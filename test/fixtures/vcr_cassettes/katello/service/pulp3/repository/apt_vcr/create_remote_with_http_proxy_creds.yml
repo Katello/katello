@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/remotes/deb/apt/
+    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/deb/apt/
     body:
       encoding: UTF-8
       base64_string: |
@@ -16,60 +16,56 @@ http_interactions:
         dHMiOiJtYWluIiwiYXJjaGl0ZWN0dXJlcyI6ImFtZDY0IiwiZ3Bna2V5Ijoi
         QURGI0ZDU0ZBU0RGJEAkQFpGRERTRyQjJSMlQURTIn0=
     headers:
-      Content-Type:
-      - application/json
       User-Agent:
       - OpenAPI-Generator/2.16.0/ruby
       Accept:
       - application/json
+      Content-Type:
+      - application/json
       Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      - Basic Og==
   response:
     status:
       code: 201
       message: Created
     headers:
-      Server:
-      - nginx/1.20.1
       Date:
-      - Mon, 01 Nov 2021 20:23:49 GMT
+      - Mon, 06 Dec 2021 19:36:11 GMT
+      Server:
+      - gunicorn
       Content-Type:
       - application/json
-      Content-Length:
-      - '771'
-      Connection:
-      - keep-alive
       Location:
-      - "/pulp/api/v3/remotes/deb/apt/b44b709f-422f-4bf3-aaf9-acad7607e635/"
+      - "/pulp/api/v3/remotes/deb/apt/a0468d5c-7f69-416b-831e-7988f7ae6554/"
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
+      Content-Length:
+      - '771'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - d335aad5c33340a8b6ed9f1da9abc8ea
+      - 8349e3bba8da42a698fca412ec8d5b7d
       Access-Control-Expose-Headers:
       - Correlation-ID
-      Strict-Transport-Security:
-      - max-age=15768000
+      Via:
+      - 1.1 devel8.markarth.example.com
     body:
-      encoding: UTF-8
+      encoding: ASCII-8BIT
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9kZWIvYXB0L2I0
-        NGI3MDlmLTQyMmYtNGJmMy1hYWY5LWFjYWQ3NjA3ZTYzNS8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIxLTExLTAxVDIwOjIzOjQ5LjY0MzQzNVoiLCJuYW1lIjoi
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9kZWIvYXB0L2Ew
+        NDY4ZDVjLTdmNjktNDE2Yi04MzFlLTc5ODhmN2FlNjU1NC8iLCJwdWxwX2Ny
+        ZWF0ZWQiOiIyMDIxLTEyLTA2VDE5OjM2OjExLjIxMzM0OFoiLCJuYW1lIjoi
         RGViaWFuIDkgYW1kNjQtdGVzdCIsInVybCI6Imh0dHA6Ly9mdHAuZGViaWFu
         Lm15bWlycm9yLm9yZy9kZWJpYW4iLCJjYV9jZXJ0IjpudWxsLCJjbGllbnRf
         Y2VydCI6bnVsbCwidGxzX3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6
         Imh0dHBzOi8vbXl0ZXN0LmNvbSIsInB1bHBfbGFiZWxzIjp7fSwicHVscF9s
-        YXN0X3VwZGF0ZWQiOiIyMDIxLTExLTAxVDIwOjIzOjQ5LjY0MzQ1NVoiLCJk
+        YXN0X3VwZGF0ZWQiOiIyMDIxLTEyLTA2VDE5OjM2OjExLjIxMzM3M1oiLCJk
         b3dubG9hZF9jb25jdXJyZW5jeSI6bnVsbCwibWF4X3JldHJpZXMiOm51bGws
         InBvbGljeSI6Im9uX2RlbWFuZCIsInRvdGFsX3RpbWVvdXQiOjMwMC4wLCJj
         b25uZWN0X3RpbWVvdXQiOm51bGwsInNvY2tfY29ubmVjdF90aW1lb3V0Ijpu
@@ -81,58 +77,56 @@ http_interactions:
         U0ckIyUjJUFEUyIsImlnbm9yZV9taXNzaW5nX3BhY2thZ2VfaW5kaWNlcyI6
         ZmFsc2V9
     http_version: 
-  recorded_at: Mon, 01 Nov 2021 20:23:49 GMT
+  recorded_at: Mon, 06 Dec 2021 19:36:11 GMT
 - request:
     method: delete
-    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/remotes/deb/apt/b44b709f-422f-4bf3-aaf9-acad7607e635/
+    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/deb/apt/a0468d5c-7f69-416b-831e-7988f7ae6554/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      Content-Type:
-      - application/json
       User-Agent:
       - OpenAPI-Generator/2.16.0/ruby
       Accept:
       - application/json
+      Content-Type:
+      - application/json
       Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      - Basic Og==
   response:
     status:
       code: 202
       message: Accepted
     headers:
-      Server:
-      - nginx/1.20.1
       Date:
-      - Mon, 01 Nov 2021 20:23:49 GMT
+      - Mon, 06 Dec 2021 19:36:11 GMT
+      Server:
+      - gunicorn
       Content-Type:
       - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie
       Allow:
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
+      Content-Length:
+      - '67'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - e54cf5929a8f423598e28b334d46d3ad
+      - a60010a5c04944c29f8a603b9db6e000
       Access-Control-Expose-Headers:
       - Correlation-ID
+      Via:
+      - 1.1 devel8.markarth.example.com
     body:
-      encoding: UTF-8
+      encoding: ASCII-8BIT
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBlMzhjMzkxLTVhMzYtNDQ5
-        Zi04MTUyLWY4YjNiNjFhNjlkOS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzhiZDA0NGRiLWQ0ZmQtNDJh
+        YS1iOWI4LWIwYWU2MjU0OGI0Ny8ifQ==
     http_version: 
-  recorded_at: Mon, 01 Nov 2021 20:23:49 GMT
+  recorded_at: Mon, 06 Dec 2021 19:36:11 GMT
 recorded_with: VCR 3.0.3
