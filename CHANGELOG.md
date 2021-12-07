@@ -1,22 +1,26 @@
-# 4.3.0 Ghost Pepper (2021-11-29)
+# 4.3.0 Ghost Pepper (2021-12-07)
 
 ## Features
 
-### Hammer
-* Add hammer support for viewing generic content units ([#33837](https://projects.theforeman.org/issues/33837), [3fea3152](https://github.com/Katello/hammer-cli-katello.git/commit/3fea31527c59121036fe89c030b18f1fedf123ae))
-
-### Foreman Proxy Content
-* OSTree repositories and content are synced to external capsules ([#33303](https://projects.theforeman.org/issues/33303), [7e276eba](https://github.com/Katello/katello.git/commit/7e276eba47723420627731454c8fba1cf3ba375b))
+### Repositories
+ * Support restricting repository to rhel 9 clients ([#33923](https://projects.theforeman.org/issues/33923), [9feababd](https://github.com/Katello/katello.git/commit/9feababd9f3e2b859426422ae170cd2953f334f9))
+ * Support 'cleaning' a repo of downloaded on_demand content ([#33919](https://projects.theforeman.org/issues/33919), [cb8ac796](https://github.com/Katello/katello.git/commit/cb8ac796e21571de5c25de013e1295790390d327))
+ * support pulp 3.15 ([#33652](https://projects.theforeman.org/issues/33652), [a7067d14](https://github.com/Katello/katello.git/commit/a7067d14fff4310e9b594c36f81ee95217a4d6c5), [7306fdb0](https://github.com/Katello/katello.git/commit/7306fdb07e7beaf726e2dcf82608c8b2d51ccab1), [c87adcfa](https://github.com/Katello/katello.git/commit/c87adcfa3cefb9593ff8a450ba8a6b62c0ce3159))
+ * Add download_policy setting for Deb-repositories ([#33578](https://projects.theforeman.org/issues/33578), [53a31d6b](https://github.com/Katello/katello.git/commit/53a31d6b8aaf4ba3a296e31b1dda7ee125b383ad))
+ * show new content counts as part of sync task status ([#33509](https://projects.theforeman.org/issues/33509), [1b0ea93b](https://github.com/Katello/katello.git/commit/1b0ea93be447779cdc9101ee8eefd62364c01383))
+ * Integrate Pulp3 ULN support into Katello ([#33250](https://projects.theforeman.org/issues/33250), [b781e6af](https://github.com/Katello/katello.git/commit/b781e6af48499137ccf74b57f1b70fbe079673c5), [11eed6aa](https://github.com/Katello/katello.git/commit/11eed6aaf588f17a23c1be10c2667bc5af810707))
+ * Applicability for deb packages ([#27625](https://projects.theforeman.org/issues/27625), [d519e0fd](https://github.com/Katello/katello.git/commit/d519e0fde4c839522719d6af663a3c40c0adef5b), [f3ab52fb](https://github.com/Katello/katello.git/commit/f3ab52fb60173ade330626ba542b413cf8900427))
+ * Modify generic content units controller to be Apipie compatible ([#33838](https://projects.theforeman.org/issues/33838), [73323fb4](https://github.com/Katello/katello.git/commit/73323fb4a23e18e8484842307018c7dd91a5bbe5))
+ * Add filename attribute to python packages ([#33650](https://projects.theforeman.org/issues/33650), [04197518](https://github.com/Katello/katello.git/commit/0419751898683514ba6c153b26d9617982334507))
 
 ### Tooling
  * Support smart_proxy_pulp's exposed rhsm_url setting ([#33899](https://projects.theforeman.org/issues/33899), [94770d21](https://github.com/Katello/katello.git/commit/94770d212ca36db418dc6265bc250df26a63eb49))
  * Upgrade Pulpcore and plugins to 3.16 ([#33832](https://projects.theforeman.org/issues/33832), [2068c4e4](https://github.com/Katello/katello.git/commit/2068c4e4c57c30a0a22185665748dafd73774346))
  * Add "What was your strategy?" question to PR template ([#33708](https://projects.theforeman.org/issues/33708), [f176d979](https://github.com/Katello/katello.git/commit/f176d979c4f25a695e292658c2f9f25209e02b7c))
  * Add PR template to remind contributors to add context and testing steps ([#33571](https://projects.theforeman.org/issues/33571), [873c50aa](https://github.com/Katello/katello.git/commit/873c50aaf5287f8c78a8de41d9479da5de9b69a5))
- * Remove old ostree code ([#33925](https://projects.theforeman.org/issues/33925), [383facce](https://github.com/Katello/katello/commit/383facce4587719adf1270ef6a47f55a509fd810))
 
 ### Inter Server Sync
- * UI for Connected ISS ([#33874](https://projects.theforeman.org/issues/33874), [8f098309](https://github.com/Katello/katello.git/commit/8f0983097bd100b883e7636ee394c0f0938db4b1))
+ * UI for Connected ISS ([#33874](https://projects.theforeman.org/issues/33874), [8f098309](https://github.com/Katello/katello.git/commit/8f0983097bd100b883e7636ee394c0f0938db4b1), [c19f7b46](https://github.com/Katello/katello.git/commit/c19f7b4629ed3d71bf9a80bb901e128b86b60dd6))
  * Support connected Inter Server Sync ([#33783](https://projects.theforeman.org/issues/33783), [d40c039b](https://github.com/Katello/katello.git/commit/d40c039b808da04029f21788575f28a2cce446e2), [a6f67a99](https://github.com/Katello/hammer-cli-katello.git/commit/a6f67a99c271543821dbb167f86b1c5571e54906))
 
 ### Content Views
@@ -28,15 +32,11 @@
  * New Content View Page - Add Added/Available/All to the content view filter details page ([#31970](https://projects.theforeman.org/issues/31970), [1af1bfde](https://github.com/Katello/katello.git/commit/1af1bfde8196c245d949c7725493397fa4642caf))
  * As a user I can publish OSTree repositories to a content view ([#33296](https://projects.theforeman.org/issues/33296), [6e2a6137](https://github.com/Katello/katello.git/commit/6e2a6137f67c9b101cafa6d232d3ce0478118c21))
 
-### Repositories
- * support pulp 3.15 ([#33652](https://projects.theforeman.org/issues/33652), [a7067d14](https://github.com/Katello/katello.git/commit/a7067d14fff4310e9b594c36f81ee95217a4d6c5), [7306fdb0](https://github.com/Katello/katello.git/commit/7306fdb07e7beaf726e2dcf82608c8b2d51ccab1), [c87adcfa](https://github.com/Katello/katello.git/commit/c87adcfa3cefb9593ff8a450ba8a6b62c0ce3159))
- * Add download_policy setting for Deb-repositories ([#33578](https://projects.theforeman.org/issues/33578), [53a31d6b](https://github.com/Katello/katello.git/commit/53a31d6b8aaf4ba3a296e31b1dda7ee125b383ad))
- * show new content counts as part of sync task status ([#33509](https://projects.theforeman.org/issues/33509), [1b0ea93b](https://github.com/Katello/katello.git/commit/1b0ea93be447779cdc9101ee8eefd62364c01383))
- * Integrate Pulp3 ULN support into Katello ([#33250](https://projects.theforeman.org/issues/33250), [b781e6af](https://github.com/Katello/katello.git/commit/b781e6af48499137ccf74b57f1b70fbe079673c5), [11eed6aa](https://github.com/Katello/katello.git/commit/11eed6aaf588f17a23c1be10c2667bc5af810707))
- * Applicability for deb packages ([#27625](https://projects.theforeman.org/issues/27625), [d519e0fd](https://github.com/Katello/katello.git/commit/d519e0fde4c839522719d6af663a3c40c0adef5b), [f3ab52fb](https://github.com/Katello/katello.git/commit/f3ab52fb60173ade330626ba542b413cf8900427))
- * Add json of extra metadata to generic content model ([#33780](https://projects.theforeman.org/issues/33780), [19372d28](https://github.com/Katello/katello.git/commit/19372d286b88264ec8bf53d111de99580d19011f))
- * Add filename attribute to python packages ([#33650](https://projects.theforeman.org/issues/33650), [04197518](https://github.com/Katello/katello.git/commit/0419751898683514ba6c153b26d9617982334507))
- * Support restricting repository to rhel 9 cli ([#33923](https://projects.theforeman.org/issues/33923), [9feababd](https://github.com/Katello/katello.git/commit/9feababd9f3e2b859426422ae170cd2953f334f9))
+
+### Hosts
+ * [SAT-4229] Packages - basic table ([#33849](https://projects.theforeman.org/issues/33849), [1324d8c8](https://github.com/Katello/katello.git/commit/1324d8c8c0ab759258c192334b987bf96837fadb))
+ * [SAT-4229] Content - Errata - Recalculate ([#33516](https://projects.theforeman.org/issues/33516), [da26df34](https://github.com/Katello/katello.git/commit/da26df34d2f760ffc6384404facf7d51d4d863d5))
+ * [SAT-4229] New host details Content - Errata - Table row expansion ([#33485](https://projects.theforeman.org/issues/33485), [eb236dac](https://github.com/Katello/katello.git/commit/eb236dac08b02b1b3ac8143fe50cae4d87c4ba61))
 
 ### Web UI
  * UI for listing generic content units at repository level + removal support ([#33616](https://projects.theforeman.org/issues/33616), [ee9adf33](https://github.com/Katello/katello.git/commit/ee9adf332ba65ee6199408343aa3fd8fb79536b3))
@@ -64,26 +64,32 @@
  * [SAT-4231] Traces - Enable Tracer button ([#33077](https://projects.theforeman.org/issues/33077), [8420ae57](https://github.com/Katello/katello.git/commit/8420ae573aece19b34578d568dce4858a5a2bf48))
  * [SAT-4234] New Host details - Repository sets tab - basic table ([#33073](https://projects.theforeman.org/issues/33073), [e6ff331c](https://github.com/Katello/katello.git/commit/e6ff331ca70084a5b5465f7313be87e8d9375d89))
  * CV UI - Add Promote workflow to new CV UI (Component CVs) ([#32509](https://projects.theforeman.org/issues/32509), [49005039](https://github.com/Katello/katello.git/commit/490050398f5c2153ae8598c3fed3dff57f943aa0))
- * As a user I can sync an OSTree repository with the UI ([#33295](https://projects.theforeman.org/issues/33295), [b675b814](https://github.com/Katello/katello.git/commit/b675b814a1f063c6d8567ad8497d0ad1bce9eea5))
  * Generic Content Browsing UI: Details/Repositories Tabs ([#33524](https://projects.theforeman.org/issues/33524), [5908354d](https://github.com/Katello/katello.git/commit/5908354d86c87ba4477a8126583f76d69c68fc7b))
  * Landing page UI for browsing generic content units ([#33435](https://projects.theforeman.org/issues/33435), [b51fde63](https://github.com/Katello/katello.git/commit/b51fde633242cce79aa65ef5bc3611971c4d2ea1))
+ * As a user I can sync an OSTree repository with the UI ([#33295](https://projects.theforeman.org/issues/33295), [b675b814](https://github.com/Katello/katello.git/commit/b675b814a1f063c6d8567ad8497d0ad1bce9eea5))
+ * Add json of extra metadata to generic content model ([#33780](https://projects.theforeman.org/issues/33780), [19372d28](https://github.com/Katello/katello.git/commit/19372d286b88264ec8bf53d111de99580d19011f))
  * Move Ansible Collections Content page to the generic UI ([#33720](https://projects.theforeman.org/issues/33720), [8c6803a0](https://github.com/Katello/katello.git/commit/8c6803a0750f2bb9d091a7d9e19120ffd774bcdf))
  * New Host details Errata - Filter by type & severity ([#33834](https://projects.theforeman.org/issues/33834), [a764d607](https://github.com/Katello/katello.git/commit/a764d6079de7c3973075efe2e9881a068c8ea84a))
- * Allow accessing the ActivationKey name in the safe mode ([#33818](https://projects.theforeman.org/issues/33818), [574136ae](https://github.com/Katello/katello.git/commit/574136ae75b96b2ece56a0f7c8a6233547e1551b))
- * [SAT-4229] Packages - basic table)[#33849](https://projects.theforeman.org/issues/33818), [1324d8c8](https://github.com/Katello/katello/commit/1324d8c8c0ab759258c192334b987bf96837fadb))
-
-### Hosts
- * [SAT-4229] Content - Errata - Recalculate ([#33516](https://projects.theforeman.org/issues/33516), [da26df34](https://github.com/Katello/katello.git/commit/da26df34d2f760ffc6384404facf7d51d4d863d5))
- * [SAT-4229] New host details Content - Errata - Table row expansion ([#33485](https://projects.theforeman.org/issues/33485), [eb236dac](https://github.com/Katello/katello.git/commit/eb236dac08b02b1b3ac8143fe50cae4d87c4ba61))
 
 ### API
  * Expose on the Katello API the ability to sync only an individual Content View or Repository to a Smart Proxy ([#33120](https://projects.theforeman.org/issues/33120), [d55f74dd](https://github.com/Katello/katello.git/commit/d55f74dd8a4b60ce476f542537bdb7ed96f1b926))
  * As a user I can sync an OSTree repository with the CLI/API ([#33294](https://projects.theforeman.org/issues/33294), [c7a24cd9](https://github.com/Katello/katello.git/commit/c7a24cd9de9a4f7ecfcfcecd969079c749820a14))
+ * As a user, I can upload an OSTree archive with the CLI/API ([#33292](https://projects.theforeman.org/issues/33292), [716cc8a7](https://github.com/Katello/katello.git/commit/716cc8a7eff6779a78e3a15435b697a4bc90332f), [9c0fde1d](https://github.com/Katello/hammer-cli-katello.git/commit/9c0fde1de84d462a2ee648187900cf431e2fedf6), [d10ac48b](https://github.com/Katello/katello.git/commit/d10ac48b00a2be2b4e1f8c563b61bec532cab3be))
+
+### Foreman Proxy Content
+* OSTree repositories and content are synced to external capsules ([#33303](https://projects.theforeman.org/issues/33303), [7e276eba](https://github.com/Katello/katello.git/commit/7e276eba47723420627731454c8fba1cf3ba375b))
+
+### Hammer
+ * Add hammer support for viewing generic content units ([#33837](https://projects.theforeman.org/issues/33837), [3fea3152](https://github.com/Katello/hammer-cli-katello.git/commit/3fea31527c59121036fe89c030b18f1fedf123ae))
+
+### Activation Keys
+ * Allow accessing the ActivationKey name in the safe mode ([#33818](https://projects.theforeman.org/issues/33818), [574136ae](https://github.com/Katello/katello.git/commit/574136ae75b96b2ece56a0f7c8a6233547e1551b))
 
 ## Bug Fixes
 
 ### Content Views
  * CVV Import fails due to new Pulp 3.16 task return ([#33971](https://projects.theforeman.org/issues/33971), [b5ed7567](https://github.com/Katello/katello.git/commit/b5ed7567a1f125cdd387c3cfbfb8060b127819c8))
+ * Remove Greedy DepSolving from UI ([#33859](https://projects.theforeman.org/issues/33859), [29aaad9e](https://github.com/Katello/katello.git/commit/29aaad9ee60b60e8ea6860c6c3258d130e95e0a9))
  * CV UI - CV Version page tries to re-register polling with same ID when switching tabs ([#33856](https://projects.theforeman.org/issues/33856), [68129737](https://github.com/Katello/katello.git/commit/6812973721f8e1f6542980bbc2f2f474401ef168))
  * Cannot add filter on same RPM name with different architectures ([#33855](https://projects.theforeman.org/issues/33855), [92d61844](https://github.com/Katello/katello.git/commit/92d6184444a0f4d2cfb70062539a543f3b4a6d58))
  * middle clicking on new content view UI tabs does not open them in a new browser tab ([#33683](https://projects.theforeman.org/issues/33683), [882f5e59](https://github.com/Katello/katello.git/commit/882f5e59400a1560a874ba79a67e4f88bb258dfc))
@@ -92,26 +98,8 @@
  * Enter key doesn't work when creating a content view filter ([#33288](https://projects.theforeman.org/issues/33288), [fa47f3f9](https://github.com/Katello/katello.git/commit/fa47f3f9a9182e5d7f8946e58ca4f616917b6180))
  * Searching for content view filter with just "inclusion_type" will return ISE ([#31523](https://projects.theforeman.org/issues/31523), [20798322](https://github.com/Katello/katello.git/commit/2079832287a023756f725d8d25cb2857a2cb193a))
 
-### Repositories
- * After force deleting a repo, its entry in /etc/yum.repos.d/redhat.repo continues to be populated ([#33912](https://projects.theforeman.org/issues/33912), [a5fc808f](https://github.com/Katello/katello.git/commit/a5fc808f82f6df992e651a558bca8f88a541e9a0))
- * uploading a duplicate file fails with undefined local variable or method upload_href for #<Actions::Pulp3::Repository::CommitUpload:0x00000000134e3f00> ([#33748](https://projects.theforeman.org/issues/33748), [532ce8a0](https://github.com/Katello/katello.git/commit/532ce8a03879a771ad835c8fcfc2d60a4bc7abfe))
- * b'Update recommended repos for Satellite & Tools from 6.9 to 6.10' ([#33627](https://projects.theforeman.org/issues/33627), [d921227a](https://github.com/Katello/katello.git/commit/d921227a96e1533f09e8a9150c80835fb8b0afcf))
- * Generic repository types don't work properly with multiple generic types ([#33625](https://projects.theforeman.org/issues/33625), [6d0e46b1](https://github.com/Katello/katello.git/commit/6d0e46b1deecccf23feb34d4df0ad69343b9d161), [50642a73](https://github.com/Katello/katello.git/commit/50642a73afefeaba10db14cdb5fd4baa1c36844c))
- * Selecting certain products in "Red Hat Repositories" page renders a Blank Page in Satellite 6.10 ([#33544](https://projects.theforeman.org/issues/33544), [deff2d5f](https://github.com/Katello/katello.git/commit/deff2d5f478f98b41eee62f2bbae3821e6141946))
- * Selected yum metadata checksum type on is not reflected in repomd.xml on a repo creation ([#33495](https://projects.theforeman.org/issues/33495), [d2ea3134](https://github.com/Katello/katello.git/commit/d2ea31348c420314246e45b820cd88f040502120))
- * Remove OSTree filter from Red Hat Repositories drop down list ([#33493](https://projects.theforeman.org/issues/33493), [13a09871](https://github.com/Katello/katello.git/commit/13a098718447816fd3b54b054a4caa206051f9ce))
- * Total steps: 0/0 in sync status ([#33472](https://projects.theforeman.org/issues/33472), [d30d3bbc](https://github.com/Katello/katello.git/commit/d30d3bbca803c837ff516c3a79a31a1c35dcebff))
- * Background download policy is still referenced in a number of areas ([#33468](https://projects.theforeman.org/issues/33468), [295c71a5](https://github.com/Katello/katello.git/commit/295c71a5c8a6fe7f216e7723ef0598afabcb0367))
- * Add repositories node to generic content unit rabl ([#33454](https://projects.theforeman.org/issues/33454), [28be3d12](https://github.com/Katello/katello.git/commit/28be3d12f9a7fe67ca69d2218ab877f0ec315fd7))
- * Drop rake task katello:refresh_sync_schedule ([#33450](https://projects.theforeman.org/issues/33450), [3166eb28](https://github.com/Katello/katello.git/commit/3166eb2805f4cda4c094299a6891af81e0fa4dd0))
- * UI shows 0 packages\\errata\\package_groups after a bad sync followed by a successful sync for the same repo ([#33443](https://projects.theforeman.org/issues/33443), [9ff6d950](https://github.com/Katello/katello.git/commit/9ff6d950aec6f6ad84cfb70bb9b6340a806e62d6))
- * Error in logs when scanning for repository undefined method resolve_substitutions ([#33383](https://projects.theforeman.org/issues/33383), [8cb4654d](https://github.com/Katello/katello.git/commit/8cb4654dde46d5194b9947d399a841512d3223db))
- * catch specific error  from pulp and throw a better one that is katello specific ([#33376](https://projects.theforeman.org/issues/33376), [d947a8fd](https://github.com/Katello/katello.git/commit/d947a8fd3d23a9868055faa1379d0b3e8451e4a9))
- * change 'publish via http' to 'unprotected' in UI ([#33175](https://projects.theforeman.org/issues/33175), [487e5fd7](https://github.com/Katello/katello.git/commit/487e5fd72a2dd9e9501d28278088a6db41424e3b))
- * Fix upstream_authentication error when editing ULN repository ([#33659](https://projects.theforeman.org/issues/33659), [7640c27f](https://github.com/Katello/katello.git/commit/7640c27fac40cbe87dffc6e60b0457b6c07194fc))
- * As a user I can create an OSTree repository ([#33557](https://projects.theforeman.org/issues/33557), [70cf5917](https://github.com/Katello/katello.git/commit/70cf5917beb8d456845ee212939497f190e2822b))
-
 ### Web UI
+ * CV UI - UX Review 3 - Empty States - Tooltips - Assorted UI tweaks ([#33969](https://projects.theforeman.org/issues/33969), [6379a706](https://github.com/Katello/katello.git/commit/6379a706b7727443985aca1520f79b186c4bb9f1))
  * CV UI - UX Review - Modal Updates - Form Validation ([#33903](https://projects.theforeman.org/issues/33903), [9ea4eaad](https://github.com/Katello/katello.git/commit/9ea4eaad4c94ec46848ffa197b192e8b88ce7f15))
  * CV UI - UX Review - Table Sorting - Icon sizing/positioning - Date tooltips ([#33857](https://projects.theforeman.org/issues/33857), [a384ba7c](https://github.com/Katello/katello.git/commit/a384ba7c8893f8ebc66e0c7aacca06177cf09b74))
  * CV UI  - Versions page errata link and some UX changes ([#33819](https://projects.theforeman.org/issues/33819), [db432bff](https://github.com/Katello/katello.git/commit/db432bff23ce94132fa719405cb0a9d1908aa140))
@@ -126,21 +114,46 @@
  * CV UI - Show Version Details - Table View ([#33403](https://projects.theforeman.org/issues/33403))
  * CV UI - Delete Content View ([#33402](https://projects.theforeman.org/issues/33402), [dc860b0c](https://github.com/Katello/katello.git/commit/dc860b0c20ef46ff1a4226226fd7700bef77f6c6))
  * CV UI - Delete CV Version ([#33401](https://projects.theforeman.org/issues/33401))
+ * Host detaisl tabs should be translated ([#33398](https://projects.theforeman.org/issues/33398), [b303a63d](https://github.com/Katello/katello.git/commit/b303a63ddd4530f33a71ee43f6f81ef7e08f4c5a))
  * Updating per_page on table sends the page into infinite loops ([#33276](https://projects.theforeman.org/issues/33276), [fbdd242a](https://github.com/Katello/katello.git/commit/fbdd242accf4c62d6712912c576790c79c8b3ddf))
  * CV UI - CV Version remove from environment ([#33262](https://projects.theforeman.org/issues/33262), [03fc44cb](https://github.com/Katello/katello.git/commit/03fc44cbf448f0c1989d1ef37e148d796fe5dbc6))
  * CV UI - Show Version Details ([#33261](https://projects.theforeman.org/issues/33261), [b3608590](https://github.com/Katello/katello.git/commit/b360859071a9021c739c575363677ebcd14da6a1))
- * Traces - Add Select All ([#33944](https://projects.theforeman.org/issues/33944), [7eb3f0bd](https://github.com/Katello/katello.git/commit/7eb3f0bdd360303eac04d34a9a8e0299eb57e78e))
- * CV UI - Ansible collection content has sub-tab but is treated differently in Versions ([#33933](https://projects.theforeman.org/issues/33933), [b5850751](https://github.com/Katello/katello.git/commit/b58507512791a02ffabc703dd0162d46f12ad73e))
- * CV counter shows In progress when count is 0 ([#33921](https://projects.theforeman.org/issues/33921), [c8dec446](https://github.com/Katello/katello.git/commit/c8dec446044f5671bdb3fc2a23275830d6f62c32))
- * Search Dropdown doesn't allow up/down arrow or tab selection.  ([#33824](https://projects.theforeman.org/issues/33824), [be136a4f](https://github.com/Katello/katello.git/commit/be136a4ff263c0c04b5f2d366373c0b7f599c2ec))
- * [SAT-1790] Extend TableWrapper and MainTable to allow using PF TableComposable ([#33238](https://projects.theforeman.org/issues/33238), [46d3cb14](https://github.com/Katello/katello.git/commit/46d3cb1468ca468b46a61fdc0aca6de8edc92cae))
+ * custom confirm modal is broken ([#33393](https://projects.theforeman.org/issues/33393), [deff6f1d](https://github.com/Katello/katello.git/commit/deff6f1d9acc85d2e431d1adfc7916a3c4cf9708))
  * Sync Plan Start Date Always null ([#33523](https://projects.theforeman.org/issues/33523), [4269c8ab](https://github.com/Katello/katello.git/commit/4269c8ab6dccb4e58c7147f54a4b5455fc806f72))
  * Tooltip stays visible after clicking on next page button ([#33498](https://projects.theforeman.org/issues/33498), [8b0f8379](https://github.com/Katello/katello.git/commit/8b0f83797746227955feeee1e05433bb51f78fbf))
  * Fix Katello GUI issues and add debian constraints ([#33702](https://projects.theforeman.org/issues/33702), [8b56e717](https://github.com/Katello/katello.git/commit/8b56e717d2ef900c5ccd78dc428e1001957cf215))
  * Component content view list when status = Added or status = Not Added is not correctly processed ([#33700](https://projects.theforeman.org/issues/33700), [68427d85](https://github.com/Katello/katello.git/commit/68427d85374d4ae0c0b666bc99d0c74d94a19ae4))
+ * Fix upstream_authentication error when editing ULN repository ([#33659](https://projects.theforeman.org/issues/33659), [7640c27f](https://github.com/Katello/katello.git/commit/7640c27fac40cbe87dffc6e60b0457b6c07194fc))
+ * [SAT-1790] Extend TableWrapper and MainTable to allow using PF TableComposable ([#33238](https://projects.theforeman.org/issues/33238), [46d3cb14](https://github.com/Katello/katello.git/commit/46d3cb1468ca468b46a61fdc0aca6de8edc92cae))
  * Foreman setting has wrong description for a couple of parameters under Content Tab on the Foreman WebUI ([#33439](https://projects.theforeman.org/issues/33439), [6d755b7d](https://github.com/Katello/katello.git/commit/6d755b7dff116d611bf6eb5dfc73a3ab0c11cf02))
 
+### Repositories
+ * As a user I can create an OSTree repository ([#33557](https://projects.theforeman.org/issues/33557), [70cf5917](https://github.com/Katello/katello.git/commit/70cf5917beb8d456845ee212939497f190e2822b))
+ * After force deleting a repo, its entry in /etc/yum.repos.d/redhat.repo continues to be populated ([#33912](https://projects.theforeman.org/issues/33912), [a5fc808f](https://github.com/Katello/katello.git/commit/a5fc808f82f6df992e651a558bca8f88a541e9a0))
+ * uploading a duplicate file fails with undefined local variable or method upload_href for #<Actions::Pulp3::Repository::CommitUpload:0x00000000134e3f00> ([#33748](https://projects.theforeman.org/issues/33748), [532ce8a0](https://github.com/Katello/katello.git/commit/532ce8a03879a771ad835c8fcfc2d60a4bc7abfe))
+ * b'Update recommended repos for Satellite & Tools from 6.9 to 6.10' ([#33627](https://projects.theforeman.org/issues/33627), [d921227a](https://github.com/Katello/katello.git/commit/d921227a96e1533f09e8a9150c80835fb8b0afcf))
+ * Generic repository types don't work properly with multiple generic types ([#33625](https://projects.theforeman.org/issues/33625), [6d0e46b1](https://github.com/Katello/katello.git/commit/6d0e46b1deecccf23feb34d4df0ad69343b9d161), [50642a73](https://github.com/Katello/katello.git/commit/50642a73afefeaba10db14cdb5fd4baa1c36844c))
+ * change urls with username and password in the url to use basic auth parameters in pulp3 ([#33576](https://projects.theforeman.org/issues/33576), [206aa4f3](https://github.com/Katello/katello.git/commit/206aa4f373c132d806ac175a4e62f43165d3408c))
+ * Selecting certain products in "Red Hat Repositories" page renders a Blank Page in Satellite 6.10 ([#33544](https://projects.theforeman.org/issues/33544), [deff2d5f](https://github.com/Katello/katello.git/commit/deff2d5f478f98b41eee62f2bbae3821e6141946))
+ * Selected yum metadata checksum type on is not reflected in repomd.xml on a repo creation ([#33495](https://projects.theforeman.org/issues/33495), [d2ea3134](https://github.com/Katello/katello.git/commit/d2ea31348c420314246e45b820cd88f040502120))
+ * Remove OSTree filter from Red Hat Repositories drop down list ([#33493](https://projects.theforeman.org/issues/33493), [13a09871](https://github.com/Katello/katello.git/commit/13a098718447816fd3b54b054a4caa206051f9ce))
+ * Total steps: 0/0 in sync status ([#33472](https://projects.theforeman.org/issues/33472), [d30d3bbc](https://github.com/Katello/katello.git/commit/d30d3bbca803c837ff516c3a79a31a1c35dcebff))
+ * Background download policy is still referenced in a number of areas ([#33468](https://projects.theforeman.org/issues/33468), [295c71a5](https://github.com/Katello/katello.git/commit/295c71a5c8a6fe7f216e7723ef0598afabcb0367))
+ * Add repositories node to generic content unit rabl ([#33454](https://projects.theforeman.org/issues/33454), [28be3d12](https://github.com/Katello/katello.git/commit/28be3d12f9a7fe67ca69d2218ab877f0ec315fd7))
+ * Drop rake task katello:refresh_sync_schedule ([#33450](https://projects.theforeman.org/issues/33450), [3166eb28](https://github.com/Katello/katello.git/commit/3166eb2805f4cda4c094299a6891af81e0fa4dd0))
+ * UI shows 0 packages\\errata\\package_groups after a bad sync followed by a successful sync for the same repo ([#33443](https://projects.theforeman.org/issues/33443), [9ff6d950](https://github.com/Katello/katello.git/commit/9ff6d950aec6f6ad84cfb70bb9b6340a806e62d6))
+ * Error in logs when scanning for repository undefined method resolve_substitutions ([#33383](https://projects.theforeman.org/issues/33383), [8cb4654d](https://github.com/Katello/katello.git/commit/8cb4654dde46d5194b9947d399a841512d3223db))
+ * catch specific error  from pulp and throw a better one that is katello specific ([#33376](https://projects.theforeman.org/issues/33376), [d947a8fd](https://github.com/Katello/katello.git/commit/d947a8fd3d23a9868055faa1379d0b3e8451e4a9))
+ * change 'publish via http' to 'unprotected' in UI ([#33175](https://projects.theforeman.org/issues/33175), [487e5fd7](https://github.com/Katello/katello.git/commit/487e5fd72a2dd9e9501d28278088a6db41424e3b))
+ * Traces - Add Select All ([#33944](https://projects.theforeman.org/issues/33944), [7eb3f0bd](https://github.com/Katello/katello.git/commit/7eb3f0bdd360303eac04d34a9a8e0299eb57e78e))
+ * CV UI - Ansible collection content has sub-tab but is treated differently in Versions ([#33933](https://projects.theforeman.org/issues/33933), [b5850751](https://github.com/Katello/katello.git/commit/b58507512791a02ffabc703dd0162d46f12ad73e))
+ * CV counter shows In progress when count is 0 ([#33921](https://projects.theforeman.org/issues/33921), [c8dec446](https://github.com/Katello/katello.git/commit/c8dec446044f5671bdb3fc2a23275830d6f62c32))
+ * Search Dropdown doesn't allow up/down arrow or tab selection.  ([#33824](https://projects.theforeman.org/issues/33824), [be136a4f](https://github.com/Katello/katello.git/commit/be136a4ff263c0c04b5f2d366373c0b7f599c2ec))
+ * Package dependency ui incorrectly displays dependency values ([#33407](https://projects.theforeman.org/issues/33407), [c84ed316](https://github.com/Katello/katello.git/commit/c84ed3165673e8b11f5a0b2782bb22fbc2139ba1))
+
+
 ### Hosts
+ * The host detail page widget for the content view breaks on a default long content view name ([#33876](https://projects.theforeman.org/issues/33876), [de3dfa78](https://github.com/Katello/katello.git/commit/de3dfa7894a8b78e34a12336239b125e311c4036))
  * Content - Errata - Add REX actions (menu items) ([#33852](https://projects.theforeman.org/issues/33852), [0e7f14ce](https://github.com/Katello/katello.git/commit/0e7f14ce3b639b36ab968d460cc441228d991b16))
  * Host details tabs aren't responding for click event ([#33806](https://projects.theforeman.org/issues/33806), [997cab04](https://github.com/Katello/katello.git/commit/997cab04778b1e910596af3dff7b243eb11e03a1))
  * New Traces page - wrong input format passed to REX job ([#33764](https://projects.theforeman.org/issues/33764), [fcda5a12](https://github.com/Katello/katello.git/commit/fcda5a128342bb7693991080208bba38dd05edcb))
@@ -152,16 +165,14 @@
  * Change of 'auto-attach' preference via subscription-manager doesn't get reflected in Satellite WebUI ([#33285](https://projects.theforeman.org/issues/33285), [50cf33b6](https://github.com/Katello/katello.git/commit/50cf33b69b23ba0f570a515ae930425c3a12cba2))
  * Incorrect search link from packages view for applicable or upgradable hosts ([#33256](https://projects.theforeman.org/issues/33256), [5077fdc7](https://github.com/Katello/katello.git/commit/5077fdc78c21e67767fd8e13a058b42517bfd042))
  * Installation source in hostgroup cannot be changed from "synced content" to local medium ([#33144](https://projects.theforeman.org/issues/33144), [0863618b](https://github.com/Katello/katello.git/commit/0863618b348582096cb6b39e5069b1c44f946751))
- * Package dependency ui incorrectly displays dependency values ([#33407](https://projects.theforeman.org/issues/33407), [c84ed316](https://github.com/Katello/katello.git/commit/c84ed3165673e8b11f5a0b2782bb22fbc2139ba1))
- * custom confirm modal is broken ([#33393](https://projects.theforeman.org/issues/33393), [deff6f1d](https://github.com/Katello/katello.git/commit/deff6f1d9acc85d2e431d1adfc7916a3c4cf9708))
+ * Inheritance does not work for child hostgroups Content view, Content Source and Lifecycle environment ([#33054](https://projects.theforeman.org/issues/33054), [0863618b](https://github.com/Katello/katello.git/commit/0863618b348582096cb6b39e5069b1c44f946751))
 
 ### Tooling
  * katello:reset doesn't work with pulp 3.15 ([#33847](https://projects.theforeman.org/issues/33847), [24eb0863](https://github.com/Katello/katello.git/commit/24eb0863fa9a30197cacb65344de214fa7cd8880))
  * pulpcore-resource-manager gets started after rake katello:reset ([#33609](https://projects.theforeman.org/issues/33609), [b9aa4e0b](https://github.com/Katello/katello.git/commit/b9aa4e0b7516449314a897367130ebc606099605))
  * Cleanup unused methods in Candlepin Consumer resource ([#33508](https://projects.theforeman.org/issues/33508), [cafb8469](https://github.com/Katello/katello.git/commit/cafb8469216dfce0b67b99b0404956d9b29dc585))
- * Inject consumer uuid into REX jobs ([#33410](https://projects.theforeman.org/issues/33410), [ab549a2e](https://github.com/Katello/katello.git/commit/ab549a2ea76c97979c557afb5de62990cccd6920), [7179c88e](https://github.com/Katello/katello.git/commit/7179c88e661cf8f34b10c6ebe421ab2ec52e859c))
  * Pulp-ansible binding is outdated ([#33349](https://projects.theforeman.org/issues/33349), [27281d45](https://github.com/Katello/katello.git/commit/27281d457e2958ad4ed440b92b36a15f47d54922))
- * Inheritance does not work for child hostgroups Content view, Content Source and Lifecycle environment ([#33054](https://projects.theforeman.org/issues/33054), [0863618b](https://github.com/Katello/katello.git/commit/0863618b348582096cb6b39e5069b1c44f946751))
+ * Inject consumer uuid into REX jobs ([#33410](https://projects.theforeman.org/issues/33410), [ab549a2e](https://github.com/Katello/katello.git/commit/ab549a2ea76c97979c557afb5de62990cccd6920), [7179c88e](https://github.com/Katello/katello.git/commit/7179c88e661cf8f34b10c6ebe421ab2ec52e859c))
 
 ### Hammer
  * ensure hammer-cli-katello works with Ruby 2.7 ([#33792](https://projects.theforeman.org/issues/33792), [8732a4b9](https://github.com/Katello/hammer-cli-katello.git/commit/8732a4b94d6cf382ec73ba785b6e1cd4476ff3fe))
@@ -173,12 +184,11 @@
 ### Tests
  * Increase nock timeout for longer running tests and possibly slow CI ([#33692](https://projects.theforeman.org/issues/33692), [ad887ced](https://github.com/Katello/katello.git/commit/ad887cedda5033ca1a888f8459f0eacda2124f6c))
  * Fix memory exceeded issue surround katello tests in CI   ([#33796](https://projects.theforeman.org/issues/33796), [831260db](https://github.com/Katello/katello.git/commit/831260db8fc6bfb9af7b23020e44da7f439010d7))
- * Fixes nightly failures due to package availability, ([eb698858](https://github.com/Katello/katello/pull/9797/commits/eb698858443544c662146f5c94f3b65064abe98f))
 
 ### API
  * Cache resource list API responses ([#33651](https://projects.theforeman.org/issues/33651), [cf9edcda](https://github.com/Katello/katello.git/commit/cf9edcdaffa7d3d3fba8e65e8b996ddfb2576039))
- * Ping API consideres Pulp3 healthy, even if no content apps are available ([#33703](https://projects.theforeman.org/issues/33703), [13cd0c84](https://github.com/Katello/katello.git/commit/13cd0c84879a430daa052f4dc9ffdff20cc1fb8b), [5e98c816](https://github.com/Katello/hammer-cli-katello.git/commit/5e98c81601d45713f94f3ba440c8d11940b3dbae))
  * Add component view count to versions API results ([#33467](https://projects.theforeman.org/issues/33467), [0495eb34](https://github.com/Katello/katello.git/commit/0495eb348a6274f6d36f12263fffde019dd654ff))
+ * Ping API consideres Pulp3 healthy, even if no content apps are available ([#33703](https://projects.theforeman.org/issues/33703), [13cd0c84](https://github.com/Katello/katello.git/commit/13cd0c84879a430daa052f4dc9ffdff20cc1fb8b), [5e98c816](https://github.com/Katello/hammer-cli-katello.git/commit/5e98c81601d45713f94f3ba440c8d11940b3dbae))
 
 ### Subscriptions
  *  Satellite doesn't forward the "If-Modified-Since" header for /accessible_content endpoint to Candlepin ([#33618](https://projects.theforeman.org/issues/33618), [0bbdcf78](https://github.com/Katello/katello.git/commit/0bbdcf7867e8f6fea1433daf9cb73926a71838ca), [438351af](https://github.com/Katello/katello.git/commit/438351af3352088f3a8347ed1aaaf84dc3d2ae69))
@@ -190,6 +200,7 @@
  * Capsule content page shows content views as empty when they aren't ([#33466](https://projects.theforeman.org/issues/33466), [36aaff0b](https://github.com/Katello/katello.git/commit/36aaff0b08577c1c227d8346b228a4b69a671433))
  * Default Organization View showing status as  {{ historyText(version) }}  when you check through Infrastructure --> Smart Proxies --> proxy --> content --> Library --> Default Organization View ([#33465](https://projects.theforeman.org/issues/33465), [47d56b2e](https://github.com/Katello/katello.git/commit/47d56b2e30da05081f1409ac5a11e2fc7ce6c93a))
  * Audit the code for SmartProxy lookups that should be unscoped ([#33308](https://projects.theforeman.org/issues/33308), [cac7bf1d](https://github.com/Katello/katello.git/commit/cac7bf1d42aa681de6745666d98ca7629baacb83))
+ * smart proxy pulp's client certificate setting looks for wrong value ([#33959](https://projects.theforeman.org/issues/33959), [76ce48e4](https://github.com/Katello/katello.git/commit/76ce48e43beed28960264dbfe84af1221d99ab2f))
  * Give warning for certain content types on smart proxy sync ([#33325](https://projects.theforeman.org/issues/33325), [901236e5](https://github.com/Katello/katello.git/commit/901236e5fe931206600af10cd1212cfaf16bcda8))
 
 ### Ansible Collections
