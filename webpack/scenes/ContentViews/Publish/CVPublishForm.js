@@ -46,7 +46,7 @@ const CVPublishForm = ({
         <Text component={TextVariants.h3}>{__('Publish new version - ')}{nextVersion || '1.0'}</Text>
       </TextContent>
       <Form>
-        <FormGroup label="Description" fieldId="description">
+        <FormGroup label={__('Description')} fieldId="description">
           <TextArea
             isRequired
             type="text"
@@ -57,7 +57,7 @@ const CVPublishForm = ({
             onChange={setDescription}
           />
         </FormGroup>
-        <FormGroup label="Promote" fieldId="promote">
+        <FormGroup label={__('Promote')} fieldId="promote">
           <Switch
             id="promote-switch"
             aria-label="promote-switch"
@@ -77,8 +77,8 @@ const CVPublishForm = ({
             {forcePromote.length > 1 ? __('Selected environments ') : __('Selected environment ')}
             <ComponentEnvironments environments={forcePromote} />
             {forcePromote.length > 1 ?
-              __(' are out of the environment path order. The recommended practice is to promote the next environment in the path.') :
-              __(' is out of the environment path order. The recommended practice is to promote the next environment in the path.')
+              __(' are out of the environment path order. The recommended practice is to promote to the next environment in the path.') :
+              __(' is out of the environment path order. The recommended practice is to promote to the next environment in the path.')
             }
           </TextContent>
         </Alert>)}

@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Modal, ModalVariant, Form, FormGroup, TextInput, ActionGroup, Button, Select, SelectOption } from '@patternfly/react-core';
+import {
+  Modal, ModalVariant, Form, FormGroup, TextInput,
+  ActionGroup, Button, FormSelect, FormSelectOption,
+} from '@patternfly/react-core';
 import { addCVFilterRule, editCVFilterRule, getCVFilterRules } from '../../../ContentViewDetailActions';
 import {
   selectCreateFilterRuleStatus,
@@ -23,7 +26,7 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
   const isEditing = !!selectedFilterRuleData;
 
   const VersionModifiers = {
-    'All versions': __('All Versions'),
+    'All versions': __('All versions'),
     'Equal to': __('Equal to'),
     'Greater than': __('Greater than'),
     'Less than': __('Less than'),
@@ -48,7 +51,6 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
   const [maxVersion, setMaxVersion] = useState(editingMaxVersion || '');
   const [versionComparator, setVersionComparator] = useState(versionText(selectedFilterRuleData));
   const [saving, setSaving] = useState(false);
-  const [versionComparatorSelectOpen, setVersionComparatorSelectOpen] = useState(false);
   const dispatch = useDispatch();
   const status = useSelector(state => selectCreateFilterRuleStatus(state));
 
@@ -62,7 +64,7 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
 
   const formVersionParams = () => {
     switch (versionComparator) {
-      case 'All Versions':
+      case 'All versions':
         return {};
       case 'Equal to':
         return { version };
@@ -102,10 +104,6 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
       ));
   };
 
-  const onSelect = (_event, selection) => {
-    setVersionComparator(selection);
-    setVersionComparatorSelectOpen(false);
-  };
 
   useDeepCompareEffect(() => {
     if (status === STATUS.ERROR) {
@@ -115,7 +113,7 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
 
   return (
     <Modal
-      title={selectedFilterRuleData ? __('Edit package filter rule') : __('Create package filter rule')}
+      title={selectedFilterRuleData ? __('Edit RPM rule') : __('Add RPM rule')}
       variant={ModalVariant.small}
       isOpen
       onClose={onClose}
@@ -148,22 +146,18 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
           />
         </FormGroup>
         <FormGroup label={__('Version')} fieldId="version_comparator">
-          <Select
-            selections={versionComparator}
-            onSelect={onSelect}
-            isOpen={versionComparatorSelectOpen}
-            onToggle={isExpanded => setVersionComparatorSelectOpen(isExpanded)}
+          <FormSelect
+            value={versionComparator}
+            onChange={setVersionComparator}
             id="version_comparator"
             name="version_comparator"
             aria-label="version_comparator"
           >
             {
               Object.values(VersionModifiers).map(item => (
-                <SelectOption key={item} value={item}>
-                  {VersionModifiers[item]}
-                </SelectOption>))
+                <FormSelectOption key={item} value={item} label={VersionModifiers[item]} />))
             }
-          </Select>
+          </FormSelect>
         </FormGroup>
         {showVersion &&
           <FormGroup label={__('Version')} fieldId="version">
@@ -177,7 +171,7 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
             />
           </FormGroup>}
         {showMinVersion &&
-          <FormGroup label={__('Minimum Version')} fieldId="min_version">
+          <FormGroup label={__('Minimum version')} fieldId="min_version">
             <TextInput
               type="text"
               id="min_version"
@@ -188,7 +182,7 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
             />
           </FormGroup>}
         {showMaxVersion &&
-          <FormGroup label={__('Maximum Version')} fieldId="max_version">
+          <FormGroup label={__('Maximum version')} fieldId="max_version">
             <TextInput
               type="text"
               id="max_version"
@@ -200,12 +194,12 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
           </FormGroup>}
         <ActionGroup>
           <Button
-            aria-label="create_package_filter_rule"
+            aria-label="add_package_filter_rule"
             variant="primary"
             isDisabled={saving || submitDisabled}
             type="submit"
           >
-            {selectedFilterRuleData ? __('Edit rule') : __('Create rule')}
+            {selectedFilterRuleData ? __('Edit rule') : __('Add rule')}
           </Button>
           <Button variant="link" onClick={onClose}>
             {__('Cancel')}

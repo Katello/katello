@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { isEqual, sortBy, capitalize } from 'lodash';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
   Tooltip, Form, ActionGroup, Flex, FlexItem, Select,
   SelectOption, SelectVariant, ChipGroup, Chip,
@@ -12,7 +12,7 @@ import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectCVFilterDetails } from '../ContentViewDetailSelectors';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
-import { editCVFilterRule, getCVFilterDetails } from '../ContentViewDetailActions';
+import { editCVFilterRule } from '../ContentViewDetailActions';
 import { hasPermission } from '../../helpers';
 
 export const dateFormat = date => `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
@@ -37,6 +37,7 @@ export const isValidDate = date => date instanceof Date && !Number.isNaN(date.ge
 const CVErrataDateFilterContent = ({
   cvId, filterId, inclusion, showAffectedRepos, setShowAffectedRepos, details,
 }) => {
+  const { push } = useHistory();
   const filterDetails = useSelector(state =>
     selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const { repositories = [], rules } = filterDetails;
@@ -64,7 +65,7 @@ const CVErrataDateFilterContent = ({
         types: selectedTypes,
         date_type: dateType,
       },
-      () => dispatch(getCVFilterDetails(cvId, filterId)),
+      () => push('/filters'),
     ));
   };
 
@@ -236,7 +237,12 @@ const CVErrataDateFilterContent = ({
               </FlexItem>
               {hasPermission(permissions, 'edit_content_views') &&
                 <FlexItem>
-                  <Button variant="link" onClick={resetFilters} isInline>
+                  <Button
+                    disabled={saveDisabled}
+                    variant="link"
+                    onClick={resetFilters}
+                    isInline
+                  >
                     {__('Reset filters')}
                   </Button>
                 </FlexItem>
@@ -263,7 +269,7 @@ const CVErrataDateFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-        <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+        <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
           <div className="tab-body-with-spacing">
             <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>

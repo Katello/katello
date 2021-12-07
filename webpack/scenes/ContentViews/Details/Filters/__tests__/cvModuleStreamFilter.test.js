@@ -317,10 +317,8 @@ test('Can bulk add filter rules', async (done) => {
     expect(getByLabelText('bulk_actions')).toHaveAttribute('aria-expanded', 'false');
   });
   fireEvent.click(getByLabelText('Select all rows'));
-  fireEvent.click(getByLabelText('bulk_actions'));
-  expect(getByLabelText('bulk_actions')).toHaveAttribute('aria-expanded', 'true');
-  expect(getByLabelText('bulk_add')).toBeInTheDocument();
-  fireEvent.click(getByLabelText('bulk_add'));
+  expect(getByLabelText('add_filter_rule')).toBeInTheDocument();
+  fireEvent.click(getByLabelText('add_filter_rule'));
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);

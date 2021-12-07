@@ -5,18 +5,18 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import RepoIcon from '../Repositories/RepoIcon';
 import { capitalize, repoType } from '../../../../utils/helpers';
 
-const typeName = (type, errataByDate) => {
+export const typeName = (type, errataByDate) => {
   if (errataByDate) return 'Errata - by date range';
   const nameMap = {
     rpm: __('RPM'),
     docker: __('Container image tag'),
     modulemd: __('Module stream'),
     erratum: __('Errata'),
-    erratum_date: __('Errata - Date and Type'),
-    erratum_id: __('Errata - Id'),
+    erratum_date: __('Errata - by date range'),
+    erratum_id: __('Errata'),
   };
 
-  if (Object.prototype.hasOwnProperty.call(nameMap, type)) return nameMap[type];
+  if (type in nameMap) return nameMap[type];
   return capitalize(type.replace('_', ' '));
 };
 

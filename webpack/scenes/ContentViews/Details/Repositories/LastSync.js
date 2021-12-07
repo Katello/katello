@@ -93,7 +93,7 @@ LastSync.defaultProps = {
   startedAt: undefined,
   lastSyncWords: undefined,
   lastSync: undefined,
-  emptyMessage: 'Not Synced',
+  emptyMessage: 'Not synced',
 };
 
 export default LastSync;

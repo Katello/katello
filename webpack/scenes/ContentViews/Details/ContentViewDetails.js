@@ -72,14 +72,7 @@ export default () => {
               <FlexItem>
                 <TextContent>
                   <Text component={TextVariants.h1}>
-                    {name} {__('content view')}
-                  </Text>
-                </TextContent>
-              </FlexItem>
-              <FlexItem>
-                <TextContent>
-                  <Text component={TextVariants.h2}>
-                    <ContentViewIcon composite={composite} />
+                    <ContentViewIcon count={name} composite={composite} />
                   </Text>
                 </TextContent>
               </FlexItem>
