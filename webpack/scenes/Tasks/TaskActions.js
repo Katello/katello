@@ -31,12 +31,13 @@ export const startPollingTasks = (key, taskSearchParams = {}) =>
 
 export const stopPollingTasks = key => stopInterval(bulkSearchKey(key));
 
-const getTask = (key, task) => get({
+const getTask = (key, task, handleSuccess) => get({
   key,
   url: `${foremanTasksApi.baseApiPath}/tasks/${task.id}`,
+  handleSuccess,
 });
 
-export const startPollingTask = (key, task) =>
-  withInterval(getTask(pollTaskKey(key), task));
+export const startPollingTask = (key, task, handleSuccess) =>
+  withInterval(getTask(pollTaskKey(key), task, handleSuccess));
 
 export const stopPollingTask = key => stopInterval(pollTaskKey(key));
