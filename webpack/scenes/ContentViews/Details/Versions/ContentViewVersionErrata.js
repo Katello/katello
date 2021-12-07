@@ -15,6 +15,10 @@ const ContentViewVersionErrata = ({ cvId, versionId, errataCounts }) => {
     total,
   } = errataCounts;
 
+  if (!Number(total)) {
+    return <InactiveText text={__('No applicable errata')} />;
+  }
+
   const errataIcons = {
     security: SecurityIcon,
     bugfix: BugIcon,
@@ -30,10 +34,6 @@ const ContentViewVersionErrata = ({ cvId, versionId, errataCounts }) => {
       </React.Fragment>
     );
   });
-
-  if (total === 0) {
-    return <InactiveText text={__('No errata')} />;
-  }
 
   return (
     <>

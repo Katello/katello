@@ -14,6 +14,8 @@ const RoutedTabs = ({
 
   // The below transforms #/history/6 to history
   const currentTabFromUrl = head(last(hash.split('#/')).split('/'));
+  // Allows navigation back to mainTab
+  const onSubTab = currentTabFromUrl !== last(last(hash.split('#/')).split('/'));
 
   const onSelect = (e, key) => {
     e.preventDefault();
@@ -22,7 +24,7 @@ const RoutedTabs = ({
     // https://www.w3schools.com/jsref/event_button.asp
     const middleMouseButtonNotUsed = !(e.button === 1 || e.buttons === 4 || e.which === 2);
     const notCurrentTab = currentTabFromUrl !== key;
-    if (middleMouseButtonNotUsed && notCurrentTab) {
+    if (middleMouseButtonNotUsed && (notCurrentTab || !!onSubTab)) {
       push(`#/${key}`);
     }
   };

@@ -108,7 +108,7 @@ test('Can open Remove wizard and remove version from simple environment', async 
   expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
   fireEvent.click(getAllByLabelText('Actions')[0]);
   expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
-  fireEvent.click(getByText('Remove'));
+  fireEvent.click(getByText('Remove from environments'));
   await patientlyWaitFor(() => {
     expect(getByText('Remove Version')).toBeInTheDocument();
   });
@@ -180,7 +180,7 @@ test('Can open Remove wizard and remove version from environment with hosts', as
   expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
   fireEvent.click(getAllByLabelText('Actions')[0]);
   expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
-  fireEvent.click(getByText('Remove'));
+  fireEvent.click(getByText('Remove from environments'));
   await patientlyWaitFor(() => {
     expect(getByText('Remove Version')).toBeInTheDocument();
   });
@@ -272,7 +272,7 @@ test('Can open Remove wizard and remove version from environment with activation
   expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
   fireEvent.click(getAllByLabelText('Actions')[0]);
   expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
-  fireEvent.click(getByText('Remove'));
+  fireEvent.click(getByText('Remove from environments'));
   await patientlyWaitFor(() => {
     expect(getByText('Remove Version')).toBeInTheDocument();
   });

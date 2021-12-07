@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Label } from '@patternfly/react-core';
 import { CheckCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
+import InactiveText from '../scenes/ContentViews/components/InactiveText';
 
 const AddedStatusLabel = ({ added }) => {
   if (added) {
@@ -12,7 +13,7 @@ const AddedStatusLabel = ({ added }) => {
       </Label>
     );
   }
-  return __('Not added');
+  return <InactiveText text={__('Not added')} />;
 };
 
 AddedStatusLabel.propTypes = {

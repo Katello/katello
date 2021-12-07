@@ -36,7 +36,7 @@ const ContentViewVersionDetailsHeader = ({
             textArea
             label={__('Description')}
             attribute="description"
-            placeholder={__('No description provided')}
+            placeholder={__('No description')}
             onEdit={onEdit}
             disabled={!hasPermission(permissions, 'edit_content_views')}
             value={description}
@@ -54,7 +54,7 @@ const ContentViewVersionDetailsHeader = ({
 ContentViewVersionDetailsHeader.propTypes = {
   versionDetails: PropTypes.shape({
     version: PropTypes.string,
-    environments: PropTypes.arrayOf(PropTypes.shape({ })),
+    environments: PropTypes.arrayOf(PropTypes.shape({})),
     description: PropTypes.string,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,

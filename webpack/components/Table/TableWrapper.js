@@ -49,6 +49,8 @@ const TableWrapper = ({
   const { pageRowCount } = getPageStats({ total, page, perPage });
   const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
   const unresolvedStatusOrNoRows = unresolvedStatus || pageRowCount === 0;
+  const resolvedStatusNoContent =
+    !searchQuery && allTableProps.status === STATUS.RESOLVED && pageRowCount === 0;
   const showPagination = !unresolvedStatusOrNoRows;
   const showActionButtons = actionButtons && !unresolvedStatus;
   const showToggleGroup = toggleGroup && !unresolvedStatus;
@@ -175,7 +177,7 @@ const TableWrapper = ({
             />
           </FlexItem>
         }
-        {!disableSearch &&
+        {!disableSearch && !resolvedStatusNoContent &&
           <FlexItem>
             <Search
               isDisabled={unresolvedStatusOrNoRows && !searchQuery}

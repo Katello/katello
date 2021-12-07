@@ -1,8 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useDispatch, useSelector } from 'react-redux';
-import { Bullseye, Split, SplitItem, Button, ActionList,
-  ActionListItem, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import {
+  Bullseye, Split, SplitItem, Button, ActionList,
+  ActionListItem, Dropdown, DropdownItem, KebabToggle,
+} from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 import { TableVariant, fitContent, TableText } from '@patternfly/react-table';
 import { PencilAltIcon } from '@patternfly/react-icons';
@@ -34,6 +36,8 @@ import '../../../../components/EditableTextInput/editableTextInput.scss';
 import ComponentContentViewAddModal from './ComponentContentViewAddModal';
 import ComponentContentViewBulkAddModal from './ComponentContentViewBulkAddModal';
 import { hasPermission } from '../../helpers';
+import InactiveText from '../../components/InactiveText';
+
 
 const ContentViewComponents = ({ cvId, details }) => {
   const response = useSelector(state => selectCVComponents(state, cvId));
@@ -136,34 +140,38 @@ const ContentViewComponents = ({ cvId, details }) => {
         { title: <Bullseye><ContentViewIcon composite={false} /></Bullseye> },
         { title: <a href={urlBuilder('content_views', '') + id}>{name}</a> },
         {
-          title:
-  <Split>
-    <SplitItem>
-      <ComponentVersion {...{ componentCV }} />
-    </SplitItem>
-    {hasPermission(permissions, 'edit_content_views') && componentCvId && cvVersion &&
-    <SplitItem>
-      <Button
-        className="foreman-edit-icon"
-        aria-label="edit_version"
-        variant="plain"
-        onClick={() => {
+          title: (
+            <Split>
+              <SplitItem>
+                <ComponentVersion {...{ componentCV }} />
+              </SplitItem>
+              {hasPermission(permissions, 'edit_content_views') && componentCvId && cvVersion &&
+                <SplitItem>
+                  <Button
+                    className="foreman-edit-icon"
+                    aria-label="edit_version"
+                    variant="plain"
+                    onClick={() => {
                       onAdd({
                         componentCvId: id, published: cvVersion, added: componentCvId, latest,
                       });
                     }}
-      >
-        <PencilAltIcon />
-      </Button>
-    </SplitItem>}
-  </Split>,
+                  >
+                    <PencilAltIcon />
+                  </Button>
+                </SplitItem>}
+            </Split>),
         },
-        { title: environments ? <ComponentEnvironments {...{ environments }} /> : __('Not yet published') },
+        { title: environments ? <ComponentEnvironments {...{ environments }} /> : <InactiveText text={__('Not yet published')} /> },
         { title: <Link to={urlBuilder(`content_views/${id}#repositories`, '')}>{repositories ? repositories.length : 0}</Link> },
         {
           title: <AddedStatusLabel added={!!componentCvId} />,
         },
-        { title: <TableText wrapModifier="truncate">{description || __('No description')}</TableText> },
+        {
+          title: description ?
+            <TableText wrapModifier="truncate">{description}</TableText> :
+            <InactiveText text={__('No description')} />,
+        },
       ];
       newRows.push({
         componentCvId: id,
@@ -201,9 +209,6 @@ const ContentViewComponents = ({ cvId, details }) => {
   ];
 
   const dropdownItems = [
-    <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!(bulkAddEnabled())} component="button" onClick={addBulk}>
-      {__('Add')}
-    </DropdownItem>,
     <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!(bulkRemoveEnabled())} component="button" onClick={removeBulk}>
       {__('Remove')}
     </DropdownItem>,
@@ -252,7 +257,7 @@ const ContentViewComponents = ({ cvId, details }) => {
           <Split hasGutter>
             <SplitItem>
               <SelectableDropdown
-                items={[ADDED, NOT_ADDED, ALL_STATUSES]}
+                items={[ALL_STATUSES, ADDED, NOT_ADDED]}
                 title={__('Status')}
                 selected={statusSelected}
                 setSelected={setStatusSelected}
@@ -290,12 +295,12 @@ const ContentViewComponents = ({ cvId, details }) => {
               aria-label="edit_component_modal"
             />}
           {bulkAdding &&
-          <ComponentContentViewBulkAddModal
-            cvId={compositeCvEditing}
-            rowsToAdd={selectedComponentsToAdd}
-            onClose={() => setBulkAdding(false)}
-            aria-label="bulk_add_components_modal"
-          />}
+            <ComponentContentViewBulkAddModal
+              cvId={compositeCvEditing}
+              rowsToAdd={selectedComponentsToAdd}
+              onClose={() => setBulkAdding(false)}
+              aria-label="bulk_add_components_modal"
+            />}
         </>
       }
     />

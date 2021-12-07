@@ -78,7 +78,11 @@ const ContentViewVersions = ({ cvId, details }) => {
     return [
       { title: <Link to={`/versions/${versionId}`}>{__('Version ')}{version}</Link> },
       { title: <ContentViewVersionEnvironments {...{ environments }} /> },
-      { title: <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/packages`, '')}>{packageCount}</a> },
+      {
+        title: Number(packageCount) ?
+          <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/packages`, '')}>{packageCount}</a> :
+          <InactiveText text={__('No packages')} />,
+      },
       { title: <ContentViewVersionErrata {...{ cvId, versionId, errataCounts }} /> },
       { title: <ContentViewVersionContent {...{ cvId, versionId, cvVersion }} /> },
       { title: description ? <TableText wrapModifier="truncate">{description}</TableText> : <InactiveText text={__('No description')} /> },
@@ -176,7 +180,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       },
     },
     {
-      title: __('Remove'),
+      title: __('Remove from environments'),
       isDisabled: rowData.activeHistory.length,
       onClick: (_event, rowId, rowInfo) => {
         onRemoveFromEnv({

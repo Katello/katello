@@ -10,18 +10,11 @@ import CVErrataDateFilterContent from '../CVErrataDateFilterContent';
 import cvFilterDetails from './contentViewErrataByDateDetails.fixtures.json';
 import details from '../../../__tests__/mockDetails.fixtures.json';
 
-const cvFilterDetailsPath = api.getApiUrl('/content_view_filters/36');
-
 const cvErrataDateRuleEditPath = api.getApiUrl('/content_view_filters/36/rules/35');
 
 test('Can display errata-date filter rule and edit', async (done) => {
   const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
   useSelectorMock.mockReturnValue(cvFilterDetails);
-
-  const cvFilterScope = nockInstance
-    .get(cvFilterDetailsPath)
-    .query(true)
-    .reply(200, cvFilterDetails);
 
   const editDetails = {
     id: 35,
@@ -42,7 +35,7 @@ test('Can display errata-date filter rule and edit', async (done) => {
     cvId={1}
     filterId="36"
     showAffectedRepos={false}
-    setShowAffectedRepos={() => {}}
+    setShowAffectedRepos={() => { }}
     details={details}
   />);
 
@@ -70,5 +63,4 @@ test('Can display errata-date filter rule and edit', async (done) => {
 
   useSelectorMock.mockClear();
   assertNockRequest(ruleEditScope, done);
-  assertNockRequest(cvFilterScope, done);
 });
