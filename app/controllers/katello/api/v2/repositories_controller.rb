@@ -234,6 +234,10 @@ module Katello
         fail HttpErrors::UnprocessableEntity, msg
       end
 
+      if !repo_params[:url].nil? && URI(repo_params[:url]).userinfo
+        fail "Do not include the username/password in the URL. Use the username/password settings instead."
+      end
+
       gpg_key = get_content_credential(repo_params, CONTENT_CREDENTIAL_GPG_KEY_TYPE)
       ssl_ca_cert = get_content_credential(repo_params, CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE)
       ssl_client_cert = get_content_credential(repo_params, CONTENT_CREDENTIAL_SSL_CLIENT_CERT_TYPE)
@@ -333,6 +337,9 @@ module Katello
     param_group :repo
     def update
       repo_params = repository_params
+      if !repo_params[:url].nil? && URI(repo_params[:url]).userinfo
+        fail "Do not include the username/password in the URL. Use the username/password settings instead."
+      end
 
       if @repository.generic?
         generic_remote_options = generic_remote_options_hash(repo_params)
