@@ -119,7 +119,6 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
 
   const cvVersionsScope = nockInstance
     .get(cvVersionsPath)
-    .times(2)
     .query(true)
     .reply(200, cvVersionsData);
 
@@ -127,6 +126,10 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
     .get(cvDetailsPath)
     .query(true)
     .reply(200, cvDetailsData);
+
+  const cvRedirectScope = nockInstance
+    .get(api.getApiUrl('/content_views?organization_id=1&nondefault=true&include_permissions=true'))
+    .reply(200, cvIndexData);
 
   const cvDeleteParams = {
     destroy_content_view: true,
@@ -239,5 +242,5 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
   assertNockRequest(activationKeysScope);
   assertNockRequest(cVDropDownOptionsScope);
   assertNockRequest(cvDeleteScope);
-  assertNockRequest(cvVersionsScope, done);
+  assertNockRequest(cvRedirectScope, done);
 });
