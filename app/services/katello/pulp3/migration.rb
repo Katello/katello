@@ -6,7 +6,7 @@ module Katello
       attr_accessor :smart_proxy, :reimport_all, :task_id
       attr_reader :repository_types
 
-      GET_QUERY_ID_LENGTH = 90
+      GET_QUERY_ID_LENGTH = 35
 
       MUTABLE_CONTENT_TYPES = [
         Katello::DockerTag,
