@@ -105,7 +105,6 @@ module FixtureTestCase
     configure_vcr
 
     Setting::Content.load_defaults
-    Setting::ForemanTasks.load_defaults
 
     before do
       #provide consistent remote name for test
