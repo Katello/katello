@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { Form, FormGroup, TextInput, ActionGroup, Button } from '@patternfly/react-core';
 import {
@@ -15,21 +15,22 @@ import { copyContentView } from '../ContentViewsActions';
 const CopyContentViewForm = ({ cvId, setModalOpen }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState('');
-  const [redirect, setRedirect] = useState(false);
   const [saving, setSaving] = useState(false);
   const response = useSelector(selectCopyContentViews);
   const status = useSelector(selectCopyContentViewStatus);
   const error = useSelector(selectCopyContentViewError);
+  const { push } = useHistory();
 
   useDeepCompareEffect(() => {
     const { id } = response;
-    if (id && status === STATUS.RESOLVED) {
+    if (saving && id && status === STATUS.RESOLVED) {
       setSaving(false);
-      setRedirect(true);
+      setModalOpen(false);
+      push(`/content_views/${id}`);
     } else if (status === STATUS.ERROR) {
       setSaving(false);
     }
-  }, [response, status, error]);
+  }, [response, status, error, saving, setSaving, setModalOpen, push]);
 
   const onSubmit = () => {
     setSaving(true);
@@ -38,11 +39,6 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
       name,
     }));
   };
-
-  if (redirect) {
-    const { id } = response;
-    return (<Redirect to={`/content_views/${id}`} />);
-  }
 
   return (
     <Form onSubmit={(e) => {
@@ -77,7 +73,7 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
 };
 
 CopyContentViewForm.propTypes = {
-  cvId: PropTypes.string,
+  cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   setModalOpen: PropTypes.func,
 };
 
