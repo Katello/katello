@@ -1,6 +1,6 @@
 module Katello
   module Glue::Provider
-    DISTRIBUTOR_VERSION = 'sat-6.7'.freeze
+    DISTRIBUTOR_VERSION = 'sat-6.10'.freeze
 
     def self.included(base)
       base.send :include, InstanceMethods
