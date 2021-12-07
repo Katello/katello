@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { translate as __ } from 'foremanReact/common/I18n';
 import ContentConfig from '../../../Content/ContentConfig';
+import InactiveText from '../../components/InactiveText';
 
 // type: [plural_name, singular_name, link]
 const repoLabels = {
@@ -51,6 +53,8 @@ const ContentCounts = ({ productId, repoId, counts }) => {
     // package and rpm are the same
     if (type !== 'package' && count > 0) allCounts.push(appendCount(type, count, info, productId, repoId));
   });
+
+  if (!allCounts.length) return <InactiveText text={__('No content')} />;
 
   return <Fragment>{allCounts}</Fragment>;
 };

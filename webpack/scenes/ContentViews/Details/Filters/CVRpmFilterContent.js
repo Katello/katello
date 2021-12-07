@@ -179,7 +179,7 @@ const CVRpmFilterContent = ({
                 {hasPermission(permissions, 'edit_content_views') &&
                   <Split hasGutter>
                     <SplitItem>
-                      <Button onClick={() => setModalOpen(true)} variant="secondary" aria-label="create_rpm_rule">
+                      <Button onClick={() => setModalOpen(true)} variant="secondary" aria-label="add_rpm_rule">
                         {__('Add RPM rule')}
                       </Button>
                     </SplitItem>
@@ -213,7 +213,7 @@ const CVRpmFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-        <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+        <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
           <div className="tab-body-with-spacing">
             <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>

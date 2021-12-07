@@ -104,7 +104,8 @@ test('Can search for package groups in package group filter', async (done) => {
     .query(searchQueryMatcher)
     .reply(200, { results: [lastPackageGroup] });
 
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope =
+    mockAutocomplete(nockInstance, autocompleteUrl, undefined, undefined, 2);
   const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, searchQueryMatcher);
   const { getByText, queryByText, getByLabelText } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails

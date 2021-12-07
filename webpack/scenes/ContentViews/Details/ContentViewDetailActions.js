@@ -211,7 +211,7 @@ export const editCVFilter = (filterId, params, handleSuccess) => put({
   url: api.getApiUrl(`/content_view_filters/${filterId}`),
   params,
   handleSuccess,
-  successToast: () => __('Filter edited successfully'),
+  successToast: () => __('Filter edited'),
   errorToast: error => __(`Something went wrong while editing the filter! ${getResponseErrorMsgs(error.response)}`),
 });
 
@@ -249,7 +249,7 @@ export const deleteContentViewFilters = (cvId, ids, handleSuccess) => put({
   url: api.getApiUrl(`/content_views/${cvId}/remove_filters`),
   params: { filter_ids: ids },
   handleSuccess,
-  successToast: () => __('Filters successfully deleted'),
+  successToast: () => __('Filters deleted'),
   errorToast: error => __(`Something went wrong while deleting filters! ${getResponseErrorMsgs(error.response)}`),
 });
 
@@ -259,7 +259,7 @@ export const deleteContentViewFilterRules = (filterId, ids, handleSuccess) => pu
   url: api.getApiUrl(`/content_view_filters/${filterId}/remove_filter_rules`),
   params: { rule_ids: ids },
   handleSuccess,
-  successToast: () => __('Filter rules successfully deleted'),
+  successToast: () => __('Filter rules deleted'),
   errorToast: error => __(`Something went wrong while deleting filter rules! ${getResponseErrorMsgs(error.response)}`),
 });
 
@@ -269,7 +269,7 @@ export const addContentViewFilterRules = (filterId, rulesParams, handleSuccess) 
   url: api.getApiUrl(`/content_view_filters/${filterId}/add_filter_rules`),
   params: { rules_params: rulesParams },
   handleSuccess,
-  successToast: () => __('Filter rules successfully added'),
+  successToast: () => __('Filter rules added'),
   errorToast: error => __(`Something went wrong while adding filter rules! ${getResponseErrorMsgs(error.response)}`),
 });
 
@@ -278,7 +278,7 @@ export const deleteContentViewFilter = (filterId, handleSuccess) => APIActions.d
   key: DELETE_CONTENT_VIEW_FILTER_KEY,
   url: api.getApiUrl(`/content_view_filters/${filterId}`),
   handleSuccess,
-  successToast: () => __('Filter successfully deleted'),
+  successToast: () => __('Filter deleted'),
   errorToast: error => __(`Something went wrong while deleting this filter! ${getResponseErrorMsgs(error.response)}`),
 });
 
@@ -336,7 +336,7 @@ export const editCVFilterRule = (filterId, params, handleSuccess) => put({
   url: api.getApiUrl(`/content_view_filters/${filterId}/rules/${params.id}`),
   params,
   handleSuccess,
-  successToast: () => __('Filter rule edited successfully'),
+  successToast: () => __('Filter rule edited'),
   errorToast: error => __(`Something went wrong while editing a filter rule! ${getResponseErrorMsgs(error.response)}`),
 });
 
@@ -346,7 +346,7 @@ export const addCVFilterRule = (filterId, params, handleSuccess) => post({
   url: api.getApiUrl(`/content_view_filters/${filterId}/rules`),
   params,
   handleSuccess,
-  successToast: () => __('Filter rule added successfully'),
+  successToast: () => __('Filter rule added'),
   errorToast: error => __(`Something went wrong while adding a filter rule! ${getResponseErrorMsgs(error.response)}`),
 });
 
@@ -356,7 +356,7 @@ export const removeCVFilterRule = (filterId, packageGroupFilterId, handleSuccess
     key: REMOVE_CONTENT_VIEW_FILTER_RULE,
     url: api.getApiUrl(`/content_view_filters/${filterId}/rules/${packageGroupFilterId}`),
     handleSuccess,
-    successToast: () => __('Filter rule removed successfully'),
+    successToast: () => __('Filter rule removed'),
     errorToast: error => __(`Something went wrong while removing a filter rule! ${getResponseErrorMsgs(error.response)}`),
   });
 

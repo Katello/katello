@@ -173,11 +173,11 @@ const CVContainerImageFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
-        <div className="tab-body-with-spacing">
-          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="docker" setShowAffectedRepos={setShowAffectedRepos} details={details} />
-        </div>
-      </Tab>
+        <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
+          <div className="tab-body-with-spacing">
+            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="docker" setShowAffectedRepos={setShowAffectedRepos} details={details} />
+          </div>
+        </Tab>
       }
     </Tabs>
   );
@@ -197,6 +197,6 @@ CVContainerImageFilterContent.defaultProps = {
   cvId: '',
   filterId: '',
   showAffectedRepos: false,
-  setShowAffectedRepos: () => {},
+  setShowAffectedRepos: () => { },
 };
 export default CVContainerImageFilterContent;

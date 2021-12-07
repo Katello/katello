@@ -111,7 +111,7 @@ const ContentViewVersionPromote = ({
           onPromote();
         }}
         >
-          <FormGroup label="Description" fieldId="description">
+          <FormGroup label={__('Description')} fieldId="description">
             <TextArea
               isRequired
               type="text"
@@ -133,8 +133,8 @@ const ContentViewVersionPromote = ({
                 {forcePromote.length > 1 ? __('Selected environments ') : __('Selected environment ')}
                 <ComponentEnvironments environments={forcePromote} />
                 {forcePromote.length > 1 ?
-                  __(' are out of the environment path order. The recommended practice is to promote the next environment in the path.') :
-                  __(' is out of the environment path order. The recommended practice is to promote the next environment in the path.')
+                  __(' are out of the environment path order. The recommended practice is to promote to the next environment in the path.') :
+                  __(' is out of the environment path order. The recommended practice is to promote to the next environment in the path.')
                 }
               </TextContent>
             </Alert>)}

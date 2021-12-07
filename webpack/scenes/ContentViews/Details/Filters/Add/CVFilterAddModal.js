@@ -127,7 +127,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
                 isChecked={inclusion}
                 name="radio-1"
                 onChange={checked => setInclusion(checked)}
-                label="Include Filter"
+                label={__('Include filter')}
                 id="include_filter"
                 value="includeFilter"
                 style={{ margin: '1px' }}
@@ -138,7 +138,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
                 isChecked={!inclusion}
                 name="radio-1"
                 onChange={checked => setInclusion(!checked)}
-                label="Exclude Filter"
+                label={__('Exclude filter')}
                 id="exclude_filter"
                 value="excludeFilter"
                 style={{ margin: '1px' }}

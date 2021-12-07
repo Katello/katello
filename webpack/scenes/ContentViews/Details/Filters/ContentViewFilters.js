@@ -21,6 +21,7 @@ import { truncate } from '../../../../utils/helpers';
 import ContentType from './ContentType';
 import CVFilterAddModal from './Add/CVFilterAddModal';
 import { hasPermission } from '../../helpers';
+import InactiveText from '../../components/InactiveText';
 
 const ContentViewFilters = ({ cvId, details }) => {
   const dispatch = useDispatch();
@@ -58,7 +59,11 @@ const ContentViewFilters = ({ cvId, details }) => {
 
       const cells = [
         { title: <Link to={`/filters/${id}`}>{name}</Link> },
-        truncate(description || ''),
+        {
+          title: description ?
+            truncate(description) :
+            <InactiveText text={__('No description')} />,
+        },
         { title: <LongDateTime date={updatedAt} showRelativeTimeTooltip /> },
         { title: <ContentType type={type} errataByDate={errataByDate} /> },
         {
