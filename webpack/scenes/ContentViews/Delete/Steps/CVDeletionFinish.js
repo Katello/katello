@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
-import { getContentViewVersions, removeContentViewVersion } from '../../Details/ContentViewDetailActions';
+import { removeContentViewVersion } from '../../Details/ContentViewDetailActions';
 import { selectRemoveCVVersionResponse, selectRemoveCVVersionStatus } from '../../Details/ContentViewDetailSelectors';
 import getContentViews from '../../ContentViewsActions';
 import CVDeleteContext from '../CVDeleteContext';
@@ -23,14 +24,19 @@ const CVDeletionFinish = () => {
   const removeResolved = removeCVStatus === STATUS.RESOLVED;
   const dispatch = useDispatch();
   const [removeDispatched, setRemoveDispatched] = useState(false);
+  const { push } = useHistory();
 
   useDeepCompareEffect(() => {
     if (removeResolved && removeDispatched) {
+      dispatch(getContentViews());
+      push('/content_views');
       setIsOpen(false);
-      dispatch(getContentViewVersions(cvId));
-      dispatch(getContentViews);
     }
-  }, [removeCVResponse, removeResolved, setIsOpen, dispatch, cvId, removeDispatched]);
+    if (removeCVStatus === STATUS.ERROR) {
+      setIsOpen(false);
+    }
+  }, [removeCVResponse, removeCVStatus, removeResolved,
+    setIsOpen, dispatch, cvId, removeDispatched, push]);
 
   useDeepCompareEffect(() => {
     if (!removeDispatched) {
