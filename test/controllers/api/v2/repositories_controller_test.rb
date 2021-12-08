@@ -537,7 +537,7 @@ module Katello
     def test_update_with_gpg_key
       key = ContentCredential.find(katello_gpg_keys('fedora_gpg_key').id)
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
-        _(root).must_equal @repository.root
+        root.must_equal @repository.root
         expected = { 'gpg_key_id' => key.id.to_s }
         assert_equal expected, attributes.to_hash
       end
@@ -549,7 +549,7 @@ module Katello
     def test_update_with_cert
       cert = ContentCredential.find(katello_gpg_keys('fedora_cert').id)
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
-        _(root).must_equal root
+        root.must_equal root
         expected = { 'ssl_ca_cert_id' => cert.id.to_s }
         assert_equal expected, attributes.to_hash
       end
@@ -561,14 +561,14 @@ module Katello
     def test_update_with_description
       repo = katello_repositories(:busybox)
       assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
-        _(attributes[:description]).must_equal "katello rules"
+        attributes[:description].must_equal "katello rules"
       end
       put :update, params: { :id => repo.id, :description => "katello rules" }
     end
 
     def test_update_with_auth_token
       assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
-        _(attributes[:upstream_authentication_token]).must_equal "foo"
+        attributes[:upstream_authentication_token].must_equal "foo"
       end
       put :update, params: { :id => @repository.id, :upstream_authentication_token => "foo" }
     end
@@ -585,7 +585,7 @@ module Katello
     def test_update_with_upstream_name
       repo = katello_repositories(:busybox)
       assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
-        _(attributes[:docker_upstream_name]).must_equal "helloworld"
+        attributes[:docker_upstream_name].must_equal "helloworld"
       end
       put :update, params: { :id => repo.id, :docker_upstream_name => "helloworld" }
     end
@@ -593,7 +593,7 @@ module Katello
     def test_update_with_http_proxy_policy
       repo = katello_repositories(:busybox)
       assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
-        _(attributes[:http_proxy_policy]).must_equal RootRepository::GLOBAL_DEFAULT_HTTP_PROXY
+        attributes[:http_proxy_policy].must_equal RootRepository::GLOBAL_DEFAULT_HTTP_PROXY
       end
       put :update, params: { :id => repo.id, :http_proxy_policy => RootRepository::GLOBAL_DEFAULT_HTTP_PROXY }
     end
@@ -602,7 +602,7 @@ module Katello
       repo = katello_repositories(:busybox)
       proxy = FactoryBot.create(:http_proxy)
       assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
-        _(attributes[:http_proxy_id]).must_equal proxy.id
+        attributes[:http_proxy_id].must_equal proxy.id
       end
       put :update, params: { :id => repo.id, :http_proxy_id => proxy.id }
     end
@@ -620,7 +620,7 @@ module Katello
       ignorable_content = ["rpm", "srpm"]
       repo = katello_repositories(:fedora_17_unpublished)
       assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
-        _(attributes[:ignorable_content]).must_equal ignorable_content
+        attributes[:ignorable_content].must_equal ignorable_content
       end
       put :update, params: { :id => repo.id, :ignorable_content => ignorable_content }
     end
@@ -629,7 +629,7 @@ module Katello
       retain_package_versions_count = 2
       repo = katello_repositories(:fedora_17_unpublished)
       assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
-        _(attributes[:retain_package_versions_count]).must_equal retain_package_versions_count
+        attributes[:retain_package_versions_count].must_equal retain_package_versions_count
       end
       put :update, params: { :id => repo.id, :retain_package_versions_count => retain_package_versions_count }
     end
@@ -637,7 +637,7 @@ module Katello
     def test_update_with_whitelist_tags
       whitelist = ["latest", "1.23"]
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
-        _(root).must_equal @docker_repo.root
+        root.must_equal @docker_repo.root
         expected = {'docker_tags_whitelist' => whitelist}
         assert_equal expected, attributes.to_hash
       end
@@ -648,7 +648,7 @@ module Katello
 
     def test_update_non_docker_repo_with_whitelist_tags
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
-        _(root).must_equal @repository.root
+        root.must_equal @repository.root
         expected = { 'name' => 'new name' }
         assert_equal expected, attributes.to_hash
       end
@@ -663,7 +663,7 @@ module Katello
       stub_editable_product_find(@product)
       @product.expects(:add_repo).returns(@docker_repo.root)
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @docker_repo.root) do |root|
-        _(root).must_equal @docker_repo.root
+        root.must_equal @docker_repo.root
         assert_equal whitelist, root.docker_tags_whitelist
       end
       post :create, params: { :name => 'busybox', :product_id => @product.id, :content_type => 'docker', :docker_upstream_name => "busybox", :docker_tags_whitelist => whitelist }
@@ -676,7 +676,7 @@ module Katello
       stub_editable_product_find(@product)
       @product.expects(:add_repo).returns(@docker_repo.root)
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @docker_repo.root) do |root|
-        _(root).must_equal @docker_repo.root
+        root.must_equal @docker_repo.root
         assert_equal [], root.docker_tags_whitelist
       end
       post :create, params: { :name => 'busybox', :product_id => @product.id, :content_type => 'docker', :docker_upstream_name => "busybox" }
@@ -769,7 +769,7 @@ module Katello
     def test_sync_with_url_override
       assert_async_task ::Actions::Katello::Repository::Sync do |repo, options|
         assert_equal @repository.id, repo.id
-        _(options[:source_url]).must_equal('file:///tmp/')
+        options[:source_url].must_equal('file:///tmp/')
       end
       post :sync, params: { :id => @repository.id, :source_url => 'file:///tmp/' }
       assert_response :success
@@ -778,8 +778,8 @@ module Katello
     def test_sync_with_incremental_flag
       assert_async_task ::Actions::Katello::Repository::Sync do |repo, options|
         assert_equal @repository.id, repo.id
-        _(options[:source_url]).must_equal('file:///tmp/')
-        _(options[:incremental]).must_equal true
+        options[:source_url].must_equal('file:///tmp/')
+        options[:incremental].must_equal true
       end
       post :sync, params: { :id => @repository.id, :source_url => 'file:///tmp/', :incremental => true }
       assert_response :success

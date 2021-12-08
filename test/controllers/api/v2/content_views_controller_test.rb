@@ -98,11 +98,11 @@ module Katello
       target_view = ContentView.find(katello_content_views(:library_dev_view).id)
 
       assert_async_task ::Actions::Katello::ContentView::Publish do |view, description, params|
-        _(view).must_equal target_view
+        view.must_equal target_view
         assert_nil description
         assert_nil params[:force_metadata_generate]
-        _(params[:major]).must_equal 4
-        _(params[:minor]).must_equal 1
+        params[:major].must_equal 4
+        params[:minor].must_equal 1
       end
 
       post :publish, params: { :id => target_view.id, :major => 4, :minor => 1 }
@@ -112,10 +112,10 @@ module Katello
       target_view = ContentView.find(katello_content_views(:library_dev_view).id)
 
       assert_async_task ::Actions::Katello::ContentView::Publish do |view, description, params|
-        _(view).must_equal target_view
+        view.must_equal target_view
         assert_nil description
         assert_nil params[:force_metadata_generate]
-        _(params[:environment_ids]).must_equal [2]
+        params[:environment_ids].must_equal [2]
       end
 
       post :publish, params: { :id => target_view.id, :environment_ids => [2] }
@@ -208,11 +208,11 @@ module Katello
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
         params.each do |key, value|
           if key == :label || key == :composite
-            _(content_view_params.key?(key)).must_equal false
+            content_view_params.key?(key).must_equal false
             assert_nil content_view_params[key]
           else
-            _(content_view_params.key?(key)).must_equal true
-            _(content_view_params[key]).must_equal value
+            content_view_params.key?(key).must_equal true
+            content_view_params[key].must_equal value
           end
         end
       end
@@ -228,8 +228,8 @@ module Katello
 
       params = { :repository_ids => [repository.id] }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
-        _(content_view_params.key?(:repository_ids)).must_equal true
-        _(content_view_params[:repository_ids]).must_equal params[:repository_ids]
+        content_view_params.key?(:repository_ids).must_equal true
+        content_view_params[:repository_ids].must_equal params[:repository_ids]
       end
       put :update, params: { :id => @library_dev_staging_view.id, :content_view => params }
 
@@ -243,8 +243,8 @@ module Katello
 
       params = { :repository_ids => [repository.id.to_s] }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
-        _(content_view_params.key?(:repository_ids)).must_equal true
-        _(content_view_params[:repository_ids]).must_equal params[:repository_ids]
+        content_view_params.key?(:repository_ids).must_equal true
+        content_view_params[:repository_ids].must_equal params[:repository_ids]
       end
       put :update, params: { :id => @library_dev_staging_view.id, :content_view => params }
 
@@ -259,9 +259,9 @@ module Katello
 
       params = { :component_ids => [version.id] }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
-        _(content_view_params.key?(:component_ids)).must_equal true
-        _(content_view_params[:component_ids]).must_equal params[:component_ids]
-        _(content_view_params[:repository_ids]).must_be_nil
+        content_view_params.key?(:component_ids).must_equal true
+        content_view_params[:component_ids].must_equal params[:component_ids]
+        content_view_params[:repository_ids].must_be_nil
       end
       put :update, params: { :id => composite.id, :content_view => params }
 

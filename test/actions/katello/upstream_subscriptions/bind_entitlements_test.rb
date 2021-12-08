@@ -26,13 +26,13 @@ describe ::Actions::Katello::UpstreamSubscriptions::BindEntitlements do
   end
 
   it 'raises an error when given no pools' do
-    error = _ { proc { plan_action(@action, []) } }.must_raise RuntimeError
+    error = proc { plan_action(@action, []) }.must_raise RuntimeError
     assert_match(/No pools were provided/, error.message)
   end
 
   it 'raises an error when organization is set' do
     set_organization(nil)
-    error = _ { proc { plan_action(@action, [{}]) } }.must_raise RuntimeError
+    error = proc { plan_action(@action, [{}]) }.must_raise RuntimeError
     assert_match(/Current organization is not set/, error.message)
   end
 end

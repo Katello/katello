@@ -38,7 +38,7 @@ describe ::Actions::Katello::UpstreamSubscriptions::RemoveEntitlements do
     ::Katello::Pool.expects(:find).with(pool1.id).returns(pool1)
     ::Katello::Resources::Candlepin::UpstreamConsumer.expects(:get).returns(true)
 
-    error = _ { proc { plan_action(@action, [pool1.id]) } }.must_raise RuntimeError
+    error = proc { plan_action(@action, [pool1.id]) }.must_raise RuntimeError
     assert_match(/upstream/, error.message)
   end
 
@@ -46,19 +46,19 @@ describe ::Actions::Katello::UpstreamSubscriptions::RemoveEntitlements do
     pool1 = katello_pools(:pool_one)
     ::Katello::HttpResource.expects(:get).raises(::Katello::Errors::UpstreamConsumerGone)
 
-    _ { proc { plan_action(@action, [pool1.id]) } }.must_raise ::Katello::Errors::UpstreamConsumerGone
+    proc { plan_action(@action, [pool1.id]) }.must_raise ::Katello::Errors::UpstreamConsumerGone
   end
 
   it 'raises an error when given no pool ids' do
     ::Katello::Resources::Candlepin::UpstreamConsumer.expects(:get).returns(true)
-    error = _ { proc { plan_action(@action, []) } }.must_raise RuntimeError
+    error = proc { plan_action(@action, []) }.must_raise RuntimeError
     assert_match(/provided/, error.message)
   end
 
   it 'raises an error when no organization is set' do
     ::Katello::Resources::Candlepin::UpstreamConsumer.expects(:get).returns(true)
     set_organization(nil)
-    error = _ { proc { plan_action(@action, [:foo]) } }.must_raise RuntimeError
+    error = proc { plan_action(@action, [:foo]) }.must_raise RuntimeError
     assert_match(/is not set/, error.message)
   end
 end

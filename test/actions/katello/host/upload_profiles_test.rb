@@ -68,7 +68,7 @@ module Katello::Host
         ::Host.expects(:find_by).returns(@host).at_least_once
         @host.expects(:import_package_profile).with do |packages|
           expected_packages = rpm_profiles.map { |prof| ::Katello::Pulp::SimplePackage.new(prof) }
-          _(packages.map(&:nvra)).must_equal(expected_packages.map(&:nvra))
+          packages.map(&:nvra).must_equal(expected_packages.map(&:nvra))
         end
         @host.expects(:import_enabled_repositories).with(enabled_repos)
 

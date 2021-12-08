@@ -379,8 +379,8 @@ module Katello
       @activation_key.expects(:content_overrides).at_least_once.returns(content_overrides)
 
       ::Katello::Resources::Candlepin::ActivationKey.expects(:update_content_overrides).with do |id, hash|
-        _(id).wont_equal(@activation_key.cp_id)
-        _(hash).must_equal(content_overrides.map(&:to_entitlement_hash))
+        id.wont_equal(@activation_key.cp_id)
+        hash.must_equal(content_overrides.map(&:to_entitlement_hash))
       end
 
       post :copy, params: { :id => @activation_key.id, :organization_id => @organization.id, :new_name => "NewAK" }

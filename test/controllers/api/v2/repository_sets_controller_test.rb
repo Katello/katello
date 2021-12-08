@@ -184,8 +184,8 @@ module Katello
 
     def test_available_repositories
       task = assert_sync_task ::Actions::Katello::RepositorySet::ScanCdn do |product, content_id|
-        _(product).must_equal @product
-        _(content_id).must_equal @content_id
+        product.must_equal @product
+        content_id.must_equal @content_id
       end
       task.expects(:output).at_least_once.returns(results: [])
 
@@ -198,8 +198,8 @@ module Katello
       # not exposing the bug
       @content.reload.product_contents.first.update(:id => Katello::ProductContent.maximum(:id) + 1000)
       task = assert_sync_task ::Actions::Katello::RepositorySet::ScanCdn do |product, content_id|
-        _(product).must_equal @product
-        _(content_id).must_equal @content_id
+        product.must_equal @product
+        content_id.must_equal @content_id
       end
       task.expects(:output).at_least_once.returns(results: [])
 
@@ -285,9 +285,9 @@ module Katello
 
     def test_repository_enable
       assert_sync_task ::Actions::Katello::RepositorySet::EnableRepository do |product, content, substitutions|
-        _(product).must_equal @product
+        product.must_equal @product
         assert_equal @content_id, content.cp_content_id
-        _(substitutions).must_equal('basearch' => 'x86_64', 'releasever' => '6Server')
+        substitutions.must_equal('basearch' => 'x86_64', 'releasever' => '6Server')
       end
 
       put :enable, params: { product_id: @product.id, id: @content_id, basearch: 'x86_64', releasever: '6Server' }
@@ -296,9 +296,9 @@ module Katello
 
     def test_repository_enable_docker
       assert_sync_task ::Actions::Katello::RepositorySet::EnableRepository do |product, content, substitutions|
-        _(product).must_equal @product
+        product.must_equal @product
         assert_equal @content_id, content.cp_content_id
-        _(substitutions).must_be_empty
+        substitutions.must_be_empty
       end
 
       put :enable, params: { product_id: @product.id, id: @content_id }
@@ -316,9 +316,9 @@ module Katello
 
     def test_repository_disable
       assert_sync_task ::Actions::Katello::RepositorySet::DisableRepository do |product, content, substitutions|
-        _(product).must_equal @product
+        product.must_equal @product
         assert_equal @content_id, content.cp_content_id
-        _(substitutions).must_equal('basearch' => 'x86_64', 'releasever' => '6Server')
+        substitutions.must_equal('basearch' => 'x86_64', 'releasever' => '6Server')
       end
 
       put :disable, params: { product_id: @product.id, id: @content_id, basearch: 'x86_64', releasever: '6Server' }
@@ -327,9 +327,9 @@ module Katello
 
     def test_repository_disable_docker
       assert_sync_task ::Actions::Katello::RepositorySet::DisableRepository do |product, content, substitutions|
-        _(product).must_equal @product
+        product.must_equal @product
         assert_equal @content_id, content.cp_content_id
-        _(substitutions).must_be_empty
+        substitutions.must_be_empty
       end
 
       put :disable, params: { product_id: @product.id, id: @content_id }
