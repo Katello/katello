@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { selectIntervals } from 'foremanReact/redux/middlewares/IntervalMiddleware/IntervalSelectors.js';
 
+import { useSet } from '../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import InactiveText from '../../components/InactiveText';
 import ContentViewVersionEnvironments from './ContentViewVersionEnvironments';
@@ -23,7 +24,7 @@ import {
 import getEnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPathActions';
 import ContentViewVersionPromote from '../Promote/ContentViewVersionPromote';
 import TaskPresenter from '../../components/TaskPresenter/TaskPresenter';
-import { startPollingTask } from '../../../Tasks/TaskActions';
+import { startPollingTask, stopPollingTask } from '../../../Tasks/TaskActions';
 import RemoveCVVersionWizard from './Delete/RemoveCVVersionWizard';
 import { hasPermission } from '../../helpers';
 import { pollTaskKey } from '../../../Tasks/helpers';
@@ -48,6 +49,7 @@ const ContentViewVersions = ({ cvId, details }) => {
   const [deleteVersion, setDeleteVersion] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const { permissions } = details;
+  const pendingTaskSet = useSet([]);
   const intervals = useSelector(state => selectIntervals(state));
 
   const columnHeaders = [
@@ -65,6 +67,16 @@ const ContentViewVersions = ({ cvId, details }) => {
     },
     [dispatch],
   );
+
+  useEffect(() => { // eslint-disable-line arrow-body-style
+    return () => {
+      if (pendingTaskSet.size) {
+        pendingTaskSet.forEach(id =>
+          dispatch(stopPollingTask(id)));
+        pendingTaskSet.clear();
+      }
+    };
+  }, [pendingTaskSet, dispatch]);
 
   const buildCells = useCallback((cvVersion) => {
     const {
@@ -98,8 +110,18 @@ const ContentViewVersions = ({ cvId, details }) => {
     } = cvVersion;
     const { task } = activeHistory[0];
     const { result } = task || {};
+
     if (result !== 'error' && !pollIntervals[pollTaskKey(task.id)]) {
-      dispatch(startPollingTask(task.id, task));
+      pendingTaskSet.add(task.id);
+      dispatch(startPollingTask(
+        task.id, task,
+        ({ data: { pending } = {} }) => {
+          if (!pending) {
+            dispatch(stopPollingTask(task.id));
+            pendingTaskSet.delete(task.id);
+          }
+        },
+      ));
     }
 
     return [
@@ -115,7 +137,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       { title: '' },
       { title: description ? <TableText wrapModifier="truncate">{description}</TableText> : <InactiveText text={__('No description')} /> },
     ];
-  }, [dispatch]);
+  }, [dispatch, pendingTaskSet]);
 
   useDeepCompareEffect(() => {
     const buildRows = () => {
