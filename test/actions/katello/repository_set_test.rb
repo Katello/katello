@@ -56,10 +56,9 @@ module ::Actions::Katello::RepositorySet
 
     it 'fails when repository already enabled' do
       repository_already_enabled!
-      failed = lambda do
+      assert_raises(::Katello::Errors::ConflictException) do
         plan_action(action, product, content, substitutions)
       end
-      failed.must_raise(::Katello::Errors::ConflictException)
     end
   end
 
@@ -77,10 +76,9 @@ module ::Actions::Katello::RepositorySet
     end
 
     it 'fails when repository not enabled' do
-      failed = lambda do
+      assert_raises(::Katello::Errors::NotFound) do
         plan_action(action, product, content, substitutions)
       end
-      failed.must_raise(::Katello::Errors::NotFound)
     end
   end
 
@@ -97,8 +95,8 @@ module ::Actions::Katello::RepositorySet
     it 'plans' do
       plan_action action, product, content.cp_content_id
       assert_run_phase action do
-        action.input[:product_id].must_equal product.id
-        action.input[:content_id].must_equal content.cp_content_id
+        assert_equal action.input[:product_id], product.id
+        assert_equal action.input[:content_id], content.cp_content_id
       end
     end
 
@@ -124,7 +122,7 @@ module ::Actions::Katello::RepositorySet
     it 'considers the repo being enabled when the repository object is present' do
       repository_already_enabled!
       action = simulate_run
-      action.output[:results].first[:enabled].must_equal true
+      assert_equal action.output[:results].first[:enabled], true
     end
 
     def simulate_run

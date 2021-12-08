@@ -543,7 +543,7 @@ module ::Actions::Katello::Repository
         end
 
         specify do
-          pulp_action.run_progress.must_be_within_delta 0.6256
+          assert_in_delta pulp_action.run_progress, 0.6256
         end
       end
 
@@ -578,7 +578,7 @@ module ::Actions::Katello::Repository
         end
 
         specify do
-          pulp3_action.run_progress.must_be_within_delta 1
+          assert_in_delta pulp3_action.run_progress, 1
         end
       end
 
@@ -593,7 +593,7 @@ module ::Actions::Katello::Repository
         end
 
         specify do
-          pulp3_action.run_progress.must_be_within_delta 1
+          assert_in_delta pulp3_action.run_progress, 1
         end
       end
 
@@ -610,7 +610,7 @@ module ::Actions::Katello::Repository
         end
 
         specify do
-          pulp3_action.run_progress.must_be_within_delta 1
+          assert_in_delta pulp3_action.run_progress, 1
         end
       end
 
@@ -628,7 +628,7 @@ module ::Actions::Katello::Repository
         end
 
         specify do
-          pulp3_action.run_progress.must_be_within_delta 1
+          assert_in_delta pulp3_action.run_progress, 1
         end
       end
 
@@ -644,7 +644,7 @@ module ::Actions::Katello::Repository
         end
 
         specify do
-          pulp3_action.run_progress.must_be_within_delta 0.50
+          assert_in_delta pulp3_action.run_progress, 0.50
         end
       end
 
@@ -658,7 +658,7 @@ module ::Actions::Katello::Repository
         end
 
         specify do
-          pulp3_action.run_progress.must_be_within_delta 0.5
+          assert_in_delta pulp3_action.run_progress, 0.5
         end
       end
     end

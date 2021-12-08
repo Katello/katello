@@ -34,7 +34,7 @@ module ::Actions::Katello::ActivationKey
 
     it 'raises error when validation fails' do
       activation_key.name = nil
-      proc { plan_action action, activation_key }.must_raise(ActiveRecord::RecordInvalid)
+      assert_raises(ActiveRecord::RecordInvalid) { plan_action action, activation_key }
     end
   end
 

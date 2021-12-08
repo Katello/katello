@@ -302,8 +302,8 @@ module Katello
     def test_update
       @plan.save!
       p = SyncPlan.find_by_name('Norman Rockwell')
-      p.wont_be_nil
-      new_name = p.name + "N"
+      refute_nil p
+      new_name = "#{p.name}N"
       p = SyncPlan.update(p.id, :name => new_name)
       assert_equal new_name, p.name
     end
@@ -315,7 +315,7 @@ module Katello
       pid = p.id
       p.destroy
 
-      lambda { SyncPlan.find(pid) }.must_raise(ActiveRecord::RecordNotFound)
+      assert_raises(ActiveRecord::RecordNotFound) { SyncPlan.find(pid) }
     end
 
     def test_product_enabled

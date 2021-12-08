@@ -26,7 +26,7 @@ describe ::Actions::Katello::UpstreamSubscriptions::UpdateEntitlements do
   end
 
   it 'raises an error when given no pools' do
-    error = proc { plan_action(@action, []) }.must_raise RuntimeError
+    error = assert_raises(RuntimeError) { plan_action(@action, []) }
     assert_match(/provided/, error.message)
   end
 
@@ -35,13 +35,13 @@ describe ::Actions::Katello::UpstreamSubscriptions::UpdateEntitlements do
     pool1.expects(:upstream_entitlement_id).returns(nil)
     ::Katello::Pool.expects(:find).with(pool1.id).returns(pool1)
 
-    error = proc { plan_action(@action, [{id: pool1.id, quantity: 1}]) }.must_raise RuntimeError
+    error = assert_raises(RuntimeError) { plan_action(@action, [{id: pool1.id, quantity: 1}]) }
     assert_match(/upstream/, error.message)
   end
 
   it 'raises an error when no organization is set' do
     set_organization(nil)
-    error = proc { plan_action(@action, [:foo]) }.must_raise RuntimeError
+    error = assert_raises(RuntimeError) { plan_action(@action, [:foo]) }
     assert_match(/is not set/, error.message)
   end
 end

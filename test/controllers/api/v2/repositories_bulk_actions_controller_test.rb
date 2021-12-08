@@ -28,7 +28,7 @@ module Katello
 
     def test_destroy_repositories
       assert_async_task(::Actions::BulkAction) do |action_class|
-        action_class.must_equal ::Actions::Katello::Repository::Destroy
+        assert_equal action_class, ::Actions::Katello::Repository::Destroy
       end
 
       put :destroy_repositories, params: { :ids => @repositories.collect(&:id), :organization_id => @organization.id }
@@ -47,7 +47,7 @@ module Katello
 
     def test_sync
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
-        action_class.must_equal ::Actions::Katello::Repository::Sync
+        assert_equal action_class, ::Actions::Katello::Repository::Sync
         assert_equal @repositories.map(&:id).sort, repos.map(&:id).sort
       end
 
@@ -60,8 +60,8 @@ module Katello
       repo_with_feed = katello_repositories(:fedora_17_x86_64)
       repo_with_no_feed = katello_repositories(:feedless_fedora_17_x86_64)
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
-        action_class.must_equal ::Actions::Katello::Repository::Sync
-        repos.map(&:id).must_equal [repo_with_feed.id]
+        assert_equal action_class, ::Actions::Katello::Repository::Sync
+        assert_equal repos.map(&:id), [repo_with_feed.id]
       end
 
       post :sync_repositories, params: { :ids => [repo_with_feed, repo_with_no_feed].collect(&:id), :organization_id => @organization.id }

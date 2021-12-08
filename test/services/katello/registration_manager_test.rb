@@ -317,11 +317,9 @@ module Katello
 
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy).raises(Exception)
 
-        failed = lambda do
+        assert_raises(Exception) do
           ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
         end
-
-        failed.must_raise(Exception)
       end
 
       def test_registration_dead_candlepin
@@ -332,11 +330,9 @@ module Katello
         new_host.organization.stubs(:simple_content_access?).returns(false)
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).raises("uhoh!")
 
-        failed = lambda do
+        assert_raises(Exception) do
           ::Katello::RegistrationManager.register_host(new_host, rhsm_params, @content_view_environment)
         end
-
-        failed.must_raise(Exception)
       end
 
       # this case can only happen if candlepin/pulp dies after the host is unregistered, but before it's re-registered.
@@ -354,11 +350,9 @@ module Katello
 
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
-        failed = lambda do
+        assert_raises(Exception) do
           ::Katello::RegistrationManager.register_host(@host, rhsm_params, @content_view_environment)
         end
-
-        failed.must_raise(Exception)
       end
     end
   end
