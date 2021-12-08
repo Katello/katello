@@ -39,7 +39,7 @@ module ::Actions::Katello
 
       plan_action(action, [Pulp2TestAction, Pulp3TestAction], repo, smart_proxy)
 
-      assert_action_planed_with(action, Pulp2TestAction, repo, smart_proxy)
+      assert_action_planned_with(action, Pulp2TestAction, repo, smart_proxy)
     end
 
     def test_plans_pulp3
@@ -48,7 +48,7 @@ module ::Actions::Katello
 
       plan_action(action, [Pulp2TestAction, Pulp3TestAction], repo, smart_proxy)
 
-      assert_action_planed_with(action, Pulp3TestAction, repo, smart_proxy)
+      assert_action_planned_with(action, Pulp3TestAction, repo, smart_proxy)
     end
 
     def test_plans_not_found

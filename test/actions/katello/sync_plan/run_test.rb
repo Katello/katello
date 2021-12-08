@@ -27,7 +27,7 @@ describe ::Actions::Katello::SyncPlan::Run do
     plan_action(action, @sync_plan)
     syncable_products = @sync_plan.products.syncable
     syncable_repositories = ::Katello::RootRepository.where(:product_id => syncable_products).has_url
-    assert_action_planed_with(action, ::Actions::BulkAction, ::Actions::Katello::Repository::Sync, syncable_repositories.map(&:library_instance),
+    assert_action_planned_with(action, ::Actions::BulkAction, ::Actions::Katello::Repository::Sync, syncable_repositories.map(&:library_instance),
                               generate_applicability: false)
   end
 

@@ -27,7 +27,7 @@ module Actions
       assert_equal expected_upstream_url, repo.root.url
       assert_equal expected_relative_path, repo.relative_path
 
-      assert_action_planed_with(action, refresh_class, repo)
+      assert_action_planned_with(action, refresh_class, repo)
     end
   end
 end

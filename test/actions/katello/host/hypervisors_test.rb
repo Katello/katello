@@ -23,7 +23,7 @@ module Katello::Host
         ::Katello::Resources::Candlepin::Consumer.expects(:register_hypervisors).with(@hypervisor_params).returns(@hypervisor_response)
 
         plan_action(action, @hypervisor_params)
-        assert_action_planed_with(action, ::Actions::Katello::Host::HypervisorsUpdate) do |results, *_|
+        assert_action_planned_with(action, ::Actions::Katello::Host::HypervisorsUpdate) do |results, *_|
           assert_equal results, { :hypervisors => [{:uuid => 1, :name => 'foo', :organization_label => 'org-label'}] }
         end
       end

@@ -62,7 +62,7 @@ module ::Actions::Katello::Repository
 
     it 'plans' do
       plan_action action, repository
-      assert_action_planed_with action, candlepin_action_class, view_env_cp_id: "1", content_id: "69"
+      assert_action_planned_with action, candlepin_action_class, view_env_cp_id: "1", content_id: "69"
     end
 
     it 'no clone flag means generate metadata in run phase' do
@@ -131,7 +131,7 @@ module ::Actions::Katello::Repository
 
       action.expects(:plan_self)
       plan_action action, in_use_repository
-      assert_action_planed_with action, pulp3_action_class,
+      assert_action_planned_with action, pulp3_action_class,
         in_use_repository, proxy
 
       refute_action_planned action, ::Actions::BulkAction
@@ -163,7 +163,7 @@ module ::Actions::Katello::Repository
       action.expects(:plan_self)
       plan_action action, unpublished_repository
 
-      assert_action_planed_with action, ::Actions::Katello::Product::ContentDestroy, unpublished_repository.root
+      assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, unpublished_repository.root
     end
 
     it 'does not plan content destroy when custom and 1 clone with planned destroy' do
@@ -216,7 +216,7 @@ module ::Actions::Katello::Repository
       action.expects(:action_subject).with(custom_repository)
       plan_action action, custom_repository, to_remove
 
-      assert_action_planed_with action, ::Actions::Pulp3::Orchestration::Repository::RemoveUnits,
+      assert_action_planned_with action, ::Actions::Pulp3::Orchestration::Repository::RemoveUnits,
         custom_repository, proxy,
         contents: uuids, content_unit_type: "rpm"
     end
@@ -251,7 +251,7 @@ module ::Actions::Katello::Repository
       action.expects(:action_subject).with(docker_repo)
       plan_action action, docker_repo, docker_repo.docker_manifests
 
-      assert_action_planed_with action,
+      assert_action_planned_with action,
        Actions::Pulp3::Orchestration::Repository::RemoveUnits,
        docker_repo, proxy,
        contents: docker_repo.docker_manifests.pluck(:id), content_unit_type: "docker_manifest"
@@ -266,7 +266,7 @@ module ::Actions::Katello::Repository
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "squirrel-0.3-0.8.noarch.rpm")
       action.expects(:action_subject).with(custom_repository)
       plan_action action, custom_repository, [{:path => file, :filename => 'squirrel-0.3-0.8.noarch.rpm'}]
-      assert_action_planed_with action,
+      assert_action_planned_with action,
                                 ::Actions::Katello::Applicability::Repository::Regenerate,
                                 :repo_ids => [custom_repository.id]
     end
@@ -276,7 +276,7 @@ module ::Actions::Katello::Repository
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "squirrel-0.3-0.8.noarch.rpm")
       action.expects(:action_subject).with(custom_repository)
       plan_action action, custom_repository, [{:path => file, :filename => 'squirrel-0.3-0.8.noarch.rpm'}]
-      assert_action_planed_with action,
+      assert_action_planned_with action,
                                 ::Actions::Katello::Applicability::Repository::Regenerate,
                                 :repo_ids => [custom_repository.id]
     end
@@ -302,16 +302,16 @@ module ::Actions::Katello::Repository
       end
 
       plan_action action, repository_pulp3, proxy, {:path => file, :filename => 'puppet_module.tar.gz'}, 'file'
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::UploadFile,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::UploadFile,
                                 repository_pulp3, proxy, file)
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveArtifact,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveArtifact,
                                 {:path => file, :filename => 'puppet_module.tar.gz'},
                                 repository_pulp3, proxy,
                                 [{href: "demo_task/href"}],
                                 "file")
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::ImportUpload,
                                 {pulp_tasks: [{href: "demo_task/artifact_href"}]}, repository_pulp3, proxy)
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_pulp3,
                                 tasks: [{href: "demo_task/version_href"}])
     end
@@ -325,9 +325,9 @@ module ::Actions::Katello::Repository
       end
 
       plan_action action, repository_pulp3, proxy, {:path => file, :filename => 'puppet_module.tar.gz'}, 'file'
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::ImportUpload,
                                 {content_unit_href: "demo_content/href"}, repository_pulp3, proxy)
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_pulp3,
                                 tasks: [{href: "demo_task/version_href"}])
     end
@@ -352,16 +352,16 @@ module ::Actions::Katello::Repository
       end
 
       plan_action action, repository_python_pulp3, proxy, {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'}, 'python_package'
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::UploadFile,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::UploadFile,
                                 repository_python_pulp3, proxy, file)
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveArtifact,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveArtifact,
                                 {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'},
                                 repository_python_pulp3, proxy,
                                 [{href: "demo_task/href"}],
                                 "python_package")
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::ImportUpload,
                                 {pulp_tasks: [{href: "demo_task/artifact_href"}]}, repository_python_pulp3, proxy)
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_python_pulp3,
                                 tasks: [{href: "demo_task/version_href"}])
     end
@@ -375,9 +375,9 @@ module ::Actions::Katello::Repository
       end
 
       plan_action action, repository_python_pulp3, proxy, {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'}, 'python_package'
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::ImportUpload,
                                 {content_unit_href: "demo_content/href"}, repository_python_pulp3, proxy)
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_python_pulp3,
                                 tasks: [{href: "demo_task/version_href"}])
     end
@@ -465,14 +465,14 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, :validate_contents => true
 
-      assert_action_planed_with(action, ::Actions::Katello::Repository::VerifyChecksum, repository)
+      assert_action_planned_with(action, ::Actions::Katello::Repository::VerifyChecksum, repository)
     end
 
     it 'plans pulp3 orchestration actions with file repo' do
       action = create_action pulp3_action_class
       action.stubs(:action_subject).with(repository_pulp3)
       plan_action action, repository_pulp3, proxy, {}
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::Sync, repository_pulp3, proxy, {})
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::Sync, repository_pulp3, proxy, {})
       assert_action_planed action, ::Actions::Pulp3::Repository::SaveVersion
       assert_action_planed action, ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata
     end
@@ -481,15 +481,15 @@ module ::Actions::Katello::Repository
       action = create_action pulp3_metadata_generate_action_class
       action.stubs(:action_subject).with(repository_pulp3)
       plan_action action, repository_pulp3, proxy, :contents_changed => true
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::CreatePublication, repository_pulp3, proxy, :contents_changed => true)
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_pulp3, proxy, :contents_changed => true)
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::CreatePublication, repository_pulp3, proxy, :contents_changed => true)
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_pulp3, proxy, :contents_changed => true)
     end
 
     it 'plans pulp3 orchestration actions with apt repo' do
       action = create_action pulp3_action_class
       action.stubs(:action_subject).with(repository_apt_pulp3)
       plan_action action, repository_apt_pulp3, proxy, {}
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::Sync, repository_apt_pulp3, proxy, {})
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::Sync, repository_apt_pulp3, proxy, {})
       assert_action_planed action, ::Actions::Pulp3::Repository::SaveVersion
       assert_action_planed action, ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata
     end
@@ -498,8 +498,8 @@ module ::Actions::Katello::Repository
       action = create_action pulp3_metadata_generate_action_class
       action.stubs(:action_subject).with(repository_apt_pulp3)
       plan_action action, repository_apt_pulp3, proxy, :contents_changed => true
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::CreatePublication, repository_apt_pulp3, proxy, :contents_changed => true)
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_apt_pulp3, proxy, :contents_changed => true)
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::CreatePublication, repository_apt_pulp3, proxy, :contents_changed => true)
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_apt_pulp3, proxy, :contents_changed => true)
     end
 
     it 'plans pulp3 ansible collection metadata generate without publication ' do
@@ -507,7 +507,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository_ansible_collection_pulp3)
       plan_action action, repository_ansible_collection_pulp3, proxy, :contents_changed => true
       refute_action_planed action, ::Actions::Pulp3::Repository::CreatePublication
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_ansible_collection_pulp3, proxy, :contents_changed => true)
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_ansible_collection_pulp3, proxy, :contents_changed => true)
     end
 
     describe 'progress' do

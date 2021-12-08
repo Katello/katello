@@ -27,9 +27,9 @@ module Katello::Host
 
         plan_action action, @host, pools_with_quantities
 
-        assert_action_planed_with action, Actions::Candlepin::Consumer::RemoveSubscription, :uuid => @host.subscription_facet.uuid,
+        assert_action_planned_with action, Actions::Candlepin::Consumer::RemoveSubscription, :uuid => @host.subscription_facet.uuid,
                                           :entitlement_id => 3, :pool_id => 'foo'
-        assert_action_planed_with action, Actions::Candlepin::Consumer::RemoveSubscription, :uuid => @host.subscription_facet.uuid,
+        assert_action_planned_with action, Actions::Candlepin::Consumer::RemoveSubscription, :uuid => @host.subscription_facet.uuid,
                                           :entitlement_id => 4, :pool_id => 'bar'
       end
     end

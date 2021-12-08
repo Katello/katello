@@ -45,8 +45,8 @@ module ::Actions::Katello::ContentViewVersion
       action.expects(:action_subject).with(content_view_version.content_view)
       plan_action(action, content_view_version, [library], :content => {:package_ids => [@rpm.id]})
 
-      assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, new_repo)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::IndexContent, id: new_repo.id)
+      assert_action_planned_with(action, ::Actions::Katello::Repository::MetadataGenerate, new_repo)
+      assert_action_planned_with(action, ::Actions::Katello::Repository::IndexContent, id: new_repo.id)
     end
 
     describe 'pulp3' do
@@ -87,12 +87,12 @@ module ::Actions::Katello::ContentViewVersion
 
         pulp3_repo_map = {}
         pulp3_repo_map[[library_repo.id]] = { :dest_repo => new_repo.id, :base_version => 1 }
-        assert_action_planed_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
+        assert_action_planned_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
                                   pulp3_repo_map,
                                   { :errata => [], :rpms => [old_rpm.id] },
                                   :dependency_solving => false)
-        assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, new_repo)
-        assert_action_planed_with(action, ::Actions::Katello::Repository::IndexContent, id: new_repo.id)
+        assert_action_planned_with(action, ::Actions::Katello::Repository::MetadataGenerate, new_repo)
+        assert_action_planned_with(action, ::Actions::Katello::Repository::IndexContent, id: new_repo.id)
       end
 
       it 'respects dep solving true' do
@@ -101,7 +101,7 @@ module ::Actions::Katello::ContentViewVersion
 
         pulp3_repo_map = {}
         pulp3_repo_map[[library_repo.id]] = { :dest_repo => new_repo.id, :base_version => 1 }
-        assert_action_planed_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
+        assert_action_planned_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
                                   pulp3_repo_map,
                                   { :errata => [], :rpms => [old_rpm.id] },
                                   :dependency_solving => true)

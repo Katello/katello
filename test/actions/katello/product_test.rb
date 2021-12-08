@@ -38,10 +38,10 @@ module ::Actions::Katello::Product
           action = create_action action_class
           action.stubs(:action_subject).with(@repository)
           plan_action action, @repository.root
-          assert_action_planed_with action, candlepin_remove_class, product_id: @product.cp_id,
+          assert_action_planned_with action, candlepin_remove_class, product_id: @product.cp_id,
                                                                     owner: @product.organization.label,
                                                                     content_id: @repository.content_id
-          assert_action_planed_with action, candlepin_destroy_class, content_id: @repository.content_id,
+          assert_action_planned_with action, candlepin_destroy_class, content_id: @repository.content_id,
                                                                      owner: @product.organization.label
         end
 
@@ -51,10 +51,10 @@ module ::Actions::Katello::Product
           action = create_action action_class
           action.stubs(:action_subject).with(@repository)
           plan_action action, @repository.root
-          assert_action_planed_with action, candlepin_remove_class, product_id: @product.cp_id,
+          assert_action_planned_with action, candlepin_remove_class, product_id: @product.cp_id,
                                                                     owner: @product.organization.label,
                                                                     content_id: @repository.content_id
-          assert_action_planed_with action, candlepin_destroy_class, content_id: @repository.content_id,
+          assert_action_planned_with action, candlepin_destroy_class, content_id: @repository.content_id,
                                                                      owner: @product.organization.label
         end
 
@@ -94,7 +94,7 @@ module ::Actions::Katello::Product
 
       plan_action(action, product, product.organization)
 
-      assert_action_planed_with(action,
+      assert_action_planned_with(action,
                                 ::Actions::Candlepin::Product::Create,
                                 :id => '3',
                                 :name => product.name,
@@ -117,13 +117,13 @@ module ::Actions::Katello::Product
       action.expects(:action_subject).with(product)
       product.expects(:reload)
       plan_action action, product, :gpg_key_id => key.id, :name => "Animal Product"
-      assert_action_planed_with(action, ::Actions::Katello::Product::RepositoriesGpgReset, product)
+      assert_action_planned_with(action, ::Actions::Katello::Product::RepositoriesGpgReset, product)
 
-      assert_action_planed_with(action, ::Actions::Candlepin::Product::Update, owner: product.organization.label, name: product.name, id: product.cp_id)
+      assert_action_planned_with(action, ::Actions::Candlepin::Product::Update, owner: product.organization.label, name: product.name, id: product.cp_id)
 
       assert(product.subscriptions.length > 0)
       product.subscriptions.each do |subscription|
-        assert_action_planed_with(action, ::Actions::Katello::Subscription::Update, subscription, name: product.name)
+        assert_action_planned_with(action, ::Actions::Katello::Subscription::Update, subscription, name: product.name)
       end
     end
 
@@ -201,21 +201,21 @@ module ::Actions::Katello::Product
 
       plan_action(action, product)
 
-      assert_action_planed_with(action, candlepin_destroy_class, cp_id: product.cp_id, owner: product.organization.label)
-      assert_action_planed_with(action, ::Actions::Katello::Product::ContentDestroy) do |root|
+      assert_action_planned_with(action, candlepin_destroy_class, cp_id: product.cp_id, owner: product.organization.label)
+      assert_action_planned_with(action, ::Actions::Katello::Product::ContentDestroy) do |root|
         root.first.repositories.where.not(id: root.first.repositories.first.id).empty?
         !root.first.repositories.first.redhat?
       end
-      assert_action_planed_with(action, ::Actions::Katello::Repository::Destroy) do |repo|
+      assert_action_planned_with(action, ::Actions::Katello::Repository::Destroy) do |repo|
         default_view_repos.include?(repo.first.id)
       end
 
-      assert_action_planed_with(action,
+      assert_action_planned_with(action,
                                 candlepin_delete_pools_class,
                                 cp_id: product.cp_id,
                                 organization_label: product.organization.label)
 
-      assert_action_planed_with(action, candlepin_delete_subscriptions_class,
+      assert_action_planned_with(action, candlepin_delete_subscriptions_class,
                                 cp_id: product.cp_id, organization_label: product.organization.label)
     end
 
