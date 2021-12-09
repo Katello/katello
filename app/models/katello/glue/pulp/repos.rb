@@ -148,7 +148,7 @@ module Katello
       def add_repo(repo_param)
         repo_param[:unprotected] = repo_param[:unprotected].nil? ? false : repo_param[:unprotected]
 
-        if repo_param[:download_policy].blank? && repo_param[:content_type] == Repository::YUM_TYPE
+        if repo_param[:download_policy].blank? && repo_param[:content_type].in?([Repository::YUM_TYPE, Repository::DEB_TYPE])
           repo_param[:download_policy] = Setting[:default_download_policy]
         end
 
