@@ -74,7 +74,7 @@ namespace :katello do
 
     if found_missing
       puts "Corrupted or missing content has been detected, you can examine the list of content in #{path} and take action by either:"
-      puts "1. Performing a 'Verify Checksum' sync under Advanced Sync Options, let it complete, and re-running the migration"
+      puts "1. Performing a 'Validate Content Sync' under Advanced Sync Options, let it complete, and re-running the migration"
       puts "2. Deleting/disabling the affected repositories and running orphan cleanup (foreman-rake katello:delete_orphaned_content) and re-running the migration"
       puts "3. Manually correcting files on the filesystem in /var/lib/pulp/content/ and re-running the migration"
       puts "4. Mark currently corrupted or missing content as skipped (foreman-rake katello:approve_corrupted_migration_content).  This will skip migration of missing or corrupted content."
