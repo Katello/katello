@@ -30,18 +30,18 @@ module Katello
 
       it "should be unsuccessful without content" do
         content_credential = ContentCredential.new(:name => "Gpg Key 1", :organization => @organization)
-        assert_not content_credential.valid?
+        refute content_credential.valid?
       end
 
       it "should be unsuccessful without a name" do
         content_credential = ContentCredential.new(:content => @test_gpg_content, :organization => @organization)
-        assert_not content_credential.valid?
+        refute content_credential.valid?
       end
 
       it "should be unsuccessful without proper gpg key" do
         content_credential = ContentCredential.new(:name => "Gpg Key 1", :content => "foo-bar-baz", :organization => @organization)
         if SETTINGS[:katello][:gpg_strict_validation]
-          assert_not content_credential.valid?
+          refute content_credential.valid?
         else
           assert content_credential.valid?
         end
@@ -51,7 +51,7 @@ module Katello
         content = "\x81\xA4user\x83\xA3age\x18\xA4name\xA4ivan\xA5float\xCB@\x93J=p\xA3\xD7\n"
         content.force_encoding(::Encoding::ASCII_8BIT)
         content_credential = ContentCredential.new(:name => "Gpg Key 1", :content => content, :organization => @organization)
-        assert_not content_credential.valid?
+        refute content_credential.valid?
       end
     end
   end
