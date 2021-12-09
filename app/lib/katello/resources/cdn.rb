@@ -67,6 +67,8 @@ module Katello
             options[:username] = cdn_configuration.username
             options[:password] = cdn_configuration.password
             options[:organization_label] = cdn_configuration.upstream_organization_label
+            options[:content_view_label] = cdn_configuration.upstream_content_view_label
+            options[:lifecycle_environment_label] = cdn_configuration.upstream_lifecycle_environment_label
             options[:ssl_ca_cert] = cdn_configuration.ssl_ca
             CDN::KatelloCdn.new(cdn_configuration.url, options)
           end

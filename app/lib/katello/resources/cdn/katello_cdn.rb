@@ -4,6 +4,8 @@ module Katello
       class KatelloCdn < CdnResource
         def initialize(url, options)
           @organization_label = options.delete(:organization_label)
+          @content_view_label = options.delete(:content_view_label)
+          @lifecycle_environment_label = options.delete(:lifecycle_environment_label)
           fail ArgumentError, "No upstream organization was specified" if @organization_label.nil?
 
           super
@@ -38,14 +40,50 @@ module Katello
           get("/katello/api/v2/organizations/#{organization['id']}/download_debug_certificate")
         end
 
+        def content_view_id
+          rs = get("/katello/api/v2/organizations/#{organization['id']}/content_views?name=#{CGI.escape(@content_view_label)}")
+          content_view = JSON.parse(rs)['results']&.first
+          if content_view.blank?
+            fail _("Upstream organization %{org_label} does not have a content view with the label %{cv_label}") % { org_label: @organization_label,
+                                                                                                                     cv_label: @content_view_label }
+          end
+          content_view["id"]
+        end
+
+        def lifecycle_environment_id
+          rs = get("/katello/api/v2/organizations/#{organization['id']}/environments")
+          env = JSON.parse(rs)['results'].find { |lce| lce['label'] == @lifecycle_environment_label }
+
+          if env.blank?
+            fail _("Upstream organization %{org_label} does not have a lifecycle environment with the label %{lce_label}") % { org_label: @organization_label,
+                                                                                                                               lce_label: @lifecycle_environment_label }
+          end
+          env["id"]
+        end
+
         def repository_url(content_label:)
-          response = get("/katello/api/v2/organizations/#{organization['id']}/repositories?search=#{CGI.escape("content_label = #{content_label}")}")
+          params = {
+            search: CGI.escape("content_label = #{content_label}")
+          }
+
+          params[:content_view_id] = content_view_id if @content_view_label
+          params[:environment_id] = lifecycle_environment_id if @lifecycle_environment_label
+
+          query_params = params.map { |key, value| "#{key}=#{value}" }
+          url = "/katello/api/v2/organizations/#{organization['id']}/repositories?#{query_params.join('&')}"
+          response = get(url)
           repository = JSON.parse(response)['results'].first
 
           if repository.nil?
-            fail _("Repository with content label %{content_label} was not found in upstream organization %{org_label}") % { content_label: content_label, org_label: @organization_label }
-          end
+            msg_params = { content_label: content_label,
+                           org_label: @organization_label,
+                           cv_label: @content_view_label || Katello::OrganizationCreator::DEFAULT_CONTENT_VIEW_LABEL,
+                           env_label: @lifecycle_environment_label || Katello::OrganizationCreator::DEFAULT_LIFECYCLE_ENV_LABEL
+            }
 
+            fail _("Repository with content label %{content_label} was not found in upstream organization %{org_label},"\
+                   " content view %{cv_label} and lifecycle environment %{env_label} ") % msg_params
+          end
           repository['full_path']
         end
 
