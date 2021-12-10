@@ -20,15 +20,15 @@ module Actions
                           filters: filters, rpm_filenames: rpm_filenames, solve_dependencies: solve_dependencies)
             end
 
+            if purge_empty_contents && new_repository.backend_service(SmartProxy.pulp_primary).should_purge_empty_contents?
+              plan_action(Katello::Repository::PurgeEmptyContent, id: new_repository.id)
+            end
+
             metadata_generate(source_repositories, new_repository, filters, rpm_filenames) if generate_metadata
 
             index_options = {id: new_repository.id}
             index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
             plan_action(Katello::Repository::IndexContent, index_options)
-
-            if purge_empty_contents && new_repository.backend_service(SmartProxy.pulp_master).should_purge_empty_contents?
-              plan_action(Katello::Repository::PurgeEmptyContent, id: new_repository.id)
-            end
           end
         end
 
