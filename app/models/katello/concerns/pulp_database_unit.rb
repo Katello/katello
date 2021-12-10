@@ -95,8 +95,8 @@ module Katello
 
         if hosts
           hosts = ::Host.where(id: hosts) if hosts.is_a?(Array)
-          facet_repos = facet_repos.merge(hosts).reorder(nil)
-          facet_content_units = facet_content_units.merge(hosts).reorder(nil)
+          facet_repos = facet_repos.where(hosts: { id: hosts }).reorder(nil)
+          facet_content_units = facet_content_units.where(hosts: { id: hosts }).reorder(nil)
         end
 
         self.joins(repository_association_units).

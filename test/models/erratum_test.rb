@@ -1,5 +1,5 @@
 require File.expand_path("repository_base", File.dirname(__FILE__))
-
+require 'models/authorization/authorization_base'
 module Katello
   class ErratumTestBase < ActiveSupport::TestCase
     def setup
@@ -160,6 +160,43 @@ module Katello
       refute_includes errata, @security
       refute_includes errata, @bugfix
       refute_includes errata, @enhancement
+    end
+  end
+
+  class ErratumInstallableForHostsTest < AuthorizationTestBase
+    def setup
+      super
+      @repo = katello_repositories(:rhel_6_x86_64)
+      @security = katello_errata(:security)
+      @host = hosts(:one)
+      @host.content_facet.content_view = katello_content_views(:library_dev_view)
+      @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
+      @host.content_facet.bound_repositories = [@repo, @view_repo]
+      @host.content_facet.save!
+    end
+
+    def test_returns_installable_errata_for_host_with_hostgroup
+      hostgroup = ::Hostgroup.create!(name: "foo",
+                                      organizations: [@host.organization],
+                                      locations: [@host.location])
+      @host.hostgroup = hostgroup
+      @host.save(validate: false)
+      User.current = User.find(users('restricted').id)
+      setup_current_user_with_permissions([{ name: "view_hosts",
+                                             search: "hostgroup=#{hostgroup.name}"},
+                                           { name: "edit_hosts",
+                                             search: "hostgroup=#{hostgroup.name}"},
+                                           { name: "view_organizations",
+                                             resource_type: "Organization"},
+                                           { name: "view_hostgroups", search: "name=#{hostgroup.name}"},
+                                           { name: "edit_hostgroups", search: "name=#{hostgroup.name}"},
+                                           { name: 'view_host_collections'},
+                                           { name: 'edit_host_collections'}
+                                          ],
+                                          organizations: [@host.organization],
+                                          locations: [@host.location])
+      errata = Erratum.installable_for_hosts(::Host::Managed.unscoped.authorized(:view_hosts))
+      assert_includes errata, @security
     end
   end
 end
