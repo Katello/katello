@@ -4,7 +4,7 @@ module Actions
       class SyncCapsule < ::Actions::EntryAction
         include Actions::Katello::PulpSelector
         def plan(smart_proxy, options = {})
-          plan_self(:smart_proxy_id => smart_proxy.id, :options => options)
+          plan_self(:smart_proxy_id => smart_proxy.id)
           action_subject(smart_proxy)
           environment = options[:environment]
           content_view = options[:content_view]
