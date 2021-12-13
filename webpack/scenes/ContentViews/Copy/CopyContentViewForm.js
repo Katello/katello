@@ -61,7 +61,7 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
         <Button
           aria-label="copy_content_view"
           variant="primary"
-          isDisabled={name.length <= 2 || saving}
+          isDisabled={!name?.length || saving}
           type="submit"
         >
           {__('Copy content view')}

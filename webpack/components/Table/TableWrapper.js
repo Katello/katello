@@ -159,7 +159,7 @@ const TableWrapper = ({
 
   return (
     <>
-      <Flex>
+      <Flex style={{ alignItems: 'center' }} className="margin-16-24">
         {displaySelectAllCheckbox &&
           <FlexItem alignSelf={{ default: 'alignSelfCenter' }}>
             <SelectAllCheckbox
@@ -190,11 +190,11 @@ const TableWrapper = ({
           </FlexItem>
         }
         {showToggleGroup &&
-          <FlexItem style={{ marginLeft: '16px' }}>
+          <FlexItem>
             {toggleGroup}
           </FlexItem>}
         {showActionButtons &&
-          <FlexItem style={{ marginLeft: '16px' }}>
+          <FlexItem>
             {actionButtons}
           </FlexItem>}
 
@@ -208,7 +208,11 @@ const TableWrapper = ({
           />
         }
       </Flex>
-      {nodesBelowSearch}
+      {nodesBelowSearch &&
+        <Flex className="margin-16-24 gap-16" style={{ alignItems: 'center' }}>
+          {nodesBelowSearch}
+        </Flex>
+      }
       <MainTable
         searchIsActive={!!searchQuery}
         activeFilters={activeFilters}

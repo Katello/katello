@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
+  Grid,
   GridItem,
   TextContent,
   Text,
@@ -72,7 +73,7 @@ const ContentViewVersionDetailsHeader = ({
   ];
 
   return (
-    <>
+    <Grid className="margin-0-24">
       <GridItem span={10}>
         <TextContent>
           <Text component={TextVariants.h2}>{__('Version ')}{version}</Text>
@@ -90,7 +91,7 @@ const ContentViewVersionDetailsHeader = ({
             >
               {__('Actions')}
             </DropdownToggle>
-        }
+          }
           isOpen={dropdownOpen}
           dropdownItems={dropDownItems}
         />
@@ -116,32 +117,32 @@ const ContentViewVersionDetailsHeader = ({
         </Flex>
       </GridItem>
       {promoting &&
-      <ContentViewVersionPromote
-        cvId={cvId}
-        versionIdToPromote={id}
-        versionNameToPromote={version}
-        versionEnvironments={environments}
-        setIsOpen={setPromoting}
-        detailsPage
-        aria-label="promote_content_view_modal"
-      />
+        <ContentViewVersionPromote
+          cvId={cvId}
+          versionIdToPromote={id}
+          versionNameToPromote={version}
+          versionEnvironments={environments}
+          setIsOpen={setPromoting}
+          detailsPage
+          aria-label="promote_content_view_modal"
+        />
       }
       {removingFromEnv &&
-      <RemoveCVVersionWizard
-        cvId={cvId}
-        versionIdToRemove={id}
-        versionNameToRemove={version}
-        versionEnvironments={environments}
-        show={removingFromEnv}
-        setIsOpen={setRemovingFromEnv}
-        currentStep={currentStep}
-        setCurrentStep={setCurrentStep}
-        deleteWizard={deleteVersion}
-        detailsPage
-        aria-label="remove_content_view_version_modal"
-      />
+        <RemoveCVVersionWizard
+          cvId={cvId}
+          versionIdToRemove={id}
+          versionNameToRemove={version}
+          versionEnvironments={environments}
+          show={removingFromEnv}
+          setIsOpen={setRemovingFromEnv}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          deleteWizard={deleteVersion}
+          detailsPage
+          aria-label="remove_content_view_version_modal"
+        />
       }
-    </>
+    </Grid>
   );
 };
 

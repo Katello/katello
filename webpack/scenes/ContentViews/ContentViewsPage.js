@@ -5,19 +5,23 @@ import ContentViewsTable from './Table/ContentViewsTable';
 import ContentViewsCounter from './components/ContentViewsCounter';
 
 const ContentViewsPage = () => (
-  <Grid className="grid-with-margin">
-    <GridItem span={12}>
-      <TextContent>
-        <Text component={TextVariants.h1}>{__('Content Views')}</Text>
-      </TextContent>
-    </GridItem>
-    <GridItem span={12}>
-      <ContentViewsCounter />
-    </GridItem>
-    <GridItem span={12}>
-      <ContentViewsTable />
-    </GridItem>
-  </Grid>
+  <>
+    <Grid className="margin-24">
+      <GridItem span={12}>
+        <TextContent>
+          <Text component={TextVariants.h1}>{__('Content views')}</Text>
+        </TextContent>
+      </GridItem>
+      <GridItem span={12} className="margin-top-8">
+        <ContentViewsCounter />
+      </GridItem>
+    </Grid>
+    <Grid>
+      <GridItem span={12}>
+        <ContentViewsTable />
+      </GridItem>
+    </Grid>
+  </>
 );
 
 export default ContentViewsPage;

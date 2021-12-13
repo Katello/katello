@@ -173,7 +173,7 @@ test('Can handle no Content Views being present', async (done) => {
   const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
-  await patientlyWaitFor(() => expect(queryByText(/don't have any Content Views/i)).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(queryByText(/don't have any Content views/i)).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });

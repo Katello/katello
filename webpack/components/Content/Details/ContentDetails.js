@@ -37,7 +37,7 @@ const ContentDetails = (props) => {
         loadingText={__('Loading')}
       >
         <TabContainer id="content-tabs-container" defaultActiveKey={1}>
-          <Grid bsClass="container-fluid">
+          <Grid>
             <Row>
               <Col sm={12}>
                 <Nav id="content-nav-container" bsClass="nav nav-tabs">

@@ -64,7 +64,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
     return (<Redirect to={`/content_views/${id}`} />);
   }
 
-  const submitDisabled = name.length <= 2 || label.length <= 2 || saving;
+  const submitDisabled = !name?.length || !label?.length || saving;
 
   return (
     <Form onSubmit={(e) => {
