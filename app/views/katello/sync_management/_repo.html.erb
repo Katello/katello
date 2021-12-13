@@ -6,37 +6,48 @@
     </label>
   </td>
   <td class="start_time">
-    <%= @repo_status[repo.id][:start_time] %>
+    <%= @repo_status[repo.id][:sync_id] ? @repo_status[repo.id][:start_time] : _('N/A') %>
   </td>
   <td class="duration">
-    <%= @repo_status[repo.id][:duration] %>
+    <%= @repo_status[repo.id][:sync_id] ? @repo_status[repo.id][:duration] : _('N/A') %>
   </td>
   <td class="size" data-size="<%= @repo_status[repo.id][:size] %>">
-    <%= @repo_status[repo.id][:display_size] %>
+    <%= @repo_status[repo.id][:sync_id] ? @repo_status[repo.id][:display_size]  : _('N/A')%>
   </td>
-  <td class="result">
-    <span class="result-info">
-      <a href="/foreman_tasks/tasks/<%= @repo_status[repo.id][:sync_id] %>">
-        <%= @repo_status[repo.id][:state] %>
-      </a>
-    </span>
-    <a class="info-tipsy clickable fa fa-warning <%= 'hidden' if @repo_status[repo.id][:raw_state] != 'error' %>"
-       href="/foreman_tasks/tasks/<%= @repo_status[repo.id][:sync_id] %>">
-      <span class="hidden-text hidden">
-        <div class="la error-tipsy">
-          <ul>
-            <% if @repo_status[repo.id][:error_details].present? && error_state?(@repo_status[repo.id]) %>
-              <% @repo_status[repo.id][:error_details][:messages].each do |error| %>
-                <li>
-                  <%= error %>
-                </li>
-              <% end %>
-            <% end %>
-          </ul>
-        </div>
+  <% if @repo_status[repo.id][:sync_id] %>
+    <td class="result">
+      <span class="result-info">
+          <a href="/foreman_tasks/tasks/<%= @repo_status[repo.id][:sync_id] %>">
+            <%= @repo_status[repo.id][:state] %>
+          </a>
       </span>
-    </a>
-  </td>
+      <a class="info-tipsy clickable fa fa-warning <%= 'hidden' if @repo_status[repo.id][:raw_state] != 'error' %>"
+         href="/foreman_tasks/tasks/<%= @repo_status[repo.id][:sync_id] %>">
+        <span class="hidden-text hidden">
+          <div class="la error-tipsy">
+            <ul>
+              <% if @repo_status[repo.id][:error_details].present? && error_state?(@repo_status[repo.id]) %>
+                <% @repo_status[repo.id][:error_details][:messages].each do |error| %>
+                  <li>
+                    <%= error %>
+                  </li>
+                <% end %>
+              <% end %>
+            </ul>
+          </div>
+        </span>
+      </a>
+    </td>
+  <% elsif repo&.latest_sync_audit&.created_at %>
+    <td>
+      <%= _("Synced ") + time_ago_in_words(repo&.latest_sync_audit&.created_at) + _(" ago.") %>
+    </td>
+  <% else%>
+    <td>
+      <%= @repo_status[repo.id][:state] %>
+    </td>
+  <% end %>
+
   <% if @show_org %>
     <td></td>
   <% end %>
