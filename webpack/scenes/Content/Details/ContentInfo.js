@@ -33,7 +33,7 @@ const ContentInfo = ({ contentType, id, tabKey }) => {
   }
 
   return (
-    <TextContent>
+    <TextContent className="margin-0-24">
       <TextList component={TextListVariants.dl}>
         {columnHeaders.map((col, index) => [
           <TextListItem

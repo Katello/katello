@@ -153,6 +153,9 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
             name="description"
             aria-label="input_description"
             value={description}
+            resizeOrientation="vertical"
+            autoResize
+            style={{ maxHeight: '200px', minHeight: '36px' }}
             onChange={value => setDescription(value)}
           />
         </FormGroup>

@@ -46,7 +46,7 @@ const RelatedContentViewsModal = ({ cvName, cvId, relatedCVCount }) => {
       <Button aria-label={`button_${cvId}`} variant="link" isInline onClick={handleModalToggle}>
         {relatedCVCount}
       </Button>
-      <Grid className="grid-with-margin">
+      <Grid>
         <GridItem span={12}>
           <Modal
             title={__('Related component content views')}
@@ -54,18 +54,18 @@ const RelatedContentViewsModal = ({ cvName, cvId, relatedCVCount }) => {
             isOpen={isOpen}
             description={description()}
             onClose={() => {
-                setIsOpen(false);
-              }}
+              setIsOpen(false);
+            }}
             appendTo={document.body}
           >
 
             <TableWrapper
               {...{
-              metadata,
-              searchQuery,
-              updateSearchQuery,
-              error,
-              status,
+                metadata,
+                searchQuery,
+                updateSearchQuery,
+                error,
+                status,
               }}
               fetchItems={useCallback(params => getContentViewComponents(cvId, params, 'Added'), [cvId])}
               variant={TableVariant.compact}

@@ -1,9 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { last } from 'lodash';
 import PropTypes from 'prop-types';
-import { Modal, ModalVariant, FormSelect,
+import {
+  Flex, Modal, ModalVariant, FormSelect,
   FormSelectOption, Checkbox, Form, FormGroup,
-  ActionGroup, Button, Card, CardTitle, CardBody } from '@patternfly/react-core';
+  ActionGroup, Button, Card, CardTitle, CardBody, Tooltip,
+} from '@patternfly/react-core';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useDispatch } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { addComponent } from '../ContentViewDetailActions';
@@ -75,25 +78,35 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
                   aria-label={`version-select-${componentCvName}`}
                 >
                   {versionSelectOptions[componentCvName].map((version, index) => (
-                  // eslint-disable-next-line react/no-array-index-key
+                    // eslint-disable-next-line react/no-array-index-key
                     <FormSelectOption aria-label={`${componentCvName}-${version.version}`} key={index} value={version.id} label={`${__('Version')} ${version.version}`} />
-                ))}
+                  ))}
                 </FormSelect>
               </FormGroup>
               <FormGroup style={{ marginTop: '1em' }}>
-                <Checkbox
-                  style={{ marginTop: 0 }}
-                  id={`latest-${componentCvName}`}
-                  name="latest"
-                  label={__('Always update to latest version')}
-                  isChecked={selectedComponentLatest[componentCvName]}
-                  onChange={checked =>
-                    setSelectedComponentLatest({
-                      ...selectedComponentLatest,
-                      ...{ [componentCvName]: checked },
-                    })
-                  }
-                />
+                <Flex style={{ display: 'inline-flex' }}>
+                  <Checkbox
+                    style={{ marginTop: 0 }}
+                    id={`latest-${componentCvName}`}
+                    name="latest"
+                    label={__('Always update to latest version')}
+                    isChecked={selectedComponentLatest[componentCvName]}
+                    onChange={checked =>
+                      setSelectedComponentLatest({
+                        ...selectedComponentLatest,
+                        ...{ [componentCvName]: checked },
+                      })
+                    }
+                  />
+                  <Tooltip
+                    position="top"
+                    content={
+                      __('This content view will be automatically updated to the latest version.')
+                    }
+                  >
+                    <OutlinedQuestionCircleIcon />
+                  </Tooltip>
+                </Flex>
               </FormGroup>
             </CardBody>
           </Card>
@@ -103,7 +116,7 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
           <Button variant="link" onClick={onClose}>{__('Cancel')}</Button>
         </ActionGroup>
       </Form>
-    </Modal>);
+    </Modal >);
 };
 
 ComponentContentViewBulkAddModal.propTypes = {

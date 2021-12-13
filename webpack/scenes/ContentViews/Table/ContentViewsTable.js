@@ -191,7 +191,7 @@ const ContentViewTable = () => {
     [sortByIndex, direction],
   );
 
-  const emptyContentTitle = __("You currently don't have any Content Views.");
+  const emptyContentTitle = __("You currently don't have any Content views.");
   const emptyContentBody = __('A content view can be added by using the "Create content view" button above.');
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');

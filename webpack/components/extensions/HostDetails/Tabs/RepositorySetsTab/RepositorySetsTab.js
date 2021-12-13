@@ -241,18 +241,18 @@ const RepositorySetsTab = () => {
         </div>
         <TableWrapper
           {...{
-                metadata,
-                emptyContentTitle,
-                emptyContentBody,
-                emptySearchTitle,
-                emptySearchBody,
-                status,
-                searchQuery,
-                updateSearchQuery,
-                selectedCount,
-                selectNone,
-                toggleGroup,
-                }
+            metadata,
+            emptyContentTitle,
+            emptyContentBody,
+            emptySearchTitle,
+            emptySearchBody,
+            status,
+            searchQuery,
+            updateSearchQuery,
+            selectedCount,
+            selectNone,
+            toggleGroup,
+          }
           }
           activeFilters={[toggleGroupState]}
           defaultFilters={[defaultToggleGroupState]}
@@ -291,12 +291,12 @@ const RepositorySetsTab = () => {
                 <Tbody key={`${id}_${repoPath}`}>
                   <Tr>
                     <Td select={{
-                        disable: !isSelectable(id),
-                        isSelected: isSelected(id),
-                        onSelect: (event, selected) => selectOne(selected, id),
-                        rowIndex,
-                        variant: 'checkbox',
-                        }}
+                      disable: !isSelectable(id),
+                      isSelected: isSelected(id),
+                      onSelect: (event, selected) => selectOne(selected, id),
+                      rowIndex,
+                      variant: 'checkbox',
+                    }}
                     />
                     <Td>
                       <span>{repoName}</span>
@@ -313,30 +313,30 @@ const RepositorySetsTab = () => {
                     <Td
                       key={`rowActions-${id}`}
                       actions={{
-                          items: [
-                            {
-                              title: __('Override to disabled'),
-                              isDisabled: isOverridden && !isEnabled,
-                              onClick: () => overrideToDisabled({ labels: [label] }),
-                            },
-                            {
-                              title: __('Override to enabled'),
-                              isDisabled: isOverridden && isEnabled,
-                              onClick: () => overrideToEnabled({ labels: [label] }),
-                            },
-                            {
-                              title: __('Reset to default'),
-                              isDisabled: !isOverridden,
-                              onClick: () => resetToDefault({ labels: [label] }),
-                            },
-                          ],
-                        }}
+                        items: [
+                          {
+                            title: __('Override to disabled'),
+                            isDisabled: isOverridden && !isEnabled,
+                            onClick: () => overrideToDisabled({ labels: [label] }),
+                          },
+                          {
+                            title: __('Override to enabled'),
+                            isDisabled: isOverridden && isEnabled,
+                            onClick: () => overrideToEnabled({ labels: [label] }),
+                          },
+                          {
+                            title: __('Reset to default'),
+                            isDisabled: !isOverridden,
+                            onClick: () => resetToDefault({ labels: [label] }),
+                          },
+                        ],
+                      }}
                     />
                   </Tr>
                 </Tbody>
-                );
-              })
-              }
+              );
+            })
+            }
           </>
         </TableWrapper>
       </div>

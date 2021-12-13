@@ -13,7 +13,7 @@ const ContentViewsCounter = () => {
     content_view_components_count: component,
   } = organization;
   return (
-    <Grid className="grid-with-margin">
+    <Grid>
       <GridItem span={12}>
         <b>
           <Flex>
