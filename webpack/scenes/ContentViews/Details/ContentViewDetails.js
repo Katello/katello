@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Grid,
+import {
+  Grid,
   GridItem,
   TextContent,
   Text,
@@ -12,7 +13,8 @@ import { Grid,
   Dropdown,
   DropdownItem,
   KebabToggle,
-  DropdownPosition } from '@patternfly/react-core';
+  DropdownPosition,
+} from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 
@@ -103,8 +105,8 @@ export default () => {
             <CVBreadCrumb />
             <GridItem xl={8} lg={7} sm={12} style={{ margin: '10px 0' }}>
               <Flex alignItems={{
-              default: 'alignItemsCenter',
-            }}
+                default: 'alignItemsCenter',
+              }}
               >
                 <FlexItem>
                   <TextContent>
@@ -118,20 +120,20 @@ export default () => {
             <GridItem xl={4} lg={5} sm={12} >
               <Flex justifyContent={{ lg: 'justifyContentFlexEnd', sm: 'justifyContentFlexStart' }}>
                 {hasPermission(permissions, 'publish_content_views') &&
-                <FlexItem>
-                  <Button onClick={() => { setIsPublishModalOpen(true); }} variant="primary" aria-label="publish_content_view">
-                    {__('Publish new version')}
-                  </Button>
-                  {isPublishModalOpen && <PublishContentViewWizard
-                    details={details}
-                    show={isPublishModalOpen}
-                    setIsOpen={setIsPublishModalOpen}
-                    currentStep={currentStep}
-                    setCurrentStep={setCurrentStep}
-                    aria-label="publish_content_view_modal"
-                  />}
-                </FlexItem>
-              }
+                  <FlexItem>
+                    <Button onClick={() => { setIsPublishModalOpen(true); }} variant="primary" aria-label="publish_content_view">
+                      {__('Publish new version')}
+                    </Button>
+                    {isPublishModalOpen && <PublishContentViewWizard
+                      details={details}
+                      show={isPublishModalOpen}
+                      setIsOpen={setIsPublishModalOpen}
+                      currentStep={currentStep}
+                      setCurrentStep={setCurrentStep}
+                      aria-label="publish_content_view_modal"
+                    />}
+                  </FlexItem>
+                }
                 <FlexItem>
                   <Button
                     component="a"
