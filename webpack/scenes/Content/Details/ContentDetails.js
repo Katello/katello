@@ -38,29 +38,31 @@ const ContentDetails = () => {
   }
 
   return (
-    <Grid className="grid-with-margin">
-      <Breadcrumb style={{ marginTop: '15px', marginBottom: '15px' }}>
-        <BreadcrumbItem
-          aria-label="content_breadcrumb"
-          render={() => (<Link to={`/content/${pluralLabel}`}>{pluralTitle}</Link>)}
-        />
-        <BreadcrumbItem
-          aria-label="content_breadcrumb_content"
-          isActive
-        > {contentDetailsResponse.name}
-        </BreadcrumbItem>
-      </Breadcrumb>
-      <GridItem span={12} >
-        <Flex>
-          <TextContent>
-            <Text component={TextVariants.h1}> {contentDetailsResponse.name} </Text>
-          </TextContent>
-        </Flex>
-      </GridItem>
+    <Grid>
+      <Grid className="margin-16-24">
+        <Breadcrumb>
+          <BreadcrumbItem
+            aria-label="content_breadcrumb"
+            render={() => (<Link to={`/content/${pluralLabel}`}>{pluralTitle}</Link>)}
+          />
+          <BreadcrumbItem
+            aria-label="content_breadcrumb_content"
+            isActive
+          > {contentDetailsResponse.name}
+          </BreadcrumbItem>
+        </Breadcrumb>
+        <GridItem span={12} className="margin-top-24">
+          <Flex>
+            <TextContent>
+              <Text component={TextVariants.h1}> {contentDetailsResponse.name} </Text>
+            </TextContent>
+          </Flex>
+        </GridItem>
+      </Grid>
       <GridItem span={12}>
         <RoutedTabs tabs={tabs} baseUrl={`/${contentType}/${contentId}`} defaultTabIndex={0} />
       </GridItem>
-    </Grid>
+    </Grid >
   );
 };
 export default ContentDetails;

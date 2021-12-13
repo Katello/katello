@@ -101,7 +101,7 @@ const CVBreadcrumb = () => {
     filterDetails, filterDetailsStatus, breadcrumbItems, setBreadcrumbItems]);
 
   return (
-    <Breadcrumb style={{ marginTop: '15px' }}>
+    <Breadcrumb className="margin-bottom-24">
       {
         Object.keys(breadcrumbItems)?.sort()?.map(key => (
           <BreadcrumbItem

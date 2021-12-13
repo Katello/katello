@@ -105,9 +105,9 @@ const CVErrataDateFilterContent = ({
   const tabTitle = inclusion ? __('Included errata') : __('Excluded errata');
 
   return (
-    <Tabs activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
+    <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
       <Tab eventKey={0} title={<TabTitleText>{tabTitle}</TabTitleText>}>
-        <div className="tab-body-with-spacing">
+        <div className="margin-24">
           <Form onSubmit={(e) => {
             e.preventDefault();
             onSave();
@@ -153,7 +153,7 @@ const CVErrataDateFilterContent = ({
                   </SelectOption>
                 </Select>
               </FlexItem>
-              <FlexItem span={1} spacer={{ default: 'spacer3xl' }}>
+              <FlexItem span={1} spacer={{ default: 'spacerMd' }}>
                 {(selectedTypes.length === 1) &&
                   <Tooltip
                     position="top"
@@ -238,7 +238,7 @@ const CVErrataDateFilterContent = ({
               {hasPermission(permissions, 'edit_content_views') &&
                 <FlexItem>
                   <Button
-                    disabled={saveDisabled}
+                    isDisabled={saveDisabled}
                     variant="link"
                     onClick={resetFilters}
                     isInline
@@ -270,7 +270,7 @@ const CVErrataDateFilterContent = ({
       </Tab>
       {(repositories.length || showAffectedRepos) &&
         <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
-          <div className="tab-body-with-spacing">
+          <div className="margin-24-0">
             <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>
         </Tab>}

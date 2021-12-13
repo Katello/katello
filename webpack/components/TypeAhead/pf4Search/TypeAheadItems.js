@@ -3,6 +3,7 @@ import {
   Dropdown,
   DropdownItem,
   DropdownSeparator,
+  DropdownPosition,
 } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 
@@ -37,6 +38,7 @@ const TypeAheadItems = ({
   // satisfy the requirement
   return (
     <Dropdown
+      position={DropdownPosition.right}
       toggle={<React.Fragment />}
       isOpen={isOpen}
       dropdownItems={buildDropdownItems()}

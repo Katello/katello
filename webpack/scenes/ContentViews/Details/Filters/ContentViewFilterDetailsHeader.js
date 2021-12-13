@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { head } from 'lodash';
-import { Split, SplitItem, GridItem, TextContent, Text, TextVariants, Label } from '@patternfly/react-core';
+import { Split, SplitItem, Grid, GridItem, TextContent, Text, TextVariants, Label } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useDispatch } from 'react-redux';
 import { getCVFilterDetails, editCVFilter } from '../ContentViewDetailActions';
@@ -36,7 +36,7 @@ const ContentViewFilterDetailsHeader = ({
   };
 
   return (
-    <>
+    <Grid className="margin-0-24">
       <GridItem span={9}>
         <TextContent>
           <EditableTextInput
@@ -90,7 +90,7 @@ const ContentViewFilterDetailsHeader = ({
           </SplitItem>
         </Split>
       </GridItem>
-    </>
+    </Grid>
   );
 };
 

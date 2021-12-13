@@ -33,6 +33,7 @@ const RoutedTabs = ({
     <>
       <Tabs
         activeKey={currentTabFromUrl}
+        className="margin-0-24"
       >
         {tabs.map(({ key, title }) => (
           <a
@@ -49,7 +50,7 @@ const RoutedTabs = ({
           </a>
         ))}
       </Tabs>
-      <div className="tab-body-with-spacing">
+      <div className="margin-16-0">
         <HashRouter key={locationKey}>
           <Switch>
             {tabs.map(({ key, content }) => (
