@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, act } from 'react-testing-lib-wrapper';
 
 import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
@@ -66,7 +66,7 @@ test('Can enable and disable add repositories button', async (done) => {
 
 test('Can add repositories', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const cvAddparams = { repository_ids: [58, 62, 64, 106] };
+  const cvAddparams = { include_permissions: true, repository_ids: [58, 62, 64, 106] };
 
   const repoAddscope = nockInstance
     .put(cvDetailsPath, cvAddparams)
@@ -92,16 +92,19 @@ test('Can add repositories', async (done) => {
   expect(getByLabelText('add_repositories')).toHaveAttribute('aria-disabled', 'true');
   getByLabelText('Select all rows').click();
   getByLabelText('add_repositories').click();
+  await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
+
   assertNockRequest(repoAddscope);
 
   assertNockRequest(cvDetailScope);
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
+  act(done);
 });
 
 test('Can remove repositories', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const cvRemoveParams = { repository_ids: [58, 62, 64] };
+  const cvRemoveParams = { include_permissions: true, repository_ids: [58, 62, 64] };
   const scope = nockInstance
     .get(cvAllRepos)
     .query(true)
@@ -131,9 +134,12 @@ test('Can remove repositories', async (done) => {
     expect(getByLabelText('bulk_remove')).toBeInTheDocument();
   });
   getByLabelText('bulk_remove').click();
+  await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
+
   assertNockRequest(repoRemoveScope);
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvDetailScope);
   assertNockRequest(scope, done);
+  act(done);
 });

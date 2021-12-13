@@ -143,14 +143,35 @@ const ContentViewRepositories = ({ cvId, details }) => {
 
   const onAdd = (repos) => {
     const { repository_ids: repositoryIds = [] } = details;
-    dispatch(updateContentView(cvId, { repository_ids: repositoryIds.concat(repos) }));
+    dispatch(updateContentView(
+      cvId,
+      { repository_ids: repositoryIds.concat(repos) },
+      () =>
+        dispatch(getContentViewRepositories(
+          cvId,
+          typeSelected !== 'All repositories' ? {
+            content_type: repoTypes[typeSelected],
+          } : {},
+          statusSelected,
+        )),
+    ));
   };
 
   const onRemove = (repos) => {
     const reposToDelete = [].concat(repos);
     const { repository_ids: repositoryIds = [] } = details;
     const deletedRepos = repositoryIds.filter(x => !reposToDelete.includes(x));
-    dispatch(updateContentView(cvId, { repository_ids: deletedRepos }));
+    dispatch(updateContentView(
+      cvId, { repository_ids: deletedRepos },
+      () =>
+        dispatch(getContentViewRepositories(
+          cvId,
+          typeSelected !== 'All repositories' ? {
+            content_type: repoTypes[typeSelected],
+          } : {},
+          statusSelected,
+        )),
+    ));
   };
 
   const addBulk = () => {

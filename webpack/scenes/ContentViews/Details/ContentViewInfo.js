@@ -44,9 +44,12 @@ const ContentViewInfo = ({ cvId, details }) => {
     dispatch(updateContentView(cvId, { [attribute]: val }));
   };
 
+  // Guarantees strings update despite render chain
+  const uniqueKey = name + label + description;
+
   return (
     <TextContent className="margin-0-24">
-      <TextList component={TextListVariants.dl}>
+      <TextList key={uniqueKey} component={TextListVariants.dl}>
         <ActionableDetail
           label={__('Name')}
           attribute="name"

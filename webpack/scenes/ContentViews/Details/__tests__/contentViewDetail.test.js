@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 import ContentViewDetails from '../ContentViewDetails';
@@ -53,7 +53,7 @@ test('Can edit text details such as name', async (done) => {
     .query(true)
     .reply(200, cvDetailData);
   const updatescope = nockInstance
-    .put(cvDetailsPath, { name: newName })
+    .put(cvDetailsPath, { include_permissions: true, name: newName })
     .reply(200, updatedCVDetails);
   const afterUpdateScope = nockInstance
     .get(cvDetailsPath)
@@ -81,6 +81,7 @@ test('Can edit text details such as name', async (done) => {
   assertNockRequest(getscope);
   assertNockRequest(updatescope);
   assertNockRequest(afterUpdateScope, done);
+  act(done);
 });
 
 test('Can edit boolean details such as solve dependencies', async (done) => {
@@ -90,7 +91,7 @@ test('Can edit boolean details such as solve dependencies', async (done) => {
     .query(true)
     .reply(200, cvDetailData);
   const updatescope = nockInstance
-    .put(cvDetailsPath, { solve_dependencies: true })
+    .put(cvDetailsPath, { include_permissions: true, solve_dependencies: true })
     .reply(200, updatedCVDetails);
   const afterUpdateScope = nockInstance
     .get(cvDetailsPath)
@@ -115,6 +116,7 @@ test('Can edit boolean details such as solve dependencies', async (done) => {
   assertNockRequest(getscope);
   assertNockRequest(updatescope);
   assertNockRequest(afterUpdateScope, done);
+  act(done);
 });
 
 test('Can link to view tasks', async () => {
