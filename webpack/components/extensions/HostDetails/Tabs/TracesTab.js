@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { Skeleton, Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle } from '@patternfly/react-core';
+import {
+  Skeleton, Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
+  DropdownItem, KebabToggle,
+} from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { useSelector, useDispatch } from 'react-redux';
@@ -111,19 +113,19 @@ const TracesTab = () => {
       <h3>{__('Tracer helps administrators identify applications that need to be restarted after a system is patched.')}</h3>
       <TableWrapper
         {...{
-                emptyContentTitle,
-                emptyContentBody,
-                emptySearchTitle,
-                emptySearchBody,
-                status,
-                searchQuery,
-                updateSearchQuery,
-                selectedCount,
-                selectNone,
-                fetchItems,
-                actionButtons,
-                }
-          }
+          emptyContentTitle,
+          emptyContentBody,
+          emptySearchTitle,
+          emptySearchBody,
+          status,
+          searchQuery,
+          updateSearchQuery,
+          selectedCount,
+          selectNone,
+          fetchItems,
+          actionButtons,
+        }
+        }
         metadata={meta}
         autocompleteEndpoint={`/hosts/${hostId}/traces/auto_complete_search`}
         foremanApiAutoComplete
@@ -143,49 +145,49 @@ const TracesTab = () => {
         </Thead>
         <Tbody>
           {results?.map((result, rowIndex) => {
-          const {
-            id,
-            application,
-            helper,
-            app_type: appType,
-          } = result;
-          const resolveDisabled = !isSelectable(id);
-          let rowDropdownItems = [
-            { title: 'Restart via remote execution', onClick: () => onRestartApp(id) },
-            {
-              component: 'a', href: resolveTraceUrl({ hostname, search: tracesSearchQuery(id) }), title: 'Restart via customized remote execution',
-            },
-          ];
-          if (resolveDisabled) {
-            rowDropdownItems = [
-              { isDisabled: true, title: __('Traces that require logout cannot be restarted remotely') },
+            const {
+              id,
+              application,
+              helper,
+              app_type: appType,
+            } = result;
+            const resolveDisabled = !isSelectable(id);
+            let rowDropdownItems = [
+              { title: 'Restart via remote execution', onClick: () => onRestartApp(id) },
+              {
+                component: 'a', href: resolveTraceUrl({ hostname, search: tracesSearchQuery(id) }), title: 'Restart via customized remote execution',
+              },
             ];
-          }
-          return (
-            <Tr key={id} >
-              <Td select={{
-                disable: resolveDisabled,
-                props: {
-                  'aria-label': `check-${application}`,
-                },
-                isSelected: isSelected(id),
-                onSelect: (event, selected) => selectOne(selected, id),
-                rowIndex,
-                variant: 'checkbox',
-              }}
-              />
-              <Td>{application}</Td>
-              <Td>{appType}</Td>
-              <Td>{helper}</Td>
-              <Td
-                actions={{
-                  items: rowDropdownItems,
+            if (resolveDisabled) {
+              rowDropdownItems = [
+                { isDisabled: true, title: __('Traces that require logout cannot be restarted remotely') },
+              ];
+            }
+            return (
+              <Tr key={id} >
+                <Td select={{
+                  disable: resolveDisabled,
+                  props: {
+                    'aria-label': `check-${application}`,
+                  },
+                  isSelected: isSelected(id),
+                  onSelect: (event, selected) => selectOne(selected, id),
+                  rowIndex,
+                  variant: 'checkbox',
                 }}
-              />
-            </Tr>
-          );
-         })
-         }
+                />
+                <Td>{application}</Td>
+                <Td>{appType}</Td>
+                <Td>{helper}</Td>
+                <Td
+                  actions={{
+                    items: rowDropdownItems,
+                  }}
+                />
+              </Tr>
+            );
+          })
+          }
         </Tbody>
       </TableWrapper>
     </div>

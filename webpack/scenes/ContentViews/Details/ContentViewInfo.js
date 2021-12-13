@@ -45,7 +45,7 @@ const ContentViewInfo = ({ cvId, details }) => {
   };
 
   return (
-    <TextContent>
+    <TextContent className="margin-0-24">
       <TextList component={TextListVariants.dl}>
         <ActionableDetail
           label={__('Name')}

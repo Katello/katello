@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Modal, ModalVariant, FormSelect,
+  Flex, Modal, ModalVariant, FormSelect,
   FormSelectOption, Checkbox, Form, FormGroup,
-  ActionGroup, Button,
+  ActionGroup, Button, Tooltip,
 } from '@patternfly/react-core';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
@@ -116,21 +117,31 @@ const ComponentContentViewAddModal = ({
           </FormSelect>
         </FormGroup>
         <FormGroup fieldId="latest">
-          <Checkbox
-            style={{ marginTop: 0 }}
-            id="latest"
-            name="latest"
-            label={__('Always update to latest version')}
-            isChecked={formLatest}
-            onChange={checked => updateLatest(checked)}
-          />
+          <Flex style={{ display: 'inline-flex' }}>
+            <Checkbox
+              style={{ marginTop: 0 }}
+              id="latest"
+              name="latest"
+              label={__('Always update to latest version')}
+              isChecked={formLatest}
+              onChange={checked => updateLatest(checked)}
+            />
+            <Tooltip
+              position="top"
+              content={
+                __('This content view will be automatically updated to the latest version.')
+              }
+            >
+              <OutlinedQuestionCircleIcon />
+            </Tooltip>
+          </Flex>
         </FormGroup>
         <ActionGroup>
           <Button aria-label="add_component" variant="primary" type="submit">{__('Submit')}</Button>
           <Button variant="link" onClick={() => setIsOpen(false)}>{__('Cancel')}</Button>
         </ActionGroup>
       </Form>
-    </Modal>);
+    </Modal >);
 };
 
 ComponentContentViewAddModal.propTypes = {

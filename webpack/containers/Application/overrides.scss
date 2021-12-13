@@ -40,9 +40,62 @@ html .pagination-pf-pagesize.btn-group {
   }
 }
 
-// Patternfly 4's Grid doesn't add margin at the top and bottom
-.grid-with-margin {
-  margin: 20px 4px;
+// Removes inherited container padding on view
+.container-fluid.container-pf-nav-pf-vertical.nav-pf-persistent-secondary {
+  padding: 0;
+}
+
+// Margin shortcuts
+.margin-24 {
+  margin: 24px;
+}
+
+.margin-16 {
+  margin: 16px;
+}
+
+.margin-8 {
+  margin: 8px;
+}
+
+.margin-16-24 {
+  margin: 16px 24px;
+}
+
+.margin-24-0 {
+  margin: 24px 0;
+}
+
+.margin-16-0 {
+  margin: 16px 0;
+}
+
+.margin-0-24 {
+  margin: 0 24px;
+}
+
+.margin-right-16 {
+  margin: 0 16px 0 0;
+}
+
+.gap-16 {
+  grid-gap: 16px;
+}
+
+.margin-bottom-24 {
+  margin-bottom: 24px;
+}
+
+.margin-top-24 {
+  margin-top: 24px;
+}
+
+.margin-top-16 {
+  margin-top: 16px;
+}
+
+.margin-top-8 {
+  margin-top: 8px;
 }
 
 // needed to ensure correct spacing between buttons and the button
@@ -66,10 +119,6 @@ html .pagination-pf-pagesize.btn-group {
 // Override browser default outline ring on focus
 *:focus {
   outline: none;
-}
-
-.tab-body-with-spacing {
-  margin: 24px 0px;
 }
 
 // Modal sizing fix

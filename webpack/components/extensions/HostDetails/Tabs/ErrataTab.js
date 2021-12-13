@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem } from '@patternfly/react-core';
+import {
+  Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
+  DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem,
+} from '@patternfly/react-core';
 import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
 import {
   TableVariant,
@@ -145,7 +147,7 @@ export const ErrataTab = () => {
   ));
 
   const katelloAgentAvailable = (contentFacet.katelloAgentInstalled &&
-                                 contentFacet.katelloAgentEnabled);
+    contentFacet.katelloAgentEnabled);
   const apply = () => {
     if (contentFacet.remoteExecutionByDefault || !katelloAgentAvailable) {
       applyViaRemoteExecution();
@@ -262,26 +264,26 @@ export const ErrataTab = () => {
         />
       </SplitItem>
       {hostIsNonLibrary &&
-      <SplitItem>
-        <ToggleGroup aria-label="Installable Errata">
-          <ToggleGroupItem
-            text={__('All')}
-            buttonId="allToggle"
-            aria-label="Show All"
-            isSelected={toggleGroupState === ALL}
-            onChange={() => setToggleGroupState(ALL)}
-          />
+        <SplitItem>
+          <ToggleGroup aria-label="Installable Errata">
+            <ToggleGroupItem
+              text={__('All')}
+              buttonId="allToggle"
+              aria-label="Show All"
+              isSelected={toggleGroupState === ALL}
+              onChange={() => setToggleGroupState(ALL)}
+            />
 
-          <ToggleGroupItem
-            text={__('Installable')}
-            buttonId="installableToggle"
-            aria-label="Show Installable"
-            isSelected={toggleGroupState === INSTALLABLE}
-            onChange={() => setToggleGroupState(INSTALLABLE)}
-          />
-        </ToggleGroup>
-      </SplitItem>
-  }
+            <ToggleGroupItem
+              text={__('Installable')}
+              buttonId="installableToggle"
+              aria-label="Show Installable"
+              isSelected={toggleGroupState === INSTALLABLE}
+              onChange={() => setToggleGroupState(INSTALLABLE)}
+            />
+          </ToggleGroup>
+        </SplitItem>
+      }
     </Split>
   );
 
@@ -290,21 +292,21 @@ export const ErrataTab = () => {
       <div id="errata-tab">
         <TableWrapper
           {...{
-                metadata,
-                emptyContentTitle,
-                emptyContentBody,
-                emptySearchTitle,
-                emptySearchBody,
-                status,
-                activeFilters,
-                defaultFilters,
-                actionButtons,
-                searchQuery,
-                updateSearchQuery,
-                selectedCount,
-                selectNone,
-                toggleGroup,
-                }
+            metadata,
+            emptyContentTitle,
+            emptyContentBody,
+            emptySearchTitle,
+            emptySearchBody,
+            status,
+            activeFilters,
+            defaultFilters,
+            actionButtons,
+            searchQuery,
+            updateSearchQuery,
+            selectedCount,
+            selectNone,
+            toggleGroup,
+          }
           }
           additionalListeners={[
             hostId, toggleGroupState, errataTypeSelected, errataSeveritySelected]}
@@ -352,9 +354,9 @@ export const ErrataTab = () => {
 
                 if (contentFacet.katelloAgentInstalled && contentFacet.katelloAgentEnabled) {
                   rowActions.unshift({
-                      title: __('Apply via Katello agent'),
-                      onClick: () => applyErratumViaKatelloAgent(errataId),
-                    });
+                    title: __('Apply via Katello agent'),
+                    onClick: () => applyErratumViaKatelloAgent(errataId),
+                  });
                 }
               } else {
                 rowActions = [
@@ -374,15 +376,15 @@ export const ErrataTab = () => {
                         rowIndex,
                         isExpanded,
                         onToggle: (_event, _rInx, isOpen) => expandedErrata.onToggle(isOpen, id),
-                    }}
+                      }}
                     />
                     <Td select={{
-                        disable: !isSelectable(errataId),
-                        isSelected: isSelected(errataId),
-                        onSelect: (event, selected) => selectOne(selected, errataId),
-                        rowIndex,
-                        variant: 'checkbox',
-                        }}
+                      disable: !isSelectable(errataId),
+                      isSelected: isSelected(errataId),
+                      onSelect: (event, selected) => selectOne(selected, errataId),
+                      rowIndex,
+                      variant: 'checkbox',
+                    }}
                     />
                     <Td>
                       <a href={urlBuilder(`errata/${id}`, '')}>{errataId}</a>
@@ -390,13 +392,13 @@ export const ErrataTab = () => {
                     <Td><ErrataType {...erratum} /></Td>
                     <Td><ErrataSeverity {...erratum} /></Td>
                     <Td>
-                      { isInstallable ?
+                      {isInstallable ?
                         <span><CheckIcon /> {__('Yes')}</span> :
                         <span>
                           <Tooltip
                             content={
-                                         __("This erratum is not installable because it is not in this host's content view and lifecycle environment.")
-                                      }
+                              __("This erratum is not installable because it is not in this host's content view and lifecycle environment.")
+                            }
                           >
 
                             <TimesIcon />
@@ -410,8 +412,8 @@ export const ErrataTab = () => {
                     <Td
                       key={`rowActions-${id}`}
                       actions={{
-                          items: rowActions,
-                        }}
+                        items: rowActions,
+                      }}
 
                     />
                   </Tr>
@@ -428,9 +430,9 @@ export const ErrataTab = () => {
                     </Td>
                   </Tr>
                 </Tbody>
-                );
-              })
-              }
+              );
+            })
+            }
           </>
         </TableWrapper>
       </div>

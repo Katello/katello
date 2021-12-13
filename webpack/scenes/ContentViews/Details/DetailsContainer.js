@@ -5,9 +5,11 @@ import { STATUS } from 'foremanReact/constants';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 import Loading from '../../../components/Loading';
 import getContentViewDetails from './ContentViewDetailActions';
-import { selectCVDetails,
+import {
+  selectCVDetails,
   selectCVDetailStatus,
-  selectCVDetailError } from './ContentViewDetailSelectors';
+  selectCVDetailError,
+} from './ContentViewDetailSelectors';
 
 const DetailsContainer = ({ children, cvId, isOpen }) => {
   const dispatch = useDispatch();
@@ -23,7 +25,7 @@ const DetailsContainer = ({ children, cvId, isOpen }) => {
 
   if (status === STATUS.PENDING) return (<Loading />);
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
-  return (<React.Fragment>{children}</React.Fragment>);
+  return (<>{children}</>);
 };
 
 DetailsContainer.propTypes = {

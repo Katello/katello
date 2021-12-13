@@ -70,16 +70,16 @@ const ContentPage = () => {
   }
 
   return (
-    <Grid className="grid-with-margin">
-      <GridItem span={12}>
+    <Grid>
+      <GridItem span={12} className="margin-24">
         <TextContent>
           <Text component={TextVariants.h1}>{__(`${selectedContentType}`)}</Text>
         </TextContent>
       </GridItem>
       <GridItem span={12}>
         <ContentTable {...{
- selectedContentType, setSelectedContentType, contentTypes, showContentTypeSelector,
-}}
+          selectedContentType, setSelectedContentType, contentTypes, showContentTypeSelector,
+        }}
         />
       </GridItem>
     </Grid>

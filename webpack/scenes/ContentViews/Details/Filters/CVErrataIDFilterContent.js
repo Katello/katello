@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
-import { capitalize, omit } from 'lodash';
+import { capitalize, omit, isEqual } from 'lodash';
 import { TableVariant } from '@patternfly/react-table';
 import {
   Tabs, Tab, TabTitleText, Split, SplitItem, Select, SelectVariant,
@@ -229,6 +229,13 @@ const CVErrataIDFilterContent = ({
     setStatusSelected(ALL_STATUSES);
   };
 
+  const resetFiltersDisabled =
+    startDate === '' &&
+    endDate === '' &&
+    isEqual(selectedTypes, ERRATA_TYPES) &&
+    dateType === 'issued' &&
+    statusSelected === ALL_STATUSES;
+
   const emptyContentTitle = __('No errata available to add to this filter.');
   const emptyContentBody = __('No errata available for this content view.');
   const emptySearchTitle = __('No matching filter rules found.');
@@ -236,9 +243,9 @@ const CVErrataIDFilterContent = ({
 
 
   return (
-    <Tabs activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
+    <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
       <Tab eventKey={0} title={<TabTitleText>{__('Errata')}</TabTitleText>}>
-        <div className="tab-body-with-spacing">
+        <div className="margin-24-0">
           <TableWrapper
             {...{
               rows,
@@ -328,8 +335,8 @@ const CVErrataIDFilterContent = ({
             }
             nodesBelowSearch={
               <>
-                <Flex style={{ marginTop: '2em' }}>
-                  <FlexItem span={2} spacer={{ default: 'spacerMd' }}>
+                <Flex>
+                  <FlexItem span={2}>
                     <Select
                       selections={dateType}
                       onSelect={(_event, selection) => {
@@ -371,7 +378,7 @@ const CVErrataIDFilterContent = ({
                     </Bullseye>
                   </FlexItem>
                 </Flex>
-                <Flex style={{ marginTop: '2em', marginBottom: '1em' }}>
+                <Flex>
                   <FlexItem>
                     <ChipGroup categoryName={dateType === 'issued' ? __('Issued') : __('Updated')}>
                       <Chip key="startDate" onClick={() => setValidStartDate('')} isReadOnly={startDate === ''}>
@@ -404,7 +411,7 @@ const CVErrataIDFilterContent = ({
                     </ChipGroup>
                   </FlexItem>
                   <FlexItem>
-                    <Button variant="link" onClick={resetFilters} isInline>
+                    <Button isDisabled={resetFiltersDisabled} variant="link" onClick={resetFilters} isInline>
                       {__('Reset filters')}
                     </Button>
                   </FlexItem>
@@ -416,7 +423,7 @@ const CVErrataIDFilterContent = ({
       </Tab>
       {(repositories.length || showAffectedRepos) &&
         <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
-          <div className="tab-body-with-spacing">
+          <div className="margin-24-0">
             <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>
         </Tab>

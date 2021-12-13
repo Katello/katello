@@ -56,7 +56,7 @@ export const links = [
   },
   {
     path: 'content_views',
-    component: WithOrganization(withHeader(ContentViews, { title: __('Content Views') })),
+    component: WithOrganization(withHeader(ContentViews, { title: __('Content views') })),
   },
   {
     path: 'content_views/:id([0-9]+)',

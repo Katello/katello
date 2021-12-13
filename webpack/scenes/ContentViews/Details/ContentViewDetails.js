@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Grid,
+import {
+  Grid,
   GridItem,
   TextContent,
   Text,
@@ -12,7 +13,8 @@ import { Grid,
   Dropdown,
   DropdownItem,
   KebabToggle,
-  DropdownPosition } from '@patternfly/react-core';
+  DropdownPosition,
+} from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 
@@ -76,7 +78,7 @@ export default () => {
     },
     ...composite ? [{
       key: 'contentviews',
-      title: __('Content Views'),
+      title: __('Content views'),
       content: <ContentViewComponents {...{ cvId, details }} />,
     }] : [{
       key: 'repositories',
@@ -97,14 +99,14 @@ export default () => {
 
   return (
     <>
-      <Grid className="grid-with-margin">
-        <DetailsContainer cvId={cvId}>
-          <>
+      <DetailsContainer cvId={cvId}>
+        <Grid>
+          <Grid className="margin-16-24">
             <CVBreadCrumb />
-            <GridItem xl={8} lg={7} sm={12} style={{ margin: '10px 0' }}>
+            <GridItem md={8} sm={12}>
               <Flex alignItems={{
-              default: 'alignItemsCenter',
-            }}
+                default: 'alignItemsCenter',
+              }}
               >
                 <FlexItem>
                   <TextContent>
@@ -115,23 +117,23 @@ export default () => {
                 </FlexItem>
               </Flex>
             </GridItem>
-            <GridItem xl={4} lg={5} sm={12} >
+            <GridItem md={4} sm={12} style={{ minWidth: '380px' }}>
               <Flex justifyContent={{ lg: 'justifyContentFlexEnd', sm: 'justifyContentFlexStart' }}>
                 {hasPermission(permissions, 'publish_content_views') &&
-                <FlexItem>
-                  <Button onClick={() => { setIsPublishModalOpen(true); }} variant="primary" aria-label="publish_content_view">
-                    {__('Publish new version')}
-                  </Button>
-                  {isPublishModalOpen && <PublishContentViewWizard
-                    details={details}
-                    show={isPublishModalOpen}
-                    setIsOpen={setIsPublishModalOpen}
-                    currentStep={currentStep}
-                    setCurrentStep={setCurrentStep}
-                    aria-label="publish_content_view_modal"
-                  />}
-                </FlexItem>
-              }
+                  <FlexItem>
+                    <Button onClick={() => { setIsPublishModalOpen(true); }} variant="primary" aria-label="publish_content_view">
+                      {__('Publish new version')}
+                    </Button>
+                    {isPublishModalOpen && <PublishContentViewWizard
+                      details={details}
+                      show={isPublishModalOpen}
+                      setIsOpen={setIsPublishModalOpen}
+                      currentStep={currentStep}
+                      setCurrentStep={setCurrentStep}
+                      aria-label="publish_content_view_modal"
+                    />}
+                  </FlexItem>
+                }
                 <FlexItem>
                   <Button
                     component="a"
@@ -156,12 +158,12 @@ export default () => {
                 </FlexItem>
               </Flex>
             </GridItem>
-            <GridItem span={12}>
-              <RoutedTabs tabs={tabs} defaultTabIndex={1} />
-            </GridItem>
-          </ >
-        </DetailsContainer >
-      </Grid >
+          </Grid>
+          <GridItem span={12}>
+            <RoutedTabs tabs={tabs} defaultTabIndex={1} />
+          </GridItem>
+        </Grid>
+      </DetailsContainer>
       {copying && <CopyContentViewModal
         cvId={cvId}
         cvName={name}

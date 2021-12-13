@@ -50,7 +50,7 @@ export const PackagesTab = () => {
 
   return (
     <div>
-      <div id="packages-hint">
+      <div id="packages-hint" className="margin-0-24 margin-top-16">
         <Hint>
           <HintBody>
             {__('Packages management functionality on this page is incomplete')}.
@@ -64,16 +64,16 @@ export const PackagesTab = () => {
       <div id="packages-tab">
         <TableWrapper
           {...{
-                metadata,
-                emptyContentTitle,
-                emptyContentBody,
-                emptySearchTitle,
-                emptySearchBody,
-                status,
-                actionButtons,
-                searchQuery,
-                updateSearchQuery,
-                }
+            metadata,
+            emptyContentTitle,
+            emptyContentBody,
+            emptySearchTitle,
+            emptySearchBody,
+            status,
+            actionButtons,
+            searchQuery,
+            updateSearchQuery,
+          }
           }
           additionalListeners={[hostId]}
           fetchItems={fetchItems}
@@ -90,33 +90,33 @@ export const PackagesTab = () => {
           </Thead>
           <Tbody>
             {results?.map((packages) => {
-                const {
-                  id,
-                  name: packageName,
-                  nvra: installedVersion,
-                  rpm_id: rpmId,
-                } = packages;
-                return (
-                  <Tr key={`${id}`}>
-                    <Td>
-                      {rpmId
-                        ? <a href={urlBuilder(`packages/${rpmId}`, '')}>{packageName}</a>
-                        : packageName
-                      }
-                    </Td>
-                    <Td><PackagesStatus {...packages} /></Td>
-                    <Td>{installedVersion.replace(`${packageName}-`, '')}</Td>
-                    <Td><PackagesLatestVersion {...packages} /></Td>
-                    <Td
-                      key={`rowActions-${id}`}
-                      actions={{
-                          items: rowActions,
-                        }}
-                    />
-                  </Tr>
-                );
-              })
-              }
+              const {
+                id,
+                name: packageName,
+                nvra: installedVersion,
+                rpm_id: rpmId,
+              } = packages;
+              return (
+                <Tr key={`${id}`}>
+                  <Td>
+                    {rpmId
+                      ? <a href={urlBuilder(`packages/${rpmId}`, '')}>{packageName}</a>
+                      : packageName
+                    }
+                  </Td>
+                  <Td><PackagesStatus {...packages} /></Td>
+                  <Td>{installedVersion.replace(`${packageName}-`, '')}</Td>
+                  <Td><PackagesLatestVersion {...packages} /></Td>
+                  <Td
+                    key={`rowActions-${id}`}
+                    actions={{
+                      items: rowActions,
+                    }}
+                  />
+                </Tr>
+              );
+            })
+            }
           </Tbody>
         </TableWrapper>
       </div>
