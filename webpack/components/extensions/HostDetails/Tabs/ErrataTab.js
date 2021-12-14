@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useLocation, useHistory } from 'react-router-dom';
 import {
   Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem,
@@ -20,6 +21,7 @@ import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
+import { friendlySearchParam } from '../../../../utils/helpers';
 import SelectableDropdown from '../../../SelectableDropdown';
 import { useSet, useBulkSelect } from '../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../components/Table/TableWrapper';
@@ -95,6 +97,10 @@ export const ErrataTab = () => {
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
   const { results, ...metadata } = response;
   const status = useSelector(state => selectHostErrataStatus(state));
+  const history = useHistory();
+  const location = useLocation();
+  const urlSearchParam = location.search.split('?search=')[1];
+  const searchParam = urlSearchParam ? friendlySearchParam(urlSearchParam) : '';
   const errataSearchQuery = id => `errata_id = ${id}`;
   const {
     selectOne, isSelected, searchQuery, selectedCount, isSelectable,
@@ -104,6 +110,8 @@ export const ErrataTab = () => {
     metadata,
     idColumn: 'errata_id',
     isSelectable: result => result.installable,
+    initialSearchQuery: searchParam || '',
+    routerHistory: history,
   });
 
   if (!hostId) return <Skeleton />;
@@ -239,7 +247,7 @@ export const ErrataTab = () => {
   );
 
   const hostIsNonLibrary = (
-    !contentFacet.contentViewDefault && !contentFacet.lifecycleEnvironmentLibrary
+    contentFacet?.contentViewDefault === false && contentFacet.lifecycleEnvironmentLibrary === false
   );
   const toggleGroup = (
     <Split hasGutter>

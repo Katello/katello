@@ -117,6 +117,8 @@ export const useBulkSelect = ({
   results,
   metadata,
   initialArry = [],
+  initialSearchQuery = '',
+  routerHistory,
   idColumn = 'id',
   isSelectable,
 }) => {
@@ -125,7 +127,7 @@ export const useBulkSelect = ({
                   results, metadata, initialArry, idColumn, isSelectable,
                 });
   const exclusionSet = useSet([]);
-  const [searchQuery, updateSearchQuery] = useState('');
+  const [searchQuery, updateSearchQuery] = useState(initialSearchQuery);
   const [selectAllMode, setSelectAllMode] = useState(false);
   const selectedCount = selectAllMode ?
     Number(metadata.selectable) - exclusionSet.size : selectOptions.selectedCount;
@@ -203,6 +205,13 @@ export const useBulkSelect = ({
       selectNone();
     }
   }, [searchQuery, selectAllMode, prevSearchRef, selectNone]);
+
+  // useEffect(() => {
+  //   routerHistory.replace({
+  //     ...routerHistory,
+  //     search: `?search=${encodeURIComponent(searchQuery)}`,
+  //   });
+  // }, [searchQuery, routerHistory]);
 
   return {
     ...selectOptions,
