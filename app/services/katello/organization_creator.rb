@@ -16,7 +16,7 @@ module Katello
       User.as_anonymous_admin do
         Organization.not_created_in_katello.each do |org|
           creator = self.new(org)
-          creator.create!
+          creator.create!(raise_validation_errors: false)
         end
       end
     end
@@ -42,7 +42,7 @@ module Katello
       end
     end
 
-    def create!
+    def create!(raise_validation_errors: true)
       ActiveRecord::Base.transaction do
         seed!
 
@@ -50,8 +50,11 @@ module Katello
 
         @organization.created_in_katello = true
 
-        # existing validation errors are not resolvable here, so don't validatate
-        @organization.save(validate: false)
+        begin
+          @organization.save!
+        rescue => e
+          raise e if raise_validation_errors
+        end
       end
     end
 
