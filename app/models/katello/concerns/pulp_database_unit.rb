@@ -190,7 +190,7 @@ module Katello
                 service.update_model(model, generic_content_type)
               elsif self == ::Katello::Erratum
                 # Errata will change pulp_hrefs if the upstream repo updates them
-                erratum_updated_ids << service.update_model(model)
+                erratum_updated_ids << service.update_model(model, repository)
               else
                 service.update_model(model)
               end
