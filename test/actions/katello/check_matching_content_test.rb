@@ -28,7 +28,7 @@ module ::Actions::Katello
 
       plan_action(action, new_repo, [repo])
 
-      assert_action_planed_with(action, Actions::Katello::Repository::CheckMatchingContent, :source_repo_id => repo.id, :target_repo_id => new_repo.id)
+      assert_action_planned_with(action, Actions::Katello::Repository::CheckMatchingContent, :source_repo_id => repo.id, :target_repo_id => new_repo.id)
     end
 
     def test_does_not_plan_check_matching_content_without_target_repo_environment

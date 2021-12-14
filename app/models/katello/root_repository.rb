@@ -49,7 +49,7 @@ module Katello
     has_many :repositories, :class_name => "Katello::Repository", :foreign_key => :root_id,
                           :inverse_of => :root, :dependent => :destroy
 
-    has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference', :foreign_key => :root_repository_id,
+    has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference',
              :dependent => :destroy, :inverse_of => :root_repository
 
     validates_lengths_from_database :except => [:label]

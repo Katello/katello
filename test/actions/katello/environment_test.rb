@@ -28,7 +28,7 @@ module ::Actions::Katello::Environment
       environment.expects(:content_view_environments).returns([cve])
       environment.expects(:deletable?).returns(true)
       plan_action(action, environment)
-      assert_action_planed_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cve], :skip_repo_destroy => false, :organization_destroy => false)
+      assert_action_planned_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cve], :skip_repo_destroy => false, :organization_destroy => false)
     end
   end
 end

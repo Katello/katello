@@ -18,8 +18,8 @@ module Actions
 
       plan_action(action, query, :force => true)
 
-      assert_action_planed_with(action, bulk_action, metadata_gen, query.archived, :force => true)
-      assert_action_planed_with(action, bulk_action, metadata_gen, query.in_published_environments, :force => true)
+      assert_action_planned_with(action, bulk_action, metadata_gen, query.archived, :force => true)
+      assert_action_planned_with(action, bulk_action, metadata_gen, query.in_published_environments, :force => true)
     end
   end
 end

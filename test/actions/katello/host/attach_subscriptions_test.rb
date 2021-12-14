@@ -27,9 +27,9 @@ module Katello::Host
 
         plan_action action, @host, pools_with_quantities
 
-        assert_action_planed_with action, Actions::Candlepin::Consumer::AttachSubscription, :uuid => @host.subscription_facet.uuid,
+        assert_action_planned_with action, Actions::Candlepin::Consumer::AttachSubscription, :uuid => @host.subscription_facet.uuid,
                                   :quantity => 1, :pool_uuid => @pool.cp_id
-        assert_action_planed_with action, Actions::Candlepin::Consumer::AttachSubscription, :uuid => @host.subscription_facet.uuid,
+        assert_action_planned_with action, Actions::Candlepin::Consumer::AttachSubscription, :uuid => @host.subscription_facet.uuid,
                                           :quantity => 2, :pool_uuid => @pool.cp_id
       end
 

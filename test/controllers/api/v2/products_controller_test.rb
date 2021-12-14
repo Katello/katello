@@ -88,9 +88,9 @@ module Katello
         :label => 'product_label'
       }
       Api::V2::ProductsController.any_instance.expects(:sync_task).with do |action_class, prod, org|
-        action_class.must_equal ::Actions::Katello::Product::Create
-        prod.must_be_kind_of(Product)
-        org.must_equal @organization
+        assert_equal action_class, ::Actions::Katello::Product::Create
+        assert_instance_of Product, prod
+        assert_equal org, @organization
         prod.organization = @organization
         prod.provider = @provider
         assert_equal product_params[:name], prod.name
@@ -154,12 +154,12 @@ module Katello
       params = { :name => 'New Name', :description => 'Product Description', :label => 'product_label' }
       assert_sync_task(::Actions::Katello::Product::Update) do |product, product_params|
         assert_equal @product.id, product.id
-        product_params.key?(:name).must_equal true
-        product_params[:name].must_equal params[:name]
-        product_params.key?(:description).must_equal true
-        product_params[:description].must_equal params[:description]
-        product_params.key?(:label).must_equal true
-        product_params[:label].must_equal params[:label]
+        assert_equal product_params.key?(:name), true
+        assert_equal product_params[:name], params[:name]
+        assert_equal product_params.key?(:description), true
+        assert_equal product_params[:description], params[:description]
+        assert_equal product_params.key?(:label), true
+        assert_equal product_params[:label], params[:label]
       end
       put :update, params: { :id => @product.id, :product => params }
 
@@ -221,7 +221,7 @@ module Katello
 
     def test_sync
       assert_async_task(::Actions::BulkAction) do |action_class, _repos|
-        action_class.must_equal ::Actions::Katello::Repository::Sync
+        assert_equal action_class, ::Actions::Katello::Repository::Sync
       end
       post :sync, params: { :id => @product.id }
       assert_response :success

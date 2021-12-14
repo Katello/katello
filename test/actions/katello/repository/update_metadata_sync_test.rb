@@ -23,8 +23,8 @@ module Actions
       plan_action(action, repo)
 
       # primary capsule sync should get ignored
-      assert_action_planed_with(action, capsule_sync_class, mirror, repository_id: repo.id)
-      assert_action_planed_with(action, metadata_generate_class, repo)
+      assert_action_planned_with(action, capsule_sync_class, mirror, repository_id: repo.id)
+      assert_action_planned_with(action, metadata_generate_class, repo)
     end
   end
 end

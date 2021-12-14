@@ -38,7 +38,7 @@ class MigrateContentHosts < ActiveRecord::Migration[4.2]
     self.table_name = "katello_content_views"
 
     has_many :systems, :class_name => "MigrateContentHosts::System", :dependent => :restrict_with_exception
-    has_many :content_facets, :class_name => "MigrateContentHosts::ContentFacet", :foreign_key => :content_view_id,
+    has_many :content_facets, :class_name => "MigrateContentHosts::ContentFacet",
              :inverse_of => :content_view, :dependent => :restrict_with_exception
   end
 

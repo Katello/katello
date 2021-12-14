@@ -68,10 +68,11 @@ module Katello
     end
 
     def deep_sort(obj)
-      if obj.is_a?(Array)
+      case obj
+      when Array
         to_ret = obj.map { |value| deep_sort(value) }
         to_ret[0].is_a?(Hash) ? to_ret : to_ret.sort
-      elsif obj.is_a?(Hash)
+      when Hash
         obj.inject({}) do |hash, (key, value)|
           hash[key] = deep_sort(value)
           hash
@@ -187,7 +188,7 @@ module Katello
       clause_gen = setup_whitelist_filter(rules) do |gen|
         gen.expects(:package_clauses_for_errata).once.
                     returns(returned_packages).with do |clauses|
-                      clauses.map(&:to_sql).must_equal(expected_errata_clauses.map(&:to_sql))
+                      assert_equal clauses.map(&:to_sql), expected_errata_clauses.map(&:to_sql)
                     end
       end
       assert_equal prepend_modular(returned_packages), clause_gen.copy_clause
@@ -196,7 +197,7 @@ module Katello
       clause_gen = setup_blacklist_filter(rules) do |gen|
         gen.expects(:package_clauses_for_errata).once.
                     returns(returned_packages).with do |clauses|
-                      clauses.map(&:to_sql).must_equal(expected_errata_clauses.map(&:to_sql))
+                      assert_equal clauses.map(&:to_sql), expected_errata_clauses.map(&:to_sql)
                     end
       end
       expected = {"$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [returned_packages]}]}

@@ -20,7 +20,7 @@ module Katello::Host
 
         plan_action action, @host
 
-        assert_action_planed_with action, Actions::Candlepin::Consumer::AutoAttachSubscriptions, :uuid => @host.subscription_facet.uuid
+        assert_action_planned_with action, Actions::Candlepin::Consumer::AutoAttachSubscriptions, :uuid => @host.subscription_facet.uuid
       end
     end
   end

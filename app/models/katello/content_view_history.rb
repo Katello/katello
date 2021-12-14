@@ -8,7 +8,7 @@ module Katello
 
     belongs_to :triggered_by, :class_name => "Katello::ContentViewVersion", :inverse_of => :triggered_histories
 
-    belongs_to :task, :class_name => "ForemanTasks::Task::DynflowTask", :foreign_key => :task_id
+    belongs_to :task, :class_name => "ForemanTasks::Task::DynflowTask"
 
     IN_PROGRESS = 'in progress'.freeze
     FAILED = 'failed'.freeze

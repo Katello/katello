@@ -40,7 +40,7 @@ module Actions
 
       plan_action(action, [yum_repo], version, cloned_repo, options)
 
-      assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
+      assert_action_planned_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
                                 :copy_contents => true, :metadata_generate => true,
                                 :solve_dependencies => false)
@@ -56,7 +56,7 @@ module Actions
 
       plan_action(action, [yum_repo], version_solve_deps, cloned_repo, {})
 
-      assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
+      assert_action_planned_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
                                 :copy_contents => true, :metadata_generate => true,
                                 :solve_dependencies => true)
@@ -71,7 +71,7 @@ module Actions
 
       plan_action(action, [yum_repo], version, cloned_repo, options)
 
-      assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
+      assert_action_planned_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
                                 :copy_contents => true, :metadata_generate => true,
                                 :solve_dependencies => false)
@@ -86,7 +86,7 @@ module Actions
 
       plan_action(action, [docker_repo], version, cloned_repo, options)
 
-      assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [docker_repo], cloned_repo,
+      assert_action_planned_with(action, Actions::Katello::Repository::CloneContents, [docker_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
                                 :copy_contents => true, :metadata_generate => true,
                                 :solve_dependencies => false)
@@ -100,7 +100,7 @@ module Actions
 
       plan_action(action, [file_repo], version, cloned_repo, options)
 
-      assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [file_repo], cloned_repo,
+      assert_action_planned_with(action, Actions::Katello::Repository::CloneContents, [file_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil, :copy_contents => true,
                                 :metadata_generate => true, :solve_dependencies => false)
     end

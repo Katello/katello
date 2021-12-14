@@ -58,7 +58,7 @@ module Katello
                                         where(product: @products.syncable)).count
 
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
-        action_class.must_equal ::Actions::Katello::Repository::Sync
+        assert_equal action_class, ::Actions::Katello::Repository::Sync
         assert_equal expected_repo_size, repos.size
       end
 
@@ -70,7 +70,7 @@ module Katello
     def test_sync_with_skip_metadata_check
       create_docker_repo
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
-        action_class.must_equal ::Actions::Katello::Repository::Sync
+        assert_equal action_class, ::Actions::Katello::Repository::Sync
         refute_empty repos
         assert repos.all? { |repo| repo.yum? }
       end
@@ -86,7 +86,7 @@ module Katello
                          :content_view_version => @organization.default_content_view.versions.first, :download_policy => 'on_demand')
 
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
-        action_class.must_equal ::Actions::Katello::Repository::Sync
+        assert_equal action_class, ::Actions::Katello::Repository::Sync
         refute_empty repos
         assert repos.all? { |repo| repo.yum? } && repos.all? { |repo| repo.download_policy != ::Katello::RootRepository::DOWNLOAD_ON_DEMAND }
       end
@@ -113,7 +113,7 @@ module Katello
 
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         refute_empty repos
-        action_class.must_equal ::Actions::Katello::Repository::VerifyChecksum
+        assert_equal action_class, ::Actions::Katello::Repository::VerifyChecksum
       end
 
       put :verify_checksum_products, params: { :ids => @products.collect(&:id), :organization_id => @organization.id }

@@ -24,7 +24,7 @@ module Katello::Host
         repositories = [[library_repo]]
         library_repo.expects(:build_clone).with(content_view: @version.content_view, version: @version).returns(new_repo)
         plan_action(action, @version, repositories)
-        assert_action_planed_with(action, ::Actions::Katello::Repository::Create, new_repo, clone: true)
+        assert_action_planned_with(action, ::Actions::Katello::Repository::Create, new_repo, clone: true)
         mapping = {}
         mapping[[library_repo]] = new_repo
         assert_equal mapping, action.repository_mapping

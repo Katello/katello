@@ -30,7 +30,7 @@ module Katello
              :inverse_of => :composite_content_view, :foreign_key => :composite_content_view_id, autosave: true
 
     has_many :component_composites, :class_name => "Katello::ContentViewComponent",
-             :dependent => :destroy, :inverse_of => :content_view, :foreign_key => :content_view_id
+             :dependent => :destroy, :inverse_of => :content_view
 
     has_many :content_view_repositories, :class_name => 'Katello::ContentViewRepository',
              :dependent => :destroy, :inverse_of => :content_view
@@ -41,16 +41,16 @@ module Katello
 
     has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict_with_exception
 
-    has_many :content_facets, :class_name => "Katello::Host::ContentFacet", :foreign_key => :content_view_id,
+    has_many :content_facets, :class_name => "Katello::Host::ContentFacet",
                           :inverse_of => :content_view, :dependent => :restrict_with_exception
     has_many :hosts,      :class_name => "::Host::Managed", :through => :content_facets,
                           :inverse_of => :content_view
-    has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet", :foreign_key => :content_view_id,
+    has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet",
                           :inverse_of => :content_view, :dependent => :nullify
     has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets,
                           :inverse_of => :content_view
 
-    has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference', :foreign_key => :content_view_id,
+    has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference',
              :dependent => :destroy, :inverse_of => :content_view
 
     validates_lengths_from_database :except => [:label]

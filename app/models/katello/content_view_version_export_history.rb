@@ -9,7 +9,7 @@ module Katello
     INCREMENTAL = "incremental".freeze
     EXPORT_TYPES = [COMPLETE, INCREMENTAL].freeze
 
-    belongs_to :content_view_version, :class_name => "::Katello::ContentViewVersion", :inverse_of => :export_histories, foreign_key: 'content_view_version_id'
+    belongs_to :content_view_version, :class_name => "::Katello::ContentViewVersion", :inverse_of => :export_histories
     validates_lengths_from_database
 
     validates :content_view_version_id, :presence => true

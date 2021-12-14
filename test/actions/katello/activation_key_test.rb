@@ -29,12 +29,12 @@ module ::Actions::Katello::ActivationKey
 
       plan_action action, activation_key, service_level: 'Self-support'
 
-      assert_action_planed_with(action, ::Actions::Candlepin::ActivationKey::Create, candlepin_input)
+      assert_action_planned_with(action, ::Actions::Candlepin::ActivationKey::Create, candlepin_input)
     end
 
     it 'raises error when validation fails' do
       activation_key.name = nil
-      proc { plan_action action, activation_key }.must_raise(ActiveRecord::RecordInvalid)
+      assert_raises(ActiveRecord::RecordInvalid) { plan_action action, activation_key }
     end
   end
 
@@ -85,7 +85,7 @@ module ::Actions::Katello::ActivationKey
       action.expects(:plan_self)
       action.expects(:action_subject).with(activation_key)
       plan_action(action, activation_key)
-      assert_action_planed_with(action, ::Actions::Candlepin::ActivationKey::Destroy, cp_id: activation_key.cp_id)
+      assert_action_planned_with(action, ::Actions::Candlepin::ActivationKey::Destroy, cp_id: activation_key.cp_id)
     end
   end
 end

@@ -192,7 +192,7 @@ module ::Actions::Katello::ContentView
 
       action.expects(:action_subject).with(content_view)
       plan_action(action, content_view, environment)
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cve)
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cve)
     end
   end
 
@@ -219,7 +219,7 @@ module ::Actions::Katello::ContentView
 
       action.expects(:action_subject).with(version.content_view)
       plan_action(action, version)
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version)
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version)
     end
   end
 
@@ -274,7 +274,7 @@ module ::Actions::Katello::ContentView
       action.expects(:action_subject).with(content_view)
       plan_action(action, content_view, options)
 
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => false, :organization_destroy => false)
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => false, :organization_destroy => false)
     end
 
     it 'plans for removing a version and an environment' do
@@ -289,8 +289,8 @@ module ::Actions::Katello::ContentView
       action.expects(:action_subject).with(content_view)
 
       plan_action(action, content_view, options)
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => false, :organization_destroy => false)
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, :skip_environment_check => true, :skip_destroy_env_content => true)
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => false, :organization_destroy => false)
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, :skip_environment_check => true, :skip_destroy_env_content => true)
     end
 
     it 'plans deleting all CV env and versions and removing repository references with destroy_content_view param' do
@@ -307,12 +307,12 @@ module ::Actions::Katello::ContentView
 
       plan_action(action, content_view, options)
       content_view.content_view_environments.each do |cvenv|
-        assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cvenv, :skip_repo_destroy => false, :organization_destroy => false)
+        assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cvenv, :skip_repo_destroy => false, :organization_destroy => false)
       end
       content_view.versions.each do |cv_version|
-        assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, cv_version, :skip_environment_check => true, :skip_destroy_env_content => true)
+        assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::Destroy, cv_version, :skip_environment_check => true, :skip_destroy_env_content => true)
       end
-      assert_action_planed_with(action, ::Actions::Pulp3::ContentView::DeleteRepositoryReferences, content_view, smart_proxy_service_1.smart_proxy)
+      assert_action_planned_with(action, ::Actions::Pulp3::ContentView::DeleteRepositoryReferences, content_view, smart_proxy_service_1.smart_proxy)
     end
 
     context 'organization destroy' do
@@ -341,7 +341,7 @@ module ::Actions::Katello::ContentView
 
     it 'raises error when validation fails' do
       ::Actions::Katello::ContentView::Update.any_instance.expects(:action_subject).with(content_view)
-      proc { create_and_plan_action action_class, content_view, :name => '' }.must_raise(ActiveRecord::RecordInvalid)
+      assert_raises(ActiveRecord::RecordInvalid) { create_and_plan_action action_class, content_view, :name => '' }
     end
   end
 
@@ -363,7 +363,7 @@ module ::Actions::Katello::ContentView
       action.expects(:action_subject).with(view.reload)
       action.expects(:plan_self)
       plan_action(action, view)
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, {})
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, {})
     end
   end
 
@@ -418,7 +418,7 @@ module ::Actions::Katello::ContentView
 
       plan_action(action, [{:content_view_version => content_view.version(library), :environments => [library]}], [],
                   {:errata_ids => ["FOO"]}, true, [], "BadDescription")
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, content_view.version(library), [library],
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, content_view.version(library), [library],
                                 :content => {:errata_ids => ["FOO"]}, :resolve_dependencies => true, :description => "BadDescription")
     end
 
@@ -432,9 +432,9 @@ module ::Actions::Katello::ContentView
 
       plan_action(action, [{:content_view_version => component, :environments => []}], [{:content_view_version => composite_version, :environments => [library]}],
                   {:errata_ids => ["FOO"]}, true, [], "BadDescription")
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, component, [],
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, component, [],
                                 :content => {:errata_ids => ["FOO"]}, :resolve_dependencies => true, :description => "BadDescription")
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, composite_version, [library],
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, composite_version, [library],
                                 :new_components => [new_version],
                                 :description => "BadDescription")
     end

@@ -7,8 +7,8 @@ class AddContentOrgId < ActiveRecord::Migration[5.1]
 
   class FakeProductContent < Katello::Model
     self.table_name = 'katello_product_contents'
-    belongs_to :product, :class_name => 'Katello::Product', :foreign_key => 'product_id', :inverse_of => :product_contents
-    belongs_to :content, :class_name => 'FakeContent', :foreign_key => 'content_id', :inverse_of => :product_contents
+    belongs_to :product, :class_name => 'Katello::Product', :inverse_of => :product_contents
+    belongs_to :content, :class_name => 'FakeContent', :inverse_of => :product_contents
   end
 
   class FakeProduct < Katello::Model

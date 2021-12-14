@@ -23,8 +23,8 @@ module Katello::Host
         ::Katello::Resources::Candlepin::Consumer.expects(:register_hypervisors).with(@hypervisor_params).returns(@hypervisor_response)
 
         plan_action(action, @hypervisor_params)
-        assert_action_planed_with(action, ::Actions::Katello::Host::HypervisorsUpdate) do |results, *_|
-          results.must_equal(:hypervisors => [{:uuid => 1, :name => 'foo', :organization_label => 'org-label'}])
+        assert_action_planned_with(action, ::Actions::Katello::Host::HypervisorsUpdate) do |results, *_|
+          assert_equal results, { :hypervisors => [{:uuid => 1, :name => 'foo', :organization_label => 'org-label'}] }
         end
       end
 
@@ -40,7 +40,7 @@ module Katello::Host
                     {:uuid => 2, :name => 'foo2', :organization_label => 'org-label'},
                     {:uuid => 3, :name => 'foo3', :organization_label => 'org-label'}]
         assert_equal expected, action.class.parse_hypervisors(json)
-        assert_equal [], action.class.parse_hypervisors({})
+        assert_empty action.class.parse_hypervisors({})
       end
     end
   end

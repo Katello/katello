@@ -9,10 +9,10 @@ module Katello
       HOST_TOOLS_TRACER_PACKAGE_NAME = 'katello-host-tools-tracer'.freeze
       SUBSCRIPTION_MANAGER_PACKAGE_NAME = 'subscription-manager'.freeze
 
-      belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :foreign_key => :kickstart_repository_id, :inverse_of => :kickstart_content_facets
+      belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :inverse_of => :kickstart_content_facets
       belongs_to :content_view, :inverse_of => :content_facets, :class_name => "Katello::ContentView"
       belongs_to :lifecycle_environment, :inverse_of => :content_facets, :class_name => "Katello::KTEnvironment"
-      belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :content_facets
+      belongs_to :content_source, :class_name => "::SmartProxy", :inverse_of => :content_facets
 
       has_many :content_facet_errata, :class_name => "Katello::ContentFacetErratum", :dependent => :delete_all, :inverse_of => :content_facet
       has_many :applicable_errata, :through => :content_facet_errata, :class_name => "Katello::Erratum", :source => :erratum

@@ -24,9 +24,9 @@ module Katello
              :inverse_of => :triggered_by, :foreign_key => :triggered_by_id
 
     has_many :export_histories, :class_name => "::Katello::ContentViewVersionExportHistory", :dependent => :destroy,
-             :inverse_of => :content_view_version, :foreign_key => :content_view_version_id
+             :inverse_of => :content_view_version
     has_many :import_histories, :class_name => "::Katello::ContentViewVersionImportHistory", :dependent => :destroy,
-             :inverse_of => :content_view_version, :foreign_key => :content_view_version_id
+             :inverse_of => :content_view_version
     has_many :repositories, :class_name => "::Katello::Repository", :dependent => :destroy
     has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
 

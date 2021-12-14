@@ -24,7 +24,7 @@ module Actions
         content_type: 'rpm'
       }
 
-      assert_action_planed_with(action, pulp3_import_class,
+      assert_action_planned_with(action, pulp3_import_class,
                                 repo, SmartProxy.pulp_primary,
                                 import_upload_args)
     end
