@@ -20,7 +20,7 @@ import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { enableRepoSetRepo, disableRepoSetRepo, resetRepoSetRepo, getHostRepositorySets } from './RepositorySetsActions';
 import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
 import { selectHostDetailsStatus } from '../../HostDetailsSelectors.js';
-import { useBulkSelect } from '../../../../../components/Table/TableHooks';
+import { useBulkSelect, useUrlParams } from '../../../../../components/Table/TableHooks';
 import { REPOSITORY_SETS_KEY } from './RepositorySetsConstants.js';
 import './RepositorySetsTab.scss';
 
@@ -78,11 +78,12 @@ const RepositorySetsTab = () => {
     lifecycleEnvironmentLibrary === false;
   const simpleContentAccess = (Number(subscriptionStatus) === 5);
   const dispatch = useDispatch();
+  const { searchParam, show } = useUrlParams();
   const toggleGroupStates = ['noLimit', 'limitToEnvironment'];
   const [noLimit, limitToEnvironment] = toggleGroupStates;
   const defaultToggleGroupState = nonLibraryHost ? limitToEnvironment : noLimit;
   const [toggleGroupState, setToggleGroupState] =
-    useState(defaultToggleGroupState);
+    useState(show ?? defaultToggleGroupState);
   const [alertShowing, setAlertShowing] = useState(false);
   const emptyContentTitle = __('No repository sets to show.');
   const emptyContentBody = __('Repository sets will appear here when available.');
@@ -115,6 +116,7 @@ const RepositorySetsTab = () => {
     results,
     metadata,
     isSelectable: () => false,
+    initialSearchQuery: searchParam || '',
   });
 
   const hostDetailsStatus = useSelector(state => selectHostDetailsStatus(state));
