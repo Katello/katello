@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { isEmpty } from 'lodash';
+import { useLocation } from 'react-router-dom';
+import { friendlySearchParam } from '../../utils/helpers';
 
 class ReactConnectedSet extends Set {
   constructor(initialValue, forceRender) {
@@ -118,7 +120,6 @@ export const useBulkSelect = ({
   metadata,
   initialArry = [],
   initialSearchQuery = '',
-  routerHistory,
   idColumn = 'id',
   isSelectable,
 }) => {
@@ -206,13 +207,6 @@ export const useBulkSelect = ({
     }
   }, [searchQuery, selectAllMode, prevSearchRef, selectNone]);
 
-  // useEffect(() => {
-  //   routerHistory.replace({
-  //     ...routerHistory,
-  //     search: `?search=${encodeURIComponent(searchQuery)}`,
-  //   });
-  // }, [searchQuery, routerHistory]);
-
   return {
     ...selectOptions,
     selectPage,
@@ -226,5 +220,22 @@ export const useBulkSelect = ({
     selectOne,
     areAllRowsOnPageSelected,
     areAllRowsSelected,
+  };
+};
+
+// takes a url query like ?type=security&search=name=foo
+// and returns an object
+// {
+//   type: 'security',
+//   searchParam: 'name=foo'
+// }
+export const useUrlParams = () => {
+  const location = useLocation();
+  const { search: urlSearchParam, ...urlParams }
+    = Object.fromEntries(new URLSearchParams(location.search).entries());
+  const searchParam = urlSearchParam ? friendlySearchParam(urlSearchParam) : '';
+  return {
+    searchParam,
+    ...urlParams,
   };
 };

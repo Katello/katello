@@ -1,6 +1,5 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useLocation, useHistory } from 'react-router-dom';
 import {
   Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem,
@@ -21,16 +20,15 @@ import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
-import { friendlySearchParam } from '../../../../utils/helpers';
 import SelectableDropdown from '../../../SelectableDropdown';
-import { useSet, useBulkSelect } from '../../../../components/Table/TableHooks';
+import { useSet, useBulkSelect, useUrlParams } from '../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import { ErrataType, ErrataSeverity } from '../../../../components/Errata';
 import { getInstallableErrata, regenerateApplicability, applyViaKatelloAgent } from '../HostErrata/HostErrataActions';
 import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
 import { selectHostErrataStatus } from '../HostErrata/HostErrataSelectors';
-import { HOST_ERRATA_KEY, ERRATA_TYPES, ERRATA_SEVERITIES, TYPES_TO_PARAM, SEVERITIES_TO_PARAM } from '../HostErrata/HostErrataConstants';
+import { HOST_ERRATA_KEY, ERRATA_TYPES, ERRATA_SEVERITIES, TYPES_TO_PARAM, SEVERITIES_TO_PARAM, PARAM_TO_FRIENDLY_NAME } from '../HostErrata/HostErrataConstants';
 import { installErrata } from './RemoteExecutionActions';
 import { errataInstallUrl } from './customizedRexUrlHelpers';
 import './ErrataTab.scss';
@@ -54,8 +52,11 @@ export const ErrataTab = () => {
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const expandedErrata = useSet([]);
   const erratumIsExpanded = id => expandedErrata.has(id);
-  const [errataTypeSelected, setErrataTypeSelected] = useState(ERRATA_TYPE);
-  const [errataSeveritySelected, setErrataSeveritySelected] = useState(ERRATA_SEVERITY);
+  const { type: initialType, severity: initialSeverity, searchParam } = useUrlParams();
+  const [errataTypeSelected, setErrataTypeSelected]
+    = useState(PARAM_TO_FRIENDLY_NAME[initialType] ?? ERRATA_TYPE);
+  const [errataSeveritySelected, setErrataSeveritySelected]
+    = useState(PARAM_TO_FRIENDLY_NAME[initialSeverity] ?? ERRATA_SEVERITY);
   const activeFilters = [errataTypeSelected, errataSeveritySelected];
   const defaultFilters = [ERRATA_TYPE, ERRATA_SEVERITY];
 
@@ -97,10 +98,6 @@ export const ErrataTab = () => {
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
   const { results, ...metadata } = response;
   const status = useSelector(state => selectHostErrataStatus(state));
-  const history = useHistory();
-  const location = useLocation();
-  const urlSearchParam = location.search.split('?search=')[1];
-  const searchParam = urlSearchParam ? friendlySearchParam(urlSearchParam) : '';
   const errataSearchQuery = id => `errata_id = ${id}`;
   const {
     selectOne, isSelected, searchQuery, selectedCount, isSelectable,
@@ -111,7 +108,6 @@ export const ErrataTab = () => {
     idColumn: 'errata_id',
     isSelectable: result => result.installable,
     initialSearchQuery: searchParam || '',
-    routerHistory: history,
   });
 
   if (!hostId) return <Skeleton />;

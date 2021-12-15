@@ -29,6 +29,17 @@ export const SEVERITIES_TO_PARAM = {
   [ERRATA_SEVERITIES.CRITICAL]: 'Critical',
 };
 
+export const PARAM_TO_FRIENDLY_NAME = {
+  security: 'Security',
+  bugfix: 'Bugfix',
+  enhancement: 'Enhancement',
+  none: 'N/A',
+  low: 'Low',
+  moderate: 'Moderate',
+  important: 'Important',
+  critical: 'Critical',
+};
+
 export default HOST_ERRATA_KEY;
 
 export const ERRATA_SEARCH_QUERY = 'Errata search query';
