@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_PACKAGES_KEY } from '../../HostPackages/HostPackagesConstants';
@@ -28,8 +28,14 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
   },
 });
 
-const hostPackages = foremanApi.getApiUrl('/hosts/1/packages?include_latest_upgradable=true&per_page=20&page=1');
+const hostPackages = foremanApi.getApiUrl('/hosts/1/packages');
 const autocompleteUrl = '/hosts/1/packages/auto_complete_search';
+const defaultQueryWithoutSearch = {
+  include_latest_upgradable: true,
+  per_page: 20,
+  page: 1,
+};
+const defaultQuery = { ...defaultQueryWithoutSearch, search: '' };
 
 let firstPackages;
 let searchDelayScope;
@@ -54,6 +60,7 @@ test('Can call API for packages and show on screen on page load', async (done) =
   // return tracedata results when we look for packages
   const scope = nockInstance
     .get(hostPackages)
+    .query(defaultQuery)
     .reply(200, mockPackagesData);
 
   const { getAllByText } = renderWithRedux(<PackagesTab />, renderOptions());
@@ -65,7 +72,7 @@ test('Can call API for packages and show on screen on page load', async (done) =
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
-test('Can handle no packags being present', async (done) => {
+test('Can handle no packages being present', async (done) => {
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
 
@@ -79,6 +86,7 @@ test('Can handle no packags being present', async (done) => {
 
   const scope = nockInstance
     .get(hostPackages)
+    .query(defaultQuery)
     .reply(200, noResults);
 
   const { queryByText } = renderWithRedux(<PackagesTab />, renderOptions());
@@ -88,4 +96,48 @@ test('Can handle no packags being present', async (done) => {
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Can filter by package status', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const scope2 = nockInstance
+    .get(hostPackages)
+    .query({ ...defaultQuery, status: 'upgradable' })
+    .reply(200, { ...mockPackagesData, results: [firstPackages] });
+
+  const {
+    queryByText,
+    getByRole,
+    getAllByText,
+    getByText,
+  } = renderWithRedux(<PackagesTab />, renderOptions());
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText(firstPackages.name)[0]).toBeInTheDocument());
+  // the Upgradable text in the table is just a text node, while the dropdown is a button
+  expect(getByText('Up-to date', { ignore: ['button', 'title'] })).toBeInTheDocument();
+  expect(getByText('coreutils', { ignore: ['button', 'title'] })).toBeInTheDocument();
+  expect(getByText('acl', { ignore: ['button', 'title'] })).toBeInTheDocument();
+
+  const statusDropdown = queryByText('Status', { ignore: 'th' });
+  expect(statusDropdown).toBeInTheDocument();
+  fireEvent.click(statusDropdown);
+  const upgradable = getByRole('option', { name: 'select Upgradable' });
+  fireEvent.click(upgradable);
+  await patientlyWaitFor(() => {
+    expect(queryByText('coreutils')).toBeInTheDocument();
+    expect(queryByText('acl')).not.toBeInTheDocument();
+  });
+
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
+  assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
 });

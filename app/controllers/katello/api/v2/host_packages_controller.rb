@@ -2,6 +2,10 @@ module Katello
   class Api::V2::HostPackagesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
+    UPGRADABLE = "upgradable".freeze
+    UP_TO_DATE = "up-to-date".freeze
+    VERSION_STATUSES = [UPGRADABLE, UP_TO_DATE].freeze
+
     before_action :require_packages_or_groups, :only => [:install, :remove]
     before_action :require_packages_only, :only => [:upgrade]
     before_action :find_editable_host_with_facet, :except => :index
@@ -21,9 +25,11 @@ module Katello
     api :GET, "/hosts/:host_id/packages", N_("List packages installed on the host")
     param :host_id, :number, :required => true, :desc => N_("ID of the host")
     param :include_latest_upgradable, :boolean, :desc => N_("Also include the latest upgradable package version for each host package")
+    param :status, String, :desc => N_("Return only packages of a particular status (upgradable or up-to-date)"), :required => false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Katello::InstalledPackage)
     def index
+      validate_index_params!
       collection = scoped_search(index_relation, :name, :asc, :resource_class => ::Katello::InstalledPackage)
       collection[:results] = HostPackagePresenter.with_latest(collection[:results], @host) if ::Foreman::Cast.to_bool(params[:include_latest_upgradable])
       respond_for_index(:collection => collection)
@@ -84,7 +90,15 @@ module Katello
     end
 
     def index_relation
-      @host.installed_packages
+      packages = @host.installed_packages
+      upgradable_packages = ::Katello::Rpm.installable_for_hosts([@host]).select(:name)
+      if params[:status].present?
+        packages = case params[:status]
+                   when 'up-to-date' then packages.where.not(name: upgradable_packages)
+                   when 'upgradable' then packages.where(name: upgradable_packages)
+                   end
+      end
+      packages
     end
 
     def resource_class
@@ -135,6 +149,12 @@ module Katello
     def extract_group_names(groups)
       groups.map do |group|
         group.gsub(/^@/, "")
+      end
+    end
+
+    def validate_index_params!
+      if params[:status].present?
+        fail _("Status must be one of: %s" % VERSION_STATUSES.join(', ')) unless VERSION_STATUSES.include?(params[:status])
       end
     end
   end
