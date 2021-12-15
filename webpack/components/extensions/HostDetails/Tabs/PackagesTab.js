@@ -1,16 +1,17 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Hint, HintBody } from '@patternfly/react-core';
+import { Button, Hint, HintBody, Split, SplitItem } from '@patternfly/react-core';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import SelectableDropdown from '../../../SelectableDropdown';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import { PackagesStatus, PackagesLatestVersion } from '../../../../components/Packages';
 import { getInstalledPackagesWithLatest } from '../HostPackages/HostPackagesActions';
 import { selectHostPackagesStatus } from '../HostPackages/HostPackagesSelectors';
-import { HOST_PACKAGES_KEY } from '../HostPackages/HostPackagesConstants';
+import { HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM } from '../HostPackages/HostPackagesConstants';
 import './PackagesTab.scss';
 
 export const PackagesTab = () => {
@@ -19,6 +20,10 @@ export const PackagesTab = () => {
   const actionButtons = <Button isDisabled> {__('Upgrade')} </Button>;
 
   const [searchQuery, updateSearchQuery] = useState('');
+  const PACKAGE_STATUS = __('Status');
+  const [packageStatusSelected, setPackageStatusSelected] = useState(PACKAGE_STATUS);
+  const activeFilters = [packageStatusSelected];
+  const defaultFilters = [PACKAGE_STATUS];
 
   const emptyContentTitle = __('This host does not have any packages.');
   const emptyContentBody = __('Packages will appear here when available.');
@@ -32,13 +37,23 @@ export const PackagesTab = () => {
   ];
 
   const fetchItems = useCallback(
-    params => (hostId ? getInstalledPackagesWithLatest(hostId, params) : null),
-    [hostId],
+    (params) => {
+      if (!hostId) return null;
+      const modifiedParams = { ...params };
+      if (packageStatusSelected !== PACKAGE_STATUS) {
+        modifiedParams.status = VERSION_STATUSES_TO_PARAM[packageStatusSelected];
+      }
+      return getInstalledPackagesWithLatest(hostId, modifiedParams);
+    },
+    [hostId, PACKAGE_STATUS, packageStatusSelected],
   );
 
   const response = useSelector(state => selectAPIResponse(state, HOST_PACKAGES_KEY));
   const { results, ...metadata } = response;
   const status = useSelector(state => selectHostPackagesStatus(state));
+
+  if (!hostId) return null;
+
   const rowActions = [
     {
       title: __('Upgrade via remote execution'), disabled: true,
@@ -47,6 +62,28 @@ export const PackagesTab = () => {
       title: __('Upgrade via customized remote execution'), disabled: true,
     },
   ];
+
+  const handlePackageStatusSelected = newStatus => setPackageStatusSelected((prevStatus) => {
+    if (prevStatus === newStatus) {
+      return PACKAGE_STATUS;
+    }
+    return newStatus;
+  });
+
+  const toggleGroup = (
+    <Split hasGutter>
+      <SplitItem>
+        <SelectableDropdown
+          id="package-status-dropdown"
+          title={PACKAGE_STATUS}
+          showTitle={false}
+          items={Object.values(PACKAGES_VERSION_STATUSES)}
+          selected={packageStatusSelected}
+          setSelected={handlePackageStatusSelected}
+        />
+      </SplitItem>
+    </Split>
+  );
 
   return (
     <div>
@@ -70,12 +107,15 @@ export const PackagesTab = () => {
             emptySearchTitle,
             emptySearchBody,
             status,
+            activeFilters,
+            defaultFilters,
             actionButtons,
             searchQuery,
             updateSearchQuery,
+            toggleGroup,
           }
           }
-          additionalListeners={[hostId]}
+          additionalListeners={[hostId, packageStatusSelected]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}
           foremanApiAutoComplete
