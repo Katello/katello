@@ -46,13 +46,17 @@ export const ErrataTab = () => {
   const [ALL, INSTALLABLE] = toggleGroupStates;
   const ERRATA_TYPE = __('Type');
   const ERRATA_SEVERITY = __('Severity');
-  const [toggleGroupState, setToggleGroupState] = useState(INSTALLABLE);
-
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const expandedErrata = useSet([]);
   const erratumIsExpanded = id => expandedErrata.has(id);
-  const { type: initialType, severity: initialSeverity, searchParam } = useUrlParams();
+  const {
+    type: initialType,
+    severity: initialSeverity,
+    show,
+    searchParam,
+  } = useUrlParams();
+  const [toggleGroupState, setToggleGroupState] = useState(show ?? INSTALLABLE);
   const [errataTypeSelected, setErrataTypeSelected]
     = useState(PARAM_TO_FRIENDLY_NAME[initialType] ?? ERRATA_TYPE);
   const [errataSeveritySelected, setErrataSeveritySelected]
