@@ -32,6 +32,7 @@ import { HOST_ERRATA_KEY, ERRATA_TYPES, ERRATA_SEVERITIES, TYPES_TO_PARAM, SEVER
 import { installErrata } from './RemoteExecutionActions';
 import { errataInstallUrl } from './customizedRexUrlHelpers';
 import './ErrataTab.scss';
+import hostIdNotReady from '../HostDetailsActions';
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -79,7 +80,7 @@ export const ErrataTab = () => {
 
   const fetchItems = useCallback(
     (params) => {
-      if (!hostId) return null;
+      if (!hostId) return hostIdNotReady;
       const modifiedParams = { ...params };
       if (errataTypeSelected !== ERRATA_TYPE) {
         modifiedParams.type = TYPES_TO_PARAM[errataTypeSelected];

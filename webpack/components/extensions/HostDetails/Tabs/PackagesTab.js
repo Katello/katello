@@ -14,6 +14,7 @@ import { getInstalledPackagesWithLatest } from '../HostPackages/HostPackagesActi
 import { selectHostPackagesStatus } from '../HostPackages/HostPackagesSelectors';
 import { HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM } from '../HostPackages/HostPackagesConstants';
 import './PackagesTab.scss';
+import hostIdNotReady from '../HostDetailsActions';
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -40,7 +41,7 @@ export const PackagesTab = () => {
 
   const fetchItems = useCallback(
     (params) => {
-      if (!hostId) return null;
+      if (!hostId) return hostIdNotReady;
       const modifiedParams = { ...params };
       if (packageStatusSelected !== PACKAGE_STATUS) {
         modifiedParams.status = VERSION_STATUSES_TO_PARAM[packageStatusSelected];

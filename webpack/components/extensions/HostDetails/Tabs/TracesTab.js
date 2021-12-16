@@ -15,6 +15,7 @@ import { resolveTraces } from './RemoteExecutionActions';
 import { selectHostTracesStatus } from './HostTracesSelectors';
 import { resolveTraceUrl } from './customizedRexUrlHelpers';
 import './TracesTab.scss';
+import hostIdNotReady from '../HostDetailsActions';
 
 const TracesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -31,7 +32,7 @@ const TracesTab = () => {
   const emptySearchBody = __('Try changing your search settings.');
   const fetchItems = useCallback(
     params =>
-      (hostId ? getHostTraces(hostId, params) : null),
+      (hostId ? getHostTraces(hostId, params) : hostIdNotReady),
     [hostId],
   );
   const { searchParam } = useUrlParams();

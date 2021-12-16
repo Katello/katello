@@ -23,6 +23,7 @@ import { selectHostDetailsStatus } from '../../HostDetailsSelectors.js';
 import { useBulkSelect, useUrlParams } from '../../../../../components/Table/TableHooks';
 import { REPOSITORY_SETS_KEY } from './RepositorySetsConstants.js';
 import './RepositorySetsTab.scss';
+import hostIdNotReady from '../../HostDetailsActions';
 
 const getEnabledValue = ({ enabled, enabledContentOverride }) => {
   const isOverridden = (enabledContentOverride !== null);
@@ -102,7 +103,7 @@ const RepositorySetsTab = () => {
         content_access_mode_all: simpleContentAccess,
         host_id: hostId,
         ...params,
-      }) : null),
+      }) : hostIdNotReady),
     [hostId, toggleGroupState, limitToEnvironment, simpleContentAccess],
   );
 
