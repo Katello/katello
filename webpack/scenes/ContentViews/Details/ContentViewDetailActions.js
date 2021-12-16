@@ -428,6 +428,15 @@ export const removeContentViewVersion = (cvId, versionId, versionEnvironments, p
   errorToast: error => cvErrorToast(error),
 });
 
+export const bulkRemoveContentViewVersion = (cvId, versionId, versionEnvironments, params) => put({
+  type: API_OPERATIONS.PUT,
+  key: cvRemoveVersionKey(versionId, versionEnvironments),
+  url: api.getApiUrl(`/content_views/${cvId}/bulk_remove`),
+  params,
+  handleSuccess: response => renderTaskStartedToast(response.data),
+  errorToast: error => cvErrorToast(error),
+});
+
 export const promoteContentViewVersion = params => post({
   type: API_OPERATIONS.POST,
   key: cvVersionPromoteKey(params.id, params.versionEnvironments),

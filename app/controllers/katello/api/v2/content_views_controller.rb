@@ -190,6 +190,7 @@ module Katello
 
     api :PUT, "/content_views/:id/bulk_remove", N_("Bulk remove versions from a content view and reassign systems and keys")
     param_group :bulk_content_view_version_ids
+    param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     param :system_content_view_id, :number, :desc => N_("content view to reassign orphaned systems to")
     param :system_environment_id, :number, :desc => N_("environment to reassign orphaned systems to")
     param :key_content_view_id, :number, :desc => N_("content view to reassign orphaned activation keys to")
@@ -200,7 +201,11 @@ module Katello
         cv_envs = @content_view.content_view_environments
         versions = @content_view.versions
       else
-        versions = find_bulk_items(bulk_params: bulk_content_view_version_ids,
+        100.times do
+          puts "here"
+          puts params[:bulk_content_view_version_ids]
+        end
+        versions = find_bulk_items(bulk_params: params[:bulk_content_view_version_ids],
                                    model_scope: ::Katello::ContentViewVersion.where(content_view_id: @content_view.id),
                                    key: :id)
         cv_envs = ContentViewEnvironment.where(:content_view_version_id => versions.pluck(:id),
@@ -221,7 +226,11 @@ module Katello
       ).reject { |_k, v| v.nil? }.to_unsafe_h
       options[:content_view_versions] = versions
       options[:content_view_environments] = cv_envs
-
+      100.times do
+        puts options
+        puts cv_envs
+        puts versions
+      end
       task = async_task(::Actions::Katello::ContentView::Remove, @content_view, options)
       respond_for_async :resource => task
     end

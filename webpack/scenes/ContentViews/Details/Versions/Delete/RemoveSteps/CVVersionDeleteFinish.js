@@ -5,7 +5,10 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectRemoveCVVersionResponse, selectRemoveCVVersionStatus } from '../../../ContentViewDetailSelectors';
-import { getContentViewVersions, removeContentViewVersion } from '../../../ContentViewDetailActions';
+import {
+  bulkRemoveContentViewVersion, getContentViewVersions,
+  removeContentViewVersion
+} from '../../../ContentViewDetailActions';
 import Loading from '../../../../../../components/Loading';
 import DeleteContext from '../DeleteContext';
 
@@ -63,6 +66,14 @@ const CVVersionDeleteFinish = () => {
         versionEnvironments.map(env => env.id) :
         selectedEnv.map(env => env.id);
 
+      let bulkParams = {
+        bulk_content_view_version_ids: {
+          included: {
+            ids: [6,7,8,9,10,11]
+          }
+        }
+      };
+
       let params = {
         id: cvId,
         environment_ids: environmentIdParams,
@@ -73,7 +84,7 @@ const CVVersionDeleteFinish = () => {
           key_content_view_id: selectedCVForAK,
           key_environment_id: selectedEnvForAK[0].id,
         };
-        params = { ...activationKeysParams, ...params };
+        bulkParams = { ...activationKeysParams, ...bulkParams };
       }
 
       if (affectedHosts) {
@@ -81,14 +92,14 @@ const CVVersionDeleteFinish = () => {
           system_content_view_id: selectedCVForHosts,
           system_environment_id: selectedEnvForHost[0].id,
         };
-        params = { ...hostParams, ...params };
+        bulkParams = { ...hostParams, ...bulkParams };
       }
 
       if (deleteFlow || removeDeletionFlow) {
         const deletionParams = { content_view_version_ids: [versionIdToRemove] };
-        params = { ...deletionParams, ...params };
+        bulkParams = { ...deletionParams, ...bulkParams };
       }
-      dispatch(removeContentViewVersion(cvId, versionIdToRemove, versionEnvironments, params));
+      dispatch(bulkRemoveContentViewVersion(cvId, versionIdToRemove, versionEnvironments, bulkParams));
       setRemoveDispatched(true);
     }
   }, [cvId, versionIdToRemove, versionEnvironments, dispatch, affectedActivationKeys,
