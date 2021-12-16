@@ -3,6 +3,8 @@ module Actions
     module ContentViewVersion
       # rubocop:disable Metrics/ClassLength
       class IncrementalUpdate < Actions::EntryAction
+        middleware.use Actions::Middleware::SwitchoverCheck
+
         include ::Katello::ContentViewHelper
         attr_accessor :new_content_view_version
 

@@ -2,6 +2,8 @@ module Actions
   module Katello
     module Repository
       class CreateRoot < Actions::EntryAction
+        middleware.use Actions::Middleware::SwitchoverCheck
+
         def plan(root)
           root.save!
           repository = ::Katello::Repository.new(:environment => root.organization.library,

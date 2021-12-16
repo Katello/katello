@@ -3,6 +3,8 @@ module Actions
     module ContentView
       class RemoveVersion < Actions::EntryAction
         def plan(version)
+          middleware.use Actions::Middleware::SwitchoverCheck
+
           action_subject(version.content_view)
           version.validate_destroyable!
 
