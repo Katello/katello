@@ -383,6 +383,13 @@ pulp3_python_1:
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
 
+pulp3_ostree_1:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:pulp3_ostree_root_1) %>
+  pulp_id:              "Default_Organization-Cabinet-pulp3_OSTree_1"
+  relative_path:        'Default_Organization/library/pulp3_OSTree_1'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+
 uln_ovm2_2_1_1_i386_patch:
   root_id:              <%= ActiveRecord::FixtureSet.identify(:uln_ovm2_2_1_1_i386_patch_root) %>
   pulp_id:              "Default_Organization-Cabinet-uln_Ovm2_2_1_1_i386_Patch"

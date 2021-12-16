@@ -278,6 +278,17 @@ pulp3_python_root_1:
   url:                  ""
   mirroring_policy:     "mirror_content_only"
 
+pulp3_ostree_root_1:
+  name:                 Pulp3 OSTree 1
+  content_id:           29
+  content_type:         ostree
+  label:                Pulp3_OSTree_1
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  unprotected:           <%= true %>
+  url:                  ""
+  mirroring_policy:     "mirror_content_only"
+
 uln_ovm2_2_1_1_i386_patch_root:
   name:                 ovm2 i386 patch
   content_id:           1
