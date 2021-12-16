@@ -223,11 +223,11 @@ export const useBulkSelect = ({
   };
 };
 
-// takes a url query like ?type=security&search=name=foo
+// takes a url query like ?type=security&search=name+~+foo
 // and returns an object
 // {
 //   type: 'security',
-//   searchParam: 'name=foo'
+//   searchParam: 'name ~ foo'
 // }
 export const useUrlParams = () => {
   const location = useLocation();

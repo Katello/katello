@@ -8,6 +8,7 @@ import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import SelectableDropdown from '../../../SelectableDropdown';
 import TableWrapper from '../../../../components/Table/TableWrapper';
+import { useUrlParams } from '../../../../components/Table/TableHooks';
 import { PackagesStatus, PackagesLatestVersion } from '../../../../components/Packages';
 import { getInstalledPackagesWithLatest } from '../HostPackages/HostPackagesActions';
 import { selectHostPackagesStatus } from '../HostPackages/HostPackagesSelectors';
@@ -19,7 +20,8 @@ export const PackagesTab = () => {
   const { id: hostId } = hostDetails;
   const actionButtons = <Button isDisabled> {__('Upgrade')} </Button>;
 
-  const [searchQuery, updateSearchQuery] = useState('');
+  const { searchParam } = useUrlParams();
+  const [searchQuery, updateSearchQuery] = useState(searchParam || '');
   const PACKAGE_STATUS = __('Status');
   const [packageStatusSelected, setPackageStatusSelected] = useState(PACKAGE_STATUS);
   const activeFilters = [packageStatusSelected];
