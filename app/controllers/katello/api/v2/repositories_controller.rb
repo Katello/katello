@@ -667,7 +667,7 @@ module Katello
     def check_import_parameters
       @repository.repository_type&.import_attributes&.each do |import_attribute|
         if import_attribute.required && params[import_attribute.api_param].blank?
-          fail HttpErrors::UnprocessableEntity, _("%s is required", import_attributes.api_param)
+          fail HttpErrors::UnprocessableEntity, _('%s is required') % import_attribute.api_param
         end
       end
     end
