@@ -20,7 +20,7 @@ module Katello
         not_added_cvs = views.reject { |component_content_view| Katello::ContentViewComponent.where(composite_content_view_id: composite_cv.id, content_view_id: component_content_view.id).first }
         not_added_cvs.map { |component_content_view| ComponentViewPresenter.new(composite_cv, nil, Katello::ContentViewComponent.where(composite_content_view_id: composite_cv.id, content_view_id: component_content_view.id, latest: true).new) }
       else
-        views.map { |component_content_view| ComponentViewPresenter.new(cv, component_content_view) }
+        views.map { |component_content_view| ComponentViewPresenter.new(composite_cv, component_content_view) }
       end
     end
   end
