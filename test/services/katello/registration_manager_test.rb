@@ -17,10 +17,15 @@ module Katello
         @content_view_environment = katello_content_view_environments(:library_dev_view_library)
         @activation_key = katello_activation_keys(:library_dev_staging_view_key)
         @host_collection = katello_host_collections(:simple_host_collection)
+        @one_host_limit_host_collection = katello_host_collections(:one_host_limit_host_collection)
         @activation_key.host_collections << @host_collection
         @org = @library.organization
         @facts = {'network.hostname' => 'foo.example.com'}
         @host = FactoryBot.create(:host, organization: @org)
+      end
+
+      after :all do
+        @activation_key.host_collections.delete_all
       end
 
       let(:rhsm_params) { {:name => 'foobar', :facts => @facts, :type => 'system'} }
@@ -229,6 +234,22 @@ module Katello
         assert_equal @activation_key.content_view, new_host.content_facet.content_view
 
         assert_includes new_host.host_collections, @host_collection
+      end
+
+      def test_registration_with_host_collection_max_hosts_exceeded
+        @activation_key.host_collections << @one_host_limit_host_collection
+        existing_host = ::Host::Managed.create(:name => 'alreadyhere', :managed => false, :organization => @one_host_limit_host_collection.organization)
+        new_host = ::Host::Managed.new(:name => 'foobar', :managed => false, :organization => @one_host_limit_host_collection.organization)
+        cvpe = Katello::ContentViewEnvironment.where(:content_view_id => @activation_key.content_view, :environment_id => @activation_key.environment).first
+        @one_host_limit_host_collection.hosts << existing_host
+        assert_equal 1, @one_host_limit_host_collection.hosts.count
+        assert_equal 1, @one_host_limit_host_collection.max_hosts
+
+        assert_raises(RuntimeError, "Host collection 'Single-host Collection' exceeds maximum usage limit of '1'") do
+          ::Katello::RegistrationManager.register_host(new_host, rhsm_params, cvpe, [@activation_key])
+        end
+
+        refute_includes new_host.host_collections, @host_collection
       end
 
       def test_registration_existing_host
