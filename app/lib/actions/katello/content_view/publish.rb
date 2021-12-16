@@ -3,6 +3,8 @@ module Actions
   module Katello
     module ContentView
       class Publish < Actions::EntryAction
+        middleware.use Actions::Middleware::SwitchoverCheck
+
         include ::Katello::ContentViewHelper
         attr_accessor :version
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity

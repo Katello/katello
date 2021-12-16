@@ -2,6 +2,8 @@ module Actions
   module Katello
     module ContentView
       class Remove < Actions::EntryAction
+        middleware.use Actions::Middleware::SwitchoverCheck
+
         # Remove content view versions and/or environments from a content view
 
         # Options: (note that all are optional)

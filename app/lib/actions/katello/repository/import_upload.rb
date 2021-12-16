@@ -3,6 +3,8 @@ module Actions
   module Katello
     module Repository
       class ImportUpload < Actions::EntryAction
+        middleware.use Actions::Middleware::SwitchoverCheck
+
         include Actions::Katello::PulpSelector
         # rubocop:disable Metrics/MethodLength
         def plan(repository, uploads, options = {})

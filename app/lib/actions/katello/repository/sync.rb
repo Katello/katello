@@ -6,6 +6,7 @@ module Actions
         include Helpers::Presenter
         include Actions::Katello::PulpSelector
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
+        middleware.use Actions::Middleware::SwitchoverCheck
 
         input_format do
           param :id, Integer
