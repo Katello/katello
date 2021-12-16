@@ -5,6 +5,7 @@ module Katello
     def setup
       @organization = get_organization
       @simple_collection = katello_host_collections(:simple_host_collection)
+      @limited_collection = katello_host_collections(:limited_hosts_host_collection)
       @host_one = hosts(:one)
       @host_two = hosts(:two)
     end
@@ -15,7 +16,7 @@ module Katello
     end
 
     def test_search_by_host
-      assert_equal HostCollection.search_for("host = \"#{@host_one.name}\""), [@simple_collection]
+      assert_equal HostCollection.search_for("host = \"#{@host_one.name}\""), [@simple_collection, @limited_collection]
       assert_equal HostCollection.search_for("host = \"#{@host_two.name}\""), []
     end
 
