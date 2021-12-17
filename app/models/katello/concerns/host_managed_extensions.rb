@@ -109,7 +109,7 @@ module Katello
         self.host_statuses.where(type: ::Katello::HostStatusManager::STATUSES.map(&:name)).each do |status|
           status.refresh!
         end
-        refresh_global_status!
+        refresh_global_status
       end
 
       def queue_refresh_content_host_status
