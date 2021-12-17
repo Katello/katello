@@ -15,7 +15,6 @@ import { translate as __ } from 'foremanReact/common/I18n';
 
 import { updateContentView } from './ContentViewDetailActions';
 import { selectIsCVUpdating } from './ContentViewDetailSelectors';
-import Loading from '../../../components/Loading';
 import ContentViewIcon from '../components/ContentViewIcon';
 import ActionableDetail from '../../../components/ActionableDetail';
 import './contentViewInfo.scss';
@@ -37,8 +36,6 @@ const ContentViewInfo = ({ cvId, details }) => {
     permissions,
   } = details;
 
-  if (updating) return <Loading size="sm" showText={false} />;
-
   const onEdit = (val, attribute) => {
     if (val === details[attribute]) return;
     dispatch(updateContentView(cvId, { [attribute]: val }));
@@ -48,8 +45,10 @@ const ContentViewInfo = ({ cvId, details }) => {
     <TextContent className="margin-0-24">
       <TextList component={TextListVariants.dl}>
         <ActionableDetail
+          key={name}
           label={__('Name')}
           attribute="name"
+          loading={updating && currentAttribute === 'name'}
           onEdit={onEdit}
           disabled={!hasPermission(permissions, 'edit_content_views')}
           value={name}
@@ -76,9 +75,11 @@ const ContentViewInfo = ({ cvId, details }) => {
           </Flex>
         </TextListItem>
         <ActionableDetail
+          key={description}
           textArea
           label={__('Description')}
           attribute="description"
+          loading={updating && currentAttribute === 'description'}
           onEdit={onEdit}
           disabled={!hasPermission(permissions, 'edit_content_views')}
           value={description}
@@ -86,8 +87,10 @@ const ContentViewInfo = ({ cvId, details }) => {
         />
         {composite ?
           (<ActionableDetail
+            key={autoPublish}
             label={__('Autopublish')}
             attribute="auto_publish"
+            loading={updating && currentAttribute === 'auto_publish'}
             value={autoPublish}
             onEdit={onEdit}
             disabled={!hasPermission(permissions, 'edit_content_views')}
@@ -98,6 +101,8 @@ const ContentViewInfo = ({ cvId, details }) => {
           (<ActionableDetail
             label={__('Solve dependencies')}
             attribute="solve_dependencies"
+            key={solveDependencies}
+            loading={updating && currentAttribute === 'solve_dependencies'}
             value={solveDependencies}
             onEdit={onEdit}
             disabled={!hasPermission(permissions, 'edit_content_views')}

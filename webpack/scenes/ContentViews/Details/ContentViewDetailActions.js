@@ -1,5 +1,4 @@
 import { API_OPERATIONS, APIActions, get, put, post } from 'foremanReact/redux/API';
-import { addToast } from 'foremanReact/components/ToastsList';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   RPM_PACKAGES_CONTENT,
@@ -49,7 +48,7 @@ import {
   DOCKER_TAGS_CONTENT,
 } from '../ContentViewsConstants';
 import api, { foremanApi, orgId } from '../../../services/api';
-import { getResponseErrorMsgs, apiError } from '../../../utils/helpers';
+import { getResponseErrorMsgs } from '../../../utils/helpers';
 import { renderTaskStartedToast } from '../../Tasks/helpers';
 import { cvErrorToast } from '../ContentViewsActions';
 
@@ -59,16 +58,6 @@ const getContentViewDetails = (cvId, extraParams = {}) => get({
   params: { organization_id: orgId(), include_permissions: true, ...extraParams },
   url: api.getApiUrl(`/content_views/${cvId}`),
 });
-
-const cvUpdateSuccess = (response, dispatch) => {
-  const { data: { id } } = response;
-  // Update CV info in redux with the updated CV info from API
-  dispatch(getContentViewDetails(id));
-  return dispatch(addToast({
-    type: 'success',
-    message: __(' Content view updated'),
-  }));
-};
 
 export const getRPMPackages = params => get({
   type: API_OPERATIONS.GET,
@@ -86,19 +75,21 @@ export const getFiles = params => get({
   errorToast: error => __(`Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}`),
 });
 
-export const updateContentView = (cvId, params) => dispatch => dispatch(put({
+export const updateContentView = (cvId, params, handleSuccess) => put({
   type: API_OPERATIONS.PUT,
   key: cvDetailsKey(cvId),
   url: api.getApiUrl(`/content_views/${cvId}`),
-  params,
-  handleSuccess: response => cvUpdateSuccess(response, dispatch),
-  handleError: error => dispatch(apiError(null, error)),
+  handleSuccess,
+  params: { include_permissions: true, ...params },
+  successToast: () => __(' Content view updated'),
+  errorToast: error => getResponseErrorMsgs(error.response),
+  updateData: (_prevState, respState) => respState,
   actionTypes: {
     REQUEST: UPDATE_CONTENT_VIEW,
     SUCCESS: UPDATE_CONTENT_VIEW_SUCCESS,
     FAILURE: UPDATE_CONTENT_VIEW_FAILURE,
   },
-}));
+});
 
 export const addComponent = params => put({
   type: API_OPERATIONS.PUT,
@@ -205,12 +196,13 @@ export const getFilterRepositories = (cvId, filterId, params) => {
   });
 };
 
-export const editCVFilter = (filterId, params, handleSuccess) => put({
+export const editCVFilter = (filterId, params, handleSuccess, handleError) => put({
   type: API_OPERATIONS.PUT,
   key: EDIT_CONTENT_VIEW_FILTER,
   url: api.getApiUrl(`/content_view_filters/${filterId}`),
   params,
   handleSuccess,
+  handleError,
   successToast: () => __('Filter edited'),
   errorToast: error => __(`Something went wrong while editing the filter! ${getResponseErrorMsgs(error.response)}`),
 });
@@ -416,6 +408,7 @@ export const editContentViewVersionDetails = (versionId, cvId, params, handleSuc
     url: api.getApiUrl(`/content_view_versions/${versionId}`),
     params,
     handleSuccess,
+    successToast: () => __('Version details updated.'),
     errorToast: error => __(`Something went wrong while editing version details. ${getResponseErrorMsgs(error.response)}`),
   });
 

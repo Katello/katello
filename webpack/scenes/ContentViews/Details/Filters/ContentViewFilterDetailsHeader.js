@@ -8,15 +8,16 @@ import { getCVFilterDetails, editCVFilter } from '../ContentViewDetailActions';
 import AffectedRepositorySelection from './AffectedRepositories/AffectedRepositorySelection';
 import RepoIcon from '../Repositories/RepoIcon';
 import { repoType } from '../../../../utils/helpers';
-import EditableTextInput from '../../../../components/EditableTextInput';
 import { hasPermission } from '../../helpers';
 import { typeName } from './ContentType';
+import ActionableDetail from '../../../../components/ActionableDetail';
 
 const ContentViewFilterDetailsHeader = ({
   cvId, filterId, filterDetails, setShowAffectedRepos, details,
 }) => {
   const dispatch = useDispatch();
   const [currentAttribute, setCurrentAttribute] = useState('');
+  const [loading, setLoading] = useState(false);
   const {
     type, name, inclusion, description, rules,
   } = filterDetails;
@@ -26,12 +27,17 @@ const ContentViewFilterDetailsHeader = ({
 
   const displayedType = () => typeName(type, errataByDate);
 
-  const onEdit = (val, attribute) => {
+  const onEdit = async (val, attribute) => {
     if (val === filterDetails[attribute]) return;
-    dispatch(editCVFilter(
+    setLoading(true);
+    await dispatch(editCVFilter(
       filterId,
       { [attribute]: val },
-      () => dispatch(getCVFilterDetails(cvId, filterId)),
+      () => {
+        setLoading(false);
+        dispatch(getCVFilterDetails(cvId, filterId));
+      },
+      () => setLoading(false),
     ));
   };
 
@@ -39,10 +45,10 @@ const ContentViewFilterDetailsHeader = ({
     <Grid className="margin-0-24">
       <GridItem span={9}>
         <TextContent>
-          <EditableTextInput
+          <ActionableDetail
             key={name} // This fixes a render issue with the initial value
-            label={__('Name')}
             attribute="name"
+            loading={loading && currentAttribute === 'name'}
             placeholder={__('Enter a name')}
             onEdit={onEdit}
             disabled={!hasPermission(permissions, 'edit_content_views')}
@@ -53,11 +59,11 @@ const ContentViewFilterDetailsHeader = ({
           />
         </TextContent>
         <TextContent style={{ padding: '24px 0 12px' }}>
-          <EditableTextInput
+          <ActionableDetail
             key={description} // This fixes a render issue with the initial value
             textArea
-            label={__('Description')}
             attribute="description"
+            loading={loading && currentAttribute === 'description'}
             placeholder={__('No description')}
             onEdit={onEdit}
             disabled={!hasPermission(permissions, 'edit_content_views')}

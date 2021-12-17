@@ -4,16 +4,20 @@ import { noop } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 
 const EditableSwitch = ({
-  value, attribute, onEdit, disabled,
+  value, attribute, onEdit, disabled, setCurrentAttribute,
 }) => {
   const identifier = `${attribute} switch`;
+  const onSwitch = (val) => {
+    if (setCurrentAttribute) setCurrentAttribute(attribute);
+    onEdit(val, attribute);
+  };
 
   return (
     <Switch
       id={identifier}
       aria-label={identifier}
       isChecked={value}
-      onChange={v => onEdit(v, attribute)}
+      onChange={onSwitch}
       disabled={disabled}
     />
   );
@@ -24,12 +28,14 @@ EditableSwitch.propTypes = {
   attribute: PropTypes.string,
   onEdit: PropTypes.func,
   disabled: PropTypes.bool,
+  setCurrentAttribute: PropTypes.func,
 };
 
 EditableSwitch.defaultProps = {
   attribute: '',
   onEdit: noop,
   disabled: false,
+  setCurrentAttribute: undefined,
 };
 
 export default EditableSwitch;

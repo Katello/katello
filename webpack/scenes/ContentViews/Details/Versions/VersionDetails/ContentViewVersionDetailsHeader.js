@@ -6,9 +6,7 @@ import {
   GridItem,
   TextContent,
   Text,
-  TextList,
   TextVariants,
-  TextListVariants,
   Label,
   Flex,
   FlexItem,
@@ -18,11 +16,11 @@ import {
   DropdownPosition,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
-import EditableTextInput from '../../../../../components/EditableTextInput';
 import { hasPermission } from '../../../helpers';
 import ContentViewVersionPromote from '../../Promote/ContentViewVersionPromote';
 import getEnvironmentPaths from '../../../components/EnvironmentPaths/EnvironmentPathActions';
 import RemoveCVVersionWizard from '../Delete/RemoveCVVersionWizard';
+import ActionableDetail from '../../../../../components/ActionableDetail';
 
 const ContentViewVersionDetailsHeader = ({
   versionDetails: {
@@ -30,6 +28,7 @@ const ContentViewVersionDetailsHeader = ({
   },
   onEdit,
   details: { permissions },
+  loading,
 }) => {
   const dispatch = useDispatch();
   useEffect(
@@ -98,18 +97,16 @@ const ContentViewVersionDetailsHeader = ({
       </GridItem>
       <GridItem className="content-view-header-content" span={12}>
         <TextContent>
-          <TextList component={TextListVariants.dl}>
-            <EditableTextInput
-              key={description} // This fixes a render issue with the initial value
-              textArea
-              label={__('Description')}
-              attribute="description"
-              placeholder={__('No description')}
-              onEdit={onEdit}
-              disabled={!hasPermission(permissions, 'edit_content_views')}
-              value={description}
-            />
-          </TextList>
+          <ActionableDetail
+            key={description} // This fixes a render issue with the initial value
+            textArea
+            attribute="description"
+            loading={loading}
+            placeholder={__('No description')}
+            onEdit={onEdit}
+            disabled={!hasPermission(permissions, 'edit_content_views')}
+            value={description}
+          />
         </TextContent>
         <Flex>
           {environments?.map(({ name, id: envId }) =>
@@ -164,6 +161,7 @@ ContentViewVersionDetailsHeader.propTypes = {
   details: PropTypes.shape({
     permissions: PropTypes.shape({}),
   }).isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default ContentViewVersionDetailsHeader;

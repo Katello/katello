@@ -50,8 +50,8 @@ const ContentViewFilterDetails = ({ cvId, details }) => {
       {loaded && (Object.keys(filterDetails).length > 0) ?
         <ContentViewFilterDetailsHeader
           {...{
- cvId, filterId, filterDetails, setShowAffectedRepos, details,
-}}
+            cvId, filterId, filterDetails, setShowAffectedRepos, details,
+          }}
         /> :
         <Loading />
       }
