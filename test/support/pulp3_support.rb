@@ -9,6 +9,11 @@ module Katello
     @repo_url = "file:///var/lib/pulp/sync_imports/test_repos/zoo"
     @repo = nil
 
+    def orphan_cleanup
+      Setting[:orphan_protection_time] = 0
+      ForemanTasks.sync_task(::Actions::Pulp3::OrphanCleanup::RemoveOrphans, ::SmartProxy.pulp_primary)
+    end
+
     def ensure_creatable(repo, smart_proxy)
       cert_path = "#{Katello::Engine.root}/test/fixtures/certs/content_guard.crt"
       cert = File.read(cert_path)

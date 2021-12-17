@@ -16,7 +16,8 @@ module Katello
               :pulp3_skip_publication, :configuration_class, :pulp3_api_class,
               :repositories_api_class, :api_class, :remotes_api_class, :repository_versions_api_class,
               :distributions_api_class, :remote_class, :repo_sync_url_class, :client_module_class,
-              :distribution_class, :publication_class, :publications_api_class, :url_description
+              :distribution_class, :publication_class, :publications_api_class, :url_description,
+              :test_url, :test_url_root_options
 
     attr_accessor :metadata_publish_matching_check, :index_additional_data_proc
     attr_reader :id, :unique_content_per_repo
@@ -145,7 +146,8 @@ module Katello
 
     class ContentType
       attr_accessor :model_class, :priority, :pulp3_service_class, :index, :uploadable, :removable,
-                    :primary_content, :index_on_pulp3, :generic_browser, :content_type, :repository_import_on_upload
+                    :primary_content, :index_on_pulp3, :generic_browser, :content_type, :repository_import_on_upload,
+                    :test_upload_path
 
       def initialize(options)
         self.model_class = options[:model_class]
@@ -159,6 +161,7 @@ module Katello
         self.primary_content = options[:primary_content] || false
         self.generic_browser = options[:generic_browser]
         self.repository_import_on_upload = options[:repository_import_on_upload]
+        self.test_upload_path = options[:test_upload_path]
       end
 
       def label
