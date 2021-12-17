@@ -49,4 +49,6 @@ Katello::RepositoryTypeManager.register('ostree') do
                         :required => true
 
   default_managed_content_type :ostree_ref
+
+  test_url 'https://fixtures.pulpproject.org/ostree/small/'
 end

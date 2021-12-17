@@ -49,6 +49,10 @@ Katello::RepositoryTypeManager.register('python') do
                        uploadable: true,
                        duplicates_allowed: false,
                        filename_key: :filename,
-                       generic_browser: true
+                       generic_browser: true,
+                       test_upload_path: 'test/fixtures/files/shelf_reader-0.1-py2-none-any.whl'
   default_managed_content_type :python_package
+
+  test_url 'https://fixtures.pulpproject.org/python-pypi/'
+  test_url_root_options generic_remote_options: {includes: ['celery']}.to_json
 end
