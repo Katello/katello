@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Hint, HintBody, Split, SplitItem } from '@patternfly/react-core';
+import { Button, Hint, HintBody, DropdownItem, DropdownSeparator, Dropdown, Split, SplitItem, ActionList, ActionListItem, KebabToggle } from '@patternfly/react-core';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
@@ -19,7 +19,6 @@ import hostIdNotReady from '../HostDetailsActions';
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const { id: hostId } = hostDetails;
-  const actionButtons = <Button isDisabled> {__('Upgrade')} </Button>;
 
   const { searchParam } = useUrlParams();
   const [searchQuery, updateSearchQuery] = useState(searchParam || '');
@@ -27,6 +26,8 @@ export const PackagesTab = () => {
   const [packageStatusSelected, setPackageStatusSelected] = useState(PACKAGE_STATUS);
   const activeFilters = [packageStatusSelected];
   const defaultFilters = [PACKAGE_STATUS];
+  const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
+  const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
 
   const emptyContentTitle = __('This host does not have any packages.');
   const emptyContentBody = __('Packages will appear here when available.');
@@ -86,6 +87,48 @@ export const PackagesTab = () => {
         />
       </SplitItem>
     </Split>
+  );
+
+  const dropdownItems = [
+    <DropdownItem
+      aria-label="remove_pkg_from_host"
+      key="remove_pkg_from_host"
+      component="button"
+      isDisabled
+    >
+      {__('Remove')}
+    </DropdownItem>,
+    <DropdownSeparator />,
+    <DropdownItem
+      aria-label="install_pkg_on_host"
+      key="install_pkg_on_host"
+      component="button"
+      onClick={toggleBulkAction}
+    >
+      {__('Install packages')}
+    </DropdownItem>,
+  ];
+
+  const actionButtons = (
+    <>
+      <Split hasGutter>
+        <SplitItem>
+          <ActionList isIconList>
+            <ActionListItem>
+              <Button isDisabled> {__('Upgrade')} </Button>
+            </ActionListItem>
+            <ActionListItem>
+              <Dropdown
+                toggle={<KebabToggle aria-label="Packages bulk actions" onToggle={toggleBulkAction} />}
+                isOpen={isBulkActionOpen}
+                isPlain
+                dropdownItems={dropdownItems}
+              />
+            </ActionListItem>
+          </ActionList>
+        </SplitItem>
+      </Split>
+    </>
   );
 
   return (
