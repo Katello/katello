@@ -1,6 +1,18 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Hint, HintBody, DropdownItem, DropdownSeparator, Dropdown, Split, SplitItem, ActionList, ActionListItem, KebabToggle } from '@patternfly/react-core';
+import {
+  Button,
+  Hint,
+  HintBody,
+  DropdownItem,
+  DropdownSeparator,
+  Dropdown,
+  Split,
+  SplitItem,
+  ActionList,
+  ActionListItem,
+  KebabToggle,
+} from '@patternfly/react-core';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
@@ -15,6 +27,7 @@ import { selectHostPackagesStatus } from '../HostPackages/HostPackagesSelectors'
 import { HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM } from '../HostPackages/HostPackagesConstants';
 import './PackagesTab.scss';
 import hostIdNotReady from '../HostDetailsActions';
+import PackageInstallModal from './PackageInstallModal';
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -28,6 +41,8 @@ export const PackagesTab = () => {
   const defaultFilters = [PACKAGE_STATUS];
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const toggleModal = () => setIsModalOpen(prev => !prev);
 
   const emptyContentTitle = __('This host does not have any packages.');
   const emptyContentBody = __('Packages will appear here when available.');
@@ -57,6 +72,10 @@ export const PackagesTab = () => {
   const status = useSelector(state => selectHostPackagesStatus(state));
 
   if (!hostId) return null;
+  const handleInstallPackagesClick = () => {
+    setIsBulkActionOpen(false);
+    setIsModalOpen(true);
+  };
 
   const rowActions = [
     {
@@ -98,12 +117,12 @@ export const PackagesTab = () => {
     >
       {__('Remove')}
     </DropdownItem>,
-    <DropdownSeparator />,
+    <DropdownSeparator key="separator" />,
     <DropdownItem
       aria-label="install_pkg_on_host"
       key="install_pkg_on_host"
       component="button"
-      onClick={toggleBulkAction}
+      onClick={handleInstallPackagesClick}
     >
       {__('Install packages')}
     </DropdownItem>,
@@ -206,6 +225,11 @@ export const PackagesTab = () => {
           </Tbody>
         </TableWrapper>
       </div>
+      <PackageInstallModal
+        isOpen={isModalOpen}
+        toggleModal={toggleModal}
+        hostId={hostId}
+      />
     </div>
   );
 };
