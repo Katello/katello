@@ -75,6 +75,7 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
       <ContentViewVersionDetailsHeader
         versionDetails={versionDetails}
         onEdit={editDiscription}
+        loading={status === STATUS.PENDING}
         details={details}
       />
       {showTabs &&

@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { head } from 'lodash';
 import EditableTextInput from '../EditableTextInput';
 
 const actualValue = 'burger';
@@ -17,7 +18,6 @@ test('Passed function is called after editing and clicking submit', async () => 
   getByLabelText(`edit ${attribute}`).click();
   fireEvent.change(getByLabelText(`${attribute} text input`), { target: { value: actualValue } });
   getByLabelText(`submit ${attribute}`).click();
-
   await patientlyWaitFor(() => expect(mockEdit.mock.calls).toHaveLength(1));
   expect(mockEdit.mock.calls[0][0]).toBe(actualValue); // first arg
 });
@@ -29,10 +29,10 @@ test('Passed function is called after editing and hitting enter', async () => {
   getByLabelText(`edit ${attribute}`).click();
   const textInputLabel = `${attribute} text input`;
   fireEvent.change(getByLabelText(textInputLabel), { target: { value: actualValue } });
-  fireEvent.keyDown(getByLabelText(textInputLabel), { key: 'Enter', code: 'Enter' });
+  fireEvent.keyUp(getByLabelText(textInputLabel), { key: 'Enter', code: 'Enter' });
 
   await patientlyWaitFor(() => expect(mockEdit.mock.calls).toHaveLength(1));
-  expect(mockEdit.mock.calls[0][0]).toBe(actualValue); // first arg
+  expect(head(mockEdit.mock.calls)).toContain(actualValue); // first arg
 });
 
 test('input is set back to original value after clearing', () => {

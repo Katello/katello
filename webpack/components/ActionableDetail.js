@@ -4,6 +4,7 @@ import {
   TextListItemVariants,
   Tooltip,
   TooltipPosition,
+  Spinner,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import PropTypes from 'prop-types';
@@ -23,33 +24,43 @@ const ActionableDetail = ({
   currentAttribute,
   setCurrentAttribute,
   disabled,
+  loading,
+  ...rest
 }) => {
   const displayProps = {
-    attribute, value, onEdit, disabled,
+    attribute, value, onEdit, disabled, currentAttribute, setCurrentAttribute, ...rest,
   };
 
   return (
     <React.Fragment key={label}>
-      <TextListItem component={TextListItemVariants.dt}>
-        {label}
-        {tooltip &&
-          <span className="foreman-spaced-icon">
-            <Tooltip
-              position={TooltipPosition.top}
-              content={tooltip}
-            >
-              <OutlinedQuestionCircleIcon />
-            </Tooltip>
-          </span>
-        }
-      </TextListItem>
+      {label &&
+        <TextListItem component={TextListItemVariants.dt}>
+          {label}
+          {tooltip &&
+            <span className="foreman-spaced-icon">
+              <Tooltip
+                position={TooltipPosition.top}
+                content={tooltip}
+              >
+                <OutlinedQuestionCircleIcon />
+              </Tooltip>
+            </span>
+          }
+        </TextListItem>
+      }
       <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
-        {boolean ?
-          <EditableSwitch {...displayProps} /> :
-          <EditableTextInput {...{
-            ...displayProps, textArea, onEdit, currentAttribute, setCurrentAttribute,
-          }}
-          />}
+        {loading ?
+          <Spinner
+            key={label + currentAttribute}
+            size="lg"
+          /> :
+          <>{boolean ?
+            <EditableSwitch {...displayProps} /> :
+            <EditableTextInput {...{
+              ...displayProps, textArea,
+            }}
+            />}
+          </>}
       </TextListItem>
     </React.Fragment>
   );
@@ -57,7 +68,7 @@ const ActionableDetail = ({
 
 ActionableDetail.propTypes = {
   attribute: PropTypes.string.isRequired, // back-end name for API call
-  label: PropTypes.string.isRequired, // displayed label
+  label: PropTypes.string,
   value: PropTypes.oneOfType([ // displayed value
     PropTypes.string,
     PropTypes.bool,
@@ -69,9 +80,11 @@ ActionableDetail.propTypes = {
   currentAttribute: PropTypes.string,
   setCurrentAttribute: PropTypes.func,
   disabled: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 
 ActionableDetail.defaultProps = {
+  label: undefined,
   textArea: false,
   boolean: false,
   tooltip: null,
@@ -79,6 +92,7 @@ ActionableDetail.defaultProps = {
   currentAttribute: undefined,
   setCurrentAttribute: undefined,
   disabled: false,
+  loading: false,
 };
 
 export default ActionableDetail;
