@@ -239,6 +239,10 @@ module Katello
       Rpm.in_repositories(archived_repos)
     end
 
+    def generic_content_units(content_type)
+      GenericContentUnit.in_repositories(archived_repos).where(content_type: content_type)
+    end
+
     def library_packages
       Rpm.in_repositories(library_repos)
     end
