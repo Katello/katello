@@ -12,7 +12,7 @@ import Bookmark from './../../../components/Bookmark';
 const TypeAheadSearch = ({
   userInputValue, clearSearch, getInputProps, getItemProps, isOpen, highlightedIndex,
   selectedItem, selectItem, openMenu, onSearch, items, activeItems, shouldShowItems,
-  autoSearchEnabled, isDisabled, bookmarkController, inputValue,
+  autoSearchEnabled, isDisabled, bookmarkController, inputValue, placeholder,
 }) => (
   <>
     <InputGroup>
@@ -34,6 +34,7 @@ const TypeAheadSearch = ({
         onInputFocus={openMenu}
         passedProps={{ ...getInputProps(), clearSearch }}
         autoSearchEnabled={autoSearchEnabled}
+        placeholder={placeholder}
       />
       <>
         {bookmarkController &&

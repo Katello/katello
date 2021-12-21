@@ -12,6 +12,7 @@ import { useBulkSelect } from '../../../Table/TableHooks';
 import { HOST_APPLICABLE_PACKAGES_KEY } from '../ApplicablePackages/ApplicablePackagesConstants';
 import { selectHostApplicablePackagesStatus } from '../ApplicablePackages/ApplicablePackagesSelectors';
 import { getHostApplicablePackages } from '../ApplicablePackages/ApplicablePackagesActions';
+import './PackageInstallModal.scss';
 
 const PackageInstallModal = ({
   isOpen, toggleModal, hostId, hostName,
@@ -30,17 +31,23 @@ const PackageInstallModal = ({
     updateSearchQuery,
     isSelected,
     selectOne,
+    selectNone,
     fetchBulkParams,
     isSelectable,
     ...selectAll
   } = useBulkSelect({ results, metadata });
   const fetchItems = params => (hostId ? getHostApplicablePackages(hostId, params) : { type: 'HOST_ID_NOT_AVAILABLE_NOOP' });
 
+  const handleModalClose = () => {
+    selectNone();
+    toggleModal();
+  };
+
   const modalActions = ([
     <Button key="confirm" variant="primary" onClick={() => console.log('install')}>
       Install
     </Button>,
-    <Button key="cancel" variant="link" onClick={toggleModal}>
+    <Button key="cancel" variant="link" onClick={handleModalClose}>
       Cancel
     </Button>,
   ]);
@@ -48,10 +55,11 @@ const PackageInstallModal = ({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={toggleModal}
+      onClose={handleModalClose}
       title={__('Install packages')}
       width="50%"
       actions={modalActions}
+      id="package-install-modal"
     >
       <FormattedMessage
         className="pkg-install-modal-blurb"
@@ -75,6 +83,7 @@ const PackageInstallModal = ({
         }
         additionalListeners={[hostId]}
         fetchItems={fetchItems}
+        searchPlaceholderText={__('Search available packages')}
         autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}
         foremanApiAutoComplete
         variant={TableVariant.compact}
