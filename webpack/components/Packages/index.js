@@ -45,7 +45,7 @@ export const PackagesLatestVersion = ({ name, upgradable_version: upgradableVers
 
   if (upgradableVersion == null) {
     label = '';
-    color = 'green';
+    color = 'black';
   } else {
     label = upgradableVersion.replace(`${name}-`, '');
   }

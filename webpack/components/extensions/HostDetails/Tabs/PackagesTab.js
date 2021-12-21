@@ -31,7 +31,7 @@ import PackageInstallModal from './PackageInstallModal';
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
-  const { id: hostId } = hostDetails;
+  const { id: hostId, name: hostName } = hostDetails;
 
   const { searchParam } = useUrlParams();
   const [searchQuery, updateSearchQuery] = useState(searchParam || '');
@@ -225,11 +225,14 @@ export const PackagesTab = () => {
           </Tbody>
         </TableWrapper>
       </div>
+      {hostId &&
       <PackageInstallModal
         isOpen={isModalOpen}
         toggleModal={toggleModal}
         hostId={hostId}
+        hostName={hostName}
       />
+      }
     </div>
   );
 };

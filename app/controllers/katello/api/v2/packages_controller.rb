@@ -42,7 +42,7 @@ module Katello
     param :packages_restrict_latest, :boolean, :desc => N_("Return only the latest version of each package")
     param :available_for, String, :desc => N_("Return packages that can be added to the specified object.  Only the value 'content_view_version' is supported.")
     param_group :search, ::Katello::Api::V2::ApiController
-    def index
+    def index # rubocop:disable Lint/UselessMethodDefinition
       super
     end
 
