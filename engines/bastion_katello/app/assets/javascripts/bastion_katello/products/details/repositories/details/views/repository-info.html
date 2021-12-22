@@ -304,7 +304,7 @@
           options="certs()"
           on-save="save(repository)">
       </dd>
-      <span ng-if="repository.content_type == 'yum' || repository.content_type == 'deb'">
+      <span ng-if="repository.content_type == 'yum' || repository.content_type == 'deb' || repository.content_type == 'docker'">
         <dt translate>Download Policy</dt>
         <dd bst-edit-select="downloadPolicyDisplay(repository.download_policy)"
             readonly="denied('edit_products', product)"

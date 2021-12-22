@@ -2,26 +2,28 @@
 http_interactions:
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/container/container/?name=Default_Organization-Test-busybox-library
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/repositories/container/container/?name=Default_Organization-Test-busybox-library
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
+      - Fri, 14 Jan 2022 15:18:56 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -32,58 +34,60 @@ http_interactions:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '555'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 38efe5c565e549efbff8951a3ab75c14
+      - a5fee63d5add4401897a6062e1f9ff67
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
+      Content-Length:
+      - '268'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        Y29udGFpbmVyL2NvbnRhaW5lci82NDNiNWVkNS01MzliLTRlYjEtOGVhYy04
-        ZDI0NDE0ZjFhNDcvIiwicHVscF9jcmVhdGVkIjoiMjAyMS0xMi0wNlQxOToz
-        ODoyMC44ODc2ODVaIiwidmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9y
-        ZXBvc2l0b3JpZXMvY29udGFpbmVyL2NvbnRhaW5lci82NDNiNWVkNS01Mzli
-        LTRlYjEtOGVhYy04ZDI0NDE0ZjFhNDcvdmVyc2lvbnMvIiwicHVscF9sYWJl
+        Y29udGFpbmVyL2NvbnRhaW5lci9lM2M5NmU0Yy05ZDg2LTQ5M2EtYjM2Ny0z
+        YzMwMjM3NDU5MmQvIiwicHVscF9jcmVhdGVkIjoiMjAyMi0wMS0xNFQxNTox
+        ODoxMy4xNDc3MDZaIiwidmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9y
+        ZXBvc2l0b3JpZXMvY29udGFpbmVyL2NvbnRhaW5lci9lM2M5NmU0Yy05ZDg2
+        LTQ5M2EtYjM2Ny0zYzMwMjM3NDU5MmQvdmVyc2lvbnMvIiwicHVscF9sYWJl
         bHMiOnt9LCJsYXRlc3RfdmVyc2lvbl9ocmVmIjoiL3B1bHAvYXBpL3YzL3Jl
-        cG9zaXRvcmllcy9jb250YWluZXIvY29udGFpbmVyLzY0M2I1ZWQ1LTUzOWIt
-        NGViMS04ZWFjLThkMjQ0MTRmMWE0Ny92ZXJzaW9ucy8wLyIsIm5hbWUiOiJE
+        cG9zaXRvcmllcy9jb250YWluZXIvY29udGFpbmVyL2UzYzk2ZTRjLTlkODYt
+        NDkzYS1iMzY3LTNjMzAyMzc0NTkyZC92ZXJzaW9ucy8wLyIsIm5hbWUiOiJE
         ZWZhdWx0X09yZ2FuaXphdGlvbi1UZXN0LWJ1c3lib3gtbGlicmFyeSIsImRl
         c2NyaXB0aW9uIjpudWxsLCJyZXRhaW5fcmVwb192ZXJzaW9ucyI6bnVsbCwi
         cmVtb3RlIjpudWxsfV19
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
 - request:
     method: delete
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/container/container/643b5ed5-539b-4eb1-8eac-8d24414f1a47/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/repositories/container/container/e3c96e4c-9d86-493a-b367-3c302374592d/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 202
       message: Accepted
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
+      - Fri, 14 Jan 2022 15:18:56 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -101,40 +105,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - fce790f43ef04c6aa8219df27b85e6e6
+      - c67d1f674d6d40869c02aae30de3a5f8
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzE2ZDkzZDA0LTVlMWQtNDY0
-        ZS05NGIwLTA3ZjZiOWNhNTI4NS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzU0MTAyY2JiLTVlMDItNGEy
+        Yi04ZjAzLWVjNDhjMGE0NTNiYS8ifQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/container/container/?name=Default_Organization-Test-busybox-library
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/remotes/container/container/?name=Default_Organization-Test-busybox-library
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
+      - Fri, 14 Jan 2022 15:18:56 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -145,62 +151,63 @@ http_interactions:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '727'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - fd73ced596264ed6aa98775ce0075c0a
+      - b6925993fd7d45eb86a0cae669cb5930
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
+      Content-Length:
+      - '393'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2NvbnRh
-        aW5lci9jb250YWluZXIvNGY3YzRlY2YtNWFlMy00NTEyLTlmYzAtODBmZjMz
-        ZGNhOGQ0LyIsInB1bHBfY3JlYXRlZCI6IjIwMjEtMTItMDZUMTk6Mzg6MjAu
-        NzM1OTM4WiIsIm5hbWUiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi1UZXN0LWJ1
+        aW5lci9jb250YWluZXIvMGE4NzljYjktZWQ4MC00YmUyLThiZDItN2M0Yjk4
+        NDliY2YyLyIsInB1bHBfY3JlYXRlZCI6IjIwMjItMDEtMTRUMTU6MTg6MTIu
+        ODM3NjgzWiIsIm5hbWUiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi1UZXN0LWJ1
         c3lib3gtbGlicmFyeSIsInVybCI6Imh0dHBzOi8vcXVheS5pbyIsImNhX2Nl
-        cnQiOiJLSkw6S0RGKihERiYqKCokJigqIyRKTEtKRChEKChEIiwiY2xpZW50
-        X2NlcnQiOiJLSkw6S0RGKihERiYqKCokJigqIyRKTEtKRChEKChEIiwidGxz
-        X3ZhbGlkYXRpb24iOmZhbHNlLCJwcm94eV91cmwiOm51bGwsInB1bHBfbGFi
-        ZWxzIjp7fSwicHVscF9sYXN0X3VwZGF0ZWQiOiIyMDIxLTEyLTA2VDE5OjM4
-        OjIyLjIyMTM0MVoiLCJkb3dubG9hZF9jb25jdXJyZW5jeSI6bnVsbCwibWF4
-        X3JldHJpZXMiOm51bGwsInBvbGljeSI6ImltbWVkaWF0ZSIsInRvdGFsX3Rp
-        bWVvdXQiOjMwMC4wLCJjb25uZWN0X3RpbWVvdXQiOm51bGwsInNvY2tfY29u
-        bmVjdF90aW1lb3V0IjpudWxsLCJzb2NrX3JlYWRfdGltZW91dCI6bnVsbCwi
-        aGVhZGVycyI6bnVsbCwicmF0ZV9saW1pdCI6bnVsbCwidXBzdHJlYW1fbmFt
-        ZSI6InRlc3QiLCJpbmNsdWRlX3RhZ3MiOm51bGwsImV4Y2x1ZGVfdGFncyI6
-        bnVsbH1dfQ==
+        cnQiOm51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJ0bHNfdmFsaWRhdGlvbiI6
+        dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJwdWxwX2xhYmVscyI6e30sInB1bHBf
+        bGFzdF91cGRhdGVkIjoiMjAyMi0wMS0xNFQxNToxODoxMi44Mzc3MDRaIiwi
+        ZG93bmxvYWRfY29uY3VycmVuY3kiOm51bGwsIm1heF9yZXRyaWVzIjpudWxs
+        LCJwb2xpY3kiOiJpbW1lZGlhdGUiLCJ0b3RhbF90aW1lb3V0IjozMDAuMCwi
+        Y29ubmVjdF90aW1lb3V0IjpudWxsLCJzb2NrX2Nvbm5lY3RfdGltZW91dCI6
+        bnVsbCwic29ja19yZWFkX3RpbWVvdXQiOm51bGwsImhlYWRlcnMiOm51bGws
+        InJhdGVfbGltaXQiOm51bGwsInVwc3RyZWFtX25hbWUiOiJsaWJwb2QvYnVz
+        eWJveCIsImluY2x1ZGVfdGFncyI6bnVsbCwiZXhjbHVkZV90YWdzIjpudWxs
+        fV19
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
 - request:
     method: delete
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/container/container/4f7c4ecf-5ae3-4512-9fc0-80ff33dca8d4/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/remotes/container/container/0a879cb9-ed80-4be2-8bd2-7c4b9849bcf2/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 202
       message: Accepted
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
+      - Fri, 14 Jan 2022 15:18:56 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -218,40 +225,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - a129dd3405d04f38a46b676732aeb7e6
+      - a45f82eccbba42c782167383feb9a7ff
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2I3ZjIzYjFiLTcyN2MtNGZi
-        ZS1hNzlkLTM1NjY3ZGVjYWRkMS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2YxOTEwZjEwLTIwNDgtNGQ2
+        Ni1iNzdlLWQ0NzBmYmI0ZTBlMS8ifQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/16d93d04-5e1d-464e-94b0-07f6b9ca5285/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/tasks/54102cbb-5e02-4a2b-8f03-ec48c0a453ba/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.0/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.1/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
+      - Fri, 14 Jan 2022 15:18:56 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -262,59 +271,61 @@ http_interactions:
       - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '619'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 83b0ab33870f4e93a38906d262b7b101
+      - 7a2533f81a294904bf81b40369e7a4c2
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
+      Content-Length:
+      - '375'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMTZkOTNkMDQtNWUx
-        ZC00NjRlLTk0YjAtMDdmNmI5Y2E1Mjg1LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTItMDZUMTk6Mzg6MjMuNDE4NDQzWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNTQxMDJjYmItNWUw
+        Mi00YTJiLThmMDMtZWM0OGMwYTQ1M2JhLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDEtMTRUMTU6MTg6NTYuMzQ5Nzg2WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiJmY2U3OTBmNDNlZjA0YzZhYTgyMTlkZjI3
-        Yjg1ZTZlNiIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEyLTA2VDE5OjM4OjIzLjQ1
-        ODk5MFoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTItMDZUMTk6Mzg6MjMuNTE0
-        NzQxWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy8yZmRhZDBhOS1iZjczLTQxMGMtYWZmOC1jOWRjOTAxODIwNjYvIiwi
+        ZXRlIiwibG9nZ2luZ19jaWQiOiJjNjdkMWY2NzRkNmQ0MDg2OWMwMmFhZTMw
+        ZGUzYTVmOCIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAxLTE0VDE1OjE4OjU2LjQx
+        MDg2OVoiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDEtMTRUMTU6MTg6NTYuNDc0
+        ODc1WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy8wYzE3OGUzNy04OWUzLTRhY2ItYjUwZC1iNjZiYzAyYWYwYzEvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVwb3NpdG9yaWVzL2NvbnRhaW5lci9jb250YWluZXIvNjQzYjVl
-        ZDUtNTM5Yi00ZWIxLThlYWMtOGQyNDQxNGYxYTQ3LyJdfQ==
+        cGkvdjMvcmVwb3NpdG9yaWVzL2NvbnRhaW5lci9jb250YWluZXIvZTNjOTZl
+        NGMtOWQ4Ni00OTNhLWIzNjctM2MzMDIzNzQ1OTJkLyJdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/b7f23b1b-727c-4fbe-a79d-35667decadd1/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/tasks/f1910f10-2048-4d66-b77e-d470fbb4e0e1/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.0/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.1/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
+      - Fri, 14 Jan 2022 15:18:56 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -325,124 +336,61 @@ http_interactions:
       - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '614'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - ff40fc60fe574e76aabdfdacf35d7300
+      - 58f72402990c45d796fc56fb7cfcee0d
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
+      Content-Length:
+      - '375'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYjdmMjNiMWItNzI3
-        Yy00ZmJlLWE3OWQtMzU2NjdkZWNhZGQxLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTItMDZUMTk6Mzg6MjMuNTM3OTAxWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZjE5MTBmMTAtMjA0
+        OC00ZDY2LWI3N2UtZDQ3MGZiYjRlMGUxLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDEtMTRUMTU6MTg6NTYuNTA4OTg0WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiJhMTI5ZGQzNDA1ZDA0ZjM4YTQ2YjY3Njcz
-        MmFlYjdlNiIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEyLTA2VDE5OjM4OjIzLjU4
-        MTA2NloiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTItMDZUMTk6Mzg6MjMuNjI0
-        Mzg5WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy8yZmRhZDBhOS1iZjczLTQxMGMtYWZmOC1jOWRjOTAxODIwNjYvIiwi
+        ZXRlIiwibG9nZ2luZ19jaWQiOiJhNDVmODJlY2NiYmE0MmM3ODIxNjczODNm
+        ZWI5YTdmZiIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAxLTE0VDE1OjE4OjU2LjU2
+        MTY1NVoiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDEtMTRUMTU6MTg6NTYuNjE3
+        MDQ5WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy8xZWRiNjA2ZS00NTVlLTQ0Y2EtOWRlMi05YTUyN2E2MzI1ZGEvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVtb3Rlcy9jb250YWluZXIvY29udGFpbmVyLzRmN2M0ZWNmLTVh
-        ZTMtNDUxMi05ZmMwLTgwZmYzM2RjYThkNC8iXX0=
+        cGkvdjMvcmVtb3Rlcy9jb250YWluZXIvY29udGFpbmVyLzBhODc5Y2I5LWVk
+        ODAtNGJlMi04YmQyLTdjNGI5ODQ5YmNmMi8iXX0=
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/container/container/?name=Default_Organization-Test-busybox-library
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/distributions/container/container/?name=Default_Organization-Test-busybox-library
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '693'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 5c0275e7a36a4c369c0a2507475031a7
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7Im5hbWUiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi1UZXN0LWJ1c3li
-        b3gtbGlicmFyeSIsInB1bHBfbGFiZWxzIjp7fSwicHVscF9jcmVhdGVkIjoi
-        MjAyMS0xMi0wNlQxOTozODoyMS40MTA5NzVaIiwicHVscF9ocmVmIjoiL3B1
-        bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvY29udGFpbmVyL2NvbnRhaW5lci82
-        MTQ2ODYwNi0xNTMwLTQ1YmItOTdjZS0zNWQxYzI1NjUwNmMvIiwicmVwb3Np
-        dG9yeSI6bnVsbCwiY29udGVudF9ndWFyZCI6Ii9wdWxwL2FwaS92My9jb250
-        ZW50Z3VhcmRzL2NvbnRhaW5lci9jb250ZW50X3JlZGlyZWN0LzNhZWEyMGY1
-        LTRlYTMtNGYyNS05ZTI4LTkyYTg5MWFkNGY1My8iLCJiYXNlX3BhdGgiOiJl
-        bXB0eV9vcmdhbml6YXRpb24tcHVwcGV0X3Byb2R1Y3QtYnVzeWJveCIsInJl
-        cG9zaXRvcnlfdmVyc2lvbiI6bnVsbCwicmVnaXN0cnlfcGF0aCI6ImRldmVs
-        OC5tYXJrYXJ0aC5leGFtcGxlLmNvbTo0NDMvZW1wdHlfb3JnYW5pemF0aW9u
-        LXB1cHBldF9wcm9kdWN0LWJ1c3lib3giLCJuYW1lc3BhY2UiOiIvcHVscC9h
-        cGkvdjMvcHVscF9jb250YWluZXIvbmFtZXNwYWNlcy80N2M3MTE1ZC1jNmZl
-        LTQzOWEtYmZkYy1hMzkxNjQ2M2JmMmEvIiwicHJpdmF0ZSI6ZmFsc2UsImRl
-        c2NyaXB0aW9uIjpudWxsfV19
-    http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
-- request:
-    method: delete
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/container/container/61468606-1530-45bb-97ce-35d1c256506c/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/2.9.1/ruby
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-      Authorization:
-      - Basic Og==
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
+      - Fri, 14 Jan 2022 15:18:56 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -450,230 +398,52 @@ http_interactions:
       Vary:
       - Accept,Cookie
       Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '67'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 1f80288c6b654649bba9407959b24893
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzE3NmYyMGU2LTQ5MmMtNDgx
-        OS1iMGY1LTkwZDllY2FkMWM1NC8ifQ==
-    http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
-- request:
-    method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/container/container/?base_path=empty_organization-puppet_product-busybox
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/2.9.1/ruby
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-      Authorization:
-      - Basic Og==
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
       Content-Length:
-      - '693'
+      - '52'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 21452ec6c3d14a8f9d2576e6ce701d08
+      - 5b3eec1de40740d5924722e902196815
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7Im5hbWUiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi1UZXN0LWJ1c3li
-        b3gtbGlicmFyeSIsInB1bHBfbGFiZWxzIjp7fSwicHVscF9jcmVhdGVkIjoi
-        MjAyMS0xMi0wNlQxOTozODoyMS40MTA5NzVaIiwicHVscF9ocmVmIjoiL3B1
-        bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvY29udGFpbmVyL2NvbnRhaW5lci82
-        MTQ2ODYwNi0xNTMwLTQ1YmItOTdjZS0zNWQxYzI1NjUwNmMvIiwicmVwb3Np
-        dG9yeSI6bnVsbCwiY29udGVudF9ndWFyZCI6Ii9wdWxwL2FwaS92My9jb250
-        ZW50Z3VhcmRzL2NvbnRhaW5lci9jb250ZW50X3JlZGlyZWN0LzNhZWEyMGY1
-        LTRlYTMtNGYyNS05ZTI4LTkyYTg5MWFkNGY1My8iLCJiYXNlX3BhdGgiOiJl
-        bXB0eV9vcmdhbml6YXRpb24tcHVwcGV0X3Byb2R1Y3QtYnVzeWJveCIsInJl
-        cG9zaXRvcnlfdmVyc2lvbiI6bnVsbCwicmVnaXN0cnlfcGF0aCI6ImRldmVs
-        OC5tYXJrYXJ0aC5leGFtcGxlLmNvbTo0NDMvZW1wdHlfb3JnYW5pemF0aW9u
-        LXB1cHBldF9wcm9kdWN0LWJ1c3lib3giLCJuYW1lc3BhY2UiOiIvcHVscC9h
-        cGkvdjMvcHVscF9jb250YWluZXIvbmFtZXNwYWNlcy80N2M3MTE1ZC1jNmZl
-        LTQzOWEtYmZkYy1hMzkxNjQ2M2JmMmEvIiwicHJpdmF0ZSI6ZmFsc2UsImRl
-        c2NyaXB0aW9uIjpudWxsfV19
-    http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
-- request:
-    method: delete
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/container/container/61468606-1530-45bb-97ce-35d1c256506c/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/2.9.1/ruby
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-      Authorization:
-      - Basic Og==
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '23'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - c6496fd8bb5047f0b489362b21a770b5
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: ASCII-8BIT
-      base64_string: 'eyJkZXRhaWwiOiJOb3QgZm91bmQuIn0=
-
-'
-    http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
-- request:
-    method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/176f20e6-492c-4819-b0f5-90d9ecad1c54/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.0/ruby
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-      Authorization:
-      - Basic Og==
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '632'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - '09a381f48a804860b19330fe3c092a97'
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMTc2ZjIwZTYtNDky
-        Yy00ODE5LWIwZjUtOTBkOWVjYWQxYzU0LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTItMDZUMTk6Mzg6MjMuNzY0MzI1WiIsInN0YXRlIjoiY29tcGxldGVk
-        IiwibmFtZSI6InB1bHBfY29udGFpbmVyLmFwcC50YXNrcy5iYXNlLmdlbmVy
-        YWxfbXVsdGlfZGVsZXRlIiwibG9nZ2luZ19jaWQiOiIxZjgwMjg4YzZiNjU0
-        NjQ5YmJhOTQwNzk1OWIyNDg5MyIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEyLTA2
-        VDE5OjM4OjIzLjgwNDUxNVoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTItMDZU
-        MTk6Mzg6MjMuODM5ODU4WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVs
-        cC9hcGkvdjMvd29ya2Vycy8yZmRhZDBhOS1iZjczLTQxMGMtYWZmOC1jOWRj
-        OTAxODIwNjYvIiwicGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpb
-        XSwidGFza19ncm91cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNy
-        ZWF0ZWRfcmVzb3VyY2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29y
-        ZCI6WyIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9jb250YWluZXIvY29u
-        dGFpbmVyLzYxNDY4NjA2LTE1MzAtNDViYi05N2NlLTM1ZDFjMjU2NTA2Yy8i
-        XX0=
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/container/container/?name=Default_Organization-Test-busybox-library
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/distributions/container/container/?base_path=empty_organization-puppet_product-busybox
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:23 GMT
+      - Fri, 14 Jan 2022 15:18:56 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -691,40 +461,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 6b935412a31745b4ac9ec9484f61fa94
+      - 4f82484b9145415bb73933509ad32e4e
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:23 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/container/container/?name=Default_Organization-Test-busybox-library
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/repositories/container/container/?name=Default_Organization-Test-busybox-library
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:24 GMT
+      - Fri, 14 Jan 2022 15:18:56 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -742,40 +514,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 41efecee019643469232030be928e8e2
+      - 8b7e6d7cdb2647998eb4421e6555b7b1
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:24 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/container/container/?name=Default_Organization-Test-busybox-library
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/remotes/container/container/?name=Default_Organization-Test-busybox-library
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:24 GMT
+      - Fri, 14 Jan 2022 15:18:56 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -793,40 +567,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 4166bb34eabf403796cce184f2b0f75c
+      - 47b7313f2b624d6cb9a33df3f84498b1
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:24 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/container/container/?base_path=empty_organization-puppet_product-busybox
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/distributions/container/container/?name=Default_Organization-Test-busybox-library
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:24 GMT
+      - Fri, 14 Jan 2022 15:18:56 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -844,21 +620,74 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - fba88192c36048b886b8c1999ab20d5a
+      - 83cce05a218b498791bd88b5297b6ab2
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:24 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/distributions/container/container/?base_path=empty_organization-puppet_product-busybox
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/2.9.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 14 Jan 2022 15:18:56 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '52'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Correlation-Id:
+      - 7b703d09d8ee45b6b30aa2092ea6ff7e
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Via:
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Fri, 14 Jan 2022 15:18:56 GMT
 - request:
     method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/container/container/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/remotes/container/container/
     body:
       encoding: UTF-8
       base64_string: |
@@ -866,30 +695,33 @@ http_interactions:
         YnJhcnkiLCJ1cmwiOiJodHRwczovL3F1YXkuaW8iLCJjYV9jZXJ0IjpudWxs
         LCJjbGllbnRfY2VydCI6bnVsbCwiY2xpZW50X2tleSI6bnVsbCwidGxzX3Zh
         bGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6bnVsbCwicHJveHlfdXNlcm5h
-        bWUiOm51bGwsInByb3h5X3Bhc3N3b3JkIjpudWxsLCJ0b3RhbF90aW1lb3V0
-        IjozMDAsInVwc3RyZWFtX25hbWUiOiJsaWJwb2QvYnVzeWJveCJ9
+        bWUiOm51bGwsInByb3h5X3Bhc3N3b3JkIjpudWxsLCJwb2xpY3kiOiJpbW1l
+        ZGlhdGUiLCJ0b3RhbF90aW1lb3V0IjozMDAsInVwc3RyZWFtX25hbWUiOiJs
+        aWJwb2QvYnVzeWJveCJ9
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 201
       message: Created
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:24 GMT
+      - Fri, 14 Jan 2022 15:18:57 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/container/container/07bdfbcc-1b53-47ea-85ce-1b0f41f86274/"
+      - "/pulp/api/v3/remotes/container/container/77b45a4e-d899-435c-8fa6-bdae0dcc29a7/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -903,22 +735,22 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 2b4920a4222f4dfebf4fba9cddfedce7
+      - 2b02e3c486724e4c800ca88dde6277e7
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9jb250YWluZXIv
-        Y29udGFpbmVyLzA3YmRmYmNjLTFiNTMtNDdlYS04NWNlLTFiMGY0MWY4NjI3
-        NC8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIxLTEyLTA2VDE5OjM4OjI0LjIwODY3
-        N1oiLCJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94
+        Y29udGFpbmVyLzc3YjQ1YTRlLWQ4OTktNDM1Yy04ZmE2LWJkYWUwZGNjMjlh
+        Ny8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIyLTAxLTE0VDE1OjE4OjU3LjE0Mzcx
+        MFoiLCJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94
         LWxpYnJhcnkiLCJ1cmwiOiJodHRwczovL3F1YXkuaW8iLCJjYV9jZXJ0Ijpu
         dWxsLCJjbGllbnRfY2VydCI6bnVsbCwidGxzX3ZhbGlkYXRpb24iOnRydWUs
         InByb3h5X3VybCI6bnVsbCwicHVscF9sYWJlbHMiOnt9LCJwdWxwX2xhc3Rf
-        dXBkYXRlZCI6IjIwMjEtMTItMDZUMTk6Mzg6MjQuMjA4Njk2WiIsImRvd25s
+        dXBkYXRlZCI6IjIwMjItMDEtMTRUMTU6MTg6NTcuMTQzNzMyWiIsImRvd25s
         b2FkX2NvbmN1cnJlbmN5IjpudWxsLCJtYXhfcmV0cmllcyI6bnVsbCwicG9s
         aWN5IjoiaW1tZWRpYXRlIiwidG90YWxfdGltZW91dCI6MzAwLjAsImNvbm5l
         Y3RfdGltZW91dCI6bnVsbCwic29ja19jb25uZWN0X3RpbWVvdXQiOm51bGws
@@ -926,37 +758,39 @@ http_interactions:
         X2xpbWl0IjpudWxsLCJ1cHN0cmVhbV9uYW1lIjoibGlicG9kL2J1c3lib3gi
         LCJpbmNsdWRlX3RhZ3MiOm51bGwsImV4Y2x1ZGVfdGFncyI6bnVsbH0=
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:24 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:57 GMT
 - request:
     method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/container/container/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/repositories/container/container/
     body:
       encoding: UTF-8
       base64_string: |
         eyJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94LWxp
         YnJhcnkifQ==
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 201
       message: Created
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:24 GMT
+      - Fri, 14 Jan 2022 15:18:57 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/container/container/5e760886-7f2a-49b0-8a20-3c704c7312ff/"
+      - "/pulp/api/v3/repositories/container/container/91093203-0ea7-4f83-a11d-b73388a5f5a0/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -970,50 +804,52 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 3cd5564efd924ecab17a6d90a3be102e
+      - bc67751d6178405a9a00906bbd57f552
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2NvbnRh
-        aW5lci9jb250YWluZXIvNWU3NjA4ODYtN2YyYS00OWIwLThhMjAtM2M3MDRj
-        NzMxMmZmLyIsInB1bHBfY3JlYXRlZCI6IjIwMjEtMTItMDZUMTk6Mzg6MjQu
-        MzU3NzM1WiIsInZlcnNpb25zX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3Np
-        dG9yaWVzL2NvbnRhaW5lci9jb250YWluZXIvNWU3NjA4ODYtN2YyYS00OWIw
-        LThhMjAtM2M3MDRjNzMxMmZmL3ZlcnNpb25zLyIsInB1bHBfbGFiZWxzIjp7
+        aW5lci9jb250YWluZXIvOTEwOTMyMDMtMGVhNy00ZjgzLWExMWQtYjczMzg4
+        YTVmNWEwLyIsInB1bHBfY3JlYXRlZCI6IjIwMjItMDEtMTRUMTU6MTg6NTcu
+        NDYzMzIzWiIsInZlcnNpb25zX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3Np
+        dG9yaWVzL2NvbnRhaW5lci9jb250YWluZXIvOTEwOTMyMDMtMGVhNy00Zjgz
+        LWExMWQtYjczMzg4YTVmNWEwL3ZlcnNpb25zLyIsInB1bHBfbGFiZWxzIjp7
         fSwibGF0ZXN0X3ZlcnNpb25faHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0
-        b3JpZXMvY29udGFpbmVyL2NvbnRhaW5lci81ZTc2MDg4Ni03ZjJhLTQ5YjAt
-        OGEyMC0zYzcwNGM3MzEyZmYvdmVyc2lvbnMvMC8iLCJuYW1lIjoiRGVmYXVs
+        b3JpZXMvY29udGFpbmVyL2NvbnRhaW5lci85MTA5MzIwMy0wZWE3LTRmODMt
+        YTExZC1iNzMzODhhNWY1YTAvdmVyc2lvbnMvMC8iLCJuYW1lIjoiRGVmYXVs
         dF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94LWxpYnJhcnkiLCJkZXNjcmlw
         dGlvbiI6bnVsbCwicmV0YWluX3JlcG9fdmVyc2lvbnMiOm51bGwsInJlbW90
         ZSI6bnVsbH0=
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:24 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:57 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/container/container/?base_path=empty_organization-puppet_product-busybox
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/distributions/container/container/?base_path=empty_organization-puppet_product-busybox
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:24 GMT
+      - Fri, 14 Jan 2022 15:18:58 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1031,46 +867,48 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - fcccf8869d9147de98b817e6bbd99a87
+      - 1b0463282e0f4865870e0002e8858171
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:24 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:58 GMT
 - request:
     method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/container/container/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/distributions/container/container/
     body:
       encoding: UTF-8
       base64_string: |
         eyJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94LWxp
         YnJhcnkiLCJiYXNlX3BhdGgiOiJlbXB0eV9vcmdhbml6YXRpb24tcHVwcGV0
         X3Byb2R1Y3QtYnVzeWJveCIsInJlcG9zaXRvcnlfdmVyc2lvbiI6Ii9wdWxw
-        L2FwaS92My9yZXBvc2l0b3JpZXMvY29udGFpbmVyL2NvbnRhaW5lci81ZTc2
-        MDg4Ni03ZjJhLTQ5YjAtOGEyMC0zYzcwNGM3MzEyZmYvdmVyc2lvbnMvMC8i
+        L2FwaS92My9yZXBvc2l0b3JpZXMvY29udGFpbmVyL2NvbnRhaW5lci85MTA5
+        MzIwMy0wZWE3LTRmODMtYTExZC1iNzMzODhhNWY1YTAvdmVyc2lvbnMvMC8i
         fQ==
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 202
       message: Accepted
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:24 GMT
+      - Fri, 14 Jan 2022 15:18:58 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1088,40 +926,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - c371a5ff25d8495e869e10995d87adce
+      - e34fe35f1cc545e98fb0dd2f84e10460
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2MwZjFlZTcwLTljNjAtNGJi
-        MC05MmI5LTcwNmY1YWIwYzU5My8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzY1OWEyYTBlLTg5M2QtNDdh
+        Ni1hZDJmLTQ2M2Q4OWUzN2YwMC8ifQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:24 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:58 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/c0f1ee70-9c60-4bb0-92b9-706f5ab0c593/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/tasks/659a2a0e-893d-47a6-ad2f-463d89e37f00/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.0/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.1/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:25 GMT
+      - Fri, 14 Jan 2022 15:18:58 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1132,60 +972,62 @@ http_interactions:
       - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '644'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 0c18c16386ef42b0b9e8a69e8874a731
+      - 2c274786dd814a3e91ffbb829576b9ee
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
+      Content-Length:
+      - '381'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYzBmMWVlNzAtOWM2
-        MC00YmIwLTkyYjktNzA2ZjVhYjBjNTkzLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTItMDZUMTk6Mzg6MjQuNzA5MzM3WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNjU5YTJhMGUtODkz
+        ZC00N2E2LWFkMmYtNDYzZDg5ZTM3ZjAwLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDEtMTRUMTU6MTg6NTguMTA5NzEyWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfY3Jl
-        YXRlIiwibG9nZ2luZ19jaWQiOiJjMzcxYTVmZjI1ZDg0OTVlODY5ZTEwOTk1
-        ZDg3YWRjZSIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEyLTA2VDE5OjM4OjI0Ljc1
-        NzE2MFoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTItMDZUMTk6Mzg6MjQuOTg4
-        Nzk4WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy81NTIxYzNlOS05ZmIxLTRlN2ItYWU2Ny1iYmJlMWRhZWU2MGQvIiwi
+        YXRlIiwibG9nZ2luZ19jaWQiOiJlMzRmZTM1ZjFjYzU0NWU5OGZiMGRkMmY4
+        NGUxMDQ2MCIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAxLTE0VDE1OjE4OjU4LjE3
+        NDA4N1oiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDEtMTRUMTU6MTg6NTguNDY2
+        NzMyWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy8wYzE3OGUzNy04OWUzLTRhY2ItYjUwZC1iNjZiYzAyYWYwYzEvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbIi9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zL2NvbnRhaW5lci9j
-        b250YWluZXIvY2RhMzQ5MmQtN2FjNS00NzcwLThlYjEtZDdiYjY5YWNmMDkz
+        b250YWluZXIvNzU2ODVjOTYtMzQ2OS00OTI3LWEzN2UtMWUzOTg3ZDY0ZTJm
         LyJdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9hcGkvdjMvZGlz
         dHJpYnV0aW9ucy8iXX0=
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:25 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:58 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/container/container/cda3492d-7ac5-4770-8eb1-d7bb69acf093/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/distributions/container/container/75685c96-3469-4927-a37e-1e3987d64e2f/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:25 GMT
+      - Fri, 14 Jan 2022 15:18:58 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1196,62 +1038,64 @@ http_interactions:
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '733'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 91740e1dd05d43318362b8d369964d47
+      - c27d21c5e1c1400dab53431846ba037c
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
+      Content-Length:
+      - '431'
     body:
       encoding: ASCII-8BIT
       base64_string: |
-        eyJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94LWxp
-        YnJhcnkiLCJwdWxwX2xhYmVscyI6e30sInB1bHBfY3JlYXRlZCI6IjIwMjEt
-        MTItMDZUMTk6Mzg6MjQuODg4OTk5WiIsInB1bHBfaHJlZiI6Ii9wdWxwL2Fw
-        aS92My9kaXN0cmlidXRpb25zL2NvbnRhaW5lci9jb250YWluZXIvY2RhMzQ5
-        MmQtN2FjNS00NzcwLThlYjEtZDdiYjY5YWNmMDkzLyIsInJlcG9zaXRvcnki
-        Om51bGwsImNvbnRlbnRfZ3VhcmQiOiIvcHVscC9hcGkvdjMvY29udGVudGd1
-        YXJkcy9jb250YWluZXIvY29udGVudF9yZWRpcmVjdC8zYWVhMjBmNS00ZWEz
-        LTRmMjUtOWUyOC05MmE4OTFhZDRmNTMvIiwiYmFzZV9wYXRoIjoiZW1wdHlf
-        b3JnYW5pemF0aW9uLXB1cHBldF9wcm9kdWN0LWJ1c3lib3giLCJyZXBvc2l0
+        eyJjb250ZW50X2d1YXJkIjoiL3B1bHAvYXBpL3YzL2NvbnRlbnRndWFyZHMv
+        Y29udGFpbmVyL2NvbnRlbnRfcmVkaXJlY3QvYzA5YTY0ZjUtMmRkNy00YzNm
+        LWIwYjAtNjdmMWU5ZTJkZjE2LyIsInB1bHBfbGFiZWxzIjp7fSwibmFtZSI6
+        IkRlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtYnVzeWJveC1saWJyYXJ5Iiwi
+        cHVscF9jcmVhdGVkIjoiMjAyMi0wMS0xNFQxNToxODo1OC4zNDA3MTNaIiwi
+        cHVscF9ocmVmIjoiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvY29udGFp
+        bmVyL2NvbnRhaW5lci83NTY4NWM5Ni0zNDY5LTQ5MjctYTM3ZS0xZTM5ODdk
+        NjRlMmYvIiwiYmFzZV9wYXRoIjoiZW1wdHlfb3JnYW5pemF0aW9uLXB1cHBl
+        dF9wcm9kdWN0LWJ1c3lib3giLCJyZXBvc2l0b3J5IjpudWxsLCJyZXBvc2l0
         b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2NvbnRh
-        aW5lci9jb250YWluZXIvNWU3NjA4ODYtN2YyYS00OWIwLThhMjAtM2M3MDRj
-        NzMxMmZmL3ZlcnNpb25zLzAvIiwicmVnaXN0cnlfcGF0aCI6ImRldmVsOC5t
-        YXJrYXJ0aC5leGFtcGxlLmNvbTo0NDMvZW1wdHlfb3JnYW5pemF0aW9uLXB1
-        cHBldF9wcm9kdWN0LWJ1c3lib3giLCJuYW1lc3BhY2UiOiIvcHVscC9hcGkv
-        djMvcHVscF9jb250YWluZXIvbmFtZXNwYWNlcy80N2M3MTE1ZC1jNmZlLTQz
-        OWEtYmZkYy1hMzkxNjQ2M2JmMmEvIiwicHJpdmF0ZSI6ZmFsc2UsImRlc2Ny
-        aXB0aW9uIjpudWxsfQ==
+        aW5lci9jb250YWluZXIvOTEwOTMyMDMtMGVhNy00ZjgzLWExMWQtYjczMzg4
+        YTVmNWEwL3ZlcnNpb25zLzAvIiwicmVnaXN0cnlfcGF0aCI6ImNlbnRvczct
+        a2F0ZWxsby1kZXZlbC1uby1vc3RyZWUubG9jYWxob3N0LmV4YW1wbGUuY29t
+        L2VtcHR5X29yZ2FuaXphdGlvbi1wdXBwZXRfcHJvZHVjdC1idXN5Ym94Iiwi
+        bmFtZXNwYWNlIjoiL3B1bHAvYXBpL3YzL3B1bHBfY29udGFpbmVyL25hbWVz
+        cGFjZXMvYTFiODQ4NTQtNDBjOC00YTI3LWI4OWEtMzlkYTA0Mzg4NTMxLyIs
+        InByaXZhdGUiOmZhbHNlLCJkZXNjcmlwdGlvbiI6bnVsbH0=
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:25 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:58 GMT
 - request:
     method: delete
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/container/container/07bdfbcc-1b53-47ea-85ce-1b0f41f86274/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/remotes/container/container/77b45a4e-d899-435c-8fa6-bdae0dcc29a7/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 202
       message: Accepted
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:25 GMT
+      - Fri, 14 Jan 2022 15:18:59 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1269,40 +1113,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 33465bfdbef34bd1936d94d96728bd5e
+      - d04b8f929aa04ef5a5808b80a05f2e29
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2JhZWM4OTlkLTU1NjQtNGQx
-        YS1iZTlmLTc3YTE2YWY3MWQ5Mi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzI1NjdkODZkLTAzYmQtNGI5
+        Yi05NDgzLWVkNWNiZjBlNjNmOC8ifQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:25 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:59 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/baec899d-5564-4d1a-be9f-77a16af71d92/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/tasks/2567d86d-03bd-4b9b-9483-ed5cbf0e63f8/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.0/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.1/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:25 GMT
+      - Fri, 14 Jan 2022 15:18:59 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1313,59 +1159,61 @@ http_interactions:
       - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '614'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 7e7ec0ef5bf9469db64b7e3572d30e38
+      - d3d9ef99a0de4675a5197d5935daf465
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
+      Content-Length:
+      - '376'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYmFlYzg5OWQtNTU2
-        NC00ZDFhLWJlOWYtNzdhMTZhZjcxZDkyLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTItMDZUMTk6Mzg6MjUuNDA5MjIxWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMjU2N2Q4NmQtMDNi
+        ZC00YjliLTk0ODMtZWQ1Y2JmMGU2M2Y4LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDEtMTRUMTU6MTg6NTkuMDMyMzAyWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiIzMzQ2NWJmZGJlZjM0YmQxOTM2ZDk0ZDk2
-        NzI4YmQ1ZSIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEyLTA2VDE5OjM4OjI1LjQ0
-        OTY4NloiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTItMDZUMTk6Mzg6MjUuNDkz
-        ODIzWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy8yZmRhZDBhOS1iZjczLTQxMGMtYWZmOC1jOWRjOTAxODIwNjYvIiwi
+        ZXRlIiwibG9nZ2luZ19jaWQiOiJkMDRiOGY5MjlhYTA0ZWY1YTU4MDhiODBh
+        MDVmMmUyOSIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAxLTE0VDE1OjE4OjU5LjA5
+        MDUwM1oiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDEtMTRUMTU6MTg6NTkuMTQ0
+        MTE5WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy8wYzE3OGUzNy04OWUzLTRhY2ItYjUwZC1iNjZiYzAyYWYwYzEvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVtb3Rlcy9jb250YWluZXIvY29udGFpbmVyLzA3YmRmYmNjLTFi
-        NTMtNDdlYS04NWNlLTFiMGY0MWY4NjI3NC8iXX0=
+        cGkvdjMvcmVtb3Rlcy9jb250YWluZXIvY29udGFpbmVyLzc3YjQ1YTRlLWQ4
+        OTktNDM1Yy04ZmE2LWJkYWUwZGNjMjlhNy8iXX0=
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:25 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:59 GMT
 - request:
     method: delete
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/container/container/cda3492d-7ac5-4770-8eb1-d7bb69acf093/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/distributions/container/container/75685c96-3469-4927-a37e-1e3987d64e2f/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 202
       message: Accepted
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:25 GMT
+      - Fri, 14 Jan 2022 15:18:59 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1383,40 +1231,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - dbd2926d4cb74919a3eccee280a19c97
+      - 61f7cdf87de94e689919c70452d5bdab
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2MyNzQ1NmE0LTk3Y2QtNDkx
-        NS04ODFkLTk5ZjZlNzM0M2ZiNC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzkwMmM5NTZjLWNhODQtNDBm
+        Zi04NzZkLTAwOTk5NDllNDNiZS8ifQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:25 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:59 GMT
 - request:
     method: delete
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/container/container/5e760886-7f2a-49b0-8a20-3c704c7312ff/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/repositories/container/container/91093203-0ea7-4f83-a11d-b73388a5f5a0/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
+      Content-Type:
+      - application/json
       User-Agent:
       - OpenAPI-Generator/2.9.1/ruby
       Accept:
       - application/json
-      Content-Type:
-      - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 202
       message: Accepted
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:25 GMT
+      - Fri, 14 Jan 2022 15:18:59 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1434,40 +1284,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - c46e07ae77f542788fefc8acf643520f
+      - 025ec4dd1fad4a32b339f44bbff1054b
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBmYWVjOWE2LTliMDAtNGVh
-        Zi1hOTVkLTJmOTkzNmZkZjFiZC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2YzOTU1OTFkLTE0MWYtNGFk
+        OC04YTI4LTc5ODM1YjYzNjZhOS8ifQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:25 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:59 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/0faec9a6-9b00-4eaf-a95d-2f9936fdf1bd/
+    uri: https://centos7-katello-devel-no-ostree.localhost.example.com/pulp/api/v3/tasks/f395591d-141f-4ad8-8a28-79835b6366a9/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.0/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.1/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:38:25 GMT
+      - Fri, 14 Jan 2022 15:18:59 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1478,35 +1330,35 @@ http_interactions:
       - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '619'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 3e03ad2019e642df84648561c7a9b9c9
+      - '069f9a7f95684e4ab666103e05cd1f6f'
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos7-katello-devel-no-ostree.localhost.example.com
+      Content-Length:
+      - '378'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMGZhZWM5YTYtOWIw
-        MC00ZWFmLWE5NWQtMmY5OTM2ZmRmMWJkLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTItMDZUMTk6Mzg6MjUuNzUzNTM3WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZjM5NTU5MWQtMTQx
+        Zi00YWQ4LThhMjgtNzk4MzViNjM2NmE5LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDEtMTRUMTU6MTg6NTkuNDMyMTc2WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiJjNDZlMDdhZTc3ZjU0Mjc4OGZlZmM4YWNm
-        NjQzNTIwZiIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEyLTA2VDE5OjM4OjI1Ljgw
-        MDE4MFoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTItMDZUMTk6Mzg6MjUuODU2
-        MDkwWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy81NTIxYzNlOS05ZmIxLTRlN2ItYWU2Ny1iYmJlMWRhZWU2MGQvIiwi
+        ZXRlIiwibG9nZ2luZ19jaWQiOiIwMjVlYzRkZDFmYWQ0YTMyYjMzOWY0NGJi
+        ZmYxMDU0YiIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAxLTE0VDE1OjE4OjU5LjQ5
+        MTM1M1oiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDEtMTRUMTU6MTg6NTkuNTYx
+        OTY4WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy8xZWRiNjA2ZS00NTVlLTQ0Y2EtOWRlMi05YTUyN2E2MzI1ZGEvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVwb3NpdG9yaWVzL2NvbnRhaW5lci9jb250YWluZXIvNWU3NjA4
-        ODYtN2YyYS00OWIwLThhMjAtM2M3MDRjNzMxMmZmLyJdfQ==
+        cGkvdjMvcmVwb3NpdG9yaWVzL2NvbnRhaW5lci9jb250YWluZXIvOTEwOTMy
+        MDMtMGVhNy00ZjgzLWExMWQtYjczMzg4YTVmNWEwLyJdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:38:25 GMT
+  recorded_at: Fri, 14 Jan 2022 15:18:59 GMT
 recorded_with: VCR 3.0.3

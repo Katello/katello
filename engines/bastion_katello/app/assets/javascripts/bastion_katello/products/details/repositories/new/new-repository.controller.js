@@ -138,7 +138,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                         repository.ignorable_content = [];
                     }
                 }
-                if (repository.content_type !== 'yum' && repository.content_type !== 'deb' ) {
+                if (repository.content_type !== 'yum' && repository.content_type !== 'deb' && repository.content_type !== 'docker') {
                     repository['download_policy'] = '';
                 }
                 if (repository.arch === 'No restriction') {

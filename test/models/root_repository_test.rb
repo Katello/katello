@@ -227,10 +227,10 @@ module Katello
     test_attributes :pid => '8a59cb31-164d-49df-b3c6-9b90634919ce'
     def test_create_non_yum_with_download_policy
       @root.download_policy = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
-      @root.content_type = 'docker'
-      refute @root.valid?, "Validation succeed for create with download_policy and non-yum repository: docker"
+      @root.content_type = 'ansible_collection'
+      refute @root.valid?, "Validation succeed for create with download_policy and non-yum repository: ansible_collection"
       assert @root.errors.key?(:download_policy)
-      assert_match(/Cannot set attribute.*docker.*/, @root.errors[:download_policy][0])
+      assert_match(/Cannot set attribute.*ansible_collection.*/, @root.errors[:download_policy][0])
     end
 
     test_attributes :pid => 'c49a3c49-110d-4b74-ae14-5c9494a4541c'
@@ -414,7 +414,7 @@ module Katello
     def test_docker_repository_docker_upstream_name_url
       @root.unprotected = true
       @root.content_type = 'docker'
-      @root.download_policy = nil
+      @root.download_policy = 'immediate'
       @root.docker_upstream_name = ""
       @root.url = nil
 
@@ -493,7 +493,7 @@ module Katello
       @root.content_type = Repository::DOCKER_TYPE
       @root.docker_upstream_name = "haha"
       @root.unprotected = true
-      @root.download_policy = nil
+      @root.download_policy = 'on_demand'
       assert @root.valid?
       @root.unprotected = false
       refute @root.valid?
