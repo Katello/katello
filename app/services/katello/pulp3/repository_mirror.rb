@@ -128,6 +128,7 @@ module Katello
         sync_params = repo_service.sync_url_params(options)
         sync_params[:remote] = remote_href
         sync_params[:mirror] = true
+        sync_params.delete(:sync_policy)
         repository_sync_url_data = api.repository_sync_url_class.new(sync_params)
         [api.repositories_api.sync(repository_href, repository_sync_url_data)]
       end
