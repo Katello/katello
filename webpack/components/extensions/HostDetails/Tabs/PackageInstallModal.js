@@ -34,10 +34,10 @@ const PackageInstallModal = ({
     selectNone,
     fetchBulkParams,
     isSelectable,
+    selectedCount,
     ...selectAll
   } = useBulkSelect({ results, metadata });
   const fetchItems = params => (hostId ? getHostApplicablePackages(hostId, params) : { type: 'HOST_ID_NOT_AVAILABLE_NOOP' });
-
   const handleModalClose = () => {
     selectNone();
     toggleModal();
@@ -79,6 +79,8 @@ const PackageInstallModal = ({
           status,
           searchQuery,
           updateSearchQuery,
+          selectedCount,
+          selectNone,
         }
         }
         additionalListeners={[hostId]}
