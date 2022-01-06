@@ -7,7 +7,7 @@ module Actions
 
         include ::Katello::ContentViewHelper
         attr_accessor :version
-        # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
+        # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
         def plan(content_view, description = "", options = {importing: false})
           action_subject(content_view)
 
@@ -59,6 +59,18 @@ module Actions
                 handle_import(version, options.slice(:path, :metadata))
               else
                 plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum], version)
+              end
+            end
+
+            # Copy all repositories with filters before running CloneToVersion
+            if content_view.solve_dependencies
+              sequence do
+                source_repositories.each do |repositories|
+                  if repositories.present? && separated_repo_map[:other].keys.include?(repositories)
+                    plan_action(Repository::CloneToVersion, repositories, version, repository_mapping[repositories],
+                                :repos_units => options[:repos_units], :solve_dependencies => false, :pulp_copy_only => true)
+                  end
+                end
               end
             end
 
