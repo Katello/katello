@@ -58,9 +58,8 @@ module Katello
       if upgradable
         collection = collection.installable_for_hosts(@hosts)
       elsif not_installed && params[:host_id]
-        Rails.logger.info collection.installable_for_hosts(@hosts).pluck(:name).sort
-        Rails.logger.info @hosts.first.installed_packages.pluck(:name).sort
-        collection = collection.installable_for_hosts(@hosts).where.not(name: @hosts.first.installed_packages.pluck(:name))
+        host = @hosts.first
+        collection = Katello::Rpm.yum_installable_for_host(host)
       elsif applicable
         collection = collection.applicable_to_hosts(@hosts)
       end

@@ -215,6 +215,19 @@ module Katello
         where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).distinct
     end
 
+    # Return RPMs that are not installed on a host, but could be installed
+    # the word 'installable' has a different meaning here than elsewhere
+    def self.yum_installable_for_host(host)
+      env = host.lifecycle_environment
+      content_view = host.content_view
+      repos = if env.library? && content_view.default?
+                host.content_facet.bound_repositories.pluck(:id)
+              else
+                Katello::Repository.in_environment(env).in_content_views([content_view])
+              end
+      Katello::Rpm.in_repositories(repos).where.not(name: host.installed_packages.pluck(:name)).order(:name)
+    end
+
     def self.latest(relation)
       # There are several different ways to implement this:
 
