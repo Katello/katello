@@ -53,6 +53,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
 
   #pulp3
+  gem.add_dependency "faraday", "< 1.9"
   gem.add_dependency "pulpcore_client", ">= 3.16.0", "< 3.17.0"
   gem.add_dependency "pulp_file_client", ">= 1.10.0", "< 1.11.0"
   gem.add_dependency "pulp_ansible_client", ">= 0.10", "< 0.11"
