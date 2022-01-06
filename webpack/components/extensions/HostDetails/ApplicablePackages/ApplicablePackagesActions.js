@@ -9,7 +9,8 @@ export const getHostApplicablePackages = (hostId, params) => get({
   params: {
     ...params,
     host_id: hostId,
-    packages_restrict_applicable: true,
+    packages_restrict_not_installed: true,
+    packages_restrict_applicable: false,
     packages_restrict_latest: true,
   },
 });

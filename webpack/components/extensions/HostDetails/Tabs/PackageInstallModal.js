@@ -21,7 +21,7 @@ const PackageInstallModal = ({
   const emptyContentBody = __('No packages applicable to this host. Please check the host\'s content view and environment.');
   const emptySearchTitle = __('No matching packages found');
   const emptySearchBody = __('Try changing your search settings.');
-  const columnHeaders = ['', __('Packages')];
+  const columnHeaders = ['', __('Packages'), __('Version')];
   const response = useSelector(state => selectAPIResponse(state, HOST_APPLICABLE_PACKAGES_KEY));
   const status = useSelector(state => selectHostApplicablePackagesStatus(state));
   const { results, ...metadata } = response;
@@ -105,6 +105,7 @@ const PackageInstallModal = ({
               id,
               name: packageName,
               rpm_id: rpmId,
+              version,
             } = pkg;
             return (
               <Tr key={id}>
@@ -112,7 +113,7 @@ const PackageInstallModal = ({
                   select={{
                       disable: false,
                       isSelected: isSelected(id),
-                      onSelect: (event, selected) => selectOne(selected, id),
+                      onSelect: (_event, selected) => selectOne(selected, id),
                       rowIndex,
                       variant: 'checkbox',
                   }}
@@ -122,6 +123,9 @@ const PackageInstallModal = ({
                     ? <a href={urlBuilder(`packages/${rpmId}`, '')}>{packageName}</a>
                     : packageName
                   }
+                </Td>
+                <Td>
+                  {version}
                 </Td>
               </Tr>
             );

@@ -53,9 +53,14 @@ module Katello
     def custom_index_relation(collection)
       applicable = ::Foreman::Cast.to_bool(params[:packages_restrict_applicable]) || params[:host_id]
       upgradable = ::Foreman::Cast.to_bool(params[:packages_restrict_upgradable])
+      not_installed = ::Foreman::Cast.to_bool(params[:packages_restrict_not_installed])
 
       if upgradable
         collection = collection.installable_for_hosts(@hosts)
+      elsif not_installed && params[:host_id]
+        Rails.logger.info collection.installable_for_hosts(@hosts).pluck(:name).sort
+        Rails.logger.info @hosts.first.installed_packages.pluck(:name).sort
+        collection = collection.installable_for_hosts(@hosts).where.not(name: @hosts.first.installed_packages.pluck(:name))
       elsif applicable
         collection = collection.applicable_to_hosts(@hosts)
       end
