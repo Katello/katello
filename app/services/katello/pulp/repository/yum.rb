@@ -24,6 +24,7 @@ module Katello
         end
 
         def partial_repo_path
+          # TODO: get /pulp/content from pulp_content_url
           "/pulp/content/#{repo.relative_path}/".sub('//', '/')
         end
 

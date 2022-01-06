@@ -427,15 +427,19 @@ module Katello
     end
 
     def full_path(smart_proxy = nil, force_http = false)
-      pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : ::SmartProxy.pulp_primary.url)
-      scheme = force_http ? 'http' : 'https'
+      smart_proxy ||= ::SmartProxy.pulp_primary
+      pulp_uri = smart_proxy.pulp_content_url
+      pulp_uri.scheme = force_http ? 'http' : 'https'
+      # TODO: this should be normalized in smart_proxy_pulp's setting
+      pulp_uri.host = pulp_uri.host.downcase
       if docker?
-        "#{pulp_uri.host.downcase}/#{container_repository_name}"
+        "#{pulp_uri.host}/#{container_repository_name}"
       elsif ansible_collection?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp_ansible/galaxy/#{relative_path}/api/"
+        "#{scheme}://#{pulp_uri.host}/pulp_ansible/galaxy/#{relative_path}/api/"
       else
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/#{relative_path}/"
+        pulp_uri.path += "/#{relative_path}"
       end
+      pulp_uri.to_s
     end
 
     def to_hash(content_source = nil, force_http = false)
