@@ -72,8 +72,11 @@ module Katello
     end
 
     def test_create_duplicate_name
+      stub_organization_creator
+
       post(:create, params: { :organization => {"name" => @organization.name} })
       assert_response :unprocessable_entity
+      assert_match(/Name has already been taken/, response.body)
     end
 
     def test_controller_path

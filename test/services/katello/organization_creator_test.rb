@@ -89,12 +89,48 @@ module Katello
       validate_creator_equal(creator, creator_two)
     end
 
+    def test_create_raise_validation_errors
+      org = FactoryBot.build(:organization)
+      org.name = nil
+      refute org.valid?
+
+      creator = Katello::OrganizationCreator.new(org)
+      creator.expects(:create_backend_objects!).returns
+
+      assert_raises(ActiveRecord::RecordInvalid) do
+        creator.create!
+      end
+    end
+
+    def test_create_no_raise_validation_errors
+      org = FactoryBot.build(:organization)
+      org.name = nil
+      refute org.valid?
+
+      creator = Katello::OrganizationCreator.new(org)
+      creator.expects(:create_backend_objects!).returns
+
+      refute creator.create!(raise_validation_errors: false)
+    end
+
     def test_create_all_organizations
       org = FactoryBot.create(:organization)
       relation = ::Organization.where(id: org.id)
       ::Organization.expects(:not_created_in_katello).returns(relation)
       Katello::Ping.expects(:ping!).returns(true)
       Katello::OrganizationCreator.any_instance.expects(:create!)
+
+      Katello::OrganizationCreator.create_all_organizations!
+    end
+
+    def test_create_all_organizations_no_validation_errors
+      org = FactoryBot.build(:organization)
+      org.name = nil
+      refute org.valid?
+
+      ::Organization.expects(:not_created_in_katello).returns([org])
+      Katello::Ping.expects(:ping!).returns(true)
+      Katello::OrganizationCreator.any_instance.expects(:create_backend_objects!).returns
 
       Katello::OrganizationCreator.create_all_organizations!
     end
