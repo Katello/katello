@@ -16,7 +16,7 @@ module Katello
       User.as_anonymous_admin do
         Organization.not_created_in_katello.each do |org|
           creator = self.new(org)
-          creator.create!
+          creator.create!(raise_validation_errors: false)
         end
       end
     end
@@ -28,7 +28,9 @@ module Katello
     def seed!
       ActiveRecord::Base.transaction do
         @organization.setup_label_from_name
-        @organization.save!
+
+        # existing validation errors are not resolvable here, so don't validatate
+        @organization.save(validate: false)
 
         create_library_environment
         create_library_view
@@ -40,14 +42,19 @@ module Katello
       end
     end
 
-    def create!
+    def create!(raise_validation_errors: true)
       ActiveRecord::Base.transaction do
         seed!
 
         create_backend_objects!
 
         @organization.created_in_katello = true
-        @organization.save!
+
+        begin
+          @organization.save!
+        rescue => e
+          raise e if raise_validation_errors
+        end
       end
     end
 
