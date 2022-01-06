@@ -8,11 +8,10 @@ import {
   SquareIcon,
 } from '@patternfly/react-icons';
 import PropTypes from 'prop-types';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
 
 export const ErrataMapper = ({ data, id }) => data.map(({ x: type, y: count }) => <ErrataSummary count={count} type={type} key={`${count} ${type}`} id={id} />);
 
-export const ErrataSummary = ({ type, count, id }) => {
+export const ErrataSummary = ({ type, count }) => {
   let ErrataIcon;
   let label;
   let name;
@@ -24,7 +23,7 @@ export const ErrataSummary = ({ type, count, id }) => {
       ErrataIcon = SecurityIcon;
       name = 'security advisories';
       color = '#0066cc';
-      url = <a href={urlBuilder(`content_hosts/${id}/errata`, '')}> {count} {name} </a>;
+      url = <a href="#/Content/errata?type=security"> {count} {name} </a>;
       break;
     case 'recommended':
     case 'bugfix':
@@ -32,7 +31,7 @@ export const ErrataSummary = ({ type, count, id }) => {
       ErrataIcon = BugIcon;
       name = 'bug fixes';
       color = '#8bc1f7';
-      url = <a href={urlBuilder(`content_hosts/${id}/errata`, '')}> {count} {name} </a>;
+      url = <a href="#/Content/errata?type=bugfix"> {count} {name} </a>;
       break;
     case 'enhancement':
     case 'optional':
@@ -40,7 +39,7 @@ export const ErrataSummary = ({ type, count, id }) => {
       ErrataIcon = EnhancementIcon;
       name = 'enhancements';
       color = '#002f5d';
-      url = <a href={urlBuilder(`content_hosts/${id}/errata`, '')}> {count} {name} </a>;
+      url = <a href="#/Content/errata?type=enhancement"> {count} {name} </a>;
       break;
     default:
   }
@@ -62,7 +61,6 @@ export const ErrataSummary = ({ type, count, id }) => {
 ErrataSummary.propTypes = {
   type: PropTypes.string.isRequired,
   count: PropTypes.number.isRequired,
-  id: PropTypes.number.isRequired,
 };
 
 export const ErrataType = ({ type }) => {

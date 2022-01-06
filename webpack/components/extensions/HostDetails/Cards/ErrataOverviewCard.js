@@ -8,7 +8,6 @@ import {
   FlexItem,
   GridItem,
 } from '@patternfly/react-core';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
@@ -38,7 +37,7 @@ function HostInstallableErrata({
         <CardBody>
           <Flex direction="column">
             <FlexItem>
-              <a href={urlBuilder(`content_hosts/${id}/errata`, '')}>
+              <a href="#/Content/errata">
                 {errataTotal} errata
               </a>
             </FlexItem>
