@@ -141,6 +141,8 @@ module Katello
       ENV['LIFECYCLE_ENVIRONMENT'] = @library_repo.environment.name
       ENV['COMMIT'] = 'true'
 
+      ::Katello::Repository.any_instance.expects(:index_content).once
+
       Katello::Repository.stubs(:in_environment).returns(Katello::Repository.where(:id => @library_repo))
       PulpRpmClient::RepositoriesRpmApi.any_instance.expects(:read).once.with("test_repo_1/").raises(PulpRpmClient::ApiError)
 

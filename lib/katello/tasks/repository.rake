@@ -128,7 +128,10 @@ namespace :katello do
     puts "Repository #{repo.id} Missing"
     if repo.content_view.default?
       puts "Recreating #{repo.id}"
-      ForemanTasks.sync_task(::Actions::Katello::Repository::Create, repo, force_repo_create: true) if commit?
+      if commit?
+        ForemanTasks.sync_task(::Actions::Katello::Repository::Create, repo, force_repo_create: true)
+        repo.reload.index_content
+      end
     else
       puts "Deleting #{repo.id}"
       ForemanTasks.sync_task(::Actions::Katello::Repository::Destroy, repo) if commit?
