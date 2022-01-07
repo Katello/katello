@@ -149,7 +149,7 @@ module Katello
     end
 
     def scoped_search_total(query, group)
-      scoped_search_query(query, group).length
+      scoped_search_query(query, group).count
     end
 
     def scoped_search_total_selectable(query, group)
@@ -157,7 +157,7 @@ module Katello
       if self.respond_to?(:total_selectable, true)
         total_selectable(q)
       else
-        q.length
+        q.count
       end
     end
 
