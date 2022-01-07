@@ -130,6 +130,9 @@ module Katello
       end
 
       def filter_by_content_view_version(version, collection)
+        if params[:content_type]
+          return collection.where(:id => version.send(controller_name, params[:content_type]))
+        end
         collection.where(:id => version.send(controller_name))
       end
 
