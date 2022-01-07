@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, Button } from '@patternfly/react-core';
 import { useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -15,16 +15,17 @@ import { getHostApplicablePackages } from '../ApplicablePackages/ApplicablePacka
 import './PackageInstallModal.scss';
 
 const PackageInstallModal = ({
-  isOpen, toggleModal, hostId, hostName,
+  isOpen, closeModal, hostId, hostName,
 }) => {
   const emptyContentTitle = __('No packages available to install');
   const emptyContentBody = __('No packages applicable to this host. Please check the host\'s content view and environment.');
   const emptySearchTitle = __('No matching packages found');
   const emptySearchBody = __('Try changing your search settings.');
-  const columnHeaders = ['', __('Packages'), __('Version')];
+  const columnHeaders = ['', __('Package'), __('Version')];
   const response = useSelector(state => selectAPIResponse(state, HOST_APPLICABLE_PACKAGES_KEY));
   const status = useSelector(state => selectHostApplicablePackagesStatus(state));
   const { results, ...metadata } = response;
+  const [suppressFirstFetch, setSuppressFirstFetch] = useState(false);
 
   const {
     searchQuery,
@@ -37,10 +38,20 @@ const PackageInstallModal = ({
     selectedCount,
     ...selectAll
   } = useBulkSelect({ results, metadata });
-  const fetchItems = params => (hostId ? getHostApplicablePackages(hostId, params) : { type: 'HOST_ID_NOT_AVAILABLE_NOOP' });
+  const fetchItems = (params) => {
+    if (!hostId) return { type: 'HOST_ID_NOT_AVAILABLE_NOOP' };
+
+    if (results?.length > 0 && suppressFirstFetch) {
+      // If the modal has already been opened, no need to re-fetch the data that's already present
+      setSuppressFirstFetch(false);
+      return { type: 'HOST_APPLICABLE_PACKAGES_NOOP' };
+    }
+    return getHostApplicablePackages(hostId, params);
+  };
+
   const handleModalClose = () => {
-    selectNone();
-    toggleModal();
+    setSuppressFirstFetch(true);
+    closeModal();
   };
 
   const modalActions = ([
@@ -139,7 +150,7 @@ const PackageInstallModal = ({
 
 PackageInstallModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  toggleModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
   hostId: PropTypes.number.isRequired,
   hostName: PropTypes.string.isRequired,
 };

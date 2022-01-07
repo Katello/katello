@@ -42,7 +42,7 @@ export const PackagesTab = () => {
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const toggleModal = () => setIsModalOpen(prev => !prev);
+  const closeModal = () => setIsModalOpen(false);
 
   const emptyContentTitle = __('This host does not have any packages.');
   const emptyContentBody = __('Packages will appear here when available.');
@@ -228,7 +228,7 @@ export const PackagesTab = () => {
       {hostId &&
       <PackageInstallModal
         isOpen={isModalOpen}
-        toggleModal={toggleModal}
+        closeModal={closeModal}
         hostId={hostId}
         hostName={hostName}
       />

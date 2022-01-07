@@ -126,7 +126,7 @@ module Katello
       end
     rescue ScopedSearch::QueryNotSupported, ActiveRecord::StatementInvalid => error
       message = error.message
-      if error.class == ActiveRecord::StatementInvalid
+      if error.instance_of? ActiveRecord::StatementInvalid
         Rails.logger.error("Invalid search: #{error.message}")
         message = _('Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.')
       end
