@@ -16,7 +16,7 @@ const ContentDetails = () => {
 
   const { id, content_type: contentType } = useParams();
   const contentId = Number(id);
-  const config = ContentConfig().find(type =>
+  const config = ContentConfig.find(type =>
     type.names.pluralLabel === contentType);
   const { pluralTitle, pluralLabel } = config.names;
 

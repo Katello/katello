@@ -92,7 +92,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       { title: <ContentViewVersionEnvironments {...{ environments }} /> },
       {
         title: Number(packageCount) ?
-          <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/packages`, '')}>{packageCount}</a> :
+          <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/rpmPackages`, '')}>{packageCount}</a> :
           <InactiveText text={__('No packages')} />,
       },
       { title: <ContentViewVersionErrata {...{ cvId, versionId, errataCounts }} /> },

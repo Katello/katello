@@ -1,5 +1,6 @@
 import { API_OPERATIONS, APIActions, get, put, post } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { lowerCase } from 'lodash';
 import {
   RPM_PACKAGES_CONTENT,
   RPM_PACKAGE_GROUPS_CONTENT,
@@ -44,8 +45,8 @@ import {
   ERRATA_CONTENT,
   MODULE_STREAMS_CONTENT,
   DEB_PACKAGES_CONTENT,
-  ANSIBLE_COLLECTIONS_CONTENT,
   DOCKER_TAGS_CONTENT,
+  generatedContentKey,
 } from '../ContentViewsConstants';
 import api, { foremanApi, orgId } from '../../../services/api';
 import { getResponseErrorMsgs } from '../../../utils/helpers';
@@ -57,6 +58,14 @@ const getContentViewDetails = (cvId, extraParams = {}) => get({
   key: cvDetailsKey(cvId),
   params: { organization_id: orgId(), include_permissions: true, ...extraParams },
   url: api.getApiUrl(`/content_views/${cvId}`),
+});
+
+export const getContent = (pluralLabel, params) => get({
+  type: API_OPERATIONS.GET,
+  key: generatedContentKey(pluralLabel),
+  url: api.getApiUrl(`/${pluralLabel}`),
+  params,
+  errorToast: error => __(`Something went wrong while fetching ${lowerCase(pluralLabel)}! ${getResponseErrorMsgs(error.response)}`),
 });
 
 export const getRPMPackages = params => get({
@@ -124,14 +133,6 @@ export const getDockerTags = params => get({
   url: api.getApiUrl('/docker_tags'),
   params,
   errorToast: error => __(`Something went wrong while getting docker tags! ${getResponseErrorMsgs(error.response)}`),
-});
-
-export const getAnsibleCollections = params => get({
-  type: API_OPERATIONS.GET,
-  key: ANSIBLE_COLLECTIONS_CONTENT,
-  url: api.getApiUrl('/ansible_collections'),
-  params,
-  errorToast: error => __(`Something went wrong while getting ansible collections! ${getResponseErrorMsgs(error.response)}`),
 });
 
 export const getErrata = params => get({

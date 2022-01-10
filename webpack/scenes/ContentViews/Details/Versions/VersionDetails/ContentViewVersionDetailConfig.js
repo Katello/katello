@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
-import { startCase } from 'lodash';
+import { startCase, camelCase } from 'lodash';
 import {
   BugIcon,
   SecurityIcon,
   EnhancementIcon,
 } from '@patternfly/react-icons';
 import {
-  getAnsibleCollections,
   getContentViewVersions,
   getDebPackages,
   getDockerTags,
@@ -20,10 +19,9 @@ import {
   getPackageGroups,
   getRepositories,
   getRPMPackages,
+  getContent,
 } from '../../ContentViewDetailActions';
 import {
-  selectAnsibleCollections,
-  selectAnsibleCollectionsStatus,
   selectCVVersions,
   selectCVVersionsStatus,
   selectDebPackages,
@@ -42,11 +40,15 @@ import {
   selectRPMPackageGroupsStatus,
   selectRPMPackages,
   selectRPMPackagesStatus,
+  selectContent,
+  selectContentStatus,
 } from '../../ContentViewDetailSelectors';
 import ContentViewVersionRepositoryCell from './ContentViewVersionRepositoryCell';
+import ContentConfig from '../../../../Content/ContentConfig';
 
 export const TableType = PropTypes.shape({
   name: PropTypes.string,
+  route: PropTypes.string,
   getCountKey: PropTypes.func,
   repoType: PropTypes.string,
   responseSelector: PropTypes.func,
@@ -64,6 +66,7 @@ export const TableType = PropTypes.shape({
 export default ({ cvId, versionId }) => [
   {
     name: __('Components'),
+    route: 'components',
     getCountKey: item => item?.component_view_count,
     responseSelector: state => selectCVVersions(state, cvId),
     statusSelector: state => selectCVVersionsStatus(state, cvId),
@@ -91,6 +94,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('Repositories'),
+    route: 'repositories',
     getCountKey: item => item?.repositories?.length,
     responseSelector: state => selectRepositories(state),
     statusSelector: state => selectRepositoriesStatus(state),
@@ -127,6 +131,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('RPM Packages'),
+    route: 'rpmPackages',
     repoType: 'yum',
     getCountKey: item => item?.rpm_count,
     responseSelector: state => selectRPMPackages(state),
@@ -148,6 +153,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('RPM Package Groups'),
+    route: 'rpmPackageGroups',
     repoType: 'yum',
     getCountKey: item => item?.package_group_count,
     responseSelector: state => selectRPMPackageGroups(state),
@@ -161,6 +167,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('Files'),
+    route: 'files',
     repoType: 'file',
     getCountKey: item => item?.file_count,
     responseSelector: state => selectFiles(state),
@@ -180,6 +187,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('Errata'),
+    route: 'errata',
     repoType: 'yum',
     getCountKey: item => item?.erratum_count,
     responseSelector: state => selectErrata(state),
@@ -233,6 +241,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('Module Streams'),
+    route: 'moduleStreams',
     repoType: 'yum',
     getCountKey: item => item?.module_stream_count,
     responseSelector: state => selectModuleStreams(state),
@@ -255,6 +264,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('Deb Packages'),
+    route: 'debPackages',
     repoType: 'deb',
     getCountKey: item => item?.deb_count,
     responseSelector: state => selectDebPackages(state),
@@ -274,37 +284,8 @@ export default ({ cvId, versionId }) => [
     ],
   },
   {
-    name: __('Ansible Collections'),
-    repoType: 'ansible_collection',
-    getCountKey: item => item?.ansible_collection_count,
-    responseSelector: state => selectAnsibleCollections(state),
-    statusSelector: state => selectAnsibleCollectionsStatus(state),
-    autocompleteEndpoint: `/ansible_collections/auto_complete_search?content_view_version_id=${versionId}`,
-    fetchItems: params => getAnsibleCollections({ content_view_version_id: versionId, ...params }),
-    columnHeaders: [
-      {
-        title: __('Name'),
-        getProperty: item => (
-          <a href={urlBuilder(`ansible_collections/${item?.id}`, '')}>
-            {item?.name}
-          </a>),
-      },
-      {
-        title: __('Author'),
-        getProperty: item => item?.namespace,
-      },
-      {
-        title: __('Version'),
-        getProperty: item => item?.version,
-      },
-      {
-        title: __('Checksum'),
-        getProperty: item => item?.checksum,
-      },
-    ],
-  },
-  {
     name: __('Docker Tags'),
+    route: 'dockerTags',
     repoType: 'docker',
     getCountKey: item => item?.docker_tag_count,
     responseSelector: state => selectDockerTags(state),
@@ -329,4 +310,19 @@ export default ({ cvId, versionId }) => [
       { title: __('Product Name'), getProperty: item => item?.product?.name },
     ],
   },
+  ...ContentConfig.map(({
+    names: { pluralTitle, pluralLabel, singularLabel },
+    columnHeaders,
+  }) => ({
+    name: pluralTitle,
+    route: camelCase(pluralLabel),
+    repoType: singularLabel,
+    getCountKey: item => item[`${singularLabel}_count`],
+    responseSelector: state => selectContent(pluralLabel, state),
+    statusSelector: state => selectContentStatus(pluralLabel, state),
+    autocompleteEndpoint: `/${pluralLabel}/auto_complete_search?content_view_version_id=${versionId}`,
+    fetchItems: params =>
+      getContent(pluralLabel, { content_view_version_id: versionId, ...params }),
+    columnHeaders,
+  })),
 ];
