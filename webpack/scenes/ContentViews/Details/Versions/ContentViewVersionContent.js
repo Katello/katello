@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { camelCase } from 'lodash';
 import { Link } from 'react-router-dom';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
@@ -17,15 +18,16 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
   } = cvVersion;
 
 
-  const genericContentTypes = ContentConfig().filter(({ names: { singularLabel } }) => {
-    // Ansible Collections has a tab in version details so it's handled separately below.
-    if (singularLabel === 'ansible_collection') return false;
-    const countLabel = `${singularLabel}_count`;
-    return !!cvVersion[countLabel];
-  }).map(({ names: { singularLabel, singularLowercase, pluralLowercase } }) => {
+  const contentConfigTypes = ContentConfig.filter(({ names: { singularLabel } }) =>
+    !!cvVersion[`${singularLabel}_count`]).map(({
+    names: {
+      singularLabel, singularLowercase, pluralLowercase, pluralLabel,
+    },
+  }) => {
     const countParam = `${singularLabel}_count`;
     const count = cvVersion[countParam];
     return {
+      pluralLabel,
       label: count > 1 ? pluralLowercase : singularLowercase,
       count,
     };
@@ -34,7 +36,7 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
   const noCounts =
     !Number(debCount) && !Number(dockerManifestCount) && !Number(dockerTagCount) &&
     !Number(fileCount) && !Number(moduleStreamCount) && !Number(ansibleCollectionCount) &&
-    !genericContentTypes?.length;
+    !contentConfigTypes?.length;
 
   if (noCounts) {
     return <InactiveText text={__('No content')} />;
@@ -69,16 +71,13 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
           <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/files`, '')}>{`${fileCount} Files`}</a><br />
         </>
       }
-      {ansibleCollectionCount > 0 &&
-        <>
-          <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/ansibleCollections`, '')}>{`${ansibleCollectionCount} Collections`}</a><br />
-        </>
-      }
-      {genericContentTypes?.length > 0 &&
-        genericContentTypes.map(({ label, count }) => (
-          <span key={label} style={{ whiteSpace: 'pre-line' }}>
-            {`${count} ${label}`}
-          </span>))
+      {contentConfigTypes?.length > 0 &&
+        contentConfigTypes.map(({ label, count, pluralLabel }) => (
+          <React.Fragment key={label}>
+            <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/${camelCase(pluralLabel)}`, '')}>
+              {`${count} ${label}`}
+            </a><br />
+          </React.Fragment>))
       }
     </>
   );

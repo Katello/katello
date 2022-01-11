@@ -3,7 +3,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useParams, Route, useHistory, useLocation, Redirect, Switch } from 'react-router-dom';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
-import { isEmpty, camelCase, first } from 'lodash';
+import { isEmpty, first } from 'lodash';
 import { Grid, Tabs, Tab, TabTitleText, Label } from '@patternfly/react-core';
 import { number, shape } from 'prop-types';
 import './ContentViewVersionDetails.scss';
@@ -68,7 +68,7 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
   const filteredTableConfigs = tableConfigs.filter(({ getCountKey }) => !!getCountKey(response));
   const { repositories } = versionDetails;
   const showTabs = filteredTableConfigs.length > 0 && repositories;
-  const getCurrentActiveKey = tab ?? camelCase(first(filteredTableConfigs)?.name);
+  const getCurrentActiveKey = tab ?? first(filteredTableConfigs)?.route;
 
   return (
     <Grid>
@@ -85,10 +85,10 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
             onSelect={onSelect}
             isVertical
           >
-            {filteredTableConfigs.map(({ name, getCountKey }) => (
+            {filteredTableConfigs.map(({ route, name, getCountKey }) => (
               <Tab
-                key={name}
-                eventKey={camelCase(name)}
+                key={route}
+                eventKey={route}
                 title={
                   <>
                     <TabTitleText>{name}</TabTitleText>
@@ -101,9 +101,9 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
           <Switch>
             {filteredTableConfigs.map(config => (
               <Route
-                key={camelCase(config.name)}
+                key={config.route}
                 exact
-                path={`/versions/:versionId([0-9]+)/${camelCase(config.name)}`}
+                path={`/versions/:versionId([0-9]+)/${config.route}`}
               >
                 <ContentViewVersionDetailsTable
                   tableConfig={config}
@@ -112,7 +112,7 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
               </Route>))
             }
             <Redirect
-              to={`/versions/${versionId}/${camelCase(first(filteredTableConfigs).name)}`}
+              to={`/versions/${versionId}/${first(filteredTableConfigs).route}`}
             />
           </Switch>
         </div>
