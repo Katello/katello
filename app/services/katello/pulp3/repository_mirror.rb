@@ -162,8 +162,13 @@ module Katello
 
       def create_publication
         if (href = version_href)
-          publication_data = api.class.publication_class.new(publication_options(href))
-          api.publications_api.create(publication_data)
+          if repo_service.repo.content_type == "deb"
+            publication_data = api.class.publication_verbatim_class.new({repository_version: href})
+            api.publications_verbatim_api.create(publication_data)
+          else
+            publication_data = api.class.publication_class.new(publication_options(href))
+            api.publications_api.create(publication_data)
+          end
         end
       end
 

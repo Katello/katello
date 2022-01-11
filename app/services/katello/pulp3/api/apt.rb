@@ -51,6 +51,14 @@ module Katello
         def distributions_api
           PulpDebClient::DistributionsAptApi.new(api_client)
         end
+
+        def publication_verbatim_class
+          PulpDebClient::DebVerbatimPublication
+        end
+
+        def publications_verbatim_api
+          PulpDebClient::PublicationsVerbatimApi.new(api_client)
+        end
       end
     end
   end
