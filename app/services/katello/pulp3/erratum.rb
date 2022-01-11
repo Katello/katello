@@ -26,7 +26,7 @@ module Katello
       end
 
       # rubocop:disable Metrics/AbcSize
-      def update_model(model)
+      def update_model(model, repository = nil)
         updated = false
         keys = %w(title id severity issued_date type description reboot_suggested solution updated_date summary)
         custom_json = backend_data.slice(*keys)
@@ -54,6 +54,14 @@ module Katello
         end
         update_packages(model, backend_data['pkglist']) unless backend_data['pkglist'].blank?
         update_modules(model, backend_data['pkglist']) unless backend_data['pkglist'].blank?
+
+        if !updated && repository.present?
+          backend_identifier = backend_data.dig(self.class.backend_unit_identifier)
+          if Katello::RepositoryErratum.where(repository_id: repository.id, erratum_id: model.id).where.not(erratum_pulp3_href: backend_identifier).any?
+            # Pulp has created a new record for this erratum because it has been updated so we need to update repo association too
+            updated = true
+          end
+        end
 
         return model.id if updated
       end
