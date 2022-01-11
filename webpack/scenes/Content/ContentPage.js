@@ -27,7 +27,7 @@ const ContentPage = () => {
       const types = {};
       contentTypesResponse.forEach((type) => {
         if (type.generic_browser) {
-          const typeConfig = ContentConfig().find(config =>
+          const typeConfig = ContentConfig.find(config =>
             config.names.singularLabel === type.label);
           if (typeConfig) {
             const { names } = typeConfig;

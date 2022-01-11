@@ -18,7 +18,7 @@ const ContentTable = ({
   const [searchQuery, updateSearchQuery] = useState('');
   const { results, ...metadata } = response;
 
-  const { columnHeaders } = contentConfig().find(type =>
+  const { columnHeaders } = contentConfig.find(type =>
     type.names.singularLabel === contentTypes[selectedContentType][0]);
 
   return (

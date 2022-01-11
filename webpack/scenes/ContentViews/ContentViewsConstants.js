@@ -1,4 +1,5 @@
 import { translate as __ } from 'foremanReact/common/I18n';
+import { toUpper } from 'lodash';
 
 const CONTENT_VIEWS_KEY = 'CONTENT_VIEWS';
 export const CREATE_CONTENT_VIEW_KEY = 'CONTENT_VIEW_CREATE';
@@ -22,11 +23,11 @@ export const RPM_PACKAGE_GROUPS_CONTENT = 'RPM_PACKAGE_GROUPS_CONTENT';
 export const REPOSITORY_CONTENT = 'REPOSITORY_CONTENT';
 export const ERRATA_CONTENT = 'ERRATA_CONTENT';
 export const DOCKER_TAGS_CONTENT = 'DOCKER_TAGS_CONTENT';
-export const ANSIBLE_COLLECTIONS_CONTENT = 'ANSIBLE_COLLECTIONS_CONTENT';
 export const MODULE_STREAMS_CONTENT = 'MODULE_STREAMS_CONTENT';
 export const DEB_PACKAGES_CONTENT = 'DEB_PACKAGES_CONTENT';
 export const RPM_PACKAGES_CONTENT = 'RPM_PACKAGES_CONTENT';
 export const FILE_CONTENT = 'FILE_CONTENT';
+export const generatedContentKey = pluralLabel => `${toUpper(pluralLabel)}_CONTENT`;
 export const cvDetailsKey = cvId => `${CONTENT_VIEWS_KEY}_${cvId}`;
 export const cvDetailsRepoKey = cvId => `${CONTENT_VIEWS_KEY}_REPOSITORIES_${cvId}`;
 export const cvFilterRepoKey = filterId => `CV_FILTER_REPOSITORIES_${filterId}`;

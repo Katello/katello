@@ -33,8 +33,8 @@ import {
   ERRATA_CONTENT,
   MODULE_STREAMS_CONTENT,
   DEB_PACKAGES_CONTENT,
-  ANSIBLE_COLLECTIONS_CONTENT,
   DOCKER_TAGS_CONTENT,
+  generatedContentKey,
 } from '../ContentViewsConstants';
 import { pollTaskKey } from '../../Tasks/helpers';
 
@@ -131,11 +131,11 @@ export const selectCVFilterRules = (state, filterId) =>
 export const selectCVFilterRulesStatus = (state, filterId) =>
   selectAPIStatus(state, cvFilterRulesKey(filterId)) || STATUS.PENDING;
 
-export const selectAnsibleCollections = state =>
-  selectAPIResponse(state, ANSIBLE_COLLECTIONS_CONTENT);
+export const selectContent = (pluralLabel, state) =>
+  selectAPIResponse(state, generatedContentKey(pluralLabel));
 
-export const selectAnsibleCollectionsStatus = state =>
-  selectAPIStatus(state, ANSIBLE_COLLECTIONS_CONTENT) || STATUS.PENDING;
+export const selectContentStatus = (pluralLabel, state) =>
+  selectAPIStatus(state, generatedContentKey(pluralLabel)) || STATUS.PENDING;
 
 export const selectDockerTags = state =>
   selectAPIResponse(state, DOCKER_TAGS_CONTENT);

@@ -122,7 +122,7 @@ test('Can show package and erratas and link to list page', async () => {
 
   await patientlyWaitFor(() => {
     expect(getAllByText(8)[0].closest('a'))
-      .toHaveAttribute('href', '/content_views/5#/versions/11/packages/');
+      .toHaveAttribute('href', '/content_views/5#/versions/11/rpmPackages/');
     expect(getAllByText(15)[0].closest('a'))
       .toHaveAttribute('href', '/content_views/5#/versions/11/errata/');
     expect(getByText(5)).toBeInTheDocument();
