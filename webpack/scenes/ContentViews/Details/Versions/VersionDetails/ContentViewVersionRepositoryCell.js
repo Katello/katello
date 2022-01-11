@@ -67,7 +67,7 @@ const ContentViewVersionRepositoryCell = ({
     },
   };
 
-  ContentConfig().forEach((type) => {
+  ContentConfig.forEach((type) => {
     CONTENT_COUNTS[type.names.singularLabel] = {
       name: type.names.pluralLowercase,
       url: `products/${id}/repositories/${libraryInstanceId}/content/${type.names.pluralLabel}`,

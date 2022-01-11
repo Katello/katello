@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import ContentInfo from './Details/ContentInfo';
@@ -7,7 +6,8 @@ import LastSync from '../ContentViews/Details/Repositories/LastSync';
 import ContentRepositories from './Details/ContentRepositories';
 import ContentCounts from '../ContentViews/Details/Repositories/ContentCounts';
 
-export default () => [
+// Keep in mind when editing this file that the ContentViewVersionDetailConfig consumes this array.
+export default [
   {
     names: {
       pluralTitle: __('Python Packages'),
@@ -18,7 +18,7 @@ export default () => [
       singularLabel: 'python_package',
     },
     columnHeaders: [
-      { title: __('Name'), getProperty: unit => (<Link to={urlBuilder(`content/python_packages/${unit?.id}`, '')}>{unit?.name}</Link>) },
+      { title: __('Name'), getProperty: unit => (<a href={urlBuilder(`content/python_packages/${unit?.id}`, '')}>{unit?.name}</a>) },
       { title: __('Version'), getProperty: unit => unit?.version },
       { title: __('Filename'), getProperty: unit => unit?.filename },
     ],
@@ -82,6 +82,57 @@ export default () => [
       pluralLabel: 'ostree_refs',
       singularLabel: 'ostree_ref',
     },
+    columnHeaders: [
+      { title: __('Name'), getProperty: unit => (<a href={urlBuilder(`content/ostree_refs/${unit?.id}`, '')}>{unit?.name}</a>) },
+      { title: __('Version'), getProperty: unit => unit?.version },
+    ],
+    tabs: [
+      {
+        tabKey: 'details',
+        title: __('Details'),
+        getContent: (contentType, id, tabKey) => <ContentInfo {...{ contentType, id, tabKey }} />,
+        columnHeaders: [
+          { title: __('Name'), getProperty: unit => unit?.name },
+          { title: __('Version'), getProperty: unit => unit?.version },
+        ],
+      },
+      {
+        tabKey: 'repositories',
+        title: __('Repositories'),
+        getContent: (contentType, id, tabKey) =>
+          <ContentRepositories {...{ contentType, id, tabKey }} />,
+        columnHeaders: [
+          {
+            title: __('Name'),
+            getProperty: unit =>
+              <a href={urlBuilder(`products/${unit?.product.id}/repositories/${unit?.id}`, '')}>{unit?.name}</a>,
+          },
+          {
+            title: __('Product'),
+            getProperty: unit =>
+              <a href={urlBuilder(`products/${unit?.product.id}`, '')}>{unit?.product.name}</a>,
+          },
+          {
+            title: __('Sync Status'),
+            getProperty: unit =>
+              (<LastSync
+                startedAt={unit?.started_at}
+                lastSyncWords={unit?.last_sync_words}
+                lastSync={unit?.last_sync}
+              />),
+          },
+          {
+            title: __('Content Count'),
+            getProperty: unit =>
+              (<ContentCounts
+                productId={unit.product.id}
+                repoId={unit.id}
+                counts={unit.content_counts}
+              />),
+          },
+        ],
+      },
+    ],
   },
   {
     names: {
@@ -93,11 +144,10 @@ export default () => [
       singularLabel: 'ansible_collection',
     },
     columnHeaders: [
-      { title: __('Name'), getProperty: unit => (<Link to={urlBuilder(`content/ansible_collections/${unit?.id}`, '')}>{unit?.name}</Link>) },
+      { title: __('Name'), getProperty: unit => (<a href={urlBuilder(`content/ansible_collections/${unit?.id}`, '')}>{unit?.name}</a>) },
       { title: __('Author'), getProperty: unit => unit?.namespace },
       { title: __('Version'), getProperty: unit => unit?.version },
       { title: __('Checksum'), getProperty: unit => unit?.checksum },
-
     ],
     tabs: [
       {

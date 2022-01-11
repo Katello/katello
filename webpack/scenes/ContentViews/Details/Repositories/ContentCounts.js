@@ -41,7 +41,7 @@ const ContentCounts = ({ productId, repoId, counts }) => {
   Object.keys(counts).forEach((type) => {
     const count = counts[type];
     let info = repoLabels[type];
-    const config = ContentConfig().find(typeConfig =>
+    const config = ContentConfig.find(typeConfig =>
       typeConfig.names.singularLabel === type);
 
     if (config) {
