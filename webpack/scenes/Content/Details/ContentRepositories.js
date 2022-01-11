@@ -20,7 +20,7 @@ const ContentRepositories = ({ contentType, id, tabKey }) => {
   const [searchQuery, updateSearchQuery] = useState('');
   const { results, ...metadata } = response;
 
-  const config = contentConfig().find(type => type.names.pluralLabel === contentType);
+  const config = contentConfig.find(type => type.names.pluralLabel === contentType);
   const typeSingularLabel = config.names.singularLabel;
   const { columnHeaders } = config.tabs.find(header => header.tabKey === tabKey);
 

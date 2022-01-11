@@ -27,6 +27,7 @@ Katello::RepositoryTypeManager.register('ostree') do
                        model_name: lambda { |pulp_unit| pulp_unit["name"] },
                        model_version: lambda { |pulp_unit| pulp_unit["checksum"] },
                        uploadable: true,
+                       generic_browser: true,
                        repository_import_on_upload: true
 
   import_attribute :ref, :content_type => 'ostree_ref',

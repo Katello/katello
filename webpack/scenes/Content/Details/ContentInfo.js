@@ -19,7 +19,7 @@ const ContentInfo = ({ contentType, id, tabKey }) => {
   const detailsResponse = useSelector(selectContentDetails);
   const detailsStatus = useSelector(selectContentDetailsStatus);
 
-  const config = contentConfig().find(type => type.names.pluralLabel === contentType);
+  const config = contentConfig.find(type => type.names.pluralLabel === contentType);
   const { columnHeaders } = config.tabs.find(header => header.tabKey === tabKey);
 
   useEffect(() => {
