@@ -7,6 +7,7 @@ import {
   DropdownItem,
   DropdownSeparator,
   Dropdown,
+  Skeleton,
   Split,
   SplitItem,
   ActionList,
@@ -71,7 +72,7 @@ export const PackagesTab = () => {
   const { results, ...metadata } = response;
   const status = useSelector(state => selectHostPackagesStatus(state));
 
-  if (!hostId) return null;
+  if (!hostId) return <Skeleton />;
   const handleInstallPackagesClick = () => {
     setIsBulkActionOpen(false);
     setIsModalOpen(true);
