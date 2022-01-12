@@ -20,6 +20,7 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
       HOST_DETAILS: {
         response: {
           id: 1,
+          name: 'test-host',
           content_facet_attributes: { ...facetAttributes },
         },
         status: 'RESOLVED',
