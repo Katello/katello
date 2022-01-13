@@ -30,7 +30,7 @@ function HostInstallableErrata({
     w: 'enhancements', x: 'enhancement', y: errataEnhance, z: errataTotal,
   }];
   return (
-    <GridItem rowSpan={2} md={3} lg={4}>
+    <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
       <Card isHoverable>
         <CardHeader>
           <CardTitle>{__('Installable Errata')}</CardTitle>
@@ -61,7 +61,7 @@ function HostInstallableErrata({
                   />
                 </div>
               </div>
-              <div className="erratalegend">
+              <div className="erratalegend" style={{ minWidth: '140px' }}>
                 <FlexItem>
                   <ErrataMapper data={chartData} id={id} />
                 </FlexItem>

@@ -26,7 +26,7 @@ const HostContentViewDetails = ({
   }
 
   return (
-    <GridItem rowSpan={2} md={6} lg={4}>
+    <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
       <Card isHoverable>
         <CardHeader>
           <CardTitle>{__('Content view details')}</CardTitle>
