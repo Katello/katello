@@ -1,8 +1,6 @@
 import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
 import ContentDetailRepositories from '../ContentDetailRepositories';
 
-jest.mock('foremanReact/components/Pagination/PaginationWrapper');
-
 const fixtures = {
   'renders with repositories': {
     repositories: [

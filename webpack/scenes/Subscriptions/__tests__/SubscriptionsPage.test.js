@@ -9,7 +9,6 @@ import { checkSimpleContentAccessEligible } from '../Manifest/ManifestActions';
 import { createColumns, updateColumns } from '../../../scenes/Settings/Tables/TableActions';
 
 jest.mock('foremanReact/components/PermissionDenied');
-jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
 jest.mock('foremanReact/components/ForemanModal', () => (<div>ForemanModal Mock</div>));
 
 const loadTables = () => new Promise((resolve) => {

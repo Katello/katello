@@ -4,8 +4,6 @@ import toJson from 'enzyme-to-json';
 import AnsibleCollectionsPage from '../AnsibleCollectionsPage';
 import ContentPage from '../../../components/Content/ContentPage';
 
-jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
-
 describe('Ansible Collections page', () => {
   it('should render and contain appropiate components', async () => {
     const ansibleCollections = {};

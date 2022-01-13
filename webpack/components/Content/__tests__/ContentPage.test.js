@@ -5,8 +5,6 @@ import ContentPage from '../ContentPage';
 import ContentTable from '../ContentTable';
 import Search from '../../../components/Search/index';
 
-jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
-
 describe('Content page', () => {
   it('should render and contain appropriate components', async () => {
     const contentHeader = 'Content Header';

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Pagination, PaginationVariant, FlexItem } from '@patternfly/react-core';
-import { usePaginationOptions } from 'foremanReact/components/Pagination/PaginationHooks';
+import { FlexItem } from '@patternfly/react-core';
+import Pagination from 'foremanReact/components/Pagination';
 
 import { getPageStats } from './helpers';
 
@@ -18,10 +18,7 @@ const PageControls = ({
         itemsEnd={lastIndex}
         page={page}
         perPage={perPage}
-        isCompact={variant === PaginationVariant.top}
-        onSetPage={(_evt, updated) => onPaginationUpdate({ page: updated })}
-        onPerPageSelect={(_evt, updated) => onPaginationUpdate({ per_page: updated })}
-        perPageOptions={usePaginationOptions().map(p => ({ title: p.toString(), value: p }))}
+        onChange={onPaginationUpdate}
         variant={variant}
       />
     </FlexItem>

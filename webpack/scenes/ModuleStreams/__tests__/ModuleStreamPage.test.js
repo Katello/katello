@@ -4,8 +4,6 @@ import toJson from 'enzyme-to-json';
 import ModuleStreamsPage from '../ModuleStreamsPage';
 import ContentPage from '../../../components/Content/ContentPage';
 
-jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
-
 describe('Module streams page', () => {
   it('should render and contain appropiate components', async () => {
     const moduleStreams = {};

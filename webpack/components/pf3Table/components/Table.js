@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Table as PfTable } from 'patternfly-react';
 import { noop } from 'foremanReact/common/helpers';
 import EmptyState from 'foremanReact/components/common/EmptyState';
-import Pagination from 'foremanReact/components/Pagination/PaginationWrapper';
+import Pagination from 'foremanReact/components/Pagination';
 
 import TableBody from './TableBody';
 
@@ -43,10 +43,9 @@ const Table = ({
       </PfTable.PfProvider>
       {shouldRenderPagination && (
         <Pagination
-          viewType="table"
           itemCount={itemCount}
-          pagination={pagination}
           onChange={onPaginationChange}
+          {...pagination}
         />
       )}
     </div>

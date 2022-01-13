@@ -5,8 +5,6 @@ import ContentTable from '../../../components/Content/ContentTable';
 import TableSchema from '../../ModuleStreams/ModuleStreamsTableSchema';
 import { Table } from '../../../components/pf3Table';
 
-jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
-
 describe('Module streams table', () => {
   it('should render and contain appropiate components', async () => {
     const moduleStreams = {

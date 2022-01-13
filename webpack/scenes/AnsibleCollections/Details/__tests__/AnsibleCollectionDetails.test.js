@@ -2,8 +2,6 @@ import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
 import AnsibleCollectionDetails from '../AnsibleCollectionDetails';
 import { details, loadingState } from './AnsibleCollectionDetails.fixtures';
 
-jest.mock('foremanReact/components/Pagination/PaginationWrapper');
-
 const mockFunc = jest.fn();
 
 const baseProps = {

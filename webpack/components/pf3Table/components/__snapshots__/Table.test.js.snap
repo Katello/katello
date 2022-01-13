@@ -137,16 +137,17 @@ exports[`Table renders Table with pagination 1`] = `
   >
     some children
   </TablePfProvider>
-  <PaginationWrapper
+  <Pagination
+    className={null}
     itemCount={2}
+    noSidePadding={false}
     onChange={[Function]}
-    pagination={
-      Object {
-        "page": 1,
-        "perPage": 20,
-      }
-    }
-    viewType="table"
+    onPerPageSelect={null}
+    onSetPage={null}
+    page={1}
+    perPage={20}
+    updateParamsByUrl={true}
+    variant="bottom"
   />
 </div>
 `;

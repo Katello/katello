@@ -6,8 +6,6 @@ import ContentDetailInfo from '../ContentDetailInfo';
 import ContentDetailRepositories from '../ContentDetailRepositories';
 import ContentDetails from '../ContentDetails';
 
-jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
-
 describe('Content Details Info', () => {
   it('should render and contain appropriate components', async () => {
     const detail = {
