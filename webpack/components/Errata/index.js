@@ -47,8 +47,8 @@ export const ErrataSummary = ({ type, count, id }) => {
   if (!ErrataIcon) return null;
 
   return (
-    <span style={{ whiteSpace: 'nowrap' }}>
-      <TableText wrapModifier="nowrap">
+    <span style={{ whiteSpace: 'normal', fontSize: 'small' }}>
+      <TableText>
         <SquareIcon size="sm" color={color} />
         <span style={{ marginLeft: '8px' }}>
           <ErrataIcon title={label} />
