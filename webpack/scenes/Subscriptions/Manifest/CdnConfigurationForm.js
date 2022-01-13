@@ -12,6 +12,7 @@ import {
   FormSelect,
   FormSelectOption,
   TextInput,
+  Tooltip,
 } from '@patternfly/react-core';
 
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -40,6 +41,12 @@ const CdnConfigurationForm = (props) => {
     useState(cdnConfiguration.upstream_organization_label);
   const [sslCaCredentialId, setSslCaCredentialId] = useState(cdnConfiguration.ssl_ca_credential_id);
   const updatingCdnConfiguration = useSelector(state => selectUpdatingCdnConfiguration(state));
+
+  const [contentViewLabel, setContentViewLabel] =
+    useState(cdnConfiguration.upstream_content_view_label);
+
+  const [lifecycleEnvironmentLabel, setLifecycleEnvironmentLabel] =
+    useState(cdnConfiguration.upstream_lifecycle_environment_label);
 
   const editPassword = (value) => {
     if (value === null) {
@@ -130,8 +137,35 @@ const CdnConfigurationForm = (props) => {
             aria-label="cdn-organization-label"
             type="text"
             value={organizationLabel || ''}
-            onChange={value => setOrganizationLabel(value)}
+            onChange={setOrganizationLabel}
           />
+        </FormGroup>
+        <FormGroup
+          label={__('Lifecycle Environment Label')}
+        >
+          <TextInput
+            aria-label="cdn-lifecycle-environment-label"
+            type="text"
+            value={lifecycleEnvironmentLabel || ''}
+            onChange={setLifecycleEnvironmentLabel}
+          />
+          <Tooltip>
+            {__('Leave blank if consuming Red Hat Content from the Library lifecycle environment or CDN ')}
+          </Tooltip>
+        </FormGroup>
+        <FormGroup
+          label={__('Content View Label')}
+        >
+          <TextInput
+            aria-label="cdn-content-view-label"
+            type="text"
+            value={contentViewLabel || ''}
+            onChange={setContentViewLabel}
+          />
+          <Tooltip>
+            {__('Leave blank if consuming Red Hat Content from the Default Content View or CDN ')}
+          </Tooltip>
+
         </FormGroup>
         <FormGroup
           label={__('SSL CA Content Credential')}
@@ -172,6 +206,8 @@ CdnConfigurationForm.propTypes = {
     url: PropTypes.string,
     username: PropTypes.string,
     upstream_organization_label: PropTypes.string,
+    upstream_content_view_label: PropTypes.string,
+    upstream_lifecycle_environment_label: PropTypes.string,
     ssl_ca_credential_id: PropTypes.number,
     password_exists: PropTypes.bool,
   }),

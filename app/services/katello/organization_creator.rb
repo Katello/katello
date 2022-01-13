@@ -1,5 +1,11 @@
 module Katello
   class OrganizationCreator
+    DEFAULT_CONTENT_VIEW_NAME = 'Default Organization View'.freeze
+    DEFAULT_CONTENT_VIEW_LABEL = 'Default_Organization_View'.freeze
+
+    DEFAULT_LIFECYCLE_ENV_NAME = 'Library'.freeze
+    DEFAULT_LIFECYCLE_ENV_LABEL = 'Library'.freeze
+
     attr_reader :library_view, :library_environment, :library_cvv, :content_view_environment, :anonymous_provider, :redhat_provider
 
     def self.seed_all_organizations!
@@ -86,8 +92,8 @@ module Katello
 
     def create_library_environment
       @library_environment = Katello::KTEnvironment.where(
-        :name => "Library",
-        :label => "Library",
+        :name => DEFAULT_LIFECYCLE_ENV_NAME,
+        :label => DEFAULT_LIFECYCLE_ENV_LABEL,
         :library => true,
         :organization => @organization
       ).first_or_create!
@@ -96,7 +102,8 @@ module Katello
     def create_library_view
       @library_view = Katello::ContentView.where(
         default: true,
-        name: 'Default Organization View',
+        name: DEFAULT_CONTENT_VIEW_NAME,
+        label: DEFAULT_CONTENT_VIEW_LABEL,
         organization: @organization
       ).first_or_create!
     end
