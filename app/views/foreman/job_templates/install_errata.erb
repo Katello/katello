@@ -19,7 +19,7 @@ foreign_input_sets:
     <% advisories = input(:errata).split(',').join(' ') %>
     <%= render_template('Package Action - SSH Default', :action => 'install -n -t patch', :package => advisories) %>
 <% else %>
-    <% advisory_ids = @host.advisory_ids(search: input("Errata search query")) %>
+    <% advisory_ids = @host.advisory_ids(search: input(:errata)) %>
 
     <% advisories = advisory_ids.map { |e| "--advisory=#{e}" }.join(' ') %>
     <%= render_template('Package Action - SSH Default', :action => 'update-minimal', :package => advisories) %>
