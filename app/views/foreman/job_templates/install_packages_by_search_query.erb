@@ -2,8 +2,8 @@
 kind: job_template
 name: Install Packages by search query - Katello SSH Default
 job_category: Katello
-description_format: 'Install package(s) %{package}'
-feature: katello_package_install
+description_format: 'Install package(s) %{Package search query}'
+feature: katello_package_install_by_search
 provider_type: SSH
 template_inputs:
 - name: Package search query
