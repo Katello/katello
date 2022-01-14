@@ -21,6 +21,12 @@ export const katelloPackageInstallUrl = ({ hostname }) => createJob({
   inputs: { package: KATELLO_TRACER_PACKAGE },
 });
 
+export const katelloPackageInstallBySearchUrl = ({ hostname, search }) => createJob({
+  hostname,
+  feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH,
+  inputs: { search },
+});
+
 export const resolveTraceUrl = ({ hostname, search }) => createJob({
   hostname,
   feature: REX_FEATURES.KATELLO_HOST_TRACER_RESOLVE,

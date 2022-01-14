@@ -2,7 +2,7 @@ import { API_OPERATIONS, get } from 'foremanReact/redux/API';
 import katelloApi from '../../../../services/api';
 import { HOST_APPLICABLE_PACKAGES_KEY } from './ApplicablePackagesConstants';
 
-export const getHostApplicablePackages = (hostId, params) => get({
+export const getHostYumInstallablePackages = (hostId, params) => get({
   type: API_OPERATIONS.GET,
   key: HOST_APPLICABLE_PACKAGES_KEY,
   url: katelloApi.getApiUrl('/packages'),
@@ -14,5 +14,5 @@ export const getHostApplicablePackages = (hostId, params) => get({
     packages_restrict_latest: true,
   },
 });
-export default getHostApplicablePackages;
+export default getHostYumInstallablePackages;
 

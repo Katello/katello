@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Modal, Button, Dropdown, DropdownItem, DropdownToggle, DropdownDirection, DropdownToggleAction } from '@patternfly/react-core';
 import { CaretDownIcon, CaretUpIcon } from '@patternfly/react-icons';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Thead, Th, Tbody, Tr, Td, TableVariant } from '@patternfly/react-table';
+import { noop } from 'foremanReact/common/helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
@@ -12,26 +13,30 @@ import TableWrapper from '../../../Table/TableWrapper';
 import { useBulkSelect } from '../../../Table/TableHooks';
 import { HOST_APPLICABLE_PACKAGES_KEY } from '../ApplicablePackages/ApplicablePackagesConstants';
 import { selectHostApplicablePackagesStatus } from '../ApplicablePackages/ApplicablePackagesSelectors';
-import { getHostApplicablePackages } from '../ApplicablePackages/ApplicablePackagesActions';
+import { getHostYumInstallablePackages } from '../ApplicablePackages/ApplicablePackagesActions';
 import './PackageInstallModal.scss';
+import { installPackageBySearch } from './RemoteExecutionActions';
+import { katelloPackageInstallBySearchUrl } from './customizedRexUrlHelpers';
 
-const InstallDropdown = ({ isDisabled }) => {
+const InstallDropdown = ({ isDisabled, installViaRex, bulkCustomizedRexUrl }) => {
   const [isActionOpen, setIsActionOpen] = useState(false);
-  const onActionClick = (_event) => {
-    console.log('You selected an action button!');
-  };
   const onActionSelect = () => {
     setIsActionOpen(false);
-  }
+  };
   const onActionToggle = () => {
     setIsActionOpen(prev => !prev);
-  }
+  };
 
   const dropdownItems = [
-    <DropdownItem key="install-rex" component="button" onClick={onActionClick}>
+    <DropdownItem key="install-rex" component="button" onClick={installViaRex}>
       {__('Install via remote execution')}
     </DropdownItem>,
-    <DropdownItem key="install-customized-rex" component="button" onClick={onActionClick}>
+    <DropdownItem
+      key="install-customized-rex"
+      component="a"
+      href={bulkCustomizedRexUrl}
+      onClick={onActionSelect}
+    >
       {__('Install via customized remote execution')}
     </DropdownItem>,
   ];
@@ -44,7 +49,7 @@ const InstallDropdown = ({ isDisabled }) => {
           isPrimary
           isDisabled={isDisabled}
           splitButtonItems={[
-            <DropdownToggleAction key="install" onClick={onActionClick}>
+            <DropdownToggleAction key="install" onClick={installViaRex}>
               Install
             </DropdownToggleAction>,
           ]}
@@ -61,10 +66,14 @@ const InstallDropdown = ({ isDisabled }) => {
 
 InstallDropdown.propTypes = {
   isDisabled: PropTypes.bool,
+  installViaRex: PropTypes.func,
+  bulkCustomizedRexUrl: PropTypes.string,
 };
 
 InstallDropdown.defaultProps = {
   isDisabled: false,
+  installViaRex: noop,
+  bulkCustomizedRexUrl: '',
 };
 
 const PackageInstallModal = ({
@@ -77,6 +86,7 @@ const PackageInstallModal = ({
   const columnHeaders = ['', __('Package'), __('Version')];
   const response = useSelector(state => selectAPIResponse(state, HOST_APPLICABLE_PACKAGES_KEY));
   const status = useSelector(state => selectHostApplicablePackagesStatus(state));
+  const dispatch = useDispatch();
   const { results, ...metadata } = response;
   const [suppressFirstFetch, setSuppressFirstFetch] = useState(false);
 
@@ -99,7 +109,13 @@ const PackageInstallModal = ({
       setSuppressFirstFetch(false);
       return { type: 'HOST_APPLICABLE_PACKAGES_NOOP' };
     }
-    return getHostApplicablePackages(hostId, params);
+    return getHostYumInstallablePackages(hostId, params);
+  };
+
+  const installViaRex = () => {
+    dispatch(installPackageBySearch({ hostname: hostName, search: fetchBulkParams() }));
+    selectNone();
+    closeModal();
   };
 
   const handleModalClose = () => {
@@ -107,8 +123,17 @@ const PackageInstallModal = ({
     closeModal();
   };
 
+  const bulkCustomizedRexUrl = selectedCount ?
+    katelloPackageInstallBySearchUrl({ hostname: hostName, search: fetchBulkParams() }) :
+    '#';
+  console.log(bulkCustomizedRexUrl);
   const modalActions = ([
-    <InstallDropdown key="install" isDisabled={!selectedCount} />,
+    <InstallDropdown
+      key="install"
+      isDisabled={!selectedCount}
+      installViaRex={installViaRex}
+      bulkCustomizedRexUrl={bulkCustomizedRexUrl}
+    />,
     <Button key="cancel" variant="link" onClick={handleModalClose}>
       Cancel
     </Button>,

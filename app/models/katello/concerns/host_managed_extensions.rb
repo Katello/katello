@@ -400,8 +400,14 @@ module Katello
         ::Katello::HostTracer.helpers_for(traces)
       end
 
-      def package_names_from(search:)
-        ::Katello::Rpm.yum_installable_for_host(self).search_for(search).distinct.pluck(:name)
+      def package_names_for_job_template(feature:, search:)
+        features = ['katello_package_install_by_search']
+        case feature
+        when 'katello_package_install_by_search'
+          ::Katello::Rpm.yum_installable_for_host(self).search_for(search).distinct.pluck(:name)
+        else
+          raise ::Foreman::Exception.new(N_("Feature must be one of %s"), features.join(', '))
+        end
       end
 
       def advisory_ids(search:)
