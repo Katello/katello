@@ -28,7 +28,7 @@ module Actions
 
           fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank? && source_url.blank?
           fail ::Katello::Errors::InvalidActionOptionError, _("Cannot validate contents on non-yum/deb repositories.") if validate_contents && !repo.yum? && !repo.deb?
-          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum?
+          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum? && !repo.deb?
 
           pulp_sync_options = {}
           pulp_sync_options[:download_policy] = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND if validate_contents && repo.yum?
@@ -51,6 +51,7 @@ module Actions
               plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
               plan_action(Katello::Repository::CorrectChecksum, repo)
               concurrence do
+		        plan_action(Katello::Repository::SyncDebErrata, repo, validate_contents) if repo.deb? && repo.root.deb_errata_url.present?
                 plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
                 plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repo.id]) if generate_applicability
               end

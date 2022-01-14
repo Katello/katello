@@ -170,6 +170,15 @@
                 <br />
                 <div class="alert alert-danger" ><strong>Warning. </strong>Are you sure you want to add a comma in this whitespace separated list of architectures?</div>
        </div>
+       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Errata URL' | translate }}">
+        <input id="deb_errata_url"
+               name="deb_errata_url"
+               ng-model="repository.deb_errata_url"
+               type="text"/>
+        <p class="help-block" translate>
+          URL to a deb errata service. Example: https://dep.atix.de/dep/api/v1/debian
+        </p>
+       </div>
       </div>
 
       <div bst-form-group label="{{ 'Upstream Repository Name' | translate }}"  ng-if="repository.content_type === 'docker'">

@@ -4,11 +4,17 @@
   <div data-block="left-column">
     <h3 translate>Independent Packages</h3>
     <ul>
-      <p ng-show="!errata.packages.length" >No Packages to show</p>
+      <p ng-show="!(errata.packages.length || errata.deb_packages.length)" >No Packages to show</p>
       <li ng-show="errata.packages.length" ng-repeat="package in errata.packages">
         <a href="/packages?search={{package}}">
           {{ package }}
         </a>
+      </li>
+      <li ng-show="errata.deb_packages.length" ng-repeat="deb_package in errata.deb_packages">
+        <a href="/debs?search={{ encodeURIComponent('name==' + deb_package.name + ' and version>=' + deb_package.version) }}">
+          {{ deb_package.name }} {{ deb_package.version }}
+        </a>
+        ({{ deb_package.release }})
       </li>
     </ul>
   </div>

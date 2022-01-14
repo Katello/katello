@@ -274,7 +274,7 @@ module Actions
 
         def generate_description(version, content)
           humanized_lines = []
-          [::Katello::Erratum, ::Katello::Rpm].each do |content_type|
+	      [::Katello::Erratum, ::Katello::Rpm, ::Katello::Deb].each do |content_type|
             unless content[content_type::CONTENT_TYPE].blank?
               humanized_lines << "#{HUMANIZED_TYPES[content_type::CONTENT_TYPE]}:"
               humanized_lines += content[content_type::CONTENT_TYPE].sort.map { |unit| "    #{unit}" }

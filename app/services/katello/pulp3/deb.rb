@@ -31,6 +31,7 @@ module Katello
         custom_json['version'] = backend_data['version']
         custom_json['description'] = backend_data['description']
         custom_json['architecture'] = backend_data['architecture']
+        custom_json['nva'] = "#{backend_data['package']}_#{backend_data['version']}_#{backend_data['architecture']}"
         model.update!(custom_json)
       end
     end

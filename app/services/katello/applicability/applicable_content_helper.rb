@@ -21,7 +21,7 @@ module Katello
 
       def fetch_content_ids
         if self.content_unit_class == ::Katello::Erratum
-          fetch_errata_content_ids
+          fetch_errata_content_ids + fetch_errata_deb_content_ids
         elsif self.content_unit_class == ::Katello::Deb
           fetch_deb_content_ids
         elsif self.content_unit_class == ::Katello::ModuleStream
@@ -29,6 +29,20 @@ module Katello
         else
           fetch_rpm_content_ids
         end
+      end
+
+      def fetch_errata_deb_content_ids
+        query = 'SELECT DISTINCT katello_repository_errata.erratum_id AS id FROM katello_repository_errata
+                     INNER JOIN katello_erratum_deb_packages
+                        ON katello_repository_errata.erratum_id = katello_erratum_deb_packages.erratum_id
+                     INNER JOIN katello_debs
+                        ON katello_debs.nva = katello_erratum_deb_packages.nva
+                     INNER JOIN katello_content_facet_applicable_debs
+                        ON katello_content_facet_applicable_debs.deb_id = katello_debs.id
+                     WHERE katello_content_facet_applicable_debs.content_facet_id = :content_facet_id
+                        AND katello_repository_errata.repository_id IN (:repo_ids)'
+
+        return Katello::Erratum.find_by_sql([query, { content_facet_id: content_facet.id, repo_ids: self.bound_library_instance_repos }]).map(&:id)
       end
 
       def fetch_errata_content_ids

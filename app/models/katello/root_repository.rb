@@ -315,6 +315,10 @@ module Katello
       Katello::Content.find_by(:cp_content_id => self.content_id, :organization_id => self.product.organization_id)
     end
 
+    def repository_type
+      RepositoryTypeManager.find(self.content_type)
+    end
+
     def docker?
       self.content_type == Repository::DOCKER_TYPE
     end
@@ -363,6 +367,14 @@ module Katello
       changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?
       changeable_attributes += %w(ansible_collection_requirements ansible_collection_auth_url ansible_collection_auth_token) if ansible_collection?
       changeable_attributes.any? { |key| previous_changes.key?(key) }
+    end
+
+    def supports_errata?
+      if deb?
+        self.deb_errata_url.present?
+      else
+        self.repository_type.supports_content_type Katello::Erratum
+      end
     end
 
     def raw_content_path
