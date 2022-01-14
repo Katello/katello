@@ -14,6 +14,9 @@ foreign_input_sets:
 - template: Package Action - SSH Default
   exclude: action
 %>
-<% package_names = @host.package_names_from(search: input('Package search query')) -%>
+<% package_names = @host.package_names_for_job_template(
+  feature: 'katello_package_install_by_search',
+  search: input('Package search query')
+) -%>
 
 <%= render_template('Package Action - SSH Default', :action => 'install', :package => package_names.join(' ')) %>
