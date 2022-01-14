@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Modal, Button } from '@patternfly/react-core';
+import { Modal, Button, Dropdown, DropdownItem, DropdownToggle, DropdownDirection, DropdownToggleAction } from '@patternfly/react-core';
+import { CaretDownIcon, CaretUpIcon } from '@patternfly/react-icons';
 import { useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Thead, Th, Tbody, Tr, Td, TableVariant } from '@patternfly/react-table';
@@ -14,11 +15,63 @@ import { selectHostApplicablePackagesStatus } from '../ApplicablePackages/Applic
 import { getHostApplicablePackages } from '../ApplicablePackages/ApplicablePackagesActions';
 import './PackageInstallModal.scss';
 
+const InstallDropdown = ({ isDisabled }) => {
+  const [isActionOpen, setIsActionOpen] = useState(false);
+  const onActionClick = (_event) => {
+    console.log('You selected an action button!');
+  };
+  const onActionSelect = () => {
+    setIsActionOpen(false);
+  }
+  const onActionToggle = () => {
+    setIsActionOpen(prev => !prev);
+  }
+
+  const dropdownItems = [
+    <DropdownItem key="install-rex" component="button" onClick={onActionClick}>
+      {__('Install via remote execution')}
+    </DropdownItem>,
+    <DropdownItem key="install-customized-rex" component="button" onClick={onActionClick}>
+      {__('Install via customized remote execution')}
+    </DropdownItem>,
+  ];
+  return (
+    <Dropdown
+      direction={DropdownDirection.up}
+      onSelect={onActionSelect}
+      toggle={
+        <DropdownToggle
+          isPrimary
+          isDisabled={isDisabled}
+          splitButtonItems={[
+            <DropdownToggleAction key="install" onClick={onActionClick}>
+              Install
+            </DropdownToggleAction>,
+          ]}
+          splitButtonVariant="action"
+          toggleIndicator={isActionOpen ? CaretUpIcon : CaretDownIcon}
+          onToggle={onActionToggle}
+        />
+      }
+      isOpen={isActionOpen}
+      dropdownItems={dropdownItems}
+    />
+  );
+};
+
+InstallDropdown.propTypes = {
+  isDisabled: PropTypes.bool,
+};
+
+InstallDropdown.defaultProps = {
+  isDisabled: false,
+};
+
 const PackageInstallModal = ({
   isOpen, closeModal, hostId, hostName,
 }) => {
   const emptyContentTitle = __('No packages available to install');
-  const emptyContentBody = __('No packages applicable to this host. Please check the host\'s content view and environment.');
+  const emptyContentBody = __('No packages available to install on this host. Please check the host\'s content view and lifecycle environment.');
   const emptySearchTitle = __('No matching packages found');
   const emptySearchBody = __('Try changing your search settings.');
   const columnHeaders = ['', __('Package'), __('Version')];
@@ -55,9 +108,7 @@ const PackageInstallModal = ({
   };
 
   const modalActions = ([
-    <Button key="confirm" variant="primary" onClick={() => console.log('install')}>
-      Install
-    </Button>,
+    <InstallDropdown key="install" isDisabled={!selectedCount} />,
     <Button key="cancel" variant="link" onClick={handleModalClose}>
       Cancel
     </Button>,
