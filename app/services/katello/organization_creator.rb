@@ -34,7 +34,6 @@ module Katello
     def seed!
       ActiveRecord::Base.transaction do
         @organization.setup_label_from_name
-        @organization.created_in_katello = true
 
         # existing validation errors are not resolvable here, so don't validatate
         @organization.save(validate: false)
@@ -54,6 +53,8 @@ module Katello
         seed!
 
         create_backend_objects!
+
+        @organization.created_in_katello = true
 
         begin
           @organization.save!
