@@ -46,7 +46,7 @@ const InstallDropdown = ({ isDisabled, installViaRex, bulkCustomizedRexUrl }) =>
       onSelect={onActionSelect}
       toggle={
         <DropdownToggle
-          isPrimary
+          toggleVariant="primary"
           isDisabled={isDisabled}
           splitButtonItems={[
             <DropdownToggleAction key="install" onClick={installViaRex}>

@@ -1,6 +1,7 @@
 import { REX_FEATURES } from './RemoteExecutionConstants';
 import { KATELLO_TRACER_PACKAGE, TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
 import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
+import { PACKAGE_SEARCH_QUERY } from '../ApplicablePackages/ApplicablePackagesConstants';
 
 export const createJob = ({
   hostname, feature, inputs,
@@ -24,7 +25,7 @@ export const katelloPackageInstallUrl = ({ hostname }) => createJob({
 export const katelloPackageInstallBySearchUrl = ({ hostname, search }) => createJob({
   hostname,
   feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH,
-  inputs: { search },
+  inputs: { [PACKAGE_SEARCH_QUERY]: search },
 });
 
 export const resolveTraceUrl = ({ hostname, search }) => createJob({
