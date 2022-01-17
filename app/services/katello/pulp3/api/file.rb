@@ -7,6 +7,14 @@ module Katello
         def self.add_remove_content_class
           PulpFileClient::RepositoryAddRemoveContent
         end
+
+        def self.alternate_content_source_class
+          PulpFileClient::FileFileAlternateContentSource
+        end
+
+        def alternate_content_source_api
+          PulpFileClient::AcsFileApi.new(api_client)
+        end
       end
     end
   end
