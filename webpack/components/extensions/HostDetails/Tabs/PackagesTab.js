@@ -8,18 +8,21 @@ import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import SelectableDropdown from '../../../SelectableDropdown';
 import TableWrapper from '../../../../components/Table/TableWrapper';
+import { useUrlParams } from '../../../../components/Table/TableHooks';
 import { PackagesStatus, PackagesLatestVersion } from '../../../../components/Packages';
 import { getInstalledPackagesWithLatest } from '../HostPackages/HostPackagesActions';
 import { selectHostPackagesStatus } from '../HostPackages/HostPackagesSelectors';
 import { HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM } from '../HostPackages/HostPackagesConstants';
 import './PackagesTab.scss';
+import hostIdNotReady from '../HostDetailsActions';
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const { id: hostId } = hostDetails;
   const actionButtons = <Button isDisabled> {__('Upgrade')} </Button>;
 
-  const [searchQuery, updateSearchQuery] = useState('');
+  const { searchParam } = useUrlParams();
+  const [searchQuery, updateSearchQuery] = useState(searchParam || '');
   const PACKAGE_STATUS = __('Status');
   const [packageStatusSelected, setPackageStatusSelected] = useState(PACKAGE_STATUS);
   const activeFilters = [packageStatusSelected];
@@ -38,7 +41,7 @@ export const PackagesTab = () => {
 
   const fetchItems = useCallback(
     (params) => {
-      if (!hostId) return null;
+      if (!hostId) return hostIdNotReady;
       const modifiedParams = { ...params };
       if (packageStatusSelected !== PACKAGE_STATUS) {
         modifiedParams.status = VERSION_STATUSES_TO_PARAM[packageStatusSelected];

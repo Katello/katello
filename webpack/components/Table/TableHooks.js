@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { isEmpty } from 'lodash';
+import { useLocation } from 'react-router-dom';
+import { friendlySearchParam } from '../../utils/helpers';
 
 class ReactConnectedSet extends Set {
   constructor(initialValue, forceRender) {
@@ -117,6 +119,7 @@ export const useBulkSelect = ({
   results,
   metadata,
   initialArry = [],
+  initialSearchQuery = '',
   idColumn = 'id',
   isSelectable,
 }) => {
@@ -125,7 +128,7 @@ export const useBulkSelect = ({
                   results, metadata, initialArry, idColumn, isSelectable,
                 });
   const exclusionSet = useSet([]);
-  const [searchQuery, updateSearchQuery] = useState('');
+  const [searchQuery, updateSearchQuery] = useState(initialSearchQuery);
   const [selectAllMode, setSelectAllMode] = useState(false);
   const selectedCount = selectAllMode ?
     Number(metadata.selectable) - exclusionSet.size : selectOptions.selectedCount;
@@ -217,5 +220,22 @@ export const useBulkSelect = ({
     selectOne,
     areAllRowsOnPageSelected,
     areAllRowsSelected,
+  };
+};
+
+// takes a url query like ?type=security&search=name+~+foo
+// and returns an object
+// {
+//   type: 'security',
+//   searchParam: 'name ~ foo'
+// }
+export const useUrlParams = () => {
+  const location = useLocation();
+  const { search: urlSearchParam, ...urlParams }
+    = Object.fromEntries(new URLSearchParams(location.search).entries());
+  const searchParam = urlSearchParam ? friendlySearchParam(urlSearchParam) : '';
+  return {
+    searchParam,
+    ...urlParams,
   };
 };

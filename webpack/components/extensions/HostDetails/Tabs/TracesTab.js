@@ -9,12 +9,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import EnableTracerEmptyState from './EnableTracerEmptyState';
 import TableWrapper from '../../../Table/TableWrapper';
-import { useBulkSelect } from '../../../Table/TableHooks';
+import { useBulkSelect, useUrlParams } from '../../../Table/TableHooks';
 import { getHostTraces } from './HostTracesActions';
 import { resolveTraces } from './RemoteExecutionActions';
 import { selectHostTracesStatus } from './HostTracesSelectors';
 import { resolveTraceUrl } from './customizedRexUrlHelpers';
 import './TracesTab.scss';
+import hostIdNotReady from '../HostDetailsActions';
 
 const TracesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -31,9 +32,10 @@ const TracesTab = () => {
   const emptySearchBody = __('Try changing your search settings.');
   const fetchItems = useCallback(
     params =>
-      (hostId ? getHostTraces(hostId, params) : null),
+      (hostId ? getHostTraces(hostId, params) : hostIdNotReady),
     [hostId],
   );
+  const { searchParam } = useUrlParams();
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
@@ -46,6 +48,7 @@ const TracesTab = () => {
     results,
     metadata: meta,
     isSelectable: result => !!result.restart_command,
+    initialSearchQuery: searchParam || '',
   });
 
 

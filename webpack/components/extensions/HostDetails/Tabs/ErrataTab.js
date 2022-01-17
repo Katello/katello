@@ -21,17 +21,18 @@ import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import SelectableDropdown from '../../../SelectableDropdown';
-import { useSet, useBulkSelect } from '../../../../components/Table/TableHooks';
+import { useSet, useBulkSelect, useUrlParams } from '../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import { ErrataType, ErrataSeverity } from '../../../../components/Errata';
 import { getInstallableErrata, regenerateApplicability, applyViaKatelloAgent } from '../HostErrata/HostErrataActions';
 import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
 import { selectHostErrataStatus } from '../HostErrata/HostErrataSelectors';
-import { HOST_ERRATA_KEY, ERRATA_TYPES, ERRATA_SEVERITIES, TYPES_TO_PARAM, SEVERITIES_TO_PARAM } from '../HostErrata/HostErrataConstants';
+import { HOST_ERRATA_KEY, ERRATA_TYPES, ERRATA_SEVERITIES, TYPES_TO_PARAM, SEVERITIES_TO_PARAM, PARAM_TO_FRIENDLY_NAME } from '../HostErrata/HostErrataConstants';
 import { installErrata } from './RemoteExecutionActions';
 import { errataInstallUrl } from './customizedRexUrlHelpers';
 import './ErrataTab.scss';
+import hostIdNotReady from '../HostDetailsActions';
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -46,14 +47,21 @@ export const ErrataTab = () => {
   const [ALL, INSTALLABLE] = toggleGroupStates;
   const ERRATA_TYPE = __('Type');
   const ERRATA_SEVERITY = __('Severity');
-  const [toggleGroupState, setToggleGroupState] = useState(INSTALLABLE);
-
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const expandedErrata = useSet([]);
   const erratumIsExpanded = id => expandedErrata.has(id);
-  const [errataTypeSelected, setErrataTypeSelected] = useState(ERRATA_TYPE);
-  const [errataSeveritySelected, setErrataSeveritySelected] = useState(ERRATA_SEVERITY);
+  const {
+    type: initialType,
+    severity: initialSeverity,
+    show,
+    searchParam,
+  } = useUrlParams();
+  const [toggleGroupState, setToggleGroupState] = useState(show ?? INSTALLABLE);
+  const [errataTypeSelected, setErrataTypeSelected]
+    = useState(PARAM_TO_FRIENDLY_NAME[initialType] ?? ERRATA_TYPE);
+  const [errataSeveritySelected, setErrataSeveritySelected]
+    = useState(PARAM_TO_FRIENDLY_NAME[initialSeverity] ?? ERRATA_SEVERITY);
   const activeFilters = [errataTypeSelected, errataSeveritySelected];
   const defaultFilters = [ERRATA_TYPE, ERRATA_SEVERITY];
 
@@ -72,7 +80,7 @@ export const ErrataTab = () => {
 
   const fetchItems = useCallback(
     (params) => {
-      if (!hostId) return null;
+      if (!hostId) return hostIdNotReady;
       const modifiedParams = { ...params };
       if (errataTypeSelected !== ERRATA_TYPE) {
         modifiedParams.type = TYPES_TO_PARAM[errataTypeSelected];
@@ -104,6 +112,7 @@ export const ErrataTab = () => {
     metadata,
     idColumn: 'errata_id',
     isSelectable: result => result.installable,
+    initialSearchQuery: searchParam || '',
   });
 
   if (!hostId) return <Skeleton />;
@@ -239,7 +248,7 @@ export const ErrataTab = () => {
   );
 
   const hostIsNonLibrary = (
-    !contentFacet.contentViewDefault && !contentFacet.lifecycleEnvironmentLibrary
+    contentFacet?.contentViewDefault === false && contentFacet.lifecycleEnvironmentLibrary === false
   );
   const toggleGroup = (
     <Split hasGutter>

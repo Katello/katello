@@ -182,6 +182,7 @@ const TableWrapper = ({
             <Search
               isDisabled={unresolvedStatusOrNoRows && !searchQuery}
               patternfly4
+              initialInputValue={searchQuery && searchQuery}
               onSearch={search => updateSearchQuery(search)}
               getAutoCompleteParams={getAutoCompleteParams}
               foremanApiAutoComplete={foremanApiAutoComplete}
