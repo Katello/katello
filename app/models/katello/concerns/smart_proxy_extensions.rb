@@ -180,8 +180,9 @@ module Katello
           pulp3_ssl_configuration(config)
           config.debugging = false
           config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
-          config.username = self.setting(PULP3_FEATURE, 'username')
-          config.password = self.setting(PULP3_FEATURE, 'password')
+          pulp_auth = SETTINGS[:katello][:pulp_auth].find { |proxy| proxy['url'] == uri.scheme + "://" + uri.hostname }
+          config.username = pulp_auth['username']
+          config.password = pulp_auth['password']
         end
       end
 
