@@ -49,16 +49,6 @@ module Katello
           }
         end
 
-        def mirror_remote_options
-          policy = smart_proxy.download_policy
-
-          if smart_proxy.download_policy == SmartProxy::DOWNLOAD_INHERIT
-            policy = repo.root.download_policy
-          end
-
-          { policy: policy }
-        end
-
         def import_distribution_data
           distribution = ::Katello::Pulp3::Distribution.fetch_content_list(repository_version: repo.version_href)
           if distribution.results.present?

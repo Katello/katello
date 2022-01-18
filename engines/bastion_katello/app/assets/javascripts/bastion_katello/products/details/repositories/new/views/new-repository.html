@@ -259,7 +259,7 @@
         </div>
       </div>
 
-      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-if="repository.content_type === 'yum' || repository.content_type === 'deb'">
+      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-if="repository.content_type === 'yum' || repository.content_type === 'deb' || repository.content_type === 'docker'">
         <select id="download_policy"
                 name="download_policy"
                 ng-model="repository.download_policy"

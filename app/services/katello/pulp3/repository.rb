@@ -410,6 +410,17 @@ module Katello
         remote_options.merge!(ssl_remote_options)
       end
 
+      def mirror_remote_options
+        options = {}
+        if Katello::RootRepository::CONTENT_ATTRIBUTE_RESTRICTIONS[:download_policy].include?(repo.content_type)
+          options[:policy] = smart_proxy.download_policy
+          if smart_proxy.download_policy == SmartProxy::DOWNLOAD_INHERIT
+            options[:policy] = repo.root.download_policy
+          end
+        end
+        options
+      end
+
       def create_options
         { name: generate_backend_object_name }.merge!(specific_create_options)
       end

@@ -179,6 +179,7 @@ redis_root:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   unprotected:           <%= true %>
   mirroring_policy:     "mirror_content_only"
+  download_policy:               immediate
 
 busybox_root:
   name:                 busybox
@@ -191,6 +192,7 @@ busybox_root:
   url:                  'https://quay.io'
   docker_upstream_name: 'libpod/busybox'
   mirroring_policy:     "mirror_content_only"
+  download_policy:               immediate
 
 busybox2_root:
   name:                 busybox
@@ -203,6 +205,7 @@ busybox2_root:
   url:                  'https://quay.io'
   docker_upstream_name: 'libpod/busybox'
   mirroring_policy:     "mirror_content_only"
+  download_policy:               immediate
 
 generic_file_root:
   name:                 My Files
@@ -253,6 +256,7 @@ pulp3_docker_root_1:
   url:                  "https://registry-1.docker.io/"
   docker_upstream_name: "fedora/ssh"
   mirroring_policy:     "mirror_content_only"
+  download_policy:               immediate
 
 pulp3_deb_root_1:
   name:                 Pulp3 Deb 1
@@ -266,6 +270,7 @@ pulp3_deb_root_1:
   deb_components:       main
   deb_architectures:    amd64
   mirroring_policy:     "mirror_content_only"
+  download_policy:      immediate
 
 pulp3_python_root_1:
   name:                 Pulp3 Python 1

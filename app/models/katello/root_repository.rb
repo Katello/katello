@@ -21,7 +21,7 @@ module Katello
     SUBSCRIBABLE_TYPES = [Repository::YUM_TYPE, Repository::OSTREE_TYPE, Repository::DEB_TYPE].freeze
 
     CONTENT_ATTRIBUTE_RESTRICTIONS = {
-      :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE]
+      :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE, Repository::DOCKER_TYPE]
     }.freeze
 
     NO_DEFAULT_HTTP_PROXY = 'none'.freeze

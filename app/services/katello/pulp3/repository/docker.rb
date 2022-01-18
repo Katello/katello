@@ -13,7 +13,7 @@ module Katello
         end
 
         def remote_options
-          options = {url: root.url, upstream_name: root.docker_upstream_name}
+          options = {url: root.url, upstream_name: root.docker_upstream_name, policy: root.download_policy}
           if root.docker_tags_whitelist&.any?
             options[:include_tags] = root.docker_tags_whitelist
           else
@@ -31,10 +31,12 @@ module Katello
         end
 
         def mirror_remote_options
-          {
-            url: "https://#{SmartProxy.pulp_primary.pulp3_host!.downcase}",
-            upstream_name: repo.container_repository_name
-          }
+          super.merge(
+            {
+              url: "https://#{SmartProxy.pulp_primary.pulp3_host!.downcase}",
+              upstream_name: repo.container_repository_name
+            }
+          )
         end
 
         def distribution_options(path)
