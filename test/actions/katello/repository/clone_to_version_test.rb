@@ -30,7 +30,7 @@ module Actions
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
                                 :copy_contents => true, :metadata_generate => true,
-                                :solve_dependencies => false)
+                                :solve_dependencies => false, :pulp_copy_only => false)
     end
 
     it 'plans to clone yum units with dependency solving' do
@@ -41,12 +41,12 @@ module Actions
 
       cloned_repo.root = yum_repo.root
 
-      plan_action(action, [yum_repo], version_solve_deps, cloned_repo, {})
+      plan_action(action, [yum_repo], version_solve_deps, cloned_repo, {:pulp_copy_only => true})
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
                                 :copy_contents => true, :metadata_generate => true,
-                                :solve_dependencies => true)
+                                :solve_dependencies => true, :pulp_copy_only => true)
     end
 
     it 'plans to clone yum metadata' do
@@ -61,7 +61,7 @@ module Actions
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
                                 :copy_contents => true, :metadata_generate => true,
-                                :solve_dependencies => false)
+                                :solve_dependencies => false, :pulp_copy_only => false)
     end
 
     it 'plans to clone docker units' do
@@ -76,7 +76,7 @@ module Actions
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [docker_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
                                 :copy_contents => true, :metadata_generate => true,
-                                :solve_dependencies => false)
+                                :solve_dependencies => false, :pulp_copy_only => false)
     end
 
     it 'plans to clone file units' do
@@ -89,7 +89,7 @@ module Actions
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [file_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil, :copy_contents => true,
-                                :metadata_generate => true, :solve_dependencies => false)
+                                :metadata_generate => true, :solve_dependencies => false, :pulp_copy_only => false)
     end
 
     it 'fully plans out a clone with pulp3' do

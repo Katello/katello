@@ -10,6 +10,7 @@ module Actions
           purge_empty_contents = options.fetch(:purge_empty_contents, false)
           copy_contents = options.fetch(:copy_contents, true)
           solve_dependencies = options.fetch(:solve_dependencies, false)
+          pulp_copy_only = options.fetch(:pulp_copy_only, false)
 
           sequence do
             if copy_contents
@@ -20,14 +21,16 @@ module Actions
                           filters: filters, rpm_filenames: rpm_filenames, solve_dependencies: solve_dependencies)
             end
 
-            metadata_generate(source_repositories, new_repository, filters, rpm_filenames) if generate_metadata
+            unless pulp_copy_only
+              metadata_generate(source_repositories, new_repository, filters, rpm_filenames) if generate_metadata
 
-            index_options = {id: new_repository.id}
-            index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
-            plan_action(Katello::Repository::IndexContent, index_options)
+              index_options = {id: new_repository.id}
+              index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
+              plan_action(Katello::Repository::IndexContent, index_options)
 
-            if purge_empty_contents && new_repository.backend_service(SmartProxy.pulp_primary).should_purge_empty_contents?
-              plan_action(Katello::Repository::PurgeEmptyContent, id: new_repository.id)
+              if purge_empty_contents && new_repository.backend_service(SmartProxy.pulp_primary).should_purge_empty_contents?
+                plan_action(Katello::Repository::PurgeEmptyContent, id: new_repository.id)
+              end
             end
           end
         end
