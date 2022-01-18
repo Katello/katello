@@ -1,9 +1,6 @@
 import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
-
 import Table from './Table';
 import { columnsFixtures, rowsFixtures } from './TableFixtures';
-
-jest.mock('foremanReact/components/Pagination/PaginationWrapper');
 
 const fixtures = {
   'renders Table with emptyState': {

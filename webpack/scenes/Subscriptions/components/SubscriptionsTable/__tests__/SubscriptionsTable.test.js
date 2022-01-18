@@ -8,6 +8,10 @@ import { successState, loadingState, emptyState, groupedSubscriptions } from '..
 import { loadSubscriptions, updateQuantity } from '../../../SubscriptionActions';
 
 jest.useFakeTimers();
+jest.mock('foremanReact/components/Pagination', () => ({
+  __esModule: true,
+  default: () => <div>MockPagination</div>,
+}));
 
 const tableColumns = [
   'id',

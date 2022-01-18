@@ -2,8 +2,6 @@ import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
 import ModuleStreamDetails from '../ModuleStreamDetails';
 import { details, loadingState } from './moduleStreamDetails.fixtures';
 
-jest.mock('foremanReact/components/Pagination/PaginationWrapper');
-
 const mockFunc = jest.fn();
 
 const baseProps = {

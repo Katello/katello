@@ -5,8 +5,6 @@ import ContentTable from '../ContentTable';
 import { LoadingState } from '../../../components/LoadingState';
 import { Table } from '../../../components/pf3Table';
 
-jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
-
 describe('Content Table', () => {
   it('should render and contain appropriate components', async () => {
     const content = {

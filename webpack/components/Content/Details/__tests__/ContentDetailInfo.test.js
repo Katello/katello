@@ -4,8 +4,6 @@ import toJson from 'enzyme-to-json';
 import { Table } from 'react-bootstrap';
 import ContentDetailInfo from '../ContentDetailInfo';
 
-jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
-
 describe('Content Details Info', () => {
   it('should render and contain appropriate components', async () => {
     const displayMap = new Map([
