@@ -19,7 +19,7 @@ const props = {
 
 let searchDelayScope;
 beforeEach(() => {
-  searchDelayScope = mockSetting(nockInstance, AUTOSEARCH_DELAY, 500);
+  searchDelayScope = mockSetting(nockInstance, AUTOSEARCH_DELAY, 0);
 });
 
 afterEach(() => {
@@ -73,7 +73,7 @@ test('autosearch turned off does show patternfly 4 search button', async (done) 
 });
 
 test('search function is called when search is typed into with autosearch', async (done) => {
-  const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING, true);
+  const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING);
   const autocompleteScope = mockAutocomplete(nockInstance, endpoint, true, [], 2);
   const mockSearch = jest.fn();
 
@@ -100,7 +100,6 @@ test('search function is called by clicking search button without autosearch', a
   });
   searchButton.click();
   expect(mockSearch.mock.calls).toHaveLength(3);
-
   assertNockRequest(autoSearchScope);
   assertNockRequest(autocompleteScope, done);
 });

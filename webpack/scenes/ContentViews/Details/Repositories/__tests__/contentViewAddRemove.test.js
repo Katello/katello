@@ -23,8 +23,8 @@ let autoSearchScope;
 beforeEach(() => {
   const { results } = repoData;
   [firstRepo] = results;
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   nockInstance
     .persist() // match any query to this endpoint, gets cleaned up by `nock.cleanAll()`
     .get(api.getApiUrl('/repositories/repository_types'))

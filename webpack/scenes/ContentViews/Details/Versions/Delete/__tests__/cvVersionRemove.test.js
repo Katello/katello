@@ -34,8 +34,8 @@ let envScope;
 beforeEach(() => {
   const { results } = cvVersionsData;
   [firstVersion] = results;
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   envScope = nockInstance
     .get(environmentPathsPath)
     .query(true)
@@ -131,8 +131,8 @@ test('Can open Remove wizard and remove version from environment with hosts', as
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const hostAutocompleteUrl = '/hosts/auto_complete_search';
   const hostAutocompleteScope = mockForemanAutocomplete(nockInstance, hostAutocompleteUrl);
-  const hostSearchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  const hostAutoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  const hostSearchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  const hostAutoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const scope = nockInstance
     .get(cvVersions)
@@ -223,8 +223,8 @@ test('Can open Remove wizard and remove version from environment with activation
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const akAutocompleteUrl = '/activation_keys/auto_complete_search';
   const akAutocompleteScope = mockAutocomplete(nockInstance, akAutocompleteUrl);
-  const akSearchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  const akAutoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  const akSearchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  const akAutoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const scope = nockInstance
     .get(cvVersions)

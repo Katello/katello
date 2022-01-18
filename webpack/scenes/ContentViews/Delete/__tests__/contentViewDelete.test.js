@@ -44,8 +44,8 @@ beforeEach(() => {
     .get('/api/v2/bookmarks')
     .query(true)
     .reply(200, {});
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 });
 
 afterEach(() => {
@@ -99,12 +99,12 @@ test('Can call API for CVs and show Delete Wizard for the row', async (done) => 
 test('Can open Delete wizard and delete CV with all steps', async (done) => {
   const hostAutocompleteUrl = '/hosts/auto_complete_search';
   const hostAutocompleteScope = mockForemanAutocomplete(nockInstance, hostAutocompleteUrl);
-  const hostSearchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  const hostAutoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  const hostSearchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  const hostAutoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   const akAutocompleteUrl = '/activation_keys/auto_complete_search';
   const akAutocompleteScope = mockAutocomplete(nockInstance, akAutocompleteUrl);
-  const akSearchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  const akAutoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  const akSearchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  const akAutoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 

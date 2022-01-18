@@ -81,11 +81,10 @@ let searchDelayScope;
 let autoSearchScope;
 
 beforeEach(() => {
-  // jest.resetModules();
   const { results } = mockErrataData;
   [firstErrata, , thirdErrata] = results;
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 });
 
 afterEach(() => {
@@ -813,7 +812,7 @@ test('apply button chooses katello agent if enabled', async (done) => {
     <ErrataTab />,
     options,
   );
-    // Assert that the errata are now showing on the screen, but wait for them to appear.
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
 
   getByLabelText('Select row 0').click();
@@ -855,7 +854,7 @@ test('Can bulk apply via katello agent', async (done) => {
     <ErrataTab />,
     options,
   );
-    // Assert that the errata are now showing on the screen, but wait for them to appear.
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
 
   getByLabelText('Select row 0').click();
@@ -902,7 +901,7 @@ test('Can select all, exclude and bulk apply via katello agent', async (done) =>
     <ErrataTab />,
     options,
   );
-    // Assert that the errata are now showing on the screen, but wait for them to appear.
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   const selectAllCheckbox = getByLabelText('Select all');
   selectAllCheckbox.click();
@@ -948,7 +947,7 @@ test('Apply button chooses remote execution', async (done) => {
     <ErrataTab />,
     options,
   );
-    // Assert that the errata are now showing on the screen, but wait for them to appear.
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
 
   getByLabelText('Select row 0').click();
@@ -981,9 +980,9 @@ test('Can bulk apply via remote execution', async (done) => {
   // eslint-disable-next-line camelcase
   const jobInvocationBody = ({ job_invocation: { inputs, feature, search_query } }) =>
     inputs[ERRATA_SEARCH_QUERY] === `errata_id ^ (${results[0].errata_id},${results[1].errata_id})` &&
-     feature === REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL &&
-     // eslint-disable-next-line camelcase
-     search_query === `name ^ (${hostName})`;
+    feature === REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL &&
+    // eslint-disable-next-line camelcase
+    search_query === `name ^ (${hostName})`;
 
   const resolveErrataScope = nockInstance
     .post(jobInvocations, jobInvocationBody)
@@ -993,7 +992,7 @@ test('Can bulk apply via remote execution', async (done) => {
     <ErrataTab />,
     renderOptions(),
   );
-    // Assert that the errata are now showing on the screen, but wait for them to appear.
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
 
   getByLabelText('Select row 0').click();
@@ -1038,7 +1037,7 @@ test('Can select all, exclude and bulk apply via remote execution', async (done)
     <ErrataTab />,
     renderOptions(),
   );
-    // Assert that the errata are now showing on the screen, but wait for them to appear.
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   const selectAllCheckbox = getByLabelText('Select all');
   selectAllCheckbox.click();

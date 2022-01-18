@@ -59,8 +59,8 @@ test('Can call API for Python package details and show details tab on page load'
 test('Can call API for Python package repository details and show repositories tab', async (done) => {
   const autocompleteUrl = '/repositories/auto_complete_search';
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const results = pythonPackageRepositoryDetailsResponse.results[0];
   const repoName = results.name;
@@ -122,8 +122,8 @@ test('Can call API for Ansible collection details and show details tab on page l
 test('Can call API for Ansible collection repository details and show repositories tab', async (done) => {
   const autocompleteUrl = '/repositories/auto_complete_search';
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const results = ansibleCollectionRepositoryDetailsResponse.results[0];
   const repoName = results.name;
