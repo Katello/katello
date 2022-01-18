@@ -62,15 +62,20 @@ module Katello
         response
       end
 
+      def delete_remote
+        href = smart_proxy_acs.remote_href
+        api.remotes_api.delete(href) if href
+      end
+
       def create
         response = api.alternate_content_source_api.create(name: generate_backend_object_name, paths: acs.subpaths,
                                                            remote: smart_proxy_acs.remote_href)
         smart_proxy_acs.update!(alternate_content_source_href: response.pulp_href)
       end
 
-      def delete_remote
-        href = smart_proxy_acs.remote_href
-        api.remotes_api.delete(href) if href
+      def delete
+        href = smart_proxy_acs.alternate_content_source_href
+        api.alternate_content_source_api.delete(href) if href
       end
 
       # TODO: ignore 404
