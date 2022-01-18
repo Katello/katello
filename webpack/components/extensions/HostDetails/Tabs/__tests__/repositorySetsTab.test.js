@@ -59,8 +59,8 @@ beforeEach(() => {
   const { results } = mockRepoSetData;
   [firstRepoSet] = results;
   bookmarkScope = nockInstance.get(repositorySetBookmarks).reply(200, mockBookmarkData);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 });
 
 afterEach(() => {

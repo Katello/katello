@@ -43,9 +43,8 @@ const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filter
 let searchDelayScope;
 let autoSearchScope;
 beforeEach(() => {
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  // Autosearch can cause some asynchronous issues with the typing timeout, using basic search
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', false);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 });
 
 afterEach(() => {

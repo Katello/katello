@@ -16,8 +16,8 @@ let searchDelayScope;
 let autoSearchScope;
 
 beforeEach(() => {
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 });
 
 afterEach(() => {
@@ -74,7 +74,7 @@ test('Can call API for Ansible collections and show table on page load', async (
     renderWithRedux(<ContentTable
       contentTypes={mockContentTypes}
       selectedContentType="Ansible Collections"
-      setSelectedContentType={() => {}}
+      setSelectedContentType={() => { }}
       showContentTypeSelector={false}
     />);
 

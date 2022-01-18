@@ -59,8 +59,8 @@ describe('With tracer installed', () => {
   beforeEach(() => {
     const { results } = mockTraceData;
     [firstTrace, secondTrace] = results;
-    searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-    autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+    searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+    autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   });
 
   afterEach(() => {

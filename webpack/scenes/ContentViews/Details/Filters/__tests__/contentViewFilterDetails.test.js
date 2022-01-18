@@ -33,9 +33,8 @@ const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filter
 let searchDelayScope;
 let autoSearchScope;
 beforeEach(() => {
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  // Autosearch can cause some asynchronous issues with the typing timeout, using basic search
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', false);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 });
 
 afterEach(() => {
@@ -105,7 +104,7 @@ test('Can search for package groups in package group filter', async (done) => {
     .reply(200, { results: [lastPackageGroup] });
 
   const autocompleteScope =
-    mockAutocomplete(nockInstance, autocompleteUrl, undefined, undefined, 2);
+    mockAutocomplete(nockInstance, autocompleteUrl);
   const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, searchQueryMatcher);
   const { getByText, queryByText, getByLabelText } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
@@ -121,7 +120,6 @@ test('Can search for package groups in package group filter', async (done) => {
 
   // Search and only searched result shows
   fireEvent.change(getByLabelText(/text input for search/i), { target: { value: lastPackageGroupName } });
-  getByLabelText(/search button/i).click();
   await patientlyWaitFor(() => {
     expect(getByText(lastPackageGroupName)).toBeInTheDocument();
     expect(queryByText(firstPackageGroupName)).not.toBeInTheDocument();

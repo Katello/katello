@@ -31,11 +31,9 @@ let autoSearchScope;
 beforeEach(() => {
   const { results } = cvFilterFixtures;
   [firstFilter] = results;
-  // lastFilter = results.pop();
   [lastFilter] = results.slice(-1);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  // Autosearch can cause some asynchronous issues with the typing timeout, using basic search
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', false);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 });
 
 afterEach(() => {
@@ -43,11 +41,6 @@ afterEach(() => {
   assertNockRequest(autoSearchScope);
   nock.cleanAll();
 });
-
-jest.mock('../../../../../utils/useDebounce', () => ({
-  __esModule: true,
-  default: value => value,
-}));
 
 test('Can call API and show filters on page load', async (done) => {
   const { name, description } = firstFilter;
@@ -96,7 +89,6 @@ test('Can search for filter', async (done) => {
   await patientlyWaitFor(() => expect(getByText(description)).toBeInTheDocument());
   // Search for a filter by name
   fireEvent.change(getByLabelText(/text input for search/i), { target: { value: name } });
-  getByLabelText(/search button/i).click();
   // Only the first filter should be showing, not the last one
   await patientlyWaitFor(() => {
     expect(getByText(description)).toBeInTheDocument();

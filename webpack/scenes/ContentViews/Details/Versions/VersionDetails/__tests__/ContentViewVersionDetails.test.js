@@ -199,8 +199,8 @@ testConfig.forEach(({
     const { version } = ContentViewVersionDetailsData;
 
     const autocompleteScope = mockAutocomplete(nockInstance, autoCompleteUrl);
-    const searchDelayScope = mockSetting(nockInstance, AUTOSEARCH_DELAY, 500);
-    const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING, true);
+    const searchDelayScope = mockSetting(nockInstance, AUTOSEARCH_DELAY);
+    const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING);
 
     const scope = nockInstance
       .get(cvVersions)
@@ -251,8 +251,8 @@ test('Can change repository selector', async (done) => {
 
   const { version } = ContentViewVersionDetailsData;
   const autocompleteScope = mockAutocomplete(nockInstance, autoCompleteUrl);
-  const searchDelayScope = mockSetting(nockInstance, AUTOSEARCH_DELAY, 500);
-  const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING, true);
+  const searchDelayScope = mockSetting(nockInstance, AUTOSEARCH_DELAY, 0);
+  const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING);
 
   const scope = nockInstance
     .get(cvVersions)

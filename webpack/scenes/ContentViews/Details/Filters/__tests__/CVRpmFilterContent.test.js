@@ -35,9 +35,8 @@ const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filter
 let searchDelayScope;
 let autoSearchScope;
 beforeEach(() => {
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  // Autosearch can cause some asynchronous issues with the typing timeout, using basic search
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', false);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 });
 
 afterEach(() => {
@@ -45,11 +44,6 @@ afterEach(() => {
   assertNockRequest(autoSearchScope);
   nock.cleanAll();
 });
-
-jest.mock('../../../../../utils/useDebounce', () => ({
-  __esModule: true,
-  default: value => value,
-}));
 
 test('Can show filter details and package groups on page load', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
@@ -127,7 +121,6 @@ test('Can search for package rules in package filter details', async (done) => {
 
   // Search and only searched result shows
   fireEvent.change(getByLabelText(/text input for search/i), { target: { value: lastPackageRuleName } });
-  getByLabelText(/search button/i).click();
   await patientlyWaitFor(() => {
     expect(getByText(lastPackageRuleName)).toBeInTheDocument();
     expect(queryByText(firstPackageRuleName)).not.toBeInTheDocument();
