@@ -11,12 +11,13 @@ import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import PropTypes from 'prop-types';
 import TableWrapper from '../../../Table/TableWrapper';
 import { useBulkSelect } from '../../../Table/TableHooks';
-import { HOST_APPLICABLE_PACKAGES_KEY } from '../ApplicablePackages/ApplicablePackagesConstants';
-import { selectHostApplicablePackagesStatus } from '../ApplicablePackages/ApplicablePackagesSelectors';
-import { getHostYumInstallablePackages } from '../ApplicablePackages/ApplicablePackagesActions';
+import { HOST_YUM_INSTALLABLE_PACKAGES_KEY } from '../YumInstallablePackages/YumInstallablePackagesConstants';
+import { selectHostYumInstallablePackagesStatus } from '../YumInstallablePackages/YumInstallablePackagesSelectors';
+import { getHostYumInstallablePackages } from '../YumInstallablePackages/YumInstallablePackagesActions';
 import './PackageInstallModal.scss';
 import { installPackageBySearch } from './RemoteExecutionActions';
 import { katelloPackageInstallBySearchUrl } from './customizedRexUrlHelpers';
+import hostIdNotReady from '../HostDetailsActions';
 
 const InstallDropdown = ({ isDisabled, installViaRex, bulkCustomizedRexUrl }) => {
   const [isActionOpen, setIsActionOpen] = useState(false);
@@ -84,8 +85,9 @@ const PackageInstallModal = ({
   const emptySearchTitle = __('No matching packages found');
   const emptySearchBody = __('Try changing your search settings.');
   const columnHeaders = ['', __('Package'), __('Version')];
-  const response = useSelector(state => selectAPIResponse(state, HOST_APPLICABLE_PACKAGES_KEY));
-  const status = useSelector(state => selectHostApplicablePackagesStatus(state));
+  const response =
+    useSelector(state => selectAPIResponse(state, HOST_YUM_INSTALLABLE_PACKAGES_KEY));
+  const status = useSelector(state => selectHostYumInstallablePackagesStatus(state));
   const dispatch = useDispatch();
   const { results, ...metadata } = response;
   const [suppressFirstFetch, setSuppressFirstFetch] = useState(false);
@@ -102,7 +104,7 @@ const PackageInstallModal = ({
     ...selectAll
   } = useBulkSelect({ results, metadata });
   const fetchItems = (params) => {
-    if (!hostId) return { type: 'HOST_ID_NOT_AVAILABLE_NOOP' };
+    if (!hostId) return hostIdNotReady;
 
     if (results?.length > 0 && suppressFirstFetch) {
       // If the modal has already been opened, no need to re-fetch the data that's already present

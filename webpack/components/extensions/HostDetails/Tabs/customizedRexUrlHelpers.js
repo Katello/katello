@@ -1,7 +1,7 @@
 import { REX_FEATURES } from './RemoteExecutionConstants';
 import { KATELLO_TRACER_PACKAGE, TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
 import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
-import { PACKAGE_SEARCH_QUERY } from '../ApplicablePackages/ApplicablePackagesConstants';
+import { PACKAGE_SEARCH_QUERY } from '../YumInstallablePackages/YumInstallablePackagesConstants';
 
 export const createJob = ({
   hostname, feature, inputs,

@@ -1,10 +1,10 @@
 import { API_OPERATIONS, get } from 'foremanReact/redux/API';
 import katelloApi from '../../../../services/api';
-import { HOST_APPLICABLE_PACKAGES_KEY } from './ApplicablePackagesConstants';
+import { HOST_YUM_INSTALLABLE_PACKAGES_KEY } from './YumInstallablePackagesConstants';
 
 export const getHostYumInstallablePackages = (hostId, params) => get({
   type: API_OPERATIONS.GET,
-  key: HOST_APPLICABLE_PACKAGES_KEY,
+  key: HOST_YUM_INSTALLABLE_PACKAGES_KEY,
   url: katelloApi.getApiUrl('/packages'),
   params: {
     ...params,

@@ -1,3 +1,0 @@
-export const HOST_APPLICABLE_PACKAGES_KEY = 'HOST_APPLICABLE_PACKAGES';
-export const PACKAGE_SEARCH_QUERY = 'Package search query';
-export default HOST_APPLICABLE_PACKAGES_KEY;

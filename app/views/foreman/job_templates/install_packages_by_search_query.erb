@@ -7,7 +7,7 @@ feature: katello_package_install_by_search
 provider_type: SSH
 template_inputs:
 - name: Package search query
-  description: Filter criteria for packages to be installed.
+  description: Filter criteria for packages to be installed. IMPORTANT: If left blank, the job will attempt to install all possible packages.
   input_type: user
   required: false
 %>
