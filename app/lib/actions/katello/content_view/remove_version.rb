@@ -2,9 +2,9 @@ module Actions
   module Katello
     module ContentView
       class RemoveVersion < Actions::EntryAction
-        def plan(version)
-          middleware.use Actions::Middleware::SwitchoverCheck
+        middleware.use Actions::Middleware::SwitchoverCheck
 
+        def plan(version)
           action_subject(version.content_view)
           version.validate_destroyable!
 

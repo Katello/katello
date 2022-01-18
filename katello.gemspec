@@ -46,6 +46,9 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "pg"
 
+  # Pin rdoc to prevent updating bundled psych (https://github.com/ruby/rdoc/commit/ebe185c8775b2afe844eb3da6fa78adaa79e29a4)
+  gem.add_dependency 'rdoc', '< 6.4'
+
   # Pulp
   gem.add_dependency "runcible", ">= 2.13.0", "< 3.0.0"
   gem.add_dependency "anemone"
