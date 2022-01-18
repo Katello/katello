@@ -8,9 +8,13 @@ class AddAlternateContentSources < ActiveRecord::Migration[6.0]
       t.integer :ssl_client_cert_id
       t.integer :ssl_client_key_id
       t.integer :http_proxy_id
-      t.string :base_url, limit: 1024
+      t.string :base_url, limit: 1024, null: false
+      t.string :subpaths, array: true, default: []
       t.string :content_type, limit: 255, default: 'yum', null: false
       t.string :alternate_content_source_type, limit: 255, default: 'custom', null: false
+      t.boolean :verify_ssl, default: true, null: false
+      t.string 'upstream_username', limit: 255
+      t.string 'upstream_password', limit: 1024
     end
 
     add_foreign_key :katello_alternate_content_sources, :katello_content_credentials, :name => :katello_alternate_content_sources_ssl_ca_cert_id, :column => :ssl_ca_cert_id
@@ -21,6 +25,8 @@ class AddAlternateContentSources < ActiveRecord::Migration[6.0]
     create_table :katello_smart_proxy_alternate_content_sources do |t|
       t.references :alternate_content_source, :null => false, index: false
       t.references :smart_proxy, :null => false, index: false
+      t.string :remote_href
+      t.string :alternate_content_source_href
       t.timestamps
     end
 
