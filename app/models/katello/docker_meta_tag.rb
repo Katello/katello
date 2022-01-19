@@ -153,7 +153,7 @@ module Katello
         end
 
         unless params_to_query_for_delete.empty?
-          RepositoryDockerMetaTag.where(:docker_meta_tag => DockerMetaTag.where(params_to_query_for_delete.join(" OR "))).delete_all
+          RepositoryDockerMetaTag.where(:repository_id => repo.id).where(:docker_meta_tag => DockerMetaTag.where(params_to_query_for_delete.join(" OR "))).delete_all
         end
 
         metatags = []
