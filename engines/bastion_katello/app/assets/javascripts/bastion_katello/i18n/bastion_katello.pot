@@ -50,8 +50,20 @@ msgstr ""
 msgid "{{ contentViewComponent.content_view_version.repositories.length || 0 }} Repositories"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/debs/details/views/deb.html
-msgid "{{ deb.name }}"
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
+msgid "{{ deb.hosts_applicable_count }} Host(s)"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/debs/views/debs.html
+msgid "{{ deb.hosts_applicable_count || 0 }} Applicable,"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
+msgid "{{ deb.hosts_available_count }} Host(s)"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/debs/views/debs.html
+msgid "{{ deb.hosts_available_count || 0 }} Upgradable"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
@@ -80,6 +92,10 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "{{ host.subscription_facet_attributes.user.login }}"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
+msgid "{{ installedDebCount }} Host(s)"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
@@ -168,10 +184,6 @@ msgstr ""
 msgid "{{ repository.content_counts.module_stream || 0 }} Module Streams"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
-msgid "{{ repository.content_counts.ostree_branch || 0 }} OSTree Branches"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-yum.html
@@ -190,7 +202,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-repositories.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-repositories.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "{{ repository.last_sync_words }} ago"
@@ -241,10 +252,6 @@ msgid "{{ version.module_stream_count }} Module Streams"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-versions.html
-msgid "{{ version.ostree_branch_count }} OSTree Branches"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-versions.html
 msgid "{{ version.package_count }} Packages"
 msgstr ""
 
@@ -254,6 +261,18 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-publish.html
 msgid "{{contentView.errors['messages'][0]}}"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-generic-content.html
+msgid "{{header}}"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "{{option.description}}"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "{{urlDescription}}"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
@@ -286,12 +305,24 @@ msgstr ""
 msgid "<a ui-sref=\"content-view.version.details({versionId: version.id})\">Version {{ version.version }}</a>"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "<b>Additive:</b> new content available during sync will be added to the repository, and no content will be removed."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "<b>Description</b>"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "<b>Issued</b>"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "<b>Mirror Complete</b>: a sync behaves exactly like \"Mirror Content Only\", but also mirrors metadata as well.  This is the fastest method, and preserves repository signatures, but is only supported by yum and not by all upstream repositories."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "<b>Mirror Content Only</b>: any new content available during sync will be added to the repository and any content removed from the upstream repository will be removed from the local repository."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
@@ -331,7 +362,7 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/common/views/registration.html
 msgid ""
 "<i class=\"fa fa-warning inline-icon\"></i>\n"
-"  This Host is not currently registered with subscription-manager.  Click <a ui-sref=\"content-hosts.register\">here</a> for registration information."
+"  This Host is not currently registered with subscription-manager. Use the <a href=\"/hosts/register\">Register Host</a> workflow to complete registration."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-activation-keys.html
@@ -568,6 +599,10 @@ msgstr ""
 msgid "Adding Lifecycle Environment to the end of \"{{ priorEnvironment.name }}\""
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/mirroring-policy.service.js
+msgid "Additive"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
@@ -605,10 +640,6 @@ msgstr ""
 msgid "All Content Views"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/ostree-upstream-sync-policy.service.js
-msgid "All History"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 msgid "All Lifecycle Environments"
@@ -621,7 +652,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/versions/content-view-version-content.controller.js
 #: app/assets/javascripts/bastion_katello/environments/details/environment-content.controller.js
 #: app/assets/javascripts/bastion_katello/errata/errata.controller.js
-#: app/assets/javascripts/bastion_katello/ostree-branches/ostree-branches.controller.js
 #: app/assets/javascripts/bastion_katello/packages/packages.controller.js
 msgid "All Repositories"
 msgstr ""
@@ -734,6 +764,7 @@ msgid "Ansible Collections"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
+#: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "Applicable"
@@ -742,6 +773,10 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-errata.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-errata.html
 msgid "Applicable Content Hosts"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
+msgid "Applicable Deb Packages"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
@@ -757,6 +792,7 @@ msgstr ""
 msgid "Applicable Packages"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Applicable To"
 msgstr ""
@@ -845,6 +881,7 @@ msgstr ""
 msgid "Arch"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
@@ -917,6 +954,10 @@ msgstr ""
 msgid "Are you sure you want to remove Content View \"{{ contentView.name }}\"?"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/environments/details/views/environment.html
+msgid "Are you sure you want to remove environment {{ environment.name }}?"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-details.html
 msgid "Are you sure you want to remove Host Collection \"{{ hostCollection.name }}\"?"
 msgstr ""
@@ -926,12 +967,18 @@ msgid "Are you sure you want to remove product \"{{ product.name }}\"?"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
-msgid "Are you sure you want to remove repository \"{{ repository.name }}\"?"
+msgid "Are you sure you want to remove repository {{ repositoryWrapper.repository.name }}?"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-details.html
 msgid "Are you sure you want to remove Sync Plan \"{{ syncPlan.name }}\"?"
 msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-generic-content.html
+msgid "Are you sure you want to remove the {{ table.getSelected()[0].name }} content unit?"
+msgid_plural "Are you sure you want to remove the {{ table.numSelected }} content units selected?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-files.html
 msgid "Are you sure you want to remove the {{ table.getSelected()[0].name }} file?"
@@ -1133,14 +1180,6 @@ msgstr ""
 msgid "Bootable"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-info.html
-msgid "Branch Info"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ostree-branches.html
-msgid "Branch Name"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-errata.html
@@ -1184,6 +1223,14 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync.html
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "Cancel"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
+msgid "Cannot clean Repository without the proper permissions."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
+msgid "Cannot clean Repository, a sync is already in progress."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
@@ -1268,10 +1315,6 @@ msgstr ""
 msgid "Choose a lifecycle environment from the available promotion paths."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Choose one of the policy selections for downloading ostree content from upstream url during synchronization. Choose \"Latest\" for downloading the latest version of the upstream branch. Choose \"All History\" to download all available versions of the upstream repository (this may take a large amount of space). Choose \"Custom Depth\" and provide an number to indicate the number of prior versions of the upstream branch to download."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "Choose one of the registry options to discover containers. To examine a private registry choose \"Custom\" and provide the url for the private registry."
 msgstr ""
@@ -1303,11 +1346,8 @@ msgstr ""
 msgid "Collection Name"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-ostree-branches.html
-#: app/assets/javascripts/bastion_katello/environments/details/views/environment-ostree.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-info.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ostree-branches.html
-msgid "Commit"
+#: app/assets/javascripts/bastion_katello/products/details/repositories/mirroring-policy.service.js
+msgid "Complete Mirroring"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
@@ -1466,6 +1506,7 @@ msgstr ""
 msgid "Content Host Content"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "Content Host Counts"
@@ -1515,6 +1556,10 @@ msgstr ""
 msgid "Content Hosts using Version {{ version.version }}"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/mirroring-policy.service.js
+msgid "Content Only"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
 "Content synced depends on the specifity of the URL and/or the optional requirements.yaml specified below <a class=\"fa fa-question-circle\" ng-show=\"repository.content_type === 'ansible_collection'\" uib-popover-html=\"collectionURLPopover\" popover-class=\"popover-large\" popover-trigger=\"'outsideClick'\" popover-append-to-body=\"true\" popover-title=\"Upstream URL\">\n"
@@ -1534,12 +1579,14 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-repositories.html
+#: app/assets/javascripts/bastion_katello/environments/details/views/environment.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-content-hosts.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts-list.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Content View"
 msgstr ""
 
@@ -1750,14 +1797,6 @@ msgstr ""
 msgid "Custom Cron : {{ product.sync_plan.cron_expression }}"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/ostree-upstream-sync-policy.service.js
-msgid "Custom Depth"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/ostree-upstream-sync-policy.service.js
-msgid "Custom Depth (Currently %s)"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
 msgid "Customize"
@@ -1790,6 +1829,10 @@ msgstr ""
 msgid "deb metadata generation has been initiated in the background.  Click <a href=\"{{ taskUrl() }}\">Here</a> to monitor the progress."
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
+msgid "deb Package Updates"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "deb Packages"
 msgstr ""
@@ -1800,13 +1843,13 @@ msgstr ""
 msgid "Deb Packages"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
+msgid "Deb Packages for:"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb.html
 msgid "Deb:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/debs/views/debs.html
-msgid "Debs"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/checksum.service.js
@@ -1913,7 +1956,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-details.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-details.html
@@ -1986,6 +2028,10 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Distribution Information"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Do not require a subscription entitlement certificate for accessing this repository."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-docker-tags.html
@@ -2089,6 +2135,10 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/environments/details/environment.controller.js
 msgid "Environment saved"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/environments/details/views/environment.html
+msgid "Environment will also be removed from the following published content views!"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-confirm.html
@@ -2234,6 +2284,7 @@ msgstr ""
 msgid "Family"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "File Information"
 msgstr ""
@@ -2261,6 +2312,7 @@ msgstr ""
 msgid "File:"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Filename"
 msgstr ""
@@ -2634,6 +2686,7 @@ msgstr ""
 msgid "Installed Deb Packages"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Installed On"
 msgstr ""
@@ -2733,7 +2786,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-repositories.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-repositories.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-info.html
@@ -2754,10 +2806,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/components/views/content-view-composite-content-views-list.html
 msgid "Latest (Currently no version)"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/ostree-upstream-sync-policy.service.js
-msgid "Latest Only"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
@@ -2895,6 +2943,10 @@ msgstr ""
 msgid "Manage Container Image Manifests for Repository:"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-generic-content.html
+msgid "Manage Content for Repository:"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-debs.html
 msgid "Manage deb Packages for Repository:"
 msgstr ""
@@ -2921,10 +2973,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-module-streams.html
 msgid "Manage Module Streams for Repository:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ostree-branches.html
-msgid "Manage OSTree Branches for Repository:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
@@ -2973,7 +3021,7 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Mirror on Sync"
+msgid "Mirroring Policy"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-provisioning-info.html
@@ -3051,7 +3099,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-repositories.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 #: app/assets/javascripts/bastion_katello/errata/errata-severity.filter.js
@@ -3097,7 +3144,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-deb.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-docker.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-file.html
-#: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-ostree-branches.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-package-groups.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-packages.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-yum.html
@@ -3110,7 +3156,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-docker.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-module-streams.html
-#: app/assets/javascripts/bastion_katello/environments/details/views/environment-ostree.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-packages.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-repositories.html
 #: app/assets/javascripts/bastion_katello/environments/views/new-environment.html
@@ -3125,8 +3170,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/host-collections/new/views/new-host-collection.html
 #: app/assets/javascripts/bastion_katello/host-collections/views/host-collections.html
 #: app/assets/javascripts/bastion_katello/module-streams/views/partials/module-streams-table.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/views/ostree-branches.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
@@ -3355,10 +3398,6 @@ msgstr ""
 msgid "No releases exist in the Library."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
-msgid "No Repositories contain this Branch."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-repositories.html
 msgid "No Repositories contain this Deb"
 msgstr ""
@@ -3424,7 +3463,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-repositories.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-repositories.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
@@ -3472,10 +3510,12 @@ msgstr ""
 msgid "Only show Errata that are Installable on one or more Content Hosts"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "Only show Packages that are Applicable to one or more Content Hosts"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "Only show Packages that are Upgradable on one or more Content Hosts"
 msgstr ""
@@ -3517,25 +3557,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-content-hosts.html
 msgid "OS"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ostree-branches.html
-msgid ""
-"OSTree Branch metadata generation has been initiated in the background.  Click\n"
-"      <a ng-href=\"{{ taskUrl() }}\">Here</a> to monitor the progress."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-info.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch.html
-msgid "OSTree Branch:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/views/ostree-branches.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/environments/content.service.js
-msgid "OSTree Branches"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-details.html
@@ -3641,10 +3662,6 @@ msgstr ""
 msgid "Package Update"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
-msgid "Package Updates"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-dependencies.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-files.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
@@ -3670,6 +3687,7 @@ msgstr ""
 msgid "Packages <div>{{ library.counts.packages || 0 }}</div>"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "Packages are automatically Applicable if they are Upgradable"
 msgstr ""
@@ -3796,7 +3814,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-repositories.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-repositories.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
 msgid "Product"
@@ -3930,11 +3947,6 @@ msgid "Publish New Version"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Publish via HTTP"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Publish via HTTPS"
 msgstr ""
 
@@ -3997,6 +4009,13 @@ msgid ""
 "          <i class=\"fa fa-spinner fa-spin\" ng-show=\"calculatingApplicability\"></i>"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details-reclaim-space-modal.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories-reclaim-space-modal.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
+msgid "Reclaim Space"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 msgid "Recurring Logic"
 msgstr ""
@@ -4011,10 +4030,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "Refresh Table"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-versions.html
-msgid "Regenerate Repository Metadata"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
@@ -4072,8 +4087,11 @@ msgid "Release Version:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Releases"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Releases/Distributions"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
@@ -4109,6 +4127,10 @@ msgstr ""
 msgid "Remove Container Image Manifests"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-generic-content.html
+msgid "Remove Content"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
 msgid "Remove Content Credential"
 msgstr ""
@@ -4126,8 +4148,18 @@ msgstr ""
 msgid "Remove Content Views"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-generic-content.html
+msgid "Remove Content?"
+msgid_plural "Remove {{ table.numSelected }} content units?"
+msgstr[0] ""
+msgstr[1] ""
+
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment.html
 msgid "Remove Environment"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/environments/details/views/environment.html
+msgid "Remove environment {{ environment.name }}?"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/errata-filter-details.html
@@ -4200,7 +4232,7 @@ msgid "Remove Repository"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
-msgid "Remove Repository \"{{ repository.name }}\"?"
+msgid "Remove Repository {{ repositoryWrapper.repository.name }}?"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
@@ -4280,16 +4312,11 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/views/content-views.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "Repositories"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
-msgid "Repositories containing branch {{ branch.name }}"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
@@ -4423,13 +4450,13 @@ msgstr ""
 msgid "Repository URL"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
+msgid "Repository will also be removed from the following published content view versions!"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Repository:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
-msgid "Republish Repository Metadata"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
@@ -4455,6 +4482,9 @@ msgid "Reset to Default"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
+msgid "Resolving the selected Traces will reboot the selected content hosts."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 msgid "Resolving the selected Traces will reboot this host."
 msgstr ""
@@ -4520,6 +4550,10 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version.html
 msgid "rpm Package Groups"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
+msgid "rpm Package Updates"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version.html
@@ -4595,13 +4629,8 @@ msgstr ""
 msgid "Select an Organization"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
 #: app/assets/javascripts/bastion_katello/environments/details/environment-content.controller.js
 msgid "Select Content View"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
-msgid "Select Environment"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-environments.html
@@ -4614,10 +4643,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Selecting this option will exclude SRPMs from repository synchronization."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Selecting this option will result in contents that are no longer part of the upstream repository being removed during synchronization."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -4681,6 +4706,10 @@ msgid "Size"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
+msgid "Smart proxy currently reclaiming space..."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy currently syncing to your locations..."
 msgstr ""
 
@@ -4727,6 +4756,10 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Source RPMs"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
+msgid "Space reclamation is about to start..."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
@@ -5121,6 +5154,7 @@ msgstr ""
 msgid "The following actions can be performed on content hosts in this host collection:"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
 msgid "The host has not reported any applicable packages for upgrade."
 msgstr ""
@@ -5182,6 +5216,7 @@ msgstr ""
 msgid "There are {{ errataCount }} total Errata in this organization but none match the above filters."
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "There are {{ packageCount }} total Packages in this organization but none match the above filters."
 msgstr ""
@@ -5231,7 +5266,6 @@ msgid "There are no %(contentType)s that match the criteria."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 msgid "There are no Content Views in this Environment."
 msgstr ""
@@ -5261,6 +5295,7 @@ msgstr ""
 msgid "There are no Module Streams to display."
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "There are no Packages in this organization.  Create one or more Products with Packages to view Packages on this page."
 msgstr ""
@@ -5377,6 +5412,10 @@ msgstr ""
 msgid "Toggle Dropdown"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Token of the upstream repository user for authentication. Leave empty if repository does not require authentication."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Topic"
 msgstr ""
@@ -5440,6 +5479,11 @@ msgstr ""
 msgid "Unlimited Hosts"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Unprotected"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 msgid "Unregister Host"
 msgstr ""
@@ -5464,6 +5508,10 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
 #: app/assets/javascripts/bastion_katello/common/module-stream-actions.service.js
 msgid "Update"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
+msgid "Update All Deb Packages"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
@@ -5502,14 +5550,17 @@ msgstr ""
 msgid "Updated On"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "Upgradable"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Upgradable For"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
 msgid "Upgradable Package"
 msgstr ""
@@ -5518,6 +5569,7 @@ msgstr ""
 msgid "Upgrade Available"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
 msgid "Upgrade Selected"
 msgstr ""
@@ -5555,6 +5607,11 @@ msgid "Uploading..."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Upstream Authentication Token"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Upstream Authorization"
 msgstr ""
 
@@ -5570,11 +5627,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Upstream Repository Name"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Upstream Sync Policy"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
@@ -5597,6 +5649,12 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "URL to Discover"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid ""
+"URL to the repository base. Example: http://ftp.de.debian.org/debian/ <a class=\"fa fa-question-circle\" ng-show=\"repository.content_type === 'deb'\" uib-popover-html=\"debURLPopover\" popover-class=\"popover-large\" popover-trigger=\"'outsideClick'\" popover-append-to-body=\"true\" popover-title=\"Upstream URL\">\n"
+"        </a>"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
@@ -5651,6 +5709,7 @@ msgstr ""
 msgid "Verify SSL"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/content-view-deletion.html
 #: app/assets/javascripts/bastion_katello/content-views/details/components/views/content-view-composite-available-content-views.html
@@ -5662,24 +5721,23 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-versions.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-components.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-deb.html
-#: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-ostree-branches.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-packages.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-content-views.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-module-streams.html
-#: app/assets/javascripts/bastion_katello/environments/details/views/environment-ostree.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-packages.html
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-content-views.html
 #: app/assets/javascripts/bastion_katello/module-streams/views/partials/module-streams-table.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-info.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/views/ostree-branches.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-debs.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ostree-branches.html
 msgid "Version"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
+msgid "Version {{ cvVersions['version'] }}"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
@@ -5699,6 +5757,7 @@ msgid "Version:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-details.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Versions"
 msgstr ""
 
@@ -5720,6 +5779,7 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
@@ -5729,6 +5789,7 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
@@ -5763,6 +5824,11 @@ msgstr ""
 msgid "Virtual Host"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details-reclaim-space-modal.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories-reclaim-space-modal.html
+msgid "Warning: reclaiming space for an \"On Demand\" repository will delete all cached content units.  Take precaution when cleaning custom repositories whose upstream parents don't keep old package versions."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-details-info.controller.js
 #: app/assets/javascripts/bastion_katello/sync-plans/sync-plan-helper.service.js
 msgid "weekly"
@@ -5777,15 +5843,21 @@ msgid "When Auto Attach is disabled, registering systems will be attached to all
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Whitespace-separated list of components to sync from (leave clear to sync all). Example: main"
+msgid ""
+"Whitespace-separated list of components to sync (leave clear to sync all). Example: main <a class=\"fa fa-question-circle\" ng-show=\"repository.content_type === 'deb'\" uib-popover-html=\"componentPopover\" popover-class=\"popover-large\" popover-trigger=\"'outsideClick'\" popover-append-to-body=\"true\" popover-title=\"Components\">\n"
+"        </a>"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Whitespace-separated list of processor architectures to filter the sync by. Example: amd64"
+msgid ""
+"Whitespace-separated list of processor architectures to sync (leave clear to sync all). Example: amd64 <a class=\"fa fa-question-circle\" ng-show=\"repository.content_type === 'deb'\" uib-popover-html=\"archPopover\" popover-class=\"popover-large\" popover-trigger=\"'outsideClick'\" popover-append-to-body=\"true\" popover-title=\"Architectures\">\n"
+"        </a>"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Whitespace-separated list of releases (suite or codename) to sync from. Default: stable"
+msgid ""
+"Whitespace-separated list of releases/distributions to sync (required for syncing). Example: buster <a class=\"fa fa-question-circle\" ng-show=\"repository.content_type === 'deb'\" uib-popover-html=\"distPopover\" popover-class=\"popover-large\" popover-trigger=\"'outsideClick'\" popover-append-to-body=\"true\" popover-title=\"Releases/Distributions\">\n"
+"        </a>"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
@@ -5813,7 +5885,7 @@ msgid "Yes"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-msgid "You can upload a requirements.yml file above to auto-fill contents <b>OR</b> paste contents of <a ng-href=\"https://docs.ansible.com/ansible/devel/dev_guide/collections_tech_preview.html#install-multiple-collections-with-a-requirements-file\" target=\"_blank\"> Requirements.yml </a>below."
+msgid "You can upload a requirements.yml file above to auto-fill contents <b>OR</b> paste contents of <a ng-href=\"https://docs.ansible.com/ansible/latest/galaxy/user_guide.html#install-multiple-collections-with-a-requirements-file\" target=\"_blank\"> Requirements.yml </a>below."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -5834,14 +5906,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
 msgid "You cannot remove this product because you do not have permission."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
-msgid "You cannot remove this repository because it is a Red Hat repository."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
-msgid "You cannot remove this repository because it was published to a content view."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
@@ -5872,10 +5936,6 @@ msgstr ""
 msgid "You currently don't have any Content Views.  A Content View can be added by using the button on the right."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/debs/views/debs.html
-msgid "You currently don't have any Debs."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/files/views/files.html
 msgid "You currently don't have any Files."
 msgstr ""
@@ -5890,10 +5950,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts-list.html
 msgid "You currently don't have any Hosts in this Host Group, you can add Content Hosts after selecting the 'Add' tab."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/ostree-branches/views/ostree-branches.html
-msgid "You currently don't have any OSTree Branches."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
@@ -6000,6 +6056,10 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/views/content-views.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
 msgid "Your search returned zero Content Views."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
+msgid "Your search returned zero Deb Packages."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/debs/views/debs.html
