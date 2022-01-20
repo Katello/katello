@@ -56,21 +56,37 @@ module Katello
 
       # TODO: ULN? reformat_api_exception?
       def create_remote
-        remote_file_data = api.remote_class.new(remote_options)
-        response = api.remotes_api.create(remote_file_data)
-        smart_proxy_acs.update!(remote_href: response.pulp_href)
-        response
+        if smart_proxy_acs&.remote_href.nil?
+          remote_file_data = api.remote_class.new(remote_options)
+          response = api.remotes_api.create(remote_file_data)
+          smart_proxy_acs.update!(remote_href: response.pulp_href)
+          return response
+        end
       end
 
+      def update_remote
+        api.remotes_api.partial_update(smart_proxy_acs.remote_href, remote_options)
+      end
+
+      # TODO: ignore 404?
       def delete_remote
         href = smart_proxy_acs.remote_href
         api.remotes_api.delete(href) if href
       end
 
       def create
-        response = api.alternate_content_source_api.create(name: generate_backend_object_name, paths: acs.subpaths,
-                                                           remote: smart_proxy_acs.remote_href)
-        smart_proxy_acs.update!(alternate_content_source_href: response.pulp_href)
+        if smart_proxy_acs&.alternate_content_source_href.nil?
+          response = api.alternate_content_source_api.create(name: generate_backend_object_name, paths: acs.subpaths,
+                                                             remote: smart_proxy_acs.remote_href)
+          smart_proxy_acs.update!(alternate_content_source_href: response.pulp_href)
+          return response
+        end
+      end
+
+      def update
+        href = smart_proxy_acs.alternate_content_source_href
+        api.alternate_content_source_api.update(href, name: generate_backend_object_name, paths: acs.subpaths,
+                                                remote: smart_proxy_acs.remote_href)
       end
 
       def delete
@@ -78,7 +94,7 @@ module Katello
         api.alternate_content_source_api.delete(href) if href
       end
 
-      # TODO: ignore 404
+      # TODO: ignore 404?
       def delete_alternate_content_source
         href = smart_proxy_acs.alternate_content_source_href
         api.alternate_content_source_api.delete(href) if href

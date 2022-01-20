@@ -6,7 +6,7 @@ module Actions
           action_subject(acs)
           sequence do
             acs.smart_proxies.each do |smart_proxy|
-              plan_action(Pulp3::Orchestration::AlternateContentSource::Destroy,
+              plan_action(Pulp3::Orchestration::AlternateContentSource::Delete,
                           acs, smart_proxy)
             end
             plan_self(:acs_id => acs.id)
