@@ -51,7 +51,7 @@ module Katello
       param :checksum_type, String, :desc => N_("Checksum of the repository, currently 'sha1' & 'sha256' are supported")
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
       param :docker_tags_whitelist, Array, :desc => N_("Comma-separated list of tags to sync for Container Image repository")
-      param :download_policy, ["immediate", "on_demand"], :desc => N_("download policy for yum repos (either 'immediate' or 'on_demand')")
+      param :download_policy, ["immediate", "on_demand"], :desc => N_("download policy for yum, deb, and docker repos (either 'immediate' or 'on_demand')")
       param :download_concurrency, :number, :desc => N_("Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10")
       param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed (Deprecated)")
       param :mirroring_policy, Katello::RootRepository::MIRRORING_POLICIES, :desc => N_("Policy to set for mirroring content.  Must be one of %s.") % RootRepository::MIRRORING_POLICIES
