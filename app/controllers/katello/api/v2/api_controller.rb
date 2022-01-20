@@ -141,7 +141,7 @@ module Katello
     protected
 
     def scoped_search_query(query, group)
-      if group
+      if group && !query.to_sql.include?('GROUP BY')
         query.select(group).group(group)
       else
         query
@@ -149,7 +149,12 @@ module Katello
     end
 
     def scoped_search_total(query, group)
-      scoped_search_query(query, group).count
+      result = scoped_search_query(query, group).count
+      if result.instance_of?(Hash)
+        result.keys.length
+      else
+        result
+      end
     end
 
     def scoped_search_total_selectable(query, group)
@@ -157,7 +162,7 @@ module Katello
       if self.respond_to?(:total_selectable, true)
         total_selectable(q)
       else
-        q.count
+        group ? q.length : q.count
       end
     end
 
