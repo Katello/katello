@@ -15,6 +15,7 @@ module Katello
       product_permissions
       subscription_permissions
       sync_plan_permissions
+      alternate_content_source_permissions
       user_permissions
     end
 
@@ -386,6 +387,15 @@ module Katello
                          },
                          :resource_type => 'Katello::SyncPlan',
                          :finder_scope => :syncable
+    end
+
+    def alternate_content_source_permissions
+      @plugin.permission :view_alternate_content_source,
+                         {
+                           'katello/api/v2/alternate_content_sources' => [:index, :show, :auto_complete_search]
+                         },
+                         :resource_type => 'Katello::AlternateContentSource',
+                         :finder_scope => :readable
     end
 
     def user_permissions

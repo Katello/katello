@@ -2,7 +2,9 @@ module Katello
   class AlternateContentSource < Katello::Model
     include Ext::LabelFromName
     include Encryptable
+    include Katello::Authorization::SyncPlan
     include ForemanTasks::Concerns::ActionSubject
+    include ::ScopedSearchExtensions
 
     self.table_name = :katello_alternate_content_sources
 
@@ -11,13 +13,17 @@ module Katello
 
     encrypts :upstream_password
 
-    belongs_to :ssl_ca_cert, :inverse_of => :ssl_ca_alternate_content_sources, :class_name => "Katello::ContentCredential"
-    belongs_to :ssl_client_cert, :inverse_of => :ssl_client_alternate_content_sources, :class_name => "Katello::ContentCredential"
-    belongs_to :ssl_client_key, :inverse_of => :ssl_key_alternate_content_sources, :class_name => "Katello::ContentCredential"
-    belongs_to :http_proxy, :class_name => "HttpProxy"
-    has_many :smart_proxy_alternate_content_sources, :dependent => :destroy,
-             :inverse_of => :alternate_content_source
-    has_many :smart_proxies, :through => :smart_proxy_alternate_content_sources
+    belongs_to :ssl_ca_cert, inverse_of: :ssl_ca_alternate_content_sources, class_name: "Katello::ContentCredential"
+    belongs_to :ssl_client_cert, inverse_of: :ssl_client_alternate_content_sources, class_name: "Katello::ContentCredential"
+    belongs_to :ssl_client_key, inverse_of: :ssl_key_alternate_content_sources, class_name: "Katello::ContentCredential"
+    belongs_to :http_proxy, class_name: "HttpProxy"
+    has_many :smart_proxy_alternate_content_sources, dependent: :destroy,
+             inverse_of: :alternate_content_source
+    has_many :smart_proxies, through: :smart_proxy_alternate_content_sources
+
+    scoped_search on: :name, complete_value: true
+    scoped_search on: :label, complete_value: true
+    scoped_search on: :content_type, complete_value: true
 
     def backend_service(smart_proxy)
       @service ||= ::Katello::Pulp3::AlternateContentSource.new(self, smart_proxy)
@@ -25,6 +31,10 @@ module Katello
 
     def custom?
       alternate_content_source_type == 'custom'
+    end
+
+    def self.with_type(content_type)
+      where(content_type: content_type)
     end
   end
 end

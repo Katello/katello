@@ -469,6 +469,10 @@ Katello::Engine.routes.draw do
           get :auto_complete_search, :on => :collection
           put :sync
         end
+
+        api_resources :alternate_content_sources, :only => [:index, :show] do
+          get :auto_complete_search, :on => :collection
+        end
       end # module v2
     end # '/api' namespace
   end # '/katello' namespace
