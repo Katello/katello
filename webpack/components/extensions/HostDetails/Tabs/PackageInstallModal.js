@@ -18,8 +18,13 @@ import './PackageInstallModal.scss';
 import { installPackageBySearch } from './RemoteExecutionActions';
 import { katelloPackageInstallBySearchUrl } from './customizedRexUrlHelpers';
 import hostIdNotReady from '../HostDetailsActions';
+import { installPackageViaKatelloAgent } from '../HostPackages/HostPackagesActions';
 
-const InstallDropdown = ({ isDisabled, installViaRex, bulkCustomizedRexUrl }) => {
+const InstallDropdown = ({
+  isDisabled, installViaRex, installViaKatelloAgent,
+  bulkCustomizedRexUrl, showKatelloAgent,
+  disableInstallViaKatelloAgent,
+}) => {
   const [isActionOpen, setIsActionOpen] = useState(false);
   const onActionSelect = () => {
     setIsActionOpen(false);
@@ -29,6 +34,14 @@ const InstallDropdown = ({ isDisabled, installViaRex, bulkCustomizedRexUrl }) =>
   };
 
   const dropdownItems = [
+    <DropdownItem
+      key="install-k-agent"
+      component="button"
+      onClick={installViaKatelloAgent}
+      isDisabled={disableInstallViaKatelloAgent}
+    >
+      {__('Install via katello-agent')}
+    </DropdownItem>,
     <DropdownItem key="install-rex" component="button" onClick={installViaRex}>
       {__('Install via remote execution')}
     </DropdownItem>,
@@ -41,16 +54,20 @@ const InstallDropdown = ({ isDisabled, installViaRex, bulkCustomizedRexUrl }) =>
       {__('Install via customized remote execution')}
     </DropdownItem>,
   ];
+
+  if (!showKatelloAgent) dropdownItems.shift();
+  const defaultRemoteAction = showKatelloAgent ? installViaKatelloAgent : installViaRex;
+
   return (
     <Dropdown
       direction={DropdownDirection.up}
       onSelect={onActionSelect}
       toggle={
         <DropdownToggle
-          toggleVariant="primary"
+          isPrimary
           isDisabled={isDisabled}
           splitButtonItems={[
-            <DropdownToggleAction key="install" onClick={installViaRex}>
+            <DropdownToggleAction key="install" onClick={defaultRemoteAction}>
               Install
             </DropdownToggleAction>,
           ]}
@@ -68,17 +85,23 @@ const InstallDropdown = ({ isDisabled, installViaRex, bulkCustomizedRexUrl }) =>
 InstallDropdown.propTypes = {
   isDisabled: PropTypes.bool,
   installViaRex: PropTypes.func,
+  installViaKatelloAgent: PropTypes.func,
   bulkCustomizedRexUrl: PropTypes.string,
+  showKatelloAgent: PropTypes.bool,
+  disableInstallViaKatelloAgent: PropTypes.bool,
 };
 
 InstallDropdown.defaultProps = {
   isDisabled: false,
   installViaRex: noop,
+  installViaKatelloAgent: noop,
   bulkCustomizedRexUrl: '',
+  showKatelloAgent: false,
+  disableInstallViaKatelloAgent: false,
 };
 
 const PackageInstallModal = ({
-  isOpen, closeModal, hostId, hostName,
+  isOpen, closeModal, hostId, hostName, showKatelloAgent,
 }) => {
   const emptyContentTitle = __('No packages available to install');
   const emptyContentBody = __('No packages available to install on this host. Please check the host\'s content view and lifecycle environment.');
@@ -101,6 +124,7 @@ const PackageInstallModal = ({
     fetchBulkParams,
     isSelectable,
     selectedCount,
+    selectedResults,
     ...selectAll
   } = useBulkSelect({ results, metadata });
   const fetchItems = (params) => {
@@ -120,6 +144,13 @@ const PackageInstallModal = ({
     closeModal();
   };
 
+  const installViaKatelloAgent = () => {
+    const packages = selectedResults.map(({ name }) => name);
+    dispatch(installPackageViaKatelloAgent(hostId, { packages }));
+    selectNone();
+    closeModal();
+  };
+
   const handleModalClose = () => {
     setSuppressFirstFetch(true);
     closeModal();
@@ -128,13 +159,15 @@ const PackageInstallModal = ({
   const bulkCustomizedRexUrl = selectedCount ?
     katelloPackageInstallBySearchUrl({ hostname: hostName, search: fetchBulkParams() }) :
     '#';
-  console.log(bulkCustomizedRexUrl);
   const modalActions = ([
     <InstallDropdown
       key="install"
       isDisabled={!selectedCount}
       installViaRex={installViaRex}
+      installViaKatelloAgent={installViaKatelloAgent}
       bulkCustomizedRexUrl={bulkCustomizedRexUrl}
+      showKatelloAgent={showKatelloAgent}
+      disableInstallViaKatelloAgent={selectedResults.length === 0}
     />,
     <Button key="cancel" variant="link" onClick={handleModalClose}>
       Cancel
@@ -202,7 +235,7 @@ const PackageInstallModal = ({
                   select={{
                       disable: false,
                       isSelected: isSelected(id),
-                      onSelect: (_event, selected) => selectOne(selected, id),
+                      onSelect: (_event, selected) => selectOne(selected, id, pkg),
                       rowIndex,
                       variant: 'checkbox',
                   }}
@@ -231,6 +264,11 @@ PackageInstallModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   hostId: PropTypes.number.isRequired,
   hostName: PropTypes.string.isRequired,
+  showKatelloAgent: PropTypes.bool,
+};
+
+PackageInstallModal.defaultProps = {
+  showKatelloAgent: false,
 };
 
 export default PackageInstallModal;

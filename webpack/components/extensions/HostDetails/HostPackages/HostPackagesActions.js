@@ -1,6 +1,13 @@
-import { API_OPERATIONS, get } from 'foremanReact/redux/API';
+import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
+import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
 import { foremanApi } from '../../../../services/api';
-import { HOST_PACKAGES_KEY } from './HostPackagesConstants';
+import { getResponseErrorMsgs } from '../../../../utils/helpers';
+import { HOST_PACKAGES_INSTALL_KEY, HOST_PACKAGES_KEY } from './HostPackagesConstants';
+
+const errorToast = (error) => {
+  const message = getResponseErrorMsgs(error.response);
+  return message;
+};
 
 export const getInstalledPackagesWithLatest = (hostId, params) => get({
   type: API_OPERATIONS.GET,
@@ -9,3 +16,12 @@ export const getInstalledPackagesWithLatest = (hostId, params) => get({
   params,
 });
 export default getInstalledPackagesWithLatest;
+
+export const installPackageViaKatelloAgent = (hostId, params) => put({
+  type: API_OPERATIONS.PUT,
+  key: HOST_PACKAGES_INSTALL_KEY,
+  url: foremanApi.getApiUrl(`/hosts/${hostId}/packages/install`),
+  handleSuccess: ({ data }) => renderTaskStartedToast(data),
+  errorToast: error => errorToast(error),
+  params,
+});

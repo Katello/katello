@@ -29,6 +29,7 @@ import { HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM
 import './PackagesTab.scss';
 import hostIdNotReady from '../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
+import defaultRemoteActionMethod, { KATELLO_AGENT } from '../hostDetailsHelpers';
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -44,6 +45,7 @@ export const PackagesTab = () => {
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => setIsModalOpen(false);
+  const showKatelloAgent = (defaultRemoteActionMethod({ hostDetails }) === KATELLO_AGENT);
 
   const emptyContentTitle = __('This host does not have any packages.');
   const emptyContentBody = __('Packages will appear here when available.');
@@ -232,6 +234,7 @@ export const PackagesTab = () => {
         closeModal={closeModal}
         hostId={hostId}
         hostName={hostName}
+        showKatelloAgent={showKatelloAgent}
       />
       }
     </div>
