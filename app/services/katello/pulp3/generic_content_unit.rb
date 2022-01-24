@@ -13,7 +13,8 @@ module Katello
       end
 
       def self.content_api(repository_type, content_type)
-        repository_type.content_types.find { |type| type.content_type == content_type }.pulp3_api.new(repository_type.pulp3_api_class.new(SmartProxy.pulp_primary!, repository_type).api_client)
+        label = content_type.is_a?(String) ? content_type : content_type.label
+        repository_type.content_types.find { |type| type.content_type == label }.pulp3_api.new(repository_type.pulp3_api_class.new(SmartProxy.pulp_primary!, repository_type).api_client)
       end
 
       def update_model(model, content_type)

@@ -27,6 +27,7 @@ module Actions
               []
             else
               output[:pulp_tasks] = [content_backend_service.content_api_create(relative_path: input[:options][:file_name],
+                                                                                repository_id: repository.id,
                                                                                 artifact: artifact_href,
                                                                                 content_type: content_type)]
             end
