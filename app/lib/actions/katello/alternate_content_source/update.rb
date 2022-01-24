@@ -5,7 +5,7 @@ module Actions
         def plan(acs, smart_proxies, acs_params)
           action_subject(acs)
           acs.update!(acs_params)
-          smart_proxies.uniq!
+          smart_proxies = smart_proxies.uniq
 
           smart_proxies_to_add = smart_proxies - acs.smart_proxies
           smart_proxies_to_delete = acs.smart_proxies - smart_proxies

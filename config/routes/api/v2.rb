@@ -470,7 +470,7 @@ Katello::Engine.routes.draw do
           put :sync
         end
 
-        api_resources :alternate_content_sources, :only => [:index, :show] do
+        api_resources :alternate_content_sources, :only => [:index, :show, :create, :update, :destroy] do
           get :auto_complete_search, :on => :collection
         end
       end # module v2

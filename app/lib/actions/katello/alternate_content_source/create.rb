@@ -5,7 +5,7 @@ module Actions
         def plan(acs, smart_proxies)
           acs.save!
           action_subject(acs)
-          smart_proxies.uniq!
+          smart_proxies = smart_proxies.uniq
           # TODO: Can this be concurrent?
           sequence do
             smart_proxies.each do |smart_proxy|
