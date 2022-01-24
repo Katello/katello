@@ -10,7 +10,7 @@ module Cert
     end
 
     def uuid
-      drop_cn_prefix_from_subject(@cert.subject.to_s)
+      @uuid ||= @cert.subject.to_a.detect { |name, _, _| name == 'CN' }&.second
     end
 
     private
@@ -24,10 +24,6 @@ module Cert
 
         OpenSSL::X509::Certificate.new(cert)
       end
-    end
-
-    def drop_cn_prefix_from_subject(subject_string)
-      subject_string.sub(/\/CN=/i, '')
     end
 
     def strip_cert(cert)
