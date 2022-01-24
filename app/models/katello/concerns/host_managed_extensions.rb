@@ -401,10 +401,20 @@ module Katello
       end
 
       def package_names_for_job_template(action:, search:)
-        actions = ['install']
+        actions = %w(install remove update).freeze
         case action
         when 'install'
           ::Katello::Rpm.yum_installable_for_host(self).search_for(search).distinct.pluck(:name)
+        when 'remove'
+          return [] if search.empty?
+
+          installed_packages.search_for(search).distinct.pluck(:name)
+        when 'update'
+          return [] if search.empty?
+
+          pkg_names = installed_packages.search_for(search).distinct.pluck(:name)
+          upgrades = ::Katello::Rpm.installable_for_hosts([self]).select(:id, :name, :nvra, :evr).order(evr: :desc).group_by(&:name)
+          pkg_names.map { |p| upgrades[p]&.first&.nvra }.compact
         else
           fail ::Foreman::Exception.new(N_("package_names_for_job_template: Action must be one of %s"), actions.join(', '))
         end
