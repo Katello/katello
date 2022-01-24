@@ -1,31 +1,39 @@
 import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
-  Button,
-  Hint,
-  HintBody,
+  ActionList,
+  ActionListItem,
+  Dropdown,
   DropdownItem,
   DropdownSeparator,
-  Dropdown,
+  DropdownToggle,
+  DropdownToggleAction,
+  KebabToggle,
   Skeleton,
   Split,
   SplitItem,
-  ActionList,
-  ActionListItem,
-  KebabToggle,
 } from '@patternfly/react-core';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { useBulkSelect } from '../../../../components/Table/TableHooks';
 import SelectableDropdown from '../../../SelectableDropdown';
 import TableWrapper from '../../../../components/Table/TableWrapper';
-import { useUrlParams } from '../../../../components/Table/TableHooks';
 import { PackagesStatus, PackagesLatestVersion } from '../../../../components/Packages';
-import { getInstalledPackagesWithLatest } from '../HostPackages/HostPackagesActions';
+import {
+  getInstalledPackagesWithLatest,
+  removePackageViaKatelloAgent,
+  upgradeAllViaKatelloAgent,
+  upgradePackageViaKatelloAgent,
+} from '../HostPackages/HostPackagesActions';
 import { selectHostPackagesStatus } from '../HostPackages/HostPackagesSelectors';
-import { HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM } from '../HostPackages/HostPackagesConstants';
+import {
+  HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM,
+} from '../HostPackages/HostPackagesConstants';
+import { removePackage, updatePackage, removePackages, updatePackages } from './RemoteExecutionActions';
+import { katelloPackageUpdateUrl, packagesUpdateUrl } from './customizedRexUrlHelpers';
 import './PackagesTab.scss';
 import hostIdNotReady from '../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
@@ -33,10 +41,12 @@ import defaultRemoteActionMethod, { KATELLO_AGENT } from '../hostDetailsHelpers'
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
-  const { id: hostId, name: hostName } = hostDetails;
+  const {
+    id: hostId,
+    name: hostname,
+  } = hostDetails;
 
-  const { searchParam } = useUrlParams();
-  const [searchQuery, updateSearchQuery] = useState(searchParam || '');
+  const dispatch = useDispatch();
   const PACKAGE_STATUS = __('Status');
   const [packageStatusSelected, setPackageStatusSelected] = useState(PACKAGE_STATUS);
   const activeFilters = [packageStatusSelected];
@@ -46,6 +56,14 @@ export const PackagesTab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => setIsModalOpen(false);
   const showKatelloAgent = (defaultRemoteActionMethod({ hostDetails }) === KATELLO_AGENT);
+
+  const [isActionOpen, setIsActionOpen] = useState(false);
+  const onActionSelect = () => {
+    setIsActionOpen(false);
+  };
+  const onActionToggle = () => {
+    setIsActionOpen(prev => !prev);
+  };
 
   const emptyContentTitle = __('This host does not have any packages.');
   const emptyContentBody = __('Packages will appear here when available.');
@@ -73,20 +91,157 @@ export const PackagesTab = () => {
   const response = useSelector(state => selectAPIResponse(state, HOST_PACKAGES_KEY));
   const { results, ...metadata } = response;
   const status = useSelector(state => selectHostPackagesStatus(state));
+  const {
+    selectOne,
+    isSelected,
+    searchQuery,
+    selectedCount,
+    isSelectable,
+    selectedResults,
+    updateSearchQuery,
+    selectNone,
+    selectAllMode,
+    areAllRowsSelected,
+    fetchBulkParams,
+    ...selectAll
+  } = useBulkSelect({
+    results,
+    metadata,
+  });
 
   if (!hostId) return <Skeleton />;
+
   const handleInstallPackagesClick = () => {
     setIsBulkActionOpen(false);
     setIsModalOpen(true);
   };
 
-  const rowActions = [
-    {
-      title: __('Upgrade via remote execution'), disabled: true,
-    },
-    {
-      title: __('Upgrade via customized remote execution'), disabled: true,
-    },
+  const removePackageViaRemoteExecution = packageName => dispatch(removePackage({
+    hostname,
+    packageName,
+  }));
+
+  const removeViaKatelloAgent = (packageName) => {
+    dispatch(removePackageViaKatelloAgent(hostId, { packages: [packageName] }));
+    selectNone();
+  };
+
+  const removePackagesViaRemoteExecution = () => {
+    const selected = fetchBulkParams();
+    setIsBulkActionOpen(false);
+    selectNone();
+    dispatch(removePackages({ hostname, search: selected }));
+  };
+
+  const selectedPackageNames = () => selectedResults.map(({ name }) => name);
+  const selectedUpgradableVersions = () => selectedResults.map(({ upgradable_version: v }) => v);
+
+  const removePackagesViaKatelloAgent = () => {
+    dispatch(removePackageViaKatelloAgent(hostId, { packages: selectedPackageNames() }));
+    selectNone();
+  };
+
+  const defaultRemoteAction = defaultRemoteActionMethod({ hostDetails });
+
+  const removeBulk = () => {
+    if (defaultRemoteAction === KATELLO_AGENT) {
+      removePackagesViaKatelloAgent();
+    } else {
+      removePackagesViaRemoteExecution();
+    }
+  };
+
+  const handlePackageRemove = (packageName) => {
+    if (defaultRemoteAction === KATELLO_AGENT) {
+      removeViaKatelloAgent(packageName);
+    } else {
+      removePackageViaRemoteExecution(packageName);
+    }
+  };
+
+  const upgradeViaRemoteExecution = packageName => dispatch(updatePackage({
+    hostname,
+    packageName,
+  }));
+
+  const upgradeBulkViaRemoteExecution = () => {
+    const selected = fetchBulkParams();
+    setIsBulkActionOpen(false);
+    selectNone();
+    dispatch(updatePackages({
+      hostname,
+      search: selected,
+    }));
+  };
+
+  const upgradeBulkViaKatelloAgent = () => {
+    if (areAllRowsSelected()) {
+      dispatch(upgradeAllViaKatelloAgent(hostId));
+    } else {
+      dispatch(upgradePackageViaKatelloAgent(hostId, { packages: selectedUpgradableVersions() }));
+    }
+    selectNone();
+  };
+
+  const upgradeBulk = () => {
+    if (defaultRemoteAction === KATELLO_AGENT) {
+      upgradeBulkViaKatelloAgent();
+    } else {
+      upgradeBulkViaRemoteExecution();
+    }
+  };
+
+  const upgradeViaCustomizedRemoteExecution = selectedCount ?
+    packagesUpdateUrl({ hostname, search: fetchBulkParams() }) :
+    '#';
+
+  const disableRemove = () => selectedCount === 0 || selectAllMode;
+
+  const allUpgradable = () => selectedResults.length > 0 &&
+    selectedResults.every(item => item.upgradable_version);
+  const disableUpgrade = () => selectedCount === 0 ||
+    (selectAllMode && packageStatusSelected !== 'Upgradable') ||
+    (defaultRemoteAction === KATELLO_AGENT && selectAllMode && !areAllRowsSelected()) ||
+    (!selectAllMode && !allUpgradable());
+
+  const dropdownUpgradeItems = [
+    <DropdownItem
+      aria-label="bulk_upgrade_rex"
+      key="bulk_upgrade_rex"
+      component="button"
+      onClick={upgradeBulkViaRemoteExecution}
+    >
+      {__('Upgrade via remote execution')}
+    </DropdownItem>,
+    <DropdownItem
+      aria-label="bulk_upgrade_customized_rex"
+      key="bulk_upgrade_customized_rex"
+      component="a"
+      href={upgradeViaCustomizedRemoteExecution}
+    >
+      {__('Upgrade via customized remote execution')}
+    </DropdownItem>,
+  ];
+
+  const dropdownRemoveItems = [
+    <DropdownItem
+      aria-label="bulk_remove"
+      key="bulk_remove"
+      component="button"
+      onClick={removeBulk}
+      isDisabled={disableRemove()}
+    >
+      {__('Remove')}
+    </DropdownItem>,
+    <DropdownSeparator key="separator" />,
+    <DropdownItem
+      aria-label="install_pkg_on_host"
+      key="install_pkg_on_host"
+      component="button"
+      onClick={handleInstallPackagesClick}
+    >
+      {__('Install packages')}
+    </DropdownItem>,
   ];
 
   const handlePackageStatusSelected = newStatus => setPackageStatusSelected((prevStatus) => {
@@ -95,6 +250,42 @@ export const PackagesTab = () => {
     }
     return newStatus;
   });
+
+  const actionButtons = (
+    <Split hasGutter>
+      <SplitItem>
+        <ActionList isIconList>
+          <ActionListItem>
+            <Dropdown
+              onSelect={onActionSelect}
+              toggle={
+                <DropdownToggle
+                  splitButtonItems={[
+                    <DropdownToggleAction key="action" aria-label="upgrade_actions" onClick={upgradeBulk}>
+                      {__('Upgrade')}
+                    </DropdownToggleAction>,
+                  ]}
+                  isDisabled={disableUpgrade()}
+                  splitButtonVariant="action"
+                  onToggle={onActionToggle}
+                />
+              }
+              isOpen={isActionOpen}
+              dropdownItems={dropdownUpgradeItems}
+            />
+          </ActionListItem>
+          <ActionListItem>
+            <Dropdown
+              toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+              isOpen={isBulkActionOpen}
+              isPlain
+              dropdownItems={dropdownRemoveItems}
+            />
+          </ActionListItem>
+        </ActionList>
+      </SplitItem>
+    </Split>
+  );
 
   const toggleGroup = (
     <Split hasGutter>
@@ -111,61 +302,8 @@ export const PackagesTab = () => {
     </Split>
   );
 
-  const dropdownItems = [
-    <DropdownItem
-      aria-label="remove_pkg_from_host"
-      key="remove_pkg_from_host"
-      component="button"
-      isDisabled
-    >
-      {__('Remove')}
-    </DropdownItem>,
-    <DropdownSeparator key="separator" />,
-    <DropdownItem
-      aria-label="install_pkg_on_host"
-      key="install_pkg_on_host"
-      component="button"
-      onClick={handleInstallPackagesClick}
-    >
-      {__('Install packages')}
-    </DropdownItem>,
-  ];
-
-  const actionButtons = (
-    <>
-      <Split hasGutter>
-        <SplitItem>
-          <ActionList isIconList>
-            <ActionListItem>
-              <Button isDisabled> {__('Upgrade')} </Button>
-            </ActionListItem>
-            <ActionListItem>
-              <Dropdown
-                toggle={<KebabToggle aria-label="Packages bulk actions" onToggle={toggleBulkAction} />}
-                isOpen={isBulkActionOpen}
-                isPlain
-                dropdownItems={dropdownItems}
-              />
-            </ActionListItem>
-          </ActionList>
-        </SplitItem>
-      </Split>
-    </>
-  );
-
   return (
     <div>
-      <div id="packages-hint" className="margin-0-24 margin-top-16">
-        <Hint>
-          <HintBody>
-            {__('Packages management functionality on this page is incomplete')}.
-            <br />
-            <Button component="a" variant="link" isInline href={urlBuilder(`content_hosts/${hostId}/packages/installed`, '')}>
-              {__('Visit the previous Packages page')}.
-            </Button>
-          </HintBody>
-        </Hint>
-      </div>
       <div id="packages-tab">
         <TableWrapper
           {...{
@@ -181,40 +319,78 @@ export const PackagesTab = () => {
             searchQuery,
             updateSearchQuery,
             toggleGroup,
+            selectedCount,
+            selectNone,
+            areAllRowsSelected,
           }
           }
           additionalListeners={[hostId, packageStatusSelected]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}
           foremanApiAutoComplete
+          rowsCount={results?.length}
           variant={TableVariant.compact}
+          {...selectAll}
+          displaySelectAllCheckbox
         >
           <Thead>
             <Tr>
+              <Th key="select-all" />
               {columnHeaders.map(col =>
                 <Th key={col}>{col}</Th>)}
               <Th />
             </Tr>
           </Thead>
           <Tbody>
-            {results?.map((packages) => {
+            {results?.map((pkg, rowIndex) => {
               const {
                 id,
                 name: packageName,
                 nvra: installedVersion,
                 rpm_id: rpmId,
-              } = packages;
+                upgradable_version: upgradableVersion,
+              } = pkg;
+
+              const rowActions = [
+                {
+                  title: __('Remove'),
+                  onClick: () => handlePackageRemove(packageName),
+                },
+              ];
+
+              if (upgradableVersion) {
+                rowActions.unshift(
+                  {
+                    title: __('Upgrade via remote execution'),
+                    onClick: () => upgradeViaRemoteExecution(upgradableVersion),
+                  },
+                  {
+                    title: __('Upgrade via customized remote execution'),
+                    component: 'a',
+                    href: katelloPackageUpdateUrl({ hostname, packageName: upgradableVersion }),
+                  },
+                );
+              }
+
               return (
                 <Tr key={`${id}`}>
+                  <Td select={{
+                      disable: false,
+                      isSelected: isSelected(id),
+                      onSelect: (event, selected) => selectOne(selected, id, pkg),
+                      rowIndex,
+                      variant: 'checkbox',
+                    }}
+                  />
                   <Td>
                     {rpmId
                       ? <a href={urlBuilder(`packages/${rpmId}`, '')}>{packageName}</a>
                       : packageName
                     }
                   </Td>
-                  <Td><PackagesStatus {...packages} /></Td>
+                  <Td><PackagesStatus {...pkg} /></Td>
                   <Td>{installedVersion.replace(`${packageName}-`, '')}</Td>
-                  <Td><PackagesLatestVersion {...packages} /></Td>
+                  <Td><PackagesLatestVersion {...pkg} /></Td>
                   <Td
                     key={`rowActions-${id}`}
                     actions={{
@@ -233,7 +409,7 @@ export const PackagesTab = () => {
         isOpen={isModalOpen}
         closeModal={closeModal}
         hostId={hostId}
-        hostName={hostName}
+        hostName={hostname}
         showKatelloAgent={showKatelloAgent}
       />
       }

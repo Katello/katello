@@ -2,6 +2,7 @@ import { REX_FEATURES } from './RemoteExecutionConstants';
 import { TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
 import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
 import { PACKAGE_SEARCH_QUERY } from '../YumInstallablePackages/YumInstallablePackagesConstants';
+import { PACKAGES_SEARCH_QUERY } from '../HostPackages/HostPackagesConstants';
 
 export const createJob = ({
   hostname, feature, inputs,
@@ -26,6 +27,18 @@ export const katelloPackageInstallBySearchUrl = ({ hostname, search }) => create
   hostname,
   feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH,
   inputs: { [PACKAGE_SEARCH_QUERY]: search },
+});
+
+export const katelloPackageUpdateUrl = ({ hostname, packageName }) => createJob({
+  hostname,
+  feature: REX_FEATURES.KATELLO_PACKAGE_UPDATE,
+  inputs: { package: packageName },
+});
+
+export const packagesUpdateUrl = ({ hostname, search }) => createJob({
+  hostname,
+  feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
+  inputs: { [PACKAGES_SEARCH_QUERY]: search },
 });
 
 export const resolveTraceUrl = ({ hostname, search }) => createJob({
