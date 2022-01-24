@@ -231,6 +231,7 @@ export const useBulkSelect = ({
     selectPage,
     selectNone,
     selectAll,
+    selectAllMode,
     isSelected,
     selectedCount,
     fetchBulkParams,

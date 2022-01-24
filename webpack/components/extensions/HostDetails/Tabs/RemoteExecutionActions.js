@@ -6,6 +6,7 @@ import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
 import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
 import { TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
 import { PACKAGE_SEARCH_QUERY } from '../YumInstallablePackages/YumInstallablePackagesConstants';
+import { PACKAGES_SEARCH_QUERY } from '../HostPackages/HostPackagesConstants';
 
 const errorToast = (error) => {
   const message = getResponseErrorMsgs(error.response);
@@ -36,6 +37,33 @@ const katelloPackageInstallBySearchParams = ({ hostname, search }) =>
     feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH,
   });
 
+const katelloPackageRemoveParams = ({ hostname, packageName }) =>
+  baseParams({
+    hostname,
+    inputs: { package: packageName },
+    feature: REX_FEATURES.KATELLO_PACKAGE_REMOVE,
+  });
+
+const katelloPackagesRemoveParams = ({ hostname, search }) =>
+  baseParams({
+    hostname,
+    inputs: { [PACKAGES_SEARCH_QUERY]: search },
+    feature: REX_FEATURES.KATELLO_PACKAGES_REMOVE_BY_SEARCH,
+  });
+
+const katelloPackageUpdateParams = ({ hostname, packageName }) =>
+  baseParams({
+    hostname,
+    inputs: { package: packageName },
+    feature: REX_FEATURES.KATELLO_PACKAGE_UPDATE,
+  });
+
+const katelloPackagesUpdateParams = ({ hostname, search }) =>
+  baseParams({
+    hostname,
+    inputs: { [PACKAGES_SEARCH_QUERY]: search },
+    feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
+  });
 
 const katelloTracerResolveParams = ({ hostname, search }) =>
   baseParams({
@@ -71,6 +99,54 @@ export const installPackageBySearch = ({ hostname, search }) => post({
   params: katelloPackageInstallBySearchParams({ hostname, search }),
   handleSuccess: response => renderTaskStartedToast({
     humanized: { action: `Install packages on ${hostname}` },
+    id: response?.data?.dynflow_task?.id,
+  }),
+  errorToast: error => errorToast(error),
+});
+
+export const removePackage = ({ hostname, packageName }) => post({
+  type: API_OPERATIONS.POST,
+  key: REX_JOB_INVOCATIONS_KEY,
+  url: foremanApi.getApiUrl('/job_invocations'),
+  params: katelloPackageRemoveParams({ hostname, packageName }),
+  handleSuccess: response => renderTaskStartedToast({
+    humanized: { action: `Remove ${packageName} on ${hostname}` },
+    id: response?.data?.dynflow_task?.id,
+  }),
+  errorToast: error => errorToast(error),
+});
+
+export const removePackages = ({ hostname, search }) => post({
+  type: API_OPERATIONS.POST,
+  key: REX_JOB_INVOCATIONS_KEY,
+  url: foremanApi.getApiUrl('/job_invocations'),
+  params: katelloPackagesRemoveParams({ hostname, search }),
+  handleSuccess: response => renderTaskStartedToast({
+    humanized: { action: `Remove packages on ${hostname}` },
+    id: response?.data?.dynflow_task?.id,
+  }),
+  errorToast: error => errorToast(error),
+});
+
+export const updatePackage = ({ hostname, packageName }) => post({
+  type: API_OPERATIONS.POST,
+  key: REX_JOB_INVOCATIONS_KEY,
+  url: foremanApi.getApiUrl('/job_invocations'),
+  params: katelloPackageUpdateParams({ hostname, packageName }),
+  handleSuccess: response => renderTaskStartedToast({
+    humanized: { action: `Update ${packageName} on ${hostname}` },
+    id: response?.data?.dynflow_task?.id,
+  }),
+  errorToast: error => errorToast(error),
+});
+
+export const updatePackages = ({ hostname, search }) => post({
+  type: API_OPERATIONS.POST,
+  key: REX_JOB_INVOCATIONS_KEY,
+  url: foremanApi.getApiUrl('/job_invocations'),
+  params: katelloPackagesUpdateParams({ hostname, search }),
+  handleSuccess: response => renderTaskStartedToast({
+    humanized: { action: `Update on ${hostname}` },
     id: response?.data?.dynflow_task?.id,
   }),
   errorToast: error => errorToast(error),
