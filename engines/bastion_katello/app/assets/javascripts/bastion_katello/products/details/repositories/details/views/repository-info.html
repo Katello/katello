@@ -28,31 +28,37 @@
     </dl>
 
     <div class="divider"></div>
-    <h4 translate>Sync Settings</h4>
-    <dl class="dl-horizontal dl-horizontal-left">
-      <span ng-show="repository.content_type === 'yum'" >
-        <dt>
-          <span translate>Restrict to architecture</span>
-          <i class="pficon-info" title="{{ 'The repository will be enabled by default on content hosts with the selected architecture.' | translate }}"></i>
-        </dt>
-        <dd bst-edit-select="repository.arch==='noarch'?'No restriction':repository.arch"
-            selector="repository.arch"
-            options="architectures()"
-            on-save="save(repository)">
-        </dd>
-      </span>
 
-      <span ng-show="repository.content_type === 'yum'" >
-        <dt>
-          <span translate>Restrict to <br />OS version</span>
-          <i class="pficon-info" title="{{ 'The repository will be enabled by default on content hosts with the selected OS version.' | translate }}"></i>
-        </dt>
-        <dd bst-edit-select="repository.os_versions.length ? formatOSVersions() : 'No restriction'"
-            selector="selectedOSVersion"
-            options="osVersionsOptions()"
-            on-save="save(repository)">
-        </dd>
-      </span>
+    <div ng-show="repository.content_type === 'yum'" >
+      <h4 translate>Publishing Settings</h4>
+
+      <dl class="dl-horizontal dl-horizontal-left">
+          <dt>
+            <span translate>Restrict to architecture</span>
+            <i class="pficon-info" title="{{ 'The repository will be enabled by default on content hosts with the selected architecture.' | translate }}"></i>
+          </dt>
+          <dd bst-edit-select="repository.arch==='noarch'?'No restriction':repository.arch"
+              selector="repository.arch"
+              options="architectures()"
+              on-save="save(repository)">
+          </dd>
+
+          <dt>
+            <span translate>Restrict to <br />OS version</span>
+            <i class="pficon-info" title="{{ 'The repository will be enabled by default on content hosts with the selected OS version.' | translate }}"></i>
+          </dt>
+          <dd bst-edit-select="repository.os_versions.length ? formatOSVersions() : 'No restriction'"
+              selector="selectedOSVersion"
+              options="osVersionsOptions()"
+              on-save="save(repository)">
+          </dd>
+      </dl>
+      <div class="divider"></div>
+    </div>
+
+    <h4 translate>Sync Settings</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
 
       <dt ng-show="repository.content_type !== 'docker'" translate>Upstream URL</dt>
       <dt ng-show="repository.content_type === 'docker'" translate>Registry URL</dt>

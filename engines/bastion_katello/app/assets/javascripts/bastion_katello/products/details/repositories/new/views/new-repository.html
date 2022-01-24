@@ -39,29 +39,33 @@
         </select>
       </div>
 
-      <div bst-form-group label="{{ 'Restrict to Architecture' | translate }}" ng-show="repository.content_type === 'yum'">
+    </div>
+
+    <div ng-show="repository.content_type === 'yum'">
+      <h4 translate> Publishing Settings </h4>
+      <div bst-form-group label="{{ 'Restrict to Architecture' | translate }}">
         <select id="architecture_restricted"
                 name="architecture_restricted"
                 ng-model="repository.arch"
                 ng-options="arch.id as arch.name for arch in architecture">
         </select>
+        <p class="help-block" translate>
+          The repository will be enabled by default on content hosts with the selected architecture.
+        </p>
       </div>
 
-      <div
-        bst-form-group label="{{ 'Restrict to OS version' | translate }}"
-        ng-if="repository.content_type === 'yum'"
-      >
-       <select id="os_versions"
-               name="os_versions"
-               ng-model="repository.os_versions"
-               ng-options="tag as tag.name for tag in osVersionsOptions track by tag.id">
-       </select>
-       <p class="help-block" translate>
-         The repository will be enabled by default on content hosts with the selected OS version.
-       </p>
+      <div bst-form-group label="{{ 'Restrict to OS version' | translate }}">
+        <select id="os_versions"
+                name="os_versions"
+                ng-model="repository.os_versions"
+                ng-options="tag as tag.name for tag in osVersionsOptions track by tag.id">
+        </select>
+        <p class="help-block" translate>
+          The repository will be enabled by default on content hosts with the selected OS version.
+        </p>
       </div>
-
     </div>
+
     <div ng-show="repository.content_type !== undefined">
       <h4 translate> Sync Settings </h4>
       <div bst-form-group label="{{ 'Upstream URL' | translate }} ">
