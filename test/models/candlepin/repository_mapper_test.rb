@@ -33,8 +33,8 @@ module Katello
       assert_equal mapper.unprotected?, false
     end
 
-    def test_disconnected_no_http
-      Setting[:content_disconnected] = true
+    def test_airgapped_no_http
+      @product_content.product.organization.cdn_configuration.update!(type: ::Katello::CdnConfiguration::AIRGAPPED_TYPE)
       mapper = Candlepin::RepositoryMapper.new(@product_content.product, @product_content.content, {})
       mapper.expects(:substitutor).never
       mapper.validate!

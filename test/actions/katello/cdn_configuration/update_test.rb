@@ -31,6 +31,7 @@ module ::Actions::Katello::CdnConfiguration
 
     def test_plans_katello_cdn
       attrs = {
+        type: Katello::CdnConfiguration::UPSTREAM_SERVER_TYPE,
         url: 'http://newcdn.example.com',
         ssl_ca_credential_id: @credential.id,
         username: 'test_username',
@@ -58,11 +59,8 @@ module ::Actions::Katello::CdnConfiguration
 
     def test_plans_redhat_cdn
       attrs = {
-        url: 'http://cdn.redhat.com',
-        ssl_ca_credential_id: nil,
-        username: '',
-        password: '',
-        upstream_organization_label: ''
+        type: ::Katello::CdnConfiguration::CDN_TYPE,
+        url: 'http://cdn.redhat.com'
       }
 
       plan_action(@action, @cdn_configuration, attrs)
@@ -73,9 +71,9 @@ module ::Actions::Katello::CdnConfiguration
       assert_nil @cdn_configuration.ssl_cert
       assert_nil @cdn_configuration.ssl_key
       assert_nil @cdn_configuration.ssl_ca_credential_id
-      assert_equal attrs[:username], @cdn_configuration.username
-      assert_equal attrs[:password], @cdn_configuration.password
-      assert_equal attrs[:upstream_organization_label], @cdn_configuration.upstream_organization_label
+      assert_nil @cdn_configuration.username
+      assert_nil @cdn_configuration.password
+      assert_nil @cdn_configuration.upstream_organization_label
     end
   end
 end

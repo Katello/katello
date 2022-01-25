@@ -14,7 +14,7 @@ import DeleteManifestModalText from './DeleteManifestModalText';
 import { MANAGE_MANIFEST_MODAL_ID, DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
 import { CONTENT_CREDENTIAL_CERT_TYPE } from '../../ContentCredentials/ContentCredentialConstants';
 import SimpleContentAccess from './SimpleContentAccess';
-import CdnConfigurationForm from './CdnConfigurationForm';
+import CdnConfigurationForm from './CdnConfigurationTab';
 
 import './ManageManifestModal.scss';
 
@@ -51,6 +51,10 @@ class ManageManifestModal extends Component {
       this.props.setModalClosed({ id: DELETE_MANIFEST_MODAL_ID });
     }
   };
+
+  reloadOrganization = () => {
+    this.props.loadOrganization();
+  }
 
   uploadManifest = (fileList) => {
     if (fileList.length > 0) {
@@ -247,6 +251,7 @@ class ManageManifestModal extends Component {
                 <CdnConfigurationForm
                   cdnConfiguration={organization.cdn_configuration}
                   contentCredentials={contentCredentials}
+                  onUpdate={this.reloadOrganization}
                 />
               </Grid>
             </Tab>

@@ -13,6 +13,7 @@ module Katello
     before_action :find_authorized_host, :only => [:index, :auto_complete_search]
     before_action :find_organization
     before_action :find_product_content, :except => [:index, :auto_complete_search]
+    before_action :check_airgapped, :only => [:index]
 
     resource_description do
       api_version "v2"
@@ -207,6 +208,12 @@ module Katello
         params[:activation_key_id] ||= params[:id]
       else
         params[:host_id] ||= params[:id]
+      end
+    end
+
+    def check_airgapped
+      if @organization.cdn_configuration.airgapped?
+        respond_for_index(:collection => { :error => _("Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).") }, :status => :forbidden)
       end
     end
   end

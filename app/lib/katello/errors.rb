@@ -145,10 +145,10 @@ module Katello
       end
     end
 
-    class DisconnectedMode < StandardError
+    class SubscriptionConnectionNotEnabled < StandardError
       def message
-        _("You are currently operating in disconnected mode where access to Red Hat Subcription Management " \
-        "is prohibited. If you would like to change this, please update the content setting 'Disconnected mode'.")
+        _("Access to Red Hat Subscription Management " \
+        "is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.")
       end
     end
 

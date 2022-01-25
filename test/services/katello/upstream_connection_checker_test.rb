@@ -37,13 +37,13 @@ module Katello
     end
 
     def test_assert_disconnected
-      Setting[:content_disconnected] = true
+      Setting[:subscription_connection_enabled] = false
 
-      assert_raises Katello::Errors::DisconnectedMode do
+      assert_raises Katello::Errors::SubscriptionConnectionNotEnabled do
         @checker.assert_connection
       end
     ensure
-      Setting[:content_disconnected] = false
+      Setting[:subscription_connection_enabled] = true
     end
 
     def test_assert_manifest_expired

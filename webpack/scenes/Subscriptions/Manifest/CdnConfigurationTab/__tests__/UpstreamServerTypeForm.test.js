@@ -2,13 +2,17 @@ import React from 'react';
 import { cleanup } from '@testing-library/react';
 import { renderWithRedux, fireEvent, patientlyWaitFor } from 'react-testing-lib-wrapper';
 import userEvent from '@testing-library/user-event';
-import CdnConfigurationForm from '../CdnConfigurationForm';
-import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
-import { updateCdnConfigurationSuccessResponse } from '../../../Organizations/__tests__/organizations.fixtures';
-import api from '../../../../services/api';
+import UpstreamServerTypeForm from '../UpstreamServerTypeForm';
+import { nockInstance, assertNockRequest } from '../../../../../test-utils/nockWrapper';
+import { updateCdnConfigurationSuccessResponse } from '../../../../Organizations/__tests__/organizations.fixtures';
+import { UPSTREAM_SERVER } from '../CdnConfigurationConstants';
+
+import api from '../../../../../services/api';
 
 afterEach(cleanup);
 const updateCdnConfigurationPath = api.getApiUrl('/organizations/1/cdn_configuration');
+
+const updateButtonName = 'update-upstream-configuration';
 
 const cdnConfiguration = {
   url: 'http://currentcdn.example.com',
@@ -16,6 +20,9 @@ const cdnConfiguration = {
   password_exists: false,
   upstream_organization_label: 'CurrentOrg',
   ssl_ca_credential_id: 2,
+  type: UPSTREAM_SERVER,
+  upstream_lifecycle_environment_label: 'Library',
+  upstream_content_view_label: 'CV',
 };
 
 const organization = {
@@ -39,8 +46,9 @@ const contentCredentials = [
   },
 ];
 
-test('Can update the CDN configuration', async (done) => {
-  const { getByLabelText } = renderWithRedux(<CdnConfigurationForm
+test('Can update the upstream server configuration', async (done) => {
+  const { getByLabelText } = renderWithRedux(<UpstreamServerTypeForm
+    showUpdate
     cdnConfiguration={cdnConfiguration}
     contentCredentials={contentCredentials}
   />, { initialState });
@@ -52,6 +60,9 @@ test('Can update the CDN configuration', async (done) => {
       password: 'changeme',
       upstream_organization_label: 'Default_Organization',
       ssl_ca_credential_id: '1',
+      type: UPSTREAM_SERVER,
+      upstream_lifecycle_environment_label: 'Library',
+      upstream_content_view_label: 'CV',
     })
     .reply(200, updateCdnConfigurationSuccessResponse);
 
@@ -74,14 +85,15 @@ test('Can update the CDN configuration', async (done) => {
     '1',
   );
 
-  const updateButton = getByLabelText('update-cdn-configuration');
+  const updateButton = getByLabelText(updateButtonName);
   fireEvent.click(updateButton);
 
   assertNockRequest(updateCdnConfigurationRequest, done);
 });
 
 test('the form shall reflect the given cdnConfiguration', () => {
-  const { getAllByTestId, getByLabelText } = renderWithRedux(<CdnConfigurationForm
+  const { getAllByTestId, getByLabelText } = renderWithRedux(<UpstreamServerTypeForm
+    showUpdate
     cdnConfiguration={cdnConfiguration}
     contentCredentials={contentCredentials}
   />, { initialState });
@@ -96,19 +108,36 @@ test('the form shall reflect the given cdnConfiguration', () => {
   expect(options[1].selected).toBeTruthy();
 });
 
-test('resetting the password sends nothing to the API', async (done) => {
-  const { getByLabelText } = renderWithRedux(<CdnConfigurationForm />, { initialState });
+test('resetting the password enables/disables appropriately', async (done) => {
+  const { getByLabelText } = renderWithRedux(<UpstreamServerTypeForm
+    showUpdate
+    cdnConfiguration={{ ...cdnConfiguration, password_exists: true }}
+  />, { initialState });
 
-  const updateCdnConfigurationRequest = nockInstance
-    .put(updateCdnConfigurationPath, {}) // note the empty request body
-    .reply(200, updateCdnConfigurationSuccessResponse);
-
+  expect(getByLabelText(updateButtonName)).toHaveAttribute('aria-disabled', 'true');
   fireEvent.click(getByLabelText('edit cdn-password'));
   fireEvent.change(getByLabelText('cdn-password text input'), { target: { value: 'changeme' } });
   fireEvent.click(getByLabelText('clear cdn-password'));
+  expect(getByLabelText(updateButtonName)).toHaveAttribute('aria-disabled', 'true');
 
-  const updateButton = getByLabelText('update-cdn-configuration');
-  fireEvent.click(updateButton);
+  fireEvent.click(getByLabelText('edit cdn-password'));
+  fireEvent.change(getByLabelText('cdn-password text input'), { target: { value: 'changeme' } });
+  fireEvent.click(getByLabelText('submit cdn-password'));
 
-  assertNockRequest(updateCdnConfigurationRequest, done);
+  await patientlyWaitFor(() => expect(getByLabelText('cdn-password text value')).toBeInTheDocument());
+  expect(getByLabelText(updateButtonName)).toHaveAttribute('aria-disabled', 'false');
+  done();
+});
+
+test('update button disabled on incomplete information', async (done) => {
+  const { getByLabelText } = renderWithRedux(<UpstreamServerTypeForm
+    showUpdate
+    cdnConfiguration={{ ...cdnConfiguration, password_exists: true }}
+    contentCredentials={contentCredentials}
+  />, { initialState });
+
+  expect(getByLabelText(updateButtonName)).toHaveAttribute('aria-disabled', 'true');
+  fireEvent.change(getByLabelText('cdn-username'), { target: { value: 'user' } });
+  expect(getByLabelText(updateButtonName)).toHaveAttribute('aria-disabled', 'false');
+  done();
 });
