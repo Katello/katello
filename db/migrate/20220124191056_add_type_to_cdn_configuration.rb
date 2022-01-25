@@ -7,7 +7,7 @@ class AddTypeToCdnConfiguration < ActiveRecord::Migration[6.0]
       unless Setting[:subscription_connection_enabled]
         # if subscription connection is not enabled
         # the user most likely wants the type to be airgapped
-        config.update!(type: ::Katello::CdnConfiguration::AIRGAPPED)
+        config.update!(type: ::Katello::CdnConfiguration::AIRGAPPED_TYPE)
         next
       end
 
