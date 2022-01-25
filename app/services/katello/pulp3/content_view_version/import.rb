@@ -121,11 +121,20 @@ module Katello
                         }
           end
 
+          fail _("Content View label not provided.") if metadata[:label].blank?
+
           cv = ::Katello::ContentView.find_by(label: metadata[:label],
-                                              organization: organization,
-                                              import_only: true)
+                                              organization: organization)
           if cv.blank?
             ::Katello::ContentView.create!(metadata.merge(organization: organization, import_only: true))
+          elsif !cv.import_only?
+            msg = _("Unable to import in to Content View specified in the metadata - '%{name}'. "\
+                     "The 'import_only' attribute for the content view is set to false. "\
+                     "To mark this Content View as importable, have your system administrator"\
+                     " run the following command on the satellite. "\
+                        % { name: cv.name })
+            command = "foreman-rake katello:set_content_view_import_only ID=#{cv.id}"
+            fail msg + "\n" + command
           else
             cv.update!(description: cv_metadata[:description]) if cv.description != metadata[:description]
             cv
