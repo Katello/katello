@@ -16,10 +16,10 @@ export const createJob = ({
   return `/job_invocations/new?${urlQuery}`;
 };
 
-export const katelloPackageInstallUrl = ({ hostname }) => createJob({
+export const katelloPackageInstallUrl = ({ hostname, packages }) => createJob({
   hostname,
   feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL,
-  inputs: { package: KATELLO_TRACER_PACKAGE },
+  inputs: { package: packages },
 });
 
 export const katelloPackageInstallBySearchUrl = ({ hostname, search }) => createJob({

@@ -16,7 +16,7 @@ import { selectHostYumInstallablePackagesStatus } from '../YumInstallablePackage
 import { getHostYumInstallablePackages } from '../YumInstallablePackages/YumInstallablePackagesActions';
 import './PackageInstallModal.scss';
 import { installPackageBySearch } from './RemoteExecutionActions';
-import { katelloPackageInstallBySearchUrl } from './customizedRexUrlHelpers';
+import { katelloPackageInstallBySearchUrl, katelloPackageInstallUrl } from './customizedRexUrlHelpers';
 import hostIdNotReady from '../HostDetailsActions';
 import { installPackageViaKatelloAgent } from '../HostPackages/HostPackagesActions';
 
@@ -138,6 +138,8 @@ const PackageInstallModal = ({
     return getHostYumInstallablePackages(hostId, params);
   };
 
+  const selectedPackageNames = () => selectedResults.map(({ name }) => name);
+
   const installViaRex = () => {
     dispatch(installPackageBySearch({ hostname: hostName, search: fetchBulkParams() }));
     selectNone();
@@ -145,8 +147,7 @@ const PackageInstallModal = ({
   };
 
   const installViaKatelloAgent = () => {
-    const packages = selectedResults.map(({ name }) => name);
-    dispatch(installPackageViaKatelloAgent(hostId, { packages }));
+    dispatch(installPackageViaKatelloAgent(hostId, { packages: selectedPackageNames() }));
     selectNone();
     closeModal();
   };
@@ -159,13 +160,17 @@ const PackageInstallModal = ({
   const bulkCustomizedRexUrl = selectedCount ?
     katelloPackageInstallBySearchUrl({ hostname: hostName, search: fetchBulkParams() }) :
     '#';
+  const simpleBulkCustomizedRexUrl
+    = katelloPackageInstallUrl({ hostname: hostName, packages: selectedPackageNames() });
+  const enableSimpleRexUrl = !!selectedResults.length;
+
   const modalActions = ([
     <InstallDropdown
       key="install"
       isDisabled={!selectedCount}
       installViaRex={installViaRex}
       installViaKatelloAgent={installViaKatelloAgent}
-      bulkCustomizedRexUrl={bulkCustomizedRexUrl}
+      bulkCustomizedRexUrl={enableSimpleRexUrl ? simpleBulkCustomizedRexUrl : bulkCustomizedRexUrl}
       showKatelloAgent={showKatelloAgent}
       disableInstallViaKatelloAgent={selectedResults.length === 0}
     />,

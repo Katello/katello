@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { installTracerPackage } from './HostTracesActions';
 import { katelloPackageInstallUrl } from '../customizedRexUrlHelpers';
+import { KATELLO_TRACER_PACKAGE } from './HostTracesConstants';
 
 const EnableTracerModal = ({ isOpen, setIsOpen }) => {
   const title = __('Enable Tracer');
@@ -43,7 +44,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
     <DropdownItem key={`option_${text}`} onClick={() => setSelectedOption(text)}>{text}</DropdownItem>
   ));
 
-  const customizedRexUrl = katelloPackageInstallUrl({ hostname });
+  const customizedRexUrl = katelloPackageInstallUrl({ hostname, packages: KATELLO_TRACER_PACKAGE });
 
   const getEnableTracerButton = () => {
     const [viaRex] = dropdownOptions;
