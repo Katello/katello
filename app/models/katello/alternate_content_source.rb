@@ -23,7 +23,11 @@ module Katello
 
     scoped_search on: :name, complete_value: true
     scoped_search on: :label, complete_value: true
+    scoped_search on: :description, complete_value: true
+    scoped_search on: :base_url, complete_value: true
     scoped_search on: :content_type, complete_value: true
+    scoped_search on: :alternate_content_source_type, complete_value: true
+    scoped_search on: :upstream_username, complete_value: true
 
     def backend_service(smart_proxy)
       @service ||= ::Katello::Pulp3::AlternateContentSource.new(self, smart_proxy)

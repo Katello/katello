@@ -37,9 +37,9 @@ module Katello
         # TODO: add /PULP_MANIFEST? like so?  The paths would also need /PULP_MANIFEST if there are any.
         #remote_options[:url] = acs.url + '/PULP_MANIFEST' if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.empty?
         # TODO: download concurrency?
-        if !acs.upstream_username.blank? && !asc.upstream_password.blank?
+        if !acs.upstream_username.blank? && !acs.upstream_password.blank?
           remote_options.merge!(username: acs.upstream_username,
-                               password: asc.upstream_password)
+                               password: acs.upstream_password)
         end
         remote_options.merge!(ssl_remote_options)
       end

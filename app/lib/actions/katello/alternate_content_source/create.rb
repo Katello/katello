@@ -6,8 +6,7 @@ module Actions
           acs.save!
           action_subject(acs)
           smart_proxies = smart_proxies.uniq
-          # TODO: Can this be concurrent?
-          sequence do
+          concurrence do
             smart_proxies.each do |smart_proxy|
               ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id)
               plan_action(Pulp3::Orchestration::AlternateContentSource::Create,

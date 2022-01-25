@@ -24,6 +24,14 @@ module Katello
 
     api :GET, "/alternate_content_sources", N_("List of alternate_content_sources")
     param :label, String, desc: N_("Label of the alternate content source"), required: false
+    param :name, String, desc: N_("Name of the alternate content source"), required: false
+    param :description, String, desc: N_("Description for the alternate content source")
+    param :base_url, String, desc: N_('Base URL for finding alternate content')
+    param :subpaths, Array, desc: N_('Path suffixes for finding alternate content')
+    param :smart_proxy_ids, Array, desc: N_("Ids of smart proxies to associate"), required: false
+    param :content_type, RepositoryTypeManager.defined_repository_types.keys, desc: N_("The content type for the Alternate Content Source")
+    param :alternate_content_source_type, AlternateContentSource::ALLOWED_TYPES, desc: N_("The Alternate Content Source type")
+    param :upstream_username, String, desc: N_("Basic authentication username"), required: false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(AlternateContentSource)
     def index
@@ -46,12 +54,7 @@ module Katello
 
     def index_relation
       query = AlternateContentSource.readable
-      query = with_type(params[:content_type]) if params[:content_type]
-      query = query.where(name: params[:name]) if params[:name]
-      query = query.where(label: params[:label]) if params[:label]
-      query = query.where(base_url: params(:base_url)) if params[:base_url]
-      query = query.where(subpaths: params(:subpaths)) if params[:subpaths]
-      query = query.where(alternate_content_source_type: params(:alternate_content_source_type)) if params[:alternate_content_source_type]
+      query = query.where(subpaths: params[:subpaths]) if params[:subpaths]
       query = query.joins('inner join katello_smart_proxy_alternate_content_sources on katello_smart_proxy_alternate_content_sources.alternate_content_source_id = katello_alternate_content_sources.id').joins('inner join smart_proxies on katello_smart_proxy_alternate_content_sources.smart_proxy_id = smart_proxies.id').where('smart_proxies.id' => params[:smart_proxy_ids]) if params[:smart_proxy_ids]
       query
     end

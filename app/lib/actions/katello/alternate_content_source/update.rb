@@ -11,8 +11,7 @@ module Actions
           smart_proxies_to_delete = acs.smart_proxies - smart_proxies
           smart_proxies_to_update = smart_proxies & acs.smart_proxies
 
-          # TODO: Concurrent?
-          sequence do
+          concurrence do
             smart_proxies_to_add.each do |smart_proxy|
               ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id)
               plan_action(Pulp3::Orchestration::AlternateContentSource::Create,
