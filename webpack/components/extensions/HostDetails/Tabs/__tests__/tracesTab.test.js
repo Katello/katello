@@ -3,8 +3,8 @@ import { renderWithRedux, waitFor, patientlyWaitFor, fireEvent, act } from 'reac
 import nock, { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
-import { HOST_TRACES_KEY, TRACES_SEARCH_QUERY } from '../HostTracesConstants';
-import TracesTab from '../TracesTab';
+import { HOST_TRACES_KEY, TRACES_SEARCH_QUERY } from '../TracesTab/HostTracesConstants';
+import TracesTab from '../TracesTab/TracesTab.js';
 import mockTraceData from './traces.fixtures.json';
 import mockResolveTraceTask from './resolveTraces.fixtures.json';
 import emptyTraceResults from './tracerEmptyTraceResults.fixtures.json';

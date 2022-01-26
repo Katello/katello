@@ -3,8 +3,8 @@ import {
   HOST_TRACES_KEY,
   KATELLO_TRACER_PACKAGE,
 } from './HostTracesConstants';
-import { installPackage } from './RemoteExecutionActions';
-import { foremanApi } from '../../../../services/api';
+import { installPackage } from '../RemoteExecutionActions';
+import { foremanApi } from '../../../../../services/api';
 
 export const getHostTraces = (hostId, params) => get({
   type: API_OPERATIONS.GET,

@@ -4,7 +4,7 @@ import { foremanApi } from '../../../../services/api';
 import { getResponseErrorMsgs } from '../../../../utils/helpers';
 import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
 import { ERRATA_SEARCH_QUERY } from '../HostErrata/HostErrataConstants';
-import { TRACES_SEARCH_QUERY } from './HostTracesConstants';
+import { TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
 
 const errorToast = (error) => {
   const message = getResponseErrorMsgs(error.response);

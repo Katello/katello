@@ -11,7 +11,7 @@ import ErrataOverviewCard from './components/extensions/HostDetails/Cards/Errata
 
 // import SubscriptionTab from './components/extensions/HostDetails/Tabs/SubscriptionTab';
 import RepositorySetsTab from './components/extensions/HostDetails/Tabs/RepositorySetsTab/RepositorySetsTab';
-import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab';
+import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js';
 import extendReducer from './components/extensions/reducers';
 import rootReducer from './redux/reducers';
 
