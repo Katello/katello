@@ -3,9 +3,9 @@ import { isEqual } from 'lodash';
 import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
-import { HOST_ERRATA_KEY, ERRATA_SEARCH_QUERY } from '../../HostErrata/HostErrataConstants';
+import { HOST_ERRATA_KEY, ERRATA_SEARCH_QUERY } from '../ErrataTab/HostErrataConstants';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
-import { ErrataTab } from '../ErrataTab';
+import { ErrataTab } from '../ErrataTab/ErrataTab.js';
 import mockErrataData from './errata.fixtures.json';
 import mockResolveErrataTask from './resolveErrata.fixtures.json';
 

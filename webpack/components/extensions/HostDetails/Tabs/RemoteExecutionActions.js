@@ -3,7 +3,7 @@ import { REX_JOB_INVOCATIONS_KEY, REX_FEATURES } from './RemoteExecutionConstant
 import { foremanApi } from '../../../../services/api';
 import { getResponseErrorMsgs } from '../../../../utils/helpers';
 import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
-import { ERRATA_SEARCH_QUERY } from '../HostErrata/HostErrataConstants';
+import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
 import { TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
 
 const errorToast = (error) => {

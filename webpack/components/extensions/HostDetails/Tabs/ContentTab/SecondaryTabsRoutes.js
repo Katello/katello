@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { PackagesTab } from '../PackagesTab';
-import { ErrataTab } from '../ErrataTab';
+import { ErrataTab } from '../ErrataTab/ErrataTab.js';
 import { route } from './helpers';
 
 const SecondaryTabRoutes = () => (
