@@ -131,7 +131,7 @@ module Katello
             msg = _("Unable to import in to Content View specified in the metadata - '%{name}'. "\
                      "The 'import_only' attribute for the content view is set to false. "\
                      "To mark this Content View as importable, have your system administrator"\
-                     " run the following command on the satellite. "\
+                     " run the following command on the server. "\
                         % { name: cv.name })
             command = "foreman-rake katello:set_content_view_import_only ID=#{cv.id}"
             fail msg + "\n" + command
