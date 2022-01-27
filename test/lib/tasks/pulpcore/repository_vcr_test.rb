@@ -36,6 +36,11 @@ module Katello
 
         @backend_service.delete_remote
         @backend_service.delete_repository
+
+        Katello::Repository.where("id not in (#{@library_repo.id})").each do |repo|
+          repo.library_instances_inverse.destroy_all
+        end
+
         # For some reason, the first `destroy_all` leaves records behind.
         Katello::Repository.where("id not in (#{@library_repo.id})").destroy_all
         Katello::Repository.where("id not in (#{@library_repo.id})").destroy_all

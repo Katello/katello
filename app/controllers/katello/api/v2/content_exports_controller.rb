@@ -2,6 +2,7 @@ module Katello
   class Api::V2::ContentExportsController < Api::V2::ApiController
     before_action :find_exportable_organization, :only => [:library]
     before_action :find_exportable_content_view_version, :only => [:version]
+    before_action :find_exportable_repository, :only => [:repository]
 
     api :GET, "/content_exports", N_("List export histories")
     param :content_view_version_id, :number, :desc => N_("Content view version identifier"), :required => false
@@ -58,7 +59,27 @@ module Katello
       respond_for_async :resource => tasks
     end
 
+    api :POST, "/content_exports/repository", N_("Performs a full-export of the repository in library.")
+    param :id, :number, :desc => N_("Repository identifier"), :required => true
+    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
+    param :chunk_size_gb, :number, :desc => N_("Split the exported content into archives "\
+                                               "no greater than the specified size in gigabytes."), :required => false
+    def repository
+      tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportRepository,
+                          @repository,
+                          destination_server: params[:destination_server],
+                          chunk_size: params[:chunk_size_gb])
+      respond_for_async :resource => tasks
+    end
+
     private
+
+    def find_exportable_repository
+      @repository = Repository.find_by_id(params[:id])
+      if @repository.blank? || !@repository.organization.can_export_content?
+        throw_resource_not_found(name: 'repository', id: params[:id])
+      end
+    end
 
     def find_exportable_content_view_version
       @version = ContentViewVersion.exportable.find_by_id(params[:id])

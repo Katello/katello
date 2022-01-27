@@ -19,7 +19,7 @@ import ContentViewIcon from '../components/ContentViewIcon';
 import ActionableDetail from '../../../components/ActionableDetail';
 import './contentViewInfo.scss';
 import { dependenciesHelpText, autoPublishHelpText, hasPermission } from '../helpers';
-import { LabelImportOnly } from '../Create/ContentViewFormComponents';
+import { LabelImportOnly, LabelGenerated } from '../Create/ContentViewFormComponents';
 
 const ContentViewInfo = ({ cvId, details }) => {
   const dispatch = useDispatch();
@@ -33,9 +33,10 @@ const ContentViewInfo = ({ cvId, details }) => {
     solve_dependencies: solveDependencies,
     auto_publish: autoPublish,
     import_only: importOnly,
+    generated_for: generatedFor,
     permissions,
   } = details;
-
+  const generatedContentView = generatedFor !== 'none';
   const onEdit = (val, attribute) => {
     if (val === details[attribute]) return;
     dispatch(updateContentView(cvId, { [attribute]: val }));
@@ -122,6 +123,18 @@ const ContentViewInfo = ({ cvId, details }) => {
             disabled
           />
         </TextListItem>
+        <TextListItem component={TextListItemVariants.dt}>
+          {LabelGenerated()}
+        </TextListItem>
+        <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
+          <Switch
+            id="generated_by_export_switch"
+            aria-label="generated_by_export_switch"
+            isChecked={generatedContentView}
+            className="foreman-spaced-list"
+            disabled
+          />
+        </TextListItem>
       </TextList>
     </TextContent>
   );
@@ -137,6 +150,7 @@ ContentViewInfo.propTypes = {
     solve_dependencies: PropTypes.bool,
     auto_publish: PropTypes.bool,
     import_only: PropTypes.bool,
+    generated_for: PropTypes.string,
     permissions: PropTypes.shape({}),
   }).isRequired,
 };

@@ -144,17 +144,79 @@ module ::Actions::Katello::Repository
       in_use_repository.stubs(:assert_deletable).returns(true)
       in_use_repository.stubs(:destroyable?).returns(true)
       in_use_repository.stubs(:pulp_scratchpad_checksum_type).returns(nil)
-      clone = in_use_repository.build_clone(:environment => katello_environments(:dev), :content_view => katello_content_views(:library_dev_view))
+      content_view = katello_content_views(:library_dev_view)
+      in_use_repository.content_views << content_view
+      in_use_repository.save!
+      clone = in_use_repository.build_clone(:environment => katello_environments(:dev), :content_view => content_view)
       clone.save!
-
       action.expects(:plan_self)
       plan_action action, in_use_repository, remove_from_content_view_versions: true
       assert_action_planned_with action, pulp3_action_class,
         in_use_repository, proxy
 
-      assert_action_planned_with action, ::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, in_use_repository.library_instances_inverse
+      assert_action_planned_with action,
+        ::Actions::BulkAction,
+        ::Actions::Katello::Repository::Destroy,
+        in_use_repository.library_instances_inverse
 
       assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, in_use_repository.root
+    end
+
+    it 'It removes repo generated content views' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(in_use_repository)
+      in_use_repository.stubs(:assert_deletable).returns(true)
+      in_use_repository.stubs(:destroyable?).returns(true)
+      in_use_repository.stubs(:pulp_scratchpad_checksum_type).returns(nil)
+      repo_export_content_view = katello_content_views(:library_dev_view)
+      repo_export_content_view.generated_for_repository_export!
+      in_use_repository.content_views << repo_export_content_view
+
+      in_use_repository.save!
+      clone1 = in_use_repository.build_clone(:environment => katello_environments(:dev), :content_view => repo_export_content_view)
+      clone1.save!
+
+      action.expects(:plan_self)
+      plan_action action, in_use_repository
+      assert_action_planned_with action, pulp3_action_class,
+        in_use_repository, proxy
+
+      # make sure the repository generated content views get removed
+      assert_action_planned_with action,
+        ::Actions::BulkAction,
+        ::Actions::Katello::ContentView::Remove,
+        [repo_export_content_view],
+        skip_repo_destroy: true,
+        destroy_content_view: true
+    end
+
+    it 'It removes repo from generated content view versions for library-export' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(in_use_repository)
+      in_use_repository.stubs(:assert_deletable).returns(true)
+      in_use_repository.stubs(:destroyable?).returns(true)
+      in_use_repository.stubs(:pulp_scratchpad_checksum_type).returns(nil)
+      library_export_content_view = katello_content_views(:library_dev_view)
+      library_export_content_view.generated_for_library_export!
+      in_use_repository.content_views << library_export_content_view
+
+      in_use_repository.save!
+      clone1 = in_use_repository.build_clone(:environment => katello_environments(:dev), :content_view => library_export_content_view)
+      clone1.save!
+
+      action.expects(:plan_self)
+      plan_action action, in_use_repository
+      assert_action_planned_with action, pulp3_action_class,
+        in_use_repository, proxy
+
+      # make sure the repository is removed from library export generated content view versions
+      assert_action_planned_with action,
+        ::Actions::BulkAction,
+        ::Actions::Katello::Repository::Destroy,
+        in_use_repository.
+          library_instances_inverse.
+          joins(:content_view_version => :content_view).
+          merge(::Katello::ContentView.where(id: library_export_content_view))
     end
 
     it 'plans when custom and no clones' do

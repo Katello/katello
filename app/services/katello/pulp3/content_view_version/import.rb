@@ -113,16 +113,31 @@ module Katello
           content_view.update!(repository_ids: repo_ids)
         end
 
-        def self.find_or_create_import_view(organization:, metadata:, library: false)
-          if library
-            metadata = { name: ::Katello::ContentView::IMPORT_LIBRARY,
-                         label: ::Katello::ContentView::IMPORT_LIBRARY,
-                         description: "Content View used for importing library"
-                        }
+        def self.import_cv_name_from_export(name:, destination_server: nil)
+          import_name = name.gsub(/^Export/, 'Import')
+          unless destination_server.blank?
+            import_name = import_name[0...-(destination_server.length + 1)]
           end
+          import_name
+        end
 
+        def self.find_or_create_import_view(organization:, metadata:)
           fail _("Content View label not provided.") if metadata[:label].blank?
 
+          unless metadata[:generated_for].to_s == "none"
+            generated_for = metadata[:generated_for].to_sym
+            if generated_for == :library_export
+              generated_for = :library_import
+            elsif generated_for == :repository_export
+              generated_for = :repository_import
+            end
+
+            metadata = { name: import_cv_name_from_export(name: metadata[:name], destination_server: metadata[:destination_server]),
+                         label: import_cv_name_from_export(name: metadata[:label], destination_server: metadata[:destination_server]),
+                         description: "Content View used for importing into library",
+                         generated_for: generated_for
+                        }
+          end
           cv = ::Katello::ContentView.find_by(label: metadata[:label],
                                               organization: organization)
           if cv.blank?

@@ -104,8 +104,7 @@ module Katello
             exception = assert_raises(RuntimeError) do
               ::Katello::Pulp3::ContentViewVersion::Import.
                     find_or_create_import_view(organization: org,
-                                                metadata: {},
-                                                library: false)
+                                                metadata: {})
             end
             assert_match(/label not provided/, exception.message)
           end
@@ -116,20 +115,21 @@ module Katello
             exception = assert_raises(RuntimeError) do
               ::Katello::Pulp3::ContentViewVersion::Import.
                     find_or_create_import_view(organization: cv.organization,
-                                                metadata: { label: cv.label }.with_indifferent_access,
-                                                library: false)
+                                                metadata: { label: cv.label,
+                                                            generated_for: :none }.with_indifferent_access)
             end
             assert_match(/foreman-rake katello:set_content_view_import_only ID=/, exception.message)
           end
 
           it "should create an importable content view" do
             org = katello_content_views(:library_view).organization
-            label = "GREAT_CV10000"
+            label = "Export-GREAT_REPO10000"
             cv = ::Katello::Pulp3::ContentViewVersion::Import.
                     find_or_create_import_view(organization: org,
-                                                metadata: { label: label, name: label }.with_indifferent_access,
-                                                library: false)
-            assert_equal cv.label, label
+                                                metadata: { label: label,
+                                                            name: label,
+                                                            generated_for: :repository_export }.with_indifferent_access)
+            assert_equal cv.label, "Import-GREAT_REPO10000"
             assert_equal cv.organization, org
             assert cv.import_only?
           end
@@ -138,11 +138,28 @@ module Katello
             org = katello_content_views(:library_view).organization
             cv = ::Katello::Pulp3::ContentViewVersion::Import.
                     find_or_create_import_view(organization: org,
-                                                metadata: { },
-                                                library: true)
+                                                metadata: { name: ::Katello::ContentView::EXPORT_LIBRARY,
+                                                            label: ::Katello::ContentView::EXPORT_LIBRARY,
+                                                            generated_for: :library_export })
             assert_equal cv.label, ::Katello::ContentView::IMPORT_LIBRARY
             assert_equal cv.organization, org
             assert cv.import_only?
+            assert cv.generated_for_library_import?
+          end
+
+          it "should create the import name for generated content" do
+            org = katello_content_views(:library_view).organization
+            destination_server = "Foo"
+            cv = ::Katello::Pulp3::ContentViewVersion::Import.
+                    find_or_create_import_view(organization: org,
+                                                metadata: { name: "Export-Repository-#{destination_server}",
+                                                            label: "Export-Repository-#{destination_server}",
+                                                            generated_for: :repository_export,
+                                                            destination_server: "Foo" })
+            assert_equal cv.label, "Import-Repository"
+            assert_equal cv.organization, org
+            assert cv.import_only?
+            assert cv.generated_for_repository_import?
           end
         end
       end

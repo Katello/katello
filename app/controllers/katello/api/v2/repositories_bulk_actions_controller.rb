@@ -6,7 +6,7 @@ module Katello
     param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def destroy_repositories
       deletion_authorized_repositories = @repositories.deletable
-      unpromoted_repos = deletion_authorized_repositories.reject { |repo| repo.promoted? }
+      unpromoted_repos = deletion_authorized_repositories.reject { |repo| repo.promoted? && repo.content_views.generated_for_none.exists? }
 
       messages1 = format_bulk_action_messages(
           :success    => "",

@@ -1,10 +1,7 @@
 module Katello
   class Api::V2::ContentImportsController < Api::V2::ApiController
-    before_action :find_organization, :only => [:version]
-    before_action :check_authorized, :only => [:version]
-
-    before_action :find_importable_organization, :only => [:library]
-    before_action :find_default_content_view, :only => [:library]
+    before_action :find_organization, :only => [:version, :repository, :library]
+    before_action :check_authorized, :only => [:version, :repository, :library]
 
     api :GET, "/content_imports", N_("List import histories")
     param :content_view_version_id, :number, :desc => N_("Content view version identifier"), :required => false
@@ -46,20 +43,19 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :POST, "/content_imports/repository", N_("Import a repository")
+    param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
+    param :path, String, :desc => N_("Directory containing the exported Content View Version"), :required => true
+    param :metadata, Hash, :desc => N_("Metadata taken from the upstream export history for this Content View Version"), :required => true
+    def repository
+      task = async_task(::Actions::Katello::ContentViewVersion::ImportRepository, @organization, path: params[:path], metadata: metadata_params.to_h)
+      respond_for_async :resource => task
+    end
+
     private
 
     def check_authorized
       fail HttpErrors::Forbidden, _("Action unauthorized to be performed in this organization.") unless @organization.can_import_content?
-    end
-
-    def find_default_content_view
-      @view = @organization&.default_content_view
-      throw_resource_not_found(name: 'organization', id: params[:organization_id]) if @view.blank?
-    end
-
-    def find_importable_organization
-      find_organization
-      throw_resource_not_found(name: 'organization', id: params[:organization_id]) unless @organization.can_import_content?
     end
 
     def metadata_params
@@ -69,8 +65,9 @@ module Katello
         :products,
         :toc,
         :incremental,
+        :destination_server,
         gpg_keys: {},
-        content_view: [:name, :label, :description],
+        content_view: [:name, :label, :description, :generated_for],
         content_view_version: [:major, :minor, :description],
         from_content_view_version: [:major, :minor]
       ).tap do |nested|

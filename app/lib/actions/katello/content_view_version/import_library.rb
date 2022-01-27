@@ -5,7 +5,6 @@ module Actions
         def plan(organization, path:, metadata:)
           action_subject(organization)
           plan_action(::Actions::Katello::ContentViewVersion::Import, organization: organization,
-                                                                      library: true,
                                                                       path: path,
                                                                       metadata: metadata)
         end
