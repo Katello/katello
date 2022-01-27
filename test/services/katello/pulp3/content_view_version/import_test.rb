@@ -98,6 +98,52 @@ module Katello
             refute_empty metadata_map[[repo.product.label, unknown]]
             refute metadata_map[[repo.product.label, unknown]][:redhat]
           end
+
+          it "should fail to import  cv if label is not specified" do
+            org = katello_content_views(:library_view).organization
+            exception = assert_raises(RuntimeError) do
+              ::Katello::Pulp3::ContentViewVersion::Import.
+                    find_or_create_import_view(organization: org,
+                                                metadata: {},
+                                                library: false)
+            end
+            assert_match(/label not provided/, exception.message)
+          end
+
+          it "should fail to import cv if import_only is false" do
+            cv = katello_content_views(:library_view)
+            refute cv.import_only?
+            exception = assert_raises(RuntimeError) do
+              ::Katello::Pulp3::ContentViewVersion::Import.
+                    find_or_create_import_view(organization: cv.organization,
+                                                metadata: { label: cv.label }.with_indifferent_access,
+                                                library: false)
+            end
+            assert_match(/foreman-rake katello:set_content_view_import_only ID=/, exception.message)
+          end
+
+          it "should create an importable content view" do
+            org = katello_content_views(:library_view).organization
+            label = "GREAT_CV10000"
+            cv = ::Katello::Pulp3::ContentViewVersion::Import.
+                    find_or_create_import_view(organization: org,
+                                                metadata: { label: label, name: label }.with_indifferent_access,
+                                                library: false)
+            assert_equal cv.label, label
+            assert_equal cv.organization, org
+            assert cv.import_only?
+          end
+
+          it "should create an importable content view for library" do
+            org = katello_content_views(:library_view).organization
+            cv = ::Katello::Pulp3::ContentViewVersion::Import.
+                    find_or_create_import_view(organization: org,
+                                                metadata: { },
+                                                library: true)
+            assert_equal cv.label, ::Katello::ContentView::IMPORT_LIBRARY
+            assert_equal cv.organization, org
+            assert cv.import_only?
+          end
         end
       end
     end
