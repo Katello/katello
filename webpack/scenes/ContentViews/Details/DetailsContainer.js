@@ -1,27 +1,27 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import PropTypes from 'prop-types';
 import { STATUS } from 'foremanReact/constants';
-import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
+import PropTypes from 'prop-types';
+import {
+  shallowEqual,
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 import Loading from '../../../components/Loading';
+import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 import getContentViewDetails from './ContentViewDetailActions';
 import {
-  selectCVDetails,
-  selectCVDetailStatus,
   selectCVDetailError,
+  selectCVDetailStatus,
 } from './ContentViewDetailSelectors';
 
-const DetailsContainer = ({ children, cvId, isOpen }) => {
+const DetailsContainer = ({ children, cvId }) => {
   const dispatch = useDispatch();
-  const details = useSelector(state => selectCVDetails(state, cvId), shallowEqual);
   const status = useSelector(state => selectCVDetailStatus(state, cvId), shallowEqual);
   const error = useSelector(state => selectCVDetailError(state, cvId), shallowEqual);
 
   useEffect(() => {
-    if (isOpen && Object.keys(details).length === 0) {
-      dispatch(getContentViewDetails(cvId));
-    }
-  });
+    dispatch(getContentViewDetails(cvId));
+  }, [cvId, dispatch]);
 
   if (status === STATUS.PENDING) return (<Loading />);
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
@@ -31,11 +31,6 @@ const DetailsContainer = ({ children, cvId, isOpen }) => {
 DetailsContainer.propTypes = {
   children: PropTypes.element.isRequired,
   cvId: PropTypes.number.isRequired,
-  isOpen: PropTypes.bool,
-};
-
-DetailsContainer.defaultProps = {
-  isOpen: true,
 };
 
 export default DetailsContainer;
