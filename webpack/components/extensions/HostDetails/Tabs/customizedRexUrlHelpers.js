@@ -29,6 +29,6 @@ export const resolveTraceUrl = ({ hostname, search }) => createJob({
 
 export const errataInstallUrl = ({ hostname, search }) => createJob({
   hostname,
-  feature: REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL,
+  feature: REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH,
   inputs: { [ERRATA_SEARCH_QUERY]: search },
 });
