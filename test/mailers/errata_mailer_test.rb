@@ -34,11 +34,12 @@ module Katello
     end
 
     def test_host_errata
+      Setting['foreman_url'] = 'http://luna.example.net'
       ActionMailer::Base.deliveries = []
       @user.user_mail_notifications.first.deliver
       email = ActionMailer::Base.deliveries.first
       assert_includes email.body.encoded, @errata_host.name
-      assert_includes email.body.encoded, "http://foreman.some.host.fqdn/content_hosts/#{@errata_host.id}/errata"
+      assert_includes email.body.encoded, "http://luna.example.net/content_hosts/#{@errata_host.id}/errata"
     end
 
     def test_sync_errata
