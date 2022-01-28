@@ -12,7 +12,7 @@ template_inputs:
   required: false
 %>
 <% package_names = @host.package_names_for_job_template(
-  feature: 'katello_package_install_by_search',
+  action: 'install',
   search: input('Package search query')
 ) -%>
 
