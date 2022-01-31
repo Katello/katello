@@ -12,6 +12,8 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
 
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(false)
+
       ensure_creatable(@repo, @primary)
       create_repo(@repo, @primary)
       ensure_creatable(@repo_clone, @primary)
@@ -26,6 +28,7 @@ module ::Actions::Pulp3
     end
 
     def test_yum_copy_all_no_filter_rules
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
       filter = FactoryBot.build(:katello_content_view_package_filter)
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
@@ -81,6 +84,7 @@ module ::Actions::Pulp3
     end
 
     def test_yum_copy_all_no_filter_rules_without_dependency_solving
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
       filter = FactoryBot.create(:katello_content_view_package_filter, :inclusion => true)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "trout")
 
@@ -134,6 +138,7 @@ module ::Actions::Pulp3
     end
 
     def test_yum_copy_all_no_filter_rules_with_dependency_solving
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "trout")
 
@@ -280,6 +285,8 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'https://fixtures.pulpproject.org/srpm-unsigned/')
 
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(false)
+
       ensure_creatable(@repo, @primary)
       create_repo(@repo, @primary)
       ensure_creatable(@repo_clone, @primary)
@@ -321,6 +328,8 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
 
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(false)
+
       ensure_creatable(@repo, @primary)
       create_repo(@repo, @primary)
       ensure_creatable(@repo_clone, @primary)
@@ -335,6 +344,7 @@ module ::Actions::Pulp3
     end
 
     def test_all_errata_copied_if_no_filter_rules
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
 
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
@@ -409,6 +419,8 @@ module ::Actions::Pulp3
       @repo_clone = katello_repositories(:fedora_17_x86_64_dev)
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
+
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(false)
 
       ensure_creatable(@repo, @primary)
       create_repo(@repo, @primary)
@@ -496,6 +508,8 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
 
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(false)
+
       ensure_creatable(@repo, @primary)
       create_repo(@repo, @primary)
       ensure_creatable(@repo_clone, @primary)
@@ -510,6 +524,7 @@ module ::Actions::Pulp3
     end
 
     def test_all_package_groups_copied_with_no_filter_rules
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
 
       @repo_clone_original_version_href = @repo_clone.version_href
@@ -581,6 +596,8 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
 
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(false)
+
       ensure_creatable(@repo, @primary)
       create_repo(@repo, @primary)
       ensure_creatable(@repo_clone, @primary)
@@ -644,6 +661,8 @@ module ::Actions::Pulp3
       @repo_clone = katello_repositories(:fedora_17_x86_64_dev)
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
+
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(false)
 
       ensure_creatable(@repo, @primary)
       create_repo(@repo, @primary)
