@@ -184,7 +184,7 @@ module Katello
         def net_http_class
           if proxy
             uri = URI(proxy.url) #Net::HTTP::Proxy ignores port as part of the url
-            Net::HTTP::Proxy("#{uri.host}#{uri.path}", uri.port, proxy.username, proxy.password)
+            Net::HTTP::Proxy("#{uri.host}", uri.port, proxy.username, proxy.password)
           else
             Net::HTTP
           end
