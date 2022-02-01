@@ -21,9 +21,9 @@ module Katello
           config = {
             feed: external_url,
             remove_missing: true,
-            releases: root.deb_releases,
-            components: root.deb_components,
-            architectures: root.deb_architectures,
+            releases: root.deb_releases&.split&.join(','),
+            components: root.deb_components&.split&.join(','),
+            architectures: root.deb_architectures&.split&.join(','),
             gpg_keys: root&.gpg_key&.content,
             require_signature: root.gpg_key.present?
           }
