@@ -1,8 +1,8 @@
 import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
-import { foremanApi } from '../../../../services/api';
+import { foremanApi } from '../../../../../services/api';
 import { HOST_ERRATA_KEY, HOST_ERRATA_APPLICABILITY_KEY, HOST_ERRATA_APPLY_KEY } from './HostErrataConstants';
-import { getResponseErrorMsgs } from '../../../../utils/helpers';
-import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
+import { getResponseErrorMsgs } from '../../../../../utils/helpers';
+import { renderTaskStartedToast } from '../../../../../scenes/Tasks/helpers';
 
 const errorToast = (error) => {
   const message = getResponseErrorMsgs(error.response);

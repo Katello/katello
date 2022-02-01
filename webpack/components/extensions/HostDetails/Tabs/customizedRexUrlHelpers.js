@@ -1,6 +1,6 @@
 import { REX_FEATURES } from './RemoteExecutionConstants';
-import { KATELLO_TRACER_PACKAGE, TRACES_SEARCH_QUERY } from './HostTracesConstants';
-import { ERRATA_SEARCH_QUERY } from '../HostErrata/HostErrataConstants';
+import { KATELLO_TRACER_PACKAGE, TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
+import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
 
 export const createJob = ({
   hostname, feature, inputs,

@@ -15,7 +15,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { installTracerPackage } from './HostTracesActions';
-import { katelloPackageInstallUrl } from './customizedRexUrlHelpers';
+import { katelloPackageInstallUrl } from '../customizedRexUrlHelpers';
 
 const EnableTracerModal = ({ isOpen, setIsOpen }) => {
   const title = __('Enable Tracer');

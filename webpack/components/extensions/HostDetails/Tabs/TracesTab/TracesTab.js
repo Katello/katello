@@ -8,14 +8,14 @@ import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table'
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import EnableTracerEmptyState from './EnableTracerEmptyState';
-import TableWrapper from '../../../Table/TableWrapper';
-import { useBulkSelect, useUrlParams } from '../../../Table/TableHooks';
+import TableWrapper from '../../../../Table/TableWrapper';
+import { useBulkSelect, useUrlParams } from '../../../../Table/TableHooks';
 import { getHostTraces } from './HostTracesActions';
-import { resolveTraces } from './RemoteExecutionActions';
+import { resolveTraces } from '../RemoteExecutionActions';
 import { selectHostTracesStatus } from './HostTracesSelectors';
-import { resolveTraceUrl } from './customizedRexUrlHelpers';
+import { resolveTraceUrl } from '../customizedRexUrlHelpers';
 import './TracesTab.scss';
-import hostIdNotReady from '../HostDetailsActions';
+import hostIdNotReady from '../../HostDetailsActions';
 
 const TracesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
