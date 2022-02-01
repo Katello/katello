@@ -15,17 +15,19 @@ module Actions
                 metadata: metadata
               ).output
 
-              import_output = plan_action(
+              plan_action(
                 ::Actions::Pulp3::ContentViewVersion::Import,
                 content_view_version_id: content_view_version.id,
                 smart_proxy_id: smart_proxy.id,
                 importer_data: importer_output[:importer_data],
                 path: path,
                 metadata: metadata
-              ).output
-
-              plan_action(Actions::Pulp3::Repository::SaveVersions, content_view_version.importable_repositories.pluck(:id),
-                          tasks: import_output[:pulp_tasks])
+              )
+              concurrence do
+                content_view_version.importable_repositories.each do |repo|
+                  plan_action(Actions::Pulp3::Repository::SaveVersion, repo)
+                end
+              end
               plan_action(
                 ::Actions::Pulp3::ContentViewVersion::CreateImportHistory,
                 content_view_version_id: content_view_version.id,
