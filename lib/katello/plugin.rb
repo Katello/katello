@@ -304,6 +304,7 @@ Foreman::Plugin.register :katello do
 
   if Katello.with_remote_execution?
     RemoteExecutionFeature.register(:katello_package_install, N_("Katello: Install Package"), :description => N_("Install package via Katello interface"), :provided_inputs => ['package'])
+    RemoteExecutionFeature.register(:katello_package_install_by_search, N_("Katello: Install packages by search query"), :description => N_("Install packages via Katello interface"), :provided_inputs => ['Package search query'])
     RemoteExecutionFeature.register(:katello_package_update, N_("Katello: Update Package"), :description => N_("Update package via Katello interface"), :provided_inputs => ['package'])
     RemoteExecutionFeature.register(:katello_package_remove, N_("Katello: Remove Package"), :description => N_("Remove package via Katello interface"), :provided_inputs => ['package'])
     RemoteExecutionFeature.register(:katello_group_install, N_("Katello: Install Package Group"), :description => N_("Install package group via Katello interface"), :provided_inputs => ['package'])

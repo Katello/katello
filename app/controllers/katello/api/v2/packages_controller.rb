@@ -53,9 +53,13 @@ module Katello
     def custom_index_relation(collection)
       applicable = ::Foreman::Cast.to_bool(params[:packages_restrict_applicable]) || params[:host_id]
       upgradable = ::Foreman::Cast.to_bool(params[:packages_restrict_upgradable])
+      not_installed = ::Foreman::Cast.to_bool(params[:packages_restrict_not_installed])
 
       if upgradable
         collection = collection.installable_for_hosts(@hosts)
+      elsif not_installed && params[:host_id]
+        host = @hosts.first
+        collection = Katello::Rpm.yum_installable_for_host(host)
       elsif applicable
         collection = collection.applicable_to_hosts(@hosts)
       end

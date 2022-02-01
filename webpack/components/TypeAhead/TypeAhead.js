@@ -22,6 +22,7 @@ const TypeAhead = ({
   autoSearchEnabled,
   autoSearchDelay,
   bookmarkController,
+  placeholder,
 }) => {
   const [inputValue, setInputValue] = useState(initialInputValue);
 
@@ -79,6 +80,7 @@ const TypeAhead = ({
           onSearch,
           items,
           activeItems,
+          placeholder,
           shouldShowItems: isOpen && items.length > 0,
         };
 
@@ -86,7 +88,7 @@ const TypeAhead = ({
           <div>
             {patternfly4 ?
               <TypeAheadSearchPf4 autoSearchEnabled={autoSearchEnabled} {...typeAheadProps} /> :
-              <TypeAheadSearch actionText={actionText} {...typeAheadProps} />}
+              <TypeAheadSearch actionText={actionText} {...typeAheadProps} placeholder={null} />}
           </div>
         );
       }}
@@ -112,6 +114,7 @@ TypeAhead.propTypes = {
   autoSearchEnabled: PropTypes.bool.isRequired,
   autoSearchDelay: PropTypes.number,
   bookmarkController: PropTypes.string,
+  placeholder: PropTypes.string,
 };
 
 TypeAhead.defaultProps = {
@@ -121,6 +124,7 @@ TypeAhead.defaultProps = {
   isDisabled: undefined,
   autoSearchDelay: 500,
   bookmarkController: undefined,
+  placeholder: undefined,
 };
 
 export default TypeAhead;

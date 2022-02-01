@@ -8,7 +8,7 @@ import { commonInputPropTypes } from '../helpers/commonPropTypes';
 import './TypeAheadInput.scss';
 
 const TypeAheadInput = ({
-  onKeyPress, onInputFocus, passedProps, isDisabled, autoSearchEnabled,
+  onKeyPress, onInputFocus, passedProps, isDisabled, autoSearchEnabled, placeholder,
 }) => {
   const inputRef = useRef(null);
   const {
@@ -33,6 +33,7 @@ const TypeAheadInput = ({
         onChange={onChangeWrapper}
         type="search"
         iconVariant={autoSearchEnabled && 'search'}
+        placeholder={placeholder}
       />
       {
         value && (
@@ -50,10 +51,12 @@ TypeAheadInput.propTypes = {
   isDisabled: PropTypes.bool,
   autoSearchEnabled: PropTypes.bool.isRequired,
   ...commonInputPropTypes,
+  placeholder: PropTypes.string,
 };
 
 TypeAheadInput.defaultProps = {
   isDisabled: undefined,
+  placeholder: '',
 };
 
 export default TypeAheadInput;

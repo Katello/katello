@@ -8,6 +8,7 @@ module Katello
     has_many :content_facets, :through => :content_facet_applicable_rpms, :class_name => "Katello::Host::ContentFacet"
     has_many :module_stream_rpms, class_name: "Katello::ModuleStreamRpm", inverse_of: :rpm, dependent: :destroy
     has_many :module_streams, :through => :module_stream_rpms
+    scoped_search :on => :id, :complete_value => true
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :version, :complete_value => true, :ext_method => :scoped_search_version
     scoped_search :on => :release, :complete_value => true, :ext_method => :scoped_search_release
@@ -213,6 +214,13 @@ module Katello
     def self.applicable_to_hosts(hosts)
       self.joins(:content_facets).
         where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).distinct
+    end
+
+    # Return RPMs that are not installed on a host, but could be installed
+    # the word 'installable' has a different meaning here than elsewhere
+    def self.yum_installable_for_host(host)
+      repos = host.content_facet.bound_repositories.pluck(:id)
+      Katello::Rpm.in_repositories(repos).where.not(name: host.installed_packages.pluck(:name)).order(:name)
     end
 
     def self.latest(relation)

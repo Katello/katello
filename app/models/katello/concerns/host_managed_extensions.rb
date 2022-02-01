@@ -400,6 +400,16 @@ module Katello
         ::Katello::HostTracer.helpers_for(traces)
       end
 
+      def package_names_for_job_template(action:, search:)
+        actions = ['install']
+        case action
+        when 'install'
+          ::Katello::Rpm.yum_installable_for_host(self).search_for(search).distinct.pluck(:name)
+        else
+          fail ::Foreman::Exception.new(N_("package_names_for_job_template: Action must be one of %s"), actions.join(', '))
+        end
+      end
+
       def advisory_ids(search:)
         ::Katello::Erratum.installable_for_hosts([self]).search_for(search).pluck(:errata_id)
       end
@@ -426,7 +436,7 @@ end
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
         :host_collections, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
-        :installed_packages, :traces_helpers, :advisory_ids
+        :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail

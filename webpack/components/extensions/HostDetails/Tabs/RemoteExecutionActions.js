@@ -5,6 +5,7 @@ import { getResponseErrorMsgs } from '../../../../utils/helpers';
 import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
 import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
 import { TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
+import { PACKAGE_SEARCH_QUERY } from '../YumInstallablePackages/YumInstallablePackagesConstants';
 
 const errorToast = (error) => {
   const message = getResponseErrorMsgs(error.response);
@@ -19,12 +20,22 @@ const baseParams = ({ feature, hostname, inputs = {} }) => ({
   },
 });
 
+// used when we know the package name
 const katelloPackageInstallParams = ({ hostname, packageName }) =>
   baseParams({
     hostname,
     inputs: { package: packageName },
     feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL,
   });
+
+// used when we know package Id(s)
+const katelloPackageInstallBySearchParams = ({ hostname, search }) =>
+  baseParams({
+    hostname,
+    inputs: { [PACKAGE_SEARCH_QUERY]: search },
+    feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH,
+  });
+
 
 const katelloTracerResolveParams = ({ hostname, search }) =>
   baseParams({
@@ -48,6 +59,18 @@ export const installPackage = ({ hostname, packageName }) => post({
   params: katelloPackageInstallParams({ hostname, packageName }),
   handleSuccess: response => renderTaskStartedToast({
     humanized: { action: `Install ${packageName} on ${hostname}` },
+    id: response?.data?.dynflow_task?.id,
+  }),
+  errorToast: error => errorToast(error),
+});
+
+export const installPackageBySearch = ({ hostname, search }) => post({
+  type: API_OPERATIONS.POST,
+  key: REX_JOB_INVOCATIONS_KEY,
+  url: foremanApi.getApiUrl('/job_invocations'),
+  params: katelloPackageInstallBySearchParams({ hostname, search }),
+  handleSuccess: response => renderTaskStartedToast({
+    humanized: { action: `Install packages on ${hostname}` },
     id: response?.data?.dynflow_task?.id,
   }),
   errorToast: error => errorToast(error),

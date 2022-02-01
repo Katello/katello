@@ -1,6 +1,19 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Hint, HintBody, Split, SplitItem } from '@patternfly/react-core';
+import {
+  Button,
+  Hint,
+  HintBody,
+  DropdownItem,
+  DropdownSeparator,
+  Dropdown,
+  Skeleton,
+  Split,
+  SplitItem,
+  ActionList,
+  ActionListItem,
+  KebabToggle,
+} from '@patternfly/react-core';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
@@ -15,11 +28,12 @@ import { selectHostPackagesStatus } from '../HostPackages/HostPackagesSelectors'
 import { HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM } from '../HostPackages/HostPackagesConstants';
 import './PackagesTab.scss';
 import hostIdNotReady from '../HostDetailsActions';
+import PackageInstallModal from './PackageInstallModal';
+import defaultRemoteActionMethod, { KATELLO_AGENT } from '../hostDetailsHelpers';
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
-  const { id: hostId } = hostDetails;
-  const actionButtons = <Button isDisabled> {__('Upgrade')} </Button>;
+  const { id: hostId, name: hostName } = hostDetails;
 
   const { searchParam } = useUrlParams();
   const [searchQuery, updateSearchQuery] = useState(searchParam || '');
@@ -27,6 +41,11 @@ export const PackagesTab = () => {
   const [packageStatusSelected, setPackageStatusSelected] = useState(PACKAGE_STATUS);
   const activeFilters = [packageStatusSelected];
   const defaultFilters = [PACKAGE_STATUS];
+  const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
+  const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
+  const showKatelloAgent = (defaultRemoteActionMethod({ hostDetails }) === KATELLO_AGENT);
 
   const emptyContentTitle = __('This host does not have any packages.');
   const emptyContentBody = __('Packages will appear here when available.');
@@ -55,7 +74,11 @@ export const PackagesTab = () => {
   const { results, ...metadata } = response;
   const status = useSelector(state => selectHostPackagesStatus(state));
 
-  if (!hostId) return null;
+  if (!hostId) return <Skeleton />;
+  const handleInstallPackagesClick = () => {
+    setIsBulkActionOpen(false);
+    setIsModalOpen(true);
+  };
 
   const rowActions = [
     {
@@ -86,6 +109,48 @@ export const PackagesTab = () => {
         />
       </SplitItem>
     </Split>
+  );
+
+  const dropdownItems = [
+    <DropdownItem
+      aria-label="remove_pkg_from_host"
+      key="remove_pkg_from_host"
+      component="button"
+      isDisabled
+    >
+      {__('Remove')}
+    </DropdownItem>,
+    <DropdownSeparator key="separator" />,
+    <DropdownItem
+      aria-label="install_pkg_on_host"
+      key="install_pkg_on_host"
+      component="button"
+      onClick={handleInstallPackagesClick}
+    >
+      {__('Install packages')}
+    </DropdownItem>,
+  ];
+
+  const actionButtons = (
+    <>
+      <Split hasGutter>
+        <SplitItem>
+          <ActionList isIconList>
+            <ActionListItem>
+              <Button isDisabled> {__('Upgrade')} </Button>
+            </ActionListItem>
+            <ActionListItem>
+              <Dropdown
+                toggle={<KebabToggle aria-label="Packages bulk actions" onToggle={toggleBulkAction} />}
+                isOpen={isBulkActionOpen}
+                isPlain
+                dropdownItems={dropdownItems}
+              />
+            </ActionListItem>
+          </ActionList>
+        </SplitItem>
+      </Split>
+    </>
   );
 
   return (
@@ -163,6 +228,15 @@ export const PackagesTab = () => {
           </Tbody>
         </TableWrapper>
       </div>
+      {hostId &&
+      <PackageInstallModal
+        isOpen={isModalOpen}
+        closeModal={closeModal}
+        hostId={hostId}
+        hostName={hostName}
+        showKatelloAgent={showKatelloAgent}
+      />
+      }
     </div>
   );
 };

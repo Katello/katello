@@ -873,7 +873,7 @@ test('Can bulk apply via katello agent', async (done) => {
 
 test('Can select all, exclude and bulk apply via katello agent', async (done) => {
   // This is the same test as above,
-  // but using the table action bar instead of the Restart app button
+  // but using the table action bar instead of the Apply button
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
   const { results } = mockErrata;
@@ -906,7 +906,7 @@ test('Can select all, exclude and bulk apply via katello agent', async (done) =>
   const selectAllCheckbox = getByLabelText('Select all');
   selectAllCheckbox.click();
 
-  getByLabelText('Select row 0').click(); // de select
+  getByLabelText('Select row 0').click(); // deselect
 
   const actionMenu = getByLabelText('bulk_actions');
   actionMenu.click();

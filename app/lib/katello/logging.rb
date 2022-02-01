@@ -19,9 +19,9 @@ module Katello
     class Timer
       def initialize(key = "default")
         @key = key
-        @start_time = Time.now
         Thread.current[:timers] ||= {}
         Thread.current[:timers][key] = self
+        self.start
       end
 
       def start
@@ -36,6 +36,11 @@ module Katello
         duration = (Time.now - @start_time).truncate(2)
         @start_time = nil
         Rails.logger.info "Timer #{@key} stopping at #{Time.now}: #{duration} sec"
+      end
+
+      def log(msg = nil)
+        duration = (Time.now - @start_time).truncate(2)
+        Rails.logger.info ["Timer #{@key} running at #{Time.now}", msg, "#{duration} sec"].compact.join(': ')
       end
 
       def self.find_by_key(key)

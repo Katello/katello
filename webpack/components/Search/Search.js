@@ -22,6 +22,7 @@ const Search = ({
   getAutoCompleteParams,
   foremanApiAutoComplete,
   bookmarkController,
+  placeholder,
 }) => {
   const [items, setItems] = useState([]);
   const dispatch = useDispatch();
@@ -81,6 +82,7 @@ const Search = ({
         initialInputValue={initialInputValue}
         patternfly4={patternfly4}
         autoSearchEnabled={autoSearchEnabled}
+        placeholder={placeholder}
       />
     </div>
   );
@@ -99,6 +101,7 @@ Search.propTypes = {
     autoSearchDelay: PropTypes.number,
   }),
   bookmarkController: PropTypes.string,
+  placeholder: PropTypes.string,
 };
 
 Search.defaultProps = {
@@ -111,6 +114,7 @@ Search.defaultProps = {
   },
   isDisabled: undefined,
   bookmarkController: undefined,
+  placeholder: undefined,
 };
 
 export default Search;

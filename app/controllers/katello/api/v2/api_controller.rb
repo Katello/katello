@@ -126,7 +126,7 @@ module Katello
       end
     rescue ScopedSearch::QueryNotSupported, ActiveRecord::StatementInvalid => error
       message = error.message
-      if error.class == ActiveRecord::StatementInvalid
+      if error.instance_of? ActiveRecord::StatementInvalid
         Rails.logger.error("Invalid search: #{error.message}")
         message = _('Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.')
       end
@@ -141,7 +141,7 @@ module Katello
     protected
 
     def scoped_search_query(query, group)
-      if group
+      if group && !query_has_group_by?(query)
         query.select(group).group(group)
       else
         query
@@ -149,7 +149,12 @@ module Katello
     end
 
     def scoped_search_total(query, group)
-      scoped_search_query(query, group).length
+      count_query = scoped_search_query(query, group)
+      if query_has_group_by?(count_query)
+        count_query.length
+      else
+        count_query.count
+      end
     end
 
     def scoped_search_total_selectable(query, group)
@@ -157,8 +162,12 @@ module Katello
       if self.respond_to?(:total_selectable, true)
         total_selectable(q)
       else
-        q.length
+        group ? q.length : q.count
       end
+    end
+
+    def query_has_group_by?(query)
+      query.to_sql.include?('GROUP BY')
     end
 
     def scoped_search_results(query:, subtotal: 0, total: 0, page: 0, per_page: 0, error: nil, selectable: nil)

@@ -70,6 +70,7 @@ export const useSelectionSet = ({
   const pageIds = results?.map(result => result[idColumn]) ?? [];
   const selectableResults = results?.filter(result => isSelectable(result)) ?? [];
   const selectableIds = new Set(selectableResults.map(result => result[idColumn]));
+  const selectedResults = useRef({}); // { id: result }
   const canSelect = id => selectableIds.has(id);
   const areAllRowsOnPageSelected = () =>
     Number(pageIds?.length) > 0 &&
@@ -78,13 +79,28 @@ export const useSelectionSet = ({
   const areAllRowsSelected = () =>
     Number(selectionSet.size) > 0 && selectionSet.size === Number(metadata.selectable);
 
-  const selectPage = () => selectionSet.addAll(pageIds.filter(canSelect));
-  const selectNone = () => selectionSet.clear();
-  const selectOne = (isSelected, id) => {
+  const selectPage = () => {
+    const selectablePageIds = pageIds.filter(canSelect);
+    selectionSet.addAll(selectablePageIds);
+    // eslint-disable-next-line no-restricted-syntax
+    for (const result of selectableResults) {
+      selectedResults.current[result[idColumn]] = result;
+    }
+  };
+  const clearSelectedResults = () => {
+    selectedResults.current = {};
+  };
+  const selectNone = () => {
+    selectionSet.clear();
+    clearSelectedResults();
+  };
+  const selectOne = (isSelected, id, data) => {
     if (canSelect(id)) {
       if (isSelected) {
+        if (data) selectedResults.current[id] = data;
         selectionSet.add(id);
       } else {
+        delete selectedResults.current[id];
         selectionSet.delete(id);
       }
     }
@@ -104,6 +120,8 @@ export const useSelectionSet = ({
     isSelected,
     isSelectable: canSelect,
     selectionSet,
+    selectedResults: Object.values(selectedResults.current),
+    clearSelectedResults,
   };
 };
 
@@ -158,9 +176,10 @@ export const useBulkSelect = ({
     setSelectAllMode(false);
     exclusionSet.clear();
     inclusionSet.clear();
-  }, [exclusionSet, inclusionSet]);
+    selectOptions.clearSelectedResults();
+  }, [exclusionSet, inclusionSet, selectOptions]);
 
-  const selectOne = (isRowSelected, id) => {
+  const selectOne = (isRowSelected, id, data) => {
     if (selectAllMode) {
       if (isRowSelected) {
         exclusionSet.delete(id);
@@ -168,7 +187,7 @@ export const useBulkSelect = ({
         exclusionSet.add(id);
       }
     } else {
-      selectOptions.selectOne(isRowSelected, id);
+      selectOptions.selectOne(isRowSelected, id, data);
     }
   };
 

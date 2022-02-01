@@ -26,6 +26,7 @@ const TableWrapper = ({
   foremanApiAutoComplete,
   searchQuery,
   updateSearchQuery,
+  searchPlaceholderText,
   additionalListeners,
   activeFilters,
   displaySelectAllCheckbox,
@@ -35,6 +36,8 @@ const TableWrapper = ({
   areAllRowsOnPageSelected,
   areAllRowsSelected,
   selectedCount,
+  selectedResults,
+  clearSelectedResults,
   emptySearchBody,
   disableSearch,
   nodesBelowSearch,
@@ -187,6 +190,7 @@ const TableWrapper = ({
               getAutoCompleteParams={getAutoCompleteParams}
               foremanApiAutoComplete={foremanApiAutoComplete}
               bookmarkController={bookmarkController}
+              placeholder={searchPlaceholderText}
             />
           </FlexItem>
         }
@@ -261,6 +265,7 @@ TableWrapper.propTypes = {
   }),
   autocompleteEndpoint: PropTypes.string.isRequired,
   foremanApiAutoComplete: PropTypes.bool,
+  searchPlaceholderText: PropTypes.string,
   actionButtons: PropTypes.node,
   toggleGroup: PropTypes.node,
   children: PropTypes.node,
@@ -280,6 +285,8 @@ TableWrapper.propTypes = {
   ])),
   displaySelectAllCheckbox: PropTypes.bool,
   selectedCount: PropTypes.number,
+  selectedResults: PropTypes.arrayOf(PropTypes.object),
+  clearSelectedResults: PropTypes.func,
   selectAll: PropTypes.func,
   selectNone: PropTypes.func,
   selectPage: PropTypes.func,
@@ -298,13 +305,16 @@ TableWrapper.defaultProps = {
   activeFilters: [],
   defaultFilters: [],
   foremanApiAutoComplete: false,
+  searchPlaceholderText: undefined,
   actionButtons: null,
   toggleGroup: null,
   displaySelectAllCheckbox: false,
   selectedCount: 0,
-  selectAll: noop,
-  selectNone: noop,
-  selectPage: noop,
+  selectedResults: [],
+  clearSelectedResults: noop,
+  selectAll: undefined,
+  selectNone: undefined,
+  selectPage: undefined,
   areAllRowsOnPageSelected: noop,
   areAllRowsSelected: noop,
   emptySearchBody: __('Try changing your search settings.'),

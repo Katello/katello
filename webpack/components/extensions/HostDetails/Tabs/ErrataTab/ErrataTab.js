@@ -33,6 +33,7 @@ import { installErrata } from '../RemoteExecutionActions';
 import { errataInstallUrl } from '../customizedRexUrlHelpers';
 import './ErrataTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
+import defaultRemoteActionMethod, { KATELLO_AGENT } from '../../hostDetailsHelpers';
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -155,13 +156,12 @@ export const ErrataTab = () => {
     { errata_ids: [id] },
   ));
 
-  const katelloAgentAvailable = (contentFacet.katelloAgentInstalled &&
-    contentFacet.katelloAgentEnabled);
+  const defaultRemoteAction = defaultRemoteActionMethod({ hostDetails });
   const apply = () => {
-    if (contentFacet.remoteExecutionByDefault || !katelloAgentAvailable) {
-      applyViaRemoteExecution();
-    } else {
+    if (defaultRemoteAction === KATELLO_AGENT) {
       applyByKatelloAgent();
+    } else {
+      applyViaRemoteExecution();
     }
   };
 
@@ -176,7 +176,7 @@ export const ErrataTab = () => {
     </DropdownItem>,
   ];
 
-  if (katelloAgentAvailable) {
+  if (defaultRemoteAction === KATELLO_AGENT) {
     dropdownItems.push((
       <DropdownItem
         aria-label="apply_via_katello_agent"

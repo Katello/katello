@@ -20,6 +20,7 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
       HOST_DETAILS: {
         response: {
           id: 1,
+          name: 'test-host',
           content_facet_attributes: { ...facetAttributes },
         },
         status: 'RESOLVED',
@@ -56,8 +57,6 @@ afterEach(() => {
 test('Can call API for packages and show on screen on page load', async (done) => {
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-
-  // return tracedata results when we look for packages
   const scope = nockInstance
     .get(hostPackages)
     .query(defaultQuery)
