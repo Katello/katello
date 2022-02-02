@@ -200,6 +200,11 @@ module Actions
                 plan_action(Katello::Repository::IndexContent, id: id, full_index: true)
               end
             end
+            concurrence do
+              version.importable_repositories.each do |repo|
+                plan_action(::Actions::Katello::Repository::MetadataGenerate, repo)
+              end
+            end
             plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::CopyVersionUnitsToLibrary, version)
           end
         end
