@@ -11,7 +11,7 @@ module Katello
     end
 
     def test_success
-      Katello::Host::ContentFacet.any_instance.expects(:import_applicability).at_least_once
+      Katello::Host::ContentFacet.any_instance.expects(:calculate_and_import_applicability).at_least_once
 
       Rake.application.invoke_task('katello:import_applicability')
     end
