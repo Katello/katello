@@ -1,3 +1,31 @@
+# 4.2.2 Alfalfa (2022-02-03)
+
+## Bug Fixes
+
+### Foreman Proxy Content
+ * Smart proxy syncing of a specific LCE fails on Katello 4.2 ([#34128](https://projects.theforeman.org/issues/34128))
+ * smart proxy syncing a repository that has no upstream url set error with '"bad argument (expected URI object or URI string)' ([#33893](https://projects.theforeman.org/issues/33893), 
+[a6600467](https://github.com/Katello/katello.git/commit/a66004676548d488440644d754391037dd63f0b3))
+ * Pulp 3 check fails if only running a single worker ([#33430](https://projects.theforeman.org/issues/33430), [76eef833](https://github.com/Katello/katello.git/commit/76eef8331694c66c0
+73e9b03357d88b91c6ced8d))
+
+### Hosts
+ * db:seed can fail when there are host mismatches ([#34059](https://projects.theforeman.org/issues/34059), [fe3dbc9b](https://github.com/Katello/katello.git/commit/fe3dbc9b5f07d7628f7e
+6ec38b8f61305dbf5fa0))
+
+### Upgrades
+ * Upgrade fails with PG::NotNullViolation: ERROR:  column "subscription_id" contains null values ([#33936](https://projects.theforeman.org/issues/33936), [a8a75800](https://github.com/
+Katello/katello.git/commit/a8a758004b3952c5b6fc094676181b13fa1c5a68))
+
+### Other
+ * Incremental publish content view doesn't copy any contents ([#34145](https://projects.theforeman.org/issues/34145), [7961da66](https://github.com/Katello/katello.git/commit/7961da661
+073d22c9ae8e3f320186777aa85aa8b))
+ * webhook event "build_exited" never gets triggered ([#34110](https://projects.theforeman.org/issues/34110), [353ebfc0](https://github.com/Katello/katello.git/commit/353ebfc0ab489458a9
+882c759bb3d7ec6b16f85d))
+ * Cannot pull container content -  TypeError: wrong argument type String (expected OpenSSL/X509) ([#34070](https://projects.theforeman.org/issues/34070), [d6adef8e](https://github.com/
+Katello/katello.git/commit/d6adef8e4ca5ba135277ec6c5c1721870e9e8776))
+
+
 # 4.2.1 Alfalfa (2021-11-01)
 
 ## Bug Fixes
