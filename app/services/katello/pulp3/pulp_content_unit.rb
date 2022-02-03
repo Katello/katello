@@ -59,13 +59,6 @@ module Katello
         end
       end
 
-      def self.time
-        a = Time.now
-        to_return = yield
-        @query_time += Time.now - a
-        to_return
-      end
-
       def self.add_timestamps(rows)
         rows.each do |row|
           row[:created_at] = DateTime.now
@@ -81,8 +74,6 @@ module Katello
       end
 
       def self.pulp_units_batch_for_repo(repository, options = {})
-        @query_time = 0
-
         fetch_identifiers = options.fetch(:fetch_identifiers, false)
         page_size = options.fetch(:page_size, Setting[:bulk_load_size])
         repository_version_href = repository.version_href
@@ -100,18 +91,13 @@ module Katello
             if repository.generic?
               response = fetch_content_list page_opts, repository.repository_type, options[:content_type]
             else
-              response = time { fetch_content_list page_opts }
+              response = fetch_content_list page_opts
             end
             response = response.as_json.with_indifferent_access
             yielder.yield response[:results]
             page_opts[:offset] += page_size
           end
         end
-      end
-
-      def self.report
-        Rails.logger.error("QueryTime: #{@query_time}")
-        @query_time = 0
       end
 
       def self.page_options(page_opts = {})

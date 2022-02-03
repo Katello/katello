@@ -8,34 +8,6 @@ module Katello
       @content_type = content_type
       @pulp_content_ids = pulp_content_ids
       @optimized = optimized
-      @other_time = 0
-      @import_time = 0
-      @assoc_time = 0
-    end
-
-    def report
-      Rails.logger.error("Times: #{@other_time}, #{@import_time}, #{@assoc_time}")
-    end
-
-    def import_time
-      a = Time.now
-      to_return = yield
-      @import_time += (Time.now - a)
-      to_return
-    end
-
-    def other_time
-      a = Time.now
-      to_return = yield
-      @other_time += (Time.now - a)
-      to_return
-    end
-
-    def assoc_time
-      a = Time.now
-      to_return = yield
-      @assoc_time += (Time.now - a)
-      to_return
     end
 
     def remove_duplicates(unit)
@@ -57,28 +29,26 @@ module Katello
           association_tracker.push(unit)
           remove_duplicates(unit)
           if @content_type.generic?
-            other_time { @service_class.generate_model_row(unit, @content_type) }
+            @service_class.generate_model_row(unit, @content_type)
           else
-            other_time { @service_class.generate_model_row(unit) }
+            @service_class.generate_model_row(unit)
           end
         end
 
         next if to_insert.empty?
         insert_timestamps(to_insert)
         if @content_type.mutable
-          import_time { @model_class.upsert_all(to_insert, unique_by: :pulp_id) }
+          @model_class.upsert_all(to_insert, unique_by: :pulp_id)
         else
-          import_time { @model_class.insert_all(to_insert, unique_by: :pulp_id) }
+          @model_class.insert_all(to_insert, unique_by: :pulp_id)
         end
 
         import_associations(units) if @repository
       end
 
       if @model_class.many_repository_associations && @repository
-        assoc_time { sync_repository_associations(association_tracker) } #:pulp_ids => ids_to_associate, :additive => true) }
+        sync_repository_associations(association_tracker)
       end
-      @service_class.report
-      report
     end
 
     def import_associations(units)
@@ -186,35 +156,6 @@ module Katello
       else
         fail "Unable to find unique index for #{columns} on table #{self.repository_association_class.table_name}"
       end
-    end
-
-    def copy_repository_associations(source_repo, dest_repo)
-      if many_repository_associations
-        delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
-                         #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
-        ActiveRecord::Base.transaction do
-          ActiveRecord::Base.connection.execute(delete_query)
-          self.repository_association_class.import(db_columns_copy, db_values_copy(source_repo, dest_repo), validate: false)
-        end
-      else
-        columns = column_names - ["id", "pulp_id", "created_at", "updated_at", "repository_id"]
-        queries = []
-        queries << "delete from #{self.table_name} where repository_id = #{dest_repo.id} and
-                          pulp_id not in (select pulp_id from #{self.table_name} where repository_id = #{source_repo.id})"
-        queries << "insert into #{self.table_name} (repository_id, pulp_id, #{columns.join(',')})
-                    select #{dest_repo.id} as repository_id, pulp_id, #{columns.join(',')} from #{self.table_name}
-                    where repository_id = #{source_repo.id} and pulp_id not in (select pulp_id
-                    from #{self.table_name} where repository_id = #{dest_repo.id})"
-        ActiveRecord::Base.transaction do
-          queries.each do |query|
-            ActiveRecord::Base.connection.execute(query)
-          end
-        end
-      end
-    end
-
-    def db_columns_copy
-      [unit_id_field, backend_identifier_field, :repository_id].compact
     end
   end
 end

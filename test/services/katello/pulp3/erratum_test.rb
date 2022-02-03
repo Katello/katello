@@ -51,6 +51,37 @@ module Katello
           assert_equal post_unit_repository_count, 7
         end
 
+        def test_updates_href
+          Katello::Erratum.destroy_all
+          ::Katello::Pulp3::Repository.any_instance.stubs(:ssl_remote_options).returns({})
+
+          repo_1 = katello_repositories(:rhel_7_x86_64)
+          repo_1.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo2', :download_policy => 'immediate')
+          ensure_creatable(repo_1, @primary)
+          create_repo(repo_1, @primary)
+          repo_1.reload
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, repo_1, @primary, :smart_proxy_id => @primary.id, :repo_id => repo_1.id)
+          ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, :id => repo_1.id, :contents_changed => true)
+          repo_1.reload
+          post_unit_count, post_unit_repository_count = Katello::Erratum.all.count, Katello::RepositoryErratum.where(:repository_id => repo_1.id).count
+          assert_equal post_unit_count, 3
+          assert_equal post_unit_repository_count, 3
+
+          errata_id_list = repo_1.errata.pluck(:errata_id).sort
+          errata = Katello::Erratum.find_by(:errata_id => 'RHEA-2012:0059')
+          old_href = repo_1.repository_errata.find_by(erratum_id: errata.id).erratum_pulp3_href
+
+          repo_1.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo2_dup')
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, repo_1, @primary, :smart_proxy_id => @primary.id, :repo_id => repo_1.id)
+          ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, :id => repo_1.id, :contents_changed => true)
+          repo_1.reload
+          errata = Katello::Erratum.find_by(:errata_id => 'RHEA-2012:0059')
+          new_href = repo_1.repository_errata.find_by(erratum_id: errata.id).erratum_pulp3_href
+
+          refute_equal old_href, new_href
+          assert_equal errata_id_list, repo_1.errata.pluck(:errata_id).sort
+        end
+
         def test_dup_errata
           Katello::Erratum.destroy_all
           ::Katello::Pulp3::Repository.any_instance.stubs(:ssl_remote_options).returns({})

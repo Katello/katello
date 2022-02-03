@@ -5,7 +5,7 @@ class CleanDuplicateContentUnits < ActiveRecord::Migration[6.0]
     end
   end
 
-  def reassign_duplicate_associations(associated_models, duplicates, new_id, field, _unique_fields)
+  def reassign_duplicate_associations(associated_models, duplicates, new_id, field)
     associated_models.each do |associated_model, unique_by|
       associated_duplicates = associated_model.where(field => duplicates)
       to_delete, to_update = filter_duplicates(associated_model, associated_duplicates, new_id, field, [unique_by])
@@ -44,7 +44,7 @@ class CleanDuplicateContentUnits < ActiveRecord::Migration[6.0]
       to_keep = duplicate_ids.sort!.shift
 
       remove_children(reference_attribute_name, duplicate_ids, child_models)
-      reassign_duplicate_associations(associated_models, duplicate_ids, to_keep, reference_attribute_name, unique_by_fields)
+      reassign_duplicate_associations(associated_models, duplicate_ids, to_keep, reference_attribute_name)
       model.where(id: duplicate_ids).delete_all
     end
   end

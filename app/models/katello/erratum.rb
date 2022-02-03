@@ -92,18 +92,6 @@ module Katello
       where("#{self.table_name}.id in (?) or #{self.table_name}.pulp_id in (?) or #{self.table_name}.errata_id in (?)", id_integers, ids, ids)
     end
 
-    def self.update_repo_association_records(new_ids, erratum_updated_ids, id_href_map_for_repository, repository)
-      # if new_ids.any?
-      #   self.repository_association_class.import(db_columns_sync, db_values(new_ids, id_href_map_for_repository, repository), validate: false)
-      # end
-      erratum_updated_ids += new_ids
-      erratum_updated_ids.uniq!
-      if erratum_updated_ids.present?
-        # PostgreSQL refuses to insert and update in the same command: https://github.com/rails/rails/issues/35519
-        self.repository_association_class.upsert_all(db_values(erratum_updated_ids, id_href_map_for_repository, repository), unique_by: [:erratum_id, :repository_id])
-      end
-    end
-
     def hosts_applicable(org_id = nil)
       if org_id.present?
         self.content_facets_applicable.joins(:host).where("#{::Host.table_name}.organization_id" => org_id)
