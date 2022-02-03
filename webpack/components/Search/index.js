@@ -1,12 +1,22 @@
-import { bindActionCreators } from 'redux';
+import * as settingActions
+  from 'foremanReact/components/Settings/SettingsActions';
 import { connect } from 'react-redux';
-import * as settingActions from 'foremanReact/components/Settings/SettingsActions';
+import { bindActionCreators } from 'redux';
 import { selectSettings } from '../../scenes/Settings/SettingsSelectors';
 import Search from './Search';
 
 const mapStateToProps = state => ({
   settings: selectSettings(state),
 });
+
+const thing = () => {
+  if (mapStateToProps) {
+    return 'stuff';
+  }
+  return 'not stuff';
+};
+console.log('🚀 ~ file: index.js ~ line 23 ~ thing', 'you jeremy');
+
 
 const actions = { ...settingActions };
 
