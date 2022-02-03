@@ -16,7 +16,7 @@ module Katello
     end
 
     def test_search_by_host
-      assert_equal HostCollection.search_for("host = \"#{@host_one.name}\""), [@simple_collection, @limited_collection]
+      assert_equal HostCollection.search_for("host = \"#{@host_one.name}\"").sort, [@simple_collection, @limited_collection].sort
       assert_equal HostCollection.search_for("host = \"#{@host_two.name}\""), []
     end
 
