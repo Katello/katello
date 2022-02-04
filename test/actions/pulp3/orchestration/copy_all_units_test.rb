@@ -638,7 +638,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexPackageGroups, @repo_clone)
       @repo_clone.reload
 
-      assert_equal 'bird', @repo_clone.package_groups.first.name
+      assert_equal ['bird', 'mammal'], @repo_clone.package_groups.pluck(:name).sort
     end
 
     def test_package_groups_as_a_filter_rule

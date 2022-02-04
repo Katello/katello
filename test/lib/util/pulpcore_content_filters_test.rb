@@ -74,8 +74,8 @@ module Katello
       assert_equal [], filter_package_groups_by_pulp_href([], [@rpm2.pulp_id])
     end
 
-    def test_filter_by_pulp_id_ignores_incomplete_package_groups
-      assert_empty filter_package_groups_by_pulp_href([@package_group], [@rpm2.pulp_id])
+    def test_filter_by_pulp_id_includes_incomplete_package_groups
+      assert_equal [@package_group], filter_package_groups_by_pulp_href([@package_group], [@rpm2.pulp_id])
     end
 
     def test_filter_by_pulp_id_returns_nothing_if_no_package_group_matches
