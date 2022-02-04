@@ -8,8 +8,9 @@ module Katello
       def filter_package_groups_by_pulp_href(package_groups, package_pulp_hrefs)
         rpms = Katello::Rpm.where(:pulp_id => package_pulp_hrefs)
         package_groups.reject do |package_group|
+          #copy the package group as long as we have 1 package from the group
           package_group.package_names.empty? ||
-          (package_group.package_names - rpms.pluck(:name)).any?
+          (package_group.package_names & rpms.pluck(:name)).empty?
         end
       end
 
