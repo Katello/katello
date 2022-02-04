@@ -2,6 +2,7 @@ module Katello
   class Api::V2::ContentViewsController < Api::V2::ApiController
     include Concerns::Authorization::Api::V2::ContentViewsController
     include Katello::Concerns::FilteredAutoCompleteSearch
+    include Katello::Concerns::Api::V2::BulkExtensions
 
     before_action :find_authorized_katello_resource, :except => [:index, :create, :copy, :auto_complete_search]
     before_action :ensure_non_default, :except => [:index, :create, :copy, :auto_complete_search]
@@ -22,6 +23,18 @@ module Katello
       param :auto_publish, :bool, :desc => N_("Enable/Disable auto publish of composite view")
       param :solve_dependencies, :bool, :desc => N_("Solve RPM dependencies by default on Content View publish, defaults to false")
       param :import_only, :bool, :desc => N_("Designate this Content View for importing from upstream servers only. Defaults to false")
+    end
+
+    def_param_group :bulk_content_view_version_ids do
+      param :included, Hash, :desc => N_("Versions to exclusively include in the action"), :required => true, :action_aware => true do
+        param :search, String, :required => false, :desc => N_("Search string for versions to perform an action on")
+        param :ids, Array, :required => false, :desc => N_("List of versions to perform an action on")
+      end
+      param :excluded, Hash, :desc => N_("Versions to explicitly exclude in the action."\
+                                         " All other versions will be included in the action,"\
+                                         " unless an included parameter is passed as well."), :required => true, :action_aware => true do
+        param :ids, Array, :required => false, :desc => N_("List of versions to exclude and not run an action on")
+      end
     end
 
     def filtered_associations
@@ -171,6 +184,39 @@ module Katello
       options[:content_view_versions] = versions
       options[:content_view_environments] = cv_envs
 
+      task = async_task(::Actions::Katello::ContentView::Remove, @content_view, options)
+      respond_for_async :resource => task
+    end
+
+    api :PUT, "/content_views/:id/bulk_delete_versions", N_("Bulk remove versions from a content view and reassign systems and keys")
+    param_group :bulk_content_view_version_ids
+    param :id, :number, :desc => N_("content view numeric identifier"), :required => true
+    param :system_content_view_id, :number, :desc => N_("content view to reassign orphaned systems to")
+    param :system_environment_id, :number, :desc => N_("environment to reassign orphaned systems to")
+    param :key_content_view_id, :number, :desc => N_("content view to reassign orphaned activation keys to")
+    param :key_environment_id, :number, :desc => N_("environment to reassign orphaned activation keys to")
+    def bulk_delete_versions
+      params[:bulk_content_view_version_ids] ||= {}
+
+      versions = find_bulk_items(bulk_params: params[:bulk_content_view_version_ids],
+                                 model_scope: ::Katello::ContentViewVersion.where(content_view_id: @content_view.id),
+                                 key: :id)
+      cv_envs = ContentViewEnvironment.where(:content_view_version_id => versions.pluck(:id),
+                                             :content_view_id => @content_view.id
+      )
+
+      if !params[:destroy_content_view] && cv_envs.empty? && versions.empty?
+        fail _("There either were no environments nor versions specified or there were invalid environments/versions specified. "\
+               "Please check environment_ids and content_view_version_ids parameters.")
+      end
+
+      options = params.slice(:system_content_view_id,
+                             :system_environment_id,
+                             :key_content_view_id,
+                             :key_environment_id
+      ).reject { |_k, v| v.nil? }.to_unsafe_h
+      options[:content_view_versions] = versions
+      options[:content_view_environments] = cv_envs
       task = async_task(::Actions::Katello::ContentView::Remove, @content_view, options)
       respond_for_async :resource => task
     end

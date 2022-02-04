@@ -383,6 +383,35 @@ module Katello
       end
     end
 
+    def test_bulk_delete_versions
+      assert_async_task ::Actions::Katello::ContentView::Remove do |view, options|
+        @library_dev_staging_view == view &&
+          options[:system_content_view_id] == @library_dev_staging_view.id &&
+          options[:system_environment_id] == @library.id &&
+          options[:key_content_view_id] == @library_dev_staging_view.id &&
+          options[:key_environment_id] == @library.id &&
+          @library_dev_staging_view.versions.sort == options[:content_view_versions].sort &&
+          view.content_view_environments.sort == options[:content_view_environments].sort
+      end
+
+      put :bulk_delete_versions, params: {
+        key_content_view_id: @library_dev_staging_view.id,
+        key_environment_id: @library.id,
+        system_content_view_id: @library_dev_staging_view.id,
+        system_environment_id: @library.id,
+        bulk_content_view_version_ids: {
+          included: {
+            ids: @library_dev_staging_view.versions.map(&:id)
+          }
+        },
+        id: @library_dev_staging_view.id
+      }
+
+      assert_response :success
+
+      @library_dev_staging_view
+    end
+
     def test_remove_from_environment
       refute_includes @library_dev_view.environments, @staging
       delete :remove_from_environment, params: { id: @library_dev_view.id, environment_id: @staging.id }

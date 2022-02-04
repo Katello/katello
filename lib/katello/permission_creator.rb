@@ -124,7 +124,7 @@ module Katello
                          :finder_scope => :editable
       @plugin.permission :destroy_content_views,
                          {
-                           'katello/api/v2/content_views' => [:destroy, :remove],
+                           'katello/api/v2/content_views' => [:destroy, :remove, :bulk_delete_versions],
                            'katello/api/v2/content_view_versions' => [:destroy]
                          },
                          :resource_type => 'Katello::ContentView',
