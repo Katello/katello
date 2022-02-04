@@ -31,6 +31,7 @@ module Katello
         custom_json['pulp_id'] = custom_json['id']
         custom_json["issued"] = custom_json.delete("issued_date")
         custom_json["updated"] = custom_json.delete("updated_date")
+        custom_json['title'] = custom_json['title']&.truncate(255)
 
         # handle SUSE epoch dates
         custom_json["issued"] = convert_date_if_epoch(custom_json["issued"])

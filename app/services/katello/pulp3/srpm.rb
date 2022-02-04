@@ -74,6 +74,7 @@ module Katello
         custom_json['nvra'] = Katello::Util::Package.build_nvra(custom_json)
         custom_json['filename'] = unit['location_href']
         custom_json['checksum'] = unit['pkgId']
+        custom_json['summary'] = custom_json['summary']&.truncate(255)
         custom_json
       end
     end

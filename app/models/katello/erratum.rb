@@ -47,8 +47,6 @@ module Katello
                   :validator => ->(value) { ['true', 'false'].include?(value.downcase) },
                   :operators => ["="]
 
-    before_save lambda { |erratum| erratum.title = erratum.title.truncate(255) unless erratum.title.blank? }
-
     def self.of_type(type)
       where(:errata_type => type)
     end

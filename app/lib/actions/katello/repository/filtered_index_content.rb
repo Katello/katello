@@ -24,7 +24,7 @@ module Actions
             ::Katello::FileUnit.import_for_repository(repo)
           elsif repo.generic?
             repo.repository_type.content_types_to_index.each do |type|
-              type.model_class.import_for_repository(repo, generic_content_type: type.content_type)
+              type.model_class.import_for_repository(repo, content_type: type.content_type)
             end
           elsif repo.deb?
             if input[:import_upload_task] && input[:import_upload_task][:content_unit_href]
