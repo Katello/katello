@@ -14,10 +14,15 @@ module Katello
 
         def remote_options
           options = {url: root.url, upstream_name: root.docker_upstream_name, policy: root.download_policy}
-          if root.docker_tags_whitelist&.any?
-            options[:include_tags] = root.docker_tags_whitelist
+          if root.include_tags&.any?
+            options[:include_tags] = root.include_tags
           else
             options[:include_tags] = nil
+          end
+          if root.exclude_tags&.any?
+            options[:exclude_tags] = root.exclude_tags
+          else
+            options[:exclude_tags] = nil
           end
           common_remote_options.merge(options)
         end

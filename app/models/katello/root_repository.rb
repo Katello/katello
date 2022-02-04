@@ -4,6 +4,8 @@ module Katello
     audited :except => [:content_id]
     serialize :ignorable_content
     serialize :docker_tags_whitelist
+    serialize :include_tags
+    serialize :exclude_tags
     serialize :os_versions
 
     include Ext::LabelFromName
@@ -72,7 +74,8 @@ module Katello
     validate :ensure_valid_collection_attributes, :if => :ansible_collection?
     validate :ensure_valid_auth_url_token, :if => :ansible_collection?
     validate :ensure_valid_ignorable_content
-    validate :ensure_valid_docker_tags_whitelist
+    validate :ensure_valid_include_tags
+    validate :ensure_valid_exclude_tags
     validate :ensure_valid_os_versions
     validate :ensure_content_attribute_restrictions
     validate :ensure_valid_upstream_authorization
@@ -223,10 +226,17 @@ module Katello
       end
     end
 
-    def ensure_valid_docker_tags_whitelist
-      return if docker_tags_whitelist.blank?
-      unless docker_tags_whitelist.is_a?(Array)
-        errors.add(:docker_tags_whitelist, N_("Invalid value specified for Container Image repositories."))
+    def ensure_valid_include_tags
+      return if include_tags.blank?
+      unless include_tags.is_a?(Array)
+        errors.add(:include_tags, N_("Invalid value specified for Container Image repositories."))
+      end
+    end
+
+    def ensure_valid_exclude_tags
+      return if exclude_tags.blank?
+      unless exclude_tags.is_a?(Array)
+        errors.add(:exclude_tags, N_("Invalid value specified for Container Image repositories."))
       end
     end
 
@@ -315,6 +325,11 @@ module Katello
       Katello::Content.find_by(:cp_content_id => self.content_id, :organization_id => self.product.organization_id)
     end
 
+    # For API support during deprecation period.
+    def docker_tags_whitelist
+      include_tags
+    end
+
     def docker?
       self.content_type == Repository::DOCKER_TYPE
     end
@@ -359,7 +374,7 @@ module Katello
       changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirroring_policy verify_ssl_on_sync
                                  upstream_username upstream_password ignorable_content
                                  ssl_ca_cert_id ssl_client_cert_id ssl_client_key_id http_proxy_policy http_proxy_id download_concurrency)
-      changeable_attributes += %w(name container_repository_name docker_tags_whitelist) if docker?
+      changeable_attributes += %w(name container_repository_name include_tags exclude_tags) if docker?
       changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?
       changeable_attributes += %w(ansible_collection_requirements ansible_collection_auth_url ansible_collection_auth_token) if ansible_collection?
       changeable_attributes.any? { |key| previous_changes.key?(key) }

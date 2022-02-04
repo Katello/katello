@@ -389,9 +389,10 @@ module Katello
       end
     end
 
-    def test_pulp_update_needed_with_docker_white_tags?
+    def test_pulp_update_needed_with_docker_limit_tags?
       refute @docker_root.pulp_update_needed?
-      @docker_root.docker_tags_whitelist = ['3.7']
+      @docker_root.include_tags = ['3.7', '4.7']
+      @docker_root.exclude_tags = ['3.7']
       @docker_root.save!
       assert @docker_root.pulp_update_needed?
     end
@@ -529,15 +530,18 @@ module Katello
       assert @root.valid?
     end
 
-    def test_docker_white_tags
+    def test_docker_limit_tags
       @docker_root.url = "http://foo.com"
-      @docker_root.docker_tags_whitelist = nil
+      @docker_root.include_tags = nil
+      @docker_root.exclude_tags = nil
       assert @root.valid?
-      @docker_root.docker_tags_whitelist = ["latest", "1.1"]
+      @docker_root.include_tags = ["latest", "1.1"]
+      @docker_root.exclude_tags = ["latest"]
       assert @docker_root.valid?
 
       @root.content_type = Repository::OSTREE_TYPE
-      @root.docker_tags_whitelist = ["boo"]
+      @root.include_tags = ["boo"]
+      @root.exclude_tags = ["blue"]
       refute @root.valid?
     end
 

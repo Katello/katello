@@ -292,6 +292,22 @@
         </p>
       </div>
 
+      <div bst-form-group label="{{ 'Include Tags' | translate }}" ng-if="(repository.content_type === 'docker')">
+        <input id="include_tags" name="include_tags" ng-model="repository.include_tags" type="text"/>
+
+        <p class="help-block">
+          <span translate>A comma-separated list of container image tags to include when syncing.</span><br />
+        </p>
+      </div>
+
+      <div bst-form-group label="{{ 'Exclude Tags' | translate }}" ng-if="(repository.content_type === 'docker')">
+        <input id="exclude_tags" name="exclude_tags" ng-model="repository.exclude_tags" type="text"/>
+
+        <p class="help-block">
+          <span translate>A comma-separated list of container image tags to exclude when syncing. Source images are excluded by default because they are often large and unwanted.</span><br />
+        </p>
+      </div>
+
       <div bst-form-group label="{{ 'Retain package versions' | translate }}" ng-if="(repository.content_type === 'yum' && repository.mirroring_policy === 'additive')">
         <input id="retain_package_versions_count" name="retain_package_versions_count" ng-model="repository.retain_package_versions_count" type="number"/>
 

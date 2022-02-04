@@ -663,50 +663,54 @@ module Katello
       put :update, params: { :id => repo.id, :retain_package_versions_count => retain_package_versions_count }
     end
 
-    def test_update_with_whitelist_tags
-      whitelist = ["latest", "1.23"]
+    def test_update_with_limit_tags
+      include = ["latest", "1.23"]
+      exclude = ["latest"]
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
         assert_equal root, @docker_repo.root
-        expected = {'docker_tags_whitelist' => whitelist}
+        expected = {'include_tags' => include, 'exclude_tags' => exclude}
         assert_equal expected, attributes.to_hash
       end
-      put :update, params: { :id => @docker_repo.id, :repository => { :docker_tags_whitelist => whitelist } }
+      put :update, params: { :id => @docker_repo.id, :repository => { :include_tags => include, :exclude_tags => exclude } }
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
 
-    def test_update_non_docker_repo_with_whitelist_tags
+    def test_update_non_docker_repo_with_limit_tags
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
         assert_equal root, @repository.root
         expected = { 'name' => 'new name' }
         assert_equal expected, attributes.to_hash
       end
-      put :update, params: { :id => @repository.id, :repository => { name: 'new name', docker_tags_whitelist: [] } }
+      put :update, params: { :id => @repository.id, :repository => { name: 'new name', include_tags: [], exclude_dats: [] } }
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
 
-    def test_create_with_whitelist_tags
-      whitelist = ["latest", "1.23"]
-      @docker_repo.root.docker_tags_whitelist = nil
+    def test_create_with_limit_tags
+      include = ["latest", "1.23"]
+      exclude = ["latest"]
+      @docker_repo.root.include_tags = nil
       stub_editable_product_find(@product)
       @product.expects(:add_repo).returns(@docker_repo.root)
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @docker_repo.root) do |root|
         assert_equal root, @docker_repo.root
-        assert_equal whitelist, root.docker_tags_whitelist
+        assert_equal include, root.include_tags
+        assert_equal exclude, root.exclude_tags
       end
-      post :create, params: { :name => 'busybox', :product_id => @product.id, :content_type => 'docker', :docker_upstream_name => "busybox", :docker_tags_whitelist => whitelist }
+      post :create, params: { :name => 'busybox', :product_id => @product.id, :content_type => 'docker', :docker_upstream_name => "busybox", :include_tags => include, :exclude_tags => exclude }
       assert_response :success
       assert_template 'api/v2/common/create'
     end
 
-    def test_create_without_whitelist_tags
-      @docker_repo.root.docker_tags_whitelist = nil
+    def test_create_without_limit_tags
+      @docker_repo.root.include_tags = nil
       stub_editable_product_find(@product)
       @product.expects(:add_repo).returns(@docker_repo.root)
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @docker_repo.root) do |root|
         assert_equal root, @docker_repo.root
-        assert_empty root.docker_tags_whitelist
+        assert_equal ['*-source'], root.exclude_tags
+        assert_empty root.include_tags
       end
       post :create, params: { :name => 'busybox', :product_id => @product.id, :content_type => 'docker', :docker_upstream_name => "busybox" }
       assert_response :success

@@ -23,7 +23,7 @@ module ::Actions::Pulp3
     def setup
       @primary = SmartProxy.pulp_primary
       @docker_repo = katello_repositories(:busybox)
-      @docker_repo.root.update!(docker_tags_whitelist: %w(latest glibc musl))
+      @docker_repo.root.update!(include_tags: %w(latest glibc musl))
       @docker_clone = katello_repositories(:busybox_dev)
       @rule = FactoryBot.build(:katello_content_view_docker_filter_rule)
       @rule2 = FactoryBot.build(:katello_content_view_docker_filter_rule)

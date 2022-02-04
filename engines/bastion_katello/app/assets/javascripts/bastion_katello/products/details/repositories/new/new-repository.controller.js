@@ -64,7 +64,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
                 'checksum_type': null, 'verify_ssl_on_sync': true,
                 'download_policy': BastionConfig.defaultDownloadPolicy, 'arch': null,
-                'mirroring_policy': MirroringPolicy.defaultMirroringPolicy});
+                'mirroring_policy': MirroringPolicy.defaultMirroringPolicy, 'include_tags': '', 'exclude_tags': '*-source'});
 
             $scope.product = Product.get({id: $scope.$stateParams.productId}, function () {
                 $scope.page.loading = false;
@@ -159,6 +159,20 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                             repository[option.name] = option.value;
                         }
                     });
+                }
+                if (!_.isEmpty(repository.include_tags)) {
+                    repository["include_tags"] = repository.include_tags.split(",").map(function(tag) {
+                        return tag.trim();
+                    });
+                } else {
+                    repository["include_tags"] = [];
+                }
+                if (!_.isEmpty(repository.exclude_tags)) {
+                    repository["exclude_tags"] = repository.exclude_tags.split(",").map(function(tag) {
+                        return tag.trim();
+                    });
+                } else {
+                    repository["exclude_tags"] = [];
                 }
                 repository.$save(success, error);
             };

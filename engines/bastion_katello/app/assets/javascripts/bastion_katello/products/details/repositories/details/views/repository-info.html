@@ -332,15 +332,13 @@
         </dd>
       </span>
       <span ng-if="repository.content_type == 'docker'">
-        <dt translate>Limit Sync Tags</dt>
-        <dd bst-edit-text="repository.commaTagsWhitelist"
+        <dt translate>Include Tags</dt>
+        <dd bst-edit-text="repository.commaIncludeTags"
             on-save="save(repository)"
             readonly="denied('edit_products', product)">
         </dd>
-      </span>
-      <span ng-if="repository.content_type == 'docker'">
-        <dt translate>Limit Sync Tags</dt>
-        <dd bst-edit-text="repository.commaTagsWhitelist"
+        <dt translate>Exclude Tags</dt>
+        <dd bst-edit-text="repository.commaExcludeTags"
             on-save="save(repository)"
             readonly="denied('edit_products', product)">
         </dd>
