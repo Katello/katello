@@ -37,16 +37,6 @@ module Katello
       assert_includes Katello::Erratum.search_for(@security.title[0..3]), @security
     end
 
-    def test_create_truncates_long_title
-      attrs = {:pulp_id => 'foo', :title => "This life, which had been the tomb of " \
-        "his virtue and of his honour is but a walking shadow; a poor player, " \
-        "that struts and frets his hour upon the stage, and then is heard no more: " \
-        "it is a tale told by an idiot, full of sound and fury, signifying nothing." \
-        " - William Shakespeare"}
-      assert Erratum.create!(attrs)
-      assert_equal Erratum.find_by_pulp_id(attrs[:pulp_id]).title.size, 255
-    end
-
     def test_with_identifiers_single
       assert_includes Katello::Erratum.with_identifiers(@security.id), @security
     end

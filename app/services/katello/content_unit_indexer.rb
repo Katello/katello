@@ -25,22 +25,27 @@ module Katello
       association_tracker = RepoAssociationTracker.new(@content_type, @service_class, @repository)
 
       units_from_pulp.each do |units|
-        to_insert = units.map do |unit|
+        units.each do |unit|
           association_tracker.push(unit)
           remove_duplicates(unit)
-          if @content_type.generic?
-            @service_class.generate_model_row(unit, @content_type)
-          else
-            @service_class.generate_model_row(unit)
-          end
         end
 
-        next if to_insert.empty?
-        insert_timestamps(to_insert)
-        if @content_type.mutable
-          @model_class.upsert_all(to_insert, unique_by: :pulp_id)
-        else
-          @model_class.insert_all(to_insert, unique_by: :pulp_id)
+        unless fetch_only_ids
+          to_insert = units.map do |unit|
+            if @content_type.generic?
+              @service_class.generate_model_row(unit, @content_type)
+            else
+              @service_class.generate_model_row(unit)
+            end
+          end
+
+          next if to_insert.empty?
+          insert_timestamps(to_insert)
+          if @content_type.mutable
+            @model_class.upsert_all(to_insert, unique_by: :pulp_id)
+          else
+            @model_class.insert_all(to_insert, unique_by: :pulp_id)
+          end
         end
 
         import_associations(units) if @repository
