@@ -21,6 +21,7 @@ angular.module('Bastion.packages').controller('PackagesController',
         var nutupane, params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
+            'repository_id': $location.search().repositoryId || null,
             'paged': true
         };
 
