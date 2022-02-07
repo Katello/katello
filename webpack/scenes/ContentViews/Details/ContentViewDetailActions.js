@@ -168,7 +168,7 @@ export const getRepositories = params => get({
 });
 
 export const getContentViewRepositories = (cvId, params, status) => {
-  const apiParams = { ...params };
+  const apiParams = { organization_id: orgId(), ...params };
   let apiUrl = `/content_views/${cvId}/repositories`;
 
   if (status === ALL_STATUSES) {
