@@ -179,6 +179,7 @@ module Katello
           config.scheme = uri.scheme
           pulp3_ssl_configuration(config)
           config.debugging = false
+          config.timeout = SETTINGS[:katello][:rest_client_timeout]
           config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
           config.username = self.setting(PULP3_FEATURE, 'username')
           config.password = self.setting(PULP3_FEATURE, 'password')
