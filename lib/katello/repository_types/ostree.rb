@@ -21,6 +21,7 @@ Katello::RepositoryTypeManager.register('ostree') do
   url_description N_("URL of an OSTree repository.")
 
   generic_content_type 'ostree_ref',
+                       pluralized_name: "OSTree Refs",
                        model_class: Katello::GenericContentUnit,
                        pulp3_api: PulpOstreeClient::ContentRefsApi,
                        pulp3_service_class: Katello::Pulp3::GenericContentUnit,
