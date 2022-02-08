@@ -19,6 +19,13 @@ module Actions
             metadata: input[:metadata]
           ).create_import(input[:importer_data][:pulp_href])
         end
+
+        def rescue_strategy_for_self
+          # There are various reasons the importing fails, not all of them are
+          # fatal: when fail on import, we continue with the task ending up
+          # in the warning state, but not locking further imports
+          Dynflow::Action::Rescue::Skip
+        end
       end
     end
   end
