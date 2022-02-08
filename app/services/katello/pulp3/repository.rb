@@ -330,19 +330,26 @@ module Katello
         tasks
       end
 
-      def copy_all(source_repository, mirror: false)
-        if mirror
+      def copy_all(source_repository, options = {})
+        tasks = []
+        if options[:remove_all]
+          tasks << api.repositories_api.modify(repository_reference.repository_href, remove_content_units: ['*'])
+        end
+
+        if options[:mirror]
           data = api.class.add_remove_content_class.new(
                     base_version: source_repository.version_href)
 
-          [api.repositories_api.modify(repository_reference.repository_href, data)]
+          tasks << api.repositories_api.modify(repository_reference.repository_href, data)
+          tasks
         elsif api.respond_to? :copy_api
           data = api.class.copy_class.new
           data.config = [{
             source_repo_version: source_repository.version_href,
             dest_repo: repository_reference.repository_href
           }]
-          [api.copy_api.copy_content(data)]
+          tasks << api.copy_api.copy_content(data)
+          tasks
         else
           copy_content_for_source(source_repository)
         end
