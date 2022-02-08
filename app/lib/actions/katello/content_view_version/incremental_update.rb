@@ -72,6 +72,18 @@ module Actions
 
                 unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
                   sequence do
+                    # Pre-copy content if dest_repo is a soft copy of its library instance.
+                    # Don't use extended_repo_mapping because the source repositories are library instances.
+                    # We want the old CV snapshot repositories here so as to not pull in excess new content.
+                    separated_repo_map[:pulp3_yum_multicopy].each do |source_repos, dest_repo|
+                      if dest_repo.soft_copy_of_library?
+                        source_repos.each do |source_repo|
+                          # remove_all flag is set to cover the case of incrementally updating more than once with different content.
+                          # Without it, content from the previous incremental update will be copied as well due to how Pulp repo versions work.
+                          plan_action(Pulp3::Repository::CopyContent, source_repo, SmartProxy.pulp_primary, dest_repo, copy_all: true, remove_all: true)
+                        end
+                      end
+                    end
                     copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
                                                        dependency_solving: dep_solve).output
                     repos_to_clone.each do |source_repos|
@@ -125,10 +137,12 @@ module Actions
             source_library_repo = source_repos.first.library_instance? ? source_repos.first : source_repos.first.library_instance
 
             source_repos = [source_library_repo]
-            if old_version_repo.version_href
-              base_version = old_version_repo.version_href.split("/")[-1].to_i
-            else
+            if old_version_repo.version_href.nil?
               base_version = 0
+            elsif old_version_repo.soft_copy_of_library?
+              base_version = nil
+            else
+              base_version = old_version_repo.version_href.split("/")[-1].to_i
             end
 
             pulp3_repo_mapping[source_repos.map(&:id)] = { dest_repo: dest_repo.id, base_version: base_version }

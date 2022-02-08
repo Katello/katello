@@ -285,6 +285,11 @@ module Katello
       ::Katello::Resources::CDN::CdnResource.ca_file if ::Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
     end
 
+    def soft_copy_of_library?
+      return false if self.version_href.nil?
+      self.version_href.starts_with?(self.library_instance.backend_service(SmartProxy.pulp_primary).repository_reference.repository_href)
+    end
+
     def archive?
       self.environment.nil?
     end

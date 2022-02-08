@@ -85,6 +85,7 @@ module Katello
           "/pulp/content/#{repo.relative_path}/".sub('//', '/')
         end
 
+        # rubocop:disable Metrics/MethodLength
         def multi_copy_units(repo_id_map, dependency_solving)
           tasks = []
 
@@ -97,14 +98,20 @@ module Katello
               dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_primary).repository_reference.repository_href
               content_unit_hrefs = dest_repo_id_map[:content_unit_hrefs]
               # Not needed during incremental update due to dest_base_version
+              # -> Unless incrementally updating a CV repo that is a soft copy of its library instance.
+              # -> I.e. no filters and not an incremental version.
               unless dest_repo_id_map[:base_version]
                 source_repo_for_package_envs = ::Katello::Repository.find(source_repo_ids.first)
                 unless source_repo_for_package_envs.library_instance?
                   source_repo_for_package_envs = source_repo_for_package_envs.library_instance
                 end
                 package_env_hrefs = packageenvironments({ :repository_version => source_repo_for_package_envs.version_href }).map(&:pulp_href).sort
-                tasks << remove_all_content_from_repo(dest_repo_href)
-                tasks << add_content_for_repo(dest_repo_href, package_env_hrefs) unless package_env_hrefs.empty?
+                # Don't perform extra content actions if the repo is a soft copy of its library instance.
+                # Taken care of by the IncrementalUpdate action.
+                unless dest_repo.soft_copy_of_library?
+                  tasks << remove_all_content_from_repo(dest_repo_href)
+                  tasks << add_content_for_repo(dest_repo_href, package_env_hrefs) unless package_env_hrefs.empty?
+                end
               end
               source_repo_ids.each do |source_repo_id|
                 source_repo_version = ::Katello::Repository.find(source_repo_id).version_href
@@ -119,6 +126,7 @@ module Katello
           end
           tasks.flatten
         end
+        # rubocop:enable Metrics/MethodLength
 
         def copy_api_data_dup(data)
           data_dup = PulpRpmClient::Copy.new
