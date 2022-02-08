@@ -29,9 +29,7 @@ module ::Actions::Katello::ContentViewVersion
     end
 
     it 'plans' do
-      SmartProxy.stubs(:pulp_primary).returns(SmartProxy.find_by(name: "Unused Proxy"))
       SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
-      ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.stubs(:pulp3_dest_base_version).returns(1)
       stub_remote_user
       @rpm = library_repo.rpms.first
 
@@ -63,9 +61,8 @@ module ::Actions::Katello::ContentViewVersion
       end
 
       def pulp3_cvv_setup
-        SmartProxy.stubs(:pulp_primary).returns(SmartProxy.find_by(name: "Unused Proxy"))
         SmartProxy.any_instance.stubs(:pulp3_support?).returns(true)
-        ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.stubs(:pulp3_dest_base_version).returns(1)
+        content_view_version.repositories.where(version_href: nil).update(version_href: 'not-nil-href/1/')
         stub_remote_user
 
         repository_mapping = {}
@@ -83,20 +80,23 @@ module ::Actions::Katello::ContentViewVersion
 
       it 'respects dep solving false' do
         pulp3_cvv_setup
+        ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
         plan_action(action, content_view_version, [library], :resolve_dependencies => false, :content => {:package_ids => [old_rpm.id]})
 
         pulp3_repo_map = {}
-        pulp3_repo_map[[library_repo.id]] = { :dest_repo => new_repo.id, :base_version => 1 }
-        assert_action_planed_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
+        pulp3_repo_map[[library_repo.id]] = { :dest_repo => new_repo.id, :base_version => nil }
+        assert_action_planned_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
                                   pulp3_repo_map,
                                   { :errata => [], :rpms => [old_rpm.id] },
                                   :dependency_solving => false)
-        assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, new_repo)
-        assert_action_planed_with(action, ::Actions::Katello::Repository::IndexContent, id: new_repo.id)
+        assert_action_planned_with(action, ::Actions::Pulp3::Repository::CopyContent, library_repo, SmartProxy.pulp_primary, new_repo, copy_all: true, remove_all: true)
+        assert_action_planned_with(action, ::Actions::Katello::Repository::MetadataGenerate, new_repo)
+        assert_action_planned_with(action, ::Actions::Katello::Repository::IndexContent, id: new_repo.id)
       end
 
       it 'respects dep solving true' do
         pulp3_cvv_setup
+        ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(false)
         plan_action(action, content_view_version, [library], :resolve_dependencies => true, :content => {:package_ids => [old_rpm.id]})
 
         pulp3_repo_map = {}
@@ -105,6 +105,7 @@ module ::Actions::Katello::ContentViewVersion
                                   pulp3_repo_map,
                                   { :errata => [], :rpms => [old_rpm.id] },
                                   :dependency_solving => true)
+        refute_action_planned(action, ::Actions::Pulp3::Repository::CopyContent)
       end
     end
   end

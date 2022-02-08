@@ -13,7 +13,7 @@ module Actions
           target = ::Katello::Repository.find(input[:target_repository_id] || input[:target_repository])
           service = target.backend_service(smart_proxy)
           output[:pulp_tasks] = if input[:copy_all]
-                                  service.copy_all(source, mirror: input[:mirror] || false)
+                                  service.copy_all(source, input)
                                 else
                                   service.copy_content_for_source(source, input)
                                 end
