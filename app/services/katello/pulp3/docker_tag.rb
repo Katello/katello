@@ -14,15 +14,24 @@ module Katello
         repo_content_list.map { |content| content.try(:pulp_href) }
       end
 
-      def update_model(model)
-        custom_json = {}
-        taggable = ::Katello::DockerManifest.find_by(:pulp_id => backend_data['tagged_manifest'])
+      def self.generate_model_row(unit)
+        row = {
+          pulp_id: unit[unit_identifier],
+          name: unit['name']
+        }
+
+        taggable = ::Katello::DockerManifest.find_by(:pulp_id => unit['tagged_manifest'])
+        taggable_type = ::Katello::DockerManifest.name
         if taggable.nil?
-          taggable = ::Katello::DockerManifestList.find_by(:pulp_id => backend_data['tagged_manifest'])
+          taggable = ::Katello::DockerManifestList.find_by(:pulp_id => unit['tagged_manifest'])
+          taggable_type = ::Katello::DockerManifestList.name
         end
-        custom_json['docker_taggable'] = taggable
-        custom_json['name'] = backend_data['name']
-        model.update!(custom_json)
+
+        if taggable
+          row[:docker_taggable_id] = taggable.id
+          row[:docker_taggable_type] = taggable_type
+        end
+        row
       end
     end
   end

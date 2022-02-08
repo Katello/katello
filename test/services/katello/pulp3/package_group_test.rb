@@ -50,28 +50,18 @@ module Katello
       end
 
       class PackageGroupTest < ActiveSupport::TestCase
-        def test_update_model_new
+        def test_generate_model_row
           uuid = 'foo'
 
           PackageGroup.where(:pulp_id => uuid).destroy_all
-          group = PackageGroup.create!(:pulp_id => uuid)
 
-          json = {'name' => 'foobar', 'pulp_href' => uuid}
-          service = ::Katello::Pulp3::PackageGroup.new(uuid)
-          service.backend_data = json
-          service.update_model(group)
+          json = {'name' => 'foobar', 'pulp_href' => uuid, 'description' => 'an update'}.with_indifferent_access
+          row = Katello::Pulp3::PackageGroup.generate_model_row(json)
+          model = ::Katello::PackageGroup.new(row)
 
-          assert_equal group.name, json["name"]
-        end
-
-        def test_update_from_json_desc
-          pg = PackageGroup.create!(:pulp_id => "foo")
-          json = pg.attributes.merge('description' => 'an update', 'pulp_href' => "foo").as_json
-          service = ::Katello::Pulp3::PackageGroup.new(pg.pulp_id)
-          service.backend_data = json
-          service.update_model(pg)
-
-          assert_equal pg.description, json['description']
+          assert_equal model.name, json["name"]
+          assert_equal model.description, json['description']
+          refute_nil model.pulp_id
         end
       end
     end

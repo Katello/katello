@@ -23,15 +23,16 @@ module Katello
         repo_content_list.map { |content| content.try(:pulp_href) }
       end
 
-      def update_model(model)
-        custom_json = {}
-        custom_json['checksum'] = backend_data['sha256']
-        custom_json['filename'] = backend_data['relative_path']
-        custom_json['name'] = backend_data['package']
-        custom_json['version'] = backend_data['version']
-        custom_json['description'] = backend_data['description']
-        custom_json['architecture'] = backend_data['architecture']
-        model.update!(custom_json)
+      def self.generate_model_row(unit)
+        {
+          pulp_id: unit[unit_identifier],
+          checksum: unit[:sha256],
+          filename: unit[:relative_path],
+          name: unit[:package],
+          version: unit[:version],
+          description: unit[:description]&.truncate(255),
+          architecture: unit[:architecture]
+        }
       end
     end
   end

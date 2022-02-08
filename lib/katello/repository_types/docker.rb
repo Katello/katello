@@ -19,6 +19,10 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
   distribution_class PulpContainerClient::ContainerContainerDistribution
   repo_sync_url_class PulpContainerClient::RepositorySyncURL
 
+  index_additional_data do |repo|
+    Katello::DockerMetaTag.import_meta_tags([repo])
+  end
+
   content_type Katello::DockerManifest,
                :priority => 1,
                :pulp3_service_class => ::Katello::Pulp3::DockerManifest,

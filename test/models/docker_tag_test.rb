@@ -12,7 +12,9 @@ module Katello
       @tag = create(:docker_tag, :repositories => [@repo])
 
       @repo.clones.each do |repo|
-        repo.docker_tags << @tag.dup
+        tag = @tag.dup
+        tag.pulp_id = SecureRandom.hex
+        repo.docker_tags << tag
       end
     end
 

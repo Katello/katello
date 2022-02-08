@@ -34,10 +34,6 @@ module Katello
         true
       end
 
-      def update_model
-        fail NotImplementedError
-      end
-
       attr_accessor :uuid
       attr_writer :backend_data
 
@@ -55,6 +51,20 @@ module Katello
 
       def self.content_type
         self::CONTENT_TYPE
+      end
+
+      def self.pulp_units_for_ids(content_unit_hrefs)
+        Enumerator.new do |yielder|
+          yielder.yield content_unit_hrefs.collect { |href| pulp_data(href).with_indifferent_access }
+        end
+      end
+
+      def self.add_timestamps(rows)
+        rows.each do |row|
+          row[:created_at] = DateTime.now
+          row[:updated_at] = DateTime.now
+        end
+        rows
       end
 
       def self.pulp_units_batch_all(content_unit_hrefs)

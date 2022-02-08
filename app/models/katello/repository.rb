@@ -910,11 +910,7 @@ module Katello
       else
         repository_type.content_types_to_index.each do |type|
           Katello::Logging.time("CONTENT_INDEX", data: {type: type.model_class}) do
-            if self.generic?
-              type.model_class.import_for_repository(self, generic_content_type: type.content_type, full_index: full_index)
-            else
-              type.model_class.import_for_repository(self, full_index: full_index)
-            end
+            Katello::ContentUnitIndexer.new(content_type: type, repository: self, optimized: !full_index).import_all
           end
         end
         repository_type.index_additional_data_proc&.call(self)

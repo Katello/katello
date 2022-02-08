@@ -612,9 +612,7 @@ module Katello
 
     def test_units_for_removal_docker
       ['one', 'two', 'three'].each do |str|
-        @redis.docker_manifests.create!(:digest => str) do |manifest|
-          manifest.pulp_id = str
-        end
+        @redis.docker_manifests.create!(:digest => str, :pulp_id => "pulpid-#{str}")
       end
 
       manifests = @redis.docker_manifests.sample(2).sort_by { |obj| obj.id }

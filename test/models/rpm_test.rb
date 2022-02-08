@@ -201,15 +201,6 @@ module Katello
       count.times.map { |i| {'pulp_href' => SecureRandom.hex, 'name' => "somename-#{i}", 'repository_memberships' => [@repo.pulp_id]} }
     end
 
-    def test_import_all
-      ::Setting::Content.find_by(name: "bulk_load_size").update(value: 10)
-      json = random_json(30)
-      count = Katello::Rpm.all.count
-      Katello::Pulp3::Rpm.stubs(:pulp_units_batch_all).returns([json[0..29]])
-      Katello::Rpm.import_all
-      assert_equal 30, Katello::Rpm.all.count - count
-    end
-
     def test_import_all_pulp_ids
       json = random_json(10)
       pulp_ids = json.map { |obj| obj['pulp_href'] }

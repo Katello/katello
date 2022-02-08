@@ -16,8 +16,6 @@ module Katello
     scoped_search :on => :filename, :complete_value => true
     scoped_search :on => :checksum
 
-    before_save lambda { |deb| deb.description = deb.description.truncate(255) unless deb.description.blank? }
-
     def self.default_sort
       order(:name).order(:version).order(:architecture)
     end

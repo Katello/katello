@@ -95,15 +95,14 @@ module Katello
     end
 
     def test_docker_count
-      SmartProxy.stubs(:pulp_primary).returns(SmartProxy.pulp_primary)
       cv = katello_content_views(:library_view)
       cvv = cv.versions.first
       assert cvv.repositories.archived.docker_type.count > 0
       manifest_count = 0
       tag_count = 0
       cvv.repositories.archived.docker_type.each do |repo|
-        manifest = repo.docker_manifests.create!(:digest => "abc123", :pulp_id => "123")
-        repo.docker_tags.create!(:name => "wat", :docker_taggable => manifest)
+        manifest = repo.docker_manifests.create!(:digest => "abc123", :pulp_id => "123-#{rand(9999)}")
+        repo.docker_tags.create!(:name => "wat", :docker_taggable => manifest, :pulp_id => "123-#{rand(9999)}")
         manifest_count += repo.docker_manifests.count
         tag_count += repo.docker_tags.count
       end
@@ -118,6 +117,7 @@ module Katello
       dup_repo.docker_tags = [archived_repo.docker_tags[0]]
       ::Katello::DockerMetaTag.import_meta_tags([dup_repo])
       assert cvv.repositories.archived.docker_type.count > 0
+
       cvv.update_content_counts!
       counts = cvv.content_counts_map
       assert_equal manifest_count, counts["docker_manifest_count"]

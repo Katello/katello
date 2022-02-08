@@ -66,16 +66,13 @@ module Katello
       end
 
       class SrpmNonVcrTest < ActiveSupport::TestCase
-        def test_update_model
+        def test_generate_model_row
           pulp_id = 'foo'
           model = Srpm.create!(:pulp_id => pulp_id)
           json = model.attributes.merge('pulp_href' => pulp_id, 'summary' => 'an update', 'version' => '3', 'release' => '4')
 
-          service = Katello::Pulp3::Srpm.new(pulp_id)
-          service.backend_data = json
-          service.update_model(model)
-
-          model = model.reload
+          row = Katello::Pulp3::Srpm.generate_model_row(json)
+          model = ::Katello::Srpm.new(row)
 
           assert_equal model.summary, json['summary']
           refute model.release_sortable.blank?

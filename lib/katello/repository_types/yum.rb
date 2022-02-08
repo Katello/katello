@@ -30,7 +30,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::YUM_TYPE) do
     :pulp3_service_class => ::Katello::Pulp3::ModuleStream
   content_type Katello::Erratum, :priority => 3,
     :pulp3_service_class => ::Katello::Pulp3::Erratum,
-    :primary_content => true
+    :primary_content => true, :mutable => true
   content_type Katello::PackageGroup,
     :pulp3_service_class => ::Katello::Pulp3::PackageGroup
   content_type Katello::YumMetadataFile,

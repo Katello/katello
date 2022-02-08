@@ -37,16 +37,6 @@ module Katello
       assert_includes Katello::Erratum.search_for(@security.title[0..3]), @security
     end
 
-    def test_create_truncates_long_title
-      attrs = {:pulp_id => 'foo', :title => "This life, which had been the tomb of " \
-        "his virtue and of his honour is but a walking shadow; a poor player, " \
-        "that struts and frets his hour upon the stage, and then is heard no more: " \
-        "it is a tale told by an idiot, full of sound and fury, signifying nothing." \
-        " - William Shakespeare"}
-      assert Erratum.create!(attrs)
-      assert_equal Erratum.find_by_pulp_id(attrs[:pulp_id]).title.size, 255
-    end
-
     def test_with_identifiers_single
       assert_includes Katello::Erratum.with_identifiers(@security.id), @security
     end
@@ -105,7 +95,17 @@ module Katello
         i += 1
       end
       Katello::Erratum.import([:pulp_id], ids, validate: false)
-      Katello::Erratum.sync_repository_associations(@repo, :pulp_id_href_map => ids_href_map)
+
+      content_type = Katello::RepositoryTypeManager.find_content_type('erratum')
+      service_class = content_type.pulp3_service_class
+
+      indexer = Katello::ContentUnitIndexer.new(content_type: content_type, repository: @repo)
+      tracker = Katello::ContentUnitIndexer::RepoAssociationTracker.new(content_type, service_class, @repo)
+      ids.each do |errata_id|
+        tracker.push({pulp_href: ids_href_map[errata_id.first], id: errata_id.first}.with_indifferent_access)
+      end
+      indexer.sync_repository_associations(tracker)
+
       post_repo_erratum_size = @repo.errata.size
       assert_equal post_repo_erratum_size, 70_000
     end

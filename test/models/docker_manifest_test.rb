@@ -7,8 +7,8 @@ module Katello
     TAGS = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "docker_tags.yml")
 
     def setup
-      @manifests = YAML.load_file(MANIFESTS).values.map(&:deep_symbolize_keys)
-      @tags = YAML.load_file(TAGS).values.map(&:deep_symbolize_keys)
+      @manifests = YAML.load_file(MANIFESTS).values.map(&:deep_symbolize_keys).map(&:with_indifferent_access)
+      @tags = YAML.load_file(TAGS).values.map(&:deep_symbolize_keys).map(&:with_indifferent_access)
       @repo = Repository.find(katello_repositories(:redis).id)
 
       Katello::Pulp3::DockerManifest.stubs(:pulp_units_batch_for_repo).returns([@manifests])
