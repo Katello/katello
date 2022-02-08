@@ -433,12 +433,6 @@ module Katello
       assert_equal virt_host, subscription_facet.hypervisor_host
     end
 
-    def test_valid_content_override_label?
-      subscription_facet.candlepin_consumer.expects(:available_product_content).returns([OpenStruct.new(:content => OpenStruct.new(:label => 'some-label'))]).at_least_once
-      assert host.valid_content_override_label?('some-label')
-      refute host.valid_content_override_label?('some-label1')
-    end
-
     def test_host_type
       kvm = "kvm"
       host = FactoryBot.create(:host, :with_content, :with_subscription, content_view: view,

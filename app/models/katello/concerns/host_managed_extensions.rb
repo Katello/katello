@@ -414,11 +414,6 @@ module Katello
         ::Katello::Erratum.installable_for_hosts([self]).search_for(search).pluck(:errata_id)
       end
 
-      def valid_content_override_label?(content_label)
-        available_content = subscription_facet.candlepin_consumer.available_product_content
-        available_content.map(&:content).any? { |content| content.label == content_label }
-      end
-
       protected
 
       def update_trace_status

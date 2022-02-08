@@ -200,16 +200,16 @@ export const useBulkSelect = ({
     }
   };
 
-  const fetchBulkParams = () => {
+  const fetchBulkParams = (idColumnName = idColumn) => {
     const searchQueryWithExclusionSet = () => {
       const query = [searchQuery,
-        !isEmpty(exclusionSet) && `${idColumn} !^ (${[...exclusionSet].join(',')})`];
+        !isEmpty(exclusionSet) && `${idColumnName} !^ (${[...exclusionSet].join(',')})`];
       return query.filter(item => item).join(' and ');
     };
 
     const searchQueryWithInclusionSet = () => {
       if (isEmpty(inclusionSet)) throw new Error('Cannot build a search query with no items selected');
-      return `${idColumn} ^ (${[...inclusionSet].join(',')})`;
+      return `${idColumnName} ^ (${[...inclusionSet].join(',')})`;
     };
 
     return selectAllMode ? searchQueryWithExclusionSet() : searchQueryWithInclusionSet();

@@ -5,6 +5,7 @@ module Katello
     before_action :check_subscriptions, :only => [:add_subscriptions, :remove_subscriptions]
     before_action :find_content_view_environment, :only => :create
     before_action :check_registration_services, :only => [:destroy, :create]
+    before_action :find_content_overrides, :only => [:content_override]
 
     def_param_group :installed_products do
       param :product_id, String, :desc => N_("Product id as listed from a host's installed products, \
@@ -165,12 +166,16 @@ module Katello
       param :name, String, :desc => N_("Override key or name. Note if name is not provided the default name will be 'enabled'"), :required => false
       param :remove, :bool, :desc => N_("Set true to remove an override and reset it to 'default'"), :required => false
     end
+    param :content_overrides_search, Hash, :desc => N_("Content override search parameters") do
+      param_group :search, Api::V2::ApiController
+      param :enabled, :bool, :desc => N_("Set true to override to enabled; Set false to override to disabled.'"), :required => false
+      param :remove, :bool, :desc => N_("Set true to remove an override and reset it to 'default'"), :required => false
+    end
     def content_override
-      content_overrides = params[:content_overrides] || []
-
-      content_override_values = content_overrides.map do |override_params|
+      content_override_values = @content_overrides.map do |override_params|
         validate_content_overrides_enabled(override_params)
       end
+
       sync_task(::Actions::Katello::Host::UpdateContentOverrides, @host, content_override_values, false)
       fetch_product_content
     end
@@ -215,6 +220,23 @@ module Katello
         :view
       else
         fail ::Foreman::Exception.new(N_("unknown permission for %s"), "#{params[:controller]}##{params[:action]}")
+      end
+    end
+
+    def find_content_overrides
+      if params[:content_overrides_search]
+        content_labels = ::Katello::Content.joins(:product_contents)
+                            .where("#{Katello::ProductContent.table_name}.product_id": @host.organization.products.subscribable.enabled)
+                            .search_for(params[:content_overrides_search][:search])
+                            .pluck(:label)
+        @content_overrides = content_labels.map do |label|
+          { content_label: label,
+            value: Foreman::Cast.to_bool(params[:content_overrides_search][:enabled]),
+            remove: Foreman::Cast.to_bool(params[:content_overrides_search][:remove])
+          }
+        end
+      else
+        @content_overrides = params[:content_overrides] || []
       end
     end
   end

@@ -1,29 +1,60 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+
+import { propsToCamelCase } from 'foremanReact/common/helpers';
+import { translate as __ } from 'foremanReact/common/I18n';
+import { STATUS } from 'foremanReact/constants';
+import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
-import { Skeleton, ToggleGroup, ToggleGroupItem, Label, Tooltip, Alert, AlertActionCloseButton } from '@patternfly/react-core';
+import { FormattedMessage } from 'react-intl';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
+
+import {
+  ActionList,
+  ActionListItem,
+  Alert,
+  AlertActionCloseButton,
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+  Label,
+  Skeleton,
+  Split,
+  SplitItem,
+  ToggleGroup,
+  ToggleGroupItem,
+  Tooltip,
+} from '@patternfly/react-core';
+import { FlagIcon } from '@patternfly/react-icons';
 import {
   TableVariant,
-  Thead,
   Tbody,
-  Tr,
-  Th,
   Td,
+  Th,
+  Thead,
+  Tr,
 } from '@patternfly/react-table';
-import { FlagIcon } from '@patternfly/react-icons';
-import { translate as __ } from 'foremanReact/common/I18n';
-import { propsToCamelCase } from 'foremanReact/common/helpers';
-import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
-import { STATUS } from 'foremanReact/constants';
+
+import {
+  useBulkSelect,
+  useUrlParams,
+} from '../../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
-import { enableRepoSetRepo, disableRepoSetRepo, resetRepoSetRepo, getHostRepositorySets } from './RepositorySetsActions';
-import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
-import { selectHostDetailsStatus } from '../../HostDetailsSelectors.js';
-import { useBulkSelect, useUrlParams } from '../../../../../components/Table/TableHooks';
-import { REPOSITORY_SETS_KEY } from './RepositorySetsConstants.js';
-import './RepositorySetsTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
+import { selectHostDetailsStatus } from '../../HostDetailsSelectors.js';
+import {
+  getHostRepositorySets,
+  setContentOverrides,
+} from './RepositorySetsActions';
+import { REPOSITORY_SETS_KEY } from './RepositorySetsConstants.js';
+import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
+import './RepositorySetsTab.scss';
 
 const getEnabledValue = ({ enabled, enabledContentOverride }) => {
   const isOverridden = (enabledContentOverride !== null);
@@ -78,6 +109,8 @@ const RepositorySetsTab = () => {
   const nonLibraryHost = contentViewDefault === false &&
     lifecycleEnvironmentLibrary === false;
   const simpleContentAccess = (Number(subscriptionStatus) === 5);
+  const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
+  const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const dispatch = useDispatch();
   const { searchParam, show } = useUrlParams();
   const toggleGroupStates = ['noLimit', 'limitToEnvironment'];
@@ -110,13 +143,13 @@ const RepositorySetsTab = () => {
   const response = useSelector(state => selectAPIResponse(state, REPOSITORY_SETS_KEY));
   const { results, ...metadata } = response;
   const status = useSelector(state => selectRepositorySetsStatus(state));
+  const repoSetSearchQuery = label => `cp_content_id = ${label}`;
   const {
     selectOne, isSelected, searchQuery, selectedCount, isSelectable,
     updateSearchQuery, selectNone, fetchBulkParams, ...selectAll
   } = useBulkSelect({
     results,
     metadata,
-    isSelectable: () => false,
     initialSearchQuery: searchParam || '',
   });
 
@@ -130,44 +163,71 @@ const RepositorySetsTab = () => {
   }, [hostDetailsStatus, nonLibraryHost]);
 
   if (!hostId) return <Skeleton />;
-
-  const updateResults = ({ labels, enabled, newResponse }) => dispatch({
+  const updateResults = newResponse => dispatch({
     type: `${REPOSITORY_SETS_KEY}_SUCCESS`,
     key: REPOSITORY_SETS_KEY,
     response: {
       ...response,
       results: results.map((result) => {
-        if (labels.includes(result.label)) {
-          const isEnabled = enabled === null ?
-            newResponse.results.find(r => r.id === result.id).enabled :
-            enabled;
-          return { ...result, enabled: isEnabled, enabled_content_override: enabled };
+        const {
+          enabled,
+          enabled_content_override: enabledContentOverride,
+        } = newResponse.results.find(r => r.id === result.id);
+        if (enabled !== null) {
+          return { ...result, enabled, enabled_content_override: enabledContentOverride };
         }
         return result;
       }),
     },
   });
-  const overrideToEnabled = ({ labels }) =>
-    dispatch(enableRepoSetRepo({ hostId, labels, updateResults }));
-  const overrideToDisabled = ({ labels }) =>
-    dispatch(disableRepoSetRepo({ hostId, labels, updateResults }));
-  const resetToDefault = ({ labels }) =>
-    dispatch(resetRepoSetRepo({ hostId, labels, updateResults }));
 
-  // uncomment (and remove rule disablement) when Select All is added
-  /* eslint-disable max-len */
-  // const dropdownItems = [
-  //   <DropdownItem aria-label="bulk_enable" key="bulk_enable" component="button" onClick={overrideToEnabled}>
-  //     {__('Override to enabled')}
-  //   </DropdownItem>,
-  //   <DropdownItem aria-label="bulk_disable" key="bulk_disable" component="button" onClick={overrideToDisabled}>
-  //     {__('Override to disabled')}
-  //   </DropdownItem>,
-  //   <DropdownItem aria-label="bulk_disable" key="bulk_disable" component="button" onClick={resetToDefault}>
-  //     {__('Reset to default')}
-  //   </DropdownItem>,
-  // ];
-  /* eslint-enable max-len */
+  const updateOverrides = ({
+    enabled, remove = false, search, singular = false,
+  }) => {
+    setIsBulkActionOpen(false);
+    selectNone();
+
+    dispatch(setContentOverrides({
+      hostId,
+      search,
+      enabled,
+      remove,
+      updateResults: resp => updateResults(resp),
+      singular: singular || selectedCount === 1,
+    }));
+  };
+  const bulkParams = () => fetchBulkParams('cp_content_id');
+  const enableRepoSets = () => updateOverrides({ enabled: true, search: bulkParams() });
+  const disableRepoSets = () => updateOverrides({ enabled: false, search: bulkParams() });
+  const resetToDefaultRepoSets = () => updateOverrides({ remove: true, search: bulkParams() });
+
+  const enableRepoSet = id => updateOverrides({
+    enabled: true,
+    search: repoSetSearchQuery(id),
+    singular: true,
+  });
+  const disableRepoSet = id => updateOverrides({
+    enabled: false,
+    search: repoSetSearchQuery(id),
+    singular: true,
+  });
+  const resetToDefaultRepoSet = id => updateOverrides({
+    remove: true,
+    search: repoSetSearchQuery(id),
+    singular: true,
+  });
+
+  const dropdownItems = [
+    <DropdownItem aria-label="bulk_enable" key="bulk_enable" component="button" onClick={enableRepoSets} isDisabled={selectedCount === 0}>
+      {__('Override to enabled')}
+    </DropdownItem>,
+    <DropdownItem aria-label="bulk_disable" key="bulk_disable" component="button" onClick={disableRepoSets} isDisabled={selectedCount === 0}>
+      {__('Override to disabled')}
+    </DropdownItem>,
+    <DropdownItem aria-label="bulk_reset_default" key="bulk_reset_default" component="button" onClick={resetToDefaultRepoSets} isDisabled={selectedCount === 0}>
+      {__('Reset to default')}
+    </DropdownItem>,
+  ];
 
   let toggleGroup;
   if (nonLibraryHost) {
@@ -190,6 +250,23 @@ const RepositorySetsTab = () => {
       </ToggleGroup>
     );
   }
+
+  const actionButtons = (
+    <Split hasGutter>
+      <SplitItem>
+        <ActionList isIconList>
+          <ActionListItem>
+            <Dropdown
+              toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+              isOpen={isBulkActionOpen}
+              isPlain
+              dropdownItems={dropdownItems}
+            />
+          </ActionListItem>
+        </ActionList>
+      </SplitItem>
+    </Split>
+  );
 
   const hostEnvText = 'the "{contentViewName}" content view and "{lifecycleEnvironmentName}" environment';
 
@@ -255,6 +332,7 @@ const RepositorySetsTab = () => {
             selectedCount,
             selectNone,
             toggleGroup,
+            actionButtons,
           }
           }
           activeFilters={[toggleGroupState]}
@@ -266,7 +344,7 @@ const RepositorySetsTab = () => {
           rowsCount={results?.length}
           variant={TableVariant.compact}
           {...selectAll}
-          displaySelectAllCheckbox={false}
+          displaySelectAllCheckbox
         >
           <Thead>
             <Tr>
@@ -281,7 +359,6 @@ const RepositorySetsTab = () => {
             {results?.map((repoSet, rowIndex) => {
               const {
                 id,
-                label,
                 content: { name: repoName },
                 enabled,
                 enabled_content_override: enabledContentOverride,
@@ -320,17 +397,17 @@ const RepositorySetsTab = () => {
                           {
                             title: __('Override to disabled'),
                             isDisabled: isOverridden && !isEnabled,
-                            onClick: () => overrideToDisabled({ labels: [label] }),
+                            onClick: () => disableRepoSet(id),
                           },
                           {
                             title: __('Override to enabled'),
                             isDisabled: isOverridden && isEnabled,
-                            onClick: () => overrideToEnabled({ labels: [label] }),
+                            onClick: () => enableRepoSet(id),
                           },
                           {
                             title: __('Reset to default'),
                             isDisabled: !isOverridden,
-                            onClick: () => resetToDefault({ labels: [label] }),
+                            onClick: () => resetToDefaultRepoSet(id),
                           },
                         ],
                       }}
