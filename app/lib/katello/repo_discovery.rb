@@ -42,31 +42,33 @@ module Katello
     private
 
     def docker_search
-      params = {
-        :accept => :json
-      }
-      params[:user] = @upstream_username unless @upstream_username.empty?
-      params[:password] = @upstream_password unless @upstream_password.empty?
-
-      RestClient.proxy = nil
-
+      proxy_uri = nil
       if @proxy && @proxy[:proxy_host]
         proxy_uri = URI(@proxy[:proxy_host])
         proxy_uri.user = @proxy[:proxy_user] if @proxy[:proxy_user]
         proxy_uri.password = @proxy[:proxy_password] if @proxy[:proxy_password]
         proxy_uri.port = @proxy[:proxy_port] if @proxy[:proxy_port]
-
-        RestClient.proxy = proxy_uri.to_s
       end
 
+      request_params = {
+        method: :get,
+        headers: { accept: :json },
+        url: "#{@uri}v1/search?q=#{@search}"
+      }
+
+      request_params[:headers][:user] = @upstream_username unless @upstream_username.empty?
+      request_params[:headers][:password] = @upstream_password unless @upstream_password.empty?
+      request_params[:proxy] = proxy_uri.to_s if proxy_uri
+
       begin
-        results = RestClient.get(@uri.to_s + "v1/search?q=#{@search}", params)
+        results = RestClient::Request.execute(request_params)
         JSON.parse(results)['results'].each do |result|
           @found << result['name']
         end
       rescue
         # Note: v2 endpoint does not support search
-        results = RestClient.get(@uri.to_s + "v2/_catalog", params)
+        request_params[:url] = "#{@uri}v2/_catalog"
+        results = RestClient::Request.execute(request_params)
         @found = JSON.parse(results)['repositories']
       end
       @found.sort!
