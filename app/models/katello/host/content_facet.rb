@@ -110,14 +110,6 @@ module Katello
         self.update_errata_status
       end
 
-      def import_applicability(partial = false)
-        import_module_stream_applicability(partial)
-        import_errata_applicability(partial)
-        import_deb_applicability(partial)
-        import_rpm_applicability(partial)
-        update_applicability_counts
-      end
-
       def update_applicability_counts
         self.assign_attributes(
             :installable_security_errata_count => self.installable_errata.security.count,
@@ -131,23 +123,6 @@ module Katello
             :upgradable_module_stream_count => self.installable_module_streams.count
         )
         self.save!(:validate => false)
-      end
-
-      def import_deb_applicability(partial)
-        ApplicableContentHelper.new(Deb, self).import(partial)
-      end
-
-      def import_rpm_applicability(partial)
-        ApplicableContentHelper.new(Rpm, self).import(partial)
-      end
-
-      def import_errata_applicability(partial)
-        ApplicableContentHelper.new(Erratum, self).import(partial)
-        self.update_errata_status
-      end
-
-      def import_module_stream_applicability(partial)
-        ApplicableContentHelper.new(ModuleStream, self).import(partial)
       end
 
       def self.in_content_view_version_environments(version_environments)
