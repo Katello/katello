@@ -25,7 +25,7 @@ angular.module('Bastion.content-credentials').controller('ContentCredentialsCont
         };
 
         var nutupane = new Nutupane(ContentCredential, params);
-        $scope.controllerName = 'katello_gpg_keys';
+        $scope.controllerName = 'katello_content_credentials';
         $scope.table = nutupane.table;
         $scope.panel = {loading: false};
         $scope.removeRow = nutupane.removeRow;
