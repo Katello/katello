@@ -88,6 +88,7 @@ class Setting::Content < Setting
                100, N_('Batch size to sync repositories in.')),
       self.set('foreman_proxy_content_auto_sync', N_("Whether or not to auto sync the Smart Proxies after a Content View promotion."),
                true, N_('Sync Smart Proxies after Content View promotion')),
+      self.set('download_rate_limit', N_("Maximum download rate when syncing a repository (requests per second). Use 0 for no limit."), 0, N_("Download rate limit")),
       self.set('default_download_policy', N_("Default download policy for custom repositories (either 'immediate' or 'on_demand')"), "immediate",
                N_('Default Custom Repository download policy'), nil, :collection => download_policies),
       self.set('default_redhat_download_policy', N_("Default download policy for enabled Red Hat repositories (either 'immediate' or 'on_demand')"), "on_demand",

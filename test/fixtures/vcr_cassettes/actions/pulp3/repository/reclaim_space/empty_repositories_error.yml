@@ -2,26 +2,28 @@
 http_interactions:
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/rpm/rpm/?name=Fedora_17
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/?name=Fedora_17
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:11 GMT
+      - Fri, 28 Jan 2022 17:27:24 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -32,30 +34,30 @@ http_interactions:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '681'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 199ec2404fe54f01bb7c466a4c847bc5
+      - 562261f16fd44e92be75a0e3f8846fd8
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '316'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS83ZGM2OTRjNi1hYTcwLTQ1NTEtYWM2OC05MjQ5NWZiNTU3MDIv
-        IiwicHVscF9jcmVhdGVkIjoiMjAyMS0xMi0wNlQxODowNDo1NS4yMzQ0Mzla
+        cnBtL3JwbS9lMjhlOWNmNC04OWI0LTQ4NGItOWI3ZC1jNTE4Y2IwMGIxZmEv
+        IiwicHVscF9jcmVhdGVkIjoiMjAyMi0wMS0yOFQxNzoyNzoyMC4xNzU2MjFa
         IiwidmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS83ZGM2OTRjNi1hYTcwLTQ1NTEtYWM2OC05MjQ5NWZiNTU3MDIv
+        cnBtL3JwbS9lMjhlOWNmNC04OWI0LTQ4NGItOWI3ZC1jNTE4Y2IwMGIxZmEv
         dmVyc2lvbnMvIiwicHVscF9sYWJlbHMiOnt9LCJsYXRlc3RfdmVyc2lvbl9o
-        cmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9ycG0vcnBtLzdkYzY5
-        NGM2LWFhNzAtNDU1MS1hYzY4LTkyNDk1ZmI1NTcwMi92ZXJzaW9ucy8wLyIs
+        cmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9ycG0vcnBtL2UyOGU5
+        Y2Y0LTg5YjQtNDg0Yi05YjdkLWM1MThjYjAwYjFmYS92ZXJzaW9ucy8wLyIs
         Im5hbWUiOiJGZWRvcmFfMTciLCJkZXNjcmlwdGlvbiI6bnVsbCwicmV0YWlu
         X3JlcG9fdmVyc2lvbnMiOm51bGwsInJlbW90ZSI6bnVsbCwiYXV0b3B1Ymxp
         c2giOmZhbHNlLCJtZXRhZGF0YV9zaWduaW5nX3NlcnZpY2UiOm51bGwsInJl
@@ -64,29 +66,31 @@ http_interactions:
         ZWNrIjowLCJyZXBvX2dwZ2NoZWNrIjowLCJzcWxpdGVfbWV0YWRhdGEiOmZh
         bHNlfV19
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:11 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:24 GMT
 - request:
     method: delete
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/rpm/rpm/7dc694c6-aa70-4551-ac68-92495fb55702/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/e28e9cf4-89b4-484b-9b7d-c518cb00b1fa/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 202
       message: Accepted
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:11 GMT
+      - Fri, 28 Jan 2022 17:27:24 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -104,40 +108,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - de61495003274adda0bea51af02fe111
+      - 90e7e4b0bcd04c5bb8d64d7c0b836263
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzcyMDQ2MGY3LTAwMDktNGUw
-        My1iYTI3LTNmNThmYWIyNTk2Ny8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2U4MjRlZDE5LTQwYTEtNDdj
+        Ni05ZmVlLTc0YzRkZTRkNmE3ZS8ifQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:11 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:24 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/rpm/rpm/?name=Fedora_17
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/remotes/rpm/rpm/?name=Fedora_17
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:11 GMT
+      - Fri, 28 Jan 2022 17:27:24 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -148,59 +154,60 @@ http_interactions:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '586'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 4b46bdc2a1054d4abf5f054b9ee3a5a3
+      - c36c2b513ad54034a8292e90313b2b80
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '350'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL3JwbS9y
-        cG0vYTUzMTliMDgtOGM2MC00OGEwLWE3NjgtZTAyZTU5NDRjODg3LyIsInB1
-        bHBfY3JlYXRlZCI6IjIwMjEtMTItMDZUMTg6MDQ6NTUuMDg0MDk4WiIsIm5h
+        cG0vZWFkOTU3OWEtZjZiMy00MDBiLTljOWUtNGZlZjMzYjM2OGM0LyIsInB1
+        bHBfY3JlYXRlZCI6IjIwMjItMDEtMjhUMTc6Mjc6MTkuOTk4Mjc0WiIsIm5h
         bWUiOiJGZWRvcmFfMTciLCJ1cmwiOiJodHRwOi8vbXlyZXBvLmNvbSIsImNh
         X2NlcnQiOm51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJ0bHNfdmFsaWRhdGlv
         biI6dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJwdWxwX2xhYmVscyI6e30sInB1
-        bHBfbGFzdF91cGRhdGVkIjoiMjAyMS0xMi0wNlQxODowNDo1NS4wODQxMTha
+        bHBfbGFzdF91cGRhdGVkIjoiMjAyMi0wMS0yOFQxNzoyNzoxOS45OTgzMDJa
         IiwiZG93bmxvYWRfY29uY3VycmVuY3kiOm51bGwsIm1heF9yZXRyaWVzIjpu
         dWxsLCJwb2xpY3kiOiJvbl9kZW1hbmQiLCJ0b3RhbF90aW1lb3V0IjozMDAu
         MCwiY29ubmVjdF90aW1lb3V0IjpudWxsLCJzb2NrX2Nvbm5lY3RfdGltZW91
         dCI6bnVsbCwic29ja19yZWFkX3RpbWVvdXQiOm51bGwsImhlYWRlcnMiOm51
-        bGwsInJhdGVfbGltaXQiOm51bGwsInNsZXNfYXV0aF90b2tlbiI6bnVsbH1d
-        fQ==
+        bGwsInJhdGVfbGltaXQiOjAsInNsZXNfYXV0aF90b2tlbiI6bnVsbH1dfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:11 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:24 GMT
 - request:
     method: delete
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/rpm/rpm/a5319b08-8c60-48a0-a768-e02e5944c887/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/remotes/rpm/rpm/ead9579a-f6b3-400b-9c9e-4fef33b368c4/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 202
       message: Accepted
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:11 GMT
+      - Fri, 28 Jan 2022 17:27:24 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -218,40 +225,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - e6c0961f80714872a4a8d22f5df68b2c
+      - 570dc17da91f46b898e96ec344ae82fa
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2RjOGFhYWFjLWY2YjItNGMy
-        Ni1iMDVmLTZiNzNkNDU3YzRjNC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzhhNzk4MGQ2LWY4OTctNDhk
+        Yy1iY2U4LTZiNzI0MDAxODE2OC8ifQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:11 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:24 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/720460f7-0009-4e03-ba27-3f58fab25967/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/tasks/e824ed19-40a1-47c6-9fee-74c4de4d6a7e/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.0/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:11 GMT
+      - Fri, 28 Jan 2022 17:27:24 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -262,59 +271,61 @@ http_interactions:
       - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '607'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - acb0355578bf47b3b8052f598bab72c6
+      - 0556e853551f4674b84625532f70312b
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '372'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNzIwNDYwZjctMDAw
-        OS00ZTAzLWJhMjctM2Y1OGZhYjI1OTY3LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTItMDZUMTk6MzY6MTEuNjQ5NTI1WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZTgyNGVkMTktNDBh
+        MS00N2M2LTlmZWUtNzRjNGRlNGQ2YTdlLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDEtMjhUMTc6Mjc6MjQuNDE3OTgzWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiJkZTYxNDk1MDAzMjc0YWRkYTBiZWE1MWFm
-        MDJmZTExMSIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEyLTA2VDE5OjM2OjExLjY5
-        OTMxNloiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTItMDZUMTk6MzY6MTEuNzQ5
-        ODUzWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy8yY2ZlZDRlMy0zZDIzLTRlNzAtOTcyYy1kNTZlZWVmODIwOWYvIiwi
+        ZXRlIiwibG9nZ2luZ19jaWQiOiI5MGU3ZTRiMGJjZDA0YzViYjhkNjRkN2Mw
+        YjgzNjI2MyIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAxLTI4VDE3OjI3OjI0LjQ5
+        NjkyNFoiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDEtMjhUMTc6Mjc6MjQuNTY2
+        NzEwWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy8xZTRmNWRmMi0wYmY5LTQ2MzYtOGY3Yi1mYWMyNzFhYWViMGMvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vN2RjNjk0YzYtYWE3MC00NTUx
-        LWFjNjgtOTI0OTVmYjU1NzAyLyJdfQ==
+        cGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vZTI4ZTljZjQtODliNC00ODRi
+        LTliN2QtYzUxOGNiMDBiMWZhLyJdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:11 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:24 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/dc8aaaac-f6b2-4c26-b05f-6b73d457c4c4/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/tasks/8a7980d6-f897-48dc-bce8-6b7240018168/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.0/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:11 GMT
+      - Fri, 28 Jan 2022 17:27:24 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -325,59 +336,61 @@ http_interactions:
       - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '602'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 22efa01fc3694a559485df11a660d428
+      - 73f392cc470c4c48bf484d7802958c81
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '371'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZGM4YWFhYWMtZjZi
-        Mi00YzI2LWIwNWYtNmI3M2Q0NTdjNGM0LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTItMDZUMTk6MzY6MTEuNzcyNjM2WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvOGE3OTgwZDYtZjg5
+        Ny00OGRjLWJjZTgtNmI3MjQwMDE4MTY4LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDEtMjhUMTc6Mjc6MjQuNTgzMTIxWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiJlNmMwOTYxZjgwNzE0ODcyYTRhOGQyMmY1
-        ZGY2OGIyYyIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEyLTA2VDE5OjM2OjExLjgx
-        ODYwOFoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTItMDZUMTk6MzY6MTEuODU3
-        NDMzWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy81NTIxYzNlOS05ZmIxLTRlN2ItYWU2Ny1iYmJlMWRhZWU2MGQvIiwi
+        ZXRlIiwibG9nZ2luZ19jaWQiOiI1NzBkYzE3ZGE5MWY0NmI4OThlOTZlYzM0
+        NGFlODJmYSIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAxLTI4VDE3OjI3OjI0LjY0
+        NDQxM1oiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDEtMjhUMTc6Mjc6MjQuNjk2
+        MjU4WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy9iYTNmMDdkNy1mMDJmLTRlYzItOGQ5My1jZjdkZTA0ZDE4YjkvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVtb3Rlcy9ycG0vcnBtL2E1MzE5YjA4LThjNjAtNDhhMC1hNzY4
-        LWUwMmU1OTQ0Yzg4Ny8iXX0=
+        cGkvdjMvcmVtb3Rlcy9ycG0vcnBtL2VhZDk1NzlhLWY2YjMtNDAwYi05Yzll
+        LTRmZWYzM2IzNjhjNC8iXX0=
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:11 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:24 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/rpm/rpm/?name=Fedora_17
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/distributions/rpm/rpm/?name=Fedora_17
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:11 GMT
+      - Fri, 28 Jan 2022 17:27:24 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -395,40 +408,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 7bc570e7bd9f4b939cfc473f6b012453
+      - 3eed5c10006c4817bc87d6b23f577c5f
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:11 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:24 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/library/fedora_17_label
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/library/fedora_17_label
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:12 GMT
+      - Fri, 28 Jan 2022 17:27:24 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -446,21 +461,21 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - da033973acfe478c9f5da4aa9c84aaee
+      - 5994c8fd440e4927824a8c1a20174f37
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:12 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:24 GMT
 - request:
     method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/rpm/rpm/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/remotes/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
@@ -468,29 +483,32 @@ http_interactions:
         LCJjYV9jZXJ0IjpudWxsLCJjbGllbnRfY2VydCI6bnVsbCwiY2xpZW50X2tl
         eSI6bnVsbCwidGxzX3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6bnVs
         bCwicHJveHlfdXNlcm5hbWUiOm51bGwsInByb3h5X3Bhc3N3b3JkIjpudWxs
-        LCJwb2xpY3kiOiJvbl9kZW1hbmQiLCJ0b3RhbF90aW1lb3V0IjozMDB9
+        LCJwb2xpY3kiOiJvbl9kZW1hbmQiLCJ0b3RhbF90aW1lb3V0IjozMDAsInJh
+        dGVfbGltaXQiOjB9
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 201
       message: Created
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:12 GMT
+      - Fri, 28 Jan 2022 17:27:25 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/rpm/rpm/359af3ff-bdbd-4210-9c9c-fd694235617e/"
+      - "/pulp/api/v3/remotes/rpm/rpm/3ccc1c07-af41-4aa1-8560-90d7fba42756/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -498,64 +516,66 @@ http_interactions:
       X-Frame-Options:
       - DENY
       Content-Length:
-      - '534'
+      - '531'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - '078c88b0553e447d9e3c9fbf8b915977'
+      - d61a7db3ff68424a84f989179e9e10fb
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzM1
-        OWFmM2ZmLWJkYmQtNDIxMC05YzljLWZkNjk0MjM1NjE3ZS8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIxLTEyLTA2VDE5OjM2OjEyLjEyMjI2N1oiLCJuYW1lIjoi
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzNj
+        Y2MxYzA3LWFmNDEtNGFhMS04NTYwLTkwZDdmYmE0Mjc1Ni8iLCJwdWxwX2Ny
+        ZWF0ZWQiOiIyMDIyLTAxLTI4VDE3OjI3OjI1LjAyNzUxMloiLCJuYW1lIjoi
         RmVkb3JhXzE3IiwidXJsIjoiaHR0cDovL215cmVwby5jb20iLCJjYV9jZXJ0
         IjpudWxsLCJjbGllbnRfY2VydCI6bnVsbCwidGxzX3ZhbGlkYXRpb24iOnRy
         dWUsInByb3h5X3VybCI6bnVsbCwicHVscF9sYWJlbHMiOnt9LCJwdWxwX2xh
-        c3RfdXBkYXRlZCI6IjIwMjEtMTItMDZUMTk6MzY6MTIuMTIyMjg1WiIsImRv
+        c3RfdXBkYXRlZCI6IjIwMjItMDEtMjhUMTc6Mjc6MjUuMDI3NTM4WiIsImRv
         d25sb2FkX2NvbmN1cnJlbmN5IjpudWxsLCJtYXhfcmV0cmllcyI6bnVsbCwi
         cG9saWN5Ijoib25fZGVtYW5kIiwidG90YWxfdGltZW91dCI6MzAwLjAsImNv
         bm5lY3RfdGltZW91dCI6bnVsbCwic29ja19jb25uZWN0X3RpbWVvdXQiOm51
         bGwsInNvY2tfcmVhZF90aW1lb3V0IjpudWxsLCJoZWFkZXJzIjpudWxsLCJy
-        YXRlX2xpbWl0IjpudWxsLCJzbGVzX2F1dGhfdG9rZW4iOm51bGx9
+        YXRlX2xpbWl0IjowLCJzbGVzX2F1dGhfdG9rZW4iOm51bGx9
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:12 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:25 GMT
 - request:
     method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/rpm/rpm/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
         eyJuYW1lIjoiRmVkb3JhXzE3IiwicmV0YWluX3BhY2thZ2VfdmVyc2lvbnMi
         OjB9
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 201
       message: Created
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:12 GMT
+      - Fri, 28 Jan 2022 17:27:25 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/rpm/rpm/60fe25c6-555b-4d8c-8754-d5274f40bec4/"
+      - "/pulp/api/v3/repositories/rpm/rpm/53a3c3d2-4204-48dd-b3dc-55d3498f3de9/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -569,22 +589,22 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - b4bdde40cf474f32a2beb75758a4fd14
+      - 23f1b25e210643c8a735d7f8d7eedd94
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vNjBmZTI1YzYtNTU1Yi00ZDhjLTg3NTQtZDUyNzRmNDBiZWM0LyIsInB1
-        bHBfY3JlYXRlZCI6IjIwMjEtMTItMDZUMTk6MzY6MTIuMjY0OTg4WiIsInZl
+        cG0vNTNhM2MzZDItNDIwNC00OGRkLWIzZGMtNTVkMzQ5OGYzZGU5LyIsInB1
+        bHBfY3JlYXRlZCI6IjIwMjItMDEtMjhUMTc6Mjc6MjUuMjY5NjQ1WiIsInZl
         cnNpb25zX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vNjBmZTI1YzYtNTU1Yi00ZDhjLTg3NTQtZDUyNzRmNDBiZWM0L3ZlcnNp
+        cG0vNTNhM2MzZDItNDIwNC00OGRkLWIzZGMtNTVkMzQ5OGYzZGU5L3ZlcnNp
         b25zLyIsInB1bHBfbGFiZWxzIjp7fSwibGF0ZXN0X3ZlcnNpb25faHJlZiI6
-        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS82MGZlMjVjNi01
-        NTViLTRkOGMtODc1NC1kNTI3NGY0MGJlYzQvdmVyc2lvbnMvMC8iLCJuYW1l
+        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS81M2EzYzNkMi00
+        MjA0LTQ4ZGQtYjNkYy01NWQzNDk4ZjNkZTkvdmVyc2lvbnMvMC8iLCJuYW1l
         IjoiRmVkb3JhXzE3IiwiZGVzY3JpcHRpb24iOm51bGwsInJldGFpbl9yZXBv
         X3ZlcnNpb25zIjpudWxsLCJyZW1vdGUiOm51bGwsImF1dG9wdWJsaXNoIjpm
         YWxzZSwibWV0YWRhdGFfc2lnbmluZ19zZXJ2aWNlIjpudWxsLCJyZXRhaW5f
@@ -592,29 +612,398 @@ http_interactions:
         bnVsbCwicGFja2FnZV9jaGVja3N1bV90eXBlIjpudWxsLCJncGdjaGVjayI6
         MCwicmVwb19ncGdjaGVjayI6MCwic3FsaXRlX21ldGFkYXRhIjpmYWxzZX0=
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:12 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:25 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/rpm/rpm/?name=2_duplicate
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/?name=2_duplicate
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:12 GMT
+      - Fri, 28 Jan 2022 17:27:25 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie,Accept-Encoding
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Correlation-Id:
+      - b4fe901fdb194e10b89e0d1fa8a65229
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Via:
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '314'
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
+        cnBtL3JwbS8xMDRjZWQ4MC1kMzJlLTRkYjctYWY0ZS0wZTdjNTliMjAwZmUv
+        IiwicHVscF9jcmVhdGVkIjoiMjAyMi0wMS0yOFQxNzoyNzoyMS4yNjY1NTha
+        IiwidmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
+        cnBtL3JwbS8xMDRjZWQ4MC1kMzJlLTRkYjctYWY0ZS0wZTdjNTliMjAwZmUv
+        dmVyc2lvbnMvIiwicHVscF9sYWJlbHMiOnt9LCJsYXRlc3RfdmVyc2lvbl9o
+        cmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9ycG0vcnBtLzEwNGNl
+        ZDgwLWQzMmUtNGRiNy1hZjRlLTBlN2M1OWIyMDBmZS92ZXJzaW9ucy8wLyIs
+        Im5hbWUiOiIyX2R1cGxpY2F0ZSIsImRlc2NyaXB0aW9uIjpudWxsLCJyZXRh
+        aW5fcmVwb192ZXJzaW9ucyI6bnVsbCwicmVtb3RlIjpudWxsLCJhdXRvcHVi
+        bGlzaCI6ZmFsc2UsIm1ldGFkYXRhX3NpZ25pbmdfc2VydmljZSI6bnVsbCwi
+        cmV0YWluX3BhY2thZ2VfdmVyc2lvbnMiOjAsIm1ldGFkYXRhX2NoZWNrc3Vt
+        X3R5cGUiOm51bGwsInBhY2thZ2VfY2hlY2tzdW1fdHlwZSI6bnVsbCwiZ3Bn
+        Y2hlY2siOjAsInJlcG9fZ3BnY2hlY2siOjAsInNxbGl0ZV9tZXRhZGF0YSI6
+        ZmFsc2V9XX0=
+    http_version: 
+  recorded_at: Fri, 28 Jan 2022 17:27:25 GMT
+- request:
+    method: delete
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/104ced80-d32e-4db7-af4e-0e7c59b200fe/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 28 Jan 2022 17:27:25 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '67'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Correlation-Id:
+      - e52601e53b014f409d7ccbe76930ca42
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Via:
+      - 1.1 centos8-dev.localhost.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2MyOWY2MWNmLWY5NzktNDUy
+        Mi1iYjdhLTgxNGM5MmNmOWM5YS8ifQ==
+    http_version: 
+  recorded_at: Fri, 28 Jan 2022 17:27:25 GMT
+- request:
+    method: get
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/remotes/rpm/rpm/?name=2_duplicate
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 28 Jan 2022 17:27:25 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie,Accept-Encoding
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Correlation-Id:
+      - 59cd64fe4fff4fd4b521ccb3cf26485c
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Via:
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '345'
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL3JwbS9y
+        cG0vNDJlZGM3MmQtYjUwMy00MWI4LTgzMTYtZmQ1ZTM5YmMxMmUwLyIsInB1
+        bHBfY3JlYXRlZCI6IjIwMjItMDEtMjhUMTc6Mjc6MjEuMDEzNDA2WiIsIm5h
+        bWUiOiIyX2R1cGxpY2F0ZSIsInVybCI6Imh0dHA6Ly9teXJlcG8uY29tIiwi
+        Y2FfY2VydCI6bnVsbCwiY2xpZW50X2NlcnQiOm51bGwsInRsc192YWxpZGF0
+        aW9uIjp0cnVlLCJwcm94eV91cmwiOm51bGwsInB1bHBfbGFiZWxzIjp7fSwi
+        cHVscF9sYXN0X3VwZGF0ZWQiOiIyMDIyLTAxLTI4VDE3OjI3OjIxLjAxMzQz
+        MVoiLCJkb3dubG9hZF9jb25jdXJyZW5jeSI6bnVsbCwibWF4X3JldHJpZXMi
+        Om51bGwsInBvbGljeSI6ImltbWVkaWF0ZSIsInRvdGFsX3RpbWVvdXQiOjMw
+        MC4wLCJjb25uZWN0X3RpbWVvdXQiOm51bGwsInNvY2tfY29ubmVjdF90aW1l
+        b3V0IjpudWxsLCJzb2NrX3JlYWRfdGltZW91dCI6bnVsbCwiaGVhZGVycyI6
+        bnVsbCwicmF0ZV9saW1pdCI6MCwic2xlc19hdXRoX3Rva2VuIjpudWxsfV19
+    http_version: 
+  recorded_at: Fri, 28 Jan 2022 17:27:25 GMT
+- request:
+    method: delete
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/remotes/rpm/rpm/42edc72d-b503-41b8-8316-fd5e39bc12e0/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 28 Jan 2022 17:27:25 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '67'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Correlation-Id:
+      - b5015eead3714640bbac29ab0072639c
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Via:
+      - 1.1 centos8-dev.localhost.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2M3YmRlM2ViLWIxZWItNGQy
+        Mi04NTQzLTgwNzU4NzQ2MzM5ZS8ifQ==
+    http_version: 
+  recorded_at: Fri, 28 Jan 2022 17:27:25 GMT
+- request:
+    method: get
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/tasks/c29f61cf-f979-4522-bb7a-814c92cf9c9a/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 28 Jan 2022 17:27:25 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie,Accept-Encoding
+      Allow:
+      - GET, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Correlation-Id:
+      - 74d7f519275742bf9b6c5b77680c1637
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Via:
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '373'
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYzI5ZjYxY2YtZjk3
+        OS00NTIyLWJiN2EtODE0YzkyY2Y5YzlhLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDEtMjhUMTc6Mjc6MjUuNDk5MTgyWiIsInN0YXRlIjoiY29tcGxldGVk
+        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
+        ZXRlIiwibG9nZ2luZ19jaWQiOiJlNTI2MDFlNTNiMDE0ZjQwOWQ3Y2NiZTc2
+        OTMwY2E0MiIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAxLTI4VDE3OjI3OjI1LjU2
+        Mzg0NloiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDEtMjhUMTc6Mjc6MjUuNjM3
+        NzYxWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy8xZTRmNWRmMi0wYmY5LTQ2MzYtOGY3Yi1mYWMyNzFhYWViMGMvIiwi
+        cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
+        cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
+        Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
+        cGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vMTA0Y2VkODAtZDMyZS00ZGI3
+        LWFmNGUtMGU3YzU5YjIwMGZlLyJdfQ==
+    http_version: 
+  recorded_at: Fri, 28 Jan 2022 17:27:25 GMT
+- request:
+    method: get
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/tasks/c7bde3eb-b1eb-4d22-8543-80758746339e/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 28 Jan 2022 17:27:25 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie,Accept-Encoding
+      Allow:
+      - GET, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Correlation-Id:
+      - 472b052eb6cf4a1dbd74bd6afd4e0dc3
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Via:
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '367'
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYzdiZGUzZWItYjFl
+        Yi00ZDIyLTg1NDMtODA3NTg3NDYzMzllLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDEtMjhUMTc6Mjc6MjUuNjM1NjE3WiIsInN0YXRlIjoiY29tcGxldGVk
+        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
+        ZXRlIiwibG9nZ2luZ19jaWQiOiJiNTAxNWVlYWQzNzE0NjQwYmJhYzI5YWIw
+        MDcyNjM5YyIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAxLTI4VDE3OjI3OjI1Ljcw
+        MDEwMVoiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDEtMjhUMTc6Mjc6MjUuNzUx
+        NzMyWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy9iYTNmMDdkNy1mMDJmLTRlYzItOGQ5My1jZjdkZTA0ZDE4YjkvIiwi
+        cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
+        cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
+        Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
+        cGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzQyZWRjNzJkLWI1MDMtNDFiOC04MzE2
+        LWZkNWUzOWJjMTJlMC8iXX0=
+    http_version: 
+  recorded_at: Fri, 28 Jan 2022 17:27:25 GMT
+- request:
+    method: get
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/distributions/rpm/rpm/?name=2_duplicate
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 28 Jan 2022 17:27:25 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -632,40 +1021,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 1470fbecedb1446fae0ca44358ea3ee6
+      - 5313d4e0325a4bc586df57b38a0319ea
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:12 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:25 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/rpm/rpm/?name=2_duplicate
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:12 GMT
+      - Fri, 28 Jan 2022 17:27:25 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -683,123 +1074,21 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - dcc576cde48b4cc6868011fcf538214d
+      - d8edd384b4254369aeb44389d0e283e8
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:12 GMT
-- request:
-    method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/rpm/rpm/?name=2_duplicate
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-      Authorization:
-      - Basic Og==
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 06 Dec 2021 19:36:12 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '52'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 98623bfd981f4f10b3c061c206ba6cfe
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:12 GMT
-- request:
-    method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-      Authorization:
-      - Basic Og==
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 06 Dec 2021 19:36:12 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '52'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - afc5c4c0dea2486b9e759ad974980ac5
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:12 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:25 GMT
 - request:
     method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/rpm/rpm/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/remotes/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
@@ -807,29 +1096,32 @@ http_interactions:
         bSIsImNhX2NlcnQiOm51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJjbGllbnRf
         a2V5IjpudWxsLCJ0bHNfdmFsaWRhdGlvbiI6dHJ1ZSwicHJveHlfdXJsIjpu
         dWxsLCJwcm94eV91c2VybmFtZSI6bnVsbCwicHJveHlfcGFzc3dvcmQiOm51
-        bGwsInBvbGljeSI6ImltbWVkaWF0ZSIsInRvdGFsX3RpbWVvdXQiOjMwMH0=
+        bGwsInBvbGljeSI6ImltbWVkaWF0ZSIsInRvdGFsX3RpbWVvdXQiOjMwMCwi
+        cmF0ZV9saW1pdCI6MH0=
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 201
       message: Created
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:12 GMT
+      - Fri, 28 Jan 2022 17:27:26 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/rpm/rpm/c0878719-94be-41c4-9220-d7b9e4549488/"
+      - "/pulp/api/v3/remotes/rpm/rpm/2134425a-2c84-460d-86a2-938d309381b4/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -837,64 +1129,66 @@ http_interactions:
       X-Frame-Options:
       - DENY
       Content-Length:
-      - '536'
+      - '533'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - d65d7a9705a44152bee864b32d02c9a9
+      - a70629faa9274c2a8473d70f9af77f98
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtL2Mw
-        ODc4NzE5LTk0YmUtNDFjNC05MjIwLWQ3YjllNDU0OTQ4OC8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIxLTEyLTA2VDE5OjM2OjEyLjY0ODk0MVoiLCJuYW1lIjoi
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzIx
+        MzQ0MjVhLTJjODQtNDYwZC04NmEyLTkzOGQzMDkzODFiNC8iLCJwdWxwX2Ny
+        ZWF0ZWQiOiIyMDIyLTAxLTI4VDE3OjI3OjI2LjExOTM1N1oiLCJuYW1lIjoi
         Ml9kdXBsaWNhdGUiLCJ1cmwiOiJodHRwOi8vbXlyZXBvLmNvbSIsImNhX2Nl
         cnQiOm51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJ0bHNfdmFsaWRhdGlvbiI6
         dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJwdWxwX2xhYmVscyI6e30sInB1bHBf
-        bGFzdF91cGRhdGVkIjoiMjAyMS0xMi0wNlQxOTozNjoxMi42NDg5NzBaIiwi
+        bGFzdF91cGRhdGVkIjoiMjAyMi0wMS0yOFQxNzoyNzoyNi4xMTkzODFaIiwi
         ZG93bmxvYWRfY29uY3VycmVuY3kiOm51bGwsIm1heF9yZXRyaWVzIjpudWxs
         LCJwb2xpY3kiOiJpbW1lZGlhdGUiLCJ0b3RhbF90aW1lb3V0IjozMDAuMCwi
         Y29ubmVjdF90aW1lb3V0IjpudWxsLCJzb2NrX2Nvbm5lY3RfdGltZW91dCI6
         bnVsbCwic29ja19yZWFkX3RpbWVvdXQiOm51bGwsImhlYWRlcnMiOm51bGws
-        InJhdGVfbGltaXQiOm51bGwsInNsZXNfYXV0aF90b2tlbiI6bnVsbH0=
+        InJhdGVfbGltaXQiOjAsInNsZXNfYXV0aF90b2tlbiI6bnVsbH0=
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:12 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:26 GMT
 - request:
     method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/rpm/rpm/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
         eyJuYW1lIjoiMl9kdXBsaWNhdGUiLCJyZXRhaW5fcGFja2FnZV92ZXJzaW9u
         cyI6MH0=
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 201
       message: Created
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:12 GMT
+      - Fri, 28 Jan 2022 17:27:26 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/rpm/rpm/d49f0a31-6321-4927-99b5-d03e00b4a773/"
+      - "/pulp/api/v3/repositories/rpm/rpm/26ff27cc-49d8-4622-b8f2-e0d7fcbef7e1/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -908,22 +1202,22 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - d59b240681e443c39851147368975039
+      - 761193e360d04230b22b0700f6c3efeb
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vZDQ5ZjBhMzEtNjMyMS00OTI3LTk5YjUtZDAzZTAwYjRhNzczLyIsInB1
-        bHBfY3JlYXRlZCI6IjIwMjEtMTItMDZUMTk6MzY6MTIuNzkyNTE4WiIsInZl
+        cG0vMjZmZjI3Y2MtNDlkOC00NjIyLWI4ZjItZTBkN2ZjYmVmN2UxLyIsInB1
+        bHBfY3JlYXRlZCI6IjIwMjItMDEtMjhUMTc6Mjc6MjYuMzgzMDQ2WiIsInZl
         cnNpb25zX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vZDQ5ZjBhMzEtNjMyMS00OTI3LTk5YjUtZDAzZTAwYjRhNzczL3ZlcnNp
+        cG0vMjZmZjI3Y2MtNDlkOC00NjIyLWI4ZjItZTBkN2ZjYmVmN2UxL3ZlcnNp
         b25zLyIsInB1bHBfbGFiZWxzIjp7fSwibGF0ZXN0X3ZlcnNpb25faHJlZiI6
-        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS9kNDlmMGEzMS02
-        MzIxLTQ5MjctOTliNS1kMDNlMDBiNGE3NzMvdmVyc2lvbnMvMC8iLCJuYW1l
+        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS8yNmZmMjdjYy00
+        OWQ4LTQ2MjItYjhmMi1lMGQ3ZmNiZWY3ZTEvdmVyc2lvbnMvMC8iLCJuYW1l
         IjoiMl9kdXBsaWNhdGUiLCJkZXNjcmlwdGlvbiI6bnVsbCwicmV0YWluX3Jl
         cG9fdmVyc2lvbnMiOm51bGwsInJlbW90ZSI6bnVsbCwiYXV0b3B1Ymxpc2gi
         OmZhbHNlLCJtZXRhZGF0YV9zaWduaW5nX3NlcnZpY2UiOm51bGwsInJldGFp
@@ -932,29 +1226,31 @@ http_interactions:
         IjowLCJyZXBvX2dwZ2NoZWNrIjowLCJzcWxpdGVfbWV0YWRhdGEiOmZhbHNl
         fQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:12 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:26 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/rpm/rpm/?name=feedless_1
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/?name=feedless_1
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:12 GMT
+      - Fri, 28 Jan 2022 17:27:26 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -965,30 +1261,30 @@ http_interactions:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '682'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - dda771165cff4ccc9026c147abe13c1e
+      - 7ce137e1f20c4d55a25d5cdfed6b555d
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '315'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS9hY2ViY2IwOS1hZjVhLTQ4ZjItYTA4OC0wMDRkZWI1MmFkZmYv
-        IiwicHVscF9jcmVhdGVkIjoiMjAyMS0xMi0wNlQxNzo1Mzo1Mi4xMTUwODNa
+        cnBtL3JwbS8wZmZkMGExOC1lNzI1LTQ2ZjItOTc3Ni0xZDZhOGI5MzU3Mjgv
+        IiwicHVscF9jcmVhdGVkIjoiMjAyMi0wMS0yOFQxNzoyNzoyMi4yNDQyMTda
         IiwidmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS9hY2ViY2IwOS1hZjVhLTQ4ZjItYTA4OC0wMDRkZWI1MmFkZmYv
+        cnBtL3JwbS8wZmZkMGExOC1lNzI1LTQ2ZjItOTc3Ni0xZDZhOGI5MzU3Mjgv
         dmVyc2lvbnMvIiwicHVscF9sYWJlbHMiOnt9LCJsYXRlc3RfdmVyc2lvbl9o
-        cmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9ycG0vcnBtL2FjZWJj
-        YjA5LWFmNWEtNDhmMi1hMDg4LTAwNGRlYjUyYWRmZi92ZXJzaW9ucy8wLyIs
+        cmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9ycG0vcnBtLzBmZmQw
+        YTE4LWU3MjUtNDZmMi05Nzc2LTFkNmE4YjkzNTcyOC92ZXJzaW9ucy8wLyIs
         Im5hbWUiOiJmZWVkbGVzc18xIiwiZGVzY3JpcHRpb24iOm51bGwsInJldGFp
         bl9yZXBvX3ZlcnNpb25zIjpudWxsLCJyZW1vdGUiOm51bGwsImF1dG9wdWJs
         aXNoIjpmYWxzZSwibWV0YWRhdGFfc2lnbmluZ19zZXJ2aWNlIjpudWxsLCJy
@@ -997,29 +1293,31 @@ http_interactions:
         aGVjayI6MCwicmVwb19ncGdjaGVjayI6MCwic3FsaXRlX21ldGFkYXRhIjpm
         YWxzZX1dfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:12 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:26 GMT
 - request:
     method: delete
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/rpm/rpm/acebcb09-af5a-48f2-a088-004deb52adff/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/0ffd0a18-e725-46f2-9776-1d6a8b935728/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 202
       message: Accepted
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:26 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1037,40 +1335,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 8897bb1b347e4775bc8dbcd2e55cf8e3
+      - f01913043dbe44a1a1ec90ab3f004994
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2I5MzJmOGQ1LTEzMDgtNDZk
-        OC1hOTM5LTJhOGU5Zjk5MGJkZC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzhjNmE3NTY5LTE4ZjktNGVk
+        Mi04YzE3LTI5MDFlZTE0NTkxOC8ifQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:26 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/rpm/rpm/?name=feedless_1
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/remotes/rpm/rpm/?name=feedless_1
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:26 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1088,40 +1388,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - f2734472029742a7b4450fc012d2f1c9
+      - 4d171d00811240339edc02d0a1854ffd
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:26 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/b932f8d5-1308-46d8-a939-2a8e9f990bdd/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/tasks/8c6a7569-18f9-4ed2-8c17-2901ee145918/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.0/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:26 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1132,59 +1434,61 @@ http_interactions:
       - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '607'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 8a3277b5f4784f52ae1749639761d933
+      - 50e506bebb5f43f3bc95bcfeb996ed63
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '373'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYjkzMmY4ZDUtMTMw
-        OC00NmQ4LWE5MzktMmE4ZTlmOTkwYmRkLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTItMDZUMTk6MzY6MTIuOTc0MTk2WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvOGM2YTc1NjktMThm
+        OS00ZWQyLThjMTctMjkwMWVlMTQ1OTE4LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDEtMjhUMTc6Mjc6MjYuNjE4NTU4WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiI4ODk3YmIxYjM0N2U0Nzc1YmM4ZGJjZDJl
-        NTVjZjhlMyIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEyLTA2VDE5OjM2OjEzLjAy
-        NDE4MVoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTItMDZUMTk6MzY6MTMuMDc4
-        MjM4WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy8yY2ZlZDRlMy0zZDIzLTRlNzAtOTcyYy1kNTZlZWVmODIwOWYvIiwi
+        ZXRlIiwibG9nZ2luZ19jaWQiOiJmMDE5MTMwNDNkYmU0NGExYTFlYzkwYWIz
+        ZjAwNDk5NCIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAxLTI4VDE3OjI3OjI2Ljcw
+        MjUyOFoiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDEtMjhUMTc6Mjc6MjYuODAw
+        NTc1WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy9iYTNmMDdkNy1mMDJmLTRlYzItOGQ5My1jZjdkZTA0ZDE4YjkvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vYWNlYmNiMDktYWY1YS00OGYy
-        LWEwODgtMDA0ZGViNTJhZGZmLyJdfQ==
+        cGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vMGZmZDBhMTgtZTcyNS00NmYy
+        LTk3NzYtMWQ2YThiOTM1NzI4LyJdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:26 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/rpm/rpm/?name=feedless_1
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/distributions/rpm/rpm/?name=feedless_1
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:26 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1202,40 +1506,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - c73ad8e61bc74b018347666cf0786e5c
+      - 8a31db46aafb4dafbbeee8dae69bdd00
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:26 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/library/fedora_17_label_no_feed
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/library/fedora_17_label_no_feed
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:27 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1253,48 +1559,50 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - f63302f7862f470fa1bfba00f42b0255
+      - 21f83e0a0e7f466b9716f65508d6a0c1
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:27 GMT
 - request:
     method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/rpm/rpm/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
         eyJuYW1lIjoiZmVlZGxlc3NfMSIsInJldGFpbl9wYWNrYWdlX3ZlcnNpb25z
         IjowfQ==
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 201
       message: Created
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:27 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/rpm/rpm/28bf82fe-f16e-46f4-b059-13a4cf38ee0d/"
+      - "/pulp/api/v3/repositories/rpm/rpm/3932f1e0-98d3-4e64-8e6b-929ebd36e1dc/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -1308,22 +1616,22 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 8c15fc51f1e5469ead50ddc437c5620c
+      - 0b09a798099b4e89b8af8c9af5afb00c
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vMjhiZjgyZmUtZjE2ZS00NmY0LWIwNTktMTNhNGNmMzhlZTBkLyIsInB1
-        bHBfY3JlYXRlZCI6IjIwMjEtMTItMDZUMTk6MzY6MTMuMzg5MTk3WiIsInZl
+        cG0vMzkzMmYxZTAtOThkMy00ZTY0LThlNmItOTI5ZWJkMzZlMWRjLyIsInB1
+        bHBfY3JlYXRlZCI6IjIwMjItMDEtMjhUMTc6Mjc6MjcuNDI2MjY1WiIsInZl
         cnNpb25zX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vMjhiZjgyZmUtZjE2ZS00NmY0LWIwNTktMTNhNGNmMzhlZTBkL3ZlcnNp
+        cG0vMzkzMmYxZTAtOThkMy00ZTY0LThlNmItOTI5ZWJkMzZlMWRjL3ZlcnNp
         b25zLyIsInB1bHBfbGFiZWxzIjp7fSwibGF0ZXN0X3ZlcnNpb25faHJlZiI6
-        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS8yOGJmODJmZS1m
-        MTZlLTQ2ZjQtYjA1OS0xM2E0Y2YzOGVlMGQvdmVyc2lvbnMvMC8iLCJuYW1l
+        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS8zOTMyZjFlMC05
+        OGQzLTRlNjQtOGU2Yi05MjllYmQzNmUxZGMvdmVyc2lvbnMvMC8iLCJuYW1l
         IjoiZmVlZGxlc3NfMSIsImRlc2NyaXB0aW9uIjpudWxsLCJyZXRhaW5fcmVw
         b192ZXJzaW9ucyI6bnVsbCwicmVtb3RlIjpudWxsLCJhdXRvcHVibGlzaCI6
         ZmFsc2UsIm1ldGFkYXRhX3NpZ25pbmdfc2VydmljZSI6bnVsbCwicmV0YWlu
@@ -1331,29 +1639,31 @@ http_interactions:
         Om51bGwsInBhY2thZ2VfY2hlY2tzdW1fdHlwZSI6bnVsbCwiZ3BnY2hlY2si
         OjAsInJlcG9fZ3BnY2hlY2siOjAsInNxbGl0ZV9tZXRhZGF0YSI6ZmFsc2V9
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:27 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/rpm/rpm/?name=fedora_17_library_library_view
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/?name=fedora_17_library_library_view
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:27 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1364,30 +1674,30 @@ http_interactions:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '702'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 3c3c9721a38f45949adca738b64432a5
+      - f8178cfabcbd443aabe85349a1114625
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '324'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS8wN2RjY2IyZS0xMDAzLTRiNjUtYWFkOS05M2FlMTBhODNhMDQv
-        IiwicHVscF9jcmVhdGVkIjoiMjAyMS0xMi0wNlQxNzo1Mzo1Mi43NzI5MTRa
+        cnBtL3JwbS8zMjI1ZTM4OS05N2IyLTQ5YjMtYmVmNy05NTIxZGNiN2ZlNmQv
+        IiwicHVscF9jcmVhdGVkIjoiMjAyMi0wMS0yOFQxNzoyNzoyMy4zMDA5NzFa
         IiwidmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS8wN2RjY2IyZS0xMDAzLTRiNjUtYWFkOS05M2FlMTBhODNhMDQv
+        cnBtL3JwbS8zMjI1ZTM4OS05N2IyLTQ5YjMtYmVmNy05NTIxZGNiN2ZlNmQv
         dmVyc2lvbnMvIiwicHVscF9sYWJlbHMiOnt9LCJsYXRlc3RfdmVyc2lvbl9o
-        cmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9ycG0vcnBtLzA3ZGNj
-        YjJlLTEwMDMtNGI2NS1hYWQ5LTkzYWUxMGE4M2EwNC92ZXJzaW9ucy8wLyIs
+        cmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9ycG0vcnBtLzMyMjVl
+        Mzg5LTk3YjItNDliMy1iZWY3LTk1MjFkY2I3ZmU2ZC92ZXJzaW9ucy8wLyIs
         Im5hbWUiOiJmZWRvcmFfMTdfbGlicmFyeV9saWJyYXJ5X3ZpZXciLCJkZXNj
         cmlwdGlvbiI6bnVsbCwicmV0YWluX3JlcG9fdmVyc2lvbnMiOm51bGwsInJl
         bW90ZSI6bnVsbCwiYXV0b3B1Ymxpc2giOmZhbHNlLCJtZXRhZGF0YV9zaWdu
@@ -1396,29 +1706,31 @@ http_interactions:
         c3VtX3R5cGUiOm51bGwsImdwZ2NoZWNrIjowLCJyZXBvX2dwZ2NoZWNrIjow
         LCJzcWxpdGVfbWV0YWRhdGEiOmZhbHNlfV19
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:27 GMT
 - request:
     method: delete
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/rpm/rpm/07dccb2e-1003-4b65-aad9-93ae10a83a04/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/3225e389-97b2-49b3-bef7-9521dcb7fe6d/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 202
       message: Accepted
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:27 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1436,40 +1748,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 4ab3f046fdff488b8a484cda017ec438
+      - cbdd5fdb1e2046c7a3ad3f19813ad30c
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzlmMGQ5MGIxLTFhYWUtNDVj
-        Zi05MmRlLTVlMTY2ODEwNWQ5NC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2YzMTczYWNkLTdkNzMtNDQz
+        Ni1hM2EyLTc0NWM4MWEyNmNiOC8ifQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:27 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/remotes/rpm/rpm/?name=fedora_17_library_library_view
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/remotes/rpm/rpm/?name=fedora_17_library_library_view
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:27 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1487,40 +1801,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 207e8667e5794aef8b0f1423b7e6989f
+      - 58d00c7e8fbd49b59f31dae20cb8c411
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:27 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/9f0d90b1-1aae-45cf-92de-5e1668105d94/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/tasks/f3173acd-7d73-4436-a3a2-745c81a26cb8/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.0/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:27 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1531,59 +1847,61 @@ http_interactions:
       - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
-      Content-Length:
-      - '607'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 300ed8ccbcff41dc8046a7046114cec7
+      - 1049ceae50f342189ca8208cd45659d9
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
+      Content-Length:
+      - '371'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvOWYwZDkwYjEtMWFh
-        ZS00NWNmLTkyZGUtNWUxNjY4MTA1ZDk0LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTItMDZUMTk6MzY6MTMuNjEwMzAxWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZjMxNzNhY2QtN2Q3
+        My00NDM2LWEzYTItNzQ1YzgxYTI2Y2I4LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDEtMjhUMTc6Mjc6MjcuNjcyNzI4WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiI0YWIzZjA0NmZkZmY0ODhiOGE0ODRjZGEw
-        MTdlYzQzOCIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEyLTA2VDE5OjM2OjEzLjY2
-        MzE1NloiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTItMDZUMTk6MzY6MTMuNzE2
-        NTI5WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy8yY2ZlZDRlMy0zZDIzLTRlNzAtOTcyYy1kNTZlZWVmODIwOWYvIiwi
+        ZXRlIiwibG9nZ2luZ19jaWQiOiJjYmRkNWZkYjFlMjA0NmM3YTNhZDNmMTk4
+        MTNhZDMwYyIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAxLTI4VDE3OjI3OjI3Ljcz
+        NzMyMFoiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDEtMjhUMTc6Mjc6MjcuODA0
+        NDc4WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy8xZTRmNWRmMi0wYmY5LTQ2MzYtOGY3Yi1mYWMyNzFhYWViMGMvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vMDdkY2NiMmUtMTAwMy00YjY1
-        LWFhZDktOTNhZTEwYTgzYTA0LyJdfQ==
+        cGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vMzIyNWUzODktOTdiMi00OWIz
+        LWJlZjctOTUyMWRjYjdmZTZkLyJdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:27 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/rpm/rpm/?name=fedora_17_library_library_view
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/distributions/rpm/rpm/?name=fedora_17_library_library_view
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:27 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1601,40 +1919,42 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 46d41b3158ed469e94c61a121ac37b12
+      - f015e25e13b245fca49026c7ca20824a
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:27 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_library_library_view_label
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_library_library_view_label
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:13 GMT
+      - Fri, 28 Jan 2022 17:27:27 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1652,48 +1972,50 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 2a9b0f52624948e7bff5a2977dbfdb10
+      - 555dea0045f24f3cbabd65eeb334c68d
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:13 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:27 GMT
 - request:
     method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/rpm/rpm/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
         eyJuYW1lIjoiZmVkb3JhXzE3X2xpYnJhcnlfbGlicmFyeV92aWV3IiwicmV0
         YWluX3BhY2thZ2VfdmVyc2lvbnMiOjB9
     headers:
-      User-Agent:
-      - OpenAPI-Generator/3.16.1/ruby
-      Accept:
-      - application/json
       Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.2/ruby
+      Accept:
       - application/json
       Authorization:
       - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 201
       message: Created
     headers:
       Date:
-      - Mon, 06 Dec 2021 19:36:14 GMT
+      - Fri, 28 Jan 2022 17:27:28 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/rpm/rpm/d04ed4d7-90c1-41b3-ac19-bd4ed79b7085/"
+      - "/pulp/api/v3/repositories/rpm/rpm/4d9260f2-072f-471f-a604-0ef5c328ffc2/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -1707,22 +2029,22 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 75eef40298c94b3c8b3de9d687748ecf
+      - 706aeba92f6d4b278afe0e92084bdb22
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vZDA0ZWQ0ZDctOTBjMS00MWIzLWFjMTktYmQ0ZWQ3OWI3MDg1LyIsInB1
-        bHBfY3JlYXRlZCI6IjIwMjEtMTItMDZUMTk6MzY6MTQuMDUzMDE5WiIsInZl
+        cG0vNGQ5MjYwZjItMDcyZi00NzFmLWE2MDQtMGVmNWMzMjhmZmMyLyIsInB1
+        bHBfY3JlYXRlZCI6IjIwMjItMDEtMjhUMTc6Mjc6MjguMjU1OTIwWiIsInZl
         cnNpb25zX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vZDA0ZWQ0ZDctOTBjMS00MWIzLWFjMTktYmQ0ZWQ3OWI3MDg1L3ZlcnNp
+        cG0vNGQ5MjYwZjItMDcyZi00NzFmLWE2MDQtMGVmNWMzMjhmZmMyL3ZlcnNp
         b25zLyIsInB1bHBfbGFiZWxzIjp7fSwibGF0ZXN0X3ZlcnNpb25faHJlZiI6
-        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS9kMDRlZDRkNy05
-        MGMxLTQxYjMtYWMxOS1iZDRlZDc5YjcwODUvdmVyc2lvbnMvMC8iLCJuYW1l
+        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS80ZDkyNjBmMi0w
+        NzJmLTQ3MWYtYTYwNC0wZWY1YzMyOGZmYzIvdmVyc2lvbnMvMC8iLCJuYW1l
         IjoiZmVkb3JhXzE3X2xpYnJhcnlfbGlicmFyeV92aWV3IiwiZGVzY3JpcHRp
         b24iOm51bGwsInJldGFpbl9yZXBvX3ZlcnNpb25zIjpudWxsLCJyZW1vdGUi
         Om51bGwsImF1dG9wdWJsaXNoIjpmYWxzZSwibWV0YWRhdGFfc2lnbmluZ19z
@@ -1731,5 +2053,5 @@ http_interactions:
         eXBlIjpudWxsLCJncGdjaGVjayI6MCwicmVwb19ncGdjaGVjayI6MCwic3Fs
         aXRlX21ldGFkYXRhIjpmYWxzZX0=
     http_version: 
-  recorded_at: Mon, 06 Dec 2021 19:36:14 GMT
+  recorded_at: Fri, 28 Jan 2022 17:27:28 GMT
 recorded_with: VCR 3.0.3

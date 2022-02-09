@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/content/file/files/?relative_path=test_erratum.json&sha256=ef0c9983106b824f943850df94420e7f18ad381acc6bd5a21ea05dcf660a7791
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/content/file/files/?relative_path=test_erratum.json&sha256=ef0c9983106b824f943850df94420e7f18ad381acc6bd5a21ea05dcf660a7791
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -23,427 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Tue, 01 Feb 2022 13:48:26 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '52'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 59e2a2355f5d407a83f3bb66ac9c7b5c
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:26 GMT
-- request:
-    method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/artifacts/?sha256=ef0c9983106b824f943850df94420e7f18ad381acc6bd5a21ea05dcf660a7791
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.16.2/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 01 Feb 2022 13:48:26 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '52'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 5bea8c49d25a4000b78c3d31fda2a7bd
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:26 GMT
-- request:
-    method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/uploads/
-    body:
-      encoding: UTF-8
-      base64_string: 'eyJzaXplIjo3NDB9
-
-'
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.16.2/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 201
-      message: Created
-    headers:
-      Date:
-      - Tue, 01 Feb 2022 13:48:26 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Location:
-      - "/pulp/api/v3/uploads/b5aa9048-e8f7-4b37-87b6-4e227772951b/"
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, POST, HEAD
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '130'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - c048226cc740414bb95157a8aa2a3632
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdXBsb2Fkcy9iNWFhOTA0OC1l
-        OGY3LTRiMzctODdiNi00ZTIyNzc3Mjk1MWIvIiwicHVscF9jcmVhdGVkIjoi
-        MjAyMi0wMi0wMVQxMzo0ODoyNi40MzI1MDdaIiwic2l6ZSI6NzQwfQ==
-    http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:26 GMT
-- request:
-    method: put
-    uri: https://devel8.markarth.example.com/pulp/api/v3/uploads/b5aa9048-e8f7-4b37-87b6-4e227772951b/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        LS0tLS0tLS0tLS0tLVJ1YnlNdWx0aXBhcnRQb3N0LWY1ZDhmMmYzMDRkYThl
-        ZDFjMWI0OGI5Y2E3ZmUzZTA1DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3Jt
-        LWRhdGE7IG5hbWU9ImZpbGUiOyBmaWxlbmFtZT0iZmlsZWNodW5rMjAyMjAy
-        MDEtOTcwMzgtMzN3cXh2Ig0KQ29udGVudC1MZW5ndGg6IDc0MA0KQ29udGVu
-        dC1UeXBlOiBhcHBsaWNhdGlvbi9vY3RldC1zdHJlYW0NCkNvbnRlbnQtVHJh
-        bnNmZXItRW5jb2Rpbmc6IGJpbmFyeQ0KDQp7InVuaXRfa2V5IjogeyJpZCI6
-        ICJ0ZXN0In0sICJ1bml0X21ldGFkYXRhIjogeyJzdGF0dXMiOiAiZmluYWwi
-        LCAidXBkYXRlZCI6ICIyMDEyLTctMjUgMDA6MDA6MDAiLCAiZGVzY3JpcHRp
-        b24iOiBudWxsLCAiaXNzdWVkIjogIjIwMTAtMTEtNyAwMDowMDowMCIsICJw
-        dXNoY291bnQiOiAiIiwgInJlZmVyZW5jZXMiOiBbXSwgImZyb20iOiAicHVs
-        cC1saXN0QHJlZGhhdC5jb20iLCAic2V2ZXJpdHkiOiAiIiwgInRpdGxlIjog
-        IlRlc3QgRXJyYXRhIHJlZmVycmluZyB0byB0ZXN0LXBhY2thZ2UtMC4yIiwg
-        InJpZ2h0cyI6ICIiLCAic29sdXRpb24iOiAiIiwgInN1bW1hcnkiOiAiIiwg
-        InZlcnNpb24iOiAiMSIsICJyZWxlYXNlIjogIiIsICJyZWJvb3Rfc3VnZ2Vz
-        dGVkIjogZmFsc2UsICJ0eXBlIjogImVuaGFuY2VtZW50cyIsICJwa2dsaXN0
-        IjogW3sicGFja2FnZXMiOiBbeyJzcmMiOiAidGVzdC1wYWNrYWdlLTAuMi0x
-        LmVsNi5zcmMucnBtIiwgIm5hbWUiOiAidGVzdC1wYWNrYWdlIiwgInN1bSI6
-        IFsibWQ1IiwgIjViNTkwY2M5NWZkZmYxNDU2MDAzNGExZjMzNGE0NzUzIl0s
-        ICJmaWxlbmFtZSI6ICJ0ZXN0LXBhY2thZ2UtMC4yLTEuZWw2Lm5vYXJjaC5y
-        cG0iLCAiZXBvY2giOiAiMCIsICJ2ZXJzaW9uIjogIjAuMiIsICJyZWxlYXNl
-        IjogIjEuZWw2IiwgImFyY2giOiAibm9hcmNoIn1dLCAibmFtZSI6ICJQdWxw
-        IFRlc3QgUGFja2FnZXMiLCAic2hvcnQiOiAiVGVzdENvbGxlY3Rpb24ifV19
-        fQ0KLS0tLS0tLS0tLS0tLVJ1YnlNdWx0aXBhcnRQb3N0LWY1ZDhmMmYzMDRk
-        YThlZDFjMWI0OGI5Y2E3ZmUzZTA1LS0NCg==
-    headers:
-      Content-Type:
-      - multipart/form-data; boundary=-----------RubyMultipartPost-f5d8f2f304da8ed1c1b48b9ca7fe3e05
-      User-Agent:
-      - OpenAPI-Generator/3.16.2/ruby
-      Accept:
-      - application/json
-      Content-Range:
-      - bytes 0-739/740
-      Authorization:
-      - Basic Og==
-      Content-Length:
-      - '1060'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 01 Feb 2022 13:48:26 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, HEAD, PUT, DELETE
-      X-Frame-Options:
-      - DENY
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 7386da9683ca46a9a59473144eb99efd
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-      Content-Length:
-      - '133'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdXBsb2Fkcy9iNWFhOTA0OC1l
-        OGY3LTRiMzctODdiNi00ZTIyNzc3Mjk1MWIvIiwicHVscF9jcmVhdGVkIjoi
-        MjAyMi0wMi0wMVQxMzo0ODoyNi40MzI1MDdaIiwic2l6ZSI6NzQwfQ==
-    http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:26 GMT
-- request:
-    method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/artifacts/?sha256=ef0c9983106b824f943850df94420e7f18ad381acc6bd5a21ea05dcf660a7791
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.16.2/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 01 Feb 2022 13:48:26 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '52'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 51ebddc9f4544e4ebdaccdd28c6c30af
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:26 GMT
-- request:
-    method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/uploads/b5aa9048-e8f7-4b37-87b6-4e227772951b/commit/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzaGEyNTYiOiJlZjBjOTk4MzEwNmI4MjRmOTQzODUwZGY5NDQyMGU3ZjE4
-        YWQzODFhY2M2YmQ1YTIxZWEwNWRjZjY2MGE3NzkxIn0=
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.16.2/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Tue, 01 Feb 2022 13:48:26 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - POST
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '67'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - c08fd1da8f3a4a8c9fde3a62187b64b3
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzU5ZmFiMDM5LTYxMmMtNDE2
-        Ni05MmM4LWM1ZjZjYjc4NzE1Mi8ifQ==
-    http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:26 GMT
-- request:
-    method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/59fab039-612c-4166-92c8-c5f6cb787152/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.16.2/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 01 Feb 2022 13:48:26 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 7e1ff658dc274a43bd314864a7d9b8be
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-      Content-Length:
-      - '395'
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNTlmYWIwMzktNjEy
-        Yy00MTY2LTkyYzgtYzVmNmNiNzg3MTUyLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjItMDItMDFUMTM6NDg6MjYuNTM5NDEwWiIsInN0YXRlIjoiY29tcGxldGVk
-        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy51cGxvYWQuY29tbWl0Iiwi
-        bG9nZ2luZ19jaWQiOiJjMDhmZDFkYThmM2E0YThjOWZkZTNhNjIxODdiNjRi
-        MyIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAyLTAxVDEzOjQ4OjI2LjU5MzE1NVoi
-        LCJmaW5pc2hlZF9hdCI6IjIwMjItMDItMDFUMTM6NDg6MjYuNjQ5NTY1WiIs
-        ImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29ya2Vycy8z
-        YTkzNDhlMy1mMDkzLTRkZWYtOTNkZi0wMGNlYjBhMzQwOWIvIiwicGFyZW50
-        X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91cCI6bnVs
-        bCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3VyY2VzIjpb
-        Ii9wdWxwL2FwaS92My9hcnRpZmFjdHMvYjExNzJjOTctZTliMC00NjM3LTgz
-        MjktMTNiMWQ5MjM2MGMxLyJdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3Jk
-        IjpbIi9wdWxwL2FwaS92My91cGxvYWRzL2I1YWE5MDQ4LWU4ZjctNGIzNy04
-        N2I2LTRlMjI3NzcyOTUxYi8iXX0=
-    http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:26 GMT
-- request:
-    method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/artifacts/?sha256=ef0c9983106b824f943850df94420e7f18ad381acc6bd5a21ea05dcf660a7791
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.16.2/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 01 Feb 2022 13:48:26 GMT
+      - Tue, 08 Feb 2022 20:02:52 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -459,226 +39,44 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - eddb2e7b17fe41949e74ffdbff3d3c42
+      - 3f10311c568e4c1d9ea7f39b4fa021f0
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
       Content-Length:
-      - '439'
+      - '488'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9hcnRpZmFjdHMvYjEx
-        NzJjOTctZTliMC00NjM3LTgzMjktMTNiMWQ5MjM2MGMxLyIsInB1bHBfY3Jl
-        YXRlZCI6IjIwMjItMDItMDFUMTM6NDg6MjYuNjE5NzU2WiIsImZpbGUiOiJh
-        cnRpZmFjdC9lZi8wYzk5ODMxMDZiODI0Zjk0Mzg1MGRmOTQ0MjBlN2YxOGFk
-        MzgxYWNjNmJkNWEyMWVhMDVkY2Y2NjBhNzc5MSIsInNpemUiOjc0MCwibWQ1
-        IjpudWxsLCJzaGExIjoiNjA5ODg1NzE1ZmQ4ZDZhNzA3ZjE4ZmM1NTlkNjFi
-        OGJkZWU3MTgwZSIsInNoYTIyNCI6ImUyOTMxZjAzNjY1NmJhNmQwMTdiNTA2
-        YjhmZWM1N2I4N2U1N2VlYzI3YWVhZDBkZjdhZDhlZDNjIiwic2hhMjU2Ijoi
-        ZWYwYzk5ODMxMDZiODI0Zjk0Mzg1MGRmOTQ0MjBlN2YxOGFkMzgxYWNjNmJk
-        NWEyMWVhMDVkY2Y2NjBhNzc5MSIsInNoYTM4NCI6ImQzYzUyOGQyMTEwZDgw
-        NjY3NTliZWQwY2RkYzA5OTEzOTFkNDc3MjdkN2JiMDAzODY0ZWE5MzYyMTNh
-        OGVjNDRhM2RmNTJkZDFiMjdjNzg1YzdlNjdiMTAzMjJlOTlmZCIsInNoYTUx
-        MiI6ImNmYjg1MjNlODdjN2JmOTFlODIzMGY1Y2UxNjhiZTFkODUyN2FiNzY3
-        ZjU1NzE0ZWU0NWRiY2Q1MDVmNzdlODQxYTU0MTc4MjI0ODdmZGUyMjVlNjIy
-        ZmQ0ZjljZGYzMzM4NDVkOTAxNDAwNzg2M2E5OWExOWE3ZjQ5MDJlZTI4In1d
-        fQ==
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9jb250ZW50L2ZpbGUv
+        ZmlsZXMvYTA0ZmIxNDUtZTI1Ny00ZjBmLTkwM2YtZTk0N2U0YjA1NjU1LyIs
+        InB1bHBfY3JlYXRlZCI6IjIwMjItMDItMDhUMTk6NDU6NTYuOTY4MTU1WiIs
+        ImFydGlmYWN0IjoiL3B1bHAvYXBpL3YzL2FydGlmYWN0cy9mNjY5Mjc2Ni0z
+        MjliLTQ5OTYtYjk4Yi01OTNhOTUxZjQ2YzIvIiwicmVsYXRpdmVfcGF0aCI6
+        InRlc3RfZXJyYXR1bS5qc29uIiwibWQ1IjpudWxsLCJzaGExIjoiNjA5ODg1
+        NzE1ZmQ4ZDZhNzA3ZjE4ZmM1NTlkNjFiOGJkZWU3MTgwZSIsInNoYTIyNCI6
+        ImUyOTMxZjAzNjY1NmJhNmQwMTdiNTA2YjhmZWM1N2I4N2U1N2VlYzI3YWVh
+        ZDBkZjdhZDhlZDNjIiwic2hhMjU2IjoiZWYwYzk5ODMxMDZiODI0Zjk0Mzg1
+        MGRmOTQ0MjBlN2YxOGFkMzgxYWNjNmJkNWEyMWVhMDVkY2Y2NjBhNzc5MSIs
+        InNoYTM4NCI6ImQzYzUyOGQyMTEwZDgwNjY3NTliZWQwY2RkYzA5OTEzOTFk
+        NDc3MjdkN2JiMDAzODY0ZWE5MzYyMTNhOGVjNDRhM2RmNTJkZDFiMjdjNzg1
+        YzdlNjdiMTAzMjJlOTlmZCIsInNoYTUxMiI6ImNmYjg1MjNlODdjN2JmOTFl
+        ODIzMGY1Y2UxNjhiZTFkODUyN2FiNzY3ZjU1NzE0ZWU0NWRiY2Q1MDVmNzdl
+        ODQxYTU0MTc4MjI0ODdmZGUyMjVlNjIyZmQ0ZjljZGYzMzM4NDVkOTAxNDAw
+        Nzg2M2E5OWExOWE3ZjQ5MDJlZTI4In1dfQ==
     http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:26 GMT
-- request:
-    method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/content/file/files/?relative_path=test_erratum.json&sha256=ef0c9983106b824f943850df94420e7f18ad381acc6bd5a21ea05dcf660a7791
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/1.10.1/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 01 Feb 2022 13:48:26 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '52'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 7762d74d866c4aa890ea3f1e5e70b5c1
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:26 GMT
+  recorded_at: Tue, 08 Feb 2022 20:02:52 GMT
 - request:
     method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/content/file/files/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        LS0tLS0tLS0tLS0tLVJ1YnlNdWx0aXBhcnRQb3N0LTUzMTMzMDE1ZTE4ZDIw
-        ZWY2NWM5ZjJiMzkzMTNkYzk2DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3Jt
-        LWRhdGE7IG5hbWU9InJlbGF0aXZlX3BhdGgiDQoNCnRlc3RfZXJyYXR1bS5q
-        c29uDQotLS0tLS0tLS0tLS0tUnVieU11bHRpcGFydFBvc3QtNTMxMzMwMTVl
-        MThkMjBlZjY1YzlmMmIzOTMxM2RjOTYNCkNvbnRlbnQtRGlzcG9zaXRpb246
-        IGZvcm0tZGF0YTsgbmFtZT0iYXJ0aWZhY3QiDQoNCi9wdWxwL2FwaS92My9h
-        cnRpZmFjdHMvYjExNzJjOTctZTliMC00NjM3LTgzMjktMTNiMWQ5MjM2MGMx
-        Lw0KLS0tLS0tLS0tLS0tLVJ1YnlNdWx0aXBhcnRQb3N0LTUzMTMzMDE1ZTE4
-        ZDIwZWY2NWM5ZjJiMzkzMTNkYzk2LS0NCg==
-    headers:
-      Content-Type:
-      - multipart/form-data; boundary=-----------RubyMultipartPost-53133015e18d20ef65c9f2b39313dc96
-      User-Agent:
-      - OpenAPI-Generator/1.10.1/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Content-Length:
-      - '385'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Tue, 01 Feb 2022 13:48:26 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      Content-Length:
-      - '67'
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 0f77b438a7f5457b98cabf506ca49f0e
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2I3YTE1YjljLTg5ODctNGEy
-        NS04NGIzLWFmZDg5NGMyNmM3MC8ifQ==
-    http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:26 GMT
-- request:
-    method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/b7a15b9c-8987-4a25-84b3-afd894c26c70/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.16.2/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 01 Feb 2022 13:48:27 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 6b411b5ad5524c27a553e98043765cd7
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 devel8.markarth.example.com
-      Content-Length:
-      - '371'
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYjdhMTViOWMtODk4
-        Ny00YTI1LTg0YjMtYWZkODk0YzI2YzcwLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjItMDItMDFUMTM6NDg6MjYuODM4Mzk0WiIsInN0YXRlIjoiY29tcGxldGVk
-        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfY3Jl
-        YXRlIiwibG9nZ2luZ19jaWQiOiIwZjc3YjQzOGE3ZjU0NTdiOThjYWJmNTA2
-        Y2E0OWYwZSIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAyLTAxVDEzOjQ4OjI2Ljg5
-        NjM3OVoiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDItMDFUMTM6NDg6MjcuMDE0
-        NzcwWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy84MzAzM2FiNi1mMzU4LTQ2NzMtOWQ5MS1iOTlhZDk1YTY3ZDUvIiwi
-        cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
-        cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
-        Y2VzIjpbIi9wdWxwL2FwaS92My9jb250ZW50L2ZpbGUvZmlsZXMvYjQwN2U1
-        OTgtOWZlYS00ODk1LWJhODctNGRkMTQwMDZhZGE3LyJdLCJyZXNlcnZlZF9y
-        ZXNvdXJjZXNfcmVjb3JkIjpbXX0=
-    http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:27 GMT
-- request:
-    method: post
-    uri: https://devel8.markarth.example.com/pulp/api/v3/repositories/file/file/6bd5f95c-3744-4836-8f32-6b358eca4558/modify/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/repositories/file/file/0156b225-1c56-4f28-a021-3761f70ea6de/modify/
     body:
       encoding: UTF-8
       base64_string: |
         eyJhZGRfY29udGVudF91bml0cyI6WyIvcHVscC9hcGkvdjMvY29udGVudC9m
-        aWxlL2ZpbGVzL2I0MDdlNTk4LTlmZWEtNDg5NS1iYTg3LTRkZDE0MDA2YWRh
-        Ny8iXX0=
+        aWxlL2ZpbGVzL2EwNGZiMTQ1LWUyNTctNGYwZi05MDNmLWU5NDdlNGIwNTY1
+        NS8iXX0=
     headers:
       Content-Type:
       - application/json
@@ -696,7 +94,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Tue, 01 Feb 2022 13:48:27 GMT
+      - Tue, 08 Feb 2022 20:02:52 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -714,21 +112,21 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 1ae4b5dbc26843a1ab81dee4bb3bb0c0
+      - ed19b84aae884954a0a9eb79faca10d7
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzJhODllNGI2LTJhMmMtNGYy
-        ZC1hMmYzLTk5MWRhY2IzYThkYy8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzI1OWFjOWFiLTRjODMtNGJh
+        Zi1hNGY5LWFhZjY5YjQ2NDYxOS8ifQ==
     http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:27 GMT
+  recorded_at: Tue, 08 Feb 2022 20:02:52 GMT
 - request:
     method: get
-    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/2a89e4b6-2a2c-4f2d-a2f3-991dacb3a8dc/
+    uri: https://centos8-dev.localhost.example.com/pulp/api/v3/tasks/259ac9ab-4c83-4baf-a4f9-aaf69b464619/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -749,7 +147,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Tue, 01 Feb 2022 13:48:27 GMT
+      - Tue, 08 Feb 2022 20:02:52 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -765,32 +163,32 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 43e63ebe8788400f873457869bfa0fa9
+      - 3ff27a5c17a64495a4577f12741485ea
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel8.markarth.example.com
+      - 1.1 centos8-dev.localhost.example.com
       Content-Length:
-      - '390'
+      - '389'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMmE4OWU0YjYtMmEy
-        Yy00ZjJkLWEyZjMtOTkxZGFjYjNhOGRjLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjItMDItMDFUMTM6NDg6MjcuMTM4NTk4WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMjU5YWM5YWItNGM4
+        My00YmFmLWE0ZjktYWFmNjliNDY0NjE5LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjItMDItMDhUMjA6MDI6NTIuMTk2OTI4WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5yZXBvc2l0b3J5LmFkZF9h
-        bmRfcmVtb3ZlIiwibG9nZ2luZ19jaWQiOiIxYWU0YjVkYmMyNjg0M2ExYWI4
-        MWRlZTRiYjNiYjBjMCIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAyLTAxVDEzOjQ4
-        OjI3LjE4MDM5MVoiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDItMDFUMTM6NDg6
-        MjcuMjczMDEwWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkv
-        djMvd29ya2Vycy9mOTYzNzk2NC1kNDU1LTQ3YjUtYjk3NC0zNTcyYWYzZmQx
-        NzIvIiwicGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFz
+        bmRfcmVtb3ZlIiwibG9nZ2luZ19jaWQiOiJlZDE5Yjg0YWFlODg0OTU0YTBh
+        OWViNzlmYWNhMTBkNyIsInN0YXJ0ZWRfYXQiOiIyMDIyLTAyLTA4VDIwOjAy
+        OjUyLjI1NjM1OFoiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDItMDhUMjA6MDI6
+        NTIuMzgwNDExWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkv
+        djMvd29ya2Vycy80YmIxMGY1OS0zOTY5LTQwNzItYjVmYS1iZDZkNmI2YjUx
+        NjgvIiwicGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFz
         a19ncm91cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRf
         cmVzb3VyY2VzIjpbIi9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvZmlsZS9m
-        aWxlLzZiZDVmOTVjLTM3NDQtNDgzNi04ZjMyLTZiMzU4ZWNhNDU1OC92ZXJz
+        aWxlLzAxNTZiMjI1LTFjNTYtNGYyOC1hMDIxLTM3NjFmNzBlYTZkZS92ZXJz
         aW9ucy8xLyJdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxw
-        L2FwaS92My9yZXBvc2l0b3JpZXMvZmlsZS9maWxlLzZiZDVmOTVjLTM3NDQt
-        NDgzNi04ZjMyLTZiMzU4ZWNhNDU1OC8iXX0=
+        L2FwaS92My9yZXBvc2l0b3JpZXMvZmlsZS9maWxlLzAxNTZiMjI1LTFjNTYt
+        NGYyOC1hMDIxLTM3NjFmNzBlYTZkZS8iXX0=
     http_version: 
-  recorded_at: Tue, 01 Feb 2022 13:48:27 GMT
+  recorded_at: Tue, 08 Feb 2022 20:02:52 GMT
 recorded_with: VCR 3.0.3

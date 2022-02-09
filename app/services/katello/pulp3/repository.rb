@@ -406,7 +406,8 @@ module Katello
           proxy_url: root.http_proxy&.url,
           proxy_username: root.http_proxy&.username,
           proxy_password: root.http_proxy&.password,
-          total_timeout: Setting[:sync_connect_timeout]
+          total_timeout: Setting[:sync_connect_timeout],
+          rate_limit: Setting[:download_rate_limit]
         }
         remote_options[:url] = root.url unless root.url.blank?
         remote_options[:download_concurrency] = root.download_concurrency unless root.download_concurrency.blank?
