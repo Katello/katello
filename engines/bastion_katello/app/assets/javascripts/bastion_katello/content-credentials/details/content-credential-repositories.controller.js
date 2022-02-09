@@ -15,7 +15,7 @@
         var nutupane = new Nutupane(ContentCredential, {
             id: $scope.$stateParams.contentCredentialId
         }, 'repositories');
-        $scope.controllerName = 'katello_gpg_keys';
+        $scope.controllerName = 'katello_content_credentials';
         nutupane.primaryOnly = true;
 
         $scope.panel = $scope.panel || {error: false, loading: false};
