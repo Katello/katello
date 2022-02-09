@@ -1,5 +1,11 @@
 import React from 'react';
 import { TableText } from '@patternfly/react-table';
+import {
+  chart_color_black_500 as pfBlack,
+  chart_color_gold_400 as pfGold,
+  chart_color_orange_300 as pfOrange,
+  chart_color_red_200 as pfRed,
+} from '@patternfly/react-tokens';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   BugIcon,
@@ -102,16 +108,20 @@ export const ErrataSeverity = ({ severity }) => {
   let label;
 
   switch (severity) {
+    case 'Low':
+      color = pfBlack.value;
+      label = __('Low');
+      break;
     case 'Moderate':
-      color = 'yellow';
+      color = pfGold.value;
       label = __('Moderate');
       break;
     case 'Important':
-      color = 'orange';
+      color = pfOrange.value;
       label = __('Important');
       break;
     case 'Critical':
-      color = 'red';
+      color = pfRed.value;
       label = __('Critical');
       break;
     default:
