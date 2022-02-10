@@ -10,7 +10,7 @@ namespace :katello do
         ForemanTasks.sync_task(::Actions::Katello::Repository::Update, repo.root,
                                download_policy: 'immediate',
                                deb_architectures: repo.root.deb_architectures&.gsub(',', ' '),
-                               deb_releases: repo.root.deb_releases&.gsub(',', ' '),
+                               deb_releases: repo.root.deb_releases&.gsub(',', ' ') || 'stable',
                                deb_components: repo.root.deb_components&.gsub(',', ' '))
       rescue => e
         puts "Failed to update repository #{repo.name} (#{repo.id}): #{e.message}"
