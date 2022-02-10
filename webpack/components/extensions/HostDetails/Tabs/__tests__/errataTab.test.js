@@ -981,9 +981,9 @@ test('Can bulk apply via remote execution', async (done) => {
   // eslint-disable-next-line camelcase
   const jobInvocationBody = ({ job_invocation: { inputs, feature, search_query } }) =>
     inputs[ERRATA_SEARCH_QUERY] === `errata_id ^ (${results[0].errata_id},${results[1].errata_id})` &&
-     feature === REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL &&
-     // eslint-disable-next-line camelcase
-     search_query === `name ^ (${hostName})`;
+    feature === REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH &&
+    // eslint-disable-next-line camelcase
+    search_query === `name ^ (${hostName})`;
 
   const resolveErrataScope = nockInstance
     .post(jobInvocations, jobInvocationBody)
@@ -1076,7 +1076,7 @@ test('Can apply errata in bulk via customized remote execution', async (done) =>
   getByLabelText('Select row 0').click();
   getByLabelText('Select row 1').click();
   const errata = `${results[0].errata_id},${results[1].errata_id}`;
-  const feature = REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL;
+  const feature = REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH;
   const actionMenu = getByLabelText('bulk_actions');
   actionMenu.click();
   const viaRexAction = queryByText('Apply via customized remote execution');
@@ -1176,7 +1176,7 @@ test('Can apply a single erratum to the host via customized remote execution', a
   const mockErrata = makeMockErrata({});
   const { results } = mockErrata;
   const { errata_id: errataId } = results[0];
-  const feature = REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL;
+  const feature = REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH;
   const scope = nockInstance
     .get(hostErrata)
     .query(defaultQuery)

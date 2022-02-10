@@ -1,0 +1,26 @@
+<%#
+kind: job_template
+name: Install errata by search query - Katello SSH Default
+job_category: Katello
+description_format: 'Install errata %{Errata search query}'
+feature: katello_errata_install_by_search
+provider_type: SSH
+template_inputs:
+- name: Errata search query
+  description: Filter criteria for errata to be installed.
+  input_type: user
+  required: false
+foreign_input_sets:
+- template: Package Action - SSH Default
+  exclude: action,package
+%>
+
+<% if @host.operatingsystem.family == 'Suse' -%>
+    <% advisories = @host.advisory_ids(search: input("Errata search query")).join(' ') %>
+    <%= render_template('Package Action - SSH Default', :action => 'install -n -t patch', :package => advisories) %>
+<% else %>
+    <% advisory_ids = @host.advisory_ids(search: input("Errata search query")) %>
+
+    <% advisories = advisory_ids.map { |e| "--advisory=#{e}" }.join(' ') %>
+    <%= render_template('Package Action - SSH Default', :action => 'update-minimal', :package => advisories) %>
+<% end %>
