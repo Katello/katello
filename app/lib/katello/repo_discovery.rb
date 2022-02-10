@@ -1,10 +1,12 @@
 module Katello
   class RepoDiscovery
+    include Katello::Util::HttpProxy
+
     attr_reader :found, :crawled, :to_follow
 
     # rubocop:disable Metrics/ParameterLists
     def initialize(url, content_type = 'yum', upstream_username = nil,
-      upstream_password = nil, search = '*', proxy = {}, crawled = [],
+      upstream_password = nil, search = '*', crawled = [],
       found = [], to_follow = [])
       @uri = uri(url)
       @content_type = content_type
@@ -14,7 +16,6 @@ module Katello
       @found = found
       @crawled = crawled
       @to_follow = to_follow
-      @proxy = proxy
     end
     # rubocop:enable Metrics/ParameterLists
 
@@ -42,14 +43,6 @@ module Katello
     private
 
     def docker_search
-      proxy_uri = nil
-      if @proxy && @proxy[:proxy_host]
-        proxy_uri = URI(@proxy[:proxy_host])
-        proxy_uri.user = @proxy[:proxy_user] if @proxy[:proxy_user]
-        proxy_uri.password = @proxy[:proxy_password] if @proxy[:proxy_password]
-        proxy_uri.port = @proxy[:proxy_port] if @proxy[:proxy_port]
-      end
-
       request_params = {
         method: :get,
         headers: { accept: :json },
@@ -58,7 +51,7 @@ module Katello
 
       request_params[:headers][:user] = @upstream_username unless @upstream_username.empty?
       request_params[:headers][:password] = @upstream_password unless @upstream_password.empty?
-      request_params[:proxy] = proxy_uri.to_s if proxy_uri
+      request_params[:proxy] = proxy_uri if proxy
 
       begin
         results = RestClient::Request.execute(request_params)
@@ -74,12 +67,25 @@ module Katello
       @found.sort!
     end
 
+    def anemone_proxy_details
+      details = {}
+
+      if proxy
+        details[:proxy_host] = proxy_host
+        details[:proxy_port] = proxy_port
+        details[:proxy_user] = proxy.username
+        details[:proxy_password] = proxy.password
+      end
+
+      details
+    end
+
     def http_crawl(resume_point)
       resume_point_uri = URI(resume_point)
       resume_point_uri.user = @upstream_username if @upstream_username
       resume_point_uri.password = @upstream_password if @upstream_password
 
-      Anemone.crawl(resume_point_uri, @proxy) do |anemone|
+      Anemone.crawl(resume_point_uri, anemone_proxy_details) do |anemone|
         anemone.focus_crawl do |page|
           @crawled << page.url.path
 
