@@ -38,7 +38,7 @@ const katelloHostErrataInstallParams = ({
 }) => baseParams({
   hostname,
   inputs: { [ERRATA_SEARCH_QUERY]: search },
-  feature: REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL,
+  feature: REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH,
 });
 
 export const installPackage = ({ hostname, packageName }) => post({
@@ -75,7 +75,7 @@ export const installErrata = ({
     hostname, search,
   }),
   handleSuccess: response => renderTaskStartedToast({
-    humanized: { action: `Install Errata on ${hostname}` },
+    humanized: { action: `Install errata on ${hostname}` },
     id: response?.data?.dynflow_task?.id,
   }),
   errorToast: error => errorToast(error),
