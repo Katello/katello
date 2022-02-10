@@ -47,11 +47,12 @@ module Katello
       end
 
       def inputs
-        if feature_name == 'katello_errata_install'
-          { "Errata Search Query" => "errata_id ^ (#{errata_inputs.join(',')})" }
-        elsif feature_name == 'katello_service_restart'
+        case feature_name
+        when 'katello_errata_install'
+          { :errata => errata_inputs }
+        when 'katello_service_restart'
           { :helper => params[:name] }
-        elsif feature_name == 'katello_module_stream_action'
+        when 'katello_module_stream_action'
           fail HttpErrors::NotFound, _('module streams not found') if params[:module_spec].blank?
           fail HttpErrors::NotFound, _('actions not found') if params[:module_stream_action].blank?
           inputs = { :module_spec => params[:module_spec], :action => params[:module_stream_action] }
