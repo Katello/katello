@@ -18,7 +18,7 @@ module Katello
           config = {
             feed: root.url,
             upstream_name: root.docker_upstream_name,
-            tags: root.docker_tags_whitelist,
+            tags: root.include_tags,
             enable_v1: false
           }
           importer_class.new(config.merge(primary_importer_connection_options))

@@ -50,7 +50,7 @@ module Katello
           dummy_cv_repo = ::Katello::Repository.find_by(pulp_id: 'Default_Organization-Test-busybox-dev')
           repo_meta_tag = ::Katello::RepositoryDockerMetaTag.create(docker_meta_tag_id: meta_tag.id, repository_id: dummy_cv_repo.id)
 
-          @repo.root.update(:docker_tags_whitelist => ['doesntexist'])
+          @repo.root.update(:include_tags => ['doesntexist'])
           @repo.backend_service(SmartProxy.pulp_primary).refresh_if_needed
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
           ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)

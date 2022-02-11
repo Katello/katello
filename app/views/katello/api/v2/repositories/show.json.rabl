@@ -8,6 +8,8 @@ glue(@resource.root) do
   attributes :content_type
   attributes :docker_upstream_name
   attributes :docker_tags_whitelist
+  attributes :include_tags
+  attributes :exclude_tags
   attributes :verify_ssl_on_sync
   attributes :unprotected, :full_path, :checksum_type
   attributes :container_repository_name

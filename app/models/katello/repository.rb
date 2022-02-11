@@ -177,8 +177,8 @@ module Katello
              :download_policy, :verify_ssl_on_sync, :"verify_ssl_on_sync?", :upstream_username, :upstream_password,
              :upstream_authentication_token, :deb_releases,
              :deb_components, :deb_architectures, :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id,
-             :ssl_client_key_id, :os_versions, :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist,
-             :ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token,
+             :ssl_client_key_id, :os_versions, :ssl_client_key, :ignorable_content, :description, :include_tags, :exclude_tags,
+             :docker_tags_whitelist, :ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token,
              :http_proxy_policy, :http_proxy_id, :to => :root
 
     delegate :content_id, to: :root, allow_nil: true

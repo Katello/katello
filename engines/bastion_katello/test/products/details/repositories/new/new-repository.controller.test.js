@@ -98,6 +98,32 @@ describe('Controller: NewRepositoryController', function() {
         expect($scope.repositoryForm['name'].$error.messages).toBeDefined();
     });
 
+    it('should set exclude_tags to be *-source by default', function() {
+        var repo = $scope.repository;
+        expect(repo.exclude_tags).toEqual('*-source');
+        expect(repo.include_tags).toEqual('');
+        spyOn($scope, 'transitionTo');
+        spyOn(repo, '$save').and.callThrough();
+        spyOn(Notification, "setSuccessMessage");
+        $scope.save(repo);
+        expect(repo.$save).toHaveBeenCalled();
+        expect(repo.exclude_tags).toEqual(['*-source']);
+        expect(repo.include_tags).toEqual([]);
+    })
+
+    it('should turn include and exclude tags into arrays', function() {
+        var repo = $scope.repository;
+        repo.exclude_tags = 'a-tag, another-tag'
+        repo.include_tags = 'a-tag, some-different-tag, 3'
+        spyOn($scope, 'transitionTo');
+        spyOn(repo, '$save').and.callThrough();
+        spyOn(Notification, "setSuccessMessage");
+        $scope.save(repo);
+        expect(repo.$save).toHaveBeenCalled();
+        expect(repo.exclude_tags).toEqual(['a-tag', 'another-tag']);
+        expect(repo.include_tags).toEqual(['a-tag', 'some-different-tag', '3']);
+    })
+
     it('should clear out auth fields on save if blank', function() {
         var repo = $scope.repository;
         repo.upstream_username = '';

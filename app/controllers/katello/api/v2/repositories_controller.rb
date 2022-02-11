@@ -50,7 +50,9 @@ module Katello
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
       param :checksum_type, String, :desc => N_("Checksum of the repository, currently 'sha1' & 'sha256' are supported")
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
-      param :docker_tags_whitelist, Array, :desc => N_("Comma-separated list of tags to sync for Container Image repository")
+      param :docker_tags_whitelist, Array, :desc => N_("Comma-separated list of tags to sync for Container Image repository (Deprecated)"), :deprecated => true
+      param :include_tags, Array, :desc => N_("Comma-separated list of tags to sync for a container image repository")
+      param :exclude_tags, Array, :desc => N_("Comma-separated list of tags to exclude when syncing a container image repository. Default: any tag ending in \"-source\"")
       param :download_policy, ["immediate", "on_demand"], :desc => N_("download policy for yum, deb, and docker repos (either 'immediate' or 'on_demand')")
       param :download_concurrency, :number, :desc => N_("Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10")
       param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed (Deprecated)")
@@ -507,7 +509,7 @@ module Katello
               {:os_versions => []}, :deb_releases, :deb_components, :deb_architectures, :description,
               :http_proxy_policy, :http_proxy_id, :retain_package_versions_count, {:ignorable_content => []}
              ]
-      keys += [{:docker_tags_whitelist => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
+      keys += [{:docker_tags_whitelist => []}, {:include_tags => []}, {:exclude_tags => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
       keys += [:ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token] if params[:action] == 'create' || @repository&.ansible_collection?
       keys += [:label, :content_type] if params[:action] == "create"
 
@@ -540,13 +542,20 @@ module Katello
       credential_value
     end
 
-    # rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity,Metrics/MethodLength
     def construct_repo_from_params(repo_params) # rubocop:disable Metrics/AbcSize
       root = @product.add_repo(repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
                                                             :checksum_type, :download_policy, :http_proxy_policy).to_h.with_indifferent_access)
       root.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
-      root.docker_tags_whitelist = repo_params.fetch(:docker_tags_whitelist, []) if root.docker?
+      if root.docker?
+        if repo_params[:docker_tags_whitelist].present?
+          root.include_tags = repo_params.fetch(:docker_tags_whitelist, [])
+        else
+          root.include_tags = repo_params.fetch(:include_tags, [])
+        end
+      end
+      root.exclude_tags = repo_params.fetch(:exclude_tags, ['*-source']) if root.docker?
       root.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
       root.mirroring_policy = repo_params[:mirroring_policy] || Katello::RootRepository::MIRRORING_POLICY_CONTENT
       root.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
@@ -577,7 +586,7 @@ module Katello
 
       root
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/CyclomaticComplexity,Metrics/MethodLength
 
     def handle_mirror_on_sync(repo_params)
       if !repo_params.key?(:mirroring_policy) && repo_params.key?(:mirror_on_sync)

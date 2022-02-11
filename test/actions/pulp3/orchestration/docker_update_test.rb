@@ -53,9 +53,9 @@ module ::Actions::Pulp3
         @primary)
     end
 
-    def test_update_whitelist_tags
+    def test_update_limit_tags
       @repo.root.update!(
-        docker_tags_whitelist: ['test_tag'])
+        include_tags: ['test_tag'], exclude_tags: ['other_tag'])
 
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
@@ -63,9 +63,9 @@ module ::Actions::Pulp3
         @primary)
     end
 
-    def test_update_whitelist_tags_empty
+    def test_update_limit_tags_empty
       @repo.root.update(
-        docker_tags_whitelist: nil)
+        include_tags: nil, exclude_tags: nil)
 
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,

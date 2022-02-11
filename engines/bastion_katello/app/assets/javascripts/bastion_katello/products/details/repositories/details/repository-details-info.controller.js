@@ -116,12 +116,19 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                    });
                 }
 
-                if (!_.isEmpty(repository.commaTagsWhitelist)) {
-                    repository["docker_tags_whitelist"] = repository.commaTagsWhitelist.split(",").map(function(tag) {
+                if (!_.isEmpty(repository.commaIncludeTags)) {
+                    repository["include_tags"] = repository.commaIncludeTags.split(",").map(function(tag) {
                         return tag.trim();
                     });
                 } else {
-                    repository["docker_tags_whitelist"] = [];
+                    repository["include_tags"] = [];
+                }
+                if (!_.isEmpty(repository.commaExcludeTags)) {
+                    repository["exclude_tags"] = repository.commaExcludeTags.split(",").map(function(tag) {
+                        return tag.trim();
+                    });
+                } else {
+                    repository["exclude_tags"] = [];
                 }
                 /* eslint-disable camelcase */
 
@@ -134,10 +141,15 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 repository.$update(function (response) {
                     deferred.resolve(response);
                     $scope.repository.ignore_srpms = $scope.repository.ignorable_content && $scope.repository.ignorable_content.includes("srpm");
-                    if (!_.isEmpty(response["docker_tags_whitelist"])) {
-                        repository.commaTagsWhitelist = repository["docker_tags_whitelist"].join(", ");
+                    if (!_.isEmpty(response["include_tags"])) {
+                        repository.commaIncludeTags = repository["include_tags"].join(", ");
                     } else {
-                        repository.commaTagsWhitelist = null;
+                        repository.commaIncludeTags = null;
+                    }
+                    if (!_.isEmpty(response["exclude_tags"])) {
+                        repository.commaExcludeTags = repository["exclude_tags"].join(", ");
+                    } else {
+                        repository.commaExcludeTags = null;
                     }
                     Notification.setSuccessMessage(translate('Repository Saved.'));
                 }, function (response) {

@@ -53,10 +53,15 @@
             'product_id': $scope.$stateParams.productId,
             'id': $scope.$stateParams.repositoryId
         }, function () {
-            if (!_.isEmpty($scope.repository["docker_tags_whitelist"])) {
-                $scope.repository.commaTagsWhitelist = $scope.repository["docker_tags_whitelist"].join(", ");
+            if (!_.isEmpty($scope.repository["include_tags"])) {
+                $scope.repository.commaIncludeTags = $scope.repository["include_tags"].join(", ");
             } else {
-                $scope.repository.commaTagsWhitelist = "";
+                $scope.repository.commaIncludeTags = "";
+            }
+            if (!_.isEmpty($scope.repository["exclude_tags"])) {
+                $scope.repository.commaExcludeTags = $scope.repository["exclude_tags"].join(", ");
+            } else {
+                $scope.repository.commaExcludeTags = "";
             }
             $scope.page.loading = false;
             $scope.repositoryWrapper.repository = $scope.repository;
