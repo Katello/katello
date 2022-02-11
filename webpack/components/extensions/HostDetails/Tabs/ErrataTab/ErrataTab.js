@@ -33,7 +33,7 @@ import { installErrata } from '../RemoteExecutionActions';
 import { errataInstallUrl } from '../customizedRexUrlHelpers';
 import './ErrataTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
-import defaultRemoteActionMethod, { KATELLO_AGENT } from '../../hostDetailsHelpers';
+import { defaultRemoteActionMethod, KATELLO_AGENT } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 
 export const ErrataTab = () => {

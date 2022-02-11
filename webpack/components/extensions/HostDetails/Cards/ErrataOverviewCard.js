@@ -13,6 +13,7 @@ import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import { ChartPie } from '@patternfly/react-charts';
 import { ErrataMapper } from '../../../../components/Errata';
+import { hostIsRegistered } from '../hostDetailsHelpers';
 
 function HostInstallableErrata({
   id, errataCounts,
@@ -74,7 +75,7 @@ function HostInstallableErrata({
 }
 
 const ErrataOverviewCard = ({ hostDetails }) => {
-  if (hostDetails.content_facet_attributes) {
+  if (hostIsRegistered({ hostDetails }) && hostDetails.content_facet_attributes) {
     const { id: hostId } = hostDetails;
     return (<HostInstallableErrata
       {...propsToCamelCase(hostDetails.content_facet_attributes)}
