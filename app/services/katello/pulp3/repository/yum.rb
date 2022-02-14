@@ -236,6 +236,10 @@ module Katello
           api.content_distribution_trees_api.list(options)
         end
 
+        def modulemd_defaults(options = {})
+          api.content_modulemd_defaults_api.list(options)
+        end
+
         def add_filter_content(source_repo_ids, filters, filter_list_map)
           filters.each do |filter|
             if filter.inclusion
@@ -382,6 +386,10 @@ module Katello
 
           package_groups_to_include = filter_package_groups_by_pulp_href(source_repository.package_groups, content_unit_hrefs)
           content_unit_hrefs += package_groups_to_include.pluck(:pulp_id)
+
+          modulemd_defaults_hrefs_to_include = filter_modulemd_defaults_by_pulp_hrefs(
+            repo_service.modulemd_defaults(options)&.results, content_unit_hrefs)
+          content_unit_hrefs += modulemd_defaults_hrefs_to_include
 
           metadata_file_hrefs_to_include = filter_metadatafiles_by_pulp_hrefs(
             repo_service.metadatafiles(options)&.results, content_unit_hrefs)

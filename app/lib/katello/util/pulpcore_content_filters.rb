@@ -28,6 +28,10 @@ module Katello
       def filter_metadatafiles_by_pulp_hrefs(metadatafiles_results, _package_pulp_hrefs)
         metadatafiles_results.collect { |result| result.pulp_href }.flatten.uniq
       end
+
+      def filter_modulemd_defaults_by_pulp_hrefs(modulemd_defaults_results, content_pulp_hrefs)
+        modulemd_defaults_results.collect { |result| result.pulp_href }.flatten.uniq
+      end
     end
   end
 end

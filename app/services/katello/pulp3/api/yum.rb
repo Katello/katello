@@ -43,6 +43,10 @@ module Katello
         def content_distribution_trees_api
           PulpRpmClient::ContentDistributionTreesApi.new(api_client)
         end
+
+        def content_modulemd_defaults_api
+          PulpRpmClient::ContentModulemdDefaultsApi.new(api_client)
+        end
       end
     end
   end
