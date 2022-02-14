@@ -33,7 +33,7 @@ module Actions
                 password = decrypt_field(input[:upstream_password])
                 repo_discovery = ::Katello::RepoDiscovery.new(input[:url], input[:content_type],
                                                               input[:upstream_username], password,
-                                                              input[:search], proxy,
+                                                              input[:search],
                                                               output[:crawled], output[:repo_urls], output[:to_follow])
 
                 repo_discovery.run(output[:to_follow].shift)
@@ -48,19 +48,6 @@ module Actions
         # @return [Array<String>] urls found by the action
         def task_output
           output[:repo_urls] || []
-        end
-
-        def proxy
-          proxy_details = {}
-          if (proxy = ::HttpProxy.default_global_content_proxy)
-            uri = URI(proxy.url)
-            proxy_details[:proxy_host] = "#{uri.scheme}://#{uri.host}#{uri.path}"
-            proxy_details[:proxy_port] = uri.port
-            proxy_details[:proxy_user] = proxy.username
-            proxy_details[:proxy_password] = proxy.password
-          end
-
-          proxy_details
         end
       end
     end

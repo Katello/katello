@@ -1,13 +1,19 @@
 require 'katello_test_helper'
 
 module Katello
-  class FileRepoDiscoveryTest < ActiveSupport::TestCase
+  class RepoDiscoveryTest < ActiveSupport::TestCase
+    def setup
+      @http_proxy = http_proxies(:myhttpproxy)
+      @proxy_url = "proxys://mytest.com:443"
+      @proxy_uri = URI(@proxy_url)
+    end
+
     def test_run
       base_url = "file://#{Katello::Engine.root}/test/fixtures/"
       crawled = []
       found = []
       to_follow = [base_url]
-      rd = RepoDiscovery.new(base_url, 'yum', nil, nil, {}, crawled, found, to_follow)
+      rd = RepoDiscovery.new(base_url, 'yum', nil, nil, crawled, found, to_follow)
 
       rd.run(to_follow.shift)
       assert_equal 1, rd.crawled.size
@@ -16,21 +22,50 @@ module Katello
       assert_equal rd.crawled.first, "#{Katello::Engine.root}/test/fixtures/"
     end
 
+    def test_run_http_with_proxy
+      base_url = "http://yum.theforeman.org/"
+      crawled = []
+      found = []
+      to_follow = [base_url]
+      rd = RepoDiscovery.new(base_url, 'yum', nil, nil, crawled, found, to_follow)
+      rd.stubs(:proxy).returns(@http_proxy)
+
+      expected_proxy_params = {
+        proxy_host: @proxy_uri.host,
+        proxy_port: @proxy_uri.port,
+        proxy_user: @http_proxy.username,
+        proxy_password: @http_proxy.password
+      }
+
+      Anemone.expects(:crawl).with(rd.uri(base_url), expected_proxy_params).returns
+
+      rd.run(to_follow.shift)
+    end
+
+    def test_run_http
+      base_url = "http://yum.theforeman.org/"
+      crawled = []
+      found = []
+      to_follow = [base_url]
+      rd = RepoDiscovery.new(base_url, 'yum', nil, nil, crawled, found, to_follow)
+      Anemone.expects(:crawl).with(rd.uri(base_url), {}).returns
+
+      rd.run(to_follow.shift)
+    end
+
     def test_docker_with_v1_search_no_proxy
       base_url = "https://docker.io/"
       crawled = []
       found = []
       to_follow = [base_url]
-      proxy = {}
       search = 'busybox'
 
-      RestClient.expects(:get)
-        .with(base_url.to_s + "v1/search?q=#{search}", {:accept => :json})
+      RestClient::Request.expects(:execute)
+        .with(method: :get, url: base_url.to_s + "v1/search?q=#{search}", headers: {:accept => :json})
         .returns({results: ['busybox']}.to_json)
 
-      RestClient.expects(:proxy=).with(nil)
-
-      rd = RepoDiscovery.new(base_url, 'docker', nil, nil, search, proxy, crawled, found, to_follow)
+      rd = RepoDiscovery.new(base_url, 'docker', nil, nil, search, crawled, found, to_follow)
+      rd.expects(:proxy).returns(nil)
 
       rd.run(to_follow.shift)
     end
@@ -40,27 +75,14 @@ module Katello
       crawled = []
       found = []
       to_follow = [base_url]
-      proxy = {
-        proxy_host: 'https://proxy.example.com',
-        proxy_user: 'admin',
-        proxy_password: 'redhat',
-        proxy_port: 8888
-      }
       search = 'busybox'
 
-      expected_proxy_uri = URI(proxy[:proxy_host])
-      expected_proxy_uri.user = proxy[:proxy_user]
-      expected_proxy_uri.password = proxy[:proxy_password]
-      expected_proxy_uri.port = proxy[:proxy_port]
-
-      RestClient.expects(:get)
-        .with(base_url.to_s + "v1/search?q=#{search}", {:accept => :json})
+      RestClient::Request.expects(:execute)
+        .with(method: :get, url: base_url.to_s + "v1/search?q=#{search}", proxy: @proxy_url, headers: {:accept => :json})
         .returns({results: ['busybox']}.to_json)
 
-      RestClient.expects(:proxy=).with(nil)
-      RestClient.expects(:proxy=).with('https://admin:redhat@proxy.example.com:8888')
-
-      rd = RepoDiscovery.new(base_url, 'docker', nil, nil, search, proxy, crawled, found, to_follow)
+      rd = RepoDiscovery.new(base_url, 'docker', nil, nil, search, crawled, found, to_follow)
+      rd.stubs(:proxy).returns(@http_proxy)
 
       rd.run(to_follow.shift)
     end
@@ -70,31 +92,18 @@ module Katello
       crawled = []
       found = []
       to_follow = [base_url]
-      proxy = {
-        proxy_host: 'https://proxy.example.com',
-        proxy_user: 'admin',
-        proxy_password: 'redhat',
-        proxy_port: 8888
-      }
       search = 'busybox'
 
-      expected_proxy_uri = URI(proxy[:proxy_host])
-      expected_proxy_uri.user = proxy[:proxy_user]
-      expected_proxy_uri.password = proxy[:proxy_password]
-      expected_proxy_uri.port = proxy[:proxy_port]
-
-      RestClient.expects(:get)
-        .with(base_url.to_s + "v1/search?q=#{search}", {:accept => :json})
+      RestClient::Request.expects(:execute)
+        .with(method: :get, url: base_url.to_s + "v1/search?q=#{search}", proxy: @proxy_url, headers: {:accept => :json})
         .returns({code: Net::HTTPNotFound}.to_json)
 
-      RestClient.expects(:get)
-        .with(base_url.to_s + "v2/_catalog", {:accept => :json})
+      RestClient::Request.expects(:execute)
+        .with(method: :get, url: base_url.to_s + "v2/_catalog", proxy: @proxy_url, headers: {:accept => :json})
         .returns({'repositories' => ['busybox']}.to_json)
 
-      RestClient.expects(:proxy=).with(nil)
-      RestClient.expects(:proxy=).with('https://admin:redhat@proxy.example.com:8888')
-
-      rd = RepoDiscovery.new(base_url, 'docker', nil, nil, search, proxy, crawled, found, to_follow)
+      rd = RepoDiscovery.new(base_url, 'docker', nil, nil, search, crawled, found, to_follow)
+      rd.stubs(:proxy).returns(@http_proxy)
 
       rd.run(to_follow.shift)
     end

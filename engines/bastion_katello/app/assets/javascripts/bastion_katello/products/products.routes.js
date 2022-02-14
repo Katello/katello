@@ -42,13 +42,14 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     });
 
     $stateProvider.state("product-discovery", {
-        abstract: true,
         url: '/products/discovery',
-        controller: 'DiscoveryController',
-        templateUrl: 'products/discovery/views/discovery-base.html'
+        templateUrl: 'products/discovery/views/discovery-base.html',
+        permission: 'edit_products',
+        redirectTo: 'product-discovery.scan'
     })
     .state("product-discovery.scan", {
         url: '/scan',
+        controller: 'DiscoveryController',
         permission: 'edit_products',
         templateUrl: 'products/discovery/views/discovery.html',
         ncyBreadcrumb: {
