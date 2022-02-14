@@ -8,8 +8,7 @@ module Actions
 
           content_view = ::Katello::Pulp3::ContentViewVersion::Import.
                                 find_or_create_import_view(organization: organization,
-                                                           metadata: metadata[:content_view].
-                                                                     merge(metadata.slice(:destination_server)))
+                                                           metadata: metadata[:content_view])
           content_view.check_ready_to_import!
           self.content_view = content_view
           ::Katello::Pulp3::ContentViewVersion::Import.check!(content_view: content_view,

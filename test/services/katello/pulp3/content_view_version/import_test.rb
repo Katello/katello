@@ -161,13 +161,11 @@ module Katello
 
           it "should create the import name for generated content" do
             org = katello_content_views(:library_view).organization
-            destination_server = "Foo"
             cv = ::Katello::Pulp3::ContentViewVersion::Import.
                     find_or_create_import_view(organization: org,
-                                                metadata: { name: "Export-Repository-#{destination_server}",
-                                                            label: "Export-Repository-#{destination_server}",
-                                                            generated_for: :repository_export,
-                                                            destination_server: "Foo" })
+                                                metadata: { name: "Export-Repository",
+                                                            label: "Export-Repository",
+                                                            generated_for: :repository_export})
             assert_equal cv.label, "Import-Repository"
             assert_equal cv.organization, org
             assert cv.import_only?

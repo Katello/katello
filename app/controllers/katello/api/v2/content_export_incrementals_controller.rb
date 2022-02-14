@@ -48,7 +48,6 @@ module Katello
 
     api :POST, "/content_export_incrementals/repository", N_("Performs a incremental-export of the repository in library.")
     param :id, :number, :desc => N_("Repository identifier"), :required => true
-    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
     param :chunk_size_gb, :number, :desc => N_("Split the exported content into archives "\
                                                "no greater than the specified size in gigabytes."), :required => false
     param :from_history_id, :number, :desc => N_("Export history identifier used for incremental export. "\
@@ -56,7 +55,6 @@ module Katello
     def repository
       tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportRepository,
                           @repository,
-                          destination_server: params[:destination_server],
                           chunk_size: params[:chunk_size_gb],
                           from_history: @history)
       respond_for_async :resource => tasks
@@ -82,12 +80,11 @@ module Katello
     end
 
     def find_repository_export_view
-      @view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(destination_server: params[:destination_server],
+      @view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(
                                                                 repository: @repository,
                                                                 create_by_default: false)
       if @view.blank?
-        msg = _("Unable to incrementally export. Do a Full Export on the library content "\
-                "before updating from the latest increment.")
+        msg = _("Unable to incrementally export. Do a Full Export on the repository content.")
         fail HttpErrors::BadRequest, msg
       end
     end

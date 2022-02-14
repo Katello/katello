@@ -4,13 +4,12 @@ module Actions
       module ContentViewVersion
         class ExportRepository < Actions::EntryAction
           def plan(repository,
-                    destination_server: nil,
                     chunk_size: nil,
                     from_history: nil)
             action_subject(repository)
             validate_repositories_immediate!(repository)
 
-            content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(destination_server: destination_server,
+            content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(
                                                                            repository: repository,
                                                                            create_by_default: true)
             content_view.update!(repository_ids: [repository.library_instance_or_self.id])
@@ -19,7 +18,6 @@ module Actions
               publish_action = plan_action(::Actions::Katello::ContentView::Publish, content_view, '')
               export_action = plan_action(Actions::Katello::ContentViewVersion::Export,
                                           content_view_version: publish_action.version,
-                                          destination_server: destination_server,
                                           chunk_size: chunk_size,
                                           from_history: from_history)
               plan_self(export_action_output: export_action.output)

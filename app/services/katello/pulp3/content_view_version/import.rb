@@ -113,12 +113,9 @@ module Katello
           content_view.update!(repository_ids: repo_ids)
         end
 
-        def self.import_cv_name_from_export(name:, destination_server: nil)
-          import_name = name.gsub(/^Export/, 'Import')
-          unless destination_server.blank?
-            import_name = import_name[0...-(destination_server.length + 1)]
-          end
-          import_name
+        def self.import_cv_name_from_export(name:)
+          name.gsub(/^#{::Katello::ContentView::EXPORT_LIBRARY}.*/, ::Katello::ContentView::IMPORT_LIBRARY)
+              .gsub(/^Export/, 'Import')
         end
 
         def self.process_metadata(metadata:)
@@ -140,8 +137,8 @@ module Katello
             generated_for = :repository_import
           end
 
-          { name: import_cv_name_from_export(name: metadata[:name], destination_server: metadata[:destination_server]),
-            label: import_cv_name_from_export(name: metadata[:label], destination_server: metadata[:destination_server]),
+          { name: import_cv_name_from_export(name: metadata[:name]),
+            label: import_cv_name_from_export(name: metadata[:label]),
             description: "Content View used for importing into library",
             generated_for: generated_for
           }

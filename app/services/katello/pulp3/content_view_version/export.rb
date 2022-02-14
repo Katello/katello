@@ -173,10 +173,9 @@ module Katello
         end
 
         def self.find_repository_export_view(create_by_default: false,
-                                              destination_server:,
                                               repository:)
           find_generated_export_view(create_by_default: create_by_default,
-                                     destination_server: destination_server,
+                                     destination_server: nil,
                                      organization: repository.organization,
                                      name: "Export-#{repository.label}-#{repository.library_instance_or_self.id}",
                                      generated_for: :repository_export)

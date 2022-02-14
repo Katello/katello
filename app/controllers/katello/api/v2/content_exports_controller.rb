@@ -61,13 +61,11 @@ module Katello
 
     api :POST, "/content_exports/repository", N_("Performs a full-export of the repository in library.")
     param :id, :number, :desc => N_("Repository identifier"), :required => true
-    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
     param :chunk_size_gb, :number, :desc => N_("Split the exported content into archives "\
                                                "no greater than the specified size in gigabytes."), :required => false
     def repository
       tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportRepository,
                           @repository,
-                          destination_server: params[:destination_server],
                           chunk_size: params[:chunk_size_gb])
       respond_for_async :resource => tasks
     end
