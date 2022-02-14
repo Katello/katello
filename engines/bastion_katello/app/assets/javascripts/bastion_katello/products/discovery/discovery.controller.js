@@ -4,8 +4,6 @@
  *
  * @requires $scope
  * @requires $q
- * @requires $timeout
- * @requires $http
  * @requires Notification
  * @requires Task
  * @requires Organization
@@ -18,8 +16,8 @@
  *   Provides the functionality for the repo discovery action pane.
  */
 angular.module('Bastion.products').controller('DiscoveryController',
-    ['$scope', '$q', '$timeout', '$http', '$filter', 'Notification', 'Task', 'Organization', 'CurrentOrganization', 'DiscoveryRepositories', 'ContainerRegistries', 'translate',
-    function ($scope, $q, $timeout, $http, $filter, Notification, Task, Organization, CurrentOrganization, DiscoveryRepositories, ContainerRegistries, translate) {
+    ['$scope', '$q', '$filter', 'Notification', 'Task', 'Organization', 'CurrentOrganization', 'DiscoveryRepositories', 'ContainerRegistries', 'translate',
+    function ($scope, $q, $filter, Notification, Task, Organization, CurrentOrganization, DiscoveryRepositories, ContainerRegistries, translate) {
         var transformRows, setDiscoveryDetails;
 
         $scope.discovery = {
@@ -37,6 +35,9 @@ angular.module('Bastion.products').controller('DiscoveryController',
             {id: "docker", name: "Container Images"}
         ];
         $scope.hideSwitcher = true;
+
+        // scope.table may have been set when clicking in from products
+        // otherwise set a simple table since there is no BastionResource here
         if (!$scope.table) {
             $scope.table = {
                 rows: [],
