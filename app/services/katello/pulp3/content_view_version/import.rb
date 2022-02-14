@@ -159,7 +159,7 @@ module Katello
             command = "foreman-rake katello:set_content_view_import_only ID=#{cv.id}"
             fail msg + "\n" + command
           else
-            cv.update!(description: cv_metadata[:description]) if cv.description != metadata[:description]
+            cv.update!(description: metadata[:description]) if cv.description != metadata[:description]
             cv
           end
         end
