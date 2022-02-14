@@ -199,14 +199,14 @@ const ContentViewRepositories = ({ cvId, details }) => {
     if (parent || compoundParent || noactions) return null;
     return [
       {
-        title: 'Add',
+        title: __('Add'),
         isDisabled: added,
         onClick: (_event, _rowId, rowInfo) => {
           onAdd(rowInfo.repoId);
         },
       },
       {
-        title: 'Remove',
+        title: __('Remove'),
         isDisabled: !added,
         onClick: (_event, _rowId, rowInfo) => {
           onRemove(rowInfo.repoId);
