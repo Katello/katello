@@ -193,7 +193,7 @@ module Katello
 
         def latest_repo_discovery
           ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Discover)
-            .for_resource(::User.current).order("started_at").last
+            .where(user: ::User.current).order("started_at").last
         end
 
         def cancel_repo_discovery
