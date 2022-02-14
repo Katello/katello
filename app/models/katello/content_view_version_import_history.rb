@@ -1,6 +1,7 @@
 module Katello
   class ContentViewVersionImportHistory < Katello::Model
     include Authorization::ContentViewVersionImportHistory
+    include Concerns::AuditCommentExtensions
 
     audited except: :metadata
     delegate :organization, to: :content_view_version
@@ -32,11 +33,11 @@ module Katello
     scoped_search :on => :import_type, :rename => :type, :complete_value => ContentViewVersionExportHistory::EXPORT_TYPES
 
     def self.generate_audit_comment(user:, path:, content_view_name:)
-      _("Content imported from %{path} into content view '%{name}' by %{user}") % {
+      truncate_audit_comment(_("Content imported from %{path} into content view '%{name}' by %{user}") % {
         path: path,
         user: user.to_label,
         name: content_view_name
-      }
+      })
     end
   end
 end

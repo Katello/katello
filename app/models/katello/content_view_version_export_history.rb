@@ -1,6 +1,7 @@
 module Katello
   class ContentViewVersionExportHistory < Katello::Model
     include Authorization::ContentViewVersionExportHistory
+    include Concerns::AuditCommentExtensions
     audited except: :metadata
     delegate :organization, to: :content_view_version
     delegate :id, to: :organization, prefix: true
@@ -58,7 +59,7 @@ module Katello
         export_descriptor = "export of content view '#{content_view_version.content_view.name}' version #{content_view_version.version}"
         export_descriptor += " from #{from_version.name}" if from_version
       end
-      "#{export_type&.capitalize} #{export_descriptor} created by #{user.to_label}"
+      truncate_audit_comment("#{export_type&.capitalize} #{export_descriptor} created by #{user.to_label}")
     end
   end
 end
