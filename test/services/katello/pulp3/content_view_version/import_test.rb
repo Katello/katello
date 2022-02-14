@@ -147,6 +147,18 @@ module Katello
             assert cv.generated_for_library_import?
           end
 
+          it "should create an importable content view for library with no generated_for" do
+            org = katello_content_views(:library_view).organization
+            cv = ::Katello::Pulp3::ContentViewVersion::Import.
+                    find_or_create_import_view(organization: org,
+                                                metadata: { name: ::Katello::ContentView::EXPORT_LIBRARY,
+                                                            label: ::Katello::ContentView::EXPORT_LIBRARY})
+            assert_equal cv.label, ::Katello::ContentView::IMPORT_LIBRARY
+            assert_equal cv.organization, org
+            assert cv.import_only?
+            assert cv.generated_for_library_import?
+          end
+
           it "should create the import name for generated content" do
             org = katello_content_views(:library_view).organization
             destination_server = "Foo"

@@ -121,23 +121,34 @@ module Katello
           import_name
         end
 
-        def self.find_or_create_import_view(organization:, metadata:)
+        def self.process_metadata(metadata:)
           fail _("Content View label not provided.") if metadata[:label].blank?
-
-          unless metadata[:generated_for].to_s == "none"
-            generated_for = metadata[:generated_for].to_sym
-            if generated_for == :library_export
-              generated_for = :library_import
-            elsif generated_for == :repository_export
-              generated_for = :repository_import
-            end
-
-            metadata = { name: import_cv_name_from_export(name: metadata[:name], destination_server: metadata[:destination_server]),
-                         label: import_cv_name_from_export(name: metadata[:label], destination_server: metadata[:destination_server]),
-                         description: "Content View used for importing into library",
-                         generated_for: generated_for
-                        }
+          if metadata[:generated_for].blank?
+            metadata[:generated_for] = if metadata[:label].start_with? ::Katello::ContentView::EXPORT_LIBRARY
+                                         "library_export"
+                                       else
+                                         "none"
+                                       end
           end
+          generated_for = metadata[:generated_for].to_sym
+
+          return metadata if metadata[:generated_for] == :none
+
+          if generated_for == :library_export
+            generated_for = :library_import
+          elsif generated_for == :repository_export
+            generated_for = :repository_import
+          end
+
+          { name: import_cv_name_from_export(name: metadata[:name], destination_server: metadata[:destination_server]),
+            label: import_cv_name_from_export(name: metadata[:label], destination_server: metadata[:destination_server]),
+            description: "Content View used for importing into library",
+            generated_for: generated_for
+          }
+        end
+
+        def self.find_or_create_import_view(organization:, metadata:)
+          metadata = process_metadata(metadata: metadata)
           cv = ::Katello::ContentView.find_by(label: metadata[:label],
                                               organization: organization)
           if cv.blank?

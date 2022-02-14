@@ -741,5 +741,13 @@ module Katello
       assert_equal version.sort, view.versions.map(&:version)
       assert_equal cv_name, view.name
     end
+
+    def test_repository_smart_proxy_syncable
+      view = katello_content_views(:library_view)
+      repo = view.versions.map(&:repositories).flatten.find(&:yum?)
+      assert_includes ::Katello::Repository.smart_proxy_syncable.map(&:pulp_id), repo.pulp_id
+      view.generated_for_repository_export!
+      refute_includes ::Katello::Repository.smart_proxy_syncable.map(&:pulp_id), repo.pulp_id
+    end
   end
 end
