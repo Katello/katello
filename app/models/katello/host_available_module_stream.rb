@@ -37,6 +37,16 @@ module Katello
                                              :stream => available_module_stream.stream}).exists?
     end
 
+    def install_status
+      return 'Not installed' if installed_profiles.blank?
+      case status
+      when 'disabled'
+        'Installed'
+      when 'enabled'
+        upgradable? ? 'Upgradable' : 'Up-to-date'
+      end
+    end
+
     def self.upgradable(host)
       upgradable_module_name_streams = ModuleStream.installable_for_hosts([host]).select(:name, :stream)
 
