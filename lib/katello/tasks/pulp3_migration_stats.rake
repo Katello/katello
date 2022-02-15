@@ -59,7 +59,8 @@ namespace :katello do
     found_missing = false
     path = Dir.mktmpdir('unmigratable_content-')
     Katello::Pulp3::Migration::CORRUPTABLE_CONTENT_TYPES.each do |type|
-      if type.missing_migrated_content.any?
+      content = type.missing_migrated_content
+      if content.any?
         unless displayed_warning
           displayed_warning = true
           puts
@@ -72,8 +73,15 @@ namespace :katello do
         puts "Corrupted or Missing #{name}: #{type.missing_migrated_content.count}/#{type.count}"
 
         File.open(File.join(path, name), 'w') do |file|
-          text = type.missing_migrated_content.map(&:filename).join("\n") + "\n"
-          file.write(text)
+          file.write("filename,id,Repository Name,Content View Name,Content View Version\n")
+          content.joins(:repositories => [:root, :content_view_version => :content_view]).each do |unit|
+            filename = unit.filename
+            unit.repositories.each do |repo|
+              if repo.environment_id || repo.in_default_view?
+                file.write("#{filename},#{unit.id},#{repo.name},#{repo.content_view_version.content_view.name},#{repo.content_view_version.version}\n")
+              end
+            end
+          end
         end
       end
     end
@@ -83,7 +91,8 @@ namespace :katello do
       puts "1. Performing a 'Validate Content Sync' under Advanced Sync Options, let it complete, and re-running the migration"
       puts "2. Deleting/disabling the affected repositories and running orphan cleanup (foreman-rake katello:delete_orphaned_content) and re-running the migration"
       puts "3. Manually correcting files on the filesystem in /var/lib/pulp/content/ and re-running the migration"
-      puts "4. Mark currently corrupted or missing content as skipped (foreman-rake katello:approve_corrupted_migration_content).  This will skip migration of missing or corrupted content."
+      puts "4. Mark currently corrupted or missing content as skipped (foreman-rake katello:approve_corrupted_migration_content).  This will skip migration of missing or corrupted content." \
+            "  Any skipped content will be re-synced if it is still available from the upstream repository."
       puts
     end
   end
