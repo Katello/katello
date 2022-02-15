@@ -28,7 +28,9 @@ module Actions
           if remove_from_content_view_versions
             library_instances_inverse = repository.library_instances_inverse
             affected_cvv_ids = library_instances_inverse.pluck(:content_view_version_id).uniq
-            plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, library_instances_inverse)
+            if library_instances_inverse && library_instances_inverse.size != 0
+              plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, library_instances_inverse)
+            end
           end
 
           plan_self(:user_id => ::User.current.id, :affected_cvv_ids => affected_cvv_ids)

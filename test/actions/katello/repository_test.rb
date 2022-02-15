@@ -157,6 +157,24 @@ module ::Actions::Katello::Repository
       assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, in_use_repository.root
     end
 
+    it 'skips bulk repo version deletes when passed in remove_from_content_view_versions: true with empty non library versions' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(in_use_repository)
+      in_use_repository.stubs(:assert_deletable).returns(true)
+      in_use_repository.stubs(:destroyable?).returns(true)
+      in_use_repository.stubs(:pulp_scratchpad_checksum_type).returns(nil)
+      in_use_repository.stubs(:library_instances_inverse).returns([])
+
+      action.expects(:plan_self)
+      plan_action action, in_use_repository, remove_from_content_view_versions: true
+      assert_action_planned_with action, pulp3_action_class,
+                                 in_use_repository, proxy
+
+      refute_action_planned(action, ::Actions::BulkAction)
+
+      assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, in_use_repository.root
+    end
+
     it 'plans when custom and no clones' do
       action = create_action action_class
       action.stubs(:action_subject).with(unpublished_repository)
