@@ -468,6 +468,13 @@ module ::Actions::Katello::Repository
       assert_action_planned_with(action, ::Actions::Katello::Repository::VerifyChecksum, repository)
     end
 
+    it 'plans errata mailer with contents_changed' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+      plan_action action, repository
+      assert_action_planned(action, ::Actions::Katello::Repository::ErrataMail)
+    end
+
     it 'plans pulp3 orchestration actions with file repo' do
       action = create_action pulp3_action_class
       action.stubs(:action_subject).with(repository_pulp3)
@@ -661,6 +668,16 @@ module ::Actions::Katello::Repository
           assert_in_delta pulp3_action.run_progress, 0.5
         end
       end
+    end
+  end
+
+  class ErrataMailerTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::ErrataMail }
+
+    it 'plans' do
+      action = create_action action_class
+      planned_action = plan_action action, repository, true
+      assert_equal planned_action.execution_plan.planned_run_steps.first.input, "repo" => repository.id, "contents_changed" => true
     end
   end
 
