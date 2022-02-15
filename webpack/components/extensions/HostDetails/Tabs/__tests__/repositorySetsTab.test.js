@@ -204,9 +204,11 @@ test('Can override to disabled', async (done) => {
     .get(hostRepositorySets)
     .query(defaultQuery)
     .reply(200, mockRepoSetData);
+  const overrides = JSON.parse(JSON.stringify(mockContentOverride));
+  overrides.results[0].enabled_content_override = false;
   const contentOverrideScope = nockInstance
     .put(contentOverride)
-    .reply(200, mockContentOverride);
+    .reply(200, overrides);
 
   const { getByText, getAllByText, getAllByLabelText } =
     renderWithRedux(<RepositorySetsTab />, renderOptions());
@@ -240,9 +242,12 @@ test('Can override to enabled', async (done) => {
     .get(hostRepositorySets)
     .query(defaultQuery)
     .reply(200, mockRepoSetData);
+  const overrides = JSON.parse(JSON.stringify(mockContentOverride));
+  overrides.results[1].enabled_content_override = true;
+
   const contentOverrideScope = nockInstance
     .put(contentOverride)
-    .reply(200, mockContentOverride);
+    .reply(200, overrides);
 
   const {
     getByText, queryByText, getAllByText, getAllByLabelText,
@@ -276,10 +281,12 @@ test('Can reset to default', async (done) => {
     .get(hostRepositorySets)
     .query(defaultQuery)
     .reply(200, mockRepoSetData);
+  const overrides = JSON.parse(JSON.stringify(mockContentOverride));
+  overrides.results[1].enabled_content_override = null;
+
   const contentOverrideScope = nockInstance
     .put(contentOverride)
-    .reply(200, mockContentOverride);
-
+    .reply(200, overrides);
   const {
     getByText, queryByText, getAllByText, getAllByLabelText,
   } = renderWithRedux(<RepositorySetsTab />, renderOptions());
@@ -288,6 +295,7 @@ test('Can reset to default', async (done) => {
   await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
   expect(getAllByText('Enabled')).toHaveLength(2);
   expect(getAllByText('Disabled')).toHaveLength(1);
+
   // The second item is overridden to disabled but would normally be enabled; we're going to reset
   const actionMenu = getAllByLabelText('Actions')[1].closest('button');
   fireEvent.click(actionMenu);
@@ -304,4 +312,32 @@ test('Can reset to default', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(contentOverrideScope, done); // Pass jest callback to confirm test is done
+});
+
+test('Can override in bulk', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostRepositorySets)
+    .query(defaultQuery)
+    .reply(200, mockRepoSetData);
+  const contentOverrideScope = nockInstance
+    .put(contentOverride)
+    .reply(200, mockContentOverride);
+
+  const {
+    getByText, getByLabelText, queryByText,
+  } = renderWithRedux(<RepositorySetsTab />, renderOptions());
+
+  await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
+  getByLabelText('Select row 0').click();
+  getByLabelText('Select row 1').click();
+  const actionMenu = getByLabelText('bulk_actions');
+  actionMenu.click();
+  const resetToDefault = queryByText('Reset to default');
+  expect(resetToDefault).toBeInTheDocument();
+  resetToDefault.click();
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(contentOverrideScope, done); // Pass jest callback to confirm test is done});
 });

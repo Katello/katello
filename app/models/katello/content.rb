@@ -10,6 +10,7 @@ module Katello
     scoped_search :on => :label, :complete_value => true
     scoped_search :relation => :products, :on => :name, :rename => :product_name, :complete_value => true
     scoped_search :on => :label, :rename => :content_label, :complete_value => true
+    scoped_search :on => :cp_content_id, :complete_value => true
 
     after_update :update_repository_names, :if => :propagate_name_change?
 
