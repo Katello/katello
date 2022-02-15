@@ -1,6 +1,6 @@
 module Actions
   module Pulp3
-    class Abstract < Actions::Base
+    class Abstract < Actions::EntryAction
       middleware.use ::Actions::Middleware::RemoteAction
       middleware.use Actions::Middleware::Pulp3ServicesCheck
 
