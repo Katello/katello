@@ -14,22 +14,16 @@ module Actions
           destroy_content = options.fetch(:destroy_content, true)
           remove_from_content_view_versions = options.fetch(:remove_from_content_view_versions, false)
           action_subject(repository)
+          check_destroyable!(repository, remove_from_content_view_versions)
+          remove_generated_content_views(repository)
 
-          unless repository.destroyable?(remove_from_content_view_versions)
-            # The repository is going to be deleted in finalize, but it cannot be deleted.
-            # Stop now and inform the user.
-            fail repository.errors.messages.values.join("\n")
-          end
+          remove_versions(repository, repository.content_views.generated_for_library, affected_cvv_ids)
 
           plan_action(Actions::Pulp3::Orchestration::Repository::Delete,
                            repository,
                            SmartProxy.pulp_primary)
 
-          if remove_from_content_view_versions
-            library_instances_inverse = repository.library_instances_inverse
-            affected_cvv_ids = library_instances_inverse.pluck(:content_view_version_id).uniq
-            plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, library_instances_inverse)
-          end
+          remove_versions(repository, repository.content_views.generated_for_none, affected_cvv_ids) if remove_from_content_view_versions
 
           plan_self(:user_id => ::User.current.id, :affected_cvv_ids => affected_cvv_ids)
           sequence do
@@ -50,8 +44,9 @@ module Actions
             delete_record(repository, {docker_cleanup: docker_cleanup})
 
             if (affected_cvv_ids = input[:affected_cvv_ids]).any?
-              affected_cvv_ids.each do |cvv_id|
-                ::Katello::ContentViewVersion.find(cvv_id).update_content_counts!
+              cvvs = ::Katello::ContentViewVersion.where(id: affected_cvv_ids)
+              cvvs.each do |cvv|
+                cvv.update_content_counts!
               end
             end
           end
@@ -75,6 +70,35 @@ module Actions
           repository.destroy!
           repository.root.destroy! if repository.root.repositories.empty?
           ::Katello::DockerMetaTag.cleanup_tags if options[:docker_cleanup]
+        end
+
+        def remove_generated_content_views(repository)
+          # remove the content views generated for this repository (since we are deleting the repo)
+          content_views = repository.content_views.generated_for_repository
+          return if content_views.blank?
+          plan_action(::Actions::BulkAction, ::Actions::Katello::ContentView::Remove,
+                        content_views,
+                        skip_repo_destroy: true,
+                        destroy_content_view: true)
+        end
+
+        def remove_versions(repository, content_views, affected_cvv_ids)
+          return if content_views.blank?
+
+          interested_inverses = repository.
+                                  library_instances_inverse.
+                                  joins(:content_view_version => :content_view).
+                                  merge(content_views)
+          affected_cvv_ids.concat(interested_inverses.pluck(:content_view_version_id).uniq)
+          plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, interested_inverses)
+        end
+
+        def check_destroyable!(repository, remove_from_content_view_versions)
+          unless repository.destroyable?(remove_from_content_view_versions)
+            # The repository is going to be deleted in finalize, but it cannot be deleted.
+            # Stop now and inform the user.
+            fail repository.errors.messages.values.join("\n")
+          end
         end
 
         def humanized_name

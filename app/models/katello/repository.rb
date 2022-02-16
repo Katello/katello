@@ -307,7 +307,7 @@ module Katello
     end
 
     def immediate?
-      root.download_policy == ::Katello::RootRepository::DOWNLOAD_ON_IMMEDIATE
+      root.download_policy == ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
     end
 
     def yum_gpg_key_url
@@ -338,7 +338,8 @@ module Katello
     end
 
     def published_in_versions
-      Katello::ContentViewVersion.with_repositories(self.library_instances_inverse).distinct
+      Katello::ContentViewVersion.with_repositories(self.library_instances_inverse)
+                                 .where(content_view_id: Katello::ContentView.not_generated_for_repository).distinct
     end
 
     def self.errata_with_package_counts(repo)
@@ -664,7 +665,9 @@ module Katello
     end
 
     def self.smart_proxy_syncable
-      where.not(:environment_id => nil)
+      joins(:content_view_version => :content_view).
+        merge(ContentView.not_generated_for_repository).
+        where.not(environment_id: nil)
     end
 
     def exist_for_environment?(environment, content_view, attribute = nil)

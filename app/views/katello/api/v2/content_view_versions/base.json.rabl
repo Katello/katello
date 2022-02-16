@@ -25,7 +25,7 @@ node :errata_counts do |version|
 end
 
 child :content_view => :content_view do
-  attributes :id, :name, :label
+  attributes :id, :name, :label, :generated_for
 end
 
 child :composite_content_views => :composite_content_views do

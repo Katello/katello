@@ -11,7 +11,6 @@ module Katello
     CONTENT_DIR = "content_views".freeze
     IMPORT_LIBRARY = "Import-Library".freeze
     EXPORT_LIBRARY = "Export-Library".freeze
-
     belongs_to :organization, :inverse_of => :content_views, :class_name => "::Organization"
 
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment", :dependent => :destroy
@@ -19,7 +18,6 @@ module Katello
 
     has_many :content_view_versions, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
     alias_method :versions, :content_view_versions
-
     # Note the difference between content_view_components and component_composites both refer to
     # ContentViewComponent but mean different things.
     # content_view_components -> Topdown, given I am a composite CV get the associated components belonging to me
@@ -73,6 +71,12 @@ module Katello
               inclusion: { in: [false], message: "Import-only Content Views can not solve dependencies"},
               if: :solve_dependencies
     validate :import_only_immutable
+    validates :generated_for,
+              exclusion: { in: [:none], message: "Generated Content Views can not be Composite"},
+              if: :composite
+    validates :generated_for,
+              exclusion: { in: [:none], message: "Generated Content Views can not solve dependencies"},
+              if: :solve_dependencies
 
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -81,11 +85,25 @@ module Katello
     scope :non_default, -> { where(:default => false) }
     scope :composite, -> { where(:composite => true) }
     scope :non_composite, -> { where(:composite => [nil, false]) }
+    scope :generated, -> { where.not(:generated_for => :none) }
+    scope :generated_for_repository, -> { where(:generated_for => [:repository_export, :repository_import]) }
+    scope :not_generated_for_repository, -> { where.not(id: generated_for_repository) }
+
+    scope :generated_for_library, -> { where(:generated_for => [:library_export, :library_import]) }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :label, :complete_value => true
     scoped_search :on => :composite, :complete_value => true
+    scoped_search :on => :generated_for, :complete_value => true
+
+    enum generated_for: {
+      none: 0,
+      library_export: 1,
+      repository_export: 2,
+      library_import: 3,
+      repository_import: 4
+    }, _prefix: true
 
     set_crud_hooks :content_view
 
@@ -121,6 +139,14 @@ module Katello
 
     def library_export?
       name.start_with? EXPORT_LIBRARY
+    end
+
+    def generated_for_repository?
+      generated_for_repository_export? || generated_for_repository_import?
+    end
+
+    def generated_for_library?
+      generated_for_library_export? || generated_for_library_import?
     end
 
     def content_host_count
@@ -209,6 +235,10 @@ module Katello
     def promoted?
       # if the view exists in more than 1 environment, it has been promoted
       self.environments.many?
+    end
+
+    def generated?
+      !generated_for_none?
     end
 
     #NOTE: this function will most likely become obsolete once we drop api v1

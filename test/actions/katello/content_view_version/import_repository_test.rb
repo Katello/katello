@@ -41,11 +41,12 @@ module ::Actions::Katello::ContentViewVersion
           minor: '0'
         },
         content_view: {
-          name: ::Katello::ContentView::EXPORT_LIBRARY,
-          label: ::Katello::ContentView::EXPORT_LIBRARY,
+          name: "Export-Repository",
+          label: 'Export-Repository',
           description: 'great',
-          generated_for: :library_export
-        }
+          generated_for: :repository_export
+        },
+        destination_server: "wow"
       }.with_indifferent_access
     end
 
@@ -71,10 +72,8 @@ module ::Actions::Katello::ContentViewVersion
       ::Katello::Repository.any_instance.stubs(:pulp_scratchpad_checksum_type).returns(nil)
     end
 
-    describe 'Import Default' do
+    describe 'Import Repository' do
       it 'should plan properly' do
-        assert_nil ::Katello::ContentView.where(organization: organization,
-                                                name: ::Katello::ContentView::IMPORT_LIBRARY).first
         action_class.any_instance.expects(:action_subject).with(organization)
         plan_action(action, organization, path: path, metadata: metadata)
         assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::Import) do |options|

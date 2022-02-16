@@ -36,6 +36,7 @@ module ::Actions::Pulp3::ContentView
       assert_action_planned_with(action, ::Actions::Katello::ContentView::Publish) do |content_view, _|
         assert_equal content_view.name, "Export-Library-#{destination_server}"
         assert_equal content_view.repository_ids.sort, immediate_repo_ids_in_library.sort
+        assert content_view.generated_for_library?
       end
 
       assert_action_planned_with(action, Actions::Katello::ContentViewVersion::Export) do |**options|

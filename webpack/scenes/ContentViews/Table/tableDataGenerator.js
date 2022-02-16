@@ -64,6 +64,7 @@ const buildExpandableRows = (contentViews) => {
       environments,
       versions,
       permissions,
+      generated_for: generatedFor,
       related_cv_count: relatedCVCount,
       related_composite_cvs: relatedCompositeCVs,
     } = contentView;
@@ -80,6 +81,7 @@ const buildExpandableRows = (contentViews) => {
       environments,
       versions,
       permissions,
+      generatedFor,
       isOpen: false,
       cells,
     };

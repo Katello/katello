@@ -134,7 +134,7 @@ module Katello
 
     api :PUT, "/organizations/:id/cdn_configuration", N_("Update the CDN configuration")
     param :id, String, :desc => N_("ID of the Organization"), :required => true
-    param :type, String, :desc => N_("CDN configuration type. One of %s.") % CdnConfiguration::TYPES, :required => true
+    param :type, String, :desc => N_("CDN configuration type. One of %s.") % CdnConfiguration::TYPES.join(", "), :required => true
     param :url, String, :desc => N_("Upstream foreman server to sync CDN content from. Relevant only for 'upstream_server' type.")
     param :username, String, :desc => N_("Username for authentication. Relevant only for 'upstream_server' type.")
     param :password, String, :desc => N_("Password for authentication. Relevant only for 'upstream_server' type.")

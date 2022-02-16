@@ -86,7 +86,7 @@
       <div bst-modal="removeRepository(repository)" model="repositoryWrapper">
         <div data-block="modal-header" translate>Remove Repository {{ repositoryWrapper.repository.name }}?</div>
         <div data-block="modal-body">
-            <div ng-show="repositoryWrapper.repository.promoted" style="margin-bottom: 1em">
+            <div ng-show="repositoryWrapper.repository.content_view_versions.length !== 0" style="margin-bottom: 1em">
                 <span translate>Repository will also be removed from the following published content view versions!</span>
                 <table class="table table-striped table-bordered" style="margin-top: 1em">
                     <thead>

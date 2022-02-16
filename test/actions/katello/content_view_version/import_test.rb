@@ -46,7 +46,7 @@ module ::Actions::Katello::ContentViewVersion
           minor: content_view_version.minor,
           description: description
         },
-        content_view: content_view.slice(:label, :name, :description)
+        content_view: content_view.slice(:label, :name, :description, :generated_for)
       }.with_indifferent_access
     end
 
@@ -109,7 +109,7 @@ module ::Actions::Katello::ContentViewVersion
       end
 
       it 'should create a non existent cv and plan properly' do
-        metadata[:content_view] = { name: "non_existent_view", label: "nope" }
+        metadata[:content_view] = { name: "non_existent_view", label: "nope", generated_for: :none }
         ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).returns
 
         plan_action(action, organization: organization, path: path, metadata: metadata)
@@ -128,10 +128,13 @@ module ::Actions::Katello::ContentViewVersion
       end
 
       it 'should create the library cv and plan properly' do
-        metadata[:content_view] = {name: 'export-library', label: 'export_library'}
+        metadata[:content_view] = { name: ::Katello::ContentView::EXPORT_LIBRARY,
+                                    label: ::Katello::ContentView::EXPORT_LIBRARY,
+                                    generated_for: :library_export
+                                  }
         ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).returns
 
-        plan_action(action, organization: organization, path: path, metadata: metadata, library: true)
+        plan_action(action, organization: organization, path: path, metadata: metadata)
         content_view = ::Katello::ContentView.find_by(label: ::Katello::ContentView::IMPORT_LIBRARY,
                                                       organization: organization)
         refute_nil content_view

@@ -24,7 +24,13 @@ node :default_content_view_id do |org|
 end
 
 node(:composite_content_views_count) { Katello::ContentView.readable&.in_organization(Organization.current)&.composite&.count }
-node(:content_view_components_count) { Katello::ContentView.readable&.in_organization(Organization.current)&.non_composite&.non_default&.count }
+node(:content_view_components_count) do
+  Katello::ContentView.readable&.
+    in_organization(Organization.current)&.
+    non_composite&.
+    non_default&.
+    not_generated_for_repository&.count
+end
 
 node :library_id do |org|
   org.library.id

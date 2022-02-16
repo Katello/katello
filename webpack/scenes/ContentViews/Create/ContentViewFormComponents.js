@@ -2,7 +2,7 @@ import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { Tooltip, TooltipPosition, Flex, FlexItem } from '@patternfly/react-core';
-import { autoPublishHelpText, dependenciesHelpText, importOnlyHelpText } from '../helpers';
+import { autoPublishHelpText, dependenciesHelpText, importOnlyHelpText, generatedContentViewHelpText } from '../helpers';
 import ContentViewIcon from '../components/ContentViewIcon';
 
 const HelpToolTip = tooltip => (
@@ -53,6 +53,15 @@ export const LabelImportOnly = () => (
     <FlexItem spacer={{ default: 'spacerSm' }}>{__('Import only')}</FlexItem>
     <FlexItem>
       {HelpToolTip(importOnlyHelpText)}
+    </FlexItem>
+  </Flex>
+);
+
+export const LabelGenerated = () => (
+  <Flex>
+    <FlexItem spacer={{ default: 'spacerSm' }}>{__('Generated')}</FlexItem>
+    <FlexItem>
+      {HelpToolTip(generatedContentViewHelpText)}
     </FlexItem>
   </Flex>
 );

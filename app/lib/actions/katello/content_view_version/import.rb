@@ -2,13 +2,15 @@ module Actions
   module Katello
     module ContentViewVersion
       class Import < Actions::EntryAction
-        def plan(organization:, path:, metadata:, library: false)
+        attr_accessor :content_view
+        def plan(organization:, path:, metadata:)
           fail _("Content view not provided in the metadata") if metadata[:content_view].blank?
+
           content_view = ::Katello::Pulp3::ContentViewVersion::Import.
                                 find_or_create_import_view(organization: organization,
-                                                           metadata: metadata[:content_view],
-                                                           library: library)
+                                                           metadata: metadata[:content_view])
           content_view.check_ready_to_import!
+          self.content_view = content_view
           ::Katello::Pulp3::ContentViewVersion::Import.check!(content_view: content_view,
                                                               metadata: metadata,
                                                               path: path,

@@ -9,6 +9,7 @@ attributes :latest_version, :latest_version_id
 attributes :auto_publish
 attributes :solve_dependencies
 attributes :import_only
+attributes :generated_for
 attributes :related_cv_count
 attributes :related_composite_cvs
 

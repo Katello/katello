@@ -131,6 +131,7 @@ const ContentViewTable = () => {
     if (rowData.parent !== undefined || rowData.compoundParent || rowData.noactions) return null;
     const publishAction = {
       title: __('Publish'),
+      isDisabled: rowData.generatedFor !== 'none',
       onClick: (_event, _rowId, rowInfo) => {
         openPublishModal(rowInfo);
       },

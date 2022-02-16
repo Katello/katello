@@ -399,15 +399,15 @@ module Katello
     def organization_permissions
       @plugin.permission :import_content,
                          {
-                           'katello/api/v2/content_imports' => [:library, :version, :index]
+                           'katello/api/v2/content_imports' => [:library, :version, :index, :repository]
                          },
                          :resource_type => 'Organization'
 
       @plugin.permission :export_content,
                          {
-                           'katello/api/v2/content_view_versions' => [:export],
-                           'katello/api/v2/content_exports' => [:library, :version, :index],
-                           'katello/api/v2/content_export_incrementals' => [:library, :version]
+                           'katello/api/v2/content_view_versions' => [:export, :repository],
+                           'katello/api/v2/content_exports' => [:library, :version, :index, :repository],
+                           'katello/api/v2/content_export_incrementals' => [:library, :version, :repository]
                          },
                          :resource_type => 'Organization'
     end

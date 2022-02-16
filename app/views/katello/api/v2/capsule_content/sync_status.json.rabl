@@ -32,7 +32,7 @@ child @lifecycle_environments => :lifecycle_environments do
     end
 
     node :content_views do |env|
-      env.content_views.map do |content_view|
+      env.content_views.not_generated_for_repository.map do |content_view|
         attributes = {
           :id => content_view.id,
           :label => content_view.label,

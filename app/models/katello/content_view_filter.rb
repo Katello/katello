@@ -162,6 +162,10 @@ module Katello
       if self.content_view.import_only?
         errors.add(:base, _("cannot add filter to import-only view"))
       end
+
+      if self.content_view.generated?
+        errors.add(:base, _("cannot add filter to generated content views"))
+      end
     end
 
     def validate_filter_repos(errors, content_view)

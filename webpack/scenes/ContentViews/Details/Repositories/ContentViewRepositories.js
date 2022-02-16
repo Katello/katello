@@ -1,41 +1,65 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
-import { lowerCase, upperFirst } from 'lodash';
-import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+
+import { translate as __ } from 'foremanReact/common/I18n';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { STATUS } from 'foremanReact/constants';
 import {
-  Bullseye,
-  Split,
-  SplitItem,
-  Button,
+  lowerCase,
+  upperFirst,
+} from 'lodash';
+import PropTypes from 'prop-types';
+import {
+  shallowEqual,
+  useDispatch,
+  useSelector,
+} from 'react-redux';
+import useDeepCompareEffect from 'use-deep-compare-effect';
+
+import {
   ActionList,
   ActionListItem,
+  Bullseye,
+  Button,
   Dropdown,
   DropdownItem,
   KebabToggle,
+  Split,
+  SplitItem,
 } from '@patternfly/react-core';
-import { TableVariant, fitContent } from '@patternfly/react-table';
-import { STATUS } from 'foremanReact/constants';
-import { translate as __ } from 'foremanReact/common/I18n';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
-import PropTypes from 'prop-types';
+import {
+  fitContent,
+  TableVariant,
+} from '@patternfly/react-table';
 
-import TableWrapper from '../../../../components/Table/TableWrapper';
+import AddedStatusLabel from '../../../../components/AddedStatusLabel';
+import SelectableDropdown from '../../../../components/SelectableDropdown';
 import onSelect from '../../../../components/Table/helpers';
-import { getContentViewRepositories, getRepositoryTypes, updateContentView } from '../ContentViewDetailActions';
+import TableWrapper from '../../../../components/Table/TableWrapper';
+import {
+  ADDED,
+  ALL_STATUSES,
+  NOT_ADDED,
+} from '../../ContentViewsConstants';
+import { hasPermission } from '../../helpers';
+import {
+  getContentViewRepositories,
+  getRepositoryTypes,
+  updateContentView,
+} from '../ContentViewDetailActions';
 import {
   selectCVRepos,
-  selectCVReposStatus,
   selectCVReposError,
+  selectCVReposStatus,
   selectRepoTypes,
   selectRepoTypesStatus,
 } from '../ContentViewDetailSelectors';
-import { ADDED, NOT_ADDED, ALL_STATUSES } from '../../ContentViewsConstants';
 import ContentCounts from './ContentCounts';
 import LastSync from './LastSync';
 import RepoIcon from './RepoIcon';
-import AddedStatusLabel from '../../../../components/AddedStatusLabel';
-import SelectableDropdown from '../../../../components/SelectableDropdown';
-import { hasPermission } from '../../helpers';
 
 const allRepositories = 'All repositories';
 
@@ -54,8 +78,8 @@ const ContentViewRepositories = ({ cvId, details }) => {
   const error = useSelector(state => selectCVReposError(state, cvId), shallowEqual);
   const repoTypesResponse = useSelector(state => selectRepoTypes(state), shallowEqual);
   const repoTypesStatus = useSelector(state => selectRepoTypesStatus(state), shallowEqual);
-  const { permissions } = details;
-
+  const { permissions, generated_for: generatedFor, import_only: importOnly } = details;
+  const generatedContentView = generatedFor !== 'none';
   const [rows, setRows] = useState([]);
   const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
   const [searchQuery, updateSearchQuery] = useState('');
@@ -90,7 +114,6 @@ const ContentViewRepositories = ({ cvId, details }) => {
         last_sync_words: lastSyncWords,
         last_sync: lastSync,
       } = repo;
-
       const cells = [
         { title: <Bullseye><RepoIcon type={contentType} /></Bullseye> },
         { title: <a href={urlBuilder(`products/${productId}/repositories`, '', id)}>{name}</a> },
@@ -200,14 +223,14 @@ const ContentViewRepositories = ({ cvId, details }) => {
     return [
       {
         title: 'Add',
-        isDisabled: added,
+        isDisabled: importOnly || generatedContentView || added,
         onClick: (_event, _rowId, rowInfo) => {
           onAdd(rowInfo.repoId);
         },
       },
       {
         title: 'Remove',
-        isDisabled: !added,
+        isDisabled: importOnly || generatedContentView || !added,
         onClick: (_event, _rowId, rowInfo) => {
           onRemove(rowInfo.repoId);
         },
@@ -252,7 +275,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
         defaultFilters,
       }}
       actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
-      onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
+      onSelect={hasPermission(permissions, 'edit_content_views') && !(importOnly || generatedContentView) ? onSelect(rows, setRows) : null}
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint="/repositories/auto_complete_search"
@@ -284,7 +307,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
             <SplitItem>
               <ActionList>
                 <ActionListItem>
-                  <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="secondary" aria-label="add_repositories">
+                  <Button onClick={addBulk} isDisabled={!hasNotAddedSelected || importOnly || generatedContentView} variant="secondary" aria-label="add_repositories">
                     {__('Add repositories')}
                   </Button>
                 </ActionListItem>
@@ -310,6 +333,8 @@ ContentViewRepositories.propTypes = {
   details: PropTypes.shape({
     repository_ids: PropTypes.arrayOf(PropTypes.number),
     permissions: PropTypes.shape({}),
+    import_only: PropTypes.bool,
+    generated_for: PropTypes.string,
   }).isRequired,
 };
 

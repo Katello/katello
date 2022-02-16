@@ -52,8 +52,10 @@ module Katello
 
     def self.generate_audit_comment(user:, content_view_version:, from_version: nil, metadata:)
       export_type = export_type_from_metadata(metadata)
-      if content_view_version.content_view.library_export?
+      if content_view_version.content_view.generated_for_library?
         export_descriptor = "library export"
+      elsif content_view_version.content_view.generated_for_repository?
+        export_descriptor = "repository export"
       else
         export_descriptor = "export of content view '#{content_view_version.content_view.name}' version #{content_view_version.version}"
         export_descriptor += " from #{from_version.name}" if from_version

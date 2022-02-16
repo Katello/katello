@@ -20,7 +20,11 @@ module Katello
             data = export.generate_metadata
             assert_equal data[:content_view_version][:major], version.major
             assert_equal data[:content_view_version][:minor], version.minor
-            assert_equal data[:content_view], version.content_view.slice(:name, :label, :description)
+            assert_equal data[:content_view],
+                         version.content_view.slice(:name,
+                                                    :label,
+                                                    :description,
+                                                    :generated_for)
 
             version_repositories = version.archived_repos.yum_type
             data[:repositories].each do |name, repo_info|

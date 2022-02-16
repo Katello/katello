@@ -24,8 +24,10 @@ module Katello
       @cv_repo = katello_repositories(:fedora_17_dev_library_view)
       ::Katello::Pulp3::RepositoryReference.new(repository_href: "test_repo_2/", root_repository_id: @cv_repo.root_id, content_view_id: @cv_repo.content_view.id).save
       @primary = ::SmartProxy.pulp_primary!
-
-      Katello::Repository.where("id not in (#{@library_repo.id},#{@cv_repo.id})").destroy_all
+      Katello::Repository.where("id not in (#{@library_repo.id},#{@cv_repo.id})").each do |repo|
+        repo.library_instances_inverse.destroy_all
+        repo.destroy!
+      end
       ENV['COMMIT'] = nil
       ENV['CONTENT_VIEW'] = nil
       ENV['LIFECYCLE_ENVIRONMENT'] = nil
