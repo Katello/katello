@@ -11,7 +11,7 @@ module Actions
           if repositories.empty?
             fail _("Only On Demand repositories may have space reclaimed.")
           end
-          repository_hrefs = ::Katello::Pulp3::RepositoryReference.default_cv_repository_hrefs(repositories, Organization.current)
+          repository_hrefs = ::Katello::Pulp3::RepositoryReference.default_cv_repository_hrefs(repositories, Organization.current || repositories.first.organization)
           plan_self(repository_hrefs: repository_hrefs, smart_proxy_id: smart_proxy.id)
         end
 
