@@ -32,9 +32,8 @@ module Katello
     scoped_search :on => :id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :import_type, :rename => :type, :complete_value => ContentViewVersionExportHistory::EXPORT_TYPES
 
-    def self.generate_audit_comment(user:, path:, content_view_name:)
-      truncate_audit_comment(_("Content imported from %{path} into content view '%{name}' by %{user}") % {
-        path: path,
+    def self.generate_audit_comment(user:, content_view_name:)
+      truncate_audit_comment(_("Content imported by %{user} into content view '%{name}'") % {
         user: user.to_label,
         name: content_view_name
       })
