@@ -36,7 +36,7 @@ module ::Actions::Katello::CdnConfiguration
         ssl_ca_credential_id: @credential.id,
         username: 'test_username',
         password: 'test_password',
-        upstream_organization_label: 'upstream_org'
+        upstream_organization_label: @organization.label
       }
 
       certs = keypair

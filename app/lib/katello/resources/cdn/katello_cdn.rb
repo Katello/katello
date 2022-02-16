@@ -95,7 +95,9 @@ module Katello
 
         def find_organization(label)
           response = get("/api/v2/organizations?search=#{CGI.escape("label = #{label}")}")
-          JSON.parse(response)['results'].first
+          JSON.parse(response)['results'].first.tap do |org|
+            fail "Specified organization was not found: #{label}" if org.nil?
+          end
         rescue => e
           Rails.logger.error("Couldn't load upstream organization with label=#{label} error=#{e.message}")
           raise e
