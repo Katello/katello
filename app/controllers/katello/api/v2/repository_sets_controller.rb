@@ -35,9 +35,20 @@ module Katello
     add_scoped_search_description_for(Katello::ProductContent)
     def index
       collection = scoped_search(index_relation, :name, :asc, :resource_class => Katello::ProductContent)
-      collection[:results] = ProductContentFinder.wrap_with_overrides(
-          product_contents: collection[:results],
-          overrides: @consumable&.content_overrides)
+      pcf = ProductContentFinder.wrap_with_overrides(
+        product_contents: collection[:results],
+        overrides: @consumable&.content_overrides)
+      # collection[:results] = ProductContentFinder.wrap_with_overrides(
+      #     product_contents: collection[:results],
+      #     overrides: @consumable&.content_overrides)
+      collection[:results] = if params[:sort_by] == 'enabled_by_default' && params[:sort_order] == 'desc'
+                               pcf.sort { |pca, pcb| sort_score(pca) <=> sort_score(pcb) }.reverse!
+                             elsif params[:sort_by] == 'enabled_by_default'
+                               pcf.sort { |pca, pcb| sort_score(pca) <=> sort_score(pcb) }
+                             else
+                               pcf
+                             end
+      Rails.logger.debug collection[:results].inspect
       respond(:collection => collection)
     end
 
@@ -215,6 +226,22 @@ module Katello
       if @organization.cdn_configuration.airgapped?
         respond_for_index(:collection => { :error => _("Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).") }, :status => :forbidden)
       end
+    end
+
+    def sort_score(pc) # sort order for enabled
+      score = if pc.enabled_content_override&.value == "1"
+                4 # overridden to enabled
+              elsif pc.enabled_content_override.nil? && pc.enabled
+                3 # enabled
+              elsif pc.enabled_content_override.nil? && !pc.enabled
+                2 # disabled
+              elsif pc.enabled_content_override&.value == "0"
+                1 # overridden to disabled
+              else
+                0
+              end
+      Rails.logger.debug [pc.product_name, pc.enabled_content_override, "Id: #{pc.id}", "Score: #{score}"]
+      score
     end
   end
 end
