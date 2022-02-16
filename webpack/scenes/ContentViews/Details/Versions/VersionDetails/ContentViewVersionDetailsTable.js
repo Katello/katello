@@ -1,21 +1,31 @@
 /* eslint-disable react/no-array-index-key */
-import React, { useState, useEffect } from 'react';
-import { head } from 'lodash';
-import PropTypes from 'prop-types';
-import { useSelector, shallowEqual } from 'react-redux';
-import { Grid, Select, SelectOption, SelectVariant } from '@patternfly/react-core';
+import React, { useState } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import PropTypes from 'prop-types';
+import {
+  shallowEqual,
+  useSelector,
+} from 'react-redux';
+import {
+  Grid,
+  Select,
+  SelectOption,
+  SelectVariant,
+} from '@patternfly/react-core';
+import {
+  TableVariant,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from '@patternfly/react-table';
+import { useUrlParams } from '../../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { TableType } from './ContentViewVersionDetailConfig';
 
-const ContentViewVersionDetailsTable = ({ tableConfig, repositories }) => {
-  const ALL_REPOSITORIES = __('All Repositories');
-  const [searchQuery, updateSearchQuery] = useState('');
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(0);
-  const [selectedList, setSelectedList] = useState([]);
-  const {
+const ContentViewVersionDetailsTable = ({
+  tableConfig: {
     name,
     repoType,
     responseSelector,
@@ -24,33 +34,35 @@ const ContentViewVersionDetailsTable = ({ tableConfig, repositories }) => {
     fetchItems,
     columnHeaders,
     disableSearch,
-  } = tableConfig;
+  }, repositories,
+}) => {
+  const ALL_REPOSITORIES = __('All Repositories');
+  const [searchQuery, updateSearchQuery] = useState('');
+  const [open, setOpen] = useState(false);
+  const { repository_id: urlParamId } = useUrlParams();
+
+  const relevantRepositories = repositories
+    .filter(({ content_type: contentType }) => repoType === contentType);
+
+  const selectedList = relevantRepositories.length > 1 ? [
+    {
+      id: undefined,
+      name: ALL_REPOSITORIES,
+    },
+    ...relevantRepositories] :
+    relevantRepositories;
+
+  const presetIndex = selectedList
+    .findIndex(({ library_instance_id: id }) =>
+      id === Number(urlParamId));
+  const [selected, setSelected] = useState(presetIndex ?? 0);
 
   const response = useSelector(responseSelector, shallowEqual);
   const { results, ...metadata } = response;
   const status = useSelector(statusSelector, shallowEqual);
 
-  useEffect(() => {
-    const relevantRepositories = repositories
-      .filter(({ content_type: contentType }) => repoType === contentType);
-
-    switch (relevantRepositories.length) {
-      case 1:
-        setSelected(head(relevantRepositories));
-        setSelectedList([...relevantRepositories]);
-        break;
-      default:
-        setSelected(0);
-        setSelectedList([{
-          id: undefined,
-          name: ALL_REPOSITORIES,
-        }, ...relevantRepositories]);
-        break;
-    }
-  }, [repositories, ALL_REPOSITORIES, repoType]);
-
   const fetchItemsWithRepositoryId = (params) => {
-    if (selectedList.length === 1) return fetchItems(params);
+    if (selectedList?.length === 1) return fetchItems(params);
     return fetchItems({ repository_id: selectedList[selected]?.id, ...params });
   };
 
