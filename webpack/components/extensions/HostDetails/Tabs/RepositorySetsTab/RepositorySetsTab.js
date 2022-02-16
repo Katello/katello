@@ -136,7 +136,7 @@ const RepositorySetsTab = () => {
     [columnHeaders[0]]: 'name',
     [columnHeaders[1]]: 'product',
     [columnHeaders[2]]: 'path',
-    [columnHeaders[3]]: 'enabled',
+    [columnHeaders[3]]: 'enabled_by_default',
   };
 
   const {
@@ -355,7 +355,7 @@ const RepositorySetsTab = () => {
             actionButtons,
           }
           }
-          activeFilters={[toggleGroupState, activeSortColumn]}
+          activeFilters={[toggleGroupState]}
           defaultFilters={[defaultToggleGroupState]}
           additionalListeners={[hostId, toggleGroupState, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
@@ -372,7 +372,7 @@ const RepositorySetsTab = () => {
               <Th key="repo" sort={pfSortParams('Repository')}>{__('Repository')}</Th>
               <Th key="product">{__('Product')}</Th>
               <Th key="path" sort={pfSortParams('Repository path')}>{__('Repository path')}</Th>
-              <Th key="status">{__('Status')}</Th>
+              <Th key="status" sort={pfSortParams('Status')}>{__('Status')}</Th>
               <Th />
               <Th key="action-menu" />
             </Tr>
