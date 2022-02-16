@@ -259,3 +259,38 @@ export const useUrlParams = () => {
     ...urlParams,
   };
 };
+
+export const useTableSort = ({
+  allColumns,
+  columnsToSortParams,
+  initialSortColumnName = allColumns[0],
+}) => {
+  const [activeSortColumn, setActiveSortColumn] = useState(initialSortColumnName);
+  const [activeSortDirection, setActiveSortDirection] = useState('asc');
+
+  const onSort = (_event, index, direction) => {
+    console.log({ index, direction });
+    setActiveSortColumn(allColumns?.[index]);
+    setActiveSortDirection(direction);
+  };
+
+  const sortParams = (columnName, newSortColIndex) => ({
+    columnIndex: newSortColIndex ?? allColumns?.indexOf(columnName),
+    sortBy: {
+      defaultDirection: 'asc',
+      direction: activeSortDirection,
+      index: allColumns?.indexOf(activeSortColumn),
+    },
+    onSort,
+  });
+
+  return {
+    pfSortParams: sortParams,
+    apiSortParams: {
+      sort_by: columnsToSortParams[activeSortColumn],
+      sort_order: activeSortDirection,
+    },
+    activeSortColumn,
+    activeSortDirection,
+  };
+};

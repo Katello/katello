@@ -44,6 +44,7 @@ import {
 
 import {
   useBulkSelect,
+  useTableSort,
   useUrlParams,
 } from '../../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
@@ -130,18 +131,21 @@ const RepositorySetsTab = () => {
     __('Repository path'),
     __('Status'),
   ], []);
-  const [activeSortColumn, setActiveSortColumn] = useState(columnHeaders[0]);
-  const [activeSortDirection, setActiveSortDirection] = useState('asc');
 
-  const getSortBy = useCallback(() => {
-    const COLUMNS_TO_SORT_PARAMS = {
-      [columnHeaders[0]]: 'name',
-      [columnHeaders[1]]: 'product',
-      [columnHeaders[2]]: 'path',
-      [columnHeaders[3]]: 'enabled',
-    };
-    return COLUMNS_TO_SORT_PARAMS[activeSortColumn];
-  }, [activeSortColumn, columnHeaders]);
+  const COLUMNS_TO_SORT_PARAMS = {
+    [columnHeaders[0]]: 'name',
+    [columnHeaders[1]]: 'product',
+    [columnHeaders[2]]: 'path',
+    [columnHeaders[3]]: 'enabled',
+  };
+
+  const {
+    pfSortParams, apiSortParams,
+    activeSortColumn, activeSortDirection,
+  } = useTableSort({
+    allColumns: columnHeaders,
+    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
+  });
 
   const fetchItems = useCallback(
     params => (hostId ?
@@ -149,12 +153,11 @@ const RepositorySetsTab = () => {
         content_access_mode_env: toggleGroupState === limitToEnvironment,
         content_access_mode_all: simpleContentAccess,
         host_id: hostId,
-        sort_by: getSortBy(),
-        sort_order: activeSortDirection,
+        ...apiSortParams,
         ...params,
       }) : hostIdNotReady),
     [hostId, toggleGroupState, limitToEnvironment,
-      simpleContentAccess, getSortBy, activeSortDirection],
+      simpleContentAccess, apiSortParams],
   );
 
   const response = useSelector(state => selectAPIResponse(state, REPOSITORY_SETS_KEY));
@@ -302,23 +305,6 @@ const RepositorySetsTab = () => {
     alertText = nonScaAlert;
   }
 
-  const onSort = (_event, index, direction) => {
-    console.log({ index, direction });
-    setActiveSortColumn(columnHeaders[index]);
-    setActiveSortDirection(direction);
-  };
-
-  const sortParams = (columnName, colIndex) => ({
-    columnIndex: colIndex ?? columnHeaders.indexOf(columnName),
-    sortBy: {
-      defaultDirection: 'asc',
-      direction: activeSortDirection,
-      index: columnHeaders.indexOf(activeSortColumn),
-    },
-    onSort,
-    isFavorites: false,
-  });
-
   return (
     <div>
       <div id="repo-sets-tab">
@@ -369,7 +355,7 @@ const RepositorySetsTab = () => {
             actionButtons,
           }
           }
-          activeFilters={[toggleGroupState]}
+          activeFilters={[toggleGroupState, activeSortColumn]}
           defaultFilters={[defaultToggleGroupState]}
           additionalListeners={[hostId, toggleGroupState, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
@@ -383,9 +369,9 @@ const RepositorySetsTab = () => {
           <Thead>
             <Tr>
               <Th key="select-all" />
-              <Th key="repo" sort={sortParams('Repository', 0)}>{__('Repository')}</Th>
+              <Th key="repo" sort={pfSortParams('Repository')}>{__('Repository')}</Th>
               <Th key="product">{__('Product')}</Th>
-              <Th key="path" sort={sortParams('Repository path', 2)}>{__('Repository path')}</Th>
+              <Th key="path" sort={pfSortParams('Repository path')}>{__('Repository path')}</Th>
               <Th key="status">{__('Status')}</Th>
               <Th />
               <Th key="action-menu" />
