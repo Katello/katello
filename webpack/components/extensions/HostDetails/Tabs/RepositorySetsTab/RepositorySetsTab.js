@@ -2,6 +2,7 @@ import React, {
   useCallback,
   useEffect,
   useState,
+  useMemo,
 } from 'react';
 
 import { propsToCamelCase } from 'foremanReact/common/helpers';
@@ -123,21 +124,37 @@ const RepositorySetsTab = () => {
   const emptyContentBody = __('Repository sets will appear here when available.');
   const emptySearchTitle = __('No matching repository sets found');
   const emptySearchBody = __('Try changing your search query.');
-  const columnHeaders = [
+  const columnHeaders = useMemo(() => [
     __('Repository'),
     __('Product'),
     __('Repository path'),
     __('Status'),
-  ];
+  ], []);
+  const [activeSortColumn, setActiveSortColumn] = useState(columnHeaders[0]);
+  const [activeSortDirection, setActiveSortDirection] = useState('asc');
+
+  const getSortBy = useCallback(() => {
+    const COLUMNS_TO_SORT_PARAMS = {
+      [columnHeaders[0]]: 'name',
+      [columnHeaders[1]]: 'product',
+      [columnHeaders[2]]: 'path',
+      [columnHeaders[3]]: 'enabled',
+    };
+    return COLUMNS_TO_SORT_PARAMS[activeSortColumn];
+  }, [activeSortColumn, columnHeaders]);
+
   const fetchItems = useCallback(
     params => (hostId ?
       getHostRepositorySets({
         content_access_mode_env: toggleGroupState === limitToEnvironment,
         content_access_mode_all: simpleContentAccess,
         host_id: hostId,
+        sort_by: getSortBy(),
+        sort_order: activeSortDirection,
         ...params,
       }) : hostIdNotReady),
-    [hostId, toggleGroupState, limitToEnvironment, simpleContentAccess],
+    [hostId, toggleGroupState, limitToEnvironment,
+      simpleContentAccess, getSortBy, activeSortDirection],
   );
 
   const response = useSelector(state => selectAPIResponse(state, REPOSITORY_SETS_KEY));
@@ -285,6 +302,23 @@ const RepositorySetsTab = () => {
     alertText = nonScaAlert;
   }
 
+  const onSort = (_event, index, direction) => {
+    console.log({ index, direction });
+    setActiveSortColumn(columnHeaders[index]);
+    setActiveSortDirection(direction);
+  };
+
+  const sortParams = (columnName, colIndex) => ({
+    columnIndex: colIndex ?? columnHeaders.indexOf(columnName),
+    sortBy: {
+      defaultDirection: 'asc',
+      direction: activeSortDirection,
+      index: columnHeaders.indexOf(activeSortColumn),
+    },
+    onSort,
+    isFavorites: false,
+  });
+
   return (
     <div>
       <div id="repo-sets-tab">
@@ -337,7 +371,7 @@ const RepositorySetsTab = () => {
           }
           activeFilters={[toggleGroupState]}
           defaultFilters={[defaultToggleGroupState]}
-          additionalListeners={[hostId, toggleGroupState]}
+          additionalListeners={[hostId, toggleGroupState, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
           autocompleteEndpoint="/repository_sets/auto_complete_search"
           bookmarkController="katello_product_contents" // Katello::ProductContent.table_name
@@ -349,8 +383,10 @@ const RepositorySetsTab = () => {
           <Thead>
             <Tr>
               <Th key="select-all" />
-              {columnHeaders.map(col =>
-                <Th key={col}>{col}</Th>)}
+              <Th key="repo" sort={sortParams('Repository', 0)}>{__('Repository')}</Th>
+              <Th key="product">{__('Product')}</Th>
+              <Th key="path" sort={sortParams('Repository path', 2)}>{__('Repository path')}</Th>
+              <Th key="status">{__('Status')}</Th>
               <Th />
               <Th key="action-menu" />
             </Tr>
