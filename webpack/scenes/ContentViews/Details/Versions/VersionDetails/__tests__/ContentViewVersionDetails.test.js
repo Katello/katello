@@ -176,7 +176,7 @@ const testConfig = [
       last(ContentViewVersionAnsibleCollectionsData.results).checksum],
   },
   {
-    name: 'Docker Tags',
+    name: 'Container tags',
     countKey: 'docker_tag_count',
     autoCompleteUrl: '/docker_tags/auto_complete_search',
     dataUrl: api.getApiUrl('/docker_tags'),
