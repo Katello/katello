@@ -1,4 +1,5 @@
 import React from 'react';
+import { translate as __ } from 'foremanReact/common/I18n';
 import {
   Table,
   TableHeader,
@@ -15,8 +16,9 @@ import Loading from '../../components/Loading';
 
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
-  emptySearchTitle, emptySearchBody, searchIsActive, activeFilters,
-  defaultFilters, actionButtons, rowsCount, children, ...extraTableProps
+  emptySearchTitle, emptySearchBody, errorSearchTitle, errorSearchBody,
+  searchIsActive, activeFilters, defaultFilters, actionButtons, rowsCount,
+  children, ...extraTableProps
 }) => {
   const tableHasNoRows = () => {
     if (children) return rowsCount === 0;
@@ -28,6 +30,13 @@ const MainTable = ({
   if (status === STATUS.PENDING) return (<Loading />);
   // Can we display the error message?
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
+  if (status === STATUS.RESOLVED && !!errorSearchBody) {
+    return (<EmptyStateMessage
+      title={errorSearchTitle}
+      body={errorSearchBody}
+      search
+    />);
+  }
   if (status === STATUS.RESOLVED && isFiltering && tableHasNoRows()) {
     return (<EmptyStateMessage
       title={emptySearchTitle}
@@ -36,7 +45,7 @@ const MainTable = ({
     />);
   }
   if (status === STATUS.RESOLVED && tableHasNoRows()) {
-    return (<EmptyStateMessage title={emptyContentTitle} body={emptyContentBody} />);
+    return (<EmptyStateMessage title={emptyContentTitle} body={emptyContentBody} search />);
   }
 
   const tableProps = { cells, rows, ...extraTableProps };
@@ -77,6 +86,8 @@ MainTable.propTypes = {
   emptyContentBody: PropTypes.string.isRequired,
   emptySearchTitle: PropTypes.string.isRequired,
   emptySearchBody: PropTypes.string.isRequired,
+  errorSearchTitle: PropTypes.string,
+  errorSearchBody: PropTypes.string,
   searchIsActive: PropTypes.bool,
   activeFilters: PropTypes.arrayOf(PropTypes.oneOfType([
     PropTypes.string,
@@ -99,6 +110,8 @@ MainTable.defaultProps = {
   searchIsActive: false,
   activeFilters: [],
   defaultFilters: [],
+  errorSearchTitle: __('Problem searching'),
+  errorSearchBody: '',
   actionButtons: false,
   children: null,
   cells: undefined,

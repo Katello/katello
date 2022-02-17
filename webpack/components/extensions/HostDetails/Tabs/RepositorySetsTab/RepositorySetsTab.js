@@ -125,6 +125,7 @@ const RepositorySetsTab = () => {
   const emptyContentBody = __('Repository sets will appear here when available.');
   const emptySearchTitle = __('No matching repository sets found');
   const emptySearchBody = __('Try changing your search query.');
+  const errorSearchTitle = __('Problem searching repository sets');
   const columnHeaders = useMemo(() => [
     __('Repository'),
     __('Product'),
@@ -161,7 +162,7 @@ const RepositorySetsTab = () => {
   );
 
   const response = useSelector(state => selectAPIResponse(state, REPOSITORY_SETS_KEY));
-  const { results, ...metadata } = response;
+  const { results, error: searchError, ...metadata } = response;
   const status = useSelector(state => selectRepositorySetsStatus(state));
   const repoSetSearchQuery = label => `cp_content_id = ${label}`;
   const {
@@ -304,7 +305,6 @@ const RepositorySetsTab = () => {
   } else {
     alertText = nonScaAlert;
   }
-
   return (
     <div>
       <div id="repo-sets-tab">
@@ -344,8 +344,6 @@ const RepositorySetsTab = () => {
             metadata,
             emptyContentTitle,
             emptyContentBody,
-            emptySearchTitle,
-            emptySearchBody,
             status,
             searchQuery,
             updateSearchQuery,
@@ -353,8 +351,12 @@ const RepositorySetsTab = () => {
             selectNone,
             toggleGroup,
             actionButtons,
+            emptySearchTitle,
+            emptySearchBody,
           }
           }
+          errorSearchTitle={errorSearchTitle}
+          errorSearchBody={searchError}
           activeFilters={[toggleGroupState]}
           defaultFilters={[defaultToggleGroupState]}
           additionalListeners={[hostId, toggleGroupState, activeSortColumn, activeSortDirection]}

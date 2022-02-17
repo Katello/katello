@@ -269,7 +269,6 @@ export const useTableSort = ({
   const [activeSortDirection, setActiveSortDirection] = useState('asc');
 
   const onSort = (_event, index, direction) => {
-    console.log({ index, direction });
     setActiveSortColumn(allColumns?.[index]);
     setActiveSortDirection(direction);
   };
