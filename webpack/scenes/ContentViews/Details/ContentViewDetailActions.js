@@ -47,6 +47,7 @@ import {
   DEB_PACKAGES_CONTENT,
   DOCKER_TAGS_CONTENT,
   generatedContentKey,
+  STATUS_TRANSLATIONS_ENUM,
 } from '../ContentViewsConstants';
 import api, { foremanApi, orgId } from '../../../services/api';
 import { getResponseErrorMsgs } from '../../../utils/helpers';
@@ -372,7 +373,7 @@ export const getCVFilterRules = (filterId, params) => get({
 });
 
 export const getContentViewComponents = (cvId, params, statusSelected) => {
-  const apiParams = { ...params, status: statusSelected };
+  const apiParams = { ...params, status: STATUS_TRANSLATIONS_ENUM[statusSelected] };
   const apiUrl = `/content_views/${cvId}/content_view_components/show_all`;
   return get({
     key: cvDetailsComponentKey(cvId),

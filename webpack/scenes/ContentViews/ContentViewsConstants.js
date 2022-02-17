@@ -56,9 +56,15 @@ export const addComponentSuccessMessage = component => (component ? __('Updated 
 
 
 // Repo added to content view status display and key
-export const ADDED = 'Added';
-export const NOT_ADDED = 'Not added';
-export const ALL_STATUSES = 'All';
+export const ADDED = __('Added');
+export const NOT_ADDED = __('Not added');
+export const ALL_STATUSES = __('All');
+
+export const STATUS_TRANSLATIONS_ENUM = {
+  [ADDED]: 'Added',
+  [NOT_ADDED]: 'Not added',
+  [ALL_STATUSES]: 'All',
+};
 
 export const REPOSITORY_TYPES = 'REPOSITORY_TYPES';
 export const FILTER_TYPES = ['rpm', 'package_group', 'erratum_date', 'erratum_id', 'docker', 'modulemd'];
