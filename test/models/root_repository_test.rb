@@ -55,6 +55,28 @@ module Katello
       ]
     end
 
+    def test_invalid_retain_package_version_counts
+      @root.content_type = 'yum'
+      @root.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
+      @root.retain_package_versions_count = -2
+      assert_not_valid @root
+      assert_equal @root.errors[:retain_package_versions_count], ["must not be a negative value."]
+    end
+
+    def test_valid_retain_package_version_counts
+      @root.content_type = 'yum'
+      @root.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
+      @root.retain_package_versions_count = 2
+      assert_valid @root
+    end
+
+    def test_non_yum_retain_package_version_counts
+      @root.content_type = 'docker'
+      @root.retain_package_versions_count = 2
+      assert_not_valid @root
+      assert_equal @root.errors[:retain_package_versions_count], ["is only allowed for Yum repositories."]
+    end
+
     def test_invalid_content_type_with_os_versions
       @root.content_type = 'docker'
       @root.os_versions = ['rhel-7']
