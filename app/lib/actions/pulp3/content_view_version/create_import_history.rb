@@ -18,8 +18,7 @@ module Actions
             content_view_version_id: input[:content_view_version_id],
             path: input[:path],
             metadata: input[:metadata],
-            audit_comment: ::Katello::ContentViewVersionImportHistory.generate_audit_comment(path: input[:path],
-                                                                                             user: User.current,
+            audit_comment: ::Katello::ContentViewVersionImportHistory.generate_audit_comment(user: User.current,
                                                                                              content_view_name: input[:content_view_name])
           )
           output[:import_history_id] = history.id
