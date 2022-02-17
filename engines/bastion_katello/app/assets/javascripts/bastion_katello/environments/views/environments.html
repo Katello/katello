@@ -21,28 +21,28 @@
   <section class="row">
     <div class="col-sm-12">
       <div ng-hide="denied('view_lifecycle_environments', library)">
-        <table class="table table-bordered info-blocks">
+        <table class="table table-bordered info-blocks" ng-hide="loading">
           <tbody>
             <tr>
               <td class="info-block-head"><a ui-sref="environment.details({environmentId: library.id})" translate>Library</a></td>
               <td class="info-block" translate>Content Views <div>{{ library.counts.content_views || 0 }}</div></td>
               <td class="info-block" translate>Products <div>{{ library.counts.products || 0 }}</div></td>
-              <td class="info-block" ng-hide="library.counts.yum_repositories == 0" translate>
+              <td class="info-block" ng-show="library.counts.yum_repositories > 0" translate>
                 Yum Repositories <div>{{ library.counts.yum_repositories || 0 }}</div>
               </td>
-              <td class="info-block" ng-hide="library.counts.ostree_repositories == 0" translate>
+              <td class="info-block" ng-show="library.counts.ostree_repositories > 0" translate>
                 OSTree Repositories <div>{{ library.counts.ostree_repositories || 0 }}</div>
               </td>
-              <td class="info-block" ng-hide="library.counts.docker_repositories == 0" translate>
+              <td class="info-block" ng-show="library.counts.docker_repositories > 0" translate>
                 Docker Repositories <div>{{ library.counts.docker_repositories || 0 }}</div>
               </td>
-              <td class="info-block" ng-hide="library.counts.packages == 0" translate>
+              <td class="info-block" ng-show="library.counts.packages > 0" translate>
                 Packages <div>{{ library.counts.packages || 0 }}</div>
               </td>
-              <td class="info-block" ng-hide="library.counts.errata.total == 0" translate>
+              <td class="info-block" ng-show="library.counts.errata.total > 0" translate>
                 Errata <div>{{ library.counts.errata.total || 0 }}</div>
               </td>
-              <td class="info-block" ng-hide="library.counts.module_streams == 0"  translate>
+              <td class="info-block" ng-show="library.counts.module_streams > 0"  translate>
                 Module Streams <div>{{ library.counts.module_streams || 0 }}</div>
               </td>
             </tr>

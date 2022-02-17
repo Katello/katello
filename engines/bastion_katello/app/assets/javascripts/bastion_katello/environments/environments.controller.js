@@ -27,6 +27,7 @@ angular.module('Bastion.environments').controller('EnvironmentsController',
 
             var nutupane = new Nutupane(Environment, params);
             $scope.table = nutupane.table;
+            $scope.loading = true;
 
             PathsService.getActualPaths().then(function (data) {
                 $scope.library = data.library;
