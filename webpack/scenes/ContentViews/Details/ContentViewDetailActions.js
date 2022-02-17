@@ -132,7 +132,7 @@ export const getDockerTags = params => get({
   key: DOCKER_TAGS_CONTENT,
   url: api.getApiUrl('/docker_tags'),
   params,
-  errorToast: error => __(`Something went wrong while getting docker tags! ${getResponseErrorMsgs(error.response)}`),
+  errorToast: error => __(`Something went wrong while getting container tags! ${getResponseErrorMsgs(error.response)}`),
 });
 
 export const getErrata = params => get({

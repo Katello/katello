@@ -284,7 +284,7 @@ export default ({ cvId, versionId }) => [
     ],
   },
   {
-    name: __('Docker Tags'),
+    name: __('Container tags'),
     route: 'dockerTags',
     repoType: 'docker',
     getCountKey: item => item?.docker_tag_count,
