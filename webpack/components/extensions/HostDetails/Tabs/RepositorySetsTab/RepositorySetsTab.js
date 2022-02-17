@@ -379,7 +379,7 @@ const RepositorySetsTab = () => {
               <Th key="action-menu" />
             </Tr>
           </Thead>
-          <>
+          <Tbody>
             {results?.map((repoSet, rowIndex) => {
               const {
                 id,
@@ -392,56 +392,54 @@ const RepositorySetsTab = () => {
               const { isEnabled, isOverridden } =
                 getEnabledValue({ enabled, enabledContentOverride });
               return (
-                <Tbody key={`${id}_${repoPath}`}>
-                  <Tr>
-                    <Td select={{
-                      disable: !isSelectable(id),
-                      isSelected: isSelected(id),
-                      onSelect: (event, selected) => selectOne(selected, id),
-                      rowIndex,
-                      variant: 'checkbox',
+                <Tr key={id}>
+                  <Td select={{
+                    disable: !isSelectable(id),
+                    isSelected: isSelected(id),
+                    onSelect: (event, selected) => selectOne(selected, id),
+                    rowIndex,
+                    variant: 'checkbox',
+                  }}
+                  />
+                  <Td>
+                    <span>{repoName}</span>
+                  </Td>
+                  <Td>
+                    <a href={`/products/${productId}`}>{productName}</a>
+                  </Td>
+                  <Td>
+                    <span>{repoPath}</span>
+                  </Td>
+                  <Td>
+                    <span><EnabledIcon key={`enabled-icon-${id}`} {...{ isEnabled, isOverridden }} /></span>
+                  </Td>
+                  <Td
+                    key={`rowActions-${id}`}
+                    actions={{
+                      items: [
+                        {
+                          title: __('Override to disabled'),
+                          isDisabled: isOverridden && !isEnabled,
+                          onClick: () => disableRepoSet(id),
+                        },
+                        {
+                          title: __('Override to enabled'),
+                          isDisabled: isOverridden && isEnabled,
+                          onClick: () => enableRepoSet(id),
+                        },
+                        {
+                          title: __('Reset to default'),
+                          isDisabled: !isOverridden,
+                          onClick: () => resetToDefaultRepoSet(id),
+                        },
+                      ],
                     }}
-                    />
-                    <Td>
-                      <span>{repoName}</span>
-                    </Td>
-                    <Td>
-                      <a href={`/products/${productId}`}>{productName}</a>
-                    </Td>
-                    <Td>
-                      <span>{repoPath}</span>
-                    </Td>
-                    <Td>
-                      <span><EnabledIcon key={`enabled-icon-${id}`} {...{ isEnabled, isOverridden }} /></span>
-                    </Td>
-                    <Td
-                      key={`rowActions-${id}`}
-                      actions={{
-                        items: [
-                          {
-                            title: __('Override to disabled'),
-                            isDisabled: isOverridden && !isEnabled,
-                            onClick: () => disableRepoSet(id),
-                          },
-                          {
-                            title: __('Override to enabled'),
-                            isDisabled: isOverridden && isEnabled,
-                            onClick: () => enableRepoSet(id),
-                          },
-                          {
-                            title: __('Reset to default'),
-                            isDisabled: !isOverridden,
-                            onClick: () => resetToDefaultRepoSet(id),
-                          },
-                        ],
-                      }}
-                    />
-                  </Tr>
-                </Tbody>
+                  />
+                </Tr>
               );
             })
             }
-          </>
+          </Tbody>
         </TableWrapper>
       </div>
     </div>
