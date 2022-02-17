@@ -1,10 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { camelCase } from 'lodash';
-import { Link } from 'react-router-dom';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
-import ContentConfig from './../../../Content/ContentConfig';
+import { camelCase } from 'lodash';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import ContentConfig from '../../../Content/ContentConfig';
 import InactiveText from '../../components/InactiveText';
 
 const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
@@ -19,19 +19,20 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
 
 
   const contentConfigTypes = ContentConfig.filter(({ names: { singularLabel } }) =>
-    !!cvVersion[`${singularLabel}_count`]).map(({
-    names: {
-      singularLabel, singularLowercase, pluralLowercase, pluralLabel,
-    },
-  }) => {
-    const countParam = `${singularLabel}_count`;
-    const count = cvVersion[countParam];
-    return {
-      pluralLabel,
-      label: count > 1 ? pluralLowercase : singularLowercase,
-      count,
-    };
-  });
+    !!cvVersion[`${singularLabel}_count`])
+    .map(({
+      names: {
+        singularLabel, singularLowercase, pluralLowercase, pluralLabel,
+      },
+    }) => {
+      const countParam = `${singularLabel}_count`;
+      const count = cvVersion[countParam];
+      return {
+        pluralLabel,
+        label: count > 1 ? pluralLowercase : singularLowercase,
+        count,
+      };
+    });
 
   const noCounts =
     !Number(debCount) && !Number(dockerManifestCount) && !Number(dockerTagCount) &&
@@ -61,7 +62,7 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
       {dockerManifestCount > 0 && dockerTagCount > 0 &&
         <>
           <Link to={`/versions/${versionId}/dockerTags`}>
-            {`${dockerTagCount} Docker tags`}
+            {`${dockerTagCount} Container tags`}
           </Link><br />
           <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/dockerTags`, '')}>{`${dockerManifestCount} Container manifests`}</a><br />
         </>
