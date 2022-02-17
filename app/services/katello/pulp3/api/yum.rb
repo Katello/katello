@@ -36,6 +36,10 @@ module Katello
           PulpRpmClient::ContentPackageenvironmentsApi.new(api_client)
         end
 
+        def content_modulemd_defaults_api
+          PulpRpmClient::ContentModulemdDefaultsApi.new(api_client)
+        end
+
         def content_repo_metadata_files_api
           PulpRpmClient::ContentRepoMetadataFilesApi.new(api_client)
         end

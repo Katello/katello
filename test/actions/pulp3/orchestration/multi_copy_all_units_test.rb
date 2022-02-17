@@ -651,6 +651,52 @@ module ::Actions::Pulp3
     end
   end
 
+  class MultiCopyAllUnitYumModlemdDefaultsRepositoryTest < ActiveSupport::TestCase
+    include Katello::Pulp3Support
+    def setup
+      @primary = SmartProxy.pulp_primary
+      @repo = katello_repositories(:fedora_17_x86_64_duplicate)
+      @repo.update!(:environment_id => nil)
+      @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
+      @repo_clone = katello_repositories(:fedora_17_x86_64_dev)
+      @repo_clone.update!(:environment_id => nil)
+      @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
+
+      ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(false)
+
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
+      create_repo(@repo_clone, @primary)
+
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+
+      index_args = {:id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
+      @repo.reload
+    end
+
+    def test_all_modulemd_defaults_are_copied_by_default
+      filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
+
+      @repo_clone_original_version_href = @repo_clone.version_href
+      extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
+
+      @repo_clone.reload
+
+      options = { :repository_version => @repo.version_href }
+      repo_modulemd_defaults_response = @repo.backend_service(@primary).api.content_modulemd_defaults_api.list(options)
+
+      options = { :repository_version => @repo_clone.version_href }
+      repo_clone_modulemd_defaults_response = @repo_clone.backend_service(@primary).api.content_modulemd_defaults_api.list(options)
+
+      refute_empty repo_modulemd_defaults_response.results
+      assert_equal repo_modulemd_defaults_response.results, repo_clone_modulemd_defaults_response.results
+    end
+  end
+
   class MultiCopyAllUnitYumDistributionTreesRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
