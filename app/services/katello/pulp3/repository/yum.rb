@@ -101,16 +101,18 @@ module Katello
               # -> Unless incrementally updating a CV repo that is a soft copy of its library instance.
               # -> I.e. no filters and not an incremental version.
               unless dest_repo_id_map[:base_version]
-                source_repo_for_package_envs = ::Katello::Repository.find(source_repo_ids.first)
-                unless source_repo_for_package_envs.library_instance?
-                  source_repo_for_package_envs = source_repo_for_package_envs.library_instance
+                source_repo_for_content = ::Katello::Repository.find(source_repo_ids.first)
+                unless source_repo_for_content.library_instance?
+                  source_repo_for_content = source_repo_for_content.library_instance
                 end
-                package_env_hrefs = packageenvironments({ :repository_version => source_repo_for_package_envs.version_href }).map(&:pulp_href).sort
+                modulemd_defaults_hrefs = modulemd_defaults({ :repository_version => source_repo_for_content.version_href }).map(&:pulp_href).sort
+                package_env_hrefs = packageenvironments({ :repository_version => source_repo_for_content.version_href }).map(&:pulp_href).sort
                 # Don't perform extra content actions if the repo is a soft copy of its library instance.
                 # Taken care of by the IncrementalUpdate action.
                 unless dest_repo.soft_copy_of_library?
                   tasks << remove_all_content_from_repo(dest_repo_href)
                   tasks << add_content_for_repo(dest_repo_href, package_env_hrefs) unless package_env_hrefs.empty?
+                  tasks << add_content_for_repo(dest_repo_href, modulemd_defaults_hrefs) unless modulemd_defaults_hrefs.empty?
                 end
               end
               source_repo_ids.each do |source_repo_id|
@@ -201,6 +203,7 @@ module Katello
 
           if content_unit_hrefs.sort!.any?
             content_unit_hrefs += packageenvironments({ :repository_version => source_repository.version_href }).map(&:pulp_href).sort
+            content_unit_hrefs += modulemd_defaults({ :repository_version => source_repository.version_href }).map(&:pulp_href).sort
             first_slice = remove_all
             content_unit_hrefs.each_slice(UNIT_LIMIT) do |slice|
               tasks << add_content(slice, first_slice)
@@ -226,6 +229,10 @@ module Katello
 
         def packageenvironments(options = {})
           Katello::Pulp3::Api::Core.fetch_from_list { |page_opts| api.content_package_environments_api.list(page_opts.merge(options)) }
+        end
+
+        def modulemd_defaults(options = {})
+          Katello::Pulp3::Api::Core.fetch_from_list { |page_opts| api.content_modulemd_defaults_api.list(page_opts.merge(options)) }
         end
 
         def metadatafiles(options = {})
