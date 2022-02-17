@@ -38,17 +38,7 @@ module Katello
       pcf = ProductContentFinder.wrap_with_overrides(
         product_contents: collection[:results],
         overrides: @consumable&.content_overrides)
-      # collection[:results] = ProductContentFinder.wrap_with_overrides(
-      #     product_contents: collection[:results],
-      #     overrides: @consumable&.content_overrides)
-      collection[:results] = if params[:sort_by] == 'enabled_by_default' && params[:sort_order] == 'desc'
-                               pcf.sort { |pca, pcb| sort_score(pca) <=> sort_score(pcb) }.reverse!
-                             elsif params[:sort_by] == 'enabled_by_default'
-                               pcf.sort { |pca, pcb| sort_score(pca) <=> sort_score(pcb) }
-                             else
-                               pcf
-                             end
-      Rails.logger.debug collection[:results].inspect
+      collection[:results] = custom_sort_results(pcf)
       respond(:collection => collection)
     end
 
@@ -242,6 +232,16 @@ module Katello
               end
       Rails.logger.debug [pc.product_name, pc.enabled_content_override, "Id: #{pc.id}", "Score: #{score}"]
       score
+    end
+
+    def custom_sort_results(product_content_finder)
+      if params[:sort_by] == 'enabled_by_default' && params[:sort_order] == 'desc'
+        product_content_finder.sort { |pca, pcb| sort_score(pca) <=> sort_score(pcb) }.reverse!
+      elsif params[:sort_by] == 'enabled_by_default'
+        product_content_finder.sort { |pca, pcb| sort_score(pca) <=> sort_score(pcb) }
+      else
+        product_content_finder
+      end
     end
   end
 end

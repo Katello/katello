@@ -370,8 +370,8 @@ const RepositorySetsTab = () => {
             <Tr>
               <Th key="select-all" />
               <Th key="repo" sort={pfSortParams('Repository')}>{__('Repository')}</Th>
-              <Th key="product">{__('Product')}</Th>
-              <Th key="path" sort={pfSortParams('Repository path')}>{__('Repository path')}</Th>
+              <Th key="product" sort={pfSortParams('Product')}>{__('Product')}</Th>
+              <Th key="path">{__('Repository path')}</Th>
               <Th key="status" sort={pfSortParams('Status')}>{__('Status')}</Th>
               <Th />
               <Th key="action-menu" />
