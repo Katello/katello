@@ -40,10 +40,6 @@ const renderOptions = isTracerInstalled => ({ // sets initial Redux state
   },
 });
 
-// Find the checkbox to the left of the trace.
-// (We could also have just found the checkbox by its aria-label "Select row 0",
-// but this is closer to how the user would do it)
-const checkboxToTheLeftOf = node => node.previousElementSibling.firstElementChild;
 const actionMenuToTheRightOf = node => node.nextElementSibling.firstElementChild.firstElementChild;
 
 const hostTraces = foremanApi.getApiUrl('/hosts/1/traces?per_page=20&page=1');
@@ -51,14 +47,13 @@ const autocompleteUrl = '/hosts/1/traces/auto_complete_search';
 const jobInvocations = foremanApi.getApiUrl('/job_invocations');
 
 let firstTrace;
-let secondTrace;
 let searchDelayScope;
 let autoSearchScope;
 
 describe('With tracer installed', () => {
   beforeEach(() => {
     const { results } = mockTraceData;
-    [firstTrace, secondTrace] = results;
+    [firstTrace] = results;
     searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
     autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   });
@@ -119,17 +114,17 @@ describe('With tracer installed', () => {
       .reply(201, mockResolveTraceTask);
 
 
-    const { getByText } = renderWithRedux(
+    const { getByText, getByLabelText } = renderWithRedux(
       <TracesTab />,
       renderOptions(true),
     );
+
     let traceCheckbox;
-    // Find the trace.
+    // Find the trace checkbox.
     await patientlyWaitFor(() => {
-      const traceNameNode = getByText(firstTrace.application);
-      traceCheckbox = checkboxToTheLeftOf(traceNameNode);
+      traceCheckbox = getByLabelText('Select row 0');
     });
-    traceCheckbox.click();
+    fireEvent.click(traceCheckbox);
     expect(traceCheckbox.checked).toEqual(true);
 
     const restartAppButton = getByText('Restart app');
@@ -158,16 +153,17 @@ describe('With tracer installed', () => {
       .reply(201, mockResolveTraceTask);
 
 
-    const { getByText, getByLabelText, queryByText } = renderWithRedux(
+    const { getByLabelText, queryByText } = renderWithRedux(
       <TracesTab />,
       renderOptions(true),
     );
     let traceCheckbox;
+
+    // Find the trace.
     await patientlyWaitFor(() => {
-      const traceNameNode = getByText(firstTrace.application);
-      traceCheckbox = checkboxToTheLeftOf(traceNameNode);
+      traceCheckbox = getByLabelText('Select row 0');
     });
-    traceCheckbox.click();
+    fireEvent.click(traceCheckbox);
     expect(traceCheckbox.checked).toEqual(true);
     const actionMenu = getByLabelText('bulk_actions');
     actionMenu.click();
@@ -204,14 +200,16 @@ describe('With tracer installed', () => {
     );
 
     let traceCheckbox;
-    // Assert that the traces are now showing on the screen, but wait for them to appear.
+    // Find the trace.
     await patientlyWaitFor(() => {
-      const traceNameNode = getByText(firstTrace.application);
-      traceCheckbox = checkboxToTheLeftOf(traceNameNode);
+      traceCheckbox = getByLabelText('Select row 0');
     });
+
+
     const selectAllCheckbox = getByLabelText('Select all');
     fireEvent.click(selectAllCheckbox);
     expect(traceCheckbox.checked).toEqual(true);
+
     fireEvent.click(getByLabelText('Select row 0')); // de select
     fireEvent.click(getByLabelText('Select row 2')); // de select
 
@@ -298,16 +296,15 @@ describe('With tracer installed', () => {
       .get(hostTraces)
       .reply(200, mockTraceData);
 
-    const { getByText, getByLabelText, queryByText } = renderWithRedux(
+    const { getByLabelText, queryByText } = renderWithRedux(
       <TracesTab />,
       renderOptions(true),
     );
     let traceCheckbox;
     await patientlyWaitFor(() => {
-      const traceNameNode = getByText(firstTrace.application);
-      traceCheckbox = checkboxToTheLeftOf(traceNameNode);
+      traceCheckbox = getByLabelText('Select row 0');
     });
-    traceCheckbox.click();
+    fireEvent.click(traceCheckbox);
     expect(traceCheckbox.checked).toEqual(true);
 
     const actionMenu = getByLabelText('bulk_actions');
@@ -327,7 +324,7 @@ describe('With tracer installed', () => {
   describe('Remote execution URL helper logic', () => {
     beforeEach(() => {
       const { results } = mockTraceData;
-      [firstTrace, secondTrace] = results;
+      [firstTrace] = results;
     });
 
     afterEach(() => {
@@ -341,14 +338,13 @@ describe('With tracer installed', () => {
         .get(hostTraces)
         .reply(200, mockTraceData);
 
-      const { getByText } = renderWithRedux(
+      const { getByLabelText } = renderWithRedux(
         <TracesTab />,
         renderOptions(true),
       );
       let traceCheckbox;
       await patientlyWaitFor(() => {
-        const traceNameNode = getByText(secondTrace.application);
-        traceCheckbox = checkboxToTheLeftOf(traceNameNode);
+        traceCheckbox = getByLabelText('Select row 1');
       });
       expect(traceCheckbox.disabled).toEqual(true);
 
