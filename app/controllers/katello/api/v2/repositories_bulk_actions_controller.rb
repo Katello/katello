@@ -53,7 +53,16 @@ module Katello
     api :POST, "/repositories/bulk/reclaim_space", N_("Reclaim space from On Demand repositories")
     param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def reclaim_space_from_repositories
-      task = async_task(::Actions::Pulp3::Repository::ReclaimSpace, @repositories)
+      if @repositories.empty?
+        fail _("No repositories selected.")
+      end
+      repositories = @repositories.select { |repo| repo.download_policy == ::Katello::RootRepository::DOWNLOAD_ON_DEMAND }
+      if repositories.empty?
+        fail _("Only On Demand repositories may have space reclaimed.")
+      end
+      task = async_task(::Actions::BulkAction,
+                        ::Actions::Pulp3::Repository::ReclaimSpace,
+                        repositories)
 
       respond_for_async :resource => task
     end
