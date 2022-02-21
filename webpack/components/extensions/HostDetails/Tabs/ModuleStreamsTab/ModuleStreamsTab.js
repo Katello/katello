@@ -4,19 +4,20 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { Skeleton, Label, Hint, HintBody, Button } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 import { upperFirst } from 'lodash';
-import { TableText, TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import { TableText, TableVariant, Thead, Tbody, Tr, Td } from '@patternfly/react-table';
 import {
   LongArrowAltUpIcon,
   CheckIcon,
 } from '@patternfly/react-icons';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { selectModuleStreamStatus, selectModuleStream } from './ModuleStreamsSelectors';
-import { useBulkSelect, useUrlParams } from '../../../../Table/TableHooks';
+import { useBulkSelect, useTableSort, useUrlParams } from '../../../../Table/TableHooks';
 import { getHostModuleStreams } from './ModuleStreamsActions';
 import InactiveText from '../../../../../scenes/ContentViews/components/InactiveText';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import hostIdNotReady from '../../HostDetailsActions';
 import { selectHostDetails } from '../../HostDetailsSelectors';
+import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 
 export const ModuleStreamsTab = () => {
   const { id: hostId, name: hostName } = useSelector(selectHostDetails);
@@ -33,16 +34,28 @@ export const ModuleStreamsTab = () => {
     __('Installation status'),
     __('Installed profile'),
   ];
+  const COLUMNS_TO_SORT_PARAMS = {
+    [columnHeaders[0]]: 'name',
+  };
+
+  const {
+    pfSortParams, apiSortParams,
+    activeSortColumn, activeSortDirection,
+  } = useTableSort({
+    allColumns: columnHeaders,
+    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
+    initialSortColumnName: 'Name',
+  });
 
   const fetchItems = useCallback(
     (params) => {
       if (!hostId) return hostIdNotReady;
       return getHostModuleStreams(
         hostId,
-        params,
+        { ...apiSortParams, ...params },
       );
     },
-    [hostId],
+    [hostId, apiSortParams],
   );
 
   const response = useSelector(selectModuleStream);
@@ -170,7 +183,7 @@ export const ModuleStreamsTab = () => {
           fetchItems,
           status,
         }}
-          additionalListeners={[hostId]}
+          additionalListeners={[hostId, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/module_streams/auto_complete_search`}
           foremanApiAutoComplete
@@ -179,8 +192,11 @@ export const ModuleStreamsTab = () => {
         >
           <Thead>
             <Tr>
-              {columnHeaders.map(col =>
-                <Th key={col}>{col}</Th>)}
+              <SortableColumnHeaders
+                columnHeaders={columnHeaders}
+                pfSortParams={pfSortParams}
+                columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
+              />
             </Tr>
           </Thead>
           <Tbody>

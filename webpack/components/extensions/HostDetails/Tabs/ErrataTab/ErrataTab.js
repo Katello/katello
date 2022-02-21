@@ -21,7 +21,7 @@ import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import SelectableDropdown from '../../../../SelectableDropdown';
-import { useSet, useBulkSelect, useUrlParams } from '../../../../../components/Table/TableHooks';
+import { useSet, useBulkSelect, useUrlParams, useTableSort } from '../../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { ErrataType, ErrataSeverity } from '../../../../../components/Errata';
 import { getInstallableErrata, regenerateApplicability, applyViaKatelloAgent } from './HostErrataActions';
@@ -78,6 +78,21 @@ export const ErrataTab = () => {
     __('Synopsis'),
     __('Published date'),
   ];
+  const COLUMNS_TO_SORT_PARAMS = {
+    [columnHeaders[0]]: 'errata_id',
+    [columnHeaders[1]]: 'type',
+    [columnHeaders[2]]: 'severity',
+    [columnHeaders[5]]: 'updated',
+  };
+
+  const {
+    pfSortParams, apiSortParams,
+    activeSortColumn, activeSortDirection,
+  } = useTableSort({
+    allColumns: columnHeaders,
+    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
+    initialSortColumnName: 'Errata',
+  });
 
   const fetchItems = useCallback(
     (params) => {
@@ -93,12 +108,13 @@ export const ErrataTab = () => {
         hostId,
         {
           include_applicable: toggleGroupState === ALL,
+          ...apiSortParams,
           ...modifiedParams,
         },
       );
     },
     [hostId, toggleGroupState, ALL, ERRATA_SEVERITY, ERRATA_TYPE,
-      errataTypeSelected, errataSeveritySelected],
+      errataTypeSelected, errataSeveritySelected, apiSortParams],
   );
 
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
@@ -318,7 +334,8 @@ export const ErrataTab = () => {
           }
           }
           additionalListeners={[
-            hostId, toggleGroupState, errataTypeSelected, errataSeveritySelected]}
+            hostId, toggleGroupState, errataTypeSelected,
+            errataSeveritySelected, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/errata/auto_complete_search`}
           foremanApiAutoComplete
@@ -331,8 +348,14 @@ export const ErrataTab = () => {
             <Tr>
               <Th key="expand-carat" />
               <Th key="select-all" />
-              {columnHeaders.map(col =>
-                <Th key={col}>{col}</Th>)}
+              {columnHeaders.map(col => (
+                <Th
+                  key={col}
+                  sort={COLUMNS_TO_SORT_PARAMS[col] ? pfSortParams(col) : undefined}
+                >
+                  {col}
+                </Th>
+              ))}
               <Th key="action-menu" />
             </Tr>
           </Thead>

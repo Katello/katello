@@ -265,6 +265,9 @@ export const useTableSort = ({
   columnsToSortParams,
   initialSortColumnName = allColumns[0],
 }) => {
+  if (!Object.keys(columnsToSortParams).includes(initialSortColumnName)) {
+    throw new Error(`initialSortColumnName '${initialSortColumnName}' must also be defined in columnsToSortParams`);
+  }
   const [activeSortColumn, setActiveSortColumn] = useState(initialSortColumnName);
   const [activeSortDirection, setActiveSortDirection] = useState('asc');
 
@@ -273,7 +276,7 @@ export const useTableSort = ({
     setActiveSortDirection(direction);
   };
 
-  const sortParams = (columnName, newSortColIndex) => ({
+  const pfSortParams = (columnName, newSortColIndex) => ({
     columnIndex: newSortColIndex ?? allColumns?.indexOf(columnName),
     sortBy: {
       defaultDirection: 'asc',
@@ -284,7 +287,7 @@ export const useTableSort = ({
   });
 
   return {
-    pfSortParams: sortParams,
+    pfSortParams,
     apiSortParams: {
       sort_by: columnsToSortParams[activeSortColumn],
       sort_order: activeSortDirection,

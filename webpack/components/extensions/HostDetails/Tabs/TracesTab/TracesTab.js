@@ -16,6 +16,7 @@ import { selectHostTracesStatus } from './HostTracesSelectors';
 import { resolveTraceUrl } from '../customizedRexUrlHelpers';
 import './TracesTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
+import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 
 const TracesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -159,14 +160,11 @@ const TracesTab = () => {
         <Thead>
           <Tr>
             <Th key="select_checkbox" />
-            {columnHeaders.map(col => (
-              <Th
-                key={col}
-                sort={COLUMNS_TO_SORT_PARAMS[col] ? pfSortParams(col) : undefined}
-              >
-                {col}
-              </Th>
-          ))}
+            <SortableColumnHeaders
+              columnHeaders={columnHeaders}
+              pfSortParams={pfSortParams}
+              columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
+            />
             <Th key="action_menu" />
           </Tr>
         </Thead>
