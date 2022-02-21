@@ -864,12 +864,21 @@ module Katello
     end
 
     def test_reclaim_space
+      @repository.root.update_attribute(:download_policy, ::Katello::RootRepository::DOWNLOAD_ON_DEMAND)
       assert_async_task ::Actions::Pulp3::Repository::ReclaimSpace do |repo|
         repo.id == @repository.id
       end
 
       post :reclaim_space, params: { :id => @repository.id }
       assert_response :success
+      @repository.root.update_attribute(:download_policy, ::Katello::RootRepository::DOWNLOAD_IMMEDIATE)
+    end
+
+    def test_reclaim_space_with_immediate_repo
+      @repository.root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
+      post :reclaim_space, params: { :id => @repository.id }
+      assert_response 400
+      assert_match "Only On Demand repositories may have space reclaimed.", @response.body
     end
 
     def test_verify_checksum_protected

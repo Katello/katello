@@ -327,6 +327,9 @@ module Katello
     api :POST, "/repositories/:id/reclaim_space", N_("Reclaim space from an On Demand repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
     def reclaim_space
+      if @repository.download_policy != ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
+        fail HttpErrors::BadRequest, _("Only On Demand repositories may have space reclaimed.")
+      end
       task = async_task(::Actions::Pulp3::Repository::ReclaimSpace, @repository)
       respond_for_async :resource => task
     rescue Errors::InvalidActionOptionError => e

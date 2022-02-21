@@ -79,8 +79,10 @@ module Katello
     end
 
     def test_reclaim_space
-      assert_async_task(::Actions::Pulp3::Repository::ReclaimSpace) do |repos|
-        assert_equal @repositories.map(&:id).sort, repos.map(&:id).sort
+      assert_async_task(::Actions::BulkAction) do |action_class, repos|
+        assert_equal action_class, ::Actions::Pulp3::Repository::ReclaimSpace
+        assert_equal @repositories.select { |repo| repo.download_policy == ::Katello::RootRepository::DOWNLOAD_ON_DEMAND }.map(&:id).sort,
+                     repos.select { |repo| repo.download_policy == ::Katello::RootRepository::DOWNLOAD_ON_DEMAND }.map(&:id).sort
       end
 
       post :reclaim_space_from_repositories, params: { :ids => @repositories.collect(&:id), :organization_id => @organization.id }

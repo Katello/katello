@@ -22,33 +22,12 @@ module ::Actions::Pulp3::Repository
       @repo3.root.update(download_policy: 'immediate')
     end
 
-    def test_proper_repositories_have_space_reclaimed
+    def test_repository_has_space_reclaimed
       task = ForemanTasks.async_task(::Actions::Pulp3::Repository::ReclaimSpace,
-                                      [@repo, @repo2, @repo3])
+                                      @repo)
 
-      on_demand_repo_hrefs = [@repo.version_href.split('/').slice(0, 8).join('/') + '/',
-                              @repo2.version_href.split('/').slice(0, 8).join('/') + '/']
-
-      immediate_repo_href = @repo3.version_href.split('/').slice(0, 8).join('/') + '/'
-
-      refute_includes task.input.with_indifferent_access[:repository_hrefs], immediate_repo_href
+      on_demand_repo_hrefs = [@repo.version_href.split('/').slice(0, 8).join('/') + '/']
       assert_equal task.input.with_indifferent_access[:repository_hrefs] & on_demand_repo_hrefs, on_demand_repo_hrefs
-    end
-
-    def test_empty_repositories_error
-      error = assert_raises(RuntimeError) do
-        ForemanTasks.async_task(::Actions::Pulp3::Repository::ReclaimSpace, [])
-      end
-
-      assert_equal 'No repositories selected.', error.message
-    end
-
-    def test_no_on_demand_repositories_error
-      error = assert_raises(RuntimeError) do
-        ForemanTasks.async_task(::Actions::Pulp3::Repository::ReclaimSpace, [@repo3])
-      end
-
-      assert_equal 'Only On Demand repositories may have space reclaimed.', error.message
     end
   end
 end
