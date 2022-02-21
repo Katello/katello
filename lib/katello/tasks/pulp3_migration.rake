@@ -47,6 +47,15 @@ namespace :katello do
               exit(-1)
             end
           end
+          repos_missing_errata = ::Katello::Repository.joins("inner join katello_repository_errata on katello_repositories.id = katello_repository_errata.repository_id").
+            joins("inner join katello_root_repositories on katello_repositories.root_id = katello_root_repositories.id").
+            where("katello_repository_errata.erratum_pulp3_href is null").pluck(:repository_id, :name).uniq
+          if repos_missing_errata.present?
+            puts "\nRepositories with the following IDs and names have unmigrated errata:\n"
+            repos_missing_errata.each { |r| puts(r[0].to_s + ', ' + r[1]) }
+            puts "\nResync these repositories and then run 'reimport_all=true foreman-maintain content prepare'.\n"
+            exit(-1)
+          end
           puts _("Content Migration completed successfully")
         end
       else
