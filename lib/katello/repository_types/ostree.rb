@@ -37,12 +37,6 @@ Katello::RepositoryTypeManager.register('ostree') do
                         :type => String,
                         :required => false
 
-  import_attribute :parent_commit, :content_type => 'ostree_ref',
-                        :api_param => :ostree_parent_commit,
-                        :description => "Checksum of a parent commit",
-                        :type => String,
-                        :required => false
-
   import_attribute :repository_name, :content_type => 'ostree_ref',
                         :api_param => :ostree_repository_name,
                         :description => "Name of the repository in the ostree archive",
