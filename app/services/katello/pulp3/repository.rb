@@ -498,7 +498,6 @@ module Katello
         ostree_import.artifact = artifact_href
         ostree_import.repository_name = options[:ostree_repository_name]
         ostree_import.ref = options[:ostree_ref]
-        ostree_import.parent_commit = options[:ostree_parent_commit]
         api.repositories_api.import_commits(repository_reference.repository_href, ostree_import)
       end
 
