@@ -25,8 +25,6 @@ namespace :katello do
                          0.000943 * immediate_unmigrated_deb_count - 3 + # copied from RPM, no scientific analysis has been done ;-)
                          0.000943 * immediate_unmigrated_rpm_count - 3 +
                          0.0746 * migratable_repo_count).to_i
-    hours = (migration_minutes / 60) % 60
-    minutes = migration_minutes % 60
 
     puts "============Migration Summary================"
     puts "Migrated/Total DEBs: #{migrated_deb_count}/#{::Katello::Deb.count}"
@@ -36,7 +34,12 @@ namespace :katello do
 
     # The timing formulas go negative if the amount of content is negligibly small
     if migration_minutes >= 5
-      puts "Estimated migration time based on yum/apt content: #{hours} hours, #{minutes} minutes"
+      fast_hours = (migration_minutes / 60) % 60
+      fast_minutes = migration_minutes % 60
+      slow_hours = ((migration_minutes * 4) / 60) % 60
+      slow_minutes = (migration_minutes * 4) % 60
+      puts "Estimated migration time based on yum/apt content, fast hardware, and low server load: #{fast_hours} hours, #{fast_minutes} minutes"
+      puts "Estimated migration time based on yum/apt content, slow hardware, and high server load: #{slow_hours} hours, #{slow_minutes} minutes"
     elsif migrated_rpm_count == ::Katello::Rpm.count &&
       migrated_deb_count == ::Katello::Deb.count &&
       migrated_erratum_count == ::Katello::RepositoryErratum.count &&
