@@ -1,9 +1,6 @@
 namespace :katello do
   desc "Marks corrupted or missing content as approved to be ignored during the migration"
   task :approve_corrupted_migration_content => ["dynflow:client"] do
-    services = [:candlepin, :foreman_tasks, :pulp3, :pulp, :pulp_auth]
-    Katello::Ping.ping!(services: services)
-
     Katello::Pulp3::Migration::CORRUPTABLE_CONTENT_TYPES.each do |type|
       type.missing_migrated_content.update_all(:ignore_missing_from_migration => true)
     end
@@ -11,8 +8,6 @@ namespace :katello do
   end
 
   task :unapprove_corrupted_migration_content => ["dynflow:client"] do
-    services = [:candlepin, :foreman_tasks, :pulp3, :pulp, :pulp_auth]
-    Katello::Ping.ping!(services: services)
     Katello::Pulp3::Migration::CORRUPTABLE_CONTENT_TYPES.each do |type|
       type.ignored_missing_migrated_content.update_all(:ignore_missing_from_migration => false)
     end
