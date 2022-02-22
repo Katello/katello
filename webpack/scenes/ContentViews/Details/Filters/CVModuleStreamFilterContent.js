@@ -247,7 +247,7 @@ const CVModuleStreamFilterContent = ({
                   <Button
                     isDisabled={!hasNotAddedSelected}
                     onClick={bulkAdd}
-                    variant="secondary"
+                    variant="primary"
                     aria-label="add_filter_rule"
                   >
                     {__('Add filter rule')}
