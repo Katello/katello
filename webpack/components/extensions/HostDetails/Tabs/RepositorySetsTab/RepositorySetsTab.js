@@ -57,6 +57,7 @@ import {
 import { REPOSITORY_SETS_KEY } from './RepositorySetsConstants.js';
 import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
 import './RepositorySetsTab.scss';
+import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 
 const getEnabledValue = ({ enabled, enabledContentOverride }) => {
   const isOverridden = (enabledContentOverride !== null);
@@ -136,7 +137,6 @@ const RepositorySetsTab = () => {
   const COLUMNS_TO_SORT_PARAMS = {
     [columnHeaders[0]]: 'name',
     [columnHeaders[1]]: 'product',
-    [columnHeaders[2]]: 'path',
     [columnHeaders[3]]: 'enabled_by_default',
   };
 
@@ -371,10 +371,11 @@ const RepositorySetsTab = () => {
           <Thead>
             <Tr>
               <Th key="select-all" />
-              <Th key="repo" sort={pfSortParams('Repository')}>{__('Repository')}</Th>
-              <Th key="product" sort={pfSortParams('Product')}>{__('Product')}</Th>
-              <Th key="path">{__('Repository path')}</Th>
-              <Th key="status" sort={pfSortParams('Status')}>{__('Status')}</Th>
+              <SortableColumnHeaders
+                columnHeaders={columnHeaders}
+                pfSortParams={pfSortParams}
+                columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
+              />
               <Th />
               <Th key="action-menu" />
             </Tr>

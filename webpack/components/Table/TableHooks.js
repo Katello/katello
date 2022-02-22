@@ -271,11 +271,14 @@ export const useTableSort = ({
   const [activeSortColumn, setActiveSortColumn] = useState(initialSortColumnName);
   const [activeSortDirection, setActiveSortDirection] = useState('asc');
 
+  // Patternfly sort function
   const onSort = (_event, index, direction) => {
     setActiveSortColumn(allColumns?.[index]);
     setActiveSortDirection(direction);
   };
 
+  // Patternfly sort params to pass to the <Th> component.
+  // (but you should probably just use <SortableColumnHeaders> instead)
   const pfSortParams = (columnName, newSortColIndex) => ({
     columnIndex: newSortColIndex ?? allColumns?.indexOf(columnName),
     sortBy: {
@@ -288,11 +291,11 @@ export const useTableSort = ({
 
   return {
     pfSortParams,
-    apiSortParams: {
+    apiSortParams: { // scoped_search params to pass to the Katello API
       sort_by: columnsToSortParams[activeSortColumn],
       sort_order: activeSortDirection,
     },
-    activeSortColumn,
+    activeSortColumn, // state values to pass as additionalListeners
     activeSortDirection,
   };
 };

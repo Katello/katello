@@ -34,6 +34,7 @@ import { errataInstallUrl } from '../customizedRexUrlHelpers';
 import './ErrataTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import defaultRemoteActionMethod, { KATELLO_AGENT } from '../../hostDetailsHelpers';
+import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -348,14 +349,11 @@ export const ErrataTab = () => {
             <Tr>
               <Th key="expand-carat" />
               <Th key="select-all" />
-              {columnHeaders.map(col => (
-                <Th
-                  key={col}
-                  sort={COLUMNS_TO_SORT_PARAMS[col] ? pfSortParams(col) : undefined}
-                >
-                  {col}
-                </Th>
-              ))}
+              <SortableColumnHeaders
+                columnHeaders={columnHeaders}
+                pfSortParams={pfSortParams}
+                columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
+              />
               <Th key="action-menu" />
             </Tr>
           </Thead>
