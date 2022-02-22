@@ -7,9 +7,14 @@ module Actions
         end
 
         def plan(product, content, options)
-          repository = repository_mapper(product,
-                                         content,
-                                         options).find_repository
+          if options[:repository_id]
+            repository = ::Katello::Repository.find(options[:repository_id])
+          else
+            repository = repository_mapper(product,
+                                           content,
+                                           options).find_repository
+          end
+
           if repository
             action_subject(repository)
             plan_action(Repository::Destroy, repository)

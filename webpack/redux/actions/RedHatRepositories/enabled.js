@@ -44,7 +44,7 @@ export const createEnabledRepoParams = (extendedParams = {}) => {
 
 export const disableRepository = repository => async (dispatch) => {
   const {
-    productId, contentId, arch, releasever,
+    productId, contentId, arch, releasever, id,
   } = repository;
 
   const repoData = {
@@ -52,6 +52,7 @@ export const disableRepository = repository => async (dispatch) => {
     product_id: productId,
     basearch: arch,
     releasever,
+    repository_id: id,
   };
   dispatch({ type: DISABLE_REPOSITORY_REQUEST, repository });
   const url = `/products/${productId}/repository_sets/${contentId}/disable`;

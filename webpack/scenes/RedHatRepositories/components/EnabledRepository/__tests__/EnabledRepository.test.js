@@ -60,6 +60,7 @@ describe('Enabled Repositories Component', () => {
         type: 'foo',
         arch: 'foo',
         releasever: '1.1.1',
+        id: 1,
       };
       expect(instance.repoForAction()).toEqual(expected);
     });
@@ -109,6 +110,7 @@ describe('Enabled Repositories Component', () => {
         type: 'foo',
         arch: 'foo',
         releasever: '1.1.1',
+        id: 1,
       };
       instance.reloadAndNotify = jest.fn();
       await instance.disableRepository();

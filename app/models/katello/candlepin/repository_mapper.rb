@@ -10,10 +10,17 @@ module Katello
       end
 
       def find_repository
-        root = ::Katello::RootRepository.where(product_id: product.id,
-                                    content_id: content.cp_content_id,
-                                    minor: minor,
-                                    arch: arch).first
+        if substitutions[:basearch]
+          root = ::Katello::RootRepository.where(product_id: product.id,
+                                                 content_id: content.cp_content_id,
+                                                 minor: minor,
+                                                 arch: arch).first
+        else
+          root = ::Katello::RootRepository.where(product_id: product.id,
+                                                 content_id: content.cp_content_id,
+                                                 minor: minor).first
+        end
+
         if root
           Katello::Repository.where(root: root,
                                     environment_id: product.organization.library.id).first
