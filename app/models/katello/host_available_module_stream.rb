@@ -27,6 +27,7 @@ module Katello
 
     scoped_search :on => :name, :relation => :available_module_stream, :complete_value => true
     scoped_search :on => :stream, :relation => :available_module_stream, :complete_value => false
+    scoped_search :on => :installed_profiles
     scoped_search :on => :status, :complete_value => STATUS
 
     def upgradable?

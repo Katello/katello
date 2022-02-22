@@ -22,6 +22,9 @@ module Katello
       return HostAvailableModuleStream.upgradable([@host]) if params[:status] == HostAvailableModuleStream::UPGRADABLE
 
       rel = @host.host_available_module_streams
+      if params[:sort_by] == 'installed_profiles'
+        rel = rel.order([:installed_profiles, :status])
+      end
       return rel if params[:status].blank?
       rel.send(::Katello::HostAvailableModuleStream::API_STATES[params[:status]])
     end

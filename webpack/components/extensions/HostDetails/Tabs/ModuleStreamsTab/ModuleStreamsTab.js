@@ -19,6 +19,67 @@ import hostIdNotReady from '../../HostDetailsActions';
 import { selectHostDetails } from '../../HostDetailsSelectors';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 
+const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
+  const INSTALLED_STATE = {
+    INSTALLED: __('Installed'),
+    UPGRADEABLE: __('Upgradable'),
+    UPTODATE: __('Up-to-date'),
+    NOTINSTALLED: __('Not installed'),
+  };
+
+  switch (true) {
+    case (streamInstallStatus?.length > 0 && streamText === 'disabled'):
+      return <TableText wrapModifier="nowrap">{INSTALLED_STATE.INSTALLED}</TableText>;
+    case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable !== true):
+      return <><CheckIcon color="green" /> {INSTALLED_STATE.UPTODATE}</>;
+    case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable):
+      return <><LongArrowAltUpIcon color="blue" /> {INSTALLED_STATE.UPGRADEABLE}</>;
+    default:
+      return <InactiveText text={INSTALLED_STATE.NOTINSTALLED} />;
+  }
+};
+
+EnabledIcon.propTypes = {
+  streamText: PropTypes.string.isRequired,
+  streamInstallStatus: PropTypes.arrayOf(PropTypes.string).isRequired,
+  upgradable: PropTypes.bool.isRequired,
+};
+
+const StreamState = ({ moduleStreamStatus }) => {
+  let streamText = moduleStreamStatus?.charAt(0)?.toUpperCase() + moduleStreamStatus?.slice(1);
+  streamText = streamText?.replace('Unknown', 'Default');
+  switch (true) {
+    case (streamText === 'Default'):
+      return <Label color="gray" variant="outline">{streamText}</Label>;
+    case (streamText === 'Disabled'):
+      return <Label color="gray" variant="filled">{streamText}</Label>;
+    case (streamText === 'Enabled'):
+      return <Label color="green" variant="filled">{streamText}</Label>;
+    default:
+      return null;
+  }
+};
+
+StreamState.propTypes = {
+  moduleStreamStatus: PropTypes.string.isRequired,
+};
+
+const HostInstalledProfiles = ({ moduleStreamStatus, installedProfiles }) => {
+  let installedProfile;
+  if (installedProfiles?.length > 0) {
+    installedProfile = installedProfiles?.map(profile => upperFirst(profile)).join(', ');
+  } else {
+    installedProfile = 'No profile installed';
+  }
+  const disabledText = moduleStreamStatus === 'disabled' || moduleStreamStatus === 'unknown';
+  return disabledText ? <InactiveText text={installedProfile} /> : installedProfile;
+};
+
+HostInstalledProfiles.propTypes = {
+  moduleStreamStatus: PropTypes.string.isRequired,
+  installedProfiles: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
 export const ModuleStreamsTab = () => {
   const { id: hostId, name: hostName } = useSelector(selectHostDetails);
 
@@ -36,6 +97,8 @@ export const ModuleStreamsTab = () => {
   ];
   const COLUMNS_TO_SORT_PARAMS = {
     [columnHeaders[0]]: 'name',
+    [columnHeaders[1]]: 'status',
+    [columnHeaders[3]]: 'installed_profiles',
   };
 
   const {
@@ -95,67 +158,6 @@ export const ModuleStreamsTab = () => {
       title: __('Remove'), disabled: true,
     },
   ];
-
-  const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
-    const INSTALLED_STATE = {
-      INSTALLED: __('Installed'),
-      UPGRADEABLE: __('Upgradable'),
-      UPTODATE: __('Up-to-date'),
-      NOTINSTALLED: __('Not installed'),
-    };
-
-    switch (true) {
-      case (streamInstallStatus?.length > 0 && streamText === 'disabled'):
-        return <TableText wrapModifier="nowrap">{INSTALLED_STATE.INSTALLED}</TableText>;
-      case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable !== true):
-        return <><CheckIcon color="green" /> {INSTALLED_STATE.UPTODATE}</>;
-      case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable):
-        return <><LongArrowAltUpIcon color="blue" /> {INSTALLED_STATE.UPGRADEABLE}</>;
-      default:
-        return <InactiveText text={INSTALLED_STATE.NOTINSTALLED} />;
-    }
-  };
-
-  EnabledIcon.propTypes = {
-    streamText: PropTypes.string.isRequired,
-    streamInstallStatus: PropTypes.arrayOf(PropTypes.string).isRequired,
-    upgradable: PropTypes.bool.isRequired,
-  };
-
-  const StreamState = ({ moduleStreamStatus }) => {
-    let streamText = moduleStreamStatus?.charAt(0)?.toUpperCase() + moduleStreamStatus?.slice(1);
-    streamText = streamText?.replace('Unknown', 'Default');
-    switch (true) {
-      case (streamText === 'Default'):
-        return <Label color="gray" variant="outline">{streamText}</Label>;
-      case (streamText === 'Disabled'):
-        return <Label color="gray" variant="filled">{streamText}</Label>;
-      case (streamText === 'Enabled'):
-        return <Label color="green" variant="filled">{streamText}</Label>;
-      default:
-        return null;
-    }
-  };
-
-  StreamState.propTypes = {
-    moduleStreamStatus: PropTypes.string.isRequired,
-  };
-
-  const HostInstalledProfiles = ({ moduleStreamStatus, installedProfiles }) => {
-    let installedProfile;
-    if (installedProfiles?.length > 0) {
-      installedProfile = installedProfiles?.map(profile => upperFirst(profile)).join(', ');
-    } else {
-      installedProfile = 'No profile installed';
-    }
-    const disabledText = moduleStreamStatus === 'disabled' || moduleStreamStatus === 'unknown';
-    return disabledText ? <InactiveText text={installedProfile} /> : installedProfile;
-  };
-
-  HostInstalledProfiles.propTypes = {
-    moduleStreamStatus: PropTypes.string.isRequired,
-    installedProfiles: PropTypes.arrayOf(PropTypes.string).isRequired,
-  };
 
   return (
     <div>
