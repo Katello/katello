@@ -27,9 +27,9 @@ addGlobalFill('host-details-page-tabs', 'Traces', <TracesTab key="traces" />, 80
 addGlobalFill('host-details-page-tabs', 'Repository sets', <RepositorySetsTab key="repository-sets" />, 700, { title: __('Repository sets') });
 
 addGlobalFill(
-  'details-cards',
+  'host-overview-cards',
   'Content View Details',
   <ContentViewDetailsCard key="content-view-details" />,
   2000,
 );
-addGlobalFill('details-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 1900);
+addGlobalFill('host-overview-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 1900);
