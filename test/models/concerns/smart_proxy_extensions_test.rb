@@ -138,16 +138,13 @@ module Katello
     end
 
     pulpcore_features = {
-      'pulp_rpm': Katello::Repository::YUM_TYPE,
       'rpm': Katello::Repository::YUM_TYPE,
-      'pulp_file': Katello::Repository::FILE_TYPE,
       'file': Katello::Repository::FILE_TYPE,
-      'pulp_container': Katello::Repository::DOCKER_TYPE,
       'container': Katello::Repository::DOCKER_TYPE,
-      'pulp_ansible': Katello::Repository::ANSIBLE_COLLECTION_TYPE,
       'ansible': Katello::Repository::ANSIBLE_COLLECTION_TYPE,
-      'pulp_deb': Katello::Repository::DEB_TYPE,
-      'deb': Katello::Repository::DEB_TYPE
+      'deb': Katello::Repository::DEB_TYPE,
+      'ostree': Katello::Repository::OSTREE_TYPE,
+      'python': 'python'
     }
 
     pulpcore_features.each_pair do |feature_name, repo_type|
