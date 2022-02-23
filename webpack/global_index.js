@@ -32,18 +32,18 @@ addGlobalFill('host-details-page-tabs', 'Repository sets', <RepositorySetsTab ke
 
 // Overview tab cards
 addGlobalFill(
-  'details-cards',
+  'host-overview-cards',
   'Content view details',
   <ContentViewDetailsCard key="content-view-details" />,
   2000,
 );
 addGlobalFill(
-  'details-cards',
+  'host-overview-cards',
   'Host collections',
   <HostCollectionsCard key="host-collections-details" />,
   700,
 );
-addGlobalFill('details-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 1900);
+addGlobalFill('host-overview-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 1900);
 
 // Details tab cards & card extensions
 addGlobalFill('host-tab-details-cards', 'Installed products', <InstalledProductsCard key="installed-products" />, 100);
