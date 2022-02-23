@@ -83,6 +83,7 @@ module Katello
     validate :ensure_valid_deb_constraints, :if => :deb?
     validate :ensure_no_checksum_on_demand
     validate :ensure_valid_mirroring_policy
+    validate :ensure_valid_retain_package_versions_count
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
     validates :product_id, :presence => true
     validates :content_type, :inclusion => {
@@ -306,6 +307,16 @@ module Katello
       end
     end
 
+    def ensure_valid_retain_package_versions_count
+      return unless self.retain_package_versions_count
+      unless yum?
+        errors.add(:retain_package_versions_count, N_("is only allowed for Yum repositories."))
+      end
+      if self.retain_package_versions_count.to_i < 0
+        errors.add(:retain_package_versions_count, N_("must not be a negative value."))
+      end
+    end
+
     def custom_content_path
       parts = []
       # We generate repo path only for custom product content. We add this
@@ -372,7 +383,7 @@ module Katello
 
     def pulp_update_needed?
       changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirroring_policy verify_ssl_on_sync
-                                 upstream_username upstream_password ignorable_content
+                                 upstream_username upstream_password ignorable_content retain_package_versions_count
                                  ssl_ca_cert_id ssl_client_cert_id ssl_client_key_id http_proxy_policy http_proxy_id download_concurrency)
       changeable_attributes += %w(name container_repository_name include_tags exclude_tags) if docker?
       changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?
