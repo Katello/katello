@@ -34,10 +34,16 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
 const hostPackages = foremanApi.getApiUrl('/hosts/1/packages');
 const jobInvocations = foremanApi.getApiUrl('/job_invocations');
 const autocompleteUrl = '/hosts/1/packages/auto_complete_search';
-const defaultQueryWithoutSearch = {
+const baseQuery = {
   include_latest_upgradable: true,
   per_page: 20,
   page: 1,
+};
+
+const defaultQueryWithoutSearch = {
+  ...baseQuery,
+  sort_by: 'nvra',
+  sort_order: 'asc',
 };
 const defaultQuery = { ...defaultQueryWithoutSearch, search: '' };
 

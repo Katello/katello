@@ -16,22 +16,26 @@ import affectedHostData from './affectedHosts.fixtures.json';
 import cVDropDownOptionsData from '../../Details/Versions/Delete/__tests__/cvDropDownOptionsResponse.fixture.json';
 import cvDeleteResponse from '../../Details/Versions/Delete/__tests__/cvVersionRemoveResponse.fixture.json';
 
-const cvIndexPath = api.getApiUrl('/content_views?organization_id=1&nondefault=true&include_permissions=true&per_page=20&page=1');
+const cvIndexPath = api.getApiUrl('/content_views');
 const autocompleteUrl = '/content_views/auto_complete_search';
 const renderOptions = { apiNamespace: CONTENT_VIEWS_KEY };
 const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
-
 const cvVersionsPath = api.getApiUrl('/content_view_versions');
-
 const cvDetailsPath = api.getApiUrl('/content_views/20');
-
 const activationKeyURL = api.getApiUrl('/activation_keys');
-
 const hostURL = foremanApi.getApiUrl('/hosts');
-
 const cVDropDownOptionsPath = api.getApiUrl('/content_views?organization_id=1&environment_id=9&include_default=true&include_permissions=true&full_result=true');
-
 const cvDeleteUrl = api.getApiUrl('/content_views/20/remove');
+
+const baseQuery = {
+  organization_id: 1,
+  nondefault: true,
+  include_permissions: true,
+  per_page: 20,
+  page: 1,
+  sort_by: 'name',
+  sort_order: 'asc',
+};
 
 let scopeBookmark;
 let firstCV;
@@ -58,6 +62,7 @@ test('Can call API for CVs and show Delete Wizard for the row', async (done) => 
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(cvIndexPath)
+    .query(baseQuery)
     .reply(200, cvIndexData);
 
   const envPathDeleteScope = nockInstance
@@ -110,6 +115,7 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
 
   const scope = nockInstance
     .get(cvIndexPath)
+    .query(true)
     .reply(200, cvIndexData);
 
   const envPathDeleteScope = nockInstance
