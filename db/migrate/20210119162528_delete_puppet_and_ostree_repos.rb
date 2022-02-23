@@ -39,6 +39,8 @@ class DeletePuppetAndOstreeRepos < ActiveRecord::Migration[6.0]
     FakeContentViewPuppetEnvironment.delete_all
     FakePuppetModule.delete_all
 
+    ::Katello::RepositoryErratum.where(:repository_id => ::Katello::Repository.where(:root_id => ::Katello::RootRepository.where(:content_type => [:ostree, :puppet]))).delete_all
+
     if puppet_repositories.any?
       User.as_anonymous_admin do
         ::Katello::Repository.delete(puppet_repositories)
