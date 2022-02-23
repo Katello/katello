@@ -28,6 +28,10 @@ module Katello
           PulpDebClient::RepositorySyncURL
         end
 
+        def self.publication_verbatim_class
+          PulpDebClient::DebVerbatimPublication
+        end
+
         def api_client
           api_client_class(PulpDebClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpDebClient::Configuration)))
         end
@@ -50,10 +54,6 @@ module Katello
 
         def distributions_api
           PulpDebClient::DistributionsAptApi.new(api_client)
-        end
-
-        def publication_verbatim_class
-          PulpDebClient::DebVerbatimPublication
         end
 
         def publications_verbatim_api
