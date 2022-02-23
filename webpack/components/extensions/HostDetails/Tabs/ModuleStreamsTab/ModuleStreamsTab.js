@@ -87,6 +87,7 @@ export const ModuleStreamsTab = () => {
   const emptyContentBody = __('Module streams will appear here when available.');
   const emptySearchTitle = __('Your search returned no matching Module streams.');
   const emptySearchBody = __('Try changing your search criteria.');
+  const errorSearchTitle = __('Problem searching module streams');
   const { searchParam } = useUrlParams();
   const columnHeaders = [
     __('Name'),
@@ -123,6 +124,7 @@ export const ModuleStreamsTab = () => {
 
   const response = useSelector(selectModuleStream);
   const { results, ...metadata } = response;
+  const { error: errorSearchBody } = metadata;
   const status = useSelector(state => selectModuleStreamStatus(state));
   /* eslint-disable no-unused-vars */
   const {
@@ -180,6 +182,8 @@ export const ModuleStreamsTab = () => {
           emptyContentBody,
           emptySearchTitle,
           emptySearchBody,
+          errorSearchTitle,
+          errorSearchBody,
           searchQuery,
           updateSearchQuery,
           fetchItems,

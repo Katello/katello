@@ -31,6 +31,7 @@ const TracesTab = () => {
   const emptyContentBody = __('Add traces by applying updates on this host.');
   const emptySearchTitle = __('No matching traces found');
   const emptySearchBody = __('Try changing your search settings.');
+  const errorSearchTitle = __('Problem searching traces');
   const columnHeaders = [
     __('Application'),
     __('Type'),
@@ -54,6 +55,7 @@ const TracesTab = () => {
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
   const { results, ...meta } = response;
+  const { error: errorSearchBody } = meta;
   const tracesSearchQuery = id => `id = ${id}`;
   const {
     selectOne, isSelected, searchQuery, selectedCount, isSelectable,
@@ -139,6 +141,8 @@ const TracesTab = () => {
           emptyContentBody,
           emptySearchTitle,
           emptySearchBody,
+          errorSearchTitle,
+          errorSearchBody,
           status,
           searchQuery,
           updateSearchQuery,

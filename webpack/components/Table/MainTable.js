@@ -30,6 +30,9 @@ const MainTable = ({
   if (status === STATUS.PENDING) return (<Loading />);
   // Can we display the error message?
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
+
+  // scoped_search errors come back as 200 with an error message,
+  // so they should be passed here as errorSearchBody & errorSearchTitle.
   if (status === STATUS.RESOLVED && !!errorSearchBody) {
     return (<EmptyStateMessage
       title={errorSearchTitle}

@@ -162,7 +162,7 @@ const RepositorySetsTab = () => {
   );
 
   const response = useSelector(state => selectAPIResponse(state, REPOSITORY_SETS_KEY));
-  const { results, error: searchError, ...metadata } = response;
+  const { results, error: errorSearchBody, ...metadata } = response;
   const status = useSelector(state => selectRepositorySetsStatus(state));
   const repoSetSearchQuery = label => `cp_content_id = ${label}`;
   const {
@@ -356,7 +356,7 @@ const RepositorySetsTab = () => {
           }
           }
           errorSearchTitle={errorSearchTitle}
-          errorSearchBody={searchError}
+          errorSearchBody={errorSearchBody}
           activeFilters={[toggleGroupState]}
           defaultFilters={[defaultToggleGroupState]}
           additionalListeners={[hostId, toggleGroupState, activeSortColumn, activeSortDirection]}

@@ -71,6 +71,7 @@ export const ErrataTab = () => {
   const emptyContentBody = __('Installable errata will appear here when available.');
   const emptySearchTitle = __('No matching errata found');
   const emptySearchBody = __('Try changing your search settings.');
+  const errorSearchTitle = __('Problem searching errata');
   const columnHeaders = [
     __('Errata'),
     __('Type'),
@@ -120,6 +121,7 @@ export const ErrataTab = () => {
 
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
   const { results, ...metadata } = response;
+  const { error: errorSearchBody } = metadata;
   const status = useSelector(state => selectHostErrataStatus(state));
   const errataSearchQuery = id => `errata_id = ${id}`;
   const {
@@ -323,6 +325,8 @@ export const ErrataTab = () => {
             emptyContentBody,
             emptySearchTitle,
             emptySearchBody,
+            errorSearchTitle,
+            errorSearchBody,
             status,
             activeFilters,
             defaultFilters,

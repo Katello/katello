@@ -70,6 +70,7 @@ export const PackagesTab = () => {
   const emptyContentBody = __('Packages will appear here when available.');
   const emptySearchTitle = __('No matching packages found');
   const emptySearchBody = __('Try changing your search settings.');
+  const errorSearchTitle = __('Problem searching packages');
   const columnHeaders = [
     __('Package'),
     __('Status'),
@@ -105,6 +106,7 @@ export const PackagesTab = () => {
 
   const response = useSelector(state => selectAPIResponse(state, HOST_PACKAGES_KEY));
   const { results, ...metadata } = response;
+  const { error: errorSearchBody } = metadata;
   const status = useSelector(state => selectHostPackagesStatus(state));
   const {
     selectOne,
@@ -327,6 +329,8 @@ export const PackagesTab = () => {
             emptyContentBody,
             emptySearchTitle,
             emptySearchBody,
+            errorSearchTitle,
+            errorSearchBody,
             status,
             activeFilters,
             defaultFilters,
