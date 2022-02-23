@@ -110,6 +110,14 @@ module ::Actions::Katello::Repository
       plan_action action, repository.root, :unprotected => true
       assert_action_planed action, candlepin_action_class
     end
+
+    it 'plans pulp3 update when retain_package_version is updated' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+
+      plan_action action, repository.root, :retain_package_versions_count => 17
+      assert_action_planed action, pulp3_action_class
+    end
   end
 
   class DestroyTest < TestBase
