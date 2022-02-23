@@ -37,11 +37,15 @@ node :last_published do |content_view|
   end
 end
 
-child :environments => :environments do
-  attributes :id, :name, :label
-  node :permissions do |env|
+node :environments do |cv|
+  cv.environments.map do |env|
     {
-      :readable => env.readable?
+      id: env.id,
+      label: env.label,
+      name: env.label,
+      activation_keys: cv&.activation_keys&.in_environment(env)&.ids,
+      hosts: cv&.hosts&.in_environment(env)&.ids,
+      permissions: {readable: env.readable?}
     }
   end
 end
