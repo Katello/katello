@@ -61,7 +61,8 @@ const CreateContentViewForm = ({ setModalOpen }) => {
 
   if (redirect) {
     const { id } = response;
-    return (<Redirect to={`/content_views/${id}`} />);
+    if (composite) { return (<Redirect to={`/content_views/${id}#/contentviews`} />); }
+    return (<Redirect to={`/content_views/${id}#/repositories`} />);
   }
 
   const submitDisabled = !name?.length || !label?.length || saving;
