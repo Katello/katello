@@ -357,6 +357,7 @@ export const PackagesTab = () => {
         >
           <Thead>
             <Tr>
+              <Th key="select-all" />
               <SortableColumnHeaders
                 columnHeaders={columnHeaders}
                 pfSortParams={pfSortParams}
