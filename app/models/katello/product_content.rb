@@ -16,6 +16,7 @@ module Katello
     }
 
     scoped_search :on => :name, :relation => :content
+    scoped_search :relation => :product, :on => :name, :rename => :product
     scoped_search :on => :content_type, :relation => :content, :complete_value => true
     scoped_search :on => :label, :relation => :content
     scoped_search :on => :content_url, :relation => :content, :rename => :path

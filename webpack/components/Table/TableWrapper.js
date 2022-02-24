@@ -160,7 +160,6 @@ const TableWrapper = ({
     paginationChangePending.current = pagData;
   };
 
-
   return (
     <>
       <Flex style={{ alignItems: 'center' }} className="margin-16-24">

@@ -43,6 +43,8 @@ const defaultQuery = {
   per_page: 20,
   page: 1,
   search: '',
+  sort_by: 'name',
+  sort_order: 'asc',
 };
 const libraryQuery = {
   ...defaultQuery,

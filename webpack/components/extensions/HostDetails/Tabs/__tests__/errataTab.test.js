@@ -65,13 +65,18 @@ const makeMockErrata = ({ pageSize = 20, total = 100, page = 1 }) => {
 
 const hostErrata = foremanApi.getApiUrl('/hosts/1/errata');
 const autocompleteUrl = '/hosts/1/errata/auto_complete_search';
-const defaultQueryWithoutSearch = {
+const baseQuery = {
   include_applicable: false,
   per_page: 20,
   page: 1,
 };
-const defaultQuery = { ...defaultQueryWithoutSearch, search: '' };
-const page2Query = { ...defaultQueryWithoutSearch, page: 2 };
+const baseQueryWithSort = {
+  ...baseQuery,
+  sort_by: 'errata_id',
+  sort_order: 'asc',
+};
+const defaultQuery = { ...baseQueryWithSort, search: '' };
+const page2Query = { ...baseQueryWithSort, page: 2 };
 const jobInvocations = foremanApi.getApiUrl('/job_invocations');
 const applyByKatelloAgentUrl = foremanApi.getApiUrl('/hosts/1/errata/apply');
 
@@ -393,7 +398,7 @@ test('Can de-select items in select all mode across pages', async (done) => {
 
   const scope2 = nockInstance
     .get(hostErrata)
-    .query({ ...defaultQueryWithoutSearch, page: 1 })
+    .query({ ...baseQueryWithSort, page: 1 })
     .reply(200, makeMockErrata({ page: 2 }));
 
   const scope3 = nockInstance
@@ -716,6 +721,7 @@ test('Can filter by errata type', async (done) => {
 
   const {
     queryByText,
+    queryByLabelText,
     getByRole,
     getAllByText,
     getByText,
@@ -726,7 +732,8 @@ test('Can filter by errata type', async (done) => {
   // the Bugfix text in the table is just a text node, while the dropdown is a button
   expect(getByText('Bugfix', { ignore: ['button', 'title'] })).toBeInTheDocument();
   expect(getByText('Enhancement', { ignore: ['button', 'title'] })).toBeInTheDocument();
-  const typeDropdown = queryByText('Type', { ignore: 'th' });
+  const typeContainer = queryByLabelText('select Type container', { ignore: 'th' });
+  const typeDropdown = within(typeContainer).queryByText('Type');
   expect(typeDropdown).toBeInTheDocument();
   fireEvent.click(typeDropdown);
   const security = getByRole('option', { name: 'select Security' });
@@ -759,6 +766,7 @@ test('Can filter by severity', async (done) => {
   const {
     queryByText,
     getByRole,
+    queryByLabelText,
     getAllByText,
     getByText,
   } = renderWithRedux(<ErrataTab />, renderOptions());
@@ -769,7 +777,8 @@ test('Can filter by severity', async (done) => {
   expect(getByText('Moderate', { ignore: ['button', 'title'] })).toBeInTheDocument();
   expect(getByText('Important', { ignore: ['.pf-c-select__toggle-text', 'title'] })).toBeInTheDocument();
   expect(getByText('Critical', { ignore: ['button', 'title'] })).toBeInTheDocument();
-  const severityDropdown = queryByText('Severity', { ignore: 'th' });
+  const severityContainer = queryByLabelText('select Severity container', { ignore: 'th' });
+  const severityDropdown = within(severityContainer).queryByText('Severity');
   expect(severityDropdown).toBeInTheDocument();
   fireEvent.click(severityDropdown);
   const important = getByRole('option', { name: 'select Important' });
@@ -936,7 +945,7 @@ test('Apply button chooses remote execution', async (done) => {
 
   const scope1 = nockInstance
     .get(hostErrata)
-    .query(defaultQueryWithoutSearch)
+    .query(baseQuery)
     .reply(200, mockErrata);
 
   const resolveErrataScope = nockInstance
@@ -974,7 +983,7 @@ test('Can bulk apply via remote execution', async (done) => {
 
   const scope1 = nockInstance
     .get(hostErrata)
-    .query(defaultQueryWithoutSearch)
+    .query(baseQuery)
     .reply(200, mockErrata);
 
   // eslint-disable-next-line camelcase
@@ -1023,7 +1032,7 @@ test('Can select all, exclude and bulk apply via remote execution', async (done)
 
   const scope1 = nockInstance
     .get(hostErrata)
-    .query(defaultQueryWithoutSearch)
+    .query(baseQuery)
     .reply(200, mockErrata);
 
   const jobInvocationBody = ({ job_invocation: { inputs } }) =>

@@ -2,6 +2,7 @@ import React, {
   useCallback,
   useEffect,
   useState,
+  useMemo,
 } from 'react';
 
 import { propsToCamelCase } from 'foremanReact/common/helpers';
@@ -43,6 +44,7 @@ import {
 
 import {
   useBulkSelect,
+  useTableSort,
   useUrlParams,
 } from '../../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
@@ -55,6 +57,7 @@ import {
 import { REPOSITORY_SETS_KEY } from './RepositorySetsConstants.js';
 import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
 import './RepositorySetsTab.scss';
+import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 
 const getEnabledValue = ({ enabled, enabledContentOverride }) => {
   const isOverridden = (enabledContentOverride !== null);
@@ -123,25 +126,43 @@ const RepositorySetsTab = () => {
   const emptyContentBody = __('Repository sets will appear here when available.');
   const emptySearchTitle = __('No matching repository sets found');
   const emptySearchBody = __('Try changing your search query.');
-  const columnHeaders = [
+  const errorSearchTitle = __('Problem searching repository sets');
+  const columnHeaders = useMemo(() => [
     __('Repository'),
     __('Product'),
     __('Repository path'),
     __('Status'),
-  ];
+  ], []);
+
+  const COLUMNS_TO_SORT_PARAMS = {
+    [columnHeaders[0]]: 'name',
+    [columnHeaders[1]]: 'product',
+    [columnHeaders[3]]: 'enabled_by_default',
+  };
+
+  const {
+    pfSortParams, apiSortParams,
+    activeSortColumn, activeSortDirection,
+  } = useTableSort({
+    allColumns: columnHeaders,
+    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
+  });
+
   const fetchItems = useCallback(
     params => (hostId ?
       getHostRepositorySets({
         content_access_mode_env: toggleGroupState === limitToEnvironment,
         content_access_mode_all: simpleContentAccess,
         host_id: hostId,
+        ...apiSortParams,
         ...params,
       }) : hostIdNotReady),
-    [hostId, toggleGroupState, limitToEnvironment, simpleContentAccess],
+    [hostId, toggleGroupState, limitToEnvironment,
+      simpleContentAccess, apiSortParams],
   );
 
   const response = useSelector(state => selectAPIResponse(state, REPOSITORY_SETS_KEY));
-  const { results, ...metadata } = response;
+  const { results, error: errorSearchBody, ...metadata } = response;
   const status = useSelector(state => selectRepositorySetsStatus(state));
   const repoSetSearchQuery = label => `cp_content_id = ${label}`;
   const {
@@ -284,7 +305,6 @@ const RepositorySetsTab = () => {
   } else {
     alertText = nonScaAlert;
   }
-
   return (
     <div>
       <div id="repo-sets-tab">
@@ -324,8 +344,6 @@ const RepositorySetsTab = () => {
             metadata,
             emptyContentTitle,
             emptyContentBody,
-            emptySearchTitle,
-            emptySearchBody,
             status,
             searchQuery,
             updateSearchQuery,
@@ -333,11 +351,15 @@ const RepositorySetsTab = () => {
             selectNone,
             toggleGroup,
             actionButtons,
+            emptySearchTitle,
+            emptySearchBody,
           }
           }
+          errorSearchTitle={errorSearchTitle}
+          errorSearchBody={errorSearchBody}
           activeFilters={[toggleGroupState]}
           defaultFilters={[defaultToggleGroupState]}
-          additionalListeners={[hostId, toggleGroupState]}
+          additionalListeners={[hostId, toggleGroupState, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
           autocompleteEndpoint="/repository_sets/auto_complete_search"
           bookmarkController="katello_product_contents" // Katello::ProductContent.table_name
@@ -349,13 +371,16 @@ const RepositorySetsTab = () => {
           <Thead>
             <Tr>
               <Th key="select-all" />
-              {columnHeaders.map(col =>
-                <Th key={col}>{col}</Th>)}
+              <SortableColumnHeaders
+                columnHeaders={columnHeaders}
+                pfSortParams={pfSortParams}
+                columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
+              />
               <Th />
               <Th key="action-menu" />
             </Tr>
           </Thead>
-          <>
+          <Tbody>
             {results?.map((repoSet, rowIndex) => {
               const {
                 id,
@@ -368,56 +393,54 @@ const RepositorySetsTab = () => {
               const { isEnabled, isOverridden } =
                 getEnabledValue({ enabled, enabledContentOverride });
               return (
-                <Tbody key={`${id}_${repoPath}`}>
-                  <Tr>
-                    <Td select={{
-                      disable: !isSelectable(id),
-                      isSelected: isSelected(id),
-                      onSelect: (event, selected) => selectOne(selected, id),
-                      rowIndex,
-                      variant: 'checkbox',
+                <Tr key={id}>
+                  <Td select={{
+                    disable: !isSelectable(id),
+                    isSelected: isSelected(id),
+                    onSelect: (event, selected) => selectOne(selected, id),
+                    rowIndex,
+                    variant: 'checkbox',
+                  }}
+                  />
+                  <Td>
+                    <span>{repoName}</span>
+                  </Td>
+                  <Td>
+                    <a href={`/products/${productId}`}>{productName}</a>
+                  </Td>
+                  <Td>
+                    <span>{repoPath}</span>
+                  </Td>
+                  <Td>
+                    <span><EnabledIcon key={`enabled-icon-${id}`} {...{ isEnabled, isOverridden }} /></span>
+                  </Td>
+                  <Td
+                    key={`rowActions-${id}`}
+                    actions={{
+                      items: [
+                        {
+                          title: __('Override to disabled'),
+                          isDisabled: isOverridden && !isEnabled,
+                          onClick: () => disableRepoSet(id),
+                        },
+                        {
+                          title: __('Override to enabled'),
+                          isDisabled: isOverridden && isEnabled,
+                          onClick: () => enableRepoSet(id),
+                        },
+                        {
+                          title: __('Reset to default'),
+                          isDisabled: !isOverridden,
+                          onClick: () => resetToDefaultRepoSet(id),
+                        },
+                      ],
                     }}
-                    />
-                    <Td>
-                      <span>{repoName}</span>
-                    </Td>
-                    <Td>
-                      <a href={`/products/${productId}`}>{productName}</a>
-                    </Td>
-                    <Td>
-                      <span>{repoPath}</span>
-                    </Td>
-                    <Td>
-                      <span><EnabledIcon key={`enabled-icon-${id}`} {...{ isEnabled, isOverridden }} /></span>
-                    </Td>
-                    <Td
-                      key={`rowActions-${id}`}
-                      actions={{
-                        items: [
-                          {
-                            title: __('Override to disabled'),
-                            isDisabled: isOverridden && !isEnabled,
-                            onClick: () => disableRepoSet(id),
-                          },
-                          {
-                            title: __('Override to enabled'),
-                            isDisabled: isOverridden && isEnabled,
-                            onClick: () => enableRepoSet(id),
-                          },
-                          {
-                            title: __('Reset to default'),
-                            isDisabled: !isOverridden,
-                            onClick: () => resetToDefaultRepoSet(id),
-                          },
-                        ],
-                      }}
-                    />
-                  </Tr>
-                </Tbody>
+                  />
+                </Tr>
               );
             })
             }
-          </>
+          </Tbody>
         </TableWrapper>
       </div>
     </div>

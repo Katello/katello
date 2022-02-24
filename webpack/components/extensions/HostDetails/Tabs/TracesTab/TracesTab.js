@@ -9,13 +9,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import EnableTracerEmptyState from './EnableTracerEmptyState';
 import TableWrapper from '../../../../Table/TableWrapper';
-import { useBulkSelect, useUrlParams } from '../../../../Table/TableHooks';
+import { useBulkSelect, useTableSort, useUrlParams } from '../../../../Table/TableHooks';
 import { getHostTraces } from './HostTracesActions';
 import { resolveTraces } from '../RemoteExecutionActions';
 import { selectHostTracesStatus } from './HostTracesSelectors';
 import { resolveTraceUrl } from '../customizedRexUrlHelpers';
 import './TracesTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
+import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 
 const TracesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -30,16 +31,31 @@ const TracesTab = () => {
   const emptyContentBody = __('Add traces by applying updates on this host.');
   const emptySearchTitle = __('No matching traces found');
   const emptySearchBody = __('Try changing your search settings.');
-  const fetchItems = useCallback(
-    params =>
-      (hostId ? getHostTraces(hostId, params) : hostIdNotReady),
-    [hostId],
-  );
+  const errorSearchTitle = __('Problem searching traces');
+  const columnHeaders = [
+    __('Application'),
+    __('Type'),
+    __('Helper'),
+  ];
+  const COLUMNS_TO_SORT_PARAMS = {
+    [columnHeaders[0]]: 'application',
+    [columnHeaders[1]]: 'app_type',
+    [columnHeaders[2]]: 'helper',
+  };
+  const {
+    pfSortParams, apiSortParams,
+    activeSortColumn, activeSortDirection,
+  } = useTableSort({
+    allColumns: columnHeaders,
+    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
+    initialSortColumnName: 'Application',
+  });
   const { searchParam } = useUrlParams();
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
   const { results, ...meta } = response;
+  const { error: errorSearchBody } = meta;
   const tracesSearchQuery = id => `id = ${id}`;
   const {
     selectOne, isSelected, searchQuery, selectedCount, isSelectable,
@@ -51,6 +67,11 @@ const TracesTab = () => {
     initialSearchQuery: searchParam || '',
   });
 
+  const fetchItems = useCallback(
+    params =>
+      (hostId ? getHostTraces(hostId, { ...apiSortParams, ...params }) : hostIdNotReady),
+    [hostId, apiSortParams],
+  );
 
   const onBulkRestartApp = () => {
     dispatch(resolveTraces({
@@ -120,6 +141,8 @@ const TracesTab = () => {
           emptyContentBody,
           emptySearchTitle,
           emptySearchBody,
+          errorSearchTitle,
+          errorSearchBody,
           status,
           searchQuery,
           updateSearchQuery,
@@ -135,14 +158,17 @@ const TracesTab = () => {
         rowsCount={results?.length}
         variant={TableVariant.compact}
         displaySelectAllCheckbox
+        additionalListeners={[activeSortColumn, activeSortDirection]}
         {...selectAll}
       >
         <Thead>
           <Tr>
             <Th key="select_checkbox" />
-            <Th>{__('Application')}</Th>
-            <Th>{__('Type')}</Th>
-            <Th>{__('Helper')}</Th>
+            <SortableColumnHeaders
+              columnHeaders={columnHeaders}
+              pfSortParams={pfSortParams}
+              columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
+            />
             <Th key="action_menu" />
           </Tr>
         </Thead>

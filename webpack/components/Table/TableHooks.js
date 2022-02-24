@@ -259,3 +259,43 @@ export const useUrlParams = () => {
     ...urlParams,
   };
 };
+
+export const useTableSort = ({
+  allColumns,
+  columnsToSortParams,
+  initialSortColumnName = allColumns[0],
+}) => {
+  if (!Object.keys(columnsToSortParams).includes(initialSortColumnName)) {
+    throw new Error(`initialSortColumnName '${initialSortColumnName}' must also be defined in columnsToSortParams`);
+  }
+  const [activeSortColumn, setActiveSortColumn] = useState(initialSortColumnName);
+  const [activeSortDirection, setActiveSortDirection] = useState('asc');
+
+  // Patternfly sort function
+  const onSort = (_event, index, direction) => {
+    setActiveSortColumn(allColumns?.[index]);
+    setActiveSortDirection(direction);
+  };
+
+  // Patternfly sort params to pass to the <Th> component.
+  // (but you should probably just use <SortableColumnHeaders> instead)
+  const pfSortParams = (columnName, newSortColIndex) => ({
+    columnIndex: newSortColIndex ?? allColumns?.indexOf(columnName),
+    sortBy: {
+      defaultDirection: 'asc',
+      direction: activeSortDirection,
+      index: allColumns?.indexOf(activeSortColumn),
+    },
+    onSort,
+  });
+
+  return {
+    pfSortParams,
+    apiSortParams: { // scoped_search params to pass to the Katello API
+      sort_by: columnsToSortParams[activeSortColumn],
+      sort_order: activeSortDirection,
+    },
+    activeSortColumn, // state values to pass as additionalListeners
+    activeSortDirection,
+  };
+};

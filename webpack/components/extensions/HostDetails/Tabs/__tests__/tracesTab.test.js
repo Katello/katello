@@ -42,7 +42,7 @@ const renderOptions = isTracerInstalled => ({ // sets initial Redux state
 
 const actionMenuToTheRightOf = node => node.nextElementSibling.firstElementChild.firstElementChild;
 
-const hostTraces = foremanApi.getApiUrl('/hosts/1/traces?per_page=20&page=1');
+const hostTraces = foremanApi.getApiUrl('/hosts/1/traces');
 const autocompleteUrl = '/hosts/1/traces/auto_complete_search';
 const jobInvocations = foremanApi.getApiUrl('/job_invocations');
 
@@ -71,6 +71,7 @@ describe('With tracer installed', () => {
     // return tracedata results when we look for traces
     const scope = nockInstance
       .get(hostTraces)
+      .query(true)
       .reply(200, mockTraceData);
 
 
@@ -89,6 +90,7 @@ describe('With tracer installed', () => {
 
     const scope = nockInstance
       .get(hostTraces)
+      .query(true)
       .reply(200, emptyTraceResults);
 
 
@@ -107,6 +109,7 @@ describe('With tracer installed', () => {
 
     const scope = nockInstance
       .get(hostTraces)
+      .query(true)
       .times(2)
       .reply(200, mockTraceData);
     const resolveTracesScope = nockInstance
@@ -146,6 +149,7 @@ describe('With tracer installed', () => {
 
     const scope = nockInstance
       .get(hostTraces)
+      .query(true)
       .times(2)
       .reply(200, mockTraceData);
     const resolveTracesScope = nockInstance
@@ -183,6 +187,7 @@ describe('With tracer installed', () => {
     const thirdTrace = mockTraceData.results[2];
     const scope = nockInstance
       .get(hostTraces)
+      .query(true)
       .times(2)
       .reply(200, mockTraceData);
     const jobInvocationBody = ({ job_invocation: { inputs } }) =>
@@ -225,6 +230,7 @@ describe('With tracer installed', () => {
 
     const scope = nockInstance
       .get(hostTraces)
+      .query(true)
       .reply(200, mockTraceData);
     const resolveTracesScope = nockInstance
       .post(jobInvocations)
@@ -260,6 +266,7 @@ describe('With tracer installed', () => {
     const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
     const scope = nockInstance
       .get(hostTraces)
+      .query(true)
       .reply(200, mockTraceData);
 
     const { getByText } = renderWithRedux(
@@ -294,6 +301,7 @@ describe('With tracer installed', () => {
     const feature = REX_FEATURES.KATELLO_HOST_TRACER_RESOLVE;
     const scope = nockInstance
       .get(hostTraces)
+      .query(true)
       .reply(200, mockTraceData);
 
     const { getByLabelText, queryByText } = renderWithRedux(
@@ -336,6 +344,7 @@ describe('With tracer installed', () => {
 
       const scope = nockInstance
         .get(hostTraces)
+        .query(true)
         .reply(200, mockTraceData);
 
       const { getByLabelText } = renderWithRedux(

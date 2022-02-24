@@ -4,19 +4,81 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { Skeleton, Label, Hint, HintBody, Button } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 import { upperFirst } from 'lodash';
-import { TableText, TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import { TableText, TableVariant, Thead, Tbody, Tr, Td } from '@patternfly/react-table';
 import {
   LongArrowAltUpIcon,
   CheckIcon,
 } from '@patternfly/react-icons';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { selectModuleStreamStatus, selectModuleStream } from './ModuleStreamsSelectors';
-import { useBulkSelect, useUrlParams } from '../../../../Table/TableHooks';
+import { useBulkSelect, useTableSort, useUrlParams } from '../../../../Table/TableHooks';
 import { getHostModuleStreams } from './ModuleStreamsActions';
 import InactiveText from '../../../../../scenes/ContentViews/components/InactiveText';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import hostIdNotReady from '../../HostDetailsActions';
 import { selectHostDetails } from '../../HostDetailsSelectors';
+import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
+
+const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
+  const INSTALLED_STATE = {
+    INSTALLED: __('Installed'),
+    UPGRADEABLE: __('Upgradable'),
+    UPTODATE: __('Up-to-date'),
+    NOTINSTALLED: __('Not installed'),
+  };
+
+  switch (true) {
+    case (streamInstallStatus?.length > 0 && streamText === 'disabled'):
+      return <TableText wrapModifier="nowrap">{INSTALLED_STATE.INSTALLED}</TableText>;
+    case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable !== true):
+      return <><CheckIcon color="green" /> {INSTALLED_STATE.UPTODATE}</>;
+    case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable):
+      return <><LongArrowAltUpIcon color="blue" /> {INSTALLED_STATE.UPGRADEABLE}</>;
+    default:
+      return <InactiveText text={INSTALLED_STATE.NOTINSTALLED} />;
+  }
+};
+
+EnabledIcon.propTypes = {
+  streamText: PropTypes.string.isRequired,
+  streamInstallStatus: PropTypes.arrayOf(PropTypes.string).isRequired,
+  upgradable: PropTypes.bool.isRequired,
+};
+
+const StreamState = ({ moduleStreamStatus }) => {
+  let streamText = moduleStreamStatus?.charAt(0)?.toUpperCase() + moduleStreamStatus?.slice(1);
+  streamText = streamText?.replace('Unknown', 'Default');
+  switch (true) {
+    case (streamText === 'Default'):
+      return <Label color="gray" variant="outline">{streamText}</Label>;
+    case (streamText === 'Disabled'):
+      return <Label color="gray" variant="filled">{streamText}</Label>;
+    case (streamText === 'Enabled'):
+      return <Label color="green" variant="filled">{streamText}</Label>;
+    default:
+      return null;
+  }
+};
+
+StreamState.propTypes = {
+  moduleStreamStatus: PropTypes.string.isRequired,
+};
+
+const HostInstalledProfiles = ({ moduleStreamStatus, installedProfiles }) => {
+  let installedProfile;
+  if (installedProfiles?.length > 0) {
+    installedProfile = installedProfiles?.map(profile => upperFirst(profile)).join(', ');
+  } else {
+    installedProfile = 'No profile installed';
+  }
+  const disabledText = moduleStreamStatus === 'disabled' || moduleStreamStatus === 'unknown';
+  return disabledText ? <InactiveText text={installedProfile} /> : installedProfile;
+};
+
+HostInstalledProfiles.propTypes = {
+  moduleStreamStatus: PropTypes.string.isRequired,
+  installedProfiles: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
 export const ModuleStreamsTab = () => {
   const { id: hostId, name: hostName } = useSelector(selectHostDetails);
@@ -25,6 +87,7 @@ export const ModuleStreamsTab = () => {
   const emptyContentBody = __('Module streams will appear here when available.');
   const emptySearchTitle = __('Your search returned no matching Module streams.');
   const emptySearchBody = __('Try changing your search criteria.');
+  const errorSearchTitle = __('Problem searching module streams');
   const { searchParam } = useUrlParams();
   const columnHeaders = [
     __('Name'),
@@ -33,20 +96,35 @@ export const ModuleStreamsTab = () => {
     __('Installation status'),
     __('Installed profile'),
   ];
+  const COLUMNS_TO_SORT_PARAMS = {
+    [columnHeaders[0]]: 'name',
+    [columnHeaders[1]]: 'status',
+    [columnHeaders[3]]: 'installed_profiles',
+  };
+
+  const {
+    pfSortParams, apiSortParams,
+    activeSortColumn, activeSortDirection,
+  } = useTableSort({
+    allColumns: columnHeaders,
+    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
+    initialSortColumnName: 'Name',
+  });
 
   const fetchItems = useCallback(
     (params) => {
       if (!hostId) return hostIdNotReady;
       return getHostModuleStreams(
         hostId,
-        params,
+        { ...apiSortParams, ...params },
       );
     },
-    [hostId],
+    [hostId, apiSortParams],
   );
 
   const response = useSelector(selectModuleStream);
   const { results, ...metadata } = response;
+  const { error: errorSearchBody } = metadata;
   const status = useSelector(state => selectModuleStreamStatus(state));
   /* eslint-disable no-unused-vars */
   const {
@@ -83,67 +161,6 @@ export const ModuleStreamsTab = () => {
     },
   ];
 
-  const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
-    const INSTALLED_STATE = {
-      INSTALLED: __('Installed'),
-      UPGRADEABLE: __('Upgradable'),
-      UPTODATE: __('Up-to-date'),
-      NOTINSTALLED: __('Not installed'),
-    };
-
-    switch (true) {
-      case (streamInstallStatus?.length > 0 && streamText === 'disabled'):
-        return <TableText wrapModifier="nowrap">{INSTALLED_STATE.INSTALLED}</TableText>;
-      case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable !== true):
-        return <><CheckIcon color="green" /> {INSTALLED_STATE.UPTODATE}</>;
-      case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable):
-        return <><LongArrowAltUpIcon color="blue" /> {INSTALLED_STATE.UPGRADEABLE}</>;
-      default:
-        return <InactiveText text={INSTALLED_STATE.NOTINSTALLED} />;
-    }
-  };
-
-  EnabledIcon.propTypes = {
-    streamText: PropTypes.string.isRequired,
-    streamInstallStatus: PropTypes.arrayOf(PropTypes.string).isRequired,
-    upgradable: PropTypes.bool.isRequired,
-  };
-
-  const StreamState = ({ moduleStreamStatus }) => {
-    let streamText = moduleStreamStatus?.charAt(0)?.toUpperCase() + moduleStreamStatus?.slice(1);
-    streamText = streamText?.replace('Unknown', 'Default');
-    switch (true) {
-      case (streamText === 'Default'):
-        return <Label color="gray" variant="outline">{streamText}</Label>;
-      case (streamText === 'Disabled'):
-        return <Label color="gray" variant="filled">{streamText}</Label>;
-      case (streamText === 'Enabled'):
-        return <Label color="green" variant="filled">{streamText}</Label>;
-      default:
-        return null;
-    }
-  };
-
-  StreamState.propTypes = {
-    moduleStreamStatus: PropTypes.string.isRequired,
-  };
-
-  const HostInstalledProfiles = ({ moduleStreamStatus, installedProfiles }) => {
-    let installedProfile;
-    if (installedProfiles?.length > 0) {
-      installedProfile = installedProfiles?.map(profile => upperFirst(profile)).join(', ');
-    } else {
-      installedProfile = 'No profile installed';
-    }
-    const disabledText = moduleStreamStatus === 'disabled' || moduleStreamStatus === 'unknown';
-    return disabledText ? <InactiveText text={installedProfile} /> : installedProfile;
-  };
-
-  HostInstalledProfiles.propTypes = {
-    moduleStreamStatus: PropTypes.string.isRequired,
-    installedProfiles: PropTypes.arrayOf(PropTypes.string).isRequired,
-  };
-
   return (
     <div>
       <div id="modules-hint" className="margin-0-24 margin-top-16">
@@ -165,12 +182,14 @@ export const ModuleStreamsTab = () => {
           emptyContentBody,
           emptySearchTitle,
           emptySearchBody,
+          errorSearchTitle,
+          errorSearchBody,
           searchQuery,
           updateSearchQuery,
           fetchItems,
           status,
         }}
-          additionalListeners={[hostId]}
+          additionalListeners={[hostId, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/module_streams/auto_complete_search`}
           foremanApiAutoComplete
@@ -179,8 +198,11 @@ export const ModuleStreamsTab = () => {
         >
           <Thead>
             <Tr>
-              {columnHeaders.map(col =>
-                <Th key={col}>{col}</Th>)}
+              <SortableColumnHeaders
+                columnHeaders={columnHeaders}
+                pfSortParams={pfSortParams}
+                columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
+              />
             </Tr>
           </Thead>
           <Tbody>

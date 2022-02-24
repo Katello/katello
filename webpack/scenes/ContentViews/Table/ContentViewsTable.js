@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector, useDispatch } from 'react-redux';
-import { omit, upperCase } from 'lodash';
+import { Link } from 'react-router-dom';
+import { omit } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { STATUS } from 'foremanReact/constants';
+import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import { Button } from '@patternfly/react-core';
-import { TableVariant } from '@patternfly/react-table';
+import { TableVariant, Thead, Tbody, Th, Tr, Td, ExpandableRowContent } from '@patternfly/react-table';
 import TableWrapper from '../../../components/Table/TableWrapper';
-import tableDataGenerator from './tableDataGenerator';
+// import tableDataGenerator, { buildColumns } from './tableDataGenerator';
 import getContentViews from '../ContentViewsActions';
 import CreateContentViewModal from '../Create/CreateContentViewModal';
 import CopyContentViewModal from '../Copy/CopyContentViewModal';
@@ -18,20 +18,23 @@ import getEnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPathA
 import ContentViewDeleteWizard from '../Delete/ContentViewDeleteWizard';
 import getContentViewDetails, { getContentViewVersions } from '../Details/ContentViewDetailActions';
 import { hasPermission } from '../helpers';
+import { useSet, useTableSort } from '../../../components/Table/TableHooks';
+import ContentViewIcon from '../components/ContentViewIcon';
+import { urlBuilder } from '../../../__mocks__/foremanReact/common/urlHelpers';
+import LastSync from '../Details/Repositories/LastSync';
+import InactiveText from '../components/InactiveText';
+import ContentViewVersionCell from './ContentViewVersionCell';
+import DetailsExpansion from '../expansions/DetailsExpansion';
 
 const ContentViewTable = () => {
   const response = useSelector(selectContentViews);
   const status = useSelector(selectContentViewStatus);
   const error = useSelector(selectContentViewError);
-  const [table, setTable] = useState({ rows: [], columns: [] });
-  const [sortBy, setSortBy] = useState({});
-  const [rowMappingIds, setRowMappingIds] = useState([]);
   const [searchQuery, updateSearchQuery] = useState('');
-  const loadingResponse = status === STATUS.PENDING;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copy, setCopy] = useState(false);
-  const [cvResults, setCvResults] = useState([]);
-  const [cvTableStatus, setCvTableStatus] = useState(STATUS.PENDING);
+  const expandedTableRows = useSet([]);
+  const tableRowIsExpanded = id => expandedTableRows.has(id);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -41,155 +44,90 @@ const ContentViewTable = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const dispatch = useDispatch();
   const metadata = omit(response, ['results']);
-  const { can_create: canCreate = false } = response;
+  const { can_create: canCreate = false, results } = response;
+  const columnHeaders = [
+    __('Type'),
+    __('Name'),
+    __('Last published'),
+    __('Last task'),
+    __('Latest version'),
+  ];
+  const COLUMNS_TO_SORT_PARAMS = {
+    [columnHeaders[1]]: 'name',
+  };
+  const {
+    pfSortParams, apiSortParams,
+    activeSortColumn, activeSortDirection,
+  } = useTableSort({
+    allColumns: columnHeaders,
+    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
+    initialSortColumnName: 'Name',
+  });
 
   const openForm = () => setIsModalOpen(true);
 
-  const openPublishModal = (rowInfo) => {
-    setActionableCvDetails({
-      id: rowInfo.cvId.toString(),
-      name: rowInfo.cvName,
-      composite: rowInfo.cvComposite,
-      version_count: rowInfo.cvVersionCount,
-      next_version: rowInfo.cvNextVersion,
-    });
+  const openPublishModal = (cvInfo) => {
+    setActionableCvDetails(cvInfo);
     setIsPublishModalOpen(true);
   };
 
-  const openPromoteModal = (rowInfo) => {
+  const openPromoteModal = (cvInfo) => {
     dispatch(getEnvironmentPaths());
-    setActionableCvDetails({
-      id: rowInfo.cvId.toString(),
-      latestVersionId: rowInfo.latestVersionId,
-      latestVersionEnvironments: rowInfo.latestVersionEnvironments,
-      latestVersionName: rowInfo.latestVersionName,
-    });
+    setActionableCvDetails(cvInfo);
     setIsPromoteModalOpen(true);
   };
 
-  const openDeleteModal = (rowInfo) => {
-    dispatch(getContentViewDetails(rowInfo.cvId));
-    dispatch(getContentViewVersions(rowInfo.cvId));
-    setActionableCvDetails({
-      id: rowInfo.cvId.toString(),
-      name: rowInfo.cvName,
-      environments: rowInfo.environments,
-      versions: rowInfo.versions,
-    });
+  const openDeleteModal = (cvInfo) => {
+    dispatch(getContentViewDetails(cvInfo.id));
+    dispatch(getContentViewVersions(cvInfo.id));
+    setActionableCvDetails(cvInfo);
     setIsDeleteModalOpen(true);
   };
 
-  useDeepCompareEffect(
-    () => {
-      // Prevents flash of "No Content" before rows are loaded
-      const tableStatus = () => {
-        if (typeof cvResults === 'undefined' || status === STATUS.ERROR) return status; // will handle errored state
-        const resultsIds = Array.from(cvResults.map(result => result.id));
-        // All results are accounted for in row mapping, the page is ready to load
-        if (resultsIds.length === rowMappingIds.length &&
-          resultsIds.every(id => rowMappingIds.includes(id))) {
-          return status;
-        }
-        return STATUS.PENDING; // Fallback to pending
-      };
+  const actionsWithPermissions = (cvInfo) => {
+    const { version_count: cvVersionCount, generated_for: generatedFor, permissions } = cvInfo;
 
-      const { results } = response;
-      if (status === STATUS.ERROR) {
-        setCvTableStatus(tableStatus());
-      }
-      if (!loadingResponse && results) {
-        setCvResults(results);
-        setCurrentStep(1);
-        const { newRowMappingIds, ...tableData } = tableDataGenerator(results);
-        setTable(tableData);
-        setRowMappingIds(newRowMappingIds);
-        setCvTableStatus(tableStatus());
-      }
-      return () => {
-        // This sets the loading state so that the table doesn't flicker on return
-        setCvTableStatus(STATUS.PENDING);
-      };
-    },
-    [response, status, loadingResponse, setTable, setRowMappingIds,
-      setCvResults, setCvTableStatus, setCurrentStep, cvResults, rowMappingIds],
-  );
-
-  const onCollapse = (_event, rowId, isOpen) => {
-    let rows;
-    if (rowId === -1) {
-      rows = table.rows.map(row => ({ ...row, isOpen }));
-    } else {
-      rows = [...table.rows];
-      rows[rowId].isOpen = isOpen;
-    }
-
-    setTable(prevTable => ({ ...prevTable, rows }));
-  };
-
-  const actionResolver = (rowData, { _rowIndex }) => {
-    // don't show actions for the expanded parts
-    if (rowData.parent !== undefined || rowData.compoundParent || rowData.noactions) return null;
     const publishAction = {
       title: __('Publish'),
-      isDisabled: rowData.generatedFor !== 'none',
-      onClick: (_event, _rowId, rowInfo) => {
-        openPublishModal(rowInfo);
-      },
+      isDisabled: generatedFor !== 'none',
+      onClick: () => openPublishModal(cvInfo),
     };
 
     const promoteAction = {
       title: __('Promote'),
-      isDisabled: !rowData.cvVersionCount,
-      onClick: (_event, _rowId, rowInfo) => openPromoteModal(rowInfo),
+      isDisabled: !cvVersionCount,
+      onClick: () => openPromoteModal(cvInfo),
     };
 
     const copyAction = {
       title: __('Copy'),
-      onClick: (_event, _rowId, rowInfo) => {
+      onClick: () => {
         setCopy(true);
-        setActionableCvId(rowInfo.cvId.toString());
-        setActionableCvName(rowInfo.cvName);
+        setActionableCvId(cvInfo.id.toString());
+        setActionableCvName(cvInfo.name);
       },
     };
 
     const deleteAction = {
       title: __('Delete'),
-      onClick: (_event, _rowId, rowInfo) => openDeleteModal(rowInfo),
+      onClick: () => openDeleteModal(cvInfo),
     };
 
     return [
-      ...(hasPermission(rowData.permissions, 'publish_content_views') ? [publishAction] : []),
-      ...(hasPermission(rowData.permissions, 'promote_or_remove_content_views') ? [promoteAction] : []),
+      ...(hasPermission(permissions, 'publish_content_views') ? [publishAction] : []),
+      ...(hasPermission(permissions, 'promote_or_remove_content_views') ? [promoteAction] : []),
       ...(canCreate ? [copyAction] : []),
-      ...(hasPermission(rowData.permissions, 'destroy_content_views') ? [deleteAction] : []),
+      ...(hasPermission(permissions, 'destroy_content_views') ? [deleteAction] : []),
     ];
   };
 
-  const indexToSortVariable = (key) => {
-    switch (key) {
-      case 2:
-        return 'name';
-      default:
-        return undefined;
-    }
-  };
-
-  const onSort = (_event, index, direction) => {
-    setCvTableStatus(STATUS.PENDING);
-    setSortBy({ index, direction });
-  };
-
-  const { index: sortByIndex, direction } = sortBy;
   const fetchItems = useCallback(
     params =>
       getContentViews({
+        ...apiSortParams,
         ...params,
-        ...sortByIndex ? {
-          sort_by: indexToSortVariable(sortByIndex),
-          sort_order: upperCase(direction),
-        } : {},
       }),
-    [sortByIndex, direction],
+    [apiSortParams],
   );
 
   const emptyContentTitle = __("You currently don't have any Content views.");
@@ -198,38 +136,30 @@ const ContentViewTable = () => {
   const emptySearchBody = __('Try changing your search settings.');
   const {
     id,
-    latestVersionId,
-    latestVersionName,
-    latestVersionEnvironments,
+    latest_version_id: latestVersionId,
+    latest_version: latestVersionName,
+    latest_version_environments: latestVersionEnvironments,
     environments,
     versions,
   } = actionableCvDetails;
 
-  const { rows, columns } = table;
   return (
     <TableWrapper
       {...{
-        rows,
         error,
         metadata,
         emptyContentTitle,
         emptyContentBody,
         emptySearchTitle,
         emptySearchBody,
-        actionResolver,
         searchQuery,
         updateSearchQuery,
         fetchItems,
       }}
-      additionalListeners={[isPublishModalOpen, sortByIndex, direction]}
-      sortBy={sortBy}
-      onSort={onSort}
+      additionalListeners={[isPublishModalOpen, activeSortColumn, activeSortDirection]}
       bookmarkController="katello_content_views"
       variant={TableVariant.compact}
-      status={cvTableStatus}
-      onCollapse={onCollapse}
-      canSelectAll={false}
-      cells={columns}
+      status={status}
       autocompleteEndpoint="/content_views/auto_complete_search"
       actionButtons={
         <>
@@ -271,7 +201,95 @@ const ContentViewTable = () => {
           />}
         </>
       }
-    />
+    >
+      <Thead>
+        <Tr>
+          <Th key="expand-carat" />
+          {columnHeaders.map(col => (
+            <Th
+              key={col}
+              sort={COLUMNS_TO_SORT_PARAMS[col] ? pfSortParams(col) : undefined}
+            >
+              {col}
+            </Th>
+          ))}
+          <Th key="action-menu" />
+        </Tr>
+      </Thead>
+      {results?.map((cvInfo, rowIndex) => {
+        const {
+          composite,
+          name,
+          id: cvId,
+          last_published: lastPublished,
+          latest_version: latestVersion,
+          latest_version_id: cvLatestVersionId,
+          latest_version_environments: cvLatestVersionEnvironments,
+          last_task: lastTask,
+          activation_keys: activationKeys,
+          hosts,
+          related_cv_count: relatedCVCount,
+          related_composite_cvs: relatedCompositeCVs,
+          description,
+          createdAt,
+        } = cvInfo;
+        const { last_sync_words: lastSyncWords, started_at: startedAt } = lastTask ?? {};
+        const isExpanded = tableRowIsExpanded(cvId);
+        return (
+          <Tbody isExpanded={isExpanded} key={`${cvId}_${createdAt}`}>
+            <Tr key={cvId}>
+              <Td
+                expand={{
+                        rowIndex,
+                        isExpanded,
+                        onToggle: (_event, _rInx, isOpen) =>
+                          expandedTableRows.onToggle(isOpen, cvId),
+                      }}
+              />
+              <Td><ContentViewIcon composite={composite ? true : undefined} /></Td>
+              <Td><Link to={`${urlBuilder('content_views', '')}${cvId}`}>{name}</Link></Td>
+              <Td>{lastPublished ? <LongDateTime date={lastPublished} showRelativeTimeTooltip /> : <InactiveText text={__('Not yet published')} />}</Td>
+              <Td><LastSync startedAt={startedAt} lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /></Td>
+              <Td>{latestVersion ?
+                <ContentViewVersionCell {...{
+                    id: cvId,
+                    latestVersion,
+                    latestVersionId: cvLatestVersionId,
+                    latestVersionEnvironments: cvLatestVersionEnvironments,
+                  }}
+                /> :
+                <InactiveText style={{ marginTop: '0.5em', marginBottom: '0.5em' }} text={__('Not yet published')} />}
+              </Td>
+              <Td
+                key={`rowActions-${id}`}
+                actions={{
+                  items: actionsWithPermissions(cvInfo),
+                }}
+              />
+            </Tr>
+            <Tr key="child_row" isExpanded={isExpanded}>
+              <Td colSpan={2}>
+                <ExpandableRowContent>
+                  <DetailsExpansion
+                    cvId={cvId}
+                    cvName={name}
+                    cvComposite={composite}
+                    {...{
+                      activationKeys, hosts, relatedCVCount, relatedCompositeCVs,
+                    }}
+                  />
+                </ExpandableRowContent>
+              </Td>
+              <Td colSpan={4}>
+                <ExpandableRowContent>
+                  {description || <InactiveText text={__('No description')} />}
+                </ExpandableRowContent>
+              </Td>
+            </Tr>
+          </Tbody>
+        );
+      })}
+    </TableWrapper>
   );
 };
 

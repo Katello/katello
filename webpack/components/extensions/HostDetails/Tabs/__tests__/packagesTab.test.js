@@ -6,6 +6,7 @@ import { HOST_PACKAGES_KEY, PACKAGES_SEARCH_QUERY } from '../../HostPackages/Hos
 import { PackagesTab } from '../PackagesTab';
 import mockPackagesData from './packages.fixtures.json';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
+import * as hooks from '../../../../Table/TableHooks';
 
 const contentFacetAttributes = {
   id: 11,
@@ -34,10 +35,16 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
 const hostPackages = foremanApi.getApiUrl('/hosts/1/packages');
 const jobInvocations = foremanApi.getApiUrl('/job_invocations');
 const autocompleteUrl = '/hosts/1/packages/auto_complete_search';
-const defaultQueryWithoutSearch = {
+const baseQuery = {
   include_latest_upgradable: true,
   per_page: 20,
   page: 1,
+};
+
+const defaultQueryWithoutSearch = {
+  ...baseQuery,
+  sort_by: 'nvra',
+  sort_order: 'asc',
 };
 const defaultQuery = { ...defaultQueryWithoutSearch, search: '' };
 
@@ -390,3 +397,25 @@ test('Remove is disabled when in select all mode', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
+
+test('Sets initial search query from url params', async (done) => {
+  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostPackages)
+    .query({ ...defaultQuery, search: `name=${firstPackage.name}` })
+    .reply(200, { ...mockPackagesData, results: [firstPackage] });
+
+  jest.spyOn(hooks, 'useUrlParams').mockImplementation(() => ({
+    searchParam: `name=${firstPackage.name}`,
+  }));
+
+  const { getAllByText, queryByText } = renderWithRedux(<PackagesTab />, renderOptions());
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+  expect(queryByText(secondPackage.name)).not.toBeInTheDocument();
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+

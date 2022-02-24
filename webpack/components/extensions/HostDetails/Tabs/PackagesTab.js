@@ -18,9 +18,9 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
-import { useBulkSelect } from '../../../../components/Table/TableHooks';
 import SelectableDropdown from '../../../SelectableDropdown';
 import TableWrapper from '../../../../components/Table/TableWrapper';
+import { useBulkSelect, useTableSort, useUrlParams } from '../../../../components/Table/TableHooks';
 import { PackagesStatus, PackagesLatestVersion } from '../../../../components/Packages';
 import {
   getInstalledPackagesWithLatest,
@@ -38,6 +38,7 @@ import './PackagesTab.scss';
 import hostIdNotReady from '../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
 import defaultRemoteActionMethod, { KATELLO_AGENT } from '../hostDetailsHelpers';
+import SortableColumnHeaders from '../../../Table/components/SortableColumnHeaders';
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -46,6 +47,7 @@ export const PackagesTab = () => {
     name: hostname,
   } = hostDetails;
 
+  const { searchParam } = useUrlParams();
   const dispatch = useDispatch();
   const PACKAGE_STATUS = __('Status');
   const [packageStatusSelected, setPackageStatusSelected] = useState(PACKAGE_STATUS);
@@ -69,12 +71,27 @@ export const PackagesTab = () => {
   const emptyContentBody = __('Packages will appear here when available.');
   const emptySearchTitle = __('No matching packages found');
   const emptySearchBody = __('Try changing your search settings.');
+  const errorSearchTitle = __('Problem searching packages');
   const columnHeaders = [
     __('Package'),
     __('Status'),
-    __('Installed Version'),
-    __('Upgradable To'),
+    __('Installed version'),
+    __('Upgradable to'),
   ];
+
+  const COLUMNS_TO_SORT_PARAMS = {
+    [columnHeaders[0]]: 'nvra',
+    [columnHeaders[2]]: 'version',
+  };
+
+  const {
+    pfSortParams, apiSortParams,
+    activeSortColumn, activeSortDirection,
+  } = useTableSort({
+    allColumns: columnHeaders,
+    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
+    initialSortColumnName: 'Package',
+  });
 
   const fetchItems = useCallback(
     (params) => {
@@ -83,22 +100,23 @@ export const PackagesTab = () => {
       if (packageStatusSelected !== PACKAGE_STATUS) {
         modifiedParams.status = VERSION_STATUSES_TO_PARAM[packageStatusSelected];
       }
-      return getInstalledPackagesWithLatest(hostId, modifiedParams);
+      return getInstalledPackagesWithLatest(hostId, { ...apiSortParams, ...modifiedParams });
     },
-    [hostId, PACKAGE_STATUS, packageStatusSelected],
+    [hostId, PACKAGE_STATUS, packageStatusSelected, apiSortParams],
   );
 
   const response = useSelector(state => selectAPIResponse(state, HOST_PACKAGES_KEY));
   const { results, ...metadata } = response;
+  const { error: errorSearchBody } = metadata;
   const status = useSelector(state => selectHostPackagesStatus(state));
   const {
     selectOne,
     isSelected,
     searchQuery,
+    updateSearchQuery,
     selectedCount,
     isSelectable,
     selectedResults,
-    updateSearchQuery,
     selectNone,
     selectAllMode,
     areAllRowsSelected,
@@ -107,6 +125,7 @@ export const PackagesTab = () => {
   } = useBulkSelect({
     results,
     metadata,
+    initialSearchQuery: searchParam || '',
   });
 
   if (!hostId) return <Skeleton />;
@@ -312,6 +331,8 @@ export const PackagesTab = () => {
             emptyContentBody,
             emptySearchTitle,
             emptySearchBody,
+            errorSearchTitle,
+            errorSearchBody,
             status,
             activeFilters,
             defaultFilters,
@@ -324,7 +345,8 @@ export const PackagesTab = () => {
             areAllRowsSelected,
           }
           }
-          additionalListeners={[hostId, packageStatusSelected]}
+          additionalListeners={[hostId, packageStatusSelected,
+            activeSortDirection, activeSortColumn]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}
           foremanApiAutoComplete
@@ -336,8 +358,11 @@ export const PackagesTab = () => {
           <Thead>
             <Tr>
               <Th key="select-all" />
-              {columnHeaders.map(col =>
-                <Th key={col}>{col}</Th>)}
+              <SortableColumnHeaders
+                columnHeaders={columnHeaders}
+                pfSortParams={pfSortParams}
+                columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
+              />
               <Th />
             </Tr>
           </Thead>

@@ -43,9 +43,13 @@ module Katello
     end
 
     def ==(other)
-      self.content_label == other.content_label &&
-        self.name == other.name &&
-        self.value == other.value
+      if self.class == other.class
+        self.content_label == other.content_label &&
+          self.name == other.name &&
+          self.value == other.value
+      else
+        super
+      end
     end
 
     def to_hash

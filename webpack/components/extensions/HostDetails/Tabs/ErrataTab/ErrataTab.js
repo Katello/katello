@@ -21,7 +21,7 @@ import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import SelectableDropdown from '../../../../SelectableDropdown';
-import { useSet, useBulkSelect, useUrlParams } from '../../../../../components/Table/TableHooks';
+import { useSet, useBulkSelect, useUrlParams, useTableSort } from '../../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { ErrataType, ErrataSeverity } from '../../../../../components/Errata';
 import { getInstallableErrata, regenerateApplicability, applyViaKatelloAgent } from './HostErrataActions';
@@ -34,6 +34,7 @@ import { errataInstallUrl } from '../customizedRexUrlHelpers';
 import './ErrataTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import defaultRemoteActionMethod, { KATELLO_AGENT } from '../../hostDetailsHelpers';
+import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -70,6 +71,7 @@ export const ErrataTab = () => {
   const emptyContentBody = __('Installable errata will appear here when available.');
   const emptySearchTitle = __('No matching errata found');
   const emptySearchBody = __('Try changing your search settings.');
+  const errorSearchTitle = __('Problem searching errata');
   const columnHeaders = [
     __('Errata'),
     __('Type'),
@@ -78,6 +80,21 @@ export const ErrataTab = () => {
     __('Synopsis'),
     __('Published date'),
   ];
+  const COLUMNS_TO_SORT_PARAMS = {
+    [columnHeaders[0]]: 'errata_id',
+    [columnHeaders[1]]: 'type',
+    [columnHeaders[2]]: 'severity',
+    [columnHeaders[5]]: 'updated',
+  };
+
+  const {
+    pfSortParams, apiSortParams,
+    activeSortColumn, activeSortDirection,
+  } = useTableSort({
+    allColumns: columnHeaders,
+    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
+    initialSortColumnName: 'Errata',
+  });
 
   const fetchItems = useCallback(
     (params) => {
@@ -93,16 +110,18 @@ export const ErrataTab = () => {
         hostId,
         {
           include_applicable: toggleGroupState === ALL,
+          ...apiSortParams,
           ...modifiedParams,
         },
       );
     },
     [hostId, toggleGroupState, ALL, ERRATA_SEVERITY, ERRATA_TYPE,
-      errataTypeSelected, errataSeveritySelected],
+      errataTypeSelected, errataSeveritySelected, apiSortParams],
   );
 
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
   const { results, ...metadata } = response;
+  const { error: errorSearchBody } = metadata;
   const status = useSelector(state => selectHostErrataStatus(state));
   const errataSearchQuery = id => `errata_id = ${id}`;
   const {
@@ -306,6 +325,8 @@ export const ErrataTab = () => {
             emptyContentBody,
             emptySearchTitle,
             emptySearchBody,
+            errorSearchTitle,
+            errorSearchBody,
             status,
             activeFilters,
             defaultFilters,
@@ -318,7 +339,8 @@ export const ErrataTab = () => {
           }
           }
           additionalListeners={[
-            hostId, toggleGroupState, errataTypeSelected, errataSeveritySelected]}
+            hostId, toggleGroupState, errataTypeSelected,
+            errataSeveritySelected, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/errata/auto_complete_search`}
           foremanApiAutoComplete
@@ -331,8 +353,11 @@ export const ErrataTab = () => {
             <Tr>
               <Th key="expand-carat" />
               <Th key="select-all" />
-              {columnHeaders.map(col =>
-                <Th key={col}>{col}</Th>)}
+              <SortableColumnHeaders
+                columnHeaders={columnHeaders}
+                pfSortParams={pfSortParams}
+                columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
+              />
               <Th key="action-menu" />
             </Tr>
           </Thead>
