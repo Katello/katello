@@ -47,6 +47,7 @@ export const PackagesTab = () => {
     name: hostname,
   } = hostDetails;
 
+  const { searchParam } = useUrlParams();
   const dispatch = useDispatch();
   const PACKAGE_STATUS = __('Status');
   const [packageStatusSelected, setPackageStatusSelected] = useState(PACKAGE_STATUS);
@@ -112,10 +113,10 @@ export const PackagesTab = () => {
     selectOne,
     isSelected,
     searchQuery,
+    updateSearchQuery,
     selectedCount,
     isSelectable,
     selectedResults,
-    updateSearchQuery,
     selectNone,
     selectAllMode,
     areAllRowsSelected,
@@ -124,6 +125,7 @@ export const PackagesTab = () => {
   } = useBulkSelect({
     results,
     metadata,
+    initialSearchQuery: searchParam || '',
   });
 
   if (!hostId) return <Skeleton />;
