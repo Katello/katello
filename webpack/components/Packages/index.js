@@ -4,7 +4,6 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import {
   CheckIcon,
   LongArrowAltUpIcon,
-  MinusIcon,
 } from '@patternfly/react-icons';
 import PropTypes from 'prop-types';
 
@@ -41,16 +40,14 @@ PackagesStatus.defaultProps = {
 
 export const PackagesLatestVersion = ({ name, upgradable_version: upgradableVersion }) => {
   let label;
-  let color;
 
   if (upgradableVersion == null) {
     label = '';
-    color = 'black';
   } else {
     label = upgradableVersion.replace(`${name}-`, '');
   }
 
-  return <TableText wrapModifier="nowrap">{color && <MinusIcon color={color} title={label} />} {label} </TableText>;
+  return <TableText wrapModifier="nowrap">{label || '—'} </TableText>;
 };
 
 PackagesLatestVersion.propTypes = {

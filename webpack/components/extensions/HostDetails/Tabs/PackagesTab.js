@@ -74,8 +74,8 @@ export const PackagesTab = () => {
   const columnHeaders = [
     __('Package'),
     __('Status'),
-    __('Installed Version'),
-    __('Upgradable To'),
+    __('Installed version'),
+    __('Upgradable to'),
   ];
 
   const COLUMNS_TO_SORT_PARAMS = {
