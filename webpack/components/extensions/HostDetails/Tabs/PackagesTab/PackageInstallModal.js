@@ -9,16 +9,16 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import PropTypes from 'prop-types';
-import TableWrapper from '../../../Table/TableWrapper';
-import { useBulkSelect } from '../../../Table/TableHooks';
-import { HOST_YUM_INSTALLABLE_PACKAGES_KEY } from '../YumInstallablePackages/YumInstallablePackagesConstants';
-import { selectHostYumInstallablePackagesStatus } from '../YumInstallablePackages/YumInstallablePackagesSelectors';
-import { getHostYumInstallablePackages } from '../YumInstallablePackages/YumInstallablePackagesActions';
+import TableWrapper from '../../../../Table/TableWrapper';
+import { useBulkSelect } from '../../../../Table/TableHooks';
+import { HOST_YUM_INSTALLABLE_PACKAGES_KEY } from './YumInstallablePackagesConstants';
+import { selectHostYumInstallablePackagesStatus } from './YumInstallablePackagesSelectors';
+import { getHostYumInstallablePackages } from './YumInstallablePackagesActions';
 import './PackageInstallModal.scss';
-import { installPackageBySearch } from './RemoteExecutionActions';
-import { katelloPackageInstallBySearchUrl, katelloPackageInstallUrl } from './customizedRexUrlHelpers';
-import hostIdNotReady from '../HostDetailsActions';
-import { installPackageViaKatelloAgent } from '../HostPackages/HostPackagesActions';
+import { installPackageBySearch } from '../RemoteExecutionActions';
+import { katelloPackageInstallBySearchUrl, katelloPackageInstallUrl } from '../customizedRexUrlHelpers';
+import hostIdNotReady from '../../HostDetailsActions';
+import { installPackageViaKatelloAgent } from './HostPackagesActions';
 
 const InstallDropdown = ({
   isDisabled, installViaRex, installViaKatelloAgent,

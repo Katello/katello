@@ -2,8 +2,8 @@ import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
-import { HOST_PACKAGES_KEY, PACKAGES_SEARCH_QUERY } from '../../HostPackages/HostPackagesConstants';
-import { PackagesTab } from '../PackagesTab';
+import { HOST_PACKAGES_KEY, PACKAGES_SEARCH_QUERY } from '../PackagesTab/HostPackagesConstants';
+import { PackagesTab } from '../PackagesTab/PackagesTab.js';
 import mockPackagesData from './packages.fixtures.json';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
 

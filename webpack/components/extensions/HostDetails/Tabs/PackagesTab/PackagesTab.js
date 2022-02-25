@@ -18,26 +18,27 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
-import { useBulkSelect } from '../../../../components/Table/TableHooks';
-import SelectableDropdown from '../../../SelectableDropdown';
-import TableWrapper from '../../../../components/Table/TableWrapper';
-import { PackagesStatus, PackagesLatestVersion } from '../../../../components/Packages';
+import SelectableDropdown from '../../../../SelectableDropdown';
+import TableWrapper from '../../../../../components/Table/TableWrapper';
+import { useBulkSelect, useTableSort, useUrlParams } from '../../../../../components/Table/TableHooks';
+import { PackagesStatus, PackagesLatestVersion } from '../../../../../components/Packages';
 import {
   getInstalledPackagesWithLatest,
   removePackageViaKatelloAgent,
   upgradeAllViaKatelloAgent,
   upgradePackageViaKatelloAgent,
-} from '../HostPackages/HostPackagesActions';
-import { selectHostPackagesStatus } from '../HostPackages/HostPackagesSelectors';
+} from './HostPackagesActions';
+import { selectHostPackagesStatus } from './HostPackagesSelectors';
 import {
   HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM,
-} from '../HostPackages/HostPackagesConstants';
-import { removePackage, updatePackage, removePackages, updatePackages } from './RemoteExecutionActions';
-import { katelloPackageUpdateUrl, packagesUpdateUrl } from './customizedRexUrlHelpers';
+} from './HostPackagesConstants';
+import { removePackage, updatePackage, removePackages, updatePackages } from '../RemoteExecutionActions';
+import { katelloPackageUpdateUrl, packagesUpdateUrl } from '../customizedRexUrlHelpers';
 import './PackagesTab.scss';
-import hostIdNotReady from '../HostDetailsActions';
+import hostIdNotReady from '../../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
-import defaultRemoteActionMethod, { KATELLO_AGENT } from '../hostDetailsHelpers';
+import defaultRemoteActionMethod, { KATELLO_AGENT } from '../../hostDetailsHelpers';
+import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));

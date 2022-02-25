@@ -1,8 +1,8 @@
 import { REX_FEATURES } from './RemoteExecutionConstants';
 import { TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
 import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
-import { PACKAGE_SEARCH_QUERY } from '../YumInstallablePackages/YumInstallablePackagesConstants';
-import { PACKAGES_SEARCH_QUERY } from '../HostPackages/HostPackagesConstants';
+import { PACKAGE_SEARCH_QUERY } from './PackagesTab/YumInstallablePackagesConstants';
+import { PACKAGES_SEARCH_QUERY } from './PackagesTab/HostPackagesConstants';
 
 export const createJob = ({
   hostname, feature, inputs,
