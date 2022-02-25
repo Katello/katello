@@ -16,7 +16,7 @@ import { filterRHSubscriptions } from './SubscriptionHelpers';
 import api, { orgId } from '../../services/api';
 
 import { createSubscriptionParams } from './SubscriptionActions.js';
-import { SUBSCRIPTION_TABLE_NAME, SUBSCRIPTION_WATCH_URL } from './SubscriptionConstants';
+import { SUBSCRIPTION_TABLE_NAME, SUBSCRIPTION_WATCH_URL, SCA_URL } from './SubscriptionConstants';
 import './SubscriptionsPage.scss';
 
 class SubscriptionsPage extends Component {
@@ -218,21 +218,22 @@ class SubscriptionsPage extends Component {
       },
     };
 
-    const SCAAlert = simpleContentAccess ? (
-      <Alert type="info">
+    const SCAAlert = (
+      <Alert type={simpleContentAccess ? 'info' : 'warning'}>
         <FormattedMessage
           id="sca-alert"
           values={{
             subscriptionWatch: <a href={SUBSCRIPTION_WATCH_URL} target="_blank" rel="noreferrer">{__('Subscription Watch')}</a>,
             br: <br />,
+            scaLink: <a href={SCA_URL} target="_blank" rel="noreferrer">{__('Simple Content Access')}</a>,
           }}
-          defaultMessage={__(`This organization has Simple Content Access enabled.
+          defaultMessage={simpleContentAccess ? __(`This organization has Simple Content Access enabled.
           Hosts are not required to have subscriptions attached to access repositories.
           {br}
-          Learn more about your overall subscription usage at {subscriptionWatch}.`)}
+          Learn more about your overall subscription usage at {subscriptionWatch}.`) : __('This organization is not using {scaLink}. Legacy subscription management is deprecated and will be removed in a future version.')}
         />
       </Alert>
-    ) : null;
+    );
     return (
       <Grid bsClass="container-fluid">
         <Row>
