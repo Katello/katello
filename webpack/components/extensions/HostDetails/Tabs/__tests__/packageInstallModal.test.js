@@ -3,8 +3,8 @@ import { renderWithRedux, patientlyWaitFor, fireEvent, within } from 'react-test
 import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import katelloApi, { foremanApi } from '../../../../../services/api';
 import mockPackagesData from './yumInstallablePackages.fixtures.json';
-import PackageInstallModal from '../PackageInstallModal';
-import { HOST_YUM_INSTALLABLE_PACKAGES_KEY, PACKAGE_SEARCH_QUERY } from '../../YumInstallablePackages/YumInstallablePackagesConstants';
+import PackageInstallModal from '../PackagesTab/PackageInstallModal';
+import { HOST_YUM_INSTALLABLE_PACKAGES_KEY, PACKAGE_SEARCH_QUERY } from '../PackagesTab/YumInstallablePackagesConstants';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
 
 const contentFacetAttributes = {
