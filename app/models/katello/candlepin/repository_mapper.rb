@@ -74,6 +74,7 @@ module Katello
       end
 
       def feed_url
+        return if product.organization.cdn_configuration.airgapped?
         @feed_url ||= if product.cdn_resource&.respond_to?(:repository_url)
                         product.cdn_resource.repository_url(content_label: content.label)
                       else
