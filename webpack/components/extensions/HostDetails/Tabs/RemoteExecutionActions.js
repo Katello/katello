@@ -5,8 +5,8 @@ import { getResponseErrorMsgs } from '../../../../utils/helpers';
 import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
 import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
 import { TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
-import { PACKAGE_SEARCH_QUERY } from '../YumInstallablePackages/YumInstallablePackagesConstants';
-import { PACKAGES_SEARCH_QUERY } from '../HostPackages/HostPackagesConstants';
+import { PACKAGE_SEARCH_QUERY } from './PackagesTab/YumInstallablePackagesConstants';
+import { PACKAGES_SEARCH_QUERY } from './PackagesTab/HostPackagesConstants';
 
 const errorToast = (error) => {
   const message = getResponseErrorMsgs(error.response);
