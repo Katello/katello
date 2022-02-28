@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
+  Button,
   Grid,
   GridItem,
   TextContent,
@@ -12,7 +13,7 @@ import {
   FlexItem,
   Dropdown,
   DropdownItem,
-  DropdownToggle,
+  KebabToggle,
   DropdownPosition,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -44,14 +45,6 @@ const ContentViewVersionDetailsHeader = ({
   const [deleteVersion, setDeleteVersion] = useState(false);
   const dropDownItems = [
     <DropdownItem
-      key="promote"
-      onClick={() => {
-        setPromoting(true);
-      }}
-    >
-      {__('Promote')}
-    </DropdownItem>,
-    <DropdownItem
       key="remove"
       onClick={() => {
         setRemovingFromEnv(true);
@@ -73,23 +66,26 @@ const ContentViewVersionDetailsHeader = ({
 
   return (
     <Grid className="margin-0-24">
-      <GridItem span={10}>
+      <GridItem sm={6} >
         <TextContent>
           <Text component={TextVariants.h2}>{__('Version ')}{version}</Text>
         </TextContent>
       </GridItem>
-      <GridItem span={2} style={{ display: 'flex' }}>
-        <Dropdown
-          aria-label="version-action-dropdown"
-          position={DropdownPosition.right}
+      <GridItem sm={6} style={{ display: 'flex' }}>
+        <Button
           style={{ marginLeft: 'auto' }}
+          onClick={() => setPromoting(true)}
+          variant="primary"
+          aria-label="publish_content_view"
+        >
+          {__('Promote')}
+        </Button>
+        <Dropdown
+          isPlain
+          style={{ width: 'inherit' }}
+          position={DropdownPosition.right}
           toggle={
-            <DropdownToggle
-              onToggle={setDropdownOpen}
-              id="toggle-id"
-            >
-              {__('Actions')}
-            </DropdownToggle>
+            <KebabToggle onToggle={setDropdownOpen} id="toggle-dropdown" />
           }
           isOpen={dropdownOpen}
           dropdownItems={dropDownItems}
