@@ -71,7 +71,7 @@ const AffectedActivationKeys = ({
             </Td>
             <Td><EnvironmentLabels environments={environment} /></Td>
           </Tr>
-            ))
+        ))
         }
       </Tbody>
     </TableWrapper>

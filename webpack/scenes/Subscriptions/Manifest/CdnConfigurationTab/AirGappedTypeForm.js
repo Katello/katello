@@ -37,7 +37,7 @@ const AirGappedTypeForm = ({ showUpdate, onUpdate }) => {
             id="cdn-configuration-type"
             defaultMessage={__('Red Hat content will be enabled and consumed via the {type} process.')}
             values={{
-                type: <strong>{__('Import/Export')}</strong>,
+              type: <strong>{__('Import/Export')}</strong>,
             }}
           />
           <br />
@@ -46,10 +46,10 @@ const AirGappedTypeForm = ({ showUpdate, onUpdate }) => {
               id="cdn-configuration-type-cdn"
               defaultMessage={__('Click {update} below to save changes.')}
               values={{
-                  update: <strong>{__('Update')}</strong>,
+                update: <strong>{__('Update')}</strong>,
               }}
             />
-        }
+          }
         </p>
       </div>
 

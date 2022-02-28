@@ -78,7 +78,7 @@ const ContentTable = ({
 ContentTable.propTypes = {
   selectedContentType: PropTypes.string.isRequired,
   setSelectedContentType: PropTypes.func.isRequired,
-  contentTypes: PropTypes.objectOf(PropTypes.array).isRequired,
+  contentTypes: PropTypes.shape({}).isRequired,
   showContentTypeSelector: PropTypes.bool,
 };
 

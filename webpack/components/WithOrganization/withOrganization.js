@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-indent */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
@@ -46,14 +47,13 @@ function withOrganization(WrappedComponent) {
 
       if (newOrgSelected) {
         if (!organization.label && !organization.loading) { this.props.loadOrganization(); }
-
         return <WrappedComponent {...this.props} />;
       } else if (this.state.orgId === '') {
         return (
-          <React.Fragment>
+          <>
             <Header title={__('Select Organization')} />
             <SetOrganization />
-          </React.Fragment>);
+          </>);
       }
       return <WrappedComponent {...this.props} />;
     }

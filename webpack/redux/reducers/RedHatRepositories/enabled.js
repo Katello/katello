@@ -60,49 +60,49 @@ const changeRepoState = (state, repoToChange, stateDiff) => (
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case DISABLE_REPOSITORY_REQUEST:
-      return changeRepoState(state, action.repository, { loading: true });
-    case DISABLE_REPOSITORY_FAILURE:
-      return changeRepoState(state, action.payload.repository, { loading: false });
-    case ENABLED_REPOSITORIES_REQUEST:
-      if (!action.silent) {
-        return state.set(['loading'], true);
-      }
-      return state;
-    case ENABLED_REPOSITORIES_SUCCESS: {
-      const {
-        page,
-        per_page, // eslint-disable-line camelcase
-        subtotal,
-        results,
-      } = action.response;
-      return Immutable({
-        repositories: mapRepositories(results),
-        pagination: {
-          page: Number(page) || 1,
-          // server can return per_page: null when there's error in the search query,
-          // don't store it in such case
-          // eslint-disable-next-line camelcase
-          perPage: (per_page || state.pagination.perPage)
-          // eslint-disable-next-line camelcase
+  case DISABLE_REPOSITORY_REQUEST:
+    return changeRepoState(state, action.repository, { loading: true });
+  case DISABLE_REPOSITORY_FAILURE:
+    return changeRepoState(state, action.payload.repository, { loading: false });
+  case ENABLED_REPOSITORIES_REQUEST:
+    if (!action.silent) {
+      return state.set(['loading'], true);
+    }
+    return state;
+  case ENABLED_REPOSITORIES_SUCCESS: {
+    const {
+      page,
+      per_page, // eslint-disable-line camelcase
+      subtotal,
+      results,
+    } = action.response;
+    return Immutable({
+      repositories: mapRepositories(results),
+      pagination: {
+        page: Number(page) || 1,
+        // server can return per_page: null when there's error in the search query,
+        // don't store it in such case
+        // eslint-disable-next-line camelcase
+        perPage: (per_page || state.pagination.perPage)
+        // eslint-disable-next-line camelcase
             && Number(per_page || state.pagination.perPage),
-        },
-        itemCount: Number(subtotal),
-        loading: false,
-        searchIsActive: !isEmpty(action.search),
-        search: action.search,
-      });
-    }
-    case ENABLED_REPOSITORIES_FAILURE: {
-      const { error, missingPermissions } = action;
-      return Immutable({
-        repositories: [],
-        loading: false,
-        error,
-        missingPermissions,
-      });
-    }
-    default:
-      return state;
+      },
+      itemCount: Number(subtotal),
+      loading: false,
+      searchIsActive: !isEmpty(action.search),
+      search: action.search,
+    });
+  }
+  case ENABLED_REPOSITORIES_FAILURE: {
+    const { error, missingPermissions } = action;
+    return Immutable({
+      repositories: [],
+      loading: false,
+      error,
+      missingPermissions,
+    });
+  }
+  default:
+    return state;
   }
 };

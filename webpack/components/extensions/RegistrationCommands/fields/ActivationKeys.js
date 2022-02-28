@@ -81,7 +81,7 @@ ActivationKeys.propTypes = {
   selectedKeys: PropTypes.array,
   hostGroupActivationKeys: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   hostGroupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  pluginValues: PropTypes.object,
+  pluginValues: PropTypes.objectOf(PropTypes.shape({})),
   onChange: PropTypes.func.isRequired,
   handleInvalidField: PropTypes.func.isRequired,
   isLoading: PropTypes.bool,

@@ -28,14 +28,14 @@ const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
   };
 
   switch (true) {
-    case (streamInstallStatus?.length > 0 && streamText === 'disabled'):
-      return <TableText wrapModifier="nowrap">{INSTALLED_STATE.INSTALLED}</TableText>;
-    case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable !== true):
-      return <><CheckIcon color="green" /> {INSTALLED_STATE.UPTODATE}</>;
-    case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable):
-      return <><LongArrowAltUpIcon color="blue" /> {INSTALLED_STATE.UPGRADEABLE}</>;
-    default:
-      return <InactiveText text={INSTALLED_STATE.NOTINSTALLED} />;
+  case (streamInstallStatus?.length > 0 && streamText === 'disabled'):
+    return <TableText wrapModifier="nowrap">{INSTALLED_STATE.INSTALLED}</TableText>;
+  case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable !== true):
+    return <><CheckIcon color="green" /> {INSTALLED_STATE.UPTODATE}</>;
+  case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable):
+    return <><LongArrowAltUpIcon color="blue" /> {INSTALLED_STATE.UPGRADEABLE}</>;
+  default:
+    return <InactiveText text={INSTALLED_STATE.NOTINSTALLED} />;
   }
 };
 
@@ -49,14 +49,14 @@ const StreamState = ({ moduleStreamStatus }) => {
   let streamText = moduleStreamStatus?.charAt(0)?.toUpperCase() + moduleStreamStatus?.slice(1);
   streamText = streamText?.replace('Unknown', 'Default');
   switch (true) {
-    case (streamText === 'Default'):
-      return <Label color="gray" variant="outline">{streamText}</Label>;
-    case (streamText === 'Disabled'):
-      return <Label color="gray" variant="filled">{streamText}</Label>;
-    case (streamText === 'Enabled'):
-      return <Label color="green" variant="filled">{streamText}</Label>;
-    default:
-      return null;
+  case (streamText === 'Default'):
+    return <Label color="gray" variant="outline">{streamText}</Label>;
+  case (streamText === 'Disabled'):
+    return <Label color="gray" variant="filled">{streamText}</Label>;
+  case (streamText === 'Enabled'):
+    return <Label color="green" variant="filled">{streamText}</Label>;
+  default:
+    return null;
   }
 };
 
@@ -177,18 +177,18 @@ export const ModuleStreamsTab = () => {
       <div id="modulestreams-tab">
         <TableWrapper
           {...{
-          metadata,
-          emptyContentTitle,
-          emptyContentBody,
-          emptySearchTitle,
-          emptySearchBody,
-          errorSearchTitle,
-          errorSearchBody,
-          searchQuery,
-          updateSearchQuery,
-          fetchItems,
-          status,
-        }}
+            metadata,
+            emptyContentTitle,
+            emptyContentBody,
+            emptySearchTitle,
+            emptySearchBody,
+            errorSearchTitle,
+            errorSearchBody,
+            searchQuery,
+            updateSearchQuery,
+            fetchItems,
+            status,
+          }}
           additionalListeners={[hostId, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/module_streams/auto_complete_search`}
@@ -207,52 +207,52 @@ export const ModuleStreamsTab = () => {
           </Thead>
           <Tbody>
             {results?.map(({
-                id,
-                status: moduleStreamStatus,
-                name,
-                stream,
-                installed_profiles: installedProfiles,
-                upgradable,
-                module_spec: moduleSpec,
-              }, index) =>
+              id,
+              status: moduleStreamStatus,
+              name,
+              stream,
+              installed_profiles: installedProfiles,
+              upgradable,
+              module_spec: moduleSpec,
+            }, index) =>
 
             /* eslint-disable react/no-array-index-key */
 
-             (
-               <Tr key={`${id} ${index}`}>
-                 <Td>
-                   <a
-                     href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostName}`}
-                   >
-                     {name}
-                   </a>
-                 </Td>
-                 <Td>
-                   <StreamState moduleStreamStatus={moduleStreamStatus} />
-                 </Td>
-                 <Td>{stream}</Td>
-                 <Td>
-                   <EnabledIcon
-                     streamText={moduleStreamStatus}
-                     streamInstallStatus={installedProfiles}
-                     upgradable={upgradable}
-                   />
-                 </Td>
-                 <Td>
-                   <HostInstalledProfiles
-                     moduleStreamStatus={moduleStreamStatus}
-                     installedProfiles={installedProfiles}
-                   />
-                 </Td>
-                 <Td
-                   key={`rowActions-${id}`}
-                   actions={{
-                  items: rowActions,
-                }}
-                 />
-               </Tr>
-            ))
-          }
+              (
+                <Tr key={`${id} ${index}`}>
+                  <Td>
+                    <a
+                      href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostName}`}
+                    >
+                      {name}
+                    </a>
+                  </Td>
+                  <Td>
+                    <StreamState moduleStreamStatus={moduleStreamStatus} />
+                  </Td>
+                  <Td>{stream}</Td>
+                  <Td>
+                    <EnabledIcon
+                      streamText={moduleStreamStatus}
+                      streamInstallStatus={installedProfiles}
+                      upgradable={upgradable}
+                    />
+                  </Td>
+                  <Td>
+                    <HostInstalledProfiles
+                      moduleStreamStatus={moduleStreamStatus}
+                      installedProfiles={installedProfiles}
+                    />
+                  </Td>
+                  <Td
+                    key={`rowActions-${id}`}
+                    actions={{
+                      items: rowActions,
+                    }}
+                  />
+                </Tr>
+              ))
+            }
           </Tbody>
         </TableWrapper>
       </div>

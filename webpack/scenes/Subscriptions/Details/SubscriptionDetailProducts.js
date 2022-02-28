@@ -11,7 +11,7 @@ const SubscriptionDetailProducts = ({ subscriptionDetails }) => (
       {subscriptionDetails.provided_products &&
         subscriptionDetails.provided_products.map(prod => (
           <ListGroupItem key={prod.id}> {prod.name} </ListGroupItem>
-          ))}
+        ))}
     </ListGroup>
   </div>
 );

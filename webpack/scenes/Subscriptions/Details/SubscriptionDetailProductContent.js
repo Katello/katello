@@ -22,22 +22,22 @@ const SubscriptionDetailProductContent = ({ productContent }) => {
     return (
       <ListView>
         {listItems.map(({
-              index,
-              title,
-              availableContent,
-            }) => (
-              <ListView.Item
-                key={index}
-                heading={title}
-                hideCloseIcon
-              >
+          index,
+          title,
+          availableContent,
+        }) => (
+          <ListView.Item
+            key={index}
+            heading={title}
+            hideCloseIcon
+          >
 
-                <Col sm={12}>
-                  {availableContent.map(content => (
-                    <SubscriptionDetailProduct key={content.id} content={content} />
-                  ))}
-                </Col>
-              </ListView.Item>
+            <Col sm={12}>
+              {availableContent.map(content => (
+                <SubscriptionDetailProduct key={content.id} content={content} />
+              ))}
+            </Col>
+          </ListView.Item>
         ))}
       </ListView>
     );

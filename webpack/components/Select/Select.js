@@ -28,7 +28,7 @@ export default Select;
 
 Select.propTypes = {
   onChange: PropTypes.func.isRequired,
-  options: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   disabled: PropTypes.bool,
   placeholder: PropTypes.string.isRequired,
   value: PropTypes.string,

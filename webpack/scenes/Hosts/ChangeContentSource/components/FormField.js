@@ -22,9 +22,9 @@ const FormField = ({
         isRequired
       >
         <FormSelectOption key={0} value="" label={__('Select ...')} />
-        { items.map(item => (
+        {items.map(item => (
           <FormSelectOption key={item.id} value={item.id} label={item.name} />
-          ))}
+        ))}
       </FormSelect>
     </FormGroup>
   </GridItem>
@@ -34,7 +34,7 @@ FormField.propTypes = {
   label: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   onChange: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
   contentHostsCount: PropTypes.number.isRequired,

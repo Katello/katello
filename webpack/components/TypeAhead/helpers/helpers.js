@@ -5,22 +5,22 @@ const keyPressHandler = (
   selectItem, userInputValue, onSearch,
 ) => {
   switch (e.keyCode) {
-    case KEYCODES.TAB_KEY:
-      if (isOpen && activeItems[highlightedIndex]) {
-        selectItem(activeItems[highlightedIndex]);
-        e.preventDefault();
-      }
-      break;
+  case KEYCODES.TAB_KEY:
+    if (isOpen && activeItems[highlightedIndex]) {
+      selectItem(activeItems[highlightedIndex]);
+      e.preventDefault();
+    }
+    break;
 
-    case KEYCODES.ENTER:
-      if (!isOpen || !activeItems[highlightedIndex]) {
-        onSearch(userInputValue);
-        e.preventDefault();
-      }
-      break;
+  case KEYCODES.ENTER:
+    if (!isOpen || !activeItems[highlightedIndex]) {
+      onSearch(userInputValue);
+      e.preventDefault();
+    }
+    break;
 
-    default:
-      break;
+  default:
+    break;
   }
 };
 

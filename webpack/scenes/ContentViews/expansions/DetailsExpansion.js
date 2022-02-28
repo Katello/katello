@@ -25,8 +25,8 @@ const DetailsExpansion = ({
         <RelatedCompositeContentViewsModal
           key={cvId}
           {...{
-         cvName, cvId, relatedCVCount, relatedCompositeCVs,
-        }}
+            cvName, cvId, relatedCVCount, relatedCompositeCVs,
+          }}
         />
       </>
     );

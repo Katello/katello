@@ -23,11 +23,11 @@ export const getBookmarkErrorMsgs = ({ data: { error } } = {}) => {
 const getCustomMessage = (actionType, message) => {
   let customMessage;
   switch (actionType) {
-    case SUBSCRIPTIONS_QUANTITIES_FAILURE:
-      customMessage = getSubscriptionsErrorMessage(message);
-      break;
-    default:
-      customMessage = null;
+  case SUBSCRIPTIONS_QUANTITIES_FAILURE:
+    customMessage = getSubscriptionsErrorMessage(message);
+    break;
+  default:
+    customMessage = null;
   }
   return customMessage;
 };

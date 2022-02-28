@@ -114,9 +114,9 @@ const CVReassignHostsForm = () => {
       >
         <AffectedHosts
           {...{
-          cvId,
-          versionEnvironments,
-          selectedEnvSet,
+            cvId,
+            versionEnvironments,
+            selectedEnvSet,
           }}
           deleteCV={false}
         />

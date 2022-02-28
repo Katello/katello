@@ -22,14 +22,14 @@ export const ArtifactsWithNoErrataRenderer = ({ filterDetails }) => {
   };
   const getLabel = () => {
     switch (true) {
-      case type === 'modulemd' && inclusion:
-        return __('Include all Module Streams with no errata.');
-      case type === 'modulemd' && !inclusion:
-        return __('Exclude all Module Streams with no errata.');
-      case !inclusion:
-        return __('Exclude all RPMs with no errata.');
-      default:
-        return __('Include all RPMs with no errata.');
+    case type === 'modulemd' && inclusion:
+      return __('Include all Module Streams with no errata.');
+    case type === 'modulemd' && !inclusion:
+      return __('Exclude all Module Streams with no errata.');
+    case !inclusion:
+      return __('Exclude all RPMs with no errata.');
+    default:
+      return __('Include all RPMs with no errata.');
     }
   };
 

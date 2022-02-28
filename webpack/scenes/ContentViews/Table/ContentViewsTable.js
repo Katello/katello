@@ -240,11 +240,11 @@ const ContentViewTable = () => {
             <Tr key={cvId}>
               <Td
                 expand={{
-                        rowIndex,
-                        isExpanded,
-                        onToggle: (_event, _rInx, isOpen) =>
-                          expandedTableRows.onToggle(isOpen, cvId),
-                      }}
+                  rowIndex,
+                  isExpanded,
+                  onToggle: (_event, _rInx, isOpen) =>
+                    expandedTableRows.onToggle(isOpen, cvId),
+                }}
               />
               <Td><ContentViewIcon composite={composite ? true : undefined} /></Td>
               <Td><Link to={`${urlBuilder('content_views', '')}${cvId}`}>{name}</Link></Td>
@@ -252,11 +252,11 @@ const ContentViewTable = () => {
               <Td><LastSync startedAt={startedAt} lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /></Td>
               <Td>{latestVersion ?
                 <ContentViewVersionCell {...{
-                    id: cvId,
-                    latestVersion,
-                    latestVersionId: cvLatestVersionId,
-                    latestVersionEnvironments: cvLatestVersionEnvironments,
-                  }}
+                  id: cvId,
+                  latestVersion,
+                  latestVersionId: cvLatestVersionId,
+                  latestVersionEnvironments: cvLatestVersionEnvironments,
+                }}
                 /> :
                 <InactiveText style={{ marginTop: '0.5em', marginBottom: '0.5em' }} text={__('Not yet published')} />}
               </Td>
