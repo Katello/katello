@@ -141,7 +141,7 @@ const CVContainerImageFilterContent = ({
                   <SplitItem>
                     <Button
                       onClick={() => setModalOpen(true)}
-                      variant="secondary"
+                      variant="primary"
                       aria-label="add_filter_rule"
                     >
                       {__('Add filter rule')}

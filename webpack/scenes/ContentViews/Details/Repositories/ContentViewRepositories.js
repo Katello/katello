@@ -284,7 +284,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
             <SplitItem>
               <ActionList>
                 <ActionListItem>
-                  <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="secondary" aria-label="add_repositories">
+                  <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="primary" aria-label="add_repositories">
                     {__('Add repositories')}
                   </Button>
                 </ActionListItem>

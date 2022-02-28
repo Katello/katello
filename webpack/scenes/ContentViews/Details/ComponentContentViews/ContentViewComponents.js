@@ -268,7 +268,7 @@ const ContentViewComponents = ({ cvId, details }) => {
               <SplitItem>
                 <ActionList>
                   <ActionListItem>
-                    <Button onClick={addBulk} isDisabled={!(bulkAddEnabled())} variant="secondary" aria-label="bulk_add_components">
+                    <Button onClick={addBulk} isDisabled={!(bulkAddEnabled())} variant="primary" aria-label="bulk_add_components">
                       {__('Add content views')}
                     </Button>
                   </ActionListItem>
