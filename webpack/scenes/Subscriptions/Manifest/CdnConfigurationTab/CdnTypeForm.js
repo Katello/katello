@@ -51,8 +51,8 @@ const CdnTypeForm = ({ showUpdate, onUpdate, url }) => {
             id="cdn-configuration-type"
             defaultMessage={__('Red Hat content will be consumed from the {type}.')}
             values={{
-                  type: <strong>{__('Red Hat CDN')}</strong>,
-              }}
+              type: <strong>{__('Red Hat CDN')}</strong>,
+            }}
           />
           <br />
           {showUpdate &&
@@ -60,8 +60,8 @@ const CdnTypeForm = ({ showUpdate, onUpdate, url }) => {
             id="cdn-configuration-type-cdn"
             defaultMessage={__('Click {update} below to save changes.')}
             values={{
-                    update: <strong>{__('Update')}</strong>,
-                }}
+              update: <strong>{__('Update')}</strong>,
+            }}
           />
           }
         </Text>

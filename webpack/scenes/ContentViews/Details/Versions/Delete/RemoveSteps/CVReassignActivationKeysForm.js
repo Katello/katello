@@ -117,9 +117,9 @@ const CVReassignActivationKeysForm = () => {
       >
         <AffectedActivationKeys
           {...{
-          cvId,
-          versionEnvironments,
-          selectedEnvSet,
+            cvId,
+            versionEnvironments,
+            selectedEnvSet,
           }}
           deleteCV={false}
         />

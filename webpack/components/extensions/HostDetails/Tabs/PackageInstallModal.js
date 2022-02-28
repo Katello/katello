@@ -238,11 +238,11 @@ const PackageInstallModal = ({
               <Tr key={id}>
                 <Td
                   select={{
-                      disable: false,
-                      isSelected: isSelected(id),
-                      onSelect: (_event, selected) => selectOne(selected, id, pkg),
-                      rowIndex,
-                      variant: 'checkbox',
+                    disable: false,
+                    isSelected: isSelected(id),
+                    onSelect: (_event, selected) => selectOne(selected, id, pkg),
+                    rowIndex,
+                    variant: 'checkbox',
                   }}
                 />
                 <Td>

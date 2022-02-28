@@ -15,8 +15,8 @@ const TableBody = ({
 };
 
 TableBody.propTypes = {
-  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  rows: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   message: PropTypes.string,
 };
 

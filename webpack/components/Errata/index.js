@@ -24,30 +24,30 @@ export const ErrataSummary = ({ type, count }) => {
   let url;
   let color;
   switch (type) {
-    case 'security':
-      label = __('Security');
-      ErrataIcon = SecurityIcon;
-      name = 'security advisories';
-      color = '#0066cc';
-      url = <a href="#/Content/errata?type=security"> {count} {name} </a>;
-      break;
-    case 'recommended':
-    case 'bugfix':
-      label = __('Bugfix');
-      ErrataIcon = BugIcon;
-      name = 'bug fixes';
-      color = '#8bc1f7';
-      url = <a href="#/Content/errata?type=bugfix"> {count} {name} </a>;
-      break;
-    case 'enhancement':
-    case 'optional':
-      label = __('Enhancement');
-      ErrataIcon = EnhancementIcon;
-      name = 'enhancements';
-      color = '#002f5d';
-      url = <a href="#/Content/errata?type=enhancement"> {count} {name} </a>;
-      break;
-    default:
+  case 'security':
+    label = __('Security');
+    ErrataIcon = SecurityIcon;
+    name = 'security advisories';
+    color = '#0066cc';
+    url = <a href="#/Content/errata?type=security"> {count} {name} </a>;
+    break;
+  case 'recommended':
+  case 'bugfix':
+    label = __('Bugfix');
+    ErrataIcon = BugIcon;
+    name = 'bug fixes';
+    color = '#8bc1f7';
+    url = <a href="#/Content/errata?type=bugfix"> {count} {name} </a>;
+    break;
+  case 'enhancement':
+  case 'optional':
+    label = __('Enhancement');
+    ErrataIcon = EnhancementIcon;
+    name = 'enhancements';
+    color = '#002f5d';
+    url = <a href="#/Content/errata?type=enhancement"> {count} {name} </a>;
+    break;
+  default:
   }
   if (!ErrataIcon) return null;
 
@@ -73,21 +73,21 @@ export const ErrataType = ({ type }) => {
   let ErrataIcon;
   let label;
   switch (type) {
-    case 'security':
-      label = __('Security');
-      ErrataIcon = SecurityIcon;
-      break;
-    case 'recommended':
-    case 'bugfix':
-      label = __('Bugfix');
-      ErrataIcon = BugIcon;
-      break;
-    case 'enhancement':
-    case 'optional':
-      label = __('Enhancement');
-      ErrataIcon = EnhancementIcon;
-      break;
-    default:
+  case 'security':
+    label = __('Security');
+    ErrataIcon = SecurityIcon;
+    break;
+  case 'recommended':
+  case 'bugfix':
+    label = __('Bugfix');
+    ErrataIcon = BugIcon;
+    break;
+  case 'enhancement':
+  case 'optional':
+    label = __('Enhancement');
+    ErrataIcon = EnhancementIcon;
+    break;
+  default:
   }
   if (!ErrataIcon) return null;
 
@@ -108,24 +108,24 @@ export const ErrataSeverity = ({ severity }) => {
   let label;
 
   switch (severity) {
-    case 'Low':
-      color = pfBlack.value;
-      label = __('Low');
-      break;
-    case 'Moderate':
-      color = pfGold.value;
-      label = __('Moderate');
-      break;
-    case 'Important':
-      color = pfOrange.value;
-      label = __('Important');
-      break;
-    case 'Critical':
-      color = pfRed.value;
-      label = __('Critical');
-      break;
-    default:
-      label = __('N/A');
+  case 'Low':
+    color = pfBlack.value;
+    label = __('Low');
+    break;
+  case 'Moderate':
+    color = pfGold.value;
+    label = __('Moderate');
+    break;
+  case 'Important':
+    color = pfOrange.value;
+    label = __('Important');
+    break;
+  case 'Critical':
+    color = pfRed.value;
+    label = __('Critical');
+    break;
+  default:
+    label = __('N/A');
   }
   return <TableText wrapModifier="nowrap">{color && <SecurityIcon color={color} title={label} />} {label} </TableText>;
 };

@@ -65,10 +65,10 @@ const Table = ({
       bodyMessage={bodyMessage}
       rows={rows}
       components={{
-      header: {
-        row: PFtable.TableInlineEditHeaderRow,
-      },
-    }}
+        header: {
+          row: PFtable.TableInlineEditHeaderRow,
+        },
+      }}
       itemCount={subscriptions.itemCount}
       pagination={subscriptions.pagination}
       onPaginationChange={onPaginationChange}
@@ -76,11 +76,11 @@ const Table = ({
     >
       <PFtable.Header
         onRow={() => ({
-        role: 'row',
-        isEditing: () => editing,
-        onCancel: () => inlineEditController.onCancel(),
-        onConfirm: () => inlineEditController.onConfirm(),
-      })}
+          role: 'row',
+          isEditing: () => editing,
+          onCancel: () => inlineEditController.onCancel(),
+          onConfirm: () => inlineEditController.onConfirm(),
+        })}
       />
       <ForemanTableBody
         columns={columnsDefinition}
@@ -88,8 +88,8 @@ const Table = ({
         rowKey="id"
         message={bodyMessage}
         onRow={rowData => ({
-        className: classNames({ 'open-grouped-row': !groupingController.isCollapsed({ rowData }) }),
-      })}
+          className: classNames({ 'open-grouped-row': !groupingController.isCollapsed({ rowData }) }),
+        })}
       />
     </ForemanTable>
   );
@@ -115,7 +115,7 @@ Table.propTypes = {
   }).isRequired,
   groupedSubscriptions: PropTypes.shape({}).isRequired,
   editing: PropTypes.bool.isRequired,
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectionEnabled: PropTypes.bool.isRequired,
 };
 

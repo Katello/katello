@@ -34,12 +34,12 @@ function MultiSelect(props) {
 }
 
 MultiSelect.defaultProps = {
-  onChange: () => {},
+  onChange: () => { },
   defaultValues: null,
 };
 
 MultiSelect.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   onChange: PropTypes.func,
   defaultValues: PropTypes.arrayOf(PropTypes.string),
 };

@@ -76,14 +76,14 @@ const ContentViewVersionRepositoryCell = ({
 
   const getContentSpan = (num) => {
     switch (true) {
-      case num < 4:
-        return 12;
-      case num > 4 && num < 9:
-        return 6;
-      case num > 9:
-        return 4;
-      default:
-        return 12;
+    case num < 4:
+      return 12;
+    case num > 4 && num < 9:
+      return 6;
+    case num > 9:
+      return 4;
+    default:
+      return 12;
     }
   };
 
@@ -91,18 +91,18 @@ const ContentViewVersionRepositoryCell = ({
     const { to, url, name } = CONTENT_COUNTS[countKey];
     const count = ContentCounts[countKey];
     switch (true) {
-      case !!url:
-        return (
-          <a href={urlBuilder(url, '')}>
-            {count} {name}
-          </a>);
-      case !!to:
-        return (
-          <Link to={to}>
-            {count} {name}
-          </Link>);
-      default:
-        return `${count} ${name} `;
+    case !!url:
+      return (
+        <a href={urlBuilder(url, '')}>
+          {count} {name}
+        </a>);
+    case !!to:
+      return (
+        <Link to={to}>
+          {count} {name}
+        </Link>);
+    default:
+      return `${count} ${name} `;
     }
   };
 

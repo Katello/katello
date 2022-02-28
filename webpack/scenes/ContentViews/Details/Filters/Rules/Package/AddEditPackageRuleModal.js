@@ -36,11 +36,11 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
 
   const versionText = () => {
     switch (true) {
-      case !!editingVersion: return VersionModifiers['Equal to'];
-      case !!editingMinVersion && !editingMaxVersion: return VersionModifiers['Greater than'];
-      case !editingMinVersion && !!editingMaxVersion: return VersionModifiers['Less than'];
-      case !!editingMinVersion && !!editingMaxVersion: return VersionModifiers.Range;
-      default: return VersionModifiers['All versions'];
+    case !!editingVersion: return VersionModifiers['Equal to'];
+    case !!editingMinVersion && !editingMaxVersion: return VersionModifiers['Greater than'];
+    case !editingMinVersion && !!editingMaxVersion: return VersionModifiers['Less than'];
+    case !!editingMinVersion && !!editingMaxVersion: return VersionModifiers.Range;
+    default: return VersionModifiers['All versions'];
     }
   };
 
@@ -64,18 +64,18 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
 
   const formVersionParams = () => {
     switch (versionComparator) {
-      case 'All versions':
-        return {};
-      case 'Equal to':
-        return { version };
-      case 'Greater than':
-        return { min_version: minVersion };
-      case 'Less than':
-        return { max_version: maxVersion };
-      case 'Range':
-        return { min_version: minVersion, max_version: maxVersion };
-      default:
-        return {};
+    case 'All versions':
+      return {};
+    case 'Equal to':
+      return { version };
+    case 'Greater than':
+      return { min_version: minVersion };
+    case 'Less than':
+      return { max_version: maxVersion };
+    case 'Range':
+      return { min_version: minVersion, max_version: maxVersion };
+    default:
+      return {};
     }
   };
 

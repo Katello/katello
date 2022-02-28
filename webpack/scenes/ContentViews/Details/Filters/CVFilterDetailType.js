@@ -12,24 +12,42 @@ const CVFilterDetailType = ({
   cvId, filterId, inclusion, type, showAffectedRepos, setShowAffectedRepos, rules, details,
 }) => {
   switch (type) {
-    case 'docker':
-      return (<CVContainerImageFilterContent
-        cvId={cvId}
-        filterId={filterId}
-        showAffectedRepos={showAffectedRepos}
-        setShowAffectedRepos={setShowAffectedRepos}
-        details={details}
-      />);
-    case 'package_group':
-      return (<CVPackageGroupFilterContent
-        cvId={cvId}
-        filterId={filterId}
-        showAffectedRepos={showAffectedRepos}
-        setShowAffectedRepos={setShowAffectedRepos}
-        details={details}
-      />);
-    case 'rpm':
-      return (<CVRpmFilterContent
+  case 'docker':
+    return (<CVContainerImageFilterContent
+      cvId={cvId}
+      filterId={filterId}
+      showAffectedRepos={showAffectedRepos}
+      setShowAffectedRepos={setShowAffectedRepos}
+      details={details}
+    />);
+  case 'package_group':
+    return (<CVPackageGroupFilterContent
+      cvId={cvId}
+      filterId={filterId}
+      showAffectedRepos={showAffectedRepos}
+      setShowAffectedRepos={setShowAffectedRepos}
+      details={details}
+    />);
+  case 'rpm':
+    return (<CVRpmFilterContent
+      cvId={cvId}
+      filterId={filterId}
+      inclusion={inclusion}
+      showAffectedRepos={showAffectedRepos}
+      setShowAffectedRepos={setShowAffectedRepos}
+      details={details}
+    />);
+  case 'modulemd':
+    return (<CVModuleStreamFilterContent
+      cvId={cvId}
+      filterId={filterId}
+      showAffectedRepos={showAffectedRepos}
+      setShowAffectedRepos={setShowAffectedRepos}
+      details={details}
+    />);
+  case 'erratum':
+    if (head(rules)?.types) {
+      return (<CVErrataDateFilterContent
         cvId={cvId}
         filterId={filterId}
         inclusion={inclusion}
@@ -37,34 +55,16 @@ const CVFilterDetailType = ({
         setShowAffectedRepos={setShowAffectedRepos}
         details={details}
       />);
-    case 'modulemd':
-      return (<CVModuleStreamFilterContent
-        cvId={cvId}
-        filterId={filterId}
-        showAffectedRepos={showAffectedRepos}
-        setShowAffectedRepos={setShowAffectedRepos}
-        details={details}
-      />);
-    case 'erratum':
-      if (head(rules)?.types) {
-        return (<CVErrataDateFilterContent
-          cvId={cvId}
-          filterId={filterId}
-          inclusion={inclusion}
-          showAffectedRepos={showAffectedRepos}
-          setShowAffectedRepos={setShowAffectedRepos}
-          details={details}
-        />);
-      }
-      return (<CVErrataIDFilterContent
-        cvId={cvId}
-        filterId={filterId}
-        showAffectedRepos={showAffectedRepos}
-        setShowAffectedRepos={setShowAffectedRepos}
-        details={details}
-      />);
-    default:
-      return null;
+    }
+    return (<CVErrataIDFilterContent
+      cvId={cvId}
+      filterId={filterId}
+      showAffectedRepos={showAffectedRepos}
+      setShowAffectedRepos={setShowAffectedRepos}
+      details={details}
+    />);
+  default:
+    return null;
   }
 };
 

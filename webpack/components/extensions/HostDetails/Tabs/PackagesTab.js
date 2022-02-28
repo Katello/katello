@@ -375,12 +375,12 @@ export const PackagesTab = () => {
               return (
                 <Tr key={`${id}`}>
                   <Td select={{
-                      disable: false,
-                      isSelected: isSelected(id),
-                      onSelect: (event, selected) => selectOne(selected, id, pkg),
-                      rowIndex,
-                      variant: 'checkbox',
-                    }}
+                    disable: false,
+                    isSelected: isSelected(id),
+                    onSelect: (event, selected) => selectOne(selected, id, pkg),
+                    rowIndex,
+                    variant: 'checkbox',
+                  }}
                   />
                   <Td>
                     {rpmId

@@ -160,16 +160,16 @@ export const ModuleStreamsTab = () => {
       <div id="modulestreams-tab">
         <TableWrapper
           {...{
-          metadata,
-          emptyContentTitle,
-          emptyContentBody,
-          emptySearchTitle,
-          emptySearchBody,
-          searchQuery,
-          updateSearchQuery,
-          fetchItems,
-          status,
-        }}
+            metadata,
+            emptyContentTitle,
+            emptyContentBody,
+            emptySearchTitle,
+            emptySearchBody,
+            searchQuery,
+            updateSearchQuery,
+            fetchItems,
+            status,
+          }}
           additionalListeners={[hostId]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/module_streams/auto_complete_search`}
@@ -185,52 +185,52 @@ export const ModuleStreamsTab = () => {
           </Thead>
           <Tbody>
             {results?.map(({
-                id,
-                status: moduleStreamStatus,
-                name,
-                stream,
-                installed_profiles: installedProfiles,
-                upgradable,
-                module_spec: moduleSpec,
-              }, index) =>
+              id,
+              status: moduleStreamStatus,
+              name,
+              stream,
+              installed_profiles: installedProfiles,
+              upgradable,
+              module_spec: moduleSpec,
+            }, index) =>
 
             /* eslint-disable react/no-array-index-key */
 
-             (
-               <Tr key={`${id} ${index}`}>
-                 <Td>
-                   <a
-                     href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostName}`}
-                   >
-                     {name}
-                   </a>
-                 </Td>
-                 <Td>
-                   <StreamState moduleStreamStatus={moduleStreamStatus} />
-                 </Td>
-                 <Td>{stream}</Td>
-                 <Td>
-                   <EnabledIcon
-                     streamText={moduleStreamStatus}
-                     streamInstallStatus={installedProfiles}
-                     upgradable={upgradable}
-                   />
-                 </Td>
-                 <Td>
-                   <HostInstalledProfiles
-                     moduleStreamStatus={moduleStreamStatus}
-                     installedProfiles={installedProfiles}
-                   />
-                 </Td>
-                 <Td
-                   key={`rowActions-${id}`}
-                   actions={{
-                  items: rowActions,
-                }}
-                 />
-               </Tr>
-            ))
-          }
+              (
+                <Tr key={`${id} ${index}`}>
+                  <Td>
+                    <a
+                      href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostName}`}
+                    >
+                      {name}
+                    </a>
+                  </Td>
+                  <Td>
+                    <StreamState moduleStreamStatus={moduleStreamStatus} />
+                  </Td>
+                  <Td>{stream}</Td>
+                  <Td>
+                    <EnabledIcon
+                      streamText={moduleStreamStatus}
+                      streamInstallStatus={installedProfiles}
+                      upgradable={upgradable}
+                    />
+                  </Td>
+                  <Td>
+                    <HostInstalledProfiles
+                      moduleStreamStatus={moduleStreamStatus}
+                      installedProfiles={installedProfiles}
+                    />
+                  </Td>
+                  <Td
+                    key={`rowActions-${id}`}
+                    actions={{
+                      items: rowActions,
+                    }}
+                  />
+                </Tr>
+              ))
+            }
           </Tbody>
         </TableWrapper>
       </div>

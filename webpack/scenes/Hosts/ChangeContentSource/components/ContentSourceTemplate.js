@@ -44,14 +44,14 @@ const ContentSourceTemplate = ({ template, jobInvocationPath }) => {
         </h1>
         <p>
           {jobInvocationPath && (
-          <>
-            <a href={jobInvocationPath}>
-              {__('Run job invocation')}
-            </a>
+            <>
+              <a href={jobInvocationPath}>
+                {__('Run job invocation')}
+              </a>
           &nbsp;
-            {__('to update configuration on all hosts, or')}
-          </>
-      )}
+              {__('to update configuration on all hosts, or')}
+            </>
+          )}
         &nbsp;
           {__('update configuration on the hosts manually:')}
         </p>

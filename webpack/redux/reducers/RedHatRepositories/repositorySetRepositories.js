@@ -56,48 +56,48 @@ const initialState = Immutable({});
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case ENABLE_REPOSITORY_REQUEST:
-      return changeRepoState(state, action.repository, { loading: true });
+  case ENABLE_REPOSITORY_REQUEST:
+    return changeRepoState(state, action.repository, { loading: true });
 
-    case ENABLE_REPOSITORY_FAILURE:
-      return changeRepoState(state, action.payload.repository, { loading: false, error: true });
+  case ENABLE_REPOSITORY_FAILURE:
+    return changeRepoState(state, action.payload.repository, { loading: false, error: true });
 
-    case REPOSITORY_SET_REPOSITORIES_REQUEST:
-      return state.set(action.contentId, {
-        loading: true,
-        repositories: [],
-        error: null,
-      });
+  case REPOSITORY_SET_REPOSITORIES_REQUEST:
+    return state.set(action.contentId, {
+      loading: true,
+      repositories: [],
+      error: null,
+    });
 
-    case REPOSITORY_SET_REPOSITORIES_SUCCESS:
-      return state.set(action.contentId, {
-        loading: false,
-        repositories: normalizeContentSetRepositories(
-          action.results,
-          action.contentId,
-          action.productId,
-        ),
-        error: null,
-      });
+  case REPOSITORY_SET_REPOSITORIES_SUCCESS:
+    return state.set(action.contentId, {
+      loading: false,
+      repositories: normalizeContentSetRepositories(
+        action.results,
+        action.contentId,
+        action.productId,
+      ),
+      error: null,
+    });
 
-    case REPOSITORY_SET_REPOSITORIES_FAILURE:
-      return state.set(action.contentId, {
-        loading: false,
-        repositories: [],
-        error: action.error,
-      });
+  case REPOSITORY_SET_REPOSITORIES_FAILURE:
+    return state.set(action.contentId, {
+      loading: false,
+      repositories: [],
+      error: action.error,
+    });
 
-    case REPOSITORY_ENABLED:
-      return changeRepoState(state, action.repository, {
-        enabled: true,
-        loading: false,
-        error: false,
-      });
+  case REPOSITORY_ENABLED:
+    return changeRepoState(state, action.repository, {
+      enabled: true,
+      loading: false,
+      error: false,
+    });
 
-    case REPOSITORY_DISABLED:
-      return changeRepoState(state, action.repository, { enabled: false });
+  case REPOSITORY_DISABLED:
+    return changeRepoState(state, action.repository, { enabled: false });
 
-    default:
-      return state;
+  default:
+    return state;
   }
 };

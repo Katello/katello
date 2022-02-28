@@ -26,7 +26,7 @@ export const commonInputPropTypes = {
 };
 
 export const commonItemPropTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   activeItems: PropTypes.arrayOf(PropTypes.string).isRequired,
   highlightedIndex: PropTypes.number.isRequired,
   getItemProps: PropTypes.func.isRequired,
