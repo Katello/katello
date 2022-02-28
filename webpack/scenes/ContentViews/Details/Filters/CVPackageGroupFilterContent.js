@@ -234,7 +234,7 @@ const CVPackageGroupFilterContent = ({
                   </Select>
                 </SplitItem>
                 <SplitItem>
-                  <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
+                  <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="primary" aria-label="add_filter_rule">
                     {__('Add filter rule')}
                   </Button>
                 </SplitItem>

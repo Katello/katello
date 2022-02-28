@@ -312,7 +312,7 @@ const CVErrataIDFilterContent = ({
                 </SplitItem>
                 {hasPermission(permissions, 'edit_content_views') &&
                   <SplitItem>
-                    <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
+                    <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="primary" aria-label="add_filter_rule">
                       {__('Add errata')}
                     </Button>
                   </SplitItem>
