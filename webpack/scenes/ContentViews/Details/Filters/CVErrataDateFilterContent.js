@@ -252,7 +252,7 @@ const CVErrataDateFilterContent = ({
               <ActionGroup>
                 <Button
                   aria-label="save_filter_rule"
-                  variant="secondary"
+                  variant="primary"
                   isDisabled={saveDisabled}
                   type="submit"
                 >
