@@ -31,7 +31,7 @@ class SystemStatuses extends Component {
                     <td>{value.status.toUpperCase()}</td>
                     <td> {value.message}</td>
                   </tr>
-            ))}
+                ))}
               </tbody>
             </table>
           </LoadingState>

@@ -10,16 +10,16 @@ const initialState = Immutable({ loading: false });
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case GET_ORGANIZATION_REQUEST:
-      return state.set('loading', true);
+  case GET_ORGANIZATION_REQUEST:
+    return state.set('loading', true);
 
-    case GET_ORGANIZATION_SUCCESS:
-      return Immutable({ loading: false, ...action.response });
+  case GET_ORGANIZATION_SUCCESS:
+    return Immutable({ loading: false, ...action.response });
 
-    case GET_ORGANIZATION_FAILURE:
-      return Immutable({ error: action.error });
+  case GET_ORGANIZATION_FAILURE:
+    return Immutable({ error: action.error });
 
-    default:
-      return state;
+  default:
+    return state;
   }
 };

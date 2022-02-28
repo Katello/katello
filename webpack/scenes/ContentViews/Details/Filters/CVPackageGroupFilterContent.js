@@ -74,19 +74,19 @@ const CVPackageGroupFilterContent = ({
   const fetchItems = useCallback((params) => {
     const adjustedParams = { ...params };
     switch (selectedIndex) {
-      case 0:
-        adjustedParams.show_all_for = 'content_view_filter';
-        adjustedParams.available_for = undefined;
-        break;
-      case 1:
-        adjustedParams.show_all_for = undefined;
-        adjustedParams.available_for = undefined;
-        break;
-      case 2:
-        adjustedParams.show_all_for = undefined;
-        adjustedParams.available_for = 'content_view_filter';
-        break;
-      default:
+    case 0:
+      adjustedParams.show_all_for = 'content_view_filter';
+      adjustedParams.available_for = undefined;
+      break;
+    case 1:
+      adjustedParams.show_all_for = undefined;
+      adjustedParams.available_for = undefined;
+      break;
+    case 2:
+      adjustedParams.show_all_for = undefined;
+      adjustedParams.available_for = 'content_view_filter';
+      break;
+    default:
     }
 
     return getCVFilterPackageGroups(cvId, filterId, adjustedParams);

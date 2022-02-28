@@ -136,8 +136,8 @@ const CVPublishFinish = ({
             <Bullseye>
               <Button
                 onClick={() => {
-                handleEndTask({ taskComplete: false });
-              }}
+                  handleEndTask({ taskComplete: false });
+                }}
                 variant="primary"
                 aria-label="publish_content_view"
               >

@@ -31,7 +31,7 @@ const LifecycleEnvironment = ({
       />
       {lifecycleEnvironments.map(lce => (
         <FormSelectOption key={lce.id} value={lce.id} label={lce.name} />
-        ))}
+      ))}
     </FormSelect>
   </FormGroup>
 );

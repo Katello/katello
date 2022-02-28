@@ -26,9 +26,9 @@ const ContentSourceForm = ({
   isLoading,
 }) => {
   const formIsValid = () => (!!environmentId &&
-                             !!contentViewId &&
-                             !!contentSourceId &&
-                             contentHostsIds.length !== 0);
+    !!contentViewId &&
+    !!contentSourceId &&
+    contentHostsIds.length !== 0);
 
   return (
     <Form
@@ -50,7 +50,7 @@ const ContentSourceForm = ({
               isDisabled={isLoading || !formIsValid()}
               isLoading={isLoading}
             >
-              { __('Change content source')}
+              {__('Change content source')}
             </Button>
           </ActionGroup>
         </GridItem>
@@ -60,13 +60,13 @@ const ContentSourceForm = ({
 
 ContentSourceForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  environments: PropTypes.arrayOf(PropTypes.object),
+  environments: PropTypes.arrayOf(PropTypes.shape({})),
   handleEnvironment: PropTypes.func.isRequired,
   environmentId: PropTypes.string,
-  contentViews: PropTypes.arrayOf(PropTypes.object),
+  contentViews: PropTypes.arrayOf(PropTypes.shape({})),
   handleContentView: PropTypes.func.isRequired,
   contentViewId: PropTypes.string,
-  contentSources: PropTypes.arrayOf(PropTypes.object),
+  contentSources: PropTypes.arrayOf(PropTypes.shape({})),
   handleContentSource: PropTypes.func.isRequired,
   contentSourceId: PropTypes.string,
   contentHostsIds: PropTypes.arrayOf(PropTypes.number),

@@ -159,7 +159,7 @@ class ManageManifestModal extends Component {
                           simpleContentAccessEligible={simpleContentAccessEligible}
                         />
                       </Row>
-                        }
+                      }
                       <Row>
                         <Col sm={5}>
                           <strong>{__('Subscription Allocation')}</strong>
@@ -176,7 +176,7 @@ class ManageManifestModal extends Component {
                           >
                             <div>{__('Import New Manifest')}</div>
                           </ControlLabel>
-                            }
+                          }
                         </Col>
                         <Col sm={7} className="manifest-actions">
                           <Spinner loading={actionInProgress} />
@@ -188,7 +188,7 @@ class ManageManifestModal extends Component {
                             disabled={actionInProgress}
                             onChange={e => this.uploadManifest(e.target.files)}
                           />
-                            }
+                          }
                           <div id="manifest-actions-row">
                             {canImportManifest &&
                             <TooltipButton
@@ -200,7 +200,7 @@ class ManageManifestModal extends Component {
                               disabled={!isManifestImported ||
                                     actionInProgress || disableManifestActions}
                             />
-                              }
+                            }
                             {canDeleteManifest &&
                             <React.Fragment>
                               <TooltipButton
@@ -213,7 +213,7 @@ class ManageManifestModal extends Component {
                                 tooltipPlacement="top"
                               />
                             </React.Fragment>
-                              }
+                            }
                           </div>
                           <ForemanModal title={__('Confirm delete manifest')} id={DELETE_MANIFEST_MODAL_ID}>
                             <DeleteManifestModalText />

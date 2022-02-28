@@ -53,8 +53,8 @@ const Table = ({
 };
 
 Table.propTypes = {
-  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  rows: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   emptyState: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   pagination: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   bodyMessage: PropTypes.node,

@@ -44,7 +44,7 @@ const SubscriptionDetailInfo = ({ subscriptionDetails }) => {
               <td><b>{__(subscriptionAttributes[key])}</b></td>
               <td>{subscriptionDetailValue(subscriptionDetails, key)}</td>
             </tr>
-            ))}
+          ))}
           <tr>
             <td><b>{__('Limits')}</b></td>
             <td>{subscriptionLimits(subscriptionDetails)}</td>
@@ -63,7 +63,7 @@ const SubscriptionDetailInfo = ({ subscriptionDetails }) => {
               <td><b>{__(subscriptionPurposeAttributes[key])}</b></td>
               <td>{subscriptionDetailValue(subscriptionDetails, key)}</td>
             </tr>
-            ))}
+          ))}
         </tbody>
       </Table>
     </div>

@@ -50,10 +50,10 @@ ErratumExpansionContents.propTypes = {
     description: PropTypes.string,
     summary: PropTypes.string,
     solution: PropTypes.string,
-    bugs: PropTypes.arrayOf(PropTypes.object),
-    cves: PropTypes.arrayOf(PropTypes.object),
+    bugs: PropTypes.arrayOf(PropTypes.shape({})),
+    cves: PropTypes.arrayOf(PropTypes.shape({})),
     packages: PropTypes.arrayOf(PropTypes.string),
-    module_streams: PropTypes.arrayOf(PropTypes.object),
+    module_streams: PropTypes.arrayOf(PropTypes.shape({})),
   }).isRequired,
 };
 

@@ -13,15 +13,15 @@ const DeleteDialog = ({
       // eslint-disable-next-line react/no-danger
       <p dangerouslySetInnerHTML={{
         __html: sprintf(
-              __(`Are you sure you want to delete %(entitlementCount)s
+          __(`Are you sure you want to delete %(entitlementCount)s
                   subscription(s)? This action will remove the subscription(s) and
                   refresh your manifest. All systems using these subscription(s) will
                   lose them and also may lose access to updates and Errata.`),
-              {
-                entitlementCount: `<b>${selectedRows.length}</b>`,
-              },
-          ),
-        }}
+          {
+            entitlementCount: `<b>${selectedRows.length}</b>`,
+          },
+        ),
+      }}
       />
     }
     primaryActionButtonContent={__('Delete')}

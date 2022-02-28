@@ -96,24 +96,24 @@ const CVEnvironmentSelectionForm = () => {
               id, name, activation_key_count: akCount,
               host_count: hostCount,
             }, rowIndex) =>
-            (
-              <Tr key={`${name}_${id}`}>
-                <Td
-                  key={`${name}__${id}_select`}
-                  select={{
-                    rowIndex,
-                    onSelect: (event, isSelected) => onSelect(event, isSelected, id),
-                    isSelected: selectedEnvSet.has(id) || deleteFlow || removeDeletionFlow,
-                    disable: deleteFlow || removeDeletionFlow,
-                  }}
-                />
-                <Td>
-                  {name}
-                </Td>
-                <Td>{hostCount}</Td>
-                <Td>{akCount}</Td>
-              </Tr>
-            ))
+              (
+                <Tr key={`${name}_${id}`}>
+                  <Td
+                    key={`${name}__${id}_select`}
+                    select={{
+                      rowIndex,
+                      onSelect: (event, isSelected) => onSelect(event, isSelected, id),
+                      isSelected: selectedEnvSet.has(id) || deleteFlow || removeDeletionFlow,
+                      disable: deleteFlow || removeDeletionFlow,
+                    }}
+                  />
+                  <Td>
+                    {name}
+                  </Td>
+                  <Td>{hostCount}</Td>
+                  <Td>{akCount}</Td>
+                </Tr>
+              ))
             }
           </Tbody>
         </TableComposable>}

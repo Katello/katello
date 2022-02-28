@@ -47,19 +47,19 @@ const EnvironmentPaths = ({
               {index === 0 && <hr />}
               <FormGroup key={`fg-${index}`} isInline fieldId="environment-checkbox-group">
                 {environments.map(env =>
-                (<Checkbox
-                  isChecked={(publishing && env.library) ||
+                  (<Checkbox
+                    isChecked={(publishing && env.library) ||
                     envCheckedInList(env, userCheckedItems) ||
                     envCheckedInList(env, promotedEnvironments)}
-                  isDisabled={(publishing && env.library)
+                    isDisabled={(publishing && env.library)
                     || envCheckedInList(env, promotedEnvironments)}
-                  className="env-path__labels-with-pointer"
-                  key={`${env.id}${index}`}
-                  id={`${env.id}${index}`}
-                  label={<EnvironmentLabels environments={env} />}
-                  aria-label={env.label}
-                  onChange={checked => oncheckedChange(checked, env)}
-                />))}
+                    className="env-path__labels-with-pointer"
+                    key={`${env.id}${index}`}
+                    id={`${env.id}${index}`}
+                    label={<EnvironmentLabels environments={env} />}
+                    aria-label={env.label}
+                    onChange={checked => oncheckedChange(checked, env)}
+                  />))}
               </FormGroup>
               <hr />
             </div>
