@@ -19,10 +19,11 @@ class EnabledRepository extends Component {
 
   repoForAction = () => {
     const {
-      productId, contentId, arch, releasever, name, type,
+      id, productId, contentId, arch, releasever, name, type,
     } = this.props;
 
     return {
+      id,
       contentId,
       productId,
       name,

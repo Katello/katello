@@ -101,6 +101,7 @@ module Katello
     api :PUT, "/repository_sets/:id/disable", N_("Disable a repository from the set")
     api :PUT, "/products/:product_id/repository_sets/:id/disable", N_("Disable a repository from the set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set to disable")
+    param :repository_id, :number, :required => false, :desc => N_("ID of the repository within the set to disable")
     param :product_id, :number, :required => false, :desc => N_("ID of the product containing the repository set")
     param :basearch, String, :required => false, :desc => N_("Basearch to disable")
     param :releasever, String, :required => false, :desc => N_("Releasever to disable")
@@ -187,7 +188,7 @@ module Katello
     end
 
     def substitutions
-      params.permit(:basearch, :releasever).to_h
+      params.permit(:basearch, :releasever, :repository_id).to_h
     end
 
     def find_authorized_activation_key
