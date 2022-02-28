@@ -107,8 +107,8 @@ const CVDeletionReassignHostsForm = () => {
       >
         <AffectedHosts
           {...{
-          cvId,
-        }}
+            cvId,
+          }}
           versionEnvironments={cvEnvironments}
           deleteCV
         />

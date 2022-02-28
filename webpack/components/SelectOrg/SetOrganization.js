@@ -87,7 +87,7 @@ class SetOrganization extends Component {
 
 
 SetOrganization.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.object),
+  list: PropTypes.arrayOf(PropTypes.shape({})),
   loading: PropTypes.bool.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,

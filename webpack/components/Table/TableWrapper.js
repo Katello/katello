@@ -286,7 +286,7 @@ TableWrapper.propTypes = {
   ])),
   displaySelectAllCheckbox: PropTypes.bool,
   selectedCount: PropTypes.number,
-  selectedResults: PropTypes.arrayOf(PropTypes.object),
+  selectedResults: PropTypes.arrayOf(PropTypes.shape({})),
   clearSelectedResults: PropTypes.func,
   selectAll: PropTypes.func,
   selectAllMode: PropTypes.bool,

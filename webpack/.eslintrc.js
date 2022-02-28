@@ -25,6 +25,11 @@ module.exports = {
   ],
   parser: '@babel/eslint-parser',
   rules: {
+    // https://github.com/yannickcr/eslint-plugin-react/issues/1679 
+    // TODO: Add this to foreman rules somewhere
+    "indent": ["error", 2, {
+      "ignoredNodes": ['JSX*', 'JSXElement', 'JSXElement > *', 'JSXAttribute', 'JSXIdentifier', 'JSXNamespacedName', 'JSXMemberExpression', 'JSXSpreadAttribute', 'JSXExpressionContainer', 'JSXOpeningElement', 'JSXClosingElement', 'JSXText', 'JSXEmptyExpression', 'JSXSpreadChild']
+    }],
     'react/jsx-filename-extension': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': ["warn", {
@@ -57,7 +62,7 @@ module.exports = {
       {
         'required': {
           // Some patternfly components don't play well with the 'nesting' check
-          "every": [ "id" ]
+          "every": ["id"]
         },
       }
     ],

@@ -18,7 +18,7 @@ const TypeAheadSearch = ({
         onKeyPress={e => keyPressHandler(
           e, isOpen, activeItems, highlightedIndex,
           selectItem, userInputValue, onSearch,
-)}
+        )}
         onInputFocus={openMenu}
         passedProps={getInputProps()}
       />

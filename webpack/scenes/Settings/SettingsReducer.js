@@ -13,21 +13,21 @@ export const initialSettingsState = Immutable({
 
 export default (state = initialSettingsState, action) => {
   switch (action.type) {
-    case GET_SETTING_SUCCESS: {
-      const { name, value } = action.response;
-      switch (name) {
-        case AUTOSEARCH_DELAY:
-          return state.set('autoSearchDelay', value);
-        case AUTOSEARCH_WHILE_TYPING:
-          return state.set('autoSearchEnabled', value);
-        case CONTENT_DISCONNECTED:
-          return state.set('disconnected', value);
-        default:
-          return state;
-      }
-    }
-
+  case GET_SETTING_SUCCESS: {
+    const { name, value } = action.response;
+    switch (name) {
+    case AUTOSEARCH_DELAY:
+      return state.set('autoSearchDelay', value);
+    case AUTOSEARCH_WHILE_TYPING:
+      return state.set('autoSearchEnabled', value);
+    case CONTENT_DISCONNECTED:
+      return state.set('disconnected', value);
     default:
       return state;
+    }
+  }
+
+  default:
+    return state;
   }
 };

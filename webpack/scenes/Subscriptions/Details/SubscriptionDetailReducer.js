@@ -20,47 +20,47 @@ const initialState = Immutable({
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case SUBSCRIPTION_DETAILS_REQUEST: {
-      return state.set('loading', true);
-    }
+  case SUBSCRIPTION_DETAILS_REQUEST: {
+    return state.set('loading', true);
+  }
 
-    case PRODUCTS_REQUEST: {
-      return state.set('loading', true);
-    }
+  case PRODUCTS_REQUEST: {
+    return state.set('loading', true);
+  }
 
-    case SUBSCRIPTION_DETAILS_SUCCESS: {
-      const subscriptionDetails = action.response;
+  case SUBSCRIPTION_DETAILS_SUCCESS: {
+    const subscriptionDetails = action.response;
 
-      return state.merge({
-        ...subscriptionDetails,
-        loading: false,
-      });
-    }
+    return state.merge({
+      ...subscriptionDetails,
+      loading: false,
+    });
+  }
 
-    case PRODUCTS_SUCCESS: {
-      const productContent = { productContent: action.response };
+  case PRODUCTS_SUCCESS: {
+    const productContent = { productContent: action.response };
 
-      return state.merge({
-        ...productContent,
-        loading: false,
-      });
-    }
+    return state.merge({
+      ...productContent,
+      loading: false,
+    });
+  }
 
-    case SUBSCRIPTION_DETAILS_FAILURE: {
-      return state.merge({
-        error: action.payload.message,
-        loading: false,
-      });
-    }
+  case SUBSCRIPTION_DETAILS_FAILURE: {
+    return state.merge({
+      error: action.payload.message,
+      loading: false,
+    });
+  }
 
-    case PRODUCTS_FAILURE: {
-      return state.merge({
-        error: action.payload.message,
-        loading: false,
-      });
-    }
+  case PRODUCTS_FAILURE: {
+    return state.merge({
+      error: action.payload.message,
+      loading: false,
+    });
+  }
 
-    default:
-      return state;
+  default:
+    return state;
   }
 };

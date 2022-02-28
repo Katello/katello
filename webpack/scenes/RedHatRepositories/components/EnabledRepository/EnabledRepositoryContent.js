@@ -15,10 +15,10 @@ const EnabledRepositoryContent = ({ loading, disableTooltipId, disableRepository
       <button
         onClick={disableRepository}
         style={{
-            backgroundColor: 'initial',
-            border: 'none',
-            color: '#0388ce',
-          }}
+          backgroundColor: 'initial',
+          border: 'none',
+          color: '#0388ce',
+        }}
       >
         <i className={cx('fa-2x', 'fa fa-minus-circle')} />
       </button>

@@ -114,7 +114,7 @@ const UpstreamServerTypeForm = ({
               defaultMessage={__('Red Hat content will be consumed from an {type}.')}
               values={{
                 type: <strong>{__('upstream Foreman server')}</strong>,
-            }}
+              }}
             />
             <br />
             {showUpdate &&
@@ -122,10 +122,10 @@ const UpstreamServerTypeForm = ({
               id="cdn-configuration-type-upstream-server"
               defaultMessage={__('Provide the required information and click {update} below to save changes.')}
               values={{
-                  update: <strong>{__('Update')}</strong>,
+                update: <strong>{__('Update')}</strong>,
               }}
             />
-          }
+            }
           </Text>
         </div>
         <FormGroup
