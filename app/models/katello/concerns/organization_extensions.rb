@@ -90,8 +90,10 @@ module Katello
           self.providers.anonymous.first
         end
 
-        def manifest_imported?
-          owner_details['upstreamConsumer'].present?
+        def manifest_imported?(cached: false)
+          Rails.cache.fetch("#{self.label}_manifest_imported?", expires_in: 1.minute, force: !cached) do
+            owner_details['upstreamConsumer'].present?
+          end
         end
 
         def manifest_expired?
