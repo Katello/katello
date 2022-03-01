@@ -133,11 +133,15 @@ module Katello
     end
 
     def create_cdn_configuration
-      @cdn_configuration = Katello::CdnConfiguration.where(
-        organization: @organization,
-        url: ::Katello::Resources::CDN::CdnResource.redhat_cdn_url,
-        type: ::Katello::CdnConfiguration::CDN_TYPE
-      ).first_or_create!
+      @cdn_configuration = Katello::CdnConfiguration.where(organization: @organization)
+
+      if @cdn_configuration.blank?
+        Katello::CdnConfiguration.where(
+          organization: @organization,
+          url: ::Katello::Resources::CDN::CdnResource.redhat_cdn_url,
+          type: ::Katello::CdnConfiguration::CDN_TYPE
+        ).first_or_create!
+      end
     end
   end
 end
