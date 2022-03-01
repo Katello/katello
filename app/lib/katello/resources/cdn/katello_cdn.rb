@@ -36,12 +36,16 @@ module Katello
           true
         end
 
+        def validate!
+          organization && content_view_id && lifecycle_environment_id
+        end
+
         def debug_certificate
           get("/katello/api/v2/organizations/#{organization['id']}/download_debug_certificate")
         end
 
         def content_view_id
-          rs = get("/katello/api/v2/organizations/#{organization['id']}/content_views?name=#{CGI.escape(@content_view_label)}")
+          rs = get("/katello/api/v2/organizations/#{organization['id']}/content_views?search=#{CGI.escape("label=#{@content_view_label}")}")
           content_view = JSON.parse(rs)['results']&.first
           if content_view.blank?
             fail _("Upstream organization %{org_label} does not have a content view with the label %{cv_label}") % { org_label: @organization_label,
@@ -51,7 +55,7 @@ module Katello
         end
 
         def lifecycle_environment_id
-          rs = get("/katello/api/v2/organizations/#{organization['id']}/environments")
+          rs = get("/katello/api/v2/organizations/#{organization['id']}/environments?full_result=true")
           env = JSON.parse(rs)['results'].find { |lce| lce['label'] == @lifecycle_environment_label }
 
           if env.blank?
