@@ -14,7 +14,7 @@ import RepositorySetsTab from './components/extensions/HostDetails/Tabs/Reposito
 import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js';
 import extendReducer from './components/extensions/reducers';
 import rootReducer from './redux/reducers';
-import HostCollectionsDetailsCard from './components/extensions/HostDetails/Cards/HostCollectionsCard';
+import HostCollectionsCard from './components/extensions/HostDetails/Cards/HostCollectionsCard';
 
 registerReducer('katelloExtends', extendReducer);
 registerReducer('katello', rootReducer);
@@ -36,7 +36,7 @@ addGlobalFill(
 addGlobalFill(
   'details-cards',
   'Host collections',
-  <HostCollectionsDetailsCard key="host-collections-details" />,
+  <HostCollectionsCard key="host-collections-details" />,
   700,
 );
 addGlobalFill('details-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 1900);

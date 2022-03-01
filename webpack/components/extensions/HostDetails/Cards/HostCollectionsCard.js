@@ -124,7 +124,7 @@ const HostCollectionsDetails = ({
   );
 };
 
-const HostCollectionsDetailsCard = ({ hostDetails }) => {
+const HostCollectionsCard = ({ hostDetails }) => {
   if (hostDetails) {
     return <HostCollectionsDetails {...propsToCamelCase(hostDetails)} />;
   }
@@ -139,12 +139,12 @@ HostCollectionsDetails.defaultProps = {
   hostCollections: [],
 };
 
-HostCollectionsDetailsCard.propTypes = {
+HostCollectionsCard.propTypes = {
   hostDetails: PropTypes.shape({}),
 };
 
-HostCollectionsDetailsCard.defaultProps = {
+HostCollectionsCard.defaultProps = {
   hostDetails: null,
 };
 
-export default HostCollectionsDetailsCard;
+export default HostCollectionsCard;

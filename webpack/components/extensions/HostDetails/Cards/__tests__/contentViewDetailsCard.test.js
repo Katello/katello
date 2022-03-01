@@ -24,7 +24,7 @@ test('shows host details when content facet is set', () => {
 });
 
 
-test('doesnot show host details when content facet is not set', () => {
+test('does not show host details when content facet is not set', () => {
   const { queryByText } = render(<ContentViewDetailsCard />);
   expect(queryByText('Version 1.0')).toBeNull();
 });
