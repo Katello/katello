@@ -167,6 +167,10 @@ module Katello
       (!content_counts.blank? && content_counts.dig(PuppetModule::CONTENT_TYPE) > 0) || self.content_view.force_puppet_environment?
     end
 
+    def puppet_module_count
+      content_counts&.dig(PuppetModule::CONTENT_TYPE)
+    end
+
     def archived_repos
       self.default? ? self.repositories : self.repos(nil)
     end

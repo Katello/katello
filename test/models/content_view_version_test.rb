@@ -196,7 +196,6 @@ module Katello
       katello_content_view_puppet_environments(:library_dev_staging_view_library_puppet_env).puppet_modules << puppet_module
       puppet_cv_env = katello_content_view_puppet_environments(:dev_view_puppet_environment)
       puppet_cv_env.puppet_modules << puppet_module
-
       assert_include ContentViewVersion.with_puppet_module(puppet_module), puppet_cv_env.content_view_version
     end
 
@@ -208,6 +207,7 @@ module Katello
 
       @cvv.content_view.force_puppet_environment = false
       @cvv.content_counts = { "puppet_module" => 2 }
+      assert_equal 2, @cvv.puppet_module_count
       assert @cvv.promote_puppet_environment?
     end
 
