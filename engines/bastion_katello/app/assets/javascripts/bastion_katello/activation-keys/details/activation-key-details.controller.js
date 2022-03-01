@@ -12,18 +12,20 @@
  * @requires Notification
  * @requires ApiErrorHandler
  * @requires simpleContentAccessEnabled
+ * @requires isManifestImported
  *
  * @description
  *   Provides the functionality for the activation key details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'ActivationKey', 'Organization', 'CurrentOrganization', 'Notification', 'ApiErrorHandler', 'simpleContentAccessEnabled',
-    function ($scope, $state, $q, translate, ActivationKey, Organization, CurrentOrganization, Notification, ApiErrorHandler, simpleContentAccessEnabled) {
+    ['$scope', '$state', '$q', 'translate', 'ActivationKey', 'Organization', 'CurrentOrganization', 'Notification', 'ApiErrorHandler', 'simpleContentAccessEnabled', 'isManifestImported',
+    function ($scope, $state, $q, translate, ActivationKey, Organization, CurrentOrganization, Notification, ApiErrorHandler, simpleContentAccessEnabled, isManifestImported) {
         $scope.defaultRoles = ['Red Hat Enterprise Linux Server', 'Red Hat Enterprise Linux Workstation', 'Red Hat Enterprise Linux Compute Node'];
         $scope.defaultUsages = ['Production', 'Development/Test', 'Disaster Recovery'];
 
         $scope.purposeAddonsCount = 0;
         $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
+        $scope.isManifestImported = isManifestImported;
 
         $scope.organization = Organization.get({id: CurrentOrganization}, function(org) {
             $scope.purposeAddonsCount += org.system_purposes.addons.length;

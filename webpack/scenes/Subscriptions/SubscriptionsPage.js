@@ -272,7 +272,7 @@ class SubscriptionsPage extends Component {
             />
 
             <div id="subscriptions-table" className="modal-container">
-              {SCAAlert}
+              {isManifestImported && SCAAlert}
               <SubscriptionsTable
                 canManageSubscriptionAllocations={canManageSubscriptionAllocations}
                 loadSubscriptions={this.props.loadSubscriptions}
