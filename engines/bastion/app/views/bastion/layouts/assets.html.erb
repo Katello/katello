@@ -19,7 +19,7 @@
     angular.module('Bastion').value('currentLocale', '<%= I18n.locale %>');
     angular.module('Bastion').value('CurrentOrganization', "<%= Organization.current.id if Organization.current %>");
     angular.module('Bastion').value('simpleContentAccessEnabled', <%= Organization.current.simple_content_access? if Organization.current %>);
-    angular.module('Bastion').value('isManifestImported', <%= !!Organization.current&.owner_details&.[](:upstreamConsumer)&.[](:webUrl) %>)
+    angular.module('Bastion').value('isManifestImported', <%= !!Organization.current&.manifest_imported? %>)
     angular.module('Bastion').value('foreman', tfm);
     angular.module('Bastion').value('repositoryTypes', angular.fromJson('<%= Katello::RepositoryTypeManager.enabled_repository_types.values.to_json.html_safe %>'));
     angular.module('Bastion').value('deleteHostOnUnregister', angular.fromJson('<%= Setting[:unregister_delete_host] %>'));
