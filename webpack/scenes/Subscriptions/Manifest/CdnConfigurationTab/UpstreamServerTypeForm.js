@@ -87,8 +87,9 @@ const UpstreamServerTypeForm = ({
       password,
       upstream_organization_label: organizationLabel,
       ssl_ca_credential_id: sslCaCredentialId,
-      upstream_content_view_label: contentViewLabel,
-      upstream_lifecycle_environment_label: lifecycleEnvironmentLabel,
+      upstream_content_view_label: contentViewLabel || DEFAULT_CONTENT_VIEW_LABEL,
+      upstream_lifecycle_environment_label: lifecycleEnvironmentLabel ||
+      DEFAULT_LIFECYCLE_ENVIRONMENT_LABEL,
       type: UPSTREAM_SERVER,
     }, onUpdate, onError));
   };

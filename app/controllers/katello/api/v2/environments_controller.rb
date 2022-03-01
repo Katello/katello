@@ -48,6 +48,7 @@ module Katello
     param :organization_id, :number, :desc => N_("organization identifier")
     param :library, [true, false], :desc => N_("set true if you want to see only library environments")
     param :name, String, :desc => N_("filter only environments containing this name")
+    param :label, String, :desc => N_("filter only environments containing this label"), :required => false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(KTEnvironment)
     def index
@@ -58,6 +59,7 @@ module Katello
       query = KTEnvironment.readable
       query = query.where(organization: @organization) if @organization
       query = query.where(:name => params[:name]) if params[:name]
+      query = query.where(:label => params[:label]) if params[:label]
       query = query.where(:library => params[:library]) if params[:library]
       query
     end
