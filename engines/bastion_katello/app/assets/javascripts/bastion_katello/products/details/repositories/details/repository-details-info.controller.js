@@ -119,6 +119,8 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 if (!_.isEmpty(repository.commaIncludeTags)) {
                     repository["include_tags"] = repository.commaIncludeTags.split(",").map(function(tag) {
                         return tag.trim();
+                    }).filter(function(el) {
+                        return el;
                     });
                 } else {
                     repository["include_tags"] = [];
@@ -126,6 +128,8 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 if (!_.isEmpty(repository.commaExcludeTags)) {
                     repository["exclude_tags"] = repository.commaExcludeTags.split(",").map(function(tag) {
                         return tag.trim();
+                    }).filter(function(el) {
+                        return el;
                     });
                 } else {
                     repository["exclude_tags"] = [];
