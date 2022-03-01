@@ -92,14 +92,14 @@ export const ModuleStreamsTab = () => {
     };
 
     switch (true) {
-      case (streamInstallStatus?.length > 0 && streamText === 'disabled'):
-        return <TableText wrapModifier="nowrap">{INSTALLED_STATE.INSTALLED}</TableText>;
-      case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable !== true):
-        return <><CheckIcon color="green" /> {INSTALLED_STATE.UPTODATE}</>;
-      case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable):
-        return <><LongArrowAltUpIcon color="blue" /> {INSTALLED_STATE.UPGRADEABLE}</>;
-      default:
-        return <InactiveText text={INSTALLED_STATE.NOTINSTALLED} />;
+    case (streamInstallStatus?.length > 0 && streamText === 'disabled'):
+      return <TableText wrapModifier="nowrap">{INSTALLED_STATE.INSTALLED}</TableText>;
+    case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable !== true):
+      return <><CheckIcon color="green" /> {INSTALLED_STATE.UPTODATE}</>;
+    case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable):
+      return <><LongArrowAltUpIcon color="blue" /> {INSTALLED_STATE.UPGRADEABLE}</>;
+    default:
+      return <InactiveText text={INSTALLED_STATE.NOTINSTALLED} />;
     }
   };
 
@@ -113,14 +113,14 @@ export const ModuleStreamsTab = () => {
     let streamText = moduleStreamStatus?.charAt(0)?.toUpperCase() + moduleStreamStatus?.slice(1);
     streamText = streamText?.replace('Unknown', 'Default');
     switch (true) {
-      case (streamText === 'Default'):
-        return <Label color="gray" variant="outline">{streamText}</Label>;
-      case (streamText === 'Disabled'):
-        return <Label color="gray" variant="filled">{streamText}</Label>;
-      case (streamText === 'Enabled'):
-        return <Label color="green" variant="filled">{streamText}</Label>;
-      default:
-        return null;
+    case (streamText === 'Default'):
+      return <Label color="gray" variant="outline">{streamText}</Label>;
+    case (streamText === 'Disabled'):
+      return <Label color="gray" variant="filled">{streamText}</Label>;
+    case (streamText === 'Enabled'):
+      return <Label color="green" variant="filled">{streamText}</Label>;
+    default:
+      return null;
     }
   };
 

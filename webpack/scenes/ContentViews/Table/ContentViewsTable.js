@@ -166,10 +166,10 @@ const ContentViewTable = () => {
 
   const indexToSortVariable = (key) => {
     switch (key) {
-      case 2:
-        return 'name';
-      default:
-        return undefined;
+    case 2:
+      return 'name';
+    default:
+      return undefined;
     }
   };
 
