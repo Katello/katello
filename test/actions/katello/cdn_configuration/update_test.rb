@@ -12,6 +12,8 @@ module ::Actions::Katello::CdnConfiguration
       @organization = taxonomies(:empty_organization)
       @cdn_configuration = @organization.cdn_configuration
       @credential = FactoryBot.create(:katello_content_credential, organization: @organization)
+      @library = ::Katello::KTEnvironment.find(katello_environments(:library).id)
+      @library_view = ::Katello::ContentView.find(katello_content_views(:library_view).id)
     end
 
     def keypair
@@ -36,8 +38,13 @@ module ::Actions::Katello::CdnConfiguration
         ssl_ca_credential_id: @credential.id,
         username: 'test_username',
         password: 'test_password',
-        upstream_organization_label: @organization.label
+        upstream_organization_label: @organization.label,
+        upstream_content_view_label: @library_view.label,
+        upstream_lifecycle_environment_label: @library.label
       }
+      ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:organization).returns(@organization)
+      ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:content_view_id).returns(2)
+      ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:lifecycle_environment_id).returns(2)
 
       certs = keypair
       ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:debug_certificate).returns(certs[:joined])
@@ -55,6 +62,8 @@ module ::Actions::Katello::CdnConfiguration
       assert_equal attrs[:username], @cdn_configuration.username
       assert_equal attrs[:password], @cdn_configuration.password
       assert_equal attrs[:upstream_organization_label], @cdn_configuration.upstream_organization_label
+      assert_equal attrs[:upstream_content_view_label], @cdn_configuration.upstream_content_view_label
+      assert_equal attrs[:upstream_lifecycle_environment_label], @cdn_configuration.upstream_lifecycle_environment_label
     end
 
     def test_plans_redhat_cdn
@@ -68,6 +77,26 @@ module ::Actions::Katello::CdnConfiguration
       @cdn_configuration.reload
 
       assert_equal attrs[:url], @cdn_configuration.url
+      assert_nil @cdn_configuration.ssl_cert
+      assert_nil @cdn_configuration.ssl_key
+      assert_nil @cdn_configuration.ssl_ca_credential_id
+      assert_nil @cdn_configuration.username
+      assert_nil @cdn_configuration.password
+      assert_nil @cdn_configuration.upstream_organization_label
+    end
+
+    def test_plans_airgapped
+      attrs = {
+        type: ::Katello::CdnConfiguration::AIRGAPPED_TYPE
+      }
+      refute @cdn_configuration.airgapped?
+      refute_nil @cdn_configuration.url
+
+      plan_action(@action, @cdn_configuration, attrs)
+      @cdn_configuration.reload
+
+      assert @cdn_configuration.airgapped?
+      assert_nil @cdn_configuration.url
       assert_nil @cdn_configuration.ssl_cert
       assert_nil @cdn_configuration.ssl_key
       assert_nil @cdn_configuration.ssl_ca_credential_id

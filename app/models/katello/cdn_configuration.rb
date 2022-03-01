@@ -53,6 +53,8 @@ module Katello
       self.ssl_ca_credential_id = nil
       self.upstream_content_view_label = nil
       self.upstream_lifecycle_environment_label = nil
+      self.ssl_cert = nil
+      self.ssl_key = nil
     end
 
     def non_redhat_configuration
