@@ -160,19 +160,24 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                         }
                     });
                 }
-                if (!_.isEmpty(repository.include_tags)) {
-                    repository["include_tags"] = repository.include_tags.split(",").map(function(tag) {
-                        return tag.trim();
-                    });
-                } else {
-                    repository["include_tags"] = [];
+                if (!Array.isArray(repository.include_tags)) {
+                    if (!_.isEmpty(repository.include_tags)) {
+                        repository["include_tags"] = repository.include_tags.split(",").map(function(tag) {
+                            return tag.trim();
+                        });
+                    } else {
+                        repository["include_tags"] = [];
+                    }
                 }
-                if (!_.isEmpty(repository.exclude_tags)) {
-                    repository["exclude_tags"] = repository.exclude_tags.split(",").map(function(tag) {
-                        return tag.trim();
-                    });
-                } else {
-                    repository["exclude_tags"] = [];
+
+                if (!Array.isArray(repository.exclude_tags)) {
+                    if (!_.isEmpty(repository.exclude_tags)) {
+                        repository["exclude_tags"] = repository.exclude_tags.split(",").map(function(tag) {
+                            return tag.trim();
+                        });
+                    } else {
+                        repository["exclude_tags"] = [];
+                    }
                 }
                 repository.$save(success, error);
             };
