@@ -96,9 +96,18 @@ module Actions
         response
       end
 
+      def missing_resources_message(error)
+        migration_task = pulp_tasks.any? { |task| task[:name] == 'pulp_2to3_migration.app.tasks.migrate.migrate_from_pulp2' }
+        if migration_task && error&.starts_with?("Validation failed: resources missing")
+          "Missing repositories found, please run 'COMMIT=true foreman-rake katello:correct_repositories'.  Original error: #{error}"
+        else
+          error
+        end
+      end
+
       def check_for_errors
         combined_tasks.each do |task|
-          if (message = task.error)
+          if (message = missing_resources_message(task.error))
             fail ::Katello::Errors::Pulp3Error, message
           end
         end
