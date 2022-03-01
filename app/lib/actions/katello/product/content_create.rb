@@ -44,16 +44,18 @@ module Actions
           root = ::Katello::RootRepository.find(input[:root_repository_id])
           root.update(:content_id => input[:content_id])
 
-          content = ::Katello::Content.create!(name: root.name,
-                                               organization_id: root.product.organization_id,
-                                               cp_content_id: root.content_id,
-                                               content_type: root.content_type,
-                                               label: root.custom_content_label,
-                                               content_url: root.custom_content_path,
-                                               vendor: ::Katello::Provider::CUSTOM)
+          content = ::Katello::Content.where(organization_id: root.product.organization_id, cp_content_id: root.content_id).first_or_create do |new_content|
+            new_content.name = root.name
+            new_content.content_type = root.content_type
+            new_content.label = root.custom_content_label
+            new_content.content_url = root.custom_content_path
+            new_content.vendor = ::Katello::Provider::CUSTOM
+          end
 
           #custom product content is always enabled by default
-          ::Katello::ProductContent.create!(product: root.product, content: content, enabled: true)
+          ::Katello::ProductContent.where(product: root.product, content: content).first_or_create do |pc|
+            pc.enabled = true
+          end
         end
       end
     end
