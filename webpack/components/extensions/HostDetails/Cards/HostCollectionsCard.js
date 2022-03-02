@@ -18,23 +18,36 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import { useSet } from '../../../Table/TableHooks';
+import { HostCollectionsAddModal, HostCollectionsRemoveModal } from './HostCollectionsCard/HostCollectionsModal';
 
 const HostCollectionsDetails = ({
-  hostCollections,
+  hostCollections, id: hostId, name: hostName,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleBulkAction = () => setIsDropdownOpen(prev => !prev);
 
   const expandedHostCollections = useSet([]);
-  const openAddHostCollectionsModal = () => {}; // TODO: implement
-  const openRemoveHostCollectionsModal = () => {}; // TODO: implement
+  const hostCollectionIds = hostCollections?.map(({ id }) => id) ?? [];
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const closeAddModal = () => setIsAddModalOpen(false);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const closeRemoveModal = () => setIsRemoveModalOpen(false);
+
+  const openAddHostCollectionsModal = () => {
+    setIsDropdownOpen(false);
+    setIsAddModalOpen(true);
+  };
+  const openRemoveHostCollectionsModal = () => {
+    setIsDropdownOpen(false);
+    setIsRemoveModalOpen(true);
+  };
 
   const dropdownItems = [
     <DropdownItem
       aria-label="add_host_to_collections"
       key="add_host_to_collections"
       component="button"
-      isDisabled
       onClick={openAddHostCollectionsModal}
     >
       {__('Add host to collections')}
@@ -43,7 +56,7 @@ const HostCollectionsDetails = ({
       aria-label="remove_host_from_collections"
       key="remove_host_from_collections"
       component="button"
-      isDisabled
+      isDisabled={!hostCollections.length}
       onClick={openRemoveHostCollectionsModal}
     >
       {__('Remove host from collections')}
@@ -120,6 +133,23 @@ const HostCollectionsDetails = ({
           })}
         </CardBody>
       </Card>
+      <HostCollectionsAddModal
+        isOpen={isAddModalOpen}
+        closeModal={closeAddModal}
+        hostId={hostId}
+        key={`hc-add-modal-${hostId}`}
+        hostName={hostName}
+        existingHostCollectionIds={hostCollectionIds}
+      />
+      <HostCollectionsRemoveModal
+        isOpen={isRemoveModalOpen}
+        closeModal={closeRemoveModal}
+        hostId={hostId}
+        key={`hc-remove-modal-${hostId}`}
+        hostName={hostName}
+        existingHostCollectionIds={hostCollectionIds}
+      />
+
     </GridItem>
   );
 };
@@ -133,10 +163,14 @@ const HostCollectionsCard = ({ hostDetails }) => {
 
 HostCollectionsDetails.propTypes = {
   hostCollections: PropTypes.arrayOf(PropTypes.shape({})),
+  id: PropTypes.number,
+  name: PropTypes.string,
 };
 
 HostCollectionsDetails.defaultProps = {
   hostCollections: [],
+  id: null,
+  name: '',
 };
 
 HostCollectionsCard.propTypes = {
