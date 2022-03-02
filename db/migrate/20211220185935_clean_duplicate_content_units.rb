@@ -1,6 +1,6 @@
 class CleanDuplicateContentUnits < ActiveRecord::Migration[6.0]
   def find_duplicate_groups(model, fields)
-    model.having("count(*) > 1").group(*fields).pluck("string_agg(id::TEXT, ',') ").map do |ids|
+    model.having("count(*) > 1").group(*fields).pluck(Arel.sql("string_agg(id::TEXT, ',')")).map do |ids|
       ids.split(',').map(&:to_i)
     end
   end
