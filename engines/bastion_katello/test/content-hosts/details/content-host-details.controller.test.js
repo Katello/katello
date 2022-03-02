@@ -115,7 +115,8 @@ describe('Controller: ContentHostDetailsController', function() {
             Organization: Organization,
             HostSubscription: HostSubscription,
             MenuExpander: MenuExpander,
-            simpleContentAccessEnabled: false
+            simpleContentAccessEnabled: false,
+            isManifestImported: true,
         });
     }));
 

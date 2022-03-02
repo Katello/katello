@@ -79,7 +79,8 @@ describe('Controller: ActivationKeyDetailsController', function() {
             CurrentOrganization: CurrentOrganization,
             Notification: Notification,
             Organization: Organization,
-            simpleContentAccessEnabled: 'simpleContentAccessEnabled'
+            simpleContentAccessEnabled: 'simpleContentAccessEnabled',
+            isManifestImported: 'isManifestImported'
         });
     }));
 
