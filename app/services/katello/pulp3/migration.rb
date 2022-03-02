@@ -65,7 +65,11 @@ module Katello
 
       def create_and_run_migrations
         migs = create_migrations
-        migs.map { |href| start_migration(href) }
+        if migs.any?
+          migs.map { |href| start_migration(href) }
+        else
+          []
+        end
       end
 
       def self.ignorable_content_types
