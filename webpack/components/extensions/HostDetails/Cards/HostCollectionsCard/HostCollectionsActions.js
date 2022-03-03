@@ -1,4 +1,6 @@
+import { translate as __ } from 'foremanReact/common/I18n';
 import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
+import { errorToast } from '../../../../../scenes/Tasks/helpers';
 import api, { foremanApi } from '../../../../../services/api';
 import { ALTER_HOST_HOST_COLLECTIONS_KEY, AVAILABLE_HOST_COLLECTIONS_KEY, REMOVABLE_HOST_COLLECTIONS_KEY } from './HostCollectionsConstants';
 
@@ -16,10 +18,13 @@ export const getHostRemovableHostCollections = params => get({
   params,
 });
 
-export const alterHostCollections = (hostId, params) => put({
+export const alterHostCollections = (hostId, params, refreshHostDetails) => put({
   type: API_OPERATIONS.PUT,
   key: ALTER_HOST_HOST_COLLECTIONS_KEY,
   url: foremanApi.getApiUrl(`/hosts/${hostId}/host_collections`),
   params,
+  successToast: () => __('Host collections updated'),
+  errorToast: error => errorToast(error),
+  handleSuccess: () => refreshHostDetails(),
 });
 

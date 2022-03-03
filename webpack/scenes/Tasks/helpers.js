@@ -1,6 +1,7 @@
 import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { getResponseErrorMsgs } from '../../utils/helpers';
 
 export const bulkSearchKey = key => `${key}_TASK_SEARCH`;
 export const pollTaskKey = key => `${key}_POLL_TASK`;
@@ -45,4 +46,9 @@ export const renderTaskFinishedToast = (task) => {
   if (!task) return;
 
   window.tfm.toastNotifications.notify(taskFinishedToast(task));
+};
+
+export const errorToast = (error) => {
+  const message = getResponseErrorMsgs(error.response);
+  return message;
 };

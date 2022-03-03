@@ -3,16 +3,18 @@ import { Modal, Button } from '@patternfly/react-core';
 import { useSelector, useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Thead, Th, Tbody, Tr, Td, TableVariant } from '@patternfly/react-table';
+import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import TableWrapper from '../../../../Table/TableWrapper';
-import { useBulkSelect, useSelectionSet } from '../../../../Table/TableHooks';
-import { selectAvailableHostCollections, selectAvailableHostCollectionsStatus, selectHostCollections, selectHostCollectionsStatus, selectRemovableHostCollections, selectRemovableHostCollectionsStatus } from './HostCollectionsSelectors';
+import { useSelectionSet } from '../../../../Table/TableHooks';
+import { selectAvailableHostCollections, selectAvailableHostCollectionsStatus, selectRemovableHostCollections, selectRemovableHostCollectionsStatus } from './HostCollectionsSelectors';
 import hostIdNotReady from '../../HostDetailsActions';
 import { alterHostCollections, getHostAvailableHostCollections, getHostRemovableHostCollections } from './HostCollectionsActions';
 import { MODAL_TYPES } from './HostCollectionsConstants';
+import { truncate } from '../../../../../utils/helpers';
 
 export const HostCollectionsAddModal =
   props => <HostCollectionsModal modalType={MODAL_TYPES.ADD} {...props} />;
@@ -23,7 +25,7 @@ export const HostCollectionsModal = ({
   isOpen, closeModal, hostId, hostName, modalType = MODAL_TYPES.ADD, existingHostCollectionIds,
 }) => {
   const emptyContentTitle = __('No host collections');
-  const emptyContentBody = __('There are no host collections available to add or remove.');
+  const emptyContentBody = __('There are no host collections available to add.');
   const emptySearchTitle = __('No matching host collections found');
   const emptySearchBody = __('Try changing your search settings.');
 
@@ -39,6 +41,7 @@ export const HostCollectionsModal = ({
   const dispatch = useDispatch();
   const { results, ...metadata } = response;
   const [suppressFirstFetch, setSuppressFirstFetch] = useState(false);
+  const [searchQuery, updateSearchQuery] = useState('');
 
   const hostLimitNotExceeded = (hc) => {
     const { totalHosts, maxHosts, unlimitedHosts } = propsToCamelCase(hc);
@@ -46,9 +49,9 @@ export const HostCollectionsModal = ({
     return totalHosts < maxHosts;
   };
 
+  const hostLimitExceeded = hc => !hostLimitNotExceeded(hc);
+
   const {
-    searchQuery,
-    updateSearchQuery,
     isSelected,
     selectOne,
     selectNone,
@@ -63,7 +66,6 @@ export const HostCollectionsModal = ({
     metadata,
     isSelectable: adding ? hc => hostLimitNotExceeded(hc) : () => true,
   });
-  console.log({ selectAll, selectionSet })
 
   const fetchItems = (params) => {
     if (!hostId) return hostIdNotReady;
@@ -83,35 +85,43 @@ export const HostCollectionsModal = ({
     }
   };
 
-  const handleModalClose = () => {
+  const handleModalCancel = () => {
     setSuppressFirstFetch(true);
     closeModal();
   };
 
   const newHostCollectionIds = (hcIds) => {
-    console.log({hcIds, selectionSet});
+    const uniq = ids => [...new Set(ids)];
     switch (modalType) {
     case MODAL_TYPES.ADD:
-      return [...hcIds, ...selectionSet];
+      return uniq([...hcIds, ...selectionSet]);
     case MODAL_TYPES.REMOVE:
-      return hcIds.filter(id => !selectionSet.has(id));
+      return uniq(hcIds.filter(id => !selectionSet.has(id)));
     default:
-      return hcIds;
+      return uniq(hcIds);
     }
   };
 
+  const refreshHostDetails = () => dispatch({
+    type: 'API_GET',
+    payload: {
+      key: HOST_DETAILS_KEY,
+      url: `/api/hosts/${hostName}`,
+    },
+  });
+
   const handleModalAction = () => {
     const newIds = newHostCollectionIds(existingHostCollectionIds);
-    dispatch(alterHostCollections(hostId, { host_collection_ids: newIds }));
+    dispatch(alterHostCollections(hostId, { host_collection_ids: newIds }, refreshHostDetails));
+    selectNone();
     closeModal();
   };
-
 
   const modalActions = ([
     <Button key="add" variant="primary" onClick={handleModalAction} isDisabled={!selectedCount}>
       {adding ? __('Add') : __('Remove')}
     </Button>,
-    <Button key="cancel" variant="link" onClick={handleModalClose}>
+    <Button key="cancel" variant="link" onClick={handleModalCancel}>
       Cancel
     </Button>,
   ]);
@@ -119,7 +129,7 @@ export const HostCollectionsModal = ({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={handleModalClose}
+      onClose={closeModal}
       title={adding ? __('Add host to host collections') : __('Remove host from host collections')}
       width="50%"
       actions={modalActions}
@@ -171,7 +181,7 @@ export const HostCollectionsModal = ({
               <Tr key={id}>
                 <Td
                   select={{
-                    disable: adding ? !hostLimitNotExceeded(hostCollection) : false,
+                    disable: adding && hostLimitExceeded(hostCollection),
                     isSelected: isSelected(id),
                     onSelect: (_event, selected) => selectOne(selected, id, hostCollection),
                     rowIndex,
@@ -184,7 +194,7 @@ export const HostCollectionsModal = ({
                 <Td>
                   {totalHosts}/{unlimitedHosts ? 'unlimited' : maxHosts}
                 </Td>
-                <Td>{description}</Td>
+                <Td>{description && truncate(description)}</Td>
               </Tr>
             );
           })

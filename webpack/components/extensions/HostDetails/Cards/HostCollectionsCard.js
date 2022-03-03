@@ -13,7 +13,6 @@ import {
   GridItem,
   DropdownItem,
 } from '@patternfly/react-core';
-
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
