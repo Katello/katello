@@ -38,6 +38,7 @@ export const SUBSCRIPTIONS_DISABLE_DELETE_BUTTON = 'SUBSCRIPTIONS_DISABLE_DELETE
 export const SUBSCRIPTIONS_ENABLE_DELETE_BUTTON = 'SUBSCRIPTIONS_ENABLE_DELETE_BUTTON';
 
 export const SUBSCRIPTION_WATCH_URL = 'https://access.redhat.com/articles/subscription-watch';
+export const SCA_URL = 'https://access.redhat.com/articles/simple-content-access';
 
 export const MANIFEST_DELETE_TASK_LABEL = 'Actions::Katello::Organization::ManifestDelete';
 

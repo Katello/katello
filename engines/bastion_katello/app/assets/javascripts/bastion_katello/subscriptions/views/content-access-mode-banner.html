@@ -1,5 +1,10 @@
-<div id="content-access-mode-banner" bst-alert="info" ng-show="simpleContentAccessEnabled">
+<div id="content-access-mode-banner" bst-alert="info" ng-if="simpleContentAccessEnabled">
   <span translate>
 This organization has Simple Content Access enabled.  Hosts are not required to have subscriptions attached to access repositories.
+  </span>
+</div>
+<div id="non-sca-banner" bst-alert="warning" ng-if="isManifestImported && !simpleContentAccessEnabled">
+  <span translate>
+This organization is not using <a target="_blank" href="https://access.redhat.com/articles/simple-content-access">Simple Content Access.</a> Legacy subscription management is deprecated and will be removed in a future version.
   </span>
 </div>

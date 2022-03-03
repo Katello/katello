@@ -35,6 +35,7 @@ BASTION_MODULES.push('myModuleName');
 Bastion supplies a common set of testing and development using Grunt.  To setup your development environment, from your plugin's checkout:
 
 ```
+sudo yum -y install npm chromium-headless chromium
 sudo npm install -g grunt-cli
 npm install
 npm install ../bastion/
