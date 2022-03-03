@@ -132,23 +132,26 @@ const HostCollectionsDetails = ({
           })}
         </CardBody>
       </Card>
-      <HostCollectionsAddModal
-        isOpen={isAddModalOpen}
-        closeModal={closeAddModal}
-        hostId={hostId}
-        key={`hc-add-modal-${hostId}`}
-        hostName={hostName}
-        existingHostCollectionIds={hostCollectionIds}
-      />
-      <HostCollectionsRemoveModal
-        isOpen={isRemoveModalOpen}
-        closeModal={closeRemoveModal}
-        hostId={hostId}
-        key={`hc-remove-modal-${hostId}`}
-        hostName={hostName}
-        existingHostCollectionIds={hostCollectionIds}
-      />
-
+      {hostId &&
+        <>
+          <HostCollectionsAddModal
+            isOpen={isAddModalOpen}
+            closeModal={closeAddModal}
+            hostId={hostId}
+            key={`hc-add-modal-${hostId}`}
+            hostName={hostName}
+            existingHostCollectionIds={hostCollectionIds}
+          />
+          <HostCollectionsRemoveModal
+            isOpen={isRemoveModalOpen}
+            closeModal={closeRemoveModal}
+            hostId={hostId}
+            key={`hc-remove-modal-${hostId}`}
+            hostName={hostName}
+            existingHostCollectionIds={hostCollectionIds}
+          />
+        </>
+      }
     </GridItem>
   );
 };

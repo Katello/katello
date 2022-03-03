@@ -28,6 +28,7 @@ export const HostCollectionsModal = ({
   const emptyContentBody = __('There are no host collections available to add.');
   const emptySearchTitle = __('No matching host collections found');
   const emptySearchBody = __('Try changing your search settings.');
+  const errorSearchTitle = __('Problem searching host collections');
 
   const columnHeaders = ['', __('Host collection'), __('Capacity'), __('Description')];
   const adding = (modalType === MODAL_TYPES.ADD);
@@ -39,7 +40,7 @@ export const HostCollectionsModal = ({
       selectAvailableHostCollectionsStatus(state) :
       selectRemovableHostCollectionsStatus(state))) || '';
   const dispatch = useDispatch();
-  const { results, ...metadata } = response;
+  const { results, error: errorSearchBody, ...metadata } = response;
   const [suppressFirstFetch, setSuppressFirstFetch] = useState(false);
   const [searchQuery, updateSearchQuery] = useState('');
 
@@ -150,6 +151,8 @@ export const HostCollectionsModal = ({
           emptyContentBody,
           emptySearchTitle,
           emptySearchBody,
+          errorSearchTitle,
+          errorSearchBody,
           status,
           searchQuery,
           updateSearchQuery,
@@ -163,7 +166,7 @@ export const HostCollectionsModal = ({
         autocompleteEndpoint="/host_collections/auto_complete_search"
         variant={TableVariant.compact}
         {...selectAll}
-        displaySelectAllCheckbox
+        displaySelectAllCheckbox={results?.length > 0}
       >
         <Thead>
           <Tr>
@@ -177,11 +180,12 @@ export const HostCollectionsModal = ({
             const {
               id, name, description, maxHosts, unlimitedHosts, totalHosts,
             } = propsToCamelCase(hostCollection);
+            const isDisabled = (adding && hostLimitExceeded(hostCollection));
             return (
               <Tr key={id}>
                 <Td
                   select={{
-                    disable: adding && hostLimitExceeded(hostCollection),
+                    disable: isDisabled,
                     isSelected: isSelected(id),
                     onSelect: (_event, selected) => selectOne(selected, id, hostCollection),
                     rowIndex,
@@ -192,7 +196,7 @@ export const HostCollectionsModal = ({
                   <a href={urlBuilder(`host_collections/${id}`, '')}>{name}</a>
                 </Td>
                 <Td>
-                  {totalHosts}/{unlimitedHosts ? 'unlimited' : maxHosts}
+                  {totalHosts}/{unlimitedHosts ? __('unlimited') : maxHosts}
                 </Td>
                 <Td>{description && truncate(description)}</Td>
               </Tr>
