@@ -160,7 +160,7 @@ export const HostCollectionsModal = ({
           selectNone,
         }
         }
-        additionalListeners={[hostId, modalType]}
+        additionalListeners={[hostId, modalType, existingHostCollectionIds]}
         fetchItems={fetchItems}
         searchPlaceholderText={__('Search host collections')}
         autocompleteEndpoint="/host_collections/auto_complete_search"

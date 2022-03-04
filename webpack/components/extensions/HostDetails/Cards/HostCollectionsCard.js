@@ -63,7 +63,7 @@ const HostCollectionsDetails = ({
   ];
 
   return (
-    <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
+    <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
       <Card isHoverable>
         <CardHeader>
           <Flex
