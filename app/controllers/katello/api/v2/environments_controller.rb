@@ -107,7 +107,7 @@ module Katello
       fail HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library" if @environment.library? && update_params.empty?
       update_params[:name] = params[:environment][:new_name] if params[:environment][:new_name]
       @environment.update!(update_params)
-      if update_params[:registry_name_pattern]
+      if update_params[:registry_name_pattern] || update_params[:registry_unauthenticated_pull]
         task = send(async ? :async_task : :sync_task, ::Actions::Katello::Environment::PublishRepositories,
                     @environment, content_type: Katello::Repository::DOCKER_TYPE)
       end

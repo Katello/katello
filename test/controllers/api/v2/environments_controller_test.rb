@@ -198,6 +198,47 @@ module Katello
       assert_equal original_label, @staging.label
     end
 
+    def test_update_pull_async
+      original_label = @staging.label
+
+      assert_async_task(::Actions::Katello::Environment::PublishRepositories, @staging,
+                        content_type: Katello::Repository::DOCKER_TYPE)
+      put :update, params: {
+        :organization_id => @organization.id, :id => @staging.id,
+        :environment => {
+          :new_name => 'New Name',
+          :label => 'New Label',
+          :registry_unauthenticated_pull => true
+        }
+      }
+
+      assert_response :success
+      assert_equal 'New Name', @staging.reload.name
+      # note: label is not editable; therefore, confirm that it is unchanged
+      assert_equal original_label, @staging.label
+    end
+
+    def test_update_pull_sync
+      original_label = @staging.label
+
+      assert_sync_task(::Actions::Katello::Environment::PublishRepositories, @staging,
+                       content_type: Katello::Repository::DOCKER_TYPE)
+      put :update, params: {
+        :organization_id => @organization.id, :id => @staging.id,
+        :async => false,
+        :environment => {
+          :new_name => 'New Name',
+          :label => 'New Label',
+          :registry_unauthenticated_pull => true
+        }
+      }
+
+      assert_response :success
+      assert_equal 'New Name', @staging.reload.name
+      # note: label is not editable; therefore, confirm that it is unchanged
+      assert_equal original_label, @staging.label
+    end
+
     def test_update_pattern_spaces
       put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
         :new_name => 'New Name',
