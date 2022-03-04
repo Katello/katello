@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from 'react-testing-lib-wrapper';
-import HostCollectionsCard from '../HostCollectionsCard';
+import HostCollectionsCard from '../HostCollectionsCard/HostCollectionsCard';
 
 const hostDetails = {
   host_collections: [

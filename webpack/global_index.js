@@ -14,7 +14,7 @@ import RepositorySetsTab from './components/extensions/HostDetails/Tabs/Reposito
 import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js';
 import extendReducer from './components/extensions/reducers';
 import rootReducer from './redux/reducers';
-import HostCollectionsCard from './components/extensions/HostDetails/Cards/HostCollectionsCard';
+import HostCollectionsCard from './components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsCard';
 import { hostIsNotRegistered } from './components/extensions/HostDetails/hostDetailsHelpers';
 
 registerReducer('katelloExtends', extendReducer);

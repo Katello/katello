@@ -16,8 +16,8 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
-import { useSet } from '../../../Table/TableHooks';
-import { HostCollectionsAddModal, HostCollectionsRemoveModal } from './HostCollectionsCard/HostCollectionsModal';
+import { useSet } from '../../../../Table/TableHooks';
+import { HostCollectionsAddModal, HostCollectionsRemoveModal } from './HostCollectionsModal';
 
 const HostCollectionsDetails = ({
   hostCollections, id: hostId, name: hostName,
