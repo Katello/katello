@@ -86,7 +86,7 @@ const HostCollectionsDetails = ({
             </FlexItem>
             <FlexItem>
               <Dropdown
-                toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                toggle={<KebabToggle aria-label="host_collections_bulk_actions" onToggle={toggleBulkAction} />}
                 isOpen={isDropdownOpen}
                 isPlain
                 position="right"

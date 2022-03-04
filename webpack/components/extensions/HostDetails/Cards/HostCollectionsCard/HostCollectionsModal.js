@@ -99,6 +99,7 @@ export const HostCollectionsModal = ({
     case MODAL_TYPES.REMOVE:
       return uniq(hcIds.filter(id => !selectionSet.has(id)));
     default:
+      console.log('DEFAULT')
       return uniq(hcIds);
     }
   };
@@ -160,7 +161,7 @@ export const HostCollectionsModal = ({
           selectNone,
         }
         }
-        additionalListeners={[hostId, modalType, existingHostCollectionIds]}
+        additionalListeners={[hostId, modalType, existingHostCollectionIds.join(',')]}
         fetchItems={fetchItems}
         searchPlaceholderText={__('Search host collections')}
         autocompleteEndpoint="/host_collections/auto_complete_search"
