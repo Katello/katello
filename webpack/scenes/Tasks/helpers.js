@@ -48,7 +48,4 @@ export const renderTaskFinishedToast = (task) => {
   window.tfm.toastNotifications.notify(taskFinishedToast(task));
 };
 
-export const errorToast = (error) => {
-  const message = getResponseErrorMsgs(error.response);
-  return message;
-};
+export const errorToast = error => getResponseErrorMsgs(error.response);

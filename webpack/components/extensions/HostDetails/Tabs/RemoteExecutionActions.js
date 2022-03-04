@@ -1,17 +1,11 @@
 import { API_OPERATIONS, post } from 'foremanReact/redux/API';
 import { REX_JOB_INVOCATIONS_KEY, REX_FEATURES } from './RemoteExecutionConstants';
 import { foremanApi } from '../../../../services/api';
-import { getResponseErrorMsgs } from '../../../../utils/helpers';
-import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
+import { errorToast, renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
 import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
 import { TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
 import { PACKAGE_SEARCH_QUERY } from './PackagesTab/YumInstallablePackagesConstants';
 import { PACKAGES_SEARCH_QUERY } from './PackagesTab/HostPackagesConstants';
-
-const errorToast = (error) => {
-  const message = getResponseErrorMsgs(error.response);
-  return message;
-};
 
 const baseParams = ({ feature, hostname, inputs = {} }) => ({
   job_invocation: {

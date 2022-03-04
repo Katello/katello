@@ -1,18 +1,12 @@
 import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
-import { renderTaskStartedToast } from '../../../../../scenes/Tasks/helpers';
+import { errorToast, renderTaskStartedToast } from '../../../../../scenes/Tasks/helpers';
 import { foremanApi } from '../../../../../services/api';
-import { getResponseErrorMsgs } from '../../../../../utils/helpers';
 import {
   HOST_PACKAGES_INSTALL_KEY,
   HOST_PACKAGES_KEY,
   HOST_PACKAGES_REMOVE_KEY,
   HOST_PACKAGES_UPGRADE_KEY,
 } from './HostPackagesConstants';
-
-const errorToast = (error) => {
-  const message = getResponseErrorMsgs(error.response);
-  return message;
-};
 
 export const getInstalledPackagesWithLatest = (hostId, params) => get({
   type: API_OPERATIONS.GET,

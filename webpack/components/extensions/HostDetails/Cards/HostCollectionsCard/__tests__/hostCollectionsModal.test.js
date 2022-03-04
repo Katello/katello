@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent, within } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import mockAvailableHostCollections from './availableHostCollections.fixtures.json';
 import mockRemovableHostCollections from './removableHostCollections.fixtures.json';
 import { REMOVABLE_HOST_COLLECTIONS_KEY } from '../HostCollectionsConstants';
@@ -23,7 +23,6 @@ const renderOptions = () => ({
 });
 
 const availableHostCollections = katelloApi.getApiUrl('/host_collections');
-const removableHostCollections = foremanApi.getApiUrl('/host_collections');
 const alterHostCollections = foremanApi.getApiUrl('/hosts/1/host_collections');
 const autocompleteUrl = '/host_collections/auto_complete_search';
 const hostDetailsUrl = '/api/hosts/test-host';

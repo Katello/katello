@@ -99,7 +99,6 @@ export const HostCollectionsModal = ({
     case MODAL_TYPES.REMOVE:
       return uniq(hcIds.filter(id => !selectionSet.has(id)));
     default:
-      console.log('DEFAULT')
       return uniq(hcIds);
     }
   };
