@@ -7,7 +7,7 @@ module Katello
       attr_accessor :metadata, :retry
 
       def self.retry_seconds
-        180
+        18
       end
 
       def initialize(content_view_id)
