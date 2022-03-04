@@ -24,7 +24,14 @@ module Katello
         end
 
         def mirror_remote_options
+          policy = smart_proxy.download_policy
+
+          if smart_proxy.download_policy == SmartProxy::DOWNLOAD_INHERIT
+            policy = repo.root.download_policy
+          end
+
           {
+            policy: policy,
             distributions: "#{repo.deb_releases}#{ ' default' unless repo.deb_releases&.split(' ')&.include? 'default'}"
           }
         end
