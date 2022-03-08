@@ -41,7 +41,7 @@ module Katello
           :content_type => katello_content_type,
           :unprotected => unprotected?,
           :download_policy => download_policy,
-          :mirroring_policy => Katello::RootRepository::MIRRORING_POLICY_COMPLETE
+          :mirroring_policy => mirroring_policy
         )
 
         Repository.new(:root => root,
@@ -142,6 +142,14 @@ module Katello
           Setting[:default_redhat_download_policy]
         else
           ""
+        end
+      end
+
+      def mirroring_policy
+        if katello_content_type == Repository::YUM_TYPE
+          Katello::RootRepository::MIRRORING_POLICY_COMPLETE
+        else
+          Katello::RootRepository::MIRRORING_POLICY_CONTENT
         end
       end
     end
