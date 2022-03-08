@@ -29,3 +29,7 @@ library_view_solve_deps_fedora:
 library_view_python:
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
   repository_id:   <%= ActiveRecord::FixtureSet.identify(:pulp3_python_1) %>
+
+import_only_view_fedora_17_x86_64:
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:import_only_view) %>
+  repository_id:   <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>

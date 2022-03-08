@@ -51,7 +51,7 @@ module Katello
         end
 
         def generate_product_metadata(product)
-          product.slice(:name, :label, :description).
+          product.slice(:name, :label, :description, :cp_id).
             merge(gpg_key: generate_gpg_metadata(product.gpg_key),
                   redhat: product.redhat?)
         end

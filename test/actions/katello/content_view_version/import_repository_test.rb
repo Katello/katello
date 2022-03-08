@@ -85,7 +85,7 @@ module ::Actions::Katello::ContentViewVersion
       end
 
       it 'should plan the full tree appropriately' do
-        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!)
+        ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
         ::Katello::ContentViewManager.expects(:create_candlepin_environment).returns
 
         tree = plan_action_tree(action_class, organization, path: path, metadata: metadata)

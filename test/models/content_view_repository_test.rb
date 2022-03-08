@@ -8,7 +8,7 @@ module Katello
     def test_import_only_yum_repos
       cv = katello_content_views(:import_only_view)
 
-      cv.repositories << katello_repositories(:fedora_17_x86_64)
+      cv.repositories << katello_repositories(:rhel_6_x86_64)
 
       assert cv.valid?
     end

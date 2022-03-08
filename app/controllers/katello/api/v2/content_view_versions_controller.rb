@@ -274,17 +274,5 @@ module Katello
       return deny_access unless @content_view_version.content_view.deletable?
       true
     end
-
-    def metadata_params
-      params.require(:metadata).permit(
-        :organization,
-        :content_view,
-        :repository_mapping,
-        :toc,
-        content_view_version: [:major, :minor]
-      ).tap do |nested|
-        nested[:repository_mapping] = params[:metadata].require(:repository_mapping).permit!
-      end
-    end
   end
 end

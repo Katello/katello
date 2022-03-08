@@ -2,41 +2,35 @@ module Actions
   module Katello
     module ContentViewVersion
       class Import < Actions::EntryAction
-        attr_accessor :content_view
         def plan(organization:, path:, metadata:)
-          fail _("Content view not provided in the metadata") if metadata[:content_view].blank?
+          metadata_map = ::Katello::Pulp3::ContentViewVersion::MetadataMap.new(metadata: metadata)
 
-          content_view = ::Katello::Pulp3::ContentViewVersion::Import.
-                                find_or_create_import_view(organization: organization,
-                                                           metadata: metadata[:content_view])
-          content_view.check_ready_to_import!
-          self.content_view = content_view
-          ::Katello::Pulp3::ContentViewVersion::Import.check!(content_view: content_view,
-                                                              metadata: metadata,
-                                                              path: path,
-                                                              smart_proxy: SmartProxy.pulp_primary!)
+          import = ::Katello::Pulp3::ContentViewVersion::Import.new(
+            organization: organization,
+            metadata_map: metadata_map,
+            path: path,
+            smart_proxy: SmartProxy.pulp_primary!
+          )
 
-          major = metadata[:content_view_version][:major]
-          minor = metadata[:content_view_version][:minor]
-          description = metadata[:content_view_version][:description]
+          import.check!
 
           gpg_helper = ::Katello::Pulp3::ContentViewVersion::ImportGpgKeys.
                           new(organization: organization,
-                              metadata: metadata)
+                              metadata_gpg_keys: metadata_map.gpg_keys)
           gpg_helper.import!
 
           sequence do
-            plan_action(AutoCreateProducts, organization: content_view.organization, metadata: metadata)
-            plan_action(AutoCreateRepositories, organization: content_view.organization, metadata: metadata)
-            plan_action(AutoCreateRedhatRepositories, organization: content_view.organization, metadata: metadata)
-            plan_action(ResetContentViewRepositoriesFromMetadata, content_view: content_view, metadata: metadata)
-            plan_action(::Actions::Katello::ContentView::Publish, content_view, description,
+            plan_action(AutoCreateProducts, import: import)
+            plan_action(AutoCreateRepositories, import: import)
+            plan_action(AutoCreateRedhatRepositories, import: import)
+            plan_action(ResetContentViewRepositoriesFromMetadata, import: import)
+            plan_action(::Actions::Katello::ContentView::Publish, import.content_view, metadata_map.content_view_version.description,
                           path: path,
                           metadata: metadata,
                           importing: true,
-                          major: major,
-                          minor: minor)
-            plan_self(content_view_id: content_view.id)
+                          major: metadata_map.content_view_version.major,
+                          minor: metadata_map.content_view_version.minor)
+            plan_self(content_view_id: import.content_view.id)
           end
         end
 

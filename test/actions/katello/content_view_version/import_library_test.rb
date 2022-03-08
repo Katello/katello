@@ -22,18 +22,31 @@ module ::Actions::Katello::ContentViewVersion
       organization.default_content_view_version
     end
 
-    let(:metadata) do
-      prod = katello_products(:redhat)
+    let(:repo) do
+      organization.repositories.redhat.first
+    end
 
+    let(:prod) do
+      repo.product
+    end
+
+    let(:metadata) do
       {
         products: {
           prod.label => prod.slice(:name, :label).merge(redhat: prod.redhat?)
         },
         gpg_keys: {},
         repositories: {
-          "misc-24037" => { label: prod.repositories.first.label,
+          "misc-24037" => { label: repo.label,
+                            name: repo.name,
+                            mirroring_policy: repo.mirroring_policy,
                             product: prod.slice(:label),
-                            redhat: prod.redhat?
+                            redhat: prod.redhat?,
+                            arch: 'noarch',
+                            unprotected: false,
+                            content_type: 'yum',
+                            download_policy: 'immediate',
+                            content: { id: 1, label: 'misc-24037' }
           }
         },
         content_view_version: {
@@ -86,10 +99,11 @@ module ::Actions::Katello::ContentViewVersion
       end
 
       it 'should plan the full tree appropriately' do
-        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!)
         ::Katello::ContentViewManager.expects(:create_candlepin_environment).returns
+        ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
 
         tree = plan_action_tree(action_class, organization, path: path, metadata: metadata)
+
         assert_empty tree.errors
         assert_tree_planned_with(tree, Actions::Pulp3::Repository::CopyContent) do |input|
           assert input[:copy_all]

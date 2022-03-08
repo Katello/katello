@@ -2,12 +2,12 @@ module Katello
   module Pulp3
     module ContentViewVersion
       module ImportExportCommon
-        def generate_name
-          @content_view_version.name.gsub(/\s/, '_')
+        def generate_name(content_view_version)
+          content_view_version.name.gsub(/\s/, '_')
         end
 
-        def generate_id
-          "#{@content_view_version.organization.label}_#{generate_name}"
+        def generate_id(content_view_version)
+          "#{content_view_version.organization.label}_#{generate_name(content_view_version)}"
         end
 
         def api
