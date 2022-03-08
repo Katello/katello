@@ -36,6 +36,13 @@ module Actions
                           importing: true,
                           major: major,
                           minor: minor)
+            plan_self(content_view_id: content_view.id)
+          end
+        end
+
+        def finalize
+          if task.execution_plan.run_steps.any? { |s| s.action_class == ::Actions::Pulp3::ContentViewVersion::Import && s.state != :success }
+            ::Katello::EventQueue.push_event(::Katello::Events::DeleteLatestContentViewVersion::EVENT_TYPE, input[:content_view_id])
           end
         end
 

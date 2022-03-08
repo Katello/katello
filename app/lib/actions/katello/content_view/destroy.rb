@@ -25,7 +25,8 @@ module Actions
         end
 
         def finalize
-          content_view = ::Katello::ContentView.find(input[:content_view][:id])
+          content_view = ::Katello::ContentView.where(id: input[:content_view][:id]).first
+          return if content_view.blank?
           content_view.content_view_repositories.each(&:destroy)
           content_view.destroy!
         end
