@@ -14,26 +14,27 @@ const recommendedRepositoriesRHEL = [
   'rhel-8-for-x86_64-baseos-kickstart',
   'rhel-8-for-x86_64-appstream-rpms',
   'rhel-8-for-x86_64-appstream-kickstart',
+  'rhel-8-for-x86_64-baseos-eus-rpms',
+  'rhel-8-for-x86_64-appstream-eus-rpms',
   'rhel-7-server-rpms',
   'rhel-7-server-optional-rpms',
   'rhel-7-server-extras-rpms',
-  'rhel-7-server-eus-rpms',
   'rhel-7-server-kickstart',
-  'rhel-6-server-els-rpms',
-  'rhel-6-server-kickstart',
 ];
 
 const recommendedRepositoriesSatTools = [
-  'satellite-tools-6.10-for-rhel-8-x86_64-rpms',
-  'rhel-7-server-satellite-tools-6.10-rpms',
-  'rhel-6-server-els-satellite-tools-6.10-rpms',
-  'rhel-7-server-satellite-maintenance-6-rpms',
+  'satellite-client-6-for-rhel-8-x86_64-rpms',
+  'rhel-7-server-satellite-client-6-rpms',
+  'rhel-7-server-satellite-maintenance-6.11-rpms',
+  'rhel-6-server-els-satellite-client-6-rpms',
 ];
 
 const recommendedRepositoriesMisc = [
   'rhel-server-rhscl-7-rpms',
-  'rhel-7-server-satellite-capsule-6.10-rpms',
+  'rhel-7-server-satellite-capsule-6.11-rpms',
+  'satellite-capsule-6.11-for-rhel-8-x86_64-rpms',
   'rhel-7-server-ansible-2.9-rpms',
+  'ansible-2-for-rhel-8-x86_64-rpms',
 ];
 
 const recommendedRepositorySetLables = recommendedRepositoriesRHEL
