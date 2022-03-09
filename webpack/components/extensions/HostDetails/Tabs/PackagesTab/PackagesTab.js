@@ -37,7 +37,7 @@ import { katelloPackageUpdateUrl, packagesUpdateUrl } from '../customizedRexUrlH
 import './PackagesTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
-import defaultRemoteActionMethod, { KATELLO_AGENT } from '../../hostDetailsHelpers';
+import { defaultRemoteActionMethod, KATELLO_AGENT } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 
 export const PackagesTab = () => {
