@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import React, { useEffect } from 'react';
 import { useParams, Route, useHistory, useLocation, Redirect, Switch } from 'react-router-dom';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
-import { isEmpty, first } from 'lodash';
+import { first } from 'lodash';
 import { Grid, Tabs, Tab, TabTitleText, Label } from '@patternfly/react-core';
 import { number, shape } from 'prop-types';
 import './ContentViewVersionDetails.scss';
@@ -20,8 +19,6 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
   const { pathname } = useLocation();
   const { push } = useHistory();
   const dispatch = useDispatch();
-  const [versionDetails, setVersionDetails] = useState({});
-  const [mounted, setMounted] = useState(true);
   // Example urls expected:/versions/:id or /versions/:id/repositories.
   const tab = pathname.split('/')[3];
   const response = useSelector(state =>
@@ -32,20 +29,11 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
   const tableConfigs = getCVVersionTableConfigs({ cvId, versionId });
 
   useEffect(() => {
-    if (mounted || (isEmpty(response) && status === STATUS.PENDING)) {
-      dispatch(getContentViewVersionDetails(versionId, cvId));
-    }
-    return () => { setMounted(false); };
-  }, [dispatch, mounted, setMounted, versionId, cvId, response, status]);
-
-  useDeepCompareEffect(() => {
-    if (loaded) {
-      setVersionDetails(response);
-    }
-  }, [response, loaded, tableConfigs]);
+    dispatch(getContentViewVersionDetails(versionId, cvId));
+  }, [dispatch, versionId, cvId]);
 
   const editDiscription = (val, attribute) => {
-    const { description } = versionDetails;
+    const { description } = response;
     if (val !== description) {
       dispatch(editContentViewVersionDetails(
         versionId,
@@ -64,16 +52,16 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
   };
 
   // Checking versionDetails is done to prevent two renders of the table.
-  if (!loaded && isEmpty(versionDetails)) return <Loading />;
+  if (!loaded) return <Loading />;
   const filteredTableConfigs = tableConfigs.filter(({ getCountKey }) => !!getCountKey(response));
-  const { repositories } = versionDetails;
+  const { repositories } = response;
   const showTabs = filteredTableConfigs.length > 0 && repositories;
   const getCurrentActiveKey = tab ?? first(filteredTableConfigs)?.route;
 
   return (
     <Grid>
       <ContentViewVersionDetailsHeader
-        versionDetails={versionDetails}
+        versionDetails={response}
         onEdit={editDiscription}
         loading={status === STATUS.PENDING}
         details={details}

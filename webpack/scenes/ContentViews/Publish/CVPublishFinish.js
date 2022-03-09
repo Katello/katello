@@ -3,10 +3,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { Bullseye, Button, Grid, GridItem,
+import { useHistory } from 'react-router-dom';
+import {
+  Bullseye, Button, Grid, GridItem,
   Progress, ProgressSize, ProgressMeasureLocation,
   ProgressVariant, EmptyState, EmptyStateIcon, EmptyStateVariant,
-  Title } from '@patternfly/react-core';
+  Title,
+} from '@patternfly/react-core';
 import { ExternalLinkAltIcon, InProgressIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
@@ -14,7 +17,7 @@ import {
   selectPublishContentViewStatus,
 } from './ContentViewPublishSelectors';
 import { selectPublishTaskPoll, selectPublishTaskPollStatus } from '../Details/ContentViewDetailSelectors';
-import getContentViews, { publishContentView } from '../ContentViewsActions';
+import { publishContentView } from '../ContentViewsActions';
 import Loading from '../../../components/Loading';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 import { cvVersionPublishKey } from '../ContentViewsConstants';
@@ -28,6 +31,7 @@ const CVPublishFinish = ({
   setIsOpen, versionCount, currentStep, setCurrentStep,
 }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [publishDispatched, setPublishDispatched] = useState(false);
   const [saving, setSaving] = useState(true);
   const [polling, setPolling] = useState(false);
@@ -39,6 +43,7 @@ const CVPublishFinish = ({
     selectPublishTaskPoll(state, cvVersionPublishKey(cvId, versionCount)), shallowEqual);
   const pollResponseStatus = useSelector(state =>
     selectPublishTaskPollStatus(state, cvVersionPublishKey(cvId, versionCount)), shallowEqual);
+  const { input: { content_view_version_id: cvvID } = {} } = response;
 
   const progressCompleted = () => (pollResponse.progress ? pollResponse.progress * 100 : 0);
 
@@ -46,14 +51,16 @@ const CVPublishFinish = ({
     if (currentStep !== 1) {
       dispatch(stopPollingTask(cvVersionPublishKey(cvId, versionCount)));
       setCurrentStep(1);
-      setIsOpen(false);
-      dispatch(getContentViewDetails(cvId));
-      dispatch(getContentViews);
       if (taskComplete) {
+        dispatch(getContentViewDetails(cvId));
         dispatch(toastTaskFinished(pollResponse));
+        history.push(`/content_views/${cvId}#/versions/${taskErrored ? '' : cvvID}`);
       }
+      setIsOpen(false);
     }
-  }, [currentStep, cvId, dispatch, pollResponse, setCurrentStep, setIsOpen, versionCount]);
+  }, [
+    currentStep, cvId, cvvID, dispatch, history,
+    pollResponse, setCurrentStep, setIsOpen, versionCount, taskErrored]);
 
 
   useEffect(() => {
@@ -161,6 +168,7 @@ const CVPublishFinish = ({
   }
   if (status === STATUS.PENDING) return (<Loading />);
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
+
   return <Loading />;
 };
 

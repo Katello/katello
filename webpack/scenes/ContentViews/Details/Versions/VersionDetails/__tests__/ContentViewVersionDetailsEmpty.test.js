@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, act } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 
 import nock, { nockInstance, assertNockRequest } from '../../../../../../test-utils/nockWrapper';
@@ -55,11 +55,11 @@ test('Can show versions detail header', async (done) => {
   );
 
   // Nothing will show at first, page is loading
-  expect(queryByText(`Version ${version}`)).toBeNull();
+  expect(queryByText(`Version ${version}`)).not.toBeInTheDocument();
   // Assert that the CV version is now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => {
-    expect(getByText(`Version ${version}`)).toBeTruthy();
+    expect(getByText(`Version ${version}`)).toBeInTheDocument();
   });
-
   assertNockRequest(scope, done);
+  act(done);// Need to tell the test to stahp!
 });

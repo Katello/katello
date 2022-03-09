@@ -72,8 +72,11 @@ const PublishContentViewWizard = ({
   useEffect(
     () => {
       dispatch(getEnvironmentPaths());
+      return () => {
+        setIsOpen(false);
+      };
     },
-    [dispatch],
+    [dispatch, setIsOpen],
   );
 
   const envPathFlat = useMemo(() => {
@@ -101,10 +104,11 @@ const PublishContentViewWizard = ({
 
   useEffect(() => {
     setForcePromote(userCheckedItems.filter(item => !isValid(item)));
-  }, [userCheckedItems, setForcePromote, isValid]);
+  }, [userCheckedItems, setForcePromote, isValid, setIsOpen]);
 
   return (
     <Wizard
+      key={versionCount + cvId}
       title={__('Publish')}
       description={currentStep === 3 ? __(`Publishing ${name}`) : __(`Determining settings for ${name}`)}
       steps={steps}

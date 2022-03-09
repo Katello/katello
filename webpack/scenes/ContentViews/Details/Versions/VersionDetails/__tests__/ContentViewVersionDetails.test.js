@@ -58,7 +58,6 @@ test('Can show versions details - Components Tab', async (done) => {
   const { version } = ContentViewVersionDetailsData;
   const scope = nockInstance
     .get(cvVersions)
-    .times(2)
     .query(true)
     .reply(200, getTabSpecificData('component_view_count'));
 
@@ -204,7 +203,6 @@ testConfig.forEach(({
 
     const scope = nockInstance
       .get(cvVersions)
-      .times(2)
       .query(true)
       .reply(200, getTabSpecificData(countKey));
 
@@ -257,7 +255,6 @@ test('Can change repository selector', async (done) => {
   const scope = nockInstance
     .get(cvVersions)
     .query(true)
-    .times(2)
     .reply(200, {
       ...getTabSpecificData(countKey),
       repositories: ContentViewVersionDetailsCounts.repositories,
