@@ -14,17 +14,18 @@ import RepositorySetsTab from './components/extensions/HostDetails/Tabs/Reposito
 import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js';
 import extendReducer from './components/extensions/reducers';
 import rootReducer from './redux/reducers';
+import { hostIsNotRegistered } from './components/extensions/HostDetails/hostDetailsHelpers';
 
 registerReducer('katelloExtends', extendReducer);
 registerReducer('katello', rootReducer);
 
 addGlobalFill('aboutFooterSlot', '[katello]AboutSystemStatuses', <SystemStatuses key="katello-system-statuses" />, 100);
 addGlobalFill('registrationAdvanced', '[katello]RegistrationCommands', <RegistrationCommands key="katello-reg" />, 100);
-addGlobalFill('host-details-page-tabs', 'Content', <ContentTab key="content" />, 900, { title: __('Content') });
+addGlobalFill('host-details-page-tabs', 'Content', <ContentTab key="content" />, 900, { title: __('Content'), hideTab: hostIsNotRegistered });
 /* eslint-disable max-len */
 // addGlobalFill('host-details-page-tabs', 'Subscription', <SubscriptionTab key="subscription" />, 100, { title: __('Subscription') });
-addGlobalFill('host-details-page-tabs', 'Traces', <TracesTab key="traces" />, 800, { title: __('Traces') });
-addGlobalFill('host-details-page-tabs', 'Repository sets', <RepositorySetsTab key="repository-sets" />, 700, { title: __('Repository sets') });
+addGlobalFill('host-details-page-tabs', 'Traces', <TracesTab key="traces" />, 800, { title: __('Traces'), hideTab: hostIsNotRegistered });
+addGlobalFill('host-details-page-tabs', 'Repository sets', <RepositorySetsTab key="repository-sets" />, 700, { title: __('Repository sets'), hideTab: hostIsNotRegistered });
 
 addGlobalFill(
   'details-cards',
