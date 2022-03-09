@@ -3,6 +3,13 @@ import { render } from 'react-testing-lib-wrapper';
 import ErrataOverviewCard from '../ErrataOverviewCard';
 import nock from '../../../../../test-utils/nockWrapper';
 
+const baseHostDetails = {
+  id: 2,
+  subscription_facet_attributes: {
+    uuid: '123',
+  },
+};
+
 describe('Without errata', () => {
   afterEach(() => {
     nock.cleanAll();
@@ -10,7 +17,7 @@ describe('Without errata', () => {
 
   test('does not show piechart when there are 0 errata', () => {
     const hostDetails = {
-      id: 2,
+      ...baseHostDetails,
       content_facet_attributes: {
         errata_counts: {
           bugfix: 0,
@@ -26,6 +33,26 @@ describe('Without errata', () => {
     expect(queryByLabelText('errataChart')).not.toBeInTheDocument();
     expect(getByText('0 errata')).toBeInTheDocument();
   });
+
+  test('does not show errata card when host not registered', () => {
+    const hostDetails = {
+      ...baseHostDetails,
+      content_facet_attributes: {
+        errata_counts: {
+          bugfix: 0,
+          enhancement: 0,
+          security: 0,
+          total: 0,
+        },
+      },
+      subscription_facet_attributes: undefined,
+    };
+    /* eslint-disable max-len */
+    const { queryByLabelText, queryByText } = render(<ErrataOverviewCard hostDetails={hostDetails} />);
+    /* eslint-enable max-len */
+    expect(queryByLabelText('errataChart')).not.toBeInTheDocument();
+    expect(queryByText('0 errata')).not.toBeInTheDocument();
+  });
 });
 
 describe('With errata', () => {
@@ -33,9 +60,9 @@ describe('With errata', () => {
     nock.cleanAll();
   });
 
-  test('show piechart when there are errata', () => {
+  test('shows piechart when there are errata', () => {
     const hostDetails = {
-      id: 2,
+      ...baseHostDetails,
       content_facet_attributes: {
         errata_counts: {
           bugfix: 10,

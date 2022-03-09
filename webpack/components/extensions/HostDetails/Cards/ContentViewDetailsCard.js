@@ -15,6 +15,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import ContentViewIcon from '../../../../scenes/ContentViews/components/ContentViewIcon';
+import { hostIsRegistered } from '../hostDetailsHelpers';
 
 const HostContentViewDetails = ({
   contentView, lifecycleEnvironment, contentViewVersionId,
@@ -61,7 +62,7 @@ const HostContentViewDetails = ({
 };
 
 const ContentViewDetailsCard = ({ hostDetails }) => {
-  if (hostDetails.content_facet_attributes) {
+  if (hostIsRegistered({ hostDetails }) && hostDetails.content_facet_attributes) {
     return <HostContentViewDetails {...propsToCamelCase(hostDetails.content_facet_attributes)} />;
   }
   return null;
