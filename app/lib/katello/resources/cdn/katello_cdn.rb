@@ -4,8 +4,8 @@ module Katello
       class KatelloCdn < CdnResource
         def initialize(url, options)
           @organization_label = options.delete(:organization_label)
-          @content_view_label = options.delete(:content_view_label)
-          @lifecycle_environment_label = options.delete(:lifecycle_environment_label)
+          @content_view_label = options.delete(:content_view_label) || ::Katello::OrganizationCreator::DEFAULT_CONTENT_VIEW_LABEL
+          @lifecycle_environment_label = options.delete(:lifecycle_environment_label) || ::Katello::OrganizationCreator::DEFAULT_LIFECYCLE_ENV_LABEL
           fail ArgumentError, "No upstream organization was specified" if @organization_label.nil?
 
           super
@@ -18,16 +18,33 @@ module Katello
 
           fail _("Upstream organization %s does not provide this content path") % @organization_label if repo_set.nil?
 
-          # now get available repositories when we know the upstream repo set ID
-          url = "/katello/api/v2/repository_sets/#{repo_set['id']}/available_repositories?organization_id=#{organization['id']}"
+          params = {
+            full_result: true,
+            organization_id: organization['id'],
+            content_view_id: content_view_id,
+            environment_id: lifecycle_environment_id,
+            search: CGI.escape("content_label = #{repo_set['label']}")
+          }
+          query_params = params.map { |key, value| "#{key}=#{value}" }
+
+          url = "/katello/api/v2/repositories?#{query_params.join("&")}"
           response = get(url)
           json_body = JSON.parse(response)
           results = json_body['results']
 
-          results.map do |r|
+          results.map do |repo|
+            arch = repo['arch']
+            arch = nil if arch == "noarch"
+            substitutions = {
+              :releasever => repo['minor'],
+              :basearch => arch
+            }.compact
+            path = substitutions.inject(content_path) do |path_url, (key, value)|
+              path_url.gsub("$#{key}", value)
+            end
             {
-              path: r['path'],
-              substitutions: r['substitutions']
+              path: path,
+              substitutions: substitutions
             }
           end
         end
@@ -65,7 +82,7 @@ module Katello
           env["id"]
         end
 
-        def repository_url(content_label:)
+        def repository_url(content_label:, arch:, major:, minor:)
           params = {
             search: CGI.escape("content_label = #{content_label}")
           }
@@ -76,17 +93,19 @@ module Katello
           query_params = params.map { |key, value| "#{key}=#{value}" }
           url = "/katello/api/v2/organizations/#{organization['id']}/repositories?#{query_params.join('&')}"
           response = get(url)
-          repository = JSON.parse(response)['results'].first
-
+          repository = JSON.parse(response)['results']&.find { |r| r['arch'] == arch && r['major'] == major && r['minor'] == minor }
           if repository.nil?
             msg_params = { content_label: content_label,
+                           arch: arch,
+                           major: major,
+                           minor: minor,
                            org_label: @organization_label,
                            cv_label: @content_view_label || Katello::OrganizationCreator::DEFAULT_CONTENT_VIEW_LABEL,
                            env_label: @lifecycle_environment_label || Katello::OrganizationCreator::DEFAULT_LIFECYCLE_ENV_LABEL
             }
 
-            fail _("Repository with content label %{content_label} was not found in upstream organization %{org_label},"\
-                   " content view %{cv_label} and lifecycle environment %{env_label} ") % msg_params
+            fail _("Repository with content label: '%{content_label}'#{arch ? ', arch: \'%{arch}\'' : ''}#{minor ? ', version: \'%{minor}\'' : ''} was not found in upstream organization '%{org_label}',"\
+                   " content view '%{cv_label}' and lifecycle environment '%{env_label}'") % msg_params
           end
           repository['full_path']
         end
