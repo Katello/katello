@@ -22,7 +22,8 @@ module Katello
       CONTAINER_GATEWAY_FEATURE = "Container_Gateway".freeze
 
       DOWNLOAD_INHERIT = 'inherit'.freeze
-      DOWNLOAD_POLICIES = [::Katello::RootRepository::DOWNLOAD_ON_DEMAND, ::Katello::RootRepository::DOWNLOAD_IMMEDIATE, DOWNLOAD_INHERIT].freeze
+      DOWNLOAD_STREAMED = 'streamed'.freeze
+      DOWNLOAD_POLICIES = [::Katello::RootRepository::DOWNLOAD_ON_DEMAND, ::Katello::RootRepository::DOWNLOAD_IMMEDIATE, DOWNLOAD_INHERIT, DOWNLOAD_STREAMED].freeze
 
       included do
         include ForemanTasks::Concerns::ActionSubject
