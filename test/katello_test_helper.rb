@@ -396,3 +396,7 @@ def stub_lazy_accessors(model, stubs)
   end
   target.stubs(stubs)
 end
+
+def read_test_file_data(name)
+  File.read(Katello::Engine.root + name)
+end
