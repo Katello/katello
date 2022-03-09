@@ -40,6 +40,10 @@ module Katello
             :label => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE
           },
           {
+            :name => _("Streamed"),
+            :label => SmartProxy::DOWNLOAD_STREAMED
+          },
+          {
             :name => _("Inherit from Repository"),
             :label => SmartProxy::DOWNLOAD_INHERIT
           }
