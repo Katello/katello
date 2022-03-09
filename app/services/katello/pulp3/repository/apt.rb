@@ -25,7 +25,7 @@ module Katello
 
         def mirror_remote_options
           {
-            distributions: repo.deb_releases + "#{' default' unless repo.deb_releases.include? 'default'}"
+            distributions: "#{repo.deb_releases}#{ ' default' unless repo.deb_releases&.split(' ')&.include? 'default'}"
           }
         end
 
