@@ -18,6 +18,7 @@ import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import { useSet } from '../../../../Table/TableHooks';
 import { HostCollectionsAddModal, HostCollectionsRemoveModal } from './HostCollectionsModal';
+import { hostIsRegistered } from '../../hostDetailsHelpers';
 
 const HostCollectionsDetails = ({
   hostCollections, id: hostId, name: hostName,
@@ -157,7 +158,7 @@ const HostCollectionsDetails = ({
 };
 
 const HostCollectionsCard = ({ hostDetails }) => {
-  if (hostDetails) {
+  if (hostIsRegistered({ hostDetails })) {
     return <HostCollectionsDetails {...propsToCamelCase(hostDetails)} />;
   }
   return null;
