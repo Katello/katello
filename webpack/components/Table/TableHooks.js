@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { isEmpty } from 'lodash';
 import { useLocation } from 'react-router-dom';
 import { friendlySearchParam } from '../../utils/helpers';
@@ -53,9 +53,9 @@ class ReactConnectedSet extends Set {
 }
 
 export const useSet = (initialArry) => {
-  const [, setToggle] = useState(0);
+  const [, setToggle] = useState(Date.now());
   // needed because mutating a Ref won't cause React to rerender
-  const forceRender = () => setToggle(prev => prev + 1);
+  const forceRender = () => setToggle(Date.now());
   const set = useRef(new ReactConnectedSet(initialArry, forceRender));
   return set.current;
 };
@@ -68,10 +68,13 @@ export const useSelectionSet = ({
 }) => {
   const selectionSet = useSet(initialArry);
   const pageIds = results?.map(result => result[idColumn]) ?? [];
-  const selectableResults = results?.filter(result => isSelectable(result)) ?? [];
-  const selectableIds = new Set(selectableResults.map(result => result[idColumn]));
+  const selectableResults = useMemo(() => results?.filter(result =>
+    isSelectable(result)) ?? [], [results, isSelectable]);
   const selectedResults = useRef({}); // { id: result }
-  const canSelect = id => selectableIds.has(id);
+  const canSelect = useCallback((id) => {
+    const selectableIds = new Set(selectableResults.map(result => result[idColumn]));
+    return selectableIds.has(id);
+  }, [idColumn, selectableResults]);
   const areAllRowsOnPageSelected = () =>
     Number(pageIds?.length) > 0 &&
         pageIds.every(result => selectionSet.has(result) || !canSelect(result));
@@ -108,7 +111,8 @@ export const useSelectionSet = ({
 
   const selectedCount = selectionSet.size;
 
-  const isSelected = id => canSelect(id) && selectionSet.has(id);
+  const isSelected = useCallback(id =>
+    canSelect(id) && selectionSet.has(id), [canSelect, selectionSet]);
 
   return {
     selectOne,
@@ -157,7 +161,7 @@ export const useBulkSelect = ({
   const areAllRowsSelected = () => (selectAllMode && exclusionSet.size === 0) ||
                                    selectOptions.areAllRowsSelected();
 
-  const isSelected = (id) => {
+  const isSelected = useCallback((id) => {
     if (!selectOptions.isSelectable(id)) {
       return false;
     }
@@ -165,7 +169,7 @@ export const useBulkSelect = ({
       return !exclusionSet.has(id);
     }
     return inclusionSet.has(id);
-  };
+  }, [exclusionSet, inclusionSet, selectAllMode, selectOptions]);
 
   const selectPage = () => {
     setSelectAllMode(false);

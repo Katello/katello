@@ -434,6 +434,7 @@ export const PackagesTab = () => {
         isOpen={isModalOpen}
         closeModal={closeModal}
         hostId={hostId}
+        key={hostId}
         hostName={hostname}
         showKatelloAgent={showKatelloAgent}
       />

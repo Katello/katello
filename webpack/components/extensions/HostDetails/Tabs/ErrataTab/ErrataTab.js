@@ -135,6 +135,14 @@ export const ErrataTab = () => {
     initialSearchQuery: searchParam || '',
   });
 
+  const tdSelect = useCallback((errataId, rowIndex) => ({
+    disable: !isSelectable(errataId),
+    isSelected: isSelected(errataId),
+    onSelect: (event, selected) => selectOne(selected, errataId),
+    rowIndex,
+    variant: 'checkbox',
+  }), [isSelectable, isSelected, selectOne]);
+
   if (!hostId) return <Skeleton />;
 
   const applyErratumViaRemoteExecution = id => dispatch(installErrata({
@@ -412,14 +420,7 @@ export const ErrataTab = () => {
                         onToggle: (_event, _rInx, isOpen) => expandedErrata.onToggle(isOpen, id),
                       }}
                     />
-                    <Td select={{
-                      disable: !isSelectable(errataId),
-                      isSelected: isSelected(errataId),
-                      onSelect: (event, selected) => selectOne(selected, errataId),
-                      rowIndex,
-                      variant: 'checkbox',
-                    }}
-                    />
+                    <Td select={tdSelect(errataId, rowIndex)} />
                     <Td>
                       <a href={urlBuilder(`errata/${id}`, '')}>{errataId}</a>
                     </Td>
@@ -452,16 +453,20 @@ export const ErrataTab = () => {
                     />
                   </Tr>
                   <Tr key="child_row" isExpanded={isExpanded}>
-                    <Td colSpan={3}>
-                      <ExpandableRowContent>
-                        <ErratumExpansionContents erratum={erratum} />
-                      </ExpandableRowContent>
-                    </Td>
-                    <Td colSpan={4}>
-                      <ExpandableRowContent>
-                        <ErratumExpansionDetail erratum={erratum} />
-                      </ExpandableRowContent>
-                    </Td>
+                    {isExpanded && (
+                      <>
+                        <Td colSpan={3}>
+                          <ExpandableRowContent>
+                            <ErratumExpansionContents erratum={erratum} />
+                          </ExpandableRowContent>
+                        </Td>
+                        <Td colSpan={4}>
+                          <ExpandableRowContent>
+                            <ErratumExpansionDetail erratum={erratum} />
+                          </ExpandableRowContent>
+                        </Td>
+                      </>
+                    )}
                   </Tr>
                 </Tbody>
               );

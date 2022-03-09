@@ -176,8 +176,8 @@ test('Can display expanded errata details', async (done) => {
   expect(queryByText(firstErrata.cves[0].cve_id)).not.toBeInTheDocument();
 
   firstExpansion.click();
-  // the errata details should now be hidden
-  expect(getByText(firstErrata.summary)).not.toBeVisible();
+  // the errata details should now be gone
+  expect(queryByText(firstErrata.summary)).not.toBeInTheDocument();
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
