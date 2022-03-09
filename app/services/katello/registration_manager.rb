@@ -297,6 +297,7 @@ module Katello
           host.content_facet.applicable_errata = []
           host.content_facet.uuid = nil
           host.content_facet.save!
+          host.content_facet.calculate_and_import_applicability
         end
 
         host.get_status(::Katello::ErrataStatus).destroy

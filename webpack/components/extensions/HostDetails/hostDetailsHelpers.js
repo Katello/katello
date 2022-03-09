@@ -3,7 +3,7 @@ import { propsToCamelCase } from 'foremanReact/common/helpers';
 export const REMOTE_EXECUTION = 'remoteExecution';
 export const KATELLO_AGENT = 'katelloAgent';
 
-const defaultRemoteActionMethod = ({ hostDetails }) => {
+export const defaultRemoteActionMethod = ({ hostDetails }) => {
   const {
     content_facet_attributes: contentFacetAttributes,
   } = hostDetails;
@@ -15,5 +15,14 @@ const defaultRemoteActionMethod = ({ hostDetails }) => {
   }
   return KATELLO_AGENT;
 };
+
+export const hostIsNotRegistered = ({ hostDetails }) => {
+  const {
+    subscription_facet_attributes: subscriptionFacetAttributes,
+  } = hostDetails;
+  return !subscriptionFacetAttributes?.uuid;
+};
+
+export const hostIsRegistered = ({ hostDetails }) => !hostIsNotRegistered({ hostDetails });
 
 export default defaultRemoteActionMethod;

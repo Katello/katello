@@ -33,7 +33,7 @@ import { installErrata } from '../RemoteExecutionActions';
 import { errataInstallUrl } from '../customizedRexUrlHelpers';
 import './ErrataTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
-import defaultRemoteActionMethod, { KATELLO_AGENT } from '../../hostDetailsHelpers';
+import { defaultRemoteActionMethod, KATELLO_AGENT } from '../../hostDetailsHelpers';
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
