@@ -59,6 +59,7 @@ angular.module('Bastion.components').directive('bstModal',
 
                     modalInstance.result.then(function () {
                         scope.action();
+                    }, function() {
                     });
                 };
 

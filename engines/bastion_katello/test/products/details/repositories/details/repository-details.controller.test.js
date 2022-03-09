@@ -100,7 +100,7 @@ describe('Controller: RepositoryDetailsController', function() {
 
     it("should provide a valid reason for a repo deletion disablement", function() {
         var product = {id: 100, $resolved: true},
-            repository = {id: 200, $resolved: true};
+            repository = {id: 200, permissions: {deletable_across_cv: true}, $resolved: true};
 
         $scope.denied = function (perm, prod) {
             expect(perm).toBe("deletable");
@@ -113,6 +113,16 @@ describe('Controller: RepositoryDetailsController', function() {
             return false;
         };
         repository.promoted = true;
+        expect($scope.getRepoNonDeletableReason(repository, product)).toBe(null);
+        expect($scope.canRemove(repository, product)).toBe(true);
+
+        repository.promoted = true;
+        repository.permissions.deletable_across_cv = false;
+        repository.content_view_versions = ["id1", "id2"];
+        expect($scope.getRepoNonDeletableReason(repository, product)).toBe("setting");
+        expect($scope.canRemove(repository, product)).toBe(false);
+
+        repository.permissions.deletable_across_cv = true;
         expect($scope.getRepoNonDeletableReason(repository, product)).toBe(null);
         expect($scope.canRemove(repository, product)).toBe(true);
 

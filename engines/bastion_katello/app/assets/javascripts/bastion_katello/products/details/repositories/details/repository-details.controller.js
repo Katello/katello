@@ -39,7 +39,12 @@
 
         $scope.repositoryWrapper = {
             repository: $scope.repository,
-            repositoryVersions: {}
+            repositoryVersions: {},
+            forceDelete: false
+        };
+
+        $scope.updateForceDelete = function () {
+            $scope.repositoryWrapper.forceDelete = !($scope.repositoryWrapper.forceDelete);
         };
 
         $scope.product = Product.get({id: $scope.$stateParams.productId}, function () {
@@ -144,7 +149,11 @@
                 if ($scope.denied('deletable', repo)) {
                     readOnlyReason = 'permissions';
                 }
+                if (readOnlyReason === null && !repo.permissions.deletable_across_cv && repo.content_view_versions.length > 0 ) {
+                    readOnlyReason = 'setting';
+                }
             }
+
             return readOnlyReason;
         };
     }

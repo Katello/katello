@@ -4,7 +4,7 @@ module Katello
 
     delegate :editable?, to: :product
 
-    def deletable?(remove_from_content_view_versions = false)
+    def deletable?(remove_from_content_view_versions = true)
       product.editable? && (remove_from_content_view_versions || !promoted? || !self.content_views.generated_for_none.exists?)
     end
 
