@@ -20,7 +20,8 @@ module Katello
       CONTAINER_GATEWAY_FEATURE = "Container_Gateway".freeze
 
       DOWNLOAD_INHERIT = 'inherit'.freeze
-      DOWNLOAD_POLICIES = ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES + [DOWNLOAD_INHERIT]
+      DOWNLOAD_STREAMED = 'streamed'.freeze
+      DOWNLOAD_POLICIES = ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES + [DOWNLOAD_INHERIT, DOWNLOAD_STREAMED]
 
       included do
         include ForemanTasks::Concerns::ActionSubject
