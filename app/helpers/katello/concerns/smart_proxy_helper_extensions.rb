@@ -36,6 +36,10 @@ module Katello
             :label => ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
           },
           {
+            :name => _("Streamed"),
+            :label => SmartProxy::DOWNLOAD_STREAMED
+          },
+          {
             :name => _("Inherit from Repository"),
             :label => SmartProxy::DOWNLOAD_INHERIT
           }
