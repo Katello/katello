@@ -29,10 +29,16 @@ const hostDetails = {
       total_hosts: 1,
     },
   ],
+  subscription_facet_attributes: {
+    uuid: '123',
+  },
 };
 
 const emptyHostDetails = {
   host_collections: [],
+  subscription_facet_attributes: {
+    uuid: '123',
+  },
 };
 
 test('shows host collections and host limits when present', () => {
@@ -93,4 +99,12 @@ test('remove is disabled when no host collections present', () => {
   const remove = queryByLabelText('remove_host_from_collections');
   expect(remove).toBeInTheDocument();
   expect(remove).toHaveAttribute('aria-disabled', 'true');
+});
+
+test('does not show card when host not registered', () => {
+  const { queryByText } = render(<HostCollectionsCard
+    hostDetails={{ ...emptyHostDetails, subscription_facet_attributes: undefined }}
+  />);
+  const cardTitle = queryByText('Host collections');
+  expect(cardTitle).not.toBeInTheDocument();
 });
