@@ -46,7 +46,7 @@ module Katello
         end
 
         def create_exporter(export_base_dir: Setting['pulpcore_export_destination'])
-          api.exporter_api.create(name: generate_id,
+          api.exporter_api.create(name: generate_id(content_view_version),
                                   path: "#{export_base_dir}/#{generate_exporter_path}",
                                   repositories: repository_hrefs)
         end

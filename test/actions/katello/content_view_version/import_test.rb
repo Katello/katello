@@ -27,9 +27,11 @@ module ::Actions::Katello::ContentViewVersion
       katello_content_view_versions(:library_no_filter_view_version_1)
     end
 
-    let(:metadata) do
-      prod = katello_products(:redhat)
+    let(:prod) do
+      katello_products(:redhat)
+    end
 
+    let(:metadata) do
       {
         products: {
           prod.label => prod.slice(:label, :name).merge(redhat: prod.redhat?)
@@ -92,10 +94,8 @@ module ::Actions::Katello::ContentViewVersion
 
       it 'should plan properly' do
         metadata[:content_view_version][:major] += 10
-        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).with(content_view: content_view,
-                                                                           metadata: metadata,
-                                                                           path: path,
-                                                                          smart_proxy: SmartProxy.pulp_primary).returns
+
+        ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
 
         plan_action(action, organization: organization, path: path, metadata: metadata)
         assert_action_planned_with(action,
@@ -110,7 +110,7 @@ module ::Actions::Katello::ContentViewVersion
 
       it 'should create a non existent cv and plan properly' do
         metadata[:content_view] = { name: "non_existent_view", label: "nope", generated_for: :none }
-        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).returns
+        ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
 
         plan_action(action, organization: organization, path: path, metadata: metadata)
         content_view = ::Katello::ContentView.find_by(label: metadata[:content_view][:label],
@@ -132,7 +132,7 @@ module ::Actions::Katello::ContentViewVersion
                                     label: ::Katello::ContentView::EXPORT_LIBRARY,
                                     generated_for: :library_export
                                   }
-        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).returns
+        ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
 
         plan_action(action, organization: organization, path: path, metadata: metadata)
         content_view = ::Katello::ContentView.find_by(label: ::Katello::ContentView::IMPORT_LIBRARY,
@@ -150,11 +150,7 @@ module ::Actions::Katello::ContentViewVersion
       end
 
       it 'should plan the full tree appropriately' do
-        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).
-            with(content_view: content_view,
-                 metadata: metadata,
-                 path: path,
-                 smart_proxy: SmartProxy.pulp_primary).returns
+        ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
 
         ::Katello::ContentViewManager.expects(:create_candlepin_environment).returns
         metadata[:content_view_version][:major] += 10
@@ -176,10 +172,10 @@ module ::Actions::Katello::ContentViewVersion
           assert_equal metadata[:content_view_version][:minor], generated_cvv.minor
         end
 
-        assert_tree_planned_with(tree, Actions::Pulp3::ContentViewVersion::Import) do |input|
+        assert_tree_planned_with(tree, Actions::Pulp3::ContentViewVersion::CreateImport) do |input|
           assert_equal SmartProxy.pulp_primary.id, input[:smart_proxy_id]
           assert_equal path, input[:path]
-          assert_equal generated_cvv.id, input[:content_view_version_id]
+          assert_equal content_view_version.content_view.organization_id, input[:organization_id]
           refute_nil input[:importer_data]
         end
 

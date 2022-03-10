@@ -38,7 +38,7 @@ module ::Actions::Katello::ContentViewVersion
     def test_create_exporter
       exporter_data = create_exporter
       assert_includes exporter_data["repositories"], pulp3_cvv.version_href_to_repository_href(@repo.version_href)
-      assert_equal exporter_data["name"], pulp3_cvv.generate_id
+      assert_equal exporter_data["name"], pulp3_cvv.generate_id(@content_view_version)
       assert exporter_data["path"].end_with? pulp3_cvv.generate_exporter_path
       delete_exporter(exporter_data)
     end

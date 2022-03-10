@@ -16,8 +16,8 @@ module Actions
               ).output
 
               plan_action(
-                ::Actions::Pulp3::ContentViewVersion::Import,
-                content_view_version_id: content_view_version.id,
+                ::Actions::Pulp3::ContentViewVersion::CreateImport,
+                organization_id: content_view_version.content_view.organization_id,
                 smart_proxy_id: smart_proxy.id,
                 importer_data: importer_output[:importer_data],
                 path: path,
@@ -36,7 +36,10 @@ module Actions
                 content_view_name: content_view_version.name
               )
               plan_action(::Actions::Pulp3::ContentViewVersion::DestroyImporter,
+                            organization_id: content_view_version.content_view.organization_id,
                             smart_proxy_id: smart_proxy.id,
+                            path: path,
+                            metadata: metadata,
                             importer_data: importer_output[:importer_data])
               plan_self(
                 content_view_name: content_view_version.name,
