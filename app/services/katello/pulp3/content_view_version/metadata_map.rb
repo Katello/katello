@@ -14,8 +14,6 @@ module Katello
 
         class MetadataRepositoryContent < OpenStruct; end
 
-        class MetadataOrganization < OpenStruct; end
-
         attr_reader :toc,
                     :products,
                     :repositories,

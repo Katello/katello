@@ -22,11 +22,8 @@ module Katello
             product = product_for_metadata_repo(repo)
             fail _("Unable to find product '%s' in organization '%s'" % [repo.product.label, @organization.name]) if product.blank?
 
-            # TODO: is it valid to look up the root this way?
             root = product.root_repositories.find { |r| r.label == repo.label }
-            #if product_repo_labels.include?([repo.product.label, repo.label])
             if root
-              #root = ::Katello::RootRepository.find_by(product: product, label: repo.label)
               updatable << { repository: root, options: update_repo_params(repo) }
             elsif repo.redhat
               content = repo.content
