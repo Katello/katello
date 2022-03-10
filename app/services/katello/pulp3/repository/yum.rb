@@ -243,11 +243,15 @@ module Katello
           api.content_distribution_trees_api.list(options)
         end
 
-        def add_filter_content(source_repo_ids, filters, filter_list_map)
+        def add_filter_content(source_repo_ids, filters, filter_list_map, additional_included_errata)
           filters.each do |filter|
             if filter.inclusion
               source_repo_ids.each do |repo_id|
                 filter_list_map[:whitelist_ids] += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id))
+              end
+            elsif filter.class == ContentViewErratumFilter
+              source_repo_ids.each do |repo_id|
+                filter_list_map[:blacklist_ids] += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id), additional_included_errata)
               end
             else
               source_repo_ids.each do |repo_id|
@@ -297,6 +301,7 @@ module Katello
           filter_list_map
         end
 
+        # rubocop:disable Metrics/MethodLength
         def copy_content_from_mapping(repo_id_map, options = {})
           repo_id_map.each do |source_repo_ids, dest_repo_map|
             filters = [ContentViewErratumFilter, ContentViewPackageGroupFilter, ContentViewPackageFilter].collect do |filter_class|
@@ -305,8 +310,20 @@ module Katello
             modular_filters = ContentViewModuleStreamFilter.where(:id => dest_repo_map[:filter_ids])
             filters.flatten!.compact!
 
+            errata_filters = ContentViewErratumFilter.where(:id => dest_repo_map[:filter_ids])
+
+            # Only filter out RPMs & modules via an erratum filter if they're not included in other allowed errata.
+            # Begin this by calculating all the errata that should be copied.
+            # If there are exclude filters, send the errata to the relevant methods to ensure their contents aren't excluded.
+            additional_included_errata = []
+            all_excluded_errata = []
+            unless errata_filters.blacklist.empty?
+              all_included_errata, all_excluded_errata = filtered_errata(errata_filters, source_repo_ids)
+              additional_included_errata = all_included_errata - all_excluded_errata
+            end
+
             filter_list_map = { whitelist_ids: [], blacklist_ids: [] }
-            filter_list_map = add_filter_content(source_repo_ids, filters, filter_list_map)
+            filter_list_map = add_filter_content(source_repo_ids, filters, filter_list_map, additional_included_errata)
             filter_list_map = add_un_modular_rpms(source_repo_ids, filters, filter_list_map)
             filter_list_map = add_modular_content(source_repo_ids, filters, modular_filters, filter_list_map)
 
@@ -320,7 +337,7 @@ module Katello
 
             if content_unit_hrefs.any?
               source_repo_ids.each do |source_repo_id|
-                content_unit_hrefs += additional_content_hrefs(::Katello::Repository.find(source_repo_id), content_unit_hrefs)
+                content_unit_hrefs += additional_content_hrefs(::Katello::Repository.find(source_repo_id), content_unit_hrefs, all_excluded_errata)
               end
             end
 
@@ -331,29 +348,68 @@ module Katello
 
           multi_copy_units(repo_id_map, dependency_solving)
         end
+        # rubocop:enable Metrics/MethodLength
 
-        def copy_content_for_source(source_repository, options = {}) # rubocop:disable Metrics/CyclomaticComplexity
-          filters = [ContentViewErratumFilter, ContentViewPackageGroupFilter, ContentViewPackageFilter].collect do |filter_class|
+        # Calculate errata that should be included and excluded.
+        # https://projects.theforeman.org/issues/34437
+        def filtered_errata(errata_filters, source_repository_ids)
+          if errata_filters.whitelist.empty?
+            all_included_errata = ::Katello::Erratum.joins("inner join katello_repository_errata on katello_errata.id = katello_repository_errata.erratum_id").
+              joins("inner join katello_repositories on katello_repositories.id = katello_repository_errata.repository_id").
+              where("katello_repositories.id in (?)", source_repository_ids)
+          else
+            all_included_errata = errata_filters.whitelist.collect do |filter|
+              ::Katello::Erratum.joins("inner join katello_repository_errata on katello_errata.id = katello_repository_errata.erratum_id").
+                where(filter.generate_clauses(nil)).where("katello_repository_errata.repository_id in (?)", source_repository_ids)
+            end
+            all_included_errata.flatten!
+          end
+          all_excluded_errata = errata_filters.blacklist.collect do |filter|
+            ::Katello::Erratum.joins("inner join katello_repository_errata on katello_errata.id = katello_repository_errata.erratum_id").
+              where(filter.generate_clauses(nil)).where("katello_repository_errata.repository_id in (?)", source_repository_ids)
+          end
+          all_excluded_errata.flatten!
+          return all_included_errata, all_excluded_errata
+        end
+
+        # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
+        def copy_content_for_source(source_repository, options = {})
+          package_filters = [ContentViewPackageGroupFilter, ContentViewPackageFilter].collect do |filter_class|
             filter_class.where(:id => options[:filter_ids])
           end
+          package_filters.flatten!.compact!
 
-          filters.flatten!.compact!
+          errata_filters = ContentViewErratumFilter.where(:id => options[:filter_ids])
+
           whitelist_ids = []
           blacklist_ids = []
-          filters.each do |filter|
+
+          # Only filter out RPMs & modules via an erratum filter if they're not included in other allowed errata.
+          # Begin this by calculating all the errata that should be copied.
+          # If there are exclude filters, send the errata to the relevant methods to ensure their contents aren't excluded.
+          additional_included_errata = []
+          all_excluded_errata = []
+          unless errata_filters.blacklist.empty?
+            all_included_errata, all_excluded_errata = filtered_errata(errata_filters, [source_repository.id])
+            additional_included_errata = all_included_errata - all_excluded_errata
+          end
+
+          (errata_filters + package_filters).each do |filter|
             if filter.inclusion
               whitelist_ids += filter.content_unit_pulp_ids(source_repository)
+            elsif filter.class == ContentViewErratumFilter
+              blacklist_ids += filter.content_unit_pulp_ids(source_repository, additional_included_errata)
             else
               blacklist_ids += filter.content_unit_pulp_ids(source_repository)
             end
           end
 
-          whitelist_ids = source_repository.rpms.where(:modular => false).pluck(:pulp_id).sort if (whitelist_ids.empty? && filters.select { |filter| filter.inclusion }.empty?)
+          whitelist_ids = source_repository.rpms.where(:modular => false).pluck(:pulp_id).sort if (whitelist_ids.empty? && (errata_filters + package_filters).select { |filter| filter.inclusion }.empty?)
 
           modular_filters = ContentViewModuleStreamFilter.where(:id => options[:filter_ids])
           inclusion_modular_filters = modular_filters.select { |filter| filter.inclusion }
           exclusion_modular_filters = modular_filters - inclusion_modular_filters
-          if inclusion_modular_filters.empty? && !(filters.any? { |filter| filter.class == ContentViewErratumFilter && filter.inclusion })
+          if inclusion_modular_filters.empty? && errata_filters.whitelist.empty?
             whitelist_ids += source_repository.rpms.where(:modular => true).pluck(:pulp_id).sort
             whitelist_ids += source_repository.module_streams.pluck(:pulp_id).sort
           end
@@ -362,10 +418,11 @@ module Katello
           content_unit_hrefs = whitelist_ids - blacklist_ids
           content_unit_hrefs += source_repository.srpms.pluck(:pulp_id)
           if content_unit_hrefs.any?
-            content_unit_hrefs += additional_content_hrefs(source_repository, content_unit_hrefs)
+            content_unit_hrefs += additional_content_hrefs(source_repository, content_unit_hrefs, all_excluded_errata)
           end
           copy_units(source_repository, content_unit_hrefs.uniq, options[:remove_all])
         end
+        # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
 
         def modular_packages(source_repository, filters)
           list_ids = []
@@ -375,13 +432,14 @@ module Katello
           list_ids
         end
 
-        def additional_content_hrefs(source_repository, content_unit_hrefs)
+        def additional_content_hrefs(source_repository, content_unit_hrefs, all_excluded_errata)
           repo_service = source_repository.backend_service(SmartProxy.pulp_primary)
           options = { :repository_version => source_repository.version_href }
 
           errata_to_include = filter_errata_by_pulp_href(source_repository.errata, content_unit_hrefs,
                                                          source_repository.rpms.pluck(:filename) +
-                                                         source_repository.srpms.pluck(:filename))
+                                                         source_repository.srpms.pluck(:filename)) -
+                                                         all_excluded_errata
           content_unit_hrefs += errata_to_include.collect do |erratum|
             erratum.repository_errata.where(repository_id: source_repository.id).pluck(:erratum_pulp3_href)
           end

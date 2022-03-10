@@ -103,6 +103,29 @@ module Katello
       assert_equal [rpm1.pulp_id], filter.content_unit_pulp_ids(@repo)
     end
 
+    def test_content_unit_pulp_ids_by_errata_id_does_not_return_protected_errata_content
+      rpm1 = @repo.rpms.find_by(pulp_id: 'one-uuid')
+      rpm2 = @repo.rpms.find_by(pulp_id: 'two-uuid')
+      modular_rpm = @repo.rpms.find_by(pulp_id: 'modular')
+      erratum1 = Katello::Erratum.new(pulp_id: "one", errata_id: "ERRATA1")
+      erratum1.packages << Katello::ErratumPackage.new(filename: rpm1.filename, name: "e1", nvrea: "e1")
+      erratum2 = Katello::Erratum.create(pulp_id: "two", errata_id: "ERRATA2")
+      modular_erratum_package = Katello::ErratumPackage.create(filename: modular_rpm.filename, name: "e2", nvrea: "e2", erratum_id: erratum2.id)
+      erratum2.packages << Katello::ErratumPackage.new(filename: rpm2.filename, name: "e2-2", nvrea: "e2-2")
+      module_stream = ::Katello::ModuleStream.create(name: 'mock', pulp_id: 'mock-module', version: '8050020220115095224', context: 'c5368500', stream: 'av', arch: modular_rpm.arch)
+      ::Katello::ModuleStreamErratumPackage.create(module_stream_id: module_stream.id, erratum_package_id: modular_erratum_package.id)
+
+      @repo.errata = [erratum1, erratum2]
+      @repo.save!
+
+      filter = FactoryBot.create(:katello_content_view_erratum_filter, inclusion: false)
+      FactoryBot.create(:katello_content_view_erratum_filter_rule, errata_id: erratum1.errata_id, content_view_filter_id: filter.id)
+      FactoryBot.create(:katello_content_view_erratum_filter_rule, errata_id: erratum2.errata_id, content_view_filter_id: filter.id)
+      filter.reload
+
+      assert_equal [modular_rpm.pulp_id, rpm2.pulp_id, module_stream.pulp_id].sort, filter.content_unit_pulp_ids(@repo, [erratum1]).sort
+    end
+
     def test_content_unit_pulp_ids_by_updated_start_date_returns_pulp_hrefs
       rpm1 = @repo.rpms.first
       rpm2 = @repo.rpms.last

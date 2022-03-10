@@ -56,10 +56,9 @@ module Katello
         matching_errata = []
         errata.each do |erratum|
           # The erratum should be copied if package_pulp_hrefs has all of its packages that are available in the source repo.
-          next if erratum.packages.empty?
           rpms_in_erratum_and_source_repo = erratum.packages.pluck(:filename) & source_repo_rpm_filenames
-          next if rpms_in_erratum_and_source_repo.empty?
-          if (rpms_in_erratum_and_source_repo - rpm_filenames - srpm_filenames).empty?
+          if (rpms_in_erratum_and_source_repo - rpm_filenames - srpm_filenames).empty? ||
+              erratum.packages.empty? || rpms_in_erratum_and_source_repo.empty?
             matching_errata << erratum
           end
         end

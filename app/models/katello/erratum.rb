@@ -108,25 +108,29 @@ module Katello
       installable_for_hosts(hosts).select(:id)
     end
 
-    def self.list_filenames_by_clauses(repo, clauses)
+    def self.list_filenames_by_clauses(repo, clauses, additional_included_errata)
       query_clauses = clauses.map do |clause|
         "(#{clause.to_sql})"
       end
       statement = query_clauses.join(" AND ")
 
       Katello::ErratumPackage.joins(:erratum => :repository_errata).
-          where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
-          where(statement).pluck(:filename)
+        where("#{RepositoryErratum.table_name}.repository_id" => repo.id).where(statement).pluck(:filename) -
+        Katello::ErratumPackage.joins(:erratum => :repository_errata).where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
+          where("#{Erratum.table_name}.errata_id" => additional_included_errata.pluck(:errata_id)).pluck(:filename)
     end
 
-    def self.list_modular_streams_by_clauses(repo, clauses)
+    def self.list_modular_streams_by_clauses(repo, clauses, additional_included_errata)
       query_clauses = clauses.map do |clause|
         "(#{clause.to_sql})"
       end
       statement = query_clauses.join(" AND ")
       ModuleStream.where(:id => ModuleStreamErratumPackage.joins(:erratum_package => {:erratum => :repository_errata}).
           where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
-          where(statement).select("#{ModuleStreamErratumPackage.table_name}.module_stream_id"))
+          where(statement).select("#{ModuleStreamErratumPackage.table_name}.module_stream_id")) -
+      ModuleStream.where(:id => ModuleStreamErratumPackage.joins(:erratum_package => {:erratum => :repository_errata}).
+          where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
+          where(statement).where("#{Erratum.table_name}.errata_id" => additional_included_errata.pluck(:errata_id)).select("#{ModuleStreamErratumPackage.table_name}.module_stream_id"))
     end
 
     def module_streams
