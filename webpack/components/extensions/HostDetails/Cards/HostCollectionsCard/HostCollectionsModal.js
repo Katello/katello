@@ -133,6 +133,7 @@ export const HostCollectionsModal = ({
       onClose={closeModal}
       title={adding ? __('Add host to host collections') : __('Remove host from host collections')}
       width="50%"
+      position="top"
       actions={modalActions}
       id={adding ? 'add-host-to-host-collections-modal' : 'remove-host-from-host-collections-modal'}
     >
