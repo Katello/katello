@@ -244,11 +244,11 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             $scope.$watch('repository.content_type', function () {
                 var remOptions, optionIndex;
                 $scope.genericRemoteOptions = RepositoryTypesService.getAttribute($scope.repository, "generic_remote_options");
-                if ($scope.genericRemoteOptions && $scope.genericRemoteOptions !== []) {
+                if ($scope.genericRemoteOptions && $scope.genericRemoteOptions !== [] && $scope.repository.generic_remote_options) {
                     remOptions = angular.fromJson($scope.repository.generic_remote_options);
-                    Object.keys(remOptions).forEach(function(key) {
+                    Object.keys(remOptions).forEach(function (key) {
                         if (remOptions[key]) {
-                            optionIndex = $scope.genericRemoteOptions.map(function(option) {
+                            optionIndex = $scope.genericRemoteOptions.map(function (option) {
                                 return option.name;
                             }).indexOf(key);
                             $scope.genericRemoteOptions[optionIndex].value = remOptions[key].join($scope.genericRemoteOptions[optionIndex].delimiter);
