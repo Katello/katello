@@ -48,8 +48,8 @@ glue(@resource.root) do
     attributes :id => @resource.root&.ssl_client_key&.id, :name => @resource.root&.ssl_client_key&.name
   end
 
-  child :gpg_key do
-    attributes :id, :name
+  node :gpg_key do
+    attributes :id => @resource.root&.gpg_key&.id, :name => @resource.root&.gpg_key&.name
   end
 end
 
