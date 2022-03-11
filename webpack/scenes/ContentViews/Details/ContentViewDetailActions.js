@@ -48,6 +48,7 @@ import {
   DOCKER_TAGS_CONTENT,
   generatedContentKey,
   STATUS_TRANSLATIONS_ENUM,
+  bulkRemoveVersionKey,
 } from '../ContentViewsConstants';
 import api, { foremanApi, orgId } from '../../../services/api';
 import { getResponseErrorMsgs } from '../../../utils/helpers';
@@ -413,6 +414,18 @@ export const editContentViewVersionDetails = (versionId, cvId, params, handleSuc
     successToast: () => __('Version details updated.'),
     errorToast: error => __(`Something went wrong while editing version details. ${getResponseErrorMsgs(error.response)}`),
   });
+
+export const bulkDeleteContentViewVersion = (cvId, params, handleSuccess) => put({
+  type: API_OPERATIONS.PUT,
+  key: bulkRemoveVersionKey(cvId),
+  url: api.getApiUrl(`/content_views/${cvId}/bulk_delete_versions`),
+  params,
+  handleSuccess: (response) => {
+    renderTaskStartedToast(response?.data);
+    return handleSuccess();
+  },
+  errorToast: error => __(`Something went wrong while deleting versions ${getResponseErrorMsgs(error.response)}`),
+});
 
 export const removeContentViewVersion = (cvId, versionId, versionEnvironments, params) => put({
   type: API_OPERATIONS.PUT,

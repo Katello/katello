@@ -115,7 +115,7 @@ test('Can open Remove wizard and remove version from simple environment', async 
   fireEvent.click(getByLabelText('Select row 1'));
   fireEvent.click(getByText('Next'));
   await patientlyWaitFor(() => {
-    expect(getByText('Review Details')).toBeInTheDocument();
+    expect(getByText('Review details')).toBeInTheDocument();
   });
   expect(getAllByText('qa1')[0].closest('a'))
     .toHaveAttribute('href', '/lifecycle_environments/4');
@@ -203,7 +203,7 @@ test('Can open Remove wizard and remove version from environment with hosts', as
   fireEvent.click(getByText('cv2'));
   fireEvent.click(getByText('Next'));
   await patientlyWaitFor(() => {
-    expect(getByText('Review Details')).toBeInTheDocument();
+    expect(getByText('Review details')).toBeInTheDocument();
     expect(getByText('1 host will be moved to content view cv2 in')).toBeInTheDocument();
   });
   fireEvent.click(getAllByText('Remove')[0]);
@@ -295,7 +295,7 @@ test('Can open Remove wizard and remove version from environment with activation
   fireEvent.click(getByText('cv2'));
   fireEvent.click(getByText('Next'));
   await patientlyWaitFor(() => {
-    expect(getByText('Review Details')).toBeInTheDocument();
+    expect(getByText('Review details')).toBeInTheDocument();
     expect(getByText('1 activation key will be moved to content view cv2 in')).toBeInTheDocument();
   });
   fireEvent.click(getAllByText('Remove')[0]);

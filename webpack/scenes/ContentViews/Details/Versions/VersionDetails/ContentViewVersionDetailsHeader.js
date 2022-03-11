@@ -16,21 +16,25 @@ import {
   KebabToggle,
   DropdownPosition,
 } from '@patternfly/react-core';
+import { useHistory } from 'react-router-dom';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { hasPermission } from '../../../helpers';
 import ContentViewVersionPromote from '../../Promote/ContentViewVersionPromote';
 import getEnvironmentPaths from '../../../components/EnvironmentPaths/EnvironmentPathActions';
 import RemoveCVVersionWizard from '../Delete/RemoveCVVersionWizard';
 import ActionableDetail from '../../../../../components/ActionableDetail';
+import BulkDeleteModal from '../BulkDelete/BulkDeleteModal';
 
 const ContentViewVersionDetailsHeader = ({
-  versionDetails: {
-    version, description, environments, content_view_id: cvId, id,
-  },
+  versionDetails,
   onEdit,
   details: { permissions },
   loading,
 }) => {
+  const history = useHistory();
+  const {
+    version, description, environments, content_view_id: cvId, id,
+  } = versionDetails;
   const dispatch = useDispatch();
   useEffect(
     () => {
@@ -42,7 +46,7 @@ const ContentViewVersionDetailsHeader = ({
   const [promoting, setPromoting] = useState(false);
   const [removingFromEnv, setRemovingFromEnv] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [deleteVersion, setDeleteVersion] = useState(false);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const dropDownItems = [
     <DropdownItem
       key="remove"
@@ -54,14 +58,12 @@ const ContentViewVersionDetailsHeader = ({
     </DropdownItem>,
     <DropdownItem
       key="delete"
-      onClick={() => {
-        setCurrentStep(1);
-        setDeleteVersion(true);
-        setRemovingFromEnv(true);
-      }}
+      onClick={() =>
+        setBulkDeleteOpen(true)
+      }
     >
       {__('Delete')}
-    </DropdownItem>,
+    </DropdownItem >,
   ];
 
   return (
@@ -120,6 +122,15 @@ const ContentViewVersionDetailsHeader = ({
           aria-label="promote_content_view_modal"
         />
       }
+      {bulkDeleteOpen &&
+        <BulkDeleteModal
+          versions={[versionDetails]}
+          onClose={(redirect) => {
+            setBulkDeleteOpen(false);
+            if (redirect) history.push(`/content_views/${cvId}#/versions`);
+          }}
+        />
+      }
       {removingFromEnv &&
         <RemoveCVVersionWizard
           cvId={cvId}
@@ -130,7 +141,6 @@ const ContentViewVersionDetailsHeader = ({
           setIsOpen={setRemovingFromEnv}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
-          deleteWizard={deleteVersion}
           detailsPage
           aria-label="remove_content_view_version_modal"
         />

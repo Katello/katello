@@ -1,0 +1,936 @@
+{
+  "total": 5,
+  "subtotal": 5,
+  "selectable": 5,
+  "page": "1",
+  "per_page": "20",
+  "error": null,
+  "search": null,
+  "sort": {
+    "by": "version",
+    "order": "desc"
+  },
+  "results": [
+    {
+      "version": "89.0",
+      "major": 89,
+      "minor": 0,
+      "composite_content_view_ids": [],
+      "published_in_composite_content_view_ids": [],
+      "content_view_id": 10,
+      "default": false,
+      "description": "",
+      "id": 145,
+      "name": "Billy 89.0",
+      "created_at": "2022-02-15 14:21:21 -0700",
+      "updated_at": "2022-02-15 14:21:39 -0700",
+      "content_view": {
+        "id": 10,
+        "name": "Billy",
+        "label": "Billy"
+      },
+      "composite_content_views": [],
+      "composite_content_view_versions": [],
+      "published_in_composite_content_views": [],
+      "environments": [
+        {
+          "id": 1,
+          "name": "Library",
+          "label": "Library",
+          "publish_date": "about 1 hour",
+          "permissions": {
+            "readable": true,
+            "promotable_or_removable": true,
+            "all_hosts_editable": true,
+            "all_keys_editable": true
+          },
+          "host_count": 1,
+          "activation_key_count": 1
+        }
+      ],
+      "repositories": [
+        {
+          "id": 917,
+          "name": "Zoo Repo Uno",
+          "label": "Zoo_Repo_Uno",
+          "content_type": "yum",
+          "library_instance_id": 1
+        },
+        {
+          "id": 918,
+          "name": "Needed Errata",
+          "label": "Needed_Errata",
+          "content_type": "yum",
+          "library_instance_id": 61
+        },
+        {
+          "id": 916,
+          "name": "Zoo Repo Dos",
+          "label": "Zoo_Repo_Dos",
+          "content_type": "yum",
+          "library_instance_id": 2
+        }
+      ],
+      "last_event": {
+        "user": "admin",
+        "status": "successful",
+        "description": "",
+        "action": "publish",
+        "created_at": "2022-02-15 14:21:21 -0700",
+        "updated_at": "2022-02-15 14:21:40 -0700",
+        "environment": null,
+        "task": {
+          "id": "e4436479-9f3c-41d2-b2f6-6baeee4341a3",
+          "label": "Actions::Katello::ContentView::Publish",
+          "pending": false,
+          "action": "Publish content view 'Billy'; organization 'Default Organization'",
+          "username": "admin",
+          "started_at": "2022-02-15 14:21:21 -0700",
+          "ended_at": "2022-02-15 14:21:40 -0700",
+          "state": "stopped",
+          "result": "success",
+          "progress": 1,
+          "input": {
+            "content_view": {
+              "id": 10,
+              "name": "Billy",
+              "label": "Billy"
+            },
+            "organization": {
+              "id": 1,
+              "name": "Default Organization",
+              "label": "Default_Organization"
+            },
+            "services_checked": [
+              "pulp3",
+              "candlepin",
+              "candlepin_auth"
+            ],
+            "history_id": 408,
+            "content_view_id": 10,
+            "auto_publish_composite_ids": [],
+            "content_view_version_name": "Billy 89.0",
+            "content_view_version_id": 145,
+            "environment_id": 1,
+            "user_id": 4,
+            "skip_promotion": null,
+            "locale": "en",
+            "current_request_id": "9161f4f6-3ffc-454d-81ef-ab68b09a73f4",
+            "current_timezone": "America/Edmonton",
+            "current_organization_id": 1,
+            "current_location_id": 2,
+            "current_user_id": 4
+          },
+          "output": {
+            "content_view_id": 10,
+            "content_view_version_id": 145,
+            "skip_promotion": null
+          },
+          "humanized": {
+            "action": "Publish",
+            "input": [
+              [
+                "content_view",
+                {
+                  "text": "content view 'Billy'",
+                  "link": "/content_views/10/versions"
+                }
+              ],
+              [
+                "organization",
+                {
+                  "text": "organization 'Default Organization'",
+                  "link": "/organizations/1/edit"
+                }
+              ]
+            ],
+            "output": "",
+            "errors": []
+          },
+          "cli_example": null,
+          "start_at": "2022-02-15 14:21:21 -0700",
+          "available_actions": {
+            "cancellable": false,
+            "resumable": false
+          }
+        },
+        "version": "89.0",
+        "publish": true,
+        "version_id": 145,
+        "triggered_by": null,
+        "triggered_by_id": null
+      },
+      "active_history": [],
+      "ansible_collection_count": 0,
+      "deb_count": 0,
+      "file_count": 0,
+      "python_package_count": 0,
+      "docker_manifest_count": 0,
+      "docker_manifest_list_count": 0,
+      "docker_tag_count": 0,
+      "ostree_ref_count": 0,
+      "rpm_count": 1,
+      "modulemd_count": 0,
+      "erratum_count": 0,
+      "package_group_count": 0,
+      "srpm_count": 0,
+      "module_stream_count": 0,
+      "package_count": 1,
+      "component_view_count": 0,
+      "ansible_collection_repository_count": 0,
+      "deb_repository_count": 0,
+      "file_repository_count": 0,
+      "python_repository_count": 0,
+      "docker_repository_count": 0,
+      "ostree_repository_count": 0,
+      "yum_repository_count": 3,
+      "errata_counts": {
+        "security": null,
+        "bugfix": 0,
+        "enhancement": 0,
+        "total": null
+      },
+      "permissions": {
+        "deletable": true
+      }
+    },
+    {
+      "version": "88.0",
+      "major": 88,
+      "minor": 0,
+      "composite_content_view_ids": [],
+      "published_in_composite_content_view_ids": [],
+      "content_view_id": 10,
+      "default": false,
+      "description": "",
+      "id": 144,
+      "name": "Billy 88.0",
+      "created_at": "2022-02-11 11:17:05 -0700",
+      "updated_at": "2022-02-11 11:17:30 -0700",
+      "content_view": {
+        "id": 10,
+        "name": "Billy",
+        "label": "Billy"
+      },
+      "composite_content_views": [],
+      "composite_content_view_versions": [],
+      "published_in_composite_content_views": [],
+      "environments": [
+        {
+          "id": 3,
+          "name": "bob",
+          "label": "bob",
+          "publish_date": "4 days",
+          "permissions": {
+            "readable": true,
+            "promotable_or_removable": true,
+            "all_hosts_editable": true,
+            "all_keys_editable": true
+          },
+          "host_count": 0,
+          "activation_key_count": 0
+        }
+      ],
+      "repositories": [
+        {
+          "id": 914,
+          "name": "Needed Errata",
+          "label": "Needed_Errata",
+          "content_type": "yum",
+          "library_instance_id": 61
+        },
+        {
+          "id": 913,
+          "name": "Zoo Repo Uno",
+          "label": "Zoo_Repo_Uno",
+          "content_type": "yum",
+          "library_instance_id": 1
+        },
+        {
+          "id": 912,
+          "name": "Zoo Repo Dos",
+          "label": "Zoo_Repo_Dos",
+          "content_type": "yum",
+          "library_instance_id": 2
+        }
+      ],
+      "last_event": {
+        "user": "admin",
+        "status": "successful",
+        "description": null,
+        "action": "promotion",
+        "created_at": "2022-02-11 11:17:09 -0700",
+        "updated_at": "2022-02-11 11:17:30 -0700",
+        "environment": {
+          "id": 3,
+          "name": "bob"
+        },
+        "task": {
+          "id": "18a89f53-e33f-4d56-9e4c-9d1305c3c556",
+          "label": "Actions::Katello::ContentView::Publish",
+          "pending": false,
+          "action": "Publish content view 'Billy'; organization 'Default Organization'",
+          "username": "admin",
+          "started_at": "2022-02-11 11:17:05 -0700",
+          "ended_at": "2022-02-11 11:17:30 -0700",
+          "state": "stopped",
+          "result": "success",
+          "progress": 1,
+          "input": {
+            "content_view": {
+              "id": 10,
+              "name": "Billy",
+              "label": "Billy"
+            },
+            "organization": {
+              "id": 1,
+              "name": "Default Organization",
+              "label": "Default_Organization"
+            },
+            "services_checked": [
+              "pulp3",
+              "candlepin",
+              "candlepin_auth"
+            ],
+            "history_id": 404,
+            "content_view_id": 10,
+            "auto_publish_composite_ids": [],
+            "content_view_version_name": "Billy 88.0",
+            "content_view_version_id": 144,
+            "environment_id": 1,
+            "user_id": 4,
+            "skip_promotion": null,
+            "locale": "en",
+            "current_request_id": "7a4cf39c-1cd9-411c-99ca-547041f437b0",
+            "current_timezone": "America/Edmonton",
+            "current_organization_id": 1,
+            "current_location_id": 2,
+            "current_user_id": 4
+          },
+          "output": {
+            "content_view_id": 10,
+            "content_view_version_id": 144,
+            "skip_promotion": null
+          },
+          "humanized": {
+            "action": "Publish",
+            "input": [
+              [
+                "content_view",
+                {
+                  "text": "content view 'Billy'",
+                  "link": "/content_views/10/versions"
+                }
+              ],
+              [
+                "organization",
+                {
+                  "text": "organization 'Default Organization'",
+                  "link": "/organizations/1/edit"
+                }
+              ]
+            ],
+            "output": "",
+            "errors": []
+          },
+          "cli_example": null,
+          "start_at": "2022-02-11 11:17:05 -0700",
+          "available_actions": {
+            "cancellable": false,
+            "resumable": false
+          }
+        },
+        "version": "88.0",
+        "publish": false,
+        "version_id": 144,
+        "triggered_by": null,
+        "triggered_by_id": null
+      },
+      "active_history": [],
+      "ansible_collection_count": 0,
+      "deb_count": 0,
+      "file_count": 0,
+      "python_package_count": 0,
+      "docker_manifest_count": 0,
+      "docker_manifest_list_count": 0,
+      "docker_tag_count": 0,
+      "ostree_ref_count": 0,
+      "rpm_count": 1,
+      "modulemd_count": 0,
+      "erratum_count": 0,
+      "package_group_count": 0,
+      "srpm_count": 0,
+      "module_stream_count": 0,
+      "package_count": 1,
+      "component_view_count": 0,
+      "ansible_collection_repository_count": 0,
+      "deb_repository_count": 0,
+      "file_repository_count": 0,
+      "python_repository_count": 0,
+      "docker_repository_count": 0,
+      "ostree_repository_count": 0,
+      "yum_repository_count": 3,
+      "errata_counts": {
+        "security": null,
+        "bugfix": 0,
+        "enhancement": 0,
+        "total": null
+      },
+      "permissions": {
+        "deletable": true
+      }
+    },
+    {
+      "version": "85.0",
+      "major": 85,
+      "minor": 0,
+      "composite_content_view_ids": [],
+      "published_in_composite_content_view_ids": [],
+      "content_view_id": 10,
+      "default": false,
+      "description": "",
+      "id": 140,
+      "name": "Billy 85.0",
+      "created_at": "2022-02-10 15:56:48 -0700",
+      "updated_at": "2022-02-10 15:57:08 -0700",
+      "content_view": {
+        "id": 10,
+        "name": "Billy",
+        "label": "Billy"
+      },
+      "composite_content_views": [],
+      "composite_content_view_versions": [],
+      "published_in_composite_content_views": [],
+      "environments": [],
+      "repositories": [
+        {
+          "id": 895,
+          "name": "Zoo Repo Dos",
+          "label": "Zoo_Repo_Dos",
+          "content_type": "yum",
+          "library_instance_id": 2
+        },
+        {
+          "id": 896,
+          "name": "Zoo Repo Uno",
+          "label": "Zoo_Repo_Uno",
+          "content_type": "yum",
+          "library_instance_id": 1
+        },
+        {
+          "id": 897,
+          "name": "Python",
+          "label": "Python",
+          "content_type": "python",
+          "library_instance_id": 11
+        },
+        {
+          "id": 899,
+          "name": "Needed Errata",
+          "label": "Needed_Errata",
+          "content_type": "yum",
+          "library_instance_id": 61
+        },
+        {
+          "id": 898,
+          "name": "OZtree",
+          "label": "OZtree",
+          "content_type": "ostree",
+          "library_instance_id": 32
+        }
+      ],
+      "last_event": {
+        "user": "admin",
+        "status": "successful",
+        "description": "",
+        "action": "publish",
+        "created_at": "2022-02-10 15:56:48 -0700",
+        "updated_at": "2022-02-10 15:57:09 -0700",
+        "environment": null,
+        "task": {
+          "id": "4dfff3bf-4b86-4726-9b6c-46956a0cec42",
+          "label": "Actions::Katello::ContentView::Publish",
+          "pending": false,
+          "action": "Publish content view 'Billy'; organization 'Default Organization'",
+          "username": "admin",
+          "started_at": "2022-02-10 15:56:48 -0700",
+          "ended_at": "2022-02-10 15:57:09 -0700",
+          "state": "stopped",
+          "result": "success",
+          "progress": 1,
+          "input": {
+            "content_view": {
+              "id": 10,
+              "name": "Billy",
+              "label": "Billy"
+            },
+            "organization": {
+              "id": 1,
+              "name": "Default Organization",
+              "label": "Default_Organization"
+            },
+            "services_checked": [
+              "pulp3",
+              "candlepin",
+              "candlepin_auth"
+            ],
+            "history_id": 398,
+            "content_view_id": 10,
+            "auto_publish_composite_ids": [],
+            "content_view_version_name": "Billy 85.0",
+            "content_view_version_id": 140,
+            "environment_id": 1,
+            "user_id": 4,
+            "skip_promotion": null,
+            "locale": "en",
+            "current_request_id": "c79b5e05-f5e6-4e9f-88a0-057b1d618953",
+            "current_timezone": "America/Edmonton",
+            "current_organization_id": 1,
+            "current_location_id": 2,
+            "current_user_id": 4
+          },
+          "output": {
+            "content_view_id": 10,
+            "content_view_version_id": 140,
+            "skip_promotion": null
+          },
+          "humanized": {
+            "action": "Publish",
+            "input": [
+              [
+                "content_view",
+                {
+                  "text": "content view 'Billy'",
+                  "link": "/content_views/10/versions"
+                }
+              ],
+              [
+                "organization",
+                {
+                  "text": "organization 'Default Organization'",
+                  "link": "/organizations/1/edit"
+                }
+              ]
+            ],
+            "output": "",
+            "errors": []
+          },
+          "cli_example": null,
+          "start_at": "2022-02-10 15:56:48 -0700",
+          "available_actions": {
+            "cancellable": false,
+            "resumable": false
+          }
+        },
+        "version": "85.0",
+        "publish": true,
+        "version_id": 140,
+        "triggered_by": null,
+        "triggered_by_id": null
+      },
+      "active_history": [],
+      "deb_count": 0,
+      "docker_manifest_count": 0,
+      "docker_manifest_list_count": 0,
+      "docker_tag_count": 0,
+      "file_count": 0,
+      "rpm_count": 1,
+      "modulemd_count": 0,
+      "erratum_count": 0,
+      "package_group_count": 0,
+      "srpm_count": 0,
+      "ansible_collection_count": 0,
+      "python_package_count": 0,
+      "ostree_ref_count": 0,
+      "module_stream_count": 0,
+      "package_count": 1,
+      "component_view_count": 0,
+      "ansible_collection_repository_count": 0,
+      "deb_repository_count": 0,
+      "file_repository_count": 0,
+      "python_repository_count": 1,
+      "docker_repository_count": 0,
+      "ostree_repository_count": 1,
+      "yum_repository_count": 3,
+      "errata_counts": {
+        "security": null,
+        "bugfix": 0,
+        "enhancement": 0,
+        "total": null
+      },
+      "permissions": {
+        "deletable": true
+      }
+    },
+    {
+      "version": "84.0",
+      "major": 84,
+      "minor": 0,
+      "composite_content_view_ids": [],
+      "published_in_composite_content_view_ids": [],
+      "content_view_id": 10,
+      "default": false,
+      "description": "",
+      "id": 139,
+      "name": "Billy 84.0",
+      "created_at": "2022-02-08 13:41:23 -0700",
+      "updated_at": "2022-02-08 13:41:43 -0700",
+      "content_view": {
+        "id": 10,
+        "name": "Billy",
+        "label": "Billy"
+      },
+      "composite_content_views": [],
+      "composite_content_view_versions": [],
+      "published_in_composite_content_views": [],
+      "environments": [],
+      "repositories": [
+        {
+          "id": 891,
+          "name": "Zoo Repo Uno",
+          "label": "Zoo_Repo_Uno",
+          "content_type": "yum",
+          "library_instance_id": 1
+        },
+        {
+          "id": 893,
+          "name": "OZtree",
+          "label": "OZtree",
+          "content_type": "ostree",
+          "library_instance_id": 32
+        },
+        {
+          "id": 892,
+          "name": "Python",
+          "label": "Python",
+          "content_type": "python",
+          "library_instance_id": 11
+        },
+        {
+          "id": 894,
+          "name": "Needed Errata",
+          "label": "Needed_Errata",
+          "content_type": "yum",
+          "library_instance_id": 61
+        },
+        {
+          "id": 890,
+          "name": "Zoo Repo Dos",
+          "label": "Zoo_Repo_Dos",
+          "content_type": "yum",
+          "library_instance_id": 2
+        }
+      ],
+      "last_event": {
+        "user": "admin",
+        "status": "successful",
+        "description": null,
+        "action": "promotion",
+        "created_at": "2022-02-08 13:41:26 -0700",
+        "updated_at": "2022-02-08 13:41:43 -0700",
+        "environment": {
+          "id": 3,
+          "name": "bob"
+        },
+        "task": {
+          "id": "1be91ce6-45be-4a64-afca-cb9276ef7093",
+          "label": "Actions::Katello::ContentView::Publish",
+          "pending": false,
+          "action": "Publish content view 'Billy'; organization 'Default Organization'",
+          "username": "admin",
+          "started_at": "2022-02-08 13:41:23 -0700",
+          "ended_at": "2022-02-08 13:41:43 -0700",
+          "state": "stopped",
+          "result": "success",
+          "progress": 1,
+          "input": {
+            "content_view": {
+              "id": 10,
+              "name": "Billy",
+              "label": "Billy"
+            },
+            "organization": {
+              "id": 1,
+              "name": "Default Organization",
+              "label": "Default_Organization"
+            },
+            "services_checked": [
+              "pulp3",
+              "candlepin",
+              "candlepin_auth"
+            ],
+            "history_id": 394,
+            "content_view_id": 10,
+            "auto_publish_composite_ids": [],
+            "content_view_version_name": "Billy 84.0",
+            "content_view_version_id": 139,
+            "environment_id": 1,
+            "user_id": 4,
+            "skip_promotion": null,
+            "locale": "en",
+            "current_request_id": "5bd7faeb-1d80-4bac-a830-ea1ce732cab1",
+            "current_timezone": "America/Edmonton",
+            "current_organization_id": 1,
+            "current_location_id": 2,
+            "current_user_id": 4
+          },
+          "output": {
+            "content_view_id": 10,
+            "content_view_version_id": 139,
+            "skip_promotion": null
+          },
+          "humanized": {
+            "action": "Publish",
+            "input": [
+              [
+                "content_view",
+                {
+                  "text": "content view 'Billy'",
+                  "link": "/content_views/10/versions"
+                }
+              ],
+              [
+                "organization",
+                {
+                  "text": "organization 'Default Organization'",
+                  "link": "/organizations/1/edit"
+                }
+              ]
+            ],
+            "output": "",
+            "errors": []
+          },
+          "cli_example": null,
+          "start_at": "2022-02-08 13:41:23 -0700",
+          "available_actions": {
+            "cancellable": false,
+            "resumable": false
+          }
+        },
+        "version": "84.0",
+        "publish": false,
+        "version_id": 139,
+        "triggered_by": null,
+        "triggered_by_id": null
+      },
+      "active_history": [],
+      "deb_count": 0,
+      "docker_manifest_count": 0,
+      "docker_manifest_list_count": 0,
+      "docker_tag_count": 0,
+      "file_count": 0,
+      "rpm_count": 40,
+      "modulemd_count": 0,
+      "erratum_count": 8,
+      "package_group_count": 2,
+      "srpm_count": 0,
+      "ansible_collection_count": 0,
+      "ostree_ref_count": 2,
+      "python_package_count": 54,
+      "module_stream_count": 0,
+      "package_count": 40,
+      "component_view_count": 0,
+      "ansible_collection_repository_count": 0,
+      "deb_repository_count": 0,
+      "file_repository_count": 0,
+      "python_repository_count": 1,
+      "docker_repository_count": 0,
+      "ostree_repository_count": 1,
+      "yum_repository_count": 3,
+      "errata_counts": {
+        "security": 5,
+        "bugfix": 0,
+        "enhancement": 1,
+        "total": 8
+      },
+      "permissions": {
+        "deletable": true
+      }
+    },
+    {
+      "version": "83.0",
+      "major": 83,
+      "minor": 0,
+      "composite_content_view_ids": [],
+      "published_in_composite_content_view_ids": [],
+      "content_view_id": 10,
+      "default": false,
+      "description": "",
+      "id": 138,
+      "name": "Billy 83.0",
+      "created_at": "2022-02-07 12:26:00 -0700",
+      "updated_at": "2022-02-07 12:26:25 -0700",
+      "content_view": {
+        "id": 10,
+        "name": "Billy",
+        "label": "Billy"
+      },
+      "composite_content_views": [],
+      "composite_content_view_versions": [],
+      "published_in_composite_content_views": [],
+      "environments": [],
+      "repositories": [
+        {
+          "id": 881,
+          "name": "Zoo Repo Uno",
+          "label": "Zoo_Repo_Uno",
+          "content_type": "yum",
+          "library_instance_id": 1
+        },
+        {
+          "id": 880,
+          "name": "Zoo Repo Dos",
+          "label": "Zoo_Repo_Dos",
+          "content_type": "yum",
+          "library_instance_id": 2
+        },
+        {
+          "id": 884,
+          "name": "Needed Errata",
+          "label": "Needed_Errata",
+          "content_type": "yum",
+          "library_instance_id": 61
+        },
+        {
+          "id": 882,
+          "name": "Python",
+          "label": "Python",
+          "content_type": "python",
+          "library_instance_id": 11
+        },
+        {
+          "id": 883,
+          "name": "OZtree",
+          "label": "OZtree",
+          "content_type": "ostree",
+          "library_instance_id": 32
+        }
+      ],
+      "last_event": {
+        "user": "admin",
+        "status": "successful",
+        "description": null,
+        "action": "promotion",
+        "created_at": "2022-02-07 12:26:04 -0700",
+        "updated_at": "2022-02-07 12:26:25 -0700",
+        "environment": {
+          "id": 2,
+          "name": "Steve"
+        },
+        "task": {
+          "id": "56205a86-165b-4c37-9c0e-9821b8c0ad47",
+          "label": "Actions::Katello::ContentView::Publish",
+          "pending": false,
+          "action": "Publish content view 'Billy'; organization 'Default Organization'",
+          "username": "admin",
+          "started_at": "2022-02-07 12:26:00 -0700",
+          "ended_at": "2022-02-07 12:26:25 -0700",
+          "state": "stopped",
+          "result": "success",
+          "progress": 1,
+          "input": {
+            "content_view": {
+              "id": 10,
+              "name": "Billy",
+              "label": "Billy"
+            },
+            "organization": {
+              "id": 1,
+              "name": "Default Organization",
+              "label": "Default_Organization"
+            },
+            "services_checked": [
+              "pulp3",
+              "candlepin",
+              "candlepin_auth"
+            ],
+            "history_id": 392,
+            "content_view_id": 10,
+            "auto_publish_composite_ids": [],
+            "content_view_version_name": "Billy 83.0",
+            "content_view_version_id": 138,
+            "environment_id": 1,
+            "user_id": 4,
+            "skip_promotion": null,
+            "locale": "en",
+            "current_request_id": "ee1dc23f-a613-4fdd-9c43-53c34d43d3a1",
+            "current_timezone": "America/Edmonton",
+            "current_organization_id": 1,
+            "current_location_id": 2,
+            "current_user_id": 4
+          },
+          "output": {
+            "content_view_id": 10,
+            "content_view_version_id": 138,
+            "skip_promotion": null
+          },
+          "humanized": {
+            "action": "Publish",
+            "input": [
+              [
+                "content_view",
+                {
+                  "text": "content view 'Billy'",
+                  "link": "/content_views/10/versions"
+                }
+              ],
+              [
+                "organization",
+                {
+                  "text": "organization 'Default Organization'",
+                  "link": "/organizations/1/edit"
+                }
+              ]
+            ],
+            "output": "",
+            "errors": []
+          },
+          "cli_example": null,
+          "start_at": "2022-02-07 12:26:00 -0700",
+          "available_actions": {
+            "cancellable": false,
+            "resumable": false
+          }
+        },
+        "version": "83.0",
+        "publish": false,
+        "version_id": 138,
+        "triggered_by": null,
+        "triggered_by_id": null
+      },
+      "active_history": [],
+      "ansible_collection_count": 0,
+      "deb_count": 0,
+      "docker_manifest_count": 0,
+      "docker_manifest_list_count": 0,
+      "docker_tag_count": 0,
+      "file_count": 0,
+      "rpm_count": 40,
+      "modulemd_count": 0,
+      "erratum_count": 8,
+      "package_group_count": 2,
+      "srpm_count": 0,
+      "ostree_ref_count": 2,
+      "python_package_count": 54,
+      "module_stream_count": 0,
+      "package_count": 40,
+      "component_view_count": 0,
+      "ansible_collection_repository_count": 0,
+      "deb_repository_count": 0,
+      "file_repository_count": 0,
+      "python_repository_count": 1,
+      "docker_repository_count": 0,
+      "ostree_repository_count": 1,
+      "yum_repository_count": 3,
+      "errata_counts": {
+        "security": 5,
+        "bugfix": 0,
+        "enhancement": 1,
+        "total": 8
+      },
+      "permissions": {
+        "deletable": true
+      }
+    }
+  ]
+}

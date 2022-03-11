@@ -61,7 +61,8 @@ export const useSet = (initialArry) => {
 };
 
 export const useSelectionSet = ({
-  results, metadata,
+  results,
+  metadata,
   initialArry = [],
   idColumn = 'id',
   isSelectable = () => true,
@@ -77,7 +78,7 @@ export const useSelectionSet = ({
   }, [idColumn, selectableResults]);
   const areAllRowsOnPageSelected = () =>
     Number(pageIds?.length) > 0 &&
-        pageIds.every(result => selectionSet.has(result) || !canSelect(result));
+    pageIds.every(result => selectionSet.has(result) || !canSelect(result));
 
   const areAllRowsSelected = () =>
     Number(selectionSet.size) > 0 && selectionSet.size === Number(metadata.selectable);
@@ -146,9 +147,9 @@ export const useBulkSelect = ({
   isSelectable,
 }) => {
   const { selectionSet: inclusionSet, ...selectOptions } =
-                useSelectionSet({
-                  results, metadata, initialArry, idColumn, isSelectable,
-                });
+    useSelectionSet({
+      results, metadata, initialArry, idColumn, isSelectable,
+    });
   const exclusionSet = useSet([]);
   const [searchQuery, updateSearchQuery] = useState(initialSearchQuery);
   const [selectAllMode, setSelectAllMode] = useState(false);
@@ -156,10 +157,10 @@ export const useBulkSelect = ({
     Number(metadata.selectable) - exclusionSet.size : selectOptions.selectedCount;
 
   const areAllRowsOnPageSelected = () => selectAllMode ||
-                                         selectOptions.areAllRowsOnPageSelected();
+    selectOptions.areAllRowsOnPageSelected();
 
   const areAllRowsSelected = () => (selectAllMode && exclusionSet.size === 0) ||
-                                   selectOptions.areAllRowsSelected();
+    selectOptions.areAllRowsSelected();
 
   const isSelected = useCallback((id) => {
     if (!selectOptions.isSelectable(id)) {
@@ -225,7 +226,7 @@ export const useBulkSelect = ({
     // if search value changed and cleared from a string to empty value
     // And it was select all -> then reset selections
     if ((prevSearchRef && !isEmpty(prevSearchRef.searchQuery)) &&
-        isEmpty(searchQuery) && selectAllMode) {
+      isEmpty(searchQuery) && selectAllMode) {
       selectNone();
     }
   }, [searchQuery, selectAllMode, prevSearchRef, selectNone]);

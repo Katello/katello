@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { act, renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
@@ -122,7 +122,7 @@ test('Can show package and erratas and link to list page', async () => {
 
   await patientlyWaitFor(() => {
     expect(getAllByText(8)[0].closest('a'))
-      .toHaveAttribute('href', '/content_views/5#/versions/11/rpmPackages/');
+      .toHaveAttribute('href', '/content_views/5#/versions/11/packages/');
     expect(getAllByText(15)[0].closest('a'))
       .toHaveAttribute('href', '/content_views/5#/versions/11/errata/');
     expect(getByText(5)).toBeInTheDocument();
@@ -145,7 +145,6 @@ test('Can show additional content and link to list page', async () => {
     withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
   );
-
 
   await patientlyWaitFor(() => {
     expect(getByText('3 Files').closest('a'))
@@ -183,6 +182,7 @@ test('Can call API and show versions with tasks on page load', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const { results: withTaskResults } = cvVersionsTasksData;
   [firstVersion] = withTaskResults;
+
   const scope = nockInstance
     .get(cvVersions)
     .query(true)
@@ -190,6 +190,7 @@ test('Can call API and show versions with tasks on page load', async (done) => {
 
   const taskInProgressScope = nockInstance
     .get(taskPollingUrl)
+    .times(4)
     .reply(200, contentViewTaskInProgressResponseData);
 
   const {
@@ -207,9 +208,11 @@ test('Can call API and show versions with tasks on page load', async (done) => {
     expect(getByLabelText('task_presenter')).toBeInTheDocument();
     expect(getByLabelText('task_presenter')).toHaveAttribute('aria-valuenow', '50');
   });
+
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(taskInProgressScope, done);
+  act(done);// Force the test to stop listening for tasks
 });
 
 test('Can reload versions upon task completion', async (done) => {
@@ -223,6 +226,7 @@ test('Can reload versions upon task completion', async (done) => {
 
   const taskSuccessScope = nockInstance
     .get(taskPollingUrl)
+    .times(6)
     .reply(200, contentViewTaskResponseData);
 
   const reloadScope = nockInstance
@@ -230,9 +234,8 @@ test('Can reload versions upon task completion', async (done) => {
     .query(true)
     .reply(200, cvVersionsData);
 
-
   const {
-    getByText, queryByLabelText, getByLabelText, queryByText,
+    getByText, queryByLabelText, queryByText,
   } = renderWithRedux(
     withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
@@ -241,10 +244,6 @@ test('Can reload versions upon task completion', async (done) => {
   // Nothing will show at first, page is loading
   expect(queryByText(`Version ${firstVersion.version}`)).toBeNull();
   // Assert that the CV version and active task is now showing on the screen.
-  await patientlyWaitFor(() => {
-    expect(queryByText(`Version ${firstVersion.version}`)).toBeInTheDocument();
-    expect(getByLabelText('task_presenter')).toBeInTheDocument();
-  });
   const { results } = cvVersionsData;
   [firstVersion] = results;
 
@@ -258,15 +257,16 @@ test('Can reload versions upon task completion', async (done) => {
   assertNockRequest(taskSuccessScope);
   // Assert CV Versions API is called upon task completion
   assertNockRequest(reloadScope, done);
+  act(done);
 });
 
 test('Can open Promote Modal', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(cvVersions)
-    .times(2)
     .query(true)
     .reply(200, cvVersionsData);
+
   const cvPromoteParams = {
     id: 10, versionEnvironments: [], description: '', environment_ids: [5], force: true,
   };
@@ -307,4 +307,5 @@ test('Can open Promote Modal', async (done) => {
   assertNockRequest(promoteScope);
   // Page is refreshed
   assertNockRequest(scope, done);
+  act(done);
 });
