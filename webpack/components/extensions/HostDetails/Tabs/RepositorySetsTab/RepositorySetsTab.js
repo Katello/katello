@@ -7,10 +7,10 @@ import React, {
 
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { STATUS } from 'foremanReact/constants';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import { STATUS } from 'foremanReact/constants';
 import {
   useDispatch,
   useSelector,
@@ -54,10 +54,11 @@ import {
   getHostRepositorySets,
   setContentOverrides,
 } from './RepositorySetsActions';
-import { REPOSITORY_SETS_KEY } from './RepositorySetsConstants.js';
+import { REPOSITORY_SETS_KEY, STATUSES, STATUS_TO_PARAM, PARAM_TO_FRIENDLY_NAME } from './RepositorySetsConstants.js';
 import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
 import './RepositorySetsTab.scss';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
+import SelectableDropdown from '../../../../SelectableDropdown';
 
 const getEnabledValue = ({ enabled, enabledContentOverride }) => {
   const isOverridden = (enabledContentOverride !== null);
@@ -102,6 +103,8 @@ const RepositorySetsTab = () => {
     subscription_status: subscriptionStatus,
     content_facet_attributes: contentFacetAttributes,
   } = hostDetails;
+  const STATUS_LABEL = __('Status');
+
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
   const {
     contentViewDefault,
@@ -115,12 +118,18 @@ const RepositorySetsTab = () => {
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const dispatch = useDispatch();
-  const { searchParam, show } = useUrlParams();
+  const { searchParam, show, status: initialStatus } = useUrlParams();
+
   const toggleGroupStates = ['noLimit', 'limitToEnvironment'];
   const [noLimit, limitToEnvironment] = toggleGroupStates;
   const defaultToggleGroupState = nonLibraryHost ? limitToEnvironment : noLimit;
   const [toggleGroupState, setToggleGroupState] =
     useState(show ?? defaultToggleGroupState);
+  const [statusSelected, setStatusSelected]
+    = useState(PARAM_TO_FRIENDLY_NAME[initialStatus] ?? STATUS_LABEL);
+  const activeFilters = [statusSelected, toggleGroupState];
+  const defaultFilters = [STATUS_LABEL, defaultToggleGroupState];
+
   const [alertShowing, setAlertShowing] = useState(false);
   const emptyContentTitle = __('No repository sets to show.');
   const emptyContentBody = __('Repository sets will appear here when available.');
@@ -149,16 +158,22 @@ const RepositorySetsTab = () => {
   });
 
   const fetchItems = useCallback(
-    params => (hostId ?
-      getHostRepositorySets({
+    (params) => {
+      if (!hostId) return hostIdNotReady;
+      const modifiedParams = { ...params };
+      if (statusSelected !== STATUS_LABEL) {
+        modifiedParams.status = STATUS_TO_PARAM[statusSelected];
+      }
+      return getHostRepositorySets({
         content_access_mode_env: toggleGroupState === limitToEnvironment,
         content_access_mode_all: simpleContentAccess,
         host_id: hostId,
         ...apiSortParams,
-        ...params,
-      }) : hostIdNotReady),
+        ...modifiedParams,
+      });
+    },
     [hostId, toggleGroupState, limitToEnvironment,
-      simpleContentAccess, apiSortParams],
+      simpleContentAccess, apiSortParams, statusSelected, STATUS_LABEL],
   );
 
   const response = useSelector(state => selectAPIResponse(state, REPOSITORY_SETS_KEY));
@@ -200,6 +215,13 @@ const RepositorySetsTab = () => {
         return result;
       }),
     },
+  });
+
+  const handleStatusSelected = newType => setStatusSelected((prevType) => {
+    if (prevType === newType) {
+      return STATUS_LABEL;
+    }
+    return newType;
   });
 
   const updateOverrides = ({
@@ -250,27 +272,40 @@ const RepositorySetsTab = () => {
     </DropdownItem>,
   ];
 
-  let toggleGroup;
-  if (nonLibraryHost) {
-    toggleGroup = (
-      <ToggleGroup aria-label="Repository Set toggle">
-        <ToggleGroupItem
-          text={__('Show all')}
-          buttonId="no-limit-toggle"
-          aria-label="No limit"
-          isSelected={toggleGroupState === noLimit}
-          onChange={() => setToggleGroupState(noLimit)}
+  const toggleGroup = (
+    <Split hasGutter>
+      {nonLibraryHost &&
+        <SplitItem>
+          <ToggleGroup aria-label="Repository Set toggle">
+            <ToggleGroupItem
+              text={__('Show all')}
+              buttonId="no-limit-toggle"
+              aria-label="No limit"
+              isSelected={toggleGroupState === noLimit}
+              onChange={() => setToggleGroupState(noLimit)}
+            />
+            <ToggleGroupItem
+              text={__('Limit to environment')}
+              buttonId="limit-to-env-toggle"
+              aria-label="Limit to environment"
+              isSelected={toggleGroupState === limitToEnvironment}
+              onChange={() => setToggleGroupState(limitToEnvironment)}
+            />
+          </ToggleGroup>
+        </SplitItem>
+      }
+      <SplitItem>
+        <SelectableDropdown
+          id="status-dropdown"
+          title={STATUS_LABEL}
+          showTitle={false}
+          items={Object.values(STATUSES)}
+          selected={statusSelected}
+          setSelected={handleStatusSelected}
         />
-        <ToggleGroupItem
-          text={__('Limit to environment')}
-          buttonId="limit-to-env-toggle"
-          aria-label="Limit to environment"
-          isSelected={toggleGroupState === limitToEnvironment}
-          onChange={() => setToggleGroupState(limitToEnvironment)}
-        />
-      </ToggleGroup>
-    );
-  }
+      </SplitItem>
+    </Split>
+  );
 
   const actionButtons = (
     <Split hasGutter>
@@ -353,14 +388,15 @@ const RepositorySetsTab = () => {
             actionButtons,
             emptySearchTitle,
             emptySearchBody,
+            activeFilters,
+            defaultFilters,
           }
           }
           ouiaId="host-repository-sets-table"
           errorSearchTitle={errorSearchTitle}
           errorSearchBody={errorSearchBody}
-          activeFilters={[toggleGroupState]}
-          defaultFilters={[defaultToggleGroupState]}
-          additionalListeners={[hostId, toggleGroupState, activeSortColumn, activeSortDirection]}
+          additionalListeners={[hostId, toggleGroupState, statusSelected,
+            activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
           autocompleteEndpoint="/repository_sets/auto_complete_search"
           bookmarkController="katello_product_contents" // Katello::ProductContent.table_name
