@@ -65,6 +65,8 @@ const CVContainerImageFilterContent = ({
     __('Tag name'),
   ];
 
+  const repositoryIds = details.repository_ids;
+
   const bulkRemove = () => {
     setBulkActionOpen(false);
     const tagFilterIds =
@@ -163,7 +165,7 @@ const CVContainerImageFilterContent = ({
                 {modalOpen &&
                   <AddEditContainerTagRuleModal
                     {...{
-                      filterId, selectedFilterRuleData, onClose,
+                      filterId, selectedFilterRuleData, onClose, repositoryIds,
                     }}
                   />
                 }
@@ -189,6 +191,7 @@ CVContainerImageFilterContent.propTypes = {
   showAffectedRepos: PropTypes.bool,
   setShowAffectedRepos: PropTypes.func,
   details: PropTypes.shape({
+    repository_ids: PropTypes.arrayOf(PropTypes.number),
     permissions: PropTypes.shape({}),
   }).isRequired,
 };

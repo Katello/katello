@@ -23,6 +23,8 @@ const Search = ({
   foremanApiAutoComplete,
   bookmarkController,
   placeholder,
+  isTextInput,
+  setTextInputValue,
 }) => {
   const [items, setItems] = useState([]);
   const dispatch = useDispatch();
@@ -48,9 +50,16 @@ const Search = ({
       }
       // Checking whether the current component is mounted before state change events
       if (!mountedRef.current) return;
-      setItems(data?.data?.filter(({ error }) => !error).map(({ label }) => ({
-        text: label.trim(),
-      })));
+      switch (true) {
+      case endpoint.includes('auto_complete_arch'):
+      case endpoint.includes('auto_complete_name'):
+        setItems(data?.data?.map(label => ({ text: label.trim() })));
+        break;
+      default:
+        setItems(data?.data?.filter(({ error }) => !error).map(({ label }) => ({
+          text: label.trim(),
+        })));
+      }
     }
 
     if (autoSearchEnabled && patternfly4) {
@@ -83,6 +92,8 @@ const Search = ({
         patternfly4={patternfly4}
         autoSearchEnabled={autoSearchEnabled}
         placeholder={placeholder}
+        isTextInput={isTextInput}
+        setTextInputValue={setTextInputValue}
       />
     </div>
   );
@@ -102,6 +113,8 @@ Search.propTypes = {
   }),
   bookmarkController: PropTypes.string,
   placeholder: PropTypes.string,
+  isTextInput: PropTypes.bool,
+  setTextInputValue: PropTypes.func,
 };
 
 Search.defaultProps = {
@@ -115,6 +128,8 @@ Search.defaultProps = {
   isDisabled: undefined,
   bookmarkController: undefined,
   placeholder: undefined,
+  isTextInput: false,
+  setTextInputValue: undefined,
 };
 
 export default Search;

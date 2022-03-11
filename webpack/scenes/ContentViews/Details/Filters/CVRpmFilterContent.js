@@ -207,6 +207,7 @@ const CVRpmFilterContent = ({
                     filterId={filterId}
                     onClose={onClose}
                     selectedFilterRuleData={selectedFilterRuleData}
+                    repositoryIds={details.repository_ids}
                   />}
               </>}
           />
@@ -230,6 +231,7 @@ CVRpmFilterContent.propTypes = {
   setShowAffectedRepos: PropTypes.func.isRequired,
   details: PropTypes.shape({
     permissions: PropTypes.shape({}),
+    repository_ids: PropTypes.arrayOf(PropTypes.number),
   }).isRequired,
 };
 
