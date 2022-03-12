@@ -29,10 +29,16 @@ const hostDetails = {
       total_hosts: 1,
     },
   ],
+  subscription_facet_attributes: {
+    uuid: '123',
+  },
 };
 
 const emptyHostDetails = {
   host_collections: [],
+  subscription_facet_attributes: {
+    uuid: '123',
+  },
 };
 
 test('shows host collections and host limits when present', () => {
@@ -67,4 +73,38 @@ test('expands to show when no description provided', () => {
   queryAllByText('No description provided').forEach(element => expect(element).not.toBeVisible());
   fireEvent.click(indescribableHostCollection);
   expect(getAllByText('No description provided')[0]).toBeVisible();
+});
+
+test('shows add and remove options in kebab', () => {
+  const { queryByLabelText } = render(<HostCollectionsCard hostDetails={hostDetails} />);
+  const kebab = queryByLabelText('host_collections_bulk_actions');
+  expect(kebab).toBeInTheDocument();
+  fireEvent.click(kebab);
+
+  const add = queryByLabelText('add_host_to_collections');
+  const remove = queryByLabelText('remove_host_from_collections');
+
+  expect(add).toBeInTheDocument();
+  expect(remove).toBeInTheDocument();
+  expect(add).toHaveAttribute('aria-disabled', 'false');
+  expect(remove).toHaveAttribute('aria-disabled', 'false');
+});
+
+test('remove is disabled when no host collections present', () => {
+  const { queryByLabelText } = render(<HostCollectionsCard hostDetails={emptyHostDetails} />);
+  const kebab = queryByLabelText('host_collections_bulk_actions');
+  expect(kebab).toBeInTheDocument();
+  fireEvent.click(kebab);
+
+  const remove = queryByLabelText('remove_host_from_collections');
+  expect(remove).toBeInTheDocument();
+  expect(remove).toHaveAttribute('aria-disabled', 'true');
+});
+
+test('does not show card when host not registered', () => {
+  const { queryByText } = render(<HostCollectionsCard
+    hostDetails={{ ...emptyHostDetails, subscription_facet_attributes: undefined }}
+  />);
+  const cardTitle = queryByText('Host collections');
+  expect(cardTitle).not.toBeInTheDocument();
 });

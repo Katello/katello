@@ -4,18 +4,13 @@ import {
   get,
   put,
 } from 'foremanReact/redux/API';
+import { errorToast } from '../../../../../scenes/Tasks/helpers';
 
 import katelloApi, { foremanApi } from '../../../../../services/api';
-import { getResponseErrorMsgs } from '../../../../../utils/helpers';
 import {
   CONTENT_OVERRIDES_KEY,
   REPOSITORY_SETS_KEY,
 } from './RepositorySetsConstants';
-
-const errorToast = (error) => {
-  const message = getResponseErrorMsgs(error.response);
-  return message;
-};
 
 export const getHostRepositorySets = params => get({
   type: API_OPERATIONS.GET,

@@ -24,7 +24,7 @@ module Katello
           process_response(:object => @host)
         end
 
-        api :PUT, "/hosts/:host_id/host_collections", N_("Alter a hosts host collections")
+        api :PUT, "/hosts/:host_id/host_collections", N_("Alter a host's host collections")
         param :host_id, :number, :required => true, :desc => N_("The id of the host to alter")
         param :host_collection_ids, Array, :required => true, :desc => N_("List of host collection ids to update")
         def host_collections
