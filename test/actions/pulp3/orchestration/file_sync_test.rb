@@ -47,7 +47,7 @@ module ::Actions::Pulp3
           @primary)
 
       old_page_size = Setting[:bulk_load_size]
-      ::Setting::Content.find_by(name: "bulk_load_size").update(value: 10)
+      ::Setting[:bulk_load_size] = 10
 
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
@@ -59,7 +59,7 @@ module ::Actions::Pulp3
         @repo.index_content
         assert_equal 250, @repo.repository_file_units.count
       ensure
-        ::Setting::Content.find_by(name: "bulk_load_size").update(value: old_page_size)
+        ::Setting[:bulk_load_size] = old_page_size
       end
     end
 

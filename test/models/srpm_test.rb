@@ -85,7 +85,7 @@ module Katello
     end
 
     def teardown
-      ::Setting::Content.find_by(name: "bulk_load_size").update(value: @original_bulk_load_size)
+      ::Setting[:bulk_load_size] = @original_bulk_load_size
     end
   end
 

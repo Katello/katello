@@ -8,20 +8,19 @@ module Katello
     end
 
     def test_default_setting_accepts_proxy_name
-      setting = Setting.where(name: @name).first
       proxy = FactoryBot.create(:http_proxy)
-      setting.value = proxy.name
+      setting = Foreman.settings.set_user_value(@name, proxy.name)
       assert setting.valid?
     end
 
     def test_collection_children_empty_when_no_proxies_defined
-      children = Setting.find_by(name: @name).select_collection.last[:children]
+      children = Foreman.settings.find(@name).select_values.last[:children]
       assert_empty children
     end
 
     def test_collection_includes_defined_proxy
       proxy = FactoryBot.create(:http_proxy)
-      children = Setting.find_by(name: @name).select_collection.last[:children]
+      children = Foreman.settings.find(@name).select_values.last[:children]
       assert_equal children.first[:value], proxy.name
     end
 

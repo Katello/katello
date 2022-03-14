@@ -194,7 +194,7 @@ module Katello
   class RpmImportTest < RpmTestBase
     def setup
       super
-      @original_bulk_load_size = Setting[:bulk_load_size]
+      @original_bulk_load_size = ::Setting[:bulk_load_size]
     end
 
     def random_json(count)
@@ -245,7 +245,7 @@ module Katello
     end
 
     def teardown
-      ::Setting::Content.find_by(name: "bulk_load_size").update(value: @original_bulk_load_size)
+      ::Setting[:bulk_load_size] = @original_bulk_load_size
     end
   end
 
