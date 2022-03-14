@@ -1,42 +1,43 @@
-import {
-  selectAPIStatus,
-  selectAPIError,
-  selectAPIResponse,
-} from 'foremanReact/redux/API/APISelectors';
 import { STATUS } from 'foremanReact/constants';
 import {
+  selectAPIError,
+  selectAPIResponse,
+  selectAPIStatus,
+} from 'foremanReact/redux/API/APISelectors';
+import { pollTaskKey } from '../../Tasks/helpers';
+import {
+  ACTIVATION_KEY_KEY,
+  ADD_CONTENT_VIEW_FILTER_RULE,
+  bulkRemoveVersionKey,
+  CREATE_CONTENT_VIEW_FILTER_KEY,
+  cvAddComponentKey,
+  cvDetailsComponentKey,
+  cvDetailsFiltersKey,
+  cvDetailsHistoryKey,
   cvDetailsKey,
   cvDetailsRepoKey,
-  cvDetailsFiltersKey,
-  cvFilterDetailsKey,
-  cvFilterPackageGroupsKey,
-  cvFilterModuleStreamKey,
-  cvFilterErratumIDKey,
-  cvDetailsHistoryKey,
-  cvFilterRulesKey,
   cvDetailsVersionKey,
-  REPOSITORY_TYPES,
-  cvDetailsComponentKey,
-  cvAddComponentKey,
-  cvRemoveComponentKey,
-  CREATE_CONTENT_VIEW_FILTER_KEY,
-  ADD_CONTENT_VIEW_FILTER_RULE,
-  ACTIVATION_KEY_KEY,
-  HOSTS_KEY,
+  cvFilterDetailsKey,
+  cvFilterErratumIDKey,
+  cvFilterModuleStreamKey,
+  cvFilterPackageGroupsKey,
   cvFilterRepoKey,
-  cvVersionDetailsKey,
+  cvFilterRulesKey,
+  cvRemoveComponentKey,
   cvRemoveVersionKey,
-  RPM_PACKAGES_CONTENT,
-  RPM_PACKAGE_GROUPS_CONTENT,
-  REPOSITORY_CONTENT,
-  FILE_CONTENT,
-  ERRATA_CONTENT,
-  MODULE_STREAMS_CONTENT,
+  cvVersionDetailsKey,
   DEB_PACKAGES_CONTENT,
   DOCKER_TAGS_CONTENT,
+  ERRATA_CONTENT,
+  FILE_CONTENT,
   generatedContentKey,
+  HOSTS_KEY,
+  MODULE_STREAMS_CONTENT,
+  REPOSITORY_CONTENT,
+  REPOSITORY_TYPES,
+  RPM_PACKAGE_GROUPS_CONTENT,
+  RPM_PACKAGES_CONTENT,
 } from '../ContentViewsConstants';
-import { pollTaskKey } from '../../Tasks/helpers';
 
 export const selectCVDetails = (state, cvId) =>
   selectAPIResponse(state, cvDetailsKey(cvId)) || {};
@@ -274,6 +275,15 @@ export const selectCVHosts = state =>
 
 export const selectCVHostsStatus = state =>
   selectAPIStatus(state, HOSTS_KEY) || STATUS.PENDING;
+
+export const selectBulkRemoveCVVersionResponse = (state, cvId) =>
+  selectAPIResponse(state, bulkRemoveVersionKey(cvId)) || {};
+
+export const selectBulkRemoveCVVersionStatus = (state, cvId) =>
+  selectAPIStatus(state, bulkRemoveVersionKey(cvId)) || STATUS.PENDING;
+
+export const selectBulkRemoveCVVersionError = (state, cvId) =>
+  selectAPIError(state, bulkRemoveVersionKey(cvId));
 
 export const selectRemoveCVVersionResponse = (state, versionId, versionEnvironments) =>
   selectAPIResponse(state, cvRemoveVersionKey(versionId, versionEnvironments)) || {};

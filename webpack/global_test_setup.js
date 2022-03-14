@@ -1,4 +1,6 @@
 // runs before each test to make sure console.error output will
+import nock from 'nock';
+
 // fail a test (i.e. default PropType missing). Check the error
 // output and traceback for actual error.
 global.console.error = (error, stack) => {
@@ -14,3 +16,12 @@ afterAll(() => {
   jest.resetModules();
   if (global.gc) global.gc();
 });
+
+beforeEach(() => {
+  if (!nock.isActive()) { nock.activate(); }
+});
+
+afterEach(() => {
+  nock.restore();
+});
+

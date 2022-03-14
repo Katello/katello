@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { InProgressIcon } from '@patternfly/react-icons';
 import PropTypes from 'prop-types';
-import { Progress,
+import {
+  Progress,
   ProgressSize,
   ProgressMeasureLocation,
-  ProgressVariant } from '@patternfly/react-core';
+  ProgressVariant,
+} from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { stopPollingTask, toastTaskFinished } from '../../../Tasks/TaskActions';
 import { selectTaskPoll, selectTaskPollStatus } from '../../Details/ContentViewDetailSelectors';

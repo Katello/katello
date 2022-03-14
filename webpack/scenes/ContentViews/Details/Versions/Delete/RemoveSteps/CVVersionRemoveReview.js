@@ -26,7 +26,7 @@ const CVVersionRemoveReview = () => {
 
   return (
     <>
-      <WizardHeader title={__('Review Details')} />
+      <WizardHeader title={__('Review details')} />
       {!alertDismissed && (deleteFlow || removeDeletionFlow) &&
         <Alert
           variant="warning"

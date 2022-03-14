@@ -309,7 +309,6 @@ export const ErrataTab = () => {
               isSelected={toggleGroupState === ALL}
               onChange={() => setToggleGroupState(ALL)}
             />
-
             <ToggleGroupItem
               text={__('Installable')}
               buttonId="installableToggle"

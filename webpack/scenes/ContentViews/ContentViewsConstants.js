@@ -43,6 +43,7 @@ export const cvDetailsHistoryKey = cvId => `${CONTENT_VIEWS_KEY}_HISTORIES_${cvI
 export const cvFilterRulesKey = filterId => `CONTENT_VIEW_FILTER_${filterId}_RULES`;
 export const cvDetailsComponentKey = cvId => `${CONTENT_VIEWS_KEY}_COMPONENTS_${cvId}`;
 export const cvDetailsVersionKey = cvId => `${CONTENT_VIEWS_KEY}_VERSIONS_${cvId}`;
+export const bulkRemoveVersionKey = cvId => `BULK_REMOVE_CV_VERSION_${cvId}`;
 export const cvRemoveVersionKey = (versionId, versionEnvironments) => `REMOVE_CV_VERSION_${versionId}_${versionEnvironments.length}`;
 export const cvVersionPromoteKey = (versionId, environmentIds) => `PROMOTE_CONTENT_VIEW_VERSION_${versionId}_${environmentIds.length}`;
 export const cvVersionDetailsKey = (cvId, versionId) => `CONTENT_VIEW_VERSION_DETAILS_${cvId}_${versionId}`;
