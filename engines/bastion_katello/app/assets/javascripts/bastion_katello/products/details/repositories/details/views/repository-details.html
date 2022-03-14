@@ -78,6 +78,12 @@
                  tooltip-placement="left"
                  tooltip-append-to-body="true">
               </i>
+                <i class="fa fa-question-circle" ng-switch-when="setting"
+                   uib-tooltip="{{ 'Turn on Setting > Content > Allow deleting repositories in published content views' | translate }}"
+                   tooltip-animation="false"
+                   tooltip-placement="left"
+                   tooltip-append-to-body="true">
+              </i>
             </span>
           </span>
         </li>
@@ -113,9 +119,21 @@
                     </tbody>
                 </table>
             </div>
-            <span translate>Are you sure you want to remove repository {{ repositoryWrapper.repository.name }}?</span>
+            <input type="checkbox"
+                   ng-show="repositoryWrapper.repository.content_view_versions.length !== 0"
+                   ng-model="repositoryWrapper.forceDelete"
+                   ng-change="updateForceDelete()"/>
+            <span translate> Are you sure you want to remove repository {{ repositoryWrapper.repository.name }} from all content views?</span>
         </div>
-      </div>
+          <div data-block="modal-footer">
+            <span data-block="modal-confirm-button">
+              <button class="btn btn-danger" ng-disabled="repositoryWrapper.repository.content_view_versions.length !== 0 && !repositoryWrapper.forceDelete" ng-click="ok()">
+                <span translate>Delete</span>
+              </button>
+            </span>
+            <button class="btn btn-default" ng-click="cancel()" translate>Cancel</button>
+          </div>
+        </div>
     </span>
   </div>
 

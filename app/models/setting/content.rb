@@ -158,7 +158,10 @@ class Setting::Content < Setting
                N_('Upload profiles without Dynflow')),
       self.set('orphan_protection_time', N_('Time in minutes to consider orphan content as orphaned.'), 1440, N_('Orphaned Content Protection Time')),
       self.set('remote_execution_prefer_registered_through_proxy', N_('Prefer using a proxy to which a host is registered when using remote execution'), false,
-               N_('Prefer registered through proxy for remote execution'))
+               N_('Prefer registered through proxy for remote execution')),
+      self.set('delete_repo_across_cv', N_("If this is enabled, repositories can be deleted even when they belong to published "\
+                 "content views. The deleted repository will be removed from all content view versions."),
+               true, N_('Allow deleting repositories in published content views'))
     ]
   end
 
