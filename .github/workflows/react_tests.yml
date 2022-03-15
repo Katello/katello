@@ -28,7 +28,7 @@ jobs:
       with:
         repository: theforeman/foreman
         path: ${{ github.workspace }}/foreman # checkout Foreman and Katello as siblings, same as dev env
-        ref: develop
+        ref: 3.1-stable
     - name: Install Foreman dependencies
       run:  npm i
       working-directory: ${{ github.workspace }}/foreman
