@@ -5,6 +5,8 @@ module ::Actions::Katello::ContentViewVersion
     include Katello::Pulp3Support
 
     def setup
+      Setting[:ssl_certificate] = '/etc/foreman/client_cert.pem'
+      Setting[:ssl_priv_key] = '/etc/foreman/client_key.pem'
       @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')

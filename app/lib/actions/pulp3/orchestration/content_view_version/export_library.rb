@@ -6,7 +6,8 @@ module Actions
           def plan(organization, destination_server: nil,
                                  chunk_size: nil,
                                  from_history: nil,
-                                 fail_on_missing_content: false)
+                                 fail_on_missing_content: false,
+                                 format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
             action_subject(organization)
             validate_repositories_immediate!(organization) if fail_on_missing_content
 
@@ -24,7 +25,8 @@ module Actions
                                           chunk_size: chunk_size,
                                           from_history: from_history,
                                           validate_incremental: false,
-                                          fail_on_missing_content: fail_on_missing_content)
+                                          fail_on_missing_content: fail_on_missing_content,
+                                          format: format)
               plan_self(export_action_output: export_action.output)
             end
           end

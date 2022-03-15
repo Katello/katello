@@ -3,16 +3,31 @@ module Katello
     module ContentViewVersion
       class Export
         include ImportExportCommon
-        attr_reader :smart_proxy, :content_view_version, :destination_server, :from_content_view_version
+        SYNCABLE = "syncable".freeze
+        IMPORTABLE = "importable".freeze
+        FORMATS = [SYNCABLE, IMPORTABLE].freeze
+
+        attr_reader :smart_proxy, :content_view_version, :destination_server, :from_content_view_version, :repository, :base_path
+        def self.create(options)
+          if options.delete(:format) == SYNCABLE
+            SyncableFormatExport.new(options)
+          else
+            self.new(options)
+          end
+        end
 
         def initialize(smart_proxy:,
                         content_view_version: nil,
                         destination_server: nil,
-                        from_content_view_version: nil)
+                        from_content_view_version: nil,
+                        repository: nil,
+                        base_path: nil)
           @smart_proxy = smart_proxy
           @content_view_version = content_view_version
           @destination_server = destination_server
           @from_content_view_version = from_content_view_version
+          @repository = repository
+          @base_path = base_path
         end
 
         def repository_hrefs
@@ -37,21 +52,27 @@ module Katello
         end
 
         def generate_exporter_path
-          export_path = "#{content_view_version.content_view}/#{content_view_version.version}/#{destination_server}/#{date_dir}".gsub(/\s/, '_')
-          "#{content_view_version.organization.label}/#{export_path}"
+          return base_path if base_path
+          export_path = "#{content_view_version.content_view}/#{content_view_version.version}/"
+          export_path += "#{destination_server}/" unless destination_server.blank?
+          export_path += "#{date_dir}".gsub(/\s/, '_')
+          @base_path = "#{Setting['pulpcore_export_destination']}/#{content_view_version.organization.label}/#{export_path}"
         end
 
         def date_dir
           DateTime.now.to_s.gsub(/\W/, '-')
         end
 
-        def create_exporter(export_base_dir: Setting['pulpcore_export_destination'])
-          api.exporter_api.create(name: generate_id(content_view_version),
-                                  path: "#{export_base_dir}/#{generate_exporter_path}",
-                                  repositories: repository_hrefs)
+        def create_exporter
+          exporter_api = api.exporter_api
+          options = { name: generate_id(content_view_version), path: generate_exporter_path }
+          options[:repositories] = repository_hrefs
+
+          exporter_api.create(options)
         end
 
-        def create_export(exporter_href, chunk_size: nil)
+        def create_export(exporter_data, chunk_size: nil)
+          exporter_href = exporter_data[:pulp_href]
           options = { versions: version_hrefs }
           options[:chunk_size] = "#{chunk_size}GB" if chunk_size
           if from_content_view_version
@@ -77,14 +98,16 @@ module Katello
             options[:start_versions] = start_versions
             options[:full] = 'false'
           end
-          [api.export_api.create(exporter_href, options)]
+          export_api = api.export_api
+          [export_api.create(exporter_href, options)]
         end
 
         def fetch_export(exporter_href)
           api.export_api.list(exporter_href).results.first
         end
 
-        def destroy_exporter(exporter_href)
+        def destroy_exporter(exporter_data)
+          exporter_href = exporter_data[:pulp_href]
           export_data = fetch_export(exporter_href)
           api.exporter_api.partial_update(exporter_href, :last_export => nil)
           api.export_api.delete(export_data.pulp_href) unless export_data.blank?
@@ -160,6 +183,10 @@ module Katello
           ::Katello::ContentView.where(name: name,
                                        organization: organization,
                                        generated_for: generated_for).send(select_method)
+        end
+
+        def format
+          is_a?(SyncableFormatExport) ? SYNCABLE : IMPORTABLE
         end
 
         def self.find_library_export_view(create_by_default: false,
