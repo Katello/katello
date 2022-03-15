@@ -111,6 +111,7 @@ describe('Controller: DiscoveryController', function() {
 
         $scope.discover();
 
+        expect($scope.discovery.contentType === 'yum');
         expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'http://fake/', 'content_type': 'yum', upstream_username: undefined, upstream_password: undefined, search: undefined},
                                                                jasmine.any(Function));
     });
