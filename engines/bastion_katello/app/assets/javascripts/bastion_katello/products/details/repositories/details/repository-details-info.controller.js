@@ -246,6 +246,9 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 $scope.genericRemoteOptions = RepositoryTypesService.getAttribute($scope.repository, "generic_remote_options");
                 if ($scope.genericRemoteOptions && $scope.genericRemoteOptions !== []) {
                     remOptions = angular.fromJson($scope.repository.generic_remote_options);
+                    if (remOptions === null) {
+                        return null;
+                    }
                     Object.keys(remOptions).forEach(function(key) {
                         if (remOptions[key]) {
                             optionIndex = $scope.genericRemoteOptions.map(function(option) {

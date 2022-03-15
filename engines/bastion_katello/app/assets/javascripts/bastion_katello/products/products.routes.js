@@ -43,6 +43,7 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
 
     $stateProvider.state("product-discovery", {
         url: '/products/discovery',
+        controller: 'DiscoveryController',
         templateUrl: 'products/discovery/views/discovery-base.html',
         permission: 'edit_products',
         redirectTo: 'product-discovery.scan'

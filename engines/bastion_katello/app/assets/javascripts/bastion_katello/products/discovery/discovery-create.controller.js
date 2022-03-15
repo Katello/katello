@@ -37,7 +37,7 @@ angular.module('Bastion.products').controller('DiscoveryCreateController',
                 'content_type': repo.contentType,
                 'product_id': $scope.createRepoChoices.existingProductId,
                 unprotected: $scope.createRepoChoices.unprotected,
-                'verify_ssl': $scope.createRepoChoices.verifySsl,
+                'verify_ssl_on_sync': $scope.createRepoChoices.verifySsl,
                 'upstream_username': $scope.createRepoChoices.upstreamUsername,
                 'upstream_password': $scope.createRepoChoices.upstreamPassword
             };
