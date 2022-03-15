@@ -286,6 +286,7 @@ export const PackagesTab = () => {
                   ]}
                   isDisabled={disableUpgrade()}
                   splitButtonVariant="action"
+                  toggleVariant="primary"
                   onToggle={onActionToggle}
                 />
               }
@@ -306,7 +307,7 @@ export const PackagesTab = () => {
     </Split>
   );
 
-  const toggleGroup = (
+  const statusFilters = (
     <Split hasGutter>
       <SplitItem>
         <SelectableDropdown
@@ -339,7 +340,7 @@ export const PackagesTab = () => {
             actionButtons,
             searchQuery,
             updateSearchQuery,
-            toggleGroup,
+            toggleGroup: statusFilters,
             selectedCount,
             selectNone,
             areAllRowsSelected,

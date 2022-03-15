@@ -1,7 +1,7 @@
 import { API_OPERATIONS, post } from 'foremanReact/redux/API';
 import { REX_JOB_INVOCATIONS_KEY, REX_FEATURES } from './RemoteExecutionConstants';
 import { foremanApi } from '../../../../services/api';
-import { errorToast, renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
+import { errorToast, renderRexJobStartedToast } from '../../../../scenes/Tasks/helpers';
 import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
 import { TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
 import { PACKAGE_SEARCH_QUERY } from './PackagesTab/YumInstallablePackagesConstants';
@@ -74,15 +74,14 @@ const katelloHostErrataInstallParams = ({
   feature: REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH,
 });
 
+const showRexToast = response => renderRexJobStartedToast(response.data);
+
 export const installPackage = ({ hostname, packageName }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackageInstallParams({ hostname, packageName }),
-  handleSuccess: response => renderTaskStartedToast({
-    humanized: { action: `Install ${packageName} on ${hostname}` },
-    id: response?.data?.dynflow_task?.id,
-  }),
+  handleSuccess: showRexToast,
   errorToast: error => errorToast(error),
 });
 
@@ -91,10 +90,7 @@ export const installPackageBySearch = ({ hostname, search }) => post({
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackageInstallBySearchParams({ hostname, search }),
-  handleSuccess: response => renderTaskStartedToast({
-    humanized: { action: `Install packages on ${hostname}` },
-    id: response?.data?.dynflow_task?.id,
-  }),
+  handleSuccess: showRexToast,
   errorToast: error => errorToast(error),
 });
 
@@ -103,10 +99,7 @@ export const removePackage = ({ hostname, packageName }) => post({
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackageRemoveParams({ hostname, packageName }),
-  handleSuccess: response => renderTaskStartedToast({
-    humanized: { action: `Remove ${packageName} on ${hostname}` },
-    id: response?.data?.dynflow_task?.id,
-  }),
+  handleSuccess: showRexToast,
   errorToast: error => errorToast(error),
 });
 
@@ -115,10 +108,7 @@ export const removePackages = ({ hostname, search }) => post({
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackagesRemoveParams({ hostname, search }),
-  handleSuccess: response => renderTaskStartedToast({
-    humanized: { action: `Remove packages on ${hostname}` },
-    id: response?.data?.dynflow_task?.id,
-  }),
+  handleSuccess: showRexToast,
   errorToast: error => errorToast(error),
 });
 
@@ -127,10 +117,7 @@ export const updatePackage = ({ hostname, packageName }) => post({
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackageUpdateParams({ hostname, packageName }),
-  handleSuccess: response => renderTaskStartedToast({
-    humanized: { action: `Update ${packageName} on ${hostname}` },
-    id: response?.data?.dynflow_task?.id,
-  }),
+  handleSuccess: showRexToast,
   errorToast: error => errorToast(error),
 });
 
@@ -139,10 +126,7 @@ export const updatePackages = ({ hostname, search }) => post({
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackagesUpdateParams({ hostname, search }),
-  handleSuccess: response => renderTaskStartedToast({
-    humanized: { action: `Update on ${hostname}` },
-    id: response?.data?.dynflow_task?.id,
-  }),
+  handleSuccess: showRexToast,
   errorToast: error => errorToast(error),
 });
 
@@ -151,10 +135,7 @@ export const resolveTraces = ({ hostname, search }) => post({
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloTracerResolveParams({ hostname, search }),
-  handleSuccess: response => renderTaskStartedToast({
-    humanized: { action: `Resolve traces on ${hostname}` },
-    id: response?.data?.dynflow_task?.id,
-  }),
+  handleSuccess: showRexToast,
   errorToast: error => errorToast(error),
 });
 
@@ -167,9 +148,6 @@ export const installErrata = ({
   params: katelloHostErrataInstallParams({
     hostname, search,
   }),
-  handleSuccess: response => renderTaskStartedToast({
-    humanized: { action: `Install errata on ${hostname}` },
-    id: response?.data?.dynflow_task?.id,
-  }),
+  handleSuccess: showRexToast,
   errorToast: error => errorToast(error),
 });

@@ -64,7 +64,6 @@ const InstallDropdown = ({
       onSelect={onActionSelect}
       toggle={
         <DropdownToggle
-          isPrimary
           isDisabled={isDisabled}
           splitButtonItems={[
             <DropdownToggleAction key="install" onClick={defaultRemoteAction}>
@@ -72,6 +71,7 @@ const InstallDropdown = ({
             </DropdownToggleAction>,
           ]}
           splitButtonVariant="action"
+          toggleVariant="primary"
           toggleIndicator={isActionOpen ? CaretUpIcon : CaretDownIcon}
           onToggle={onActionToggle}
         />
