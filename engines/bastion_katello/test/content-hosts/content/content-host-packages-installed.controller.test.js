@@ -58,6 +58,12 @@ describe('Controller: ContentHostPackagesInstalledController', function() {
         expect($scope.table).toBeTruthy();
     });
 
+    it("verifies controller name", function() {
+        expect($scope.controllerName).toBeTruthy();
+        expect($scope.controllerName).toBe("katello_host_installed_packages");
+    });
+    
+
     it("performs a selected package removal", function() {
         var mockPackage, mockPackageClone;
         mockPackage = {name: 'foo', version: '3', release: '14', arch: 'noarch'};

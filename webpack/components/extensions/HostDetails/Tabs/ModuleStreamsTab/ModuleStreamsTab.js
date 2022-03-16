@@ -191,6 +191,7 @@ export const ModuleStreamsTab = () => {
           }}
           additionalListeners={[hostId, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
+          bookmarkController="katello_host_available_module_streams"
           autocompleteEndpoint={`/hosts/${hostId}/module_streams/auto_complete_search`}
           foremanApiAutoComplete
           rowsCount={results?.length}

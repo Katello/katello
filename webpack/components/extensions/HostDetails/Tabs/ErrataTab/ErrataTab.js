@@ -350,6 +350,7 @@ export const ErrataTab = () => {
             hostId, toggleGroupState, errataTypeSelected,
             errataSeveritySelected, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
+          bookmarkController="katello_errata"
           autocompleteEndpoint={`/hosts/${hostId}/errata/auto_complete_search`}
           foremanApiAutoComplete
           rowsCount={results?.length}

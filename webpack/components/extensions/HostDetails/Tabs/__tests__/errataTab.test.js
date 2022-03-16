@@ -8,6 +8,7 @@ import { REX_FEATURES } from '../RemoteExecutionConstants';
 import { ErrataTab } from '../ErrataTab/ErrataTab.js';
 import mockErrataData from './errata.fixtures.json';
 import mockResolveErrataTask from './resolveErrata.fixtures.json';
+import mockBookmarkData from './bookmarks.fixtures.json';
 
 const contentFacetAttributes = {
   id: 11,
@@ -16,6 +17,8 @@ const contentFacetAttributes = {
   lifecycle_environment_library: false,
 };
 const hostName = 'foo.example.com';
+
+const errataBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_errata');
 
 const renderOptions = (facetAttributes = contentFacetAttributes) => ({
   apiNamespace: HOST_ERRATA_KEY,
@@ -84,10 +87,12 @@ let firstErrata;
 let thirdErrata;
 let searchDelayScope;
 let autoSearchScope;
+let bookmarkScope;
 
 beforeEach(() => {
   const { results } = mockErrataData;
   [firstErrata, , thirdErrata] = results;
+  bookmarkScope = nockInstance.get(errataBookmarks).reply(200, mockBookmarkData);
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
   autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 });
@@ -95,6 +100,7 @@ beforeEach(() => {
 afterEach(() => {
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
+  assertNockRequest(bookmarkScope);
 });
 
 test('Can call API for errata and show on screen on page load', async (done) => {

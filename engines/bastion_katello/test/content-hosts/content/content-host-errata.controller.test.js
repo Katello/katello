@@ -98,6 +98,11 @@ describe('Controller: ContentHostErrataController', function() {
         expect($scope.table).toBeTruthy();
     });
 
+    it("verifies controller name", function() {
+        expect($scope.controllerName).toBeTruthy();
+        expect($scope.controllerName).toBe("katello_errata");
+    });
+
     it("provide a way to apply errata", function() {
         var bulk_errata_ids = angular.toJson({included: { ids: [mockErratum.errata_id], params: {} }});
 

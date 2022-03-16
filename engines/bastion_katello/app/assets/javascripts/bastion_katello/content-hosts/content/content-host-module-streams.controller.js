@@ -21,6 +21,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsCont
         $scope.working = false;
 
         $scope.nutupaneParams = { id: $scope.$stateParams.hostId };
+        $scope.controllerName = 'katello_host_available_module_streams';
 
         $scope.moduleStreamsNutupane = new Nutupane(HostModuleStream, $scope.nutupaneParams);
 
