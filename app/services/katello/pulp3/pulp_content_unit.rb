@@ -128,8 +128,13 @@ module Katello
 
       def self.find_duplicate_unit(repository, unit_type_id, file, checksum)
         filter_label = :sha256
+        path_label = :relative_path
         if unit_type_id == 'ostree_ref'
           filter_label = :checksum
+        end
+        if unit_type_id == 'rpm'
+          filter_label = :pkg_id
+          path_label = :location_href
         end
         content_backend_service = SmartProxy.pulp_primary.content_service(unit_type_id)
         duplicates_allowed = ::Katello::RepositoryTypeManager.find_content_type(unit_type_id).try(:duplicates_allowed)
@@ -144,7 +149,7 @@ module Katello
         else
           duplicate_sha_path_content_list = content_backend_service.content_api.list(
             filter_label => checksum,
-            "relative_path": file[:filename])
+            path_label => file[:filename])
         end
         duplicate_sha_path_content_list
       end
