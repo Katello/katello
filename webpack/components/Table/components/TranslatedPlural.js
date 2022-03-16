@@ -3,8 +3,9 @@ import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 
 // a defaultMessage like
-// "{errataTotal, plural, =0 {No errata} one {# erratum} other {# errata}}"
+// "{count, plural, =0 {No errata} one {# erratum} other {# errata}}"
 // will give us properly translated pluralized strings!
+// see https://formatjs.io/docs/react-intl/components/#message-syntax
 export const TranslatedPlural = ({
   count, singular,
   plural = `${singular}s`,
@@ -35,8 +36,10 @@ TranslatedPlural.defaultProps = {
   zeroMsg: undefined,
 };
 
-export const TranslatedAnchor = ({ href, style, ...props }) => (
-  <a href={href} style={style} >
+export const TranslatedAnchor = ({
+  href, style, ariaLabel, ...props
+}) => (
+  <a href={href} style={style} aria-label={ariaLabel}>
     <TranslatedPlural
       {...props}
     />
@@ -46,8 +49,9 @@ export const TranslatedAnchor = ({ href, style, ...props }) => (
 TranslatedAnchor.propTypes = {
   href: PropTypes.string.isRequired,
   style: PropTypes.shape({}),
+  ariaLabel: PropTypes.string.isRequired,
 };
 
 TranslatedAnchor.defaultProps = {
-  style: { marginLeft: 'initial' },
+  style: undefined,
 };

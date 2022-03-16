@@ -37,6 +37,7 @@ export const ErrataSummary = ({ type, count }) => {
         plural="security advisories"
         singular="security advisory"
         zeroMsg="# security advisories"
+        ariaLabel={`${count} security advisories`}
       />
     );
     break;
@@ -45,7 +46,6 @@ export const ErrataSummary = ({ type, count }) => {
     label = __('Bugfix');
     ErrataIcon = BugIcon;
     color = '#8bc1f7';
-    // url = <a href="#/Content/errata?type=bugfix"> {count} {plural} </a>;
     url = (
       <TranslatedAnchor
         id="errata-card-bugfix-count"
@@ -55,6 +55,7 @@ export const ErrataSummary = ({ type, count }) => {
         plural="bug fixes"
         singular="bug fix"
         zeroMsg="# bug fixes"
+        ariaLabel={`${count} bug fixes`}
       />
     );
     break;
@@ -63,7 +64,6 @@ export const ErrataSummary = ({ type, count }) => {
     label = __('Enhancement');
     ErrataIcon = EnhancementIcon;
     color = '#002f5d';
-    // url = <a href="#/Content/errata?type=enhancement"> {count} {plural} </a>;
     url = (
       <TranslatedAnchor
         id="errata-card-enhancement-count"
@@ -73,6 +73,7 @@ export const ErrataSummary = ({ type, count }) => {
         plural="enhancements"
         singular="enhancement"
         zeroMsg="# enhancements"
+        ariaLabel={`${count} enhancements`}
       />
     );
     break;

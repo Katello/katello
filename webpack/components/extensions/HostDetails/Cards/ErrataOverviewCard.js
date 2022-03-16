@@ -41,11 +41,11 @@ function HostInstallableErrata({
             <FlexItem>
               <TranslatedAnchor
                 id="errata-card-total-count"
-                style={{ marginLeft: '0.4rem' }}
                 href="#/Content/errata"
                 count={errataTotal}
                 plural="errata"
                 singular="erratum"
+                ariaLabel={`${errataTotal} total errata`}
               />
             </FlexItem>
             <Flex flexWrap={{ xl: 'nowrap' }} direction="row" alignItems={{ default: 'alignItemsCenter' }}>

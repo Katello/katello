@@ -15,7 +15,7 @@ describe('Without errata', () => {
     nock.cleanAll();
   });
 
-  test('does not show piechart when there are 0 errata', () => {
+  test('shows zero counts when there are 0 errata', () => {
     const hostDetails = {
       ...baseHostDetails,
       content_facet_attributes: {
@@ -28,10 +28,13 @@ describe('Without errata', () => {
       },
     };
     /* eslint-disable max-len */
-    const { queryByLabelText, getByText } = render(<ErrataOverviewCard hostDetails={hostDetails} />);
+    const { queryByLabelText, getByLabelText } = render(<ErrataOverviewCard hostDetails={hostDetails} />);
     /* eslint-enable max-len */
     expect(queryByLabelText('errataChart')).not.toBeInTheDocument();
-    expect(getByText('0 errata')).toBeInTheDocument();
+    expect(getByLabelText('0 total errata')).toBeInTheDocument();
+    expect(getByLabelText('0 security advisories')).toBeInTheDocument();
+    expect(getByLabelText('0 bug fixes')).toBeInTheDocument();
+    expect(getByLabelText('0 enhancements')).toBeInTheDocument();
   });
 
   test('does not show errata card when host not registered', () => {
@@ -60,7 +63,7 @@ describe('With errata', () => {
     nock.cleanAll();
   });
 
-  test('shows piechart when there are errata', () => {
+  test('shows links when there are errata', () => {
     const hostDetails = {
       ...baseHostDetails,
       content_facet_attributes: {
@@ -72,12 +75,13 @@ describe('With errata', () => {
         },
       },
     };
-    const { getByText, container } = render(<ErrataOverviewCard hostDetails={hostDetails} />);
+    const { getByLabelText, container } = render(<ErrataOverviewCard hostDetails={hostDetails} />);
     expect(container.getElementsByClassName('erratachart')).toHaveLength(1);
     expect(container.getElementsByClassName('erratalegend')).toHaveLength(1);
-    expect(getByText('60 errata')).toBeInTheDocument();
-    expect(getByText('30 security advisories')).toBeInTheDocument();
-    expect(getByText('10 bug fixes')).toBeInTheDocument();
-    expect(getByText('20 enhancements')).toBeInTheDocument();
+
+    expect(getByLabelText('60 total errata')).toBeInTheDocument();
+    expect(getByLabelText('30 security advisories')).toBeInTheDocument();
+    expect(getByLabelText('20 enhancements')).toBeInTheDocument();
+    expect(getByLabelText('10 bug fixes')).toBeInTheDocument();
   });
 });
