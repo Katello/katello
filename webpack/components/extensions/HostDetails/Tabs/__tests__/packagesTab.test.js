@@ -7,6 +7,7 @@ import { PackagesTab } from '../PackagesTab/PackagesTab.js';
 import mockPackagesData from './packages.fixtures.json';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
 import * as hooks from '../../../../Table/TableHooks';
+import mockBookmarkData from './bookmarks.fixtures.json';
 
 const contentFacetAttributes = {
   id: 11,
@@ -16,6 +17,8 @@ const contentFacetAttributes = {
 };
 
 const hostname = 'test-host.example.com';
+const packageBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_host_installed_packages');
+
 const renderOptions = (facetAttributes = contentFacetAttributes) => ({
   apiNamespace: HOST_PACKAGES_KEY,
   initialState: {
@@ -52,10 +55,12 @@ let firstPackage;
 let secondPackage;
 let searchDelayScope;
 let autoSearchScope;
+let bookmarkScope;
 
 beforeEach(() => {
   const { results } = mockPackagesData;
   [firstPackage, secondPackage] = results;
+  bookmarkScope = nockInstance.get(packageBookmarks).reply(200, mockBookmarkData);
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
   autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 });
@@ -63,6 +68,7 @@ beforeEach(() => {
 afterEach(() => {
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
+  assertNockRequest(bookmarkScope);
 });
 
 test('Can call API for packages and show on screen on page load', async (done) => {

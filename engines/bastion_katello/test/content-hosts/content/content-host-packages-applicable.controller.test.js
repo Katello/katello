@@ -51,6 +51,11 @@ describe('Controller: ContentHostPackagesApplicableController', function() {
         expect($scope.table).toBeTruthy();
     });
 
+    it("verifies controller name", function() {
+        expect($scope.controllerName).toBeTruthy();
+        expect($scope.controllerName).toBe("katello_erratum_packages");
+    });
+
     it("formats selected items", function() {
         expect($scope.getSelectedPackages()[0]).toBe("foo-3-14.noarch");
     });

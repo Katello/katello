@@ -350,6 +350,7 @@ export const PackagesTab = () => {
           additionalListeners={[hostId, packageStatusSelected,
             activeSortDirection, activeSortColumn]}
           fetchItems={fetchItems}
+          bookmarkController="katello_host_installed_packages"
           autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}
           foremanApiAutoComplete
           rowsCount={results?.length}

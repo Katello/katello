@@ -6,6 +6,9 @@ import { foremanApi } from '../../../../../../services/api';
 import { ModuleStreamsTab } from '../ModuleStreamsTab';
 import mockModuleStreams from './modules.fixtures.json';
 import { MODULE_STREAMS_KEY } from '../ModuleStreamsConstants';
+import mockBookmarkData from '../../__tests__/bookmarks.fixtures.json';
+
+const moduleBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_host_available_module_streams');
 
 const contentFacetAttributes = {
   id: 11,
@@ -36,10 +39,12 @@ const autocompleteUrl = '/hosts/1/module_streams/auto_complete_search';
 let firstModuleStreams;
 let searchDelayScope;
 let autoSearchScope;
+let bookmarkScope;
 
 beforeEach(() => {
   const { results } = mockModuleStreams;
   [firstModuleStreams] = results;
+  bookmarkScope = nockInstance.get(moduleBookmarks).reply(200, mockBookmarkData);
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
   autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 });
@@ -47,6 +52,7 @@ beforeEach(() => {
 afterEach(() => {
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
+  assertNockRequest(bookmarkScope);
 });
 
 beforeEach(() => {

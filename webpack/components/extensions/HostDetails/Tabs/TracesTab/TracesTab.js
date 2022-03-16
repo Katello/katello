@@ -154,6 +154,7 @@ const TracesTab = () => {
         }
         ouiaId="host-traces-table"
         metadata={meta}
+        bookmarkController="katello_host_tracers"
         autocompleteEndpoint={`/hosts/${hostId}/traces/auto_complete_search`}
         foremanApiAutoComplete
         rowsCount={results?.length}

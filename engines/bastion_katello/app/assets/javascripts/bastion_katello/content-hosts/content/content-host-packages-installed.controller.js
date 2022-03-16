@@ -17,6 +17,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesInstalled
     ['$scope', '$timeout', '$window', 'HostPackage', 'translate', 'Nutupane', 'BastionConfig',
     function ($scope, $timeout, $window, HostPackage, translate, Nutupane, BastionConfig) {
         var packagesNutupane;
+        $scope.controllerName = 'katello_host_installed_packages';
 
         $scope.katelloAgentPresent = BastionConfig.katelloAgentPresent;
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;

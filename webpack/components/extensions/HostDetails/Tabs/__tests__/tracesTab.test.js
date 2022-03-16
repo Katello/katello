@@ -9,8 +9,12 @@ import mockTraceData from './traces.fixtures.json';
 import mockResolveTraceTask from './resolveTraces.fixtures.json';
 import emptyTraceResults from './tracerEmptyTraceResults.fixtures.json';
 import mockJobInvocationStatus from './tracerEnableJobInvocation.fixtures.json';
+import mockBookmarkData from './bookmarks.fixtures.json';
 
 const hostName = 'client.example.com';
+const tracesBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_host_tracers');
+
+
 const tracerInstalledResponse = {
   id: 1,
   name: 'client.example.com',
@@ -49,11 +53,13 @@ const jobInvocations = foremanApi.getApiUrl('/job_invocations');
 let firstTrace;
 let searchDelayScope;
 let autoSearchScope;
+let bookmarkScope;
 
 describe('With tracer installed', () => {
   beforeEach(() => {
     const { results } = mockTraceData;
     [firstTrace] = results;
+    bookmarkScope = nockInstance.get(tracesBookmarks).reply(200, mockBookmarkData);
     searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
     autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   });
@@ -61,6 +67,7 @@ describe('With tracer installed', () => {
   afterEach(() => {
     assertNockRequest(searchDelayScope);
     assertNockRequest(autoSearchScope);
+    assertNockRequest(bookmarkScope);
     nock.cleanAll();
   });
 
