@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import { ChartPie } from '@patternfly/react-charts';
 import { ErrataMapper } from '../../../../components/Errata';
 import { hostIsRegistered } from '../hostDetailsHelpers';
+import { TranslatedAnchor } from '../../../Table/components/TranslatedPlural';
 
 function HostInstallableErrata({
   id, errataCounts,
@@ -38,9 +39,14 @@ function HostInstallableErrata({
         <CardBody>
           <Flex direction="column">
             <FlexItem>
-              <a href="#/Content/errata">
-                {errataTotal} errata
-              </a>
+              <TranslatedAnchor
+                id="errata-card-total-count"
+                style={{ marginLeft: '0.4rem' }}
+                href="#/Content/errata"
+                count={errataTotal}
+                plural="errata"
+                singular="erratum"
+              />
             </FlexItem>
             <Flex flexWrap={{ xl: 'nowrap' }} direction="row" alignItems={{ default: 'alignItemsCenter' }}>
               <div className="piechart-overflow" style={{ overflow: 'visible', minWidth: '140px', maxHeight: '155px' }}>

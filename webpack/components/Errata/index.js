@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { TableText } from '@patternfly/react-table';
 import {
   chart_color_black_500 as pfBlack,
@@ -13,39 +14,67 @@ import {
   EnhancementIcon,
   SquareIcon,
 } from '@patternfly/react-icons';
-import PropTypes from 'prop-types';
+import { TranslatedAnchor } from '../Table/components/TranslatedPlural';
 
 export const ErrataMapper = ({ data, id }) => data.map(({ x: type, y: count }) => <ErrataSummary count={count} type={type} key={`${count} ${type}`} id={id} />);
 
 export const ErrataSummary = ({ type, count }) => {
   let ErrataIcon;
   let label;
-  let name;
   let url;
   let color;
   switch (type) {
   case 'security':
     label = __('Security');
     ErrataIcon = SecurityIcon;
-    name = 'security advisories';
     color = '#0066cc';
-    url = <a href="#/Content/errata?type=security"> {count} {name} </a>;
+    url = (
+      <TranslatedAnchor
+        id="errata-card-security-count"
+        style={{ marginLeft: '0.4rem' }}
+        href="#/Content/errata?type=security"
+        count={count}
+        plural="security advisories"
+        singular="security advisory"
+        zeroMsg="# security advisories"
+      />
+    );
     break;
   case 'recommended':
   case 'bugfix':
     label = __('Bugfix');
     ErrataIcon = BugIcon;
-    name = 'bug fixes';
     color = '#8bc1f7';
-    url = <a href="#/Content/errata?type=bugfix"> {count} {name} </a>;
+    // url = <a href="#/Content/errata?type=bugfix"> {count} {plural} </a>;
+    url = (
+      <TranslatedAnchor
+        id="errata-card-bugfix-count"
+        style={{ marginLeft: '0.4rem' }}
+        href="#/Content/errata?type=bugfix"
+        count={count}
+        plural="bug fixes"
+        singular="bug fix"
+        zeroMsg="# bug fixes"
+      />
+    );
     break;
   case 'enhancement':
   case 'optional':
     label = __('Enhancement');
     ErrataIcon = EnhancementIcon;
-    name = 'enhancements';
     color = '#002f5d';
-    url = <a href="#/Content/errata?type=enhancement"> {count} {name} </a>;
+    // url = <a href="#/Content/errata?type=enhancement"> {count} {plural} </a>;
+    url = (
+      <TranslatedAnchor
+        id="errata-card-enhancement-count"
+        style={{ marginLeft: '0.4rem' }}
+        href="#/Content/errata?type=enhancement"
+        count={count}
+        plural="enhancements"
+        singular="enhancement"
+        zeroMsg="# enhancements"
+      />
+    );
     break;
   default:
   }
