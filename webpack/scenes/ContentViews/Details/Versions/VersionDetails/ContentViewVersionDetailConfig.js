@@ -149,6 +149,7 @@ export default ({ cvId, versionId }) => [
       { title: __('Version'), getProperty: item => item?.version },
       { title: __('Release'), getProperty: item => item?.release },
       { title: __('Arch'), getProperty: item => item?.arch },
+      { title: __('Epoch'), getProperty: item => item?.epoch },
     ],
   },
   {
