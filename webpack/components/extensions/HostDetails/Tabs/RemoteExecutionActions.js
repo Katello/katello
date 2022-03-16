@@ -82,7 +82,7 @@ export const installPackage = ({ hostname, packageName }) => post({
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackageInstallParams({ hostname, packageName }),
   handleSuccess: showRexToast,
-  errorToast: error => errorToast(error),
+  errorToast,
 });
 
 export const installPackageBySearch = ({ hostname, search }) => post({
@@ -91,7 +91,7 @@ export const installPackageBySearch = ({ hostname, search }) => post({
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackageInstallBySearchParams({ hostname, search }),
   handleSuccess: showRexToast,
-  errorToast: error => errorToast(error),
+  errorToast,
 });
 
 export const removePackage = ({ hostname, packageName }) => post({
@@ -100,7 +100,7 @@ export const removePackage = ({ hostname, packageName }) => post({
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackageRemoveParams({ hostname, packageName }),
   handleSuccess: showRexToast,
-  errorToast: error => errorToast(error),
+  errorToast,
 });
 
 export const removePackages = ({ hostname, search }) => post({
@@ -109,7 +109,7 @@ export const removePackages = ({ hostname, search }) => post({
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackagesRemoveParams({ hostname, search }),
   handleSuccess: showRexToast,
-  errorToast: error => errorToast(error),
+  errorToast,
 });
 
 export const updatePackage = ({ hostname, packageName }) => post({
@@ -118,7 +118,7 @@ export const updatePackage = ({ hostname, packageName }) => post({
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackageUpdateParams({ hostname, packageName }),
   handleSuccess: showRexToast,
-  errorToast: error => errorToast(error),
+  errorToast,
 });
 
 export const updatePackages = ({ hostname, search }) => post({
@@ -127,7 +127,7 @@ export const updatePackages = ({ hostname, search }) => post({
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackagesUpdateParams({ hostname, search }),
   handleSuccess: showRexToast,
-  errorToast: error => errorToast(error),
+  errorToast,
 });
 
 export const resolveTraces = ({ hostname, search }) => post({
@@ -136,7 +136,7 @@ export const resolveTraces = ({ hostname, search }) => post({
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloTracerResolveParams({ hostname, search }),
   handleSuccess: showRexToast,
-  errorToast: error => errorToast(error),
+  errorToast,
 });
 
 export const installErrata = ({
@@ -149,5 +149,5 @@ export const installErrata = ({
     hostname, search,
   }),
   handleSuccess: showRexToast,
-  errorToast: error => errorToast(error),
+  errorToast,
 });
