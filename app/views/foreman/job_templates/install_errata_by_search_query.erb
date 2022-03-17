@@ -20,6 +20,7 @@ foreign_input_sets:
     <%= render_template('Package Action - SSH Default', :action => 'install -n -t patch', :package => advisories) %>
 <% else %>
     <% advisory_ids = @host.advisory_ids(search: input("Errata search query")) %>
+    <% raise "No errata matching given search query" if !input("Errata search query").blank? && advisory_ids.empty? %>
 
     <% advisories = advisory_ids.map { |e| "--advisory=#{e}" }.join(' ') %>
     <%= render_template('Package Action - SSH Default', :action => 'update-minimal', :package => advisories) %>
