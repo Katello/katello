@@ -1,4 +1,4 @@
-# 4.4.0.rc2 Habanero (2022-03-03)
+# 4.4.0 Habanero (2022-03-17)
 
 ## Features
 
@@ -33,20 +33,8 @@
 
 ## Bug Fixes
 
-### Inter Server Sync
- * 4.3 -> nightly update has a bad migration and marks all organizations Airgapped ([#34531](https://projects.theforeman.org/issues/34531), [26afdff1](https://github.com/Katello/katello.git/commit/26afdff1d4917f7b12316c616b28c572bd79c47e))
- *  [RFE] Need a way to sync from a specific content view lifecycle environment of the upstream organization ([#34144](https://projects.theforeman.org/issues/34144), [0cda22e6](https://github.com/Katello/katello.git/commit/0cda22e6c989d5897bd19b936dead485d7290b73))
- * RH Repos page should not access CDN on 'disconnected' mode ([#33951](https://projects.theforeman.org/issues/33951), [3e8f2696](https://github.com/Katello/katello.git/commit/3e8f26961ff2a84a1de0b5dea197ea49a514d391), [b09ddee2](https://github.com/Katello/katello.git/commit/b09ddee2f2c395c86f2f8c6cc862cc680f9debea))
-
-### Web UI
- * Katello Lint failure due to uncontrolled eslint-plugin update ([#34529](https://projects.theforeman.org/issues/34529), [3b783a50](https://github.com/Katello/katello.git/commit/3b783a50eb2e5ae821ebaa07626e358495389dd5))
- * CV UI -  Content view version list API being called multiple times ([#34347](https://projects.theforeman.org/issues/34347), [97a0bd4b](https://github.com/Katello/katello.git/commit/97a0bd4b93653978a475403b3a1bc3f502922388))
- * Fix inconsistent Katello test failures on CI ([#34285](https://projects.theforeman.org/issues/34285), [86565c03](https://github.com/Katello/katello.git/commit/86565c03d852369fa0fa40106d7340b3a8cee51f))
- * Sync status showing never synced even though the repositories has been synced successfully ([#34143](https://projects.theforeman.org/issues/34143), [72756ada](https://github.com/Katello/katello.git/commit/72756ada8c9382b25e4b03d2aaa5ce3b996077c2))
- * Katello - Nightly failures due to package availability ([#33953](https://projects.theforeman.org/issues/33953), [fd833f23](https://github.com/Katello/katello.git/commit/fd833f23e9a69ee8ba035660c339b6e25c1a6d64))
- * New Content View details: Switching autopublish switch reloads entire page ([#32379](https://projects.theforeman.org/issues/32379), [8ca9d36e](https://github.com/Katello/katello.git/commit/8ca9d36efa44b8f2fa0982b066e7483989407fec))
-
 ### Repositories
+ * Sync error for deb repos after upgrade to 4.3 ([#34591](https://projects.theforeman.org/issues/34591), [504111f7](https://github.com/Katello/katello.git/commit/504111f78731f5f57ee88947855a6e110b301681))
  * Update pulp-rpm to 3.17 ([#34510](https://projects.theforeman.org/issues/34510), [e440920c](https://github.com/Katello/katello.git/commit/e440920cdaf7383c9d427905bf2115e2684ed3e8))
  * Creating repo fails if there's a validation error in the first save. ([#34508](https://projects.theforeman.org/issues/34508), [232dfc9e](https://github.com/Katello/katello.git/commit/232dfc9e6fc83ddbf13e93c216640ee952229d12))
  * Upgrade to Satellite 6.10 fails at db:migrate stage if there are errata reference present for some ostree\puppet type repos ([#34488](https://projects.theforeman.org/issues/34488), [10c7fb70](https://github.com/Katello/katello.git/commit/10c7fb7083f07d6142ca48f0b8b1061464458e91))
@@ -64,6 +52,20 @@
  * Python backend remote options are not cleared after deleting the field in Katello ([#33685](https://projects.theforeman.org/issues/33685), [5a7dd414](https://github.com/Katello/katello.git/commit/5a7dd4147919010540fc8ea402cc1d072ffc5572))
  * Many Postgres ERRORs (duplicate key) especially on RedHat repo sync ([#33451](https://projects.theforeman.org/issues/33451), [215b0401](https://github.com/Katello/katello.git/commit/215b0401dcdda07ecf300d1751b43c2062f461e3))
  * revert monkey patch for pulp_rpm_client 3.13.3 ([#32976](https://projects.theforeman.org/issues/32976), [4897c73c](https://github.com/Katello/katello.git/commit/4897c73c45f375077b41316e301c44348e5a776e))
+
+### Web UI
+ * CV UI - Patternfly update causes tabs to navigate twice on click ([#34559](https://projects.theforeman.org/issues/34559), [acf477e2](https://github.com/Katello/katello.git/commit/acf477e24a52ed85d0b89511475e399b75192898))
+ * Katello Lint failure due to uncontrolled eslint-plugin update ([#34529](https://projects.theforeman.org/issues/34529), [3b783a50](https://github.com/Katello/katello.git/commit/3b783a50eb2e5ae821ebaa07626e358495389dd5))
+ * CV UI -  Content view version list API being called multiple times ([#34347](https://projects.theforeman.org/issues/34347), [97a0bd4b](https://github.com/Katello/katello.git/commit/97a0bd4b93653978a475403b3a1bc3f502922388))
+ * Fix inconsistent Katello test failures on CI ([#34285](https://projects.theforeman.org/issues/34285), [86565c03](https://github.com/Katello/katello.git/commit/86565c03d852369fa0fa40106d7340b3a8cee51f))
+ * Sync status showing never synced even though the repositories has been synced successfully ([#34143](https://projects.theforeman.org/issues/34143), [72756ada](https://github.com/Katello/katello.git/commit/72756ada8c9382b25e4b03d2aaa5ce3b996077c2))
+ * Katello - Nightly failures due to package availability ([#33953](https://projects.theforeman.org/issues/33953), [fd833f23](https://github.com/Katello/katello.git/commit/fd833f23e9a69ee8ba035660c339b6e25c1a6d64))
+ * New Content View details: Switching autopublish switch reloads entire page ([#32379](https://projects.theforeman.org/issues/32379), [8ca9d36e](https://github.com/Katello/katello.git/commit/8ca9d36efa44b8f2fa0982b066e7483989407fec))
+
+### Inter Server Sync
+ * 4.3 -> nightly update has a bad migration and marks all organizations Airgapped ([#34531](https://projects.theforeman.org/issues/34531), [26afdff1](https://github.com/Katello/katello.git/commit/26afdff1d4917f7b12316c616b28c572bd79c47e))
+ *  [RFE] Need a way to sync from a specific content view lifecycle environment of the upstream organization ([#34144](https://projects.theforeman.org/issues/34144), [0cda22e6](https://github.com/Katello/katello.git/commit/0cda22e6c989d5897bd19b936dead485d7290b73))
+ * RH Repos page should not access CDN on 'disconnected' mode ([#33951](https://projects.theforeman.org/issues/33951), [3e8f2696](https://github.com/Katello/katello.git/commit/3e8f26961ff2a84a1de0b5dea197ea49a514d391), [b09ddee2](https://github.com/Katello/katello.git/commit/b09ddee2f2c395c86f2f8c6cc862cc680f9debea))
 
 ### Tests
  * Remove use of `pulp_` prefixes in the tests ([#34493](https://projects.theforeman.org/issues/34493), [65e30fbc](https://github.com/Katello/katello.git/commit/65e30fbc00176964949274400a6613bb308231d3))
