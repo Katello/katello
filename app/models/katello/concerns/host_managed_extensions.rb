@@ -424,6 +424,12 @@ module Katello
         ::Katello::Erratum.installable_for_hosts([self]).search_for(search).pluck(:errata_id)
       end
 
+      def filtered_entitlement_quantity_consumed(pool)
+        entitlements = subscription_facet.candlepin_consumer.filter_entitlements(pool.cp_id)
+        return nil if entitlements.empty?
+        entitlements.sum { |e| e[:quantity] }
+      end
+
       protected
 
       def update_trace_status
@@ -441,7 +447,8 @@ end
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
         :host_collections, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
-        :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template
+        :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template,
+        :filtered_entitlement_quantity_consumed
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail
