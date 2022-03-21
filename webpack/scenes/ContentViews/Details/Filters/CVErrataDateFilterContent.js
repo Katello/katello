@@ -7,6 +7,7 @@ import {
   Tooltip, Form, ActionGroup, Flex, FlexItem, Select,
   SelectOption, SelectVariant, ChipGroup, Chip,
   Tabs, Tab, TabTitleText, Button, DatePicker, Bullseye,
+  Divider, Text,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -53,6 +54,8 @@ const CVErrataDateFilterContent = ({
   const [selectedTypes, setSelectedTypes] = useState(types);
   const dispatch = useDispatch();
   const [activeTabKey, setActiveTabKey] = useState(0);
+  const [startEntry, setStartEntry] = useState(false);
+  const [endEntry, setEndEntry] = useState(false);
 
   const onSave = () => {
     dispatch(editCVFilterRule(
@@ -103,6 +106,7 @@ const CVErrataDateFilterContent = ({
   }, [showAffectedRepos, repositories.length]);
 
   const tabTitle = inclusion ? __('Included errata') : __('Excluded errata');
+  const invalidDateFormat = __('Enter a valid date: MM/DD/YYYY');
 
   return (
     <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
@@ -153,7 +157,7 @@ const CVErrataDateFilterContent = ({
                   </SelectOption>
                 </Select>
               </FlexItem>
-              <FlexItem span={1} spacer={{ default: 'spacerMd' }}>
+              <FlexItem span={1} spacer={{ default: 'spacerNone' }}>
                 {(selectedTypes.length === 1) &&
                   <Tooltip
                     position="top"
@@ -165,7 +169,8 @@ const CVErrataDateFilterContent = ({
                   </Tooltip>
                 }
               </FlexItem>
-              <FlexItem span={2} spacer={{ default: 'spacerMd' }}>
+              <Divider isVertical />
+              <FlexItem span={2} spacer={{ default: 'spacerNone' }}>
                 <Select
                   selections={dateType}
                   onSelect={(_event, selection) => {
@@ -179,49 +184,51 @@ const CVErrataDateFilterContent = ({
                   aria-label="date_type_selector"
                   isDisabled={!hasPermission(permissions, 'edit_content_views')}
                 >
-                  <SelectOption key="issued" value="issued">{__('Issued')}</SelectOption>
-                  <SelectOption key="updated" value="updated">{__('Updated')}</SelectOption>
+                  <SelectOption key="issued" value="issued">{__('Issued from')}</SelectOption>
+                  <SelectOption key="updated" value="updated">{__('Updated from')}</SelectOption>
                 </Select>
               </FlexItem>
-              <FlexItem span={2} spacer={{ default: 'spacerXs' }}>
-                <Bullseye>
+              <FlexItem span={2} spacer={{ default: 'spacerNone' }}>
+                <Bullseye
+                  onFocus={() => setStartEntry(true)}
+                  onBlur={() => setStartEntry(false)}
+                >
                   <DatePicker
                     aria-label="start_date_input"
                     value={startDate}
+                    invalidFormatText={invalidDateFormat}
                     dateFormat={dateFormat}
                     onChange={setStartDate}
                     dateParse={dateParse}
-                    placeholder="MM/DD/YYYY"
+                    placeholder={startEntry ? 'MM/DD/YYYY' : __('Start date')}
                     isDisabled={!hasPermission(permissions, 'edit_content_views')}
                   />
                 </Bullseye>
               </FlexItem>
+              <FlexItem spacer={{ default: 'spacerNone' }}>
+                <Bullseye style={{ padding: '0 5px' }}>
+                  <Text>{__('to')}</Text>
+                </Bullseye>
+              </FlexItem>
               <FlexItem span={2}>
-                <Bullseye>
+                <Bullseye
+                  onFocus={() => setEndEntry(true)}
+                  onBlur={() => setEndEntry(false)}
+                >
                   <DatePicker
                     aria-label="end_date_input"
                     value={endDate}
+                    invalidFormatText={invalidDateFormat}
                     dateFormat={dateFormat}
                     onChange={setEndDate}
                     dateParse={dateParse}
-                    placeholder="MM/DD/YYYY"
+                    placeholder={endEntry ? 'MM/DD/YYYY' : __('End date')}
                     isDisabled={!hasPermission(permissions, 'edit_content_views')}
                   />
                 </Bullseye>
               </FlexItem>
             </Flex>
             <Flex>
-              <FlexItem>
-                <ChipGroup categoryName={dateType === 'issued' ? __('Issued') : __('Updated')}>
-                  <Chip key="startDate" onClick={() => setStartDate('')} isReadOnly={!startDate || !hasPermission(permissions, 'edit_content_views')}>
-                    {startDate || __('ANY')}
-                  </Chip>
-                  -
-                  <Chip key="endDate" onClick={() => setEndDate('')} isReadOnly={!endDate || !hasPermission(permissions, 'edit_content_views')}>
-                    {endDate || __('ANY')}
-                  </Chip>
-                </ChipGroup>
-              </FlexItem>
               <FlexItem>
                 <ChipGroup categoryName={__('Type')}>
                   {selectedTypes.map(type => (
@@ -233,6 +240,17 @@ const CVErrataDateFilterContent = ({
                       {capitalize(type)}
                     </Chip>
                   ))}
+                </ChipGroup>
+              </FlexItem>
+              <FlexItem>
+                <ChipGroup categoryName={dateType === 'issued' ? __('Issued from') : __('Updated from')}>
+                  <Chip key="startDate" onClick={() => setStartDate('')} isReadOnly={!startDate || !hasPermission(permissions, 'edit_content_views')}>
+                    {startDate || __('ANY')}
+                  </Chip>
+                  {__('to')}
+                  <Chip key="endDate" onClick={() => setEndDate('')} isReadOnly={!endDate || !hasPermission(permissions, 'edit_content_views')}>
+                    {endDate || __('ANY')}
+                  </Chip>
                 </ChipGroup>
               </FlexItem>
               {hasPermission(permissions, 'edit_content_views') &&

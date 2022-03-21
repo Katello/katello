@@ -7,7 +7,7 @@ import { TableVariant } from '@patternfly/react-table';
 import {
   Tabs, Tab, TabTitleText, Split, SplitItem, Select, SelectVariant,
   SelectOption, Button, Dropdown, DropdownItem, KebabToggle, Flex, FlexItem,
-  Bullseye, DatePicker, ChipGroup, Chip,
+  Bullseye, DatePicker, ChipGroup, Chip, Text,
 } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -70,6 +70,9 @@ const CVErrataIDFilterContent = ({
   const [apiEndDate, setApiEndDate] = useState('');
   const [dateType, setDateType] = useState('issued');
   const [dateTypeSelectOpen, setDateTypeSelectOpen] = useState(false);
+  const [startEntry, setStartEntry] = useState(false);
+  const [endEntry, setEndEntry] = useState(false);
+
   const metadata = omit(response, ['results']);
   const { permissions } = details;
   const columnHeaders = [
@@ -241,6 +244,7 @@ const CVErrataIDFilterContent = ({
   const emptySearchTitle = __('No matching filter rules found.');
   const emptySearchBody = __('Try changing your search settings.');
 
+  const invalidDateFormat = __('Enter a valid date: MM/DD/YYYY');
 
   return (
     <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
@@ -336,7 +340,7 @@ const CVErrataIDFilterContent = ({
             nodesBelowSearch={
               <>
                 <Flex>
-                  <FlexItem span={2}>
+                  <FlexItem span={2} spacer={{ default: 'spacerNone' }}>
                     <Select
                       selections={dateType}
                       onSelect={(_event, selection) => {
@@ -349,51 +353,64 @@ const CVErrataIDFilterContent = ({
                       name="date_type_selector"
                       aria-label="date_type_selector"
                     >
-                      <SelectOption key="issued" value="issued">{__('Issued')}</SelectOption>
-                      <SelectOption key="updated" value="updated">{__('Updated')}</SelectOption>
+                      <SelectOption key="issued" value="issued">{__('Issued from')}</SelectOption>
+                      <SelectOption key="updated" value="updated">{__('Updated from')}</SelectOption>
                     </Select>
                   </FlexItem>
-                  <FlexItem span={2} spacer={{ default: 'spacerXs' }}>
-                    <Bullseye>
+                  <FlexItem span={2} spacer={{ default: 'spacerNone' }}>
+                    <Bullseye
+                      onFocus={() => setStartEntry(true)}
+                      onBlur={() => setStartEntry(false)}
+                    >
                       <DatePicker
                         aria-label="start_date_input"
+                        invalidFormatText={invalidDateFormat}
                         value={startDate}
                         dateFormat={dateFormat}
                         onChange={setValidStartDate}
                         dateParse={dateParse}
-                        placeholder="MM/DD/YYYY"
+                        placeholder={startEntry ? 'MM/DD/YYYY' : __('Start date')}
                       />
                     </Bullseye>
                   </FlexItem>
+                  <FlexItem spacer={{ default: 'spacerNone' }}>
+                    <Bullseye style={{ padding: '0 5px' }}>
+                      <Text>{__('to')}</Text>
+                    </Bullseye>
+                  </FlexItem>
                   <FlexItem span={2}>
-                    <Bullseye>
+                    <Bullseye
+                      onFocus={() => setEndEntry(true)}
+                      onBlur={() => setEndEntry(false)}
+                    >
                       <DatePicker
                         aria-label="end_date_input"
                         value={endDate}
+                        invalidFormatText={invalidDateFormat}
                         dateFormat={dateFormat}
                         onChange={setValidEndDate}
                         dateParse={dateParse}
-                        placeholder="MM/DD/YYYY"
+                        placeholder={endEntry ? 'MM/DD/YYYY' : __('End date')}
                       />
                     </Bullseye>
                   </FlexItem>
                 </Flex>
                 <Flex>
                   <FlexItem>
-                    <ChipGroup categoryName={dateType === 'issued' ? __('Issued') : __('Updated')}>
-                      <Chip key="startDate" onClick={() => setValidStartDate('')} isReadOnly={startDate === ''}>
-                        {startDate || __('ANY')}
-                      </Chip>
-                      -
-                      <Chip key="endDate" onClick={() => setValidEndDate('')} isReadOnly={endDate === ''}>
-                        {endDate || __('ANY')}
+                    <ChipGroup categoryName={__('Status')}>
+                      <Chip key="status" onClick={() => setStatusSelected(ALL_STATUSES)} isReadOnly={statusSelected === ALL_STATUSES}>
+                        {statusSelected}
                       </Chip>
                     </ChipGroup>
                   </FlexItem>
                   <FlexItem>
-                    <ChipGroup categoryName={__('Status')}>
-                      <Chip key="status" onClick={() => setStatusSelected(ALL_STATUSES)} isReadOnly={statusSelected === ALL_STATUSES}>
-                        {statusSelected}
+                    <ChipGroup categoryName={dateType === 'issued' ? __('Issued from') : __('Updated from')}>
+                      <Chip key="startDate" onClick={() => setValidStartDate('')} isReadOnly={startDate === ''}>
+                        {startDate || __('ANY')}
+                      </Chip>
+                      {__('to')}
+                      <Chip key="endDate" onClick={() => setValidEndDate('')} isReadOnly={endDate === ''}>
+                        {endDate || __('ANY')}
                       </Chip>
                     </ChipGroup>
                   </FlexItem>
