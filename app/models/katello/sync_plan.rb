@@ -83,7 +83,7 @@ module Katello
           ::Katello::Util::Support.active_record_retry do
             self.save!
           end
-          old_rec_logic.cancel
+          old_rec_logic.reload.cancel
           start_recurring_logic
         end
         toggle_enabled(params[:enabled]) if (params.key?(:enabled) && params[:enabled] != self.enabled?)
