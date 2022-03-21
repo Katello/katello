@@ -369,7 +369,7 @@ const CVErrataIDFilterContent = ({
                         dateFormat={dateFormat}
                         onChange={setValidStartDate}
                         dateParse={dateParse}
-                        placeholder={startEntry ? 'MM/DD/YYYY' : __('Start Date')}
+                        placeholder={startEntry ? 'MM/DD/YYYY' : __('Start date')}
                       />
                     </Bullseye>
                   </FlexItem>
