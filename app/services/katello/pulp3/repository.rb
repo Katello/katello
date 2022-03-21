@@ -414,10 +414,8 @@ module Katello
         }
         remote_options[:url] = root.url unless root.url.blank?
         remote_options[:download_concurrency] = root.download_concurrency unless root.download_concurrency.blank?
-        if !root.upstream_username.blank? && !root.upstream_password.blank?
-          remote_options.merge!(username: root.upstream_username,
-                               password: root.upstream_password)
-        end
+        remote_options.merge!(username: root&.upstream_username,
+                              password: root&.upstream_password)
         remote_options.merge!(ssl_remote_options)
       end
 
