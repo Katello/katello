@@ -222,7 +222,7 @@ const CVErrataDateFilterContent = ({
                     dateFormat={dateFormat}
                     onChange={setEndDate}
                     dateParse={dateParse}
-                    placeholder={endEntry ? 'MM/DD/YYYY' : __('End Date')}
+                    placeholder={endEntry ? 'MM/DD/YYYY' : __('End date')}
                     isDisabled={!hasPermission(permissions, 'edit_content_views')}
                   />
                 </Bullseye>
