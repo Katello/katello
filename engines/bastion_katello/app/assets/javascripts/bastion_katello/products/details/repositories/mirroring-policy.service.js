@@ -10,7 +10,7 @@
 angular.module('Bastion.repositories').service('MirroringPolicy',
     ['translate', function (translate) {
 
-        this.defaultMirroringPolicy = 'additive';
+        this.defaultMirroringPolicy = 'mirror_content_only';
 
         this.mirroringPolicies = function(repoType) {
             var policies = {
