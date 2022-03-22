@@ -48,6 +48,17 @@ module Katello
       end
     end
 
+    def self.installed_status(status, host)
+      case status
+      when 'not installed'
+        where(installed_profiles: [])
+      when 'upgradable'
+        where(id: upgradable(host).pluck(:id))
+      when 'up to date'
+        where(status: 'enabled').where.not(installed_profiles: []).where.not(id: upgradable(host).pluck(:id))
+      end
+    end
+
     def self.upgradable(host)
       upgradable_module_name_streams = ModuleStream.installable_for_hosts([host]).select(:name, :stream)
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { act } from 'react-test-renderer';
-import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../../services/api';
 import { ModuleStreamsTab } from '../ModuleStreamsTab';
@@ -110,5 +110,71 @@ test('Can handle no Module streams being present', async (done) => {
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  act(done);
+});
+
+test('Can filter results based on status', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostModuleStreams)
+    .query(true)
+    .reply(200, mockModuleStreams);
+
+  const scope2 = nockInstance
+    .get(hostModuleStreams)
+    .query(true)
+    .reply(200, mockModuleStreams);
+
+  const {
+    queryByLabelText,
+    getByRole,
+    getAllByText,
+  } = renderWithRedux(<ModuleStreamsTab />, renderOptions());
+
+  // Assert that the Module streams are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() =>
+    expect(getAllByText(firstModuleStreams.name)[0]).toBeInTheDocument());
+  const typeContainer = queryByLabelText('select Status container', { ignore: 'th' });
+  const typeDropdown = within(typeContainer).queryByText('Status');
+  expect(typeDropdown).toBeInTheDocument();
+  fireEvent.click(typeDropdown);
+  const installed = getByRole('option', { name: 'select Installed' });
+  fireEvent.click(installed);
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(scope2, done);
+  act(done);
+});
+
+test('Can filter results based on Installation status', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostModuleStreams)
+    .query(true)
+    .reply(200, mockModuleStreams);
+
+  const scope2 = nockInstance
+    .get(hostModuleStreams)
+    .query(true)
+    .reply(200, mockModuleStreams);
+
+  const {
+    queryByLabelText,
+    getByRole,
+    getAllByText,
+  } = renderWithRedux(<ModuleStreamsTab />, renderOptions());
+
+  // Assert that the Module streams are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() =>
+    expect(getAllByText(firstModuleStreams.name)[0]).toBeInTheDocument());
+  const typeContainer = queryByLabelText('select Installation status container', { ignore: 'th' });
+  const typeDropdown = within(typeContainer).queryByText('Installation status');
+  expect(typeDropdown).toBeInTheDocument();
+  fireEvent.click(typeDropdown);
+  const installed = getByRole('option', { name: 'select Upgradable' });
+  fireEvent.click(installed);
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(scope2, done);
   act(done);
 });

@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Skeleton, Label, Hint, HintBody, Button } from '@patternfly/react-core';
+import { Skeleton, Label, Hint, HintBody, Button, Split, SplitItem } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
-import { upperFirst } from 'lodash';
+import { upperFirst, lowerCase } from 'lodash';
 import { TableText, TableVariant, Thead, Tbody, Tr, Td } from '@patternfly/react-table';
 import {
   LongArrowAltUpIcon,
@@ -18,15 +18,13 @@ import TableWrapper from '../../../../../components/Table/TableWrapper';
 import hostIdNotReady from '../../HostDetailsActions';
 import { selectHostDetails } from '../../HostDetailsSelectors';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
+import SelectableDropdown from '../../../../SelectableDropdown/SelectableDropdown';
+import {
+  HOST_MODULE_STREAM_STATUSES, INSTALL_STATUS_PARAM_TO_FRIENDLY_NAME, INSTALLED_STATE,
+  STATUS_PARAM_TO_FRIENDLY_NAME,
+} from './ModuleStreamsConstants';
 
 const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
-  const INSTALLED_STATE = {
-    INSTALLED: __('Installed'),
-    UPGRADEABLE: __('Upgradable'),
-    UPTODATE: __('Up-to-date'),
-    NOTINSTALLED: __('Not installed'),
-  };
-
   switch (true) {
   case (streamInstallStatus?.length > 0 && streamText === 'disabled'):
     return <TableText wrapModifier="nowrap">{INSTALLED_STATE.INSTALLED}</TableText>;
@@ -88,7 +86,19 @@ export const ModuleStreamsTab = () => {
   const emptySearchTitle = __('Your search returned no matching Module streams.');
   const emptySearchBody = __('Try changing your search criteria.');
   const errorSearchTitle = __('Problem searching module streams');
-  const { searchParam } = useUrlParams();
+  const {
+    status: initialStatus,
+    installStatus: initialInstallStatusSelected,
+    searchParam,
+  } = useUrlParams();
+  const MODULE_STREAM_STATUS = __('Status');
+  const MODULE_STREAM_INSTALLATION_STATUS = __('Installation status');
+  const [statusSelected, setStatusSelected] =
+    useState(STATUS_PARAM_TO_FRIENDLY_NAME[initialStatus] ??
+    MODULE_STREAM_STATUS);
+  const [installStatusSelected, setInstallStatusSelected] =
+    useState(INSTALL_STATUS_PARAM_TO_FRIENDLY_NAME[initialInstallStatusSelected] ??
+    MODULE_STREAM_INSTALLATION_STATUS);
   const columnHeaders = [
     __('Name'),
     __('State'),
@@ -113,14 +123,37 @@ export const ModuleStreamsTab = () => {
 
   const fetchItems = useCallback(
     (params) => {
+      let extraParams = params;
       if (!hostId) return hostIdNotReady;
+      if (statusSelected !== MODULE_STREAM_STATUS) {
+        extraParams = { ...extraParams, status: lowerCase(statusSelected) };
+      }
+      if (installStatusSelected !== MODULE_STREAM_INSTALLATION_STATUS) {
+        extraParams = { ...extraParams, install_status: lowerCase(installStatusSelected) };
+      }
       return getHostModuleStreams(
         hostId,
-        { ...apiSortParams, ...params },
+        { ...apiSortParams, ...extraParams },
       );
     },
-    [hostId, apiSortParams],
+    [hostId, statusSelected, installStatusSelected,
+      MODULE_STREAM_STATUS, MODULE_STREAM_INSTALLATION_STATUS, apiSortParams],
   );
+
+  const handleModuleStreamStatusSelected = newStatus => setStatusSelected((prevStatus) => {
+    if (prevStatus === newStatus) {
+      return MODULE_STREAM_STATUS;
+    }
+    return newStatus;
+  });
+
+  const handleModuleStreamInstallationStatusSelected =
+      newInstallationStatus => setInstallStatusSelected((prevInstallationStatus) => {
+        if (prevInstallationStatus === newInstallationStatus) {
+          return MODULE_STREAM_INSTALLATION_STATUS;
+        }
+        return newInstallationStatus;
+      });
 
   const response = useSelector(selectModuleStream);
   const { results, ...metadata } = response;
@@ -160,6 +193,8 @@ export const ModuleStreamsTab = () => {
       title: __('Remove'), disabled: true,
     },
   ];
+  const activeFilters = [statusSelected, installStatusSelected];
+  const defaultFilters = [MODULE_STREAM_STATUS, MODULE_STREAM_INSTALLATION_STATUS];
 
   return (
     <div>
@@ -187,16 +222,43 @@ export const ModuleStreamsTab = () => {
             searchQuery,
             updateSearchQuery,
             fetchItems,
+            activeFilters,
+            defaultFilters,
             status,
           }}
           ouiaId="host-module-stream-table"
-          additionalListeners={[hostId, activeSortColumn, activeSortDirection]}
+          additionalListeners={[hostId, activeSortColumn, activeSortDirection,
+            statusSelected, installStatusSelected]}
           fetchItems={fetchItems}
           bookmarkController="katello_host_available_module_streams"
           autocompleteEndpoint={`/hosts/${hostId}/module_streams/auto_complete_search`}
           foremanApiAutoComplete
           rowsCount={results?.length}
           variant={TableVariant.compact}
+          actionButtons={
+            <Split hasGutter>
+              <SplitItem>
+                <SelectableDropdown
+                  id="status-dropdown"
+                  title={MODULE_STREAM_STATUS}
+                  showTitle={false}
+                  items={Object.values(HOST_MODULE_STREAM_STATUSES)}
+                  selected={statusSelected}
+                  setSelected={handleModuleStreamStatusSelected}
+                />
+              </SplitItem>
+              <SplitItem>
+                <SelectableDropdown
+                  id="install-status-dropdown"
+                  title={MODULE_STREAM_INSTALLATION_STATUS}
+                  showTitle={false}
+                  items={Object.values(INSTALLED_STATE)}
+                  selected={installStatusSelected}
+                  setSelected={handleModuleStreamInstallationStatusSelected}
+                />
+              </SplitItem>
+            </Split>
+          }
         >
           <Thead>
             <Tr>

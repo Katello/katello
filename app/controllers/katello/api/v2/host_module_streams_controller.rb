@@ -12,6 +12,7 @@ module Katello
     api :GET, "/hosts/:host_id/module_streams", N_("List module streams available to the host")
     param :host_id, :number, :required => true, :desc => N_("ID of the host")
     param :status, ::Katello::HostAvailableModuleStream::API_STATES.keys, :desc => N_("Streams based on the host based on their status")
+    param :install_status, String, :desc => N_("Streams based on the host based on the installation status"), :required => false
     param_group :search, Api::V2::ApiController
     def index
       collection = scoped_search(index_relation, :name, :asc, :resource_class => ::Katello::HostAvailableModuleStream)
@@ -25,8 +26,10 @@ module Katello
       if params[:sort_by] == 'installed_profiles'
         rel = rel.order([:installed_profiles, :status])
       end
-      return rel if params[:status].blank?
-      rel.send(::Katello::HostAvailableModuleStream::API_STATES[params[:status]])
+      return rel if (params[:status].blank? && params[:install_status].blank?)
+      rel = rel.send(::Katello::HostAvailableModuleStream::API_STATES[params[:status]]) unless params[:status].blank?
+      rel = rel.installed_status(params[:install_status], @host) unless params[:install_status].blank?
+      rel
     end
 
     def resource_class
