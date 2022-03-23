@@ -29,15 +29,18 @@ import {
   KebabToggle,
   Split,
   SplitItem,
+  Checkbox,
 } from '@patternfly/react-core';
 import {
-  fitContent,
   TableVariant,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
 } from '@patternfly/react-table';
-
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import SelectableDropdown from '../../../../components/SelectableDropdown';
-import onSelect from '../../../../components/Table/helpers';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import {
   ADDED,
@@ -60,6 +63,7 @@ import {
 import ContentCounts from './ContentCounts';
 import LastSync from './LastSync';
 import RepoIcon from './RepoIcon';
+import { useSelectionSet } from '../../../../components/Table/TableHooks';
 
 const allRepositories = 'All repositories';
 
@@ -80,70 +84,43 @@ const ContentViewRepositories = ({ cvId, details }) => {
   const repoTypesStatus = useSelector(state => selectRepoTypesStatus(state), shallowEqual);
   const { permissions, generated_for: generatedFor, import_only: importOnly } = details;
   const generatedContentView = generatedFor !== 'none';
-  const [rows, setRows] = useState([]);
-  const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
   const [searchQuery, updateSearchQuery] = useState('');
   const [typeSelected, setTypeSelected] = useState(allRepositories);
   const [statusSelected, setStatusSelected] = useState(ALL_STATUSES);
   // repoTypes object format: [displayed_value]: API_value
   const [repoTypes, setRepoTypes] = useState({});
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
-  const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
-  const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
+  const { repository_ids: repositoryIds = [] } = details;
+
+  const {
+    isSelected,
+    selectOne,
+    selectNone,
+    selectedCount,
+    selectedResults,
+    selectionSet,
+    isSelectable,
+    ...selectAll
+  } = useSelectionSet({
+    results,
+    metadata,
+  });
+
+  const hasAddedSelected = selectedResults.some(({ id }) => repositoryIds.includes(id));
+  const hasNotAddedSelected = selectedResults.some(({ id }) => !repositoryIds.includes(id));
 
   const columnHeaders = [
-    { title: __('Type'), transforms: [fitContent] },
+    __('Type'),
     __('Name'),
     __('Product'),
     __('Sync state'),
     __('Content'),
-    { title: __('Status') },
+    __('Status'),
   ];
-  const loading = status === STATUS.PENDING;
-
-  const buildRows = useCallback(() => {
-    const newRows = [];
-    results.forEach((repo) => {
-      const {
-        id,
-        content_type: contentType,
-        name,
-        added_to_content_view: addedToCV,
-        product: { id: productId, name: productName },
-        content_counts: counts,
-        last_sync_words: lastSyncWords,
-        last_sync: lastSync,
-      } = repo;
-      const cells = [
-        { title: <Bullseye><RepoIcon type={contentType} /></Bullseye> },
-        { title: <a href={urlBuilder(`products/${productId}/repositories`, '', id)}>{name}</a> },
-        productName,
-        { title: <LastSync {...{ startedAt: lastSync?.started_at, lastSyncWords, lastSync }} /> },
-        { title: <ContentCounts {...{ counts, productId }} repoId={id} /> },
-        {
-          title: <AddedStatusLabel added={addedToCV || statusSelected === ADDED} />,
-        },
-      ];
-      newRows.push({
-        repoId: id,
-        cells,
-        added: addedToCV || statusSelected === ADDED,
-      });
-    });
-    return newRows;
-  }, [statusSelected, results]);
-
-  useDeepCompareEffect(() => {
-    if (!loading && results) {
-      const newRows = buildRows(results);
-      setRows(newRows);
-    }
-  }, [response, loading, buildRows, results]);
 
   useEffect(() => {
     dispatch(getRepositoryTypes());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
 
   // Get repo type filter selections dynamically from the API
   useDeepCompareEffect(() => {
@@ -160,12 +137,12 @@ const ContentViewRepositories = ({ cvId, details }) => {
     }
   }, [repoTypesResponse, repoTypesStatus]);
 
+
   const toggleBulkAction = () => {
     setBulkActionOpen(!bulkActionOpen);
   };
 
   const onAdd = (repos) => {
-    const { repository_ids: repositoryIds = [] } = details;
     dispatch(updateContentView(
       cvId,
       { repository_ids: repositoryIds.concat(repos) },
@@ -182,7 +159,6 @@ const ContentViewRepositories = ({ cvId, details }) => {
 
   const onRemove = (repos) => {
     const reposToDelete = [].concat(repos);
-    const { repository_ids: repositoryIds = [] } = details;
     const deletedRepos = repositoryIds.filter(x => !reposToDelete.includes(x));
     dispatch(updateContentView(
       cvId, { repository_ids: deletedRepos },
@@ -199,49 +175,40 @@ const ContentViewRepositories = ({ cvId, details }) => {
 
   const addBulk = () => {
     setBulkActionOpen(false);
-    const reposToAdd = rows.filter(({ selected, added }) =>
-      selected && !added).map(({ repoId }) => repoId);
-    deselectAll();
+    const reposToAdd = selectedResults.filter(selectedRepo =>
+      !repositoryIds.includes(selectedRepo.id)).map(({ id }) => id);
+    selectNone();
     onAdd(reposToAdd);
   };
 
   const removeBulk = () => {
     setBulkActionOpen(false);
-    const reposToDelete = rows.filter(({ selected, added }) =>
-      selected && added).map(({ repoId }) => repoId);
-    deselectAll();
+    const reposToDelete = selectedResults.filter(selectedRepo =>
+      repositoryIds.includes(selectedRepo.id)).map(({ id }) => id);
+    selectNone();
     onRemove(reposToDelete);
   };
 
-  const actionResolver = ({
-    parent,
-    compoundParent,
-    noactions,
-    added,
-  }) => {
-    if (parent || compoundParent || noactions) return null;
-    return [
-      {
-        title: 'Add',
-        isDisabled: importOnly || generatedContentView || added,
-        onClick: (_event, _rowId, rowInfo) => {
-          onAdd(rowInfo.repoId);
-        },
+  const rowDropdownItems = ({ id }) => [
+    {
+      title: 'Add',
+      isDisabled: importOnly || generatedContentView || repositoryIds.includes(id),
+      onClick: () => {
+        onAdd(id);
       },
-      {
-        title: 'Remove',
-        isDisabled: importOnly || generatedContentView || !added,
-        onClick: (_event, _rowId, rowInfo) => {
-          onRemove(rowInfo.repoId);
-        },
+    },
+    {
+      title: 'Remove',
+      isDisabled: importOnly || generatedContentView || !repositoryIds.includes(id),
+      onClick: () => {
+        onRemove(id);
       },
-    ];
-  };
+    },
+  ];
 
   const getCVReposWithOptions = useCallback((params = {}) => {
     const allParams = { ...params };
     if (typeSelected !== 'All repositories') allParams.content_type = repoTypes[typeSelected];
-
     return getContentViewRepositories(cvId, allParams, statusSelected);
   }, [cvId, repoTypes, statusSelected, typeSelected]);
 
@@ -261,7 +228,6 @@ const ContentViewRepositories = ({ cvId, details }) => {
   return (
     <TableWrapper
       {...{
-        rows,
         metadata,
         emptyContentTitle,
         emptyContentBody,
@@ -273,15 +239,16 @@ const ContentViewRepositories = ({ cvId, details }) => {
         status,
         activeFilters,
         defaultFilters,
+        selectedCount,
+        selectNone,
       }}
       ouiaId="content-view-repositories-table"
-      actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
-      onSelect={hasPermission(permissions, 'edit_content_views') && !(importOnly || generatedContentView) ? onSelect(rows, setRows) : null}
-      cells={columnHeaders}
+      {...selectAll}
       variant={TableVariant.compact}
       autocompleteEndpoint="/repositories/auto_complete_search"
       fetchItems={useCallback(params => getCVReposWithOptions(params), [getCVReposWithOptions])}
       additionalListeners={[typeSelected, statusSelected]}
+      displaySelectAllCheckbox={hasPermission(permissions, 'edit_content_views')}
       actionButtons={
         <Split hasGutter>
           <SplitItem>
@@ -325,7 +292,64 @@ const ContentViewRepositories = ({ cvId, details }) => {
           }
         </Split>
       }
-    />
+    >
+      <Thead>
+        <Tr key="version-header">
+          {hasPermission(permissions, 'edit_content_views') && <Th key="select-all" />}
+          {columnHeaders.map((title, index) => {
+            if (index === 0) {
+              return <Th modifier="fitContent" key={`col-header-${title}`}>{title}</Th>;
+            }
+            return <Th key={`col-header-${title}`}>{title}</Th>;
+          })}
+        </Tr>
+      </Thead>
+      <Tbody>
+        {results?.map((repo) => {
+          const {
+            id,
+            content_type: contentType,
+            name,
+            added_to_content_view: addedToCV,
+            product: { id: productId, name: productName },
+            content_counts: counts,
+            last_sync_words: lastSyncWords,
+            last_sync: lastSync,
+          } = repo;
+          return (
+            <Tr key={id}>
+              {hasPermission(permissions, 'edit_content_views') &&
+                <Td>
+                  <Checkbox
+                    id={id}
+                    isChecked={isSelected(id)}
+                    onChange={selected =>
+                      selectOne(selected, id, repo)
+                    }
+                  />
+                </Td>
+              }
+              <Td><Bullseye><RepoIcon type={contentType} /></Bullseye></Td>
+              <Td>
+                <a href={urlBuilder(`products/${productId}/repositories`, '', id)}>{name}</a>
+              </Td>
+              <Td>{productName}</Td>
+              <Td>
+                <LastSync {...{ startedAt: lastSync?.started_at, lastSyncWords, lastSync }} />
+              </Td>
+              <Td><ContentCounts {...{ counts, productId }} repoId={id} /></Td>
+              <Td><AddedStatusLabel added={addedToCV || statusSelected === ADDED} /></Td>
+              {hasPermission(permissions, 'edit_content_views') &&
+              <Td
+                actions={{
+                  items: rowDropdownItems(repo),
+                }}
+              />}
+            </Tr>
+          );
+        })}
+      </Tbody>
+    </TableWrapper>
   );
 };
 

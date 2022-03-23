@@ -54,9 +54,9 @@ test('Can enable and disable add repositories button', async (done) => {
   );
 
   await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
-  expect(getByLabelText('Select all rows')).toBeInTheDocument();
+  expect(getByLabelText('Select all')).toBeInTheDocument();
   expect(getByLabelText('add_repositories')).toHaveAttribute('aria-disabled', 'true');
-  getByLabelText('Select all rows').click();
+  getByLabelText('Select all').click();
   await patientlyWaitFor(() => {
     expect(getByLabelText('add_repositories')).toHaveAttribute('aria-disabled', 'false');
   });
@@ -66,7 +66,7 @@ test('Can enable and disable add repositories button', async (done) => {
 
 test('Can add repositories', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const cvAddparams = { include_permissions: true, repository_ids: [58, 62, 64, 106] };
+  const cvAddparams = { include_permissions: true, repository_ids: [58, 62, 64, 106, 107] };
 
   const repoAddscope = nockInstance
     .put(cvDetailsPath, cvAddparams)
@@ -88,9 +88,9 @@ test('Can add repositories', async (done) => {
   );
 
   await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
-  expect(getByLabelText('Select all rows')).toBeInTheDocument();
+  expect(getByLabelText('Select all')).toBeInTheDocument();
   expect(getByLabelText('add_repositories')).toHaveAttribute('aria-disabled', 'true');
-  getByLabelText('Select all rows').click();
+  getByLabelText('Select all').click();
   getByLabelText('add_repositories').click();
   await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
 
@@ -123,8 +123,8 @@ test('Can remove repositories', async (done) => {
   );
 
   await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
-  expect(getByLabelText('Select all rows')).toBeInTheDocument();
-  getByLabelText('Select all rows').click();
+  expect(getByLabelText('Select all')).toBeInTheDocument();
+  getByLabelText('Select all').click();
   await patientlyWaitFor(() => {
     expect(getByLabelText('bulk_actions')).toHaveAttribute('aria-expanded', 'false');
   });
