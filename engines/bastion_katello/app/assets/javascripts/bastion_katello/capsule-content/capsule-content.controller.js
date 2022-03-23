@@ -23,9 +23,14 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
         var urlMatcher = $urlMatcherFactory.compile("/smart_proxies/:capsuleId");
         var capsuleId = urlMatcher.exec($location.path()).capsuleId;
 
-        function processError(response) {
+        function processError(response, prependMsg) {
+            var msg = '';
             if (response.data && response.data.displayMessage) {
-                Notification.setErrorMessage(response.data.displayMessage);
+                if (angular.isDefined(prependMsg)) {
+                    msg = msg + prependMsg;
+                }
+                msg = msg + response.data.displayMessage;
+                Notification.setErrorMessage(msg);
             }
         }
 
@@ -113,7 +118,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                     'active_sync_tasks': [],
                     'last_failed_sync_tasks': []
                 };
-                processError(response);
+                processError(response, translate('Last sync failed: '));
             });
         };
 
@@ -141,7 +146,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                     $scope.syncTask = aggregateTasks($scope.syncStatus['active_sync_tasks']);
                     $scope.syncState.set(syncState.RECLAIMING_SPACE);
                 }, function (response) {
-                    processError(response);
+                    processError(response, translate('Last reclaim space failed: '));
                     $scope.syncState.set(syncState.DEFAULT);
                 });
             }
@@ -157,7 +162,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                     $scope.syncTask = aggregateTasks($scope.syncStatus['active_sync_tasks']);
                     $scope.syncState.set(syncState.SYNCING);
                 }, function (response) {
-                    processError(response);
+                    processError(response, translate('Last sync failed: '));
                     $scope.syncState.set(syncState.DEFAULT);
                 });
             }
