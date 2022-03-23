@@ -186,6 +186,35 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     refute_empty options
     assert_equal ret.first[:name], options.first.name
   end
+
+  test "kickstart_repository_options should provide options for a populated host with a selected_host_group and differing consumed content" do
+    host = ::Host.new
+    host.content_facet = ::Katello::Host::ContentFacet.new(:lifecycle_environment_id => 997,
+                                                           :content_view_id => 998,
+                                                           :content_source_id => 999)
+    hostgroup = ::Hostgroup.new(
+      :content_facet_attributes => {
+        :lifecycle_environment_id => @env.id,
+        :content_view_id => @cv.id})
+    hostgroup.architecture = @arch
+    hostgroup.operatingsystem = @os
+    hostgroup.content_source = @content_source
+
+    ret = [{:name => "boo" }]
+
+    @os.expects(:kickstart_repos).returns(ret).with do |param_host|
+      assert_instance_of ::Host::Managed, param_host
+      assert_equal @os, param_host.os
+      assert_equal 997, param_host.content_facet.lifecycle_environment_id
+      assert_equal 998, param_host.content_facet.content_view_id
+      assert_equal 999, param_host.content_facet.content_source_id
+      assert_equal @arch, param_host.architecture
+    end
+
+    options = kickstart_repository_options(host, :selected_host_group => hostgroup)
+    refute_empty options
+    assert_equal ret.first[:name], options.first.name
+  end
 end
 
 class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelperTestBase

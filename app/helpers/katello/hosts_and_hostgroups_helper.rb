@@ -205,9 +205,7 @@ module Katello
         return [] unless new_host.operatingsystem.is_a?(Redhat)
 
         if (host.is_a? ::Hostgroup)
-          new_host.content_facet = ::Katello::Host::ContentFacet.new(:lifecycle_environment_id => host.inherited_lifecycle_environment_id,
-                                                          :content_view_id => host.inherited_content_view_id,
-                                                          :content_source_id => host.inherited_content_source_id)
+          new_host.content_facet = hostgroup_content_facet(host, param_host)
         elsif host.content_facet.present?
           new_host.content_facet = ::Katello::Host::ContentFacet.new(:lifecycle_environment_id => host.content_facet.lifecycle_environment_id,
                                                           :content_view_id => host.content_facet.content_view_id,
@@ -269,6 +267,26 @@ module Katello
 
     def hosts_change_content_source
       [{ action: [_('Change Content Source'), '/change_host_content_source', false], priority: 100 }]
+    end
+
+    private
+
+    def hostgroup_content_facet(hostgroup, param_host)
+      lifecycle_environment_id = hostgroup.inherited_lifecycle_environment_id
+      content_view_id = hostgroup.inherited_content_view_id
+      content_source_id = hostgroup.inherited_content_source_id
+      if param_host.lifecycle_environment_id && (hostgroup.inherited_lifecycle_environment_id != param_host.lifecycle_environment_id)
+        lifecycle_environment_id = param_host.lifecycle_environment_id
+      end
+      if param_host.content_view_id && (hostgroup.inherited_content_view_id != param_host.content_view_id)
+        content_view_id = param_host.content_view_id
+      end
+      if param_host.content_source_id && (hostgroup.inherited_content_source_id != param_host.content_source_id)
+        content_source_id = param_host.content_source_id
+      end
+      ::Katello::Host::ContentFacet.new(:lifecycle_environment_id => lifecycle_environment_id,
+                                        :content_view_id => content_view_id,
+                                        :content_source_id => content_source_id)
     end
   end
 end
