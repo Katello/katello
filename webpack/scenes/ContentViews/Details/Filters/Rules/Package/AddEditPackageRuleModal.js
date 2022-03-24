@@ -12,8 +12,12 @@ import { addCVFilterRule, editCVFilterRule, getCVFilterRules } from '../../../Co
 import {
   selectCreateFilterRuleStatus,
 } from '../../../ContentViewDetailSelectors';
+import { orgId } from '../../../../../../services/api';
+import Search from '../../../../../../components/Search/Search';
 
-const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) => {
+const AddEditPackageRuleModal = ({
+  filterId, onClose, selectedFilterRuleData, repositoryIds,
+}) => {
   const {
     id: editingId,
     name: editingName,
@@ -22,6 +26,9 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
     min_version: editingMinVersion,
     max_version: editingMaxVersion,
   } = selectedFilterRuleData || {};
+
+  const architectureAutoCompleteEndpoint = '/packages/auto_complete_arch';
+  const nameAutoCompleteEndpoint = '/packages/auto_complete_name';
 
   const isEditing = !!selectedFilterRuleData;
 
@@ -111,6 +118,16 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
     }
   }, [status, setSaving]);
 
+  const getAutoCompleteParams = (term, autoCompleteEndpoint) => ({
+    endpoint: autoCompleteEndpoint,
+    params: {
+      organization_id: orgId(),
+      term,
+      repoids: repositoryIds,
+      non_modular: true,
+    },
+  });
+
   return (
     <Modal
       title={selectedFilterRuleData ? __('Edit RPM rule') : __('Add RPM rule')}
@@ -125,24 +142,26 @@ const AddEditPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData }) 
       }}
       >
         <FormGroup label={__('RPM name')} isRequired fieldId="name">
-          <TextInput
-            isRequired
-            type="text"
-            id="name"
-            aria-label="input_name"
-            name="name"
-            value={name}
-            onChange={value => setName(value)}
+          <Search
+            patternfly4
+            initialInputValue={name}
+            onSearch={() => {}}
+            getAutoCompleteParams={term => getAutoCompleteParams(term, nameAutoCompleteEndpoint)}
+            foremanApiAutoComplete={false}
+            isTextInput
+            setTextInputValue={setName}
           />
         </FormGroup>
         <FormGroup label={__('Architecture')} fieldId="architecture">
-          <TextInput
-            type="text"
-            id="architecture"
-            aria-label="input_architecture"
-            name="architecture"
-            value={architecture}
-            onChange={value => setArchitecture(value)}
+          <Search
+            patternfly4
+            initialInputValue={architecture}
+            onSearch={() => {}}
+            getAutoCompleteParams={term =>
+              getAutoCompleteParams(term, architectureAutoCompleteEndpoint)}
+            foremanApiAutoComplete={false}
+            isTextInput
+            setTextInputValue={setArchitecture}
           />
         </FormGroup>
         <FormGroup label={__('Version')} fieldId="version_comparator">
@@ -221,11 +240,13 @@ AddEditPackageRuleModal.propTypes = {
     min_version: PropTypes.string,
     max_version: PropTypes.string,
   }),
+  repositoryIds: PropTypes.arrayOf(PropTypes.number),
 };
 
 AddEditPackageRuleModal.defaultProps = {
   onClose: null,
   selectedFilterRuleData: undefined,
+  repositoryIds: [],
 };
 
 export default AddEditPackageRuleModal;

@@ -23,6 +23,8 @@ const TypeAhead = ({
   autoSearchDelay,
   bookmarkController,
   placeholder,
+  isTextInput,
+  setTextInputValue,
 }) => {
   const [inputValue, setInputValue] = useState(initialInputValue);
 
@@ -38,6 +40,7 @@ const TypeAhead = ({
   const handleStateChange = ({ inputValue: value }) => {
     if (typeof value === 'string') {
       setInputValue(value);
+      if (setTextInputValue) setTextInputValue(value);
     }
   };
 
@@ -82,6 +85,7 @@ const TypeAhead = ({
           activeItems,
           placeholder,
           shouldShowItems: isOpen && items.length > 0,
+          isTextInput,
         };
 
         return (
@@ -115,6 +119,8 @@ TypeAhead.propTypes = {
   autoSearchDelay: PropTypes.number,
   bookmarkController: PropTypes.string,
   placeholder: PropTypes.string,
+  isTextInput: PropTypes.bool,
+  setTextInputValue: PropTypes.func,
 };
 
 TypeAhead.defaultProps = {
@@ -125,6 +131,8 @@ TypeAhead.defaultProps = {
   autoSearchDelay: 500,
   bookmarkController: undefined,
   placeholder: undefined,
+  isTextInput: false,
+  setTextInputValue: undefined,
 };
 
 export default TypeAhead;

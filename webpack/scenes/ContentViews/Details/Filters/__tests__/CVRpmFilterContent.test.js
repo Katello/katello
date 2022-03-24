@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 
 import ContentViewFilterDetails from '../ContentViewFilterDetails';
 import { cvFilterDetailsKey } from '../../../ContentViewsConstants';
-import nock, {
+import {
   nockInstance,
   assertNockRequest,
   mockAutocomplete,
@@ -22,6 +22,8 @@ const cvFilterEditDeletePath = api.getApiUrl('/content_view_filters/2/rules/2');
 const cvPackageFilterRulesPath = api.getApiUrl('/content_view_filters/2/rules');
 const cvPackageFilterRuleCreatePath = api.getApiUrl('/content_view_filters/2/rules');
 const autocompleteUrl = '/content_view_filters/2/rules/auto_complete_search';
+const autocompleteNameUrl = '/packages/auto_complete_name';
+const autocompleteArchUrl = '/packages/auto_complete_arch';
 const renderOptions = {
   apiNamespace: cvFilterDetailsKey(1, 2),
   routerParams: {
@@ -32,21 +34,10 @@ const renderOptions = {
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
 
-let searchDelayScope;
-let autoSearchScope;
-beforeEach(() => {
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-  nock.cleanAll();
-});
-
 test('Can show filter details and package groups on page load', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
+  const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   const cvFilterScope = nockInstance
     .get(cvFilterDetailsPath)
     .query(true)
@@ -74,6 +65,8 @@ test('Can show filter details and package groups on page load', async (done) => 
   });
 
   assertNockRequest(autocompleteScope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvPackageFilterRulesScope, done);
@@ -88,6 +81,8 @@ test('Can search for package rules in package filter details', async (done) => {
   const { name: lastPackageRuleName } = lastPackageRule;
   const searchQueryMatcher = actualParams =>
     actualParams?.search?.includes(lastPackageRuleName);
+  const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const cvFilterScope = nockInstance
     .get(cvFilterDetailsPath)
@@ -127,6 +122,8 @@ test('Can search for package rules in package filter details', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvPackageFilterRulesScope);
@@ -136,6 +133,12 @@ test('Can search for package rules in package filter details', async (done) => {
 
 test('Can add package rules to filter in a self-closing modal', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteNameScope = mockAutocomplete(nockInstance, autocompleteNameUrl);
+  const autocompleteArchScope = mockAutocomplete(nockInstance, autocompleteArchUrl);
+  const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0, 3);
+  const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 3);
+
   const cvFiltersScope = nockInstance
     .get(cvFiltersPath)
     .query(true)
@@ -154,6 +157,7 @@ test('Can add package rules to filter in a self-closing modal', async (done) => 
     architecture: 'noarch',
     name: 'elephant',
   };
+
   const createdFilterDetails = {
     architecture: 'noarch',
     content_view_filter_id: 1,
@@ -167,9 +171,9 @@ test('Can add package rules to filter in a self-closing modal', async (done) => 
     .post(cvPackageFilterRuleCreatePath, newFilterRuleDetails)
     .reply(201, createdFilterDetails);
 
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-
-  const { getByText, queryByText, getByLabelText } =
+  const {
+    getByText, queryByText, getByLabelText, getAllByLabelText,
+  } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
       cvId={1}
       details={details}
@@ -183,19 +187,22 @@ test('Can add package rules to filter in a self-closing modal', async (done) => 
   });
   getByLabelText('add_rpm_rule').click();
   await patientlyWaitFor(() => {
-    expect(getByLabelText('input_name')).toBeInTheDocument();
-    expect(getByLabelText('input_architecture')).toBeInTheDocument();
+    expect(getAllByLabelText('text input for search')[1]).toBeInTheDocument();
+    expect(getAllByLabelText('text input for search')[2]).toBeInTheDocument();
     expect(getByLabelText('add_package_filter_rule')).toBeInTheDocument();
   });
-
-  fireEvent.change(getByLabelText('input_name'), { target: { value: 'elephant' } });
-  fireEvent.change(getByLabelText('input_architecture'), { target: { value: 'noarch' } });
+  fireEvent.change(getAllByLabelText('text input for search')[1], { target: { value: 'elephant' } });
+  fireEvent.change(getAllByLabelText('text input for search')[2], { target: { value: 'noarch' } });
   fireEvent.submit(getByLabelText('add_package_filter_rule'));
 
   await patientlyWaitFor(() => {
     expect(queryByText('Add rule')).not.toBeInTheDocument();
   });
   assertNockRequest(autocompleteScope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
+  assertNockRequest(autocompleteNameScope);
+  assertNockRequest(autocompleteArchScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFilterDetailsScope);
   assertNockRequest(cvPackageFilterRulesScope);
@@ -206,6 +213,9 @@ test('Can add package rules to filter in a self-closing modal', async (done) => 
 test('Remove rpm filter rule in a self-closing modal', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
+
   const cvFiltersScope = nockInstance
     .get(cvFiltersPath)
     .query(true)
@@ -247,6 +257,8 @@ test('Remove rpm filter rule in a self-closing modal', async (done) => {
   getByText('Remove').click();
 
   assertNockRequest(autocompleteScope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFilterDetailsScope);
   assertNockRequest(cvPackageFilterRulesScope);
@@ -256,13 +268,19 @@ test('Remove rpm filter rule in a self-closing modal', async (done) => {
 
 test('Edit rpm filter rule in a self-closing modal', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, true, undefined, 2);
+  const autocompleteNameScope = mockAutocomplete(nockInstance, autocompleteNameUrl);
+  const autocompleteArchScope = mockAutocomplete(nockInstance, autocompleteArchUrl);
+  const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0, 3);
+  const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 3);
   const cvFiltersScope = nockInstance
     .get(cvFiltersPath)
+    .times(2)
     .query(true)
     .reply(200, cvFilterFixtures);
   const cvFilterDetailsScope = nockInstance
     .get(cvFilterDetailsPath)
+    .times(2)
     .query(true)
     .reply(200, cvFilterDetails);
   const cvPackageFilterRulesScope = nockInstance
@@ -309,8 +327,13 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
+  assertNockRequest(autocompleteNameScope);
+  assertNockRequest(autocompleteArchScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFilterDetailsScope);
   assertNockRequest(cvPackageFilterRulesScope);
   assertNockRequest(editScope, done);
+  act(done);
 });
