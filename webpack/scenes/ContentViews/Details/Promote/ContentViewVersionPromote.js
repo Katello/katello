@@ -21,6 +21,7 @@ import {
 } from './ContentViewVersionPromoteSelectors';
 import ComponentEnvironments from '../ComponentContentViews/ComponentEnvironments';
 import Loading from '../../../../components/Loading';
+import getContentViews from "../../ContentViewsActions";
 
 const ContentViewVersionPromote = ({
   cvId, versionIdToPromote, versionNameToPromote,
@@ -58,6 +59,7 @@ const ContentViewVersionPromote = ({
   useDeepCompareEffect(() => {
     if (promoteResolved && promoteResponse) {
       dispatch(getContentViewVersions(cvId));
+      dispatch(getContentViews());
       if (detailsPage) {
         setRedirect(true);
       } else {

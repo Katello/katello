@@ -67,6 +67,7 @@ const ContentViewTable = () => {
   const openForm = () => setIsModalOpen(true);
 
   const openPublishModal = (cvInfo) => {
+    console.log("openPublishModal");
     setActionableCvDetails(cvInfo);
     setIsPublishModalOpen(true);
   };
@@ -156,7 +157,7 @@ const ContentViewTable = () => {
         updateSearchQuery,
         fetchItems,
       }}
-      additionalListeners={[isPublishModalOpen, activeSortColumn, activeSortDirection]}
+      additionalListeners={[activeSortColumn, activeSortDirection]}
       bookmarkController="katello_content_views"
       variant={TableVariant.compact}
       status={status}

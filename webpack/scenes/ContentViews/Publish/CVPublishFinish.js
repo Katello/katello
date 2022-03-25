@@ -23,6 +23,7 @@ import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 import { cvVersionPublishKey } from '../ContentViewsConstants';
 import { startPollingTask, stopPollingTask, toastTaskFinished } from '../../Tasks/TaskActions';
 import getContentViewDetails from '../Details/ContentViewDetailActions';
+import getContentViews from "../ContentViewsActions";
 
 const CVPublishFinish = ({
   cvId,
@@ -51,8 +52,9 @@ const CVPublishFinish = ({
     if (currentStep !== 1) {
       dispatch(stopPollingTask(cvVersionPublishKey(cvId, versionCount)));
       setCurrentStep(1);
+      dispatch(getContentViews());
+      dispatch(getContentViewDetails(cvId));
       if (taskComplete) {
-        dispatch(getContentViewDetails(cvId));
         dispatch(toastTaskFinished(pollResponse));
         history.push(`/content_views/${cvId}#/versions/${taskErrored ? '' : cvvID}`);
       }
