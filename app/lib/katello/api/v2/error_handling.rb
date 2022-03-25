@@ -23,6 +23,7 @@ module Katello
           rescue_from Errors::CdnSubstitutionError, :with => :rescue_from_bad_data
           rescue_from Errors::RegistrationError, :with => :rescue_from_bad_data
           rescue_from ActionController::ParameterMissing, :with => :rescue_from_missing_param
+          rescue_from ::ForemanTasks::Lock::LockConflict, :with => :rescue_from_bad_data
         end
 
         protected
