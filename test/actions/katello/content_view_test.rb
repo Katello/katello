@@ -429,6 +429,7 @@ module ::Actions::Katello::ContentView
       SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
 
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_content_view_version).returns(new_version)
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_content_view_version_id).returns(1)
 
       plan_action(action, [{:content_view_version => component, :environments => []}], [{:content_view_version => composite_version, :environments => [library]}],
                   {:errata_ids => ["FOO"]}, true, [], "BadDescription")

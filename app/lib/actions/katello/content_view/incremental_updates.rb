@@ -58,9 +58,8 @@ module Actions
 
               action = plan_action(ContentViewVersion::IncrementalUpdate, composite_version, environments,
                                    :new_components => new_components, :description => description)
-              unless SmartProxy.pulp_primary.pulp3_repository_type_support?("yum")
-                output_for_version_ids << {:version_id => action.new_content_view_version.id, :output => action.output}
-              end
+
+              output_for_version_ids << {:version_id => action.new_content_view_version_id, :output => action.output}
             end
           end
         end
