@@ -26,6 +26,7 @@ module.exports = {
   parser: '@babel/eslint-parser',
   rules: {
     'react/jsx-filename-extension': 'off',
+    'indent': 'off', 'react/forbid-prop-types': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': ["warn", {
       "additionalHooks": "(useDeepCompareEffect)"
