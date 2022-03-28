@@ -18,7 +18,7 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import { noop } from 'foremanReact/common/helpers';
 
-import { UPSTREAM_SERVER, DEFAULT_CONTENT_VIEW_LABEL, DEFAULT_LIFECYCLE_ENVIRONMENT_LABEL } from './CdnConfigurationConstants';
+import { UPSTREAM_SERVER, DEFAULT_CONTENT_VIEW_LABEL, DEFAULT_LIFECYCLE_ENVIRONMENT_LABEL, DEFAULT_ORGANIZATION_LABEL } from './CdnConfigurationConstants';
 import EditableTextInput from '../../../../components/EditableTextInput';
 
 import {
@@ -37,15 +37,17 @@ const UpstreamServerTypeForm = ({
   const [username, setUsername] = useState(cdnConfiguration.username);
   const [password, setPassword] = useState(null);
   const [organizationLabel, setOrganizationLabel] =
-    useState(cdnConfiguration.upstream_organization_label);
+    useState(cdnConfiguration.upstream_organization_label || DEFAULT_ORGANIZATION_LABEL);
   const [sslCaCredentialId, setSslCaCredentialId] = useState(cdnConfiguration.ssl_ca_credential_id);
   const updatingCdnConfiguration = useSelector(state => selectUpdatingCdnConfiguration(state));
 
   const [contentViewLabel, setContentViewLabel] =
-    useState(cdnConfiguration.upstream_content_view_label);
+    useState(cdnConfiguration.upstream_content_view_label ||
+      DEFAULT_CONTENT_VIEW_LABEL);
 
   const [lifecycleEnvironmentLabel, setLifecycleEnvironmentLabel] =
-    useState(cdnConfiguration.upstream_lifecycle_environment_label);
+    useState(cdnConfiguration.upstream_lifecycle_environment_label ||
+      DEFAULT_LIFECYCLE_ENVIRONMENT_LABEL);
 
   const [updateEnabled, setUpdateEnabled] = useState(false);
 
@@ -85,7 +87,7 @@ const UpstreamServerTypeForm = ({
       url,
       username,
       password,
-      upstream_organization_label: organizationLabel,
+      upstream_organization_label: organizationLabel || DEFAULT_ORGANIZATION_LABEL,
       ssl_ca_credential_id: sslCaCredentialId,
       upstream_content_view_label: contentViewLabel || DEFAULT_CONTENT_VIEW_LABEL,
       upstream_lifecycle_environment_label: lifecycleEnvironmentLabel ||
@@ -184,7 +186,7 @@ const UpstreamServerTypeForm = ({
           <TextInput
             aria-label="cdn-lifecycle-environment-label"
             type="text"
-            value={lifecycleEnvironmentLabel || DEFAULT_LIFECYCLE_ENVIRONMENT_LABEL}
+            value={lifecycleEnvironmentLabel || ''}
             isDisabled={updatingCdnConfiguration}
             onChange={setLifecycleEnvironmentLabel}
           />
@@ -195,7 +197,7 @@ const UpstreamServerTypeForm = ({
           <TextInput
             aria-label="cdn-content-view-label"
             type="text"
-            value={contentViewLabel || DEFAULT_CONTENT_VIEW_LABEL}
+            value={contentViewLabel || ''}
             isDisabled={updatingCdnConfiguration}
             onChange={setContentViewLabel}
           />
