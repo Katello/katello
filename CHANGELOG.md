@@ -1,3 +1,45 @@
+# 4.3.1 Ghost Pepper (2022-03-28)
+
+## Bug Fixes
+
+### Tests
+ * Katello Lint failure due to uncontrolled eslint-plugin update ([#34537](https://projects.theforeman.org/issues/34537))
+
+### Upgrades
+ * Upgrade to 4.1- 4.3 fails migration step with error "undefined local variable or method `type' for #<Katello::CdnConfiguration:0x00000000153c6198>" ([#34455](https://projects.theforeman.org/issues/34455), [274acc47](https://github.com/Katello/katello.git/commit/274acc476bc65225e98d7725e8ad0216a06fa99c))
+
+### Content Views
+ * Custom yum CV does not show correct list of packages ([#34408](https://projects.theforeman.org/issues/34408), [b07031b3](https://github.com/Katello/katello.git/commit/b07031b390ee6ae2a1e65632479ea08ad709fe97))
+ * Repo filtering shows all products and repos in different organizations ([#34407](https://projects.theforeman.org/issues/34407), [ee43f08d](https://github.com/Katello/katello.git/commit/ee43f08d58634b7f0642722217344b4fa4d6e72c))
+ * Incremental CV update fails with 400 HTTP error ([#34357](https://projects.theforeman.org/issues/34357), [80808aaf](https://github.com/Katello/katello.git/commit/80808aaf9c84efa804be14c3cf4463f11674bd3d))
+ * CV - UI - Add generic content pages to CVV details ([#34183](https://projects.theforeman.org/issues/34183), [131825e3](https://github.com/Katello/katello.git/commit/131825e3f376ef8d90a36e732a817fa83dcfb974))
+
+### Foreman Proxy Content
+ * content views configured as "import only" generate 404 errors during capsule sync ([#34384](https://projects.theforeman.org/issues/34384), [6948e2d7](https://github.com/Katello/katello.git/commit/6948e2d7b75290629c30bcccf4d681a69cb23ada))
+
+### Inter Server Sync
+ *  Importing content fails if an importer with same name already exists  ([#34373](https://projects.theforeman.org/issues/34373), [76333391](https://github.com/Katello/katello.git/commit/76333391ca1aca44e2f1304fefaf1e766002c8b5))
+ * Unable to Import any content via Import/Export ([#34338](https://projects.theforeman.org/issues/34338), [d1c48d27](https://github.com/Katello/katello.git/commit/d1c48d27730b7c424d90ba213cacea78c12e2d5c))
+ * Need a task to update the import_only flags in an importing server ([#34314](https://projects.theforeman.org/issues/34314), [068058eb](https://github.com/Katello/katello.git/commit/068058eb0e85521c86299acb1183467f96c1ce3e))
+
+### Repositories
+ * The / at the end of proxy url is not being handled correctly when trying to enable repositories' ([#34372](https://projects.theforeman.org/issues/34372), [f2c904d9](https://github.com/Katello/katello.git/commit/f2c904d9a96b07ad05f4cb7b0fa485607cb3abd1))
+ * upload-content results in wrong RPM being added to product ([#34202](https://projects.theforeman.org/issues/34202), [9803f40e](https://github.com/Katello/katello.git/commit/9803f40e203e49e369378bae6fae0adbf8cb8372))
+ * OSTree repository update error: `excludes` is not a valid attribute in `PulpOstreeClient::OstreeOstreeRemote` ([#34187](https://projects.theforeman.org/issues/34187), [c45b0fc2](https://github.com/Katello/katello.git/commit/c45b0fc21b531e9911251b47d5d1de433d5e0fda))
+ * Repository content manage UI error: OstreeBranchProvider <- OstreeBranch <- RepositoryManageContentController ([#33988](https://projects.theforeman.org/issues/33988), [97f34ee8](https://github.com/Katello/katello.git/commit/97f34ee8b7843cc8842a455173c92802ccd2abbb))
+ * "OSTree Refs" missing from OSTree Repository Details ([#34356](https://projects.theforeman.org/issues/34356), [ae534c5d](https://github.com/Katello/katello.git/commit/ae534c5d861cac1d0a178e49dcc15adf2cad7366))
+ * Limited CV docker tags cannot be pulled after syncing library repo with "limit sync tags" ([#34257](https://projects.theforeman.org/issues/34257), [b1061f57](https://github.com/Katello/katello.git/commit/b1061f5774126df14d113d9789cce92eeb9529e3))
+ * ~1gb OSTree files timeout when uploaded ([#34156](https://projects.theforeman.org/issues/34156), [85dfb446](https://github.com/Katello/hammer-cli-katello.git/commit/85dfb4465603cb80cc8145d7b260db94164b5591))
+
+### Subscriptions
+ * New version of Candlepin now has org in entitlement certificate and causes authorization issues ([#34306](https://projects.theforeman.org/issues/34306), [bc1eef93](https://github.com/Katello/katello.git/commit/bc1eef93a9299a8d127f0febeb4d4a2e111f964f))
+
+### Content Uploads
+ * Unrelated Error when uploading an ostree image if you don't specify repository ([#34182](https://projects.theforeman.org/issues/34182))
+
+### Errata Management
+ * Content Hosts->Manage Errata: undefined method join for comma-separated string ([#34175](https://projects.theforeman.org/issues/34175), [fee5cbcc](https://github.com/Katello/katello.git/commit/fee5cbcc8ee3551e5cd714eaf4b34cc6370fe84e))
+
 # 4.3.0 Ghost Pepper (2022-01-06)
 
 ## Features
