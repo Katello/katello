@@ -45,7 +45,7 @@ module Katello
         prepend ::ForemanRemoteExecution::HostExtensions if ::Katello.with_remote_execution?
         prepend Overrides
 
-        delegate :content_source_id, :content_view_id, :lifecycle_environment_id, :kickstart_repository_id, to: :content_facet, allow_nil: true
+        delegate :content_source_id, :content_view_id, :lifecycle_environment_id, :kickstart_repository_id, :bound_repositories, to: :content_facet, allow_nil: true
 
         has_many :dispatch_histories, :class_name => "::Katello::Agent::DispatchHistory", :foreign_key => :host_id, :dependent => :delete_all
 
@@ -448,7 +448,7 @@ class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
         :host_collections, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
         :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template,
-        :filtered_entitlement_quantity_consumed
+        :filtered_entitlement_quantity_consumed, :bound_repositories
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail
