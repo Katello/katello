@@ -189,6 +189,7 @@ export const ModuleStreamsTab = () => {
             fetchItems,
             status,
           }}
+          ouiaId="host-module-stream-table"
           additionalListeners={[hostId, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/module_streams/auto_complete_search`}
@@ -214,44 +215,41 @@ export const ModuleStreamsTab = () => {
               installed_profiles: installedProfiles,
               upgradable,
               module_spec: moduleSpec,
-            }, index) =>
-
-            /* eslint-disable react/no-array-index-key */
-
-              (
-                <Tr key={`${id} ${index}`}>
-                  <Td>
-                    <a
-                      href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostName}`}
-                    >
-                      {name}
-                    </a>
-                  </Td>
-                  <Td>
-                    <StreamState moduleStreamStatus={moduleStreamStatus} />
-                  </Td>
-                  <Td>{stream}</Td>
-                  <Td>
-                    <EnabledIcon
-                      streamText={moduleStreamStatus}
-                      streamInstallStatus={installedProfiles}
-                      upgradable={upgradable}
-                    />
-                  </Td>
-                  <Td>
-                    <HostInstalledProfiles
-                      moduleStreamStatus={moduleStreamStatus}
-                      installedProfiles={installedProfiles}
-                    />
-                  </Td>
-                  <Td
-                    key={`rowActions-${id}`}
-                    actions={{
-                      items: rowActions,
-                    }}
+            }, index) => (
+              /* eslint-disable react/no-array-index-key */
+              <Tr key={`${id} ${index}`}>
+                <Td>
+                  <a
+                    href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostName}`}
+                  >
+                    {name}
+                  </a>
+                </Td>
+                <Td>
+                  <StreamState moduleStreamStatus={moduleStreamStatus} />
+                </Td>
+                <Td>{stream}</Td>
+                <Td>
+                  <EnabledIcon
+                    streamText={moduleStreamStatus}
+                    streamInstallStatus={installedProfiles}
+                    upgradable={upgradable}
                   />
-                </Tr>
-              ))
+                </Td>
+                <Td>
+                  <HostInstalledProfiles
+                    moduleStreamStatus={moduleStreamStatus}
+                    installedProfiles={installedProfiles}
+                  />
+                </Td>
+                <Td
+                  key={`rowActions-${id}`}
+                  actions={{
+                    items: rowActions,
+                  }}
+                />
+              </Tr>
+            ))
             }
           </Tbody>
         </TableWrapper>

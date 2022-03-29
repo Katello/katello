@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
+import { kebabCase } from 'lodash';
 import {
   shallowEqual,
   useSelector,
@@ -34,6 +35,7 @@ const ContentViewVersionDetailsTable = ({
     fetchItems,
     columnHeaders,
     disableSearch,
+    route,
   }, repositories,
 }) => {
   const ALL_REPOSITORIES = __('All Repositories');
@@ -77,6 +79,7 @@ const ContentViewVersionDetailsTable = ({
           autocompleteEndpoint,
           disableSearch,
         }}
+        ouiaId={`content-view-version-details-${kebabCase(route)}-table`}
         additionalListeners={[selected]}
         fetchItems={fetchItemsWithRepositoryId}
         emptySearchTitle={__('Your search returned no matching ') + name}

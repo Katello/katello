@@ -53,6 +53,7 @@ const CVRpmMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
           fetchItems,
           status,
         }}
+        ouiaId="content-view-rpm-match-content-table"
         autocompleteEndpoint="/packages/auto_complete_search"
         variant={TableVariant.compact}
       >

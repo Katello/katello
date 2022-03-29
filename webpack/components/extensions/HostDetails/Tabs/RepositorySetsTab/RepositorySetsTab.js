@@ -355,6 +355,7 @@ const RepositorySetsTab = () => {
             emptySearchBody,
           }
           }
+          ouiaId="host-repository-sets-table"
           errorSearchTitle={errorSearchTitle}
           errorSearchBody={errorSearchBody}
           activeFilters={[toggleGroupState]}

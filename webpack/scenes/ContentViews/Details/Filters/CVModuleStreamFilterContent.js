@@ -216,6 +216,7 @@ const CVModuleStreamFilterContent = ({
               error,
               status,
             }}
+            ouiaId="content-view-module-stream-filter-table"
             additionalListeners={[selectedIndex]}
             activeFilters={[selectedAdded]}
             defaultFilters={[allAddedNotAdded[0]]}

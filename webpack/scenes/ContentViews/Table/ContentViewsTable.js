@@ -156,6 +156,7 @@ const ContentViewTable = () => {
         updateSearchQuery,
         fetchItems,
       }}
+      ouiaId="content-views-table"
       additionalListeners={[isPublishModalOpen, activeSortColumn, activeSortDirection]}
       bookmarkController="katello_content_views"
       variant={TableVariant.compact}

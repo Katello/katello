@@ -210,6 +210,7 @@ const PackageInstallModal = ({
           selectNone,
         }
         }
+        ouiaId="host-package-install-table"
         additionalListeners={[hostId]}
         fetchItems={fetchItems}
         searchPlaceholderText={__('Search available packages')}

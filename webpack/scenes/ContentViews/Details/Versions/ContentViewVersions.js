@@ -240,6 +240,7 @@ const ContentViewVersions = ({ cvId, details }) => {
         status,
         selectedCount,
       }}
+      ouiaId="content-view-versions-table"
       variant={TableVariant.compact}
       autocompleteEndpoint={`/content_view_versions/auto_complete_search?content_view_id=${cvId}`}
       fetchItems={useCallback((params) => {

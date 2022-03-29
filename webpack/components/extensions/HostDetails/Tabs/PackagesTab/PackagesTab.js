@@ -345,6 +345,7 @@ export const PackagesTab = () => {
             areAllRowsSelected,
           }
           }
+          ouiaId="host-packages-table"
           additionalListeners={[hostId, packageStatusSelected,
             activeSortDirection, activeSortColumn]}
           fetchItems={fetchItems}
@@ -430,14 +431,14 @@ export const PackagesTab = () => {
         </TableWrapper>
       </div>
       {hostId &&
-      <PackageInstallModal
-        isOpen={isModalOpen}
-        closeModal={closeModal}
-        hostId={hostId}
-        key={hostId}
-        hostName={hostname}
-        showKatelloAgent={showKatelloAgent}
-      />
+        <PackageInstallModal
+          isOpen={isModalOpen}
+          closeModal={closeModal}
+          hostId={hostId}
+          key={hostId}
+          hostName={hostname}
+          showKatelloAgent={showKatelloAgent}
+        />
       }
     </div>
   );

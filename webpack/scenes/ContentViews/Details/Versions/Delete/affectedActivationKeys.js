@@ -54,6 +54,7 @@ const AffectedActivationKeys = ({
         fetchItems,
         status,
       }}
+      ouiaId="content-view-delete-modal-affected-activation-keys"
       autocompleteEndpoint="/activation_keys/auto_complete_search"
       variant={TableVariant.compact}
     >

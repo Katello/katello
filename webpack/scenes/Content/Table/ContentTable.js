@@ -30,6 +30,7 @@ const ContentTable = ({
         error,
         status,
       }}
+      ouiaId="content-table"
       key={selectedContentType}
       variant={TableVariant.compact}
       autocompleteEndpoint={`/${contentTypes[selectedContentType][1]}/auto_complete_search`}
