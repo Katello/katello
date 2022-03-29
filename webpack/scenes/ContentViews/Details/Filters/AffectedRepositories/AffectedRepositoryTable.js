@@ -200,6 +200,7 @@ const AffectedRepositoryTable = ({
         error,
         status,
       }}
+      ouiaId="content-view-filter-affected-repository-table"
       onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
       cells={columnHeaders}
       variant={TableVariant.compact}

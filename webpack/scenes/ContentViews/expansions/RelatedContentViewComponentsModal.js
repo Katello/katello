@@ -58,7 +58,6 @@ const RelatedContentViewsModal = ({ cvName, cvId, relatedCVCount }) => {
             }}
             appendTo={document.body}
           >
-
             <TableWrapper
               {...{
                 metadata,
@@ -67,6 +66,7 @@ const RelatedContentViewsModal = ({ cvName, cvId, relatedCVCount }) => {
                 error,
                 status,
               }}
+              ouiaId="related-content-view-components-table"
               fetchItems={useCallback(params => getContentViewComponents(cvId, params, 'Added'), [cvId])}
               variant={TableVariant.compact}
               autocompleteEndpoint="/content_views/auto_complete_search"

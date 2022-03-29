@@ -42,6 +42,7 @@ const ContentRepositories = ({ contentType, id, tabKey }) => {
         emptySearchBody,
         emptyContentBody,
       }}
+      ouiaId="content-repositories-table"
       variant={TableVariant.compact}
       autocompleteEndpoint="/repositories/auto_complete_search"
       fetchItems={useCallback(

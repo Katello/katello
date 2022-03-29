@@ -244,6 +244,7 @@ const ContentViewComponents = ({ cvId, details }) => {
         activeFilters,
         defaultFilters,
       }}
+      ouiaId="content-view-components-table"
       actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
       onSelect={onSelect(rows, setRows)}
       cells={columnHeaders}

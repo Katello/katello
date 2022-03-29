@@ -49,6 +49,7 @@ const AffectedHosts = ({
         fetchItems,
         status,
       }}
+      ouiaId="content-view-delete-modal-affected-hosts-table"
       autocompleteEndpoint="/hosts/auto_complete_search"
       foremanApiAutoComplete
       variant={TableVariant.compact}

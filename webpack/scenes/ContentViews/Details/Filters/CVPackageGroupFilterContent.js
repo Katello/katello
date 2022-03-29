@@ -206,6 +206,7 @@ const CVPackageGroupFilterContent = ({
               error,
               status,
             }}
+            ouiaId="content-view-package-group-filter-table"
             additionalListeners={[selectedIndex]}
             activeFilters={[selectedAdded]}
             defaultFilters={[allAddedNotAdded[0]]}

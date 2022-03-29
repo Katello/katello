@@ -274,6 +274,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
         activeFilters,
         defaultFilters,
       }}
+      ouiaId="content-view-repositories-table"
       actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
       onSelect={hasPermission(permissions, 'edit_content_views') && !(importOnly || generatedContentView) ? onSelect(rows, setRows) : null}
       cells={columnHeaders}

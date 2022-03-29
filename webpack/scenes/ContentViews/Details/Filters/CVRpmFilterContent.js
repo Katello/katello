@@ -161,6 +161,7 @@ const CVRpmFilterContent = ({
               updateSearchQuery,
               status,
             }}
+            ouiaId="content-view-rpm-filter-table"
             actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
             onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
             cells={columnHeaders}

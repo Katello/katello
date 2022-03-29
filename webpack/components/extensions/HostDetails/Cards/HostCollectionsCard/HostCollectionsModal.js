@@ -35,10 +35,9 @@ export const HostCollectionsModal = ({
 
   const response = useSelector(state =>
     (adding ? selectAvailableHostCollections(state) : selectRemovableHostCollections(state))) || {};
-  const status = useSelector(state =>
-    (adding ?
-      selectAvailableHostCollectionsStatus(state) :
-      selectRemovableHostCollectionsStatus(state))) || '';
+  const status = useSelector(state => (adding ?
+    selectAvailableHostCollectionsStatus(state) :
+    selectRemovableHostCollectionsStatus(state))) || '';
   const dispatch = useDispatch();
   const { results, error: errorSearchBody, ...metadata } = response;
   const [suppressFirstFetch, setSuppressFirstFetch] = useState(false);
@@ -161,6 +160,7 @@ export const HostCollectionsModal = ({
           selectNone,
         }
         }
+        ouiaId="host-collections-table"
         additionalListeners={[hostId, modalType, existingHostCollectionIds.join(',')]}
         fetchItems={fetchItems}
         searchPlaceholderText={__('Search host collections')}

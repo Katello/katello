@@ -131,6 +131,7 @@ const CVContainerImageFilterContent = ({
               updateSearchQuery,
               status,
             }}
+            ouiaId="content-view-container-image-filter"
             actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
             onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
             cells={columnHeaders}
