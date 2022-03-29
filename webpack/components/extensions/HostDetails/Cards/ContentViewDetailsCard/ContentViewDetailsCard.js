@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardBody,
+  Dropdown,
+  DropdownItem,
   Flex,
   FlexItem,
   GridItem,
+  KebabToggle,
   Label,
 } from '@patternfly/react-core';
 
@@ -14,8 +17,8 @@ import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
-import ContentViewIcon from '../../../../scenes/ContentViews/components/ContentViewIcon';
-import { hostIsRegistered } from '../hostDetailsHelpers';
+import ContentViewIcon from '../../../../../scenes/ContentViews/components/ContentViewIcon';
+import { hostIsRegistered } from '../../hostDetailsHelpers';
 
 const HostContentViewDetails = ({
   contentView, lifecycleEnvironment, contentViewVersionId,
@@ -26,11 +29,50 @@ const HostContentViewDetails = ({
     versionLabel += ' (latest)';
   }
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const toggleBulkAction = () => setIsDropdownOpen(prev => !prev);
+
+  const dropdownItems = [
+    <DropdownItem
+      aria-label="change-host-content-view"
+      key="change-host-content-view"
+      component="button"
+      onClick={toggleBulkAction}
+    >
+      {__('Edit content view assignment')}
+    </DropdownItem>,
+  ];
+
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
       <Card isHoverable>
         <CardHeader>
-          <CardTitle>{__('Content view details')}</CardTitle>
+          <Flex
+            alignItems={{ default: 'alignItemsCenter' }}
+            justifyContent={{ default: 'justifyContentSpaceBetween' }}
+            style={{ width: '100%' }}
+          >
+            <FlexItem>
+              <Flex
+                alignItems={{ default: 'alignItemsCenter' }}
+                justifyContent={{ default: 'justifyContentSpaceBetween' }}
+              >
+                <FlexItem>
+                  <CardTitle>{__('Content view details')}</CardTitle>
+                </FlexItem>
+              </Flex>
+            </FlexItem>
+            <FlexItem>
+              <Dropdown
+                toggle={<KebabToggle aria-label="change_content_view_hamburger" onToggle={toggleBulkAction} />}
+                isOpen={isDropdownOpen}
+                isPlain
+                ouiaId="change-host-content-view-kebab"
+                position="right"
+                dropdownItems={dropdownItems}
+              />
+            </FlexItem>
+          </Flex>
         </CardHeader>
         <CardBody>
           <Flex direction={{ default: 'column' }}>

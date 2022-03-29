@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-testing-lib-wrapper';
-import ContentViewDetailsCard from '../ContentViewDetailsCard';
+import ContentViewDetailsCard from '../ContentViewDetailsCard/ContentViewDetailsCard';
 
 const baseHostDetails = {
   content_facet_attributes: {
