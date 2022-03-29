@@ -1,10 +1,10 @@
 <%#
 kind: job_template
-name: Install packages by search query - Katello SSH Default
+name: Install packages by search query - Katello Script Default
 job_category: Katello
 description_format: 'Install package(s) %{Package search query}'
 feature: katello_package_install_by_search
-provider_type: SSH
+provider_type: script
 template_inputs:
 - name: Package search query
   description: Filter criteria for packages to be installed. IMPORTANT- If left blank, the job will attempt to install all possible packages.
@@ -16,4 +16,4 @@ template_inputs:
   search: input('Package search query')
 ) -%>
 
-<%= render_template('Package Action - SSH Default', :action => 'install', :package => package_names.join(' ')) %>
+<%= render_template('Package Action - Script Default', :action => 'install', :package => package_names.join(' ')) %>

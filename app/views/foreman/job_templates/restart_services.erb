@@ -1,10 +1,10 @@
 <%#
 kind: job_template
-name: Restart Services - Katello SSH Default
+name: Restart Services - Katello Script Default
 job_category: Katello
 description_format: 'Restart Services'
 feature: katello_service_restart
-provider_type: SSH
+provider_type: script
 template_inputs:
 - name: helper
   description: A comma separated list of commands to run to restart services
@@ -19,5 +19,5 @@ reboot = commands.delete('reboot')
 <%= commands.join("\n") %>
 katello-tracer-upload
 <% if reboot -%>
-<%= render_template('Power Action - SSH Default', action: 'restart') %>
+<%= render_template('Power Action - Script Default', action: 'restart') %>
 <% end %>
