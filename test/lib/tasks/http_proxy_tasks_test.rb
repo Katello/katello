@@ -7,10 +7,6 @@ module Katello
       Rake.application.rake_require 'katello/tasks/update_content_default_http_proxy'
       Rake::Task['katello:update_default_http_proxy'].reenable
       Rake::Task.define_task(:environment)
-      @setting = Setting.find_by(name: 'content_default_http_proxy')
-      @setting ||= Setting::Content.create(FactoryBot.attributes_for(:setting, name: 'content_default_http_proxy').except(:category))
-      assert @setting
-
       HttpProxy.delete_all
 
       ::Setting.any_instance.stubs(:update_global_proxies)
@@ -40,13 +36,13 @@ module Katello
 
     def test_update_proxy_sets_default
       current_default_proxy = FactoryBot.create(:http_proxy)
-      @setting.update_attribute(:value, current_default_proxy.name)
+      Setting['content_default_http_proxy'] = current_default_proxy.name
       proxy = FactoryBot.create(:http_proxy)
       assert_raises SystemExit do
         ARGV.concat(['--', '--name', proxy.name, '--url', 'http://someurl'])
         Rake::Task['katello:update_default_http_proxy'].invoke
       end
-      assert_equal proxy.name, @setting.reload.value
+      assert_equal proxy.name, Setting['content_default_http_proxy']
     end
 
     def test_update_proxy_updates_url
@@ -88,13 +84,13 @@ module Katello
 
     def test_update_proxy_by_short_option_name_sets_default
       current_default_proxy = FactoryBot.create(:http_proxy)
-      @setting.update_attribute(:value, current_default_proxy.name)
+      Setting['content_default_http_proxy'] = current_default_proxy.name
       proxy = FactoryBot.create(:http_proxy)
       assert_raises SystemExit do
         ARGV.concat(['--', '-n', proxy.name, '--url', proxy.url])
         Rake::Task['katello:update_default_http_proxy'].invoke
       end
-      assert_equal proxy.name, @setting.reload.value
+      assert_equal proxy.name, Setting['content_default_http_proxy']
     end
 
     def test_update_proxy_by_proxy_name_and_url_creates_new_proxy
