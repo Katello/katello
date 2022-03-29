@@ -1,13 +1,13 @@
 <%#
 kind: job_template
-name: Install Package - Katello SSH Default
+name: Install Package - Katello Script Default
 job_category: Katello
 description_format: 'Install package(s) %{package}'
 feature: katello_package_install
-provider_type: SSH
+provider_type: script
 foreign_input_sets:
-- template: Package Action - SSH Default
+- template: Package Action - Script Default
   exclude: action
 %>
 
-<%= render_template('Package Action - SSH Default', :action => 'install') %>
+<%= render_template('Package Action - Script Default', :action => 'install') %>

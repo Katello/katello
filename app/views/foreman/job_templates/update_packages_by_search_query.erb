@@ -1,10 +1,10 @@
 <%#
 kind: job_template
-name: Update Packages by search query - Katello SSH Default
+name: Update Packages by search query - Katello Script Default
 job_category: Katello
 description_format: 'Update package(s) %{Packages search query}'
 feature: katello_packages_update_by_search
-provider_type: SSH
+provider_type: script
 template_inputs:
 - name: Packages search query
   description: Filter criteria for packages to be updated.
@@ -16,4 +16,4 @@ template_inputs:
   search: input('Packages search query')
 ) -%>
 
-<%= render_template('Package Action - SSH Default', :action => 'update', :package => package_names.join(' ')) %> 
+<%= render_template('Package Action - Script Default', :action => 'update', :package => package_names.join(' ')) %>
