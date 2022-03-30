@@ -152,6 +152,8 @@ module Katello
           repo_param[:download_policy] = Setting[:default_download_policy]
         end
 
+        repo_param[:mirroring_policy] = Katello::RootRepository::MIRRORING_POLICY_ADDITIVE if repo_param[:mirroring_policy].blank?
+
         RootRepository.new(repo_param.merge(:product_id => self.id))
       end
     end

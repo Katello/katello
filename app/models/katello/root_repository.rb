@@ -40,7 +40,14 @@ module Katello
     RHEL8 = 'rhel-8'.freeze
     ALLOWED_OS_VERSIONS = [RHEL6, RHEL7, RHEL8].freeze
 
+    MIRRORING_POLICY_ADDITIVE = 'additive'.freeze
+    MIRRORING_POLICY_CONTENT = 'mirror_content_only'.freeze
+    MIRRORING_POLICY_COMPLETE = 'mirror_complete'.freeze
+    MIRRORING_POLICIES = [MIRRORING_POLICY_ADDITIVE, MIRRORING_POLICY_COMPLETE, MIRRORING_POLICY_CONTENT].freeze
+
     belongs_to :product, :inverse_of => :root_repositories, :class_name => "Katello::Product"
+    has_one :provider, :through => :product
+
     belongs_to :gpg_key, :inverse_of => :root_repositories, :class_name => "Katello::GpgKey"
     belongs_to :ssl_ca_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_ca_root_repos
     belongs_to :ssl_client_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_client_root_repos
@@ -75,6 +82,7 @@ module Katello
     validate :ensure_valid_upstream_authorization
     validate :ensure_valid_deb_constraints, :if => :deb?
     validate :ensure_no_checksum_on_demand
+    validate :ensure_valid_mirroring_policy
     validates :url, presence: true, if: :ostree?
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
     validates :product_id, :presence => true
@@ -111,6 +119,8 @@ module Katello
       where(:http_proxy_id => http_proxy_id)
     }
     scope :orphaned, -> { where.not(id: Katello::Repository.pluck(:root_id).uniq) }
+    scope :redhat, -> { joins(:provider).merge(Katello::Provider.redhat) }
+    scope :custom, -> { where.not(:id => self.redhat) }
     delegate :redhat?, :provider, :organization, to: :product
 
     def library_instance
@@ -141,6 +151,21 @@ module Katello
       if !url.blank? && URI(url).scheme == 'file' &&
           [::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND, ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND].include?(download_policy)
         errors.add(:download_policy, _("Cannot sync file:// repositories with the On Demand Download Policy"))
+      end
+    end
+
+    def valid_mirroring_policies
+      if self.yum?
+        MIRRORING_POLICIES
+      else
+        [MIRRORING_POLICY_ADDITIVE, MIRRORING_POLICY_CONTENT]
+      end
+    end
+
+    def ensure_valid_mirroring_policy
+      unless valid_mirroring_policies.include?(self.mirroring_policy)
+        errors.add(:mirroring_policy, _("Invalid mirroring policy for repository type %{type}, only %{policies} are valid.") %
+          {:type => self.content_type, :policies => valid_mirroring_policies.join(', ')})
       end
     end
 
@@ -346,12 +371,16 @@ module Katello
       (%w(unprotected checksum_type container_repsoitory_name) & previous_changes.keys).any?
     end
 
+    def using_mirrored_content?
+      self.mirroring_policy != Katello::RootRepository::MIRRORING_POLICY_ADDITIVE
+    end
+
     def on_demand?
       self.download_policy == Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
     end
 
     def pulp_update_needed?
-      changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
+      changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirroring_policy verify_ssl_on_sync
                                  upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignorable_content
                                  ssl_ca_cert_id ssl_client_cert_id ssl_client_key_id http_proxy_policy http_proxy_id download_concurrency)
       changeable_attributes += %w(name container_repository_name docker_tags_whitelist) if docker?

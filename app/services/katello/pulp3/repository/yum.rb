@@ -70,6 +70,8 @@ module Katello
 
         def sync_url_params(sync_options)
           params = super
+          params.delete(:mirror)
+          params[:sync_policy] = repo.mirroring_policy
           params[:optimize] = sync_options[:optimize] if sync_options.key?(:optimize)
           params
         end

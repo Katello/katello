@@ -18,14 +18,15 @@
  * @requires Architecture
  * @requires RepositoryTypesService
  * @requires OSVersions
- * #requires HttpProxyPolicy
+ * @requires HttpProxyPolicy
+ * @requires MirroringPolicy
  *
  * @description
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', '$sce', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions',
-        function ($scope, $sce, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy, OSVersions) {
+    ['$scope', '$sce', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions', 'MirroringPolicy',
+        function ($scope, $sce, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy, OSVersions, MirroringPolicy) {
 
             function success() {
                 Notification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -64,6 +65,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
                 'checksum_type': null, 'mirror_on_sync': true, 'verify_ssl_on_sync': true,
                 'download_policy': BastionConfig.defaultDownloadPolicy, 'arch': null,
+                'mirroring_policy': MirroringPolicy.defaultMirroringPolicy,
                 'ostree_upstream_sync_policy': 'latest'});
 
             $scope.product = Product.get({id: $scope.$stateParams.productId}, function () {
@@ -79,6 +81,8 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             $scope.checksums = Checksum.checksums;
             $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
             $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;
+
+            $scope.mirroringPolicies = MirroringPolicy.mirroringPolicies;
 
             $scope.$watch('repository.name', function () {
                 if ($scope.repositoryForm && $scope.repositoryForm.name) {
