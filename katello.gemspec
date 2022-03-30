@@ -54,14 +54,14 @@ Gem::Specification.new do |gem|
 
   #pulp3
   gem.add_dependency "faraday", "< 1.9"
-  gem.add_dependency "pulpcore_client", ">= 3.16.0", "< 3.17.0"
+  gem.add_dependency "pulpcore_client", ">= 3.17.0", "< 3.18.0"
   gem.add_dependency "pulp_file_client", ">= 1.10.0", "< 1.11.0"
-  gem.add_dependency "pulp_ansible_client", ">= 0.10", "< 0.11"
-  gem.add_dependency "pulp_container_client", ">= 2.9.0", "< 2.10.0"
-  gem.add_dependency "pulp_deb_client", ">= 2.16.0", "< 2.17.0"
-  gem.add_dependency "pulp_rpm_client", ">=3.17.0", "< 3.17.5"
+  gem.add_dependency "pulp_ansible_client", ">= 0.12.1", "< 0.13"
+  gem.add_dependency "pulp_container_client", ">= 2.10.0", "< 2.11.0"
+  gem.add_dependency "pulp_deb_client", ">= 2.17.1", "< 2.18.0"
+  gem.add_dependency "pulp_rpm_client", ">= 3.17.0", "< 3.18.0"
   gem.add_dependency "pulp_certguard_client", "< 2.0"
-  gem.add_dependency "pulp_python_client", ">= 3.5.0", "< 3.6.0"
+  gem.add_dependency "pulp_python_client", ">= 3.6.0", "< 3.7.0"
   gem.add_dependency "pulp_ostree_client"
 
   # UI
