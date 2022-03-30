@@ -11,7 +11,9 @@ import {
   GridItem,
   KebabToggle,
   Label,
+  Tooltip,
 } from '@patternfly/react-core';
+import { FormattedMessage } from 'react-intl';
 
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -81,12 +83,25 @@ const HostContentViewDetails = ({
               flexWrap={{ default: 'nowrap' }}
               alignItems={{ default: 'alignItemsCenter', sm: 'alignItemsCenter' }}
             >
-              <ContentViewIcon composite={contentView.composite} style={{ marginRight: '2px' }} />
+              <ContentViewIcon composite={contentView.composite} style={{ marginRight: '2px' }} position="left" />
               <h3>{__('Content view')}</h3>
             </Flex>
             <Flex direction={{ default: 'row', sm: 'row' }} flexWrap={{ default: 'wrap' }}>
               <a style={{ fontSize: '14px' }} href={`/content_views/${contentView.id}`}>{`${contentView.name}`}</a>
-              <Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{`${lifecycleEnvironment.name}`}</Label>
+              <Tooltip
+                position="top"
+                enableFlip
+                entryDelay={400}
+                content={<FormattedMessage
+                  id="cv-card-lce-tooltip"
+                  defaultMessage={__('Lifecycle environment: {lce}')}
+                  values={{
+                    lce: lifecycleEnvironment.name,
+                  }}
+                />}
+              >
+                <Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{`${lifecycleEnvironment.name}`}</Label>
+              </Tooltip>
             </Flex>
           </Flex>
           <Flex direction={{ default: 'column' }}>

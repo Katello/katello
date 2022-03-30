@@ -244,7 +244,7 @@ const ContentViewTable = () => {
                     expandedTableRows.onToggle(isOpen, cvId),
                 }}
               />
-              <Td><ContentViewIcon composite={composite ? true : undefined} /></Td>
+              <Td><ContentViewIcon position="right" composite={composite} /></Td>
               <Td><Link to={`${urlBuilder('content_views', '')}${cvId}`}>{name}</Link></Td>
               <Td>{lastPublished ? <LongDateTime date={lastPublished} showRelativeTimeTooltip /> : <InactiveText text={__('Not yet published')} />}</Td>
               <Td><LastSync startedAt={startedAt} lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /></Td>
