@@ -12,7 +12,7 @@ class RemoveDuplicateErrata < ActiveRecord::Migration[6.0]
     #For duplicate errata,
     # a) update all RepositoryErrata to point to unique errata,
     # b) if repo-errata association for that combination exists, delete duplicate errata association
-    # c) Delete all duplicate errata
+    # c) Delete all duplicate errata and child records
     ::Katello::Erratum.group(:errata_id).having("count(errata_id) > 1").pluck(:errata_id).each do |original_errata_id|
       errata_to_keep = ::Katello::Erratum.find_by(pulp_id: original_errata_id)
       errata_all = ::Katello::Erratum.where(errata_id: original_errata_id)
@@ -24,7 +24,13 @@ class RemoveDuplicateErrata < ActiveRecord::Migration[6.0]
           repo_erratum.update(erratum_id: errata_to_keep.id)
         end
       end
-      ::Katello::Erratum.delete(dup_errata&.pluck(:id))
+      dup_errata_ids = dup_errata&.pluck(:id)
+      if dup_errata_ids&.present?
+        ::Katello::ErratumPackage.where(:erratum_id => dup_errata_ids).delete_all
+        ::Katello::ErratumBugzilla.where(:erratum_id => dup_errata_ids).delete_all
+        ::Katello::ErratumCve.where(:erratum_id => dup_errata_ids).delete_all
+        ::Katello::Erratum.where(:id => dup_errata_ids).delete_all
+      end
     end
   end
 
