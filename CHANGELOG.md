@@ -16,6 +16,7 @@
  * Add remote download rate limit ([#34345](https://projects.theforeman.org/issues/34345), [7776b81b](https://github.com/Katello/katello.git/commit/7776b81ba39ded5eee3d7cc60dd793640b56132f))
  * Use the APT verbatim publisher for deb content on Pulp 3 foreman-proxy syncs ([#34279](https://projects.theforeman.org/issues/34279), [4a363fd9](https://github.com/Katello/katello.git/commit/4a363fd945d56ad48f6a30446d9c16320819d4a5))
  * Add default download policy for deb content ([#34119](https://projects.theforeman.org/issues/34119), [48c128db](https://github.com/Katello/katello.git/commit/48c128db02a1d9e95a81e371f4d9229ae25ebb5b))
+ * De-duplicate errata migration doesn't delete child records ([#34703](https://projects.theforeman.org/issues/34703))
 
 ### Hosts
  * [SAT-4229] Content - Packages - Bulk select & remove ([#34220](https://projects.theforeman.org/issues/34220), [5e96a6f8](https://github.com/Katello/katello.git/commit/5e96a6f83e47ce3fe56862bde67d0d0b1c92bcb7))
