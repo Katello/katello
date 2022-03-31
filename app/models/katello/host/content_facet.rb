@@ -19,6 +19,8 @@ module Katello
 
       has_many :content_facet_repositories, :class_name => "Katello::ContentFacetRepository", :dependent => :destroy, :inverse_of => :content_facet
       has_many :bound_repositories, :through => :content_facet_repositories, :class_name => "Katello::Repository", :source => :repository
+      has_many :bound_content, :through => :bound_repositories, :class_name => "Katello::Content", :source => :content
+      has_many :bound_root_repositories, :through => :bound_repositories, :class_name => "Katello::RootRepository", :source => :root
 
       has_many :content_facet_applicable_debs, :class_name => "Katello::ContentFacetApplicableDeb", :dependent => :delete_all, :inverse_of => :content_facet
       has_many :applicable_debs, :through => :content_facet_applicable_debs, :class_name => "Katello::Deb", :source => :deb
@@ -176,6 +178,18 @@ module Katello
 
       def self.joins_installable_rpms
         joins_installable_relation(Katello::Rpm, Katello::ContentFacetApplicableRpm)
+      end
+
+      def self.joins_repositories
+        facet_repository = Katello::ContentFacetRepository.table_name
+        root_repository = Katello::RootRepository.table_name
+        repository = Katello::Repository.table_name
+
+        self.joins("INNER JOIN #{facet_repository} on #{facet_repository}.content_facet_id = #{table_name}.id",
+                   "INNER JOIN #{repository} on #{repository}.id = #{facet_repository}.repository_id",
+                   "INNER JOIN #{root_repository} on #{root_repository}.id = #{repository}.root_id",
+                   "INNER JOIN #{Katello::Content.table_name} on #{Katello::Content.table_name}.cp_content_id = #{root_repository}.content_id").
+             where("#{facet_repository}.content_facet_id = #{self.table_name}.id")
       end
 
       def content_view_version
