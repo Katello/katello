@@ -25,7 +25,7 @@ import ChangeHostCVModal from './ChangeHostCVModal';
 
 const HostContentViewDetails = ({
   contentView, lifecycleEnvironment, contentViewVersionId,
-  contentViewVersion, contentViewVersionLatest, hostId, hostName,
+  contentViewVersion, contentViewVersionLatest, hostId, hostName, orgId, hostEnvId,
 }) => {
   let versionLabel = `Version ${contentViewVersion}`;
   if (contentViewVersionLatest) {
@@ -126,6 +126,8 @@ const HostContentViewDetails = ({
           isOpen={isModalOpen}
           closeModal={closeModal}
           hostId={hostId}
+          hostEnvId={hostEnvId}
+          orgId={orgId}
           key={`cv-change-modal-${hostId}`}
           hostName={hostName}
         />
@@ -135,10 +137,13 @@ const HostContentViewDetails = ({
 };
 
 const ContentViewDetailsCard = ({ hostDetails }) => {
-  if (hostIsRegistered({ hostDetails }) && hostDetails.content_facet_attributes) {
+  if (hostIsRegistered({ hostDetails })
+    && hostDetails.content_facet_attributes && hostDetails.organization_id) {
     return (<HostContentViewDetails
       hostId={hostDetails.id}
       hostName={hostDetails.name}
+      orgId={hostDetails.organization_id}
+      hostEnvId={hostDetails.content_facet_attributes.lifecycle_environment_id}
       {...propsToCamelCase(hostDetails.content_facet_attributes)}
     />);
   }
@@ -160,18 +165,23 @@ HostContentViewDetails.propTypes = {
   contentViewVersionLatest: PropTypes.bool.isRequired,
   id: PropTypes.number,
   name: PropTypes.string,
+  hostEnvId: PropTypes.number,
 };
 
 HostContentViewDetails.defaultProps = {
   id: null,
   name: '',
+  hostEnvId: null,
 };
 
 ContentViewDetailsCard.propTypes = {
   hostDetails: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
-    content_facet_attributes: PropTypes.shape({}),
+    organization_id: PropTypes.number,
+    content_facet_attributes: PropTypes.shape({
+      lifecycle_environment_id: PropTypes.number,
+    }),
   }),
 };
 
