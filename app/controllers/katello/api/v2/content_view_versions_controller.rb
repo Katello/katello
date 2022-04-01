@@ -205,22 +205,19 @@ module Katello
           @composite_version_environments << version_environment
         else
           @content_view_version_environments << version_environment
-          @composite_version_environments += lookup_all_composites(version_environment[:content_view_version], params[:propagate_all_composites])
+          @composite_version_environments += lookup_all_composites(version_environment[:content_view_version]) if params[:propagate_all_composites]
         end
       end
       @composite_version_environments.uniq! { |cve| cve[:content_view_version] }
     end
 
-    def lookup_all_composites(component, propagate_all_composites)
-      composites = component.composites.select { |c| c.environments.any? }.map do |composite|
-        if propagate_all_composites || composite.content_view.auto_publish?
-          {
-            :content_view_version => composite,
-            :environments => composite.environments
-          }
-        end
+    def lookup_all_composites(component)
+      component.composites.select { |c| c.environments.any? }.map do |composite|
+        {
+          :content_view_version => composite,
+          :environments => composite.environments
+        }
       end
-      composites.compact.flatten
     end
 
     def find_version_environments_for_hosts(include_composites)

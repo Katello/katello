@@ -344,6 +344,18 @@ module Katello
       save!
     end
 
+    def auto_publish_composites!
+      metadata = {
+        description: _("Auto Publish - Triggered by '%s'") % self.name,
+        triggered_by: self.id
+      }
+      self.content_view.auto_publish_components.pluck(:composite_content_view_id).each do |composite_id|
+        ::Katello::EventQueue.push_event(::Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_id) do |attrs|
+          attrs[:metadata] = metadata
+        end
+      end
+    end
+
     def repository_type_counts_map
       counts = {}
       Katello::RepositoryTypeManager.enabled_repository_types.keys.each do |repo_type|
