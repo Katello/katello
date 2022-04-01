@@ -415,33 +415,45 @@ export const editContentViewVersionDetails = (versionId, cvId, params, handleSuc
     errorToast: error => __(`Something went wrong while editing version details. ${getResponseErrorMsgs(error.response)}`),
   });
 
-export const bulkDeleteContentViewVersion = (cvId, params, handleSuccess) => put({
+export const bulkDeleteContentViewVersion = (cvId, params, handleSuccess, handleError) => put({
   type: API_OPERATIONS.PUT,
   key: bulkRemoveVersionKey(cvId),
   url: api.getApiUrl(`/content_views/${cvId}/bulk_delete_versions`),
   params,
   handleSuccess: (response) => {
     renderTaskStartedToast(response?.data);
-    return handleSuccess();
+    handleSuccess(response);
   },
+  handleError,
   errorToast: error => __(`Something went wrong while deleting versions ${getResponseErrorMsgs(error.response)}`),
 });
 
-export const removeContentViewVersion = (cvId, versionId, versionEnvironments, params) => put({
-  type: API_OPERATIONS.PUT,
-  key: cvRemoveVersionKey(versionId, versionEnvironments),
-  url: api.getApiUrl(`/content_views/${cvId}/remove`),
-  params,
-  handleSuccess: response => renderTaskStartedToast(response.data),
-  errorToast: error => cvErrorToast(error),
-});
+export const removeContentViewVersion =
+  (cvId, versionId, versionEnvironments, params, handleSuccess, handleError) =>
+    put({
+      type: API_OPERATIONS.PUT,
+      key: cvRemoveVersionKey(versionId, versionEnvironments),
+      url: api.getApiUrl(`/content_views/${cvId}/remove`),
+      params,
+      handleSuccess: (response) => {
+        renderTaskStartedToast(response.data);
+        if (handleSuccess) return handleSuccess(response);
+        return undefined; // consistent-return
+      },
+      handleError,
+      errorToast: error => cvErrorToast(error),
+    });
 
-export const promoteContentViewVersion = params => post({
+
+export const promoteContentViewVersion = (params, handleSuccess) => post({
   type: API_OPERATIONS.POST,
   key: cvVersionPromoteKey(params.id, params.versionEnvironments),
   url: api.getApiUrl(`/content_view_versions/${params.id}/promote`),
   params,
-  handleSuccess: response => renderTaskStartedToast(response.data),
+  handleSuccess: (response) => {
+    if (handleSuccess) return handleSuccess();
+    return renderTaskStartedToast(response.data);
+  },
   errorToast: error => cvErrorToast(error),
 });
 

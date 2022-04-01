@@ -141,7 +141,6 @@ const ContentViewVersionDetailsHeader = ({
           setIsOpen={setRemovingFromEnv}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
-          detailsPage
           aria-label="remove_content_view_version_modal"
         />
       }

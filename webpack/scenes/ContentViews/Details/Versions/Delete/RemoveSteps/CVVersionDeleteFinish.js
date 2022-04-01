@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useHistory } from 'react-router-dom';
 import { STATUS } from 'foremanReact/constants';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { selectRemoveCVVersionResponse, selectRemoveCVVersionStatus } from '../../../ContentViewDetailSelectors';
-import { getContentViewVersions, removeContentViewVersion } from '../../../ContentViewDetailActions';
+import { selectRemoveCVVersionStatus } from '../../../ContentViewDetailSelectors';
+import getContentViewDetails, { removeContentViewVersion } from '../../../ContentViewDetailActions';
 import Loading from '../../../../../../components/Loading';
 import DeleteContext from '../DeleteContext';
 
@@ -15,50 +15,27 @@ const CVVersionDeleteFinish = () => {
     setIsOpen, selectedEnvSet,
     selectedCVForAK, selectedEnvForAK, selectedCVForHosts,
     selectedEnvForHost, affectedActivationKeys, affectedHosts,
-    deleteFlow, removeDeletionFlow, detailsPage,
+    deleteFlow, removeDeletionFlow,
   } = useContext(DeleteContext);
-  const removeCVVersionResponse = useSelector(state =>
-    selectRemoveCVVersionResponse(state, versionIdToRemove, versionEnvironments));
+
+  const dispatch = useDispatch();
   const removeCVVersionStatus = useSelector(state =>
     selectRemoveCVVersionStatus(state, versionIdToRemove, versionEnvironments));
-  const removeResolved = removeCVVersionStatus === STATUS.RESOLVED;
-  const dispatch = useDispatch();
   const [removeDispatched, setRemoveDispatched] = useState(false);
-  const [redirect, setRedirect] = useState(false);
   const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
+  const { push, location: { pathname } } = useHistory();
 
-  useDeepCompareEffect(() => {
-    if (removeResolved && removeCVVersionResponse && removeDispatched) {
-      dispatch(getContentViewVersions(cvId));
-      if (detailsPage) {
-        setRedirect(true);
-      } else {
-        setIsOpen(false);
-      }
+  useEffect(() => {
+    if (removeCVVersionStatus === STATUS.ERROR) {
+      setIsOpen(false);
     }
-  }, [removeCVVersionResponse, removeResolved, setIsOpen,
-    dispatch, cvId, removeDispatched, detailsPage, setRedirect]);
+  }, [setIsOpen, removeCVVersionStatus]);
 
-  /*
-    The remove version from environment API takes the following params :
-     id: Content View to remove from environments
-     environment_ids: List of environments to remove CV from
 
-     If activation keys need to be reassigned, we need to pass:
-     key_content_view_id : New Content view for activation keys
-     key_environment_id: Environment of the CV we are reassigning keys to
-
-     Additionally, if hosts need to be reassigned, we need to pass:
-     system_content_view_id: New Content view for Hosts
-     system_environment_id: Environment of the CV we are reassigning hosts to
-
-    Finally, if we want to delete the version after removing it from all environments,
-    we need to pass content_view_version_ids param, that accepts an array of versions to delete
-
-    This hook forms the params based on selections made in the wizard and dispatches the call.
-  */
   useDeepCompareEffect(() => {
     if (!removeDispatched) {
+      setRemoveDispatched(true);
+
       const environmentIdParams = (deleteFlow || removeDeletionFlow) ?
         versionEnvironments.map(env => env.id) :
         selectedEnv.map(env => env.id);
@@ -69,36 +46,44 @@ const CVVersionDeleteFinish = () => {
       };
 
       if (affectedActivationKeys) {
-        const activationKeysParams = {
+        params = {
+          ...params,
           key_content_view_id: selectedCVForAK,
           key_environment_id: selectedEnvForAK[0].id,
         };
-        params = { ...activationKeysParams, ...params };
       }
 
       if (affectedHosts) {
-        const hostParams = {
+        params = {
+          ...params,
           system_content_view_id: selectedCVForHosts,
           system_environment_id: selectedEnvForHost[0].id,
         };
-        params = { ...hostParams, ...params };
       }
 
       if (deleteFlow || removeDeletionFlow) {
-        const deletionParams = { content_view_version_ids: [versionIdToRemove] };
-        params = { ...deletionParams, ...params };
+        params = {
+          ...params,
+          content_view_version_ids: [versionIdToRemove],
+        };
       }
-      dispatch(removeContentViewVersion(cvId, versionIdToRemove, versionEnvironments, params));
-      setRemoveDispatched(true);
-    }
-  }, [cvId, versionIdToRemove, versionEnvironments, dispatch, affectedActivationKeys,
-    affectedHosts, deleteFlow, removeDeletionFlow, selectedCVForAK, selectedCVForHosts,
-    selectedEnvForAK, selectedEnvForHost, selectedEnv,
-    removeCVVersionResponse, removeCVVersionStatus, removeDispatched]);
 
-  if (redirect) {
-    return (<Redirect to="/versions" />);
-  }
+      dispatch(removeContentViewVersion(
+        cvId,
+        versionIdToRemove,
+        versionEnvironments,
+        params,
+        () => {
+          dispatch(getContentViewDetails(cvId));
+          if (pathname !== '/versions') push('/versions');
+        },
+      ));
+    }
+  }, [affectedActivationKeys, affectedHosts, cvId, deleteFlow,
+    dispatch, pathname, push, removeDeletionFlow, removeDispatched,
+    selectedCVForAK, selectedCVForHosts, selectedEnv, selectedEnvForAK,
+    selectedEnvForHost, setIsOpen, versionEnvironments, versionIdToRemove]);
+
   return <Loading loadingText={__('Please wait while the task starts..')} />;
 };
 

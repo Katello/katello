@@ -75,7 +75,6 @@ test('Can open Remove wizard and remove version from simple environment', async 
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(cvVersions)
-    .times(2)
     .query(true)
     .reply(200, cvVersionsData);
 
@@ -123,8 +122,7 @@ test('Can open Remove wizard and remove version from simple environment', async 
   assertNockRequest(scope);
   assertNockRequest(autocompleteScope);
   assertNockRequest(envPathRemovalScope);
-  assertNockRequest(versionRemovalScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(versionRemovalScope, done);
 });
 
 test('Can open Remove wizard and remove version from environment with hosts', async (done) => {
@@ -136,7 +134,6 @@ test('Can open Remove wizard and remove version from environment with hosts', as
 
   const scope = nockInstance
     .get(cvVersions)
-    .times(2)
     .query(true)
     .reply(200, cvVersionsData);
 
@@ -215,8 +212,7 @@ test('Can open Remove wizard and remove version from environment with hosts', as
   assertNockRequest(hostScope);
   assertNockRequest(cVDropDownOptionsScope);
   assertNockRequest(envPathRemovalScope);
-  assertNockRequest(versionRemovalScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(versionRemovalScope, done);
 });
 
 test('Can open Remove wizard and remove version from environment with activation keys', async (done) => {
@@ -228,7 +224,6 @@ test('Can open Remove wizard and remove version from environment with activation
 
   const scope = nockInstance
     .get(cvVersions)
-    .times(2)
     .query(true)
     .reply(200, cvVersionsData);
 
@@ -308,6 +303,5 @@ test('Can open Remove wizard and remove version from environment with activation
   assertNockRequest(activationKeysScope);
   assertNockRequest(cVDropDownOptionsScope);
   assertNockRequest(envPathRemovalScope);
-  assertNockRequest(versionRemovalScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(versionRemovalScope, done);
 });

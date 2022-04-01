@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-escape */
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import api, { foremanApi } from '../../../../services/api';
 import nock, {
   nockInstance, assertNockRequest, mockAutocomplete, mockSetting, mockForemanAutocomplete,
@@ -249,4 +249,5 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
   assertNockRequest(cVDropDownOptionsScope);
   assertNockRequest(cvDeleteScope);
   assertNockRequest(cvRedirectScope, done);
+  act(done);
 });

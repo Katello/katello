@@ -17,7 +17,7 @@ import { useSet } from '../../../../../components/Table/TableHooks';
 const RemoveCVVersionWizard = ({
   cvId, versionIdToRemove, versionNameToRemove,
   versionEnvironments, show, setIsOpen,
-  currentStep, setCurrentStep, deleteWizard, detailsPage,
+  currentStep, setCurrentStep, deleteWizard,
 }) => {
   const [selectedEnvForAK, setSelectedEnvForAK] = useState([]);
   const [selectedEnvForHost, setSelectedEnvForHost] = useState([]);
@@ -78,7 +78,7 @@ const RemoveCVVersionWizard = ({
     component: <CVReassignActivationKeysForm />,
     enableNext: canReview,
     canJumpTo: affectedActivationKeys &&
-    (affectedHosts ? selectedEnvForHost && selectedCVForHosts : true),
+      (affectedHosts ? selectedEnvForHost && selectedCVForHosts : true),
   };
 
   const reviewStep = {
@@ -133,7 +133,6 @@ const RemoveCVVersionWizard = ({
       selectedEnvForHost,
       setSelectedEnvForHost,
       selectedEnvSet,
-      detailsPage,
     }}
     >
       <Wizard
@@ -166,14 +165,12 @@ RemoveCVVersionWizard.propTypes = {
   currentStep: PropTypes.number.isRequired,
   setCurrentStep: PropTypes.func.isRequired,
   deleteWizard: PropTypes.bool.isRequired,
-  detailsPage: PropTypes.bool,
 };
 
 RemoveCVVersionWizard.defaultProps = {
   versionEnvironments: [],
   show: false,
   setIsOpen: null,
-  detailsPage: false,
 };
 
 export default RemoveCVVersionWizard;

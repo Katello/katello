@@ -13,6 +13,7 @@ import {
   selectCVVersionsStatus,
 } from '../Details/ContentViewDetailSelectors';
 import getEnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPathActions';
+import getContentViewDetails, { getContentViewVersions } from '../Details/ContentViewDetailActions';
 import CVDeletionReassignHostsForm from './Steps/CVDeletionReassignHostsForm';
 import CVDeletionReassignActivationKeysForm from './Steps/CVDeletionReassignActivationKeysForm';
 import CVDeletionReview from './Steps/CVDeletionReview';
@@ -23,7 +24,6 @@ import Loading from '../../../components/Loading';
 const ContentViewDeleteWizard =
   ({
     cvId, cvEnvironments, show, setIsOpen,
-    currentStep, setCurrentStep,
   }) => {
     const cvVersionResponse = useSelector(state => selectCVVersions(state, cvId));
     const cvVersionStatus = useSelector(state => selectCVVersionsStatus(state, cvId));
@@ -39,14 +39,19 @@ const ContentViewDeleteWizard =
     const [affectedActivationKeys, setAffectedActivationKeys] = useState(false);
     const [affectedHosts, setAffectedHosts] = useState(false);
     const [canReview, setCanReview] = useState(false);
+    const [currentStep, setCurrentStep] = useState(1);
 
     const { name } = cvDetailsResponse ?? {};
 
     useEffect(
       () => {
+        if (cvDetailsStatus !== STATUS.RESOLVED) { dispatch(getContentViewDetails(cvId)); }
+        if (cvVersionStatus !== STATUS.RESOLVED) { dispatch(getContentViewVersions(cvId)); }
         dispatch(getEnvironmentPaths());
       },
-      [dispatch],
+      // We don't want to call this everytime the status changes
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [cvId, dispatch],
     );
 
     useEffect(() => {
@@ -144,7 +149,6 @@ const ContentViewDeleteWizard =
           startAtStep={currentStep}
           onClose={() => {
             setIsOpen(false);
-            setCurrentStep(0);
           }}
           isOpen={show}
         />
@@ -157,8 +161,6 @@ ContentViewDeleteWizard.propTypes = {
   cvEnvironments: PropTypes.arrayOf(PropTypes.shape({})),
   show: PropTypes.bool,
   setIsOpen: PropTypes.func,
-  currentStep: PropTypes.number.isRequired,
-  setCurrentStep: PropTypes.func.isRequired,
 };
 
 ContentViewDeleteWizard.defaultProps = {

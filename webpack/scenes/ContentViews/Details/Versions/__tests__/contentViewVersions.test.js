@@ -235,7 +235,7 @@ test('Can reload versions upon task completion', async (done) => {
     .reply(200, cvVersionsData);
 
   const {
-    getByText, queryByLabelText, queryByText,
+    queryByLabelText, queryByText,
   } = renderWithRedux(
     withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
@@ -243,15 +243,12 @@ test('Can reload versions upon task completion', async (done) => {
 
   // Nothing will show at first, page is loading
   expect(queryByText(`Version ${firstVersion.version}`)).toBeNull();
-  // Assert that the CV version and active task is now showing on the screen.
-  const { results } = cvVersionsData;
-  [firstVersion] = results;
 
   // Assert that the CV version is shown and active task is not rendered anymore on the screen.
   await patientlyWaitFor(() => {
-    expect(getByText(`Version ${firstVersion.version}`)).toBeInTheDocument();
     expect(queryByLabelText('task_presenter')).not.toBeInTheDocument();
   });
+
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(taskSuccessScope);

@@ -1,6 +1,6 @@
 import React from 'react';
 import * as reactRedux from 'react-redux';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 import PublishContentViewWizard from '../PublishContentViewWizard';
@@ -23,9 +23,7 @@ test('Can call API and show Wizard', async (done) => {
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
     show
-    setIsOpen={() => { }}
-    currentStep={1}
-    setCurrentStep={() => { }}
+    onClose={() => { }}
   />);
 
   await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeInTheDocument());
@@ -44,9 +42,7 @@ test('Can show Wizard and show environment paths', async (done) => {
   const { getByText, getByLabelText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
     show
-    setIsOpen={() => { }}
-    currentStep={1}
-    setCurrentStep={() => { }}
+    onClose={() => { }}
   />);
 
   await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeInTheDocument());
@@ -75,9 +71,7 @@ test('Can show and hide force promotion alert', async (done) => {
   } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
     show
-    setIsOpen={() => { }}
-    currentStep={1}
-    setCurrentStep={() => { }}
+    onClose={() => { }}
   />);
 
   await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeInTheDocument());
@@ -128,9 +122,7 @@ test('Can show Wizard form and move to review', async (done) => {
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
     show
-    setIsOpen={() => { }}
-    currentStep={1}
-    setCurrentStep={() => { }}
+    onClose={() => { }}
   />);
   const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
   useSelectorMock.mockReturnValue(environmentPathsData);
@@ -156,7 +148,6 @@ test('Can move to Finish step and publish CV', async (done) => {
   const cvPublishParams = {
     id: 1, versionCount: 5, description: '', environment_ids: [], is_force_promote: false,
   };
-
   const publishScope = nockInstance
     .post(cvPublishPath, cvPublishParams)
     .reply(202, publishResponseData);
@@ -164,19 +155,17 @@ test('Can move to Finish step and publish CV', async (done) => {
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
     show
-    setIsOpen={() => { }}
-    currentStep={1}
-    setCurrentStep={() => { }}
+    onClose={() => { }}
   />);
-  const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
-  useSelectorMock.mockReturnValue(environmentPathsData);
+
   fireEvent.click(getByText('Next'));
   // Test the review page
   await patientlyWaitFor(() => {
     expect(getByText('Finish')).toBeInTheDocument();
   });
   fireEvent.click(getByText('Finish'));
-  useSelectorMock.mockClear();
+
   assertNockRequest(scope);
   assertNockRequest(publishScope, done);
+  act(done); // stop listening for nocks
 });

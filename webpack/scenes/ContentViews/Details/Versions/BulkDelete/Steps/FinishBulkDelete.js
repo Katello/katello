@@ -1,23 +1,17 @@
 import React, { useContext } from 'react';
 
 import { translate as __ } from 'foremanReact/common/I18n';
-import { STATUS } from 'foremanReact/constants';
 import { first } from 'lodash';
 import {
   useDispatch,
-  useSelector,
 } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 
 import Loading from '../../../../../../components/Loading';
-import {
+import getContentViewDetails, {
   bulkDeleteContentViewVersion,
-  getContentViewVersions,
 } from '../../../ContentViewDetailActions';
-import {
-  selectBulkRemoveCVVersionResponse,
-  selectBulkRemoveCVVersionStatus,
-} from '../../../ContentViewDetailSelectors';
+
 import { BulkDeleteContext } from '../BulkDeleteContextWrapper';
 
 export default () => {
@@ -30,10 +24,6 @@ export default () => {
     selectedCVForHosts,
   } = useContext(BulkDeleteContext);
   const { content_view: { id: cvId } } = first(versions);
-  const bulkRemoveCVVersionResponse = useSelector(state =>
-    selectBulkRemoveCVVersionResponse(state, cvId));
-  const bulkRemoveCVVersionStatus = useSelector(state =>
-    selectBulkRemoveCVVersionStatus(state, cvId));
 
   const dispatch = useDispatch();
 
@@ -55,18 +45,16 @@ export default () => {
         key_environment_id: first(selectedEnvForAK)?.id ?? undefined,
       },
       // Callback to update on success
-      () => dispatch(getContentViewVersions(cvId)),
+      () => {
+        onClose(true);
+        dispatch(getContentViewDetails(cvId));
+      },
+      // onError
+      () => { onClose(true); },
     ));
-  }, [dispatch, cvId, versions, selectedCVForHosts,
-    selectedEnvForHosts, selectedCVForAK, selectedEnvForAK]);
+  }, [dispatch, cvId, versions,
+    selectedCVForHosts, selectedEnvForHosts, selectedCVForAK, selectedEnvForAK, onClose]);
 
-  useDeepCompareEffect(() => {
-    if (!!bulkRemoveCVVersionResponse &&
-      bulkRemoveCVVersionStatus !== STATUS.PENDING) {
-      onClose(true);
-      // Send true in the onClose callback to know when to redirect on other pages
-    }
-  }, [dispatch, cvId, bulkRemoveCVVersionResponse, bulkRemoveCVVersionStatus, onClose]);
 
   return <Loading loadingText={__('Please wait while the task starts..')} />;
 };

@@ -12,19 +12,19 @@ import {
   selectEnvironmentPaths,
   selectEnvironmentPathsStatus,
 } from '../components/EnvironmentPaths/EnvironmentPathSelectors';
-import getContentViews from '../ContentViewsActions';
-import getContentViewDetails from '../Details/ContentViewDetailActions';
 import { stopPollingTask } from '../../Tasks/TaskActions';
-import { cvVersionPublishKey } from '../ContentViewsConstants';
+import { cvVersionTaskPollingKey } from '../ContentViewsConstants';
 
 const PublishContentViewWizard = ({
-  details, show, setIsOpen, currentStep, setCurrentStep,
+  details, show, onClose,
 }) => {
   const { name, id: cvId, version_count: versionCount } = details;
+  const POLLING_TASK_KEY = cvVersionTaskPollingKey(cvId);
   const [description, setDescription] = useState('');
   const [userCheckedItems, setUserCheckedItems] = useState([]);
   const [promote, setPromote] = useState(false);
   const [forcePromote, setForcePromote] = useState([]);
+  const [currentStep, setCurrentStep] = useState(1);
   const dispatch = useDispatch();
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
@@ -61,9 +61,8 @@ const PublishContentViewWizard = ({
         cvId={cvId}
         versionCount={versionCount}
         show={show}
-        setIsOpen={setIsOpen}
+        onClose={onClose}
         currentStep={currentStep}
-        setCurrentStep={setCurrentStep}
       />,
       isFinishedStep: true,
     },
@@ -72,11 +71,8 @@ const PublishContentViewWizard = ({
   useEffect(
     () => {
       dispatch(getEnvironmentPaths());
-      return () => {
-        setIsOpen(false);
-      };
     },
-    [dispatch, setIsOpen],
+    [dispatch],
   );
 
   const envPathFlat = useMemo(() => {
@@ -104,27 +100,23 @@ const PublishContentViewWizard = ({
 
   useEffect(() => {
     setForcePromote(userCheckedItems.filter(item => !isValid(item)));
-  }, [userCheckedItems, setForcePromote, isValid, setIsOpen]);
+  }, [userCheckedItems, setForcePromote, isValid]);
 
   return (
     <Wizard
-      key={versionCount + cvId}
       title={__('Publish')}
       description={currentStep === 3 ? __(`Publishing ${name}`) : __(`Determining settings for ${name}`)}
       steps={steps}
       startAtStep={currentStep}
+      // Let the wizard handle step change
+      onGoToStep={({ id }) => setCurrentStep(id)}
+      onNext={({ id }) => setCurrentStep(id)}
+      onBack={({ id }) => setCurrentStep(id)}
       onClose={() => {
-        setDescription('');
-        setUserCheckedItems([]);
-        setPromote(false);
-        setForcePromote([]);
         if (currentStep === 3) {
-          setCurrentStep(1);
-          dispatch(getContentViewDetails(cvId));
-          dispatch(getContentViews);
-          dispatch(stopPollingTask(cvVersionPublishKey(cvId, versionCount)));
-        }
-        setIsOpen(false);
+          dispatch(stopPollingTask(POLLING_TASK_KEY));
+          onClose(true);
+        } else onClose();
       }}
       isOpen={show}
     />
@@ -133,9 +125,7 @@ const PublishContentViewWizard = ({
 
 PublishContentViewWizard.propTypes = {
   show: PropTypes.bool.isRequired,
-  setIsOpen: PropTypes.func.isRequired,
-  currentStep: PropTypes.number.isRequired,
-  setCurrentStep: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
   details: PropTypes.shape({
     id: PropTypes.oneOfType([
       PropTypes.number,
