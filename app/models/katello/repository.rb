@@ -968,7 +968,7 @@ module Katello
       property :docker_upstream_name, String, desc: 'Returns name of the upstream docker repository'
     end
     class Jail < ::Safemode::Jail
-      allow :name, :label, :docker_upstream_name
+      allow :name, :label, :docker_upstream_name, :content_counts
     end
   end
 end
