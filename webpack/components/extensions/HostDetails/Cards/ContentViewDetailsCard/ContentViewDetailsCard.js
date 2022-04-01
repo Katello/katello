@@ -21,10 +21,11 @@ import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import ContentViewIcon from '../../../../../scenes/ContentViews/components/ContentViewIcon';
 import { hostIsRegistered } from '../../hostDetailsHelpers';
+import ChangeHostCVModal from './ChangeHostCVModal';
 
 const HostContentViewDetails = ({
   contentView, lifecycleEnvironment, contentViewVersionId,
-  contentViewVersion, contentViewVersionLatest,
+  contentViewVersion, contentViewVersionLatest, hostId, hostName,
 }) => {
   let versionLabel = `Version ${contentViewVersion}`;
   if (contentViewVersionLatest) {
@@ -32,14 +33,20 @@ const HostContentViewDetails = ({
   }
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const toggleBulkAction = () => setIsDropdownOpen(prev => !prev);
+  const toggleHamburger = () => setIsDropdownOpen(prev => !prev);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
+  const openModal = () => {
+    setIsDropdownOpen(false);
+    setIsModalOpen(true);
+  };
 
   const dropdownItems = [
     <DropdownItem
       aria-label="change-host-content-view"
       key="change-host-content-view"
       component="button"
-      onClick={toggleBulkAction}
+      onClick={openModal}
     >
       {__('Edit content view assignment')}
     </DropdownItem>,
@@ -66,7 +73,7 @@ const HostContentViewDetails = ({
             </FlexItem>
             <FlexItem>
               <Dropdown
-                toggle={<KebabToggle aria-label="change_content_view_hamburger" onToggle={toggleBulkAction} />}
+                toggle={<KebabToggle aria-label="change_content_view_hamburger" onToggle={toggleHamburger} />}
                 isOpen={isDropdownOpen}
                 isPlain
                 ouiaId="change-host-content-view-kebab"
@@ -114,13 +121,26 @@ const HostContentViewDetails = ({
           </Flex>
         </CardBody>
       </Card>
+      {hostId &&
+        <ChangeHostCVModal
+          isOpen={isModalOpen}
+          closeModal={closeModal}
+          hostId={hostId}
+          key={`cv-change-modal-${hostId}`}
+          hostName={hostName}
+        />
+      }
     </GridItem>
   );
 };
 
 const ContentViewDetailsCard = ({ hostDetails }) => {
   if (hostIsRegistered({ hostDetails }) && hostDetails.content_facet_attributes) {
-    return <HostContentViewDetails {...propsToCamelCase(hostDetails.content_facet_attributes)} />;
+    return (<HostContentViewDetails
+      hostId={hostDetails.id}
+      hostName={hostDetails.name}
+      {...propsToCamelCase(hostDetails.content_facet_attributes)}
+    />);
   }
   return null;
 };
@@ -138,10 +158,19 @@ HostContentViewDetails.propTypes = {
   contentViewVersionId: PropTypes.number.isRequired,
   contentViewVersion: PropTypes.string.isRequired,
   contentViewVersionLatest: PropTypes.bool.isRequired,
+  id: PropTypes.number,
+  name: PropTypes.string,
+};
+
+HostContentViewDetails.defaultProps = {
+  id: null,
+  name: '',
 };
 
 ContentViewDetailsCard.propTypes = {
   hostDetails: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
     content_facet_attributes: PropTypes.shape({}),
   }),
 };
