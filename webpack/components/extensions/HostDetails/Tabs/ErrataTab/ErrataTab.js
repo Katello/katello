@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem,
+  Split, SplitItem, ActionList, ActionListItem, Dropdown,
+  DropdownItem, DropdownToggle, DropdownToggleAction, KebabToggle,
+  Skeleton, Tooltip, ToggleGroup, ToggleGroupItem,
 } from '@patternfly/react-core';
 import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
 import {
@@ -66,6 +67,14 @@ export const ErrataTab = () => {
     = useState(PARAM_TO_FRIENDLY_NAME[initialSeverity] ?? ERRATA_SEVERITY);
   const activeFilters = [errataTypeSelected, errataSeveritySelected];
   const defaultFilters = [ERRATA_TYPE, ERRATA_SEVERITY];
+
+  const [isActionOpen, setIsActionOpen] = useState(false);
+  const onActionSelect = () => {
+    setIsActionOpen(false);
+  };
+  const onActionToggle = () => {
+    setIsActionOpen(prev => !prev);
+  };
 
   const emptyContentTitle = __('This host does not have any installable errata.');
   const emptyContentBody = __('Installable errata will appear here when available.');
@@ -258,7 +267,23 @@ export const ErrataTab = () => {
         <SplitItem>
           <ActionList isIconList>
             <ActionListItem>
-              <Button isDisabled={selectedCount === 0} onClick={apply}> {__('Apply')} </Button>
+              <Dropdown
+                onSelect={onActionSelect}
+                toggle={
+                  <DropdownToggle
+                    splitButtonItems={[
+                      <DropdownToggleAction key="action" aria-label="bulk_actions" onClick={apply}>
+                        {__('Apply')}
+                      </DropdownToggleAction>,
+                    ]}
+                    splitButtonVariant="action"
+                    toggleVariant="primary"
+                    onToggle={onActionToggle}
+                  />
+              }
+                isOpen={isActionOpen}
+                dropdownItems={dropdownItems}
+              />
             </ActionListItem>
             <ActionListItem>
               <Dropdown

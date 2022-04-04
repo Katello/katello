@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {
-  Skeleton, Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle,
+  Skeleton, Split, SplitItem, ActionList, ActionListItem, Dropdown,
+  DropdownItem, DropdownToggle, DropdownToggleAction, KebabToggle,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
@@ -26,6 +26,15 @@ const TracesTab = () => {
     name: hostname,
     content_facet_attributes: contentFacetAttributes,
   } = hostDetails;
+
+  const [isActionOpen, setIsActionOpen] = useState(false);
+  const onActionSelect = () => {
+    setIsActionOpen(false);
+  };
+  const onActionToggle = () => {
+    setIsActionOpen(prev => !prev);
+  };
+
   const showEnableTracer = (contentFacetAttributes?.katello_tracer_installed === false);
   const emptyContentTitle = __('This host currently does not have traces.');
   const emptyContentBody = __('Add traces by applying updates on this host.');
@@ -105,17 +114,28 @@ const TracesTab = () => {
       <SplitItem>
         <ActionList isIconList>
           <ActionListItem>
-            <Button
-              variant="secondary"
-              isDisabled={selectedCount === 0}
-              onClick={onBulkRestartApp}
-            >
-              {__('Restart app')}
-            </Button>
+            <Dropdown
+              onSelect={onActionSelect}
+              toggle={
+                <DropdownToggle
+                  aria-label="bulk_actions"
+                  splitButtonItems={[
+                    <DropdownToggleAction key="action" onClick={onBulkRestartApp}>
+                      {__('Restart app')}
+                    </DropdownToggleAction>,
+                  ]}
+                  splitButtonVariant="action"
+                  toggleVariant="primary"
+                  onToggle={onActionToggle}
+                />
+              }
+              isOpen={isActionOpen}
+              dropdownItems={dropdownItems}
+            />
           </ActionListItem>
           <ActionListItem>
             <Dropdown
-              toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+              toggle={<KebabToggle aria-label="bulk_actions_kebab" onToggle={toggleBulkAction} />}
               isOpen={isBulkActionOpen}
               isPlain
               dropdownItems={dropdownItems}
