@@ -21,6 +21,7 @@ import {
 } from './ContentViewVersionPromoteSelectors';
 import ComponentEnvironments from '../ComponentContentViews/ComponentEnvironments';
 import Loading from '../../../../components/Loading';
+import getContentViews from '../../ContentViewsActions';
 
 const ContentViewVersionPromote = ({
   cvId, versionIdToPromote, versionNameToPromote,
@@ -52,7 +53,7 @@ const ContentViewVersionPromote = ({
       versionEnvironments,
       environment_ids: userCheckedItems.map(item => item.id),
       force: true,
-    }));
+    }, () => dispatch(getContentViews())));
   };
 
   useDeepCompareEffect(() => {
@@ -66,6 +67,7 @@ const ContentViewVersionPromote = ({
     }
     if (promoteError) {
       setLoading(false);
+      setIsOpen(false);
     }
   }, [promoteResponse, promoteResolved, promoteError, detailsPage,
     setRedirect, setLoading, setIsOpen, dispatch, cvId]);

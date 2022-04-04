@@ -7,7 +7,6 @@ import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import { Button } from '@patternfly/react-core';
 import { TableVariant, Thead, Tbody, Th, Tr, Td, ExpandableRowContent } from '@patternfly/react-table';
 import TableWrapper from '../../../components/Table/TableWrapper';
-// import tableDataGenerator, { buildColumns } from './tableDataGenerator';
 import getContentViews from '../ContentViewsActions';
 import CreateContentViewModal from '../Create/CreateContentViewModal';
 import CopyContentViewModal from '../Copy/CopyContentViewModal';
@@ -15,8 +14,6 @@ import PublishContentViewWizard from '../Publish/PublishContentViewWizard';
 import { selectContentViews, selectContentViewStatus, selectContentViewError } from '../ContentViewSelectors';
 import ContentViewVersionPromote from '../Details/Promote/ContentViewVersionPromote';
 import getEnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPathActions';
-import ContentViewDeleteWizard from '../Delete/ContentViewDeleteWizard';
-import getContentViewDetails, { getContentViewVersions } from '../Details/ContentViewDetailActions';
 import { hasPermission } from '../helpers';
 import { useSet, useTableSort } from '../../../components/Table/TableHooks';
 import ContentViewIcon from '../components/ContentViewIcon';
@@ -25,6 +22,7 @@ import LastSync from '../Details/Repositories/LastSync';
 import InactiveText from '../components/InactiveText';
 import ContentViewVersionCell from './ContentViewVersionCell';
 import DetailsExpansion from '../expansions/DetailsExpansion';
+import ContentViewDeleteWizard from '../Delete/ContentViewDeleteWizard';
 
 const ContentViewTable = () => {
   const response = useSelector(selectContentViews);
@@ -41,7 +39,6 @@ const ContentViewTable = () => {
   const [actionableCvDetails, setActionableCvDetails] = useState({});
   const [actionableCvId, setActionableCvId] = useState('');
   const [actionableCvName, setActionableCvName] = useState('');
-  const [currentStep, setCurrentStep] = useState(1);
   const dispatch = useDispatch();
   const metadata = omit(response, ['results']);
   const { can_create: canCreate = false, results } = response;
@@ -78,8 +75,6 @@ const ContentViewTable = () => {
   };
 
   const openDeleteModal = (cvInfo) => {
-    dispatch(getContentViewDetails(cvInfo.id));
-    dispatch(getContentViewVersions(cvInfo.id));
     setActionableCvDetails(cvInfo);
     setIsDeleteModalOpen(true);
   };
@@ -157,7 +152,7 @@ const ContentViewTable = () => {
         fetchItems,
       }}
       ouiaId="content-views-table"
-      additionalListeners={[isPublishModalOpen, activeSortColumn, activeSortDirection]}
+      additionalListeners={[activeSortColumn, activeSortDirection]}
       bookmarkController="katello_content_views"
       variant={TableVariant.compact}
       status={status}
@@ -175,9 +170,12 @@ const ContentViewTable = () => {
             <PublishContentViewWizard
               details={actionableCvDetails}
               show={isPublishModalOpen}
-              setIsOpen={setIsPublishModalOpen}
-              currentStep={currentStep}
-              setCurrentStep={setCurrentStep}
+              onClose={(makeCallback) => {
+                if (makeCallback) {
+                  dispatch(getContentViews(apiSortParams));
+                }
+                setIsPublishModalOpen(false);
+              }}
               aria-label="publish_content_view_modal"
             />
           }
@@ -190,16 +188,15 @@ const ContentViewTable = () => {
               setIsOpen={setIsPromoteModalOpen}
             />
           }
-          {isDeleteModalOpen && <ContentViewDeleteWizard
-            cvId={id && Number(id)}
-            cvEnvironments={environments}
-            cvVersions={versions}
-            show={isDeleteModalOpen}
-            setIsOpen={setIsDeleteModalOpen}
-            currentStep={currentStep}
-            setCurrentStep={setCurrentStep}
-            aria-label="delete_content_view_modal"
-          />}
+          {isDeleteModalOpen &&
+            <ContentViewDeleteWizard
+              cvId={id && Number(id)}
+              cvEnvironments={environments}
+              cvVersions={versions}
+              show={isDeleteModalOpen}
+              setIsOpen={setIsDeleteModalOpen}
+              aria-label="delete_content_view_modal"
+            />}
         </>
       }
     >

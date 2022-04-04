@@ -54,12 +54,16 @@ export const copyContentView = params => post({
   errorToast: error => cvErrorToast(error),
 });
 
-export const publishContentView = params => post({
+export const publishContentView = (params, handleSuccess, handleError) => post({
   type: API_OPERATIONS.POST,
   key: cvVersionPublishKey(params.id, params.versionCount),
   url: api.getApiUrl(`/content_views/${params.id}/publish`),
   params,
-  handleSuccess: response => renderTaskStartedToast(response.data),
+  handleSuccess: (response) => {
+    if (handleSuccess) handleSuccess(response);
+    return renderTaskStartedToast(response.data);
+  },
+  handleError,
   errorToast: error => cvErrorToast(error),
 });
 

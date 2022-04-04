@@ -41,3 +41,9 @@ export const startPollingTask = (key, task, handleSuccess) =>
   withInterval(getTask(pollTaskKey(key), task, handleSuccess));
 
 export const stopPollingTask = key => stopInterval(pollTaskKey(key));
+
+export const clearPollTaskData = key => ({
+  type: `${pollTaskKey(key)}_UPDATE`,
+  key: pollTaskKey(key),
+  payload: {},
+});

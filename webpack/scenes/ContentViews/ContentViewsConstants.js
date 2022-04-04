@@ -48,6 +48,7 @@ export const cvRemoveVersionKey = (versionId, versionEnvironments) => `REMOVE_CV
 export const cvVersionPromoteKey = (versionId, environmentIds) => `PROMOTE_CONTENT_VIEW_VERSION_${versionId}_${environmentIds.length}`;
 export const cvVersionDetailsKey = (cvId, versionId) => `CONTENT_VIEW_VERSION_DETAILS_${cvId}_${versionId}`;
 export const cvVersionPublishKey = (cvId, versionCount) => `${PUBLISH_CONTENT_VIEW_KEY}_${cvId}_VERSION_${versionCount}`;
+export const cvVersionTaskPollingKey = cvId => `CONTENT_VIEW_VERSION_POLLING_${cvId}`;
 export const cvAddComponentKey = cvId => `${CONTENT_VIEWS_KEY}_ADD_COMPONENT_${cvId}`;
 export const cvRemoveComponentKey = cvId => `${CONTENT_VIEWS_KEY}_REMOVE_COMPONENT_${cvId}`;
 

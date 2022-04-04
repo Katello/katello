@@ -1,5 +1,5 @@
 import { STATUS } from 'foremanReact/constants';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
@@ -16,57 +16,42 @@ import {
   selectPublishContentViewsError, selectPublishContentViews,
   selectPublishContentViewStatus,
 } from './ContentViewPublishSelectors';
-import { selectPublishTaskPoll, selectPublishTaskPollStatus } from '../Details/ContentViewDetailSelectors';
+import { selectTaskPoll, selectTaskPollStatus } from '../Details/ContentViewDetailSelectors';
 import { publishContentView } from '../ContentViewsActions';
 import Loading from '../../../components/Loading';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
-import { cvVersionPublishKey } from '../ContentViewsConstants';
-import { startPollingTask, stopPollingTask, toastTaskFinished } from '../../Tasks/TaskActions';
+import { cvVersionTaskPollingKey } from '../ContentViewsConstants';
+import { clearPollTaskData, startPollingTask, stopPollingTask, toastTaskFinished } from '../../Tasks/TaskActions';
 import getContentViewDetails from '../Details/ContentViewDetailActions';
 
 const CVPublishFinish = ({
   cvId,
-  userCheckedItems, setUserCheckedItems,
-  forcePromote, description, setDescription,
-  setIsOpen, versionCount, currentStep, setCurrentStep,
+  userCheckedItems,
+  forcePromote, description,
+  onClose, versionCount, currentStep,
 }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [publishDispatched, setPublishDispatched] = useState(false);
   const [saving, setSaving] = useState(true);
-  const [polling, setPolling] = useState(false);
+  const POLLING_TASK_KEY = cvVersionTaskPollingKey(cvId);
   const [taskErrored, setTaskErrored] = useState(false);
   const response = useSelector(state => selectPublishContentViews(state, cvId, versionCount));
   const status = useSelector(state => selectPublishContentViewStatus(state, cvId, versionCount));
   const error = useSelector(state => selectPublishContentViewsError(state, cvId, versionCount));
+
   const pollResponse = useSelector(state =>
-    selectPublishTaskPoll(state, cvVersionPublishKey(cvId, versionCount)), shallowEqual);
+    selectTaskPoll(state, POLLING_TASK_KEY), shallowEqual);
   const pollResponseStatus = useSelector(state =>
-    selectPublishTaskPollStatus(state, cvVersionPublishKey(cvId, versionCount)), shallowEqual);
+    selectTaskPollStatus(state, POLLING_TASK_KEY), shallowEqual);
+
   const { input: { content_view_version_id: cvvID } = {} } = response;
 
-  const progressCompleted = () => (pollResponse.progress ? pollResponse.progress * 100 : 0);
+  const progressCompleted = pollResponse.progress ? pollResponse.progress * 100 : 0;
 
-  const handleEndTask = useCallback(({ taskComplete }) => {
-    if (currentStep !== 1) {
-      dispatch(stopPollingTask(cvVersionPublishKey(cvId, versionCount)));
-      setCurrentStep(1);
-      if (taskComplete) {
-        dispatch(getContentViewDetails(cvId));
-        dispatch(toastTaskFinished(pollResponse));
-        history.push(`/content_views/${cvId}#/versions/${taskErrored ? '' : cvvID}`);
-      }
-      setIsOpen(false);
-    }
-  }, [
-    currentStep, cvId, cvvID, dispatch, history,
-    pollResponse, setCurrentStep, setIsOpen, versionCount, taskErrored]);
-
-
-  useEffect(() => {
-    if (currentStep !== 3 && !publishDispatched) {
-      setCurrentStep(3);
-      setSaving(true);
+  // Fire this on load
+  useDeepCompareEffect(() => {
+    if (currentStep === 3 && !publishDispatched) {
       setPublishDispatched(true);
       dispatch(publishContentView({
         id: cvId,
@@ -74,102 +59,89 @@ const CVPublishFinish = ({
         description,
         environment_ids: userCheckedItems.map(item => item.id),
         is_force_promote: (forcePromote.length > 0),
-      }));
-      setDescription('');
-      setUserCheckedItems([]);
+      }, ({ data: task }) => {
+        // First callback
+        dispatch(startPollingTask(
+          POLLING_TASK_KEY, task,
+          () => {
+            // Second Callback
+            setSaving(false);
+          },
+        ));
+      }, () => { setSaving(false); }));
     }
-  }, [dispatch, setSaving, publishDispatched, setPublishDispatched,
-    setDescription, setUserCheckedItems, currentStep, setCurrentStep,
-    cvId, versionCount, description, forcePromote, userCheckedItems]);
-
-  useDeepCompareEffect(() => {
-    if (!response) return;
-    const pollPublishTask = (cvPublishVersionKey, task) => {
-      if (!polling) dispatch(startPollingTask(cvPublishVersionKey, task));
-    };
-
-    setSaving(true);
-    const { id } = response;
-    if (id && status === STATUS.RESOLVED) {
-      setSaving(false);
-      pollPublishTask(cvVersionPublishKey(cvId, versionCount), response);
-      setPolling(true);
-    } else if (status === STATUS.ERROR) {
-      setSaving(false);
-    }
-  }, [response, status, error, cvId, versionCount,
-    dispatch, polling, setPolling, setSaving]);
-
+  }, [POLLING_TASK_KEY, currentStep, cvId, description, dispatch, forcePromote,
+    publishDispatched, userCheckedItems, versionCount]);
 
   useDeepCompareEffect(() => {
     const { state, result } = pollResponse;
+    if (!state || !result || !publishDispatched || saving) return;
     if (state === 'paused' || result === 'error') {
       setTaskErrored(true);
-      setTimeout(() => {
-        handleEndTask({ taskComplete: true });
-      }, 500);
     }
     if (state === 'stopped' && result === 'success') {
-      setTimeout(() => {
-        handleEndTask({ taskComplete: true });
-      }, 500);
+      dispatch(stopPollingTask(POLLING_TASK_KEY));
+      dispatch(clearPollTaskData(POLLING_TASK_KEY));
+      dispatch(getContentViewDetails(cvId));
+      dispatch(toastTaskFinished(pollResponse));
+      history.push(`/content_views/${cvId}#/versions/${cvvID || ''}`);
+      onClose();
     }
-  }, [pollResponse, dispatch, setTaskErrored,
-    setPolling, setIsOpen, pollResponseStatus, handleEndTask]);
+  }, [pollResponse, dispatch, setTaskErrored, pollResponseStatus,
+    POLLING_TASK_KEY, cvId, history, taskErrored, cvvID, onClose,
+    publishDispatched, saving]);
 
-  if (saving) {
+  if (saving || status === STATUS.PENDING) {
     return <Loading />;
   }
-  if (polling && pollResponse) {
-    return (
-      <>
-        <EmptyState style={{ marginTop: '10px' }} variant={EmptyStateVariant.large}>
-          <EmptyStateIcon icon={InProgressIcon} />
-          <Title headingLevel="h2" size="lg">
-            {__('Publishing content view')}
-          </Title>
-        </EmptyState>
-        <Grid hasGutter>
-          <GridItem span={12} rowSpan={19}>
-            <Progress
-              value={progressCompleted()}
-              title={__('In progress')}
-              measureLocation={ProgressMeasureLocation.outside}
-              variant={taskErrored ? ProgressVariant.danger : ProgressVariant.default}
-              size={ProgressSize.lg}
-            />
-          </GridItem>
-          <GridItem style={{ marginTop: '10px' }} span={12} rowSpan={1}>
-            <Bullseye>
-              <Button
-                onClick={() => {
-                  handleEndTask({ taskComplete: false });
-                }}
-                variant="primary"
-                aria-label="publish_content_view"
-              >
-                {__('Close')}
-              </Button>
-              <Button
-                component="a"
-                aria-label="view tasks button"
-                href={`/foreman_tasks/tasks/${pollResponse.id}`}
-                target="_blank"
-                variant="link"
-              >
-                {__(' View task details ')}
-                <ExternalLinkAltIcon />
-              </Button>
-            </Bullseye>
-          </GridItem>
-        </Grid>
-      </>
-    );
-  }
-  if (status === STATUS.PENDING) return (<Loading />);
+
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
 
-  return <Loading />;
+  return (
+    <>
+      <EmptyState style={{ marginTop: '10px' }} variant={EmptyStateVariant.large}>
+        <EmptyStateIcon icon={InProgressIcon} />
+        <Title headingLevel="h2" size="lg">
+          {__('Publishing content view')}
+        </Title>
+      </EmptyState>
+      <Grid hasGutter>
+        <GridItem span={12} rowSpan={19}>
+          <Progress
+            value={progressCompleted}
+            title={__('In progress')}
+            measureLocation={ProgressMeasureLocation.outside}
+            variant={taskErrored ? ProgressVariant.danger : ProgressVariant.default}
+            size={ProgressSize.lg}
+          />
+        </GridItem>
+        <GridItem style={{ marginTop: '10px' }} span={12} rowSpan={1}>
+          <Bullseye>
+            <Button
+              onClick={() => {
+                dispatch(stopPollingTask(POLLING_TASK_KEY));
+                onClose(true);
+              }}
+              variant="primary"
+              aria-label="publish_content_view"
+            >
+              {__('Close')}
+            </Button>
+            <Button
+              component="a"
+              aria-label="view tasks button"
+              href={`/foreman_tasks/tasks/${pollResponse.id}`}
+              target="_blank"
+              variant="link"
+            >
+              {__(' View task details ')}
+              <ExternalLinkAltIcon />
+            </Button>
+          </Bullseye>
+        </GridItem>
+      </Grid>
+    </>
+  );
 };
 
 CVPublishFinish.propTypes = {
@@ -179,13 +151,10 @@ CVPublishFinish.propTypes = {
   ]).isRequired,
   forcePromote: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   description: PropTypes.string.isRequired,
-  setDescription: PropTypes.func.isRequired,
   userCheckedItems: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  setUserCheckedItems: PropTypes.func.isRequired,
-  setIsOpen: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
   versionCount: PropTypes.number.isRequired,
   currentStep: PropTypes.number.isRequired,
-  setCurrentStep: PropTypes.func.isRequired,
 };
 
 

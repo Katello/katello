@@ -8,7 +8,6 @@ import { STATUS } from 'foremanReact/constants';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { first } from 'lodash';
-import { selectIntervals } from 'foremanReact/redux/middlewares/IntervalMiddleware/IntervalSelectors.js';
 import { useSelectionSet } from '../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import InactiveText from '../../components/InactiveText';
@@ -24,19 +23,24 @@ import {
 import getEnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPathActions';
 import ContentViewVersionPromote from '../Promote/ContentViewVersionPromote';
 import TaskPresenter from '../../components/TaskPresenter/TaskPresenter';
-import { startPollingTask, stopPollingTask } from '../../../Tasks/TaskActions';
 import RemoveCVVersionWizard from './Delete/RemoveCVVersionWizard';
 import { hasPermission } from '../../helpers';
-import { pollTaskKey } from '../../../Tasks/helpers';
 import BulkDeleteModal from './BulkDelete/BulkDeleteModal';
+import { selectEnvironmentPathsStatus } from '../../components/EnvironmentPaths/EnvironmentPathSelectors';
 
 
 const ContentViewVersions = ({ cvId, details }) => {
   const response = useSelector(state => selectCVVersions(state, cvId));
   const { results, ...metadata } = response;
+
+  const firstIdWithActiveHistory =
+    results?.find(({ active_history: activeHistory }) =>
+      activeHistory?.length)?.id;
+
   const status = useSelector(state => selectCVVersionsStatus(state, cvId));
   const error = useSelector(state => selectCVVersionsError(state, cvId));
-  const [pollingFinished, setPollingFinished] = useState(false);
+  const envStatus = useSelector(state => selectEnvironmentPathsStatus(state, cvId));
+
   const dispatch = useDispatch();
   const [searchQuery, updateSearchQuery] = useState('');
   const [versionIdToPromote, setVersionIdToPromote] = useState('');
@@ -50,9 +54,7 @@ const ContentViewVersions = ({ cvId, details }) => {
   const [deleteVersion, setDeleteVersion] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const { permissions } = details;
-  const [currentTask, setCurrentTask] = useState(null);
   const [kebabOpen, setKebabOpen] = useState(false);
-  const intervals = useSelector(state => selectIntervals(state));
   const hasActionPermissions = hasPermission(permissions, 'promote_or_remove_content_views');
   const renderActionButtons =
     hasActionPermissions && status === STATUS.RESOLVED && !!results?.length;
@@ -76,36 +78,12 @@ const ContentViewVersions = ({ cvId, details }) => {
 
   useEffect(
     () => {
-      dispatch(getEnvironmentPaths());
+      if (envStatus !== STATUS.RESOLVED) { dispatch(getEnvironmentPaths()); }
     },
+    // We only want this to fire once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [dispatch],
   );
-
-  useEffect(() => {
-    if (currentTask) {
-      dispatch(startPollingTask(
-        currentTask.id, currentTask,
-        ({ data: { result, pending, progress } = {} }) => {
-          if (result !== 'pending' &&
-            !pending && progress === 1) {
-            dispatch(stopPollingTask(currentTask.id));
-            // This is what is getting called 5 times
-          }
-        },
-      ));
-    }
-    return () => { setCurrentTask(null); };
-  }, [currentTask, dispatch, pollingFinished]);
-
-
-  useEffect(() => {
-    if (pollingFinished) {
-      setPollingFinished(false);
-      setCurrentTask(null);
-      dispatch(getContentViewVersions(cvId));
-      // For some reason this needs to finish for the above to stop being called.
-    }
-  }, [cvId, dispatch, pollingFinished]);
 
   const buildCells = (cvVersion) => {
     const {
@@ -115,7 +93,25 @@ const ContentViewVersions = ({ cvId, details }) => {
       environments,
       rpm_count: packageCount,
       errata_counts: errataCounts,
+      active_history: activeHistory,
     } = cvVersion;
+
+    if (activeHistory?.length) {
+      return [
+        '',
+        <Link disabled to={`/versions/${versionId}`}>{__('Version ')}{version}</Link>,
+        <TaskPresenter
+          activeHistory={first(activeHistory)}
+          cvId={cvId}
+          allowCallback={firstIdWithActiveHistory === versionId}
+        />,
+        '',
+        '',
+        '',
+        description ? <TableText wrapModifier="truncate">{description}</TableText> : <InactiveText text={__('No description')} />,
+      ];
+    }
+
     return [
       <Checkbox
         id={versionId}
@@ -135,41 +131,12 @@ const ContentViewVersions = ({ cvId, details }) => {
     ];
   };
 
-  const buildActiveTaskCells = (cvVersion, pollIntervals) => {
-    const {
-      version,
-      description,
-      id: versionId,
-      active_history: activeHistory,
-    } = cvVersion;
-    const [{ task }] = activeHistory;
-    const { result } = task || {};
-
-    if (!currentTask && result !== 'error' && !pollIntervals[pollTaskKey(task.id)]) {
-      setCurrentTask(task);
-    }
-
-    return [
-      '',
-      <Link disabled to={`/versions/${versionId}`}>{__('Version ')}{version}</Link>,
-      <TaskPresenter
-        activeHistory={first(activeHistory)}
-        setPollingFinished={setPollingFinished}
-      />,
-      '',
-      '',
-      '',
-      description ? <TableText wrapModifier="truncate">{description}</TableText> : <InactiveText text={__('No description')} />,
-    ];
-  };
-
 
   const onPromote = ({ cvVersionId, cvVersionName, cvVersionEnvironments }) => {
     setVersionIdToPromote(cvVersionId);
     setVersionNameToPromote(cvVersionName);
     setVersionEnvironments(cvVersionEnvironments);
     setPromoting(true);
-    setPollingFinished(false);
   };
 
   const onRemoveFromEnv = ({
@@ -180,7 +147,6 @@ const ContentViewVersions = ({ cvId, details }) => {
     setVersionEnvironments(cvVersionEnvironments);
     setRemovingFromEnv(true);
     setDeleteVersion(deleting);
-    setPollingFinished(false);
   };
 
   const rowDropdownItems = ({
@@ -215,7 +181,6 @@ const ContentViewVersions = ({ cvId, details }) => {
         onClick: () => {
           selectionSet.clear();
           selectOne(true, versionId);
-          setPollingFinished(false);
           setBulkDeleteModalOpen(true);
         },
       },
@@ -263,7 +228,6 @@ const ContentViewVersions = ({ cvId, details }) => {
                   isDisabled={selectedCount < 1}
                   component="button"
                   onClick={() => {
-                    setPollingFinished(false);
                     setKebabOpen(false);
                     setBulkDeleteModalOpen(true);
                   }}
@@ -319,9 +283,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       <Tbody>
         {results?.map((cvVersion) => {
           const hasHistory = !!cvVersion?.active_history?.length;
-          const cells = hasHistory ?
-            buildActiveTaskCells(cvVersion, intervals) :
-            buildCells(cvVersion);
+          const cells = buildCells(cvVersion);
           return (
             <Tr key={`column-${cvVersion.id}`}>
               {cells.map((cell, index) => {
