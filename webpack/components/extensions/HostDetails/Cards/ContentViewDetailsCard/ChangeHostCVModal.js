@@ -37,6 +37,13 @@ const ChangeHostCVModal = ({
     ENV_PATH_OPTIONS,
   );
 
+  const handleModalClose = () => {
+    setCVSelectOpen(false);
+    setSelectedCVForHost(null);
+    setSelectedEnvForHost([]);
+    closeModal();
+  };
+
   const selectedEnv = selectedEnvForHost?.[0];
 
   const handleCVSelect = (event, selection) => {
@@ -57,10 +64,14 @@ const ChangeHostCVModal = ({
   const { results: contentViewsInEnv = [] } = contentViewsInEnvResponse;
   const canSave = !!(selectedCVForHost && selectedEnvForHost.length);
 
-  const relevantVersionFromCv = (cv, env) => {
+  const relevantVersionObjFromCv = (cv, env) => { // returns the entire version object
     const versions = cv.versions.filter(version => new Set(version.environment_ids).has(env.id));
-    return uniq(versions)?.[0]?.version;
+    return uniq(versions)?.[0];
   };
+  const relevantVersionFromCv = (cv, env) =>
+    relevantVersionObjFromCv(cv, env)?.version; // returns the version text e.g. "1.0"
+  const relevantVersionIdFromCv = (cv, env) =>
+    relevantVersionObjFromCv(cv, env)?.id; // returns the version's database id
 
   const cvPlaceholderText = useCallback(() => {
     if (contentViewsInEnvStatus === STATUS.PENDING) return __('Loading...');
@@ -68,10 +79,10 @@ const ChangeHostCVModal = ({
   }, [contentViewsInEnv.length, contentViewsInEnvStatus]);
 
   const modalActions = ([
-    <Button key="add" variant="primary" onClick={closeModal} isDisabled={!canSave}>
+    <Button key="add" variant="primary" onClick={handleModalClose} isDisabled={!canSave}>
       {__('Save')}
     </Button>,
-    <Button key="cancel" variant="link" onClick={closeModal}>
+    <Button key="cancel" variant="link" onClick={handleModalClose}>
       Cancel
     </Button>,
   ]);
@@ -79,7 +90,8 @@ const ChangeHostCVModal = ({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={closeModal}
+      onClose={handleModalClose}
+      onEscapePress={handleModalClose}
       title={__('Edit content view assignment')}
       width="50%"
       position="top"
@@ -112,7 +124,7 @@ const ChangeHostCVModal = ({
           {contentViewsInEnv?.map(cv => (
             <SelectOption
               key={cv.id}
-              value={cv}
+              value={cv.id}
               description={cv.default ? __('Library') :
               <FormattedMessage
                 id={`content-view-${cv.id}-version-${cv.latest_version}`}

@@ -24,7 +24,7 @@ import { hostIsRegistered } from '../../hostDetailsHelpers';
 import ChangeHostCVModal from './ChangeHostCVModal';
 
 const HostContentViewDetails = ({
-  contentView, lifecycleEnvironment, contentViewVersionId,
+  contentView, lifecycleEnvironment, contentViewVersionId, contentViewDefault,
   contentViewVersion, contentViewVersionLatest, hostId, orgId, hostEnvId,
 }) => {
   let versionLabel = `Version ${contentViewVersion}`;
@@ -51,6 +51,8 @@ const HostContentViewDetails = ({
       {__('Edit content view assignment')}
     </DropdownItem>,
   ];
+
+  console.log(contentView)
 
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
@@ -111,6 +113,7 @@ const HostContentViewDetails = ({
               </Tooltip>
             </Flex>
           </Flex>
+          {!contentViewDefault &&
           <Flex direction={{ default: 'column' }}>
             <FlexItem>
               <h3>{__('Version in use')}</h3>
@@ -119,6 +122,7 @@ const HostContentViewDetails = ({
               </a>
             </FlexItem>
           </Flex>
+      }
         </CardBody>
       </Card>
       {hostId &&
@@ -153,6 +157,7 @@ HostContentViewDetails.propTypes = {
     name: PropTypes.string,
     id: PropTypes.number,
     composite: PropTypes.bool,
+    contentViewDefault: PropTypes.bool,
   }).isRequired,
   lifecycleEnvironment: PropTypes.shape({
     name: PropTypes.string,
