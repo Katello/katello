@@ -18,7 +18,7 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import { noop } from 'foremanReact/common/helpers';
 
-import { UPSTREAM_SERVER, DEFAULT_CONTENT_VIEW_LABEL, DEFAULT_LIFECYCLE_ENVIRONMENT_LABEL, DEFAULT_ORGANIZATION_LABEL } from './CdnConfigurationConstants';
+import { NETWORK_SYNC, DEFAULT_CONTENT_VIEW_LABEL, DEFAULT_LIFECYCLE_ENVIRONMENT_LABEL, DEFAULT_ORGANIZATION_LABEL } from './CdnConfigurationConstants';
 import EditableTextInput from '../../../../components/EditableTextInput';
 
 import {
@@ -28,11 +28,11 @@ import {
 import { updateCdnConfiguration } from '../../../Organizations/OrganizationActions';
 import './CdnConfigurationForm.scss';
 
-const UpstreamServerTypeForm = ({
+const NetworkSyncForm = ({
   showUpdate, contentCredentials, cdnConfiguration, onUpdate,
 }) => {
   const dispatch = useDispatch();
-  const urlValue = cdnConfiguration.type === UPSTREAM_SERVER ? cdnConfiguration.url : '';
+  const urlValue = cdnConfiguration.type === NETWORK_SYNC ? cdnConfiguration.url : '';
   const [url, setUrl] = useState(urlValue);
   const [username, setUsername] = useState(cdnConfiguration.username);
   const [password, setPassword] = useState(null);
@@ -92,7 +92,7 @@ const UpstreamServerTypeForm = ({
       upstream_content_view_label: contentViewLabel || DEFAULT_CONTENT_VIEW_LABEL,
       upstream_lifecycle_environment_label: lifecycleEnvironmentLabel ||
       DEFAULT_LIFECYCLE_ENVIRONMENT_LABEL,
-      type: UPSTREAM_SERVER,
+      type: NETWORK_SYNC,
     }, onUpdate, onError));
   };
 
@@ -242,7 +242,7 @@ const UpstreamServerTypeForm = ({
   );
 };
 
-UpstreamServerTypeForm.propTypes = {
+NetworkSyncForm.propTypes = {
   showUpdate: PropTypes.bool.isRequired,
   contentCredentials: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
@@ -261,10 +261,10 @@ UpstreamServerTypeForm.propTypes = {
   onUpdate: PropTypes.func,
 };
 
-UpstreamServerTypeForm.defaultProps = {
+NetworkSyncForm.defaultProps = {
   contentCredentials: [],
   cdnConfiguration: {},
   onUpdate: noop,
 };
 
-export default UpstreamServerTypeForm;
+export default NetworkSyncForm;

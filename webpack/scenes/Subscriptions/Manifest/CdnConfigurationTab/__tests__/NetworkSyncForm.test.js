@@ -2,10 +2,10 @@ import React from 'react';
 import { cleanup } from '@testing-library/react';
 import { renderWithRedux, fireEvent, patientlyWaitFor } from 'react-testing-lib-wrapper';
 import userEvent from '@testing-library/user-event';
-import UpstreamServerTypeForm from '../UpstreamServerTypeForm';
+import NetworkSyncForm from '../NetworkSyncForm';
 import { nockInstance, assertNockRequest } from '../../../../../test-utils/nockWrapper';
 import { updateCdnConfigurationSuccessResponse } from '../../../../Organizations/__tests__/organizations.fixtures';
-import { UPSTREAM_SERVER } from '../CdnConfigurationConstants';
+import { NETWORK_SYNC } from '../CdnConfigurationConstants';
 
 import api from '../../../../../services/api';
 
@@ -20,7 +20,7 @@ const cdnConfiguration = {
   password_exists: false,
   upstream_organization_label: 'CurrentOrg',
   ssl_ca_credential_id: 2,
-  type: UPSTREAM_SERVER,
+  type: NETWORK_SYNC,
   upstream_lifecycle_environment_label: 'Library',
   upstream_content_view_label: 'CV',
 };
@@ -47,7 +47,7 @@ const contentCredentials = [
 ];
 
 test('Can update the upstream server configuration', async (done) => {
-  const { getByLabelText } = renderWithRedux(<UpstreamServerTypeForm
+  const { getByLabelText } = renderWithRedux(<NetworkSyncForm
     showUpdate
     cdnConfiguration={cdnConfiguration}
     contentCredentials={contentCredentials}
@@ -60,7 +60,7 @@ test('Can update the upstream server configuration', async (done) => {
       password: 'changeme',
       upstream_organization_label: 'Default_Organization',
       ssl_ca_credential_id: '1',
-      type: UPSTREAM_SERVER,
+      type: NETWORK_SYNC,
       upstream_lifecycle_environment_label: 'Library',
       upstream_content_view_label: 'CV',
     })
@@ -92,7 +92,7 @@ test('Can update the upstream server configuration', async (done) => {
 });
 
 test('the form shall reflect the given cdnConfiguration', () => {
-  const { getAllByTestId, getByLabelText } = renderWithRedux(<UpstreamServerTypeForm
+  const { getAllByTestId, getByLabelText } = renderWithRedux(<NetworkSyncForm
     showUpdate
     cdnConfiguration={cdnConfiguration}
     contentCredentials={contentCredentials}
@@ -109,7 +109,7 @@ test('the form shall reflect the given cdnConfiguration', () => {
 });
 
 test('resetting the password enables/disables appropriately', async (done) => {
-  const { getByLabelText } = renderWithRedux(<UpstreamServerTypeForm
+  const { getByLabelText } = renderWithRedux(<NetworkSyncForm
     showUpdate
     cdnConfiguration={{ ...cdnConfiguration, password_exists: true }}
   />, { initialState });
@@ -130,7 +130,7 @@ test('resetting the password enables/disables appropriately', async (done) => {
 });
 
 test('update button disabled on incomplete information', async (done) => {
-  const { getByLabelText } = renderWithRedux(<UpstreamServerTypeForm
+  const { getByLabelText } = renderWithRedux(<NetworkSyncForm
     showUpdate
     cdnConfiguration={{ ...cdnConfiguration, password_exists: true }}
     contentCredentials={contentCredentials}

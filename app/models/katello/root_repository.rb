@@ -63,7 +63,7 @@ module Katello
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloUrlFormatValidator, :attributes => :url,
-                   :nil_allowed => proc { |repo| repo.custom? || repo.organization.cdn_configuration.airgapped? },
+                   :nil_allowed => proc { |repo| repo.custom? || repo.organization.cdn_configuration.export_sync? },
                    :field_name => :url
     validates_with Validators::RootRepositoryUniqueAttributeValidator, :attributes => :name
     validates_with Validators::RootRepositoryUniqueAttributeValidator, :attributes => :label

@@ -7,11 +7,11 @@ import {
 } from '@patternfly/react-core';
 import { noop } from 'foremanReact/common/helpers';
 import CdnTypeForm from './CdnTypeForm';
-import AirGappedTypeForm from './AirGappedTypeForm';
-import UpstreamServerTypeForm from './UpstreamServerTypeForm';
+import ExportSyncForm from './ExportSyncForm';
+import NetworkSyncForm from './NetworkSyncForm';
 
 import './CdnConfigurationForm.scss';
-import { CDN_URL, CDN, AIRGAPPED, UPSTREAM_SERVER, CDN_CONFIGURATION_TYPES } from './CdnConfigurationConstants';
+import { CDN_URL, CDN, EXPORT_SYNC, NETWORK_SYNC, CDN_CONFIGURATION_TYPES } from './CdnConfigurationConstants';
 
 const CdnConfigurationForm = (props) => {
   const {
@@ -35,17 +35,17 @@ const CdnConfigurationForm = (props) => {
       <ToggleGroup aria-label="Default with multiple selectable">
         <ToggleGroupItem text={CDN_CONFIGURATION_TYPES[CDN]} key={0} buttonId="cdn" isSelected={type === CDN} onChange={() => updateType(CDN)} />
         <ToggleGroupItem
-          text={CDN_CONFIGURATION_TYPES[UPSTREAM_SERVER]}
+          text={CDN_CONFIGURATION_TYPES[NETWORK_SYNC]}
           key={1}
           buttonId="usptream_server"
-          isSelected={type === UPSTREAM_SERVER}
-          onChange={() => updateType(UPSTREAM_SERVER)}
+          isSelected={type === NETWORK_SYNC}
+          onChange={() => updateType(NETWORK_SYNC)}
         />
-        <ToggleGroupItem text={CDN_CONFIGURATION_TYPES[AIRGAPPED]} key={2} buttonId="airgapped" isSelected={type === AIRGAPPED} onChange={() => updateType(AIRGAPPED)} />
+        <ToggleGroupItem text={CDN_CONFIGURATION_TYPES[EXPORT_SYNC]} key={2} buttonId="airgapped" isSelected={type === EXPORT_SYNC} onChange={() => updateType(EXPORT_SYNC)} />
       </ToggleGroup>
 
-      { type === UPSTREAM_SERVER &&
-        <UpstreamServerTypeForm
+      { type === NETWORK_SYNC &&
+        <NetworkSyncForm
           cdnConfiguration={cdnConfiguration}
           contentCredentials={contentCredentials}
           onUpdate={onUpdate}
@@ -60,8 +60,8 @@ const CdnConfigurationForm = (props) => {
           url={cdnUrl}
         />
       }
-      { type === AIRGAPPED &&
-        <AirGappedTypeForm
+      { type === EXPORT_SYNC &&
+        <ExportSyncForm
           showUpdate={type !== cdnConfiguration.type}
           onUpdate={onUpdate}
         />

@@ -616,7 +616,7 @@ module Katello
 
     def test_nil_rhel_url_on_airgapped
       rhel = katello_root_repositories(:rhel_6_x86_64_root)
-      rhel.organization.cdn_configuration.update!(type: :airgapped)
+      rhel.organization.cdn_configuration.update!(type: :export_sync)
       rhel.url = nil
       assert rhel.valid?
     end
