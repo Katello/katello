@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { Modal, Button, Select, SelectOption } from '@patternfly/react-core';
+import { Modal, Button, Select, SelectOption, Alert } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
@@ -98,6 +98,17 @@ const ChangeHostCVModal = ({
       actions={modalActions}
       id="change-host-cv-modal"
     >
+      {contentViewsInEnvStatus === STATUS.RESOLVED &&
+        !!selectedEnvForHost.length && contentViewsInEnv.length === 0 &&
+        <Alert
+          variant="warning"
+          isInline
+          title={__('No content views available for the selected environment')}
+          style={{ marginBottom: '1rem' }}
+        >
+          {__('View the Content Views page to manage and promote content views, or select a different environment.')}
+        </Alert>
+      }
       <EnvironmentPaths
         userCheckedItems={selectedEnvForHost}
         setUserCheckedItems={handleEnvSelect}
