@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Button, Select, SelectOption } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
@@ -8,6 +9,8 @@ import EnvironmentPaths from '../../../../../scenes/ContentViews/components/Envi
 import { ENVIRONMENT_PATHS_KEY } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../../../scenes/ContentViews/ContentViewsConstants';
+import getContentViews from '../../../../../scenes/ContentViews/ContentViewsActions';
+import { selectContentViewError, selectContentViews, selectContentViewStatus } from '../../../../../scenes/ContentViews/ContentViewSelectors';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
 const CV_OPTIONS = { key: CONTENT_VIEWS_KEY };
@@ -17,66 +20,42 @@ const ChangeHostCVModal = ({
   closeModal,
   hostEnvId,
   orgId,
+  contentViewVersionId,
 }) => {
-  const { response: envResponse } = useAPI( // No TableWrapper here, so we can useAPI from Foreman
+  const [selectedEnvForHost, setSelectedEnvForHost]
+    = useState([]);
+
+  const [selectedCVForHost, setSelectedCVForHost] = useState(null);
+  const [cvSelectOpen, setCVSelectOpen] = useState(false);
+  const dispatch = useDispatch();
+  const contentViewsInEnvResponse = useSelector(state => selectContentViews(state, `FOR_ENV_${hostEnvId}`));
+  const contentViewsInEnvStatus = useSelector(state => selectContentViewStatus(state, `FOR_ENV_${hostEnvId}`));
+  const contentViewsInEnvError = useSelector(state => selectContentViewError(state, `FOR_ENV_${hostEnvId}`));
+
+  useAPI( // No TableWrapper here, so we can useAPI from Foreman
     'get',
     api.getApiUrl(`/organizations/${orgId}/environments/paths?permission_type=promotable`),
     ENV_PATH_OPTIONS,
   );
-  const { response: cvResponse } = useAPI(
-    'get',
-    api.getApiUrl(`/organizations/${orgId}/content_views`),
-    CV_OPTIONS,
-  );
-  const { results: allContentViews } = cvResponse;
-  const { results: envPaths } = envResponse ?? [];
 
-  const initialEnvFromId = useCallback((paths, envId) => {
-    const envFlatPaths = paths?.map(p => p.environments ?? []).flat();
-    return envFlatPaths?.filter(e => e.id === envId) ?? [];
-  }, []);
-  const [selectedEnvForHost, setSelectedEnvForHost]
-    = useState([]);
-
-  const cvSelectionsFromEnvironment = useCallback((env) => {
-    if (!env) return [];
-    const defaultOrgView = allContentViews?.find(cv => cv.default);
-    const cvIds = new Set(env.content_views.map(cv => cv.id));
-    const cvSelections = allContentViews?.filter(cv => cvIds.has(cv.id));
-    if (defaultOrgView && cvSelections && env.library) {
-      return [defaultOrgView, ...cvSelections];
-    }
-    return cvSelections ?? [];
-  }, [allContentViews]);
-
-  const [selectedCVForHost, setSelectedCVForHost] = useState(null);
-  const [cvSelectOpen, setCVSelectOpen] = useState(false);
-  const [cvSelectOptions, setCvSelectOptions] = useState([]);
-
-  useEffect(() => {
-    // set selectedEnvForHost when hostCurrentEnv is populated
-    setSelectedEnvForHost(initialEnvFromId(envPaths, hostEnvId));
-  }, [envPaths, hostEnvId, initialEnvFromId]);
-
-  useEffect(() => {
-    // set cvSelectOptions when selectedEnvForHost is populated
-    setCvSelectOptions(cvSelectionsFromEnvironment(selectedEnvForHost[0]));
-  }, [selectedEnvForHost, cvSelectionsFromEnvironment]);
-
-  const onSelect = (event, selection) => {
+  const handleCVSelect = (event, selection) => {
     setSelectedCVForHost(selection);
     setCVSelectOpen(false);
   };
 
-  const canSave = selectedCVForHost && selectedEnvForHost.length;
-
-  useEffect(() => {
-    const selectedCVIsValid = selectedCVForHost &&
-        new Set(cvSelectOptions.map(cv => cv.latest_version_id)).has(selectedCVForHost);
-    if (!selectedCVIsValid) {
-      setSelectedCVForHost(null);
-    }
-  }, [cvSelectOptions, selectedCVForHost]);
+  const handleEnvSelect = (selection) => {
+    dispatch(getContentViews({
+      environment_id: selection[0].id,
+      include_default: true,
+      full_result: true,
+      order: 'default DESC',
+    }, `FOR_ENV_${hostEnvId}`));
+    setSelectedCVForHost(null);
+    setSelectedEnvForHost(selection);
+  };
+  const { results: contentViewsInEnv = [] } = contentViewsInEnvResponse;
+  const canSave = !!(selectedCVForHost && selectedEnvForHost.length);
+  console.log(contentViewsInEnv);
 
   const modalActions = ([
     <Button key="add" variant="primary" onClick={closeModal} isDisabled={!canSave}>
@@ -99,7 +78,7 @@ const ChangeHostCVModal = ({
     >
       <EnvironmentPaths
         userCheckedItems={selectedEnvForHost}
-        setUserCheckedItems={setSelectedEnvForHost}
+        setUserCheckedItems={handleEnvSelect}
         publishing={false}
         multiSelect={false}
         headerText={__('Select environment')}
@@ -109,18 +88,18 @@ const ChangeHostCVModal = ({
         <h3>{__('Select content view')}</h3>
         <Select
           selections={selectedCVForHost}
-          onSelect={onSelect}
+          onSelect={handleCVSelect}
           isOpen={cvSelectOpen}
           menuAppendTo="parent"
-          isDisabled={cvSelectOptions.length === 0}
+          isDisabled={contentViewsInEnv.length === 0}
           onToggle={isExpanded => setCVSelectOpen(isExpanded)}
           ouiaId="select-content-view"
           id="selectCV"
           name="selectCV"
           aria-label="selectCV"
-          placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
+          placeholderText={(contentViewsInEnv.length === 0) ? __('No content views available') : __('Select a content view')}
         >
-          {cvSelectOptions.map(cv => (
+          {contentViewsInEnv?.map(cv => (
             <SelectOption
               key={cv.id}
               value={cv.latest_version_id}

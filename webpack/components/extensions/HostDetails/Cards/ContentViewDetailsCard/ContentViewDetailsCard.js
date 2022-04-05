@@ -127,6 +127,7 @@ const HostContentViewDetails = ({
           closeModal={closeModal}
           hostId={hostId}
           hostEnvId={hostEnvId}
+          contentViewVersionId={contentViewVersionId}
           orgId={orgId}
           key={`cv-change-modal-${hostId}`}
         />
