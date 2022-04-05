@@ -52,8 +52,6 @@ const HostContentViewDetails = ({
     </DropdownItem>,
   ];
 
-  console.log(contentView)
-
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
       <Card isHoverable>
@@ -157,8 +155,8 @@ HostContentViewDetails.propTypes = {
     name: PropTypes.string,
     id: PropTypes.number,
     composite: PropTypes.bool,
-    contentViewDefault: PropTypes.bool,
   }).isRequired,
+  contentViewDefault: PropTypes.bool,
   lifecycleEnvironment: PropTypes.shape({
     name: PropTypes.string,
     id: PropTypes.number,
@@ -179,6 +177,7 @@ HostContentViewDetails.defaultProps = {
   hostEnvId: null,
   hostId: null,
   orgId: null,
+  contentViewDefault: false,
 };
 
 ContentViewDetailsCard.propTypes = {

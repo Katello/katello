@@ -2,7 +2,10 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { Modal, Button, Select, SelectOption, Alert } from '@patternfly/react-core';
+import { Modal, Button, Select, SelectOption, Alert, Flex } from '@patternfly/react-core';
+import {
+  global_palette_black_600 as pfDescriptionColor,
+} from '@patternfly/react-tokens';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
@@ -10,10 +13,39 @@ import EnvironmentPaths from '../../../../../scenes/ContentViews/components/Envi
 import { ENVIRONMENT_PATHS_KEY } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
 import api from '../../../../../services/api';
 import getContentViews from '../../../../../scenes/ContentViews/ContentViewsActions';
-import { selectContentViewError, selectContentViews, selectContentViewStatus } from '../../../../../scenes/ContentViews/ContentViewSelectors';
+import { selectContentViews, selectContentViewStatus } from '../../../../../scenes/ContentViews/ContentViewSelectors';
 import { uniq } from '../../../../../utils/helpers';
+import ContentViewIcon from '../../../../../scenes/ContentViews/components/ContentViewIcon';
+
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
+
+const ContentViewDescription = ({ cv, versionNumber }) => {
+  const descriptionStyle = {
+    fontSize: '12px',
+    fontWeight: 400,
+    color: pfDescriptionColor.value,
+  };
+  if (cv.default) return <span style={descriptionStyle}>{__('Library')}</span>;
+  return (
+    <span style={descriptionStyle}>
+      <FormattedMessage
+        id={`content-view-${cv.id}-version-${cv.latest_version}`}
+        defaultMessage="Version {versionNumber}"
+        values={{ versionNumber }}
+      />
+    </span>
+  );
+};
+
+ContentViewDescription.propTypes = {
+  cv: PropTypes.shape({
+    default: PropTypes.bool.isRequired,
+    id: PropTypes.number.isRequired,
+    latest_version: PropTypes.string.isRequired,
+  }).isRequired,
+  versionNumber: PropTypes.string.isRequired,
+};
 
 const ChangeHostCVModal = ({
   isOpen,
@@ -29,7 +61,6 @@ const ChangeHostCVModal = ({
   const dispatch = useDispatch();
   const contentViewsInEnvResponse = useSelector(state => selectContentViews(state, `FOR_ENV_${hostEnvId}`));
   const contentViewsInEnvStatus = useSelector(state => selectContentViewStatus(state, `FOR_ENV_${hostEnvId}`));
-  const contentViewsInEnvError = useSelector(state => selectContentViewError(state, `FOR_ENV_${hostEnvId}`));
 
   useAPI( // No TableWrapper here, so we can useAPI from Foreman
     'get',
@@ -70,11 +101,10 @@ const ChangeHostCVModal = ({
   };
   const relevantVersionFromCv = (cv, env) =>
     relevantVersionObjFromCv(cv, env)?.version; // returns the version text e.g. "1.0"
-  const relevantVersionIdFromCv = (cv, env) =>
-    relevantVersionObjFromCv(cv, env)?.id; // returns the version's database id
 
   const cvPlaceholderText = useCallback(() => {
     if (contentViewsInEnvStatus === STATUS.PENDING) return __('Loading...');
+    if (contentViewsInEnvStatus === STATUS.ERROR) return __('Error loading content views');
     return (contentViewsInEnv.length === 0) ? __('No content views available') : __('Select a content view');
   }, [contentViewsInEnv.length, contentViewsInEnvStatus]);
 
@@ -136,14 +166,28 @@ const ChangeHostCVModal = ({
             <SelectOption
               key={cv.id}
               value={cv.id}
-              description={cv.default ? __('Library') :
-              <FormattedMessage
-                id={`content-view-${cv.id}-version-${cv.latest_version}`}
-                defaultMessage="Version {versionNumber}"
-                values={{ versionNumber: relevantVersionFromCv(cv, selectedEnv) }}
-              />}
             >
-              {cv.name}
+              <Flex
+                direction={{ default: 'row', sm: 'row' }}
+                flexWrap={{ default: 'nowrap' }}
+                alignItems={{ default: 'alignItemsCenter', sm: 'alignItemsCenter' }}
+              >
+                <ContentViewIcon
+                  composite={cv.composite}
+                  size="sm"
+                />
+                <Flex
+                  direction={{ default: 'column', sm: 'column' }}
+                  flexWrap={{ default: 'nowrap' }}
+                  alignItems={{ default: 'alignItemsFlexStart', sm: 'alignItemsFlexStart' }}
+                >
+                  {cv.name}
+                  <ContentViewDescription
+                    cv={cv}
+                    versionNumber={relevantVersionFromCv(cv, selectedEnv)}
+                  />
+                </Flex>
+              </Flex>
             </SelectOption>
           ))
           }
