@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Button, Select, SelectOption } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { STATUS } from 'foremanReact/constants';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
 import EnvironmentPaths from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPaths';
 import { ENVIRONMENT_PATHS_KEY } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
@@ -55,7 +56,11 @@ const ChangeHostCVModal = ({
   };
   const { results: contentViewsInEnv = [] } = contentViewsInEnvResponse;
   const canSave = !!(selectedCVForHost && selectedEnvForHost.length);
-  console.log(contentViewsInEnv);
+
+  const cvPlaceholderText = useCallback(() => {
+    if (contentViewsInEnvStatus === STATUS.PENDING) return __('Loading...');
+    return (contentViewsInEnv.length === 0) ? __('No content views available') : __('Select a content view');
+  }, [contentViewsInEnv.length, contentViewsInEnvStatus]);
 
   const modalActions = ([
     <Button key="add" variant="primary" onClick={closeModal} isDisabled={!canSave}>
@@ -97,7 +102,7 @@ const ChangeHostCVModal = ({
           id="selectCV"
           name="selectCV"
           aria-label="selectCV"
-          placeholderText={(contentViewsInEnv.length === 0) ? __('No content views available') : __('Select a content view')}
+          placeholderText={cvPlaceholderText()}
         >
           {contentViewsInEnv?.map(cv => (
             <SelectOption
