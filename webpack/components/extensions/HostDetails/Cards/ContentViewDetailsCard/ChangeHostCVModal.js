@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,19 +9,17 @@ import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
 import EnvironmentPaths from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPaths';
 import { ENVIRONMENT_PATHS_KEY } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
 import api from '../../../../../services/api';
-import CONTENT_VIEWS_KEY from '../../../../../scenes/ContentViews/ContentViewsConstants';
 import getContentViews from '../../../../../scenes/ContentViews/ContentViewsActions';
 import { selectContentViewError, selectContentViews, selectContentViewStatus } from '../../../../../scenes/ContentViews/ContentViewSelectors';
+import { uniq } from '../../../../../utils/helpers';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
-const CV_OPTIONS = { key: CONTENT_VIEWS_KEY };
 
 const ChangeHostCVModal = ({
   isOpen,
   closeModal,
   hostEnvId,
   orgId,
-  contentViewVersionId,
 }) => {
   const [selectedEnvForHost, setSelectedEnvForHost]
     = useState([]);
@@ -39,6 +37,8 @@ const ChangeHostCVModal = ({
     ENV_PATH_OPTIONS,
   );
 
+  const selectedEnv = selectedEnvForHost?.[0];
+
   const handleCVSelect = (event, selection) => {
     setSelectedCVForHost(selection);
     setCVSelectOpen(false);
@@ -49,13 +49,18 @@ const ChangeHostCVModal = ({
       environment_id: selection[0].id,
       include_default: true,
       full_result: true,
-      order: 'default DESC',
+      order: 'default DESC', // show Default Organization View first
     }, `FOR_ENV_${hostEnvId}`));
     setSelectedCVForHost(null);
     setSelectedEnvForHost(selection);
   };
   const { results: contentViewsInEnv = [] } = contentViewsInEnvResponse;
   const canSave = !!(selectedCVForHost && selectedEnvForHost.length);
+
+  const relevantVersionFromCv = (cv, env) => {
+    const versions = cv.versions.filter(version => new Set(version.environment_ids).has(env.id));
+    return uniq(versions)?.[0]?.version;
+  };
 
   const cvPlaceholderText = useCallback(() => {
     if (contentViewsInEnvStatus === STATUS.PENDING) return __('Loading...');
@@ -107,13 +112,13 @@ const ChangeHostCVModal = ({
           {contentViewsInEnv?.map(cv => (
             <SelectOption
               key={cv.id}
-              value={cv.latest_version_id}
-              description={
-                <FormattedMessage
-                  id={`content-view-${cv.id}-version-${cv.latest_version}`}
-                  defaultMessage="Version {versionNumber}"
-                  values={{ versionNumber: cv.latest_version }}
-                />}
+              value={cv}
+              description={cv.default ? __('Library') :
+              <FormattedMessage
+                id={`content-view-${cv.id}-version-${cv.latest_version}`}
+                defaultMessage="Version {versionNumber}"
+                values={{ versionNumber: relevantVersionFromCv(cv, selectedEnv) }}
+              />}
             >
               {cv.name}
             </SelectOption>
