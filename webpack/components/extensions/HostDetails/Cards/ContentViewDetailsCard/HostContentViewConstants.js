@@ -1,0 +1,2 @@
+const HOST_CV_AND_ENV_KEY = 'HOST_CV_AND_ENV';
+export default HOST_CV_AND_ENV_KEY;

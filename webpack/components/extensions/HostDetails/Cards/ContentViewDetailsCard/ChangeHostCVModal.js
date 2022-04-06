@@ -9,6 +9,8 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
+import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
+import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
 import EnvironmentPaths from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPaths';
 import { ENVIRONMENT_PATHS_KEY } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
 import api from '../../../../../services/api';
@@ -16,7 +18,8 @@ import getContentViews from '../../../../../scenes/ContentViews/ContentViewsActi
 import { selectContentViews, selectContentViewStatus } from '../../../../../scenes/ContentViews/ContentViewSelectors';
 import { uniq } from '../../../../../utils/helpers';
 import ContentViewIcon from '../../../../../scenes/ContentViews/components/ContentViewIcon';
-
+import updateHostContentViewAndEnvironment from './HostContentViewActions';
+import HOST_CV_AND_ENV_KEY from './HostContentViewConstants';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
 
@@ -52,6 +55,8 @@ const ChangeHostCVModal = ({
   closeModal,
   hostEnvId,
   orgId,
+  hostId,
+  hostName,
 }) => {
   const [selectedEnvForHost, setSelectedEnvForHost]
     = useState([]);
@@ -61,6 +66,7 @@ const ChangeHostCVModal = ({
   const dispatch = useDispatch();
   const contentViewsInEnvResponse = useSelector(state => selectContentViews(state, `FOR_ENV_${hostEnvId}`));
   const contentViewsInEnvStatus = useSelector(state => selectContentViewStatus(state, `FOR_ENV_${hostEnvId}`));
+  const hostUpdateStatus = useSelector(state => selectAPIStatus(state, HOST_CV_AND_ENV_KEY));
 
   useAPI( // No TableWrapper here, so we can useAPI from Foreman
     'get',
@@ -76,6 +82,7 @@ const ChangeHostCVModal = ({
   };
 
   const selectedEnv = selectedEnvForHost?.[0];
+  const selectedEnvId = selectedEnv?.id;
 
   const handleCVSelect = (event, selection) => {
     setSelectedCVForHost(selection);
@@ -102,6 +109,30 @@ const ChangeHostCVModal = ({
   const relevantVersionFromCv = (cv, env) =>
     relevantVersionObjFromCv(cv, env)?.version; // returns the version text e.g. "1.0"
 
+  const refreshHostDetails = () => {
+    handleModalClose();
+    return dispatch({
+      type: 'API_GET',
+      payload: {
+        key: HOST_DETAILS_KEY,
+        url: `/api/hosts/${hostName}`,
+      },
+    });
+  };
+
+  const handleSave = () => {
+    const requestBody = {
+      id: hostId,
+      host: {
+        content_facet_attributes: {
+          content_view_id: selectedCVForHost,
+          lifecycle_environment_id: selectedEnvId,
+        },
+      },
+    };
+    dispatch(updateHostContentViewAndEnvironment(requestBody, hostId, refreshHostDetails));
+  };
+
   const cvPlaceholderText = useCallback(() => {
     if (contentViewsInEnvStatus === STATUS.PENDING) return __('Loading...');
     if (contentViewsInEnvStatus === STATUS.ERROR) return __('Error loading content views');
@@ -109,7 +140,13 @@ const ChangeHostCVModal = ({
   }, [contentViewsInEnv.length, contentViewsInEnvStatus]);
 
   const modalActions = ([
-    <Button key="add" variant="primary" onClick={handleModalClose} isDisabled={!canSave}>
+    <Button
+      key="add"
+      variant="primary"
+      onClick={handleSave}
+      isDisabled={!canSave}
+      isLoading={hostUpdateStatus === STATUS.PENDING}
+    >
       {__('Save')}
     </Button>,
     <Button key="cancel" variant="link" onClick={handleModalClose}>
@@ -145,6 +182,7 @@ const ChangeHostCVModal = ({
         publishing={false}
         multiSelect={false}
         headerText={__('Select environment')}
+        isDisabled={hostUpdateStatus === STATUS.PENDING}
       />
       {selectedEnvForHost.length > 0 &&
       <div style={{ marginTop: '1em' }}>
@@ -154,7 +192,7 @@ const ChangeHostCVModal = ({
           onSelect={handleCVSelect}
           isOpen={cvSelectOpen}
           menuAppendTo="parent"
-          isDisabled={contentViewsInEnv.length === 0}
+          isDisabled={contentViewsInEnv.length === 0 || hostUpdateStatus === STATUS.PENDING}
           onToggle={isExpanded => setCVSelectOpen(isExpanded)}
           ouiaId="select-content-view"
           id="selectCV"
@@ -203,6 +241,8 @@ ChangeHostCVModal.propTypes = {
   closeModal: PropTypes.func,
   hostEnvId: PropTypes.number,
   orgId: PropTypes.number.isRequired,
+  hostId: PropTypes.number.isRequired,
+  hostName: PropTypes.string.isRequired,
 };
 
 ChangeHostCVModal.defaultProps = {

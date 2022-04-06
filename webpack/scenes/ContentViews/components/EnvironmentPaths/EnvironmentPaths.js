@@ -10,7 +10,8 @@ import './EnvironmentPaths.scss';
 import Loading from '../../../../components/Loading';
 
 const EnvironmentPaths = ({
-  userCheckedItems, setUserCheckedItems, promotedEnvironments, publishing, headerText, multiSelect,
+  userCheckedItems, setUserCheckedItems, promotedEnvironments,
+  publishing, headerText, multiSelect, isDisabled,
 }) => {
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
@@ -51,12 +52,12 @@ const EnvironmentPaths = ({
                     isChecked={(publishing && env.library) ||
                     envCheckedInList(env, userCheckedItems) ||
                     envCheckedInList(env, promotedEnvironments)}
-                    isDisabled={(publishing && env.library)
+                    isDisabled={isDisabled || (publishing && env.library)
                     || envCheckedInList(env, promotedEnvironments)}
                     className="env-path__labels-with-pointer"
                     key={`${env.id}${index}`}
                     id={`${env.id}${index}`}
-                    label={<EnvironmentLabels environments={env} />}
+                    label={<EnvironmentLabels environments={env} isDisabled={isDisabled} />}
                     aria-label={env.label}
                     onChange={checked => oncheckedChange(checked, env)}
                   />))}
@@ -79,6 +80,7 @@ EnvironmentPaths.propTypes = {
   publishing: PropTypes.bool,
   headerText: PropTypes.string,
   multiSelect: PropTypes.bool,
+  isDisabled: PropTypes.bool,
 };
 
 EnvironmentPaths.defaultProps = {
@@ -86,5 +88,6 @@ EnvironmentPaths.defaultProps = {
   publishing: true,
   headerText: __('Select a lifecycle environment from the available promotion paths to promote new version.'),
   multiSelect: true,
+  isDisabled: false,
 };
 export default EnvironmentPaths;

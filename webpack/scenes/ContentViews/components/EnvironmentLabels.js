@@ -2,14 +2,15 @@ import React from 'react';
 import { Label } from '@patternfly/react-core';
 
 const EnvironmentLabels = (environments) => {
-  const { environments: singleEnvironment } = environments || {};
+  const { environments: singleEnvironment, isDisabled } = environments || {};
   const { name } = singleEnvironment || {};
+  const labelColor = isDisabled ? 'grey' : 'purple';
   switch (environments) {
   case Array:
     return environments.map(env => (
       <React.Fragment key={env.id} style={{ marginBottom: '5px' }}>
         <Label
-          color="purple"
+          color={labelColor}
           isTruncated
         >{env.name}
         </Label>
@@ -18,7 +19,7 @@ const EnvironmentLabels = (environments) => {
   default:
     return (
       <React.Fragment>
-        <Label color="purple" isTruncated>
+        <Label color={labelColor} isTruncated>
           {name}
         </Label>
       </React.Fragment>
