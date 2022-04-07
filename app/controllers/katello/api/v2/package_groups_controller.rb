@@ -67,7 +67,9 @@ module Katello
     end
 
     def all_for_content_view_filter(filter, _collection)
-      PackageGroup.joins(:repositories).merge(filter.applicable_repos)
+      available_ids = PackageGroup.joins(:repositories).merge(filter.applicable_repos)&.pluck(:pulp_id) || []
+      added_ids = filter&.package_group_rules&.pluck(:uuid) || []
+      PackageGroup.where(pulp_id: available_ids + added_ids)
     end
 
     def default_sort
