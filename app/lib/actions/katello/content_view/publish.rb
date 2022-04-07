@@ -90,15 +90,8 @@ module Actions
         end
 
         def run
-          metadata = {
-            description: _("Auto Publish - Triggered by '%s'") % input[:content_view_version_name],
-            triggered_by: input[:content_view_version_id]
-          }
-          input[:auto_publish_composite_ids].each do |composite_id|
-            ::Katello::EventQueue.push_event(::Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_id) do |attrs|
-              attrs[:metadata] = metadata
-            end
-          end
+          version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
+          version.auto_publish_composites!
 
           output[:content_view_id] = input[:content_view_id]
           output[:content_view_version_id] = input[:content_view_version_id]

@@ -274,6 +274,10 @@ module Actions
                 repo.pulp_id)
             end
           end
+
+          if version.latest? && !version.content_view.composite?
+            version.auto_publish_composites!
+          end
         end
 
         # given a composite version, and a list of new components, calculate the list of all components for the new version
