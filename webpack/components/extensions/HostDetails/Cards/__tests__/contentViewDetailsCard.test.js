@@ -3,11 +3,13 @@ import { render } from 'react-testing-lib-wrapper';
 import ContentViewDetailsCard from '../ContentViewDetailsCard/ContentViewDetailsCard';
 
 const baseHostDetails = {
+  organization_id: 1,
   content_facet_attributes: {
     content_view: {
       name: 'CV',
       id: 100,
       composite: false,
+      content_view_default: false,
     },
     lifecycle_environment: {
       name: 'ENV',
