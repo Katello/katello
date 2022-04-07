@@ -24,6 +24,7 @@ module ::Actions::Pulp3
     def test_upload
       @repo.reload
       assert @repo.remote_href
+      rpm_count = @repo.rpms.count
 
       VCR.use_cassette(cassette_name + '_binary', :match_requests_on => [:method, :path, :params]) do
         action_result = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::UploadContent, @repo, @primary, @file1, 'rpm')
@@ -34,13 +35,16 @@ module ::Actions::Pulp3
             :content_view_id => @repo.content_view.id)
         assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
 
-        action_result = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::UploadContent, @repo, @primary, @file2, 'rpm')
-        assert_equal "success", action_result.result
+        upload_action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::UploadContent, @repo, @primary, @file2, 'rpm')
+        assert_equal "success", upload_action.result
+        finish_upload_action = ForemanTasks.sync_task(::Actions::Katello::Repository::FinishUpload, @repo, content_type: 'rpm', upload_actions: [upload_action.output])
+        assert_equal "success", finish_upload_action.result
         @repo.reload
         repository_reference = Katello::Pulp3::RepositoryReference.find_by(
           :root_repository_id => @repo.root.id,
           :content_view_id => @repo.content_view.id)
         assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
+        assert_equal @repo.rpms.count, rpm_count + 1
       end
     end
 

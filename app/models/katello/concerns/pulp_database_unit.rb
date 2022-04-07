@@ -81,7 +81,8 @@ module Katello
 
       def import_all(unit_ids, repository = nil, options = {})
         content_type = options[:content_type] || self.content_type
-        Katello::ContentUnitIndexer.new(content_type: Katello::RepositoryTypeManager.find_content_type(content_type), repository: repository, pulp_content_ids: unit_ids).import_all
+        filtered_indexing = options[:filtered_indexing] || false
+        Katello::ContentUnitIndexer.new(content_type: Katello::RepositoryTypeManager.find_content_type(content_type), repository: repository, pulp_content_ids: unit_ids).import_all(filtered_indexing)
       end
 
       def copy_repository_associations(source_repo, dest_repo)
