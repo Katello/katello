@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { FormGroup, Checkbox, TextContent } from '@patternfly/react-core';
+import { FormGroup, Checkbox, Radio, TextContent } from '@patternfly/react-core';
 import { selectEnvironmentPaths, selectEnvironmentPathsStatus } from './EnvironmentPathSelectors';
 import EnvironmentLabels from '../EnvironmentLabels';
 import './EnvironmentPaths.scss';
@@ -16,6 +16,7 @@ const EnvironmentPaths = ({
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
   const environmentPathLoading = environmentPathStatus === STATUS.PENDING;
+  const CheckboxOrRadio = multiSelect ? Checkbox : Radio;
 
   const oncheckedChange = (checked, env) => {
     if (checked) {
@@ -48,7 +49,7 @@ const EnvironmentPaths = ({
               {index === 0 && <hr />}
               <FormGroup key={`fg-${index}`} isInline fieldId="environment-checkbox-group">
                 {environments.map(env =>
-                  (<Checkbox
+                  (<CheckboxOrRadio
                     isChecked={(publishing && env.library) ||
                     envCheckedInList(env, userCheckedItems) ||
                     envCheckedInList(env, promotedEnvironments)}

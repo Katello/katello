@@ -130,7 +130,10 @@ const ChangeHostCVModal = ({
         },
       },
     };
-    dispatch(updateHostContentViewAndEnvironment(requestBody, hostId, refreshHostDetails));
+    dispatch(updateHostContentViewAndEnvironment(
+      requestBody, hostId,
+      refreshHostDetails, handleModalClose,
+    ));
   };
 
   const cvPlaceholderText = useCallback(() => {
