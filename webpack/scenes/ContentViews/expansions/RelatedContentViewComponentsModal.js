@@ -43,7 +43,7 @@ const RelatedContentViewsModal = ({ cvName, cvId, relatedCVCount }) => {
 
   return (
     <>
-      <Button aria-label={`button_${cvId}`} variant="link" isInline onClick={handleModalToggle}>
+      <Button ouiaId="related-cv-count" aria-label={`button_${cvId}`} variant="link" isInline onClick={handleModalToggle}>
         {relatedCVCount}
       </Button>
       <Grid>

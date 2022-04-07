@@ -75,10 +75,11 @@ const ContentViewVersionDetailsHeader = ({
       </GridItem>
       <GridItem sm={6} style={{ display: 'flex' }}>
         <Button
+          ouiaId="cv-details-promote-button"
           style={{ marginLeft: 'auto' }}
           onClick={() => setPromoting(true)}
           variant="primary"
-          aria-label="publish_content_view"
+          aria-label="promote_content_view"
         >
           {__('Promote')}
         </Button>

@@ -180,7 +180,12 @@ const CVRpmFilterContent = ({
                 {hasPermission(permissions, 'edit_content_views') &&
                   <Split hasGutter>
                     <SplitItem>
-                      <Button onClick={() => setModalOpen(true)} variant="primary" aria-label="add_rpm_rule">
+                      <Button
+                        ouiaId="add-rpm-rule-button"
+                        onClick={() => setModalOpen(true)}
+                        variant="primary"
+                        aria-label="add_rpm_rule"
+                      >
                         {__('Add RPM rule')}
                       </Button>
                     </SplitItem>

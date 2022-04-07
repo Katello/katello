@@ -256,6 +256,7 @@ const CVErrataDateFilterContent = ({
               {hasPermission(permissions, 'edit_content_views') &&
                 <FlexItem>
                   <Button
+                    ouiaId="errata-date-reset-filters-button"
                     isDisabled={saveDisabled}
                     variant="link"
                     onClick={resetFilters}
@@ -269,6 +270,7 @@ const CVErrataDateFilterContent = ({
             {hasPermission(permissions, 'edit_content_views') &&
               <ActionGroup>
                 <Button
+                  ouiaId="save-filter-rule-button"
                   aria-label="save_filter_rule"
                   variant="primary"
                   isDisabled={saveDisabled}
@@ -277,7 +279,7 @@ const CVErrataDateFilterContent = ({
                   {__('Edit rule')}
                 </Button>
                 <Link to={`/content_views/${cvId}#/filters`}>
-                  <Button variant="link">
+                  <Button ouiaId="cancel-save-filter-rule-button" variant="link">
                     {__('Cancel')}
                   </Button>
                 </Link>

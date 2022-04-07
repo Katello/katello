@@ -223,7 +223,7 @@ const AffectedRepositoryTable = ({
               <SplitItem>
                 <ActionList>
                   <ActionListItem>
-                    <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="primary" aria-label="add_repositories">
+                    <Button ouiaId="add-repositories" onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="primary" aria-label="add_repositories">
                       {__('Add repositories')}
                     </Button>
                   </ActionListItem>

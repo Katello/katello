@@ -161,6 +161,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
         </FormGroup>
         <ActionGroup>
           <Button
+            ouiaId="create-filter-form-submit-button"
             aria-label="create_filter"
             variant="primary"
             isDisabled={saving || name.length === 0}
@@ -168,7 +169,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
           >
             {__('Create filter')}
           </Button>
-          <Button variant="link" onClick={onClose}>
+          <Button ouiaId="create-filter-form-cancel-button" variant="link" onClick={onClose}>
             {__('Cancel')}
           </Button>
         </ActionGroup>

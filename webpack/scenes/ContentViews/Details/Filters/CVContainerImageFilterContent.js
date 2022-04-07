@@ -143,6 +143,7 @@ const CVContainerImageFilterContent = ({
                 <Split hasGutter>
                   <SplitItem>
                     <Button
+                      ouiaId="add-content-view-container-image-filter-button"
                       onClick={() => setModalOpen(true)}
                       variant="primary"
                       aria-label="add_filter_rule"

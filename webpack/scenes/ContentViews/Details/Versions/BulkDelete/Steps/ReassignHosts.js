@@ -167,7 +167,7 @@ export default () => {
                   </>
                 }
               >
-                <Button style={{ padding: '8px' }} variant="plain" aria-label="popoverButton">
+                <Button ouiaId="reassign-hosts-info" style={{ padding: '8px' }} variant="plain" aria-label="popoverButton">
                   <OutlinedQuestionCircleIcon />
                 </Button>
               </Popover>

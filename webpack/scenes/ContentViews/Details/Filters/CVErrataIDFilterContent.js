@@ -317,7 +317,7 @@ const CVErrataIDFilterContent = ({
                 </SplitItem>
                 {hasPermission(permissions, 'edit_content_views') &&
                   <SplitItem>
-                    <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="primary" aria-label="add_filter_rule">
+                    <Button ouiaId="add-errata-id-button" isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="primary" aria-label="add_filter_rule">
                       {__('Add errata')}
                     </Button>
                   </SplitItem>
@@ -429,7 +429,7 @@ const CVErrataIDFilterContent = ({
                     </ChipGroup>
                   </FlexItem>
                   <FlexItem>
-                    <Button isDisabled={resetFiltersDisabled} variant="link" onClick={resetFilters} isInline>
+                    <Button ouiaId="errata-reset-filters-button" isDisabled={resetFiltersDisabled} variant="link" onClick={resetFilters} isInline>
                       {__('Reset filters')}
                     </Button>
                   </FlexItem>

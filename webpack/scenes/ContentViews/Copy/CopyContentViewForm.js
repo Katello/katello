@@ -59,6 +59,7 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
       </FormGroup>
       <ActionGroup>
         <Button
+          ouiaId="copy-form-submit-button"
           aria-label="copy_content_view"
           variant="primary"
           isDisabled={!name?.length || saving}
@@ -66,7 +67,7 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
         >
           {__('Copy content view')}
         </Button>
-        <Button variant="link" onClick={() => setModalOpen(false)}>{__('Cancel')}</Button>
+        <Button ouiaId="copy-form-cancel" variant="link" onClick={() => setModalOpen(false)}>{__('Cancel')}</Button>
       </ActionGroup>
     </Form >
   );

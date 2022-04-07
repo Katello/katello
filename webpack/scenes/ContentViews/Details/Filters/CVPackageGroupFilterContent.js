@@ -235,7 +235,13 @@ const CVPackageGroupFilterContent = ({
                   </Select>
                 </SplitItem>
                 <SplitItem>
-                  <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="primary" aria-label="add_filter_rule">
+                  <Button
+                    ouiaId="add-package-group-filter-rule-button"
+                    isDisabled={!hasNotAddedSelected}
+                    onClick={bulkAdd}
+                    variant="primary"
+                    aria-label="add_filter_rule"
+                  >
                     {__('Add filter rule')}
                   </Button>
                 </SplitItem>
