@@ -96,6 +96,7 @@ module Actions
           output[:content_view_id] = input[:content_view_id]
           output[:content_view_version_id] = input[:content_view_version_id]
           output[:skip_promotion] = input[:skip_promotion]
+          output[:history_id] = input[:history_id]
         end
 
         def rescue_strategy_for_self
@@ -133,6 +134,10 @@ module Actions
 
         def content_view_version_name
           input['content_view_version_name']
+        end
+
+        def history_id
+          input['history_id']
         end
 
         private
