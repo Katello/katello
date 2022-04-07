@@ -1,0 +1,320 @@
+{
+    "total": 2,
+    "subtotal": 2,
+    "selectable": 2,
+    "page": null,
+    "per_page": null,
+    "error": null,
+    "search": null,
+    "sort": {
+        "by": null,
+        "order": null
+    },
+    "results": [
+        {
+            "environments": [
+                {
+                    "library": true,
+                    "registry_name_pattern": null,
+                    "registry_unauthenticated_pull": false,
+                    "id": 1,
+                    "name": "Library",
+                    "label": "Library",
+                    "description": null,
+                    "organization_id": 1,
+                    "organization": {
+                        "name": "Default Organization",
+                        "label": "Default_Organization",
+                        "id": 1
+                    },
+                    "created_at": "2022-03-18 14:11:05 -0400",
+                    "updated_at": "2022-03-18 14:11:05 -0400",
+                    "prior": null,
+                    "successor": null,
+                    "counts": {
+                        "content_hosts": 0,
+                        "content_views": 2,
+                        "packages": 55250,
+                        "module_streams": 445,
+                        "errata": {
+                            "security": 1701,
+                            "bugfix": 4272,
+                            "enhancement": 952,
+                            "total": 6927
+                        },
+                        "yum_repositories": 6,
+                        "docker_repositories": 0,
+                        "ostree_repositories": 0,
+                        "products": 4
+                    },
+                    "permissions": {
+                        "create_lifecycle_environments": true,
+                        "view_lifecycle_environments": true,
+                        "edit_lifecycle_environments": true,
+                        "destroy_lifecycle_environments": false,
+                        "promote_or_remove_content_views_to_environments": true
+                    },
+                    "content_views": [
+                        {
+                            "name": "cv_1",
+                            "id": 2
+                        },
+                        {
+                            "name": "composite_cv",
+                            "id": 3
+                        }
+                    ]
+                },
+                {
+                    "library": false,
+                    "registry_name_pattern": null,
+                    "registry_unauthenticated_pull": false,
+                    "id": 2,
+                    "name": "dev",
+                    "label": "dev",
+                    "description": null,
+                    "organization_id": 1,
+                    "organization": {
+                        "name": "Default Organization",
+                        "label": "Default_Organization",
+                        "id": 1
+                    },
+                    "created_at": "2022-03-29 15:58:06 -0400",
+                    "updated_at": "2022-03-29 15:58:06 -0400",
+                    "prior": {
+                        "name": "Library",
+                        "id": 1
+                    },
+                    "successor": {
+                        "name": "stages",
+                        "id": 3
+                    },
+                    "counts": {
+                        "content_hosts": 2,
+                        "content_views": 2
+                    },
+                    "permissions": {
+                        "create_lifecycle_environments": true,
+                        "view_lifecycle_environments": true,
+                        "edit_lifecycle_environments": true,
+                        "destroy_lifecycle_environments": false,
+                        "promote_or_remove_content_views_to_environments": true
+                    },
+                    "content_views": [
+                        {
+                            "name": "cv_1",
+                            "id": 2
+                        },
+                        {
+                            "name": "composite_cv",
+                            "id": 3
+                        }
+                    ]
+                },
+                {
+                    "library": false,
+                    "registry_name_pattern": null,
+                    "registry_unauthenticated_pull": false,
+                    "id": 3,
+                    "name": "stages",
+                    "label": "stages",
+                    "description": null,
+                    "organization_id": 1,
+                    "organization": {
+                        "name": "Default Organization",
+                        "label": "Default_Organization",
+                        "id": 1
+                    },
+                    "created_at": "2022-03-29 15:58:20 -0400",
+                    "updated_at": "2022-03-29 15:58:20 -0400",
+                    "prior": {
+                        "name": "dev",
+                        "id": 2
+                    },
+                    "successor": {
+                        "name": "prod",
+                        "id": 4
+                    },
+                    "counts": {
+                        "content_hosts": 0,
+                        "content_views": 1
+                    },
+                    "permissions": {
+                        "create_lifecycle_environments": true,
+                        "view_lifecycle_environments": true,
+                        "edit_lifecycle_environments": true,
+                        "destroy_lifecycle_environments": true,
+                        "promote_or_remove_content_views_to_environments": true
+                    },
+                    "content_views": [
+                        {
+                            "name": "composite_cv",
+                            "id": 3
+                        }
+                    ]
+                },
+                {
+                    "library": false,
+                    "registry_name_pattern": null,
+                    "registry_unauthenticated_pull": false,
+                    "id": 4,
+                    "name": "prod",
+                    "label": "prod",
+                    "description": null,
+                    "organization_id": 1,
+                    "organization": {
+                        "name": "Default Organization",
+                        "label": "Default_Organization",
+                        "id": 1
+                    },
+                    "created_at": "2022-03-29 15:58:31 -0400",
+                    "updated_at": "2022-03-29 15:58:31 -0400",
+                    "prior": {
+                        "name": "stages",
+                        "id": 3
+                    },
+                    "successor": null,
+                    "counts": {
+                        "content_hosts": 0,
+                        "content_views": 0
+                    },
+                    "permissions": {
+                        "create_lifecycle_environments": true,
+                        "view_lifecycle_environments": true,
+                        "edit_lifecycle_environments": true,
+                        "destroy_lifecycle_environments": true,
+                        "promote_or_remove_content_views_to_environments": true
+                    },
+                    "content_views": []
+                }
+            ]
+        },
+        {
+            "environments": [
+                {
+                    "library": true,
+                    "registry_name_pattern": null,
+                    "registry_unauthenticated_pull": false,
+                    "id": 1,
+                    "name": "Library",
+                    "label": "Library",
+                    "description": null,
+                    "organization_id": 1,
+                    "organization": {
+                        "name": "Default Organization",
+                        "label": "Default_Organization",
+                        "id": 1
+                    },
+                    "created_at": "2022-03-18 14:11:05 -0400",
+                    "updated_at": "2022-03-18 14:11:05 -0400",
+                    "prior": null,
+                    "successor": null,
+                    "counts": {
+                        "content_hosts": 0,
+                        "content_views": 2,
+                        "packages": 55250,
+                        "module_streams": 445,
+                        "errata": {
+                            "security": 1701,
+                            "bugfix": 4272,
+                            "enhancement": 952,
+                            "total": 6927
+                        },
+                        "yum_repositories": 6,
+                        "docker_repositories": 0,
+                        "ostree_repositories": 0,
+                        "products": 4
+                    },
+                    "permissions": {
+                        "create_lifecycle_environments": true,
+                        "view_lifecycle_environments": true,
+                        "edit_lifecycle_environments": true,
+                        "destroy_lifecycle_environments": false,
+                        "promote_or_remove_content_views_to_environments": true
+                    },
+                    "content_views": [
+                        {
+                            "name": "cv_1",
+                            "id": 2
+                        },
+                        {
+                            "name": "composite_cv",
+                            "id": 3
+                        }
+                    ]
+                },
+                {
+                    "library": false,
+                    "registry_name_pattern": null,
+                    "registry_unauthenticated_pull": false,
+                    "id": 5,
+                    "name": "Path Two",
+                    "label": "Path_Two",
+                    "description": null,
+                    "organization_id": 1,
+                    "organization": {
+                        "name": "Default Organization",
+                        "label": "Default_Organization",
+                        "id": 1
+                    },
+                    "created_at": "2022-04-04 11:35:21 -0400",
+                    "updated_at": "2022-04-04 11:35:21 -0400",
+                    "prior": {
+                        "name": "Library",
+                        "id": 1
+                    },
+                    "successor": {
+                        "name": "path2_2",
+                        "id": 6
+                    },
+                    "counts": {
+                        "content_hosts": 0,
+                        "content_views": 0
+                    },
+                    "permissions": {
+                        "create_lifecycle_environments": true,
+                        "view_lifecycle_environments": true,
+                        "edit_lifecycle_environments": true,
+                        "destroy_lifecycle_environments": true,
+                        "promote_or_remove_content_views_to_environments": true
+                    },
+                    "content_views": []
+                },
+                {
+                    "library": false,
+                    "registry_name_pattern": null,
+                    "registry_unauthenticated_pull": false,
+                    "id": 6,
+                    "name": "path2_2",
+                    "label": "path2_2",
+                    "description": null,
+                    "organization_id": 1,
+                    "organization": {
+                        "name": "Default Organization",
+                        "label": "Default_Organization",
+                        "id": 1
+                    },
+                    "created_at": "2022-04-04 11:35:33 -0400",
+                    "updated_at": "2022-04-04 11:35:33 -0400",
+                    "prior": {
+                        "name": "Path Two",
+                        "id": 5
+                    },
+                    "successor": null,
+                    "counts": {
+                        "content_hosts": 0,
+                        "content_views": 0
+                    },
+                    "permissions": {
+                        "create_lifecycle_environments": true,
+                        "view_lifecycle_environments": true,
+                        "edit_lifecycle_environments": true,
+                        "destroy_lifecycle_environments": true,
+                        "promote_or_remove_content_views_to_environments": true
+                    },
+                    "content_views": []
+                }
+            ]
+        }
+    ]
+}

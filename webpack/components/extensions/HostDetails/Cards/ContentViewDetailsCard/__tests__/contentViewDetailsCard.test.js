@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-testing-lib-wrapper';
-import ContentViewDetailsCard from '../ContentViewDetailsCard/ContentViewDetailsCard';
+import ContentViewDetailsCard from '../ContentViewDetailsCard';
 
 const baseHostDetails = {
   organization_id: 1,
@@ -52,3 +52,23 @@ test('shows when the CV in use is not the latest version', () => {
   expect(getByText('Version 1.0')).toBeInTheDocument();
   expect(queryByText('Version 1.0 (latest)')).toBeNull();
 });
+
+test('does not show version info when using Default Organization View', () => {
+  const hostDetails = {
+    ...baseHostDetails,
+    content_facet_attributes: {
+      ...baseHostDetails.content_facet_attributes,
+      content_view:
+        {
+          ...baseHostDetails.content_facet_attributes.content_view,
+          content_view_default: true,
+          name: 'Default Organization View',
+        },
+    },
+  };
+
+  const { queryByText } = render(<ContentViewDetailsCard hostDetails={hostDetails} />);
+  expect(queryByText('Default Organization View')).toBeInTheDocument();
+  expect(queryByText('Version 1.0')).toBeNull();
+});
+

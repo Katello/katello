@@ -67,7 +67,6 @@ const ChangeHostCVModal = ({
   const contentViewsInEnvResponse = useSelector(state => selectContentViews(state, `FOR_ENV_${hostEnvId}`));
   const contentViewsInEnvStatus = useSelector(state => selectContentViewStatus(state, `FOR_ENV_${hostEnvId}`));
   const hostUpdateStatus = useSelector(state => selectAPIStatus(state, HOST_CV_AND_ENV_KEY));
-
   useAPI( // No TableWrapper here, so we can useAPI from Foreman
     'get',
     api.getApiUrl(`/organizations/${orgId}/environments/paths?permission_type=promotable`),
@@ -156,7 +155,6 @@ const ChangeHostCVModal = ({
       Cancel
     </Button>,
   ]);
-
   return (
     <Modal
       isOpen={isOpen}
