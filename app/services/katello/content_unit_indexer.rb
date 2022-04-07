@@ -21,9 +21,9 @@ module Katello
       end
     end
 
-    def import_all
+    def import_all(filtered_indexing = false)
+      additive = filtered_indexing || (@repository&.mirroring_policy == 'additive')
       association_tracker = RepoAssociationTracker.new(@content_type, @service_class, @repository)
-
       units_from_pulp.each do |units|
         units.each do |unit|
           association_tracker.push(unit)
@@ -52,7 +52,7 @@ module Katello
       end
 
       if @model_class.many_repository_associations && @repository
-        sync_repository_associations(association_tracker)
+        sync_repository_associations(association_tracker, additive: additive)
       end
     end
 
