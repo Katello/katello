@@ -36,7 +36,7 @@ module Actions
             else
               unit_ids = search_units(repo)
             end
-            ::Katello::Deb.import_all(unit_ids, repo)
+            ::Katello::Deb.import_all(unit_ids, repo, {filtered_indexing: true})
           elsif repo.yum?
             if input[:import_upload_task] && input[:import_upload_task][:content_unit_href]
               unit_ids = [input[:import_upload_task][:content_unit_href]]
@@ -48,9 +48,9 @@ module Actions
               unit_ids = search_units(repo)
             end
             if input[:content_type] == ::Katello::Srpm::CONTENT_TYPE
-              ::Katello::Srpm.import_all(unit_ids, repo)
+              ::Katello::Srpm.import_all(unit_ids, repo, {filtered_indexing: true})
             else
-              ::Katello::Rpm.import_all(unit_ids, repo)
+              ::Katello::Rpm.import_all(unit_ids, repo, {filtered_indexing: true})
             end
           end
         end
