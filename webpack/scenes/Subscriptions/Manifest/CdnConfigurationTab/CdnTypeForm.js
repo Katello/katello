@@ -78,6 +78,7 @@ const CdnTypeForm = ({ showUpdate, onUpdate, url }) => {
 
       <ActionGroup>
         <Button
+          ouiaId="cdn-configuration-update-button"
           aria-label="update-cdn-configuration"
           variant="secondary"
           onClick={performUpdate}

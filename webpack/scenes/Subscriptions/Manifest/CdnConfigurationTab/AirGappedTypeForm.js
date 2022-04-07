@@ -55,6 +55,7 @@ const AirGappedTypeForm = ({ showUpdate, onUpdate }) => {
 
       <ActionGroup>
         <Button
+          ouiaId="export-sync-configuration-update-button"
           aria-label="update-airgapped-configuration"
           variant="secondary"
           onClick={performUpdate}
