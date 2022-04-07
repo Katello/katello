@@ -220,6 +220,7 @@ const UpstreamServerTypeForm = ({
 
         <ActionGroup>
           <Button
+            ouiaId="network-sync-configuration-update-button"
             aria-label="update-upstream-configuration"
             variant="secondary"
             onClick={performUpdate}
