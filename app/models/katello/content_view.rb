@@ -96,6 +96,7 @@ module Katello
     scoped_search :on => :label, :complete_value => true
     scoped_search :on => :composite, :complete_value => true
     scoped_search :on => :generated_for, :complete_value => true
+    scoped_search :on => :default # just for ordering
 
     enum generated_for: {
       none: 0,

@@ -6,7 +6,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import SystemStatuses from './components/extensions/about';
 import RegistrationCommands from './components/extensions/RegistrationCommands';
 import ContentTab from './components/extensions/HostDetails/Tabs/ContentTab';
-import ContentViewDetailsCard from './components/extensions/HostDetails/Cards/ContentViewDetailsCard';
+import ContentViewDetailsCard from './components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 import ErrataOverviewCard from './components/extensions/HostDetails/Cards/ErrataOverviewCard';
 
 // import SubscriptionTab from './components/extensions/HostDetails/Tabs/SubscriptionTab';

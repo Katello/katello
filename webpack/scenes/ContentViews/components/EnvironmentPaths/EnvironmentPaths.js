@@ -3,18 +3,20 @@ import { useSelector } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { FormGroup, Checkbox, TextContent } from '@patternfly/react-core';
+import { FormGroup, Checkbox, Radio, TextContent } from '@patternfly/react-core';
 import { selectEnvironmentPaths, selectEnvironmentPathsStatus } from './EnvironmentPathSelectors';
 import EnvironmentLabels from '../EnvironmentLabels';
 import './EnvironmentPaths.scss';
 import Loading from '../../../../components/Loading';
 
 const EnvironmentPaths = ({
-  userCheckedItems, setUserCheckedItems, promotedEnvironments, publishing, headerText, multiSelect,
+  userCheckedItems, setUserCheckedItems, promotedEnvironments,
+  publishing, headerText, multiSelect, isDisabled,
 }) => {
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
   const environmentPathLoading = environmentPathStatus === STATUS.PENDING;
+  const CheckboxOrRadio = multiSelect ? Checkbox : Radio;
 
   const oncheckedChange = (checked, env) => {
     if (checked) {
@@ -47,16 +49,16 @@ const EnvironmentPaths = ({
               {index === 0 && <hr />}
               <FormGroup key={`fg-${index}`} isInline fieldId="environment-checkbox-group">
                 {environments.map(env =>
-                  (<Checkbox
+                  (<CheckboxOrRadio
                     isChecked={(publishing && env.library) ||
                     envCheckedInList(env, userCheckedItems) ||
                     envCheckedInList(env, promotedEnvironments)}
-                    isDisabled={(publishing && env.library)
+                    isDisabled={isDisabled || (publishing && env.library)
                     || envCheckedInList(env, promotedEnvironments)}
                     className="env-path__labels-with-pointer"
                     key={`${env.id}${index}`}
                     id={`${env.id}${index}`}
-                    label={<EnvironmentLabels environments={env} />}
+                    label={<EnvironmentLabels environments={env} isDisabled={isDisabled} />}
                     aria-label={env.label}
                     onChange={checked => oncheckedChange(checked, env)}
                   />))}
@@ -79,6 +81,7 @@ EnvironmentPaths.propTypes = {
   publishing: PropTypes.bool,
   headerText: PropTypes.string,
   multiSelect: PropTypes.bool,
+  isDisabled: PropTypes.bool,
 };
 
 EnvironmentPaths.defaultProps = {
@@ -86,5 +89,6 @@ EnvironmentPaths.defaultProps = {
   publishing: true,
   headerText: __('Select a lifecycle environment from the available promotion paths to promote new version.'),
   multiSelect: true,
+  isDisabled: false,
 };
 export default EnvironmentPaths;

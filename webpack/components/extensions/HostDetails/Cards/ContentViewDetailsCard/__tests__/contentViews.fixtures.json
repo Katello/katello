@@ -1,0 +1,443 @@
+{
+    "total": 3,
+    "subtotal": 3,
+    "selectable": 3,
+    "page": 1,
+    "per_page": 3,
+    "error": null,
+    "search": null,
+    "sort": {
+        "by": "default",
+        "order": "DESC"
+    },
+    "can_create": true,
+    "results": [
+        {
+            "composite": false,
+            "component_ids": [],
+            "default": true,
+            "version_count": 1,
+            "latest_version": "1.0",
+            "latest_version_id": 1,
+            "auto_publish": false,
+            "solve_dependencies": false,
+            "import_only": false,
+            "generated_for": "none",
+            "related_cv_count": 0,
+            "related_composite_cvs": [],
+            "repository_ids": [],
+            "id": 1,
+            "name": "Default Organization View",
+            "label": "Default_Organization_View",
+            "description": null,
+            "organization_id": 1,
+            "organization": {
+                "name": "Default Organization",
+                "label": "Default_Organization",
+                "id": 1
+            },
+            "created_at": "2022-03-18 14:11:05 -0400",
+            "updated_at": "2022-03-18 14:11:05 -0400",
+            "last_task": null,
+            "latest_version_environments": [
+                {
+                    "id": 1,
+                    "name": "Library",
+                    "label": "Library"
+                }
+            ],
+            "repositories": [],
+            "versions": [
+                {
+                    "id": 1,
+                    "version": "1.0",
+                    "published": "2022-03-18 14:11:05 -0400",
+                    "environment_ids": [
+                        1
+                    ]
+                }
+            ],
+            "components": [],
+            "content_view_components": [],
+            "activation_keys": [
+                {
+                    "id": 1,
+                    "name": "ak1"
+                }
+            ],
+            "hosts": [],
+            "next_version": "1.0",
+            "last_published": "2022-03-18 14:11:05 -0400",
+            "environments": [
+                {
+                    "id": 1,
+                    "label": "Library",
+                    "name": "Library",
+                    "activation_keys": [
+                        1
+                    ],
+                    "hosts": [],
+                    "permissions": {
+                        "readable": true
+                    }
+                }
+            ],
+            "permissions": {
+                "view_content_views": true,
+                "edit_content_views": true,
+                "destroy_content_views": true,
+                "publish_content_views": true,
+                "promote_or_remove_content_views": true
+            }
+        },
+        {
+            "composite": true,
+            "component_ids": [
+                3
+            ],
+            "default": false,
+            "version_count": 3,
+            "latest_version": "3.0",
+            "latest_version_id": 6,
+            "auto_publish": false,
+            "solve_dependencies": false,
+            "import_only": false,
+            "generated_for": "none",
+            "related_cv_count": 1,
+            "related_composite_cvs": [],
+            "repository_ids": [
+                9
+            ],
+            "id": 3,
+            "name": "composite_cv",
+            "label": "composite_cv",
+            "description": "",
+            "organization_id": 1,
+            "organization": {
+                "name": "Default Organization",
+                "label": "Default_Organization",
+                "id": 1
+            },
+            "created_at": "2022-04-01 15:55:49 -0400",
+            "updated_at": "2022-04-05 13:25:34 -0400",
+            "last_task": {
+                "id": "c6621455-0fbf-430e-bf70-b8aadbae282c",
+                "started_at": "2022-04-05 13:30:04 -0400",
+                "result": "success",
+                "last_sync_words": "2 days"
+            },
+            "latest_version_environments": [
+                {
+                    "id": 1,
+                    "name": "Library",
+                    "label": "Library"
+                }
+            ],
+            "repositories": [
+                {
+                    "id": 9,
+                    "name": "Zoo Repo",
+                    "label": "Zoo_Repo",
+                    "content_type": "yum"
+                }
+            ],
+            "versions": [
+                {
+                    "id": 4,
+                    "version": "1.0",
+                    "published": "2022-04-01 15:56:35 -0400",
+                    "environment_ids": [
+                        3
+                    ]
+                },
+                {
+                    "id": 5,
+                    "version": "2.0",
+                    "published": "2022-04-05 13:25:13 -0400",
+                    "environment_ids": [
+                        2
+                    ]
+                },
+                {
+                    "id": 6,
+                    "version": "3.0",
+                    "published": "2022-04-05 13:25:34 -0400",
+                    "environment_ids": [
+                        1
+                    ]
+                }
+            ],
+            "components": [
+                {
+                    "id": 3,
+                    "name": "cv_1 2.0",
+                    "content_view_id": 2,
+                    "version": "2.0",
+                    "environments": [
+                        {
+                            "id": 1,
+                            "name": "Library",
+                            "label": "Library"
+                        },
+                        {
+                            "id": 2,
+                            "name": "dev",
+                            "label": "dev"
+                        }
+                    ],
+                    "content_view": {
+                        "id": 2,
+                        "name": "cv_1",
+                        "label": "cv_1",
+                        "description": "",
+                        "next_version": 3,
+                        "latest_version": "2.0"
+                    },
+                    "repositories": [
+                        {
+                            "id": 9,
+                            "name": "Zoo Repo",
+                            "label": "Zoo_Repo",
+                            "description": null
+                        }
+                    ]
+                }
+            ],
+            "content_view_components": [
+                {
+                    "latest": true,
+                    "id": 1,
+                    "created_at": "2022-04-01 15:56:02 -0400",
+                    "updated_at": "2022-04-01 15:56:02 -0400",
+                    "composite_content_view": {
+                        "id": 3,
+                        "name": "composite_cv",
+                        "label": "composite_cv",
+                        "description": "",
+                        "next_version": 4,
+                        "latest_version": "3.0",
+                        "version_count": 3
+                    },
+                    "content_view": {
+                        "id": 2,
+                        "name": "cv_1",
+                        "label": "cv_1",
+                        "description": "",
+                        "next_version": 3,
+                        "latest_version": "2.0",
+                        "version_count": 2
+                    },
+                    "content_view_version": {
+                        "id": 3,
+                        "name": "cv_1 2.0",
+                        "content_view_id": 2,
+                        "version": "2.0",
+                        "content_view": {
+                            "id": 2,
+                            "name": "cv_1",
+                            "label": "cv_1",
+                            "description": ""
+                        },
+                        "environments": [
+                            {
+                                "id": 1,
+                                "name": "Library",
+                                "label": "Library"
+                            },
+                            {
+                                "id": 2,
+                                "name": "dev",
+                                "label": "dev"
+                            }
+                        ],
+                        "repositories": [
+                            {
+                                "id": 9,
+                                "name": "Zoo Repo",
+                                "label": "Zoo_Repo",
+                                "description": null
+                            }
+                        ]
+                    },
+                    "component_content_view_versions": [
+                        {
+                            "id": 2,
+                            "version": "1.0"
+                        },
+                        {
+                            "id": 3,
+                            "version": "2.0"
+                        }
+                    ]
+                }
+            ],
+            "activation_keys": [],
+            "hosts": [],
+            "next_version": "4.0",
+            "last_published": "2022-04-05 13:25:34 -0400",
+            "environments": [
+                {
+                    "id": 3,
+                    "label": "stages",
+                    "name": "stages",
+                    "activation_keys": [],
+                    "hosts": [],
+                    "permissions": {
+                        "readable": true
+                    }
+                },
+                {
+                    "id": 1,
+                    "label": "Library",
+                    "name": "Library",
+                    "activation_keys": [],
+                    "hosts": [],
+                    "permissions": {
+                        "readable": true
+                    }
+                },
+                {
+                    "id": 2,
+                    "label": "dev",
+                    "name": "dev",
+                    "activation_keys": [],
+                    "hosts": [],
+                    "permissions": {
+                        "readable": true
+                    }
+                }
+            ],
+            "permissions": {
+                "view_content_views": true,
+                "edit_content_views": true,
+                "destroy_content_views": true,
+                "publish_content_views": true,
+                "promote_or_remove_content_views": true
+            }
+        },
+        {
+            "composite": false,
+            "component_ids": [],
+            "default": false,
+            "version_count": 2,
+            "latest_version": "2.0",
+            "latest_version_id": 3,
+            "auto_publish": false,
+            "solve_dependencies": false,
+            "import_only": false,
+            "generated_for": "none",
+            "related_cv_count": 1,
+            "related_composite_cvs": [
+                {
+                    "id": 3,
+                    "name": "composite_cv"
+                }
+            ],
+            "repository_ids": [
+                1
+            ],
+            "id": 2,
+            "name": "cv_1",
+            "label": "cv_1",
+            "description": "",
+            "organization_id": 1,
+            "organization": {
+                "name": "Default Organization",
+                "label": "Default_Organization",
+                "id": 1
+            },
+            "created_at": "2022-03-29 15:57:07 -0400",
+            "updated_at": "2022-04-01 15:54:48 -0400",
+            "last_task": {
+                "id": "44c73343-54c1-411d-8e3e-e80b9d158cc1",
+                "started_at": "2022-04-01 15:54:48 -0400",
+                "result": "success",
+                "last_sync_words": "6 days"
+            },
+            "latest_version_environments": [
+                {
+                    "id": 1,
+                    "name": "Library",
+                    "label": "Library"
+                },
+                {
+                    "id": 2,
+                    "name": "dev",
+                    "label": "dev"
+                }
+            ],
+            "repositories": [
+                {
+                    "id": 1,
+                    "name": "Zoo Repo",
+                    "label": "Zoo_Repo",
+                    "content_type": "yum"
+                }
+            ],
+            "versions": [
+                {
+                    "id": 2,
+                    "version": "1.0",
+                    "published": "2022-03-29 15:57:45 -0400",
+                    "environment_ids": []
+                },
+                {
+                    "id": 3,
+                    "version": "2.0",
+                    "published": "2022-04-01 15:54:48 -0400",
+                    "environment_ids": [
+                        1,
+                        2
+                    ]
+                }
+            ],
+            "components": [],
+            "content_view_components": [],
+            "activation_keys": [],
+            "hosts": [
+                {
+                    "id": 2,
+                    "name": "rhel9.fedora.example.com"
+                },
+                {
+                    "id": 3,
+                    "name": "rhel7.fedora.example.com"
+                }
+            ],
+            "next_version": "3.0",
+            "last_published": "2022-04-01 15:54:48 -0400",
+            "environments": [
+                {
+                    "id": 1,
+                    "label": "Library",
+                    "name": "Library",
+                    "activation_keys": [],
+                    "hosts": [],
+                    "permissions": {
+                        "readable": true
+                    }
+                },
+                {
+                    "id": 2,
+                    "label": "dev",
+                    "name": "dev",
+                    "activation_keys": [],
+                    "hosts": [
+                        2,
+                        3
+                    ],
+                    "permissions": {
+                        "readable": true
+                    }
+                }
+            ],
+            "permissions": {
+                "view_content_views": true,
+                "edit_content_views": true,
+                "destroy_content_views": true,
+                "publish_content_views": true,
+                "promote_or_remove_content_views": true
+            }
+        }
+    ]
+}

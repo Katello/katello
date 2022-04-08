@@ -1,20 +1,31 @@
 import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
+import { Tooltip } from '@patternfly/react-core';
 import { EnterpriseIcon, RegistryIcon } from '@patternfly/react-icons';
 import './contentViewIcon.scss';
 
 const ContentViewIcon = ({
-  composite, count, description, style,
+  composite, count, description, style, ...toolTipProps
 }) => {
   const props = {
-    title: composite ? __('Composite') : __('Component'),
     className: composite ? 'svg-icon-composite' : 'svg-icon-component',
   };
+  const cvIcon = (
+    <Tooltip
+      position="auto"
+      enableFlip
+      entryDelay={400}
+      content={composite ? __('Composite content view') : __('Component content view')}
+      {...toolTipProps}
+    >
+      {composite ? <RegistryIcon size="md" {...props} /> : <EnterpriseIcon size="sm" {...props} />}
+    </Tooltip>
+  );
   return (
     <div aria-label="content_view_icon" className="svg-centered-container" style={style}>
       {count && <span className="composite-component-count">{count}</span>}
-      {composite ? <RegistryIcon size="md" {...props} /> : <EnterpriseIcon size="sm" {...props} />}
+      {cvIcon}
       <span>{description}</span>
     </div>
   );
