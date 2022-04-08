@@ -68,6 +68,7 @@ const CdnTypeForm = ({ showUpdate, onUpdate, url }) => {
       </div>
       <FormGroup label={__('URL')} isRequired>
         <TextInput
+          ouiaId="cdn-configuration-url-input"
           aria-label="cdn-url"
           type="text"
           value={cdnUrl}
