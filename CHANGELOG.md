@@ -1,3 +1,13 @@
+# 4.4.0.2 Habanero (2022-04-08)
+
+## Bug Fixes
+
+### Repositories
+ * Uploaded Rpm(s) replaces Rpm(s) currently in repository ([#34707](https://projects.theforeman.org/issues/34707), [db81b915](https://github.com/Katello/katello.git/commit/db81b9152d3356cd70d7b78c91e4e1b7b3b22984))
+
+### Inter Server Sync
+ * LCE and content view label resets when trying to delete the field names in "Upstream Foreman Server" tab ([#34687](https://projects.theforeman.org/issues/34687), [0039255](https://github.com/Katello/katello/commit/0039255d135c4f270e2223fbc9baccc73524bd8f))
+
 # 4.4.0 Habanero (2022-03-17)
 
 ## Features
@@ -67,6 +77,7 @@
  * 4.3 -> nightly update has a bad migration and marks all organizations Airgapped ([#34531](https://projects.theforeman.org/issues/34531), [26afdff1](https://github.com/Katello/katello.git/commit/26afdff1d4917f7b12316c616b28c572bd79c47e))
  *  [RFE] Need a way to sync from a specific content view lifecycle environment of the upstream organization ([#34144](https://projects.theforeman.org/issues/34144), [0cda22e6](https://github.com/Katello/katello.git/commit/0cda22e6c989d5897bd19b936dead485d7290b73))
  * RH Repos page should not access CDN on 'disconnected' mode ([#33951](https://projects.theforeman.org/issues/33951), [3e8f2696](https://github.com/Katello/katello.git/commit/3e8f26961ff2a84a1de0b5dea197ea49a514d391), [b09ddee2](https://github.com/Katello/katello.git/commit/b09ddee2f2c395c86f2f8c6cc862cc680f9debea))
+
 
 ### Tests
  * Remove use of `pulp_` prefixes in the tests ([#34493](https://projects.theforeman.org/issues/34493), [65e30fbc](https://github.com/Katello/katello.git/commit/65e30fbc00176964949274400a6613bb308231d3))
