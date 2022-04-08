@@ -136,6 +136,7 @@ const UpstreamServerTypeForm = ({
           isRequired
         >
           <TextInput
+            ouiaId="network-sync-url-input"
             aria-label="cdn-url"
             type="text"
             value={url || ''}
@@ -148,6 +149,7 @@ const UpstreamServerTypeForm = ({
           isRequired
         >
           <TextInput
+            ouiaId="network-sync-username-input"
             aria-label="cdn-username"
             type="text"
             value={username || ''}
@@ -160,6 +162,7 @@ const UpstreamServerTypeForm = ({
           isRequired
         >
           <EditableTextInput
+            ouiaId="network-sync-password-input"
             attribute="cdn-password"
             value={password}
             isPassword
@@ -173,6 +176,7 @@ const UpstreamServerTypeForm = ({
           isRequired
         >
           <TextInput
+            ouiaId="network-sync-organization-input"
             aria-label="cdn-organization-label"
             type="text"
             value={organizationLabel || ''}
@@ -184,6 +188,7 @@ const UpstreamServerTypeForm = ({
           label={__('Lifecycle Environment Label')}
         >
           <TextInput
+            ouiaId="network-sync-lifecycle-environment-input"
             aria-label="cdn-lifecycle-environment-label"
             type="text"
             value={lifecycleEnvironmentLabel || ''}
@@ -195,6 +200,7 @@ const UpstreamServerTypeForm = ({
           label={__('Content view label')}
         >
           <TextInput
+            ouiaId="network-sync-content-view-input"
             aria-label="cdn-content-view-label"
             type="text"
             value={contentViewLabel || ''}
@@ -207,6 +213,7 @@ const UpstreamServerTypeForm = ({
           isRequired
         >
           <FormSelect
+            ouiaId="network-sync-ca-content-credential-input"
             aria-label="cdn-ssl-ca-content-credential"
             value={sslCaCredentialId || ''}
             isDisabled={updatingCdnConfiguration}
