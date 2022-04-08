@@ -76,12 +76,15 @@ module Katello
       def delete_orphan_remotes
         tasks = []
         repo_names = Katello::Repository.pluck(:pulp_id)
+        acs_remotes = Katello::SmartProxyAlternateContentSource.pluck(remote_href)
         pulp3_enabled_repo_types.each do |repo_type|
           api = repo_type.pulp3_api(smart_proxy)
           remotes = api.remotes_list
 
           remotes.each do |remote|
-            tasks << api.delete_remote(remote.pulp_href) unless repo_names.include?(remote.name)
+            if !repo_names.include?(remote.name) && !acs_remotes.include?(remote.pulp_href)
+              tasks << api.delete_remote(remote.pulp_href)
+            end
           end
         end
         tasks

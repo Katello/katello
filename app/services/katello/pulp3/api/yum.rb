@@ -20,6 +20,14 @@ module Katello
           PulpRpmClient::RepositoryAddRemoveContent
         end
 
+        def self.alternate_content_source_class
+          PulpRpmClient::RpmRpmAlternateContentSource
+        end
+
+        def alternate_content_source_api
+          PulpRpmClient::AcsRpmApi.new(api_client)
+        end
+
         def remotes_uln_api
           PulpRpmClient::RemotesUlnApi.new(api_client)
         end

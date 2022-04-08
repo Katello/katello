@@ -11,8 +11,8 @@ module Katello
       param :base_url, String, desc: N_('Base URL for finding alternate content')
       param :subpaths, Array, desc: N_('Path suffixes for finding alternate content')
       param :smart_proxy_ids, Array, desc: N_("Ids of smart proxies to associate"), required: false
-      param :content_type, RepositoryTypeManager.defined_repository_types.keys, desc: N_("The content type for the Alternate Content Source")
-      param :alternate_content_source_type, AlternateContentSource::ALLOWED_TYPES, desc: N_("The Alternate Content Source type")
+      param :content_type, RepositoryTypeManager.defined_repository_types.keys & AlternateContentSource::CONTENT_TYPES, desc: N_("The content type for the Alternate Content Source")
+      param :alternate_content_source_type, AlternateContentSource::ACS_TYPES, desc: N_("The Alternate Content Source type")
       param :upstream_username, String, desc: N_("Basic authentication username"), required: false
       param :upstream_password, String, desc: N_("Basic authentication password"), required: false
       param :ssl_ca_cert_id, :number, desc: N_("Identifier of the content credential containing the SSL CA Cert"), required: false
@@ -30,7 +30,7 @@ module Katello
     param :subpaths, Array, desc: N_('Path suffixes for finding alternate content')
     param :smart_proxy_ids, Array, desc: N_("Ids of smart proxies to associate"), required: false
     param :content_type, RepositoryTypeManager.defined_repository_types.keys, desc: N_("The content type for the Alternate Content Source")
-    param :alternate_content_source_type, AlternateContentSource::ALLOWED_TYPES, desc: N_("The Alternate Content Source type")
+    param :alternate_content_source_type, AlternateContentSource::ACS_TYPES, desc: N_("The Alternate Content Source type")
     param :upstream_username, String, desc: N_("Basic authentication username"), required: false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(AlternateContentSource)
@@ -68,6 +68,16 @@ module Katello
     api :POST, '/alternate_content_sources', N_('Create an ACS')
     param_group :acs
     def create
+      if params[:alternate_content_source_type] == 'custom'
+        if params[:base_url] !~ /\A#{URI::DEFAULT_PARSER.make_regexp}\z/
+          fail HttpErrors::UnprocessableEntity, _('%s is not a valid path') % params[:base_url]
+        end
+
+        bad_subpaths = params[:subpaths]&.select { |subpath| subpath[0] == '/' || subpath[-1] != '/'}
+        if bad_subpaths.present?
+          fail HttpErrors::UnprocessableEntity, _('All subpaths must have a slash at the end and none at the front')
+        end
+      end
       @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params)
       sync_task(::Actions::Katello::AlternateContentSource::Create, @alternate_content_source, @smart_proxies)
       respond_for_create(resource: @alternate_content_source.reload)

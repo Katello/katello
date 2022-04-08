@@ -10,6 +10,10 @@ module Actions
           acs = ::Katello::AlternateContentSource.find(input[:acs_id])
           output[:response] = acs.backend_service(smart_proxy).create_remote
         end
+
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
+        end
       end
     end
   end

@@ -54,14 +54,32 @@ module Katello
         end
       end
 
-      # TODO: ULN? reformat_api_exception?
+      # TODO: ULN?
       def create_remote
         if smart_proxy_acs&.remote_href.nil?
-          remote_file_data = api.remote_class.new(remote_options)
-          response = api.remotes_api.create(remote_file_data)
-          smart_proxy_acs.update!(remote_href: response.pulp_href)
-          return response
+          reformat_api_exception do
+            remote_file_data = api.remote_class.new(remote_options)
+            response = api.remotes_api.create(remote_file_data)
+            smart_proxy_acs.update!(remote_href: response.pulp_href)
+          end
         end
+      end
+
+      # TODO: ULN?
+      def create_test_remote
+        test_remote_options = remote_options
+        test_remote_options[:name] = test_remote_name
+        remote_file_data = api.remote_class.new(test_remote_options)
+
+        reformat_api_exception do
+          response = api.remotes_api.create(remote_file_data)
+          #delete is async, but if its not properly deleted, orphan cleanup will take care of it later
+          delete_remote(response.pulp_href)
+        end
+      end
+
+      def test_remote_name
+        "test_remote_#{SecureRandom.uuid}"
       end
 
       def update_remote
@@ -98,6 +116,14 @@ module Katello
       def delete_alternate_content_source
         href = smart_proxy_acs.alternate_content_source_href
         api.alternate_content_source_api.delete(href) if href
+      end
+
+      def reformat_api_exception
+        yield
+      rescue api.client_module::ApiError => exception
+        body = JSON.parse(exception.response_body) rescue body
+        body = body.values.join(',') if body.respond_to?(:values)
+        raise ::Katello::Errors::Pulp3Error, body
       end
     end
   end

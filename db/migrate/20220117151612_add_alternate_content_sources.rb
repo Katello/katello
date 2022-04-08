@@ -1,16 +1,16 @@
 class AddAlternateContentSources < ActiveRecord::Migration[6.0]
   def up
     create_table :katello_alternate_content_sources do |t|
-      t.string :name, limit: 255
+      t.string :name, limit: 255, null: false
       t.string :label, limit: 255, null: false
       t.text :description
       t.integer :ssl_ca_cert_id
       t.integer :ssl_client_cert_id
       t.integer :ssl_client_key_id
       t.integer :http_proxy_id
-      t.string :base_url, limit: 1024, null: false
+      t.string :base_url, limit: 1024
       t.string :subpaths, array: true, default: []
-      t.string :content_type, limit: 255, default: 'yum', null: false
+      t.string :content_type, limit: 255, default: 'yum'
       t.string :alternate_content_source_type, limit: 255, default: 'custom', null: false
       t.boolean :verify_ssl, default: true, null: false
       t.string 'upstream_username', limit: 255

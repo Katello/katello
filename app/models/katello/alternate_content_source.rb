@@ -6,10 +6,15 @@ module Katello
     include ForemanTasks::Concerns::ActionSubject
     include ::ScopedSearchExtensions
 
+    # TODO: optional validations depending on ACS type
+    #  -> e.g. optionally validate null:false for content_type because
+    #     product ACSs can create smart proxy ACSs of any content type.
+
     self.table_name = :katello_alternate_content_sources
 
-    # TODO: cdn, rhui
-    ALLOWED_TYPES = %w(custom).freeze
+    # TODO: product, rhui
+    ACS_TYPES = %w(custom).freeze
+    CONTENT_TYPES = [::Katello::Repository::YUM_TYPE, ::Katello::Repository::FILE_TYPE].freeze
 
     encrypts :upstream_password
 
