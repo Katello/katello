@@ -941,6 +941,28 @@ module Katello
       assert_response :success
     end
 
+    def test_import_uploads_without_checksum
+      uploads = [{'id' => '1', 'size' => '12333', 'name' => 'test'}]
+
+      put :import_uploads, params: { id: @repository.id, uploads: uploads }
+
+      response = JSON.parse(@response.body)
+      assert response.key?('displayMessage')
+      assert_equal 'Checksum is a required parameter.', response['displayMessage']
+      assert_response :bad_request
+    end
+
+    def test_import_uploads_without_name
+      uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324'}]
+
+      put :import_uploads, params: { id: @repository.id, uploads: uploads }
+
+      response = JSON.parse(@response.body)
+      assert response.key?('displayMessage')
+      assert_equal 'Name is a required parameter.', response['displayMessage']
+      assert_response :bad_request
+    end
+
     def test_import_uploads_file
       # make sure name does not get ignored for file repos
       # this is yum repo. So unit keys should accept name
