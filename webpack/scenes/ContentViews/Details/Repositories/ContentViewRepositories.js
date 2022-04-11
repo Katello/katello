@@ -192,6 +192,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
   const rowDropdownItems = ({ id }) => [
     {
       title: 'Add',
+      ouiaId: `add-repository-${id}`,
       isDisabled: importOnly || generatedContentView || repositoryIds.includes(id),
       onClick: () => {
         onAdd(id);
@@ -199,6 +200,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
     },
     {
       title: 'Remove',
+      ouiaId: `remove-repository-${id}`,
       isDisabled: importOnly || generatedContentView || !repositoryIds.includes(id),
       onClick: () => {
         onRemove(id);
@@ -220,7 +222,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
   const defaultFilters = [allRepositories, ALL_STATUSES];
 
   const dropdownItems = [
-    <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={removeBulk}>
+    <DropdownItem ouiaId="bulk-remove-repositories" aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={removeBulk}>
       {__('Remove')}
     </DropdownItem>,
   ];
@@ -281,6 +283,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
                 </ActionListItem>
                 <ActionListItem>
                   <Dropdown
+                    ouiaId="repositoies-bulk-actions"
                     toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
                     isOpen={bulkActionOpen}
                     isPlain
@@ -317,7 +320,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
             last_sync: lastSync,
           } = repo;
           return (
-            <Tr key={id}>
+            <Tr key={id} ouiaId={`repositories-table-row-${productName}-${name}`}>
               {hasPermission(permissions, 'edit_content_views') &&
                 <Td>
                   <Checkbox
