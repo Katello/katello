@@ -286,7 +286,7 @@ export const ErrataTab = () => {
             </ActionListItem>
             <ActionListItem>
               <Dropdown
-                toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                toggle={<KebabToggle aria-label="bulk_actions_kebab" onToggle={toggleBulkAction} />}
                 isOpen={isBulkActionOpen}
                 isPlain
                 dropdownItems={dropdownKebabItems}
