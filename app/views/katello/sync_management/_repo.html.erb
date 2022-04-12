@@ -14,40 +14,19 @@
   <td class="size" data-size="<%= @repo_status[repo.id][:size] %>">
     <%= @repo_status[repo.id][:sync_id] ? @repo_status[repo.id][:display_size]  : _('N/A')%>
   </td>
-  <% if @repo_status[repo.id][:sync_id] %>
-    <td class="result">
+  <td class="result">
       <span class="result-info">
+        <% if @repo_status[repo.id][:sync_id] %>
           <a href="/foreman_tasks/tasks/<%= @repo_status[repo.id][:sync_id] %>">
             <%= @repo_status[repo.id][:state] %>
           </a>
+        <% elsif repo&.latest_sync_audit&.created_at %>
+          <%= _("Synced ") + time_ago_in_words(repo&.latest_sync_audit&.created_at) + _(" ago.") %>
+        <% else%>
+          <%= @repo_status[repo.id][:state] %>
+        <% end %>
       </span>
-      <a class="info-tipsy clickable fa fa-warning <%= 'hidden' if @repo_status[repo.id][:raw_state] != 'error' %>"
-         href="/foreman_tasks/tasks/<%= @repo_status[repo.id][:sync_id] %>">
-        <span class="hidden-text hidden">
-          <div class="la error-tipsy">
-            <ul>
-              <% if @repo_status[repo.id][:error_details].present? && error_state?(@repo_status[repo.id]) %>
-                <% @repo_status[repo.id][:error_details][:messages].each do |error| %>
-                  <li>
-                    <%= error %>
-                  </li>
-                <% end %>
-              <% end %>
-            </ul>
-          </div>
-        </span>
-      </a>
-    </td>
-  <% elsif repo&.latest_sync_audit&.created_at %>
-    <td>
-      <%= _("Synced ") + time_ago_in_words(repo&.latest_sync_audit&.created_at) + _(" ago.") %>
-    </td>
-  <% else%>
-    <td>
-      <%= @repo_status[repo.id][:state] %>
-    </td>
-  <% end %>
-
+  </td>
   <% if @show_org %>
     <td></td>
   <% end %>
