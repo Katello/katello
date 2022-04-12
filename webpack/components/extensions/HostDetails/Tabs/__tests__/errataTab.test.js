@@ -9,6 +9,7 @@ import { ErrataTab } from '../ErrataTab/ErrataTab.js';
 import mockErrataData from './errata.fixtures.json';
 import mockResolveErrataTask from './resolveErrata.fixtures.json';
 import mockBookmarkData from './bookmarks.fixtures.json';
+import { act } from 'react-test-renderer';
 
 const contentFacetAttributes = {
   id: 11,
@@ -976,6 +977,7 @@ test('Apply button chooses remote execution', async (done) => {
   assertNockRequest(resolveErrataScope);
   assertNockRequest(scope1);
   assertNockRequest(scope, done);
+  act(done);
 });
 
 test('Can bulk apply via remote execution', async (done) => {
@@ -1023,6 +1025,7 @@ test('Can bulk apply via remote execution', async (done) => {
   assertNockRequest(resolveErrataScope);
   assertNockRequest(scope1);
   assertNockRequest(scope, done);
+  act(done);
 });
 
 test('Can select all, exclude and bulk apply via remote execution', async (done) => {
@@ -1217,4 +1220,5 @@ test('Can apply a single erratum to the host via customized remote execution', a
   );
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
+  act(done);
 });
