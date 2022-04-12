@@ -27,14 +27,6 @@ const TracesTab = () => {
     content_facet_attributes: contentFacetAttributes,
   } = hostDetails;
 
-  const [isActionOpen, setIsActionOpen] = useState(false);
-  const onActionSelect = () => {
-    setIsActionOpen(false);
-  };
-  const onActionToggle = () => {
-    setIsActionOpen(prev => !prev);
-  };
-
   const showEnableTracer = (contentFacetAttributes?.katello_tracer_installed === false);
   const emptyContentTitle = __('This host currently does not have traces.');
   const emptyContentBody = __('Add traces by applying updates on this host.');
@@ -115,7 +107,7 @@ const TracesTab = () => {
         <ActionList isIconList>
           <ActionListItem>
             <Dropdown
-              onSelect={onActionSelect}
+              onSelect={onBulkRestartApp}
               toggle={
                 <DropdownToggle
                   aria-label="bulk_actions"
@@ -126,18 +118,10 @@ const TracesTab = () => {
                   ]}
                   splitButtonVariant="action"
                   toggleVariant="primary"
-                  onToggle={onActionToggle}
+                  onToggle={toggleBulkAction}
                 />
               }
-              isOpen={isActionOpen}
-              dropdownItems={dropdownItems}
-            />
-          </ActionListItem>
-          <ActionListItem>
-            <Dropdown
-              toggle={<KebabToggle aria-label="bulk_actions_kebab" onToggle={toggleBulkAction} />}
               isOpen={isBulkActionOpen}
-              isPlain
               dropdownItems={dropdownItems}
             />
           </ActionListItem>
