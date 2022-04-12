@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {
   Skeleton, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, DropdownToggle, DropdownToggleAction, KebabToggle,
+  DropdownItem, DropdownToggle, DropdownToggleAction,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';

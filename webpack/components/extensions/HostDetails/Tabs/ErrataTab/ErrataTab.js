@@ -201,7 +201,7 @@ export const ErrataTab = () => {
     }
   };
 
-  const dropdownItems = [
+  const dropdownKebabItems = [
     <DropdownItem
       aria-label="bulk_add"
       key="bulk_add"
@@ -212,8 +212,29 @@ export const ErrataTab = () => {
     </DropdownItem>,
   ];
 
+  const dropdownItems = [
+    <DropdownItem
+      aria-label="apply_via_remote_execution"
+      key="apply_via_remote_execution"
+      component="button"
+      onClick={applyViaRemoteExecution}
+      isDisabled={selectedCount === 0}
+    >
+      {__('Apply via remote execution')}
+    </DropdownItem>,
+    <DropdownItem
+      aria-label="apply_via_customized_remote_execution"
+      key="apply_via_customized_remote_execution"
+      component="a"
+      href={bulkCustomizedRexUrl()}
+      isDisabled={selectedCount === 0}
+    >
+      {__('Apply via customized remote execution')}
+    </DropdownItem>,
+  ];
+
   if (defaultRemoteAction === KATELLO_AGENT) {
-    dropdownItems.push((
+    dropdownItems.unshift((
       <DropdownItem
         aria-label="apply_via_katello_agent"
         key="apply_via_katello_agent"
@@ -224,28 +245,6 @@ export const ErrataTab = () => {
         {__('Apply via Katello agent')}
       </DropdownItem>));
   }
-
-  dropdownItems.push((
-    <DropdownItem
-      aria-label="apply_via_remote_execution"
-      key="apply_via_remote_execution"
-      component="button"
-      onClick={applyViaRemoteExecution}
-      isDisabled={selectedCount === 0}
-    >
-      {__('Apply via remote execution')}
-    </DropdownItem>));
-
-  dropdownItems.push((
-    <DropdownItem
-      aria-label="apply_via_customized_remote_execution"
-      key="apply_via_customized_remote_execution"
-      component="a"
-      href={bulkCustomizedRexUrl()}
-      isDisabled={selectedCount === 0}
-    >
-      {__('Apply via customized remote execution')}
-    </DropdownItem>));
 
   const handleErrataTypeSelected = newType => setErrataTypeSelected((prevType) => {
     if (prevType === newType) {
@@ -290,7 +289,7 @@ export const ErrataTab = () => {
                 toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
                 isOpen={isBulkActionOpen}
                 isPlain
-                dropdownItems={dropdownItems}
+                dropdownItems={dropdownKebabItems}
               />
             </ActionListItem>
           </ActionList>
