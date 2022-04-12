@@ -267,6 +267,7 @@ export const ErrataTab = () => {
           <ActionList isIconList>
             <ActionListItem>
               <Dropdown
+                aria-label="errata_dropdown"
                 onSelect={onActionSelect}
                 toggle={
                   <DropdownToggle
