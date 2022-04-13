@@ -35,7 +35,9 @@ module Katello
     end
 
     def all_for_content_view_filter(filter, _collection)
-      Erratum.joins(:repositories).merge(filter.applicable_repos)
+      available_ids = Erratum.joins(:repositories).merge(filter.applicable_repos)&.pluck(:errata_id) || []
+      added_ids = filter&.erratum_rules&.pluck(:errata_id) || []
+      Erratum.where(errata_id: available_ids + added_ids)
     end
 
     def custom_index_relation(collection)

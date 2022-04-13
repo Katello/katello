@@ -36,7 +36,9 @@ module Katello
     end
 
     def all_for_content_view_filter(filter, _collection)
-      ModuleStream.joins(:repositories).merge(filter.applicable_repos)
+      available_ids = ModuleStream.joins(:repositories).merge(filter.applicable_repos)&.pluck(:id) || []
+      added_ids = filter&.module_stream_rules&.pluck(:module_stream_id) || []
+      ModuleStream.where(id: available_ids + added_ids)
     end
 
     def available_for_content_view_filter(filter, _collection)
