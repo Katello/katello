@@ -1,7 +1,8 @@
 require 'katello/permission_creator'
-require 'katello/repository_types.rb'
-require 'katello/host_status_manager.rb'
+require 'katello/repository_types'
+require 'katello/host_status_manager'
 # rubocop:disable Metrics/BlockLength
+
 Foreman::Plugin.register :katello do
   requires_foreman '>= 2.6'
 
@@ -216,7 +217,7 @@ Foreman::Plugin.register :katello do
     :content_facet_attributes => [:content_view_id, :lifecycle_environment_id, :content_source_id,
                                   :host, :kickstart_repository_id],
     :subscription_facet_attributes => [:release_version, :autoheal, :purpose_usage, :purpose_role, :service_level, :host,
-                                       {:installed_products => [:product_id, :product_name, :arch, :version]}, :facts, :hypervisor_guest_uuids => [], :purpose_addon_ids => []]
+                                       {:installed_products => [:product_id, :product_name, :arch, :version]}, :facts, {:hypervisor_guest_uuids => []}, {:purpose_addon_ids => []}]
   parameter_filter ::Hostgroup, :content_view_id, :lifecycle_environment_id, :content_source_id,
     :kickstart_repository_id
   parameter_filter Organization, :label, :service_level
@@ -300,6 +301,370 @@ Foreman::Plugin.register :katello do
   describe_host do
     overview_buttons_provider :content_host_overview_button
     multiple_actions_provider :hosts_change_content_source
+  end
+
+  settings do
+    category :katello, N_('Content') do
+      http_proxy_select = [{
+        name: _("HTTP Proxies"),
+        class: 'HttpProxy',
+        scope: 'all',
+        value_method: 'name',
+        text_method: 'name_and_url'
+      }]
+      download_policies = proc { hashify_parameters(::Katello::RootRepository::DOWNLOAD_POLICIES) }
+      proxy_download_policies = proc { hashify_parameters(::SmartProxy::DOWNLOAD_POLICIES) }
+
+      def hashify_parameters(parameters)
+        Hash[parameters.map { |p| [p, p] }]
+      end
+
+      def katello_template_setting_values(name)
+        templates = ProvisioningTemplate.where(:template_kind => TemplateKind.where(:name => name))
+        templates.each_with_object({}) { |tmpl, hash| hash[tmpl.name] = tmpl.name }
+      end
+
+      setting 'content_default_http_proxy',
+        type: :string,
+        default: nil,
+        full_name: N_('Default HTTP Proxy'),
+        description: N_("Default HTTP proxy for syncing content"),
+        collection: proc { http_proxy_select },
+        include_blank: N_("no global default")
+
+      setting 'cdn_ssl_version',
+        type: :string,
+        default: nil,
+        full_name: N_('CDN SSL version'),
+        description: N_("SSL version used to communicate with the CDN"),
+        collection: proc { hashify_parameters(Katello::Resources::CDN::SUPPORTED_SSL_VERSIONS) }
+
+      setting 'katello_default_provision',
+        type: :string,
+        default: 'Kickstart default',
+        full_name: N_('Default synced OS provisioning template'),
+        description: N_("Default provisioning template for Operating Systems created from synced content"),
+        collection: proc { katello_template_setting_values("provision") }
+
+      setting 'katello_default_finish',
+        type: :string,
+        default: 'Kickstart default finish',
+        full_name: N_('Default synced OS finish template'),
+        description: N_("Default finish template for new Operating Systems created from synced content"),
+        collection: proc { katello_template_setting_values("finish") }
+
+      setting 'katello_default_user_data',
+        type: :string,
+        default: 'Kickstart default user data',
+        full_name: N_('Default synced OS user-data'),
+        description: N_("Default user data for new Operating Systems created from synced content"),
+        collection: proc { katello_template_setting_values("user_data") }
+
+      setting 'katello_default_PXELinux',
+        type: :string,
+        default: 'Kickstart default PXELinux',
+        full_name: N_('Default synced OS PXELinux template'),
+        description: N_("Default PXELinux template for new Operating Systems created from synced content"),
+        collection: proc { katello_template_setting_values("PXELinux") }
+
+      setting 'katello_default_PXEGrub',
+        type: :string,
+        default: 'Kickstart default PXEGrub',
+        full_name: N_('Default synced OS PXEGrub template'),
+        description: N_("Default PXEGrub template for new Operating Systems created from synced content"),
+        collection: proc { katello_template_setting_values("PXEGrub") }
+
+      setting 'katello_default_PXEGrub2',
+        type: :string,
+        default: 'Kickstart default PXEGrub2',
+        full_name: N_('Default synced OS PXEGrub2 template'),
+        description: N_("Default PXEGrub2 template for new Operating Systems created from synced content"),
+        collection: proc { katello_template_setting_values("PXEGrub2") }
+
+      setting 'katello_default_iPXE',
+        type: :string,
+        default: 'Kickstart default iPXE',
+        full_name: N_('Default synced OS iPXE template'),
+        description: N_("Default iPXE template for new Operating Systems created from synced content"),
+        collection: proc { katello_template_setting_values("iPXE") }
+
+      setting 'katello_default_ptable',
+        type: :string,
+        default: 'Kickstart default',
+        full_name: N_('Default synced OS partition table'),
+        description: N_("Default partitioning table for new Operating Systems created from synced content"),
+        collection: proc { Hash[Template.all.where(:type => "Ptable").map { |tmp| [tmp[:name], tmp[:name]] }] }
+
+      setting 'katello_default_kexec',
+        type: :string,
+        default: 'Discovery Red Hat kexec',
+        full_name: N_('Default synced OS kexec template'),
+        description: N_("Default kexec template for new Operating Systems created from synced content"),
+        collection: proc { katello_template_setting_values("kexec") }
+
+      setting 'katello_default_atomic_provision',
+        type: :string,
+        default: 'Atomic Kickstart default',
+        full_name: N_('Default synced OS Atomic template'),
+        description: N_("Default provisioning template for new Atomic Operating Systems created from synced content"),
+        collection: proc { katello_template_setting_values("provision") }
+
+      setting 'manifest_refresh_timeout',
+        type: :integer,
+        default: 60 * 20,
+        full_name: N_('Timeout when refreshing a manifest (in seconds)'),
+        description: N_("Manifest refresh timeout")
+
+      setting 'content_action_accept_timeout',
+        type: :integer,
+        default: 20,
+        full_name: N_('Accept action timeout'),
+        description: N_("Time in seconds to wait for a host to pick up a katello-agent action")
+
+      setting 'content_action_finish_timeout',
+        type: :integer,
+        default: 3600,
+        full_name: N_('Finish action timeout'),
+        description: N_("Time in seconds to wait for a host to finish a katello-agent action")
+
+      setting 'subscription_connection_enabled',
+        type: :boolean,
+        default: true,
+        full_name: N_('Subscription connection enabled'),
+        description: N_("Can communicate with the Red Hat Portal for subscriptions.")
+
+      setting 'errata_status_installable',
+        type: :boolean,
+        default: false,
+        full_name: N_('Installable errata from content view'),
+        description: N_("Calculate errata host status based only on errata in a host's content view and lifecycle environment")
+
+      setting 'restrict_composite_view',
+        type: :boolean,
+        default: false,
+        full_name: N_('Restrict composite content view promotion'),
+        description: N_("If this is enabled, a composite content view may not be published or promoted unless the component content view versions that it includes exist in the target environment.")
+
+      setting 'check_services_before_actions',
+        type: :boolean,
+        default: true,
+        full_name: N_('Check services before actions'),
+        description: N_("Whether or not to check the status of backend services such as pulp and candlepin prior to performing some actions.")
+
+      setting 'foreman_proxy_content_batch_size',
+        type: :integer,
+        default: 100,
+        full_name: N_('Batch size to sync repositories in.'),
+        description: N_("How many repositories should be synced concurrently on the capsule. A smaller number may lead to longer sync times. A larger number will increase dynflow load.")
+
+      setting 'foreman_proxy_content_auto_sync',
+        type: :boolean,
+        default: true,
+        full_name: N_('Sync Smart Proxies after content view promotion'),
+        description: N_("Whether or not to auto sync the Smart Proxies after a content view promotion.")
+
+      setting 'download_rate_limit',
+        type: :integer,
+        default: 0,
+        full_name: N_('Download rate limit'),
+        description: N_("Maximum download rate when syncing a repository (requests per second). Use 0 for no limit.")
+
+      setting 'default_download_policy',
+        type: :string,
+        default: "immediate",
+        full_name: N_('Default Custom Repository download policy'),
+        description: N_("Default download policy for custom repositories (either 'immediate' or 'on_demand')"),
+        collection: download_policies
+
+      setting 'default_redhat_download_policy',
+        type: :string,
+        default: "on_demand",
+        full_name: N_('Default Red Hat Repository download policy'),
+        description: N_("Default download policy for enabled Red Hat repositories (either 'immediate' or 'on_demand')"),
+        collection: download_policies
+
+      setting 'default_proxy_download_policy',
+        type: :string,
+        default: "on_demand",
+        full_name: N_('Default Smart Proxy download policy'),
+        description: N_("Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')"),
+        collection: proxy_download_policies
+
+      setting 'pulp_docker_registry_port',
+        type: :integer,
+        default: 5000,
+        full_name: N_('Pulp Docker registry port'),
+        description: N_("The port used by Pulp Crane to provide Docker Registries")
+
+      setting 'pulp_export_destination',
+        type: :string,
+        default: "/var/lib/pulp/katello-export",
+        full_name: N_('Pulp export destination filepath'),
+        description: N_("On-disk location for exported repositories")
+
+      setting 'pulpcore_export_destination',
+        type: :string,
+        default: "/var/lib/pulp/exports",
+        full_name: N_('Pulp 3 export destination filepath'),
+        description: N_("On-disk location for pulp 3 exported repositories")
+
+      setting 'pulp_client_key',
+        type: :string,
+        default: "/etc/pki/katello/private/pulp-client.key",
+        full_name: N_('Pulp client key'),
+        description: N_("Path for ssl key used for pulp server auth")
+
+      setting 'pulp_client_cert',
+        type: :string,
+        default: "/etc/pki/katello/certs/pulp-client.crt",
+        full_name: N_('Pulp client cert'),
+        description: N_("Path for ssl cert used for pulp server auth")
+
+      setting 'sync_total_timeout',
+        type: :integer,
+        default: 3600,
+        full_name: N_('Sync Total Timeout'),
+        description: N_("The maximum number of second that Pulp can take to do a single sync operation, e.g., download a single metadata file.")
+
+      setting 'sync_connect_timeout_v2',
+        type: :integer,
+        default: 60,
+        full_name: N_('Sync Connect Timeout'),
+        description: N_("The maximum number of seconds for Pulp to establish a new connection or for waiting for a free connection from a pool if pool connection limits are exceeded.")
+
+      setting 'sync_sock_connect_timeout',
+        type: :integer,
+        default: 60,
+        full_name: N_('Sync Sock Connect Timeout'),
+        description: N_("The maximum number of seconds for Pulp to connect to a peer for a new connection not given from a pool.")
+
+      setting 'sync_sock_read_timeout',
+        type: :integer,
+        default: 3600,
+        full_name: N_('Sync Sock Read Timeout'),
+        description: N_("The maximum number of seconds that Pulp can take to download a file, not counting connection time.")
+
+      setting 'remote_execution_by_default',
+        type: :boolean,
+        default: false,
+        full_name: N_('Use remote execution by default'),
+        description: N_("If this is enabled, remote execution is used instead of katello-agent for remote actions")
+
+      setting 'unregister_delete_host',
+        type: :boolean,
+        default: false,
+        full_name: N_('Delete Host upon unregister'),
+        description: N_("When unregistering a host via subscription-manager, also delete the host record. Managed resources linked to host such as virtual machines and DNS records may also be deleted.")
+
+      setting 'register_hostname_fact',
+        type: :string,
+        default: '',
+        full_name: N_('Subscription manager name registration fact'),
+        description: N_("When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')")
+
+      setting 'register_hostname_fact_strict_match',
+        type: :boolean,
+        default: false,
+        full_name: N_('Subscription manager name registration fact strict matching'),
+        description: N_('If this is enabled, and register_hostname_fact is set and provided, registration will look for a new host by name only using that fact, and will skip all hostname matching')
+
+      setting 'default_location_subscribed_hosts',
+        type: :string,
+        default: nil,
+        full_name: N_('Default location for subscribed hosts'),
+        description: N_('Default Location where new subscribed hosts will put upon registration'),
+        collection: proc { Hash[Location.unscoped.all.map { |loc| [loc[:title], loc[:title]] }] }
+
+      setting 'expire_soon_days',
+        type: :integer,
+        default: 120,
+        full_name: N_('Expire soon days'),
+        description: N_('The number of days remaining in a subscription before you will be reminded about renewing it.')
+
+      setting 'content_view_solve_dependencies',
+        type: :boolean,
+        default: false,
+        full_name: N_('content view Dependency Solving Default'),
+        description: N_('The default dependency solving value for new content views.')
+
+      setting 'host_dmi_uuid_duplicates',
+        type: :array,
+        default: [],
+        full_name: N_('Host Duplicate DMI UUIDs'),
+        description: N_("If hosts fail to register because of duplicate DMI UUIDs, add their comma-separated values here. Subsequent registrations will generate a unique DMI UUID for the affected hosts.")
+
+      setting 'host_profile_assume',
+        type: :boolean,
+        default: true,
+        full_name: N_('Host Profile Assume'),
+        description: N_("Allow new host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host.")
+
+      setting 'host_profile_assume_build_can_change',
+        type: :boolean,
+        default: false,
+        full_name: N_('Host Profile Can Change In Build'),
+        description: N_("Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode.")
+
+      setting 'host_re_register_build_only',
+        type: :boolean,
+        default: false,
+        full_name: N_('Host Can Re-Register Only In Build'),
+        description: N_("Allow hosts to re-register themselves only when they are in build mode")
+
+      setting 'host_tasks_workers_pool_size',
+        type: :integer,
+        default: 5,
+        full_name: N_('Host Tasks Workers Pool Size'),
+        description: N_("Amount of workers in the pool to handle the execution of host-related tasks. When set to 0, the default queue will be used instead. Restart of the dynflowd/foreman-tasks service is required.")
+
+      setting 'applicability_batch_size',
+        type: :integer,
+        default: 50,
+        full_name: N_('Applicability Batch Size'),
+        description: N_("Number of host applicability calculations to process per task.")
+
+      setting 'autosearch_while_typing',
+        type: :boolean,
+        default: true,
+        full_name: N_('Autosearch'),
+        description: N_('For pages that support it, automatically perform search while typing in search input.')
+
+      setting 'autosearch_delay',
+        type: :integer,
+        default: 500,
+        full_name: N_('Autosearch delay'),
+        description: N_('If Autosearch is enabled, delay in milliseconds before executing searches while typing.')
+
+      setting 'bulk_load_size',
+        type: :integer,
+        default: 2000,
+        full_name: N_('Pulp bulk load size'),
+        description: N_('The number of items fetched from a single paged Pulp API call.')
+
+      setting 'upload_profiles_without_dynflow',
+        type: :boolean,
+        default: true,
+        full_name: N_('Upload profiles without Dynflow'),
+        description: N_('Allow Katello to update host installed packages, enabled repos, and module inventory directly instead of wrapped in Dynflow tasks (try turning off if Puma processes are using too much memory)')
+
+      setting 'orphan_protection_time',
+        type: :integer,
+        default: 1440,
+        full_name: N_('Orphaned Content Protection Time'),
+        description: N_('Time in minutes to consider orphan content as orphaned.')
+
+      setting 'remote_execution_prefer_registered_through_proxy',
+        type: :boolean,
+        default: false,
+        full_name: N_('Prefer registered through proxy for remote execution'),
+        description: N_('Prefer using a proxy to which a host is registered when using remote execution')
+
+      setting 'delete_repo_across_cv',
+        type: :boolean,
+        default: true,
+        full_name: N_('Allow deleting repositories in published content views'),
+        description: N_("If this is enabled, repositories can be deleted even when they belong to published content views. The deleted repository will be removed from all content view versions.")
+    end
   end
 
   if Katello.with_remote_execution?
