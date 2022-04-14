@@ -271,6 +271,7 @@ export const ErrataTab = () => {
                 onSelect={onActionSelect}
                 toggle={
                   <DropdownToggle
+                    aria-label="expand_errata_toggle"
                     splitButtonItems={[
                       <DropdownToggleAction key="action" aria-label="bulk_actions" onClick={apply}>
                         {__('Apply')}
