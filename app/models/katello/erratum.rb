@@ -101,7 +101,8 @@ module Katello
           { erratum_id: upsert[0], erratum_pulp3_href: upsert[1], repository_id: upsert[2], created_at: upsert[3], updated_at: upsert[4] }
         end
         # PostgreSQL refuses to insert and update in the same command: https://github.com/rails/rails/issues/35519
-        self.repository_association_class.upsert_all(upserts, unique_by: [:erratum_id, :repository_id])
+        uniq_records = upserts.uniq { |e| [e[:erratum_id], e[:repository_id]] }
+        self.repository_association_class.upsert_all(uniq_records, unique_by: [:erratum_id, :repository_id])
       end
     end
 
