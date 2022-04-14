@@ -1,5 +1,5 @@
 class RemoveDuplicateErrata < ActiveRecord::Migration[6.0]
-  def up
+  def up # rubocop:disable Metrics/MethodLength
     #Update all unique errata records to have pulp_id = errata_id
     ::Katello::Erratum.group(:errata_id).having("count(errata_id) = 1").pluck(:errata_id).each do |original_errata_id|
       erratum = ::Katello::Erratum.find_by(errata_id: original_errata_id)
@@ -22,6 +22,13 @@ class RemoveDuplicateErrata < ActiveRecord::Migration[6.0]
           repo_erratum.delete
         else
           repo_erratum.update(erratum_id: errata_to_keep.id)
+        end
+      end
+      ::Katello::ContentFacetErratum.where(erratum_id: dup_errata&.map(&:id)).each do |host_erratum|
+        if ::Katello::ContentFacetErratum.find_by(content_facet_id: host_erratum.content_facet_id, erratum_id: errata_to_keep.id)
+          host_erratum.delete
+        else
+          host_erratum.update(erratum_id: errata_to_keep.id)
         end
       end
       dup_errata_ids = dup_errata&.pluck(:id)
