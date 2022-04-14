@@ -76,11 +76,6 @@ exports[`Module stream details page rendering renders with loading state 1`] = `
         },
         Object {
           "key": 3,
-          "tabContent": "No profiles to show",
-          "tabHeader": "Profiles",
-        },
-        Object {
-          "key": 4,
           "tabContent": "No artifacts to show",
           "tabHeader": "Artifacts",
         },
@@ -93,26 +88,26 @@ exports[`Module stream details page rendering renders with loading state 1`] = `
 exports[`Module stream details page rendering renders with module stream provided 1`] = `
 <div>
   <BreadcrumbsBar
-    data={
-      Object {
-        "breadcrumbItems": Array [
-          Object {
-            "caption": "Module Streams",
-            "onClick": [Function],
-          },
-          Object {
-            "caption": "avocado latest",
-          },
-        ],
-        "isSwitchable": true,
-        "resource": Object {
-          "nameField": "name",
-          "resourceUrl": "/katello/api/v2/module_streams",
-          "switcherItemUrl": "/module_streams/:id",
+    breadcrumbItems={
+      Array [
+        Object {
+          "caption": "Module Streams",
+          "onClick": [Function],
         },
+        Object {
+          "caption": "avocado latest",
+        },
+      ]
+    }
+    isSwitchable={true}
+    onSwitcherItemClick={[Function]}
+    resource={
+      Object {
+        "nameField": "name",
+        "resourceUrl": "/katello/api/v2/module_streams",
+        "switcherItemUrl": "/module_streams/:id",
       }
     }
-    onSwitcherItemClick={[Function]}
   />
   <ContentDetails
     contentDetails={
@@ -397,84 +392,6 @@ exports[`Module stream details page rendering renders with module stream provide
         },
         Object {
           "key": 3,
-          "tabContent": <ModuleStreamDetailProfiles
-            profiles={
-              Array [
-                Object {
-                  "id": 37,
-                  "name": "default",
-                  "rpms": Array [
-                    Object {
-                      "id": 108,
-                      "name": "perl",
-                    },
-                    Object {
-                      "id": 110,
-                      "name": "foo",
-                    },
-                    Object {
-                      "id": 111,
-                      "name": "rpm_0",
-                    },
-                    Object {
-                      "id": 112,
-                      "name": "rpm_1",
-                    },
-                    Object {
-                      "id": 113,
-                      "name": "rpm_2",
-                    },
-                    Object {
-                      "id": 114,
-                      "name": "rpm_3",
-                    },
-                    Object {
-                      "id": 115,
-                      "name": "rpm_4",
-                    },
-                    Object {
-                      "id": 116,
-                      "name": "rpm_5",
-                    },
-                    Object {
-                      "id": 117,
-                      "name": "rpm_6",
-                    },
-                    Object {
-                      "id": 118,
-                      "name": "rpm_7",
-                    },
-                    Object {
-                      "id": 119,
-                      "name": "rpm_8",
-                    },
-                    Object {
-                      "id": 120,
-                      "name": "rpm_9",
-                    },
-                    Object {
-                      "id": 121,
-                      "name": "rpm_10",
-                    },
-                  ],
-                },
-                Object {
-                  "id": 38,
-                  "name": "minimal",
-                  "rpms": Array [
-                    Object {
-                      "id": 84,
-                      "name": "python2-avocado",
-                    },
-                  ],
-                },
-              ]
-            }
-          />,
-          "tabHeader": "Profiles",
-        },
-        Object {
-          "key": 4,
           "tabContent": <ModuleStreamDetailArtifacts
             artifacts={
               Array [
