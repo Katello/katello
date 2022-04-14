@@ -44,21 +44,20 @@ class ModuleStreamDetails extends Component {
     return (
       <div>
         {!loading && <BreadcrumbsBar
+          isLoadingResources={loading}
           onSwitcherItemClick={(e, url) => this.handleBreadcrumbSwitcherItem(e, url)}
-          data={{
-            isSwitchable: true,
-            breadcrumbItems: [
-              {
-                caption: __('Module Streams'),
-                onClick: () =>
-                  this.props.history.push('/module_streams'),
-              },
-              {
-                caption: `${name} ${stream}`,
-              },
-            ],
-            resource,
-          }}
+          isSwitchable
+          breadcrumbItems={[
+            {
+              caption: __('Module Streams'),
+              onClick: () =>
+                this.props.history.push('/module_streams'),
+            },
+            {
+              caption: `${name} ${stream}`,
+            },
+          ]}
+          resource={resource}
         />}
         <ContentDetails
           contentDetails={moduleStreamDetails}
