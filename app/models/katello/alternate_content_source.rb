@@ -12,7 +12,7 @@ module Katello
 
     self.table_name = :katello_alternate_content_sources
 
-    # TODO: product, rhui
+    # TODO: simplified, rhui
     ACS_TYPES = %w(custom).freeze
     CONTENT_TYPES = [::Katello::Repository::YUM_TYPE, ::Katello::Repository::FILE_TYPE].freeze
 
@@ -26,13 +26,23 @@ module Katello
              inverse_of: :alternate_content_source
     has_many :smart_proxies, through: :smart_proxy_alternate_content_sources
 
+    validates :base_url, if: :custom?, presence: true
+    validates :verify_ssl, if: :custom?, presence: true
+    validates :content_type, if: :custom?, inclusion: {
+      in: ->(_) { RepositoryTypeManager.defined_repository_types.keys & AlternateContentSource::CONTENT_TYPES },
+      allow_blank: false,
+      message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % RepositoryTypeManager.defined_repository_types.keys & AlternateContentSource::CONTENT_TYPES }
+    }
+
     scoped_search on: :name, complete_value: true
     scoped_search on: :label, complete_value: true
     scoped_search on: :description, complete_value: true
     scoped_search on: :base_url, complete_value: true
+    scoped_search on: :subpath, ext_method: :search_by_subpath
     scoped_search on: :content_type, complete_value: true
     scoped_search on: :alternate_content_source_type, complete_value: true
     scoped_search on: :upstream_username, complete_value: true
+    scoped_search on: :smart_proxy_id, relation: :smart_proxy_alternate_content_sources, validator: ScopedSearch::Validators::INTEGER, only_explicit: true
 
     def backend_service(smart_proxy)
       @service ||= ::Katello::Pulp3::AlternateContentSource.new(self, smart_proxy)
@@ -44,6 +54,12 @@ module Katello
 
     def self.with_type(content_type)
       where(content_type: content_type)
+    end
+
+    def self.search_by_subpath(_key, operator, value)
+      binding.pry
+      conditions = sanitize_sql_for_conditions(["? #{operator} ANY (subpaths)", value_to_sql(operator, value)])
+      { conditions: conditions }
     end
   end
 end

@@ -12,7 +12,7 @@ class AddAlternateContentSources < ActiveRecord::Migration[6.0]
       t.string :subpaths, array: true, default: []
       t.string :content_type, limit: 255, default: 'yum'
       t.string :alternate_content_source_type, limit: 255, default: 'custom', null: false
-      t.boolean :verify_ssl, default: true, null: false
+      t.boolean :verify_ssl, default: true
       t.string 'upstream_username', limit: 255
       t.string 'upstream_password', limit: 1024
     end
