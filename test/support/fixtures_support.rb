@@ -3,6 +3,7 @@ module Katello
     FIXTURE_CLASSES = {
       :katello_activation_keys => Katello::ActivationKey,
       :katello_activation_key_purpose_addons => Katello::ActivationKeyPurposeAddon,
+      :katello_alternate_content_sources => Katello::AlternateContentSource,
       :katello_cdn_configurations => Katello::CdnConfiguration,
       :katello_contents => Katello::Content,
       :katello_content_views => Katello::ContentView,

@@ -27,11 +27,16 @@ module Katello
     has_many :smart_proxies, through: :smart_proxy_alternate_content_sources
 
     validates :base_url, if: :custom?, presence: true
-    validates :verify_ssl, if: :custom?, presence: true
-    validates :content_type, if: :custom?, inclusion: {
-      in: ->(_) { RepositoryTypeManager.defined_repository_types.keys & AlternateContentSource::CONTENT_TYPES },
+    validates :verify_ssl, if: :custom?, exclusion: [nil]
+    validates :alternate_content_source_type, inclusion: {
+      in: ->(_) { ACS_TYPES },
       allow_blank: false,
-      message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % RepositoryTypeManager.defined_repository_types.keys & AlternateContentSource::CONTENT_TYPES }
+      message: ->(_, _) { _("is not a valid type. Must be one of the following: %s") % ACS_TYPES.join(',') }
+    }
+    validates :content_type, if: :custom?, inclusion: {
+      in: ->(_) { RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES },
+      allow_blank: false,
+      message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % (RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES).join(',') }
     }
 
     scoped_search on: :name, complete_value: true
@@ -57,7 +62,6 @@ module Katello
     end
 
     def self.search_by_subpath(_key, operator, value)
-      binding.pry
       conditions = sanitize_sql_for_conditions(["? #{operator} ANY (subpaths)", value_to_sql(operator, value)])
       { conditions: conditions }
     end

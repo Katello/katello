@@ -1,0 +1,12 @@
+yum_alternate_content_source:
+  name:                           Yum ACS
+  label:                          yum_acs_fixture
+  ssl_ca_cert_id:                 <%= ActiveRecord::FixtureSet.identify(:fedora_ca) %>
+  ssl_client_cert_id:             <%= ActiveRecord::FixtureSet.identify(:fedora_cert) %>
+  ssl_client_key_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_key) %>
+  content_type:                   yum
+  base_url:                       "https://fixtures.pulpproject.org/"
+  alternate_content_source_type:  custom
+  verify_ssl:                     true
+  upstream_username:              admin
+  upstream_password:              changeme

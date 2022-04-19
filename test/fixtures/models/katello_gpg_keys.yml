@@ -37,3 +37,19 @@ fedora_cert:
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
   content_type: "cert"
+
+fedora_ca:
+  name:         Fedora CA
+  content:      Awesome SSL CA certificate
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  content_type: "cert"
+
+fedora_key:
+  name:         Fedora Key
+  content:      Awesome SSL Key
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  content_type: "cert"
