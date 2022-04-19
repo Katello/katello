@@ -246,6 +246,7 @@ const CVModuleStreamFilterContent = ({
                 </SplitItem>
                 <SplitItem>
                   <Button
+                    ouiaId="add-module-stream-rule-button"
                     isDisabled={!hasNotAddedSelected}
                     onClick={bulkAdd}
                     variant="primary"

@@ -118,6 +118,7 @@ const CVPublishFinish = ({
         <GridItem style={{ marginTop: '10px' }} span={12} rowSpan={1}>
           <Bullseye>
             <Button
+              ouiaId="publish-wizard-close"
               onClick={() => {
                 dispatch(stopPollingTask(POLLING_TASK_KEY));
                 onClose(true);
@@ -128,6 +129,7 @@ const CVPublishFinish = ({
               {__('Close')}
             </Button>
             <Button
+              ouiaId="publish-wizard-view-task-button"
               component="a"
               aria-label="view tasks button"
               href={`/foreman_tasks/tasks/${pollResponse.id}`}

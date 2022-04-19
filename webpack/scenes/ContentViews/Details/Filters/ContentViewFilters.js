@@ -137,7 +137,7 @@ const ContentViewFilters = ({ cvId, details }) => {
         <>
           <Split hasGutter>
             <SplitItem>
-              <Button onClick={openAddModal} variant="primary" aria-label="create_filter">
+              <Button ouiaId="create-filter-button" onClick={openAddModal} variant="primary" aria-label="create_filter">
                 {__('Create filter')}
               </Button>
             </SplitItem>

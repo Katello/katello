@@ -148,6 +148,7 @@ const ContentViewComponents = ({ cvId, details }) => {
               {hasPermission(permissions, 'edit_content_views') && componentCvId && cvVersion &&
                 <SplitItem>
                   <Button
+                    ouiaId={`edit-component-version-${componentCvId}`}
                     className="foreman-edit-icon"
                     aria-label="edit_version"
                     variant="plain"
@@ -269,7 +270,7 @@ const ContentViewComponents = ({ cvId, details }) => {
               <SplitItem>
                 <ActionList>
                   <ActionListItem>
-                    <Button onClick={addBulk} isDisabled={!(bulkAddEnabled())} variant="primary" aria-label="bulk_add_components">
+                    <Button ouiaId="add-content-views" onClick={addBulk} isDisabled={!(bulkAddEnabled())} variant="primary" aria-label="bulk_add_components">
                       {__('Add content views')}
                     </Button>
                   </ActionListItem>

@@ -213,6 +213,7 @@ const AddEditPackageRuleModal = ({
           </FormGroup>}
         <ActionGroup>
           <Button
+            ouiaId="add-edit-package-modal-submit"
             aria-label="add_package_filter_rule"
             variant="primary"
             isDisabled={saving || submitDisabled}
@@ -220,7 +221,7 @@ const AddEditPackageRuleModal = ({
           >
             {selectedFilterRuleData ? __('Edit rule') : __('Add rule')}
           </Button>
-          <Button variant="link" onClick={onClose}>
+          <Button ouiaId="add-edit-package-modal-cancel" variant="link" onClick={onClose}>
             {__('Cancel')}
           </Button>
         </ActionGroup>

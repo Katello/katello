@@ -137,8 +137,8 @@ const ComponentContentViewAddModal = ({
           </Flex>
         </FormGroup>
         <ActionGroup>
-          <Button aria-label="add_component" variant="primary" type="submit">{__('Submit')}</Button>
-          <Button variant="link" onClick={() => setIsOpen(false)}>{__('Cancel')}</Button>
+          <Button ouiaId="add-component-submit" aria-label="add_component" variant="primary" type="submit">{__('Submit')}</Button>
+          <Button ouiaId="add-component-cancel" variant="link" onClick={() => setIsOpen(false)}>{__('Cancel')}</Button>
         </ActionGroup>
       </Form>
     </Modal >);

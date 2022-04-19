@@ -159,6 +159,7 @@ const ContentViewVersionPromote = ({
           />
           <ActionGroup style={{ margin: 0 }}>
             <Button
+              ouiaId="cv-version-promote-submit"
               aria-label="promote_content_view"
               variant="primary"
               isDisabled={submitDisabled}
@@ -166,7 +167,7 @@ const ContentViewVersionPromote = ({
             >
               {__('Promote')}
             </Button>
-            <Button variant="link" onClick={() => setIsOpen(false)}>
+            <Button ouiaId="cv-version-promote-cancel" variant="link" onClick={() => setIsOpen(false)}>
               {__('Cancel')}
             </Button>
           </ActionGroup>

@@ -170,6 +170,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
         </FormGroup>}
       <ActionGroup>
         <Button
+          ouia-id="create-content-view-form-submit"
           aria-label="create_content_view"
           variant="primary"
           isDisabled={submitDisabled}
@@ -177,7 +178,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
         >
           {__('Create content view')}
         </Button>
-        <Button variant="link" onClick={() => setModalOpen(false)}>
+        <Button ouia-id="create-content-view-form-cancel" variant="link" onClick={() => setModalOpen(false)}>
           {__('Cancel')}
         </Button>
       </ActionGroup>

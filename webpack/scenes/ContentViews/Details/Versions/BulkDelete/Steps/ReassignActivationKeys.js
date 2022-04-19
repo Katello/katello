@@ -143,7 +143,7 @@ export default () => {
                   __('Before removing versions you must move activation keys to an environment where the associated version is not in use.')
                 }
               >
-                <Button style={{ padding: '8px' }} variant="plain" aria-label="popoverButton">
+                <Button ouiaId="reassign-activation-keys-info" style={{ padding: '8px' }} variant="plain" aria-label="popoverButton">
                   <OutlinedQuestionCircleIcon />
                 </Button>
               </Popover>

@@ -161,9 +161,10 @@ export default () => {
               {hasPermission(permissions, 'publish_content_views') &&
                 <FlexItem>
                   <Button
+                    ouiaId="cv-details-publish-button"
                     isDisabled={importOnly || generatedContentView}
                     onClick={() => setIsPublishModalOpen(true)}
-                    variant="primary"
+                    variant="secondary"
                     aria-label="publish_content_view"
                   >
                     {__('Publish new version')}
@@ -182,6 +183,7 @@ export default () => {
               }
               <FlexItem>
                 <Button
+                  ouiaId="cv-details-view-tasks-button"
                   component="a"
                   aria-label="view tasks button"
                   href={`/foreman_tasks/tasks?search=resource_type%3D+Katello%3A%3AContentView+resource_id%3D${cvId}`}

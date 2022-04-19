@@ -160,7 +160,7 @@ const ContentViewTable = () => {
       actionButtons={
         <>
           {canCreate &&
-            <Button onClick={openForm} variant="primary" aria-label="create_content_view">
+            <Button ouiaId="create-content-view" onClick={openForm} variant="primary" aria-label="create_content_view">
               {__('Create content view')}
             </Button>
           }
