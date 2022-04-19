@@ -178,3 +178,77 @@ test('Can filter results based on Installation status', async (done) => {
   assertNockRequest(scope2, done);
   act(done);
 });
+
+test('Can provide dropdown actions with redirects on Module Streams with customized Rex', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostModuleStreams)
+    .query(true)
+    .reply(200, mockModuleStreams);
+
+  const {
+    queryByLabelText,
+    getByText,
+    getAllByText,
+    getByLabelText,
+  } = renderWithRedux(<ModuleStreamsTab />, renderOptions());
+
+  // Assert that the Module streams are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() =>
+    expect(getAllByText(firstModuleStreams.name)[0]).toBeInTheDocument());
+  expect(queryByLabelText('kebab-dropdown-3')).toBeInTheDocument();
+  fireEvent.click(queryByLabelText('kebab-dropdown-3'));
+  await patientlyWaitFor(() => expect(getByLabelText('customize-checkbox-3')).toBeInTheDocument());
+  fireEvent.click(getByLabelText('customize-checkbox-3'));
+  await patientlyWaitFor(() => expect(getByText('Enable')).toBeInTheDocument());
+  expect(getByText('Enable')).toHaveAttribute('href', '/job_invocations/new?feature=katello_module_stream_action&host_ids=name%20%5E%20(test-host)&inputs%5Baction%5D=enable&inputs%5Bmodule_spec%5D=walrus:2.4');
+  expect(getByText('Install')).toHaveAttribute('href', '/job_invocations/new?feature=katello_module_stream_action&host_ids=name%20%5E%20(test-host)&inputs%5Baction%5D=install&inputs%5Bmodule_spec%5D=walrus:2.4');
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done);
+  act(done);
+});
+
+test('Can perform actions on Module Streams', async (done) => {
+  const jobInvocationURL = foremanApi.getApiUrl('/job_invocations');
+  const exampleRemoveAction = {
+    job_invocation:
+    {
+      feature: 'katello_module_stream_action',
+      inputs: {
+        action: 'remove',
+        module_spec: 'walrus:2.4',
+      },
+      search_query: 'name ^ (test-host)',
+    },
+  };
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostModuleStreams)
+    .query(true)
+    .reply(200, mockModuleStreams);
+
+  const jobScope = nockInstance
+    .post(jobInvocationURL, exampleRemoveAction)
+    .reply(200, { id: 'dummy_id', description: 'Remove action dummy response' });
+
+  const {
+    queryByLabelText,
+    getByText,
+    getAllByText,
+    getByLabelText,
+  } = renderWithRedux(<ModuleStreamsTab />, renderOptions());
+
+  // Assert that the Module streams are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() =>
+    expect(getAllByText(firstModuleStreams.name)[0]).toBeInTheDocument());
+  expect(queryByLabelText('kebab-dropdown-3')).toBeInTheDocument();
+  fireEvent.click(queryByLabelText('kebab-dropdown-3'));
+  await patientlyWaitFor(() => expect(getByText('Enable')).toBeInTheDocument());
+  fireEvent.click(getByText('Remove'));
+  expect(getByLabelText('confirm-module-action')).toBeInTheDocument();
+  fireEvent.click(getByLabelText('confirm-module-action'));
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(jobScope, done);
+  act(done);
+});

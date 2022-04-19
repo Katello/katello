@@ -52,3 +52,9 @@ export const errataInstallUrl = ({ hostname, search }) => createJob({
   feature: REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH,
   inputs: { [ERRATA_SEARCH_QUERY]: search },
 });
+
+export const katelloModuleStreamActionUrl = ({ hostname, action, moduleSpec }) => createJob({
+  hostname,
+  feature: REX_FEATURES.KATELLO_HOST_MODULE_STREAM_ACTION,
+  inputs: { action, module_spec: moduleSpec },
+});
