@@ -150,27 +150,6 @@ module Katello
         ApplicableContentHelper.new(ModuleStream, self).import(partial)
       end
 
-      def applicable_deb_errata_uuids
-        # find 'base-repositories'
-        repositories = []
-        self.bound_repositories.each do |repo|
-          if repo.library_instance.nil?
-            repositories << repo.id
-          else
-            repositories << repo.library_instance.id
-          end
-        end
-
-        Katello::Erratum.joins([:deb_packages, :repositories],
-                               "INNER JOIN #{Katello::InstalledDeb.table_name} ON #{Katello::InstalledDeb.table_name}.name = #{Katello::ErratumDebPackage.table_name}.name",
-                               "INNER JOIN #{Katello::HostInstalledDeb.table_name} ON #{Katello::HostInstalledDeb.table_name}.installed_deb_id = #{Katello::InstalledDeb.table_name}.id")
-                              .where("deb_version_cmp(#{Katello::ErratumDebPackage.table_name}.version, #{Katello::InstalledDeb.table_name}.version) > 0")
-                              .where("#{Katello::ErratumDebPackage.table_name}.release": self.host.operatingsystem.release_name)
-                              .where("#{Katello::HostInstalledDeb.table_name}.host_id": self.host.id)
-                              .where("#{Katello::RepositoryErratum.table_name}.repository_id" => repositories)
-                              .distinct.pluck(:pulp_id)
-      end
-
       def self.in_content_view_version_environments(version_environments)
         #takes a structure of [{:content_view_version => ContentViewVersion, :environments => [KTEnvironment]}]
         queries = version_environments.map do |version_environment|
