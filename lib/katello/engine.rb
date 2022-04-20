@@ -68,11 +68,6 @@ module Katello
       }
 
       SETTINGS[:katello] = default_settings.deep_merge(SETTINGS[:katello] || {})
-
-      # if (Setting.table_exists? rescue(false))
-      #   require_dependency File.expand_path('../../../app/models/setting/content.rb', __FILE__)
-      #   Setting::Content.load_defaults
-      # end
     end
 
     initializer "katello.apipie" do
