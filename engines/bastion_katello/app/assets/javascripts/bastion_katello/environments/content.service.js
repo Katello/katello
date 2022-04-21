@@ -36,6 +36,11 @@
                 params: {'content_type': 'yum'},
                 display: 'Yum Repositories'
             }, {
+                state: 'deb-repositories',
+                resource: 'Repository',
+                params: {'content_type': 'deb'},
+                display: 'Deb Repositories'
+            }, {
                 state: 'errata',
                 resource: 'Erratum',
                 display: translate('Errata'),
@@ -55,6 +60,11 @@
                 resource: 'ModuleStream',
                 display: translate('Module Streams'),
                 repositoryType: 'yum'
+            }, {
+                state: 'debs',
+                resource: 'Deb',
+                display: translate('Deb Packages'),
+                repositoryType: 'deb'
             }
         ];
 
