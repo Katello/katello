@@ -20,7 +20,7 @@ describe('Service: ContentService', function() {
     }));
 
     it("should expose the list of content types", function() {
-        expect(ContentService.contentTypes.length).toBe(7);
+        expect(ContentService.contentTypes.length).toBe(8);
     });
 
     it("should provide a method to build a nutupane based on params", function () {

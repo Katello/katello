@@ -1,0 +1,26 @@
+<div data-extend-template="layouts/partials/table.html">
+  <span data-block="search-filter">
+    <select class="form-control" ng-model="contentView" ng-change="contentViewSelected(contentView)" ng-options="contentView.name for (id, contentView) in contentViews"></select>
+  </span>
+
+  <span data-block="no-rows-message" ng-bind="getNoRowsMessage()"></span>
+  <span data-block="no-search-results-message" ng-bind="getZeroResultsMessage()"></span>
+
+  <table data-block="table" class="table table-striped table-bordered">
+    <thead>
+      <tr bst-table-head>
+        <th bst-table-column translate>Name</th>
+        <th bst-table-column translate>Product</th>
+        <th bst-table-column translate>Content View</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr bst-table-row ng-repeat="repository in table.rows">
+        <td bst-table-cell>{{ repository.name }}</td>
+        <td bst-table-cell>{{ repository.product.name }}</td>
+        <td bst-table-cell>{{ repository.content_view.name }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
