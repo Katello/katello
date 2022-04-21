@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/MethodLength
 class AddAlternateContentSources < ActiveRecord::Migration[6.0]
   def up
     create_table :katello_alternate_content_sources do |t|
@@ -16,6 +17,9 @@ class AddAlternateContentSources < ActiveRecord::Migration[6.0]
       t.string 'upstream_username', limit: 255
       t.string 'upstream_password', limit: 1024
     end
+
+    add_index :katello_alternate_content_sources, :name, :unique => true
+    add_index :katello_alternate_content_sources, :label, :unique => true
 
     add_foreign_key :katello_alternate_content_sources, :katello_content_credentials, :name => :katello_alternate_content_sources_ssl_ca_cert_id, :column => :ssl_ca_cert_id
     add_foreign_key :katello_alternate_content_sources, :katello_content_credentials, :name => :katello_alternate_content_sources_ssl_client_cert_id, :column => :ssl_client_cert_id

@@ -2,18 +2,16 @@ module Actions
   module Katello
     module AlternateContentSource
       class Update < Actions::EntryAction
+        # smart_proxies ALWAYS represents the smart proxies to remain associated
+        # after the action runs.  If smart_proxies == [], there will be none afterwards.
         def plan(acs, smart_proxies, acs_params)
           action_subject(acs)
           acs.update!(acs_params)
 
-          if smart_proxies.present?
-            smart_proxies = smart_proxies.uniq
-            smart_proxies_to_add = smart_proxies - acs.smart_proxies
-            smart_proxies_to_delete = acs.smart_proxies - smart_proxies
-            smart_proxies_to_update = smart_proxies & acs.smart_proxies
-          else
-            smart_proxies_to_update = acs.smart_proxies
-          end
+          smart_proxies = smart_proxies.uniq
+          smart_proxies_to_add = smart_proxies - acs.smart_proxies
+          smart_proxies_to_delete = acs.smart_proxies - smart_proxies
+          smart_proxies_to_update = smart_proxies & acs.smart_proxies
 
           concurrence do
             smart_proxies_to_add&.each do |smart_proxy|

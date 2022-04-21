@@ -37,10 +37,7 @@ module Katello
         if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.empty? && !remote_options[:url].end_with?('/PULP_MANIFEST')
           remote_options[:url] = acs.base_url + '/PULP_MANIFEST'
         end
-        if !acs.upstream_username.blank? && !acs.upstream_password.blank?
-          remote_options.merge!(username: acs.upstream_username,
-                               password: acs.upstream_password)
-        end
+        remote_options.merge!(username: acs&.upstream_username, password: acs&.upstream_password)
         remote_options.merge!(ssl_remote_options)
       end
 
@@ -59,6 +56,10 @@ module Katello
           response = super
           smart_proxy_acs.update!(remote_href: response.pulp_href)
         end
+      end
+
+      def get_remote(href = smart_proxy_acs.remote_href)
+        acs.base_url&.start_with?('uln') ? api.remotes_uln_api.read(href) : api.remotes_api.read(href)
       end
 
       def update_remote
@@ -82,24 +83,22 @@ module Katello
         end
       end
 
+      def read(href = smart_proxy_acs.alternate_content_source_href)
+        api.alternate_content_source_api.read(href)
+      end
+
       def update
         href = smart_proxy_acs.alternate_content_source_href
         paths = acs.subpaths.deep_dup
         if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.present?
           paths = insert_pulp_manifest!(paths)
         end
-        api.alternate_content_source_api.update(href, name: generate_backend_object_name, paths: paths,
-                                                remote: smart_proxy_acs.remote_href)
-      end
-
-      def delete
-        href = smart_proxy_acs.alternate_content_source_href
-        api.alternate_content_source_api.delete(href) if href
+        api.alternate_content_source_api.update(href, name: generate_backend_object_name, paths: paths, remote: smart_proxy_acs.remote_href)
       end
 
       def delete_alternate_content_source
         href = smart_proxy_acs.alternate_content_source_href
-        ignore_404_exception { api.alternate_content_sources_api.delete(href) } if href
+        ignore_404_exception { api.alternate_content_source_api.delete(href) } if href
       end
 
       private

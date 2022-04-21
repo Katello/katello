@@ -6,12 +6,12 @@ module Katello
     before_action :find_smart_proxies
 
     def_param_group :acs do
-      param :name, String, desc: N_("Name of the alternate content source"), required: false
-      param :description, String, desc: N_("Description for the alternate content source")
-      param :base_url, String, desc: N_('Base URL for finding alternate content')
-      param :subpaths, Array, desc: N_('Path suffixes for finding alternate content')
+      param :name, String, desc: N_("Name of the alternate content source")
+      param :description, String, desc: N_("Description for the alternate content source"), required: false
+      param :base_url, String, desc: N_('Base URL for finding alternate content'), required: false
+      param :subpaths, Array, desc: N_('Path suffixes for finding alternate content'), required: false
       param :smart_proxy_ids, Array, desc: N_("Ids of smart proxies to associate"), required: false
-      param :content_type, RepositoryTypeManager.defined_repository_types.keys & AlternateContentSource::CONTENT_TYPES, desc: N_("The content type for the Alternate Content Source")
+      param :content_type, RepositoryTypeManager.defined_repository_types.keys & AlternateContentSource::CONTENT_TYPES, desc: N_("The content type for the Alternate Content Source"), required: false
       param :alternate_content_source_type, AlternateContentSource::ACS_TYPES, desc: N_("The Alternate Content Source type")
       param :upstream_username, String, desc: N_("Basic authentication username"), required: false
       param :upstream_password, String, desc: N_("Basic authentication password"), required: false
@@ -26,21 +26,23 @@ module Katello
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(AlternateContentSource)
     def index
-      base_args = [AlternateContentSource.readable.distinct, :name, :asc]
-
       respond_to do |format|
         format.csv do
           options[:csv] = true
-          alternate_content_sources = scoped_search(*base_args)
+          alternate_content_sources = scoped_search(index_relation, :name, :asc)
           csv_response(alternate_content_sources,
                        [:id, :name, :description, :label, :base_url, :subpaths, :content_type, :alternate_content_source_type],
                        ['Id', 'Name', 'Description', 'label', 'Base URL', 'Subpaths', 'Content Type', 'Alternate Content Source Type'])
         end
         format.any do
-          alternate_content_sources = scoped_search(*base_args)
+          alternate_content_sources = scoped_search(index_relation, :name, :asc)
           respond(collection: alternate_content_sources)
         end
       end
+    end
+
+    def index_relation
+      AlternateContentSource.readable.distinct
     end
 
     api :GET, '/alternate_content_sources/:id', N_('Show an alternate content source')
@@ -52,25 +54,20 @@ module Katello
     api :POST, '/alternate_content_sources', N_('Create an ACS')
     param_group :acs
     def create
-      if params[:alternate_content_source_type] == 'custom'
-        if params[:base_url] !~ /\A#{URI::DEFAULT_PARSER.make_regexp}\z/
-          fail HttpErrors::UnprocessableEntity, _('%s is not a valid path') % params[:base_url]
-        end
-
-        bad_subpaths = params[:subpaths]&.select { |subpath| subpath[0] == '/' || subpath[-1] != '/'}
-        if bad_subpaths.present?
-          fail HttpErrors::UnprocessableEntity, _('All subpaths must have a slash at the end and none at the front')
-        end
-      end
       @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params)
       sync_task(::Actions::Katello::AlternateContentSource::Create, @alternate_content_source, @smart_proxies)
-      respond_for_create(resource: @alternate_content_source.reload)
+      @alternate_content_source.reload
+      respond_for_create(resource: @alternate_content_source)
     end
 
     api :PUT, '/alternate_content_sources/:id', N_('Update an alternate content source')
     param_group :acs
     param :id, :number, :required => true, :desc => N_("Alternate content source ID")
     def update
+      # If a user doesn't include smart proxies in the update call, don't accidentally remove all of them.
+      if params[:smart_proxy_ids].nil?
+        @smart_proxies = @alternate_content_source.smart_proxies
+      end
       sync_task(::Actions::Katello::AlternateContentSource::Update, @alternate_content_source, @smart_proxies, acs_params)
       respond_for_show(:resource => @alternate_content_source)
     end

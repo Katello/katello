@@ -8,7 +8,7 @@ module Actions
 
         def run
           acs = ::Katello::AlternateContentSource.find(input[:acs_id])
-          output[:response] = acs.backend_service(smart_proxy).delete
+          output[:response] = acs.backend_service(smart_proxy).delete_alternate_content_source
         end
       end
     end

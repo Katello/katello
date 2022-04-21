@@ -2,13 +2,9 @@ module Katello
   class AlternateContentSource < Katello::Model
     include Ext::LabelFromName
     include Encryptable
-    include Katello::Authorization::SyncPlan
-    include ForemanTasks::Concerns::ActionSubject
     include ::ScopedSearchExtensions
-
-    # TODO: optional validations depending on ACS type
-    #  -> e.g. optionally validate null:false for content_type because
-    #     product ACSs can create smart proxy ACSs of any content type.
+    include Authorization::AlternateContentSource
+    include ForemanTasks::Concerns::ActionSubject
 
     self.table_name = :katello_alternate_content_sources
 
@@ -21,7 +17,7 @@ module Katello
     belongs_to :ssl_ca_cert, inverse_of: :ssl_ca_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_cert, inverse_of: :ssl_client_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_key, inverse_of: :ssl_key_alternate_content_sources, class_name: "Katello::ContentCredential"
-    belongs_to :http_proxy, class_name: "HttpProxy"
+    belongs_to :http_proxy, inverse_of: :alternate_content_sources
     has_many :smart_proxy_alternate_content_sources, dependent: :destroy,
              inverse_of: :alternate_content_source
     has_many :smart_proxies, through: :smart_proxy_alternate_content_sources
@@ -38,6 +34,7 @@ module Katello
       allow_blank: false,
       message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % (RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES).join(',') }
     }
+    validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
 
     scoped_search on: :name, complete_value: true
     scoped_search on: :label, complete_value: true

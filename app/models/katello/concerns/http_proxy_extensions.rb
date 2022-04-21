@@ -31,6 +31,7 @@ module Katello
 
       def remove_references_to_proxy
         root_repos = repositories_with_proxy(nil).uniq.sort
+        acss = ::Katello::AlternateContentSource.where(http_proxy_id: id)
 
         setting = Setting.find_by(name: 'content_default_http_proxy')
         if setting&.value && setting.value == self.name
@@ -44,6 +45,17 @@ module Katello
             root_repos,
             http_proxy_policy: Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY,
             http_proxy_id: nil)
+        end
+
+        unless acss.empty?
+          acss.each do |acs|
+            ForemanTasks.async_task(
+              ::Actions::Katello::AlternateContentSource::Update,
+              acs,
+              acs.smart_proxies,
+              http_proxy_id: nil
+            )
+          end
         end
       end
 
