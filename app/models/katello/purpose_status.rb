@@ -17,7 +17,7 @@ module Katello
     end
 
     def self.status_name
-      N_('System Purpose')
+      N_('System purpose')
     end
 
     def self.humanized_name
@@ -31,7 +31,7 @@ module Katello
       when MISMATCHED
         N_('Mismatched')
       when NOT_SPECIFIED
-        N_('Not Specified')
+        N_('Not specified')
       else
         N_('Unknown')
       end
