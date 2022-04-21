@@ -1,7 +1,7 @@
 module Katello
   class ApplicableHostQueue
     def self.batch_size
-      ::Setting::Content.find_by(name: "applicability_batch_size").value
+      Setting["applicability_batch_size"]
     end
 
     def self.queue_depth
