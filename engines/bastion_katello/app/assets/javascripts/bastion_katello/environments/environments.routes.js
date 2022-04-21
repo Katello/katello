@@ -86,6 +86,28 @@ angular.module('Bastion.environments').config(['$stateProvider', function ($stat
             parent: 'environment.details'
         }
     })
+    .state('environment.deb-repositories', {
+        url: '/deb-repositories?contentViewId',
+        reloadOnSearch: false,
+        permission: 'view_lifecycle_environments',
+        controller: 'EnvironmentContentController',
+        templateUrl: 'environments/details/views/environment-deb-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Deb Repositories" | translate }}',
+            parent: 'environment.details'
+        }
+    })
+    .state('environment.debs', {
+        url: '/debs?repositoryId&contentViewId',
+        reloadOnSearch: false,
+        permission: 'view_lifecycle_environments',
+        controller: 'EnvironmentContentController',
+        templateUrl: 'environments/details/views/environment-debs.html',
+        ncyBreadcrumb: {
+            label: '{{ "Deb Packages" | translate }}',
+            parent: 'environment.details'
+        }
+    })
     .state('environment.module-streams', {
         url: '/module-streams?repositoryId&contentViewId',
         reloadOnSearch: false,

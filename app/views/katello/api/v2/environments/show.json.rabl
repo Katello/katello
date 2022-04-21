@@ -32,6 +32,8 @@ node :counts do |env|
     counts[:docker_repositories] = repos.docker_type.count
     counts[:ostree_repositories] = repos.ostree_type.count
     counts[:products] = env.organization.products.enabled.count
+    counts[:debs] = Katello::Deb.total_for_repositories(repos)
+    counts[:deb_repositories] = repos.deb_type.count
   end
   counts
 end
