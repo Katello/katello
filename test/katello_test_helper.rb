@@ -98,8 +98,6 @@ module FixtureTestCase
     load_repository_types
     configure_vcr
 
-    Setting::Content.load_defaults
-
     before do
       #provide consistent remote name for test
       ::Katello::Pulp3::Repository.any_instance.stubs(:test_remote_name).returns(:test_remote_name)
@@ -257,7 +255,6 @@ class ActiveSupport::TestCase
   before do
     stub_ping
     stub_certs
-    Setting::Content.load_defaults
   end
 
   teardown do
