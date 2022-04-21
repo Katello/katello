@@ -61,7 +61,7 @@
           readonly="product.redhat || denied('edit_products', product)">
       </dd>
       <span ng-if="repository.content_type == 'deb'">
-        <dt translate>Releases</dt>
+        <dt translate>Releases/Distributions</dt>
         <dd bst-edit-text="repository.deb_releases"
             on-save="save(repository)"
             readonly="denied('edit_products', product)">
