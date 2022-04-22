@@ -17,7 +17,7 @@ import Loading from '../../components/Loading';
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
   emptySearchTitle, emptySearchBody, errorSearchTitle, errorSearchBody,
-  searchIsActive, activeFilters, defaultFilters, actionButtons, rowsCount,
+  happyEmptyContent, searchIsActive, activeFilters, defaultFilters, actionButtons, rowsCount,
   children, ...extraTableProps
 }) => {
   const tableHasNoRows = () => {
@@ -48,7 +48,14 @@ const MainTable = ({
     />);
   }
   if (status === STATUS.RESOLVED && tableHasNoRows()) {
-    return (<EmptyStateMessage title={emptyContentTitle} body={emptyContentBody} search />);
+    return (
+      <EmptyStateMessage
+        title={emptyContentTitle}
+        body={emptyContentBody}
+        happy={happyEmptyContent}
+        search={!happyEmptyContent}
+      />
+    );
   }
 
   const tableProps = { cells, rows, ...extraTableProps };
