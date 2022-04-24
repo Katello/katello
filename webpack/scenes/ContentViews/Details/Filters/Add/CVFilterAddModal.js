@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,12 +9,11 @@ import {
   Modal, ModalVariant, Form, FormGroup, TextInput, ActionGroup, Button, Radio, TextArea,
   Split, SplitItem, Select, SelectOption,
 } from '@patternfly/react-core';
-import { addCVFilterRule, createContentViewFilter } from '../../ContentViewDetailActions';
-import {
-  selectCreateContentViewFilter, selectCreateContentViewFilterStatus,
+import { addCVFilterRule, createContentViewFilter, getRepositoryTypes } from '../../ContentViewDetailActions';
+import { selectCreateContentViewFilter, selectCreateContentViewFilterStatus,
   selectCreateContentViewFilterError, selectCreateFilterRule,
   selectCreateFilterRuleError, selectCreateFilterRuleStatus,
-} from '../../../Details/ContentViewDetailSelectors';
+  selectRepoTypes, selectRepoTypesStatus } from '../../../Details/ContentViewDetailSelectors';
 import { FILTER_TYPES } from '../../../ContentViewsConstants';
 import ContentType from '../ContentType';
 
@@ -32,7 +31,14 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
   const ruleResponse = useSelector(state => selectCreateFilterRule(state));
   const ruleStatus = useSelector(state => selectCreateFilterRuleStatus(state));
   const ruleError = useSelector(state => selectCreateFilterRuleError(state));
+  const repoTypesResponse = useSelector(state => selectRepoTypes(state));
+  const repoTypesStatus = useSelector(state => selectRepoTypesStatus(state));
   const [redirect, setRedirect] = useState(false);
+  const [repoTypes, setRepoTypes] = useState([]);
+
+  useEffect(() => {
+    dispatch(getRepositoryTypes());
+  }, [dispatch]);
 
   const onSubmit = () => {
     setSaving(true);
@@ -75,6 +81,26 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
     }
   }, [response, status, ruleResponse, ruleStatus, ruleError, saving]);
 
+  useDeepCompareEffect(() => {
+    if (repoTypesStatus === STATUS.RESOLVED && repoTypesResponse) {
+      const allRepoTypes = [];
+      repoTypesResponse.forEach((repoType) => {
+        const { name: repoTypeName } = repoType;
+        allRepoTypes.push(repoTypeName);
+      });
+      setRepoTypes(allRepoTypes);
+    }
+  }, [repoTypesResponse, repoTypesStatus]);
+
+  const filterTypeOptions = () => {
+    const filterTypeSelectOpions = FILTER_TYPES.map(item =>
+      <SelectOption key={item} value={item}><ContentType type={item} /></SelectOption>);
+    if (repoTypes.includes('deb')) {
+      filterTypeSelectOpions.push(<SelectOption key="deb" value="deb"><ContentType type="deb" /></SelectOption>);
+    }
+    return filterTypeSelectOpions;
+  };
+
   if (redirect) {
     const { id } = response;
     return (<Redirect to={`/filters/${id}`} />);
@@ -114,10 +140,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
             name="content_type"
             aria-label="ContentType"
           >
-            {
-              FILTER_TYPES.map(item =>
-                <SelectOption key={item} value={item}><ContentType type={item} /></SelectOption>)
-            }
+            { filterTypeOptions() }
           </Select>
         </FormGroup>
         <FormGroup>
