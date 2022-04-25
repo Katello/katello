@@ -2,7 +2,7 @@ module Katello
   class PurposeSlaStatus < HostStatus::Status
     UNKNOWN = Katello::PurposeStatus::UNKNOWN
     def self.status_name
-      N_('Service Level')
+      N_('Service level')
     end
 
     def self.humanized_name

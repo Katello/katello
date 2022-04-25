@@ -25,7 +25,7 @@ module Katello
       status.status = status.to_status
 
       assert_equal Katello::PurposeStatus::NOT_SPECIFIED, status.status
-      assert_equal 'Not Specified', status.to_label
+      assert_equal 'Not specified', status.to_label
     end
 
     def test_status_matched
