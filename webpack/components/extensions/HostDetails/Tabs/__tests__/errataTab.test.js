@@ -140,7 +140,7 @@ test('Can handle no errata being present', async (done) => {
   const { queryByText } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that there are not any errata showing on the screen.
-  await patientlyWaitFor(() => expect(queryByText('This host does not have any installable errata.')).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(queryByText('This host has errata that are applicable, but not installable.')).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done

@@ -113,6 +113,7 @@ MainTable.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]),
+  happyEmptyContent: PropTypes.bool,
 };
 
 MainTable.defaultProps = {
@@ -127,6 +128,7 @@ MainTable.defaultProps = {
   cells: undefined,
   rows: undefined,
   rowsCount: undefined,
+  happyEmptyContent: false,
 };
 
 export default MainTable;

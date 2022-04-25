@@ -12,7 +12,9 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { CubeIcon, ExclamationCircleIcon, SearchIcon, CheckCircleIcon } from '@patternfly/react-icons';
 import { global_danger_color_200 as dangerColor, global_success_color_100 as successColor } from '@patternfly/react-tokens';
 
-const KatelloEmptyStateIcon = ({ error, search, customIcon, happyIcon }) => {
+const KatelloEmptyStateIcon = ({
+  error, search, customIcon, happyIcon,
+}) => {
   if (error) return <EmptyStateIcon icon={ExclamationCircleIcon} color={dangerColor.value} />;
   if (search) return <EmptyStateIcon icon={SearchIcon} />;
   if (happyIcon) return <EmptyStateIcon icon={CheckCircleIcon} color={successColor.value} />;
@@ -38,8 +40,15 @@ const EmptyStateMessage = ({
   }
   return (
     <Bullseye>
-      <EmptyState variant={happy ? EmptyStateVariant.large : EmptyStateVariant.small}>
-        <KatelloEmptyStateIcon error={!!error} search={search} customIcon={customIcon} happyIcon={happy} />
+      <EmptyState
+        variant={happy ? EmptyStateVariant.large : EmptyStateVariant.small}
+      >
+        <KatelloEmptyStateIcon
+          error={!!error}
+          search={search}
+          customIcon={customIcon}
+          happyIcon={happy}
+        />
         <Title headingLevel="h2" size="lg">
           {emptyStateTitle}
         </Title>
