@@ -95,6 +95,7 @@ const SelectAllCheckbox = ({
               aria-label="Select all"
               onChange={checked => onSelectAllCheckboxChange(checked)}
               isChecked={selectionToggle}
+              isDisabled={totalCount === 0 && selectedCount === 0}
             >
               {selectedCount > 0 && `${selectedCount} selected`}
             </DropdownToggleCheckbox>,
