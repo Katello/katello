@@ -67,13 +67,14 @@ KatelloEmptyStateIcon.defaultProps = {
 
 EmptyStateMessage.propTypes = {
   title: PropTypes.string,
-  body: PropTypes.string,
+  body: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
   error: PropTypes.oneOfType([
     PropTypes.shape({}),
     PropTypes.string,
   ]),
   search: PropTypes.bool,
   customIcon: PropTypes.elementType,
+  happy: PropTypes.bool,
 };
 
 EmptyStateMessage.defaultProps = {
@@ -82,6 +83,7 @@ EmptyStateMessage.defaultProps = {
   error: undefined,
   search: false,
   customIcon: undefined,
+  happy: false,
 };
 
 export default EmptyStateMessage;

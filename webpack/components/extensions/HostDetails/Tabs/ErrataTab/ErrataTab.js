@@ -42,6 +42,7 @@ export const ErrataTab = () => {
     id: hostId,
     name: hostname,
     content_facet_attributes: contentFacetAttributes,
+    errata_status: errataStatus,
   } = hostDetails;
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
   const dispatch = useDispatch();
@@ -66,9 +67,9 @@ export const ErrataTab = () => {
     = useState(PARAM_TO_FRIENDLY_NAME[initialSeverity] ?? ERRATA_SEVERITY);
   const activeFilters = [errataTypeSelected, errataSeveritySelected];
   const defaultFilters = [ERRATA_TYPE, ERRATA_SEVERITY];
-
-  const emptyContentTitle = __('This host does not have any installable errata.');
-  const emptyContentBody = __('Installable errata will appear here when available.');
+  const allUpToDate = errataStatus === 0;
+  const emptyContentTitle = allUpToDate ? __('All errata up-to-date') : __('This host has errata that are applicable, but not installable.');
+  const emptyContentBody = allUpToDate ? __('No action is needed because there are no applicable errata for this host.') : __("You may want to check the host's content view and lifecycle environment.");
   const emptySearchTitle = __('No matching errata found');
   const emptySearchBody = __('Try changing your search settings.');
   const errorSearchTitle = __('Problem searching errata');
@@ -345,6 +346,7 @@ export const ErrataTab = () => {
             toggleGroup,
           }
           }
+          happyEmptyContent={allUpToDate}
           ouiaId="host-errata-table"
           additionalListeners={[
             hostId, toggleGroupState, errataTypeSelected,

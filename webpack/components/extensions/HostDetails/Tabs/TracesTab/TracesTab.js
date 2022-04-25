@@ -34,7 +34,7 @@ const TracesTab = () => {
     values={{
       pkgLink: <a href="#/Content/packages?status=Upgradable">{__('installing or updating packages')}</a>,
     }}
-    defaultMessage={__('To see suitable applications, update your host by {pkgLink}.')}
+    defaultMessage={__('Traces may be listed here after {pkgLink}.')}
   />);
   const emptySearchTitle = __('No matching traces found');
   const emptySearchBody = __('Try changing your search settings.');

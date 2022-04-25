@@ -93,7 +93,7 @@ MainTable.propTypes = {
     PropTypes.string,
   ]),
   emptyContentTitle: PropTypes.string.isRequired,
-  emptyContentBody: PropTypes.string.isRequired,
+  emptyContentBody: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]).isRequired,
   emptySearchTitle: PropTypes.string.isRequired,
   emptySearchBody: PropTypes.string.isRequired,
   errorSearchTitle: PropTypes.string,
