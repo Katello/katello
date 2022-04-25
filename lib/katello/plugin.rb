@@ -195,6 +195,15 @@ Foreman::Plugin.register :katello do
        :after => :content_hosts,
        :turbolinks => false
 
+  menu :labs_menu,
+       :alternate_content_sources,
+       :url => '/labs/alternate_content_sources',
+       :url_hash => {:controller => 'katello/api/v2/alternate_content_sources_controller',
+                     :action => 'index'},
+       :caption => N_('Alternate Content Sources'),
+       :parent => :lab_features_menu,
+       :turbolinks => false
+
   extend_template_helpers Katello::KatelloUrlsHelper
   extend_template_helpers Katello::Concerns::BaseTemplateScopeExtensions
 
