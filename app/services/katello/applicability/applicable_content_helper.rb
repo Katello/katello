@@ -21,7 +21,7 @@ module Katello
 
       def fetch_content_ids
         if self.content_unit_class == ::Katello::Erratum
-          fetch_errata_content_ids
+          fetch_errata_content_ids + fetch_deb_errata_content_ids
         elsif self.content_unit_class == ::Katello::Deb
           fetch_deb_content_ids
         elsif self.content_unit_class == ::Katello::ModuleStream
@@ -29,6 +29,17 @@ module Katello
         else
           fetch_rpm_content_ids
         end
+      end
+
+      def fetch_deb_errata_content_ids
+        Katello::Erratum.joins([:deb_packages, :repositories],
+                               "INNER JOIN #{Katello::Deb.table_name} ON #{Katello::ErratumDebPackage.table_name}.name = #{Katello::Deb.table_name}.name",
+                               "INNER JOIN #{Katello::ContentFacetApplicableDeb.table_name} ON #{Katello::ContentFacetApplicableDeb.table_name}.deb_id = #{Katello::Deb.table_name}.id")
+                              .where("deb_version_cmp(#{Katello::ErratumDebPackage.table_name}.version, #{Katello::Deb.table_name}.version) > 0")
+                              .where("#{Katello::ErratumDebPackage.table_name}.release": content_facet.host.operatingsystem.release_name)
+                              .where("#{Katello::ContentFacetApplicableDeb.table_name}.content_facet_id": content_facet.id)
+                              .where("#{Katello::RepositoryErratum.table_name}.repository_id" => self.bound_library_instance_repos)
+                              .distinct.pluck(:id)
       end
 
       def fetch_errata_content_ids
