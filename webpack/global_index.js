@@ -11,25 +11,26 @@ import ErrataOverviewCard from './components/extensions/HostDetails/Cards/Errata
 import InstalledProductsCard from './components/extensions/HostDetails/DetailsTabCards/InstalledProductsCard';
 import RegistrationCard from './components/extensions/HostDetails/DetailsTabCards/RegistrationCard';
 
-// import SubscriptionTab from './components/extensions/HostDetails/Tabs/SubscriptionTab';
 import RepositorySetsTab from './components/extensions/HostDetails/Tabs/RepositorySetsTab/RepositorySetsTab';
 import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js';
 import extendReducer from './components/extensions/reducers';
 import rootReducer from './redux/reducers';
 import HostCollectionsCard from './components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsCard';
 import { hostIsNotRegistered } from './components/extensions/HostDetails/hostDetailsHelpers';
+import SystemPropertiesCardExtensions from './components/extensions/HostDetails/DetailsTabCards/SystemPropertiesCardExtensions';
 
 registerReducer('katelloExtends', extendReducer);
 registerReducer('katello', rootReducer);
 
 addGlobalFill('aboutFooterSlot', '[katello]AboutSystemStatuses', <SystemStatuses key="katello-system-statuses" />, 100);
 addGlobalFill('registrationAdvanced', '[katello]RegistrationCommands', <RegistrationCommands key="katello-reg" />, 100);
+
+// Host details page tabs
 addGlobalFill('host-details-page-tabs', 'Content', <ContentTab key="content" />, 900, { title: __('Content'), hideTab: hostIsNotRegistered });
-/* eslint-disable max-len */
-// addGlobalFill('host-details-page-tabs', 'Subscription', <SubscriptionTab key="subscription" />, 100, { title: __('Subscription') });
 addGlobalFill('host-details-page-tabs', 'Traces', <TracesTab key="traces" />, 800, { title: __('Traces'), hideTab: hostIsNotRegistered });
 addGlobalFill('host-details-page-tabs', 'Repository sets', <RepositorySetsTab key="repository-sets" />, 700, { title: __('Repository sets'), hideTab: hostIsNotRegistered });
 
+// Overview tab cards
 addGlobalFill(
   'details-cards',
   'Content view details',
@@ -43,5 +44,8 @@ addGlobalFill(
   700,
 );
 addGlobalFill('details-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 1900);
+
+// Details tab cards & card extensions
 addGlobalFill('host-tab-details-cards', 'Installed products', <InstalledProductsCard key="installed-products" />, 100);
 addGlobalFill('host-tab-details-cards', 'Registration details', <RegistrationCard key="registration-details" />, 200);
+addGlobalFill('host-details-tab-properties-1', 'Subscription UUID', <SystemPropertiesCardExtensions key="subscription-uuid" />);
