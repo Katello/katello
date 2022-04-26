@@ -34,7 +34,7 @@ module Katello
     end
 
     def test_airgapped_no_http
-      @product_content.product.organization.cdn_configuration.update!(type: ::Katello::CdnConfiguration::AIRGAPPED_TYPE)
+      @product_content.product.organization.cdn_configuration.update!(type: ::Katello::CdnConfiguration::EXPORT_SYNC)
       mapper = Candlepin::RepositoryMapper.new(@product_content.product, @product_content.content, {})
       mapper.expects(:substitutor).never
       mapper.validate!

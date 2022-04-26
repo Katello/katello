@@ -33,18 +33,18 @@ module Katello
       config = org.cdn_configuration
       assert config.redhat_cdn?
 
-      config.update!(type: ::Katello::CdnConfiguration::UPSTREAM_SERVER_TYPE,
+      config.update!(type: ::Katello::CdnConfiguration::NETWORK_SYNC,
                      username: 'Foo',
                      password: 'great',
                      upstream_organization_label: 'GreatOrg',
                      url: 'http://foo.com',
                      ssl_ca_credential_id: content_credential.id)
 
-      assert config.upstream_server?
+      assert config.network_sync?
 
       # Now update back to airgapped
-      config.update!(type: ::Katello::CdnConfiguration::AIRGAPPED_TYPE)
-      assert config.airgapped?
+      config.update!(type: ::Katello::CdnConfiguration::EXPORT_SYNC)
+      assert config.export_sync?
       assert_empty config.url
       assert_empty config.username
       assert_empty config.password

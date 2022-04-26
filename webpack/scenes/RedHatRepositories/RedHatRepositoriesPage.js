@@ -16,7 +16,7 @@ import SearchBar from './components/SearchBar';
 import RecommendedRepositorySetsToggler from './components/RecommendedRepositorySetsToggler';
 import { getSetsComponent, getEnabledComponent } from './helpers';
 import api from '../../services/api';
-import { AIRGAPPED } from '../Subscriptions/Manifest/CdnConfigurationTab/CdnConfigurationConstants';
+import { EXPORT_SYNC } from '../Subscriptions/Manifest/CdnConfigurationTab/CdnConfigurationConstants';
 
 class RedHatRepositoriesPage extends Component {
   componentDidMount() {
@@ -42,7 +42,7 @@ class RedHatRepositoriesPage extends Component {
     if (!(organization?.cdn_configuration)) {
       return <Skeleton />;
     }
-    if (organization.cdn_configuration.type === AIRGAPPED) {
+    if (organization.cdn_configuration.type === EXPORT_SYNC) {
       return (
         <Grid id="redhatRepositoriesPage" bsClass="container-fluid">
           <h1>{__('Red Hat Repositories')}</h1>
@@ -52,7 +52,7 @@ class RedHatRepositoriesPage extends Component {
                 variant="info"
                 className="repo-sets-alert"
                 isInline
-                title={__('CDN configuration is set to Air-gapped (disconnected). Repository enablement/disablement is not permitted on this page.')}
+                title={__('CDN configuration is set to Export Sync (disconnected). Repository enablement/disablement is not permitted on this page.')}
               />
             </Col>
           </Row>

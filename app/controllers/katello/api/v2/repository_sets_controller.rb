@@ -214,7 +214,7 @@ module Katello
     end
 
     def check_airgapped
-      if @organization.cdn_configuration.airgapped?
+      if @organization.cdn_configuration.export_sync?
         fail HttpErrors::BadRequest, _("Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).")
       end
     end

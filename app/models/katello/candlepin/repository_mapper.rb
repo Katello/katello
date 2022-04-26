@@ -51,7 +51,7 @@ module Katello
       end
 
       def validate!
-        return if katello_content_type == Repository::OSTREE_TYPE || product.organization.cdn_configuration.airgapped?
+        return if katello_content_type == Repository::OSTREE_TYPE || product.organization.cdn_configuration.export_sync?
         substitutor.validate_substitutions(content, substitutions)
       end
 
@@ -81,7 +81,7 @@ module Katello
       end
 
       def feed_url
-        return if product.organization.cdn_configuration.airgapped?
+        return if product.organization.cdn_configuration.export_sync?
         @feed_url ||= if product.cdn_resource&.respond_to?(:repository_url)
                         product.cdn_resource.repository_url(content_label: content.label, arch: arch, major: version[:major], minor: version[:minor])
                       else

@@ -1,10 +1,10 @@
 import React from 'react';
 import { cleanup } from '@testing-library/react';
 import { renderWithRedux, fireEvent } from 'react-testing-lib-wrapper';
-import AirGappedTypeForm from '../AirGappedTypeForm';
+import ExportSyncForm from '../ExportSyncForm';
 import { nockInstance, assertNockRequest } from '../../../../../test-utils/nockWrapper';
 import { updateCdnConfigurationSuccessResponse } from '../../../../Organizations/__tests__/organizations.fixtures';
-import { AIRGAPPED } from '../CdnConfigurationConstants';
+import { EXPORT_SYNC } from '../CdnConfigurationConstants';
 
 import api from '../../../../../services/api';
 
@@ -25,13 +25,13 @@ const initialState = {
 
 
 test('Can update to Airgapped type', async (done) => {
-  const { getByLabelText } = renderWithRedux(<AirGappedTypeForm
+  const { getByLabelText } = renderWithRedux(<ExportSyncForm
     showUpdate
   />, { initialState });
 
   const updateCdnConfigurationRequest = nockInstance
     .put(updateCdnConfigurationPath, {
-      type: AIRGAPPED,
+      type: EXPORT_SYNC,
     })
     .reply(200, updateCdnConfigurationSuccessResponse);
 

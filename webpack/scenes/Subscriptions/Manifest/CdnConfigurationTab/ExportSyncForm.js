@@ -10,7 +10,7 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import { noop } from 'foremanReact/common/helpers';
 
-import { AIRGAPPED } from './CdnConfigurationConstants';
+import { EXPORT_SYNC } from './CdnConfigurationConstants';
 import { updateCdnConfiguration } from '../../../Organizations/OrganizationActions';
 import {
   selectUpdatingCdnConfiguration,
@@ -18,14 +18,14 @@ import {
 
 import './CdnConfigurationForm.scss';
 
-const AirGappedTypeForm = ({ showUpdate, onUpdate }) => {
+const ExportSyncForm = ({ showUpdate, onUpdate }) => {
   const [updateEnabled, setUpdateEnabled] = useState(showUpdate);
   const updatingCdnConfiguration = useSelector(state => selectUpdatingCdnConfiguration(state));
   const dispatch = useDispatch();
   const performUpdate = () => {
     setUpdateEnabled(false);
     dispatch(updateCdnConfiguration({
-      type: AIRGAPPED,
+      type: EXPORT_SYNC,
     }, onUpdate));
   };
 
@@ -70,13 +70,13 @@ const AirGappedTypeForm = ({ showUpdate, onUpdate }) => {
 };
 
 
-AirGappedTypeForm.propTypes = {
+ExportSyncForm.propTypes = {
   showUpdate: PropTypes.bool.isRequired,
   onUpdate: PropTypes.func,
 };
 
-AirGappedTypeForm.defaultProps = {
+ExportSyncForm.defaultProps = {
   onUpdate: noop,
 };
 
-export default AirGappedTypeForm;
+export default ExportSyncForm;

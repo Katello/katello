@@ -455,7 +455,7 @@ module Katello
             client_key: root.product.key,
             ca_cert: Katello::Repository.feed_ca_cert(root.url)
           }
-        elsif root.redhat? && root.cdn_configuration.upstream_server?
+        elsif root.redhat? && root.cdn_configuration.network_sync?
           {
             client_cert: root.cdn_configuration.ssl_cert,
             client_key: root.cdn_configuration.ssl_key,

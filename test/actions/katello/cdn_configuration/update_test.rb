@@ -33,7 +33,7 @@ module ::Actions::Katello::CdnConfiguration
 
     def test_plans_katello_cdn
       attrs = {
-        type: Katello::CdnConfiguration::UPSTREAM_SERVER_TYPE,
+        type: Katello::CdnConfiguration::NETWORK_SYNC,
         url: 'http://newcdn.example.com',
         ssl_ca_credential_id: @credential.id,
         username: 'test_username',
@@ -87,15 +87,15 @@ module ::Actions::Katello::CdnConfiguration
 
     def test_plans_airgapped
       attrs = {
-        type: ::Katello::CdnConfiguration::AIRGAPPED_TYPE
+        type: ::Katello::CdnConfiguration::EXPORT_SYNC
       }
-      refute @cdn_configuration.airgapped?
+      refute @cdn_configuration.export_sync?
       refute_nil @cdn_configuration.url
 
       plan_action(@action, @cdn_configuration, attrs)
       @cdn_configuration.reload
 
-      assert @cdn_configuration.airgapped?
+      assert @cdn_configuration.export_sync?
       assert_nil @cdn_configuration.url
       assert_nil @cdn_configuration.ssl_cert
       assert_nil @cdn_configuration.ssl_key
