@@ -8,6 +8,7 @@ import RegistrationCommands from './components/extensions/RegistrationCommands';
 import ContentTab from './components/extensions/HostDetails/Tabs/ContentTab';
 import ContentViewDetailsCard from './components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 import ErrataOverviewCard from './components/extensions/HostDetails/Cards/ErrataOverviewCard';
+import InstalledProductsCard from './components/extensions/HostDetails/DetailsTabCards/InstalledProductsCard';
 
 // import SubscriptionTab from './components/extensions/HostDetails/Tabs/SubscriptionTab';
 import RepositorySetsTab from './components/extensions/HostDetails/Tabs/RepositorySetsTab/RepositorySetsTab';
@@ -41,3 +42,4 @@ addGlobalFill(
   700,
 );
 addGlobalFill('details-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 1900);
+addGlobalFill('host-tab-details-cards', 'Installed products', <InstalledProductsCard key="installed-products" />, 100);
