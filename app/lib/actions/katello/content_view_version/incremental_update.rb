@@ -67,17 +67,19 @@ module Actions
             end
 
             concurrence do
-              if separated_repo_map[:pulp3_yum].keys.flatten.present?
-                extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[:pulp3_yum], old_version)
-                unit_map = pulp3_content_mapping(content)
+              [:pulp3_deb,:pulp3_yum].each do |mapping|
+                if separated_repo_map[mapping].keys.flatten.present?
+                  extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[mapping], old_version)
+                  unit_map = pulp3_content_mapping(content)
 
-                unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
-                  sequence do
-                    copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
-                                                       dependency_solving: dep_solve).output
-                    repos_to_clone.each do |source_repos|
-                      if separated_repo_map[:pulp3_yum].keys.include?(source_repos)
-                        copy_repos(repository_mapping[source_repos])
+                  unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
+                    sequence do
+                      copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
+                                                         dependency_solving: dep_solve).output
+                      repos_to_clone.each do |source_repos|
+                        if separated_repo_map[mapping].keys.include?(source_repos)
+                          copy_repos(repository_mapping[source_repos])
+                        end
                       end
                     end
                   end
@@ -104,11 +106,14 @@ module Actions
 
         def pulp3_content_mapping(content)
           units = ::Katello::Erratum.with_identifiers(content[:errata_ids]) +
+            ::Katello::Deb.with_identifiers(content[:deb_ids]) +
             ::Katello::Rpm.with_identifiers(content[:package_ids])
-          unit_map = { :errata => [], :rpms => [] }
+          unit_map = { :errata => [], :debs => [], :rpms => [] }
           units.each do |unit|
             if unit.class.name == "Katello::Erratum"
               unit_map[:errata] << unit.id
+            elsif unit.class.name == "Katello::Deb"
+              unit_map[:debs] << unit.id
             elsif unit.class.name == "Katello::Rpm"
               unit_map[:rpms] << unit.id
             end
