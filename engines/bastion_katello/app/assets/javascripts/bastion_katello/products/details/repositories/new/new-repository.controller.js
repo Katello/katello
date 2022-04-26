@@ -196,11 +196,13 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
             $scope.debURLPopover = $sce.trustAsHtml("For standard Debian repos, this is the folder that contains the \"dists/\" and the \"pool/\" subfolders.");
 
-            $scope.distPopover = $sce.trustAsHtml("A \"distribution\" provides the path from the repository root to the \"Release\" file <br/>" +
-             "you want to access. Each distribution in the list should use /etc/apt/sources.list<br/>" +
-             "syntax. For most official Debian and Ubuntu repositories, the distribution is equal<br/>" +
-             "to either the codename or the suite. When syncing a repo using flat repository format<br/>" +
-             "specify exactly one distribution, which must end with a \"/\".");
+            $scope.distPopover = $sce.trustAsHtml("A \"distribution\" provides the path from the repository root to the \"Release\" file you want to access. Each<br/>" +
+             "distribution in the list should use /etc/apt/sources.list syntax. For most official Debian and Ubuntu repositories,<br/>" +
+             "the distribution is equal to either the codename or the suite. Upstream repos that do not contain a \"dists/\" <br>" +
+             "folder may be using the deprecated \"flat repository format\".<br>" +
+             "(See: https://wiki.debian.org/DebianRepository/Format#Flat_Repository_Format).<br>" +
+             "When syncing a repo using flat repository format specify exactly one distribution, which must end with a \"/\". When<br>" +
+             "syncing repositories that do not use \"flat repository format\" you must not use a trailing \"/\" for your distributions! <br>");
 
             $scope.componentPopover = $sce.trustAsHtml("Requesting a component that does not exist in the upstream repo, will result in <br/>" +
              "a Pulp warning, but no error. A typo can therefore result in missing content.");
