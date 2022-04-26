@@ -74,29 +74,31 @@ module Actions
               end
 
               concurrence do
-                if separated_repo_map[:pulp3_yum_multicopy].keys.flatten.present?
-                  extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[:pulp3_yum_multicopy], old_version)
-                  unit_map = pulp3_content_mapping(content)
+                [:pulp3_deb_multicopy, :pulp3_yum_multicopy].each do |mapping|
+                  if separated_repo_map[mapping].keys.flatten.present?
+                    extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[mapping], old_version)
+                    unit_map = pulp3_content_mapping(content)
 
-                  unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
-                    sequence do
-                      # Pre-copy content if dest_repo is a soft copy of its library instance.
-                      # Don't use extended_repo_mapping because the source repositories are library instances.
-                      # We want the old CV snapshot repositories here so as to not pull in excess new content.
-                      separated_repo_map[:pulp3_yum_multicopy].each do |source_repos, dest_repo|
-                        if dest_repo.soft_copy_of_library?
-                          source_repos.each do |source_repo|
-                            # remove_all flag is set to cover the case of incrementally updating more than once with different content.
-                            # Without it, content from the previous incremental update will be copied as well due to how Pulp repo versions work.
-                            plan_action(Pulp3::Repository::CopyContent, source_repo, SmartProxy.pulp_primary, dest_repo, copy_all: true, remove_all: true)
+                    unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
+                      sequence do
+                        # Pre-copy content if dest_repo is a soft copy of its library instance.
+                        # Don't use extended_repo_mapping because the source repositories are library instances.
+                        # We want the old CV snapshot repositories here so as to not pull in excess new content.
+                        separated_repo_map[mapping].each do |source_repos, dest_repo|
+                          if dest_repo.soft_copy_of_library?
+                            source_repos.each do |source_repo|
+                              # remove_all flag is set to cover the case of incrementally updating more than once with different content.
+                              # Without it, content from the previous incremental update will be copied as well due to how Pulp repo versions work.
+                              plan_action(Pulp3::Repository::CopyContent, source_repo, SmartProxy.pulp_primary, dest_repo, copy_all: true, remove_all: true)
+                            end
                           end
                         end
-                      end
-                      copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
-                                                         dependency_solving: dep_solve).output
-                      repos_to_clone.each do |source_repos|
-                        if separated_repo_map[:pulp3_yum_multicopy].keys.include?(source_repos)
-                          copy_repos(repository_mapping[source_repos])
+                        copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
+                                                           dependency_solving: dep_solve).output
+                        repos_to_clone.each do |source_repos|
+                          if separated_repo_map[mapping].keys.include?(source_repos)
+                            copy_repos(repository_mapping[source_repos])
+                          end
                         end
                       end
                     end
@@ -124,12 +126,15 @@ module Actions
 
         def pulp3_content_mapping(content)
           units = ::Katello::Erratum.with_identifiers(content[:errata_ids]) +
+            ::Katello::Deb.with_identifiers(content[:deb_ids]) +
             ::Katello::Rpm.with_identifiers(content[:package_ids])
-          unit_map = { :errata => [], :rpms => [] }
+          unit_map = { :errata => [], :debs => [], :rpms => [] }
           units.each do |unit|
             case unit.class.name
             when "Katello::Erratum"
               unit_map[:errata] << unit.id
+            when "Katello::Deb"
+              unit_map[:debs] << unit.id
             when "Katello::Rpm"
               unit_map[:rpms] << unit.id
             end
@@ -230,6 +235,7 @@ module Actions
               new_errata = new_repo.errata - (matched_old_repo&.errata || [])
               new_module_streams = new_repo.module_streams - (matched_old_repo&.module_streams || [])
               new_rpms = new_repo.rpms - (matched_old_repo&.rpms || [])
+              new_debs = new_repo.debs - (matched_old_repo&.debs || [])
 
               new_errata.each do |erratum|
                 content[::Katello::Erratum::CONTENT_TYPE] << erratum.errata_id
@@ -240,6 +246,9 @@ module Actions
               end
               new_rpms.each do |rpm|
                 content[::Katello::Rpm::CONTENT_TYPE] << rpm.nvra
+              end
+              new_debs.each do |deb|
+                content[::Katello::Deb::CONTENT_TYPE] << deb.nva
               end
             end
           end
