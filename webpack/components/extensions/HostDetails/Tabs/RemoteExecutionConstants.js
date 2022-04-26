@@ -8,4 +8,5 @@ export const REX_FEATURES = {
   KATELLO_PACKAGES_UPDATE_BY_SEARCH: 'katello_packages_update_by_search',
   KATELLO_HOST_TRACER_RESOLVE: 'katello_host_tracer_resolve',
   KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH: 'katello_errata_install_by_search',
+  KATELLO_HOST_MODULE_STREAM_ACTION: 'katello_module_stream_action',
 };

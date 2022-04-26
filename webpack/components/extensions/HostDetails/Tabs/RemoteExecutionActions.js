@@ -74,6 +74,13 @@ const katelloHostErrataInstallParams = ({
   feature: REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH,
 });
 
+const katelloModuleStreamActionsParams = ({ hostname, action, moduleSpec }) =>
+  baseParams({
+    hostname,
+    inputs: { action, module_spec: moduleSpec },
+    feature: REX_FEATURES.KATELLO_HOST_MODULE_STREAM_ACTION,
+  });
+
 const showRexToast = response => renderRexJobStartedToast(response.data);
 
 export const installPackage = ({ hostname, packageName }) => post({
@@ -148,6 +155,15 @@ export const installErrata = ({
   params: katelloHostErrataInstallParams({
     hostname, search,
   }),
+  handleSuccess: showRexToast,
+  errorToast,
+});
+
+export const moduleStreamAction = ({ hostname, action, moduleSpec }) => post({
+  type: API_OPERATIONS.POST,
+  key: REX_JOB_INVOCATIONS_KEY,
+  url: foremanApi.getApiUrl('/job_invocations'),
+  params: katelloModuleStreamActionsParams({ hostname, action, moduleSpec }),
   handleSuccess: showRexToast,
   errorToast,
 });

@@ -1,7 +1,22 @@
 import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Skeleton, Label, Hint, HintBody, Button, Split, SplitItem } from '@patternfly/react-core';
+import { Skeleton,
+  Label,
+  Button,
+  Split,
+  SplitItem,
+  Checkbox,
+  Dropdown,
+  Text,
+  TextVariants,
+  DropdownItem,
+  KebabToggle,
+  DropdownPosition,
+  DropdownSeparator,
+  Modal,
+  ModalVariant } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 import { upperFirst, lowerCase } from 'lodash';
 import { TableText, TableVariant, Thead, Tbody, Tr, Td } from '@patternfly/react-table';
@@ -9,7 +24,6 @@ import {
   LongArrowAltUpIcon,
   CheckIcon,
 } from '@patternfly/react-icons';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { selectModuleStreamStatus, selectModuleStream } from './ModuleStreamsSelectors';
 import { useBulkSelect, useTableSort, useUrlParams } from '../../../../Table/TableHooks';
 import { getHostModuleStreams } from './ModuleStreamsActions';
@@ -23,6 +37,8 @@ import {
   HOST_MODULE_STREAM_STATUSES, INSTALL_STATUS_PARAM_TO_FRIENDLY_NAME, INSTALLED_STATE,
   STATUS_PARAM_TO_FRIENDLY_NAME,
 } from './ModuleStreamsConstants';
+import { moduleStreamAction } from '../RemoteExecutionActions';
+import { katelloModuleStreamActionUrl } from '../customizedRexUrlHelpers';
 
 const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
   switch (true) {
@@ -43,9 +59,14 @@ EnabledIcon.propTypes = {
   upgradable: PropTypes.bool.isRequired,
 };
 
-const StreamState = ({ moduleStreamStatus }) => {
+const stateText = (moduleStreamStatus) => {
   let streamText = moduleStreamStatus?.charAt(0)?.toUpperCase() + moduleStreamStatus?.slice(1);
   streamText = streamText?.replace('Unknown', 'Default');
+  return streamText;
+};
+
+const StreamState = ({ moduleStreamStatus }) => {
+  const streamText = stateText(moduleStreamStatus);
   switch (true) {
   case (streamText === 'Default'):
     return <Label color="gray" variant="outline">{streamText}</Label>;
@@ -78,8 +99,110 @@ HostInstalledProfiles.propTypes = {
   installedProfiles: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
+const performModuleStreamAction = (hostName, action, moduleSpec, dispatch) => {
+  dispatch(moduleStreamAction({ hostname: hostName, action, moduleSpec }));
+};
+
+const ModuleActionConfirmationModal = ({
+  hostName, action, moduleSpec, actionModalOpen, setActionModalOpen,
+}) => {
+  const dispatch = useDispatch();
+  let title;
+  let body;
+  let confirmText;
+  switch (action) {
+  case 'disable':
+    confirmText = __('Disable');
+    title = __('Disable module stream');
+    body = (
+      <FormattedMessage
+        id="warning-message-disable"
+        defaultMessage={__('Selected module {moduleSpec} will become unavailable. \n' +
+          '      The module RPMs will become unavailable in the package set.')}
+        values={{
+          moduleSpec,
+        }}
+      />
+    );
+    break;
+  case 'reset':
+    confirmText = __('Reset');
+    title = __('Reset module stream');
+    body = (
+      <FormattedMessage
+        id="warning-message-reset"
+        defaultMessage={__('Selected module {moduleSpec} will be no longer enabled or disabled. \n' +
+          'Consequently, all installed profiles will be removed and only RPMs from the default stream will be available in the package set.')}
+        values={{
+          moduleSpec,
+        }}
+      />
+    );
+    break;
+  case 'remove':
+    confirmText = __('Remove');
+    title = __('Remove module stream');
+    body = __(`Installed module profiles will be removed. Additionally, all packages whose names are provided by specific modules will be removed.
+      Packages required by other installed modules profiles and packages whose names are also provided by other modules are not removed.`);
+    break;
+  default:
+    // No action selected. Should not be here!
+    setActionModalOpen(false);
+  }
+  return (
+    <Modal
+      variant={ModalVariant.small}
+      isOpen={actionModalOpen}
+      aria-label="Module action confirmation modal"
+      title={title}
+      titleIconVariant="warning"
+      showClose
+      onClose={() => setActionModalOpen(false)}
+      actions={[
+        <Button
+          aria-label="confirm-module-action"
+          key="confirm-module-action"
+          onClick={() => {
+            performModuleStreamAction(hostName, action, moduleSpec, dispatch);
+            setActionModalOpen(false);
+          }}
+        >
+          {confirmText}
+        </Button>,
+        <Button
+          aria-label="cancel-module-action"
+          key="cancel-module-action"
+          variant="link"
+          onClick={() => setActionModalOpen(false)}
+        >
+          {__('Cancel')}
+        </Button>,
+      ]}
+    >
+      <Text component={TextVariants.p}>
+        {body}
+      </Text>
+
+    </Modal>
+  );
+};
+
+ModuleActionConfirmationModal.propTypes = {
+  hostName: PropTypes.string.isRequired,
+  action: PropTypes.string.isRequired,
+  moduleSpec: PropTypes.string.isRequired,
+  actionModalOpen: PropTypes.bool.isRequired,
+  setActionModalOpen: PropTypes.func.isRequired,
+};
+
 export const ModuleStreamsTab = () => {
   const { id: hostId, name: hostName } = useSelector(selectHostDetails);
+  const [useCustomizedRex, setUseCustomizedRex] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState('');
+  const [actionModalOpen, setActionModalOpen] = useState(false);
+  const [actionableModuleSpec, setActionableModuleSpec] = useState(null);
+  const [hostModuleStreamAction, setHostModuleStreamAction] = useState(null);
+  const dispatch = useDispatch();
 
   const emptyContentTitle = __('This host does not have any Module streams.');
   const emptyContentBody = __('Module streams will appear here when available.');
@@ -155,6 +278,9 @@ export const ModuleStreamsTab = () => {
         return newInstallationStatus;
       });
 
+  const customizedActionURL = (action, moduleSpec) =>
+    katelloModuleStreamActionUrl({ hostname: hostName, action, moduleSpec });
+
   const response = useSelector(selectModuleStream);
   const { results, ...metadata } = response;
   const { error: errorSearchBody } = metadata;
@@ -173,42 +299,11 @@ export const ModuleStreamsTab = () => {
 
   if (!hostId) return <Skeleton />;
 
-  const rowActions = [
-    {
-      title: __('Install'), disabled: true,
-    },
-    {
-      title: __('Update'), disabled: true,
-    },
-    {
-      title: __('Enable'), disabled: true,
-    },
-    {
-      title: __('Disable'), disabled: true,
-    },
-    {
-      title: __('Reset'), disabled: true,
-    },
-    {
-      title: __('Remove'), disabled: true,
-    },
-  ];
   const activeFilters = [statusSelected, installStatusSelected];
   const defaultFilters = [MODULE_STREAM_STATUS, MODULE_STREAM_INSTALLATION_STATUS];
 
   return (
     <div>
-      <div id="modules-hint" className="margin-0-24 margin-top-16">
-        <Hint>
-          <HintBody>
-            {__('Module stream management functionality on this page is incomplete')}.
-            <br />
-            <Button component="a" variant="link" isInline href={urlBuilder(`content_hosts/${hostId}/module-streams`, '')}>
-              {__('Visit the previous Module stream page')}.
-            </Button>
-          </HintBody>
-        </Hint>
-      </div>
       <div id="modulestreams-tab">
         <TableWrapper
           {...{
@@ -277,45 +372,237 @@ export const ModuleStreamsTab = () => {
               stream,
               installed_profiles: installedProfiles,
               upgradable,
+              install_status: installedStatus,
               module_spec: moduleSpec,
-            }, index) => (
+            }, index) => {
               /* eslint-disable react/no-array-index-key */
-              <Tr key={`${id} ${index}`}>
-                <Td>
-                  <a
-                    href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostName}`}
+              const dropdownItems = [
+                <DropdownItem key={`dropdownItem-checkbox-${id}`}>
+                  <Checkbox
+                    aria-label={`customize-checkbox-${id}`}
+                    id={`Checkbox${id}`}
+                    label={__('Customize with Rex')}
+                    isChecked={id === useCustomizedRex}
+                    onChange={checked => (checked ? setUseCustomizedRex(id) : setUseCustomizedRex(''))}
+                  />
+                </DropdownItem>,
+                <DropdownSeparator key={`separator-${id}`} />,
+
+              ];
+              if (id === useCustomizedRex) {
+                dropdownItems.push(
+                  <DropdownItem
+                    aria-label={`enable-${id}-href`}
+                    key={`dropdownItem-enable-url-${id}`}
+                    component="a"
+                    href={customizedActionURL('enable', moduleSpec)}
+                    isDisabled={stateText(moduleStreamStatus) ===
+                    HOST_MODULE_STREAM_STATUSES.ENABLED}
                   >
-                    {name}
-                  </a>
-                </Td>
-                <Td>
-                  <StreamState moduleStreamStatus={moduleStreamStatus} />
-                </Td>
-                <Td>{stream}</Td>
-                <Td>
-                  <EnabledIcon
-                    streamText={moduleStreamStatus}
-                    streamInstallStatus={installedProfiles}
-                    upgradable={upgradable}
-                  />
-                </Td>
-                <Td>
-                  <HostInstalledProfiles
-                    moduleStreamStatus={moduleStreamStatus}
-                    installedProfiles={installedProfiles}
-                  />
-                </Td>
-                <Td
-                  key={`rowActions-${id}`}
-                  actions={{
-                    items: rowActions,
-                  }}
-                />
-              </Tr>
-            ))
+                    {__('Enable')}
+                  </DropdownItem>,
+                  <DropdownItem
+                    aria-label={`disable-${id}-href`}
+                    key={`dropdownItem-disable-url-${id}`}
+                    component="a"
+                    href={customizedActionURL('disable', moduleSpec)}
+                    isDisabled={stateText(moduleStreamStatus) !==
+                    HOST_MODULE_STREAM_STATUSES.ENABLED}
+                  >
+                    {__('Disable')}
+                    <InactiveText style={{ marginBottom: '1px' }} text={__('Prevent from further updates')} />
+                  </DropdownItem>,
+                  <DropdownItem
+                    aria-label={`install-${id}-href`}
+                    key={`dropdownItem-install-url-${id}`}
+                    component="a"
+                    href={customizedActionURL('install', moduleSpec)}
+                    isDisabled={(upgradable ||
+                      (installedStatus !== INSTALLED_STATE.NOTINSTALLED) ||
+                      !(stateText(moduleStreamStatus) === HOST_MODULE_STREAM_STATUSES.ENABLED ||
+                        stateText(moduleStreamStatus) === HOST_MODULE_STREAM_STATUSES.DISABLED)
+                    )}
+                  >
+                    {__('Install')}
+                  </DropdownItem>,
+                  <DropdownItem
+                    aria-label={`update-${id}-href`}
+                    key={`dropdownItem-update-${id}`}
+                    component="a"
+                    href={customizedActionURL('update', moduleSpec)}
+                    isDisabled={!upgradable}
+                  >
+                    {__('Update')}
+                  </DropdownItem>,
+                  <DropdownItem
+                    aria-label={`reset-${id}-href`}
+                    key={`dropdownItem-reset-${id}`}
+                    component="a"
+                    href={customizedActionURL('reset', moduleSpec)}
+                  >
+                    {__('Reset')}
+                    <InactiveText style={{ marginBottom: '1px' }} text={__('Reset to the default state')} />
+                  </DropdownItem>,
+                  <DropdownItem
+                    aria-label={`remove-${id}-href`}
+                    key={`dropdownItem-remove-${id}`}
+                    component="a"
+                    href={customizedActionURL('remove', moduleSpec)}
+                  >
+                    {__('Remove')}
+                    <InactiveText style={{ marginBottom: '1px' }} text={__('Uninstall and reset')} />
+                  </DropdownItem>,
+                );
+              } else {
+                dropdownItems.push(
+                  <DropdownItem
+                    aria-label={`enable-${id}-button`}
+                    key={`dropdownItem-enable-${id}`}
+                    component="button"
+                    onClick={() => {
+                      performModuleStreamAction(hostName, 'enable', moduleSpec, dispatch);
+                      setUseCustomizedRex('');
+                      setDropdownOpen('');
+                    }}
+                    isDisabled={stateText(moduleStreamStatus) ===
+                    HOST_MODULE_STREAM_STATUSES.ENABLED}
+                  >
+                    {__('Enable')}
+                  </DropdownItem>,
+                  <DropdownItem
+                    aria-label={`disable-${id}-button`}
+                    key={`dropdownItem-disable-${id}`}
+                    component="button"
+                    onClick={() => {
+                      setActionableModuleSpec(moduleSpec);
+                      setHostModuleStreamAction('disable');
+                      setActionModalOpen(true);
+                      setUseCustomizedRex('');
+                      setDropdownOpen('');
+                    }}
+                    isDisabled={stateText(moduleStreamStatus) !==
+                    HOST_MODULE_STREAM_STATUSES.ENABLED}
+                  >
+                    {__('Disable')}
+                    <InactiveText style={{ marginBottom: '1px' }} text={__('Prevent from further updates')} />
+                  </DropdownItem>,
+                  <DropdownItem
+                    aria-label={`install-${id}-button`}
+                    key={`dropdownItem-install-${id}`}
+                    component="button"
+                    onClick={() => {
+                      performModuleStreamAction(hostName, 'install', moduleSpec, dispatch);
+                      setUseCustomizedRex('');
+                      setDropdownOpen('');
+                    }}
+                    isDisabled={(upgradable ||
+                      (installedStatus !== INSTALLED_STATE.NOTINSTALLED) ||
+                      !(stateText(moduleStreamStatus) === HOST_MODULE_STREAM_STATUSES.ENABLED ||
+                        stateText(moduleStreamStatus) === HOST_MODULE_STREAM_STATUSES.DISABLED)
+                    )}
+                  >
+                    {__('Install')}
+                  </DropdownItem>,
+                  <DropdownItem
+                    aria-label={`update-${id}-button`}
+                    key={`dropdownItem-update-${id}`}
+                    component="button"
+                    onClick={() => {
+                      performModuleStreamAction(hostName, 'update', moduleSpec, dispatch);
+                      setUseCustomizedRex('');
+                      setDropdownOpen('');
+                    }}
+                    isDisabled={!upgradable}
+                  >
+                    {__('Update')}
+                  </DropdownItem>,
+                  <DropdownItem
+                    aria-label={`reset-${id}-button`}
+                    key={`dropdownItem-reset-${id}`}
+                    component="button"
+                    onClick={() => {
+                      setActionableModuleSpec(moduleSpec);
+                      setHostModuleStreamAction('reset');
+                      setActionModalOpen(true);
+                      setUseCustomizedRex('');
+                      setDropdownOpen('');
+                    }}
+                  >
+                    {__('Reset')}
+                    <InactiveText style={{ marginBottom: '1px' }} text={__('Reset to the default state')} />
+                  </DropdownItem>,
+                  <DropdownItem
+                    aria-label={`remove-${id}-button`}
+                    key={`dropdownItem-remove-${id}`}
+                    component="button"
+                    onClick={() => {
+                      setActionableModuleSpec(moduleSpec);
+                      setHostModuleStreamAction('remove');
+                      setActionModalOpen(true);
+                      setUseCustomizedRex('');
+                      setDropdownOpen('');
+                    }}
+                  >
+                    {__('Remove')}
+                    <InactiveText style={{ marginBottom: '1px' }} text={__('Uninstall and reset')} />
+                  </DropdownItem>,
+                );
+              }
+              return (
+                <Tr key={`${id} ${index}`}>
+                  <Td>
+                    <a
+                      href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostName}`}
+                    >
+                      {name}
+                    </a>
+                  </Td>
+                  <Td>
+                    <StreamState moduleStreamStatus={moduleStreamStatus} />
+                  </Td>
+                  <Td>{stream}</Td>
+                  <Td>
+                    <EnabledIcon
+                      streamText={moduleStreamStatus}
+                      streamInstallStatus={installedProfiles}
+                      upgradable={upgradable}
+                    />
+                  </Td>
+                  <Td>
+                    <HostInstalledProfiles
+                      moduleStreamStatus={moduleStreamStatus}
+                      installedProfiles={installedProfiles}
+                    />
+                  </Td>
+                  <Td key={`actions-td-${id}-${dropdownOpen}`}>
+                    <Dropdown
+                      aria-label={`actions-dropdown-${id}`}
+                      key={`actions-dropdown-${id}-${dropdownOpen}`}
+                      isPlain
+                      style={{ width: 'inherit' }}
+                      position={DropdownPosition.right}
+                      toggle={
+                        <KebabToggle aria-label={`kebab-dropdown-${id}`} onToggle={() => ((dropdownOpen === id) ? setDropdownOpen('') : setDropdownOpen(id))} id={`toggle-dropdown-${id}`} />
+                    }
+                      isOpen={id === dropdownOpen}
+                      dropdownItems={dropdownItems}
+                    />
+                  </Td>
+                </Tr>
+              );
+            })
             }
           </Tbody>
         </TableWrapper>
+        {actionModalOpen &&
+          <ModuleActionConfirmationModal
+            hostName={hostName}
+            action={hostModuleStreamAction}
+            moduleSpec={actionableModuleSpec}
+            actionModalOpen={actionModalOpen}
+            setActionModalOpen={setActionModalOpen}
+          />
+        }
       </div>
     </div>
   );
