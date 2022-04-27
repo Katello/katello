@@ -9,7 +9,6 @@ const InstalledProductsCard = ({ isExpandedGlobal, hostDetails }) => {
   if (!installedProducts?.length) return null;
   return (
     <CardTemplate
-      overrideGridProps={{ rowSpan: 2 }}
       header={__('Installed products')}
       expandable
       isExpandedGlobal={isExpandedGlobal}
