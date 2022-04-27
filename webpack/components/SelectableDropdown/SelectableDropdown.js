@@ -5,7 +5,7 @@ import { ErrorCircleOIcon } from '@patternfly/react-icons';
 
 
 const SelectableDropdown = ({
-  items, title, showTitle, selected, setSelected, loading, error,
+  items, title, showTitle, selected, setSelected, loading, error, isDisabled,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const icon = () => {
@@ -40,7 +40,7 @@ const SelectableDropdown = ({
           onSelect={onSelect}
           selections={selected}
           isOpen={isOpen}
-          isDisabled={loading || error}
+          isDisabled={loading || error || isDisabled}
           toggleIcon={icon()}
         >
           {selectItems}
@@ -59,12 +59,14 @@ SelectableDropdown.propTypes = {
   // If the items are loaded dynamically, you can pass in loading or error states
   loading: PropTypes.bool,
   error: PropTypes.bool,
+  isDisabled: PropTypes.bool,
 };
 
 SelectableDropdown.defaultProps = {
   loading: false,
   error: false,
   showTitle: true,
+  isDisabled: false,
 };
 
 

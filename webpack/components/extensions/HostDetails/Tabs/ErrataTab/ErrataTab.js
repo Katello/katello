@@ -288,6 +288,7 @@ export const ErrataTab = () => {
           items={Object.values(ERRATA_TYPES)}
           selected={errataTypeSelected}
           setSelected={handleErrataTypeSelected}
+          isDisabled={!results?.length}
         />
       </SplitItem>
       <SplitItem>
@@ -298,6 +299,7 @@ export const ErrataTab = () => {
           items={Object.values(ERRATA_SEVERITIES)}
           selected={errataSeveritySelected}
           setSelected={handleErrataSeveritySelected}
+          isDisabled={!results?.length}
         />
       </SplitItem>
       {hostIsNonLibrary &&
