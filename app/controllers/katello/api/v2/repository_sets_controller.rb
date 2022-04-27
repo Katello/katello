@@ -31,13 +31,18 @@ module Katello
     param :host_id, :number, :desc => N_("Id of the host"), :required => false
     param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions.")
     param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the host's or activation key's content view version and lifecycle environment.")
+    param :status, [:enabled, :disabled, :overridden],
+                                  :desc => N_("Limit content to enabled / disabled / overridden"),
+                                  :required => false
+
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Katello::ProductContent)
     def index
       collection = scoped_search(index_relation, :name, :asc, :resource_class => Katello::ProductContent)
       pcf = ProductContentFinder.wrap_with_overrides(
         product_contents: collection[:results],
-        overrides: @consumable&.content_overrides)
+        overrides: @consumable&.content_overrides,
+        status: params[:status])
       collection[:results] = custom_sort_results(pcf)
       respond(:collection => collection)
     end

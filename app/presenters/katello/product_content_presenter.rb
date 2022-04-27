@@ -23,5 +23,20 @@ module Katello
       return [] if overrides.blank?
       overrides.select { |pc| pc.content_label == content.label }
     end
+
+    def status
+      overidden_value = enabled_content_override&.computed_value
+      if overidden_value.nil?
+        {
+          status: enabled ? "enabled" : "disabled",
+          overridden: false
+        }
+      else
+        {
+          status: overidden_value ? "enabled" : "disabled",
+          overridden: true
+        }
+      end
+    end
   end
 end

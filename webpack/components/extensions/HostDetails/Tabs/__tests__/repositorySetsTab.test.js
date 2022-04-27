@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import katelloApi, { foremanApi } from '../../../../../services/api';
 import { REPOSITORY_SETS_KEY } from '../RepositorySetsTab/RepositorySetsConstants';
@@ -52,6 +52,7 @@ const libraryQuery = {
 };
 
 let firstRepoSet;
+let secondRepoSet;
 let searchDelayScope;
 let autoSearchScope;
 let bookmarkScope;
@@ -59,7 +60,7 @@ let bookmarkScope;
 beforeEach(() => {
   // jest.resetModules();
   const { results } = mockRepoSetData;
-  [firstRepoSet] = results;
+  [firstRepoSet, secondRepoSet] = results;
   bookmarkScope = nockInstance.get(repositorySetBookmarks).reply(200, mockBookmarkData);
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
   autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
@@ -342,4 +343,38 @@ test('Can override in bulk', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(contentOverrideScope, done); // Pass jest callback to confirm test is done});
+});
+
+test('Can filter by status', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostRepositorySets)
+    .query(defaultQuery)
+    .reply(200, mockRepoSetData);
+
+  const scope2 = nockInstance
+    .get(hostRepositorySets)
+    .query({ ...defaultQuery, status: 'overridden' })
+    .reply(200, { ...mockRepoSetData, results: [secondRepoSet] });
+
+  const {
+    getByText, queryByLabelText, getByRole,
+  } = renderWithRedux(<RepositorySetsTab />, renderOptions());
+
+  await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
+
+  const statusContainer = queryByLabelText('select Status container', { ignore: 'th' });
+  const statusDropdown = within(statusContainer).queryByText('Status');
+  expect(statusDropdown).toBeInTheDocument();
+  fireEvent.click(statusDropdown);
+  const overridden = getByRole('option', { name: 'select Overridden' });
+  fireEvent.click(overridden);
+  await patientlyWaitFor(() => {
+    expect(getByText('Overridden')).toBeInTheDocument();
+  });
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
+  assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
 });

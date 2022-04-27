@@ -30,8 +30,18 @@ module Katello
       consumable.organization.enabled_product_content_for(roots)
     end
 
-    def self.wrap_with_overrides(product_contents:, overrides:)
-      product_contents.map { |pc| ProductContentPresenter.new(pc, overrides) }
+    def self.wrap_with_overrides(product_contents:, overrides:, status: nil)
+      pc_with_overrides = product_contents.map { |pc| ProductContentPresenter.new(pc, overrides) }
+      if status
+        pc_with_overrides.keep_if do |pc|
+          if status == "overridden"
+            pc.status[:overridden]
+          else
+            pc.status[:status] == status
+          end
+        end
+      end
+      pc_with_overrides
     end
 
     def presenter_with_overrides(overrides)
