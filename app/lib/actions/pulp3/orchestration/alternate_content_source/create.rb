@@ -7,8 +7,6 @@ module Actions
             sequence do
               plan_action(Actions::Pulp3::AlternateContentSource::CreateRemote, acs, smart_proxy)
               plan_action(Actions::Pulp3::AlternateContentSource::Create, acs, smart_proxy)
-              # TODO: Should the hrefs be committed to acs records in a new action? Is it okay to be in the service class methods?
-              #  -> i.e. do we need something like SaveVersions?
             end
           end
         end
