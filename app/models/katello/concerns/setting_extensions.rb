@@ -6,8 +6,11 @@ module Katello
       included do
         validates :value, inclusion: { in: ::Katello::RootRepository::DOWNLOAD_POLICIES },
           if: ->(setting) { setting.name == 'default_download_policy' }
+        validates_with ::Katello::Validators::ContentDefaultHttpProxySettingValidator,
+        if: proc { |s| s.name == 'content_default_http_proxy' && HttpProxy.table_exists? }
 
         after_save :recalculate_errata_status
+        after_save :add_organizations_and_locations_if_global_http_proxy
         after_commit :update_global_proxies
       end
 
@@ -24,6 +27,17 @@ module Katello
               ::Actions::BulkAction,
               ::Actions::Katello::Repository::UpdateHttpProxyDetails,
               repos.sort_by(&:pulp_id))
+          end
+        end
+      end
+
+      def add_organizations_and_locations_if_global_http_proxy
+        if name == 'content_default_http_proxy' && (::HttpProxy.table_exists? rescue(false))
+          proxy = HttpProxy.where(name: value).first
+
+          if proxy
+            proxy.update_attribute(:organizations, Organization.unscoped.all)
+            proxy.update_attribute(:locations, Location.unscoped.all)
           end
         end
       end

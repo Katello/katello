@@ -43,7 +43,7 @@ class CleanupInstalledPackages < ActiveRecord::Migration[4.2]
     # Now do new things
     add_index :katello_installed_packages, [:nvra], :unique => true
     add_index :katello_host_installed_packages, [:host_id, :installed_package_id], :unique => true, :name => :katello_host_installed_packages_h_id_ip_id
-    Setting.where(:name => 'bulk_query_installed_packages', :category => 'Setting::Content').delete_all
+    Setting.where(:name => 'bulk_query_installed_packages').delete_all
   end
 
   def down
