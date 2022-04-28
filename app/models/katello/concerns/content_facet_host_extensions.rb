@@ -33,6 +33,9 @@ module Katello
         has_many :applicable_debs, :through => :content_facet
         has_many :applicable_rpms, :through => :content_facet
         has_many :applicable_module_streams, :through => :content_facet
+        has_many :bound_repositories, :through => :content_facet
+        has_many :bound_root_repositories, :through => :content_facet
+        has_many :bound_content, :through => :content_facet
 
         scoped_search :relation => :content_view, :on => :name, :complete_value => true, :rename => :content_view
         scoped_search :relation => :content_facet, :on => :content_view_id, :rename => :content_view_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
@@ -46,6 +49,8 @@ module Katello
         scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :applicable_rpms, :complete_value => true, :ext_method => :find_by_applicable_rpms, :only_explicit => true
         scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :upgradable_rpms, :complete_value => true, :ext_method => :find_by_installable_rpms, :only_explicit => true
         scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source
+        scoped_search :relation => :bound_root_repositories, :on => :name, :rename => :repository, :complete_value => true, :ext_method => :find_by_repository_name, :only_explicit => true
+        scoped_search :relation => :bound_content, :on => :label, :rename => :repository_content_label, :complete_value => true, :ext_method => :find_by_repository_content_label, :only_explicit => true
 
         # preserve options set by facets framework, but add new :reject_if statement
         accepts_nested_attributes_for(
@@ -122,6 +127,26 @@ module Katello
         def find_by_installable_rpms(_key, operator, value)
           conditions = sanitize_sql_for_conditions(["#{Katello::Rpm.table_name}.nvra #{operator} ?", value_to_sql(operator, value)])
           facets = Katello::Host::ContentFacet.joins_installable_rpms.where(conditions)
+          if facets.empty?
+            { :conditions => "1=0" }
+          else
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
+          end
+        end
+
+        def find_by_repository_content_label(_key, operator, value)
+          conditions = sanitize_sql_for_conditions(["#{Katello::Content.table_name}.label #{operator} ?", value_to_sql(operator, value)])
+          facets = Katello::Host::ContentFacet.joins_repositories.where(conditions)
+          if facets.empty?
+            { :conditions => "1=0" }
+          else
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
+          end
+        end
+
+        def find_by_repository_name(_key, operator, value)
+          conditions = sanitize_sql_for_conditions(["#{Katello::RootRepository.table_name}.name #{operator} ?", value_to_sql(operator, value)])
+          facets = Katello::Host::ContentFacet.joins_repositories.where(conditions)
           if facets.empty?
             { :conditions => "1=0" }
           else

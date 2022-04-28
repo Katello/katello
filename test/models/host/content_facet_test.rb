@@ -408,8 +408,10 @@ module Katello
   end
 
   class ContentHostExtensions < ContentFacetBase
+    let(:host_one) { hosts(:one) }
     def setup
       assert host #force lazy load
+      assert host_one
     end
 
     def test_content_view_search
@@ -444,6 +446,16 @@ module Katello
       status.save!
 
       assert_includes ::Host::Managed.search_for("trace_status = process_restart_needed"), content_facet.host
+    end
+
+    def test_repository_search
+      name = host_one.bound_repositories.sort.find { |repo| repo.name == "Fedora 17 x86_64" }&.name
+      assert_includes ::Host::Managed.search_for("repository = \"#{name}\""), host_one
+    end
+
+    def test_content_label_search
+      label = host_one.bound_repositories.sort.find { |repo| repo&.content&.label == "fedora" }&.content&.label
+      assert_includes ::Host::Managed.search_for("repository_content_label = \"#{label}\""), host_one
     end
   end
 end
