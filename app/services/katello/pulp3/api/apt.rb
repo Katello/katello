@@ -45,7 +45,7 @@ module Katello
         end
 
         def repository_versions_api
-          PulpDebClient::RepositoriesDebVersionsApi.new(api_client)
+          PulpDebClient::RepositoriesAptVersionsApi.new(api_client)
         end
 
         def remotes_api
