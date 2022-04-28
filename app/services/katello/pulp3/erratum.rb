@@ -119,7 +119,7 @@ module Katello
         date.to_i.to_s == date ? epoch_to_date(date) : date
       end
 
-      def epoch_to_date(epoch)
+      def self.epoch_to_date(epoch)
         Time.at(epoch.to_i).to_s
       end
     end
