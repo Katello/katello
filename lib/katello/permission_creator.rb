@@ -15,6 +15,7 @@ module Katello
       product_permissions
       subscription_permissions
       sync_plan_permissions
+      alternate_content_source_permissions
       user_permissions
     end
 
@@ -386,6 +387,33 @@ module Katello
                          },
                          :resource_type => 'Katello::SyncPlan',
                          :finder_scope => :syncable
+    end
+
+    def alternate_content_source_permissions
+      @plugin.permission :view_alternate_content_sources,
+                         {
+                           'katello/api/v2/alternate_content_sources' => [:index, :show, :auto_complete_search]
+                         },
+                         :resource_type => 'Katello::AlternateContentSource',
+                         :finder_scope => :readable
+      @plugin.permission :create_alternate_content_sources,
+                         {
+                           'katello/api/v2/alternate_content_sources' => [:create]
+                         },
+                         :resource_type => 'Katello::AlternateContentSource',
+                         :finder_scope => :editable
+      @plugin.permission :edit_alternate_content_sources,
+                         {
+                           'katello/api/v2/alternate_content_sources' => [:update]
+                         },
+                         :resource_type => 'Katello::AlternateContentSource',
+                         :finder_scope => :editable
+      @plugin.permission :destroy_alternate_content_sources,
+                         {
+                           'katello/api/v2/alternate_content_sources' => [:destroy]
+                         },
+                         :resource_type => 'Katello::AlternateContentSource',
+                         :finder_scope => :deletable
     end
 
     def user_permissions
