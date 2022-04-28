@@ -32,6 +32,8 @@ module Actions
           validate_environments(environments, old_version)
 
           new_minor = old_version.content_view.versions.where(:major => old_version.major).maximum(:minor) + 1
+          ## Shortcut for composite CVs
+          #FIXME: do we need to check for "deb" as well?
           if SmartProxy.pulp_primary.pulp3_repository_type_support?("yum") && is_composite
             sequence do
               publish_action = plan_action(::Actions::Katello::ContentView::Publish, old_version.content_view, description,
@@ -76,6 +78,16 @@ module Actions
                     sequence do
                       copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
                                                          dependency_solving: dep_solve).output
+                      separated_repo_map[mapping].each do |source_repos, dest_repo|
+                        # find errata belonging to this repo
+                        errata = ::Katello::Erratum.with_identifiers(content[:errata_ids]).joins(:root_repositories).where(::Katello::RootRepository.table_name => {id: dest_repo.root}).distinct
+                        if errata.present?
+                          # attach deb errata to the dest_repo
+                          plan_action(Actions::Katello::Repository::CopyDebErratum,
+                                      target_repo_id: dest_repo.id,
+                                      erratum_ids: errata.pluck(:errata_id))
+                        end
+                      end
                       repos_to_clone.each do |source_repos|
                         if separated_repo_map[mapping].keys.include?(source_repos)
                           copy_repos(repository_mapping[source_repos])
@@ -213,6 +225,7 @@ module Actions
                 new_errata = new_repo.errata - matched_old_repo.errata
                 new_module_streams = new_repo.module_streams - matched_old_repo.module_streams
                 new_rpms = new_repo.rpms - matched_old_repo.rpms
+                new_debs = new_repo.debs - matched_old_repo.debs
 
                 new_errata.each do |erratum|
                   content[::Katello::Erratum::CONTENT_TYPE] << erratum.errata_id
@@ -223,6 +236,9 @@ module Actions
                 end
                 new_rpms.each do |rpm|
                   content[::Katello::Rpm::CONTENT_TYPE] << rpm.nvra
+                end
+                new_debs.each do |deb|
+                  content[::Katello::Deb::CONTENT_TYPE] << deb.nva
                 end
               end
             else
@@ -283,7 +299,8 @@ module Actions
           [::Katello::Erratum, ::Katello::Rpm, ::Katello::Deb].each do |content_type|
             unless content[content_type::CONTENT_TYPE].blank?
               humanized_lines << "#{HUMANIZED_TYPES[content_type::CONTENT_TYPE]}:"
-              humanized_lines += content[content_type::CONTENT_TYPE].sort.map { |unit| "    #{unit}" }
+              #FIXME: solves duplicate Deb-Errata displayed, here (might need deeper inspection)
+              humanized_lines += content[content_type::CONTENT_TYPE].uniq.sort.map { |unit| "    #{unit}" }
             end
             humanized_lines << ''
           end
