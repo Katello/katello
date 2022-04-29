@@ -38,6 +38,17 @@ module Katello
           }
         end
 
+        def create_publication(options = {})
+          #FIXME: We need to set structured to false for IncrementalUpdates
+          # because Copying of packages may result in additional pulp_deb-releases, if the repo intermediately changed suite or something else.
+          pub_options = publication_options(repo.version_href)
+          if options[:deb_simple_publish_only]
+            pub_options[:structured] = false
+          end
+          publication_data = api.class.publication_class.new(pub_options)
+          api.publications_api.create(publication_data)
+        end
+
         def publication_options(repository_version)
           ss = api.signing_services_api.list(name: SIGNING_SERVICE_NAME).results
           popts = super(repository_version)

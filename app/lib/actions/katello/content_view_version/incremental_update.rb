@@ -162,7 +162,8 @@ module Actions
 
         def copy_repos(new_repo)
           sequence do
-            plan_action(Katello::Repository::MetadataGenerate, new_repo)
+            plan_action(Katello::Repository::MetadataGenerate, new_repo, deb_simple_publish_only: true)
+
             plan_action(Katello::Repository::IndexContent, id: new_repo.id)
           end
         end
