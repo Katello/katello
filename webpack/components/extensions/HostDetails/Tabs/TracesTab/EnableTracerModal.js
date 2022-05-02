@@ -12,13 +12,12 @@ import {
 } from '@patternfly/react-core';
 import { CaretDownIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
-import { installTracerPackage } from './HostTracesActions';
 import { katelloPackageInstallUrl } from '../customizedRexUrlHelpers';
 import { KATELLO_TRACER_PACKAGE } from './HostTracesConstants';
 
-const EnableTracerModal = ({ isOpen, setIsOpen, startRexJobPolling }) => {
+const EnableTracerModal = ({ isOpen, setIsOpen, triggerJobStart }) => {
   const title = __('Enable Tracer');
   const body = __('Enabling will install the katello-host-tools-tracer package on the host.');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -29,26 +28,18 @@ const EnableTracerModal = ({ isOpen, setIsOpen, startRexJobPolling }) => {
     __('via customized remote execution'),
   ];
   const [selectedOption, setSelectedOption] = useState(dropdownOptions[0]);
-  const dispatch = useDispatch();
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const { name: hostname } = hostDetails;
   const handleSelect = () => {
     setIsDropdownOpen(false);
   };
-  const enableTracer = () => {
-    setButtonLoading(true);
-    dispatch(installTracerPackage({
-      hostname,
-      handleSuccess: (resp) => {
-        const jobId = resp?.data?.id;
-        if (!jobId) return;
-        startRexJobPolling({ jobId });
-      },
-    }));
-  };
   const handleClose = () => {
     setIsOpen(false);
-    setButtonLoading(false);
+  };
+  const enableTracer = () => {
+    setButtonLoading(true);
+    triggerJobStart();
+    handleClose();
   };
 
   const dropdownItems = dropdownOptions.map(text => (
@@ -129,7 +120,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen, startRexJobPolling }) => {
 EnableTracerModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
-  startRexJobPolling: PropTypes.func.isRequired,
+  triggerJobStart: PropTypes.func.isRequired,
 };
 
 export default EnableTracerModal;

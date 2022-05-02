@@ -137,7 +137,7 @@ const TracesTab = () => {
 
   );
   const status = useSelector(state => selectHostTracesStatus(state));
-  if (showEnableTracer) return <TracesEnabler />;
+  if (showEnableTracer) return <TracesEnabler hostname={hostname} />;
 
   if (!hostId) return <Skeleton />;
 
