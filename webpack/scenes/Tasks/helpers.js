@@ -56,6 +56,30 @@ export const renderRexJobStartedToast = ({ id, description }) => {
   });
 };
 
+export const renderRexJobFailedToast = ({ id, description }) => {
+  if (!id) return;
+
+  const message = (__(`Remote execution job '${description}' failed.`));
+
+  window.tfm.toastNotifications.notify({
+    message,
+    type: 'error',
+    link: rexJobLink(id),
+  });
+};
+
+export const renderRexJobSucceededToast = ({ id, description }) => {
+  if (!id) return;
+
+  const message = (__(`Job '${description}' completed`));
+
+  window.tfm.toastNotifications.notify({
+    message,
+    type: 'success',
+    link: rexJobLink(id),
+  });
+};
+
 export const taskFinishedToast = (task) => {
   const message = __(`Task ${task.humanized.action} completed with a result of ${task.result}.
   ${task.errors ? getErrors(task) : ''}`);

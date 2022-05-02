@@ -2,11 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { startPollingJob, stopPollingJob } from './RemoteExecutionActions';
-import { refreshHostDetails } from '../HostDetailsActions';
+import { renderRexJobFailedToast, renderRexJobSucceededToast } from '../../../../scenes/Tasks/helpers';
 
-export const useRexJobPolling = (initialAction) => {
+export const useRexJobPolling = (initialAction, successAction = null, failureAction = null) => {
   const [isPolling, setIsPolling] = useState(null);
-  const [pollingComplete, setPollingComplete] = useState(false);
+  const [succeeded, setSucceeded] = useState(null);
   const [rexJobId, setRexJobId] = useState(null);
   const dispatch = useDispatch();
 
@@ -14,25 +14,29 @@ export const useRexJobPolling = (initialAction) => {
     dispatch(stopPollingJob({ key: `INSTALL_TRACER_${jobId}` }));
   }, [dispatch]);
 
-  const handleSuccess = (resp) => {
+  const tick = (resp) => {
     const { data } = resp;
-    const { statusLabel, id } = propsToCamelCase(data);
-    const hostName = data.targeting.hosts[0].name;
+    const { statusLabel, id, description } = propsToCamelCase(data);
     setRexJobId(id);
     if (statusLabel !== 'running') {
-      setPollingComplete(true);
       setIsPolling(false);
       stopRexJobPolling({ jobId: id });
-    }
-    if (statusLabel === 'succeeded') {
-      dispatch(refreshHostDetails({ hostName }));
+      if (statusLabel === 'succeeded') {
+        setSucceeded(true);
+        renderRexJobSucceededToast({ id, description });
+        if (successAction) dispatch(successAction);
+      } else {
+        setSucceeded(false);
+        renderRexJobFailedToast({ id, description });
+        if (failureAction) dispatch(failureAction);
+      }
     }
   };
   const startRexJobPolling = ({ jobId }) => {
     setIsPolling(true);
-    dispatch(startPollingJob({ key: `INSTALL_TRACER_${jobId}`, jobId, handleSuccess }));
+    dispatch(startPollingJob({ key: `INSTALL_TRACER_${jobId}`, jobId, handleSuccess: tick }));
   };
-  const pollingStarted = (isPolling || pollingComplete);
+  const pollingStarted = !!(isPolling || succeeded);
 
   const dispatchInitialAction = () => {
     const modifiedAction = {
@@ -59,7 +63,7 @@ export const useRexJobPolling = (initialAction) => {
 
   return ({
     pollingStarted,
-    pollingComplete,
+    pollingComplete: succeeded,
     isPolling,
     startRexJobPolling,
     rexJobId,

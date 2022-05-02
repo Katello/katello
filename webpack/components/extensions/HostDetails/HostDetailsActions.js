@@ -2,11 +2,11 @@ import HOST_DETAILS_KEY from './HostDetailsConstants';
 
 const hostIdNotReady = { type: 'NOOP_HOST_ID_NOT_READY' };
 
-export const refreshHostDetails = ({ hostName }) => ({
+export const refreshHostDetails = ({ hostname }) => ({
   type: 'API_GET',
   payload: {
     key: HOST_DETAILS_KEY,
-    url: `/api/hosts/${hostName}`,
+    url: `/api/hosts/${hostname}`,
   },
 });
 
