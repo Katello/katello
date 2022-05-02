@@ -8,7 +8,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
-import EnableTracerEmptyState from './EnableTracerEmptyState';
+import TracesEnabler from './TracesEnabler';
 import TableWrapper from '../../../../Table/TableWrapper';
 import { useBulkSelect, useTableSort, useUrlParams } from '../../../../Table/TableHooks';
 import { getHostTraces } from './HostTracesActions';
@@ -137,7 +137,7 @@ const TracesTab = () => {
 
   );
   const status = useSelector(state => selectHostTracesStatus(state));
-  if (showEnableTracer) return <EnableTracerEmptyState />;
+  if (showEnableTracer) return <TracesEnabler />;
 
   if (!hostId) return <Skeleton />;
 
