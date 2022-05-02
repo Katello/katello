@@ -2,7 +2,7 @@ module Katello
   class Api::V2::AlternateContentSourcesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    acs_wrap_params = AlternateContentSource.attribute_names.concat([:smart_proxy_ids])
+    acs_wrap_params = AlternateContentSource.attribute_names.concat([:smart_proxy_ids, :smart_proxy_names])
     wrap_parameters :alternate_content_source, include: acs_wrap_params
 
     before_action :find_authorized_katello_resource, only: [:show, :update, :destroy, :refresh]
@@ -13,6 +13,7 @@ module Katello
       param :base_url, String, desc: N_('Base URL for finding alternate content'), required: false
       param :subpaths, Array, desc: N_('Path suffixes for finding alternate content'), required: false
       param :smart_proxy_ids, Array, desc: N_("Ids of smart proxies to associate"), required: false
+      param :smart_proxy_names, Array, desc: N_("Names of smart proxies to associate"), required: false
       param :content_type, RepositoryTypeManager.defined_repository_types.keys & AlternateContentSource::CONTENT_TYPES, desc: N_("The content type for the Alternate Content Source"), required: false
       param :alternate_content_source_type, AlternateContentSource::ACS_TYPES, desc: N_("The Alternate Content Source type")
       param :upstream_username, String, desc: N_("Basic authentication username"), required: false
@@ -57,9 +58,7 @@ module Katello
     param_group :acs
     def create
       find_smart_proxies
-      @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params.except(:smart_proxy_ids))
-      fail HttpErrors::NotFound, _("Couldn't find smart proxies with id '%s'") % params[:smart_proxy_ids].to_sentence if @smart_proxies.empty?
-
+      @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params.except(:smart_proxy_ids, :smart_proxy_names))
       sync_task(::Actions::Katello::AlternateContentSource::Create, @alternate_content_source, @smart_proxies)
       @alternate_content_source.reload
       respond_for_create(resource: @alternate_content_source)
@@ -98,7 +97,7 @@ module Katello
     protected
 
     def acs_params
-      keys = [:name, :label, :base_url, {subpaths: []}, {smart_proxy_ids: []}, :content_type, :alternate_content_source_type,
+      keys = [:name, :label, :base_url, {subpaths: []}, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type, :alternate_content_source_type,
               :upstream_username, :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id,
               :http_proxy_id, :verify_ssl]
       params.require(:alternate_content_source).permit(*keys).to_h.with_indifferent_access
@@ -107,11 +106,15 @@ module Katello
     def find_smart_proxies
       if params[:smart_proxy_ids]
         @smart_proxies = ::SmartProxy.where(id: params[:smart_proxy_ids])
-        fail HttpErrors::NotFound, _("Couldn't find smart proxies with id '%s'") % params[:smart_proxy_ids].to_sentence if @smart_proxies.empty?
-        if @smart_proxies.length < params[:smart_proxy_ids].length
-          missing_smart_proxies = params[:smart_proxy_ids] - @smart_proxies.pluck(:id)
-          fail HttpErrors::NotFound, _("Couldn't find smart proxies with id '%s'") % missing_smart_proxies.to_sentence
-        end
+      elsif params[:smart_proxy_names]
+        @smart_proxies = ::SmartProxy.where(name: params[:smart_proxy_names])
+      end
+      if params[:smart_proxy_ids] && @smart_proxies.length < params[:smart_proxy_ids].length
+        missing_smart_proxies = params[:smart_proxy_ids] - @smart_proxies.pluck(:id)
+        fail HttpErrors::NotFound, _("Couldn't find smart proxies with id '%s'") % missing_smart_proxies.to_sentence
+      elsif params[:smart_proxy_names] && @smart_proxies.length < params[:smart_proxy_names].length
+        missing_smart_proxies = params[:smart_proxy_names] - @smart_proxies.pluck(:name)
+        fail HttpErrors::NotFound, _("Couldn't find smart proxies with name '%s'") % missing_smart_proxies.to_sentence
       end
     end
   end
