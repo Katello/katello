@@ -13,7 +13,8 @@ export const getHostTraces = (hostId, params) => get({
   params,
 });
 
-export const installTracerPackage = ({ hostname }) => installPackage({
+export const installTracerPackage = ({ hostname, handleSuccess }) => installPackage({
   hostname,
   packageName: KATELLO_TRACER_PACKAGE,
+  handleSuccess,
 });

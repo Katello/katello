@@ -18,7 +18,7 @@ import { installTracerPackage } from './HostTracesActions';
 import { katelloPackageInstallUrl } from '../customizedRexUrlHelpers';
 import { KATELLO_TRACER_PACKAGE } from './HostTracesConstants';
 
-const EnableTracerModal = ({ isOpen, setIsOpen }) => {
+const EnableTracerModal = ({ isOpen, setIsOpen, startRexJobPolling }) => {
   const title = __('Enable Tracer');
   const body = __('Enabling will install the katello-host-tools-tracer package on the host.');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -36,8 +36,19 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
     setIsDropdownOpen(false);
   };
   const enableTracer = () => {
-    dispatch(installTracerPackage({ hostname }));
+    setButtonLoading(true);
+    dispatch(installTracerPackage({
+      hostname,
+      handleSuccess: (resp) => {
+        const jobId = resp?.data?.id;
+        if (!jobId) return;
+        startRexJobPolling({ jobId });
+      },
+    }));
+  };
+  const handleClose = () => {
     setIsOpen(false);
+    setButtonLoading(false);
   };
 
   const dropdownItems = dropdownOptions.map(text => (
@@ -54,6 +65,8 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
           key="enable_button"
           type="submit"
           variant="primary"
+          isLoading={buttonLoading}
+          isDisabled={buttonLoading}
           onClick={enableTracer}
         >
           {title}
@@ -65,6 +78,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
         key="enable_button"
         component="a"
         isLoading={buttonLoading}
+        isDisabled={buttonLoading}
         onClick={() => setButtonLoading(true)}
         variant="primary"
         href={customizedRexUrl}
@@ -80,7 +94,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
       title={title}
       width="28em"
       isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
+      onClose={handleClose}
       actions={[
         getEnableTracerButton(),
         <Button key="cancel_button" variant="link" onClick={() => setIsOpen(false)}>{__('Cancel')}</Button>,
@@ -96,6 +110,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
                 id="toggle-enable-tracer-modal-dropdown"
                 onToggle={toggleDropdownOpen}
                 toggleIndicator={CaretDownIcon}
+                isDisabled={buttonLoading}
               >
                 {selectedOption}
               </DropdownToggle>
@@ -114,6 +129,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
 EnableTracerModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
+  startRexJobPolling: PropTypes.func.isRequired,
 };
 
 export default EnableTracerModal;
