@@ -32,6 +32,8 @@ module Actions
           validate_environments(environments, old_version)
 
           new_minor = old_version.content_view.versions.where(:major => old_version.major).maximum(:minor) + 1
+          ## Shortcut for composite CVs
+          #FIXME: do we need to check for "deb" as well?
           if SmartProxy.pulp_primary.pulp3_repository_type_support?("yum") && is_composite
             sequence do
               publish_action = plan_action(::Actions::Katello::ContentView::Publish, old_version.content_view, description,
@@ -67,17 +69,29 @@ module Actions
             end
 
             concurrence do
-              if separated_repo_map[:pulp3_yum].keys.flatten.present?
-                extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[:pulp3_yum], old_version)
-                unit_map = pulp3_content_mapping(content)
+              [:pulp3_deb,:pulp3_yum].each do |mapping|
+                if separated_repo_map[mapping].keys.flatten.present?
+                  extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[mapping], old_version)
+                  unit_map = pulp3_content_mapping(content)
 
-                unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
-                  sequence do
-                    copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
-                                                       dependency_solving: dep_solve).output
-                    repos_to_clone.each do |source_repos|
-                      if separated_repo_map[:pulp3_yum].keys.include?(source_repos)
-                        copy_repos(repository_mapping[source_repos])
+                  unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
+                    sequence do
+                      copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
+                                                         dependency_solving: dep_solve).output
+                      separated_repo_map[mapping].each do |source_repos, dest_repo|
+                        # find errata belonging to this repo
+                        errata = ::Katello::Erratum.with_identifiers(content[:errata_ids]).joins(:root_repositories).where(::Katello::RootRepository.table_name => {id: dest_repo.root}).distinct
+                        if errata.present?
+                          # attach deb errata to the dest_repo
+                          plan_action(Actions::Katello::Repository::CopyDebErratum,
+                                      target_repo_id: dest_repo.id,
+                                      erratum_ids: errata.pluck(:errata_id))
+                        end
+                      end
+                      repos_to_clone.each do |source_repos|
+                        if separated_repo_map[mapping].keys.include?(source_repos)
+                          copy_repos(repository_mapping[source_repos])
+                        end
                       end
                     end
                   end
@@ -104,11 +118,14 @@ module Actions
 
         def pulp3_content_mapping(content)
           units = ::Katello::Erratum.with_identifiers(content[:errata_ids]) +
+            ::Katello::Deb.with_identifiers(content[:deb_ids]) +
             ::Katello::Rpm.with_identifiers(content[:package_ids])
-          unit_map = { :errata => [], :rpms => [] }
+          unit_map = { :errata => [], :debs => [], :rpms => [] }
           units.each do |unit|
             if unit.class.name == "Katello::Erratum"
               unit_map[:errata] << unit.id
+            elsif unit.class.name == "Katello::Deb"
+              unit_map[:debs] << unit.id
             elsif unit.class.name == "Katello::Rpm"
               unit_map[:rpms] << unit.id
             end
@@ -145,7 +162,8 @@ module Actions
 
         def copy_repos(new_repo)
           sequence do
-            plan_action(Katello::Repository::MetadataGenerate, new_repo)
+            plan_action(Katello::Repository::MetadataGenerate, new_repo, deb_simple_publish_only: true)
+
             plan_action(Katello::Repository::IndexContent, id: new_repo.id)
           end
         end
@@ -208,6 +226,7 @@ module Actions
                 new_errata = new_repo.errata - matched_old_repo.errata
                 new_module_streams = new_repo.module_streams - matched_old_repo.module_streams
                 new_rpms = new_repo.rpms - matched_old_repo.rpms
+                new_debs = new_repo.debs - matched_old_repo.debs
 
                 new_errata.each do |erratum|
                   content[::Katello::Erratum::CONTENT_TYPE] << erratum.errata_id
@@ -218,6 +237,9 @@ module Actions
                 end
                 new_rpms.each do |rpm|
                   content[::Katello::Rpm::CONTENT_TYPE] << rpm.nvra
+                end
+                new_debs.each do |deb|
+                  content[::Katello::Deb::CONTENT_TYPE] << deb.nva
                 end
               end
             else
@@ -278,7 +300,8 @@ module Actions
           [::Katello::Erratum, ::Katello::Rpm, ::Katello::Deb].each do |content_type|
             unless content[content_type::CONTENT_TYPE].blank?
               humanized_lines << "#{HUMANIZED_TYPES[content_type::CONTENT_TYPE]}:"
-              humanized_lines += content[content_type::CONTENT_TYPE].sort.map { |unit| "    #{unit}" }
+              #FIXME: solves duplicate Deb-Errata displayed, here (might need deeper inspection)
+              humanized_lines += content[content_type::CONTENT_TYPE].uniq.sort.map { |unit| "    #{unit}" }
             end
             humanized_lines << ''
           end

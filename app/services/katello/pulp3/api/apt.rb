@@ -12,6 +12,10 @@ module Katello
           PulpDebClient
         end
 
+        def self.copy_class
+          PulpDebClient::Copy
+        end
+
         def self.remote_class
           PulpDebClient::DebAptRemote
         end
@@ -41,7 +45,7 @@ module Katello
         end
 
         def repository_versions_api
-          PulpDebClient::RepositoriesDebVersionsApi.new(api_client)
+          PulpDebClient::RepositoriesAptVersionsApi.new(api_client)
         end
 
         def remotes_api
@@ -54,6 +58,10 @@ module Katello
 
         def distributions_api
           PulpDebClient::DistributionsAptApi.new(api_client)
+        end
+
+        def copy_api
+          PulpDebClient::DebCopyApi.new(api_client)
         end
 
         def publications_verbatim_api
