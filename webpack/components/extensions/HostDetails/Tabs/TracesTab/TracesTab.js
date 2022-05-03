@@ -18,6 +18,7 @@ import { resolveTraceUrl } from '../customizedRexUrlHelpers';
 import './TracesTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
+import useRexJobPolling from '../RemoteExecutionHooks';
 
 const TracesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -74,6 +75,21 @@ const TracesTab = () => {
     initialSearchQuery: searchParam || '',
   });
 
+  const BulkRestartTracesAction = () => resolveTraces({
+    hostname, search: fetchBulkParams(),
+  });
+  const refreshTracesAction = getHostTraces(hostId);
+  const { triggerJobStart: triggerBulkRestart }
+    = useRexJobPolling(BulkRestartTracesAction, refreshTracesAction);
+
+  const restartTraceAction = id => resolveTraces({
+    hostname,
+    search: tracesSearchQuery(id),
+  });
+
+  const { triggerJobStart: triggerAppRestart }
+    = useRexJobPolling(restartTraceAction, refreshTracesAction);
+
   const fetchItems = useCallback(
     params =>
       (hostId ? getHostTraces(hostId, { ...apiSortParams, ...params }) : hostIdNotReady),
@@ -81,18 +97,11 @@ const TracesTab = () => {
   );
 
   const onBulkRestartApp = () => {
-    dispatch(resolveTraces({
-      hostname, search: fetchBulkParams(),
-    }));
+    triggerBulkRestart();
     selectNone();
-    const params = { page: meta.page, per_page: meta.per_page, search: meta.search };
-    dispatch(getHostTraces(hostId, params));
   };
 
-  const onRestartApp = id => dispatch(resolveTraces({
-    hostname,
-    search: tracesSearchQuery(id),
-  }));
+  const onRestartApp = id => triggerAppRestart(id);
 
   const bulkCustomizedRexUrl = () => resolveTraceUrl({
     hostname, search: (selectedCount > 0) ? fetchBulkParams() : '',

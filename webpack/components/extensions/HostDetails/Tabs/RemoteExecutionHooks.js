@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { startPollingJob, stopPollingJob } from './RemoteExecutionActions';
-import { renderRexJobFailedToast, renderRexJobSucceededToast } from '../../../../scenes/Tasks/helpers';
+import { renderRexJobFailedToast, renderRexJobStartedToast, renderRexJobSucceededToast } from '../../../../scenes/Tasks/helpers';
 
 export const useRexJobPolling = (initialAction, successAction = null, failureAction = null) => {
   const [isPolling, setIsPolling] = useState(null);
@@ -11,7 +11,7 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
   const dispatch = useDispatch();
 
   const stopRexJobPolling = useCallback(({ jobId }) => {
-    dispatch(stopPollingJob({ key: `INSTALL_TRACER_${jobId}` }));
+    dispatch(stopPollingJob({ key: `REX_JOB_POLLING_${jobId}` }));
   }, [dispatch]);
 
   const tick = (resp) => {
@@ -24,28 +24,30 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
       if (statusLabel === 'succeeded') {
         setSucceeded(true);
         renderRexJobSucceededToast({ id, description });
-        if (successAction) dispatch(successAction);
+        if (successAction) dispatch(typeof successAction === 'function' ? successAction() : successAction);
       } else {
         setSucceeded(false);
         renderRexJobFailedToast({ id, description });
-        if (failureAction) dispatch(failureAction);
+        if (failureAction) dispatch(typeof failureAction === 'function' ? failureAction() : failureAction);
       }
     }
   };
   const startRexJobPolling = ({ jobId }) => {
     setIsPolling(true);
-    dispatch(startPollingJob({ key: `INSTALL_TRACER_${jobId}`, jobId, handleSuccess: tick }));
+    dispatch(startPollingJob({ key: `REX_JOB_POLLING_${jobId}`, jobId, handleSuccess: tick }));
   };
   const pollingStarted = !!(isPolling || succeeded);
 
-  const dispatchInitialAction = () => {
+  const dispatchInitialAction = (...args) => {
+    const originalAction = typeof initialAction === 'function' ? initialAction(...args) : initialAction;
     const modifiedAction = {
-      ...initialAction,
+      ...originalAction,
       payload: {
-        ...initialAction.payload,
+        ...originalAction.payload,
         handleSuccess: (resp) => {
           const jobId = resp?.data?.id;
           if (!jobId) return;
+          renderRexJobStartedToast(resp.data);
           startRexJobPolling({ jobId });
         },
       },

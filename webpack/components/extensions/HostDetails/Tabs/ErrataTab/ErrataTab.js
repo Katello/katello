@@ -36,6 +36,7 @@ import './ErrataTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import { defaultRemoteActionMethod, KATELLO_AGENT } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
+import useRexJobPolling from '../RemoteExecutionHooks';
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -143,6 +144,24 @@ export const ErrataTab = () => {
     initialSearchQuery: searchParam || '',
   });
 
+  const installErrataAction = () => installErrata({
+    hostname, search: fetchBulkParams(),
+  });
+  const refreshErrataAction = () => getInstallableErrata(
+    hostId,
+    { include_applicable: toggleGroupState === ALL },
+  );
+  const { triggerJobStart: triggerBulkApply }
+    = useRexJobPolling(installErrataAction, refreshErrataAction);
+
+  const installErratumAction = id => installErrata({
+    hostname,
+    search: errataSearchQuery(id),
+  });
+
+  const { triggerJobStart: triggerApply }
+    = useRexJobPolling(installErratumAction, refreshErrataAction);
+
   const tdSelect = useCallback((errataId, rowIndex) => ({
     disable: !isSelectable(errataId),
     isSelected: isSelected(errataId),
@@ -153,21 +172,11 @@ export const ErrataTab = () => {
 
   if (!hostId) return <Skeleton />;
 
-  const applyErratumViaRemoteExecution = id => dispatch(installErrata({
-    hostname,
-    search: errataSearchQuery(id),
-  }));
+  const applyErratumViaRemoteExecution = id => triggerApply(id);
 
   const applyViaRemoteExecution = () => {
-    dispatch(installErrata({
-      hostname, search: fetchBulkParams(),
-    }));
-
-    const params = { page: metadata.page, per_page: metadata.per_page, search: metadata.search };
-    dispatch(getInstallableErrata(
-      hostId,
-      { ...params, include_applicable: toggleGroupState === ALL },
-    ));
+    triggerBulkApply();
+    selectNone();
   };
 
   const bulkCustomizedRexUrl = () => errataInstallUrl({
