@@ -29,7 +29,6 @@ module Katello
         param :hostgroup_ids, Array, N_("Host group IDs"), :required => false
         param :environment_ids, Array, N_("Environment IDs"), :required => false
         param :subnet_ids, Array, N_("Subnet IDs"), :required => false
-        param :label, String, :required => false
         param :location_ids, Array, N_("Associated location IDs"), :required => false
       end
     end
@@ -66,6 +65,9 @@ module Katello
 
     api :POST, '/organizations', N_('Create organization')
     param_group :resource
+    param :organization, Hash do
+      param :label, String, :required => false
+    end
     def create
       @organization = Organization.new(resource_params)
       creator = ::Katello::OrganizationCreator.new(@organization)
