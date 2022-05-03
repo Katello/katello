@@ -59,6 +59,16 @@ module Katello
       @host = facet.host
     end
 
+    rescue_from RestClient::Exception do |e|
+      Rails.logger.error(pp_exception(e, with_backtrace: false))
+      Rails.logger.error(e.backtrace.detect { |line| line.match("katello.*controller") })
+      if request_from_katello_cli?
+        render :json => { :errors => [e.http_body] }, :status => e.http_code
+      else
+        render :plain => e.http_body, :status => e.http_code
+      end
+    end
+
     def authorize_client_or_user
       client_authorized? || authorize
     end
