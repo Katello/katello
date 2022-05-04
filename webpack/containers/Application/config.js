@@ -15,6 +15,7 @@ import Content from '../../scenes/Content';
 import ContentDetails from '../../scenes/Content/Details';
 import withHeader from './withHeaders';
 import ChangeContentSource from '../../scenes/Hosts/ChangeContentSource';
+import AlternateContentSource from '../../scenes/AlternateContentSources';
 
 // eslint-disable-next-line import/prefer-default-export
 export const links = [
@@ -79,5 +80,9 @@ export const links = [
   {
     path: 'change_host_content_source',
     component: WithOrganization(withHeader(ChangeContentSource, { title: __('Change host content source') })),
+  },
+  {
+    path: 'labs/alternate_content_sources',
+    component: WithOrganization(withHeader(AlternateContentSource, { title: __('Alternate Content Sources') })),
   },
 ];
