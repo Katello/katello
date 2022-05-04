@@ -10,7 +10,13 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
   const [rexJobId, setRexJobId] = useState(null);
   const dispatch = useDispatch();
 
-  const stopRexJobPolling = useCallback(({ jobId }) => {
+  const stopRexJobPolling = useCallback(({ jobId, statusLabel }) => {
+    setIsPolling(false);
+    if (statusLabel === 'succeeded') {
+      setSucceeded(true);
+    } else {
+      setSucceeded(false);
+    }
     dispatch(stopPollingJob({ key: `REX_JOB_POLLING_${jobId}` }));
   }, [dispatch]);
 
@@ -19,14 +25,13 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
     const { statusLabel, id, description } = propsToCamelCase(data);
     setRexJobId(id);
     if (statusLabel !== 'running') {
-      setIsPolling(false);
-      stopRexJobPolling({ jobId: id });
+      stopRexJobPolling({ jobId: id, statusLabel });
       if (statusLabel === 'succeeded') {
-        setSucceeded(true);
+        // setSucceeded(true);
         renderRexJobSucceededToast({ id, description });
         if (successAction) dispatch(typeof successAction === 'function' ? successAction() : successAction);
       } else {
-        setSucceeded(false);
+        // setSucceeded(false);
         renderRexJobFailedToast({ id, description });
         if (failureAction) dispatch(typeof failureAction === 'function' ? failureAction() : failureAction);
       }
@@ -62,7 +67,6 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
       if (rexJobId) stopRexJobPolling({ jobId: rexJobId });
     };
   }, [rexJobId, stopRexJobPolling]);
-
   return ({
     pollingStarted,
     pollingComplete: succeeded,

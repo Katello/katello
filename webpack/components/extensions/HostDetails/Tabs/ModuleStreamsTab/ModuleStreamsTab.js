@@ -101,11 +101,8 @@ HostInstalledProfiles.propTypes = {
 };
 
 const ModuleActionConfirmationModal = ({
-  hostname, action, moduleSpec, actionModalOpen, setActionModalOpen,
+  hostname, action, moduleSpec, actionModalOpen, setActionModalOpen, triggerModuleStreamAction,
 }) => {
-  const { triggerJobStart: triggerModuleStreamAction }
-    = useRexJobPolling(moduleStreamAction);
-
   let title;
   let body;
   let confirmText;
@@ -192,6 +189,7 @@ ModuleActionConfirmationModal.propTypes = {
   moduleSpec: PropTypes.string.isRequired,
   actionModalOpen: PropTypes.bool.isRequired,
   setActionModalOpen: PropTypes.func.isRequired,
+  triggerModuleStreamAction: PropTypes.func.isRequired,
 };
 
 export const ModuleStreamsTab = () => {
@@ -242,7 +240,10 @@ export const ModuleStreamsTab = () => {
     initialSortColumnName: 'Name',
   });
 
-  const { triggerJobStart: triggerModuleStreamAction }
+  const { triggerJobStart: triggerModuleStreamAction, pollingComplete: tablePollingComplete }
+    = useRexJobPolling(moduleStreamAction);
+
+  const { triggerJobStart: triggerConfirmModalAction, pollingComplete: confirmModalPollingComplete }
     = useRexJobPolling(moduleStreamAction);
 
   const fetchItems = useCallback(
@@ -280,7 +281,7 @@ export const ModuleStreamsTab = () => {
       });
 
   const customizedActionURL = (action, moduleSpec) =>
-    katelloModuleStreamActionUrl({ hostname: hostname, action, moduleSpec });
+    katelloModuleStreamActionUrl({ hostname, action, moduleSpec });
 
   const response = useSelector(selectModuleStream);
   const { results, ...metadata } = response;
@@ -302,7 +303,6 @@ export const ModuleStreamsTab = () => {
 
   const activeFilters = [statusSelected, installStatusSelected];
   const defaultFilters = [MODULE_STREAM_STATUS, MODULE_STREAM_INSTALLATION_STATUS];
-
   return (
     <div>
       <div id="modulestreams-tab">
@@ -324,7 +324,8 @@ export const ModuleStreamsTab = () => {
           }}
           ouiaId="host-module-stream-table"
           additionalListeners={[hostId, activeSortColumn, activeSortDirection,
-            statusSelected, installStatusSelected]}
+            statusSelected, installStatusSelected, confirmModalPollingComplete,
+            tablePollingComplete]}
           fetchItems={fetchItems}
           bookmarkController="katello_host_available_module_streams"
           autocompleteEndpoint={`/hosts/${hostId}/module_streams/auto_complete_search`}
@@ -597,11 +598,12 @@ export const ModuleStreamsTab = () => {
         </TableWrapper>
         {actionModalOpen &&
           <ModuleActionConfirmationModal
-            hostName={hostname}
+            hostname={hostname}
             action={hostModuleStreamAction}
             moduleSpec={actionableModuleSpec}
             actionModalOpen={actionModalOpen}
             setActionModalOpen={setActionModalOpen}
+            triggerModuleStreamAction={triggerConfirmModalAction}
           />
         }
       </div>

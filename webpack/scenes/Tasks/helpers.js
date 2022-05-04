@@ -63,7 +63,7 @@ export const renderRexJobFailedToast = ({ id, description }) => {
 
   window.tfm.toastNotifications.notify({
     message,
-    type: 'error',
+    type: 'danger',
     link: rexJobLink(id),
   });
 };
