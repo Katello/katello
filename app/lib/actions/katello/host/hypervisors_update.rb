@@ -132,7 +132,11 @@ module Actions
 
         def name_for_host(organization, consumer)
           sanitized_name = ::Katello::Host::SubscriptionFacet.sanitize_name(consumer[:hypervisorId][:hypervisorId])
-          "virt-who-#{sanitized_name}-#{organization.id}"
+          rhel_host?(consumer) ? sanitized_name : "virt-who-#{sanitized_name}-#{organization.id}"
+        end
+
+        def rhel_host?(consumer)
+          consumer[:facts]["hypervisor.type"] == 'QEMU'
         end
 
         def duplicate_name(hypervisor, consumer)

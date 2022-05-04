@@ -100,6 +100,7 @@ module Katello::Host
         "entitlementStatus" => nil,
         "entitlementCount" => 0,
         "hypervisorId" => {"hypervisorId" => "hypervisor1.example.com"},
+        "facts" => {"hypervisor.type" => "VMware ESXi"},
         "type" => {"id" => "1004", "label" => "hypervisor", "manifest" => false}
       }
       Katello::Resources::Candlepin::Consumer.expects(:get_all_with_facts).returns([consumer.with_indifferent_access])
