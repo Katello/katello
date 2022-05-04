@@ -59,7 +59,7 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
   useEffect(() => {
     // clean up polling when component unmounts
     return function cleanupRexPolling() {
-      stopRexJobPolling({ jobId: rexJobId });
+      if (rexJobId) stopRexJobPolling({ jobId: rexJobId });
     };
   }, [rexJobId, stopRexJobPolling]);
 

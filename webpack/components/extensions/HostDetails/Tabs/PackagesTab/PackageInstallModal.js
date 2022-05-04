@@ -19,6 +19,7 @@ import { installPackageBySearch } from '../RemoteExecutionActions';
 import { katelloPackageInstallBySearchUrl, katelloPackageInstallUrl } from '../customizedRexUrlHelpers';
 import hostIdNotReady from '../../HostDetailsActions';
 import { installPackageViaKatelloAgent } from './HostPackagesActions';
+import useRexJobPolling from '../RemoteExecutionHooks';
 
 const InstallDropdown = ({
   isDisabled, installViaRex, installViaKatelloAgent,
@@ -127,6 +128,13 @@ const PackageInstallModal = ({
     selectedResults,
     ...selectAll
   } = useBulkSelect({ results, metadata });
+
+  const packageInstallAction
+    = bulkParams => installPackageBySearch({ hostname: hostName, search: bulkParams });
+
+  const { triggerJobStart: triggerPackageInstall }
+   = useRexJobPolling(packageInstallAction);
+
   const fetchItems = (params) => {
     if (!hostId) return hostIdNotReady;
 
@@ -141,7 +149,7 @@ const PackageInstallModal = ({
   const selectedPackageNames = () => selectedResults.map(({ name }) => name);
 
   const installViaRex = () => {
-    dispatch(installPackageBySearch({ hostname: hostName, search: fetchBulkParams() }));
+    triggerPackageInstall(fetchBulkParams());
     selectNone();
     closeModal();
   };

@@ -39,6 +39,7 @@ import hostIdNotReady from '../../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
 import { defaultRemoteActionMethod, KATELLO_AGENT } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
+import useRexJobPolling from '../RemoteExecutionHooks';
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -128,6 +129,38 @@ export const PackagesTab = () => {
     initialSearchQuery: searchParam || '',
   });
 
+  const packageRemoveAction = packageName => removePackage({
+    hostname,
+    packageName,
+  });
+
+  const { triggerJobStart: triggerPackageRemove }
+    = useRexJobPolling(packageRemoveAction);
+
+  const packageBulkRemoveAction = bulkParams => removePackages({
+    hostname,
+    search: bulkParams,
+  });
+
+  const { triggerJobStart: triggerBulkPackageRemove }
+    = useRexJobPolling(packageBulkRemoveAction);
+
+  const packageUpgradeAction = packageName => updatePackage({
+    hostname,
+    packageName,
+  });
+
+  const { triggerJobStart: triggerPackageUpgrade }
+    = useRexJobPolling(packageUpgradeAction);
+
+  const packageBulkUpgradeAction = bulkParams => updatePackages({
+    hostname,
+    search: bulkParams,
+  });
+
+  const { triggerJobStart: triggerBulkPackageUpgrade }
+    = useRexJobPolling(packageBulkUpgradeAction);
+
   if (!hostId) return <Skeleton />;
 
   const handleInstallPackagesClick = () => {
@@ -135,10 +168,7 @@ export const PackagesTab = () => {
     setIsModalOpen(true);
   };
 
-  const removePackageViaRemoteExecution = packageName => dispatch(removePackage({
-    hostname,
-    packageName,
-  }));
+  const removePackageViaRemoteExecution = packageName => triggerPackageRemove(packageName);
 
   const removeViaKatelloAgent = (packageName) => {
     dispatch(removePackageViaKatelloAgent(hostId, { packages: [packageName] }));
@@ -149,7 +179,7 @@ export const PackagesTab = () => {
     const selected = fetchBulkParams();
     setIsBulkActionOpen(false);
     selectNone();
-    dispatch(removePackages({ hostname, search: selected }));
+    triggerBulkPackageRemove(selected);
   };
 
   const selectedPackageNames = () => selectedResults.map(({ name }) => name);
@@ -178,19 +208,13 @@ export const PackagesTab = () => {
     }
   };
 
-  const upgradeViaRemoteExecution = packageName => dispatch(updatePackage({
-    hostname,
-    packageName,
-  }));
+  const upgradeViaRemoteExecution = packageName => triggerPackageUpgrade(packageName);
 
   const upgradeBulkViaRemoteExecution = () => {
     const selected = fetchBulkParams();
     setIsBulkActionOpen(false);
     selectNone();
-    dispatch(updatePackages({
-      hostname,
-      search: selected,
-    }));
+    triggerBulkPackageUpgrade(selected);
   };
 
   const upgradeBulkViaKatelloAgent = () => {
