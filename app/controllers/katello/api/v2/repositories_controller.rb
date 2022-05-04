@@ -7,7 +7,7 @@ module Katello
       generic_repo_wrap_params << option.name
     end
 
-    repo_wrap_params = RootRepository.attribute_names.concat([:ignore_global_proxy, :mirror_on_sync]) + generic_repo_wrap_params
+    repo_wrap_params = RootRepository.attribute_names + [:mirror_on_sync] + generic_repo_wrap_params
 
     wrap_parameters :repository, :include => repo_wrap_params
 
