@@ -36,7 +36,7 @@ import './ErrataTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import { defaultRemoteActionMethod, KATELLO_AGENT } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
-import useRexJobPolling from '../RemoteExecutionHooks';
+import { useRexJobPolling } from '../RemoteExecutionHooks';
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -147,20 +147,16 @@ export const ErrataTab = () => {
   const installErrataAction = () => installErrata({
     hostname, search: fetchBulkParams(),
   });
-  const refreshErrataAction = () => getInstallableErrata(
-    hostId,
-    { include_applicable: toggleGroupState === ALL },
-  );
-  const { triggerJobStart: triggerBulkApply }
-    = useRexJobPolling(installErrataAction, refreshErrataAction);
+  const { triggerJobStart: triggerBulkApply, lastCompletedJob: lastCompletedBulkApply }
+    = useRexJobPolling(installErrataAction);
 
   const installErratumAction = id => installErrata({
     hostname,
     search: errataSearchQuery(id),
   });
 
-  const { triggerJobStart: triggerApply }
-    = useRexJobPolling(installErratumAction, refreshErrataAction);
+  const { triggerJobStart: triggerApply, lastCompletedJob: lastCompletedApply }
+    = useRexJobPolling(installErratumAction);
 
   const tdSelect = useCallback((errataId, rowIndex) => ({
     disable: !isSelectable(errataId),
@@ -384,7 +380,8 @@ export const ErrataTab = () => {
           ouiaId="host-errata-table"
           additionalListeners={[
             hostId, toggleGroupState, errataTypeSelected,
-            errataSeveritySelected, activeSortColumn, activeSortDirection]}
+            errataSeveritySelected, activeSortColumn, activeSortDirection,
+            lastCompletedApply, lastCompletedBulkApply]}
           fetchItems={fetchItems}
           bookmarkController="katello_errata"
           autocompleteEndpoint={`/hosts/${hostId}/errata/auto_complete_search`}

@@ -240,10 +240,10 @@ export const ModuleStreamsTab = () => {
     initialSortColumnName: 'Name',
   });
 
-  const { triggerJobStart: triggerModuleStreamAction, pollingComplete: tablePollingComplete }
+  const { triggerJobStart: triggerModuleStreamAction, lastCompletedJob: tableJobCompleted }
     = useRexJobPolling(moduleStreamAction);
 
-  const { triggerJobStart: triggerConfirmModalAction, pollingComplete: confirmModalPollingComplete }
+  const { triggerJobStart: triggerConfirmModalAction, lastCompletedJob: confirmModalJobCompleted }
     = useRexJobPolling(moduleStreamAction);
 
   const fetchItems = useCallback(
@@ -324,8 +324,8 @@ export const ModuleStreamsTab = () => {
           }}
           ouiaId="host-module-stream-table"
           additionalListeners={[hostId, activeSortColumn, activeSortDirection,
-            statusSelected, installStatusSelected, confirmModalPollingComplete,
-            tablePollingComplete]}
+            statusSelected, installStatusSelected, confirmModalJobCompleted,
+            tableJobCompleted]}
           fetchItems={fetchItems}
           bookmarkController="katello_host_available_module_streams"
           autocompleteEndpoint={`/hosts/${hostId}/module_streams/auto_complete_search`}

@@ -19,7 +19,7 @@ import { installPackageBySearch } from '../RemoteExecutionActions';
 import { katelloPackageInstallBySearchUrl, katelloPackageInstallUrl } from '../customizedRexUrlHelpers';
 import hostIdNotReady from '../../HostDetailsActions';
 import { installPackageViaKatelloAgent } from './HostPackagesActions';
-import useRexJobPolling from '../RemoteExecutionHooks';
+import { useRexJobPolling } from '../RemoteExecutionHooks';
 
 const InstallDropdown = ({
   isDisabled, installViaRex, installViaKatelloAgent,
@@ -132,7 +132,7 @@ const PackageInstallModal = ({
   const packageInstallAction
     = bulkParams => installPackageBySearch({ hostname: hostName, search: bulkParams });
 
-  const { triggerJobStart: triggerPackageInstall }
+  const { triggerJobStart: triggerPackageInstall, lastCompletedJob: lastCompletedPackageInstall }
    = useRexJobPolling(packageInstallAction);
 
   const fetchItems = (params) => {
@@ -219,7 +219,7 @@ const PackageInstallModal = ({
         }
         }
         ouiaId="host-package-install-table"
-        additionalListeners={[hostId]}
+        additionalListeners={[hostId, lastCompletedPackageInstall]}
         fetchItems={fetchItems}
         searchPlaceholderText={__('Search available packages')}
         autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}

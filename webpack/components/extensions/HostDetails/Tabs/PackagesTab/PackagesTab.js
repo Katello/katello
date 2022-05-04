@@ -134,7 +134,7 @@ export const PackagesTab = () => {
     packageName,
   });
 
-  const { triggerJobStart: triggerPackageRemove }
+  const { triggerJobStart: triggerPackageRemove, lastCompletedJob: lastCompletedPackageRemove }
     = useRexJobPolling(packageRemoveAction);
 
   const packageBulkRemoveAction = bulkParams => removePackages({
@@ -142,24 +142,30 @@ export const PackagesTab = () => {
     search: bulkParams,
   });
 
-  const { triggerJobStart: triggerBulkPackageRemove }
-    = useRexJobPolling(packageBulkRemoveAction);
+  const {
+    triggerJobStart: triggerBulkPackageRemove,
+    lastCompletedJob: lastCompletedBulkPackageRemove,
+  } = useRexJobPolling(packageBulkRemoveAction);
 
   const packageUpgradeAction = packageName => updatePackage({
     hostname,
     packageName,
   });
 
-  const { triggerJobStart: triggerPackageUpgrade }
-    = useRexJobPolling(packageUpgradeAction);
+  const {
+    triggerJobStart: triggerPackageUpgrade,
+    lastCompletedJob: lastCompletedPackageUpgrade,
+  } = useRexJobPolling(packageUpgradeAction);
 
   const packageBulkUpgradeAction = bulkParams => updatePackages({
     hostname,
     search: bulkParams,
   });
 
-  const { triggerJobStart: triggerBulkPackageUpgrade }
-    = useRexJobPolling(packageBulkUpgradeAction);
+  const {
+    triggerJobStart: triggerBulkPackageUpgrade,
+    lastCompletedJob: lastCompletedBulkPackageUpgrade,
+  } = useRexJobPolling(packageBulkUpgradeAction);
 
   if (!hostId) return <Skeleton />;
 
@@ -372,7 +378,9 @@ export const PackagesTab = () => {
           }
           ouiaId="host-packages-table"
           additionalListeners={[hostId, packageStatusSelected,
-            activeSortDirection, activeSortColumn]}
+            activeSortDirection, activeSortColumn, lastCompletedPackageUpgrade,
+            lastCompletedPackageRemove, lastCompletedBulkPackageRemove,
+            lastCompletedBulkPackageUpgrade]}
           fetchItems={fetchItems}
           bookmarkController="katello_host_installed_packages"
           autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}

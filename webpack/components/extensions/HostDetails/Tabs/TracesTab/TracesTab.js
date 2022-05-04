@@ -6,7 +6,7 @@ import {
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import TracesEnabler from './TracesEnabler';
 import TableWrapper from '../../../../Table/TableWrapper';
@@ -18,11 +18,10 @@ import { resolveTraceUrl } from '../customizedRexUrlHelpers';
 import './TracesTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
-import useRexJobPolling from '../RemoteExecutionHooks';
+import { useRexJobPolling } from '../RemoteExecutionHooks';
 
 const TracesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
-  const dispatch = useDispatch();
   const {
     id: hostId,
     name: hostname,
@@ -78,17 +77,16 @@ const TracesTab = () => {
   const BulkRestartTracesAction = () => resolveTraces({
     hostname, search: fetchBulkParams(),
   });
-  const refreshTracesAction = getHostTraces(hostId);
-  const { triggerJobStart: triggerBulkRestart }
-    = useRexJobPolling(BulkRestartTracesAction, refreshTracesAction);
+  const { triggerJobStart: triggerBulkRestart, lastCompletedJob: lastCompletedBulkRestart }
+    = useRexJobPolling(BulkRestartTracesAction);
 
   const restartTraceAction = id => resolveTraces({
     hostname,
     search: tracesSearchQuery(id),
   });
 
-  const { triggerJobStart: triggerAppRestart }
-    = useRexJobPolling(restartTraceAction, refreshTracesAction);
+  const { triggerJobStart: triggerAppRestart, lastCompletedJob: lastCompletedAppRestart }
+    = useRexJobPolling(restartTraceAction);
 
   const fetchItems = useCallback(
     params =>
@@ -180,7 +178,8 @@ const TracesTab = () => {
         rowsCount={results?.length}
         variant={TableVariant.compact}
         displaySelectAllCheckbox
-        additionalListeners={[activeSortColumn, activeSortDirection]}
+        additionalListeners={[activeSortColumn, activeSortDirection,
+          lastCompletedAppRestart, lastCompletedBulkRestart]}
         {...selectAll}
       >
         <Thead>

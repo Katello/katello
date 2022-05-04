@@ -8,12 +8,16 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
   const [isPolling, setIsPolling] = useState(null);
   const [succeeded, setSucceeded] = useState(null);
   const [rexJobId, setRexJobId] = useState(null);
+  // A value that only changes when the job succeeds. Pass to TableWrapper as an additionalListener
+  // to reload results.
+  const [lastCompletedJob, setLastCompletedJob] = useState(null);
   const dispatch = useDispatch();
 
   const stopRexJobPolling = useCallback(({ jobId, statusLabel }) => {
     setIsPolling(false);
     if (statusLabel === 'succeeded') {
       setSucceeded(true);
+      setLastCompletedJob(jobId);
     } else {
       setSucceeded(false);
     }
@@ -69,10 +73,10 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
   }, [rexJobId, stopRexJobPolling]);
   return ({
     pollingStarted,
-    pollingComplete: succeeded,
     isPolling,
-    startRexJobPolling,
+    succeeded,
     rexJobId,
+    lastCompletedJob,
     triggerJobStart: dispatchInitialAction,
   });
 };
