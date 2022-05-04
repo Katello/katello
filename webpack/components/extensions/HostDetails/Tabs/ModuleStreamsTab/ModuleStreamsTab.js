@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { Skeleton,
@@ -39,6 +39,7 @@ import {
 } from './ModuleStreamsConstants';
 import { moduleStreamAction } from '../RemoteExecutionActions';
 import { katelloModuleStreamActionUrl } from '../customizedRexUrlHelpers';
+import { useRexJobPolling } from '../RemoteExecutionHooks';
 
 const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
   switch (true) {
@@ -99,14 +100,12 @@ HostInstalledProfiles.propTypes = {
   installedProfiles: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-const performModuleStreamAction = (hostName, action, moduleSpec, dispatch) => {
-  dispatch(moduleStreamAction({ hostname: hostName, action, moduleSpec }));
-};
-
 const ModuleActionConfirmationModal = ({
-  hostName, action, moduleSpec, actionModalOpen, setActionModalOpen,
+  hostname, action, moduleSpec, actionModalOpen, setActionModalOpen,
 }) => {
-  const dispatch = useDispatch();
+  const { triggerJobStart: triggerModuleStreamAction }
+    = useRexJobPolling(moduleStreamAction);
+
   let title;
   let body;
   let confirmText;
@@ -163,7 +162,7 @@ const ModuleActionConfirmationModal = ({
           aria-label="confirm-module-action"
           key="confirm-module-action"
           onClick={() => {
-            performModuleStreamAction(hostName, action, moduleSpec, dispatch);
+            triggerModuleStreamAction({ hostname, action, moduleSpec });
             setActionModalOpen(false);
           }}
         >
@@ -188,7 +187,7 @@ const ModuleActionConfirmationModal = ({
 };
 
 ModuleActionConfirmationModal.propTypes = {
-  hostName: PropTypes.string.isRequired,
+  hostname: PropTypes.string.isRequired,
   action: PropTypes.string.isRequired,
   moduleSpec: PropTypes.string.isRequired,
   actionModalOpen: PropTypes.bool.isRequired,
@@ -196,13 +195,12 @@ ModuleActionConfirmationModal.propTypes = {
 };
 
 export const ModuleStreamsTab = () => {
-  const { id: hostId, name: hostName } = useSelector(selectHostDetails);
+  const { id: hostId, name: hostname } = useSelector(selectHostDetails);
   const [useCustomizedRex, setUseCustomizedRex] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState('');
   const [actionModalOpen, setActionModalOpen] = useState(false);
   const [actionableModuleSpec, setActionableModuleSpec] = useState(null);
   const [hostModuleStreamAction, setHostModuleStreamAction] = useState(null);
-  const dispatch = useDispatch();
 
   const emptyContentTitle = __('This host does not have any Module streams.');
   const emptyContentBody = __('Module streams will appear here when available.');
@@ -244,6 +242,9 @@ export const ModuleStreamsTab = () => {
     initialSortColumnName: 'Name',
   });
 
+  const { triggerJobStart: triggerModuleStreamAction }
+    = useRexJobPolling(moduleStreamAction);
+
   const fetchItems = useCallback(
     (params) => {
       let extraParams = params;
@@ -279,7 +280,7 @@ export const ModuleStreamsTab = () => {
       });
 
   const customizedActionURL = (action, moduleSpec) =>
-    katelloModuleStreamActionUrl({ hostname: hostName, action, moduleSpec });
+    katelloModuleStreamActionUrl({ hostname: hostname, action, moduleSpec });
 
   const response = useSelector(selectModuleStream);
   const { results, ...metadata } = response;
@@ -460,7 +461,7 @@ export const ModuleStreamsTab = () => {
                     key={`dropdownItem-enable-${id}`}
                     component="button"
                     onClick={() => {
-                      performModuleStreamAction(hostName, 'enable', moduleSpec, dispatch);
+                      triggerModuleStreamAction({ hostname, action: 'enable', moduleSpec });
                       setUseCustomizedRex('');
                       setDropdownOpen('');
                     }}
@@ -491,7 +492,7 @@ export const ModuleStreamsTab = () => {
                     key={`dropdownItem-install-${id}`}
                     component="button"
                     onClick={() => {
-                      performModuleStreamAction(hostName, 'install', moduleSpec, dispatch);
+                      triggerModuleStreamAction({ hostname, action: 'install', moduleSpec });
                       setUseCustomizedRex('');
                       setDropdownOpen('');
                     }}
@@ -508,7 +509,7 @@ export const ModuleStreamsTab = () => {
                     key={`dropdownItem-update-${id}`}
                     component="button"
                     onClick={() => {
-                      performModuleStreamAction(hostName, 'update', moduleSpec, dispatch);
+                      triggerModuleStreamAction({ hostname, action: 'update', moduleSpec });
                       setUseCustomizedRex('');
                       setDropdownOpen('');
                     }}
@@ -552,7 +553,7 @@ export const ModuleStreamsTab = () => {
                 <Tr key={`${id} ${index}`}>
                   <Td>
                     <a
-                      href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostName}`}
+                      href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostname}`}
                     >
                       {name}
                     </a>
@@ -596,7 +597,7 @@ export const ModuleStreamsTab = () => {
         </TableWrapper>
         {actionModalOpen &&
           <ModuleActionConfirmationModal
-            hostName={hostName}
+            hostName={hostname}
             action={hostModuleStreamAction}
             moduleSpec={actionableModuleSpec}
             actionModalOpen={actionModalOpen}

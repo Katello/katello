@@ -39,7 +39,7 @@ import hostIdNotReady from '../../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
 import { defaultRemoteActionMethod, KATELLO_AGENT } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
-import useRexJobPolling from '../RemoteExecutionHooks';
+import { useRexJobPolling } from '../RemoteExecutionHooks';
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
