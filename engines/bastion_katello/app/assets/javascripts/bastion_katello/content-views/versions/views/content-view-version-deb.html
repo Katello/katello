@@ -3,16 +3,26 @@
     <thead>
       <tr bst-table-head>
         <th bst-table-column translate>Name</th>
-        <th bst-table-column translate>Version</th>
-        <th bst-table-column translate>Architecture</th>
+        <th bst-table-column translate>Product</th>
+        <th bst-table-column translate>Content</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr bst-table-row ng-repeat="deb in table.rows">
-        <td bst-table-cell>{{ deb.name }}</td>
-        <td bst-table-cell>{{ deb.version }}</td>
-        <td bst-table-cell>{{ deb.architecture }}</td>
+      <tr bst-table-row ng-repeat="repository in table.rows">
+        <td bst-table-cell>
+          <a ui-sref="product.repository.info({productId: repository.product.id, repositoryId: repository.id })">{{ repository.name }}</a>
+        </td>
+        <td bst-table-cell>
+          <a ui-sref="product.info({productId: repository.product.id})">{{ repository.product.name }}</a>
+        </td>
+        <td bst-table-cell>
+          <div>
+            <a ui-sref="product.repository.manage-content.debs({productId: repository.product.id, repositoryId: repository.id})" translate>
+              {{ repository.content_counts.deb }} Deb Packages
+            </a>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>

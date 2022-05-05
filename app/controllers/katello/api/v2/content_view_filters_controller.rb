@@ -34,7 +34,7 @@ module Katello
     api :post, "/content_view_filters", N_("create a filter for a content view")
     param :content_view_id, :number, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("name of the filter"), :required => true
-    param :type, String, :desc => N_("type of filter (e.g. rpm, package_group, erratum, docker, modulemd)"), :required => true
+    param :type, String, :desc => N_("type of filter (e.g. deb, rpm, package_group, erratum, docker, modulemd)"), :required => true
     param :original_packages, :bool, :desc => N_("add all packages without errata to the included/excluded list. " \
                                                        "(package filter only)")
     param :original_module_streams, :bool, :desc => N_("add all module streams without errata to the included/excluded list. " \

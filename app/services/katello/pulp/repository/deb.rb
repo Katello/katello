@@ -48,12 +48,50 @@ module Katello
           Runcible::Models::DebImporter
         end
 
-        def copy_contents(destination_repo, _options = {})
-          [
-            @smart_proxy.pulp_api.extensions.deb.copy(@repo.pulp_id, destination_repo.pulp_id, fields: ::Katello::Pulp::Deb::PULP_SELECT_FIELDS),
-            @smart_proxy.pulp_api.extensions.deb_release.copy(@repo.pulp_id, destination_repo.pulp_id, {}),
-            @smart_proxy.pulp_api.extensions.deb_component.copy(@repo.pulp_id, destination_repo.pulp_id, {})
-          ]
+        def regenerate_applicability
+          smart_proxy.pulp_api.extensions.repository.regenerate_applicability_by_ids([repo.pulp_id], true)
+        end
+
+        def copy_contents(destination_repo, options = {})
+          if options[:filters]
+            deb_copy_clauses, deb_remove_clauses = generate_copy_clauses(options[:filters])
+          end
+
+          if deb_copy_clauses
+            [
+              @smart_proxy.pulp_api.extensions.deb.copy(@repo.pulp_id, destination_repo.pulp_id, deb_copy_clauses),
+              @smart_proxy.pulp_api.extensions.deb_release.copy(@repo.pulp_id, destination_repo.pulp_id, {}),
+              @smart_proxy.pulp_api.extensions.deb_component.copy(@repo.pulp_id, destination_repo.pulp_id, {})
+            ]
+
+          end
+
+          if deb_remove_clauses
+            @smart_proxy.pulp_api.extensions.repository.unassociate_units(destination_repo.pulp_id,
+                                                                         type_ids: [::Katello::Pulp::Deb::CONTENT_TYPE],
+                                                                          filters: {unit: deb_remove_clauses})
+          end
+
+          tasks
+        end
+
+        def generate_copy_clauses(filters)
+          copy_clauses = {}
+          remove_clauses = nil
+
+          if filters
+            clause_gen = ::Katello::Util::DebClauseGenerator.new(repo, filters)
+            clause_gen.generate
+
+            copy = clause_gen.copy_clause
+            copy_clauses = {filters: {unit: copy }} if copy
+
+            remove = clause_gen.remove_clause
+            remove_clauses = {filters: {unit: remove}} if remove
+          end
+
+          copy_clauses&.merge!(fields: ::Katello::Pulp::Deb::PULP_SELECT_FIELDS)
+          [copy_clauses, remove_clauses]
         end
       end
     end

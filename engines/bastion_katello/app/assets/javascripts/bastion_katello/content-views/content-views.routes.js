@@ -160,21 +160,21 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
             parent: 'content-view.version.details'
         }
     })
-    .state('content-view.version.apt', {
-        url: '/apt',
-        permission: 'view_content_views',
-        controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-apt.html',
-        ncyBreadcrumb: {
-            label: '{{ "Apt Repositories" | translate }}',
-            parent: 'content-view.version.details'
-        }
-    })
     .state('content-view.version.deb', {
         url: '/deb',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
         templateUrl: 'content-views/versions/views/content-view-version-deb.html',
+        ncyBreadcrumb: {
+            label: '{{ "Apt Repositories" | translate }}',
+            parent: 'content-view.version.details'
+        }
+    })
+    .state('content-view.version.debs', {
+        url: '/debs',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-debs.html',
         ncyBreadcrumb: {
             label: '{{ "Deb" | translate }}',
             parent: 'content-view.version.details'
@@ -657,6 +657,81 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         ncyBreadcrumb: {
             label: '{{ "Repositories | translate }}',
             parent: 'content-view.yum.filter.module-stream.edit'
+        }
+    })
+    .state('content-view.deb', {
+        url: '/repositories/deb',
+        abstract: true,
+        template: '<div ui-view></div>'
+    })
+
+    .state('content-view.deb.filters', {
+        url: '/filters',
+        permission: 'view_content_views',
+        controller: 'FiltersController',
+        templateUrl: 'content-views/details/filters/views/filters.html',
+        ncyBreadcrumb: {
+            label: '{{ "Deb Filters" | translate }}',
+            parent: 'content-view.info'
+        }
+
+    })
+    .state('content-view.deb.filters.new', {
+        url: '/new',
+        permission: 'edit_content_views',
+        views: {
+            '@content-view': {
+                controller: 'NewFilterController',
+                templateUrl: 'content-views/details/filters/views/new-filter.html'
+            }
+        },
+        ncyBreadcrumb: {
+            label: '{{ "Create Deb Filter" | translate }}',
+            parent: 'content-view.deb.filters'
+        }
+    });
+
+    $stateProvider.state('content-view.deb.filter', {
+        abstract: true,
+        controller: 'FilterDetailsController',
+        templateUrl: 'content-views/details/filters/views/filter-details.html'
+    })
+
+    .state('content-view.deb.filter.deb', {
+        abstract: true,
+        url: '/filters/:filterId/deb',
+        permission: 'view_content_views',
+        controller: 'DebFilterController',
+        templateUrl: 'content-views/details/filters/views/deb-filter.html'
+    })
+    .state('content-view.deb.filter.deb.details', {
+        url: '/details',
+        permission: 'view_content_views',
+        controller: 'DebFilterController',
+        templateUrl: 'content-views/details/filters/views/deb-filter-details.html',
+        ncyBreadcrumb: {
+            label: '{{ filter.name }}',
+            parent: 'content-view.deb.filters'
+        }
+    })
+    .state('content-view.deb.filter.deb.edit', {
+        url: '/edit',
+        controller: 'FilterEditController',
+        permission: 'edit_content_views',
+        templateUrl: 'content-views/details/filters/views/edit-filter.html',
+        ncyBreadcrumb: {
+            label: '{{ "Edit" | translate}} {{ filter.name }}',
+            parent: 'content-view.deb.filters'
+        }
+    })
+    .state('content-view.deb.filter.deb.repositories', {
+        url: '/repositories',
+        permission: 'view_content_views',
+        controller: 'FilterRepositoriesController',
+        templateUrl: 'content-views/details/filters/views/filter-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Repositories" | translate }}',
+            parent: 'content-view.deb.filter.deb.edit'
         }
     })
     .state('content-view.docker', {

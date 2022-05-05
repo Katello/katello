@@ -9,13 +9,14 @@ module Actions
             filter_ids = options.fetch(:filters, nil)&.map(&:id)
             rpm_filenames = options.fetch(:rpm_filenames, nil)
             solve_dependencies = options.fetch(:solve_dependencies, false)
+            deb_filenames = options.fetch(:deb_filenames, nil)
 
-            if filter_ids.present? || rpm_filenames.present? || source_repositories.length > 1
+            if filter_ids.present? || rpm_filenames.present? || deb_filenames.present? || source_repositories.length > 1
               sequence do
-                if filter_ids.present? || rpm_filenames.present?
+                if filter_ids.present? || rpm_filenames.present? || deb_filenames.present?
                   copy_action = plan_action(Actions::Pulp3::Repository::CopyContent, source_repositories.first, smart_proxy, target_repo,
                                             filter_ids: filter_ids, solve_dependencies: solve_dependencies,
-                                            rpm_filenames: rpm_filenames)
+                                            rpm_filenames: rpm_filenames, deb_filenames: deb_filenames)
                   plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, tasks: copy_action.output[:pulp_tasks])
                 else
                   #if we are not filtering, copy the version to the cv repository, and the units for each additional repo
@@ -26,7 +27,7 @@ module Actions
                   source_repositories[1..-1].each do |source_repo|
                     copy_actions << plan_action(Actions::Pulp3::Repository::CopyContent, source_repo, smart_proxy, target_repo,
                                                 filter_ids: filter_ids, solve_dependencies: solve_dependencies,
-                                                rpm_filenames: rpm_filenames)
+                                                rpm_filenames: rpm_filenames, deb_filenames: deb_filenames)
                   end
                   plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, tasks: copy_actions.last.output[:pulp_tasks])
                 end

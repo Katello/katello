@@ -60,7 +60,9 @@ module Katello
       :katello_available_module_streams => Katello::AvailableModuleStream,
       :katello_host_available_module_streams => Katello::HostAvailableModuleStream,
       :katello_ansible_collections => Katello::AnsibleCollection,
-      :katello_repository_ansible_collections => Katello::RepositoryAnsibleCollection
+      :katello_repository_ansible_collections => Katello::RepositoryAnsibleCollection,
+      :katello_content_view_deb_filter_rules => Katello::ContentViewDebFilterRule,
+      :katello_debs => Katello::Deb
     }.freeze
 
     # rubocop:disable Naming/AccessorMethodName

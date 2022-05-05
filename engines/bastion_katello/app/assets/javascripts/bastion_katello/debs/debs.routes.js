@@ -42,7 +42,7 @@
         })
         .state('deb.repositories', {
             url: '/repositories',
-            permission: ['view_products'],
+            permission: ['view_products', 'view_content_views'],
             controller: 'DebRepositoriesController',
             templateUrl: 'debs/details/views/deb-repositories.html',
             ncyBreadcrumb: {

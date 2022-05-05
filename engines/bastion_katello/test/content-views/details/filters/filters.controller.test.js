@@ -56,5 +56,7 @@ describe('Controller: FiltersController', function() {
             toBe('content-view.yum.filter.rpm({filterId: filter.id})');
         expect($scope.getFilterState({type: 'package_group'})).
             toBe('content-view.yum.filter.package_group.list({filterId: filter.id})');
+        expect($scope.getFilterState({type: 'deb'})).
+            toBe('content-view.deb.filter.deb({filterId: filter.id})');
     });
 });

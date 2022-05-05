@@ -254,6 +254,26 @@ module Katello
       ModuleStream.in_repositories(archived_repos)
     end
 
+    def library_debs
+      Katello::Deb.in_repositories(library_repos)
+    end
+
+    def available_debs
+      # The simple/obvious solution is:
+      #   library_debs.where.not(:id => debs)
+      # However, when the list of exclusions is large, the SQL "NOT IN" clause
+      # is extremely inefficient, and it is much better to use a
+      # "LEFT OUTER JOIN" with a subquery.
+      # ActiveRecord .joins() only supports subqueries by supplying raw SQL.  We
+      # use .to_sql to avoid hard-coding raw SQL for self.packages, although
+      # .to_sql may also be somewhat brittle.  For example, see:
+      # https://github.com/rails/rails/issues/18379
+      library_debs.joins(
+        "LEFT OUTER JOIN (#{debs.select('id').to_sql}) AS exclude_debs ON " \
+        'katello_debs.id = exclude_debs.id'
+      ).where('exclude_debs.id IS NULL')
+    end
+
     def docker_tags
       # Don't count tags from non-archived repos; this causes count errors
       ::Katello::DockerMetaTag.where(:id => RepositoryDockerMetaTag.where(:repository_id => repositories.archived.docker_type).select(:docker_meta_tag_id))
@@ -261,14 +281,6 @@ module Katello
 
     def debs
       Katello::Deb.in_repositories(self.repositories.archived)
-    end
-
-    def library_debs
-      Katello::Deb.in_repositories(library_repos)
-    end
-
-    def available_debs
-      library_packages.where.not(:id => debs)
     end
 
     def errata(errata_type = nil)

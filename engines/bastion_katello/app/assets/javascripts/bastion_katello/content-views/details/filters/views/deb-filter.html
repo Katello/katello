@@ -1,0 +1,28 @@
+<span page-title ng-model="filter">{{ 'Deb Package Filter:' | translate }} {{ filter.name }}</span>
+
+<nav>
+  <ul class="nav nav-tabs nav-tabs-pf">
+
+    <li ng-class="{active: isState('content-view.deb.filter.deb.edit')}">
+      <a ui-sref="content-view.deb.filter.deb.edit" translate>
+        Details
+      </a>
+    </li>
+
+    <li ng-class="{active: isState('content-view.deb.filter.deb.details')}">
+      <a ui-sref="content-view.deb.filter.deb.details" translate>
+        DEBs
+      </a>
+    </li>
+
+    <li ng-class="{active: isState('content-view.deb.filter.deb.repositories')}"
+        ng-show="!contentView.permissions.editable">
+      <a ui-sref="content-view.deb.filter.deb.repositories({filterId: filter.id})"
+         ng-include="'content-views/details/filters/views/partials/filter-repositories-count.html'">
+      </a>
+    </li>
+
+  </ul>
+</nav>
+
+<div ui-view></div>

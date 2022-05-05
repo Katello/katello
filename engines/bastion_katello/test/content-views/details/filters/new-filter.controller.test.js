@@ -91,6 +91,19 @@ describe('Controller: NewFilterController', function() {
         )
     });
 
+    it('should save a new deb filter and transition to deb page', function() {
+        $scope.filter['content_view'] = $scope.contentView;
+        $scope.filter.type = 'deb';
+
+        spyOn($scope, 'transitionTo');
+        $scope.save($scope.filter, $scope.contentView);
+
+        expect($scope.transitionTo).toHaveBeenCalledWith(
+            'content-view.deb.filter.deb.details',
+            {filterId: 1, contentViewId: 1}
+        )
+    });
+
     it('should fail to save a new filter resource', function() {
         $scope.filter.failed = true;
         spyOn($scope.filter, '$save').and.callThrough();

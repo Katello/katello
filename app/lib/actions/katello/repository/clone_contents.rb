@@ -8,6 +8,7 @@ module Actions
         def plan(source_repositories, new_repository, options)
           filters = options.fetch(:filters, nil)
           rpm_filenames = options.fetch(:rpm_filenames, nil)
+          deb_filenames = options.fetch(:deb_filenames, nil)
           generate_metadata = options.fetch(:generate_metadata, true)
           purge_empty_contents = options.fetch(:purge_empty_contents, false)
           copy_contents = options.fetch(:copy_contents, true)
@@ -19,7 +20,7 @@ module Actions
                           new_repository,
                           SmartProxy.pulp_primary,
                           source_repositories,
-                          filters: filters, rpm_filenames: rpm_filenames, solve_dependencies: solve_dependencies)
+                          filters: filters, rpm_filenames: rpm_filenames, deb_filenames: deb_filenames, solve_dependencies: solve_dependencies)
 
               source_repositories.select(&:deb?).each do |repository|
                 plan_action(Actions::Katello::Repository::CopyDebErratum,

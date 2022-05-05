@@ -172,6 +172,10 @@ module Katello
         new_view.filters << new_filter
 
         case filter.type
+        when ContentViewDebFilter.name
+          filter.deb_rules.each do |rule|
+            new_filter.deb_rules << rule.dup
+          end
         when ContentViewPackageFilter.name
           filter.package_rules.each do |rule|
             new_filter.package_rules << rule.dup
