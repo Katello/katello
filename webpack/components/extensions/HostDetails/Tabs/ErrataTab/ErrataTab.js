@@ -3,7 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem,
+<<<<<<< HEAD
   DropdownToggle, DropdownToggleAction,
+=======
+  Spinner,
+>>>>>>> 33b221d6c5 (Refs #34856 - add loader to Errata)
 } from '@patternfly/react-core';
 import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
 import {
@@ -147,19 +151,26 @@ export const ErrataTab = () => {
   const installErrataAction = () => installErrata({
     hostname, search: fetchBulkParams(),
   });
-  const { triggerJobStart: triggerBulkApply, lastCompletedJob: lastCompletedBulkApply }
-    = useRexJobPolling(installErrataAction);
+  const {
+    triggerJobStart: triggerBulkApply, lastCompletedJob: lastCompletedBulkApply,
+    isPolling: isBulkApplyInProgress,
+  } = useRexJobPolling(installErrataAction);
 
   const installErratumAction = id => installErrata({
     hostname,
     search: errataSearchQuery(id),
   });
 
-  const { triggerJobStart: triggerApply, lastCompletedJob: lastCompletedApply }
-    = useRexJobPolling(installErratumAction);
+  const {
+    triggerJobStart: triggerApply, lastCompletedJob: lastCompletedApply,
+    isPolling: isApplyInProgress,
+  } = useRexJobPolling(installErratumAction);
 
-  const tdSelect = useCallback((errataId, rowIndex) => ({
-    disable: !isSelectable(errataId),
+  const actionInProgress = (isApplyInProgress || isBulkApplyInProgress);
+  const disabledReason = __('A remote execution job is in progress');
+
+  const tdSelect = useCallback((errataId, rowIndex, rexJobInProgress) => ({
+    disable: rexJobInProgress || !isSelectable(errataId),
     isSelected: isSelected(errataId),
     onSelect: (event, selected) => selectOne(selected, errataId),
     rowIndex,
@@ -420,6 +431,7 @@ export const ErrataTab = () => {
                   {
                     title: __('Apply via remote execution'),
                     onClick: () => applyErratumViaRemoteExecution(errataId),
+                    isDisabled: actionInProgress,
                   },
                   {
                     title: __('Apply via customized remote execution'),
@@ -454,7 +466,10 @@ export const ErrataTab = () => {
                         onToggle: (_event, _rInx, isOpen) => expandedErrata.onToggle(isOpen, id),
                       }}
                     />
-                    <Td select={tdSelect(errataId, rowIndex)} />
+                    <Td
+                      select={tdSelect(errataId, rowIndex, actionInProgress)}
+                      title={actionInProgress && disabledReason}
+                    />
                     <Td>
                       <a href={urlBuilder(`errata/${id}`, '')}>{errataId}</a>
                     </Td>
