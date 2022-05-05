@@ -738,7 +738,7 @@ module Katello
       assert_equal versions.length, 3
       version = @fedora_17_x86_64.published_in_versions.where(content_view_id: view.id).map(&:version)
       cv_name = @fedora_17_x86_64.published_in_versions.where(content_view_id: view.id).first.content_view.name
-      assert_equal version.sort, view.versions.map(&:version)
+      assert_equal_arrays version, view.versions.map(&:version)
       assert_equal cv_name, view.name
     end
 
