@@ -53,6 +53,9 @@ module Actions
 
             if options[:importing]
               handle_import(version, options.slice(:path, :metadata))
+            elsif separated_repo_map[:pulp3_deb].keys.flatten.present? &&
+              SmartProxy.pulp_primary.pulp3_support?(separated_repo_map[:pulp3_deb].keys.flatten.first)
+              plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_deb], version)
             elsif separated_repo_map[:pulp3_yum].keys.flatten.present? &&
               SmartProxy.pulp_primary.pulp3_support?(separated_repo_map[:pulp3_yum].keys.flatten.first)
               plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum], version)
