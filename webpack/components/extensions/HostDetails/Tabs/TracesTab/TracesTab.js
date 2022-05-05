@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   Skeleton, Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle,
@@ -27,8 +28,14 @@ const TracesTab = () => {
     content_facet_attributes: contentFacetAttributes,
   } = hostDetails;
   const showEnableTracer = (contentFacetAttributes?.katello_tracer_installed === false);
-  const emptyContentTitle = __('This host currently does not have traces.');
-  const emptyContentBody = __('Add traces by applying updates on this host.');
+  const emptyContentTitle = __('No applications to restart');
+  const emptyContentBody = (<FormattedMessage
+    id="traces-happy-empty"
+    values={{
+      pkgLink: <a href="#/Content/packages?status=Upgradable">{__('installing or updating packages')}</a>,
+    }}
+    defaultMessage={__('Traces may be listed here after {pkgLink}.')}
+  />);
   const emptySearchTitle = __('No matching traces found');
   const emptySearchBody = __('Try changing your search settings.');
   const errorSearchTitle = __('Problem searching traces');
@@ -152,6 +159,7 @@ const TracesTab = () => {
           actionButtons,
         }
         }
+        happyEmptyContent
         ouiaId="host-traces-table"
         metadata={meta}
         bookmarkController="katello_host_tracers"

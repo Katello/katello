@@ -50,6 +50,7 @@ const TableWrapper = ({
   const perPage = Number(metadata?.per_page ?? foremanPerPage);
   const page = Number(metadata?.page ?? 1);
   const total = Number(metadata?.subtotal ?? 0);
+  const totalSelectableCount = Number(metadata?.selectable ?? total);
   const { pageRowCount } = getPageStats({ total, page, perPage });
   const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
   const unresolvedStatusOrNoRows = unresolvedStatus || pageRowCount === 0;
@@ -174,7 +175,7 @@ const TableWrapper = ({
                 pageRowCount,
               }
               }
-              totalCount={Number(metadata?.selectable ?? total)}
+              totalCount={totalSelectableCount}
               areAllRowsOnPageSelected={areAllRowsOnPageSelected()}
               areAllRowsSelected={areAllRowsSelected()}
             />

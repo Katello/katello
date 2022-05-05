@@ -17,7 +17,7 @@ import Loading from '../../components/Loading';
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
   emptySearchTitle, emptySearchBody, errorSearchTitle, errorSearchBody,
-  searchIsActive, activeFilters, defaultFilters, actionButtons, rowsCount,
+  happyEmptyContent, searchIsActive, activeFilters, defaultFilters, actionButtons, rowsCount,
   children, ...extraTableProps
 }) => {
   const tableHasNoRows = () => {
@@ -48,7 +48,14 @@ const MainTable = ({
     />);
   }
   if (status === STATUS.RESOLVED && tableHasNoRows()) {
-    return (<EmptyStateMessage title={emptyContentTitle} body={emptyContentBody} search />);
+    return (
+      <EmptyStateMessage
+        title={emptyContentTitle}
+        body={emptyContentBody}
+        happy={happyEmptyContent}
+        search={!happyEmptyContent}
+      />
+    );
   }
 
   const tableProps = { cells, rows, ...extraTableProps };
@@ -86,7 +93,7 @@ MainTable.propTypes = {
     PropTypes.string,
   ]),
   emptyContentTitle: PropTypes.string.isRequired,
-  emptyContentBody: PropTypes.string.isRequired,
+  emptyContentBody: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]).isRequired,
   emptySearchTitle: PropTypes.string.isRequired,
   emptySearchBody: PropTypes.string.isRequired,
   errorSearchTitle: PropTypes.string,
@@ -106,6 +113,7 @@ MainTable.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]),
+  happyEmptyContent: PropTypes.bool,
 };
 
 MainTable.defaultProps = {
@@ -120,6 +128,7 @@ MainTable.defaultProps = {
   cells: undefined,
   rows: undefined,
   rowsCount: undefined,
+  happyEmptyContent: false,
 };
 
 export default MainTable;

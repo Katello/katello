@@ -15,9 +15,10 @@ describe('Without errata', () => {
     nock.cleanAll();
   });
 
-  test('shows zero counts when there are 0 errata', () => {
+  test('shows zero counts when there are 0 installable errata', () => {
     const hostDetails = {
       ...baseHostDetails,
+      errata_status: 1,
       content_facet_attributes: {
         errata_counts: {
           bugfix: 0,
@@ -35,6 +36,26 @@ describe('Without errata', () => {
     expect(getByLabelText('0 security advisories')).toBeInTheDocument();
     expect(getByLabelText('0 bug fixes')).toBeInTheDocument();
     expect(getByLabelText('0 enhancements')).toBeInTheDocument();
+  });
+
+  test('shows empty state when there are 0 errata', () => {
+    const hostDetails = {
+      ...baseHostDetails,
+      errata_status: 0,
+      content_facet_attributes: {
+        errata_counts: {
+          bugfix: 0,
+          enhancement: 0,
+          security: 0,
+          total: 0,
+        },
+      },
+    };
+    /* eslint-disable max-len */
+    const { queryByLabelText, getByText } = render(<ErrataOverviewCard hostDetails={hostDetails} />);
+    /* eslint-enable max-len */
+    expect(queryByLabelText('errataChart')).not.toBeInTheDocument();
+    expect(getByText('All errata up-to-date')).toBeInTheDocument();
   });
 
   test('does not show errata card when host not registered', () => {

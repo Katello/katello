@@ -47,10 +47,10 @@ export const PackagesTab = () => {
     name: hostname,
   } = hostDetails;
 
-  const { searchParam } = useUrlParams();
+  const { searchParam, status: statusParam } = useUrlParams();
   const dispatch = useDispatch();
   const PACKAGE_STATUS = __('Status');
-  const [packageStatusSelected, setPackageStatusSelected] = useState(PACKAGE_STATUS);
+  const [packageStatusSelected, setPackageStatusSelected] = useState(statusParam ?? PACKAGE_STATUS);
   const activeFilters = [packageStatusSelected];
   const defaultFilters = [PACKAGE_STATUS];
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);

@@ -104,7 +104,7 @@ describe('With tracer installed', () => {
     const { queryByText } = renderWithRedux(<TracesTab />, renderOptions(true));
 
     // Assert that there are not any traces showing on the screen.
-    await patientlyWaitFor(() => expect(queryByText('This host currently does not have traces.')).toBeInTheDocument());
+    await patientlyWaitFor(() => expect(queryByText('No applications to restart')).toBeInTheDocument());
     // Assert request was made and completed, see helper function
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope, done);
