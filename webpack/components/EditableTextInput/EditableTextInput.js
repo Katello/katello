@@ -86,6 +86,7 @@ const EditableTextInput = ({
       </SplitItem>
       <SplitItem>
         <Button
+          ouiaId={`submit-button-${attribute}`}
           aria-label={`submit ${attribute}`}
           variant="plain"
           onClick={onSubmit}
@@ -94,13 +95,19 @@ const EditableTextInput = ({
         </Button>
       </SplitItem>
       <SplitItem>
-        <Button aria-label={`clear ${attribute}`} variant="plain" onClick={onClear}>
+        <Button ouiaId={`clear-button-${attribute}`} aria-label={`clear ${attribute}`} variant="plain" onClick={onClear}>
           <TimesIcon />
         </Button>
       </SplitItem>
       {isPassword ?
         <SplitItem>
-          <Button aria-label={`show-password ${attribute}`} variant="plain" isDisabled={!inputValue?.length} onClick={toggleShowPassword}>
+          <Button
+            ouiaId={`show-button-${attribute}`}
+            aria-label={`show-password ${attribute}`}
+            variant="plain"
+            isDisabled={!inputValue?.length}
+            onClick={toggleShowPassword}
+          >
             {showPassword ?
               (<EyeSlashIcon />) :
               (<EyeIcon />)}
@@ -128,6 +135,7 @@ const EditableTextInput = ({
           >
             <Button
               className="foreman-edit-icon"
+              ouiaId={`edit-button-${attribute}`}
               aria-label={`edit ${attribute}`}
               variant="plain"
               onClick={onEditClick}
