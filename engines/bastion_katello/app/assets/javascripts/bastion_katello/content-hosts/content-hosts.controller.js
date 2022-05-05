@@ -169,5 +169,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             nutupane.invalidate();
             ContentHostsModalHelper.openTracesModal();
         };
+
+        $scope.isDebEnabled = function(hostOS) {
+            return _.isString(hostOS) && hostOS.match(/Debian|Ubuntu/) !== null;
+        };
+
+        $scope.isRpmEnabled = function(hostOS) {
+            return !$scope.isDebEnabled(hostOS);
+        };
     }]
 );

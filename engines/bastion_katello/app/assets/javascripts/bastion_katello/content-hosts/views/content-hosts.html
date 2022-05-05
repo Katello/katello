@@ -112,7 +112,7 @@
               <span class="aligned-errata-count" errata-counts="host.content_facet_attributes.errata_counts"></span>
             </a>
 
-            <span ng-if="host.content_facet_attributes.upgradable_package_count > 0">
+            <span ng-if="isRpmEnabled(host.operatingsystem_name)">
               <a ui-sref="content-host.packages.applicable({hostId: host.id})">
               <span class="aligned-errata-count">
                 <span class="errata-count"
@@ -126,7 +126,7 @@
               </span>
               </a>
             </span>
-            <span ng-if="host.content_facet_attributes.upgradable_deb_count > 0">
+            <span ng-if="isDebEnabled(host.operatingsystem_name)">
               <a ui-sref="content-host.debs.applicable({hostId: host.id})">
               <span class="aligned-errata-count">
                 <span class="errata-count"
