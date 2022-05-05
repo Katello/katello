@@ -77,16 +77,22 @@ const TracesTab = () => {
   const BulkRestartTracesAction = () => resolveTraces({
     hostname, search: fetchBulkParams(),
   });
-  const { triggerJobStart: triggerBulkRestart, lastCompletedJob: lastCompletedBulkRestart }
-    = useRexJobPolling(BulkRestartTracesAction);
+  const {
+    triggerJobStart: triggerBulkRestart, lastCompletedJob: lastCompletedBulkRestart,
+    isPolling: isBulkRestartInProgress,
+  } = useRexJobPolling(BulkRestartTracesAction);
 
   const restartTraceAction = id => resolveTraces({
     hostname,
     search: tracesSearchQuery(id),
   });
 
-  const { triggerJobStart: triggerAppRestart, lastCompletedJob: lastCompletedAppRestart }
-    = useRexJobPolling(restartTraceAction);
+  const {
+    triggerJobStart: triggerAppRestart, lastCompletedJob: lastCompletedAppRestart,
+    isPolling: isAppRestartInProgress,
+  } = useRexJobPolling(restartTraceAction);
+
+  const actionInProgress = (isBulkRestartInProgress || isAppRestartInProgress);
 
   const fetchItems = useCallback(
     params =>
@@ -202,8 +208,11 @@ const TracesTab = () => {
               app_type: appType,
             } = result;
             const resolveDisabled = !isSelectable(id);
+            let disabledReason;
+            if (resolveDisabled) disabledReason = __('Traces that require logout cannot be restarted remotely');
+            if (actionInProgress) disabledReason = __('A remote execution job is in progress');
             let rowDropdownItems = [
-              { title: 'Restart via remote execution', onClick: () => onRestartApp(id) },
+              { title: 'Restart via remote execution', onClick: () => onRestartApp(id), isDisabled: actionInProgress },
               {
                 component: 'a', href: resolveTraceUrl({ hostname, search: tracesSearchQuery(id) }), title: 'Restart via customized remote execution',
               },
@@ -215,16 +224,18 @@ const TracesTab = () => {
             }
             return (
               <Tr key={id} >
-                <Td select={{
-                  disable: resolveDisabled,
-                  props: {
-                    'aria-label': `check-${application}`,
-                  },
-                  isSelected: isSelected(id),
-                  onSelect: (event, selected) => selectOne(selected, id),
-                  rowIndex,
-                  variant: 'checkbox',
-                }}
+                <Td
+                  select={{
+                    disable: actionInProgress || resolveDisabled,
+                    props: {
+                      'aria-label': `check-${application}`,
+                    },
+                    isSelected: isSelected(id),
+                    onSelect: (event, selected) => selectOne(selected, id),
+                    rowIndex,
+                    variant: 'checkbox',
+                  }}
+                  title={disabledReason}
                 />
                 <Td>{application}</Td>
                 <Td>{appType}</Td>
