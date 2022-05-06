@@ -17,7 +17,7 @@ import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import EnableTracerModal from './EnableTracerModal';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
 import { installTracerPackage } from './HostTracesActions';
-import { refreshHostDetails } from '../../HostDetailsActions';
+import { getHostDetails } from '../../HostDetailsActions';
 
 const EnableTracerButton = ({ setEnableTracerModalOpen, pollingStarted }) => (
   <Button
@@ -57,7 +57,7 @@ const TracesEnabler = ({ hostname }) => {
   const body = __('Traces help administrators identify applications that need to be restarted after a system is patched.');
   const [enableTracerModalOpen, setEnableTracerModalOpen] = useState(false);
   const initialAction = installTracerPackage({ hostname });
-  const successAction = refreshHostDetails({ hostname });
+  const successAction = getHostDetails({ hostname });
   const {
     pollingStarted,
     rexJobId,
