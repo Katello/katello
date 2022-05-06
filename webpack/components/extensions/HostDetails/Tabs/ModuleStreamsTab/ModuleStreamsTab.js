@@ -7,6 +7,7 @@ import { Skeleton,
   Button,
   Split,
   SplitItem,
+  Spinner,
   Checkbox,
   Dropdown,
   Text,
@@ -240,11 +241,17 @@ export const ModuleStreamsTab = () => {
     initialSortColumnName: 'Name',
   });
 
-  const { triggerJobStart: triggerModuleStreamAction, lastCompletedJob: tableJobCompleted }
-    = useRexJobPolling(moduleStreamAction);
+  const {
+    triggerJobStart: triggerModuleStreamAction, lastCompletedJob: tableJobCompleted,
+    isPolling: isModuleStreamActionInProgress,
+  } = useRexJobPolling(moduleStreamAction);
 
-  const { triggerJobStart: triggerConfirmModalAction, lastCompletedJob: confirmModalJobCompleted }
-    = useRexJobPolling(moduleStreamAction);
+  const {
+    triggerJobStart: triggerConfirmModalAction, lastCompletedJob: confirmModalJobCompleted,
+    isPolling: isConfirmModalActionInProgress,
+  } = useRexJobPolling(moduleStreamAction);
+
+  const actionInProgress = (isModuleStreamActionInProgress || isConfirmModalActionInProgress);
 
   const fetchItems = useCallback(
     (params) => {
@@ -354,6 +361,11 @@ export const ModuleStreamsTab = () => {
                   setSelected={handleModuleStreamInstallationStatusSelected}
                 />
               </SplitItem>
+              {actionInProgress && (
+                <SplitItem style={{ alignSelf: 'center' }}>
+                  <Spinner size="lg" style={{ marginTop: '2px' }} />
+                </SplitItem>
+              )}
             </Split>
           }
         >
@@ -466,7 +478,7 @@ export const ModuleStreamsTab = () => {
                       setUseCustomizedRex('');
                       setDropdownOpen('');
                     }}
-                    isDisabled={stateText(moduleStreamStatus) ===
+                    isDisabled={actionInProgress || stateText(moduleStreamStatus) ===
                     HOST_MODULE_STREAM_STATUSES.ENABLED}
                   >
                     {__('Enable')}
@@ -482,7 +494,7 @@ export const ModuleStreamsTab = () => {
                       setUseCustomizedRex('');
                       setDropdownOpen('');
                     }}
-                    isDisabled={stateText(moduleStreamStatus) !==
+                    isDisabled={actionInProgress || stateText(moduleStreamStatus) !==
                     HOST_MODULE_STREAM_STATUSES.ENABLED}
                   >
                     {__('Disable')}
@@ -497,7 +509,7 @@ export const ModuleStreamsTab = () => {
                       setUseCustomizedRex('');
                       setDropdownOpen('');
                     }}
-                    isDisabled={(upgradable ||
+                    isDisabled={(actionInProgress || upgradable ||
                       (installedStatus !== INSTALLED_STATE.NOTINSTALLED) ||
                       !(stateText(moduleStreamStatus) === HOST_MODULE_STREAM_STATUSES.ENABLED ||
                         stateText(moduleStreamStatus) === HOST_MODULE_STREAM_STATUSES.DISABLED)
@@ -514,7 +526,7 @@ export const ModuleStreamsTab = () => {
                       setUseCustomizedRex('');
                       setDropdownOpen('');
                     }}
-                    isDisabled={!upgradable}
+                    isDisabled={actionInProgress || !upgradable}
                   >
                     {__('Update')}
                   </DropdownItem>,
@@ -529,6 +541,7 @@ export const ModuleStreamsTab = () => {
                       setUseCustomizedRex('');
                       setDropdownOpen('');
                     }}
+                    isDisabled={actionInProgress}
                   >
                     {__('Reset')}
                     <InactiveText style={{ marginBottom: '1px' }} text={__('Reset to the default state')} />
@@ -544,6 +557,7 @@ export const ModuleStreamsTab = () => {
                       setUseCustomizedRex('');
                       setDropdownOpen('');
                     }}
+                    isDisabled={actionInProgress}
                   >
                     {__('Remove')}
                     <InactiveText style={{ marginBottom: '1px' }} text={__('Uninstall and reset')} />
