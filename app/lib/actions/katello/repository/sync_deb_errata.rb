@@ -10,9 +10,9 @@ module Actions
           repo = ::Katello::Repository.find(input[:repo_id]).root
           proxy = repo.http_proxy
           params = {}
-          params['releases'] = repo.deb_releases.split(',').map { |comp| comp.split('/')[0] }.join(',') if repo.deb_releases
-          params['components'] = repo.deb_components if repo.deb_components
-          params['architectures'] = repo.deb_architectures if repo.deb_architectures
+          params['releases'] = repo.deb_releases.split(' ').map { |comp| comp.split('/')[0] }.join(',') if repo.deb_releases
+          params['components'] = repo.deb_components.split(' ').join(',') if repo.deb_components
+          params['architectures'] = repo.deb_architectures.split(' ').join(',') if repo.deb_architectures
           RestClient::Request.execute(
             method: :get,
             url: repo.deb_errata_url,
