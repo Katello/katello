@@ -206,21 +206,22 @@ module Katello
         search_up_to = up_to.present? ? "ended_at < \"#{up_to}\"" : nil
         search_since = since.present? ? "ended_at > \"#{since}\"" : nil
         search_result = status.present? && status != 'all' ? "result = #{status}" : nil
-        search = [search_up_to, search_since, search_result].compact.join(' and ')
+        labels = 'label ^ (Actions::Katello::Host::Erratum::Install, Actions::Katello::Host::Erratum::ApplicableErrataInstall)'
+        select = 'foreman_tasks_tasks.*'
 
         if Katello.with_remote_execution?
-          condition = ["state = 'stopped' AND ((label = 'Actions::RemoteExecution::RunHostJob' AND templates.id = ?) " \
-                       "OR label = 'Actions::Katello::Host::Erratum::Install' OR label = 'Actions::Katello::Host::Erratum::ApplicableErrataInstall')",
-                       RemoteExecutionFeature.feature('katello_errata_install').job_template_id]
+          new_labels = 'label = Actions::RemoteExecution::RunHostJob AND remote_execution_feature.label = katello_errata_install'
+          labels = [labels, new_labels].map { |label| "(#{label})" }.join(' OR ')
+          select += ',template_invocations.id AS template_invocation_id'
         else
-          condition = "state = 'stopped' AND (label = 'Actions::Katello::Host::Erratum::Install' OR label = 'Actions::Katello::Host::Erratum::ApplicableErrataInstall')"
+          select += ',NULL AS template_invocation_id'
         end
 
+        search = [search_up_to, search_since, search_result, "state = stopped", labels].compact.join(' and ')
+
         tasks = load_resource(klass: ForemanTasks::Task,
-                              where: condition,
                               permission: 'view_foreman_tasks',
-                              joins: 'LEFT OUTER JOIN template_invocations ON foreman_tasks_tasks.id = template_invocations.run_host_job_task_id LEFT OUTER JOIN templates ON template_invocations.template_id = templates.id',
-                              select: 'foreman_tasks_tasks.*,template_invocations.id AS template_invocation_id',
+                              select: select,
                               search: search)
         only_host_ids = ::Host.search_for(host_filter).pluck(:id) if host_filter
 
