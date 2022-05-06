@@ -335,7 +335,7 @@ export const PackagesTab = () => {
             />
           </ActionListItem>
           <ActionListItem>
-            {actionInProgress ? <Spinner size="lg" style={{marginLeft: '1em', marginTop: '4px' }} /> : (
+            {actionInProgress ? <Spinner size="lg" style={{ marginLeft: '1em', marginTop: '4px' }} /> : (
               <Dropdown
                 toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
                 isOpen={isBulkActionOpen}
