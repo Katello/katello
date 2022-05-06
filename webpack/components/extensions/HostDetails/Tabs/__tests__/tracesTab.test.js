@@ -117,7 +117,6 @@ describe('With tracer installed', () => {
     const scope = nockInstance
       .get(hostTraces)
       .query(true)
-      .times(2)
       .reply(200, mockTraceData);
     const resolveTracesScope = nockInstance
       .post(jobInvocations)
@@ -140,7 +139,7 @@ describe('With tracer installed', () => {
     const restartAppButton = getByText('Restart app');
     // wait 50ms so that the button is enabled
     await waitFor(() => {
-      expect(getByText('Restart app')).not.toBeDisabled();
+      expect(getByText('Restart app')).toHaveAttribute('aria-disabled', 'false');
       restartAppButton.click();
     });
 
@@ -157,7 +156,6 @@ describe('With tracer installed', () => {
     const scope = nockInstance
       .get(hostTraces)
       .query(true)
-      .times(2)
       .reply(200, mockTraceData);
     const resolveTracesScope = nockInstance
       .post(jobInvocations)
@@ -195,7 +193,6 @@ describe('With tracer installed', () => {
     const scope = nockInstance
       .get(hostTraces)
       .query(true)
-      .times(2)
       .reply(200, mockTraceData);
     const jobInvocationBody = ({ job_invocation: { inputs } }) =>
       inputs[TRACES_SEARCH_QUERY] === `id !^ (${firstTrace.id},${thirdTrace.id})`;
