@@ -12,6 +12,7 @@ import {
   Skeleton,
   Split,
   SplitItem,
+  Spinner,
 } from '@patternfly/react-core';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -134,8 +135,10 @@ export const PackagesTab = () => {
     packageName,
   });
 
-  const { triggerJobStart: triggerPackageRemove, lastCompletedJob: lastCompletedPackageRemove }
-    = useRexJobPolling(packageRemoveAction);
+  const {
+    triggerJobStart: triggerPackageRemove, lastCompletedJob: lastCompletedPackageRemove,
+    isPolling: isRemoveInProgress,
+  } = useRexJobPolling(packageRemoveAction);
 
   const packageBulkRemoveAction = bulkParams => removePackages({
     hostname,
@@ -145,6 +148,7 @@ export const PackagesTab = () => {
   const {
     triggerJobStart: triggerBulkPackageRemove,
     lastCompletedJob: lastCompletedBulkPackageRemove,
+    isPolling: isBulkRemoveInProgress,
   } = useRexJobPolling(packageBulkRemoveAction);
 
   const packageUpgradeAction = packageName => updatePackage({
@@ -155,6 +159,7 @@ export const PackagesTab = () => {
   const {
     triggerJobStart: triggerPackageUpgrade,
     lastCompletedJob: lastCompletedPackageUpgrade,
+    isPolling: isUpgradeInProgress,
   } = useRexJobPolling(packageUpgradeAction);
 
   const packageBulkUpgradeAction = bulkParams => updatePackages({
@@ -165,7 +170,12 @@ export const PackagesTab = () => {
   const {
     triggerJobStart: triggerBulkPackageUpgrade,
     lastCompletedJob: lastCompletedBulkPackageUpgrade,
+    isPolling: isBulkUpgradeInProgress,
   } = useRexJobPolling(packageBulkUpgradeAction);
+
+  const actionInProgress = (isRemoveInProgress || isUpgradeInProgress
+    || isBulkRemoveInProgress || isBulkUpgradeInProgress);
+  const disabledReason = __('A remote execution job is in progress.');
 
   if (!hostId) return <Skeleton />;
 
@@ -314,7 +324,7 @@ export const PackagesTab = () => {
                       {__('Upgrade')}
                     </DropdownToggleAction>,
                   ]}
-                  isDisabled={disableUpgrade()}
+                  isDisabled={actionInProgress || disableUpgrade()}
                   splitButtonVariant="action"
                   toggleVariant="primary"
                   onToggle={onActionToggle}
@@ -325,12 +335,14 @@ export const PackagesTab = () => {
             />
           </ActionListItem>
           <ActionListItem>
-            <Dropdown
-              toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-              isOpen={isBulkActionOpen}
-              isPlain
-              dropdownItems={dropdownRemoveItems}
-            />
+            {actionInProgress ? <Spinner size="lg" style={{marginLeft: '1em', marginTop: '4px' }} /> : (
+              <Dropdown
+                toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                isOpen={isBulkActionOpen}
+                isPlain
+                dropdownItems={dropdownRemoveItems}
+              />
+            )}
           </ActionListItem>
         </ActionList>
       </SplitItem>
@@ -414,6 +426,7 @@ export const PackagesTab = () => {
               const rowActions = [
                 {
                   title: __('Remove'),
+                  isDisabled: actionInProgress,
                   onClick: () => handlePackageRemove(packageName),
                 },
               ];
@@ -423,6 +436,7 @@ export const PackagesTab = () => {
                   {
                     title: __('Upgrade via remote execution'),
                     onClick: () => upgradeViaRemoteExecution(upgradableVersion),
+                    isDisabled: actionInProgress,
                   },
                   {
                     title: __('Upgrade via customized remote execution'),
@@ -434,13 +448,15 @@ export const PackagesTab = () => {
 
               return (
                 <Tr key={`${id}`}>
-                  <Td select={{
-                    disable: false,
-                    isSelected: isSelected(id),
-                    onSelect: (event, selected) => selectOne(selected, id, pkg),
-                    rowIndex,
-                    variant: 'checkbox',
-                  }}
+                  <Td
+                    select={{
+                      disable: actionInProgress,
+                      isSelected: isSelected(id),
+                      onSelect: (event, selected) => selectOne(selected, id, pkg),
+                      rowIndex,
+                      variant: 'checkbox',
+                    }}
+                    title={actionInProgress && disabledReason}
                   />
                   <Td>
                     {rpmId
