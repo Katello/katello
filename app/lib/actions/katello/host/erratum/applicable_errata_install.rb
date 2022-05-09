@@ -37,6 +37,10 @@ module Actions
           def presenter
             Helpers::Presenter::Delegated.new(self, planned_actions(Katello::Host::Erratum::Install))
           end
+
+          def self.cleanup_after
+            '90d'
+          end
         end
       end
     end

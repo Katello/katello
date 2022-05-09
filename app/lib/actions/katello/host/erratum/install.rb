@@ -31,6 +31,10 @@ module Actions
             host = ::Host.find_by(:id => input[:host_id])
             host.update(audit_comment: (_("Installation of errata requested: %{errata}") % {errata: input[:content].join(", ")}).truncate(255))
           end
+
+          def self.cleanup_after
+            '90d'
+          end
         end
       end
     end
