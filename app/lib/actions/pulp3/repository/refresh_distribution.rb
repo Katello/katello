@@ -3,7 +3,6 @@ module Actions
     module Repository
       class RefreshDistribution < Pulp3::AbstractAsyncTask
         include Helpers::Presenter
-        middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
         def plan(repository, smart_proxy, options = {})
           smart_proxy = SmartProxy.unscoped.find_by(id: smart_proxy) #support bulk actions
@@ -16,11 +15,9 @@ module Actions
               :repository_id => repository.id,
               :smart_proxy_id => smart_proxy.id
             }
-            refresh_options[:contents_changed] if options.key?(:contents_changed)
             action = plan_self(refresh_options)
 
-            plan_action(SaveDistributionReferences, repository, smart_proxy,
-                        action.output, :contents_changed => options[:contents_changed])
+            plan_action(SaveDistributionReferences, repository, smart_proxy, action.output)
           end
         end
 

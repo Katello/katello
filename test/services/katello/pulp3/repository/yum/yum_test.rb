@@ -52,6 +52,45 @@ module Katello
             assert_equal 'sha1', publication_options[:package_checksum_type]
           end
 
+          def test_refresh_distributions_distribution_ref_wrong
+            service = @repo.backend_service(@proxy)
+            service.stubs(:lookup_distributions).returns([PulpRpmClient::RpmRpmDistributionResponse.new(pulp_href: 'some fake href')])
+            fake_dist_ref = ::Katello::Pulp3::DistributionReference.new(href: 'hey its an href')
+            service.stubs(:distribution_reference).returns(fake_dist_ref)
+
+            fake_dist_ref.expects(:destroy)
+            service.expects(:save_distribution_references).with(['some fake href']).returns(nil)
+            service.expects(:update_distribution).returns(nil)
+
+            service.refresh_distributions
+          end
+
+          def test_fail_missing_pub_on_dist_create
+            service = @repo.backend_service(@proxy)
+            dist_options = service.secure_distribution_options(@repo.relative_path)
+            dist_options[:publication] = 'publication_href'
+            service.expects(:secure_distribution_options).with(@repo.relative_path).returns(dist_options)
+            service.expects(:lookup_publication).with('publication_href').returns(false)
+
+            assert_raises_with_message(RuntimeError, "The repository's publication is missing. Please run a 'complete sync' on Fedora 17 x86_64.") do
+              service.create_distribution(@repo.relative_path)
+            end
+          end
+
+          def test_fail_missing_pub_on_dist_update
+            service = @repo.backend_service(@proxy)
+            fake_dist_ref = ::Katello::Pulp3::DistributionReference.new(href: 'hey its an href')
+            service.stubs(:distribution_reference).returns(fake_dist_ref)
+            dist_options = service.secure_distribution_options(@repo.relative_path)
+            dist_options[:publication] = 'publication_href'
+            service.expects(:secure_distribution_options).with(@repo.relative_path).returns(dist_options)
+            service.expects(:lookup_publication).with('publication_href').returns(false)
+
+            assert_raises_with_message(RuntimeError, "The repository's publication is missing. Please run a 'complete sync' on Fedora 17 x86_64.") do
+              service.update_distribution
+            end
+          end
+
           def test_sles_auth_token_not_included_if_blank
             @repo.root.url = "http://foo.com/bar/"
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)

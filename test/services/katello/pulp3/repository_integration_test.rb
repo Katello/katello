@@ -22,7 +22,7 @@ types.values.each do |repository_type|
         @repo.root.update!(url: repo_type.test_url, :content_type => repo_type.id,
                            :download_policy => nil, generic_remote_options: {})
         @repo.root.update(repo_type.test_url_root_options) if repo_type.test_url_root_options
-        @repo.update(:pulp_id => @repo.pulp_id + "-test-#{repo_type.id}", :relative_path => "/integration_tests/#{repo_type.id}")
+        @repo.update(:pulp_id => @repo.pulp_id + "-test-#{repo_type.id}", :relative_path => "integration_tests/#{repo_type.id}")
         create_repo(@repo, @primary)
         ForemanTasks.sync_task(::Actions::Katello::Repository::MetadataGenerate, @repo)
       end
