@@ -49,7 +49,7 @@
         <button class="btn btn-default"
                 type="button"
                 translate
-                ng-disabled="working || !katelloAgentPresent"
+                ng-disabled="working || (!remoteExecutionPresent && !katelloAgentPresent)"
                 ng-click="updateAll()">
           Update All Packages
         </button>

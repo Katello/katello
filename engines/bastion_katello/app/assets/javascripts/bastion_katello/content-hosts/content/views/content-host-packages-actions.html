@@ -60,7 +60,7 @@
         <div class="form-group">
           <button class="btn btn-default" type="button"
                   translate
-                  ng-disabled="!katelloAgentPresent || working"
+                  ng-disabled="working || (!remoteExecutionPresent && !katelloAgentPresent)"
                   ng-click="updateAll()">
             Update All Packages
           </button>

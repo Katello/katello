@@ -45,7 +45,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         $scope.updateAll = function () {
             $scope.working = true;
-            HostPackage.updateAll({id: $scope.host.id}, $scope.openEventInfo, $scope.errorHandler);
+            $scope.performPackageAction('packageUpdate', '');
         };
 
         $scope.performPackageAction = function (actionType, term) {
