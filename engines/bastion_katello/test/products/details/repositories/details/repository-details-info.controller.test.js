@@ -125,34 +125,6 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect(Notification.setSuccessMessage).toHaveBeenCalledWith('Repository Saved.');
     });
 
-    it('should ignore upstream auth on save unless specified', function() {
-        var repo = new Repository({
-            upstream_username: 'autofilled',
-            upstream_password: 'autofilled',
-            upstream_authentication_token: 'autofilled'
-        })
-
-        $scope.save(repo);
-
-        expect(repo.upstream_username).toBe(null);
-        expect(repo.upstream_password).toBe(null);
-        expect(repo.upstream_authentication_token).toBe(null);
-    });
-
-    it('should not ignore upstream auth on save unless specified', function() {
-        var repo = new Repository({
-            upstream_username: 'autofilled',
-            upstream_password: 'autofilled',
-            upstream_authentication_token: 'autofilled'
-        })
-
-        $scope.save(repo, true);
-
-        expect(repo.upstream_username).toBe('autofilled');
-        expect(repo.upstream_password).toBe('autofilled');
-        expect(repo.upstream_authentication_token).toBe('autofilled');
-    });
-
     it('should clear out auth fields on save if blank', function() {
       var repo = new Repository({
         upstream_username: '',
@@ -162,7 +134,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         ansible_collection_auth_token: '',
       })
 
-      $scope.save(repo, true);
+      $scope.save(repo);
 
       expect(repo.upstream_username).toBe(null);
       expect(repo.upstream_password).toBe(null);
@@ -180,7 +152,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
       ansible_collection_auth_token: 'some_token',
     })
 
-    $scope.save(repo, true);
+    $scope.save(repo);
 
     expect(repo.upstream_username).not.toBe(null);
     expect(repo.upstream_password).not.toBe(null);
