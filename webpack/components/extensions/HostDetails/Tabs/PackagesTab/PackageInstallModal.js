@@ -15,11 +15,9 @@ import { HOST_YUM_INSTALLABLE_PACKAGES_KEY } from './YumInstallablePackagesConst
 import { selectHostYumInstallablePackagesStatus } from './YumInstallablePackagesSelectors';
 import { getHostYumInstallablePackages } from './YumInstallablePackagesActions';
 import './PackageInstallModal.scss';
-import { installPackageBySearch } from '../RemoteExecutionActions';
 import { katelloPackageInstallBySearchUrl, katelloPackageInstallUrl } from '../customizedRexUrlHelpers';
 import hostIdNotReady from '../../HostDetailsActions';
 import { installPackageViaKatelloAgent } from './HostPackagesActions';
-import { useRexJobPolling } from '../RemoteExecutionHooks';
 
 const InstallDropdown = ({
   isDisabled, installViaRex, installViaKatelloAgent,
@@ -102,7 +100,7 @@ InstallDropdown.defaultProps = {
 };
 
 const PackageInstallModal = ({
-  isOpen, closeModal, hostId, hostName, showKatelloAgent,
+  isOpen, closeModal, hostId, hostName, showKatelloAgent, triggerPackageInstall,
 }) => {
   const emptyContentTitle = __('No packages available to install');
   const emptyContentBody = __('No packages available to install on this host. Please check the host\'s content view and lifecycle environment.');
@@ -128,12 +126,6 @@ const PackageInstallModal = ({
     selectedResults,
     ...selectAll
   } = useBulkSelect({ results, metadata });
-
-  const packageInstallAction
-    = bulkParams => installPackageBySearch({ hostname: hostName, search: bulkParams });
-
-  const { triggerJobStart: triggerPackageInstall, lastCompletedJob: lastCompletedPackageInstall }
-   = useRexJobPolling(packageInstallAction);
 
   const fetchItems = (params) => {
     if (!hostId) return hostIdNotReady;
@@ -219,7 +211,7 @@ const PackageInstallModal = ({
         }
         }
         ouiaId="host-package-install-table"
-        additionalListeners={[hostId, lastCompletedPackageInstall]}
+        additionalListeners={[hostId]}
         fetchItems={fetchItems}
         searchPlaceholderText={__('Search available packages')}
         autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}
@@ -279,6 +271,7 @@ PackageInstallModal.propTypes = {
   hostId: PropTypes.number.isRequired,
   hostName: PropTypes.string.isRequired,
   showKatelloAgent: PropTypes.bool,
+  triggerPackageInstall: PropTypes.func.isRequired,
 };
 
 PackageInstallModal.defaultProps = {

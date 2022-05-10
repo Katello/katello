@@ -75,6 +75,7 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
     succeeded,
     rexJobId,
     lastCompletedJob,
+    startRexJobPolling,
     triggerJobStart: dispatchInitialAction,
   });
 };

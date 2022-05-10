@@ -33,7 +33,7 @@ import { selectHostPackagesStatus } from './HostPackagesSelectors';
 import {
   HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM,
 } from './HostPackagesConstants';
-import { removePackage, updatePackage, removePackages, updatePackages } from '../RemoteExecutionActions';
+import { removePackage, updatePackage, removePackages, updatePackages, installPackageBySearch } from '../RemoteExecutionActions';
 import { katelloPackageUpdateUrl, packagesUpdateUrl } from '../customizedRexUrlHelpers';
 import './PackagesTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
@@ -173,8 +173,17 @@ export const PackagesTab = () => {
     isPolling: isBulkUpgradeInProgress,
   } = useRexJobPolling(packageBulkUpgradeAction);
 
+  const packageInstallAction
+    = bulkParams => installPackageBySearch({ hostname, search: bulkParams });
+
+  const {
+    triggerJobStart: triggerPackageInstall,
+    lastCompletedJob: lastCompletedPackageInstall,
+    isPolling: isInstallInProgress,
+  } = useRexJobPolling(packageInstallAction);
+
   const actionInProgress = (isRemoveInProgress || isUpgradeInProgress
-    || isBulkRemoveInProgress || isBulkUpgradeInProgress);
+    || isBulkRemoveInProgress || isBulkUpgradeInProgress || isInstallInProgress);
   const disabledReason = __('A remote execution job is in progress.');
 
   if (!hostId) return <Skeleton />;
@@ -392,7 +401,7 @@ export const PackagesTab = () => {
           additionalListeners={[hostId, packageStatusSelected,
             activeSortDirection, activeSortColumn, lastCompletedPackageUpgrade,
             lastCompletedPackageRemove, lastCompletedBulkPackageRemove,
-            lastCompletedBulkPackageUpgrade]}
+            lastCompletedBulkPackageUpgrade, lastCompletedPackageInstall]}
           fetchItems={fetchItems}
           bookmarkController="katello_host_installed_packages"
           autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}
@@ -488,6 +497,7 @@ export const PackagesTab = () => {
           key={hostId}
           hostName={hostname}
           showKatelloAgent={showKatelloAgent}
+          triggerPackageInstall={triggerPackageInstall}
         />
       }
     </div>
