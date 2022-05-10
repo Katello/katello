@@ -3,11 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem,
-<<<<<<< HEAD
   DropdownToggle, DropdownToggleAction,
-=======
-  Spinner,
->>>>>>> 33b221d6c5 (Refs #34856 - add loader to Errata)
 } from '@patternfly/react-core';
 import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
 import {

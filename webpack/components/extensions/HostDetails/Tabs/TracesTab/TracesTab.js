@@ -1,13 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-<<<<<<< HEAD
   Skeleton, Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, DropdownToggle, DropdownToggleAction,
-=======
-  Skeleton, Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle, Spinner,
->>>>>>> e7c816ca85 (Refs #34856 - standardize spinner in Traces)
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';

@@ -465,7 +465,7 @@ export const PackagesTab = () => {
                       rowIndex,
                       variant: 'checkbox',
                     }}
-                    title={actionInProgress && disabledReason}
+                    title={actionInProgress ? disabledReason : undefined}
                   />
                   <Td>
                     {rpmId
