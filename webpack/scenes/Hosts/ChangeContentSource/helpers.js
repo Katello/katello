@@ -1,6 +1,11 @@
 import { STATUS } from 'foremanReact/constants';
 
 export const getHostIds = () => {
+  const url = new URL(window.location);
+  const hostId = url.searchParams.get('host_id');
+
+  if (hostId) return [hostId];
+
   const cookie = document.cookie.split('; ')
     .find(row => row.startsWith('_ForemanSelectedhosts'));
   const params = new URLSearchParams(cookie);
