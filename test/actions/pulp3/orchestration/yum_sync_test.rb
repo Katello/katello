@@ -118,5 +118,39 @@ module ::Actions::Pulp3
         ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       end
     end
+
+    def test_sync_with_acs
+      yum_acs = katello_alternate_content_sources(:yum_alternate_content_source)
+      yum_acs.base_url = 'https://jlsherrill.fedorapeople.org/fake-repos/'
+      yum_acs.subpaths = ['needed-errata/', 'empty/']
+      yum_acs.ssl_ca_cert_id = nil
+      yum_acs.ssl_client_cert_id = nil
+      yum_acs.ssl_client_key_id = nil
+      yum_acs.upstream_username = nil
+      yum_acs.upstream_password = nil
+      yum_acs.save!
+
+      ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: yum_acs.id, smart_proxy_id: @primary.id)
+
+      ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(yum_acs.name)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, yum_acs, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, yum_acs, @primary)
+
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      @repo.reload
+      repository_reference = Katello::Pulp3::RepositoryReference.find_by(
+          :root_repository_id => @repo.root.id,
+          :content_view_id => @repo.content_view.id)
+
+      assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
+      refute_nil @repo.version_href
+      refute_nil @repo.publication_href
+
+      yum_acs.smart_proxies.each do |proxy|
+        ForemanTasks.sync_task(
+            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, yum_acs, proxy)
+      end
+    end
   end
 end

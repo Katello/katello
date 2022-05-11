@@ -2,8 +2,10 @@ module Katello
   class Api::V2::AlternateContentSourcesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy]
-    before_action :find_smart_proxies
+    acs_wrap_params = AlternateContentSource.attribute_names.concat([:smart_proxy_ids])
+    wrap_parameters :alternate_content_source, include: acs_wrap_params
+
+    before_action :find_authorized_katello_resource, only: [:show, :update, :destroy, :refresh]
 
     def_param_group :acs do
       param :name, String, desc: N_("Name of the alternate content source")
@@ -54,7 +56,10 @@ module Katello
     api :POST, '/alternate_content_sources', N_('Create an ACS')
     param_group :acs
     def create
-      @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params)
+      find_smart_proxies
+      @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params.except(:smart_proxy_ids))
+      fail HttpErrors::NotFound, _("Couldn't find smart proxies with id '%s'") % params[:smart_proxy_ids].to_sentence if @smart_proxies.empty?
+
       sync_task(::Actions::Katello::AlternateContentSource::Create, @alternate_content_source, @smart_proxies)
       @alternate_content_source.reload
       respond_for_create(resource: @alternate_content_source)
@@ -67,8 +72,12 @@ module Katello
       # If a user doesn't include smart proxies in the update call, don't accidentally remove all of them.
       if params[:smart_proxy_ids].nil?
         @smart_proxies = @alternate_content_source.smart_proxies
+      elsif params[:smart_proxy_ids].empty?
+        @smart_proxies = []
+      else
+        find_smart_proxies
       end
-      sync_task(::Actions::Katello::AlternateContentSource::Update, @alternate_content_source, @smart_proxies, acs_params)
+      sync_task(::Actions::Katello::AlternateContentSource::Update, @alternate_content_source, @smart_proxies, acs_params.except(:smart_proxy_ids))
       respond_for_show(:resource => @alternate_content_source)
     end
 
@@ -77,6 +86,13 @@ module Katello
     def destroy
       sync_task(::Actions::Katello::AlternateContentSource::Destroy, @alternate_content_source)
       respond_for_destroy
+    end
+
+    api :POST, '/alternate_content_sources/:id/refresh', N_('Refresh an alternate content source')
+    param :id, :number, :required => true, :desc => N_("Alternate content source ID")
+    def refresh
+      task = async_task(::Actions::Katello::AlternateContentSource::Refresh, @alternate_content_source)
+      respond_for_async :resource => task
     end
 
     protected
@@ -92,6 +108,10 @@ module Katello
       if params[:smart_proxy_ids]
         @smart_proxies = ::SmartProxy.where(id: params[:smart_proxy_ids])
         fail HttpErrors::NotFound, _("Couldn't find smart proxies with id '%s'") % params[:smart_proxy_ids].to_sentence if @smart_proxies.empty?
+        if @smart_proxies.length < params[:smart_proxy_ids].length
+          missing_smart_proxies = params[:smart_proxy_ids] - @smart_proxies.pluck(:id)
+          fail HttpErrors::NotFound, _("Couldn't find smart proxies with id '%s'") % missing_smart_proxies.to_sentence
+        end
       end
     end
   end
