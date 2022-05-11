@@ -14,6 +14,10 @@ Katello::Engine.routes.draw do
         # re-routes alphabetical
         ##############################
 
+        api_resources :alternate_content_sources, :only => [:index, :show, :create, :update, :destroy] do
+          get :auto_complete_search, :on => :collection
+        end
+
         api_resources :capsules, :only => [:index, :show] do
           member do
             resource :content, :only => [], :controller => 'capsule_content' do
@@ -349,6 +353,18 @@ Katello::Engine.routes.draw do
         ##############################
         ##############################
 
+        api_resources :alternate_content_sources, :only => [], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+          collection do
+            match '/bulk/destroy' => 'alternate_content_sources_bulk_actions#destroy_alternate_content_sources', :via => :put
+            match '/bulk/refresh' => 'alternate_content_sources_bulk_actions#refresh_alternate_content_sources', :via => :post
+            get :auto_complete_search
+          end
+
+          member do
+            post :refresh
+          end
+        end
+
         api_resources :organizations do
           api_resources :sync_plans do
             member do
@@ -468,10 +484,6 @@ Katello::Engine.routes.draw do
         api_resources :sync_plans, :only => [:index, :show, :update, :destroy] do
           get :auto_complete_search, :on => :collection
           put :sync
-        end
-
-        api_resources :alternate_content_sources, :only => [:index, :show, :create, :update, :destroy] do
-          get :auto_complete_search, :on => :collection
         end
       end # module v2
     end # '/api' namespace

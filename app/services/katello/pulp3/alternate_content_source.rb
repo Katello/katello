@@ -101,6 +101,12 @@ module Katello
         ignore_404_exception { api.alternate_content_source_api.delete(href) } if href
       end
 
+      def refresh
+        href = smart_proxy_acs.alternate_content_source_href
+        # https://github.com/pulp/pulp_rpm/issues/2504
+        api.alternate_content_source_api.refresh(href, 'placeholder')
+      end
+
       private
 
       def insert_pulp_manifest!(subpaths)
