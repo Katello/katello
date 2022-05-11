@@ -5,7 +5,7 @@ module Actions
         #This task creates a content unit and may or may not create a new repository version in the process
         def plan(file, repository, smart_proxy, tasks, unit_type_id, options = {})
           options[:file_name] = file[:filename]
-          options[:sha256] = file[:sha256] || Digest::SHA256.hexdigest(File.read(file[:path]))
+          options[:sha256] = file[:sha256] || (Digest::SHA256.hexdigest(File.read(file[:path])) if file[:path].present?)
           plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :tasks => tasks, :unit_type_id => unit_type_id, :options => options)
         end
 
