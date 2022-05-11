@@ -194,7 +194,11 @@ module Katello
 
     def host_collection_params_with_host_ids
       result = host_collection_params
-      result[:max_hosts] = nil if params[:unlimited_hosts]
+      if params[:unlimited_hosts]
+        result[:max_hosts] = nil
+      elsif params[:max_hosts]
+        result[:unlimited_hosts] = false
+      end
       result
     end
 
