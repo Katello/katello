@@ -24,17 +24,9 @@ module Katello
       @acs.save!
     end
 
-    def permissions
-      @read_permission = :view_alternate_content_sources
-      @create_permission = :create_alternate_content_sources
-      @update_permission = :edit_alternate_content_sources
-      @destroy_permission = :destroy_alternate_content_sources
-    end
-
     def setup
       setup_controller_defaults_api
       models
-      permissions
     end
 
     def test_index
@@ -198,6 +190,16 @@ module Katello
       end
 
       delete :destroy, params: { :id => @acs.id }
+
+      assert_response :success
+    end
+
+    def test_refresh
+      assert_async_task(::Actions::Katello::AlternateContentSource::Refresh) do |acs|
+        assert_equal acs.attributes.except('id', 'label'), @acs.attributes.except('id', 'label')
+      end
+
+      post :refresh, params: { :id => @acs.id }
 
       assert_response :success
     end
