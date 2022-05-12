@@ -875,7 +875,7 @@ test('Can bulk apply via katello agent', async (done) => {
   getByLabelText('Select row 0').click();
   getByLabelText('Select row 1').click();
 
-  const actionMenu = getByLabelText('bulk_actions');
+  const actionMenu = getByLabelText('expand_errata_toggle');
   actionMenu.click();
   const viaAction = queryByText('Apply via Katello agent');
   expect(viaAction).toBeInTheDocument();
@@ -923,7 +923,7 @@ test('Can select all, exclude and bulk apply via katello agent', async (done) =>
 
   getByLabelText('Select row 0').click(); // deselect
 
-  const actionMenu = getByLabelText('bulk_actions');
+  const actionMenu = getByLabelText('expand_errata_toggle');
   actionMenu.click();
   const viaAction = queryByText('Apply via Katello agent');
   expect(viaAction).toBeInTheDocument();
@@ -1013,7 +1013,7 @@ test('Can bulk apply via remote execution', async (done) => {
   getByLabelText('Select row 0').click();
   getByLabelText('Select row 1').click();
 
-  const actionMenu = getByLabelText('bulk_actions');
+  const actionMenu = getByLabelText('expand_errata_toggle');
   actionMenu.click();
   const viaRexAction = queryByText('Apply via remote execution');
   expect(viaRexAction).toBeInTheDocument();
@@ -1059,7 +1059,7 @@ test('Can select all, exclude and bulk apply via remote execution', async (done)
 
   getByLabelText('Select row 0').click(); // de select
 
-  const actionMenu = getByLabelText('bulk_actions');
+  const actionMenu = getByLabelText('expand_errata_toggle');
   actionMenu.click();
   const viaRexAction = queryByText('Apply via remote execution');
   expect(viaRexAction).toBeInTheDocument();
@@ -1091,7 +1091,7 @@ test('Can apply errata in bulk via customized remote execution', async (done) =>
   getByLabelText('Select row 1').click();
   const errata = `${results[0].errata_id},${results[1].errata_id}`;
   const feature = REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH;
-  const actionMenu = getByLabelText('bulk_actions');
+  const actionMenu = getByLabelText('expand_errata_toggle');
   actionMenu.click();
   const viaRexAction = queryByText('Apply via customized remote execution');
   expect(viaRexAction).toBeInTheDocument();
