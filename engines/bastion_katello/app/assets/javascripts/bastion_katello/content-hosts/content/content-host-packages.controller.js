@@ -45,7 +45,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         $scope.updateAll = function () {
             $scope.working = true;
-            HostPackage.updateAll({id: $scope.host.id}, $scope.openEventInfo, $scope.errorHandler);
+            $scope.performPackageAction('packageUpdate', '');
         };
 
         $scope.performPackageAction = function (actionType, term) {
@@ -57,9 +57,14 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
         };
 
         $scope.performViaKatelloAgent = function (actionType, term) {
-            var terms = term.split(/ *, */);
+            var terms = [];
+            if (term === '') {
+                packageActions.updateAll();
+            } else {
+                terms = term.split(/ *, */);
+                packageActions[actionType](terms);
+            }
             $scope.working = true;
-            packageActions[actionType](terms);
         };
 
         $scope.performViaRemoteExecution = function(actionType, term, customize) {
@@ -76,6 +81,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
         };
 
         packageActions = {
+            updateAll: function () {
+                HostPackage.updateAll({id: $scope.host.id}, $scope.openEventInfo, $scope.errorHandler);
+            },
             packageInstall: function (termList) {
                 HostPackage.install({id: $scope.host.id, packages: termList}, $scope.openEventInfo, $scope.errorHandler);
             },
