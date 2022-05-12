@@ -109,7 +109,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                         } else if (errorCount > 1) {
                             errorMessage += " " + translate("Plus 1 more error");
                         }
-                        Notification.setErrorMessage(errorMessage);
+                        Notification.setErrorMessage(translate('Last sync failed: ') + errorMessage);
                     }
                 }
                 $scope.syncState.set(stateFromTask(activeOrFailedTask));
