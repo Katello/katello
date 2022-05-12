@@ -112,8 +112,8 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
           </Card>
         ))}
         <ActionGroup>
-          <Button ouia-id="add-components-modal-add" aria-label="add_components" variant="primary" type="submit">{__('Add')}</Button>
-          <Button ouia-id="add-components-modal-cancel" variant="link" onClick={onClose}>{__('Cancel')}</Button>
+          <Button ouiaId="add-components-modal-add" aria-label="add_components" variant="primary" type="submit">{__('Add')}</Button>
+          <Button ouiaId="add-components-modal-cancel" variant="link" onClick={onClose}>{__('Cancel')}</Button>
         </ActionGroup>
       </Form>
     </Modal >);
