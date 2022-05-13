@@ -41,6 +41,12 @@ import {
 import { moduleStreamAction } from '../RemoteExecutionActions';
 import { katelloModuleStreamActionUrl } from '../customizedRexUrlHelpers';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
+import {
+  hasRequiredPermissions as can,
+  missingRequiredPermissions as cannot,
+  userPermissionsFromHostDetails,
+} from '../../hostDetailsHelpers';
+
 
 const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
   switch (true) {
@@ -193,8 +199,13 @@ ModuleActionConfirmationModal.propTypes = {
   triggerModuleStreamAction: PropTypes.func.isRequired,
 };
 
+const invokeRexJobs = ['create_job_invocations'];
+const createBookmarks = ['create_bookmarks'];
+
 export const ModuleStreamsTab = () => {
-  const { id: hostId, name: hostname } = useSelector(selectHostDetails);
+  const hostDetails = useSelector(selectHostDetails);
+  const { id: hostId, name: hostname } = hostDetails;
+  const showActions = can(invokeRexJobs, userPermissionsFromHostDetails({ hostDetails }));
   const [useCustomizedRex, setUseCustomizedRex] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState('');
   const [actionModalOpen, setActionModalOpen] = useState(false);
@@ -306,6 +317,9 @@ export const ModuleStreamsTab = () => {
   });
   /* eslint-enable no-unused-vars */
 
+  const hideBookmarkActions =
+    cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
+
   if (!hostId) return <Skeleton />;
 
   const activeFilters = [statusSelected, installStatusSelected];
@@ -335,6 +349,7 @@ export const ModuleStreamsTab = () => {
             tableJobCompleted]}
           fetchItems={fetchItems}
           bookmarkController="katello_host_available_module_streams"
+          readOnlyBookmarks={hideBookmarkActions}
           autocompleteEndpoint={`/hosts/${hostId}/module_streams/auto_complete_search`}
           foremanApiAutoComplete
           rowsCount={results?.length}
@@ -590,20 +605,22 @@ export const ModuleStreamsTab = () => {
                       installedProfiles={installedProfiles}
                     />
                   </Td>
-                  <Td key={`actions-td-${id}-${dropdownOpen}`}>
-                    <Dropdown
-                      aria-label={`actions-dropdown-${id}`}
-                      key={`actions-dropdown-${id}-${dropdownOpen}`}
-                      isPlain
-                      style={{ width: 'inherit' }}
-                      position={DropdownPosition.right}
-                      toggle={
-                        <KebabToggle aria-label={`kebab-dropdown-${id}`} onToggle={() => ((dropdownOpen === id) ? setDropdownOpen('') : setDropdownOpen(id))} id={`toggle-dropdown-${id}`} />
-                    }
-                      isOpen={id === dropdownOpen}
-                      dropdownItems={dropdownItems}
-                    />
-                  </Td>
+                  {showActions && (
+                    <Td key={`actions-td-${id}-${dropdownOpen}`}>
+                      <Dropdown
+                        aria-label={`actions-dropdown-${id}`}
+                        key={`actions-dropdown-${id}-${dropdownOpen}`}
+                        isPlain
+                        style={{ width: 'inherit' }}
+                        position={DropdownPosition.right}
+                        toggle={
+                          <KebabToggle aria-label={`kebab-dropdown-${id}`} onToggle={() => ((dropdownOpen === id) ? setDropdownOpen('') : setDropdownOpen(id))} id={`toggle-dropdown-${id}`} />
+                      }
+                        isOpen={id === dropdownOpen}
+                        dropdownItems={dropdownItems}
+                      />
+                    </Td>
+                  )}
                 </Tr>
               );
             })

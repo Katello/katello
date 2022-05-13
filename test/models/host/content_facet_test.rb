@@ -374,7 +374,7 @@ module Katello
                                                    "/pulp/content/Library/test/"
                                                  ])
 
-      assert_equal content_facet.bound_repositories, [deb_repo, repo]
+      assert_equal_arrays content_facet.bound_repositories, [deb_repo, repo]
     end
 
     def test_save_bound_repos_by_paths_same_path

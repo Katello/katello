@@ -59,7 +59,24 @@ import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
 import './RepositorySetsTab.scss';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import SelectableDropdown from '../../../../SelectableDropdown';
+import { hasRequiredPermissions as can,
+  missingRequiredPermissions as cannot,
+  hostIsNotRegistered,
+  userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 
+const viewRepoSets = [
+  'view_hosts', 'view_activation_keys', 'view_products',
+];
+const createBookmarks = ['create_bookmarks'];
+
+export const hideRepoSetsTab = ({ hostDetails }) =>
+  hostIsNotRegistered({ hostDetails }) ||
+    cannot(
+      viewRepoSets,
+      userPermissionsFromHostDetails({ hostDetails }),
+    );
+
+const editHosts = ['edit_hosts'];
 const getEnabledValue = ({ enabled, enabledContentOverride }) => {
   const isOverridden = (enabledContentOverride !== null);
   return {
@@ -103,6 +120,10 @@ const RepositorySetsTab = () => {
     subscription_status: subscriptionStatus,
     content_facet_attributes: contentFacetAttributes,
   } = hostDetails;
+  const canDoContentOverrides = can(
+    editHosts,
+    userPermissionsFromHostDetails({ hostDetails }),
+  );
   const STATUS_LABEL = __('Status');
 
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
@@ -260,6 +281,9 @@ const RepositorySetsTab = () => {
     singular: true,
   });
 
+  const readOnlyBookmarks =
+  cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
+
   const dropdownItems = [
     <DropdownItem aria-label="bulk_enable" key="bulk_enable" component="button" onClick={enableRepoSets} isDisabled={selectedCount === 0}>
       {__('Override to enabled')}
@@ -307,7 +331,7 @@ const RepositorySetsTab = () => {
     </Split>
   );
 
-  const actionButtons = (
+  const actionButtons = canDoContentOverrides ? (
     <Split hasGutter>
       <SplitItem>
         <ActionList isIconList>
@@ -322,7 +346,7 @@ const RepositorySetsTab = () => {
         </ActionList>
       </SplitItem>
     </Split>
-  );
+  ) : null;
 
   const hostEnvText = 'the "{contentViewName}" content view and "{lifecycleEnvironmentName}" environment';
 
@@ -400,10 +424,11 @@ const RepositorySetsTab = () => {
           fetchItems={fetchItems}
           autocompleteEndpoint="/repository_sets/auto_complete_search"
           bookmarkController="katello_product_contents" // Katello::ProductContent.table_name
+          readOnlyBookmarks={readOnlyBookmarks}
           rowsCount={results?.length}
           variant={TableVariant.compact}
           {...selectAll}
-          displaySelectAllCheckbox
+          displaySelectAllCheckbox={canDoContentOverrides}
         >
           <Thead>
             <Tr>
@@ -431,14 +456,16 @@ const RepositorySetsTab = () => {
                 getEnabledValue({ enabled, enabledContentOverride });
               return (
                 <Tr key={id}>
-                  <Td select={{
-                    disable: !isSelectable(id),
-                    isSelected: isSelected(id),
-                    onSelect: (event, selected) => selectOne(selected, id),
-                    rowIndex,
-                    variant: 'checkbox',
-                  }}
-                  />
+                  {canDoContentOverrides ? (
+                    <Td select={{
+                      disable: !isSelectable(id),
+                      isSelected: isSelected(id),
+                      onSelect: (event, selected) => selectOne(selected, id),
+                      rowIndex,
+                      variant: 'checkbox',
+                    }}
+                    />
+                  ) : <Td>&nbsp;</Td>}
                   <Td>
                     <span>{repoName}</span>
                   </Td>
@@ -451,28 +478,30 @@ const RepositorySetsTab = () => {
                   <Td>
                     <span><EnabledIcon key={`enabled-icon-${id}`} {...{ isEnabled, isOverridden }} /></span>
                   </Td>
-                  <Td
-                    key={`rowActions-${id}`}
-                    actions={{
-                      items: [
-                        {
-                          title: __('Override to disabled'),
-                          isDisabled: isOverridden && !isEnabled,
-                          onClick: () => disableRepoSet(id),
-                        },
-                        {
-                          title: __('Override to enabled'),
-                          isDisabled: isOverridden && isEnabled,
-                          onClick: () => enableRepoSet(id),
-                        },
-                        {
-                          title: __('Reset to default'),
-                          isDisabled: !isOverridden,
-                          onClick: () => resetToDefaultRepoSet(id),
-                        },
-                      ],
-                    }}
-                  />
+                  {canDoContentOverrides ? (
+                    <Td
+                      key={`rowActions-${id}`}
+                      actions={{
+                        items: [
+                          {
+                            title: __('Override to disabled'),
+                            isDisabled: isOverridden && !isEnabled,
+                            onClick: () => disableRepoSet(id),
+                          },
+                          {
+                            title: __('Override to enabled'),
+                            isDisabled: isOverridden && isEnabled,
+                            onClick: () => enableRepoSet(id),
+                          },
+                          {
+                            title: __('Reset to default'),
+                            isDisabled: !isOverridden,
+                            onClick: () => resetToDefaultRepoSet(id),
+                          },
+                        ],
+                      }}
+                    />
+                  ) : <Td />}
                 </Tr>
               );
             })

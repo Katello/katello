@@ -33,6 +33,18 @@ child :content_facet => :content_facet_attributes do
   node :remote_execution_by_default do
     Katello.remote_execution_by_default?
   end
+
+  user = User.current # current_user is not available here
+  child :permissions do
+    node(:view_lifecycle_environments) { user.can?("view_lifecycle_environments") }
+    node(:view_content_views) { user.can?("view_content_views") }
+    node(:promote_or_remove_content_views_to_environments) { user.can?("promote_or_remove_content_views_to_environments") }
+    node(:view_host_collections) { user.can?("view_host_collections") }
+    node(:create_job_invocations) { user.can?("create_job_invocations") }
+    node(:view_activation_keys) { user.can?("view_activation_keys") }
+    node(:view_products) { user.can?("view_products") }
+    node(:create_bookmarks) { user.can?("create_bookmarks") }
+  end
 end
 
 attributes :description, :facts

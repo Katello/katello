@@ -11,7 +11,7 @@ import './Bookmark.scss';
 import AddBookmarkModal from './AddBookmarkModal';
 
 const Bookmark = ({
-  selectItem, selectedItem, controller = '', isDisabled,
+  selectItem, selectedItem, controller = '', isDisabled, readOnlyBookmarks,
 }) => {
   const dispatch = useDispatch();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -20,6 +20,7 @@ const Bookmark = ({
     useSelector(state => selectBookmarks(state, controller), shallowEqual);
   const status =
     useSelector(state => selectBookmarkStatus(state, controller), shallowEqual);
+  const showActions = !readOnlyBookmarks;
 
   useEffect(() => {
     dispatch(getBookmarks(controller));
@@ -31,6 +32,7 @@ const Bookmark = ({
     }
     setDropdownOpen(false);
   };
+  if (!results.length && readOnlyBookmarks) return null;
 
   const dropDownItems = [
     ...results.map(({ name, id, query }) => (
@@ -41,16 +43,21 @@ const Bookmark = ({
       >
         {name}
       </DropdownItem >)),
-    <DropdownSeparator key="separator" />,
-    <DropdownItem
-      onClick={() => {
-        setDropdownOpen(false);
-        setModalOpen(true);
-      }}
-      key="ADD_BOOKMARK"
-    >
-      {selectedItem ? __('Bookmark this search') : __('Add new bookmark')}
-    </DropdownItem >];
+  ];
+  if (showActions) {
+    dropDownItems.push(
+      <DropdownSeparator key="separator" />,
+      <DropdownItem
+        onClick={() => {
+          setDropdownOpen(false);
+          setModalOpen(true);
+        }}
+        key="ADD_BOOKMARK"
+      >
+        {selectedItem ? __('Bookmark this search') : __('Add new bookmark')}
+      </DropdownItem >,
+    );
+  }
 
 
   return (
@@ -84,10 +91,12 @@ Bookmark.propTypes = {
   controller: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,
   selectedItem: PropTypes.string.isRequired,
+  readOnlyBookmarks: PropTypes.bool,
 };
 
 Bookmark.defaultProps = {
   isDisabled: undefined,
+  readOnlyBookmarks: false,
 };
 
 export default Bookmark;

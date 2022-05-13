@@ -7,6 +7,14 @@ import PackageInstallModal from '../PackagesTab/PackageInstallModal';
 import { HOST_YUM_INSTALLABLE_PACKAGES_KEY } from '../PackagesTab/YumInstallablePackagesConstants';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
 
+jest.mock('../../hostDetailsHelpers', () => ({
+  ...jest.requireActual('../../hostDetailsHelpers'),
+  userPermissionsFromHostDetails: () => ({
+    create_job_invocations: true,
+    edit_hosts: true,
+  }),
+}));
+
 const contentFacetAttributes = {
   id: 11,
   uuid: 'e5761ea3-4117-4ecf-83d0-b694f99b389e',
