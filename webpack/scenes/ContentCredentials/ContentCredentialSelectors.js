@@ -1,6 +1,8 @@
 import {
+  selectAPIStatus,
   selectAPIResponse,
 } from 'foremanReact/redux/API/APISelectors';
+import { STATUS } from 'foremanReact/constants';
 
 import { GET_CONTENT_CREDENTIALS_KEY } from './ContentCredentialConstants';
 
@@ -9,4 +11,5 @@ export const selectContentCredentials = (state) => {
   return response.results;
 };
 
-export default selectContentCredentials;
+export const selectContentCredentialsStatus = state =>
+  selectAPIStatus(state, GET_CONTENT_CREDENTIALS_KEY) || STATUS.PENDING;
