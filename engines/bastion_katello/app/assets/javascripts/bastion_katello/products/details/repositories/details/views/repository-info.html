@@ -63,7 +63,7 @@
       <dt ng-show="repository.content_type !== 'docker'" translate>Upstream URL</dt>
       <dt ng-show="repository.content_type === 'docker'" translate>Registry URL</dt>
       <dd bst-edit-text="repository.url"
-          on-save="save(repository)"
+          on-save="save(repository, true)"
           readonly="product.redhat || denied('edit_products', product)">
       </dd>
 
@@ -134,7 +134,7 @@
         <dt translate>Ansible Collection Authorization</dt>
         <dd bst-edit-custom="repository.ansible_collection_auth_exists"
             readonly="denied('edit_products', product)"
-            on-save="save(repository)"
+            on-save="save(repository, true)"
             formatter="ansibleAuthFilter"
             formatter-options="repository"
             deletable="repository.ansible_collection_auth_exists"
@@ -165,7 +165,7 @@
         <dt translate>Upstream Authorization</dt>
         <dd bst-edit-custom="repository.upstream_auth_exists"
             readonly="denied('edit_products', product)"
-            on-save="save(repository)"
+            on-save="save(repository, true)"
             formatter="upstreamPasswordFilter"
             formatter-options="repository"
             deletable="repository.upstream_auth_exists"
@@ -174,17 +174,18 @@
           <input id="upstream_username"
                  name="upstream_username"
                  type="name"
+                 autocomplete="off"
                  ng-model="repository.upstream_username"/>
           <div translate>Upstream Password</div>
-	  <input id="upstream_password"
+          <input id="upstream_password"
                  name="upstream_password"
-                 type="{{ repository.upstream_password.length < 1 ? 'text': 'password' }}"
-                 autocomplete="{{ (repository.upstream_username==null || repository.upstream_username=='') ? 'new-password' : '' }}"
+                 type="password"
+                 autocomplete="off"
                  ng-model="repository.upstream_password"/>
           <div translate>Upstream Authentication Token</div>
           <input id="upstream_authentication_token"
                   name="upstream_authentication_token"
-                  type="{{ repository.upstream_authentication_token.length < 1 ? 'text': 'password' }}"
+                  type="password"
                   autocomplete="off"
                   ng-model="repository.upstream_authentication_token"/>
         </dd>

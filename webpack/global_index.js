@@ -18,7 +18,6 @@ import rootReducer from './redux/reducers';
 import HostCollectionsCard from './components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsCard';
 import { hostIsNotRegistered } from './components/extensions/HostDetails/hostDetailsHelpers';
 import SystemPropertiesCardExtensions from './components/extensions/HostDetails/DetailsTabCards/SystemPropertiesCardExtensions';
-import HostActionsBar from './components/extensions/HostDetails/ActionsBar';
 
 registerReducer('katelloExtends', extendReducer);
 registerReducer('katello', rootReducer);
@@ -50,10 +49,3 @@ addGlobalFill('host-overview-cards', 'Installable errata', <ErrataOverviewCard k
 addGlobalFill('host-tab-details-cards', 'Installed products', <InstalledProductsCard key="installed-products" />, 100);
 addGlobalFill('host-tab-details-cards', 'Registration details', <RegistrationCard key="registration-details" />, 200);
 addGlobalFill('host-details-tab-properties-1', 'Subscription UUID', <SystemPropertiesCardExtensions key="subscription-uuid" />);
-
-addGlobalFill(
-  'host-details-kebab',
-  'katello-host-details-kebab',
-  <HostActionsBar key="katello-host-details-kebab" />,
-  100,
-);
