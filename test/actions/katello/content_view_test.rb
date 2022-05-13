@@ -36,6 +36,14 @@ module ::Actions::Katello::ContentView
       end
     end
 
+    it 'uses override_components properly' do
+      action.stubs(:task).returns(success_task)
+      action.expects(:include_other_components).with('mock', content_view).returns('mock')
+      content_view.expects(:publish_repositories).with.returns([])
+      content_view.expects(:publish_repositories).with('mock').returns([])
+      plan_action action, content_view, nil, override_components: 'mock', importing: false
+    end
+
     context 'run phase' do
       it 'creates auto-publish events for non-composite views' do
         composite_view = katello_content_views(:composite_view)
