@@ -41,7 +41,7 @@ module Actions
                                                           :triggered_by => options[:triggered_by]
                                                          )
           source_repositories = []
-          content_view.publish_repositories(options[:override_cvvs]) do |repositories|
+          content_view.publish_repositories(options[:override_components]) do |repositories|
             source_repositories += [repositories]
           end
 
