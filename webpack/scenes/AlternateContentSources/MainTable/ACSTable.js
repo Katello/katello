@@ -10,12 +10,14 @@ import {
 } from '../ACSSelectors';
 import { useTableSort } from '../../../components/Table/TableHooks';
 import getAlternateContentSources, { deleteACS } from '../ACSActions';
+import ACSCreateWizard from '../Create/ACSCreateWizard';
 
 const ACSTable = () => {
   const response = useSelector(selectAlternateContentSources);
   const status = useSelector(selectAlternateContentSourcesStatus);
   const error = useSelector(selectAlternateContentSourcesError);
   const [searchQuery, updateSearchQuery] = useState('');
+  const [isCreateWizardOpen, setIsCreateWizardOpen] = useState(false);
   const dispatch = useDispatch();
   const { results, ...metadata } = response;
   const columnHeaders = [
@@ -47,27 +49,13 @@ const ACSTable = () => {
     [apiSortParams],
   );
 
-  // const createButtonOnclick = () => {
-  //   let params = {
-  //     name: `test_acs-${Math.random()}`,
-  //     label: `test_acs-${Math.random()}`,
-  //     base_url: "https://fixtures.pulpproject.org/",
-  //     subpaths: ["file/", "package/"],
-  //     smart_proxy_ids:[1],
-  //     content_type:"yum",
-  //     alternate_content_source_type:"custom"
-  //   };
-  //   dispatch(createACS(params));
-  // };
-
   const onDelete = (id) => {
     dispatch(deleteACS(id, () =>
       dispatch(getAlternateContentSources())));
   };
 
   const createButtonOnclick = () => {
-    /* eslint-disable-next-line no-console */
-    console.log('Dispatch create!');
+    setIsCreateWizardOpen(true);
   };
 
   const rowDropdownItems = ({ id }) => [
@@ -104,9 +92,17 @@ const ACSTable = () => {
       additionalListeners={[activeSortColumn, activeSortDirection]}
       autocompleteEndpoint="/alternate_content_sources/auto_complete_search"
       actionButtons={
-        <Button ouiaId="create-acs" onClick={createButtonOnclick} variant="primary" aria-label="create_acs">
-          {__('Add source')}
-        </Button>
+        <>
+          <Button ouiaId="create-acs" onClick={createButtonOnclick} variant="primary" aria-label="create_acs">
+            {__('Add source')}
+          </Button>
+          {isCreateWizardOpen &&
+            <ACSCreateWizard
+              show={isCreateWizardOpen}
+              setIsOpen={setIsCreateWizardOpen}
+            />
+          }
+        </>
       }
     >
       <Thead>
