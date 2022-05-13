@@ -71,7 +71,7 @@ const AddEditContainerTagRuleModal = ({
         </FormGroup>
         <ActionGroup>
           <Button
-            ouiaId="add-edit-container-tag-filter-rule-submit"
+            ouia-id="add-edit-container-tag-filter-rule-submit"
             aria-label="add_edit_filter_rule"
             variant="primary"
             isDisabled={saving || tagName.length === 0}
@@ -79,7 +79,7 @@ const AddEditContainerTagRuleModal = ({
           >
             {isEditing ? __('Edit rule') : __('Add rule')}
           </Button>
-          <Button ouiaId="add-edit-container-tag-filter-rule-cancel" variant="link" onClick={onClose}>
+          <Button ouia-id="add-edit-container-tag-filter-rule-cancel" variant="link" onClick={onClose}>
             {__('Cancel')}
           </Button>
         </ActionGroup>

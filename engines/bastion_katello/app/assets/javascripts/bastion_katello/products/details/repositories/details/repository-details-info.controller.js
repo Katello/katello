@@ -89,7 +89,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 return deferred.promise;
             };
 
-            $scope.save = function (repository) {
+            $scope.save = function (repository, saveUpstreamAuth) {
                 var deferred = $q.defer();
                 var fields = ['upstream_password', 'upstream_username', 'upstream_authentication_token', 'ansible_collection_auth_token', 'ansible_collection_auth_url', 'ansible_collection_requirements'];
                 if (repository.content_type === 'yum' && typeof repository.ignore_srpms !== 'undefined') {
@@ -99,6 +99,13 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                         repository['ignorable_content'] = [];
                     }
                 }
+
+                if (!saveUpstreamAuth) {
+                    repository['upstream_username'] = null;
+                    repository['upstream_password'] = null;
+                    repository['upstream_authentication_token'] = null;
+                }
+
                 if ($scope.genericRemoteOptions && $scope.genericRemoteOptions !== []) {
                     $scope.genericRemoteOptions.forEach(function(option) {
                        if (option.type === "Array") {
@@ -134,9 +141,6 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                         repository[field] = null;
                     }
                 });
-                if (!repository['upstream_username']) {
-                    repository['upstream_password'] = null;
-                }
                 repository.os_versions = $scope.osVersionsParam();
                 repository.$update(function (response) {
                     deferred.resolve(response);
