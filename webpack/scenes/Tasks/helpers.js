@@ -53,6 +53,7 @@ export const renderRexJobStartedToast = ({ id, description }) => {
     message,
     type: 'info',
     link: rexJobLink(id),
+    sticky: true,
   });
 };
 
