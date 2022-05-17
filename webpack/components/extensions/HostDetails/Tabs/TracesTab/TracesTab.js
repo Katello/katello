@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-  Skeleton, Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle,
+  Skeleton, Split, SplitItem, ActionList, ActionListItem, Dropdown,
+  DropdownItem, DropdownToggle, DropdownToggleAction,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
@@ -112,19 +112,22 @@ const TracesTab = () => {
       <SplitItem>
         <ActionList isIconList>
           <ActionListItem>
-            <Button
-              variant="secondary"
-              isDisabled={selectedCount === 0}
-              onClick={onBulkRestartApp}
-            >
-              {__('Restart app')}
-            </Button>
-          </ActionListItem>
-          <ActionListItem>
             <Dropdown
-              toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+              aria-label="bulk_actions_dropdown"
+              toggle={
+                <DropdownToggle
+                  aria-label="bulk_actions"
+                  splitButtonItems={[
+                    <DropdownToggleAction key="action" onClick={onBulkRestartApp}>
+                      {__('Restart app')}
+                    </DropdownToggleAction>,
+                  ]}
+                  splitButtonVariant="action"
+                  toggleVariant="primary"
+                  onToggle={toggleBulkAction}
+                />
+              }
               isOpen={isBulkActionOpen}
-              isPlain
               dropdownItems={dropdownItems}
             />
           </ActionListItem>

@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
+  Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem,
+  DropdownToggle, DropdownToggleAction,
 } from '@patternfly/react-core';
 import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
 import {
@@ -67,6 +68,12 @@ export const ErrataTab = () => {
     = useState(PARAM_TO_FRIENDLY_NAME[initialSeverity] ?? ERRATA_SEVERITY);
   const activeFilters = [errataTypeSelected, errataSeveritySelected];
   const defaultFilters = [ERRATA_TYPE, ERRATA_SEVERITY];
+
+  const [isActionOpen, setIsActionOpen] = useState(false);
+  const onActionToggle = () => {
+    setIsActionOpen(prev => !prev);
+  };
+
   const allUpToDate = errataStatus === 0;
   const emptyContentTitle = allUpToDate ? __('All errata up-to-date') : __('This host has errata that are applicable, but not installable.');
   const emptyContentBody = allUpToDate ? __('No action is needed because there are no applicable errata for this host.') : __("You may want to check the host's content view and lifecycle environment.");
@@ -193,7 +200,7 @@ export const ErrataTab = () => {
     }
   };
 
-  const dropdownItems = [
+  const dropdownKebabItems = [
     <DropdownItem
       aria-label="bulk_add"
       key="bulk_add"
@@ -204,8 +211,29 @@ export const ErrataTab = () => {
     </DropdownItem>,
   ];
 
+  const dropdownItems = [
+    <DropdownItem
+      aria-label="apply_via_remote_execution"
+      key="apply_via_remote_execution"
+      component="button"
+      onClick={applyViaRemoteExecution}
+      isDisabled={selectedCount === 0}
+    >
+      {__('Apply via remote execution')}
+    </DropdownItem>,
+    <DropdownItem
+      aria-label="apply_via_customized_remote_execution"
+      key="apply_via_customized_remote_execution"
+      component="a"
+      href={bulkCustomizedRexUrl()}
+      isDisabled={selectedCount === 0}
+    >
+      {__('Apply via customized remote execution')}
+    </DropdownItem>,
+  ];
+
   if (defaultRemoteAction === KATELLO_AGENT) {
-    dropdownItems.push((
+    dropdownItems.unshift((
       <DropdownItem
         aria-label="apply_via_katello_agent"
         key="apply_via_katello_agent"
@@ -216,28 +244,6 @@ export const ErrataTab = () => {
         {__('Apply via Katello agent')}
       </DropdownItem>));
   }
-
-  dropdownItems.push((
-    <DropdownItem
-      aria-label="apply_via_remote_execution"
-      key="apply_via_remote_execution"
-      component="button"
-      onClick={applyViaRemoteExecution}
-      isDisabled={selectedCount === 0}
-    >
-      {__('Apply via remote execution')}
-    </DropdownItem>));
-
-  dropdownItems.push((
-    <DropdownItem
-      aria-label="apply_via_customized_remote_execution"
-      key="apply_via_customized_remote_execution"
-      component="a"
-      href={bulkCustomizedRexUrl()}
-      isDisabled={selectedCount === 0}
-    >
-      {__('Apply via customized remote execution')}
-    </DropdownItem>));
 
   const handleErrataTypeSelected = newType => setErrataTypeSelected((prevType) => {
     if (prevType === newType) {
@@ -259,14 +265,31 @@ export const ErrataTab = () => {
         <SplitItem>
           <ActionList isIconList>
             <ActionListItem>
-              <Button isDisabled={selectedCount === 0} onClick={apply}> {__('Apply')} </Button>
+              <Dropdown
+                aria-label="errata_dropdown"
+                toggle={
+                  <DropdownToggle
+                    aria-label="expand_errata_toggle"
+                    splitButtonItems={[
+                      <DropdownToggleAction key="action" aria-label="bulk_actions" onClick={apply}>
+                        {__('Apply')}
+                      </DropdownToggleAction>,
+                    ]}
+                    splitButtonVariant="action"
+                    toggleVariant="primary"
+                    onToggle={onActionToggle}
+                  />
+              }
+                isOpen={isActionOpen}
+                dropdownItems={dropdownItems}
+              />
             </ActionListItem>
             <ActionListItem>
               <Dropdown
-                toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                toggle={<KebabToggle aria-label="bulk_actions_kebab" onToggle={toggleBulkAction} />}
                 isOpen={isBulkActionOpen}
                 isPlain
-                dropdownItems={dropdownItems}
+                dropdownItems={dropdownKebabItems}
               />
             </ActionListItem>
           </ActionList>
