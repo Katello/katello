@@ -212,7 +212,7 @@ test('Can add published component views to content view with modal', async (done
   });
   fireEvent.click(getByText('Add'));
   await patientlyWaitFor(() => {
-    expect(getByText('Add component')).toBeInTheDocument();
+    expect(getByText('Add content view')).toBeInTheDocument();
   });
   fireEvent.click(getByLabelText('add_component'));
   await patientlyWaitFor(() => {
@@ -317,7 +317,7 @@ test('Can bulk add component views to content view with modal', async (done) => 
     .reply(200, {});
 
   const {
-    getByText, getByLabelText, queryByText,
+    getAllByText, getByLabelText, queryByText,
   } = renderWithRedux(
     <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
@@ -333,14 +333,14 @@ test('Can bulk add component views to content view with modal', async (done) => 
   });
   fireEvent.click(getByLabelText('bulk_add_components'));
   await patientlyWaitFor(() => {
-    expect(getByText('Add component content views')).toBeInTheDocument();
+    expect(getAllByText('Add content views')[1]).toBeInTheDocument();
   });
   fireEvent.click(getByLabelText('version-select-cv-10'));
   fireEvent.click(getByLabelText('cv-10-3.0'));
 
   fireEvent.click(getByLabelText('add_components'));
   await patientlyWaitFor(() => {
-    expect(queryByText('Add component content views')).not.toBeInTheDocument();
+    expect(queryByText('Select available version of content views to use')).not.toBeInTheDocument();
     expect(getByLabelText('bulk_add_components')).toHaveAttribute('aria-disabled', 'false');
   });
 

@@ -29,7 +29,7 @@ const RelatedContentViewsModal = ({ cvName, cvId, relatedCVCount }) => {
       <FlexItem>
         <RegistryIcon />
         <b>{` ${cvName}`}</b>
-        {__(' content view is used in listed component content views. For more information, ')}
+        {__(' content view is used in listed content views. For more information, ')}
         <Link to={urlBuilder(`content_views/${cvId}#/contentviews`, '')}>
           {__('view content view tabs.')}
         </Link>
@@ -49,7 +49,7 @@ const RelatedContentViewsModal = ({ cvName, cvId, relatedCVCount }) => {
       <Grid>
         <GridItem span={12}>
           <Modal
-            title={__('Related component content views')}
+            title={__('Related content views')}
             variant={ModalVariant.medium}
             isOpen={isOpen}
             description={description()}
