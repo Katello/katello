@@ -51,10 +51,10 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
 
   return (
     <Modal
-      title={__('Add component content views')}
+      title={__('Add content views')}
       variant={ModalVariant.large}
       isOpen
-      description={__('Select available version of components to use')}
+      description={__('Select available version of content views to use')}
       onClose={onClose}
       appendTo={document.body}
     >

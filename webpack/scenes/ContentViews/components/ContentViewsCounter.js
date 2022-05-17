@@ -18,7 +18,7 @@ const ContentViewsCounter = () => {
         <b>
           <Flex>
             <FlexItem spacer={{ default: 'spacerXs' }}>
-              <ContentViewIcon composite={false} description={__('Component content views')} count={(component || component === 0) ? component : <InProgressIcon />} />
+              <ContentViewIcon composite={false} description={__('Content views')} count={(component || component === 0) ? component : <InProgressIcon />} />
             </FlexItem>
             <FlexItem>
               <Tooltip

@@ -30,7 +30,7 @@ test('Can call API and show Related Content Views Components Modal', async (done
 
   await patientlyWaitFor(() => expect(getByLabelText(`button_${cvId}`)).toBeInTheDocument());
   fireEvent.click(getByLabelText(`button_${cvId}`));
-  await patientlyWaitFor(() => expect(getByText('Related component content views')).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(getByText('Related content views')).toBeInTheDocument());
 
   assertNockRequest(scope, done);
 });
