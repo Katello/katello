@@ -114,7 +114,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
               aria-label="component_tile"
               icon={<ContentViewIcon composite={false} />}
               id="component"
-              title={__('Component content view')}
+              title={__('Content view')}
               onClick={() => { setComponent(true); setComposite(false); }}
               isSelected={component}
             >
@@ -132,7 +132,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
               onClick={() => { setComposite(true); setComponent(false); }}
               isSelected={composite}
             >
-              {__('Consisting of multiple component content views')}
+              {__('Consisting of multiple content views')}
             </Tile>
           </GridItem>
         </Grid>

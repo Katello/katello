@@ -87,7 +87,7 @@ const ComponentContentViewAddModal = ({
 
   return (
     <Modal
-      title={componentId ? __('Update version') : __('Add component')}
+      title={componentId ? __('Update version') : __('Add content view')}
       variant={ModalVariant.small}
       isOpen={show}
       description={__(`Select available version of ${cvName} to use`)}

@@ -71,7 +71,7 @@ const ContentViewInfo = ({ cvId, details }) => {
         <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
           <Flex>
             <FlexItem spacer={{ default: 'spacerXs' }}>
-              <ContentViewIcon composite={composite} description={composite ? __('Composite') : __('Component')} />
+              <ContentViewIcon composite={composite} description={composite ? __('Composite') : __('Content view')} />
             </FlexItem>
           </Flex>
         </TextListItem>

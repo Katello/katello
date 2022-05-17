@@ -14,14 +14,14 @@ const DetailsExpansion = ({
     if (cvComposite) {
       return (
         <>
-          {__('Related component cvs: ')}
+          {__('Related content views: ')}
           <RelatedContentViewComponentsModal key="cvId" {...{ cvName, cvId, relatedCVCount }} />
         </>
       );
     }
     return (
       <>
-        {__('Related composite cvs: ')}
+        {__('Related composite content views: ')}
         <RelatedCompositeContentViewsModal
           key={cvId}
           {...{

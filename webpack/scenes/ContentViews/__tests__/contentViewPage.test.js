@@ -43,14 +43,14 @@ test('Can call API for CVs and show on screen on page load', async (done) => {
     .query(true)
     .reply(200, cvIndexData);
 
-  const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
+  const { queryByText, queryAllByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
 
   // Assert that the CV name is now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => {
     expect(queryByText(firstCV.name)).toBeInTheDocument();
-    expect(queryByText('Component content views')).toBeInTheDocument();
+    expect(queryAllByText('Content views')[0]).toBeInTheDocument();
     expect(queryByText('Composite content views')).toBeInTheDocument();
   });
 
@@ -354,7 +354,7 @@ test('Displays Create Content View and opens modal with Form', async () => {
   expect(queryByText('Name')).not.toBeInTheDocument();
   expect(queryByText('Label')).not.toBeInTheDocument();
   expect(queryByText('Composite content view')).not.toBeInTheDocument();
-  expect(queryByText('Component content view')).not.toBeInTheDocument();
+  expect(queryByText('Content view')).not.toBeInTheDocument();
   expect(queryByText('Solve dependencies')).not.toBeInTheDocument();
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
   expect(queryByText('Import only')).not.toBeInTheDocument();
@@ -365,7 +365,7 @@ test('Displays Create Content View and opens modal with Form', async () => {
   expect(getByText('Name')).toBeInTheDocument();
   expect(getByText('Label')).toBeInTheDocument();
   expect(getByText('Composite content view')).toBeInTheDocument();
-  expect(getByText('Component content view')).toBeInTheDocument();
+  expect(getByText('Content view')).toBeInTheDocument();
   expect(getByText('Solve dependencies')).toBeInTheDocument();
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
   expect(getByText('Import only')).toBeInTheDocument();
