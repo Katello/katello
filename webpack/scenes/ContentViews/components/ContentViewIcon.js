@@ -16,7 +16,7 @@ const ContentViewIcon = ({
       position="auto"
       enableFlip
       entryDelay={400}
-      content={composite ? __('Composite content view') : __('Component content view')}
+      content={composite ? __('Composite content view') : __('Content view')}
       {...toolTipProps}
     >
       {composite ? <RegistryIcon size="md" {...props} /> : <EnterpriseIcon size="sm" {...props} />}
