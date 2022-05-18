@@ -290,6 +290,7 @@ export const ErrataTab = () => {
                     splitButtonVariant="action"
                     toggleVariant="primary"
                     onToggle={onActionToggle}
+                    isDisabled={selectedCount === 0}
                   />
               }
                 isOpen={isActionOpen}

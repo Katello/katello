@@ -135,6 +135,7 @@ const TracesTab = () => {
                       {__('Restart app')}
                     </DropdownToggleAction>,
                   ]}
+                  isDisabled={selectedCount === 0}
                   splitButtonVariant="action"
                   toggleVariant="primary"
                   onToggle={toggleBulkAction}
