@@ -661,6 +661,12 @@ Foreman::Plugin.register :katello do
         default: true,
         full_name: N_('Allow deleting repositories in published content views'),
         description: N_("If this is enabled, repositories can be deleted even when they belong to published content views. The deleted repository will be removed from all content view versions.")
+
+      setting 'distribute_archived_cvv',
+        type: :boolean,
+        default: true,
+        full_name: N_('Distribute archived content view versions'),
+        description: N_("If this is enabled, repositories of content view versions without environments (\"archived\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'.")
     end
   end
 

@@ -16,7 +16,7 @@ module Actions
                 plan_action(Actions::Pulp3::Repository::CreatePublication, repository, smart_proxy, options)
               end
               plan_action(Actions::Pulp3::ContentGuard::Refresh, smart_proxy) unless repository.unprotected
-              plan_action(Actions::Pulp3::Repository::RefreshDistribution, repository, smart_proxy, :contents_changed => options[:contents_changed]) if repository.environment
+              plan_action(Actions::Pulp3::Repository::RefreshDistribution, repository, smart_proxy, :contents_changed => options[:contents_changed]) if Setting[:distribute_archived_cvv] || repository.environment
             end
           end
 
