@@ -1,6 +1,8 @@
 import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
+import store from 'foremanReact/redux';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { addToast } from 'foremanReact/components/ToastsList/slice.js';
 import { getResponseErrorMsgs } from '../../utils/helpers';
 
 export const bulkSearchKey = key => `${key}_TASK_SEARCH`;
@@ -44,17 +46,17 @@ export const renderTaskStartedToast = (task) => {
   });
 };
 
-export const renderRexJobStartedToast = ({ id, description }) => {
+export const renderRexJobStartedToast = ({ id, description, key }) => {
   if (!id) return;
+  const message = (__(`Job '${description}' has started.`));
 
-  const message = (__(`Job ${description} has started.`));
-
-  window.tfm.toastNotifications.notify({
+  store.dispatch(addToast({
     message,
     type: 'info',
     link: rexJobLink(id),
     sticky: true,
-  });
+    key,
+  }));
 };
 
 export const renderRexJobFailedToast = ({ id, description }) => {

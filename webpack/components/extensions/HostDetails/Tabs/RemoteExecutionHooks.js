@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
+import { deleteToast } from 'foremanReact/components/ToastsList/slice';
 import { startPollingJob, stopPollingJob } from './RemoteExecutionActions';
 import { renderRexJobFailedToast, renderRexJobStartedToast, renderRexJobSucceededToast } from '../../../../scenes/Tasks/helpers';
 
@@ -22,6 +23,7 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
       setSucceeded(false);
     }
     dispatch(stopPollingJob({ key: `REX_JOB_POLLING_${jobId}` }));
+    dispatch(deleteToast(`REX_TOAST_${jobId}`));
   }, [dispatch]);
 
   const tick = (resp) => {
@@ -53,7 +55,7 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
         handleSuccess: (resp) => {
           const jobId = resp?.data?.id;
           if (!jobId) return;
-          renderRexJobStartedToast(resp.data);
+          renderRexJobStartedToast({ key: `REX_TOAST_${jobId}`, ...resp.data });
           startRexJobPolling({ jobId });
         },
       },
