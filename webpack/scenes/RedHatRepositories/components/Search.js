@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { DropdownButton, MenuItem } from 'patternfly-react';
 import PropTypes from 'prop-types';
-
+import { translate as __ } from 'foremanReact/common/I18n';
 import '../index.scss';
 import Search from '../../../components/Search/index';
 import { orgId } from '../../../services/api';
@@ -14,17 +14,17 @@ class RepositorySearch extends Component {
       {
         key: 'available',
         endpoint: 'repository_sets',
-        title: 'Available',
+        title: __('Available'),
       },
       {
         key: 'enabled',
         endpoint: 'enabled_repositories',
-        title: 'Enabled',
+        title: __('Enabled'),
       },
       {
         key: 'both',
         endpoint: false,
-        title: 'Both',
+        title: __('Both'),
       },
     ];
     this.state = { searchList: this.dropDownItems[0] };
