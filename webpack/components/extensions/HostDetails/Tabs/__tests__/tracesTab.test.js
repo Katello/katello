@@ -139,7 +139,7 @@ describe('With tracer installed', () => {
     const restartAppButton = getByText('Restart app');
     // wait 50ms so that the button is enabled
     await waitFor(() => {
-      expect(getByText('Restart app')).toHaveAttribute('aria-disabled', 'false');
+      expect(restartAppButton.parentElement).not.toHaveClass('pf-m-disabled');
       restartAppButton.click();
     });
 
