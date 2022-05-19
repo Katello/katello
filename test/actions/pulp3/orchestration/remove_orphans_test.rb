@@ -5,6 +5,7 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def sync_and_reload_repo(repo, smart_proxy)
+      ::Katello::Pulp3::Repository.any_instance.stubs(:fail_missing_publication).returns(nil)
       ForemanTasks.sync_task(
                 ::Actions::Pulp3::Orchestration::Repository::Update,
                 repo,
