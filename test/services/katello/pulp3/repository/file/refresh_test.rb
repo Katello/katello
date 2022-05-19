@@ -8,6 +8,8 @@ module Katello
           include Katello::Pulp3Support
 
           def setup
+            ::Katello::Pulp3::Repository.any_instance.stubs(:fail_missing_publication).returns(nil)
+
             User.current = User.anonymous_admin
             @primary = SmartProxy.pulp_primary
             @repo = katello_repositories(:pulp3_file_1)
