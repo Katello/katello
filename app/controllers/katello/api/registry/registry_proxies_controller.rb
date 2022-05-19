@@ -177,6 +177,9 @@ module Katello
                        end
         end
         response.headers['Content-Type'] = media_type
+        length = manifest_response.try(:body).try(:size)
+        length ||= 0
+        response.header['Content-Length'] = "#{length}"
         render json: manifest_response
       end
     end
