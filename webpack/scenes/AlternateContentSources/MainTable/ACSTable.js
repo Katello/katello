@@ -9,8 +9,9 @@ import {
   selectAlternateContentSourcesStatus,
 } from '../ACSSelectors';
 import { useTableSort } from '../../../components/Table/TableHooks';
-import getAlternateContentSources, { deleteACS } from '../ACSActions';
+import getAlternateContentSources, { deleteACS, refreshACS } from '../ACSActions';
 import ACSCreateWizard from '../Create/ACSCreateWizard';
+import LastSync from '../../ContentViews/Details/Repositories/LastSync';
 
 const ACSTable = () => {
   const response = useSelector(selectAlternateContentSources);
@@ -23,7 +24,7 @@ const ACSTable = () => {
   const columnHeaders = [
     __('Name'),
     __('Type'),
-    __('Id'),
+    __('Last Refresh'),
   ];
 
   const COLUMNS_TO_SORT_PARAMS = {
@@ -54,16 +55,28 @@ const ACSTable = () => {
       dispatch(getAlternateContentSources())));
   };
 
+  const onRefresh = (id) => {
+    dispatch(refreshACS(id, () =>
+      dispatch(getAlternateContentSources())));
+  };
+
   const createButtonOnclick = () => {
     setIsCreateWizardOpen(true);
   };
 
   const rowDropdownItems = ({ id }) => [
     {
-      title: 'Delete',
+      title: __('Delete'),
       ouiaId: `remove-acs-${id}`,
       onClick: () => {
         onDelete(id);
+      },
+    },
+    {
+      title: __('Refresh'),
+      ouiaId: `remove-acs-${id}`,
+      onClick: () => {
+        onRefresh(id);
       },
     },
   ];
@@ -120,15 +133,16 @@ const ACSTable = () => {
       <Tbody>
         {results?.map((acs, index) => {
           const {
-            id,
             name,
             alternate_content_source_type: acsType,
+            last_refresh: lastTask,
           } = acs;
+          const { last_refresh_words: lastRefreshWords, started_at: startedAt } = lastTask ?? {};
           return (
             <Tr key={index}>
               <Td>{name}</Td>
               <Td>{acsType}</Td>
-              <Td>{id}</Td>
+              <Td><LastSync startedAt={startedAt} lastSync={lastTask} lastSyncWords={lastRefreshWords} emptyMessage="N/A" /></Td>
               <Td
                 actions={{
                   items: rowDropdownItems(acs),

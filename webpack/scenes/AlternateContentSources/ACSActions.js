@@ -1,8 +1,9 @@
 import { API_OPERATIONS, APIActions, get, post } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
 import api, { orgId } from '../../services/api';
-import ACS_KEY, { CREATE_ACS_KEY, DELETE_ACS_KEY } from './ACSConstants';
+import ACS_KEY, { acsRefreshKey, CREATE_ACS_KEY, DELETE_ACS_KEY } from './ACSConstants';
 import { getResponseErrorMsgs } from '../../utils/helpers';
+import { renderTaskStartedToast } from '../Tasks/helpers';
 
 const acsSuccessToast = (response) => {
   const { data: { name } } = response;
@@ -47,6 +48,17 @@ export const deleteACS = (acsId, handleSuccess) => APIActions.delete({
   errorToast: error => __(`Something went wrong while deleting this alternate content source! ${getResponseErrorMsgs(error.response)}`),
 });
 
+export const refreshACS = (acsId, handleSuccess) => post({
+  type: API_OPERATIONS.POST,
+  key: acsRefreshKey(acsId),
+  url: api.getApiUrl(`/alternate_content_sources/${acsId}/refresh`),
+  params: { id: acsId },
+  handleSuccess: (response) => {
+    if (handleSuccess) handleSuccess();
+    return renderTaskStartedToast(response.data);
+  },
+  errorToast: error => __(`Something went wrong while refreshing this alternate content source! ${getResponseErrorMsgs(error.response)}`),
+});
 export default getAlternateContentSources;
 
 // acs = Katello::AlternateContentSource.new
