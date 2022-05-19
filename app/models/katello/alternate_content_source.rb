@@ -62,5 +62,10 @@ module Katello
       conditions = sanitize_sql_for_conditions(["? #{operator} ANY (subpaths)", value_to_sql(operator, value)])
       { conditions: conditions }
     end
+
+    def latest_dynflow_refresh_task
+      @latest_dynflow_refresh_task ||= ForemanTasks::Task::DynflowTask.where(:label => Actions::Katello::AlternateContentSource::Refresh.name).
+          for_resource(self).order(:started_at).last
+    end
   end
 end
