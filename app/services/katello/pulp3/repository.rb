@@ -231,11 +231,17 @@ module Katello
           return update_distribution
         end
 
-        if dist_ref
+        if dist && dist_ref
+          # If the saved distribution reference is wrong, delete it and use the existing distribution
+          if dist.pulp_href != dist_ref.href
+            dist_ref.destroy
+            save_distribution_references([dist.pulp_href])
+          end
           return update_distribution
         end
 
         # Since we got this far, we need to create a new distribution
+        # Note: the distribution reference can't be saved yet because distribution creation is async
         begin
           create_distribution(relative_path)
         rescue api.client_module::ApiError => e
@@ -253,6 +259,9 @@ module Katello
 
       def create_distribution(path)
         distribution_data = api.distribution_class.new(secure_distribution_options(path))
+        unless ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
+          fail_missing_publication(distribution_data.publication)
+        end
         api.distributions_api.create(distribution_data)
       end
 
@@ -260,9 +269,16 @@ module Katello
         api.distributions_api.list(args).results
       end
 
+      def read_distribution(href = distribution_reference.href)
+        ignore_404_exception { api.distributions_api.read(href) }
+      end
+
       def update_distribution
         if distribution_reference
           options = secure_distribution_options(relative_path).except(:name)
+          unless ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
+            fail_missing_publication(options[:publication])
+          end
           distribution_reference.update(:content_guard_href => options[:content_guard])
           api.distributions_api.partial_update(distribution_reference.href, options)
         end
@@ -321,6 +337,12 @@ module Katello
         hrefs.each do |href|
           pulp3_distribution_data = api.get_distribution(href)
           path, content_guard_href = pulp3_distribution_data&.base_path, pulp3_distribution_data&.content_guard
+          if distribution_reference
+            found_distribution = read_distribution(distribution_reference.href)
+            unless found_distribution
+              distribution_reference.destroy
+            end
+          end
           unless distribution_reference
             # Ensure that duplicates won't be created in the case of a race condition
             DistributionReference.where(path: path, href: href, repository_id: repo.id, content_guard_href: content_guard_href).first_or_create!
@@ -472,6 +494,12 @@ module Katello
       def retain_package_versions_count
         return 0 if root.retain_package_versions_count.nil? || root.using_mirrored_content?
         root.retain_package_versions_count.to_i
+      end
+
+      def fail_missing_publication(publication_href)
+        unless lookup_publication(publication_href)
+          fail _("The repository's publication is missing. Please run a 'complete sync' on %s." % repo.name)
+        end
       end
     end
   end

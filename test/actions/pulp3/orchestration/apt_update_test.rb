@@ -69,6 +69,7 @@ module ::Actions::Pulp3
     end
 
     def test_addurl
+      ::Katello::Pulp3::Repository.any_instance.stubs(:fail_missing_publication).returns(nil)
       @repo.root.update(url: "http://someotherurl")
       task = ForemanTasks.sync_task(
               ::Actions::Pulp3::Orchestration::Repository::Update,
