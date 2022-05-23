@@ -57,7 +57,7 @@ module Katello
               else
                 query
               end
-      custom_sort = ->(sort_query) { sort_query.joins(join_query).order(order_query) }
+      custom_sort = ->(sort_query) { sort_query.joins(join_query).order(Arel.sql(order_query)) }
       options = { resource_class: Katello::ContentView, custom_sort: custom_sort }
       collection = scoped_search(query, nil, nil, options)
       collection[:results] = ComponentViewPresenter.component_presenter(@view, params[:status], views: collection[:results])
