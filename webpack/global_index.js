@@ -10,6 +10,7 @@ import ContentViewDetailsCard from './components/extensions/HostDetails/Cards/Co
 import ErrataOverviewCard from './components/extensions/HostDetails/Cards/ErrataOverviewCard';
 import InstalledProductsCard from './components/extensions/HostDetails/DetailsTabCards/InstalledProductsCard';
 import RegistrationCard from './components/extensions/HostDetails/DetailsTabCards/RegistrationCard';
+import HwPropertiesCard from './components/extensions/HostDetails/DetailsTabCards/HwPropertiesCard';
 
 import RepositorySetsTab from './components/extensions/HostDetails/Tabs/RepositorySetsTab/RepositorySetsTab';
 import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js';
@@ -57,3 +58,4 @@ addGlobalFill(
   <HostActionsBar key="katello-host-details-kebab" />,
   100,
 );
+addGlobalFill('host-tab-details-cards', 'HW properties', <HwPropertiesCard key="hw-properties" />, 200);
