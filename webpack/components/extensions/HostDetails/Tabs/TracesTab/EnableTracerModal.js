@@ -12,13 +12,12 @@ import {
 } from '@patternfly/react-core';
 import { CaretDownIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
-import { installTracerPackage } from './HostTracesActions';
 import { katelloPackageInstallUrl } from '../customizedRexUrlHelpers';
 import { KATELLO_TRACER_PACKAGE } from './HostTracesConstants';
 
-const EnableTracerModal = ({ isOpen, setIsOpen }) => {
+const EnableTracerModal = ({ isOpen, setIsOpen, triggerJobStart }) => {
   const title = __('Enable Tracer');
   const body = __('Enabling will install the katello-host-tools-tracer package on the host.');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -29,15 +28,18 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
     __('via customized remote execution'),
   ];
   const [selectedOption, setSelectedOption] = useState(dropdownOptions[0]);
-  const dispatch = useDispatch();
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const { name: hostname } = hostDetails;
   const handleSelect = () => {
     setIsDropdownOpen(false);
   };
-  const enableTracer = () => {
-    dispatch(installTracerPackage({ hostname }));
+  const handleClose = () => {
     setIsOpen(false);
+  };
+  const enableTracer = () => {
+    setButtonLoading(true);
+    triggerJobStart();
+    handleClose();
   };
 
   const dropdownItems = dropdownOptions.map(text => (
@@ -54,6 +56,8 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
           key="enable_button"
           type="submit"
           variant="primary"
+          isLoading={buttonLoading}
+          isDisabled={buttonLoading}
           onClick={enableTracer}
         >
           {title}
@@ -65,6 +69,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
         key="enable_button"
         component="a"
         isLoading={buttonLoading}
+        isDisabled={buttonLoading}
         onClick={() => setButtonLoading(true)}
         variant="primary"
         href={customizedRexUrl}
@@ -80,7 +85,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
       title={title}
       width="28em"
       isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
+      onClose={handleClose}
       actions={[
         getEnableTracerButton(),
         <Button key="cancel_button" variant="link" onClick={() => setIsOpen(false)}>{__('Cancel')}</Button>,
@@ -96,6 +101,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
                 id="toggle-enable-tracer-modal-dropdown"
                 onToggle={toggleDropdownOpen}
                 toggleIndicator={CaretDownIcon}
+                isDisabled={buttonLoading}
               >
                 {selectedOption}
               </DropdownToggle>
@@ -114,6 +120,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
 EnableTracerModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
+  triggerJobStart: PropTypes.func.isRequired,
 };
 
 export default EnableTracerModal;

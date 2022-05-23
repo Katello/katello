@@ -1,4 +1,5 @@
-import { API_OPERATIONS, post } from 'foremanReact/redux/API';
+import { API_OPERATIONS, get, post } from 'foremanReact/redux/API';
+import { stopInterval, withInterval } from 'foremanReact/redux/middlewares/IntervalMiddleware';
 import { REX_JOB_INVOCATIONS_KEY, REX_FEATURES } from './RemoteExecutionConstants';
 import { foremanApi } from '../../../../services/api';
 import { errorToast, renderRexJobStartedToast } from '../../../../scenes/Tasks/helpers';
@@ -7,6 +8,7 @@ import { TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
 import { PACKAGE_SEARCH_QUERY } from './PackagesTab/YumInstallablePackagesConstants';
 import { PACKAGES_SEARCH_QUERY } from './PackagesTab/HostPackagesConstants';
 
+// PARAM BUILDING
 const baseParams = ({ feature, hostname, inputs = {} }) => ({
   job_invocation: {
     feature,
@@ -83,12 +85,32 @@ const katelloModuleStreamActionsParams = ({ hostname, action, moduleSpec }) =>
 
 const showRexToast = response => renderRexJobStartedToast(response.data);
 
-export const installPackage = ({ hostname, packageName }) => post({
+// JOB POLLING
+const pollJobKey = key => `${key}_POLL_REX_JOB`;
+
+export const getJob = (key, jobId, handleSuccess) => get({
+  key,
+  url: foremanApi.getApiUrl(`/job_invocations/${jobId}`),
+  handleSuccess,
+});
+
+export const startPollingJob = ({
+  key, jobId, handleSuccess, interval = 1000,
+}) =>
+  withInterval(getJob(pollJobKey(key), jobId, handleSuccess), interval);
+
+export const stopPollingJob = ({ key }) => stopInterval(pollJobKey(key));
+
+// JOB INVOCATIONS
+export const installPackage = ({ hostname, packageName, handleSuccess }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackageInstallParams({ hostname, packageName }),
-  handleSuccess: showRexToast,
+  handleSuccess: (response) => {
+    showRexToast(response);
+    if (handleSuccess) handleSuccess(response);
+  },
   errorToast,
 });
 

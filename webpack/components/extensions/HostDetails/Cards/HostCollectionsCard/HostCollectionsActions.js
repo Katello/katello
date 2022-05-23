@@ -24,7 +24,7 @@ export const alterHostCollections = (hostId, params, refreshHostDetails) => put(
   url: foremanApi.getApiUrl(`/hosts/${hostId}/host_collections`),
   params,
   successToast: () => __('Host collections updated'),
-  errorToast: error => errorToast(error),
-  handleSuccess: () => refreshHostDetails(),
+  errorToast,
+  handleSuccess: refreshHostDetails,
 });
 
