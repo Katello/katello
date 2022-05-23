@@ -18,7 +18,7 @@ module ::Actions::Katello::Repository
       task = ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, id: @repo.id)
 
       @repo.reload
-      assert_equal indexed_time.inspect, @repo.last_indexed.inspect
+      assert_equal indexed_time.strftime("%D-%T"), @repo.last_indexed.strftime("%D-%T")
       assert task.output[:index_skipped]
     end
 

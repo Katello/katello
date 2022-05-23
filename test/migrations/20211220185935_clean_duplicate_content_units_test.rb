@@ -32,7 +32,7 @@ module Katello
       stream = Katello::ModuleStream.create!(:pulp_id => original_stream.pulp_id) #associated_to_repo
       Katello::ModuleStream.create!(:pulp_id => original_stream.pulp_id) #not associated to repo
 
-      Katello::ContentViewModuleStreamFilterRule.create!(module_stream_id: stream.id, content_view_filter_id: katello_content_view_filters(:populated_module_stream_filter))
+      Katello::ContentViewModuleStreamFilterRule.create!(module_stream_id: stream.id, content_view_filter_id: katello_content_view_filters(:populated_module_stream_filter).id)
       Katello::ContentFacetApplicableModuleStream.create!(module_stream_id: stream.id, content_facet_id: katello_content_facets(:content_facet_one).id)
       Katello::ModuleProfile.create!(module_stream_id: stream.id, name: 'foobar')
       Katello::ModuleStreamArtifact.create!(module_stream_id: stream.id, name: 'the one artifact')
@@ -71,8 +71,8 @@ module Katello
       collection = Katello::AnsibleCollection.create!(:pulp_id => 'my_pulp_id')
       tag1 = Katello::AnsibleTag.create(name: name)
       tag2 = Katello::AnsibleTag.create(name: name)
-      Katello::AnsibleCollectionTag.create!(ansible_collection_id: collection.id, ansible_tag_id: tag1)
-      Katello::AnsibleCollectionTag.create!(ansible_collection_id: collection.id, ansible_tag_id: tag2)
+      Katello::AnsibleCollectionTag.create!(ansible_collection_id: collection.id, ansible_tag_id: tag1.id)
+      Katello::AnsibleCollectionTag.create!(ansible_collection_id: collection.id, ansible_tag_id: tag2.id)
 
       assert_equal 2, Katello::AnsibleTag.where(name: name).count
       migrate_up
