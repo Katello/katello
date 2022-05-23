@@ -208,15 +208,6 @@ const TracesTab = () => {
               helper,
               app_type: appType,
             } = result;
-            // if (actionInProgress) {
-            //   return (
-            //     <Tr>
-            //       <Td key={id} colSpan={5}>
-            //         <Skeleton />
-            //       </Td>
-            //     </Tr>
-            //   );
-            // }
             const resolveDisabled = !isSelectable(id);
             let disabledReason;
             if (resolveDisabled) disabledReason = __('Traces that require logout cannot be restarted remotely');
