@@ -28,7 +28,7 @@ module Katello
       query = query.with_type(params[:content_type]) if params[:content_type]
       # Use custom sort to perform the join and order since we need to order by specific content_view
       # and the ORDER BY query needs access to the katello_content_view_repositories table
-      custom_sort = ->(sort_query) { sort_query.joins(:root).joins(join_query).order(order_query) }
+      custom_sort = ->(sort_query) { sort_query.joins(:root).joins(join_query).order(Arel.sql(order_query)) }
       options = { resource_class: Katello::Repository, custom_sort: custom_sort }
       repos = scoped_search(query, nil, nil, options)
 

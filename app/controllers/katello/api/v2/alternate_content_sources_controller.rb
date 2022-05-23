@@ -2,7 +2,7 @@ module Katello
   class Api::V2::AlternateContentSourcesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    acs_wrap_params = AlternateContentSource.attribute_names.concat([:smart_proxy_ids, :smart_proxy_names])
+    acs_wrap_params = AlternateContentSource.attribute_names + [:smart_proxy_ids, :smart_proxy_names]
     wrap_parameters :alternate_content_source, include: acs_wrap_params
 
     before_action :find_authorized_katello_resource, only: [:show, :update, :destroy, :refresh]

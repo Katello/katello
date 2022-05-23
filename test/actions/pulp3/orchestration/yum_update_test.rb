@@ -26,7 +26,7 @@ module ::Actions::Pulp3
     def test_update_http_proxy_with_no_url
       @repo.root.update(url: nil)
       @repo.root.update(http_proxy_policy: ::Katello::RootRepository::USE_SELECTED_HTTP_PROXY)
-      @repo.root.update(http_proxy_id: ::HttpProxy.find_by(name: 'myhttpproxy'))
+      @repo.root.update(http_proxy_id: ::HttpProxy.find_by(name: 'myhttpproxy').id)
 
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
