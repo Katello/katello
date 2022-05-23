@@ -4,7 +4,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { Dropdown, DropdownItem, DropdownToggle, DropdownSeparator } from '@patternfly/react-core';
-import { CaretDownIcon } from '@patternfly/react-icons';
+import { OutlinedBookmarkIcon } from '@patternfly/react-icons';
 import { getBookmarks } from './BookmarkActions';
 import { selectBookmarks, selectBookmarkStatus } from './BookmarkSelectors';
 import './Bookmark.scss';
@@ -62,9 +62,8 @@ const Bookmark = ({
             isDisabled={isDisabled || status !== STATUS.RESOLVED}
             onToggle={setDropdownOpen}
             id="toggle-id"
-            toggleIndicator={CaretDownIcon}
           >
-            <i className="fas fa-bookmark" />
+            <OutlinedBookmarkIcon />
           </DropdownToggle>
         }
         isOpen={dropdownOpen}
