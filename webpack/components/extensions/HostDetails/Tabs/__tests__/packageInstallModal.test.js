@@ -4,7 +4,7 @@ import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting }
 import katelloApi, { foremanApi } from '../../../../../services/api';
 import mockPackagesData from './yumInstallablePackages.fixtures.json';
 import PackageInstallModal from '../PackagesTab/PackageInstallModal';
-import { HOST_YUM_INSTALLABLE_PACKAGES_KEY, PACKAGE_SEARCH_QUERY } from '../PackagesTab/YumInstallablePackagesConstants';
+import { HOST_YUM_INSTALLABLE_PACKAGES_KEY } from '../PackagesTab/YumInstallablePackagesConstants';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
 
 const contentFacetAttributes = {
@@ -32,7 +32,6 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
 
 const hostYumInstallablePackages = katelloApi.getApiUrl('/packages');
 const hostPackages = foremanApi.getApiUrl('/hosts/1/packages/install');
-const jobInvocations = foremanApi.getApiUrl('/job_invocations');
 const autocompleteUrl = '/hosts/1/packages/auto_complete_search';
 const fakeTask = { id: '21c0f9e4-b27b-49aa-8774-6be66126043b' };
 
@@ -77,6 +76,7 @@ test('Can call API for installable packages and show on screen on page load', as
        hostId={1}
        hostName="test-host"
        showKatelloAgent={false}
+       triggerPackageInstall={jest.fn()}
      />, renderOptions());
 
   // Assert that the packages are now showing on the screen, but wait for them to appear.
@@ -109,6 +109,7 @@ test('Can handle no installable packages being present', async (done) => {
       hostId={1}
       hostName="test-host"
       showKatelloAgent={false}
+      triggerPackageInstall={jest.fn()}
     />, renderOptions());
 
   // Assert that there are not any packages showing on the screen.
@@ -134,6 +135,7 @@ test('Does not show katello-agent option when disabled', async (done) => {
     hostId={1}
     hostName="test-host"
     showKatelloAgent={false}
+    triggerPackageInstall={jest.fn()}
   />, renderOptions());
 
   // Assert that the packages are now showing on the screen, but wait for them to appear.
@@ -172,6 +174,7 @@ test('Shows the katello-agent option when enabled', async (done) => {
     hostId={1}
     hostName="test-host"
     showKatelloAgent
+    triggerPackageInstall={jest.fn()}
   />, renderOptions());
 
   // Assert that the packages are now showing on the screen, but wait for them to appear.
@@ -209,6 +212,7 @@ test('Can install packages via katello-agent', async (done) => {
     hostId={1}
     hostName="test-host"
     showKatelloAgent
+    triggerPackageInstall={jest.fn()}
   />, renderOptions());
 
   await patientlyWaitFor(() => expect(getAllByText(firstPackages.name)[0]).toBeInTheDocument());
@@ -236,17 +240,7 @@ test('Can install a package via remote execution', async (done) => {
     .get(hostYumInstallablePackages)
     .query(defaultQuery)
     .reply(200, mockPackagesData);
-  const installScope = nockInstance
-    .post(jobInvocations, {
-      job_invocation: {
-        inputs: {
-          [PACKAGE_SEARCH_QUERY]: `id ^ (${firstPackages.id},${secondPackages.id})`,
-        },
-        search_query: 'name ^ (test-host)',
-        feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH,
-      },
-    })
-    .reply(201);
+  const triggerPackageInstall = jest.fn();
 
   const {
     getAllByText, getByText, getByRole,
@@ -256,6 +250,7 @@ test('Can install a package via remote execution', async (done) => {
     hostId={1}
     hostName="test-host"
     showKatelloAgent
+    triggerPackageInstall={triggerPackageInstall}
   />, renderOptions());
 
   await patientlyWaitFor(() => expect(getAllByText(firstPackages.name)[0]).toBeInTheDocument());
@@ -271,9 +266,9 @@ test('Can install a package via remote execution', async (done) => {
   const rexOption = getByText('Install via remote execution');
   fireEvent.click(rexOption);
 
+  expect(triggerPackageInstall).toHaveBeenCalled();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope);
-  assertNockRequest(installScope, done);
+  assertNockRequest(scope, done);
 });
 
 test('Can install a package via customized remote execution', async (done) => {
@@ -290,6 +285,7 @@ test('Can install a package via customized remote execution', async (done) => {
     closeModal={jest.fn()}
     hostId={1}
     hostName="test-host"
+    triggerPackageInstall={jest.fn()}
   />, renderOptions());
 
   await patientlyWaitFor(() => expect(getAllByText(firstPackages.name)[0]).toBeInTheDocument());
@@ -326,6 +322,7 @@ test('Uses package_install_by_search_query template when in select all mode', as
     closeModal={jest.fn()}
     hostId={1}
     hostName="test-host"
+    triggerPackageInstall={jest.fn()}
   />, renderOptions());
 
   await patientlyWaitFor(() => expect(getAllByText(firstPackages.name)[0]).toBeInTheDocument());
@@ -364,6 +361,7 @@ test('Disables the katello-agent option when in select all mode', async (done) =
     hostId={1}
     hostName="test-host"
     showKatelloAgent
+    triggerPackageInstall={jest.fn()}
   />, renderOptions());
 
   await patientlyWaitFor(() => expect(getAllByText(firstPackages.name)[0]).toBeInTheDocument());

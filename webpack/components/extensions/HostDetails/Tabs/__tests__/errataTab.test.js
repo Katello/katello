@@ -949,11 +949,6 @@ test('Apply button chooses remote execution', async (done) => {
     .query(defaultQuery)
     .reply(200, mockErrata);
 
-  const scope1 = nockInstance
-    .get(hostErrata)
-    .query(baseQuery)
-    .reply(200, mockErrata);
-
   const resolveErrataScope = nockInstance
     .post(jobInvocations)
     .reply(201, mockResolveErrataTask);
@@ -974,7 +969,6 @@ test('Apply button chooses remote execution', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(resolveErrataScope);
-  assertNockRequest(scope1);
   assertNockRequest(scope, done);
 });
 
@@ -985,11 +979,6 @@ test('Can bulk apply via remote execution', async (done) => {
   const scope = nockInstance
     .get(hostErrata)
     .query(defaultQuery)
-    .reply(200, mockErrata);
-
-  const scope1 = nockInstance
-    .get(hostErrata)
-    .query(baseQuery)
     .reply(200, mockErrata);
 
   // eslint-disable-next-line camelcase
@@ -1021,7 +1010,6 @@ test('Can bulk apply via remote execution', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(resolveErrataScope);
-  assertNockRequest(scope1);
   assertNockRequest(scope, done);
 });
 
@@ -1034,11 +1022,6 @@ test('Can select all, exclude and bulk apply via remote execution', async (done)
   const scope = nockInstance
     .get(hostErrata)
     .query(defaultQuery)
-    .reply(200, mockErrata);
-
-  const scope1 = nockInstance
-    .get(hostErrata)
-    .query(baseQuery)
     .reply(200, mockErrata);
 
   const jobInvocationBody = ({ job_invocation: { inputs } }) =>
@@ -1067,7 +1050,6 @@ test('Can select all, exclude and bulk apply via remote execution', async (done)
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(resolveErrataScope);
-  assertNockRequest(scope1);
   assertNockRequest(scope, done);
 });
 
