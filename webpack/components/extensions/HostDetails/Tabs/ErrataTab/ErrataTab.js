@@ -36,6 +36,7 @@ import './ErrataTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import { defaultRemoteActionMethod, KATELLO_AGENT } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
+import { useRexJobPolling } from '../RemoteExecutionHooks';
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -143,8 +144,29 @@ export const ErrataTab = () => {
     initialSearchQuery: searchParam || '',
   });
 
-  const tdSelect = useCallback((errataId, rowIndex) => ({
-    disable: !isSelectable(errataId),
+  const installErrataAction = () => installErrata({
+    hostname, search: fetchBulkParams(),
+  });
+  const {
+    triggerJobStart: triggerBulkApply, lastCompletedJob: lastCompletedBulkApply,
+    isPolling: isBulkApplyInProgress,
+  } = useRexJobPolling(installErrataAction);
+
+  const installErratumAction = id => installErrata({
+    hostname,
+    search: errataSearchQuery(id),
+  });
+
+  const {
+    triggerJobStart: triggerApply, lastCompletedJob: lastCompletedApply,
+    isPolling: isApplyInProgress,
+  } = useRexJobPolling(installErratumAction);
+
+  const actionInProgress = (isApplyInProgress || isBulkApplyInProgress);
+  const disabledReason = __('A remote execution job is in progress');
+
+  const tdSelect = useCallback((errataId, rowIndex, rexJobInProgress) => ({
+    disable: rexJobInProgress || !isSelectable(errataId),
     isSelected: isSelected(errataId),
     onSelect: (event, selected) => selectOne(selected, errataId),
     rowIndex,
@@ -153,21 +175,11 @@ export const ErrataTab = () => {
 
   if (!hostId) return <Skeleton />;
 
-  const applyErratumViaRemoteExecution = id => dispatch(installErrata({
-    hostname,
-    search: errataSearchQuery(id),
-  }));
+  const applyErratumViaRemoteExecution = id => triggerApply(id);
 
   const applyViaRemoteExecution = () => {
-    dispatch(installErrata({
-      hostname, search: fetchBulkParams(),
-    }));
-
-    const params = { page: metadata.page, per_page: metadata.per_page, search: metadata.search };
-    dispatch(getInstallableErrata(
-      hostId,
-      { ...params, include_applicable: toggleGroupState === ALL },
-    ));
+    triggerBulkApply();
+    selectNone();
   };
 
   const bulkCustomizedRexUrl = () => errataInstallUrl({
@@ -278,6 +290,7 @@ export const ErrataTab = () => {
                     splitButtonVariant="action"
                     toggleVariant="primary"
                     onToggle={onActionToggle}
+                    isDisabled={selectedCount === 0}
                   />
               }
                 isOpen={isActionOpen}
@@ -375,7 +388,8 @@ export const ErrataTab = () => {
           ouiaId="host-errata-table"
           additionalListeners={[
             hostId, toggleGroupState, errataTypeSelected,
-            errataSeveritySelected, activeSortColumn, activeSortDirection]}
+            errataSeveritySelected, activeSortColumn, activeSortDirection,
+            lastCompletedApply, lastCompletedBulkApply]}
           fetchItems={fetchItems}
           bookmarkController="katello_errata"
           autocompleteEndpoint={`/hosts/${hostId}/errata/auto_complete_search`}
@@ -414,6 +428,7 @@ export const ErrataTab = () => {
                   {
                     title: __('Apply via remote execution'),
                     onClick: () => applyErratumViaRemoteExecution(errataId),
+                    isDisabled: actionInProgress,
                   },
                   {
                     title: __('Apply via customized remote execution'),
@@ -448,7 +463,10 @@ export const ErrataTab = () => {
                         onToggle: (_event, _rInx, isOpen) => expandedErrata.onToggle(isOpen, id),
                       }}
                     />
-                    <Td select={tdSelect(errataId, rowIndex)} />
+                    <Td
+                      select={tdSelect(errataId, rowIndex, actionInProgress)}
+                      title={actionInProgress && disabledReason}
+                    />
                     <Td>
                       <a href={urlBuilder(`errata/${id}`, '')}>{errataId}</a>
                     </Td>

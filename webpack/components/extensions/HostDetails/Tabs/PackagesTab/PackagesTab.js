@@ -12,6 +12,7 @@ import {
   Skeleton,
   Split,
   SplitItem,
+  Spinner,
 } from '@patternfly/react-core';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -32,13 +33,14 @@ import { selectHostPackagesStatus } from './HostPackagesSelectors';
 import {
   HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM,
 } from './HostPackagesConstants';
-import { removePackage, updatePackage, removePackages, updatePackages } from '../RemoteExecutionActions';
+import { removePackage, updatePackage, removePackages, updatePackages, installPackageBySearch } from '../RemoteExecutionActions';
 import { katelloPackageUpdateUrl, packagesUpdateUrl } from '../customizedRexUrlHelpers';
 import './PackagesTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
 import { defaultRemoteActionMethod, KATELLO_AGENT } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
+import { useRexJobPolling } from '../RemoteExecutionHooks';
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -128,6 +130,62 @@ export const PackagesTab = () => {
     initialSearchQuery: searchParam || '',
   });
 
+  const packageRemoveAction = packageName => removePackage({
+    hostname,
+    packageName,
+  });
+
+  const {
+    triggerJobStart: triggerPackageRemove, lastCompletedJob: lastCompletedPackageRemove,
+    isPolling: isRemoveInProgress,
+  } = useRexJobPolling(packageRemoveAction);
+
+  const packageBulkRemoveAction = bulkParams => removePackages({
+    hostname,
+    search: bulkParams,
+  });
+
+  const {
+    triggerJobStart: triggerBulkPackageRemove,
+    lastCompletedJob: lastCompletedBulkPackageRemove,
+    isPolling: isBulkRemoveInProgress,
+  } = useRexJobPolling(packageBulkRemoveAction);
+
+  const packageUpgradeAction = packageName => updatePackage({
+    hostname,
+    packageName,
+  });
+
+  const {
+    triggerJobStart: triggerPackageUpgrade,
+    lastCompletedJob: lastCompletedPackageUpgrade,
+    isPolling: isUpgradeInProgress,
+  } = useRexJobPolling(packageUpgradeAction);
+
+  const packageBulkUpgradeAction = bulkParams => updatePackages({
+    hostname,
+    search: bulkParams,
+  });
+
+  const {
+    triggerJobStart: triggerBulkPackageUpgrade,
+    lastCompletedJob: lastCompletedBulkPackageUpgrade,
+    isPolling: isBulkUpgradeInProgress,
+  } = useRexJobPolling(packageBulkUpgradeAction);
+
+  const packageInstallAction
+    = bulkParams => installPackageBySearch({ hostname, search: bulkParams });
+
+  const {
+    triggerJobStart: triggerPackageInstall,
+    lastCompletedJob: lastCompletedPackageInstall,
+    isPolling: isInstallInProgress,
+  } = useRexJobPolling(packageInstallAction);
+
+  const actionInProgress = (isRemoveInProgress || isUpgradeInProgress
+    || isBulkRemoveInProgress || isBulkUpgradeInProgress || isInstallInProgress);
+  const disabledReason = __('A remote execution job is in progress.');
+
   if (!hostId) return <Skeleton />;
 
   const handleInstallPackagesClick = () => {
@@ -135,10 +193,7 @@ export const PackagesTab = () => {
     setIsModalOpen(true);
   };
 
-  const removePackageViaRemoteExecution = packageName => dispatch(removePackage({
-    hostname,
-    packageName,
-  }));
+  const removePackageViaRemoteExecution = packageName => triggerPackageRemove(packageName);
 
   const removeViaKatelloAgent = (packageName) => {
     dispatch(removePackageViaKatelloAgent(hostId, { packages: [packageName] }));
@@ -149,7 +204,7 @@ export const PackagesTab = () => {
     const selected = fetchBulkParams();
     setIsBulkActionOpen(false);
     selectNone();
-    dispatch(removePackages({ hostname, search: selected }));
+    triggerBulkPackageRemove(selected);
   };
 
   const selectedPackageNames = () => selectedResults.map(({ name }) => name);
@@ -178,19 +233,13 @@ export const PackagesTab = () => {
     }
   };
 
-  const upgradeViaRemoteExecution = packageName => dispatch(updatePackage({
-    hostname,
-    packageName,
-  }));
+  const upgradeViaRemoteExecution = packageName => triggerPackageUpgrade(packageName);
 
   const upgradeBulkViaRemoteExecution = () => {
     const selected = fetchBulkParams();
     setIsBulkActionOpen(false);
     selectNone();
-    dispatch(updatePackages({
-      hostname,
-      search: selected,
-    }));
+    triggerBulkPackageUpgrade(selected);
   };
 
   const upgradeBulkViaKatelloAgent = () => {
@@ -284,7 +333,7 @@ export const PackagesTab = () => {
                       {__('Upgrade')}
                     </DropdownToggleAction>,
                   ]}
-                  isDisabled={disableUpgrade()}
+                  isDisabled={actionInProgress || disableUpgrade()}
                   splitButtonVariant="action"
                   toggleVariant="primary"
                   onToggle={onActionToggle}
@@ -295,12 +344,14 @@ export const PackagesTab = () => {
             />
           </ActionListItem>
           <ActionListItem>
-            <Dropdown
-              toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-              isOpen={isBulkActionOpen}
-              isPlain
-              dropdownItems={dropdownRemoveItems}
-            />
+            {actionInProgress ? <Spinner size="lg" style={{ marginLeft: '1em', marginTop: '4px' }} /> : (
+              <Dropdown
+                toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                isOpen={isBulkActionOpen}
+                isPlain
+                dropdownItems={dropdownRemoveItems}
+              />
+            )}
           </ActionListItem>
         </ActionList>
       </SplitItem>
@@ -348,7 +399,9 @@ export const PackagesTab = () => {
           }
           ouiaId="host-packages-table"
           additionalListeners={[hostId, packageStatusSelected,
-            activeSortDirection, activeSortColumn]}
+            activeSortDirection, activeSortColumn, lastCompletedPackageUpgrade,
+            lastCompletedPackageRemove, lastCompletedBulkPackageRemove,
+            lastCompletedBulkPackageUpgrade, lastCompletedPackageInstall]}
           fetchItems={fetchItems}
           bookmarkController="katello_host_installed_packages"
           autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}
@@ -382,6 +435,7 @@ export const PackagesTab = () => {
               const rowActions = [
                 {
                   title: __('Remove'),
+                  isDisabled: actionInProgress,
                   onClick: () => handlePackageRemove(packageName),
                 },
               ];
@@ -391,6 +445,7 @@ export const PackagesTab = () => {
                   {
                     title: __('Upgrade via remote execution'),
                     onClick: () => upgradeViaRemoteExecution(upgradableVersion),
+                    isDisabled: actionInProgress,
                   },
                   {
                     title: __('Upgrade via customized remote execution'),
@@ -402,13 +457,15 @@ export const PackagesTab = () => {
 
               return (
                 <Tr key={`${id}`}>
-                  <Td select={{
-                    disable: false,
-                    isSelected: isSelected(id),
-                    onSelect: (event, selected) => selectOne(selected, id, pkg),
-                    rowIndex,
-                    variant: 'checkbox',
-                  }}
+                  <Td
+                    select={{
+                      disable: actionInProgress,
+                      isSelected: isSelected(id),
+                      onSelect: (event, selected) => selectOne(selected, id, pkg),
+                      rowIndex,
+                      variant: 'checkbox',
+                    }}
+                    title={actionInProgress ? disabledReason : undefined}
                   />
                   <Td>
                     {rpmId
@@ -440,6 +497,7 @@ export const PackagesTab = () => {
           key={hostId}
           hostName={hostname}
           showKatelloAgent={showKatelloAgent}
+          triggerPackageInstall={triggerPackageInstall}
         />
       }
     </div>

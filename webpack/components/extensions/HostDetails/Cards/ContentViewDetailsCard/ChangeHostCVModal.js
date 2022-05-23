@@ -9,7 +9,6 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
-import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
 import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
 import EnvironmentPaths from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPaths';
 import { ENVIRONMENT_PATHS_KEY } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
@@ -20,6 +19,7 @@ import { uniq } from '../../../../../utils/helpers';
 import ContentViewIcon from '../../../../../scenes/ContentViews/components/ContentViewIcon';
 import updateHostContentViewAndEnvironment from './HostContentViewActions';
 import HOST_CV_AND_ENV_KEY from './HostContentViewConstants';
+import { getHostDetails } from '../../HostDetailsActions';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
 
@@ -110,13 +110,7 @@ const ChangeHostCVModal = ({
 
   const refreshHostDetails = () => {
     handleModalClose();
-    return dispatch({
-      type: 'API_GET',
-      payload: {
-        key: HOST_DETAILS_KEY,
-        url: `/api/hosts/${hostName}`,
-      },
-    });
+    return dispatch(getHostDetails({ hostname: hostName }));
   };
 
   const handleSave = () => {

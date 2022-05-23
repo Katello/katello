@@ -15,7 +15,6 @@ import { HOST_YUM_INSTALLABLE_PACKAGES_KEY } from './YumInstallablePackagesConst
 import { selectHostYumInstallablePackagesStatus } from './YumInstallablePackagesSelectors';
 import { getHostYumInstallablePackages } from './YumInstallablePackagesActions';
 import './PackageInstallModal.scss';
-import { installPackageBySearch } from '../RemoteExecutionActions';
 import { katelloPackageInstallBySearchUrl, katelloPackageInstallUrl } from '../customizedRexUrlHelpers';
 import hostIdNotReady from '../../HostDetailsActions';
 import { installPackageViaKatelloAgent } from './HostPackagesActions';
@@ -101,7 +100,7 @@ InstallDropdown.defaultProps = {
 };
 
 const PackageInstallModal = ({
-  isOpen, closeModal, hostId, hostName, showKatelloAgent,
+  isOpen, closeModal, hostId, hostName, showKatelloAgent, triggerPackageInstall,
 }) => {
   const emptyContentTitle = __('No packages available to install');
   const emptyContentBody = __('No packages available to install on this host. Please check the host\'s content view and lifecycle environment.');
@@ -127,6 +126,7 @@ const PackageInstallModal = ({
     selectedResults,
     ...selectAll
   } = useBulkSelect({ results, metadata });
+
   const fetchItems = (params) => {
     if (!hostId) return hostIdNotReady;
 
@@ -141,7 +141,7 @@ const PackageInstallModal = ({
   const selectedPackageNames = () => selectedResults.map(({ name }) => name);
 
   const installViaRex = () => {
-    dispatch(installPackageBySearch({ hostname: hostName, search: fetchBulkParams() }));
+    triggerPackageInstall(fetchBulkParams());
     selectNone();
     closeModal();
   };
@@ -271,6 +271,7 @@ PackageInstallModal.propTypes = {
   hostId: PropTypes.number.isRequired,
   hostName: PropTypes.string.isRequired,
   showKatelloAgent: PropTypes.bool,
+  triggerPackageInstall: PropTypes.func.isRequired,
 };
 
 PackageInstallModal.defaultProps = {

@@ -6,9 +6,9 @@ import {
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
-import EnableTracerEmptyState from './EnableTracerEmptyState';
+import TracesEnabler from './TracesEnabler';
 import TableWrapper from '../../../../Table/TableWrapper';
 import { useBulkSelect, useTableSort, useUrlParams } from '../../../../Table/TableHooks';
 import { getHostTraces } from './HostTracesActions';
@@ -18,10 +18,10 @@ import { resolveTraceUrl } from '../customizedRexUrlHelpers';
 import './TracesTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
+import { useRexJobPolling } from '../RemoteExecutionHooks';
 
 const TracesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
-  const dispatch = useDispatch();
   const {
     id: hostId,
     name: hostname,
@@ -74,6 +74,26 @@ const TracesTab = () => {
     initialSearchQuery: searchParam || '',
   });
 
+  const BulkRestartTracesAction = () => resolveTraces({
+    hostname, search: fetchBulkParams(),
+  });
+  const {
+    triggerJobStart: triggerBulkRestart, lastCompletedJob: lastCompletedBulkRestart,
+    isPolling: isBulkRestartInProgress,
+  } = useRexJobPolling(BulkRestartTracesAction);
+
+  const restartTraceAction = id => resolveTraces({
+    hostname,
+    search: tracesSearchQuery(id),
+  });
+
+  const {
+    triggerJobStart: triggerAppRestart, lastCompletedJob: lastCompletedAppRestart,
+    isPolling: isAppRestartInProgress,
+  } = useRexJobPolling(restartTraceAction);
+
+  const actionInProgress = (isBulkRestartInProgress || isAppRestartInProgress);
+
   const fetchItems = useCallback(
     params =>
       (hostId ? getHostTraces(hostId, { ...apiSortParams, ...params }) : hostIdNotReady),
@@ -81,18 +101,11 @@ const TracesTab = () => {
   );
 
   const onBulkRestartApp = () => {
-    dispatch(resolveTraces({
-      hostname, search: fetchBulkParams(),
-    }));
+    triggerBulkRestart();
     selectNone();
-    const params = { page: meta.page, per_page: meta.per_page, search: meta.search };
-    dispatch(getHostTraces(hostId, params));
   };
 
-  const onRestartApp = id => dispatch(resolveTraces({
-    hostname,
-    search: tracesSearchQuery(id),
-  }));
+  const onRestartApp = id => triggerAppRestart(id);
 
   const bulkCustomizedRexUrl = () => resolveTraceUrl({
     hostname, search: (selectedCount > 0) ? fetchBulkParams() : '',
@@ -122,6 +135,7 @@ const TracesTab = () => {
                       {__('Restart app')}
                     </DropdownToggleAction>,
                   ]}
+                  isDisabled={selectedCount === 0}
                   splitButtonVariant="action"
                   toggleVariant="primary"
                   onToggle={toggleBulkAction}
@@ -137,7 +151,7 @@ const TracesTab = () => {
 
   );
   const status = useSelector(state => selectHostTracesStatus(state));
-  if (showEnableTracer) return <EnableTracerEmptyState />;
+  if (showEnableTracer) return <TracesEnabler hostname={hostname} />;
 
   if (!hostId) return <Skeleton />;
 
@@ -171,7 +185,8 @@ const TracesTab = () => {
         rowsCount={results?.length}
         variant={TableVariant.compact}
         displaySelectAllCheckbox
-        additionalListeners={[activeSortColumn, activeSortDirection]}
+        additionalListeners={[activeSortColumn, activeSortDirection,
+          lastCompletedAppRestart, lastCompletedBulkRestart]}
         {...selectAll}
       >
         <Thead>
@@ -194,8 +209,11 @@ const TracesTab = () => {
               app_type: appType,
             } = result;
             const resolveDisabled = !isSelectable(id);
+            let disabledReason;
+            if (resolveDisabled) disabledReason = __('Traces that require logout cannot be restarted remotely');
+            if (actionInProgress) disabledReason = __('A remote execution job is in progress');
             let rowDropdownItems = [
-              { title: 'Restart via remote execution', onClick: () => onRestartApp(id) },
+              { title: 'Restart via remote execution', onClick: () => onRestartApp(id), isDisabled: actionInProgress },
               {
                 component: 'a', href: resolveTraceUrl({ hostname, search: tracesSearchQuery(id) }), title: 'Restart via customized remote execution',
               },
@@ -207,16 +225,18 @@ const TracesTab = () => {
             }
             return (
               <Tr key={id} >
-                <Td select={{
-                  disable: resolveDisabled,
-                  props: {
-                    'aria-label': `check-${application}`,
-                  },
-                  isSelected: isSelected(id),
-                  onSelect: (event, selected) => selectOne(selected, id),
-                  rowIndex,
-                  variant: 'checkbox',
-                }}
+                <Td
+                  select={{
+                    disable: actionInProgress || resolveDisabled,
+                    props: {
+                      'aria-label': `check-${application}`,
+                    },
+                    isSelected: isSelected(id),
+                    onSelect: (event, selected) => selectOne(selected, id),
+                    rowIndex,
+                    variant: 'checkbox',
+                  }}
+                  title={disabledReason}
                 />
                 <Td>{application}</Td>
                 <Td>{appType}</Td>
