@@ -12,6 +12,7 @@ module Actions
             end
             repository_hrefs = ::Katello::Pulp3::Api::Core.new(smart_proxy).core_repositories_list_all(fields: 'pulp_href').map(&:pulp_href)
           end
+          fail _('There is no downloaded content to clean.') if repository_hrefs.empty?
           plan_self(repository_hrefs: repository_hrefs, smart_proxy_id: smart_proxy.id)
         end
 
