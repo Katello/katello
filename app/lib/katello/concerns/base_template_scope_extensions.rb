@@ -210,7 +210,7 @@ module Katello
         select = 'foreman_tasks_tasks.*'
 
         if Katello.with_remote_execution?
-          new_labels = 'label = Actions::RemoteExecution::RunHostJob AND remote_execution_feature.label = katello_errata_install'
+          new_labels = 'label = Actions::RemoteExecution::RunHostJob AND remote_execution_feature.label ^ (katello_errata_install, katello_errata_install_by_search)'
           labels = [labels, new_labels].map { |label| "(#{label})" }.join(' OR ')
           select += ',template_invocations.id AS template_invocation_id'
         else
