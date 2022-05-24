@@ -75,8 +75,15 @@ function ktSetParam(name, value) {
     var paramContainer = ktFindParamContainer(name);
     if(value) {
         if(! paramContainer) { // we create the param for kt_activation_keys
-            $("div#parameters a[target~='#global_parameters_table']").click();
-            paramContainer = $("div#parameters .fields").last();
+            var addParameterButton = $('#parameters').find('.btn-primary');
+            addParameterButton.click();
+            var directionOfAddedItems = addParameterButton.attr('direction');
+            var paramContainer = $('#parameters').find('.fields');
+            if(directionOfAddedItems === 'append'){
+                paramContainer = paramContainer.last();
+            } else {
+                paramContainer = paramContainer.first();
+            }
             paramContainer.find("input[name*='name']").val(name);
         }
         paramContainer.find("textarea").val(value);
