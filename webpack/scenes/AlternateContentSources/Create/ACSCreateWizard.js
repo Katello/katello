@@ -67,7 +67,7 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
       id: 4,
       name: __('URL and paths'),
       component: <AcsUrlPaths />,
-      enableNext: url !== '' && subpaths !== '',
+      enableNext: url !== '',
     },
     {
       id: 5,

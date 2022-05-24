@@ -41,13 +41,15 @@ const ACSCreateFinish = () => {
         name,
         description,
         base_url: url,
-        subpaths: subpaths.split(','),
         smart_proxy_names: smartProxies,
         content_type: contentType,
         alternate_content_source_type: acsType,
         verify_ssl: verifySSL,
         ssl_ca_cert_id: caCert,
       };
+      if (subpaths !== '') {
+        params = { subpaths: subpaths.split(','), ...params };
+      }
       if (authentication === 'content_credentials') {
         params = { ssl_client_cert_id: sslCert, ssl_client_key_id: sslKey, ...params };
       }

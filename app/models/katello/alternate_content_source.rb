@@ -1,5 +1,6 @@
 module Katello
   class AlternateContentSource < Katello::Model
+    audited
     include Ext::LabelFromName
     include Encryptable
     include ::ScopedSearchExtensions
@@ -11,6 +12,7 @@ module Katello
     # TODO: simplified, rhui
     ACS_TYPES = %w(custom).freeze
     CONTENT_TYPES = [::Katello::Repository::YUM_TYPE, ::Katello::Repository::FILE_TYPE].freeze
+    AUDIT_REFRESH_ACTION = 'refresh'.freeze
 
     encrypts :upstream_password
 
@@ -66,6 +68,10 @@ module Katello
     def latest_dynflow_refresh_task
       @latest_dynflow_refresh_task ||= ForemanTasks::Task::DynflowTask.where(:label => Actions::Katello::AlternateContentSource::Refresh.name).
           for_resource(self).order(:started_at).last
+    end
+
+    def audit_refresh
+      write_audit(action: AUDIT_REFRESH_ACTION, comment: _('Successfully refreshed.'), audited_changes: {})
     end
   end
 end

@@ -45,7 +45,7 @@ const ACSReview = () => {
           </TextListItem>
           <TextListItem component={TextListItemVariants.dt}>{__('Smart proxies')}</TextListItem>
           <TextListItem component={TextListItemVariants.dd}>
-            {smartProxies}
+            {smartProxies.join(',')}
           </TextListItem>
           <TextListItem component={TextListItemVariants.dt}>{__('Base URL')}</TextListItem>
           <TextListItem component={TextListItemVariants.dd}>
