@@ -409,6 +409,7 @@ module Katello
         get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
         assert_response 200
         assert_equal(manifest, response.body)
+        assert_equal response.header['Content-Length'], '0'
         assert response.header['Content-Type'] =~ /MEDIATYPE/
         assert_equal @digest, response.header['Docker-Content-Digest']
       end
@@ -435,6 +436,7 @@ module Katello
         get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
         assert_response 200
         assert_equal(manifest, response.body)
+        assert_equal response.header['Content-Length'], '0'
         assert response.header['Content-Type'] =~ /MEDIATYPE/
         assert_equal @digest, response.header['Docker-Content-Digest']
       end
@@ -453,6 +455,7 @@ module Katello
         assert_response 200
         assert_equal(manifest, response.body)
         assert_includes response.header['Content-Type'], 'application/vnd.docker.distribution.manifest.v1+json'
+        assert_equal response.header['Content-Length'], '0'
         assert_equal @digest, response.header['Docker-Content-Digest']
       end
 
@@ -469,6 +472,7 @@ module Katello
         get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
         assert_response 200
         assert_equal(manifest, response.body)
+        assert_equal response.header['Content-Length'], '0'
         assert_includes response.header['Content-Type'], 'application/vnd.docker.distribution.manifest.v1+prettyjws'
         assert_equal @digest, response.header['Docker-Content-Digest']
       end
@@ -487,6 +491,7 @@ module Katello
         get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
         assert_response 200
         assert_equal(manifest, response.body)
+        assert_equal response.header['Content-Length'], '0'
         assert response.header['Content-Type'] =~ /MEDIATYPE/
         assert_equal @digest, response.header['Docker-Content-Digest']
       end
