@@ -1,3 +1,21 @@
+# 4.4.1 Habanero (2022-05-25)
+
+## Bug Fixes
+
+### Repositories
+ * Missing publications and distributions can cause sync failures ([#34880](https://projects.theforeman.org/issues/34880), [3638d91f](https://github.com/Katello/katello.git/commit/3638d91f74c7031f40c6ac217fdd1f576e118039))
+
+### Errata Management
+ * PG::ForeignKeyViolation: ERROR:  update or delete on table "katello_erratum_packages" violates foreign key constraint "katello_msep_erratum_package_id_fk" on table "katello_module_stream_erratum_packages" ([#34870](https://projects.theforeman.org/issues/34870), [a3ce2c52](https://github.com/Katello/katello.git/commit/a3ce2c5216a6ca650ec1ff4b45c9cb83a5402136))
+
+### Upgrades
+ * Katello upgrade from 4.4 to 4.4.0.2 still fails during remove duplicate errata ([#34771](https://projects.theforeman.org/issues/34771), [b7572d06](https://github.com/Katello/katello.git/commit/b7572d06e6a9ae8c413fbf230962e34fc50b467d))
+
+### Content Views
+ * Hide profiles for module streams since we no longer have that info indexed from  pulp ([#34760](https://projects.theforeman.org/issues/34760), [3afbe21c](https://github.com/Katello/katello.git/commit/3afbe21cda6fa72da5d17c70e5fb7891e2c5b8cc))
+
+### Other
+ * Undefined method epoch_to_date when syncing SUSE repos ([#34756](https://projects.theforeman.org/issues/34756), [42dbf62d](https://github.com/Katello/katello.git/commit/42dbf62d47270c67960557f1215f64c62d0392c1))
 # 4.4.0.2 Habanero (2022-04-08)
 
 ## Bug Fixes
