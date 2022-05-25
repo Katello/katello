@@ -50,7 +50,7 @@ module ::Actions::Pulp3
       pulp_acs = @file_acs.backend_service(@primary).read
       pulp_remote = @file_acs.backend_service(@primary).get_remote
       assert_equal @file_acs.base_url, pulp_remote.url
-      assert_equal @file_acs.subpaths.collect { |s| s + '/PULP_MANIFEST' }.sort, pulp_acs.paths
+      assert_equal @file_acs.subpaths.collect { |s| s + '/PULP_MANIFEST' }.sort, pulp_acs.paths.sort
     end
 
     def test_file_update_no_subpaths
