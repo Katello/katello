@@ -4,8 +4,6 @@ module Katello
       extend ActiveSupport::Concern
       extend ApipieDSL::Module
 
-      ERRATA_SEARCH_QUERY_INPUT = 'Errata search query'
-
       apipie :class, 'Base macros related to content hosts to use within a template' do
         name 'Base Content'
         sections only: %w[all reports provisioning jobs partition_tables]
@@ -324,25 +322,23 @@ module Katello
 
       def parse_errata(task)
         task_input = get_task_input(task)
-        agent_input = errata_ids_from_task_input(task_input)
+        agent_input = task_input['errata'] || task_input['content']
         # Pick katello agent errata if present
         # Otherwise pick rex errata. There are multiple template inputs, such as errata, pre_script and post_script we only need the
         # errata input here.
         @_tasks_errata_cache[task.id] ||= agent_input.presence || errata_ids_from_template_invocation(task, task_input)
       end
 
-      def errata_ids_from_task_input(task)
-        return task_input['errata'] || task_input['content'] unless task_input.has_key? 'job_features'
-      end
-
       def errata_ids_from_template_invocation(task, task_input)
-        scope = TemplateInvocationInputValue.joins(:template_input)
-        if task_input.has_key? 'job_features' && task_input['job_features'].include? 'katello_errata_install_by_search'
-          query = scope.where("template_invocation_id = ? AND template_inputs.name = ?", task.template_invocation_id, ERRATA_SEARCH_QUERY_INPUT)
-                    .first.value
-          ::Katello::Erratum.search_for(query).pluck(:id)
+        if task_input.key?('job_features') && task_input['job_features'].include?('katello_errata_install_by_search')
+          # This may give wrong results if the template is not rendered yet
+          # This also will not work for jobs run before we started storing
+          #   resolved ids in the template
+          script = task.execution_plan.actions[1].try(:input).try(:[], 'script') || ''
+          found = script.lines.find { |line| line.start_with? '# RESOLVED_ERRATA_IDS=' } || ''
+          (found.split('=').last || '').split(',')
         else
-          scope.where("template_invocation_id = ? AND template_inputs.name = ?", task.template_invocation_id, 'errata')
+          TemplateInvocationInputValue.joins(:template_input).where("template_invocation_id = ? AND template_inputs.name = ?", task.template_invocation_id, 'errata')
             .first.value.split(',')
         end
       end
