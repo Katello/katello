@@ -1,11 +1,11 @@
 <% if @smart_proxy.pulp_mirror? -%>
   <div ng-controller="CapsuleContentController">
-    <%= render :file => 'smart_proxies/show' %>
+    <%= render :template => 'smart_proxies/show' %>
   </div>
 <% elsif @smart_proxy.pulp_primary? -%>
   <div ng-controller="PulpPrimaryController">
-    <%= render :file => 'smart_proxies/show' %>
+    <%= render :template => 'smart_proxies/show' %>
   </div>
 <% else -%>
-  <%= render :file => 'smart_proxies/show' %>
+  <%= render :template => 'smart_proxies/show' %>
 <% end -%>
