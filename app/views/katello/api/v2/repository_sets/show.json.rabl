@@ -37,6 +37,10 @@ child @resource.repositories => :repositories do
   attributes :minor => :releasever
 end
 
+node :osRestricted do |pc|
+  pc.repositories&.first&.os_versions&.first
+end
+
 node :override do |pc|
   pc.override if pc.respond_to? :override
 end
