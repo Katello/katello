@@ -44,7 +44,6 @@ const AcsUrlPaths = () => {
           label={__('Subpaths')}
           type="string"
           fieldId="acs_subpaths"
-          isRequired
         >
           <TextArea
             placeholder="test/repo1/, test/repo2/,"

@@ -14,8 +14,7 @@ module Actions
         end
 
         def finalize
-          acs = ::Katello::AlternateContentSource.find_by(id: input[:acs_id])
-          acs.update(last_refreshed: ::DateTime.now)
+          ::Katello::AlternateContentSource.find_by(id: input[:acs_id])&.audit_refresh
         end
 
         def humanized_name
