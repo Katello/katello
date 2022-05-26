@@ -43,7 +43,7 @@ class RemoveDuplicateErrata < ActiveRecord::Migration[6.0]
         ::Katello::ModuleStreamErratumPackage.where(erratum_package_id: dup_err_package).each do |dup_mod_errata_package|
           if ::Katello::ModuleStreamErratumPackage.find_by(module_stream_id: dup_mod_errata_package.module_stream_id, erratum_package_id: erratum_package_to_keep&.id)
             dup_mod_errata_package.delete
-          else
+          elsif erratum_package_to_keep&.id
             begin
               dup_mod_errata_package.update(erratum_package_id: erratum_package_to_keep&.id)
             rescue
