@@ -96,6 +96,29 @@ EnabledIcon.propTypes = {
   isOverridden: PropTypes.bool.isRequired,
 };
 
+const OsRestrictedIcon = ({ osRestricted }) => (
+  <Tooltip
+    position="right"
+    content={<FormattedMessage
+      id="os-restricted-tooltip"
+      defaultMessage={__('OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host.')}
+      values={{ osRestricted }}
+    />}
+  >
+    <Label color="blue" className="os-restricted-label" style={{ marginLeft: '8px' }}>
+      {__(osRestricted)}
+    </Label>
+  </Tooltip>
+);
+
+OsRestrictedIcon.propTypes = {
+  osRestricted: PropTypes.string,
+};
+
+OsRestrictedIcon.defaultProps = {
+  osRestricted: null,
+};
+
 const RepositorySetsTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const {
@@ -426,6 +449,7 @@ const RepositorySetsTab = () => {
                 enabled_content_override: enabledContentOverride,
                 contentUrl: repoPath,
                 product: { name: productName, id: productId },
+                osRestricted,
               } = repoSet;
               const { isEnabled, isOverridden } =
                 getEnabledValue({ enabled, enabledContentOverride });
@@ -450,6 +474,9 @@ const RepositorySetsTab = () => {
                   </Td>
                   <Td>
                     <span><EnabledIcon key={`enabled-icon-${id}`} {...{ isEnabled, isOverridden }} /></span>
+                    {osRestricted &&
+                      <span><OsRestrictedIcon key={`os-restricted-icon-${id}`} {...{ osRestricted }} /></span>
+                    }
                   </Td>
                   <Td
                     key={`rowActions-${id}`}
