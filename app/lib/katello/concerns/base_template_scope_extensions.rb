@@ -336,7 +336,7 @@ module Katello
           #   resolved ids in the template
           script = task.execution_plan.actions[1].try(:input).try(:[], 'script') || ''
           found = script.lines.find { |line| line.start_with? '# RESOLVED_ERRATA_IDS=' } || ''
-          (found.split('=').last || '').split(',')
+          (found.chomp.split('=', 2).last || '').split(',')
         else
           TemplateInvocationInputValue.joins(:template_input).where("template_invocation_id = ? AND template_inputs.name = ?", task.template_invocation_id, 'errata')
             .first.value.split(',')
