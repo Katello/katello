@@ -86,6 +86,7 @@ module ::Actions::Katello::Organization
       acme_org.stubs(:owner_details).returns({})
       action.stubs(:action_subject).with(acme_org)
       action.stubs(:rand).returns('1234')
+      path = File.join(::Rails.root, 'tmp', '1234.zip')
       plan_action(action, acme_org)
 
       found = assert_action_planned_with(action,
@@ -97,13 +98,13 @@ module ::Actions::Katello::Organization
                                  ::Actions::Candlepin::Owner::UpstreamExport,
                                  organization_id: acme_org.id,
                                  upstream: upstream,
-                                 path: "/tmp/1234.zip",
+                                 path: path,
                                  dependency: found.first.output
                                         )
       found = assert_action_planned_with(action,
                                  ::Actions::Candlepin::Owner::Import,
                                  label: acme_org.label,
-                                 path: "/tmp/1234.zip",
+                                 path: path,
                                  dependency: found.first.output
                                         )
       found = assert_action_planned_with(action,

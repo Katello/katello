@@ -9,7 +9,7 @@ module Actions
         def plan(organization)
           action_subject organization
           manifest_update = organization.products.redhat.any?
-          path = "/tmp/#{rand}.zip"
+          path = File.join(::Rails.root, "tmp", "#{rand}.zip")
           details = organization.owner_details
           upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
 
