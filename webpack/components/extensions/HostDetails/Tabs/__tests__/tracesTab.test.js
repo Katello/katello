@@ -14,6 +14,12 @@ import mockBookmarkData from './bookmarks.fixtures.json';
 const hostName = 'client.example.com';
 const tracesBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_host_tracers');
 
+jest.mock('../../hostDetailsHelpers', () => ({
+  ...jest.requireActual('../../hostDetailsHelpers'),
+  userPermissionsFromHostDetails: () => ({
+    create_job_invocations: true,
+  }),
+}));
 
 const tracerInstalledResponse = {
   id: 1,

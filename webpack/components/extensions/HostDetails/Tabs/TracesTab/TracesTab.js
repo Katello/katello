@@ -19,6 +19,12 @@ import './TracesTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
+import { hasRequiredPermissions as can,
+  missingRequiredPermissions as cannot,
+  userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
+
+const invokeRexJobs = ['create_job_invocations'];
+const createBookmarks = ['create_bookmarks'];
 
 const TracesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -27,15 +33,18 @@ const TracesTab = () => {
     name: hostname,
     content_facet_attributes: contentFacetAttributes,
   } = hostDetails;
+  const showActions = can(invokeRexJobs, userPermissionsFromHostDetails({ hostDetails }));
   const showEnableTracer = (contentFacetAttributes?.katello_tracer_installed === false);
-  const emptyContentTitle = __('No applications to restart');
-  const emptyContentBody = (<FormattedMessage
+  const emptyContentTitle = showActions ? __('No applications to restart') : __('Traces not available');
+  const tracesNotAvailBody = showEnableTracer ? __('Traces may be enabled by a user with the appropriate permissions.') :
+    __('Traces will be shown here to a user with the appropriate permissions.');
+  const emptyContentBody = showActions ? (<FormattedMessage
     id="traces-happy-empty"
     values={{
       pkgLink: <a href="#/Content/packages?status=Upgradable">{__('installing or updating packages')}</a>,
     }}
     defaultMessage={__('Traces may be listed here after {pkgLink}.')}
-  />);
+  />) : tracesNotAvailBody;
   const emptySearchTitle = __('No matching traces found');
   const emptySearchBody = __('Try changing your search settings.');
   const errorSearchTitle = __('Problem searching traces');
@@ -111,6 +120,9 @@ const TracesTab = () => {
     hostname, search: (selectedCount > 0) ? fetchBulkParams() : '',
   });
 
+  const readOnlyBookmarks =
+  cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
+
   const dropdownItems = [
     <DropdownItem isDisabled={selectedCount === 0} aria-label="bulk_rex" key="bulk_rex" component="button" onClick={onBulkRestartApp}>
       {__('Restart via remote execution')}
@@ -120,7 +132,7 @@ const TracesTab = () => {
     </DropdownItem>,
   ];
 
-  const actionButtons = (
+  const actionButtons = showActions ? (
     <Split hasGutter>
       <SplitItem>
         <ActionList isIconList>
@@ -149,9 +161,9 @@ const TracesTab = () => {
       </SplitItem>
     </Split>
 
-  );
+  ) : null;
   const status = useSelector(state => selectHostTracesStatus(state));
-  if (showEnableTracer) return <TracesEnabler hostname={hostname} />;
+  if (showEnableTracer && showActions) return <TracesEnabler hostname={hostname} />;
 
   if (!hostId) return <Skeleton />;
 
@@ -176,17 +188,18 @@ const TracesTab = () => {
           actionButtons,
         }
         }
-        happyEmptyContent
+        happyEmptyContent={showActions}
         ouiaId="host-traces-table"
         metadata={meta}
         bookmarkController="katello_host_tracers"
+        readOnlyBookmarks={readOnlyBookmarks}
         autocompleteEndpoint={`/hosts/${hostId}/traces/auto_complete_search`}
         foremanApiAutoComplete
         rowsCount={results?.length}
         variant={TableVariant.compact}
-        displaySelectAllCheckbox
         additionalListeners={[activeSortColumn, activeSortDirection,
           lastCompletedAppRestart, lastCompletedBulkRestart]}
+        displaySelectAllCheckbox={showActions}
         {...selectAll}
       >
         <Thead>
@@ -225,27 +238,32 @@ const TracesTab = () => {
             }
             return (
               <Tr key={id} >
-                <Td
-                  select={{
-                    disable: actionInProgress || resolveDisabled,
-                    props: {
-                      'aria-label': `check-${application}`,
-                    },
-                    isSelected: isSelected(id),
-                    onSelect: (event, selected) => selectOne(selected, id),
-                    rowIndex,
-                    variant: 'checkbox',
-                  }}
-                  title={disabledReason}
-                />
+                {showActions ? (
+                  <Td
+                    select={{
+                      disable: actionInProgress || resolveDisabled,
+                      props: {
+                        'aria-label': `check-${application}`,
+                      },
+                      isSelected: isSelected(id),
+                      onSelect: (event, selected) => selectOne(selected, id),
+                      rowIndex,
+                      variant: 'checkbox',
+                    }}
+                    title={disabledReason}
+                  />
+                ) : <Td>&nbsp;</Td>
+                }
                 <Td>{application}</Td>
                 <Td>{appType}</Td>
                 <Td>{helper}</Td>
-                <Td
-                  actions={{
-                    items: rowDropdownItems,
-                  }}
-                />
+                {showActions && (
+                  <Td
+                    actions={{
+                      items: rowDropdownItems,
+                    }}
+                  />
+                )}
               </Tr>
             );
           })

@@ -43,6 +43,7 @@ const TableWrapper = ({
   disableSearch,
   nodesBelowSearch,
   bookmarkController,
+  readOnlyBookmarks,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
@@ -191,6 +192,7 @@ const TableWrapper = ({
               getAutoCompleteParams={getAutoCompleteParams}
               foremanApiAutoComplete={foremanApiAutoComplete}
               bookmarkController={bookmarkController}
+              readOnlyBookmarks={readOnlyBookmarks}
               placeholder={searchPlaceholderText}
             />
           </FlexItem>
@@ -272,7 +274,7 @@ TableWrapper.propTypes = {
   actionButtons: PropTypes.node,
   toggleGroup: PropTypes.node,
   children: PropTypes.node,
-  // additionalListeners are anything that can trigger another API call, e.g. a filter
+  // additionalListeners are anything that should trigger another API call, e.g. a filter
   additionalListeners: PropTypes.arrayOf(PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
@@ -300,6 +302,7 @@ TableWrapper.propTypes = {
   disableSearch: PropTypes.bool,
   nodesBelowSearch: PropTypes.node,
   bookmarkController: PropTypes.string,
+  readOnlyBookmarks: PropTypes.bool,
 };
 
 TableWrapper.defaultProps = {
@@ -326,6 +329,7 @@ TableWrapper.defaultProps = {
   disableSearch: false,
   nodesBelowSearch: null,
   bookmarkController: undefined,
+  readOnlyBookmarks: false,
 };
 
 export default TableWrapper;

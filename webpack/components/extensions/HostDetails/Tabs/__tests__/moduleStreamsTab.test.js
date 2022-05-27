@@ -1,12 +1,19 @@
 import React from 'react';
 import { act } from 'react-test-renderer';
 import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../../test-utils/nockWrapper';
-import { foremanApi } from '../../../../../../services/api';
-import { ModuleStreamsTab } from '../ModuleStreamsTab';
-import mockModuleStreams from './modules.fixtures.json';
-import { MODULE_STREAMS_KEY } from '../ModuleStreamsConstants';
-import mockBookmarkData from '../../__tests__/bookmarks.fixtures.json';
+import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { ModuleStreamsTab } from '../ModuleStreamsTab/ModuleStreamsTab.js';
+import mockModuleStreams from './moduleStreams.fixtures.json';
+import mockBookmarkData from './bookmarks.fixtures.json';
+import { MODULE_STREAMS_KEY } from '../../../../../scenes/ModuleStreams/ModuleStreamsConstants';
+import { foremanApi } from '../../../../../services/api';
+
+jest.mock('../../hostDetailsHelpers', () => ({
+  ...jest.requireActual('../../hostDetailsHelpers'),
+  userPermissionsFromHostDetails: () => ({
+    create_job_invocations: true,
+  }),
+}));
 
 const moduleBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_host_available_module_streams');
 

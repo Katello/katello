@@ -22,6 +22,7 @@ const Search = ({
   getAutoCompleteParams,
   foremanApiAutoComplete,
   bookmarkController,
+  readOnlyBookmarks,
   placeholder,
   isTextInput,
   setTextInputValue,
@@ -84,6 +85,7 @@ const Search = ({
       <TypeAhead
         autoSearchDelay={autoSearchDelay}
         bookmarkController={bookmarkController}
+        readOnlyBookmarks={readOnlyBookmarks}
         isDisabled={isDisabled}
         items={items}
         onInputUpdate={onInputUpdate}
@@ -112,6 +114,7 @@ Search.propTypes = {
     autoSearchDelay: PropTypes.number,
   }),
   bookmarkController: PropTypes.string,
+  readOnlyBookmarks: PropTypes.bool,
   placeholder: PropTypes.string,
   isTextInput: PropTypes.bool,
   setTextInputValue: PropTypes.func,
@@ -127,6 +130,7 @@ Search.defaultProps = {
   },
   isDisabled: undefined,
   bookmarkController: undefined,
+  readOnlyBookmarks: false,
   placeholder: undefined,
   isTextInput: false,
   setTextInputValue: undefined,

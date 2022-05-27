@@ -18,10 +18,13 @@ import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import { useSet } from '../../../../Table/TableHooks';
 import { HostCollectionsAddModal, HostCollectionsRemoveModal } from './HostCollectionsModal';
-import { hostIsRegistered } from '../../hostDetailsHelpers';
+import { hasRequiredPermissions, hostIsRegistered, userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
+
+const requiredPermissions = ['edit_hosts', 'view_host_collections'];
 
 const HostCollectionsDetails = ({
   hostCollections, id: hostId, name: hostName,
+  showKebab,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleBulkAction = () => setIsDropdownOpen(prev => !prev);
@@ -85,15 +88,17 @@ const HostCollectionsDetails = ({
                 </FlexItem>
               </Flex>
             </FlexItem>
-            <FlexItem>
-              <Dropdown
-                toggle={<KebabToggle aria-label="host_collections_bulk_actions" onToggle={toggleBulkAction} />}
-                isOpen={isDropdownOpen}
-                isPlain
-                position="right"
-                dropdownItems={dropdownItems}
-              />
-            </FlexItem>
+            {showKebab && (
+              <FlexItem>
+                <Dropdown
+                  toggle={<KebabToggle aria-label="host_collections_bulk_actions" onToggle={toggleBulkAction} />}
+                  isOpen={isDropdownOpen}
+                  isPlain
+                  position="right"
+                  dropdownItems={dropdownItems}
+                />
+              </FlexItem>)
+            }
           </Flex>
         </CardHeader>
         <CardBody>
@@ -159,7 +164,9 @@ const HostCollectionsDetails = ({
 
 const HostCollectionsCard = ({ hostDetails }) => {
   if (hostIsRegistered({ hostDetails })) {
-    return <HostCollectionsDetails {...propsToCamelCase(hostDetails)} />;
+    const showKebab =
+      hasRequiredPermissions(requiredPermissions, userPermissionsFromHostDetails({ hostDetails }));
+    return <HostCollectionsDetails showKebab={showKebab} {...propsToCamelCase(hostDetails)} />;
   }
   return null;
 };
@@ -168,20 +175,32 @@ HostCollectionsDetails.propTypes = {
   hostCollections: PropTypes.arrayOf(PropTypes.shape({})),
   id: PropTypes.number,
   name: PropTypes.string,
+  showKebab: PropTypes.bool,
 };
 
 HostCollectionsDetails.defaultProps = {
   hostCollections: [],
   id: null,
   name: '',
+  showKebab: false,
 };
 
 HostCollectionsCard.propTypes = {
-  hostDetails: PropTypes.shape({}),
+  hostDetails: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+    contentFacetAttributes: PropTypes.shape({
+      permissions: PropTypes.shape({}),
+    }),
+  }),
 };
 
 HostCollectionsCard.defaultProps = {
-  hostDetails: null,
+  hostDetails: {
+    permissions: {},
+    contentFacetAttributes: {
+      permissions: {},
+    },
+  },
 };
 
 export default HostCollectionsCard;

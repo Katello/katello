@@ -34,9 +34,18 @@ import { installErrata } from '../RemoteExecutionActions';
 import { errataInstallUrl } from '../customizedRexUrlHelpers';
 import './ErrataTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
-import { defaultRemoteActionMethod, KATELLO_AGENT } from '../../hostDetailsHelpers';
+import { defaultRemoteActionMethod,
+  hasRequiredPermissions as can,
+  missingRequiredPermissions as cannot,
+  KATELLO_AGENT,
+  userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
+
+const recalculateApplicability = ['edit_hosts'];
+const invokeRexJobs = ['create_job_invocations'];
+const doKatelloAgentActions = ['edit_hosts'];
+const createBookmarks = ['create_bookmarks'];
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -46,6 +55,12 @@ export const ErrataTab = () => {
     content_facet_attributes: contentFacetAttributes,
     errata_status: errataStatus,
   } = hostDetails;
+  const userPermissions = userPermissionsFromHostDetails({ hostDetails });
+  const showRecalculate =
+    can(
+      recalculateApplicability,
+      userPermissions,
+    );
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
   const dispatch = useDispatch();
   const toggleGroupStates = ['all', 'installable'];
@@ -204,6 +219,10 @@ export const ErrataTab = () => {
   ));
 
   const defaultRemoteAction = defaultRemoteActionMethod({ hostDetails });
+  const showActions = defaultRemoteAction === KATELLO_AGENT ?
+    can(doKatelloAgentActions, userPermissions) :
+    can(invokeRexJobs, userPermissions);
+
   const apply = () => {
     if (defaultRemoteAction === KATELLO_AGENT) {
       applyByKatelloAgent();
@@ -211,6 +230,9 @@ export const ErrataTab = () => {
       applyViaRemoteExecution();
     }
   };
+
+  const readOnlyBookmarks =
+  cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
 
   const dropdownKebabItems = [
     <DropdownItem
@@ -271,7 +293,7 @@ export const ErrataTab = () => {
     return newSeverity;
   });
 
-  const actionButtons = (
+  const actionButtons = showActions ? (
     <>
       <Split hasGutter>
         <SplitItem>
@@ -297,6 +319,7 @@ export const ErrataTab = () => {
                 dropdownItems={dropdownItems}
               />
             </ActionListItem>
+            {showRecalculate &&
             <ActionListItem>
               <Dropdown
                 toggle={<KebabToggle aria-label="bulk_actions_kebab" onToggle={toggleBulkAction} />}
@@ -305,11 +328,12 @@ export const ErrataTab = () => {
                 dropdownItems={dropdownKebabItems}
               />
             </ActionListItem>
+            }
           </ActionList>
         </SplitItem>
       </Split>
     </>
-  );
+  ) : null;
 
   const hostIsNonLibrary = (
     contentFacet?.contentViewDefault === false && contentFacet.lifecycleEnvironmentLibrary === false
@@ -392,12 +416,13 @@ export const ErrataTab = () => {
             lastCompletedApply, lastCompletedBulkApply]}
           fetchItems={fetchItems}
           bookmarkController="katello_errata"
+          readOnlyBookmarks={readOnlyBookmarks}
           autocompleteEndpoint={`/hosts/${hostId}/errata/auto_complete_search`}
           foremanApiAutoComplete
           rowsCount={results?.length}
           variant={TableVariant.compact}
           {...selectAll}
-          displaySelectAllCheckbox
+          displaySelectAllCheckbox={showActions}
         >
           <Thead>
             <Tr>
@@ -463,10 +488,12 @@ export const ErrataTab = () => {
                         onToggle: (_event, _rInx, isOpen) => expandedErrata.onToggle(isOpen, id),
                       }}
                     />
-                    <Td
-                      select={tdSelect(errataId, rowIndex, actionInProgress)}
-                      title={actionInProgress && disabledReason}
-                    />
+                    {showActions ? (
+                      <Td
+                        select={tdSelect(errataId, rowIndex, actionInProgress)}
+                        title={actionInProgress && disabledReason}
+                      />
+                    ) : null}
                     <Td>
                       <a href={urlBuilder(`errata/${id}`, '')}>{errataId}</a>
                     </Td>
@@ -490,13 +517,14 @@ export const ErrataTab = () => {
                     </Td>
                     <Td><TableText wrapModifier="truncate">{title}</TableText></Td>
                     <Td key={publishedAt}><IsoDate date={publishedAt} /></Td>
-                    <Td
-                      key={`rowActions-${id}`}
-                      actions={{
-                        items: rowActions,
-                      }}
-
-                    />
+                    {showActions ? (
+                      <Td
+                        key={`rowActions-${id}`}
+                        actions={{
+                          items: rowActions,
+                        }}
+                      />
+                    ) : null}
                   </Tr>
                   <Tr key="child_row" isExpanded={isExpanded}>
                     {isExpanded && (
