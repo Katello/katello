@@ -86,11 +86,11 @@ module Katello
           ::HttpProxy.default_global_content_proxy
         end
 
-        def http_downloader
-          net = net_http_class.new(@uri.host, @uri.port)
-          net.use_ssl = @uri.is_a?(URI::HTTPS)
+        def http_downloader(uri = @uri)
+          net = net_http_class.new(uri.host, uri.port)
+          net.use_ssl = uri.is_a?(URI::HTTPS)
 
-          if @uri.is_a?(URI::HTTPS)
+          if uri.is_a?(URI::HTTPS)
             net.cert = @options[:ssl_client_cert]
             net.key = @options[:ssl_client_key]
             net.ca_file = @options[:ssl_ca_file]
@@ -121,9 +121,16 @@ module Katello
 
         # rubocop:disable Metrics/MethodLength
         def get(path, _headers = {})
-          net = http_downloader
-          path = File.join(@uri.request_uri, path)
-          used_url = File.join("#{@uri.scheme}://#{@uri.host}:#{@uri.port}", path)
+          uri = URI.parse(path)
+          if uri.relative?
+            path = File.join(@uri.request_uri, path)
+            used_url = File.join("#{@uri.scheme}://#{@uri.host}:#{@uri.port}", path)
+            net = http_downloader
+          else
+            used_url = path
+            net = http_downloader(uri)
+          end
+
           Rails.logger.info "CDN: Requesting path #{used_url}"
           req = Net::HTTP::Get.new(path)
 
@@ -137,6 +144,9 @@ module Katello
               code = res.code.to_i
               if code == 200
                 return res.body
+              elsif [301, 302].include?(code) && res.header.key?('location')
+                Rails.logger.info "CDN: Redirecting to #{res.header['location']}"
+                return get(res.header['location'])
               else
                 # we don't really use RestClient here (it doesn't allow to safely
                 # set the proxy only for a set of requests and we don't want the
