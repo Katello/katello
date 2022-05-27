@@ -40,7 +40,7 @@ const EnvironmentPaths = ({
     <>
       <TextContent>{headerText}</TextContent>
       <div>
-        {results.map((path, index) => {
+        {results?.map((path, index) => {
           const {
             environments,
           } = path || {};

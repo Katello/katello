@@ -9,6 +9,14 @@ import { REX_FEATURES } from '../RemoteExecutionConstants';
 import * as hooks from '../../../../Table/TableHooks';
 import mockBookmarkData from './bookmarks.fixtures.json';
 
+jest.mock('../../hostDetailsHelpers', () => ({
+  ...jest.requireActual('../../hostDetailsHelpers'),
+  userPermissionsFromHostDetails: () => ({
+    create_job_invocations: true,
+    edit_hosts: true,
+  }),
+}));
+
 const contentFacetAttributes = {
   id: 11,
   uuid: 'e5761ea3-4117-4ecf-83d0-b694f99b389e',

@@ -38,9 +38,17 @@ import { katelloPackageUpdateUrl, packagesUpdateUrl } from '../customizedRexUrlH
 import './PackagesTab.scss';
 import hostIdNotReady from '../../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
-import { defaultRemoteActionMethod, KATELLO_AGENT } from '../../hostDetailsHelpers';
+import { defaultRemoteActionMethod,
+  hasRequiredPermissions as can,
+  missingRequiredPermissions as cannot,
+  KATELLO_AGENT,
+  userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
+
+const invokeRexJobs = ['create_job_invocations'];
+const doKatelloAgentActions = ['edit_hosts'];
+const createBookmarks = ['create_bookmarks'];
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -60,6 +68,9 @@ export const PackagesTab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => setIsModalOpen(false);
   const showKatelloAgent = (defaultRemoteActionMethod({ hostDetails }) === KATELLO_AGENT);
+  const showActions = showKatelloAgent ?
+    can(doKatelloAgentActions, userPermissionsFromHostDetails({ hostDetails })) :
+    can(invokeRexJobs, userPermissionsFromHostDetails({ hostDetails }));
 
   const [isActionOpen, setIsActionOpen] = useState(false);
   const onActionSelect = () => {
@@ -272,6 +283,9 @@ export const PackagesTab = () => {
     (defaultRemoteAction === KATELLO_AGENT && selectAllMode && !areAllRowsSelected()) ||
     (!selectAllMode && !allUpgradable());
 
+  const readOnlyBookmarks =
+  cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
+
   const dropdownUpgradeItems = [
     <DropdownItem
       aria-label="bulk_upgrade_rex"
@@ -319,7 +333,7 @@ export const PackagesTab = () => {
     return newStatus;
   });
 
-  const actionButtons = (
+  const actionButtons = showActions ? (
     <Split hasGutter>
       <SplitItem>
         <ActionList isIconList>
@@ -356,7 +370,7 @@ export const PackagesTab = () => {
         </ActionList>
       </SplitItem>
     </Split>
-  );
+  ) : null;
 
   const statusFilters = (
     <Split hasGutter>
@@ -404,12 +418,13 @@ export const PackagesTab = () => {
             lastCompletedBulkPackageUpgrade, lastCompletedPackageInstall]}
           fetchItems={fetchItems}
           bookmarkController="katello_host_installed_packages"
+          readOnlyBookmarks={readOnlyBookmarks}
           autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}
           foremanApiAutoComplete
           rowsCount={results?.length}
           variant={TableVariant.compact}
           {...selectAll}
-          displaySelectAllCheckbox
+          displaySelectAllCheckbox={showActions}
         >
           <Thead>
             <Tr>
@@ -457,16 +472,18 @@ export const PackagesTab = () => {
 
               return (
                 <Tr key={`${id}`}>
-                  <Td
-                    select={{
-                      disable: actionInProgress,
-                      isSelected: isSelected(id),
-                      onSelect: (event, selected) => selectOne(selected, id, pkg),
-                      rowIndex,
-                      variant: 'checkbox',
-                    }}
-                    title={actionInProgress ? disabledReason : undefined}
-                  />
+                  {showActions ? (
+                    <Td
+                      select={{
+                        disable: actionInProgress,
+                        isSelected: isSelected(id),
+                        onSelect: (event, selected) => selectOne(selected, id, pkg),
+                        rowIndex,
+                        variant: 'checkbox',
+                      }}
+                      title={actionInProgress ? disabledReason : undefined}
+                    />
+                  ) : <Td>&nbsp;</Td>}
                   <Td>
                     {rpmId
                       ? <a href={urlBuilder(`packages/${rpmId}`, '')}>{packageName}</a>
@@ -476,12 +493,14 @@ export const PackagesTab = () => {
                   <Td><PackagesStatus {...pkg} /></Td>
                   <Td>{installedVersion.replace(`${packageName}-`, '')}</Td>
                   <Td><PackagesLatestVersion {...pkg} /></Td>
-                  <Td
-                    key={`rowActions-${id}`}
-                    actions={{
-                      items: rowActions,
-                    }}
-                  />
+                  {showActions ? (
+                    <Td
+                      key={`rowActions-${id}`}
+                      actions={{
+                        items: rowActions,
+                      }}
+                    />
+                  ) : null}
                 </Tr>
               );
             })

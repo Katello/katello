@@ -8,6 +8,16 @@ import mockRepoSetData from './repositorySets.fixtures.json';
 import mockBookmarkData from './bookmarks.fixtures.json';
 import mockContentOverride from './contentOverrides.fixtures.json';
 
+jest.mock('../../hostDetailsHelpers', () => ({
+  ...jest.requireActual('../../hostDetailsHelpers'),
+  userPermissionsFromHostDetails: () => ({
+    view_hosts: true,
+    view_activation_keys: true,
+    view_products: true,
+    edit_hosts: true,
+  }),
+}));
+
 const contentFacetAttributes = {
   id: 11,
   uuid: 'e5761ea3-4117-4ecf-83d0-b694f99b389e',
