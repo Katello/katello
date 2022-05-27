@@ -11,7 +11,7 @@ import ErrataOverviewCard from './components/extensions/HostDetails/Cards/Errata
 import InstalledProductsCard from './components/extensions/HostDetails/DetailsTabCards/InstalledProductsCard';
 import RegistrationCard from './components/extensions/HostDetails/DetailsTabCards/RegistrationCard';
 
-import RepositorySetsTab from './components/extensions/HostDetails/Tabs/RepositorySetsTab/RepositorySetsTab';
+import RepositorySetsTab, { hideRepoSetsTab } from './components/extensions/HostDetails/Tabs/RepositorySetsTab/RepositorySetsTab';
 import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js';
 import extendReducer from './components/extensions/reducers';
 import rootReducer from './redux/reducers';
@@ -29,7 +29,7 @@ addGlobalFill('registrationAdvanced', '[katello]RegistrationCommands', <Registra
 // Host details page tabs
 addGlobalFill('host-details-page-tabs', 'Content', <ContentTab key="content" />, 900, { title: __('Content'), hideTab: hostIsNotRegistered });
 addGlobalFill('host-details-page-tabs', 'Traces', <TracesTab key="traces" />, 800, { title: __('Traces'), hideTab: hostIsNotRegistered });
-addGlobalFill('host-details-page-tabs', 'Repository sets', <RepositorySetsTab key="repository-sets" />, 700, { title: __('Repository sets'), hideTab: hostIsNotRegistered });
+addGlobalFill('host-details-page-tabs', 'Repository sets', <RepositorySetsTab key="repository-sets" />, 700, { title: __('Repository sets'), hideTab: hideRepoSetsTab });
 
 // Overview tab cards
 addGlobalFill(

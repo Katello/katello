@@ -22,6 +22,7 @@ const TypeAhead = ({
   autoSearchEnabled,
   autoSearchDelay,
   bookmarkController,
+  readOnlyBookmarks,
   placeholder,
   isTextInput,
   setTextInputValue,
@@ -69,6 +70,7 @@ const TypeAhead = ({
       }) => {
         const typeAheadProps = {
           bookmarkController,
+          readOnlyBookmarks,
           isDisabled,
           userInputValue: inputValue,
           clearSearch,
@@ -118,6 +120,7 @@ TypeAhead.propTypes = {
   autoSearchEnabled: PropTypes.bool.isRequired,
   autoSearchDelay: PropTypes.number,
   bookmarkController: PropTypes.string,
+  readOnlyBookmarks: PropTypes.bool,
   placeholder: PropTypes.string,
   isTextInput: PropTypes.bool,
   setTextInputValue: PropTypes.func,
@@ -130,6 +133,7 @@ TypeAhead.defaultProps = {
   isDisabled: undefined,
   autoSearchDelay: 500,
   bookmarkController: undefined,
+  readOnlyBookmarks: false,
   placeholder: undefined,
   isTextInput: false,
   setTextInputValue: undefined,

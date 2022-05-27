@@ -41,6 +41,14 @@ const emptyHostDetails = {
   },
 };
 
+jest.mock('../../../hostDetailsHelpers', () => ({
+  ...jest.requireActual('../../../hostDetailsHelpers'),
+  userPermissionsFromHostDetails: () => ({
+    view_host_collections: true,
+    edit_hosts: true,
+  }),
+}));
+
 test('shows host collections and host limits when present', () => {
   const { getByText } = render(<HostCollectionsCard hostDetails={hostDetails} />);
   expect(getByText('Host collections')).toBeInTheDocument();

@@ -13,6 +13,7 @@ const TypeAheadSearch = ({
   userInputValue, clearSearch, getInputProps, getItemProps, isOpen, highlightedIndex,
   selectedItem, selectItem, openMenu, onSearch, items, activeItems, shouldShowItems,
   autoSearchEnabled, isDisabled, bookmarkController, inputValue, placeholder, isTextInput,
+  readOnlyBookmarks,
 }) => (
   <>
     <InputGroup>
@@ -44,6 +45,7 @@ const TypeAheadSearch = ({
               isDisabled,
               selectedItem,
               selectItem,
+              readOnlyBookmarks,
             }}
             controller={bookmarkController}
           />}

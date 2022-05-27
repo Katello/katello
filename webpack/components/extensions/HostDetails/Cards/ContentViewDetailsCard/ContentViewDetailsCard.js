@@ -20,12 +20,18 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import ContentViewIcon from '../../../../../scenes/ContentViews/components/ContentViewIcon';
-import { hostIsRegistered } from '../../hostDetailsHelpers';
+import { hasRequiredPermissions, hostIsRegistered } from '../../hostDetailsHelpers';
 import ChangeHostCVModal from './ChangeHostCVModal';
+
+const requiredPermissions = [
+  'view_lifecycle_environments', 'view_content_views',
+  'promote_or_remove_content_views_to_environments',
+];
 
 const HostContentViewDetails = ({
   contentView, lifecycleEnvironment, contentViewVersionId, contentViewDefault,
   contentViewVersion, contentViewVersionLatest, hostId, hostName, orgId, hostEnvId,
+  hostPermissions, permissions,
 }) => {
   let versionLabel = `Version ${contentViewVersion}`;
   if (contentViewVersionLatest) {
@@ -40,6 +46,9 @@ const HostContentViewDetails = ({
     setIsDropdownOpen(false);
     setIsModalOpen(true);
   };
+
+  const userPermissions = { ...hostPermissions, ...permissions };
+  const showKebab = hasRequiredPermissions(requiredPermissions, userPermissions);
 
   const dropdownItems = [
     <DropdownItem
@@ -71,16 +80,18 @@ const HostContentViewDetails = ({
                 </FlexItem>
               </Flex>
             </FlexItem>
-            <FlexItem>
-              <Dropdown
-                toggle={<KebabToggle aria-label="change_content_view_hamburger" onToggle={toggleHamburger} />}
-                isOpen={isDropdownOpen}
-                isPlain
-                ouiaId="change-host-content-view-kebab"
-                position="right"
-                dropdownItems={dropdownItems}
-              />
-            </FlexItem>
+            {showKebab && (
+              <FlexItem>
+                <Dropdown
+                  toggle={<KebabToggle aria-label="change_content_view_hamburger" onToggle={toggleHamburger} />}
+                  isOpen={isDropdownOpen}
+                  isPlain
+                  ouiaId="change-host-content-view-kebab"
+                  position="right"
+                  dropdownItems={dropdownItems}
+                />
+              </FlexItem>
+            )}
           </Flex>
         </CardHeader>
         <CardBody>
@@ -146,6 +157,7 @@ const ContentViewDetailsCard = ({ hostDetails }) => {
       hostName={hostDetails.name}
       orgId={hostDetails.organization_id}
       hostEnvId={hostDetails.content_facet_attributes.lifecycle_environment_id}
+      hostPermissions={hostDetails.permissions}
       {...propsToCamelCase(hostDetails.content_facet_attributes)}
     />);
   }
@@ -172,6 +184,14 @@ HostContentViewDetails.propTypes = {
   hostName: PropTypes.string,
   orgId: PropTypes.number,
   hostEnvId: PropTypes.number,
+  hostPermissions: PropTypes.shape({
+    edit_hosts: PropTypes.bool,
+  }),
+  permissions: PropTypes.shape({
+    view_content_views: PropTypes.bool,
+    view_lifecycle_environments: PropTypes.bool,
+    promote_or_remove_content_views_to_environments: PropTypes.bool,
+  }),
 };
 
 HostContentViewDetails.defaultProps = {
@@ -182,6 +202,8 @@ HostContentViewDetails.defaultProps = {
   hostName: '',
   orgId: null,
   contentViewDefault: false,
+  hostPermissions: {},
+  permissions: {},
 };
 
 ContentViewDetailsCard.propTypes = {
@@ -191,6 +213,14 @@ ContentViewDetailsCard.propTypes = {
     organization_id: PropTypes.number,
     content_facet_attributes: PropTypes.shape({
       lifecycle_environment_id: PropTypes.number,
+      permissions: PropTypes.shape({
+        view_content_views: PropTypes.bool,
+        view_lifecycle_environments: PropTypes.bool,
+        promote_or_remove_content_views_to_environments: PropTypes.bool,
+      }),
+    }),
+    permissions: PropTypes.shape({
+      edit_hosts: PropTypes.bool,
     }),
   }),
 };
