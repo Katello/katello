@@ -2,6 +2,8 @@ module Katello
   class Api::V2::ContentUploadsController < Api::V2::ApiController
     before_action :find_repository
     skip_before_action :check_media_type, :only => [:update]
+    # https://github.com/rails/rails/issues/42278#issuecomment-918079123
+    skip_parameter_encoding :update
 
     include ::Foreman::Controller::FilterParameters
     filter_parameters :content
