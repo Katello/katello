@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TableText } from '@patternfly/react-table';
+import { Tooltip } from '@patternfly/react-core';
 import {
   chart_color_black_500 as pfBlack,
   chart_color_gold_400 as pfGold,
@@ -86,7 +87,9 @@ export const ErrataSummary = ({ type, count }) => {
       <TableText>
         <SquareIcon size="sm" color={color} />
         <span style={{ marginLeft: '8px' }}>
-          <ErrataIcon title={label} />
+          <Tooltip content={label} >
+            <ErrataIcon />
+          </Tooltip>
           {url}
         </span>
       </TableText>
@@ -124,7 +127,10 @@ export const ErrataType = ({ type }) => {
 
   return (
     <TableText wrapModifier="nowrap">
-      <ErrataIcon title={label} /> {label}
+      <Tooltip content={label} >
+        <ErrataIcon style={{ marginRight: '4px' }} />
+      </Tooltip>
+      {label}
     </TableText>
   );
 };
@@ -157,7 +163,16 @@ export const ErrataSeverity = ({ severity }) => {
   default:
     label = __('N/A');
   }
-  return <TableText wrapModifier="nowrap">{color && <SecurityIcon color={color} title={label} />} {label} </TableText>;
+  return (
+    <TableText wrapModifier="nowrap">
+      {color &&
+        <Tooltip content={label} >
+          <SecurityIcon color={color} />
+        </Tooltip>
+      }
+      {label}
+    </TableText>
+  );
 };
 
 ErrataSeverity.propTypes = {
