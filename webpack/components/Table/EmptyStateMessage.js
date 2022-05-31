@@ -9,15 +9,16 @@ import {
 } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { CubeIcon, ExclamationCircleIcon, SearchIcon, CheckCircleIcon } from '@patternfly/react-icons';
+import { CubeIcon, ExclamationCircleIcon, SearchIcon, CheckCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { global_danger_color_200 as dangerColor, global_success_color_100 as successColor } from '@patternfly/react-tokens';
 
 const KatelloEmptyStateIcon = ({
   error, search, customIcon, happyIcon,
 }) => {
+  console.log(error, search, customIcon, happyIcon,);
   if (error) return <EmptyStateIcon icon={ExclamationCircleIcon} color={dangerColor.value} />;
   if (search) return <EmptyStateIcon icon={SearchIcon} />;
-  if (happyIcon) return <EmptyStateIcon icon={CheckCircleIcon} color={successColor.value} />;
+  if (happyIcon) return <EmptyStateIcon icon={PlusCircleIcon} color={successColor.value} />;
   if (customIcon) return <EmptyStateIcon icon={customIcon} />;
   return <EmptyStateIcon icon={CubeIcon} />;
 };

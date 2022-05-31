@@ -4,7 +4,15 @@ import { Link } from 'react-router-dom';
 import { omit } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
-import { Button } from '@patternfly/react-core';
+import {
+  Title,
+  Button,
+  EmptyState,
+  EmptyStateIcon,
+  EmptyStateBody,
+  EmptyStateSecondaryActions
+} from '@patternfly/react-core';
+import { PlusCircleIcon } from '@patternfly/react-icons';
 import { TableVariant, Thead, Tbody, Th, Tr, Td, ExpandableRowContent } from '@patternfly/react-table';
 import TableWrapper from '../../../components/Table/TableWrapper';
 import getContentViews from '../ContentViewsActions';
@@ -126,7 +134,19 @@ const ContentViewTable = () => {
   );
 
   const emptyContentTitle = __("You currently don't have any Content views.");
-  const emptyContentBody = __('A content view can be added by using the "Create content view" button above.');
+  const emptyContentBody = (
+    <>
+      {__("You currently don't have any Content views. Please create a content view using button below")}
+      <Button
+        ouiaId="create-content-view-empty-state"
+        onClick={() => {console.log("clicked"); openForm();}}
+        variant="primary"
+        aria-label="create_content_view_empty"
+      >
+        {__('Create content view')}
+      </Button>
+    </>
+  );
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');
   const {
@@ -164,39 +184,43 @@ const ContentViewTable = () => {
               {__('Create content view')}
             </Button>
           }
+        </>
+      }
+      actionModals={
+        <>
           <CreateContentViewModal show={isModalOpen} setIsOpen={setIsModalOpen} aria-label="create_content_view_modal" />
           <CopyContentViewModal cvId={actionableCvId} cvName={actionableCvName} show={copy} setIsOpen={setCopy} aria-label="copy_content_view_modal" />
           {isPublishModalOpen &&
-            <PublishContentViewWizard
-              details={actionableCvDetails}
-              show={isPublishModalOpen}
-              onClose={(makeCallback) => {
-                if (makeCallback) {
-                  dispatch(getContentViews(apiSortParams));
-                }
-                setIsPublishModalOpen(false);
-              }}
-              aria-label="publish_content_view_modal"
-            />
+          <PublishContentViewWizard
+            details={actionableCvDetails}
+            show={isPublishModalOpen}
+            onClose={(makeCallback) => {
+              if (makeCallback) {
+                dispatch(getContentViews(apiSortParams));
+              }
+              setIsPublishModalOpen(false);
+            }}
+            aria-label="publish_content_view_modal"
+          />
           }
           {isPromoteModalOpen &&
-            <ContentViewVersionPromote
-              cvId={id && Number(id)}
-              versionIdToPromote={latestVersionId}
-              versionNameToPromote={latestVersionName}
-              versionEnvironments={latestVersionEnvironments}
-              setIsOpen={setIsPromoteModalOpen}
-            />
+          <ContentViewVersionPromote
+            cvId={id && Number(id)}
+            versionIdToPromote={latestVersionId}
+            versionNameToPromote={latestVersionName}
+            versionEnvironments={latestVersionEnvironments}
+            setIsOpen={setIsPromoteModalOpen}
+          />
           }
           {isDeleteModalOpen &&
-            <ContentViewDeleteWizard
-              cvId={id && Number(id)}
-              cvEnvironments={environments}
-              cvVersions={versions}
-              show={isDeleteModalOpen}
-              setIsOpen={setIsDeleteModalOpen}
-              aria-label="delete_content_view_modal"
-            />}
+          <ContentViewDeleteWizard
+            cvId={id && Number(id)}
+            cvEnvironments={environments}
+            cvVersions={versions}
+            show={isDeleteModalOpen}
+            setIsOpen={setIsDeleteModalOpen}
+            aria-label="delete_content_view_modal"
+          />}
         </>
       }
     >

@@ -28,12 +28,15 @@ const MainTable = ({
     !isEqual(new Set(activeFilters), new Set(defaultFilters));
   const isFiltering = searchIsActive || filtersAreActive;
   if (status === STATUS.PENDING) return (<Loading />);
+  console.log("Main table");
+  console.log(status, errorSearchBody, isFiltering, tableHasNoRows());
   // Can we display the error message?
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
 
   // scoped_search errors come back as 200 with an error message,
   // so they should be passed here as errorSearchBody & errorSearchTitle.
   if (status === STATUS.RESOLVED && !!errorSearchBody) {
+    console.log("status === STATUS.RESOLVED && !!errorSearchBody")
     return (<EmptyStateMessage
       title={errorSearchTitle}
       body={errorSearchBody}
@@ -41,6 +44,7 @@ const MainTable = ({
     />);
   }
   if (status === STATUS.RESOLVED && isFiltering && tableHasNoRows()) {
+    console.log("status === STATUS.RESOLVED && isFiltering && tableHasNoRows()")
     return (<EmptyStateMessage
       title={emptySearchTitle}
       body={emptySearchBody}
@@ -48,6 +52,8 @@ const MainTable = ({
     />);
   }
   if (status === STATUS.RESOLVED && tableHasNoRows()) {
+    console.log("status === STATUS.RESOLVED && tableHasNoRows()")
+    console.log(happyEmptyContent, !happyEmptyContent)
     return (
       <EmptyStateMessage
         title={emptyContentTitle}

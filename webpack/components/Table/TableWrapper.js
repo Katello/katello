@@ -18,6 +18,7 @@ import { orgId } from '../../services/api';
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
   actionButtons,
+  actionModals,
   toggleGroup,
   children,
   metadata,
@@ -197,15 +198,20 @@ const TableWrapper = ({
             />
           </FlexItem>
         }
-        {showToggleGroup &&
+        {!disableSearch && !resolvedStatusNoContent && showToggleGroup &&
           <FlexItem>
             {toggleGroup}
           </FlexItem>}
-        {showActionButtons &&
+        {!disableSearch && !resolvedStatusNoContent && showActionButtons &&
           <FlexItem>
             {actionButtons}
-          </FlexItem>}
-
+          </FlexItem>
+        }
+        {showActionButtons &&
+        <FlexItem>
+          {actionModals}
+        </FlexItem>
+        }
         {showPagination &&
           <PageControls
             variant={PaginationVariant.top}
@@ -225,6 +231,7 @@ const TableWrapper = ({
         searchIsActive={!!searchQuery}
         activeFilters={activeFilters}
         rowsCount={pageRowCount}
+        happyEmptyContent={!searchQuery && resolvedStatusNoContent}
         emptySearchBody={emptySearchBody}
         {...allTableProps}
       >
@@ -272,6 +279,7 @@ TableWrapper.propTypes = {
   foremanApiAutoComplete: PropTypes.bool,
   searchPlaceholderText: PropTypes.string,
   actionButtons: PropTypes.node,
+  actionModals: PropTypes.node,
   toggleGroup: PropTypes.node,
   children: PropTypes.node,
   // additionalListeners are anything that should trigger another API call, e.g. a filter
