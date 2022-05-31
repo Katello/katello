@@ -9,6 +9,7 @@ import {
   SecurityIcon,
   EnhancementIcon,
 } from '@patternfly/react-icons';
+import { Tooltip } from '@patternfly/react-core';
 import {
   getContentViewVersions,
   getDebPackages,
@@ -217,8 +218,9 @@ export default ({ cvId, versionId }) => [
             enhancements: EnhancementIcon,
           };
           const ErrataIcon = errataIcons[item?.type];
-          if (!ErrataIcon) return startCase(item?.type);
-          return <><ErrataIcon />{' '}{startCase(item?.type)}{item?.severity && ` - ${item.severity}`}</>;
+          const itemType = startCase(item?.type);
+          if (!ErrataIcon) return itemType;
+          return <><Tooltip content={itemType} ><ErrataIcon style={{ marginRight: '4px' }} /></Tooltip>{itemType}{item?.severity !== 'None' && ` - ${item.severity}`}</>;
         },
       },
       {
