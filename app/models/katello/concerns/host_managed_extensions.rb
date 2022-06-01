@@ -204,7 +204,16 @@ module Katello
 
       def import_package_profile_in_bulk(simple_packages)
         nvreas = simple_packages.map { |sp| sp.nvrea }
-        found = InstalledPackage.where(:nvrea => nvreas).select(:id, :nvrea).to_a
+        found_nvrea = InstalledPackage.where(:nvrea => nvreas)
+        nil_vendor_installed_packages = found_nvrea.where(vendor: nil)
+        unless nil_vendor_installed_packages.blank?
+          packages_to_update = simple_packages.select { |sp| !sp.vendor.blank? && nil_vendor_installed_packages&.map(&:nvrea)&.include?(sp.nvrea) }
+          packages_to_update.each do |simple_package|
+            nil_vendor_installed_packages.where(nvrea: simple_package.nvrea).update(vendor: simple_package.vendor)
+          end
+        end
+
+        found = found_nvrea.select(:id, :nvrea).to_a
         found_nvreas = found.map(&:nvrea)
 
         new_packages = simple_packages.select { |sp| !found_nvreas.include?(sp.nvrea) }
@@ -217,7 +226,8 @@ module Katello
                                           :epoch => simple_package.epoch,
                                           :version => simple_package.version,
                                           :release => simple_package.release,
-                                          :arch => simple_package.arch)
+                                          :arch => simple_package.arch,
+                                          :vendor => simple_package.vendor)
         end
         InstalledPackage.import(installed_packages, validate: false, on_duplicate_key_ignore: true)
         #re-lookup all imported to pickup any duplicates/conflicts
