@@ -24,12 +24,12 @@ module Katello
 
         def initialize(metadata:)
           @toc = metadata[:toc]
+          @gpg_keys = parse_gpg_keys(metadata[:gpg_keys]) if metadata[:gpg_keys]
           @products = parse_products(metadata[:products]) if metadata[:products]
           @repositories = parse_repositories(metadata[:repositories]) if metadata[:repositories]
           @content_view = parse_content_view(metadata[:content_view]) if metadata[:content_view]
           @content_view_version = parse_content_view_version(metadata[:content_view_version]) if metadata[:content_view_version]
           @from_content_view_version = parse_content_view_version(metadata[:from_content_view_version]) if metadata[:from_content_view_version]
-          @gpg_keys = parse_gpg_keys(metadata[:gpg_keys]) if metadata[:gpg_keys]
         end
 
         private
