@@ -33,7 +33,15 @@ module Katello
             @metadata_cv = stub('metadata cv', name: cv.name, label: cv.label, description: cv.description, generated_for: 'none')
             metadata_product = stub('metadata_product', label: repo.product.label, name: repo.product.name, cp_id: repo.product.cp_id)
             @metadata_repos = [
-              stub('metadata repo', label: repo.label, product: metadata_product, redhat: repo.redhat?)
+              stub('metadata repo',
+                    content: stub(id: repo.root.content_id),
+                    label: repo.label,
+                    product: metadata_product,
+                    redhat: repo.redhat?,
+                    arch: repo.arch,
+                    major: repo.major,
+                    minor: repo.minor
+              )
             ]
 
             import.reset_content_view_repositories!
@@ -64,13 +72,19 @@ module Katello
             @metadata_cv = stub('metadata cv', name: cv.name, label: cv.label, description: cv.description, generated_for: 'none')
             metadata_product = stub('metadata_product', label: repo.product.label, cp_id: repo.product.cp_id)
             @metadata_repos = [
-              stub('library repo', label: repo.label, product: metadata_product, redhat: true),
-              stub('non-library repo', label: "unknown-007", product: metadata_product, redhat: true)
+              stub('library repo',
+                      content: stub(id: repo.root.content_id),
+                      label: repo.label,
+                      product: metadata_product,
+                      arch: repo.arch,
+                      major: repo.major,
+                      minor: repo.minor,
+                      redhat: true),
+              stub('non-library repo', content: nil, label: "unknown-007", product: metadata_product, redhat: true)
             ]
 
-            repos = import.intersecting_repos_library_and_metadata
-
-            assert_equal [repo.id], repos.pluck(:id)
+            repos = import.intersecting_repos_library_and_metadata.pluck(:id)
+            assert_equal repos, [repo.id]
           end
 
           it "should fail to import  cv if label is not specified" do

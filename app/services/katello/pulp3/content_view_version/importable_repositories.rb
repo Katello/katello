@@ -22,12 +22,21 @@ module Katello
             product = product_for_metadata_repo(repo)
             fail _("Unable to find product '%s' in organization '%s'" % [repo.product.label, @organization.name]) if product.blank?
 
-            root = product.root_repositories.find { |r| r.label == repo.label }
+            root = product.root_repositories.find do |r|
+              if repo.content&.id && repo.redhat
+                r.content.cp_content_id == repo.content.id &&
+                  r.arch == repo.arch &&
+                  r.major == repo.major &&
+                  r.minor == repo.minor
+              else
+                r.label == repo.label
+              end
+            end
+
             if root
               updatable << { repository: root, options: update_repo_params(repo) }
             elsif repo.redhat
-              content = repo.content
-              product_content = product_content_by_label(content.label)
+              product_content = fetch_product_content(repo.content, product)
               substitutions = {
                 basearch: repo.arch,
                 releasever: repo.minor
@@ -49,8 +58,14 @@ module Katello
           end
         end
 
-        def product_content_by_label(content_label)
-          ::Katello::Content.find_by_label(content_label)
+        def fetch_product_content(content_metadata, product)
+          query = ::Katello::Content.joins(:product_contents).where("#{Katello::ProductContent.table_name}.product_id": product.id)
+          table_name = Katello::Content.table_name
+          if content_metadata&.id
+            query.find_by("#{table_name}.cp_content_id": content_metadata.id)
+          else
+            query.find_by("#{table_name}.label": content_metadata.label)
+          end
         end
 
         def gpg_key_id(metadata_repo)
