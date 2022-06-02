@@ -42,11 +42,14 @@ module Katello
           # In other words if metadata had repos {label:foo, product: bar}
           # this would match it to the repo with the label foo and product bar
           # in the library.
-
           queries = metadata_map.repositories.map do |repo|
-            if repo.redhat && repo.product.cp_id
+            if repo.redhat && repo.product.cp_id && repo.content&.id
               library_repositories.where("#{Katello::Product.table_name}.cp_id": repo.product.cp_id,
-                                         "#{Katello::RootRepository.table_name}.label": repo.label)
+                                         "#{::Katello::RootRepository.table_name}" => {
+                                           content_id: repo.content.id,
+                                           arch: repo.arch,
+                                           major: repo.major,
+                                           minor: repo.minor })
             else
               library_repositories.where("#{Katello::Product.table_name}.label": repo.product.label,
                                          "#{Katello::RootRepository.table_name}.label": repo.label)
@@ -84,9 +87,13 @@ module Katello
           relation = content_view_version.importable_repositories.joins(:root, :product)
 
           metadata_map.repositories.each do |metadata_repo|
-            if metadata_repo.redhat && metadata_repo.product.cp_id
+            if metadata_repo.redhat && metadata_repo.product.cp_id && metadata_repo.content&.id
               repo = relation.where("#{::Katello::Product.table_name}" => {cp_id: metadata_repo.product.cp_id},
-                                        "#{::Katello::RootRepository.table_name}" => {label: metadata_repo.label}).first
+                                    "#{::Katello::RootRepository.table_name}" => {
+                                      content_id: metadata_repo.content.id,
+                                      arch: metadata_repo.arch,
+                                      major: metadata_repo.major,
+                                      minor: metadata_repo.minor}).first
             else
               repo = relation.where("#{::Katello::Product.table_name}" => {label: metadata_repo.product.label},
                                         "#{::Katello::RootRepository.table_name}" => {label: metadata_repo.label}).first
