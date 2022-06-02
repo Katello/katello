@@ -225,11 +225,6 @@ const TableWrapper = ({
         activeFilters={activeFilters}
         rowsCount={pageRowCount}
         emptySearchBody={emptySearchBody}
-        // primaryActionTitle = {primaryActionTitle}
-        // showPrimaryAction = {showPrimaryAction}
-        // secondaryActionTitle = {secondaryActionTitle}
-        // showSecondaryAction = {showSecondaryAction}
-        // {...emptyStateProps}
         {...allTableProps}
       >
         {children}

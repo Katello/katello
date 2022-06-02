@@ -54,6 +54,7 @@ const MainTable = ({
       title={emptySearchTitle}
       body={emptySearchBody}
       search
+      {...emptyStateProps}
     />);
   }
   if (status === STATUS.RESOLVED && tableHasNoRows()) {
