@@ -91,6 +91,7 @@ rhel_7_x86_64_root:
   content_id:           69
   major:                7
   minor:                7Server
+  arch:                 x86_64
   content_type:         yum
   label:                rhel_7_x86_64_label
   product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
@@ -127,9 +128,10 @@ fedora_17_no_arch_root:
 
 rhel_7_no_arch_root:
   name:                 RHEL 7 no_arch
-  content_id:           1
+  content_id:           69
   major:                7
   minor:                7Server
+  arch:                 noarch
   content_type:         yum
   label:                rhel_7_no_arch_label
   product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
