@@ -29,7 +29,8 @@ module Katello
                 major: repo.major,
                 minor: repo.minor,
                 download_policy: repo.download_policy,
-                mirroring_policy: repo.mirroring_policy
+                mirroring_policy: repo.mirroring_policy,
+                content: nil
               ),
               stub('new repo 1',
                    name: new_repo_1,
@@ -46,7 +47,8 @@ module Katello
                    major: '7',
                    minor: '1',
                    download_policy: 'immediate',
-                   mirroring_policy: nil
+                   mirroring_policy: nil,
+                   content: nil
                   )
             ]
 
@@ -69,7 +71,7 @@ module Katello
             repo = katello_repositories(:rhel_7_no_arch)
             product_label = repo.product.label
             metadata_product = stub(label: product_label, cp_id: nil)
-            metadata_content = stub(label: repo.content.label)
+            metadata_content = stub(label: repo.content.label, id: nil)
             metadata_repositories = [
               stub(
                 name: repo.name,
@@ -100,7 +102,8 @@ module Katello
           it "Fetches the redhat repos to enable by cp_id" do
             repo = katello_repositories(:rhel_7_no_arch)
             metadata_product = stub(cp_id: repo.product.cp_id)
-            metadata_content = stub(label: repo.content.label)
+            metadata_content = stub(label: repo.content.label, id: repo.content.cp_content_id)
+            ::Katello::Product.any_instance.expects(:root_repositories).returns([])
             metadata_repositories = [
               stub(
                 name: repo.name,
