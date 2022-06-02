@@ -67,7 +67,6 @@ const TableWrapper = ({
   const prevAdditionalListeners = useRef([]);
   const prevActiveFilters = useRef([]);
   const paginationChangePending = useRef(null);
-
   const hasChanged = (oldValue, newValue) => !isEqual(oldValue, newValue);
 
   const spawnFetch = useCallback((paginationData) => {
