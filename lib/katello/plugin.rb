@@ -517,18 +517,6 @@ Foreman::Plugin.register :katello do
         full_name: N_('Pulp 3 export destination filepath'),
         description: N_("On-disk location for pulp 3 exported repositories")
 
-      setting 'pulp_client_key',
-        type: :string,
-        default: "/etc/pki/katello/private/pulp-client.key",
-        full_name: N_('Pulp client key'),
-        description: N_("Path for ssl key used for pulp server auth")
-
-      setting 'pulp_client_cert',
-        type: :string,
-        default: "/etc/pki/katello/certs/pulp-client.crt",
-        full_name: N_('Pulp client cert'),
-        description: N_("Path for ssl cert used for pulp server auth")
-
       setting 'sync_total_timeout',
         type: :integer,
         default: 3600,
