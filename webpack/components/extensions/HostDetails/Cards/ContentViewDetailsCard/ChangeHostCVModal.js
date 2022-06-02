@@ -168,7 +168,8 @@ const ChangeHostCVModal = ({
           title={__('No content views available for the selected environment')}
           style={{ marginBottom: '1rem' }}
         >
-          {__('View the Content Views page to manage and promote content views, or select a different environment.')}
+          <a href="/content_views">{__('View the Content Views page')}</a>
+          {__(' to manage and promote content views, or select a different environment.')}
         </Alert>
       }
       <EnvironmentPaths

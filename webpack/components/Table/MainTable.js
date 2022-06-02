@@ -18,11 +18,20 @@ const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
   emptySearchTitle, emptySearchBody, errorSearchTitle, errorSearchBody,
   happyEmptyContent, searchIsActive, activeFilters, defaultFilters, actionButtons, rowsCount,
-  children, ...extraTableProps
+  children, showPrimaryAction, showSecondaryAction, primaryActionLink,
+  secondaryActionLink, primaryActionTitle, secondaryActionTitle, ...extraTableProps
 }) => {
   const tableHasNoRows = () => {
     if (children) return rowsCount === 0;
     return rows.length === 0;
+  };
+  const callToActionProps = {
+    showPrimaryAction,
+    showSecondaryAction,
+    primaryActionLink,
+    primaryActionTitle,
+    secondaryActionLink,
+    secondaryActionTitle,
   };
   const filtersAreActive = activeFilters?.length &&
     !isEqual(new Set(activeFilters), new Set(defaultFilters));
@@ -54,6 +63,7 @@ const MainTable = ({
         body={emptyContentBody}
         happy={happyEmptyContent}
         search={!happyEmptyContent}
+        {...callToActionProps}
       />
     );
   }
@@ -85,11 +95,11 @@ const MainTable = ({
 MainTable.propTypes = {
   status: PropTypes.string.isRequired,
   cells: PropTypes.arrayOf(PropTypes.oneOfType([
-    PropTypes.shape({ }),
+    PropTypes.shape({}),
     PropTypes.string])),
-  rows: PropTypes.arrayOf(PropTypes.shape({ })),
+  rows: PropTypes.arrayOf(PropTypes.shape({})),
   error: PropTypes.oneOfType([
-    PropTypes.shape({ }),
+    PropTypes.shape({}),
     PropTypes.string,
   ]),
   emptyContentTitle: PropTypes.string.isRequired,
@@ -114,6 +124,12 @@ MainTable.propTypes = {
     PropTypes.node,
   ]),
   happyEmptyContent: PropTypes.bool,
+  showPrimaryAction: PropTypes.bool,
+  showSecondaryAction: PropTypes.bool,
+  primaryActionLink: PropTypes.string,
+  secondaryActionLink: PropTypes.string,
+  secondaryActionTitle: PropTypes.string,
+  primaryActionTitle: PropTypes.string,
 };
 
 MainTable.defaultProps = {
@@ -129,6 +145,13 @@ MainTable.defaultProps = {
   rows: undefined,
   rowsCount: undefined,
   happyEmptyContent: false,
+  showPrimaryAction: false,
+  showSecondaryAction: false,
+  primaryActionLink: '',
+  secondaryActionLink: '',
+  primaryActionTitle: '',
+  secondaryActionTitle: '',
+
 };
 
 export default MainTable;

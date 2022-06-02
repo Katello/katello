@@ -4,8 +4,10 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateVariant,
+  EmptyStateSecondaryActions,
   Bullseye,
   Title,
+  Button,
 } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -23,10 +25,14 @@ const KatelloEmptyStateIcon = ({
 };
 
 const EmptyStateMessage = ({
-  title, body, error, search, customIcon, happy,
+  title, body, error, search, customIcon, happy, ...extraTableProps
 }) => {
   let emptyStateTitle = title;
   let emptyStateBody = body;
+  const {
+    primaryActionTitle, showPrimaryAction, showSecondaryAction,
+    secondaryActionTitle, primaryActionLink, secondaryActionLink,
+  } = extraTableProps;
   if (error) {
     if (error?.response?.data?.error) {
       const { response: { data: { error: { message, details } } } } = error;
@@ -55,10 +61,23 @@ const EmptyStateMessage = ({
         <EmptyStateBody>
           {emptyStateBody}
         </EmptyStateBody>
+        {showPrimaryAction &&
+          <Button>
+            <a href={primaryActionLink} style={{ color: 'white', textDecoration: 'none' }}>{primaryActionTitle}</a>
+          </Button>}
+        {showSecondaryAction &&
+          <EmptyStateSecondaryActions>
+            <Button variant="link">
+              <a href={secondaryActionLink} style={{ textDecoration: 'none' }}>{secondaryActionTitle}</a>
+            </Button>
+          </EmptyStateSecondaryActions>
+        }
+
       </EmptyState>
     </Bullseye>
   );
 };
+
 
 KatelloEmptyStateIcon.propTypes = {
   error: PropTypes.bool,
@@ -84,6 +103,8 @@ EmptyStateMessage.propTypes = {
   search: PropTypes.bool,
   customIcon: PropTypes.elementType,
   happy: PropTypes.bool,
+  showPrimaryAction: PropTypes.bool,
+  showSecondaryAction: PropTypes.bool,
 };
 
 EmptyStateMessage.defaultProps = {
@@ -93,6 +114,8 @@ EmptyStateMessage.defaultProps = {
   search: false,
   customIcon: undefined,
   happy: false,
+  showPrimaryAction: false,
+  showSecondaryAction: false,
 };
 
 export default EmptyStateMessage;
