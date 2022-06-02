@@ -59,3 +59,21 @@ node :enabled_content_override do |pc|
     override&.computed_value
   end
 end
+
+# ISSUE: this doesn't take into account the repo's arch or OS version restrictions
+# It may be better to just make a new "bound repositories" API endpoint...
+# REMOVE ME
+if params[:host_id].present?
+  node :enabled_for_host do |pc|
+    if pc.enabled_content_override.present?
+      pc.enabled_content_override.computed_value
+    else
+      host = ::Host.find(params[:host_id].to_i)
+      if host.organization.simple_content_access?
+        true
+      else
+        ::Katello::ProductContentFinder.new(consumable: host.subscription_facet, match_subscription: true).product_content.find { |host_pc| host_pc.attributes == pc.attributes }.present?
+      end
+    end
+  end
+end

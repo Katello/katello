@@ -285,6 +285,14 @@ module Katello
       assert_response :success
     end
 
+    def test_enabled_repositories
+      @host.content_facet = ::Katello::Host::ContentFacet.find_by(uuid: 'abcdefghi')
+
+      get :enabled_repositories, params: { :host_id => @host.id }
+
+      assert_response :success
+    end
+
     def test_destroy
       ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => true)
 
