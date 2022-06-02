@@ -233,7 +233,7 @@ export const ModuleStreamsTab = () => {
   const columnHeaders = [
     __('Name'),
     __('State'),
-    __('Stream'),
+    __('Version'),
     __('Installation status'),
     __('Installed profile'),
   ];
@@ -398,7 +398,7 @@ export const ModuleStreamsTab = () => {
               id,
               status: moduleStreamStatus,
               name,
-              stream,
+              version,
               installed_profiles: installedProfiles,
               upgradable,
               install_status: installedStatus,
@@ -591,7 +591,7 @@ export const ModuleStreamsTab = () => {
                   <Td>
                     <StreamState moduleStreamStatus={moduleStreamStatus} />
                   </Td>
-                  <Td>{stream}</Td>
+                  <Td>{version}</Td>
                   <Td>
                     <EnabledIcon
                       streamText={moduleStreamStatus}

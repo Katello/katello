@@ -257,7 +257,8 @@ module Katello
         module_streams.each do |module_stream|
           stream = AvailableModuleStream.where(name: module_stream["name"],
                                                context: module_stream["context"],
-                                               stream: module_stream["stream"]).first_or_create!
+                                               stream: module_stream["stream"],
+                                               version: module_stream["version"]).first_or_create!
           streams[stream.id] = module_stream
         end
         sync_available_module_stream_associations(streams)
