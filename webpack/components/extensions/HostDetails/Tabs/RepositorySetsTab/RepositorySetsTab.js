@@ -61,7 +61,6 @@ import SortableColumnHeaders from '../../../../Table/components/SortableColumnHe
 import SelectableDropdown from '../../../../SelectableDropdown';
 import { hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
-  hostIsNotRegistered,
   userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 
 const viewRepoSets = [
@@ -70,11 +69,10 @@ const viewRepoSets = [
 const createBookmarks = ['create_bookmarks'];
 
 export const hideRepoSetsTab = ({ hostDetails }) =>
-  hostIsNotRegistered({ hostDetails }) ||
-    cannot(
-      viewRepoSets,
-      userPermissionsFromHostDetails({ hostDetails }),
-    );
+  cannot(
+    viewRepoSets,
+    userPermissionsFromHostDetails({ hostDetails }),
+  );
 
 const editHosts = ['edit_hosts'];
 const getEnabledValue = ({ enabled, enabledContentOverride }) => {
