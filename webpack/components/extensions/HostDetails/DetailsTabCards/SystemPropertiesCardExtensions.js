@@ -8,7 +8,7 @@ import {
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 
-const SystemPropertiesCardExtensions = ({ hostDetails }) => {
+export const SystemPropertiesCardSubscription = ({ hostDetails }) => {
   const subscriptionUuid = hostDetails?.subscription_facet_attributes?.uuid;
   if (!subscriptionUuid) return null;
   return (
@@ -23,7 +23,7 @@ const SystemPropertiesCardExtensions = ({ hostDetails }) => {
   );
 };
 
-SystemPropertiesCardExtensions.propTypes = {
+SystemPropertiesCardSubscription.propTypes = {
   hostDetails: PropTypes.shape({
     subscription_facet_attributes: PropTypes.shape({
       uuid: PropTypes.string,
@@ -31,8 +31,30 @@ SystemPropertiesCardExtensions.propTypes = {
   }),
 };
 
-SystemPropertiesCardExtensions.defaultProps = {
+SystemPropertiesCardSubscription.defaultProps = {
   hostDetails: {},
 };
 
-export default SystemPropertiesCardExtensions;
+export const SystemPropertiesCardTracer = ({ hostDetails }) => {
+  const tracerStatus = hostDetails?.content_facet_attributes?.katello_tracer_installed;
+  return (
+    <DescriptionListGroup>
+      <DescriptionListTerm>{__('Tracer')}</DescriptionListTerm>
+      <DescriptionListDescription>
+        {tracerStatus ? __('Installed') : __('Not installed')}
+      </DescriptionListDescription>
+    </DescriptionListGroup>
+  );
+};
+
+SystemPropertiesCardTracer.propTypes = {
+  hostDetails: PropTypes.shape({
+    content_facet_attributes: PropTypes.shape({
+      katello_tracer_installed: PropTypes.bool,
+    }),
+  }),
+};
+
+SystemPropertiesCardTracer.defaultProps = {
+  hostDetails: {},
+};

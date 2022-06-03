@@ -17,7 +17,10 @@ import extendReducer from './components/extensions/reducers';
 import rootReducer from './redux/reducers';
 import HostCollectionsCard from './components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsCard';
 import { hostIsNotRegistered } from './components/extensions/HostDetails/hostDetailsHelpers';
-import SystemPropertiesCardExtensions from './components/extensions/HostDetails/DetailsTabCards/SystemPropertiesCardExtensions';
+import {
+  SystemPropertiesCardSubscription,
+  SystemPropertiesCardTracer,
+} from './components/extensions/HostDetails/DetailsTabCards/SystemPropertiesCardExtensions';
 import HostActionsBar from './components/extensions/HostDetails/ActionsBar';
 import RecentCommunicationCardExtensions from './components/extensions/HostDetails/DetailsTabCards/RecentCommunicationCardExtensions';
 
@@ -50,7 +53,8 @@ addGlobalFill('recent-communication-card-item', 'Recent communication', <RecentC
 // Details tab cards & card extensions
 addGlobalFill('host-tab-details-cards', 'Installed products', <InstalledProductsCard key="installed-products" />, 100);
 addGlobalFill('host-tab-details-cards', 'Registration details', <RegistrationCard key="registration-details" />, 200);
-addGlobalFill('host-details-tab-properties-1', 'Subscription UUID', <SystemPropertiesCardExtensions key="subscription-uuid" />);
+addGlobalFill('host-details-tab-properties-1', 'Subscription UUID', <SystemPropertiesCardSubscription key="subscription-uuid" />);
+addGlobalFill('host-details-tab-properties-2', 'Tracer', <SystemPropertiesCardTracer key="tracer-status" />);
 
 addGlobalFill(
   'host-details-kebab',
