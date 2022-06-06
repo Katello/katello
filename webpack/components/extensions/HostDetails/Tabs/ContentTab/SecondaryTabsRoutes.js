@@ -3,6 +3,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import { PackagesTab } from '../PackagesTab/PackagesTab.js';
 import { ErrataTab } from '../ErrataTab/ErrataTab.js';
 import { ModuleStreamsTab } from '../ModuleStreamsTab/ModuleStreamsTab';
+import RepositorySetsTab from '../RepositorySetsTab/RepositorySetsTab';
 import { route } from './helpers';
 
 const SecondaryTabRoutes = () => (
@@ -15,6 +16,9 @@ const SecondaryTabRoutes = () => (
     </Route>
     <Route path={route('module-streams')}>
       <ModuleStreamsTab />
+    </Route>
+    <Route path={route('Repository sets')}>
+      <RepositorySetsTab />
     </Route>
     <Redirect to={route('errata')} />
   </Switch>
