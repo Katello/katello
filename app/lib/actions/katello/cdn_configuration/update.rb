@@ -21,7 +21,7 @@ module Actions
             full_path = if cdn_configuration.redhat_cdn?
                           root.product.repo_url(root.library_instance.generate_content_path)
                         elsif cdn_configuration.network_sync?
-                          resource.repository_url(content_label: root.content.label)
+                          resource.repository_url(content_label: root.content.label, arch: root.arch, major: root.major, minor: root.minor)
                         end
             plan_action(::Actions::Katello::Repository::Update, root, url: full_path)
           end
