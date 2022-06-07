@@ -289,7 +289,10 @@ module Katello
       @host.content_facet = ::Katello::Host::ContentFacet.find_by(uuid: 'abcdefghi')
 
       get :enabled_repositories, params: { :host_id => @host.id }
+      response_body_hash = JSON.parse(response.body)
 
+      assert_equal 1, response_body_hash['results'].count
+      assert_equal 'ACME_Corporation/dev/fedora_17_dev_label', response_body_hash['results'].first['relative_path']
       assert_response :success
     end
 
