@@ -97,7 +97,7 @@ module Katello
     protected
 
     def acs_params
-      keys = [:name, :label, :base_url, {subpaths: []}, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type, :alternate_content_source_type,
+      keys = [:name, :label, :description, :base_url, {subpaths: []}, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type, :alternate_content_source_type,
               :upstream_username, :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id,
               :http_proxy_id, :verify_ssl]
       params.require(:alternate_content_source).permit(*keys).to_h.with_indifferent_access

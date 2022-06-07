@@ -2,7 +2,19 @@ object @resource
 
 extends 'katello/api/v2/common/identifier'
 
-attributes :name, :base_url, :subpaths, :content_type, :alternate_content_source_type, :smart_proxies, :upstream_username, :last_refreshed
+attributes :name, :base_url, :subpaths, :content_type, :alternate_content_source_type, :smart_proxies, :upstream_username, :verify_ssl
+
+child :ssl_ca_cert => :ssl_ca_cert do |_object|
+  attributes :id, :name
+end
+
+child :ssl_client_cert => :ssl_client_cert do |_object|
+  attributes :id, :name
+end
+
+child :ssl_client_key => :ssl_client_key do |_object|
+  attributes :id, :name
+end
 
 child :latest_dynflow_refresh_task => :last_refresh do |_object|
   attributes :id, :username, :started_at, :ended_at, :state, :result, :progress

@@ -1,7 +1,7 @@
 import { API_OPERATIONS, APIActions, get, post } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
 import api, { orgId } from '../../services/api';
-import ACS_KEY, { acsRefreshKey, CREATE_ACS_KEY, DELETE_ACS_KEY } from './ACSConstants';
+import ACS_KEY, { acsRefreshKey, acsDetailsKey, CREATE_ACS_KEY, DELETE_ACS_KEY } from './ACSConstants';
 import { getResponseErrorMsgs } from '../../utils/helpers';
 import { renderTaskStartedToast } from '../Tasks/helpers';
 
@@ -29,6 +29,14 @@ const getAlternateContentSources = (extraParams, id = '') => get({
   url: api.getApiUrl('/alternate_content_sources'),
   params: createACSParams(extraParams),
 });
+
+export const getACSDetails = (acsId, extraParams = {}) => get({
+  type: API_OPERATIONS.GET,
+  key: acsDetailsKey(acsId),
+  params: { organization_id: orgId(), include_permissions: true, ...extraParams },
+  url: api.getApiUrl(`/alternate_content_sources/${acsId}`),
+});
+
 
 export const createACS = params => post({
   type: API_OPERATIONS.POST,
@@ -61,5 +69,3 @@ export const refreshACS = (acsId, handleSuccess) => post({
 });
 export default getAlternateContentSources;
 
-// acs = Katello::AlternateContentSource.new
-// (name:"acs", label:"acs", alternate_content_source_type:"custom", base_url:"abcdef")

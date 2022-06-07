@@ -1,14 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import ACSCreateContext from '../ACSCreateContext';
 import { selectCreateACS, selectCreateACSError, selectCreateACSStatus } from '../../ACSSelectors';
-import getAlternateContentSources, { createACS } from '../../ACSActions';
+import { createACS } from '../../ACSActions';
 import Loading from '../../../../components/Loading';
 
 const ACSCreateFinish = () => {
+  const { push } = useHistory();
   const {
     currentStep,
     setIsOpen,
@@ -67,13 +69,13 @@ const ACSCreateFinish = () => {
     const { id } = response;
     if (id && status === STATUS.RESOLVED && saving) {
       setSaving(false);
-      dispatch(getAlternateContentSources());
+      push(`/labs/alternate_content_sources/${id}/details`);
       setIsOpen(false);
     } else if (status === STATUS.ERROR) {
       setSaving(false);
       setIsOpen(false);
     }
-  }, [response, status, error, saving, dispatch, setIsOpen]);
+  }, [response, status, error, push, saving, dispatch, setIsOpen]);
 
   return <Loading loadingText={__('Saving alternate content source...')} />;
 };

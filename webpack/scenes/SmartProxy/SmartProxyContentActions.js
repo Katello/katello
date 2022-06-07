@@ -12,7 +12,7 @@ export const getSmartProxies = () => get({
   type: API_OPERATIONS.GET,
   key: SMART_PROXY_KEY,
   url: foremanApi.getApiUrl('/smart_proxies'),
-  params: { organization_id: orgId() },
+  params: { organization_id: orgId(), per_page: 'all' },
 });
 
 export default getSmartProxyContent;
