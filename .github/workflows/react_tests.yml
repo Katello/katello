@@ -29,11 +29,16 @@ jobs:
         repository: theforeman/foreman
         path: ${{ github.workspace }}/foreman # checkout Foreman and Katello as siblings, same as dev env
         ref: develop
-    - name: Install Foreman dependencies
-      run:  npm i
+    - name: Generate Foreman dependencies package-lock
+      run:  npm i --package-lock-only --no-audit
       working-directory: ${{ github.workspace }}/foreman
+    - name: Install Foreman dependencies
+      run:  npm ci --no-audit
+      working-directory: ${{ github.workspace }}/foreman
+    - name: Generate Katello dependencies package-lock
+      run:  npm i --package-lock-only --no-audit
     - name: Install Katello dependencies
-      run:  npm i
+      run:  npm ci --no-audit
     - name: Run Katello linting
       run: npm run lint
     - name: Run Katello tests
