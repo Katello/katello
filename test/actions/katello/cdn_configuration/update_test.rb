@@ -49,8 +49,15 @@ module ::Actions::Katello::CdnConfiguration
       certs = keypair
       ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:debug_certificate).returns(certs[:joined])
 
-      times = ::Katello::RootRepository.redhat.in_organization(@organization).count
-      ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:repository_url).returns('https://www.example.com').times(times)
+      root_repo = ::Katello::RootRepository.redhat.in_organization(@organization).first
+      ::Katello::RootRepository.expects(:in_organization).returns([root_repo])
+
+      ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:repository_url).with(
+          content_label: root_repo.content.label,
+          arch: root_repo.arch,
+          major: root_repo.major,
+          minor: root_repo.minor
+      ).returns('https://www.example.com')
 
       plan_action(@action, @cdn_configuration, attrs)
 
