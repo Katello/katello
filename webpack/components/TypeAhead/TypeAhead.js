@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-
+import { useDispatch, useSelector } from 'react-redux';
 import TypeAheadSearch from './pf3Search/TypeAheadSearch';
 // eslint-disable-next-line import/no-named-default
 import { default as TypeAheadSearchPf4 } from './pf4Search/TypeAheadSearch';
 import { getActiveItems } from './helpers/helpers';
-
 import './TypeAhead.scss';
 import useDebounce from '../../utils/useDebounce';
+import { selectHostDetailsClearSearch } from '../extensions/HostDetails/HostDetailsSelectors';
+
 
 const TypeAhead = ({
   items,
@@ -17,7 +18,6 @@ const TypeAhead = ({
   onInputUpdate,
   onSearch,
   actionText,
-  initialInputValue,
   patternfly4,
   autoSearchEnabled,
   autoSearchDelay,
@@ -26,10 +26,12 @@ const TypeAhead = ({
   placeholder,
   isTextInput,
   setTextInputValue,
+  initialInputValue,
 }) => {
   const [inputValue, setInputValue] = useState(initialInputValue);
-
   const debouncedValue = useDebounce(inputValue, autoSearchDelay);
+  const dispatch = useDispatch();
+  const existingClearSearch = useSelector(selectHostDetailsClearSearch);
   useEffect(
     () => {
       onInputUpdate(debouncedValue);
@@ -38,20 +40,24 @@ const TypeAhead = ({
     [debouncedValue],
   );
 
-  const handleStateChange = ({ inputValue: value }) => {
-    if (typeof value === 'string') {
-      setInputValue(value);
-      if (setTextInputValue) setTextInputValue(value);
-    }
-  };
-
   const clearSearch = () => {
     setInputValue('');
     onSearch('');
   };
 
+  const handleStateChange = ({ inputValue: value }) => {
+    if (typeof value === 'string') {
+      setInputValue(value);
+      if (setTextInputValue) setTextInputValue(value);
+    }
+    if (typeof existingClearSearch !== 'function') {
+      dispatch({
+        type: 'SET_CLEAR_SEARCH',
+        payload: clearSearch,
+      });
+    }
+  };
   const activeItems = getActiveItems(items);
-
   return (
     <Downshift
       onStateChange={handleStateChange}

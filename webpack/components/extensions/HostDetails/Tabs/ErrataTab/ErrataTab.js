@@ -231,6 +231,11 @@ export const ErrataTab = () => {
     }
   };
 
+  const resetFilters = () => {
+    setErrataTypeSelected(ERRATA_TYPE);
+    setErrataSeveritySelected(ERRATA_SEVERITY);
+  };
+
   const readOnlyBookmarks =
   cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
 
@@ -406,6 +411,7 @@ export const ErrataTab = () => {
             selectedCount,
             selectNone,
             toggleGroup,
+            resetFilters,
           }
           }
           happyEmptyContent={allUpToDate}
@@ -423,6 +429,7 @@ export const ErrataTab = () => {
           variant={TableVariant.compact}
           {...selectAll}
           displaySelectAllCheckbox={showActions}
+          requestKey={HOST_ERRATA_KEY}
         >
           <Thead>
             <Tr>

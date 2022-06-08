@@ -22,6 +22,7 @@ import { useRexJobPolling } from '../RemoteExecutionHooks';
 import { hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
   userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
+import { HOST_TRACES_KEY } from './HostTracesConstants';
 
 const invokeRexJobs = ['create_job_invocations'];
 const createBookmarks = ['create_bookmarks'];
@@ -201,6 +202,7 @@ const TracesTab = () => {
           lastCompletedAppRestart, lastCompletedBulkRestart]}
         displaySelectAllCheckbox={showActions}
         {...selectAll}
+        requestKey={HOST_TRACES_KEY}
       >
         <Thead>
           <Tr>

@@ -14,6 +14,7 @@ import { reducers as systemStatuses } from '../../components/extensions/about';
 import { ansibleCollections } from '../../scenes/AnsibleCollections';
 import { ansibleCollectionDetails } from '../../scenes/AnsibleCollections/Details';
 import { contentViewDetails } from '../../scenes/ContentViews/Details';
+import hostDetails from '../../components/extensions/HostDetails/HostDetailsReducer';
 
 export default combineReducers({
   organization,
@@ -29,6 +30,7 @@ export default combineReducers({
   ansibleCollections,
   ansibleCollectionDetails,
   contentViewDetails,
+  hostDetails,
   ...organizationProductsReducers,
   ...systemStatuses,
 });
