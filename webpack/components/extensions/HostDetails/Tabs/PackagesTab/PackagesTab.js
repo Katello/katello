@@ -12,7 +12,6 @@ import {
   Skeleton,
   Split,
   SplitItem,
-  Spinner,
 } from '@patternfly/react-core';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -358,14 +357,12 @@ export const PackagesTab = () => {
             />
           </ActionListItem>
           <ActionListItem>
-            {actionInProgress ? <Spinner size="lg" style={{ marginLeft: '1em', marginTop: '4px' }} /> : (
-              <Dropdown
-                toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                isOpen={isBulkActionOpen}
-                isPlain
-                dropdownItems={dropdownRemoveItems}
-              />
-            )}
+            <Dropdown
+              toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+              isOpen={isBulkActionOpen}
+              isPlain
+              dropdownItems={dropdownRemoveItems}
+            />
           </ActionListItem>
         </ActionList>
       </SplitItem>
