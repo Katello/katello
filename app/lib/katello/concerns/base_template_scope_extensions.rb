@@ -161,7 +161,7 @@ module Katello
         returns String, desc: 'Package version'
       end
       def host_latest_applicable_rpm_version(host, package)
-        host.applicable_rpms.where(name: package).order(:version_sortable).limit(1).pluck(:nvra).first
+        ::Katello::Rpm.latest(host.applicable_rpms.where(name: package)).first.nvra
       end
 
       apipie :method, 'Loads Pool objects' do
