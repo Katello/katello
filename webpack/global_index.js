@@ -44,7 +44,7 @@ addGlobalFill(
   700,
 );
 addGlobalFill('host-overview-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 1900);
-addGlobalFill('host-overview-cards', 'Recent communication', <RecentCommunicationCardExtensions key="recent-communication" />, 3000);
+addGlobalFill('recent-communication-card-item', 'Recent communication', <RecentCommunicationCardExtensions key="recent-communication" />, 3000);
 
 // Details tab cards & card extensions
 addGlobalFill('host-tab-details-cards', 'Installed products', <InstalledProductsCard key="installed-products" />, 100);
