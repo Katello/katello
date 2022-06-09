@@ -23,6 +23,6 @@ module Katello
     scoped_search :on => :version
     scoped_search :on => :release
     scoped_search :on => :arch
-    scoped_search :on => :vendor
+    scoped_search :on => :vendor, :complete_value => true
   end
 end
