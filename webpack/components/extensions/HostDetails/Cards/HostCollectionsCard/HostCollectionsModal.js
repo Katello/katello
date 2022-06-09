@@ -29,7 +29,9 @@ export const HostCollectionsModal = ({
   const emptySearchTitle = __('No matching host collections found');
   const emptySearchBody = __('Try changing your search settings.');
   const errorSearchTitle = __('Problem searching host collections');
-
+  const primaryActionTitle = __('Create host collection');
+  const showPrimaryAction = true;
+  const primaryActionLink = '/host_collections/new';
   const columnHeaders = ['', __('Host collection'), __('Capacity'), __('Description')];
   const adding = (modalType === MODAL_TYPES.ADD);
 
@@ -158,6 +160,9 @@ export const HostCollectionsModal = ({
           updateSearchQuery,
           selectedCount,
           selectNone,
+          showPrimaryAction,
+          primaryActionTitle,
+          primaryActionLink,
         }
         }
         ouiaId="host-collections-table"

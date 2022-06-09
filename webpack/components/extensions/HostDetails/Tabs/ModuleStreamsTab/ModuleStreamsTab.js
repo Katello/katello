@@ -213,9 +213,15 @@ export const ModuleStreamsTab = () => {
   const [hostModuleStreamAction, setHostModuleStreamAction] = useState(null);
 
   const emptyContentTitle = __('This host does not have any Module streams.');
-  const emptyContentBody = __('Module streams will appear here when available.');
+  const emptyContentBody = __('Module streams will appear here after enabling Red Hat repositories or creating custom products.');
   const emptySearchTitle = __('Your search returned no matching Module streams.');
   const emptySearchBody = __('Try changing your search criteria.');
+  const showPrimaryAction = true;
+  const showSecondaryAction = true;
+  const primaryActionTitle = __('Enable Red Hat repositories');
+  const secondaryActionTitle = __('Create a custom product');
+  const primaryActionLink = '/redhat_repositories';
+  const secondaryActionLink = '/products/new';
   const errorSearchTitle = __('Problem searching module streams');
   const {
     status: initialStatus,
@@ -342,6 +348,12 @@ export const ModuleStreamsTab = () => {
             activeFilters,
             defaultFilters,
             status,
+            showPrimaryAction,
+            showSecondaryAction,
+            primaryActionTitle,
+            secondaryActionTitle,
+            primaryActionLink,
+            secondaryActionLink,
           }}
           ouiaId="host-module-stream-table"
           additionalListeners={[hostId, activeSortColumn, activeSortDirection,

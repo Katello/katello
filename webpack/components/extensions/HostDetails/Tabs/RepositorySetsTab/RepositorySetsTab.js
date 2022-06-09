@@ -174,9 +174,15 @@ const RepositorySetsTab = () => {
 
   const [alertShowing, setAlertShowing] = useState(false);
   const emptyContentTitle = __('No repository sets to show.');
-  const emptyContentBody = __('Repository sets will appear here when available.');
+  const emptyContentBody = __('Repository sets will appear here after enabling Red Hat repositories or creating custom products.');
   const emptySearchTitle = __('No matching repository sets found');
   const emptySearchBody = __('Try changing your search query.');
+  const showPrimaryAction = true;
+  const showSecondaryAction = true;
+  const primaryActionTitle = __('Enable Red Hat repositories');
+  const secondaryActionTitle = __('Create a custom product');
+  const primaryActionLink = '/redhat_repositories';
+  const secondaryActionLink = '/products/new';
   const errorSearchTitle = __('Problem searching repository sets');
   const columnHeaders = useMemo(() => [
     __('Repository'),
@@ -435,6 +441,12 @@ const RepositorySetsTab = () => {
             emptySearchBody,
             activeFilters,
             defaultFilters,
+            showPrimaryAction,
+            showSecondaryAction,
+            primaryActionLink,
+            secondaryActionLink,
+            primaryActionTitle,
+            secondaryActionTitle,
           }
           }
           ouiaId="host-repository-sets-table"
