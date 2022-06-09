@@ -21,8 +21,8 @@ const ACSSmartProxies = () => {
   return (
     <>
       <WizardHeader
-        title={__('Name source')}
-        description={__('Enter a name for your source.')}
+        title={__('Select smart proxy')}
+        description={__('Select smart proxies to be used with this source.')}
       />
       <DualListSelector
         isSearchable
