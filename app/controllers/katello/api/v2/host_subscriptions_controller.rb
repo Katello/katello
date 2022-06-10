@@ -187,6 +187,13 @@ module Katello
       respond_for_index :collection => full_result_response(releases)
     end
 
+    api :GET, "/hosts/:host_id/subscriptions/enabled_repositories", N_("Show repositories enabled on the host that are known to Katello")
+    param :host_id, String, :desc => N_("id of host"), :required => true
+    def enabled_repositories
+      repositories = @host.content_facet.try(:bound_repositories) || []
+      respond_with_template_collection "index", 'repositories', :collection => full_result_response(repositories)
+    end
+
     private
 
     def fetch_product_content
@@ -216,7 +223,7 @@ module Katello
     def action_permission
       if ['add_subscriptions', 'destroy', 'remove_subscriptions', 'auto_attach', 'content_override'].include?(params[:action])
         :edit
-      elsif ['index', 'events', 'product_content', 'available_release_versions'].include?(params[:action])
+      elsif ['index', 'events', 'product_content', 'available_release_versions', 'enabled_repositories'].include?(params[:action])
         :view
       else
         fail ::Foreman::Exception.new(N_("unknown permission for %s"), "#{params[:controller]}##{params[:action]}")

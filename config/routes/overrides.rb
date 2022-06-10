@@ -110,6 +110,7 @@ Foreman::Application.routes.draw do
               put :auto_attach
               match '/product_content' => 'repository_sets#index', :via => :get, :entity => :host
               get :available_release_versions
+              get :enabled_repositories
               put :content_override
               put :remove_subscriptions
               put :add_subscriptions
