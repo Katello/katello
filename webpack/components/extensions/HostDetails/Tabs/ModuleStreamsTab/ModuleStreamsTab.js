@@ -7,7 +7,6 @@ import { Skeleton,
   Button,
   Split,
   SplitItem,
-  Spinner,
   Checkbox,
   Dropdown,
   Text,
@@ -376,11 +375,6 @@ export const ModuleStreamsTab = () => {
                   setSelected={handleModuleStreamInstallationStatusSelected}
                 />
               </SplitItem>
-              {actionInProgress && (
-                <SplitItem style={{ alignSelf: 'center' }}>
-                  <Spinner size="lg" style={{ marginTop: '2px' }} />
-                </SplitItem>
-              )}
             </Split>
           }
         >
