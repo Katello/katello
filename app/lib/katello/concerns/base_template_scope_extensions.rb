@@ -206,21 +206,22 @@ module Katello
         search_up_to = up_to.present? ? "ended_at < \"#{up_to}\"" : nil
         search_since = since.present? ? "ended_at > \"#{since}\"" : nil
         search_result = status.present? && status != 'all' ? "result = #{status}" : nil
-        search = [search_up_to, search_since, search_result].compact.join(' and ')
+        labels = 'label ^ (Actions::Katello::Host::Erratum::Install, Actions::Katello::Host::Erratum::ApplicableErrataInstall)'
+        select = 'foreman_tasks_tasks.*'
 
         if Katello.with_remote_execution?
-          condition = ["state = 'stopped' AND ((label = 'Actions::RemoteExecution::RunHostJob' AND templates.id = ?) " \
-                       "OR label = 'Actions::Katello::Host::Erratum::Install' OR label = 'Actions::Katello::Host::Erratum::ApplicableErrataInstall')",
-                       RemoteExecutionFeature.feature('katello_errata_install').job_template_id]
+          new_labels = 'label = Actions::RemoteExecution::RunHostJob AND remote_execution_feature.label ^ (katello_errata_install, katello_errata_install_by_search)'
+          labels = [labels, new_labels].map { |label| "(#{label})" }.join(' OR ')
+          select += ',template_invocations.id AS template_invocation_id'
         else
-          condition = "state = 'stopped' AND (label = 'Actions::Katello::Host::Erratum::Install' OR label = 'Actions::Katello::Host::Erratum::ApplicableErrataInstall')"
+          select += ',NULL AS template_invocation_id'
         end
 
+        search = [search_up_to, search_since, search_result, "state = stopped", labels].compact.join(' and ')
+
         tasks = load_resource(klass: ForemanTasks::Task,
-                              where: condition,
                               permission: 'view_foreman_tasks',
-                              joins: 'LEFT OUTER JOIN template_invocations ON foreman_tasks_tasks.id = template_invocations.run_host_job_task_id LEFT OUTER JOIN templates ON template_invocations.template_id = templates.id',
-                              select: 'foreman_tasks_tasks.*,template_invocations.id AS template_invocation_id',
+                              select: select,
                               search: search)
         only_host_ids = ::Host.search_for(host_filter).pluck(:id) if host_filter
 
@@ -325,9 +326,21 @@ module Katello
         # Pick katello agent errata if present
         # Otherwise pick rex errata. There are multiple template inputs, such as errata, pre_script and post_script we only need the
         # errata input here.
-        @_tasks_errata_cache[task.id] ||= agent_input.presence || TemplateInvocationInputValue.joins(:template_input)
-                                            .where("template_invocation_id = ? AND template_inputs.name = ?", task.template_invocation_id, 'errata')
-                                            .first.value.split(',')
+        @_tasks_errata_cache[task.id] ||= agent_input.presence || errata_ids_from_template_invocation(task, task_input)
+      end
+
+      def errata_ids_from_template_invocation(task, task_input)
+        if task_input.key?('job_features') && task_input['job_features'].include?('katello_errata_install_by_search')
+          # This may give wrong results if the template is not rendered yet
+          # This also will not work for jobs run before we started storing
+          #   resolved ids in the template
+          script = task.execution_plan.actions[1].try(:input).try(:[], 'script') || ''
+          found = script.lines.find { |line| line.start_with? '# RESOLVED_ERRATA_IDS=' } || ''
+          (found.chomp.split('=', 2).last || '').split(',')
+        else
+          TemplateInvocationInputValue.joins(:template_input).where("template_invocation_id = ? AND template_inputs.name = ?", task.template_invocation_id, 'errata')
+            .first.value.split(',')
+        end
       end
     end
   end
