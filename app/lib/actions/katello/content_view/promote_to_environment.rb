@@ -1,8 +1,8 @@
-# rubocop:disable Lint/SuppressedException
 module Actions
   module Katello
     module ContentView
       class PromoteToEnvironment < Actions::EntryAction
+        execution_plan_hooks.use :trigger_capsule_sync, :on => :success
         def plan(version, environment, description, incremental_update = false)
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
                                                           :environment => environment, :task => self.task,
@@ -51,13 +51,15 @@ module Actions
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
+        end
 
+        def trigger_capsule_sync(_execution_plan)
+          environment = ::Katello::KTEnvironment.find(input[:environment_id])
           if !input[:incremental_update] && sync_proxies?(environment)
             ForemanTasks.async_task(ContentView::CapsuleSync,
                                     ::Katello::ContentView.find(input[:content_view_id]),
                                     environment)
           end
-        rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
         private

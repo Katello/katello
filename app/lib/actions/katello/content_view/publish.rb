@@ -1,4 +1,3 @@
-# rubocop:disable Lint/SuppressedException
 module Actions
   module Katello
     module ContentView
@@ -7,6 +6,8 @@ module Actions
         include ::Katello::ContentViewHelper
         include ::Actions::ObservableAction
         attr_accessor :version
+        execution_plan_hooks.use :trigger_capsule_sync, :on => :success
+
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
         def plan(content_view, description = "", options = {importing: false}) # rubocop:disable Metrics/PerceivedComplexity
           action_subject(content_view)
@@ -118,6 +119,9 @@ module Actions
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
+        end
+
+        def trigger_capsule_sync(_execution_plan)
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
           view = ::Katello::ContentView.find(input[:content_view_id])
           if SmartProxy.sync_needed?(environment) && !input[:skip_promotion]
@@ -125,7 +129,6 @@ module Actions
                                     view,
                                     environment)
           end
-        rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
         def content_view_version_id
