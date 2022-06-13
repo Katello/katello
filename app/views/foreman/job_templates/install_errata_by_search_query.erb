@@ -15,11 +15,12 @@ foreign_input_sets:
   exclude: action,package
 %>
 
+<% advisory_ids = @host.advisory_ids(search: input("Errata search query")) %>
+# RESOLVED_ERRATA_IDS=<%= advisory_ids.join(',') %>
+
 <% if @host.operatingsystem.family == 'Suse' -%>
-    <% advisories = @host.advisory_ids(search: input("Errata search query")).join(' ') %>
-    <%= render_template('Package Action - Script Default', :action => 'install -n -t patch', :package => advisories) %>
+    <%= render_template('Package Action - Script Default', :action => 'install -n -t patch', :package => advisory_ids.join(' ')) %>
 <% else %>
-    <% advisory_ids = @host.advisory_ids(search: input("Errata search query")) %>
     <% raise "No errata matching given search query" if !input("Errata search query").blank? && advisory_ids.empty? %>
 
     <% advisories = advisory_ids.map { |e| "--advisory=#{e}" }.join(' ') %>
