@@ -2,10 +2,10 @@ module Actions
   module Katello
     module AlternateContentSource
       class Create < Actions::EntryAction
-        def plan(acs, smart_proxies, products)
+        def plan(acs, smart_proxies, products = nil)
           acs.save!
           action_subject(acs)
-          acs.products << products
+          acs.products << products if products.present?
           smart_proxies = smart_proxies.uniq
           concurrence do
             smart_proxies.each do |smart_proxy|
