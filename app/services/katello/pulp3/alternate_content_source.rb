@@ -5,10 +5,12 @@ module Katello
       include Katello::Pulp3::ServiceCommon
       attr_accessor :acs
       attr_accessor :smart_proxy
+      attr_accessor :repository
 
-      def initialize(acs, smart_proxy)
+      def initialize(acs, smart_proxy, repository = nil)
         @acs = acs
         @smart_proxy = smart_proxy
+        @repository = repository
       end
 
       def api
@@ -20,10 +22,20 @@ module Katello
       end
 
       def smart_proxy_acs
-        ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id)
+        if acs.alternate_content_source_type == 'custom'
+          ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id)
+        else
+          ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id, repository_id: repository.id)
+        end
       end
 
       def remote_options
+        if repository.present?
+          options = repository.backend_service(smart_proxy).remote_options
+          options[:policy] = 'on_demand'
+          return options
+        end
+
         remote_options = {
           tls_validation: acs.verify_ssl,
           name: generate_backend_object_name,

@@ -110,6 +110,8 @@ module Katello
 
     has_many :smart_proxy_sync_histories, :class_name => "::Katello::SmartProxySyncHistory", :inverse_of => :repository, :dependent => :delete_all
 
+    has_many :smart_proxy_alternate_content_sources, :class_name=> 'Katello::SmartProxyAlternateContentSource', :inverse_of => :repository, :dependent => :nullify
+
     validates_with Validators::ContainerImageNameValidator, :attributes => :container_repository_name, :allow_blank => false, :if => :docker?
     validates :container_repository_name, :if => :docker?, :uniqueness => {message: ->(object, _data) do
       _("for repository '%{name}' is not unique and cannot be created in '%{env}'. Its Container Repository Name (%{container_name}) conflicts with an existing repository.  Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.") %

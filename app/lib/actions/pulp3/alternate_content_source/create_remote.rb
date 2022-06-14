@@ -2,13 +2,14 @@ module Actions
   module Pulp3
     module AlternateContentSource
       class CreateRemote < Pulp3::Abstract
-        def plan(acs, smart_proxy)
-          plan_self(:acs_id => acs.id, :smart_proxy_id => smart_proxy.id)
+        def plan(smart_proxy_acs)
+          plan_self(smart_proxy_id: smart_proxy_acs.smart_proxy_id, smart_proxy_acs_id: smart_proxy_acs.id)
         end
 
         def run
-          acs = ::Katello::AlternateContentSource.find(input[:acs_id])
-          output[:response] = acs.backend_service(smart_proxy).create_remote
+          smart_proxy_acs_id = input[:smart_proxy_acs_id]
+          smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.find(smart_proxy_acs_id)
+          output[:response] = smart_proxy_acs.backend_service.create_remote
         end
 
         def rescue_strategy

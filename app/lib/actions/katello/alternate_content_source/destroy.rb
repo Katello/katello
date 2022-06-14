@@ -5,11 +5,10 @@ module Actions
         def plan(acs)
           action_subject(acs)
           sequence do
-            acs.smart_proxies.each do |smart_proxy|
-              plan_action(Pulp3::Orchestration::AlternateContentSource::Delete,
-                          acs, smart_proxy)
+            acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
+              plan_action(Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
             end
-            plan_self(:acs_id => acs.id)
+            plan_self(acs_id: acs.id)
           end
         end
 

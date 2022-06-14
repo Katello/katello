@@ -3,18 +3,20 @@ module Actions
     module Orchestration
       module AlternateContentSource
         class Delete < Pulp3::Abstract
-          def plan(acs, smart_proxy)
+          def plan(smart_proxy_acs)
             sequence do
-              plan_action(Actions::Pulp3::AlternateContentSource::Delete, acs, smart_proxy)
-              plan_action(Actions::Pulp3::AlternateContentSource::DeleteRemote, acs, smart_proxy)
-              plan_self(acs_id: acs.id, smart_proxy_id: smart_proxy.id)
+              plan_action(Actions::Pulp3::AlternateContentSource::Delete, smart_proxy_acs)
+              plan_action(Actions::Pulp3::AlternateContentSource::DeleteRemote, smart_proxy_acs)
+              plan_self(smart_proxy_id: smart_proxy_acs.smart_proxy_id, smart_proxy_acs_id: smart_proxy_acs.id)
             end
           end
 
           def finalize
-            acs_id = input[:acs_id]
-            smart_proxy_id = input[:smart_proxy_id]
-            ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs_id, smart_proxy_id: smart_proxy_id).destroy
+            #acs_id = input[:acs_id]
+            #smart_proxy_id = input[:smart_proxy_id]
+            #::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs_id, smart_proxy_id: smart_proxy_id).destroy
+            smart_proxy_acs_id = input[:smart_proxy_acs_id]
+            ::Katello::SmartProxyAlternateContentSource.find_by(id: smart_proxy_acs_id).destroy
           end
         end
       end

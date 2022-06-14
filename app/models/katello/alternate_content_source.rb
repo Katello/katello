@@ -10,7 +10,7 @@ module Katello
     self.table_name = :katello_alternate_content_sources
 
     # TODO: simplified, rhui
-    ACS_TYPES = %w(custom).freeze
+    ACS_TYPES = %w(custom simplified).freeze
     CONTENT_TYPES = [::Katello::Repository::YUM_TYPE, ::Katello::Repository::FILE_TYPE].freeze
     AUDIT_REFRESH_ACTION = 'refresh'.freeze
 
@@ -20,6 +20,10 @@ module Katello
     belongs_to :ssl_client_cert, inverse_of: :ssl_client_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_key, inverse_of: :ssl_key_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :http_proxy, inverse_of: :alternate_content_sources
+
+    has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :alternate_content_source
+    has_many :products, through: :alternate_content_source_products, inverse_of: :alternate_content_sources
+
     has_many :smart_proxy_alternate_content_sources, dependent: :destroy,
              inverse_of: :alternate_content_source
     has_many :smart_proxies, through: :smart_proxy_alternate_content_sources
@@ -48,12 +52,16 @@ module Katello
     scoped_search on: :upstream_username, complete_value: true
     scoped_search on: :smart_proxy_id, relation: :smart_proxy_alternate_content_sources, validator: ScopedSearch::Validators::INTEGER, only_explicit: true
 
-    def backend_service(smart_proxy)
-      @service ||= ::Katello::Pulp3::AlternateContentSource.new(self, smart_proxy)
+    def backend_service(smart_proxy, repository = nil)
+      @service ||= ::Katello::Pulp3::AlternateContentSource.new(self, smart_proxy, repository)
     end
 
     def custom?
       alternate_content_source_type == 'custom'
+    end
+
+    def simplified?
+      alternate_content_source_type == 'simplified'
     end
 
     def self.with_type(content_type)

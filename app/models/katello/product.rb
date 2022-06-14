@@ -28,6 +28,9 @@ module Katello
     has_many :pools, :through => :pool_products
     has_many :subscriptions, :through => :pools, :dependent => :destroy
 
+    has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :product
+    has_many :alternate_content_sources, through: :alternate_content_source_products, inverse_of: :products
+
     validates_lengths_from_database :except => [:label]
     validates :provider_id, :presence => true
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
