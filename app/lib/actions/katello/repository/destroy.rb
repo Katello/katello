@@ -25,6 +25,10 @@ module Actions
 
           remove_versions(repository, repository.content_views.generated_for_none, affected_cvv_ids) if remove_from_content_view_versions
 
+          repository.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
+            plan_action(Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
+          end
+
           plan_self(:user_id => ::User.current.id, :affected_cvv_ids => affected_cvv_ids)
           sequence do
             if repository.redhat?

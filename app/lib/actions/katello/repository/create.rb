@@ -33,6 +33,12 @@ module Actions
 
             concurrence do
               plan_self(:repository_id => repository.id, :clone => clone)
+              repository.product.alternate_content_sources.with_type(repository.content_type).each do |acs|
+                acs.smart_proxies.each do |smart_proxy|
+                  smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id, repository_id: repository.id)
+                  plan_action(Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+                end
+              end
             end
           end
         end

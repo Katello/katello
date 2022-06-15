@@ -43,6 +43,9 @@ module Actions
               if update_cv_cert_protected
                 plan_optional_pulp_action([::Actions::Pulp3::Orchestration::Repository::TriggerUpdateRepoCertGuard], repository, ::SmartProxy.pulp_primary)
               end
+              repository.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
+                plan_action(Pulp3::Orchestration::AlternateContentSource::Update, smart_proxy_acs)
+              end
             end
           end
         end
