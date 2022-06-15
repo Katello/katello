@@ -26,7 +26,7 @@ module Katello
 
     has_many :smart_proxy_alternate_content_sources, dependent: :destroy,
              inverse_of: :alternate_content_source
-    has_many :smart_proxies, through: :smart_proxy_alternate_content_sources
+    has_many :smart_proxies, -> { distinct }, through: :smart_proxy_alternate_content_sources
 
     validates :base_url, if: :custom?, presence: true
     validates :verify_ssl, if: :custom?, exclusion: [nil]

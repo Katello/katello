@@ -6,7 +6,8 @@ module Katello
     wrap_parameters :alternate_content_source, include: acs_wrap_params
 
     before_action :find_authorized_katello_resource, only: [:show, :update, :destroy, :refresh]
-    before_action :find_products, only: [:create, :update]
+    before_action :find_smart_proxies, only: :create
+    before_action :find_products, only: :create
 
     def_param_group :acs do
       param :name, String, desc: N_("Name of the alternate content source")
@@ -66,7 +67,6 @@ module Katello
     param :alternate_content_source_type, AlternateContentSource::ACS_TYPES, desc: N_("The Alternate Content Source type")
     param_group :acs
     def create
-      find_smart_proxies
       @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params.except(:smart_proxy_ids, :smart_proxy_names, :product_ids, :product_names))
       sync_task(::Actions::Katello::AlternateContentSource::Create, @alternate_content_source, @smart_proxies, @products)
       @alternate_content_source.reload
@@ -77,15 +77,23 @@ module Katello
     param_group :acs
     param :id, :number, :required => true, :desc => N_("Alternate content source ID")
     def update
-      # If a user doesn't include smart proxies in the update call, don't accidentally remove all of them.
-      if params[:smart_proxy_ids].nil?
+      # If a user doesn't include smart proxies or products in the update call, don't accidentally remove all of them.
+      if params[:smart_proxy_ids].nil? && params[:smart_proxy_names].nil?
         @smart_proxies = @alternate_content_source.smart_proxies
-      elsif params[:smart_proxy_ids].empty?
+      elsif params[:smart_proxy_ids] == [] || params[:smart_proxy_names] == []
         @smart_proxies = []
       else
         find_smart_proxies
       end
-      sync_task(::Actions::Katello::AlternateContentSource::Update, @alternate_content_source, @smart_proxies, acs_params.except(:smart_proxy_ids))
+
+      if params[:product_ids].nil? && params[:product_names].nil?
+        @products = @alternate_content_source.products
+      elsif params[:product_ids] == [] || params[:product_names] == []
+        @products = []
+      else
+        find_products
+      end
+      sync_task(::Actions::Katello::AlternateContentSource::Update, @alternate_content_source, @smart_proxies, @products, acs_params.except(:smart_proxy_ids, :smart_proxy_names, :product_ids, :product_names))
       respond_for_show(:resource => @alternate_content_source)
     end
 
@@ -132,7 +140,10 @@ module Katello
         @products = ::Katello::Product.where(id: params[:product_ids])
       elsif params[:product_names]
         @products = ::SmartProxy.where(name: params[:product_names])
+      else
+        @products = nil
       end
+
       if params[:product_ids] && @products.length < params[:product_ids].length
         missing_products = params[:product_ids] - @products.pluck(:id)
         fail HttpErrors::NotFound, _("Couldn't find products with id '%s'") % missing_products.to_sentence
