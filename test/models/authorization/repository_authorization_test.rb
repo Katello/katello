@@ -24,9 +24,44 @@ module Katello
       assert repository.deletable?
     end
 
+    def test_promoted_deletable?
+      repository = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1).id)
+      repository.stubs(:promoted?).returns(true)
+      assert repository.deletable?
+    end
+
     def test_redhat_deletable?
       repository = Repository.find(katello_repositories(:rhel_7_x86_64).id)
       assert repository.redhat_deletable?
+    end
+
+    def test_promoted_redhat_repo_not_deletable
+      repository = Repository.find(katello_repositories(:rhel_7_x86_64).id)
+      repository.stubs(:promoted?).returns(true)
+      refute repository.redhat_deletable?
+      assert repository.redhat_deletable?(true)
+    end
+
+    def test_generated_cv_redhat_repo_deletable
+      repository = Repository.find(katello_repositories(:rhel_7_x86_64).id)
+      repository.stubs(:promoted?).returns(true)
+      content_views = Katello::ContentView.where(id: katello_content_views(:library_dev_staging_view).id)
+      repository.stubs(:content_views).returns(content_views)
+      content_views.first.generated_for_repository_export!
+      assert repository.content_views.exists?
+      refute repository.content_views.generated_for_none.exists?
+      assert repository.redhat_deletable?
+    end
+
+    def test_cv_redhat_repo_not_deletable
+      repository = Repository.find(katello_repositories(:rhel_7_x86_64).id)
+      repository.stubs(:promoted?).returns(true)
+      content_views = Katello::ContentView.where(id: katello_content_views(:library_dev_staging_view).id)
+      repository.stubs(:content_views).returns(content_views)
+      assert repository.content_views.exists?
+      assert repository.content_views.generated_for_none.exists?
+      refute repository.redhat_deletable?
+      assert repository.redhat_deletable?(true)
     end
 
     def test_readable
