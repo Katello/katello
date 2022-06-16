@@ -468,6 +468,7 @@ const RepositorySetsTab = () => {
           {...selectAll}
           requestKey={REPOSITORY_SETS_KEY}
           displaySelectAllCheckbox={canDoContentOverrides}
+          alwaysShowActionButtons={false}
         >
           <Thead>
             <Tr>

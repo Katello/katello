@@ -18,6 +18,7 @@ import { orgId } from '../../services/api';
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
   actionButtons,
+  alwaysShowActionButtons,
   toggleGroup,
   children,
   metadata,
@@ -55,11 +56,13 @@ const TableWrapper = ({
   const { pageRowCount } = getPageStats({ total, page, perPage });
   const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
   const unresolvedStatusOrNoRows = unresolvedStatus || pageRowCount === 0;
-  const resolvedStatusNoContent =
-    !searchQuery && allTableProps.status === STATUS.RESOLVED && pageRowCount === 0;
   const showPagination = !unresolvedStatusOrNoRows;
-  const showActionButtons = actionButtons && !unresolvedStatus;
-  const showToggleGroup = toggleGroup && !unresolvedStatus;
+  const filtersAreActive = activeFilters?.length &&
+    !isEqual(new Set(activeFilters), new Set(allTableProps.defaultFilters));
+  const hideToolbar = !searchQuery && !filtersAreActive &&
+    allTableProps.status === STATUS.RESOLVED && total === 0;
+  const showActionButtons = actionButtons && (alwaysShowActionButtons || !hideToolbar);
+  const showToggleGroup = toggleGroup && !hideToolbar;
   const paginationParams = useCallback(() =>
     ({ per_page: perPage, page }), [perPage, page]);
   const prevRequest = useRef({});
@@ -163,7 +166,7 @@ const TableWrapper = ({
   return (
     <>
       <Flex style={{ alignItems: 'center' }} className="margin-16-24">
-        {displaySelectAllCheckbox &&
+        {displaySelectAllCheckbox && !hideToolbar &&
           <FlexItem alignSelf={{ default: 'alignSelfCenter' }}>
             <SelectAllCheckbox
               {...{
@@ -180,7 +183,7 @@ const TableWrapper = ({
             />
           </FlexItem>
         }
-        {!disableSearch && !resolvedStatusNoContent &&
+        {!disableSearch && !hideToolbar &&
           <FlexItem>
             <Search
               isDisabled={unresolvedStatusOrNoRows && !searchQuery}
@@ -271,6 +274,7 @@ TableWrapper.propTypes = {
   foremanApiAutoComplete: PropTypes.bool,
   searchPlaceholderText: PropTypes.string,
   actionButtons: PropTypes.node,
+  alwaysShowActionButtons: PropTypes.bool,
   toggleGroup: PropTypes.node,
   children: PropTypes.node,
   // additionalListeners are anything that should trigger another API call, e.g. a filter
@@ -314,6 +318,7 @@ TableWrapper.defaultProps = {
   foremanApiAutoComplete: false,
   searchPlaceholderText: undefined,
   actionButtons: null,
+  alwaysShowActionButtons: true,
   toggleGroup: null,
   displaySelectAllCheckbox: false,
   selectedCount: 0,
