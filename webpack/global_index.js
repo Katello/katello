@@ -34,20 +34,20 @@ addGlobalFill('registrationAdvanced', '[katello]RegistrationCommands', <Registra
 addGlobalFill('host-details-page-tabs', 'Content', <ContentTab key="content" />, 900, { title: __('Content'), hideTab: hostIsNotRegistered });
 addGlobalFill('host-details-page-tabs', 'Traces', <TracesTab key="traces" />, 800, { title: __('Traces'), hideTab: hostIsNotRegistered });
 
-// Overview tab cards
+// Overview tab cards & card extensions
 addGlobalFill(
   'host-overview-cards',
   'Content view details',
   <ContentViewDetailsCard key="content-view-details" />,
-  2000,
+  3800,
 );
 addGlobalFill(
   'host-overview-cards',
   'Host collections',
   <HostCollectionsCard key="host-collections-details" />,
-  700,
+  2600,
 );
-addGlobalFill('host-overview-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 1900);
+addGlobalFill('host-overview-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 3600);
 addGlobalFill('recent-communication-card-item', 'Recent communication', <RecentCommunicationCardExtensions key="recent-communication" />, 3000);
 
 // Details tab cards & card extensions
