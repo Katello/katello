@@ -222,6 +222,8 @@ module Katello
 
       if ::Katello.with_remote_execution?
         ::RemoteExecutionProxySelector.prepend Katello::Concerns::RemoteExecutionProxySelectorExtensions
+        ::Actions::RemoteExecution::RunHostJob.extend Actions::Katello::Extensions::RexJobsExtensions
+        ::Actions::RemoteExecution::RunHostsJob.extend Actions::Katello::Extensions::RexJobsExtensions
       end
 
       load 'katello/repository_types.rb'
