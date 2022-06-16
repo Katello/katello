@@ -373,6 +373,7 @@ export const ModuleStreamsTab = () => {
           rowsCount={results?.length}
           variant={TableVariant.compact}
           requestKey={MODULE_STREAMS_KEY}
+          alwaysShowActionButtons={false}
           actionButtons={
             <Split hasGutter>
               <SplitItem>

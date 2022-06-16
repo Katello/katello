@@ -426,6 +426,7 @@ export const PackagesTab = () => {
           {...selectAll}
           displaySelectAllCheckbox={showActions}
           requestKey={HOST_PACKAGES_KEY}
+          alwaysShowActionButtons={false}
         >
           <Thead>
             <Tr>
