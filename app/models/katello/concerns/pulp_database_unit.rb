@@ -156,8 +156,8 @@ module Katello
         end
 
         self.joins(repository_association_units).
-            where(repository_association_class.table_name => {:repository_id => facet_repos,
-                                                              content_unit_association_id => facet_content_units}).distinct
+          where(repository_association_class.table_name => { :repository_id => facet_repos,
+                                                             content_unit_association_id => facet_content_units }).distinct
       end
 
       def with_identifiers(ids)
