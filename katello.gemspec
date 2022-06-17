@@ -56,7 +56,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "faraday", "< 1.9"
   gem.add_dependency "pulpcore_client", ">= 3.18.0", "< 3.19.0"
   gem.add_dependency "pulp_file_client", ">= 1.10.0", "< 1.11.0"
-  gem.add_dependency "pulp_ansible_client", ">= 0.12.1", "< 0.13"
+  gem.add_dependency "pulp_ansible_client", ">= 0.13.1", "< 0.14"
   gem.add_dependency "pulp_container_client", ">= 2.10.0", "< 2.11.0"
   gem.add_dependency "pulp_deb_client", ">= 2.18.0", "< 2.19.0"
   gem.add_dependency "pulp_rpm_client", ">= 3.17.0", "< 3.18.0"
