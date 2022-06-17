@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-testing-lib-wrapper';
+import { render, renderWithRedux } from 'react-testing-lib-wrapper';
 import ErrataOverviewCard from '../ErrataOverviewCard';
 import nock from '../../../../../test-utils/nockWrapper';
 
@@ -9,7 +9,16 @@ const baseHostDetails = {
     uuid: '123',
   },
 };
-
+const renderOptions = {
+  initialState: {
+    // This is the API state that your tests depend on for their data
+    // You can cross reference the needed useSelectors from your tested components
+    // with the data found within the redux chrome add-on to help determine this fixture data.
+    katello: {
+      hostDetails: {},
+    },
+  },
+};
 describe('Without errata', () => {
   afterEach(() => {
     nock.cleanAll();
@@ -52,7 +61,7 @@ describe('Without errata', () => {
       },
     };
     /* eslint-disable max-len */
-    const { queryByLabelText, getByText } = render(<ErrataOverviewCard hostDetails={hostDetails} />);
+    const { queryByLabelText, getByText } = renderWithRedux(<ErrataOverviewCard hostDetails={hostDetails} />, renderOptions);
     /* eslint-enable max-len */
     expect(queryByLabelText('errataChart')).not.toBeInTheDocument();
     expect(getByText('All errata up-to-date')).toBeInTheDocument();
