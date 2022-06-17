@@ -16,13 +16,20 @@ import {
   Label,
   List,
   ListItem,
+  Tooltip,
 } from '@patternfly/react-core';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PencilEditButton from '../../../EditableTextInput/PencilEditButton';
 import './SystemPurposeCard.scss';
 
 const SystemPurposeCard = ({ hostDetails }) => {
   const showEditButton = true;
+  const subscriptionFacetAttributes = hostDetails?.subscription_facet_attributes;
+  const {
+    purposeRole, purposeUsage, purposeAddons, releaseVersion, serviceLevel,
+  } = propsToCamelCase(subscriptionFacetAttributes);
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
       <Card isHoverable ouiaId="system-purpose-card">
@@ -37,8 +44,18 @@ const SystemPurposeCard = ({ hostDetails }) => {
                 alignItems={{ default: 'alignItemsCenter' }}
                 justifyContent={{ default: 'justifyContentSpaceBetween' }}
               >
-                <FlexItem>
+                <FlexItem style={{ marginRight: '0.5em' }}>
                   <CardTitle>{__('System purpose')}</CardTitle>
+                </FlexItem>
+                <FlexItem>
+                  <Tooltip
+                    content={__('System purpose allows you to set the system\'s intended use on your network and improves the reporting of usage in Subscription Watch.')}
+                    position="top"
+                    enableFlip
+                    isContentLeftAligned
+                  >
+                    <OutlinedQuestionCircleIcon style={{ marginTop: '7px' }} color="gray" />
+                  </Tooltip>
                 </FlexItem>
               </Flex>
             </FlexItem>
@@ -53,20 +70,34 @@ const SystemPurposeCard = ({ hostDetails }) => {
           <DescriptionList isHorizontal>
             <DescriptionListGroup>
               <DescriptionListTerm>{__('Role')}</DescriptionListTerm>
-              <DescriptionListDescription>Red Hat Enterprise Linux Server</DescriptionListDescription>
+              <DescriptionListDescription>{purposeRole}</DescriptionListDescription>
               <DescriptionListTerm>{__('SLA')}</DescriptionListTerm>
-              <DescriptionListDescription><Label color="blue">Premium</Label></DescriptionListDescription>
-              <DescriptionListTerm>{__('Usage type')}</DescriptionListTerm>
-              <DescriptionListDescription><Label color="blue">Production</Label></DescriptionListDescription>
-              <DescriptionListTerm>{__('Release version')}</DescriptionListTerm>
-              <DescriptionListDescription>5</DescriptionListDescription>
-              <DescriptionListTerm>{__('Add-ons')}</DescriptionListTerm>
               <DescriptionListDescription>
-                <List isPlain>
-                  <ListItem>Add-on 1</ListItem>
-                  <ListItem>Add-on 2</ListItem>
-                </List>
+                {serviceLevel && (
+                  <Label color="blue">{serviceLevel}</Label>
+                )}
               </DescriptionListDescription>
+              <DescriptionListTerm>{__('Usage type')}</DescriptionListTerm>
+              <DescriptionListDescription>
+                {purposeUsage && (
+                  <Label color="blue">{purposeUsage}</Label>
+                )}
+              </DescriptionListDescription>
+              <DescriptionListTerm>{__('Release version')}</DescriptionListTerm>
+              <DescriptionListDescription>{releaseVersion}</DescriptionListDescription>
+              {purposeAddons.length > 0 && (
+                <>
+                  <DescriptionListTerm>{__('Add-ons')}</DescriptionListTerm>
+                  <DescriptionListDescription>
+                    <List isPlain>
+                      {purposeAddons.map(addon => (
+                        <ListItem key={addon}>{addon}</ListItem>
+                      ))}
+                    </List>
+                  </DescriptionListDescription>
+                </>
+              )
+              }
             </DescriptionListGroup>
           </DescriptionList>
         </CardBody>
