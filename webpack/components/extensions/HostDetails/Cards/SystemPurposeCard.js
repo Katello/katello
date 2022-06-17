@@ -29,7 +29,7 @@ const SystemPurposeCard = ({ hostDetails }) => {
   const subscriptionFacetAttributes = hostDetails?.subscription_facet_attributes;
   const {
     purposeRole, purposeUsage, purposeAddons, releaseVersion, serviceLevel,
-  } = propsToCamelCase(subscriptionFacetAttributes);
+  } = propsToCamelCase(subscriptionFacetAttributes ?? {});
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
       <Card isHoverable ouiaId="system-purpose-card">
@@ -85,7 +85,7 @@ const SystemPurposeCard = ({ hostDetails }) => {
               </DescriptionListDescription>
               <DescriptionListTerm>{__('Release version')}</DescriptionListTerm>
               <DescriptionListDescription>{releaseVersion}</DescriptionListDescription>
-              {purposeAddons.length > 0 && (
+              {purposeAddons?.length && (
                 <>
                   <DescriptionListTerm>{__('Add-ons')}</DescriptionListTerm>
                   <DescriptionListDescription>
