@@ -22,32 +22,57 @@ module ::Actions::Pulp3
       @file_acs.upstream_password = nil
       @yum_acs.save!
       @file_acs.save!
+      @simplified_acs = katello_alternate_content_sources(:simplified_alternate_content_source)
       ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
-      ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @file_acs.id, smart_proxy_id: @primary.id)
     end
 
     def teardown
-      @yum_acs.smart_proxies.each do |proxy|
+      @yum_acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
         ForemanTasks.sync_task(
-            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, @yum_acs, proxy)
+            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
       end
 
-      @file_acs.smart_proxies.each do |proxy|
+      @file_acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
         ForemanTasks.sync_task(
-            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, @file_acs, proxy)
+            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
+      end
+
+      @simplified_acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
+        ForemanTasks.sync_task(
+            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
       end
     end
 
     def test_yum_refresh
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@yum_acs.name)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, @yum_acs, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, @yum_acs, @primary)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
     end
 
-    def test_file_create
+    def test_yum_refresh_simplified
+      ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@simplified_acs.name)
+      repo = katello_repositories(:fedora_17_x86_64_duplicate)
+      repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @simplified_acs.id, smart_proxy_id: @primary.id, repository_id: repo.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
+    end
+
+    def test_file_refresh_simplified
+      ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@simplified_acs.name)
+      repo = katello_repositories(:pulp3_file_1)
+      @simplified_acs.update(content_type: 'file')
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @simplified_acs.id, smart_proxy_id: @primary.id, repository_id: repo.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
+    end
+
+    def test_file_refresh
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@file_acs.name)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, @file_acs, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, @file_acs, @primary)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @file_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
     end
   end
 end

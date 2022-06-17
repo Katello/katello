@@ -10,30 +10,29 @@ module ::Actions::Pulp3
       @file_acs = katello_alternate_content_sources(:file_alternate_content_source)
       @yum_acs.save!
       @file_acs.save!
-      ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
-      ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @file_acs.id, smart_proxy_id: @primary.id)
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:test_remote_name).returns('test-remote')
     end
 
     def teardown
-      @yum_acs.smart_proxies.each do |proxy|
+      @yum_acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
         ForemanTasks.sync_task(
-            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, @yum_acs, proxy)
+            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
       end
       @yum_acs.reload
 
-      @file_acs.smart_proxies.each do |proxy|
+      @file_acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
         ForemanTasks.sync_task(
-            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, @file_acs, proxy)
+            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
       end
       @file_acs.reload
     end
 
     def test_yum_update
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@yum_acs.name)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, @yum_acs, @primary)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
       @yum_acs.update(base_url: 'https://yum.theforeman.org', subpaths: ['a_new_path/'])
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Update, @yum_acs, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Update, smart_proxy_acs)
 
       pulp_acs = @yum_acs.backend_service(@primary).read
       pulp_remote = @yum_acs.backend_service(@primary).get_remote
@@ -43,9 +42,10 @@ module ::Actions::Pulp3
 
     def test_file_update
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@file_acs.name)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, @file_acs, @primary)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @file_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
       @file_acs.update(base_url: 'https://fixtures.pulpproject.org/', subpaths: ['file/', 'file-many/'])
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Update, @file_acs, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Update, smart_proxy_acs)
 
       pulp_acs = @file_acs.backend_service(@primary).read
       pulp_remote = @file_acs.backend_service(@primary).get_remote
@@ -55,9 +55,10 @@ module ::Actions::Pulp3
 
     def test_file_update_no_subpaths
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@file_acs.name)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, @file_acs, @primary)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @file_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
       @file_acs.update(base_url: 'https://fixtures.pulpproject.org/file/')
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Update, @file_acs, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Update, smart_proxy_acs)
 
       pulp_acs = @file_acs.backend_service(@primary).read
       pulp_remote = @file_acs.backend_service(@primary).get_remote

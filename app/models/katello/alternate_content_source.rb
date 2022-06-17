@@ -35,7 +35,7 @@ module Katello
       allow_blank: false,
       message: ->(_, _) { _("is not a valid type. Must be one of the following: %s") % ACS_TYPES.join(',') }
     }
-    validates :content_type, if: :custom?, inclusion: {
+    validates :content_type, inclusion: {
       in: ->(_) { RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES },
       allow_blank: false,
       message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % (RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES).join(',') }
@@ -50,7 +50,10 @@ module Katello
     scoped_search on: :content_type, complete_value: true
     scoped_search on: :alternate_content_source_type, complete_value: true
     scoped_search on: :upstream_username, complete_value: true
-    scoped_search on: :smart_proxy_id, relation: :smart_proxy_alternate_content_sources, validator: ScopedSearch::Validators::INTEGER, only_explicit: true
+    scoped_search on: :id, relation: :smart_proxies, rename: :smart_proxy_id, validator: ScopedSearch::Validators::INTEGER, only_explicit: true
+    scoped_search on: :name, relation: :smart_proxies, rename: :smart_proxy_name, complete_value: true
+    scoped_search on: :id, relation: :products, rename: :product_id, validator: ScopedSearch::Validators::INTEGER, only_explicit: true
+    scoped_search on: :name, relation: :products, rename: :product_name, complete_value: true
 
     def backend_service(smart_proxy, repository = nil)
       @service ||= ::Katello::Pulp3::AlternateContentSource.new(self, smart_proxy, repository)

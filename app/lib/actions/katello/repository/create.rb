@@ -2,6 +2,7 @@ module Actions
   module Katello
     module Repository
       class Create < Actions::EntryAction
+        # rubocop:disable Metrics/MethodLength
         def plan(repository, args = {})
           clone = args[:clone] || false
           force_repo_create = args[:force_repo_create] || false
