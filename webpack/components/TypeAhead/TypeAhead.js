@@ -39,6 +39,15 @@ const TypeAhead = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [debouncedValue],
   );
+  // eslint-disable-next-line arrow-body-style
+  useEffect(() => {
+    return function cleanupClearSearch() {
+      dispatch({
+        type: 'SET_CLEAR_SEARCH',
+        payload: {},
+      });
+    };
+  }, [dispatch]);
 
   const clearSearch = () => {
     setInputValue('');
