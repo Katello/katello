@@ -115,7 +115,7 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
     })
     .state('activation-key.copy', {
         url: '/copy',
-        permission: 'create_activation_key',
+        permission: 'create_activation_keys',
         controller: 'ActivationKeyCopyController',
         templateUrl: 'activation-keys/details/views/activation-key-copy.html',
         ncyBreadcrumb: {
