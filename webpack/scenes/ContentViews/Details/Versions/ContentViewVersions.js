@@ -207,6 +207,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       }}
       ouiaId="content-view-versions-table"
       variant={TableVariant.compact}
+      resetFilters={null}
       autocompleteEndpoint={`/content_view_versions/auto_complete_search?content_view_id=${cvId}`}
       fetchItems={useCallback((params) => {
         selectionSet.clear();

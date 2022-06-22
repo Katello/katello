@@ -224,12 +224,19 @@ const CVErrataIDFilterContent = ({
     return getCVFilterErrata(cvId, filterId, apiParams, statusSelected);
   }, [cvId, filterId, statusSelected, selectedTypes, dateType, apiStartDate, apiEndDate]);
 
-  const resetFilters = () => {
+  const resetFiltersOnClick = () => {
     setValidStartDate('');
     setValidEndDate('');
     setSelectedTypes(ERRATA_TYPES);
     setDateType('issued');
     setStatusSelected(ALL_STATUSES);
+  };
+
+  const resetFilters = () => {
+    setSelectedTypes(ERRATA_TYPES);
+    setStatusSelected(ALL_STATUSES);
+    setStartDate('');
+    setEndDate('');
   };
 
   const resetFiltersDisabled =
@@ -264,6 +271,7 @@ const CVErrataIDFilterContent = ({
               status,
               activeFilters,
               defaultFilters,
+              resetFilters,
             }}
             ouiaId="content-view-errata-by-id-filter-table"
             actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
@@ -429,7 +437,7 @@ const CVErrataIDFilterContent = ({
                     </ChipGroup>
                   </FlexItem>
                   <FlexItem>
-                    <Button ouiaId="errata-reset-filters-button" isDisabled={resetFiltersDisabled} variant="link" onClick={resetFilters} isInline>
+                    <Button ouiaId="errata-reset-filters-button" isDisabled={resetFiltersDisabled} variant="link" onClick={resetFiltersOnClick} isInline>
                       {__('Reset filters')}
                     </Button>
                   </FlexItem>

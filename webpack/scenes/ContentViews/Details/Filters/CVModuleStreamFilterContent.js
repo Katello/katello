@@ -75,6 +75,8 @@ const CVModuleStreamFilterContent = ({
   ];
   const selectedAdded = allAddedNotAdded[selectedIndex];
 
+  const resetFilters = () => setSelectedIndex(0);
+
   const fetchItems = useCallback((params) => {
     const adjustedParams = { ...params };
     switch (selectedIndex) {
@@ -215,6 +217,7 @@ const CVModuleStreamFilterContent = ({
               updateSearchQuery,
               error,
               status,
+              resetFilters,
             }}
             ouiaId="content-view-module-stream-filter-table"
             additionalListeners={[selectedIndex]}

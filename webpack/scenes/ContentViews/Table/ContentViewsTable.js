@@ -62,7 +62,6 @@ const ContentViewTable = () => {
   });
 
   const openForm = () => setIsModalOpen(true);
-
   const openPublishModal = (cvInfo) => {
     setActionableCvDetails(cvInfo);
     setIsPublishModalOpen(true);
@@ -156,6 +155,7 @@ const ContentViewTable = () => {
       bookmarkController="katello_content_views"
       variant={TableVariant.compact}
       status={status}
+      resetFilters={null}
       autocompleteEndpoint="/content_views/auto_complete_search"
       actionButtons={
         <>

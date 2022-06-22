@@ -91,7 +91,10 @@ const ContentViewRepositories = ({ cvId, details }) => {
   const [repoTypes, setRepoTypes] = useState({});
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
   const { repository_ids: repositoryIds = [] } = details;
-
+  const resetFilters = () => {
+    setTypeSelected(allRepositories);
+    setStatusSelected(ALL_STATUSES);
+  };
   const {
     isSelected,
     selectOne,
@@ -243,6 +246,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
         defaultFilters,
         selectedCount,
         selectNone,
+        resetFilters,
       }}
       ouiaId="content-view-repositories-table"
       {...selectAll}

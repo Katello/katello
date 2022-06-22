@@ -69,6 +69,7 @@ const CVPackageGroupFilterContent = ({
     ADDED,
     NOT_ADDED,
   ];
+
   const selectedAdded = allAddedNotAdded[selectedIndex];
 
   const fetchItems = useCallback((params) => {
@@ -187,7 +188,7 @@ const CVPackageGroupFilterContent = ({
   const emptyContentBody = __("Add to this filter using the 'Add filter rule' button.");
   const emptySearchTitle = __('No matching filter rules found.');
   const emptySearchBody = __('Try changing your search settings.');
-
+  const resetFilters = () => setSelectedIndex(0);
 
   return (
     <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
@@ -205,6 +206,7 @@ const CVPackageGroupFilterContent = ({
               updateSearchQuery,
               error,
               status,
+              resetFilters,
             }}
             ouiaId="content-view-package-group-filter-table"
             additionalListeners={[selectedIndex]}

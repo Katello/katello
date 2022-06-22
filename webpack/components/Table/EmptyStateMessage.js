@@ -130,6 +130,7 @@ EmptyStateMessage.propTypes = {
   customIcon: PropTypes.elementType,
   happy: PropTypes.bool,
   searchIsActive: PropTypes.bool,
+  resetFilters: PropTypes.oneOfType([PropTypes.func, null]).isRequired,
 };
 
 EmptyStateMessage.defaultProps = {
