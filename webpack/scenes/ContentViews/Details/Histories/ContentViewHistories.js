@@ -83,7 +83,6 @@ const ContentViewHistories = ({ cvId }) => {
       }}
       ouiaId="content-view-history-table"
       variant={TableVariant.compact}
-      resetFilters={null}
       autocompleteEndpoint={`/content_views/${cvId}/history/auto_complete_search`}
       fetchItems={useCallback(params => getContentViewHistories(cvId, params), [cvId])}
     >

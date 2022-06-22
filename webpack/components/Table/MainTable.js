@@ -45,6 +45,8 @@ const MainTable = ({
     updateSearchQuery,
     filtersAreActive,
     requestKey,
+    defaultFilters,
+    activeFilters,
   };
   // Can we display the error message?
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);

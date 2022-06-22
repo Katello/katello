@@ -130,7 +130,23 @@ EmptyStateMessage.propTypes = {
   customIcon: PropTypes.elementType,
   happy: PropTypes.bool,
   searchIsActive: PropTypes.bool,
-  resetFilters: PropTypes.oneOfType([PropTypes.func, null]).isRequired,
+  activeFilters: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ])),
+  defaultFilters: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ])),
+  // eslint-disable-next-line react/require-default-props
+  resetFilters: (props, propName) => {
+    if (props.defaultFilters?.length || props.activeFilters?.length) {
+      if (typeof props[propName] !== 'function') {
+        return new Error(`A ${propName} function is required when using activeFilters or defaultFilters`);
+      }
+    }
+    return null;
+  },
 };
 
 EmptyStateMessage.defaultProps = {
@@ -141,6 +157,8 @@ EmptyStateMessage.defaultProps = {
   customIcon: undefined,
   happy: false,
   searchIsActive: false,
+  activeFilters: [],
+  defaultFilters: [],
 };
 
 export default EmptyStateMessage;

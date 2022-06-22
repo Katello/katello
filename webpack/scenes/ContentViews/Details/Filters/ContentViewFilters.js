@@ -126,7 +126,6 @@ const ContentViewFilters = ({ cvId, details }) => {
         status,
       }}
       ouiaId="content-view-filters-table"
-      resetFilters={null}
       actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
       onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
       cells={columnHeaders}

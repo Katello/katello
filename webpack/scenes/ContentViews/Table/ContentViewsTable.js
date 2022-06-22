@@ -155,7 +155,6 @@ const ContentViewTable = () => {
       bookmarkController="katello_content_views"
       variant={TableVariant.compact}
       status={status}
-      resetFilters={null}
       autocompleteEndpoint="/content_views/auto_complete_search"
       actionButtons={
         <>

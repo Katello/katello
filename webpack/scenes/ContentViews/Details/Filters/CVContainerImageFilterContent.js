@@ -137,7 +137,6 @@ const CVContainerImageFilterContent = ({
             variant={TableVariant.compact}
             autocompleteEndpoint={`/content_view_filters/${filterId}/rules/auto_complete_search`}
             fetchItems={useCallback(params => getCVFilterRules(filterId, params), [filterId])}
-            resetFilters={null}
             actionButtons={hasPermission(permissions, 'edit_content_views') &&
               <>
                 <Split hasGutter>
