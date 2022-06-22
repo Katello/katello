@@ -15,6 +15,14 @@ module Katello
       render json: { simple_content_access_eligible: eligible }
     end
 
+    api :GET, "/organizations/:organization_id/simple_content_access/status",
+      N_("Check if the specified organization has Simple Content Access enabled")
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
+    def status
+      status = @organization.simple_content_access?
+      render json: { simple_content_access: status }
+    end
+
     api :PUT, "/organizations/:organization_id/simple_content_access/enable",
       N_("Enable simple content access for a manifest")
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
