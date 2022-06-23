@@ -85,7 +85,7 @@ const SystemPurposeCard = ({ hostDetails }) => {
               </DescriptionListDescription>
               <DescriptionListTerm>{__('Release version')}</DescriptionListTerm>
               <DescriptionListDescription>{releaseVersion}</DescriptionListDescription>
-              {purposeAddons?.length && (
+              {!!purposeAddons?.length && (
                 <>
                   <DescriptionListTerm>{__('Add-ons')}</DescriptionListTerm>
                   <DescriptionListDescription>
