@@ -224,19 +224,12 @@ const CVErrataIDFilterContent = ({
     return getCVFilterErrata(cvId, filterId, apiParams, statusSelected);
   }, [cvId, filterId, statusSelected, selectedTypes, dateType, apiStartDate, apiEndDate]);
 
-  const resetFiltersOnClick = () => {
+  const resetFilters = () => {
     setValidStartDate('');
     setValidEndDate('');
     setSelectedTypes(ERRATA_TYPES);
     setDateType('issued');
     setStatusSelected(ALL_STATUSES);
-  };
-
-  const resetFilters = () => {
-    setSelectedTypes(ERRATA_TYPES);
-    setStatusSelected(ALL_STATUSES);
-    setStartDate('');
-    setEndDate('');
   };
 
   const resetFiltersDisabled =
@@ -437,7 +430,7 @@ const CVErrataIDFilterContent = ({
                     </ChipGroup>
                   </FlexItem>
                   <FlexItem>
-                    <Button ouiaId="errata-reset-filters-button" isDisabled={resetFiltersDisabled} variant="link" onClick={resetFiltersOnClick} isInline>
+                    <Button ouiaId="errata-reset-filters-button" isDisabled={resetFiltersDisabled} variant="link" onClick={resetFilters} isInline>
                       {__('Reset filters')}
                     </Button>
                   </FlexItem>
