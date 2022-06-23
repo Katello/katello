@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Badge,
@@ -21,15 +21,26 @@ import {
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
-import PencilEditButton from '../../../EditableTextInput/PencilEditButton';
+import PencilEditButton from '../../../../EditableTextInput/PencilEditButton';
 import './SystemPurposeCard.scss';
+import SystemPurposeEditModal from './SystemPurposeEditModal';
 
 const SystemPurposeCard = ({ hostDetails }) => {
-  const showEditButton = true;
+  const showEditButton = true; // TODO: take permissions into account
   const subscriptionFacetAttributes = hostDetails?.subscription_facet_attributes;
   const {
     purposeRole, purposeUsage, purposeAddons, releaseVersion, serviceLevel,
   } = propsToCamelCase(subscriptionFacetAttributes ?? {});
+  const sysPurposeProps = {
+    purposeRole,
+    purposeUsage,
+    purposeAddons,
+    releaseVersion,
+    serviceLevel,
+  };
+
+  const [editing, setEditing] = useState(false);
+
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
       <Card isHoverable ouiaId="system-purpose-card">
@@ -61,45 +72,53 @@ const SystemPurposeCard = ({ hostDetails }) => {
             </FlexItem>
             {showEditButton && (
               <FlexItem>
-                <PencilEditButton attribute="system_purpose" onEditClick={() => {}} />
+                <PencilEditButton attribute="system_purpose" onEditClick={() => setEditing(val => !val)} />
               </FlexItem>)
             }
           </Flex>
         </CardHeader>
         <CardBody className="system-purpose-card-body">
-          <DescriptionList isHorizontal>
-            <DescriptionListGroup>
-              <DescriptionListTerm>{__('Role')}</DescriptionListTerm>
-              <DescriptionListDescription>{purposeRole}</DescriptionListDescription>
-              <DescriptionListTerm>{__('SLA')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                {serviceLevel && (
-                  <Label color="blue">{serviceLevel}</Label>
-                )}
-              </DescriptionListDescription>
-              <DescriptionListTerm>{__('Usage type')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                {purposeUsage && (
-                  <Label color="blue">{purposeUsage}</Label>
-                )}
-              </DescriptionListDescription>
-              <DescriptionListTerm>{__('Release version')}</DescriptionListTerm>
-              <DescriptionListDescription>{releaseVersion}</DescriptionListDescription>
-              {!!purposeAddons?.length && (
-                <>
-                  <DescriptionListTerm>{__('Add-ons')}</DescriptionListTerm>
-                  <DescriptionListDescription>
-                    <List isPlain>
-                      {purposeAddons.map(addon => (
-                        <ListItem key={addon}>{addon}</ListItem>
-                      ))}
-                    </List>
-                  </DescriptionListDescription>
-                </>
-              )
-              }
-            </DescriptionListGroup>
-          </DescriptionList>
+          {editing ? (
+            <SystemPurposeEditModal
+              closeModal={() => setEditing(false)}
+              hostName={hostDetails.name}
+              {...sysPurposeProps}
+            />
+          ) : (
+            <DescriptionList isHorizontal>
+              <DescriptionListGroup>
+                <DescriptionListTerm>{__('Role')}</DescriptionListTerm>
+                <DescriptionListDescription>{purposeRole}</DescriptionListDescription>
+                <DescriptionListTerm>{__('SLA')}</DescriptionListTerm>
+                <DescriptionListDescription>
+                  {serviceLevel && (
+                    <Label color="blue">{serviceLevel}</Label>
+                  )}
+                </DescriptionListDescription>
+                <DescriptionListTerm>{__('Usage type')}</DescriptionListTerm>
+                <DescriptionListDescription>
+                  {purposeUsage && (
+                    <Label color="blue">{purposeUsage}</Label>
+                  )}
+                </DescriptionListDescription>
+                <DescriptionListTerm>{__('Release version')}</DescriptionListTerm>
+                <DescriptionListDescription>{releaseVersion}</DescriptionListDescription>
+                {!!purposeAddons?.length && (
+                  <>
+                    <DescriptionListTerm>{__('Add-ons')}</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      <List isPlain>
+                        {purposeAddons.map(addon => (
+                          <ListItem key={addon}>{addon}</ListItem>
+                        ))}
+                      </List>
+                    </DescriptionListDescription>
+                  </>
+                )
+                }
+              </DescriptionListGroup>
+            </DescriptionList>
+          )}
         </CardBody>
       </Card>
     </GridItem>

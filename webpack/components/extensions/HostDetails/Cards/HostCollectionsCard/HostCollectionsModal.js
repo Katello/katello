@@ -124,7 +124,7 @@ export const HostCollectionsModal = ({
       {adding ? __('Add') : __('Remove')}
     </Button>,
     <Button key="cancel" variant="link" onClick={handleModalCancel}>
-      Cancel
+      {__('Cancel')}
     </Button>,
   ]);
   return (

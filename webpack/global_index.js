@@ -23,7 +23,7 @@ import {
 } from './components/extensions/HostDetails/DetailsTabCards/SystemPropertiesCardExtensions';
 import HostActionsBar from './components/extensions/HostDetails/ActionsBar';
 import RecentCommunicationCardExtensions from './components/extensions/HostDetails/DetailsTabCards/RecentCommunicationCardExtensions';
-import SystemPurposeCard from './components/extensions/HostDetails/Cards/SystemPurposeCard';
+import SystemPurposeCard from './components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeCard';
 
 registerReducer('katelloExtends', extendReducer);
 registerReducer('katello', rootReducer);
