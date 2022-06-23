@@ -12,9 +12,6 @@ module Actions
           end
 
           def finalize
-            #acs_id = input[:acs_id]
-            #smart_proxy_id = input[:smart_proxy_id]
-            #::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs_id, smart_proxy_id: smart_proxy_id).destroy
             smart_proxy_acs_id = input[:smart_proxy_acs_id]
             ::Katello::SmartProxyAlternateContentSource.find_by(id: smart_proxy_acs_id).destroy
           end

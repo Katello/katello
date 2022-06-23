@@ -6,7 +6,7 @@ module Actions
           acs.save!
           action_subject(acs)
           acs.products << products if products.present?
-          smart_proxies = smart_proxies.uniq
+          smart_proxies = smart_proxies.present? ? smart_proxies.uniq : []
           concurrence do
             smart_proxies.each do |smart_proxy|
               if acs.custom?

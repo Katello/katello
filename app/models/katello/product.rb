@@ -28,8 +28,8 @@ module Katello
     has_many :pools, :through => :pool_products
     has_many :subscriptions, :through => :pools, :dependent => :destroy
 
-    has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :product
-    has_many :alternate_content_sources, through: :alternate_content_source_products, inverse_of: :products
+    has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :product, :class_name => "Katello::AlternateContentSourceProduct"
+    has_many :alternate_content_sources, :through => :alternate_content_source_products, :inverse_of => :products, :class_name => "Katello::AlternateContentSource"
 
     validates_lengths_from_database :except => [:label]
     validates :provider_id, :presence => true

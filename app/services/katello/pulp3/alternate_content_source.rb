@@ -33,6 +33,9 @@ module Katello
         if repository.present?
           options = repository.backend_service(smart_proxy).remote_options
           options[:policy] = 'on_demand'
+          options[:proxy_url] = acs.http_proxy&.url
+          options[:proxy_username] = acs.http_proxy&.username
+          options[:proxy_password] = acs.http_proxy&.password
           return options
         end
 

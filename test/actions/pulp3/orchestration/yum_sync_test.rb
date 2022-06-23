@@ -130,11 +130,11 @@ module ::Actions::Pulp3
       yum_acs.upstream_password = nil
       yum_acs.save!
 
-      ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: yum_acs.id, smart_proxy_id: @primary.id)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: yum_acs.id, smart_proxy_id: @primary.id)
 
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(yum_acs.name)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, yum_acs, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, yum_acs, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
 
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
@@ -147,9 +147,8 @@ module ::Actions::Pulp3
       refute_nil @repo.version_href
       refute_nil @repo.publication_href
 
-      yum_acs.smart_proxies.each do |proxy|
-        ForemanTasks.sync_task(
-            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, yum_acs, proxy)
+      yum_acs.smart_proxy_alternate_content_sources.each do |sma|
+        ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, sma)
       end
     end
   end

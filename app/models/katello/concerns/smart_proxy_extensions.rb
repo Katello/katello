@@ -57,7 +57,7 @@ module Katello
         has_many :hostgroup_content_facets, :class_name => "::Katello::Hostgroup::ContentFacet", :foreign_key => :content_source_id,
                               :inverse_of => :content_source, :dependent => :nullify
         has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets
-        has_many :smart_proxy_alternate_content_sources, :inverse_of => :smart_proxy, :dependent => :delete_all
+        has_many :smart_proxy_alternate_content_sources, :class_name => "::Katello::SmartProxyAlternateContentSource", :inverse_of => :smart_proxy, :dependent => :delete_all
 
         validates :download_policy, inclusion: {
           :in => DOWNLOAD_POLICIES,

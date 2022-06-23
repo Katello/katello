@@ -15,6 +15,7 @@ if @resource.respond_to?(:alternate_content_source_type)
 
     child :ssl_client_key => :ssl_client_key do |_object|
       attributes :id, :name
+    end
   elsif @resource.simplified?
     attributes :name, :alternate_content_source_type, :content_type, :products, :smart_proxies
   end

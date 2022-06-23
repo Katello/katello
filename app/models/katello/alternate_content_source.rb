@@ -1,6 +1,7 @@
 module Katello
   class AlternateContentSource < Katello::Model
     audited
+
     include Ext::LabelFromName
     include Encryptable
     include ::ScopedSearchExtensions
@@ -21,14 +22,19 @@ module Katello
     belongs_to :ssl_client_key, inverse_of: :ssl_key_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :http_proxy, inverse_of: :alternate_content_sources
 
-    has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :alternate_content_source
-    has_many :products, through: :alternate_content_source_products, inverse_of: :alternate_content_sources
+    has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :alternate_content_source,
+             class_name: "Katello::AlternateContentSourceProduct"
+    has_many :products, through: :alternate_content_source_products, inverse_of: :alternate_content_sources,
+             class_name: "Katello::Product"
 
-    has_many :smart_proxy_alternate_content_sources, dependent: :destroy,
+    has_many :smart_proxy_alternate_content_sources, dependent: :delete_all,
              inverse_of: :alternate_content_source
     has_many :smart_proxies, -> { distinct }, through: :smart_proxy_alternate_content_sources
 
+    validates :base_url, :subpaths, :verify_ssl, :upstream_username,
+              :upstream_password, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key, if: :simplified?, absence: true
     validates :base_url, if: :custom?, presence: true
+    validates :products, if: :custom?, absence: true
     validates :verify_ssl, if: :custom?, exclusion: [nil]
     validates :alternate_content_source_type, inclusion: {
       in: ->(_) { ACS_TYPES },
@@ -83,6 +89,10 @@ module Katello
 
     def audit_refresh
       write_audit(action: AUDIT_REFRESH_ACTION, comment: _('Successfully refreshed.'), audited_changes: {})
+    end
+
+    def audit_updated_products(old_product_ids)
+      write_audit(action: 'update', comment: _('Products updated.'), audited_changes: { 'product_ids' => [old_product_ids, product_ids] })
     end
   end
 end

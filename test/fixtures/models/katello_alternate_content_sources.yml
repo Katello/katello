@@ -24,8 +24,14 @@ file_alternate_content_source:
   upstream_username:              admin
   upstream_password:              changeme
 
-simplified_alternate_content_source:
-  name:                           Simplified ACS
-  label:                          simplified_acs_fixture
+yum_simplified_alternate_content_source:
+  name:                           Yum Simplified ACS
+  label:                          yum_simplified_acs_fixture
   content_type:                   yum
+  alternate_content_source_type:  simplified
+
+file_simplified_alternate_content_source:
+  name:                           File Simplified ACS
+  label:                          file_simplified_acs_fixture
+  content_type:                   file
   alternate_content_source_type:  simplified

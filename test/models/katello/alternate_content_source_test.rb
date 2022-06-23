@@ -6,7 +6,7 @@ module Katello
     def setup
       @yum_acs = katello_alternate_content_sources(:yum_alternate_content_source)
       @file_acs = katello_alternate_content_sources(:file_alternate_content_source)
-      @simplified_acs = katello_alternate_content_sources(:simplified_alternate_content_source)
+      @simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
       Setting['content_default_http_proxy'] = proxy.name
     end
 
@@ -95,7 +95,7 @@ module Katello
       @file_acs.save
       @file_acs.reload
 
-      @simplified_acs = katello_alternate_content_sources(:simplified_alternate_content_source)
+      @simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
       @repo1 = ::Katello::Repository.find_by(relative_path: 'ACME_Corporation/library/fedora_17_label_no_arch')
       @repo2 = ::Katello::Repository.find_by(relative_path: 'ACME_Corporation/library/fedora_17_label')
       @simplified_acs.products << @repo1.product
@@ -143,6 +143,9 @@ module Katello
     end
 
     def test_search_smart_proxy_id
+      # For some reason, searching by smart_proxy_id first causes a Postgres error only in the tests.
+      # Searching by smart_proxy_name right before fixes the issue. It may have to do with caching.
+      AlternateContentSource.search_for("smart_proxy_name = \"#{@yum_acs.smart_proxy_names.first}\"")
       acss = AlternateContentSource.search_for("smart_proxy_id = \"#{@yum_acs.smart_proxy_ids.first}\"")
       assert_equal acss.sort, [@file_acs, @yum_acs, @simplified_acs].sort
     end
