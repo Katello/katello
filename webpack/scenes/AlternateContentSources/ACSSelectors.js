@@ -4,7 +4,7 @@ import {
   selectAPIResponse,
 } from 'foremanReact/redux/API/APISelectors';
 import { STATUS } from 'foremanReact/constants';
-import ACS_KEY, { CREATE_ACS_KEY } from './ACSConstants';
+import ACS_KEY, { acsDetailsKey, CREATE_ACS_KEY } from './ACSConstants';
 
 export const selectAlternateContentSources = (state, index = '') => selectAPIResponse(state, ACS_KEY + index) || {};
 
@@ -22,3 +22,12 @@ export const selectCreateACSStatus = state =>
 
 export const selectCreateACSError = state =>
   selectAPIError(state, CREATE_ACS_KEY);
+
+export const selectACSDetails = (state, acsId) =>
+  selectAPIResponse(state, acsDetailsKey(acsId)) || {};
+
+export const selectACSDetailsStatus =
+  (state, acsId) => selectAPIStatus(state, acsDetailsKey(acsId)) || STATUS.PENDING;
+
+export const selectACSDetailsError =
+  (state, acsId) => selectAPIError(state, acsDetailsKey(acsId));

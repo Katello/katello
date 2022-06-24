@@ -1,0 +1,49 @@
+{
+  "name": "test_acs",
+  "base_url": "https://fedorapeople.org/groups/katello/fakerepos/",
+  "subpaths": [
+    "zoo/",
+    " zoo2/",
+    " zoo3/",
+    " zoo4/",
+    " zoo5/"
+  ],
+  "content_type": "yum",
+  "alternate_content_source_type": "custom",
+  "smart_proxies": [
+    {
+      "id": 1,
+      "name": "centos7-katello-devel-stable.example.com",
+      "url": "https://centos7-katello-devel-stable.example.com:9090",
+      "created_at": "2022-05-25T12:31:24.683-04:00",
+      "updated_at": "2022-05-31T11:11:38.503-04:00",
+      "pubkey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3bzUlVINCZqDFEcBmWI3d3rytod1XtlGNrTp4JXeLVmT74/gbpeUkM221RZxfNDrU6BPHxwbuzeAF3/DU4nT6w9WkRSemeNxzLSZPqNiJuqjDwIkI2KTmTkyOF+jYObC+0ir7pCD7IdCVdf2RxJIJjPB8GnLYAzBjPRwtUFuDZfzpBGf4iTlmMd8oSfSnUOSrdI30ag2DkvoqGII+z+QVIGRj/bKL55DW4C/5ykH5B7kpZSFfRcmYzA6f1bNHuWuOkopkT3CcpotEb7kx3qeh16skJsgPABYBTm41klUPIFJS609dF8jJwbF+ZhNkIv96OYT/7nZR+Kcf/S2qBbXP foreman-proxy@centos7-katello-devel-stable.example.com",
+      "expired_logs": "0",
+      "puppet_path": null,
+      "download_policy": "on_demand"
+    }
+  ],
+  "upstream_username": null,
+  "verify_ssl": false,
+  "id": 2,
+  "label": "test_acs",
+  "description": null,
+  "ssl_ca_cert": null,
+  "ssl_client_cert": null,
+  "ssl_client_key": null,
+  "last_refresh": {
+    "id": "52aa69f8-124c-4ae9-80f3-1e4a0e248dad",
+    "username": "admin",
+    "started_at": "2022-06-09 10:10:38 -0400",
+    "ended_at": "2022-06-09 10:10:42 -0400",
+    "state": "stopped",
+    "result": "success",
+    "progress": 1,
+    "last_refresh_words": "8 days"
+  },
+  "permissions": {
+    "view_alternate_content_sources": true,
+    "edit_alternate_content_sources": true,
+    "destroy_alternate_content_sources": true
+  }
+}

@@ -85,4 +85,9 @@ export const links = [
     path: 'labs/alternate_content_sources',
     component: WithOrganization(withHeader(AlternateContentSource, { title: __('Alternate Content Sources') })),
   },
+  {
+    path: 'labs/alternate_content_sources/:id([0-9]+)',
+    component: WithOrganization(withHeader(AlternateContentSource, { title: __('Alternate Content Sources') })),
+    exact: false,
+  },
 ];
