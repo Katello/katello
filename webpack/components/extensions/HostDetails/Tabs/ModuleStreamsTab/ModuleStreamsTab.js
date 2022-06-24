@@ -35,7 +35,7 @@ import SortableColumnHeaders from '../../../../Table/components/SortableColumnHe
 import SelectableDropdown from '../../../../SelectableDropdown/SelectableDropdown';
 import {
   HOST_MODULE_STREAM_STATUSES, INSTALL_STATUS_PARAM_TO_FRIENDLY_NAME, INSTALLED_STATE,
-  STATUS_PARAM_TO_FRIENDLY_NAME,
+  STATUS_PARAM_TO_FRIENDLY_NAME, MODULE_STREAMS_KEY,
 } from './ModuleStreamsConstants';
 import { moduleStreamAction } from '../RemoteExecutionActions';
 import { katelloModuleStreamActionUrl } from '../customizedRexUrlHelpers';
@@ -329,6 +329,12 @@ export const ModuleStreamsTab = () => {
 
   const activeFilters = [statusSelected, installStatusSelected];
   const defaultFilters = [MODULE_STREAM_STATUS, MODULE_STREAM_INSTALLATION_STATUS];
+
+  const resetFilters = () => {
+    setStatusSelected(MODULE_STREAM_STATUS);
+    setInstallStatusSelected(MODULE_STREAM_INSTALLATION_STATUS);
+  };
+
   return (
     <div>
       <div id="modulestreams-tab">
@@ -353,6 +359,7 @@ export const ModuleStreamsTab = () => {
             secondaryActionTitle,
             primaryActionLink,
             secondaryActionLink,
+            resetFilters,
           }}
           ouiaId="host-module-stream-table"
           additionalListeners={[hostId, activeSortColumn, activeSortDirection,
@@ -365,6 +372,7 @@ export const ModuleStreamsTab = () => {
           foremanApiAutoComplete
           rowsCount={results?.length}
           variant={TableVariant.compact}
+          requestKey={MODULE_STREAMS_KEY}
           actionButtons={
             <Split hasGutter>
               <SplitItem>

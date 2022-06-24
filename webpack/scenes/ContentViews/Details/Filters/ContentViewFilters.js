@@ -47,7 +47,6 @@ const ContentViewFilters = ({ cvId, details }) => {
     __('Content type'),
     __('Inclusion type'),
   ];
-
   const buildRows = useCallback(() => {
     const newRows = [];
     results.forEach((filter) => {

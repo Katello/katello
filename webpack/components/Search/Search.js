@@ -30,7 +30,6 @@ const Search = ({
   const [items, setItems] = useState([]);
   const dispatch = useDispatch();
   const mountedRef = useRef(true);
-
   const onInputUpdate = async (searchTerm = '') => {
     const newItems = items.filter(({ text }) => stringIncludes(text, searchTerm));
 

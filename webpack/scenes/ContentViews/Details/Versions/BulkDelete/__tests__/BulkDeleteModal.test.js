@@ -41,6 +41,9 @@ const renderOptions = {
         response: contentViewData, status: STATUS.RESOLVED,
       },
     },
+    katello: {
+      hostDetails: {},
+    },
   },
 };
 

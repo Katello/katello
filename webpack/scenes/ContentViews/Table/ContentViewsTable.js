@@ -62,7 +62,6 @@ const ContentViewTable = () => {
   });
 
   const openForm = () => setIsModalOpen(true);
-
   const openPublishModal = (cvInfo) => {
     setActionableCvDetails(cvInfo);
     setIsPublishModalOpen(true);

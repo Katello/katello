@@ -384,6 +384,8 @@ export const PackagesTab = () => {
     </Split>
   );
 
+  const resetFilters = () => setPackageStatusSelected(PACKAGE_STATUS);
+
   return (
     <div>
       <div id="packages-tab">
@@ -406,6 +408,7 @@ export const PackagesTab = () => {
             selectedCount,
             selectNone,
             areAllRowsSelected,
+            resetFilters,
           }
           }
           ouiaId="host-packages-table"
@@ -422,6 +425,7 @@ export const PackagesTab = () => {
           variant={TableVariant.compact}
           {...selectAll}
           displaySelectAllCheckbox={showActions}
+          requestKey={HOST_PACKAGES_KEY}
         >
           <Thead>
             <Tr>

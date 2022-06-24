@@ -14,3 +14,9 @@ export const selectHostDetailsStatus = state =>
 
 export const selectHostDetailsError = state =>
   selectAPIError(state, HOST_DETAILS_KEY);
+
+export const selectHostDetailsState = state =>
+  state.katello.hostDetails;
+
+export const selectHostDetailsClearSearch = state =>
+  selectHostDetailsState(state).clearSearch;

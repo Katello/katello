@@ -58,6 +58,7 @@ const ContentViewComponents = ({ cvId, details }) => {
   const [bulkAdding, setBulkAdding] = useState(false);
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
   const dispatch = useDispatch();
+  const resetFilters = () => setStatusSelected(ALL_STATUSES);
 
   const columnHeaders = [
     { title: __('Type'), transforms: [fitContent] },
@@ -244,6 +245,7 @@ const ContentViewComponents = ({ cvId, details }) => {
         status,
         activeFilters,
         defaultFilters,
+        resetFilters,
       }}
       ouiaId="content-view-components-table"
       actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}

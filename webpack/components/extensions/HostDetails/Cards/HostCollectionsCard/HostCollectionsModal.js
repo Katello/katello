@@ -13,7 +13,7 @@ import { useSelectionSet } from '../../../../Table/TableHooks';
 import { selectAvailableHostCollections, selectAvailableHostCollectionsStatus, selectRemovableHostCollections, selectRemovableHostCollectionsStatus } from './HostCollectionsSelectors';
 import hostIdNotReady from '../../HostDetailsActions';
 import { alterHostCollections, getHostAvailableHostCollections, getHostRemovableHostCollections } from './HostCollectionsActions';
-import { MODAL_TYPES } from './HostCollectionsConstants';
+import { MODAL_TYPES, AVAILABLE_HOST_COLLECTIONS_KEY, REMOVABLE_HOST_COLLECTIONS_KEY } from './HostCollectionsConstants';
 import { truncate } from '../../../../../utils/helpers';
 
 export const HostCollectionsAddModal =
@@ -127,7 +127,6 @@ export const HostCollectionsModal = ({
       Cancel
     </Button>,
   ]);
-
   return (
     <Modal
       isOpen={isOpen}
@@ -173,6 +172,7 @@ export const HostCollectionsModal = ({
         variant={TableVariant.compact}
         {...selectAll}
         displaySelectAllCheckbox={results?.length > 0}
+        requestKey={adding ? AVAILABLE_HOST_COLLECTIONS_KEY : REMOVABLE_HOST_COLLECTIONS_KEY}
       >
         <Thead>
           <Tr>

@@ -264,6 +264,7 @@ const CVErrataIDFilterContent = ({
               status,
               activeFilters,
               defaultFilters,
+              resetFilters,
             }}
             ouiaId="content-view-errata-by-id-filter-table"
             actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
