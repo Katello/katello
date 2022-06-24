@@ -6,6 +6,9 @@ import {
   FormGroup,
   FormSelect,
   FormSelectOption,
+  Select,
+  SelectOption,
+  SelectVariant,
 } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -15,6 +18,23 @@ const SystemPurposeEditModal = ({
   serviceLevel, releaseVersion,
 }) => {
   const unmodified = false;
+  const [addonSelectOpen, setAddonSelectOpen] = useState(false);
+  const [selectedAddons, setSelectedAddons] = useState([]);
+
+  const toggleAddonSelect = () => setAddonSelectOpen(prev => !prev);
+
+  const onAddonSelect = (_event, selected) => {
+    const newSelectedAddons = new Set(selectedAddons);
+    if (!selected) return;
+    if (newSelectedAddons.has(selected)) {
+      newSelectedAddons.delete(selected);
+    } else {
+      newSelectedAddons.add(selected);
+    }
+    setSelectedAddons([...newSelectedAddons]);
+  };
+
+
   const modalActions = ([
     <Button key="save-syspurpose" variant="primary" onClick={closeModal} isDisabled={unmodified}>
       {__('Save')}
@@ -123,21 +143,27 @@ const SystemPurposeEditModal = ({
           </FormSelect>
         </FormGroup>
         <FormGroup label={__('Add-ons')}>
-          <FormSelect
-            id="addons"
-            name="addons"
-            value={purposeAddons}
-            onChange={() => {}}
-            multiple
+          <span id="syspurpose-addons-title" hidden>
+            Checkbox Title
+          </span>
+          <Select
+            variant={SelectVariant.checkbox}
+            aria-label="syspurpose-addons"
+            onToggle={toggleAddonSelect}
+            onSelect={onAddonSelect}
+            selections={selectedAddons}
+            isOpen={addonSelectOpen}
+            placeholderText="Select add-ons"
+            aria-labelledby="syspurpose-addons-title"
           >
             {addonsOptions.map(option => (
-              <FormSelectOption
+              <SelectOption
                 key={option.value}
                 value={option.value}
                 label={option.label}
               />
             ))}
-          </FormSelect>
+          </Select>
         </FormGroup>
         <FormGroup label={__('Release version')}>
           <FormSelect
