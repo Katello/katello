@@ -72,9 +72,7 @@ class ScenarioSupport
   end
 
   def destroy_repo_if_exists(repo)
-    if exists? { Katello.pulp_server.resources.repository.retrieve(repo.pulp_id) }
-      Katello.pulp_server.resources.repository.delete(repo.pulp_id)
-    end
+    # TODO: Implement for Pulp 3
   end
 
   def destroy_org_if_exists(org)
