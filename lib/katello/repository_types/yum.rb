@@ -1,5 +1,4 @@
 Katello::RepositoryTypeManager.register(::Katello::Repository::YUM_TYPE) do
-  service_class Katello::Pulp::Repository::Yum
   pulp3_service_class Katello::Pulp3::Repository::Yum
   pulp3_api_class Katello::Pulp3::Api::Yum
   pulp3_plugin 'rpm'
