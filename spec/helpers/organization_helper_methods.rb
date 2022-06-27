@@ -38,20 +38,5 @@ module Katello
       end
       view
     end
-
-    def create_activation_key(attrs)
-      env_id = attrs.delete(:environment_id)
-      attrs[:environment] = KTEnvironment.find(env_id) if env_id
-      if attrs[:environment] && !attrs[:environment].library? && !attrs[:content_view]
-        cv = find_or_create_content_view(attrs[:environment])
-        attrs[:content_view] = cv
-      end
-      ak = ActivationKey.create!(attrs)
-      if block_given?
-        yield ak
-        ak.save!
-      end
-      ak
-    end
   end
 end
