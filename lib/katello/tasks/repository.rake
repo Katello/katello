@@ -108,7 +108,7 @@ namespace :katello do
       return false unless backend_service&.repository_reference&.repository_href
       backend_service.api.repositories_api.read(backend_service.repository_reference.repository_href)
     else
-      Katello.pulp_server.extensions.repository.retrieve(repo.pulp_id)
+      false
     end
     true
   rescue StandardError => e
