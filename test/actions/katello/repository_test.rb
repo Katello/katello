@@ -180,7 +180,6 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(in_use_repository)
       in_use_repository.stubs(:assert_deletable).returns(true)
       in_use_repository.stubs(:destroyable?).returns(true)
-      in_use_repository.stubs(:pulp_scratchpad_checksum_type).returns(nil)
       clone = in_use_repository.build_clone(:environment => katello_environments(:dev), :content_view => katello_content_views(:library_dev_view))
       clone.save!
 
@@ -198,7 +197,6 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(in_use_repository)
       in_use_repository.stubs(:assert_deletable).returns(true)
       in_use_repository.stubs(:destroyable?).returns(true)
-      in_use_repository.stubs(:pulp_scratchpad_checksum_type).returns(nil)
       content_view = katello_content_views(:library_dev_view)
       in_use_repository.content_views << content_view
       in_use_repository.save!
@@ -222,7 +220,6 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(in_use_repository)
       in_use_repository.stubs(:assert_deletable).returns(true)
       in_use_repository.stubs(:destroyable?).returns(true)
-      in_use_repository.stubs(:pulp_scratchpad_checksum_type).returns(nil)
       repo_export_content_view = katello_content_views(:library_dev_view)
       repo_export_content_view.generated_for_repository_export!
       in_use_repository.content_views << repo_export_content_view
@@ -250,7 +247,6 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(in_use_repository)
       in_use_repository.stubs(:assert_deletable).returns(true)
       in_use_repository.stubs(:destroyable?).returns(true)
-      in_use_repository.stubs(:pulp_scratchpad_checksum_type).returns(nil)
       library_export_content_view = katello_content_views(:library_dev_view)
       library_export_content_view.generated_for_library_export!
       in_use_repository.content_views << library_export_content_view
