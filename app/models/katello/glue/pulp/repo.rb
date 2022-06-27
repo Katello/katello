@@ -62,28 +62,6 @@ module Katello
         end
       end
 
-      def pulp_counts_differ?
-        pulp_counts = pulp_repo_facts[:content_unit_counts]
-        rpms.count != pulp_counts['rpm'].to_i ||
-          srpms.count != pulp_counts['srpm'].to_i ||
-          errata.count != pulp_counts['erratum'].to_i ||
-          package_groups.count != pulp_counts['package_group'].to_i ||
-          docker_manifests.count != pulp_counts['docker_manifest'].to_i ||
-          docker_tags.count != pulp_counts['docker_tag'].to_i
-      end
-
-      def empty_in_pulp?
-        pulp_repo_facts[:content_unit_counts].values.all? { |value| value == 0 }
-      end
-
-      def generate_importer(capsule = ::SmartProxy.default_capsule!)
-        backend_service(capsule).generate_importer
-      end
-
-      def generate_distributors(capsule = ::SmartProxy.default_capsule!)
-        backend_service(capsule).generate_distributors
-      end
-
       def package_group_count
         content_unit_counts = 0
         if self.pulp_repo_facts
@@ -147,23 +125,6 @@ module Katello
         return statuses
       end
 
-      def unit_type_id
-        case content_type
-        when Repository::YUM_TYPE
-          "rpm"
-        when Repository::DOCKER_TYPE
-          "docker_manifest"
-        when Repository::OSTREE_TYPE
-          "ostree"
-        when Repository::FILE_TYPE
-          "iso"
-        when Repository::DEB_TYPE
-          "deb"
-        when Repository::ANSIBLE_COLLECTION_TYPE
-          "ansible_collection"
-        end
-      end
-
       def unit_search(options = {})
         Katello.pulp_server.extensions.repository.unit_search(self.pulp_id, options)
       end
@@ -192,30 +153,6 @@ module Katello
         self.content_type == Repository::ANSIBLE_COLLECTION_TYPE
       end
 
-      def published?
-        distributors.map { |dist| dist['last_publish'] }.compact.any?
-      end
-
-      def capsule_download_policy(capsule)
-        policy = capsule.download_policy || Setting[:default_proxy_download_policy]
-        if self.yum?
-          if policy == ::SmartProxy::DOWNLOAD_INHERIT
-            self.root.download_policy
-          else
-            policy
-          end
-        end
-      end
-
-      def distributors_match?(capsule_distributors, capsule)
-        generated_distributor_configs = self.generate_distributors(capsule)
-        generated_distributor_configs.all? do |gen_dist|
-          type = gen_dist.class.type_id
-          found_on_capsule = capsule_distributors.find { |dist| dist['distributor_type_id'] == type }
-          found_on_capsule && filtered_distribution_config_equal?(gen_dist.config, found_on_capsule['config'])
-        end
-      end
-
       def needs_metadata_publish?
         last_publish = last_publish_task.try(:[], 'finish_time')
         last_sync = last_sync_task.try(:[], 'finish_time')
@@ -241,30 +178,7 @@ module Katello
         tasks.last
       end
 
-      def filtered_distribution_config_equal?(generated_config, actual_config)
-        generated = generated_config.clone
-        actual = actual_config.clone
-        #We store 'default' checksum type as nil, but pulp will default to sha256, so if we haven't set it, ignore it
-        if generated.keys.include?('checksum_type') && generated['checksum_type'].nil?
-          generated.delete('checksum_type')
-          actual.delete('checksum_type')
-        end
-        generated.compact == actual.compact
-      end
-
-      def importer_matches?(capsule_importer, capsule)
-        generated_importer = self.generate_importer(capsule)
-        capsule_importer.try(:[], 'importer_type_id') == generated_importer.id &&
-            generated_importer.config.compact == capsule_importer['config'].compact
-      end
-
       protected
-
-      def object_to_hash(object)
-        hash = {}
-        object.instance_variables.each { |var| hash[var.to_s.delete("@")] = object.instance_variable_get(var) }
-        hash
-      end
 
       def _get_most_recent_sync_status
         begin
