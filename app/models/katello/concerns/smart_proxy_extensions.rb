@@ -227,14 +227,6 @@ module Katello
         end
       end
 
-      def backend_service_type(repository)
-        if pulp3_support?(repository)
-          Actions::Pulp3::Abstract::BACKEND_SERVICE_TYPE
-        else
-          raise Exception, 'No Pulp 3 support'
-        end
-      end
-
       def pulp3_enabled?
         self.has_feature? PULP3_FEATURE
       end
