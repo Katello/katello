@@ -353,7 +353,6 @@ module ::Actions::Katello::Repository
   end
 
   class UploadFilesTest < TestBase
-    let(:pulp2_action_class) { ::Actions::Pulp::Orchestration::Repository::UploadContent }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::UploadContent }
 
     it 'plans for Pulp3 without duplicate' do
