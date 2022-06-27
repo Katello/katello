@@ -1,5 +1,4 @@
 require 'katello_test_helper'
-require 'support/pulp/repository_support'
 
 module Katello
   module Service

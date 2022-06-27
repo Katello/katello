@@ -4,7 +4,6 @@ require 'support/pulp3_support'
 module Katello
   class OstreeTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
-    include RepositorySupport
 
     def setup
       skip "TODO: Until the ostree support is present in pulp packaging"

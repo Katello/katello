@@ -21,19 +21,6 @@ module Katello
       self.result[:errors][0] if self.error? && self.result[:errors]
     end
 
-    def self.using_pulp_task(pulp_status)
-      if pulp_status.is_a? TaskStatus
-        pulp_status
-      else
-        task_id = pulp_status[:task_id] || pulp_status[:spawned_tasks].first[:task_id]
-        pulp_status = Katello.pulp_server.resources.task.poll(task_id)
-
-        task_status = TaskStatus.find_by(:uuid => task_id)
-        task_status = self.new { |t| yield t if block_given? } if task_status.nil?
-        PulpTaskStatus.dump_state(pulp_status, task_status)
-      end
-    end
-
     def self.dump_state(pulp_status, task_status)
       if !pulp_status.key?(:state) && pulp_status[:result] == "success"
         # Note: if pulp_status doesn't contain a state, the status is coming from pulp sync history
