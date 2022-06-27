@@ -2,7 +2,6 @@ module Actions
   module Katello
     module CapsuleContent
       class SyncCapsule < ::Actions::EntryAction
-        include Actions::Katello::PulpSelector
         # rubocop:disable Metrics/MethodLength
         def plan(smart_proxy, options = {})
           plan_self(:smart_proxy_id => smart_proxy.id)
@@ -18,7 +17,7 @@ module Actions
             repos.in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repo_batch|
               concurrence do
                 repo_batch.each do |repo|
-                  if smart_proxy.backend_service_type(repo) == Actions::Pulp3::Abstract::BACKEND_SERVICE_TYPE
+                  if smart_proxy.pulp3_support?(repo)
                     plan_action(Actions::Pulp3::CapsuleContent::Sync,
                       repo, smart_proxy,
                       skip_metadata_check: skip_metadata_check)
