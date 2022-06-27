@@ -96,7 +96,7 @@ module Katello
 end
 
 module Katello
-  class PulpSyncStatus < PulpTaskStatus
+  class PulpSyncStatus < TaskStatus
     HISTORY_ERROR = 'failed'.freeze
     HISTORY_SUCCESS = 'success'.freeze
     FINISHED  = "finished".freeze
@@ -107,6 +107,24 @@ module Katello
 
     class Status < TaskStatus::Status
       NOT_SYNCED = :not_synced
+    end
+
+    def self.dump_state(pulp_status, task_status)
+      if !pulp_status.key?(:state) && pulp_status[:result] == "success"
+        # Note: if pulp_status doesn't contain a state, the status is coming from pulp sync history
+        pulp_status[:state] = Status::FINISHED.to_s
+      end
+
+      task_status.attributes = {
+        :uuid => pulp_status[:task_id],
+        :state => pulp_status[:state] || pulp_status[:result],
+        :start_time => pulp_status[:start_time] || pulp_status[:start_time],
+        :finish_time => pulp_status[:finish_time],
+        :progress => pulp_status,
+        :result => pulp_status[:result].nil? ? {:errors => [pulp_status[:exception], pulp_status[:traceback]]} : pulp_status[:result]
+      }
+      task_status.save! unless task_status.new_record?
+      task_status
     end
 
     def progress

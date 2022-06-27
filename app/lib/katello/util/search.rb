@@ -42,7 +42,7 @@ module Katello
         classes = get_subclasses(ActiveRecord::Base)
         classes = classes.select { |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }
 
-        #we need index base classes first (TaskStatus) before child classes (PulpTaskStatus)
+        #we need index base classes first (TaskStatus) before child classes (PulpSyncStatus)
         initial_list = classes.select { |c| c.superclass == ActiveRecord::Base }
         subclass_list = classes - initial_list
         initial_list + subclass_list
