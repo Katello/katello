@@ -56,12 +56,6 @@ module Katello
         pulp_repo_facts.merge(as_json).merge(:sync_state => sync_state)
       end
 
-      def pulp_scratchpad_checksum_type
-        if SmartProxy.pulp_primary.has_feature?(SmartProxy::PULP_FEATURE)
-          pulp_repo_facts&.dig('scratchpad', 'checksum_type')
-        end
-      end
-
       def package_group_count
         content_unit_counts = 0
         if self.pulp_repo_facts

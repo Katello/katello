@@ -572,7 +572,7 @@ module Katello
 
       if self.yum?
         if self.library_instance?
-          checksum_type = root.checksum_type || pulp_scratchpad_checksum_type
+          checksum_type = root.checksum_type
         else
           checksum_type = self.saved_checksum_type
         end

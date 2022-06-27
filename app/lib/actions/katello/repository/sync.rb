@@ -49,7 +49,6 @@ module Actions
               plan_action(Katello::Repository::IndexContent, :id => repo.id, :force_index => skip_metadata_check)
               plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
               plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
-              plan_action(Katello::Repository::CorrectChecksum, repo)
               concurrence do
                 plan_action(Katello::Repository::ErrataMail, repo, output[:contents_changed])
                 plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repo.id]) if generate_applicability
