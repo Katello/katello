@@ -92,10 +92,6 @@ module Katello
         content_unit_counts
       end
 
-      def clone_file_metadata(to_repo)
-        Katello.pulp_server.extensions.yum_repo_metadata_file.copy(self.pulp_id, to_repo.pulp_id)
-      end
-
       def clear_contents
         tasks = content_types.flat_map { |type| type.unassociate_from_repo(self.pulp_id, {}) }
 
