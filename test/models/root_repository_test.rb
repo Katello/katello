@@ -626,10 +626,6 @@ module Katello
       refute @fedora_root.valid?
     end
 
-    def test_capsule_download_policy
-      assert_not_nil @fedora_17_x86_64.download_policy
-    end
-
     def test_pulp_update_needed?
       refute @fedora_root.pulp_update_needed?
 
