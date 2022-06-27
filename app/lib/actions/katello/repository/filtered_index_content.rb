@@ -34,7 +34,7 @@ module Actions
               input[:upload_actions].each { |action| uploaded_content_unit_hrefs << action.try(:[], "content_unit_href") }
               unit_ids = uploaded_content_unit_hrefs.compact
             else
-              unit_ids = search_units(repo)
+              unit_ids = []
             end
             ::Katello::Deb.import_all(unit_ids, repo, {filtered_indexing: true})
           elsif repo.yum?
@@ -45,7 +45,7 @@ module Actions
               input[:upload_actions].each { |action| uploaded_content_unit_hrefs << action.try(:[], "content_unit_href") }
               unit_ids = uploaded_content_unit_hrefs.compact
             else
-              unit_ids = search_units(repo)
+              unit_ids = []
             end
             if input[:content_type] == ::Katello::Srpm::CONTENT_TYPE
               ::Katello::Srpm.import_all(unit_ids, repo, {filtered_indexing: true})
@@ -53,14 +53,6 @@ module Actions
               ::Katello::Rpm.import_all(unit_ids, repo, {filtered_indexing: true})
             end
           end
-        end
-
-        private
-
-        def search_units(repo)
-          found = repo.unit_search(:type_ids => [input[:content_type]],
-                                   :filters => input[:filter])
-          found.map { |result| result.try(:[], :unit_id) }.compact
         end
       end
     end
