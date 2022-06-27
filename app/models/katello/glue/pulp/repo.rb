@@ -147,31 +147,6 @@ module Katello
         self.content_type == Repository::ANSIBLE_COLLECTION_TYPE
       end
 
-      def needs_metadata_publish?
-        last_publish = last_publish_task.try(:[], 'finish_time')
-        last_sync = last_sync_task.try(:[], 'finish_time')
-        return false if last_sync.nil?
-        return true if last_publish.nil?
-
-        Time.parse(last_sync) >= Time.parse(last_publish)
-      end
-
-      def last_sync_task
-        tasks = Katello.pulp_server.extensions.repository.sync_status(self.pulp_id)
-        most_recent_task(tasks)
-      end
-
-      def last_publish_task
-        tasks = Katello.pulp_server.extensions.repository.publish_status(self.pulp_id)
-        most_recent_task(tasks, true)
-      end
-
-      def most_recent_task(tasks, only_successful = false)
-        tasks = tasks.select { |t| t['finish_time'] }.sort_by { |t| t['finish_time'] }
-        tasks = tasks.select { |task| task['error'].nil? } if only_successful
-        tasks.last
-      end
-
       protected
 
       def _get_most_recent_sync_status
