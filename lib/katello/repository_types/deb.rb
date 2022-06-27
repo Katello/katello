@@ -1,5 +1,4 @@
 Katello::RepositoryTypeManager.register(::Katello::Repository::DEB_TYPE) do
-  service_class Katello::Pulp::Repository::Deb
   pulp3_service_class Katello::Pulp3::Repository::Apt
   pulp3_api_class Katello::Pulp3::Api::Apt
   pulp3_plugin 'deb'

@@ -23,8 +23,7 @@ module Actions
 
         def invoke_external_task
           repo = ::Katello::Repository.find(input[:repository_id])
-          #used in switchover, need to assume pulp3
-          repo.backend_service(smart_proxy, true).with_mirror_adapter.refresh_distributions
+          repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions
         end
       end
     end
