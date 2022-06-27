@@ -119,10 +119,6 @@ module Katello
         return statuses
       end
 
-      def unit_search(options = {})
-        Katello.pulp_server.extensions.repository.unit_search(self.pulp_id, options)
-      end
-
       def docker?
         self.content_type == Repository::DOCKER_TYPE
       end
