@@ -35,7 +35,6 @@ module Katello
       setup_controller_defaults_api
       login_user(users(:admin))
       @request.env['HTTP_ACCEPT'] = 'application/json'
-      Repository.any_instance.stubs(:sync_status).returns(PulpSyncStatus.new({}))
       Repository.any_instance.stubs(:last_sync).returns(Time.now.to_s)
       models
       permissions

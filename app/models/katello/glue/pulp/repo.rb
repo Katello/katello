@@ -4,29 +4,9 @@ module Katello
     def self.included(base)
       base.send :include, LazyAccessor
       base.send :include, InstanceMethods
-
-      base.class_eval do
-        lazy_accessor :pulp_repo_facts,
-                      :initializer => (lambda do |_s|
-                                         if pulp_id
-                                           begin
-                                             Katello.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
-                                           rescue RestClient::ResourceNotFound
-                                             nil # not found = it was not orchestrated yet
-                                           end
-                                         end
-                                       end)
-
-        lazy_accessor :importers,
-                      :initializer => lambda { |_s| pulp_repo_facts["importers"] if pulp_id }
-
-        lazy_accessor :distributors,
-                      :initializer => lambda { |_s| pulp_repo_facts["distributors"] if pulp_id }
-      end
     end
 
     module InstanceMethods
-      # TODO: This module is too long. See https://projects.theforeman.org/issues/12584.
       def last_sync
         last = self.latest_dynflow_sync
         last.nil? ? nil : last.to_s
@@ -49,74 +29,32 @@ module Katello
       end
 
       def srpm_count
-        pulp_repo_facts['content_unit_counts']['srpm']
+        # TODO: Pulp 3 replacement?
+        0
       end
 
       def to_hash
-        pulp_repo_facts.merge(as_json).merge(:sync_state => sync_state)
+        as_json.merge(:sync_state => sync_state)
       end
 
       def package_group_count
-        content_unit_counts = 0
-        if self.pulp_repo_facts
-          content_unit_counts = self.pulp_repo_facts[:content_unit_counts][:package_group]
-        end
-        content_unit_counts
-      end
-
-      def content_types
-        [Katello.pulp_server.extensions.errata,
-         Katello.pulp_server.extensions.package_group,
-         Katello.pulp_server.extensions.module_stream
-        ]
+        # TODO: Pulp 3 replacement?
+        0
       end
 
       def sync_status
-        self._get_most_recent_sync_status
+        # TODO: Pulp 3 replacement?
+        PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED)
       end
 
       def sync_state
-        status = sync_status
-        return PulpSyncStatus::Status::NOT_SYNCED if status.nil?
-        status.state
+        # TODO: Pulp 3 replacement?
+        PulpSyncStatus::Status::NOT_SYNCED
       end
 
       def synced?
-        sync_history = self.sync_status
-        !sync_history.nil? && successful_sync?(sync_history)
-      end
-
-      def successful_sync?(sync_history_item)
-        sync_history_item['state'] == PulpTaskStatus::Status::FINISHED.to_s
-      end
-
-      def sort_sync_status(statuses)
-        statuses.sort! do |a, b|
-          if a['finish_time'].nil? && b['finish_time'].nil?
-            if a['start_time'].nil?
-              1
-            elsif b['start_time'].nil?
-              -1
-            else
-              a['start_time'] <=> b['start_time']
-            end
-          elsif a['finish_time'].nil?
-            if a['start_time'].nil?
-              1
-            else
-              -1
-            end
-          elsif b['finish_time'].nil?
-            if b['start_time'].nil?
-              -1
-            else
-              1
-            end
-          else
-            b['finish_time'] <=> a['finish_time']
-          end
-        end
-        return statuses
+        # TODO: Pulp 3 replacement?
+        false
       end
 
       def docker?
@@ -141,27 +79,6 @@ module Katello
 
       def ansible_collection?
         self.content_type == Repository::ANSIBLE_COLLECTION_TYPE
-      end
-
-      protected
-
-      def _get_most_recent_sync_status
-        begin
-          history = Katello.pulp_server.extensions.repository.sync_status(pulp_id)
-
-          if history.blank?
-            history = PulpSyncStatus.convert_history(Katello.pulp_server.extensions.repository.sync_history(pulp_id))
-          end
-        rescue
-          history = PulpSyncStatus.convert_history(Katello.pulp_server.extensions.repository.sync_history(pulp_id))
-        end
-
-        if history.blank?
-          return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED)
-        else
-          history = sort_sync_status(history)
-          return PulpSyncStatus.pulp_task(history.first.with_indifferent_access)
-        end
       end
     end
   end
