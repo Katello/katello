@@ -710,10 +710,6 @@ module Katello
       assert_includes Repository.with_errata([errata]), @rhel6
     end
 
-    def test_capsule_download_policy
-      assert_not_nil @fedora_17_x86_64.download_policy
-    end
-
     def test_index_content_ordering
       repo_type = @rhel6.repository_type
       SmartProxy.stubs(:pulp_primary).returns(SmartProxy.pulp_primary)
