@@ -6,7 +6,6 @@ module Actions
   module Katello
     module Repository
       class UploadFiles < Actions::EntryAction
-        include Actions::Katello::PulpSelector
         def plan(repository, files, content_type = nil, options = {})
           action_subject(repository)
           repository.clear_smart_proxy_sync_histories

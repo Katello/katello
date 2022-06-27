@@ -2,8 +2,7 @@ module Actions
   module Katello
     module Repository
       class Update < Actions::EntryAction
-        include Actions::Katello::PulpSelector
-
+        # rubocop:disable Metrics/MethodLength
         def plan(root, repo_params)
           repository = root.library_instance
           action_subject root.library_instance
@@ -46,7 +45,10 @@ module Actions
                                SmartProxy.pulp_primary)
               plan_self(:repository_id => root.library_instance.id)
               if update_cv_cert_protected
-                plan_optional_pulp_action([::Actions::Pulp3::Orchestration::Repository::TriggerUpdateRepoCertGuard], repository, ::SmartProxy.pulp_primary)
+                smart_proxy = ::SmartProxy.pulp_primary
+                if smart_proxy.pulp3_support?(repository)
+                  plan_action(::Actions::Pulp3::Orchestration::Repository::TriggerUpdateRepoCertGuard, repository, smart_proxy)
+                end
               end
 
               handle_alternate_content_sources(repository, create_acs, delete_acs, old_url)
