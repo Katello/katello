@@ -76,8 +76,7 @@ module ::Actions::Katello::ContentViewVersion
       ::Katello::Pulp3::Repository.any_instance.stubs(:create_remote).returns(nil)
       ::Katello::Pulp3::Api::ContentGuard.any_instance.stubs(:list).returns(nil)
       ::Katello::Pulp3::Api::ContentGuard.any_instance.stubs(:create).returns(nil)
-      ::Katello::Repository.any_instance.stubs(:pulp_scratchpad_checksum_type).returns(nil)
-      Katello::Product.any_instance.stubs(cdn_resource: cdn_resource)
+      ::Katello::Product.any_instance.stubs(cdn_resource: cdn_resource)
       ::Katello::Resources::Candlepin::Content.stubs(:get).returns
     end
 
