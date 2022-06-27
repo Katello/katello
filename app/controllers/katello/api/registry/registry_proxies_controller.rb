@@ -243,7 +243,8 @@ module Katello
     end
 
     def pulp_content
-      Katello.pulp_server.resources.content
+      # TODO: Remove this
+      fail 'Pulp 2 content was being used'
     end
 
     def start_upload_blob

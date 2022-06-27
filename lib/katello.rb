@@ -10,7 +10,6 @@ require "rest_client"
 require "anemone"
 require "securerandom"
 
-require "runcible"
 require "deface"
 
 require "securerandom"
@@ -26,8 +25,4 @@ require "monkeys/anemone"
 module Katello
   require "katello/version"
   require "katello/engine"
-
-  def self.pulp_server
-    Katello::Pulp::Server.config(::SmartProxy.pulp_primary.url + '/pulp/api/v2/', User.remote_user)
-  end
 end

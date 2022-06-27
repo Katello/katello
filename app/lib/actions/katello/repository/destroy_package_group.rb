@@ -7,7 +7,8 @@ module Actions
           criteria = { type_ids: ["package_group"], filters: {"unit": {"name": pkg_group_id} } }
 
           sequence do
-            ::Katello.pulp_server.extensions.repository.unassociate_units(repository.pulp_id, criteria)
+            # TODO: Replace with Pulp 3?
+            fail 'Pulp 2 was used'
             plan_action(IndexPackageGroups, repository)
             plan_action(Katello::Repository::MetadataGenerate, repository)
           end
