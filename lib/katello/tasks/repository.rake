@@ -3,27 +3,6 @@ namespace :katello do
     ENV['COMMIT'] == 'true' || ENV['FOREMAN_UPGRADE'] == '1'
   end
 
-  desc "Check for repositories that have not been published since their last sync, and republish if they have."
-  task :publish_unpublished_repositories => ["dynflow:client", "check_ping"] do
-    needing_publish = []
-    Organization.find_each do |org|
-      if org.default_content_view && !org.default_content_view.versions.empty?
-        org.default_content_view.versions.first.repositories.joins(:root)
-          .where.not(katello_root_repositories: { url: nil }).find_each do |repo|
-          if repo.needs_metadata_publish?
-            Rails.logger.error("Repository metadata for #{repo.name} (#{repo.id}) is out of date, regenerating.")
-            needing_publish << repo.id
-          end
-        rescue => e
-          puts "Failed to check repository #{repo.id}: #{e}"
-        end
-      end
-    end
-    if needing_publish.any?
-      ForemanTasks.async_task(::Actions::Katello::Repository::BulkMetadataGenerate, Katello::Repository.where(:id => needing_publish))
-    end
-  end
-
   desc "Regnerate metadata for all repositories. Specify CONTENT_VIEW=name and LIFECYCLE_ENVIRONMENT=name to narrow repositories."
   task :regenerate_repo_metadata => ["dynflow:client", "check_ping"] do
     User.current = User.anonymous_api_admin
