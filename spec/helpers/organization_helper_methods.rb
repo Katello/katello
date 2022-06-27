@@ -39,18 +39,6 @@ module Katello
       view
     end
 
-    def publish_content_view(name, org, repos)
-      Katello.pulp_server.extensions.repository.stubs(:create).returns({})
-      Repository.stubs(:trigger_contents_changed).returns([])
-      cv = ContentView.create!(:organization => org, :name => name)
-      cv.stubs(:repositories_to_publish).returns(repos)
-      cv.stubs(:check_ready_to_publish!)
-      cv.save!
-      plan = ForemanTasks.dynflow.world.plan(::Actions::Katello::ContentView::Publish, cv)
-      plan.failed_steps.each { |step| fail step.error if step.error }
-      cv
-    end
-
     def create_activation_key(attrs)
       env_id = attrs.delete(:environment_id)
       attrs[:environment] = KTEnvironment.find(env_id) if env_id
