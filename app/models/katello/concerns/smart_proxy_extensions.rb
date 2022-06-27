@@ -232,7 +232,7 @@ module Katello
         if pulp3_support?(repository)
           Actions::Pulp3::Abstract::BACKEND_SERVICE_TYPE
         else
-          Actions::Pulp::Abstract::BACKEND_SERVICE_TYPE
+          raise Exception, 'No Pulp 3 support'
         end
       end
 
