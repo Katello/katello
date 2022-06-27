@@ -5,8 +5,6 @@ module Katello
     module Pulp3
       class Repository
         class AptTest < ::ActiveSupport::TestCase
-          include RepositorySupport
-
           def setup
             @repo = katello_repositories(:debian_9_amd64)
             @proxy = SmartProxy.pulp_primary
@@ -83,8 +81,6 @@ module Katello
         end
 
         class AptVcrTest < ::ActiveSupport::TestCase
-          include RepositorySupport
-
           def setup
             @repo = katello_repositories(:debian_9_amd64)
             @proxy = SmartProxy.pulp_primary

@@ -6,7 +6,6 @@ module Katello
       class Repository
         class PythonTest < ActiveSupport::TestCase
           include Katello::Pulp3Support
-          include RepositorySupport
 
           def setup
             @repo = katello_repositories(:pulp3_python_1)
