@@ -92,14 +92,6 @@ module Katello
         content_unit_counts
       end
 
-      def clear_contents
-        tasks = content_types.flat_map { |type| type.unassociate_from_repo(self.pulp_id, {}) }
-
-        tasks << Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id,
-                   :type_ids => ['rpm'], :filters => {}, :fields => { :unit => Pulp::Rpm::PULP_SELECT_FIELDS})
-        tasks
-      end
-
       def content_types
         [Katello.pulp_server.extensions.errata,
          Katello.pulp_server.extensions.package_group,
