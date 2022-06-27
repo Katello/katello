@@ -162,26 +162,6 @@ module Katello
         sync_history_item['state'] == PulpTaskStatus::Status::FINISHED.to_s
       end
 
-      def find_distributor(use_clone_distributor = false)
-        dist_type_id = if use_clone_distributor
-                         case self.content_type
-                         when Repository::YUM_TYPE
-                           Runcible::Models::YumCloneDistributor.type_id
-                         when Repository::PUPPET_TYPE
-                           Runcible::Models::PuppetInstallDistributor.type_id
-                         end
-                       else
-                         case self.content_type
-                         when Repository::YUM_TYPE
-                           Runcible::Models::YumDistributor.type_id
-                         when Repository::PUPPET_TYPE
-                           Runcible::Models::PuppetInstallDistributor.type_id
-                         end
-                       end
-
-        distributors.detect { |dist| dist["distributor_type_id"] == dist_type_id }
-      end
-
       def sort_sync_status(statuses)
         statuses.sort! do |a, b|
           if a['finish_time'].nil? && b['finish_time'].nil?
