@@ -26,23 +26,6 @@ module Katello
         def self.delete_orphaned_content
           Katello.pulp_server.resources.content.remove_orphans
         end
-
-        def self.needs_importer_updates(repos, smart_proxy)
-          repos.select do |repo|
-            repo_details = repo.backend_service(smart_proxy).backend_data
-            next unless repo_details
-            capsule_importer = repo_details["importers"][0]
-            !repo.importer_matches?(capsule_importer, smart_proxy)
-          end
-        end
-
-        def self.needs_distributor_updates(repos, smart_proxy)
-          repos.select do |repo|
-            repo_details = repo.backend_service(smart_proxy).backend_data
-            next unless repo_details
-            !repo.distributors_match?(repo_details["distributors"], smart_proxy)
-          end
-        end
       end
     end
 
@@ -115,17 +98,6 @@ module Katello
 
       def clone_file_metadata(to_repo)
         Katello.pulp_server.extensions.yum_repo_metadata_file.copy(self.pulp_id, to_repo.pulp_id)
-      end
-
-      def unassociate_by_filter(content_type, filter_clauses)
-        criteria = {:type_ids => [content_type], :filters => {:unit => filter_clauses}}
-        case content_type
-        when Katello.pulp_server.extensions.rpm.content_type
-          criteria[:fields] = { :unit => Pulp::Rpm::PULP_SELECT_FIELDS}
-        when Katello.pulp_server.extensions.errata.content_type
-          criteria[:fields] = { :unit => Pulp::Erratum::PULP_SELECT_FIELDS}
-        end
-        Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id, criteria)
       end
 
       def clear_contents

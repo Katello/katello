@@ -1,6 +1,5 @@
 Katello::RepositoryTypeManager.register(::Katello::Repository::FILE_TYPE) do
   allow_creation_by_user true
-  service_class Katello::Pulp::Repository::File
   pulp3_service_class Katello::Pulp3::Repository::File
   pulp3_api_class Katello::Pulp3::Api::File
   pulp3_plugin 'file'
