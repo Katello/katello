@@ -22,10 +22,6 @@ module Katello
 
         lazy_accessor :distributors,
                       :initializer => lambda { |_s| pulp_repo_facts["distributors"] if pulp_id }
-
-        def self.delete_orphaned_content
-          Katello.pulp_server.resources.content.remove_orphans
-        end
       end
     end
 
