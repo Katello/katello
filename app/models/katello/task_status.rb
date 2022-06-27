@@ -101,10 +101,6 @@ module Katello
       PulpTaskStatus.dump_state(pulp_task, self)
     end
 
-    def refresh_pulp
-      PulpTaskStatus.refresh(self)
-    end
-
     def human_readable_message
       task_template = TaskStatus::TYPES[self.task_type]
       return '' if task_template.nil?
