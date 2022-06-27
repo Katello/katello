@@ -2,7 +2,6 @@ require 'katello_test_helper'
 
 module Katello
   class Util::ErrataFilterByPulpHref < ActiveSupport::TestCase
-    include RepositorySupport
     include Util::Errata
 
     def setup

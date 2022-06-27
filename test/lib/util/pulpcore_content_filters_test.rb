@@ -2,7 +2,6 @@ require 'katello_test_helper'
 
 module Katello
   class Util::PulpcoreContentMetadataFileFilterTest < ActiveSupport::TestCase
-    include RepositorySupport
     include Util::PulpcoreContentFilters
 
     def setup
@@ -28,7 +27,6 @@ module Katello
   end
 
   class Util::PulpcoreContentDistributionTreeFilterTest < ActiveSupport::TestCase
-    include RepositorySupport
     include Util::PulpcoreContentFilters
 
     def setup
@@ -54,7 +52,6 @@ module Katello
   end
 
   class Util::PulpcoreContentPackageGroupFilterTest < ActiveSupport::TestCase
-    include RepositorySupport
     include Util::PulpcoreContentFilters
 
     def setup

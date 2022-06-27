@@ -5,8 +5,6 @@ module Katello
     module Pulp3
       class Repository
         class GenericTest < ::ActiveSupport::TestCase
-          include RepositorySupport
-
           def setup
             @repo = katello_repositories(:fedora_17_x86_64)
             @proxy = SmartProxy.pulp_primary
