@@ -14,8 +14,7 @@ module Actions
           to_delete = content_view.repository_references.select do |repository_reference|
             repo = repository_reference.root_repository.library_instance
             if delete_href?(repository_reference.repository_href, content_view)
-              #force pulp3 in case we've done migrations, but haven't switched over yet
-              tasks << repo.backend_service(smart_proxy, true).delete_repository(repository_reference)
+              tasks << repo.backend_service(smart_proxy).delete_repository(repository_reference)
               true
             else
               false

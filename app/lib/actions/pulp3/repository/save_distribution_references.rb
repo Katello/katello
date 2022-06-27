@@ -12,9 +12,9 @@ module Actions
             distribution_hrefs.compact!
             repo = ::Katello::Repository.find(input[:repository_id])
             if distribution_hrefs.any?
-              repo.backend_service(smart_proxy, true).save_distribution_references(distribution_hrefs)
+              repo.backend_service(smart_proxy).save_distribution_references(distribution_hrefs)
             else
-              repo.backend_service(smart_proxy, true).update_distribution
+              repo.backend_service(smart_proxy).update_distribution
             end
           end
         end
