@@ -577,7 +577,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(docker_repository)
       plan_action action, docker_repository
 
-      refute_action_planed action, ::Actions::Pulp::Repository::RegenerateApplicability
+      refute_action_planed action, ::Actions::Katello::Applicability::Repository::Regenerate
     end
 
     it 'plans verift checksum when validate_contents is passed' do
