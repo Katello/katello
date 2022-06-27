@@ -72,7 +72,7 @@ module Katello
       end
 
       def sync_status
-        self._get_most_recent_sync_status if @sync_status.nil?
+        self._get_most_recent_sync_status
       end
 
       def sync_state
