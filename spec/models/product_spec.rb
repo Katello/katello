@@ -1,5 +1,4 @@
 require 'katello_test_helper'
-require 'helpers/repo_test_data'
 
 module Katello
   describe Product do
