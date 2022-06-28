@@ -82,10 +82,25 @@ describe('Controller: ContentHostPackagesController', function() {
     });
 
     it("provides a way to upgrade all packages", function() {
+        $scope.katelloAgentPresent = true;
+        $scope.remoteExecutionPresent = false;
+        $scope.remoteExecutionByDefault = false;
         spyOn(HostPackage, "updateAll");
         $scope.updateAll();
         expect(HostPackage.updateAll).toHaveBeenCalledWith({id: mockHost.id}, jasmine.any(Function),
             jasmine.any(Function));
+        expect($scope.working).toBe(true);
+    });
+
+    it("provides a way to upgrade all packages via remoteExecution", function() {
+        $scope.remoteExecutionPresent = true;
+        $scope.remoteExecutionByDefault = true;
+        spyOn(HostPackage, "updateAll");
+        $scope.updateAll();
+        expect(HostPackage.updateAll).not.toHaveBeenCalled();
+        expect($scope.packageActionFormValues.package).toEqual('');
+        expect($scope.packageActionFormValues.remoteAction).toEqual('packageUpdate');
+        expect($scope.packageActionFormValues.bulkHostIds).toEqual('{"included":{"ids":[' + mockHost.id + ']}}');
         expect($scope.working).toBe(true);
     });
 
