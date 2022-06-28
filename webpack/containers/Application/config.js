@@ -7,8 +7,6 @@ import SetOrganization from '../../components/SelectOrg/SetOrganization';
 import WithOrganization from '../../components/WithOrganization/withOrganization';
 import ModuleStreams from '../../scenes/ModuleStreams';
 import ModuleStreamDetails from '../../scenes/ModuleStreams/Details';
-import AnsibleCollections from '../../scenes/AnsibleCollections';
-import AnsibleCollectionDetails from '../../scenes/AnsibleCollections/Details';
 import ContentViews from '../../scenes/ContentViews';
 import ContentViewDetails from '../../scenes/ContentViews/Details';
 import Content from '../../scenes/Content';
@@ -47,14 +45,6 @@ export const links = [
   {
     path: 'module_streams/:id([0-9]+)',
     component: WithOrganization(withHeader(ModuleStreamDetails, { title: __('Module Stream Details') })),
-  },
-  {
-    path: 'legacy_ansible_collections',
-    component: WithOrganization(withHeader(AnsibleCollections, { title: __('Ansible Collections') })),
-  },
-  {
-    path: 'legacy_ansible_collections/:id([0-9]+)',
-    component: WithOrganization(withHeader(AnsibleCollectionDetails, { title: __('Ansible Collection Details') })),
   },
   {
     path: 'content_views',
