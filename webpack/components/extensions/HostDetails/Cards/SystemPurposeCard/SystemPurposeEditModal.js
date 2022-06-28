@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Modal,
   Button,
@@ -18,8 +19,12 @@ const SystemPurposeEditModal = ({
   serviceLevel, releaseVersion,
 }) => {
   const unmodified = false;
+  const [selectedRole, setSelectedRole] = useState(purposeRole);
+  const [selectedUsage, setSelectedUsage] = useState(purposeUsage);
   const [addonSelectOpen, setAddonSelectOpen] = useState(false);
-  const [selectedAddons, setSelectedAddons] = useState([]);
+  const [selectedAddons, setSelectedAddons] = useState(purposeAddons);
+  const [selectedReleaseVersion, setSelectedReleaseVersion] = useState(releaseVersion);
+  const [selectedServiceLevel, setSelectedServiceLevel] = useState(serviceLevel);
 
   const toggleAddonSelect = () => setAddonSelectOpen(prev => !prev);
 
@@ -98,8 +103,8 @@ const SystemPurposeEditModal = ({
           <FormSelect
             id="role"
             name="role"
-            value={purposeRole}
-            onChange={() => {}}
+            value={selectedRole}
+            onChange={setSelectedRole}
           >
             {roleOptions.map(option => (
               <FormSelectOption
@@ -114,8 +119,8 @@ const SystemPurposeEditModal = ({
           <FormSelect
             id="serviceLevel"
             name="serviceLevel"
-            value={serviceLevel}
-            onChange={() => {}}
+            value={selectedServiceLevel}
+            onChange={setSelectedServiceLevel}
           >
             {serviceLevelOptions.map(option => (
               <FormSelectOption
@@ -130,8 +135,8 @@ const SystemPurposeEditModal = ({
           <FormSelect
             id="usage"
             name="usage"
-            value={purposeUsage}
-            onChange={() => {}}
+            value={selectedUsage}
+            onChange={setSelectedUsage}
           >
             {usageOptions.map(option => (
               <FormSelectOption
@@ -155,6 +160,7 @@ const SystemPurposeEditModal = ({
             isOpen={addonSelectOpen}
             placeholderText="Select add-ons"
             aria-labelledby="syspurpose-addons-title"
+            menuAppendTo="parent"
           >
             {addonsOptions.map(option => (
               <SelectOption
@@ -169,8 +175,8 @@ const SystemPurposeEditModal = ({
           <FormSelect
             id="release_version"
             name="release_version"
-            value={releaseVersion}
-            onChange={() => {}}
+            value={selectedReleaseVersion}
+            onChange={setSelectedReleaseVersion}
           >
             {releaseVersionOptions.map(option => (
               <FormSelectOption
@@ -187,3 +193,13 @@ const SystemPurposeEditModal = ({
 };
 
 export default SystemPurposeEditModal;
+
+SystemPurposeEditModal.propTypes = {
+  closeModal: PropTypes.func.isRequired,
+  hostName: PropTypes.string.isRequired,
+  purposeRole: PropTypes.string.isRequired,
+  purposeUsage: PropTypes.string.isRequired,
+  purposeAddons: PropTypes.arrayOf(PropTypes.string).isRequired,
+  serviceLevel: PropTypes.string.isRequired,
+  releaseVersion: PropTypes.string.isRequired,
+};
