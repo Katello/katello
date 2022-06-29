@@ -34,10 +34,10 @@
                 OSTree Repositories <div>{{ library.counts.ostree_repositories || 0 }}</div>
               </td>
               <td class="info-block" ng-show="library.counts.docker_repositories > 0" translate>
-	      <td class="info-block" ng-show="library.counts.deb_repositories > 0" translate>
-                Deb Repositories <div>{{ library.counts.deb_repositories || 0 }}</div>
-              </td>
                 Docker Repositories <div>{{ library.counts.docker_repositories || 0 }}</div>
+                </td>
+	            <td class="info-block" ng-show="library.counts.deb_repositories > 0" translate>
+                Deb Repositories <div>{{ library.counts.deb_repositories || 0 }}</div>
               </td>
               <td class="info-block" ng-show="library.counts.packages > 0" translate>
                 Packages <div>{{ library.counts.packages || 0 }}</div>
