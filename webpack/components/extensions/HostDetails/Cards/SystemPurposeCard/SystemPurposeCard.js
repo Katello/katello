@@ -77,47 +77,45 @@ const SystemPurposeCard = ({ hostDetails }) => {
           </Flex>
         </CardHeader>
         <CardBody className="system-purpose-card-body">
-          {editing ? (
-            <SystemPurposeEditModal
-              closeModal={() => setEditing(false)}
-              hostName={hostDetails.name}
-              {...sysPurposeProps}
-            />
-          ) : (
-            <DescriptionList isHorizontal>
-              <DescriptionListGroup>
-                <DescriptionListTerm>{__('Role')}</DescriptionListTerm>
-                <DescriptionListDescription>{purposeRole}</DescriptionListDescription>
-                <DescriptionListTerm>{__('SLA')}</DescriptionListTerm>
-                <DescriptionListDescription>
-                  {serviceLevel && (
-                    <Label color="blue">{serviceLevel}</Label>
-                  )}
-                </DescriptionListDescription>
-                <DescriptionListTerm>{__('Usage type')}</DescriptionListTerm>
-                <DescriptionListDescription>
-                  {purposeUsage && (
-                    <Label color="blue">{purposeUsage}</Label>
-                  )}
-                </DescriptionListDescription>
-                <DescriptionListTerm>{__('Release version')}</DescriptionListTerm>
-                <DescriptionListDescription>{releaseVersion}</DescriptionListDescription>
-                {!!purposeAddons?.length && (
-                  <>
-                    <DescriptionListTerm>{__('Add-ons')}</DescriptionListTerm>
-                    <DescriptionListDescription>
-                      <List isPlain>
-                        {purposeAddons.map(addon => (
-                          <ListItem key={addon}>{addon}</ListItem>
-                        ))}
-                      </List>
-                    </DescriptionListDescription>
-                  </>
-                )
-                }
-              </DescriptionListGroup>
-            </DescriptionList>
-          )}
+          <DescriptionList isHorizontal>
+            <DescriptionListGroup>
+              <DescriptionListTerm>{__('Role')}</DescriptionListTerm>
+              <DescriptionListDescription>{purposeRole}</DescriptionListDescription>
+              <DescriptionListTerm>{__('SLA')}</DescriptionListTerm>
+              <DescriptionListDescription>
+                {serviceLevel && (
+                  <Label color="blue">{serviceLevel}</Label>
+                )}
+              </DescriptionListDescription>
+              <DescriptionListTerm>{__('Usage type')}</DescriptionListTerm>
+              <DescriptionListDescription>
+                {purposeUsage && (
+                  <Label color="blue">{purposeUsage}</Label>
+                )}
+              </DescriptionListDescription>
+              <DescriptionListTerm>{__('Release version')}</DescriptionListTerm>
+              <DescriptionListDescription>{releaseVersion}</DescriptionListDescription>
+              {!!purposeAddons?.length && (
+                <>
+                  <DescriptionListTerm>{__('Add-ons')}</DescriptionListTerm>
+                  <DescriptionListDescription>
+                    <List isPlain>
+                      {purposeAddons.map(addon => (
+                        <ListItem key={addon}>{addon}</ListItem>
+                      ))}
+                    </List>
+                  </DescriptionListDescription>
+                </>
+              )
+              }
+            </DescriptionListGroup>
+          </DescriptionList>
+          <SystemPurposeEditModal
+            isOpen={editing}
+            closeModal={() => setEditing(false)}
+            hostName={hostDetails.name}
+            {...sysPurposeProps}
+          />
         </CardBody>
       </Card>
     </GridItem>

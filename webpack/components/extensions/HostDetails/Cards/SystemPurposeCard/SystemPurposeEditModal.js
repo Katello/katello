@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Modal,
@@ -16,7 +16,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 
 const SystemPurposeEditModal = ({
   closeModal, hostName, purposeRole, purposeUsage, purposeAddons,
-  serviceLevel, releaseVersion,
+  serviceLevel, releaseVersion, isOpen,
 }) => {
   const unmodified = false;
   const [selectedRole, setSelectedRole] = useState(purposeRole);
@@ -80,9 +80,15 @@ const SystemPurposeEditModal = ({
     { label: __('Basic'), value: 'basic' },
   ];
 
+  useEffect(() => {
+    console.log({
+      selectedRole, selectedUsage, selectedAddons, selectedReleaseVersion, selectedServiceLevel,
+    });
+  }, [selectedRole, selectedUsage, selectedAddons, selectedReleaseVersion, selectedServiceLevel]);
+
   return (
     <Modal
-      isOpen
+      isOpen={isOpen}
       onClose={closeModal}
       title={__('Edit system purpose attributes')}
       width="50%"
@@ -202,4 +208,5 @@ SystemPurposeEditModal.propTypes = {
   purposeAddons: PropTypes.arrayOf(PropTypes.string).isRequired,
   serviceLevel: PropTypes.string.isRequired,
   releaseVersion: PropTypes.string.isRequired,
+  isOpen: PropTypes.bool.isRequired,
 };
