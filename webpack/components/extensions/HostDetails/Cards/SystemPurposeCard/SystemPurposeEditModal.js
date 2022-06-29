@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { STATUS } from 'foremanReact/constants';
+import { propsToCamelCase } from 'foremanReact/common/helpers';
 import {
   Modal,
   Button,
@@ -13,10 +16,12 @@ import {
 } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { selectOrganizationStatus, selectOrganization, selectAvailableReleaseVersions, selectAvailableReleaseVersionsStatus } from '../../HostDetailsSelectors';
+import { getAvailableReleaseVersions, getOrganization } from '../../HostDetailsActions';
 
 const SystemPurposeEditModal = ({
   closeModal, hostName, purposeRole, purposeUsage, purposeAddons,
-  serviceLevel, releaseVersion, isOpen,
+  serviceLevel, releaseVersion, isOpen, orgId, hostId,
 }) => {
   const unmodified = false;
   const [selectedRole, setSelectedRole] = useState(purposeRole);
@@ -25,8 +30,34 @@ const SystemPurposeEditModal = ({
   const [selectedAddons, setSelectedAddons] = useState(purposeAddons);
   const [selectedReleaseVersion, setSelectedReleaseVersion] = useState(releaseVersion);
   const [selectedServiceLevel, setSelectedServiceLevel] = useState(serviceLevel);
+  const dispatch = useDispatch();
 
-  const toggleAddonSelect = () => setAddonSelectOpen(prev => !prev);
+  const orgStatus = useSelector(state => selectOrganizationStatus(state, orgId));
+  const organizationDetails = useSelector(state => selectOrganization(state, orgId));
+  const orgDetails = propsToCamelCase(organizationDetails ?? { systemPurposes: {} });
+  const availableSyspurposeAttributes = orgDetails?.systemPurposes ?? {};
+  const availableServiceLevels = orgDetails?.serviceLevels ?? [];
+  const { addons: availableAddons, roles: availableRoles, usage: availableUsages }
+    = availableSyspurposeAttributes;
+
+  const availableReleaseVersionsStatus
+    = useSelector(state => selectAvailableReleaseVersionsStatus(state, orgId));
+  const availableReleaseVersions = useSelector(state =>
+    selectAvailableReleaseVersions(state, hostId))?.results ?? [];
+
+  useEffect(() => {
+    if (orgId && orgStatus !== STATUS.RESOLVED) {
+      dispatch(getOrganization({ orgId }));
+    }
+  }, [orgId, orgStatus, dispatch]);
+
+  useEffect(() => {
+    if (hostId && availableReleaseVersionsStatus !== STATUS.RESOLVED) {
+      dispatch(getAvailableReleaseVersions({ hostId }));
+    }
+  }, [hostId, availableReleaseVersionsStatus, dispatch]);
+
+  const toggleAddonSelect = isOpenState => setAddonSelectOpen(isOpenState);
 
   const onAddonSelect = (_event, selected) => {
     const newSelectedAddons = new Set(selectedAddons);
@@ -39,9 +70,14 @@ const SystemPurposeEditModal = ({
     setSelectedAddons([...newSelectedAddons]);
   };
 
+  const handleSave = (event) => {
+    event.preventDefault();
+    closeModal();
+  };
+
 
   const modalActions = ([
-    <Button key="save-syspurpose" variant="primary" onClick={closeModal} isDisabled={unmodified}>
+    <Button key="save-syspurpose" variant="primary" onClick={handleSave} isDisabled={unmodified}>
       {__('Save')}
     </Button>,
     <Button key="cancel" variant="link" onClick={closeModal}>
@@ -49,49 +85,29 @@ const SystemPurposeEditModal = ({
     </Button>,
   ]);
 
-  const roleOptions = [
-    { label: __('Unspecified'), value: 'unspecified' },
-    { label: __('Management'), value: 'management' },
-    { label: __('User'), value: 'user' },
-  ];
+  const roleOptions = availableRoles?.map(role => ({ label: role, value: role })) ?? [];
+  const usageOptions = availableUsages?.map(usage => ({ label: usage, value: usage })) ?? [];
+  // addons may be present on the host but not available from subscriptions,
+  // so we combine the options here
+  const addonToObject = addon => ({ label: addon, value: addon });
+  const addonsOptions =
+    [...new Set([ // don't repeat addons if they are already selected
+      ...purposeAddons.map(addonToObject), ...availableAddons?.map(addonToObject) ?? [],
+    ])];
+  const serviceLevelOptions = availableServiceLevels?.map(sl => ({ label: sl, value: sl })) ?? [];
 
-  const usageOptions = [
-    { label: __('Unspecified'), value: 'unspecified' },
-    { label: __('Production'), value: 'production' },
-    { label: __('Development'), value: 'development' },
-    { label: __('Test'), value: 'test' },
-  ];
-
-  const addonsOptions = [
-    { label: __('Add-on 1'), value: 'addon1' },
-    { label: __('Add-on 2'), value: 'addon2' },
-  ];
-
-  const releaseVersionOptions = [
-    { label: __('6'), value: 'rhel-6' },
-    { label: __('7'), value: 'rhel-7' },
-    { label: __('8'), value: 'rhel-8' },
-    { label: __('9'), value: 'rhel-9' },
-  ];
-
-  const serviceLevelOptions = [
-    { label: __('Premium'), value: 'premium' },
-    { label: __('Standard'), value: 'standard' },
-    { label: __('Basic'), value: 'basic' },
-  ];
-
-  useEffect(() => {
-    console.log({
-      selectedRole, selectedUsage, selectedAddons, selectedReleaseVersion, selectedServiceLevel,
-    });
-  }, [selectedRole, selectedUsage, selectedAddons, selectedReleaseVersion, selectedServiceLevel]);
+  const releaseVersionOptions = availableReleaseVersions.map(release => ({
+    label: release,
+    value: release,
+    key: release,
+  }));
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={closeModal}
       title={__('Edit system purpose attributes')}
-      width="50%"
+      width="40%"
       position="top"
       actions={modalActions}
       id="syspurpose-edit-modal"
@@ -104,7 +120,7 @@ const SystemPurposeEditModal = ({
           hostName: <strong>{hostName}</strong>,
         }}
       />
-      <Form isHorizontal>
+      <Form isHorizontal style={{ marginTop: '1.3rem' }}>
         <FormGroup label={__('Role')}>
           <FormSelect
             id="role"
@@ -153,30 +169,6 @@ const SystemPurposeEditModal = ({
             ))}
           </FormSelect>
         </FormGroup>
-        <FormGroup label={__('Add-ons')}>
-          <span id="syspurpose-addons-title" hidden>
-            Checkbox Title
-          </span>
-          <Select
-            variant={SelectVariant.checkbox}
-            aria-label="syspurpose-addons"
-            onToggle={toggleAddonSelect}
-            onSelect={onAddonSelect}
-            selections={selectedAddons}
-            isOpen={addonSelectOpen}
-            placeholderText="Select add-ons"
-            aria-labelledby="syspurpose-addons-title"
-            menuAppendTo="parent"
-          >
-            {addonsOptions.map(option => (
-              <SelectOption
-                key={option.value}
-                value={option.value}
-                label={option.label}
-              />
-            ))}
-          </Select>
-        </FormGroup>
         <FormGroup label={__('Release version')}>
           <FormSelect
             id="release_version"
@@ -193,6 +185,30 @@ const SystemPurposeEditModal = ({
             ))}
           </FormSelect>
         </FormGroup>
+        <FormGroup label={__('Add-ons')}>
+          <span id="syspurpose-addons-title" hidden>
+            Checkbox Title
+          </span>
+          <Select
+            variant={SelectVariant.typeaheadMulti}
+            aria-label="syspurpose-addons"
+            onToggle={toggleAddonSelect}
+            onSelect={onAddonSelect}
+            selections={selectedAddons}
+            isOpen={addonSelectOpen}
+            placeholderText={__('Select add-ons')}
+            aria-labelledby="syspurpose-addons-title"
+            menuAppendTo="parent"
+          >
+            {addonsOptions.map(option => (
+              <SelectOption
+                key={option.value}
+                value={option.value}
+                label={option.label}
+              />
+            ))}
+          </Select>
+        </FormGroup>
       </Form>
     </Modal>
   );
@@ -202,11 +218,19 @@ export default SystemPurposeEditModal;
 
 SystemPurposeEditModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
-  hostName: PropTypes.string.isRequired,
+  hostName: PropTypes.string,
   purposeRole: PropTypes.string.isRequired,
   purposeUsage: PropTypes.string.isRequired,
   purposeAddons: PropTypes.arrayOf(PropTypes.string).isRequired,
   serviceLevel: PropTypes.string.isRequired,
   releaseVersion: PropTypes.string.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  orgId: PropTypes.number,
+  hostId: PropTypes.number,
+};
+
+SystemPurposeEditModal.defaultProps = {
+  hostName: '',
+  orgId: null,
+  hostId: null,
 };

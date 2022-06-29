@@ -16,6 +16,7 @@ import {
   List,
   ListItem,
   Tooltip,
+  Skeleton,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -26,6 +27,7 @@ import SystemPurposeEditModal from './SystemPurposeEditModal';
 
 const SystemPurposeCard = ({ hostDetails }) => {
   const showEditButton = true; // TODO: take permissions into account
+  const orgId = hostDetails.organization_id;
   const subscriptionFacetAttributes = hostDetails?.subscription_facet_attributes;
   const {
     purposeRole, purposeUsage, purposeAddons, releaseVersion, serviceLevel,
@@ -39,6 +41,16 @@ const SystemPurposeCard = ({ hostDetails }) => {
   };
 
   const [editing, setEditing] = useState(false);
+
+  if (!hostDetails?.id) {
+    return (
+      <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
+        <Card isHoverable ouiaId="system-purpose-card">
+          <Skeleton />
+        </Card>
+      </GridItem>
+    );
+  }
 
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
@@ -112,8 +124,10 @@ const SystemPurposeCard = ({ hostDetails }) => {
           </DescriptionList>
           <SystemPurposeEditModal
             isOpen={editing}
+            orgId={orgId}
             closeModal={() => setEditing(false)}
             hostName={hostDetails.name}
+            hostId={hostDetails.id}
             {...sysPurposeProps}
           />
         </CardBody>
@@ -124,6 +138,9 @@ const SystemPurposeCard = ({ hostDetails }) => {
 
 SystemPurposeCard.propTypes = {
   hostDetails: PropTypes.shape({
+    name: PropTypes.string,
+    organization_id: PropTypes.number,
+    id: PropTypes.number,
     subscription_facet_attributes: PropTypes.shape({
       installed_products: PropTypes.arrayOf(PropTypes.shape({
         productId: PropTypes.string,
