@@ -80,22 +80,19 @@ const SystemPurposeEditModal = ({
     },
   });
 
-  const buildOptions = (defaultOptions, additionalOptions) => {
-    const optionToObject = option => ({ label: option, value: option });
-    const unsetOption = { label: __('(unset)'), value: '' };
+  const buildOptions = (defaultOptions, additionalOptions, currentSelected) => {
+    const optionToObject = option => ({ label: option || __('(unset)'), value: option });
+    // const unsetOption = { label: __('(unset)'), value: '' };
     // combine default options with additional options,
     // but don't allow duplicates
-    const uniqOptions = [...new Set([...defaultOptions ?? [], ...additionalOptions ?? []])];
-    return [
-      unsetOption,
-      ...uniqOptions?.map(optionToObject),
-    ];
+    const uniqOptions = [...new Set(['', currentSelected, ...defaultOptions ?? [], ...additionalOptions ?? []])];
+    return [...uniqOptions?.map(optionToObject)];
   };
 
   const roleOptions =
-    buildOptions(defaultRoles, availableRoles);
+    buildOptions(defaultRoles, availableRoles, selectedRole);
   const usageOptions =
-    buildOptions(defaultUsages, availableUsages);
+    buildOptions(defaultUsages, availableUsages, selectedUsage);
 
   // addons may be present on the host but not available from subscriptions,
   // so we combine the options here
@@ -106,13 +103,12 @@ const SystemPurposeEditModal = ({
     ])];
 
   const serviceLevelOptions =
-    buildOptions(defaultServiceLevels, availableServiceLevels);
+    buildOptions(defaultServiceLevels, availableServiceLevels, selectedServiceLevel);
 
   const releaseVersionOptions =
-    buildOptions([], availableReleaseVersions);
+    buildOptions([], availableReleaseVersions, selectedReleaseVersion);
 
   const handleSave = (event) => {
-    console.log('handleSave');
     event.preventDefault();
     closeModal();
     const optionsToValue = (options, stateValue) =>
