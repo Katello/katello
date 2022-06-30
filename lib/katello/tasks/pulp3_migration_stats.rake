@@ -77,9 +77,9 @@ namespace :katello do
 
         File.open(File.join(path, name), 'w') do |file|
           file.write("filename,id,Repository Name,Content View Name,Content View Version\n")
-          content.joins(:repositories => [:root, :content_view_version => :content_view]).each do |unit|
+          content.includes(:repositories => [:root, :content_view_version => :content_view]).find_each(batch_size: 2000) do |unit|
             filename = unit.filename
-            unit.repositories.each do |repo|
+            unit.repositories.find_each(batch_size: 2000) do |repo|
               if repo.environment_id || repo.in_default_view?
                 file.write("#{filename},#{unit.id},#{repo.name},#{repo.content_view_version.content_view.name},#{repo.content_view_version.version}\n")
               end
