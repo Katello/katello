@@ -679,12 +679,10 @@ module Katello
     end
 
     def generic_remote_options_hash(repo_params)
-      generic_remote_options = {}
       content_type = @repository&.content_type || repo_params[:content_type]
-      RepositoryTypeManager.generic_remote_options(content_type: content_type).each do |option|
-        generic_remote_options[option.name] = repo_params[option.name]
+      RepositoryTypeManager.generic_remote_options(content_type: content_type).to_h do |option|
+        [option.name, repo_params[option.name].nil? ? option&.default : repo_params[option.name]]
       end
-      generic_remote_options
     end
 
     def generic_content_type_import_upload_args

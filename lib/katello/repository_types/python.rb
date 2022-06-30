@@ -19,13 +19,13 @@ Katello::RepositoryTypeManager.register('python') do
   publications_api_class PulpPythonClient::PublicationsPypiApi
   repo_sync_url_class PulpPythonClient::RepositorySyncURL
 
-  generic_remote_option :includes, title: N_("Includes"), type: Array, input_type: "textarea", delimiter: "\\n",
+  generic_remote_option :includes, title: N_("Includes"), type: Array, input_type: "textarea", delimiter: "\\n", default: [],
                         description: N_("Python packages to include from the upstream URL, names separated by newline. You may also specify versions, for example: django~=2.0. Leave empty to include every package.")
 
-  generic_remote_option :excludes, title: N_("Excludes"), type: Array, input_type: "textarea", delimiter: "\\n",
+  generic_remote_option :excludes, title: N_("Excludes"), type: Array, input_type: "textarea", delimiter: "\\n", default: [],
                         description: N_("Python packages to exclude from the upstream URL, names separated by newline. You may also specify versions, for example: django~=2.0.")
 
-  generic_remote_option :package_types, title: N_("Package Types"), type: Array, input_type: "text", delimiter: ",",
+  generic_remote_option :package_types, title: N_("Package Types"), type: Array, input_type: "text", delimiter: ",", default: [],
                         description: N_("Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg, bdist_dumb, bdist_egg, bdist_msi, bdist_rpm, bdist_wheel, bdist_wininst, sdist.")
 
   url_description N_("URL of a PyPI content source such as https://pypi.org.")
