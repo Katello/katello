@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { STATUS } from 'foremanReact/constants';
 import {
+  Button,
   Card,
   CardHeader,
   CardTitle,
@@ -21,9 +24,9 @@ import {
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
-import PencilEditButton from '../../../../EditableTextInput/PencilEditButton';
 import './SystemPurposeCard.scss';
 import SystemPurposeEditModal from './SystemPurposeEditModal';
+import { selectHostDetailsStatus } from '../../HostDetailsSelectors';
 
 const SystemPurposeCard = ({ hostDetails }) => {
   const showEditButton = true; // TODO: take permissions into account
@@ -39,9 +42,10 @@ const SystemPurposeCard = ({ hostDetails }) => {
     releaseVersion,
     serviceLevel,
   };
+  const hostDetailsStatus = useSelector(selectHostDetailsStatus);
+  const dataIsLoading = hostDetailsStatus === STATUS.PENDING;
 
   const [editing, setEditing] = useState(false);
-
   if (!hostDetails?.id) {
     return (
       <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
@@ -83,7 +87,7 @@ const SystemPurposeCard = ({ hostDetails }) => {
             </FlexItem>
             {showEditButton && (
               <FlexItem>
-                <PencilEditButton attribute="system_purpose" onEditClick={() => setEditing(val => !val)} />
+                <Button variant="link" isSmall ouiaId="syspurpose-edit-button" onClick={() => setEditing(val => !val)}>{__('Edit')}</Button>
               </FlexItem>)
             }
           </Flex>
@@ -92,31 +96,35 @@ const SystemPurposeCard = ({ hostDetails }) => {
           <DescriptionList isHorizontal>
             <DescriptionListGroup>
               <DescriptionListTerm>{__('Role')}</DescriptionListTerm>
-              <DescriptionListDescription>{purposeRole}</DescriptionListDescription>
+              <DescriptionListDescription>{dataIsLoading ? <Skeleton /> : purposeRole}</DescriptionListDescription>
               <DescriptionListTerm>{__('SLA')}</DescriptionListTerm>
               <DescriptionListDescription>
-                {serviceLevel && (
+                {serviceLevel && (dataIsLoading ? <Skeleton /> : (
                   <Label color="blue">{serviceLevel}</Label>
-                )}
+                ))}
               </DescriptionListDescription>
               <DescriptionListTerm>{__('Usage type')}</DescriptionListTerm>
               <DescriptionListDescription>
-                {purposeUsage && (
+                {purposeUsage && (dataIsLoading ? <Skeleton /> : (
                   <Label color="blue">{purposeUsage}</Label>
-                )}
+                ))}
               </DescriptionListDescription>
               <DescriptionListTerm>{__('Release version')}</DescriptionListTerm>
-              <DescriptionListDescription>{releaseVersion}</DescriptionListDescription>
+              <DescriptionListDescription>
+                {dataIsLoading ? <Skeleton /> : releaseVersion}
+              </DescriptionListDescription>
               {!!purposeAddons?.length && (
                 <>
                   <DescriptionListTerm>{__('Add-ons')}</DescriptionListTerm>
-                  <DescriptionListDescription>
-                    <List isPlain>
-                      {purposeAddons.map(addon => (
-                        <ListItem key={addon}>{addon}</ListItem>
-                      ))}
-                    </List>
-                  </DescriptionListDescription>
+                  {dataIsLoading ? <Skeleton /> : (
+                    <DescriptionListDescription>
+                      <List isPlain>
+                        {purposeAddons.map(addon => (
+                          <ListItem key={addon}>{addon}</ListItem>
+                        ))}
+                      </List>
+                    </DescriptionListDescription>
+                  )}
                 </>
               )
               }

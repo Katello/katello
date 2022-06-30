@@ -17,7 +17,9 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectOrganizationStatus, selectOrganization, selectAvailableReleaseVersions, selectAvailableReleaseVersionsStatus } from '../../HostDetailsSelectors';
-import { getAvailableReleaseVersions, getOrganization } from '../../HostDetailsActions';
+import { getAvailableReleaseVersions, getOrganization, updateSystemPurposeAttributes } from '../../HostDetailsActions';
+import HOST_DETAILS_KEY from '../../HostDetailsConstants';
+import { defaultUsages, defaultRoles, defaultServiceLevels } from './SystemPurposeConstants';
 
 const SystemPurposeEditModal = ({
   closeModal, hostName, purposeRole, purposeUsage, purposeAddons,
@@ -70,11 +72,64 @@ const SystemPurposeEditModal = ({
     setSelectedAddons([...newSelectedAddons]);
   };
 
-  const handleSave = (event) => {
-    event.preventDefault();
-    closeModal();
+  const refreshHostDetails = () => dispatch({
+    type: 'API_GET',
+    payload: {
+      key: HOST_DETAILS_KEY,
+      url: `/api/hosts/${hostName}`,
+    },
+  });
+
+  const buildOptions = (defaultOptions, additionalOptions) => {
+    const optionToObject = option => ({ label: option, value: option });
+    const unsetOption = { label: __('(unset)'), value: '' };
+    // combine default options with additional options,
+    // but don't allow duplicates
+    const uniqOptions = [...new Set([...defaultOptions ?? [], ...additionalOptions ?? []])];
+    return [
+      unsetOption,
+      ...uniqOptions?.map(optionToObject),
+    ];
   };
 
+  const roleOptions =
+    buildOptions(defaultRoles, availableRoles);
+  const usageOptions =
+    buildOptions(defaultUsages, availableUsages);
+
+  // addons may be present on the host but not available from subscriptions,
+  // so we combine the options here
+  const addonToObject = addon => ({ label: addon, value: addon });
+  const addonsOptions =
+    [...new Set([ // don't repeat addons if they are already selected
+      ...purposeAddons.map(addonToObject), ...availableAddons?.map(addonToObject) ?? [],
+    ])];
+
+  const serviceLevelOptions =
+    buildOptions(defaultServiceLevels, availableServiceLevels);
+
+  const releaseVersionOptions =
+    buildOptions([], availableReleaseVersions);
+
+  const handleSave = (event) => {
+    console.log('handleSave');
+    event.preventDefault();
+    closeModal();
+    const optionsToValue = (options, stateValue) =>
+      options.find(option => option.value === stateValue)?.value;
+    dispatch(updateSystemPurposeAttributes({
+      hostId,
+      attributes: {
+        autoheal: true,
+        purpose_role: optionsToValue(roleOptions, selectedRole),
+        purpose_usage: optionsToValue(usageOptions, selectedUsage),
+        purpose_addons: selectedAddons,
+        release_version: optionsToValue(releaseVersionOptions, selectedReleaseVersion),
+        service_level: optionsToValue(serviceLevelOptions, selectedServiceLevel),
+      },
+      refreshHostDetails,
+    }));
+  };
 
   const modalActions = ([
     <Button key="save-syspurpose" variant="primary" onClick={handleSave} isDisabled={unmodified}>
@@ -85,22 +140,6 @@ const SystemPurposeEditModal = ({
     </Button>,
   ]);
 
-  const roleOptions = availableRoles?.map(role => ({ label: role, value: role })) ?? [];
-  const usageOptions = availableUsages?.map(usage => ({ label: usage, value: usage })) ?? [];
-  // addons may be present on the host but not available from subscriptions,
-  // so we combine the options here
-  const addonToObject = addon => ({ label: addon, value: addon });
-  const addonsOptions =
-    [...new Set([ // don't repeat addons if they are already selected
-      ...purposeAddons.map(addonToObject), ...availableAddons?.map(addonToObject) ?? [],
-    ])];
-  const serviceLevelOptions = availableServiceLevels?.map(sl => ({ label: sl, value: sl })) ?? [];
-
-  const releaseVersionOptions = availableReleaseVersions.map(release => ({
-    label: release,
-    value: release,
-    key: release,
-  }));
 
   return (
     <Modal
