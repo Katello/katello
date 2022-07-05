@@ -1,17 +1,13 @@
 import React from 'react';
 import { act, renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
-import nock, { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 import ACSExpandableDetails from '../ACSExpandableDetails';
 import acsDetails from './acsDetails.fixtures';
 
 const acsDetailsURL = api.getApiUrl('/alternate_content_sources/1');
 const withACSRoute = component => <Route path="/labs/alternate_content_sources/:id([0-9]+)">{component}</Route>;
-
-afterEach(() => {
-  nock.cleanAll();
-});
 
 test('Can call API and show ACS details expandable sections on page load', async (done) => {
   const renderOptions = {

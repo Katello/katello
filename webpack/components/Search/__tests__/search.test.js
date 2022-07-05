@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
-import nock, {
+import {
   nockInstance, assertNockRequest, mockAutocomplete, mockSetting,
 } from '../../../test-utils/nockWrapper';
 import { AUTOSEARCH_WHILE_TYPING, AUTOSEARCH_DELAY } from '../../../scenes/Settings/SettingsConstants.js';
@@ -24,7 +24,6 @@ beforeEach(() => {
 
 afterEach(() => {
   assertNockRequest(searchDelayScope);
-  nock.cleanAll();
 });
 
 jest.mock('../../../utils/useDebounce', () => ({

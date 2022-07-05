@@ -2,7 +2,7 @@ import React from 'react';
 import * as reactRedux from 'react-redux';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import api, { foremanApi } from '../../../../services/api';
-import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../test-utils/nockWrapper';
 import ACSTable from '../../MainTable/ACSTable';
 import contentCredentialResult from './contentCredentials.fixtures';
 import smartProxyResult from './smartProxy.fixtures';
@@ -43,7 +43,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  nock.cleanAll();
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
 });

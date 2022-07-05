@@ -5,7 +5,7 @@ import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-
 import CONTENT_VIEWS_KEY from '../ContentViewsConstants';
 import ContentViewsPage from '../../ContentViews';
 import api from '../../../services/api';
-import nock, {
+import {
   nockInstance, assertNockRequest, mockAutocomplete, mockSetting,
 } from '../../../test-utils/nockWrapper';
 import createBasicCVs from './basicContentViews.fixtures';
@@ -31,7 +31,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  nock.cleanAll();
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
 });

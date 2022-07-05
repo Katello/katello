@@ -3,7 +3,7 @@ import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing
 import { Route } from 'react-router-dom';
 
 import { cvFilterDetailsKey } from '../../../ContentViewsConstants';
-import nock, {
+import {
   nockInstance,
   assertNockRequest,
   mockAutocomplete,
@@ -51,7 +51,6 @@ beforeEach(() => {
 afterEach(() => {
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
-  nock.cleanAll();
 });
 
 test('Can view container image filter rules', async (done) => {
