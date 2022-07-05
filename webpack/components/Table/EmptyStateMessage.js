@@ -35,7 +35,8 @@ const EmptyStateMessage = ({
   const {
     primaryActionTitle, showPrimaryAction, showSecondaryAction,
     secondaryActionTitle, primaryActionLink, secondaryActionLink, searchIsActive, resetFilters,
-    filtersAreActive, requestKey,
+    filtersAreActive, requestKey, showEmptyStateButtonClickAction, emptyStateButtonClickActions,
+    emptyStateButtonDetails,
   } = extraTableProps;
   if (error) {
     if (error?.response?.data?.error) {
@@ -81,9 +82,18 @@ const EmptyStateMessage = ({
           {emptyStateBody}
         </EmptyStateBody>
         {showPrimaryAction &&
-          <Button>
+          <Button
+            ouiaId={emptyStateButtonDetails?.ouiaId}
+            onClick={showEmptyStateButtonClickAction ?
+              () => emptyStateButtonClickActions() : undefined}
+            variant={emptyStateButtonDetails?.variant}
+            aria-label={emptyStateButtonDetails?.aria_label}
+          >
+            {showEmptyStateButtonClickAction ? primaryActionTitle :
             <a href={primaryActionLink} style={{ color: 'white', textDecoration: 'none' }}>{primaryActionTitle}</a>
-          </Button>}
+            }
+          </Button>
+        }
         {showSecondaryAction &&
           <EmptyStateSecondaryActions>
             <Button variant="link">
@@ -147,6 +157,9 @@ EmptyStateMessage.propTypes = {
     }
     return null;
   },
+  showPrimaryAction: PropTypes.bool,
+  showSecondaryAction: PropTypes.bool,
+  showEmptyStateButtonClickAction: PropTypes.bool,
 };
 
 EmptyStateMessage.defaultProps = {
@@ -159,6 +172,9 @@ EmptyStateMessage.defaultProps = {
   searchIsActive: false,
   activeFilters: [],
   defaultFilters: [],
+  showPrimaryAction: false,
+  showSecondaryAction: false,
+  showEmptyStateButtonClickAction: false,
 };
 
 export default EmptyStateMessage;

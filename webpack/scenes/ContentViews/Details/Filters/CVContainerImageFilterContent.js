@@ -10,10 +10,10 @@ import {
   TabTitleText,
   Split,
   SplitItem,
-  Button,
   Dropdown,
   DropdownItem,
   KebabToggle,
+  Button,
 } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -114,6 +114,17 @@ const CVContainerImageFilterContent = ({
       },
     },
   ];
+
+  const showPrimaryAction = true;
+  const showEmptyStateButtonClickAction = true;
+  const emptyStateButtonClickActions = () => setModalOpen(true);
+  const primaryActionTitle = __('Add filter rule');
+  const emptyStateButtonDetails = {
+    ouiaId: 'add-content-view-container-image-filter-button',
+    aria_label: 'add_filter_rule_empty_state',
+    variant: 'primary',
+  };
+
   return (
     <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
       <Tab eventKey={0} title={<TabTitleText>{__('Tags')}</TabTitleText>}>
@@ -129,6 +140,11 @@ const CVContainerImageFilterContent = ({
               searchQuery,
               updateSearchQuery,
               status,
+              showPrimaryAction,
+              showEmptyStateButtonClickAction,
+              emptyStateButtonClickActions,
+              emptyStateButtonDetails,
+              primaryActionTitle,
             }}
             ouiaId="content-view-container-image-filter"
             actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
@@ -139,6 +155,7 @@ const CVContainerImageFilterContent = ({
             fetchItems={useCallback(params => getCVFilterRules(filterId, params), [filterId])}
             actionButtons={hasPermission(permissions, 'edit_content_views') &&
               <>
+                {status === STATUS.RESOLVED && rows.length !== 0 &&
                 <Split hasGutter>
                   <SplitItem>
                     <Button
@@ -162,7 +179,7 @@ const CVContainerImageFilterContent = ({
                       }
                     />
                   </SplitItem>
-                </Split>
+                </Split>}
                 {modalOpen &&
                   <AddEditContainerTagRuleModal
                     {...{

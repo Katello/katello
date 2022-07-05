@@ -62,6 +62,7 @@ const ContentViewTable = () => {
   });
 
   const openForm = () => setIsModalOpen(true);
+
   const openPublishModal = (cvInfo) => {
     setActionableCvDetails(cvInfo);
     setIsPublishModalOpen(true);
@@ -125,9 +126,16 @@ const ContentViewTable = () => {
   );
 
   const emptyContentTitle = __("You currently don't have any Content views.");
-  const emptyContentBody = __('A content view can be added by using the "Create content view" button above.');
+  const emptyContentBody = __('A content view can be added by using the "Create content view" button below.');
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');
+  const primaryActionTitle = __('Create content view');
+  const showPrimaryAction = true;
+  const emptyStateButtonDetails = {
+    ouiaId: 'create-content-view',
+    aria_label: 'create_content_view',
+    variant: 'primary',
+  };
   const {
     id,
     latest_version_id: latestVersionId,
@@ -136,6 +144,8 @@ const ContentViewTable = () => {
     environments,
     versions,
   } = actionableCvDetails;
+
+  const emptyStateButtonClickActions = () => setIsModalOpen(true);
 
   return (
     <TableWrapper
@@ -149,6 +159,9 @@ const ContentViewTable = () => {
         searchQuery,
         updateSearchQuery,
         fetchItems,
+        showPrimaryAction,
+        emptyStateButtonClickActions,
+        emptyStateButtonDetails,
       }}
       ouiaId="content-views-table"
       additionalListeners={[activeSortColumn, activeSortDirection]}
@@ -156,9 +169,11 @@ const ContentViewTable = () => {
       variant={TableVariant.compact}
       status={status}
       autocompleteEndpoint="/content_views/auto_complete_search"
+      showEmptyStateButtonClickAction={canCreate}
+      primaryActionTitle={primaryActionTitle}
       actionButtons={
         <>
-          {canCreate &&
+          {results?.length !== 0 &&
             <Button ouiaId="create-content-view" onClick={openForm} variant="primary" aria-label="create_content_view">
               {__('Create content view')}
             </Button>

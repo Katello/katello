@@ -3,7 +3,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { TableVariant } from '@patternfly/react-table';
-import { Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { Tabs, Tab, TabTitleText, Split, SplitItem, Dropdown, DropdownItem, KebabToggle, Button } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { ArtifactsWithNoErrataRenderer } from './ArtifactsWithNoErrata';
@@ -145,6 +145,16 @@ const CVRpmFilterContent = ({
     deselectAll();
   };
 
+  const showPrimaryAction = true;
+  const showEmptyStateButtonClickAction = true;
+  const emptyStateButtonClickActions = () => setModalOpen(true);
+  const primaryActionTitle = __('Add RPM rule');
+  const emptyStateButtonDetails = {
+    ouiaId: 'add-rpm-rule-button',
+    aria_label: 'add_rpm_rule_empty_state',
+    variant: 'primary',
+  };
+
   return (
     <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
       <Tab eventKey={0} title={<TabTitleText>{tabTitle}</TabTitleText>}>
@@ -160,6 +170,11 @@ const CVRpmFilterContent = ({
               searchQuery,
               updateSearchQuery,
               status,
+              showPrimaryAction,
+              showEmptyStateButtonClickAction,
+              emptyStateButtonClickActions,
+              emptyStateButtonDetails,
+              primaryActionTitle,
             }}
             ouiaId="content-view-rpm-filter-table"
             actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
@@ -178,6 +193,7 @@ const CVRpmFilterContent = ({
                     onClose={onClose}
                   />}
                 {hasPermission(permissions, 'edit_content_views') &&
+                  status === STATUS.RESOLVED && rows.length !== 0 &&
                   <Split hasGutter>
                     <SplitItem>
                       <Button
@@ -206,8 +222,7 @@ const CVRpmFilterContent = ({
                         filterDetails={filterDetails}
                       />
                     </SplitItem>
-                  </Split>
-                }
+                  </Split>}
                 {modalOpen &&
                   <AddEditPackageRuleModal
                     filterId={filterId}

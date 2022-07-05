@@ -20,8 +20,8 @@ const MainTable = ({
   happyEmptyContent, searchIsActive, activeFilters, defaultFilters, actionButtons, rowsCount,
   children, showPrimaryAction, showSecondaryAction, primaryActionLink,
   secondaryActionLink, primaryActionTitle, secondaryActionTitle, resetFilters,
-  updateSearchQuery, requestKey,
-  ...extraTableProps
+  updateSearchQuery, requestKey, showEmptyStateButtonClickAction,
+  emptyStateButtonClickActions, emptyStateButtonDetails, ...extraTableProps
 }) => {
   const tableHasNoRows = () => {
     if (children) return rowsCount === 0;
@@ -34,6 +34,9 @@ const MainTable = ({
     primaryActionTitle,
     secondaryActionLink,
     secondaryActionTitle,
+    showEmptyStateButtonClickAction,
+    emptyStateButtonClickActions,
+    emptyStateButtonDetails,
   };
   const filtersAreActive = activeFilters?.length &&
     !isEqual(new Set(activeFilters), new Set(defaultFilters));
@@ -145,6 +148,12 @@ MainTable.propTypes = {
   resetFilters: PropTypes.func,
   updateSearchQuery: PropTypes.func,
   requestKey: PropTypes.string,
+  showEmptyStateButtonClickAction: PropTypes.bool,
+  emptyStateButtonClickActions: PropTypes.func,
+  emptyStateButtonDetails: PropTypes.objectOf(
+    PropTypes.string,
+    PropTypes.string,
+  ),
 };
 
 MainTable.defaultProps = {
@@ -169,6 +178,9 @@ MainTable.defaultProps = {
   resetFilters: undefined,
   updateSearchQuery: undefined,
   requestKey: '',
+  showEmptyStateButtonClickAction: false,
+  emptyStateButtonClickActions: undefined,
+  emptyStateButtonDetails: null,
 };
 
 export default MainTable;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
-import { Label, Split, SplitItem, Button, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { Label, Split, SplitItem, Dropdown, DropdownItem, KebabToggle, Button } from '@patternfly/react-core';
 import { TableVariant } from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
@@ -108,9 +108,18 @@ const ContentViewFilters = ({ cvId, details }) => {
   ];
 
   const emptyContentTitle = __("You currently don't have any filters for this content view.");
-  const emptyContentBody = __("Add filters using the 'Add filter' button above."); // needs link
+  const emptyContentBody = __('Filters will appear here when the filter is created.'); // needs link
   const emptySearchTitle = __('No matching filters found');
   const emptySearchBody = __('Try changing your search settings.');
+  const showEmptyStateButtonClickAction = true;
+  const emptyStateButtonClickActions = () => openAddModal();
+  const primaryActionTitle = __('Create filter');
+  const showPrimaryAction = true;
+  const emptyStateButtonDetails = {
+    ouiaId: 'create-filter-button',
+    aria_label: 'create_filter_empty_state',
+    variant: 'primary',
+  };
   return (
     <TableWrapper
       {...{
@@ -124,6 +133,11 @@ const ContentViewFilters = ({ cvId, details }) => {
         updateSearchQuery,
         error,
         status,
+        showPrimaryAction,
+        primaryActionTitle,
+        showEmptyStateButtonClickAction,
+        emptyStateButtonClickActions,
+        emptyStateButtonDetails,
       }}
       ouiaId="content-view-filters-table"
       actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
@@ -134,25 +148,26 @@ const ContentViewFilters = ({ cvId, details }) => {
       fetchItems={useCallback(params => getContentViewFilters(cvId, params), [cvId])}
       actionButtons={hasPermission(permissions, 'edit_content_views') &&
         <>
-          <Split hasGutter>
-            <SplitItem>
-              <Button ouiaId="create-filter-button" onClick={openAddModal} variant="primary" aria-label="create_filter">
-                {__('Create filter')}
-              </Button>
-            </SplitItem>
-            <SplitItem>
-              <Dropdown
-                toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                isOpen={bulkActionOpen}
-                isPlain
-                dropdownItems={[
-                  <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!bulkActionEnabled} component="button" onClick={bulkRemove}>
-                    {__('Remove')}
-                  </DropdownItem>]
-                }
-              />
-            </SplitItem>
-          </Split>
+          {status === STATUS.RESOLVED && rows.length !== 0 &&
+            <Split hasGutter>
+              <SplitItem>
+                <Button ouiaId="create-filter-button" onClick={openAddModal} variant="primary" aria-label="create_filter">
+                  {__('Create filter')}
+                </Button>
+              </SplitItem>
+              <SplitItem>
+                <Dropdown
+                  toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                  isOpen={bulkActionOpen}
+                  isPlain
+                  dropdownItems={[
+                    <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!bulkActionEnabled} component="button" onClick={bulkRemove}>
+                      {__('Remove')}
+                    </DropdownItem>]
+                  }
+                />
+              </SplitItem>
+            </Split>}
           {addModalOpen &&
             <CVFilterAddModal
               cvId={cvId}
