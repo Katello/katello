@@ -1,27 +1,30 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
-import { Button,
+import {
+  Button,
   Drawer,
-  DrawerPanelContent,
+  DrawerActions,
+  DrawerCloseButton,
   DrawerContent,
   DrawerContentBody,
   DrawerHead,
-  DrawerActions,
-  DrawerCloseButton,
-  TextContent,
+  DrawerPanelContent,
   Text,
-  TextVariants,
+  TextContent,
   TextList,
   TextListItem,
+  TextListItemVariants,
   TextListVariants,
-  TextListItemVariants } from '@patternfly/react-core';
-import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+  TextVariants,
+} from '@patternfly/react-core';
+import { TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import TableWrapper from '../../../components/Table/TableWrapper';
 import {
-  selectAlternateContentSources, selectAlternateContentSourcesError,
+  selectAlternateContentSources,
+  selectAlternateContentSourcesError,
   selectAlternateContentSourcesStatus,
 } from '../ACSSelectors';
 import { useTableSort } from '../../../components/Table/TableHooks';
@@ -91,27 +94,38 @@ const ACSTable = () => {
       <DrawerPanelContent defaultSize="50%">
         <DrawerHead>
           {results && isExpanded &&
-          <span ref={drawerRef}>
-            <TextContent>
-              <Text component={TextVariants.h1}>
-                {acs?.name}
-              </Text>
-              <TextList component={TextListVariants.dl}>
-                <TextListItem component={TextListItemVariants.dt}>
-                  {__('Last refresh :')}
-                </TextListItem>
-                <TextListItem
-                  aria-label="name_text_value"
-                  component={TextListItemVariants.dd}
-                >
-                  <LastSync startedAt={startedAt} lastSync={lastTask} lastSyncWords={lastRefreshWords} emptyMessage="N/A" />
-                </TextListItem>
-              </TextList>
-            </TextContent>
-            <ACSExpandableDetails />
-          </span>}
+            <span ref={drawerRef}>
+              <TextContent>
+                <Text component={TextVariants.h1}>
+                  {acs?.name}
+                </Text>
+                <TextList component={TextListVariants.dl}>
+                  <TextListItem component={TextListItemVariants.dt}>
+                    {__('Last refresh :')}
+                  </TextListItem>
+                  <TextListItem
+                    aria-label="name_text_value"
+                    component={TextListItemVariants.dd}
+                  >
+                    <LastSync
+                      startedAt={startedAt}
+                      lastSync={lastTask}
+                      lastSyncWords={lastRefreshWords}
+                      emptyMessage="N/A"
+                    />
+                  </TextListItem>
+                </TextList>
+              </TextContent>
+              <ACSExpandableDetails />
+            </span>}
           <DrawerActions>
-            <Button ouiaId="refresh-acs" onClick={() => onRefresh(acs?.id)} variant="secondary" aria-label="refresh_acs">
+            <Button
+              ouiaId="refresh-acs"
+              onClick={() => onRefresh(acs?.id)}
+              variant="secondary"
+              isSmall
+              aria-label="refresh_acs"
+            >
               {__('Refresh source')}
             </Button>
             <DrawerCloseButton onClick={onCloseClick} />
@@ -196,7 +210,12 @@ const ACSTable = () => {
             autocompleteEndpoint="/alternate_content_sources/auto_complete_search"
             actionButtons={
               <>
-                <Button ouiaId="create-acs" onClick={createButtonOnclick} variant="primary" aria-label="create_acs">
+                <Button
+                  ouiaId="create-acs"
+                  onClick={createButtonOnclick}
+                  variant="primary"
+                  aria-label="create_acs"
+                >
                   {__('Add source')}
                 </Button>
                 {isCreateWizardOpen &&
@@ -204,9 +223,9 @@ const ACSTable = () => {
                   show={isCreateWizardOpen}
                   setIsOpen={setIsCreateWizardOpen}
                 />
-                }
+                    }
               </>
-            }
+                }
           >
             <Thead>
               <Tr>
@@ -234,11 +253,21 @@ const ACSTable = () => {
                 } = lastTask ?? {};
                 return (
                   <Tr key={index}>
-                    <Td onClick={() => { onClick(id); push(`/labs/alternate_content_sources/${id}/details`); }}>
+                    <Td onClick={() => {
+                      onClick(id);
+                      push(`/labs/alternate_content_sources/${id}/details`);
+                    }}
+                    >
                       <Text component="a">{name}</Text>
                     </Td>
                     <Td>{acsType}</Td>
-                    <Td><LastSync startedAt={startedAt} lastSync={lastTask} lastSyncWords={lastRefreshWords} emptyMessage="N/A" /></Td>
+                    <Td><LastSync
+                      startedAt={startedAt}
+                      lastSync={lastTask}
+                      lastSyncWords={lastRefreshWords}
+                      emptyMessage="N/A"
+                    />
+                    </Td>
                     <Td
                       actions={{
                         items: rowDropdownItems(acs),
@@ -247,7 +276,7 @@ const ACSTable = () => {
                   </Tr>
                 );
               })
-            }
+                }
             </Tbody>
           </TableWrapper>
         </DrawerContentBody>

@@ -9,6 +9,10 @@ if @resource.respond_to?(:simplified?)
         { id: product.id, organization_id: product.organization.id, name: product.name, label: product.label }
       end
     end
+  else
+    node :upstream_password_exists do |_acs|
+      @resource.upstream_password.present?
+    end
   end
 end
 

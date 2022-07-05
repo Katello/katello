@@ -1,7 +1,14 @@
 import { API_OPERATIONS, APIActions, get, post } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
 import api, { orgId } from '../../services/api';
-import ACS_KEY, { acsDetailsKey, acsRefreshKey, CREATE_ACS_KEY, DELETE_ACS_KEY, PRODUCTS_KEY } from './ACSConstants';
+import ACS_KEY, {
+  acsDetailsKey,
+  acsRefreshKey,
+  CREATE_ACS_KEY,
+  DELETE_ACS_KEY,
+  EDIT_ACS_KEY,
+  PRODUCTS_KEY,
+} from './ACSConstants';
 import { getResponseErrorMsgs } from '../../utils/helpers';
 import { renderTaskStartedToast } from '../Tasks/helpers';
 
@@ -36,7 +43,6 @@ export const getACSDetails = (acsId, extraParams = {}) => get({
   params: { organization_id: orgId(), include_permissions: true, ...extraParams },
   url: api.getApiUrl(`/alternate_content_sources/${acsId}`),
 });
-
 
 export const createACS = params => post({
   type: API_OPERATIONS.POST,
@@ -76,5 +82,17 @@ export const getProducts = () => get({
     organization_id: orgId(), full_result: true, enabled: true, non_empty: true,
   },
 });
+
+export const editACS = (acsId, params, handleSuccess, handleError) => APIActions.put({
+  type: API_OPERATIONS.PUT,
+  key: EDIT_ACS_KEY,
+  url: api.getApiUrl(`/alternate_content_sources/${acsId}`),
+  params,
+  handleSuccess,
+  handleError,
+  successToast: () => __('Alternate content source edited'),
+  errorToast: error => __(`Something went wrong while editing the alternate content source! ${getResponseErrorMsgs(error.response)}`),
+});
+
 export default getAlternateContentSources;
 
