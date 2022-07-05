@@ -24,6 +24,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  nock.restore();
+  nock.cleanAll();
 });
 

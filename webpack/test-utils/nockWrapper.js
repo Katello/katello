@@ -18,6 +18,13 @@ export const nockInstance = nock('http://localhost');
 // The number of tries dictates the number of attempts assert will make before failing.
 // `tries * interval` is the maximum time that every nock scope will wait before failing if not met.
 export const assertNockRequest = (nockScope, jestDone, tries = 600) => {
+  // First function run of setInterval is not until after interval milliseconds.
+  // So duplicating some code here just in case the scope is already complete.
+  if (nockScope.isDone()) {
+    nockScope.done(); // Assert nock request
+    if (jestDone) jestDone(); // Tell jest test is done
+    return;
+  }
   // 500ms interval * 600 tries = 5 min timeout
   const interval = 500;
   let i = 0;
