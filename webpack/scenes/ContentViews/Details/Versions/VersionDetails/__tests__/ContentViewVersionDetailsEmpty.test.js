@@ -2,7 +2,7 @@ import React from 'react';
 import { renderWithRedux, patientlyWaitFor, act } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 
-import nock, { nockInstance, assertNockRequest } from '../../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest } from '../../../../../../test-utils/nockWrapper';
 import api from '../../../../../../services/api';
 import { cvVersionDetailsKey } from '../../../../ContentViewsConstants';
 import ContentViewVersionDetails from '../ContentViewVersionDetails';
@@ -39,7 +39,6 @@ beforeEach(() => {
 afterEach(() => {
   assertNockRequest(envScope);
   assertNockRequest(versionScope);
-  nock.cleanAll();
 });
 
 test('Can show versions detail header', async (done) => {

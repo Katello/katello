@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
-import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewVersions from '../ContentViewVersions';
@@ -50,7 +50,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  nock.cleanAll();
   assertNockRequest(envScope);
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);

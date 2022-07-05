@@ -2,7 +2,7 @@ import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 import { head, last } from 'lodash';
-import nock, { nockInstance, assertNockRequest, mockSetting, mockAutocomplete } from '../../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockSetting, mockAutocomplete } from '../../../../../../test-utils/nockWrapper';
 import api from '../../../../../../services/api';
 import { cvVersionDetailsKey } from '../../../../ContentViewsConstants';
 import ContentViewVersionDetails from '../ContentViewVersionDetails';
@@ -51,7 +51,6 @@ beforeEach(() => {
 
 afterEach(() => {
   assertNockRequest(envScope);
-  nock.cleanAll();
 });
 // This is written separately, as the autocomplete/search scopes are not needed.
 test('Can show versions details - Components Tab', async (done) => {
