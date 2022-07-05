@@ -1,4 +1,4 @@
-# 4.5 Old Monk (2022-06-09)
+# 4.5 Old Monk (2022-07-05)
 
 ## Features
 
@@ -18,6 +18,10 @@
  * Set up lab routes for ACS UI and land on read-only index page for ACS ([#34783](https://projects.theforeman.org/issues/34783), [2a10b1eb](https://github.com/Katello/katello.git/commit/2a10b1eb15f0dab79630aeba832b67b8ef043767))
  * Hosts UI - Module streams - Filter by state & installation status ([#34663](https://projects.theforeman.org/issues/34663), [91dd495a](https://github.com/Katello/katello.git/commit/91dd495a2b04d8c54411b2be7ef9967b1cbb467e))
  * Add table sorting by column ([#34461](https://projects.theforeman.org/issues/34461), [f609171f](https://github.com/Katello/katello.git/commit/f609171fd2bdc2372a88af85087efc3b018e1ea0))
+
+### Client/Agent
+ * Add "zypper ps" to trace services which need to be restarted. ([#34826](https://projects.theforeman.org/issues/34826), [15ddfdff](https://github.com/Katello/katello-host-tools.git/commit/15ddfdff868d2c5a9e303b1a076f68c5e2052964))
+ * Add "needrestart" to trace services which need to be restarted. ([#34825](https://projects.theforeman.org/issues/34825), [1e119689](https://github.com/Katello/katello-host-tools.git/commit/1e11968941496a118f7bd978318b1a0df55f079b))
 
 ### Repositories
  * Extend info box in release field of Deb repository create page in Katello GUI ([#34795](https://projects.theforeman.org/issues/34795), [7b1bd0e3](https://github.com/Katello/katello.git/commit/7b1bd0e30815355bb8439364d854511e2f56aaef))
@@ -48,23 +52,9 @@
 
 ## Bug Fixes
 
-### Hosts
- * 'Recent communication' card fill using the wrong slot  ([#35039](https://projects.theforeman.org/issues/35039))
- * Repository Sets - Filter by status ([#34808](https://projects.theforeman.org/issues/34808), [bd142604](https://github.com/Katello/katello.git/commit/bd142604d182d1559ca817784675b44e86a19823))
- * Updating packages from the Content host's page always tries to use katello-agent even when remote_execution_by_default set to true ([#34743](https://projects.theforeman.org/issues/34743), [2b824a86](https://github.com/Katello/katello.git/commit/2b824a86dde492b726fa14e0d62de4872a289145))
- * rename SSH to script provider ([#34696](https://projects.theforeman.org/issues/34696), [6014c4b6](https://github.com/Katello/katello.git/commit/6014c4b6b2feb4f1636d5df96e9ffc64ddb751ed))
- * New host details tables should link to REX job page, not Foreman Tasks ([#34620](https://projects.theforeman.org/issues/34620), [a0f9140b](https://github.com/Katello/katello.git/commit/a0f9140b6313e31a3eff848826d781d7d9c4cefd))
- * Repository Sets - Add Select All & bulk actions ([#34421](https://projects.theforeman.org/issues/34421), [70a71857](https://github.com/Katello/katello.git/commit/70a71857af0649cc942b398faf8411aa7dec5ba8))
-
-### Inter Server Sync
- * Error "missing keywords: :arch, :major, :minor" on CDN configuration ([#35033](https://projects.theforeman.org/issues/35033), [1e2bdb28](https://github.com/Katello/katello.git/commit/1e2bdb2843dc1f721c097266e6a0bd625371c7e9))
- * undefined method `find' for nil:NilClass when importing content that has gpg_keys associated to it ([#34966](https://projects.theforeman.org/issues/34966), [ba767120](https://github.com/Katello/katello.git/commit/ba76712092b8a85255f051499628251c295fc9cb))
- * Repository set not showing repos after importing library and creating an ak in a disconnected satellite ([#34733](https://projects.theforeman.org/issues/34733), [13dba28d](https://github.com/Katello/katello.git/commit/13dba28d9724cfab41458dbab14d70554df3c500))
- * on content import failure for a repository the created version should be cleaned up ([#34518](https://projects.theforeman.org/issues/34518), [dfacc815](https://github.com/Katello/katello.git/commit/dfacc81503e66aab70bb2131a25297f50ba611b6))
- * Fail to import contents when the connected and disconnected servers have different product labels for the same product ([#34501](https://projects.theforeman.org/issues/34501), [c90c4bd2](https://github.com/Katello/katello.git/commit/c90c4bd2722437463a3e9532bc54d3dac4c4342d))
- * Misleading error message when incorrect org label is entered ([#34464](https://projects.theforeman.org/issues/34464), [cf5f9c87](https://github.com/Katello/katello.git/commit/cf5f9c87fad2abeddad31f63e507e5e4b6f65bd5))
-
 ### Repositories
+ * Rake task refresh_alternate_content_sources fails when there are no ACSs ([#35119](https://projects.theforeman.org/issues/35119), [0b57cf37](https://github.com/Katello/katello.git/commit/0b57cf378b5433904b34b8f24687ad2e21b4d75c))
+ * Attempt to disable a Red Hat Repository fails with error "Cannot delete record because of dependent library_instances_inverse" if the repository is part of any CV versions in Satellite 6.10 ([#35073](https://projects.theforeman.org/issues/35073), [e1982b2c](https://github.com/Katello/katello.git/commit/e1982b2c9bcccc049f297de8e01dcc61e070d2b8))
  * Need to list Satellite Utils and Puppet agent repositories on Recommended Repositories page for Sat 6.11 ([#34993](https://projects.theforeman.org/issues/34993), [a30a7f42](https://github.com/Katello/katello.git/commit/a30a7f42b832f086d171a36c7b2b17712f5507d8))
  * Web elements are not localized Available Button ([#34933](https://projects.theforeman.org/issues/34933), [4c0e4933](https://github.com/Katello/katello.git/commit/4c0e49331885cb484218864452258910d355f92c))
  * AlternateContentSource::Update and AlternateContentSource::UpdateRemote should be async ([#34925](https://projects.theforeman.org/issues/34925))
@@ -76,12 +66,39 @@
  * A failed CV promote during publish or repo sync causes ISE ([#34680](https://projects.theforeman.org/issues/34680), [f0c69a1b](https://github.com/Katello/katello.git/commit/f0c69a1bf7799807e2238998f7b54e230aa5fa36))
  * Cannot upload a package to a repository if the same package already exists in another repository, but is not downloaded  ([#34635](https://projects.theforeman.org/issues/34635), [a3a856e8](https://github.com/Katello/katello.git/commit/a3a856e896823dd70510c197070199b013a434b4))
  * Remotes should have username and password cleared out if a user sets them to be blank ([#34619](https://projects.theforeman.org/issues/34619), [17a12869](https://github.com/Katello/katello.git/commit/17a12869397c56d556a38784ac88380713873866))
- * The "Serve via HTTP" and "Verify SSL" options in Repo Discovery page does not functions at all in Satellite 7.0 ([#34617](https://projects.theforeman.org/issues/34617), [8f76e5e9](https://github.com/Katello/katello.git/commit/8f76e5e98e97ff138884e2d0a6db2b7ff6610543))
+ * The "Serve via HTTP" and "Verify SSL" options in Repo Discovery page does not functions at all in Satellite 7.0 ([#34617](https://projects.theforeman.org/issues/34617), [8f76e5e9](https://github.com/Katello/katello.git/commit/8f76e5e98e97ff138884e2d0a6db2b7ff6610543), [b7e118e6](https://github.com/Katello/katello.git/commit/b7e118e6fdbae2e25b93c881ca83154f0088cc49))
  * Satellite/capsule 6.10 and tools 6.10 repos are listed in the Recommended Repositories for Sat 7.0 ([#34577](https://projects.theforeman.org/issues/34577), [c0cb3e25](https://github.com/Katello/katello.git/commit/c0cb3e25f3abdd14af5d3e0b9a4739345252b015))
  * Deletion of Custom repo deletes it from all versions of CV where it is included but the behavior is different for Red Hat based repos in Satellite 7.0 ([#34576](https://projects.theforeman.org/issues/34576), [05d1d710](https://github.com/Katello/katello.git/commit/05d1d71017ea839409bb84b8d74262bcb0bce1a3))
  * Red Hat Repositories have weird behavior if arch setting is changed ([#34490](https://projects.theforeman.org/issues/34490), [77f6193f](https://github.com/Katello/katello.git/commit/77f6193f8c1e59e067f8df29917b136001223a0c))
  * After upgrade products with repositories that had Ignorable Content = drpm can no longer be modified ([#34432](https://projects.theforeman.org/issues/34432), [2859ec67](https://github.com/Katello/katello.git/commit/2859ec678d2ce3e1d92cbc9d5daa9b8b32a361bf))
  * new host details - Repos restricted to an OS still show as Enabled on Repository Sets screen ([#32282](https://projects.theforeman.org/issues/32282), [ba22d6af](https://github.com/Katello/katello.git/commit/ba22d6af11d808e0bfe815b0d66e660aacb36ca6))
+
+### Tooling
+ * Bump pulp ansible client bindings to 0.13 ([#35064](https://projects.theforeman.org/issues/35064), [14c3e79d](https://github.com/Katello/katello.git/commit/14c3e79ddd76b7d6a17088ffff9eaeed07f32cb3))
+ * Upgrade to Pulpcore 3.18 ([#34926](https://projects.theforeman.org/issues/34926), [46276c9e](https://github.com/Katello/katello.git/commit/46276c9ee0d2cd30776666747af47d2d55a23e0f))
+ * Rails 6.1 upgrade raising errors on server startup ([#34862](https://projects.theforeman.org/issues/34862), [7fa2de58](https://github.com/Katello/katello.git/commit/7fa2de58861c68c446033a5828dbe0e756ec46aa), [89af56bd](https://github.com/Katello/katello.git/commit/89af56bdac183bbe785e24b87e43a42efccb57db))
+ * Pin pulp_rpm_client to <3.17.5 ([#34770](https://projects.theforeman.org/issues/34770), [5125b763](https://github.com/Katello/katello.git/commit/5125b763841ac5baf929e959affe810c8c43bff5))
+ *  Update Pulpcore to 3.17 ([#34697](https://projects.theforeman.org/issues/34697), [ad46cb3e](https://github.com/Katello/katello.git/commit/ad46cb3ee5c57a9b1d3f4b4a5678b875a1a27dde))
+
+### Roles and Permissions
+ * Permissions issue with activation key copy ([#35063](https://projects.theforeman.org/issues/35063), [85f0ce45](https://github.com/Katello/katello.git/commit/85f0ce45551f974c657d10b54f2b152a938be1ab))
+
+### Hosts
+ * 'Recent communication' card fill using the wrong slot  ([#35039](https://projects.theforeman.org/issues/35039), [f4542efa](https://github.com/Katello/katello.git/commit/f4542efaacf3aaea2cc7414a14de10caa13539cb))
+ * Repository Sets - Filter by status ([#34808](https://projects.theforeman.org/issues/34808), [bd142604](https://github.com/Katello/katello.git/commit/bd142604d182d1559ca817784675b44e86a19823))
+ * Updating packages from the Content host's page always tries to use katello-agent even when remote_execution_by_default set to true ([#34743](https://projects.theforeman.org/issues/34743), [2b824a86](https://github.com/Katello/katello.git/commit/2b824a86dde492b726fa14e0d62de4872a289145), [edefdb87](https://github.com/Katello/katello.git/commit/edefdb877ca9566b53c1e1d8f51ff144567329d6))
+ * rename SSH to script provider ([#34696](https://projects.theforeman.org/issues/34696), [6014c4b6](https://github.com/Katello/katello.git/commit/6014c4b6b2feb4f1636d5df96e9ffc64ddb751ed))
+ * New host details tables should link to REX job page, not Foreman Tasks ([#34620](https://projects.theforeman.org/issues/34620), [a0f9140b](https://github.com/Katello/katello.git/commit/a0f9140b6313e31a3eff848826d781d7d9c4cefd))
+ * Repository Sets - Add Select All & bulk actions ([#34421](https://projects.theforeman.org/issues/34421), [70a71857](https://github.com/Katello/katello.git/commit/70a71857af0649cc942b398faf8411aa7dec5ba8))
+
+### Inter Server Sync
+ * Error "missing keywords: :arch, :major, :minor" on CDN configuration ([#35033](https://projects.theforeman.org/issues/35033), [1e2bdb28](https://github.com/Katello/katello.git/commit/1e2bdb2843dc1f721c097266e6a0bd625371c7e9))
+ * Content import fails if repo labels differ and repo is already imported ([#34992](https://projects.theforeman.org/issues/34992), [26e1a5e3](https://github.com/Katello/katello.git/commit/26e1a5e316c654f6e651974eb31e8c56e967c5a9))
+ * undefined method `find' for nil:NilClass when importing content that has gpg_keys associated to it ([#34966](https://projects.theforeman.org/issues/34966), [ba767120](https://github.com/Katello/katello.git/commit/ba76712092b8a85255f051499628251c295fc9cb))
+ * Repository set not showing repos after importing library and creating an ak in a disconnected satellite ([#34733](https://projects.theforeman.org/issues/34733), [13dba28d](https://github.com/Katello/katello.git/commit/13dba28d9724cfab41458dbab14d70554df3c500))
+ * on content import failure for a repository the created version should be cleaned up ([#34518](https://projects.theforeman.org/issues/34518), [dfacc815](https://github.com/Katello/katello.git/commit/dfacc81503e66aab70bb2131a25297f50ba611b6))
+ * Fail to import contents when the connected and disconnected servers have different product labels for the same product ([#34501](https://projects.theforeman.org/issues/34501), [c90c4bd2](https://github.com/Katello/katello.git/commit/c90c4bd2722437463a3e9532bc54d3dac4c4342d))
+ * Misleading error message when incorrect org label is entered ([#34464](https://projects.theforeman.org/issues/34464), [cf5f9c87](https://github.com/Katello/katello.git/commit/cf5f9c87fad2abeddad31f63e507e5e4b6f65bd5))
 
 ### Upgrades
  * DB seeds fails on NoMethodError: undefined method `update!' for nil:NilClass ([#34974](https://projects.theforeman.org/issues/34974), [a5fa4a7f](https://github.com/Katello/katello.git/commit/a5fa4a7f6113564c973f5056b0ad602c231453de))
@@ -109,12 +126,6 @@
  * CV UI - Patternfly update causes tabs to navigate twice on click ([#34559](https://projects.theforeman.org/issues/34559), [acf477e2](https://github.com/Katello/katello.git/commit/acf477e24a52ed85d0b89511475e399b75192898))
  * CV UI - Status value translations should only translate the user facing text, not params etc sent to API. ([#34158](https://projects.theforeman.org/issues/34158), [aa9592ee](https://github.com/Katello/katello.git/commit/aa9592eec9d4ff47506c3d7b316098b14768d9f4))
  * Table row selection is slow when per_page is high ([#34072](https://projects.theforeman.org/issues/34072), [99d0567c](https://github.com/Katello/katello.git/commit/99d0567c3e4af2d8c3b95639a986cf44cde6496c))
-
-### Tooling
- * Upgrade to Pulpcore 3.18 ([#34926](https://projects.theforeman.org/issues/34926), [46276c9e](https://github.com/Katello/katello.git/commit/46276c9ee0d2cd30776666747af47d2d55a23e0f))
- * Rails 6.1 upgrade raising errors on server startup ([#34862](https://projects.theforeman.org/issues/34862), [7fa2de58](https://github.com/Katello/katello.git/commit/7fa2de58861c68c446033a5828dbe0e756ec46aa), [89af56bd](https://github.com/Katello/katello.git/commit/89af56bdac183bbe785e24b87e43a42efccb57db))
- * Pin pulp_rpm_client to <3.17.5 ([#34770](https://projects.theforeman.org/issues/34770), [5125b763](https://github.com/Katello/katello.git/commit/5125b763841ac5baf929e959affe810c8c43bff5))
- *  Update Pulpcore to 3.17 ([#34697](https://projects.theforeman.org/issues/34697), [ad46cb3e](https://github.com/Katello/katello.git/commit/ad46cb3ee5c57a9b1d3f4b4a5678b875a1a27dde))
 
 ### Hammer
  * Hammer is not showing gpg key in repo info ([#34924](https://projects.theforeman.org/issues/34924), [0a46a40a](https://github.com/Katello/hammer-cli-katello.git/commit/0a46a40aa7327dd2d59ddbac5e2474e9a4d91315))
@@ -146,6 +157,7 @@
 
 ### Other
  * Un-break Katello after Foreman settings change ([#34902](https://projects.theforeman.org/issues/34902))
+ * Reuse newly added support for searching on tasks by REX feature when gathering tasks for errata reports ([#34872](https://projects.theforeman.org/issues/34872), [83b7a4b3](https://github.com/Katello/katello.git/commit/83b7a4b379abb230f3039077adae0b12b52ba9af))
  * Update terminology for ISS ([#34734](https://projects.theforeman.org/issues/34734), [92980096](https://github.com/Katello/katello.git/commit/92980096784151ed88072bdb0c49e96cf8d70682), [4f334235](https://github.com/Katello/hammer-cli-katello.git/commit/4f334235ae64bba279c78ae97540184e7b637bf8))
  * Recurring logic does not clean up sync plan relationship when unset  ([#34660](https://projects.theforeman.org/issues/34660), [828e4f05](https://github.com/Katello/katello.git/commit/828e4f05e7facca2bdf9506c7885a86ae462723d))
  * Job invocation installs all the installable errata if incorrect `Job Template` is used ([#34638](https://projects.theforeman.org/issues/34638), [bbecd8d7](https://github.com/Katello/katello.git/commit/bbecd8d788fc8c872d396d45e956b62785485639))
