@@ -8,6 +8,7 @@ import ContentViewFilters from '../ContentViewFilters';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import cvFilterFixtures from './contentViewFilters.fixtures.json';
 import details from '../../../__tests__/mockDetails.fixtures.json';
+import emptyContentViewFiltersData from './emptyContentViewFilters.fixtures.json';
 
 const withCVRoute = component =>
   <Route path="/content_views/:id([0-9]+)#/filters">{component}</Route>;
@@ -175,4 +176,27 @@ test('Can remove multiple filters', async (done) => {
   assertNockRequest(getContentViewScope);
   assertNockRequest(removeFilterScope);
   assertNockRequest(callbackGetContentViewScope, done);
+});
+
+test('Shows call-to-action button when there are no filters', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+
+  const scope = nockInstance
+    .get(cvFilters)
+    .query(true)
+    .reply(200, emptyContentViewFiltersData);
+
+  const { queryByLabelText } =
+    renderWithRedux(withCVRoute(<ContentViewFilters cvId={1} details={details} />), renderOptions);
+
+  expect(queryByLabelText('create_filter_empty_state')).toBeNull();
+  await patientlyWaitFor(() => {
+    expect(queryByLabelText('create_filter_empty_state')).toBeInTheDocument();
+  });
+  fireEvent.click(queryByLabelText('create_filter_empty_state'));
+  await patientlyWaitFor(() => {
+    expect(queryByLabelText('create_filter')).toBeInTheDocument();
+  });
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done);
 });

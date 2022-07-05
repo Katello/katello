@@ -12,8 +12,10 @@ import contentViewTaskInProgressResponseData from './contentViewTaskInProgressRe
 import contentViewTaskResponseData from './contentViewTaskResponse.fixtures.json';
 import cvDetailData from '../../../../ContentViews/__tests__/mockDetails.fixtures.json';
 import environmentPathsData from '../../../Publish/__tests__/environmentPaths.fixtures.json';
+import cvIndexData from '../../../__tests__/contentViewList.fixtures.json';
 
 const cvPromotePath = api.getApiUrl('/content_view_versions/10/promote');
+const cvIndexPath = api.getApiUrl('/content_views');
 const promoteResponseData = contentViewTaskInProgressResponseData;
 
 
@@ -74,10 +76,11 @@ test('Can call API and show versions on page load', async (done) => {
     expect(getByText(`Version ${firstVersion.version}`)).toBeTruthy();
   });
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  act(done);
 });
 
-test('Can link to view environment and see publish time', async () => {
+test('Can link to view environment and see publish time', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(cvVersions)
@@ -104,9 +107,10 @@ test('Can link to view environment and see publish time', async () => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
+  act(done);
 });
 
-test('Can show package and erratas and link to list page', async () => {
+test('Can show package and erratas and link to list page', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(cvVersions)
@@ -131,9 +135,10 @@ test('Can show package and erratas and link to list page', async () => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
+  act(done);
 });
 
-test('Can show additional content and link to list page', async () => {
+test('Can show additional content and link to list page', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(cvVersions)
@@ -156,9 +161,10 @@ test('Can show additional content and link to list page', async () => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
+  act(done);
 });
 
-test('Can load for empty versions', async () => {
+test('Can load for empty versions', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(cvVersions)
@@ -175,6 +181,7 @@ test('Can load for empty versions', async () => {
     expect(queryByText("You currently don't have any versions for this content view.")).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
+  act(done);
 });
 
 test('Can call API and show versions with tasks on page load', async (done) => {
@@ -210,54 +217,16 @@ test('Can call API and show versions with tasks on page load', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(taskInProgressScope, done);
+  assertNockRequest(taskInProgressScope);
   act(done);// Force the test to stop listening for tasks
-});
-
-test('Can reload versions upon task completion', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const { results: withTaskResults } = cvVersionsTasksData;
-  [firstVersion] = withTaskResults;
-  const scope = nockInstance
-    .get(cvVersions)
-    .query(true)
-    .reply(200, cvVersionsTasksData);
-
-  const taskSuccessScope = nockInstance
-    .get(taskPollingUrl)
-    .times(6)
-    .reply(200, contentViewTaskResponseData);
-
-  const reloadScope = nockInstance
-    .get(cvVersions)
-    .query(true)
-    .reply(200, cvVersionsData);
-
-  const {
-    queryByLabelText, queryByText,
-  } = renderWithRedux(
-    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
-    renderOptions,
-  );
-
-  // Nothing will show at first, page is loading
-  expect(queryByText(`Version ${firstVersion.version}`)).toBeNull();
-
-  // Assert that the CV version is shown and active task is not rendered anymore on the screen.
-  await patientlyWaitFor(() => {
-    expect(queryByLabelText('task_presenter')).not.toBeInTheDocument();
-  });
-
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(scope);
-  assertNockRequest(taskSuccessScope);
-  // Assert CV Versions API is called upon task completion
-  assertNockRequest(reloadScope, done);
-  act(done);
 });
 
 test('Can open Promote Modal', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const cvScope = nockInstance
+    .get(cvIndexPath)
+    .query(true)
+    .reply(200, cvIndexData);
   const scope = nockInstance
     .get(cvVersions)
     .query(true)
@@ -297,11 +266,116 @@ test('Can open Promote Modal', async (done) => {
   // Modal closes itself
   await patientlyWaitFor(() => {
     expect(queryByText('Select a lifecycle environment from the available promotion paths to promote new version.')).toBeNull();
+    expect(getByText(`Version ${firstVersion.version}`)).toBeInTheDocument();
   });
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(promoteScope);
   // Page is refreshed
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  assertNockRequest(cvScope);
+  act(done);
+});
+
+test('Can reload versions upon task completion', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const { results: withTaskResults } = cvVersionsTasksData;
+  [firstVersion] = withTaskResults;
+  const scope = nockInstance
+    .get(cvVersions)
+    .query(true)
+    .reply(200, cvVersionsTasksData);
+  const cvScope = nockInstance
+    .get(cvIndexPath)
+    .query(true)
+    .reply(200, cvIndexData);
+
+  const taskSuccessScope = nockInstance
+    .get(taskPollingUrl)
+    .times(6)
+    .reply(200, contentViewTaskResponseData);
+
+  const reloadScope = nockInstance
+    .get(cvVersions)
+    .query(true)
+    .reply(200, cvVersionsData);
+
+  const {
+    queryByLabelText, queryByText,
+  } = renderWithRedux(
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
+    renderOptions,
+  );
+
+  // Nothing will show at first, page is loading
+  expect(queryByText(`Version ${firstVersion.version}`)).toBeNull();
+
+  // Assert that the CV version is shown and active task is not rendered anymore on the screen.
+  await patientlyWaitFor(() => {
+    expect(queryByLabelText('task_presenter')).not.toBeInTheDocument();
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(taskSuccessScope);
+  // Assert CV Versions API is called upon task completion
+  assertNockRequest(reloadScope);
+  assertNockRequest(cvScope);
+  act(done);
+});
+
+test('Shows call-to-action when there are no versions', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(cvVersions)
+    .query(true)
+    .reply(200, emptyCVVersionData);
+
+  const scopeWizard = nockInstance
+    .get(environmentPathsPath)
+    .query(true)
+    .reply(200, environmentPathsData);
+
+  const { getByText, queryByText } = renderWithRedux(
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
+    renderOptions,
+  );
+
+  // Nothing will show at first, page is loading
+  expect(queryByText('Publish new version')).toBeNull();
+  // Assert that the CV version is now showing on the screen, but wait for it to appear.
+  await patientlyWaitFor(() => {
+    expect(getByText('Publish new version')).toBeInTheDocument();
+  });
+  fireEvent.click(getByText('Publish new version'));
+  await patientlyWaitFor(() => expect(getByText('Publish new version - 1.0')).toBeInTheDocument);
+
+  assertNockRequest(scopeWizard);
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  act(done);
+});
+
+test('Hides selectAllCheckbox when there are no versions', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(cvVersions)
+    .query(true)
+    .reply(200, emptyCVVersionData);
+
+  const { queryByLabelText, queryByText, getByText } = renderWithRedux(
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
+    renderOptions,
+  );
+  // Nothing will show at first, page is loading
+  expect(queryByText('Publish new version')).toBeNull();
+  // Assert that the CV version is now showing on the screen, but wait for it to appear.
+  await patientlyWaitFor(() => {
+    expect(getByText('Publish new version')).toBeInTheDocument();
+    expect(queryByLabelText('Select all')).not.toBeInTheDocument();
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
   act(done);
 });

@@ -10,10 +10,10 @@ import {
   TabTitleText,
   Split,
   SplitItem,
-  Button,
   Dropdown,
   DropdownItem,
   KebabToggle,
+  Button,
 } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -55,7 +55,16 @@ const CVContainerImageFilterContent = ({
   const hasSelected = rows.some(({ selected }) => selected);
   const metadata = omit(response, ['results']);
   const { permissions } = details;
-
+  const showPrimaryAction = true;
+  const primaryActionButton =
+    (
+      <Button
+        ouiaId="add-content-view-container-image-filter-button"
+        onClick={() => setModalOpen(true)}
+        variant="primary"
+        aria-label="add_filter_rule_empty_state"
+      > {__('Add filter rule')}
+      </Button>);
   const onClose = () => {
     setModalOpen(false);
     setSelectedFilterRuleData(undefined);
@@ -129,6 +138,8 @@ const CVContainerImageFilterContent = ({
               searchQuery,
               updateSearchQuery,
               status,
+              showPrimaryAction,
+              primaryActionButton,
             }}
             ouiaId="content-view-container-image-filter"
             actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
@@ -139,30 +150,31 @@ const CVContainerImageFilterContent = ({
             fetchItems={useCallback(params => getCVFilterRules(filterId, params), [filterId])}
             actionButtons={hasPermission(permissions, 'edit_content_views') &&
               <>
-                <Split hasGutter>
-                  <SplitItem>
-                    <Button
-                      ouiaId="add-content-view-container-image-filter-button"
-                      onClick={() => setModalOpen(true)}
-                      variant="primary"
-                      aria-label="add_filter_rule"
-                    >
-                      {__('Add filter rule')}
-                    </Button>
-                  </SplitItem>
-                  <SplitItem>
-                    <Dropdown
-                      toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                      isOpen={bulkActionOpen}
-                      isPlain
-                      dropdownItems={[
-                        <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasSelected} component="button" onClick={bulkRemove}>
-                          {__('Remove')}
-                        </DropdownItem>]
-                      }
-                    />
-                  </SplitItem>
-                </Split>
+                {status === STATUS.RESOLVED && rows.length !== 0 &&
+                  <Split hasGutter>
+                    <SplitItem>
+                      <Button
+                        ouiaId="add-content-view-container-image-filter-button"
+                        onClick={() => setModalOpen(true)}
+                        variant="primary"
+                        aria-label="add_filter_rule"
+                      >
+                        {__('Add filter rule')}
+                      </Button>
+                    </SplitItem>
+                    <SplitItem>
+                      <Dropdown
+                        toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                        isOpen={bulkActionOpen}
+                        isPlain
+                        dropdownItems={[
+                          <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasSelected} component="button" onClick={bulkRemove}>
+                            {__('Remove')}
+                          </DropdownItem>]
+                        }
+                      />
+                    </SplitItem>
+                  </Split>}
                 {modalOpen &&
                   <AddEditContainerTagRuleModal
                     {...{

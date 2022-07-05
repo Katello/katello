@@ -15,6 +15,8 @@ import cvFilterDetails from './cvPackageFilterDetail.fixtures.json';
 import cvPackageFilterRules from './cvPackageFilterRules.fixtures.json';
 import cvFilterFixtures from './contentViewFilters.fixtures.json';
 import details from '../../../__tests__/mockDetails.fixtures.json';
+// import emptyContentViewFiltersData from './emptyContentViewFilters.fixtures.json';
+import emptyCVPackageFilterRules from './emptyCVPackageFilterRules.fixtures.json';
 
 const cvFiltersPath = api.getApiUrl('/content_view_filters');
 const cvFilterDetailsPath = api.getApiUrl('/content_view_filters/2');
@@ -69,7 +71,7 @@ test('Can show filter details and package groups on page load', async (done) => 
   assertNockRequest(autoSearchScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
-  assertNockRequest(cvPackageFilterRulesScope, done);
+  assertNockRequest(cvPackageFilterRulesScope);
   act(done);
 });
 
@@ -128,7 +130,8 @@ test('Can search for package rules in package filter details', async (done) => {
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvPackageFilterRulesScope);
   assertNockRequest(withSearchScope);
-  assertNockRequest(packageRuleSearchScope, done);
+  assertNockRequest(packageRuleSearchScope);
+  act(done);
 });
 
 test('Can add package rules to filter in a self-closing modal', async (done) => {
@@ -207,7 +210,8 @@ test('Can add package rules to filter in a self-closing modal', async (done) => 
   assertNockRequest(cvFilterDetailsScope);
   assertNockRequest(cvPackageFilterRulesScope);
   assertNockRequest(createscope);
-  assertNockRequest(cvPackageFilterRulesScope, done);
+  assertNockRequest(cvPackageFilterRulesScope);
+  act(done);
 });
 
 test('Remove rpm filter rule in a self-closing modal', async (done) => {
@@ -263,7 +267,8 @@ test('Remove rpm filter rule in a self-closing modal', async (done) => {
   assertNockRequest(cvFilterDetailsScope);
   assertNockRequest(cvPackageFilterRulesScope);
   assertNockRequest(removeScope);
-  assertNockRequest(cvPackageFilterRulesScope, done);
+  assertNockRequest(cvPackageFilterRulesScope);
+  act(done);
 });
 
 test('Edit rpm filter rule in a self-closing modal', async (done) => {
@@ -284,8 +289,8 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
     .query(true)
     .reply(200, cvFilterDetails);
   const cvPackageFilterRulesScope = nockInstance
+    .persist()
     .get(cvPackageFilterRulesPath)
-    .times(2) // One on initial page load and one after rule create
     .query(true)
     .reply(200, cvPackageFilterRules);
 
@@ -321,8 +326,8 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
     expect(getByText('Edit RPM rule')).toBeInTheDocument();
   });
   fireEvent.submit(getByLabelText('add_package_filter_rule'));
-
   await patientlyWaitFor(() => {
+    expect(queryByText('Edit RPM rule')).not.toBeInTheDocument();
     expect(getByText(cvFilterName)).toBeInTheDocument();
   });
 
@@ -334,6 +339,55 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFilterDetailsScope);
   assertNockRequest(cvPackageFilterRulesScope);
-  assertNockRequest(editScope, done);
+  assertNockRequest(editScope);
+  act(done);
+});
+
+test('Shows call-to-action when there are no RPM filters', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteNameScope = mockAutocomplete(nockInstance, autocompleteNameUrl);
+  const autocompleteArchScope = mockAutocomplete(nockInstance, autocompleteArchUrl);
+  const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0, 3);
+  const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 3);
+  const cvFilterDetailScope = nockInstance
+    .get(cvFilterDetailsPath)
+    .query(true)
+    .reply(200, cvFilterDetails);
+  const cvFiltersScope = nockInstance
+    .get(cvFiltersPath)
+    .query(true)
+    .reply(200, cvFilterFixtures);
+  const cvPackageFilterRulesScope = nockInstance
+    .get(cvPackageFilterRulesPath)
+    .times(1)
+    .query(true)
+    .reply(200, emptyCVPackageFilterRules);
+  const {
+    queryByLabelText, getAllByLabelText, queryByText,
+  } =
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
+  expect(queryByLabelText('add_rpm_rule_empty_state')).not.toBeInTheDocument();
+  await patientlyWaitFor(() => expect(queryByLabelText('add_rpm_rule_empty_state')).toBeInTheDocument());
+  fireEvent.click(queryByLabelText('add_rpm_rule_empty_state'));
+
+  await patientlyWaitFor(() => {
+    expect(getAllByLabelText('text input for search')[0]).toBeInTheDocument();
+    expect(queryByText('Cancel')).toBeInTheDocument();
+  });
+  fireEvent.click(queryByText('Cancel'));
+  await patientlyWaitFor(() => {
+    expect(queryByLabelText('add-edit-package-modal-cancel')).not.toBeInTheDocument();
+  });
+  assertNockRequest(autocompleteNameScope);
+  assertNockRequest(autocompleteArchScope);
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
+  assertNockRequest(cvFiltersScope);
+  assertNockRequest(cvFilterDetailScope);
+  assertNockRequest(cvPackageFilterRulesScope);
   act(done);
 });

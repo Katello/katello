@@ -20,8 +20,7 @@ const MainTable = ({
   happyEmptyContent, searchIsActive, activeFilters, defaultFilters, actionButtons, rowsCount,
   children, showPrimaryAction, showSecondaryAction, primaryActionLink,
   secondaryActionLink, primaryActionTitle, secondaryActionTitle, resetFilters,
-  updateSearchQuery, requestKey,
-  ...extraTableProps
+  updateSearchQuery, requestKey, primaryActionButton, ...extraTableProps
 }) => {
   const tableHasNoRows = () => {
     if (children) return rowsCount === 0;
@@ -34,6 +33,7 @@ const MainTable = ({
     primaryActionTitle,
     secondaryActionLink,
     secondaryActionTitle,
+    primaryActionButton,
   };
   const filtersAreActive = activeFilters?.length &&
     !isEqual(new Set(activeFilters), new Set(defaultFilters));
@@ -145,6 +145,7 @@ MainTable.propTypes = {
   resetFilters: PropTypes.func,
   updateSearchQuery: PropTypes.func,
   requestKey: PropTypes.string,
+  primaryActionButton: PropTypes.element,
 };
 
 MainTable.defaultProps = {
@@ -169,6 +170,7 @@ MainTable.defaultProps = {
   resetFilters: undefined,
   updateSearchQuery: undefined,
   requestKey: '',
+  primaryActionButton: undefined,
 };
 
 export default MainTable;

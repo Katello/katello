@@ -13,6 +13,7 @@ import api from '../../../../../services/api';
 import CVContainerImageFilterContent from '../CVContainerImageFilterContent';
 import cvFilterFixtures from './CVContainerImageFilterContent.fixtures.json';
 import details from '../../../../ContentViews/__tests__/mockDetails.fixtures.json';
+import emptyCVContainerImageData from './emptyCVContainerImageFilterContent.fixtures.json';
 
 const afterDeleteFilterResultsArray = [...cvFilterFixtures.results];
 afterDeleteFilterResultsArray.shift();
@@ -136,7 +137,6 @@ test('Can remove filter rules', async (done) => {
   assertNockRequest(cvFilterDeleteScope);
   assertNockRequest(cvFiltersCallbackScope, done);
 });
-
 
 // Add
 test('Can add filter rules', async (done) => {
@@ -276,5 +276,59 @@ test('Can edit filter rules', async (done) => {
   assertNockRequest(inputAutoSearchScope);
   assertNockRequest(autocompleteNameScope);
   assertNockRequest(cvFiltersCallbackScope, done);
+  act(done);
+});
+
+test('Shows call-to-action when there are no filter rules', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, true, [], 2);
+  const autocompleteNameScope = mockAutocomplete(nockInstance, autocompleteNameUrl, true, [], 2);
+  const inputSearchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0, 2);
+  const inputAutoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 2);
+  const cvFiltersScope = nockInstance
+    .get(cvFilterRulesPath)
+    .query(true)
+    .reply(200, emptyCVContainerImageData);
+
+  const { queryByLabelText, getAllByLabelText } =
+    renderWithRedux(
+      withCVRoute(<CVContainerImageFilterContent filterId={195} details={details} />),
+      renderOptions,
+    );
+
+  expect(queryByLabelText('add_filter_rule_empty_state')).toBeNull();
+  await patientlyWaitFor(() => expect(queryByLabelText('add_filter_rule_empty_state')).toBeInTheDocument());
+  fireEvent.click(queryByLabelText('add_filter_rule_empty_state'));
+  await patientlyWaitFor(() => {
+    expect(getAllByLabelText('text input for search')[0]).toBeInTheDocument();
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(inputSearchDelayScope);
+  assertNockRequest(inputAutoSearchScope);
+  assertNockRequest(autocompleteNameScope);
+  assertNockRequest(cvFiltersScope, done);
+  act(done);
+});
+
+test('Hides bulk_remove dropdownItem when there are no filter rules', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const cvFiltersScope = nockInstance
+    .get(cvFilterRulesPath)
+    .query(true)
+    .reply(200, emptyCVContainerImageData);
+
+  const { queryByText, getByText, queryByLabelText } =
+    renderWithRedux(
+      withCVRoute(<CVContainerImageFilterContent filterId={195} details={details} />),
+      renderOptions,
+    );
+  expect(queryByText('Add filter rule')).toBeNull();
+  await patientlyWaitFor(() => {
+    expect(getByText('Add filter rule')).toBeInTheDocument();
+    expect(queryByLabelText('bulk_actions')).not.toBeInTheDocument();
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(cvFiltersScope, done);
   act(done);
 });
