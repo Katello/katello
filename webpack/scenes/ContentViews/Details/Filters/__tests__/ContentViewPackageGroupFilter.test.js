@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 
 import ContentViewFilterDetails from '../ContentViewFilterDetails';
 import { ADDED, cvFilterDetailsKey, NOT_ADDED } from '../../../ContentViewsConstants';
-import nock, {
+import {
   nockInstance,
   assertNockRequest,
 } from '../../../../../test-utils/nockWrapper';
@@ -37,10 +37,6 @@ const renderOptions = {
 };
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
-
-afterEach(() => {
-  nock.cleanAll();
-});
 
 jest.mock('../../../../../components/Search', () => () => 'mocked!');
 

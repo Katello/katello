@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
-import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockForemanAutocomplete, mockSetting } from '../../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete, mockForemanAutocomplete, mockSetting } from '../../../../../../test-utils/nockWrapper';
 import api, { foremanApi } from '../../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../../ContentViewsConstants';
 import ContentViewVersions from '../../ContentViewVersions';
@@ -43,7 +43,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  nock.cleanAll();
   assertNockRequest(envScope);
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);

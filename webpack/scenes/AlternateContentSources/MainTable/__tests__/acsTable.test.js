@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
 
-import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 import ACSTable from '../ACSTable';
 import acsData from './acsIndex.fixtures.json';
@@ -21,7 +21,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  nock.cleanAll();
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
 });

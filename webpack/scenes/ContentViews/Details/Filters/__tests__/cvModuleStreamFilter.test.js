@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 
 import ContentViewFilterDetails from '../ContentViewFilterDetails';
 import { ADDED, cvFilterDetailsKey, NOT_ADDED } from '../../../ContentViewsConstants';
-import nock, {
+import {
   nockInstance,
   assertNockRequest,
   mockAutocomplete,
@@ -47,7 +47,6 @@ beforeEach(() => {
 afterEach(() => {
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
-  nock.cleanAll();
 });
 
 test('Can enable and disable add filter button', async (done) => {

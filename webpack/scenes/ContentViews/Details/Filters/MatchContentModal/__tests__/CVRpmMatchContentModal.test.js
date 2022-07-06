@@ -4,7 +4,7 @@ import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-
 
 import api from '../../../../../../services/api';
 import CVRpmMatchContentModal from '../CVRpmMatchContentModal';
-import nock, { nockInstance, assertNockRequest, mockSetting, mockAutocomplete } from '../../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockSetting, mockAutocomplete } from '../../../../../../test-utils/nockWrapper';
 
 import CVMatchedContent from './CVRpmMatchContent.fixtures.json';
 import CVMatchContentSearch from './CVRpmMatchContentSearch.fixtures.json';
@@ -27,7 +27,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  nock.cleanAll();
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
 });

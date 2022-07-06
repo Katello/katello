@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, renderWithRedux } from 'react-testing-lib-wrapper';
 import ErrataOverviewCard from '../ErrataOverviewCard';
-import nock from '../../../../../test-utils/nockWrapper';
 
 const baseHostDetails = {
   id: 2,
@@ -20,10 +19,6 @@ const renderOptions = {
   },
 };
 describe('Without errata', () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   test('shows zero counts when there are 0 installable errata', () => {
     const hostDetails = {
       ...baseHostDetails,
@@ -89,10 +84,6 @@ describe('Without errata', () => {
 });
 
 describe('With errata', () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   test('shows links when there are errata', () => {
     const hostDetails = {
       ...baseHostDetails,

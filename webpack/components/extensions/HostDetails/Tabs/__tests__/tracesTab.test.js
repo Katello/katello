@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithRedux, waitFor, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
-import nock, { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
 import { HOST_TRACES_KEY, TRACES_SEARCH_QUERY } from '../TracesTab/HostTracesConstants';
@@ -74,7 +74,6 @@ describe('With tracer installed', () => {
     assertNockRequest(searchDelayScope);
     assertNockRequest(autoSearchScope);
     assertNockRequest(bookmarkScope);
-    nock.cleanAll();
   });
 
   test('Can call API for traces and show on screen on page load', async (done) => {
@@ -345,10 +344,6 @@ describe('With tracer installed', () => {
       [firstTrace] = results;
     });
 
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
     test('Does not allow selection of session type traces', async (done) => {
       const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
 
@@ -374,10 +369,6 @@ describe('With tracer installed', () => {
 });
 
 describe('Without tracer installed', () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   test('Shows Enable Tracer empty state', async () => {
     const { queryByText } = renderWithRedux(<TracesTab />, renderOptions(false));
 

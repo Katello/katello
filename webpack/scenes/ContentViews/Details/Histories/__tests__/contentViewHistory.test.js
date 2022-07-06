@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
 
-import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewHistories from '../ContentViewHistories';
@@ -23,7 +23,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  nock.cleanAll();
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
 });

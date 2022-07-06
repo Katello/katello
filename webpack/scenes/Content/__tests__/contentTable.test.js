@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
-import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../test-utils/nockWrapper';
 import api from '../../../services/api';
 import ContentPage from '../ContentPage';
 import ansibleCollectionsResponse from './ansibleCollections.fixtures';
@@ -21,7 +21,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  nock.cleanAll();
   assertNockRequest(autoSearchScope);
   assertNockRequest(searchDelayScope);
 });

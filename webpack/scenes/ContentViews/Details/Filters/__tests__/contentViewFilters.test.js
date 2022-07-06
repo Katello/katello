@@ -3,7 +3,7 @@ import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-
 import { Route } from 'react-router-dom';
 
 import api from '../../../../../services/api';
-import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import ContentViewFilters from '../ContentViewFilters';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import cvFilterFixtures from './contentViewFilters.fixtures.json';
@@ -39,7 +39,6 @@ beforeEach(() => {
 afterEach(() => {
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
-  nock.cleanAll();
 });
 
 test('Can call API and show filters on page load', async (done) => {

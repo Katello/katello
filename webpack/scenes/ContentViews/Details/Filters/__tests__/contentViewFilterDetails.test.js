@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 
 import ContentViewFilterDetails from '../ContentViewFilterDetails';
 import { cvFilterDetailsKey } from '../../../ContentViewsConstants';
-import nock, {
+import {
   nockInstance,
   assertNockRequest,
   mockAutocomplete,
@@ -40,7 +40,6 @@ beforeEach(() => {
 afterEach(() => {
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
-  nock.cleanAll();
 });
 
 test('Can show filter details and package groups on page load', async (done) => {
