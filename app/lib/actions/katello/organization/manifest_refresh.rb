@@ -42,10 +42,14 @@ module Actions
 
         def plan_refresh_repos(import_products_action, org)
           repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(org))
-          repositories.each do |repo|
-            plan_action(Katello::Repository::RefreshRepository,
-              repo,
-              :dependency => import_products_action.output)
+          repositories.in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repo_batch|
+            concurrence do
+              repo_batch.each do |repo|
+                plan_action(Katello::Repository::RefreshRepository,
+                  repo,
+                  :dependency => import_products_action.output)
+              end
+            end
           end
         end
 
