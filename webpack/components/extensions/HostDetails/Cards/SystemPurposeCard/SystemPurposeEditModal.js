@@ -16,8 +16,8 @@ import {
 } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { selectOrganizationStatus, selectOrganization, selectAvailableReleaseVersions, selectAvailableReleaseVersionsStatus } from '../../HostDetailsSelectors';
-import { getAvailableReleaseVersions, getOrganization, updateSystemPurposeAttributes } from '../../HostDetailsActions';
+import { selectOrganizationStatus, selectOrganization, selectAvailableReleaseVersions, selectAvailableReleaseVersionsStatus } from './SystemPurposeSelectors';
+import { getAvailableReleaseVersions, getOrganization, updateSystemPurposeAttributes } from './SystemPurposeActions';
 import HOST_DETAILS_KEY from '../../HostDetailsConstants';
 import { defaultUsages, defaultRoles, defaultServiceLevels } from './SystemPurposeConstants';
 
