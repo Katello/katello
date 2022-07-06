@@ -26,12 +26,12 @@ const SystemPurposeEditModal = ({
   serviceLevel, releaseVersion, isOpen, orgId, hostId,
 }) => {
   const unmodified = false;
-  const [selectedRole, setSelectedRole] = useState(purposeRole);
-  const [selectedUsage, setSelectedUsage] = useState(purposeUsage);
+  const [selectedRole, setSelectedRole] = useState(purposeRole ?? '');
+  const [selectedUsage, setSelectedUsage] = useState(purposeUsage ?? '');
   const [addonSelectOpen, setAddonSelectOpen] = useState(false);
-  const [selectedAddons, setSelectedAddons] = useState(purposeAddons);
-  const [selectedReleaseVersion, setSelectedReleaseVersion] = useState(releaseVersion);
-  const [selectedServiceLevel, setSelectedServiceLevel] = useState(serviceLevel);
+  const [selectedAddons, setSelectedAddons] = useState(purposeAddons ?? []);
+  const [selectedReleaseVersion, setSelectedReleaseVersion] = useState(releaseVersion ?? '');
+  const [selectedServiceLevel, setSelectedServiceLevel] = useState(serviceLevel ?? '');
   const dispatch = useDispatch();
 
   const orgStatus = useSelector(state => selectOrganizationStatus(state, orgId));
@@ -46,7 +46,6 @@ const SystemPurposeEditModal = ({
     = useSelector(state => selectAvailableReleaseVersionsStatus(state, orgId));
   const availableReleaseVersions = useSelector(state =>
     selectAvailableReleaseVersions(state, hostId))?.results ?? [];
-
   useEffect(() => {
     if (orgId && orgStatus !== STATUS.RESOLVED) {
       dispatch(getOrganization({ orgId }));
@@ -80,19 +79,27 @@ const SystemPurposeEditModal = ({
     },
   });
 
-  const buildOptions = (defaultOptions, additionalOptions, currentSelected) => {
+  // Building the dropdown options is a bit complex because they come from several sources:
+  // 1. The hard-coded set of default values (defaultOptions)
+  // 2. The set of available values from the API (additionalOptions)
+  // 3. The value actually set on the host (currentSelected - this need not be a value from 1 or 2)
+  // We then need to combine these values into a single set of options, and ensure that
+  // (a) (unset) appears first;
+  // (b) there are no duplicate options;
+  // (c) that the currently selected option always appears (initialOption); and
+  // (d) that the order of the items doesn't change unexpectedly.
+  const buildOptions = (defaultOptions, additionalOptions, currentSelected, initialOption) => {
     const optionToObject = option => ({ label: option || __('(unset)'), value: option });
-    // const unsetOption = { label: __('(unset)'), value: '' };
-    // combine default options with additional options,
-    // but don't allow duplicates
-    const uniqOptions = [...new Set(['', currentSelected, ...defaultOptions ?? [], ...additionalOptions ?? []])];
-    return [...uniqOptions?.map(optionToObject)];
+    const uniqOptions = new Set(['', ...defaultOptions ?? [], ...additionalOptions ?? [], currentSelected, initialOption]);
+    uniqOptions.delete(null);
+    uniqOptions.delete(undefined);
+    return [...[...uniqOptions]?.map(optionToObject)];
   };
 
   const roleOptions =
-    buildOptions(defaultRoles, availableRoles, selectedRole);
+    buildOptions(defaultRoles, availableRoles, selectedRole, purposeRole);
   const usageOptions =
-    buildOptions(defaultUsages, availableUsages, selectedUsage);
+    buildOptions(defaultUsages, availableUsages, selectedUsage, purposeUsage);
 
   // addons may be present on the host but not available from subscriptions,
   // so we combine the options here
@@ -103,10 +110,10 @@ const SystemPurposeEditModal = ({
     ])];
 
   const serviceLevelOptions =
-    buildOptions(defaultServiceLevels, availableServiceLevels, selectedServiceLevel);
+    buildOptions(defaultServiceLevels, availableServiceLevels, selectedServiceLevel, serviceLevel);
 
   const releaseVersionOptions =
-    buildOptions([], availableReleaseVersions, selectedReleaseVersion);
+    buildOptions([], availableReleaseVersions, selectedReleaseVersion, releaseVersion);
 
   const handleSave = (event) => {
     event.preventDefault();
@@ -258,7 +265,7 @@ SystemPurposeEditModal.propTypes = {
   purposeUsage: PropTypes.string.isRequired,
   purposeAddons: PropTypes.arrayOf(PropTypes.string).isRequired,
   serviceLevel: PropTypes.string.isRequired,
-  releaseVersion: PropTypes.string.isRequired,
+  releaseVersion: PropTypes.string,
   isOpen: PropTypes.bool.isRequired,
   orgId: PropTypes.number,
   hostId: PropTypes.number,
@@ -268,4 +275,5 @@ SystemPurposeEditModal.defaultProps = {
   hostName: '',
   orgId: null,
   hostId: null,
+  releaseVersion: '',
 };

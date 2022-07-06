@@ -1,7 +1,8 @@
 import { translate as __ } from 'foremanReact/common/I18n';
 import { API_OPERATIONS, put } from 'foremanReact/redux/API';
 import api, { foremanApi } from '../../../../../services/api';
-import HOST_DETAILS_KEY, { ORGANIZATION, AVAILABLE_RELEASE_VERSIONS } from '../../HostDetailsConstants';
+import HOST_DETAILS_KEY from '../../HostDetailsConstants';
+import { ORGANIZATION, AVAILABLE_RELEASE_VERSIONS } from './SystemPurposeConstants';
 import { errorToast } from '../../../../../scenes/Tasks/helpers';
 
 export const getOrganization = ({ orgId }) => ({
