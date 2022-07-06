@@ -10,6 +10,8 @@ const repoTypeSearchQueryMap = {
 };
 
 const recommendedRepositoriesRHEL = [
+  'rhel-9-for-x86_64-baseos-rpms',
+  'rhel-9-for-x86_64-appstream-rpms',
   'rhel-8-for-x86_64-baseos-rpms',
   'rhel-8-for-x86_64-baseos-kickstart',
   'rhel-8-for-x86_64-appstream-rpms',
