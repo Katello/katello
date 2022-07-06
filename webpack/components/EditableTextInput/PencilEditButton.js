@@ -8,25 +8,22 @@ import {
   PencilAltIcon,
 } from '@patternfly/react-icons';
 
-const PencilEditButton = ({ attribute, onEditClick }) => {
-
-  return (
-    <Tooltip
-      position={TooltipPosition.top}
-      content={__('Edit')}
+const PencilEditButton = ({ attribute, onEditClick }) => (
+  <Tooltip
+    position={TooltipPosition.top}
+    content={__('Edit')}
+  >
+    <Button
+      className="foreman-edit-icon"
+      ouiaId={`edit-button-${attribute}`}
+      aria-label={`edit ${attribute}`}
+      variant="plain"
+      onClick={onEditClick}
     >
-      <Button
-        className="foreman-edit-icon"
-        ouiaId={`edit-button-${attribute}`}
-        aria-label={`edit ${attribute}`}
-        variant="plain"
-        onClick={onEditClick}
-      >
-        <PencilAltIcon />
-      </Button>
-    </Tooltip>
-  );
-};
+      <PencilAltIcon />
+    </Button>
+  </Tooltip>
+);
 
 export default PencilEditButton;
 

@@ -96,7 +96,9 @@ const SystemPurposeCard = ({ hostDetails }) => {
           <DescriptionList isHorizontal>
             <DescriptionListGroup>
               <DescriptionListTerm>{__('Role')}</DescriptionListTerm>
-              <DescriptionListDescription>{dataIsLoading ? <Skeleton /> : purposeRole}</DescriptionListDescription>
+              <DescriptionListDescription>
+                {dataIsLoading ? <Skeleton /> : purposeRole}
+              </DescriptionListDescription>
               <DescriptionListTerm>{__('SLA')}</DescriptionListTerm>
               <DescriptionListDescription>
                 {serviceLevel && (dataIsLoading ? <Skeleton /> : (
