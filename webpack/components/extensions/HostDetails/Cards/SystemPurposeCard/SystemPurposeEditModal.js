@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { STATUS } from 'foremanReact/constants';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
@@ -25,13 +26,25 @@ const SystemPurposeEditModal = ({
   closeModal, hostName, purposeRole, purposeUsage, purposeAddons,
   serviceLevel, releaseVersion, isOpen, orgId, hostId,
 }) => {
-  const unmodified = false;
-  const [selectedRole, setSelectedRole] = useState(purposeRole ?? '');
-  const [selectedUsage, setSelectedUsage] = useState(purposeUsage ?? '');
+  const initialPurposeRole = purposeRole ?? '';
+  const initialServiceLevel = serviceLevel ?? '';
+  const initialPurposeUsage = purposeUsage ?? '';
+  const initialReleaseVersion = releaseVersion ?? '';
+  const initialPurposeAddons = purposeAddons ?? [];
+  const [selectedRole, setSelectedRole] = useState(initialPurposeRole);
+  const [selectedServiceLevel, setSelectedServiceLevel] = useState(initialServiceLevel);
+  const [selectedUsage, setSelectedUsage] = useState(initialPurposeUsage);
   const [addonSelectOpen, setAddonSelectOpen] = useState(false);
-  const [selectedAddons, setSelectedAddons] = useState(purposeAddons ?? []);
-  const [selectedReleaseVersion, setSelectedReleaseVersion] = useState(releaseVersion ?? '');
-  const [selectedServiceLevel, setSelectedServiceLevel] = useState(serviceLevel ?? '');
+  const [selectedAddons, setSelectedAddons] = useState(initialPurposeAddons);
+  const [selectedReleaseVersion, setSelectedReleaseVersion] = useState(initialReleaseVersion);
+
+  const unmodified = (
+    selectedRole === initialPurposeRole &&
+    selectedServiceLevel === initialServiceLevel &&
+    selectedUsage === initialPurposeUsage &&
+    selectedReleaseVersion === initialReleaseVersion &&
+    isEqual(selectedAddons, initialPurposeAddons)
+  );
   const dispatch = useDispatch();
 
   const orgStatus = useSelector(state => selectOrganizationStatus(state, orgId));
@@ -134,11 +147,20 @@ const SystemPurposeEditModal = ({
     }));
   };
 
+  const handleCancel = () => {
+    setSelectedRole(initialPurposeRole);
+    setSelectedServiceLevel(initialServiceLevel);
+    setSelectedUsage(initialPurposeUsage);
+    setSelectedAddons(initialPurposeAddons);
+    setSelectedReleaseVersion(initialReleaseVersion);
+    closeModal();
+  };
+
   const modalActions = ([
-    <Button key="save-syspurpose" variant="primary" onClick={handleSave} isDisabled={unmodified}>
+    <Button ouiaId="save-syspurpose" key="save-syspurpose" variant="primary" onClick={handleSave} isDisabled={unmodified}>
       {__('Save')}
     </Button>,
-    <Button key="cancel" variant="link" onClick={closeModal}>
+    <Button ouiaId="cancel-syspurpose" key="cancel" variant="link" onClick={handleCancel}>
       {__('Cancel')}
     </Button>,
   ]);
@@ -147,7 +169,7 @@ const SystemPurposeEditModal = ({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={closeModal}
+      onClose={handleCancel}
       title={__('Edit system purpose attributes')}
       width="40%"
       position="top"
@@ -163,7 +185,7 @@ const SystemPurposeEditModal = ({
         }}
       />
       <Form isHorizontal style={{ marginTop: '1.3rem' }}>
-        <FormGroup label={__('Role')}>
+        <FormGroup label={__('Role')} fieldId="role">
           <FormSelect
             id="role"
             name="role"
@@ -179,7 +201,7 @@ const SystemPurposeEditModal = ({
             ))}
           </FormSelect>
         </FormGroup>
-        <FormGroup label={__('SLA')}>
+        <FormGroup label={__('SLA')} fieldId="serviceLevel">
           <FormSelect
             id="serviceLevel"
             name="serviceLevel"
@@ -195,7 +217,7 @@ const SystemPurposeEditModal = ({
             ))}
           </FormSelect>
         </FormGroup>
-        <FormGroup label={__('Usage')}>
+        <FormGroup label={__('Usage')} fieldId="usage">
           <FormSelect
             id="usage"
             name="usage"
@@ -211,7 +233,7 @@ const SystemPurposeEditModal = ({
             ))}
           </FormSelect>
         </FormGroup>
-        <FormGroup label={__('Release version')}>
+        <FormGroup label={__('Release version')} fieldId="releaseVersion">
           <FormSelect
             id="release_version"
             name="release_version"
@@ -227,7 +249,7 @@ const SystemPurposeEditModal = ({
             ))}
           </FormSelect>
         </FormGroup>
-        <FormGroup label={__('Add-ons')}>
+        <FormGroup label={__('Add-ons')} fieldId="addons">
           <span id="syspurpose-addons-title" hidden>
             Checkbox Title
           </span>
