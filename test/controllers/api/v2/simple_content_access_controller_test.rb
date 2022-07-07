@@ -93,6 +93,7 @@ module Katello
       assert_response :success
       refute(body['simple_content_access'])
     end
+
     def test_status_protected
       allowed_perms = [permission]
       denied_perms = []
