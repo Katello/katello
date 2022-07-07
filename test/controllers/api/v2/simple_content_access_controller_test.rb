@@ -93,6 +93,15 @@ module Katello
       assert_response :success
       refute(body['simple_content_access'])
     end
+    
+    def test_status_protected
+      allowed_perms = [permission]
+      denied_perms = []
+
+      assert_protected_action(:status, allowed_perms, denied_perms, [@organization]) do
+        get :status, params: { organization_id: @organization.id }
+      end
+    end    
 
     def test_eligible
       Katello::Candlepin::UpstreamConsumer.any_instance.expects(:simple_content_access_eligible?).returns(true)
