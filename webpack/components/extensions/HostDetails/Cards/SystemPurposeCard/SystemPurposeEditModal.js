@@ -82,11 +82,11 @@ const SystemPurposeEditModal = ({
   // Building the dropdown options is a bit complex because they come from several sources:
   // 1. The hard-coded set of default values (defaultOptions)
   // 2. The set of available values from the API (additionalOptions)
-  // 3. The value actually set on the host (currentSelected - this need not be a value from 1 or 2)
+  // 3. The value actually set on the host (initialOption - this need not be a value from 1 or 2)
   // We then need to combine these values into a single set of options, and ensure that
   // (a) (unset) appears first;
   // (b) there are no duplicate options;
-  // (c) that the currently selected option always appears (initialOption); and
+  // (c) that the currently selected option always appears (currentSelected); and
   // (d) that the order of the items doesn't change unexpectedly.
   const buildOptions = (defaultOptions, additionalOptions, currentSelected, initialOption) => {
     const optionToObject = option => ({ label: option || __('(unset)'), value: option });

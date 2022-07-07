@@ -27,9 +27,10 @@ import { propsToCamelCase } from 'foremanReact/common/helpers';
 import './SystemPurposeCard.scss';
 import SystemPurposeEditModal from './SystemPurposeEditModal';
 import { selectHostDetailsStatus } from '../../HostDetailsSelectors';
+import { hasRequiredPermissions } from '../../hostDetailsHelpers';
 
 const SystemPurposeCard = ({ hostDetails }) => {
-  const showEditButton = true; // TODO: take permissions into account
+  const showEditButton = hasRequiredPermissions(['edit_hosts'], hostDetails?.permissions);
   const orgId = hostDetails.organization_id;
   const subscriptionFacetAttributes = hostDetails?.subscription_facet_attributes;
   const {
@@ -132,14 +133,16 @@ const SystemPurposeCard = ({ hostDetails }) => {
               }
             </DescriptionListGroup>
           </DescriptionList>
-          <SystemPurposeEditModal
-            isOpen={editing}
-            orgId={orgId}
-            closeModal={() => setEditing(false)}
-            hostName={hostDetails.name}
-            hostId={hostDetails.id}
-            {...sysPurposeProps}
-          />
+          {showEditButton && (
+            <SystemPurposeEditModal
+              isOpen={editing}
+              orgId={orgId}
+              closeModal={() => setEditing(false)}
+              hostName={hostDetails.name}
+              hostId={hostDetails.id}
+              {...sysPurposeProps}
+            />
+          )}
         </CardBody>
       </Card>
     </GridItem>
@@ -156,6 +159,9 @@ SystemPurposeCard.propTypes = {
         productId: PropTypes.string,
         productName: PropTypes.string,
       })),
+    }),
+    permissions: PropTypes.shape({
+      edit_hosts: PropTypes.bool,
     }),
   }),
 };
