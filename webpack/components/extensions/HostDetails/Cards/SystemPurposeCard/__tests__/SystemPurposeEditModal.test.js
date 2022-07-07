@@ -52,7 +52,16 @@ const renderOptions = () => ({
 });
 
 describe('SystemPurposeEditModal', () => {
-  test('Shows currently selected attributes as defaults', () => {
+  test('Shows currently selected attributes as defaults', (done) => {
+    const orgScope = nockInstance
+      .get(organizationDetails)
+      .reply(200, {
+        id: 1,
+      });
+    const availableReleaseVersionsScope = nockInstance
+      .get(availableReleaseVersions)
+      .reply(200, []);
+
     const { getByText }
       = renderWithRedux(<SystemPurposeEditModal
         {...baseAttributes}
@@ -65,9 +74,20 @@ describe('SystemPurposeEditModal', () => {
     expect(getByText('Addon1')).toBeInTheDocument();
     expect(getByText('Addon2')).toBeInTheDocument();
     expect(getByText('8')).toBeInTheDocument();
+
+    assertNockRequest(orgScope);
+    assertNockRequest(availableReleaseVersionsScope, done);
   });
 
   test('Shows blank options as (unset)', () => {
+    const orgScope = nockInstance
+      .get(organizationDetails)
+      .reply(200, {
+        id: 1,
+      });
+    const availableReleaseVersionsScope = nockInstance
+      .get(availableReleaseVersions)
+      .reply(200, []);
     const { getAllByText }
       = renderWithRedux(<SystemPurposeEditModal
         {...
@@ -79,6 +99,9 @@ describe('SystemPurposeEditModal', () => {
       />, renderOptions());
 
     expect(getAllByText('(unset)')[0]).toBeVisible();
+
+    assertNockRequest(orgScope);
+    assertNockRequest(availableReleaseVersionsScope);
   });
   test('Calls API and changes syspurpose values', async (done) => {
     const orgScope = nockInstance

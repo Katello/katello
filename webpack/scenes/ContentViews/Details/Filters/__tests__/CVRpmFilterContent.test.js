@@ -319,8 +319,8 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText('Edit RPM rule')).toBeInTheDocument();
-    fireEvent.submit(getByLabelText('add_package_filter_rule'));
   });
+  fireEvent.submit(getByLabelText('add_package_filter_rule'));
 
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
