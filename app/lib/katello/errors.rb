@@ -154,7 +154,7 @@ module Katello
 
     class NoManifestImported < StandardError
       def message
-        _("Current organization has no manifest imported.")
+        _("Current organization does not have a manifest imported.")
       end
     end
 

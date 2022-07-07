@@ -392,6 +392,7 @@ Katello::Engine.routes.draw do
               put :enable
               put :disable
               get :eligible
+              get :status
             end
           end
 
@@ -403,6 +404,7 @@ Katello::Engine.routes.draw do
               match '/simple_content_access/enable', :to => 'upstream_subscriptions#enable_simple_content_access', :via => :put
               match '/simple_content_access/disable', :to => 'upstream_subscriptions#disable_simple_content_access', :via => :put
               match '/simple_content_access/eligible', :to => 'upstream_subscriptions#simple_content_access_eligible', :via => :get
+              match '/simple_content_access/status', :to => 'upstream_subscriptions#simple_content_access_status', :via => :get
             end
           end
         end
