@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 
 import ContentViewFilterDetails from '../ContentViewFilterDetails';
 import { cvFilterDetailsKey } from '../../../ContentViewsConstants';
-import nock, {
+import {
   nockInstance,
   assertNockRequest,
   mockAutocomplete,
@@ -33,10 +33,6 @@ const renderOptions = {
     initialIndex: 1,
   },
 };
-
-afterEach(() => {
-  nock.cleanAll();
-});
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
 
@@ -293,8 +289,8 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
     .query(true)
     .reply(200, cvFilterDetails);
   const cvPackageFilterRulesScope = nockInstance
+    .persist()
     .get(cvPackageFilterRulesPath)
-    .times(2) // One on initial page load and one after rule create
     .query(true)
     .reply(200, cvPackageFilterRules);
 
@@ -328,10 +324,10 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText('Edit RPM rule')).toBeInTheDocument();
-    fireEvent.submit(getByLabelText('add_package_filter_rule'));
   });
-
+  fireEvent.submit(getByLabelText('add_package_filter_rule'));
   await patientlyWaitFor(() => {
+    expect(queryByText('Edit RPM rule')).not.toBeInTheDocument();
     expect(getByText(cvFilterName)).toBeInTheDocument();
   });
 
@@ -363,10 +359,12 @@ test('Shows call-to-action when there are no RPM filters', async (done) => {
     .reply(200, cvFilterFixtures);
   const cvPackageFilterRulesScope = nockInstance
     .get(cvPackageFilterRulesPath)
-    .times(2)
+    .times(1)
     .query(true)
     .reply(200, emptyCVPackageFilterRules);
-  const { queryByLabelText, getAllByLabelText } =
+  const {
+    queryByLabelText, getAllByLabelText, queryByText,
+  } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
       cvId={1}
       details={details}
@@ -377,8 +375,12 @@ test('Shows call-to-action when there are no RPM filters', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getAllByLabelText('text input for search')[0]).toBeInTheDocument();
+    expect(queryByText('Cancel')).toBeInTheDocument();
   });
-
+  fireEvent.click(queryByText('Cancel'));
+  await patientlyWaitFor(() => {
+    expect(queryByLabelText('add-edit-package-modal-cancel')).not.toBeInTheDocument();
+  });
   assertNockRequest(autocompleteNameScope);
   assertNockRequest(autocompleteArchScope);
   assertNockRequest(autocompleteScope);
@@ -386,7 +388,6 @@ test('Shows call-to-action when there are no RPM filters', async (done) => {
   assertNockRequest(autoSearchScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFilterDetailScope);
-  assertNockRequest(cvPackageFilterRulesScope);
   assertNockRequest(cvPackageFilterRulesScope);
   act(done);
 });
