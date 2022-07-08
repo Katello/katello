@@ -11,8 +11,6 @@ import { moduleStreams } from '../../scenes/ModuleStreams';
 import { reducers as organizationProductsReducers } from '../OrganizationProducts';
 import { moduleStreamDetails } from '../../scenes/ModuleStreams/Details';
 import { reducers as systemStatuses } from '../../components/extensions/about';
-import { ansibleCollections } from '../../scenes/AnsibleCollections';
-import { ansibleCollectionDetails } from '../../scenes/AnsibleCollections/Details';
 import { contentViewDetails } from '../../scenes/ContentViews/Details';
 import hostDetails from '../../components/extensions/HostDetails/HostDetailsReducer';
 
@@ -27,8 +25,6 @@ export default combineReducers({
   setOrganization,
   moduleStreams,
   moduleStreamDetails,
-  ansibleCollections,
-  ansibleCollectionDetails,
   contentViewDetails,
   hostDetails,
   ...organizationProductsReducers,
