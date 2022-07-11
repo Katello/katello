@@ -558,7 +558,7 @@ test('Toggle Group shows if it\'s not the default content view or library enviro
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
-test('Toggle Group does not show if it\'s the default content view ', async (done) => {
+test('Toggle Group shows if it\'s the default content view but non-library environment', async (done) => {
   const options = renderOptions({
     ...contentFacetAttributes,
     content_view_default: true,
@@ -579,14 +579,41 @@ test('Toggle Group does not show if it\'s the default content view ', async (don
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-  expect(queryByLabelText('Installable Errata')).not.toBeInTheDocument();
+  expect(queryByLabelText('Installable Errata')).toBeInTheDocument();
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
-test('Toggle Group does not show if it\'s the  library environment', async (done) => {
+test('Toggle Group shows if it\'s the library environment but non-default content view', async (done) => {
   const options = renderOptions({
     ...contentFacetAttributes,
+    lifecycle_environment_library: true,
+  });
+  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const mockErrata = makeMockErrata({});
+  // return errata data results when we look for errata
+  const scope = nockInstance
+    .get(hostErrata)
+    .query(defaultQuery)
+    .reply(200, mockErrata);
+
+  const {
+    queryByLabelText,
+    getAllByText,
+  } = renderWithRedux(<ErrataTab />, options);
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
+  expect(queryByLabelText('Installable Errata')).toBeInTheDocument();
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Toggle Group does not show if it\'s the default content view and library environment', async (done) => {
+  const options = renderOptions({
+    ...contentFacetAttributes,
+    content_view_default: true,
     lifecycle_environment_library: true,
   });
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
