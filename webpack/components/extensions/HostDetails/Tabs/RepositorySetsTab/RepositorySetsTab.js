@@ -154,7 +154,7 @@ const RepositorySetsTab = () => {
     contentViewName,
     lifecycleEnvironmentName,
   } = contentFacet;
-  const nonLibraryHost = contentViewDefault === false &&
+  const nonLibraryHost = contentViewDefault === false ||
     lifecycleEnvironmentLibrary === false;
   const simpleContentAccess = (Number(subscriptionStatus) === 5);
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
