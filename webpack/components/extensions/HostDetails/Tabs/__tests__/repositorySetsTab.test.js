@@ -36,7 +36,7 @@ const autocompleteUrl = '/repository_sets/auto_complete_search';
 const repositorySetBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_product_contents');
 const contentOverride = foremanApi.getApiUrl('/hosts/1/subscriptions/content_override');
 
-const defaultQuery = {
+const limitToEnvQuery = {
   content_access_mode_env: true,
   content_access_mode_all: true,
   host_id: 1,
@@ -44,8 +44,8 @@ const defaultQuery = {
   page: 1,
   search: '',
 };
-const libraryQuery = {
-  ...defaultQuery,
+const showAllQuery = {
+  ...limitToEnvQuery,
   content_access_mode_env: false,
 };
 
@@ -73,7 +73,7 @@ test('Can call API for repository sets and show basic table', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(hostRepositorySets)
-    .query(defaultQuery)
+    .query(limitToEnvQuery)
     .reply(200, mockRepoSetData);
 
   const { getByText } = renderWithRedux(<RepositorySetsTab />, renderOptions());
@@ -97,7 +97,7 @@ test('Can handle no repository sets being present', async (done) => {
 
   const scope = nockInstance
     .get(hostRepositorySets)
-    .query(defaultQuery)
+    .query(limitToEnvQuery)
     .reply(200, noResults);
 
   const { queryByText } = renderWithRedux(<RepositorySetsTab />, renderOptions());
@@ -113,7 +113,7 @@ test('Toggle Group shows if it\'s not the default content view or library enviro
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(hostRepositorySets)
-    .query(defaultQuery)
+    .query(limitToEnvQuery)
     .reply(200, mockRepoSetData);
 
   const {
@@ -128,7 +128,7 @@ test('Toggle Group shows if it\'s not the default content view or library enviro
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
-test('Toggle Group does not show if it\'s the default content view ', async (done) => {
+test('Toggle Group shows if it\'s the default content view but non-library environment', async (done) => {
   const options = renderOptions({
     ...contentFacetAttributes,
     content_view_default: true,
@@ -137,7 +137,7 @@ test('Toggle Group does not show if it\'s the default content view ', async (don
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(hostRepositorySets)
-    .query(libraryQuery)
+    .query(limitToEnvQuery)
     .reply(200, mockRepoSetData);
 
   const {
@@ -147,12 +147,12 @@ test('Toggle Group does not show if it\'s the default content view ', async (don
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
-  expect(queryByLabelText('Limit to environment')).not.toBeInTheDocument();
+  expect(queryByLabelText('Limit to environment')).toBeInTheDocument();
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
-test('Toggle Group does not show if it\'s the library environment', async (done) => {
+test('Toggle Group shows if it\'s the library environment but a non-default content view', async (done) => {
   const options = renderOptions({
     ...contentFacetAttributes,
     lifecycle_environment_library: true,
@@ -161,7 +161,32 @@ test('Toggle Group does not show if it\'s the library environment', async (done)
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostRepositorySets)
-    .query(libraryQuery)
+    .query(limitToEnvQuery)
+    .reply(200, mockRepoSetData);
+
+  const {
+    queryByLabelText,
+    getByText,
+  } = renderWithRedux(<RepositorySetsTab />, options);
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
+  expect(queryByLabelText('Limit to environment')).toBeInTheDocument();
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Toggle Group does not show if it\'s the library environment and default content view', async (done) => {
+  const options = renderOptions({
+    ...contentFacetAttributes,
+    lifecycle_environment_library: true,
+    content_view_default: true,
+  });
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  // return errata data results when we look for errata
+  const scope = nockInstance
+    .get(hostRepositorySets)
+    .query(showAllQuery)
     .reply(200, mockRepoSetData);
 
   const {
@@ -182,7 +207,7 @@ test('Can toggle with the Toggle Group ', async (done) => {
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostRepositorySets)
-    .query(defaultQuery)
+    .query(limitToEnvQuery)
     .reply(200, mockRepoSetData);
 
   const {
@@ -202,7 +227,7 @@ test('Can override to disabled', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(hostRepositorySets)
-    .query(defaultQuery)
+    .query(limitToEnvQuery)
     .reply(200, mockRepoSetData);
   const contentOverrideScope = nockInstance
     .put(contentOverride)
@@ -238,7 +263,7 @@ test('Can override to enabled', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(hostRepositorySets)
-    .query(defaultQuery)
+    .query(limitToEnvQuery)
     .reply(200, mockRepoSetData);
   const contentOverrideScope = nockInstance
     .put(contentOverride)
@@ -274,7 +299,7 @@ test('Can reset to default', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(hostRepositorySets)
-    .query(defaultQuery)
+    .query(limitToEnvQuery)
     .reply(200, mockRepoSetData);
   const contentOverrideScope = nockInstance
     .put(contentOverride)
