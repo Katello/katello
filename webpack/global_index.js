@@ -23,6 +23,7 @@ import {
 } from './components/extensions/HostDetails/DetailsTabCards/SystemPropertiesCardExtensions';
 import HostActionsBar from './components/extensions/HostDetails/ActionsBar';
 import RecentCommunicationCardExtensions from './components/extensions/HostDetails/DetailsTabCards/RecentCommunicationCardExtensions';
+import SystemPurposeCard from './components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeCard';
 
 registerReducer('katelloExtends', extendReducer);
 registerReducer('katello', rootReducer);
@@ -48,6 +49,7 @@ addGlobalFill(
   2600,
 );
 addGlobalFill('host-overview-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 3600);
+addGlobalFill('host-overview-cards', 'System purpose', <SystemPurposeCard key="system-purpose" />, 1400);
 addGlobalFill('recent-communication-card-item', 'Recent communication', <RecentCommunicationCardExtensions key="recent-communication" />, 3000);
 
 // Details tab cards & card extensions

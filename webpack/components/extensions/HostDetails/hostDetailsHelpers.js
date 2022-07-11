@@ -35,7 +35,7 @@ export const userPermissionsFromHostDetails = ({ hostDetails }) => {
 
 // requiredPermissions is an array
 // userPermissions is an object, e.g. { view_hosts: true }
-export const hasRequiredPermissions = (requiredPermissions = [], userPermissions) => {
+export const hasRequiredPermissions = (requiredPermissions = [], userPermissions = {}) => {
   const permittedActions = Object.keys(userPermissions).filter(key => userPermissions[key]);
   return requiredPermissions.every(permission => permittedActions.includes(permission));
 };

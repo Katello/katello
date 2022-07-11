@@ -14,6 +14,11 @@ global.console.error = (error, stack) => {
 // Increase jest timeout as some tests using multiple http mocks can time out on CI systems.
 jest.setTimeout(process.env.JEST_TIMEOUT || 15000);
 
+// uncomment this to see if tests are trying to make real API requests
+// beforeAll(() => {
+//   nock.disableNetConnect();
+// });
+
 afterAll(() => {
   jest.resetModules();
   if (global.gc) global.gc();

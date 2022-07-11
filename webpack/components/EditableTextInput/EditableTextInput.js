@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import {
-  TextInput, TextArea, Text, Button, Split, SplitItem, Tooltip, TooltipPosition,
+  TextInput, TextArea, Text, Button, Split, SplitItem,
 } from '@patternfly/react-core';
 import {
   EyeIcon,
   EyeSlashIcon,
   TimesIcon,
   CheckIcon,
-  PencilAltIcon,
 } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import './editableTextInput.scss';
+import PencilEditButton from './PencilEditButton';
 
 const PASSWORD_MASK = '••••••••';
 
@@ -129,20 +129,7 @@ const EditableTextInput = ({
       </SplitItem >
       {!disabled &&
         <SplitItem>
-          <Tooltip
-            position={TooltipPosition.top}
-            content={__('Edit')}
-          >
-            <Button
-              className="foreman-edit-icon"
-              ouiaId={`edit-button-${attribute}`}
-              aria-label={`edit ${attribute}`}
-              variant="plain"
-              onClick={onEditClick}
-            >
-              <PencilAltIcon />
-            </Button>
-          </Tooltip>
+          <PencilEditButton {...{ attribute, onEditClick }} />
         </SplitItem>
       }
     </Split >
