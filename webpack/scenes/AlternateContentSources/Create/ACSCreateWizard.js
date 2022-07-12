@@ -14,6 +14,8 @@ import ACSCreateFinish from './Steps/ACSCreateFinish';
 import { getContentCredentials } from '../../ContentCredentials/ContentCredentialActions';
 import { getSmartProxies } from '../../SmartProxy/SmartProxyContentActions';
 import { CONTENT_CREDENTIAL_CERT_TYPE } from '../../ContentCredentials/ContentCredentialConstants';
+import { getProducts } from '../ACSActions';
+import ACSProducts from './Steps/ACSProducts';
 
 const ACSCreateWizard = ({ show, setIsOpen }) => {
   const [acsType, setAcsType] = useState(null);
@@ -33,6 +35,8 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
   const [password, setPassword] = useState('');
   const [caCert, setCACert] = useState('');
   const [caCertName, setCACertName] = useState('');
+  const [productIds, setProductIds] = useState([]);
+  const [productNames, setProductNames] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
   const dispatch = useDispatch();
 
@@ -40,53 +44,76 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
     () => {
       dispatch(getContentCredentials({ content_type: CONTENT_CREDENTIAL_CERT_TYPE }));
       dispatch(getSmartProxies());
+      dispatch(getProducts());
     },
     [dispatch],
   );
 
-  const steps = [
-    {
-      id: 1,
-      name: __('Select source type'),
-      component: <SelectSource />,
-      enableNext: acsType && contentType,
-    },
-    {
-      id: 2,
-      name: __('Name source'),
-      component: <NameACS />,
-      enableNext: name !== '',
-    },
-    {
-      id: 3,
-      name: __('Select smart proxy'),
-      component: <ACSSmartProxies />,
-      enableNext: smartProxies.length,
-    },
-    {
-      id: 4,
-      name: __('URL and paths'),
-      component: <AcsUrlPaths />,
-      enableNext: url !== '',
-    },
-    {
-      id: 5,
-      name: __('Credentials'),
-      component: <ACSCredentials />,
-    },
-    {
-      id: 6,
-      name: __('Review details'),
-      component: <ACSReview />,
-      nextButtonText: __('Add'),
-    },
-    {
-      id: 7,
-      name: __('Create ACS'),
-      component: <ACSCreateFinish />,
-      isFinishedStep: true,
-    },
+  const sourceTypeStep = {
+    id: 1,
+    name: __('Select source type'),
+    component: <SelectSource />,
+    enableNext: acsType && contentType,
+  };
 
+  const nameStep = {
+    id: 2,
+    name: __('Name source'),
+    component: <NameACS />,
+    enableNext: name !== '',
+  };
+
+  const smartProxyStep = {
+    id: 3,
+    name: __('Select smart proxy'),
+    component: <ACSSmartProxies />,
+    enableNext: smartProxies.length,
+  };
+
+  const productStep = {
+    id: 4,
+    name: __('Select products'),
+    component: <ACSProducts />,
+    enableNext: productIds.length,
+  };
+
+  const urlPathStep = {
+    id: 5,
+    name: __('URL and paths'),
+    component: <AcsUrlPaths />,
+    enableNext: url !== '',
+  };
+
+  const credentialsStep = {
+    id: 6,
+    name: __('Credentials'),
+    component: <ACSCredentials />,
+    enableNext: (url !== '' || productIds.length) && smartProxies.length && name !== '' && acsType && contentType,
+  };
+
+  const reviewStep = {
+    id: 7,
+    name: __('Review details'),
+    component: <ACSReview />,
+    nextButtonText: __('Add'),
+    enableNext: (url !== '' || productIds.length) && smartProxies.length && name !== '' && acsType && contentType,
+  };
+
+  const finishStep = {
+    id: 8,
+    name: __('Create ACS'),
+    component: <ACSCreateFinish />,
+    isFinishedStep: true,
+  };
+
+  const steps = [
+    sourceTypeStep,
+    nameStep,
+    smartProxyStep,
+    ...(acsType === 'custom' ? [urlPathStep, credentialsStep] : []),
+    ...(acsType === 'simplified' ? [productStep] : []),
+    reviewStep,
+    finishStep,
   ];
 
   return (
@@ -105,6 +132,10 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
       setDescription,
       smartProxies,
       setSmartProxies,
+      productIds,
+      setProductIds,
+      productNames,
+      setProductNames,
       url,
       setUrl,
       subpaths,

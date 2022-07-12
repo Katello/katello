@@ -4,39 +4,41 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { DualListSelector } from '@patternfly/react-core';
 import ACSCreateContext from '../ACSCreateContext';
 import WizardHeader from '../../../ContentViews/components/WizardHeader';
-import { selectSmartProxy } from '../../../SmartProxy/SmartProxyContentSelectors';
+import { selectProducts } from '../../ACSSelectors';
 
-const ACSSmartProxies = () => {
+const ACSProducts = () => {
   const {
-    smartProxies, setSmartProxies,
+    setProductIds, productNames, setProductNames,
   } = useContext(ACSCreateContext);
-  const availableSmartProxies = useSelector(selectSmartProxy);
-  const { results } = availableSmartProxies;
-  const [availableOptions, setAvailableOptions] = useState(results?.map(proxy =>
-    proxy.name)?.filter(sp => !smartProxies.includes(sp)));
+  const availableProducts = useSelector(selectProducts);
+  const { results } = availableProducts;
+  const [availableOptions, setAvailableOptions] = useState(results?.map(product =>
+    product.name)?.filter(pName => !productNames.includes(pName)));
   const onListChange = (newAvailableOptions, newChosenOptions) => {
     setAvailableOptions(newAvailableOptions);
-    setSmartProxies(newChosenOptions);
+    setProductNames(newChosenOptions);
+    setProductIds(results?.filter(product =>
+      newChosenOptions.includes(product.name))?.map(p => p?.id));
   };
 
   return (
     <>
       <WizardHeader
-        title={__('Select smart proxy')}
-        description={__('Select smart proxies to be used with this source.')}
+        title={__('Select products')}
+        description={__('Select products to associate to this source.')}
       />
       <DualListSelector
         isSearchable
         availableOptions={availableOptions}
-        chosenOptions={smartProxies}
+        chosenOptions={productNames}
         addAll={onListChange}
         removeAll={onListChange}
         addSelected={onListChange}
         removeSelected={onListChange}
-        id="selector"
+        id="product_selector"
       />
     </>
   );
 };
 
-export default ACSSmartProxies;
+export default ACSProducts;

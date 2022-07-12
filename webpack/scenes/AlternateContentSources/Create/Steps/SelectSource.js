@@ -1,14 +1,6 @@
 import React, { useContext } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
-import {
-  Tile,
-  Flex,
-  FlexItem,
-  Form,
-  FormGroup,
-  FormSelect,
-  FormSelectOption,
-} from '@patternfly/react-core';
+import { Flex, FlexItem, Form, FormGroup, FormSelect, FormSelectOption, Tile } from '@patternfly/react-core';
 import ACSCreateContext from '../ACSCreateContext';
 import WizardHeader from '../../../ContentViews/components/WizardHeader';
 
@@ -47,7 +39,24 @@ const SelectSource = () => {
         >
           <Flex>
             <FlexItem>
-              <Tile title={__('Custom')} isStacked id="custom" onClick={onSelect} onKeyDown={onKeyDown} isSelected={acsType === 'custom'} />{' '}
+              <Tile
+                title={__('Custom')}
+                isStacked
+                id="custom"
+                onClick={onSelect}
+                onKeyDown={onKeyDown}
+                isSelected={acsType === 'custom'}
+              />{' '}
+            </FlexItem>
+            <FlexItem>
+              <Tile
+                title={__('Simplified')}
+                isStacked
+                id="simplified"
+                onClick={onSelect}
+                onKeyDown={onKeyDown}
+                isSelected={acsType === 'simplified'}
+              />{' '}
             </FlexItem>
           </Flex>
         </FormGroup>
@@ -57,16 +66,23 @@ const SelectSource = () => {
           fieldId="content_type"
           isRequired
         >
-          <FormSelect isRequired value={contentType} onChange={(value) => { setContentType(value); }} aria-label="FormSelect Input">
+          <FormSelect
+            isRequired
+            value={contentType}
+            onChange={(value) => {
+              setContentType(value);
+            }}
+            aria-label="FormSelect Input"
+          >
             {
-          typeOptions.map(option => (
-            <FormSelectOption
-              key={option.value}
-              value={option.value}
-              label={option.label}
-            />
-          ))
-        }
+                            typeOptions.map(option => (
+                              <FormSelectOption
+                                key={option.value}
+                                value={option.value}
+                                label={option.label}
+                              />
+                            ))
+                        }
           </FormSelect>
         </FormGroup>
       </Form>

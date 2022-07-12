@@ -3,14 +3,16 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { isEmpty } from 'lodash';
-import { TextContent,
-  TextList,
-  TextListVariants,
-  TextListItem,
-  TextListItemVariants,
+import {
   ExpandableSection,
   List,
-  ListItem } from '@patternfly/react-core';
+  ListItem,
+  TextContent,
+  TextList,
+  TextListItem,
+  TextListItemVariants,
+  TextListVariants,
+} from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -27,6 +29,7 @@ const ACSExpandableDetails = () => {
   const dispatch = useDispatch();
   const [showDetails, setShowDetails] = useState(true);
   const [showSmartProxies, setShowSmartProxies] = useState(false);
+  const [showProducts, setShowProducts] = useState(false);
   const [showUrlPaths, setShowUrlPaths] = useState(false);
   const [showCredentials, setShowCredentials] = useState(false);
 
@@ -51,6 +54,7 @@ const ACSExpandableDetails = () => {
     ssl_client_cert: sslClientCert,
     ssl_client_key: sslClientKey,
     upstream_username: username,
+    products,
   } = details;
   return (
     <>
@@ -59,6 +63,7 @@ const ACSExpandableDetails = () => {
         onToggle={(expanded) => {
           setShowDetails(expanded);
           setShowSmartProxies(false);
+          setShowProducts(false);
           setShowUrlPaths(false);
           setShowCredentials(false);
         }}
@@ -110,125 +115,158 @@ const ACSExpandableDetails = () => {
         onToggle={(expanded) => {
           setShowDetails(false);
           setShowSmartProxies(expanded);
+          setShowProducts(false);
           setShowUrlPaths(false);
           setShowCredentials(false);
         }}
         isExpanded={showSmartProxies}
       >
         <List className="margin-0-24" isPlain>
-          { smartProxies.map(sp =>
+          {smartProxies?.length > 0 && smartProxies.map(sp =>
             (
               <ListItem key={sp?.id} aria-label="smartproxy_value">
                 <a href={urlBuilder(`smart_proxies/${sp?.id}`, '')}><b>{sp?.name}</b></a>
               </ListItem>
             ))}
+          {smartProxies?.length === 0 &&
+          <InactiveText text="N/A" />
+                    }
         </List>
       </ExpandableSection>
+      {acsType === 'simplified' &&
       <ExpandableSection
-        toggleText={showUrlPaths ? 'Hide URL and subpaths' : 'Show URL and subpaths'}
+        toggleText={showProducts ? 'Hide products' : 'Show products'}
         onToggle={(expanded) => {
           setShowDetails(false);
           setShowSmartProxies(false);
-          setShowUrlPaths(expanded);
+          setShowProducts(expanded);
+          setShowUrlPaths(false);
           setShowCredentials(false);
         }}
-        isExpanded={showUrlPaths}
+        isExpanded={showProducts}
       >
-        <TextContent className="margin-0-24">
-          <TextList component={TextListVariants.dl}>
-            <TextListItem component={TextListItemVariants.dt}>
-              {__('URL')}
-            </TextListItem>
-            <TextListItem
-              aria-label="url_text_value"
-              component={TextListItemVariants.dd}
-            >
-              {url}
-            </TextListItem>
-            <TextListItem component={TextListItemVariants.dt}>
-              {__('Subpaths')}
-            </TextListItem>
-            <TextListItem
-              aria-label="subpaths_text_value"
-              component={TextListItemVariants.dd}
-            >
-              {subpaths.join()}
-            </TextListItem>
-          </TextList>
-        </TextContent>
+        <List className="margin-0-24" isPlain>
+          {products.map(product =>
+            (
+              <ListItem key={product?.id} aria-label="product_value">
+                <a href={urlBuilder(`products/${product?.id}`, '')}><b>{product?.name}</b></a>
+              </ListItem>
+            ))}
+        </List>
       </ExpandableSection>
-      <ExpandableSection
-        toggleText={showCredentials ? 'Hide credentials' : 'Show credentials'}
-        onToggle={(expanded) => {
-          setShowDetails(false);
-          setShowSmartProxies(false);
-          setShowUrlPaths(false);
-          setShowCredentials(expanded);
-        }}
-        isExpanded={showCredentials}
-      >
-        <TextContent className="margin-0-24">
-          <TextList component={TextListVariants.dl}>
-            <TextListItem component={TextListItemVariants.dt}>
-              {__('Verify SSL')}
-            </TextListItem>
-            <TextListItem
-              aria-label="verifySSL_value"
-              component={TextListItemVariants.dd}
-            >
-              {verifySsl ? 'true' : 'false'}
-            </TextListItem>
-            <TextListItem component={TextListItemVariants.dt}>
-              {__('SSL CA certificate')}
-            </TextListItem>
-            <TextListItem
-              aria-label="sslCaCert_value"
-              component={TextListItemVariants.dd}
-            >
-              {sslCaCert ? <a href={urlBuilder(`content_credentials/${sslCaCert?.id}`, '')}>{sslCaCert?.name}</a> :
-              <InactiveText text="N/A" />}
-            </TextListItem>
-            <TextListItem component={TextListItemVariants.dt}>
-              {__('SSL client certificate')}
-            </TextListItem>
-            <TextListItem
-              aria-label="sslClientCert_value"
-              component={TextListItemVariants.dd}
-            >
-              {sslClientCert ? <a href={urlBuilder(`content_credentials/${sslClientCert?.id}`, '')}>{sslClientCert?.name}</a> :
-              <InactiveText text="N/A" />}
-            </TextListItem>
-            <TextListItem component={TextListItemVariants.dt}>
-              {__('SSL client key')}
-            </TextListItem>
-            <TextListItem
-              aria-label="sslClientKey_value"
-              component={TextListItemVariants.dd}
-            >
-              {sslClientKey ? <a href={urlBuilder(`content_credentials/${sslClientKey?.id}`, '')}>{sslClientKey?.name}</a> :
-              <InactiveText text="N/A" />}
-            </TextListItem>
-            <TextListItem component={TextListItemVariants.dt}>
-              {__('Username')}
-            </TextListItem>
-            <TextListItem
-              aria-label="username_value"
-              component={TextListItemVariants.dd}
-            >
-              { username || <InactiveText text="N/A" />}
-            </TextListItem>
-            <TextListItem component={TextListItemVariants.dt}>
-              {__('Password')}
-            </TextListItem>
-            <TextListItem
-              aria-label="password_value"
-              component={TextListItemVariants.dd}
-            >
-              {username ? '****' : <InactiveText text="N/A" />}
-            </TextListItem>
-          </TextList>
-        </TextContent>
-      </ExpandableSection>
+            }
+      {acsType === 'custom' &&
+      <>
+        <ExpandableSection
+          toggleText={showUrlPaths ? 'Hide URL and subpaths' : 'Show URL and subpaths'}
+          onToggle={(expanded) => {
+            setShowDetails(false);
+            setShowSmartProxies(false);
+            setShowUrlPaths(expanded);
+            setShowCredentials(false);
+          }}
+          isExpanded={showUrlPaths}
+        >
+          <TextContent className="margin-0-24">
+            <TextList component={TextListVariants.dl}>
+              <TextListItem component={TextListItemVariants.dt}>
+                {__('URL')}
+              </TextListItem>
+              <TextListItem
+                aria-label="url_text_value"
+                component={TextListItemVariants.dd}
+              >
+                {url}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dt}>
+                {__('Subpaths')}
+              </TextListItem>
+              <TextListItem
+                aria-label="subpaths_text_value"
+                component={TextListItemVariants.dd}
+              >
+                {subpaths.join()}
+              </TextListItem>
+            </TextList>
+          </TextContent>
+        </ExpandableSection>
+        <ExpandableSection
+          toggleText={showCredentials ? 'Hide credentials' : 'Show credentials'}
+          onToggle={(expanded) => {
+            setShowDetails(false);
+            setShowSmartProxies(false);
+            setShowUrlPaths(false);
+            setShowCredentials(expanded);
+          }}
+          isExpanded={showCredentials}
+        >
+          <TextContent className="margin-0-24">
+            <TextList component={TextListVariants.dl}>
+              <TextListItem component={TextListItemVariants.dt}>
+                {__('Verify SSL')}
+              </TextListItem>
+              <TextListItem
+                aria-label="verifySSL_value"
+                component={TextListItemVariants.dd}
+              >
+                {verifySsl ? 'true' : 'false'}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dt}>
+                {__('SSL CA certificate')}
+              </TextListItem>
+              <TextListItem
+                aria-label="sslCaCert_value"
+                component={TextListItemVariants.dd}
+              >
+                {sslCaCert ?
+                  <a href={urlBuilder(`content_credentials/${sslCaCert?.id}`, '')}>{sslCaCert?.name}</a> :
+                  <InactiveText text="N/A" />}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dt}>
+                {__('SSL client certificate')}
+              </TextListItem>
+              <TextListItem
+                aria-label="sslClientCert_value"
+                component={TextListItemVariants.dd}
+              >
+                {sslClientCert ?
+                  <a href={urlBuilder(`content_credentials/${sslClientCert?.id}`, '')}>{sslClientCert?.name}</a> :
+                  <InactiveText text="N/A" />}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dt}>
+                {__('SSL client key')}
+              </TextListItem>
+              <TextListItem
+                aria-label="sslClientKey_value"
+                component={TextListItemVariants.dd}
+              >
+                {sslClientKey ?
+                  <a href={urlBuilder(`content_credentials/${sslClientKey?.id}`, '')}>{sslClientKey?.name}</a> :
+                  <InactiveText text="N/A" />}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dt}>
+                {__('Username')}
+              </TextListItem>
+              <TextListItem
+                aria-label="username_value"
+                component={TextListItemVariants.dd}
+              >
+                {username || <InactiveText text="N/A" />}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dt}>
+                {__('Password')}
+              </TextListItem>
+              <TextListItem
+                aria-label="password_value"
+                component={TextListItemVariants.dd}
+              >
+                {username ? '****' : <InactiveText text="N/A" />}
+              </TextListItem>
+            </TextList>
+          </TextContent>
+        </ExpandableSection>
+      </>
+            }
     </>
   );
 };
