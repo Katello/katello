@@ -146,6 +146,8 @@ module Katello
         elsif repository.generic?
           duplicate_sha_path_content_list = content_backend_service.content_api(repository.repository_type, unit_type_id).list(
             filter_label => checksum)
+        elsif unit_type_id == 'deb'
+          duplicate_sha_path_content_list = content_backend_service.content_api.list(filter_label => checksum)
         else
           duplicate_sha_path_content_list = content_backend_service.content_api.list(
             filter_label => checksum,
