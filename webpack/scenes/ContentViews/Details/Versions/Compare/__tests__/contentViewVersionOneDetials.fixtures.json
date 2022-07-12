@@ -1,77 +1,66 @@
 {
-  "version": "7.0",
-  "major": 7,
+  "version": "4.0",
+  "major": 4,
   "minor": 0,
   "composite_content_view_ids": [],
   "published_in_composite_content_view_ids": [],
-  "content_view_id": 21,
+  "content_view_id": 4,
   "default": false,
   "description": "",
-  "id": 51,
-  "name": "cv1 7.0",
-  "created_at": "2022-07-19 10:40:26 -0400",
-  "updated_at": "2022-07-19 10:40:30 -0400",
+  "id": 15,
+  "name": "cv3 4.0",
+  "created_at": "2022-08-01 15:25:17 -0400",
+  "updated_at": "2022-08-01 15:25:20 -0400",
   "content_view": {
-    "id": 21,
-    "name": "cv1",
-    "label": "cv1",
+    "id": 4,
+    "name": "cv3",
+    "label": "cv3",
     "generated_for": "none"
   },
   "composite_content_views": [],
   "composite_content_view_versions": [],
   "published_in_composite_content_views": [],
-  "environments": [
-    {
-      "id": 4,
-      "name": "test1",
-      "label": "test1",
-      "publish_date": "3 days",
-      "permissions": {
-        "readable": true,
-        "promotable_or_removable": true,
-        "all_hosts_editable": true,
-        "all_keys_editable": true
-      },
-      "host_count": 0,
-      "activation_key_count": 0
-    }
-  ],
+  "environments": [],
   "repositories": [
     {
-      "id": 105,
+      "id": 60,
       "name": "repo1",
       "label": "repo1",
       "content_type": "yum",
-      "library_instance_id": 3
+      "library_instance_id": 1
+    },
+    {
+      "id": 61,
+      "name": "repo4",
+      "label": "repo4",
+      "content_type": "file",
+      "library_instance_id": 4
     }
   ],
   "last_event": {
     "user": "admin",
     "status": "successful",
-    "description": null,
-    "action": "promotion",
-    "created_at": "2022-07-19 10:40:27 -0400",
-    "updated_at": "2022-07-19 10:40:30 -0400",
-    "environment": {
-      "id": 4,
-      "name": "test1"
-    },
+    "description": "",
+    "action": "publish",
+    "created_at": "2022-08-01 15:25:17 -0400",
+    "updated_at": "2022-08-01 15:25:20 -0400",
+    "environment": null,
     "task": {
-      "id": "3ddcc4a4-2e04-4595-8e3e-c7a1c8d90912",
+      "id": "cf20fb90-0d85-4270-b721-80a83728ae4f",
       "label": "Actions::Katello::ContentView::Publish",
       "pending": false,
-      "action": "Publish content view 'cv1'; organization 'Default Organization'",
+      "action": "Publish content view 'cv3'; organization 'Default Organization'",
       "username": "admin",
-      "started_at": "2022-07-19 10:40:26 -0400",
-      "ended_at": "2022-07-19 10:40:30 -0400",
+      "started_at": "2022-08-01 15:25:17 -0400",
+      "ended_at": "2022-08-01 15:25:20 -0400",
       "state": "stopped",
       "result": "success",
       "progress": 1,
       "input": {
         "content_view": {
-          "id": 21,
-          "name": "cv1",
-          "label": "cv1"
+          "id": 4,
+          "name": "cv3",
+          "label": "cv3"
         },
         "organization": {
           "id": 1,
@@ -83,26 +72,26 @@
           "candlepin",
           "candlepin_auth"
         ],
-        "history_id": 213,
-        "content_view_id": 21,
+        "history_id": 23,
+        "content_view_id": 4,
         "auto_publish_composite_ids": [],
-        "content_view_version_name": "cv1 7.0",
-        "content_view_version_id": 51,
+        "content_view_version_name": "cv3 4.0",
+        "content_view_version_id": 15,
         "environment_id": 1,
         "user_id": 4,
         "skip_promotion": null,
         "locale": "en",
-        "current_request_id": "47692f20-5168-49f0-b4dc-adddda467130",
+        "current_request_id": "cb82966b-2994-4299-b382-7b81bed88d1c",
         "current_timezone": "America/New_York",
         "current_organization_id": 1,
         "current_location_id": 2,
         "current_user_id": 4
       },
       "output": {
-        "content_view_id": 21,
-        "content_view_version_id": 51,
+        "content_view_id": 4,
+        "content_view_version_id": 15,
         "skip_promotion": null,
-        "history_id": 213
+        "history_id": 23
       },
       "humanized": {
         "action": "Publish",
@@ -110,8 +99,8 @@
           [
             "content_view",
             {
-              "text": "content view 'cv1'",
-              "link": "/content_views/21/versions"
+              "text": "content view 'cv3'",
+              "link": "/content_views/4/versions"
             }
           ],
           [
@@ -126,15 +115,15 @@
         "errors": []
       },
       "cli_example": null,
-      "start_at": "2022-07-19 10:40:26 -0400",
+      "start_at": "2022-08-01 15:25:17 -0400",
       "available_actions": {
         "cancellable": false,
         "resumable": false
       }
     },
-    "version": "7.0",
-    "publish": false,
-    "version_id": 51,
+    "version": "4.0",
+    "publish": true,
+    "version_id": 15,
     "triggered_by": null,
     "triggered_by_id": null
   },
@@ -144,7 +133,7 @@
   "docker_manifest_count": 0,
   "docker_manifest_list_count": 0,
   "docker_tag_count": 0,
-  "file_count": 0,
+  "file_count": 3,
   "python_package_count": 0,
   "rpm_count": 32,
   "modulemd_count": 0,
@@ -157,7 +146,7 @@
   "ansible_collection_repository_count": 0,
   "deb_repository_count": 0,
   "docker_repository_count": 0,
-  "file_repository_count": 0,
+  "file_repository_count": 1,
   "python_repository_count": 0,
   "yum_repository_count": 1,
   "errata_counts": {

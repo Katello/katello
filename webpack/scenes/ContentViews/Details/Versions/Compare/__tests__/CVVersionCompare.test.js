@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 import { head, last } from 'lodash';
 import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../../test-utils/nockWrapper';
 import api from '../../../../../../services/api';
+
 import ContentViewVersions from '../../ContentViewVersions';
 import cvVersionsData from './contentViewVersions.fixtures.json';
 import cvDetailsData from './contentViewDetails.fixtures.json';
@@ -19,14 +20,11 @@ import cvVersionContainerTagsCompareData from './CVVersionContainerTagsCompareDa
 import versionOneDetailsData from './contentViewVersionOneDetials.fixtures.json';
 import versionTwoDetailsData from './contentViewVersionTwoDetails.fixtures.json';
 import versionThreeDetailsData from './contentViewVersionThreeDetails.fixtures.json';
-import emptyStateCVVersionsData from './emptyStateContentViewVersions.fixtures.json';
-import emptyStateCVDetailsData from './emptyStateContentViewDetails.fixtures.json';
 import emptyStateVersionOneData from './emptyStateCVVersionOneDetails.fixtures.json';
 import empptyStateVersionTwoData from './emptyStateCVVersionTwoDetails.fixtures.json';
 
 const cvVersions = api.getApiUrl('/content_view_versions');
-const cvDetails = api.getApiUrl('/content_views/21');
-const emptyCVDetails = api.getApiUrl('/content_views/22');
+const cvDetails = api.getApiUrl('/content_views/4');
 const versionDetails = versionId => api.getApiUrl(`/content_view_versions/${versionId}`);
 const autocompleteUrl = '/content_view_versions/auto_complete_search';
 const withCVRoute = component => <Route path="/content_views/:id">{component}</Route>;
@@ -43,7 +41,7 @@ const renderOptions = {
     },
   },
   routerParams: {
-    initialEntries: [{ pathname: '/content_views/21' }],
+    initialEntries: [{ pathname: '/content_views/4' }],
     initialIndex: 1,
   },
 
@@ -54,23 +52,23 @@ let autoSearchScope;
 let envScope;
 
 const versionIdsAllContentTypes = {
-  versionOneId: '51',
-  versionTwoId: '55',
+  versionOneId: '15',
+  versionTwoId: '17',
 };
 
-const versionIdsTwoContentTypes = {
-  versionOneId: '48',
-  versionTwoId: '51',
+const versionIdsThreeContentTypes = {
+  versionOneId: '14',
+  versionTwoId: '15',
 };
 
 const versionLabelsAllContentTypes = {
-  versionOneLabel: '7',
-  versionTwoLabel: '9',
+  versionOneLabel: '4',
+  versionTwoLabel: '6',
 };
 
-const versionLabelsTwoContentTypes = {
-  versionOneLabel: '5',
-  versionTwoLabel: '7',
+const versionLabelsThreeContentTypes = {
+  versionOneLabel: '3',
+  versionTwoLabel: '4',
 };
 beforeEach(() => {
   envScope = nockInstance
@@ -154,10 +152,30 @@ const testConfigAllContentTypes = [
       head(cvVersionContainerTagsCompareData.results).name,
       last(cvVersionContainerTagsCompareData.results).name],
   },
+  {
+    name: 'Python packages',
+    countKey: 'python_package_count',
+    autoCompleteUrl: '/python_packages/auto_complete_search',
+    dataUrl: api.getApiUrl('/python_packages/compare'),
+    data: cvVersionContainerTagsCompareData,
+    textQuery: [
+      head(cvVersionContainerTagsCompareData.results).name,
+      last(cvVersionContainerTagsCompareData.results).name],
+  },
+  {
+    name: 'Ansible collections',
+    countKey: 'ansible_collection_count',
+    autoCompleteUrl: '/ansible_collections/auto_complete_search',
+    dataUrl: api.getApiUrl('/ansible_collections/compare'),
+    data: cvVersionContainerTagsCompareData,
+    textQuery: [
+      head(cvVersionContainerTagsCompareData.results).name,
+      last(cvVersionContainerTagsCompareData.results).name],
+  },
 ];
 
 
-const testConfigTwoContentTypes = [
+const testConfigThreeContentTypes = [
   {
     name: 'RPM packages',
     countKey: 'rpm_count',
@@ -178,37 +196,50 @@ const testConfigTwoContentTypes = [
       head(cvVersionErrataCompareData.results).name,
       last(cvVersionErrataCompareData.results).name],
   },
+  {
+    name: 'Files',
+    countKey: 'file_count',
+    autoCompleteUrl: '/files/auto_complete_search',
+    dataUrl: api.getApiUrl('/files/compare'),
+    data: cvVersionFilesCompareData,
+    textQuery: [
+      head(cvVersionFilesCompareData.results).name,
+      last(cvVersionFilesCompareData.results).name],
+  },
 ];
 
 
 test('Can make an API call and show comparison of two versions with all content types', async (done) => {
   const autoCompleteContentTypesScope = testConfigAllContentTypes.map(({ autoCompleteUrl }) =>
     mockAutocomplete(nockInstance, autoCompleteUrl));
+
   const scopeContentTypes = testConfigAllContentTypes.map(({ dataUrl, data }) =>
     nockInstance.get(dataUrl).query(true).reply(200, data));
+
   const scopeCVDetails = nockInstance
     .get(cvDetails)
     .query(true)
     .reply(200, cvDetailsData);
+
   const scopeVersionOneDetails = nockInstance
-    .get(versionDetails(51))
+    .get(versionDetails(15))
     .query(true)
     .reply(200, versionOneDetailsData);
   const scopeVersionTwoDetails = nockInstance
-    .get(versionDetails(55))
+    .get(versionDetails(17))
     .query(true)
     .reply(200, versionTwoDetailsData);
   const { queryByText, queryAllByText, getAllByText } = renderWithRedux(
     withCVRoute(<CVVersionCompare
-      cvId={21}
+      cvId={4}
       versionIds={versionIdsAllContentTypes}
       versionLabels={versionLabelsAllContentTypes}
     />),
     renderOptions,
   );
 
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 7);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 7);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 9);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 9);
 
   // Nothing will show at first, page is loading
   expect(queryByText(`Version ${versionLabelsAllContentTypes.versionOneLabel}`)).toBeNull();
@@ -242,51 +273,51 @@ test('Can make an API call and show comparison of two versions with all content 
   act(done);
 });
 
-test('Can make an API call and compare two versions with two content types', async (done) => {
-  const autoCompleteContentTypesScope = testConfigTwoContentTypes.map(({ autoCompleteUrl }) =>
+test('Can make an API call and compare two versions with three content types', async (done) => {
+  const autoCompleteContentTypesScope = testConfigThreeContentTypes.map(({ autoCompleteUrl }) =>
     mockAutocomplete(nockInstance, autoCompleteUrl));
-  const scopeContentTypes = testConfigTwoContentTypes.map(({ dataUrl, data }) =>
+  const scopeContentTypes = testConfigThreeContentTypes.map(({ dataUrl, data }) =>
     nockInstance.get(dataUrl).query(true).reply(200, data));
   const scopeCVDetails = nockInstance
     .get(cvDetails)
     .query(true)
     .reply(200, cvDetailsData);
   const scopeVersionOneDetails = nockInstance
-    .get(versionDetails(48))
+    .get(versionDetails(14))
     .query(true)
     .reply(200, versionThreeDetailsData);
   const scopeVersionTwoDetails = nockInstance
-    .get(versionDetails(51))
+    .get(versionDetails(15))
     .query(true)
     .reply(200, versionOneDetailsData);
   const { queryByText, queryAllByText, getAllByText } = renderWithRedux(
     withCVRoute(<CVVersionCompare
-      cvId={21}
-      versionIds={versionIdsTwoContentTypes}
-      versionLabels={versionLabelsTwoContentTypes}
+      cvId={4}
+      versionIds={versionIdsThreeContentTypes}
+      versionLabels={versionLabelsThreeContentTypes}
     />),
     renderOptions,
   );
 
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 2);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 2);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 3);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 3);
 
   // Nothing will show at first, page is loading
-  expect(queryByText(`Version ${versionLabelsTwoContentTypes.versionOneLabel}`)).toBeNull();
-  expect(queryByText(`Version ${versionLabelsTwoContentTypes.versionTwoLabel}`)).toBeNull();
+  expect(queryByText(`Version ${versionLabelsThreeContentTypes.versionOneLabel}`)).toBeNull();
+  expect(queryByText(`Version ${versionLabelsThreeContentTypes.versionTwoLabel}`)).toBeNull();
 
   // Assert that the CV version is now showing on the screen, but wait for it to appear.
 
   await patientlyWaitFor(() => {
-    expect(getAllByText(`Version ${versionLabelsTwoContentTypes.versionOneLabel}`)).toBeTruthy();
+    expect(getAllByText(`Version ${versionLabelsThreeContentTypes.versionOneLabel}`)).toBeTruthy();
   });
 
   await patientlyWaitFor(() => {
-    expect(getAllByText(`Version ${versionLabelsTwoContentTypes.versionTwoLabel}`)).toBeTruthy();
+    expect(getAllByText(`Version ${versionLabelsThreeContentTypes.versionTwoLabel}`)).toBeTruthy();
   });
   // Ensure that tab exists on the screen
   await patientlyWaitFor(() => {
-    testConfigTwoContentTypes.forEach(({ name, textQuery }) => {
+    testConfigThreeContentTypes.forEach(({ name, textQuery }) => {
       expect(queryByText(name)).toBeTruthy();
       textQuery.forEach(query => expect(queryAllByText(query)).toBeTruthy());
     });
@@ -309,8 +340,8 @@ test('Can select two versions and click compare button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scopeContentTypes = testConfigAllContentTypes.map(({ dataUrl, data }) =>
     nockInstance.get(dataUrl).query(true).reply(200, data));
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 8);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 8);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 10);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 10);
   const scope = nockInstance
     .get(cvVersions)
     .query(true)
@@ -320,25 +351,25 @@ test('Can select two versions and click compare button', async (done) => {
     .query(true)
     .reply(200, cvDetailsData);
   const scopeVersionOneDetails = nockInstance
-    .get(versionDetails(51))
+    .get(versionDetails(15))
     .query(true)
     .reply(200, versionOneDetailsData);
   const scopeVersionTwoDetails = nockInstance
-    .get(versionDetails(55))
+    .get(versionDetails(17))
     .query(true)
     .reply(200, versionTwoDetailsData);
   const { getByLabelText, getByText } = renderWithRedux(
-    withCVRoute(<ContentViewVersions cvId={21} details={cvDetailsData} />),
+    withCVRoute(<ContentViewVersions cvId={4} details={cvDetailsData} />),
     renderOptions,
   );
 
   await patientlyWaitFor(() => {
-    expect(getByLabelText('Select version 51')).toBeInTheDocument();
-    expect(getByLabelText('Select version 55')).toBeInTheDocument();
+    expect(getByLabelText('Select version 15')).toBeInTheDocument();
+    expect(getByLabelText('Select version 17')).toBeInTheDocument();
     expect(getByLabelText('compare_two_versions')).toHaveAttribute('disabled');
   });
-  fireEvent.click(getByLabelText('Select version 51'));
-  fireEvent.click(getByLabelText('Select version 55'));
+  fireEvent.click(getByLabelText('Select version 15'));
+  fireEvent.click(getByLabelText('Select version 17'));
 
   await patientlyWaitFor(() => {
     expect(getByLabelText('compare_two_versions')).toBeInTheDocument();
@@ -368,31 +399,31 @@ test('Can select two versions with no content and click compare button', async (
   const scope = nockInstance
     .get(cvVersions)
     .query(true)
-    .reply(200, emptyStateCVVersionsData);
+    .reply(200, cvVersionsData);
   const scopeCVDetails = nockInstance
-    .get(emptyCVDetails)
+    .get(cvDetails)
     .query(true)
-    .reply(200, emptyStateCVDetailsData);
+    .reply(200, cvDetailsData);
   const scopeVersionOneDetails = nockInstance
-    .get(versionDetails(49))
+    .get(versionDetails(12))
     .query(true)
     .reply(200, emptyStateVersionOneData);
   const scopeVersionTwoDetails = nockInstance
-    .get(versionDetails(52))
+    .get(versionDetails(13))
     .query(true)
     .reply(200, empptyStateVersionTwoData);
   const { getByLabelText, getByText } = renderWithRedux(
-    withCVRoute(<ContentViewVersions cvId={22} details={emptyStateCVDetailsData} />),
+    withCVRoute(<ContentViewVersions cvId={4} details={cvDetailsData} />),
     renderOptions,
   );
 
   await patientlyWaitFor(() => {
-    expect(getByLabelText('Select version 49')).toBeInTheDocument();
-    expect(getByLabelText('Select version 52')).toBeInTheDocument();
+    expect(getByLabelText('Select version 12')).toBeInTheDocument();
+    expect(getByLabelText('Select version 13')).toBeInTheDocument();
     expect(getByLabelText('compare_two_versions')).toHaveAttribute('disabled');
   });
-  fireEvent.click(getByLabelText('Select version 49'));
-  fireEvent.click(getByLabelText('Select version 52'));
+  fireEvent.click(getByLabelText('Select version 12'));
+  fireEvent.click(getByLabelText('Select version 13'));
 
   await patientlyWaitFor(() => {
     expect(getByLabelText('compare_two_versions')).toBeInTheDocument();
