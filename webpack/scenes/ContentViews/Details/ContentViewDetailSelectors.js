@@ -37,6 +37,7 @@ import {
   REPOSITORY_TYPES,
   RPM_PACKAGE_GROUPS_CONTENT,
   RPM_PACKAGES_CONTENT,
+  cvPackagesCompareKey,
 } from '../ContentViewsConstants';
 
 export const selectCVDetails = (state, cvId) =>
@@ -125,6 +126,15 @@ export const selectCVHistoriesStatus = (state, cvId) =>
 
 export const selectCVHistoriesError = (state, cvId) =>
   selectAPIError(state, cvDetailsHistoryKey(cvId));
+
+export const selectPackagesComparison = (state, versionOne, versionTwo) =>
+  selectAPIResponse(state, cvPackagesCompareKey(versionOne, versionTwo)) || {};
+
+export const selectPackagesComparisonStatus = (state, versionOne, versionTwo) =>
+  selectAPIStatus(state, cvPackagesCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
+
+export const selectPackagesComparisonError = (state, versionOne, versionTwo) =>
+  selectAPIError(state, cvPackagesCompareKey(versionOne, versionTwo));
 
 export const selectCVFilterRules = (state, filterId) =>
   selectAPIResponse(state, cvFilterRulesKey(filterId));

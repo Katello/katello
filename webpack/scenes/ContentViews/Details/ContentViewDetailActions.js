@@ -49,6 +49,7 @@ import {
   generatedContentKey,
   STATUS_TRANSLATIONS_ENUM,
   bulkRemoveVersionKey,
+  cvPackagesCompareKey,
 } from '../ContentViewsConstants';
 import api, { foremanApi, orgId } from '../../../services/api';
 import { getResponseErrorMsgs } from '../../../utils/helpers';
@@ -77,6 +78,18 @@ export const getRPMPackages = params => get({
   params,
   errorToast: error => __(`Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}`),
 });
+
+export const getRPMPackagesComparison = (versionOne, versionTwo, params) => {
+  const versions = { content_view_version_ids: [versionOne, versionTwo] };
+  const apiParams = { ...versions, ...params };
+  const apiUrl = '/packages/compare';
+  return get({
+    key: cvPackagesCompareKey(versionOne, versionTwo),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the packages! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
 
 export const getFiles = params => get({
   type: API_OPERATIONS.GET,

@@ -30,7 +30,7 @@ import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTa
 import { hasPermission } from '../../helpers';
 
 const emptyContentTitle = __('No rules have been added to this filter.');
-const emptyContentBody = __("Add to this filter using the 'Add filter rule' button.");
+const emptyContentBody = __('Filters will appear here when the filter rule is added.');
 const emptySearchTitle = __('No matching filter rules found.');
 const emptySearchBody = __('Try changing your search settings.');
 
@@ -123,6 +123,7 @@ const CVContainerImageFilterContent = ({
       },
     },
   ];
+
   return (
     <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
       <Tab eventKey={0} title={<TabTitleText>{__('Tags')}</TabTitleText>}>
