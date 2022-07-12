@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TableVariant, TableText, Tbody, Thead, Td, Tr, Th } from '@patternfly/react-table';
-import { Checkbox, Dropdown, DropdownItem, Grid, KebabToggle } from '@patternfly/react-core';
+import { Checkbox, Dropdown, DropdownItem, Grid, KebabToggle, Button } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { STATUS } from 'foremanReact/constants';
@@ -14,7 +14,7 @@ import InactiveText from '../../components/InactiveText';
 import ContentViewVersionEnvironments from './ContentViewVersionEnvironments';
 import ContentViewVersionErrata from './ContentViewVersionErrata';
 import ContentViewVersionContent from './ContentViewVersionContent';
-import { getContentViewVersions } from '../ContentViewDetailActions';
+import getContentViewDetails, { getContentViewVersions } from '../ContentViewDetailActions';
 import {
   selectCVVersions,
   selectCVVersionsStatus,
@@ -27,7 +27,7 @@ import RemoveCVVersionWizard from './Delete/RemoveCVVersionWizard';
 import { hasPermission } from '../../helpers';
 import BulkDeleteModal from './BulkDelete/BulkDeleteModal';
 import { selectEnvironmentPathsStatus } from '../../components/EnvironmentPaths/EnvironmentPathSelectors';
-
+import PublishContentViewWizard from '../../Publish/PublishContentViewWizard';
 
 const ContentViewVersions = ({ cvId, details }) => {
   const response = useSelector(state => selectCVVersions(state, cvId));
@@ -49,6 +49,7 @@ const ContentViewVersions = ({ cvId, details }) => {
   const [versionNameToRemove, setVersionNameToRemove] = useState('');
   const [versionEnvironments, setVersionEnvironments] = useState([]);
   const [bulkDeleteModalOpen, setBulkDeleteModalOpen] = useState(false);
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [promoting, setPromoting] = useState(false);
   const [removingFromEnv, setRemovingFromEnv] = useState(false);
   const [deleteVersion, setDeleteVersion] = useState(false);
@@ -56,8 +57,11 @@ const ContentViewVersions = ({ cvId, details }) => {
   const { permissions } = details;
   const [kebabOpen, setKebabOpen] = useState(false);
   const hasActionPermissions = hasPermission(permissions, 'promote_or_remove_content_views');
+  const hasPublishCvPermissions = hasPermission(permissions, 'publish_content_views');
   const renderActionButtons =
     hasActionPermissions && status === STATUS.RESOLVED && !!results?.length;
+  const renderPublishCvModal =
+    hasPublishCvPermissions && status === STATUS.RESOLVED && isPublishModalOpen;
   const {
     selectOne, isSelected, isSelectable: _isSelectable,
     selectedCount, selectionSet, ...selectionSetVars
@@ -66,6 +70,16 @@ const ContentViewVersions = ({ cvId, details }) => {
     metadata,
   });
 
+  const showPrimaryAction = true;
+  const primaryActionButton =
+    (
+      <Button
+        ouiaId="cv-details-publish-button"
+        onClick={() => setIsPublishModalOpen(true)}
+        variant="primary"
+        aria-label="publish_content_view"
+      > {__('Publish new version')}
+      </Button>);
   const columnHeaders = [
     '',
     __('Version'),
@@ -187,10 +201,9 @@ const ContentViewVersions = ({ cvId, details }) => {
     ];
 
   const emptyContentTitle = __("You currently don't have any versions for this content view.");
-  const emptyContentBody = __('Versions will appear here when the content view is published.'); // needs link
+  const emptyContentBody = __('Versions will appear here when the content view is published.');
   const emptySearchTitle = __('No matching version found');
   const emptySearchBody = __('Try changing your search settings.');
-
   return (
     <TableWrapper
       {...{
@@ -204,6 +217,8 @@ const ContentViewVersions = ({ cvId, details }) => {
         error,
         status,
         selectedCount,
+        showPrimaryAction,
+        primaryActionButton,
       }}
       ouiaId="content-view-versions-table"
       variant={TableVariant.compact}
@@ -215,29 +230,42 @@ const ContentViewVersions = ({ cvId, details }) => {
       }, [cvId])}
       {...hasActionPermissions ? selectionSetVars : []}
       actionButtons={
-        renderActionButtons && (
-          <Grid>
-            <Dropdown
-              toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
-              isOpen={kebabOpen}
-              isPlain
-              dropdownItems={[
-                <DropdownItem
-                  aria-label="bulk_delete"
-                  key="bulk_delete"
-                  isDisabled={selectedCount < 1}
-                  component="button"
-                  onClick={() => {
-                    setKebabOpen(false);
-                    setBulkDeleteModalOpen(true);
-                  }}
-                >
-                  {__('Delete')}
-                </DropdownItem>]}
-            />
-          </Grid>
-        )}
-      displaySelectAllCheckbox={hasActionPermissions}
+        <>
+          {renderPublishCvModal &&
+            <PublishContentViewWizard
+              details={details}
+              show={isPublishModalOpen}
+              onClose={(step3) => {
+                if (step3) dispatch(getContentViewDetails(cvId));
+                setIsPublishModalOpen(false);
+              }}
+              aria-label="publish_content_view_modal"
+            />}
+          {renderActionButtons && (
+            <Grid>
+              <Dropdown
+                toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
+                isOpen={kebabOpen}
+                isPlain
+                dropdownItems={[
+                  <DropdownItem
+                    aria-label="bulk_delete"
+                    key="bulk_delete"
+                    isDisabled={selectedCount < 1}
+                    component="button"
+                    onClick={() => {
+                      setKebabOpen(false);
+                      setBulkDeleteModalOpen(true);
+                    }}
+                  >
+                    {__('Delete')}
+                  </DropdownItem>]}
+              />
+            </Grid>
+          )}
+        </>
+      }
+      displaySelectAllCheckbox={renderActionButtons}
     >
       <Thead>
         {bulkDeleteModalOpen &&

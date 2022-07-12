@@ -62,6 +62,7 @@ const ContentViewTable = () => {
   });
 
   const openForm = () => setIsModalOpen(true);
+
   const openPublishModal = (cvInfo) => {
     setActionableCvDetails(cvInfo);
     setIsPublishModalOpen(true);
@@ -125,9 +126,10 @@ const ContentViewTable = () => {
   );
 
   const emptyContentTitle = __("You currently don't have any Content views.");
-  const emptyContentBody = __('A content view can be added by using the "Create content view" button above.');
+  const emptyContentBody = __('A content view can be added by using the "Create content view" button below.');
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');
+  const showPrimaryAction = true;
   const {
     id,
     latest_version_id: latestVersionId,
@@ -136,7 +138,6 @@ const ContentViewTable = () => {
     environments,
     versions,
   } = actionableCvDetails;
-
   return (
     <TableWrapper
       {...{
@@ -149,6 +150,7 @@ const ContentViewTable = () => {
         searchQuery,
         updateSearchQuery,
         fetchItems,
+        showPrimaryAction,
       }}
       ouiaId="content-views-table"
       additionalListeners={[activeSortColumn, activeSortDirection]}
@@ -156,16 +158,25 @@ const ContentViewTable = () => {
       variant={TableVariant.compact}
       status={status}
       autocompleteEndpoint="/content_views/auto_complete_search"
+      primaryActionButton={canCreate ? (
+        <Button
+          ouiaId="create-content-view"
+          onClick={openForm}
+          variant="primary"
+          aria-label="create_content_view"
+        > {__('Create content view')}
+        </Button >) : undefined}
       actionButtons={
         <>
-          {canCreate &&
+          {results?.length !== 0 &&
             <Button ouiaId="create-content-view" onClick={openForm} variant="primary" aria-label="create_content_view">
               {__('Create content view')}
             </Button>
           }
           <CreateContentViewModal show={isModalOpen} setIsOpen={setIsModalOpen} aria-label="create_content_view_modal" />
           <CopyContentViewModal cvId={actionableCvId} cvName={actionableCvName} show={copy} setIsOpen={setCopy} aria-label="copy_content_view_modal" />
-          {isPublishModalOpen &&
+          {
+            isPublishModalOpen &&
             <PublishContentViewWizard
               details={actionableCvDetails}
               show={isPublishModalOpen}
@@ -178,7 +189,8 @@ const ContentViewTable = () => {
               aria-label="publish_content_view_modal"
             />
           }
-          {isPromoteModalOpen &&
+          {
+            isPromoteModalOpen &&
             <ContentViewVersionPromote
               cvId={id && Number(id)}
               versionIdToPromote={latestVersionId}
@@ -187,7 +199,8 @@ const ContentViewTable = () => {
               setIsOpen={setIsPromoteModalOpen}
             />
           }
-          {isDeleteModalOpen &&
+          {
+            isDeleteModalOpen &&
             <ContentViewDeleteWizard
               cvId={id && Number(id)}
               cvEnvironments={environments}
@@ -195,7 +208,8 @@ const ContentViewTable = () => {
               show={isDeleteModalOpen}
               setIsOpen={setIsDeleteModalOpen}
               aria-label="delete_content_view_modal"
-            />}
+            />
+          }
         </>
       }
     >
@@ -213,80 +227,82 @@ const ContentViewTable = () => {
           <Th key="action-menu" />
         </Tr>
       </Thead>
-      {results?.map((cvInfo, rowIndex) => {
-        const {
-          composite,
-          name,
-          id: cvId,
-          last_published: lastPublished,
-          latest_version: latestVersion,
-          latest_version_id: cvLatestVersionId,
-          latest_version_environments: cvLatestVersionEnvironments,
-          last_task: lastTask,
-          activation_keys: activationKeys,
-          hosts,
-          related_cv_count: relatedCVCount,
-          related_composite_cvs: relatedCompositeCVs,
-          description,
-          createdAt,
-        } = cvInfo;
-        const { last_sync_words: lastSyncWords, started_at: startedAt } = lastTask ?? {};
-        const isExpanded = tableRowIsExpanded(cvId);
-        return (
-          <Tbody isExpanded={isExpanded} key={`${cvId}_${createdAt}`}>
-            <Tr key={cvId}>
-              <Td
-                expand={{
-                  rowIndex,
-                  isExpanded,
-                  onToggle: (_event, _rInx, isOpen) =>
-                    expandedTableRows.onToggle(isOpen, cvId),
-                }}
-              />
-              <Td><ContentViewIcon position="right" composite={composite} /></Td>
-              <Td><Link to={`${urlBuilder('content_views', '')}${cvId}`}>{name}</Link></Td>
-              <Td>{lastPublished ? <LongDateTime date={lastPublished} showRelativeTimeTooltip /> : <InactiveText text={__('Not yet published')} />}</Td>
-              <Td><LastSync startedAt={startedAt} lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /></Td>
-              <Td>{latestVersion ?
-                <ContentViewVersionCell {...{
-                  id: cvId,
-                  latestVersion,
-                  latestVersionId: cvLatestVersionId,
-                  latestVersionEnvironments: cvLatestVersionEnvironments,
-                }}
-                /> :
-                <InactiveText style={{ marginTop: '0.5em', marginBottom: '0.5em' }} text={__('Not yet published')} />}
-              </Td>
-              <Td
-                key={`rowActions-${id}`}
-                actions={{
-                  items: actionsWithPermissions(cvInfo),
-                }}
-              />
-            </Tr>
-            <Tr key="child_row" isExpanded={isExpanded}>
-              <Td colSpan={2}>
-                <ExpandableRowContent>
-                  <DetailsExpansion
-                    cvId={cvId}
-                    cvName={name}
-                    cvComposite={composite}
-                    {...{
-                      activationKeys, hosts, relatedCVCount, relatedCompositeCVs,
-                    }}
-                  />
-                </ExpandableRowContent>
-              </Td>
-              <Td colSpan={4}>
-                <ExpandableRowContent>
-                  {description || <InactiveText text={__('No description')} />}
-                </ExpandableRowContent>
-              </Td>
-            </Tr>
-          </Tbody>
-        );
-      })}
-    </TableWrapper>
+      {
+        results?.map((cvInfo, rowIndex) => {
+          const {
+            composite,
+            name,
+            id: cvId,
+            last_published: lastPublished,
+            latest_version: latestVersion,
+            latest_version_id: cvLatestVersionId,
+            latest_version_environments: cvLatestVersionEnvironments,
+            last_task: lastTask,
+            activation_keys: activationKeys,
+            hosts,
+            related_cv_count: relatedCVCount,
+            related_composite_cvs: relatedCompositeCVs,
+            description,
+            createdAt,
+          } = cvInfo;
+          const { last_sync_words: lastSyncWords, started_at: startedAt } = lastTask ?? {};
+          const isExpanded = tableRowIsExpanded(cvId);
+          return (
+            <Tbody isExpanded={isExpanded} key={`${cvId}_${createdAt}`}>
+              <Tr key={cvId}>
+                <Td
+                  expand={{
+                    rowIndex,
+                    isExpanded,
+                    onToggle: (_event, _rInx, isOpen) =>
+                      expandedTableRows.onToggle(isOpen, cvId),
+                  }}
+                />
+                <Td><ContentViewIcon position="right" composite={composite} /></Td>
+                <Td><Link to={`${urlBuilder('content_views', '')}${cvId}`}>{name}</Link></Td>
+                <Td>{lastPublished ? <LongDateTime date={lastPublished} showRelativeTimeTooltip /> : <InactiveText text={__('Not yet published')} />}</Td>
+                <Td><LastSync startedAt={startedAt} lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /></Td>
+                <Td>{latestVersion ?
+                  <ContentViewVersionCell {...{
+                    id: cvId,
+                    latestVersion,
+                    latestVersionId: cvLatestVersionId,
+                    latestVersionEnvironments: cvLatestVersionEnvironments,
+                  }}
+                  /> :
+                  <InactiveText style={{ marginTop: '0.5em', marginBottom: '0.5em' }} text={__('Not yet published')} />}
+                </Td>
+                <Td
+                  key={`rowActions-${id}`}
+                  actions={{
+                    items: actionsWithPermissions(cvInfo),
+                  }}
+                />
+              </Tr>
+              <Tr key="child_row" isExpanded={isExpanded}>
+                <Td colSpan={2}>
+                  <ExpandableRowContent>
+                    <DetailsExpansion
+                      cvId={cvId}
+                      cvName={name}
+                      cvComposite={composite}
+                      {...{
+                        activationKeys, hosts, relatedCVCount, relatedCompositeCVs,
+                      }}
+                    />
+                  </ExpandableRowContent>
+                </Td>
+                <Td colSpan={4}>
+                  <ExpandableRowContent>
+                    {description || <InactiveText text={__('No description')} />}
+                  </ExpandableRowContent>
+                </Td>
+              </Tr>
+            </Tbody>
+          );
+        })
+      }
+    </TableWrapper >
   );
 };
 

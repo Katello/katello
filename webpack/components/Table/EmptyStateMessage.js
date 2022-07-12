@@ -35,7 +35,7 @@ const EmptyStateMessage = ({
   const {
     primaryActionTitle, showPrimaryAction, showSecondaryAction,
     secondaryActionTitle, primaryActionLink, secondaryActionLink, searchIsActive, resetFilters,
-    filtersAreActive, requestKey,
+    filtersAreActive, requestKey, primaryActionButton,
   } = extraTableProps;
   if (error) {
     if (error?.response?.data?.error) {
@@ -63,6 +63,12 @@ const EmptyStateMessage = ({
       key: requestKey,
     });
   };
+
+  const actionButton = primaryActionButton ?? (
+    <Button>
+      <a href={primaryActionLink} style={{ color: 'white', textDecoration: 'none' }}>{primaryActionTitle}</a>
+    </Button>
+  );
   return (
     <Bullseye>
       <EmptyState
@@ -80,10 +86,7 @@ const EmptyStateMessage = ({
         <EmptyStateBody>
           {emptyStateBody}
         </EmptyStateBody>
-        {showPrimaryAction &&
-          <Button>
-            <a href={primaryActionLink} style={{ color: 'white', textDecoration: 'none' }}>{primaryActionTitle}</a>
-          </Button>}
+        {showPrimaryAction ? actionButton : null}
         {showSecondaryAction &&
           <EmptyStateSecondaryActions>
             <Button variant="link">
@@ -93,11 +96,11 @@ const EmptyStateMessage = ({
         }
 
         {(searchIsActive || !!filtersAreActive) &&
-        <EmptyStateSecondaryActions>
-          <Button variant="link" onClick={handleClick}>
-            {secondaryActionText}
-          </Button>
-        </EmptyStateSecondaryActions>
+          <EmptyStateSecondaryActions>
+            <Button variant="link" onClick={handleClick}>
+              {secondaryActionText}
+            </Button>
+          </EmptyStateSecondaryActions>
         }
       </EmptyState>
     </Bullseye>
@@ -147,6 +150,9 @@ EmptyStateMessage.propTypes = {
     }
     return null;
   },
+  showPrimaryAction: PropTypes.bool,
+  showSecondaryAction: PropTypes.bool,
+  primaryActionButton: PropTypes.element,
 };
 
 EmptyStateMessage.defaultProps = {
@@ -159,6 +165,9 @@ EmptyStateMessage.defaultProps = {
   searchIsActive: false,
   activeFilters: [],
   defaultFilters: [],
+  showPrimaryAction: false,
+  showSecondaryAction: false,
+  primaryActionButton: undefined,
 };
 
 export default EmptyStateMessage;
