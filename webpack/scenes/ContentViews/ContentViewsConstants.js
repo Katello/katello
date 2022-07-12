@@ -2,6 +2,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { toUpper } from 'lodash';
 
 const CONTENT_VIEWS_KEY = 'CONTENT_VIEWS';
+const PACKAGES_KEY = 'PACKAGES';
 export const CREATE_CONTENT_VIEW_KEY = 'CONTENT_VIEW_CREATE';
 export const COPY_CONTENT_VIEW_KEY = 'CONTENT_VIEW_COPY';
 export const CREATE_CONTENT_VIEW_FILTER_KEY = 'CONTENT_VIEW_FILTER_CREATE';
@@ -51,7 +52,7 @@ export const cvVersionPublishKey = (cvId, versionCount) => `${PUBLISH_CONTENT_VI
 export const cvVersionTaskPollingKey = cvId => `CONTENT_VIEW_VERSION_POLLING_${cvId}`;
 export const cvAddComponentKey = cvId => `${CONTENT_VIEWS_KEY}_ADD_COMPONENT_${cvId}`;
 export const cvRemoveComponentKey = cvId => `${CONTENT_VIEWS_KEY}_REMOVE_COMPONENT_${cvId}`;
-
+export const cvPackagesCompare = (versionOne, versionTwo) => `${PACKAGES_KEY}_${versionOne}_${versionTwo}`;
 export const removeComponentSuccessMessage = size => (size === 1 ? __('Removed component from content view') : __('Removed components from content view'));
 
 export const addComponentSuccessMessage = component => (component ? __('Updated component details') : __('Added component to content view'));

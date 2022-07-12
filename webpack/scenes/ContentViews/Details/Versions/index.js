@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 import { number, shape } from 'prop-types';
 import ContentViewVersions from './ContentViewVersions';
 import ContentViewVersionDetails from './VersionDetails/ContentViewVersionDetails';
+import CVVersionCompare from './Compare/CVVersionCompare';
 
 const ContentViewVersionsRoutes = ({ cvId, details }) => (
   <>
@@ -11,6 +12,9 @@ const ContentViewVersionsRoutes = ({ cvId, details }) => (
     </Route>
     <Route path="/versions/:versionId([0-9]+)">
       <ContentViewVersionDetails cvId={cvId} details={details} />
+    </Route>
+    <Route path="/versions/compare">
+      <CVVersionCompare cvId={cvId} details={details} />
     </Route>
   </>
 );
