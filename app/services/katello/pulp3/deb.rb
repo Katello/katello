@@ -24,7 +24,8 @@ module Katello
       end
 
       def self.generate_model_row(unit)
-        {
+        unit = unit.try(:with_indifferent_access)
+        return {
           pulp_id: unit[unit_identifier],
           checksum: unit[:sha256],
           filename: unit[:relative_path],
