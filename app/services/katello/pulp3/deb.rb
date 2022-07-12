@@ -9,6 +9,7 @@ module Katello
       end
 
       def self.content_api_create(opts = {})
+        opts.delete(:relative_path) if opts.key?(:relative_path)
         self.content_api.create(opts)
       end
 
