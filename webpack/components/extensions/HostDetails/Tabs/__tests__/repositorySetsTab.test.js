@@ -389,7 +389,7 @@ test('Can filter by status', async (done) => {
   assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
 });
 
-test('Can display osRestricted as a label', async (done) => {
+test('Can display restrictions as labels', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(hostRepositorySets)
@@ -401,6 +401,8 @@ test('Can display osRestricted as a label', async (done) => {
   await patientlyWaitFor(() => expect(getByText(secondRepoSet.contentUrl)).toBeInTheDocument());
   expect(secondRepoSet.osRestricted).not.toBeNull();
   expect(getByText(secondRepoSet.osRestricted)).toBeInTheDocument();
+  expect(secondRepoSet.archRestricted).not.toBeNull();
+  expect(getByText(secondRepoSet.archRestricted)).toBeInTheDocument();
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
