@@ -111,6 +111,29 @@ EnabledIcon.propTypes = {
   isOverridden: PropTypes.bool.isRequired,
 };
 
+const ArchRestrictedIcon = ({ archRestricted }) => (
+  <Tooltip
+    position="right"
+    content={<FormattedMessage
+      id="arch-restricted-tooltip"
+      defaultMessage={__('Architecture restricted to {archRestricted}. If host architecture does not match, the repository will not be available on this host.')}
+      values={{ archRestricted }}
+    />}
+  >
+    <Label color="orange" className="arch-restricted-label" style={{ marginLeft: '8px' }}>
+      {__(archRestricted)}
+    </Label>
+  </Tooltip>
+);
+
+ArchRestrictedIcon.propTypes = {
+  archRestricted: PropTypes.string,
+};
+
+ArchRestrictedIcon.defaultProps = {
+  archRestricted: null,
+};
+
 const OsRestrictedIcon = ({ osRestricted }) => (
   <Tooltip
     position="right"
@@ -495,9 +518,11 @@ const RepositorySetsTab = () => {
                 contentUrl: repoPath,
                 product: { name: productName, id: productId },
                 osRestricted,
+                archRestricted,
               } = repoSet;
               const { isEnabled, isOverridden } =
                 getEnabledValue({ enabled, enabledContentOverride });
+              const showArchRestricted = archRestricted !== 'noarch';
               return (
                 <Tr key={id} ouiaId={`tr-${rowIndex}`}>
                   {canDoContentOverrides ? (
@@ -521,6 +546,9 @@ const RepositorySetsTab = () => {
                   </Td>
                   <Td>
                     <span><EnabledIcon key={`enabled-icon-${id}`} {...{ isEnabled, isOverridden }} /></span>
+                    {showArchRestricted &&
+                      <span><ArchRestrictedIcon key={`arch-restricted-icon-${id}`} {...{ archRestricted }} /></span>
+                    }
                     {osRestricted &&
                       <span><OsRestrictedIcon key={`os-restricted-icon-${id}`} {...{ osRestricted }} /></span>
                     }

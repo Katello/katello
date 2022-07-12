@@ -37,6 +37,10 @@ child @resource.repositories => :repositories do
   attributes :minor => :releasever
 end
 
+node :archRestricted do |pc|
+  pc.repositories&.first&.arch
+end
+
 node :osRestricted do |pc|
   pc.repositories&.first&.os_versions&.first
 end
