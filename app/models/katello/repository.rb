@@ -31,7 +31,7 @@ module Katello
     ANSIBLE_COLLECTION_TYPE = 'ansible_collection'.freeze
     GENERIC_TYPE = 'generic'.freeze
 
-    EXPORTABLE_TYPES = [YUM_TYPE, FILE_TYPE, ANSIBLE_COLLECTION_TYPE].freeze
+    EXPORTABLE_TYPES = [YUM_TYPE, FILE_TYPE, ANSIBLE_COLLECTION_TYPE, DOCKER_TYPE].freeze
 
     define_model_callbacks :sync, :only => :after
 
