@@ -7,23 +7,28 @@ module Katello
     apipie_concern_subst(:a_resource => N_("a deb package"), :resource => "deb packages")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
-    before_action :find_repositories, :only => [:auto_complete_name, :auto_complete_arch]
     before_action :find_hosts, :only => :index
+    before_action :find_repositories, :only => [:auto_complete_name, :auto_complete_arch]
 
-    def auto_complete_name
+    def auto_complete(search)
       page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
       debs = Deb.in_repositories(@repositories)
-      col = "#{Deb.table_name}.name"
-      debs = debs.where("#{Deb.table_name}.name ILIKE ?", "#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
+      col = ''
+      if search == 'name'
+        col = "#{Deb.table_name}.name"
+      elsif search == 'arch'
+        col = "#{Deb.table_name}.architecture"
+      end
+      debs = debs.where("#{col} ILIKE ?", "#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
       render :json => debs.pluck(col)
     end
 
+    def auto_complete_name
+      auto_complete('name')
+    end
+
     def auto_complete_arch
-      page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
-      debs = Deb.in_repositories(@repositories)
-      col = "#{Deb.table_name}.architecture"
-      debs = debs.where("#{col} ILIKE ?", "%#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
-      render :json => debs.pluck(col)
+      auto_complete('architecture')
     end
 
     api :GET, "/debs", N_("List deb packages")
@@ -39,14 +44,41 @@ module Katello
     param :host_id, :number, :desc => N_("Host id to list applicable deb packages for")
     param :packages_restrict_applicable, :boolean, :desc => N_("Return deb packages that are applicable to one or more hosts (defaults to true if host_id is specified)")
     param :packages_restrict_upgradable, :boolean, :desc => N_("Return deb packages that are upgradable on one or more hosts")
+    param :packages_restrict_latest, :boolean, :desc => N_("Return only the latest version of each package")
     param :available_for, String, :desc => N_("Return deb packages that can be added to the specified object.  Only the value 'content_view_version' is supported.")
     param_group :search, ::Katello::Api::V2::ApiController
     def index
       super
     end
 
+    def final_custom_index_relation(collection)
+      # :packages_restrict_latest is intended to filter the result set after all
+      # other constraints have been applied, including the scoped_search
+      # constraints.  If any constraints are applied after this, then a package
+      # will not be returned if its latest version does not match those
+      # constraints, even if an older version does match those constraints.
+      collection = Katello::Deb.latest(collection) if ::Foreman::Cast.to_bool(params[:packages_restrict_latest])
+      collection
+    end
+
+    def filter_by_content_view_filter(filter, collection)
+      filtered_debs = []
+      filter.deb_rules.each do |rule|
+        filtered_debs += filter.query_debs_from_collection(collection, rule).pluck(:id)
+      end
+
+      collection.where(id: filter.applicable_debs.pluck(:id) & filtered_debs)
+    end
+
+    def filter_by_content_view_filter_rule(rule, collection)
+      filter = rule.filter
+      filtered_debs = filter.query_debs_from_collection(collection, rule).pluck(:id)
+      collection.where(id: filter.applicable_debs.pluck(:id) & filtered_debs)
+    end
+
     def default_sort
-      %w(name asc)
+      lambda { |query| query.default_sort }
+      # %w(name asc)
     end
 
     def available_for_content_view_version(version)

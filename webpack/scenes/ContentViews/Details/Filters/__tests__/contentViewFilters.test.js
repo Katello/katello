@@ -179,6 +179,12 @@ test('Can remove multiple filters', async (done) => {
 });
 
 test('Shows call-to-action button when there are no filters', async (done) => {
+  const repoTypesResponse = [{ name: 'deb' }, { name: 'docker' }, { name: 'file' }, { name: 'ostree' }, { name: 'yum' }];
+  const repoTypeScope = nockInstance
+    .get(api.getApiUrl('/repositories/repository_types'))
+    .query(true)
+    .reply(200, repoTypesResponse);
+
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const scope = nockInstance
@@ -198,5 +204,6 @@ test('Shows call-to-action button when there are no filters', async (done) => {
     expect(queryByLabelText('create_filter')).toBeInTheDocument();
   });
   assertNockRequest(autocompleteScope);
+  assertNockRequest(repoTypeScope);
   assertNockRequest(scope, done);
 });

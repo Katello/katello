@@ -14,6 +14,7 @@ export const typeName = (type, errataByDate) => {
     erratum: __('Errata'),
     erratum_date: __('Errata - by date range'),
     erratum_id: __('Errata'),
+    deb: __('Deb'),
   };
 
   if (type in nameMap) return nameMap[type];

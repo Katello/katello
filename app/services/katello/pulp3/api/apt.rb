@@ -11,6 +11,18 @@ module Katello
         def publications_verbatim_api
           PulpDebClient::PublicationsVerbatimApi.new(api_client)
         end
+
+        def self.copy_class
+          PulpDebClient::Copy
+        end
+
+        def self.add_remove_content_class
+          PulpDebClient::RepositoryAddRemoveContent
+        end
+
+        def copy_api
+          PulpDebClient::CopyApi.new(api_client)
+        end
       end
     end
   end
