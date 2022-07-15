@@ -1,4 +1,5 @@
 import nock from 'nock';
+// import checkForOuiaIds from './ouia_id_check';
 
 // runs before each test to make sure console.error output will
 // fail a test (i.e. default PropType missing). Check the error
@@ -8,7 +9,8 @@ global.console.error = (error, stack) => {
   originalConsoleError(error); // ensure error is printed to console
   /* eslint-disable-next-line no-console */
   if (stack) console.log(stack); // Prints out original stack trace
-  throw new Error(error);
+  throw new Error(error); // comment this and uncomment the next line when checking for ouia ids
+  // if (!error.includes('Failed prop type')) throw new Error(error);
 };
 
 // Increase jest timeout as some tests using multiple http mocks can time out on CI systems.
@@ -27,6 +29,11 @@ afterAll(() => {
 beforeEach(() => {
   if (!nock.isActive()) { nock.activate(); }
 });
+
+// To see where you need to add ouiaIds:
+// 1. uncomment this and the import above
+// checkForOuiaIds();
+// 2. (optional) uncomment the line in global.console.error function above
 
 afterEach(() => {
   nock.cleanAll();

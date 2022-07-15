@@ -80,7 +80,7 @@ const EmptyStateMessage = ({
           customIcon={customIcon}
           happyIcon={happy}
         />
-        <Title headingLevel="h2" size="lg">
+        <Title headingLevel="h2" size="lg" ouiaId="empty-state-title">
           {emptyStateTitle}
         </Title>
         <EmptyStateBody>

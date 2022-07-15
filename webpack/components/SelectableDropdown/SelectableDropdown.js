@@ -33,6 +33,7 @@ const SelectableDropdown = ({
       <LevelItem aria-label={`select ${title} container`}>
         <Select
           id={`select ${title}`}
+          ouiaId={`select ${title}`}
           aria-label={`select ${title}`}
           key="type-dropdown"
           variant={SelectVariant.single}

@@ -68,16 +68,16 @@ const SelectAllCheckbox = ({
   }, [selectedCount, areAllRowsSelected]);
 
   const selectAllDropdownItems = [
-    <DropdownItem key="select-none" component="button" isDisabled={selectedCount === 0} onClick={handleSelectNone} >
+    <DropdownItem key="select-none" ouiaId="select-none" component="button" isDisabled={selectedCount === 0} onClick={handleSelectNone} >
       {`${__('Select none')} (0)`}
     </DropdownItem>,
-    <DropdownItem key="select-page" component="button" isDisabled={pageRowCount === 0 || areAllRowsOnPageSelected} onClick={handleSelectPage}>
+    <DropdownItem key="select-page" ouiaId="select-page" component="button" isDisabled={pageRowCount === 0 || areAllRowsOnPageSelected} onClick={handleSelectPage}>
       {`${__('Select page')} (${pageRowCount})`}
     </DropdownItem>,
   ];
   if (canSelectAll) {
     selectAllDropdownItems.push((
-      <DropdownItem key="select-all" id="all" component="button" isDisabled={totalCount === 0 || areAllRowsSelected} onClick={handleSelectAll}>
+      <DropdownItem key="select-all" id="all" ouiaId="select-all" component="button" isDisabled={totalCount === 0 || areAllRowsSelected} onClick={handleSelectAll}>
         {`${__('Select all')} (${totalCount})`}
       </DropdownItem>));
   }
@@ -87,11 +87,13 @@ const SelectAllCheckbox = ({
       toggle={
         <DropdownToggle
           onToggle={onSelectAllDropdownToggle}
-          id="toggle-id-8"
+          id="select-all-checkbox-dropdown-toggle"
+          ouiaId="select-all-checkbox-dropdown-toggle"
           splitButtonItems={[
             <DropdownToggleCheckbox
               className="tablewrapper-select-all-checkbox"
               key="tablewrapper-select-all-checkbox"
+              ouiaId="select-all-checkbox-dropdown-toggle-checkbox"
               aria-label="Select all"
               onChange={checked => onSelectAllCheckboxChange(checked)}
               isChecked={selectionToggle}
@@ -105,6 +107,7 @@ const SelectAllCheckbox = ({
       isOpen={isSelectAllDropdownOpen}
       dropdownItems={selectAllDropdownItems}
       id="selection-checkbox"
+      ouiaId="selection-checkbox"
     />
   );
 };

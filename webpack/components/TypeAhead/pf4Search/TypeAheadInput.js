@@ -30,6 +30,7 @@ const TypeAheadInput = ({
         ref={inputRef}
         onFocus={onInputFocus}
         aria-label="text input for search"
+        ouiaId="type-ahead-input"
         onChange={onChangeWrapper}
         type="text"
         iconVariant={autoSearchEnabled && !isTextInput ? 'search' : undefined}
