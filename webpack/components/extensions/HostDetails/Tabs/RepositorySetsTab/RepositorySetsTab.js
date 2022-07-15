@@ -316,13 +316,13 @@ const RepositorySetsTab = () => {
   cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
 
   const dropdownItems = [
-    <DropdownItem aria-label="bulk_enable" key="bulk_enable" component="button" onClick={enableRepoSets} isDisabled={selectedCount === 0}>
+    <DropdownItem aria-label="bulk_enable" key="bulk_enable" ouiaId="bulk_enable" component="button" onClick={enableRepoSets} isDisabled={selectedCount === 0}>
       {__('Override to enabled')}
     </DropdownItem>,
-    <DropdownItem aria-label="bulk_disable" key="bulk_disable" component="button" onClick={disableRepoSets} isDisabled={selectedCount === 0}>
+    <DropdownItem aria-label="bulk_disable" key="bulk_disable" ouiaId="bulk_disable" component="button" onClick={disableRepoSets} isDisabled={selectedCount === 0}>
       {__('Override to disabled')}
     </DropdownItem>,
-    <DropdownItem aria-label="bulk_reset_default" key="bulk_reset_default" component="button" onClick={resetToDefaultRepoSets} isDisabled={selectedCount === 0}>
+    <DropdownItem aria-label="bulk_reset_default" key="bulk_reset_default" ouiaId="bulk_reset_default" component="button" onClick={resetToDefaultRepoSets} isDisabled={selectedCount === 0}>
       {__('Reset to default')}
     </DropdownItem>,
   ];
@@ -352,6 +352,7 @@ const RepositorySetsTab = () => {
       <SplitItem>
         <SelectableDropdown
           id="status-dropdown"
+          ouiaId="status-dropdown"
           title={STATUS_LABEL}
           showTitle={false}
           items={Object.values(STATUSES)}
@@ -372,6 +373,7 @@ const RepositorySetsTab = () => {
               isOpen={isBulkActionOpen}
               isPlain
               dropdownItems={dropdownItems}
+              ouiaId="repository-sets-bulk-actions"
             />
           </ActionListItem>
         </ActionList>
@@ -413,6 +415,7 @@ const RepositorySetsTab = () => {
             <Alert
               variant="info"
               className="repo-sets-alert"
+              ouiaId="repo-sets-alert"
               isInline
               title={
                 <FormattedMessage
@@ -425,7 +428,7 @@ const RepositorySetsTab = () => {
                   }}
                 />
               }
-              actionClose={<AlertActionCloseButton onClose={() => setAlertShowing(false)} />}
+              actionClose={<AlertActionCloseButton ouiaId="alert-close-button" onClose={() => setAlertShowing(false)} />}
             />
           }
         </div>
@@ -471,7 +474,7 @@ const RepositorySetsTab = () => {
           alwaysShowActionButtons={false}
         >
           <Thead>
-            <Tr>
+            <Tr ouiaId="header-tr">
               <Th key="select-all" />
               <SortableColumnHeaders
                 columnHeaders={columnHeaders}
@@ -496,7 +499,7 @@ const RepositorySetsTab = () => {
               const { isEnabled, isOverridden } =
                 getEnabledValue({ enabled, enabledContentOverride });
               return (
-                <Tr key={id}>
+                <Tr key={id} ouiaId={`tr-${rowIndex}`}>
                   {canDoContentOverrides ? (
                     <Td select={{
                       disable: !isSelectable(id),

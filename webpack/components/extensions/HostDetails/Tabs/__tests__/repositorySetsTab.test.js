@@ -8,6 +8,7 @@ import mockRepoSetData from './repositorySets.fixtures.json';
 import mockBookmarkData from './bookmarks.fixtures.json';
 import mockContentOverride from './contentOverrides.fixtures.json';
 
+
 jest.mock('../../hostDetailsHelpers', () => ({
   ...jest.requireActual('../../hostDetailsHelpers'),
   userPermissionsFromHostDetails: () => ({

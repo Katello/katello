@@ -6,7 +6,7 @@ import { commonItemPropTypes } from '../helpers/commonPropTypes';
 const TypeAheadItems = ({
   items, activeItems, getItemProps, highlightedIndex,
 }) => (
-  <Dropdown.Menu className="typeahead-dropdown">
+  <Dropdown.Menu className="typeahead-dropdown" ouiaId="typeahead-dropdown">
     {items.map(({ text, type, disabled = false }, index) => {
       if (type === 'header') {
         return (

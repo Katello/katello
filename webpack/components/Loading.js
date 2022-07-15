@@ -14,7 +14,7 @@ const Loading = ({ size, showText, loadingText }) => (
     <EmptyState>
       <EmptyStateIcon size={size} variant="container" component={Spinner} />
       {showText && (
-        <Title size={size} headingLevel="h4">
+        <Title size={size} headingLevel="h4" ouiaId="loading-title">
           {loadingText || __('Loading')}
         </Title>)}
     </EmptyState>
