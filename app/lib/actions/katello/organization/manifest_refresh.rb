@@ -29,6 +29,8 @@ module Actions
             import_products = plan_action(Candlepin::Owner::ImportProducts,
               :organization_id => organization.id,
               :dependency => owner_import.output)
+            plan_action(Katello::Organization::EnvironmentContentsRefresh,
+              organization)
             if manifest_update
               plan_refresh_repos(import_products, organization)
             end
