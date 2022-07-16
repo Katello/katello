@@ -22,7 +22,7 @@ module Katello
     end
 
     def test_index
-      get :index, params: { :repository_id => @repo.id, :organization_id => @org.id}
+      get :index, params: { :repository_id => @repo.id, :organization_id => @org.id }
 
       assert_response :success
       assert_template "katello/api/v2/packages/index"
@@ -168,6 +168,36 @@ module Katello
       assert_response :success
       assert_template "katello/api/v2/packages/compare"
       assert_equal 2, JSON.parse(response.body)['total']
+    end
+
+    def test_compare_same
+      @lib_repo = katello_repositories(:rhel_6_x86_64)
+      @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
+
+      @lib_repo.rpms = [katello_rpms(:one), katello_rpms(:two)]
+      @view_repo.rpms = [katello_rpms(:two)]
+
+      response = get :compare, params: { content_view_version_ids: [@lib_repo.content_view_version_id, @view_repo.content_view_version_id], restrict_comparison: 'same', repository_id: @lib_repo.id }
+      assert_response :success
+      assert_template "katello/api/v2/packages/compare"
+      assert_equal 1, JSON.parse(response.body)['total']
+    end
+
+    def test_compare_different
+      @lib_repo = katello_repositories(:rhel_6_x86_64)
+      @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
+
+      cv1_packages = Katello::ContentViewVersion.find(@lib_repo.content_view_version_id).packages.pluck(:id)
+      cv2_packages = Katello::ContentViewVersion.find(@view_repo.content_view_version_id).packages.pluck(:id)
+
+      unique_package_ids = (cv1_packages + cv2_packages)
+      same_package_ids = cv1_packages.intersection cv2_packages
+      different_package_ids = unique_package_ids - same_package_ids
+
+      response = get :compare, params: { content_view_version_ids: [@lib_repo.content_view_version_id, @view_repo.content_view_version_id], restrict_comparison: 'different' }
+      assert_response :success
+      assert_template "katello/api/v2/packages/compare"
+      assert_equal different_package_ids&.count, JSON.parse(response.body)['total']
     end
   end
 end

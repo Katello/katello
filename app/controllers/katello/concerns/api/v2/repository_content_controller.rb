@@ -30,6 +30,7 @@ module Katello
       param :ids, Array, :desc => N_("ids to filter content by")
       param :include_filter_ids, :bool, desc: N_("Includes associated content view filter ids in response")
       param_group :search, ::Katello::Api::V2::ApiController
+
       def index
         sort_by, sort_order, options = sort_options
         respond(:collection => scoped_search(index_relation, sort_by, sort_order, options))
@@ -40,6 +41,7 @@ module Katello
       param :repository_id, :number, :desc => N_("repository identifier")
       param :organization_id, :number, :desc => N_("organization identifier")
       param :id, String, :desc => N_(":a_resource identifier"), :required => true
+
       def show
         respond :resource => @resource
       end
@@ -47,10 +49,11 @@ module Katello
       api :GET, "/:resource_id/compare/", N_("List :resource")
       param :content_view_version_ids, Array, :desc => N_("content view versions to compare")
       param :repository_id, :number, :desc => N_("Library repository id to restrict comparisons to")
+      param :restrict_comparison, String, :desc => N_("Return same, different or all results")
+
       def compare
         fail _("No content_view_version_ids provided") if params[:content_view_version_ids].empty?
         @versions = ContentViewVersion.readable.where(:id => params[:content_view_version_ids])
-
         if @versions.count != params[:content_view_version_ids].uniq.length
           missing = params[:content_view_version_ids] - @versions.pluck(:id)
           fail HttpErrors::NotFound, _("Couldn't find content view versions '%s'") % missing.join(',')
@@ -63,9 +66,8 @@ module Katello
         else
           repos = Katello::Repository.where(:content_view_version_id => @versions.pluck(:id))
           repos = repos.where(:root_id => @repo.root_id) if @repo
-          collection = filter_by_repos(repos, resource_class.all)
+          collection = filter_by_repos(repos, resource_class.all, @versions, params[:restrict_comparison])
         end
-
         collection = scoped_search(collection.distinct, sort_by, sort_order, options)
         collection[:results] = collection[:results].map { |item| ContentViewVersionComparePresenter.new(item, @versions, @repo) }
         respond_for_index(:collection => collection)
@@ -75,6 +77,7 @@ module Katello
       param :show_all_for, :bool,
             :desc => N_("Returns content that can be both added and is currently added to the object. The value 'content_view_filter' is supported")
       param :filterId, :integer, :desc => N_("Content View Filter id"), deprecated: true
+
       def index_relation
         if @version && params[:available_for] == "content_view_version" && self.respond_to?(:available_for_content_view_version)
           collection = self.available_for_content_view_version(@version)
@@ -125,8 +128,28 @@ module Katello
         repos
       end
 
-      def filter_by_repos(repos, collection)
-        collection.in_repositories(repos)
+      def filter_by_repos(repos, collection, content_view_versions = nil, compare = 'all')
+        collection = collection.in_repositories(repos)
+        case compare
+        when 'same'
+          compare_same(collection, content_view_versions)
+        when 'different'
+          collection_all_ids = collection&.pluck(:id)
+          collection_same_ids = compare_same(collection, content_view_versions)&.pluck(:id)
+          collection.where(id: collection_all_ids - collection_same_ids)
+        else
+          collection
+        end
+      end
+
+      def compare_same(collection, content_view_versions = nil)
+        cv_version_first = content_view_versions[0]
+        collection_ids = collection.in_repositories(Katello::Repository.where(:content_view_version_id => cv_version_first&.id))&.pluck(:id)
+        content_view_versions[1..-1].each do |version|
+          collection_version_ids = collection.in_repositories(Katello::Repository.where(:content_view_version_id => version&.id))&.pluck(:id)
+          collection_ids = collection_ids.intersection collection_version_ids
+        end
+        return collection.where(id: collection_ids)
       end
 
       def filter_by_content_view_version(version, collection)
@@ -145,12 +168,12 @@ module Katello
 
         if @resource.blank?
           fail HttpErrors::NotFound, _("Failed to find %{content} with id '%{id}'.") %
-            {content: resource_name, id: params[:id]}
+            { content: resource_name, id: params[:id] }
         end
 
         if params[:repository_id] && !@resource.repositories.include?(@repo)
           fail HttpErrors::NotFound, _("Could not find %{content} with id '%{id}' in repository.") %
-            {content: resource_name, id: params[:id]}
+            { content: resource_name, id: params[:id] }
         end
 
         if params[:organization_id] && !@resource.repositories.any? { |repo| repo.organization_id == params[:organization_id].to_i }
@@ -174,7 +197,7 @@ module Katello
           @environment = KTEnvironment.readable.find_by(:id => params[:environment_id])
           if @environment.nil?
             fail HttpErrors::NotFound, _("Could not find Lifecycle Environment with id '%{id}'.") %
-              {id: params[:environment_id]}
+              { id: params[:environment_id] }
           end
         end
       end
@@ -196,7 +219,7 @@ module Katello
 
           unless @filter
             fail HttpErrors::NotFound, _("Couldn't find %{type} Filter with id %{id}") %
-              {:type => resource_name, :id => params[:filter_id]}
+              { :type => resource_name, :id => params[:filter_id] }
           end
         end
       end
@@ -209,7 +232,7 @@ module Katello
 
           unless @filter_rule
             fail HttpErrors::NotFound, _("Couldn't find %{type} Filter with id %{id}") %
-              {:type => resource_name, :id => filter_rule_id}
+              { :type => resource_name, :id => filter_rule_id }
           end
         end
       end
@@ -272,7 +295,7 @@ module Katello
       def check_repo_for_content_resource
         if params[:repository_id] && !@resource.send(repo_association).include?(@repo.pulp_id)
           fail HttpErrors::NotFound, _("Could not find %{content} with id '%{id}' in repository.") %
-            {content: resource_name, id: params[:id]}
+            { content: resource_name, id: params[:id] }
         end
       end
 
