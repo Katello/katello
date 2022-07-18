@@ -22,7 +22,7 @@ module Katello
     def index_relation
       return HostAvailableModuleStream.upgradable([@host]) if params[:status] == HostAvailableModuleStream::UPGRADABLE
 
-      rel = @host.host_available_module_streams
+      rel = @host.host_available_module_streams.where(available_module_stream_id: find_available_module_stream_ids)
       if params[:sort_by] == 'installed_profiles'
         rel = rel.order([:installed_profiles, :status])
       end
@@ -37,6 +37,14 @@ module Katello
     end
 
     private
+
+    def find_available_module_stream_ids
+      items = @host.host_available_module_streams.includes(:available_module_stream).map(&:available_module_stream)
+      grouped = items.group_by { |item| [item.name, item.stream] }
+      grouped.values.map do |item|
+        item.first.id
+      end
+    end
 
     def find_host
       @host = resource_finder(::Host::Managed.authorized(:view_hosts, ::Host::Managed), params[:host_id])
