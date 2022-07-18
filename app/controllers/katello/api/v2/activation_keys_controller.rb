@@ -11,6 +11,7 @@ module Katello
                                                                :content_override, :add_subscriptions, :remove_subscriptions,
                                                                :subscriptions]
     before_action :verify_simple_content_access_disabled, :only => [:add_subscriptions]
+    before_action :validate_release_version, :only => [:create, :update]
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach purpose_role purpose_usage purpose_addons content_view_environment))
 
@@ -335,6 +336,12 @@ module Katello
     def verify_simple_content_access_disabled
       if @activation_key.organization.simple_content_access?
         fail HttpErrors::BadRequest, _("The specified organization is in Simple Content Access mode. Attaching subscriptions is disabled")
+      end
+    end
+
+    def validate_release_version
+      if params[:release_version].present? && !@organization.library.available_releases.include?(params[:release_version])
+        fail HttpErrors::BadRequest, _("Invalid release version: [%s]") % params[:release_version]
       end
     end
   end
