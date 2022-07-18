@@ -48,7 +48,6 @@ module Katello
       param :content_view_version_ids, Array, :desc => N_("content view versions to compare")
       param :repository_id, :number, :desc => N_("Library repository id to restrict comparisons to")
       def compare
-        # params[:content_view_version_ids] = [41,42]
         fail _("No content_view_version_ids provided") if params[:content_view_version_ids].empty?
         @versions = ContentViewVersion.readable.where(:id => params[:content_view_version_ids])
 

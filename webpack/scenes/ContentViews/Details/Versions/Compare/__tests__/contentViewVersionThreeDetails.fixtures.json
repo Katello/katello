@@ -1,0 +1,163 @@
+{
+  "version": "5.0",
+  "major": 5,
+  "minor": 0,
+  "composite_content_view_ids": [],
+  "published_in_composite_content_view_ids": [],
+  "content_view_id": 21,
+  "default": false,
+  "description": "",
+  "id": 48,
+  "name": "cv1 5.0",
+  "created_at": "2022-07-12 12:40:10 -0400",
+  "updated_at": "2022-07-12 12:40:16 -0400",
+  "content_view": {
+    "id": 21,
+    "name": "cv1",
+    "label": "cv1",
+    "generated_for": "none"
+  },
+  "composite_content_views": [],
+  "composite_content_view_versions": [],
+  "published_in_composite_content_views": [],
+  "environments": [
+    {
+      "id": 3,
+      "name": "dev1",
+      "label": "dev1",
+      "publish_date": "7 days",
+      "permissions": {
+        "readable": true,
+        "promotable_or_removable": true,
+        "all_hosts_editable": true,
+        "all_keys_editable": true
+      },
+      "host_count": 0,
+      "activation_key_count": 0
+    }
+  ],
+  "repositories": [
+    {
+      "id": 101,
+      "name": "repo1",
+      "label": "repo1",
+      "content_type": "yum",
+      "library_instance_id": 3
+    }
+  ],
+  "last_event": {
+    "user": "admin",
+    "status": "successful",
+    "description": "",
+    "action": "promotion",
+    "created_at": "2022-07-19 10:38:05 -0400",
+    "updated_at": "2022-07-19 10:38:07 -0400",
+    "environment": {
+      "id": 4,
+      "name": "test1"
+    },
+    "task": {
+      "id": "c3c6b1d6-1ba6-4f93-b69e-c22e0520de8a",
+      "label": "Actions::Katello::ContentView::Promote",
+      "pending": false,
+      "action": "Promote content view 'cv1'; organization 'Default Organization'",
+      "username": "admin",
+      "started_at": "2022-07-19 10:38:04 -0400",
+      "ended_at": "2022-07-19 10:38:07 -0400",
+      "state": "stopped",
+      "result": "success",
+      "progress": 1,
+      "input": {
+        "content_view": {
+          "id": 21,
+          "name": "cv1",
+          "label": "cv1"
+        },
+        "organization": {
+          "id": 1,
+          "name": "Default Organization",
+          "label": "Default_Organization"
+        },
+        "environments": [
+          "dev1",
+          "test1"
+        ],
+        "services_checked": [
+          "pulp3",
+          "candlepin",
+          "candlepin_auth"
+        ],
+        "locale": "en",
+        "current_request_id": "bf23c004-0ed0-4084-94b1-a41c19f92239",
+        "current_timezone": "America/New_York",
+        "current_organization_id": 1,
+        "current_location_id": 2,
+        "current_user_id": 4
+      },
+      "output": {},
+      "humanized": {
+        "action": "Promote",
+        "input": [
+          [
+            "content_view",
+            {
+              "text": "content view 'cv1'",
+              "link": "/content_views/21/versions"
+            }
+          ],
+          [
+            "organization",
+            {
+              "text": "organization 'Default Organization'",
+              "link": "/organizations/1/edit"
+            }
+          ]
+        ],
+        "output": "",
+        "errors": []
+      },
+      "cli_example": null,
+      "start_at": "2022-07-19 10:38:04 -0400",
+      "available_actions": {
+        "cancellable": false,
+        "resumable": false
+      }
+    },
+    "version": "5.0",
+    "publish": false,
+    "version_id": 48,
+    "triggered_by": null,
+    "triggered_by_id": null
+  },
+  "active_history": [],
+  "ansible_collection_count": 0,
+  "deb_count": 0,
+  "docker_manifest_count": 0,
+  "docker_manifest_list_count": 0,
+  "docker_tag_count": 0,
+  "file_count": 0,
+  "python_package_count": 0,
+  "rpm_count": 32,
+  "modulemd_count": 0,
+  "erratum_count": 4,
+  "package_group_count": 0,
+  "srpm_count": 0,
+  "module_stream_count": 0,
+  "package_count": 32,
+  "component_view_count": 0,
+  "ansible_collection_repository_count": 0,
+  "deb_repository_count": 0,
+  "docker_repository_count": 0,
+  "file_repository_count": 0,
+  "python_repository_count": 0,
+  "yum_repository_count": 1,
+  "errata_counts": {
+    "security": 3,
+    "bugfix": 0,
+    "enhancement": 1,
+    "total": 4
+  },
+  "permissions": {
+    "deletable": true
+  }
+}

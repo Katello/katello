@@ -19,6 +19,7 @@ import {
   selectCVVersions,
   selectCVVersionsStatus,
   selectCVVersionsError,
+  selectCVDetails,
 } from '../ContentViewDetailSelectors';
 import getEnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPathActions';
 import ContentViewVersionPromote from '../Promote/ContentViewVersionPromote';
@@ -33,7 +34,7 @@ import CVVersionCompare from './Compare/CVVersionCompare';
 const ContentViewVersions = ({ cvId, details }) => {
   const response = useSelector(state => selectCVVersions(state, cvId));
   const { results, ...metadata } = response;
-
+  const { versions: cvDetails } = useSelector(state => selectCVDetails(state, cvId));
   const firstIdWithActiveHistory =
     results?.find(({ active_history: activeHistory }) =>
       activeHistory?.length)?.id;
@@ -81,8 +82,9 @@ const ContentViewVersions = ({ cvId, details }) => {
         aria-label="publish_content_view"
       > {__('Publish new version')}
       </Button>);
-  const [versionOneId, setVersionOneId] = useState('');
-  const [versionTwoId, setVersionTwoId] = useState('');
+
+  const versionOneId = String([...selectionSet][0]);
+  const versionTwoId = String([...selectionSet][1]);
   const fetchItems = useCallback((params) => {
     selectionSet.clear();
     return getContentViewVersions(cvId, params);
@@ -97,11 +99,10 @@ const ContentViewVersions = ({ cvId, details }) => {
     __('Description'),
   ];
 
-  const checkboxOnChange = (selected, versionId) => {
-    selectOne(selected, versionId);
-    setVersionOneId(String([...selectionSet][0]));
-    setVersionTwoId(String([...selectionSet][1]));
-  };
+  const versionOneLabel = String(cvDetails?.find(version =>
+    Number(version.id) === Number(versionOneId))?.version);
+  const versionTwoLabel = String(cvDetails?.find(version =>
+    Number(version.id) === Number(versionTwoId))?.version);
   useEffect(
     () => {
       if (envStatus !== STATUS.RESOLVED) { dispatch(getEnvironmentPaths()); }
@@ -141,8 +142,9 @@ const ContentViewVersions = ({ cvId, details }) => {
     return [
       <Checkbox
         id={versionId}
+        aria-label={`Select version ${versionId}`}
         isChecked={isSelected(versionId)}
-        onChange={selected => checkboxOnChange(selected, versionId)}
+        onChange={selected => selectOne(selected, versionId)}
       />,
       <Link to={`/versions/${versionId}`}>{__('Version ')}{version}</Link>,
       <ContentViewVersionEnvironments {...{ environments }} />,
@@ -219,12 +221,16 @@ const ContentViewVersions = ({ cvId, details }) => {
     versionTwoId,
   };
   const [hasTwoVersions, setHasTwoVersions] = useState(false);
-
   if (hasTwoVersions) {
+    const versionLabels = {
+      versionOneLabel,
+      versionTwoLabel,
+    };
     return (
       <CVVersionCompare
         versionIds={selectedVersionIds}
         cvId={cvId}
+        versionLabels={versionLabels}
       />
     );
   }
@@ -268,6 +274,7 @@ const ContentViewVersions = ({ cvId, details }) => {
                   variant="primary"
                   onClick={() => setHasTwoVersions(true)}
                   isDisabled={selectedCount !== 2}
+                  aria-label="compare_two_versions"
                 >
                   {__('Compare')}
                 </Button>

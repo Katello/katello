@@ -30,7 +30,7 @@ import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTa
 import { hasPermission } from '../../helpers';
 
 const emptyContentTitle = __('No rules have been added to this filter.');
-const emptyContentBody = __('Filters will appear here when the filter rule is added.');
+const emptyContentBody = __('Items will appear here when a filter rule is added.');
 const emptySearchTitle = __('No matching filter rules found.');
 const emptySearchBody = __('Try changing your search settings.');
 

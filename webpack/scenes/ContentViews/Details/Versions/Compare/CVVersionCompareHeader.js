@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector } from 'react-redux';
 import {
-  Grid, GridItem, TextContent, Text, TextVariants, Tooltip, Button,
+  Grid, GridItem, TextContent, Text, TextVariants, Tooltip,
   Select, SelectOption, SelectVariant, Flex, FlexItem,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
@@ -12,7 +12,7 @@ import { selectCVDetails } from '../../ContentViewDetailSelectors';
 const CVVersionCompareHeader = ({
   versionOne, versionTwo, cvId, setVersionOne, setVersionTwo,
 }) => {
-  const toolTipContent = 'Comparison of the content types within selected two versions';
+  const toolTipContent = 'Compare the content of any two versions of this content view.';
   const response = useSelector(state => selectCVDetails(state, cvId));
   const { versions } = response;
   const [isOpenSelectVersionOne, setIsOpenSelectVersionOne] = useState(false);
@@ -80,33 +80,28 @@ const CVVersionCompareHeader = ({
     <Grid hasGutter style={{ margin: '0 24px' }}>
       <GridItem span={12} style={{ display: 'flex' }}>
         <TextContent>
-          <Text component={TextVariants.h2}>{__('Compare')}</Text>
+          <Text ouiaId="cv-version-compare-button" component={TextVariants.h2}>{__('Compare')}</Text>
         </TextContent>
         <Tooltip aria="none" aria-live="polite" content={toolTipContent} style={{ marginLeft: 'auto' }}>
-          <Button
-            aria-label="Clipboard"
-            variant="plain"
-            id="tt-ref"
-          >
-            <OutlinedQuestionCircleIcon />
-          </Button>
+          <OutlinedQuestionCircleIcon />
         </Tooltip>
       </GridItem>
       <GridItem span={12}>
-        <Flex className="example-border">
+        <Flex>
           <FlexItem>
             <Flex direction={{ default: 'column' }}>
               <TextContent>
-                <Text component={TextVariants.h4}>{__('Versions to compare')}</Text>
+                <Text ouiaId="versions-to-compare-text" component={TextVariants.h4}>{__('Versions to compare')}</Text>
               </TextContent>
               <FlexItem>
-                <Flex className="example-border">
+                <Flex>
                   <FlexItem>
                     <Select
                       style={{ marginRight: '10px' }}
                       variant={SelectVariant.single}
-                      placeholderText="Select an option"
+                      placeholderText={__('Select an option')}
                       aria-label="Select version one"
+                      ouiaId="select-version-one"
                       onToggle={setIsOpenSelectVersionOne}
                       onSelect={onSelectVersionOne}
                       selections={versionOne}
@@ -125,7 +120,7 @@ const CVVersionCompareHeader = ({
                   </FlexItem>
                   <FlexItem>
                     <TextContent style={{ margin: '10px' }}>
-                      <Text component={TextVariants.h4}>{__('to')}</Text>
+                      <Text ouiaId="to-text" component={TextVariants.h4}>{__('to')}</Text>
                     </TextContent>
                   </FlexItem>
                   <FlexItem>
@@ -133,6 +128,7 @@ const CVVersionCompareHeader = ({
                       variant={SelectVariant.single}
                       placeholderText="Select an option"
                       aria-label="Select version two"
+                      ouiaId="select-version-two"
                       onToggle={setIsOpenSelectVersionTwo}
                       onSelect={onSelectVersionTwo}
                       selections={versionTwo}
@@ -153,31 +149,33 @@ const CVVersionCompareHeader = ({
               </FlexItem>
             </Flex>
           </FlexItem >
-          <FlexItem style={{ marginLeft: '60px' }}>
-            <Flex direction={{ default: 'column' }}>
-              <FlexItem>
-                <TextContent>
-                  <Text component={TextVariants.h4}>{__('View by')}</Text>
-                </TextContent>
-              </FlexItem>
-              <FlexItem>
-                <Select
-                  style={{ marginRight: '10px' }}
-                  variant={SelectVariant.single}
-                  placeholderText="Select an option"
-                  aria-label="Select view by"
-                  onToggle={setIsOpenSelectViewBy}
-                  onSelect={onSelectViewBy}
-                  selections={selectedViewBy}
-                  isOpen={isOpenSelectViewBy}
-                  isDisabled={!(filteredVersionsFirstSelect?.length
-                    && filteredVersionsSecondSelect?.length)}
-                >
-                  {selectionOptionsViewBy}
-                </Select>
-              </FlexItem>
-            </Flex>
-          </FlexItem >
+          {false &&
+            <FlexItem style={{ marginLeft: '60px' }}>
+              <Flex direction={{ default: 'column' }}>
+                <FlexItem>
+                  <TextContent>
+                    <Text component={TextVariants.h4}>{__('View by')}</Text>
+                  </TextContent>
+                </FlexItem>
+                <FlexItem>
+                  <Select
+                    style={{ marginRight: '10px' }}
+                    variant={SelectVariant.single}
+                    placeholderText="Select an option"
+                    aria-label="Select view by"
+                    ouiaId="select-view-by"
+                    onToggle={setIsOpenSelectViewBy}
+                    onSelect={onSelectViewBy}
+                    selections={selectedViewBy}
+                    isOpen={isOpenSelectViewBy}
+                    isDisabled={!(filteredVersionsFirstSelect?.length
+                      && filteredVersionsSecondSelect?.length)}
+                  >
+                    {selectionOptionsViewBy}
+                  </Select>
+                </FlexItem>
+              </Flex>
+            </FlexItem >}
         </Flex >
       </GridItem>
     </Grid>

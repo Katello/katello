@@ -3,6 +3,12 @@ import { toUpper } from 'lodash';
 
 const CONTENT_VIEWS_KEY = 'CONTENT_VIEWS';
 const PACKAGES_KEY = 'PACKAGES';
+const PACKAGE_GROUPS_KEY = 'PACKAGE_GROUPS';
+const ERRATA_KEY = 'ERRATA';
+const MODULE_STREAMS_KEY = 'MODULE_STREAMS';
+const DEB_PACKAGES_KEY = 'DEB_PACKAGES';
+const DOCKER_TAGS_KEY = 'DOCKER_TAGS';
+const FILES_KEY = 'FILES';
 export const CREATE_CONTENT_VIEW_KEY = 'CONTENT_VIEW_CREATE';
 export const COPY_CONTENT_VIEW_KEY = 'CONTENT_VIEW_COPY';
 export const CREATE_CONTENT_VIEW_FILTER_KEY = 'CONTENT_VIEW_FILTER_CREATE';
@@ -52,12 +58,15 @@ export const cvVersionPublishKey = (cvId, versionCount) => `${PUBLISH_CONTENT_VI
 export const cvVersionTaskPollingKey = cvId => `CONTENT_VIEW_VERSION_POLLING_${cvId}`;
 export const cvAddComponentKey = cvId => `${CONTENT_VIEWS_KEY}_ADD_COMPONENT_${cvId}`;
 export const cvRemoveComponentKey = cvId => `${CONTENT_VIEWS_KEY}_REMOVE_COMPONENT_${cvId}`;
-export const cvPackagesCompare = (versionOne, versionTwo) => `${PACKAGES_KEY}_${versionOne}_${versionTwo}`;
 export const removeComponentSuccessMessage = size => (size === 1 ? __('Removed component from content view') : __('Removed components from content view'));
-
 export const addComponentSuccessMessage = component => (component ? __('Updated component details') : __('Added component to content view'));
-
-
+export const cvPackageGroupsCompareKey = (versionOne, versionTwo) => `${PACKAGE_GROUPS_KEY}_COMPARE_${versionOne}_${versionTwo}`;
+export const cvRPMPackagesCompareKey = (versionOne, versionTwo) => `${PACKAGES_KEY}_COMPARE_${versionOne}_${versionTwo}`;
+export const cvErrataCompareKey = (versionOne, versionTwo) => `${ERRATA_KEY}_COMPARE_${versionOne}_${versionTwo}`;
+export const cvModuleStreamsCompareKey = (versionOne, versionTwo) => `${MODULE_STREAMS_KEY}_COMPARE_${versionOne}_${versionTwo}`;
+export const cvDebPackagesCompareKey = (versionOne, versionTwo) => `${DEB_PACKAGES_KEY}_COMPARE_${versionOne}_${versionTwo}`;
+export const cvDockerTagsCompareKey = (versionOne, versionTwo) => `${DOCKER_TAGS_KEY}_COMPARE_${versionOne}_${versionTwo}`;
+export const filesCompareKey = (versionOne, versionTwo) => `${FILES_KEY}_COMPARE_${versionOne}_${versionTwo}`;
 // Repo added to content view status display and key
 export const ADDED = __('Added');
 export const NOT_ADDED = __('Not added');

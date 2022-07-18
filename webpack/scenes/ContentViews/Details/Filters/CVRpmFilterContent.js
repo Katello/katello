@@ -106,7 +106,7 @@ const CVRpmFilterContent = ({
   }, [showAffectedRepos, repositories.length]);
 
   const emptyContentTitle = __('No rules have been added to this filter.');
-  const emptyContentBody = __('RPM filters will appear here when the RPM rule is added.');
+  const emptyContentBody = __('Items will appear here when a filter rule is added.');
   const emptySearchTitle = __('No matching rules found.');
   const emptySearchBody = __('Try changing your search settings.');
   const tabTitle = (inclusion ? __('Included') : __('Excluded')) + __(' RPMs');
