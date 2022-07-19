@@ -101,12 +101,23 @@ module Katello
     end
 
     def create_library_view
-      @library_view = Katello::ContentView.where(
+      cv_wrong_label = Katello::ContentView.where(
         default: true,
         name: DEFAULT_CONTENT_VIEW_NAME,
-        label: DEFAULT_CONTENT_VIEW_LABEL,
         organization: @organization
-      ).first_or_create!
+      ).where.not(label: DEFAULT_CONTENT_VIEW_LABEL)&.first
+
+      if cv_wrong_label
+        cv_wrong_label.update_attribute(:label, DEFAULT_CONTENT_VIEW_LABEL)
+        @library_view = cv_wrong_label
+      else
+        @library_view = Katello::ContentView.where(
+          default: true,
+          name: DEFAULT_CONTENT_VIEW_NAME,
+          label: DEFAULT_CONTENT_VIEW_LABEL,
+          organization: @organization
+        ).first_or_create!
+      end
     end
 
     def create_library_cvv
