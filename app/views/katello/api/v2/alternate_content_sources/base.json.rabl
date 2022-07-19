@@ -1,9 +1,7 @@
-object @resource
-
 extends 'katello/api/v2/common/identifier'
 
-if @resource.respond_to?(:alternate_content_source_type)
-  if @resource.custom?
+if @object.respond_to?(:alternate_content_source_type)
+  if @object.custom?
     attributes :name, :alternate_content_source_type, :content_type, :base_url, :subpaths, :upstream_username, :smart_proxies, :verify_ssl
     child :ssl_ca_cert => :ssl_ca_cert do |_object|
       attributes :id, :name
@@ -16,7 +14,7 @@ if @resource.respond_to?(:alternate_content_source_type)
     child :ssl_client_key => :ssl_client_key do |_object|
       attributes :id, :name
     end
-  elsif @resource.simplified?
+  elsif @object.simplified?
     attributes :name, :alternate_content_source_type, :content_type, :products, :smart_proxies
   end
 end

@@ -23,7 +23,7 @@ module Katello
       param :ssl_client_key_id, :number, desc: N_("Identifier of the content credential containing the SSL Client Key"), required: false
       param :http_proxy_id, :number, desc: N_("ID of a HTTP Proxy"), required: false
       param :verify_ssl, :bool, desc: N_("If SSL should be verified for the upstream URL"), required: false
-      param :product_ids, Array, desc: N_("IDs of products to copy repository information from into a Simplified Alternate Content Source"), required: false
+      param :product_ids, Array, desc: N_("IDs of products to copy repository information from into a Simplified Alternate Content Source. Products must include at least one repository of the chosen content type."), required: false
     end
 
     api :GET, "/alternate_content_sources", N_("List alternate content sources.")

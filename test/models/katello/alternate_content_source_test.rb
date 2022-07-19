@@ -7,6 +7,7 @@ module Katello
       @yum_acs = katello_alternate_content_sources(:yum_alternate_content_source)
       @file_acs = katello_alternate_content_sources(:file_alternate_content_source)
       @simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
+      @simplified_acs.verify_ssl = nil
       Setting['content_default_http_proxy'] = proxy.name
     end
 

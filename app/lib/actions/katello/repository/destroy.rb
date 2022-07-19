@@ -25,9 +25,7 @@ module Actions
 
           remove_versions(repository, repository.content_views.generated_for_none, affected_cvv_ids) if remove_from_content_view_versions
 
-          repository.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
-            plan_action(Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
-          end
+          handle_alternate_content_sources(repository)
 
           plan_self(:user_id => ::User.current.id, :affected_cvv_ids => affected_cvv_ids)
           sequence do
@@ -52,6 +50,25 @@ module Actions
               cvvs.each do |cvv|
                 cvv.update_content_counts!
               end
+            end
+          end
+        end
+
+        def handle_alternate_content_sources(repository)
+          product = repository.product
+          content_type = repository.content_type
+          repository.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
+            plan_action(Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
+          end
+
+          # Remove the product from the ACS if it's empty.
+          # An ACS with only an empty product will not function correctly
+          ## because there will be no smart_proxy_alternate_content_sources.
+          if product.repositories.with_type(content_type).count == 1
+            ::Katello::AlternateContentSource.with_products(product).each do |acs|
+              acs.products = acs.products - [product]
+              Rails.logger.info _('Removing product %{prod_name} with ID %{prod_id} from ACS %{acs_name} with ID %{acs_id}') %
+                { prod_name: product.name, prod_id: product.id, acs_name: acs.name, acs_id: acs.id }
             end
           end
         end

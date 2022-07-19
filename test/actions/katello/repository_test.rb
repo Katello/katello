@@ -97,9 +97,13 @@ module ::Actions::Katello::Repository
     let(:candlepin_action_class) { ::Actions::Candlepin::Product::ContentUpdate }
     let(:repository) { katello_repositories(:fedora_17_unpublished) }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Update }
+    let(:simplified_acs) { katello_alternate_content_sources(:yum_alternate_content_source) }
+    let(:proxy) { SmartProxy.pulp_primary }
     def setup
       content = FactoryBot.create(:katello_content, cp_content_id: repository.content_id, organization_id: repository.product.organization_id)
       Katello::ProductContent.create!(:content_id => content.id, :product_id => repository.product_id)
+      simplified_acs.products << repository.product
+      ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id)
       super
     end
 
@@ -117,6 +121,33 @@ module ::Actions::Katello::Repository
 
       plan_action action, repository.root, :retain_package_versions_count => 17
       assert_action_planed action, pulp3_action_class
+    end
+
+    it 'plans ACS creation when adding the URL' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+
+      repository.root.update(url: nil)
+      plan_action action, repository.root, :url => 'https://fixtures.pulpproject.org/rpm-with-modules/'
+      assert_action_planned action, ::Actions::Pulp3::Orchestration::AlternateContentSource::Create
+    end
+
+    it 'plans ACS deletion when removing the URL' do
+      ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: repository.id)
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+
+      plan_action action, repository.root, :url => ''
+      assert_action_planned action, ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete
+    end
+
+    it 'plans ACS update when changing the URL' do
+      ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: repository.id)
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+
+      plan_action action, repository.root, :url => 'https://fixtures.pulpproject.org/rpm-with-modules/'
+      assert_action_planned action, ::Actions::Pulp3::Orchestration::AlternateContentSource::Update
     end
   end
 

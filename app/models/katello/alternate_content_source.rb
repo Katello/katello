@@ -10,7 +10,6 @@ module Katello
 
     self.table_name = :katello_alternate_content_sources
 
-    # TODO: simplified, rhui
     ACS_TYPES = %w(custom simplified).freeze
     CONTENT_TYPES = [::Katello::Repository::YUM_TYPE, ::Katello::Repository::FILE_TYPE].freeze
     AUDIT_REFRESH_ACTION = 'refresh'.freeze
@@ -71,6 +70,11 @@ module Katello
 
     def simplified?
       alternate_content_source_type == 'simplified'
+    end
+
+    def self.with_products(products)
+      products = [products] unless products.is_a?(Array)
+      joins(:alternate_content_source_products).where('katello_alternate_content_source_products.product_id in (:product_ids)', product_ids: products.pluck(:id))
     end
 
     def self.with_type(content_type)
