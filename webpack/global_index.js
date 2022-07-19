@@ -4,7 +4,10 @@ import { registerReducer } from 'foremanReact/common/MountingService';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 import SystemStatuses from './components/extensions/about';
-import RegistrationCommands from './components/extensions/RegistrationCommands';
+import {
+  RegistrationCommands,
+  RegistrationActivationKeys,
+} from './components/extensions/RegistrationCommands';
 import ContentTab from './components/extensions/HostDetails/Tabs/ContentTab';
 import ContentViewDetailsCard from './components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 import ErrataOverviewCard from './components/extensions/HostDetails/Cards/ErrataOverviewCard';
@@ -30,6 +33,7 @@ registerReducer('katello', rootReducer);
 
 addGlobalFill('aboutFooterSlot', '[katello]AboutSystemStatuses', <SystemStatuses key="katello-system-statuses" />, 100);
 addGlobalFill('registrationAdvanced', '[katello]RegistrationCommands', <RegistrationCommands key="katello-reg" />, 100);
+addGlobalFill('registrationGeneral', '[katello]RegistrationActivationKeys', <RegistrationActivationKeys key="katello-reg-ak" />, 100);
 
 // Host details page tabs
 addGlobalFill('host-details-page-tabs', 'Content', <ContentTab key="content" />, 900, { title: __('Content'), hideTab: hostIsNotRegistered });

@@ -7,32 +7,20 @@ import LifecycleEnvironment from './fields/LifecycleEnvironment';
 import IgnoreSubmanErrors from './fields/IgnoreSubmanErrors';
 import Force from './fields/Force';
 
-const RegistrationCommands = ({
+export const RegistrationCommands = ({
   organizationId,
   hostGroupId,
   pluginValues,
   pluginData,
   onChange,
-  handleInvalidField,
   isLoading,
 }) => {
   useEffect(() => {
-    onChange({ activationKeys: [], lifecycleEnvironmentId: '' });
+    onChange({ lifecycleEnvironmentId: '' });
   }, [onChange, organizationId, hostGroupId]);
 
   return (
     <>
-      <ActivationKeys
-        activationKeys={pluginData?.activationKeys}
-        organizationId={organizationId}
-        selectedKeys={(pluginValues?.activationKeys || [])}
-        hostGroupActivationKeys={pluginData?.hostGroupActivationKeys}
-        hostGroupId={hostGroupId}
-        pluginValues={pluginValues}
-        onChange={onChange}
-        handleInvalidField={handleInvalidField}
-        isLoading={isLoading}
-      />
       <LifecycleEnvironment
         pluginValues={pluginValues}
         lifecycleEnvironments={pluginData?.lifecycleEnvironments}
@@ -63,7 +51,6 @@ RegistrationCommands.propTypes = {
   pluginValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   pluginData: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   onChange: PropTypes.func,
-  handleInvalidField: PropTypes.func,
   isLoading: PropTypes.bool,
 };
 
@@ -74,7 +61,52 @@ RegistrationCommands.defaultProps = {
   pluginData: {},
   isLoading: false,
   onChange: noop,
-  handleInvalidField: noop,
 };
 
-export default RegistrationCommands;
+export const RegistrationActivationKeys = ({
+  organizationId,
+  hostGroupId,
+  pluginValues,
+  pluginData,
+  onChange,
+  handleInvalidField,
+  isLoading,
+}) => {
+  useEffect(() => {
+    onChange({ activationKeys: [] });
+  }, [onChange, organizationId, hostGroupId]);
+
+  return (
+    <ActivationKeys
+      activationKeys={pluginData?.activationKeys}
+      organizationId={organizationId}
+      selectedKeys={(pluginValues?.activationKeys || [])}
+      hostGroupActivationKeys={pluginData?.hostGroupActivationKeys}
+      hostGroupId={hostGroupId}
+      pluginValues={pluginValues}
+      onChange={onChange}
+      handleInvalidField={handleInvalidField}
+      isLoading={isLoading}
+    />
+  );
+};
+
+RegistrationActivationKeys.propTypes = {
+  organizationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  hostGroupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  pluginValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  pluginData: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  onChange: PropTypes.func,
+  handleInvalidField: PropTypes.func,
+  isLoading: PropTypes.bool,
+};
+
+RegistrationActivationKeys.defaultProps = {
+  organizationId: undefined,
+  hostGroupId: undefined,
+  pluginValues: {},
+  pluginData: {},
+  isLoading: false,
+  onChange: noop,
+  handleInvalidField: noop,
+};
