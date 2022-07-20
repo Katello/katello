@@ -13,7 +13,6 @@ import { columns } from './ManifestHistoryTableSchema';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import { MANAGE_MANIFEST_MODAL_ID, DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
 import { CONTENT_CREDENTIAL_CERT_TYPE } from '../../ContentCredentials/ContentCredentialConstants';
-import SimpleContentAccess from './SimpleContentAccess';
 import CdnConfigurationForm from './CdnConfigurationTab';
 
 import './ManageManifestModal.scss';
@@ -87,10 +86,6 @@ class ManageManifestModal extends Component {
       canDeleteManifest,
       isManifestImported,
       canEditOrganizations,
-      simpleContentAccess,
-      simpleContentAccessEligible,
-      enableSimpleContentAccess,
-      disableSimpleContentAccess,
       taskInProgress,
       manifestActionStarted,
       contentCredentials,
@@ -100,14 +95,6 @@ class ManageManifestModal extends Component {
     const showCdnConfigurationTab = canEditOrganizations;
     const showSubscriptionManifest = (canImportManifest || canDeleteManifest);
     const showManifestTab = (canEditOrganizations || showSubscriptionManifest);
-    const disableSCASwitch = (
-      // allow users to turn SCA off even if they are not eligible to turn it back on
-      (!simpleContentAccessEligible && !simpleContentAccess) ||
-      disableManifestActions ||
-      !isManifestImported ||
-      actionInProgress ||
-      organization.loading
-    );
 
     const emptyStateData = () => ({
       header: __('There is no Manifest History to display.'),
@@ -149,17 +136,6 @@ class ManageManifestModal extends Component {
                     <Grid>
                       <h3>{__('Subscription Manifest')}</h3>
                       <hr />
-                      { isManifestImported &&
-                      <Row>
-                        <SimpleContentAccess
-                          enableSimpleContentAccess={enableSimpleContentAccess}
-                          disableSimpleContentAccess={disableSimpleContentAccess}
-                          isSimpleContentAccessEnabled={simpleContentAccess}
-                          canToggleSimpleContentAccess={!disableSCASwitch}
-                          simpleContentAccessEligible={simpleContentAccessEligible}
-                        />
-                      </Row>
-                      }
                       <Row>
                         <Col sm={5}>
                           <strong>{__('Subscription Allocation')}</strong>
@@ -271,8 +247,6 @@ ManageManifestModal.propTypes = {
   upload: PropTypes.func.isRequired,
   refresh: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
-  enableSimpleContentAccess: PropTypes.func.isRequired,
-  disableSimpleContentAccess: PropTypes.func.isRequired,
   loadManifestHistory: PropTypes.func.isRequired,
   getContentCredentials: PropTypes.func.isRequired,
   organization: PropTypes.shape({
@@ -302,8 +276,6 @@ ManageManifestModal.propTypes = {
   disabledReason: PropTypes.string,
   loadOrganization: PropTypes.func.isRequired,
   taskInProgress: PropTypes.bool.isRequired,
-  simpleContentAccess: PropTypes.bool,
-  simpleContentAccessEligible: PropTypes.bool,
   manifestHistory: PropTypes.shape({
     loading: PropTypes.bool,
     // Disabling rule as existing code failed due to an eslint-plugin-react update
@@ -327,8 +299,6 @@ ManageManifestModal.defaultProps = {
   isManifestImported: false,
   deleteManifestModalExists: false,
   canEditOrganizations: false,
-  simpleContentAccess: false,
-  simpleContentAccessEligible: undefined,
   manifestActionStarted: false,
   contentCredentials: [],
 };
