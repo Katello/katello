@@ -89,6 +89,10 @@ module Katello
           PulpcoreClient::RepositoriesReclaimSpaceApi.new(core_api_client)
         end
 
+        def yum_exporter_api
+          PulpcoreClient::ExportersFilesystemApi.new(core_api_client)
+        end
+
         def exporter_api
           PulpcoreClient::ExportersPulpApi.new(core_api_client)
         end
@@ -99,6 +103,10 @@ module Katello
 
         def importer_check_api
           PulpcoreClient::ImportersPulpImportCheckApi.new(core_api_client)
+        end
+
+        def yum_export_api
+          PulpcoreClient::ExportersFilesystemExportsApi.new(core_api_client)
         end
 
         def export_api
