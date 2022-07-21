@@ -16,10 +16,12 @@ module Katello
 
         def generate!
           ret = { organization: organization.name,
+                  base_path: Setting['pulpcore_export_destination'],
                   repositories: {},
                   content_view: content_view.slice(:name, :label, :description, :generated_for),
                   content_view_version: content_view_version.slice(:major, :minor, :description),
-                  incremental: from_content_view_version.present?
+                  incremental: from_content_view_version.present?,
+                  format: export_service.format
           }
 
           unless from_content_view_version.blank?
