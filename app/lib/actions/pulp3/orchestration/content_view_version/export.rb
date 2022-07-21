@@ -10,6 +10,7 @@ module Actions
             param :export_history_id, Integer
             param :exporter_data, Hash
             param :destination_server, String
+            param :format, String
           end
 
           output_format do
@@ -19,16 +20,30 @@ module Actions
           def plan(content_view_version:, destination_server: nil,
                    chunk_size: nil, from_history: nil,
                    validate_incremental: true,
-                   fail_on_missing_content: false)
+                   fail_on_missing_content: false,
+                   format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
+            smart_proxy = SmartProxy.pulp_primary!
+
+            if format == ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
+              sequence do
+                export_output = plan_action(SyncableExport,
+                          content_view_version: content_view_version,
+                          smart_proxy: smart_proxy,
+                          destination_server: destination_server).output
+                plan_self(export_history_id: export_output[:export_history_id],
+                          export_path: export_output[:export_path])
+              end
+              return
+            end
 
             sequence do
-              smart_proxy = SmartProxy.pulp_primary!
               from_content_view_version = from_history&.content_view_version
-              export_service = ::Katello::Pulp3::ContentViewVersion::Export.new(
+              export_service = ::Katello::Pulp3::ContentViewVersion::Export.create(
                   smart_proxy: smart_proxy,
                   content_view_version: content_view_version,
                   destination_server: destination_server,
-                  from_content_view_version: from_content_view_version)
+                  from_content_view_version: from_content_view_version,
+                  format: format)
               export_service.validate!(fail_on_missing_content: fail_on_missing_content,
                                        validate_incremental: validate_incremental,
                                        chunk_size: chunk_size)
@@ -36,14 +51,16 @@ module Actions
               action_output = plan_action(::Actions::Pulp3::ContentViewVersion::CreateExporter,
                                           content_view_version_id: content_view_version.id,
                                           smart_proxy_id: smart_proxy.id,
-                                          destination_server: destination_server).output
+                                          destination_server: destination_server,
+                                          format: format).output
 
               plan_action(::Actions::Pulp3::ContentViewVersion::Export,
                           content_view_version_id: content_view_version.id,
                           smart_proxy_id: smart_proxy.id,
                           exporter_data: action_output[:exporter_data],
                           chunk_size: chunk_size,
-                          from_content_view_version_id: from_content_view_version&.id)
+                          from_content_view_version_id: from_content_view_version&.id,
+                          format: format)
 
               history_output = plan_action(
                   ::Actions::Pulp3::ContentViewVersion::CreateExportHistory,
@@ -52,18 +69,16 @@ module Actions
                   pulp_href: action_output[:exporter_data][:pulp_href],
                   content_view_version_id: content_view_version.id,
                   from_content_view_version_id: from_content_view_version&.id,
-                  destination_server: destination_server
+                  destination_server: destination_server,
+                  format: format
               ).output
 
               plan_action(::Actions::Pulp3::ContentViewVersion::DestroyExporter,
                           smart_proxy_id: smart_proxy.id,
-                          exporter_data: action_output[:exporter_data])
+                          exporter_data: action_output[:exporter_data],
+                          format: format)
 
-              plan_self(exporter_data: action_output[:exporter_data], smart_proxy_id: smart_proxy.id,
-                        destination_server: destination_server,
-                        content_view_version_id: content_view_version.id,
-                        from_content_view_version_id: from_content_view_version&.id,
-                        export_history_id: history_output[:export_history_id],
+              plan_self(export_history_id: history_output[:export_history_id],
                         exported_file_checksum: history_output[:exported_file_checksum],
                         export_path: history_output[:path])
             end

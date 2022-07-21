@@ -5,7 +5,8 @@ module Actions
         class ExportRepository < Actions::EntryAction
           def plan(repository,
                     chunk_size: nil,
-                    from_history: nil)
+                    from_history: nil,
+                    format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
             action_subject(repository)
             validate_repositories_immediate!(repository)
 
@@ -19,7 +20,8 @@ module Actions
               export_action = plan_action(Actions::Katello::ContentViewVersion::Export,
                                           content_view_version: publish_action.version,
                                           chunk_size: chunk_size,
-                                          from_history: from_history)
+                                          from_history: from_history,
+                                          format: format)
               plan_self(export_action_output: export_action.output)
             end
           end
