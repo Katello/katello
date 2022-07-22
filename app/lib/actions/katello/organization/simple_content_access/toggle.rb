@@ -14,15 +14,7 @@ module Actions
           def plan(organization_id)
             @organization = ::Organization.find(organization_id)
             action_subject organization
-            ::Katello::Resources::Candlepin::UpstreamConsumer.update(
-              "#{consumer['apiUrl']}#{consumer['uuid']}",
-              consumer['idCert']['cert'],
-              consumer['idCert']['key'],
-              nil,
-              {contentAccessMode: content_access_mode_value}
-            )
-
-            plan_action(::Actions::Katello::Organization::ManifestRefresh, organization)
+            ::Katello::Resources::Candlepin::Owner.update(@organization.label, contentAccessMode: content_access_mode_value)
           end
 
           def failure_notification(plan)
