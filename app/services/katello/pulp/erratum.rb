@@ -79,8 +79,9 @@ module Katello
               next if module_stream.blank?
               nvreas = package_item["packages"].map { |hash| Util::Package.build_nvra(hash) }
               module_stream_id_column = "#{ModuleStreamErratumPackage.table_name}.module_stream_id"
+              erratum_id_column = "#{ErratumPackage.table_name}.erratum_id"
               existing = ErratumPackage.joins(:module_streams).
-                                        where(module_stream_id_column => module_stream.id,
+                                        where(module_stream_id_column => module_stream.id, erratum_id_column => model.id,
                                               :nvrea => nvreas).pluck(:nvrea)
 
               (nvreas - existing).each do |nvrea|
