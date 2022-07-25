@@ -138,7 +138,8 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
 
       plan_action action, repository.root, :url => ''
-      assert_action_planned action, ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete
+      assert_action_planned_with action, ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, ::Katello::SmartProxyAlternateContentSource.where(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: repository.id).first,
+                                         old_url: "http://www.pleaseack.com"
     end
 
     it 'plans ACS update when changing the URL' do

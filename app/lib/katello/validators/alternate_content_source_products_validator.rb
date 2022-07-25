@@ -6,8 +6,8 @@ module Katello
           if attribute == :product_id
             product = ::Katello::Product.find(value)
             content_type = record.alternate_content_source.content_type
-            if product.repositories.with_type(content_type).empty?
-              record.errors[attribute] << N_("The product %s has no repositories to add to the alternate content source.") % product.name
+            if product.repositories.with_type(content_type).has_url.empty?
+              record.errors[attribute] << N_("The product %s has no %s repositories with upstream URLs to add to the alternate content source.") % [product.name, content_type]
             end
           end
         end

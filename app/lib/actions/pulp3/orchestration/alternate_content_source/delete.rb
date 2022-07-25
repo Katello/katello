@@ -3,10 +3,10 @@ module Actions
     module Orchestration
       module AlternateContentSource
         class Delete < Pulp3::Abstract
-          def plan(smart_proxy_acs)
+          def plan(smart_proxy_acs, options = {})
             sequence do
               plan_action(Actions::Pulp3::AlternateContentSource::Delete, smart_proxy_acs)
-              plan_action(Actions::Pulp3::AlternateContentSource::DeleteRemote, smart_proxy_acs)
+              plan_action(Actions::Pulp3::AlternateContentSource::DeleteRemote, smart_proxy_acs, options)
               plan_self(smart_proxy_id: smart_proxy_acs.smart_proxy_id, smart_proxy_acs_id: smart_proxy_acs.id)
             end
           end

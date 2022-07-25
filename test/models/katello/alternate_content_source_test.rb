@@ -23,6 +23,29 @@ module Katello
       assert_equal @simplified_acs.products.pluck(:name).sort, ['Fedora', 'Red Hat Linux'].sort
     end
 
+    # A 'proper' repository has a URL and the same content type as the ACS.
+    def test_cannot_add_product_if_repo_has_no_url
+      repo_no_url = FactoryBot.create(:katello_repository, :with_product)
+      repo_no_url.root.update!(url: nil)
+
+      error = assert_raises ::ActiveRecord::RecordInvalid do
+        @simplified_acs.products << repo_no_url.product
+      end
+
+      assert_equal "Validation failed: Product The product #{repo_no_url.product.name} has no yum repositories with upstream URLs to add to the alternate content source.", error.message
+    end
+
+    def test_cannot_add_product_with_no_repositories
+      org = FactoryBot.create(:organization)
+      provider = FactoryBot.create(:katello_provider, organization: org)
+      empty_product = FactoryBot.create(:katello_product, organization: org, provider: provider, cp_id: '12345')
+      error = assert_raises ::ActiveRecord::RecordInvalid do
+        @simplified_acs.products << empty_product
+      end
+
+      assert_equal "Validation failed: Product The product #{empty_product.name} has no yum repositories with upstream URLs to add to the alternate content source.", error.message
+    end
+
     def test_subpaths
       @yum_acs.subpaths = ['test/', 'some_files/'].sort
       assert @yum_acs.save

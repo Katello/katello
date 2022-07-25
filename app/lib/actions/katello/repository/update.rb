@@ -13,6 +13,8 @@ module Actions
           create_acs = create_acs?(repository.url, repo_params[:url])
           delete_acs = delete_acs?(repository.url, repo_params[:url])
 
+          # Keep the old URL for RPM vs ULN remote cleanup
+          old_url = root.url
           root.update!(repo_params)
 
           if update_content?(repository)
@@ -46,7 +48,7 @@ module Actions
                 plan_optional_pulp_action([::Actions::Pulp3::Orchestration::Repository::TriggerUpdateRepoCertGuard], repository, ::SmartProxy.pulp_primary)
               end
 
-              handle_alternate_content_sources(repository, create_acs, delete_acs)
+              handle_alternate_content_sources(repository, create_acs, delete_acs, old_url)
             end
           end
         end
@@ -59,7 +61,7 @@ module Actions
 
         private
 
-        def handle_alternate_content_sources(repository, create_acs, delete_acs)
+        def handle_alternate_content_sources(repository, create_acs, delete_acs, old_url)
           if create_acs
             repository.product.alternate_content_sources.each do |acs|
               acs.smart_proxies.each do |smart_proxy|
@@ -69,7 +71,7 @@ module Actions
             end
           elsif delete_acs
             repository.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
-              plan_action(Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
+              plan_action(Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs, old_url: old_url)
             end
           else
             repository.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
