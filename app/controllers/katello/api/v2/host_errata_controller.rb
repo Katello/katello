@@ -104,6 +104,7 @@ module Katello
         relation = relation.where(:errata_type => TYPES_FROM_PARAMS[params[:type].to_sym])
       end
       if params[:severity].present?
+        params[:severity] = ['None', ''] if params[:severity] == 'None'
         relation = relation.where(:severity => params[:severity])
       end
       relation
