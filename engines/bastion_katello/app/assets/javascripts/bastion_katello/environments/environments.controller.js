@@ -26,6 +26,7 @@ angular.module('Bastion.environments').controller('EnvironmentsController',
             };
 
             var nutupane = new Nutupane(Environment, params);
+            $scope.controllerName = 'katello_environments';
             $scope.table = nutupane.table;
             $scope.loading = true;
 

@@ -16,6 +16,8 @@
             loading: true
         };
 
+        $scope.controllerName = 'katello_environments';
+
         $scope.repositoryTypeEnabled = RepositoryTypesService.repositoryTypeEnabled;
         $scope.environment = Environment.get({id: $scope.$stateParams.environmentId}, function () {
             $scope.panel.loading = false;
