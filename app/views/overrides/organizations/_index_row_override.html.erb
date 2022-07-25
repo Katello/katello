@@ -1,3 +1,3 @@
 <% if taxonomy.is_a?(Organization) %>
-  <td><%= checked_icon taxonomy.simple_content_access? %></td>
+  <td><%= checked_icon taxonomy.simple_content_access?(cached: false) %></td>
 <% end %>

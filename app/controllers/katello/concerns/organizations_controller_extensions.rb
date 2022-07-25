@@ -6,12 +6,6 @@ module Katello
       include Foreman::Controller::Flash
 
       module Overrides
-        def edit
-          @can_toggle_sca = Katello::UpstreamConnectionChecker.new(@taxonomy).can_connect? &&
-            (@taxonomy.upstream_consumer.simple_content_access_eligible? || @taxonomy.simple_content_access?)
-          super
-        end
-
         def destroy
           if @taxonomy.is_a?(Organization)
             begin
@@ -50,20 +44,16 @@ module Katello
       end
 
       def update
-        super # we run super first here so that flash messages won't be in a confusing order
         return if params[:simple_content_access].nil?
         sca_param = ::Foreman::Cast.to_bool(params[:simple_content_access])
-        if sca_param && !@taxonomy.simple_content_access?
+        if sca_param && !@taxonomy.simple_content_access?(cached: false)
           # user has requested SCA enable
-          task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:id])
-          info "Enabling Simple Content Access for organization #{@taxonomy.name}.",
-            link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks/#{task&.id}" }
-        elsif !sca_param && @taxonomy.simple_content_access?
+          sync_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:id])
+        elsif !sca_param && @taxonomy.simple_content_access?(cached: false)
           # user has requested SCA disable
-          task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:id])
-          info "Disabling Simple Content Access for organization #{@taxonomy.name}.",
-            link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks/#{task&.id}" }
+          sync_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:id])
         end
+        super
       end
 
       included do

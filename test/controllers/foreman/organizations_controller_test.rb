@@ -28,7 +28,7 @@ class OrganizationsControllerTest < ActionController::TestCase
     org = get_organization(:organization2)
     Organization.any_instance.stubs(:simple_content_access?).returns true
     # assert correct task will be started
-    @controller.expects(:async_task).with(::Actions::Katello::Organization::SimpleContentAccess::Disable, org.id.to_s)
+    @controller.expects(:sync_task).with(::Actions::Katello::Organization::SimpleContentAccess::Disable, org.id.to_s)
     # send request to disable SCA
     put :update, params: { id: org.id, simple_content_access: false }
     assert_response :found
@@ -39,7 +39,7 @@ class OrganizationsControllerTest < ActionController::TestCase
     org = get_organization(:organization2)
     Organization.any_instance.stubs(:simple_content_access?).returns false
     # assert correct task will be started
-    @controller.expects(:async_task).with(::Actions::Katello::Organization::SimpleContentAccess::Enable, org.id.to_s)
+    @controller.expects(:sync_task).with(::Actions::Katello::Organization::SimpleContentAccess::Enable, org.id.to_s)
     # send request to enable SCA
     put :update, params: { id: org.id, simple_content_access: true }
     assert_response :found
@@ -60,8 +60,6 @@ class OrganizationsControllerTest < ActionController::TestCase
     org = get_organization(:organization2)
     Organization.any_instance.stubs(:service_level)
     Organization.any_instance.stubs(:service_levels).returns []
-    Katello::UpstreamConnectionChecker.any_instance.expects(:can_connect?).returns true
-    Katello::Candlepin::UpstreamConsumer.any_instance.expects(:simple_content_access_eligible?).returns(true)
     Organization.any_instance.expects(:simple_content_access?).returns true
     get :edit, params: { id: org.id }
     assert_response :success
