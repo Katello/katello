@@ -43,7 +43,7 @@ module Katello
             response = api.remotes_api.create(remote_file_data)
           end
           #delete is async, but if its not properly deleted, orphan cleanup will take care of it later
-          delete_remote(response.pulp_href)
+          delete_remote(href: response.pulp_href)
         end
       end
 

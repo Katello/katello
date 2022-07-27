@@ -99,7 +99,7 @@ module Katello
 
             remote_file_data = @service.api.remote_class.new(@service.remote_options)
             remote_response = @service.api.remotes_api.create(remote_file_data)
-            @service.delete_remote(remote_response.pulp_href)
+            @service.delete_remote(href: remote_response.pulp_href)
           end
         end
       end
