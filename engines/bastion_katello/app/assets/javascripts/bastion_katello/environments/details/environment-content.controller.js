@@ -11,6 +11,8 @@
     function EnvironmentContentController($scope, ContentService, ContentView, Repository, translate, $location) {
         var nutupane, allRepositories, nutupaneParams;
 
+        $scope.controllerName = 'katello_environments';
+
         function fetchContentViews(environmentId) {
             ContentView.queryUnpaged({'environment_id': environmentId}, function (data) {
                 $scope.contentViews = [$scope.contentView].concat(data.results);
