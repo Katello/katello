@@ -33,6 +33,20 @@ module Katello
       assert_response :success
     end
 
+    def test_duplicate_streams
+      @host.host_available_module_streams.destroy_all
+      stream1 = katello_available_module_streams(:available_module_stream_three)
+      stream2 = Katello::AvailableModuleStream.create(name: stream1.name, stream: stream1.stream, context: 'foo')
+      @host.host_available_module_streams.create(available_module_stream: stream1)
+      @host.host_available_module_streams.create(available_module_stream: stream2)
+
+      get :index, params: { :host_id => @host.id }
+
+      body = JSON.parse(response.body)
+
+      assert_equal 1, body['results'].length
+    end
+
     def test_view_permissions
       ::Host.any_instance.stubs(:check_host_registration).returns(true)
 
