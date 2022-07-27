@@ -16,6 +16,7 @@ module Katello
       def run
         Katello::Logging.time("CONTENT_SWITCHOVER - Total Switchover Process") do
           Katello::Logging.time("CONTENT_SWITCHOVER - check_already_migrated_content") { check_already_migrated_content }
+          Katello::Logging.time("CONTENT_SWITCHOVER - correct_docker_meta_tags") { correct_docker_meta_tags } if docker_migration?
           Katello::Logging.time("CONTENT_SWITCHOVER - cleanup_v1_docker_tags") { cleanup_v1_docker_tags } if docker_migration?
           Katello::Logging.time("CONTENT_SWITCHOVER - migrated_content_type_check") { migrated_content_type_check }
           Katello::Logging.time("CONTENT_SWITCHOVER - combine_duplicate_content_types") { combine_duplicate_content_types }
@@ -61,6 +62,19 @@ module Katello
             Rails.logger.error("Content Switchover: #{content_type.label} seems to have already migrated content, switchover may fail.  Did you already perform the switchover?")
           end
         end
+      end
+
+      def correct_docker_meta_tags
+        bad_tags = ::Katello::DockerTag.all.select do |t|
+          (t.schema1_meta_tag.nil? && t.schema2_meta_tag.nil?) ||
+            (t.schema1_meta_tag.present? && t.docker_taggable.schema_version == 2) ||
+            (t.schema2_meta_tag.present? && t.docker_taggable.schema_version == 1)
+        end
+
+        bad_repos = bad_tags.collect { |t| t.repositories }.flatten.compact.uniq
+        bad_repos.each { |r| r.docker_meta_tags.destroy_all }
+        bad_repos.each { |r| r.index_content }
+        ::Katello::DockerMetaTag.cleanup_tags
       end
 
       def cleanup_v1_docker_tags

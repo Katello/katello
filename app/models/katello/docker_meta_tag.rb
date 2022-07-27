@@ -173,12 +173,12 @@ module Katello
                                         select(:docker_tag_id))
       dups = tags.group_by(&:name)
 
+      # Values can have more than 2 values if the upstream container repo changed manifest organization
+      # E.g. if a v2 manifest turned into a v2 manifest list
       dups.map do |name, values|
-        if values.first.docker_manifest.schema_version == 1
-          schema1, schema2 = values
-        else
-          schema2, schema1 = values
-        end
+        schema1 = values.find { |t| t.docker_manifest.schema_version == 1 }
+        schema2 = values.find { |t| t.docker_manifest.schema_version == 2 && t.docker_taggable_type == 'Katello::DockerManifestList' }
+        schema2 ||= values.find { |t| t.docker_manifest.schema_version == 2 }
         [schema1.try(:id), schema2.try(:id), name]
       end
     end

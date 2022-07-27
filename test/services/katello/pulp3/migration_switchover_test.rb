@@ -166,6 +166,7 @@ module Katello
 
       refute_equal @another_fake_pulp3_href, tag.reload.pulp_id
 
+      ::Katello::Pulp3::MigrationSwitchover.any_instance.expects(:correct_docker_meta_tags).returns(true)
       @switchover.run
       assert_equal @another_fake_pulp3_href, tag.reload.pulp_id
     end
@@ -177,6 +178,7 @@ module Katello
       docker_manifest = tag.docker_taggable
       docker_manifest.update(:migrated_pulp3_href => @another_fake_pulp3_href + docker_manifest.id.to_s)
 
+      ::Katello::Pulp3::MigrationSwitchover.any_instance.expects(:correct_docker_meta_tags).returns(true)
       @switchover.run
 
       refute Katello::DockerTag.find_by(:id => tag.id)
@@ -217,6 +219,7 @@ module Katello
 
     def test_docker_tag_cleanup
       assert_equal 2, Katello::DockerTag.count
+      ::Katello::Pulp3::MigrationSwitchover.any_instance.expects(:correct_docker_meta_tags).returns(true)
       @switchover_service.run
       assert_equal 1, Katello::DockerTag.count
       tag = Katello::DockerTag.first
