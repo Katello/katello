@@ -46,7 +46,7 @@ module Katello
       assert_equal 1, Katello::ModuleStream.where(:pulp_id => original_stream.pulp_id).count
     end
 
-    def test_duplicates_module_profile
+    def test_delete_all_module_profiles
       stream = katello_module_streams(:river)
 
       dup_profile = Katello::ModuleProfile.create!(module_stream_id: stream.id, name: stream.profiles.first.name)
@@ -54,16 +54,16 @@ module Katello
 
       assert_equal 2, Katello::ModuleProfile.where(module_stream_id: stream.id, name: stream.profiles.first.name).count
       migrate_up
-      assert_equal 1, Katello::ModuleProfile.where(module_stream_id: stream.id, name: stream.profiles.first.name).count
+      assert_equal 0, Katello::ModuleProfile.all.count
     end
 
-    def test_module_profile_rpm
+    def test_delete_all_module_profile_rpms
       profile_rpm = Katello::ModuleProfileRpm.first
       Katello::ModuleProfileRpm.create!(name: profile_rpm.name, module_profile_id: profile_rpm.module_profile_id)
 
       assert_equal 2, Katello::ModuleProfileRpm.where(name: profile_rpm.name, module_profile_id: profile_rpm.module_profile_id).count
       migrate_up
-      assert_equal 1, Katello::ModuleProfileRpm.where(name: profile_rpm.name, module_profile_id: profile_rpm.module_profile_id).count
+      assert_equal 0, Katello::ModuleProfileRpm.all.count
     end
 
     def test_ansible_tag
