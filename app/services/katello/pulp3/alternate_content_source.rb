@@ -5,10 +5,12 @@ module Katello
       include Katello::Pulp3::ServiceCommon
       attr_accessor :acs
       attr_accessor :smart_proxy
+      attr_accessor :repository
 
-      def initialize(acs, smart_proxy)
+      def initialize(acs, smart_proxy, repository = nil)
         @acs = acs
         @smart_proxy = smart_proxy
+        @repository = repository
       end
 
       def api
@@ -20,10 +22,23 @@ module Katello
       end
 
       def smart_proxy_acs
-        ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id)
+        if acs.alternate_content_source_type == 'custom'
+          ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id)
+        else
+          ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id, repository_id: repository.id)
+        end
       end
 
       def remote_options
+        if repository.present?
+          options = repository.backend_service(smart_proxy).remote_options
+          options[:policy] = 'on_demand'
+          options[:proxy_url] = acs.http_proxy&.url
+          options[:proxy_username] = acs.http_proxy&.username
+          options[:proxy_password] = acs.http_proxy&.password
+          return options
+        end
+
         remote_options = {
           tls_validation: acs.verify_ssl,
           name: generate_backend_object_name,
@@ -66,8 +81,11 @@ module Katello
         api.remotes_api.partial_update(smart_proxy_acs.remote_href, remote_options)
       end
 
-      def delete_remote(href = smart_proxy_acs.remote_href)
-        ignore_404_exception { remote_options[:url]&.start_with?('uln') ? api.remotes_uln_api.delete(href) : api.remotes_api.delete(href) } if href
+      # The old repo URL is needed to determine which remote API to use.
+      def delete_remote(options = {})
+        options[:href] ||= smart_proxy_acs.remote_href
+        options[:old_url] ||= remote_options[:url]
+        ignore_404_exception { options[:old_url]&.start_with?('uln') ? api.remotes_uln_api.delete(options[:href]) : api.remotes_api.delete(options[:href]) } if options[:href]
       end
 
       def create

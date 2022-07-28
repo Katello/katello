@@ -7,8 +7,11 @@ module Actions
     include FactoryBot::Syntax::Methods
 
     let(:action_class) { ::Actions::Katello::Repository::UpdateRedhatRepository }
-    let(:refresh_class) { ::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded }
+    let(:refresh_class) { ::Actions::Katello::Repository::RefreshRepository }
+    let(:acs_remote_refresh_class) { ::Actions::Pulp3::Orchestration::AlternateContentSource::RefreshRemote }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
+    let(:simplified_acs) { katello_alternate_content_sources(:yum_simplified_alternate_content_source) }
+    let(:proxy) { SmartProxy.pulp_primary }
 
     it 'plans' do
       action = create_action(action_class)
@@ -28,6 +31,14 @@ module Actions
       assert_equal expected_relative_path, repo.relative_path
 
       assert_action_planned_with(action, refresh_class, repo)
+    end
+
+    it 'plans to refresh ACS remote' do
+      ::Katello::SmartProxyAlternateContentSource.create(repository_id: repo.id,
+        alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id)
+
+      tree = plan_action_tree(action_class, repo)
+      assert_tree_planned_with(tree, acs_remote_refresh_class)
     end
   end
 end

@@ -83,7 +83,7 @@ module Katello
 
           remotes.each do |remote|
             if !repo_names.include?(remote.name) && !acs_remotes.include?(remote.pulp_href)
-              tasks << api.delete_remote(remote.pulp_href)
+              tasks << api.delete_remote(href: remote.pulp_href)
             end
           end
         end

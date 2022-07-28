@@ -3,10 +3,10 @@ module Actions
     module Orchestration
       module AlternateContentSource
         class Update < Pulp3::Abstract
-          def plan(acs, smart_proxy)
+          def plan(smart_proxy_acs)
             sequence do
-              plan_action(Actions::Pulp3::AlternateContentSource::UpdateRemote, acs, smart_proxy)
-              plan_action(Actions::Pulp3::AlternateContentSource::Update, acs, smart_proxy)
+              plan_action(Actions::Pulp3::AlternateContentSource::UpdateRemote, smart_proxy_acs)
+              plan_action(Actions::Pulp3::AlternateContentSource::Update, smart_proxy_acs)
             end
           end
         end

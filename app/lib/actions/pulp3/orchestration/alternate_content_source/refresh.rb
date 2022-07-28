@@ -3,9 +3,9 @@ module Actions
     module Orchestration
       module AlternateContentSource
         class Refresh < Pulp3::Abstract
-          def plan(acs, smart_proxy)
+          def plan(smart_proxy_acs)
             sequence do
-              plan_action(Actions::Pulp3::AlternateContentSource::Refresh, acs, smart_proxy)
+              plan_action(Actions::Pulp3::AlternateContentSource::Refresh, smart_proxy_acs)
             end
           end
         end

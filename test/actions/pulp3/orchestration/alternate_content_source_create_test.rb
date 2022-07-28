@@ -10,27 +10,26 @@ module ::Actions::Pulp3
       @file_acs = katello_alternate_content_sources(:file_alternate_content_source)
       @yum_acs.save!
       @file_acs.save!
-      ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
-      ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @file_acs.id, smart_proxy_id: @primary.id)
     end
 
     def teardown
-      @yum_acs.smart_proxies.each do |proxy|
+      @yum_acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
         ForemanTasks.sync_task(
-            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, @yum_acs, proxy)
+            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
       end
       @yum_acs.reload
 
-      @file_acs.smart_proxies.each do |proxy|
+      @file_acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
         ForemanTasks.sync_task(
-            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, @file_acs, proxy)
+            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
       end
       @file_acs.reload
     end
 
     def test_yum_create
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@yum_acs.name)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, @yum_acs, @primary)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
       assert_equal 1, @yum_acs.smart_proxy_alternate_content_sources.count
       assert @yum_acs.smart_proxy_alternate_content_sources.first.remote_href.start_with?('/pulp/api/v3/remotes/rpm/rpm/')
       assert @yum_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_href.start_with?('/pulp/api/v3/acs/rpm/rpm/')
@@ -38,7 +37,8 @@ module ::Actions::Pulp3
 
     def test_file_create
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@file_acs.name)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, @file_acs, @primary)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @file_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
       assert_equal 1, @file_acs.smart_proxy_alternate_content_sources.count
       assert @file_acs.smart_proxy_alternate_content_sources.first.remote_href.start_with?('/pulp/api/v3/remotes/file/file/')
       assert @file_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_href.start_with?('/pulp/api/v3/acs/file/file/')
@@ -64,7 +64,8 @@ module ::Actions::Pulp3
       @yum_acs.http_proxy = http_proxy
       @yum_acs.update(subpaths: ['test/', 'rpms/', 'manicotti/'])
 
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, @yum_acs, @primary)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
       assert_equal 1, @yum_acs.smart_proxy_alternate_content_sources.count
       assert @yum_acs.smart_proxy_alternate_content_sources.first.remote_href.start_with?('/pulp/api/v3/remotes/rpm/rpm/')
       assert @yum_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_href.start_with?('/pulp/api/v3/acs/rpm/rpm/')

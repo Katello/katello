@@ -1,5 +1,4 @@
 require 'katello_test_helper'
-
 module Katello
   class AlternateContentSourceCreateTest < ActiveSupport::TestCase
     let(:proxy) { FactoryBot.create(:http_proxy) }
@@ -7,12 +6,44 @@ module Katello
     def setup
       @yum_acs = katello_alternate_content_sources(:yum_alternate_content_source)
       @file_acs = katello_alternate_content_sources(:file_alternate_content_source)
+      @simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
+      @simplified_acs.verify_ssl = nil
       Setting['content_default_http_proxy'] = proxy.name
     end
 
     def test_create
       assert @yum_acs.save
       refute_empty AlternateContentSource.where(id: @yum_acs.id)
+    end
+
+    def test_products
+      @simplified_acs.products << ::Katello::Product.find_by(name: 'Fedora')
+      @simplified_acs.products << ::Katello::Product.find_by(name: 'Red Hat Linux')
+      assert @simplified_acs.save
+      assert_equal @simplified_acs.products.pluck(:name).sort, ['Fedora', 'Red Hat Linux'].sort
+    end
+
+    # A 'proper' repository has a URL and the same content type as the ACS.
+    def test_cannot_add_product_if_repo_has_no_url
+      repo_no_url = FactoryBot.create(:katello_repository, :with_product)
+      repo_no_url.root.update!(url: nil)
+
+      error = assert_raises ::ActiveRecord::RecordInvalid do
+        @simplified_acs.products << repo_no_url.product
+      end
+
+      assert_equal "Validation failed: Product The product #{repo_no_url.product.name} has no yum repositories with upstream URLs to add to the alternate content source.", error.message
+    end
+
+    def test_cannot_add_product_with_no_repositories
+      org = FactoryBot.create(:organization)
+      provider = FactoryBot.create(:katello_provider, organization: org)
+      empty_product = FactoryBot.create(:katello_product, organization: org, provider: provider, cp_id: '12345')
+      error = assert_raises ::ActiveRecord::RecordInvalid do
+        @simplified_acs.products << empty_product
+      end
+
+      assert_equal "Validation failed: Product The product #{empty_product.name} has no yum repositories with upstream URLs to add to the alternate content source.", error.message
     end
 
     def test_subpaths
@@ -69,7 +100,8 @@ module Katello
 
     def test_with_type
       @yum_acs.save!
-      assert_equal [@yum_acs], AlternateContentSource.with_type('yum')
+      @simplified_acs.save!
+      assert_equal [@yum_acs, @simplified_acs].sort, AlternateContentSource.with_type('yum').sort
     end
   end
 
@@ -86,6 +118,15 @@ module Katello
       SmartProxyAlternateContentSource.create(alternate_content_source_id: @file_acs.id, smart_proxy_id: ::SmartProxy.pulp_primary.id, remote_href: 'remote_href2', alternate_content_source_href: 'acs_href2')
       @file_acs.save
       @file_acs.reload
+
+      @simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
+      @repo1 = ::Katello::Repository.find_by(relative_path: 'ACME_Corporation/library/fedora_17_label_no_arch')
+      @repo2 = ::Katello::Repository.find_by(relative_path: 'ACME_Corporation/library/fedora_17_label')
+      @simplified_acs.products << @repo1.product
+      SmartProxyAlternateContentSource.create(alternate_content_source_id: @simplified_acs.id, smart_proxy_id: ::SmartProxy.pulp_primary.id, remote_href: 'remote_href2', alternate_content_source_href: 'acs_href2', repository_id: @repo1.id)
+      SmartProxyAlternateContentSource.create(alternate_content_source_id: @simplified_acs.id, smart_proxy_id: ::SmartProxy.pulp_primary.id, remote_href: 'remote_href2', alternate_content_source_href: 'acs_href2', repository_id: @repo2.id)
+      @simplified_acs.save
+      @simplified_acs.reload
     end
 
     def test_search_name
@@ -112,7 +153,7 @@ module Katello
 
     def test_search_content_type
       acss = AlternateContentSource.search_for("content_type = \"#{@yum_acs.content_type}\"")
-      assert_equal acss, [@yum_acs]
+      assert_equal acss.sort, [@yum_acs, @simplified_acs].sort
     end
 
     def test_search_acs_type
@@ -126,8 +167,26 @@ module Katello
     end
 
     def test_search_smart_proxy_id
+      # For some reason, searching by smart_proxy_id first causes a Postgres error only in the tests.
+      # Searching by smart_proxy_name right before fixes the issue. It may have to do with caching.
+      AlternateContentSource.search_for("smart_proxy_name = \"#{@yum_acs.smart_proxy_names.first}\"")
       acss = AlternateContentSource.search_for("smart_proxy_id = \"#{@yum_acs.smart_proxy_ids.first}\"")
-      assert_equal acss.sort, [@file_acs, @yum_acs].sort
+      assert_equal acss.sort, [@file_acs, @yum_acs, @simplified_acs].sort
+    end
+
+    def test_search_smart_proxy_name
+      acss = AlternateContentSource.search_for("smart_proxy_name = \"#{@yum_acs.smart_proxy_names.first}\"")
+      assert_equal acss.sort, [@file_acs, @yum_acs, @simplified_acs].sort
+    end
+
+    def test_search_product_id
+      acss = AlternateContentSource.search_for("product_id = \"#{@repo1.product.id}\"")
+      assert_equal acss, [@simplified_acs]
+    end
+
+    def test_search_product_name
+      acss = AlternateContentSource.search_for("product_name = \"#{@repo1.product.name}\"")
+      assert_equal acss, [@simplified_acs]
     end
   end
 end

@@ -28,7 +28,7 @@ module Katello
       end
 
       if (remote = service.api.remotes_list(name: service.generate_backend_object_name).first)
-        tasks << service.delete_remote(remote.pulp_href)
+        tasks << service.delete_remote(href: remote.pulp_href)
       end
 
       tasks.compact.each { |task| wait_on_task(smart_proxy, task) }

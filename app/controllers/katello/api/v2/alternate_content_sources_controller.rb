@@ -2,10 +2,12 @@ module Katello
   class Api::V2::AlternateContentSourcesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    acs_wrap_params = AlternateContentSource.attribute_names + [:smart_proxy_ids, :smart_proxy_names]
+    acs_wrap_params = AlternateContentSource.attribute_names + [:smart_proxy_ids, :smart_proxy_names, :product_ids]
     wrap_parameters :alternate_content_source, include: acs_wrap_params
 
     before_action :find_authorized_katello_resource, only: [:show, :update, :destroy, :refresh]
+    before_action :find_smart_proxies, only: :create
+    before_action :find_products, only: :create
 
     def_param_group :acs do
       param :name, String, desc: N_("Name of the alternate content source")
@@ -14,8 +16,6 @@ module Katello
       param :subpaths, Array, desc: N_('Path suffixes for finding alternate content'), required: false
       param :smart_proxy_ids, Array, desc: N_("Ids of smart proxies to associate"), required: false
       param :smart_proxy_names, Array, desc: N_("Names of smart proxies to associate"), required: false
-      param :content_type, RepositoryTypeManager.defined_repository_types.keys & AlternateContentSource::CONTENT_TYPES, desc: N_("The content type for the Alternate Content Source"), required: false
-      param :alternate_content_source_type, AlternateContentSource::ACS_TYPES, desc: N_("The Alternate Content Source type")
       param :upstream_username, String, desc: N_("Basic authentication username"), required: false
       param :upstream_password, String, desc: N_("Basic authentication password"), required: false
       param :ssl_ca_cert_id, :number, desc: N_("Identifier of the content credential containing the SSL CA Cert"), required: false
@@ -23,9 +23,10 @@ module Katello
       param :ssl_client_key_id, :number, desc: N_("Identifier of the content credential containing the SSL Client Key"), required: false
       param :http_proxy_id, :number, desc: N_("ID of a HTTP Proxy"), required: false
       param :verify_ssl, :bool, desc: N_("If SSL should be verified for the upstream URL"), required: false
+      param :product_ids, Array, desc: N_("IDs of products to copy repository information from into a Simplified Alternate Content Source. Products must include at least one repository of the chosen content type."), required: false
     end
 
-    api :GET, "/alternate_content_sources", N_("List of alternate_content_sources")
+    api :GET, "/alternate_content_sources", N_("List alternate content sources.")
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(AlternateContentSource)
     def index
@@ -33,9 +34,15 @@ module Katello
         format.csv do
           options[:csv] = true
           alternate_content_sources = scoped_search(index_relation, :name, :asc)
-          csv_response(alternate_content_sources,
-                       [:id, :name, :description, :label, :base_url, :subpaths, :content_type, :alternate_content_source_type],
-                       ['Id', 'Name', 'Description', 'label', 'Base URL', 'Subpaths', 'Content Type', 'Alternate Content Source Type'])
+          if @acs.custom?
+            csv_response(alternate_content_sources,
+                        [:id, :name, :description, :label, :base_url, :subpaths, :content_type, :alternate_content_source_type],
+                        ['Id', 'Name', 'Description', 'label', 'Base URL', 'Subpaths', 'Content Type', 'Alternate Content Source Type'])
+          elsif @acs.simplified?
+            csv_response(alternate_content_sources,
+                        [:id, :name, :description, :label, :content_type, :alternate_content_source_type, :products],
+                        ['Id', 'Name', 'Description', 'label', 'Content Type', 'Alternate Content Source Type', 'Products'])
+          end
         end
         format.any do
           alternate_content_sources = scoped_search(index_relation, :name, :asc)
@@ -48,46 +55,56 @@ module Katello
       AlternateContentSource.readable.distinct
     end
 
-    api :GET, '/alternate_content_sources/:id', N_('Show an alternate content source')
+    api :GET, '/alternate_content_sources/:id', N_('Show an alternate content source.')
     param :id, :number, :required => true, :desc => N_("Alternate content source ID")
     def show
       respond_for_show(:resource => @alternate_content_source)
     end
 
-    api :POST, '/alternate_content_sources', N_('Create an ACS')
+    api :POST, '/alternate_content_sources', N_('Create an alternate content source to download content from during repository syncing.  Note: alternate content sources are global and affect ALL sync actions on their smart proxies regardless of organization.')
+    param :content_type, RepositoryTypeManager.defined_repository_types.keys & AlternateContentSource::CONTENT_TYPES, desc: N_("The content type for the Alternate Content Source"), required: false
+    param :alternate_content_source_type, AlternateContentSource::ACS_TYPES, desc: N_("The Alternate Content Source type")
     param_group :acs
     def create
-      find_smart_proxies
-      @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params.except(:smart_proxy_ids, :smart_proxy_names))
-      sync_task(::Actions::Katello::AlternateContentSource::Create, @alternate_content_source, @smart_proxies)
+      @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params.except(:smart_proxy_ids, :smart_proxy_names, :product_ids))
+      @alternate_content_source.verify_ssl = nil if @alternate_content_source.simplified?
+      sync_task(::Actions::Katello::AlternateContentSource::Create, @alternate_content_source, @smart_proxies, @products)
       @alternate_content_source.reload
       respond_for_create(resource: @alternate_content_source)
     end
 
-    api :PUT, '/alternate_content_sources/:id', N_('Update an alternate content source')
+    api :PUT, '/alternate_content_sources/:id', N_('Update an alternate content source.')
     param_group :acs
     param :id, :number, :required => true, :desc => N_("Alternate content source ID")
     def update
-      # If a user doesn't include smart proxies in the update call, don't accidentally remove all of them.
-      if params[:smart_proxy_ids].nil?
+      # If a user doesn't include smart proxies or products in the update call, don't accidentally remove all of them.
+      if params[:smart_proxy_ids].nil? && params[:smart_proxy_names].nil?
         @smart_proxies = @alternate_content_source.smart_proxies
-      elsif params[:smart_proxy_ids].empty?
+      elsif params[:smart_proxy_ids] == [] || params[:smart_proxy_names] == []
         @smart_proxies = []
       else
         find_smart_proxies
       end
-      sync_task(::Actions::Katello::AlternateContentSource::Update, @alternate_content_source, @smart_proxies, acs_params.except(:smart_proxy_ids))
+
+      if params[:product_ids].nil?
+        @products = @alternate_content_source.products
+      elsif params[:product_ids] == []
+        @products = []
+      else
+        find_products
+      end
+      sync_task(::Actions::Katello::AlternateContentSource::Update, @alternate_content_source, @smart_proxies, @products, acs_params.except(:smart_proxy_ids, :smart_proxy_names, :product_ids))
       respond_for_show(:resource => @alternate_content_source)
     end
 
-    api :DELETE, '/alternate_content_sources/:id', N_('Destroy an alternate content source')
+    api :DELETE, '/alternate_content_sources/:id', N_('Destroy an alternate content source.')
     param :id, :number, :required => true, :desc => N_("Alternate content source ID")
     def destroy
       sync_task(::Actions::Katello::AlternateContentSource::Destroy, @alternate_content_source)
       respond_for_destroy
     end
 
-    api :POST, '/alternate_content_sources/:id/refresh', N_('Refresh an alternate content source')
+    api :POST, '/alternate_content_sources/:id/refresh', N_('Refresh an alternate content source. Refreshing, like repository syncing, is required before using an alternate content source.')
     param :id, :number, :required => true, :desc => N_("Alternate content source ID")
     def refresh
       task = async_task(::Actions::Katello::AlternateContentSource::Refresh, @alternate_content_source)
@@ -97,9 +114,9 @@ module Katello
     protected
 
     def acs_params
-      keys = [:name, :label, :description, :base_url, {subpaths: []}, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type, :alternate_content_source_type,
-              :upstream_username, :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id,
-              :http_proxy_id, :verify_ssl]
+      keys = [:name, :label, :description, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type, :alternate_content_source_type]
+      keys += [:base_url, {subpaths: []}, :upstream_username, :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :http_proxy_id, :verify_ssl] if params[:action] == 'create' || @alternate_content_source&.custom?
+      keys += [{product_ids: []}] if params[:action] == 'create' || @alternate_content_source&.simplified?
       params.require(:alternate_content_source).permit(*keys).to_h.with_indifferent_access
     end
 
@@ -115,6 +132,19 @@ module Katello
       elsif params[:smart_proxy_names] && @smart_proxies.length < params[:smart_proxy_names].length
         missing_smart_proxies = params[:smart_proxy_names] - @smart_proxies.pluck(:name)
         fail HttpErrors::NotFound, _("Couldn't find smart proxies with name '%s'") % missing_smart_proxies.to_sentence
+      end
+    end
+
+    def find_products
+      if params[:product_ids]
+        @products = ::Katello::Product.where(id: params[:product_ids])
+      else
+        @products = nil
+      end
+
+      if params[:product_ids] && @products.length < params[:product_ids].length
+        missing_products = params[:product_ids] - @products.pluck(:id)
+        fail HttpErrors::NotFound, _("Couldn't find products with id '%s'") % missing_products.to_sentence
       end
     end
   end
