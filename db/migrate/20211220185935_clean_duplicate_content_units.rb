@@ -20,7 +20,7 @@ class CleanDuplicateContentUnits < ActiveRecord::Migration[6.0]
     to_delete = []
     to_update = []
     duplicate_models.each do |duplicate|
-      query = {new_id_field => new_id}
+      query = { new_id_field => new_id }
       unique_fields.each do |field|
         query[field] = duplicate.send(field)
       end
@@ -52,28 +52,25 @@ class CleanDuplicateContentUnits < ActiveRecord::Migration[6.0]
   def up
     handle_null_pulp_ids
     add_foreign_keys
+    delete_deprecated_models
 
     handle_duplicate(Katello::ModuleStream,
                      'module_stream_id',
                      [:pulp_id],
-                     associated_models: {Katello::RepositoryModuleStream => :repository_id},
+                     associated_models: { Katello::RepositoryModuleStream => :repository_id },
                      child_models: [Katello::ContentViewModuleStreamFilterRule,
                                     Katello::ContentFacetApplicableModuleStream,
                                     Katello::ModuleProfile,
                                     Katello::ModuleStreamArtifact,
                                     Katello::ModuleStreamErratumPackage,
                                     Katello::ModuleStreamRpm])
+
     add_index :katello_module_streams, :pulp_id, :unique => true
-
-    handle_duplicate(Katello::ModuleProfile, 'module_profile_id', [:module_stream_id, :name],
-                     child_models: [Katello::ModuleProfileRpm])
     add_index :katello_module_profiles, [:module_stream_id, :name], :unique => true
-
-    handle_duplicate(Katello::ModuleProfileRpm, 'module_profile_rpm_id', [:module_profile_id, :name])
     add_index :katello_module_profile_rpms, [:module_profile_id, :name], :unique => true
 
     handle_duplicate(Katello::AnsibleTag, 'ansible_tag_id', [:name],
-                     associated_models: {Katello::AnsibleCollectionTag => :ansible_collection_id})
+                     associated_models: { Katello::AnsibleCollectionTag => :ansible_collection_id })
     add_index :katello_ansible_tags, [:name], :unique => true
 
     handle_duplicate(Katello::AnsibleCollectionTag, 'ansible_collection_tag_id', [:ansible_collection_id, :ansible_tag_id])
@@ -83,7 +80,7 @@ class CleanDuplicateContentUnits < ActiveRecord::Migration[6.0]
     handle_duplicate(Katello::GenericContentUnit,
                      'generic_content_unit_id',
                      [:pulp_id],
-                     associated_models: {Katello::RepositoryGenericContentUnit => :repository_id})
+                     associated_models: { Katello::RepositoryGenericContentUnit => :repository_id })
     add_index :katello_generic_content_units, :pulp_id, :unique => true
 
     handle_duplicate(Katello::DockerManifestList, 'docker_manifest_list_id', [:pulp_id],
@@ -110,6 +107,11 @@ class CleanDuplicateContentUnits < ActiveRecord::Migration[6.0]
 
     Katello::DockerManifest.where(:pulp_id => nil).destroy_all
     change_column :katello_docker_manifests, :pulp_id, :string, :null => false
+  end
+
+  def delete_deprecated_models
+    Katello::ModuleProfileRpm.delete_all
+    Katello::ModuleProfile.delete_all
   end
 
   def add_foreign_keys
