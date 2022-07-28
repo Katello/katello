@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
@@ -28,6 +28,7 @@ const ACSCreateFinish = () => {
     username,
     password,
     caCert,
+    productIds,
   } = useContext(ACSCreateContext);
   const dispatch = useDispatch();
   const response = useSelector(state => selectCreateACS(state));
@@ -36,22 +37,33 @@ const ACSCreateFinish = () => {
   const [createACSDispatched, setCreateACSDispatched] = useState(false);
   const [saving, setSaving] = useState(true);
 
+  const acsTypeParams = useCallback((params, type) => {
+    let acsParams = params;
+    if (type === 'custom') {
+      acsParams = {
+        base_url: url, verify_ssl: verifySSL, ssl_ca_cert_id: caCert, ...acsParams,
+      };
+      if (subpaths !== '') {
+        acsParams = { subpaths: subpaths.split(','), ...acsParams };
+      }
+    }
+    if (type === 'simplified') {
+      acsParams = { product_ids: productIds, ...acsParams };
+    }
+    return acsParams;
+  }, [caCert, productIds, subpaths, url, verifySSL]);
+
   useDeepCompareEffect(() => {
-    if (currentStep === 7 && !createACSDispatched) {
+    if (currentStep === 8 && !createACSDispatched) {
       setCreateACSDispatched(true);
       let params = {
         name,
         description,
-        base_url: url,
         smart_proxy_names: smartProxies,
         content_type: contentType,
         alternate_content_source_type: acsType,
-        verify_ssl: verifySSL,
-        ssl_ca_cert_id: caCert,
       };
-      if (subpaths !== '') {
-        params = { subpaths: subpaths.split(','), ...params };
-      }
+      params = acsTypeParams(params, acsType);
       if (authentication === 'content_credentials') {
         params = { ssl_client_cert_id: sslCert, ssl_client_key_id: sslKey, ...params };
       }
@@ -63,7 +75,7 @@ const ACSCreateFinish = () => {
   }, [dispatch, createACSDispatched, setCreateACSDispatched,
     acsType, authentication, name, description, url, subpaths,
     smartProxies, contentType, verifySSL, caCert, sslCert, sslKey,
-    username, password, currentStep]);
+    username, password, currentStep, acsTypeParams]);
 
   useDeepCompareEffect(() => {
     const { id } = response;

@@ -1,7 +1,7 @@
 import { API_OPERATIONS, APIActions, get, post } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
 import api, { orgId } from '../../services/api';
-import ACS_KEY, { acsRefreshKey, acsDetailsKey, CREATE_ACS_KEY, DELETE_ACS_KEY } from './ACSConstants';
+import ACS_KEY, { acsDetailsKey, acsRefreshKey, CREATE_ACS_KEY, DELETE_ACS_KEY, PRODUCTS_KEY } from './ACSConstants';
 import { getResponseErrorMsgs } from '../../utils/helpers';
 import { renderTaskStartedToast } from '../Tasks/helpers';
 
@@ -66,6 +66,15 @@ export const refreshACS = (acsId, handleSuccess) => post({
     return renderTaskStartedToast(response.data);
   },
   errorToast: error => __(`Something went wrong while refreshing this alternate content source! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const getProducts = () => get({
+  type: API_OPERATIONS.GET,
+  key: PRODUCTS_KEY,
+  url: api.getApiUrl('/products'),
+  params: {
+    organization_id: orgId(), full_result: true, enabled: true, non_empty: true,
+  },
 });
 export default getAlternateContentSources;
 
