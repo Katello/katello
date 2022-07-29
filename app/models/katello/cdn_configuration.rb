@@ -32,6 +32,10 @@ module Katello
       type == CDN_TYPE
     end
 
+    def redhat_cdn_url?
+      Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
+    end
+
     def export_sync?
       type == EXPORT_SYNC
     end

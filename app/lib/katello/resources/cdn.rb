@@ -38,15 +38,18 @@ module Katello
                                     :username,
                                     :password,
                                     :organization_label,
-                                    :ssl_ca_cert)
+                                    :ssl_ca_cert,
+                                    :custom_cdn)
 
-          if options[:ssl_ca_cert].present?
+          if options[:custom_cdn]
+            @cert_store = OpenSSL::X509::Store.new
+            @cert_store.set_default_paths
+          elsif options[:ssl_ca_cert].present?
             begin
               ca_cert = OpenSSL::X509::Certificate.new(options[:ssl_ca_cert])
             rescue
               raise _("Invalid SSL CA certificate given for CDN")
             end
-
             @cert_store = OpenSSL::X509::Store.new
             @cert_store.add_cert(ca_cert)
           end
@@ -59,6 +62,7 @@ module Katello
         def self.create(product: nil, cdn_configuration:)
           options = {}
           if cdn_configuration.redhat_cdn?
+            options[:custom_cdn] = !cdn_configuration.redhat_cdn_url?
             options[:ssl_client_cert] = OpenSSL::X509::Certificate.new(product.certificate)
             options[:ssl_client_key] = OpenSSL::PKey::RSA.new(product.key)
             options[:ssl_ca_file] = self.ca_file
@@ -91,10 +95,12 @@ module Katello
           net.use_ssl = @uri.is_a?(URI::HTTPS)
 
           if @uri.is_a?(URI::HTTPS)
-            net.cert = @options[:ssl_client_cert]
-            net.key = @options[:ssl_client_key]
-            net.ca_file = @options[:ssl_ca_file]
             net.cert_store = @cert_store
+            unless @options[:custom_cdn]
+              net.cert = @options[:ssl_client_cert]
+              net.key = @options[:ssl_client_key]
+              net.ca_file = @options[:ssl_ca_file]
+            end
           end
 
           # NOTE: This was added because some proxies dont support SSLv23 and do not handle TLS 1.2
