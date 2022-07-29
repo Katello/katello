@@ -46,6 +46,7 @@ const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
       header={__('HW properties')}
       expandable
       isExpandedGlobal={isExpandedGlobal}
+      masonryLayout
     >
       <DescriptionList isHorizontal>
         <DescriptionListGroup>
