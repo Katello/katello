@@ -72,7 +72,7 @@ const NetworkSyncForm = ({
   const hasPassword = (cdnConfiguration.password_exists && !password)
       || password?.length > 0;
 
-  const requiredFields = [username, organizationLabel, sslCaCredentialId];
+  const requiredFields = [username, organizationLabel, sslCaCredentialId, url];
 
   if (!hasPassword) {
     requiredFields.push(password);

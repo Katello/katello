@@ -75,8 +75,27 @@ module ::Actions::Katello::CdnConfiguration
 
     def test_plans_redhat_cdn
       attrs = {
-        type: ::Katello::CdnConfiguration::CDN_TYPE,
-        url: 'http://cdn.redhat.com'
+        type: ::Katello::CdnConfiguration::CDN_TYPE
+      }
+
+      plan_action(@action, @cdn_configuration, attrs)
+
+      @cdn_configuration.reload
+
+      assert_equal ::Katello::Resources::CDN::CdnResource.redhat_cdn_url, @cdn_configuration.url
+      assert_nil @cdn_configuration.ssl_cert
+      assert_nil @cdn_configuration.ssl_key
+      assert_nil @cdn_configuration.ssl_ca_credential_id
+      assert_nil @cdn_configuration.username
+      assert_nil @cdn_configuration.password
+      assert_nil @cdn_configuration.upstream_organization_label
+    end
+
+    def test_plans_custom_cdn
+      attrs = {
+        type: ::Katello::CdnConfiguration::CUSTOM_CDN_TYPE,
+        url: 'http://newcdn.example.com',
+        ssl_ca_credential_id: @credential.id
       }
 
       plan_action(@action, @cdn_configuration, attrs)
@@ -84,9 +103,7 @@ module ::Actions::Katello::CdnConfiguration
       @cdn_configuration.reload
 
       assert_equal attrs[:url], @cdn_configuration.url
-      assert_nil @cdn_configuration.ssl_cert
-      assert_nil @cdn_configuration.ssl_key
-      assert_nil @cdn_configuration.ssl_ca_credential_id
+      assert_equal @credential.id, @cdn_configuration.ssl_ca_credential_id
       assert_nil @cdn_configuration.username
       assert_nil @cdn_configuration.password
       assert_nil @cdn_configuration.upstream_organization_label

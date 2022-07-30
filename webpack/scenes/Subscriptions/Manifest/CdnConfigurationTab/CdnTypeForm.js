@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -20,26 +20,14 @@ import {
 } from '../../../Organizations/OrganizationSelectors';
 import './CdnConfigurationForm.scss';
 
-const CdnTypeForm = ({ showUpdate, onUpdate, url }) => {
+const CdnTypeForm = ({ showUpdate, onUpdate }) => {
   const dispatch = useDispatch();
-  const [cdnUrl, setCdnUrl] = useState(url);
   const [updateEnabled, setUpdateEnabled] = useState(showUpdate);
   const updatingCdnConfiguration = useSelector(state => selectUpdatingCdnConfiguration(state));
-  const firstUpdate = useRef(true);
-
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-    setUpdateEnabled(true);
-  }, [cdnUrl]);
-
   const performUpdate = () => {
     setUpdateEnabled(false);
     dispatch(updateCdnConfiguration({
       type: CDN,
-      url: cdnUrl,
     }, onUpdate));
   };
 
@@ -69,11 +57,10 @@ const CdnTypeForm = ({ showUpdate, onUpdate, url }) => {
       <FormGroup label={__('URL')} isRequired>
         <TextInput
           ouiaId="cdn-configuration-url-input"
-          aria-label="cdn-url"
+          aria-label="redhat-cdn-url"
           type="text"
-          value={cdnUrl}
-          onChange={setCdnUrl}
-          isDisabled={updatingCdnConfiguration}
+          value={CDN_URL}
+          isDisabled
         />
       </FormGroup>
 
@@ -83,7 +70,7 @@ const CdnTypeForm = ({ showUpdate, onUpdate, url }) => {
           aria-label="update-cdn-configuration"
           variant="secondary"
           onClick={performUpdate}
-          isDisabled={updatingCdnConfiguration || !updateEnabled || !cdnUrl}
+          isDisabled={updatingCdnConfiguration || !updateEnabled}
           isLoading={updatingCdnConfiguration}
         >
           {__('Update')}
@@ -97,11 +84,9 @@ const CdnTypeForm = ({ showUpdate, onUpdate, url }) => {
 CdnTypeForm.propTypes = {
   showUpdate: PropTypes.bool.isRequired,
   onUpdate: PropTypes.func,
-  url: PropTypes.string,
 };
 
 CdnTypeForm.defaultProps = {
-  url: CDN_URL,
   onUpdate: noop,
 };
 

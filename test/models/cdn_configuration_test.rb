@@ -15,6 +15,14 @@ module Katello
       assert config.valid?
     end
 
+    def test_custom_cdn
+      config = FactoryBot.build(:katello_cdn_configuration, :custom_cdn)
+      assert config.custom_cdn?
+      assert config.valid?
+      config.assign_attributes(url: nil)
+      refute config.valid?
+    end
+
     def test_non_redhat_configuration
       NON_REDHAT_FIELDS.each do |field|
         config = FactoryBot.build(:katello_cdn_configuration, :upstream_server)
@@ -41,6 +49,14 @@ module Katello
                      ssl_ca_credential_id: content_credential.id)
 
       assert config.network_sync?
+
+      # Now update to custom cdn
+      config.update!(type: ::Katello::CdnConfiguration::CUSTOM_CDN_TYPE)
+      assert config.custom_cdn?
+      assert_empty config.username
+      assert_empty config.password
+      assert_empty config.upstream_organization_label
+      assert_equal content_credential.id, config.ssl_ca_credential_id
 
       # Now update back to airgapped
       config.update!(type: ::Katello::CdnConfiguration::EXPORT_SYNC)

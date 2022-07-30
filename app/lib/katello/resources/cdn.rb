@@ -41,17 +41,16 @@ module Katello
                                     :ssl_ca_cert,
                                     :custom_cdn)
 
-          if options[:custom_cdn]
+          if options[:ssl_ca_cert].present?
             @cert_store = OpenSSL::X509::Store.new
-            @cert_store.set_default_paths
-          elsif options[:ssl_ca_cert].present?
-            begin
-              ca_cert = OpenSSL::X509::Certificate.new(options[:ssl_ca_cert])
-            rescue
-              raise _("Invalid SSL CA certificate given for CDN")
-            end
+            Foreman::Util.add_ca_bundle_to_store(options[:ssl_ca_cert], @cert_store)
+          elsif options[:ssl_ca_file]
             @cert_store = OpenSSL::X509::Store.new
-            @cert_store.add_cert(ca_cert)
+            @cert_store.add_file(options[:ssl_ca_file])
+          end
+
+          if @cert_store && proxy&.cacert
+            Foreman::Util.add_ca_bundle_to_store(proxy.cacert, @cert_store)
           end
 
           @url = url
@@ -62,10 +61,12 @@ module Katello
         def self.create(product: nil, cdn_configuration:)
           options = {}
           if cdn_configuration.redhat_cdn?
-            options[:custom_cdn] = !cdn_configuration.redhat_cdn_url?
             options[:ssl_client_cert] = OpenSSL::X509::Certificate.new(product.certificate)
             options[:ssl_client_key] = OpenSSL::PKey::RSA.new(product.key)
             options[:ssl_ca_file] = self.ca_file
+            self.new(cdn_configuration.url, options)
+          elsif cdn_configuration.custom_cdn?
+            options[:ssl_ca_cert] = cdn_configuration.ssl_ca
             self.new(cdn_configuration.url, options)
           else
             options[:username] = cdn_configuration.username
@@ -96,11 +97,9 @@ module Katello
 
           if @uri.is_a?(URI::HTTPS)
             net.cert_store = @cert_store
-            unless @options[:custom_cdn]
-              net.cert = @options[:ssl_client_cert]
-              net.key = @options[:ssl_client_key]
-              net.ca_file = @options[:ssl_ca_file]
-            end
+            net.cert = @options[:ssl_client_cert]
+            net.key = @options[:ssl_client_key]
+            net.cert_store = @cert_store
           end
 
           # NOTE: This was added because some proxies dont support SSLv23 and do not handle TLS 1.2
