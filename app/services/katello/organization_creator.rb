@@ -27,15 +27,16 @@ module Katello
       end
     end
 
-    def initialize(organization)
+    def initialize(organization, sca: true)
       @organization = organization
+      @content_access_mode = sca ? 'org_environment' : 'entitlement'
     end
 
     def seed!
       ActiveRecord::Base.transaction do
         @organization.setup_label_from_name
 
-        # existing validation errors are not resolvable here, so don't validatate
+        # existing validation errors are not resolvable here, so don't validate
         @organization.save(validate: false)
 
         create_library_environment
@@ -66,9 +67,8 @@ module Katello
 
     def create_backend_objects!
       Katello::Ping.ping!(services: [:candlepin])
-
       if needs_candlepin_organization?
-        ::Katello::Resources::Candlepin::Owner.create(@organization.label, @organization.name)
+        ::Katello::Resources::Candlepin::Owner.create(@organization.label, @organization.name, content_access_mode: @content_access_mode)
       end
 
       ::Katello::ContentViewManager.create_candlepin_environment(

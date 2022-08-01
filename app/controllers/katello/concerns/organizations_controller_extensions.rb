@@ -30,7 +30,8 @@ module Katello
           if taxonomy_class == Organization
             begin
               @taxonomy = Organization.new(resource_params)
-              ::Katello::OrganizationCreator.new(@taxonomy).create!
+              sca = ::Foreman::Cast.to_bool(params[:simple_content_access])
+              ::Katello::OrganizationCreator.new(@taxonomy, sca: sca).create!
               @taxonomy.reload
               switch_taxonomy
               if @count_nil_hosts > 0
