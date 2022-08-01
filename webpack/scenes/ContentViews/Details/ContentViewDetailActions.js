@@ -49,6 +49,13 @@ import {
   generatedContentKey,
   STATUS_TRANSLATIONS_ENUM,
   bulkRemoveVersionKey,
+  cvRPMPackagesCompareKey,
+  cvPackageGroupsCompareKey,
+  cvErrataCompareKey,
+  cvModuleStreamsCompareKey,
+  cvDockerTagsCompareKey,
+  cvDebPackagesCompareKey,
+  filesCompareKey,
 } from '../ContentViewsConstants';
 import api, { foremanApi, orgId } from '../../../services/api';
 import { getResponseErrorMsgs } from '../../../utils/helpers';
@@ -77,6 +84,90 @@ export const getRPMPackages = params => get({
   params,
   errorToast: error => __(`Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}`),
 });
+
+export const getRPMPackagesComparison = (versionOne, versionTwo, params) => {
+  const versions = { content_view_version_ids: [versionOne, versionTwo] };
+  const apiParams = { ...versions, ...params };
+  const apiUrl = '/packages/compare';
+  return get({
+    key: cvRPMPackagesCompareKey(versionOne, versionTwo),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the packages! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
+
+export const getPackageGroupsComparison = (versionOne, versionTwo, params) => {
+  const versions = { content_view_version_ids: [versionOne, versionTwo] };
+  const apiParams = { ...versions, ...params };
+  const apiUrl = '/package_groups/compare';
+  return get({
+    key: cvPackageGroupsCompareKey(versionOne, versionTwo),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the package groups! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
+
+export const getErrataComparison = (versionOne, versionTwo, params) => {
+  const versions = { content_view_version_ids: [versionOne, versionTwo] };
+  const apiParams = { ...versions, ...params };
+  const apiUrl = '/errata/compare';
+  return get({
+    key: cvErrataCompareKey(versionOne, versionTwo),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the errata! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
+
+export const getModuleStreamsComparison = (versionOne, versionTwo, params) => {
+  const versions = { content_view_version_ids: [versionOne, versionTwo] };
+  const apiParams = { ...versions, ...params };
+  const apiUrl = '/module_streams/compare';
+  return get({
+    key: cvModuleStreamsCompareKey(versionOne, versionTwo),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the module streams! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
+
+export const getDebPackagesComparison = (versionOne, versionTwo, params) => {
+  const versions = { content_view_version_ids: [versionOne, versionTwo] };
+  const apiParams = { ...versions, ...params };
+  const apiUrl = '/debs/compare';
+  return get({
+    key: cvDebPackagesCompareKey(versionOne, versionTwo),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the deb packages! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
+
+export const getDockerTagsComparison = (versionOne, versionTwo, params) => {
+  const versions = { content_view_version_ids: [versionOne, versionTwo] };
+  const apiParams = { ...versions, ...params };
+  const apiUrl = '/docker_tags/compare';
+  return get({
+    key: cvDockerTagsCompareKey(versionOne, versionTwo),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the container tags! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
+
+export const getFilesComparison = (versionOne, versionTwo, params) => {
+  const versions = { content_view_version_ids: [versionOne, versionTwo] };
+  const apiParams = { ...versions, ...params };
+  const apiUrl = '/files/compare';
+  return get({
+    key: filesCompareKey(versionOne, versionTwo),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
 
 export const getFiles = params => get({
   type: API_OPERATIONS.GET,

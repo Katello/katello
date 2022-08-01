@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TableVariant, TableText, Tbody, Thead, Td, Tr, Th } from '@patternfly/react-table';
-import { Checkbox, Dropdown, DropdownItem, Grid, KebabToggle, Button } from '@patternfly/react-core';
+import { Checkbox, Dropdown, DropdownItem, Grid, KebabToggle, GridItem, Button } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { STATUS } from 'foremanReact/constants';
@@ -19,6 +19,7 @@ import {
   selectCVVersions,
   selectCVVersionsStatus,
   selectCVVersionsError,
+  selectCVDetails,
 } from '../ContentViewDetailSelectors';
 import getEnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPathActions';
 import ContentViewVersionPromote from '../Promote/ContentViewVersionPromote';
@@ -28,11 +29,12 @@ import { hasPermission } from '../../helpers';
 import BulkDeleteModal from './BulkDelete/BulkDeleteModal';
 import { selectEnvironmentPathsStatus } from '../../components/EnvironmentPaths/EnvironmentPathSelectors';
 import PublishContentViewWizard from '../../Publish/PublishContentViewWizard';
+import CVVersionCompare from './Compare/CVVersionCompare';
 
 const ContentViewVersions = ({ cvId, details }) => {
   const response = useSelector(state => selectCVVersions(state, cvId));
   const { results, ...metadata } = response;
-
+  const { versions: cvDetails } = useSelector(state => selectCVDetails(state, cvId));
   const firstIdWithActiveHistory =
     results?.find(({ active_history: activeHistory }) =>
       activeHistory?.length)?.id;
@@ -80,6 +82,13 @@ const ContentViewVersions = ({ cvId, details }) => {
         aria-label="publish_content_view"
       > {__('Publish new version')}
       </Button>);
+
+  const versionOneId = String([...selectionSet][0]);
+  const versionTwoId = String([...selectionSet][1]);
+  const fetchItems = useCallback((params) => {
+    selectionSet.clear();
+    return getContentViewVersions(cvId, params);
+  }, [cvId, selectionSet]);
   const columnHeaders = [
     '',
     __('Version'),
@@ -90,6 +99,10 @@ const ContentViewVersions = ({ cvId, details }) => {
     __('Description'),
   ];
 
+  const versionOneLabel = String(cvDetails?.find(version =>
+    Number(version.id) === Number(versionOneId))?.version);
+  const versionTwoLabel = String(cvDetails?.find(version =>
+    Number(version.id) === Number(versionTwoId))?.version);
   useEffect(
     () => {
       if (envStatus !== STATUS.RESOLVED) { dispatch(getEnvironmentPaths()); }
@@ -129,10 +142,9 @@ const ContentViewVersions = ({ cvId, details }) => {
     return [
       <Checkbox
         id={versionId}
+        aria-label={`Select version ${versionId}`}
         isChecked={isSelected(versionId)}
-        onChange={selected =>
-          selectOne(selected, versionId)
-        }
+        onChange={selected => selectOne(selected, versionId)}
       />,
       <Link to={`/versions/${versionId}`}>{__('Version ')}{version}</Link>,
       <ContentViewVersionEnvironments {...{ environments }} />,
@@ -204,6 +216,24 @@ const ContentViewVersions = ({ cvId, details }) => {
   const emptyContentBody = __('Versions will appear here when the content view is published.');
   const emptySearchTitle = __('No matching version found');
   const emptySearchBody = __('Try changing your search settings.');
+  const selectedVersionIds = {
+    versionOneId,
+    versionTwoId,
+  };
+  const [hasTwoVersions, setHasTwoVersions] = useState(false);
+  if (hasTwoVersions) {
+    const versionLabels = {
+      versionOneLabel,
+      versionTwoLabel,
+    };
+    return (
+      <CVVersionCompare
+        versionIds={selectedVersionIds}
+        cvId={cvId}
+        versionLabels={versionLabels}
+      />
+    );
+  }
   return (
     <TableWrapper
       {...{
@@ -223,11 +253,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       ouiaId="content-view-versions-table"
       variant={TableVariant.compact}
       autocompleteEndpoint={`/content_view_versions/auto_complete_search?content_view_id=${cvId}`}
-      fetchItems={useCallback((params) => {
-        selectionSet.clear();
-        return getContentViewVersions(cvId, params);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [cvId])}
+      fetchItems={fetchItems}
       {...hasActionPermissions ? selectionSetVars : []}
       actionButtons={
         <>
@@ -243,24 +269,36 @@ const ContentViewVersions = ({ cvId, details }) => {
             />}
           {renderActionButtons && (
             <Grid>
-              <Dropdown
-                toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
-                isOpen={kebabOpen}
-                isPlain
-                dropdownItems={[
-                  <DropdownItem
-                    aria-label="bulk_delete"
-                    key="bulk_delete"
-                    isDisabled={selectedCount < 1}
-                    component="button"
-                    onClick={() => {
-                      setKebabOpen(false);
-                      setBulkDeleteModalOpen(true);
-                    }}
-                  >
-                    {__('Delete')}
-                  </DropdownItem>]}
-              />
+              <GridItem md={8} sm={12}>
+                <Button
+                  variant="primary"
+                  onClick={() => setHasTwoVersions(true)}
+                  isDisabled={selectedCount !== 2}
+                  aria-label="compare_two_versions"
+                >
+                  {__('Compare')}
+                </Button>
+              </GridItem>
+              <GridItem md={4} sm={12}>
+                <Dropdown
+                  toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
+                  isOpen={kebabOpen}
+                  isPlain
+                  dropdownItems={[
+                    <DropdownItem
+                      aria-label="bulk_delete"
+                      key="bulk_delete"
+                      isDisabled={selectedCount < 1}
+                      component="button"
+                      onClick={() => {
+                        setKebabOpen(false);
+                        setBulkDeleteModalOpen(true);
+                      }}
+                    >
+                      {__('Delete')}
+                    </DropdownItem>]}
+                />
+              </GridItem>
             </Grid>
           )}
         </>

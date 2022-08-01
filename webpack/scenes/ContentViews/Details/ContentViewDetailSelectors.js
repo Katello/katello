@@ -37,6 +37,13 @@ import {
   REPOSITORY_TYPES,
   RPM_PACKAGE_GROUPS_CONTENT,
   RPM_PACKAGES_CONTENT,
+  cvRPMPackagesCompareKey,
+  cvPackageGroupsCompareKey,
+  cvErrataCompareKey,
+  cvModuleStreamsCompareKey,
+  cvDockerTagsCompareKey,
+  cvDebPackagesCompareKey,
+  filesCompareKey,
 } from '../ContentViewsConstants';
 
 export const selectCVDetails = (state, cvId) =>
@@ -125,6 +132,69 @@ export const selectCVHistoriesStatus = (state, cvId) =>
 
 export const selectCVHistoriesError = (state, cvId) =>
   selectAPIError(state, cvDetailsHistoryKey(cvId));
+
+export const selectRPMPackagesComparison = (state, versionOne, versionTwo) =>
+  selectAPIResponse(state, cvRPMPackagesCompareKey(versionOne, versionTwo)) || {};
+
+export const selectRPMPackagesComparisonStatus = (state, versionOne, versionTwo) =>
+  selectAPIStatus(state, cvRPMPackagesCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
+
+export const selectRPMPackagesComparisonError = (state, versionOne, versionTwo) =>
+  selectAPIError(state, cvRPMPackagesCompareKey(versionOne, versionTwo));
+
+export const selectErrataComparison = (state, versionOne, versionTwo) =>
+  selectAPIResponse(state, cvErrataCompareKey(versionOne, versionTwo)) || {};
+
+export const selectErrataComparisonStatus = (state, versionOne, versionTwo) =>
+  selectAPIStatus(state, cvErrataCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
+
+export const selectErrataComparisonError = (state, versionOne, versionTwo) =>
+  selectAPIError(state, cvErrataCompareKey(versionOne, versionTwo));
+
+export const selectPackageGroupsComparison = (state, versionOne, versionTwo) =>
+  selectAPIResponse(state, cvPackageGroupsCompareKey(versionOne, versionTwo)) || {};
+
+export const selectPackageGroupsComparisonStatus = (state, versionOne, versionTwo) =>
+  selectAPIStatus(state, cvPackageGroupsCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
+
+export const selectPackageGroupsComparisonError = (state, versionOne, versionTwo) =>
+  selectAPIError(state, cvPackageGroupsCompareKey(versionOne, versionTwo));
+
+export const selectModuleStreamsComparison = (state, versionOne, versionTwo) =>
+  selectAPIResponse(state, cvModuleStreamsCompareKey(versionOne, versionTwo)) || {};
+
+export const selectModuleStreamsComparisonStatus = (state, versionOne, versionTwo) =>
+  selectAPIStatus(state, cvModuleStreamsCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
+
+export const selectModuleStreamsComparisonError = (state, versionOne, versionTwo) =>
+  selectAPIError(state, cvModuleStreamsCompareKey(versionOne, versionTwo));
+
+export const selectDockerTagsComparison = (state, versionOne, versionTwo) =>
+  selectAPIResponse(state, cvDockerTagsCompareKey(versionOne, versionTwo)) || {};
+
+export const selectDockerTagsComparisonStatus = (state, versionOne, versionTwo) =>
+  selectAPIStatus(state, cvDockerTagsCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
+
+export const selectDockerTagsComparisonError = (state, versionOne, versionTwo) =>
+  selectAPIError(state, cvDockerTagsCompareKey(versionOne, versionTwo));
+
+export const selectDebPackagesComparison = (state, versionOne, versionTwo) =>
+  selectAPIResponse(state, cvDebPackagesCompareKey(versionOne, versionTwo)) || {};
+
+export const selectDebPackagesComparisonStatus = (state, versionOne, versionTwo) =>
+  selectAPIStatus(state, cvDebPackagesCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
+
+export const selectDebPackagesComparisonError = (state, versionOne, versionTwo) =>
+  selectAPIError(state, cvDebPackagesCompareKey(versionOne, versionTwo));
+
+export const selectFilesComparison = (state, versionOne, versionTwo) =>
+  selectAPIResponse(state, filesCompareKey(versionOne, versionTwo)) || {};
+
+export const selectFilesComparisonStatus = (state, versionOne, versionTwo) =>
+  selectAPIStatus(state, filesCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
+
+export const selectFilesComparisonError = (state, versionOne, versionTwo) =>
+  selectAPIError(state, filesCompareKey(versionOne, versionTwo));
 
 export const selectCVFilterRules = (state, filterId) =>
   selectAPIResponse(state, cvFilterRulesKey(filterId));

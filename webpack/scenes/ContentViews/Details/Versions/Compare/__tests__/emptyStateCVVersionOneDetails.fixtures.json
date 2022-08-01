@@ -1,0 +1,153 @@
+{
+  "version": "1.0",
+  "major": 1,
+  "minor": 0,
+  "composite_content_view_ids": [],
+  "published_in_composite_content_view_ids": [],
+  "content_view_id": 22,
+  "default": false,
+  "description": "",
+  "id": 49,
+  "name": "cv2 1.0",
+  "created_at": "2022-07-19 10:33:24 -0400",
+  "updated_at": "2022-07-19 10:33:25 -0400",
+  "content_view": {
+    "id": 22,
+    "name": "cv2",
+    "label": "cv2",
+    "generated_for": "none"
+  },
+  "composite_content_views": [],
+  "composite_content_view_versions": [],
+  "published_in_composite_content_views": [],
+  "environments": [
+    {
+      "id": 3,
+      "name": "dev1",
+      "label": "dev1",
+      "publish_date": "7 days",
+      "permissions": {
+        "readable": true,
+        "promotable_or_removable": true,
+        "all_hosts_editable": true,
+        "all_keys_editable": true
+      },
+      "host_count": 0,
+      "activation_key_count": 0
+    }
+  ],
+  "repositories": [],
+  "last_event": {
+    "user": "admin",
+    "status": "successful",
+    "description": "",
+    "action": "promotion",
+    "created_at": "2022-07-19 10:41:45 -0400",
+    "updated_at": "2022-07-19 10:41:46 -0400",
+    "environment": {
+      "id": 3,
+      "name": "dev1"
+    },
+    "task": {
+      "id": "eb3e7682-163a-44fc-940c-079b34be4559",
+      "label": "Actions::Katello::ContentView::Promote",
+      "pending": false,
+      "action": "Promote content view 'cv2'; organization 'Default Organization'",
+      "username": "admin",
+      "started_at": "2022-07-19 10:41:45 -0400",
+      "ended_at": "2022-07-19 10:41:46 -0400",
+      "state": "stopped",
+      "result": "success",
+      "progress": 1,
+      "input": {
+        "content_view": {
+          "id": 22,
+          "name": "cv2",
+          "label": "cv2"
+        },
+        "organization": {
+          "id": 1,
+          "name": "Default Organization",
+          "label": "Default_Organization"
+        },
+        "environments": [
+          "dev1"
+        ],
+        "services_checked": [
+          "candlepin",
+          "candlepin_auth"
+        ],
+        "locale": "en",
+        "current_request_id": "871cb5f3-3f6e-4111-bfb7-72976ab46fd6",
+        "current_timezone": "America/New_York",
+        "current_organization_id": 1,
+        "current_location_id": 2,
+        "current_user_id": 4
+      },
+      "output": {},
+      "humanized": {
+        "action": "Promote",
+        "input": [
+          [
+            "content_view",
+            {
+              "text": "content view 'cv2'",
+              "link": "/content_views/22/versions"
+            }
+          ],
+          [
+            "organization",
+            {
+              "text": "organization 'Default Organization'",
+              "link": "/organizations/1/edit"
+            }
+          ]
+        ],
+        "output": "",
+        "errors": []
+      },
+      "cli_example": null,
+      "start_at": "2022-07-19 10:41:45 -0400",
+      "available_actions": {
+        "cancellable": false,
+        "resumable": false
+      }
+    },
+    "version": "1.0",
+    "publish": false,
+    "version_id": 49,
+    "triggered_by": null,
+    "triggered_by_id": null
+  },
+  "active_history": [],
+  "ansible_collection_count": 0,
+  "deb_count": 0,
+  "docker_manifest_count": 0,
+  "docker_manifest_list_count": 0,
+  "docker_tag_count": 0,
+  "file_count": 0,
+  "python_package_count": 0,
+  "rpm_count": 0,
+  "modulemd_count": 0,
+  "erratum_count": 0,
+  "package_group_count": 0,
+  "srpm_count": 0,
+  "module_stream_count": 0,
+  "package_count": 0,
+  "component_view_count": 0,
+  "ansible_collection_repository_count": 0,
+  "deb_repository_count": 0,
+  "docker_repository_count": 0,
+  "file_repository_count": 0,
+  "python_repository_count": 0,
+  "yum_repository_count": 0,
+  "errata_counts": {
+    "security": 0,
+    "bugfix": 0,
+    "enhancement": 0,
+    "total": 0
+  },
+  "permissions": {
+    "deletable": true
+  }
+}

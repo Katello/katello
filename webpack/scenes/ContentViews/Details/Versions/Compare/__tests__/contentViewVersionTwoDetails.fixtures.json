@@ -1,0 +1,214 @@
+{
+  "version": "9.0",
+  "major": 9,
+  "minor": 0,
+  "composite_content_view_ids": [],
+  "published_in_composite_content_view_ids": [],
+  "content_view_id": 21,
+  "default": false,
+  "description": "",
+  "id": 55,
+  "name": "cv1 9.0",
+  "created_at": "2022-07-22 14:36:58 -0400",
+  "updated_at": "2022-07-22 14:37:05 -0400",
+  "content_view": {
+    "id": 21,
+    "name": "cv1",
+    "label": "cv1",
+    "generated_for": "none"
+  },
+  "composite_content_views": [],
+  "composite_content_view_versions": [],
+  "published_in_composite_content_views": [],
+  "environments": [
+    {
+      "id": 1,
+      "name": "Library",
+      "label": "Library",
+      "publish_date": "about 3 hours",
+      "permissions": {
+        "readable": true,
+        "promotable_or_removable": true,
+        "all_hosts_editable": true,
+        "all_keys_editable": true
+      },
+      "host_count": 0,
+      "activation_key_count": 0
+    },
+    {
+      "id": 2,
+      "name": "Dev",
+      "label": "Dev",
+      "publish_date": "about 3 hours",
+      "permissions": {
+        "readable": true,
+        "promotable_or_removable": true,
+        "all_hosts_editable": true,
+        "all_keys_editable": true
+      },
+      "host_count": 0,
+      "activation_key_count": 0
+    }
+  ],
+  "repositories": [
+    {
+      "id": 119,
+      "name": "repo1",
+      "label": "repo1",
+      "content_type": "yum",
+      "library_instance_id": 3
+    },
+    {
+      "id": 123,
+      "name": "repo6",
+      "label": "repo6",
+      "content_type": "docker",
+      "library_instance_id": 111
+    },
+    {
+      "id": 120,
+      "name": "repo2",
+      "label": "repo2",
+      "content_type": "yum",
+      "library_instance_id": 4
+    },
+    {
+      "id": 122,
+      "name": "repo5",
+      "label": "repo5",
+      "content_type": "deb",
+      "library_instance_id": 110
+    },
+    {
+      "id": 121,
+      "name": "repo4",
+      "label": "repo4",
+      "content_type": "file",
+      "library_instance_id": 109
+    }
+  ],
+  "last_event": {
+    "user": "admin",
+    "status": "successful",
+    "description": null,
+    "action": "promotion",
+    "created_at": "2022-07-22 14:36:59 -0400",
+    "updated_at": "2022-07-22 14:37:08 -0400",
+    "environment": {
+      "id": 2,
+      "name": "Dev"
+    },
+    "task": {
+      "id": "7dbbdc3c-1634-4197-ad48-fdedb82ec412",
+      "label": "Actions::Katello::ContentView::Publish",
+      "pending": false,
+      "action": "Publish content view 'cv1'; organization 'Default Organization'",
+      "username": "admin",
+      "started_at": "2022-07-22 14:36:58 -0400",
+      "ended_at": "2022-07-22 14:37:08 -0400",
+      "state": "stopped",
+      "result": "success",
+      "progress": 1,
+      "input": {
+        "content_view": {
+          "id": 21,
+          "name": "cv1",
+          "label": "cv1"
+        },
+        "organization": {
+          "id": 1,
+          "name": "Default Organization",
+          "label": "Default_Organization"
+        },
+        "services_checked": [
+          "pulp3",
+          "candlepin",
+          "candlepin_auth"
+        ],
+        "history_id": 227,
+        "content_view_id": 21,
+        "auto_publish_composite_ids": [],
+        "content_view_version_name": "cv1 9.0",
+        "content_view_version_id": 55,
+        "environment_id": 1,
+        "user_id": 4,
+        "skip_promotion": null,
+        "locale": "en",
+        "current_request_id": "2da81afd-452c-46a3-be23-80f7b8ca49f1",
+        "current_timezone": "America/New_York",
+        "current_organization_id": 1,
+        "current_location_id": 2,
+        "current_user_id": 4
+      },
+      "output": {
+        "content_view_id": 21,
+        "content_view_version_id": 55,
+        "skip_promotion": null,
+        "history_id": 227
+      },
+      "humanized": {
+        "action": "Publish",
+        "input": [
+          [
+            "content_view",
+            {
+              "text": "content view 'cv1'",
+              "link": "/content_views/21/versions"
+            }
+          ],
+          [
+            "organization",
+            {
+              "text": "organization 'Default Organization'",
+              "link": "/organizations/1/edit"
+            }
+          ]
+        ],
+        "output": "",
+        "errors": []
+      },
+      "cli_example": null,
+      "start_at": "2022-07-22 14:36:58 -0400",
+      "available_actions": {
+        "cancellable": false,
+        "resumable": false
+      }
+    },
+    "version": "9.0",
+    "publish": false,
+    "version_id": 55,
+    "triggered_by": null,
+    "triggered_by_id": null
+  },
+  "active_history": [],
+  "ansible_collection_count": 0,
+  "deb_count": 4,
+  "docker_manifest_count": 1,
+  "docker_manifest_list_count": 0,
+  "docker_tag_count": 1,
+  "file_count": 3,
+  "python_package_count": 0,
+  "rpm_count": 54,
+  "modulemd_count": 14,
+  "erratum_count": 11,
+  "package_group_count": 2,
+  "srpm_count": 0,
+  "module_stream_count": 14,
+  "package_count": 54,
+  "component_view_count": 0,
+  "ansible_collection_repository_count": 0,
+  "deb_repository_count": 1,
+  "docker_repository_count": 1,
+  "file_repository_count": 1,
+  "python_repository_count": 0,
+  "yum_repository_count": 2,
+  "errata_counts": {
+    "security": 5,
+    "bugfix": 0,
+    "enhancement": 6,
+    "total": 11
+  },
+  "permissions": {
+    "deletable": true
+  }
+}
