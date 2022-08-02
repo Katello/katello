@@ -12,13 +12,10 @@
                'data-url' => "/katello/api/v2/organizations/#{@taxonomy.id}/download_debug_certificate"
   end %>
 
-  <% if @can_toggle_sca %>
-    <%= field(f, _('Simple Content Access'),
-              :help_inline => _('Toggling Simple Content Access will refresh your manifest.')) do
-      tag1 = hidden_field_tag 'simple_content_access', '0'
-      tag2 = check_box_tag 'simple_content_access', '1', @taxonomy.simple_content_access?
-      tag1 + tag2
-    end %>
-  <% end %>
+  <%= field(f, _('Simple Content Access')) do
+    tag1 = hidden_field_tag 'simple_content_access', '0'
+    tag2 = check_box_tag 'simple_content_access', '1', @taxonomy.simple_content_access?(cached: false)
+    tag1 + tag2
+  end %>
 
 <% end %>
