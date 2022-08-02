@@ -33,12 +33,15 @@ const CVVersionCompare = ({
     selectCVVersionDetails(state, String(getIdFromVersion(versionTwo)
       ?? initialVersionTwoId), cvId));
 
+  const [selectedViewBy, setSelectedViewBy] = useState('All');
   const tableConfigs = getCVVersionCompareTableConfigs({
     versionOne,
     versionTwo,
     versionOneId: String(getIdFromVersion(versionOne)),
     versionTwoId: String(getIdFromVersion(versionTwo)),
+    viewBy: selectedViewBy.toLowerCase(),
   });
+  // console.log(tableConfigs);
   const filteredTableConfigs = tableConfigs.filter(({ getCountKey }) =>
     !!getCountKey(versionOneDetails, versionTwoDetails));
   const versionOneDetailsStatus = useSelector(state =>
@@ -61,6 +64,7 @@ const CVVersionCompare = ({
   const showCompareTable = !(versionOneDetailsStatus === STATUS.PENDING
     ||
     versionTwoDetailsStatus === STATUS.PENDING) && versionOne && versionTwo;
+
   useEffect(() => {
     if (!cvDetails) {
       dispatch(getContentViewDetails(cvId));
@@ -85,39 +89,42 @@ const CVVersionCompare = ({
         cvId={cvId}
         setVersionOne={setVersionOne}
         setVersionTwo={setVersionTwo}
+        selectedViewBy={selectedViewBy}
+        setSelectedViewBy={setSelectedViewBy}
       />
       {showTabs && (
         (showCompareTable &&
-        <div className="grid-with-top-border">
-          <Tabs
-            isVertical
-            activeKey={currentActiveTab}
-            onSelect={onSelect}
-            ouiaId="cv-version-compare-tabs"
-          >
-            {filteredTableConfigs.map((config) => {
-              const { name } = config;
-              return (
-                <Tab
-                  key={name}
-                  eventKey={name}
-                  title={
-                    <>
-                      <TabTitleText>{name}</TabTitleText>
-                    </>}
-                />
-              );
-            })}
-          </Tabs>
-          <div className="compare-table-container">
-            <CVVersionCompareTable
-              tableConfig={activeTableConfig}
-              versionOne={versionOne}
-              versionTwo={versionTwo}
-              currentActiveKey={currentActiveTab}
-            />
-          </div>
-        </div >) || <Loading />)
+          <div className="grid-with-top-border">
+            <Tabs
+              isVertical
+              activeKey={currentActiveTab}
+              onSelect={onSelect}
+              ouiaId="cv-version-compare-tabs"
+            >
+              {filteredTableConfigs.map((config) => {
+                const { name } = config;
+                return (
+                  <Tab
+                    key={name}
+                    eventKey={name}
+                    title={
+                      <>
+                        <TabTitleText>{name}</TabTitleText>
+                      </>}
+                  />
+                );
+              })}
+            </Tabs>
+            <div className="compare-table-container">
+              <CVVersionCompareTable
+                tableConfig={activeTableConfig}
+                versionOne={versionOne}
+                versionTwo={versionTwo}
+                currentActiveKey={currentActiveTab}
+                selectedViewBy={selectedViewBy}
+              />
+            </div>
+          </div >) || <Loading />)
       }
     </>
   );

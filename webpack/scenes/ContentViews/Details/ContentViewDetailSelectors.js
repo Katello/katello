@@ -134,80 +134,86 @@ export const selectCVHistoriesStatus = (state, cvId) =>
 export const selectCVHistoriesError = (state, cvId) =>
   selectAPIError(state, cvDetailsHistoryKey(cvId));
 
-export const selectRPMPackagesComparison = (state, versionOne, versionTwo) =>
-  selectAPIResponse(state, cvRPMPackagesCompareKey(versionOne, versionTwo)) || {};
+export const selectRPMPackagesComparison = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIResponse(state, cvRPMPackagesCompareKey(versionOne, versionTwo, viewBy)) || {};
 
-export const selectRPMPackagesComparisonStatus = (state, versionOne, versionTwo) =>
-  selectAPIStatus(state, cvRPMPackagesCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
+export const selectRPMPackagesComparisonStatus = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIStatus(state, cvRPMPackagesCompareKey(versionOne, versionTwo, viewBy)) || STATUS.PENDING;
 
-export const selectRPMPackagesComparisonError = (state, versionOne, versionTwo) =>
-  selectAPIError(state, cvRPMPackagesCompareKey(versionOne, versionTwo));
+export const selectRPMPackagesComparisonError = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIError(state, cvRPMPackagesCompareKey(versionOne, versionTwo, viewBy));
 
-export const selectErrataComparison = (state, versionOne, versionTwo) =>
-  selectAPIResponse(state, cvErrataCompareKey(versionOne, versionTwo)) || {};
+export const selectErrataComparison = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIResponse(state, cvErrataCompareKey(versionOne, versionTwo, viewBy)) || {};
 
-export const selectErrataComparisonStatus = (state, versionOne, versionTwo) =>
-  selectAPIStatus(state, cvErrataCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
+export const selectErrataComparisonStatus = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIStatus(state, cvErrataCompareKey(versionOne, versionTwo, viewBy)) || STATUS.PENDING;
 
-export const selectErrataComparisonError = (state, versionOne, versionTwo) =>
-  selectAPIError(state, cvErrataCompareKey(versionOne, versionTwo));
+export const selectErrataComparisonError = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIError(state, cvErrataCompareKey(versionOne, versionTwo, viewBy));
 
-export const selectPackageGroupsComparison = (state, versionOne, versionTwo) =>
-  selectAPIResponse(state, cvPackageGroupsCompareKey(versionOne, versionTwo)) || {};
+export const selectPackageGroupsComparison = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIResponse(state, cvPackageGroupsCompareKey(versionOne, versionTwo, viewBy)) || {};
 
-export const selectPackageGroupsComparisonStatus = (state, versionOne, versionTwo) =>
-  selectAPIStatus(state, cvPackageGroupsCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
-
-export const selectPackageGroupsComparisonError = (state, versionOne, versionTwo) =>
-  selectAPIError(state, cvPackageGroupsCompareKey(versionOne, versionTwo));
-
-export const selectModuleStreamsComparison = (state, versionOne, versionTwo) =>
-  selectAPIResponse(state, cvModuleStreamsCompareKey(versionOne, versionTwo)) || {};
-
-export const selectModuleStreamsComparisonStatus = (state, versionOne, versionTwo) =>
-  selectAPIStatus(state, cvModuleStreamsCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
-
-export const selectModuleStreamsComparisonError = (state, versionOne, versionTwo) =>
-  selectAPIError(state, cvModuleStreamsCompareKey(versionOne, versionTwo));
-
-export const selectDockerTagsComparison = (state, versionOne, versionTwo) =>
-  selectAPIResponse(state, cvDockerTagsCompareKey(versionOne, versionTwo)) || {};
-
-export const selectDockerTagsComparisonStatus = (state, versionOne, versionTwo) =>
-  selectAPIStatus(state, cvDockerTagsCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
-
-export const selectDockerTagsComparisonError = (state, versionOne, versionTwo) =>
-  selectAPIError(state, cvDockerTagsCompareKey(versionOne, versionTwo));
-
-export const selectDebPackagesComparison = (state, versionOne, versionTwo) =>
-  selectAPIResponse(state, cvDebPackagesCompareKey(versionOne, versionTwo)) || {};
-
-export const selectDebPackagesComparisonStatus = (state, versionOne, versionTwo) =>
-  selectAPIStatus(state, cvDebPackagesCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
-
-export const selectDebPackagesComparisonError = (state, versionOne, versionTwo) =>
-  selectAPIError(state, cvDebPackagesCompareKey(versionOne, versionTwo));
-
-export const selectFilesComparison = (state, versionOne, versionTwo) =>
-  selectAPIResponse(state, filesCompareKey(versionOne, versionTwo)) || {};
-
-export const selectFilesComparisonStatus = (state, versionOne, versionTwo) =>
-  selectAPIStatus(state, filesCompareKey(versionOne, versionTwo)) || STATUS.PENDING;
-
-export const selectFilesComparisonError = (state, versionOne, versionTwo) =>
-  selectAPIError(state, filesCompareKey(versionOne, versionTwo));
-
-export const selectGenericContentComparison = (state, versionOne, versionTwo, pluralLabel) =>
-  selectAPIResponse(state, genericContentCompareKey(pluralLabel, versionOne, versionTwo))
-  || {};
-
-export const selectGenericContentComparisonStatus =
-  (state, versionOne, versionTwo, pluralLabel) =>
-    selectAPIStatus(state, genericContentCompareKey(pluralLabel, versionOne, versionTwo))
+export const selectPackageGroupsComparisonStatus = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIStatus(state, cvPackageGroupsCompareKey(versionOne, versionTwo, viewBy))
     || STATUS.PENDING;
 
-export const selectGenericContentComparisonError = (state, versionOne, versionTwo, pluralLabel) =>
-  selectAPIError(state, genericContentCompareKey(pluralLabel, versionOne, versionTwo));
+export const selectPackageGroupsComparisonError = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIError(state, cvPackageGroupsCompareKey(versionOne, versionTwo, viewBy));
+
+export const selectModuleStreamsComparison = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIResponse(state, cvModuleStreamsCompareKey(versionOne, versionTwo, viewBy)) || {};
+
+export const selectModuleStreamsComparisonStatus = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIStatus(state, cvModuleStreamsCompareKey(versionOne, versionTwo, viewBy))
+    || STATUS.PENDING;
+
+export const selectModuleStreamsComparisonError = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIError(state, cvModuleStreamsCompareKey(versionOne, versionTwo, viewBy));
+
+export const selectDockerTagsComparison = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIResponse(state, cvDockerTagsCompareKey(versionOne, versionTwo, viewBy)) || {};
+
+export const selectDockerTagsComparisonStatus = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIStatus(state, cvDockerTagsCompareKey(versionOne, versionTwo, viewBy)) || STATUS.PENDING;
+
+export const selectDockerTagsComparisonError = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIError(state, cvDockerTagsCompareKey(versionOne, versionTwo, viewBy));
+
+export const selectDebPackagesComparison = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIResponse(state, cvDebPackagesCompareKey(versionOne, versionTwo, viewBy)) || {};
+
+export const selectDebPackagesComparisonStatus = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIStatus(state, cvDebPackagesCompareKey(versionOne, versionTwo, viewBy)) || STATUS.PENDING;
+
+export const selectDebPackagesComparisonError = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIError(state, cvDebPackagesCompareKey(versionOne, versionTwo, viewBy));
+
+export const selectFilesComparison = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIResponse(state, filesCompareKey(versionOne, versionTwo, viewBy)) || {};
+
+export const selectFilesComparisonStatus = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIStatus(state, filesCompareKey(versionOne, versionTwo, viewBy)) || STATUS.PENDING;
+
+export const selectFilesComparisonError = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIError(state, filesCompareKey(versionOne, versionTwo, viewBy));
+
+export const selectGenericContentComparison =
+  (state, versionOne, versionTwo, pluralLabel, viewBy) =>
+    selectAPIResponse(
+      state,
+      genericContentCompareKey(pluralLabel, versionOne, versionTwo, viewBy),
+    ) || {};
+
+export const selectGenericContentComparisonStatus =
+  (state, versionOne, versionTwo, pluralLabel, viewBy) =>
+    selectAPIStatus(state, genericContentCompareKey(pluralLabel, versionOne, versionTwo, viewBy))
+    || STATUS.PENDING;
+
+export const selectGenericContentComparisonError =
+  (state, versionOne, versionTwo, pluralLabel, viewBy) =>
+    selectAPIError(state, genericContentCompareKey(pluralLabel, versionOne, versionTwo, viewBy));
 
 export const selectCVFilterRules = (state, filterId) =>
   selectAPIResponse(state, cvFilterRulesKey(filterId));

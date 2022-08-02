@@ -60,14 +60,14 @@ export const cvAddComponentKey = cvId => `${CONTENT_VIEWS_KEY}_ADD_COMPONENT_${c
 export const cvRemoveComponentKey = cvId => `${CONTENT_VIEWS_KEY}_REMOVE_COMPONENT_${cvId}`;
 export const removeComponentSuccessMessage = size => (size === 1 ? __('Removed component from content view') : __('Removed components from content view'));
 export const addComponentSuccessMessage = component => (component ? __('Updated component details') : __('Added component to content view'));
-export const cvPackageGroupsCompareKey = (versionOne, versionTwo) => `${PACKAGE_GROUPS_KEY}_COMPARE_${versionOne}_${versionTwo}`;
-export const cvRPMPackagesCompareKey = (versionOne, versionTwo) => `${PACKAGES_KEY}_COMPARE_${versionOne}_${versionTwo}`;
-export const cvErrataCompareKey = (versionOne, versionTwo) => `${ERRATA_KEY}_COMPARE_${versionOne}_${versionTwo}`;
-export const cvModuleStreamsCompareKey = (versionOne, versionTwo) => `${MODULE_STREAMS_KEY}_COMPARE_${versionOne}_${versionTwo}`;
-export const cvDebPackagesCompareKey = (versionOne, versionTwo) => `${DEB_PACKAGES_KEY}_COMPARE_${versionOne}_${versionTwo}`;
-export const cvDockerTagsCompareKey = (versionOne, versionTwo) => `${DOCKER_TAGS_KEY}_COMPARE_${versionOne}_${versionTwo}`;
-export const filesCompareKey = (versionOne, versionTwo) => `${FILES_KEY}_COMPARE_${versionOne}_${versionTwo}`;
-export const genericContentCompareKey = (pluralLabel, versionOne, versionTwo) => `${toUpper(pluralLabel)}_COMPARE_${versionOne}_${versionTwo}`;
+export const genericContentCompareKey = (pluralLabel, versionOne, versionTwo, viewBy) => `${toUpper(pluralLabel)}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
+export const cvPackageGroupsCompareKey = (versionOne, versionTwo, viewBy) => `${PACKAGE_GROUPS_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
+export const cvRPMPackagesCompareKey = (versionOne, versionTwo, viewBy) => `${PACKAGES_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
+export const cvErrataCompareKey = (versionOne, versionTwo, viewBy) => `${ERRATA_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
+export const cvModuleStreamsCompareKey = (versionOne, versionTwo, viewBy) => `${MODULE_STREAMS_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
+export const cvDebPackagesCompareKey = (versionOne, versionTwo, viewBy) => `${DEB_PACKAGES_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
+export const cvDockerTagsCompareKey = (versionOne, versionTwo, viewBy) => `${DOCKER_TAGS_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
+export const filesCompareKey = (versionOne, versionTwo, viewBy) => `${FILES_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
 // Repo added to content view status display and key
 export const ADDED = __('Added');
 export const NOT_ADDED = __('Not added');

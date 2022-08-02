@@ -86,101 +86,110 @@ export const getRPMPackages = params => get({
   errorToast: error => __(`Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}`),
 });
 
-export const getRPMPackagesComparison = (versionOne, versionTwo, params) => {
+export const getRPMPackagesComparison = (versionOne, versionTwo, viewBy, params) => {
   const versions = { content_view_version_ids: [versionOne, versionTwo] };
-  const apiParams = { ...versions, ...params };
+  const restrictComparison = { restrict_comparison: viewBy };
+  const apiParams = { ...versions, ...restrictComparison, ...params };
   const apiUrl = '/packages/compare';
   return get({
-    key: cvRPMPackagesCompareKey(versionOne, versionTwo),
+    key: cvRPMPackagesCompareKey(versionOne, versionTwo, viewBy),
     params: apiParams,
     errorToast: error => __(`Something went wrong while retrieving the packages! ${getResponseErrorMsgs(error.response)}`),
     url: api.getApiUrl(apiUrl),
   });
 };
 
-export const getPackageGroupsComparison = (versionOne, versionTwo, params) => {
+export const getPackageGroupsComparison = (versionOne, versionTwo, viewBy, params) => {
   const versions = { content_view_version_ids: [versionOne, versionTwo] };
-  const apiParams = { ...versions, ...params };
+  const restrictComparison = { restrict_comparison: viewBy };
+  const apiParams = { ...versions, ...restrictComparison, ...params };
   const apiUrl = '/package_groups/compare';
   return get({
-    key: cvPackageGroupsCompareKey(versionOne, versionTwo),
+    key: cvPackageGroupsCompareKey(versionOne, versionTwo, viewBy),
     params: apiParams,
     errorToast: error => __(`Something went wrong while retrieving the package groups! ${getResponseErrorMsgs(error.response)}`),
     url: api.getApiUrl(apiUrl),
   });
 };
 
-export const getErrataComparison = (versionOne, versionTwo, params) => {
+export const getErrataComparison = (versionOne, versionTwo, viewBy, params) => {
   const versions = { content_view_version_ids: [versionOne, versionTwo] };
-  const apiParams = { ...versions, ...params };
+  const restrictComparison = { restrict_comparison: viewBy };
+  const apiParams = { ...versions, ...restrictComparison, ...params };
   const apiUrl = '/errata/compare';
   return get({
-    key: cvErrataCompareKey(versionOne, versionTwo),
+    key: cvErrataCompareKey(versionOne, versionTwo, viewBy),
     params: apiParams,
     errorToast: error => __(`Something went wrong while retrieving the errata! ${getResponseErrorMsgs(error.response)}`),
     url: api.getApiUrl(apiUrl),
   });
 };
 
-export const getModuleStreamsComparison = (versionOne, versionTwo, params) => {
+export const getModuleStreamsComparison = (versionOne, versionTwo, viewBy, params) => {
   const versions = { content_view_version_ids: [versionOne, versionTwo] };
-  const apiParams = { ...versions, ...params };
+  const restrictComparison = { restrict_comparison: viewBy };
+  const apiParams = { ...versions, ...restrictComparison, ...params };
   const apiUrl = '/module_streams/compare';
   return get({
-    key: cvModuleStreamsCompareKey(versionOne, versionTwo),
+    key: cvModuleStreamsCompareKey(versionOne, versionTwo, viewBy),
     params: apiParams,
     errorToast: error => __(`Something went wrong while retrieving the module streams! ${getResponseErrorMsgs(error.response)}`),
     url: api.getApiUrl(apiUrl),
   });
 };
 
-export const getDebPackagesComparison = (versionOne, versionTwo, params) => {
+export const getDebPackagesComparison = (versionOne, versionTwo, viewBy, params) => {
   const versions = { content_view_version_ids: [versionOne, versionTwo] };
-  const apiParams = { ...versions, ...params };
+  const restrictComparison = { restrict_comparison: viewBy };
+  const apiParams = { ...versions, ...restrictComparison, ...params };
   const apiUrl = '/debs/compare';
   return get({
-    key: cvDebPackagesCompareKey(versionOne, versionTwo),
+    key: cvDebPackagesCompareKey(versionOne, versionTwo, viewBy),
     params: apiParams,
     errorToast: error => __(`Something went wrong while retrieving the deb packages! ${getResponseErrorMsgs(error.response)}`),
     url: api.getApiUrl(apiUrl),
   });
 };
 
-export const getDockerTagsComparison = (versionOne, versionTwo, params) => {
+export const getDockerTagsComparison = (versionOne, versionTwo, viewBy, params) => {
   const versions = { content_view_version_ids: [versionOne, versionTwo] };
-  const apiParams = { ...versions, ...params };
+  const restrictComparison = { restrict_comparison: viewBy };
+  const apiParams = { ...versions, ...restrictComparison, ...params };
   const apiUrl = '/docker_tags/compare';
   return get({
-    key: cvDockerTagsCompareKey(versionOne, versionTwo),
+    key: cvDockerTagsCompareKey(versionOne, versionTwo, viewBy),
     params: apiParams,
     errorToast: error => __(`Something went wrong while retrieving the container tags! ${getResponseErrorMsgs(error.response)}`),
     url: api.getApiUrl(apiUrl),
   });
 };
 
-export const getFilesComparison = (versionOne, versionTwo, params) => {
+export const getFilesComparison = (versionOne, versionTwo, viewBy, params) => {
   const versions = { content_view_version_ids: [versionOne, versionTwo] };
-  const apiParams = { ...versions, ...params };
+  const restrictComparison = { restrict_comparison: viewBy };
+  const apiParams = { ...versions, ...restrictComparison, ...params };
   const apiUrl = '/files/compare';
   return get({
-    key: filesCompareKey(versionOne, versionTwo),
+    key: filesCompareKey(versionOne, versionTwo, viewBy),
     params: apiParams,
     errorToast: error => __(`Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}`),
     url: api.getApiUrl(apiUrl),
   });
 };
 
-export const getContentComparison = (pluralLabel, versionOne, versionTwo, params) => {
-  const versions = { content_view_version_ids: [versionOne, versionTwo] };
-  const apiParams = { ...versions, ...params };
-  const apiUrl = `/${pluralLabel}/compare`;
-  return get({
-    key: genericContentCompareKey(pluralLabel, versionOne, versionTwo),
-    params: apiParams,
-    errorToast: error => __(`Something went wrong while retrieving the content! ${getResponseErrorMsgs(error.response)}`),
-    url: api.getApiUrl(apiUrl),
-  });
-};
+export const getGenericContentComparison =
+  (pluralLabel, versionOne, versionTwo, viewBy, params) => {
+    const versions = { content_view_version_ids: [versionOne, versionTwo] };
+    const restrictComparison = { restrict_comparison: viewBy };
+    const apiParams = { ...versions, ...restrictComparison, ...params };
+    const apiUrl = `/${pluralLabel}/compare`;
+    return get({
+      key: genericContentCompareKey(pluralLabel, versionOne, versionTwo, viewBy),
+      params: apiParams,
+      errorToast: error => __(`Something went wrong while retrieving the content! ${getResponseErrorMsgs(error.response)}`),
+      url: api.getApiUrl(apiUrl),
+    });
+  };
 
 export const getFiles = params => get({
   type: API_OPERATIONS.GET,
