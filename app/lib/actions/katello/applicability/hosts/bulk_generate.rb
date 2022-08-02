@@ -32,8 +32,8 @@ module Actions
           end
 
           def humanized_name
-            if input[:host_ids]&.length == 1
-              _("Bulk generate applicability for host %s" % hostname(input[:host_ids].first))
+            if input && input[:host_ids]&.length == 1
+              _("Bulk generate applicability for host %s" % hostname(input[:host_ids]&.first))
             else
               _("Bulk generate applicability for hosts")
             end
