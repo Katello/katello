@@ -2,6 +2,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 
 const ACS_KEY = 'ACS';
 export const CREATE_ACS_KEY = 'ACS_CREATE';
+export const EDIT_ACS_KEY = 'ACS_EDIT';
 export const DELETE_ACS_KEY = 'ACS_DELETE';
 export const SMART_PROXY_KEY = 'SMART_PROXY';
 export const PRODUCTS_KEY = 'PRODUCTS';
