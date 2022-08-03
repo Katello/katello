@@ -33,49 +33,50 @@ module Katello
     has_many :content_view_repositories, :class_name => 'Katello::ContentViewRepository',
              :dependent => :destroy, :inverse_of => :content_view
     has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
-                            :after_remove => :remove_repository
+             :after_remove => :remove_repository
 
     has_many :filters, :dependent => :destroy, :class_name => "Katello::ContentViewFilter"
 
     has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict_with_exception
 
     has_many :content_facets, :class_name => "Katello::Host::ContentFacet",
-                          :inverse_of => :content_view, :dependent => :restrict_with_exception
-    has_many :hosts,      :class_name => "::Host::Managed", :through => :content_facets,
-                          :inverse_of => :content_view
+             :inverse_of => :content_view, :dependent => :restrict_with_exception
+    has_many :hosts, :class_name => "::Host::Managed", :through => :content_facets,
+             :inverse_of => :content_view
     has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet",
-                          :inverse_of => :content_view, :dependent => :nullify
+             :inverse_of => :content_view, :dependent => :nullify
     has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets,
-                          :inverse_of => :content_view
+             :inverse_of => :content_view
 
     has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference',
              :dependent => :destroy, :inverse_of => :content_view
 
     validates_lengths_from_database :except => [:label]
-    validates :label, :uniqueness => {:scope => :organization_id},
-                      :presence => true
-    validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
+    validates :label, :uniqueness => { :scope => :organization_id },
+              :presence => true
+    validates :name, :presence => true, :uniqueness => { :scope => :organization_id }
     validates :organization_id, :presence => true
     validate :check_non_composite_components
     validate :check_docker_conflicts
     validate :check_non_composite_auto_publish
+    validate :check_default_label_name, if: :default?
     validates :composite, :inclusion => [true, false]
     validates :composite,
-              inclusion: { in: [false], message: "Composite Content Views can not solve dependencies"},
+              inclusion: { in: [false], message: "Composite Content Views can not solve dependencies" },
               if: :solve_dependencies
     validates :import_only, :inclusion => [true, false]
     validates :import_only,
-              inclusion: { in: [false], message: "Import-only Content Views can not be Composite"},
+              inclusion: { in: [false], message: "Import-only Content Views can not be Composite" },
               if: :composite
     validates :import_only,
-              inclusion: { in: [false], message: "Import-only Content Views can not solve dependencies"},
+              inclusion: { in: [false], message: "Import-only Content Views can not solve dependencies" },
               if: :solve_dependencies
     validate :import_only_immutable
     validates :generated_for,
-              exclusion: { in: [:none], message: "Generated Content Views can not be Composite"},
+              exclusion: { in: [:none], message: "Generated Content Views can not be Composite" },
               if: :composite
     validates :generated_for,
-              exclusion: { in: [:none], message: "Generated Content Views can not solve dependencies"},
+              exclusion: { in: [:none], message: "Generated Content Views can not solve dependencies" },
               if: :solve_dependencies
 
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -283,6 +284,7 @@ module Katello
       required :env, 'Katello::KTEnvironment', desc: 'a __Katello::KTEnvironment__ object for which we load the __Katello::ContentViewVersion__ object'
       returns 'Katello::ContentViewVersion'
     end
+
     def version(env)
       self.versions.in_environment(env).order("#{Katello::ContentViewVersion.table_name}.id ASC").readonly(false).last
     end
@@ -310,7 +312,7 @@ module Katello
 
     def history
       Katello::ContentViewHistory.joins(:content_view_version).where(
-          "#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
+        "#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
     end
 
     def version_environment(env)
@@ -391,7 +393,7 @@ module Katello
     end
 
     def auto_publish_components
-      component_composites.where(latest: true).joins(:composite_content_view).where(self.class.table_name => {auto_publish: true})
+      component_composites.where(latest: true).joins(:composite_content_view).where(self.class.table_name => { auto_publish: true })
     end
 
     def publish_repositories(override_components = nil)
@@ -450,8 +452,8 @@ module Katello
     def get_repo_clone(env, repo)
       lib_id = repo.library_instance_id || repo.id
       Repository.in_environment(env).where(:library_instance_id => lib_id).
-          joins(:content_view_version).
-          where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
+        joins(:content_view_version).
+        where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
     end
 
     def delete(from_env)
@@ -501,9 +503,15 @@ module Katello
       end
     end
 
+    def check_default_label_name
+      if default? && !(name == 'Default Organization View' && label == 'Default_Organization_View')
+        errors.add(:base, _("Name and label of default content view should not be changed"))
+      end
+    end
+
     def check_docker_conflicts
       duplicate_docker_repos.each do |repo|
-        msg = _("Container Image repo '%{repo}' is present in multiple component content views.") % {repo: repo.name}
+        msg = _("Container Image repo '%{repo}' is present in multiple component content views.") % { repo: repo.name }
         errors.add(:base, msg)
       end
     end
@@ -530,7 +538,7 @@ module Katello
                                        :environment_id => env.id,
                                        :content_view => self,
                                        :content_view_version => version
-                                      )
+        )
       end
     end
 
@@ -559,7 +567,7 @@ module Katello
                                            :minor => minor,
                                            :content_view => self,
                                            :components => components
-                                          )
+      )
 
       update(:next_version => major.to_i + 1) unless major.to_i < next_version
       version
@@ -630,14 +638,14 @@ module Katello
     def check_remove_from_environment!(env)
       errors = []
 
-      dependencies = {hosts: _("hosts"),
-                      activation_keys: _("activation keys")
+      dependencies = { hosts: _("hosts"),
+                       activation_keys: _("activation keys")
       }
 
       dependencies.each do |key, name|
         if (models = self.association(key).scope.in_environment(env)).any?
           errors << _("Cannot remove '%{view}' from environment '%{env}' due to associated %{dependent}: %{names}.") %
-            {view: self.name, env: env.name, dependent: name, names: models.map(&:name).join(", ")}
+            { view: self.name, env: env.name, dependent: name, names: models.map(&:name).join(", ") }
         end
       end
 
@@ -648,15 +656,15 @@ module Katello
     def check_ready_to_destroy!
       errors = []
 
-      dependencies = {environments: _("environments"),
-                      hosts: _("hosts"),
-                      activation_keys: _("activation keys")
+      dependencies = { environments: _("environments"),
+                       hosts: _("hosts"),
+                       activation_keys: _("activation keys")
       }
 
       dependencies.each do |key, name|
         if (models = self.association(key).scope).any?
           errors << _("Cannot delete '%{view}' due to associated %{dependent}: %{names}.") %
-            {view: self.name, dependent: name, names: models.map(&:name).join(", ")}
+            { view: self.name, dependent: name, names: models.map(&:name).join(", ") }
         end
       end
 
@@ -704,7 +712,7 @@ module Katello
     def remove_repository(repository)
       filters.each do |filter_item|
         repo_exists = Repository.unscoped.joins(:filters).where(
-            ContentViewFilter.table_name => {:id => filter_item.id}, :id => repository.id).count
+          ContentViewFilter.table_name => { :id => filter_item.id }, :id => repository.id).count
         if repo_exists
           filter_item.repositories.delete(repository)
           filter_item.save!
