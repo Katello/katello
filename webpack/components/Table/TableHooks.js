@@ -144,6 +144,7 @@ export const useBulkSelect = ({
   initialArry = [],
   initialSearchQuery = '',
   idColumn = 'id',
+  filtersQuery = '',
   isSelectable,
 }) => {
   const { selectionSet: inclusionSet, ...selectOptions } =
@@ -207,7 +208,7 @@ export const useBulkSelect = ({
 
   const fetchBulkParams = (idColumnName = idColumn) => {
     const searchQueryWithExclusionSet = () => {
-      const query = [searchQuery,
+      const query = [searchQuery, filtersQuery,
         !isEmpty(exclusionSet) && `${idColumnName} !^ (${[...exclusionSet].join(',')})`];
       return query.filter(item => item).join(' and ');
     };
