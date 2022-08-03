@@ -56,6 +56,7 @@ import {
   cvDockerTagsCompareKey,
   cvDebPackagesCompareKey,
   filesCompareKey,
+  genericContentCompareKey,
 } from '../ContentViewsConstants';
 import api, { foremanApi, orgId } from '../../../services/api';
 import { getResponseErrorMsgs } from '../../../utils/helpers';
@@ -165,6 +166,18 @@ export const getFilesComparison = (versionOne, versionTwo, params) => {
     key: filesCompareKey(versionOne, versionTwo),
     params: apiParams,
     errorToast: error => __(`Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
+
+export const getContentComparison = (pluralLabel, versionOne, versionTwo, params) => {
+  const versions = { content_view_version_ids: [versionOne, versionTwo] };
+  const apiParams = { ...versions, ...params };
+  const apiUrl = `/${pluralLabel}/compare`;
+  return get({
+    key: genericContentCompareKey(pluralLabel, versionOne, versionTwo),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the content! ${getResponseErrorMsgs(error.response)}`),
     url: api.getApiUrl(apiUrl),
   });
 };

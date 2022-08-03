@@ -21,6 +21,8 @@ import {
   selectDebPackagesComparisonStatus,
   selectDockerTagsComparison,
   selectDockerTagsComparisonStatus,
+  selectGenericContentComparison,
+  selectGenericContentComparisonStatus,
 } from '../../ContentViewDetailSelectors';
 import {
   getPackageGroupsComparison,
@@ -30,7 +32,10 @@ import {
   getModuleStreamsComparison,
   getDebPackagesComparison,
   getDockerTagsComparison,
+  getContentComparison,
 } from '../../ContentViewDetailActions';
+
+import ContentConfig from '../../../../Content/ContentConfig';
 
 export const TableType = PropTypes.shape({
   name: PropTypes.string,
@@ -57,6 +62,7 @@ export default ({
     const {
       comparison,
     } = item;
+
     if (
       Number(comparison?.[0]) === Number(versionId)
       || Number(comparison?.[1]) === Number(versionId)) {
@@ -68,6 +74,7 @@ export default ({
       <TimesIcon style={{ color: '#6A6E73' }} />
     );
   };
+
   return ([
     {
       name: __('RPM packages'),
@@ -265,5 +272,25 @@ export default ({
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],
     },
+    ...ContentConfig.filter(config => !(config.names.pluralLabel === 'ostree_refs')).map(({
+      names: { pluralLowercase, pluralLabel, singularLabel },
+      columnHeaders,
+    }) => ({
+      name: pluralLowercase,
+      getCountKey: (itemVersionOne, itemVersionTwo) =>
+        itemVersionOne?.[`${singularLabel}_count`] || itemVersionTwo?.[`${singularLabel}_count`],
+      responseSelector: state =>
+        selectGenericContentComparison(state, versionOneId, versionTwoId, pluralLabel),
+      statusSelector: state =>
+        selectGenericContentComparisonStatus(state, versionOneId, versionTwoId, pluralLabel),
+      autocompleteEndpoint: `/${pluralLabel}/auto_complete_search`,
+      fetchItems: params =>
+        getContentComparison(pluralLabel, versionOneId, versionTwoId, params),
+      columnHeaders: [
+        ...columnHeaders,
+        { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
+        { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
+      ],
+    })),
   ]);
 };

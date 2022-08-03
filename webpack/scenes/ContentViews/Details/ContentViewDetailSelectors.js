@@ -44,6 +44,7 @@ import {
   cvDockerTagsCompareKey,
   cvDebPackagesCompareKey,
   filesCompareKey,
+  genericContentCompareKey,
 } from '../ContentViewsConstants';
 
 export const selectCVDetails = (state, cvId) =>
@@ -195,6 +196,18 @@ export const selectFilesComparisonStatus = (state, versionOne, versionTwo) =>
 
 export const selectFilesComparisonError = (state, versionOne, versionTwo) =>
   selectAPIError(state, filesCompareKey(versionOne, versionTwo));
+
+export const selectGenericContentComparison = (state, versionOne, versionTwo, pluralLabel) =>
+  selectAPIResponse(state, genericContentCompareKey(pluralLabel, versionOne, versionTwo))
+  || {};
+
+export const selectGenericContentComparisonStatus =
+  (state, versionOne, versionTwo, pluralLabel) =>
+    selectAPIStatus(state, genericContentCompareKey(pluralLabel, versionOne, versionTwo))
+    || STATUS.PENDING;
+
+export const selectGenericContentComparisonError = (state, versionOne, versionTwo, pluralLabel) =>
+  selectAPIError(state, genericContentCompareKey(pluralLabel, versionOne, versionTwo));
 
 export const selectCVFilterRules = (state, filterId) =>
   selectAPIResponse(state, cvFilterRulesKey(filterId));

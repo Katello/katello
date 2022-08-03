@@ -67,6 +67,7 @@ export const cvModuleStreamsCompareKey = (versionOne, versionTwo) => `${MODULE_S
 export const cvDebPackagesCompareKey = (versionOne, versionTwo) => `${DEB_PACKAGES_KEY}_COMPARE_${versionOne}_${versionTwo}`;
 export const cvDockerTagsCompareKey = (versionOne, versionTwo) => `${DOCKER_TAGS_KEY}_COMPARE_${versionOne}_${versionTwo}`;
 export const filesCompareKey = (versionOne, versionTwo) => `${FILES_KEY}_COMPARE_${versionOne}_${versionTwo}`;
+export const genericContentCompareKey = (pluralLabel, versionOne, versionTwo) => `${toUpper(pluralLabel)}_COMPARE_${versionOne}_${versionTwo}`;
 // Repo added to content view status display and key
 export const ADDED = __('Added');
 export const NOT_ADDED = __('Not added');
