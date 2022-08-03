@@ -79,6 +79,17 @@ export const ErrataTab = () => {
     __('Published date'),
   ];
 
+  const filtersQuery = () => {
+    const query = [];
+    if (errataTypeSelected !== ERRATA_TYPE) {
+      query.push(`type=${TYPES_TO_PARAM[errataTypeSelected]}`);
+    }
+    if (errataSeveritySelected !== ERRATA_SEVERITY) {
+      query.push(`severity=${SEVERITIES_TO_PARAM[errataSeveritySelected]}`);
+    }
+    return query.join(' and ');
+  };
+
   const fetchItems = useCallback(
     (params) => {
       if (!hostId) return hostIdNotReady;
@@ -112,6 +123,7 @@ export const ErrataTab = () => {
     results,
     metadata,
     idColumn: 'errata_id',
+    filtersQuery: filtersQuery(),
     isSelectable: result => result.installable,
     initialSearchQuery: searchParam || '',
   });
