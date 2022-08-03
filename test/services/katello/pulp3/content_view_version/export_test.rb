@@ -160,10 +160,17 @@ module Katello
             assert_match(/Specify an export chunk size less than 1_000_000 GB/, exception.message)
           end
 
-          def setup_environment
+          it "Generates Exporter path correctly" do
+            cvv = katello_content_view_versions(:library_view_solve_deps_version)
+            export = setup_environment(version: :library_view_solve_deps_version)
+            assert_includes export.generate_exporter_path, cvv.content_view.label
+            refute_includes export.generate_exporter_path, ' '
+          end
+
+          def setup_environment(version: :library_view_version_2)
             proxy = SmartProxy.pulp_primary
             SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
-            version = katello_content_view_versions(:library_view_version_2)
+            version = katello_content_view_versions(version)
             fetch_exporter(smart_proxy: proxy, content_view_version: version)
           end
         end
