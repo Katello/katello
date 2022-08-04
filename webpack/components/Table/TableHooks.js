@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { isEmpty } from 'lodash';
 import { useLocation } from 'react-router-dom';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { friendlySearchParam } from '../../utils/helpers';
 
 class ReactConnectedSet extends Set {
@@ -268,12 +269,15 @@ export const useUrlParams = () => {
 export const useTableSort = ({
   allColumns,
   columnsToSortParams,
-  initialSortColumnName = allColumns[0],
+  initialSortColumnName,
 }) => {
-  if (!Object.keys(columnsToSortParams).includes(initialSortColumnName)) {
-    throw new Error(`initialSortColumnName '${initialSortColumnName}' must also be defined in columnsToSortParams`);
+  const translatedInitialSortColumnName = initialSortColumnName
+    ? __(initialSortColumnName)
+    : allColumns[0];
+  if (!Object.keys(columnsToSortParams).includes(translatedInitialSortColumnName)) {
+    throw new Error(`translatedInitialSortColumnName '${translatedInitialSortColumnName}' must also be defined in columnsToSortParams`);
   }
-  const [activeSortColumn, setActiveSortColumn] = useState(initialSortColumnName);
+  const [activeSortColumn, setActiveSortColumn] = useState(translatedInitialSortColumnName);
   const [activeSortDirection, setActiveSortDirection] = useState('asc');
 
   // Patternfly sort function
