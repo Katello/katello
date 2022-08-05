@@ -12,6 +12,7 @@ import {
 } from '@patternfly/react-core';
 import CardTemplate from 'foremanReact/components/HostDetails/Templates/CardItem/CardTemplate';
 import { TranslatedPlural } from '../../../Table/components/TranslatedPlural';
+import { hostIsNotRegistered } from '../hostDetailsHelpers';
 
 const HostDisks = ({ totalDisks }) => {
   if (!totalDisks) return null;
@@ -32,6 +33,7 @@ HostDisks.defaultProps = {
 };
 
 const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
+  if (hostIsNotRegistered({ hostDetails })) return null;
   const { facts } = hostDetails || {};
   const model = facts?.['virt::host_type'];
   const cpuCount = facts?.['cpu::cpu(s)'];
