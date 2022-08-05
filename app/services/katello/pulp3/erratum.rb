@@ -55,12 +55,15 @@ module Katello
           bugzillas += build_bugzillas(katello_id, unit['references'])
           cves += build_cves(katello_id, unit['references'])
           packages += build_packages(katello_id, unit['pkglist'])
-          modules += build_modules(katello_id, unit['pkglist'])
         end
 
         Katello::ErratumBugzilla.insert_all(bugzillas, unique_by: [:erratum_id, :bug_id, :href]) if bugzillas.any?
         Katello::ErratumCve.insert_all(cves, unique_by: [:erratum_id, :cve_id, :href]) if cves.any?
         Katello::ErratumPackage.insert_all(packages, unique_by: [:erratum_id, :nvrea, :name, :filename]) if packages.any?
+        units.each do |unit|
+          katello_id = pulp_id_to_id[unit['id']]
+          modules += build_modules(katello_id, unit['pkglist'])
+        end
         ModuleStreamErratumPackage.insert_all(modules, unique_by: [:module_stream_id, :erratum_package_id]) if modules.any?
         nil
       end
