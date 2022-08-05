@@ -27,7 +27,7 @@ import { propsToCamelCase } from 'foremanReact/common/helpers';
 import './SystemPurposeCard.scss';
 import SystemPurposeEditModal from './SystemPurposeEditModal';
 import { selectHostDetailsStatus } from '../../HostDetailsSelectors';
-import { hasRequiredPermissions } from '../../hostDetailsHelpers';
+import { hasRequiredPermissions, hostIsNotRegistered } from '../../hostDetailsHelpers';
 
 const SystemPurposeCard = ({ hostDetails }) => {
   const showEditButton = hasRequiredPermissions(['edit_hosts'], hostDetails?.permissions);
@@ -56,6 +56,8 @@ const SystemPurposeCard = ({ hostDetails }) => {
       </GridItem>
     );
   }
+
+  if (hostIsNotRegistered({ hostDetails })) return null;
 
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
