@@ -32,7 +32,7 @@ import {
   getModuleStreamsComparison,
   getDebPackagesComparison,
   getDockerTagsComparison,
-  getContentComparison,
+  getGenericContentComparison,
 } from '../../ContentViewDetailActions';
 
 import ContentConfig from '../../../../Content/ContentConfig';
@@ -57,6 +57,7 @@ export default ({
   versionTwo,
   versionOneId,
   versionTwoId,
+  viewBy,
 }) => {
   const compareContent = (item, versionId) => {
     const {
@@ -80,12 +81,15 @@ export default ({
       name: __('RPM packages'),
       getCountKey: (itemVersionOne, itemVersionTwo) =>
         itemVersionOne?.rpm_count || itemVersionTwo?.rpm_count,
-      responseSelector: state => selectRPMPackagesComparison(state, versionOneId, versionTwoId),
-      statusSelector: state => selectRPMPackagesComparisonStatus(state, versionOneId, versionTwoId),
+      responseSelector: state =>
+        selectRPMPackagesComparison(state, versionOneId, versionTwoId, viewBy),
+      statusSelector: state =>
+        selectRPMPackagesComparisonStatus(state, versionOneId, versionTwoId, viewBy),
       autocompleteEndpoint: '/packages/auto_complete_search',
       fetchItems: params => getRPMPackagesComparison(
         versionOneId,
         versionTwoId,
+        viewBy,
         params,
       ),
       columnHeaders: [
@@ -108,11 +112,12 @@ export default ({
       name: __('RPM package groups'),
       getCountKey: (itemVersionOne, itemVersionTwo) =>
         itemVersionOne?.package_group_count || itemVersionTwo?.package_group_count,
-      responseSelector: state => selectPackageGroupsComparison(state, versionOneId, versionTwoId),
+      responseSelector: state =>
+        selectPackageGroupsComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>
-        selectPackageGroupsComparisonStatus(state, versionOneId, versionTwoId),
+        selectPackageGroupsComparisonStatus(state, versionOneId, versionTwoId, viewBy),
       autocompleteEndpoint: '/package_groups/auto_complete_search',
-      fetchItems: params => getPackageGroupsComparison(versionOneId, versionTwoId, params),
+      fetchItems: params => getPackageGroupsComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         { title: __('Name'), getProperty: item => item?.name },
         { title: __('Repository'), getProperty: item => item?.repository?.name },
@@ -124,10 +129,11 @@ export default ({
       name: __('Files'),
       getCountKey: (itemVersionOne, itemVersionTwo) =>
         itemVersionOne?.file_count || itemVersionTwo?.file_count,
-      responseSelector: state => selectFilesComparison(state, versionOneId, versionTwoId),
-      statusSelector: state => selectFilesComparisonStatus(state, versionOneId, versionTwoId),
+      responseSelector: state => selectFilesComparison(state, versionOneId, versionTwoId, viewBy),
+      statusSelector: state =>
+        selectFilesComparisonStatus(state, versionOneId, versionTwoId, viewBy),
       autocompleteEndpoint: '/files/auto_complete_search',
-      fetchItems: params => getFilesComparison(versionOneId, versionTwoId, params),
+      fetchItems: params => getFilesComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         {
           title: __('Name'),
@@ -145,10 +151,11 @@ export default ({
       name: __('Errata'),
       getCountKey: (itemVersionOne, itemVersionTwo) =>
         itemVersionOne?.erratum_count || itemVersionTwo?.erratum_count,
-      responseSelector: state => selectErrataComparison(state, versionOneId, versionTwoId),
-      statusSelector: state => selectErrataComparisonStatus(state, versionOneId, versionTwoId),
+      responseSelector: state => selectErrataComparison(state, versionOneId, versionTwoId, viewBy),
+      statusSelector: state =>
+        selectErrataComparisonStatus(state, versionOneId, versionTwoId, viewBy),
       autocompleteEndpoint: '/errata/auto_complete_search',
-      fetchItems: params => getErrataComparison(versionOneId, versionTwoId, params),
+      fetchItems: params => getErrataComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         {
           title: __('Errata ID'),
@@ -201,11 +208,12 @@ export default ({
       name: __('Module streams'),
       getCountKey: (itemVersionOne, itemVersionTwo) =>
         itemVersionOne?.module_stream_count || itemVersionTwo?.module_stream_count,
-      responseSelector: state => selectModuleStreamsComparison(state, versionOneId, versionTwoId),
+      responseSelector: state =>
+        selectModuleStreamsComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>
-        selectModuleStreamsComparisonStatus(state, versionOneId, versionTwoId),
+        selectModuleStreamsComparisonStatus(state, versionOneId, versionTwoId, viewBy),
       autocompleteEndpoint: '/module_streams/auto_complete_search',
-      fetchItems: params => getModuleStreamsComparison(versionOneId, versionTwoId, params),
+      fetchItems: params => getModuleStreamsComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         {
           title: __('Name'),
@@ -226,10 +234,12 @@ export default ({
       name: __('Deb packages'),
       getCountKey: (itemVersionOne, itemVersionTwo) =>
         itemVersionOne?.deb_count || itemVersionTwo?.deb_count,
-      responseSelector: state => selectDebPackagesComparison(state, versionOneId, versionTwoId),
-      statusSelector: state => selectDebPackagesComparisonStatus(state, versionOneId, versionTwoId),
+      responseSelector: state =>
+        selectDebPackagesComparison(state, versionOneId, versionTwoId, viewBy),
+      statusSelector: state =>
+        selectDebPackagesComparisonStatus(state, versionOneId, versionTwoId, viewBy),
       autocompleteEndpoint: '/debs/auto_complete_search',
-      fetchItems: params => getDebPackagesComparison(versionOneId, versionTwoId, params),
+      fetchItems: params => getDebPackagesComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         {
           title: __('Name'),
@@ -248,10 +258,12 @@ export default ({
       name: __('Container tags'),
       getCountKey: (itemVersionOne, itemVersionTwo) =>
         itemVersionOne?.docker_tag_count || itemVersionTwo?.docker_tag_count,
-      responseSelector: state => selectDockerTagsComparison(state, versionOneId, versionTwoId),
-      statusSelector: state => selectDockerTagsComparisonStatus(state, versionOneId, versionTwoId),
+      responseSelector: state =>
+        selectDockerTagsComparison(state, versionOneId, versionTwoId, viewBy),
+      statusSelector: state =>
+        selectDockerTagsComparisonStatus(state, versionOneId, versionTwoId, viewBy),
       autocompleteEndpoint: '/docker_tags/auto_complete_search',
-      fetchItems: params => getDockerTagsComparison(versionOneId, versionTwoId, params),
+      fetchItems: params => getDockerTagsComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         {
           title: __('Name'),
@@ -280,12 +292,18 @@ export default ({
       getCountKey: (itemVersionOne, itemVersionTwo) =>
         itemVersionOne?.[`${singularLabel}_count`] || itemVersionTwo?.[`${singularLabel}_count`],
       responseSelector: state =>
-        selectGenericContentComparison(state, versionOneId, versionTwoId, pluralLabel),
+        selectGenericContentComparison(state, versionOneId, versionTwoId, pluralLabel, viewBy),
       statusSelector: state =>
-        selectGenericContentComparisonStatus(state, versionOneId, versionTwoId, pluralLabel),
+        selectGenericContentComparisonStatus(
+          state,
+          versionOneId,
+          versionTwoId,
+          pluralLabel,
+          viewBy,
+        ),
       autocompleteEndpoint: `/${pluralLabel}/auto_complete_search`,
       fetchItems: params =>
-        getContentComparison(pluralLabel, versionOneId, versionTwoId, params),
+        getGenericContentComparison(pluralLabel, versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         ...columnHeaders,
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },

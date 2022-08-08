@@ -17,7 +17,7 @@ const CVVersionCompareTable = ({
     fetchItems,
     columnHeaders,
     disableSearch,
-  }, versionOne, versionTwo, currentActiveKey,
+  }, versionOne, versionTwo, currentActiveKey, selectedViewBy,
 }) => {
   const [searchQuery, updateSearchQuery] = useState('');
 
@@ -36,7 +36,7 @@ const CVVersionCompareTable = ({
       }}
       ouiaId="content-view-version-comparison-table"
       fetchItems={fetchItems}
-      additionalListeners={[versionOne, versionTwo, currentActiveKey]}
+      additionalListeners={[versionOne, versionTwo, currentActiveKey, selectedViewBy]}
       emptySearchTitle={__(`Your search returned no matching ${name}.`)}
       emptySearchBody={__('Try changing your search criteria.')}
       emptyContentTitle={__(`No matching ${name} found.`)}
@@ -68,6 +68,7 @@ CVVersionCompareTable.propTypes = {
   versionOne: PropTypes.string.isRequired,
   versionTwo: PropTypes.string.isRequired,
   currentActiveKey: PropTypes.string.isRequired,
+  selectedViewBy: PropTypes.string.isRequired,
 };
 
 export default CVVersionCompareTable;

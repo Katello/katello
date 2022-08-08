@@ -10,18 +10,24 @@ import cvVersionsData from './contentViewVersions.fixtures.json';
 import cvDetailsData from './contentViewDetails.fixtures.json';
 import environmentPathsData from '../../../../Publish/__tests__/environmentPaths.fixtures.json';
 import CVVersionCompare from '../CVVersionCompare';
-import cvVersionRPMPackagesCompareData from './CVVersionRPMPackagesCompareData.fixtures.json';
-import cvVersionErrataCompareData from './CVVersionErrataCompareData.fixtures.json';
-import cvVersionPackageGroupsCompareData from './CVVersionPackageGroupsCompareData.fixtures.json';
-import cvVersionFilesCompareData from './CVVersionFilesCompareData.fixtures.json';
-import cvVersionModuleStreamsCompareData from './CVVersionModuleStreamsCompareData.fixtures.json';
-import cvVersionDebPackagesCompareData from './CVVersionDebPackagesCompareData.fixtures.json';
-import cvVersionContainerTagsCompareData from './CVVersionContainerTagsCompareData.fixtures.json';
+import cvVersionRPMPackagesCompareAllContentData from './RPMPackagesCompareAllContentData.fixtures.json';
+import cvVersionErrataCompareAllContentData from './ErrataCompareAllContentData.fixtures.json';
+import cvVersionPackageGroupsCompareAllContentData from './PackageGroupsCompareAllContentData.fixtures.json';
+import cvVersionFilesCompareAllContentData from './FilesCompareAllContentData.fixtures.json';
+import cvVersionModuleStreamsCompareAllContentData from './ModuleStreamsCompareAllContentData.fixtures.json';
+import cvVersionDebPackagesCompareAllContentData from './DebPackagesCompareAllContentData.fixtures.json';
+import cvVersionContainerTagsCompareAllContentData from './ContainerTagsCompareAllContentData.fixtures.json';
+import cvVersionPythonPackagesCompareAllContentData from './PythonPackagesCompareAllContentData.fixtures.json';
+import cvVersionAnsibleCollectionsCompareAllContentData from './AnsibleCollectionsCompareAllContentData.fixtures.json';
+import cvVersionRPMPackagesCompareThreeContentTypesData from './RPMPackagesCompareThreeContentTypesData.fixtures.json';
+import cvVersionFilesCompareThreeContentTypesData from './FilesCompareThreeContentTypesData.fixtures.json';
+import cvVersionErrataCompareThreeContentTypesData from './ErrataCompareThreeContentTypesData.fixtures.json';
 import versionOneDetailsData from './contentViewVersionOneDetials.fixtures.json';
 import versionTwoDetailsData from './contentViewVersionTwoDetails.fixtures.json';
 import versionThreeDetailsData from './contentViewVersionThreeDetails.fixtures.json';
 import emptyStateVersionOneData from './emptyStateCVVersionOneDetails.fixtures.json';
 import empptyStateVersionTwoData from './emptyStateCVVersionTwoDetails.fixtures.json';
+import cvVersionEmptyContent from './CVVersionEmptyContentCompareData.fixtures.json';
 
 const cvVersions = api.getApiUrl('/content_view_versions');
 const cvDetails = api.getApiUrl('/content_views/4');
@@ -62,13 +68,13 @@ const versionIdsThreeContentTypes = {
 };
 
 const versionLabelsAllContentTypes = {
-  versionOneLabel: '4',
-  versionTwoLabel: '6',
+  versionOneLabel: '4.0',
+  versionTwoLabel: '6.0',
 };
 
 const versionLabelsThreeContentTypes = {
-  versionOneLabel: '3',
-  versionTwoLabel: '4',
+  versionOneLabel: '3.0',
+  versionTwoLabel: '4.0',
 };
 beforeEach(() => {
   envScope = nockInstance
@@ -87,93 +93,92 @@ const testConfigAllContentTypes = [
     countKey: 'rpm_count',
     autoCompleteUrl: '/packages/auto_complete_search',
     dataUrl: api.getApiUrl('/packages/compare'),
-    data: cvVersionRPMPackagesCompareData,
+    data: cvVersionRPMPackagesCompareAllContentData,
     textQuery: [
-      head(cvVersionRPMPackagesCompareData.results).nvrea,
-      last(cvVersionRPMPackagesCompareData.results).nvrea],
+      head(cvVersionRPMPackagesCompareAllContentData.results).nvrea,
+      last(cvVersionRPMPackagesCompareAllContentData.results).nvrea],
   },
   {
     name: 'RPM package groups',
     countKey: 'package_group_count',
     autoCompleteUrl: '/package_groups/auto_complete_search',
     dataUrl: api.getApiUrl('/package_groups/compare'),
-    data: cvVersionPackageGroupsCompareData,
+    data: cvVersionPackageGroupsCompareAllContentData,
     textQuery: [
-      head(cvVersionPackageGroupsCompareData.results).name,
-      last(cvVersionPackageGroupsCompareData.results).name],
+      head(cvVersionPackageGroupsCompareAllContentData.results).name,
+      last(cvVersionPackageGroupsCompareAllContentData.results).name],
   },
   {
     name: 'Files',
     countKey: 'file_count',
     autoCompleteUrl: '/files/auto_complete_search',
     dataUrl: api.getApiUrl('/files/compare'),
-    data: cvVersionFilesCompareData,
+    data: cvVersionFilesCompareAllContentData,
     textQuery: [
-      head(cvVersionFilesCompareData.results).name,
-      last(cvVersionFilesCompareData.results).name],
+      head(cvVersionFilesCompareAllContentData.results).name,
+      last(cvVersionFilesCompareAllContentData.results).name],
   },
   {
     name: 'Errata',
     countKey: 'erratum_count',
     autoCompleteUrl: '/errata/auto_complete_search',
     dataUrl: api.getApiUrl('/errata/compare'),
-    data: cvVersionErrataCompareData,
+    data: cvVersionErrataCompareAllContentData,
     textQuery: [
-      head(cvVersionErrataCompareData.results).name,
-      last(cvVersionErrataCompareData.results).name],
+      head(cvVersionErrataCompareAllContentData.results).name,
+      last(cvVersionErrataCompareAllContentData.results).name],
   },
   {
     name: 'Module streams',
     countKey: 'module_stream_count',
     autoCompleteUrl: '/module_streams/auto_complete_search',
     dataUrl: api.getApiUrl('/module_streams/compare'),
-    data: cvVersionModuleStreamsCompareData,
+    data: cvVersionModuleStreamsCompareAllContentData,
     textQuery: [
-      head(cvVersionModuleStreamsCompareData.results).name,
-      last(cvVersionModuleStreamsCompareData.results).name],
+      head(cvVersionModuleStreamsCompareAllContentData.results).name,
+      last(cvVersionModuleStreamsCompareAllContentData.results).name],
   },
   {
     name: 'Deb packages',
     countKey: 'deb_count',
     autoCompleteUrl: '/debs/auto_complete_search',
     dataUrl: api.getApiUrl('/debs/compare'),
-    data: cvVersionDebPackagesCompareData,
+    data: cvVersionDebPackagesCompareAllContentData,
     textQuery: [
-      head(cvVersionDebPackagesCompareData.results).name,
-      last(cvVersionDebPackagesCompareData.results).name],
+      head(cvVersionDebPackagesCompareAllContentData.results).name,
+      last(cvVersionDebPackagesCompareAllContentData.results).name],
   },
   {
     name: 'Container tags',
     countKey: 'docker_tag_count',
     autoCompleteUrl: '/docker_tags/auto_complete_search',
     dataUrl: api.getApiUrl('/docker_tags/compare'),
-    data: cvVersionContainerTagsCompareData,
+    data: cvVersionContainerTagsCompareAllContentData,
     textQuery: [
-      head(cvVersionContainerTagsCompareData.results).name,
-      last(cvVersionContainerTagsCompareData.results).name],
+      head(cvVersionContainerTagsCompareAllContentData.results).name,
+      last(cvVersionContainerTagsCompareAllContentData.results).name],
   },
   {
     name: 'Python packages',
     countKey: 'python_package_count',
     autoCompleteUrl: '/python_packages/auto_complete_search',
     dataUrl: api.getApiUrl('/python_packages/compare'),
-    data: cvVersionContainerTagsCompareData,
+    data: cvVersionPythonPackagesCompareAllContentData,
     textQuery: [
-      head(cvVersionContainerTagsCompareData.results).name,
-      last(cvVersionContainerTagsCompareData.results).name],
+      head(cvVersionPythonPackagesCompareAllContentData.results).name,
+      last(cvVersionPythonPackagesCompareAllContentData.results).name],
   },
   {
     name: 'Ansible collections',
     countKey: 'ansible_collection_count',
     autoCompleteUrl: '/ansible_collections/auto_complete_search',
     dataUrl: api.getApiUrl('/ansible_collections/compare'),
-    data: cvVersionContainerTagsCompareData,
+    data: cvVersionAnsibleCollectionsCompareAllContentData,
     textQuery: [
-      head(cvVersionContainerTagsCompareData.results).name,
-      last(cvVersionContainerTagsCompareData.results).name],
+      head(cvVersionAnsibleCollectionsCompareAllContentData.results).name,
+      last(cvVersionAnsibleCollectionsCompareAllContentData.results).name],
   },
 ];
-
 
 const testConfigThreeContentTypes = [
   {
@@ -181,33 +186,93 @@ const testConfigThreeContentTypes = [
     countKey: 'rpm_count',
     autoCompleteUrl: '/packages/auto_complete_search',
     dataUrl: api.getApiUrl('/packages/compare'),
-    data: cvVersionRPMPackagesCompareData,
+    data: cvVersionRPMPackagesCompareThreeContentTypesData,
     textQuery: [
-      head(cvVersionRPMPackagesCompareData.results).nvrea,
-      last(cvVersionRPMPackagesCompareData.results).nvrea],
+      head(cvVersionRPMPackagesCompareThreeContentTypesData.results).nvrea,
+      last(cvVersionRPMPackagesCompareThreeContentTypesData.results).nvrea],
   },
   {
     name: 'Errata',
     countKey: 'erratum_count',
     autoCompleteUrl: '/errata/auto_complete_search',
     dataUrl: api.getApiUrl('/errata/compare'),
-    data: cvVersionErrataCompareData,
+    data: cvVersionErrataCompareThreeContentTypesData,
     textQuery: [
-      head(cvVersionErrataCompareData.results).name,
-      last(cvVersionErrataCompareData.results).name],
+      head(cvVersionErrataCompareThreeContentTypesData.results).name,
+      last(cvVersionErrataCompareThreeContentTypesData.results).name],
   },
   {
     name: 'Files',
     countKey: 'file_count',
     autoCompleteUrl: '/files/auto_complete_search',
     dataUrl: api.getApiUrl('/files/compare'),
-    data: cvVersionFilesCompareData,
+    data: cvVersionFilesCompareThreeContentTypesData,
     textQuery: [
-      head(cvVersionFilesCompareData.results).name,
-      last(cvVersionFilesCompareData.results).name],
+      head(cvVersionFilesCompareThreeContentTypesData.results).name,
+      last(cvVersionFilesCompareThreeContentTypesData.results).name],
+  },
+];
+const emptyContentViewByText = contentType => `No matching ${contentType} found.`;
+
+const testConfigViewByDifferent = [
+  {
+    name: 'RPM packages',
+    countKey: 'rpm_count',
+    autoCompleteUrl: '/packages/auto_complete_search',
+    dataUrl: api.getApiUrl('/packages/compare'),
+    data: cvVersionEmptyContent,
+    textQuery: emptyContentViewByText('RPM packages'),
+  },
+  {
+    name: 'Errata',
+    countKey: 'erratum_count',
+    autoCompleteUrl: '/errata/auto_complete_search',
+    dataUrl: api.getApiUrl('/errata/compare'),
+    data: cvVersionEmptyContent,
+    textQuery: emptyContentViewByText('Errata'),
+  },
+  {
+    name: 'Files',
+    countKey: 'file_count',
+    autoCompleteUrl: '/files/auto_complete_search',
+    dataUrl: api.getApiUrl('/files/compare'),
+    data: cvVersionFilesCompareThreeContentTypesData,
+    textQuery: [
+      head(cvVersionFilesCompareThreeContentTypesData.results).name,
+      last(cvVersionFilesCompareThreeContentTypesData.results).name],
   },
 ];
 
+const testConfigViewBySame = [
+  {
+    name: 'RPM packages',
+    countKey: 'rpm_count',
+    autoCompleteUrl: '/packages/auto_complete_search',
+    dataUrl: api.getApiUrl('/packages/compare'),
+    data: cvVersionRPMPackagesCompareThreeContentTypesData,
+    textQuery: [
+      head(cvVersionRPMPackagesCompareThreeContentTypesData.results).nvrea,
+      last(cvVersionRPMPackagesCompareThreeContentTypesData.results).nvrea],
+  },
+  {
+    name: 'Errata',
+    countKey: 'erratum_count',
+    autoCompleteUrl: '/errata/auto_complete_search',
+    dataUrl: api.getApiUrl('/errata/compare'),
+    data: cvVersionErrataCompareThreeContentTypesData,
+    textQuery: [
+      head(cvVersionErrataCompareThreeContentTypesData.results).name,
+      last(cvVersionErrataCompareThreeContentTypesData.results).name],
+  },
+  {
+    name: 'Files',
+    countKey: 'file_count',
+    autoCompleteUrl: '/files/auto_complete_search',
+    dataUrl: api.getApiUrl('/files/compare'),
+    data: cvVersionEmptyContent,
+    textQuery: emptyContentViewByText('Files'),
+  },
+];
 
 test('Can make an API call and show comparison of two versions with all content types', async (done) => {
   const autoCompleteContentTypesScope = testConfigAllContentTypes.map(({ autoCompleteUrl }) =>
@@ -391,7 +456,6 @@ test('Can select two versions and click compare button', async (done) => {
   act(done);
 });
 
-
 test('Can select two versions with no content and click compare button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay');
@@ -438,6 +502,155 @@ test('Can select two versions with no content and click compare button', async (
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(scopeCVDetails);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
+  act(done);
+});
+
+test('Can select viewing by "Different" in the dropdown and see the content in either of the versions but not both', async (done) => {
+  const autoCompleteContentTypesScope = testConfigViewByDifferent.map(({ autoCompleteUrl }) =>
+    mockAutocomplete(nockInstance, autoCompleteUrl));
+  const scopeContentTypes = testConfigViewByDifferent.map(({ dataUrl, data }) =>
+    nockInstance.persist().get(dataUrl).query(true).reply(200, data));
+  const scopeCVDetails = nockInstance
+    .get(cvDetails)
+    .query(true)
+    .reply(200, cvDetailsData);
+  const scopeVersionOneDetails = nockInstance
+    .get(versionDetails(14))
+    .query(true)
+    .reply(200, versionThreeDetailsData);
+  const scopeVersionTwoDetails = nockInstance
+    .get(versionDetails(15))
+    .query(true)
+    .reply(200, versionOneDetailsData);
+  const {
+    queryByText,
+    queryAllByText,
+    getByLabelText,
+    getByText,
+  } = renderWithRedux(
+    withCVRoute(<CVVersionCompare
+      cvId={4}
+      versionIds={versionIdsThreeContentTypes}
+      versionLabels={versionLabelsThreeContentTypes}
+    />),
+    renderOptions,
+  );
+
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 3);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 3);
+
+  // Nothing will show at first, page is loading
+  expect(queryByText(`Version ${versionLabelsThreeContentTypes.versionOneLabel}`)).toBeNull();
+  expect(queryByText(`Version ${versionLabelsThreeContentTypes.versionTwoLabel}`)).toBeNull();
+
+  // Assert that the CV version is now showing on the screen, but wait for it to appear.
+  await patientlyWaitFor(() => {
+    expect(getByText(`Version ${versionLabelsThreeContentTypes.versionOneLabel}`)).toBeTruthy();
+  });
+
+  await patientlyWaitFor(() => {
+    expect(getByText(`Version ${versionLabelsThreeContentTypes.versionTwoLabel}`)).toBeTruthy();
+  });
+
+  fireEvent.click(getByText('All'));
+  await patientlyWaitFor(() => {
+    expect(getByLabelText('View by Different')).toBeTruthy();
+  });
+  fireEvent.click(getByLabelText('View by Different'));
+
+  await patientlyWaitFor(() => {
+    testConfigViewByDifferent.forEach(({ name }) => {
+      expect(queryByText(name)).toBeTruthy();
+    });
+    expect(getByText('No matching RPM packages found.')).toBeTruthy();
+    (testConfigViewByDifferent.find(({ name }) => name === 'Files')).textQuery.forEach(query => expect(queryAllByText(query)).toBeTruthy());
+  });
+
+  fireEvent.click(getByText('Errata'));
+  await patientlyWaitFor(() => {
+    expect(getByText('No matching Errata found.')).toBeTruthy();
+  });
+
+  assertNockRequest(scopeCVDetails);
+  assertNockRequest(scopeVersionOneDetails);
+  assertNockRequest(scopeVersionTwoDetails);
+  scopeContentTypes.map(cv => assertNockRequest(cv));
+  autoCompleteContentTypesScope.map(cv => assertNockRequest(cv));
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
+  act(done);
+});
+
+test('Can select viewing by "Same" in the dropdown and see the content in common for any two versions', async (done) => {
+  const autoCompleteContentTypesScope = testConfigViewBySame.map(({ autoCompleteUrl }) =>
+    mockAutocomplete(nockInstance, autoCompleteUrl));
+  const scopeContentTypes = testConfigViewBySame.map(({ dataUrl, data }) =>
+    nockInstance.persist().get(dataUrl).query(true).reply(200, data));
+  const scopeCVDetails = nockInstance
+    .get(cvDetails)
+    .query(true)
+    .reply(200, cvDetailsData);
+  const scopeVersionOneDetails = nockInstance
+    .get(versionDetails(14))
+    .query(true)
+    .reply(200, versionThreeDetailsData);
+  const scopeVersionTwoDetails = nockInstance
+    .get(versionDetails(15))
+    .query(true)
+    .reply(200, versionOneDetailsData);
+  const {
+    queryByText,
+    queryAllByText,
+    getByLabelText,
+    getByText,
+  } = renderWithRedux(
+    withCVRoute(<CVVersionCompare
+      cvId={4}
+      versionIds={versionIdsThreeContentTypes}
+      versionLabels={versionLabelsThreeContentTypes}
+    />),
+    renderOptions,
+  );
+
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 3);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 3);
+
+
+  expect(queryByText(`Version ${versionLabelsThreeContentTypes.versionOneLabel}`)).toBeNull();
+  expect(queryByText(`Version ${versionLabelsThreeContentTypes.versionTwoLabel}`)).toBeNull();
+
+  await patientlyWaitFor(() => {
+    expect(getByText(`Version ${versionLabelsThreeContentTypes.versionOneLabel}`)).toBeTruthy();
+  });
+  await patientlyWaitFor(() => {
+    expect(getByText(`Version ${versionLabelsThreeContentTypes.versionTwoLabel}`)).toBeTruthy();
+  });
+  fireEvent.click(getByText('All'));
+  await patientlyWaitFor(() => {
+    expect(getByLabelText('View by Same')).toBeTruthy();
+  });
+  fireEvent.click(getByLabelText('View by Same'));
+  await patientlyWaitFor(() => {
+    testConfigViewBySame.forEach(({ name }) => {
+      expect(queryByText(name)).toBeTruthy();
+    });
+    (testConfigViewBySame.filter(({ name }) => !(name === 'Files'))).forEach(({ textQuery }) => {
+      textQuery.forEach(query => expect(queryAllByText(query)).toBeTruthy());
+    });
+  });
+
+  expect(getByText('Files')).toBeTruthy();
+  fireEvent.click(getByText('Files'));
+  await patientlyWaitFor(() => {
+    expect(getByText('No matching Files found.')).toBeTruthy();
+  });
+  assertNockRequest(scopeCVDetails);
+  assertNockRequest(scopeVersionOneDetails);
+  assertNockRequest(scopeVersionTwoDetails);
+  scopeContentTypes.map(cv => assertNockRequest(cv));
+  autoCompleteContentTypesScope.map(cv => assertNockRequest(cv));
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
   act(done);

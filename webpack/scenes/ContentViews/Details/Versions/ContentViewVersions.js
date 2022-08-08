@@ -83,8 +83,8 @@ const ContentViewVersions = ({ cvId, details }) => {
       > {__('Publish new version')}
       </Button>);
 
-  const versionOneId = String([...selectionSet][0]);
-  const versionTwoId = String([...selectionSet][1]);
+  const versionOneId = String([...selectionSet].sort()[0]);
+  const versionTwoId = String([...selectionSet].sort()[1]);
   const fetchItems = useCallback((params) => {
     selectionSet.clear();
     return getContentViewVersions(cvId, params);
