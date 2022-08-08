@@ -20,7 +20,7 @@
     <tbody>
       <tr bst-table-row ng-repeat="contentView in table.rows">
         <td bst-table-cell>
-          <a ui-sref="content-view.versions({contentViewId: contentView.id})">
+          <a href="/content_views/{{contentView.id}}">
             {{ contentView.name }}
           </a>
         </td>
