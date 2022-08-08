@@ -25,6 +25,7 @@ module Actions
       @repo.reload
 
       @repo_mapping = { [@repo] => { :dest_repo => @repo_clone, :filters => [] } }
+      ::Katello::Pulp3::Repository.any_instance.stubs(:fail_missing_publication).returns(nil)
     end
 
     def test_metadata_generation_with_changed_checksum_type
