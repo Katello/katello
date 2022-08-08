@@ -456,7 +456,6 @@ test('Can select two versions and click compare button', async (done) => {
   act(done);
 });
 
-
 test('Can select two versions with no content and click compare button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay');
@@ -566,10 +565,13 @@ test('Can select viewing by "Different" in the dropdown and see the content in e
       expect(queryByText(name)).toBeTruthy();
     });
     expect(getByText('No matching RPM packages found.')).toBeTruthy();
-    // expect(getByText('No matching Errata found.')).toBeTruthy();
     (testConfigViewByDifferent.find(({ name }) => name === 'Files')).textQuery.forEach(query => expect(queryAllByText(query)).toBeTruthy());
   });
 
+  fireEvent.click(getByText('Errata'));
+  await patientlyWaitFor(() => {
+    expect(getByText('No matching Errata found.')).toBeTruthy();
+  });
 
   assertNockRequest(scopeCVDetails);
   assertNockRequest(scopeVersionOneDetails);
@@ -639,9 +641,11 @@ test('Can select viewing by "Same" in the dropdown and see the content in common
     });
   });
 
-  // await patientlyWaitFor(() => {
-  //   expect(getByText('No matching Files found.')).toBeTruthy();
-  // });
+  expect(getByText('Files')).toBeTruthy();
+  fireEvent.click(getByText('Files'));
+  await patientlyWaitFor(() => {
+    expect(getByText('No matching Files found.')).toBeTruthy();
+  });
   assertNockRequest(scopeCVDetails);
   assertNockRequest(scopeVersionOneDetails);
   assertNockRequest(scopeVersionTwoDetails);

@@ -89,9 +89,7 @@ const CVVersionCompareHeader = ({
         <Flex>
           <FlexItem>
             <Flex direction={{ default: 'column' }}>
-              <TextContent>
-                <Text ouiaId="versions-to-compare-text" component={TextVariants.h4}>{__('Versions to compare')}</Text>
-              </TextContent>
+              <h3><b>{__('Versions to compare')}</b></h3>
               <FlexItem>
                 <Flex>
                   <FlexItem>
@@ -118,7 +116,7 @@ const CVVersionCompareHeader = ({
                     </Select>
                   </FlexItem>
                   <FlexItem>
-                    <TextContent style={{ margin: '10px' }}>
+                    <TextContent style={{ marginRight: '10px' }}>
                       <Text ouiaId="to-text" component={TextVariants.h4}>{__('to')}</Text>
                     </TextContent>
                   </FlexItem>
@@ -150,11 +148,7 @@ const CVVersionCompareHeader = ({
           </FlexItem >
           <FlexItem style={{ marginLeft: '60px' }}>
             <Flex direction={{ default: 'column' }}>
-              <FlexItem>
-                <TextContent>
-                  <Text component={TextVariants.h4}>{__('View by')}</Text>
-                </TextContent>
-              </FlexItem>
+              <h3><b>{__('View by')}</b></h3>
               <FlexItem>
                 <Select
                   style={{ marginRight: '10px' }}

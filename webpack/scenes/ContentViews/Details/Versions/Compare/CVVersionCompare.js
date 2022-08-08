@@ -41,7 +41,7 @@ const CVVersionCompare = ({
     versionTwoId: String(getIdFromVersion(versionTwo)),
     viewBy: selectedViewBy.toLowerCase(),
   });
-  // console.log(tableConfigs);
+
   const filteredTableConfigs = tableConfigs.filter(({ getCountKey }) =>
     !!getCountKey(versionOneDetails, versionTwoDetails));
   const versionOneDetailsStatus = useSelector(state =>
