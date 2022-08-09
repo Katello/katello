@@ -1,5 +1,5 @@
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, $state, translate, Notification, repository, DownloadPolicy, YumContentUnits, HttpProxy, HttpProxyPolicy, RepositoryTypesService;
+    var $scope, $state, translate, Notification, repository, DownloadPolicy, YumContentUnits, Repository, HttpProxy, HttpProxyPolicy, RepositoryTypesService;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -125,8 +125,9 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect(Notification.setSuccessMessage).toHaveBeenCalledWith('Repository Saved.');
     });
 
-    it('should clear out auth fields on save if blank', function() {
-      var repo = new Repository({
+    it('should clear out auth fields on save if blank', inject(function($injector) {
+        var Repository = $injector.get('MockResource').$new(),
+        repo = new Repository({
         upstream_username: '',
         upstream_password: '',
         upstream_authentication_token: '',
@@ -141,10 +142,11 @@ describe('Controller: RepositoryDetailsInfoController', function() {
       expect(repo.upstream_authentication_token).toBe(null);
       expect(repo.ansible_collection_auth_token).toBe(null);
       expect(repo.ansible_collection_auth_url).toBe(null);
-    });
+    }));
 
-  it('should not clear out auth fields on save if not blank', function() {
-    var repo = new Repository({
+    it('should not clear out auth fields on save if not blank', inject(function($injector) {
+      var Repository = $injector.get('MockResource').$new(),
+      repo = new Repository({
       upstream_username: 'upstream',
       upstream_password: 'passwd',
       upstream_authentication_token: 'token',
@@ -159,7 +161,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     expect(repo.upstream_authentication_token).not.toBe(null);
     expect(repo.ansible_collection_auth_token).not.toBe(null);
     expect(repo.ansible_collection_auth_url).not.toBe(null);
-  });
+  }));
 
     it('should fail to save the repository', function() {
         spyOn(Notification, 'setErrorMessage');
