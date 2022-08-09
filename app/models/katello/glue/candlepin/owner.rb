@@ -30,7 +30,6 @@ module Katello
       def owner_details
         @owner_details ||= find_owner
         @owner_details['virt_who'] ||= self.subscriptions.using_virt_who.any?
-
         @owner_details
       end
 
