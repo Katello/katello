@@ -46,6 +46,10 @@ import {
   userPermissionsFromHostDetails,
 } from '../../hostDetailsHelpers';
 
+export const hideModuleStreamsTab = ({ hostDetails }) => {
+  const osMatch = hostDetails?.operatingsystem_name?.match(/(\w+) (\d+)/);
+  return !(osMatch && osMatch[1].match(/RedHat|CentOS/i) && Number(osMatch[2]) > 7);
+};
 
 const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
   switch (true) {
