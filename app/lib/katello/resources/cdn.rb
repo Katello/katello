@@ -42,13 +42,18 @@ module Katello
 
           if options[:ssl_ca_cert].present?
             begin
-              ca_cert = OpenSSL::X509::Certificate.new(options[:ssl_ca_cert])
+              @cert_store = OpenSSL::X509::Store.new
+              delimiter = "-----END CERTIFICATE-----"
+              ca_bundle = options[:ssl_ca_cert].split(delimiter)
+              ca_bundle.each do |ca_bundle_split|
+                ca_bundle_split += delimiter
+                ca_cert = OpenSSL::X509::Certificate.new(ca_bundle_split)
+                @cert_store.add_cert(ca_cert)
+              end
             rescue
               raise _("Invalid SSL CA certificate given for CDN")
             end
 
-            @cert_store = OpenSSL::X509::Store.new
-            @cert_store.add_cert(ca_cert)
           end
 
           @url = url
