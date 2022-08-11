@@ -20,6 +20,7 @@ const baseHostDetails = {
     purpose_usage: 'Production',
     service_level: 'Premium',
     release_version: '8',
+    uuid: '12345',
   },
 };
 
