@@ -91,6 +91,7 @@ module Actions
           if finish_limit < DateTime.now
             fail _("Host did not finish content action in %s seconds.  The task has been cancelled.") % finish_timeout
           end
+          suspend
         end
       end
 
