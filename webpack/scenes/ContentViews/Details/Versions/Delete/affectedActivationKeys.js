@@ -59,14 +59,14 @@ const AffectedActivationKeys = ({
       variant={TableVariant.compact}
     >
       <Thead>
-        <Tr>
+        <Tr ouiaId="affected-activation-keys-header">
           {columnHeaders.map(col =>
             <Th key={col}>{col}</Th>)}
         </Tr>
       </Thead>
       <Tbody>
         {results?.map(({ name, id, environment }) => (
-          <Tr key={`${id}`}>
+          <Tr ouiaId={`${id}`} key={`${id}`}>
             <Td>
               <a rel="noreferrer" target="_blank" href={urlBuilder(`activation_keys/${id}`, '')}>{name}</a>
             </Td>

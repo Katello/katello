@@ -211,7 +211,7 @@ const ContentViewComponents = ({ cvId, details }) => {
   ];
 
   const dropdownItems = [
-    <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!(bulkRemoveEnabled())} component="button" onClick={removeBulk}>
+    <DropdownItem ouiaId="bulk-remove" aria-label="bulk_remove" key="bulk_remove" isDisabled={!(bulkRemoveEnabled())} component="button" onClick={removeBulk}>
       {__('Remove')}
     </DropdownItem>,
   ];
@@ -281,6 +281,7 @@ const ContentViewComponents = ({ cvId, details }) => {
                       toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
                       isOpen={bulkActionOpen}
                       isPlain
+                      ouiaId="cv-components-bulk-actions"
                       dropdownItems={dropdownItems}
                     />
                   </ActionListItem>

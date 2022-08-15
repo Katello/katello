@@ -90,7 +90,7 @@ const ContentViewFilterDetailsHeader = ({
             <RepoIcon type={repositoryType} />
           </SplitItem>
           <SplitItem>
-            <Text component={TextVariants.p}>
+            <Text ouiaId={`text-${displayedType()}`} component={TextVariants.p}>
               {displayedType()}
             </Text>
           </SplitItem>

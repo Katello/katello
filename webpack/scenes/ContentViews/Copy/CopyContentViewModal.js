@@ -18,6 +18,7 @@ const CopyContentViewModal = ({
   return (
     <Modal
       title="Copy content view"
+      ouiaId="copy-content-view-modal"
       variant={ModalVariant.small}
       isOpen={show}
       description={description}

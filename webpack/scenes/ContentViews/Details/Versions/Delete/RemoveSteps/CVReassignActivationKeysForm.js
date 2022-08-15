@@ -102,6 +102,7 @@ const CVReassignActivationKeysForm = () => {
             id="selectCV"
             name="selectCV"
             aria-label="selectCV"
+            ouiaId="selectCV"
             placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
           >
             {cvSelectOptions}

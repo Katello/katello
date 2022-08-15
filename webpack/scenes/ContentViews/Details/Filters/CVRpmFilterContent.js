@@ -157,7 +157,12 @@ const CVRpmFilterContent = ({
       </Button>);
 
   return (
-    <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
+    <Tabs
+      className="margin-0-24"
+      ouiaId="cv-rpm-filter-content-tabs"
+      activeKey={activeTabKey}
+      onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
+    >
       <Tab eventKey={0} title={<TabTitleText>{tabTitle}</TabTitleText>}>
         <div className="margin-24-0">
           <TableWrapper

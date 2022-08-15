@@ -90,6 +90,7 @@ const ComponentContentViewAddModal = ({
       title={componentId ? __('Update version') : __('Add content view')}
       variant={ModalVariant.small}
       isOpen={show}
+      ouiaId="add-update-cv-modal"
       description={__(`Select available version of ${cvName} to use`)}
       onClose={() => {
         setIsOpen(false);
@@ -109,6 +110,7 @@ const ComponentContentViewAddModal = ({
             id="horzontal-form-title"
             name="horizontal-form-title"
             aria-label="CvVersion"
+            ouiaId="select-cv-version"
           >
             {options.map((option, index) => (
               // eslint-disable-next-line react/no-array-index-key
@@ -119,6 +121,7 @@ const ComponentContentViewAddModal = ({
         <FormGroup fieldId="latest">
           <Flex style={{ display: 'inline-flex' }}>
             <Checkbox
+              ouiaId="latest"
               style={{ marginTop: 0 }}
               id="latest"
               name="latest"

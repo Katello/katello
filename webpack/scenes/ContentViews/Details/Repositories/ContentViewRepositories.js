@@ -301,7 +301,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
       }
     >
       <Thead>
-        <Tr key="version-header">
+        <Tr key="version-header" ouiaId="version-header">
           {hasPermission(permissions, 'edit_content_views') && <Th key="select-all" />}
           {columnHeaders.map((title, index) => {
             if (index === 0) {
@@ -329,6 +329,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
                 <Td>
                   <Checkbox
                     id={id}
+                    ouiaId={`repository-checkbox-${id}`}
                     isChecked={isSelected(id)}
                     onChange={selected =>
                       selectOne(selected, id, repo)

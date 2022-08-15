@@ -92,6 +92,7 @@ const ContentViewVersionDetailsTable = ({
           <Select
             onToggle={setOpen}
             isOpen={open}
+            ouiaId="repo-type-selector"
             variant={SelectVariant.single}
             onSelect={(_e, selection) => {
               const index = selectedList
@@ -108,14 +109,14 @@ const ContentViewVersionDetailsTable = ({
         }
       >
         <Thead>
-          <Tr>
+          <Tr ouiaId="column-headers">
             {columnHeaders.map(({ title, width }) =>
               <Th width={width} key={`${title}-header`}>{title}</Th>)}
           </Tr>
         </Thead>
         <Tbody>
           {results?.map((result, index) => (
-            <Tr key={`column-${index}`}>
+            <Tr key={`column-${index}`} ouiaId={`column-${index}`}>
               {columnHeaders.map(({ getProperty }, colIndex) =>
                 <Td key={`cell-${colIndex}`}>{getProperty(result)} </Td>)}
             </Tr>

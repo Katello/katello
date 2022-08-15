@@ -214,7 +214,7 @@ const ContentViewTable = () => {
       }
     >
       <Thead>
-        <Tr>
+        <Tr ouiaId="cvTableHeaderRow">
           <Th key="expand-carat" />
           {columnHeaders.map(col => (
             <Th
@@ -249,7 +249,7 @@ const ContentViewTable = () => {
           const isExpanded = tableRowIsExpanded(cvId);
           return (
             <Tbody isExpanded={isExpanded} key={`${cvId}_${createdAt}`}>
-              <Tr key={cvId}>
+              <Tr key={cvId} ouiaId={`ContentViewTableRow-${cvId}`}>
                 <Td
                   expand={{
                     rowIndex,
@@ -279,7 +279,7 @@ const ContentViewTable = () => {
                   }}
                 />
               </Tr>
-              <Tr key="child_row" isExpanded={isExpanded}>
+              <Tr key="child_row" ouiaId={`ContentViewTableRowChild-${cvId}`} isExpanded={isExpanded}>
                 <Td colSpan={2}>
                   <ExpandableRowContent>
                     <DetailsExpansion

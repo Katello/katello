@@ -44,7 +44,7 @@ const CVVersionCompareTable = ({
       variant={TableVariant.compact}
     >
       <Thead>
-        <Tr>
+        <Tr ouiaId="column-headers">
           {columnHeaders.map(({ title }) =>
             <Th key={`${title}-header`}>{title}</Th>)}
         </Tr>
@@ -52,7 +52,7 @@ const CVVersionCompareTable = ({
       <Tbody>
         {results?.map(result =>
           (
-            <Tr key={`column-${result.id}`}>
+            <Tr key={`column-${result.id}`} ouiaId={`column-${result.id}`}>
               {columnHeaders.map(({ getProperty }, colIndex) =>
                 // eslint-disable-next-line react/no-array-index-key
                 <Td key={`cell-${colIndex}`}>{getProperty(result)} </Td>)}

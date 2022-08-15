@@ -43,7 +43,9 @@ const CVPublishForm = ({
           </>}
       />
       <TextContent>
-        <Text component={TextVariants.h3}>{__('Publish new version - ')}{nextVersion || '1.0'}</Text>
+        <Text ouiaId="next-version-text" component={TextVariants.h3}>
+          {__('Publish new version - ')}{nextVersion || '1.0'}
+        </Text>
       </TextContent>
       <Form>
         <FormGroup label={__('Description')} fieldId="description">
@@ -60,6 +62,7 @@ const CVPublishForm = ({
         <FormGroup label={__('Promote')} fieldId="promote">
           <Switch
             id="promote-switch"
+            ouiaId="promote-switch"
             aria-label="promote-switch"
             isChecked={promote}
             onChange={checkPromote}
@@ -68,6 +71,7 @@ const CVPublishForm = ({
       </Form>
       {!alertDismissed && promote && forcePromote.length > 0 && (
         <Alert
+          ouiaId="force-promotion-alert"
           variant="info"
           isInline
           title={__('Force promotion')}

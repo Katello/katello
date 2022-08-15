@@ -50,6 +50,7 @@ const RelatedContentViewsModal = ({ cvName, cvId, relatedCVCount }) => {
         <GridItem span={12}>
           <Modal
             title={__('Related content views')}
+            ouiaId="related-cvs"
             variant={ModalVariant.medium}
             isOpen={isOpen}
             description={description()}
@@ -76,13 +77,13 @@ const RelatedContentViewsModal = ({ cvName, cvId, relatedCVCount }) => {
               emptySearchBody={__('Try changing your search settings.')}
             >
               <Thead>
-                <Tr>
+                <Tr ouiaId="column-headers">
                   <Th key="name_col">{__('Name')}</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {results?.map(details => (
-                  <Tr key={`${details.content_view.id}`}>
+                  <Tr key={`${details.content_view.id}`} ouiaId={`${details.content_view.id}`}>
                     <Td>
                       <Link to={urlBuilder(`content_views/${details.content_view.id}`, '')}>{details.content_view.name}</Link>
                     </Td>

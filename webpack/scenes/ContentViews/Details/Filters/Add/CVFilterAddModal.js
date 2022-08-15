@@ -111,6 +111,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
       title={__('Create filter')}
       variant={ModalVariant.large}
       isOpen
+      ouiaId="create-filter-modal"
       onClose={onClose}
       appendTo={document.body}
     >
@@ -125,6 +126,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
             type="text"
             id="name"
             aria-label="input_name"
+            ouiaId="input_name"
             name="name"
             value={name}
             onChange={value => setName(value)}
@@ -136,6 +138,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
             onSelect={onSelect}
             isOpen={typeSelectOpen}
             onToggle={setTypeSelectOpen}
+            ouiaId="content_type"
             id="content_type"
             name="content_type"
             aria-label="ContentType"
@@ -152,6 +155,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
                 onChange={checked => setInclusion(checked)}
                 label={__('Include filter')}
                 id="include_filter"
+                ouiaId="include_filter"
                 value="includeFilter"
                 style={{ margin: '1px' }}
               />
@@ -163,6 +167,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
                 onChange={checked => setInclusion(!checked)}
                 label={__('Exclude filter')}
                 id="exclude_filter"
+                ouiaId="exclude_filter"
                 value="excludeFilter"
                 style={{ margin: '1px' }}
               />

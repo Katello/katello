@@ -18,6 +18,7 @@ const RoutedTabs = ({
     <>
       <Tabs
         activeKey={currentTabFromUrl}
+        ouiaId="routed-tabs"
         className="margin-0-24"
       >
         {tabs.map(({ key, title }) => (

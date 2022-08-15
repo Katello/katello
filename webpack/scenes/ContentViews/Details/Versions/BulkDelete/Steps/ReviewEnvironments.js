@@ -64,9 +64,9 @@ export default () => {
               __('{versionOrVersions} {versionList} will be removed from the listed environment and will no longer be available for promotion.')}
           />}
       />
-      <TableComposable variant={TableVariant.compact}>
+      <TableComposable ouiaId="bulk-delete-env-table" variant={TableVariant.compact}>
         <Thead>
-          <Tr>
+          <Tr ouiaId="bulk-delete-env-header">
             {columnHeaders.map(col =>
               <Th key={col}>{col}</Th>)}
           </Tr>
@@ -80,7 +80,7 @@ export default () => {
             activation_key_count: akCount,
             host_count: hostCount,
           }) => (
-            <Tr key={`${name}_${id}`}>
+            <Tr ouiaId={`${name}_${id}`} key={`${name}_${id}`}>
               <Td>
                 <Label
                   /* TODO: Add "isCompact" to this on update of patternfly */

@@ -12,6 +12,7 @@ const PageControls = ({
   return (
     <FlexItem align={{ default: 'alignRight' }}>
       <Pagination
+        ouiaId={`pagination-${variant}`}
         key={variant}
         itemCount={total}
         itemsStart={firstIndex}

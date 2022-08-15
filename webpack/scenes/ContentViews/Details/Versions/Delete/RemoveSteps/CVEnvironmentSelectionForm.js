@@ -76,9 +76,9 @@ const CVEnvironmentSelectionForm = () => {
             />
           </Alert>)}
       {(versionEnvironments.length !== 0) &&
-        <TableComposable variant={TableVariant.compact}>
+        <TableComposable ouiaId="version-delete-env-table" variant={TableVariant.compact}>
           <Thead>
-            <Tr>
+            <Tr ouiaId="version-delete-env-table-header">
               <Td
                 select={{
                   rowIndex: 0,
@@ -97,7 +97,7 @@ const CVEnvironmentSelectionForm = () => {
               host_count: hostCount,
             }, rowIndex) =>
               (
-                <Tr key={`${name}_${id}`}>
+                <Tr ouiaId={`${name}_${id}`} key={`${name}_${id}`}>
                   <Td
                     key={`${name}__${id}_select`}
                     select={{

@@ -37,6 +37,7 @@ const AffectedRepositorySelection = ({
 
   return (
     <Select
+      ouiaId="affected-repos"
       selections={type}
       onSelect={onSelect}
       isOpen={typeSelectOpen}

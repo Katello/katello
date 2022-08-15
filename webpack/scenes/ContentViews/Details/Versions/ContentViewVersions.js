@@ -141,6 +141,7 @@ const ContentViewVersions = ({ cvId, details }) => {
 
     return [
       <Checkbox
+        ouiaId={`select-version-${versionId}`}
         id={versionId}
         aria-label={`Select version ${versionId}`}
         isChecked={isSelected(versionId)}
@@ -271,6 +272,7 @@ const ContentViewVersions = ({ cvId, details }) => {
             <Grid>
               <GridItem md={8} sm={12}>
                 <Button
+                  ouiaId="compare"
                   variant="primary"
                   onClick={() => setHasTwoVersions(true)}
                   isDisabled={selectedCount !== 2}
@@ -283,10 +285,12 @@ const ContentViewVersions = ({ cvId, details }) => {
                 <Dropdown
                   toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
                   isOpen={kebabOpen}
+                  ouiaId="cv-versions-bulk-actions"
                   isPlain
                   dropdownItems={[
                     <DropdownItem
                       aria-label="bulk_delete"
+                      ouiaId="bulk_delete"
                       key="bulk_delete"
                       isDisabled={selectedCount < 1}
                       component="button"
@@ -339,7 +343,7 @@ const ContentViewVersions = ({ cvId, details }) => {
             aria-label="remove_content_view_version_modal"
           />
         }
-        <Tr key="version-header">
+        <Tr key="version-header" ouiaId="version-header">
           {columnHeaders.map((title, index) => {
             if (index === 0 && !hasActionPermissions) return undefined;
             return <Th key={`col-header-${title}`}>{title}</Th>;
@@ -351,7 +355,7 @@ const ContentViewVersions = ({ cvId, details }) => {
           const hasHistory = !!cvVersion?.active_history?.length;
           const cells = buildCells(cvVersion);
           return (
-            <Tr key={`column-${cvVersion.id}`}>
+            <Tr key={`row-${cvVersion.id}`} ouiaId={`row-${cvVersion.id}`}>
               {cells.map((cell, index) => {
                 if (index === 0 && !hasActionPermissions) return undefined;
                 return (

@@ -64,9 +64,9 @@ const CVDeleteEnvironmentSelection = () => {
               isExpanded={versionExpanded[index]}
             >
               {(version?.environments.length !== 0) ?
-                <TableComposable variant={TableVariant.compact}>
+                <TableComposable ouiaId="cv-delete-env-select-table" variant={TableVariant.compact}>
                   <Thead>
-                    <Tr>
+                    <Tr ouiaId="cv-delete-env-select-table-header">
                       <Th />
                       {columnHeaders.map(col =>
                         <Th key={col}>{col}</Th>)}
@@ -78,7 +78,7 @@ const CVDeleteEnvironmentSelection = () => {
                         id, name, activation_key_count: akCount, host_count: hostCount,
                       } = env;
                       return (
-                        <Tr key={`${name}_${id}`}>
+                        <Tr ouiaId={`${name}_${id}`} key={`${name}_${id}`}>
                           <Td
                             key={`${name}__${id}_select`}
                             select={{

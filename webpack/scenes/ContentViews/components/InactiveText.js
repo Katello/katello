@@ -4,7 +4,7 @@ import { TextContent, Text, TextVariants } from '@patternfly/react-core';
 
 const InactiveText = props => (
   <TextContent>
-    <Text component={TextVariants.small} {...props}>{props.text}</Text>
+    <Text ouiaId="inactive-text" component={TextVariants.small} {...props}>{props.text}</Text>
   </TextContent>
 );
 

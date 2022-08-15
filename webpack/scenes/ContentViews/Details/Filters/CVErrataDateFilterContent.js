@@ -109,7 +109,12 @@ const CVErrataDateFilterContent = ({
   const invalidDateFormat = __('Enter a valid date: MM/DD/YYYY');
 
   return (
-    <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
+    <Tabs
+      className="margin-0-24"
+      ouiaId="errata-date-filter-tabs"
+      activeKey={activeTabKey}
+      onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
+    >
       <Tab eventKey={0} title={<TabTitleText>{tabTitle}</TabTitleText>}>
         <div className="margin-24">
           <Form onSubmit={(e) => {
@@ -125,6 +130,7 @@ const CVErrataDateFilterContent = ({
                   onSelect={(_event, selection) => onTypeSelect(selection)}
                   selections={selectedTypes}
                   isOpen={typeSelectOpen}
+                  ouiaId="errata-type-selector"
                   placeholderText={__('Errata type')}
                   isCheckboxSelectionBadgeHidden
                 >
@@ -180,6 +186,7 @@ const CVErrataDateFilterContent = ({
                   isOpen={dateTypeSelectOpen}
                   onToggle={setDateTypeSelectOpen}
                   id="date_type_selector"
+                  ouiaId="date_type_selector"
                   name="date_type_selector"
                   aria-label="date_type_selector"
                   isDisabled={!hasPermission(permissions, 'edit_content_views')}
@@ -207,7 +214,7 @@ const CVErrataDateFilterContent = ({
               </FlexItem>
               <FlexItem spacer={{ default: 'spacerNone' }}>
                 <Bullseye style={{ padding: '0 5px' }}>
-                  <Text>{__('to')}</Text>
+                  <Text ouiaId="to-text">{__('to')}</Text>
                 </Bullseye>
               </FlexItem>
               <FlexItem span={2}>
@@ -230,9 +237,10 @@ const CVErrataDateFilterContent = ({
             </Flex>
             <Flex>
               <FlexItem>
-                <ChipGroup categoryName={__('Type')}>
+                <ChipGroup ouiaId="chipgroup-type" categoryName={__('Type')}>
                   {selectedTypes.map(type => (
                     <Chip
+                      ouiaId={type}
                       key={type}
                       onClick={() => onTypeSelect(type)}
                       isReadOnly={singleSelection(type) || !hasPermission(permissions, 'edit_content_views')}
@@ -243,12 +251,20 @@ const CVErrataDateFilterContent = ({
                 </ChipGroup>
               </FlexItem>
               <FlexItem>
-                <ChipGroup categoryName={dateType === 'issued' ? __('Issued from') : __('Updated from')}>
-                  <Chip key="startDate" onClick={() => setStartDate('')} isReadOnly={!startDate || !hasPermission(permissions, 'edit_content_views')}>
+                <ChipGroup
+                  ouiaId="chip-issued"
+                  categoryName={dateType === 'issued' ? __('Issued from') : __('Updated from')}
+                >
+                  <Chip
+                    ouiaId="startDate"
+                    key="startDate"
+                    onClick={() => setStartDate('')}
+                    isReadOnly={!startDate || !hasPermission(permissions, 'edit_content_views')}
+                  >
                     {startDate || __('ANY')}
                   </Chip>
                   {__('to')}
-                  <Chip key="endDate" onClick={() => setEndDate('')} isReadOnly={!endDate || !hasPermission(permissions, 'edit_content_views')}>
+                  <Chip ouiaId="startDate" key="endDate" onClick={() => setEndDate('')} isReadOnly={!endDate || !hasPermission(permissions, 'edit_content_views')}>
                     {endDate || __('ANY')}
                   </Chip>
                 </ChipGroup>

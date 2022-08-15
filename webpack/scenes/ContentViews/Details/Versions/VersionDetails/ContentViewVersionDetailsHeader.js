@@ -49,6 +49,7 @@ const ContentViewVersionDetailsHeader = ({
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const dropDownItems = [
     <DropdownItem
+      ouiaId="remove"
       key="remove"
       onClick={() => {
         setRemovingFromEnv(true);
@@ -57,6 +58,7 @@ const ContentViewVersionDetailsHeader = ({
       {__('Remove from environment')}
     </DropdownItem>,
     <DropdownItem
+      ouiaId="delete"
       key="delete"
       onClick={() =>
         setBulkDeleteOpen(true)
@@ -70,7 +72,7 @@ const ContentViewVersionDetailsHeader = ({
     <Grid className="margin-0-24">
       <GridItem sm={6} >
         <TextContent>
-          <Text component={TextVariants.h2}>{__('Version ')}{version}</Text>
+          <Text ouiaId="cv-version" component={TextVariants.h2}>{__('Version ')}{version}</Text>
         </TextContent>
       </GridItem>
       <GridItem sm={6} style={{ display: 'flex' }}>
@@ -85,6 +87,7 @@ const ContentViewVersionDetailsHeader = ({
         </Button>
         <Dropdown
           isPlain
+          ouiaId="cv-version-header-actions-dropdown"
           style={{ width: 'inherit' }}
           position={DropdownPosition.right}
           toggle={

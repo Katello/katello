@@ -99,6 +99,7 @@ const CVReassignHostsForm = () => {
           isDisabled={cvSelectOptions.length === 0}
           onToggle={isExpanded => setCVSelectOpen(isExpanded)}
           id="selectCV"
+          ouiaId="selectCV"
           name="selectCV"
           aria-label="selectCV"
           placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
