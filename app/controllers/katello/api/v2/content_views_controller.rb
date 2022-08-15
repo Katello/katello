@@ -66,7 +66,7 @@ module Katello
 
     def index_relation
       content_views = ContentView.readable
-      content_views = content_views.not_generated_for_repository unless Foreman::Cast.to_bool(params[:include_generated])
+      content_views = content_views.ignore_generated unless Foreman::Cast.to_bool(params[:include_generated])
       content_views = content_views.where(:organization_id => @organization.id) if @organization
       content_views = content_views.in_environment(@environment) if @environment
       content_views = ::Foreman::Cast.to_bool(params[:nondefault]) ? content_views.non_default : content_views.default if params[:nondefault]

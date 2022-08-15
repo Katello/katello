@@ -12,7 +12,8 @@ module Actions
 
             content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(
                                                                            repository: repository,
-                                                                           create_by_default: true)
+                                                                           create_by_default: true,
+                                                                           format: format)
             content_view.update!(repository_ids: [repository.library_instance_or_self.id])
 
             sequence do
