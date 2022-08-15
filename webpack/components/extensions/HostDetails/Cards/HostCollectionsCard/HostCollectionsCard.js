@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Badge,
+  Button,
   Card,
   CardHeader,
   CardTitle,
@@ -13,12 +14,15 @@ import {
   GridItem,
   DropdownItem,
 } from '@patternfly/react-core';
+import { PlusCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import { useSet } from '../../../../Table/TableHooks';
 import { HostCollectionsAddModal, HostCollectionsRemoveModal } from './HostCollectionsModal';
 import { hasRequiredPermissions, hostIsRegistered, userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
+import EmptyStateMessage from '../../../../Table/EmptyStateMessage';
+import './HostCollectionsCard.scss';
 
 const requiredPermissions = ['edit_hosts', 'view_host_collections'];
 
@@ -66,6 +70,16 @@ const HostCollectionsDetails = ({
     </DropdownItem>,
   ];
 
+  const primaryActionButton =
+    (
+      <Button
+        ouiaId="add-to-a-host-collection-button"
+        onClick={openAddHostCollectionsModal}
+        variant="secondary"
+        aria-label="add_to_a_host_collection"
+      > {__('Add to a host collection')}
+      </Button>);
+
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
       <Card>
@@ -88,7 +102,7 @@ const HostCollectionsDetails = ({
                 </FlexItem>
               </Flex>
             </FlexItem>
-            {showKebab && (
+            {showKebab && hostCollections?.length > 0 && (
               <FlexItem>
                 <Dropdown
                   toggle={<KebabToggle aria-label="host_collections_bulk_actions" onToggle={toggleBulkAction} />}
@@ -101,7 +115,16 @@ const HostCollectionsDetails = ({
             }
           </Flex>
         </CardHeader>
-        <CardBody>
+        <CardBody className={`host-collection-card-body${hostCollections?.length === 0 ? ' empty' : ''}`}>
+          {hostCollections?.length === 0 &&
+            <EmptyStateMessage
+              title={__('No host collections yet')}
+              body={__('To get started, add this host to a host collection.')}
+              customIcon={PlusCircleIcon}
+              showPrimaryAction
+              primaryActionButton={primaryActionButton}
+            />
+          }
           {hostCollections?.map((hostCollection) => {
             const {
               id, name, description, maxHosts, unlimitedHosts, totalHosts,
@@ -130,7 +153,7 @@ const HostCollectionsDetails = ({
                     </div>
                   </ExpandableSection>
                 </FlexItem>
-                <FlexItem component="span">
+                <FlexItem component="span" spacer={{ default: 'spacerXl' }}>
                   {totalHosts}/{unlimitedHosts ? 'unlimited' : maxHosts}
                 </FlexItem>
               </Flex>
