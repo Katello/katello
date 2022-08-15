@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, fireEvent } from 'react-testing-lib-wrapper';
+import { render, fireEvent, renderWithRedux } from 'react-testing-lib-wrapper';
+
 import HostCollectionsCard from '../HostCollectionsCard';
 
 const hostDetails = {
@@ -41,6 +42,17 @@ const emptyHostDetails = {
   },
 };
 
+const renderOptions = {
+  initialState: {
+    // This is the API state that your tests depend on for their data
+    // You can cross reference the needed useSelectors from your tested components
+    // with the data found within the redux chrome add-on to help determine this fixture data.
+    katello: {
+      hostDetails: {},
+    },
+  },
+};
+
 jest.mock('../../../hostDetailsHelpers', () => ({
   ...jest.requireActual('../../../hostDetailsHelpers'),
   userPermissionsFromHostDetails: () => ({
@@ -59,9 +71,15 @@ test('shows host collections and host limits when present', () => {
 });
 
 test('shows empty card when no host collections present', () => {
-  const { queryByText } = render(<HostCollectionsCard hostDetails={emptyHostDetails} />);
+  const {
+    queryByText,
+    getByText,
+    queryByLabelText,
+  } = renderWithRedux(<HostCollectionsCard hostDetails={emptyHostDetails} />, renderOptions);
   expect(queryByText('Host collections')).toBeInTheDocument();
   expect(queryByText('Jturel hosts')).not.toBeInTheDocument();
+  expect(getByText('No host collections yet')).toBeInTheDocument();
+  expect(queryByLabelText('add_to_a_host_collection')).toBeInTheDocument();
 });
 
 test('expands to show description', () => {
@@ -98,15 +116,12 @@ test('shows add and remove options in kebab', () => {
   expect(remove).toHaveAttribute('aria-disabled', 'false');
 });
 
-test('remove is disabled when no host collections present', () => {
-  const { queryByLabelText } = render(<HostCollectionsCard hostDetails={emptyHostDetails} />);
+test('kebab is not displayed when no host collections present', () => {
+  const {
+    queryByLabelText,
+  } = renderWithRedux(<HostCollectionsCard hostDetails={emptyHostDetails} />, renderOptions);
   const kebab = queryByLabelText('host_collections_bulk_actions');
-  expect(kebab).toBeInTheDocument();
-  fireEvent.click(kebab);
-
-  const remove = queryByLabelText('remove_host_from_collections');
-  expect(remove).toBeInTheDocument();
-  expect(remove).toHaveAttribute('aria-disabled', 'true');
+  expect(kebab).not.toBeInTheDocument();
 });
 
 test('does not show card when host not registered', () => {
