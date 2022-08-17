@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://localhost:8443/candlepin/consumers/fake-uuid-from-katello/guests
+    uri: https://localhost:23443/candlepin/consumers/fake-uuid-from-candlepin/guests
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -10,11 +10,11 @@ http_interactions:
       Accept:
       - application/json
       User-Agent:
-      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      - rest-client/2.1.0 (linux x86_64) ruby/2.7.4p191
       Authorization:
-      - OAuth oauth_consumer_key="7Y5foFcBcAs5KwkNbtL4tijkyTzKvfro", oauth_nonce="7CWQVvtPlgVojzz4jVXjOPp2A83mMnalFV8Oeg3Y",
-        oauth_signature="5urwPSstUO3SacZM%2B%2Bp46AkGwWY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1588364157", oauth_version="1.0"
+      - OAuth oauth_consumer_key="a6BCjuXDwLyJrNfTNLokWT6vueUnc27w", oauth_nonce="MX47v5ByBinJNvf4BYfpiFuMbBjB8a9dHZOfRSpM",
+        oauth_signature="x8KQPypUnKlllw8yAeLufY4fLtg%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1660742563", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -31,27 +31,27 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 1ce18822-5009-404f-a58c-014296eef315
+      - 7fd94ae0-878a-4f83-90bf-3ba8d4c6961e
       X-Version:
-      - 3.1.10-1
-      - 3.1.10-1
+      - 4.1.11-${release}
+      - 4.1.11-${release}
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Fri, 01 May 2020 20:15:57 GMT
+      - Wed, 17 Aug 2022 13:22:43 GMT
     body:
       encoding: UTF-8
       base64_string: |
         eyJkaXNwbGF5TWVzc2FnZSI6IkNvbnN1bWVyIHdpdGggaWQgZmFrZS11dWlk
-        LWZyb20ta2F0ZWxsbyBjb3VsZCBub3QgYmUgZm91bmQuIiwicmVxdWVzdFV1
-        aWQiOiIxY2UxODgyMi01MDA5LTQwNGYtYTU4Yy0wMTQyOTZlZWYzMTUifQ==
+        LWZyb20tY2FuZGxlcGluIGNvdWxkIG5vdCBiZSBmb3VuZC4iLCJyZXF1ZXN0
+        VXVpZCI6IjdmZDk0YWUwLTg3OGEtNGY4My05MGJmLTNiYThkNGM2OTYxZSJ9
     http_version: 
-  recorded_at: Fri, 01 May 2020 20:15:57 GMT
+  recorded_at: Wed, 17 Aug 2022 13:22:43 GMT
 - request:
     method: get
-    uri: https://localhost:8443/candlepin/consumers/fake-uuid-from-katello/host
+    uri: https://localhost:23443/candlepin/consumers/fake-uuid-from-candlepin/host
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -59,11 +59,11 @@ http_interactions:
       Accept:
       - application/json
       User-Agent:
-      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      - rest-client/2.1.0 (linux x86_64) ruby/2.7.4p191
       Authorization:
-      - OAuth oauth_consumer_key="7Y5foFcBcAs5KwkNbtL4tijkyTzKvfro", oauth_nonce="hqjCk3eZSmMtPFMfd0iJmOfFooWzK7oQt9JZoyZ90IM",
-        oauth_signature="mrwOClr9XN2ezZ2rbD%2F%2FwRdQYrk%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1588364157", oauth_version="1.0"
+      - OAuth oauth_consumer_key="a6BCjuXDwLyJrNfTNLokWT6vueUnc27w", oauth_nonce="OJc61EsiA411Zs9ZfIuaarQNjazSW8OJjoeCz0omc",
+        oauth_signature="qyldJOjeUGYImIuv6INp8yabYl4%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1660742563", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -80,22 +80,22 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - ee40b057-c0f0-4f56-baf2-f9b9b20bfd4b
+      - 664e4883-3756-4f4c-851d-b628d479ac81
       X-Version:
-      - 3.1.10-1
-      - 3.1.10-1
+      - 4.1.11-${release}
+      - 4.1.11-${release}
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Fri, 01 May 2020 20:15:57 GMT
+      - Wed, 17 Aug 2022 13:22:43 GMT
     body:
       encoding: UTF-8
       base64_string: |
         eyJkaXNwbGF5TWVzc2FnZSI6IkNvbnN1bWVyIHdpdGggaWQgZmFrZS11dWlk
-        LWZyb20ta2F0ZWxsbyBjb3VsZCBub3QgYmUgZm91bmQuIiwicmVxdWVzdFV1
-        aWQiOiJlZTQwYjA1Ny1jMGYwLTRmNTYtYmFmMi1mOWI5YjIwYmZkNGIifQ==
+        LWZyb20tY2FuZGxlcGluIGNvdWxkIG5vdCBiZSBmb3VuZC4iLCJyZXF1ZXN0
+        VXVpZCI6IjY2NGU0ODgzLTM3NTYtNGY0Yy04NTFkLWI2MjhkNDc5YWM4MSJ9
     http_version: 
-  recorded_at: Fri, 01 May 2020 20:15:57 GMT
+  recorded_at: Wed, 17 Aug 2022 13:22:43 GMT
 recorded_with: VCR 3.0.3

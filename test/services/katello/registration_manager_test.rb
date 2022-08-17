@@ -208,12 +208,14 @@ module Katello
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
 
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).returns(:uuid => 'fake-uuid-from-katello')
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).returns(:uuid => 'fake-uuid-from-candlepin')
+        ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-candlepin').returns({})
 
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params, @content_view_environment)
+
+        assert_equal new_host.subscription_facet.uuid, 'fake-uuid-from-candlepin'
       end
 
       def test_registration_activation_key

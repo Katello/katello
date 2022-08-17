@@ -215,7 +215,13 @@ module Katello
         # if CP fails, nothing to clean up yet w.r.t. backend services
         cp_create = ::Katello::Resources::Candlepin::Consumer.create(content_view_environment.cp_id, consumer_params, activation_keys.map(&:cp_name))
         ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
-        cp_create[:uuid]
+        uuid = cp_create[:uuid]
+        if uuid.present? && uuid != host.subscription_facet.uuid
+          Rails.logger.info(_("Candlepin returned different consumer uuid than requested (%s), updating uuid in subscription_facet.") % uuid)
+          host.subscription_facet.uuid = uuid
+          host.subscription_facet.save!
+        end
+        uuid
       end
 
       def finalize_registration(host)
