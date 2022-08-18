@@ -5,7 +5,7 @@ namespace :katello do
     service_start = "sudo /usr/bin/systemctl start %s"
 
     task :pulp do
-      SERVICES = %w(rh-redis5-redis pulpcore-api pulpcore-content).freeze
+      SERVICES = %w(pulpcore-api pulpcore-content).freeze
 
       puts "\e[33mStarting Pulp3 Reset\e[0m\n\n"
 
