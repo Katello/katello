@@ -25,6 +25,18 @@ const CreateContentViewForm = ({ setModalOpen }) => {
   const [redirect, setRedirect] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  const [labelValidated, setLabelValidated] = useState('default');
+  const handleLabelChange = (newLabel, _event) => {
+    setLabel(newLabel);
+    if (newLabel === '') {
+      setLabelValidated('default');
+    } else if (/^[\w-]+$/.test(newLabel)) {
+      setLabelValidated('success');
+    } else {
+      setLabelValidated('error');
+    }
+  };
+
   const response = useSelector(selectCreateContentViews);
   const status = useSelector(selectCreateContentViewStatus);
   const error = useSelector(selectCreateContentViewError);
@@ -54,7 +66,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
 
   useEffect(
     () => {
-      setLabel(name.replace(/ /g, '_'));
+      setLabel(name.replace(/[^A-Za-z0-9_-]/g, '_'));
     },
     [name],
   );
@@ -65,7 +77,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
     return (<Redirect to={`/content_views/${id}#/repositories`} />);
   }
 
-  const submitDisabled = !name?.length || !label?.length || saving;
+  const submitDisabled = !name?.length || !label?.length || saving || labelValidated === 'error';
 
   return (
     <Form onSubmit={(e) => {
@@ -84,7 +96,13 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           onChange={value => setName(value)}
         />
       </FormGroup>
-      <FormGroup label={__('Label')} isRequired fieldId="label">
+      <FormGroup
+        label={__('Label')}
+        isRequired
+        fieldId="label"
+        helperTextInvalid="Must be Ascii alphanumeric, '_' or '-'"
+        validated={labelValidated}
+      >
         <TextInput
           isRequired
           type="text"
@@ -92,7 +110,8 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           aria-label="input_label"
           name="label"
           value={label}
-          onChange={value => setLabel(value)}
+          validated={labelValidated}
+          onChange={handleLabelChange}
         />
       </FormGroup>
       <FormGroup label={__('Description')} fieldId="description">
