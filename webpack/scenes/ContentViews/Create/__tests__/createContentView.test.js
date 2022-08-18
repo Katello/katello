@@ -89,3 +89,11 @@ test('Displays dependent fields correctly', () => {
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
   expect(getByText('Import only')).toBeInTheDocument();
 });
+
+test('Validates label field', () => {
+  const { getByText, getByLabelText } = renderWithRedux(form);
+  expect(getByText('Label')).toBeInTheDocument();
+
+  fireEvent.change(getByLabelText('input_label'), { target: { value: '123 2123' } });
+  expect(getByText('Must be Ascii alphanumeric, \'_\' or \'-\'')).toBeInTheDocument();
+});
