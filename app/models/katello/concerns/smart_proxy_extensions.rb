@@ -39,23 +39,23 @@ module Katello
         lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_node.extensions.repository.retrieve_all }
 
         has_many :capsule_lifecycle_environments,
-                 :class_name  => "Katello::CapsuleLifecycleEnvironment",
+                 :class_name => "Katello::CapsuleLifecycleEnvironment",
                  :foreign_key => :capsule_id,
-                 :dependent   => :destroy,
+                 :dependent => :destroy,
                  :inverse_of => :capsule
 
         has_many :lifecycle_environments,
                  :class_name => "Katello::KTEnvironment",
-                 :through    => :capsule_lifecycle_environments,
-                 :source     => :lifecycle_environment
+                 :through => :capsule_lifecycle_environments,
+                 :source => :lifecycle_environment
 
         has_many :content_facets, :class_name => "::Katello::Host::ContentFacet", :foreign_key => :content_source_id,
-                                  :inverse_of => :content_source, :dependent => :nullify
+                 :inverse_of => :content_source, :dependent => :nullify
 
         has_many :smart_proxy_sync_histories, :class_name => "::Katello::SmartProxySyncHistory", :inverse_of => :smart_proxy, dependent: :delete_all
 
         has_many :hostgroup_content_facets, :class_name => "::Katello::Hostgroup::ContentFacet", :foreign_key => :content_source_id,
-                              :inverse_of => :content_source, :dependent => :nullify
+                 :inverse_of => :content_source, :dependent => :nullify
         has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets
         has_many :smart_proxy_alternate_content_sources, :class_name => "::Katello::SmartProxyAlternateContentSource", :inverse_of => :smart_proxy, :dependent => :delete_all
 
@@ -67,7 +67,7 @@ module Katello
 
         def self.with_repo(repo)
           joins(:capsule_lifecycle_environments).
-          where("#{Katello::CapsuleLifecycleEnvironment.table_name}.lifecycle_environment_id" => repo.environment_id)
+            where("#{Katello::CapsuleLifecycleEnvironment.table_name}.lifecycle_environment_id" => repo.environment_id)
         end
 
         def self.pulp_primary
@@ -101,12 +101,12 @@ module Katello
           features << PULP_FEATURE if include_default
 
           unscoped.with_features(features).joins(:capsule_lifecycle_environments).
-              where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
+            where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
         end
 
         def self.pulpcore_proxies_with_environment(environment)
           unscoped.where(id: unscoped.select { |p| p.pulp_mirror? }.pluck(:id)).joins(:capsule_lifecycle_environments).
-              where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
+            where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
         end
 
         def self.sync_needed?(environment)
@@ -249,7 +249,7 @@ module Katello
       end
 
       def fix_pulp3_capabilities(type)
-        if type.is_a?(String) ||  type.is_a?(Symbol)
+        if type.is_a?(String) || type.is_a?(Symbol)
           repository_type_obj = Katello::RepositoryTypeManager.defined_repository_types[type]
         else
           repository_type_obj = type
@@ -270,7 +270,7 @@ module Katello
         repository_type_obj.pulp3_plugin.present? &&
           pulp3_enabled? &&
           (self.capabilities(PULP3_FEATURE).try(:include?, repository_type_obj.pulp3_plugin) ||
-           self.capabilities(PULP3_FEATURE).try(:include?, 'pulp_' + repository_type_obj.pulp3_plugin))
+            self.capabilities(PULP3_FEATURE).try(:include?, 'pulp_' + repository_type_obj.pulp3_plugin))
       end
 
       def pulp3_content_support?(content_type)
@@ -344,7 +344,7 @@ module Katello
         content_type_string = content_type_obj&.label || content_type
         unless content_type_obj
           fail _("Content type %{content_type_string} does not belong to an enabled repo type.") %
-                { content_type_string: content_type_string }
+                 { content_type_string: content_type_string }
         end
         content_type_obj.pulp3_service_class
       end
@@ -388,10 +388,14 @@ module Katello
         sync_tasks.where('started_at > ?', last_sync_time).where.not(:result => 'pending')
       end
 
+      def last_sync_audit
+        Audited::Audit.where(:auditable_id => self, :auditable_type => SmartProxy.name, action: "sync capsule").order(:created_at).last
+      end
+
       def last_sync_time
         task = sync_tasks.where.not(:ended_at => nil).where(:result => 'success').order(:ended_at).last
 
-        task&.ended_at
+        task&.ended_at || last_sync_audit&.created_at&.to_s
       end
 
       def environment_syncable?(env)
@@ -448,7 +452,7 @@ module Katello
         # Since Foreman 3.1 this setting is set
         if (rhsm_url = setting(SmartProxy::PULP3_FEATURE, 'rhsm_url'))
           URI(rhsm_url)
-        # Compatibility fall back
+          # Compatibility fall back
         elsif pulp_primary?
           URI("https://#{URI.parse(url).host}/rhsm")
         elsif pulp_mirror?
@@ -458,6 +462,10 @@ module Katello
 
       def pulp_content_url
         URI(setting(SmartProxy::PULP3_FEATURE, 'content_app_url'))
+      end
+
+      def audit_capsule_sync
+        write_audit(action: "sync capsule", comment: _('Successfully synced capsule.'), audited_changes: {})
       end
 
       class ::SmartProxy::Jail < ::Safemode::Jail

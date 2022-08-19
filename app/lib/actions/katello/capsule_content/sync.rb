@@ -31,8 +31,8 @@ module Actions
           fail _("Action not allowed for the default smart proxy.") if smart_proxy.pulp_primary?
 
           refresh_options = options.merge(content_view: content_view,
-                                             environment:  environment,
-                                             repository: repository)
+                                          environment: environment,
+                                          repository: repository)
           sequence do
             if smart_proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE)
               plan_action(Actions::Pulp::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
@@ -43,6 +43,14 @@ module Actions
               plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
             end
             plan_action(SyncCapsule, smart_proxy, refresh_options)
+          end
+          plan_self(smart_proxy_id: smart_proxy.id)
+        end
+
+        def finalize
+          smart_proxy = SmartProxy.unscoped.authorized(:view_capsule_content).find(input[:smart_proxy_id])
+          unless smart_proxy&.pulp_primary?
+            smart_proxy&.audit_capsule_sync
           end
         end
       end
