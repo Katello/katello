@@ -88,8 +88,12 @@ module Katello
     scope :non_composite, -> { where(:composite => [nil, false]) }
     scope :generated, -> { where.not(:generated_for => :none) }
     scope :generated_for_repository, -> { where(:generated_for => [:repository_export, :repository_import]) }
-    scope :not_generated_for_repository, -> { where.not(id: generated_for_repository) }
-
+    scope :ignore_generated, -> {
+      where.not(:generated_for => [:repository_export,
+                                   :repository_import,
+                                   :library_export_syncable,
+                                   :repository_export_syncable])
+    }
     scope :generated_for_library, -> { where(:generated_for => [:library_export, :library_import]) }
 
     scoped_search :on => :name, :complete_value => true
@@ -104,7 +108,9 @@ module Katello
       library_export: 1,
       repository_export: 2,
       library_import: 3,
-      repository_import: 4
+      repository_import: 4,
+      library_export_syncable: 5,
+      repository_export_syncable: 6
     }, _prefix: true
 
     set_crud_hooks :content_view
