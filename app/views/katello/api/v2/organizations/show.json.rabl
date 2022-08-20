@@ -29,7 +29,7 @@ node(:content_view_components_count) do
     in_organization(Organization.current)&.
     non_composite&.
     non_default&.
-    not_generated_for_repository&.count
+    ignore_generated&.count
 end
 
 node :library_id do |org|
