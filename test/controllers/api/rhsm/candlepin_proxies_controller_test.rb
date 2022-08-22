@@ -96,6 +96,27 @@ module Katello
         assert_response :success
       end
 
+      it "should register with new environments param" do
+        Resources::Candlepin::Consumer.stubs(:get)
+
+        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, @content_view_environment).returns(@host)
+
+        post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environments => [{id: @content_view_environment.cp_id}], :facts => @facts })
+
+        assert_response :success
+      end
+
+      it "should not register with multiple envs" do
+        ::Katello::RegistrationManager.expects(:process_registration).never
+
+        post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environments => [{id: @content_view_environment.cp_id}, {id: @content_view_environment.cp_id}], :facts => @facts })
+
+        body = JSON.parse(response.body)
+
+        assert_equal 'Multiple environments are not supported.', body['displayMessage']
+        assert_response 400
+      end
+
       it "should not register" do
         ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
         ::Katello::RegistrationManager.expects(:process_registration).never

@@ -313,6 +313,9 @@ module Katello
 
       if params.key?(:environment_id)
         environment = get_content_view_environment("cp_id", params[:environment_id])
+      elsif params.key?(:environments)
+        fail HttpErrors::BadRequest, _('Multiple environments are not supported.') if params['environments'].length > 1
+        environment = get_content_view_environment("cp_id", params['environments'].first['id'])
       elsif params.key?(:organization_id) && !params.key?(:environment_id)
         organization = Organization.current
         environment = organization.library.content_view_environment
