@@ -21,7 +21,7 @@ module Actions
 
           source_url = options.fetch(:source_url, nil)
           validate_contents = options.fetch(:validate_contents, false)
-          skip_metadata_check = options.fetch(:skip_metadata_check, false) || (validate_contents && repo.yum?)
+          skip_metadata_check = options.fetch(:skip_metadata_check, false) || (validate_contents && (repo.yum? || repo.deb?))
           generate_applicability =  options.fetch(:generate_applicability, repo.yum? || repo.deb?)
 
           validate_repo!(repo: repo,
@@ -34,7 +34,7 @@ module Actions
           pulp_sync_options[:download_policy] = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND if validate_contents && repo.yum?
 
           #pulp3 options
-          pulp_sync_options[:optimize] = false if skip_metadata_check && repo.yum?
+          pulp_sync_options[:optimize] = false if skip_metadata_check && (repo.yum? || repo.deb?)
 
           sequence do
             if validate_contents
@@ -85,7 +85,7 @@ module Actions
         def validate_repo!(repo:, source_url:, validate_contents:, skip_metadata_check:, skip_candlepin_check:)
           fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank? && source_url.blank?
           fail ::Katello::Errors::InvalidActionOptionError, _("Cannot validate contents on non-yum/deb repositories.") if validate_contents && !repo.yum? && !repo.deb?
-          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum?
+          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum/deb repositories.") if skip_metadata_check && !repo.yum? && !repo.deb?
           ::Katello::Util::CandlepinRepositoryChecker.check_repository_for_sync!(repo) if repo.yum? && !skip_candlepin_check
         end
 

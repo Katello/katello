@@ -21,6 +21,7 @@ module Katello
     CHECKSUM_TYPES = %w(sha1 sha256).freeze
 
     SUBSCRIBABLE_TYPES = [Repository::YUM_TYPE, Repository::OSTREE_TYPE, Repository::DEB_TYPE].freeze
+    SKIPABLE_METADATA_TYPES = [Repository::YUM_TYPE, Repository::DEB_TYPE].freeze
 
     CONTENT_ATTRIBUTE_RESTRICTIONS = {
       :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE, Repository::DOCKER_TYPE]
@@ -101,6 +102,7 @@ module Katello
       :message => _("must be one of the following: %s") % HTTP_PROXY_POLICIES.join(', ')
     }
     scope :subscribable, -> { where(content_type: RootRepository::SUBSCRIBABLE_TYPES) }
+    scope :skipable_metadata_check, -> { where(content_type: RootRepository::SKIPABLE_METADATA_TYPES) }
     scope :has_url, -> { where.not(:url => nil) }
     scope :with_repository_attribute, ->(attr, value) { joins(:repositories).where("#{Katello::Repository.table_name}.#{attr}" => value) }
     scope :in_content_view_version, ->(version) { with_repository_attribute(:content_view_version_id, version) }

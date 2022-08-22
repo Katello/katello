@@ -346,7 +346,7 @@ module Katello
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :source_url, String, :desc => N_("temporarily override feed URL for sync"), :required => false
     param :incremental, :bool, :desc => N_("perform an incremental import"), :required => false
-    param :skip_metadata_check, :bool, :desc => N_("Force sync even if no upstream changes are detected. Only used with yum repositories."), :required => false
+    param :skip_metadata_check, :bool, :desc => N_("Force sync even if no upstream changes are detected. Only used with yum or deb repositories."), :required => false
     param :validate_contents, :bool, :desc => N_("Force a sync and validate the checksums of all content. Only used with yum repositories."), :required => false
     def sync
       sync_options = {
