@@ -28,7 +28,7 @@ module Katello
     alias_method :lifecycle_environment, :environment
 
     before_validation :set_default_content_view, :unless => :persisted?
-
+    before_destroy :validate_destroyable!
     accepts_nested_attributes_for :purpose_addons
 
     validates_lengths_from_database
@@ -175,6 +175,17 @@ module Katello
       conditions = sanitize_sql_for_conditions(["#{Katello::PurposeAddon.table_name}.name #{operator} ?", value_to_sql(operator, value)])
       activation_keys = ::Katello::ActivationKey.joins(:purpose_addons).where(conditions)
       return_activation_keys_by_id(activation_keys.pluck(:id))
+    end
+
+    def validate_destroyable!
+      unless organization.being_deleted?
+        if Parameter.where(name: 'kt_activation_keys').pluck(:value).any? { |value| value.split(",").include?(name) }
+          fail _("This activation key is associated to one or more Hosts/Hostgroups. "\
+                  "Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \"%{name}\" "\
+                  "before deleting." % {name: name})
+        end
+      end
+      true
     end
 
     private

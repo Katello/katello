@@ -3,6 +3,7 @@ module Actions
     module ActivationKey
       class Destroy < Actions::EntryAction
         def plan(activation_key, options = {})
+          activation_key.validate_destroyable!
           skip_candlepin = options.fetch(:skip_candlepin, false)
           action_subject(activation_key)
 

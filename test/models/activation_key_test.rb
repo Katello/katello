@@ -211,6 +211,17 @@ module Katello
       assert_includes activation_keys, @purpose_key
     end
 
+    def test_destroy
+      hg = hostgroups(:common)
+      hg.group_parameters.create!(name: "kt_activation_keys", value: @dev_key.name)
+      exception = assert_raises(RuntimeError) do
+        @dev_key.validate_destroyable!
+      end
+      assert_match(/Search and unassociate Hosts\/Hostgroups using params.kt_activation_keys/, exception.message)
+      hg.group_parameters.destroy_all
+      assert @dev_key.validate_destroyable!
+    end
+
     context 'host_collection' do
       setup do
         @host_collection = katello_host_collections(:simple_host_collection)
