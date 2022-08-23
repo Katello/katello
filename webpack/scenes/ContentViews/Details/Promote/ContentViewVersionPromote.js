@@ -111,6 +111,7 @@ const ContentViewVersionPromote = ({
     <Modal
       title={__(`Promote version ${versionNameToPromote}`)}
       isOpen
+      ouiaId="promote-version"
       variant={ModalVariant.large}
       onClose={() => {
         setIsOpen(false);
@@ -137,6 +138,7 @@ const ContentViewVersionPromote = ({
           </FormGroup>
           {!alertDismissed && forcePromote.length > 0 && (
             <Alert
+              ouiaId="force-promotion-alert"
               variant="info"
               isInline
               title={__('Force promotion')}

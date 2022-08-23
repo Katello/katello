@@ -87,7 +87,7 @@ const ContentViewHistories = ({ cvId }) => {
       fetchItems={useCallback(params => getContentViewHistories(cvId, params), [cvId])}
     >
       <Thead>
-        <Tr>
+        <Tr ouiaId="column-headers">
           {columnHeaders.map(col =>
             <Th key={col}>{col}</Th>)}
         </Tr>
@@ -103,7 +103,7 @@ const ContentViewHistories = ({ cvId }) => {
             user,
           } = history;
           return (
-            <Tr key={index}>
+            <Tr key={index} ouiaId={`history-row-${index}`}>
               <Td><LongDateTime date={createdAt} showRelativeTimeTooltip /></Td>
               <Td>
                 <Link to={`/versions/${versionId}`}>{`Version ${version}`}</Link>

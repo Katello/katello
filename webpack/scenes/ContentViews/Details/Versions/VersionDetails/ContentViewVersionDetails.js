@@ -70,6 +70,7 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
         <div className="grid-with-top-border">
           <Tabs
             activeKey={getCurrentActiveKey}
+            ouiaId="cv-version-details-tabs"
             onSelect={onSelect}
             isVertical
           >

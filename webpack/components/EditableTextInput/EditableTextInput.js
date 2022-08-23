@@ -76,7 +76,7 @@ const EditableTextInput = ({
     <Split>
       <SplitItem>
         {textArea ?
-          (<TextArea {...inputProps} aria-label={`${attribute} text area`} ouiaId={ouiaId} />) :
+          (<TextArea {...inputProps} aria-label={`${attribute} text area`} />) :
           (<TextInput
             {...inputProps}
             type={(isPassword && !showPassword) ? 'password' : 'text'}
@@ -120,10 +120,10 @@ const EditableTextInput = ({
     <Split>
       <SplitItem>
         {inputValue ?
-          <Text aria-label={`${attribute} text value`} component={component}>
+          <Text ouiaId={`${attribute}-text-value`} aria-label={`${attribute} text value`} component={component}>
             {editing ? inputValue : passwordPlaceholder || inputValue}
           </Text> :
-          <Text className="textInput-placeholder" aria-label={`${attribute} text value`} component={component}>
+          <Text ouiaId={`${attribute}-text-value`} className="textInput-placeholder" aria-label={`${attribute} text value`} component={component}>
             {passwordPlaceholder || placeholder}
           </Text>}
       </SplitItem >

@@ -55,7 +55,7 @@ const AffectedHosts = ({
       variant={TableVariant.compact}
     >
       <Thead>
-        <Tr>
+        <Tr ouiaId="affected-hosts-table-headers">
           {columnHeaders.map(col =>
             <Th key={col}>{col}</Th>)}
         </Tr>
@@ -66,7 +66,7 @@ const AffectedHosts = ({
           id,
           content_facet_attributes: { lifecycle_environment: environment },
         }) => (
-          <Tr key={`${id}`}>
+          <Tr ouiaId={`${id}`} key={`${id}`}>
             <Td>
               <a rel="noreferrer" target="_blank" href={urlBuilder(`hosts/${id}`, '')}>{name}</a>
             </Td>

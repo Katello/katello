@@ -247,7 +247,12 @@ const CVErrataIDFilterContent = ({
   const invalidDateFormat = __('Enter a valid date: MM/DD/YYYY');
 
   return (
-    <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
+    <Tabs
+      className="margin-0-24"
+      ouiaId="errata-filter-tabs"
+      activeKey={activeTabKey}
+      onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
+    >
       <Tab eventKey={0} title={<TabTitleText>{__('Errata')}</TabTitleText>}>
         <div className="margin-24-0">
           <TableWrapper
@@ -286,11 +291,13 @@ const CVErrataIDFilterContent = ({
                     setSelected={setStatusSelected}
                     placeholderText={__('Status')}
                     aria-label="status_selector"
+                    ouiaId="status-selector"
                   />
                 </SplitItem>
                 <SplitItem>
                   <Select
                     aria-label="errata_type_selector"
+                    ouiaId="errata_type_selector"
                     variant={SelectVariant.checkbox}
                     onToggle={setTypeSelectOpen}
                     onSelect={(_event, selection) => onTypeSelect(selection)}
@@ -328,9 +335,10 @@ const CVErrataIDFilterContent = ({
                     <Dropdown
                       toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
                       isOpen={bulkActionOpen}
+                      ouiaId="cv-errata-id-bulk-action-dropdown"
                       isPlain
                       dropdownItems={[
-                        <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
+                        <DropdownItem ouiaId="bulk-remove" aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
                           {__('Remove')}
                         </DropdownItem>]
                       }
@@ -353,6 +361,7 @@ const CVErrataIDFilterContent = ({
                       onToggle={setDateTypeSelectOpen}
                       id="date_type_selector"
                       name="date_type_selector"
+                      ouiaId="date_type_selector"
                       aria-label="date_type_selector"
                     >
                       <SelectOption key="issued" value="issued">{__('Issued from')}</SelectOption>
@@ -377,7 +386,7 @@ const CVErrataIDFilterContent = ({
                   </FlexItem>
                   <FlexItem spacer={{ default: 'spacerNone' }}>
                     <Bullseye style={{ padding: '0 5px' }}>
-                      <Text>{__('to')}</Text>
+                      <Text ouiaId="to-text">{__('to')}</Text>
                     </Bullseye>
                   </FlexItem>
                   <FlexItem span={2}>
@@ -399,27 +408,28 @@ const CVErrataIDFilterContent = ({
                 </Flex>
                 <Flex>
                   <FlexItem>
-                    <ChipGroup categoryName={__('Status')}>
-                      <Chip key="status" onClick={() => setStatusSelected(ALL_STATUSES)} isReadOnly={statusSelected === ALL_STATUSES}>
+                    <ChipGroup ouiaId="status-chipgroup" categoryName={__('Status')}>
+                      <Chip ouiaId="status" key="status" onClick={() => setStatusSelected(ALL_STATUSES)} isReadOnly={statusSelected === ALL_STATUSES}>
                         {statusSelected}
                       </Chip>
                     </ChipGroup>
                   </FlexItem>
                   <FlexItem>
-                    <ChipGroup categoryName={dateType === 'issued' ? __('Issued from') : __('Updated from')}>
-                      <Chip key="startDate" onClick={() => setValidStartDate('')} isReadOnly={startDate === ''}>
+                    <ChipGroup ouiaId="issued-chipgroup" categoryName={dateType === 'issued' ? __('Issued from') : __('Updated from')}>
+                      <Chip ouiaId="startDate" key="startDate" onClick={() => setValidStartDate('')} isReadOnly={startDate === ''}>
                         {startDate || __('ANY')}
                       </Chip>
                       {__('to')}
-                      <Chip key="endDate" onClick={() => setValidEndDate('')} isReadOnly={endDate === ''}>
+                      <Chip ouiaId="endDate" key="endDate" onClick={() => setValidEndDate('')} isReadOnly={endDate === ''}>
                         {endDate || __('ANY')}
                       </Chip>
                     </ChipGroup>
                   </FlexItem>
                   <FlexItem>
-                    <ChipGroup categoryName={__('Type')}>
+                    <ChipGroup ouiaId="type-chipgroup" categoryName={__('Type')}>
                       {selectedTypes.map(type => (
                         <Chip
+                          ouiaId={`chip-${type}`}
                           key={type}
                           onClick={() => onTypeSelect(type)}
                           isReadOnly={singleSelection(type)}

@@ -125,7 +125,12 @@ const CVContainerImageFilterContent = ({
   ];
 
   return (
-    <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
+    <Tabs
+      className="margin-0-24"
+      activeKey={activeTabKey}
+      ouiaId="cv-container-image-filter-tabs"
+      onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
+    >
       <Tab eventKey={0} title={<TabTitleText>{__('Tags')}</TabTitleText>}>
         <div className="margin-24-0">
           <TableWrapper

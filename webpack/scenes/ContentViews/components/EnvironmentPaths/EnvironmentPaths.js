@@ -58,6 +58,7 @@ const EnvironmentPaths = ({
                     className="env-path__labels-with-pointer"
                     key={`${env.id}${index}`}
                     id={`${env.id}${index}`}
+                    ouiaId={`${env.id}${index}`}
                     label={<EnvironmentLabels environments={env} isDisabled={isDisabled} />}
                     aria-label={env.label}
                     onChange={checked => oncheckedChange(checked, env)}

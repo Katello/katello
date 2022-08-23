@@ -117,6 +117,7 @@ const ContentViewInfo = ({ cvId, details }) => {
         <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
           <Switch
             id="import_only_switch"
+            ouiaId="import_only_switch"
             aria-label="import_only_switch"
             isChecked={importOnly}
             className="foreman-spaced-list"
@@ -129,6 +130,7 @@ const ContentViewInfo = ({ cvId, details }) => {
         <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
           <Switch
             id="generated_by_export_switch"
+            ouiaId="generated_by_export_switch"
             aria-label="generated_by_export_switch"
             isChecked={generatedContentView}
             className="foreman-spaced-list"

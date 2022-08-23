@@ -52,6 +52,7 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
           type="text"
           id="name"
           aria-label="input_name"
+          ouiaId="input_name"
           name="name"
           value={name}
           onChange={setName}

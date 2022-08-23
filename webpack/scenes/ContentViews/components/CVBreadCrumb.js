@@ -101,7 +101,7 @@ const CVBreadcrumb = () => {
     filterDetails, filterDetailsStatus, breadcrumbItems, setBreadcrumbItems]);
 
   return (
-    <Breadcrumb className="margin-bottom-24">
+    <Breadcrumb ouiaId="cv-breadcrumb" className="margin-bottom-24">
       {
         Object.keys(breadcrumbItems)?.sort()?.map(key => (
           <BreadcrumbItem

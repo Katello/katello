@@ -34,7 +34,6 @@ import {
   Toolbar,
 } from '@patternfly/react-core';
 import {
-  RowWrapper,
   Table,
   TableComposable,
   Tr,
@@ -74,7 +73,6 @@ const checkForOuiaIds = () => {
     TextInput,
     Title,
     Toolbar,
-    RowWrapper,
     Table,
     TableComposable,
     Tr,

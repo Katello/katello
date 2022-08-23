@@ -37,6 +37,7 @@ const Bookmark = ({
   const dropDownItems = [
     ...results.map(({ name, id, query }) => (
       <DropdownItem
+        ouiaId={`bookmarkItem-${id}`}
         onClick={() => setSelectItem(query)}
         key={id}
         tooltip={query}
@@ -46,8 +47,9 @@ const Bookmark = ({
   ];
   if (showActions) {
     dropDownItems.push(
-      <DropdownSeparator key="separator" />,
+      <DropdownSeparator key="separator" ouiaId="bookmark-separator" />,
       <DropdownItem
+        ouiaId="add-bookmark"
         onClick={() => {
           setDropdownOpen(false);
           setModalOpen(true);
@@ -63,9 +65,11 @@ const Bookmark = ({
   return (
     <>
       <Dropdown
+        ouiaId="bookmark-dropdown"
         aria-label="bookmark-dropdown"
         toggle={
           <DropdownToggle
+            ouiaId="bookmark-toggle"
             isDisabled={isDisabled || status !== STATUS.RESOLVED}
             onToggle={setDropdownOpen}
             id="toggle-id"

@@ -27,7 +27,7 @@ const ComponentVersion = ({ componentCV }) => {
           {version ? `Version ${version}` : noVersionText}
         </a>
         <TextContent>
-          <Text component={TextVariants.small}>
+          <Text ouiaId="version" component={TextVariants.small}>
             {latest ? latestDescription : manualVersionText}
           </Text>
         </TextContent>

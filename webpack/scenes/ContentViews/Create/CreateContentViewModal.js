@@ -6,6 +6,7 @@ import CreateContentViewForm from './CreateContentViewForm';
 
 const CreateContentViewModal = ({ show, setIsOpen }) => (
   <Modal
+    ouiaId="create-content-view-modal"
     title={__('Create content view')}
     variant={ModalVariant.small}
     isOpen={show}

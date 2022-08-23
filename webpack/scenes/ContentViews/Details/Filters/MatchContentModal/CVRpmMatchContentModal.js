@@ -36,6 +36,7 @@ const CVRpmMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
   return (
     <Modal
       title={__('Matching content')}
+      ouiaId="rpm-matching-content"
       variant={ModalVariant.medium}
       isOpen
       onClose={onClose}
@@ -58,7 +59,7 @@ const CVRpmMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
         variant={TableVariant.compact}
       >
         <Thead>
-          <Tr>
+          <Tr ouiaId="column-headers">
             {columnHeaders.map(col =>
               <Th key={col}>{col}</Th>)}
           </Tr>
@@ -69,7 +70,7 @@ const CVRpmMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
               nvra, summary = '-', id,
             } = result;
             return (
-              <Tr key={`${nvra}_${summary}_${id}`}>
+              <Tr key={`${nvra}_${summary}_${id}`} ouiaId={`${nvra}_${summary}_${id}`}>
                 <Td>
                   <a rel="noreferrer" target="_blank" href={urlBuilder(`packages/${id}`, '')}>{nvra}</a>
                 </Td>

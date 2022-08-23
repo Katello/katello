@@ -79,6 +79,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           type="text"
           id="name"
           aria-label="input_name"
+          ouiaId="input_name"
           name="name"
           value={name}
           onChange={value => setName(value)}
@@ -90,6 +91,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           type="text"
           id="label"
           aria-label="input_label"
+          ouiaId="input_label"
           name="label"
           value={label}
           onChange={value => setLabel(value)}
@@ -142,6 +144,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
         <FormGroup isInline fieldId="dependencies">
           <Checkbox
             id="dependencies"
+            ouiaId="dependencies"
             name="dependencies"
             label={LabelDependencies()}
             isChecked={dependencies}
@@ -152,6 +155,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
         <FormGroup isInline fieldId="importOnly">
           <Checkbox
             id="importOnly"
+            ouiaId="importOnly"
             name="importOnly"
             label={LabelImportOnly()}
             isChecked={importOnly}
@@ -162,6 +166,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
         <FormGroup isInline fieldId="autoPublish">
           <Checkbox
             id="autoPublish"
+            ouiaId="autoPublish"
             name="autoPublish"
             label={LabelAutoPublish()}
             isChecked={autoPublish}

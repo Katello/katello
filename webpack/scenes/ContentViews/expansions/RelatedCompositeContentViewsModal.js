@@ -35,6 +35,7 @@ const RelatedCompositeContentViewsModal = ({
       </Button>
       <Modal
         title={__('Related composite content views')}
+        ouiaId="related-composite-cvs"
         variant={ModalVariant.large}
         isOpen={isOpen}
         description={description()}
@@ -45,10 +46,11 @@ const RelatedCompositeContentViewsModal = ({
       >
         <TableComposable
           aria-label={`${cvId}_table`}
+          ouiaId={`${cvId}_table`}
           variant="compact"
         >
           <Thead>
-            <Tr>
+            <Tr ouiaId="table-header-row">
               {columns.map((column, columnIndex) => (
                 <Th key={columnIndex}>{column}</Th>
               ))}
@@ -56,7 +58,7 @@ const RelatedCompositeContentViewsModal = ({
           </Thead>
           <Tbody>
             {relatedCompositeCVs.map(cv => (
-              <Tr key={cv.id}>
+              <Tr key={cv.id} ouiaId={`row-${cv.id}`}>
                 <Td key={`${cv.id}_${cv.name}`} dataLabel={columns[cv.id]}>
                   <Link to={`${urlBuilder('content_views', '')}${cv.id}`}>{cv.name}</Link>
                 </Td>

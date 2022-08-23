@@ -42,16 +42,16 @@ const CVPublishReview = ({
             {__('Review your currently selected changes for ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {name}.</b>
           </>}
       />
-      <TableComposable aria-label="Review Table">
+      <TableComposable ouiaId="cv-publish-review-table" aria-label="Review Table">
         <Thead>
-          <Tr>
+          <Tr ouiaId="cv-publish-review-table-headers">
             <Th>{__('Content view name')}</Th>
             <Th>{__('Version')}</Th>
             <Th>{__('Environments')}</Th>
           </Tr>
         </Thead>
         <Tbody>
-          <Tr>
+          <Tr ouiaId="cv-publish-review-table-row">
             <Td>
               <><ContentViewIcon composite={composite} description={name} /><InactiveText text={__('Newly published')} /></>
             </Td>

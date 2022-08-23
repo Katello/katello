@@ -53,6 +53,7 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
     <Modal
       title={__('Add content views')}
       variant={ModalVariant.large}
+      ouiaId="add-content-views"
       isOpen
       description={__('Select available version of content views to use')}
       onClose={onClose}
@@ -64,12 +65,13 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
       }}
       >
         {Object.keys(versionSelectOptions).sort().map(componentCvName => (
-          <Card key={componentCvName}>
+          <Card ouiaId="componentCvName" key={componentCvName}>
             <CardTitle aria-label={componentCvName}>{componentCvName}</CardTitle>
             <CardBody>
               <FormGroup label={__('Version')} isRequired fieldId="version">
                 <FormSelect
                   value={selectedVersion[componentCvName]}
+                  ouiaId="select-version"
                   isDisabled={versionSelectOptions[componentCvName].length <= 1}
                   onChange={value =>
                     setSelectedVersion({ ...selectedVersion, ...{ [componentCvName]: value } })}
@@ -88,6 +90,7 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
                   <Checkbox
                     style={{ marginTop: 0 }}
                     id={`latest-${componentCvName}`}
+                    ouiaId={`latest-${componentCvName}`}
                     name="latest"
                     label={__('Always update to latest version')}
                     isChecked={selectedComponentLatest[componentCvName]}

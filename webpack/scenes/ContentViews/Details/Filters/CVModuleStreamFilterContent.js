@@ -202,7 +202,12 @@ const CVModuleStreamFilterContent = ({
 
 
   return (
-    <Tabs className="margin-0-24" activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
+    <Tabs
+      className="margin-0-24"
+      ouiaId="module-stream-filter-content-tabs"
+      activeKey={activeTabKey}
+      onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
+    >
       <Tab eventKey={0} title={<TabTitleText>{__('Module Streams')}</TabTitleText>}>
         <div className="margin-24-0">
           <TableWrapper
@@ -235,6 +240,7 @@ const CVModuleStreamFilterContent = ({
                   <Select
                     variant={SelectVariant.single}
                     onToggle={setSelectOpen}
+                    ouiaId="added-notAdded-selector"
                     onSelect={(_event, selection) => {
                       setSelectedIndex(allAddedNotAdded.indexOf(selection));
                       setSelectOpen(false);
@@ -262,9 +268,10 @@ const CVModuleStreamFilterContent = ({
                   <Dropdown
                     toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
                     isOpen={bulkActionOpen}
+                    ouiaId="bulk-actions-dropdown"
                     isPlain
                     dropdownItems={[
-                      <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
+                      <DropdownItem ouiaId="bulk-remove" aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
                         {__('Remove')}
                       </DropdownItem>]
                     }

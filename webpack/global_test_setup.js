@@ -6,9 +6,25 @@ import nock from 'nock';
 // output and traceback for actual error.
 const originalConsoleError = global.console.error;
 global.console.error = (error, stack) => {
-  originalConsoleError(error); // ensure error is printed to console
+  originalConsoleError(error); // ensure error is printed to console , comment
+  // in case of ouia-id check
+
+  /* Uncomment block below to filter out PF4 ouiaId errors */
+  // const ignore = ['in ForwardRef (created by Tabs)',
+  //    'in Button (created by Label)', 'created by _default',
+  //    'created by PaginationOptionsMenu', 'created by TypeAheadItems',
+  //    'The prop `ouiaId` is marked as required in `Modal`, but its value is `undefined`',
+  //    'created by WizardHeader', 'created by Navigation',
+  //    'created by Context.Consumer'];
+
   /* eslint-disable-next-line no-console */
   if (stack) console.log(stack); // Prints out original stack trace
+
+  /* Uncomment block below to filter out PF4 ouiaId errors */
+  //  if (error && !ignore.some(e => error.includes(e))) {
+  //   originalConsoleError(error); // ensure error is printed to console
+  //   console.log(stack); // Prints out original stack trace
+  // }
   throw new Error(error); // comment this and uncomment the next line when checking for ouia ids
   // if (!error.includes('Failed prop type')) throw new Error(error);
 };

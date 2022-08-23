@@ -34,6 +34,7 @@ export const ArtifactsWithNoErrataRenderer = ({ filterDetails }) => {
   };
 
   return (<Checkbox
+    ouiaId="artifactsNoErrata"
     id="artifactsNoErrata"
     name="artifactsNoErrata"
     label=<p style={{ marginTop: '4px' }}>{getLabel()}</p>
