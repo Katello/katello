@@ -53,9 +53,9 @@ module Katello
 
         def generate_exporter_path
           return base_path if base_path
-          export_path = "#{content_view_version.content_view}/#{content_view_version.version}/"
-          export_path += "#{destination_server}/" unless destination_server.blank?
-          export_path += "#{date_dir}".gsub(/\s/, '_')
+          export_path = "#{content_view_version.content_view.label}/#{content_view_version.version}/"
+          export_path += "#{destination_server}/".gsub(/\s/, '_') unless destination_server.blank?
+          export_path += "#{date_dir}"
           @base_path = "#{Setting['pulpcore_export_destination']}/#{content_view_version.organization.label}/#{export_path}"
         end
 
