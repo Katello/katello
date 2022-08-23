@@ -40,7 +40,6 @@ module Katello
         end
 
         def test_chunk_upload
-          skip "Skip while faraday 0.17 is in use. Stop skipping once pulp_ansible_client 0.13.3 with faraday >= 1.0.1 is released"
           chunk_size = 100
           @repo.reload
           size = File.size(@file[:path])

@@ -22,7 +22,6 @@ module ::Actions::Pulp3
     end
 
     def test_upload
-      skip "Skip while faraday 0.17 is in use. Stop skipping once pulp_ansible_client 0.13.3 with faraday >= 1.0.1 is released"
       @repo.reload
       assert @repo.remote_href
       rpm_count = @repo.rpms.count
@@ -50,7 +49,6 @@ module ::Actions::Pulp3
     end
 
     def test_duplicate_upload
-      skip "Skip while faraday 0.17 is in use. Stop skipping once pulp_ansible_client 0.13.3 with faraday >= 1.0.1 is released"
       action_result = ""
       @repo.reload
       assert @repo.remote_href
