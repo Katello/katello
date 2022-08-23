@@ -120,10 +120,10 @@ export const HostCollectionsModal = ({
   };
 
   const modalActions = ([
-    <Button key="add" variant="primary" onClick={handleModalAction} isDisabled={!selectedCount}>
+    <Button key="add" ouiaId="add-button" variant="primary" onClick={handleModalAction} isDisabled={!selectedCount}>
       {adding ? __('Add') : __('Remove')}
     </Button>,
-    <Button key="cancel" variant="link" onClick={handleModalCancel}>
+    <Button key="cancel" ouiaId="cancel-button" variant="link" onClick={handleModalCancel}>
       {__('Cancel')}
     </Button>,
   ]);
@@ -136,6 +136,7 @@ export const HostCollectionsModal = ({
       position="top"
       actions={modalActions}
       id={adding ? 'add-host-to-host-collections-modal' : 'remove-host-from-host-collections-modal'}
+      ouiaId="host-collections-modal"
     >
       <FormattedMessage
         className="host-collections-modal-blurb"
@@ -175,7 +176,7 @@ export const HostCollectionsModal = ({
         requestKey={adding ? AVAILABLE_HOST_COLLECTIONS_KEY : REMOVABLE_HOST_COLLECTIONS_KEY}
       >
         <Thead>
-          <Tr>
+          <Tr ouiaId="row-header">
             {columnHeaders.map(col =>
               <Th key={col}>{col}</Th>)}
             <Th />
@@ -188,7 +189,7 @@ export const HostCollectionsModal = ({
             } = propsToCamelCase(hostCollection);
             const isDisabled = (adding && hostLimitExceeded(hostCollection));
             return (
-              <Tr key={id}>
+              <Tr key={id} ouiaId={`row-${id}`}>
                 <Td
                   select={{
                     disable: isDisabled,

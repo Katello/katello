@@ -175,6 +175,7 @@ const SystemPurposeEditModal = ({
       position="top"
       actions={modalActions}
       id="syspurpose-edit-modal"
+      ouiaId="syspurpose-edit-modal"
     >
       <FormattedMessage
         className="syspurpose-edit-modal-blurb"
@@ -189,6 +190,7 @@ const SystemPurposeEditModal = ({
           <FormSelect
             id="role"
             name="role"
+            ouiaId="role-select"
             value={selectedRole}
             onChange={setSelectedRole}
           >
@@ -205,6 +207,7 @@ const SystemPurposeEditModal = ({
           <FormSelect
             id="serviceLevel"
             name="serviceLevel"
+            ouiaId="service-level-select"
             value={selectedServiceLevel}
             onChange={setSelectedServiceLevel}
           >
@@ -221,6 +224,7 @@ const SystemPurposeEditModal = ({
           <FormSelect
             id="usage"
             name="usage"
+            ouiaId="usage-select"
             value={selectedUsage}
             onChange={setSelectedUsage}
           >
@@ -237,6 +241,7 @@ const SystemPurposeEditModal = ({
           <FormSelect
             id="release_version"
             name="release_version"
+            ouiaId="release-version-select"
             value={selectedReleaseVersion}
             onChange={setSelectedReleaseVersion}
           >
@@ -256,6 +261,7 @@ const SystemPurposeEditModal = ({
           <Select
             variant={SelectVariant.typeaheadMulti}
             aria-label="syspurpose-addons"
+            ouiaId="syspurpose-addons-select"
             onToggle={toggleAddonSelect}
             onSelect={onAddonSelect}
             selections={selectedAddons}

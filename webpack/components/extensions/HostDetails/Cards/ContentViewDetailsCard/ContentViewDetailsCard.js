@@ -53,6 +53,7 @@ const HostContentViewDetails = ({
   const dropdownItems = [
     <DropdownItem
       aria-label="change-host-content-view"
+      ouiaId="change-host-content-view"
       key="change-host-content-view"
       component="button"
       onClick={openModal}
@@ -63,7 +64,7 @@ const HostContentViewDetails = ({
 
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
-      <Card>
+      <Card ouiaId="content-view-details-card">
         <CardHeader>
           <Flex
             alignItems={{ default: 'alignItemsCenter' }}

@@ -35,17 +35,19 @@ const InstallDropdown = ({
   const dropdownItems = [
     <DropdownItem
       key="install-k-agent"
+      ouiaId="install-k-agent"
       component="button"
       onClick={installViaKatelloAgent}
       isDisabled={disableInstallViaKatelloAgent}
     >
       {__('Install via katello-agent')}
     </DropdownItem>,
-    <DropdownItem key="install-rex" component="button" onClick={installViaRex}>
+    <DropdownItem key="install-rex" ouiaId="install-rex" component="button" onClick={installViaRex}>
       {__('Install via remote execution')}
     </DropdownItem>,
     <DropdownItem
       key="install-customized-rex"
+      ouiaId="install-customized-rex"
       component="a"
       href={bulkCustomizedRexUrl}
       onClick={onActionSelect}
@@ -59,10 +61,12 @@ const InstallDropdown = ({
 
   return (
     <Dropdown
+      ouiaId="action-dropdown"
       direction={DropdownDirection.up}
       onSelect={onActionSelect}
       toggle={
         <DropdownToggle
+          ouiaId="install-action-toggle"
           isDisabled={isDisabled}
           splitButtonItems={[
             <DropdownToggleAction key="install" onClick={defaultRemoteAction}>
@@ -174,7 +178,7 @@ const PackageInstallModal = ({
       showKatelloAgent={showKatelloAgent}
       disableInstallViaKatelloAgent={selectedResults.length === 0}
     />,
-    <Button key="cancel" variant="link" onClick={handleModalClose}>
+    <Button key="cancel" ouiaId="cancel-button" variant="link" onClick={handleModalClose}>
       Cancel
     </Button>,
   ]);
@@ -187,6 +191,7 @@ const PackageInstallModal = ({
       width="50%"
       actions={modalActions}
       id="package-install-modal"
+      ouiaId="package-install-modal"
     >
       <FormattedMessage
         className="pkg-install-modal-blurb"
@@ -221,7 +226,7 @@ const PackageInstallModal = ({
         displaySelectAllCheckbox
       >
         <Thead>
-          <Tr>
+          <Tr ouiaId="row-header">
             {columnHeaders.map(col =>
               <Th key={col}>{col}</Th>)}
             <Th />
@@ -236,7 +241,7 @@ const PackageInstallModal = ({
               version,
             } = pkg;
             return (
-              <Tr key={id}>
+              <Tr key={id} ouiaId={`row-${id}`}>
                 <Td
                   select={{
                     disable: false,

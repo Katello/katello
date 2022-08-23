@@ -276,6 +276,7 @@ export const ErrataTab = () => {
   const dropdownKebabItems = [
     <DropdownItem
       aria-label="bulk_add"
+      ouiaId="bulk_add"
       key="bulk_add"
       component="button"
       onClick={recalculateErrata}
@@ -287,6 +288,7 @@ export const ErrataTab = () => {
   const dropdownItems = [
     <DropdownItem
       aria-label="apply_via_remote_execution"
+      ouiaId="apply_via_remote_execution"
       key="apply_via_remote_execution"
       component="button"
       onClick={applyViaRemoteExecution}
@@ -296,6 +298,7 @@ export const ErrataTab = () => {
     </DropdownItem>,
     <DropdownItem
       aria-label="apply_via_customized_remote_execution"
+      ouiaId="apply_via_customized_remote_execution"
       key="apply_via_customized_remote_execution"
       component="a"
       href={bulkCustomizedRexUrl()}
@@ -309,6 +312,7 @@ export const ErrataTab = () => {
     dropdownItems.unshift((
       <DropdownItem
         aria-label="apply_via_katello_agent"
+        ouiaId="apply_via_katello_agent"
         key="apply_via_katello_agent"
         component="button"
         onClick={applyByKatelloAgent}
@@ -340,9 +344,11 @@ export const ErrataTab = () => {
             <ActionListItem>
               <Dropdown
                 aria-label="errata_dropdown"
+                ouiaId="errata_dropdown"
                 toggle={
                   <DropdownToggle
                     aria-label="expand_errata_toggle"
+                    ouiaId="expand_errata_toggle"
                     splitButtonItems={[
                       <DropdownToggleAction key="action" aria-label="bulk_actions" onClick={apply}>
                         {__('Apply')}
@@ -361,6 +367,7 @@ export const ErrataTab = () => {
             {showRecalculate &&
             <ActionListItem>
               <Dropdown
+                ouiaId="bulk-actions-dropdown"
                 toggle={<KebabToggle aria-label="bulk_actions_kebab" onToggle={toggleBulkAction} />}
                 isOpen={isBulkActionOpen}
                 isPlain
@@ -467,7 +474,7 @@ export const ErrataTab = () => {
           alwaysShowActionButtons={false}
         >
           <Thead>
-            <Tr>
+            <Tr ouiaId="row-header">
               <Th key="expand-carat" />
               <Th key="select-all" />
               <SortableColumnHeaders
@@ -522,7 +529,7 @@ export const ErrataTab = () => {
 
               return (
                 <Tbody isExpanded={isExpanded} key={`${id}_${createdAt}`}>
-                  <Tr>
+                  <Tr ouiaId={`row-${rowIndex}`}>
                     <Td
                       expand={{
                         rowIndex,
@@ -568,7 +575,7 @@ export const ErrataTab = () => {
                       />
                     ) : null}
                   </Tr>
-                  <Tr key="child_row" isExpanded={isExpanded}>
+                  <Tr key="child_row" ouiaId="row-child" isExpanded={isExpanded}>
                     {isExpanded && (
                       <>
                         <Td colSpan={3}>

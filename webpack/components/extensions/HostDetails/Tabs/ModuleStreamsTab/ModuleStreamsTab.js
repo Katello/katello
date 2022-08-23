@@ -160,6 +160,7 @@ const ModuleActionConfirmationModal = ({
       variant={ModalVariant.small}
       isOpen={actionModalOpen}
       aria-label="Module action confirmation modal"
+      ouiaId="Module-action-confirmation-modal"
       title={title}
       titleIconVariant="warning"
       showClose
@@ -167,6 +168,7 @@ const ModuleActionConfirmationModal = ({
       actions={[
         <Button
           aria-label="confirm-module-action"
+          ouiaId="confirm-module-action"
           key="confirm-module-action"
           onClick={() => {
             triggerModuleStreamAction({ hostname, action, moduleSpec });
@@ -177,6 +179,7 @@ const ModuleActionConfirmationModal = ({
         </Button>,
         <Button
           aria-label="cancel-module-action"
+          ouiaId="cancel-module-action"
           key="cancel-module-action"
           variant="link"
           onClick={() => setActionModalOpen(false)}
@@ -185,7 +188,7 @@ const ModuleActionConfirmationModal = ({
         </Button>,
       ]}
     >
-      <Text component={TextVariants.p}>
+      <Text component={TextVariants.p} ouiaId="text">
         {body}
       </Text>
 
@@ -404,7 +407,7 @@ export const ModuleStreamsTab = () => {
           }
         >
           <Thead>
-            <Tr>
+            <Tr ouiaId="header-tr">
               <SortableColumnHeaders
                 columnHeaders={columnHeaders}
                 pfSortParams={pfSortParams}
@@ -425,22 +428,24 @@ export const ModuleStreamsTab = () => {
             }, index) => {
               /* eslint-disable react/no-array-index-key */
               const dropdownItems = [
-                <DropdownItem key={`dropdownItem-checkbox-${id}`}>
+                <DropdownItem key={`dropdownItem-checkbox-${id}`} ouiaId={`dropdownItem-checkbox-${id}`}>
                   <Checkbox
                     aria-label={`customize-checkbox-${id}`}
+                    ouiaId={`customize-checkbox-${id}`}
                     id={`Checkbox${id}`}
                     label={__('Customize with Rex')}
                     isChecked={id === useCustomizedRex}
                     onChange={checked => (checked ? setUseCustomizedRex(id) : setUseCustomizedRex(''))}
                   />
                 </DropdownItem>,
-                <DropdownSeparator key={`separator-${id}`} />,
+                <DropdownSeparator key={`separator-${id}`} ouiaId={`separator-${id}`} />,
 
               ];
               if (id === useCustomizedRex) {
                 dropdownItems.push(
                   <DropdownItem
                     aria-label={`enable-${id}-href`}
+                    ouiaId={`enable-${id}-href`}
                     key={`dropdownItem-enable-url-${id}`}
                     component="a"
                     href={customizedActionURL('enable', moduleSpec)}
@@ -451,6 +456,7 @@ export const ModuleStreamsTab = () => {
                   </DropdownItem>,
                   <DropdownItem
                     aria-label={`disable-${id}-href`}
+                    ouiaId={`disable-${id}-href`}
                     key={`dropdownItem-disable-url-${id}`}
                     component="a"
                     href={customizedActionURL('disable', moduleSpec)}
@@ -462,6 +468,7 @@ export const ModuleStreamsTab = () => {
                   </DropdownItem>,
                   <DropdownItem
                     aria-label={`install-${id}-href`}
+                    ouiaId={`install-${id}-href`}
                     key={`dropdownItem-install-url-${id}`}
                     component="a"
                     href={customizedActionURL('install', moduleSpec)}
@@ -475,6 +482,7 @@ export const ModuleStreamsTab = () => {
                   </DropdownItem>,
                   <DropdownItem
                     aria-label={`update-${id}-href`}
+                    ouiaId={`update-${id}-href`}
                     key={`dropdownItem-update-${id}`}
                     component="a"
                     href={customizedActionURL('update', moduleSpec)}
@@ -484,6 +492,7 @@ export const ModuleStreamsTab = () => {
                   </DropdownItem>,
                   <DropdownItem
                     aria-label={`reset-${id}-href`}
+                    ouiaId={`reset-${id}-href`}
                     key={`dropdownItem-reset-${id}`}
                     component="a"
                     href={customizedActionURL('reset', moduleSpec)}
@@ -493,6 +502,7 @@ export const ModuleStreamsTab = () => {
                   </DropdownItem>,
                   <DropdownItem
                     aria-label={`remove-${id}-href`}
+                    ouiaId={`remove-${id}-href`}
                     key={`dropdownItem-remove-${id}`}
                     component="a"
                     href={customizedActionURL('remove', moduleSpec)}
@@ -505,6 +515,7 @@ export const ModuleStreamsTab = () => {
                 dropdownItems.push(
                   <DropdownItem
                     aria-label={`enable-${id}-button`}
+                    ouiaId={`enable-${id}-button`}
                     key={`dropdownItem-enable-${id}`}
                     component="button"
                     onClick={() => {
@@ -519,6 +530,7 @@ export const ModuleStreamsTab = () => {
                   </DropdownItem>,
                   <DropdownItem
                     aria-label={`disable-${id}-button`}
+                    ouiaId={`disable-${id}-button`}
                     key={`dropdownItem-disable-${id}`}
                     component="button"
                     onClick={() => {
@@ -536,6 +548,7 @@ export const ModuleStreamsTab = () => {
                   </DropdownItem>,
                   <DropdownItem
                     aria-label={`install-${id}-button`}
+                    ouiaId={`install-${id}-button`}
                     key={`dropdownItem-install-${id}`}
                     component="button"
                     onClick={() => {
@@ -553,6 +566,7 @@ export const ModuleStreamsTab = () => {
                   </DropdownItem>,
                   <DropdownItem
                     aria-label={`update-${id}-button`}
+                    ouiaId={`update-${id}-button`}
                     key={`dropdownItem-update-${id}`}
                     component="button"
                     onClick={() => {
@@ -566,6 +580,7 @@ export const ModuleStreamsTab = () => {
                   </DropdownItem>,
                   <DropdownItem
                     aria-label={`reset-${id}-button`}
+                    ouiaId={`reset-${id}-button`}
                     key={`dropdownItem-reset-${id}`}
                     component="button"
                     onClick={() => {
@@ -582,6 +597,7 @@ export const ModuleStreamsTab = () => {
                   </DropdownItem>,
                   <DropdownItem
                     aria-label={`remove-${id}-button`}
+                    ouiaId={`remove-${id}-button`}
                     key={`dropdownItem-remove-${id}`}
                     component="button"
                     onClick={() => {
@@ -599,7 +615,7 @@ export const ModuleStreamsTab = () => {
                 );
               }
               return (
-                <Tr key={`${id} ${index}`}>
+                <Tr key={`${id} ${index}`} ouiaId={`tr-${id}-${index}`}>
                   <Td>
                     <a
                       href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostname}`}
@@ -628,6 +644,7 @@ export const ModuleStreamsTab = () => {
                     <Td key={`actions-td-${id}-${dropdownOpen}`}>
                       <Dropdown
                         aria-label={`actions-dropdown-${id}`}
+                        ouiaId={`actions-dropdown-${id}`}
                         key={`actions-dropdown-${id}-${dropdownOpen}`}
                         isPlain
                         style={{ width: 'inherit' }}

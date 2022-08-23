@@ -339,13 +339,34 @@ const RepositorySetsTab = () => {
   cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
 
   const dropdownItems = [
-    <DropdownItem aria-label="bulk_enable" key="bulk_enable" ouiaId="bulk_enable" component="button" onClick={enableRepoSets} isDisabled={selectedCount === 0}>
+    <DropdownItem
+      aria-label="bulk_enable"
+      key="bulk_enable"
+      ouiaId="bulk_enable"
+      component="button"
+      onClick={enableRepoSets}
+      isDisabled={selectedCount === 0}
+    >
       {__('Override to enabled')}
     </DropdownItem>,
-    <DropdownItem aria-label="bulk_disable" key="bulk_disable" ouiaId="bulk_disable" component="button" onClick={disableRepoSets} isDisabled={selectedCount === 0}>
+    <DropdownItem
+      aria-label="bulk_disable"
+      key="bulk_disable"
+      ouiaId="bulk_disable"
+      component="button"
+      onClick={disableRepoSets}
+      isDisabled={selectedCount === 0}
+    >
       {__('Override to disabled')}
     </DropdownItem>,
-    <DropdownItem aria-label="bulk_reset_default" key="bulk_reset_default" ouiaId="bulk_reset_default" component="button" onClick={resetToDefaultRepoSets} isDisabled={selectedCount === 0}>
+    <DropdownItem
+      aria-label="bulk_reset_default"
+      key="bulk_reset_default"
+      ouiaId="bulk_reset_default"
+      component="button"
+      onClick={resetToDefaultRepoSets}
+      isDisabled={selectedCount === 0}
+    >
       {__('Reset to default')}
     </DropdownItem>,
   ];

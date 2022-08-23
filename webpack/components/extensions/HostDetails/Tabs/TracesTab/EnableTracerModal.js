@@ -43,7 +43,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen, triggerJobStart }) => {
   };
 
   const dropdownItems = dropdownOptions.map(text => (
-    <DropdownItem key={`option_${text}`} onClick={() => setSelectedOption(text)}>{text}</DropdownItem>
+    <DropdownItem key={`option_${text}`} ouiaId={`option_${text}`} onClick={() => setSelectedOption(text)}>{text}</DropdownItem>
   ));
 
   const customizedRexUrl = katelloPackageInstallUrl({ hostname, packages: KATELLO_TRACER_PACKAGE });
@@ -54,6 +54,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen, triggerJobStart }) => {
       return (
         <Button
           key="enable_button"
+          ouiaId="enable-button-via-rex"
           type="submit"
           variant="primary"
           isLoading={buttonLoading}
@@ -67,6 +68,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen, triggerJobStart }) => {
     return (
       <Button
         key="enable_button"
+        ouiaId="enable-button-via-customized-rex"
         component="a"
         isLoading={buttonLoading}
         isDisabled={buttonLoading}
@@ -83,12 +85,13 @@ const EnableTracerModal = ({ isOpen, setIsOpen, triggerJobStart }) => {
     <Modal
       variant={ModalVariant.small}
       title={title}
+      ouiaId="enable-tracer-modal"
       width="28em"
       isOpen={isOpen}
       onClose={handleClose}
       actions={[
         getEnableTracerButton(),
-        <Button key="cancel_button" variant="link" onClick={() => setIsOpen(false)}>{__('Cancel')}</Button>,
+        <Button key="cancel_button" ouiaId="cancel-button" variant="link" onClick={() => setIsOpen(false)}>{__('Cancel')}</Button>,
       ]}
     >
       <Flex direction={{ default: 'column' }}>
@@ -96,9 +99,11 @@ const EnableTracerModal = ({ isOpen, setIsOpen, triggerJobStart }) => {
         <FlexItem><div>{__('Select a provider to install katello-host-tools-tracer')}</div></FlexItem>
         <FlexItem>
           <Dropdown
+            ouiaId="enable-tracer-modal-dropdown"
             toggle={
               <DropdownToggle
                 id="toggle-enable-tracer-modal-dropdown"
+                ouiaId="enable-tracer-modal-dropdown-toggle"
                 onToggle={toggleDropdownOpen}
                 toggleIndicator={CaretDownIcon}
                 isDisabled={buttonLoading}
