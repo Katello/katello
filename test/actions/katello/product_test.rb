@@ -193,7 +193,7 @@ module ::Actions::Katello::Product
       action.stubs(:action_subject).with do |subject, _params|
         assert_equal subject, product
       end
-      product.expects(:published_content_view_versions).returns([])
+      product.expects(:published_content_view_versions).returns(::Katello::ContentViewVersion.none)
       product.expects(:product_contents).returns([])
       default_view_repos = product.repositories.in_default_view.map(&:id)
 

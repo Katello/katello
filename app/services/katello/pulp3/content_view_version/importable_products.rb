@@ -37,10 +37,20 @@ module Katello
         def create_params(metadata_product)
           {
             gpg_key_id: gpg_key_id(metadata_product),
-            name: metadata_product.name,
+            name: find_unique_name(metadata_product),
             label: metadata_product.label,
             description: metadata_product.description
           }
+        end
+
+        def find_unique_name(metadata_product)
+          name = metadata_product.name
+          i = 1
+          while @products_in_library.where(name: name).exists?
+            name = "#{metadata_product.name} #{i}"
+            i += 1
+          end
+          name
         end
 
         def update_params(metadata_product)

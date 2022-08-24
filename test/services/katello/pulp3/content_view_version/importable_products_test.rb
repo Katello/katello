@@ -35,6 +35,27 @@ module Katello
             assert_nil helper.creatable.second[:product].gpg_key_id
             assert_equal gpg_key.id, helper.updatable.first[:options][:gpg_key_id]
           end
+
+          it "Fetches the right product name to auto create" do
+            repo = katello_repositories(:fedora_17_x86_64)
+            gpg_key = katello_gpg_keys(:fedora_gpg_key)
+
+            metadata_gpg_key = stub('metadata gpg key', name: gpg_key.name)
+            label = "#{repo.product.label}-f000"
+
+            metadata_products = [
+              stub(label: label, name: repo.product.name, description: repo.product.description, redhat: false, gpg_key: metadata_gpg_key)
+            ]
+
+            helper = Katello::Pulp3::ContentViewVersion::ImportableProducts.new(
+              organization: repo.organization,
+              metadata_products: metadata_products
+            )
+            helper.generate!
+
+            assert_includes helper.creatable.map { |prod| prod[:product].label }, label
+            assert_includes helper.creatable.map { |prod| prod[:product].name }, "#{repo.product.name} 1"
+          end
         end
       end
     end
