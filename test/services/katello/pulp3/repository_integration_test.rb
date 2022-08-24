@@ -53,7 +53,6 @@ types.values.each do |repository_type|
       end
 
       def test_upload_files
-        skip "Skip while faraday 0.17 is in use. Stop skipping once pulp_ansible_client 0.13.3 with faraday >= 1.0.1 is released"
         repo_type.content_types.each do |content_type|
           next unless content_type.test_upload_path
 
