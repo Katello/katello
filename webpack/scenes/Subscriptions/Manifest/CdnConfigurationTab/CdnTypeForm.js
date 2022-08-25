@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -16,16 +16,16 @@ import { noop } from 'foremanReact/common/helpers';
 import { CDN_URL, CDN } from './CdnConfigurationConstants';
 import { updateCdnConfiguration } from '../../../Organizations/OrganizationActions';
 import {
+  selectOrgLoading,
   selectUpdatingCdnConfiguration,
 } from '../../../Organizations/OrganizationSelectors';
 import './CdnConfigurationForm.scss';
 
-const CdnTypeForm = ({ showUpdate, onUpdate }) => {
+const CdnTypeForm = ({ typeChangeInProgress, onUpdate }) => {
   const dispatch = useDispatch();
-  const [updateEnabled, setUpdateEnabled] = useState(showUpdate);
   const updatingCdnConfiguration = useSelector(state => selectUpdatingCdnConfiguration(state));
+  const orgIsLoading = useSelector(state => selectOrgLoading(state));
   const performUpdate = () => {
-    setUpdateEnabled(false);
     dispatch(updateCdnConfiguration({
       type: CDN,
     }, onUpdate));
@@ -43,7 +43,7 @@ const CdnTypeForm = ({ showUpdate, onUpdate }) => {
             }}
           />
           <br />
-          {showUpdate &&
+          {typeChangeInProgress &&
           <FormattedMessage
             id="cdn-configuration-type-cdn"
             defaultMessage={__('Click {update} below to save changes.')}
@@ -70,7 +70,7 @@ const CdnTypeForm = ({ showUpdate, onUpdate }) => {
           aria-label="update-cdn-configuration"
           variant="secondary"
           onClick={performUpdate}
-          isDisabled={updatingCdnConfiguration || !updateEnabled}
+          isDisabled={updatingCdnConfiguration || orgIsLoading || !typeChangeInProgress}
           isLoading={updatingCdnConfiguration}
         >
           {__('Update')}
@@ -82,7 +82,7 @@ const CdnTypeForm = ({ showUpdate, onUpdate }) => {
 };
 
 CdnTypeForm.propTypes = {
-  showUpdate: PropTypes.bool.isRequired,
+  typeChangeInProgress: PropTypes.bool.isRequired,
   onUpdate: PropTypes.func,
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -16,12 +16,13 @@ import {
 } from '@patternfly/react-core';
 
 import { translate as __ } from 'foremanReact/common/I18n';
-import { noop } from 'foremanReact/common/helpers';
+import { noop, propsToCamelCase } from 'foremanReact/common/helpers';
 
 import { NETWORK_SYNC, DEFAULT_CONTENT_VIEW_LABEL, DEFAULT_LIFECYCLE_ENVIRONMENT_LABEL, DEFAULT_ORGANIZATION_LABEL } from './CdnConfigurationConstants';
 import EditableTextInput from '../../../../components/EditableTextInput';
 
 import {
+  selectOrgLoading,
   selectUpdatingCdnConfiguration,
 } from '../../../Organizations/OrganizationSelectors';
 
@@ -29,38 +30,29 @@ import { updateCdnConfiguration } from '../../../Organizations/OrganizationActio
 import './CdnConfigurationForm.scss';
 
 const NetworkSyncForm = ({
-  showUpdate, contentCredentials, cdnConfiguration, onUpdate,
+  typeChangeInProgress, contentCredentials, cdnConfiguration, onUpdate,
 }) => {
   const dispatch = useDispatch();
-  const urlValue = cdnConfiguration.type === NETWORK_SYNC ? cdnConfiguration.url : '';
+  const cdnConfigurationObject = propsToCamelCase(cdnConfiguration);
+  const urlValue = cdnConfigurationObject.type === NETWORK_SYNC ? cdnConfigurationObject.url : '';
   const [url, setUrl] = useState(urlValue);
-  const [username, setUsername] = useState(cdnConfiguration.username);
+  const [username, setUsername] = useState(cdnConfigurationObject.username);
   const [password, setPassword] = useState(null);
-  const [organizationLabel, setOrganizationLabel] =
-    useState(cdnConfiguration.upstream_organization_label || DEFAULT_ORGANIZATION_LABEL);
-  const [sslCaCredentialId, setSslCaCredentialId] = useState(cdnConfiguration.ssl_ca_credential_id);
-  const updatingCdnConfiguration = useSelector(state => selectUpdatingCdnConfiguration(state));
+  const [upstreamOrganizationLabel, setUpstreamOrganizationLabel] =
+    useState(cdnConfigurationObject.upstreamOrganizationLabel || DEFAULT_ORGANIZATION_LABEL);
+  const [sslCaCredentialId, setSslCaCredentialId] =
+    useState(cdnConfigurationObject.sslCaCredentialId);
+  const updatingCdnConfiguration =
+    useSelector(state => selectUpdatingCdnConfiguration(state));
+  const orgIsLoading = useSelector(state => selectOrgLoading(state));
 
-  const [contentViewLabel, setContentViewLabel] =
-    useState(cdnConfiguration.upstream_content_view_label ||
+  const [upstreamContentViewLabel, setUpstreamContentViewLabel] =
+    useState(cdnConfigurationObject.upstreamContentViewLabel ||
       DEFAULT_CONTENT_VIEW_LABEL);
 
-  const [lifecycleEnvironmentLabel, setLifecycleEnvironmentLabel] =
-    useState(cdnConfiguration.upstream_lifecycle_environment_label ||
+  const [upstreamLifecycleEnvironmentLabel, setUpstreamLifecycleEnvironmentLabel] =
+    useState(cdnConfigurationObject.upstreamLifecycleEnvironmentLabel ||
       DEFAULT_LIFECYCLE_ENVIRONMENT_LABEL);
-
-  const [updateEnabled, setUpdateEnabled] = useState(false);
-
-  const firstUpdate = useRef(true);
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-    setUpdateEnabled(true);
-  }, [url, username, password, organizationLabel,
-    contentViewLabel, lifecycleEnvironmentLabel,
-    sslCaCredentialId, cdnConfiguration]);
 
   const editPassword = (value) => {
     if (value === null) {
@@ -69,31 +61,54 @@ const NetworkSyncForm = ({
       setPassword(value);
     }
   };
-  const hasPassword = (cdnConfiguration.password_exists && !password)
+
+  const hasPassword = (cdnConfigurationObject.passwordExists && !password)
       || password?.length > 0;
 
-  const requiredFields = [username, organizationLabel, sslCaCredentialId, url];
+  const requiredFields = [username, upstreamOrganizationLabel, sslCaCredentialId, url];
 
   if (!hasPassword) {
     requiredFields.push(password);
   }
 
   const validated = !requiredFields.some(field => !field);
-  const onError = () => setUpdateEnabled(true);
+  const disableUpdate = () => {
+    if (updatingCdnConfiguration || orgIsLoading || !validated) {
+      return true;
+    }
+    const needsUpdate = Object.entries({
+      url,
+      username,
+      upstreamOrganizationLabel,
+      upstreamContentViewLabel,
+      upstreamLifecycleEnvironmentLabel,
+    }).some(([key, value]) => value?.toString() !== cdnConfigurationObject[key]?.toString());
+
+    if (needsUpdate || password?.length > 0) {
+      return false;
+    }
+
+    const sslCaCredentialIdOrNull = sslCaCredentialId === '' ? null : sslCaCredentialId;
+    return sslCaCredentialIdOrNull?.toString() ===
+            cdnConfigurationObject.sslCaCredentialId?.toString();
+  };
+
+  const sslCaCredentialValue =
+    cdnConfigurationObject.type === NETWORK_SYNC || typeChangeInProgress ?
+      sslCaCredentialId : null;
 
   const performUpdate = () => {
-    setUpdateEnabled(false);
     dispatch(updateCdnConfiguration({
       url,
       username,
       password,
-      upstream_organization_label: organizationLabel || DEFAULT_ORGANIZATION_LABEL,
+      upstream_organization_label: upstreamOrganizationLabel || DEFAULT_ORGANIZATION_LABEL,
       ssl_ca_credential_id: sslCaCredentialId,
-      upstream_content_view_label: contentViewLabel || DEFAULT_CONTENT_VIEW_LABEL,
-      upstream_lifecycle_environment_label: lifecycleEnvironmentLabel ||
+      upstream_content_view_label: upstreamContentViewLabel || DEFAULT_CONTENT_VIEW_LABEL,
+      upstream_lifecycle_environment_label: upstreamLifecycleEnvironmentLabel ||
       DEFAULT_LIFECYCLE_ENVIRONMENT_LABEL,
       type: NETWORK_SYNC,
-    }, onUpdate, onError));
+    }, onUpdate));
   };
 
   return (
@@ -120,7 +135,7 @@ const NetworkSyncForm = ({
               }}
             />
             <br />
-            {showUpdate &&
+            {typeChangeInProgress &&
             <FormattedMessage
               id="cdn-configuration-type-upstream-server"
               defaultMessage={__('Provide the required information and click {update} below to save changes.')}
@@ -179,9 +194,9 @@ const NetworkSyncForm = ({
             ouiaId="network-sync-organization-input"
             aria-label="cdn-organization-label"
             type="text"
-            value={organizationLabel || ''}
+            value={upstreamOrganizationLabel || ''}
             isDisabled={updatingCdnConfiguration}
-            onChange={setOrganizationLabel}
+            onChange={setUpstreamOrganizationLabel}
           />
         </FormGroup>
         <FormGroup
@@ -191,9 +206,9 @@ const NetworkSyncForm = ({
             ouiaId="network-sync-lifecycle-environment-input"
             aria-label="cdn-lifecycle-environment-label"
             type="text"
-            value={lifecycleEnvironmentLabel || ''}
+            value={upstreamLifecycleEnvironmentLabel || ''}
             isDisabled={updatingCdnConfiguration}
-            onChange={setLifecycleEnvironmentLabel}
+            onChange={setUpstreamLifecycleEnvironmentLabel}
           />
         </FormGroup>
         <FormGroup
@@ -203,9 +218,9 @@ const NetworkSyncForm = ({
             ouiaId="network-sync-content-view-input"
             aria-label="cdn-content-view-label"
             type="text"
-            value={contentViewLabel || ''}
+            value={upstreamContentViewLabel || ''}
             isDisabled={updatingCdnConfiguration}
-            onChange={setContentViewLabel}
+            onChange={setUpstreamContentViewLabel}
           />
         </FormGroup>
         <FormGroup
@@ -215,7 +230,7 @@ const NetworkSyncForm = ({
           <FormSelect
             ouiaId="network-sync-ca-content-credential-input"
             aria-label="cdn-ssl-ca-content-credential"
-            value={sslCaCredentialId || ''}
+            value={sslCaCredentialValue || ''}
             isDisabled={updatingCdnConfiguration}
             onChange={value => setSslCaCredentialId(value)}
           >
@@ -231,7 +246,7 @@ const NetworkSyncForm = ({
             aria-label="update-upstream-configuration"
             variant="secondary"
             onClick={performUpdate}
-            isDisabled={updatingCdnConfiguration || !validated || !updateEnabled}
+            isDisabled={disableUpdate()}
             isLoading={updatingCdnConfiguration}
           >
             {__('Update')}
@@ -243,7 +258,7 @@ const NetworkSyncForm = ({
 };
 
 NetworkSyncForm.propTypes = {
-  showUpdate: PropTypes.bool.isRequired,
+  typeChangeInProgress: PropTypes.bool.isRequired,
   contentCredentials: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,

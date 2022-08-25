@@ -54,13 +54,13 @@ const CdnConfigurationForm = (props) => {
           cdnConfiguration={cdnConfiguration}
           contentCredentials={contentCredentials}
           onUpdate={onUpdate}
-          showUpdate={type !== cdnConfiguration.type}
+          typeChangeInProgress={type !== cdnConfiguration.type}
         />
       }
 
       { type === CDN &&
         <CdnTypeForm
-          showUpdate={type !== cdnConfiguration.type}
+          typeChangeInProgress={type !== cdnConfiguration.type}
           onUpdate={onUpdate}
         />
       }
@@ -68,14 +68,14 @@ const CdnConfigurationForm = (props) => {
         <CustomCdnTypeForm
           cdnConfiguration={cdnConfiguration}
           contentCredentials={contentCredentials}
-          showUpdate={type !== cdnConfiguration.type}
+          typeChangeInProgress={type !== cdnConfiguration.type}
           onUpdate={onUpdate}
         />
       }
 
       { type === EXPORT_SYNC &&
         <ExportSyncForm
-          showUpdate={type !== cdnConfiguration.type}
+          typeChangeInProgress={type !== cdnConfiguration.type}
           onUpdate={onUpdate}
         />
       }

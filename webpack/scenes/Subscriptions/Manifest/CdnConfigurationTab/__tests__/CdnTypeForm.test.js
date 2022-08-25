@@ -24,7 +24,7 @@ const initialState = {
 
 test('Can update to cdn type', async (done) => {
   const { getByLabelText } = renderWithRedux(<CdnTypeForm
-    showUpdate
+    typeChangeInProgress
   />, { initialState });
 
   const updateCdnConfigurationRequest = nockInstance

@@ -42,7 +42,7 @@ const contentCredentials = [
 
 test('Can update the custom cdn server configuration', async (done) => {
   const { getByLabelText } = renderWithRedux(<CustomCdnTypeForm
-    showUpdate
+    typeChangeInProgress
     cdnConfiguration={cdnConfiguration}
     contentCredentials={contentCredentials}
   />, { initialState });
@@ -71,7 +71,7 @@ test('Can update the custom cdn server configuration', async (done) => {
 
 test('the form shall reflect the given cdnConfiguration', () => {
   const { getAllByTestId } = renderWithRedux(<CustomCdnTypeForm
-    showUpdate
+    typeChangeInProgress
     cdnConfiguration={cdnConfiguration}
     contentCredentials={contentCredentials}
   />, { initialState });
@@ -85,7 +85,7 @@ test('the form shall reflect the given cdnConfiguration', () => {
 
 test('update button disabled on incomplete information', async (done) => {
   const { getByLabelText } = renderWithRedux(<CustomCdnTypeForm
-    showUpdate
+    typeChangeInProgress
     cdnConfiguration={{ ...cdnConfiguration, url: '' }}
     contentCredentials={contentCredentials}
   />, { initialState });
