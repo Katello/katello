@@ -35,7 +35,7 @@ import {
 import { removePackage, updatePackage, removePackages, updatePackages, installPackageBySearch } from '../RemoteExecutionActions';
 import { katelloPackageUpdateUrl, packagesUpdateUrl } from '../customizedRexUrlHelpers';
 import './PackagesTab.scss';
-import hostIdNotReady from '../../HostDetailsActions';
+import hostIdNotReady, { getHostDetails } from '../../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
 import { defaultRemoteActionMethod,
   hasRequiredPermissions as can,
@@ -170,7 +170,7 @@ export const PackagesTab = () => {
     triggerJobStart: triggerPackageUpgrade,
     lastCompletedJob: lastCompletedPackageUpgrade,
     isPolling: isUpgradeInProgress,
-  } = useRexJobPolling(packageUpgradeAction);
+  } = useRexJobPolling(packageUpgradeAction, getHostDetails({ hostname }));
 
   const packageBulkUpgradeAction = bulkParams => updatePackages({
     hostname,
@@ -181,7 +181,7 @@ export const PackagesTab = () => {
     triggerJobStart: triggerBulkPackageUpgrade,
     lastCompletedJob: lastCompletedBulkPackageUpgrade,
     isPolling: isBulkUpgradeInProgress,
-  } = useRexJobPolling(packageBulkUpgradeAction);
+  } = useRexJobPolling(packageBulkUpgradeAction, getHostDetails({ hostname }));
 
   const packageInstallAction
     = bulkParams => installPackageBySearch({ hostname, search: bulkParams });
@@ -190,7 +190,7 @@ export const PackagesTab = () => {
     triggerJobStart: triggerPackageInstall,
     lastCompletedJob: lastCompletedPackageInstall,
     isPolling: isInstallInProgress,
-  } = useRexJobPolling(packageInstallAction);
+  } = useRexJobPolling(packageInstallAction, getHostDetails({ hostname }));
 
   const actionInProgress = (isRemoveInProgress || isUpgradeInProgress
     || isBulkRemoveInProgress || isBulkUpgradeInProgress || isInstallInProgress);

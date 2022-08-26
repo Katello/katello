@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Split, SplitItem, ActionList, ActionListItem, Dropdown,
@@ -16,6 +17,7 @@ import {
   Td,
   ExpandableRowContent,
 } from '@patternfly/react-table';
+import { isEqual } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import IsoDate from 'foremanReact/components/common/dates/IsoDate';
@@ -33,7 +35,7 @@ import { HOST_ERRATA_KEY, ERRATA_TYPES, ERRATA_SEVERITIES, TYPES_TO_PARAM, SEVER
 import { installErrata } from '../RemoteExecutionActions';
 import { errataInstallUrl } from '../customizedRexUrlHelpers';
 import './ErrataTab.scss';
-import hostIdNotReady from '../../HostDetailsActions';
+import hostIdNotReady, { getHostDetails } from '../../HostDetailsActions';
 import { defaultRemoteActionMethod,
   hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
@@ -177,7 +179,7 @@ export const ErrataTab = () => {
   const {
     triggerJobStart: triggerBulkApply, lastCompletedJob: lastCompletedBulkApply,
     isPolling: isBulkApplyInProgress,
-  } = useRexJobPolling(installErrataAction);
+  } = useRexJobPolling(installErrataAction, getHostDetails({ hostname }));
 
   const installErratumAction = id => installErrata({
     hostname,
@@ -199,6 +201,24 @@ export const ErrataTab = () => {
     rowIndex,
     variant: 'checkbox',
   }), [isSelectable, isSelected, selectOne]);
+
+  // If the API results for total errata don't match hostDetails.contentFacet's
+  // stored errata counts, this probably means the stored errata counts have been
+  // updated and we should trigger a refresh of hostDetails.
+  useDeepCompareEffect(() => {
+    if (!metadata || !contentFacet) return;
+    const resultCount = metadata?.total;
+    // eslint-disable-next-line no-restricted-globals
+    if (isNaN(resultCount)) return;
+    const { search } = metadata;
+    const isFiltering = !isEqual(activeFilters, defaultFilters);
+    const errataTotal = contentFacet?.errataCounts?.total;
+    const shouldTrigger = (errataTotal !== resultCount && !isFiltering && !search);
+    if (shouldTrigger) {
+      dispatch(getHostDetails({ hostname })); // this will update the errata overview chart
+    }
+  }, [activeFilters, defaultFilters, metadata,
+    contentFacet.errataCounts.total, contentFacet, dispatch, hostname]);
 
   if (!hostId) return <Skeleton />;
 
