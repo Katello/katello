@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -84,8 +84,10 @@ export const ErrataTab = () => {
     = useState(PARAM_TO_FRIENDLY_NAME[initialType] ?? ERRATA_TYPE);
   const [errataSeveritySelected, setErrataSeveritySelected]
     = useState(PARAM_TO_FRIENDLY_NAME[initialSeverity] ?? ERRATA_SEVERITY);
-  const activeFilters = [errataTypeSelected, errataSeveritySelected];
-  const defaultFilters = [ERRATA_TYPE, ERRATA_SEVERITY];
+  const activeFilters = useMemo(() =>
+    [errataTypeSelected, errataSeveritySelected], [errataTypeSelected, errataSeveritySelected]);
+  const defaultFilters = useMemo(() =>
+    [ERRATA_TYPE, ERRATA_SEVERITY], [ERRATA_SEVERITY, ERRATA_TYPE]);
 
   const [isActionOpen, setIsActionOpen] = useState(false);
   const onActionToggle = () => {
@@ -218,7 +220,7 @@ export const ErrataTab = () => {
       dispatch(getHostDetails({ hostname })); // this will update the errata overview chart
     }
   }, [activeFilters, defaultFilters, metadata,
-    contentFacet.errataCounts.total, contentFacet, dispatch, hostname]);
+    contentFacet.errataCounts?.total, contentFacet, dispatch, hostname]);
 
   if (!hostId) return <Skeleton />;
 
