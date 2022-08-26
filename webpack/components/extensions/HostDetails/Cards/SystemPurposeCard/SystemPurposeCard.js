@@ -50,7 +50,7 @@ const SystemPurposeCard = ({ hostDetails }) => {
   if (!hostDetails?.id) {
     return (
       <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
-        <Card isHoverable ouiaId="system-purpose-card">
+        <Card ouiaId="system-purpose-card">
           <Skeleton />
         </Card>
       </GridItem>
@@ -61,7 +61,7 @@ const SystemPurposeCard = ({ hostDetails }) => {
 
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
-      <Card isHoverable ouiaId="system-purpose-card">
+      <Card ouiaId="system-purpose-card">
         <CardHeader>
           <Flex
             alignItems={{ default: 'alignItemsCenter' }}

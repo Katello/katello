@@ -34,7 +34,7 @@ function HostInstallableErrata({
   }];
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
-      <Card isHoverable>
+      <Card>
         <CardHeader>
           <CardTitle>{__('Installable errata')}</CardTitle>
         </CardHeader>
