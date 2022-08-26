@@ -14,7 +14,7 @@ module Actions
                                                                            organization: organization,
                                                                            create_by_default: true,
                                                                            format: format)
-            repo_ids_in_library = organization.default_content_view_version.repositories.exportable.immediate_or_none.pluck(:id)
+            repo_ids_in_library = organization.default_content_view_version.repositories.exportable(format: format).immediate_or_none.pluck(:id)
             content_view.update!(repository_ids: repo_ids_in_library)
 
             sequence do

@@ -1,10 +1,13 @@
 module Support
   module ExportSupport
-    def fetch_exporter(smart_proxy:, content_view_version:, destination_server: nil, from_content_view_version: nil)
-      export = ::Katello::Pulp3::ContentViewVersion::Export.new(smart_proxy: smart_proxy,
+    def fetch_exporter(smart_proxy:, content_view_version:,
+                       destination_server: nil, from_content_view_version: nil,
+                       format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
+      export = ::Katello::Pulp3::ContentViewVersion::Export.create(smart_proxy: smart_proxy,
                                                                  content_view_version: content_view_version,
                                                                  destination_server: destination_server,
-                                                                 from_content_view_version: from_content_view_version
+                                                                 from_content_view_version: from_content_view_version,
+                                                                 format: format
                                                                  )
       version_repositories = content_view_version.archived_repos.yum_type
       version_repositories.each_with_index do |repo, index|

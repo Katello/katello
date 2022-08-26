@@ -40,9 +40,9 @@ module Katello
 
         def repositories(fetch_all: false)
           repos = if content_view_version.default?
-                    content_view_version.repositories.exportable
+                    content_view_version.repositories.exportable(format: format)
                   else
-                    content_view_version.archived_repos.exportable
+                    content_view_version.archived_repos.exportable(format: format)
                   end
           if fetch_all
             repos
@@ -126,10 +126,23 @@ module Katello
           validate_repositories_immediate! if fail_on_missing_content
           validate_incremental_export! if validate_incremental && !from_content_view_version.blank?
           validate_chunk_size(chunk_size)
+          validate_export_types! if fail_on_missing_content
+        end
+
+        def validate_export_types!
+          repos = repositories(fetch_all: true).where.not(id: ::Katello::Repository.exportable(format: format))
+          if repos.any?
+            fail _("NOTE: Unable to fully export Content View Version '%{content_view} %{current}'"\
+                   " it contains repositories with un-exportable content types. \n %{repos}" %
+                   { content_view: content_view_version.content_view.name,
+                     current: content_view_version.version,
+                     repos: self.class.generate_product_repo_strings(repositories: repos)})
+
+          end
         end
 
         def validate_repositories_immediate!
-          non_immediate_repos = repositories(fetch_all: true).non_immediate
+          non_immediate_repos = repositories(fetch_all: true).yum_type.non_immediate
           if non_immediate_repos.any?
             fail _("NOTE: Unable to fully export Content View Version '%{content_view} %{current}'"\
                    " it contains repositories without the 'immediate' download policy."\
