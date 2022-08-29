@@ -299,7 +299,7 @@ module Katello
           tasks << api.repositories_api.modify(repository_reference.repository_href, remove_content_units: ['*'])
         end
 
-        if options[:mirror]
+        if options[:mirror] && api.class.respond_to?(:add_remove_content_class)
           data = api.class.add_remove_content_class.new(
                     base_version: source_repository.version_href)
 

@@ -17,7 +17,7 @@ module Katello
       cv = katello_content_views(:import_only_view)
 
       assert_raises(ActiveRecord::RecordInvalid) do
-        cv.repositories << katello_repositories(:busybox)
+        cv.repositories << katello_repositories(:pulp3_ostree_1)
       end
     end
   end

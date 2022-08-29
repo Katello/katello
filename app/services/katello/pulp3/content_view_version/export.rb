@@ -191,21 +191,38 @@ module Katello
 
         def self.find_library_export_view(create_by_default: false,
                                           destination_server:,
-                                          organization:)
+                                          organization:,
+                                          format: IMPORTABLE)
+          if format == IMPORTABLE
+            generated_for = :library_export
+            name = ::Katello::ContentView::EXPORT_LIBRARY
+          else
+            generated_for = :library_export_syncable
+            name = "#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE"
+          end
+
           find_generated_export_view(create_by_default: create_by_default,
                                      destination_server: destination_server,
                                      organization: organization,
-                                     name: ::Katello::ContentView::EXPORT_LIBRARY,
-                                     generated_for: :library_export)
+                                     name: name,
+                                     generated_for: generated_for)
         end
 
         def self.find_repository_export_view(create_by_default: false,
-                                              repository:)
+                                              repository:,
+                                              format: IMPORTABLE)
+          if format == IMPORTABLE
+            generated_for = :repository_export
+            name = "Export-#{repository.label}-#{repository.library_instance_or_self.id}"
+          else
+            generated_for = :repository_export_syncable
+            name = "Export-SYNCABLE-#{repository.label}-#{repository.library_instance_or_self.id}"
+          end
           find_generated_export_view(create_by_default: create_by_default,
                                      destination_server: nil,
                                      organization: repository.organization,
-                                     name: "Export-#{repository.label}-#{repository.library_instance_or_self.id}",
-                                     generated_for: :repository_export)
+                                     name: name,
+                                     generated_for: generated_for)
         end
 
         def self.generate_product_repo_strings(repositories:)

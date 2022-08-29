@@ -62,6 +62,7 @@ const RegistrationCard = ({ isExpandedGlobal, hostDetails }) => {
     <CardTemplate
       header={__('Registration details')}
       expandable
+      masonryLayout
       isExpandedGlobal={isExpandedGlobal}
     >
       <DescriptionList isHorizontal>

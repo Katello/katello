@@ -11,6 +11,7 @@ const InstalledProductsCard = ({ isExpandedGlobal, hostDetails }) => {
     <CardTemplate
       header={__('Installed products')}
       expandable
+      masonryLayout
       isExpandedGlobal={isExpandedGlobal}
     >
       <List isPlain>

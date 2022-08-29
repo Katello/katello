@@ -77,9 +77,9 @@ module Katello
                                      destination_server: destination_server,
                                      from_content_view_version: from_version)
             ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:validate_repositories_immediate!)
-            ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with(nil).returns(nil).twice
             ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with("0").returns("0")
             ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with("1").returns("1")
+            ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with(nil).returns(nil).at_least_once
 
             exception = assert_raises(RuntimeError) do
               export.validate!(fail_on_missing_content: true, validate_incremental: true)
@@ -88,16 +88,51 @@ module Katello
           end
 
           it 'finds the library export view correctly' do
+            format = ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
             org = get_organization
             assert_nil ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(organization: org,
                                                             create_by_default: false,
-                                                            destination_server: nil)
+                                                            destination_server: nil,
+                                                            format: format)
             # now create it
             destination_server = "example.com"
             cv = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(organization: org,
                                                         create_by_default: true,
-                                                        destination_server: destination_server)
+                                                        destination_server: destination_server,
+                                                        format: format)
+            assert cv.generated_for_library_export?
             assert_equal cv.name, "Export-Library-#{destination_server}"
+          end
+
+          it 'finds the library export view correctly for syncable' do
+            format = ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
+            org = get_organization
+            assert_nil ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(organization: org,
+                                                            create_by_default: false,
+                                                            destination_server: nil,
+                                                            format: format)
+            # now create it
+            destination_server = "example.com"
+            cv = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(organization: org,
+                                                        create_by_default: true,
+                                                        destination_server: destination_server,
+                                                        format: format)
+            assert cv.generated_for_library_export_syncable?
+            assert_equal cv.name, "Export-Library-SYNCABLE-#{destination_server}"
+          end
+
+          it 'finds the repository export view correctly for syncable' do
+            repo = katello_repositories(:rhel_6_x86_64)
+            format = ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
+            assert_nil ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(repository: repo,
+                                                            create_by_default: false,
+                                                            format: format)
+            # now create it
+            cv = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(repository: repo,
+                                                        create_by_default: true,
+                                                        format: format)
+            assert cv.generated_for_repository_export_syncable?
+            assert_match(/^Export-SYNCABLE-#{repo.label}/, cv.name)
           end
 
           it "does not fail on validate! if chunk_size is not specified" do

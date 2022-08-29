@@ -10,10 +10,10 @@ module Actions
                                  format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
             action_subject(organization)
             validate_repositories_immediate!(organization) if fail_on_missing_content
-
             content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(destination_server: destination_server,
                                                                            organization: organization,
-                                                                           create_by_default: true)
+                                                                           create_by_default: true,
+                                                                           format: format)
             repo_ids_in_library = organization.default_content_view_version.repositories.exportable.immediate_or_none.pluck(:id)
             content_view.update!(repository_ids: repo_ids_in_library)
 

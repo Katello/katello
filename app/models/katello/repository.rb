@@ -31,7 +31,7 @@ module Katello
     ANSIBLE_COLLECTION_TYPE = 'ansible_collection'.freeze
     GENERIC_TYPE = 'generic'.freeze
 
-    EXPORTABLE_TYPES = [YUM_TYPE, FILE_TYPE, ANSIBLE_COLLECTION_TYPE].freeze
+    EXPORTABLE_TYPES = [YUM_TYPE, FILE_TYPE, ANSIBLE_COLLECTION_TYPE, DOCKER_TYPE].freeze
 
     define_model_callbacks :sync, :only => :after
 
@@ -341,7 +341,7 @@ module Katello
 
     def published_in_versions
       Katello::ContentViewVersion.with_repositories(self.library_instances_inverse)
-                                 .where(content_view_id: Katello::ContentView.not_generated_for_repository).distinct
+                                 .where(content_view_id: Katello::ContentView.ignore_generated).distinct
     end
 
     def self.errata_with_package_counts(repo)
@@ -668,7 +668,7 @@ module Katello
 
     def self.smart_proxy_syncable
       joins(:content_view_version => :content_view).
-        merge(ContentView.not_generated_for_repository).
+        merge(ContentView.ignore_generated).
         where.not(environment_id: nil)
     end
 
