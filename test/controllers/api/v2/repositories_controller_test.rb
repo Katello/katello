@@ -55,6 +55,25 @@ module Katello
       assert_template 'api/v2/repositories/index'
     end
 
+    def test_index_bad_type
+      get :index, params: { :organization_id => @organization.id, :content_type => 'cheese' }
+
+      assert_response 422
+      response = "{\"displayMessage\":\"Invalid params provided - content_type must be one of ansible_collection,deb,docker,file,ostree,python,yum\"," \
+        "\"errors\":[\"Invalid params provided - content_type must be one of ansible_collection,deb,docker,file,ostree,python,yum\"]}"
+      assert_match response, @response.body
+    end
+
+    def test_index_bad_content_unit_type
+      get :index, params: { :organization_id => @organization.id, :with_content => 'cheese' }
+
+      assert_response 422
+      response = "{\"displayMessage\":\"Invalid params provided - with_content must be one of ansible_collection,deb,docker_manifest,docker_manifest_list,docker_tag,file" \
+        ",ostree_ref,python_package,rpm,modulemd,erratum,package_group,srpm\",\"errors\":"\
+        "[\"Invalid params provided - with_content must be one of ansible_collection,deb,docker_manifest,docker_manifest_list,docker_tag,file,ostree_ref,python_package,rpm,modulemd,erratum,package_group,srpm\"]}"
+      assert_match response, @response.body
+    end
+
     def test_repository_types
       get :repository_types
 
@@ -737,6 +756,18 @@ module Katello
       end
     end
 
+    def test_remove_content_bad_type
+      @repository.rpms << @rpm
+      @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemoveContent,
+                                           @repository, [@rpm], content_type: nil, sync_capsule: true).never
+
+      put :remove_content, params: { :id => @repository.id, :ids => [@rpm.pulp_id], :content_type => 'cheese' }
+
+      assert_response 400
+      assert_match "{\"displayMessage\":\"Content type cheese is incompatible with repositories of type yum\",\"errors\":[\"Content type cheese is incompatible with repositories of type yum\"]}",
+        @response.body
+    end
+
     def test_destroy
       assert_sync_task(::Actions::Katello::Repository::Destroy) do |repo|
         repo.id == @repository.id
@@ -925,6 +956,15 @@ module Katello
       assert_protected_action(:upload_content, allowed_perms, denied_perms) do
         post :upload_content, params: { :id => @repository.id }
       end
+    end
+
+    def test_upload_content_bad_type
+      post :upload_content, params: { :id => @repository.id, :content_type => 'cheese' }
+
+      assert_response 422
+      response =  "{\"displayMessage\":\"Invalid params provided - content_type must be one of deb,docker_manifest,file,ostree_ref,python_package,rpm,srpm\"," \
+        "\"errors\":[\"Invalid params provided - content_type must be one of deb,docker_manifest,file,ostree_ref,python_package,rpm,srpm\"]}"
+      assert_match response, @response.body
     end
 
     def test_import_uploads

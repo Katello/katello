@@ -139,9 +139,10 @@ module Katello
         enabled_repository_types[katello_label]
       end
 
-      def find_content_type(katello_label)
+      def find_content_type(katello_label, indexable = false)
         enabled_repository_types.values.each do |repo_type|
-          repo_type.content_types.each do |content_type|
+          content_types = indexable ? repo_type.content_types_to_index : repo_type.content_types
+          content_types.each do |content_type|
             return content_type if content_type.label == katello_label.to_s
           end
         end
@@ -167,7 +168,7 @@ module Katello
       def check_content_matches_repo_type!(repository, content_type)
         repo_content_types = repository.repository_type.content_types.collect { |type| type.label }
         unless repo_content_types.include?(content_type)
-          fail _("Content type %{content_type} is incompatible with repositories of type %{repo_type}") %
+          fail HttpErrors::BadRequest, _("Content type %{content_type} is incompatible with repositories of type %{repo_type}") %
                  { content_type: content_type, repo_type: repository.content_type }
         end
       end
