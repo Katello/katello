@@ -116,7 +116,13 @@ module Katello
         to_delete = []
         Katello::DockerTag.having("count(migrated_pulp3_href) > 1").group(:migrated_pulp3_href).pluck(:migrated_pulp3_href).each do |duplicate_href|
           tags = Katello::DockerTag.where(:migrated_pulp3_href => duplicate_href).includes(:schema1_meta_tag, :schema2_meta_tag).to_a
-          main_tag = tags.pop
+          # The duplicates should either have a schema 1 meta tag or a schema 2 meta tag. Skip those with neither.
+          main_tag = tags.detect { |tag| tag.schema1_meta_tag.present? || tag.schema2_meta_tag.present? }
+          if main_tag.present?
+            tags -= [main_tag]
+          else
+            main_tag = tags.pop
+          end
           main_meta_v1 = main_tag.schema1_meta_tag
           main_meta_v2 = main_tag.schema2_meta_tag
 
