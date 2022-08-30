@@ -56,7 +56,7 @@ module Katello
     scope :with_organization_id, ->(organization_id) do
       joins(:content_view).where("#{Katello::ContentView.table_name}.organization_id" => organization_id)
     end
-
+    scope :not_ignorable, -> { where(content_view_id: Katello::ContentView.ignore_generated) }
     scope :triggered_by, ->(content_view_version_id) do
       sql = Katello::ContentViewHistory.where(:triggered_by_id => content_view_version_id).select(:katello_content_view_version_id).to_sql
       where("#{Katello::ContentViewVersion.table_name}.id in (#{sql})")

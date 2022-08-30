@@ -130,6 +130,45 @@ module Katello
             assert_includes helper.creatable.map { |r| r[:substitutions][:basearch] }, repo.arch
             assert_includes helper.creatable.map { |r| r[:substitutions][:releasever] }, repo.minor
           end
+
+          it "Fetches the custom repo with the corrected name on create" do
+            repo = katello_repositories(:fedora_17_x86_64)
+            repo_label = "unique"
+            gpg_key = katello_gpg_keys(:fedora_gpg_key)
+            product_label = repo.product.label
+
+            metadata_product = stub(label: product_label)
+            metadata_gpg_key = stub(name: gpg_key.name)
+            metadata_repositories = [
+              stub('new repo 1',
+                   name: repo.name,
+                   label: repo_label,
+                   description: nil,
+                   gpg_key: metadata_gpg_key,
+                   redhat: false,
+                   product: metadata_product,
+                   arch: 'x86_64',
+                   unprotected: true,
+                   content_type: 'yum',
+                   checksum_type: 'sha256',
+                   os_versions: [],
+                   major: '7',
+                   minor: '1',
+                   download_policy: 'immediate',
+                   mirroring_policy: nil,
+                   content: nil
+                  )
+            ]
+
+            helper = Katello::Pulp3::ContentViewVersion::ImportableRepositories.new(
+              organization: repo.organization,
+              metadata_repositories: metadata_repositories
+            )
+            helper.generate!
+
+            assert_includes helper.creatable.map { |r| r[:repository].label }, repo_label
+            assert_includes helper.creatable.map { |r| r[:repository].name }, "#{repo.name} 1"
+          end
         end
       end
     end

@@ -43,12 +43,22 @@ module Katello
               }
               creatable << { product: product, content: product_content, substitutions: substitutions }
             else
-              creatable << { repository: product.add_repo(create_repo_params(repo)) }
+              creatable << { repository: product.add_repo(create_repo_params(repo, product)) }
             end
           end
         end
 
         private
+
+        def find_unique_name(metadata_repo, product)
+          name = metadata_repo.name
+          i = 1
+          while product.root_repositories.where(name: name).exists?
+            name = "#{metadata_repo.name} #{i}"
+            i += 1
+          end
+          name
+        end
 
         def product_for_metadata_repo(repo)
           if repo.redhat && repo.product.cp_id
@@ -74,9 +84,8 @@ module Katello
           end
         end
 
-        def create_repo_params(metadata_repo)
+        def create_repo_params(metadata_repo, product)
           keys = [
-            :name,
             :label,
             :description,
             :arch,
@@ -90,7 +99,7 @@ module Katello
             :mirroring_policy
           ]
 
-          params = {}
+          params = { name: find_unique_name(metadata_repo, product) }
           params[:gpg_key_id] = gpg_key_id(metadata_repo)
 
           keys.each do |key|

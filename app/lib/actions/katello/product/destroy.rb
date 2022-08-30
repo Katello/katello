@@ -11,7 +11,7 @@ module Actions
           unless organization_destroy || product.user_deletable?
             if product.redhat?
               fail _("Cannot delete Red Hat product: %{product}") % { :product => product.name }
-            elsif !product.published_content_view_versions.empty?
+            elsif !product.published_content_view_versions.not_ignorable.empty?
               fail _("Cannot delete product with repositories published in a content view.  Product: %{product}, %{view_versions}") %
                        { :product => product.name, :view_versions => view_versions(product) }
             end
