@@ -3,4 +3,3 @@
 //= require "jquery-ui/effect"
 //= require "jquery-ui/effect.all"
 //= require "katello/jquery.periodicalupdater"
-//= require "katello/jquery.trunk8"
