@@ -34,6 +34,8 @@ module Katello
               :upstream_password, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key, if: :simplified?, absence: true
     validates :base_url, if: :custom?, presence: true
     validates :products, if: :custom?, absence: true
+    validates :label, :uniqueness => true
+    validates :name, :uniqueness => true
     validates :verify_ssl, if: :custom?, exclusion: [nil]
     validates :alternate_content_source_type, inclusion: {
       in: ->(_) { ACS_TYPES },
