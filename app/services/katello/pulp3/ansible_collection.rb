@@ -44,7 +44,7 @@ module Katello
         end
 
         collection_tag_rows.flatten!
-        Katello::AnsibleCollectionTag.insert_all(collection_tag_rows, unique_by: [:ansible_collection_id, :ansible_tag_id])
+        Katello::AnsibleCollectionTag.insert_all(collection_tag_rows, unique_by: [:ansible_collection_id, :ansible_tag_id]) unless collection_tag_rows.empty?
       end
     end
   end
