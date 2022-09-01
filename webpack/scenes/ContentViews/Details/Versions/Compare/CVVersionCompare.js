@@ -51,7 +51,7 @@ const CVVersionCompare = ({
     selectCVVersionDetailsStatus(state, String(getIdFromVersion(versionTwo)
       ?? initialVersionTwoId), cvId));
 
-  const [currentActiveTab, setCurrentActiveTab] = useState(__('RPM packages'));
+  const [currentActiveTab, setCurrentActiveTab] = useState(__('Repositories'));
   const onSelect = (_e, eventKey) => {
     // This prevents needless pushing on repeated clicks of a tab
     if (currentActiveTab !== eventKey) {

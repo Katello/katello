@@ -13,6 +13,11 @@ module Katello
       item_repos.map(&:content_view_version_id) & @versions.map(&:id)
     end
 
+    def comparison_repositories
+      repo = @item
+      @versions.map(&:id) & repo&.published_in_versions&.pluck(:id)
+    end
+
     def respond_to?(method)
       return method.to_s == 'comparison' || @item.respond_to?(method)
     end

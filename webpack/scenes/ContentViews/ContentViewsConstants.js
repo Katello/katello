@@ -63,6 +63,7 @@ export const addComponentSuccessMessage = component => (component ? __('Updated 
 export const genericContentCompareKey = (pluralLabel, versionOne, versionTwo, viewBy) => `${toUpper(pluralLabel)}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
 export const cvPackageGroupsCompareKey = (versionOne, versionTwo, viewBy) => `${PACKAGE_GROUPS_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
 export const cvRPMPackagesCompareKey = (versionOne, versionTwo, viewBy) => `${PACKAGES_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
+export const cvRepositoriesCompareKey = (versionOne, versionTwo, viewBy) => `REPOSITORIES_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
 export const cvErrataCompareKey = (versionOne, versionTwo, viewBy) => `${ERRATA_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
 export const cvModuleStreamsCompareKey = (versionOne, versionTwo, viewBy) => `${MODULE_STREAMS_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
 export const cvDebPackagesCompareKey = (versionOne, versionTwo, viewBy) => `${DEB_PACKAGES_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
