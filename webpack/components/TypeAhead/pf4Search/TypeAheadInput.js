@@ -41,6 +41,7 @@ const TypeAheadInput = ({
         <Button
           variant={autoSearchEnabled ? 'plain' : 'control'}
           className="search-clear"
+          ouiaId="search-clear-button"
           onClick={clearSearch}
         >
           <TimesIcon />

@@ -149,7 +149,7 @@ export default () => {
             >
               <FlexItem>
                 <TextContent>
-                  <Text component={TextVariants.h1}>
+                  <Text ouiaId="cv-details-header-name" component={TextVariants.h1}>
                     <ContentViewIcon count={name} composite={composite} />
                   </Text>
                 </TextContent>

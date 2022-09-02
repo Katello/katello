@@ -172,9 +172,10 @@ const CVContainerImageFilterContent = ({
                       <Dropdown
                         toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
                         isOpen={bulkActionOpen}
+                        ouiaId="cv-container-image-bulk-actions"
                         isPlain
                         dropdownItems={[
-                          <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasSelected} component="button" onClick={bulkRemove}>
+                          <DropdownItem ouiaId="cv-container-image-bulk-remove" aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasSelected} component="button" onClick={bulkRemove}>
                             {__('Remove')}
                           </DropdownItem>]
                         }

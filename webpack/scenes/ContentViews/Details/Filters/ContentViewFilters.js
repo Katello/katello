@@ -157,9 +157,10 @@ const ContentViewFilters = ({ cvId, details }) => {
                 <Dropdown
                   toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
                   isOpen={bulkActionOpen}
+                  ouiaId="cv-filters-bulk-action"
                   isPlain
                   dropdownItems={[
-                    <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!bulkActionEnabled} component="button" onClick={bulkRemove}>
+                    <DropdownItem ouiaId="bulk-remove" aria-label="bulk_remove" key="bulk_remove" isDisabled={!bulkActionEnabled} component="button" onClick={bulkRemove}>
                       {__('Remove')}
                     </DropdownItem>]
                   }
