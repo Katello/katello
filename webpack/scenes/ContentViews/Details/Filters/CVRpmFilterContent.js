@@ -210,11 +210,12 @@ const CVRpmFilterContent = ({
                     </SplitItem>
                     <SplitItem>
                       <Dropdown
+                        ouiaId="rpm-filter-content-bulk-actions"
                         toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
                         isOpen={bulkActionOpen}
                         isPlain
                         dropdownItems={[
-                          <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasSelected} component="button" onClick={bulkRemove}>
+                          <DropdownItem ouiaId="bulk-remove" aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasSelected} component="button" onClick={bulkRemove}>
                             {__('Remove')}
                           </DropdownItem>]
                         }

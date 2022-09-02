@@ -25,6 +25,7 @@ const TypeAheadItems = ({
     const { onClick, ...dropdownProps } = itemProps;
     return (
       <DropdownItem
+        ouiaId={text}
         {...dropdownProps}
         component={
           <button onClick={onClick}>{text}</button>
@@ -41,6 +42,7 @@ const TypeAheadItems = ({
       isOpen={isOpen}
       dropdownItems={buildDropdownItems()}
       className="typeahead-dropdown"
+      ouiaId="typeahead-dropdown"
     />
   );
 };

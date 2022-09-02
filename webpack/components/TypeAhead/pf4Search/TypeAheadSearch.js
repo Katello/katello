@@ -50,7 +50,7 @@ const TypeAheadSearch = ({
             controller={bookmarkController}
           />}
         {(!autoSearchEnabled && !isTextInput) &&
-          <Button aria-label="search button" variant="control" onClick={() => onSearch(inputValue)}>
+          <Button ouiaId="search-button" aria-label="search button" variant="control" onClick={() => onSearch(inputValue)}>
             <SearchIcon />
           </Button>}
       </>
