@@ -406,7 +406,7 @@ module Katello
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Ansible collections.") if @repository.ansible_collection?
       unless params[:content_type].empty? || RepositoryTypeManager.uploadable_content_types.map(&:label).include?(params[:content_type])
         msg = _("Invalid params provided - content_type must be one of %s") %
-          RepositoryTypeManager.uploadable_content_types.map(&:label).join(",")
+          RepositoryTypeManager.uploadable_content_types.map(&:label).sort.join(",")
         fail HttpErrors::UnprocessableEntity, msg
       end
 

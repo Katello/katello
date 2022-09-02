@@ -20,12 +20,12 @@ module Katello
       params[:excluded] ||= {}
 
       items = model_scope
-      if params[:included][:ids]
+      if params[:included][:ids].present?
         items = model_scope.where(key => params[:included][:ids])
-      elsif params[:included][:search]
+      elsif params[:included][:search].present?
         items = model_scope.search_for(params[:included][:search])
       end
-      if params[:excluded][:ids]
+      if params[:excluded][:ids].present?
         items = items.where.not(key => params[:excluded][:ids])
       end
 
