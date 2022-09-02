@@ -140,7 +140,6 @@ module Katello
     scope :order_by_root, ->(attr) { joins(:root).order("#{Katello::RootRepository.table_name}.#{attr}") }
     scope :with_content, ->(content) { joins(Katello::RepositoryTypeManager.find_content_type(content).model_class.repository_association_class.name.demodulize.underscore.pluralize.to_sym).distinct }
     scope :by_rpm_count, -> { left_joins(:repository_rpms).group(:id).order("count(katello_repository_rpms.id) ASC") } # smallest count first
-    scope :exportable, -> { with_type(EXPORTABLE_TYPES) }
     scope :immediate_or_none, -> do
       immediate.or(where("#{RootRepository.table_name}.download_policy" => nil)).
         or(where("#{RootRepository.table_name}.download_policy" => ""))
@@ -185,6 +184,12 @@ module Katello
 
     delegate :content_id, to: :root, allow_nil: true
     delegate :repository_type, to: :root
+
+    def self.exportable(format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
+      types = EXPORTABLE_TYPES
+      types = [YUM_TYPE, FILE_TYPE] if format == ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
+      with_type(types)
+    end
 
     def self.with_type(content_type)
       joins(:root).where("#{RootRepository.table_name}.content_type" => content_type)

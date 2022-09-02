@@ -24,7 +24,11 @@ module Katello
         end
 
         def generate_repository_exporter_path
-          _org, _content, content_path = repository.library_instance_or_self.relative_path.split("/", 3)
+          if repository.docker?
+            content_path = repository.library_instance_or_self.relative_path
+          else
+            _org, _content, content_path = repository.library_instance_or_self.relative_path.split("/", 3)
+          end
           content_path = content_path.sub(%r|^/|, '')
           "#{generate_exporter_path}/#{content_path}".gsub(/\s/, '_')
         end

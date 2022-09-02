@@ -9,7 +9,7 @@ module Actions
                     format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
             action_subject(repository)
             validate_repositories_immediate!(repository)
-
+            validate_export_types!(repository, format)
             content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(
                                                                            repository: repository,
                                                                            create_by_default: true,
@@ -40,10 +40,18 @@ module Actions
           end
 
           def validate_repositories_immediate!(repository)
-            unless repository.immediate?
+            unless repository.download_policy.blank? || repository.immediate?
               fail _("NOTE: Unable to fully export repository '%{repository}' because"\
                      " it does not have the 'immediate' download policy."\
                      " Update the download policy and sync the affected repository to include them in the export."\
+                       % { repository: repository.name })
+            end
+          end
+
+          def validate_export_types!(repository, format)
+            unless ::Katello::Repository.exportable(format: format).where(id: repository.id).exists?
+              fail _("NOTE: Unable to export repository '%{repository}' because"\
+                     " it does not have an exportable content type."\
                        % { repository: repository.name })
             end
           end

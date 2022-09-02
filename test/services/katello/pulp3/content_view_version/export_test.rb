@@ -51,7 +51,22 @@ module Katello
             assert_match(/#{repo1.name}/, exception.message)
           end
 
-          it "does not fail on validate! if only 'immediate' repos in cvv" do
+          it "does not fail on validate! for non yum repos" do
+            proxy = SmartProxy.pulp_primary
+            SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
+            version = katello_content_view_versions(:library_default_version)
+            version.archived_repos.yum_type.each do |repo|
+              repo.root.update!(download_policy: "immediate")
+            end
+
+            export = fetch_exporter(smart_proxy: proxy,
+                                    content_view_version: version)
+            assert_nothing_raised do
+              export.validate!(fail_on_missing_content: true)
+            end
+          end
+
+          it "does not fail on validate! if non yum  'immediate' repos are in cvv" do
             proxy = SmartProxy.pulp_primary
             SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
             version = katello_content_view_versions(:library_view_version_2)
@@ -160,6 +175,37 @@ module Katello
             assert_match(/Specify an export chunk size less than 1_000_000 GB/, exception.message)
           end
 
+          it "Picks the right repos for syncable" do
+            proxy = SmartProxy.pulp_primary
+            SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
+            version = katello_content_view_versions(:library_default_version)
+            assert_includes version.archived_repos.all.map(&:content_type), 'ansible_collection'
+
+            export = fetch_exporter(smart_proxy: proxy,
+                                    content_view_version: version,
+                                    format: ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE)
+            refute_includes export.repositories(fetch_all: true).all.map(&:content_type), 'ansible_collection'
+            refute_includes export.repositories(fetch_all: true).all.map(&:content_type), 'deb'
+            assert_includes export.repositories(fetch_all: true).all.map(&:content_type), 'file'
+            assert_includes export.repositories(fetch_all: true).all.map(&:content_type), 'yum'
+          end
+
+          it "Picks the right repos for importable" do
+            proxy = SmartProxy.pulp_primary
+            SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
+            version = katello_content_view_versions(:library_default_version)
+            assert_includes version.archived_repos.all.map(&:content_type), 'ansible_collection'
+            assert_includes version.archived_repos.all.map(&:content_type), 'deb'
+
+            export = fetch_exporter(smart_proxy: proxy,
+                                    content_view_version: version,
+                                    format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
+            assert_includes export.repositories(fetch_all: true).all.map(&:content_type), 'ansible_collection'
+            assert_includes export.repositories(fetch_all: true).all.map(&:content_type), 'file'
+            assert_includes export.repositories(fetch_all: true).all.map(&:content_type), 'yum'
+            refute_includes export.repositories(fetch_all: true).all.map(&:content_type), 'deb'
+          end
+
           it "Generates Exporter path correctly" do
             cvv = katello_content_view_versions(:library_view_solve_deps_version)
             export = setup_environment(version: :library_view_solve_deps_version)
@@ -167,11 +213,12 @@ module Katello
             refute_includes export.generate_exporter_path, ' '
           end
 
-          def setup_environment(version: :library_view_version_2)
+          def setup_environment(version: :library_view_version_2,
+                                format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
             proxy = SmartProxy.pulp_primary
             SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
             version = katello_content_view_versions(version)
-            fetch_exporter(smart_proxy: proxy, content_view_version: version)
+            fetch_exporter(smart_proxy: proxy, content_view_version: version, format: format)
           end
         end
       end
