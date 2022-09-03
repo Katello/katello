@@ -33,19 +33,9 @@ module Katello
           results = json_body['results']
 
           results.map do |repo|
-            arch = repo['arch']
-            arch = nil if arch == "noarch"
-            substitutions = {
-              :releasever => repo['minor'],
-              :basearch => arch
-            }.compact
-            path = substitutions.inject(content_path) do |path_url, (key, value)|
-              path_url.gsub("$#{key}", value)
-            end
-            {
-              path: path,
-              substitutions: substitutions
-            }
+            Katello::Content.substitute_content_path(arch: repo[:arch],
+                                                     releasever: repo[:minor],
+                                                     content_path: content_path)
           end
         end
 

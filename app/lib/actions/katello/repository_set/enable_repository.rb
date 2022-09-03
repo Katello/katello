@@ -6,15 +6,19 @@ module Actions
           _("Enable")
         end
 
-        def plan(product, content, options)
+        def plan(product, content, substitutions, override_url: nil)
           mapper = ::Katello::Candlepin::RepositoryMapper.new(product,
                                                                content,
-                                                               options)
+                                                               substitutions)
           mapper.validate!
           if mapper.find_repository
             fail ::Katello::Errors::ConflictException, _("The repository is already enabled")
           end
           repository = mapper.build_repository
+          if override_url
+            repository.root.url = override_url
+            repository.root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE if URI(override_url).scheme == 'file'
+          end
           plan_action(Repository::Create, repository, clone: false)
           action_subject(repository)
           plan_self

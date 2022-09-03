@@ -20,7 +20,8 @@ module Katello
                     :gpg_keys,
                     :content_view,
                     :content_view_version,
-                    :from_content_view_version
+                    :from_content_view_version,
+                    :format
 
         def initialize(metadata:)
           @toc = metadata[:toc]
@@ -30,6 +31,11 @@ module Katello
           @content_view = parse_content_view(metadata[:content_view]) if metadata[:content_view]
           @content_view_version = parse_content_view_version(metadata[:content_view_version]) if metadata[:content_view_version]
           @from_content_view_version = parse_content_view_version(metadata[:from_content_view_version]) if metadata[:from_content_view_version]
+          @format = metadata[:format]
+        end
+
+        def syncable_format?
+          @format == ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
         end
 
         private
@@ -76,6 +82,11 @@ module Katello
 
         def parse_repositories(repositories)
           repositories.map do |pulp_name, repo|
+            if repo[:content]
+              content =  MetadataRepositoryContent.new(id: repo[:content][:id],
+                                                       label: repo[:content][:label],
+                                                       url: repo[:content][:url])
+            end
             MetadataRepository.new(
               pulp_name: pulp_name,
               name: repo[:name],
@@ -93,7 +104,7 @@ module Katello
               redhat: repo[:redhat],
               product: product_for_repo(repo),
               gpg_key: gpg_key_for_repo(repo),
-              content: repo[:content] ? MetadataRepositoryContent.new(id: repo[:content][:id], label: repo[:content][:label]) : nil
+              content: content
             )
           rescue => e
             raise _("Invalid repository in the metadata %{repo} error=%{error}") % { repo: repo, error: e.message }

@@ -4,11 +4,16 @@ module Katello
       class ImportableRepositories
         attr_reader :creatable, :updatable
 
-        def initialize(organization:, metadata_repositories:)
+        def initialize(organization:,
+                       metadata_repositories:,
+                       syncable_format: false,
+                       path: nil)
           @organization = organization
           @metadata_repositories = metadata_repositories
           @creatable = []
           @updatable = []
+          @syncable_format = syncable_format
+          @path = path
         end
 
         def generate!
@@ -41,7 +46,11 @@ module Katello
                 basearch: repo.arch,
                 releasever: repo.minor
               }
-              creatable << { product: product, content: product_content, substitutions: substitutions }
+              creatable << { product: product,
+                             content: product_content,
+                             substitutions: substitutions,
+                             override_url: fetch_feed_url(repo)
+                           }
             else
               creatable << { repository: product.add_repo(create_repo_params(repo, product)) }
             end
@@ -101,12 +110,17 @@ module Katello
 
           params = { name: find_unique_name(metadata_repo, product) }
           params[:gpg_key_id] = gpg_key_id(metadata_repo)
-
           keys.each do |key|
             params[key] = metadata_repo.send(key)
           end
-
+          url = fetch_feed_url(metadata_repo)
+          params[:url] = url if url
           params
+        end
+
+        def fetch_feed_url(metadata_repo)
+          return unless @syncable_format
+          "file://#{@path.chomp('/')}#{metadata_repo.content.url}"
         end
 
         def update_repo_params(metadata_repo)
@@ -121,8 +135,9 @@ module Katello
             :download_policy,
             :mirroring_policy
           ]
-
           params = {}
+          url = fetch_feed_url(metadata_repo)
+          params[:url] = url if url
           params[:gpg_key_id] = gpg_key_id(metadata_repo)
 
           keys.each do |key|

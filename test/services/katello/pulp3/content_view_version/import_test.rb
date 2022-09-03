@@ -13,7 +13,8 @@ module Katello
             stub('metadata_map',
                  repositories: @metadata_repos,
                  products: @metadata_products,
-                 content_view: @metadata_cv
+                 content_view: @metadata_cv,
+                 syncable_format?: false
                 )
           end
 

@@ -10,7 +10,6 @@ module Katello
             new_repo_1 = "New-Repo-1"
             gpg_key = katello_gpg_keys(:fedora_gpg_key)
             product_label = repo.product.label
-
             metadata_product = stub(label: product_label)
             metadata_gpg_key = stub(name: gpg_key.name)
             metadata_repositories = [
@@ -67,6 +66,65 @@ module Katello
             assert_nil helper.updatable.first[:options][:gpg_key_id]
           end
 
+          it "Fetches the right custom repos to create and update For syncable" do
+            repo = katello_repositories(:fedora_17_x86_64)
+            new_repo_1 = "New-Repo-1"
+            gpg_key = katello_gpg_keys(:fedora_gpg_key)
+            product_label = repo.product.label
+            path = "/foo/grand/100"
+            metadata_product = stub(label: product_label)
+            metadata_gpg_key = stub(name: gpg_key.name)
+            content_url = "/custom/custom/repo"
+            metadata_repositories = [
+              stub('updatable repo',
+                redhat: repo.redhat?,
+                product: metadata_product,
+                gpg_key: nil,
+                name: repo.name,
+                label: repo.label,
+                description: repo.description,
+                arch: repo.arch,
+                unprotected: repo.unprotected,
+                content_type: repo.content_type,
+                checksum_type: repo.checksum_type,
+                os_versions: repo.os_versions,
+                major: repo.major,
+                minor: repo.minor,
+                download_policy: repo.download_policy,
+                mirroring_policy: repo.mirroring_policy,
+                content: stub(label: repo.content.label, id: nil, url: content_url)
+              ),
+              stub('new repo 1',
+                   name: new_repo_1,
+                   label: new_repo_1,
+                   description: nil,
+                   gpg_key: metadata_gpg_key,
+                   redhat: false,
+                   product: metadata_product,
+                   arch: 'x86_64',
+                   unprotected: true,
+                   content_type: 'yum',
+                   checksum_type: 'sha256',
+                   os_versions: [],
+                   major: '7',
+                   minor: '1',
+                   download_policy: 'immediate',
+                   mirroring_policy: nil,
+                   content: stub(label: new_repo_1, id: nil, url: content_url)
+                  )
+            ]
+
+            helper = Katello::Pulp3::ContentViewVersion::ImportableRepositories.new(
+              organization: repo.organization,
+              metadata_repositories: metadata_repositories,
+              syncable_format: true,
+              path: path
+            )
+            helper.generate!
+            assert_equal "file://#{path}#{content_url}", helper.creatable.first[:repository][:url]
+            assert_equal "file://#{path}#{content_url}", helper.updatable.first[:options][:url]
+          end
+
           it "Fetches the redhat repos to enable by label" do
             repo = katello_repositories(:rhel_7_no_arch)
             product_label = repo.product.label
@@ -97,6 +155,42 @@ module Katello
             assert_includes helper.creatable.map { |r| r[:content].label }, repo.content.label
             assert_includes helper.creatable.map { |r| r[:substitutions][:basearch] }, repo.arch
             assert_includes helper.creatable.map { |r| r[:substitutions][:releasever] }, repo.minor
+          end
+
+          it "Fetches the redhat repos to enable by label for syncable" do
+            repo = katello_repositories(:rhel_7_no_arch)
+            url = "/Foo/Bar"
+            product_label = repo.product.label
+            metadata_product = stub(label: product_label, cp_id: nil)
+            metadata_content = stub(label: repo.content.label, id: nil, url: url)
+            metadata_repositories = [
+              stub(
+                name: repo.name,
+                label: repo.label + "foo",
+                redhat: repo.redhat?,
+                product: metadata_product,
+                content: metadata_content,
+                description: repo.description,
+                arch: repo.arch,
+                major: repo.major,
+                minor: repo.minor
+              )
+            ]
+            path = "/var/lib/pulp/exports/Default_Org/CV/2.0"
+            helper = Katello::Pulp3::ContentViewVersion::ImportableRepositories.new(
+              organization: repo.organization,
+              metadata_repositories: metadata_repositories,
+              syncable_format: true,
+              path: path
+            )
+            helper.generate!
+
+            assert helper.creatable.size, 1
+            assert_includes helper.creatable.map { |r| r[:product].label }, product_label
+            assert_includes helper.creatable.map { |r| r[:content].label }, repo.content.label
+            assert_includes helper.creatable.map { |r| r[:substitutions][:basearch] }, repo.arch
+            assert_includes helper.creatable.map { |r| r[:substitutions][:releasever] }, repo.minor
+            assert_equal "file://#{path}#{url}", helper.creatable.first[:override_url]
           end
 
           it "Fetches the redhat repos to enable by cp_id" do
@@ -136,7 +230,6 @@ module Katello
             repo_label = "unique"
             gpg_key = katello_gpg_keys(:fedora_gpg_key)
             product_label = repo.product.label
-
             metadata_product = stub(label: product_label)
             metadata_gpg_key = stub(name: gpg_key.name)
             metadata_repositories = [

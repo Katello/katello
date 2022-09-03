@@ -9,10 +9,10 @@ module Actions
         execution_plan_hooks.use :trigger_capsule_sync, :on => :success
 
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
-        def plan(content_view, description = "", options = {importing: false}) # rubocop:disable Metrics/PerceivedComplexity
+        def plan(content_view, description = "", options = {importing: false, syncable: false}) # rubocop:disable Metrics/PerceivedComplexity
           action_subject(content_view)
 
-          content_view.check_ready_to_publish!(importing: options[:importing])
+          content_view.check_ready_to_publish!(options.slice(:importing, :syncable))
 
           if options[:repos_units].present?
             valid_labels_from_cv = content_view.repositories.map(&:label)
