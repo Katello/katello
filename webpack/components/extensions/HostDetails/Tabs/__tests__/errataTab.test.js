@@ -23,7 +23,20 @@ const contentFacetAttributes = {
   uuid: 'e5761ea3-4117-4ecf-83d0-b694f99b389e',
   content_view_default: false,
   lifecycle_environment_library: false,
+  errata_counts: {
+    total: 3,
+  },
 };
+
+const cfWithErrataTotal = total => ({
+  ...contentFacetAttributes,
+  errata_counts: {
+    total,
+  },
+});
+
+const cfNoErrata = cfWithErrataTotal(0);
+
 const hostName = 'foo.example.com';
 
 const errataBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_errata');
@@ -145,7 +158,7 @@ test('Can handle no errata being present', async (done) => {
     .query(defaultQuery)
     .reply(200, noResults);
 
-  const { queryByText } = renderWithRedux(<ErrataTab />, renderOptions());
+  const { queryByText } = renderWithRedux(<ErrataTab />, renderOptions(cfNoErrata));
 
   // Assert that there are not any errata showing on the screen.
   await patientlyWaitFor(() => expect(queryByText('This host has errata that are applicable, but not installable.')).toBeInTheDocument());
@@ -252,7 +265,7 @@ test('Can select all errata across pages through checkbox', async (done) => {
     getAllByText,
     getByLabelText,
     getAllByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(mockErrata.total)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -293,7 +306,7 @@ test('Can deselect all errata across pages through checkbox', async (done) => {
     getAllByText,
     getByLabelText,
     getAllByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(mockErrata.total)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -337,7 +350,7 @@ test('Can select & deselect errata across pages', async (done) => {
     getAllByText,
     getByLabelText,
     getAllByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(100)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -373,7 +386,7 @@ test('Can select & de-select all errata through selectDropDown', async (done) =>
     queryByText,
     getAllByText,
     getByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(mockErrata.total)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -425,7 +438,7 @@ test('Can de-select items in select all mode across pages', async (done) => {
     getAllByText,
     getByLabelText,
     getAllByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(mockErrata.total)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -482,7 +495,7 @@ test('Can select page and select only items on the page', async (done) => {
     queryByText,
     getAllByText,
     getByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(mockErrata.total)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -516,7 +529,7 @@ test('Select all is disabled if all rows are selected', async (done) => {
     queryByText,
     getAllByText,
     getByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(mockErrata.total)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -568,7 +581,7 @@ test('Toggle Group shows if it\'s not the default content view or library enviro
   const {
     queryByLabelText,
     getAllByText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(mockErrata.total)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -578,13 +591,13 @@ test('Toggle Group shows if it\'s not the default content view or library enviro
 });
 
 test('Toggle Group shows if it\'s the default content view but non-library environment', async (done) => {
-  const options = renderOptions({
-    ...contentFacetAttributes,
-    content_view_default: true,
-  });
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
+  const options = renderOptions({
+    ...cfWithErrataTotal(mockErrata.total),
+    content_view_default: true,
+  });
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
@@ -604,13 +617,14 @@ test('Toggle Group shows if it\'s the default content view but non-library envir
 });
 
 test('Toggle Group shows if it\'s the library environment but non-default content view', async (done) => {
-  const options = renderOptions({
-    ...contentFacetAttributes,
-    lifecycle_environment_library: true,
-  });
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
+  const options = renderOptions({
+    ...cfWithErrataTotal(mockErrata.total),
+    lifecycle_environment_library: true,
+  });
+
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
@@ -630,14 +644,14 @@ test('Toggle Group shows if it\'s the library environment but non-default conten
 });
 
 test('Toggle Group does not show if it\'s the default content view and library environment', async (done) => {
-  const options = renderOptions({
-    ...contentFacetAttributes,
-    content_view_default: true,
-    lifecycle_environment_library: true,
-  });
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
+  const options = renderOptions({
+    ...cfWithErrataTotal(mockErrata.total),
+    content_view_default: true,
+    lifecycle_environment_library: true,
+  });
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
@@ -669,7 +683,7 @@ test('Selection is disabled for errata which are applicable but not installable'
   const {
     getAllByText,
     getByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(3)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText(firstErrata.severity)[0]).toBeInTheDocument());
@@ -705,7 +719,7 @@ test('Can select only installable errata across pages through checkbox', async (
     getAllByText,
     getByLabelText,
     getAllByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(mockErrata.total)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -737,7 +751,7 @@ test('Can toggle with the Toggle Group ', async (done) => {
   const {
     queryByLabelText,
     getAllByText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(mockErrata.total)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -766,7 +780,7 @@ test('Can filter by errata type', async (done) => {
     getByRole,
     getAllByText,
     getByText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(3)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -810,7 +824,7 @@ test('Can filter by severity', async (done) => {
     queryByLabelText,
     getAllByText,
     getByText,
-  } = renderWithRedux(<ErrataTab />, renderOptions());
+  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(3)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -844,7 +858,7 @@ test('apply button chooses katello agent if enabled', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
   const options = renderOptions({
-    ...contentFacetAttributes,
+    ...cfWithErrataTotal(mockErrata.total),
     katelloAgentInstalled: true,
     katelloAgentEnabled: true,
   });
@@ -882,7 +896,7 @@ test('Can bulk apply via katello agent', async (done) => {
   const mockErrata = makeMockErrata({});
   const { results } = mockErrata;
   const options = renderOptions({
-    ...contentFacetAttributes,
+    ...cfWithErrataTotal(mockErrata.total),
     katelloAgentInstalled: true,
     katelloAgentEnabled: true,
   });
@@ -928,7 +942,7 @@ test('Can select all, exclude and bulk apply via katello agent', async (done) =>
   const mockErrata = makeMockErrata({});
   const { results } = mockErrata;
   const options = renderOptions({
-    ...contentFacetAttributes,
+    ...cfWithErrataTotal(mockErrata.total),
     katelloAgentInstalled: true,
     katelloAgentEnabled: true,
   });
@@ -973,7 +987,7 @@ test('Apply button chooses remote execution', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
   const options = renderOptions({
-    ...contentFacetAttributes,
+    ...cfWithErrataTotal(mockErrata.total),
     katelloAgentInstalled: true,
     katelloAgentEnabled: true,
     remoteExecutionByDefault: true,
@@ -1029,7 +1043,7 @@ test('Can bulk apply via remote execution', async (done) => {
 
   const { getAllByText, getByLabelText, queryByText } = renderWithRedux(
     <ErrataTab />,
-    renderOptions(),
+    renderOptions(cfWithErrataTotal(mockErrata.total)),
   );
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -1068,7 +1082,7 @@ test('Can select all, exclude and bulk apply via remote execution', async (done)
 
   const { getAllByText, getByLabelText, queryByText } = renderWithRedux(
     <ErrataTab />,
-    renderOptions(),
+    renderOptions(cfWithErrataTotal(mockErrata.total)),
   );
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -1099,7 +1113,7 @@ test('Can apply errata in bulk via customized remote execution', async (done) =>
 
   const { getAllByText, getByLabelText, queryByText } = renderWithRedux(
     <ErrataTab />,
-    renderOptions(),
+    renderOptions(cfWithErrataTotal(mockErrata.total)),
   );
 
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -1127,7 +1141,7 @@ test('Can apply a single erratum to the host via katello agent', async (done) =>
   const mockErrata = makeMockErrata({});
   const { results } = mockErrata;
   const options = renderOptions({
-    ...contentFacetAttributes,
+    ...cfWithErrataTotal(mockErrata.total),
     katelloAgentInstalled: true,
     katelloAgentEnabled: true,
   });
@@ -1183,7 +1197,7 @@ test('Can apply a single erratum to the host via remote execution', async (done)
 
   const { getByText, getAllByText, getByLabelText } = renderWithRedux(
     <ErrataTab />,
-    renderOptions(),
+    renderOptions(cfWithErrataTotal(mockErrata.total)),
   );
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   const erratumActionMenu = within(getByLabelText('Select row 0').closest('tr')).getByLabelText('Actions');
@@ -1215,7 +1229,7 @@ test('Can apply a single erratum to the host via customized remote execution', a
 
   const { getByText, getAllByText, getByLabelText } = renderWithRedux(
     <ErrataTab />,
-    renderOptions(),
+    renderOptions(cfWithErrataTotal(mockErrata.total)),
   );
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   const erratumActionMenu = within(getByLabelText('Select row 0').closest('tr')).getByLabelText('Actions');
