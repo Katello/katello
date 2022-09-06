@@ -16,6 +16,16 @@ module Katello
       refute_empty AlternateContentSource.where(id: @yum_acs.id)
     end
 
+    def test_duplicate_name
+      assert @yum_acs.save
+      yum_acs_dup_name = @yum_acs.dup
+      assert_not_valid yum_acs_dup_name
+      assert_equal yum_acs_dup_name.errors.full_messages, [
+        "Label has already been taken",
+        "Name has already been taken"
+      ]
+    end
+
     def test_products
       @simplified_acs.products << ::Katello::Product.find_by(name: 'Fedora')
       @simplified_acs.products << ::Katello::Product.find_by(name: 'Red Hat Linux')
