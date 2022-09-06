@@ -1,10 +1,10 @@
 module Katello
   class HostPackagePresenter < SimpleDelegator
-    attr_accessor :installed_package, :upgradable_version, :rpm_id
+    attr_accessor :installed_package, :upgradable_versions, :rpm_id
 
-    def initialize(installed_package, upgradable_version, rpm_id)
+    def initialize(installed_package, upgradable_versions, rpm_id)
       @installed_package = installed_package
-      @upgradable_version = upgradable_version
+      @upgradable_versions = upgradable_versions
       @rpm_id = rpm_id
       super(@installed_package)
     end
@@ -14,7 +14,7 @@ module Katello
       installed_packages_map = ::Katello::Rpm.where(nvra: packages.map(&:nvra)).select(:id, :name).group_by(&:name)
 
       packages.map do |p|
-        HostPackagePresenter.new(p, upgradable_packages_map[p.name]&.first&.nvra, installed_packages_map[p.name]&.first&.id)
+        HostPackagePresenter.new(p, upgradable_packages_map[p.name]&.pluck(:nvra), installed_packages_map[p.name]&.first&.id)
       end
     end
   end

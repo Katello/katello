@@ -410,7 +410,7 @@ module Katello
         ::Katello::HostTracer.helpers_for(traces)
       end
 
-      def package_names_for_job_template(action:, search:)
+      def package_names_for_job_template(action:, search:, versions: nil)
         actions = %w(install remove update).freeze
         case action
         when 'install'
@@ -422,9 +422,16 @@ module Katello
         when 'update'
           return [] if search.empty?
 
+          versions_by_name = {}
+          if versions.present?
+            JSON.parse(versions).each do |nvra|
+              nvra =~ /([^\.]*)-\d+\.[-\.\w]*/
+              versions_by_name[Regexp.last_match(1)] = nvra
+            end
+          end
           pkg_names = installed_packages.search_for(search).distinct.pluck(:name)
           upgrades = ::Katello::Rpm.installable_for_hosts([self]).select(:id, :name, :nvra, :evr).order(evr: :desc).group_by(&:name)
-          pkg_names.map { |p| upgrades[p]&.first&.nvra }.compact
+          pkg_names.map { |p| versions_by_name[p] || upgrades[p]&.first&.nvra }.compact
         else
           fail ::Foreman::Exception.new(N_("package_names_for_job_template: Action must be one of %s"), actions.join(', '))
         end

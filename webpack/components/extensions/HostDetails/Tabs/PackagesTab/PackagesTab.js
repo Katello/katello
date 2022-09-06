@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   ActionList,
@@ -9,19 +9,23 @@ import {
   DropdownToggle,
   DropdownToggleAction,
   KebabToggle,
+  Select,
+  SelectOption,
+  SelectVariant,
   Skeleton,
   Split,
   SplitItem,
 } from '@patternfly/react-core';
-import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText } from '@patternfly/react-table';
+import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import SelectableDropdown from '../../../../SelectableDropdown';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
-import { useBulkSelect, useTableSort, useUrlParams } from '../../../../../components/Table/TableHooks';
-import { PackagesStatus, PackagesLatestVersion } from '../../../../../components/Packages';
+import { useBulkSelect, useTableSort, useUrlParams, useSet } from '../../../../../components/Table/TableHooks';
+import PackagesStatus from '../../../../../components/Packages';
 import {
   getInstalledPackagesWithLatest,
   removePackageViaKatelloAgent,
@@ -48,6 +52,70 @@ import { useRexJobPolling } from '../RemoteExecutionHooks';
 const invokeRexJobs = ['create_job_invocations'];
 const doKatelloAgentActions = ['edit_hosts'];
 const createBookmarks = ['create_bookmarks'];
+
+const UpdateVersionsSelect = ({
+  packageName,
+  rowIndex,
+  selections,
+  upgradableVersions,
+  toggleUpgradableVersionSelect,
+  onUpgradableVersionSelect,
+  upgradableVersionSelectOpen,
+}) => {
+  if (upgradableVersions === null) {
+    return <TableText wrapModifier="nowrap">—</TableText>;
+  } else if (upgradableVersions.length === 1) {
+    return <TableText wrapModifier="nowrap">{upgradableVersions[0]}</TableText>;
+  }
+
+  return (
+    <div>
+      <span id="style-select-id">
+        <Select
+          variant={SelectVariant.single}
+          aria-label="upgradable-version-select"
+          ouiaId="upgradable-version-select"
+          onToggle={isOpen => toggleUpgradableVersionSelect(isOpen, rowIndex)}
+          onSelect={(event, selected) => {
+            onUpgradableVersionSelect(event, selected, rowIndex, packageName);
+          }}
+          selections={selections}
+          isOpen={upgradableVersionSelectOpen.has(rowIndex)}
+          isPlain
+        >
+          {upgradableVersions.map(version => (
+            <SelectOption
+              key={version}
+              value={version}
+              label={`${version}-version-select-option`}
+            />
+          ))}
+        </Select>
+      </span>
+    </div>
+  );
+};
+
+UpdateVersionsSelect.propTypes = {
+  packageName: PropTypes.string.isRequired,
+  rowIndex: PropTypes.number.isRequired,
+  selections: PropTypes.string,
+  upgradableVersions: PropTypes.arrayOf(PropTypes.string),
+  toggleUpgradableVersionSelect: PropTypes.func,
+  onUpgradableVersionSelect: PropTypes.func,
+  upgradableVersionSelectOpen: PropTypes.shape({
+    has: PropTypes.func,
+    rowIndex: PropTypes.number,
+  }),
+};
+
+UpdateVersionsSelect.defaultProps = {
+  selections: null,
+  upgradableVersions: null,
+  toggleUpgradableVersionSelect: undefined,
+  onUpgradableVersionSelect: undefined,
+  upgradableVersionSelectOpen: null,
+};
 
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -78,6 +146,26 @@ export const PackagesTab = () => {
   const onActionToggle = () => {
     setIsActionOpen(prev => !prev);
   };
+
+  const upgradableVersionSelectOpen = useSet([]);
+  const toggleUpgradableVersionSelect = (isOpenState, rowIndex) => {
+    if (isOpenState) {
+      upgradableVersionSelectOpen.add(rowIndex);
+    } else {
+      upgradableVersionSelectOpen.delete(rowIndex);
+    }
+  };
+
+  const selectedNewVersions = useRef({});
+  const onUpgradableVersionSelect = (_event, selected, rowIndex, packageName) => {
+    toggleUpgradableVersionSelect(false, rowIndex);
+    selectedNewVersions.current[packageName] = selected;
+  };
+  const selectedPackageUpgradeVersion = ({ packageName, upgradableVersions }) => (
+    selectedNewVersions.current[packageName] || upgradableVersions[0]
+  );
+  const selectedNVRAVersions = Object.keys(selectedNewVersions.current).map(k =>
+    selectedNewVersions.current[k]);
 
   const emptyContentTitle = __('This host does not have any packages.');
   const emptyContentBody = __('Packages will appear here when available.');
@@ -161,9 +249,9 @@ export const PackagesTab = () => {
     isPolling: isBulkRemoveInProgress,
   } = useRexJobPolling(packageBulkRemoveAction);
 
-  const packageUpgradeAction = packageName => updatePackage({
+  const packageUpgradeAction = ({ packageName, upgradableVersions }) => updatePackage({
     hostname,
-    packageName,
+    packageName: selectedPackageUpgradeVersion({ packageName, upgradableVersions }),
   });
 
   const {
@@ -175,6 +263,7 @@ export const PackagesTab = () => {
   const packageBulkUpgradeAction = bulkParams => updatePackages({
     hostname,
     search: bulkParams,
+    versions: JSON.stringify(selectedNVRAVersions || []),
   });
 
   const {
@@ -218,7 +307,8 @@ export const PackagesTab = () => {
   };
 
   const selectedPackageNames = () => selectedResults.map(({ name }) => name);
-  const selectedUpgradableVersions = () => selectedResults.map(({ upgradable_version: v }) => v);
+  const selectedUpgradableVersions = () => selectedResults.map(({ name, upgradable_versions: v }) =>
+    selectedNewVersions.current[name] || v[0]);
 
   const removePackagesViaKatelloAgent = () => {
     dispatch(removePackageViaKatelloAgent(hostId, { packages: selectedPackageNames() }));
@@ -243,7 +333,9 @@ export const PackagesTab = () => {
     }
   };
 
-  const upgradeViaRemoteExecution = packageName => triggerPackageUpgrade(packageName);
+  const upgradeViaRemoteExecution = ({ packageName, upgradableVersions }) => (
+    triggerPackageUpgrade({ packageName, upgradableVersions })
+  );
 
   const upgradeBulkViaRemoteExecution = () => {
     const selected = fetchBulkParams();
@@ -270,13 +362,16 @@ export const PackagesTab = () => {
   };
 
   const upgradeViaCustomizedRemoteExecution = selectedCount ?
-    packagesUpdateUrl({ hostname, search: fetchBulkParams() }) :
-    '#';
+    packagesUpdateUrl({
+      hostname,
+      search: fetchBulkParams(),
+      versions: JSON.stringify(selectedNVRAVersions),
+    }) : '#';
 
   const disableRemove = () => selectedCount === 0 || selectAllMode;
 
   const allUpgradable = () => selectedResults.length > 0 &&
-    selectedResults.every(item => item.upgradable_version);
+    selectedResults.every(item => item.upgradable_versions?.length > 0);
   const disableUpgrade = () => selectedCount === 0 ||
     (selectAllMode && packageStatusSelected !== 'Upgradable') ||
     (defaultRemoteAction === KATELLO_AGENT && selectAllMode && !areAllRowsSelected()) ||
@@ -453,7 +548,7 @@ export const PackagesTab = () => {
                 name: packageName,
                 nvra: installedVersion,
                 rpm_id: rpmId,
-                upgradable_version: upgradableVersion,
+                upgradable_versions: upgradableVersions,
               } = pkg;
 
               const rowActions = [
@@ -464,17 +559,23 @@ export const PackagesTab = () => {
                 },
               ];
 
-              if (upgradableVersion) {
+              if (upgradableVersions) {
                 rowActions.unshift(
                   {
                     title: __('Upgrade via remote execution'),
-                    onClick: () => upgradeViaRemoteExecution(upgradableVersion),
+                    onClick: () => upgradeViaRemoteExecution({ packageName, upgradableVersions }),
                     isDisabled: actionInProgress,
                   },
                   {
                     title: __('Upgrade via customized remote execution'),
                     component: 'a',
-                    href: katelloPackageUpdateUrl({ hostname, packageName: upgradableVersion }),
+                    href: katelloPackageUpdateUrl({
+                      hostname,
+                      packageName: selectedPackageUpgradeVersion({
+                        packageName,
+                        upgradableVersions,
+                      }),
+                    }),
                   },
                 );
               }
@@ -501,7 +602,17 @@ export const PackagesTab = () => {
                   </Td>
                   <Td><PackagesStatus {...pkg} /></Td>
                   <Td>{installedVersion.replace(`${packageName}-`, '')}</Td>
-                  <Td><PackagesLatestVersion {...pkg} /></Td>
+                  <Td>
+                    <UpdateVersionsSelect
+                      packageName={packageName}
+                      rowIndex={rowIndex}
+                      selections={selectedNewVersions.current[packageName]}
+                      upgradableVersions={upgradableVersions}
+                      toggleUpgradableVersionSelect={toggleUpgradableVersionSelect}
+                      onUpgradableVersionSelect={onUpgradableVersionSelect}
+                      upgradableVersionSelectOpen={upgradableVersionSelectOpen}
+                    />
+                  </Td>
                   {showActions ? (
                     <Td
                       key={`rowActions-${id}`}

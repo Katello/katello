@@ -6,7 +6,7 @@ import { errorToast, renderRexJobStartedToast } from '../../../../scenes/Tasks/h
 import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
 import { TRACES_SEARCH_QUERY } from './TracesTab/HostTracesConstants';
 import { PACKAGE_SEARCH_QUERY } from './PackagesTab/YumInstallablePackagesConstants';
-import { PACKAGES_SEARCH_QUERY } from './PackagesTab/HostPackagesConstants';
+import { PACKAGES_SEARCH_QUERY, SELECTED_UPDATE_VERSIONS } from './PackagesTab/HostPackagesConstants';
 
 // PARAM BUILDING
 const baseParams = ({ feature, hostname, inputs = {} }) => ({
@@ -54,12 +54,13 @@ const katelloPackageUpdateParams = ({ hostname, packageName }) =>
     feature: REX_FEATURES.KATELLO_PACKAGE_UPDATE,
   });
 
-const katelloPackagesUpdateParams = ({ hostname, search }) =>
-  baseParams({
-    hostname,
-    inputs: { [PACKAGES_SEARCH_QUERY]: search },
+const katelloPackagesUpdateParams = ({ hostname, search, versions }) => ({
+  job_invocation: {
     feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
-  });
+    inputs: { [PACKAGES_SEARCH_QUERY]: search, [SELECTED_UPDATE_VERSIONS]: versions },
+    search_query: `name ^ (${hostname})`,
+  },
+});
 
 const katelloTracerResolveParams = ({ hostname, search }) =>
   baseParams({
@@ -150,11 +151,11 @@ export const updatePackage = ({ hostname, packageName }) => post({
   errorToast,
 });
 
-export const updatePackages = ({ hostname, search }) => post({
+export const updatePackages = ({ hostname, search, versions }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
-  params: katelloPackagesUpdateParams({ hostname, search }),
+  params: katelloPackagesUpdateParams({ hostname, search, versions }),
   handleSuccess: showRexToast,
   errorToast,
 });

@@ -3,6 +3,7 @@ export const HOST_PACKAGES_INSTALL_KEY = 'HOST_PACKAGES_KATELLO_AGENT_INSTALL';
 export const HOST_PACKAGES_REMOVE_KEY = 'HOST_PACKAGES_REMOVE';
 export const HOST_PACKAGES_UPGRADE_KEY = 'HOST_PACKAGES_UPGRADE';
 export const PACKAGES_SEARCH_QUERY = 'Packages search query';
+export const SELECTED_UPDATE_VERSIONS = 'Selected update versions';
 
 export const PACKAGES_VERSION_STATUSES = {
   UPGRADABLE: 'Upgradable',
