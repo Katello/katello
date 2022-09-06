@@ -2,7 +2,7 @@ import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
-import { HOST_PACKAGES_KEY, PACKAGES_SEARCH_QUERY } from '../PackagesTab/HostPackagesConstants';
+import { HOST_PACKAGES_KEY, PACKAGES_SEARCH_QUERY, SELECTED_UPDATE_VERSIONS } from '../PackagesTab/HostPackagesConstants';
 import { PackagesTab } from '../PackagesTab/PackagesTab.js';
 import mockPackagesData from './packages.fixtures.json';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
@@ -181,7 +181,7 @@ test('Can upgrade a package via remote execution', async (done) => {
     .post(jobInvocations, {
       job_invocation: {
         inputs: {
-          package: firstPackage.upgradable_version,
+          package: firstPackage.upgradable_versions[0],
         },
         search_query: `name ^ (${hostname})`,
         feature: REX_FEATURES.KATELLO_PACKAGE_UPDATE,
@@ -256,7 +256,7 @@ test('Can upgrade a package via customized remote execution', async (done) => {
 
   const rexAction = getByText('Upgrade via customized remote execution');
   const feature = REX_FEATURES.KATELLO_PACKAGE_UPDATE;
-  const packageName = firstPackage.upgradable_version;
+  const packageName = firstPackage.upgradable_versions[0];
 
   expect(rexAction).toBeInTheDocument();
   expect(rexAction).toHaveAttribute(
@@ -284,6 +284,7 @@ test('Can bulk upgrade via remote execution', async (done) => {
       job_invocation: {
         inputs: {
           [PACKAGES_SEARCH_QUERY]: `id ^ (${firstPackage.id},${secondPackage.id})`,
+          [SELECTED_UPDATE_VERSIONS]: JSON.stringify([]),
         },
         search_query: `name ^ (${hostname})`,
         feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
@@ -337,7 +338,7 @@ test('Can bulk upgrade via customized remote execution', async (done) => {
   const feature = REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH;
   const packages = `${firstPackage.id},${secondPackage.id}`;
   const job =
-    `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostname})&inputs%5BPackages%20search%20query%5D=id%20%5E%20(${packages})`;
+    `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostname})&inputs%5BPackages%20search%20query%5D=id%20%5E%20(${packages})&inputs%5BSelected%20update%20versions%5D=%5B%5D`;
 
   getByRole('checkbox', { name: 'Select row 0' }).click();
   expect(getByLabelText('Select row 0').checked).toEqual(true);

@@ -11,9 +11,9 @@ module Katello
     let(:new_version) { 'one-1.2-5.el7.x86_64' }
 
     test "with set upgradable_version" do
-      presenter = HostPackagePresenter.new(installed_package, new_version, @rpm.id)
+      presenter = HostPackagePresenter.new(installed_package, [new_version], @rpm.id)
 
-      assert_equal presenter.upgradable_version, new_version
+      assert_equal presenter.upgradable_versions, [new_version]
       assert_equal presenter.name, installed_package.name
       assert_equal presenter.rpm_id, @rpm.id
     end
@@ -21,7 +21,7 @@ module Katello
     test "with nil upgradable_version" do
       presenter = HostPackagePresenter.new(installed_package, nil, @rpm.id)
 
-      assert_nil presenter.upgradable_version
+      assert_nil presenter.upgradable_versions
       assert_equal presenter.name, installed_package.name
       assert_equal presenter.rpm_id, @rpm.id
     end
@@ -32,7 +32,7 @@ module Katello
       @rpm.update(version: '1.2', nvra: new_version, release: '5')
       presenter = HostPackagePresenter.with_latest([installed_package], host).first
 
-      assert_equal presenter.upgradable_version, new_version
+      assert_equal presenter.upgradable_versions, [new_version]
       assert_equal presenter.name, installed_package.name
       assert_equal presenter.rpm_id, @rpm.id
     end

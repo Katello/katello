@@ -7,12 +7,12 @@ import {
 } from '@patternfly/react-icons';
 import PropTypes from 'prop-types';
 
-export const PackagesStatus = ({ upgradable_version: upgradableVersion }) => {
+const PackagesStatus = ({ upgradable_versions: upgradableVersions }) => {
   let PackagesIcon;
   let label;
   let color;
 
-  if (upgradableVersion == null) {
+  if (upgradableVersions === null) {
     color = 'green';
     label = __('Up-to date');
     PackagesIcon = CheckIcon;
@@ -31,30 +31,14 @@ export const PackagesStatus = ({ upgradable_version: upgradableVersion }) => {
 };
 
 PackagesStatus.propTypes = {
-  upgradable_version: PropTypes.string,
+  upgradable_versions: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ])),
 };
 
 PackagesStatus.defaultProps = {
-  upgradable_version: null,
+  upgradable_versions: null,
 };
 
-export const PackagesLatestVersion = ({ name, upgradable_version: upgradableVersion }) => {
-  let label;
-
-  if (upgradableVersion == null) {
-    label = '';
-  } else {
-    label = upgradableVersion.replace(`${name}-`, '');
-  }
-
-  return <TableText wrapModifier="nowrap">{label || '—'} </TableText>;
-};
-
-PackagesLatestVersion.propTypes = {
-  name: PropTypes.string.isRequired,
-  upgradable_version: PropTypes.string,
-};
-
-PackagesLatestVersion.defaultProps = {
-  upgradable_version: null,
-};
+export default PackagesStatus;
