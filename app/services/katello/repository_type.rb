@@ -174,7 +174,9 @@ module Katello
           label: label,
           generic_browser: generic_browser,
           generic: false,
-          removable: removable
+          removable: removable,
+          uploadable: uploadable,
+          indexed: index && index_on_pulp3
         }
       end
 

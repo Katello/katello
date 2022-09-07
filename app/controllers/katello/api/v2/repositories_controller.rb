@@ -81,7 +81,7 @@ module Katello
     def_param_group :repo_create do
       param :label, String, :required => false
       param :product_id, :number, :required => true, :desc => N_("Product the repository belongs to")
-      param :content_type, RepositoryTypeManager.creatable_repository_types(false).keys, :required => true, :desc => N_("type of repo")
+      param :content_type, String, :required => true, :desc => N_("Type of repository. Available types endpoint: /katello/api/repositories/repository_types")
     end
 
     api :GET, "/repositories", N_("List of enabled repositories")
@@ -102,18 +102,28 @@ module Katello
     param :ansible_collection_id, String, :desc => N_("Id of an ansible collection to find repositories that contain the ansible collection")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :archived, :bool, :desc => N_("show archived repositories")
-    param :content_type, RepositoryTypeManager.defined_repository_types.keys, :desc => N_("limit to only repositories of this type")
+    param :content_type, String, :desc => N_("Limit the repository type. Available types endpoint: /katello/api/repositories/repository_types")
     param :name, String, :desc => N_("name of the repository"), :required => false
     param :label, String, :desc => N_("label of the repository"), :required => false
     param :description, String, :desc => N_("description of the repository")
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."),
           :required => false
-    param :with_content, RepositoryTypeManager.enabled_content_types(false), :desc => N_("only repositories having at least one of the specified content type ex: rpm , erratum")
+    param :with_content, String, :desc => N_("Filter repositories by content unit type (erratum, docker_tag, etc.). Check the \"Indexed?\" types here: /katello/api/repositories/repository_types")
     param :download_policy, ::Katello::RootRepository::DOWNLOAD_POLICIES, :desc => N_("limit to only repositories with this download policy")
     param :username, String, :desc => N_("only show the repositories readable by this user with this username")
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Repository)
     def index
+      unless params[:content_type].empty? || RepositoryTypeManager.find(params[:content_type])
+        msg = _("Invalid params provided - content_type must be one of %s") %
+          RepositoryTypeManager.enabled_repository_types.keys.join(",")
+        fail HttpErrors::UnprocessableEntity, msg
+      end
+      unless params[:with_content].empty? || RepositoryTypeManager.find_content_type(params[:with_content], true)
+        msg = _("Invalid params provided - with_content must be one of %s") %
+          RepositoryTypeManager.indexable_content_types.map(&:label).join(",")
+        fail HttpErrors::UnprocessableEntity, msg
+      end
       base_args = [index_relation.distinct, :name, :asc]
       options = {:includes => [:environment, {:root => [:gpg_key, :product]}]}
 
@@ -233,7 +243,7 @@ module Katello
       repo_params = repository_params
       unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type], false)
         msg = _("Invalid params provided - content_type must be one of %s") %
-          RepositoryTypeManager.creatable_repository_types(false).keys.join(",")
+          RepositoryTypeManager.creatable_repository_types.keys.join(",")
         fail HttpErrors::UnprocessableEntity, msg
       end
 
@@ -374,9 +384,14 @@ module Katello
     desc "Remove content from a repository"
     param :id, :number, :required => true, :desc => "repository ID"
     param 'ids', Array, :required => true, :desc => "Array of content ids to remove"
-    param :content_type, RepositoryTypeManager.removable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
+    param :content_type, String, :required => false, :desc => N_("The type of content to remove (srpm, docker_manifest, etc.). Check removable types here: /katello/api/repositories/repository_types")
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
     def remove_content
+      unless params[:content_type].empty? || RepositoryTypeManager.removable_content_types.map(&:label).include?(params[:content_type])
+        msg = _("Invalid params provided - content_type must be one of %s") %
+          RepositoryTypeManager.removable_content_types.map(&:label).join(",")
+        fail HttpErrors::UnprocessableEntity, msg
+      end
       sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
       fail _("No content ids provided") if @content.blank?
       respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemoveContent, @repository, @content, content_type: params[:content_type], sync_capsule: sync_capsule)
@@ -385,10 +400,15 @@ module Katello
     api :POST, "/repositories/:id/upload_content", N_("Upload content into the repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :content, File, :required => true, :desc => N_("Content files to upload. Can be a single file or array of files.")
-    param :content_type, RepositoryTypeManager.uploadable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
+    param :content_type, String, :required => false, :desc => N_("The type of content to upload (srpm, file, etc.). Check uploadable types here: /katello/api/repositories/repository_types")
     def upload_content
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Container Image content.") if @repository.docker?
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Ansible collections.") if @repository.ansible_collection?
+      unless params[:content_type].empty? || RepositoryTypeManager.uploadable_content_types.map(&:label).include?(params[:content_type])
+        msg = _("Invalid params provided - content_type must be one of %s") %
+          RepositoryTypeManager.uploadable_content_types.map(&:label).join(",")
+        fail HttpErrors::UnprocessableEntity, msg
+      end
 
       filepaths = Array.wrap(params[:content]).compact.collect do |content|
         {path: content.path, filename: content.original_filename}
