@@ -24,7 +24,7 @@ module Katello
       param :service_level, String, :desc => N_("Service level to be used for autoheal")
       param :hypervisor_guest_uuids, Array, :desc => N_("List of hypervisor guest uuids")
       param :installed_products_attributes, Array, :desc => N_("List of products installed on the host") do
-        param_group :installed_products
+        param_group :installed_products, Api::V2::HostSubscriptionsController
       end
     end
 
