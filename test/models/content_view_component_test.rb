@@ -117,6 +117,21 @@ module Katello
                              /^Another component already includes content view with ID/)
     end
 
+    def test_create_content_view_with_generate_cv_components
+      view1 = create(:katello_content_view)
+      view1.generated_for_repository_export!
+      create(:katello_content_view_version, :content_view => view1)
+      component = ContentViewComponent.create(:composite_content_view => @composite,
+                                   :content_view => view1, :latest => true)
+      refute_with_error(component, /^Cannot add generated content view versions to composite content view/)
+
+      view1.generated_for_none!
+      @composite = @composite.reload
+      component = ContentViewComponent.create!(:composite_content_view => @composite,
+                                              :content_view => view1, :latest => true)
+      assert_valid component
+    end
+
     def test_latest_versions
       # test that it gets the latest versions correctly
       view1 = create(:katello_content_view)

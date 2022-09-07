@@ -56,6 +56,10 @@ module Katello
       if attached_content_view_ids.include?(view.id)
         errors.add(:base, _("Another component already includes content view with ID %s" % view.id))
       end
+
+      unless view.generated_for_none?
+        errors.add(:base, _("Cannot add generated content view versions to composite content view"))
+      end
     end
 
     def ensure_valid_attributes
