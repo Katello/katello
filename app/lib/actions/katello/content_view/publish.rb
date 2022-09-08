@@ -5,9 +5,16 @@ module Actions
         extend ApipieDSL::Class
         include ::Katello::ContentViewHelper
         include ::Actions::ObservableAction
+        include Actions::RecurringAction #https://github.com/theforeman/foreman-tasks/blob/master/app/lib/actions/recurring_action.rb
+
         attr_accessor :version
         execution_plan_hooks.use :trigger_capsule_sync, :on => :success
 
+        def delay(delay_options, content_view) # Provided by https://github.com/theforeman/foreman-tasks/blob/master/app/lib/actions/middleware/recurring_logic.rb
+          add_missing_task_group(content_view)
+          input.update :content_view_name => content_view.name
+          super delay_options, content_view
+        end
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
         def plan(content_view, description = "", options = {importing: false}) # rubocop:disable Metrics/PerceivedComplexity
           action_subject(content_view)
@@ -129,6 +136,14 @@ module Actions
                                     view,
                                     environment)
           end
+        end
+
+        def add_missing_task_group(content_view)
+          if content_view.task_group.nil?
+            content_view.task_group = ::Katello::ContentViewTaskGroup.create!
+            content_view.save!
+          end
+          task.add_missing_task_groups(content_view.task_group)
         end
 
         def content_view_version_id

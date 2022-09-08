@@ -50,6 +50,7 @@ module Katello
 
     has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference',
              :dependent => :destroy, :inverse_of => :content_view
+    belongs_to :task_group, :class_name => 'Katello::ContentViewTaskGroup', :inverse_of => :content_view
 
     validates_lengths_from_database :except => [:label]
     validates :label, :uniqueness => { :scope => :organization_id },
