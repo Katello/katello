@@ -12,6 +12,25 @@ import {
   AUTOSEARCH_WHILE_TYPING,
 } from '../../scenes/Settings/SettingsConstants';
 
+// Don't trigger auto-search until you've typed an operator and begun to type a value
+const searchContainsOperator = (search = '') => {
+  const operators = ['>=', '<=', '>', '<', '~', '^', '!^', '=', '!=', '~', '!~'];
+  return operators.some(operator => search.includes(operator) && !search.trim().endsWith(operator));
+};
+// Apply the above function only to the last 'key = value' pair, if there are multiple
+const allowSearch = (originalSearch = '') => {
+  const search = originalSearch.toLowerCase().trim();
+  // find the last occurrence of 'or' or 'and'
+  const lastOr = originalSearch.lastIndexOf('or');
+  const lastAnd = originalSearch.lastIndexOf('and');
+  if (lastOr === -1 && lastAnd === -1) {
+    return searchContainsOperator(search);
+  }
+  const winningOperator = lastOr > lastAnd ? 'or' : 'and';
+  const lastSearch = search.split(winningOperator);
+  return searchContainsOperator(lastSearch.at(-1));
+};
+
 const Search = ({
   onSearch,
   updateSearchQuery,
@@ -62,7 +81,7 @@ const Search = ({
       }
     }
 
-    if (autoSearchEnabled && patternfly4) {
+    if (autoSearchEnabled && patternfly4 && allowSearch(searchTerm)) {
       onSearch(searchTerm || '');
     }
   };
