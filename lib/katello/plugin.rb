@@ -204,6 +204,15 @@ Foreman::Plugin.register :katello do
        :parent => :lab_features_menu,
        :turbolinks => false
 
+  menu :labs_menu,
+         :sync_plans,
+         :url => '/labs/sync_plans',
+         :url_hash => {:controller => 'katello/api/v2/sync_plans_controller',
+                       :action => 'index'},
+         :caption => N_('Sync Plans'),
+         :parent => :lab_features_menu,
+         :turbolinks => false
+
   extend_template_helpers Katello::KatelloUrlsHelper
   extend_template_helpers Katello::Concerns::BaseTemplateScopeExtensions
 
