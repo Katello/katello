@@ -11,5 +11,5 @@ export const selectSyncPlans = (state, index = '') => selectAPIResponse(state, S
 export const selectPlansStatus = (state, index = '') =>
   selectAPIStatus(state, SYNC_PLANS_KEY + index) || STATUS.PENDING;
 
-export const selecSyncPlansError = (state, index = '') =>
+export const selectSyncPlansError = (state, index = '') =>
   selectAPIError(state, SYNC_PLANS_KEY + index);

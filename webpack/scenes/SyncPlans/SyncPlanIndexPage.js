@@ -1,8 +1,22 @@
 import React from 'react';
-import { Bullseye } from '@patternfly/react-core';
-import cat from './catello/cat.gif';
-const SyncPlanIndexPage = () => {
-    return <Bullseye><img src={cat} alt="catello" /></Bullseye>;
-}
+import { translate as __ } from 'foremanReact/common/I18n';
+import { Grid, GridItem, TextContent, Text, TextVariants } from '@patternfly/react-core';
+import SyncPlansTable from "../SyncPlans/MainTable/SyncPlanTable";
+const SyncPlanIndexPage = () => (
+    <>
+      <Grid className="margin-24">
+        <GridItem span={12}>
+          <TextContent>
+            <Text component={TextVariants.h1}>{__('Sync plans')}</Text>
+          </TextContent>
+        </GridItem>
+      </Grid>
+      <Grid>
+        <GridItem span={12}>
+          <SyncPlansTable />
+        </GridItem>
+      </Grid>
+    </>
+)
 
 export default SyncPlanIndexPage;
