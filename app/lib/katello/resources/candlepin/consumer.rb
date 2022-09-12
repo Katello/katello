@@ -69,6 +69,9 @@ module Katello
             if params.empty?
               true
             else
+              if params.key?(:environment) && params[:environment].key?(:id)
+                params[:environments] = [{"id": params[:environment][:id]}]
+              end
               self.put(path(uuid), params.to_json, self.default_headers).body
             end
             # consumer update doesn't return any data atm
