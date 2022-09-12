@@ -10,3 +10,8 @@ feature: katello_change_content_source
 #!/bin/sh
 
 <%= change_content_source(@host, foreman_server_ca_cert) %>
+
+if [ -f /etc/yggdrasil/config.toml ]; then
+  cp /etc/yggdrasil/config.toml /etc/yggdrasil/config.toml.bak
+  <%= snippet 'remote_execution_pull_setup' %>
+fi
