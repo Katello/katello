@@ -47,7 +47,7 @@ module Katello
          CAST (#{kcc}.composite_content_view_id as BOOLEAN) ASC, #{kc}.name
       SQL
       query = Katello::ContentView.readable.in_organization(@organization)
-      query = query&.non_composite&.non_default
+      query = query&.non_composite&.non_default&.generated_for_none
       component_cv_ids = Katello::ContentViewComponent.where(composite_content_view_id: @view.id).select(:content_view_id)
       query = case params[:status]
               when "Not added"
