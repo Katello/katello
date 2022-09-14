@@ -389,6 +389,11 @@ module Katello
     def upload_content
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Container Image content.") if @repository.docker?
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Ansible collections.") if @repository.ansible_collection?
+      unless params[:content_type].empty? || RepositoryTypeManager.uploadable_content_types.map(&:label).include?(params[:content_type])
+        msg = _("Invalid params provided - content_type must be one of %s") %
+          RepositoryTypeManager.uploadable_content_types.map(&:label).sort.join(",")
+        fail HttpErrors::UnprocessableEntity, msg
+      end
 
       filepaths = Array.wrap(params[:content]).compact.collect do |content|
         {path: content.path, filename: content.original_filename}
