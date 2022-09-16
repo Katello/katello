@@ -1,4 +1,4 @@
-# 4.6 Belgian Tripel (2022-08-29)
+# 4.6 Belgian Tripel (2022-09-15)
 
 ## Features
 
@@ -43,6 +43,17 @@
 
 ## Bug Fixes
 
+### Hosts
+ * User report: host repo files are not updating when switching lifecycle environments or content views ([#35458](https://projects.theforeman.org/issues/35458), [5ef2caca](https://github.com/Katello/katello/commit/5ef2cacaf92eb6034df94db6b174f3168483fdba))
+ * new host ui details, add button to navigate to old content UI ([#35367](https://projects.theforeman.org/issues/35367), [dc10b82f](https://github.com/Katello/katello/commit/dc10b82fe5af4bc9141a7f6d20fd1fb7e24b99c4))
+ * useTableSort should translate initialSortColumnName ([#35329](https://projects.theforeman.org/issues/35329), [dcdd1e06](https://github.com/Katello/katello/commit/dcdd1e061bc70d31083b44116f4cedd00d96796e))
+ * new host ui, content, errata subtab,  when N/A is chosen as severity filter erratas results are empty ([#35277](https://projects.theforeman.org/issues/35277), [3da0b394](https://github.com/Katello/katello/commit/3da0b394c9bb7d76e20547d179884bc7826a68e7))
+ * Show arch restrictions on Repository Sets tab (new host details) ([#35197](https://projects.theforeman.org/issues/35197), [d7199e27](https://github.com/Katello/katello/commit/d7199e270b9933712c56dc7f06e9c06eb019f763))
+ * "Registered Content Hosts" Report is Showing the Wrong Available Kernel Version for RHEL 7.7 Client ([#35040](https://projects.theforeman.org/issues/35040), [f98327e1](https://github.com/Katello/katello/commit/f98327e10b5cbadfd0e060ba6b8fe468bbcc706c))
+ * Overview tab (new host details) - Correct card order ([#35002](https://projects.theforeman.org/issues/35002), [21353017](https://github.com/Katello/katello/commit/213530172e0ca8ac0df7b36b221a804e980bf78d))
+ * Errata overview card - Add tooltips for errata type icons ([#34769](https://projects.theforeman.org/issues/34769), [064a710f](https://github.com/Katello/katello/commit/064a710f48d7118f4db6a039be73f2d655d33ee1))
+ * host registration form should include activation key selection on the first page ([#33902](https://projects.theforeman.org/issues/33902), [8ba12c34](https://github.com/Katello/katello/commit/8ba12c34f521651a243be80ac77675bd070e6eed))
+
 ### Foreman Proxy Content
  * After deploying custom certs on Satellite, signed by a new CA, capsule can't fetch on-demand content ([#35382](https://projects.theforeman.org/issues/35382), [21107ca9](https://github.com/Katello/katello/commit/21107ca9a9efd6acc5acd057688cf41355dd3463))
  * Space reclaiming fails on a blank Satellite ([#34932](https://projects.theforeman.org/issues/34932), [ba4eacff](https://github.com/Katello/katello/commit/ba4eacffb6feed5c06dcc38a878a53e4aa7e9881))
@@ -57,16 +68,6 @@
  * When toggling SCA, change the owner (not consumer) and don't refresh manifest ([#35265](https://projects.theforeman.org/issues/35265), [597b385b](https://github.com/Katello/katello/commit/597b385ba32e13d0e9764bd03c7e45644bab9482))
  * Orgs by default are in SCA mode, remove toggle sca from manage manifest modal ([#35238](https://projects.theforeman.org/issues/35238), [b306ac25](https://github.com/Katello/katello/commit/b306ac25bfbbcbf479ac43ec491175a4342e52cf))
  * Add Simple content access status API to check whether SCA is enabled or disabled in Satellite ([#35102](https://projects.theforeman.org/issues/35102), [ce43867f](https://github.com/Katello/katello/commit/ce43867f040cf596867595875cd5fccc1c0ceb26), [ee705aab](https://github.com/Katello/hammer-cli-katello/commit/ee705aabd59ff466c2a032c980bc31cdcb8fe1e0))
-
-### Hosts
- * new host ui details, add button to navigate to old content UI ([#35367](https://projects.theforeman.org/issues/35367), [dc10b82f](https://github.com/Katello/katello/commit/dc10b82fe5af4bc9141a7f6d20fd1fb7e24b99c4))
- * useTableSort should translate initialSortColumnName ([#35329](https://projects.theforeman.org/issues/35329), [dcdd1e06](https://github.com/Katello/katello/commit/dcdd1e061bc70d31083b44116f4cedd00d96796e))
- * new host ui, content, errata subtab,  when N/A is chosen as severity filter erratas results are empty ([#35277](https://projects.theforeman.org/issues/35277), [3da0b394](https://github.com/Katello/katello/commit/3da0b394c9bb7d76e20547d179884bc7826a68e7))
- * Show arch restrictions on Repository Sets tab (new host details) ([#35197](https://projects.theforeman.org/issues/35197), [d7199e27](https://github.com/Katello/katello/commit/d7199e270b9933712c56dc7f06e9c06eb019f763))
- * "Registered Content Hosts" Report is Showing the Wrong Available Kernel Version for RHEL 7.7 Client ([#35040](https://projects.theforeman.org/issues/35040), [f98327e1](https://github.com/Katello/katello/commit/f98327e10b5cbadfd0e060ba6b8fe468bbcc706c))
- * Overview tab (new host details) - Correct card order ([#35002](https://projects.theforeman.org/issues/35002), [21353017](https://github.com/Katello/katello/commit/213530172e0ca8ac0df7b36b221a804e980bf78d))
- * Errata overview card - Add tooltips for errata type icons ([#34769](https://projects.theforeman.org/issues/34769), [064a710f](https://github.com/Katello/katello/commit/064a710f48d7118f4db6a039be73f2d655d33ee1))
- * host registration form should include activation key selection on the first page ([#33902](https://projects.theforeman.org/issues/33902), [8ba12c34](https://github.com/Katello/katello/commit/8ba12c34f521651a243be80ac77675bd070e6eed))
 
 ### Repositories
  * Katello rpm search via nvra also ([#35290](https://projects.theforeman.org/issues/35290), [d4188e57](https://github.com/Katello/katello/commit/d4188e57127c0a66c2a225bdcbd321ac071be129))
