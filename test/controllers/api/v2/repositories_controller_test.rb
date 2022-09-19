@@ -68,9 +68,9 @@ module Katello
       get :index, params: { :organization_id => @organization.id, :with_content => 'cheese' }
 
       assert_response 422
-      response = "{\"displayMessage\":\"Invalid params provided - with_content must be one of ansible_collection,deb,docker_manifest,docker_manifest_list,docker_tag,file" \
-        ",ostree_ref,python_package,rpm,modulemd,erratum,package_group,srpm\",\"errors\":"\
-        "[\"Invalid params provided - with_content must be one of ansible_collection,deb,docker_manifest,docker_manifest_list,docker_tag,file,ostree_ref,python_package,rpm,modulemd,erratum,package_group,srpm\"]}"
+      response = "{\"displayMessage\":\"Invalid params provided - with_content must be one of ansible_collection,deb,docker_manifest,docker_manifest_list,docker_tag,erratum,file,modulemd,"\
+          "ostree_ref,package_group,python_package,rpm,srpm\",\"errors\":"\
+        "[\"Invalid params provided - with_content must be one of ansible_collection,deb,docker_manifest,docker_manifest_list,docker_tag,erratum,file,modulemd,ostree_ref,package_group,python_package,rpm,srpm\"]}"
       assert_match response, @response.body
     end
 
