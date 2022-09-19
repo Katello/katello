@@ -18,7 +18,7 @@ module Actions
           org = cdn_configuration.organization
           roots = ::Katello::RootRepository.redhat.in_organization(org)
           roots.each do |root|
-            full_path = if cdn_configuration.redhat_cdn?
+            full_path = if cdn_configuration.redhat_cdn? || cdn_configuration.custom_cdn?
                           root.product.repo_url(root.library_instance.generate_content_path)
                         elsif cdn_configuration.network_sync?
                           resource.repository_url(content_label: root.content.label, arch: root.arch, major: root.major, minor: root.minor)

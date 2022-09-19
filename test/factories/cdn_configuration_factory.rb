@@ -12,5 +12,9 @@ FactoryBot.define do
     trait :redhat_cdn do
       type { ::Katello::CdnConfiguration::CDN_TYPE }
     end
+
+    trait :custom_cdn do
+      type { ::Katello::CdnConfiguration::CUSTOM_CDN_TYPE }
+    end
   end
 end

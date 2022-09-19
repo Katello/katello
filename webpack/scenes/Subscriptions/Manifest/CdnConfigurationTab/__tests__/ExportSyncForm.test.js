@@ -26,7 +26,7 @@ const initialState = {
 
 test('Can update to Airgapped type', async (done) => {
   const { getByLabelText } = renderWithRedux(<ExportSyncForm
-    showUpdate
+    typeChangeInProgress
   />, { initialState });
 
   const updateCdnConfigurationRequest = nockInstance

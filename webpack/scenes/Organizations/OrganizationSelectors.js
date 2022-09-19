@@ -9,6 +9,7 @@ import {
 } from './OrganizationConstants';
 
 export const selectOrganizationState = state => state.katello.organization;
+export const selectOrgLoading = state => state.katello.organization.loading;
 
 export const selectManifestName = state =>
   selectOrganizationState(state).owner_details?.upstreamConsumer?.name;

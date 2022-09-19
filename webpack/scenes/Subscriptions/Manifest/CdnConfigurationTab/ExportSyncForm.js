@@ -18,8 +18,8 @@ import {
 
 import './CdnConfigurationForm.scss';
 
-const ExportSyncForm = ({ showUpdate, onUpdate }) => {
-  const [updateEnabled, setUpdateEnabled] = useState(showUpdate);
+const ExportSyncForm = ({ typeChangeInProgress, onUpdate }) => {
+  const [updateEnabled, setUpdateEnabled] = useState(typeChangeInProgress);
   const updatingCdnConfiguration = useSelector(state => selectUpdatingCdnConfiguration(state));
   const dispatch = useDispatch();
   const performUpdate = () => {
@@ -41,7 +41,7 @@ const ExportSyncForm = ({ showUpdate, onUpdate }) => {
             }}
           />
           <br />
-          {showUpdate &&
+          {typeChangeInProgress &&
             <FormattedMessage
               id="cdn-configuration-type-cdn"
               defaultMessage={__('Click {update} below to save changes.')}
@@ -71,7 +71,7 @@ const ExportSyncForm = ({ showUpdate, onUpdate }) => {
 
 
 ExportSyncForm.propTypes = {
-  showUpdate: PropTypes.bool.isRequired,
+  typeChangeInProgress: PropTypes.bool.isRequired,
   onUpdate: PropTypes.func,
 };
 

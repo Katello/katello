@@ -5,8 +5,9 @@ module Katello
     CDN_TYPE = 'redhat_cdn'.freeze
     NETWORK_SYNC = 'network_sync'.freeze
     EXPORT_SYNC = 'export_sync'.freeze
+    CUSTOM_CDN_TYPE = 'custom_cdn'.freeze
 
-    TYPES = [CDN_TYPE, NETWORK_SYNC, EXPORT_SYNC].freeze
+    TYPES = [CDN_TYPE, NETWORK_SYNC, EXPORT_SYNC, CUSTOM_CDN_TYPE].freeze
 
     belongs_to :organization, :inverse_of => :cdn_configuration
 
@@ -32,6 +33,14 @@ module Katello
       type == CDN_TYPE
     end
 
+    def custom_cdn?
+      type == CUSTOM_CDN_TYPE
+    end
+
+    def redhat_cdn_url?
+      Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
+    end
+
     def export_sync?
       type == EXPORT_SYNC
     end
@@ -46,11 +55,11 @@ module Katello
       return if network_sync?
 
       self.url = nil if export_sync?
-      self.url ||= SETTINGS[:katello][:redhat_repository_url] if redhat_cdn?
+      self.url = SETTINGS[:katello][:redhat_repository_url] if redhat_cdn?
       self.username = nil
       self.password = nil
       self.upstream_organization_label = nil
-      self.ssl_ca_credential_id = nil
+      self.ssl_ca_credential_id = nil unless custom_cdn?
       self.upstream_content_view_label = nil
       self.upstream_lifecycle_environment_label = nil
       self.ssl_cert = nil

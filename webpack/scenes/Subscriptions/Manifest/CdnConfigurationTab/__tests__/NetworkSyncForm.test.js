@@ -48,7 +48,7 @@ const contentCredentials = [
 
 test('Can update the upstream server configuration', async (done) => {
   const { getByLabelText } = renderWithRedux(<NetworkSyncForm
-    showUpdate
+    typeChangeInProgress
     cdnConfiguration={cdnConfiguration}
     contentCredentials={contentCredentials}
   />, { initialState });
@@ -93,7 +93,7 @@ test('Can update the upstream server configuration', async (done) => {
 
 test('the form shall reflect the given cdnConfiguration', () => {
   const { getAllByTestId, getByLabelText } = renderWithRedux(<NetworkSyncForm
-    showUpdate
+    typeChangeInProgress
     cdnConfiguration={cdnConfiguration}
     contentCredentials={contentCredentials}
   />, { initialState });
@@ -110,7 +110,7 @@ test('the form shall reflect the given cdnConfiguration', () => {
 
 test('resetting the password enables/disables appropriately', async (done) => {
   const { getByLabelText } = renderWithRedux(<NetworkSyncForm
-    showUpdate
+    typeChangeInProgress
     cdnConfiguration={{ ...cdnConfiguration, password_exists: true }}
   />, { initialState });
 
@@ -131,7 +131,7 @@ test('resetting the password enables/disables appropriately', async (done) => {
 
 test('update button disabled on incomplete information', async (done) => {
   const { getByLabelText } = renderWithRedux(<NetworkSyncForm
-    showUpdate
+    typeChangeInProgress
     cdnConfiguration={{ ...cdnConfiguration, password_exists: true }}
     contentCredentials={contentCredentials}
   />, { initialState });
