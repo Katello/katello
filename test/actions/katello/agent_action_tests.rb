@@ -78,9 +78,14 @@ module Actions
         def test_process_timeout_finish_not_elapsed
           dispatch_history.accepted_at = Time.now
           dispatch_history.result = nil
-          bulk_action.expects(:dispatch_history).returns(dispatch_history)
-
-          bulk_action.process_timeout
+          bulk_action_run = run_action(bulk_action)
+          travel_to 1.minute.from_now do
+            assert_equal bulk_action_run.phase, Dynflow::Action::Run
+          end
+          travel_to 2.hours.from_now do
+            error = assert_raises(StandardError) { bulk_action_run.process_timeout }
+            assert_match(/Host did not respond within/, error.message)
+          end
         end
 
         def test_process_timeout_noop
