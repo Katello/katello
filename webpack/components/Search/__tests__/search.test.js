@@ -77,8 +77,8 @@ test('search function is called when search is typed into with autosearch', asyn
   const mockSearch = jest.fn();
 
   const { getByLabelText } = renderWithRedux(<Search {...{ ...props, onSearch: mockSearch }} />);
-  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: 'foo' } });
-  await patientlyWaitFor(() => expect(mockSearch.mock.calls).toHaveLength(2));
+  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: 'name = foo' } });
+  await patientlyWaitFor(() => expect(mockSearch.mock.calls).toHaveLength(1));
 
   assertNockRequest(autoSearchScope);
   assertNockRequest(autocompleteScope, done);
@@ -98,7 +98,7 @@ test('search function is called by clicking search button without autosearch', a
     expect(searchButton).toBeInTheDocument();
   });
   searchButton.click();
-  expect(mockSearch.mock.calls).toHaveLength(3);
+  expect(mockSearch.mock.calls).toHaveLength(1);
   assertNockRequest(autoSearchScope);
   assertNockRequest(autocompleteScope, done);
 });

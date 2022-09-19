@@ -118,7 +118,7 @@ test('Can search for package groups in package group filter', async (done) => {
   });
 
   // Search and only searched result shows
-  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: lastPackageGroupName } });
+  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: `name = ${lastPackageGroupName}` } });
   await patientlyWaitFor(() => {
     expect(getByText(lastPackageGroupName)).toBeInTheDocument();
     expect(queryByText(firstPackageGroupName)).not.toBeInTheDocument();

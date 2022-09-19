@@ -73,7 +73,7 @@ test('Can search with filter', async (done) => {
     expect(queryByText(secondMatchContentName)).toBeInTheDocument();
   });
 
-  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: firstMatchContent.nvra } });
+  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: `nvra = ${firstMatchContent.nvra}` } });
 
   await patientlyWaitFor(() => {
     expect(queryByText('Matching content')).toBeInTheDocument();

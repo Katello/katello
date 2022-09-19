@@ -88,7 +88,7 @@ test('Can search for filter', async (done) => {
   // Looking for description because the name is in the search bar and could match
   await patientlyWaitFor(() => expect(getByText(description)).toBeInTheDocument());
   // Search for a filter by name
-  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: name } });
+  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: `name = ${name}` } });
   // Only the first filter should be showing, not the last one
   await patientlyWaitFor(() => {
     expect(getByText(description)).toBeInTheDocument();
