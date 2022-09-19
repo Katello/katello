@@ -6,7 +6,7 @@
   </header>
 
   <div data-block="item-actions" bst-feature-flag="custom_products">
-    <span select-action-dropdown>
+    <span ng-hide="hideActionsButtons(repository)" select-action-dropdown>
       <ul class="dropdown-menu-right" uib-dropdown-menu role="menu">
         <li role="menuitem" ng-hide="hideSyncButton(repository, false)" ng-class="{disabled: disableSyncLink()}">
           <a ng-click="syncRepository(repository)" disable-link="disableSyncLink()" translate>

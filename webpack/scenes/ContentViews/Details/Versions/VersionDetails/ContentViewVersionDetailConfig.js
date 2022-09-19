@@ -109,7 +109,7 @@ export default ({ cvId, versionId }) => [
       {
         title: __('Name'),
         getProperty: item => (
-          <a href={urlBuilder(`products/${item?.product?.id}/repositories/${item?.id}`, '')}>
+          <a href={urlBuilder(`products/${item?.product?.id}/repositories/${item?.library_instance_id ?? item?.id}`, '')}>
             {item?.name}
           </a>),
       },

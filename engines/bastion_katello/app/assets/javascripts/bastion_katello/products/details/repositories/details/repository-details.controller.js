@@ -84,6 +84,13 @@
             return result;
         };
 
+        $scope.hideActionsButtons = function(repository) {
+            if (repository.library_instance_id) {
+                return true;
+            }
+            return false;
+        };
+
         $scope.disableSyncLink = function (adavancedSync) {
             return $scope.hideSyncButton($scope.repository, adavancedSync);
         };
