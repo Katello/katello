@@ -4,7 +4,6 @@ import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { Form, FormGroup, TextInput, TextArea, Checkbox, ActionGroup, Button, Tile, Grid, GridItem } from '@patternfly/react-core';
 import { createContentView } from '../ContentViewsActions';
 import { selectCreateContentViews, selectCreateContentViewStatus, selectCreateContentViewError } from './ContentViewCreateSelectors';
@@ -73,11 +72,10 @@ const CreateContentViewForm = ({ setModalOpen }) => {
 
   if (redirect) {
     const { id } = response;
-    if (composite) { return (<Redirect to={`/content_views/${id}#/contentviews`} />); }
-    return (<Redirect to={`/content_views/${id}#/repositories`} />);
+    if (composite) { window.location.assign(`/content_views/${id}#/contentviews`); } else { window.location.assign(`/content_views/${id}#/repositories`); }
   }
 
-  const submitDisabled = !name?.length || !label?.length || saving || labelValidated === 'error';
+  const submitDisabled = !name?.length || !label?.length || saving || redirect || labelValidated === 'error';
 
   return (
     <Form onSubmit={(e) => {
@@ -198,6 +196,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           aria-label="create_content_view"
           variant="primary"
           isDisabled={submitDisabled}
+          isLoading={saving || redirect}
           type="submit"
         >
           {__('Create content view')}

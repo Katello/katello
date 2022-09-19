@@ -8,7 +8,14 @@ import cvCreateData from './contentViewCreateResult.fixtures.json';
 
 const cvCreatePath = api.getApiUrl('/content_views');
 
-const setModalOpen = jest.fn();
+const mockFn = jest.fn();
+
+delete window.location;
+window.location = { assign: mockFn };
+
+afterEach(() => {
+  mockFn.mockClear();
+});
 
 const createDetails = {
   name: '1232123',
@@ -22,7 +29,7 @@ const createDetails = {
 
 const createdCVDetails = { ...cvCreateData };
 
-const form = <CreateContentViewForm setModalOpen={setModalOpen} />;
+const form = <CreateContentViewForm setModalOpen={mockFn} />;
 
 test('Can save content view from form', async (done) => {
   const createscope = nockInstance
@@ -44,7 +51,7 @@ test('Form closes itself upon save', async (done) => {
   const createscope = nockInstance
     .post(cvCreatePath, createDetails)
     .reply(201, createdCVDetails);
-  const { getByText, queryByText, getByLabelText } = renderWithRedux(form);
+  const { getByText, getByLabelText } = renderWithRedux(form);
   expect(getByText('Description')).toBeInTheDocument();
   expect(getByText('Name')).toBeInTheDocument();
   expect(getByText('Label')).toBeInTheDocument();
@@ -52,11 +59,11 @@ test('Form closes itself upon save', async (done) => {
   fireEvent.change(getByLabelText('input_name'), { target: { value: '1232123' } });
 
   await patientlyWaitFor(() => { expect(getByLabelText('input_label')).toHaveAttribute('value', '1232123'); });
-
+  jest.spyOn(window.location, 'assign');
   getByLabelText('create_content_view').click();
-  // Form closes it self on success
+  // Form closes it self on success by calling location.assign()
   await patientlyWaitFor(() => {
-    expect(queryByText('Description')).not.toBeInTheDocument();
+    expect(window.location.assign).toHaveBeenCalled();
   });
 
   assertNockRequest(createscope, done);
