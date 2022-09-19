@@ -3,6 +3,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { TextContent, TextList, TextListItem, TextListItemVariants, TextListVariants } from '@patternfly/react-core';
 import ACSCreateContext from '../ACSCreateContext';
 import WizardHeader from '../../../ContentViews/components/WizardHeader';
+import InactiveText from '../../../ContentViews/components/InactiveText';
 
 const ACSReview = () => {
   const {
@@ -76,7 +77,7 @@ const ACSReview = () => {
                   </TextListItem>
                   <TextListItem component={TextListItemVariants.dt}>{__('Password')}</TextListItem>
                   <TextListItem component={TextListItemVariants.dd}>
-                    {password}
+                    {password.length > 0 ? '••••••••' : <InactiveText text={__('N/A')} />}
                   </TextListItem>
                 </>
               )}

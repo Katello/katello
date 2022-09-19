@@ -116,12 +116,12 @@ module Katello
     def index
       unless params[:content_type].empty? || RepositoryTypeManager.find(params[:content_type])
         msg = _("Invalid params provided - content_type must be one of %s") %
-          RepositoryTypeManager.enabled_repository_types.keys.join(",")
+          RepositoryTypeManager.enabled_repository_types.keys.sort.join(",")
         fail HttpErrors::UnprocessableEntity, msg
       end
       unless params[:with_content].empty? || RepositoryTypeManager.find_content_type(params[:with_content], true)
         msg = _("Invalid params provided - with_content must be one of %s") %
-          RepositoryTypeManager.indexable_content_types.map(&:label).join(",")
+          RepositoryTypeManager.indexable_content_types.map(&:label).sort.join(",")
         fail HttpErrors::UnprocessableEntity, msg
       end
       base_args = [index_relation.distinct, :name, :asc]
@@ -243,7 +243,7 @@ module Katello
       repo_params = repository_params
       unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type], false)
         msg = _("Invalid params provided - content_type must be one of %s") %
-          RepositoryTypeManager.creatable_repository_types.keys.join(",")
+          RepositoryTypeManager.creatable_repository_types.keys.sort.join(",")
         fail HttpErrors::UnprocessableEntity, msg
       end
 
@@ -389,7 +389,7 @@ module Katello
     def remove_content
       unless params[:content_type].empty? || RepositoryTypeManager.removable_content_types.map(&:label).include?(params[:content_type])
         msg = _("Invalid params provided - content_type must be one of %s") %
-          RepositoryTypeManager.removable_content_types.map(&:label).join(",")
+          RepositoryTypeManager.removable_content_types.map(&:label).sort.join(",")
         fail HttpErrors::UnprocessableEntity, msg
       end
       sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
