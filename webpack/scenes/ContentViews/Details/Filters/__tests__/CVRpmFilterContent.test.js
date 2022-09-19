@@ -117,7 +117,7 @@ test('Can search for package rules in package filter details', async (done) => {
   });
 
   // Search and only searched result shows
-  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: lastPackageRuleName } });
+  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: `name = ${lastPackageRuleName}` } });
   await patientlyWaitFor(() => {
     expect(getByText(lastPackageRuleName)).toBeInTheDocument();
     expect(queryByText(firstPackageRuleName)).not.toBeInTheDocument();

@@ -179,7 +179,7 @@ test('Can add filter rules', async (done) => {
     expect(getAllByLabelText('text input for search')[0]).toBeInTheDocument();
   });
 
-  fireEvent.change(getAllByLabelText('text input for search')[0], { target: { value: addedRule.name } });
+  fireEvent.change(getAllByLabelText('text input for search')[0], { target: { value: `name = ${addedRule.name}` } });
 
   await patientlyWaitFor(() => {
     expect(getByLabelText('add_edit_filter_rule')).toBeInTheDocument();
@@ -255,7 +255,7 @@ test('Can edit filter rules', async (done) => {
     fireEvent.click(queryByText('Edit'));
   });
 
-  fireEvent.change(getAllByLabelText('text input for search')[0], { target: { value: addedRule.name } });
+  fireEvent.change(getAllByLabelText('text input for search')[0], { target: { value: `name = ${addedRule.name}` } });
 
   await patientlyWaitFor(() => {
     expect(getByLabelText('add_edit_filter_rule')).toBeInTheDocument();

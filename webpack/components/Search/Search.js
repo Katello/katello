@@ -21,14 +21,14 @@ const searchContainsOperator = (search = '') => {
 const allowSearch = (originalSearch = '') => {
   const search = originalSearch.toLowerCase().trim();
   // find the last occurrence of 'or' or 'and'
-  const lastOr = originalSearch.lastIndexOf('or');
-  const lastAnd = originalSearch.lastIndexOf('and');
+  const lastOr = originalSearch.lastIndexOf(' or ');
+  const lastAnd = originalSearch.lastIndexOf(' and ');
   if (lastOr === -1 && lastAnd === -1) {
     return searchContainsOperator(search);
   }
-  const winningOperator = lastOr > lastAnd ? 'or' : 'and';
+  const winningOperator = lastOr > lastAnd ? ' or ' : ' and ';
   const lastSearch = search.split(winningOperator);
-  return searchContainsOperator(lastSearch.at(-1));
+  return searchContainsOperator(lastSearch[lastSearch.length - 1]);
 };
 
 const Search = ({
@@ -80,7 +80,6 @@ const Search = ({
         })));
       }
     }
-
     if (autoSearchEnabled && patternfly4 && allowSearch(searchTerm)) {
       onSearch(searchTerm || '');
     }
