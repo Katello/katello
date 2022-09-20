@@ -1,0 +1,6 @@
+<%# I'm thinking that creating test ACS remotes is not worth it for HTTP proxies because
+    we're editing 'n' remotes rather than just one. At sync time, if a remote fails to
+    update, the user can look at the error in Dynflow and likely figure out that something
+    is wrong with the HTTP proxy config. %>
+<%= select_f(f, :http_proxy_id, ::HttpProxy.all, :id, :name, :size => "col-md-8", :include_blank => true, :label => _("Alternate Content Source HTTP Proxy"),
+    :label_help => _('HTTP proxy for alternate content sources using this smart proxy')) %>

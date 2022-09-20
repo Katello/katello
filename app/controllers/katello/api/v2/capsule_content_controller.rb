@@ -7,6 +7,7 @@ module Katello
     before_action :find_capsule, :except => [:sync, :cancel_sync, :add_lifecycle_environment, :remove_lifecycle_environment, :reclaim_space]
     before_action :find_editable_capsule, :only => [:sync, :cancel_sync, :add_lifecycle_environment, :remove_lifecycle_environment]
     before_action :find_environment, :only => [:add_lifecycle_environment, :remove_lifecycle_environment]
+    before_action :find_acs_http_proxy, :only => [:add_acs_http_proxy]
     before_action :find_optional_organization, :only => [:sync_status]
 
     def_param_group :lifecycle_environments do
@@ -121,6 +122,10 @@ module Katello
 
     def find_environment
       @environment = Katello::KTEnvironment.readable.find(params[:environment_id])
+    end
+
+    def find_acs_http_proxy
+      @acs_http_proxy = ::HttpProxy.readable.find(params[:alternate_content_source_http_proxy_id])
     end
 
     def find_content_view

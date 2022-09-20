@@ -33,9 +33,17 @@ module Katello
         if repository.present?
           options = repository.backend_service(smart_proxy).remote_options
           options[:policy] = 'on_demand'
-          options[:proxy_url] = acs.http_proxy&.url
-          options[:proxy_username] = acs.http_proxy&.username
-          options[:proxy_password] = acs.http_proxy&.password
+          # TODO: Also add a boolean for inheriting the repositories' HTTP proxies?
+          if acs.use_smart_proxies
+            options[:proxy_url] = smart_proxy.http_proxy&.url
+            options[:proxy_username] = smart_proxy.http_proxy&.username
+            options[:proxy_password] = smart_proxy.http_proxy&.password
+          else
+            # TODO: test that this clears out the proxy information properly
+            options[:proxy_url] = nil
+            options[:proxy_username] = nil
+            options[:proxy_password] = nil
+          end
           return options
         end
 
@@ -44,9 +52,9 @@ module Katello
           name: generate_backend_object_name,
           url: acs.base_url,
           policy: 'on_demand',
-          proxy_url: acs.http_proxy&.url,
-          proxy_username: acs.http_proxy&.username,
-          proxy_password: acs.http_proxy&.password,
+          proxy_url: smart_proxy.http_proxy&.url,
+          proxy_username: smart_proxy.http_proxy&.username,
+          proxy_password: smart_proxy.http_proxy&.password,
           total_timeout: Setting[:sync_connect_timeout]
         }
         if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.empty? && !remote_options[:url].end_with?('/PULP_MANIFEST')

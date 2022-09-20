@@ -8,7 +8,7 @@ module Actions
 
     let(:action_class) { ::Actions::Katello::Repository::UpdateRedhatRepository }
     let(:refresh_class) { ::Actions::Katello::Repository::RefreshRepository }
-    let(:acs_remote_refresh_class) { ::Actions::Pulp3::Orchestration::AlternateContentSource::RefreshRemote }
+    let(:acs_remote_refresh_class) { ::Actions::Pulp3::AlternateContentSource::RefreshRemote }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
     let(:simplified_acs) { katello_alternate_content_sources(:yum_simplified_alternate_content_source) }
     let(:proxy) { SmartProxy.pulp_primary }

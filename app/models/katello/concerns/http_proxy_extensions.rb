@@ -6,7 +6,8 @@ module Katello
       included do
         has_many :root_repositories, :class_name => "::Katello::RootRepository", :foreign_key => :http_proxy_id,
           :inverse_of => :http_proxy, :dependent => :nullify
-        has_many :alternate_content_sources, :class_name => "::Katello::AlternateContentSource", :foreign_key => :http_proxy_id,
+        # A smart proxy's HTTP proxy is used to determine an alternate  content source's HTTP proxy.
+        has_many :smart_proxies, :class_name => "::SmartProxy", :foreign_key => :http_proxy_id,
           :inverse_of => :http_proxy, :dependent => :nullify
         after_update :update_default_proxy_setting
         after_commit :update_repository_proxy_details
