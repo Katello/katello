@@ -23,7 +23,7 @@ module Actions
                            repository,
                            SmartProxy.pulp_primary)
 
-          remove_versions(repository, repository.content_views.generated_for_none, affected_cvv_ids) if remove_from_content_view_versions
+          remove_versions(repository, repository.content_views_all(include_composite: true)&.generated_for_none, affected_cvv_ids) if remove_from_content_view_versions
 
           handle_alternate_content_sources(repository)
 
@@ -105,12 +105,12 @@ module Actions
 
         def remove_versions(repository, content_views, affected_cvv_ids)
           return if content_views.blank?
-
           interested_inverses = repository.
                                   library_instances_inverse.
                                   joins(:content_view_version => :content_view).
                                   merge(content_views)
-          affected_cvv_ids.concat(interested_inverses.pluck(:content_view_version_id).uniq)
+          return if interested_inverses.blank?
+          affected_cvv_ids.concat(interested_inverses.pluck(:content_view_version_id)&.uniq)
           plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, interested_inverses)
         end
 

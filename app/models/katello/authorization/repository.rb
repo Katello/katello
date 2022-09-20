@@ -6,12 +6,12 @@ module Katello
 
     def deletable?(remove_from_content_view_versions = true)
       return false unless product.editable?
-      remove_from_content_view_versions || !promoted? || (self.content_views.exists? && !self.content_views.generated_for_none.exists?)
+      remove_from_content_view_versions || !promoted? || (self.content_views_all(include_composite: true).exists? && !self.content_views_all(include_composite: true).generated_for_none.exists?)
     end
 
     def redhat_deletable?(remove_from_content_view_versions = false)
       return false unless product.editable?
-      remove_from_content_view_versions || !self.promoted? || (self.content_views.exists? && !self.content_views.generated_for_none.exists?)
+      remove_from_content_view_versions || !self.promoted? || (self.content_views_all(include_composite: true).exists? && !self.content_views_all(include_composite: true).generated_for_none.exists?)
     end
 
     def readable?

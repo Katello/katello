@@ -760,6 +760,15 @@ module Katello
       return true
     end
 
+    def content_views_all(include_composite: false)
+      if include_composite
+        cv_ids = library_instances_inverse&.joins(:content_view_version)&.map { |cvv| cvv&.content_view&.id }
+        return ContentView.where(id: cv_ids.uniq)
+      else
+        return self.content_views
+      end
+    end
+
     def sync_hook
       run_callbacks :sync do
         logger.debug "custom hook after_sync on #{name} will be executed if defined."
