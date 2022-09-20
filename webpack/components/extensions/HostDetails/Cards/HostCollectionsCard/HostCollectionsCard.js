@@ -53,6 +53,7 @@ const HostCollectionsDetails = ({
   const dropdownItems = [
     <DropdownItem
       aria-label="add_host_to_collections"
+      ouiaId="add_host_to_collections"
       key="add_host_to_collections"
       component="button"
       onClick={openAddHostCollectionsModal}
@@ -61,6 +62,7 @@ const HostCollectionsDetails = ({
     </DropdownItem>,
     <DropdownItem
       aria-label="remove_host_from_collections"
+      ouiaId="remove_host_from_collections"
       key="remove_host_from_collections"
       component="button"
       isDisabled={!hostCollections.length}
@@ -82,7 +84,7 @@ const HostCollectionsDetails = ({
 
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
-      <Card>
+      <Card ouiaId="host-collections-card">
         <CardHeader>
           <Flex
             alignItems={{ default: 'alignItemsCenter' }}
@@ -106,6 +108,7 @@ const HostCollectionsDetails = ({
               <FlexItem>
                 <Dropdown
                   toggle={<KebabToggle aria-label="host_collections_bulk_actions" onToggle={toggleBulkAction} />}
+                  ouiaId="host-collections-bulk-actions-dropdown"
                   isOpen={isDropdownOpen}
                   isPlain
                   position="right"

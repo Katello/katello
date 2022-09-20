@@ -25,7 +25,9 @@ export const RegisteredBy = ({ user, activationKeys }) => {
   return (
     <>
       <List isPlain>
-        <Text component={TextVariants.h4}>{activationKeys.length > 1 ? __('Activation keys') : __('Activation key')}</Text>
+        <Text component={TextVariants.h4} ouiaId="activation-key-text">
+          {activationKeys.length > 1 ? __('Activation keys') : __('Activation key')}
+        </Text>
         {activationKeys.map(key => (
           <ListItem key={key.id}>
             <a href={urlBuilder(`activation_keys/${key.id}`, '')}>{key.name}</a>

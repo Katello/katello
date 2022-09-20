@@ -23,6 +23,7 @@ const EnableTracerButton = ({ setEnableTracerModalOpen, pollingStarted }) => (
   <Button
     onClick={() => setEnableTracerModalOpen(true)}
     isDisabled={pollingStarted}
+    ouiaId="enable-traces-button"
   >
     {__('Enable Traces')}
   </Button>
@@ -70,7 +71,7 @@ const TracesEnabler = ({ hostname }) => {
         <Spinner /> :
         <EmptyStateIcon icon={WrenchIcon} />
       }
-      <Title headingLevel="h2" size="lg">
+      <Title ouiaId="enable-tracer-title" headingLevel="h2" size="lg">
         {pollingStarted ? enablingTitle : title}
       </Title>
       <EmptyStateBody>

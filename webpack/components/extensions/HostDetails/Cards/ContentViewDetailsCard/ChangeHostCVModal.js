@@ -138,6 +138,7 @@ const ChangeHostCVModal = ({
   const modalActions = ([
     <Button
       key="add"
+      ouiaId="change-host-cv-modal-add-button"
       variant="primary"
       onClick={handleSave}
       isDisabled={!canSave}
@@ -145,7 +146,7 @@ const ChangeHostCVModal = ({
     >
       {__('Save')}
     </Button>,
-    <Button key="cancel" variant="link" onClick={handleModalClose}>
+    <Button key="cancel" ouiaId="change-host-cv-modal-cancel-button" variant="link" onClick={handleModalClose}>
       Cancel
     </Button>,
   ]);
@@ -159,6 +160,7 @@ const ChangeHostCVModal = ({
       position="top"
       actions={modalActions}
       id="change-host-cv-modal"
+      ouiaId="change-host-cv-modal"
     >
       {contentViewsInEnvStatus === STATUS.RESOLVED &&
         !!selectedEnvForHost.length && contentViewsInEnv.length === 0 &&

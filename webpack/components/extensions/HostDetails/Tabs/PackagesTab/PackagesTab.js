@@ -288,6 +288,7 @@ export const PackagesTab = () => {
   const dropdownUpgradeItems = [
     <DropdownItem
       aria-label="bulk_upgrade_rex"
+      ouiaId="bulk_upgrade_rex"
       key="bulk_upgrade_rex"
       component="button"
       onClick={upgradeBulkViaRemoteExecution}
@@ -296,6 +297,7 @@ export const PackagesTab = () => {
     </DropdownItem>,
     <DropdownItem
       aria-label="bulk_upgrade_customized_rex"
+      ouiaId="bulk_upgrade_customized_rex"
       key="bulk_upgrade_customized_rex"
       component="a"
       href={upgradeViaCustomizedRemoteExecution}
@@ -307,6 +309,7 @@ export const PackagesTab = () => {
   const dropdownRemoveItems = [
     <DropdownItem
       aria-label="bulk_remove"
+      ouiaId="bulk_remove"
       key="bulk_remove"
       component="button"
       onClick={removeBulk}
@@ -314,9 +317,10 @@ export const PackagesTab = () => {
     >
       {__('Remove')}
     </DropdownItem>,
-    <DropdownSeparator key="separator" />,
+    <DropdownSeparator key="separator" ouiaId="separator" />,
     <DropdownItem
       aria-label="install_pkg_on_host"
+      ouiaId="install_pkg_on_host"
       key="install_pkg_on_host"
       component="button"
       onClick={handleInstallPackagesClick}
@@ -338,9 +342,11 @@ export const PackagesTab = () => {
         <ActionList isIconList>
           <ActionListItem>
             <Dropdown
+              ouiaId="upgrade_actions_dropdown"
               onSelect={onActionSelect}
               toggle={
                 <DropdownToggle
+                  ouiaId="upgrade_actions_dropdown_toggle"
                   splitButtonItems={[
                     <DropdownToggleAction key="action" aria-label="upgrade_actions" onClick={upgradeBulk}>
                       {__('Upgrade')}
@@ -362,6 +368,7 @@ export const PackagesTab = () => {
               isOpen={isBulkActionOpen}
               isPlain
               dropdownItems={dropdownRemoveItems}
+              ouiaId="bulk_actions_dropdown"
             />
           </ActionListItem>
         </ActionList>
@@ -429,7 +436,7 @@ export const PackagesTab = () => {
           alwaysShowActionButtons={false}
         >
           <Thead>
-            <Tr>
+            <Tr ouiaId="row-header">
               <Th key="select-all" />
               <SortableColumnHeaders
                 columnHeaders={columnHeaders}
@@ -473,7 +480,7 @@ export const PackagesTab = () => {
               }
 
               return (
-                <Tr key={`${id}`}>
+                <Tr key={`${id}`} ouiaId={`action-row-${id}`}>
                   {showActions ? (
                     <Td
                       select={{

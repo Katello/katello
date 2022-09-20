@@ -125,10 +125,24 @@ const TracesTab = () => {
   cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
 
   const dropdownItems = [
-    <DropdownItem isDisabled={selectedCount === 0} aria-label="bulk_rex" key="bulk_rex" component="button" onClick={onBulkRestartApp}>
+    <DropdownItem
+      isDisabled={selectedCount === 0}
+      aria-label="bulk_rex"
+      ouiaId="bulk_rex"
+      key="bulk_rex"
+      component="button"
+      onClick={onBulkRestartApp}
+    >
       {__('Restart via remote execution')}
     </DropdownItem>,
-    <DropdownItem isDisabled={selectedCount === 0} aria-label="bulk_rex_customized" key="bulk_rex_customized" component="a" href={bulkCustomizedRexUrl()}>
+    <DropdownItem
+      isDisabled={selectedCount === 0}
+      aria-label="bulk_rex_customized"
+      ouiaId="bulk_rex_customized"
+      key="bulk_rex_customized"
+      component="a"
+      href={bulkCustomizedRexUrl()}
+    >
       {__('Restart via customized remote execution')}
     </DropdownItem>,
   ];
@@ -140,9 +154,11 @@ const TracesTab = () => {
           <ActionListItem>
             <Dropdown
               aria-label="bulk_actions_dropdown"
+              ouiaId="bulk_actions_dropdown"
               toggle={
                 <DropdownToggle
                   aria-label="bulk_actions"
+                  ouiaId="bulk_actions"
                   splitButtonItems={[
                     <DropdownToggleAction key="action" onClick={onBulkRestartApp}>
                       {__('Restart app')}
@@ -205,7 +221,7 @@ const TracesTab = () => {
         requestKey={HOST_TRACES_KEY}
       >
         <Thead>
-          <Tr>
+          <Tr ouiaId="row-header">
             <Th key="select_checkbox" />
             <SortableColumnHeaders
               columnHeaders={columnHeaders}
@@ -239,7 +255,7 @@ const TracesTab = () => {
               ];
             }
             return (
-              <Tr key={id} >
+              <Tr key={id} ouiaId={`row-${id}`} >
                 {showActions ? (
                   <Td
                     select={{
