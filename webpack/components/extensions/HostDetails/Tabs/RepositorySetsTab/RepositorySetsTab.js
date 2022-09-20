@@ -121,7 +121,7 @@ const ArchRestrictedIcon = ({ archRestricted }) => (
     />}
   >
     <Label color="orange" className="arch-restricted-label" style={{ marginLeft: '8px' }}>
-      {__(archRestricted)}
+      {archRestricted}
     </Label>
   </Tooltip>
 );
@@ -144,7 +144,7 @@ const OsRestrictedIcon = ({ osRestricted }) => (
     />}
   >
     <Label color="blue" className="os-restricted-label" style={{ marginLeft: '8px' }}>
-      {__(osRestricted)}
+      {osRestricted}
     </Label>
   </Tooltip>
 );
@@ -522,7 +522,7 @@ const RepositorySetsTab = () => {
               } = repoSet;
               const { isEnabled, isOverridden } =
                 getEnabledValue({ enabled, enabledContentOverride });
-              const showArchRestricted = archRestricted !== 'noarch';
+              const showArchRestricted = archRestricted && archRestricted !== 'noarch';
               return (
                 <Tr key={id} ouiaId={`tr-${rowIndex}`}>
                   {canDoContentOverrides ? (
