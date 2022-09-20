@@ -22,13 +22,20 @@ const ContentSourceForm = ({
   contentSources,
   handleContentSource,
   contentSourceId,
-  contentHostsIds,
+  contentHosts,
   isLoading,
 }) => {
   const formIsValid = () => (!!environmentId &&
     !!contentViewId &&
     !!contentSourceId &&
-    contentHostsIds.length !== 0);
+    contentHosts.length !== 0);
+
+  const contentSourcesIsDisabled = (isLoading || contentSources.length === 0 ||
+    contentHosts.length === 0);
+  const environmentIsDisabled = (isLoading || environments.length === 0 ||
+    contentSourceId === '');
+  const viewIsDisabled = (isLoading || contentViews.length === 0 ||
+    contentSourceId === '' || environmentId === '');
 
   return (
     <Form
@@ -36,10 +43,10 @@ const ContentSourceForm = ({
       className="content_source_form"
       isHorizontal
     >
-      <Grid hasGutter>
-        <FormField label={__('Environment')} id="change_cs_environment" value={environmentId} items={environments} onChange={handleEnvironment} isLoading={isLoading} contentHostsCount={contentHostsIds.length} />
-        <FormField label={__('Content View')} id="change_cs_content_view" value={contentViewId} items={contentViews} onChange={handleContentView} isLoading={isLoading} contentHostsCount={contentHostsIds.length} />
-        <FormField label={__('Content Source')} id="change_cs_content_source" value={contentSourceId} items={contentSources} onChange={handleContentSource} isLoading={isLoading} contentHostsCount={contentHostsIds.length} />
+      <Grid hasGutter className="margin-top-16">
+        <FormField label={__('Content source')} id="change_cs_content_source" value={contentSourceId} items={contentSources} onChange={handleContentSource} isDisabled={contentSourcesIsDisabled} />
+        <FormField label={__('Environment')} id="change_cs_environment" value={environmentId} items={environments} onChange={handleEnvironment} isDisabled={environmentIsDisabled} />
+        <FormField label={__('Content view')} id="change_cs_content_view" value={contentViewId} items={contentViews} onChange={handleContentView} isDisabled={viewIsDisabled} />
 
         <GridItem>
           <ActionGroup>
@@ -69,7 +76,7 @@ ContentSourceForm.propTypes = {
   contentSources: PropTypes.arrayOf(PropTypes.shape({})),
   handleContentSource: PropTypes.func.isRequired,
   contentSourceId: PropTypes.string,
-  contentHostsIds: PropTypes.arrayOf(PropTypes.number),
+  contentHosts: PropTypes.arrayOf(PropTypes.shape({})),
   isLoading: PropTypes.bool,
 };
 
@@ -80,7 +87,7 @@ ContentSourceForm.defaultProps = {
   contentViewId: '',
   contentSources: [],
   contentSourceId: '',
-  contentHostsIds: [],
+  contentHosts: [],
   isLoading: false,
 };
 
