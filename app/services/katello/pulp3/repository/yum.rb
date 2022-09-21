@@ -12,11 +12,12 @@ module Katello
 
         def remote_options
           options = common_remote_options
-          uri = URI(root.url)
+          uri = root.url ? URI(root.url) : nil
           unless root.upstream_authentication_token.blank?
             options.merge!(sles_auth_token: root.upstream_authentication_token)
           end
-          options.merge!(url: uri.to_s, policy: root.download_policy)
+          options.merge!(url: uri.to_s) if uri
+          options.merge!(policy: root.download_policy)
         end
 
         def publication_options(repository_version)
