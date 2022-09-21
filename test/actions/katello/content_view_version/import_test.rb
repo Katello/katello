@@ -104,6 +104,7 @@ module ::Actions::Katello::ContentViewVersion
                                     path: path,
                                     metadata: metadata,
                                     importing: true,
+                                    syncable: false,
                                     major: metadata[:content_view_version][:major],
                                     minor: metadata[:content_view_version][:minor])
       end
@@ -123,6 +124,7 @@ module ::Actions::Katello::ContentViewVersion
                                     path: path,
                                     metadata: metadata,
                                     importing: true,
+                                    syncable: false,
                                     major: metadata[:content_view_version][:major],
                                     minor: metadata[:content_view_version][:minor])
       end
@@ -145,6 +147,7 @@ module ::Actions::Katello::ContentViewVersion
                                     path: path,
                                     metadata: metadata,
                                     importing: true,
+                                    syncable: false,
                                     major: metadata[:content_view_version][:major],
                                     minor: metadata[:content_view_version][:minor])
       end

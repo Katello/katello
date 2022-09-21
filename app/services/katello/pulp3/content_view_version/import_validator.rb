@@ -13,10 +13,13 @@ module Katello
         end
 
         def check!
-          fail _("Content view not provided in the metadata") if @metadata_map.content_view.blank?
+          if @metadata_map.content_view.blank? && !metadata_map.syncable_format?
+            fail _("Content view not provided in the metadata")
+          end
 
           ensure_pulp_importable!
-          unless @content_view.default?
+          if @content_view && !@content_view.default?
+            ensure_non_composite!
             ensure_importing_cvv_does_not_exist!
             ensure_from_cvv_exists!
           end
@@ -25,7 +28,13 @@ module Katello
           ensure_redhat_products_metadata_are_in_the_library!
         end
 
+        def ensure_non_composite!
+          return if @content_view.blank?
+          fail _("Content cannot be imported into a Composite Content View. ") if @content_view.composite?
+        end
+
         def ensure_pulp_importable!
+          return if @metadata_map.syncable_format?
           api = ::Katello::Pulp3::Api::Core.new(@smart_proxy).importer_check_api
           response = api.pulp_import_check_post(toc: "#{@path}/#{@metadata_map.toc}")
           unless response.toc.is_valid
@@ -80,8 +89,7 @@ module Katello
           if bad_repos.any?
             fail _("The following repositories provided in the import metadata have an incorrect content type or provider type. "\
                     "Make sure the export and import repositories are of the same type before importing\n "\
-                    "%{repos}" % { content_view: @content_view.name,
-                                   repos: generate_product_repo_i18n_string(bad_repos).join("")}
+                    "%{repos}" % { repos: generate_product_repo_i18n_string(bad_repos).join("")}
                   )
           end
         end
@@ -94,7 +102,7 @@ module Katello
           if missing.any?
             repos_in_import = generate_product_repo_i18n_string(missing)
             fail _("The organization's manifest does not contain the subscriptions required to enable the following repositories.\n "\
-                    "%{repos}" % { content_view: @content_view.name, repos: repos_in_import.join("")}
+                    "%{repos}" % { repos: repos_in_import.join("")}
                   )
           end
         end

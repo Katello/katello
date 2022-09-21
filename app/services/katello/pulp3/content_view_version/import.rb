@@ -156,6 +156,8 @@ module Katello
           fail _("Content View label not provided.") if metadata_map.content_view.label.blank?
 
           params = import_content_view_params
+          return if @metadata_map.syncable_format? && params[:generated_for] != :none
+
           cv = ::Katello::ContentView.find_by(label: params[:label],
                                               organization: organization)
           if cv.blank?

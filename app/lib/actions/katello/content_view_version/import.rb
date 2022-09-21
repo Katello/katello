@@ -21,16 +21,27 @@ module Actions
 
           sequence do
             plan_action(AutoCreateProducts, import: import)
-            plan_action(AutoCreateRepositories, import: import)
-            plan_action(AutoCreateRedhatRepositories, import: import)
-            plan_action(ResetContentViewRepositoriesFromMetadata, import: import)
-            plan_action(::Actions::Katello::ContentView::Publish, import.content_view, metadata_map.content_view_version.description,
-                          path: path,
-                          metadata: metadata,
-                          importing: true,
-                          major: metadata_map.content_view_version.major,
-                          minor: metadata_map.content_view_version.minor)
-            plan_self(content_view_id: import.content_view.id)
+            plan_action(AutoCreateRepositories, import: import, path: path)
+            plan_action(AutoCreateRedhatRepositories, import: import, path: path)
+
+            if metadata_map.syncable_format?
+              plan_action(::Actions::BulkAction,
+                    ::Actions::Katello::Repository::Sync,
+                    import.intersecting_repos_library_and_metadata.exportable(format: metadata_map.format)
+                    )
+            end
+
+            if import.content_view
+              plan_action(ResetContentViewRepositoriesFromMetadata, import: import)
+              plan_action(::Actions::Katello::ContentView::Publish, import.content_view, metadata_map.content_view_version.description,
+                            path: path,
+                            metadata: metadata,
+                            importing: !metadata_map.syncable_format?,
+                            syncable: metadata_map.syncable_format?,
+                            major: metadata_map.content_view_version.major,
+                            minor: metadata_map.content_view_version.minor)
+              plan_self(content_view_id: import.content_view.id)
+            end
           end
         end
 

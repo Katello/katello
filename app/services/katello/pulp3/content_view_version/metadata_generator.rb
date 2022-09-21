@@ -23,7 +23,6 @@ module Katello
                   incremental: from_content_view_version.present?,
                   format: export_service.format
           }
-
           unless from_content_view_version.blank?
             ret[:from_content_view_version] = from_content_view_version.slice(:major, :minor)
           end
@@ -45,10 +44,11 @@ module Katello
 
         def generate_repository_metadata(repo)
           repo.slice(:name, :label, :description, :arch, :content_type, :unprotected,
-                     :checksum_type, :os_versions, :major, :minor, :download_policy, :mirroring_policy).
+                     :checksum_type, :os_versions, :major, :minor,
+                     :download_policy, :mirroring_policy).
             merge(product: generate_product_metadata(repo.product),
                   gpg_key: generate_gpg_metadata(repo.gpg_key),
-                  content: generate_content_metadata(repo.content),
+                  content: generate_content_metadata(repo),
                   redhat: repo.redhat?)
         end
 
@@ -63,9 +63,16 @@ module Katello
           gpg.slice(:name, :content_type, :content)
         end
 
-        def generate_content_metadata(content)
+        def generate_content_metadata(repo)
+          content = repo.content
           return {} if content.blank?
-          { id: content.cp_content_id, label: content.label }
+          content_data = Katello::Content.substitute_content_path(arch: repo.arch,
+                                                                   releasever: repo.minor,
+                                                                   content_path: content.content_url)
+          { id: content.cp_content_id,
+            label: content.label,
+            url: content_data[:path]
+          }
         end
 
         def zip_gpg_keys(entities)

@@ -2,10 +2,12 @@ module Actions
   module Katello
     module ContentViewVersion
       class AutoCreateRepositories < Actions::Base
-        def plan(import:)
+        def plan(import:, path:)
           helper = ::Katello::Pulp3::ContentViewVersion::ImportableRepositories.new(
             organization: import.organization,
-            metadata_repositories: import.metadata_map.repositories.select { |r| !r.redhat }
+            metadata_repositories: import.metadata_map.repositories.select { |r| !r.redhat },
+            syncable_format: import.metadata_map.syncable_format?,
+            path: path
           )
           helper.generate!
 

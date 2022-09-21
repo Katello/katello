@@ -19,7 +19,8 @@ module Katello
                  content_view_version: @metadata_cvv,
                  from_content_view_version: @metadata_from_cvv,
                  products: @metadata_products,
-                 repositories: @metadata_repos
+                 repositories: @metadata_repos,
+                 syncable_format?: false
            )
 
             stub('import',

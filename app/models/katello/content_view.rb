@@ -87,7 +87,11 @@ module Katello
     scope :composite, -> { where(:composite => true) }
     scope :non_composite, -> { where(:composite => [nil, false]) }
     scope :generated, -> { where.not(:generated_for => :none) }
-    scope :generated_for_repository, -> { where(:generated_for => [:repository_export, :repository_import]) }
+    scope :generated_for_repository, -> {
+      where(:generated_for => [:repository_export,
+                               :repository_import,
+                               :repository_export_syncable])
+    }
     scope :ignore_generated, -> {
       where.not(:generated_for => [:repository_export,
                                    :repository_import,
@@ -585,14 +589,14 @@ module Katello
       true
     end
 
-    def check_ready_to_publish!(importing: false)
+    def check_ready_to_publish!(importing: false, syncable: false)
       fail _("User must be logged in.") if ::User.current.nil?
       fail _("Cannot publish default content view") if default?
 
       if importing
         check_ready_to_import!
       else
-        fail _("Import-only content views can not be published directly") if import_only?
+        fail _("Import-only content views can not be published directly") if import_only? && !syncable
         check_composite_action_allowed!(organization.library)
         check_docker_repository_names!([organization.library])
       end
