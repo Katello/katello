@@ -51,6 +51,7 @@ module ::Actions::Katello::Repository
   class CreateTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Create }
     let(:candlepin_action_class) { ::Actions::Candlepin::Environment::AddContentToEnvironment }
+    let(:acs_create_action_class) { ::Actions::Pulp3::Orchestration::AlternateContentSource::Create }
 
     before do
       repository.expects(:save!)
@@ -63,6 +64,20 @@ module ::Actions::Katello::Repository
     it 'plans' do
       plan_action action, repository
       assert_action_planned_with action, candlepin_action_class, view_env_cp_id: "1", content_id: "69"
+    end
+
+    it 'plans acs creation if not cloning' do
+      simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
+      simplified_acs.verify_ssl = nil
+      simplified_acs.products << repository.product
+      ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: simplified_acs.id, smart_proxy_id: ::SmartProxy.pulp_primary.id, remote_href: 'remote_href', alternate_content_source_href: 'acs_href')
+      plan_action action, repository
+      assert_action_planned action, acs_create_action_class
+    end
+
+    it 'does not plan acs creation if cloning' do
+      plan_action action, repository, clone: true
+      refute_action_planned action, acs_create_action_class
     end
 
     it 'no clone flag means generate metadata in run phase' do
