@@ -779,10 +779,10 @@ module ::Actions::Katello::Repository
     it 'plans' do
       action = create_action action_class
       planned_action = plan_action action, repository, true
-      last_updated = repository.repository_errata.order("updated_at desc").first.updated_at.to_s
+      old_errata_ids = repository.errata.map(&:id).uniq.sort
       new_errata = ::Katello::Erratum.where.not(:id => repository.repository_errata.pluck(:erratum_id)).first
       repository.errata << new_errata
-      assert_equal planned_action.execution_plan.planned_run_steps.first.input, "repo" => repository.id, "contents_changed" => true, "last_updated" => last_updated
+      assert_equal planned_action.execution_plan.planned_run_steps.first.input, "repo" => repository.id, "contents_changed" => true, "associated_errata_ids" => old_errata_ids
     end
   end
 
