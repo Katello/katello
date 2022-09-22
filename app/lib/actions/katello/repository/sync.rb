@@ -51,7 +51,7 @@ module Actions
               plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
               plan_action(Katello::Repository::CorrectChecksum, repo)
               concurrence do
-                plan_action(Katello::Repository::ErrataMail, repo, output[:contents_changed])
+                plan_action(Katello::Repository::ErrataMail, repo)
                 plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repo.id]) if generate_applicability
               end
               plan_self(:id => repo.id, :sync_result => output, :skip_metadata_check => skip_metadata_check, :validate_contents => validate_contents,
