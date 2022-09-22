@@ -377,7 +377,7 @@ module Katello
       end
 
       def sync_tasks
-        ForemanTasks::Task.for_resource(self)
+        ForemanTasks::Task.for_resource(self).where(:label => 'Actions::Katello::CapsuleContent::Sync')
       end
 
       def active_sync_tasks
