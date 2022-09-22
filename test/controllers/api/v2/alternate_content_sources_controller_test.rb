@@ -19,7 +19,6 @@ module Katello
       @acs.ssl_ca_cert = @ca
       @acs.ssl_client_cert = @cert
       @acs.ssl_client_key = @key
-      @acs.http_proxy = @http_proxy
       @acs.subpaths = ['content/', 'isos/', 'packages/']
       @acs.save!
     end
@@ -63,6 +62,7 @@ module Katello
         subpaths: @acs.subpaths,
         alternate_content_source_type: @acs.alternate_content_source_type,
         verify_ssl: @acs.verify_ssl,
+        use_http_proxies: @acs.use_http_proxies,
         upstream_username: @acs.upstream_username,
         upstream_password: @acs.upstream_password
       }
@@ -133,6 +133,7 @@ module Katello
         subpaths: @acs.subpaths,
         alternate_content_source_type: @acs.alternate_content_source_type,
         verify_ssl: @acs.verify_ssl,
+        use_http_proxies: @acs.use_http_proxies,
         upstream_username: @acs.upstream_username,
         upstream_password: @acs.upstream_password
       }

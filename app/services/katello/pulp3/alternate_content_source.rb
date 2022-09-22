@@ -29,23 +29,24 @@ module Katello
         end
       end
 
-      def remote_options
-        if repository.present?
-          options = repository.backend_service(smart_proxy).remote_options
-          options[:policy] = 'on_demand'
-          # TODO: Also add a boolean for inheriting the repositories' HTTP proxies?
-          if acs.use_smart_proxies
-            options[:proxy_url] = smart_proxy.http_proxy&.url
-            options[:proxy_username] = smart_proxy.http_proxy&.username
-            options[:proxy_password] = smart_proxy.http_proxy&.password
-          else
-            # TODO: test that this clears out the proxy information properly
-            options[:proxy_url] = nil
-            options[:proxy_username] = nil
-            options[:proxy_password] = nil
-          end
-          return options
+      def simplified_acs_remote_options
+        options = repository.backend_service(smart_proxy).remote_options
+        options[:policy] = 'on_demand'
+        # Potential RFE: allow inheriting of default smart proxy repo's HTTP proxies for simplified ACSs
+        if acs.use_http_proxies
+          options[:proxy_url] = smart_proxy.http_proxy&.url
+          options[:proxy_username] = smart_proxy.http_proxy&.username
+          options[:proxy_password] = smart_proxy.http_proxy&.password
+        else
+          options[:proxy_url] = nil
+          options[:proxy_username] = nil
+          options[:proxy_password] = nil
         end
+        options
+      end
+
+      def remote_options
+        return simplified_acs_remote_options if repository.present?
 
         remote_options = {
           tls_validation: acs.verify_ssl,

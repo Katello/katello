@@ -28,6 +28,7 @@ const createCustomACSDetails = {
   content_type: 'yum',
   alternate_content_source_type: 'custom',
   verify_ssl: false,
+  use_http_proxies: false,
   ssl_ca_cert_id: '',
 };
 
@@ -38,6 +39,7 @@ const createSimplifiedACSDetails = {
   product_ids: [340, 19, 341],
   content_type: 'yum',
   alternate_content_source_type: 'simplified',
+  use_http_proxies: false,
 };
 
 const noResults = {

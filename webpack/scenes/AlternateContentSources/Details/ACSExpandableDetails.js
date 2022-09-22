@@ -66,6 +66,7 @@ const ACSExpandableDetails = () => {
     description,
     base_url: url,
     smart_proxies: smartProxies,
+    use_http_proxies: useHttpProxies,
     verify_ssl: verifySsl,
     ssl_ca_cert: sslCaCert,
     ssl_client_cert: sslClientCert,
@@ -200,6 +201,19 @@ const ACSExpandableDetails = () => {
               <InactiveText text="N/A" />
                             }
             </List>
+            <TextContent className="margin-0-24">
+              <TextList component={TextListVariants.dl}>
+                <TextListItem component={TextListItemVariants.dt}>
+                  {__('Use HTTP Proxies')}
+                </TextListItem>
+                <TextListItem
+                  aria-label="useHttpProxies_value"
+                  component={TextListItemVariants.dd}
+                >
+                  {useHttpProxies ? 'true' : 'false'}
+                </TextListItem>
+              </TextList>
+            </TextContent>
           </ExpandableSection>
         </StackItem>
         {acsType === 'simplified' &&
@@ -309,6 +323,15 @@ const ACSExpandableDetails = () => {
                   >
                     {subpaths.join()}
                   </TextListItem>
+                  <TextListItem component={TextListItemVariants.dt}>
+                    {__('Verify SSL')}
+                  </TextListItem>
+                  <TextListItem
+                    aria-label="verifySSL_value"
+                    component={TextListItemVariants.dd}
+                  >
+                    {verifySsl ? 'true' : 'false'}
+                  </TextListItem>
                 </TextList>
               </TextContent>
             </ExpandableSection>
@@ -350,15 +373,6 @@ const ACSExpandableDetails = () => {
             >
               <TextContent className="margin-0-24">
                 <TextList component={TextListVariants.dl}>
-                  <TextListItem component={TextListItemVariants.dt}>
-                    {__('Verify SSL')}
-                  </TextListItem>
-                  <TextListItem
-                    aria-label="verifySSL_value"
-                    component={TextListItemVariants.dd}
-                  >
-                    {verifySsl ? 'true' : 'false'}
-                  </TextListItem>
                   <TextListItem component={TextListItemVariants.dt}>
                     {__('SSL CA certificate')}
                   </TextListItem>

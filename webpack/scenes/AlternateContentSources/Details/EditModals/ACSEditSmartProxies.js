@@ -4,15 +4,16 @@ import PropTypes from 'prop-types';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
-import { ActionGroup, Button, DualListSelector, Form, Modal, ModalVariant } from '@patternfly/react-core';
+import { ActionGroup, Button, DualListSelector, Form, FormGroup, Modal, ModalVariant, Switch } from '@patternfly/react-core';
 import { editACS, getACSDetails } from '../../ACSActions';
 import { selectSmartProxy, selectSmartProxyStatus } from '../../../SmartProxy/SmartProxyContentSelectors';
 import { getSmartProxies } from '../../../SmartProxy/SmartProxyContentActions';
 import Loading from '../../../../components/Loading';
 
 const ACSEditSmartProxies = ({ onClose, acsId, acsDetails }) => {
-  const { smart_proxies: smartProxies } = acsDetails;
+  const { smart_proxies: smartProxies, use_http_proxies: useHttpProxies } = acsDetails;
   const dispatch = useDispatch();
+  const [acsUseHttpProxies, setAcsUseHttpProxies] = useState(useHttpProxies);
   const [saving, setSaving] = useState(false);
   const [
     acsSmartProxies, setAcsSmartProxies,
@@ -45,7 +46,7 @@ const ACSEditSmartProxies = ({ onClose, acsId, acsDetails }) => {
     setSaving(true);
     dispatch(editACS(
       acsId,
-      { acsId, smart_proxy_names: acsSmartProxies },
+      { acsId, smart_proxy_names: acsSmartProxies, use_http_proxies: acsUseHttpProxies },
       () => {
         dispatch(getACSDetails(acsId));
         onClose();
@@ -83,6 +84,14 @@ const ACSEditSmartProxies = ({ onClose, acsId, acsDetails }) => {
           removeSelected={onListChange}
           id="selector"
         />
+        <FormGroup label={__('Use HTTP proxies')} fieldId="use_http_proxies">
+          <Switch
+            id="use-http-proxies-switch"
+            aria-label="use-http-proxies-switch"
+            isChecked={acsUseHttpProxies}
+            onChange={checked => setAcsUseHttpProxies(checked)}
+          />
+        </FormGroup>
         <ActionGroup>
           <Button
             ouiaId="edit-acs-details-submit"
@@ -108,11 +117,12 @@ ACSEditSmartProxies.propTypes = {
   onClose: PropTypes.func.isRequired,
   acsDetails: PropTypes.shape({
     smart_proxies: PropTypes.arrayOf(PropTypes.shape({})),
+    use_http_proxies: PropTypes.bool,
   }),
 };
 
 ACSEditSmartProxies.defaultProps = {
-  acsDetails: { smart_proxies: [], id: undefined },
+  acsDetails: { smart_proxies: [], id: undefined, use_http_proxies: false },
 };
 
 export default ACSEditSmartProxies;

@@ -96,9 +96,12 @@ test('Can expand expandable sections on details page', async (done) => {
     expect(queryByText('Show URL and subpaths')).toBeInTheDocument();
     expect(queryByText('Hide credentials')).toBeInTheDocument();
     expect(queryByText('Verify SSL')).toBeInTheDocument();
-    expect(queryByText('false')).toBeInTheDocument();
+    expect(queryAllByText('false')[0]).toBeInTheDocument();
+    expect(queryByText('Use HTTP Proxies')).toBeInTheDocument();
+    expect(queryAllByText('false')[1]).toBeInTheDocument();
     expect(queryByText('SSL CA certificate')).toBeInTheDocument();
     expect(queryAllByText('N/A')[0]).toBeInTheDocument();
+    expect(queryByText('true')).not.toBeInTheDocument();
   });
 
   assertNockRequest(acsDetailsScope, done);

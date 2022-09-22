@@ -38,8 +38,8 @@ module Katello
 
         lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_node.extensions.repository.retrieve_all }
 
-        # A smart proxy's HTTP proxy is used to determine an alternate content source's HTTP proxy.
-        belongs_to :http_proxy, :inverse_of => :smart_proxies
+        # A smart proxy's HTTP proxy is used for all related alternate content sources.
+        belongs_to :http_proxy, :inverse_of => :smart_proxies, :class_name => '::HttpProxy'
 
         has_many :capsule_lifecycle_environments,
                  :class_name => "Katello::CapsuleLifecycleEnvironment",

@@ -3,6 +3,7 @@ require 'katello_test_helper'
 class Api::V2::SmartProxiesControllerTest < ActionController::TestCase
   def models
     @smart_proxy = FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
+    @http_proxy = http_proxies(:myhttpproxy)
   end
 
   def setup
@@ -13,7 +14,11 @@ class Api::V2::SmartProxiesControllerTest < ActionController::TestCase
   end
 
   def test_update
-    put :update, params: { :name => 'foobar', :download_policy => 'immediate', :id => @smart_proxy.id }
+    put :update, params: { smart_proxy: { http_proxy_id: @http_proxy.id, :name => 'foobar', :download_policy => 'immediate' }, :id => @smart_proxy.id }
     assert_response :success
+    @smart_proxy.reload
+    assert_equal @smart_proxy.http_proxy_id, @http_proxy.id
+    assert_equal @smart_proxy.name, 'foobar'
+    assert_equal @smart_proxy.download_policy, 'immediate'
   end
 end

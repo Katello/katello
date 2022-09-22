@@ -61,7 +61,7 @@ module ::Actions::Pulp3
       @yum_acs.ssl_ca_cert = ca
       @yum_acs.ssl_client_cert = cert
       @yum_acs.ssl_client_key = key
-      @yum_acs.http_proxy = http_proxy
+      @yum_acs.use_http_proxies = true
       @yum_acs.update(subpaths: ['test/', 'rpms/', 'manicotti/'])
 
       smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
