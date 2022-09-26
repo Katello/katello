@@ -13,5 +13,6 @@ feature: katello_change_content_source
 
 if [ -f /etc/yggdrasil/config.toml ]; then
   cp /etc/yggdrasil/config.toml /etc/yggdrasil/config.toml.bak
+  export YGGDRASIL_RESTART_DELAY=10
   <%= snippet 'remote_execution_pull_setup' %>
 fi
