@@ -37,6 +37,8 @@ module Katello
           --server.prefix="#{content_source.rhsm_url.path}" \
           --rhsm.repo_ca_cert="$KATELLO_SERVER_CA_CERT" \
           --rhsm.baseurl="#{content_source.pulp_content_url}"
+
+        subscription-manager facts --update
       CMD
     end
   end
