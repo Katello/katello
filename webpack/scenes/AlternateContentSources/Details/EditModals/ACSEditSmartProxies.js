@@ -62,7 +62,7 @@ const ACSEditSmartProxies = ({ onClose, acsId, acsDetails }) => {
 
   return (
     <Modal
-      title={__('Edit Alternate content source details')}
+      title={__('Edit smart proxies')}
       variant={ModalVariant.small}
       isOpen
       onClose={onClose}

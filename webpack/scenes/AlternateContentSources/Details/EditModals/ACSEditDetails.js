@@ -29,7 +29,7 @@ const ACSEditDetails = ({ onClose, acsId, acsDetails }) => {
 
   return (
     <Modal
-      title={__('Edit Alternate content source details')}
+      title={__('Edit details')}
       variant={ModalVariant.small}
       isOpen
       onClose={onClose}

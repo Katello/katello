@@ -124,18 +124,21 @@ test('Can display create wizard and create custom ACS', async (done) => {
     expect(queryByText('Indicate the source type.')).toBeInTheDocument();
   });
 
-  // Choose ACS type, content_type defaults to yum
+  // Check that next is disabled until type is selected
+  expect(getByText('Next')).toHaveAttribute('disabled');
   fireEvent.click(getByText('Custom'));
-
+  expect(getByText('Next')).not.toHaveAttribute('disabled');
   // Go to next step: Name source
   fireEvent.click(getByText('Next'));
 
   await patientlyWaitFor(() => {
     expect(getByText('Enter a name for your source.')).toBeInTheDocument();
   });
+  // Check that next is disabled until name is entered
+  expect(getByText('Next')).toHaveAttribute('disabled');
   // Enter Name
   fireEvent.change(getByLabelText('acs_name_field'), { target: { value: 'acs_test' } });
-
+  expect(getByText('Next')).not.toHaveAttribute('disabled');
   // Mock smart proxy selector to go to next page
   const useSmartProxySelectorMock = jest.spyOn(reactRedux, 'useSelector');
   useSmartProxySelectorMock.mockReturnValue(smartProxyResult);
@@ -143,10 +146,24 @@ test('Can display create wizard and create custom ACS', async (done) => {
   await patientlyWaitFor(() => {
     expect(getByText('centos7-katello-devel-stable.example.com')).toBeInTheDocument();
   });
+
+  // Check that next is disabled until proxies are selected
+  expect(getByText('Next')).toHaveAttribute('disabled');
   fireEvent.click(getByLabelText('Add all'));
   useSmartProxySelectorMock.mockRestore();
   // Go to URL and subpath step
   fireEvent.click(getByText('Next'));
+
+  // Check that next is disabled until URL is entered
+  expect(getByText('Next')).toHaveAttribute('disabled');
+
+  // Test url/subpath validations
+  fireEvent.change(getByLabelText('acs_base_url_field'), { target: { value: 'ivalidUrlWithoutProtocol' } });
+  expect(getByText('http://, https:// or file://')).toBeInTheDocument();
+  fireEvent.change(getByLabelText('acs_subpath_field'), { target: { value: 'invalid/noTrailingSlash' } });
+  expect(getByText('Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.')).toBeInTheDocument();
+  // Test that next is still diabled with invalid values
+  expect(getByText('Next')).toHaveAttribute('disabled');
 
   fireEvent.change(getByLabelText('acs_base_url_field'), { target: { value: 'https://test_url.com/' } });
   expect(getByLabelText('acs_base_url_field')).toHaveAttribute('value', 'https://test_url.com/');
@@ -166,7 +183,8 @@ test('Can display create wizard and create custom ACS', async (done) => {
   fireEvent.change(getByLabelText('acs_password_field'), { target: { value: 'password' } });
   useContentCredentialSelectorMock.mockRestore();
   fireEvent.click(getByText('Next'));
-  fireEvent.click(getByText('Add'));
+  const addAcsButton = getAllByRole('button', { name: 'Add' })[0];
+  fireEvent.click(addAcsButton);
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
@@ -204,7 +222,7 @@ test('Can display create wizard and create simplified ACS', async (done) => {
     .reply(201, { id: 22 });
 
   const {
-    getByLabelText, getByText, queryByText,
+    getByLabelText, getByText, queryByText, getAllByRole,
   } = renderWithRedux(withACSRoute(<ACSTable />), renderOptions);
 
   expect(queryByText("You currently don't have any alternate content sources.")).toBeNull();
@@ -244,7 +262,8 @@ test('Can display create wizard and create simplified ACS', async (done) => {
 
   fireEvent.click(getByText('Next'));
   useProductSelectorMock.mockClear();
-  fireEvent.click(getByText('Add'));
+  const addAcsButton = getAllByRole('button', { name: 'Add' })[0];
+  fireEvent.click(addAcsButton);
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);

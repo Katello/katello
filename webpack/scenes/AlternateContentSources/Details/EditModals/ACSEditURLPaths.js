@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { ActionGroup, Button, Form, FormGroup, Modal, ModalVariant, TextArea, TextInput } from '@patternfly/react-core';
 import { editACS, getACSDetails } from '../../ACSActions';
+import { areSubPathsValid, isValidUrl } from '../../helpers';
 
 const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
   const { subpaths, base_url: url } = acsDetails;
@@ -11,6 +12,8 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
   const [acsUrl, setAcsUrl] = useState(url);
   const [acsSubpath, setAcsSubpath] = useState(subpaths.join() || '');
   const [saving, setSaving] = useState(false);
+  const subPathValidated = areSubPathsValid(acsSubpath) ? 'default' : 'error';
+  const urlValidated = (acsUrl === '' || isValidUrl(acsUrl)) ? 'default' : 'error';
 
   const onSubmit = () => {
     setSaving(true);
@@ -35,7 +38,7 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
 
   return (
     <Modal
-      title={__('Edit Alternate content source URL and subpaths')}
+      title={__('Edit URL and subpaths')}
       variant={ModalVariant.small}
       isOpen
       onClose={onClose}
@@ -50,6 +53,8 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
           label={__('Base URL')}
           type="string"
           fieldId="acs_base_url"
+          helperTextInvalid="http://, https:// or file://"
+          validated={urlValidated}
           isRequired
         >
           <TextInput
@@ -60,22 +65,22 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
             aria-label="acs_base_url_field"
             placeholder="https:// or file://"
             value={acsUrl}
-            onChange={(value) => {
-              setAcsUrl(value);
-            }}
+            validated={urlValidated}
+            onChange={value => setAcsUrl(value)}
           />
         </FormGroup>
         <FormGroup
           label={__('Subpaths')}
           type="string"
           fieldId="acs_subpaths"
+          helperTextInvalid={__('Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.')}
+          validated={subPathValidated}
         >
           <TextArea
             placeholder="test/repo1/, test/repo2/,"
             value={acsSubpath}
-            onChange={(value) => {
-              setAcsSubpath(value);
-            }}
+            validated={subPathValidated}
+            onChange={value => setAcsSubpath(value)}
             name="acs_subpath_field"
             id="acs_subpath_field"
             aria-label="acs_subpath_field"
@@ -86,7 +91,11 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
             ouiaId="edit-acs-url-submit"
             aria-label="edit_acs_url"
             variant="primary"
-            isDisabled={saving || acsUrl.length === 0}
+            isDisabled={saving ||
+                acsUrl.length === 0 ||
+                subPathValidated === 'error' ||
+                urlValidated === 'error'
+            }
             isLoading={saving}
             type="submit"
           >

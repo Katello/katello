@@ -117,7 +117,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
 
   return (
     <Modal
-      title={__('Edit Alternate content source credentials')}
+      title={__('Edit credentials')}
       variant={ModalVariant.large}
       isOpen
       onClose={onClose}

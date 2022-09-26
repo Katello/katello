@@ -64,7 +64,7 @@ const ACSEditProducts = ({ onClose, acsId, acsDetails }) => {
 
   return (
     <Modal
-      title={__('Edit Alternate content source products')}
+      title={__('Edit products')}
       variant={ModalVariant.small}
       isOpen
       onClose={onClose}
