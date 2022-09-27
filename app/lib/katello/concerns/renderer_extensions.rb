@@ -11,7 +11,8 @@ module Katello
           content_view = host.try(:content_facet).try(:content_view) || host.try(:content_view)
 
           if content_view && host.operatingsystem.is_a?(Redhat) &&
-                  host.operatingsystem.kickstart_repos(host).first.present?
+                  host.operatingsystem.kickstart_repos(host).first.present? &&
+                  host&.content_facet&.kickstart_repository.present?
             @mediapath ||= host.operatingsystem.mediumpath(medium_provider)
           end
         end
