@@ -1,3 +1,16 @@
+# 4.4.2 Habanero (2022-09-27)
+
+## Bug Fixes
+
+### Repositories
+ * Retain packages on Repository removes RPMs from Pulp but not from Katello ([#35120](https://projects.theforeman.org/issues/35120), [9da8f63c](https://github.com/Katello/katello.git/commit/9da8f63c47ee3d1935703dbf9f7daaf22b4b06a4))
+
+### Hosts
+ * Repository sets and Errata tabs do not show toggle group when host is in Library environment but non-default content view ([#35114](https://projects.theforeman.org/issues/35114), [12cfaa3a](https://github.com/Katello/katello.git/commit/12cfaa3a800fdd50751ca9b569157fd8feb5182c))
+ * All errata are applied when user only selects certain errata ([#35045](https://projects.theforeman.org/issues/35045), [88653969](https://github.com/Katello/katello.git/commit/886539694b79390f890505be7ae0de26f472fabf))
+
+### Upgrades
+ * 20211220185935_clean_duplicate_content_units db:migrate fails with child records ([#35031](https://projects.theforeman.org/issues/35031), [66732409](https://github.com/Katello/katello.git/commit/667324096159ef6c0950b40588e3f04cc427c1eb))
 # 4.4.1 Habanero (2022-05-25)
 
 ## Bug Fixes
