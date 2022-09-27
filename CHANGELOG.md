@@ -1,3 +1,35 @@
+# 4.5.1 Old Monk (2022-09-27)
+
+## Bug Fixes
+
+### Repositories
+ * ModuleStreamErratumPackages aren't indexed at first repository syncing ([#35337](https://projects.theforeman.org/issues/35337), [81a4a286](https://github.com/Katello/katello.git/commit/81a4a2865b5edbb357f80c668d7fa7b6db81f718))
+ * Upgrade to katello 4.3 fails in db:seed state with error "ActiveRecord::RecordInvalid: Validation failed: Name has already been taken" ([#35246](https://projects.theforeman.org/issues/35246), [219cc275](https://github.com/Katello/katello.git/commit/219cc275bac4959c6078a934beab70474b48fdf7), [06e4ebe0](https://github.com/Katello/katello.git/commit/06e4ebe0aa1f38b86f2233d1a67438f8eb6b0553))
+ * Deb packages uploaded in debian repository are not displayed ([#35060](https://projects.theforeman.org/issues/35060), [9996a313](https://github.com/Katello/katello.git/commit/9996a313ac56b12811e68240175a81c8a17be215))
+ * Debian package upload is broken ([#34804](https://projects.theforeman.org/issues/34804), [beedffb2](https://github.com/Katello/katello.git/commit/beedffb2fef9868e434212e2c8815b4662b59f7e))
+ * Retain packages on Repository removes RPMs from Pulp but not from Katello ([#35120](https://projects.theforeman.org/issues/35120), [9da8f63](https://github.com/Katello/katello/commit/9da8f63c47ee3d1935703dbf9f7daaf22b4b06a4))
+
+
+### Lifecycle Environments
+ * Manifest Refresh should ensure environment-content association ([#35193](https://projects.theforeman.org/issues/35193), [e6a94f48](https://github.com/Katello/katello.git/commit/e6a94f48f20dd4433545b519d035e261de7f4b8e))
+
+### Web UI
+ * Demo findings: Wrong step header in ACS create wizard + vendor field autocomplete ([#35041](https://projects.theforeman.org/issues/35041), [a5a5db3b](https://github.com/Katello/katello.git/commit/a5a5db3b0d43c996f53e847fa87eed07c75bc5c6))
+
+### Hosts
+ * Remove spinner from Packages & Module streams tabs during REX job polling ([#35038](https://projects.theforeman.org/issues/35038), [25f6ee54](https://github.com/Katello/katello.git/commit/25f6ee5489c4df983d0256e9aad0879585767327))
+ * Repository sets and Errata tabs do not show toggle group when host is in Library environment but non-default content view ([#35114](https://projects.theforeman.org/issues/35114), [12cfaa3](https://github.com/Katello/katello/commit/12cfaa3a800fdd50751ca9b569157fd8feb5182c))
+ * All errata are applied when user only selects certain errata ([#35045](https://projects.theforeman.org/issues/35045), [8865396](https://github.com/Katello/katello/commit/886539694b79390f890505be7ae0de26f472fabf))
+
+### Inter Server Sync
+ * [RFE] Need syncable yum-format repository exports ([#34861](https://projects.theforeman.org/issues/34861), [a19d6fd3](https://github.com/Katello/katello.git/commit/a19d6fd33573423256caaa76d35c24cf34dd162e), [4e9dbe0a](https://github.com/Katello/hammer-cli-katello.git/commit/4e9dbe0a3aa3bc5fac6e38cfc65ae2f3bd57b8fa), [ddc0a955](https://github.com/Katello/hammer-cli-katello.git/commit/ddc0a9553c0f0cfaef7f0f44e56fe1ca95adf7cb))
+
+### Upgrades
+* 20211220185935_clean_duplicate_content_units db:migrate fails with child records ([#35031](https://projects.theforeman.org/issues/35031), [6673240](https://github.com/Katello/katello/commit/667324096159ef6c0950b40588e3f04cc427c1eb))
+
+
+### Other
+ * Every CV Publish+Promote action followed by an automated Capsule sync task generates a huge traceback "(ActiveRecord::RecordNotFound): Couldn't find ForemanTasks::Task::DynflowTask" in Satellite 6.11 ([#35025](https://projects.theforeman.org/issues/35025), [8cdef21e](https://github.com/Katello/katello.git/commit/8cdef21e13e505f2046b03eabda0c9cc709d574e))
 # 4.5 Old Monk (2022-07-05)
 
 ## Features
