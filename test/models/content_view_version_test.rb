@@ -125,7 +125,6 @@ module Katello
     end
 
     def test_python_package_count
-      SmartProxy.stubs(:pulp_primary).returns(SmartProxy.pulp_primary)
       cv = katello_content_views(:acme_default)
       cvv = cv.versions.first
 
