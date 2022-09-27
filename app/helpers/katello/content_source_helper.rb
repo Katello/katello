@@ -39,5 +39,14 @@ module Katello
           --rhsm.baseurl="#{content_source.pulp_content_url}"
       CMD
     end
+
+    def reconfigure_yggdrasild(host)
+      template = Template.find_by(name: 'remote_execution_pull_setup')
+      return '' unless template
+
+      source = Foreman::Renderer.get_source(template: template, host: host)
+      scope = Foreman::Renderer.get_scope(source: source, host: host)
+      Foreman::Renderer.render(source, scope)
+    end
   end
 end
