@@ -319,7 +319,7 @@ module Katello
       lifecycle_environment = KTEnvironment.readable.find(params[:environment_id])
       content_view = Katello::ContentView.readable.find(params[:content_view_id])
       content_source = SmartProxy.authorized(:view_smart_proxies).find(params[:content_source_id])
-      template = prepare_ssl_cert(foreman_server_ca_cert) + configure_subman(content_source)
+      template = prepare_ssl_cert(foreman_server_ca_cert) + configure_subman(content_source) + reconfigure_yggdrasild(hosts.first)
 
       hosts.each do |host|
         next unless host.content_facet
