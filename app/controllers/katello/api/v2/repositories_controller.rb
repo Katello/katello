@@ -441,7 +441,7 @@ module Katello
       param 'content_unit_id', String
       param 'size', String
       param 'checksum', String
-      param 'name', String, :desc => N_("Needs to only be set for file repositories or docker tags")
+      param 'name', String, :desc => N_("Needs to only be set for file repositories or docker tags"), :required => true
       param 'digest', String, :desc => N_("Needs to only be set for docker tags")
     end
     Katello::RepositoryTypeManager.generic_repository_types.each_pair do |_, repo_type|
@@ -460,6 +460,14 @@ module Katello
 
       uploads = (params[:uploads] || []).map do |upload|
         upload.permit(:id, :content_unit_id, :size, :checksum, :name, :digest).to_h
+      end
+
+      if @repository.content_type != 'docker' && uploads.first['checksum'].nil?
+        fail HttpErrors::BadRequest, _('Checksum is a required parameter.')
+      end
+
+      if uploads.first['name'].nil?
+        fail HttpErrors::BadRequest, _('Name is a required parameter.')
       end
 
       begin

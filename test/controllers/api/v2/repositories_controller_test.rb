@@ -983,26 +983,26 @@ module Katello
 
     def test_import_uploads_without_checksum
       uploads = [{'id' => '1', 'size' => '12333', 'name' => 'test'}]
-      @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads,
-              generate_metadata: true, content_type: nil, sync_capsule: true)
-        .returns(build_task_stub)
 
       put :import_uploads, params: { id: @repository.id, uploads: uploads }
 
-      assert_response :success
+      response = JSON.parse(@response.body)
+      assert response.key?('displayMessage')
+      assert_equal 'Checksum is a required parameter.', response['displayMessage']
+
+      assert_response :bad_request
     end
 
     def test_import_uploads_without_name
       uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324'}]
-      @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads,
-              generate_metadata: true, content_type: nil, sync_capsule: true)
-        .returns(build_task_stub)
 
       put :import_uploads, params: { id: @repository.id, uploads: uploads }
 
-      assert_response :success
+      response = JSON.parse(@response.body)
+      assert response.key?('displayMessage')
+      assert_equal 'Name is a required parameter.', response['displayMessage']
+
+      assert_response :bad_request
     end
 
     def test_import_uploads_file
