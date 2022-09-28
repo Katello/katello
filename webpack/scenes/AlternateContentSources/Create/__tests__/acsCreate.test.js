@@ -88,6 +88,7 @@ test('Can display create wizard and create custom ACS', async (done) => {
   const scope = nockInstance
     .get(ACSIndexPath)
     .query(true)
+    .times(2)
     .reply(200, noResults);
 
   const contentCredentialScope = nockInstance
@@ -200,6 +201,7 @@ test('Can display create wizard and create simplified ACS', async (done) => {
   const scope = nockInstance
     .get(ACSIndexPath)
     .query(true)
+    .times(2)
     .reply(200, noResults);
 
   const contentCredentialScope = nockInstance

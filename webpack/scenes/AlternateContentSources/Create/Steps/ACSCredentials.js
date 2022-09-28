@@ -8,6 +8,7 @@ import {
   FormSelectOption,
   TextInput,
   Radio,
+  Switch,
 } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import ACSCreateContext from '../ACSCreateContext';
@@ -19,7 +20,7 @@ const ACSCredentials = () => {
   const {
     authentication, setAuthentication, username, setUsername, password, setPassword,
     sslCert, setSslCert, sslKey, setSslKey, caCert, setCACert,
-    setSslCertName, setSslKeyName, setCACertName,
+    setSslCertName, setSslKeyName, setCACertName, verifySSL, setVerifySSL,
   } = useContext(ACSCreateContext);
 
   const contentCredentials = useSelector(selectContentCredentials);
@@ -168,12 +169,26 @@ const ACSCredentials = () => {
             setPassword('');
           }}
         />
+        <FormGroup label={__('Verify SSL')} fieldId="verify_ssl">
+          <Switch
+            id="verify-ssl-switch"
+            aria-label="verify-ssl-switch"
+            isChecked={verifySSL}
+            onChange={checked => setVerifySSL(checked)}
+          />
+        </FormGroup>
         <FormGroup
           label={__('SSL CA certificate')}
           type="string"
           fieldId="ca_cert"
         >
-          <FormSelect isRequired value={caCert} onChange={(value) => { setCACert(value); setCACertName(getCertName(value)); }} aria-label="sslCAcert_select">
+          <FormSelect
+            isDisabled={!verifySSL}
+            isRequired
+            value={caCert}
+            onChange={(value) => { setCACert(value); setCACertName(getCertName(value)); }}
+            aria-label="sslCAcert_select"
+          >
             {
               [
                 <FormSelectOption

@@ -42,25 +42,26 @@ export const getACSDetails = (acsId, extraParams = {}) => get({
   key: acsDetailsKey(acsId),
   params: { organization_id: orgId(), include_permissions: true, ...extraParams },
   url: api.getApiUrl(`/alternate_content_sources/${acsId}`),
+  errorToast: error => acsErrorToast(error),
 });
 
-export const createACS = params => post({
+export const createACS = (params, name, handleSuccess) => post({
   type: API_OPERATIONS.POST,
-  key: CREATE_ACS_KEY,
+  key: CREATE_ACS_KEY + name,
   url: api.getApiUrl('/alternate_content_sources'),
   params,
+  handleSuccess,
   successToast: response => acsSuccessToast(response),
   errorToast: error => acsErrorToast(error),
 });
 
-export const deleteACS = (acsId, handleSuccess, handleError) => APIActions.delete({
+export const deleteACS = (acsId, handleSuccess) => APIActions.delete({
   type: API_OPERATIONS.DELETE,
   key: DELETE_ACS_KEY,
   url: api.getApiUrl(`/alternate_content_sources/${acsId}`),
   handleSuccess,
-  handleError,
   successToast: () => __('Alternate content source deleted'),
-  errorToast: error => __(`Something went wrong while deleting this alternate content source! ${getResponseErrorMsgs(error.response)}`),
+  errorToast: error => acsErrorToast(error),
 });
 
 export const refreshACS = (acsId, handleSuccess) => post({
@@ -69,10 +70,12 @@ export const refreshACS = (acsId, handleSuccess) => post({
   url: api.getApiUrl(`/alternate_content_sources/${acsId}/refresh`),
   params: { id: acsId },
   handleSuccess: (response) => {
-    if (handleSuccess) handleSuccess();
+    if (handleSuccess) {
+      handleSuccess();
+    }
     return renderTaskStartedToast(response.data);
   },
-  errorToast: error => __(`Something went wrong while refreshing this alternate content source! ${getResponseErrorMsgs(error.response)}`),
+  errorToast: error => acsErrorToast(error),
 });
 
 export const getProducts = () => get({
@@ -92,7 +95,7 @@ export const editACS = (acsId, params, handleSuccess, handleError) => APIActions
   handleSuccess,
   handleError,
   successToast: () => __('Alternate content source edited'),
-  errorToast: error => __(`Something went wrong while editing the alternate content source! ${getResponseErrorMsgs(error.response)}`),
+  errorToast: error => acsErrorToast(error),
 });
 
 export default getAlternateContentSources;

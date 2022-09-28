@@ -27,21 +27,21 @@ test('Can show custom ACS details expandable sections with edit buttons', async 
 
   // Nothing will show at first, page is loading
   expect(queryByText('test_acs')).toBeNull();
-  expect(queryByText('Hide details')).toBeNull();
-  expect(queryByText('Show smart proxies')).toBeNull();
-  expect(queryByText('Show URL and subpaths')).toBeNull();
-  expect(queryByText('Show credentials')).toBeNull();
+  expect(queryByText('Details')).toBeNull();
+  expect(queryByText('Smart proxies')).toBeNull();
+  expect(queryByText('URL and subpaths')).toBeNull();
+  expect(queryByText('Credentials')).toBeNull();
   // Assert that the ACS name and expandable sections
   // are now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => {
     expect(queryByText('test_acs')).toBeInTheDocument();
-    expect(queryByText('Hide details')).toBeInTheDocument();
+    expect(queryByText('Details')).toBeInTheDocument();
     expect(getByLabelText('edit-details-pencil-edit')).toBeInTheDocument();
-    expect(queryByText('Show smart proxies')).toBeInTheDocument();
+    expect(queryByText('Smart proxies')).toBeInTheDocument();
     expect(getByLabelText('edit-smart-proxies-pencil-edit')).toBeInTheDocument();
-    expect(queryByText('Show URL and subpaths')).toBeInTheDocument();
+    expect(queryByText('URL and subpaths')).toBeInTheDocument();
     expect(getByLabelText('edit-urls-pencil-edit')).toBeInTheDocument();
-    expect(queryByText('Show credentials')).toBeInTheDocument();
+    expect(queryByText('Credentials')).toBeInTheDocument();
     expect(getByLabelText('edit-credentials-pencil-edit')).toBeInTheDocument();
   });
   assertNockRequest(acsDetailsScope, done);
@@ -63,15 +63,15 @@ test('Can open and close edit ACS details modal', async (done) => {
 
   // Nothing will show at first, page is loading
   expect(queryByText('test_acs')).toBeNull();
-  expect(queryByText('Hide details')).toBeNull();
-  expect(queryByText('Show smart proxies')).toBeNull();
-  expect(queryByText('Show URL and subpaths')).toBeNull();
-  expect(queryByText('Show credentials')).toBeNull();
+  expect(queryByText('Details')).toBeNull();
+  expect(queryByText('Smart proxies')).toBeNull();
+  expect(queryByText('URL and subpaths')).toBeNull();
+  expect(queryByText('Credentials')).toBeNull();
   // Assert that the ACS name and expandable sections
   // are now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => {
     expect(queryByText('test_acs')).toBeInTheDocument();
-    expect(queryByText('Hide details')).toBeInTheDocument();
+    expect(queryByText('Details')).toBeInTheDocument();
     expect(getByLabelText('edit-details-pencil-edit')).toBeInTheDocument();
   });
   const editDetails = getByLabelText('edit-details-pencil-edit');
@@ -110,15 +110,15 @@ test('Can edit ACS details in the edit modal', async (done) => {
 
   // Nothing will show at first, page is loading
   expect(queryByText('test_acs')).toBeNull();
-  expect(queryByText('Hide details')).toBeNull();
-  expect(queryByText('Show smart proxies')).toBeNull();
-  expect(queryByText('Show URL and subpaths')).toBeNull();
-  expect(queryByText('Show credentials')).toBeNull();
+  expect(queryByText('Details')).toBeNull();
+  expect(queryByText('Smart proxies')).toBeNull();
+  expect(queryByText('URL and subpaths')).toBeNull();
+  expect(queryByText('Credentials')).toBeNull();
   // Assert that the ACS name and expandable sections
   // are now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => {
     expect(queryByText('test_acs')).toBeInTheDocument();
-    expect(queryByText('Hide details')).toBeInTheDocument();
+    expect(queryByText('Details')).toBeInTheDocument();
     expect(getByLabelText('edit-details-pencil-edit')).toBeInTheDocument();
   });
   const editDetails = getByLabelText('edit-details-pencil-edit');
@@ -156,23 +156,23 @@ test('Can show simplified ACS details expandable sections with edit buttons', as
 
   // Nothing will show at first, page is loading
   expect(queryByText('test_acs3')).toBeNull();
-  expect(queryByText('Hide details')).toBeNull();
-  expect(queryByText('Show smart proxies')).toBeNull();
-  expect(queryByText('Show URL and subpaths')).toBeNull();
-  expect(queryByText('Show credentials')).toBeNull();
-  expect(queryByText('Show products')).toBeNull();
+  expect(queryByText('Details')).toBeNull();
+  expect(queryByText('Smart proxies')).toBeNull();
+  expect(queryByText('URL and subpaths')).toBeNull();
+  expect(queryByText('Credentials')).toBeNull();
+  expect(queryByText('Products')).toBeNull();
   // Assert that the ACS name and expandable sections
   // are now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => {
     expect(queryByText('test_acs3')).toBeInTheDocument();
-    expect(queryByText('Hide details')).toBeInTheDocument();
+    expect(queryByText('Details')).toBeInTheDocument();
     expect(getByLabelText('edit-details-pencil-edit')).toBeInTheDocument();
-    expect(queryByText('Show smart proxies')).toBeInTheDocument();
+    expect(queryByText('Smart proxies')).toBeInTheDocument();
     expect(getByLabelText('edit-smart-proxies-pencil-edit')).toBeInTheDocument();
-    expect(queryByText('Show products')).toBeInTheDocument();
+    expect(queryByText('Products')).toBeInTheDocument();
     expect(getByLabelText('edit-products-pencil-edit')).toBeInTheDocument();
-    expect(queryByText('Show credentials')).not.toBeInTheDocument();
-    expect(queryByText('Show URL and subpaths')).not.toBeInTheDocument();
+    expect(queryByText('Credentials')).not.toBeInTheDocument();
+    expect(queryByText('URL and subpaths')).not.toBeInTheDocument();
   });
   assertNockRequest(acsDetailsScope, done);
   act(done);
@@ -204,23 +204,23 @@ test('Can edit products in a simplified ACS details edit modal', async (done) =>
 
   // Nothing will show at first, page is loading
   expect(queryByText('test_acs3')).toBeNull();
-  expect(queryByText('Hide details')).toBeNull();
-  expect(queryByText('Show smart proxies')).toBeNull();
-  expect(queryByText('Show URL and subpaths')).toBeNull();
-  expect(queryByText('Show credentials')).toBeNull();
-  expect(queryByText('Show products')).toBeNull();
+  expect(queryByText('Details')).toBeNull();
+  expect(queryByText('Smart proxies')).toBeNull();
+  expect(queryByText('URL and subpaths')).toBeNull();
+  expect(queryByText('Credentials')).toBeNull();
+  expect(queryByText('Products')).toBeNull();
   // Assert that the ACS name and expandable sections
   // are now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => {
     expect(queryByText('test_acs3')).toBeInTheDocument();
-    expect(queryByText('Hide details')).toBeInTheDocument();
+    expect(queryByText('Details')).toBeInTheDocument();
     expect(getByLabelText('edit-details-pencil-edit')).toBeInTheDocument();
-    expect(queryByText('Show smart proxies')).toBeInTheDocument();
+    expect(queryByText('Smart proxies')).toBeInTheDocument();
     expect(getByLabelText('edit-smart-proxies-pencil-edit')).toBeInTheDocument();
-    expect(queryByText('Show products')).toBeInTheDocument();
+    expect(queryByText('Products')).toBeInTheDocument();
     expect(getByLabelText('edit-products-pencil-edit')).toBeInTheDocument();
-    expect(queryByText('Show credentials')).not.toBeInTheDocument();
-    expect(queryByText('Show URL and subpaths')).not.toBeInTheDocument();
+    expect(queryByText('Credentials')).not.toBeInTheDocument();
+    expect(queryByText('URL and subpaths')).not.toBeInTheDocument();
   });
   const editDetails = getByLabelText('edit-products-pencil-edit');
   expect(queryAllByText('Edit products')).toHaveLength(1);

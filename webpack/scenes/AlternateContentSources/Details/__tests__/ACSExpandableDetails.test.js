@@ -23,18 +23,18 @@ test('Can call API and show ACS details expandable sections on page load', async
 
   // Nothing will show at first, page is loading
   expect(queryByText('test_acs')).toBeNull();
-  expect(queryByText('Hide details')).toBeNull();
-  expect(queryByText('Show smart proxies')).toBeNull();
-  expect(queryByText('Show URL and subpaths')).toBeNull();
-  expect(queryByText('Show credentials')).toBeNull();
+  expect(queryByText('Details')).toBeNull();
+  expect(queryByText('Smart proxies')).toBeNull();
+  expect(queryByText('URL and subpaths')).toBeNull();
+  expect(queryByText('Credentials')).toBeNull();
   // Assert that the ACS name and expandable sections
   // are now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => {
     expect(queryByText('test_acs')).toBeInTheDocument();
-    expect(queryByText('Hide details')).toBeInTheDocument();
-    expect(queryByText('Show smart proxies')).toBeInTheDocument();
-    expect(queryByText('Show URL and subpaths')).toBeInTheDocument();
-    expect(queryByText('Show credentials')).toBeInTheDocument();
+    expect(queryByText('Details')).toBeInTheDocument();
+    expect(queryByText('Smart proxies')).toBeInTheDocument();
+    expect(queryByText('URL and subpaths')).toBeInTheDocument();
+    expect(queryByText('Credentials')).toBeInTheDocument();
   });
   assertNockRequest(acsDetailsScope, done);
   act(done);
@@ -59,42 +59,42 @@ test('Can expand expandable sections on details page', async (done) => {
   // are now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => {
     expect(queryByText('test_acs')).toBeInTheDocument();
-    expect(queryByText('Hide details')).toBeInTheDocument();
-    expect(queryByText('Show smart proxies')).toBeInTheDocument();
-    expect(queryByText('Show URL and subpaths')).toBeInTheDocument();
-    expect(queryByText('Show credentials')).toBeInTheDocument();
+    expect(queryByText('Details')).toBeInTheDocument();
+    expect(queryByText('Smart proxies')).toBeInTheDocument();
+    expect(queryByText('URL and subpaths')).toBeInTheDocument();
+    expect(queryByText('Credentials')).toBeInTheDocument();
   });
-  const showSmartProxyButton = queryByText('Show smart proxies');
+  const showSmartProxyButton = queryByText('Smart proxies');
   fireEvent.click(showSmartProxyButton);
   await patientlyWaitFor(() => {
     expect(queryByText('test_acs')).toBeInTheDocument();
-    expect(queryByText('Show details')).toBeInTheDocument();
-    expect(queryByText('Hide smart proxies')).toBeInTheDocument();
+    expect(queryByText('Details')).toBeInTheDocument();
+    expect(queryByText('Smart proxies')).toBeInTheDocument();
     expect(queryByText('centos7-katello-devel-stable.example.com')).toBeInTheDocument();
-    expect(queryByText('Show URL and subpaths')).toBeInTheDocument();
-    expect(queryByText('Show credentials')).toBeInTheDocument();
+    expect(queryByText('URL and subpaths')).toBeInTheDocument();
+    expect(queryByText('Credentials')).toBeInTheDocument();
   });
 
-  const showURLSubpathsButton = queryByText('Show URL and subpaths');
+  const showURLSubpathsButton = queryByText('URL and subpaths');
   fireEvent.click(showURLSubpathsButton);
   await patientlyWaitFor(() => {
     expect(queryByText('test_acs')).toBeInTheDocument();
-    expect(queryByText('Show details')).toBeInTheDocument();
-    expect(queryByText('Show smart proxies')).toBeInTheDocument();
-    expect(queryByText('Hide URL and subpaths')).toBeInTheDocument();
+    expect(queryByText('Details')).toBeInTheDocument();
+    expect(queryByText('Smart proxies')).toBeInTheDocument();
+    expect(queryByText('URL and subpaths')).toBeInTheDocument();
     expect(queryByText('https://fedorapeople.org/groups/katello/fakerepos/')).toBeInTheDocument();
     expect(queryByText('zoo/, zoo2/, zoo3/, zoo4/, zoo5/')).toBeInTheDocument();
-    expect(queryByText('Show credentials')).toBeInTheDocument();
+    expect(queryByText('Credentials')).toBeInTheDocument();
   });
 
-  const showCredentialButton = queryByText('Show credentials');
+  const showCredentialButton = queryByText('Credentials');
   fireEvent.click(showCredentialButton);
   await patientlyWaitFor(() => {
     expect(queryByText('test_acs')).toBeInTheDocument();
-    expect(queryByText('Show details')).toBeInTheDocument();
-    expect(queryByText('Show smart proxies')).toBeInTheDocument();
-    expect(queryByText('Show URL and subpaths')).toBeInTheDocument();
-    expect(queryByText('Hide credentials')).toBeInTheDocument();
+    expect(queryByText('Details')).toBeInTheDocument();
+    expect(queryByText('Smart proxies')).toBeInTheDocument();
+    expect(queryByText('URL and subpaths')).toBeInTheDocument();
+    expect(queryByText('Credentials')).toBeInTheDocument();
     expect(queryByText('Verify SSL')).toBeInTheDocument();
     expect(queryByText('false')).toBeInTheDocument();
     expect(queryByText('SSL CA certificate')).toBeInTheDocument();

@@ -5,7 +5,6 @@ import {
   FormGroup,
   TextInput,
   TextArea,
-  Switch,
 } from '@patternfly/react-core';
 import ACSCreateContext from '../ACSCreateContext';
 import WizardHeader from '../../../ContentViews/components/WizardHeader';
@@ -13,7 +12,7 @@ import { areSubPathsValid, isValidUrl } from '../../helpers';
 
 const AcsUrlPaths = () => {
   const {
-    url, setUrl, subpaths, setSubpaths, verifySSL, setVerifySSL,
+    url, setUrl, subpaths, setSubpaths,
   } = useContext(ACSCreateContext);
 
   const subPathValidated = areSubPathsValid(subpaths) ? 'default' : 'error';
@@ -61,14 +60,6 @@ const AcsUrlPaths = () => {
             name="acs_subpath_field"
             id="acs_subpath_field"
             aria-label="acs_subpath_field"
-          />
-        </FormGroup>
-        <FormGroup label={__('Verify SSL')} fieldId="verify_ssl">
-          <Switch
-            id="verify-ssl-switch"
-            aria-label="verify-ssl-switch"
-            isChecked={verifySSL}
-            onChange={checked => setVerifySSL(checked)}
           />
         </FormGroup>
       </Form>

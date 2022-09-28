@@ -143,6 +143,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
         >
           <FormSelect
             isRequired
+            isDisabled={!acsVerifySSL}
             value={acsCAcert}
             onChange={value => setAcsCAcert(value)}
             aria-label="sslCAcert_select"
@@ -310,7 +311,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             isLoading={saving}
             type="submit"
           >
-            {__('Save')}
+            {__('Edit ACS credentials')}
           </Button>
           <Button ouiaId="edit-acs-details-cancel" variant="link" onClick={onClose}>
             {__('Cancel')}
