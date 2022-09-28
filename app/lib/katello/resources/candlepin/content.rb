@@ -18,6 +18,12 @@ module Katello
             JSON.parse(content_json)
           end
 
+          def fetch_content_ids(owner_label)
+            content_ids = Set.new
+            all(owner_label, include_only: [:id]).each {|ct| content_ids.add(ct['id'])}
+            content_ids
+          end
+
           def destroy(owner_label, id)
             fail ArgumentError, "content id has to be specified" unless id
 
