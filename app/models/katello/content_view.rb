@@ -599,7 +599,6 @@ module Katello
         fail _("Import-only content views can not be published directly") if import_only? && !syncable
         check_composite_action_allowed!(organization.library)
         check_docker_repository_names!([organization.library])
-        check_repositories_exist!
       end
 
       true
@@ -620,30 +619,6 @@ module Katello
         end
       end
       true
-    end
-
-    def check_repositories_exist!
-      bad_repo = repositories.yum_type.find do |repo|
-        ::Katello::Resources::Candlepin::Content.get(organization.label, repo.root.content_id)
-        nil
-      rescue RestClient::NotFound
-        repo
-      end
-
-      return if bad_repo.blank?
-      if bad_repo.redhat?
-        fail _("Repository: %{repo}, Product: %{product} in the content view does not have a valid subscription. "\
-               " Either remove the invalid repository or try refreshing the manifest before publishing again. " %
-               { repo: bad_repo.name,
-                 product: bad_repo.product.name
-               })
-      else
-        fail _("Repository: %{repo}, Product: %{product} in the content view does not have a valid subscription. "\
-               " Remove the invalid repository before publishing again. " %
-               { repo: bad_repo.name,
-                 product: bad_repo.product.name
-               })
-      end
     end
 
     def check_composite_action_allowed!(env)

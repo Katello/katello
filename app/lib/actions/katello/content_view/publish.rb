@@ -13,7 +13,7 @@ module Actions
           action_subject(content_view)
 
           content_view.check_ready_to_publish!(options.slice(:importing, :syncable))
-
+          validate_repositories_exist_in_backend!(content_view) unless content_view.composite?
           if options[:repos_units].present?
             valid_labels_from_cv = content_view.repositories.map(&:label)
             labels_from_repos_units = options[:repos_units].map { |repo| repo[:label] }
