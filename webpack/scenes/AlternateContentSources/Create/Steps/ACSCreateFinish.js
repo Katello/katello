@@ -6,7 +6,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import ACSCreateContext from '../ACSCreateContext';
 import { selectCreateACS, selectCreateACSError, selectCreateACSStatus } from '../../ACSSelectors';
-import { createACS } from '../../ACSActions';
+import getAlternateContentSources, { createACS } from '../../ACSActions';
 import Loading from '../../../../components/Loading';
 
 const ACSCreateFinish = () => {
@@ -31,9 +31,9 @@ const ACSCreateFinish = () => {
     productIds,
   } = useContext(ACSCreateContext);
   const dispatch = useDispatch();
-  const response = useSelector(state => selectCreateACS(state));
-  const status = useSelector(state => selectCreateACSStatus(state));
-  const error = useSelector(state => selectCreateACSError(state));
+  const response = useSelector(state => selectCreateACS(state, name));
+  const status = useSelector(state => selectCreateACSStatus(state, name));
+  const error = useSelector(state => selectCreateACSError(state, name));
   const [createACSDispatched, setCreateACSDispatched] = useState(false);
   const [saving, setSaving] = useState(true);
 
@@ -70,7 +70,7 @@ const ACSCreateFinish = () => {
       if (authentication === 'manual') {
         params = { upstream_username: username, upstream_password: password, ...params };
       }
-      dispatch(createACS(params));
+      dispatch(createACS(params, name, () => { dispatch(getAlternateContentSources()); }));
     }
   }, [dispatch, createACSDispatched, setCreateACSDispatched,
     acsType, authentication, name, description, url, subpaths,
@@ -81,7 +81,7 @@ const ACSCreateFinish = () => {
     const { id } = response;
     if (id && status === STATUS.RESOLVED && saving) {
       setSaving(false);
-      push(`/labs/alternate_content_sources/${id}/details`);
+      window.location.assign(`/labs/alternate_content_sources/${id}/details`);
       setIsOpen(false);
     } else if (status === STATUS.ERROR) {
       setSaving(false);

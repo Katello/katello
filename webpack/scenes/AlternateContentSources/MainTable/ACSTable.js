@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { capitalize } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import {
@@ -20,7 +21,7 @@ import {
   TextListVariants,
   TextVariants,
 } from '@patternfly/react-core';
-import { TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { TableVariant, Tbody, Td, Th, Thead, Tr, ActionsColumn } from '@patternfly/react-table';
 import TableWrapper from '../../../components/Table/TableWrapper';
 import {
   selectAlternateContentSources,
@@ -34,6 +35,7 @@ import LastSync from '../../ContentViews/Details/Repositories/LastSync';
 import ACSExpandableDetails from '../Details/ACSExpandableDetails';
 import './ACSTable.scss';
 import Loading from '../../../components/Loading';
+import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 
 const ACSTable = () => {
   const response = useSelector(selectAlternateContentSources);
@@ -59,9 +61,7 @@ const ACSTable = () => {
     }
   }, [dispatch, acsId]);
 
-  const onExpand = () => {
-    if (drawerRef.current) drawerRef.current.focus();
-  };
+  const onExpand = () => drawerRef.current && drawerRef.current.focus();
 
   const onDelete = (id) => {
     setDeleting(true);
@@ -84,19 +84,34 @@ const ACSTable = () => {
     setIsCreateWizardOpen(true);
   };
 
-  const onClick = (id) => {
-    setExpandedId(id);
-  };
-
   const onCloseClick = () => {
     setExpandedId(null);
     push('/labs/alternate_content_sources');
     setIsExpanded(false);
   };
 
+  const onClick = (id) => {
+    if (Number(id) === Number(expandedId)) {
+      onCloseClick();
+    } else {
+      setExpandedId(id);
+      push(`/labs/alternate_content_sources/${id}/details`);
+      setIsExpanded(true);
+    }
+  };
+
+  const isSelected = rowId => (Number(rowId) === Number(acsId));
+  const customStyle = {
+    borderLeft: '5px solid var(--pf-global--primary-color--100)',
+  };
+
   const PanelContent = () => {
     if (!resolved) return <></>;
     const acs = results?.find(source => source?.id === Number(expandedId));
+    if (!acs && isExpanded) {
+      setExpandedId(null);
+      setIsExpanded(false);
+    }
     const { last_refresh: lastTask } = acs ?? {};
     const { last_refresh_words: lastRefreshWords, started_at: startedAt } = lastTask ?? {};
     return (
@@ -105,7 +120,7 @@ const ACSTable = () => {
           {results && isExpanded &&
             <span ref={drawerRef}>
               <TextContent>
-                <Text component={TextVariants.h1}>
+                <Text component={TextVariants.h2}>
                   {acs?.name}
                 </Text>
                 <TextList component={TextListVariants.dl}>
@@ -127,6 +142,7 @@ const ACSTable = () => {
               </TextContent>
               <ACSExpandableDetails />
             </span>}
+          {error && <EmptyStateMessage error={error} />}
           <DrawerActions>
             <Button
               ouiaId="refresh-acs"
@@ -147,7 +163,7 @@ const ACSTable = () => {
   const columnHeaders = [
     __('Name'),
     __('Type'),
-    __('Last Refresh'),
+    __('Last refresh'),
   ];
 
   const COLUMNS_TO_SORT_PARAMS = {
@@ -183,12 +199,24 @@ const ACSTable = () => {
     },
     {
       title: __('Refresh'),
-      ouiaId: `remove-acs-${id}`,
+      ouiaId: `refresh-acs-${id}`,
       onClick: () => {
         onRefresh(id);
       },
     },
   ];
+
+  const showPrimaryAction = true;
+  const primaryActionButton = (
+    <Button
+      ouiaId="create-acs"
+      onClick={createButtonOnclick}
+      variant="primary"
+      aria-label="create_acs"
+    >
+      {__('Add source')}
+    </Button>
+  );
 
   const emptyContentTitle = __("You currently don't have any alternate content sources.");
   const emptyContentBody = __('An alternate content source can be added by using the "Add source" button above.');
@@ -199,9 +227,9 @@ const ACSTable = () => {
     return <Loading loadingText={__('Please wait...')} />;
   }
   return (
-    <Drawer isExpanded={isExpanded} isInline onExpand={onExpand}>
-      <DrawerContent panelContent={<PanelContent />}>
-        <DrawerContentBody style={{ paddingBottom: '5%' }}>
+    <Drawer isExpanded={isExpanded} onExpand={onExpand} isInline style={{ minHeight: '70vH' }}>
+      <DrawerContent panelContent={<PanelContent />} style={{ minHeight: '70vH' }}>
+        <DrawerContentBody>
           <TableWrapper
             {...{
               metadata,
@@ -214,6 +242,8 @@ const ACSTable = () => {
               error,
               status,
               fetchItems,
+              showPrimaryAction,
+              primaryActionButton,
             }}
             ouiaId="alternate-content-sources-table"
             variant={TableVariant.compact}
@@ -221,6 +251,7 @@ const ACSTable = () => {
             autocompleteEndpoint="/alternate_content_sources/auto_complete_search"
             actionButtons={
               <>
+                {status === STATUS.RESOLVED && results?.length !== 0 &&
                 <Button
                   ouiaId="create-acs"
                   onClick={createButtonOnclick}
@@ -228,13 +259,13 @@ const ACSTable = () => {
                   aria-label="create_acs"
                 >
                   {__('Add source')}
-                </Button>
+                </Button>}
                 {isCreateWizardOpen &&
                 <ACSCreateWizard
                   show={isCreateWizardOpen}
                   setIsOpen={setIsCreateWizardOpen}
                 />
-                    }
+                }
               </>
                 }
           >
@@ -263,15 +294,15 @@ const ACSTable = () => {
                   started_at: startedAt,
                 } = lastTask ?? {};
                 return (
-                  <Tr key={index}>
-                    <Td onClick={() => {
-                      onClick(id);
-                      push(`/labs/alternate_content_sources/${id}/details`);
-                    }}
-                    >
-                      <Text component="a">{name}</Text>
+                  <Tr
+                    key={index}
+                    style={isSelected(id) && isExpanded ? customStyle : {}}
+                    isStriped={isSelected(id) && isExpanded}
+                  >
+                    <Td>
+                      <Text onClick={() => onClick(id)} component="a">{name}</Text>
                     </Td>
-                    <Td>{acsType}</Td>
+                    <Td>{capitalize(acsType)}</Td>
                     <Td><LastSync
                       startedAt={startedAt}
                       lastSync={lastTask}
@@ -279,11 +310,9 @@ const ACSTable = () => {
                       emptyMessage="N/A"
                     />
                     </Td>
-                    <Td
-                      actions={{
-                        items: rowDropdownItems(acs),
-                      }}
-                    />
+                    <Td isActionCell>
+                      <ActionsColumn items={rowDropdownItems(acs)} />
+                    </Td>
                   </Tr>
                 );
               })
