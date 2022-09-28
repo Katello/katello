@@ -623,8 +623,13 @@ module Katello
     end
 
     def check_repositories_exist!
-      content_ids = ::Katello::Resources::Candlepin::Content.fetch_content_ids(organization.label)
-      bad_repo = repositories.find { |repo| !content_ids.include?(repo.content.cp_content_id) }
+      bad_repo = repositories.yum_type.find do |repo|
+        ::Katello::Resources::Candlepin::Content.get(organization.label, repo.root.content_id)
+        nil
+      rescue RestClient::NotFound
+        repo
+      end
+
       return if bad_repo.blank?
       if bad_repo.redhat?
         fail _("Repository: %{repo}, Product: %{product} in the content view does not have a valid subscription. "\
@@ -639,7 +644,6 @@ module Katello
                  product: bad_repo.product.name
                })
       end
-      true
     end
 
     def check_composite_action_allowed!(env)
