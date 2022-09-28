@@ -13,7 +13,17 @@ module Katello
     end
 
     def validate_repositories_exist_in_backend!(content_view)
-      bad_repo = content_view.repositories.yum_type.find do |repo|
+      if content_view.composite?
+        content_view.components.each do |cvv|
+          validate_repositories!(cvv.repositories, component_version: cvv)
+        end
+      else
+        validate_repositories!(content_view.repositories)
+      end
+    end
+
+    def validate_repositories!(repositories, component_version: nil)
+      bad_repo = repositories.yum_type.find do |repo|
         ::Katello::Resources::Candlepin::Content.get(repo.organization.label, repo.root.content_id)
         nil
       rescue RestClient::NotFound
@@ -21,18 +31,20 @@ module Katello
       end
 
       return if bad_repo.blank?
-      if bad_repo.redhat?
-        fail _("Repository: %{repo}, Product: %{product} in the content view does not have a valid subscription. "\
-               " Either remove the invalid repository or try refreshing the manifest before publishing again. " %
-               { repo: bad_repo.name,
-                 product: bad_repo.product.name
-               })
+      if component_version
+        item = _("Component Version: '%{cvv}', Product: '%{product}', Repository: '%{repo}' " %
+                { repo: bad_repo.name, product: bad_repo.product.name, cvv: component_version.name })
       else
-        fail _("Repository: %{repo}, Product: %{product} in the content view does not have a valid subscription. "\
-               " Remove the invalid repository before publishing again. " %
-               { repo: bad_repo.name,
-                 product: bad_repo.product.name
-               })
+        item = _("Product: '%{product}', Repository: '%{repo}' " %
+                { repo: bad_repo.name, product: bad_repo.product.name })
+      end
+      if bad_repo.redhat?
+        fail _("%{item} in this content view does not have a valid subscription. "\
+               " Either remove the invalid repository or try refreshing "\
+               "the manifest before publishing again. " % { item: item })
+      else
+        fail _("%{item} in this content view does not have a valid subscription. "\
+               " Remove the invalid repository before publishing again. " % { item: item })
       end
     end
   end

@@ -22,6 +22,13 @@ module ::Actions::Katello::ContentViewVersion
       organization.default_content_view_version
     end
 
+    let(:cdn_resource) do
+      ::Katello::Resources::CDN::CdnResource.new("http://foo.com").tap do |cdn_resource|
+        cdn_resource.stubs('get')
+        cdn_resource.stubs('valid_path?': true)
+      end
+    end
+
     let(:metadata) do
       prod = katello_products(:redhat)
 
@@ -70,6 +77,8 @@ module ::Actions::Katello::ContentViewVersion
       ::Katello::Pulp3::Api::ContentGuard.any_instance.stubs(:list).returns(nil)
       ::Katello::Pulp3::Api::ContentGuard.any_instance.stubs(:create).returns(nil)
       ::Katello::Repository.any_instance.stubs(:pulp_scratchpad_checksum_type).returns(nil)
+      Katello::Product.any_instance.stubs(cdn_resource: cdn_resource)
+      ::Katello::Resources::Candlepin::Content.stubs(:get).returns
     end
 
     describe 'Import Repository' do

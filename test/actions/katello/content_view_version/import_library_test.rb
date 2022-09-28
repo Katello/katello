@@ -30,6 +30,13 @@ module ::Actions::Katello::ContentViewVersion
       repo.product
     end
 
+    let(:cdn_resource) do
+      ::Katello::Resources::CDN::CdnResource.new("http://foo.com").tap do |cdn_resource|
+        cdn_resource.stubs('get')
+        cdn_resource.stubs('valid_path?': true)
+      end
+    end
+
     let(:metadata) do
       {
         products: {
@@ -43,10 +50,11 @@ module ::Actions::Katello::ContentViewVersion
                             product: prod.slice(:label),
                             redhat: prod.redhat?,
                             arch: 'noarch',
+                            minor: repo.minor,
                             unprotected: false,
                             content_type: 'yum',
                             download_policy: 'immediate',
-                            content: { id: 1, label: 'misc-24037' }
+                            content: { id: repo.content_id, label: 'misc-24037', url: "/org/cv/dump" }
           }
         },
         content_view_version: {
@@ -75,6 +83,7 @@ module ::Actions::Katello::ContentViewVersion
 
     before do
       setup_proxy
+      Katello::Product.any_instance.stubs(cdn_resource: cdn_resource)
       SmartProxy.any_instance.stubs(:ping_pulp).returns({})
       SmartProxy.any_instance.stubs(:ping_pulp3).returns({})
       SmartProxy.any_instance.stubs(:pulp3_configuration).returns(nil)
@@ -82,6 +91,7 @@ module ::Actions::Katello::ContentViewVersion
       ::Katello::Pulp3::Api::ContentGuard.any_instance.stubs(:list).returns(nil)
       ::Katello::Pulp3::Api::ContentGuard.any_instance.stubs(:create).returns(nil)
       ::Katello::Repository.any_instance.stubs(:pulp_scratchpad_checksum_type).returns(nil)
+      ::Katello::Resources::Candlepin::Content.stubs(:get).returns
     end
 
     describe 'Import Default' do
