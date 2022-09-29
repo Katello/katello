@@ -27,7 +27,8 @@ module Actions
             if metadata_map.syncable_format?
               plan_action(::Actions::BulkAction,
                     ::Actions::Katello::Repository::Sync,
-                    import.intersecting_repos_library_and_metadata.exportable(format: metadata_map.format)
+                    import.intersecting_repos_library_and_metadata.exportable(format: metadata_map.format),
+                    skip_candlepin_check: true
                     )
             end
 

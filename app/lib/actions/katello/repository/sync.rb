@@ -16,8 +16,6 @@ module Actions
         # @param repo
         # @param pulp_sync_task_id in case the sync was triggered outside
         #   of Katello and we just need to finish the rest of the orchestration
-        # rubocop:disable Metrics/MethodLength
-        # rubocop:disable Metrics/CyclomaticComplexity
         def plan(repo, options = {})
           action_subject(repo)
 
@@ -26,9 +24,11 @@ module Actions
           skip_metadata_check = options.fetch(:skip_metadata_check, false) || (validate_contents && repo.yum?)
           generate_applicability =  options.fetch(:generate_applicability, repo.yum? || repo.deb?)
 
-          fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank? && source_url.blank?
-          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot validate contents on non-yum/deb repositories.") if validate_contents && !repo.yum? && !repo.deb?
-          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum?
+          validate_repo!(repo: repo,
+                        source_url: source_url,
+                        validate_contents: validate_contents,
+                        skip_metadata_check: skip_metadata_check,
+                        skip_candlepin_check: options.fetch(:skip_candlepin_check, false))
 
           pulp_sync_options = {}
           pulp_sync_options[:download_policy] = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND if validate_contents && repo.yum?
@@ -80,6 +80,13 @@ module Actions
           else
             _("Synchronize")
           end
+        end
+
+        def validate_repo!(repo:, source_url:, validate_contents:, skip_metadata_check:, skip_candlepin_check:)
+          fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank? && source_url.blank?
+          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot validate contents on non-yum/deb repositories.") if validate_contents && !repo.yum? && !repo.deb?
+          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum?
+          ::Katello::Util::CandlepinRepositoryChecker.check_repository_for_sync!(repo) if repo.yum? && !skip_candlepin_check
         end
 
         def presenter
