@@ -99,8 +99,7 @@ module Katello
     def self.for_version(version)
       major, minor = version.to_s.split('.')
       minor ||= 0
-      query = where(:major => major, :minor => minor)
-      query
+      where(:major => major, :minor => minor)
     end
 
     def to_s
@@ -333,9 +332,10 @@ module Katello
     def update_content_counts!
       self.content_counts = {}
       RepositoryTypeManager.indexable_content_types.each do |content_type|
-        if content_type&.model_class::CONTENT_TYPE == DockerTag::CONTENT_TYPE
+        case content_type&.model_class::CONTENT_TYPE
+        when DockerTag::CONTENT_TYPE
           content_counts[DockerTag::CONTENT_TYPE] = docker_tags.count
-        elsif content_type&.model_class::CONTENT_TYPE == GenericContentUnit::CONTENT_TYPE
+        when GenericContentUnit::CONTENT_TYPE
           content_counts[content_type.content_type] = content_type&.model_class&.in_repositories(self.repositories.archived)&.where(:content_type => content_type.content_type)&.count
         else
           content_counts[content_type&.model_class::CONTENT_TYPE] = content_type&.model_class&.in_repositories(self.repositories.archived)&.count
@@ -378,7 +378,7 @@ module Katello
       content_view.check_docker_repository_names!(to_env)
     end
 
-    def validate_destroyable!(skip_environment_check = false)
+    def validate_destroyable!(skip_environment_check: false)
       unless organization.being_deleted?
         if !skip_environment_check && in_environment?
           fail _("Cannot delete version while it is in environments: %s") %

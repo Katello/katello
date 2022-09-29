@@ -21,29 +21,21 @@ class HostUrlHelpers < UrlHelperBase
       label: 'Default_Location',
       title: 'Default Location'
     )
-    @organisation = Organization.new(
+    @organization = Organization.new(
       name: 'Default Organization',
       type: 'Organization',
       label: 'Default_Organization',
       title: 'Default Organization'
     )
 
-    @host = ::Host.new(:architecture => @arch, :operatingsystem => @os,
-                       :content_facet_attributes => {:lifecycle_environment_id => @env.id,
-                                                     :content_view_id => @cv.id,
-                                                     :content_source_id => @content_source.id},
+    @host = FactoryBot.create(:host, :with_content, :architecture => @arch, :operatingsystem => @os,
+                       :content_facet_attributes => { :content_source_id => @content_source.id },
                        :location => @location,
-                       :organization => @organisation,
-                       :lifecycle_environment => @env
+                       :organization => @organization
                       )
-  end
-
-  test 'repository_url must render the right path based on host configuration' do
-    path = "http://#{@host.content_source.hostname}/pulp/content/#{@host.lifecycle_environment.organization.label}/#{@host.lifecycle_environment.label}/custom/zoo/zoo/".freeze
-    assert_equal path, repository_url('/custom/zoo/zoo/')
-
-    @host.content_view = katello_content_views(:library_dev_view)
-    path = "http://#{@host.content_source.hostname}/pulp/content/#{@host.lifecycle_environment.organization.label}/#{@host.lifecycle_environment.label}/#{@host.content_view.label}/custom/zoo/zoo/".freeze
-    assert_equal path, repository_url('/custom/zoo/zoo/')
+    @host.content_facet.assign_single_environment(
+      :lifecycle_environment_id => @env.id,
+      :content_view_id => @cv.id
+    )
   end
 end

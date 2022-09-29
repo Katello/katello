@@ -8,8 +8,12 @@ module Katello
 
     belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_environments
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :content_view_environments
+    belongs_to :lifecycle_environment, :class_name => "Katello::KTEnvironment", :foreign_key => :environment_id, :inverse_of => :content_view_environments
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
                :inverse_of => :content_view_environments
+
+    has_many :content_view_environment_content_facets, :class_name => "Katello::ContentViewEnvironmentContentFacet", :dependent => :destroy, :inverse_of => :content_view_environment
+    has_many :content_facets, through: :content_view_environment_content_facets, :class_name => "::Katello::Host::ContentFacet", :inverse_of => :content_view_environments
 
     validates_lengths_from_database
     validates :environment_id, uniqueness: {scope: :content_view_id}, presence: true
@@ -19,10 +23,10 @@ module Katello
     before_save :generate_info
 
     scope :non_default, -> { joins(:content_view).where("katello_content_views.default" => false) }
+    alias :lifecycle_environment :environment
 
     def self.for_content_facets(content_facets)
-      joins("INNER JOIN #{Host::ContentFacet.table_name} on #{Host::ContentFacet.table_name}.lifecycle_environment_id = #{ContentViewEnvironment.table_name}.environment_id").
-          where("#{Host::ContentFacet.table_name}.content_view_id = #{ContentViewEnvironment.table_name}.content_view_id").where("#{Host::ContentFacet.table_name}.id" => content_facets).uniq
+      joins(:content_view_environment_content_facets, :content_facets).where("#{Katello::ContentViewEnvironmentContentFacet.table_name}.content_facet_id" => content_facets).uniq
     end
 
     # retrieve the owning environment for this content view environment.
@@ -37,6 +41,11 @@ module Katello
     def activation_keys
       content_view.activation_keys.in_environment(environment)
     end
+
+    # TODO: uncomment when we need to start showing multiple CVE names in UI
+    # def candlepin_name
+    #   "#{environment.label}/#{content_view.label}"
+    # end
 
     private
 

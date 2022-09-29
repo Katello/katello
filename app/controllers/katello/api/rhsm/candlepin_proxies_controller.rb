@@ -211,7 +211,7 @@ module Katello
 
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
-      host = Katello::RegistrationManager.process_registration(rhsm_params, find_content_view_environment)
+      host = Katello::RegistrationManager.process_registration(rhsm_params, find_content_view_environments)
 
       host.reload
 
@@ -271,7 +271,7 @@ module Katello
 
     def get_parent_host(headers)
       hostnames = headers["HTTP_X_FORWARDED_HOST"]
-      host = hostnames.split(/[\,,:]/)[0].strip if hostnames
+      host = hostnames.split(/[,,:]/)[0].strip if hostnames
       host || URI.parse(Setting[:foreman_url]).host
     end
 
@@ -308,24 +308,27 @@ module Katello
       @host = ::Host::Managed.unscoped.find(facet.host_id)
     end
 
-    def find_content_view_environment
-      environment = nil
+    def find_content_view_environments
+      environments = []
 
       if params.key?(:environment_id)
-        environment = get_content_view_environment("cp_id", params[:environment_id])
+        environments = [get_content_view_environment("cp_id", params[:environment_id])]
       elsif params.key?(:environments)
-        fail HttpErrors::BadRequest, _('Multiple environments are not supported.') if params['environments'].length > 1
-        environment = get_content_view_environment("cp_id", params['environments'].first['id'])
-      elsif params.key?(:organization_id) && !params.key?(:environment_id)
+        if params['environments'].length > 1 && !Setting['allow_multiple_content_views']
+          fail HttpErrors::BadRequest, _('Registering to multiple environments is not enabled.')
+        end
+        environments = params[:environments].map do |env|
+          get_content_view_environment("cp_id", env['id'])
+        end
+      elsif params.key?(:organization_id) && !params.key?(:environment_id) && !params.key?(:environments)
         organization = Organization.current
-        environment = organization.library.content_view_environment
+        environments = organization.library.content_view_environment
       elsif User.current.default_organization.present?
-        environment = User.current.default_organization.library.content_view_environment
+        environments = User.current.default_organization.library.content_view_environment
       else
         fail HttpErrors::NotFound, _("User '%s' did not specify an organization ID and does not have a default organization.") % current_user.login
       end
-
-      environment
+      environments
     end
 
     def find_hypervisor_organization

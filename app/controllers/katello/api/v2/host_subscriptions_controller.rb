@@ -40,7 +40,7 @@ module Katello
       respond_for_index :collection => @collection
     end
 
-    def index_response(reload_host = false)
+    def index_response(reload_host: false)
       # Host needs to be reloaded because of lazy accessor
       @host.reload if reload_host
       presenter = ::Katello::HostSubscriptionsPresenter.new(@host)
@@ -55,7 +55,7 @@ module Katello
       end
 
       sync_task(::Actions::Katello::Host::AutoAttachSubscriptions, @host)
-      respond_for_index(:collection => index_response(true), :template => "index")
+      respond_for_index(:collection => index_response(reload_host: true), :template => "index")
     end
 
     api :DELETE, "/hosts/:host_id/subscriptions/", N_("Unregister the host as a subscription consumer")
@@ -126,7 +126,7 @@ module Katello
       end
 
       sync_task(::Actions::Katello::Host::RemoveSubscriptions, @host, pool_id_quantities.values)
-      respond_for_index(:collection => index_response(true), :template => "index")
+      respond_for_index(:collection => index_response(reload_host: true), :template => "index")
     end
 
     api :PUT, "/hosts/:host_id/subscriptions/add_subscriptions", N_("Add a subscription to a host")
@@ -145,7 +145,7 @@ module Katello
       end
 
       sync_task(::Actions::Katello::Host::AttachSubscriptions, @host, pools_with_quantities)
-      respond_for_index(:collection => index_response(true), :template => "index")
+      respond_for_index(:collection => index_response(reload_host: true), :template => "index")
     end
 
     api :GET, "/hosts/:host_id/subscriptions/product_content", N_("Get content and overrides for the host")
@@ -154,7 +154,7 @@ module Katello
     param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the host's content view version")
     param_group :search, Api::V2::ApiController
     def product_content
-      # note this is just there as a place holder for apipie.
+      # NOTE: this is just there as a placeholder for apipie.
       # The routing would automatically redirect it to repository_sets#index
     end
 
@@ -206,7 +206,7 @@ module Katello
     def find_content_view_environment
       @content_view_environment = Katello::ContentViewEnvironment.where(:content_view_id => params[:content_view_id],
                                                                         :environment_id => params[:lifecycle_environment_id]).first
-      fail HttpErrors::NotFound, _("Couldn't find specified Content View and Lifecycle Environment.") if @content_view_environment.nil?
+      fail HttpErrors::NotFound, _("Couldn't find specified content view and lifecycle environment.") if @content_view_environment.nil?
     end
 
     def check_subscriptions

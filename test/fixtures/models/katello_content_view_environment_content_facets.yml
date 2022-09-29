@@ -1,0 +1,11 @@
+library_cvecf:
+  content_view_environment_id: <%= ActiveRecord::FixtureSet.identify(:library_default_view_environment) %>
+  content_facet_id: <%= ActiveRecord::FixtureSet.identify(:content_facet_one) %>
+
+dev_library_cvecf:
+  content_view_environment_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_dev) %>
+  content_facet_id: <%= ActiveRecord::FixtureSet.identify(:content_facet_two) %>
+
+without_errata_cvecf:
+  content_view_environment_id: <%= ActiveRecord::FixtureSet.identify(:library_default_view_environment) %>
+  content_facet_id: <%= ActiveRecord::FixtureSet.identify(:without_errata) %>

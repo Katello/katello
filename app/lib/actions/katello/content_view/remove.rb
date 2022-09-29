@@ -71,10 +71,17 @@ module Actions
                       content_view_history_ids: cv_histories.map { |history| history.id })
 
             if organization_destroy
-              content_view.hostgroups.destroy_all
-              content_view.hosts.destroy_all
+              destroy_hosts_and_hostgroups(content_view: content_view)
             end
           end
+        end
+
+        def destroy_hosts_and_hostgroups(content_view:)
+          content_view.hostgroups.destroy_all
+          host_ids = content_view.hosts.ids
+          ::Katello::Host::ContentFacet.where(:host_id => host_ids).destroy_all
+          ::Katello::Host::SubscriptionFacet.where(:host_id => host_ids).destroy_all
+          ::Host::Managed.where(:id => host_ids).destroy_all
         end
 
         def check_version_deletion(versions, cv_envs)

@@ -413,9 +413,10 @@ module Katello
     end
 
     def http_proxy
-      if http_proxy_policy == NO_DEFAULT_HTTP_PROXY
+      case http_proxy_policy
+      when NO_DEFAULT_HTTP_PROXY
         return nil
-      elsif http_proxy_policy == GLOBAL_DEFAULT_HTTP_PROXY
+      when GLOBAL_DEFAULT_HTTP_PROXY
         return HttpProxy.default_global_content_proxy
       end
       super

@@ -11,8 +11,12 @@ FactoryBot.modify do
 
       after(:build) do |host, evaluator|
         if host.content_facet
-          host.content_facet.content_view = evaluator.content_view if evaluator.content_view
-          host.content_facet.lifecycle_environment = evaluator.lifecycle_environment if evaluator.lifecycle_environment
+          if evaluator.content_view && evaluator.lifecycle_environment
+            host.content_facet.assign_single_environment(
+              content_view_id: evaluator.content_view.id,
+              lifecycle_environment_id: evaluator.lifecycle_environment.id
+            )
+          end
           host.content_facet.content_source = evaluator.content_source if evaluator.content_source
         end
       end

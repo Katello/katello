@@ -42,14 +42,14 @@ module Katello
         def test_different_org
           org2 = taxonomies(:organization2)
 
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, org2, nil, nil) }
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, org2, nil, host_uuid_overridden: nil) }
 
           assert_match(/different org/, error.message)
         end
 
         def test_multiple_hosts
           assert ::Host.all.size > 1
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(::Host.all, @org, nil, nil) }
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(::Host.all, @org, nil, host_uuid_overridden: nil) }
           assert_match(/matches other registered/, error.message)
         end
 
@@ -57,7 +57,7 @@ module Katello
           existing_uuid = 'existing_system_uuid'
           @host.subscription_facet.update(dmi_uuid: existing_uuid)
 
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, 'new_host_name', existing_uuid) }
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, 'new_host_name', host_uuid_overridden: existing_uuid) }
           assert_match(/matches other registered/, error.message)
         end
 
@@ -65,7 +65,7 @@ module Katello
           @host.subscription_facet.update(dmi_uuid: 'existing_system_uuid')
           Setting[:host_profile_assume] = false
 
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid') }
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, host_uuid_overridden: 'different-uuid') }
           assert_match(/DMI UUID that differs/, error.message)
 
           # if a registering client is matched by hostname to an existing profile
@@ -80,7 +80,7 @@ module Katello
           Setting[:host_profile_assume] = false
           Setting[:host_profile_assume_build_can_change] = true
           refute @host.build
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid') }
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, host_uuid_overridden: 'different-uuid') }
           assert_match(/DMI UUID that differs/, error.message)
         end
 
@@ -92,7 +92,7 @@ module Katello
           # if a registering client is matched by hostname to an existing profile
           # but its UUID has changed *and* is still unique, also it is in build mode
           # then allow the registration when enabled
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
+          assert @klass.validate_hosts(hosts, @org, @host.name, host_uuid_overridden: 'different-uuid')
         end
 
         def test_re_register_build_mode
@@ -101,11 +101,11 @@ module Katello
           refute @host.build
           Setting[:host_re_register_build_only] = true
 
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, nil) }
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, host_uuid_overridden: nil) }
           assert_match(/currently registered/, error.message)
 
           @host.update(build: true)
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'existing_system_uuid')
+          assert @klass.validate_hosts(hosts, @org, @host.name, host_uuid_overridden: 'existing_system_uuid')
         end
 
         def test_existing_uuid_and_name
@@ -118,7 +118,7 @@ module Katello
           @host = FactoryBot.create(:host, :with_subscription, :managed, organization: @org, build: true)
           @host.subscription_facet.update(dmi_uuid: SecureRandom.uuid)
 
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
+          assert @klass.validate_hosts(hosts, @org, @host.name, host_uuid_overridden: 'different-uuid')
         end
 
         def test_existing_host_null_uuid
@@ -126,7 +126,7 @@ module Katello
           # and *then* registers to it with subscription-manager
           assert_empty @host.fact_values
 
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
+          assert @klass.validate_hosts(hosts, @org, @host.name, host_uuid_overridden: 'different-uuid')
         end
       end
 
@@ -176,18 +176,18 @@ module Katello
         Location.expects(:default_host_subscribe_location!).returns(nil)
         host = mock(organization: @org)
         ::Katello::RegistrationManager.expects(:new_host_from_facts).with(rhsm_params[:facts], @org, nil).returns(host)
-        ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, @content_view_environment, [])
+        ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, [@content_view_environment], [])
 
-        ::Katello::RegistrationManager.process_registration(rhsm_params, @content_view_environment)
+        ::Katello::RegistrationManager.process_registration(rhsm_params, [@content_view_environment])
       end
 
       def test_process_registration_existing_host
-        host = FactoryBot.create(:host, :organization_id => @org.id)
+        host = FactoryBot.create(:host, :with_content, :organization_id => @org.id)
         @facts = {'network.hostname' => host.name}
 
-        ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, @content_view_environment, [])
+        ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, [@content_view_environment], [])
 
-        ::Katello::RegistrationManager.process_registration(rhsm_params, @content_view_environment)
+        ::Katello::RegistrationManager.process_registration(rhsm_params, [@content_view_environment])
       end
 
       def test_process_registration_uuid_override
@@ -196,9 +196,9 @@ module Katello
 
         Setting[:host_dmi_uuid_duplicates] = ['duplicate-dmi-uuid']
 
-        ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, @content_view_environment, [])
+        ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, [@content_view_environment], [])
 
-        ::Katello::RegistrationManager.process_registration(rhsm_params, @content_view_environment)
+        ::Katello::RegistrationManager.process_registration(rhsm_params, [@content_view_environment])
 
         assert host.subscription_facet.dmi_uuid_override
       end
@@ -208,12 +208,13 @@ module Katello
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
 
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).returns(:uuid => 'fake-uuid-from-candlepin')
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @library.organization).returns(:uuid => 'fake-uuid-from-candlepin')
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-candlepin').returns({})
-
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
-        ::Katello::RegistrationManager.register_host(new_host, rhsm_params, @content_view_environment)
+        ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [@content_view_environment])
 
         assert_equal new_host.subscription_facet.uuid, 'fake-uuid-from-candlepin'
       end
@@ -224,16 +225,19 @@ module Katello
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
 
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with(cvpe.cp_id, rhsm_params, ["cp_name_baz"]).returns(:uuid => 'fake-uuid-from-katello')
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([cvpe.cp_id], rhsm_params, ["cp_name_baz"], @host_collection.organization).returns(:uuid => 'fake-uuid-from-katello')
         Katello::ActivationKey.any_instance.stubs(:cp_name).returns('cp_name_baz')
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
 
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
-        ::Katello::RegistrationManager.register_host(new_host, rhsm_params, cvpe, [@activation_key])
+        ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [cvpe], [@activation_key])
 
-        assert_equal @activation_key.environment, new_host.content_facet.lifecycle_environment
-        assert_equal @activation_key.content_view, new_host.content_facet.content_view
+        new_host_cve = new_host.content_facet.content_view_environments.first
+        assert_equal @activation_key.environment, new_host_cve.lifecycle_environment
+        assert_equal @activation_key.content_view, new_host_cve.content_view
 
         assert_includes new_host.host_collections, @host_collection
       end
@@ -248,7 +252,7 @@ module Katello
         assert_equal 1, @one_host_limit_host_collection.max_hosts
 
         assert_raises(RuntimeError, "Host collection 'Single-host Collection' exceeds maximum usage limit of '1'") do
-          ::Katello::RegistrationManager.register_host(new_host, rhsm_params, cvpe, [@activation_key])
+          ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [cvpe], [@activation_key])
         end
 
         refute_includes new_host.host_collections, @host_collection
@@ -257,34 +261,37 @@ module Katello
       def test_registration_existing_host
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-
+        @host.expects(:update_candlepin_associations).twice
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
 
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).returns(:uuid => 'fake-uuid-from-katello')
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).returns(:uuid => 'fake-uuid-from-katello')
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
 
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
-        ::Katello::RegistrationManager.register_host(@host, rhsm_params, @content_view_environment)
+        ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
       end
 
       def test_unregister_host_without_katello_agent
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-
+        ::Katello.expects(:with_katello_agent?).returns(false)
+        @host.content_facet.expects(:cves_changed?).returns(false)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Katello::EventQueue.expects(:push_event).never
-
         ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
       end
 
       def test_unregister_host_with_katello_agent
+        # VCR.use_cassette(cassette_name, :match_requests_on => [:method, :path, :params]) do
+        # end
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
         ::Katello.expects(:with_katello_agent?).returns(true)
-
+        @host.expects(:update_candlepin_associations)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Katello::EventQueue.expects(:push_event)
 
@@ -351,10 +358,10 @@ module Katello
         ::Host.expects(:find).returns(new_host)
         new_host.expects(:destroy)
         new_host.organization.stubs(:simple_content_access?).returns(false)
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).raises("uhoh!")
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @library.organization).raises("uhoh!")
 
         assert_raises(Exception) do
-          ::Katello::RegistrationManager.register_host(new_host, rhsm_params, @content_view_environment)
+          ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [@content_view_environment])
         end
       end
 
@@ -362,19 +369,19 @@ module Katello
       def test_registration_existing_host_dead_backend_service
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-
+        @host.expects(:update_candlepin_associations)
         @host.content_facet.expects(:destroy).never
         @host.expects(:destroy).never
 
         ::Katello::RegistrationManager.expects(:remove_host_artifacts).twice # once on original unregister, once again after failure during re-reg
         ::Katello::RegistrationManager.expects(:remove_partially_registered_new_host).never
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).raises("uhoh!")
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).raises("uhoh!")
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
 
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
         assert_raises(Exception) do
-          ::Katello::RegistrationManager.register_host(@host, rhsm_params, @content_view_environment)
+          ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
         end
       end
     end

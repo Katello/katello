@@ -278,9 +278,9 @@ Foreman::Plugin.register :katello do
       use_pagelet :hosts_table_column_header, :os_title
       use_pagelet :hosts_table_column_content, :os_title
       add_pagelet :hosts_table_column_header, key: :lifecycle_environment, label: _('Lifecycle environment'), sortable: true, class: common_th_class, width: '10%'
-      add_pagelet :hosts_table_column_content, key: :lifecycle_environment, class: common_td_class, callback: ->(host) { host.content_facet_attributes&.lifecycle_environment&.name }
+      add_pagelet :hosts_table_column_content, key: :lifecycle_environment, class: common_td_class, callback: ->(host) { host.content_facet&.single_lifecycle_environment&.name }
       add_pagelet :hosts_table_column_header, key: :content_view, label: _('Content view'), sortable: true, class: common_th_class, width: '10%'
-      add_pagelet :hosts_table_column_content, key: :content_view, class: common_td_class, callback: ->(host) { host.content_facet_attributes&.content_view&.name }
+      add_pagelet :hosts_table_column_content, key: :content_view, class: common_td_class, callback: ->(host) { host.content_facet&.single_content_view&.name }
       add_pagelet :hosts_table_column_header, key: :registered_at, label: _('Registered'), sortable: true, class: common_th_class, width: '10%'
       add_pagelet :hosts_table_column_content, key: :registered_at, class: common_td_class, callback: ->(host) { host_registered_time(host) }
       add_pagelet :hosts_table_column_header, key: :last_checkin, label: _('Last checkin'), sortable: true, class: common_th_class, width: '10%'
@@ -355,6 +355,12 @@ Foreman::Plugin.register :katello do
         templates = ProvisioningTemplate.where(:template_kind => TemplateKind.where(:name => name))
         templates.each_with_object({}) { |tmpl, hash| hash[tmpl.name] = tmpl.name }
       end
+
+      setting 'allow_multiple_content_views',
+        type: :boolean,
+        default: false,
+        full_name: N_('Allow multiple content views'),
+        description: N_("Allow a host to be registered to multiple content view environments with 'subscription-manager register --environments'.") # TODO: update this description when AKs support this setting as well
 
       setting 'content_default_http_proxy',
         type: :string,
@@ -723,14 +729,14 @@ Foreman::Plugin.register :katello do
 
   add_controller_action_scope('HostsController', :index) do |base_scope|
     base_scope
-      .preload(:content_view, :lifecycle_environment, :subscription_facet)
-      .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
+      .preload(:subscription_facet)
+      .preload(content_facet: [:bound_repositories])
   end
 
   add_controller_action_scope('Api::V2::HostsController', :index) do |base_scope|
     base_scope
-      .preload(:content_view, :lifecycle_environment, :subscription_facet)
-      .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
+      .preload(:subscription_facet)
+      .preload(content_facet: [:bound_repositories])
   end
 
   register_info_provider Katello::Host::InfoProvider

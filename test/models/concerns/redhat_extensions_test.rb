@@ -69,18 +69,40 @@ module Katello
       assert_equal ::Redhat.construct_name('My Custom Linux'), 'My_Custom_Linux'
     end
 
-    def test_distribution_repositories
+    def test_distribution_repositories_host_facet
       version = @repo_with_distro.distribution_version.split('.')
       os = ::Redhat.create_operating_system(@my_distro.name, version[0], version[1])
       other_repo = katello_repositories(:fedora_17_library_library_view)
-      host = ::Host.new(:architecture => architectures(:x86_64), :operatingsystem => os,
-                        :content_facet_attributes => {:lifecycle_environment_id => @repo_with_distro.environment.id,
-                                                      :content_view_id => @repo_with_distro.content_view.id})
-
+      host = FactoryBot.create(:host, :with_content,
+                        :architecture => architectures(:x86_64), :operatingsystem => os,
+                        :lifecycle_environment => @repo_with_distro.environment,
+                        :content_view => @repo_with_distro.content_view
+                      )
       assert_equal @repo_with_distro.distribution_arch, other_repo.distribution_arch
       assert_equal @repo_with_distro.distribution_version, other_repo.distribution_version
+      assert_instance_of ::Katello::Host::ContentFacet, host.content_facet
 
       repo_list = os.distribution_repositories(host)
+      assert_includes repo_list, @repo_with_distro
+      refute_includes repo_list, other_repo
+    end
+
+    def test_distribution_repositories_hostgroup_facet
+      version = @repo_with_distro.distribution_version.split('.')
+      os = ::Redhat.create_operating_system(@my_distro.name, version[0], version[1])
+      other_repo = katello_repositories(:fedora_17_library_library_view)
+      # use fixture for hostgroup, not FactoryBot
+      hostgroup = ::Hostgroup.find(hostgroups(:common).id)
+      hostgroup.operatingsystem = os
+      hostgroup.architecture = architectures(:x86_64)
+      hostgroup.lifecycle_environment = @repo_with_distro.environment
+      hostgroup.content_view = @repo_with_distro.content_view
+      hostgroup.save!
+      assert_equal @repo_with_distro.distribution_arch, other_repo.distribution_arch
+      assert_equal @repo_with_distro.distribution_version, other_repo.distribution_version
+      assert_instance_of ::Katello::Hostgroup::ContentFacet, hostgroup.content_facet
+
+      repo_list = os.distribution_repositories(hostgroup)
       assert_includes repo_list, @repo_with_distro
       refute_includes repo_list, other_repo
     end
@@ -92,9 +114,11 @@ module Katello
       @repo_with_distro.update!(:distribution_version => "2.3.4")
       version = @repo_with_distro.distribution_version.split('.')
       os = ::Redhat.create_operating_system("RedHat", version[0], version[1])
-      host = ::Host.new(:architecture => architectures(:x86_64), :operatingsystem => os,
-                        :content_facet_attributes => {:lifecycle_environment_id => @repo_with_distro.environment.id,
-                                                      :content_view_id => @repo_with_distro.content_view.id})
+      host = FactoryBot.create(:host, :with_content,
+                        :architecture => architectures(:x86_64), :operatingsystem => os,
+                        :lifecycle_environment => @repo_with_distro.environment,
+                        :content_view => @repo_with_distro.content_view
+                       )
       repo_list = os.distribution_repositories(host)
       assert_includes repo_list, @repo_with_distro
 

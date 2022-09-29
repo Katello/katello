@@ -60,7 +60,7 @@ module Katello
             Product.all(organization_name, [:id, :productContent])
           end
 
-          def destroy_imports(organization_name, wait_until_complete = false)
+          def destroy_imports(organization_name, wait_until_complete: false)
             response_json = self.delete(join_path(path(organization_name), 'imports'), self.default_headers)
             response = JSON.parse(response_json).with_indifferent_access
             if wait_until_complete && response['state'] == 'CREATED'

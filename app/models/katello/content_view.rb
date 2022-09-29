@@ -39,10 +39,13 @@ module Katello
 
     has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict_with_exception
 
-    has_many :content_facets, :class_name => "Katello::Host::ContentFacet",
-             :inverse_of => :content_view, :dependent => :restrict_with_exception
+    has_many :content_view_environment_content_facets, :class_name => "Katello::ContentViewEnvironmentContentFacet",
+             :through => :content_view_environments
+    has_many :content_facets, :class_name => "Katello::Host::ContentFacet", :through => :content_view_environment_content_facets,
+             :inverse_of => :content_views
     has_many :hosts, :class_name => "::Host::Managed", :through => :content_facets,
-             :inverse_of => :content_view
+             :inverse_of => :content_views
+
     has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet",
              :inverse_of => :content_view, :dependent => :nullify
     has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets,
@@ -421,8 +424,10 @@ module Katello
       # update errata applicability counts for all hosts in the CV & LE
       Location.no_taxonomy_scope do
         User.as_anonymous_admin do
-          ::Katello::Host::ContentFacet.where(:content_view_id => self,
-                                              :lifecycle_environment_id => environment).each do |facet|
+          ::Katello::Host::ContentFacet.in_content_views_and_environments(
+            content_views: [self],
+            lifecycle_environments: [environment]
+          ).each do |facet|
             facet.update_applicability_counts
             facet.update_errata_status
           end

@@ -9,8 +9,10 @@ module Katello
       @host.content_facet.content_source = smart_proxies(:one)
       @host.operatingsystem = operatingsystems(:redhat)
       @host.content_facet.kickstart_repository = @repo
-      @host.content_facet.content_view = @repo.content_view
-
+      @host.content_facet.assign_single_environment(
+        content_view: @repo.content_view,
+        lifecycle_environment: katello_environments(:library)
+      )
       @hostgroup = ::Hostgroup.new
       @hostgroup.content_source = smart_proxies(:one)
       @hostgroup.operatingsystem = operatingsystems(:redhat)

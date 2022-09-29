@@ -88,7 +88,7 @@ module Katello
         class << self
           delegate :[], to: :json_resource
 
-          def resource(url = self.site + self.path, client_cert = self.client_cert, client_key = self.client_key, ca_file = nil, options = {})
+          def resource(options = {}, url: self.site + self.path, client_cert: self.client_cert, client_key: self.client_key, ca_file: nil)
             cert_store = OpenSSL::X509::Store.new
             cert_store.add_file(ca_file) if ca_file
 
@@ -107,9 +107,9 @@ module Katello
                                     )
           end
 
-          def json_resource(url = self.site + self.path, client_cert = self.client_cert, client_key = self.client_key, ca_file = nil, options = {})
+          def json_resource(options = {}, url: self.site + self.path, client_cert: self.client_cert, client_key: self.client_key, ca_file: nil)
             options.deep_merge!(headers: self.default_headers)
-            resource(url, client_cert, client_key, ca_file, options)
+            resource(options, url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file)
           end
 
           def rest_client(_http_type = nil, method = :get, path = self.path)
@@ -117,7 +117,7 @@ module Katello
             self.consumer_secret = nil
             self.consumer_key = nil
 
-            resource(self.site + path, client_cert, client_key, nil, http_method: method)
+            resource({ http_method: method }, url: self.site + path, client_cert: client_cert, client_key: client_key, ca_file: nil)
           end
 
           def client_cert

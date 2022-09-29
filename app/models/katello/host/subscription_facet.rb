@@ -114,9 +114,10 @@ module Katello
         if self.hypervisor
           if !consumer_params.try(:[], 'guestIds').empty?
             guest_ids = consumer_params['guestIds'].map do |id|
-              if id.is_a?(Hash)
+              case id
+              when Hash
                 id['guestId'].downcase
-              elsif id.is_a?(String)
+              when String
                 id.downcase
               end
             end
@@ -144,7 +145,7 @@ module Katello
           :addOns => purpose_addons.pluck(:name),
           :serviceLevel => service_level,
           :releaseVer => release_version,
-          :environment => {:id => self.candlepin_environment_id},
+          :environments => self.candlepin_environments,
           :installedProducts => self.installed_products.map(&:consumer_attributes),
           :guestIds => virtual_guest_uuids
         }
@@ -152,20 +153,18 @@ module Katello
         HashWithIndifferentAccess.new(attrs)
       end
 
-      def candlepin_environment_id
+      def candlepin_environments
         if self.host.content_facet
-          self.host.content_facet.content_view.cp_environment_id(self.host.content_facet.lifecycle_environment)
+          self.host.content_facet.content_view_environments.map do |cve|
+            { :id => cve.content_view.cp_environment_id(cve.lifecycle_environment) }
+          end
         else
           self.host.organization.default_content_view.cp_environment_id(self.host.organization.library)
         end
       end
 
-      def content_view
-        self.host.content_facet.try(:content_view) || self.organization.default_content_view
-      end
-
-      def lifecycle_environment
-        self.host.content_facet.try(:lifecycle_environment) || self.organization.library
+      def content_view_environments
+        self.host.content_facet.try(:content_view_environments)
       end
 
       def organization
@@ -294,10 +293,15 @@ module Katello
 
       def backend_update_needed?
         %w(release_version service_level autoheal purpose_role purpose_usage purpose_addon_ids).each do |method|
-          return true if self.send("#{method}_changed?")
+          if self.send("#{method}_changed?")
+            Rails.logger.debug("backend_update_needed: subscription facet #{method} changed")
+            return true
+          end
         end
-        if self.host.content_facet
-          return true if (self.host.content_facet.content_view_id_changed? || self.host.content_facet.lifecycle_environment_id_changed?)
+        facet = self.host&.content_facet
+        if facet&.cves_changed? && !facet.new_record?
+          Rails.logger.debug("backend_update_needed: content facet CVEs changed")
+          return true
         end
         false
       end

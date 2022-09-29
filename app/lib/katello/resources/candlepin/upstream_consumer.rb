@@ -42,15 +42,14 @@ module Katello
 
           def get_export(url, client_cert, client_key, ca_file)
             logger.debug "Sending GET request to upstream Candlepin: #{url}"
-            return resource(url, client_cert, client_key, ca_file).get
+            return resource(url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file).get
           rescue RestClient::Exception => e
             raise e
           end
 
           def update(url, client_cert, client_key, ca_file, attributes)
-            logger.debug "Sending POST request to upstream Candlepin: #{url} #{attributes.to_json}"
-
-            return resource(url, client_cert, client_key, ca_file).put(attributes.to_json,
+            logger.debug "Sending PUT request to upstream Candlepin: #{url} #{attributes.to_json}"
+            return resource(url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file).put(attributes.to_json,
                                                                        'accept' => 'application/json',
                                                                        'accept-language' => I18n.locale,
                                                                        'content-type' => 'application/json')

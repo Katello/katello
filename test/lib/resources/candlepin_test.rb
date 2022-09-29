@@ -43,7 +43,7 @@ module Katello
           Foreman::Util.expects(:add_ca_bundle_to_store).never
           OpenSSL::X509::Certificate.expects(:new)
           OpenSSL::PKey::RSA.expects(:new)
-          UpstreamCandlepinResource.resource("http://www.foo.com", "", "")
+          UpstreamCandlepinResource.resource(url: "http://www.foo.com", client_cert: "", client_key: "")
         end
       end
 

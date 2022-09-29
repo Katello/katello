@@ -13,12 +13,16 @@ module Katello
       setup_controller_defaults_api
       login_user(User.find(users(:admin).id))
 
-      @content_view = katello_content_views(:acme_default)
-      @environment = katello_environments(:library)
+      @content_facet_one = katello_content_facets(:content_facet_one)
 
       @organization = get_organization
-      @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
-                                 :lifecycle_environment => @environment, :organization => @content_view.organization)
+      @host = FactoryBot.create(
+        :host,
+        :with_content,
+        :with_subscription,
+        :content_facet => @content_facet_one,
+        :organization => @content_facet_one.single_content_view.organization
+      )
       location = taxonomies(:location1)
       Setting[:default_location_subscribed_hosts] = location.title
     end
@@ -88,8 +92,8 @@ module Katello
 
       it "should register" do
         Resources::Candlepin::Consumer.stubs(:get)
-
-        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, @content_view_environment).returns(@host)
+        ::Katello::RegistrationManager.expects(:check_registration_services).returns(true)
+        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, [@content_view_environment]).returns(@host)
 
         post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environment_id => @content_view_environment.cp_id, :facts => @facts })
 
@@ -98,8 +102,8 @@ module Katello
 
       it "should register with new environments param" do
         Resources::Candlepin::Consumer.stubs(:get)
-
-        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, @content_view_environment).returns(@host)
+        ::Katello::RegistrationManager.expects(:check_registration_services).returns(true)
+        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, [@content_view_environment]).returns(@host)
 
         post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environments => [{id: @content_view_environment.cp_id}], :facts => @facts })
 
@@ -113,7 +117,7 @@ module Katello
 
         body = JSON.parse(response.body)
 
-        assert_equal 'Multiple environments are not supported.', body['displayMessage']
+        assert_equal 'Registering to multiple environments is not enabled.', body['displayMessage']
         assert_response 400
       end
 

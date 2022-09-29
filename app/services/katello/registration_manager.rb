@@ -4,10 +4,6 @@ module Katello
       private :new
       delegate :propose_existing_hostname, :new_host_from_facts, to: Katello::Host::SubscriptionFacet
 
-      def determine_organization(content_view_environment, activation_key)
-        content_view_environment.try(:environment).try(:organization) || activation_key.try(:organization)
-      end
-
       def determine_host_dmi_uuid(rhsm_params)
         host_uuid = rhsm_params.dig(:facts, 'dmi.system.uuid')
 
@@ -18,17 +14,17 @@ module Katello
         [host_uuid, false]
       end
 
-      def process_registration(rhsm_params, content_view_environment, activation_keys = [])
+      def process_registration(rhsm_params, content_view_environments, activation_keys = [])
         host_name = propose_existing_hostname(rhsm_params[:facts])
         host_uuid, host_uuid_overridden = determine_host_dmi_uuid(rhsm_params)
 
         rhsm_params[:facts]['dmi.system.uuid'] = host_uuid # ensure we find & validate against a potentially overridden UUID
 
-        organization = determine_organization(content_view_environment, activation_keys.first)
+        organization = validate_content_view_environment_org(content_view_environments, activation_keys.first)
 
         hosts = find_existing_hosts(host_name, host_uuid)
 
-        validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden)
+        validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden: host_uuid_overridden)
 
         host = hosts.first || new_host_from_facts(
           rhsm_params[:facts],
@@ -37,7 +33,7 @@ module Katello
         )
         host.organization = organization unless host.organization
 
-        register_host(host, rhsm_params, content_view_environment, activation_keys)
+        register_host(host, rhsm_params, content_view_environments, activation_keys)
 
         if host_uuid_overridden
           host.subscription_facet.update_dmi_uuid_override(host_uuid)
@@ -71,7 +67,19 @@ module Katello
         query
       end
 
-      def validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden = false)
+      def validate_content_view_environment_org(content_view_environments, activation_key)
+        orgs = Set.new([activation_key&.organization])
+        content_view_environments&.each do |cve|
+          orgs << cve&.environment&.organization
+        end
+        orgs.delete(nil)
+        if orgs.size != 1
+          registration_error(_("Content view environments and activation key must all belong to the same organization"))
+        end
+        orgs.first
+      end
+
+      def validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden: false)
         return if hosts.empty?
 
         hosts = hosts.where(organization_id: [organization.id, nil])
@@ -135,40 +143,42 @@ module Katello
           remove_host_artifacts(host)
         elsif organization_destroy
           host.content_facet.try(:destroy!)
-          remove_host_artifacts(host, false)
+          remove_host_artifacts(host, clear_content_facet: false)
         else
           host.content_facet.try(:destroy!)
           destroy_host_record(host.id)
         end
       end
 
-      def register_host(host, consumer_params, content_view_environment, activation_keys = [])
+      def register_host(host, consumer_params, content_view_environments, activation_keys = []) # rubocop:disable Metrics/MethodLength
         new_host = host.new_record?
-
         unless new_host
           host.save!
           unregister_host(host, :unregistering => true)
           host.reload
         end
 
-        unless activation_keys.empty?
-          content_view_environment ||= lookup_content_view_environment(activation_keys)
+        if activation_keys.present?
+          if content_view_environments.blank?
+            content_view_environments = [lookup_content_view_environment(activation_keys)]
+          end
           set_host_collections(host, activation_keys)
         end
-        fail _('Content View and Environment not set for registration.') if content_view_environment.nil?
+        fail _('Content view and environment not set for registration.') if content_view_environments.blank?
 
         host.save! #the host is in foreman db at this point
 
         host_uuid = get_uuid(consumer_params)
         consumer_params[:uuid] = host_uuid
-        host.content_facet = populate_content_facet(host, content_view_environment, host_uuid)
+        host.content_facet = populate_content_facet(host, content_view_environments, host_uuid)
+        host.content_facet.cves_changed = false # prevent backend_update_needed from triggering an update on a nonexistent consumer
         host.subscription_facet = populate_subscription_facet(host, activation_keys, consumer_params, host_uuid)
         host.save! # the host has content and subscription facets at this point
         create_initial_subscription_status(host)
 
         User.as_anonymous_admin do
           begin
-            create_in_candlepin(host, content_view_environment, consumer_params, activation_keys)
+            create_in_candlepin(host, content_view_environments, consumer_params, activation_keys)
           rescue StandardError => e
             # we can't call CP here since something bad already happened. Just clean up our DB as best as we can.
             host.subscription_facet.try(:destroy!)
@@ -185,8 +195,7 @@ module Katello
         User.as_anonymous_admin do
           ping_results = Katello::Ping.ping
         end
-        candlepin_ok = ping_results[:services][:candlepin][:status] == "ok"
-        candlepin_ok
+        ping_results[:services][:candlepin][:status] == "ok"
       end
 
       private
@@ -199,6 +208,11 @@ module Katello
       end
 
       def get_uuid(params)
+        if params.key?(:uuid)
+          Rails.logger.info "assigning existing uuid #{params[:uuid]}"
+        else
+          Rails.logger.info "generating new uuid"
+        end
         params.key?(:uuid) ? params[:uuid] : SecureRandom.uuid
       end
 
@@ -211,9 +225,9 @@ module Katello
         host.subscription_facet.update_subscription_status(::Katello::SubscriptionStatus::UNKNOWN)
       end
 
-      def create_in_candlepin(host, content_view_environment, consumer_params, activation_keys)
+      def create_in_candlepin(host, content_view_environments, consumer_params, activation_keys)
         # if CP fails, nothing to clean up yet w.r.t. backend services
-        cp_create = ::Katello::Resources::Candlepin::Consumer.create(content_view_environment.cp_id, consumer_params, activation_keys.map(&:cp_name))
+        cp_create = ::Katello::Resources::Candlepin::Consumer.create(content_view_environments.map(&:cp_id), consumer_params, activation_keys.map(&:cp_name), host.organization)
         ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
         uuid = cp_create[:uuid]
         if uuid.present? && uuid != host.subscription_facet.uuid
@@ -277,10 +291,9 @@ module Katello
         end
       end
 
-      def populate_content_facet(host, content_view_environment, uuid)
+      def populate_content_facet(host, content_view_environments, uuid)
         content_facet = host.content_facet || ::Katello::Host::ContentFacet.new(:host => host)
-        content_facet.content_view = content_view_environment.content_view
-        content_facet.lifecycle_environment = content_view_environment.environment
+        content_facet.content_view_environments = content_view_environments
         content_facet.uuid = uuid
         content_facet.save!
         content_facet
@@ -297,11 +310,12 @@ module Katello
         subscription_facet
       end
 
-      def remove_host_artifacts(host, clear_content_facet = true)
+      def remove_host_artifacts(host, clear_content_facet: true)
         if host.content_facet && clear_content_facet
           host.content_facet.bound_repositories = []
           host.content_facet.applicable_errata = []
           host.content_facet.uuid = nil
+          host.content_facet.content_view_environments = []
           host.content_facet.save!
           host.content_facet.calculate_and_import_applicability
         end

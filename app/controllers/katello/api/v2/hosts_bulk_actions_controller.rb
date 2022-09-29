@@ -281,7 +281,10 @@ module Katello
         version_environment[:environments] << cve.environment unless version_environment[:environments].include?(cve.environment)
         version_environment[:next_version] ||= version.next_incremental_version
         version_environment[:content_host_count] ||= 0
-        version_environment[:content_host_count] += content_facets.where(:content_view_id => cve.content_view).where(:lifecycle_environment_id => cve.environment).count
+        version_environment[:content_host_count] += content_facets.in_content_views_and_environments(
+          content_views: [cve.content_view],
+          lifecycle_environments: [cve.environment]
+        ).count
 
         if version.content_view.composite?
           version_environment[:components] = version.components_needing_errata(@errata)
@@ -323,9 +326,10 @@ module Katello
 
       hosts.each do |host|
         next unless host.content_facet
-
-        host.content_facet.lifecycle_environment = lifecycle_environment
-        host.content_facet.content_view = content_view
+        host.content_facet.assign_single_environment(
+          :content_view_id => content_view.id,
+          :environment_id => lifecycle_environment.id
+        )
         host.content_facet.content_source = content_source
 
         host.update_candlepin_associations
