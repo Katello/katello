@@ -64,7 +64,7 @@ module Katello
                  " Either remove the invalid repository or try refreshing "\
                  "the manifest before publishing again. " % { item: item })
         else
-          fail _("%{item} in this content view does not have a valid subscription. "\
+          fail _("'%{item}' in this content view does not exist in the backend system [ Candlepin ]. "\
                  " Remove the invalid repository before publishing again. " % { item: item })
         end
       end
