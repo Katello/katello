@@ -27,7 +27,7 @@ module Katello
                  " Either remove and re-enable the repository or try refreshing "\
                  "the manifest before synchronizing. " % { item: item })
         else
-          fail _("%{item} does not have a valid subscription. "\
+          fail _("'%{item}' does not exist in the backend system [ Candlepin ]. "\
                  " Remove and recreate the repository before synchronizing. " % { item: item })
         end
       end
