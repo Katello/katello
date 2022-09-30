@@ -27,6 +27,13 @@ module ::Actions::Katello::ContentViewVersion
       katello_content_view_versions(:library_no_filter_view_version_1)
     end
 
+    let(:cdn_resource) do
+      ::Katello::Resources::CDN::CdnResource.new("http://foo.com").tap do |cdn_resource|
+        cdn_resource.stubs('get')
+        cdn_resource.stubs('valid_path?': true)
+      end
+    end
+
     let(:prod) do
       katello_products(:redhat)
     end
@@ -68,6 +75,8 @@ module ::Actions::Katello::ContentViewVersion
 
     before do
       set_user
+      Katello::Product.any_instance.stubs(cdn_resource: cdn_resource)
+      ::Katello::Resources::Candlepin::Content.stubs(:get).returns
       SmartProxy.any_instance.stubs(:ping_pulp3).returns({})
       SmartProxy.any_instance.stubs(:pulp3_configuration).returns(nil)
       ::Katello::Pulp3::Repository.any_instance.stubs(:create_remote).returns(nil)

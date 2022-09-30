@@ -580,7 +580,7 @@ module ::Actions::Katello::Repository
     it 'plans verift checksum when validate_contents is passed' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
-      plan_action action, repository, :validate_contents => true
+      plan_action action, repository, :validate_contents => true, :skip_candlepin_check => true
 
       assert_action_planned_with(action, ::Actions::Katello::Repository::VerifyChecksum, repository)
     end
@@ -588,7 +588,7 @@ module ::Actions::Katello::Repository
     it 'plans errata mailer with contents_changed' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
-      plan_action action, repository
+      plan_action action, repository, :skip_candlepin_check => true
       assert_action_planned(action, ::Actions::Katello::Repository::ErrataMail)
     end
 

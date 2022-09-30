@@ -8,6 +8,7 @@ module Actions
         def plan(version, environments, is_force = false, description = nil, incremental_update = false)
           action_subject(version.content_view)
           version.check_ready_to_promote!(environments)
+          ::Katello::Util::CandlepinRepositoryChecker.check_repositories_for_promote!(version)
 
           fail ::Katello::HttpErrors::BadRequest, _("Cannot promote environment out of sequence. Use force to bypass restriction.") if !is_force && !version.promotable?(environments)
 

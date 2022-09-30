@@ -13,6 +13,9 @@ module Actions
           action_subject(content_view)
 
           content_view.check_ready_to_publish!(options.slice(:importing, :syncable))
+          unless options[:importing]
+            ::Katello::Util::CandlepinRepositoryChecker.check_repositories_for_publish!(content_view)
+          end
 
           if options[:repos_units].present?
             valid_labels_from_cv = content_view.repositories.map(&:label)
