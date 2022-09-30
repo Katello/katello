@@ -23,7 +23,7 @@ module Katello
                   { repo: repo.name, product: repo.product.name })
 
         if repo.redhat?
-          fail _("%{item} does not have a valid subscription. "\
+          fail _("'%{item}' does not exist in the backend system [ Candlepin ]. "\
                  " Either remove and re-enable the repository or try refreshing "\
                  "the manifest before synchronizing. " % { item: item })
         else
