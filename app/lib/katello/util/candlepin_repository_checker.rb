@@ -8,7 +8,7 @@ module Katello
                   { repo: bad_repo.name, product: bad_repo.product.name, cvv: content_view_version.name })
 
         if bad_repo.redhat?
-          fail _("%{item} does not have a valid subscription. "\
+          fail _("'%{item}' does not exist in the backend system [ Candlepin ]. "\
                  " Either remove the invalid repository or try refreshing "\
                  "the manifest before promoting. " % { item: item })
         else
