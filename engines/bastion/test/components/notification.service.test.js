@@ -21,7 +21,7 @@ describe('Factory: Nofification', function() {
     it("provides a way to set error messages", function () {
         var message = "Everything is broken!";
         Notification.setErrorMessage(message);
-        expect(foreman.toastNotifications.notify).toHaveBeenCalledWith({message: message, type: 'error'});
+        expect(foreman.toastNotifications.notify).toHaveBeenCalledWith({message: message, type: 'danger'});
     });
 
     it("provides a way to set warning messages", function () {

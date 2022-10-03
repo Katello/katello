@@ -9,26 +9,25 @@ module Katello
     GPG_KEY_TYPE = 'gpg_key'.freeze
     CERT_TYPE = 'cert'.freeze
 
-    has_many :root_repositories, :class_name => "Katello::RootRepository", :inverse_of => :gpg_key, :dependent => :nullify, :foreign_key => 'gpg_key_id'
+    has_many :root_repositories, :class_name => "Katello::RootRepository", :inverse_of => :gpg_key, :dependent => :restrict_with_exception, :foreign_key => 'gpg_key_id'
     has_many :repositories, :through => :root_repositories
 
-    has_many :products, :class_name => "Katello::Product", :inverse_of => :gpg_key, :dependent => :nullify, :foreign_key => 'gpg_key_id'
-
+    has_many :products, :class_name => "Katello::Product", :inverse_of => :gpg_key, :dependent => :restrict_with_exception, :foreign_key => 'gpg_key_id'
     has_many :ssl_ca_cdn_configurations, :class_name => "Katello::CdnConfiguration", :foreign_key => 'ssl_ca_credential_id',
       :inverse_of => :ssl_ca_credential, :dependent => :nullify
 
     has_many :ssl_ca_products, :class_name => "Katello::Product", :foreign_key => "ssl_ca_cert_id",
-                               :inverse_of => :ssl_ca_cert, :dependent => :nullify
+                               :inverse_of => :ssl_ca_cert, :dependent => :restrict_with_exception
     has_many :ssl_client_products, :class_name => "Katello::Product", :foreign_key => "ssl_client_cert_id",
-                                   :inverse_of => :ssl_client_cert, :dependent => :nullify
+                                   :inverse_of => :ssl_client_cert, :dependent => :restrict_with_exception
     has_many :ssl_key_products, :class_name => "Katello::Product", :foreign_key => "ssl_client_key_id",
-                                :inverse_of => :ssl_client_key, :dependent => :nullify
+                                :inverse_of => :ssl_client_key, :dependent => :restrict_with_exception
     has_many :ssl_ca_root_repos, :class_name => "Katello::RootRepository", :foreign_key => "ssl_ca_cert_id",
-                            :inverse_of => :ssl_ca_cert, :dependent => :nullify
+                            :inverse_of => :ssl_ca_cert, :dependent => :restrict_with_exception
     has_many :ssl_client_root_repos, :class_name => "Katello::RootRepository", :foreign_key => "ssl_client_cert_id",
-                                :inverse_of => :ssl_client_cert, :dependent => :nullify
+                                :inverse_of => :ssl_client_cert, :dependent => :restrict_with_exception
     has_many :ssl_key_root_repos, :class_name => "Katello::RootRepository", :foreign_key => "ssl_client_key_id",
-                             :inverse_of => :ssl_client_key, :dependent => :nullify
+                             :inverse_of => :ssl_client_key, :dependent => :restrict_with_exception
     has_many :ssl_ca_alternate_content_sources, :class_name => "Katello::AlternateContentSource", :foreign_key => "ssl_ca_cert_id",
                                 :inverse_of => :ssl_ca_cert, :dependent => :nullify
     has_many :ssl_client_alternate_content_sources, :class_name => "Katello::AlternateContentSource", :foreign_key => "ssl_client_cert_id",

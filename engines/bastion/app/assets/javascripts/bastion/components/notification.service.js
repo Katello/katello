@@ -32,6 +32,6 @@ angular.module('Bastion.components').service("Notification", ['$interpolate', 'f
     };
 
     this.setErrorMessage = function (message, context) {
-        foreman.toastNotifications.notify({message: interpolateIfNeeded(message, context), type: 'error'});
+        foreman.toastNotifications.notify({message: interpolateIfNeeded(message, context), type: 'danger'});
     };
 }]);
