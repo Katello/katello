@@ -232,7 +232,7 @@ module Katello
     end
 
     class GenericRemoteOption
-      attr_accessor :name, :title, :type, :description, :input_type, :delimiter
+      attr_accessor :name, :title, :type, :description, :input_type, :delimiter, :default
 
       def initialize(options)
         self.name = options[:name]
@@ -241,6 +241,7 @@ module Katello
         self.description = options[:description]
         self.input_type = options[:input_type]
         self.delimiter = options[:delimiter]
+        self.default = options[:default]
       end
     end
 
