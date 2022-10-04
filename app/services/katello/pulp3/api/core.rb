@@ -75,7 +75,7 @@ module Katello
         end
 
         def repository_version_class
-          client_module::RepositoryVersion
+          client_module::RepositoryVersionResponse
         end
 
         def cancel_task(task_href)

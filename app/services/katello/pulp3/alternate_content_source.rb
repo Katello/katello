@@ -121,8 +121,7 @@ module Katello
 
       def refresh
         href = smart_proxy_acs.alternate_content_source_href
-        # https://github.com/pulp/pulp_rpm/issues/2504
-        api.alternate_content_source_api.refresh(href, 'placeholder')
+        api.alternate_content_source_api.refresh(href)
       end
 
       private

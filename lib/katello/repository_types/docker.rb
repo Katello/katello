@@ -17,7 +17,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
   repositories_api_class PulpContainerClient::RepositoriesContainerApi
   distributions_api_class PulpContainerClient::DistributionsContainerApi
   distribution_class PulpContainerClient::ContainerContainerDistribution
-  repo_sync_url_class PulpContainerClient::RepositorySyncURL
+  repo_sync_url_class PulpContainerClient::ContainerRepositorySyncURL
 
   index_additional_data do |repo|
     Katello::DockerMetaTag.import_meta_tags([repo])

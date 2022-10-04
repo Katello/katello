@@ -6,7 +6,7 @@ module ::Actions::Pulp3
 
     def setup
       @primary = SmartProxy.pulp_primary
-      @repo = katello_repositories(:pulp3_docker_1)
+      @repo = katello_repositories(:busybox)
       create_repo(@repo, @primary)
       ForemanTasks.sync_task(
           ::Actions::Katello::Repository::MetadataGenerate, @repo)
