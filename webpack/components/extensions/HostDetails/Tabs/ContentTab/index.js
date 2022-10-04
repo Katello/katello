@@ -16,6 +16,7 @@ const ContentTab = ({ location: { pathname } }) => {
   return (
     <>
       <Tabs
+        ouiaId="host-content-tabs"
         className="margin-0-24"
         onSelect={(evt, subTab) => hashHistory.push(subTab)}
         isSecondary

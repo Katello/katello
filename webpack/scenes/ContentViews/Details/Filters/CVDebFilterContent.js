@@ -145,7 +145,11 @@ const CVDebFilterContent = ({
   };
 
   return (
-    <Tabs activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
+    <Tabs
+      ouiaId="cv-deb-filter-content-tabs"
+      activeKey={activeTabKey}
+      onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
+    >
       <Tab eventKey={0} title={<TabTitleText>{tabTitle}</TabTitleText>}>
         <div className="tab-body-with-spacing">
           <TableWrapper
