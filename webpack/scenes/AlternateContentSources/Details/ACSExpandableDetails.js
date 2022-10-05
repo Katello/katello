@@ -272,7 +272,7 @@ const ACSExpandableDetails = () => {
           </StackItem>
         </>
                 }
-        {acsType === 'custom' &&
+        {(acsType === 'custom' || acsType === 'rhui') &&
         <>
           <StackItem>
             <Split>

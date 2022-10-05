@@ -37,7 +37,7 @@ module Actions
 
         def create_acss(acs, smart_proxies_to_associate)
           smart_proxies_to_associate&.each do |smart_proxy|
-            if acs.custom?
+            if acs.custom? || acs.rhui?
               smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id)
               plan_action(Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
             elsif acs.simplified?
@@ -56,7 +56,7 @@ module Actions
 
         def update_acss(acs, smart_proxies_to_update, products_to_associate, products_to_disassociate)
           smart_proxies_to_update&.each do |smart_proxy|
-            if acs.custom?
+            if acs.custom? || acs.rhui?
               smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id, repository_id: nil)
               plan_action(Pulp3::Orchestration::AlternateContentSource::Update, smart_proxy_acs)
             elsif acs.simplified?

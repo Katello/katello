@@ -34,7 +34,7 @@ module Katello
         format.csv do
           options[:csv] = true
           alternate_content_sources = scoped_search(index_relation, :name, :asc)
-          if @acs.custom?
+          if @acs.custom? || @acs.rhui?
             csv_response(alternate_content_sources,
                         [:id, :name, :description, :label, :base_url, :subpaths, :content_type, :alternate_content_source_type],
                         ['Id', 'Name', 'Description', 'label', 'Base URL', 'Subpaths', 'Content Type', 'Alternate Content Source Type'])
@@ -115,7 +115,7 @@ module Katello
 
     def acs_params
       keys = [:name, :label, :description, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type, :alternate_content_source_type, :use_http_proxies]
-      keys += [:base_url, {subpaths: []}, :upstream_username, :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :verify_ssl] if params[:action] == 'create' || @alternate_content_source&.custom?
+      keys += [:base_url, {subpaths: []}, :upstream_username, :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :verify_ssl] if params[:action] == 'create' || @alternate_content_source&.custom? || @alternate_content_source&.rhui?
       keys += [{product_ids: []}] if params[:action] == 'create' || @alternate_content_source&.simplified?
       params.require(:alternate_content_source).permit(*keys).to_h.with_indifferent_access
     end

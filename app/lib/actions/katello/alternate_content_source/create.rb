@@ -11,7 +11,7 @@ module Actions
           smart_proxies = smart_proxies.present? ? smart_proxies.uniq : []
           concurrence do
             smart_proxies.each do |smart_proxy|
-              if acs.custom?
+              if acs.custom? || acs.rhui?
                 smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id)
                 plan_action(Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
               elsif acs.simplified?

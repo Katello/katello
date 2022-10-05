@@ -42,6 +42,19 @@ const createSimplifiedACSDetails = {
   use_http_proxies: false,
 };
 
+const createRHUIACSDetails = {
+  name: 'acs_rhui_test',
+  description: '',
+  base_url: 'https://test_url.com/',
+  subpaths: ['test/repo1/', 'test/repo2/'],
+  smart_proxy_names: ['centos7-katello-devel-stable.example.com'],
+  content_type: 'yum',
+  alternate_content_source_type: 'rhui',
+  verify_ssl: false,
+  use_http_proxies: false,
+  ssl_ca_cert_id: '',
+};
+
 const noResults = {
   total: 0,
   subtotal: 0,
@@ -124,7 +137,7 @@ test('Can display create wizard and create custom ACS', async (done) => {
   // First step: Select source
   await patientlyWaitFor(() => {
     expect(getByText('Add an alternate content source')).toBeInTheDocument();
-    expect(queryByText('Indicate the source type.')).toBeInTheDocument();
+    expect(queryByText('Alternate content sources define new locations to download content from at repository or smart proxy sync time.')).toBeInTheDocument();
   });
 
   // Check that next is disabled until type is selected
@@ -198,6 +211,98 @@ test('Can display create wizard and create custom ACS', async (done) => {
   act(done);
 });
 
+test('Can display create wizard and create RHUI ACS', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(ACSIndexPath)
+    .query(true)
+    .times(2)
+    .reply(200, noResults);
+
+  const contentCredentialScope = nockInstance
+    .get(contentCredentialPath)
+    .query(true)
+    .reply(200, contentCredentialResult);
+
+  const productScope = nockInstance
+    .get(productsPath)
+    .query(true)
+    .reply(200, productsResult);
+
+  const smartProxyScope = nockInstance
+    .get(smartProxyPath)
+    .query(true)
+    .reply(200, smartProxyResult);
+
+  const createScope = nockInstance
+    .post(ACSCreatePath, createRHUIACSDetails)
+    .reply(201, { id: 22 });
+
+  const {
+    getByLabelText, getByText, getAllByRole, queryByText,
+  } = renderWithRedux(withACSRoute(<ACSTable />), renderOptions);
+
+  expect(queryByText("You currently don't have any alternate content sources.")).toBeNull();
+  await patientlyWaitFor(() => expect(queryByText("You currently don't have any alternate content sources.")).toBeInTheDocument());
+  expect(queryByText('Add source')).toBeInTheDocument();
+  fireEvent.click(getByText('Add source'));
+
+  // First step: Select source
+  await patientlyWaitFor(() => {
+    expect(getByText('Add an alternate content source')).toBeInTheDocument();
+    expect(getByText('Alternate content sources define new locations to download content from at repository or smart proxy sync time.')).toBeInTheDocument();
+  });
+
+  // Choose ACS type, content_type defaults to yum
+  fireEvent.click(getByText('RHUI'));
+
+  // Go to next step: Name source
+  fireEvent.click(getByText('Next'));
+
+  await patientlyWaitFor(() => {
+    expect(getByText('Enter a name for your source.')).toBeInTheDocument();
+  });
+  // Enter Name
+  fireEvent.change(getByLabelText('acs_name_field'), { target: { value: 'acs_rhui_test' } });
+
+  // Mock smart proxy selector to go to next page
+  const useSmartProxySelectorMock = jest.spyOn(reactRedux, 'useSelector');
+  useSmartProxySelectorMock.mockReturnValue(smartProxyResult);
+  fireEvent.click(getByText('Next'));
+  await patientlyWaitFor(() => {
+    expect(getByText('centos7-katello-devel-stable.example.com')).toBeInTheDocument();
+  });
+  fireEvent.click(getByLabelText('Add all'));
+  useSmartProxySelectorMock.mockRestore();
+  // Go to URL and subpath step
+  fireEvent.click(getByText('Next'));
+
+  fireEvent.change(getByLabelText('acs_base_url_field'), { target: { value: 'https://test_url.com/' } });
+  expect(getByLabelText('acs_base_url_field')).toHaveAttribute('value', 'https://test_url.com/');
+  fireEvent.change(getByLabelText('acs_subpath_field'), { target: { value: 'test/repo1/,test/repo2/' } });
+
+  // Mock content credential data
+  const useContentCredentialSelectorMock = jest.spyOn(reactRedux, 'useSelector');
+  useContentCredentialSelectorMock.mockReturnValue(contentCredentialResult.results);
+  fireEvent.click(getByText('Next'));
+  expect(queryByText('Manual authentication')).not.toBeInTheDocument();
+  expect(queryByText('Content credentials')).toBeInTheDocument();
+  const noAuthRadio = getAllByRole('radio', { name: 'None' })[0];
+  fireEvent.click(noAuthRadio);
+  useContentCredentialSelectorMock.mockRestore();
+  fireEvent.click(getByText('Next'));
+  const addAcsButton = getAllByRole('button', { name: 'Add' })[0];
+  fireEvent.click(addAcsButton);
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(contentCredentialScope);
+  assertNockRequest(productScope);
+  assertNockRequest(smartProxyScope);
+  assertNockRequest(createScope, done);
+  act(done);
+});
+
 test('Can display create wizard and create simplified ACS', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
@@ -237,7 +342,7 @@ test('Can display create wizard and create simplified ACS', async (done) => {
   // First step: Select source
   await patientlyWaitFor(() => {
     expect(getByText('Add an alternate content source')).toBeInTheDocument();
-    expect(queryByText('Indicate the source type.')).toBeInTheDocument();
+    expect(queryByText('Alternate content sources define new locations to download content from at repository or smart proxy sync time.')).toBeInTheDocument();
   });
 
   // Choose ACS type, content_type defaults to yum

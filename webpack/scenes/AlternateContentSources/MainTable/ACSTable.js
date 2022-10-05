@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { capitalize } from 'lodash';
+import { capitalize, upperCase } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import {
@@ -302,7 +302,7 @@ const ACSTable = () => {
                     <Td>
                       <Text onClick={() => onClick(id)} component="a">{name}</Text>
                     </Td>
-                    <Td>{capitalize(acsType)}</Td>
+                    <Td>{acsType === 'rhui' ? upperCase(acsType) : capitalize(acsType)}</Td>
                     <Td><LastSync
                       startedAt={startedAt}
                       lastSync={lastTask}

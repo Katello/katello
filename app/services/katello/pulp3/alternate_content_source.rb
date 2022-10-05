@@ -22,7 +22,7 @@ module Katello
       end
 
       def smart_proxy_acs
-        if acs.alternate_content_source_type == 'custom'
+        if %w[custom rhui].include?(acs.alternate_content_source_type)
           ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id)
         else
           ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id, repository_id: repository.id)
@@ -66,7 +66,7 @@ module Katello
       end
 
       def ssl_remote_options
-        if acs.custom?
+        if acs.custom? || acs.rhui?
           {
             client_cert: acs.ssl_client_cert&.content,
             client_key: acs.ssl_client_key&.content,

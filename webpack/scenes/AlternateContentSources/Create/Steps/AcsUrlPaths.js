@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
+  ClipboardCopy,
   Form,
   FormGroup,
   TextInput,
@@ -12,24 +13,43 @@ import { areSubPathsValid, isValidUrl } from '../../helpers';
 
 const AcsUrlPaths = () => {
   const {
-    url, setUrl, subpaths, setSubpaths,
+    acsType, url, setUrl, subpaths, setSubpaths,
   } = useContext(ACSCreateContext);
 
   const subPathValidated = areSubPathsValid(subpaths) ? 'default' : 'error';
-  const urlValidated = isValidUrl(url) ? 'default' : 'error';
+  const [urlValidated, setUrlValidated] = React.useState('default');
+  const handleUrlChange = (newUrl, _event) => {
+    setUrl(newUrl);
+    if (isValidUrl(newUrl, acsType)) {
+      setUrlValidated('success');
+    } else {
+      setUrlValidated('error');
+    }
+  };
+
+  const baseURLplaceholder = acsType === 'rhui' ?
+    'https://rhui-server.example.com/pulp/content' :
+    'http:// or https://';
+  const helperTextInvalid = acsType === 'rhui' ?
+    'http://rhui-server.example.com/pulp/content or https://rhui-server.example.com/pulp/content' :
+    'http://, https:// or file://';
+  let headerDescription =
+    __('Enter in the base path and any subpaths that should be searched for alternate content.');
+  headerDescription = acsType === 'rhui' ?
+    `${headerDescription}${__(' The base path must be a web address pointing to the root RHUI content directory.')}` :
+    `${headerDescription}${__(' The base path can be a web address or a filesystem location.')}`;
 
   return (
     <>
       <WizardHeader
         title={__('URL and paths')}
-        description={__('Enter in the base path and any subpaths that should be searched for alternate content. ' +
-          'The base path can be a web address or a filesystem location.')}
+        description={headerDescription}
       />
       <Form>
         <FormGroup
           label={__('Base URL')}
           fieldId="acs_base_url"
-          helperTextInvalid="http://, https:// or file://"
+          helperTextInvalid={helperTextInvalid}
           validated={urlValidated}
           isRequired
         >
@@ -39,12 +59,24 @@ const AcsUrlPaths = () => {
             id="acs_base_url_field"
             name="acs_base_url_field"
             aria-label="acs_base_url_field"
-            placeholder="https:// or file://"
+            placeholder={baseURLplaceholder}
             value={url}
-            validated={url !== '' && urlValidated}
-            onChange={value => setUrl(value)}
+            validated={urlValidated}
+            onChange={handleUrlChange}
           />
         </FormGroup>
+        {acsType === 'rhui' &&
+        <>
+          {__('On the RHUA Instance, check the available repositories.')}
+          <ClipboardCopy hoverTip="Copy" clickTip="Copied" variant="inline-compact" isBlock>
+            rhui-manager repo list
+          </ClipboardCopy>
+          {__('Find the relative path for each RHUI repository and combine them in a comma-separated list.')}
+          <ClipboardCopy hoverTip="Copy" clickTip="Copied" variant="inline-compact" isBlock>
+            rhui-manager repo info --repo_id your_repo_id
+          </ClipboardCopy>
+        </>
+        }
         <FormGroup
           label={__('Subpaths')}
           type="string"

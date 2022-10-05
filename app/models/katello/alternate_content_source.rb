@@ -10,7 +10,7 @@ module Katello
 
     self.table_name = :katello_alternate_content_sources
 
-    ACS_TYPES = %w(custom simplified).freeze
+    ACS_TYPES = %w(custom simplified rhui).freeze
     CONTENT_TYPES = [::Katello::Repository::YUM_TYPE, ::Katello::Repository::FILE_TYPE].freeze
     AUDIT_REFRESH_ACTION = 'refresh'.freeze
 
@@ -31,8 +31,8 @@ module Katello
 
     validates :base_url, :subpaths, :verify_ssl, :upstream_username,
               :upstream_password, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key, if: :simplified?, absence: true
-    validates :base_url, if: :custom?, presence: true
-    validates :products, if: :custom?, absence: true
+    validates :base_url, if: -> { custom? || rhui? }, presence: true
+    validates :products, if: -> { custom? || rhui? }, absence: true
     validates :label, :uniqueness => true
     validates :name, :uniqueness => true
     validates :verify_ssl, if: :custom?, exclusion: [nil]
@@ -73,6 +73,10 @@ module Katello
 
     def simplified?
       alternate_content_source_type == 'simplified'
+    end
+
+    def rhui?
+      alternate_content_source_type == 'rhui'
     end
 
     def self.with_products(products)

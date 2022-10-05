@@ -1,7 +1,11 @@
-export const isValidUrl = (urlString) => {
+export const isValidUrl = (urlString, acsType = '') => {
   try {
     const urlFromString = new URL(urlString);
-    return (urlFromString.protocol === 'https:' || urlFromString.protocol === 'http:' || urlFromString.protocol === 'file:');
+    let valid = urlFromString.protocol === 'https:' || urlFromString.protocol === 'http:' || urlFromString.protocol === 'file:';
+    if (acsType === 'rhui') {
+      valid = valid && urlFromString.pathname === '/pulp/content';
+    }
+    return valid;
   } catch (e) {
     return false;
   }
