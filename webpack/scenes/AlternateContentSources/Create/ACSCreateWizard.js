@@ -97,7 +97,7 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
     id: 5,
     name: __('URL and paths'),
     component: <AcsUrlPaths />,
-    canJumpTo: acsType === 'custom' && (smartProxies.length),
+    canJumpTo: (acsType === 'custom' || acsType === 'rhui') && (smartProxies.length),
     enableNext: url !== '' && urlValidated !== 'error' && subPathValidated !== 'error',
   };
 
@@ -129,7 +129,7 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
     sourceTypeStep,
     nameStep,
     smartProxyStep,
-    ...(acsType === 'custom' ? [urlPathStep, credentialsStep] : []),
+    ...((acsType === 'custom' || acsType === 'rhui') ? [urlPathStep, credentialsStep] : []),
     ...(acsType === 'simplified' ? [productStep] : []),
     reviewStep,
     finishStep,

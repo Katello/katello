@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { capitalize } from 'lodash';
+import { capitalize, upperCase } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TextContent, TextList, TextListItem, TextListItemVariants, TextListVariants } from '@patternfly/react-core';
 import ACSCreateContext from '../ACSCreateContext';
@@ -34,7 +34,7 @@ const ACSReview = () => {
           </TextListItem>
           <TextListItem component={TextListItemVariants.dt}>{__('Source type')}</TextListItem>
           <TextListItem component={TextListItemVariants.dd}>
-            {capitalize(acsType)}
+            {acsType === 'rhui' ? upperCase(acsType) : capitalize(acsType)}
           </TextListItem>
           <TextListItem component={TextListItemVariants.dt}>{__('Description')}</TextListItem>
           <TextListItem component={TextListItemVariants.dd}>
@@ -52,7 +52,7 @@ const ACSReview = () => {
           <TextListItem component={TextListItemVariants.dd}>
             {useHttpProxies ? __('Yes') : __('No')}
           </TextListItem>
-          {acsType === 'custom' &&
+          {(acsType === 'custom' || acsType === 'rhui') &&
             <>
               <TextListItem component={TextListItemVariants.dt}>
                 {__('Base URL')}

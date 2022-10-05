@@ -18,7 +18,7 @@ import Loading from '../../../../components/Loading';
 
 const ACSCredentials = () => {
   const {
-    authentication, setAuthentication, username, setUsername, password, setPassword,
+    acsType, authentication, setAuthentication, username, setUsername, password, setPassword,
     sslCert, setSslCert, sslKey, setSslKey, caCert, setCACert,
     setSslCertName, setSslKeyName, setCACertName, verifySSL, setVerifySSL,
   } = useContext(ACSCreateContext);
@@ -32,13 +32,18 @@ const ACSCredentials = () => {
 
   const getCertName = id => contentCredentials?.filter(cc => Number(cc.id) === Number(id))[0]?.name;
 
+  const description = acsType === 'rhui' ?
+    __('Choose content credentials if required for this RHUI source.') :
+    __('Enter basic authentication information or choose content credentials if required for this source.');
+
   return (
     <>
       <WizardHeader
         title={__('Credentials')}
-        description={__('Enter basic authentication information or choose content credentials if required for this source.')}
+        description={description}
       />
       <Form>
+        {(acsType !== 'rhui') &&
         <Radio
           label={__('Manual authentication')}
           id="manual_auth"
@@ -53,6 +58,7 @@ const ACSCredentials = () => {
             setSslKeyName('');
           }}
         />
+        }
         {(authentication === 'manual') &&
           <>
             <FormGroup

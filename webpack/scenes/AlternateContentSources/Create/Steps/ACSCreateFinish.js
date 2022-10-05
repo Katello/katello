@@ -40,7 +40,7 @@ const ACSCreateFinish = () => {
 
   const acsTypeParams = useCallback((params, type) => {
     let acsParams = params;
-    if (type === 'custom') {
+    if (type === 'custom' || type === 'rhui') {
       acsParams = {
         base_url: url, verify_ssl: verifySSL, ssl_ca_cert_id: caCert, ...acsParams,
       };
