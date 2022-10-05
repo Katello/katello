@@ -269,6 +269,37 @@ module Katello
       [{ action: [_('Change Content Source'), '/change_host_content_source', false], priority: 100 }]
     end
 
+    def host_status_icon(status)
+      colours = [:green, :yellow, :red]
+
+      colour = colours[status] || :red
+
+      icons = {
+        green: "#{colour} host-status pficon pficon-ok status-ok",
+        yellow: "#{colour} host-status pficon pficon-info status-warn",
+        red: "#{colour} host-status pficon pficon-error-circle-o status-error"
+      }
+
+      "<span class=\"#{icons[colour]}\"></span>".html_safe
+    end
+
+    def errata_counts(host)
+      counts = host.content_facet_attributes&.errata_counts || {}
+      render partial: 'katello/hosts/errata_counts', locals: { counts: counts, host: host }
+    end
+
+    def host_registered_time(host)
+      return _('Never registered') unless host.subscription_facet_attributes&.registered_at
+
+      date_time_relative_value(host.subscription_facet_attributes.registered_at)
+    end
+
+    def host_checkin_time(host)
+      return _('Never checked in') unless host.subscription_facet_attributes&.last_checkin
+
+      date_time_relative_value(host.subscription_facet_attributes.last_checkin)
+    end
+
     private
 
     def hostgroup_content_facet(hostgroup, param_host)
