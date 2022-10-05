@@ -54,6 +54,8 @@ import {
   getHostRepositorySets,
   setContentOverrides,
 } from './RepositorySetsActions';
+
+import { selectOrganization } from '../../Cards/SystemPurposeCard/SystemPurposeSelectors';
 import { REPOSITORY_SETS_KEY, STATUSES, STATUS_TO_PARAM, PARAM_TO_FRIENDLY_NAME } from './RepositorySetsConstants.js';
 import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
 import './RepositorySetsTab.scss';
@@ -161,9 +163,13 @@ const RepositorySetsTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const {
     id: hostId,
-    subscription_status: subscriptionStatus,
     content_facet_attributes: contentFacetAttributes,
+    organization_id: orgId,
   } = hostDetails;
+  const organizationDetails = useSelector(state => selectOrganization(state, orgId));
+  const {
+    simple_content_access: simpleContentAccess,
+  } = organizationDetails;
   const canDoContentOverrides = can(
     editHosts,
     userPermissionsFromHostDetails({ hostDetails }),
@@ -179,7 +185,6 @@ const RepositorySetsTab = () => {
   } = contentFacet;
   const nonLibraryHost = contentViewDefault === false ||
     lifecycleEnvironmentLibrary === false;
-  const simpleContentAccess = (Number(subscriptionStatus) === 5);
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const dispatch = useDispatch();
