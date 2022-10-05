@@ -2,6 +2,7 @@ module Katello
   module Concerns
     module Api::V2::RegistrationControllerExtensions
       extend ActiveSupport::Concern
+      include ::Foreman::Controller::SmartProxyAuth
 
       def prepare_host
         if params['uuid']
@@ -35,13 +36,18 @@ module Katello
 
       def smart_proxy
         @smart_proxy ||= begin
-          proxy = params[:url] ? SmartProxy.unscoped.find_by(url: params[:url]) : SmartProxy.pulp_primary
+          proxy = params[:url] ? find_smart_proxy : SmartProxy.pulp_primary
 
           fail Foreman::Exception, _('Smart proxy content source not found!') unless proxy
           fail Foreman::Exception, _('Pulp 3 is not enabled on Smart proxy!') unless proxy.pulp3_enabled?
 
           proxy
         end
+      end
+
+      def find_smart_proxy
+        auth_smart_proxy
+        @detected_proxy
       end
     end
   end
