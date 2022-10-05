@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { capitalize } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TextContent, TextList, TextListItem, TextListItemVariants, TextListVariants } from '@patternfly/react-core';
 import ACSCreateContext from '../ACSCreateContext';
@@ -16,9 +17,14 @@ const ACSReview = () => {
   return (
     <>
       <WizardHeader
-        title={__('Review Details')}
-        description={__('Review the information below and click Add to add your source. ' +
-                'To edit details in previous steps, click Back or any step on the left.')}
+        title={__('Review details')}
+        description={
+          <>
+            {__('Review the information below and click ')}<strong>{__('Add')}</strong>{__(' to add your source. ' +
+                'To edit details in previous steps, click ')}<strong>{__('Back')}</strong>{__(' or any step on the left.')
+            }
+          </>
+        }
       />
       <TextContent>
         <TextList component={TextListVariants.dl}>
@@ -28,7 +34,7 @@ const ACSReview = () => {
           </TextListItem>
           <TextListItem component={TextListItemVariants.dt}>{__('Source type')}</TextListItem>
           <TextListItem component={TextListItemVariants.dd}>
-            {acsType}
+            {capitalize(acsType)}
           </TextListItem>
           <TextListItem component={TextListItemVariants.dt}>{__('Description')}</TextListItem>
           <TextListItem component={TextListItemVariants.dd}>
@@ -36,7 +42,7 @@ const ACSReview = () => {
           </TextListItem>
           <TextListItem component={TextListItemVariants.dt}>{__('Content type')}</TextListItem>
           <TextListItem component={TextListItemVariants.dd}>
-            {contentType}
+            {capitalize(contentType)}
           </TextListItem>
           <TextListItem component={TextListItemVariants.dt}>{__('Smart proxies')}</TextListItem>
           <TextListItem component={TextListItemVariants.dd}>
@@ -58,7 +64,7 @@ const ACSReview = () => {
               <TextListItem component={TextListItemVariants.dd}>
                 {verifySSL ? __('Yes') : __('No')}
               </TextListItem>
-              <TextListItem component={TextListItemVariants.dt}>{__('CA Cert')}</TextListItem>
+              <TextListItem component={TextListItemVariants.dt}>{__('SSL CA certificate')}</TextListItem>
               <TextListItem component={TextListItemVariants.dd}>
                 {caCertName}
               </TextListItem>
@@ -90,11 +96,11 @@ const ACSReview = () => {
                   <TextListItem component={TextListItemVariants.dd}>
                     {__('Content credential')}
                   </TextListItem>
-                  <TextListItem component={TextListItemVariants.dt}>{__('SSL Cert')}</TextListItem>
+                  <TextListItem component={TextListItemVariants.dt}>{__('SSL client certificate')}</TextListItem>
                   <TextListItem component={TextListItemVariants.dd}>
                     {sslCertName}
                   </TextListItem>
-                  <TextListItem component={TextListItemVariants.dt}>{__('Client key')}</TextListItem>
+                  <TextListItem component={TextListItemVariants.dt}>{__('SSL client key')}</TextListItem>
                   <TextListItem component={TextListItemVariants.dd}>
                     {sslKeyName}
                   </TextListItem>

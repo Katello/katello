@@ -33,6 +33,7 @@ import ACSCreateWizard from '../Create/ACSCreateWizard';
 import LastSync from '../../ContentViews/Details/Repositories/LastSync';
 import ACSExpandableDetails from '../Details/ACSExpandableDetails';
 import './ACSTable.scss';
+import Loading from '../../../components/Loading';
 
 const ACSTable = () => {
   const response = useSelector(selectAlternateContentSources);
@@ -49,6 +50,7 @@ const ACSTable = () => {
   const [expandedId, setExpandedId] = useState(acsId);
   const [isExpanded, setIsExpanded] = useState(false);
   const drawerRef = useRef(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (acsId) {
@@ -62,8 +64,15 @@ const ACSTable = () => {
   };
 
   const onDelete = (id) => {
-    dispatch(deleteACS(id, () =>
-      dispatch(getAlternateContentSources())));
+    setDeleting(true);
+    dispatch(deleteACS(id, () => {
+      setDeleting(false);
+      if (id.toString() === acsId.toString()) {
+        push('/labs/alternate_content_sources');
+      } else {
+        dispatch(getAlternateContentSources());
+      }
+    }, () => setDeleting(false)));
   };
 
   const onRefresh = (id) => {
@@ -186,7 +195,9 @@ const ACSTable = () => {
   const emptySearchTitle = __('No matching alternate content sources found');
   const emptySearchBody = __('Try changing your search settings.');
   /* eslint-disable react/no-array-index-key */
-
+  if (deleting) {
+    return <Loading loadingText={__('Please wait...')} />;
+  }
   return (
     <Drawer isExpanded={isExpanded} isInline onExpand={onExpand}>
       <DrawerContent panelContent={<PanelContent />}>

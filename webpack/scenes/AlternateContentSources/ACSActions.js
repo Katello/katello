@@ -53,11 +53,12 @@ export const createACS = params => post({
   errorToast: error => acsErrorToast(error),
 });
 
-export const deleteACS = (acsId, handleSuccess) => APIActions.delete({
+export const deleteACS = (acsId, handleSuccess, handleError) => APIActions.delete({
   type: API_OPERATIONS.DELETE,
   key: DELETE_ACS_KEY,
   url: api.getApiUrl(`/alternate_content_sources/${acsId}`),
   handleSuccess,
+  handleError,
   successToast: () => __('Alternate content source deleted'),
   errorToast: error => __(`Something went wrong while deleting this alternate content source! ${getResponseErrorMsgs(error.response)}`),
 });

@@ -101,7 +101,7 @@ const ACSExpandableDetails = () => {
                 isSmall
                 icon={<PencilAltIcon />}
                 onClick={() => setEditDetailsModalOpen(true)}
-              >{__('Edit Details')}
+              >{__('Edit details')}
               </Button>
             </SplitItem>
           </Split>

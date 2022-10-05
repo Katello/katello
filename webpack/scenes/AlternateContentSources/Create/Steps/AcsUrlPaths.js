@@ -9,11 +9,15 @@ import {
 } from '@patternfly/react-core';
 import ACSCreateContext from '../ACSCreateContext';
 import WizardHeader from '../../../ContentViews/components/WizardHeader';
+import { areSubPathsValid, isValidUrl } from '../../helpers';
 
 const AcsUrlPaths = () => {
   const {
     url, setUrl, subpaths, setSubpaths, verifySSL, setVerifySSL,
   } = useContext(ACSCreateContext);
+
+  const subPathValidated = areSubPathsValid(subpaths) ? 'default' : 'error';
+  const urlValidated = isValidUrl(url) ? 'default' : 'error';
 
   return (
     <>
@@ -25,30 +29,35 @@ const AcsUrlPaths = () => {
       <Form>
         <FormGroup
           label={__('Base URL')}
-          type="string"
           fieldId="acs_base_url"
+          helperTextInvalid="http://, https:// or file://"
+          validated={urlValidated}
           isRequired
         >
           <TextInput
             isRequired
-            type="text"
+            type="url"
             id="acs_base_url_field"
             name="acs_base_url_field"
             aria-label="acs_base_url_field"
             placeholder="https:// or file://"
             value={url}
-            onChange={(value) => { setUrl(value); }}
+            validated={url !== '' && urlValidated}
+            onChange={value => setUrl(value)}
           />
         </FormGroup>
         <FormGroup
           label={__('Subpaths')}
           type="string"
           fieldId="acs_subpaths"
+          helperTextInvalid={__('Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.')}
+          validated={subPathValidated}
         >
           <TextArea
             placeholder="test/repo1/, test/repo2/,"
             value={subpaths}
-            onChange={(value) => { setSubpaths(value); }}
+            validated={subPathValidated}
+            onChange={value => setSubpaths(value)}
             name="acs_subpath_field"
             id="acs_subpath_field"
             aria-label="acs_subpath_field"
