@@ -1,0 +1,46 @@
+<a href="/content_hosts/<%= host.id %>/errata">
+  <span class="aligned-errata-count">
+    <span class="errata-count <%= counts[:security].to_i.positive? ? 'red' : 'black' %>">
+      <span>
+        <%= counts[:security] || 0 %>
+      </span>
+      <i class="fa fa-warning inline-icon" title="<%= _('Security') %>"></i>
+    </span>
+    <span class="errata-count <%= counts[:bugfix].to_i.positive? ? 'yellow' : 'black' %>">
+      <span>
+        <%= counts[:bugfix] || 0 %>
+      </span>
+      <i class="fa fa-bug inline-icon" title="<%= _('Bug Fix') %>"></i>
+    </span>
+    <span class="errata-count <%= counts[:enhancement].to_i.positive? ? 'yellow' : 'black' %>">
+      <span>
+        <%= counts[:enhancement] || 0 %>
+      </span>
+      <i class="fa fa-plus-square inline-icon" title="<%= _('Enhancement') %>"></i>
+    </span>
+  </span>
+</a>
+<% if !host.operatingsystem_name&.match(/Debian|Ubuntu/) %>
+<a href="/content_hosts/<%= host.id %>/packages/applicable">
+  <span class="aligned-errata-count">
+    <span class="errata-count <%= host.content_facet_attributes&.upgradable_rpm_count&.positive? ? 'green' : 'black' %>"
+      <span>
+        <%= host.content_facet_attributes&.upgradable_rpm_count || 0 %>
+      </span>
+      <i class="fa fa-cube inline-icon" title="<%= _('RPM package updates') %>"></i>
+    </span>
+  </span>
+</a>
+<% end %>
+<% if host.operatingsystem_name&.match(/Debian|Ubuntu/) %>
+<a href="/content_hosts/<%= host.id %>/debs/applicable">
+  <span class="aligned-errata-count">
+    <span class="errata-count <%= host.content_facet_attributes&.upgradable_deb_count&.positive? ? 'green' : 'black' %>"
+      <span>
+        <%= host.content_facet_attributes&.upgradable_deb_count || 0 %>
+      </span>
+      <i class="fa fa-cube inline-icon" title="<%= _('DEB package updates') %>"></i>
+    </span>
+  </span>
+</a>
+<% end %>

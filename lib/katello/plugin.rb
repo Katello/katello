@@ -265,6 +265,29 @@ Foreman::Plugin.register :katello do
       :onlyif => proc { |proxy| proxy.pulp_primary? }
   end
 
+  extend_page 'hosts/_list' do |context|
+    context.with_profile :content, _('Content'), default: false do
+      common_th_class = 'hidden-tablet hidden-xs'
+      common_td_class = "#{common_th_class} ellipsis"
+      use_pagelet :hosts_table_column_header, :name
+      use_pagelet :hosts_table_column_content, :name
+      add_pagelet :hosts_table_column_header, key: :subscription_status, label: _('Subscription status'), sortable: true, class: common_th_class, width: '10%'
+      add_pagelet :hosts_table_column_content, key: :subscription_status, class: common_td_class, callback: ->(host) { host_status_icon(host.subscription_global_status) }
+      add_pagelet :hosts_table_column_header, key: :installable_updates, label: _('Installable updates'), class: common_th_class, width: '15%'
+      add_pagelet :hosts_table_column_content, key: :installable_updates, class: common_td_class, callback: ->(host) { errata_counts(host) }
+      use_pagelet :hosts_table_column_header, :os_title
+      use_pagelet :hosts_table_column_content, :os_title
+      add_pagelet :hosts_table_column_header, key: :lifecycle_environment, label: _('Lifecycle environment'), sortable: true, class: common_th_class, width: '10%'
+      add_pagelet :hosts_table_column_content, key: :lifecycle_environment, class: common_td_class, callback: ->(host) { host.content_facet_attributes&.lifecycle_environment&.name }
+      add_pagelet :hosts_table_column_header, key: :content_view, label: _('Content view'), sortable: true, class: common_th_class, width: '10%'
+      add_pagelet :hosts_table_column_content, key: :content_view, class: common_td_class, callback: ->(host) { host.content_facet_attributes&.content_view&.name }
+      add_pagelet :hosts_table_column_header, key: :registered_at, label: _('Registered'), sortable: true, class: common_th_class, width: '10%'
+      add_pagelet :hosts_table_column_content, key: :registered_at, class: common_td_class, callback: ->(host) { host_registered_time(host) }
+      add_pagelet :hosts_table_column_header, key: :last_checkin, label: _('Last checkin'), sortable: true, class: common_th_class, width: '10%'
+      add_pagelet :hosts_table_column_content, key: :last_checkin, class: common_td_class, callback: ->(host) { host_checkin_time(host) }
+    end
+  end
+
   ::Katello::HostStatusManager::STATUSES.each do |status_class|
     register_custom_status(status_class)
   end
