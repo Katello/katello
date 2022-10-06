@@ -3,7 +3,7 @@ module Actions
     module Repository
       class Repair < Pulp3::AbstractAsyncTask
         include Helpers::Presenter
-        def plan(repository_id, smart_proxy)
+        def plan(repository_id, smart_proxy = SmartProxy.pulp_primary)
           plan_self(:repository_id => repository_id, :smart_proxy_id => smart_proxy.id)
         end
 

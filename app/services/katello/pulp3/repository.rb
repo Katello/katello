@@ -55,7 +55,7 @@ module Katello
       end
 
       def repair(repository_version_href)
-        data = api.repository_version_class.new
+        data = api.repair_class.new
         api.repository_versions_api.repair(repository_version_href, data)
       end
 
