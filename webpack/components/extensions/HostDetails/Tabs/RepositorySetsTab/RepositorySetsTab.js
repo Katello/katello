@@ -55,7 +55,9 @@ import {
   setContentOverrides,
 } from './RepositorySetsActions';
 
-import { selectOrganization } from '../../Cards/SystemPurposeCard/SystemPurposeSelectors';
+import { selectOrganization, selectOrganizationStatus } from '../../Cards/SystemPurposeCard/SystemPurposeSelectors';
+import { getOrganization } from '../../Cards/SystemPurposeCard/SystemPurposeActions';
+
 import { REPOSITORY_SETS_KEY, STATUSES, STATUS_TO_PARAM, PARAM_TO_FRIENDLY_NAME } from './RepositorySetsConstants.js';
 import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
 import './RepositorySetsTab.scss';
@@ -166,7 +168,10 @@ const RepositorySetsTab = () => {
     content_facet_attributes: contentFacetAttributes,
     organization_id: orgId,
   } = hostDetails;
+
   const organizationDetails = useSelector(state => selectOrganization(state, orgId));
+  const orgStatus = useSelector(state => selectOrganizationStatus(state, orgId));
+
   const {
     simple_content_access: simpleContentAccess,
   } = organizationDetails;
@@ -251,6 +256,12 @@ const RepositorySetsTab = () => {
     [hostId, toggleGroupState, limitToEnvironment,
       simpleContentAccess, apiSortParams, statusSelected, STATUS_LABEL],
   );
+
+  useEffect(() => {
+    if (orgId && orgStatus !== STATUS.RESOLVED) {
+      dispatch(getOrganization({ orgId }));
+    }
+  }, [orgId, orgStatus, dispatch]);
 
   const response = useSelector(state => selectAPIResponse(state, REPOSITORY_SETS_KEY));
   const { results, error: errorSearchBody, ...metadata } = response;
@@ -446,6 +457,7 @@ const RepositorySetsTab = () => {
   } else {
     alertText = nonScaAlert;
   }
+
   return (
     <div>
       <div id="repo-sets-tab">
