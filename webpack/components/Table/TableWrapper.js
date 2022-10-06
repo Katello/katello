@@ -19,6 +19,7 @@ import { orgId } from '../../services/api';
 const TableWrapper = ({
   actionButtons,
   alwaysShowActionButtons,
+  alwaysShowToggleGroup,
   toggleGroup,
   children,
   metadata,
@@ -62,7 +63,7 @@ const TableWrapper = ({
   const hideToolbar = !searchQuery && !filtersAreActive &&
     allTableProps.status === STATUS.RESOLVED && total === 0;
   const showActionButtons = actionButtons && (alwaysShowActionButtons || !hideToolbar);
-  const showToggleGroup = toggleGroup && !hideToolbar;
+  const showToggleGroup = toggleGroup && (alwaysShowToggleGroup || !hideToolbar);
   const paginationParams = useCallback(() =>
     ({ per_page: perPage, page }), [perPage, page]);
   const prevRequest = useRef({});
@@ -275,6 +276,7 @@ TableWrapper.propTypes = {
   searchPlaceholderText: PropTypes.string,
   actionButtons: PropTypes.node,
   alwaysShowActionButtons: PropTypes.bool,
+  alwaysShowToggleGroup: PropTypes.bool,
   toggleGroup: PropTypes.node,
   children: PropTypes.node,
   // additionalListeners are anything that should trigger another API call, e.g. a filter
@@ -319,6 +321,7 @@ TableWrapper.defaultProps = {
   searchPlaceholderText: undefined,
   actionButtons: null,
   alwaysShowActionButtons: true,
+  alwaysShowToggleGroup: false,
   toggleGroup: null,
   displaySelectAllCheckbox: false,
   selectedCount: 0,

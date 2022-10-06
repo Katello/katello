@@ -431,6 +431,7 @@ export const ErrataTab = () => {
           displaySelectAllCheckbox={showActions}
           requestKey={HOST_ERRATA_KEY}
           alwaysShowActionButtons={false}
+          alwaysShowToggleGroup={hostIsNonLibrary}
         >
           <Thead>
             <Tr>
