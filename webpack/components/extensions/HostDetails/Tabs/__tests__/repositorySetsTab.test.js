@@ -8,7 +8,6 @@ import mockRepoSetData from './repositorySets.fixtures.json';
 import mockBookmarkData from './bookmarks.fixtures.json';
 import mockContentOverride from './contentOverrides.fixtures.json';
 
-
 jest.mock('../../hostDetailsHelpers', () => ({
   ...jest.requireActual('../../hostDetailsHelpers'),
   userPermissionsFromHostDetails: () => ({
@@ -33,8 +32,15 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
       HOST_DETAILS: {
         response: {
           id: 1,
+          organization_id: 1,
           content_facet_attributes: { ...facetAttributes },
-          subscription_status: 5, // Simple Content Access
+        },
+        status: 'RESOLVED',
+      },
+      ORGANIZATION_1: {
+        response: {
+          id: 1,
+          simple_content_access: true,
         },
         status: 'RESOLVED',
       },
@@ -182,7 +188,6 @@ test('Toggle Group shows if it\'s the library environment but a non-default cont
     queryByLabelText,
     getByText,
   } = renderWithRedux(<RepositorySetsTab />, options);
-
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
   expect(queryByLabelText('Limit to environment')).toBeInTheDocument();
