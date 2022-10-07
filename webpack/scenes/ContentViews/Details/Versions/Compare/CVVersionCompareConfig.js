@@ -84,7 +84,8 @@ export default ({
     {
       name: __('Repositories'),
       route: 'repositories',
-      getCountKey: item => item?.repositories?.length,
+      getCountKey: (itemVersionOne, itemVersionTwo) =>
+          itemVersionOne?.repositories?.length || itemVersionTwo?.repositories?.length,
       responseSelector: state =>
         selectRepositoriesComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>

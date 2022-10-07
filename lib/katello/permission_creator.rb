@@ -83,6 +83,7 @@ module Katello
                    'katello/api/v2/errata' => [:index, :show, :auto_complete_search, :compare],
                    'katello/api/v2/module_streams' => [:index, :show, :auto_complete_search, :compare],
                    'katello/api/v2/ansible_collections' => [:index, :show, :auto_complete_search, :compare],
+                   'katello/api/v2/repositories' => [:index, :show, :auto_complete_search, :compare],
                    'katello/content_views' => [:auto_complete, :auto_complete_search],
                    'katello/errata' => [:short_details, :auto_complete],
                    'katello/packages' => [:details, :auto_complete],

@@ -250,8 +250,8 @@ module Katello
       archived_version_repos = Katello::Repository.where(:content_view_version_id => @versions&.pluck(:id))&.archived
       repos = Katello::Repository.where(id: archived_version_repos&.pluck(:library_instance_id))
       repos = repos.where(:root_id => @repo.root_id) if @repo
-      collection = restrict_comparison(repos, @versions, params[:restrict_comparison])
-      collection = scoped_search(collection.distinct, :name, :asc)
+      repositories = restrict_comparison(repos, @versions, params[:restrict_comparison])
+      collection = scoped_search(repositories.distinct, :name, :asc)
       collection[:results] = collection[:results].map { |item| ContentViewVersionComparePresenter.new(item, @versions, @repo) }
       respond_for_index(:collection => collection)
     end

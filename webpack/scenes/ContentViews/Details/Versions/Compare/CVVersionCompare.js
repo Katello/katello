@@ -11,6 +11,7 @@ import CVVersionCompareTable from './CVVersionCompareTable';
 import getContentViewDetails, { getContentViewVersionDetails } from '../../ContentViewDetailActions';
 import Loading from '../../../../../components/Loading';
 import './CVVersionCompare.scss';
+import EmptyStateMessage from '../../../../../components/Table/EmptyStateMessage';
 
 const CVVersionCompare = ({
   cvId,
@@ -125,6 +126,13 @@ const CVVersionCompare = ({
               />
             </div>
           </div >) || <Loading />)
+      }
+      {!showTabs &&
+      <EmptyStateMessage
+        title={__('Empty content view versions')}
+        body={__('No content in selected versions.')}
+        search
+      />
       }
     </>
   );

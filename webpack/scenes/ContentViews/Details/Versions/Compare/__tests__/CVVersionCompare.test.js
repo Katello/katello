@@ -10,6 +10,7 @@ import cvVersionsData from './contentViewVersions.fixtures.json';
 import cvDetailsData from './contentViewDetails.fixtures.json';
 import environmentPathsData from '../../../../Publish/__tests__/environmentPaths.fixtures.json';
 import CVVersionCompare from '../CVVersionCompare';
+import cvCompareRepositoriesData from './cvCompareRepositories.fixtures.json';
 import cvVersionRPMPackagesCompareAllContentData from './RPMPackagesCompareAllContentData.fixtures.json';
 import cvVersionErrataCompareAllContentData from './ErrataCompareAllContentData.fixtures.json';
 import cvVersionPackageGroupsCompareAllContentData from './PackageGroupsCompareAllContentData.fixtures.json';
@@ -88,6 +89,15 @@ afterEach(() => {
 });
 
 const testConfigAllContentTypes = [
+  {
+    name: 'Repositories',
+    autoCompleteUrl: '/repositories/auto_complete_search',
+    dataUrl: api.getApiUrl('/repositories/compare'),
+    data: cvCompareRepositoriesData,
+    textQuery: [
+      head(cvCompareRepositoriesData.results).name,
+      last(cvCompareRepositoriesData.results).name],
+  },
   {
     name: 'RPM packages',
     countKey: 'rpm_count',
@@ -182,6 +192,15 @@ const testConfigAllContentTypes = [
 
 const testConfigThreeContentTypes = [
   {
+    name: 'Repositories',
+    autoCompleteUrl: '/repositories/auto_complete_search',
+    dataUrl: api.getApiUrl('/repositories/compare'),
+    data: cvCompareRepositoriesData,
+    textQuery: [
+      head(cvCompareRepositoriesData.results).name,
+      last(cvCompareRepositoriesData.results).name],
+  },
+  {
     name: 'RPM packages',
     countKey: 'rpm_count',
     autoCompleteUrl: '/packages/auto_complete_search',
@@ -216,6 +235,13 @@ const emptyContentViewByText = contentType => `No matching ${contentType} found.
 
 const testConfigViewByDifferent = [
   {
+    name: 'Repositories',
+    autoCompleteUrl: '/repositories/auto_complete_search',
+    dataUrl: api.getApiUrl('/repositories/compare'),
+    data: cvVersionEmptyContent,
+    textQuery: emptyContentViewByText('Repositories'),
+  },
+  {
     name: 'RPM packages',
     countKey: 'rpm_count',
     autoCompleteUrl: '/packages/auto_complete_search',
@@ -244,6 +270,15 @@ const testConfigViewByDifferent = [
 ];
 
 const testConfigViewBySame = [
+  {
+    name: 'Repositories',
+    autoCompleteUrl: '/repositories/auto_complete_search',
+    dataUrl: api.getApiUrl('/repositories/compare'),
+    data: cvCompareRepositoriesData,
+    textQuery: [
+      head(cvCompareRepositoriesData.results).name,
+      last(cvCompareRepositoriesData.results).name],
+  },
   {
     name: 'RPM packages',
     countKey: 'rpm_count',
@@ -564,10 +599,15 @@ test('Can select viewing by "Different" in the dropdown and see the content in e
     testConfigViewByDifferent.forEach(({ name }) => {
       expect(queryByText(name)).toBeTruthy();
     });
-    expect(getByText('No matching RPM packages found.')).toBeTruthy();
-    (testConfigViewByDifferent.find(({ name }) => name === 'Files')).textQuery.forEach(query => expect(queryAllByText(query)).toBeTruthy());
+    expect(getByText('No matching Repositories found.')).toBeTruthy();
   });
 
+  (testConfigViewByDifferent.find(({ name }) => name === 'Files')).textQuery.forEach(query => expect(queryAllByText(query)).toBeTruthy());
+
+  fireEvent.click(getByText('RPM packages'));
+  await patientlyWaitFor(() => {
+    expect(getByText('No matching RPM packages found.')).toBeTruthy();
+  });
   fireEvent.click(getByText('Errata'));
   await patientlyWaitFor(() => {
     expect(getByText('No matching Errata found.')).toBeTruthy();
