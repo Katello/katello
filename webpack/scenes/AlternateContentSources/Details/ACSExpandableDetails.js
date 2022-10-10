@@ -207,7 +207,7 @@ const ACSExpandableDetails = () => {
               <InactiveText text="N/A" />
                             }
             </List>
-            <TextContent className="margin-0-24">
+            <TextContent className="margin-0-24 expandable-section-text" style={{ marginTop: '24px' }}>
               <TextList component={TextListVariants.dl}>
                 <TextListItem component={TextListItemVariants.dt}>
                   {__('Use HTTP Proxies')}
@@ -329,15 +329,6 @@ const ACSExpandableDetails = () => {
                   >
                     {subpaths.join()}
                   </TextListItem>
-                  <TextListItem component={TextListItemVariants.dt}>
-                    {__('Verify SSL')}
-                  </TextListItem>
-                  <TextListItem
-                    aria-label="verifySSL_value"
-                    component={TextListItemVariants.dd}
-                  >
-                    {verifySsl ? 'true' : 'false'}
-                  </TextListItem>
                 </TextList>
               </TextContent>
             </ExpandableSection>
@@ -379,6 +370,15 @@ const ACSExpandableDetails = () => {
             >
               <TextContent className="margin-0-24 expandable-section-text">
                 <TextList component={TextListVariants.dl}>
+                  <TextListItem component={TextListItemVariants.dt}>
+                    {__('Verify SSL')}
+                  </TextListItem>
+                  <TextListItem
+                    aria-label="verifySSL_value"
+                    component={TextListItemVariants.dd}
+                  >
+                    {verifySsl ? 'true' : 'false'}
+                  </TextListItem>
                   <TextListItem component={TextListItemVariants.dt}>
                     {__('SSL CA certificate')}
                   </TextListItem>

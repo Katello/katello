@@ -36,6 +36,7 @@ const versionDetails = versionId => api.getApiUrl(`/content_view_versions/${vers
 const autocompleteUrl = '/content_view_versions/auto_complete_search';
 const withCVRoute = component => <Route path="/content_views/:id">{component}</Route>;
 const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
+const sortedRpmPackagesPath = api.getApiUrl('/packages/compare?content_view_version_ids[]=15&content_view_version_ids[]=17&restrict_comparison=all&sort_by=nvra&sort_order=desc&per_page=20&page=1');
 const renderOptions = {
   initialState: {
     API: {
@@ -309,7 +310,7 @@ const testConfigViewBySame = [
   },
 ];
 
-test('Can make an API call and show comparison of two versions with all content types', async (done) => {
+test('Can make an API call and show comparison of two versions with all content types and sort tables', async (done) => {
   const autoCompleteContentTypesScope = testConfigAllContentTypes.map(({ autoCompleteUrl }) =>
     mockAutocomplete(nockInstance, autoCompleteUrl));
 
@@ -329,6 +330,10 @@ test('Can make an API call and show comparison of two versions with all content 
     .get(versionDetails(17))
     .query(true)
     .reply(200, versionTwoDetailsData);
+  const sortedRpmTabScope = nockInstance
+    .get(sortedRpmPackagesPath)
+    .reply(200, cvCompareRepositoriesData);
+
   const { queryByText, queryAllByText, getAllByText } = renderWithRedux(
     withCVRoute(<CVVersionCompare
       cvId={4}
@@ -362,12 +367,20 @@ test('Can make an API call and show comparison of two versions with all content 
     });
   });
 
+  // Can sort rendered table
+  const rpmTab = queryByText('RPM packages');
+  fireEvent.click(rpmTab);
+  await patientlyWaitFor(() => {
+    expect(queryByText('Name')).toBeTruthy();
+  });
+  fireEvent.click(queryByText('Name'));
 
   assertNockRequest(scopeCVDetails);
   assertNockRequest(scopeVersionOneDetails);
   assertNockRequest(scopeVersionTwoDetails);
   scopeContentTypes.map(cv => assertNockRequest(cv));
   autoCompleteContentTypesScope.map(cv => assertNockRequest(cv));
+  assertNockRequest(sortedRpmTabScope);
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
   act(done);

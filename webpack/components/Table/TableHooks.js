@@ -281,6 +281,10 @@ export const useTableSort = ({
   const [activeSortColumn, setActiveSortColumn] = useState(translatedInitialSortColumnName);
   const [activeSortDirection, setActiveSortDirection] = useState('asc');
 
+  if (!allColumns.includes(activeSortColumn)) {
+    setActiveSortColumn(translatedInitialSortColumnName);
+  }
+
   // Patternfly sort function
   const onSort = (_event, index, direction) => {
     setActiveSortColumn(allColumns?.[index]);

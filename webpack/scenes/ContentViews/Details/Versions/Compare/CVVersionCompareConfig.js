@@ -120,6 +120,10 @@ export default ({
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],
+      sortConfig: {
+        [__('Name')]: 'name',
+        [__('Type')]: 'content_type',
+      },
     },
     {
       name: __('RPM packages'),
@@ -151,6 +155,12 @@ export default ({
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],
+      sortConfig: {
+        [__('Name')]: 'nvra',
+        [__('Version')]: 'version',
+        [__('Release')]: 'release',
+        [__('Arch')]: 'arch',
+      },
     },
     {
       name: __('RPM package groups'),
@@ -168,6 +178,9 @@ export default ({
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],
+      sortConfig: {
+        [__('Name')]: 'name',
+      },
     },
     {
       name: __('Files'),
@@ -190,6 +203,9 @@ export default ({
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],
+      sortConfig: {
+        [__('Name')]: 'name',
+      },
     },
     {
       name: __('Errata'),
@@ -247,6 +263,11 @@ export default ({
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],
+      sortConfig: {
+        [__('Errata ID')]: 'errata_id',
+        [__('Title')]: 'title',
+        [__('Type')]: 'type',
+      },
     },
     {
       name: __('Module streams'),
@@ -273,6 +294,13 @@ export default ({
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],
+      sortConfig: {
+        [__('Name')]: 'name',
+        [__('Stream')]: 'stream',
+        [__('Version')]: 'version',
+        [__('Context')]: 'context',
+        [__('Arch')]: 'arch',
+      },
     },
     {
       name: __('Deb packages'),
@@ -297,6 +325,11 @@ export default ({
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],
+      sortConfig: {
+        [__('Name')]: 'name',
+        [__('Version')]: 'version',
+        [__('Architecture')]: 'architecture',
+      },
     },
     {
       name: __('Container tags'),
@@ -327,6 +360,9 @@ export default ({
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],
+      sortConfig: {
+        [__('Name')]: 'name',
+      },
     },
     ...ContentConfig.filter(config => !(config.names.pluralLabel === 'ostree_refs')).map(({
       names: { pluralLowercase, pluralLabel, singularLabel },
@@ -353,6 +389,9 @@ export default ({
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],
+      sortConfig: {
+        [__('Name')]: 'name',
+      },
     })),
   ]);
 };

@@ -14,6 +14,7 @@ import {
   ModalVariant,
   Radio,
   TextInput,
+  Switch,
 } from '@patternfly/react-core';
 import { editACS, getACSDetails } from '../../ACSActions';
 import {
@@ -31,6 +32,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
     ssl_client_key: sslClientKey,
     upstream_username: username,
     upstream_password_exists: passwordExists,
+    verify_ssl: verifySsl,
   } = acsDetails;
   const dispatch = useDispatch();
   const contentCredentials = useSelector(selectContentCredentials);
@@ -40,6 +42,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
   const [acsCAcert, setAcsCAcert] = useState(sslCACert?.id);
   const [acsSslClientCert, setAcsSslClientCert] = useState(sslClientCert?.id);
   const [acsSslClientKey, setAcsSslClientKey] = useState(sslClientKey?.id);
+  const [acsVerifySSL, setAcsVerifySSL] = useState(verifySsl);
   const getAuthenticationState = () => {
     if (username) {
       return 'manual';
@@ -62,6 +65,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
     setSaving(true);
     let params = {
       ssl_ca_cert_id: acsCAcert,
+      verify_ssl: acsVerifySSL,
     };
 
     if (authentication === 'credentials') {
@@ -124,6 +128,14 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
         onSubmit();
       }}
       >
+        <FormGroup label={__('Verify SSL')} fieldId="verify_ssl">
+          <Switch
+            id="verify-ssl-switch"
+            aria-label="verify-ssl-switch"
+            isChecked={acsVerifySSL}
+            onChange={checked => setAcsVerifySSL(checked)}
+          />
+        </FormGroup>
         <FormGroup
           label={__('SSL CA certificate')}
           type="string"
@@ -322,6 +334,7 @@ ACSEditCredentials.propTypes = {
     ssl_client_key: PropTypes.shape({ id: PropTypes.number }),
     upstream_username: PropTypes.string,
     upstream_password_exists: PropTypes.bool,
+    verify_ssl: PropTypes.bool,
   }),
 };
 
@@ -335,6 +348,7 @@ ACSEditCredentials.defaultProps = {
     ssl_client_key: { id: undefined },
     upstream_username: undefined,
     upstream_password_exists: false,
+    verify_ssl: false,
   },
 };
 

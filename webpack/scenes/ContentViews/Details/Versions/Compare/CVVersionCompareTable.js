@@ -7,6 +7,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Tr, Th, Tbody, Td, Thead } from '@patternfly/react-table';
 import { TableType } from './CVVersionCompareConfig';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
+import { useTableSort } from '../../../../../components/Table/TableHooks';
 
 const CVVersionCompareTable = ({
   tableConfig: {
@@ -14,16 +15,30 @@ const CVVersionCompareTable = ({
     responseSelector,
     statusSelector,
     autocompleteEndpoint,
-    fetchItems,
+    fetchItems: fetchItemsSorted,
     columnHeaders,
     disableSearch,
+    sortConfig,
   }, versionOne, versionTwo, currentActiveKey, selectedViewBy,
 }) => {
   const [searchQuery, updateSearchQuery] = useState('');
+  const {
+    pfSortParams, apiSortParams,
+    activeSortColumn, activeSortDirection,
+  } = useTableSort({
+    allColumns: columnHeaders.map(header => header?.title),
+    columnsToSortParams: sortConfig,
+    initialSortColumnName: Object.keys(sortConfig)[0],
+  });
 
   const response = useSelector(responseSelector);
   const { results, ...metadata } = response;
   const status = useSelector(statusSelector);
+  const fetchItems = params =>
+    fetchItemsSorted({
+      ...apiSortParams,
+      ...params,
+    });
   return (
     <TableWrapper
       {...{
@@ -34,9 +49,11 @@ const CVVersionCompareTable = ({
         autocompleteEndpoint,
         disableSearch,
       }}
-      ouiaId="content-view-version-comparison-table"
+      key={`cvv-comparison-table-${name}`}
+      ouiaId={`cvv-comparison-table-${name}`}
       fetchItems={fetchItems}
-      additionalListeners={[versionOne, versionTwo, currentActiveKey, selectedViewBy]}
+      additionalListeners={[versionOne, versionTwo, currentActiveKey,
+        selectedViewBy, activeSortColumn, activeSortDirection]}
       emptySearchTitle={__(`Your search returned no matching ${name}.`)}
       emptySearchBody={__('Try changing your search criteria.')}
       emptyContentTitle={__(`No matching ${name} found.`)}
@@ -46,7 +63,14 @@ const CVVersionCompareTable = ({
       <Thead>
         <Tr ouiaId="column-headers">
           {columnHeaders.map(({ title }) =>
-            <Th key={`${title}-header`}>{title}</Th>)}
+            (
+              <Th
+                key={`${title}-header`}
+                sort={sortConfig[title] ? pfSortParams(title) : undefined}
+              >
+                {title}
+              </Th>
+            ))}
         </Tr>
       </Thead>
       <Tbody>
