@@ -20,12 +20,33 @@ module Katello
         assert content_credential.valid?
       end
 
-      it 'should be destroyable' do
+      it 'should be destroyable when not attached to a product or root repository' do
         content_credential = ContentCredential.create!(:name => "Gpg Key 1", :content => @test_gpg_content, :organization => @organization)
-        product = katello_products(:fedora)
+        assert_not_equal content_credential.destroy, false
+      end
+
+      it 'should not be destroyable when attached to a product' do
+        content_credential = ContentCredential.create!(:name => "Gpg Key 1", :content => @test_gpg_content, :organization => @organization)
+        product = katello_products(:empty_product)
         product.gpg_key = content_credential
         product.save!
-        assert_not_equal content_credential.destroy, false
+        assert_raises(ActiveRecord::InvalidForeignKey) { content_credential.destroy }
+        product.destroy
+        assert_nothing_raised { content_credential.destroy }
+      end
+
+      it 'should not be destroyable when attached to a root repository' do
+        content_credential = ContentCredential.create!(:name => "Gpg Key 1", :content => @test_gpg_content, :organization => @organization)
+        product = katello_products(:empty_product)
+        repo = build(:katello_root_repository,
+                      :product => product,
+                      :name => 'pizza',
+                      :label => 'another_label')
+        repo.gpg_key = content_credential
+        repo.save!
+        assert_raises(ActiveRecord::DeleteRestrictionError) { content_credential.destroy }
+        repo.destroy
+        assert_nothing_raised { content_credential.destroy }
       end
 
       it "should be unsuccessful without content" do

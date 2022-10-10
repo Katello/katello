@@ -40,9 +40,15 @@ angular.module('Bastion.content-credentials').controller('ContentCredentialDetai
         };
 
         $scope.removeContentCredential = function (contentCredential) {
-            contentCredential.$delete(function () {
+            var deferred = $q.defer();
+            contentCredential.$delete(function (response) {
+                deferred.resolve(response);
                 $scope.transitionTo('content-credentials');
+            }, function (response) {
+                deferred.reject(response);
+                Notification.setErrorMessage(response.data.displayMessage);
             });
+            return deferred.promise;
         };
     }]
 );
