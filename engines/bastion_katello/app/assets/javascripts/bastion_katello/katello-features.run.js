@@ -27,6 +27,7 @@
             'content-credentials.new',
             'content-credential.info',
             'content-credential.products',
+            'content-credential.acs',
             'content-credential.repositories'
         ];
 
