@@ -10,6 +10,12 @@ module Katello
           (content_source_id.blank? || (content_facet && content_facet.kickstart_repository.blank?)) && super
         end
 
+        def inherited_attributes
+          inherited_attrs = super
+          inherited_attrs.delete('medium_id') if content_facet && !content_facet.kickstart_repository.blank?
+          inherited_attrs
+        end
+
         def smart_proxy_ids
           ids = super
           ids << content_source_id

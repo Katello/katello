@@ -293,6 +293,37 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     @hostgroup.medium_id = id
     assert_nil kickstart_repository_id(::Host.new, :selected_host_group => @hostgroup)
   end
+
+  test "must handle overwrite to use kickstart repository instead of hostgroup's medium" do
+    id = 100
+    @hostgroup.content_facet.kickstart_repository_id = nil
+    @hostgroup.medium_id = 1000
+
+    host = ::Host.new(:architecture => @arch, :operatingsystem => @os, :hostgroup => @hostgroup,
+                      :content_facet_attributes => {:lifecycle_environment_id => @env.id,
+                                                    :content_view_id => @cv.id,
+                                                    :content_source_id => @content_source.id,
+                                                    :kickstart_repository_id => id}
+                     )
+    assert_empty host.medium_id
+    assert_equal id, kickstart_repository_id(host)
+  end
+
+  test "must handle overwrite to use medium instead of hostgroup's kickstart repository" do
+    id = 100
+    @hostgroup.content_facet.kickstart_repository_id = 1000
+    @hostgroup.medium_id = nil
+
+    host = ::Host.new(:architecture => @arch, :operatingsystem => @os, :hostgroup => @hostgroup,
+                      :medium_id => id,
+                      :content_facet_attributes => {:lifecycle_environment_id => @env.id,
+                                                    :content_view_id => @cv.id,
+                                                    :content_source_id => @content_source.id,
+                                                    :kickstart_repository_id => nil}
+                     )
+    assert_equal id, host.medium_id
+    assert_nil kickstart_repository_id(host)
+  end
 end
 
 class HostAndHostGroupsHelperContentSourceTests < HostsAndHostGroupsHelperTestBase
