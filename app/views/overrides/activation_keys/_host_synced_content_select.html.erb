@@ -1,5 +1,6 @@
 <%
 kickstart_repo_id = using_hostgroups_page? ? kickstart_repository_id(@hostgroup) : kickstart_repository_id(@host, :selected_host_group => @hostgroup)
+kickstart_repo_id = 'unset' if kickstart_repo_id.blank?
 host = using_hostgroups_page? ? @hostgroup : @host
 kickstart_options = kickstart_repository_options(host, :selected_host_group => @hostgroup)
 ks_repo_select_id =  using_hostgroups_page? ? :host_group_kickstart_repository_id : :host_kickstart_repository_id
