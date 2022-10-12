@@ -81,7 +81,7 @@ const ACSCreateFinish = () => {
     const { id } = response;
     if (id && status === STATUS.RESOLVED && saving) {
       setSaving(false);
-      push(`/labs/alternate_content_sources/${id}/details`);
+      push(`/alternate_content_sources/${id}/details`);
       setIsOpen(false);
     } else if (status === STATUS.ERROR) {
       setSaving(false);

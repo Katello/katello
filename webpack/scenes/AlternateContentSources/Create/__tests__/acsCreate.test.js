@@ -9,7 +9,7 @@ import contentCredentialResult from './contentCredentials.fixtures';
 import smartProxyResult from './smartProxy.fixtures';
 import productsResult from './products.fixtures.json';
 
-const withACSRoute = component => <Route path="/labs/alternate_content_sources/">{component}</Route>;
+const withACSRoute = component => <Route path="/alternate_content_sources/">{component}</Route>;
 const ACSIndexPath = api.getApiUrl('/alternate_content_sources');
 const ACSCreatePath = api.getApiUrl('/alternate_content_sources');
 const contentCredentialPath = api.getApiUrl('/content_credentials');
@@ -50,7 +50,7 @@ const noResults = {
 
 const renderOptions = {
   routerParams: {
-    initialEntries: [{ pathname: '/labs/alternate_content_sources/' }],
+    initialEntries: [{ pathname: '/alternate_content_sources/' }],
   },
 };
 
