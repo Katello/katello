@@ -74,10 +74,16 @@ msgstr ""
 msgid " is out of the environment path order. The recommended practice is to promote to the next environment in the path."
 msgstr ""
 
+msgid " or any step on the left."
+msgstr ""
+
 msgid " to manage and promote content views, or select a different environment."
 msgstr ""
 
 msgid "${deleteFlow ? 'Deleting' : 'Removing'} version ${versionNameToRemove}"
+msgstr ""
+
+msgid "${option}"
 msgstr ""
 
 msgid "${pluralize(akResponse.length, 'activation key')} will be moved to content view ${selectedCVNameForAK} in "
@@ -343,6 +349,24 @@ msgstr ""
 msgid "%{view_label} could not be promoted to %{environment_label} because the content view and the environment are not in the same organization!"
 msgstr ""
 
+msgid "'%{item}' does not exist in the backend system [ Candlepin ].  Either remove and re-enable the repository or try refreshing the manifest before synchronizing. "
+msgstr ""
+
+msgid "'%{item}' does not exist in the backend system [ Candlepin ].  Either remove the invalid repository or try refreshing the manifest before promoting. "
+msgstr ""
+
+msgid "'%{item}' does not exist in the backend system [ Candlepin ].  Remove and recreate the repository before synchronizing. "
+msgstr ""
+
+msgid "'%{item}' does not exist in the backend system [ Candlepin ].  Remove the invalid repository before promoting. "
+msgstr ""
+
+msgid "'%{item}' in this content view does not exist in the backend system [ Candlepin ].  Either remove the invalid repository or try refreshing the manifest before publishing again. "
+msgstr ""
+
+msgid "'%{item}' in this content view does not exist in the backend system [ Candlepin ].  Remove the invalid repository before publishing again. "
+msgstr ""
+
 msgid "(Orphaned)"
 msgstr ""
 
@@ -566,10 +590,10 @@ msgstr ""
 msgid "Add subscriptions to one or more hosts"
 msgstr ""
 
-msgid "Add to this filter using the 'Add Deb rule' button."
+msgid "Add to a host collection"
 msgstr ""
 
-msgid "Add to this filter using the 'Add RPM rule' button."
+msgid "Add to this filter using the 'Add Deb rule' button."
 msgstr ""
 
 msgid "Add to this filter using the 'Add filter rule' button."
@@ -666,6 +690,9 @@ msgid "Alternate content source ID"
 msgstr ""
 
 msgid "Alternate content source deleted"
+msgstr ""
+
+msgid "Alternate content source edited"
 msgstr ""
 
 msgid "Alternate content sources"
@@ -899,6 +926,9 @@ msgstr ""
 msgid "Available Schema Versions"
 msgstr ""
 
+msgid "Back"
+msgstr ""
+
 #, fuzzy
 msgid "Backend System Status"
 msgstr "Systém"
@@ -973,9 +1003,6 @@ msgid "Bulk generate applicability for hosts"
 msgstr ""
 
 msgid "Bulk remove versions from a content view and reassign systems and keys"
-msgstr ""
-
-msgid "CA Cert"
 msgstr ""
 
 msgid "CDN Configuration"
@@ -1086,6 +1113,9 @@ msgid "Cannot add composite versions to another composite content view"
 msgstr ""
 
 msgid "Cannot add default content view to composite content view"
+msgstr ""
+
+msgid "Cannot add generated content view versions to composite content view"
 msgstr ""
 
 msgid "Cannot add repositories to a composite content view"
@@ -1229,6 +1259,9 @@ msgstr ""
 msgid "Checksum"
 msgstr ""
 
+msgid "Checksum is a required parameter."
+msgstr ""
+
 msgid "Checksum of file to upload"
 msgstr ""
 
@@ -1253,9 +1286,6 @@ msgstr ""
 msgid "Click {update} below to save changes."
 msgstr ""
 
-msgid "Client key"
-msgstr ""
-
 msgid "Clone"
 msgstr ""
 
@@ -1271,6 +1301,9 @@ msgstr ""
 msgid "Combined Profile Update for %s"
 msgstr ""
 
+msgid "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front."
+msgstr ""
+
 msgid "Comma-separated list of tags to exclude when syncing a container image repository. Default: any tag ending in \"-source\""
 msgstr ""
 
@@ -1280,10 +1313,16 @@ msgstr ""
 msgid "Comma-separated list of tags to sync for a container image repository"
 msgstr ""
 
+msgid "Compare"
+msgstr ""
+
 msgid "Component"
 msgstr ""
 
 msgid "Component Content View"
+msgstr ""
+
+msgid "Component Version: '%{cvv}', Product: '%{product}', Repository: '%{repo}' "
 msgstr ""
 
 msgid "Components"
@@ -1442,6 +1481,9 @@ msgstr ""
 msgid "Content View Version specified in the metadata - '%{name}' already exists. If you wish to replace the existing version, delete %{name} and try again. "
 msgstr ""
 
+msgid "Content View Version: '%{cvv}', Product: '%{product}', Repository: '%{repo}' "
+msgstr ""
+
 msgid "Content View and Environment not set for registration."
 msgstr ""
 
@@ -1454,6 +1496,9 @@ msgstr ""
 #, fuzzy
 msgid "Content Views"
 msgstr "Vyhledat obsah"
+
+msgid "Content cannot be imported into a Composite Content View. "
+msgstr ""
 
 msgid "Content credential"
 msgstr ""
@@ -1695,6 +1740,9 @@ msgstr ""
 msgid "Couldn't find product with id '%s'"
 msgstr ""
 
+msgid "Couldn't find products with id '%s'"
+msgstr ""
+
 msgid "Couldn't find repository '%s'"
 msgstr ""
 
@@ -1766,12 +1814,12 @@ msgstr "Smazat poskytovatele"
 msgid "Create a sync plan"
 msgstr ""
 
-msgid "Create an ACS"
-msgstr ""
-
 #, fuzzy
 msgid "Create an activation key"
 msgstr "Číst aktivační klíče"
+
+msgid "Create an alternate content source to download content from during repository syncing.  Note: alternate content sources are global and affect ALL sync actions on their smart proxies regardless of organization."
+msgstr ""
 
 #, fuzzy
 msgid "Create an environment"
@@ -1821,6 +1869,9 @@ msgid "Current organization not set."
 msgstr ""
 
 msgid "Custom"
+msgstr ""
+
+msgid "Custom CDN"
 msgstr ""
 
 #, fuzzy
@@ -2124,7 +2175,7 @@ msgstr ""
 msgid "Destroy an activation key"
 msgstr ""
 
-msgid "Destroy an alternate content source"
+msgid "Destroy an alternate content source."
 msgstr ""
 
 #, fuzzy
@@ -2189,6 +2240,9 @@ msgstr ""
 msgid "Discover Repositories"
 msgstr "Repozitáře"
 
+msgid "Distribute archived content view versions"
+msgstr ""
+
 msgid "Do not include this array of content views"
 msgstr ""
 
@@ -2223,10 +2277,31 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+msgid "Edit ACS"
+msgstr ""
+
+msgid "Edit ACS details"
+msgstr ""
+
+msgid "Edit ACS products"
+msgstr ""
+
+msgid "Edit ACS smart proxies"
+msgstr ""
+
 msgid "Edit RPM rule"
 msgstr ""
 
+msgid "Edit URL and subpaths"
+msgstr ""
+
 msgid "Edit content view assignment"
+msgstr ""
+
+msgid "Edit credentials"
+msgstr ""
+
+msgid "Edit details"
 msgstr ""
 
 msgid "Edit filter rule"
@@ -2235,7 +2310,13 @@ msgstr ""
 msgid "Edit package filter rule"
 msgstr ""
 
+msgid "Edit products"
+msgstr ""
+
 msgid "Edit rule"
+msgstr ""
+
+msgid "Edit smart proxies"
 msgstr ""
 
 msgid "Edit system purpose attributes"
@@ -2583,6 +2664,9 @@ msgstr ""
 msgid "Filter products by sync plan id"
 msgstr ""
 
+msgid "Filter repositories by content unit type (erratum, docker_tag, etc.). Check the \"Indexed?\" types here: /katello/api/repositories/repository_types"
+msgstr ""
+
 msgid "Filter rule added"
 msgstr ""
 
@@ -2772,6 +2856,9 @@ msgid "Hide affected hosts"
 msgstr ""
 
 msgid "Hide description"
+msgstr ""
+
+msgid "Hide details"
 msgstr ""
 
 msgid "History"
@@ -2970,6 +3057,9 @@ msgstr ""
 msgid "ID: %s doesn't exist "
 msgstr ""
 
+msgid "IDs of products to copy repository information from into a Simplified Alternate Content Source. Products must include at least one repository of the chosen content type."
+msgstr ""
+
 msgid "Id of a deb package to find repositories that contain the deb"
 msgstr ""
 
@@ -3067,6 +3157,9 @@ msgid "If this is enabled, remote execution is used instead of katello-agent for
 msgstr ""
 
 msgid "If this is enabled, repositories can be deleted even when they belong to published content views. The deleted repository will be removed from all content view versions."
+msgstr ""
+
+msgid "If this is enabled, repositories of content view versions without environments (\"archived\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'."
 msgstr ""
 
 msgid "If true, only return repository sets that are associated with an active subscriptions"
@@ -3393,9 +3486,6 @@ msgstr ""
 msgid "Invalid"
 msgstr ""
 
-msgid "Invalid SSL CA certificate given for CDN"
-msgstr ""
-
 msgid "Invalid association of the content view id. Content View must match the content view version being saved"
 msgstr ""
 
@@ -3446,6 +3536,9 @@ msgstr ""
 msgid "Invalid params provided - date_type must be one of %s"
 msgstr ""
 
+msgid "Invalid params provided - with_content must be one of %s"
+msgstr ""
+
 msgid "Invalid release version: [%s]"
 msgstr ""
 
@@ -3465,6 +3558,9 @@ msgid "Issued"
 msgstr ""
 
 msgid "Issued from"
+msgstr ""
+
+msgid "Items will appear here when a filter rule is added."
 msgstr ""
 
 msgid "Job '${description}' completed"
@@ -3569,6 +3665,9 @@ msgstr ""
 msgid "Learn more about adding Subscription Manifests"
 msgstr ""
 
+msgid "Legacy content host UI"
+msgstr ""
+
 msgid "Less than"
 msgstr ""
 
@@ -3637,6 +3736,9 @@ msgstr ""
 msgid "Limit content to just that available in the host's or activation key's content view version and lifecycle environment."
 msgstr ""
 
+msgid "Limit the repository type. Available types endpoint: /katello/api/repositories/repository_types"
+msgstr ""
+
 msgid "Limit to environment"
 msgstr ""
 
@@ -3668,6 +3770,9 @@ msgstr ""
 #, fuzzy
 msgid "List all organizations"
 msgstr "Organizace"
+
+msgid "List alternate content sources."
+msgstr ""
 
 msgid "List an activation key's subscriptions"
 msgstr ""
@@ -3743,9 +3848,6 @@ msgid "List of Products for sync plan"
 msgstr ""
 
 msgid "List of alternate content source IDs"
-msgstr ""
-
-msgid "List of alternate_content_sources"
 msgstr ""
 
 msgid "List of component content view version ids for composite views"
@@ -4047,6 +4149,9 @@ msgstr ""
 msgid "Multi-entitlement"
 msgstr ""
 
+msgid "Multiple environments are not supported."
+msgstr ""
+
 msgid "Must supply at least one of mandatory_package_names, optional_package_names, conditional_package_names, default_package_names parameters"
 msgstr ""
 
@@ -4059,8 +4164,16 @@ msgstr ""
 msgid "NOTE: Katello-agent is deprecated and will be removed in %s. Consider using remote execution instead."
 msgstr ""
 
+msgid "NOTE: Unable to export repository '%{repository}' because it does not have an exportable content type."
+msgstr ""
+
 msgid ""
 "NOTE: Unable to fully export '%{organization}' organization's library because it contains repositories without the 'immediate' download policy. Update the download policy and sync affected repositories to include them in the export. \n"
+" %{repos}"
+msgstr ""
+
+msgid ""
+"NOTE: Unable to fully export Content View Version '%{content_view} %{current}' it contains repositories with un-exportable content types. \n"
 " %{repos}"
 msgstr ""
 
@@ -4073,6 +4186,12 @@ msgid "NOTE: Unable to fully export repository '%{repository}' because it does n
 msgstr ""
 
 msgid "Name"
+msgstr ""
+
+msgid "Name and label of default content view should not be changed"
+msgstr ""
+
+msgid "Name is a required parameter."
 msgstr ""
 
 msgid "Name of new activation key"
@@ -4274,6 +4393,9 @@ msgstr ""
 msgid "No host collections found."
 msgstr "Vyhledat obsah"
 
+msgid "No host collections yet"
+msgstr ""
+
 msgid "No hosts have been specified."
 msgstr ""
 
@@ -4296,6 +4418,9 @@ msgid "No manifest found. Import a manifest with the appropriate subscriptions b
 msgstr ""
 
 msgid "No matching "
+msgstr ""
+
+msgid "No matching ${name} found."
 msgstr ""
 
 msgid "No matching ${selectedContentType} found"
@@ -4950,6 +5075,9 @@ msgstr ""
 msgid "Please wait while the task starts.."
 msgstr ""
 
+msgid "Please wait..."
+msgstr ""
+
 msgid "Policy to set for mirroring content.  Must be one of %s."
 msgstr ""
 
@@ -5043,8 +5171,14 @@ msgstr ""
 msgid "Product: '%{product}', Repository: '%{repository}'"
 msgstr ""
 
+msgid "Product: '%{product}', Repository: '%{repo}' "
+msgstr ""
+
 msgid "Products"
 msgstr "Produkty"
+
+msgid "Products updated."
+msgstr ""
 
 msgid "Promote"
 msgstr ""
@@ -5236,6 +5370,9 @@ msgstr ""
 msgid "RPM name"
 msgstr ""
 
+msgid "RPM package groups"
+msgstr ""
+
 msgid "RPM packages"
 msgstr ""
 
@@ -5304,6 +5441,9 @@ msgstr ""
 msgid "Red Hat content will be consumed from the {type}."
 msgstr ""
 
+msgid "Red Hat content will be consumed from {type}."
+msgstr ""
+
 msgid "Red Hat content will be enabled and consumed via the {type} process."
 msgstr ""
 
@@ -5332,7 +5472,7 @@ msgstr "Smazat role"
 msgid "Refresh alternate content sources"
 msgstr ""
 
-msgid "Refresh an alternate content source"
+msgid "Refresh an alternate content source. Refreshing, like repository syncing, is required before using an alternate content source."
 msgstr ""
 
 msgid "Refresh previously imported manifest for Red Hat provider"
@@ -5534,6 +5674,9 @@ msgstr "Skupiny balíčků"
 #, fuzzy
 msgid "Removing Package..."
 msgstr "Smazat balíček filtrů"
+
+msgid "Removing product %{prod_name} with ID %{prod_id} from ACS %{acs_name} with ID %{acs_id}"
+msgstr ""
 
 msgid "Removing this version from all environments will not delete the version. Version will still be available for later promotion."
 msgstr ""
@@ -5779,9 +5922,6 @@ msgstr ""
 msgid "Returns content that can be both added and is currently added to the object. The value 'content_view_filter' is supported"
 msgstr ""
 
-msgid "Review Details"
-msgstr ""
-
 msgid "Review affected environment"
 msgstr ""
 
@@ -5789,6 +5929,9 @@ msgid "Review affected environments"
 msgstr ""
 
 msgid "Review details"
+msgstr ""
+
+msgid "Review the information below and click "
 msgstr ""
 
 msgid "Review your currently selected changes for "
@@ -5828,9 +5971,6 @@ msgid "SSL CA Content Credential"
 msgstr ""
 
 msgid "SSL CA certificate"
-msgstr ""
-
-msgid "SSL Cert"
 msgstr ""
 
 msgid "SSL client certificate"
@@ -5967,6 +6107,9 @@ msgstr ""
 msgid "Select an environment above"
 msgstr ""
 
+msgid "Select an option"
+msgstr ""
+
 msgid "Select an organization"
 msgstr ""
 
@@ -6004,6 +6147,12 @@ msgid "Select packages to install to the host {hostName}."
 msgstr ""
 
 msgid "Select page"
+msgstr ""
+
+msgid "Select products"
+msgstr ""
+
+msgid "Select products to associate to this source."
 msgstr ""
 
 msgid "Select row"
@@ -6130,7 +6279,7 @@ msgstr ""
 msgid "Show an activation key"
 msgstr "Číst aktivační klíče"
 
-msgid "Show an alternate content source"
+msgid "Show an alternate content source."
 msgstr ""
 
 #, fuzzy
@@ -6141,6 +6290,9 @@ msgid "Show content available for an activation key"
 msgstr ""
 
 msgid "Show content view version"
+msgstr ""
+
+msgid "Show details"
 msgstr ""
 
 msgid "Show filter rule info"
@@ -6181,6 +6333,9 @@ msgid "Simple Content Access has been disabled for '%{subject}'."
 msgstr ""
 
 msgid "Simple Content Access has been enabled for '%{subject}'."
+msgstr ""
+
+msgid "Simplified"
 msgstr ""
 
 msgid "Single content view consisting of e.g. repositories"
@@ -6261,6 +6416,9 @@ msgstr ""
 msgid "Something went wrong while editing a filter rule! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
+msgid "Something went wrong while editing the alternate content source! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
 msgid "Something went wrong while editing the filter! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
@@ -6315,6 +6473,9 @@ msgstr ""
 msgid "Something went wrong while retrieving the activation keys! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
+msgid "Something went wrong while retrieving the container tags! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
 msgid "Something went wrong while retrieving the content view components! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
@@ -6333,7 +6494,28 @@ msgstr ""
 msgid "Something went wrong while retrieving the content view versions! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
+msgid "Something went wrong while retrieving the content! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the deb packages! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the errata! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
 msgid "Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the module streams! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the package groups! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the packages! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
 msgid "Something went wrong while retrieving the repository types! ${getResponseErrorMsgs(error.response)}"
@@ -6529,6 +6711,9 @@ msgstr ""
 #, fuzzy
 msgid "Successfully removed %{count} content host(s) from host collection %{host_collection}."
 msgstr "úspěšně vytvořen."
+
+msgid "Successfully synced capsule."
+msgstr ""
 
 msgid "Successfully synchronized."
 msgstr ""
@@ -6837,6 +7022,9 @@ msgstr ""
 msgid "The port used by Pulp Crane to provide Docker Registries"
 msgstr ""
 
+msgid "The product %{name} has no %{type} repositories with upstream URLs to add to the alternate content source."
+msgstr ""
+
 msgid "The promotion of %{content_view} to %{environment} has completed.  %{count} errata are available to your hosts."
 msgstr ""
 
@@ -6881,6 +7069,12 @@ msgid "The synchronization of \"%s\" has completed.  Below is a summary of new e
 msgstr ""
 
 msgid "The token key to use for authentication."
+msgstr ""
+
+msgid "The type of content to remove (srpm, docker_manifest, etc.). Check removable types here: /katello/api/repositories/repository_types"
+msgstr ""
+
+msgid "The type of content to upload (srpm, file, etc.). Check uploadable types here: /katello/api/repositories/repository_types"
 msgstr ""
 
 msgid "The type of content.  The following types are supported: 'package' and 'package_group."
@@ -6959,6 +7153,9 @@ msgid "This action should only be taken in extreme circumstances or for debuggin
 msgstr ""
 
 msgid "This action uses katello-agent, which is currently disabled. Use remote execution instead."
+msgstr ""
+
+msgid "This activation key is associated to one or more Hosts/Hostgroups. Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \"%{name}\" before deleting."
 msgstr ""
 
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
@@ -7069,6 +7266,9 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
+msgid "To get started, add this host to a host collection."
+msgstr ""
+
 msgid "Toggling Simple Content Access will refresh your manifest."
 msgstr ""
 
@@ -7139,6 +7339,9 @@ msgid "Type of content"
 msgstr ""
 
 msgid "Type of content: \"cert\", \"gpg_key\""
+msgstr ""
+
+msgid "Type of repository. Available types endpoint: /katello/api/repositories/repository_types"
 msgstr ""
 
 msgid "URL"
@@ -7353,7 +7556,7 @@ msgstr ""
 msgid "Update an activation key"
 msgstr "Číst aktivační klíče"
 
-msgid "Update an alternate content source"
+msgid "Update an alternate content source."
 msgstr ""
 
 #, fuzzy
@@ -7641,6 +7844,12 @@ msgstr ""
 msgid "Version ${versionNameToRemove} will be deleted from the listed environments. It will no longer be available for promotion."
 msgstr ""
 
+msgid "Version ${versionOne}"
+msgstr ""
+
+msgid "Version ${versionTwo}"
+msgstr ""
+
 msgid "Version details updated."
 msgstr ""
 
@@ -7651,6 +7860,9 @@ msgid "Versions"
 msgstr ""
 
 msgid "Versions "
+msgstr ""
+
+msgid "Versions to compare"
 msgstr ""
 
 msgid "Versions to exclusively include in the action"
@@ -7666,6 +7878,9 @@ msgid "View %{view} has not been promoted to %{env}"
 msgstr ""
 
 msgid "View a report of the affected hosts"
+msgstr ""
+
+msgid "View by"
 msgstr ""
 
 msgid "View matching content"
@@ -7730,6 +7945,9 @@ msgid "Whether or not to sync an external capsule after upload. Default: true"
 msgstr ""
 
 msgid "Whether to include available content attribute in results"
+msgstr ""
+
+msgid "Whether to turn on Simple Content Access for the organization."
 msgstr ""
 
 msgid "Workers"
@@ -7828,6 +8046,9 @@ msgstr ""
 msgid "Your search returned no matching "
 msgstr ""
 
+msgid "Your search returned no matching ${name}."
+msgstr ""
+
 msgid "Your search returned no matching DEBs."
 msgstr ""
 
@@ -7850,6 +8071,9 @@ msgid "Yum Metadata: %s"
 msgstr ""
 
 msgid "a content unit"
+msgstr ""
+
+msgid "a custom CDN URL"
 msgstr ""
 
 msgid "a deb package"
@@ -8035,9 +8259,6 @@ msgstr ""
 #, fuzzy
 msgid "content release version"
 msgstr "Vyhledat obsah"
-
-msgid "content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')"
-msgstr ""
 
 msgid "content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')"
 msgstr ""
@@ -8326,9 +8547,6 @@ msgstr ""
 msgid "label of the repository"
 msgstr ""
 
-msgid "limit to only repositories of this type"
-msgstr ""
-
 msgid "limit to only repositories with this download policy"
 msgstr ""
 
@@ -8455,9 +8673,6 @@ msgstr ""
 #, fuzzy
 msgid "of environment must be unique within one organization"
 msgstr "Název musí být unikátní vrámci jedné organizace."
-
-msgid "only repositories having at least one of the specified content type ex: rpm , erratum"
-msgstr ""
 
 msgid "only show the repositories readable by this user with this username"
 msgstr ""
@@ -8651,9 +8866,6 @@ msgid "true if this repository when synced has to be mirrored from the source an
 msgstr ""
 
 msgid "type of filter (e.g. deb, rpm, package_group, erratum, erratum_id, erratum_date, docker, modulemd)"
-msgstr ""
-
-msgid "type of repo"
 msgstr ""
 
 msgid "types of filters"
