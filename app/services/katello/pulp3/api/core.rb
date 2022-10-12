@@ -74,8 +74,8 @@ module Katello
           nil
         end
 
-        def repository_version_class
-          client_module::RepositoryVersion
+        def repair_class
+          client_module::Repair
         end
 
         def cancel_task(task_href)
