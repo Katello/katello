@@ -17,6 +17,7 @@ module Katello
             fail _("Content view not provided in the metadata")
           end
 
+          ensure_non_syncable_path_valid! unless @metadata_map.syncable_format?
           ensure_pulp_importable!
           if @content_view && !@content_view.default?
             ensure_non_composite!
@@ -26,6 +27,13 @@ module Katello
           ensure_manifest_imported!
           ensure_metadata_matches_repos_in_library!
           ensure_redhat_products_metadata_are_in_the_library!
+        end
+
+        def ensure_non_syncable_path_valid!
+          uri = URI(@path)
+          unless uri.scheme.blank? || uri.scheme == "file"
+            fail _("Invalid path provided. Content can be only imported from file system. ")
+          end
         end
 
         def ensure_non_composite!

@@ -13,7 +13,7 @@ module Actions
           action_subject(content_view)
 
           content_view.check_ready_to_publish!(options.slice(:importing, :syncable))
-          unless options[:importing]
+          unless options[:importing] || options[:syncable]
             ::Katello::Util::CandlepinRepositoryChecker.check_repositories_for_publish!(content_view)
           end
 

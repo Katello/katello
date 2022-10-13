@@ -120,7 +120,12 @@ module Katello
 
         def fetch_feed_url(metadata_repo)
           return unless @syncable_format
-          "file://#{@path.chomp('/')}#{metadata_repo.content.url}"
+          uri = URI(@path)
+          if uri.scheme.blank? || uri.scheme == "file"
+            "file://#{uri.path.chomp('/')}#{metadata_repo.content.url}"
+          else
+            "#{@path.chomp('/')}#{metadata_repo.content.url}"
+          end
         end
 
         def update_repo_params(metadata_repo)

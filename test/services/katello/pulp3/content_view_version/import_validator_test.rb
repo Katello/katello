@@ -26,7 +26,7 @@ module Katello
             stub('import',
               organization: @content_view.organization,
               content_view: @content_view,
-              path: @path,
+              path: '/var/lib/pulp/exports',
               metadata_map: metadata_map,
               intersecting_repos_library_and_metadata: @intersecting_repos,
               smart_proxy: @smart_proxy || smart_proxies(:one)
