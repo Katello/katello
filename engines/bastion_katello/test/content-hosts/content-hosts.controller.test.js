@@ -53,7 +53,8 @@ describe('Controller: ContentHostsController', function() {
             $uibModal: $uibModal,
             ContentHostsModalHelper:ContentHostsModalHelper,
             CurrentOrganization: 'CurrentOrganization',
-            simpleContentAccessEnabled: 'simpleContentAccessEnabled'
+            simpleContentAccessEnabled: 'simpleContentAccessEnabled',
+            newHostDetailsUI: 'newHostDetailsUI'
         });
     }));
 
