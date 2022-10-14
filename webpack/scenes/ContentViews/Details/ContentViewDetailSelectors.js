@@ -44,7 +44,7 @@ import {
   cvDockerTagsCompareKey,
   cvDebPackagesCompareKey,
   filesCompareKey,
-  genericContentCompareKey,
+  genericContentCompareKey, cvRepositoriesCompareKey,
 } from '../ContentViewsConstants';
 
 export const selectCVDetails = (state, cvId) =>
@@ -133,6 +133,16 @@ export const selectCVHistoriesStatus = (state, cvId) =>
 
 export const selectCVHistoriesError = (state, cvId) =>
   selectAPIError(state, cvDetailsHistoryKey(cvId));
+
+export const selectRepositoriesComparison = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIResponse(state, cvRepositoriesCompareKey(versionOne, versionTwo, viewBy)) || {};
+
+export const selectRepositoriesComparisonStatus = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIStatus(state, cvRepositoriesCompareKey(versionOne, versionTwo, viewBy)) ||
+  STATUS.PENDING;
+
+export const selectRepositoriesComparisonError = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIError(state, cvRepositoriesCompareKey(versionOne, versionTwo, viewBy));
 
 export const selectRPMPackagesComparison = (state, versionOne, versionTwo, viewBy) =>
   selectAPIResponse(state, cvRPMPackagesCompareKey(versionOne, versionTwo, viewBy)) || {};

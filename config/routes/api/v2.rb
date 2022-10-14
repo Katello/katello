@@ -322,6 +322,7 @@ Katello::Engine.routes.draw do
             get :auto_complete_search
             get :repository_types
             get :content_types
+            get :compare
           end
           member do
             put :republish

@@ -234,6 +234,51 @@ module Katello
       query
     end
 
+    api :GET, "/repositories/compare/", N_("List :resource")
+    param :content_view_version_ids, Array, :desc => N_("content view versions to compare")
+    param :repository_id, :number, :desc => N_("Library repository id to restrict comparisons to")
+    param :restrict_comparison, String, :desc => N_("Return same, different or all results")
+
+    def compare
+      fail _("No content_view_version_ids provided") if params[:content_view_version_ids].empty?
+      @versions = ContentViewVersion.readable.where(:id => params[:content_view_version_ids])
+      if @versions.count != params[:content_view_version_ids].uniq.length
+        missing = params[:content_view_version_ids] - @versions.pluck(:id)
+        fail HttpErrors::NotFound, _("Couldn't find content view versions '%s'") % missing.join(',')
+      end
+
+      archived_version_repos = Katello::Repository.where(:content_view_version_id => @versions&.pluck(:id))&.archived
+      repos = Katello::Repository.where(id: archived_version_repos&.pluck(:library_instance_id))
+      repos = repos.where(:root_id => @repo.root_id) if @repo
+      repositories = restrict_comparison(repos, @versions, params[:restrict_comparison])
+      collection = scoped_search(repositories.distinct, :name, :asc)
+      collection[:results] = collection[:results].map { |item| ContentViewVersionComparePresenter.new(item, @versions, @repo) }
+      respond_for_index(:collection => collection)
+    end
+
+    def restrict_comparison(collection, content_view_versions = nil, compare = 'all')
+      case compare
+      when 'same'
+        same_repo_ids = compare_same(collection, content_view_versions)
+        collection.where(id: same_repo_ids)
+      when 'different'
+        same_repo_ids = compare_same(collection, content_view_versions)
+        collection.where.not(id: same_repo_ids)
+      else
+        collection
+      end
+    end
+
+    def compare_same(collection, content_view_versions = nil)
+      same_repo_ids = []
+      collection.each do |repo|
+        if (content_view_versions&.pluck(:id)&.- repo.published_in_versions&.pluck(:id))&.empty?
+          same_repo_ids << repo.id
+        end
+      end
+      same_repo_ids
+    end
+
     api :POST, "/repositories", N_("Create a custom repository")
     param :name, String, :desc => N_("Name of the repository"), :required => true
     param :description, String, :desc => N_("Description of the repository"), :required => false

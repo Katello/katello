@@ -23,6 +23,8 @@ import {
   selectDockerTagsComparisonStatus,
   selectGenericContentComparison,
   selectGenericContentComparisonStatus,
+  selectRepositoriesComparison,
+  selectRepositoriesComparisonStatus,
 } from '../../ContentViewDetailSelectors';
 import {
   getPackageGroupsComparison,
@@ -33,9 +35,11 @@ import {
   getDebPackagesComparison,
   getDockerTagsComparison,
   getGenericContentComparison,
+  getRepositoriesComparison,
 } from '../../ContentViewDetailActions';
 
 import ContentConfig from '../../../../Content/ContentConfig';
+import RepoIcon from '../../Repositories/RepoIcon';
 
 export const TableType = PropTypes.shape({
   name: PropTypes.string,
@@ -77,6 +81,46 @@ export default ({
   };
 
   return ([
+    {
+      name: __('Repositories'),
+      route: 'repositories',
+      getCountKey: (itemVersionOne, itemVersionTwo) =>
+          itemVersionOne?.repositories?.length || itemVersionTwo?.repositories?.length,
+      responseSelector: state =>
+        selectRepositoriesComparison(state, versionOneId, versionTwoId, viewBy),
+      statusSelector: state =>
+        selectRepositoriesComparisonStatus(state, versionOneId, versionTwoId, viewBy),
+      autocompleteEndpoint: '/repositories/auto_complete_search?archived=true',
+      fetchItems: params => getRepositoriesComparison(
+        versionOneId,
+        versionTwoId,
+        viewBy,
+        params,
+      ),
+      columnHeaders: [
+        {
+          title: __('Name'),
+          getProperty: item => (
+            <a href={urlBuilder(`products/${item?.product?.id}/repositories/${item?.id}`, '')}>
+              {item?.name}
+            </a>),
+        },
+        {
+          title: __('Type'),
+          modifier: 'fitContent',
+          getProperty: item => (<RepoIcon type={item?.content_type} />),
+        },
+        {
+          title: __('Product'),
+          getProperty: item => (
+            <a href={urlBuilder(`products/${item?.product?.id}`, '')}>
+              {item?.product?.name}
+            </a>),
+        },
+        { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
+        { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
+      ],
+    },
     {
       name: __('RPM packages'),
       getCountKey: (itemVersionOne, itemVersionTwo) =>

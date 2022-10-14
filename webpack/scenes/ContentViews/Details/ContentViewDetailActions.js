@@ -57,6 +57,7 @@ import {
   cvDebPackagesCompareKey,
   filesCompareKey,
   genericContentCompareKey,
+  cvRepositoriesCompareKey,
 } from '../ContentViewsConstants';
 import api, { foremanApi, orgId } from '../../../services/api';
 import { getResponseErrorMsgs } from '../../../utils/helpers';
@@ -95,6 +96,19 @@ export const getRPMPackagesComparison = (versionOne, versionTwo, viewBy, params)
     key: cvRPMPackagesCompareKey(versionOne, versionTwo, viewBy),
     params: apiParams,
     errorToast: error => __(`Something went wrong while retrieving the packages! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
+
+export const getRepositoriesComparison = (versionOne, versionTwo, viewBy, params) => {
+  const versions = { content_view_version_ids: [versionOne, versionTwo] };
+  const restrictComparison = { restrict_comparison: viewBy };
+  const apiParams = { ...versions, ...restrictComparison, ...params };
+  const apiUrl = '/repositories/compare';
+  return get({
+    key: cvRepositoriesCompareKey(versionOne, versionTwo, viewBy),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the repositories! ${getResponseErrorMsgs(error.response)}`),
     url: api.getApiUrl(apiUrl),
   });
 };

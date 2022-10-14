@@ -11,6 +11,7 @@ import CVVersionCompareTable from './CVVersionCompareTable';
 import getContentViewDetails, { getContentViewVersionDetails } from '../../ContentViewDetailActions';
 import Loading from '../../../../../components/Loading';
 import './CVVersionCompare.scss';
+import EmptyStateMessage from '../../../../../components/Table/EmptyStateMessage';
 
 const CVVersionCompare = ({
   cvId,
@@ -51,7 +52,7 @@ const CVVersionCompare = ({
     selectCVVersionDetailsStatus(state, String(getIdFromVersion(versionTwo)
       ?? initialVersionTwoId), cvId));
 
-  const [currentActiveTab, setCurrentActiveTab] = useState(__('RPM packages'));
+  const [currentActiveTab, setCurrentActiveTab] = useState(__('Repositories'));
   const onSelect = (_e, eventKey) => {
     // This prevents needless pushing on repeated clicks of a tab
     if (currentActiveTab !== eventKey) {
@@ -125,6 +126,13 @@ const CVVersionCompare = ({
               />
             </div>
           </div >) || <Loading />)
+      }
+      {!showTabs &&
+      <EmptyStateMessage
+        title={__('Empty content view versions')}
+        body={__('No content in selected versions.')}
+        search
+      />
       }
     </>
   );
