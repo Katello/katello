@@ -37,6 +37,9 @@ describe("Factory: ContentCredential", function() {
             product: { id: 1, cp_id: "644602083972", name: "test_product" }
           }
         ],
+        ssl_ca_alternate_content_sources: [{ id: 1, name: "fakeacs" }],
+        ssl_client_alternate_content_sources: [],
+        ssl_key_alternate_content_sources: [],
         ssl_ca_products: [],
         ssl_ca_root_repos: [],
         ssl_client_products: [],
@@ -54,7 +57,7 @@ describe("Factory: ContentCredential", function() {
         records: [
           contentCredential          
         ],
-        total: 2,
+        total: 3,
         subtotal: 1
       };
 
@@ -80,6 +83,19 @@ describe("Factory: ContentCredential", function() {
 
     ContentCredential.queryPaged(function(contentCredentials) {
       expect(contentCredentials.records.length).toBe(1);
+    });
+  });
+
+  it("provides a way to get a list of acs", function() {
+    $httpBackend
+      .expectGET("katello/api/v2/content_credentials?organization_id=ACME")
+      .respond(contentCredentials);
+
+    ContentCredential.queryPaged(function(contentCredentials) {
+      expect(contentCredentials.records[0].ssl_ca_alternate_content_sources).toBeDefined();
+      expect(contentCredentials.records[0].ssl_ca_alternate_content_sources.length).toBe(1);
+      expect(contentCredentials.records[0].ssl_ca_alternate_content_sources[0].id).toBe(1);
+      expect(contentCredentials.records[0].ssl_ca_alternate_content_sources[0].name).toBe("fakeacs");
     });
   });
 

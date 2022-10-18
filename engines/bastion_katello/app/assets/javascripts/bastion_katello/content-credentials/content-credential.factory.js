@@ -25,6 +25,12 @@ angular.module("Bastion.content-credentials").factory("ContentCredential", [
             "ssl_key_products": "SSL Client Key"
         };
 
+        var acsTypeMap = {
+            "ssl_ca_alternate_content_sources": "SSL CA Cert",
+            "ssl_client_alternate_content_sources": "SSL Client Cert",
+            "ssl_key_alternate_content_sources": "SSL Client Key"
+        };
+
         function appendData(allData, fullCredential, usedAs) {
             angular.forEach(fullCredential, function(data) {
                 data.usedAs = usedAs;
@@ -53,6 +59,17 @@ angular.module("Bastion.content-credentials").factory("ContentCredential", [
                     params: { id: "auto_complete_search" }
                 },
                 update: { method: "PUT" },
+                acs: {
+                    method: "GET",
+                    transformResponse: function(data) {
+                        var allAcs = parseContentCredentialData(data, acsTypeMap);
+                        return {
+                            total: allAcs.length,
+                            subtotal: allAcs.length,
+                            results: allAcs
+                        };
+                    }
+                },
                 products: {
                     method: "GET",
                     transformResponse: function(data) {

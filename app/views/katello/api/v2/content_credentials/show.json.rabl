@@ -31,6 +31,18 @@ child :root_repositories => :gpg_key_repos do
   end
 end
 
+child :ssl_ca_alternate_content_sources => :ssl_ca_alternate_content_sources do
+  attributes :id, :name
+end
+
+child :ssl_client_alternate_content_sources => :ssl_client_alternate_content_sources do
+  attributes :id, :name
+end
+
+child :ssl_client_key_alternate_content_sources => :ssl_client_key_alternate_content_sources do
+  attributes :id, :name
+end
+
 child :ssl_ca_products => :ssl_ca_products do
   attributes :id, :cp_id, :name
   node :repository_count do |product|

@@ -52,6 +52,16 @@ angular.module('Bastion.content-credentials').config(['$stateProvider', function
             parent: 'content-credentials'
         }
     })
+    .state('content-credential.acs', {
+        url: '/alternate_content_sources',
+        permission: 'view_content_credentials',
+        controller: 'ContentCredentialACSController',
+        templateUrl: 'content-credentials/details/views/content-credential-acs.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Alternate Content Sources' | translate }}",
+            parent: 'content-credential.info'
+        }
+    })
     .state('content-credential.products', {
         url: '/products',
         permission: 'view_content_credentials',
