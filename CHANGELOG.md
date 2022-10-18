@@ -27,6 +27,9 @@
 ### Content Views
  * Hide profiles for module streams since we no longer have that info indexed from  pulp ([#34760](https://projects.theforeman.org/issues/34760), [3afbe21c](https://github.com/Katello/katello.git/commit/3afbe21cda6fa72da5d17c70e5fb7891e2c5b8cc))
 
+### Web UI
+* Edit ansible_collections menu link to be /content/ansible_collections to avoid redirect([#35643](https://projects.theforeman.org/issues/35643), [949fe68](https://github.com/Katello/katello/commit/949fe685858d8d924b38f95add2bd59d5d527bc5))
+
 ### Other
  * Undefined method epoch_to_date when syncing SUSE repos ([#34756](https://projects.theforeman.org/issues/34756), [42dbf62d](https://github.com/Katello/katello.git/commit/42dbf62d47270c67960557f1215f64c62d0392c1))
 # 4.4.0.2 Habanero (2022-04-08)
