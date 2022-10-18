@@ -48,7 +48,7 @@ module Katello
     end
 
     api :DELETE, "/organizations/:organization_id/upstream_subscriptions",
-      N_("Remove one or more subscriptions from an upstream subscription allocation")
+      N_("Remove one or more subscriptions from an upstream manifest")
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param :pool_ids, Array, desc: N_("Array of local pool IDs. Only pools originating upstream are accepted."), required: true
     def destroy

@@ -181,9 +181,9 @@ class UpstreamSubscriptionsPage extends Component {
     };
 
     const emptyStateData = () => ({
-      header: __('There are no Subscription Allocations to display'),
-      description: __('Subscription Allocations allow you to export subscriptions from the Red Hat Customer Portal to ' +
-        'an on-premise subscription management application such as Red Hat Satellite.'),
+      header: __('There are no Manifests to display'),
+      description: __('Manifests allow you to find, access, synchronize, and download content ' +
+        'from upstream Red Hat repositories for use in Red Hat Satellite.'),
       action: {
         title: __('Import a Manifest to Begin'),
         url: '/subscriptions',

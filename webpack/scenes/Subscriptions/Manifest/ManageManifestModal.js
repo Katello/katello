@@ -138,7 +138,7 @@ class ManageManifestModal extends Component {
                       <hr />
                       <Row>
                         <Col sm={5}>
-                          <strong>{__('Subscription Allocation')}</strong>
+                          <strong>{__('Manifest')}</strong>
                         </Col>
                         <Col sm={7}>
                           {getManifestName()}
