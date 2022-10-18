@@ -24,7 +24,7 @@ import { STATUS } from 'foremanReact/constants';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { getACSDetails } from '../ACSActions';
-import { selectACSDetails, selectACSDetailsStatus } from '../ACSSelectors';
+import { selectACSDetails, selectACSDetailsError, selectACSDetailsStatus } from '../ACSSelectors';
 import Loading from '../../../components/Loading';
 import InactiveText from '../../ContentViews/components/InactiveText';
 import ACSEditDetails from './EditModals/ACSEditDetails';
@@ -32,12 +32,15 @@ import ACSEditURLPaths from './EditModals/ACSEditURLPaths';
 import ACSEditSmartProxies from './EditModals/ACSEditSmartProxies';
 import ACSEditCredentials from './EditModals/ACSEditCredentials';
 import ACSEditProducts from './EditModals/ACSEditProducts';
+import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
+import '../Acs.scss';
 
 const ACSExpandableDetails = () => {
   const { id } = useParams();
   const acsId = Number(id);
   const details = useSelector(state => selectACSDetails(state, acsId));
   const status = useSelector(state => selectACSDetailsStatus(state, acsId));
+  const error = useSelector(state => selectACSDetailsError(state, acsId));
   const dispatch = useDispatch();
   const [showDetails, setShowDetails] = useState(true);
   const [showSmartProxies, setShowSmartProxies] = useState(false);
@@ -56,7 +59,7 @@ const ACSExpandableDetails = () => {
     }
   }, [acsId, details, dispatch]);
 
-  if (status === STATUS.PENDING) return <Loading />;
+  if (status === STATUS.PENDING) return <Loading skeleton />;
 
   const {
     name,
@@ -73,6 +76,9 @@ const ACSExpandableDetails = () => {
     upstream_username: username,
     products,
   } = details;
+  if (error) {
+    return <EmptyStateMessage error={error} />;
+  }
   return (
     <>
       <Stack>
@@ -90,7 +96,7 @@ const ACSExpandableDetails = () => {
                 }}
                 contentId="showDetails"
               >
-                {showDetails ? __('Hide details') : __('Show details')}
+                {__('Details')}
               </ExpandableSectionToggle>
             </SplitItem>
             <SplitItem>
@@ -112,7 +118,7 @@ const ACSExpandableDetails = () => {
             isDetached
             contentId="showDetails"
           >
-            <TextContent className="margin-0-24">
+            <TextContent className="margin-0-24 expandable-section-text">
               <TextList component={TextListVariants.dl}>
                 <TextListItem component={TextListItemVariants.dt}>
                   {__('Name')}
@@ -130,7 +136,7 @@ const ACSExpandableDetails = () => {
                   aria-label="name_text_value"
                   component={TextListItemVariants.dd}
                 >
-                  {description}
+                  {description || <InactiveText text="N/A" />}
                 </TextListItem>
                 <TextListItem component={TextListItemVariants.dt}>
                   {__('Type')}
@@ -167,7 +173,7 @@ const ACSExpandableDetails = () => {
                 }}
                 contentId="showSmartProxies"
               >
-                {showSmartProxies ? 'Hide smart proxies' : 'Show smart proxies'}
+                {__('Smart proxies')}
               </ExpandableSectionToggle>
             </SplitItem>
             <SplitItem>
@@ -189,7 +195,7 @@ const ACSExpandableDetails = () => {
             contentId="showSmartProxies"
             isExpanded={showSmartProxies}
           >
-            <List className="margin-0-24" isPlain isBordered>
+            <List className="margin-0-24 expandable-section-text" isPlain isBordered>
               {smartProxies?.length > 0 && smartProxies.map(sp =>
                 (
                   <ListItem key={sp?.id} aria-label="smartproxy_value">
@@ -218,7 +224,7 @@ const ACSExpandableDetails = () => {
                   isExpanded={showProducts}
                   contentId="showProducts"
                 >
-                  {showProducts ? 'Hide products' : 'Show products'}
+                  {__('Products')}
                 </ExpandableSectionToggle>
               </SplitItem>
               <SplitItem>
@@ -240,7 +246,7 @@ const ACSExpandableDetails = () => {
               contentId="showProducts"
               isExpanded={showProducts}
             >
-              <List className="margin-0-24" isPlain isBordered>
+              <List className="margin-0-24 expandable-section-text" isPlain isBordered>
                 {products.map(product =>
                   (
                     <ListItem key={product?.id} aria-label="product_value">
@@ -267,7 +273,7 @@ const ACSExpandableDetails = () => {
                   isExpanded={showUrlPaths}
                   contentId="showUrlPaths"
                 >
-                  {showUrlPaths ? 'Hide URL and subpaths' : 'Show URL and subpaths'}
+                  {__('URL and subpaths')}
                 </ExpandableSectionToggle>
               </SplitItem>
               <SplitItem>
@@ -289,7 +295,7 @@ const ACSExpandableDetails = () => {
               isDetached
               isExpanded={showUrlPaths}
             >
-              <TextContent className="margin-0-24">
+              <TextContent className="margin-0-24 expandable-section-text">
                 <TextList component={TextListVariants.dl}>
                   <TextListItem component={TextListItemVariants.dt}>
                     {__('URL')}
@@ -326,7 +332,7 @@ const ACSExpandableDetails = () => {
                   isExpanded={showCredentials}
                   contentId="showCredentials"
                 >
-                  {showCredentials ? 'Hide credentials' : 'Show credentials'}
+                  {__('Credentials')}
                 </ExpandableSectionToggle>
               </SplitItem>
               <SplitItem>
@@ -348,7 +354,7 @@ const ACSExpandableDetails = () => {
               contentId="showCredentials"
               isDetached
             >
-              <TextContent className="margin-0-24">
+              <TextContent className="margin-0-24 expandable-section-text">
                 <TextList component={TextListVariants.dl}>
                   <TextListItem component={TextListItemVariants.dt}>
                     {__('Verify SSL')}
