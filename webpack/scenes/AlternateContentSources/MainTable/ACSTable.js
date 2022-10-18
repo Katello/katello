@@ -68,7 +68,7 @@ const ACSTable = () => {
     dispatch(deleteACS(id, () => {
       setDeleting(false);
       if (id.toString() === acsId.toString()) {
-        push('/labs/alternate_content_sources');
+        push('/alternate_content_sources');
       } else {
         dispatch(getAlternateContentSources());
       }
@@ -90,7 +90,7 @@ const ACSTable = () => {
 
   const onCloseClick = () => {
     setExpandedId(null);
-    push('/labs/alternate_content_sources');
+    push('/alternate_content_sources');
     setIsExpanded(false);
   };
 
@@ -266,7 +266,7 @@ const ACSTable = () => {
                   <Tr key={index}>
                     <Td onClick={() => {
                       onClick(id);
-                      push(`/labs/alternate_content_sources/${id}/details`);
+                      push(`/alternate_content_sources/${id}/details`);
                     }}
                     >
                       <Text component="a">{name}</Text>

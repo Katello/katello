@@ -7,12 +7,12 @@ import ACSExpandableDetails from '../ACSExpandableDetails';
 import acsDetails from './acsDetails.fixtures';
 
 const acsDetailsURL = api.getApiUrl('/alternate_content_sources/1');
-const withACSRoute = component => <Route path="/labs/alternate_content_sources/:id([0-9]+)">{component}</Route>;
+const withACSRoute = component => <Route path="/alternate_content_sources/:id([0-9]+)">{component}</Route>;
 
 test('Can call API and show ACS details expandable sections on page load', async (done) => {
   const renderOptions = {
     routerParams: {
-      initialEntries: [{ pathname: '/labs/alternate_content_sources/1/details' }],
+      initialEntries: [{ pathname: '/alternate_content_sources/1/details' }],
     },
   };
   const acsDetailsScope = nockInstance
@@ -43,7 +43,7 @@ test('Can call API and show ACS details expandable sections on page load', async
 test('Can expand expandable sections on details page', async (done) => {
   const renderOptions = {
     routerParams: {
-      initialEntries: [{ pathname: '/labs/alternate_content_sources/1/details' }],
+      initialEntries: [{ pathname: '/alternate_content_sources/1/details' }],
     },
   };
   const acsDetailsScope = nockInstance

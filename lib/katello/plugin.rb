@@ -45,6 +45,15 @@ Foreman::Plugin.register :katello do
          :turbolinks => false
 
     menu :top_menu,
+         :alternate_content_sources,
+         :url => '/alternate_content_sources',
+         :url_hash => {:controller => 'katello/api/v2/alternate_content_sources_controller',
+                       :action => 'index'},
+         :caption => N_('Alternate Content Sources'),
+         :engine => Katello::Engine,
+         :turbolinks => false
+
+    menu :top_menu,
          :sync_plans,
          :caption => N_('Sync Plans'),
          :url => '/sync_plans',
@@ -193,15 +202,6 @@ Foreman::Plugin.register :katello do
        :engine => Katello::Engine,
        :parent => :hosts_menu,
        :after => :content_hosts,
-       :turbolinks => false
-
-  menu :labs_menu,
-       :alternate_content_sources,
-       :url => '/labs/alternate_content_sources',
-       :url_hash => {:controller => 'katello/api/v2/alternate_content_sources_controller',
-                     :action => 'index'},
-       :caption => N_('Alternate Content Sources'),
-       :parent => :lab_features_menu,
        :turbolinks => false
 
   extend_template_helpers Katello::KatelloUrlsHelper

@@ -9,13 +9,13 @@ import simplifiedAcsDetails from './simplifiedAcsDetails.fixtures.json';
 import productsList from './acsProducts.fixtures.json';
 
 const acsDetailsURL = api.getApiUrl('/alternate_content_sources/1');
-const withACSRoute = component => <Route path="/labs/alternate_content_sources/:id([0-9]+)">{component}</Route>;
+const withACSRoute = component => <Route path="/alternate_content_sources/:id([0-9]+)">{component}</Route>;
 const productsURL = api.getApiUrl('/products');
 
 test('Can show custom ACS details expandable sections with edit buttons', async (done) => {
   const renderOptions = {
     routerParams: {
-      initialEntries: [{ pathname: '/labs/alternate_content_sources/1/details' }],
+      initialEntries: [{ pathname: '/alternate_content_sources/1/details' }],
     },
   };
   const acsDetailsScope = nockInstance
@@ -51,7 +51,7 @@ test('Can show custom ACS details expandable sections with edit buttons', async 
 test('Can open and close edit ACS details modal', async (done) => {
   const renderOptions = {
     routerParams: {
-      initialEntries: [{ pathname: '/labs/alternate_content_sources/1/details' }],
+      initialEntries: [{ pathname: '/alternate_content_sources/1/details' }],
     },
   };
   const acsDetailsScope = nockInstance
@@ -94,7 +94,7 @@ test('Can open and close edit ACS details modal', async (done) => {
 test('Can edit ACS details in the edit modal', async (done) => {
   const renderOptions = {
     routerParams: {
-      initialEntries: [{ pathname: '/labs/alternate_content_sources/1/details' }],
+      initialEntries: [{ pathname: '/alternate_content_sources/1/details' }],
     },
   };
   const acsDetailsScope = nockInstance
@@ -144,7 +144,7 @@ test('Can edit ACS details in the edit modal', async (done) => {
 test('Can show simplified ACS details expandable sections with edit buttons', async (done) => {
   const renderOptions = {
     routerParams: {
-      initialEntries: [{ pathname: '/labs/alternate_content_sources/1/details' }],
+      initialEntries: [{ pathname: '/alternate_content_sources/1/details' }],
     },
   };
   const acsDetailsScope = nockInstance
@@ -181,7 +181,7 @@ test('Can show simplified ACS details expandable sections with edit buttons', as
 test('Can edit products in a simplified ACS details edit modal', async (done) => {
   const renderOptions = {
     routerParams: {
-      initialEntries: [{ pathname: '/labs/alternate_content_sources/1/details' }],
+      initialEntries: [{ pathname: '/alternate_content_sources/1/details' }],
     },
   };
   const acsDetailsScope = nockInstance
