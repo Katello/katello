@@ -164,7 +164,7 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :ansible_collections,
          :caption => N_('Ansible Collections'),
-         :url => '/ansible_collections',
+         :url => '/content/ansible_collections',
          :url_hash => {:controller => 'katello/api/v2/ansible_collections',
                        :action => 'index'},
          :engine => Katello::Engine,
