@@ -102,7 +102,7 @@ class SubscriptionsPage extends Component {
     let disabledReason = null;
 
     if (!hasUpstreamConnection) {
-      disabledReason = __('This is disabled because no connection could be made to the upstream Subscription Allocation.');
+      disabledReason = __('This is disabled because no connection could be made to the upstream Manifest.');
     } else if (task) {
       disabledReason = __('This is disabled because a manifest related task is in progress.');
     } else if (deleteButton && !disabledReason) {
