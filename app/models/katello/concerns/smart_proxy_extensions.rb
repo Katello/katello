@@ -38,6 +38,9 @@ module Katello
 
         lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_node.extensions.repository.retrieve_all }
 
+        # A smart proxy's HTTP proxy is used for all related alternate content sources.
+        belongs_to :http_proxy, :inverse_of => :smart_proxies, :class_name => '::HttpProxy'
+
         has_many :capsule_lifecycle_environments,
                  :class_name => "Katello::CapsuleLifecycleEnvironment",
                  :foreign_key => :capsule_id,
@@ -112,6 +115,10 @@ module Katello
         def self.sync_needed?(environment)
           Setting[:foreman_proxy_content_auto_sync] && unscoped.with_environment(environment).any?
         end
+      end
+
+      def alternate_content_sources
+        SmartProxy.joins(:smart_proxy_alternate_content_sources).where('katello_smart_proxy_alternate_content_sources.smart_proxy_id' => self.id)
       end
 
       def sync_container_gateway

@@ -21,8 +21,8 @@ module Katello
       param :ssl_ca_cert_id, :number, desc: N_("Identifier of the content credential containing the SSL CA Cert"), required: false
       param :ssl_client_cert_id, :number, desc: N_("Identifier of the content credential containing the SSL Client Cert"), required: false
       param :ssl_client_key_id, :number, desc: N_("Identifier of the content credential containing the SSL Client Key"), required: false
-      param :http_proxy_id, :number, desc: N_("ID of a HTTP Proxy"), required: false
       param :verify_ssl, :bool, desc: N_("If SSL should be verified for the upstream URL"), required: false
+      param :use_http_proxies, :bool, desc: N_("If the smart proxies' assigned HTTP proxies should be used"), required: false
       param :product_ids, Array, desc: N_("IDs of products to copy repository information from into a Simplified Alternate Content Source. Products must include at least one repository of the chosen content type."), required: false
     end
 
@@ -114,8 +114,8 @@ module Katello
     protected
 
     def acs_params
-      keys = [:name, :label, :description, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type, :alternate_content_source_type]
-      keys += [:base_url, {subpaths: []}, :upstream_username, :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :http_proxy_id, :verify_ssl] if params[:action] == 'create' || @alternate_content_source&.custom?
+      keys = [:name, :label, :description, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type, :alternate_content_source_type, :use_http_proxies]
+      keys += [:base_url, {subpaths: []}, :upstream_username, :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :verify_ssl] if params[:action] == 'create' || @alternate_content_source&.custom?
       keys += [{product_ids: []}] if params[:action] == 'create' || @alternate_content_source&.simplified?
       params.require(:alternate_content_source).permit(*keys).to_h.with_indifferent_access
     end

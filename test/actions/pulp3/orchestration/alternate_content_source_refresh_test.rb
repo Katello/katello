@@ -56,6 +56,16 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
     end
 
+    def test_yum_refresh_updates_remote
+      ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@yum_acs.name)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+      @yum_acs.update!(verify_ssl: false)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
+      new_verify_ssl = smart_proxy_acs.backend_service.api.remotes_list(name: @yum_acs.name).first.tls_validation
+      assert_equal new_verify_ssl, @yum_acs.verify_ssl
+    end
+
     def test_yum_refresh_simplified
       ::Katello::Pulp3::Repository.any_instance.stubs(:generate_backend_object_name).returns(@yum_simplified_acs.name)
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@yum_simplified_acs.name)

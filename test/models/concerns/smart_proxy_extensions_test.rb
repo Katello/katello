@@ -11,6 +11,8 @@ module Katello
       @view = katello_content_views(:library_dev_view)
       @proxy = SmartProxy.pulp_primary
       @proxy_mirror = FactoryBot.build(:smart_proxy, :pulp_mirror, :url => 'http://fakemirrorpath.com/foo')
+      @http_proxy = http_proxies(:myhttpproxy)
+
       ::SmartProxy.any_instance.stubs(:associate_features)
     end
 
@@ -26,6 +28,13 @@ module Katello
       @proxy.save!
 
       assert_equal ::Katello::RootRepository::DOWNLOAD_IMMEDIATE, @proxy.reload.download_policy
+    end
+
+    def test_save_with_http_proxy
+      @proxy.http_proxy = @http_proxy
+      @proxy.save!
+
+      assert_equal @http_proxy.id, @proxy.http_proxy_id
     end
 
     def test_destroy_with_content_facet

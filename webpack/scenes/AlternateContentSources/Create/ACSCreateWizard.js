@@ -27,6 +27,7 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
   const [smartProxies, setSmartProxies] = useState([]);
   const [url, setUrl] = useState('');
   const [subpaths, setSubpaths] = useState('');
+  const [useHttpProxies, setUseHttpProxies] = useState(false);
   const [verifySSL, setVerifySSL] = useState(false);
   const [authentication, setAuthentication] = useState('');
   const [sslCert, setSslCert] = useState('');
@@ -158,6 +159,8 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
       setUrl,
       subpaths,
       setSubpaths,
+      useHttpProxies,
+      setUseHttpProxies,
       verifySSL,
       setVerifySSL,
       authentication,

@@ -21,6 +21,7 @@ const ACSCreateFinish = () => {
     smartProxies,
     url,
     subpaths,
+    useHttpProxies,
     verifySSL,
     authentication,
     sslCert,
@@ -60,6 +61,7 @@ const ACSCreateFinish = () => {
         name,
         description,
         smart_proxy_names: smartProxies,
+        use_http_proxies: useHttpProxies,
         content_type: contentType,
         alternate_content_source_type: acsType,
       };
@@ -74,7 +76,7 @@ const ACSCreateFinish = () => {
     }
   }, [dispatch, createACSDispatched, setCreateACSDispatched,
     acsType, authentication, name, description, url, subpaths,
-    smartProxies, contentType, verifySSL, caCert, sslCert, sslKey,
+    smartProxies, contentType, useHttpProxies, verifySSL, caCert, sslCert, sslKey,
     username, password, currentStep, acsTypeParams]);
 
   useDeepCompareEffect(() => {

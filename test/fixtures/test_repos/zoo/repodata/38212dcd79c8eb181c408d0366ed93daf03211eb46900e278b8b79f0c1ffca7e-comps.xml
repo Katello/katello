@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+<comps>
+  <group>
+   <id>bird</id>
+   <default>true</default>
+   <uservisible>true</uservisible>
+   <display_order>1024</display_order>
+   <name>bird</name>
+   <description></description>
+    <packagelist>
+      <packagereq type="mandatory">duck</packagereq>
+      <packagereq type="mandatory">penguin</packagereq>
+    </packagelist>
+  </group>        
+  <group>
+   <id>mammal</id>
+   <default>true</default>
+   <uservisible>true</uservisible>
+   <display_order>1024</display_order>
+   <name>mammal</name>
+   <description></description>
+    <packagelist>
+      <packagereq type="mandatory">tiger</packagereq>
+      <packagereq type="mandatory">walrus</packagereq>
+      <packagereq type="mandatory">whale</packagereq>
+      <packagereq type="mandatory">wolf</packagereq>
+      <packagereq type="mandatory">zebra</packagereq>
+    </packagelist>
+  </group>        
+  <category>
+   <id>all</id>
+   <display_order>99</display_order>
+   <name>all</name>
+   <description></description>
+    <grouplist>
+     <groupid>mammal</groupid>
+     <groupid>bird</groupid>
+    </grouplist>
+  </category>
+  <environment>
+    <id>minimal</id>
+    <name>Minimal</name>
+    <grouplist>
+      <groupid>bird</groupid>
+    </grouplist>
+  </environment>
+</comps>

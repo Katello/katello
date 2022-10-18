@@ -13,7 +13,6 @@ import {
   Modal,
   ModalVariant,
   Radio,
-  Switch,
   TextInput,
 } from '@patternfly/react-core';
 import { editACS, getACSDetails } from '../../ACSActions';
@@ -27,7 +26,6 @@ import { CONTENT_CREDENTIAL_CERT_TYPE } from '../../../ContentCredentials/Conten
 
 const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
   const {
-    verify_ssl: verifySsl,
     ssl_ca_cert: sslCACert,
     ssl_client_cert: sslClientCert,
     ssl_client_key: sslClientKey,
@@ -37,7 +35,6 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
   const dispatch = useDispatch();
   const contentCredentials = useSelector(selectContentCredentials);
   const contentCredentialsStatus = useSelector(selectContentCredentialsStatus);
-  const [acsVerifySSL, setAcsVerifySSL] = useState(verifySsl);
   const [acsUsername, setAcsUsername] = useState(username);
   const [acsPassword, setAcsPassword] = useState(passwordExists ? '*****' : '');
   const [acsCAcert, setAcsCAcert] = useState(sslCACert?.id);
@@ -64,7 +61,6 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
   const onSubmit = () => {
     setSaving(true);
     let params = {
-      verify_ssl: acsVerifySSL,
       ssl_ca_cert_id: acsCAcert,
     };
 
@@ -128,14 +124,6 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
         onSubmit();
       }}
       >
-        <FormGroup label={__('Verify SSL')} fieldId="verify_ssl">
-          <Switch
-            id="verify-ssl-switch"
-            aria-label="verify-ssl-switch"
-            isChecked={acsVerifySSL}
-            onChange={checked => setAcsVerifySSL(checked)}
-          />
-        </FormGroup>
         <FormGroup
           label={__('SSL CA certificate')}
           type="string"
@@ -329,7 +317,6 @@ ACSEditCredentials.propTypes = {
     name: PropTypes.string,
     description: PropTypes.string,
     id: PropTypes.number,
-    verify_ssl: PropTypes.bool,
     ssl_ca_cert: PropTypes.shape({ id: PropTypes.number }),
     ssl_client_cert: PropTypes.shape({ id: PropTypes.number }),
     ssl_client_key: PropTypes.shape({ id: PropTypes.number }),
@@ -343,7 +330,6 @@ ACSEditCredentials.defaultProps = {
     name: '',
     description: '',
     id: undefined,
-    verify_ssl: false,
     ssl_ca_cert: { id: undefined },
     ssl_client_cert: { id: undefined },
     ssl_client_key: { id: undefined },

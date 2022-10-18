@@ -70,9 +70,9 @@ module Katello
     end
 
     def test_http_proxy
-      @yum_acs.http_proxy = proxy
+      @yum_acs.use_http_proxies = true
       assert @yum_acs.save
-      assert @yum_acs.http_proxy = proxy
+      assert @yum_acs.use_http_proxies
     end
 
     def test_custom_missing_base_url

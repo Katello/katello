@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { DualListSelector } from '@patternfly/react-core';
+import { DualListSelector, FormGroup, Switch } from '@patternfly/react-core';
 import ACSCreateContext from '../ACSCreateContext';
 import WizardHeader from '../../../ContentViews/components/WizardHeader';
 import { selectSmartProxy } from '../../../SmartProxy/SmartProxyContentSelectors';
 
 const ACSSmartProxies = () => {
   const {
-    smartProxies, setSmartProxies,
+    smartProxies, setSmartProxies, useHttpProxies, setUseHttpProxies,
   } = useContext(ACSCreateContext);
   const availableSmartProxies = useSelector(selectSmartProxy);
   const { results } = availableSmartProxies;
@@ -35,6 +35,14 @@ const ACSSmartProxies = () => {
         removeSelected={onListChange}
         id="selector"
       />
+      <FormGroup label={__('Use HTTP proxies')} fieldId="use_http_proxies">
+        <Switch
+          id="use-http-proxies-switch"
+          aria-label="use-http-proxies-switch"
+          isChecked={useHttpProxies}
+          onChange={checked => setUseHttpProxies(checked)}
+        />
+      </FormGroup>
     </>
   );
 };

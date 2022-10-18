@@ -29,24 +29,33 @@ module Katello
         end
       end
 
-      def remote_options
-        if repository.present?
-          options = repository.backend_service(smart_proxy).remote_options
-          options[:policy] = 'on_demand'
-          options[:proxy_url] = acs.http_proxy&.url
-          options[:proxy_username] = acs.http_proxy&.username
-          options[:proxy_password] = acs.http_proxy&.password
-          return options
+      def simplified_acs_remote_options
+        options = repository.backend_service(smart_proxy).remote_options
+        options[:policy] = 'on_demand'
+        # Potential RFE: allow inheriting of default smart proxy repo's HTTP proxies for simplified ACSs
+        if acs.use_http_proxies
+          options[:proxy_url] = smart_proxy.http_proxy&.url
+          options[:proxy_username] = smart_proxy.http_proxy&.username
+          options[:proxy_password] = smart_proxy.http_proxy&.password
+        else
+          options[:proxy_url] = nil
+          options[:proxy_username] = nil
+          options[:proxy_password] = nil
         end
+        options
+      end
+
+      def remote_options
+        return simplified_acs_remote_options if repository.present?
 
         remote_options = {
           tls_validation: acs.verify_ssl,
           name: generate_backend_object_name,
           url: acs.base_url,
           policy: 'on_demand',
-          proxy_url: acs.http_proxy&.url,
-          proxy_username: acs.http_proxy&.username,
-          proxy_password: acs.http_proxy&.password,
+          proxy_url: smart_proxy.http_proxy&.url,
+          proxy_username: smart_proxy.http_proxy&.username,
+          proxy_password: smart_proxy.http_proxy&.password,
           total_timeout: Setting[:sync_connect_timeout]
         }
         if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.empty? && !remote_options[:url].end_with?('/PULP_MANIFEST')

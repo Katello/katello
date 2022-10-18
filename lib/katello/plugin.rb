@@ -230,7 +230,7 @@ Foreman::Plugin.register :katello do
   parameter_filter ::Hostgroup, :content_view_id, :lifecycle_environment_id, :content_source_id,
     :kickstart_repository_id
   parameter_filter Organization, :label, :service_level
-  parameter_filter SmartProxy, :download_policy, :lifecycle_environment_ids => []
+  parameter_filter SmartProxy, :download_policy, :http_proxy_id, :lifecycle_environment_ids => []
 
   logger :glue, :enabled => true
   logger :pulp_rest, :enabled => true

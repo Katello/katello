@@ -9,7 +9,7 @@ import InactiveText from '../../../ContentViews/components/InactiveText';
 const ACSReview = () => {
   const {
     name, description, acsType, contentType,
-    smartProxies, url, subpaths, verifySSL,
+    smartProxies, useHttpProxies, url, subpaths, verifySSL,
     authentication, sslCertName, sslKeyName, username,
     password, caCertName, productNames,
   } = useContext(ACSCreateContext);
@@ -47,6 +47,10 @@ const ACSReview = () => {
           <TextListItem component={TextListItemVariants.dt}>{__('Smart proxies')}</TextListItem>
           <TextListItem component={TextListItemVariants.dd}>
             {smartProxies.join(', ')}
+          </TextListItem>
+          <TextListItem component={TextListItemVariants.dt}>{__('Use HTTP Proxies')}</TextListItem>
+          <TextListItem component={TextListItemVariants.dd}>
+            {useHttpProxies ? __('Yes') : __('No')}
           </TextListItem>
           {acsType === 'custom' &&
             <>

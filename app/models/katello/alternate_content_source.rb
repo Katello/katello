@@ -19,7 +19,6 @@ module Katello
     belongs_to :ssl_ca_cert, inverse_of: :ssl_ca_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_cert, inverse_of: :ssl_client_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_key, inverse_of: :ssl_key_alternate_content_sources, class_name: "Katello::ContentCredential"
-    belongs_to :http_proxy, inverse_of: :alternate_content_sources
 
     has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :alternate_content_source,
              class_name: "Katello::AlternateContentSourceProduct"
@@ -48,6 +47,8 @@ module Katello
       message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % (RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES).join(',') }
     }
     validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
+
+    scope :uses_http_proxies, -> { where(use_http_proxies: true) }
 
     scoped_search on: :name, complete_value: true
     scoped_search on: :label, complete_value: true
