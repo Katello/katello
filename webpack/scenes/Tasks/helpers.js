@@ -33,17 +33,24 @@ const rexJobLink = id => link({
   baseUrl: 'job_invocations',
 });
 
-export const renderTaskStartedToast = (task) => {
+export const renderTaskStartedToast = (task, override = '') => {
   if (!task) return;
 
   const message = (__(`Task ${task.humanized.action} has started.`));
 
-  window.tfm.toastNotifications.notify({
-    message,
-    type: 'info',
-    link: foremanTasksLink(task.id),
-
-  });
+  if (override) {
+    window.tfm.toastNotifications.notify({
+      message: override,
+      type: 'info',
+      link: foremanTasksLink(task.id),
+    });
+  } else {
+    window.tfm.toastNotifications.notify({
+      message,
+      type: 'info',
+      link: foremanTasksLink(task.id),
+    });
+  }
 };
 
 export const renderRexJobStartedToast = ({ id, description, key }) => {

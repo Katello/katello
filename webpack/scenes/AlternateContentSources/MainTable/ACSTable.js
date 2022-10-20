@@ -6,6 +6,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import {
   Button,
+  Checkbox,
   Drawer,
   DrawerActions,
   DrawerCloseButton,
@@ -13,6 +14,9 @@ import {
   DrawerContentBody,
   DrawerHead,
   DrawerPanelContent,
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
   Text,
   TextContent,
   TextList,
@@ -28,8 +32,8 @@ import {
   selectAlternateContentSourcesError,
   selectAlternateContentSourcesStatus,
 } from '../ACSSelectors';
-import { useTableSort } from '../../../components/Table/TableHooks';
-import getAlternateContentSources, { deleteACS, getACSDetails, refreshACS } from '../ACSActions';
+import { useSelectionSet, useTableSort } from '../../../components/Table/TableHooks';
+import getAlternateContentSources, { deleteACS, bulkDeleteACS, getACSDetails, refreshACS, bulkRefreshACS } from '../ACSActions';
 import ACSCreateWizard from '../Create/ACSCreateWizard';
 import LastSync from '../../ContentViews/Details/Repositories/LastSync';
 import ACSExpandableDetails from '../Details/ACSExpandableDetails';
@@ -52,7 +56,16 @@ const ACSTable = () => {
   const [expandedId, setExpandedId] = useState(acsId);
   const [isExpanded, setIsExpanded] = useState(false);
   const drawerRef = useRef(null);
+  const [kebabOpen, setKebabOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const renderActionButtons = status === STATUS.RESOLVED && !!results?.length;
+  const {
+    selectOne, isSelected, isSelectable: _isSelectable,
+    selectedCount, selectionSet, ...selectionSetVars
+  } = useSelectionSet({
+    results,
+    metadata,
+  });
 
   useEffect(() => {
     if (acsId) {
@@ -80,6 +93,22 @@ const ACSTable = () => {
       dispatch(getAlternateContentSources())));
   };
 
+  const onBulkDelete = (ids) => {
+    setDeleting(true);
+    dispatch(bulkDeleteACS({ ids }, () => {
+      if (acsId && ids.has(Number(acsId))) {
+        push('/alternate_content_sources');
+      } else {
+        dispatch(getAlternateContentSources());
+      }
+    }));
+  };
+
+  const onBulkRefresh = (ids) => {
+    dispatch(bulkRefreshACS({ ids }, () =>
+      dispatch(getAlternateContentSources())));
+  };
+
   const createButtonOnclick = () => {
     setIsCreateWizardOpen(true);
   };
@@ -100,7 +129,7 @@ const ACSTable = () => {
     }
   };
 
-  const isSelected = rowId => (Number(rowId) === Number(acsId));
+  const isSingleSelected = rowId => (Number(rowId) === Number(acsId));
   const customStyle = {
     borderLeft: '5px solid var(--pf-global--primary-color--100)',
   };
@@ -249,9 +278,10 @@ const ACSTable = () => {
             variant={TableVariant.compact}
             additionalListeners={[activeSortColumn, activeSortDirection]}
             autocompleteEndpoint="/alternate_content_sources/auto_complete_search"
+            {...selectionSetVars}
             actionButtons={
               <>
-                {status === STATUS.RESOLVED && results?.length !== 0 &&
+                {renderActionButtons &&
                 <Button
                   ouiaId="create-acs"
                   onClick={createButtonOnclick}
@@ -260,6 +290,41 @@ const ACSTable = () => {
                 >
                   {__('Add source')}
                 </Button>}
+                {renderActionButtons &&
+                <Dropdown
+                  toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
+                  isOpen={kebabOpen}
+                  ouiaId="acs-bulk-actions"
+                  isPlain
+                  dropdownItems={[
+                    <DropdownItem
+                      aria-label="bulk_refresh"
+                      ouiaId="bulk_refresh"
+                      key="bulk_refresh"
+                      isDisabled={selectedCount < 1}
+                      component="button"
+                      onClick={() => {
+                        setKebabOpen(false);
+                        onBulkRefresh(selectionSet);
+                      }}
+                    >
+                      {__('Refresh')}
+                    </DropdownItem>,
+                    <DropdownItem
+                      aria-label="bulk_delete"
+                      ouiaId="bulk_delete"
+                      key="bulk_delete"
+                      isDisabled={selectedCount < 1}
+                      component="button"
+                      onClick={() => {
+                        setKebabOpen(false);
+                        onBulkDelete(selectionSet);
+                      }}
+                    >
+                      {__('Delete')}
+                    </DropdownItem>,
+                  ]}
+                />}
                 {isCreateWizardOpen &&
                 <ACSCreateWizard
                   show={isCreateWizardOpen}
@@ -268,9 +333,14 @@ const ACSTable = () => {
                 }
               </>
                 }
+            displaySelectAllCheckbox={renderActionButtons}
           >
             <Thead>
               <Tr>
+                <Th
+                  key="acs-checkbox"
+                  style={{ width: 0 }}
+                />
                 {columnHeaders.map(col => (
                   <Th
                     key={col}
@@ -296,9 +366,18 @@ const ACSTable = () => {
                 return (
                   <Tr
                     key={index}
-                    style={isSelected(id) && isExpanded ? customStyle : {}}
-                    isStriped={isSelected(id) && isExpanded}
+                    style={isSingleSelected(id) && isExpanded ? customStyle : {}}
+                    isStriped={isSingleSelected(id) && isExpanded}
                   >
+                    <Td>
+                      <Checkbox
+                        ouiaId={`select-acs-${id}`}
+                        id={id}
+                        aria-label={`Select ACS ${id}`}
+                        isChecked={isSelected(id)}
+                        onChange={selected => selectOne(selected, id)}
+                      />
+                    </Td>
                     <Td>
                       <Text onClick={() => onClick(id)} component="a">{name}</Text>
                     </Td>

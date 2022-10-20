@@ -8,6 +8,8 @@ import ACS_KEY, {
   DELETE_ACS_KEY,
   EDIT_ACS_KEY,
   PRODUCTS_KEY,
+  BULK_ACS_REFRESH_KEY,
+  BULK_ACS_DELETE_KEY,
 } from './ACSConstants';
 import { getResponseErrorMsgs } from '../../utils/helpers';
 import { renderTaskStartedToast } from '../Tasks/helpers';
@@ -76,6 +78,30 @@ export const refreshACS = (acsId, handleSuccess) => post({
     return renderTaskStartedToast(response.data);
   },
   errorToast: error => acsErrorToast(error),
+});
+
+export const bulkRefreshACS = (params, handleSuccess) => post({
+  type: API_OPERATIONS.POST,
+  key: BULK_ACS_REFRESH_KEY,
+  url: api.getApiUrl('/alternate_content_sources/bulk/refresh'),
+  params,
+  handleSuccess: (response) => {
+    renderTaskStartedToast(response?.data, __('Bulk alternate content source refresh has started.'));
+    return handleSuccess();
+  },
+  errorToast: error => __('Something went wrong while refreshing alternate content sources: ') + getResponseErrorMsgs(error.response),
+});
+
+export const bulkDeleteACS = (params, handleSuccess) => APIActions.put({
+  type: API_OPERATIONS.PUT,
+  key: BULK_ACS_DELETE_KEY,
+  url: api.getApiUrl('/alternate_content_sources/bulk/destroy'),
+  params,
+  handleSuccess: (response) => {
+    renderTaskStartedToast(response?.data, __('Bulk alternate content source delete has started.'));
+    return handleSuccess();
+  },
+  errorToast: error => __(`Something went wrong while deleting alternate content sources: ${getResponseErrorMsgs(error.response)}`),
 });
 
 export const getProducts = () => get({
