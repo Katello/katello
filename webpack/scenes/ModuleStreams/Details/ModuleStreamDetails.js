@@ -42,7 +42,7 @@ class ModuleStreamDetails extends Component {
     };
 
     return (
-      <div>
+      <div style={{ margin: '24px' }}>
         {!loading && <BreadcrumbsBar
           isLoadingResources={loading}
           onSwitcherItemClick={(e, url) => this.handleBreadcrumbSwitcherItem(e, url)}
