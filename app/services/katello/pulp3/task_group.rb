@@ -50,6 +50,10 @@ module Katello
         ::Katello::Pulp3::Api::Core.new(@smart_proxy).task_groups_api
       end
 
+      def tasks_api
+        ::Katello::Pulp3::Api::Core.new(@smart_proxy).tasks_api
+      end
+
       def done?
         task_group_data['all_tasks_dispatched'] == true && IN_PROGRESS_STATES.all? { |state| task_group_data[state] == 0 }
       end
@@ -74,10 +78,23 @@ module Katello
       def error
         return if task_group_data[WAITING] > 0 || task_group_data[RUNNING] > 0
         if task_group_data[FAILED] > 0
-          "#{task_group_data[FAILED]} subtask(s) failed for task group #{@href}."
+          messages = query_task_group_errors(task_group_data)
+          return "#{task_group_data[FAILED]} subtask(s) failed for task group #{@href}.\nErrors:\n #{messages.join("\n")}"
         elsif task_group_data[CANCELLED] > 0
           "#{task_group_data[CANCELLED]} subtask(s) cancelled for task group #{@href}."
         end
+      end
+
+      def query_task_group_errors(task_group_data)
+        messages = []
+        tasks_api = core_api.tasks_api
+        tasks_response = core_api.class.fetch_from_list do |page_opts|
+          tasks_api.list(page_opts.merge(task_group: task_group_data['pulp_href'], state__in: [FAILED]))
+        end
+        tasks_response.collect do |result|
+          messages << result.error
+        end
+        return messages
       end
 
       def core_api
