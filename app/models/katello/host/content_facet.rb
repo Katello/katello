@@ -83,13 +83,23 @@ module Katello
       end
 
       def errata_counts
-        hash = {
+        installable_hash = {
           :security => installable_security_errata_count,
           :bugfix => installable_bugfix_errata_count,
           :enhancement => installable_enhancement_errata_count
         }
-        hash[:total] = hash.values.inject(:+)
-        hash
+        installable_hash[:total] = installable_hash.values.inject(:+)
+        # same for applicable, but we need to get the counts from the db
+        applicable_hash = {
+          :security => applicable_errata.security.count,
+          :bugfix => applicable_errata.bugfix.count,
+          :enhancement => applicable_errata.enhancement.count
+        }
+        applicable_hash[:total] = applicable_hash.values.inject(:+)
+        # keeping installable at the top level for backward compatibility
+        installable_hash.merge({
+          :applicable => applicable_hash
+        })
       end
 
       def self.trigger_applicability_generation(host_ids)

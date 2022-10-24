@@ -17,9 +17,12 @@ import {
 } from '@patternfly/react-icons';
 import { TranslatedAnchor } from '../Table/components/TranslatedPlural';
 
-export const ErrataMapper = ({ data, id }) => data.map(({ x: type, y: count }) => <ErrataSummary count={count} type={type} key={`${count} ${type}`} id={id} />);
+export const ErrataMapper = ({ data, id, errataCategory }) =>
+  data.map(({ x: type, y: count }) =>
+    <ErrataSummary count={count} type={type} key={`${count} ${type}`} id={id} errataCategory={errataCategory} />);
 
-export const ErrataSummary = ({ type, count }) => {
+export const ErrataSummary = ({ type, count, errataCategory }) => {
+  const show = errataCategory === 'applicable' ? 'all' : 'installable';
   let ErrataIcon;
   let label;
   let url;
@@ -33,7 +36,7 @@ export const ErrataSummary = ({ type, count }) => {
       <TranslatedAnchor
         id="errata-card-security-count"
         style={{ marginLeft: '0.4rem' }}
-        href="#/Content/errata?type=security"
+        href={`#/Content/errata?type=security&show=${show}`}
         count={count}
         plural="security advisories"
         singular="security advisory"
@@ -51,7 +54,7 @@ export const ErrataSummary = ({ type, count }) => {
       <TranslatedAnchor
         id="errata-card-bugfix-count"
         style={{ marginLeft: '0.4rem' }}
-        href="#/Content/errata?type=bugfix"
+        href={`#/Content/errata?type=bugfix&show=${show}`}
         count={count}
         plural="bug fixes"
         singular="bug fix"
@@ -69,7 +72,7 @@ export const ErrataSummary = ({ type, count }) => {
       <TranslatedAnchor
         id="errata-card-enhancement-count"
         style={{ marginLeft: '0.4rem' }}
-        href="#/Content/errata?type=enhancement"
+        href={`#/Content/errata?type=enhancement&show=${show}`}
         count={count}
         plural="enhancements"
         singular="enhancement"
