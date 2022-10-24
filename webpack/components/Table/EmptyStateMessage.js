@@ -86,7 +86,7 @@ const EmptyStateMessage = ({
         <EmptyStateBody>
           {emptyStateBody}
         </EmptyStateBody>
-        {showPrimaryAction ? actionButton : null}
+        {showPrimaryAction && actionButton}
         {showSecondaryAction &&
           <EmptyStateSecondaryActions>
             <Button variant="link">
