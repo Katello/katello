@@ -127,10 +127,14 @@ module Katello
       statement = query_clauses.join(" AND ")
       ModuleStream.where(:id => ModuleStreamErratumPackage.joins(:erratum_package => {:erratum => :repository_errata}).
           where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
-          where(statement).select("#{ModuleStreamErratumPackage.table_name}.module_stream_id")) -
+          where(statement).select("#{ModuleStreamErratumPackage.table_name}.module_stream_id")).
+        joins(:repository_module_streams).
+        where("#{RepositoryModuleStream.table_name}.repository_id" => repo.id) -
       ModuleStream.where(:id => ModuleStreamErratumPackage.joins(:erratum_package => {:erratum => :repository_errata}).
           where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
-          where(statement).where("#{Erratum.table_name}.errata_id" => additional_included_errata.pluck(:errata_id)).select("#{ModuleStreamErratumPackage.table_name}.module_stream_id"))
+          where(statement).where("#{Erratum.table_name}.errata_id" => additional_included_errata.pluck(:errata_id)).select("#{ModuleStreamErratumPackage.table_name}.module_stream_id")).
+        joins(:repository_module_streams).
+        where("#{RepositoryModuleStream.table_name}.repository_id" => repo.id)
     end
 
     def module_streams
