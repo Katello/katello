@@ -9,7 +9,9 @@ import {
   GridItem,
   ToggleGroup,
   ToggleGroupItem,
+  Tooltip,
 } from '@patternfly/react-core';
+import { OutlinedQuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
@@ -20,8 +22,25 @@ import { TranslatedAnchor } from '../../../Table/components/TranslatedPlural';
 import EmptyStateMessage from '../../../Table/EmptyStateMessage';
 import './ErrataOverviewCard.scss';
 
+const statusContemplation = (errataStatus) => {
+  // from backend errata_status.rb:
+  // NEEDED_SECURITY_ERRATA = 3
+  // NEEDED_ERRATA = 2
+  // UNKNOWN = 1
+  // UP_TO_DATE = 0
+  const neededErrata = ([2, 3].includes(Number(errataStatus)));
+  const allUpToDate = (errataStatus === 0);
+  const otherErrataStatus = (!allUpToDate && !neededErrata);
+
+  return {
+    neededErrata,
+    allUpToDate,
+    otherErrataStatus,
+  };
+};
+
 function HostInstallableErrata({
-  id, errataCounts, errataStatus, errataCategory,
+  id, errataCounts, errataStatus, errataCategory, errataStatusLabel,
 }) {
   const counts = errataCategory === 'applicable' ? errataCounts.applicable : errataCounts;
   const show = errataCategory === 'applicable' ? 'all' : 'installable';
@@ -29,6 +48,7 @@ function HostInstallableErrata({
   const errataSecurity = counts.security;
   const errataBug = counts.bugfix;
   const errataEnhance = counts.enhancement;
+  const { neededErrata, allUpToDate, otherErrataStatus } = statusContemplation(errataStatus);
   const chartData = [{
     w: 'security advisories', x: 'security', y: errataSecurity, z: errataTotal,
   }, {
@@ -38,14 +58,24 @@ function HostInstallableErrata({
   }];
   return (
     <CardBody>
-      {errataStatus === 0 &&
+      {allUpToDate &&
         <EmptyStateMessage
           title={__('All errata up-to-date')}
           body={__('No action required')}
           happy
         />
       }
-      {errataStatus !== 0 &&
+      {otherErrataStatus &&
+        <EmptyStateMessage
+          title={null}
+          body={errataStatusLabel}
+          customIcon={ExclamationTriangleIcon}
+          secondaryActionTitle={__('Enable repository sets')}
+          secondaryActionLink="#/Content/Repository%20sets?show=all"
+          showSecondaryAction
+        />
+      }
+      {neededErrata &&
         <Flex direction="column">
           <FlexItem>
             <TranslatedAnchor
@@ -88,30 +118,65 @@ function HostInstallableErrata({
   );
 }
 
+const ErrataToggleGroupItem = ({
+  text, tooltipText, isSelected, onChange,
+}) => (
+  <ToggleGroupItem
+    text={
+      <>
+        {text}
+        <Tooltip
+          content={tooltipText}
+          position="top"
+          enableFlip
+        >
+          <OutlinedQuestionCircleIcon style={{ marginBottom: '-2px', marginLeft: '0.3rem' }} color="gray" />
+        </Tooltip>
+      </>
+    }
+    isSelected={isSelected}
+    onChange={onChange}
+  />
+);
+
+ErrataToggleGroupItem.propTypes = {
+  text: PropTypes.string.isRequired,
+  tooltipText: PropTypes.string.isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
 const ErrataOverviewCard = ({ hostDetails }) => {
   const hostPopulated = (hostIsRegistered({ hostDetails }) &&
     !!hostDetails.content_facet_attributes);
 
   const [errataCategory, setErrataCategory] = useState('applicable');
   if (!hostPopulated) return null;
-  const { id: hostId, errata_status: errataStatus } = hostDetails;
+  const {
+    id: hostId,
+    errata_status: errataStatus,
+    errata_status_label: errataStatusLabel,
+  } = hostDetails;
+  const { neededErrata } = statusContemplation(errataStatus);
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
       <Card ouiaId="errata-card">
         <CardHeader>
           <Flex spaceItems={{ default: 'spaceItemsXl' }}>
             <CardTitle>{__('Errata')}</CardTitle>
-            {errataStatus !== 0 &&
-              <ToggleGroup>
-                <ToggleGroupItem
-                  text={__('Installable')}
-                  isSelected={errataCategory === 'installable'}
-                  onChange={selected => selected && setErrataCategory('installable')}
-                />
-                <ToggleGroupItem
+            {neededErrata &&
+              <ToggleGroup isCompact>
+                <ErrataToggleGroupItem
                   text={__('Applicable')}
+                  tooltipText={__('Applicable errata are errata that apply to at least one package installed on the host.')}
                   isSelected={errataCategory === 'applicable'}
                   onChange={selected => selected && setErrataCategory('applicable')}
+                />
+                <ErrataToggleGroupItem
+                  text={__('Installable')}
+                  tooltipText={__('Installable errata are applicable errata that are available in the host\'s content view and lifecycle environment.')}
+                  isSelected={errataCategory === 'installable'}
+                  onChange={selected => selected && setErrataCategory('installable')}
                 />
               </ToggleGroup>
             }
@@ -122,6 +187,7 @@ const ErrataOverviewCard = ({ hostDetails }) => {
           id={hostId}
           errataCategory={errataCategory}
           errataStatus={errataStatus}
+          errataStatusLabel={errataStatusLabel}
         />
       </Card>
     </GridItem>
@@ -142,11 +208,13 @@ HostInstallableErrata.propTypes = {
     }),
   }).isRequired,
   errataStatus: PropTypes.number,
+  errataStatusLabel: PropTypes.string,
   errataCategory: PropTypes.string,
 };
 
 HostInstallableErrata.defaultProps = {
   errataStatus: undefined,
+  errataStatusLabel: __('Unknown errata status'),
   errataCategory: 'applicable',
 };
 
@@ -155,6 +223,7 @@ ErrataOverviewCard.propTypes = {
     content_facet_attributes: PropTypes.shape({}),
     id: PropTypes.number,
     errata_status: PropTypes.number,
+    errata_status_label: PropTypes.string,
   }),
 };
 

@@ -103,6 +103,7 @@ export const ErrataSummary = ({ type, count, errataCategory }) => {
 ErrataSummary.propTypes = {
   type: PropTypes.string.isRequired,
   count: PropTypes.number.isRequired,
+  errataCategory: PropTypes.string.isRequired,
 };
 
 export const ErrataType = ({ type }) => {
