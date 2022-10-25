@@ -16,7 +16,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DEB_TYPE) do
   distribution_class PulpDebClient::DebAptDistribution
   publication_class PulpDebClient::DebAptPublication
   publications_api_class PulpDebClient::PublicationsAptApi
-  repo_sync_url_class PulpDebClient::RepositorySyncURL
+  repo_sync_url_class PulpDebClient::AptRepositorySyncURL
 
   default_managed_content_type Katello::Deb::CONTENT_TYPE
   content_type Katello::Deb,

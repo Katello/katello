@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos8-katello-devel-2.cannolo.example.com/pulp/api/v3/tasks/?limit=1
+    uri: https://centos8-katello-devel.sajha.example.com/pulp/api/v3/tasks/?limit=1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.18.5/ruby
+      - OpenAPI-Generator/3.21.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -23,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 30 Jun 2022 15:54:16 GMT
+      - Wed, 19 Oct 2022 16:56:15 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -35,37 +35,41 @@ http_interactions:
       X-Frame-Options:
       - DENY
       Content-Length:
-      - '752'
+      - '936'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 3ce4d8bfcc654e859a72425ce5e919d1
+      - 55cce4d0c07641989da2f94c14be79c9
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos8-katello-devel-2.cannolo.example.com
+      - 1.1 centos8-katello-devel.sajha.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6OTIwLCJuZXh0IjoiaHR0cHM6Ly9jZW50b3M4LWthdGVsbG8t
-        ZGV2ZWwtMi5jYW5ub2xvLmV4YW1wbGUuY29tL3B1bHAvYXBpL3YzL3Rhc2tz
-        Lz9saW1pdD0xJm9mZnNldD0xIiwicHJldmlvdXMiOm51bGwsInJlc3VsdHMi
-        Olt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8xZGVhN2UwMC1k
-        NzRmLTRkNjUtYjFkMS1kNjVhMmZiYzIxODYvIiwicHVscF9jcmVhdGVkIjoi
-        MjAyMi0wNi0zMFQxNTo1NDoxNS41MDM0ODNaIiwic3RhdGUiOiJjb21wbGV0
-        ZWQiLCJuYW1lIjoicHVscGNvcmUuYXBwLnRhc2tzLmJhc2UuZ2VuZXJhbF9k
-        ZWxldGUiLCJsb2dnaW5nX2NpZCI6ImYyYzUyZmU4NTMyODRkZjNhOTk1MDYy
-        NmY1ZDVmYWFlIiwic3RhcnRlZF9hdCI6IjIwMjItMDYtMzBUMTU6NTQ6MTUu
-        NTU1NjQ3WiIsImZpbmlzaGVkX2F0IjoiMjAyMi0wNi0zMFQxNTo1NDoxNS41
-        OTgzMDVaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93
-        b3JrZXJzL2U0NDkzZjQzLWZhYWYtNDQ3ZS04NjBkLTM1MTZjNDRlODIyZS8i
-        LCJwYXJlbnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dy
-        b3VwIjpudWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNv
-        dXJjZXMiOltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxw
-        L2FwaS92My9yZXBvc2l0b3JpZXMvcHl0aG9uL3B5dGhvbi9kNTcyMmYzNC04
-        ZTI5LTQ4NTYtYjNiMS1mOGRmZDQwMTQ4N2YvIl19XX0=
+        eyJjb3VudCI6MTUsIm5leHQiOiJodHRwczovL2NlbnRvczgta2F0ZWxsby1k
+        ZXZlbC5zYWpoYS5leGFtcGxlLmNvbS9wdWxwL2FwaS92My90YXNrcy8/bGlt
+        aXQ9MSZvZmZzZXQ9MSIsInByZXZpb3VzIjpudWxsLCJyZXN1bHRzIjpbeyJw
+        dWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMTM4NzlmMGUtZmY3ZS00
+        MGZmLWFmZTktYzU4YTE2NDZhMjIzLyIsInB1bHBfY3JlYXRlZCI6IjIwMjIt
+        MTAtMTlUMTY6NTY6MTUuMjAwMDMyWiIsInN0YXRlIjoiY29tcGxldGVkIiwi
+        bmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5vcnBoYW4ub3JwaGFuX2NsZWFu
+        dXAiLCJsb2dnaW5nX2NpZCI6IjkzNDU3M2Q3NGMwNjQ0MmM5OGE5MDlhZjI5
+        NDNkNDhmIiwic3RhcnRlZF9hdCI6IjIwMjItMTAtMTlUMTY6NTY6MTUuMjM1
+        Njg2WiIsImZpbmlzaGVkX2F0IjoiMjAyMi0xMC0xOVQxNjo1NjoxNS4yNjIx
+        NjFaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3Jr
+        ZXJzLzIxYWI4NGM0LTlkNzMtNDAxMy04ZTI4LTMxNDU5ZGFiNjE5ZC8iLCJw
+        YXJlbnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3Vw
+        IjpudWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbeyJtZXNzYWdlIjoiQ2xlYW4g
+        dXAgb3JwaGFuIENvbnRlbnQiLCJjb2RlIjoiY2xlYW4tdXAuY29udGVudCIs
+        InN0YXRlIjoiY29tcGxldGVkIiwidG90YWwiOjAsImRvbmUiOjAsInN1ZmZp
+        eCI6bnVsbH0seyJtZXNzYWdlIjoiQ2xlYW4gdXAgb3JwaGFuIEFydGlmYWN0
+        cyIsImNvZGUiOiJjbGVhbi11cC5jb250ZW50Iiwic3RhdGUiOiJjb21wbGV0
+        ZWQiLCJ0b3RhbCI6MCwiZG9uZSI6MCwic3VmZml4IjpudWxsfV0sImNyZWF0
+        ZWRfcmVzb3VyY2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6
+        WyIvcHVscC9hcGkvdjMvb3JwaGFucy9jbGVhbnVwLyJdfV19
     http_version: 
-  recorded_at: Thu, 30 Jun 2022 15:54:16 GMT
+  recorded_at: Wed, 19 Oct 2022 16:56:15 GMT
 recorded_with: VCR 3.0.3

@@ -2,19 +2,17 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos8-katello-devel-2.cannolo.example.com/pulp/api/v3/tasks/?limit=1
+    uri: https://centos8-katello-devel.sajha.example.com/pulp/api/v3/tasks/?limit=1
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.18.5/ruby
+      - OpenAPI-Generator/3.21.1/ruby
       Accept:
       - application/json
       Content-Type:
       - application/json
-      Correlation-Id:
-      - abc123
       Authorization:
       - Basic Og==
   response:
@@ -23,7 +21,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 30 Jun 2022 15:54:16 GMT
+      - Wed, 19 Oct 2022 16:56:15 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -35,37 +33,41 @@ http_interactions:
       X-Frame-Options:
       - DENY
       Content-Length:
-      - '756'
+      - '940'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 46bc0b2dfab5460588950a8f45103cdc
+      - 5904b9527a4b4d728e015d4a3670499d
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos8-katello-devel-2.cannolo.example.com
+      - 1.1 centos8-katello-devel.sajha.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6OTIwLCJuZXh0IjoiaHR0cHM6Ly9jZW50b3M4LWthdGVsbG8t
-        ZGV2ZWwtMi5jYW5ub2xvLmV4YW1wbGUuY29tOjQ0My9wdWxwL2FwaS92My90
-        YXNrcy8/bGltaXQ9MSZvZmZzZXQ9MSIsInByZXZpb3VzIjpudWxsLCJyZXN1
-        bHRzIjpbeyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMWRlYTdl
-        MDAtZDc0Zi00ZDY1LWIxZDEtZDY1YTJmYmMyMTg2LyIsInB1bHBfY3JlYXRl
-        ZCI6IjIwMjItMDYtMzBUMTU6NTQ6MTUuNTAzNDgzWiIsInN0YXRlIjoiY29t
-        cGxldGVkIiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVy
-        YWxfZGVsZXRlIiwibG9nZ2luZ19jaWQiOiJmMmM1MmZlODUzMjg0ZGYzYTk5
-        NTA2MjZmNWQ1ZmFhZSIsInN0YXJ0ZWRfYXQiOiIyMDIyLTA2LTMwVDE1OjU0
-        OjE1LjU1NTY0N1oiLCJmaW5pc2hlZF9hdCI6IjIwMjItMDYtMzBUMTU6NTQ6
-        MTUuNTk4MzA1WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkv
-        djMvd29ya2Vycy9lNDQ5M2Y0My1mYWFmLTQ0N2UtODYwZC0zNTE2YzQ0ZTgy
-        MmUvIiwicGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFz
-        a19ncm91cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRf
-        cmVzb3VyY2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIv
-        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3B5dGhvbi9weXRob24vZDU3MjJm
-        MzQtOGUyOS00ODU2LWIzYjEtZjhkZmQ0MDE0ODdmLyJdfV19
+        eyJjb3VudCI6MTUsIm5leHQiOiJodHRwczovL2NlbnRvczgta2F0ZWxsby1k
+        ZXZlbC5zYWpoYS5leGFtcGxlLmNvbTo0NDMvcHVscC9hcGkvdjMvdGFza3Mv
+        P2xpbWl0PTEmb2Zmc2V0PTEiLCJwcmV2aW91cyI6bnVsbCwicmVzdWx0cyI6
+        W3sicHVscF9ocmVmIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzEzODc5ZjBlLWZm
+        N2UtNDBmZi1hZmU5LWM1OGExNjQ2YTIyMy8iLCJwdWxwX2NyZWF0ZWQiOiIy
+        MDIyLTEwLTE5VDE2OjU2OjE1LjIwMDAzMloiLCJzdGF0ZSI6ImNvbXBsZXRl
+        ZCIsIm5hbWUiOiJwdWxwY29yZS5hcHAudGFza3Mub3JwaGFuLm9ycGhhbl9j
+        bGVhbnVwIiwibG9nZ2luZ19jaWQiOiI5MzQ1NzNkNzRjMDY0NDJjOThhOTA5
+        YWYyOTQzZDQ4ZiIsInN0YXJ0ZWRfYXQiOiIyMDIyLTEwLTE5VDE2OjU2OjE1
+        LjIzNTY4NloiLCJmaW5pc2hlZF9hdCI6IjIwMjItMTAtMTlUMTY6NTY6MTUu
+        MjYyMTYxWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMv
+        d29ya2Vycy8yMWFiODRjNC05ZDczLTQwMTMtOGUyOC0zMTQ1OWRhYjYxOWQv
+        IiwicGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19n
+        cm91cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W3sibWVzc2FnZSI6IkNs
+        ZWFuIHVwIG9ycGhhbiBDb250ZW50IiwiY29kZSI6ImNsZWFuLXVwLmNvbnRl
+        bnQiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsInRvdGFsIjowLCJkb25lIjowLCJz
+        dWZmaXgiOm51bGx9LHsibWVzc2FnZSI6IkNsZWFuIHVwIG9ycGhhbiBBcnRp
+        ZmFjdHMiLCJjb2RlIjoiY2xlYW4tdXAuY29udGVudCIsInN0YXRlIjoiY29t
+        cGxldGVkIiwidG90YWwiOjAsImRvbmUiOjAsInN1ZmZpeCI6bnVsbH1dLCJj
+        cmVhdGVkX3Jlc291cmNlcyI6W10sInJlc2VydmVkX3Jlc291cmNlc19yZWNv
+        cmQiOlsiL3B1bHAvYXBpL3YzL29ycGhhbnMvY2xlYW51cC8iXX1dfQ==
     http_version: 
-  recorded_at: Thu, 30 Jun 2022 15:54:16 GMT
+  recorded_at: Wed, 19 Oct 2022 16:56:15 GMT
 recorded_with: VCR 3.0.3
