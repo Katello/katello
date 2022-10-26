@@ -28,7 +28,7 @@ child :latest_dynflow_refresh_task => :last_refresh do |_object|
   end
 end
 
-if params.key?(:include_permissions)
+if ::Foreman::Cast.to_bool(params.fetch(:include_permissions, false))
   node :permissions do |alternate_content_source|
     {
       :view_alternate_content_sources => alternate_content_source.readable?,

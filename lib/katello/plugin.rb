@@ -47,7 +47,7 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :alternate_content_sources,
          :url => '/alternate_content_sources',
-         :url_hash => {:controller => 'katello/api/v2/alternate_content_sources_controller',
+         :url_hash => {:controller => 'katello/api/v2/alternate_content_sources',
                        :action => 'index'},
          :caption => N_('Alternate Content Sources'),
          :engine => Katello::Engine,

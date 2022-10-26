@@ -51,7 +51,12 @@ const ACSTable = () => {
   const [isCreateWizardOpen, setIsCreateWizardOpen] = useState(false);
   const dispatch = useDispatch();
   const metadata = omit(response, ['results']);
-  const { can_create: canCreate = false, can_edit: canEdit = false, can_delete: canDelete = false, results } = response;
+  const {
+    can_create: canCreate = false,
+    can_edit: canEdit = false,
+    can_delete: canDelete = false,
+    results,
+  } = response;
   const { pathname } = useLocation();
   const { push } = useHistory();
   const acsId = pathname.split('/')[2];
@@ -299,7 +304,7 @@ const ACSTable = () => {
                 >
                   {__('Add source')}
                 </Button>}
-                {renderActionButtons &&
+                {renderActionButtons && (canEdit || canDelete) &&
                 <Dropdown
                   toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
                   isOpen={kebabOpen}
@@ -367,6 +372,7 @@ const ACSTable = () => {
                   id,
                   alternate_content_source_type: acsType,
                   last_refresh: lastTask,
+                  permissions,
                 } = acs;
                 const {
                   last_refresh_words: lastRefreshWords,
@@ -398,9 +404,13 @@ const ACSTable = () => {
                       emptyMessage="N/A"
                     />
                     </Td>
-                    <Td isActionCell>
-                      <ActionsColumn items={actionsWithPermissions(acs)} />
-                    </Td>
+                    {(hasPermission(permissions, 'destroy_alternate_content_sources') ||
+                        hasPermission(permissions, 'edit_alternate_content_sources')) ?
+                          <Td isActionCell>
+                            <ActionsColumn items={actionsWithPermissions(acs)} />
+                          </Td> :
+                          <Td />
+                    }
                   </Tr>
                 );
               })

@@ -252,6 +252,7 @@ Katello::Engine.routes.draw do
           end
           api_resources :products, :only => [:index]
           api_resources :repositories, :only => [:index]
+          api_resources :alternate_content_sources, :only => [:index]
           api_resources :subscriptions, :only => [:index] do
             collection do
               match '/available' => 'subscriptions#available', :via => :get
