@@ -3,7 +3,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem,
+  DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup,
   DropdownToggle, DropdownToggleAction,
 } from '@patternfly/react-core';
 import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
@@ -26,7 +26,7 @@ import { propsToCamelCase } from 'foremanReact/common/helpers';
 import SelectableDropdown from '../../../../SelectableDropdown';
 import { useSet, useBulkSelect, useUrlParams, useTableSort } from '../../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
-import { ErrataType, ErrataSeverity } from '../../../../../components/Errata';
+import { ErrataType, ErrataSeverity, ErrataToggleGroupItem } from '../../../../../components/Errata';
 import { getInstallableErrata, regenerateApplicability, applyViaKatelloAgent } from './HostErrataActions';
 import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
@@ -65,8 +65,8 @@ export const ErrataTab = () => {
     );
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
   const dispatch = useDispatch();
-  const toggleGroupStates = ['all', 'installable'];
-  const [ALL, INSTALLABLE] = toggleGroupStates;
+  const toggleGroupStates = ['applicable', 'installable'];
+  const [APPLICABLE, INSTALLABLE] = toggleGroupStates;
   const ERRATA_TYPE = __('Type');
   const ERRATA_SEVERITY = __('Severity');
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
@@ -148,13 +148,13 @@ export const ErrataTab = () => {
       return getInstallableErrata(
         hostId,
         {
-          include_applicable: toggleGroupState === ALL,
+          include_applicable: toggleGroupState === APPLICABLE,
           ...apiSortParams,
           ...modifiedParams,
         },
       );
     },
-    [hostId, toggleGroupState, ALL, ERRATA_SEVERITY, ERRATA_TYPE,
+    [hostId, toggleGroupState, APPLICABLE, ERRATA_SEVERITY, ERRATA_TYPE,
       errataTypeSelected, errataSeveritySelected, apiSortParams],
   );
 
@@ -411,17 +411,19 @@ export const ErrataTab = () => {
       {hostIsNonLibrary &&
         <SplitItem>
           <ToggleGroup aria-label="Installable Errata">
-            <ToggleGroupItem
-              text={__('All')}
-              buttonId="allToggle"
-              aria-label="Show All"
-              isSelected={toggleGroupState === ALL}
-              onChange={() => setToggleGroupState(ALL)}
+            <ErrataToggleGroupItem
+              text={__('Applicable')}
+              tooltipText={__('Applicable errata apply to at least one package installed on the host.')}
+              buttonId="applicableToggle"
+              aria-label="Show applicable errata"
+              isSelected={toggleGroupState === APPLICABLE}
+              onChange={() => setToggleGroupState(APPLICABLE)}
             />
-            <ToggleGroupItem
+            <ErrataToggleGroupItem
               text={__('Installable')}
+              tooltipText={__('Installable errata are applicable errata that are available in the host\'s content view and lifecycle environment.')}
               buttonId="installableToggle"
-              aria-label="Show Installable"
+              aria-label="Show installable errata"
               isSelected={toggleGroupState === INSTALLABLE}
               onChange={() => setToggleGroupState(INSTALLABLE)}
             />

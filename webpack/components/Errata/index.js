@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TableText } from '@patternfly/react-table';
-import { Tooltip } from '@patternfly/react-core';
+import { Tooltip, ToggleGroupItem } from '@patternfly/react-core';
 import {
   chart_color_black_500 as pfBlack,
   chart_color_gold_400 as pfGold,
@@ -14,6 +14,7 @@ import {
   SecurityIcon,
   EnhancementIcon,
   SquareIcon,
+  OutlinedQuestionCircleIcon,
 } from '@patternfly/react-icons';
 import { TranslatedAnchor } from '../Table/components/TranslatedPlural';
 
@@ -22,7 +23,6 @@ export const ErrataMapper = ({ data, id, errataCategory }) =>
     <ErrataSummary count={count} type={type} key={`${count} ${type}`} id={id} errataCategory={errataCategory} />);
 
 export const ErrataSummary = ({ type, count, errataCategory }) => {
-  const show = errataCategory === 'applicable' ? 'all' : 'installable';
   let ErrataIcon;
   let label;
   let url;
@@ -36,7 +36,7 @@ export const ErrataSummary = ({ type, count, errataCategory }) => {
       <TranslatedAnchor
         id="errata-card-security-count"
         style={{ marginLeft: '0.4rem' }}
-        href={`#/Content/errata?type=security&show=${show}`}
+        href={`#/Content/errata?type=security&show=${errataCategory}`}
         count={count}
         plural="security advisories"
         singular="security advisory"
@@ -54,7 +54,7 @@ export const ErrataSummary = ({ type, count, errataCategory }) => {
       <TranslatedAnchor
         id="errata-card-bugfix-count"
         style={{ marginLeft: '0.4rem' }}
-        href={`#/Content/errata?type=bugfix&show=${show}`}
+        href={`#/Content/errata?type=bugfix&show=${errataCategory}`}
         count={count}
         plural="bug fixes"
         singular="bug fix"
@@ -72,7 +72,7 @@ export const ErrataSummary = ({ type, count, errataCategory }) => {
       <TranslatedAnchor
         id="errata-card-enhancement-count"
         style={{ marginLeft: '0.4rem' }}
-        href={`#/Content/errata?type=enhancement&show=${show}`}
+        href={`#/Content/errata?type=enhancement&show=${errataCategory}`}
         count={count}
         plural="enhancements"
         singular="enhancement"
@@ -181,4 +181,32 @@ export const ErrataSeverity = ({ severity }) => {
 
 ErrataSeverity.propTypes = {
   severity: PropTypes.string.isRequired,
+};
+
+export const ErrataToggleGroupItem = ({
+  text, tooltipText, isSelected, onChange,
+}) => (
+  <ToggleGroupItem
+    text={
+      <>
+        {text}
+        <Tooltip
+          content={tooltipText}
+          position="top"
+          enableFlip
+        >
+          <OutlinedQuestionCircleIcon style={{ marginBottom: '-2px', marginLeft: '0.3rem' }} color="gray" />
+        </Tooltip>
+      </>
+    }
+    isSelected={isSelected}
+    onChange={onChange}
+  />
+);
+
+ErrataToggleGroupItem.propTypes = {
+  text: PropTypes.string.isRequired,
+  tooltipText: PropTypes.string.isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
 };

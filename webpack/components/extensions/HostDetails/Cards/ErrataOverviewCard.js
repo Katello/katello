@@ -8,15 +8,13 @@ import {
   FlexItem,
   GridItem,
   ToggleGroup,
-  ToggleGroupItem,
-  Tooltip,
 } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import { ChartPie } from '@patternfly/react-charts';
-import { ErrataMapper } from '../../../../components/Errata';
+import { ErrataMapper, ErrataToggleGroupItem } from '../../../../components/Errata';
 import { hostIsRegistered } from '../hostDetailsHelpers';
 import { TranslatedAnchor } from '../../../Table/components/TranslatedPlural';
 import EmptyStateMessage from '../../../Table/EmptyStateMessage';
@@ -118,34 +116,6 @@ function HostInstallableErrata({
   );
 }
 
-const ErrataToggleGroupItem = ({
-  text, tooltipText, isSelected, onChange,
-}) => (
-  <ToggleGroupItem
-    text={
-      <>
-        {text}
-        <Tooltip
-          content={tooltipText}
-          position="top"
-          enableFlip
-        >
-          <OutlinedQuestionCircleIcon style={{ marginBottom: '-2px', marginLeft: '0.3rem' }} color="gray" />
-        </Tooltip>
-      </>
-    }
-    isSelected={isSelected}
-    onChange={onChange}
-  />
-);
-
-ErrataToggleGroupItem.propTypes = {
-  text: PropTypes.string.isRequired,
-  tooltipText: PropTypes.string.isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
-
 const ErrataOverviewCard = ({ hostDetails }) => {
   const hostPopulated = (hostIsRegistered({ hostDetails }) &&
     !!hostDetails.content_facet_attributes);
@@ -168,7 +138,7 @@ const ErrataOverviewCard = ({ hostDetails }) => {
               <ToggleGroup isCompact>
                 <ErrataToggleGroupItem
                   text={__('Applicable')}
-                  tooltipText={__('Applicable errata are errata that apply to at least one package installed on the host.')}
+                  tooltipText={__('Applicable errata apply to at least one package installed on the host.')}
                   isSelected={errataCategory === 'applicable'}
                   onChange={selected => selected && setErrataCategory('applicable')}
                 />
