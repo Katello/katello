@@ -98,8 +98,8 @@ module Katello
         applicable_hash[:total] = applicable_hash.values.inject(:+)
         # keeping installable at the top level for backward compatibility
         installable_hash.merge({
-          :applicable => applicable_hash
-        })
+                                 :applicable => applicable_hash
+                               })
       end
 
       def self.trigger_applicability_generation(host_ids)

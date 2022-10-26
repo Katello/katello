@@ -109,10 +109,12 @@ ErrataSummary.propTypes = {
 export const ErrataType = ({ type }) => {
   let ErrataIcon;
   let label;
+  let verticalAlign = '-0.125em';
   switch (type) {
   case 'security':
     label = __('Security');
     ErrataIcon = SecurityIcon;
+    verticalAlign = '-0.2em';
     break;
   case 'recommended':
   case 'bugfix':
@@ -131,9 +133,11 @@ export const ErrataType = ({ type }) => {
 
   return (
     <TableText wrapModifier="nowrap">
-      <Tooltip content={label} >
-        <ErrataIcon style={{ marginRight: '4px' }} />
-      </Tooltip>
+      <span style={{ marginRight: '4px' }}>
+        <Tooltip content={label}>
+          <ErrataIcon style={{ verticalAlign }} />
+        </Tooltip>
+      </span>
       {label}
     </TableText>
   );
@@ -170,9 +174,11 @@ export const ErrataSeverity = ({ severity }) => {
   return (
     <TableText wrapModifier="nowrap">
       {color &&
-        <Tooltip content={label} >
-          <SecurityIcon color={color} />
-        </Tooltip>
+        <span style={{ marginRight: '4px' }}>
+          <Tooltip content={label} >
+            <SecurityIcon color={color} style={{ verticalAlign: '-0.2em' }}/>
+          </Tooltip>
+        </span>
       }
       {label}
     </TableText>
