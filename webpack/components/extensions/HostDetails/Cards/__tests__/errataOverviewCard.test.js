@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux } from 'react-testing-lib-wrapper';
+import { renderWithRedux, fireEvent } from 'react-testing-lib-wrapper';
 import ErrataOverviewCard from '../ErrataOverviewCard';
 
 const baseHostDetails = {
@@ -52,7 +52,7 @@ describe('Without errata', () => {
     expect(getByLabelText('0 enhancements')).toBeInTheDocument();
   });
 
-  test('shows empty state when there are 0 errata', () => {
+  test('shows happy empty state when there are 0 errata', () => {
     const hostDetails = {
       ...baseHostDetails,
       ...baseFacetAttributes,
@@ -62,6 +62,19 @@ describe('Without errata', () => {
     /* eslint-enable max-len */
     expect(queryByLabelText('errataChart')).not.toBeInTheDocument();
     expect(getByText('All errata up-to-date')).toBeInTheDocument();
+  });
+
+  // test for showing warning empty state when it has unknown errata status
+  test('shows warning empty state when it has unknown errata status', () => {
+    const hostDetails = {
+      ...baseHostDetails,
+      ...baseFacetAttributes,
+      errata_status: 1,
+    };
+    const { queryByLabelText, getByText }
+      = renderWithRedux(<ErrataOverviewCard hostDetails={hostDetails} />, renderOptions);
+    expect(queryByLabelText('errataChart')).not.toBeInTheDocument();
+    expect(getByText('Unknown errata status')).toBeInTheDocument();
   });
 
   test('does not show errata card when host not registered', () => {
@@ -102,6 +115,45 @@ describe('With errata', () => {
       = renderWithRedux(<ErrataOverviewCard hostDetails={hostDetails} />, renderOptions);
     expect(container.getElementsByClassName('erratachart')).toHaveLength(1);
     expect(container.getElementsByClassName('erratalegend')).toHaveLength(1);
+
+    expect(getByLabelText('60 total errata')).toBeInTheDocument();
+    expect(getByLabelText('30 security advisories')).toBeInTheDocument();
+    expect(getByLabelText('20 enhancements')).toBeInTheDocument();
+    expect(getByLabelText('10 bug fixes')).toBeInTheDocument();
+  });
+
+  test('Can toggle between applicable and installable with toggle group', () => {
+    const hostDetails = {
+      ...baseHostDetails,
+      errata_status: 2,
+      content_facet_attributes: {
+        errata_counts: {
+          bugfix: 10,
+          enhancement: 20,
+          security: 30,
+          total: 60,
+          applicable: {
+            bugfix: 11,
+            enhancement: 21,
+            security: 31,
+            total: 61,
+          },
+        },
+      },
+    };
+    const { getByLabelText, container, getByText }
+      = renderWithRedux(<ErrataOverviewCard hostDetails={hostDetails} />, renderOptions);
+    expect(container.getElementsByClassName('erratachart')).toHaveLength(1);
+    expect(container.getElementsByClassName('erratalegend')).toHaveLength(1);
+
+    expect(getByText('Applicable').parentElement).toHaveAttribute('aria-pressed', 'true');
+
+    expect(getByLabelText('61 total errata')).toBeInTheDocument();
+    expect(getByLabelText('31 security advisories')).toBeInTheDocument();
+    expect(getByLabelText('21 enhancements')).toBeInTheDocument();
+    expect(getByLabelText('11 bug fixes')).toBeInTheDocument();
+
+    fireEvent.click(getByText('Installable'));
 
     expect(getByLabelText('60 total errata')).toBeInTheDocument();
     expect(getByLabelText('30 security advisories')).toBeInTheDocument();
