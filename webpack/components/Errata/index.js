@@ -176,7 +176,7 @@ export const ErrataSeverity = ({ severity }) => {
       {color &&
         <span style={{ marginRight: '4px' }}>
           <Tooltip content={label} >
-            <SecurityIcon color={color} style={{ verticalAlign: '-0.2em' }}/>
+            <SecurityIcon color={color} style={{ verticalAlign: '-0.2em' }} />
           </Tooltip>
         </span>
       }
