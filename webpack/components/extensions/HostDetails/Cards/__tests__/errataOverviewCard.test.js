@@ -1,5 +1,6 @@
 import React from 'react';
-import { renderWithRedux, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+
 import ErrataOverviewCard from '../ErrataOverviewCard';
 
 const baseHostDetails = {
@@ -64,7 +65,6 @@ describe('Without errata', () => {
     expect(getByText('All errata up-to-date')).toBeInTheDocument();
   });
 
-  // test for showing warning empty state when it has unknown errata status
   test('shows warning empty state when it has unknown errata status', () => {
     const hostDetails = {
       ...baseHostDetails,
@@ -122,7 +122,36 @@ describe('With errata', () => {
     expect(getByLabelText('10 bug fixes')).toBeInTheDocument();
   });
 
-  test('Can toggle between applicable and installable with toggle group', () => {
+  test('has cute little tooltips', async () => {
+    const hostDetails = {
+      ...baseHostDetails,
+      errata_status: 2,
+      content_facet_attributes: {
+        errata_counts: {
+          bugfix: 10,
+          enhancement: 20,
+          security: 30,
+          total: 60,
+          applicable: {
+            bugfix: 10,
+            enhancement: 20,
+            security: 30,
+            total: 60,
+          },
+        },
+      },
+    };
+    const { getByText }
+      = renderWithRedux(<ErrataOverviewCard hostDetails={hostDetails} />, renderOptions);
+    // find the Applicable toggle button, then find the svg next to it
+    const applicableToggle = getByText('Applicable');
+    const questionMark = applicableToggle.querySelector('svg');
+    fireEvent.mouseEnter(questionMark);
+    // expect the tooltip to be visible
+    await patientlyWaitFor(() => expect(getByText('Applicable errata apply to at least one package installed on the host.')).toBeInTheDocument());
+  });
+
+  test('can toggle between applicable and installable with toggle group', () => {
     const hostDetails = {
       ...baseHostDetails,
       errata_status: 2,
