@@ -343,7 +343,13 @@ module Katello
         :security => 1,
         :bugfix => 2,
         :enhancement => 3,
-        :total => 6
+        :total => 6,
+        :applicable => { # it's fake data don't worry about it!
+          :security => 0,
+          :bugfix => 0,
+          :enhancement => 0,
+          :total => 0
+        }
       }
 
       assert_equal expected, content_facet.errata_counts
