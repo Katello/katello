@@ -750,14 +750,16 @@ test('Can toggle with the Toggle Group ', async (done) => {
 
   const {
     queryByLabelText,
+    getByText,
     getAllByText,
   } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(mockErrata.total)));
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   expect(queryByLabelText('Installable Errata')).toBeInTheDocument();
-  expect(queryByLabelText('Show Installable')).toHaveAttribute('aria-pressed', 'true');
-  expect(queryByLabelText('Show All')).toHaveAttribute('aria-pressed', 'false');
+  expect(getByText('Applicable')).toBeInTheDocument();
+  expect(getByText('Applicable').parentElement).toHaveAttribute('aria-pressed', 'false');
+  expect(getAllByText('Installable')[0].parentElement).toHaveAttribute('aria-pressed', 'true');
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
