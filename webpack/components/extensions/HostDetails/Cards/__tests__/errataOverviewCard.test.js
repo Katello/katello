@@ -189,4 +189,34 @@ describe('With errata', () => {
     expect(getByLabelText('20 enhancements')).toBeInTheDocument();
     expect(getByLabelText('10 bug fixes')).toBeInTheDocument();
   });
+  test('applicable view links to show=applicable; installable view links to show=installable', () => {
+    const hostDetails = {
+      ...baseHostDetails,
+      errata_status: 2,
+      content_facet_attributes: {
+        errata_counts: {
+          bugfix: 10,
+          enhancement: 20,
+          security: 30,
+          total: 60,
+          applicable: {
+            bugfix: 11,
+            enhancement: 21,
+            security: 31,
+            total: 61,
+          },
+        },
+      },
+    };
+    const { getByText, getByLabelText }
+      = renderWithRedux(<ErrataOverviewCard hostDetails={hostDetails} />, renderOptions);
+    expect(getByText('Applicable').parentElement).toHaveAttribute('aria-pressed', 'true');
+    expect(getByText('Installable').parentElement).toHaveAttribute('aria-pressed', 'false');
+
+    expect(getByLabelText('61 total errata').closest('a')).toHaveAttribute('href', '#/Content/errata?show=applicable');
+    fireEvent.click(getByText('Installable'));
+    expect(getByText('Applicable').parentElement).toHaveAttribute('aria-pressed', 'false');
+    expect(getByText('Installable').parentElement).toHaveAttribute('aria-pressed', 'true');
+    expect(getByLabelText('30 security advisories').closest('a')).toHaveAttribute('href', '#/Content/errata?type=security&show=installable');
+  });
 });

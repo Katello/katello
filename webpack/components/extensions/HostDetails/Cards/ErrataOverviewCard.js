@@ -41,7 +41,6 @@ function HostInstallableErrata({
   id, errataCounts, errataStatus, errataCategory, errataStatusLabel,
 }) {
   const counts = errataCategory === 'applicable' ? errataCounts.applicable : errataCounts;
-  const show = errataCategory === 'applicable' ? 'all' : 'installable';
   const errataTotal = counts.total;
   const errataSecurity = counts.security;
   const errataBug = counts.bugfix;
@@ -78,7 +77,7 @@ function HostInstallableErrata({
           <FlexItem>
             <TranslatedAnchor
               id="errata-card-total-count"
-              href={`#/Content/errata?show=${show}`}
+              href={`#/Content/errata?show=${errataCategory}`}
               count={errataTotal}
               plural="errata"
               singular="erratum"
