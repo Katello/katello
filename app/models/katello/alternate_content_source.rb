@@ -105,5 +105,9 @@ module Katello
     def audit_updated_products(old_product_ids)
       write_audit(action: 'update', comment: _('Products updated.'), audited_changes: { 'product_ids' => [old_product_ids, product_ids] })
     end
+
+    def self.humanize_class_name
+      "Alternate Content Sources"
+    end
   end
 end

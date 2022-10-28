@@ -34,6 +34,7 @@ import ACSEditCredentials from './EditModals/ACSEditCredentials';
 import ACSEditProducts from './EditModals/ACSEditProducts';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 import '../Acs.scss';
+import { hasPermission } from '../../ContentViews/helpers';
 
 const ACSExpandableDetails = () => {
   const { id } = useParams();
@@ -76,10 +77,12 @@ const ACSExpandableDetails = () => {
     ssl_client_key: sslClientKey,
     upstream_username: username,
     products,
+    permissions,
   } = details;
   if (error) {
     return <EmptyStateMessage error={error} />;
   }
+  const canEdit = hasPermission(permissions, 'edit_alternate_content_sources');
   return (
     <>
       <Stack>
@@ -100,6 +103,7 @@ const ACSExpandableDetails = () => {
                 {__('Details')}
               </ExpandableSectionToggle>
             </SplitItem>
+            {canEdit &&
             <SplitItem>
               <Button
                 ouiaId="edit-details-pencil-edit"
@@ -111,6 +115,7 @@ const ACSExpandableDetails = () => {
               >{__('Edit details')}
               </Button>
             </SplitItem>
+            }
           </Split>
         </StackItem>
         <StackItem>
@@ -177,6 +182,7 @@ const ACSExpandableDetails = () => {
                 {__('Smart proxies')}
               </ExpandableSectionToggle>
             </SplitItem>
+            {canEdit &&
             <SplitItem>
               <Button
                 ouiaId="edit-smart-proxies-pencil-edit"
@@ -188,6 +194,7 @@ const ACSExpandableDetails = () => {
               >{__('Edit smart proxies')}
               </Button>
             </SplitItem>
+            }
           </Split>
         </StackItem>
         <StackItem>
@@ -241,6 +248,7 @@ const ACSExpandableDetails = () => {
                   {__('Products')}
                 </ExpandableSectionToggle>
               </SplitItem>
+              {canEdit &&
               <SplitItem>
                 <Button
                   ouiaId="edit-products-pencil-edit"
@@ -252,6 +260,7 @@ const ACSExpandableDetails = () => {
                 >{__('Edit products')}
                 </Button>
               </SplitItem>
+              }
             </Split>
           </StackItem>
           <StackItem>
@@ -290,6 +299,7 @@ const ACSExpandableDetails = () => {
                   {__('URL and subpaths')}
                 </ExpandableSectionToggle>
               </SplitItem>
+              {canEdit &&
               <SplitItem>
                 <Button
                   ouiaId="edit-urls-pencil-edit"
@@ -301,6 +311,7 @@ const ACSExpandableDetails = () => {
                 >{__('Edit URL and subpaths')}
                 </Button>
               </SplitItem>
+              }
             </Split>
           </StackItem>
           <StackItem>
@@ -349,6 +360,7 @@ const ACSExpandableDetails = () => {
                   {__('Credentials')}
                 </ExpandableSectionToggle>
               </SplitItem>
+              {canEdit &&
               <SplitItem>
                 <Button
                   ouiaId="edit-credentials-pencil-edit"
@@ -360,6 +372,7 @@ const ACSExpandableDetails = () => {
                 >{__('Edit credentials')}
                 </Button>
               </SplitItem>
+              }
             </Split>
           </StackItem>
           <StackItem>

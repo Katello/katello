@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { capitalize, upperCase } from 'lodash';
+import { capitalize, upperCase, omit } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import {
@@ -40,6 +40,7 @@ import ACSExpandableDetails from '../Details/ACSExpandableDetails';
 import './ACSTable.scss';
 import Loading from '../../../components/Loading';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
+import { hasPermission } from '../../ContentViews/helpers';
 
 const ACSTable = () => {
   const response = useSelector(selectAlternateContentSources);
@@ -49,7 +50,13 @@ const ACSTable = () => {
   const [searchQuery, updateSearchQuery] = useState('');
   const [isCreateWizardOpen, setIsCreateWizardOpen] = useState(false);
   const dispatch = useDispatch();
-  const { results, ...metadata } = response;
+  const metadata = omit(response, ['results']);
+  const {
+    can_create: canCreate = false,
+    can_edit: canEdit = false,
+    can_delete: canDelete = false,
+    results,
+  } = response;
   const { pathname } = useLocation();
   const { push } = useHistory();
   const acsId = pathname.split('/')[2];
@@ -141,7 +148,7 @@ const ACSTable = () => {
       setExpandedId(null);
       setIsExpanded(false);
     }
-    const { last_refresh: lastTask } = acs ?? {};
+    const { last_refresh: lastTask, permissions } = acs ?? {};
     const { last_refresh_words: lastRefreshWords, started_at: startedAt } = lastTask ?? {};
     return (
       <DrawerPanelContent defaultSize="50%">
@@ -173,6 +180,7 @@ const ACSTable = () => {
             </span>}
           {error && <EmptyStateMessage error={error} />}
           <DrawerActions>
+            {hasPermission(permissions, 'edit_alternate_content_sources') &&
             <Button
               ouiaId="refresh-acs"
               onClick={() => onRefresh(acs?.id)}
@@ -182,6 +190,7 @@ const ACSTable = () => {
             >
               {__('Refresh source')}
             </Button>
+            }
             <DrawerCloseButton onClick={onCloseClick} />
           </DrawerActions>
         </DrawerHead>
@@ -218,24 +227,28 @@ const ACSTable = () => {
     [apiSortParams],
   );
 
-  const rowDropdownItems = ({ id }) => [
-    {
+  const actionsWithPermissions = (acs) => {
+    const { id, permissions } = acs;
+    const deleteAction = {
       title: __('Delete'),
       ouiaId: `remove-acs-${id}`,
       onClick: () => {
         onDelete(id);
       },
-    },
-    {
+    };
+    const refreshAction = {
       title: __('Refresh'),
       ouiaId: `refresh-acs-${id}`,
       onClick: () => {
         onRefresh(id);
       },
-    },
-  ];
+    };
+    return [
+      ...(hasPermission(permissions, 'destroy_alternate_content_sources') ? [deleteAction] : []),
+      ...(hasPermission(permissions, 'edit_alternate_content_sources') ? [refreshAction] : []),
+    ];
+  };
 
-  const showPrimaryAction = true;
   const primaryActionButton = (
     <Button
       ouiaId="create-acs"
@@ -248,9 +261,10 @@ const ACSTable = () => {
   );
 
   const emptyContentTitle = __("You currently don't have any alternate content sources.");
-  const emptyContentBody = __('An alternate content source can be added by using the "Add source" button above.');
+  const emptyContentBody = canCreate ? __('An alternate content source can be added by using the "Add source" button below.') : '';
   const emptySearchTitle = __('No matching alternate content sources found');
   const emptySearchBody = __('Try changing your search settings.');
+  const showPrimaryAction = canCreate;
   /* eslint-disable react/no-array-index-key */
   if (deleting) {
     return <Loading loadingText={__('Please wait...')} />;
@@ -281,7 +295,7 @@ const ACSTable = () => {
             {...selectionSetVars}
             actionButtons={
               <>
-                {renderActionButtons &&
+                {renderActionButtons && canCreate &&
                 <Button
                   ouiaId="create-acs"
                   onClick={createButtonOnclick}
@@ -290,7 +304,7 @@ const ACSTable = () => {
                 >
                   {__('Add source')}
                 </Button>}
-                {renderActionButtons &&
+                {renderActionButtons && (canEdit || canDelete) &&
                 <Dropdown
                   toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
                   isOpen={kebabOpen}
@@ -301,7 +315,7 @@ const ACSTable = () => {
                       aria-label="bulk_refresh"
                       ouiaId="bulk_refresh"
                       key="bulk_refresh"
-                      isDisabled={selectedCount < 1}
+                      isDisabled={selectedCount < 1 || !canEdit}
                       component="button"
                       onClick={() => {
                         setKebabOpen(false);
@@ -314,7 +328,7 @@ const ACSTable = () => {
                       aria-label="bulk_delete"
                       ouiaId="bulk_delete"
                       key="bulk_delete"
-                      isDisabled={selectedCount < 1}
+                      isDisabled={selectedCount < 1 || !canDelete}
                       component="button"
                       onClick={() => {
                         setKebabOpen(false);
@@ -358,6 +372,7 @@ const ACSTable = () => {
                   id,
                   alternate_content_source_type: acsType,
                   last_refresh: lastTask,
+                  permissions,
                 } = acs;
                 const {
                   last_refresh_words: lastRefreshWords,
@@ -389,9 +404,13 @@ const ACSTable = () => {
                       emptyMessage="N/A"
                     />
                     </Td>
-                    <Td isActionCell>
-                      <ActionsColumn items={rowDropdownItems(acs)} />
-                    </Td>
+                    {(hasPermission(permissions, 'destroy_alternate_content_sources') ||
+                        hasPermission(permissions, 'edit_alternate_content_sources')) ?
+                          <Td isActionCell>
+                            <ActionsColumn items={actionsWithPermissions(acs)} />
+                          </Td> :
+                          <Td />
+                    }
                   </Tr>
                 );
               })

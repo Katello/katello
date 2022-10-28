@@ -61,6 +61,7 @@ const noResults = {
   page: 1,
   per_page: 20,
   results: [],
+  can_create: true,
 };
 
 const renderOptions = {
@@ -81,7 +82,7 @@ afterEach(() => {
   assertNockRequest(autoSearchScope);
 });
 
-test('Can show add ACS button', async (done) => {
+test('Can show add ACS button if can_create is true', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
     .get(ACSIndexPath)
@@ -93,6 +94,25 @@ test('Can show add ACS button', async (done) => {
   expect(queryByText("You currently don't have any alternate content sources.")).toBeNull();
   await patientlyWaitFor(() => expect(queryByText("You currently don't have any alternate content sources.")).toBeInTheDocument());
   expect(queryByText('Add source')).toBeInTheDocument();
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  act(done);
+});
+
+test('Can hide add ACS button if can_create is false', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  noResults.can_create = false;
+  const scope = nockInstance
+    .get(ACSIndexPath)
+    .query(true)
+    .reply(200, noResults);
+
+  const { queryByText } = renderWithRedux(<ACSTable />);
+
+  expect(queryByText("You currently don't have any alternate content sources.")).toBeNull();
+  await patientlyWaitFor(() => expect(queryByText("You currently don't have any alternate content sources.")).toBeInTheDocument());
+  expect(queryByText('Add source')).not.toBeInTheDocument();
+  noResults.can_create = true;
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   act(done);
