@@ -57,9 +57,10 @@ test('Can handle no ACS being present', async (done) => {
     .query(true)
     .reply(200, noResults);
 
-  const { queryByText } = renderWithRedux(<ACSTable />);
+  const { queryByLabelText, queryByText } = renderWithRedux(<ACSTable />);
 
   expect(queryByText(firstAcs.name)).toBeNull();
+  expect(queryByLabelText('Select all')).not.toBeInTheDocument();
   await patientlyWaitFor(() => expect(queryByText("You currently don't have any alternate content sources.")).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
