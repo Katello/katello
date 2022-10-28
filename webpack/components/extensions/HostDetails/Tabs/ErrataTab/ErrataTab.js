@@ -43,6 +43,7 @@ import { defaultRemoteActionMethod,
   userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
+import { errataStatusContemplation, friendlyErrataStatus } from '../../../../Errata/errataHelpers';
 
 const recalculateApplicability = ['edit_hosts'];
 const invokeRexJobs = ['create_job_invocations'];
@@ -56,6 +57,7 @@ export const ErrataTab = () => {
     name: hostname,
     content_facet_attributes: contentFacetAttributes,
     errata_status: errataStatus,
+    errata_status_label: errataStatusLabel,
   } = hostDetails;
   const userPermissions = userPermissionsFromHostDetails({ hostDetails });
   const showRecalculate =
@@ -94,11 +96,30 @@ export const ErrataTab = () => {
     setIsActionOpen(prev => !prev);
   };
 
-  const allUpToDate = errataStatus === 0;
-  const emptyContentTitle = allUpToDate ? __('All errata up-to-date') : __('This host has errata that are applicable, but not installable.');
-  const emptyContentBody = allUpToDate ? __('No action is needed because there are no applicable errata for this host.') : __("You may want to check the host's content view and lifecycle environment.");
+  const { allUpToDate } = errataStatusContemplation(errataStatus);
   const emptySearchTitle = __('No matching errata found');
   const emptySearchBody = __('Try changing your search settings.');
+
+  let emptyContentTitle;
+  let emptyContentBody;
+  switch (friendlyErrataStatus(errataStatus)) {
+  case 'All up to date':
+    emptyContentTitle = __('All up to date');
+    emptyContentBody = __('No action is needed because there are no applicable errata for this host.');
+    break;
+  case 'Needed':
+    emptyContentTitle = __('This host has errata that are applicable, but not installable.');
+    emptyContentBody = __("You may want to check the host's content view and lifecycle environment.");
+    break;
+  case 'Unknown':
+    emptyContentTitle = __('Unknown errata status');
+    emptyContentBody = errataStatusLabel;
+    break;
+  default:
+    emptyContentTitle = emptySearchTitle;
+    emptyContentBody = emptySearchBody;
+  }
+
   const errorSearchTitle = __('Problem searching errata');
   const columnHeaders = [
     __('Errata'),

@@ -49,6 +49,8 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
         response: {
           id: 1,
           name: hostName,
+          errata_status_label: 'Security errata applicable',
+          errata_status: 2,
           content_facet_attributes: { ...facetAttributes },
         },
         status: 'RESOLVED',

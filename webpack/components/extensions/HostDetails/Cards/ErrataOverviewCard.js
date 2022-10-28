@@ -19,23 +19,7 @@ import { hostIsRegistered } from '../hostDetailsHelpers';
 import { TranslatedAnchor } from '../../../Table/components/TranslatedPlural';
 import EmptyStateMessage from '../../../Table/EmptyStateMessage';
 import './ErrataOverviewCard.scss';
-
-const statusContemplation = (errataStatus) => {
-  // from backend errata_status.rb:
-  // NEEDED_SECURITY_ERRATA = 3
-  // NEEDED_ERRATA = 2
-  // UNKNOWN = 1
-  // UP_TO_DATE = 0
-  const neededErrata = ([2, 3].includes(Number(errataStatus)));
-  const allUpToDate = (errataStatus === 0);
-  const otherErrataStatus = (!allUpToDate && !neededErrata);
-
-  return {
-    neededErrata,
-    allUpToDate,
-    otherErrataStatus,
-  };
-};
+import { errataStatusContemplation } from '../../../Errata/errataHelpers';
 
 function HostInstallableErrata({
   id, errataCounts, errataStatus, errataCategory, errataStatusLabel,
@@ -45,7 +29,7 @@ function HostInstallableErrata({
   const errataSecurity = counts.security;
   const errataBug = counts.bugfix;
   const errataEnhance = counts.enhancement;
-  const { neededErrata, allUpToDate, otherErrataStatus } = statusContemplation(errataStatus);
+  const { neededErrata, allUpToDate, otherErrataStatus } = errataStatusContemplation(errataStatus);
   const chartData = [{
     w: 'security advisories', x: 'security', y: errataSecurity, z: errataTotal,
   }, {
@@ -126,7 +110,7 @@ const ErrataOverviewCard = ({ hostDetails }) => {
     errata_status: errataStatus,
     errata_status_label: errataStatusLabel,
   } = hostDetails;
-  const { neededErrata } = statusContemplation(errataStatus);
+  const { neededErrata } = errataStatusContemplation(errataStatus);
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
       <Card ouiaId="errata-card">
