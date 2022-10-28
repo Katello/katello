@@ -17,6 +17,9 @@ module Katello
           repository_type = Katello::Repository.find(opts[:repository_id]).repository_type
           content_type = opts[:content_type]
           self.content_api(repository_type, content_type).create(relative_path, opts)
+        elsif self.content_type == 'rpm' || self.content_type == 'srpm'
+          # The pulp_rpm API bindings expect relative_path to be within the options hash.
+          self.content_api.create(opts)
         else
           self.content_api.create(relative_path, opts)
         end
