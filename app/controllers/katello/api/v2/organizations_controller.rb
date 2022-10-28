@@ -29,6 +29,7 @@ module Katello
         param :hostgroup_ids, Array, N_("Host group IDs"), :required => false
         param :environment_ids, Array, N_("Environment IDs"), :required => false
         param :subnet_ids, Array, N_("Subnet IDs"), :required => false
+        param :ignore_types, Array, N_("List of resources types that will be automatically associated"), :required => false
         param :location_ids, Array, N_("Associated location IDs"), :required => false
       end
     end
