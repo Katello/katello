@@ -190,7 +190,7 @@ ErrataSeverity.propTypes = {
 };
 
 export const ErrataToggleGroupItem = ({
-  text, tooltipText, isSelected, onChange,
+  text, tooltipText, isSelected, onChange, ...toggleGroupItemProps
 }) => (
   <ToggleGroupItem
     text={
@@ -207,6 +207,7 @@ export const ErrataToggleGroupItem = ({
     }
     isSelected={isSelected}
     onChange={onChange}
+    {...toggleGroupItemProps}
   />
 );
 

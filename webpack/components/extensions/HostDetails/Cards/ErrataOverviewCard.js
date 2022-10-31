@@ -121,12 +121,14 @@ const ErrataOverviewCard = ({ hostDetails }) => {
               <ToggleGroup isCompact>
                 <ErrataToggleGroupItem
                   text={__('Applicable')}
+                  aria-label="Show applicable errata chart"
                   tooltipText={__('Applicable errata apply to at least one package installed on the host.')}
                   isSelected={errataCategory === 'applicable'}
                   onChange={selected => selected && setErrataCategory('applicable')}
                 />
                 <ErrataToggleGroupItem
                   text={__('Installable')}
+                  aria-label="Show installable errata chart"
                   tooltipText={__('Installable errata are applicable errata that are available in the host\'s content view and lifecycle environment.')}
                   isSelected={errataCategory === 'installable'}
                   onChange={selected => selected && setErrataCategory('installable')}
