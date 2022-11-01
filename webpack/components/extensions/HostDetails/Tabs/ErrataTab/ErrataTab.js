@@ -96,7 +96,7 @@ export const ErrataTab = () => {
     setIsActionOpen(prev => !prev);
   };
 
-  const { allUpToDate } = errataStatusContemplation(errataStatus);
+  const { allUpToDate, neededErrata } = errataStatusContemplation(errataStatus);
   const emptySearchTitle = __('No matching errata found');
   const emptySearchBody = __('Try changing your search settings.');
 
@@ -495,7 +495,7 @@ export const ErrataTab = () => {
           displaySelectAllCheckbox={showActions}
           requestKey={HOST_ERRATA_KEY}
           alwaysShowActionButtons={false}
-          alwaysShowToggleGroup={hostIsNonLibrary}
+          alwaysShowToggleGroup={hostIsNonLibrary && neededErrata}
         >
           <Thead>
             <Tr ouiaId="row-header">
