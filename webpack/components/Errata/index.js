@@ -14,7 +14,6 @@ import {
   SecurityIcon,
   EnhancementIcon,
   SquareIcon,
-  OutlinedQuestionCircleIcon,
 } from '@patternfly/react-icons';
 import { TranslatedAnchor } from '../Table/components/TranslatedPlural';
 
@@ -192,23 +191,18 @@ ErrataSeverity.propTypes = {
 export const ErrataToggleGroupItem = ({
   text, tooltipText, isSelected, onChange, ...toggleGroupItemProps
 }) => (
-  <ToggleGroupItem
-    text={
-      <>
-        {text}
-        <Tooltip
-          content={tooltipText}
-          position="top"
-          enableFlip
-        >
-          <OutlinedQuestionCircleIcon style={{ marginBottom: '-2px', marginLeft: '0.3rem' }} color="gray" />
-        </Tooltip>
-      </>
-    }
-    isSelected={isSelected}
-    onChange={onChange}
-    {...toggleGroupItemProps}
-  />
+  <Tooltip
+    content={tooltipText}
+    position="top"
+    enableFlip
+  >
+    <ToggleGroupItem
+      text={text}
+      isSelected={isSelected}
+      onChange={onChange}
+      {...toggleGroupItemProps}
+    />
+  </Tooltip>
 );
 
 ErrataToggleGroupItem.propTypes = {

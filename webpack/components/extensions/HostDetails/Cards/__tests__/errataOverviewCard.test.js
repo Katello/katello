@@ -144,9 +144,8 @@ describe('With errata', () => {
     const { getByText }
       = renderWithRedux(<ErrataOverviewCard hostDetails={hostDetails} />, renderOptions);
     // find the Applicable toggle button, then find the svg next to it
-    const applicableToggle = getByText('Applicable');
-    const questionMark = applicableToggle.querySelector('svg');
-    fireEvent.mouseEnter(questionMark);
+    const applicableToggle = getByText('Applicable').parentElement.parentElement;
+    fireEvent.mouseEnter(applicableToggle);
     // expect the tooltip to be visible
     await patientlyWaitFor(() => expect(getByText('Applicable errata apply to at least one package installed on the host.')).toBeInTheDocument());
   });
