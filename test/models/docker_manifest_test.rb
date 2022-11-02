@@ -16,7 +16,7 @@ module Katello
 
     def test_import_for_repository
       Katello::DockerManifest.import_for_repository(@repo)
-      assert_equal 1, @repo.docker_manifests.count
+      assert_equal 2, @repo.docker_manifests.count
       assert_equal @repo.docker_manifests.first, DockerManifest.find_by_digest(@manifests.first[:digest])
     end
 

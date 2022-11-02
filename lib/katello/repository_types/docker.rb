@@ -34,7 +34,8 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
   content_type Katello::DockerTag,
                :priority => 3,
                :pulp3_service_class => ::Katello::Pulp3::DockerTag,
-               :primary_content => true
+               :primary_content => true,
+               :mutable => true
   content_type Katello::DockerBlob,
                :priority => 4,
                :pulp3_service_class => ::Katello::Pulp3::DockerBlob,
