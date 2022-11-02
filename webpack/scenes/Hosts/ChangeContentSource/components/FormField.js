@@ -9,7 +9,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 
 const FormField = ({
-  label, id, value, items, onChange, isLoading, contentHostsCount,
+  label, id, value, items, onChange, isDisabled,
 }) => (
   <GridItem span={7}>
     <FormGroup label={label} fieldId={id} isRequired>
@@ -17,7 +17,7 @@ const FormField = ({
         value={value}
         onChange={v => onChange(v)}
         className="without_select2"
-        isDisabled={isLoading || items.length === 0 || contentHostsCount === 0}
+        isDisabled={isDisabled}
         id={`${id}_select`}
         isRequired
       >
@@ -36,8 +36,7 @@ FormField.propTypes = {
   value: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   onChange: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  contentHostsCount: PropTypes.number.isRequired,
+  isDisabled: PropTypes.bool.isRequired,
 };
 
 export default FormField;

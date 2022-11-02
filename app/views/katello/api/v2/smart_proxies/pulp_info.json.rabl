@@ -1,2 +1,3 @@
 attributes :download_policy
 attributes :supported_pulp_types
+attributes :lifecycle_environments

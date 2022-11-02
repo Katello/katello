@@ -140,7 +140,7 @@ class HostsControllerTest < ActionController::TestCase
     assert_response :success
 
     response = JSON.parse(@response.body)
-    assert_equal response['content_hosts_ids'], [host.id]
-    assert_equal response['hosts_without_content'], [host2.name]
+    assert_equal response['content_hosts'].first['id'], host.id
+    assert_equal response['hosts_without_content'].first['id'], host2.id
   end
 end
