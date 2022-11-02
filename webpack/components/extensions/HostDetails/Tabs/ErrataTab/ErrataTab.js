@@ -3,7 +3,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem,
+  DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup,
   DropdownToggle, DropdownToggleAction,
 } from '@patternfly/react-core';
 import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
@@ -26,7 +26,7 @@ import { propsToCamelCase } from 'foremanReact/common/helpers';
 import SelectableDropdown from '../../../../SelectableDropdown';
 import { useSet, useBulkSelect, useUrlParams, useTableSort } from '../../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
-import { ErrataType, ErrataSeverity } from '../../../../../components/Errata';
+import { ErrataType, ErrataSeverity, ErrataToggleGroupItem } from '../../../../../components/Errata';
 import { getInstallableErrata, regenerateApplicability, applyViaKatelloAgent } from './HostErrataActions';
 import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
@@ -43,6 +43,7 @@ import { defaultRemoteActionMethod,
   userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
+import { errataStatusContemplation, friendlyErrataStatus } from '../../../../Errata/errataHelpers';
 
 const recalculateApplicability = ['edit_hosts'];
 const invokeRexJobs = ['create_job_invocations'];
@@ -56,6 +57,7 @@ export const ErrataTab = () => {
     name: hostname,
     content_facet_attributes: contentFacetAttributes,
     errata_status: errataStatus,
+    errata_status_label: errataStatusLabel,
   } = hostDetails;
   const userPermissions = userPermissionsFromHostDetails({ hostDetails });
   const showRecalculate =
@@ -65,8 +67,8 @@ export const ErrataTab = () => {
     );
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
   const dispatch = useDispatch();
-  const toggleGroupStates = ['all', 'installable'];
-  const [ALL, INSTALLABLE] = toggleGroupStates;
+  const toggleGroupStates = ['applicable', 'installable'];
+  const [APPLICABLE, INSTALLABLE] = toggleGroupStates;
   const ERRATA_TYPE = __('Type');
   const ERRATA_SEVERITY = __('Severity');
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
@@ -94,11 +96,30 @@ export const ErrataTab = () => {
     setIsActionOpen(prev => !prev);
   };
 
-  const allUpToDate = errataStatus === 0;
-  const emptyContentTitle = allUpToDate ? __('All errata up-to-date') : __('This host has errata that are applicable, but not installable.');
-  const emptyContentBody = allUpToDate ? __('No action is needed because there are no applicable errata for this host.') : __("You may want to check the host's content view and lifecycle environment.");
+  const { allUpToDate, neededErrata } = errataStatusContemplation(errataStatus);
   const emptySearchTitle = __('No matching errata found');
   const emptySearchBody = __('Try changing your search settings.');
+
+  let emptyContentTitle;
+  let emptyContentBody;
+  switch (friendlyErrataStatus(errataStatus)) {
+  case 'All up to date':
+    emptyContentTitle = __('All up to date');
+    emptyContentBody = __('No action is needed because there are no applicable errata for this host.');
+    break;
+  case 'Needed':
+    emptyContentTitle = __('This host has errata that are applicable, but not installable.');
+    emptyContentBody = __("You may want to check the host's content view and lifecycle environment.");
+    break;
+  case 'Unknown':
+    emptyContentTitle = __('Unknown errata status');
+    emptyContentBody = errataStatusLabel;
+    break;
+  default:
+    emptyContentTitle = emptySearchTitle;
+    emptyContentBody = emptySearchBody;
+  }
+
   const errorSearchTitle = __('Problem searching errata');
   const columnHeaders = [
     __('Errata'),
@@ -148,13 +169,13 @@ export const ErrataTab = () => {
       return getInstallableErrata(
         hostId,
         {
-          include_applicable: toggleGroupState === ALL,
+          include_applicable: toggleGroupState === APPLICABLE,
           ...apiSortParams,
           ...modifiedParams,
         },
       );
     },
-    [hostId, toggleGroupState, ALL, ERRATA_SEVERITY, ERRATA_TYPE,
+    [hostId, toggleGroupState, APPLICABLE, ERRATA_SEVERITY, ERRATA_TYPE,
       errataTypeSelected, errataSeveritySelected, apiSortParams],
   );
 
@@ -411,17 +432,19 @@ export const ErrataTab = () => {
       {hostIsNonLibrary &&
         <SplitItem>
           <ToggleGroup aria-label="Installable Errata">
-            <ToggleGroupItem
-              text={__('All')}
-              buttonId="allToggle"
-              aria-label="Show All"
-              isSelected={toggleGroupState === ALL}
-              onChange={() => setToggleGroupState(ALL)}
+            <ErrataToggleGroupItem
+              text={__('Applicable')}
+              tooltipText={__('Applicable errata apply to at least one package installed on the host.')}
+              buttonId="applicableToggle"
+              aria-label="Show applicable errata"
+              isSelected={toggleGroupState === APPLICABLE}
+              onChange={() => setToggleGroupState(APPLICABLE)}
             />
-            <ToggleGroupItem
+            <ErrataToggleGroupItem
               text={__('Installable')}
+              tooltipText={__('Installable errata are applicable errata that are available in the host\'s content view and lifecycle environment.')}
               buttonId="installableToggle"
-              aria-label="Show Installable"
+              aria-label="Show installable errata"
               isSelected={toggleGroupState === INSTALLABLE}
               onChange={() => setToggleGroupState(INSTALLABLE)}
             />
@@ -472,7 +495,7 @@ export const ErrataTab = () => {
           displaySelectAllCheckbox={showActions}
           requestKey={HOST_ERRATA_KEY}
           alwaysShowActionButtons={false}
-          alwaysShowToggleGroup={hostIsNonLibrary}
+          alwaysShowToggleGroup={hostIsNonLibrary && neededErrata}
         >
           <Thead>
             <Tr ouiaId="row-header">
