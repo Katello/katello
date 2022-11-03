@@ -46,6 +46,7 @@ const TableWrapper = ({
   nodesBelowSearch,
   bookmarkController,
   readOnlyBookmarks,
+  hasViewPermissions,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
@@ -184,7 +185,7 @@ const TableWrapper = ({
             />
           </FlexItem>
         }
-        {!disableSearch && !hideToolbar &&
+        {!disableSearch && !hideToolbar && hasViewPermissions &&
           <FlexItem>
             <Search
               isDisabled={unresolvedStatusOrNoRows && !searchQuery}
@@ -309,6 +310,7 @@ TableWrapper.propTypes = {
   bookmarkController: PropTypes.string,
   readOnlyBookmarks: PropTypes.bool,
   resetFilters: PropTypes.func,
+  hasViewPermissions: PropTypes.bool,
 };
 
 TableWrapper.defaultProps = {
@@ -339,6 +341,7 @@ TableWrapper.defaultProps = {
   bookmarkController: undefined,
   readOnlyBookmarks: false,
   resetFilters: undefined,
+  hasViewPermissions: true,
 };
 
 export default TableWrapper;

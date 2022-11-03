@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -36,9 +37,9 @@ import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 import '../Acs.scss';
 import { hasPermission } from '../../ContentViews/helpers';
 
-const ACSExpandableDetails = () => {
+const ACSExpandableDetails = ({ expandedId }) => {
   const { id } = useParams();
-  const acsId = Number(id);
+  const acsId = Number(expandedId) || Number(id);
   const details = useSelector(state => selectACSDetails(state, acsId));
   const status = useSelector(state => selectACSDetailsStatus(state, acsId));
   const error = useSelector(state => selectACSDetailsError(state, acsId));
@@ -176,6 +177,7 @@ const ACSExpandableDetails = () => {
                   setShowSmartProxies(expanded);
                   setShowUrlPaths(false);
                   setShowCredentials(false);
+                  setShowProducts(false);
                 }}
                 contentId="showSmartProxies"
               >
@@ -487,6 +489,17 @@ const ACSExpandableDetails = () => {
             }
     </>
   );
+};
+
+ACSExpandableDetails.propTypes = {
+  expandedId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]),
+};
+
+ACSExpandableDetails.defaultProps = {
+  expandedId: null,
 };
 
 export default ACSExpandableDetails;

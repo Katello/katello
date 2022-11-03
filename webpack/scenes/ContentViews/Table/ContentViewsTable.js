@@ -41,7 +41,11 @@ const ContentViewTable = () => {
   const [actionableCvName, setActionableCvName] = useState('');
   const dispatch = useDispatch();
   const metadata = omit(response, ['results']);
-  const { can_create: canCreate = false, results } = response;
+  const {
+    can_create: canCreate = false,
+    can_view: canView = false,
+    results,
+  } = response;
   const columnHeaders = [
     __('Type'),
     __('Name'),
@@ -152,6 +156,7 @@ const ContentViewTable = () => {
         fetchItems,
         showPrimaryAction,
       }}
+      hasViewPermissions={canView}
       ouiaId="content-views-table"
       additionalListeners={[activeSortColumn, activeSortDirection]}
       bookmarkController="katello_content_views"
@@ -168,7 +173,7 @@ const ContentViewTable = () => {
         </Button >) : undefined}
       actionButtons={
         <>
-          {results?.length !== 0 &&
+          {results?.length !== 0 && canCreate &&
             <Button ouiaId="create-content-view" onClick={openForm} variant="primary" aria-label="create_content_view">
               {__('Create content view')}
             </Button>
