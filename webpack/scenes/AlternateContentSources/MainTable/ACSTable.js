@@ -14,6 +14,7 @@ import {
   DrawerContentBody,
   DrawerHead,
   DrawerPanelContent,
+  DrawerPanelBody,
   Dropdown,
   DropdownItem,
   KebabToggle,
@@ -24,8 +25,6 @@ import {
   TextListItemVariants,
   TextListVariants,
   TextVariants,
-  Flex,
-  FlexItem,
 } from '@patternfly/react-core';
 import { TableVariant, Tbody, Td, Th, Thead, Tr, ActionsColumn } from '@patternfly/react-table';
 import TableWrapper from '../../../components/Table/TableWrapper';
@@ -162,73 +161,71 @@ const ACSTable = () => {
       <DrawerPanelContent defaultSize="35%">
         <DrawerHead>
           {results && isExpanded &&
-            <span ref={drawerRef}>
-              <Flex>
-                <FlexItem>
-                  <Text component={TextVariants.h2}>
-                    {acs?.name}
-                  </Text>
-                </FlexItem>
-                <FlexItem align={{ default: 'alignRight' }}>
-                  {hasPermission(permissions, 'edit_alternate_content_sources') &&
-                    <>
-                      <Button
-                        ouiaId="refresh-acs"
-                        onClick={() => onRefresh(acs?.id)}
-                        variant="secondary"
-                        isSmall
-                        aria-label="refresh_acs"
-                      >
-                        {__('Refresh source')}
-                      </Button>
-                      <Dropdown
-                        toggle={<KebabToggle aria-label="details_actions" onToggle={setDetailsKebabOpen} />}
-                        isOpen={detailsKebabOpen}
-                        ouiaId="acs-details-actions"
-                        isPlain
-                        dropdownItems={[
-                          <DropdownItem
-                            aria-label="details_delete"
-                            ouiaId="details_delete"
-                            key="details_delete"
-                            component="button"
-                            onClick={() => {
-                              setDetailsKebabOpen(false);
-                              onDelete(acs?.id);
-                            }}
-                          >
-                            {__('Delete')}
-                          </DropdownItem>]}
-                      />
-                    </>
-                    }
-                </FlexItem>
-              </Flex>
-              <TextContent>
-                <TextList component={TextListVariants.dl}>
-                  <TextListItem component={TextListItemVariants.dt}>
-                    {__('Last refresh :')}
-                  </TextListItem>
-                  <TextListItem
-                    aria-label="name_text_value"
-                    component={TextListItemVariants.dd}
-                  >
-                    <LastSync
-                      startedAt={startedAt}
-                      lastSync={lastTask}
-                      lastSyncWords={lastRefreshWords}
-                      emptyMessage="N/A"
-                    />
-                  </TextListItem>
-                </TextList>
-              </TextContent>
-              <ACSExpandableDetails expandedId={expandedId} />
-            </span>}
+          <div ref={drawerRef}>
+            <Text component={TextVariants.h2} style={{ marginTop: '0px' }}>
+              {acs?.name}
+            </Text>
+            <TextContent>
+              <TextList style={{ marginBottom: '0px' }} component={TextListVariants.dl}>
+                <TextListItem component={TextListItemVariants.dt}>
+                  {__('Last refresh :')}
+                </TextListItem>
+                <TextListItem
+                  aria-label="name_text_value"
+                  component={TextListItemVariants.dd}
+                >
+                  <LastSync
+                    startedAt={startedAt}
+                    lastSync={lastTask}
+                    lastSyncWords={lastRefreshWords}
+                    emptyMessage="N/A"
+                  />
+                </TextListItem>
+              </TextList>
+            </TextContent>
+          </div>
+            }
           {error && <EmptyStateMessage error={error} />}
           <DrawerActions>
+            {hasPermission(permissions, 'edit_alternate_content_sources') &&
+            <>
+              <Button
+                ouiaId="refresh-acs"
+                onClick={() => onRefresh(acs?.id)}
+                variant="secondary"
+                isSmall
+                aria-label="refresh_acs"
+              >
+                {__('Refresh source')}
+              </Button>
+              <Dropdown
+                style={{ paddingRight: '0px' }}
+                toggle={<KebabToggle aria-label="details_actions" onToggle={setDetailsKebabOpen} style={{ paddingRight: '0px' }} />}
+                isOpen={detailsKebabOpen}
+                ouiaId="acs-details-actions"
+                isPlain
+                dropdownItems={[
+                  <DropdownItem
+                    aria-label="details_delete"
+                    ouiaId="details_delete"
+                    key="details_delete"
+                    component="button"
+                    onClick={() => {
+                      setDetailsKebabOpen(false);
+                      onDelete(acs?.id);
+                    }}
+                  >
+                    {__('Delete')}
+                  </DropdownItem>]}
+              />
+            </>
+            }
             <DrawerCloseButton onClick={onCloseClick} />
           </DrawerActions>
         </DrawerHead>
+        <DrawerPanelBody>
+          <ACSExpandableDetails {...{ expandedId }} />
+        </DrawerPanelBody>
       </DrawerPanelContent>
     );
   };
