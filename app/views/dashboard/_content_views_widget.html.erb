@@ -3,7 +3,7 @@
 </h4>
 
 <% organizations = Organization.current.present? ? [Organization.current] : User.current.allowed_organizations %>
-<% histories = Katello::ContentViewHistory.includes(:content_view_version => [:content_view]).includes(:task, :environment).in_organizations(organizations) %>
+<% histories = Katello::ContentViewHistory.includes(:content_view_version => [:content_view]).includes(:task, :environment).in_organizations(organizations).where("#{Katello::ContentView.table_name}.generated_for" => :none) %>
 <% histories = histories.readable.limit(6) %>
 
 <% if histories.empty? %>
