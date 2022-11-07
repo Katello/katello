@@ -162,12 +162,12 @@ const ACSTable = () => {
         <DrawerHead>
           {results && isExpanded &&
           <div ref={drawerRef}>
-            <Text component={TextVariants.h2} style={{ marginTop: '0px' }}>
+            <Text component={TextVariants.h1} style={{ marginTop: '0px', fontWeight: 'bold' }}>
               {acs?.name}
             </Text>
             <TextContent>
               <TextList style={{ marginBottom: '0px' }} component={TextListVariants.dl}>
-                <TextListItem component={TextListItemVariants.dt}>
+                <TextListItem component={TextListItemVariants.dt} style={{ fontWeight: 'normal' }}>
                   {__('Last refresh :')}
                 </TextListItem>
                 <TextListItem

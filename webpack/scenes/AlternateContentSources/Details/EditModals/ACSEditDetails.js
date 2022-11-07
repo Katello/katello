@@ -76,7 +76,7 @@ const ACSEditDetails = ({ onClose, acsId, acsDetails }) => {
             isLoading={saving}
             type="submit"
           >
-            {__('Edit ACS details')}
+            {__('Edit')}
           </Button>
           <Button ouiaId="edit-acs-details-cancel" variant="link" onClick={onClose}>
             {__('Cancel')}

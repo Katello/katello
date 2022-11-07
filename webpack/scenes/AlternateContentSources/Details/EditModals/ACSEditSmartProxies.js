@@ -64,7 +64,7 @@ const ACSEditSmartProxies = ({ onClose, acsId, acsDetails }) => {
   return (
     <Modal
       title={__('Edit smart proxies')}
-      variant={ModalVariant.small}
+      variant={ModalVariant.medium}
       isOpen
       onClose={onClose}
       appendTo={document.body}
@@ -101,7 +101,7 @@ const ACSEditSmartProxies = ({ onClose, acsId, acsDetails }) => {
             isLoading={saving}
             type="submit"
           >
-            {__('Edit ACS smart proxies')}
+            {__('Edit')}
           </Button>
           <Button ouiaId="edit-acs-smart-proxies-cancel" variant="link" onClick={onClose}>
             {__('Cancel')}

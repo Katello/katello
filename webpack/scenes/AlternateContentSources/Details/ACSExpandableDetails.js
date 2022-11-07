@@ -87,7 +87,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
   return (
     <>
       <Stack>
-        <StackItem>
+        <StackItem className="primary-detail-stack-items-border">
           <Split>
             <SplitItem isFilled>
               <ExpandableSectionToggle
@@ -113,13 +113,13 @@ const ACSExpandableDetails = ({ expandedId }) => {
                 isSmall
                 icon={<PencilAltIcon />}
                 onClick={() => setEditDetailsModalOpen(true)}
-              >{__('Edit details')}
+              >{__('Edit')}
               </Button>
             </SplitItem>
             }
           </Split>
         </StackItem>
-        <StackItem>
+        <StackItem className="primary-detail-stack-items-border">
           <ExpandableSection
             isExpanded={showDetails}
             isDetached
@@ -167,7 +167,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
             </TextContent>
           </ExpandableSection>
         </StackItem>
-        <StackItem>
+        <StackItem className="primary-detail-stack-items-border">
           <Split>
             <SplitItem isFilled>
               <ExpandableSectionToggle
@@ -193,13 +193,13 @@ const ACSExpandableDetails = ({ expandedId }) => {
                 isSmall
                 icon={<PencilAltIcon />}
                 onClick={() => setEditSmartProxiesModalOpen(true)}
-              >{__('Edit smart proxies')}
+              >{__('Edit')}
               </Button>
             </SplitItem>
             }
           </Split>
         </StackItem>
-        <StackItem>
+        <StackItem className="primary-detail-stack-items-border">
           <ExpandableSection
             isDetached
             contentId="showSmartProxies"
@@ -259,7 +259,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   isSmall
                   icon={<PencilAltIcon />}
                   onClick={() => setEditProductsModalOpen(true)}
-                >{__('Edit products')}
+                >{__('Edit')}
                 </Button>
               </SplitItem>
               }
@@ -285,7 +285,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                 }
         {(acsType === 'custom' || acsType === 'rhui') &&
         <>
-          <StackItem>
+          <StackItem className="primary-detail-stack-items-border">
             <Split>
               <SplitItem isFilled>
                 <ExpandableSectionToggle
@@ -310,13 +310,13 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   isSmall
                   icon={<PencilAltIcon />}
                   onClick={() => setEditUrlModalOpen(true)}
-                >{__('Edit URL and subpaths')}
+                >{__('Edit')}
                 </Button>
               </SplitItem>
               }
             </Split>
           </StackItem>
-          <StackItem>
+          <StackItem className="primary-detail-stack-items-border">
             <ExpandableSection
               contentId="showUrlPaths"
               isDetached
@@ -346,7 +346,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
               </TextContent>
             </ExpandableSection>
           </StackItem>
-          <StackItem>
+          <StackItem className="primary-detail-stack-items-border">
             <Split>
               <SplitItem isFilled>
                 <ExpandableSectionToggle
@@ -371,13 +371,13 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   isSmall
                   icon={<PencilAltIcon />}
                   onClick={() => setEditCredentialsModalOpen(true)}
-                >{__('Edit credentials')}
+                >{__('Edit')}
                 </Button>
               </SplitItem>
               }
             </Split>
           </StackItem>
-          <StackItem>
+          <StackItem className="primary-detail-stack-items-border">
             <ExpandableSection
               isExpanded={showCredentials}
               contentId="showCredentials"
