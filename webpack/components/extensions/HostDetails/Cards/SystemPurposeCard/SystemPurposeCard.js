@@ -78,7 +78,7 @@ const SystemPurposeCard = ({ hostDetails }) => {
                 </FlexItem>
                 <FlexItem>
                   <Tooltip
-                    content={__('System purpose allows you to set the system\'s intended use on your network and improves the reporting of usage in Subscription Watch.')}
+                    content={__('System purpose enables you to set the system\'s intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console.')}
                     position="top"
                     enableFlip
                     isContentLeftAligned

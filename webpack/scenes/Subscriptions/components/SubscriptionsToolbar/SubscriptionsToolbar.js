@@ -4,7 +4,7 @@ import { Row, Col, Form, FormGroup, Button } from 'patternfly-react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { noop } from 'foremanReact/common/helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { SUBSCRIPTION_WATCH_URL } from '../../SubscriptionConstants';
+import { SUBSCRIPTIONS_SERVICE_URL } from '../../SubscriptionConstants';
 
 import Search from '../../../../components/Search/index';
 import TooltipButton from '../../../../components/TooltipButton';
@@ -61,12 +61,12 @@ const SubscriptionsToolbar = ({
 
             {isManifestImported &&
               <a
-                href={SUBSCRIPTION_WATCH_URL}
+                href={SUBSCRIPTIONS_SERVICE_URL}
                 className="btn btn-default"
                 target="_blank"
                 rel="noreferrer"
               >
-                {__('Subscription Watch')}
+                {__('View Subscription Usage')}
               </a>
             }
 
