@@ -439,7 +439,8 @@ module Katello
 
           errata_to_include = filter_errata_by_pulp_href(source_repository.errata, content_unit_hrefs,
                                                          source_repository.rpms.pluck(:filename) +
-                                                         source_repository.srpms.pluck(:filename)) -
+                                                         source_repository.srpms.pluck(:filename),
+                                                         source_repository.module_streams.map(&:module_spec)) -
                                                          all_excluded_errata
           content_unit_hrefs += errata_to_include.collect do |erratum|
             erratum.repository_errata.where(repository_id: source_repository.id).pluck(:erratum_pulp3_href)
