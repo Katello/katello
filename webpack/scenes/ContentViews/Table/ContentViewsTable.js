@@ -156,7 +156,7 @@ const ContentViewTable = () => {
         fetchItems,
         showPrimaryAction,
       }}
-      hasViewPermissions={canView}
+      hideSearch={!canView}
       ouiaId="content-views-table"
       additionalListeners={[activeSortColumn, activeSortDirection]}
       bookmarkController="katello_content_views"

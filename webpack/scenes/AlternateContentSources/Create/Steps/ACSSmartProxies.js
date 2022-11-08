@@ -47,7 +47,7 @@ const ACSSmartProxies = () => {
           <Flex spaceItems={{ default: 'spaceItemsNone' }}>
             <FlexItem>{__('Use HTTP proxies')}</FlexItem>
             <FlexItem>
-              {HelpToolTip(__('Alternate content sources use the HTTP proxy of their assigned smart proxy for communication.'))}
+              <HelpToolTip tooltip={__('Alternate content sources use the HTTP proxy of their assigned smart proxy for communication.')} />
             </FlexItem>
           </Flex>
           }

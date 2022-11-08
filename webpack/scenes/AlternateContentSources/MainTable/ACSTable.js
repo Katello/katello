@@ -381,7 +381,7 @@ const ACSTable = () => {
                 </>
                 }
               displaySelectAllCheckbox={renderActionButtons}
-              hasViewPermissions={canView}
+              hideSearch={!canView}
             >
               <Thead>
                 <Tr>

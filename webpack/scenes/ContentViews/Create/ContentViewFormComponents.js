@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { Tooltip, TooltipPosition, Flex, FlexItem } from '@patternfly/react-core';
 import { autoPublishHelpText, dependenciesHelpText, importOnlyHelpText, generatedContentViewHelpText } from '../helpers';
 import ContentViewIcon from '../components/ContentViewIcon';
 
-export const HelpToolTip = tooltip => (
+export const HelpToolTip = ({ tooltip }) => (
   <span className="foreman-spaced-icon">
     <Tooltip
       position={TooltipPosition.top}
@@ -34,7 +35,7 @@ export const LabelDependencies = () => (
   <Flex>
     <FlexItem spacer={{ default: 'spacerSm' }}>{__('Solve dependencies')}</FlexItem>
     <FlexItem>
-      {HelpToolTip(dependenciesHelpText)}
+      <HelpToolTip tooltip={dependenciesHelpText} />
     </FlexItem>
   </Flex>
 );
@@ -43,7 +44,7 @@ export const LabelAutoPublish = () => (
   <Flex>
     <FlexItem spacer={{ default: 'spacerSm' }}>{__('Auto publish')}</FlexItem>
     <FlexItem>
-      {HelpToolTip(autoPublishHelpText)}
+      <HelpToolTip tooltip={autoPublishHelpText} />
     </FlexItem>
   </Flex>
 );
@@ -52,7 +53,7 @@ export const LabelImportOnly = () => (
   <Flex>
     <FlexItem spacer={{ default: 'spacerSm' }}>{__('Import only')}</FlexItem>
     <FlexItem>
-      {HelpToolTip(importOnlyHelpText)}
+      <HelpToolTip tooltip={importOnlyHelpText} />
     </FlexItem>
   </Flex>
 );
@@ -61,7 +62,11 @@ export const LabelGenerated = () => (
   <Flex>
     <FlexItem spacer={{ default: 'spacerSm' }}>{__('Generated')}</FlexItem>
     <FlexItem>
-      {HelpToolTip(generatedContentViewHelpText)}
+      <HelpToolTip tooltip={generatedContentViewHelpText} />
     </FlexItem>
   </Flex>
 );
+
+HelpToolTip.propTypes = {
+  tooltip: PropTypes.string.isRequired,
+};
