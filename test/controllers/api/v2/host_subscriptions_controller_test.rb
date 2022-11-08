@@ -286,7 +286,7 @@ module Katello
     end
 
     def test_enabled_repositories
-      @host.content_facet = ::Katello::Host::ContentFacet.find_by(uuid: 'abcdefghi')
+      @host.content_facet = ::Katello::Host::ContentFacet.find_by(uuid: 'content_facet_one')
 
       get :enabled_repositories, params: { :host_id => @host.id }
       response_body_hash = JSON.parse(response.body)

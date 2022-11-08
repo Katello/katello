@@ -129,7 +129,13 @@ module Katello
       cv = katello_content_views(:acme_default)
       cvv = cv.versions.first
 
-      assert cvv.repositories.generic_type.count > 0
+      assert_includes Katello::RootRepository.where(id: cvv.repositories.pluck(:root_id)).pluck(:content_type).uniq, "python"
+
+      #stub RepositoryTypeManager to return python
+      Katello::RepositoryTypeManager.stubs(:indexable_content_types).returns(
+        [Katello::RepositoryType::ContentType.new({model_class: Katello::GenericContentUnit, content_type: 'python_package'})]
+      )
+
       cvv.update_content_counts!
       counts = cvv.content_counts_map
 

@@ -502,7 +502,11 @@ module ::Actions::Katello::Repository
 
   class UploadDockerTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::ImportUpload }
-    setup { SmartProxy.stubs(:pulp_primary).returns(SmartProxy.new) }
+    setup do
+      pulp3_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
+      SmartProxy.stubs(:pulp_primary).returns(pulp3_proxy)
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns true
+    end
     it 'plans' do
       action.expects(:action_subject).with(docker_repository)
 
