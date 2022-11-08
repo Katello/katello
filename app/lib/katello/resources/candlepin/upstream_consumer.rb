@@ -40,7 +40,7 @@ module Katello
             raise ::Katello::Errors::UpstreamEntitlementGone
           end
 
-          def export(url, client_cert, client_key, ca_file)
+          def get_export(url, client_cert, client_key, ca_file)
             logger.debug "Sending GET request to upstream Candlepin: #{url}"
             return resource(url, client_cert, client_key, ca_file).get
           rescue RestClient::Exception => e

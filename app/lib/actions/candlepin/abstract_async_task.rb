@@ -14,12 +14,12 @@ module Actions
         case state
         when :running
           if self.external_task.nil?
-            _("initiating Candlepin task")
+            _("initiating #{candlepin} task")
           else
-            _("checking Candlepin task status")
+            _("checking #{candlepin} task status")
           end
         when :suspended
-          _("waiting for Candlepin to finish the task")
+          _("waiting for #{candlepin} to finish the task")
         else
           super
         end
@@ -28,6 +28,10 @@ module Actions
       def done?
         check_for_errors!(external_task)
         !::Katello::Resources::Candlepin::Job.not_finished?(external_task)
+      end
+
+      def candlepin
+        "Candlepin"
       end
 
       private
