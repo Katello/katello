@@ -14,12 +14,12 @@ module Actions
         case state
         when :running
           if self.external_task.nil?
-            _("initiating #{candlepin} task")
+            _("initiating %s task") % candlepin
           else
-            _("checking #{candlepin} task status")
+            _("checking %s task status") % candlepin
           end
         when :suspended
-          _("waiting for #{candlepin} to finish the task")
+          _("waiting for %s to finish the task") % candlepin
         else
           super
         end
