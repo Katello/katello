@@ -1,10 +1,17 @@
 import React, { useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { DualListSelector, FormGroup, Switch } from '@patternfly/react-core';
+import {
+  DualListSelector,
+  FormGroup,
+  Switch,
+  Flex,
+  FlexItem,
+} from '@patternfly/react-core';
 import ACSCreateContext from '../ACSCreateContext';
 import WizardHeader from '../../../ContentViews/components/WizardHeader';
 import { selectSmartProxy } from '../../../SmartProxy/SmartProxyContentSelectors';
+import { HelpToolTip } from '../../../ContentViews/Create/ContentViewFormComponents';
 
 const ACSSmartProxies = () => {
   const {
@@ -35,7 +42,17 @@ const ACSSmartProxies = () => {
         removeSelected={onListChange}
         id="selector"
       />
-      <FormGroup label={__('Use HTTP proxies')} fieldId="use_http_proxies">
+      <FormGroup
+        label={
+          <Flex spaceItems={{ default: 'spaceItemsNone' }}>
+            <FlexItem>{__('Use HTTP proxies')}</FlexItem>
+            <FlexItem>
+              {HelpToolTip(__('Alternate content sources use the HTTP proxy of their assigned smart proxy for communication.'))}
+            </FlexItem>
+          </Flex>
+          }
+        fieldId="use_http_proxies"
+      >
         <Switch
           id="use-http-proxies-switch"
           aria-label="use-http-proxies-switch"

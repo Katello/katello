@@ -4,11 +4,23 @@ import PropTypes from 'prop-types';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
-import { ActionGroup, Button, DualListSelector, Form, FormGroup, Modal, ModalVariant, Switch } from '@patternfly/react-core';
+import {
+  ActionGroup,
+  Button,
+  DualListSelector,
+  Form,
+  FormGroup,
+  Modal,
+  ModalVariant,
+  Switch,
+  Flex,
+  FlexItem,
+} from '@patternfly/react-core';
 import { editACS, getACSDetails } from '../../ACSActions';
 import { selectSmartProxy, selectSmartProxyStatus } from '../../../SmartProxy/SmartProxyContentSelectors';
 import { getSmartProxies } from '../../../SmartProxy/SmartProxyContentActions';
 import Loading from '../../../../components/Loading';
+import { HelpToolTip } from '../../../ContentViews/Create/ContentViewFormComponents';
 
 const ACSEditSmartProxies = ({ onClose, acsId, acsDetails }) => {
   const { smart_proxies: smartProxies, use_http_proxies: useHttpProxies } = acsDetails;
@@ -84,7 +96,17 @@ const ACSEditSmartProxies = ({ onClose, acsId, acsDetails }) => {
           removeSelected={onListChange}
           id="selector"
         />
-        <FormGroup label={__('Use HTTP proxies')} fieldId="use_http_proxies">
+        <FormGroup
+          label={
+            <Flex spaceItems={{ default: 'spaceItemsNone' }}>
+              <FlexItem>{__('Use HTTP proxies')}</FlexItem>
+              <FlexItem>
+                {HelpToolTip(__('Alternate content sources use the HTTP proxy of their assigned smart proxy for communication.'))}
+              </FlexItem>
+            </Flex>
+        }
+          fieldId="use_http_proxies"
+        >
           <Switch
             id="use-http-proxies-switch"
             aria-label="use-http-proxies-switch"

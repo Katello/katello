@@ -5,7 +5,7 @@ import { Tooltip, TooltipPosition, Flex, FlexItem } from '@patternfly/react-core
 import { autoPublishHelpText, dependenciesHelpText, importOnlyHelpText, generatedContentViewHelpText } from '../helpers';
 import ContentViewIcon from '../components/ContentViewIcon';
 
-const HelpToolTip = tooltip => (
+export const HelpToolTip = tooltip => (
   <span className="foreman-spaced-icon">
     <Tooltip
       position={TooltipPosition.top}

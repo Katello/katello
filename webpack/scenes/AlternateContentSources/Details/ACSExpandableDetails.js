@@ -19,6 +19,8 @@ import {
   TextListItem,
   TextListItemVariants,
   TextListVariants,
+  Flex,
+  FlexItem,
 } from '@patternfly/react-core';
 import { PencilAltIcon } from '@patternfly/react-icons';
 import { STATUS } from 'foremanReact/constants';
@@ -36,6 +38,7 @@ import ACSEditProducts from './EditModals/ACSEditProducts';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 import '../Acs.scss';
 import { hasPermission } from '../../ContentViews/helpers';
+import { HelpToolTip } from '../../ContentViews/Create/ContentViewFormComponents';
 
 const ACSExpandableDetails = ({ expandedId }) => {
   const { id } = useParams();
@@ -219,7 +222,12 @@ const ACSExpandableDetails = ({ expandedId }) => {
             <TextContent className="margin-0-24 expandable-section-text" style={{ marginTop: '24px' }}>
               <TextList component={TextListVariants.dl}>
                 <TextListItem component={TextListItemVariants.dt}>
-                  {__('Use HTTP Proxies')}
+                  <Flex spaceItems={{ default: 'spaceItemsNone' }}>
+                    <FlexItem>{__('Use HTTP proxies')}</FlexItem>
+                    <FlexItem>
+                      {HelpToolTip(__('Alternate content sources use the HTTP proxy of their assigned smart proxy for communication.'))}
+                    </FlexItem>
+                  </Flex>
                 </TextListItem>
                 <TextListItem
                   aria-label="useHttpProxies_value"
