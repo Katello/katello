@@ -169,12 +169,12 @@ const RepositorySetsTab = () => {
     organization_id: orgId,
   } = hostDetails;
 
-  const organizationDetails = useSelector(state => selectOrganization(state, orgId));
-  const orgStatus = useSelector(state => selectOrganizationStatus(state, orgId));
-
   const {
     simple_content_access: simpleContentAccess,
-  } = organizationDetails;
+  } = useSelector(state => selectOrganization(state, orgId));
+  const orgStatus = useSelector(state => selectOrganizationStatus(state, orgId));
+  const orgNotLoaded = orgStatus !== STATUS.RESOLVED;
+
   const canDoContentOverrides = can(
     editHosts,
     userPermissionsFromHostDetails({ hostDetails }),
@@ -258,10 +258,10 @@ const RepositorySetsTab = () => {
   );
 
   useEffect(() => {
-    if (orgId && orgStatus !== STATUS.RESOLVED) {
+    if (orgId && orgNotLoaded) {
       dispatch(getOrganization({ orgId }));
     }
-  }, [orgId, orgStatus, dispatch]);
+  }, [orgId, orgNotLoaded, dispatch]);
 
   const response = useSelector(state => selectAPIResponse(state, REPOSITORY_SETS_KEY));
   const { results, error: errorSearchBody, ...metadata } = response;
@@ -289,7 +289,7 @@ const RepositorySetsTab = () => {
     }
   }, [hostDetailsStatus, nonLibraryHost]);
 
-  if (!hostId) return <Skeleton />;
+  if (!hostId || orgNotLoaded) return <Skeleton />;
   const updateResults = newResponse => dispatch({
     type: `${REPOSITORY_SETS_KEY}_SUCCESS`,
     key: REPOSITORY_SETS_KEY,
