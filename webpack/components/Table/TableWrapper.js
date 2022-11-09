@@ -42,7 +42,7 @@ const TableWrapper = ({
   selectedResults,
   clearSelectedResults,
   emptySearchBody,
-  disableSearch,
+  hideSearch,
   nodesBelowSearch,
   bookmarkController,
   readOnlyBookmarks,
@@ -101,8 +101,8 @@ const TableWrapper = ({
     let paramsOverride;
     const activeFiltersHaveChanged = hasChanged(activeFilters, prevActiveFilters.current);
     const searchQueryHasChanged = hasChanged(searchQuery, prevSearch.current);
-    if (searchQuery && !disableSearch) paramsOverride = { search: searchQuery };
-    if (!disableSearch && (searchQueryHasChanged || activeFiltersHaveChanged)) {
+    if (searchQuery && !hideSearch) paramsOverride = { search: searchQuery };
+    if (!hideSearch && (searchQueryHasChanged || activeFiltersHaveChanged)) {
       // Reset page back to 1 when filter or search changes
       prevSearch.current = searchQuery;
       prevActiveFilters.current = activeFilters;
@@ -118,7 +118,7 @@ const TableWrapper = ({
       fetchWithParams();
     }
   }, [
-    disableSearch,
+    hideSearch,
     activeFilters,
     dispatch,
     fetchItems,
@@ -184,7 +184,7 @@ const TableWrapper = ({
             />
           </FlexItem>
         }
-        {!disableSearch && !hideToolbar &&
+        {!hideSearch && !hideToolbar &&
           <FlexItem>
             <Search
               isDisabled={unresolvedStatusOrNoRows && !searchQuery}
@@ -304,7 +304,7 @@ TableWrapper.propTypes = {
   areAllRowsOnPageSelected: PropTypes.func,
   areAllRowsSelected: PropTypes.func,
   emptySearchBody: PropTypes.string,
-  disableSearch: PropTypes.bool,
+  hideSearch: PropTypes.bool,
   nodesBelowSearch: PropTypes.node,
   bookmarkController: PropTypes.string,
   readOnlyBookmarks: PropTypes.bool,
@@ -334,7 +334,7 @@ TableWrapper.defaultProps = {
   areAllRowsOnPageSelected: noop,
   areAllRowsSelected: noop,
   emptySearchBody: __('Try changing your search settings.'),
-  disableSearch: false,
+  hideSearch: false,
   nodesBelowSearch: null,
   bookmarkController: undefined,
   readOnlyBookmarks: false,

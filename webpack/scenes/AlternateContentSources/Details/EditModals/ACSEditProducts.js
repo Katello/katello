@@ -94,7 +94,7 @@ const ACSEditProducts = ({ onClose, acsId, acsDetails }) => {
             isLoading={saving}
             type="submit"
           >
-            {__('Edit ACS products')}
+            {__('Edit')}
           </Button>
           <Button ouiaId="edit-acs-smart-proxies-cancel" variant="link" onClick={onClose}>
             {__('Cancel')}

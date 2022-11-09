@@ -102,7 +102,7 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
             isLoading={saving}
             type="submit"
           >
-            {__('Edit ACS')}
+            {__('Edit')}
           </Button>
           <Button ouiaId="edit-acs-url-cancel" variant="link" onClick={onClose}>
             {__('Cancel')}

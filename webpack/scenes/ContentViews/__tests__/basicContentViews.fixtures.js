@@ -15,6 +15,8 @@ const createBasicCVs = (amount) => {
     total: amount,
     subtotal: amount,
     page: 1,
+    can_create: true,
+    can_view: true,
     per_page: 20,
     error: null,
     search: null,

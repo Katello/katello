@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -18,6 +19,8 @@ import {
   TextListItem,
   TextListItemVariants,
   TextListVariants,
+  Flex,
+  FlexItem,
 } from '@patternfly/react-core';
 import { PencilAltIcon } from '@patternfly/react-icons';
 import { STATUS } from 'foremanReact/constants';
@@ -35,10 +38,11 @@ import ACSEditProducts from './EditModals/ACSEditProducts';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 import '../Acs.scss';
 import { hasPermission } from '../../ContentViews/helpers';
+import { HelpToolTip } from '../../ContentViews/Create/ContentViewFormComponents';
 
-const ACSExpandableDetails = () => {
+const ACSExpandableDetails = ({ expandedId }) => {
   const { id } = useParams();
-  const acsId = Number(id);
+  const acsId = Number(expandedId) || Number(id);
   const details = useSelector(state => selectACSDetails(state, acsId));
   const status = useSelector(state => selectACSDetailsStatus(state, acsId));
   const error = useSelector(state => selectACSDetailsError(state, acsId));
@@ -86,7 +90,7 @@ const ACSExpandableDetails = () => {
   return (
     <>
       <Stack>
-        <StackItem>
+        <StackItem className="primary-detail-stack-items-border">
           <Split>
             <SplitItem isFilled>
               <ExpandableSectionToggle
@@ -112,13 +116,13 @@ const ACSExpandableDetails = () => {
                 isSmall
                 icon={<PencilAltIcon />}
                 onClick={() => setEditDetailsModalOpen(true)}
-              >{__('Edit details')}
+              >{__('Edit')}
               </Button>
             </SplitItem>
             }
           </Split>
         </StackItem>
-        <StackItem>
+        <StackItem className="primary-detail-stack-items-border">
           <ExpandableSection
             isExpanded={showDetails}
             isDetached
@@ -166,7 +170,7 @@ const ACSExpandableDetails = () => {
             </TextContent>
           </ExpandableSection>
         </StackItem>
-        <StackItem>
+        <StackItem className="primary-detail-stack-items-border">
           <Split>
             <SplitItem isFilled>
               <ExpandableSectionToggle
@@ -176,6 +180,7 @@ const ACSExpandableDetails = () => {
                   setShowSmartProxies(expanded);
                   setShowUrlPaths(false);
                   setShowCredentials(false);
+                  setShowProducts(false);
                 }}
                 contentId="showSmartProxies"
               >
@@ -191,13 +196,13 @@ const ACSExpandableDetails = () => {
                 isSmall
                 icon={<PencilAltIcon />}
                 onClick={() => setEditSmartProxiesModalOpen(true)}
-              >{__('Edit smart proxies')}
+              >{__('Edit')}
               </Button>
             </SplitItem>
             }
           </Split>
         </StackItem>
-        <StackItem>
+        <StackItem className="primary-detail-stack-items-border">
           <ExpandableSection
             isDetached
             contentId="showSmartProxies"
@@ -217,7 +222,12 @@ const ACSExpandableDetails = () => {
             <TextContent className="margin-0-24 expandable-section-text" style={{ marginTop: '24px' }}>
               <TextList component={TextListVariants.dl}>
                 <TextListItem component={TextListItemVariants.dt}>
-                  {__('Use HTTP Proxies')}
+                  <Flex spaceItems={{ default: 'spaceItemsNone' }}>
+                    <FlexItem aria-label="httpProxyTitle">{__('Use HTTP proxies')}</FlexItem>
+                    <FlexItem>
+                      <HelpToolTip tooltip={__('Alternate content sources use the HTTP proxy of their assigned smart proxy for communication.')} />
+                    </FlexItem>
+                  </Flex>
                 </TextListItem>
                 <TextListItem
                   aria-label="useHttpProxies_value"
@@ -257,7 +267,7 @@ const ACSExpandableDetails = () => {
                   isSmall
                   icon={<PencilAltIcon />}
                   onClick={() => setEditProductsModalOpen(true)}
-                >{__('Edit products')}
+                >{__('Edit')}
                 </Button>
               </SplitItem>
               }
@@ -283,7 +293,7 @@ const ACSExpandableDetails = () => {
                 }
         {(acsType === 'custom' || acsType === 'rhui') &&
         <>
-          <StackItem>
+          <StackItem className="primary-detail-stack-items-border">
             <Split>
               <SplitItem isFilled>
                 <ExpandableSectionToggle
@@ -308,13 +318,13 @@ const ACSExpandableDetails = () => {
                   isSmall
                   icon={<PencilAltIcon />}
                   onClick={() => setEditUrlModalOpen(true)}
-                >{__('Edit URL and subpaths')}
+                >{__('Edit')}
                 </Button>
               </SplitItem>
               }
             </Split>
           </StackItem>
-          <StackItem>
+          <StackItem className="primary-detail-stack-items-border">
             <ExpandableSection
               contentId="showUrlPaths"
               isDetached
@@ -344,7 +354,7 @@ const ACSExpandableDetails = () => {
               </TextContent>
             </ExpandableSection>
           </StackItem>
-          <StackItem>
+          <StackItem className="primary-detail-stack-items-border">
             <Split>
               <SplitItem isFilled>
                 <ExpandableSectionToggle
@@ -369,13 +379,13 @@ const ACSExpandableDetails = () => {
                   isSmall
                   icon={<PencilAltIcon />}
                   onClick={() => setEditCredentialsModalOpen(true)}
-                >{__('Edit credentials')}
+                >{__('Edit')}
                 </Button>
               </SplitItem>
               }
             </Split>
           </StackItem>
-          <StackItem>
+          <StackItem className="primary-detail-stack-items-border">
             <ExpandableSection
               isExpanded={showCredentials}
               contentId="showCredentials"
@@ -487,6 +497,17 @@ const ACSExpandableDetails = () => {
             }
     </>
   );
+};
+
+ACSExpandableDetails.propTypes = {
+  expandedId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]),
+};
+
+ACSExpandableDetails.defaultProps = {
+  expandedId: null,
 };
 
 export default ACSExpandableDetails;

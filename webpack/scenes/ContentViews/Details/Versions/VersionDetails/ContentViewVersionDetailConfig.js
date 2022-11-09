@@ -91,7 +91,7 @@ export default ({ cvId, versionId }) => [
           <LongDateTime date={item.updated_at} showRelativeTimeTooltip />,
       },
     ],
-    disableSearch: true,
+    hideSearch: true,
   },
   {
     name: __('Repositories'),
