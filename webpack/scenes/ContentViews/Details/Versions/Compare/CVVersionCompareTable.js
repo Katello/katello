@@ -17,7 +17,7 @@ const CVVersionCompareTable = ({
     autocompleteEndpoint,
     fetchItems: fetchItemsSorted,
     columnHeaders,
-    disableSearch,
+    hideSearch,
     sortConfig,
   }, versionOne, versionTwo, currentActiveKey, selectedViewBy,
 }) => {
@@ -47,7 +47,7 @@ const CVVersionCompareTable = ({
         updateSearchQuery,
         status,
         autocompleteEndpoint,
-        disableSearch,
+        hideSearch,
       }}
       key={`cvv-comparison-table-${name}`}
       ouiaId={`cvv-comparison-table-${name}`}

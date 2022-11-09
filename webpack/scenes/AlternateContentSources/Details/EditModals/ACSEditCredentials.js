@@ -311,7 +311,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             isLoading={saving}
             type="submit"
           >
-            {__('Edit ACS credentials')}
+            {__('Edit')}
           </Button>
           <Button ouiaId="edit-acs-details-cancel" variant="link" onClick={onClose}>
             {__('Cancel')}

@@ -58,7 +58,9 @@ test('Can open and close edit ACS details modal', async (done) => {
     .get(acsDetailsURL)
     .query(true)
     .reply(200, acsDetails);
-  const { queryByText, getByLabelText, queryAllByText } =
+  const {
+    queryByText, getByLabelText, queryAllByText, queryByLabelText,
+  } =
         renderWithRedux(withACSRoute(<ACSExpandableDetails />), renderOptions);
 
   // Nothing will show at first, page is loading
@@ -78,14 +80,14 @@ test('Can open and close edit ACS details modal', async (done) => {
   fireEvent.click(editDetails);
   // Can open modal
   await patientlyWaitFor(() => {
-    expect(queryAllByText('Edit details')).toHaveLength(2);
+    expect(queryAllByText('Edit')).toHaveLength(5);
     expect(getByLabelText('edit_acs_details')).toBeInTheDocument();
   });
   const cancelButton = queryByText('Cancel');
   fireEvent.click(cancelButton);
   // can close modal
   await patientlyWaitFor(() => {
-    expect(queryByText('Edit Alternate content source details')).not.toBeInTheDocument();
+    expect(queryByLabelText('edit_acs_details')).not.toBeInTheDocument();
   });
   assertNockRequest(acsDetailsScope, done);
   act(done);
@@ -122,18 +124,17 @@ test('Can edit ACS details in the edit modal', async (done) => {
     expect(getByLabelText('edit-details-pencil-edit')).toBeInTheDocument();
   });
   const editDetails = getByLabelText('edit-details-pencil-edit');
-  expect(queryAllByText('Edit details')).toHaveLength(1);
+  expect(queryAllByText('Edit')).toHaveLength(4);
   fireEvent.click(editDetails);
   // Can open modal
   await patientlyWaitFor(() => {
-    expect(queryAllByText('Edit details')).toHaveLength(2);
     expect(getByLabelText('edit_acs_details')).toBeInTheDocument();
   });
-  const saveButton = queryByText('Edit ACS details');
+  const saveButton = getByLabelText('edit_acs_details');
   fireEvent.click(saveButton);
   // can close modal
   await patientlyWaitFor(() => {
-    expect(queryAllByText('Edit details')).toHaveLength(1);
+    expect(queryAllByText('Edit')).toHaveLength(4);
   });
   assertNockRequest(acsDetailsScope);
   assertNockRequest(acsEditScope);
@@ -223,18 +224,18 @@ test('Can edit products in a simplified ACS details edit modal', async (done) =>
     expect(queryByText('URL and subpaths')).not.toBeInTheDocument();
   });
   const editDetails = getByLabelText('edit-products-pencil-edit');
-  expect(queryAllByText('Edit products')).toHaveLength(1);
+  expect(queryAllByText('Edit')).toHaveLength(3);
   fireEvent.click(editDetails);
   // Can open modal
   await patientlyWaitFor(() => {
-    expect(queryAllByText('Edit products')).toHaveLength(2);
+    expect(queryAllByText('Edit')).toHaveLength(4);
     expect(getByLabelText('edit_acs_details')).toBeInTheDocument();
   });
-  const saveButton = queryByText('Edit ACS products');
+  const saveButton = getByLabelText('edit_acs_details');
   fireEvent.click(saveButton);
   // can close modal
   await patientlyWaitFor(() => {
-    expect(queryAllByText('Edit products')).toHaveLength(1);
+    expect(queryAllByText('Edit')).toHaveLength(3);
   });
   assertNockRequest(acsDetailsScope);
   assertNockRequest(productsScope);

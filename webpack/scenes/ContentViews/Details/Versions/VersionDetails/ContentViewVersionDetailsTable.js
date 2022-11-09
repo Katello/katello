@@ -34,7 +34,7 @@ const ContentViewVersionDetailsTable = ({
     autocompleteEndpoint,
     fetchItems,
     columnHeaders,
-    disableSearch,
+    hideSearch,
     route,
   }, repositories,
 }) => {
@@ -77,7 +77,7 @@ const ContentViewVersionDetailsTable = ({
           updateSearchQuery,
           status,
           autocompleteEndpoint,
-          disableSearch,
+          hideSearch,
         }}
         ouiaId={`content-view-version-details-${kebabCase(route)}-table`}
         additionalListeners={[selected]}
