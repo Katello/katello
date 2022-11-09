@@ -115,6 +115,7 @@ module Katello
       module_stream = ::Katello::ModuleStream.create(name: 'mock', pulp_id: 'mock-module', version: '8050020220115095224', context: 'c5368500', stream: 'av', arch: modular_rpm.arch)
       ::Katello::ModuleStreamErratumPackage.create(module_stream_id: module_stream.id, erratum_package_id: modular_erratum_package.id)
 
+      @repo.module_streams << module_stream
       @repo.errata = [erratum1, erratum2]
       @repo.save!
 
