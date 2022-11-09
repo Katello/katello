@@ -16,13 +16,6 @@ let autoSearchScope;
 beforeEach(() => {
   const { results } = acsData;
   [firstAcs] = results;
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
 });
 
 test('Can call API and show ACS on page load', async (done) => {
@@ -31,6 +24,8 @@ test('Can call API and show ACS on page load', async (done) => {
     .get(acsURL)
     .query(true)
     .reply(200, acsData);
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const { getByText, queryByText } = renderWithRedux(<ACSTable />);
 
@@ -39,18 +34,22 @@ test('Can call API and show ACS on page load', async (done) => {
   // Assert that the ACS name is now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => expect(getByText(firstAcs.name)).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
   assertNockRequest(scope, done);
 });
 
 test('Can handle no ACS being present', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-
   const noResults = {
     total: 0,
     subtotal: 0,
     page: 1,
     per_page: 20,
     results: [],
+    can_create: true,
+    can_delete: true,
+    can_edit: true,
+    can_view: true,
   };
   const scope = nockInstance
     .get(acsURL)
@@ -62,6 +61,5 @@ test('Can handle no ACS being present', async (done) => {
   expect(queryByText(firstAcs.name)).toBeNull();
   expect(queryByLabelText('Select all')).not.toBeInTheDocument();
   await patientlyWaitFor(() => expect(queryByText("You currently don't have any alternate content sources.")).toBeInTheDocument());
-  assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });

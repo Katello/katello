@@ -50,7 +50,7 @@ test('Can expand expandable sections on details page', async (done) => {
     .get(acsDetailsURL)
     .query(true)
     .reply(200, acsDetails);
-  const { queryAllByText, queryByText } =
+  const { queryAllByText, queryByText, queryByLabelText } =
     renderWithRedux(withACSRoute(<ACSExpandableDetails />), renderOptions);
 
   // Nothing will show at first, page is loading
@@ -71,6 +71,7 @@ test('Can expand expandable sections on details page', async (done) => {
     expect(queryByText('Details')).toBeInTheDocument();
     expect(queryByText('Smart proxies')).toBeInTheDocument();
     expect(queryByText('centos7-katello-devel-stable.example.com')).toBeInTheDocument();
+    expect(queryByLabelText('httpProxyTitle')).toBeInTheDocument();
     expect(queryByText('URL and subpaths')).toBeInTheDocument();
     expect(queryByText('Credentials')).toBeInTheDocument();
   });
@@ -97,7 +98,6 @@ test('Can expand expandable sections on details page', async (done) => {
     expect(queryByText('Credentials')).toBeInTheDocument();
     expect(queryByText('Verify SSL')).toBeInTheDocument();
     expect(queryAllByText('false')[0]).toBeInTheDocument();
-    expect(queryByText('Use HTTP Proxies')).toBeInTheDocument();
     expect(queryAllByText('false')[1]).toBeInTheDocument();
     expect(queryByText('SSL CA certificate')).toBeInTheDocument();
     expect(queryAllByText('N/A')[0]).toBeInTheDocument();

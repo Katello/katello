@@ -14,6 +14,7 @@ import {
   DrawerContentBody,
   DrawerHead,
   DrawerPanelContent,
+  DrawerPanelBody,
   Dropdown,
   DropdownItem,
   KebabToggle,
@@ -55,15 +56,17 @@ const ACSTable = () => {
     can_create: canCreate = false,
     can_edit: canEdit = false,
     can_delete: canDelete = false,
+    can_view: canView = false,
     results,
   } = response;
   const { pathname } = useLocation();
   const { push } = useHistory();
-  const acsId = pathname.split('/')[2];
+  const [acsId, setAcsId] = useState(pathname.split('/')[2]);
   const [expandedId, setExpandedId] = useState(acsId);
   const [isExpanded, setIsExpanded] = useState(false);
   const drawerRef = useRef(null);
   const [kebabOpen, setKebabOpen] = useState(false);
+  const [detailsKebabOpen, setDetailsKebabOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const renderActionButtons = status === STATUS.RESOLVED && !!results?.length;
   const {
@@ -77,6 +80,7 @@ const ACSTable = () => {
   useEffect(() => {
     if (acsId) {
       dispatch(getACSDetails(acsId));
+      setExpandedId(acsId);
       setIsExpanded(true);
     }
   }, [dispatch, acsId]);
@@ -122,7 +126,8 @@ const ACSTable = () => {
 
   const onCloseClick = () => {
     setExpandedId(null);
-    push('/alternate_content_sources');
+    setAcsId(null);
+    window.history.replaceState(null, '', '/alternate_content_sources');
     setIsExpanded(false);
   };
 
@@ -131,12 +136,14 @@ const ACSTable = () => {
       onCloseClick();
     } else {
       setExpandedId(id);
-      push(`/alternate_content_sources/${id}/details`);
+      setAcsId(id);
+      window.history.replaceState(null, '', `/alternate_content_sources/${id}/details`);
       setIsExpanded(true);
     }
   };
 
-  const isSingleSelected = rowId => (Number(rowId) === Number(acsId));
+  const isSingleSelected = rowId => (Number(rowId) === Number(acsId) ||
+      Number(rowId) === Number(expandedId));
   const customStyle = {
     borderLeft: '5px solid var(--pf-global--primary-color--100)',
   };
@@ -151,49 +158,74 @@ const ACSTable = () => {
     const { last_refresh: lastTask, permissions } = acs ?? {};
     const { last_refresh_words: lastRefreshWords, started_at: startedAt } = lastTask ?? {};
     return (
-      <DrawerPanelContent defaultSize="50%">
+      <DrawerPanelContent defaultSize="35%">
         <DrawerHead>
           {results && isExpanded &&
-            <span ref={drawerRef}>
-              <TextContent>
-                <Text component={TextVariants.h2}>
-                  {acs?.name}
-                </Text>
-                <TextList component={TextListVariants.dl}>
-                  <TextListItem component={TextListItemVariants.dt}>
-                    {__('Last refresh :')}
-                  </TextListItem>
-                  <TextListItem
-                    aria-label="name_text_value"
-                    component={TextListItemVariants.dd}
-                  >
-                    <LastSync
-                      startedAt={startedAt}
-                      lastSync={lastTask}
-                      lastSyncWords={lastRefreshWords}
-                      emptyMessage="N/A"
-                    />
-                  </TextListItem>
-                </TextList>
-              </TextContent>
-              <ACSExpandableDetails />
-            </span>}
+          <div ref={drawerRef}>
+            <Text component={TextVariants.h1} style={{ marginTop: '0px', fontWeight: 'bold' }}>
+              {acs?.name}
+            </Text>
+            <TextContent>
+              <TextList style={{ marginBottom: '0px' }} component={TextListVariants.dl}>
+                <TextListItem component={TextListItemVariants.dt} style={{ fontWeight: 'normal' }}>
+                  {__('Last refresh :')}
+                </TextListItem>
+                <TextListItem
+                  aria-label="name_text_value"
+                  component={TextListItemVariants.dd}
+                >
+                  <LastSync
+                    startedAt={startedAt}
+                    lastSync={lastTask}
+                    lastSyncWords={lastRefreshWords}
+                    emptyMessage="N/A"
+                  />
+                </TextListItem>
+              </TextList>
+            </TextContent>
+          </div>
+            }
           {error && <EmptyStateMessage error={error} />}
           <DrawerActions>
             {hasPermission(permissions, 'edit_alternate_content_sources') &&
-            <Button
-              ouiaId="refresh-acs"
-              onClick={() => onRefresh(acs?.id)}
-              variant="secondary"
-              isSmall
-              aria-label="refresh_acs"
-            >
-              {__('Refresh source')}
-            </Button>
+            <>
+              <Button
+                ouiaId="refresh-acs"
+                onClick={() => onRefresh(acs?.id)}
+                variant="secondary"
+                isSmall
+                aria-label="refresh_acs"
+              >
+                {__('Refresh source')}
+              </Button>
+              <Dropdown
+                style={{ paddingRight: '0px' }}
+                toggle={<KebabToggle aria-label="details_actions" onToggle={setDetailsKebabOpen} style={{ paddingRight: '0px' }} />}
+                isOpen={detailsKebabOpen}
+                ouiaId="acs-details-actions"
+                isPlain
+                dropdownItems={[
+                  <DropdownItem
+                    aria-label="details_delete"
+                    ouiaId="details_delete"
+                    key="details_delete"
+                    component="button"
+                    onClick={() => {
+                      setDetailsKebabOpen(false);
+                      onDelete(acs?.id);
+                    }}
+                  >
+                    {__('Delete')}
+                  </DropdownItem>]}
+              />
+            </>
             }
             <DrawerCloseButton onClick={onCloseClick} />
           </DrawerActions>
         </DrawerHead>
+        <DrawerPanelBody>
+          <ACSExpandableDetails {...{ expandedId }} />
+        </DrawerPanelBody>
       </DrawerPanelContent>
     );
   };
@@ -270,156 +302,159 @@ const ACSTable = () => {
     return <Loading loadingText={__('Please wait...')} />;
   }
   return (
-    <Drawer isExpanded={isExpanded} onExpand={onExpand} isInline style={{ minHeight: '70vH' }}>
-      <DrawerContent panelContent={<PanelContent />} style={{ minHeight: '70vH' }}>
-        <DrawerContentBody>
-          <TableWrapper
-            {...{
-              metadata,
-              emptyContentTitle,
-              emptyContentBody,
-              emptySearchTitle,
-              emptySearchBody,
-              searchQuery,
-              updateSearchQuery,
-              error,
-              status,
-              fetchItems,
-              showPrimaryAction,
-              primaryActionButton,
-            }}
-            ouiaId="alternate-content-sources-table"
-            variant={TableVariant.compact}
-            additionalListeners={[activeSortColumn, activeSortDirection]}
-            autocompleteEndpoint="/alternate_content_sources/auto_complete_search"
-            {...selectionSetVars}
-            actionButtons={
-              <>
-                {renderActionButtons && canCreate &&
-                <Button
-                  ouiaId="create-acs"
-                  onClick={createButtonOnclick}
-                  variant="primary"
-                  aria-label="create_acs"
-                >
-                  {__('Add source')}
-                </Button>}
-                {renderActionButtons && (canEdit || canDelete) &&
-                <Dropdown
-                  toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
-                  isOpen={kebabOpen}
-                  ouiaId="acs-bulk-actions"
-                  isPlain
-                  dropdownItems={[
-                    <DropdownItem
-                      aria-label="bulk_refresh"
-                      ouiaId="bulk_refresh"
-                      key="bulk_refresh"
-                      isDisabled={selectedCount < 1 || !canEdit}
-                      component="button"
-                      onClick={() => {
-                        setKebabOpen(false);
-                        onBulkRefresh(selectionSet);
-                      }}
-                    >
-                      {__('Refresh')}
-                    </DropdownItem>,
-                    <DropdownItem
-                      aria-label="bulk_delete"
-                      ouiaId="bulk_delete"
-                      key="bulk_delete"
-                      isDisabled={selectedCount < 1 || !canDelete}
-                      component="button"
-                      onClick={() => {
-                        setKebabOpen(false);
-                        onBulkDelete(selectionSet);
-                      }}
-                    >
-                      {__('Delete')}
-                    </DropdownItem>,
-                  ]}
-                />}
-                {isCreateWizardOpen &&
-                <ACSCreateWizard
-                  show={isCreateWizardOpen}
-                  setIsOpen={setIsCreateWizardOpen}
-                />
+    <div className="primary-detail-border">
+      <Drawer isExpanded={isExpanded} onExpand={onExpand} style={{ minHeight: '80vH' }}>
+        <DrawerContent panelContent={<PanelContent />} style={{ minHeight: '80vH' }}>
+          <DrawerContentBody>
+            <TableWrapper
+              {...{
+                metadata,
+                emptyContentTitle,
+                emptyContentBody,
+                emptySearchTitle,
+                emptySearchBody,
+                searchQuery,
+                updateSearchQuery,
+                error,
+                status,
+                fetchItems,
+                showPrimaryAction,
+                primaryActionButton,
+              }}
+              ouiaId="alternate-content-sources-table"
+              variant={TableVariant.compact}
+              additionalListeners={[activeSortColumn, activeSortDirection]}
+              autocompleteEndpoint="/alternate_content_sources/auto_complete_search"
+              {...selectionSetVars}
+              actionButtons={
+                <>
+                  {renderActionButtons && canCreate &&
+                  <Button
+                    ouiaId="create-acs"
+                    onClick={createButtonOnclick}
+                    variant="primary"
+                    aria-label="create_acs"
+                  >
+                    {__('Add source')}
+                  </Button>}
+                  {renderActionButtons && (canEdit || canDelete) &&
+                  <Dropdown
+                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
+                    isOpen={kebabOpen}
+                    ouiaId="acs-bulk-actions"
+                    isPlain
+                    dropdownItems={[
+                      <DropdownItem
+                        aria-label="bulk_refresh"
+                        ouiaId="bulk_refresh"
+                        key="bulk_refresh"
+                        isDisabled={selectedCount < 1 || !canEdit}
+                        component="button"
+                        onClick={() => {
+                          setKebabOpen(false);
+                          onBulkRefresh(selectionSet);
+                        }}
+                      >
+                        {__('Refresh')}
+                      </DropdownItem>,
+                      <DropdownItem
+                        aria-label="bulk_delete"
+                        ouiaId="bulk_delete"
+                        key="bulk_delete"
+                        isDisabled={selectedCount < 1 || !canDelete}
+                        component="button"
+                        onClick={() => {
+                          setKebabOpen(false);
+                          onBulkDelete(selectionSet);
+                        }}
+                      >
+                        {__('Delete')}
+                      </DropdownItem>,
+                    ]}
+                  />}
+                  {isCreateWizardOpen &&
+                  <ACSCreateWizard
+                    show={isCreateWizardOpen}
+                    setIsOpen={setIsCreateWizardOpen}
+                  />
                 }
-              </>
+                </>
                 }
-            displaySelectAllCheckbox={renderActionButtons}
-          >
-            <Thead>
-              <Tr>
-                <Th
-                  key="acs-checkbox"
-                  style={{ width: 0 }}
-                />
-                {columnHeaders.map(col => (
+              displaySelectAllCheckbox={renderActionButtons}
+              hideSearch={!canView}
+            >
+              <Thead>
+                <Tr>
                   <Th
-                    key={col}
-                    sort={COLUMNS_TO_SORT_PARAMS[col] ? pfSortParams(col) : undefined}
-                  >
-                    {col}
-                  </Th>
-                ))}
-              </Tr>
-            </Thead>
-            <Tbody>
-              {results?.map((acs, index) => {
-                const {
-                  name,
-                  id,
-                  alternate_content_source_type: acsType,
-                  last_refresh: lastTask,
-                  permissions,
-                } = acs;
-                const {
-                  last_refresh_words: lastRefreshWords,
-                  started_at: startedAt,
-                } = lastTask ?? {};
-                return (
-                  <Tr
-                    key={index}
-                    style={isSingleSelected(id) && isExpanded ? customStyle : {}}
-                    isStriped={isSingleSelected(id) && isExpanded}
-                  >
-                    <Td>
-                      <Checkbox
-                        ouiaId={`select-acs-${id}`}
-                        id={id}
-                        aria-label={`Select ACS ${id}`}
-                        isChecked={isSelected(id)}
-                        onChange={selected => selectOne(selected, id)}
+                    key="acs-checkbox"
+                    style={{ width: 0 }}
+                  />
+                  {columnHeaders.map(col => (
+                    <Th
+                      key={col}
+                      sort={COLUMNS_TO_SORT_PARAMS[col] ? pfSortParams(col) : undefined}
+                    >
+                      {col}
+                    </Th>
+                  ))}
+                </Tr>
+              </Thead>
+              <Tbody>
+                {results?.map((acs, index) => {
+                  const {
+                    name,
+                    id,
+                    alternate_content_source_type: acsType,
+                    last_refresh: lastTask,
+                    permissions,
+                  } = acs;
+                  const {
+                    last_refresh_words: lastRefreshWords,
+                    started_at: startedAt,
+                  } = lastTask ?? {};
+                  return (
+                    <Tr
+                      key={index}
+                      style={isSingleSelected(id) && isExpanded ? customStyle : {}}
+                      isStriped={isSingleSelected(id) && isExpanded}
+                    >
+                      <Td>
+                        <Checkbox
+                          ouiaId={`select-acs-${id}`}
+                          id={id}
+                          aria-label={`Select ACS ${id}`}
+                          isChecked={isSelected(id)}
+                          onChange={selected => selectOne(selected, id)}
+                        />
+                      </Td>
+                      <Td>
+                        <Text onClick={() => onClick(id)} component="a">{name}</Text>
+                      </Td>
+                      <Td>{acsType === 'rhui' ? upperCase(acsType) : capitalize(acsType)}</Td>
+                      <Td><LastSync
+                        startedAt={startedAt}
+                        lastSync={lastTask}
+                        lastSyncWords={lastRefreshWords}
+                        emptyMessage="N/A"
                       />
-                    </Td>
-                    <Td>
-                      <Text onClick={() => onClick(id)} component="a">{name}</Text>
-                    </Td>
-                    <Td>{acsType === 'rhui' ? upperCase(acsType) : capitalize(acsType)}</Td>
-                    <Td><LastSync
-                      startedAt={startedAt}
-                      lastSync={lastTask}
-                      lastSyncWords={lastRefreshWords}
-                      emptyMessage="N/A"
-                    />
-                    </Td>
-                    {(hasPermission(permissions, 'destroy_alternate_content_sources') ||
+                      </Td>
+                      {(hasPermission(permissions, 'destroy_alternate_content_sources') ||
                         hasPermission(permissions, 'edit_alternate_content_sources')) ?
                           <Td isActionCell>
                             <ActionsColumn items={actionsWithPermissions(acs)} />
                           </Td> :
                           <Td />
                     }
-                  </Tr>
-                );
-              })
+                    </Tr>
+                  );
+                })
                 }
-            </Tbody>
-          </TableWrapper>
-        </DrawerContentBody>
-      </DrawerContent>
-    </Drawer>
+              </Tbody>
+            </TableWrapper>
+          </DrawerContentBody>
+        </DrawerContent>
+      </Drawer>
+    </div>
   );
   /* eslint-enable react/no-array-index-key */
 };
