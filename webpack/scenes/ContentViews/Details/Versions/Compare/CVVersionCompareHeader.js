@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector } from 'react-redux';
 import {
-  Grid, GridItem, TextContent, Text, TextVariants, Tooltip,
+  Grid, GridItem, TextContent, Text, TextVariants,
   Select, SelectOption, SelectVariant, Flex, FlexItem,
 } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { selectCVDetails } from '../../ContentViewDetailSelectors';
+import { HelpToolTip } from '../../../Create/ContentViewFormComponents';
 
 const CVVersionCompareHeader = ({
   versionOne, versionTwo, cvId, setVersionOne, setVersionTwo, selectedViewBy, setSelectedViewBy,
@@ -81,13 +81,11 @@ const CVVersionCompareHeader = ({
         <TextContent>
           <Text ouiaId="cv-version-compare-button" component={TextVariants.h2}>{__('Compare')}</Text>
         </TextContent>
-        <Tooltip aria="none" aria-live="polite" content={toolTipContent} style={{ marginLeft: 'auto' }}>
-          <OutlinedQuestionCircleIcon />
-        </Tooltip>
+        <HelpToolTip className="cvv-spaced-tooltip" tooltip={toolTipContent} />
       </GridItem>
       <GridItem span={12}>
         <Flex>
-          <FlexItem>
+          <FlexItem style={{ marginRight: '60px' }}>
             <Flex direction={{ default: 'column' }}>
               <h3><b>{__('Versions to compare')}</b></h3>
               <FlexItem>
@@ -146,7 +144,7 @@ const CVVersionCompareHeader = ({
               </FlexItem>
             </Flex>
           </FlexItem >
-          <FlexItem style={{ marginLeft: '60px' }}>
+          <FlexItem className="border-left" style={{ paddingLeft: '60px' }}>
             <Flex direction={{ default: 'column' }}>
               <h3><b>{__('View by')}</b></h3>
               <FlexItem>

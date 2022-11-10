@@ -6,11 +6,11 @@ import { Tooltip, TooltipPosition, Flex, FlexItem } from '@patternfly/react-core
 import { autoPublishHelpText, dependenciesHelpText, importOnlyHelpText, generatedContentViewHelpText } from '../helpers';
 import ContentViewIcon from '../components/ContentViewIcon';
 
-export const HelpToolTip = ({ tooltip }) => (
-  <span className="foreman-spaced-icon">
+export const HelpToolTip = props => (
+  <span className={props.className ?? 'foreman-spaced-icon'}>
     <Tooltip
       position={TooltipPosition.top}
-      content={tooltip}
+      content={props.tooltip}
     >
       <OutlinedQuestionCircleIcon />
     </Tooltip>
@@ -69,4 +69,9 @@ export const LabelGenerated = () => (
 
 HelpToolTip.propTypes = {
   tooltip: PropTypes.string.isRequired,
+  className: PropTypes.string,
+};
+
+HelpToolTip.defaultProps = {
+  className: null,
 };

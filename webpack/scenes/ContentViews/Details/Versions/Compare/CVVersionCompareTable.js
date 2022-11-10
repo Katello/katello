@@ -8,6 +8,7 @@ import { TableVariant, Tr, Th, Tbody, Td, Thead } from '@patternfly/react-table'
 import { TableType } from './CVVersionCompareConfig';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { useTableSort } from '../../../../../components/Table/TableHooks';
+import './CVVersionCompare.scss';
 
 const CVVersionCompareTable = ({
   tableConfig: {
@@ -59,6 +60,7 @@ const CVVersionCompareTable = ({
       emptyContentTitle={__(`No matching ${name} found.`)}
       emptyContentBody=""
       variant={TableVariant.compact}
+      className="cvv-compare-bordered-table-rows cvv-compare-bordered-table-header"
     >
       <Thead>
         <Tr ouiaId="column-headers">
@@ -78,8 +80,13 @@ const CVVersionCompareTable = ({
           (
             <Tr key={`column-${result.id}`} ouiaId={`column-${result.id}`}>
               {columnHeaders.map(({ getProperty }, colIndex) =>
-                // eslint-disable-next-line react/no-array-index-key
-                <Td key={`cell-${colIndex}`}>{getProperty(result)} </Td>)}
+                (
+                  <Td
+                  // eslint-disable-next-line react/no-array-index-key
+                    key={`cell-${colIndex}`}
+                  >
+                    {getProperty(result)}
+                  </Td>))}
             </Tr>
           ))}
       </Tbody>
