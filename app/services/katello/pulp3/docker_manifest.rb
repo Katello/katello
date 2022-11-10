@@ -16,7 +16,8 @@ module Katello
 
       def self.content_unit_list(page_opts)
         page_opts[:media_type] = ['application/vnd.docker.distribution.manifest.v1+json',
-                                  'application/vnd.docker.distribution.manifest.v2+json']
+                                  'application/vnd.docker.distribution.manifest.v2+json',
+                                  'application/vnd.oci.image.manifest.v1+json']
         self.content_api.list(page_opts)
       end
 
