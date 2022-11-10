@@ -12,6 +12,12 @@ module Katello
             @proxy = SmartProxy.pulp_primary
           end
 
+          def test_copy_units_does_not_clear_repo_during_composite_merger
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            service.expects(:remove_all_content).never
+            service.copy_units(@repo, [], false)
+          end
+
           def test_additional_content_hrefs_properly_includes_errata
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
             rpm = ::Katello::Rpm.create(name: "foobar", filename: "foobar-1.3.4.rpm", nvra: "foobar-1.2.3", pulp_id: "test")
