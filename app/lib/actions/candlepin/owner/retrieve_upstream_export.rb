@@ -1,5 +1,3 @@
-# like start_upstream_export.rb except for retrieving existing export
-# Compare this snippet from app/lib/actions/candlepin/owner/retrieve_upstream_export.rb:
 module Actions
   module Candlepin
     module Owner

@@ -11,7 +11,7 @@ module Actions
       end
 
       def candlepin
-        "Upstream Candlepin"
+        _("Upstream Candlepin")
       end
 
       private
@@ -22,7 +22,7 @@ module Actions
 
       def check_for_errors!(task)
         if task[:state] == 'FAILED'
-          fail ::Katello::Errors::CandlepinError, task[:resultData]
+          fail ::Katello::Errors::UpstreamCandlepinError, task[:resultData]
         end
       end
     end

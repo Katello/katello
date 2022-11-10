@@ -76,7 +76,7 @@ module Katello
       end
 
       def start_owner_upstream_export(upstream)
-        validate_upstream!(upstream)
+        validate_upstream_identity_cert!(upstream)
         url = upstream['apiUrl'] || API_URL
 
         response = Resources::Candlepin::UpstreamConsumer.get_export("#{url}#{upstream['uuid']}/export/async", upstream['idCert']['cert'],
@@ -85,7 +85,7 @@ module Katello
       end
 
       def retrieve_owner_upstream_export(upstream, zip_file_path, export_id)
-        validate_upstream!(upstream)
+        validate_upstream_identity_cert!(upstream)
         url = upstream['apiUrl'] || API_URL
 
         data = Resources::Candlepin::UpstreamConsumer.get_export("#{url}#{upstream['uuid']}/export/#{export_id}", upstream['idCert']['cert'],
@@ -164,7 +164,7 @@ module Katello
 
       private
 
-      def validate_upstream!(upstream)
+      def validate_upstream_identity_cert!(upstream)
         if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
           Rails.logger.error "Upstream identity certificate not available"
           fail _("Upstream identity certificate not available")

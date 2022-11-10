@@ -31,7 +31,7 @@ module Actions
       end
 
       def candlepin
-        "Candlepin"
+        _("Candlepin")
       end
 
       private
