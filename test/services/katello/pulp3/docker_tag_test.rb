@@ -37,6 +37,19 @@ module Katello
           assert_equal ::Katello::DockerManifest.find_by(id: ::Katello::DockerTag.first.docker_taggable_id).digest, "sha256:a6ecbb1553353a08936f50c275b010388ed1bd6d9d84743c7e8e7468e2acd82e"
         end
 
+        # https://projects.theforeman.org/issues/35709
+        # Tests indexing repositories with manifests that use the application/vnd.oci.image.index.v1+json media type.
+        def test_index_with_oci_tagged_manifest
+          @repo.root.update(url: 'https://quay.io', docker_upstream_name: 'ansible/ansible-runner')
+          Katello::DockerTag.destroy_all
+          sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+          index_args = {:id => @repo.id, :contents_changed => true}
+
+          # Test that indexing works
+          ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
+        end
+
         def test_resync_limit_tags_deletes_proper_repo_association_meta_tags
           # https://projects.theforeman.org/issues/34257
           Katello::DockerTag.destroy_all
