@@ -22,6 +22,7 @@ import HostCollectionsCard from './components/extensions/HostDetails/Cards/HostC
 import { hostIsNotRegistered } from './components/extensions/HostDetails/hostDetailsHelpers';
 import {
   SystemPropertiesCardSubscription,
+  SystemPropertiesCardVirtualization,
   SystemPropertiesCardTracer,
 } from './components/extensions/HostDetails/DetailsTabCards/SystemPropertiesCardExtensions';
 import HostActionsBar from './components/extensions/HostDetails/ActionsBar';
@@ -61,6 +62,7 @@ addGlobalFill('host-tab-details-cards', 'Installed products', <InstalledProducts
 addGlobalFill('host-tab-details-cards', 'Registration details', <RegistrationCard key="registration-details" />, 200);
 addGlobalFill('host-details-tab-properties-1', 'Subscription UUID', <SystemPropertiesCardSubscription key="subscription-uuid" />);
 addGlobalFill('host-details-tab-properties-2', 'Tracer', <SystemPropertiesCardTracer key="tracer-status" />);
+addGlobalFill('host-details-tab-properties-3', 'Virtualization', <SystemPropertiesCardVirtualization key="virtualization" />);
 
 addGlobalFill(
   'host-details-kebab',
