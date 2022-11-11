@@ -77,7 +77,7 @@ const RegistrationCard = ({ isExpandedGlobal, hostDetails }) => {
           <RegisteredBy user={login} activationKeys={activationKeys} />
         </DescriptionListGroup>
         <DescriptionListGroup>
-          <DescriptionListTerm>{__('Registered through')}</DescriptionListTerm>
+          <DescriptionListTerm>{__('Content source')}</DescriptionListTerm>
           <DescriptionListDescription>{registeredThrough}</DescriptionListDescription>
         </DescriptionListGroup>
       </DescriptionList>
