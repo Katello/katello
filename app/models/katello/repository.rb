@@ -344,6 +344,10 @@ module Katello
       content_counts
     end
 
+    def module_stream_specs
+      self.module_streams.map(&:module_spec)
+    end
+
     def published_in_versions
       Katello::ContentViewVersion.with_repositories(self.library_instances_inverse)
                                  .where(content_view_id: Katello::ContentView.ignore_generated).distinct

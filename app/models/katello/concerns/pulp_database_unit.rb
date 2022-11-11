@@ -134,9 +134,38 @@ module Katello
         repos = if env && content_view
                   Katello::Repository.in_environment(env).in_content_views([content_view])
                 else
-                  facet.bound_repositories.pluck(:id)
+                  facet.bound_repositories
                 end
-        facet.send("applicable_#{content_units_name}".to_sym).in_repositories(repos)
+        bound_content_units = facet.send("applicable_#{content_units_name}".to_sym).in_repositories(repos)
+        return bound_content_units unless self == Katello::Erratum
+        filter_out_incomplete_errata(repos: repos, bound_content_units: bound_content_units)
+      end
+
+      def filter_out_incomplete_errata(repos:, bound_content_units:)
+        # In order for an erratum to be installable, the host's bound repositories must
+        # (1) contain all of the packages in the erratum; and
+        package_filenames = Set.new(Katello::Rpm.in_repositories(repos).pluck(:filename))
+        actually_installable = bound_content_units.select do |erratum|
+          erratum.packages.pluck(:filename).all? do |filename|
+            keep = package_filenames.include?(filename)
+            unless keep
+              Rails.logger.debug("Erratum #{erratum.errata_id} not installable because package #{filename} is not available in bound repository")
+            end
+            keep
+          end
+        end
+
+        # (2) for modular errata, ????.
+        actually_installable += bound_content_units.modular.select do |erratum|
+          erratum.module_stream_specs.all? do |spec|
+            keep = # ????
+            unless keep
+              Rails.logger.debug("Modular erratum #{erratum.errata_id} not installable because module #{spec} is not available in bound repository")
+            end
+            keep
+          end
+        end
+        Katello::Erratum.where(id: actually_installable)
       end
 
       def installable_for_hosts(hosts = nil)
