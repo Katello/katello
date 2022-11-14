@@ -40,7 +40,7 @@ module ::Actions::Pulp3
       @repo_clone.reload
 
       refute_empty @repo.rpms
-      assert_equal @repo.rpms.sort, @repo_clone.rpms.sort
+      assert_equal @repo.rpms.order(:id), @repo_clone.rpms.order(:id)
       refute_nil(@repo.version_href)
       refute_nil(@repo_clone.version_href)
       assert_not_equal @repo.version_href, @repo_clone.version_href
