@@ -24,7 +24,8 @@ module Katello
     has_many :cves, :class_name => "Katello::ErratumCve", :dependent => :destroy, :inverse_of => :erratum
     has_many :packages, :class_name => "Katello::ErratumPackage", :dependent => :destroy, :inverse_of => :erratum
 
-    scoped_search :on => :errata_id, :only_explicit => true
+    scoped_search :on => :id, :rename => :db_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
+    scoped_search :on => :errata_id, :complete_value => true, :only_explicit => true
     scoped_search :on => :errata_id, :rename => :id, :complete_value => true, :only_explicit => true
     scoped_search :on => :title
     scoped_search :on => :title, :rename => :synopsis, :complete_value => true, :only_explicit => true
