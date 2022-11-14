@@ -26,7 +26,7 @@ module Katello
           api = repo_type.pulp3_api(smart_proxy)
           version_hrefs = api.repository_versions
           orphan_version_hrefs = api.list_all.collect do |pulp_repo|
-            mirror_repo_versions = api.versions_list_for_repository(pulp_repo.pulp_href, ordering: :_created)
+            mirror_repo_versions = api.versions_list_for_repository(pulp_repo.pulp_href, ordering: ['-pulp_created'])
             version_hrefs = mirror_repo_versions.select { |repo_version| repo_version.number != 0 }.collect { |version| version.pulp_href }
 
             version_hrefs - [pulp_repo.latest_version_href]
@@ -83,7 +83,7 @@ module Katello
 
           remotes.each do |remote|
             if !repo_names.include?(remote.name) && !acs_remotes.include?(remote.pulp_href)
-              tasks << api.delete_remote(href: remote.pulp_href)
+              tasks << api.delete_remote(remote.pulp_href)
             end
           end
         end
