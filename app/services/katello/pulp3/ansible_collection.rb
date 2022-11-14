@@ -30,21 +30,24 @@ module Katello
       end
 
       def self.insert_child_associations(units, pulp_id_to_id)
-        tag_names = units.map { |unit| unit['tags'].map { |tag| tag[:name] } }.flatten
-        tag_rows = tag_names.map { |name| {name: name } }
-        Katello::AnsibleTag.insert_all(tag_rows, unique_by: [:name]) if tag_rows.any?
-
+        insert_tags units
         collection_tag_rows = []
         units.each do |unit|
           katello_id = pulp_id_to_id[unit['pulp_href']]
           #delete old tags
-          unit_tags = unit['tags'].map { |tag| tag[:name] }
+          unit_tags = unit['tags']&.map { |tag| tag[:name] }
           Katello::AnsibleCollectionTag.where(:ansible_collection_id => katello_id).where.not(:ansible_tag_id => Katello::AnsibleTag.where(:name => unit_tags)).delete_all
-          collection_tag_rows += Katello::AnsibleTag.where(:name => unit_tags).pluck(:id).map { |tag_id| {ansible_collection_id: katello_id, ansible_tag_id: tag_id} }
+          collection_tag_rows += Katello::AnsibleTag.where(:name => unit_tags)&.pluck(:id)&.map { |tag_id| {ansible_collection_id: katello_id, ansible_tag_id: tag_id} }
         end
 
         collection_tag_rows.flatten!
         Katello::AnsibleCollectionTag.insert_all(collection_tag_rows, unique_by: [:ansible_collection_id, :ansible_tag_id]) unless collection_tag_rows.empty?
+      end
+
+      def self.insert_tags(units)
+        tag_names = units.map { |unit| unit['tags']&.map { |tag| tag[:name] } }&.flatten
+        tag_rows = tag_names&.compact&.map { |name| {name: name } }
+        Katello::AnsibleTag.insert_all(tag_rows, unique_by: [:name]) if tag_rows.any?
       end
     end
   end
