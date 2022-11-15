@@ -27,6 +27,7 @@ module Katello
     end
 
     api :GET, "/alternate_content_sources", N_("List alternate content sources.")
+    param :name, String, :desc => N_("Name of the alternate content source"), :required => false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(AlternateContentSource)
     def index
@@ -52,7 +53,9 @@ module Katello
     end
 
     def index_relation
-      AlternateContentSource.readable.distinct
+      query = AlternateContentSource.readable.distinct
+      query = query.where(name: params[:name]) if params[:name]
+      query
     end
 
     api :GET, '/alternate_content_sources/:id', N_('Show an alternate content source.')

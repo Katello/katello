@@ -114,13 +114,6 @@ module Katello
       end
     end
 
-    def assert_response_ids(response, expected)
-      body = JSON.parse(response.body)
-      found_ids = body['results'].map { |item| item['id'] }
-      refute_empty expected
-      assert_equal expected.sort, found_ids.sort
-    end
-
     def test_index_with_product_id
       ids = Repository.in_product(@product).where(:library_instance_id => nil).pluck(:id)
 
