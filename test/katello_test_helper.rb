@@ -165,6 +165,13 @@ class ActionController::TestCase
     @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
   end
 
+  def assert_response_ids(response, expected)
+    body = JSON.parse(response.body)
+    found_ids = body['results'].map { |item| item['id'] }
+    refute_empty expected
+    assert_equal expected.sort, found_ids.sort
+  end
+
   def assert_response(type, message = nil)
     if type == :success
       if response.body.present? && /json/.match(response.headers['Content-Type'])
