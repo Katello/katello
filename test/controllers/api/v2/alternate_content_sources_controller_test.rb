@@ -35,6 +35,14 @@ module Katello
       assert_template 'api/v2/alternate_content_sources/index'
     end
 
+    def test_index_with_name
+      response = get :index, params: { name: @acs.name }
+
+      assert_response :success
+      assert_template 'api/v2/alternate_content_sources/index'
+      assert_response_ids response, [@acs.id]
+    end
+
     def test_show
       get :show, params: { :id => @acs.id }
 
