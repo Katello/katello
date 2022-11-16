@@ -210,7 +210,8 @@ module Katello
               tasks << add_content(slice, first_slice)
               first_slice = false
             end
-          else
+          # If we're merging composite cv repositories, don't clear out the Pulp repository.
+          elsif remove_all
             tasks << remove_all_content
           end
           tasks
