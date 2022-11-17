@@ -230,7 +230,7 @@ class SubscriptionsPage extends Component {
           defaultMessage={simpleContentAccess ? __(`This organization has Simple Content Access enabled.
           Hosts are not required to have subscriptions attached to access repositories.
           {br}
-          Learn more about your overall subscription usage with the {subscriptionsService}.`) : __('This organization is not using {scaLink}. Legacy subscription management is deprecated and will be removed in a future version.')}
+          Learn more about your overall subscription usage with the {subscriptionsService}.`) : __('This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in a future version.')}
         />
       </Alert>
     );
@@ -272,7 +272,7 @@ class SubscriptionsPage extends Component {
             />
 
             <div id="subscriptions-table" className="modal-container">
-              {isManifestImported && SCAAlert}
+              {!this.props.organization?.loading && SCAAlert}
               <SubscriptionsTable
                 canManageSubscriptionAllocations={canManageSubscriptionAllocations}
                 loadSubscriptions={this.props.loadSubscriptions}
@@ -330,6 +330,7 @@ SubscriptionsPage.propTypes = {
   }),
   organization: PropTypes.shape({
     id: PropTypes.number,
+    loading: PropTypes.bool,
     owner_details: PropTypes.shape({
       upstreamConsumer: PropTypes.shape({
         name: PropTypes.string,
