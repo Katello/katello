@@ -22,30 +22,66 @@ module Katello
     # }
     attr_reader :content_url_updated
 
-    def initialize
+    def initialize(cp_products = [])
       @contents_to_create = []
       @product_contents_to_create = []
       @product_mapping = {}
       @content_url_updated = []
+      @cp_products = cp_products
     end
 
     def add_product_content(product, product_content_json)
       @product_mapping[product] = product_content_json.map(&:with_indifferent_access)
     end
 
+    def find_product_for_content(content_id)
+      prod = @cp_products.find do |prod_json|
+        prod_json['productContent'].any? do |product_content_json|
+          product_content_json["content"]["id"] == content_id
+        end
+      end
+      ::Katello::Product.find_by(cp_id: prod["id"]) if prod
+    end
+
     def import
       return if @product_mapping.blank?
-
+      product_contents_to_move = []
+      product_contents_to_delete = []
       @product_mapping.each do |product, prod_contents_json|
-        existing_product_contents = product.product_contents.to_a
 
+        content_ids = prod_contents_json.map {|pc|  pc[:content][:id]}
+        # Identify if there are any product_content that should not be
+        # part of this product.
+        product_contents_to_delete_or_move = product.
+                                        product_contents.
+                                        joins(:content).
+                                        where.not(content: {:cp_content_id => content_ids} )
+
+        # Identify if product content actually moved between 2 different products
+        product_contents_to_move = product_contents_to_delete_or_move.select do |pc|
+          content_exists?(product.organization, pc.content)
+        end
+
+        product_contents_to_move.each do |pc|
+          content = pc.content
+          root_repo = product.root_repositories.find_by(content_id: content.cp_content_id)
+          actual_product = find_product_for_content(content.cp_content_id)
+          if actual_product.present? && root_repo.product != actual_product
+            root_repo.update!(product_id: actual_product.id)
+            pc.update!(product_id: actual_product.id)
+          else
+            pc.destroy!
+          end
+        end
+
+        product.reload
+        existing_product_contents = product.product_contents.to_a
         prod_contents_json.each do |prod_content_json|
           content = create_or_update_content(product, prod_content_json)
           existing_content_map[content.cp_content_id] = content if content.new_record?
           create_or_update_product_content(product, existing_product_contents, content, prod_content_json[:enabled])
         end
       end
-
       ::Katello::Content.import(@contents_to_create, recursive: true)
       ::Katello::ProductContent.import(@product_contents_to_create)
     end
@@ -58,6 +94,13 @@ module Katello
         end
       end
       @existing_content_map
+    end
+
+    def content_exists?(org, content)
+        Resources::Candlepin::Content.get(org.label, content.cp_content_id)
+        true
+      rescue RestClient::NotFound
+        false
     end
 
     private def create_or_update_content(product, prod_content_json)
