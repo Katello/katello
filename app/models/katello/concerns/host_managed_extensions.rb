@@ -124,8 +124,10 @@ module Katello
       end
 
       def refresh_content_host_status
-        self.host_statuses.where(type: ::Katello::HostStatusManager::STATUSES.map(&:name)).each do |status|
-          status.refresh!
+        if content_facet&.present?
+          self.host_statuses.where(type: ::Katello::HostStatusManager::STATUSES.map(&:name)).each do |status|
+            status.refresh!
+          end
         end
         refresh_global_status
       end
