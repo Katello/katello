@@ -46,6 +46,14 @@ import {
   userPermissionsFromHostDetails,
 } from '../../hostDetailsHelpers';
 
+const moduleStreamSupported = ({ os, version }) =>
+  os.match(/RedHat|CentOS|Rocky|AlmaLinux|OracleLinux/i) && Number(version) > 7;
+export const hideModuleStreamsTab = ({ hostDetails }) => {
+  const osMatch = hostDetails?.operatingsystem_name?.match(/(\w+) (\d+)/);
+  if (!osMatch) return true;
+  const [, os, version] = osMatch;
+  return !(osMatch && moduleStreamSupported({ os, version }));
+};
 
 const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
   switch (true) {
