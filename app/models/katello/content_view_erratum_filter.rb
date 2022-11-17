@@ -34,10 +34,10 @@ module Katello
         # additional_included_errata and inclusion filters don't work together (since it only applies when excluding)
         if self.inclusion?
           errata_pulp_ids = errata_package_pulp_ids_from_errata_ids(repo, errata_ids, [])
-          errata_pulp_ids += errata_module_stream_pulp_ids_from_errata_ids(errata_ids, [])
+          errata_pulp_ids += errata_module_stream_pulp_ids_from_errata_ids(repo, errata_ids, [])
         else
           errata_pulp_ids = errata_package_pulp_ids_from_errata_ids(repo, errata_ids, additional_included_errata)
-          errata_pulp_ids += errata_module_stream_pulp_ids_from_errata_ids(errata_ids, additional_included_errata)
+          errata_pulp_ids += errata_module_stream_pulp_ids_from_errata_ids(repo, errata_ids, additional_included_errata)
         end
       else
         clauses = []
@@ -74,10 +74,11 @@ module Katello
       rpms_by_filename(repo, package_filenames).pluck(:pulp_id)
     end
 
-    def errata_module_stream_pulp_ids_from_errata_ids(errata_ids, additional_included_errata)
+    def errata_module_stream_pulp_ids_from_errata_ids(repo, errata_ids, additional_included_errata)
       module_streams = Katello::Erratum.where(:errata_id => errata_ids).map(&:module_streams).compact.flatten -
         Katello::Erratum.where(:errata_id => additional_included_errata.pluck(:errata_id)).map(&:module_streams).compact.flatten
-      module_streams.pluck(:pulp_id)
+      ModuleStream.joins(:repository_module_streams).
+        where(:id => module_streams.pluck(:id), "#{RepositoryModuleStream.table_name}.repository_id" => repo.id).pluck(:pulp_id)
     end
 
     def errata_package_pulp_ids_from_errata_ids(repo, errata_ids, additional_included_errata)
