@@ -92,7 +92,7 @@ module Katello
             cert_store = OpenSSL::X509::Store.new
             cert_store.add_file(ca_file) if ca_file
 
-            if proxy&.cacert
+            if proxy&.cacert&.present?
               Foreman::Util.add_ca_bundle_to_store(proxy.cacert, cert_store)
             end
             RestClient::Resource.new(url,
