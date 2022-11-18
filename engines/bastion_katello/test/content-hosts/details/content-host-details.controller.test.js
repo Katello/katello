@@ -116,7 +116,6 @@ describe('Controller: ContentHostDetailsController', function() {
             HostSubscription: HostSubscription,
             MenuExpander: MenuExpander,
             simpleContentAccessEnabled: false,
-            isManifestImported: true,
         });
     }));
 

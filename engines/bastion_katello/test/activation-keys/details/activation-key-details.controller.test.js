@@ -80,7 +80,6 @@ describe('Controller: ActivationKeyDetailsController', function() {
             Notification: Notification,
             Organization: Organization,
             simpleContentAccessEnabled: 'simpleContentAccessEnabled',
-            isManifestImported: 'isManifestImported'
         });
     }));
 

@@ -14,14 +14,13 @@
  * @requires deleteHostOnUnregister
  * @requires ContentHostsHelper
  * @requires simpleContentAccessEnabled
- * @requires isManifestImported
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', '$location', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'Notification', 'MenuExpander', 'ApiErrorHandler', 'deleteHostOnUnregister', 'ContentHostsHelper', 'simpleContentAccessEnabled', 'isManifestImported',
-    function ($scope, $state, $q, $location, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler, deleteHostOnUnregister, ContentHostsHelper, simpleContentAccessEnabled, isManifestImported) {
+    ['$scope', '$state', '$q', '$location', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'Notification', 'MenuExpander', 'ApiErrorHandler', 'deleteHostOnUnregister', 'ContentHostsHelper', 'simpleContentAccessEnabled',
+    function ($scope, $state, $q, $location, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler, deleteHostOnUnregister, ContentHostsHelper, simpleContentAccessEnabled) {
         $scope.menuExpander = MenuExpander;
 
         $scope.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
@@ -37,7 +36,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
 
         $scope.purposeAddonsCount = 0;
         $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
-        $scope.isManifestImported = isManifestImported;
 
         $scope.panel = {
             error: false,
