@@ -128,6 +128,7 @@ module Katello
       end
     end
 
+    class UpstreamCandlepinError < CandlepinError; end
     class UpstreamConsumerGone < StandardError
       def message
         _("The manifest doesn't exist on console.redhat.com. " \
