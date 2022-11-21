@@ -93,20 +93,27 @@ module ::Actions::Katello::Organization
                                  ::Actions::Candlepin::Owner::UpstreamUpdate,
                                  organization_id: acme_org.id,
                                  upstream: upstream)
-
       found = assert_action_planned_with(action,
-                                 ::Actions::Candlepin::Owner::UpstreamExport,
+                                 ::Actions::Candlepin::Owner::StartUpstreamExport,
                                  organization_id: acme_org.id,
                                  upstream: upstream,
                                  path: path,
                                  dependency: found.first.output
                                         )
+      found = assert_action_planned_with(action, ::Actions::Candlepin::Owner::RetrieveUpstreamExport) do |plan_input|
+        plan_input = plan_input.first if plan_input.is_a?(Array)
+        assert_equal plan_input[:export_id].inspect, found.first.output[:task]['resultData']['exportId'].inspect
+        assert_equal plan_input[:organization_id], acme_org.id
+        assert_equal plan_input[:upstream], upstream
+        assert_equal plan_input[:path], path
+        assert_equal plan_input[:dependency], found.first.output
+      end
       found = assert_action_planned_with(action,
-                                 ::Actions::Candlepin::Owner::Import,
-                                 label: acme_org.label,
-                                 path: path,
-                                 dependency: found.first.output
-                                        )
+                        ::Actions::Candlepin::Owner::Import,
+                        label: acme_org.label,
+                        path: path,
+                        dependency: found.first.output
+                              )
       found = assert_action_planned_with(action,
                                  ::Actions::Candlepin::Owner::ImportProducts,
                                  organization_id: acme_org.id,
