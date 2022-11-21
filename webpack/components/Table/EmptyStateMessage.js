@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { CubeIcon, ExclamationCircleIcon, SearchIcon, CheckCircleIcon } from '@patternfly/react-icons';
+import { CubeIcon, ExclamationCircleIcon, SearchIcon, CheckCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { global_danger_color_200 as dangerColor, global_success_color_100 as successColor } from '@patternfly/react-tokens';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectHostDetailsClearSearch } from '../extensions/HostDetails/HostDetailsSelectors';
@@ -76,8 +76,8 @@ const EmptyStateMessage = ({
       >
         <KatelloEmptyStateIcon
           error={!!error}
-          search={search}
-          customIcon={customIcon}
+          search={search && !showPrimaryAction}
+          customIcon={PlusCircleIcon}
           happyIcon={happy}
         />
         <Title headingLevel="h2" size="lg" ouiaId="empty-state-title">

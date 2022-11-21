@@ -249,10 +249,10 @@ test('Remove rpm filter rule in a self-closing modal', async (done) => {
   expect(queryByText(cvFilterName)).toBeNull();
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[0]).toBeInTheDocument();
+    expect(getAllByLabelText('Actions')[1]).toBeInTheDocument();
   });
 
-  getAllByLabelText('Actions')[0].click();
+  getAllByLabelText('Actions')[1].click();
 
   await patientlyWaitFor(() => {
     expect(getByText('Remove')).toBeInTheDocument();
@@ -311,10 +311,10 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
   expect(queryByText(cvFilterName)).toBeNull();
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[0]).toBeInTheDocument();
+    expect(getAllByLabelText('Actions')[1]).toBeInTheDocument();
   });
 
-  getAllByLabelText('Actions')[0].click();
+  getAllByLabelText('Actions')[1].click();
 
   await patientlyWaitFor(() => {
     expect(getByText('Edit')).toBeInTheDocument();
