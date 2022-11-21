@@ -25,7 +25,6 @@ import getContentViewDetails, {
 } from '../ContentViewDetailActions';
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
-import { ArtifactsWithNoErrataRenderer } from './ArtifactsWithNoErrata';
 import { ADDED, ALL_STATUSES, NOT_ADDED } from '../../ContentViewsConstants';
 import { hasPermission } from '../../helpers';
 
@@ -275,11 +274,6 @@ const CVModuleStreamFilterContent = ({
                         {__('Remove')}
                       </DropdownItem>]
                     }
-                  />
-                </SplitItem>
-                <SplitItem>
-                  <ArtifactsWithNoErrataRenderer
-                    filterDetails={filterDetails}
                   />
                 </SplitItem>
               </Split>
