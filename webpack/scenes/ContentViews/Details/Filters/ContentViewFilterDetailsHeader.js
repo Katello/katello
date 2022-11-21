@@ -1,23 +1,46 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { head } from 'lodash';
-import { Split, SplitItem, Grid, GridItem, TextContent, Text, TextVariants, Label } from '@patternfly/react-core';
+import {
+  Split,
+  SplitItem,
+  Grid,
+  GridItem,
+  TextContent,
+  Text,
+  TextVariants,
+  Label,
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+  DropdownPosition,
+  Flex,
+  FlexItem,
+} from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useDispatch } from 'react-redux';
-import { getCVFilterDetails, editCVFilter } from '../ContentViewDetailActions';
+import {
+  getCVFilterDetails,
+  editCVFilter,
+  deleteContentViewFilter,
+} from '../ContentViewDetailActions';
 import AffectedRepositorySelection from './AffectedRepositories/AffectedRepositorySelection';
 import RepoIcon from '../Repositories/RepoIcon';
 import { repoType } from '../../../../utils/helpers';
 import { hasPermission } from '../../helpers';
 import { typeName } from './ContentType';
 import ActionableDetail from '../../../../components/ActionableDetail';
+import { ArtifactsWithNoErrataRenderer } from './ArtifactsWithNoErrata';
 
 const ContentViewFilterDetailsHeader = ({
   cvId, filterId, filterDetails, setShowAffectedRepos, details,
 }) => {
   const dispatch = useDispatch();
+  const { push } = useHistory();
   const [currentAttribute, setCurrentAttribute] = useState('');
   const [loading, setLoading] = useState(false);
+  const [dropDownOpen, setDropdownOpen] = useState(false);
   const {
     type, name, inclusion, description, rules,
   } = filterDetails;
@@ -41,6 +64,20 @@ const ContentViewFilterDetailsHeader = ({
     ));
   };
 
+  const dropDownItems = [
+    <DropdownItem
+      key="delete"
+      onClick={() => {
+        dispatch(deleteContentViewFilter(filterId, () => {
+          push(`/content_views/${cvId}#/filters/`);
+        }));
+      }}
+    >
+      {__('Delete')}
+    </DropdownItem>,
+  ];
+
+  const showArtifactsWithNoErrata = (type === 'rpm' || type === 'modulemd');
   return (
     <Grid className="margin-0-24">
       <GridItem span={9}>
@@ -58,7 +95,14 @@ const ContentViewFilterDetailsHeader = ({
             setCurrentAttribute={setCurrentAttribute}
           />
         </TextContent>
-        <TextContent style={{ padding: '24px 0 12px' }}>
+        {showArtifactsWithNoErrata &&
+          <TextContent style={{ padding: '12px 0 12px' }}>
+            <ArtifactsWithNoErrataRenderer
+              filterDetails={filterDetails}
+            />
+          </TextContent>
+        }
+        <TextContent style={{ padding: '12px 0 12px' }}>
           <ActionableDetail
             key={description} // This fixes a render issue with the initial value
             textArea
@@ -74,12 +118,26 @@ const ContentViewFilterDetailsHeader = ({
         </TextContent>
       </GridItem>
       <GridItem span={3} style={{ float: 'right' }}>
-        <AffectedRepositorySelection
-          cvId={cvId}
-          filterId={filterId}
-          setShowAffectedRepos={setShowAffectedRepos}
-          disabled={!hasPermission(permissions, 'edit_content_views')}
-        />
+        <Flex justifyContent={{ lg: 'justifyContentFlexEnd', sm: 'justifyContentFlexStart' }}>
+          <FlexItem>
+            <AffectedRepositorySelection
+              cvId={cvId}
+              filterId={filterId}
+              setShowAffectedRepos={setShowAffectedRepos}
+              disabled={!hasPermission(permissions, 'edit_content_views')}
+            />
+          </FlexItem>
+          <FlexItem>
+            <Dropdown
+              position={DropdownPosition.right}
+              style={{ marginLeft: 'auto' }}
+              toggle={<KebabToggle onToggle={setDropdownOpen} id="toggle-dropdown" />}
+              isOpen={dropDownOpen}
+              isPlain
+              dropdownItems={dropDownItems}
+            />
+          </FlexItem>
+        </Flex>
       </GridItem>
       <GridItem span={10}>
         <Split hasGutter style={{ alignItems: 'baseline' }}>

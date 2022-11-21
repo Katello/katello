@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Checkbox } from '@patternfly/react-core';
+import { Switch } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { editCVFilter } from '../ContentViewDetailActions';
 
@@ -23,24 +23,24 @@ export const ArtifactsWithNoErrataRenderer = ({ filterDetails }) => {
   const getLabel = () => {
     switch (true) {
     case type === 'modulemd' && inclusion:
-      return __('Include all Module Streams with no errata.');
+      return __('Include all module streams not associated to any errata');
     case type === 'modulemd' && !inclusion:
-      return __('Exclude all Module Streams with no errata.');
+      return __('Exclude all module streams not associated to any errata');
     case !inclusion:
-      return __('Exclude all RPMs with no errata.');
+      return __('Exclude all RPMs not associated to any errata');
     default:
-      return __('Include all RPMs with no errata.');
+      return __('Include all RPMs not associated to any errata');
     }
   };
 
-  return (<Checkbox
+  return (<Switch
     ouiaId="artifactsNoErrata"
     id="artifactsNoErrata"
     name="artifactsNoErrata"
-    label=<p style={{ marginTop: '4px' }}>{getLabel()}</p>
+    label={getLabel()}
     isChecked={artifactsNoErrata}
     isDisabled={isLoading}
-    onChange={setArtifactsNoErrata}
+    onChange={checked => setArtifactsNoErrata(checked)}
   />);
 };
 
