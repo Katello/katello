@@ -66,11 +66,6 @@ module Katello
         # Default to Red Hat
         url = upstream['apiUrl'] || API_URL
 
-        # TODO: wait until ca_path is supported
-        #       https://github.com/L2G/rest-client-fork/pull/8
-        #ca_file = '/etc/candlepin/certs/upstream/subscription.rhn.stage.redhat.com.crt'
-        ca_file = nil
-
         params = {}
         params[:capabilities] = Resources::Candlepin::CandlepinPing.ping['managerCapabilities'].inject([]) do |result, element|
           result << {'name' => element}
@@ -80,26 +75,25 @@ module Katello
                                                       upstream['idCert']['key'], ca_file, params)
       end
 
-      def owner_upstream_export(upstream, zip_file_path, _options)
-        if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
-          Rails.logger.error "Upstream identity certificate not available"
-          fail _("Upstream identity certificate not available")
-        end
-
-        # Default to Red Hat
+      def start_owner_upstream_export(upstream)
+        validate_upstream_identity_cert!(upstream)
         url = upstream['apiUrl'] || API_URL
 
-        # TODO: wait until ca_path is supported
-        #       https://github.com/L2G/rest-client-fork/pull/8
-        #ca_file = '/etc/candlepin/certs/upstream/subscription.rhn.stage.redhat.com.crt'
-        ca_file = nil
+        response = Resources::Candlepin::UpstreamConsumer.get_export("#{url}#{upstream['uuid']}/export/async", upstream['idCert']['cert'],
+          upstream['idCert']['key'], ca_file)
+        JSON.parse(response)
+      end
 
-        data = Resources::Candlepin::UpstreamConsumer.export("#{url}#{upstream['uuid']}/export", upstream['idCert']['cert'],
+      def retrieve_owner_upstream_export(upstream, zip_file_path, export_id)
+        validate_upstream_identity_cert!(upstream)
+        url = upstream['apiUrl'] || API_URL
+
+        data = Resources::Candlepin::UpstreamConsumer.get_export("#{url}#{upstream['uuid']}/export/#{export_id}", upstream['idCert']['cert'],
                                                              upstream['idCert']['key'], ca_file)
 
         File.write(zip_file_path, data, mode: 'wb')
 
-        return true
+        true
       end
 
       def del_owner_import
@@ -166,6 +160,22 @@ module Katello
 
       def rules_version
         redhat_provider? ? candlepin_ping['rulesVersion'] : ''
+      end
+
+      private
+
+      def validate_upstream_identity_cert!(upstream)
+        if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
+          Rails.logger.error "Upstream identity certificate not available"
+          fail _("Upstream identity certificate not available")
+        end
+      end
+
+      def ca_file
+        # TODO: wait until ca_path is supported
+        #       https://github.com/L2G/rest-client-fork/pull/8
+        # ca_file = '/etc/candlepin/certs/upstream/subscription.rhn.stage.redhat.com.crt'
+        nil
       end
 
       protected
