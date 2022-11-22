@@ -232,7 +232,7 @@ module Katello
     end
 
     def find_content_overrides
-      if params[:content_overrides_search]
+      if params.dig(:content_overrides_search, :search).present?
         content_labels = ::Katello::Content.joins(:product_contents)
                             .where("#{Katello::ProductContent.table_name}.product_id": @host.organization.products.subscribable.enabled)
                             .search_for(params[:content_overrides_search][:search])
