@@ -21,17 +21,18 @@
     angular.module('Bastion').value('simpleContentAccessEnabled', <%= Organization.current.simple_content_access? if Organization.current %>);
     angular.module('Bastion').value('isManifestImported', <%= !!Organization.current&.manifest_imported?(cached: true) %>)
     angular.module('Bastion').value('foreman', tfm);
-    angular.module('Bastion').value('repositoryTypes', angular.fromJson('<%= Katello::RepositoryTypeManager.enabled_repository_types.values.to_json.html_safe %>'));
-    angular.module('Bastion').value('deleteHostOnUnregister', angular.fromJson('<%= Setting[:unregister_delete_host] %>'));
-    angular.module('Bastion').value('globalContentProxy', angular.fromJson('<%= Setting[:content_default_http_proxy].empty? ? nil.to_json : Setting[:content_default_http_proxy].to_json.html_safe %>'));
+    angular.module('Bastion').value('repositoryTypes', angular.fromJson(`<%= Katello::RepositoryTypeManager.enabled_repository_types.values.to_json.html_safe %>`));
+    angular.module('Bastion').value('deleteHostOnUnregister', angular.fromJson(`<%= Setting[:unregister_delete_host] %>`));
+    angular.module('Bastion').value('globalContentProxy', angular.fromJson(`<%= Setting[:content_default_http_proxy].empty? ? nil.to_json : Setting[:content_default_http_proxy].to_json.html_safe %>`));
     angular.module('Bastion').value('entriesPerPage', "<%= Setting[:entries_per_page] %>");
     angular.module('Bastion').value('contentViewSolveDependencies', "<%= Setting[:content_view_solve_dependencies] %>");
-    angular.module('Bastion').constant('BastionConfig', angular.fromJson('<%= Bastion.config.to_json.html_safe %>'));
+    angular.module('Bastion').constant('BastionConfig', angular.fromJson(`<%= Bastion.config.to_json.html_safe %>`));
     angular.module('Bastion.auth').value('CurrentUser', {
         id: <%= User.current.id %>,
         admin: <%= User.current.admin || User.current.usergroups.any? { |group| group.admin } %>
     });
-    angular.module('Bastion.auth').value('Permissions', angular.fromJson('<%= User.current.cached_roles.collect { |role| role.permissions }.flatten.to_json.html_safe %>'));
+    angular.module('Bastion.auth').value('Permissions', angular.fromJson(`<%= User.current.cached_roles.collect { |role| role.permissions }.flatten.to_json.html_safe %>`));
+    angular.module('Bastion').value('newHostDetailsUI', "<%= Setting[:host_details_ui] %>");
   </script>
   <% Bastion.plugins.each do |name, plugin| %>
     <%= include_plugin_js(plugin) %>
