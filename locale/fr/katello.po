@@ -4,18 +4,18 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Pierre-Emmanuel Dutang <dutangp@gmail.com>, 2020
 # ty breizh <tybreizh29@free.fr>, 2020
-# Baptiste Agasse <baptiste.agasse@gmail.com>, 2021
 # Romain Vrignaud <rvrignaud@gmail.com>, 2022
 # 21966816214bc546c1fc8a185e75ca1c, 2022
+# Pierre-Emmanuel Dutang <dutangp@gmail.com>, 2022
 # Claer <transiblu@claer.hammock.fr>, 2022
 # Bryan Kearney <bryan.kearney@gmail.com>, 2022
+# Baptiste Agasse <baptiste.agasse@gmail.com>, 2022
 # Amit Upadhye <aupadhye@redhat.com>, 2022
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: katello 2.5.0\n"
+"Project-Id-Version: katello 2.4.0-RC1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-12-19 20:14+0000\n"
 "Last-Translator: Amit Upadhye <aupadhye@redhat.com>, 2022\n"
@@ -24,7 +24,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 100000"
+"0 == 0 ? 1 : 2;\n"
 
 msgid ""
 "\n"
@@ -130,12 +131,16 @@ msgid "%s Host"
 msgid_plural "%s Hosts"
 msgstr[0] "%shôte"
 msgstr[1] "%shôtes"
+msgstr[2] "%shôtes"
 
 msgid "%s Used"
 msgstr "%sUtilisé(e)"
 
 msgid "%s ago"
 msgstr "Il y a %s"
+
+msgid "%s guests"
+msgstr ""
 
 msgid "%s has already been deleted"
 msgstr "%s a déjà été supprimé"
@@ -474,7 +479,7 @@ msgid "Activation Keys"
 msgstr "Clés d'activation"
 
 msgid "Activation key"
-msgstr ""
+msgstr "Clé d'activation"
 
 msgid "Activation key ID"
 msgstr "ID de clé d'activation"
@@ -612,7 +617,7 @@ msgid "Addons"
 msgstr "Addons"
 
 msgid "Affected Repositories"
-msgstr ""
+msgstr "Référentiels affectés"
 
 msgid "Affected repositories"
 msgstr "Référentiels affectés"
@@ -695,6 +700,9 @@ msgstr ""
 msgid "Alternate content sources define new locations to download content from at repository or smart proxy sync time."
 msgstr ""
 
+msgid "Alternate content sources use the HTTP proxy of their assigned smart proxy for communication."
+msgstr ""
+
 msgid "Always Use Latest (currently %{version})"
 msgstr "Toujours utiliser la version la plus récente (actuellement %{version})"
 
@@ -742,7 +750,7 @@ msgid "Applicability Batch Size"
 msgstr "Applicabilité Taille du lot"
 
 msgid "Applicable"
-msgstr ""
+msgstr "Applicable"
 
 msgid "Applicable Content Hosts"
 msgstr "Hôtes de contenu applicables"
@@ -844,6 +852,7 @@ msgid "Assign the %{count} host with no %{taxonomy_single} to %{taxonomy_name}"
 msgid_plural "Assign all %{count} hosts with no %{taxonomy_single} to %{taxonomy_name}"
 msgstr[0] "Affecter l'hôte %{count} sans %{taxonomy_single} à %{taxonomy_name}"
 msgstr[1] "Affecter tous les hôtes %{count} sans %{taxonomy_single} à %{taxonomy_name}"
+msgstr[2] "Affecter tous les hôtes %{count} sans %{taxonomy_single} à %{taxonomy_name}"
 
 msgid "Assign the environment and content view to one or more hosts"
 msgstr "Assigner l'environnement et l'affichage de contenu d'un ou plusieurs systèmes hôtes"
@@ -915,7 +924,7 @@ msgid "Autosearch delay"
 msgstr "Délai de recherche automatique"
 
 msgid "Available"
-msgstr ""
+msgstr "Disponible"
 
 msgid "Available Entitlements"
 msgstr "Droits d'accès disponibles"
@@ -927,7 +936,7 @@ msgid "Available Schema Versions"
 msgstr "Versions de schémas disponibles"
 
 msgid "Back"
-msgstr ""
+msgstr "Précédent"
 
 msgid "Backend System Status"
 msgstr "Statut du système backend"
@@ -1085,6 +1094,9 @@ msgstr "Annulé"
 msgid "Cancelled."
 msgstr "Annulé."
 
+msgid "Candlepin"
+msgstr ""
+
 msgid "Candlepin Event"
 msgstr "Événement Candlepin"
 
@@ -1233,7 +1245,7 @@ msgid "Cannot validate contents on non-yum/deb repositories."
 msgstr "Impossible de valider le contenu des référentiels non-yum/deb."
 
 msgid "Capacity"
-msgstr ""
+msgstr "Capacité"
 
 msgid "Change Content Source"
 msgstr ""
@@ -1278,7 +1290,7 @@ msgid "Clear any previous registration and run subscription-manager with --force
 msgstr "Effacez tout enregistrement précédent et exécutez subscription-manager avec --force."
 
 msgid "Clear filters"
-msgstr ""
+msgstr "Effacer les filtres"
 
 msgid "Clear search"
 msgstr ""
@@ -1458,7 +1470,7 @@ msgid "Content View Filter identifier"
 msgstr "Identifiant du filtre de l'affichage de contenu"
 
 msgid "Content View ID"
-msgstr "ID d’affichage de contenu"
+msgstr "ID de la vue de contenu"
 
 msgid "Content View Name"
 msgstr "Nom de la vue de contenu"
@@ -1620,13 +1632,13 @@ msgid "Copy content view"
 msgstr "Copier l’affichage de contenu"
 
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Copier dans le presse-papiers"
 
 msgid "Copy version units to library"
 msgstr "Copier les unités de version à la bibliothèque"
 
 msgid "Cores per socket"
-msgstr ""
+msgstr "Cores par socket"
 
 msgid "Cores: %s"
 msgstr "Cores: %s"
@@ -1842,7 +1854,7 @@ msgid "Create rule"
 msgstr ""
 
 msgid "Credentials"
-msgstr ""
+msgstr "Identifiants"
 
 msgid "Critical"
 msgstr "Critique"
@@ -1860,7 +1872,7 @@ msgid "Current organization not set."
 msgstr "Organisation actuelle non déterminée."
 
 msgid "Custom"
-msgstr ""
+msgstr "Personnalisé"
 
 msgid "Custom CDN"
 msgstr ""
@@ -2261,21 +2273,6 @@ msgstr "AVIS ERRATA"
 msgid "Edit"
 msgstr "Modifier"
 
-msgid "Edit ACS"
-msgstr ""
-
-msgid "Edit ACS credentials"
-msgstr ""
-
-msgid "Edit ACS details"
-msgstr ""
-
-msgid "Edit ACS products"
-msgstr ""
-
-msgid "Edit ACS smart proxies"
-msgstr ""
-
 msgid "Edit RPM rule"
 msgstr "Ajouter une règle RPM"
 
@@ -2418,7 +2415,7 @@ msgid "Environments"
 msgstr "Environnements"
 
 msgid "Epoch"
-msgstr ""
+msgstr "Epoch"
 
 msgid "Equal to"
 msgstr "Egal à"
@@ -2492,11 +2489,11 @@ msgstr "Dépasse la quantité disponible"
 msgid "Exclude"
 msgstr "Exclure"
 
-msgid "Exclude all Module Streams with no errata."
-msgstr "Exclure tous les flux de modules sans errata."
+msgid "Exclude all RPMs not associated to any errata"
+msgstr ""
 
-msgid "Exclude all RPMs with no errata."
-msgstr "Exclure tous les RPM sans errata."
+msgid "Exclude all module streams not associated to any errata"
+msgstr ""
 
 msgid "Exclude filter"
 msgstr "Exclure filtre"
@@ -2570,6 +2567,7 @@ msgid "Failed to download %s package."
 msgid_plural "Failed to download %s packages."
 msgstr[0] "Le téléchargement du package %s a échoué."
 msgstr[1] "Le téléchargement des packages %s a échoué."
+msgstr[2] "Le téléchargement des packages %s a échoué."
 
 msgid "Failed to find %{content} with id '%{id}'."
 msgstr "Impossible à trouver %{content} ayant pour id '%{id}'."
@@ -2915,7 +2913,7 @@ msgid "Host collection is empty."
 msgstr "La collection d'hôtes est vide."
 
 msgid "Host collections"
-msgstr ""
+msgstr "Collections d'hôtes"
 
 msgid "Host collections updated"
 msgstr ""
@@ -3283,11 +3281,11 @@ msgstr "En cours"
 msgid "Include"
 msgstr "Inclure"
 
-msgid "Include all Module Streams with no errata."
-msgstr "Inclure tous les flux de modules sans aucun errata."
+msgid "Include all RPMs not associated to any errata"
+msgstr ""
 
-msgid "Include all RPMs with no errata."
-msgstr "Inclure tous les RPM sans errata."
+msgid "Include all module streams not associated to any errata"
+msgstr ""
 
 msgid "Include content views generated by imports/exports. Defaults to false"
 msgstr ""
@@ -3353,7 +3351,7 @@ msgid "Initiate a sync of the products attached to the sync plan"
 msgstr "Initier une synchronisation des produits attachés au plan de synchronisation"
 
 msgid "Install"
-msgstr ""
+msgstr "Installez"
 
 msgid "Install Applicable Errata"
 msgstr "Installer des errata applicables"
@@ -3392,7 +3390,7 @@ msgid "Install package via Katello interface"
 msgstr "Installer le package via l'interface Katello"
 
 msgid "Install packages"
-msgstr ""
+msgstr "Installer les packages"
 
 msgid "Install packages remotely using katello-agent. %s"
 msgstr "Installer les packages à distance en utilisant katello-agent. %s"
@@ -3434,7 +3432,7 @@ msgid "Installation status"
 msgstr ""
 
 msgid "Installed"
-msgstr ""
+msgstr "Installé"
 
 msgid "Installed Packages"
 msgstr "Packages installés"
@@ -3551,7 +3549,7 @@ msgid "Invalid value specified for ignorable content. Permissible values %s"
 msgstr "Valeur invalide spécifiée pour un contenu ignorable. Valeurs autorisées %s"
 
 msgid "Issued"
-msgstr "Publié sur"
+msgstr "Publié"
 
 msgid "Issued from"
 msgstr ""
@@ -3671,7 +3669,7 @@ msgid "Less than"
 msgstr "Moins de"
 
 msgid "Library"
-msgstr ""
+msgstr "Bibliothèque"
 
 msgid "Library lifecycle environments may not be deleted."
 msgstr "Les environnements de cycle de vie de la bibliothèque ne peuvent pas être supprimés."
@@ -3932,7 +3930,7 @@ msgid "List of repository ids"
 msgstr "Liste d'ids de référentiel "
 
 msgid "List of resources types that will be automatically associated"
-msgstr ""
+msgstr "Lister les types de ressources qui seront associées automatiquement"
 
 msgid "List of subscription products in a subscription"
 msgstr "Liste de produits d'abonnement dans un abonnement"
@@ -3992,7 +3990,7 @@ msgid "Loading versions"
 msgstr "Versions de chargement"
 
 msgid "Loading..."
-msgstr ""
+msgstr "Chargement..."
 
 msgid "Low"
 msgstr ""
@@ -4040,7 +4038,7 @@ msgid "Manifest refreshed"
 msgstr "Manifeste rafraîchi"
 
 msgid "Manual"
-msgstr ""
+msgstr "Manuelle"
 
 msgid "Manual authentication"
 msgstr ""
@@ -4109,7 +4107,7 @@ msgid "Missing arguments %{substitutions} for %{content_url}"
 msgstr "Arguments manquants %{substitutions} pour %{content_url}"
 
 msgid "Model"
-msgstr ""
+msgstr "Modéliser"
 
 msgid "Moderate"
 msgstr "Modéré"
@@ -4227,16 +4225,16 @@ msgid "Network Sync"
 msgstr ""
 
 msgid "Never"
-msgstr ""
+msgstr "Jamais"
 
 msgid "Never Synced"
 msgstr "Jamais synchronisé"
 
 msgid "Never checked in"
-msgstr ""
+msgstr "Jamais enregistré dans"
 
 msgid "Never registered"
-msgstr ""
+msgstr "Jamais enregistré"
 
 msgid "New Errata"
 msgstr "Nouveaux errata"
@@ -4506,7 +4504,7 @@ msgid "No products are enabled."
 msgstr "Aucun produit n'est activé."
 
 msgid "No profiles to show"
-msgstr ""
+msgstr "Aucun profil à montrer"
 
 msgid "No pulp workers running."
 msgstr "Aucun worker Pulp en cours d'exécution."
@@ -4584,13 +4582,13 @@ msgid "Not all necessary pulp workers running at %s."
 msgstr "Tous les workers pulp nécessaires ne fonctionnent pas à %s."
 
 msgid "Not installed"
-msgstr ""
+msgstr "Non installé"
 
 msgid "Not running"
 msgstr "Non en cours"
 
 msgid "Not specified"
-msgstr ""
+msgstr "Non spécifié"
 
 msgid "Not yet published"
 msgstr "Pas encore publié"
@@ -5025,7 +5023,7 @@ msgid "Please wait while the task starts.."
 msgstr "Veuillez patienter pour le démarrage des tâches ...."
 
 msgid "Please wait..."
-msgstr ""
+msgstr "Patientez s'il vous plaît ..."
 
 msgid "Policy to set for mirroring content.  Must be one of %s."
 msgstr "Politique à définir pour le contenu de mise en miroir . Doit être un parmi %s."
@@ -5128,7 +5126,7 @@ msgid "Products updated."
 msgstr ""
 
 msgid "Profiles"
-msgstr ""
+msgstr "Profils"
 
 msgid "Promote"
 msgstr "Promouvoir"
@@ -5443,15 +5441,12 @@ msgid "Register host '%s' before attaching subscriptions"
 msgstr "Enregistrer les hôtes '%s' avant de joindre les abonnements"
 
 msgid "Registered"
-msgstr ""
+msgstr "Enregistré"
 
 msgid "Registered by"
 msgstr ""
 
 msgid "Registered on"
-msgstr ""
-
-msgid "Registered through"
 msgstr ""
 
 msgid "Registration details"
@@ -5734,7 +5729,7 @@ msgid "Requires Virt-Who"
 msgstr "Nécessite Virt-Who"
 
 msgid "Reset"
-msgstr ""
+msgstr "Restauration"
 
 msgid "Reset filters"
 msgstr "Réinitialiser les filtres"
@@ -6061,7 +6056,7 @@ msgid "Select content view"
 msgstr "Sélectionner l'affichage de contenu"
 
 msgid "Select environment"
-msgstr ""
+msgstr "Choisir l'environnement"
 
 msgid "Select host collection(s) to associate with host {hostName}."
 msgstr ""
@@ -6277,7 +6272,7 @@ msgid "Skipped pulp_auth check after failed pulp check"
 msgstr "Vérification pulp_auth ignorée après échec de la vérification Pulp"
 
 msgid "Smart proxies"
-msgstr ""
+msgstr "Smart Proxies"
 
 msgid "Smart proxy IDs"
 msgstr "IDs des Smart proxies"
@@ -6286,7 +6281,7 @@ msgid "Smart proxy content source not found!"
 msgstr "La source de contenu du smart proxy n'a pas été trouvée !"
 
 msgid "Sockets"
-msgstr ""
+msgstr "Sockets"
 
 msgid "Sockets: %s"
 msgstr "Sockets: %s"
@@ -6496,7 +6491,7 @@ msgid "Starts"
 msgstr "Démarrage"
 
 msgid "State"
-msgstr ""
+msgstr "État"
 
 msgid "Status"
 msgstr "État"
@@ -6559,10 +6554,7 @@ msgid "Subscription Status"
 msgstr "Statut des abonnements"
 
 msgid "Subscription UUID"
-msgstr ""
-
-msgid "Subscription Watch"
-msgstr "Vérification des abonnements"
+msgstr "UUID de l’abonnement"
 
 msgid "Subscription connection enabled"
 msgstr ""
@@ -6608,6 +6600,9 @@ msgstr "Les abonnements ont été enregistrés et sont en cours d'actualisation.
 
 msgid "Subscriptions information based on selected activation keys:"
 msgstr "Informations des abonnements basés sur des clés d'activation sélectionnées :"
+
+msgid "Subscriptions service"
+msgstr ""
 
 msgid "Substitution Mismatch. Unable to update for content: (%{content}). From [%{content_url}] To [%{new_url}]."
 msgstr "Discordance de substitution. Impossible de mettre à jour le contenu : (%{content}). De [%{content_url} ] à [%{new_url}]."
@@ -6777,10 +6772,10 @@ msgstr "Statut du système"
 msgid "System purpose"
 msgstr ""
 
-msgid "System purpose allows you to set the system\\'s intended use on your network and improves the reporting of usage in Subscription Watch."
+msgid "System purpose attributes updated"
 msgstr ""
 
-msgid "System purpose attributes updated"
+msgid "System purpose enables you to set the system\\'s intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console."
 msgstr ""
 
 msgid "Tag name"
@@ -7109,11 +7104,11 @@ msgstr "L'organisation de cet hôte est en mode d'accès simple au contenu. L'aj
 msgid "This host's organization is in Simple Content Access mode. Auto-attach is disabled"
 msgstr "L'organisation de cet hôte est en mode d'accès simple au contenu. L'auto-attachement est désactivé"
 
-msgid "This is disabled because a manifest related task is in progress."
-msgstr "Cette fonction est désactivée parce qu'une tâche connexe manifeste est en cours."
-
 msgid "This is disabled because a manifest task is in progress"
 msgstr "Cette fonction est désactivée parce qu'une tâche manifeste est en cours"
+
+msgid "This is disabled because a manifest-related task is in progress."
+msgstr ""
 
 msgid "This is disabled because no connection could be made to the upstream Manifest."
 msgstr ""
@@ -7130,10 +7125,10 @@ msgstr "Cette option est désactivée car aucun abonnement n'est sélectionné."
 msgid "This is not a linked repository"
 msgstr "Il ne s'agit pas d'un référentiel associé"
 
-msgid "This organization has Simple Content Access enabled. Hosts are not required to have subscriptions attached to access repositories. {br} Learn more about your overall subscription usage at {subscriptionWatch}."
-msgstr "Cette organisation a activé l'accès au contenu simple. Les hôtes ne sont pas tenus de souscrire un abonnement pour accéder aux référentiels d'accès. {br} Pour en savoir davantage sur les abonnements, visitez {subscriptionWatch}."
+msgid "This organization has Simple Content Access enabled. Hosts are not required to have subscriptions attached to access repositories. {br} Learn more about your overall subscription usage with the {subscriptionsService}."
+msgstr ""
 
-msgid "This organization is not using {scaLink}. Legacy subscription management is deprecated and will be removed in a future version."
+msgid "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in a future version."
 msgstr ""
 
 msgid "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use."
@@ -7563,7 +7558,7 @@ msgid "Update version"
 msgstr "Mise à jour de la version"
 
 msgid "Updated"
-msgstr "Mis à jour"
+msgstr "Mis à jour "
 
 msgid "Updated component details"
 msgstr "Mise à jour des détails des composants"
@@ -7630,6 +7625,9 @@ msgstr "Télécharger les profils sans Dynflow"
 
 msgid "Upload request id"
 msgstr "Télécharger l'id de requête"
+
+msgid "Upstream Candlepin"
+msgstr ""
 
 msgid "Upstream Content View Label, default: Default_Organization_View. Relevant only for 'upstream_server' type."
 msgstr ""
@@ -7734,7 +7732,7 @@ msgid "Value must either be a boolean or 'default' for 'enabled'"
 msgstr "La valeur doit être soit un booléen, soit la valeur par défaut de \"enabled\""
 
 msgid "Verify SSL"
-msgstr ""
+msgstr "Verify SSL"
 
 msgid "Verify checksum"
 msgstr "Vérifier la somme de contrôle"
@@ -7796,6 +7794,9 @@ msgstr "Les versions apparaîtront ici lorsque la vue du contenu sera publiée."
 msgid "View %{view} has not been promoted to %{env}"
 msgstr "L'affichage %{view} n’a pas été promu à %{env}"
 
+msgid "View Subscription Usage"
+msgstr ""
+
 msgid "View a report of the affected hosts"
 msgstr "Voir un rapport sur les hôtes concernés"
 
@@ -7816,6 +7817,12 @@ msgstr ""
 
 msgid "Virtual"
 msgstr "Virtuel"
+
+msgid "Virtual guests"
+msgstr ""
+
+msgid "Virtual host"
+msgstr ""
 
 msgid "Waiting to start."
 msgstr "Attente de démarrage."
@@ -8144,8 +8151,8 @@ msgstr "ne peut pas contenir de filtres dont les référentiels n'appartiennent 
 msgid "cannot contain more than %s characters"
 msgstr "ne peut pas contenir plus de %s caractères"
 
-msgid "checking Candlepin task status"
-msgstr "vérification du statut d'une tâche Candlepin"
+msgid "checking %s task status"
+msgstr ""
 
 msgid "checking Pulp task status"
 msgstr "vérification du statut de tâche Pulp"
@@ -8378,8 +8385,8 @@ msgstr "ID par lesquels filtrer le contenu"
 msgid "if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA"
 msgstr "si c'est le cas, Katello vérifiera que les certificats SSL de l'url en amont sont signés par une AC de confiance"
 
-msgid "initiating Candlepin task"
-msgstr "initialisation d'une tâche Candlepin"
+msgid "initiating %s task"
+msgstr ""
 
 msgid "initiating Pulp task"
 msgstr "initialisation d'une tâche Pulp"
@@ -8745,7 +8752,7 @@ msgid "unknown permission for %s"
 msgstr "permission inconnue pour %s"
 
 msgid "unlimited"
-msgstr ""
+msgstr "Illimité"
 
 msgid "update a filter"
 msgstr "mise à jour d'un filtre"
@@ -8780,8 +8787,8 @@ msgstr "via exécution à distante"
 msgid "view content view tabs."
 msgstr "voir onglets d’affichage de contenu"
 
-msgid "waiting for Candlepin to finish the task"
-msgstr "attend que Candlepin termine la tâche"
+msgid "waiting for %s to finish the task"
+msgstr ""
 
 msgid "waiting for Pulp to finish the task"
 msgstr "attend que Pulp termine la tâche"
