@@ -522,12 +522,6 @@ Foreman::Plugin.register :katello do
         description: N_("Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')"),
         collection: proxy_download_policies
 
-      setting 'pulp_docker_registry_port',
-        type: :integer,
-        default: 5000,
-        full_name: N_('Pulp Docker registry port'),
-        description: N_("The port used by Pulp Crane to provide Docker Registries")
-
       setting 'pulp_export_destination',
         type: :string,
         default: "/var/lib/pulp/katello-export",
