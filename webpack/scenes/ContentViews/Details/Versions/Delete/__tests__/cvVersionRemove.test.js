@@ -160,7 +160,7 @@ test('Can open Remove wizard and remove version from environment with hosts', as
 
 
   const {
-    getByText, getAllByText, getByLabelText, getAllByLabelText, queryByText,
+    getByText, getAllByText, getByLabelText, getAllByLabelText, queryByText, getByPlaceholderText,
   } = renderWithRedux(
     <ContentViewVersions cvId={2} details={cvDetailData} />,
     renderOptions,
@@ -190,9 +190,9 @@ test('Can open Remove wizard and remove version from environment with hosts', as
   fireEvent.click(getByLabelText('test1'));
   await patientlyWaitFor(() => {
     expect(getByText('Select content view')).toBeInTheDocument();
-    expect(getByText('Select a content view')).toBeInTheDocument();
+    expect(getByPlaceholderText('Select a content view')).toBeInTheDocument();
   });
-  fireEvent.click(getByText('Select a content view'));
+  fireEvent.click(getByPlaceholderText('Select a content view'));
   await patientlyWaitFor(() => {
     expect(getByText('cv2')).toBeInTheDocument();
   });
@@ -250,7 +250,7 @@ test('Can open Remove wizard and remove version from environment with activation
 
 
   const {
-    getByText, getAllByText, getByLabelText, getAllByLabelText, queryByText,
+    getByText, getAllByText, getByLabelText, getAllByLabelText, queryByText, getByPlaceholderText,
   } = renderWithRedux(
     <ContentViewVersions cvId={2} details={cvDetailData} />,
     renderOptions,
@@ -280,9 +280,9 @@ test('Can open Remove wizard and remove version from environment with activation
   fireEvent.click(getByLabelText('test1'));
   await patientlyWaitFor(() => {
     expect(getByText('Select content view')).toBeInTheDocument();
-    expect(getByText('Select a content view')).toBeInTheDocument();
+    expect(getByPlaceholderText('Select a content view')).toBeInTheDocument();
   });
-  fireEvent.click(getByText('Select a content view'));
+  fireEvent.click(getByPlaceholderText('Select a content view'));
   await patientlyWaitFor(() => {
     expect(getByText('cv2')).toBeInTheDocument();
   });
