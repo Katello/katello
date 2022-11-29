@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { ExpandableSection, Select, SelectOption } from '@patternfly/react-core';
+import { ExpandableSection, SelectOption } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import EnvironmentPaths from '../../../../components/EnvironmentPaths/EnvironmentPaths';
@@ -9,6 +9,7 @@ import getContentViews from '../../../../ContentViewsActions';
 import { selectContentViewError, selectContentViews, selectContentViewStatus } from '../../../../ContentViewSelectors';
 import AffectedActivationKeys from '../affectedActivationKeys';
 import DeleteContext from '../DeleteContext';
+import ContentViewSelect from '../../../../components/ContentViewSelect/ContentViewSelect';
 
 const CVReassignActivationKeysForm = () => {
   const dispatch = useDispatch();
@@ -75,6 +76,11 @@ const CVReassignActivationKeysForm = () => {
     return results.filter(cv => cv.id === id)[0]?.name;
   };
 
+  const onClear = () => {
+    setSelectedCVForAK(null);
+    setSelectedCVNameForAK(null);
+  };
+
   const onSelect = (event, selection) => {
     setSelectedCVForAK(selection);
     setSelectedCVNameForAK(fetchSelectedCVName(selection));
@@ -91,23 +97,17 @@ const CVReassignActivationKeysForm = () => {
         multiSelect={false}
       />
       {!cvInEnvLoading && selectedEnvForAK.length > 0 &&
-        <div style={{ marginTop: '1em' }}>
-          <h3>{__('Select content view')}</h3>
-          <Select
-            selections={selectedCVForAK}
-            onSelect={onSelect}
-            isOpen={cvSelectOpen}
-            isDisabled={cvSelectOptions.length === 0}
-            onToggle={isExpanded => setCVSelectOpen(isExpanded)}
-            id="selectCV"
-            name="selectCV"
-            aria-label="selectCV"
-            ouiaId="selectCV"
-            placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
-          >
-            {cvSelectOptions}
-          </Select>
-        </div>
+        <ContentViewSelect
+          selections={selectedCVForAK}
+          onSelect={onSelect}
+          onClear={onClear}
+          isOpen={cvSelectOpen}
+          isDisabled={cvSelectOptions.length === 0}
+          onToggle={isExpanded => setCVSelectOpen(isExpanded)}
+          placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
+        >
+          {cvSelectOptions}
+        </ContentViewSelect>
       }
       <ExpandableSection
         toggleText={showActivationKeys ?
