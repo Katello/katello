@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { Modal, Button, Select, SelectOption, Alert, Flex } from '@patternfly/react-core';
+import { Modal, Button, SelectOption, Alert, Flex } from '@patternfly/react-core';
 import {
   global_palette_black_600 as pfDescriptionColor,
 } from '@patternfly/react-tokens';
@@ -20,6 +20,7 @@ import ContentViewIcon from '../../../../../scenes/ContentViews/components/Conte
 import updateHostContentViewAndEnvironment from './HostContentViewActions';
 import HOST_CV_AND_ENV_KEY from './HostContentViewConstants';
 import { getHostDetails } from '../../HostDetailsActions';
+import ContentViewSelect from '../../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelect';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
 
@@ -183,19 +184,13 @@ const ChangeHostCVModal = ({
         isDisabled={hostUpdateStatus === STATUS.PENDING}
       />
       {selectedEnvForHost.length > 0 &&
-      <div style={{ marginTop: '1em' }}>
-        <h3>{__('Select content view')}</h3>
-        <Select
+        <ContentViewSelect
           selections={selectedCVForHost}
+          onClear={() => setSelectedCVForHost(null)}
           onSelect={handleCVSelect}
           isOpen={cvSelectOpen}
-          menuAppendTo="parent"
           isDisabled={contentViewsInEnv.length === 0 || hostUpdateStatus === STATUS.PENDING}
           onToggle={isExpanded => setCVSelectOpen(isExpanded)}
-          ouiaId="select-content-view"
-          id="selectCV"
-          name="selectCV"
-          aria-label="selectCV"
           placeholderText={cvPlaceholderText()}
         >
           {contentViewsInEnv?.map(cv => (
@@ -227,8 +222,7 @@ const ChangeHostCVModal = ({
             </SelectOption>
           ))
           }
-        </Select>
-      </div>
+        </ContentViewSelect>
       }
     </Modal>
   );
