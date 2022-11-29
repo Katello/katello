@@ -165,7 +165,7 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
     .reply(200, cVDropDownOptionsData);
 
   const {
-    getByText, getByLabelText, getAllByLabelText, getAllByText, queryByText,
+    getByText, getByLabelText, getAllByLabelText, getAllByText, queryByText, getByPlaceholderText,
   } =
     renderWithRedux(<ContentViewsPage />, renderOptions);
   expect(queryByText(firstCV.name)).toBeNull();
@@ -191,9 +191,9 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
   fireEvent.click(getByLabelText('test1'));
   await patientlyWaitFor(() => {
     expect(getByText('Select content view')).toBeInTheDocument();
-    expect(getByText('Select a content view')).toBeInTheDocument();
+    expect(getByPlaceholderText('Select a content view')).toBeInTheDocument();
   });
-  fireEvent.click(getByText('Select a content view'));
+  fireEvent.click(getByPlaceholderText('Select a content view'));
   await patientlyWaitFor(() => {
     expect(getByText('cv2')).toBeInTheDocument();
   });
@@ -210,9 +210,9 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
   fireEvent.click(getByLabelText('test1'));
   await patientlyWaitFor(() => {
     expect(getByText('Select content view')).toBeInTheDocument();
-    expect(getByText('Select a content view')).toBeInTheDocument();
+    expect(getByPlaceholderText('Select a content view')).toBeInTheDocument();
   });
-  fireEvent.click(getByText('Select a content view'));
+  fireEvent.click(getByPlaceholderText('Select a content view'));
   await patientlyWaitFor(() => {
     expect(getByText('cv2')).toBeInTheDocument();
   });

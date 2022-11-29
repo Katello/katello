@@ -86,7 +86,7 @@ test('Select an env > call CV API > select a CV > Save button is enabled', async
 
   const {
     getAllByText, getByText,
-    findByText, getAllByRole,
+    findByPlaceholderText, getAllByRole,
   } = renderWithRedux(<ChangeHostCVModal
     isOpen
     closeModal={jest.fn()}
@@ -107,7 +107,7 @@ test('Select an env > call CV API > select a CV > Save button is enabled', async
   await act(async () => {
     userEvent.click(envRadio); // Select the Library environment
 
-    const cvDropdown = await findByText('Select a content view');
+    const cvDropdown = await findByPlaceholderText('Select a content view');
     expect(cvDropdown).toBeInTheDocument();
 
     userEvent.click(cvDropdown); // Open the CV dropdown

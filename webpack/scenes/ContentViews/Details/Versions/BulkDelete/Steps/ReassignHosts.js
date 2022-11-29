@@ -18,10 +18,8 @@ import {
   ExpandableSection,
   Popover,
   PopoverPosition,
-  Select,
   SelectDirection,
   SelectOption,
-  TextContent,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 
@@ -40,6 +38,7 @@ import {
   getNumberOfActivationKeys,
   getNumberOfHosts,
 } from '../BulkDeleteHelpers';
+import ContentViewSelect from '../../../../components/ContentViewSelect/ContentViewSelect';
 
 export default () => {
   const dispatch = useDispatch();
@@ -112,6 +111,15 @@ export default () => {
     if (numberOfAKs) {
       setSelectedCVForAK(null);
       setSelectedEnvForAK(value);
+    }
+  };
+
+  const onClear = () => {
+    setSelectedCVForHosts(null);
+    setSelectedEnvForHosts([]);
+    if (numberOfAKs) {
+      setSelectedCVForAK(null);
+      setSelectedEnvForAK([]);
     }
   };
 
@@ -194,16 +202,11 @@ export default () => {
         headerText={__('Select an environment')}
         multiSelect={false}
       />
-      <TextContent>
-        {__('Select a content view')}
-      </TextContent>
-      <Select
+      <ContentViewSelect
         selections={selectedCVForHosts}
         onSelect={onSelect}
+        onClear={onClear}
         isDisabled={cvInEnvLoading || !selectOptions?.length || !selectedEnvForHosts?.length}
-        id="selectCV"
-        name="selectCV"
-        aria-label="selectCV"
         placeholderText={placeHolder}
         isOpen={toggleCVSelect}
         onToggle={setToggleCVSelect}
@@ -213,7 +216,7 @@ export default () => {
         width={350}
       >
         {selectOptions}
-      </Select>
+      </ContentViewSelect>
     </>
   );
 };

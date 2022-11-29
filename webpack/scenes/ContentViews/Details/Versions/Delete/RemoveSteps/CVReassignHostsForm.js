@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { ExpandableSection, Select, SelectOption } from '@patternfly/react-core';
+import { ExpandableSection, SelectOption } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import EnvironmentPaths from '../../../../components/EnvironmentPaths/EnvironmentPaths';
@@ -9,6 +9,7 @@ import getContentViews from '../../../../ContentViewsActions';
 import { selectContentViewError, selectContentViews, selectContentViewStatus } from '../../../../ContentViewSelectors';
 import AffectedHosts from '../affectedHosts';
 import DeleteContext from '../DeleteContext';
+import ContentViewSelect from '../../../../components/ContentViewSelect/ContentViewSelect';
 
 const CVReassignHostsForm = () => {
   const dispatch = useDispatch();
@@ -74,6 +75,11 @@ const CVReassignHostsForm = () => {
     return results.filter(cv => cv.id === id)[0]?.name;
   };
 
+  const onClear = () => {
+    setSelectedCVForHosts(null);
+    setSelectedCVNameForHosts(null);
+  };
+
   const onSelect = (event, selection) => {
     setSelectedCVForHosts(selection);
     setSelectedCVNameForHosts(fetchSelectedCVName(selection));
@@ -90,9 +96,8 @@ const CVReassignHostsForm = () => {
         multiSelect={false}
       />
       {selectedEnvForHost.length > 0 &&
-      <div style={{ marginTop: '1em' }}>
-        <h3>{__('Select content view')}</h3>
-        <Select
+        <ContentViewSelect
+          onClear={onClear}
           selections={selectedCVForHosts}
           onSelect={onSelect}
           isOpen={cvSelectOpen}
@@ -105,8 +110,7 @@ const CVReassignHostsForm = () => {
           placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
         >
           {cvSelectOptions}
-        </Select>
-      </div>
+        </ContentViewSelect>
       }
       <ExpandableSection
         toggleText={showHosts ? 'Hide hosts' : 'Show hosts'}
