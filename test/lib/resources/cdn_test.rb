@@ -23,7 +23,7 @@ class CdnResourceTest < ActiveSupport::TestCase
                               :password => 'password',
                               :cacert => "")
     Katello::Resources::CDN::CdnResource.any_instance.stubs(:proxy).returns(proxy)
-    OpenSSL::X509::Store.any_instance.stubs(:add_file)
+    OpenSSL::X509::Store.any_instance.expects(:add_file)
     Foreman::Util.expects(:add_ca_bundle_to_store).never
     Katello::Resources::CDN::CdnResource.new('http://foo.com', ssl_ca_file: "lol")
   end
