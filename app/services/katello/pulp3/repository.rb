@@ -447,7 +447,7 @@ module Katello
       end
 
       def append_proxy_cacert(options)
-        if root.http_proxy&.cacert && options.key?(:cacert)
+        if root.http_proxy&.cacert&.present? && options.key?(:cacert)
           options[:cacert] += "\n#{root.http_proxy&.cacert}"
         end
         options
