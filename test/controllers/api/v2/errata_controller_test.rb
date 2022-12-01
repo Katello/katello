@@ -146,7 +146,7 @@ module Katello
       get :index, params: { :organization_id => @test_repo.organization.id }
 
       assert_response :success
-      assert_equal JSON.parse(response.body)['results'].map { |item| item['errata_id'] }, ["RHSA-1999-1231", "RHBA-2014-013"]
+      assert_equal JSON.parse(response.body)['results'].map { |item| item['errata_id'] }, ["RHSA-1999-1231", "RHBA-2014-013", "RHEA-2022-007"]
     end
 
     def test_show
