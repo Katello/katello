@@ -33,6 +33,18 @@ module Katello
 
           assert_equal 'proxy://admin:password@foo.com:1000', UpstreamCandlepinResource.proxy_uri
         end
+
+        def test_global_proxy_no_cacert
+          proxy = FactoryBot.create(:http_proxy, :url => 'http://foo.com:1000',
+                                    :username => 'admin',
+                                    :password => 'password',
+                                    :cacert => "")
+          UpstreamCandlepinResource.stubs(:proxy).returns(proxy)
+          Foreman::Util.expects(:add_ca_bundle_to_store).never
+          OpenSSL::X509::Certificate.expects(:new)
+          OpenSSL::PKey::RSA.expects(:new)
+          UpstreamCandlepinResource.resource("http://www.foo.com", "", "")
+        end
       end
 
       class ProductTest < ActiveSupport::TestCase

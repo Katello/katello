@@ -18,6 +18,18 @@ module Katello
             service.copy_units(@repo, [], false)
           end
 
+          def test_append_proxy_cacert
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            http_proxy = FactoryBot.create(:http_proxy, :url => 'http://foo.com:1000',
+                              :username => 'admin',
+                              :password => 'password',
+                              :cacert => "")
+            ::Katello::RootRepository.any_instance.expects(:http_proxy).returns(http_proxy)
+            cert = "MY cert"
+            options = service.append_proxy_cacert(cacert: cert)
+            assert_equal(options[:cacert], cert)
+          end
+
           def test_additional_content_hrefs_properly_includes_errata
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
             rpm = ::Katello::Rpm.create(name: "foobar", filename: "foobar-1.3.4.rpm", nvra: "foobar-1.2.3", pulp_id: "test")
