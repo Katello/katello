@@ -40,5 +40,15 @@ FactoryBot.modify do
         smart_proxy_feature.settings[:mirror] = true
       end
     end
+
+    trait :with_load_balancer do
+      after(:build) do |proxy, _evaluator|
+        feature = Feature.find_or_create_by(:name => 'Registration')
+        proxy.features << feature unless proxy.features.include?(feature)
+        smart_proxy_feature = proxy.smart_proxy_features.find { |spf| spf.feature_id == feature.id }
+        smart_proxy_feature.settings ||= {}
+        smart_proxy_feature.settings[:registration_url] = "https://load-balancer.example.com/register"
+      end
+    end
   end
 end

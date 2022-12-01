@@ -81,6 +81,13 @@ module Katello
       assert_includes @proxy_mirror.rhsm_url.to_s, ":8443/rhsm"
     end
 
+    def test_rhsm_url_with_load_balancer
+      proxy = FactoryBot.build(:smart_proxy, :default_smart_proxy, :with_load_balancer)
+      registration_url = proxy.setting("Registration", 'registration_url')
+
+      assert_includes proxy.rhsm_url.to_s, URI(registration_url).hostname
+    end
+
     def test_sync_container_gateway
       environment = katello_environments(:library)
       with_pulp3_features(capsule_content.smart_proxy)

@@ -456,14 +456,16 @@ module Katello
       end
 
       def rhsm_url
+        proxy_url = setting('Registration', 'registration_url') || url
+
         # Since Foreman 3.1 this setting is set
         if (rhsm_url = setting(SmartProxy::PULP3_FEATURE, 'rhsm_url'))
           URI(rhsm_url)
           # Compatibility fall back
         elsif pulp_primary?
-          URI("https://#{URI.parse(url).host}/rhsm")
+          URI("https://#{URI.parse(proxy_url).host}/rhsm")
         elsif pulp_mirror?
-          URI("https://#{URI.parse(url).host}:8443/rhsm")
+          URI("https://#{URI.parse(proxy_url).host}:8443/rhsm")
         end
       end
 
