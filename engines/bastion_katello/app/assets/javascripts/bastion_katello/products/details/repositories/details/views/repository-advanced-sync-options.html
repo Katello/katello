@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <div class="radio" ng-hide="repository.content_type === 'deb'">
+  <div class="radio">
     <label>
       <input type="radio" ng-model="syncType" value="skipMetadataCheck" />
       <span translate>
@@ -21,10 +21,10 @@
     </label>
     <div class="help-block">
       <span translate>
-        Sync even if the upstream metadata appears to have no change. This option is only relevant for yum repositories and will take longer than an optimized sync. Choose this option if:
+        Sync even if the upstream metadata appears to have no change. This option is only relevant for yum/deb repositories and will take longer than an optimized sync. Choose this option if:
       </span>
       <ul class="list-aligned">
-        <li translate>One or more RPMs are not showing up in the local repository even though they exist in the upstream repository.</li>
+        <li translate>One or more packages are not showing up in the local repository even though they exist in the upstream repository.</li>
       </ul>
     </div>
   </div>
