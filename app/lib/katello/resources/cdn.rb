@@ -49,7 +49,7 @@ module Katello
             @cert_store.add_file(options[:ssl_ca_file])
           end
 
-          if @cert_store && proxy&.cacert
+          if @cert_store && proxy&.cacert&.present?
             Foreman::Util.add_ca_bundle_to_store(proxy.cacert, @cert_store)
           end
 
