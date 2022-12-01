@@ -28,6 +28,7 @@ module Katello
       def self.generate_model_row(unit)
         keys = %w(title id severity issued_date type description reboot_suggested solution updated_date summary)
         custom_json = unit.slice(*keys)
+        custom_json.inject(HashWithIndifferentAccess.new({})) { |h, (k, v)| h.merge({ k => v.respond_to?(:strip) ? v.strip : v }) }
         custom_json['pulp_id'] = custom_json['id']
         custom_json["issued"] = custom_json.delete("issued_date")
         custom_json["updated"] = custom_json.delete("updated_date")
