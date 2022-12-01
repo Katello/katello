@@ -24,6 +24,12 @@ module Katello
           common_remote_options.merge(deb_remote_options)
         end
 
+        def sync_url_params(sync_options)
+          params = super
+          params[:optimize] = sync_options[:optimize] if sync_options.key?(:optimize)
+          params
+        end
+
         def mirror_remote_options
           super.merge(
             {
