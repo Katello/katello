@@ -46,19 +46,21 @@ module Katello
         end
       end
 
-      def filter_errata_by_pulp_href(errata, package_pulp_hrefs, source_repo_rpm_filenames)
-        return [] if package_pulp_hrefs.empty?
-        rpms = Katello::Rpm.where(:pulp_id => package_pulp_hrefs)
-        srpms = Katello::Srpm.where(:pulp_id => package_pulp_hrefs)
-        rpm_filenames = rpms.map { |rpm| File.basename(rpm.filename) }
-        srpm_filenames = srpms.map { |srpm| File.basename(srpm.filename) }
+      def filter_errata_by_pulp_href(errata, content_pulp_hrefs, source_repo_rpm_filenames, source_repo_module_stream_specs)
+        return [] if content_pulp_hrefs.empty?
+
         source_repo_rpm_filenames = source_repo_rpm_filenames.map { |rpm| File.basename(rpm) }
+        rpm_filenames = Katello::Rpm.where(:pulp_id => content_pulp_hrefs).map { |rpm| File.basename(rpm.filename) }
+        srpm_filenames = Katello::Srpm.where(:pulp_id => content_pulp_hrefs).map { |srpm| File.basename(srpm.filename) }
+        module_stream_specs = Katello::ModuleStream.where(:pulp_id => content_pulp_hrefs).map(&:module_spec)
+
         matching_errata = []
         errata.each do |erratum|
-          # The erratum should be copied if package_pulp_hrefs has all of its packages that are available in the source repo.
-          rpms_in_erratum_and_source_repo = erratum.packages.pluck(:filename) & source_repo_rpm_filenames
-          if (rpms_in_erratum_and_source_repo - rpm_filenames - srpm_filenames).empty? ||
-              erratum.packages.empty? || rpms_in_erratum_and_source_repo.empty?
+          # The erratum should be copied if content_pulp_hrefs has all of its packages/modules that are available in the source repo.
+          content_in_erratum_and_source_repo =
+            (erratum.packages.pluck(:filename) + erratum.module_stream_specs) & (source_repo_rpm_filenames + source_repo_module_stream_specs)
+          if (content_in_erratum_and_source_repo - rpm_filenames - srpm_filenames - module_stream_specs).empty? ||
+              (erratum.packages.empty? && erratum.module_streams.empty?) || content_in_erratum_and_source_repo.empty?
             matching_errata << erratum
           end
         end

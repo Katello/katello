@@ -153,6 +153,10 @@ module Katello
       end
     end
 
+    def module_stream_specs
+      packages.collect { |package| package.module_streams.map(&:module_spec) }.flatten.uniq
+    end
+
     def module_stream_objects
       streams = packages.map do |pack|
         pack.module_streams
