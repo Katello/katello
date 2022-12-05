@@ -10,7 +10,7 @@ export const createJob = ({
   const inputParams = Object.keys(inputs).map(key => `inputs[${key}]=${inputs[key]}`);
   const params = [
     `feature=${feature}`,
-    `host_ids=name ^ (${hostname})`,
+    `search=name ^ (${hostname})`,
     ...inputParams,
   ];
   const urlQuery = encodeURI(params.join('&'));

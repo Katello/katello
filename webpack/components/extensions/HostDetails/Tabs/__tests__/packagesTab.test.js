@@ -261,7 +261,7 @@ test('Can upgrade a package via customized remote execution', async (done) => {
   expect(rexAction).toBeInTheDocument();
   expect(rexAction).toHaveAttribute(
     'href',
-    `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostname})&inputs%5Bpackage%5D=${packageName}`,
+    `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostname})&inputs%5Bpackage%5D=${packageName}`,
   );
 
   fireEvent.click(rexAction);
@@ -338,7 +338,7 @@ test('Can bulk upgrade via customized remote execution', async (done) => {
   const feature = REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH;
   const packages = `${firstPackage.id},${secondPackage.id}`;
   const job =
-    `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostname})&inputs%5BPackages%20search%20query%5D=id%20%5E%20(${packages})&inputs%5BSelected%20update%20versions%5D=%5B%5D`;
+    `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostname})&inputs%5BPackages%20search%20query%5D=id%20%5E%20(${packages})&inputs%5BSelected%20update%20versions%5D=%5B%5D`;
 
   getByRole('checkbox', { name: 'Select row 0' }).click();
   expect(getByLabelText('Select row 0').checked).toEqual(true);
