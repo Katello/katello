@@ -298,7 +298,7 @@ describe('With tracer installed', () => {
     });
     expect(viaCustomizedRexAction).toHaveAttribute(
       'href',
-      `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5BTraces%20search%20query%5D=id%20=%20${firstTrace.id}`,
+      `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostName})&inputs%5BTraces%20search%20query%5D=id%20=%20${firstTrace.id}`,
     );
 
     assertNockRequest(autocompleteScope);
@@ -331,7 +331,7 @@ describe('With tracer installed', () => {
     expect(viaCustomizedRexAction).toBeInTheDocument();
     expect(viaCustomizedRexAction).toHaveAttribute(
       'href',
-      `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5BTraces%20search%20query%5D=id%20%5E%20(${firstTrace.id})`,
+      `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostName})&inputs%5BTraces%20search%20query%5D=id%20%5E%20(${firstTrace.id})`,
     );
 
     assertNockRequest(autocompleteScope);
@@ -430,7 +430,7 @@ describe('Without tracer installed', () => {
     expect(enableTracesModalLink)
       .toHaveAttribute(
         'href',
-        `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5Bpackage%5D=katello-host-tools-tracer`,
+        `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostName})&inputs%5Bpackage%5D=katello-host-tools-tracer`,
       );
     enableTracesModalLink.click();
     expect(enableTracesModalLink).toHaveClass('pf-m-in-progress');

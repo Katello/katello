@@ -310,7 +310,7 @@ test('Can install a package via customized remote execution', async (done) => {
   expect(customizedRexOption).toBeInTheDocument();
   expect(customizedRexOption).toHaveAttribute(
     'href',
-    `/job_invocations/new?feature=${REX_FEATURES.KATELLO_PACKAGE_INSTALL}&host_ids=name%20%5E%20(test-host)&inputs%5Bpackage%5D=duck,cheetah`,
+    `/job_invocations/new?feature=${REX_FEATURES.KATELLO_PACKAGE_INSTALL}&search=name%20%5E%20(test-host)&inputs%5Bpackage%5D=duck,cheetah`,
   );
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
@@ -348,7 +348,7 @@ test('Uses package_install_by_search_query template when in select all mode', as
   expect(customizedRexOption).toBeInTheDocument();
   expect(customizedRexOption).toHaveAttribute(
     'href',
-    `/job_invocations/new?feature=${REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH}&host_ids=name%20%5E%20(test-host)&inputs%5BPackage%20search%20query%5D=id%20!%5E%20(32376)`,
+    `/job_invocations/new?feature=${REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH}&search=name%20%5E%20(test-host)&inputs%5BPackage%20search%20query%5D=id%20!%5E%20(32376)`,
   );
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);

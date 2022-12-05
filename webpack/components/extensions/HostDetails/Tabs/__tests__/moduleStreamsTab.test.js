@@ -208,8 +208,8 @@ test('Can provide dropdown actions with redirects on Module Streams with customi
   await patientlyWaitFor(() => expect(getByLabelText('customize-checkbox-3')).toBeInTheDocument());
   fireEvent.click(getByLabelText('customize-checkbox-3'));
   await patientlyWaitFor(() => expect(getByText('Enable')).toBeInTheDocument());
-  expect(getByText('Enable')).toHaveAttribute('href', '/job_invocations/new?feature=katello_module_stream_action&host_ids=name%20%5E%20(test-host)&inputs%5Baction%5D=enable&inputs%5Bmodule_spec%5D=walrus:2.4');
-  expect(getByText('Install')).toHaveAttribute('href', '/job_invocations/new?feature=katello_module_stream_action&host_ids=name%20%5E%20(test-host)&inputs%5Baction%5D=install&inputs%5Bmodule_spec%5D=walrus:2.4');
+  expect(getByText('Enable')).toHaveAttribute('href', '/job_invocations/new?feature=katello_module_stream_action&search=name%20%5E%20(test-host)&inputs%5Baction%5D=enable&inputs%5Bmodule_spec%5D=walrus:2.4');
+  expect(getByText('Install')).toHaveAttribute('href', '/job_invocations/new?feature=katello_module_stream_action&search=name%20%5E%20(test-host)&inputs%5Baction%5D=install&inputs%5Bmodule_spec%5D=walrus:2.4');
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
   act(done);
