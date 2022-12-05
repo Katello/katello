@@ -2,8 +2,6 @@ module Katello
   module Concerns
     module ContentFacetHostsControllerExtensions
       extend ActiveSupport::Concern
-      # include ForemanTasks::Triggers # do I need this?
-
       included do
         before_action :set_up_content_view_environment, only: [:update]
 

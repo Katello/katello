@@ -352,11 +352,9 @@ module Katello
         property :upgradable_rpm_count, Integer, desc: 'Returns upgradable RPM count'
         property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source'
         prop_group :katello_idname_props, Katello::Model, meta: { resource: 'content_source' }
-        # prop_group :katello_idname_props, Katello::Model, meta: { resource: 'content_view' }
         property :errata_counts, Hash, desc: 'Returns key=value object with errata counts, e.g. {security: 0, bugfix: 0, enhancement: 0, total: 0}'
         property :kickstart_repository, 'Repository', desc: 'Returns Kickstart repository object'
         prop_group :katello_idname_props, Katello::Model, meta: { resource: 'kickstart_repository' }
-        # prop_group :katello_idname_props, Katello::Model, meta: { resource: 'lifecycle_environment' }
       end
       class Jail < ::Safemode::Jail
         allow :applicable_deb_count, :applicable_module_stream_count, :applicable_rpm_count, :content_source, :content_source_id, :content_source_name,

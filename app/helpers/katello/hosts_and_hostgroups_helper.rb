@@ -310,7 +310,7 @@ module Katello
 
     private
 
-    def decide_content_source_id(host_or_hostgroup, hostgroup)
+    def inherited_or_own_content_source_id(host_or_hostgroup, hostgroup)
       content_source_id = hostgroup.inherited_content_source_id
       if host_or_hostgroup.content_source_id && (hostgroup.inherited_content_source_id != host_or_hostgroup.content_source_id)
         content_source_id = host_or_hostgroup.content_source_id
@@ -318,7 +318,7 @@ module Katello
       content_source_id
     end
 
-    def decide_facet_attributes(host_or_hostgroup, hostgroup)
+    def inherited_or_own_facet_attributes(host_or_hostgroup, hostgroup)
       lifecycle_environment_id = hostgroup.inherited_lifecycle_environment_id
       content_view_id = hostgroup.inherited_content_view_id
       case host_or_hostgroup
@@ -341,8 +341,8 @@ module Katello
     end
 
     def hostgroup_content_facet(hostgroup, param_host)
-      lifecycle_environment_id, content_view_id = decide_facet_attributes(param_host, hostgroup)
-      content_source_id = decide_content_source_id(param_host, hostgroup)
+      lifecycle_environment_id, content_view_id = inherited_or_own_facet_attributes(param_host, hostgroup)
+      content_source_id = inherited_or_own_content_source_id(param_host, hostgroup)
       facet = ::Katello::Host::ContentFacet.new(:content_source_id => content_source_id)
       facet.assign_single_environment(
         :lifecycle_environment_id => lifecycle_environment_id,
