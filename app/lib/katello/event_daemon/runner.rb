@@ -7,6 +7,7 @@ module Katello
 
       class << self
         def initialize
+          FileUtils.mkdir_p(tmp_dir)
           FileUtils.touch(lock_file)
         end
 
@@ -24,12 +25,16 @@ module Katello
           pid_dir.join('katello_event_daemon.pid')
         end
 
+        def tmp_dir
+          Rails.root.join('tmp')
+        end
+
         def pid_dir
-          Rails.root.join('tmp', 'pids')
+          tmp_dir.join('pids')
         end
 
         def lock_file
-          Rails.root.join('tmp', 'katello_event_daemon.lock')
+          tmp_dir.join('katello_event_daemon.lock')
         end
 
         def write_pid_file
