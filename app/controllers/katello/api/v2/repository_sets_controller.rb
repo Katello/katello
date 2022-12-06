@@ -38,12 +38,11 @@ module Katello
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Katello::ProductContent)
     def index
-      collection = scoped_search(index_relation, :name, :asc, :resource_class => Katello::ProductContent)
+      collection = scoped_search(index_relation, :name, :asc, :resource_class => Katello::ProductContent, :custom_sort => ->(relation) { custom_sort_results(relation) })
       pcf = ProductContentFinder.wrap_with_overrides(
         product_contents: collection[:results],
-        overrides: @consumable&.content_overrides,
-        status: params[:status])
-      collection[:results] = custom_sort_results(pcf)
+        overrides: @consumable&.content_overrides)
+      collection[:results] = pcf
       respond(:collection => collection)
     end
 
@@ -154,7 +153,13 @@ module Katello
           :match_subscription => !content_access_mode_all,
           :match_environment => content_access_mode_env,
           :consumable => @consumable)
-      relation.merge(content_finder.product_content)
+      unfiltered = relation.merge(content_finder.product_content)
+      return unfiltered unless params[:status]
+      filtered_ids = ProductContentFinder.wrap_with_overrides(
+        product_contents: unfiltered,
+        overrides: @consumable&.content_overrides,
+        status: params[:status]).map(&:id).uniq
+      unfiltered.where(id: filtered_ids)
     end
 
     def find_product_content
@@ -236,18 +241,24 @@ module Katello
               else
                 0
               end
-      Rails.logger.debug [pc.product_name, pc.enabled_content_override, "Id: #{pc.id}", "Score: #{score}"]
       score
     end
 
-    def custom_sort_results(product_content_finder)
-      if params[:sort_by] == 'enabled_by_default' && params[:sort_order] == 'desc'
-        product_content_finder.sort { |pca, pcb| sort_score(pca) <=> sort_score(pcb) }.reverse!
-      elsif params[:sort_by] == 'enabled_by_default'
-        product_content_finder.sort { |pca, pcb| sort_score(pca) <=> sort_score(pcb) }
-      else
-        product_content_finder
-      end
+    def custom_sort_results(unsorted_relation)
+      return unsorted_relation unless params[:sort_by] == 'enabled_by_default'
+      product_content_finder = ProductContentFinder.wrap_with_overrides(
+        product_contents: unsorted_relation,
+        overrides: @consumable&.content_overrides,
+        status: params[:status])
+      sorted_pcps = if params[:sort_by] == 'enabled_by_default' && params[:sort_order] == 'desc'
+                      product_content_finder.sort { |pca, pcb| sort_score(pca) <=> sort_score(pcb) }.reverse!
+                    elsif params[:sort_by] == 'enabled_by_default'
+                      product_content_finder.sort { |pca, pcb| sort_score(pca) <=> sort_score(pcb) }
+                    else
+                      product_content_finder
+                    end
+      sort_order = sorted_pcps.map(&:id)
+      unsorted_relation.reorder(Arel.sql("array_position('{#{sort_order.join(',')}}'::int[], #{Katello::ProductContent.table_name}.id)"))
     end
   end
 end
