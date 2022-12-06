@@ -13,10 +13,12 @@ class AddContentViewEnvironmentContentFacet < ActiveRecord::Migration[6.1]
           .content_view_environments
           .find_by(content_view_id: content_facet.content_view_id)
           .id
-      ::Katello::ContentViewEnvironmentContentFacet.create(
+      unless ::Katello::ContentViewEnvironmentContentFacet.create(
         content_facet_id: content_facet.id,
         content_view_environment_id: cve_id
       )
+        Rails.logger.warn "Failed to create ContentViewEnvironmentContentFacet for content_facet #{content_facet.id}"
+      end
     end
 
     remove_column :katello_content_facets, :content_view_id
