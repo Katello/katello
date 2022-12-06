@@ -517,8 +517,8 @@ module Katello
                                             host_ids: [host.id] }
       assert_response :success
 
-      assert_equal host.reload.lifecycle_environment, lifecycle_environment
-      assert_equal host.reload.content_view, content_view
+      assert_equal host.reload.single_lifecycle_environment, lifecycle_environment
+      assert_equal host.reload.single_content_view, content_view
       assert_equal host.reload.content_source_id, content_source.id
 
       assert_includes @response.body, "Configure subscription-manager"

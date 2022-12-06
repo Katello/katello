@@ -51,8 +51,12 @@ module Katello
         prepend ::ForemanRemoteExecution::HostExtensions if ::Katello.with_remote_execution?
         prepend Overrides
 
-        delegate :content_source_id, :content_view_id, :lifecycle_environment_id, :kickstart_repository_id, :bound_repositories, to: :content_facet, allow_nil: true
+        delegate :content_source_id, :single_content_view, :single_lifecycle_environment, :default_environment?, :single_content_view_environment?, :multi_content_view_environment?, :kickstart_repository_id, :bound_repositories, to: :content_facet, allow_nil: true
 
+        has_many :content_view_environment_content_facets, through: :content_facet, class_name: 'Katello::ContentViewEnvironmentContentFacet'
+        has_many :content_view_environments, through: :content_view_environment_content_facets
+        has_many :content_views, through: :content_view_environments
+        has_many :lifecycle_environments, through: :content_view_environments
         has_many :dispatch_histories, :class_name => "::Katello::Agent::DispatchHistory", :foreign_key => :host_id, :dependent => :delete_all
 
         has_many :host_installed_packages, :class_name => "::Katello::HostInstalledPackage", :foreign_key => :host_id, :dependent => :delete_all
@@ -92,6 +96,10 @@ module Katello
         scoped_search :relation => :host_traces, :on => :application, :complete_value => true, :rename => :trace_app, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :app_type, :complete_value => true, :rename => :trace_app_type, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true
+        scoped_search :relation => :lifecycle_environments, :on => :name, :complete_value => true, :rename => :lifecycle_environment, :only_explicit => true
+        scoped_search :relation => :content_views, :on => :name, :complete_value => true, :rename => :content_view, :only_explicit => true
+        scoped_search :relation => :lifecycle_environments, :on => :id, :complete_value => true, :rename => :lifecycle_environment_id, :only_explicit => true
+        scoped_search :relation => :content_views, :on => :id, :complete_value => true, :rename => :content_view_id, :only_explicit => true
 
         scoped_search relation: :pools, on: :pools_expiring_in_days, ext_method: :find_with_expiring_pools, only_explicit: true
 
@@ -111,8 +119,8 @@ module Katello
           property :host_collections, array_of: 'HostCollection', desc: 'Returns list of the host collections the host belongs to'
           property :pools, array_of: 'Pool', desc: 'Returns subscription pool objects associated with the host'
           property :hypervisor_host, 'Host', desc: 'Returns hypervisor host object of this host'
-          property :lifecycle_environment, 'KTEnvironment', desc: 'Returns lifecycle environment object associated with the host'
-          property :content_view, 'ContentView', desc: 'Returns content view associated with the host'
+          property :lifecycle_environments, 'KTEnvironment', desc: 'Returns lifecycle environments associated with the host'
+          property :content_views, 'ContentView', desc: 'Returns content views associated with the host'
           property :installed_packages, array_of: 'InstalledPackage', desc: 'Returns a list of packages installed on the host'
         end
       end
@@ -433,7 +441,7 @@ module Katello
           versions_by_name = {}
           if versions.present?
             JSON.parse(versions).each do |nvra|
-              nvra =~ /([^\.]*)-\d+\.[-\.\w]*/
+              nvra =~ /([^.]*)-\d+\.[-.\w]*/
               versions_by_name[Regexp.last_match(1)] = nvra
             end
           end
@@ -471,9 +479,10 @@ end
 
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
-        :host_collections, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
+        :host_collections, :pools, :hypervisor_host,
         :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template,
-        :filtered_entitlement_quantity_consumed, :bound_repositories
+        :filtered_entitlement_quantity_consumed, :bound_repositories,
+        :single_content_view, :single_lifecycle_environment
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail

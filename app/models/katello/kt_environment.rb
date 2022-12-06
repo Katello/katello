@@ -18,17 +18,22 @@ module Katello
     has_many :successors, :class_name => "Katello::KTEnvironment", :through => :env_successors, :source => :env
 
     has_many :repositories, :class_name => "Katello::Repository", dependent: :destroy, foreign_key: :environment_id
-    has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
-                                         :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict_with_exception
-    has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
-    has_many :content_views, :through => :content_view_environments, :inverse_of => :environments
     has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
-                                      :inverse_of => :environment, :foreign_key => :katello_environment_id
+    :inverse_of => :environment, :foreign_key => :katello_environment_id
 
-    has_many :content_facets, :class_name => "Katello::Host::ContentFacet", :foreign_key => :lifecycle_environment_id,
-                          :inverse_of => :lifecycle_environment, :dependent => :restrict_with_exception
-    has_many :hosts,      :class_name => "::Host::Managed", :through => :content_facets,
+    has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
+             :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
+    has_many :content_view_environment_content_facets, :through => :content_view_environments,
+                          :class_name => "Katello::ContentViewEnvironmentContentFacet",
                           :inverse_of => :lifecycle_environment
+    has_many :content_facets, :through => :content_view_environment_content_facets,
+                          :class_name => "Katello::Host::ContentFacet",
+                          :inverse_of => :lifecycle_environments
+    has_many :content_views, :through => :content_view_environments
+    has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
+
+    has_many :hosts,      :class_name => "::Host::Managed", :through => :content_facets,
+                          :inverse_of => :lifecycle_environments
     has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet", :foreign_key => :lifecycle_environment_id,
                           :inverse_of => :lifecycle_environment, :dependent => :restrict_with_exception
     has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets,

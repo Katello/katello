@@ -24,6 +24,10 @@ module Katello
         type: "Redhat",
         title: "CentOS 7.6")
     end
+
+    def setup
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+    end
   end
 
   class SubscriptionFacetSystemPurposeTest < SubscriptionFacetBase
@@ -200,19 +204,19 @@ module Katello
     end
 
     def test_candlepin_environment_id
-      assert_equal subscription_facet.candlepin_environment_id, ContentViewEnvironment.where(:content_view_id => view, :environment_id => library).first.cp_id
+      assert_equal subscription_facet.candlepin_environments.first[:id], ContentViewEnvironment.where(:content_view_id => view, :environment_id => library).first.cp_id
     end
 
     def test_candlepin_environment_id_no_content
       subscription_facet.host.content_facet.destroy!
-      assert_equal subscription_facet.reload.candlepin_environment_id, ContentViewEnvironment.where(:content_view_id => org.default_content_view,
+      assert_equal subscription_facet.reload.candlepin_environments.first, ContentViewEnvironment.where(:content_view_id => org.default_content_view,
                                                                                                :environment_id => org.library).first.cp_id
     end
 
     def test_consumer_attributes
       attrs = subscription_facet.consumer_attributes
-
-      assert_equal subscription_facet.candlepin_environment_id, attrs[:environment][:id]
+      # "environments"=>[{"id"=>"5"}]
+      assert_equal subscription_facet.candlepin_environments.first[:id], attrs[:environments].first[:id]
     end
 
     def test_update_foreman_facts
@@ -258,7 +262,6 @@ module Katello
         minor: 2,
         type: "Redhat",
         title: "RHEL 8.2")
-
       host.operatingsystem = centos_76
 
       Katello::Host::SubscriptionFacet.update_facts(

@@ -1,7 +1,23 @@
 object @resource
 
 @resource ||= @object
+@facet = @resource.content_facet
 
 attributes :id, :name, :description
-attributes :content_view, :content_view_id
-attributes :lifecycle_environment => :environment
+if @facet
+  node :content_view do
+    content_view = @facet&.single_content_view || {}
+    {
+      :id => content_view.id,
+      :name => content_view.name,
+      :composite => content_view.composite?
+    }
+  end
+  node :lifecycle_environment do
+    lifecycle_environment = @facet&.single_lifecycle_environment || {}
+    {
+      :id => lifecycle_environment.id,
+      :name => lifecycle_environment.name
+    }
+  end
+end

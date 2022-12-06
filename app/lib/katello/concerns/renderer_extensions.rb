@@ -8,7 +8,7 @@ module Katello
           super
 
           medium_provider = Katello::ManagedContentMediumProvider.new(host)
-          content_view = host.try(:content_facet).try(:content_view) || host.try(:content_view)
+          content_view = host.try(:content_facet).try(:single_content_view) || host.try(:single_content_view)
 
           if content_view && host.operatingsystem.is_a?(Redhat) &&
                   host.operatingsystem.kickstart_repos(host).first.present? &&

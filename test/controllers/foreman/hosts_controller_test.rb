@@ -26,13 +26,12 @@ class HostsControllerTest < ActionController::TestCase
     post :update_multiple_organization, params: { host_ids: [@host.id],
                                                   organization: { id: destination_org.id, optimistic_import: "yes" } }
 
-    assert_not_equal destination_org.id, @host.reload.organization_id
+    refute_equal destination_org.id, @host.reload.organization_id
     assert_equal "Unregister host host1.example.com before assigning an organization", flash[:error]
   end
 
   test 'can update host same organization' do
     destination_org = @host.organization
-
     post :update_multiple_organization, params: { host_ids: [@host.id],
                                                   organization: { id: destination_org.id, optimistic_import: "yes" } }
 
@@ -52,6 +51,7 @@ class HostsControllerTest < ActionController::TestCase
   end
 
   test 'empty content facet parameters are removed' do
+    orig_cves = @host.content_facet.content_view_environment_ids.to_a
     post :create, params: { :host => {
       :name => 'test_content',
       :content_facet_attributes => {
@@ -59,7 +59,7 @@ class HostsControllerTest < ActionController::TestCase
         :content_source_id => ""
       }
     } }, session: set_session_user
-    assert_empty assigns('host').content_facet
+    assert_equal orig_cves, @host.content_facet.content_view_environment_ids
   end
 
   context 'csv' do
@@ -89,8 +89,7 @@ class HostsControllerTest < ActionController::TestCase
         'Installable Updates - Enhancements',
         'Installable Updates - Package Count',
         'OS',
-        'Environment',
-        'Content View',
+        'Content View Environments',
         'Registered',
         'Last Checkin'
       ]

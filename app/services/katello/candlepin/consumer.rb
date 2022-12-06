@@ -16,8 +16,8 @@ module Katello
       lazy_accessor :entitlements, :initializer => lambda { |_s| Resources::Candlepin::Consumer.entitlements(uuid) }
       lazy_accessor :consumer_attributes, :initializer => lambda { |_s| Resources::Candlepin::Consumer.get(uuid) }
       lazy_accessor :installed_products, :initializer => lambda { |_s| consumer_attributes['installedProducts'] }
-      lazy_accessor :available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(owner_label, uuid, false) }
-      lazy_accessor :all_available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(owner_label, uuid, true) }
+      lazy_accessor :available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(owner_label, uuid, listall: false) }
+      lazy_accessor :all_available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(owner_label, uuid, listall: true) }
       lazy_accessor :content_overrides, :initializer => (lambda do |_s|
                                                            Resources::Candlepin::Consumer.content_overrides(uuid).map do |override|
                                                              ::Katello::ContentOverride.from_entitlement_hash(override)

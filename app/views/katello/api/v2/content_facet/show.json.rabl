@@ -2,7 +2,8 @@ child :content_facet => :content_facet_attributes do
   extends 'katello/api/v2/content_facet/base'
 
   node do |content_facet|
-    version = content_facet.content_view_version
+    content_facet.single_content_view # just so Rails gives a warning and we remember to fix this
+    version = content_facet.content_view_environments.first.content_view_version
     {
       :content_view_version => version.version,
       :content_view_version_id => version.id,
@@ -11,11 +12,11 @@ child :content_facet => :content_facet_attributes do
   end
 
   node :content_view_default? do |content_facet|
-    content_facet.content_view.default?
+    content_facet.single_content_view.default?
   end
 
   node :lifecycle_environment_library? do |content_facet|
-    content_facet.lifecycle_environment.library?
+    content_facet.single_lifecycle_environment.library?
   end
 
   node :katello_agent_installed do |content_facet|

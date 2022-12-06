@@ -16,6 +16,7 @@ module Katello
                         :lifecycle_environment => library)
     end
     let(:proxy) { FactoryBot.create(:smart_proxy, :url => 'http://fakepath.com/foo') }
+    let(:proxy2) { FactoryBot.create(:smart_proxy, :url => 'http://fakepath.com/bar') }
   end
 
   class ContentFacetHostExtensionsTest < ContentFacetHostExtensionsBaseTest
@@ -29,38 +30,47 @@ module Katello
     def test_action_not_triggered_on_facet_no_change
       host.reload
       host.expects(:update_candlepin_associations).never
-      host.update!(:content_facet_attributes => { :content_view_id => view.id })
+      host.update!(:content_facet_attributes => { :content_source_id => nil })
     end
 
-    def test_action_triggered_on_facet_update
+    def test_action_triggered_on_facet_cve_update
       host.reload
       host.expects(:update_candlepin_associations)
-      host.update!(:content_facet_attributes => { :content_view_id => view2.id })
-
-      host.reload
-      host.content_facet.content_view_id = view.id
-      host.expects(:update_candlepin_associations)
+      host.content_facet.assign_single_environment(
+        :content_view => view,
+        :lifecycle_environment => dev
+      )
       host.save!
 
       host.reload
       host.expects(:update_candlepin_associations)
-      host.update!(:content_facet_attributes => { :lifecycle_environment_id => dev.id })
+      host.content_facet.assign_single_environment(
+        :content_view => view2,
+        :lifecycle_environment => dev
+      )
+      host.save!
     end
 
-    def test_content_facet_update
+    def test_content_facet_cve_update
       host.expects(:update_candlepin_associations)
-      host.update!(:content_facet_attributes => { :content_view_id => view2.id })
+      host.content_facet.assign_single_environment(
+        :content_view => view2,
+        :lifecycle_environment => dev
+      )
+      host.save!
       host.reload.content_facet.reload
 
       refute_nil host.content_facet.uuid # not reset to nil
-      assert_equal library.id, host.content_facet.lifecycle_environment_id # unchanged
-      assert_equal view2.id, host.content_facet.content_view_id # changed
+      host_cve = host.content_view_environments.first
+      assert_equal dev.id, host_cve.environment_id # unchanged
+      assert_equal view2.id, host_cve.content_view_id # changed
     end
 
     def test_other_content_facet_update
       host = FactoryBot.create(:host, :with_content,
                         :with_subscription, :content_view => view,
                         :lifecycle_environment => library)
+      host.subscription_facet.expects(:backend_update_needed?).returns(false)
       host.update!(:content_facet_attributes => { :content_source_id => proxy.id })
       host.reload.content_facet.reload
       refute_nil host.content_facet.uuid # not reset to nil
@@ -69,37 +79,11 @@ module Katello
 
     def test_content_facet_allows_individual_attribute_updates
       host.reload
-      host.expects(:update_candlepin_associations)
       assert host.update(
-        :content_facet_attributes => { content_view_id: view.id, lifecycle_environment_id: library.id })
+        :content_facet_attributes => { content_source_id: proxy.id })
       refute_nil host.content_facet
-      assert host.update(:content_facet_attributes => { lifecycle_environment_id: dev.id})
-      assert_equal dev.id, host.content_facet.lifecycle_environment_id
-    end
-
-    def test_content_facet_gets_ignored_on_new
-      assert_nil empty_host.content_facet
-      empty_host.content_facet_attributes = { :content_source_id => proxy.id }
-      assert empty_host.valid?
-
-      empty_host.reload
-      assert_nil empty_host.content_facet
-
-      empty_host.update(:content_facet_attributes => {})
-      empty_host.reload
-      assert_nil empty_host.content_facet
-
-      empty_host.update(:content_facet_attributes => { content_view_id: view.id })
-      empty_host.reload
-      assert_nil empty_host.content_facet
-
-      empty_host.update(:content_facet_attributes => { lifecycle_environment_id: library.id })
-      empty_host.reload
-      assert_nil empty_host.content_facet
-
-      empty_host.update(:content_facet_attributes => { :lifecycle_environment_id => library.id, :content_view_id => view.id })
-      empty_host.reload.content_facet.reload
-      refute_nil empty_host.content_facet # not reset to nil
+      assert host.update(:content_facet_attributes => { content_source_id: proxy2.id })
+      assert_equal proxy2.id, host.content_facet.content_source_id
     end
   end
 end

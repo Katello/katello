@@ -8,9 +8,12 @@ module Katello
     let(:environment) { katello_environments(:library) }
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
     let(:host) do
-      FactoryBot.create(:host, :with_content, :content_view => view,
-                        :lifecycle_environment => library,
-                        :operatingsystem => FactoryBot.create(:operatingsystem, :release_name => ''))
+      FactoryBot.create(:host,
+                        :with_content,
+                        :operatingsystem => FactoryBot.create(:operatingsystem, :release_name => ''),
+                        :content_view => view,
+                        :lifecycle_environment => environment
+                      )
     end
     let(:content_facet) { host.content_facet }
   end
@@ -21,7 +24,7 @@ module Katello
     end
 
     def test_content_view_version
-      assert_equal view.version(library), host.content_facet.content_view_version
+      assert_equal view.version(library), host.content_facet.content_view_environments.first.content_view_version
     end
 
     def test_katello_agent_installed?
@@ -41,8 +44,9 @@ module Katello
     end
 
     def test_in_content_view_version_environments
-      first_cvve = {:content_view_version => content_facet.content_view.version(content_facet.lifecycle_environment),
-                    :environments => [content_facet.lifecycle_environment]}
+      facet_cve = content_facet.content_view_environments.first
+      first_cvve = {:content_view_version => facet_cve.content_view.version(facet_cve.lifecycle_environment),
+                    :environments => [content_facet.single_lifecycle_environment]}
       second_cvve = {:content_view_version => view.version(library), :environments => [dev]} #dummy set
 
       facets = Host::ContentFacet.in_content_view_version_environments([first_cvve, second_cvve])
@@ -221,7 +225,7 @@ module Katello
       host_one.content_facet.bound_repositories << repo
 
       #shouldn't matter if facet is invalid
-      host_one.content_facet.lifecycle_environment = katello_environments(:qa_path2)
+      host_one.content_view_environments.first.lifecycle_environment = katello_environments(:qa_path2)
       refute host_one.valid?
 
       host_one.content_facet.update_applicability_counts
@@ -272,7 +276,7 @@ module Katello
       host_one.content_facet.bound_repositories << repo
 
       #shouldn't matter if facet is invalid
-      host_one.content_facet.lifecycle_environment = katello_environments(:qa_path2)
+      host_one.content_view_environments.first.environment = katello_environments(:qa_path2)
       refute host_one.valid?
 
       host_one.content_facet.update_applicability_counts
@@ -370,8 +374,10 @@ module Katello
     end
 
     def test_save_bound_repos_by_paths
-      content_facet.content_view = repo.content_view
-      content_facet.lifecycle_environment = repo.environment
+      content_facet.assign_single_environment(
+        content_view: repo.content_view,
+        lifecycle_environment: repo.environment
+      )
       assert_empty content_facet.bound_repositories
 
       content_facet.update_repositories_by_paths([
@@ -384,8 +390,10 @@ module Katello
     end
 
     def test_save_bound_repos_by_paths_same_path
-      content_facet.content_view = repo.content_view
-      content_facet.lifecycle_environment = repo.environment
+      content_facet.assign_single_environment(
+        content_view: repo.content_view,
+        lifecycle_environment: repo.environment
+      )
       content_facet.bound_repositories = [repo]
       ForemanTasks.expects(:async_task).never
 

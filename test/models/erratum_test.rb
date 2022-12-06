@@ -76,6 +76,7 @@ module Katello
                                       :content_view => katello_content_views(:library_dev_view),
                                       :lifecycle_environment => katello_environments(:library),
                                       :compute_resource_id => compute_resources(:one).id)
+      host.stubs(:update_candlepin_associations)
       host.save
       host.content_facet.applicable_errata << @security
       host.save
@@ -115,7 +116,10 @@ module Katello
     def setup
       super
       @host = hosts(:one)
-      @host.content_facet.content_view = katello_content_views(:library_dev_view)
+      @host.content_facet.assign_single_environment(
+        content_view: katello_content_views(:library_dev_view),
+        lifecycle_environment: katello_environments(:library)
+      )
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
       @host.content_facet.bound_repositories = [@repo, @view_repo]
       @host.content_facet.save!
@@ -169,7 +173,10 @@ module Katello
       @repo = katello_repositories(:rhel_6_x86_64)
       @security = katello_errata(:security)
       @host = hosts(:one)
-      @host.content_facet.content_view = katello_content_views(:library_dev_view)
+      @host.content_facet.assign_single_environment(
+        content_view: katello_content_views(:library_dev_view),
+        lifecycle_environment: katello_environments(:library)
+      )
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
       @host.content_facet.bound_repositories = [@repo, @view_repo]
       @host.content_facet.save!
@@ -180,6 +187,7 @@ module Katello
                                       organizations: [@host.organization],
                                       locations: [@host.location])
       @host.hostgroup = hostgroup
+      @host.stubs(:update_candlepin_associations)
       @host.save(validate: false)
       User.current = User.find(users('restricted').id)
       setup_current_user_with_permissions([{ name: "view_hosts",

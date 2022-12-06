@@ -10,11 +10,28 @@ attributes :applicable_rpm_count => :applicable_package_count
 attributes :upgradable_rpm_count => :upgradable_package_count
 attributes :applicable_module_stream_count, :upgradable_module_stream_count
 
-child :content_view => :content_view do
+node :content_view do |content_facet|
+  content_view = content_facet.single_content_view
+  {
+    :id => content_view.id,
+    :name => content_view.name,
+    :composite => content_view.composite?
+  }
+end
+
+node :lifecycle_environment do |content_facet|
+  lifecycle_environment = content_facet.single_lifecycle_environment
+  {
+    :id => lifecycle_environment.id,
+    :name => lifecycle_environment.name
+  }
+end
+
+child :content_views => :content_views do
   attributes :id, :name, :composite
 end
 
-child :lifecycle_environment => :lifecycle_environment do
+child :lifecycle_environments => :lifecycle_environments do
   attributes :id, :name
 end
 

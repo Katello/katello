@@ -10,9 +10,14 @@ module Katello
       SUBSCRIPTION_MANAGER_PACKAGE_NAME = 'subscription-manager'.freeze
 
       belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :inverse_of => :kickstart_content_facets
-      belongs_to :content_view, :inverse_of => :content_facets, :class_name => "Katello::ContentView"
-      belongs_to :lifecycle_environment, :inverse_of => :content_facets, :class_name => "Katello::KTEnvironment"
       belongs_to :content_source, :class_name => "::SmartProxy", :inverse_of => :content_facets
+
+      has_many :content_view_environment_content_facets, :class_name => "Katello::ContentViewEnvironmentContentFacet", :dependent => :destroy, :inverse_of => :content_facet
+      has_many :content_view_environments, :through => :content_view_environment_content_facets,
+               :class_name => "Katello::ContentViewEnvironment", :source => :content_view_environment,
+               :after_add => :mark_cves_changed, :after_remove => :mark_cves_changed
+      has_many :content_views, :through => :content_view_environments, :class_name => "Katello::ContentView"
+      has_many :lifecycle_environments, :through => :content_view_environments, :class_name => "Katello::KTEnvironment"
 
       has_many :content_facet_errata, :class_name => "Katello::ContentFacetErratum", :dependent => :delete_all, :inverse_of => :content_facet
       has_many :applicable_errata, :through => :content_facet_errata, :class_name => "Katello::Erratum", :source => :erratum
@@ -31,11 +36,80 @@ module Katello
       has_many :content_facet_applicable_module_streams, :class_name => "Katello::ContentFacetApplicableModuleStream", :dependent => :delete_all, :inverse_of => :content_facet
       has_many :applicable_module_streams, :through => :content_facet_applicable_module_streams, :class_name => "Katello::ModuleStream", :source => :module_stream
 
-      validates :content_view, :presence => true, :allow_blank => false
-      validates :lifecycle_environment, :presence => true, :allow_blank => false
       validates_with ::AssociationExistsValidator, attributes: [:content_source]
+      validates_with Katello::Validators::GeneratedContentViewValidator
       validates :host, :presence => true, :allow_blank => false
-      validates_with Validators::ContentViewEnvironmentValidator
+
+      attr_accessor :cves_changed
+
+      def initialize(*args)
+        init_args = args.first || {}
+        env_id = init_args.delete(:lifecycle_environment_id)
+        cv_id = init_args.delete(:content_view_id)
+        super(*args)
+        if env_id && cv_id
+          assign_single_environment(
+            lifecycle_environment_id: env_id,
+            content_view_id: cv_id
+          )
+        end
+        self.cves_changed = false
+      end
+
+      def mark_cves_changed(_cve)
+        self.cves_changed = true
+      end
+
+      def cves_changed?
+        cves_changed
+      end
+
+      def multi_content_view_environment?
+        content_view_environments.size > 1
+      end
+
+      def single_content_view_environment?
+        content_view_environments.size == 1
+      end
+
+      def single_content_view
+        if multi_content_view_environment?
+          Rails.logger.warn _("Content facet for host %s has more than one content view. Use #content_views instead.") % host.name
+        end
+        content_view_environments&.first&.content_view
+      end
+
+      def single_lifecycle_environment
+        if multi_content_view_environment?
+          Rails.logger.warn _("Content facet for host %s has more than one lifecycle environment. Use #lifecycle_environments instead.") % host.name
+        end
+        content_view_environments&.first&.lifecycle_environment
+      end
+
+      def assign_single_environment(
+        content_view_id: nil, lifecycle_environment_id: nil, environment_id: nil,
+        content_view: nil, lifecycle_environment: nil, environment: nil
+      )
+        lifecycle_environment_id ||= environment_id || lifecycle_environment&.id || environment&.id
+        content_view_id ||= content_view&.id
+
+        unless lifecycle_environment_id
+          fail _("Lifecycle environment must be specified")
+        end
+        content_view_environment = ::Katello::ContentViewEnvironment
+          .where(:content_view_id => content_view_id, :environment_id => lifecycle_environment_id)
+          .first_or_create do |cve|
+          Rails.logger.info("ContentViewEnvironment not found for content view '#{cve.content_view_name}' and environment '#{cve.environment&.name}'; creating a new one.")
+        end
+        fail _("Unable to create ContentViewEnvironment. Check the logs for more information.") if content_view_environment.nil?
+        self.content_view_environments = [content_view_environment]
+      end
+
+      def default_environment?
+        content_view_environments.any? do |cve|
+          cve.content_view.default? && cve.lifecycle_environment.library?
+        end
+      end
 
       def update_repositories_by_paths(paths)
         prefixes = %w(/pulp/deb/ /pulp/repos/ /pulp/content/)
@@ -138,13 +212,21 @@ module Katello
       end
 
       def self.in_content_view_version_environments(version_environments)
-        #takes a structure of [{:content_view_version => ContentViewVersion, :environments => [KTEnvironment]}]
+        # takes a structure of [{:content_view_version => ContentViewVersion, :environments => [KTEnvironment]}]
+        relation = self.joins(:content_view_environment_content_facets => :content_view_environment)
         queries = version_environments.map do |version_environment|
           version = version_environment[:content_view_version]
           env_ids = version_environment[:environments].map(&:id)
-          "(#{table_name}.content_view_id = #{version.content_view_id} AND #{table_name}.lifecycle_environment_id IN (#{env_ids.join(',')}))"
+          "(#{::Katello::ContentViewEnvironment.table_name}.content_view_version_id = #{version.id} AND #{::Katello::ContentViewEnvironment.table_name}.environment_id IN (#{env_ids.join(',')}))"
         end
-        where(queries.join(" OR "))
+        relation.where(queries.join(" OR "))
+      end
+
+      def self.in_content_views_and_environments(content_views: nil, lifecycle_environments: nil)
+        relation = self.joins(:content_view_environment_content_facets => :content_view_environment)
+        relation = relation.where("#{::Katello::ContentViewEnvironment.table_name}.content_view_id" => content_views) if content_views
+        relation = relation.where("#{::Katello::ContentViewEnvironment.table_name}.environment_id" => lifecycle_environments) if lifecycle_environments
+        relation
       end
 
       def self.with_non_installable_errata(errata, hosts = nil)
@@ -202,12 +284,10 @@ module Katello
              where("#{facet_repository}.content_facet_id = #{self.table_name}.id")
       end
 
-      def content_view_version
-        content_view.version(lifecycle_environment)
-      end
-
       def available_releases
-        self.content_view.version(self.lifecycle_environment).available_releases
+        self.content_view_environments.flat_map do |cve|
+          cve.content_view.version(cve.lifecycle_environment).available_releases
+        end
       end
 
       def katello_agent_installed?
@@ -230,6 +310,11 @@ module Katello
         host.get_status(::Katello::ErrataStatus).refresh!
         host.refresh_global_status!
       end
+
+      # TODO: uncomment when we need to display multiple CVE names in the UI
+      # def content_view_environment_names
+      #   content_view_environments.map(&:candlepin_name).join(', ')
+      # end
 
       def self.joins_installable_relation(content_model, facet_join_model)
         facet_repository = Katello::ContentFacetRepository.table_name
@@ -267,16 +352,14 @@ module Katello
         property :upgradable_rpm_count, Integer, desc: 'Returns upgradable RPM count'
         property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source'
         prop_group :katello_idname_props, Katello::Model, meta: { resource: 'content_source' }
-        prop_group :katello_idname_props, Katello::Model, meta: { resource: 'content_view' }
         property :errata_counts, Hash, desc: 'Returns key=value object with errata counts, e.g. {security: 0, bugfix: 0, enhancement: 0, total: 0}'
         property :kickstart_repository, 'Repository', desc: 'Returns Kickstart repository object'
         prop_group :katello_idname_props, Katello::Model, meta: { resource: 'kickstart_repository' }
-        prop_group :katello_idname_props, Katello::Model, meta: { resource: 'lifecycle_environment' }
       end
       class Jail < ::Safemode::Jail
-        allow :applicable_deb_count, :applicable_module_stream_count, :applicable_rpm_count, :content_source, :content_source_id, :content_source_name, :content_view_id,
-              :content_view_name, :errata_counts, :id, :kickstart_repository, :kickstart_repository_id, :kickstart_repository_name,
-              :lifecycle_environment_id, :lifecycle_environment_name, :upgradable_deb_count, :upgradable_module_stream_count, :upgradable_rpm_count, :uuid
+        allow :applicable_deb_count, :applicable_module_stream_count, :applicable_rpm_count, :content_source, :content_source_id, :content_source_name,
+              :errata_counts, :id, :kickstart_repository, :kickstart_repository_id, :kickstart_repository_name,
+              :upgradable_deb_count, :upgradable_module_stream_count, :upgradable_rpm_count, :uuid
       end
     end
   end

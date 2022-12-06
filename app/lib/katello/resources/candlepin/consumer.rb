@@ -34,10 +34,11 @@ module Katello
             consumers
           end
 
-          def create(env_id, parameters, activation_key_cp_ids)
+          def create(env_ids, parameters, activation_key_cp_ids, org)
             parameters['installedProducts'] ||= [] #if installed products is nil, candlepin won't attach custom products
-            url = "/candlepin/environments/#{env_id}/consumers/"
-            url += "?activation_keys=" + activation_key_cp_ids.join(",") if activation_key_cp_ids.length > 0
+            parameters['environments'] = env_ids.map { |cp_id| { id: cp_id } }
+            url = "/candlepin/consumers/?owner=#{org.label}"
+            url += "&activation_keys=" + activation_key_cp_ids.join(",") if activation_key_cp_ids.length > 0
 
             response = self.post(url, parameters.to_json, self.default_headers).body
             JSON.parse(response).with_indifferent_access
@@ -92,7 +93,7 @@ module Katello
             self.put(path(uuid), {:lastCheckin => checkin_date}.to_json, self.default_headers).body
           end
 
-          def available_pools(owner_label, uuid, listall = false)
+          def available_pools(owner_label, uuid, listall: false)
             url = Resources::Candlepin::Pool.path(nil, owner_label) + "?consumer=#{uuid}&listall=#{listall}&add_future=true"
             response = Candlepin::CandlepinResource.get(url, self.default_headers).body
             JSON.parse(response)
@@ -107,8 +108,7 @@ module Katello
             # Export is a zip file
             headers = self.default_headers
             headers['accept'] = 'application/zip'
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'export'), headers)
-            response
+            Candlepin::CandlepinResource.get(join_path(path(uuid), 'export'), headers)
           end
 
           def entitlements(uuid)

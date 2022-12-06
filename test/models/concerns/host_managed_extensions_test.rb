@@ -8,6 +8,7 @@ module Katello
     def setup
       disable_orchestration # disable foreman orchestration
       @dev = KTEnvironment.find(katello_environments(:dev).id)
+      @organization1_library = KTEnvironment.find(katello_environments(:organization1_library).id)
       @library = KTEnvironment.find(katello_environments(:library).id)
       @view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
       @library_view = ContentView.find(katello_content_views(:library_view).id)
@@ -77,31 +78,23 @@ module Katello
 
     def test_info_with_katello
       assert_nil @foreman_host.info['parameters']['content_view']
-      assert_nil @foreman_host.info['parameters']['lifecycle_environment']
       assert_equal @foreman_host.info['parameters']['foreman_host_collections'], []
 
       Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
       host_collection = katello_host_collections(:simple_host_collection)
       host_collection.hosts << @foreman_host
-
-      assert_equal @foreman_host.info['parameters']['content_view'], @foreman_host.content_view.label
-      assert_equal @foreman_host.info['parameters']['lifecycle_environment'], @foreman_host.lifecycle_environment.label
+      assert_equal @foreman_host.info['parameters']['content_view'], @foreman_host.single_content_view.label
+      assert_equal @foreman_host.info['parameters']['lifecycle_environment'], @foreman_host.single_lifecycle_environment.label
       assert_includes @foreman_host.info['parameters']['foreman_host_collections'], host_collection.name
-    end
-
-    def test_update_with_cv_env
-      host = FactoryBot.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
-      host.content_facet.content_view = @library_view
-      host.content_facet.lifecycle_environment = @library
-      assert host.content_facet.save!
     end
 
     def test_update_with_invalid_cv_env_combo
       host = FactoryBot.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
-      host.content_facet.content_view = @library_view
-      host.content_facet.lifecycle_environment = @dev
       assert_raises(ActiveRecord::RecordInvalid) do
-        host.content_facet.save!
+        host.content_facet.assign_single_environment(
+          content_view: @library_view,
+          lifecycle_environment: @organization1_library # env is not in the same org as @library_view
+        )
       end
     end
   end
@@ -193,6 +186,7 @@ module Katello
     def test_backend_update_needed?
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
       subscription_facet = host.subscription_facet
+      host.content_facet.cves_changed = false
       refute subscription_facet.backend_update_needed?
 
       subscription_facet.service_level = 'terrible'
@@ -201,13 +195,17 @@ module Katello
       subscription_facet.reload
       refute subscription_facet.backend_update_needed?
 
-      subscription_facet.host.content_facet.content_view_id = @view.id
+      subscription_facet.host.content_facet.assign_single_environment(
+        content_view: @view,
+        lifecycle_environment: @library
+      )
       assert subscription_facet.backend_update_needed?
     end
 
     def test_backend_update_needed_purpose_addons?
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
       subscription_facet = host.subscription_facet
+      host.content_facet.cves_changed = false
       refute host.subscription_facet.backend_update_needed?
 
       subscription_facet.purpose_addon_ids = [katello_purpose_addons(:addon).id]

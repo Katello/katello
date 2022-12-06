@@ -64,7 +64,7 @@ module Katello
     end
 
     def fetch_content_view(host, options = {})
-      return host.content_view if host.try(:content_view_id)
+      return host.single_content_view if host.try(:single_content_view)
       selected_host_group = options.fetch(:selected_host_group, nil)
       return selected_host_group.content_view if selected_host_group.present?
     end
@@ -75,8 +75,12 @@ module Katello
       return selected_host_group.content_source if selected_host_group.present?
     end
 
-    def accessible_lifecycle_environments(org, host)
-      selected = host.lifecycle_environment
+    def accessible_lifecycle_environments(org, host_or_hostgroup)
+      selected = if host_or_hostgroup.is_a?(::Host::Managed)
+                   host_or_hostgroup.try(:single_lifecycle_environment)
+                 else
+                   host_or_hostgroup.lifecycle_environment
+                 end
       envs = org.kt_environments.readable.order(:name)
       envs |= [selected] if selected.present? && org == selected.organization
       envs
@@ -207,9 +211,11 @@ module Katello
         if (host.is_a? ::Hostgroup)
           new_host.content_facet = hostgroup_content_facet(host, param_host)
         elsif host.content_facet.present?
-          new_host.content_facet = ::Katello::Host::ContentFacet.new(:lifecycle_environment_id => host.content_facet.lifecycle_environment_id,
-                                                          :content_view_id => host.content_facet.content_view_id,
-                                                          :content_source_id => host.content_source_id)
+          new_host.content_facet = ::Katello::Host::ContentFacet.new(:content_source_id => host.content_source_id)
+          new_host.content_facet.assign_single_environment(
+            :lifecycle_environment => host.content_facet.single_lifecycle_environment,
+            :content_view => host.content_facet.single_content_view
+          )
         end
         new_host.operatingsystem.kickstart_repos(new_host).map { |repo| OpenStruct.new(repo) }
       else
@@ -243,9 +249,11 @@ module Katello
         content_view = fetch_inherited_param(host_params[:content_view_id], ::Katello::ContentView, parent&.content_view)
         content_source = fetch_inherited_param(host_params[:content_source_id], ::SmartProxy, parent&.content_source)
 
-        host.content_facet = Host::ContentFacet.new(:lifecycle_environment_id => lifecycle_env.id,
-                                                    :content_view_id => content_view.id,
-                                                    :content_source => content_source)
+        host.content_facet = Host::ContentFacet.new(:content_source => content_source)
+        host.content_facet.assign_single_environment(
+          :lifecycle_environment_id => lifecycle_env.id,
+          :content_view_id => content_view.id
+        )
         if host.operatingsystem.is_a?(Redhat)
           view_options = host.operatingsystem.kickstart_repos(host).map { |repo| OpenStruct.new(repo) }
         end
@@ -302,22 +310,45 @@ module Katello
 
     private
 
-    def hostgroup_content_facet(hostgroup, param_host)
+    def inherited_or_own_content_source_id(host_or_hostgroup, hostgroup)
+      content_source_id = hostgroup.inherited_content_source_id
+      if host_or_hostgroup.content_source_id && (hostgroup.inherited_content_source_id != host_or_hostgroup.content_source_id)
+        content_source_id = host_or_hostgroup.content_source_id
+      end
+      content_source_id
+    end
+
+    def inherited_or_own_facet_attributes(host_or_hostgroup, hostgroup)
       lifecycle_environment_id = hostgroup.inherited_lifecycle_environment_id
       content_view_id = hostgroup.inherited_content_view_id
-      content_source_id = hostgroup.inherited_content_source_id
-      if param_host.lifecycle_environment_id && (hostgroup.inherited_lifecycle_environment_id != param_host.lifecycle_environment_id)
-        lifecycle_environment_id = param_host.lifecycle_environment_id
+      case host_or_hostgroup
+      when ::Hostgroup
+        if host_or_hostgroup.lifecycle_environment_id && (hostgroup.inherited_lifecycle_environment_id != host_or_hostgroup.lifecycle_environment_id)
+          lifecycle_environment_id = host_or_hostgroup.lifecycle_environment_id
+        end
+        if host_or_hostgroup.content_view_id && (hostgroup.inherited_content_view_id != host_or_hostgroup.content_view_id)
+          content_view_id = host_or_hostgroup.content_view_id
+        end
+      when ::Host::Managed
+        if host_or_hostgroup.single_lifecycle_environment && (hostgroup.inherited_lifecycle_environment_id != host_or_hostgroup.single_lifecycle_environment.id)
+          lifecycle_environment_id = host_or_hostgroup.single_lifecycle_environment.id
+        end
+        if host_or_hostgroup.single_content_view && (hostgroup.inherited_content_view_id != host_or_hostgroup.single_content_view.id)
+          content_view_id = host_or_hostgroup.single_content_view.id
+        end
       end
-      if param_host.content_view_id && (hostgroup.inherited_content_view_id != param_host.content_view_id)
-        content_view_id = param_host.content_view_id
-      end
-      if param_host.content_source_id && (hostgroup.inherited_content_source_id != param_host.content_source_id)
-        content_source_id = param_host.content_source_id
-      end
-      ::Katello::Host::ContentFacet.new(:lifecycle_environment_id => lifecycle_environment_id,
-                                        :content_view_id => content_view_id,
-                                        :content_source_id => content_source_id)
+      [lifecycle_environment_id, content_view_id]
+    end
+
+    def hostgroup_content_facet(hostgroup, param_host)
+      lifecycle_environment_id, content_view_id = inherited_or_own_facet_attributes(param_host, hostgroup)
+      content_source_id = inherited_or_own_content_source_id(param_host, hostgroup)
+      facet = ::Katello::Host::ContentFacet.new(:content_source_id => content_source_id)
+      facet.assign_single_environment(
+        :lifecycle_environment_id => lifecycle_environment_id,
+        :content_view_id => content_view_id
+      )
+      facet
     end
   end
 end

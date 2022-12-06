@@ -63,20 +63,30 @@ module Katello
       def variant_repos(host, variant)
         if variant && host.content_source
           product_id = host.try(:content_facet).try(:kickstart_repository).try(:product_id) || host.try(:kickstart_repository).try(:product_id)
-          distros = distribution_repositories(host)
+          distribution_repositories(host)
             .joins(:product)
             .where("#{Katello::Repository.table_name}.distribution_variant LIKE :variant", { variant: "%#{variant}%" })
             .where("#{Katello::Product.table_name}.id": product_id).collect { |repo| repo.to_hash(host.content_source, true) }
-          distros
         end
       end
 
       def distribution_repositories(host, content_facet: nil)
         content_facet ||= host.content_facet
-        content_view = content_facet.try(:content_view) || host.try(:content_view)
-        lifecycle_environment = content_facet.try(:lifecycle_environment) || host.try(:lifecycle_environment)
-        if content_view && lifecycle_environment && host.os && host.architecture
-          Katello::Repository.in_environment(lifecycle_environment).in_content_views([content_view]).
+        case content_facet
+        when ::Katello::Host::ContentFacet
+          if content_facet.new_record?
+            content_views = ::Katello::ContentView.where(id: content_facet.content_view_environments.map(&:content_view_id))
+            lifecycle_environments = ::Katello::KTEnvironment.where(id: content_facet.content_view_environments.map(&:environment_id))
+          else
+            content_views = content_facet.try(:content_views) || host.try(:content_views)
+            lifecycle_environments = content_facet.try(:lifecycle_environments) || host.try(:lifecycle_environments)
+          end
+        when ::Katello::Hostgroup::ContentFacet
+          content_views = [content_facet.try(:content_view), host.try(:content_views)].flatten.compact
+          lifecycle_environments = [content_facet.try(:lifecycle_environment), host.try(:lifecycle_environments)].flatten.compact
+        end
+        if content_views.present? && lifecycle_environments.present? && host.os && host.architecture
+          Katello::Repository.in_environment(lifecycle_environments).in_content_views(content_views).
               where(:distribution_arch => host.architecture.name).
               where("#{Katello::Repository.table_name}.distribution_version = :release or #{Katello::Repository.table_name}.distribution_version like :match",
                       release: host.os.release, match: "#{host.os.release}.%")

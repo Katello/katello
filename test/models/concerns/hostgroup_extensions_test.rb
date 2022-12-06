@@ -190,7 +190,6 @@ module Katello
       # changing the lifecycle environment will trigger
       # code which attempts to reassign the kickstart repo by its label
       hg.lifecycle_environment = @dev_distro.environment
-
       assert hg.save
       assert_equal hg.kickstart_repository_id, @dev_distro.id
     end

@@ -413,7 +413,15 @@ module Katello
     end
 
     def test_check_remove_from_environment!
-      @dev.hosts.destroy_all
+      facets = ::Katello::Host::ContentFacet.in_content_views_and_environments(
+        lifecycle_environments: [@dev]
+      )
+      host_ids = facets.joins(:host).select('hosts.id').pluck('hosts.id')
+      facets.each do |facet|
+        facet&.host&.subscription_facet&.destroy
+        facet&.destroy
+      end
+      ::Host::Managed.where(id: host_ids).destroy_all
       assert @library_dev_view.check_remove_from_environment!(@dev)
 
       @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_dev_view,
@@ -615,7 +623,9 @@ module Katello
       refute_equal facet.host.location, other_location
       assert_nothing_raised do
         Location.as_taxonomy(facet.host.organization, other_location) do
-          facet.content_view.update_host_statuses(facet.lifecycle_environment)
+          facet.content_view_environments.each do |cve|
+            cve.content_view.update_host_statuses(cve.lifecycle_environment)
+          end
         end
       end
     end

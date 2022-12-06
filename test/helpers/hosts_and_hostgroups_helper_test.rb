@@ -13,7 +13,8 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
 
     @library = katello_environments(:library)
     @host =  FactoryBot.build(:host, :with_content, :with_subscription, :id => 343)
-    content_facet = Katello::Host::ContentFacet.new(
+    content_facet = Katello::Host::ContentFacet.new
+    content_facet.assign_single_environment(
       :content_view => katello_content_views(:library_dev_view),
       :lifecycle_environment => katello_environments(:library)
     )
@@ -33,7 +34,7 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
     @host.reload
     User.current = FactoryBot.create(:user)
     envs = accessible_lifecycle_environments(@library.organization, @host)
-    assert_equal([@host.content_facet.lifecycle_environment], envs)
+    assert_equal([@host.content_facet.single_lifecycle_environment], envs)
   end
 
   def test_relevant_organizations
@@ -94,8 +95,8 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     @os.expects(:kickstart_repos).returns(ret).with do |host|
       assert_instance_of(::Host::Managed, host)
       assert_equal @os, host.os
-      assert_equal @env, host.content_facet.lifecycle_environment
-      assert_equal @cv, host.content_facet.content_view
+      assert_equal @env, host.content_facet.single_lifecycle_environment
+      assert_equal @cv, host.content_facet.single_content_view
       assert_equal @content_source, host.content_source
       assert_equal @arch, host.architecture
     end
@@ -114,8 +115,8 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     @os.expects(:kickstart_repos).returns(ret).with do |param_host|
       assert_instance_of ::Host::Managed, param_host
       assert_equal @os, param_host.os
-      assert_equal @env, param_host.content_facet.lifecycle_environment
-      assert_equal @cv, param_host.content_facet.content_view
+      assert_equal @env, param_host.content_facet.single_lifecycle_environment
+      assert_equal @cv, param_host.content_facet.single_content_view
       assert_equal @content_source, param_host.content_source
       assert_equal @arch, param_host.architecture
     end
@@ -150,8 +151,8 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     @os.expects(:kickstart_repos).returns(ret).with do |param_host|
       assert_instance_of ::Host::Managed, param_host
       assert_equal @os, param_host.os
-      assert_equal @env, param_host.content_facet.lifecycle_environment
-      assert_equal @cv, param_host.content_facet.content_view
+      assert_equal @env, param_host.content_facet.single_lifecycle_environment
+      assert_equal @cv, param_host.content_facet.single_content_view
       assert_equal @content_source, param_host.content_source
       assert_equal @arch, param_host.architecture
     end
@@ -176,8 +177,8 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     @os.expects(:kickstart_repos).returns(ret).with do |param_host|
       assert_instance_of ::Host::Managed, param_host
       assert_equal @os, param_host.os
-      assert_equal @env, param_host.content_facet.lifecycle_environment
-      assert_equal @cv, param_host.content_facet.content_view
+      assert_equal @env, param_host.content_facet.single_lifecycle_environment
+      assert_equal @cv, param_host.content_facet.single_content_view
       assert_equal @content_source, param_host.content_source
       assert_equal @arch, param_host.architecture
     end
@@ -189,9 +190,12 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
 
   test "kickstart_repository_options should provide options for a populated host with a selected_host_group and differing consumed content" do
     host = ::Host.new
-    host.content_facet = ::Katello::Host::ContentFacet.new(:lifecycle_environment_id => 997,
-                                                           :content_view_id => 998,
-                                                           :content_source_id => 999)
+    host.content_facet = ::Katello::Host::ContentFacet.new(:content_source_id => 999)
+    host.content_facet.assign_single_environment(
+      lifecycle_environment_id: 997,
+      content_view_id: 998
+    )
+    host.content_facet.content_view_environments.first.stubs(:generate_info)
     hostgroup = ::Hostgroup.new(
       :content_facet_attributes => {
         :lifecycle_environment_id => @env.id,
@@ -205,8 +209,6 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     @os.expects(:kickstart_repos).returns(ret).with do |param_host|
       assert_instance_of ::Host::Managed, param_host
       assert_equal @os, param_host.os
-      assert_equal 997, param_host.content_facet.lifecycle_environment_id
-      assert_equal 998, param_host.content_facet.content_view_id
       assert_equal 999, param_host.content_facet.content_source_id
       assert_equal @arch, param_host.architecture
     end
@@ -357,9 +359,12 @@ class HostAndHostGroupsHelperContentSourceTests < HostsAndHostGroupsHelperTestBa
     )
     host = FactoryBot.build_stubbed(
       :host,
+      :with_content,
+      :content_source => nil,
       :hostgroup => hostgroup
     )
-    host.content_source = smart_proxy_host
+    host.content_facet.content_source_id = smart_proxy_host.id
+    host.expects(:content_source).returns(smart_proxy_host) # this host has a content_source_id but content_source returns nil because it's not really saved
     assert_equal(
       smart_proxy_host,
       fetch_content_source(host, :selected_host_group => hostgroup)

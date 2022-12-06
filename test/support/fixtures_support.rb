@@ -8,6 +8,7 @@ module Katello
       :katello_contents => Katello::Content,
       :katello_content_views => Katello::ContentView,
       :katello_content_view_environments => Katello::ContentViewEnvironment,
+      :katello_content_view_environment_content_facets => Katello::ContentViewEnvironmentContentFacet,
       :katello_content_view_filters => Katello::ContentViewFilter,
       :katello_content_view_erratum_filter_rules => Katello::ContentViewErratumFilterRule,
       :katello_content_view_package_filter_rules => Katello::ContentViewPackageFilterRule,

@@ -12,6 +12,7 @@ module Katello
       @environment = katello_environments(:library)
 
       Katello::Candlepin::Consumer.any_instance.stubs(:entitlement_status).returns(Katello::Candlepin::Consumer::ENTITLEMENTS_VALID)
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
 
       ENV['HOSTS'] = nil
       ENV['DRYRUN'] = nil

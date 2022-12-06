@@ -62,7 +62,7 @@ module Katello
                   end
                   fk_columns.flatten!
                   fk_columns.uniq!
-                  msg = "Foreign Key not defined for  #{model.table_name}.#{association.foreign_key}"
+                  msg = "Foreign key constraint not defined for #{model.table_name}.#{association.foreign_key}"
                   assert_includes fk_columns, association.foreign_key.to_s, msg
                 end
               end

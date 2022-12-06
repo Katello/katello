@@ -8,7 +8,7 @@
 
 <% env_select_id = using_hostgroups_page? ? :hostgroup_lifecycle_environment_id : :host_lifecycle_environment_id %>
 <% env_select_name =  using_hostgroups_page? ? 'hostgroup[lifecycle_environment_id]' : 'host[content_facet_attributes][lifecycle_environment_id]' %>
-<% env_select_attr = using_hostgroups_page? ? 'lifecycle_environment' : 'content_facet.lifecycle_environment' %>
+<% env_select_attr = using_hostgroups_page? ? 'lifecycle_environment' : 'content_facet.single_lifecycle_environment' %>
 
 <%= field(f, env_select_attr, {:label => _("Lifecycle Environment")}) do
   if using_hostgroups_page?
@@ -21,7 +21,7 @@ end %>
 
 <% cv_select_id =  using_hostgroups_page? ? :hostgroup_content_view_id : :host_content_view_id %>
 <% cv_select_name =  using_hostgroups_page? ? 'hostgroup[content_view_id]' : 'host[content_facet_attributes][content_view_id]' %>
-<% cv_select_attr = using_hostgroups_page? ? 'content_view' : 'content_facet.content_view' %>
+<% cv_select_attr = using_hostgroups_page? ? 'content_view' : 'content_facet.single_content_view' %>
 <%= field(f, cv_select_attr, {:label => _("Content View")}) do
   if using_hostgroups_page?
     select_tag cv_select_id,  content_views_for_host(@hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_view)), :data => {"spinner_path" => spinner_path},

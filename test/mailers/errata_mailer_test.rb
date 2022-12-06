@@ -54,12 +54,15 @@ module Katello
     def test_promote_errata
       view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
       @errata_host.content_facet.bound_repositories = [view_repo]
-      @errata_host.content_facet.content_view = katello_content_views(:acme_default)
+      @errata_host.content_facet.assign_single_environment(
+        content_view: katello_content_views(:acme_default),
+        lifecycle_environment: katello_environments(:library)
+      )
       @errata_host.content_facet.save!
 
       ActionMailer::Base.deliveries = []
-      MailNotification[:promote_errata].deliver(:users => [@user], :content_view => @errata_host.content_facet.content_view,
-                                                        :environment => @errata_host.content_facet.lifecycle_environment)
+      MailNotification[:promote_errata].deliver(:users => [@user], :content_view => @errata_host.single_content_view,
+                                                        :environment => @errata_host.single_lifecycle_environment)
       email = ActionMailer::Base.deliveries.first
       assert_includes email.body.encoded, 'RHSA-1999-1231'
     end

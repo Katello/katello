@@ -78,9 +78,9 @@ module ::Actions::Katello::ContentView
       it 'updates errata counts and status' do
         content_facet = katello_content_facets(:content_facet_two)
         action.stubs(:input).returns(
-          content_view_version_id: content_facet.content_view_version.id,
-          content_view_id: content_facet.content_view_id,
-          environment_id: content_facet.lifecycle_environment_id,
+          content_view_version_id: content_facet.content_view_environments.first.content_view_version.id,
+          content_view_id: content_facet.content_view_environments.first.content_view_id,
+          environment_id: content_facet.content_view_environments.first.environment_id,
           history_id: Katello::ContentViewHistory.first.id
         )
         Katello::Host::ContentFacet.any_instance.expects(:update_applicability_counts)
@@ -125,8 +125,8 @@ module ::Actions::Katello::ContentView
       it 'updates errata counts and status' do
         content_facet = katello_content_facets(:content_facet_two)
         action.stubs(:input).returns(
-          content_view_id: content_facet.content_view_id,
-          environment_id: content_facet.lifecycle_environment_id,
+          content_view_id: content_facet.content_view_environments.first.content_view_id,
+          environment_id: content_facet.content_view_environments.first.environment_id,
           history_id: Katello::ContentViewHistory.first.id
         )
         Katello::Host::ContentFacet.any_instance.expects(:update_applicability_counts)
@@ -269,8 +269,6 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans for removing environments' do
-      Katello::Host::ContentFacet.update_all(content_view_id: content_view.id)
-
       assert_raises(RuntimeError) do
         action.validate_options(content_view, [cv_env], [], {})
       end

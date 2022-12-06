@@ -8,7 +8,7 @@ module Katello
     end
 
     def test_for_content_facets
-      cve = @content_facet.content_view.content_view_environment(@content_facet.lifecycle_environment)
+      cve = @content_facet.content_view_environments.first
       assert_includes ContentViewEnvironment.for_content_facets(@content_facet), cve
     end
 

@@ -1,17 +1,11 @@
 content_facet_one:
   host_id:  <%= ActiveRecord::FixtureSet.identify(:one) %>
-  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view) %>
-  lifecycle_environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
   uuid: "content_facet_one"
 
 content_facet_two:
   host_id:  <%= ActiveRecord::FixtureSet.identify(:two) %>
-  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view) %>
-  lifecycle_environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
   uuid: "content_facet_two"
 
 without_errata:
   host_id:  <%= ActiveRecord::FixtureSet.identify(:without_errata) %>
-  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view) %>
-  lifecycle_environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
   uuid: "without_errata"

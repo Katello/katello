@@ -25,8 +25,11 @@ module Katello
                      :complete_value => TRACE_STATUS_MAP
 
         #associations for simpler scoped searches
-        has_one :content_view, :through => :content_facet
-        has_one :lifecycle_environment, :through => :content_facet
+        has_many :content_view_environment_content_facets, through: :content_facet, class_name: 'Katello::ContentViewEnvironmentContentFacet'
+        has_many :content_view_environments, through: :content_view_environment_content_facets
+        has_many :content_views, through: :content_view_environments
+        has_many :lifecycle_environments, through: :content_view_environments
+
         has_one :content_source, :through => :content_facet
         has_many :content_facet_errata, :through => :content_facet, :class_name => 'Katello::ContentFacetErratum'
         has_many :applicable_errata, :through => :content_facet_errata, :source => :erratum
@@ -37,10 +40,8 @@ module Katello
         has_many :bound_root_repositories, :through => :content_facet
         has_many :bound_content, :through => :content_facet
 
-        scoped_search :relation => :content_view, :on => :name, :complete_value => true, :rename => :content_view
-        scoped_search :relation => :content_facet, :on => :content_view_id, :rename => :content_view_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
-        scoped_search :relation => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment
-        scoped_search :relation => :content_facet, :on => :lifecycle_environment_id, :rename => :lifecycle_environment_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
+        scoped_search :relation => :content_views, :on => :name, :complete_value => true, :rename => :content_views
+        scoped_search :relation => :lifecycle_environments, :on => :name, :complete_value => true, :rename => :lifecycle_environments
         scoped_search :relation => :applicable_errata, :on => :errata_id, :rename => :applicable_errata, :complete_value => true, :ext_method => :find_by_applicable_errata, :only_explicit => true
         scoped_search :relation => :applicable_errata, :on => :errata_id, :rename => :installable_errata, :complete_value => true, :ext_method => :find_by_installable_errata, :only_explicit => true
         scoped_search :relation => :applicable_errata, :on => :issued, :rename => :applicable_errata_issued, :complete_value => true, :only_explicit => true
@@ -68,8 +69,8 @@ module Katello
         end
 
         apipie :class do
-          property :content_view, 'ContentView', desc: 'Returns content view associated with the host'
-          property :lifecycle_environment, 'KTEnvironment', desc: 'Returns lifecycle environment object associated with the host'
+          property :content_views, 'ContentView', desc: 'Returns content views associated with the host'
+          property :lifecycle_environments, 'KTEnvironment', desc: 'Returns lifecycle environment objects associated with the host'
           property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source for the host'
           property :applicable_errata, array_of: 'Erratum', desc: 'Returns errata applicable to the host'
         end
@@ -154,15 +155,25 @@ module Katello
           end
         end
 
-        def in_content_view_environment(content_view: nil, lifecycle_environment: nil)
-          relation = self.joins(:content_facet)
-          relation = relation.where("#{::Katello::Host::ContentFacet.table_name}.content_view_id" => content_view) if content_view
-          relation = relation.where("#{::Katello::Host::ContentFacet.table_name}.lifecycle_environment_id" => lifecycle_environment) if lifecycle_environment
+        def in_content_view_environments(content_views: nil, lifecycle_environments: nil)
+          relation = self.joins(:content_facet => {:content_view_environment_content_facets => :content_view_environment })
+          relation = relation.where("#{::Katello::ContentViewEnvironment.table_name}.content_view_id" => content_views) if content_views
+          relation = relation.where("#{::Katello::ContentViewEnvironment.table_name}.environment_id" => lifecycle_environments) if lifecycle_environments
           relation
         end
 
+        def in_environments(lifecycle_environments)
+          in_content_view_environments(:lifecycle_environments => lifecycle_environments)
+        end
+
+        def in_content_view_environment(content_view: nil, lifecycle_environment: nil)
+          Rails.logger.warn "DEPRECATION WARNING: in_content_view_environment is deprecated and will be removed in Katello 4.8.  Please use in_content_view_environments instead."
+          in_content_view_environments(:content_views => content_view, :lifecycle_environments => lifecycle_environment)
+        end
+
         def in_environment(lifecycle_environment)
-          in_content_view_environment(:lifecycle_environment => lifecycle_environment)
+          Rails.logger.warn "DEPRECATION WARNING: in_environment is deprecated and will be removed in Katello 4.9.  Please use in_environments instead."
+          in_environments(lifecycle_environment)
         end
 
         private
@@ -189,5 +200,5 @@ module Katello
 end
 
 class ::Host::Managed::Jail < Safemode::Jail
-  allow :content_view, :lifecycle_environment, :content_source, :applicable_errata
+  allow :content_source, :applicable_errata
 end
