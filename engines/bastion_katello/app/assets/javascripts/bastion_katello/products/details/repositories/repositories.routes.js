@@ -169,7 +169,7 @@
         })
         .state('product.repository.tasks.index', {
             url: '/tasks',
-            permission: 'view_repositories',
+            permission: 'view_products',
             templateUrl: 'products/details/repositories/details/views/repository-tasks.html',
             ncyBreadcrumb: {
                 label: "{{'Tasks' | translate }}",
@@ -178,7 +178,7 @@
         })
         .state('product.repository.tasks.details', {
             url: '/tasks/:taskId',
-            permission: 'view_repositories',
+            permission: 'view_products',
             controller: 'TaskDetailsController',
             templateUrl: 'tasks/views/task-details.html',
             ncyBreadcrumb: {
