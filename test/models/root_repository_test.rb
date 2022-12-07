@@ -325,6 +325,15 @@ module Katello
       assert_nil @root.audits.last.audited_changes["upstream_authentication_token"]
     end
 
+    def test_invalid_ignore_srpms
+      @root.content_type = 'yum'
+      @root.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
+      @root.ignorable_content = ['srpm']
+      @root.mirroring_policy = 'mirror_complete'
+      assert_not_valid @root
+      assert_equal @root.errors[:ignorable_content], ["Ignore SRPMs can not be set in combination with 'Complete Mirroring' mirroring policy."]
+    end
+
     test_attributes :pid => '1b428129-7cf9-449b-9e3b-74360c5f9eca'
     def test_update_with_valid_name
       valid_name_list.each do |new_name|
