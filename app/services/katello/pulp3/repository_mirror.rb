@@ -132,6 +132,7 @@ module Katello
         sync_params = repo_service.sync_url_params(options)
         sync_params[:remote] = remote_href
         if repo.yum?
+          sync_params.delete(:skip_types) if sync_params[:skip_types]
           sync_params[:sync_policy] = 'mirror_complete'
         else
           sync_params.delete(:sync_policy)
