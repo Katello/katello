@@ -228,7 +228,7 @@ module Katello
       elsif ignorable_content.any? { |item| !IGNORABLE_CONTENT_UNIT_TYPES.include?(item) }
         errors.add(:ignorable_content, N_("Invalid value specified for ignorable content. Permissible values %s") % IGNORABLE_CONTENT_UNIT_TYPES.join(","))
       elsif self.mirroring_policy == MIRRORING_POLICY_COMPLETE
-        errors.add(:ignorable_content, N_("Ignore SRPMs can not be set in combination with 'Complete Mirroring' mirroring policy."))
+        errors.add(:ignorable_content, N_("Ignore %s can not be set in combination with 'Complete Mirroring' mirroring policy.") % IGNORABLE_CONTENT_UNIT_TYPES.join(","))
       end
     end
 
