@@ -1,9 +1,15 @@
-# 4.7.0 Whiskey Sour (2022-11-28)
+# 4.7.0 Whiskey Sour (2022-12-08)
 
 ## Features
 
 ### Subscriptions
  * Katello should use the newer asynchronous Candlepin endpoint to export manifests ([#35734](https://projects.theforeman.org/issues/35734), [fce0a6d7](https://github.com/Katello/katello.git/commit/fce0a6d7eeca412a3586c74759f423e99cc6155f))
+
+### Repositories
+ * Use pulp_deb optimize sync mode for most APT repo syncs ([#35693](https://projects.theforeman.org/issues/35693), [a077047c](https://github.com/Katello/katello.git/commit/a077047c4ea08e249875043f4ddb5de4601a049e))
+ * Remove ACS from labs and place it in the Content section ([#35608](https://projects.theforeman.org/issues/35608), [aa0a02f5](https://github.com/Katello/katello.git/commit/aa0a02f5f96b3f35d3e94636b7ec53ef1623b244))
+ * - Add rhel-6-server-els-rpms repository under recommended repositories ([#35539](https://projects.theforeman.org/issues/35539), [af29276c](https://github.com/Katello/katello.git/commit/af29276c8590d8bad7eb3e4c27659a773b14276b), [10795f8f](https://github.com/Katello/katello.git/commit/10795f8f647562d757e67d9c5d74373e1ae6eadf))
+ * Add Alternate Content Sources tab to content credentials ([#35344](https://projects.theforeman.org/issues/35344), [6ec0e826](https://github.com/Katello/katello.git/commit/6ec0e826b64dda5bad1080112f83d35c586bfb03))
 
 ### Errata Management
  * Show applicable errata on ErrataOverviewCard ([#35668](https://projects.theforeman.org/issues/35668), [4978b131](https://github.com/Katello/katello.git/commit/4978b1314d7fd7d0a6d513353af6690a20426170))
@@ -18,11 +24,7 @@
  * CVV Compare - Add sorting to the tables ([#35613](https://projects.theforeman.org/issues/35613), [ed08beb6](https://github.com/Katello/katello.git/commit/ed08beb6cd98dbd70959f5f8b9836f6fc22c8017))
  * CVV Compare - Add repository subtab to content view compare ([#35589](https://projects.theforeman.org/issues/35589), [3bc91588](https://github.com/Katello/katello.git/commit/3bc91588f71a3cb41825b9ed448d994364967f43))
  * - Add static ouia-id to modal with wizard for publishing a cv ([#35370](https://projects.theforeman.org/issues/35370), [bd2c2c16](https://github.com/Katello/katello.git/commit/bd2c2c16dac397398d050e1a2199cb66b21a1771), [e6d6576a](https://github.com/Katello/katello.git/commit/e6d6576ac7392b9a8c38a14678cffe9005d8a856))
-
-### Repositories
- * Remove ACS from labs and place it in the Content section ([#35608](https://projects.theforeman.org/issues/35608), [aa0a02f5](https://github.com/Katello/katello.git/commit/aa0a02f5f96b3f35d3e94636b7ec53ef1623b244))
- * - Add rhel-6-server-els-rpms repository under recommended repositories ([#35539](https://projects.theforeman.org/issues/35539), [af29276c](https://github.com/Katello/katello.git/commit/af29276c8590d8bad7eb3e4c27659a773b14276b), [10795f8f](https://github.com/Katello/katello.git/commit/10795f8f647562d757e67d9c5d74373e1ae6eadf))
- * Add Alternate Content Sources tab to content credentials ([#35344](https://projects.theforeman.org/issues/35344), [6ec0e826](https://github.com/Katello/katello.git/commit/6ec0e826b64dda5bad1080112f83d35c586bfb03))
+ * CVVersion Compare - add support for different content types  ([#35220](https://projects.theforeman.org/issues/35220), [1a40f0c2](https://github.com/Katello/katello.git/commit/1a40f0c275a8e0b519e66a65bee8a3b300d9cc9b))
 
 ### Inter Server Sync
  * Make syncable import accept a url instead of a path ([#35606](https://projects.theforeman.org/issues/35606), [6a705229](https://github.com/Katello/katello.git/commit/6a705229041682536ed504de8dc81cd88989194e), [3b4052ec](https://github.com/Katello/hammer-cli-katello.git/commit/3b4052ec1c5b0e2729ed1a58edefde711f11f771))
@@ -35,12 +37,24 @@
 ### Sync Plans
  * Capsule Last Sync date and status should not be based on task data. ([#35407](https://projects.theforeman.org/issues/35407), [b5962efe](https://github.com/Katello/katello.git/commit/b5962efe644cb3fbb2bafa46b301aa7e1f847d0f))
 
-### Other
- * CVVersion Compare - add support for different content types  ([#35220](https://projects.theforeman.org/issues/35220), [1a40f0c2](https://github.com/Katello/katello.git/commit/1a40f0c275a8e0b519e66a65bee8a3b300d9cc9b))
+### Alternate Content Sources
  * As a user, I can bulk delete and refresh ACSs via the UI ([#33464](https://projects.theforeman.org/issues/33464), [012aca74](https://github.com/Katello/katello.git/commit/012aca74de9b4414bf233701a6e091936c3a78d0))
  * As a user, I can create CDN and RHUI ACSs via the UI ([#33463](https://projects.theforeman.org/issues/33463), [706094cb](https://github.com/Katello/katello.git/commit/706094cbf79f4bebb0d4e9a9628f21a7b2badebb))
 
 ## Bug Fixes
+
+### Hosts
+ * Hosts filter isn't working with host_ids URL param ([#35810](https://projects.theforeman.org/issues/35810), [a06d6471](https://github.com/Katello/katello.git/commit/a06d64715c37f11e08f823c48d1936fd2955f40c))
+ * new host details - Repository sets pagination ignores filters ([#35795](https://projects.theforeman.org/issues/35795), [5b7ede35](https://github.com/Katello/katello.git/commit/5b7ede358cbf28c23c0f23c9840a5aecf2cecd8f))
+ * Don't use the term 'Subscription Watch' any more ([#35704](https://projects.theforeman.org/issues/35704), [8cf95988](https://github.com/Katello/katello.git/commit/8cf959880228feac08f8934a0fd25f026f90ea3e))
+ * Content change template assumes host has a kickstart repository available ([#35566](https://projects.theforeman.org/issues/35566), [b7aea089](https://github.com/Katello/katello.git/commit/b7aea08962a97dfaa00b069c16cd380bd477a928))
+ * Changing content source for a host breaks REX pull, if configured ([#35516](https://projects.theforeman.org/issues/35516), [a6427862](https://github.com/Katello/katello.git/commit/a64278629616b6b7e378ef1375b7eda80012e13a))
+ * Packages tab - Add dropdown to select upgrade version ([#35452](https://projects.theforeman.org/issues/35452), [b80d6220](https://github.com/Katello/katello.git/commit/b80d622028ff391c0763098bab1fdd3c5f0dcebe))
+ * Host UI - cards have cursor pointer ([#35441](https://projects.theforeman.org/issues/35441), [cfb8779d](https://github.com/Katello/katello.git/commit/cfb8779d0885d3044e8f5f209fccb56884035d8d))
+ * '0 enhancements' text sometimes overflows Errata overview card ([#35399](https://projects.theforeman.org/issues/35399), [8df695ac](https://github.com/Katello/katello.git/commit/8df695ac76fef4a0f30789bad5c311858b915f6c))
+ * Add host collections card empty state ([#35372](https://projects.theforeman.org/issues/35372), [309624be](https://github.com/Katello/katello.git/commit/309624be4ea2e89cf14427fd80f03612456e4a3f))
+ * New host details - Hide module streams tab for EL7 hosts ([#34973](https://projects.theforeman.org/issues/34973), [9d6b86d1](https://github.com/Katello/katello.git/commit/9d6b86d1cae62f6b0f09725e45908c7fcfbc1421))
+ * Use synced content broken if hostgroup is set to all media ([#35624](https://projects.theforeman.org/issues/35624), [6b36dea1](https://github.com/Katello/katello.git/commit/6b36dea1b9be7208c89a468703f7f1d9c56045c5))
 
 ### Tooling
  * Create Georgian translations in Katello  ([#35782](https://projects.theforeman.org/issues/35782), [b18dab85](https://github.com/Katello/katello.git/commit/b18dab85c6941e86112309aea21e224e8762fc3c))
@@ -48,18 +62,21 @@
  * When installing errata via katello-agent, content_action_finish_timeout is ignored and tasks don't wait for client status to finish ([#35364](https://projects.theforeman.org/issues/35364), [fe90a5c6](https://github.com/Katello/katello.git/commit/fe90a5c6bd6ad5f2bcc4101f406c23ec41616e88))
  * [Upgrade Pulp Deb] pulp-deb fails to sync repo with a package that contains + in the name ([#35148](https://projects.theforeman.org/issues/35148))
 
+### Foreman Proxy Content
+ * Add pulp_deb monkeypatch for pulp 3.21 - 3.18 sync ([#35776](https://projects.theforeman.org/issues/35776), [28e0136a](https://github.com/Katello/katello.git/commit/28e0136ae8c9820a1cd179eb0ab02781bfbf21dc))
+ *  Error "no certificate or crl found" when using a http proxy as "Default Http Proxy" for content syncing or manifest operations  ([#35773](https://projects.theforeman.org/issues/35773), [54334bf5](https://github.com/Katello/katello.git/commit/54334bf5cadcd372996839e6ecd0fd2277ec19ea))
+ * Orphaned ACSs should be cleaned from smart proxies ([#35736](https://projects.theforeman.org/issues/35736), [28a7171e](https://github.com/Katello/katello.git/commit/28a7171ed3be4fdb0ebd96bfad2304b05f0ea080))
+ * Can't sync container repos from pulp_container 2.14 to proxies with pulp_container 2.10 ([#35688](https://projects.theforeman.org/issues/35688), [71218935](https://github.com/Katello/katello.git/commit/71218935e3e8204fc7d58dcd6922efd1a50da079))
+ * Accessing an external capsule from UI, shows "Last sync failed: 404 Not Found" even if the last capsule content sync was successful in Satellite 6.12 ([#35552](https://projects.theforeman.org/issues/35552), [26b1d1ba](https://github.com/Katello/katello.git/commit/26b1d1ba05100caff0fe17d64483fc6fb48f39a0))
+ * Assign HTTP Proxies to ACSs per smart proxy rather than per ACS ([#34897](https://projects.theforeman.org/issues/34897), [e95e87ef](https://github.com/Katello/katello.git/commit/e95e87ef4253c62785fecbb91541cb5f81f2b3e6))
+
 ### Content Views
+ * Composite content view versions can be emptied out during same-repo merging ([#35740](https://projects.theforeman.org/issues/35740), [d793dda2](https://github.com/Katello/katello.git/commit/d793dda2a36d70a8aefae2cb14f9226552dda690))
  * Content view filter errata by  id will include module streams of other repos/arches ([#35737](https://projects.theforeman.org/issues/35737), [279073d7](https://github.com/Katello/katello.git/commit/279073d7446e1cbf096437c1533925e83e4b7b31))
  * Content view filter will include module streams of other repos/arches if the errata contain rpms in multiple repos/arches. ([#35610](https://projects.theforeman.org/issues/35610), [3cff7f7c](https://github.com/Katello/katello.git/commit/3cff7f7c20a7e468feef002014ff694aa3e43b1b))
  * Make cv publish fail on invalid/non existent content ([#35572](https://projects.theforeman.org/issues/35572), [7664477e](https://github.com/Katello/katello.git/commit/7664477e77e54bb44d6475b64784e511880a49f1))
  * Navigating to content view page from the left panel after creating a cv does not work ([#35511](https://projects.theforeman.org/issues/35511), [50d5cd97](https://github.com/Katello/katello.git/commit/50d5cd97f9a08abed982f2a1dd42c8a98b90a7cf))
  * Input sanitation of Content View Names not working ([#35235](https://projects.theforeman.org/issues/35235), [2509fae9](https://github.com/Katello/katello.git/commit/2509fae91199c4bb886c70d06e488985f8b4b521))
-
-### Foreman Proxy Content
- * Orphaned ACSs should be cleaned from smart proxies ([#35736](https://projects.theforeman.org/issues/35736), [28a7171e](https://github.com/Katello/katello.git/commit/28a7171ed3be4fdb0ebd96bfad2304b05f0ea080))
- * Can't sync container repos from pulp_container 2.14 to proxies with pulp_container 2.10 ([#35688](https://projects.theforeman.org/issues/35688), [71218935](https://github.com/Katello/katello.git/commit/71218935e3e8204fc7d58dcd6922efd1a50da079))
- * Accessing an external capsule from UI, shows "Last sync failed: 404 Not Found" even if the last capsule content sync was successful in Satellite 6.12 ([#35552](https://projects.theforeman.org/issues/35552), [26b1d1ba](https://github.com/Katello/katello.git/commit/26b1d1ba05100caff0fe17d64483fc6fb48f39a0))
- * Assign HTTP Proxies to ACSs per smart proxy rather than per ACS ([#34897](https://projects.theforeman.org/issues/34897), [e95e87ef](https://github.com/Katello/katello.git/commit/e95e87ef4253c62785fecbb91541cb5f81f2b3e6))
 
 ### Web UI
  * Show include all RPM without errata and the 3 other checkboxes for rpm and module stream filters outside table so they don't get hidden by empty state. ([#35730](https://projects.theforeman.org/issues/35730), [e601daea](https://github.com/Katello/katello.git/commit/e601daea51be0750418f9289dab12dfa2784bfb5))
@@ -80,17 +97,7 @@
  * Need to be able to provide custom cert for ISS for Red Hat CDN ([#35296](https://projects.theforeman.org/issues/35296), [a0e63cb0](https://github.com/Katello/katello.git/commit/a0e63cb063a07646ef079acfab762a6e7435b110), [6a47ac35](https://github.com/Katello/hammer-cli-katello.git/commit/6a47ac3546be9aafa2533e09b9ca4b51fd449f43))
 
 ### Container
- * Getting "undefined method schema_version for NilClass" while syncing from quay.io ([#35709](https://projects.theforeman.org/issues/35709), [475388ea](https://github.com/Katello/katello.git/commit/475388eaef0796339326b17b8362b5015c719f9c))
-
-### Hosts
- * Don't use the term 'Subscription Watch' any more ([#35704](https://projects.theforeman.org/issues/35704), [8cf95988](https://github.com/Katello/katello.git/commit/8cf959880228feac08f8934a0fd25f026f90ea3e))
- * Content change template assumes host has a kickstart repository available ([#35566](https://projects.theforeman.org/issues/35566), [b7aea089](https://github.com/Katello/katello.git/commit/b7aea08962a97dfaa00b069c16cd380bd477a928))
- * Changing content source for a host breaks REX pull, if configured ([#35516](https://projects.theforeman.org/issues/35516), [a6427862](https://github.com/Katello/katello.git/commit/a64278629616b6b7e378ef1375b7eda80012e13a))
- * Packages tab - Add dropdown to select upgrade version ([#35452](https://projects.theforeman.org/issues/35452), [b80d6220](https://github.com/Katello/katello.git/commit/b80d622028ff391c0763098bab1fdd3c5f0dcebe))
- * Host UI - cards have cursor pointer ([#35441](https://projects.theforeman.org/issues/35441), [cfb8779d](https://github.com/Katello/katello.git/commit/cfb8779d0885d3044e8f5f209fccb56884035d8d))
- * '0 enhancements' text sometimes overflows Errata overview card ([#35399](https://projects.theforeman.org/issues/35399), [8df695ac](https://github.com/Katello/katello.git/commit/8df695ac76fef4a0f30789bad5c311858b915f6c))
- * Add host collections card empty state ([#35372](https://projects.theforeman.org/issues/35372), [309624be](https://github.com/Katello/katello.git/commit/309624be4ea2e89cf14427fd80f03612456e4a3f))
- * New host details - Hide module streams tab for EL7 hosts ([#34973](https://projects.theforeman.org/issues/34973), [9d6b86d1](https://github.com/Katello/katello.git/commit/9d6b86d1cae62f6b0f09725e45908c7fcfbc1421))
+ * Getting "undefined method `schema_version' for nil:NilClass" while syncing from quay.io ([#35709](https://projects.theforeman.org/issues/35709), [475388ea](https://github.com/Katello/katello.git/commit/475388eaef0796339326b17b8362b5015c719f9c))
 
 ### API
  * Can't edit the `ignore_types` of an Organization ([#35687](https://projects.theforeman.org/issues/35687), [414bcb72](https://github.com/Katello/katello.git/commit/414bcb720be9f9c6bfc730e5a9836f93b5784307))
@@ -108,6 +115,9 @@
 ### Subscriptions
  * Create a rake task to identify missing content in Candlepin ([#35599](https://projects.theforeman.org/issues/35599), [7a5a352f](https://github.com/Katello/katello.git/commit/7a5a352fbd8fbf9913c215c5bba15c83bc4ad4db))
 
+### Alternate Content Sources
+ * ACS create wizard: review details step displays password in plaintext when manual auth is selected ([#35537](https://projects.theforeman.org/issues/35537), [364205f6](https://github.com/Katello/katello.git/commit/364205f67240833eef1736510b5f5dda4cc2ee5c))
+ * ACS create fails when same name used with "PG::UniqueViolation: ERROR:  duplicate key value violates unique constraint" ([#35482](https://projects.theforeman.org/issues/35482), [445b0ee6](https://github.com/Katello/katello.git/commit/445b0ee69e8ce2e8850f32a377ec0d355757071c))
 ### Content Credentials
  * Prevent the deletion of content credentials when they are in use ([#35588](https://projects.theforeman.org/issues/35588), [8cb5f411](https://github.com/Katello/katello.git/commit/8cb5f411a95e55d8c78bda8b92c185ab08faea80))
 
@@ -121,7 +131,5 @@
 ### Activation Key
  * Activation key can be deleted, but still shows up in hostgroup configuration ([#35386](https://projects.theforeman.org/issues/35386), [dcfc73ea](https://github.com/Katello/katello.git/commit/dcfc73ea9a150a0291f94a5959e42163dfa2c330))
 
-### Other
- * Use synced content broken if hostgroup is set to all media ([#35624](https://projects.theforeman.org/issues/35624), [6b36dea1](https://github.com/Katello/katello.git/commit/6b36dea1b9be7208c89a468703f7f1d9c56045c5))
- * ACS create wizard: review details step displays password in plaintext when manual auth is selected ([#35537](https://projects.theforeman.org/issues/35537), [364205f6](https://github.com/Katello/katello.git/commit/364205f67240833eef1736510b5f5dda4cc2ee5c))
- * ACS create fails when same name used with "PG::UniqueViolation: ERROR:  duplicate key value violates unique constraint" ([#35482](https://projects.theforeman.org/issues/35482), [445b0ee6](https://github.com/Katello/katello.git/commit/445b0ee69e8ce2e8850f32a377ec0d355757071c))
+### Roles and Permissions
+ * Katello 403 after pressing Sync button on a repository page ([#35153](https://projects.theforeman.org/issues/35153), [333e11c7](https://github.com/Katello/katello.git/commit/333e11c7c4c9f03d2bbf4edef033679e8aac848f))
