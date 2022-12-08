@@ -146,7 +146,6 @@ module Katello
         )
       end
 
-      Katello::EventDaemon::Runner.initialize unless Foreman.in_rake?
       Katello::EventDaemon::Runner.register_service(:candlepin_events, Katello::CandlepinEventListener)
       Katello::EventDaemon::Runner.register_service(:katello_events, Katello::EventMonitor::PollerThread)
       Katello::EventDaemon::Runner.register_service(:katello_agent_events, Katello::EventDaemon::Services::AgentEventReceiver) if ::Katello.with_katello_agent?

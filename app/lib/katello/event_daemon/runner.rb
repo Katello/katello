@@ -6,11 +6,6 @@ module Katello
       @cache = ActiveSupport::Cache::MemoryStore.new
 
       class << self
-        def initialize
-          FileUtils.mkdir_p(tmp_dir)
-          FileUtils.touch(lock_file)
-        end
-
         def settings
           SETTINGS[:katello][:event_daemon]
         end
@@ -54,10 +49,13 @@ module Katello
 
         def start
           return unless runnable?
-          lockfile = File.open(lock_file, 'r')
-          begin
+
+          FileUtils.mkdir_p(tmp_dir)
+          FileUtils.touch(lock_file)
+
+          File.open(lock_file, 'r') do |lockfile|
             lockfile.flock(File::LOCK_EX)
-            return if started? # ensure it wasn't started while we waited for the lock
+            return nil if started? # ensure it wasn't started while we waited for the lock
             start_monitor_thread
             write_pid_file
 
