@@ -297,13 +297,13 @@ module Katello
     end
 
     def host_registered_time(host)
-      return _('Never registered') unless host.subscription_facet_attributes&.registered_at
+      return ''.html_safe unless host.subscription_facet_attributes&.registered_at
 
       date_time_relative_value(host.subscription_facet_attributes.registered_at)
     end
 
     def host_checkin_time(host)
-      return _('Never checked in') unless host.subscription_facet_attributes&.last_checkin
+      return ''.html_safe unless host.subscription_facet_attributes&.last_checkin
 
       date_time_relative_value(host.subscription_facet_attributes.last_checkin)
     end
