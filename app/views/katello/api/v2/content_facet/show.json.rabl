@@ -3,20 +3,22 @@ child :content_facet => :content_facet_attributes do
 
   node do |content_facet|
     content_facet.single_content_view # just so Rails gives a warning and we remember to fix this
-    version = content_facet.content_view_environments.first.content_view_version
-    {
-      :content_view_version => version.version,
-      :content_view_version_id => version.id,
-      :content_view_version_latest => version.latest?
-    }
+    version = content_facet.content_view_environments.first&.content_view_version
+    if version.present?
+      {
+        :content_view_version => version.version,
+        :content_view_version_id => version.id,
+        :content_view_version_latest => version.latest?
+      }
+    end
   end
 
   node :content_view_default? do |content_facet|
-    content_facet.single_content_view.default?
+    content_facet.single_content_view&.default? || false
   end
 
   node :lifecycle_environment_library? do |content_facet|
-    content_facet.single_lifecycle_environment.library?
+    content_facet.single_lifecycle_environment&.library? || false
   end
 
   node :katello_agent_installed do |content_facet|

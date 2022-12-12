@@ -12,19 +12,23 @@ attributes :applicable_module_stream_count, :upgradable_module_stream_count
 
 node :content_view do |content_facet|
   content_view = content_facet.single_content_view
-  {
-    :id => content_view.id,
-    :name => content_view.name,
-    :composite => content_view.composite?
-  }
+  if content_view.present?
+    {
+      :id => content_view.id,
+      :name => content_view.name,
+      :composite => content_view.composite?
+    }
+  end
 end
 
 node :lifecycle_environment do |content_facet|
   lifecycle_environment = content_facet.single_lifecycle_environment
-  {
-    :id => lifecycle_environment.id,
-    :name => lifecycle_environment.name
-  }
+  if lifecycle_environment.present?
+    {
+      :id => lifecycle_environment.id,
+      :name => lifecycle_environment.name
+    }
+  end
 end
 
 child :content_views => :content_views do
