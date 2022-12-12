@@ -41,6 +41,13 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     host_index_and_show(host)
   end
 
+  def test_no_content_view_environments
+    host = FactoryBot.create(:host, :with_content, :with_subscription)
+    assert_empty host.content_facet.content_view_environments
+
+    host_index_and_show(host)
+  end
+
   def test_with_subscriptions
     host = FactoryBot.create(:host, :with_subscription)
     host_index_and_show(host)
