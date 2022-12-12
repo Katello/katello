@@ -38,7 +38,7 @@ module Katello
 
       validates_with ::AssociationExistsValidator, attributes: [:content_source]
       validates_with Katello::Validators::GeneratedContentViewValidator
-      validates :host, :presence => true, :allow_blank => false
+      validates :host, :presence => true, :allow_blank => true
 
       attr_accessor :cves_changed
 

@@ -604,6 +604,7 @@ module Katello
         fail _("Import-only content views can not be published directly") if import_only? && !syncable
         check_composite_action_allowed!(organization.library)
         check_docker_repository_names!([organization.library])
+        check_orphaned_content_facets(environments: self.environments)
       end
 
       true
@@ -648,6 +649,17 @@ module Katello
         end
       end
       true
+    end
+
+    def check_orphaned_content_facets(environments: [])
+      ::Katello::Host::ContentFacet.in_content_views_and_environments(
+        content_views: [self],
+        lifecycle_environments: environments
+      ).each do |facet|
+        unless facet.host
+          fail _("Orphaned content facets for deleted hosts exist for the content view and environment. Please run rake task : katello:clean_orphaned_facets and try again!")
+        end
+      end
     end
 
     def check_remove_from_environment!(env)
