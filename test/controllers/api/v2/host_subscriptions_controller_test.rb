@@ -230,6 +230,17 @@ module Katello
       assert_template 'katello/api/v2/repository_sets/index'
     end
 
+    def test_find_content_overrides_with_empty_string_search
+      controller = ::Katello::Api::V2::HostSubscriptionsController.new
+      controller.params = { :host_id => @host.id, :content_overrides => "wrong", :content_overrides_search => { :search => '' } }
+      controller.instance_variable_set(:@host, @host)
+      controller.send(:find_content_overrides)
+
+      # content_overrides should be set from search param, not content_overrides param
+      result = controller.instance_variable_get(:@content_overrides)
+      refute_equal result, "wrong"
+    end
+
     def test_content_override_bulk
       content_overrides = [{:content_label => 'some-content', :value => 1}]
       expected_content_labels = content_overrides.map { |co| co[:content_label] }
