@@ -176,7 +176,6 @@ module Katello
       content_override_values = @content_overrides.map do |override_params|
         validate_content_overrides_enabled(override_params)
       end
-
       sync_task(::Actions::Katello::Host::UpdateContentOverrides, @host, content_override_values, false)
       fetch_product_content
     end
@@ -232,7 +231,7 @@ module Katello
     end
 
     def find_content_overrides
-      if params[:content_overrides_search]
+      if !params.dig(:content_overrides_search, :search).nil?
         content_labels = ::Katello::Content.joins(:product_contents)
                             .where("#{Katello::ProductContent.table_name}.product_id": @host.organization.products.subscribable.enabled)
                             .search_for(params[:content_overrides_search][:search])
