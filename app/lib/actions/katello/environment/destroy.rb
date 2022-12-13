@@ -24,12 +24,18 @@ module Actions
             end
 
             if organization_destroy
-              env.hostgroups.clear
-              env.hosts.clear
+              delete_host_and_hostgroup_associations(environment: env)
             end
 
             plan_self
           end
+        end
+
+        def delete_host_and_hostgroup_associations(environment:)
+          environment.hostgroups.delete_all
+          host_ids = environment.hosts.ids
+          ::Katello::Host::ContentFacet.where(:host_id => host_ids).delete_all
+          ::Katello::Host::SubscriptionFacet.where(:host_id => host_ids).delete_all
         end
 
         def humanized_name
