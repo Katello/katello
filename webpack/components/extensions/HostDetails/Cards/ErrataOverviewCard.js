@@ -20,6 +20,7 @@ import { TranslatedAnchor } from '../../../Table/components/TranslatedPlural';
 import EmptyStateMessage from '../../../Table/EmptyStateMessage';
 import './ErrataOverviewCard.scss';
 import { errataStatusContemplation } from '../../../Errata/errataHelpers';
+import { pluralize } from '../../../../utils/helpers';
 
 function HostInstallableErrata({
   id, errataCounts, errataStatus, errataCategory, errataStatusLabel,
@@ -31,11 +32,11 @@ function HostInstallableErrata({
   const errataEnhance = counts.enhancement;
   const { neededErrata, allUpToDate, otherErrataStatus } = errataStatusContemplation(errataStatus);
   const chartData = [{
-    w: 'security advisories', x: 'security', y: errataSecurity, z: errataTotal,
+    w: __('security advisories'), singular: __('security advisory'), x: 'security', y: errataSecurity, z: errataTotal,
   }, {
-    w: 'bug fixes', x: 'bugfix', y: errataBug, z: errataTotal,
+    w: __('bug fixes'), singular: __('bug fix'), x: 'bugfix', y: errataBug, z: errataTotal,
   }, {
-    w: 'enhancements', x: 'enhancement', y: errataEnhance, z: errataTotal,
+    w: __('enhancements'), singular: __('enhancement'), x: 'enhancement', y: errataEnhance, z: errataTotal,
   }];
   return (
     <CardBody>
@@ -75,7 +76,7 @@ function HostInstallableErrata({
                   ariaDesc="errataChart"
                   data={chartData}
                   constrainToVisibleArea
-                  labels={({ datum }) => `${datum.y} ${datum.w}`}
+                  labels={({ datum }) => pluralize(datum.y, datum.singular, datum.w)}
                   padding={{
                     bottom: 20,
                     left: 20,
