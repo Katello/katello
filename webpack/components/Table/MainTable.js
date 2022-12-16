@@ -18,9 +18,9 @@ const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
   emptySearchTitle, emptySearchBody, errorSearchTitle, errorSearchBody,
   happyEmptyContent, searchIsActive, activeFilters, defaultFilters, actionButtons, rowsCount,
-  children, showPrimaryAction, showSecondaryAction, primaryActionLink,
-  secondaryActionLink, primaryActionTitle, secondaryActionTitle, resetFilters,
-  updateSearchQuery, requestKey, primaryActionButton, ...extraTableProps
+  children, showPrimaryAction, showSecondaryAction, showSecondaryActionButton, primaryActionLink,
+  secondaryActionLink, primaryActionTitle, secondaryActionTitle, secondaryActionTextOverride,
+  resetFilters, updateSearchQuery, requestKey, primaryActionButton, ...extraTableProps
 }) => {
   const tableHasNoRows = () => {
     if (children) return rowsCount === 0;
@@ -29,11 +29,13 @@ const MainTable = ({
   const callToActionProps = {
     showPrimaryAction,
     showSecondaryAction,
+    showSecondaryActionButton,
     primaryActionLink,
     primaryActionTitle,
     secondaryActionLink,
     secondaryActionTitle,
     primaryActionButton,
+    secondaryActionTextOverride,
   };
   const filtersAreActive = activeFilters?.length &&
     !isEqual(new Set(activeFilters), new Set(defaultFilters));
@@ -75,6 +77,7 @@ const MainTable = ({
         body={emptyContentBody}
         happy={happyEmptyContent}
         search={!happyEmptyContent}
+        {...clearSearchProps}
         {...callToActionProps}
       />
     );
@@ -138,6 +141,8 @@ MainTable.propTypes = {
   happyEmptyContent: PropTypes.bool,
   showPrimaryAction: PropTypes.bool,
   showSecondaryAction: PropTypes.bool,
+  showSecondaryActionButton: PropTypes.bool,
+  secondaryActionTextOverride: PropTypes.string,
   primaryActionLink: PropTypes.string,
   secondaryActionLink: PropTypes.string,
   secondaryActionTitle: PropTypes.string,
@@ -163,6 +168,8 @@ MainTable.defaultProps = {
   happyEmptyContent: false,
   showPrimaryAction: false,
   showSecondaryAction: false,
+  showSecondaryActionButton: false,
+  secondaryActionTextOverride: '',
   primaryActionLink: '',
   secondaryActionLink: '',
   primaryActionTitle: '',

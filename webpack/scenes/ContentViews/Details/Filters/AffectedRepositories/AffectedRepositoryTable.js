@@ -178,6 +178,9 @@ const AffectedRepositoryTable = ({
   const emptySearchBody = __('Try changing your search settings.');
   const activeFilters = [productSelected];
   const defaultFilters = [allProducts];
+  const resetFilters = () => {
+    setProductSelected(allProducts);
+  };
   const dropdownItems = [
     <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={removeBulk}>
       {__('Remove')}
@@ -197,6 +200,7 @@ const AffectedRepositoryTable = ({
         updateSearchQuery,
         activeFilters,
         defaultFilters,
+        resetFilters,
         error,
         status,
       }}

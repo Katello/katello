@@ -99,7 +99,18 @@ export const ErrataTab = () => {
   const { allUpToDate, neededErrata } = errataStatusContemplation(errataStatus);
   const emptySearchTitle = __('No matching errata found');
   const emptySearchBody = __('Try changing your search settings.');
+  const resetFiltersOnly = () => {
+    setErrataTypeSelected(ERRATA_TYPE);
+    setErrataSeveritySelected(ERRATA_SEVERITY);
+  };
 
+  const resetFiltersAndToggle = () => {
+    resetFiltersOnly();
+    setToggleGroupState(APPLICABLE);
+  };
+
+  let resetFilters = resetFiltersOnly;
+  let secondaryActionTextOverride;
   let emptyContentTitle;
   let emptyContentBody;
   switch (friendlyErrataStatus(errataStatus)) {
@@ -108,8 +119,10 @@ export const ErrataTab = () => {
     emptyContentBody = __('No action is needed because there are no applicable errata for this host.');
     break;
   case 'Needed':
-    emptyContentTitle = __('This host has errata that are applicable, but not installable.');
-    emptyContentBody = __("You may want to check the host's content view and lifecycle environment.");
+    emptyContentTitle = __('No matching errata found');
+    emptyContentBody = __('This host has errata that are applicable, but not installable. Adjust your filters and try again.');
+    resetFilters = resetFiltersAndToggle;
+    secondaryActionTextOverride = __('View applicable errata');
     break;
   case 'Unknown':
     emptyContentTitle = __('Unknown errata status');
@@ -284,11 +297,6 @@ export const ErrataTab = () => {
     } else {
       applyViaRemoteExecution();
     }
-  };
-
-  const resetFilters = () => {
-    setErrataTypeSelected(ERRATA_TYPE);
-    setErrataSeveritySelected(ERRATA_SEVERITY);
   };
 
   const readOnlyBookmarks =
@@ -476,8 +484,10 @@ export const ErrataTab = () => {
             selectNone,
             toggleGroup,
             resetFilters,
+            secondaryActionTextOverride,
           }
           }
+          showSecondaryActionButton={neededErrata}
           happyEmptyContent={allUpToDate}
           ouiaId="host-errata-table"
           additionalListeners={[
