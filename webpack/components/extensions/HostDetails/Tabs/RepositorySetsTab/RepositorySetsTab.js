@@ -185,9 +185,11 @@ const RepositorySetsTab = () => {
   const {
     contentViewDefault,
     lifecycleEnvironmentLibrary,
-    contentViewName,
-    lifecycleEnvironmentName,
+    contentView,
+    lifecycleEnvironment,
   } = contentFacet;
+  const { name: contentViewName } = contentView ?? {};
+  const { name: lifecycleEnvironmentName } = lifecycleEnvironment ?? {};
   const nonLibraryHost = contentViewDefault === false ||
     lifecycleEnvironmentLibrary === false;
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
