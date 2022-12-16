@@ -31,4 +31,25 @@ module ::Actions::Katello::Environment
       assert_action_planned_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cve], :skip_repo_destroy => false, :organization_destroy => false)
     end
   end
+
+  class DestroyWithOrganizationDestroyTest < TestBase
+    let(:action_class) { ::Actions::Katello::Environment::Destroy }
+    let(:action) { create_action action_class }
+
+    let(:environment) { stub }
+
+    it 'plans' do
+      stub_remote_user
+      content_view = stub
+      cve = mock(:content_view => content_view)
+      action.stubs(:action_subject).with(environment)
+      environment.expects(:content_view_environments).returns([cve])
+      environment.expects(:deletable?).returns(true)
+      environment.expects(:hostgroups).returns(::Hostgroup.none)
+      environment.expects(:hosts).returns(::Host.none)
+      environment.expects(:hosts=).never
+      plan_action(action, environment, :organization_destroy => true)
+      assert_action_planned_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cve], :skip_repo_destroy => false, :organization_destroy => true)
+    end
+  end
 end
