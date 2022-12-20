@@ -9,7 +9,7 @@ const WizardHeader = ({
   <Grid style={{ gridGap: '24px' }}>
     {title &&
       <TextContent>
-        <Text component={TextVariants.h2}>{title}</Text>
+        <Text ouiaId="wizard-header-text" component={TextVariants.h2}>{title}</Text>
       </TextContent>}
     {description &&
       <TextContent>

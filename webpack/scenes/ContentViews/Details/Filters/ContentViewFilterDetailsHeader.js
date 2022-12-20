@@ -129,6 +129,7 @@ const ContentViewFilterDetailsHeader = ({
           </FlexItem>
           <FlexItem>
             <Dropdown
+              ouiaId="cv-filter-actions-kebab"
               position={DropdownPosition.right}
               style={{ marginLeft: 'auto' }}
               toggle={<KebabToggle onToggle={setDropdownOpen} id="toggle-dropdown" />}

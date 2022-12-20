@@ -162,7 +162,7 @@ const ACSTable = () => {
         <DrawerHead>
           {results && isExpanded &&
           <div ref={drawerRef}>
-            <Text component={TextVariants.h1} style={{ marginTop: '0px', fontWeight: 'bold' }}>
+            <Text ouiaId="acs-name-text" component={TextVariants.h1} style={{ marginTop: '0px', fontWeight: 'bold' }}>
               {acs?.name}
             </Text>
             <TextContent>
@@ -384,7 +384,7 @@ const ACSTable = () => {
               hideSearch={!canView}
             >
               <Thead>
-                <Tr>
+                <Tr ouiaId="acs-table-column-headers-row">
                   <Th
                     key="acs-checkbox"
                     style={{ width: 0 }}
@@ -415,6 +415,7 @@ const ACSTable = () => {
                   return (
                     <Tr
                       key={index}
+                      ouiaId={`acs-row-${id}`}
                       style={isSingleSelected(id) && isExpanded ? customStyle : {}}
                       isStriped={isSingleSelected(id) && isExpanded}
                     >
@@ -428,7 +429,7 @@ const ACSTable = () => {
                         />
                       </Td>
                       <Td>
-                        <Text onClick={() => onClick(id)} component="a">{name}</Text>
+                        <Text onClick={() => onClick(id)} component="a" ouiaId={`acs-link-text-${index}`}>{name}</Text>
                       </Td>
                       <Td>{acsType === 'rhui' ? upperCase(acsType) : capitalize(acsType)}</Td>
                       <Td><LastSync
