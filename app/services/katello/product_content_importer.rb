@@ -66,7 +66,7 @@ module Katello
           content = pc.content
           root_repo = product.root_repositories.find_by(content_id: content.cp_content_id)
           actual_product = find_product_for_content(content.cp_content_id)
-          if actual_product.present? && root_repo.product != actual_product
+          if actual_product.present? && root_repo.present? && root_repo.product != actual_product
             root_repo.update!(product_id: actual_product.id)
             pc.update!(product_id: actual_product.id)
           else
