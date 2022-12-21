@@ -479,7 +479,7 @@ end
 
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
-        :host_collections, :pools, :hypervisor_host,
+        :host_collections, :pools, :hypervisor_host, :installed_debs,
         :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template,
         :filtered_entitlement_quantity_consumed, :bound_repositories,
         :single_content_view, :single_lifecycle_environment
