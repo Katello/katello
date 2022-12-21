@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithRedux, waitFor, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
 import { HOST_TRACES_KEY, TRACES_SEARCH_QUERY } from '../TracesTab/HostTracesConstants';
@@ -9,10 +9,8 @@ import mockTraceData from './traces.fixtures.json';
 import mockResolveTraceTask from './resolveTraces.fixtures.json';
 import emptyTraceResults from './tracerEmptyTraceResults.fixtures.json';
 import mockJobInvocationStatus from './tracerEnableJobInvocation.fixtures.json';
-import mockBookmarkData from './bookmarks.fixtures.json';
 
 const hostName = 'client.example.com';
-const tracesBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_host_tracers');
 
 jest.mock('../../hostDetailsHelpers', () => ({
   ...jest.requireActual('../../hostDetailsHelpers'),
@@ -57,23 +55,11 @@ const autocompleteUrl = '/hosts/1/traces/auto_complete_search';
 const jobInvocations = foremanApi.getApiUrl('/job_invocations');
 
 let firstTrace;
-let searchDelayScope;
-let autoSearchScope;
-let bookmarkScope;
 
 describe('With tracer installed', () => {
   beforeEach(() => {
     const { results } = mockTraceData;
     [firstTrace] = results;
-    bookmarkScope = nockInstance.get(tracesBookmarks).reply(200, mockBookmarkData);
-    searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-    autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-  });
-
-  afterEach(() => {
-    assertNockRequest(searchDelayScope);
-    assertNockRequest(autoSearchScope);
-    assertNockRequest(bookmarkScope);
   });
 
   test('Can call API for traces and show on screen on page load', async (done) => {

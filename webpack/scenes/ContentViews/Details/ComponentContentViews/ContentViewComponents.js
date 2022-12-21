@@ -252,7 +252,8 @@ const ContentViewComponents = ({ cvId, details }) => {
       onSelect={onSelect(rows, setRows)}
       cells={columnHeaders}
       variant={TableVariant.compact}
-      autocompleteEndpoint="/content_views/auto_complete_search"
+      autocompleteEndpoint="/katello/api/v2/content_views"
+      bookmarkController="katello_content_views"
       fetchItems={useCallback(params =>
         getContentViewComponents(cvId, params, statusSelected), [cvId, statusSelected])}
       additionalListeners={[statusSelected, addComponentsResolved, removeComponentsResolved]}

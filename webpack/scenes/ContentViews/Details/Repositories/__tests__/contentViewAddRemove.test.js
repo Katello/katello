@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, act } from 'react-testing-lib-wrapper';
 
-import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewRepositories from '../ContentViewRepositories';
@@ -17,24 +17,15 @@ const repoTypesResponse = [{ name: 'deb' }, { name: 'docker' }, { name: 'file' }
 const cvDetailsPath = api.getApiUrl('/content_views/1');
 
 let firstRepo;
-let searchDelayScope;
-let autoSearchScope;
 
 beforeEach(() => {
   const { results } = repoData;
   [firstRepo] = results;
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   nockInstance
     .persist() // match any query to this endpoint, gets cleaned up by `nock.cleanAll()`
     .get(api.getApiUrl('/repositories/repository_types'))
     .query(true)
     .reply(200, repoTypesResponse);
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
 });
 
 jest.mock('react-intl', () => ({ addLocaleData: () => { }, FormattedDate: () => 'mocked' }));

@@ -2,7 +2,7 @@ import React from 'react';
 import { act, renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 import { head, last } from 'lodash';
-import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../../test-utils/nockWrapper';
 import api from '../../../../../../services/api';
 
 import ContentViewVersions from '../../ContentViewVersions';
@@ -55,8 +55,6 @@ const renderOptions = {
 
 };
 
-let searchDelayScope;
-let autoSearchScope;
 let envScope;
 
 const versionIdsAllContentTypes = {
@@ -343,9 +341,6 @@ test('Can make an API call and show comparison of two versions with all content 
     renderOptions,
   );
 
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 9);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 9);
-
   // Nothing will show at first, page is loading
   expect(queryByText(`Version ${versionLabelsAllContentTypes.versionOneLabel}`)).toBeNull();
   expect(queryByText(`Version ${versionLabelsAllContentTypes.versionTwoLabel}`)).toBeNull();
@@ -381,8 +376,6 @@ test('Can make an API call and show comparison of two versions with all content 
   scopeContentTypes.map(cv => assertNockRequest(cv));
   autoCompleteContentTypesScope.map(cv => assertNockRequest(cv));
   assertNockRequest(sortedRpmTabScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   act(done);
 });
 
@@ -412,9 +405,6 @@ test('Can make an API call and compare two versions with three content types', a
     renderOptions,
   );
 
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 3);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 3);
-
   // Nothing will show at first, page is loading
   expect(queryByText(`Version ${versionLabelsThreeContentTypes.versionOneLabel}`)).toBeNull();
   expect(queryByText(`Version ${versionLabelsThreeContentTypes.versionTwoLabel}`)).toBeNull();
@@ -442,8 +432,6 @@ test('Can make an API call and compare two versions with three content types', a
   assertNockRequest(scopeVersionTwoDetails);
   scopeContentTypes.map(cv => assertNockRequest(cv));
   autoCompleteContentTypesScope.map(cv => assertNockRequest(cv));
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   act(done);
 });
 
@@ -453,8 +441,6 @@ test('Can select two versions and click compare button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scopeContentTypes = testConfigAllContentTypes.map(({ dataUrl, data }) =>
     nockInstance.get(dataUrl).query(true).reply(200, data));
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 10);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 10);
   const scope = nockInstance
     .get(cvVersions)
     .query(true)
@@ -499,15 +485,11 @@ test('Can select two versions and click compare button', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(scopeCVDetails);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   act(done);
 });
 
 test('Can select two versions with no content and click compare button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay');
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   const scope = nockInstance
     .get(cvVersions)
     .query(true)
@@ -550,8 +532,6 @@ test('Can select two versions with no content and click compare button', async (
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(scopeCVDetails);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   act(done);
 });
 
@@ -585,9 +565,6 @@ test('Can select viewing by "Different" in the dropdown and see the content in e
     />),
     renderOptions,
   );
-
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 3);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 3);
 
   // Nothing will show at first, page is loading
   expect(queryByText(`Version ${versionLabelsThreeContentTypes.versionOneLabel}`)).toBeNull();
@@ -631,8 +608,6 @@ test('Can select viewing by "Different" in the dropdown and see the content in e
   assertNockRequest(scopeVersionTwoDetails);
   scopeContentTypes.map(cv => assertNockRequest(cv));
   autoCompleteContentTypesScope.map(cv => assertNockRequest(cv));
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   act(done);
 });
 
@@ -667,10 +642,6 @@ test('Can select viewing by "Same" in the dropdown and see the content in common
     renderOptions,
   );
 
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', undefined, 3);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 3);
-
-
   expect(queryByText(`Version ${versionLabelsThreeContentTypes.versionOneLabel}`)).toBeNull();
   expect(queryByText(`Version ${versionLabelsThreeContentTypes.versionTwoLabel}`)).toBeNull();
 
@@ -704,7 +675,5 @@ test('Can select viewing by "Same" in the dropdown and see the content in common
   assertNockRequest(scopeVersionTwoDetails);
   scopeContentTypes.map(cv => assertNockRequest(cv));
   autoCompleteContentTypesScope.map(cv => assertNockRequest(cv));
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   act(done);
 });

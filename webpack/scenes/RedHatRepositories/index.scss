@@ -21,16 +21,35 @@
   }
   .search-bar-row {
     min-height: 26px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
     .form-group {
       box-sizing: border-box;
+      width: 50%;
+
+      div:first-child {
+        display: flex;
+        justify-content: space-between;
+        .foreman-search-bar {
+          flex-grow: 1;
+          margin-left: 0.7rem;
+          .pf-c-search-input {
+            width: 100%;
+          }
+        }
+      }
 
       &:first-child {
         padding-left: 0;
       }
     }
+
+    .dropdown.btn-group {
+      margin-right: 0.6rem;
+    }
+
     &.search-bar-selects-row {
+      width: 50%;
       .form-group {
         border: none;
 

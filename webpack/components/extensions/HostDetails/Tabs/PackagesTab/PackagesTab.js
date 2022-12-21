@@ -521,8 +521,7 @@ export const PackagesTab = () => {
           fetchItems={fetchItems}
           bookmarkController="katello_host_installed_packages"
           readOnlyBookmarks={readOnlyBookmarks}
-          autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}
-          foremanApiAutoComplete
+          autocompleteEndpoint={`/api/v2/hosts/${hostId}/packages`}
           rowsCount={results?.length}
           variant={TableVariant.compact}
           {...selectAll}

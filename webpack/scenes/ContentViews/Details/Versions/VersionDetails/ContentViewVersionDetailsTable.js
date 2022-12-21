@@ -32,6 +32,8 @@ const ContentViewVersionDetailsTable = ({
     responseSelector,
     statusSelector,
     autocompleteEndpoint,
+    autocompleteQueryParams,
+    bookmarkController,
     fetchItems,
     columnHeaders,
     hideSearch,
@@ -77,6 +79,8 @@ const ContentViewVersionDetailsTable = ({
           updateSearchQuery,
           status,
           autocompleteEndpoint,
+          autocompleteQueryParams,
+          bookmarkController,
           hideSearch,
         }}
         ouiaId={`content-view-version-details-${kebabCase(route)}-table`}

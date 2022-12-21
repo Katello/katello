@@ -324,7 +324,8 @@ const ACSTable = () => {
               ouiaId="alternate-content-sources-table"
               variant={TableVariant.compact}
               additionalListeners={[activeSortColumn, activeSortDirection]}
-              autocompleteEndpoint="/alternate_content_sources/auto_complete_search"
+              autocompleteEndpoint="/katello/api/v2/alternate_content_sources"
+              bookmarkController="katello_alternate_content_sources"
               {...selectionSetVars}
               actionButtons={
                 <>

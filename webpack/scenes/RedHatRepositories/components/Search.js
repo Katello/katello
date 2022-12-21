@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import { DropdownButton, MenuItem } from 'patternfly-react';
 import PropTypes from 'prop-types';
+import SearchBar from 'foremanReact/components/SearchBar';
 import { translate as __ } from 'foremanReact/common/I18n';
 import '../index.scss';
-import Search from '../../../components/Search/index';
 import { orgId } from '../../../services/api';
 
 class RepositorySearch extends Component {
@@ -29,7 +29,6 @@ class RepositorySearch extends Component {
     ];
     this.state = { searchList: this.dropDownItems[0] };
     this.onSearch = this.onSearch.bind(this);
-    this.getAutoCompleteParams = this.getAutoCompleteParams.bind(this);
   }
 
   onSearch(search) {
@@ -41,23 +40,24 @@ class RepositorySearch extends Component {
     this.props.onSelectSearchList(searchList.key);
   }
 
-  getAutoCompleteParams(search) {
-    const params = {
-      organization_id: orgId(),
-      search,
-    };
+  getAutoCompleteEndpoint() {
     let endpoint = '';
     if (this.state.searchList.key === 'enabled') {
-      params.enabled = true;
-      endpoint = '/repositories/auto_complete_search';
+      endpoint = '/katello/api/v2/repositories/auto_complete_search';
     } else if (this.state.searchList.key === 'available') {
-      endpoint = '/repository_sets/auto_complete_search';
+      endpoint = '/katello/api/v2/repository_sets/auto_complete_search';
     }
 
-    return {
-      endpoint,
-      params,
-    };
+    return endpoint;
+  }
+
+  autocompleteQueryParams() {
+    const params = { organization_id: orgId() };
+    if (this.state.searchList.key === 'enabled') {
+      params.enabled = true;
+    }
+
+    return params;
   }
 
   render() {
@@ -77,9 +77,15 @@ class RepositorySearch extends Component {
               </MenuItem>
             ))}
         </DropdownButton>
-        <Search
+        <SearchBar
+          data={{
+            autocomplete: {
+              url: this.getAutoCompleteEndpoint(),
+              apiParams: this.autocompleteQueryParams(),
+            },
+            bookmarks: {},
+          }}
           onSearch={this.onSearch}
-          getAutoCompleteParams={this.getAutoCompleteParams}
         />
       </div>
     );

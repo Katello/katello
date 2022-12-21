@@ -16,6 +16,8 @@ const CVVersionCompareTable = ({
     responseSelector,
     statusSelector,
     autocompleteEndpoint,
+    autocompleteQueryParams,
+    bookmarkController,
     fetchItems: fetchItemsSorted,
     columnHeaders,
     hideSearch,
@@ -48,6 +50,8 @@ const CVVersionCompareTable = ({
         updateSearchQuery,
         status,
         autocompleteEndpoint,
+        autocompleteQueryParams,
+        bookmarkController,
         hideSearch,
       }}
       key={`cvv-comparison-table-${name}`}

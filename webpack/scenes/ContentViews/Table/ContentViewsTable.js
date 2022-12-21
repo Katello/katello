@@ -162,7 +162,7 @@ const ContentViewTable = () => {
       bookmarkController="katello_content_views"
       variant={TableVariant.compact}
       status={status}
-      autocompleteEndpoint="/content_views/auto_complete_search"
+      autocompleteEndpoint="/katello/api/v2/content_views"
       primaryActionButton={canCreate ? (
         <Button
           ouiaId="create-content-view"

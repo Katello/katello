@@ -169,7 +169,7 @@ export const HostCollectionsModal = ({
         additionalListeners={[hostId, modalType, existingHostCollectionIds.join(',')]}
         fetchItems={fetchItems}
         searchPlaceholderText={__('Search host collections')}
-        autocompleteEndpoint="/host_collections/auto_complete_search"
+        autocompleteEndpoint="/katello/api/v2/host_collections"
         variant={TableVariant.compact}
         {...selectAll}
         displaySelectAllCheckbox={results?.length > 0}

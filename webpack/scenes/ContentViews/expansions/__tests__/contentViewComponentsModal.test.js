@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 
-import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 
 import RelatedContentViewComponentsModal from '../RelatedContentViewComponentsModal';
@@ -16,6 +16,12 @@ test('Can call API and show Related Content Views Components Modal', async (done
   const relatedCvCount = 2;
   const cvName = 'italiano';
   const contentViewComponentsPath = api.getApiUrl(`/content_views/${cvId}/content_view_components/show_all`);
+  const autocompleteUrl = '/content_views/auto_complete_search';
+  const autocompleteQuery = {
+    organization_id: 1,
+    search: '',
+  };
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
 
   const scope = nockInstance
     .get(contentViewComponentsPath)
@@ -32,6 +38,7 @@ test('Can call API and show Related Content Views Components Modal', async (done
   fireEvent.click(getByLabelText(`button_${cvId}`));
   await patientlyWaitFor(() => expect(getByText('Related content views')).toBeInTheDocument());
 
+  assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
 

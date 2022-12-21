@@ -6,7 +6,7 @@ import CONTENT_VIEWS_KEY from '../ContentViewsConstants';
 import ContentViewsPage from '../../ContentViews';
 import api from '../../../services/api';
 import {
-  nockInstance, assertNockRequest, mockAutocomplete, mockSetting,
+  nockInstance, assertNockRequest, mockAutocomplete,
 } from '../../../test-utils/nockWrapper';
 import createBasicCVs from './basicContentViews.fixtures';
 import cvIndexData from './contentViewList.fixtures.json';
@@ -14,28 +14,23 @@ import cvIndexData from './contentViewList.fixtures.json';
 const cvIndexPath = api.getApiUrl('/content_views');
 const autocompleteUrl = '/content_views/auto_complete_search';
 const renderOptions = { apiNamespace: CONTENT_VIEWS_KEY };
+const autocompleteQuery = {
+  organization_id: 1,
+  search: '',
+};
 
 let firstCV;
-let searchDelayScope;
-let autoSearchScope;
-let scopeBookmark;
 beforeEach(() => {
   const { results } = cvIndexData;
   [firstCV] = results;
 });
 
 test('Can call API for CVs and show on screen on page load', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvIndexPath)
     .query(true)
     .reply(200, cvIndexData);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-  scopeBookmark = nockInstance
-    .get('/api/v2/bookmarks')
-    .query(true)
-    .reply(200, {});
 
   const { queryByText, queryAllByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
@@ -49,25 +44,16 @@ test('Can call API for CVs and show on screen on page load', async (done) => {
   });
 
 
-  assertNockRequest(scopeBookmark);
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(scope, done);
 });
 
 test('Can show last task and link to it', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvIndexPath)
     .query(true)
     .reply(200, cvIndexData);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-  scopeBookmark = nockInstance
-    .get('/api/v2/bookmarks')
-    .query(true)
-    .reply(200, {});
 
   const { getByText, queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
@@ -82,25 +68,16 @@ test('Can show last task and link to it', async (done) => {
     expect(queryByText('N/A')).toBeTruthy();
   });
 
-  assertNockRequest(scopeBookmark);
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
 test('Can show latest version and link to it', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvIndexPath)
     .query(true)
     .reply(200, cvIndexData);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-  scopeBookmark = nockInstance
-    .get('/api/v2/bookmarks')
-    .query(true)
-    .reply(200, {});
 
   const {
     getByText,
@@ -123,25 +100,16 @@ test('Can show latest version and link to it', async (done) => {
     expect(getByText('dev').closest('a'))
       .toHaveAttribute('href', '/lifecycle_environments/2');
   });
-  assertNockRequest(scopeBookmark);
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
 test('Can expand cv and show activation keys and hosts', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvIndexPath)
     .query(true)
     .reply(200, cvIndexData);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-  scopeBookmark = nockInstance
-    .get('/api/v2/bookmarks')
-    .query(true)
-    .reply(200, {});
 
   const {
     queryByLabelText,
@@ -171,9 +139,6 @@ test('Can expand cv and show activation keys and hosts', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(scopeBookmark);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
@@ -215,25 +180,16 @@ test('Can handle unpublished Content Views', async (done) => {
   const { results } = cvIndexData;
   const unpublishedCVs = results.map(cv => ({ ...cv, last_published: null }));
   const unpublishedCVData = { ...cvIndexData, results: unpublishedCVs };
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvIndexPath)
     .query(true)
     .reply(200, unpublishedCVData);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-  scopeBookmark = nockInstance
-    .get('/api/v2/bookmarks')
-    .query(true)
-    .reply(200, {});
 
   const { getAllByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   await patientlyWaitFor(() => expect(getAllByText(/not yet published/i).length).toBeGreaterThan(0));
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(scopeBookmark);
   assertNockRequest(scope, done);
 });
 
@@ -242,13 +198,7 @@ test('Can handle pagination', async (done) => {
   const { results } = cvIndexLarge;
   const cvIndexFirstPage = { ...cvIndexLarge, ...{ results: results.slice(0, 20) } };
   const cvIndexSecondPage = { ...cvIndexLarge, page: 2, results: results.slice(20, 40) };
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-  scopeBookmark = nockInstance
-    .get('/api/v2/bookmarks')
-    .query(true)
-    .reply(200, {});
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
 
   // Match first page API request
   const firstPageScope = nockInstance
@@ -283,39 +233,43 @@ test('Can handle pagination', async (done) => {
     expect(queryByText(results[41].name)).not.toBeInTheDocument();
   });
   assertNockRequest(autocompleteScope);
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(scopeBookmark);
   assertNockRequest(firstPageScope);
   assertNockRequest(secondPageScope, done); // Only pass jest callback to the last API request
 });
 
 test('Can search for specific Content View', async (done) => {
   const cvname = 'composite one';
-  const { results } = cvIndexData;
-  const matchQuery = actualParams => actualParams?.search?.includes(cvname);
-  const searchResults = {
-    ...cvIndexData,
-    ...{ total: 1, subtotal: 1, results: results.slice(-1) },
+  const matchQuery = {
+    organization_id: 1,
+    search: `name = ${firstCV.name}`,
   };
+  const searchResults = [
+    {
+      completed: 'name = cv1',
+      part: 'and',
+      label: 'name = cv1 and',
+      category: 'Operators',
+    },
+    {
+      completed: 'name = cv1',
+      part: 'or',
+      label: 'name = cv1 or',
+      category: 'Operators',
+    },
+  ];
 
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, matchQuery);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-  scopeBookmark = nockInstance
-    .get('/api/v2/bookmarks')
-    .query(true)
-    .reply(200, {});
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
+  const withSearchScope = mockAutocomplete(
+    nockInstance,
+    autocompleteUrl,
+    matchQuery,
+    searchResults,
+  );
 
   const initialScope = nockInstance
     .get(cvIndexPath)
     .query(true)
     .reply(200, cvIndexData);
-  const searchResultScope = nockInstance
-    .get(cvIndexPath)
-    .query(matchQuery)
-    .reply(200, searchResults);
 
   const {
     getByLabelText,
@@ -325,71 +279,52 @@ test('Can search for specific Content View', async (done) => {
 
   await patientlyWaitFor(() => expect(getByText(firstCV.name)).toBeInTheDocument());
 
-  const searchInput = getByLabelText(/text input for search/i);
+  const searchInput = getByLabelText('Search input');
   expect(searchInput).toBeInTheDocument();
-  fireEvent.change(searchInput, { target: { value: `name = \"${cvname}\"` } });
+  searchInput.focus();
+  fireEvent.change(searchInput, { target: { value: `name = ${firstCV.name}` } });
 
   await patientlyWaitFor(() => {
-    expect(getByText(cvname)).toBeInTheDocument();
-    expect(queryByText(firstCV.name)).not.toBeInTheDocument();
+    expect(getByText(`name = ${firstCV.name} and`)).toBeInTheDocument();
+    expect(queryByText(`name = ${cvname} and`)).not.toBeInTheDocument();
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(scopeBookmark);
   assertNockRequest(initialScope);
-  assertNockRequest(withSearchScope);
-  assertNockRequest(searchResultScope, done);
+  assertNockRequest(withSearchScope, done);
 });
 
-test('No results message is shown for empty search', async (done) => {
+test('Nothing is shown for empty search', async (done) => {
   const cvname = 'notanactualname';
   const query = `name = \"${cvname}\"`;
-  const matchQuery = actualParams => actualParams?.search?.includes(cvname);
-  const emptyResults = {
-    total: 0,
-    subtotal: 0,
-    page: 1,
-    per_page: 20,
+  const matchQuery = {
+    organization_id: 1,
     search: query,
-    results: [],
-    can_view: true,
-    can_create: true,
   };
 
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-  scopeBookmark = nockInstance
-    .get('/api/v2/bookmarks')
-    .query(true)
-    .reply(200, {});
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, matchQuery);
   const initialScope = nockInstance
     .get(cvIndexPath)
     .query(true)
     .reply(200, cvIndexData);
-  const searchResultScope = nockInstance
-    .get(cvIndexPath)
-    .query(matchQuery)
-    .reply(200, emptyResults);
 
-  const { getByLabelText, getByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
+  const {
+    getByLabelText,
+    getByText,
+    queryByText,
+  } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   await patientlyWaitFor(() => expect(getByText(firstCV.name)).toBeInTheDocument());
 
-  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: query } });
+  getByLabelText('Search input').focus();
+  fireEvent.change(getByLabelText('Search input'), { target: { value: query } });
 
-  await patientlyWaitFor(() => expect(getByText(/No matching content views found/i)).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(queryByText(`${query} and`)).not.toBeInTheDocument());
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(scopeBookmark);
   assertNockRequest(initialScope);
-  assertNockRequest(withSearchScope);
-  assertNockRequest(searchResultScope, done);
+  assertNockRequest(withSearchScope, done);
 });
 
 test('Displays Create Content View and opens modal with Form', async () => {

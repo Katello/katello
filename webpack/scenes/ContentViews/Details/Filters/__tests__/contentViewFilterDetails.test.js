@@ -8,7 +8,6 @@ import {
   nockInstance,
   assertNockRequest,
   mockAutocomplete,
-  mockSetting,
 } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import allPackageGroups from './allFilterPackageGroups.fixtures.json';
@@ -27,20 +26,13 @@ const renderOptions = {
     initialIndex: 1,
   },
 };
+const autocompleteQuery = {
+  filterid: 1,
+  organization_id: 1,
+  search: '',
+};
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
-
-let searchDelayScope;
-let autoSearchScope;
-beforeEach(() => {
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-});
 
 test('Can show filter details and package groups on page load', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
@@ -56,7 +48,7 @@ test('Can show filter details and package groups on page load', async (done) => 
     .get(packageGroupsPath)
     .query(true)
     .reply(200, allPackageGroups);
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { getByText, queryByText } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
       cvId={1}
@@ -83,7 +75,25 @@ test('Can search for package groups in package group filter', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
   const { name: firstPackageGroupName } = firstPackageGroup;
   const { name: lastPackageGroupName } = lastPackageGroup;
-  const searchQueryMatcher = actualParams => actualParams?.search?.includes(lastPackageGroupName);
+  const searchQueryMatcher = {
+    filterid: 1,
+    organization_id: 1,
+    search: `name = ${lastPackageGroupName}`,
+  };
+  const searchResults = [
+    {
+      completed: `name = ${lastPackageGroupName}`,
+      part: 'and',
+      label: `name = ${lastPackageGroupName} and`,
+      category: 'Operators',
+    },
+    {
+      completed: `name = ${lastPackageGroupName}`,
+      part: 'or',
+      label: `name = ${lastPackageGroupName} or`,
+      category: 'Operators',
+    },
+  ];
 
   const cvFilterScope = nockInstance
     .get(cvFilterDetailsPath)
@@ -103,8 +113,13 @@ test('Can search for package groups in package group filter', async (done) => {
     .reply(200, { results: [lastPackageGroup] });
 
   const autocompleteScope =
-    mockAutocomplete(nockInstance, autocompleteUrl);
-  const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, searchQueryMatcher);
+    mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
+  const withSearchScope = mockAutocomplete(
+    nockInstance,
+    autocompleteUrl,
+    searchQueryMatcher,
+    searchResults,
+  );
   const { getByText, queryByText, getByLabelText } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
       cvId={1}
@@ -118,10 +133,11 @@ test('Can search for package groups in package group filter', async (done) => {
   });
 
   // Search and only searched result shows
-  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: `name = ${lastPackageGroupName}` } });
+  getByLabelText('Search input').focus();
+  fireEvent.change(getByLabelText('Search input'), { target: { value: `name = ${lastPackageGroupName}` } });
   await patientlyWaitFor(() => {
-    expect(getByText(lastPackageGroupName)).toBeInTheDocument();
-    expect(queryByText(firstPackageGroupName)).not.toBeInTheDocument();
+    expect(getByText(`name = ${lastPackageGroupName} and`)).toBeInTheDocument();
+    expect(queryByText(`name = ${firstPackageGroupName} and`)).not.toBeInTheDocument();
   });
 
   assertNockRequest(autocompleteScope);

@@ -40,11 +40,29 @@ exports[`Content page should render and contain appropriate components 1`] = `
           bsClass="form-group"
           className="toolbar-pf toolbar-pf-filter"
         >
-          <Connect(Search)
-            getAutoCompleteParams={[Function]}
+          <SearchBar
+            data={
+              Object {
+                "autocomplete": Object {
+                  "apiParams": Object {},
+                  "id": "searchBar-content-page-Content Header",
+                  "searchQuery": "",
+                  "url": "undefined/auto_complete_search",
+                  "useKeyShortcuts": true,
+                },
+                "bookmarks": Object {
+                  "canCreate": true,
+                  "documentationUrl": "/links/manual/4.1.5Searching",
+                  "id": "searchBar-content-page-Content Header",
+                  "url": "/api/bookmarks",
+                },
+                "controller": undefined,
+              }
+            }
             initialInputValue=""
+            initialQuery=""
             onSearch={[Function]}
-            updateSearchQuery={[Function]}
+            onSearchChange={[Function]}
           />
         </FormGroup>
       </Form>

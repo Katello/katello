@@ -83,7 +83,8 @@ const ContentViewHistories = ({ cvId }) => {
       }}
       ouiaId="content-view-history-table"
       variant={TableVariant.compact}
-      autocompleteEndpoint={`/content_views/${cvId}/history/auto_complete_search`}
+      autocompleteEndpoint={`/katello/api/v2/content_views/${cvId}/history`}
+      bookmarkController="katello_content_view_histories"
       fetchItems={useCallback(params => getContentViewHistories(cvId, params), [cvId])}
     >
       <Thead>

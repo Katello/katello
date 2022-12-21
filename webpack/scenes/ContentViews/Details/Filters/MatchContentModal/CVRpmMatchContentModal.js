@@ -55,7 +55,7 @@ const CVRpmMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
           status,
         }}
         ouiaId="content-view-rpm-match-content-table"
-        autocompleteEndpoint="/packages/auto_complete_search"
+        autocompleteEndpoint="/katello/api/v2/packages"
         variant={TableVariant.compact}
       >
         <Thead>

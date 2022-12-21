@@ -276,7 +276,9 @@ const CVErrataIDFilterContent = ({
             onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
             cells={columnHeaders}
             variant={TableVariant.compact}
-            autocompleteEndpoint={`/errata/auto_complete_search?filterid=${filterId}`}
+            autocompleteEndpoint="/katello/api/v2/errata"
+            autocompleteQueryParams={{ filterid: filterId }}
+            bookmarkController="katello_content_view_erratum_filter_rules"
             additionalListeners={[statusSelected, selectedTypes.length,
               dateType, apiStartDate, apiEndDate]}
             fetchItems={useCallback(params =>

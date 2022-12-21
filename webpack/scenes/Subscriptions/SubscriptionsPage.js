@@ -162,14 +162,6 @@ class SubscriptionsPage extends Component {
       this.props.loadSubscriptions({ search });
     };
 
-    const getAutoCompleteParams = search => ({
-      endpoint: '/subscriptions/auto_complete_search',
-      params: {
-        organization_id: currentOrg,
-        search,
-      },
-    });
-
     const onDeleteSubscriptions = (selectedRows) => {
       this.props.deleteSubscriptions(selectedRows);
       this.handleSelectedRowsChange([]);
@@ -248,7 +240,7 @@ class SubscriptionsPage extends Component {
               disableDeleteButton={deleteButtonDisabled}
               disableDeleteReason={this.getDisabledReason(true)}
               disableAddButton={disableManifestActions}
-              getAutoCompleteParams={getAutoCompleteParams}
+              autocompleteQueryParams={{ organization_id: currentOrg }}
               updateSearchQuery={updateSearchQuery}
               onDeleteButtonClick={openDeleteModal}
               onSearch={onSearch}

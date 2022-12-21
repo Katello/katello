@@ -3,7 +3,7 @@ import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import api, { foremanApi } from '../../../../services/api';
 import {
-  nockInstance, assertNockRequest, mockAutocomplete, mockSetting, mockForemanAutocomplete,
+  nockInstance, assertNockRequest, mockAutocomplete, mockForemanAutocomplete,
 } from '../../../../test-utils/nockWrapper';
 import CONTENT_VIEWS_KEY from '../../ContentViewsConstants';
 import ContentViewsPage from '../../ContentViewsPage.js';
@@ -37,24 +37,10 @@ const baseQuery = {
   sort_order: 'asc',
 };
 
-let scopeBookmark;
 let firstCV;
-let searchDelayScope;
-let autoSearchScope;
 beforeEach(() => {
   const { results } = cvIndexData;
   [firstCV] = results;
-  scopeBookmark = nockInstance
-    .get('/api/v2/bookmarks')
-    .query(true)
-    .reply(200, {});
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
 });
 
 test('Can call API for CVs and show Delete Wizard for the row', async (done) => {
@@ -93,7 +79,6 @@ test('Can call API for CVs and show Delete Wizard for the row', async (done) => 
   await patientlyWaitFor(() => expect(getAllByText('Remove versions from environments')[1]).toBeInTheDocument());
 
   assertNockRequest(scope);
-  assertNockRequest(scopeBookmark);
   assertNockRequest(autocompleteScope);
   assertNockRequest(envPathDeleteScope);
   assertNockRequest(cvDetailsScope);
@@ -103,12 +88,8 @@ test('Can call API for CVs and show Delete Wizard for the row', async (done) => 
 test('Can open Delete wizard and delete CV with all steps', async (done) => {
   const hostAutocompleteUrl = '/hosts/auto_complete_search';
   const hostAutocompleteScope = mockForemanAutocomplete(nockInstance, hostAutocompleteUrl);
-  const hostSearchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  const hostAutoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   const akAutocompleteUrl = '/activation_keys/auto_complete_search';
   const akAutocompleteScope = mockAutocomplete(nockInstance, akAutocompleteUrl);
-  const akSearchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  const akAutoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
@@ -231,19 +212,14 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
   fireEvent.click(getAllByText('Delete')[0]);
 
   assertNockRequest(scope);
-  assertNockRequest(scopeBookmark);
   assertNockRequest(autocompleteScope);
   assertNockRequest(envPathDeleteScope);
   assertNockRequest(cvDetailsScope);
   assertNockRequest(cvVersionsScope);
   assertNockRequest(hostAutocompleteScope);
-  assertNockRequest(hostSearchDelayScope);
-  assertNockRequest(hostAutoSearchScope);
   assertNockRequest(hostScope);
   assertNockRequest(cVDropDownOptionsScope);
   assertNockRequest(akAutocompleteScope);
-  assertNockRequest(akSearchDelayScope);
-  assertNockRequest(akAutoSearchScope);
   assertNockRequest(activationKeysScope);
   assertNockRequest(cVDropDownOptionsScope);
   assertNockRequest(cvDeleteScope);

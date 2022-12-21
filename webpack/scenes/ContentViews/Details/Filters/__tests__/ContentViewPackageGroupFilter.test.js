@@ -7,6 +7,7 @@ import { ADDED, cvFilterDetailsKey, NOT_ADDED } from '../../../ContentViewsConst
 import {
   nockInstance,
   assertNockRequest,
+  mockAutocomplete,
 } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 
@@ -27,6 +28,13 @@ const cvBulkRemoveFilterRulesPath = api.getApiUrl('/content_view_filters/1/remov
 const cvBulkAddFilterRulesPath = api.getApiUrl('/content_view_filters/1/add_filter_rules');
 const cvGetAllReposPath = api.getApiUrl('/content_views/1/repositories');
 
+const autocompleteUrl = '/package_groups/auto_complete_search';
+const autocompleteQuery = {
+  filterid: 1,
+  organization_id: 1,
+  search: '',
+};
+
 const packageGroupsPath = api.getApiUrl('/package_groups');
 const renderOptions = {
   apiNamespace: cvFilterDetailsKey(1, 1),
@@ -41,6 +49,7 @@ const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filter
 jest.mock('../../../../../components/Search', () => () => 'mocked!');
 
 test('Can enable and disable add filter button', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { name: cvFilterName } = cvFilterDetails;
   const cvFilterScope = nockInstance
     .get(cvFilterDetailsPath)
@@ -74,12 +83,14 @@ test('Can enable and disable add filter button', async (done) => {
     expect(getByLabelText('add_filter_rule')).toHaveAttribute('aria-disabled', 'false');
   });
 
+  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(packageGroupsScope, done);
 });
 
 test('Can remove a filter rule', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
 
@@ -126,6 +137,7 @@ test('Can remove a filter rule', async (done) => {
   fireEvent.click(getByText('Remove'));
 
 
+  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleScope);
@@ -135,6 +147,7 @@ test('Can remove a filter rule', async (done) => {
 });
 
 test('Can add a filter rule', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
 
@@ -183,6 +196,7 @@ test('Can add a filter rule', async (done) => {
   fireEvent.click(getByText('Add'));
 
 
+  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleScope);
@@ -192,6 +206,7 @@ test('Can add a filter rule', async (done) => {
 });
 
 test('Can bulk remove filter rules', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
 
@@ -243,6 +258,7 @@ test('Can bulk remove filter rules', async (done) => {
   expect(getByLabelText('bulk_remove')).toBeInTheDocument();
   fireEvent.click(getByLabelText('bulk_remove'));
 
+  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleBulkDeleteScope);
@@ -252,6 +268,7 @@ test('Can bulk remove filter rules', async (done) => {
 });
 
 test('Can bulk add filter rules', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
 
@@ -300,6 +317,7 @@ test('Can bulk add filter rules', async (done) => {
   expect(getByLabelText('add_filter_rule')).toBeInTheDocument();
   fireEvent.click(getByLabelText('add_filter_rule'));
 
+  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleBulkAddScope);
@@ -308,6 +326,26 @@ test('Can bulk add filter rules', async (done) => {
 });
 
 test('Can show affected repository tab on dropdown selection and add repos', async (done) => {
+  const autocompleteScope = mockAutocomplete(
+    nockInstance,
+    autocompleteUrl,
+    autocompleteQuery,
+    [],
+    2,
+  );
+  const autocompleteUrlRepo = '/repositories/auto_complete_search';
+  const autocompleteQueryRepo = {
+    organization_id: 1,
+    search: '',
+  };
+  const autocompleteScopeRepo = mockAutocomplete(
+    nockInstance,
+    autocompleteUrlRepo,
+    autocompleteQueryRepo,
+    [],
+    2,
+  );
+
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
   const { results } = cvAllRepos;
@@ -380,10 +418,31 @@ test('Can show affected repository tab on dropdown selection and add repos', asy
   assertNockRequest(bulkAddReposScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvAllReposScope);
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(autocompleteScopeRepo);
   assertNockRequest(packageGroupsScope, done);
 });
 
 test('Can show affected repository tab and remove affected repos', async (done) => {
+  const autocompleteScope = mockAutocomplete(
+    nockInstance,
+    autocompleteUrl,
+    autocompleteQuery,
+    [],
+    2,
+  );
+  const autocompleteUrlRepo = '/repositories/auto_complete_search';
+  const autocompleteQueryRepo = {
+    organization_id: 1,
+    search: '',
+  };
+  const autocompleteScopeRepo = mockAutocomplete(
+    nockInstance,
+    autocompleteUrlRepo,
+    autocompleteQueryRepo,
+    [],
+    2,
+  );
   const { rules } = cvFilterDetailsAffectedRepos;
   const { name } = rules[0];
   const { results } = cvAllRepos;
@@ -444,6 +503,9 @@ test('Can show affected repository tab and remove affected repos', async (done) 
   fireEvent.click(getAllByLabelText('bulk_actions')[1]);
   expect(getByLabelText('bulk_remove')).toHaveAttribute('aria-disabled', 'false');
   fireEvent.click(getByLabelText('bulk_remove'));
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(autocompleteScopeRepo);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvAllReposScope);
@@ -454,6 +516,7 @@ test('Can show affected repository tab and remove affected repos', async (done) 
 });
 
 test('Can filter by added/not added rules', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
 
@@ -505,6 +568,7 @@ test('Can filter by added/not added rules', async (done) => {
     getByLabelText(NOT_ADDED).click();
   });
 
+  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(packageGroupsScope, done);

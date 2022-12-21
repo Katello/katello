@@ -70,7 +70,7 @@ const RelatedContentViewsModal = ({ cvName, cvId, relatedCVCount }) => {
               ouiaId="related-content-view-components-table"
               fetchItems={useCallback(params => getContentViewComponents(cvId, params, 'Added'), [cvId])}
               variant={TableVariant.compact}
-              autocompleteEndpoint="/content_views/auto_complete_search"
+              autocompleteEndpoint="/katello/api/v2/content_views"
               emptyContentTitle={__('You currently don\'t have any related content views.')}
               emptySearchTitle={__('No matching content views found')}
               emptyContentBody={__('Related content views will appear here when created.')}

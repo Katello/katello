@@ -54,7 +54,7 @@ const CVDebMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
           status,
         }}
         ouiaId="content-view-deb-match-content-table"
-        autocompleteEndpoint="/debs/auto_complete_search"
+        autocompleteEndpoint="/katello/api/v2/debs"
         variant={TableVariant.compact}
       >
         <Thead>

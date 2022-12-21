@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Row, Col, Form, FormGroup, Button } from 'patternfly-react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { noop } from 'foremanReact/common/helpers';
+import SearchBar from 'foremanReact/components/SearchBar';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { SUBSCRIPTIONS_SERVICE_URL } from '../../SubscriptionConstants';
 
-import Search from '../../../../components/Search/index';
 import TooltipButton from '../../../../components/TooltipButton';
 import OptionTooltip from '../../../../components/OptionTooltip';
 
@@ -17,7 +17,7 @@ const SubscriptionsToolbar = ({
   disableDeleteButton,
   disableDeleteReason,
   disableAddButton,
-  getAutoCompleteParams,
+  autocompleteQueryParams,
   updateSearchQuery,
   onDeleteButtonClick,
   onSearch,
@@ -32,10 +32,16 @@ const SubscriptionsToolbar = ({
     <Col sm={12}>
       <Form className="toolbar-pf-actions">
         <FormGroup className="toolbar-pf-filter">
-          <Search
+          <SearchBar
+            data={{
+              autocomplete: {
+                url: '/katello/api/v2/subscriptions/auto_complete_search',
+                apiParams: { ...autocompleteQueryParams },
+              },
+              bookmarks: {},
+            }}
             onSearch={onSearch}
-            getAutoCompleteParams={getAutoCompleteParams}
-            updateSearchQuery={updateSearchQuery}
+            onSearchChange={updateSearchQuery}
           />
         </FormGroup>
         <div className="option-tooltip-container">
@@ -99,7 +105,6 @@ const SubscriptionsToolbar = ({
 );
 
 SubscriptionsToolbar.propTypes = {
-  ...Search.propTypes,
   tableColumns: OptionTooltip.propTypes.options,
   canManageSubscriptionAllocations: PropTypes.bool,
   disableManifestActions: PropTypes.bool,
@@ -107,26 +112,34 @@ SubscriptionsToolbar.propTypes = {
   disableDeleteButton: PropTypes.bool,
   disableDeleteReason: PropTypes.string,
   disableAddButton: PropTypes.bool,
+  autocompleteQueryParams: PropTypes.shape({}),
+  updateSearchQuery: PropTypes.func,
+  onSearch: PropTypes.func,
   onDeleteButtonClick: PropTypes.func,
   onManageManifestButtonClick: PropTypes.func,
   onExportCsvButtonClick: PropTypes.func,
   toolTipOnChange: PropTypes.func,
   toolTipOnclose: PropTypes.func,
+  isManifestImported: PropTypes.bool,
 };
 
 SubscriptionsToolbar.defaultProps = {
-  ...Search.defaultProps,
   tableColumns: [],
+  canManageSubscriptionAllocations: false,
   disableManifestActions: false,
   disableManifestReason: '',
   disableDeleteButton: false,
   disableDeleteReason: '',
   disableAddButton: false,
+  autocompleteQueryParams: undefined,
+  updateSearchQuery: noop,
+  onSearch: noop,
   onDeleteButtonClick: noop,
   onManageManifestButtonClick: noop,
   onExportCsvButtonClick: noop,
   toolTipOnChange: noop,
   toolTipOnclose: noop,
+  isManifestImported: false,
 };
 
 export default SubscriptionsToolbar;

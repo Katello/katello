@@ -1,14 +1,13 @@
 import React from 'react';
 import { isEqual } from 'lodash';
 import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_ERRATA_KEY, ERRATA_SEARCH_QUERY } from '../ErrataTab/HostErrataConstants';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
 import { ErrataTab } from '../ErrataTab/ErrataTab.js';
 import mockErrataData from './errata.fixtures.json';
 import mockResolveErrataTask from './resolveErrata.fixtures.json';
-import mockBookmarkData from './bookmarks.fixtures.json';
 
 jest.mock('../../hostDetailsHelpers', () => ({
   ...jest.requireActual('../../hostDetailsHelpers'),
@@ -38,8 +37,6 @@ const cfWithErrataTotal = total => ({
 const cfNoErrata = cfWithErrataTotal(0);
 
 const hostName = 'foo.example.com';
-
-const errataBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_errata');
 
 const renderOptions = (facetAttributes = contentFacetAttributes) => ({
   apiNamespace: HOST_ERRATA_KEY,
@@ -108,22 +105,10 @@ const applyByKatelloAgentUrl = foremanApi.getApiUrl('/hosts/1/errata/apply');
 
 let firstErrata;
 let thirdErrata;
-let searchDelayScope;
-let autoSearchScope;
-let bookmarkScope;
 
 beforeEach(() => {
   const { results } = mockErrataData;
   [firstErrata, , thirdErrata] = results;
-  bookmarkScope = nockInstance.get(errataBookmarks).reply(200, mockBookmarkData);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(bookmarkScope);
 });
 
 test('Can call API for errata and show on screen on page load', async (done) => {
@@ -805,8 +790,6 @@ test('Can filter by errata type', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
 });
 
@@ -853,8 +836,6 @@ test('Can filter by severity', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
 });
 

@@ -32,14 +32,6 @@ class ModuleStreamsPage extends Component {
     this.props.getModuleStreams({ search });
   };
 
-  getAutoCompleteParams = search => ({
-    endpoint: '/module_streams/auto_complete_search',
-    params: {
-      organization_id: orgId(),
-      search,
-    },
-  });
-
   updateSearchQuery = (searchQuery) => {
     this.setState({ searchQuery });
   };
@@ -52,7 +44,9 @@ class ModuleStreamsPage extends Component {
         content={moduleStreams}
         tableSchema={TableSchema}
         onSearch={this.onSearch}
-        getAutoCompleteParams={this.getAutoCompleteParams}
+        autocompleteEndpoint="/katello/api/v2/module_streams"
+        autocompleteQueryParams={{ organization_id: orgId() }}
+        bookmarkController="katello_module_streams"
         updateSearchQuery={this.updateSearchQuery}
         initialInputValue={this.state.searchQuery}
         onPaginationChange={this.onPaginationChange}

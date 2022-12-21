@@ -2,11 +2,10 @@ import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 import { head, last } from 'lodash';
-import { nockInstance, assertNockRequest, mockSetting, mockAutocomplete } from '../../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../../test-utils/nockWrapper';
 import api from '../../../../../../services/api';
 import { cvVersionDetailsKey } from '../../../../ContentViewsConstants';
 import ContentViewVersionDetails from '../ContentViewVersionDetails';
-import { AUTOSEARCH_DELAY, AUTOSEARCH_WHILE_TYPING } from '../../../../../Settings/SettingsConstants';
 import ContentViewVersionDetailsData from './ContentViewVersionDetails.fixtures.json';
 import ContentViewVersionDetailsCounts from './ContentViewVersionDetailsCounts.fixtures.json';
 import cvDetailData from '../../../../__tests__/mockDetails.fixtures.json';
@@ -41,6 +40,28 @@ const renderOptions = {
     initialIndex: 1,
   },
 };
+
+const autocompleteQuery = name => ((name === 'Repositories') ? {
+  archived: true,
+  organization_id: 1,
+  content_view_version_id: 73,
+  search: '',
+} : {
+  organization_id: 1,
+  content_view_version_id: 73,
+  search: '',
+});
+
+const queryParams = name => ((name === 'Repositories') ? {
+  archived: true,
+  content_view_version_id: 73,
+  per_page: 20,
+  page: 1,
+} : {
+  content_view_version_id: 73,
+  per_page: 20,
+  page: 1,
+});
 
 beforeEach(() => {
   envScope = nockInstance
@@ -89,7 +110,6 @@ test('Can show versions details - Components Tab', async (done) => {
   assertNockRequest(scope);
   assertNockRequest(componentScope, done);
 });
-
 
 const testConfig = [
   {
@@ -196,9 +216,11 @@ testConfig.forEach(({
   test(`Can show versions details - ${name} Tab`, async (done) => {
     const { version } = ContentViewVersionDetailsData;
 
-    const autocompleteScope = mockAutocomplete(nockInstance, autoCompleteUrl);
-    const searchDelayScope = mockSetting(nockInstance, AUTOSEARCH_DELAY);
-    const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING);
+    const autocompleteScope = mockAutocomplete(
+      nockInstance,
+      autoCompleteUrl,
+      autocompleteQuery(name),
+    );
 
     const scope = nockInstance
       .get(cvVersions)
@@ -207,7 +229,7 @@ testConfig.forEach(({
 
     const tabScope = nockInstance
       .get(dataUrl)
-      .query(true)
+      .query(queryParams(name))
       .reply(200, data);
 
     const { getByText, queryByText } = renderWithRedux(
@@ -231,8 +253,6 @@ testConfig.forEach(({
     });
 
     assertNockRequest(autocompleteScope);
-    assertNockRequest(searchDelayScope);
-    assertNockRequest(autoSearchScope);
     assertNockRequest(scope);
     assertNockRequest(tabScope);
     assertNockRequest(scope, done);
@@ -247,9 +267,7 @@ test('Can change repository selector', async (done) => {
   } = testConfig[1]; // RPM Packages
 
   const { version } = ContentViewVersionDetailsData;
-  const autocompleteScope = mockAutocomplete(nockInstance, autoCompleteUrl);
-  const searchDelayScope = mockSetting(nockInstance, AUTOSEARCH_DELAY, 0);
-  const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING);
+  const autocompleteScope = mockAutocomplete(nockInstance, autoCompleteUrl, autocompleteQuery);
 
   const scope = nockInstance
     .get(cvVersions)
@@ -297,8 +315,6 @@ test('Can change repository selector', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(scope);
   assertNockRequest(tabScope);
   assertNockRequest(scope, done);

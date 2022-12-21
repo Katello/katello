@@ -3,7 +3,6 @@ import SubscriptionsToolbar from './SubscriptionsToolbar';
 
 const createRequiredProps = () => ({
   onSearch: jest.fn(),
-  getAutoCompleteParams: jest.fn(),
   updateSearchQuery: jest.fn(),
 });
 const fixtures = {

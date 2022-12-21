@@ -44,7 +44,8 @@ const ContentRepositories = ({ contentType, id, tabKey }) => {
       }}
       ouiaId="content-repositories-table"
       variant={TableVariant.compact}
-      autocompleteEndpoint="/repositories/auto_complete_search"
+      autocompleteEndpoint="/katello/api/v2/repositories"
+      bookmarkController="katello_repositories"
       fetchItems={useCallback(
         params => getRepositoryContentDetails(typeSingularLabel, id, params),
         [typeSingularLabel, id],

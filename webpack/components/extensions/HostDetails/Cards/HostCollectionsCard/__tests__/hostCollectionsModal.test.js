@@ -3,7 +3,7 @@ import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-
 import mockAvailableHostCollections from './availableHostCollections.fixtures.json';
 import mockRemovableHostCollections from './removableHostCollections.fixtures.json';
 import { REMOVABLE_HOST_COLLECTIONS_KEY } from '../HostCollectionsConstants';
-import { assertNockRequest, mockAutocomplete, mockSetting, nockInstance } from '../../../../../../test-utils/nockWrapper';
+import { assertNockRequest, mockAutocomplete, nockInstance } from '../../../../../../test-utils/nockWrapper';
 import katelloApi, { foremanApi } from '../../../../../../services/api';
 import { HostCollectionsAddModal, HostCollectionsRemoveModal } from '../HostCollectionsModal';
 
@@ -38,20 +38,11 @@ const defaultQueryWithAvailable = {
 };
 
 let firstHostCollection;
-let searchDelayScope;
-let autoSearchScope;
 
 describe('HostCollectionsAddModal', () => {
   beforeEach(() => {
     const { results } = mockAvailableHostCollections;
     [firstHostCollection] = results;
-    searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-    autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
-  });
-
-  afterEach(() => {
-    assertNockRequest(searchDelayScope);
-    assertNockRequest(autoSearchScope);
   });
 
   test('Calls API with available_for=host on page load', async (done) => {
@@ -153,13 +144,6 @@ describe('HostCollectionsRemoveModal', () => {
   beforeEach(() => {
     const { results } = mockAvailableHostCollections;
     [firstHostCollection] = results;
-    searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-    autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
-  });
-
-  afterEach(() => {
-    assertNockRequest(searchDelayScope);
-    assertNockRequest(autoSearchScope);
   });
 
   test('Calls API without available_for=host on page load', async (done) => {

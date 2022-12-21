@@ -55,6 +55,8 @@ export const TableType = PropTypes.shape({
   responseSelector: PropTypes.func,
   statusSelector: PropTypes.func,
   autocompleteEndpoint: PropTypes.string,
+  autocompleteQueryParams: PropTypes.shape({}),
+  bookmarkController: PropTypes.string,
   fetchItems: PropTypes.func,
   columnHeaders:
     PropTypes.arrayOf(PropTypes.shape({
@@ -72,6 +74,8 @@ export default ({ cvId, versionId }) => [
     responseSelector: state => selectCVVersions(state, cvId),
     statusSelector: state => selectCVVersionsStatus(state, cvId),
     autocompleteEndpoint: '',
+    autocompleteQueryParams: undefined,
+    bookmarkController: '',
     fetchItems: params => getContentViewVersions(
       cvId,
       { composite_version_id: versionId, ...params, content_view_id: undefined },
@@ -99,7 +103,9 @@ export default ({ cvId, versionId }) => [
     getCountKey: item => item?.repositories?.length,
     responseSelector: state => selectRepositories(state),
     statusSelector: state => selectRepositoriesStatus(state),
-    autocompleteEndpoint: `/repositories/auto_complete_search?archived=true&content_view_version_id=${versionId}`,
+    autocompleteEndpoint: '/katello/api/v2/repositories',
+    autocompleteQueryParams: { archived: true, content_view_version_id: versionId },
+    bookmarkController: 'katello_content_view_repositories',
     fetchItems: params => getRepositories({
       content_view_version_id: versionId,
       archived: true,
@@ -137,7 +143,9 @@ export default ({ cvId, versionId }) => [
     getCountKey: item => item?.rpm_count,
     responseSelector: state => selectRPMPackages(state),
     statusSelector: state => selectRPMPackagesStatus(state),
-    autocompleteEndpoint: `/packages/auto_complete_search?content_view_version_id=${versionId}`,
+    autocompleteEndpoint: '/katello/api/v2/packages',
+    autocompleteQueryParams: { content_view_version_id: versionId },
+    bookmarkController: 'katello_content_view_components',
     fetchItems: params => getRPMPackages({ content_view_version_id: versionId, ...params }),
     columnHeaders: [
       {
@@ -160,7 +168,9 @@ export default ({ cvId, versionId }) => [
     getCountKey: item => item?.package_group_count,
     responseSelector: state => selectRPMPackageGroups(state),
     statusSelector: state => selectRPMPackageGroupsStatus(state),
-    autocompleteEndpoint: `/package_groups/auto_complete_search?content_view_version_id=${versionId}`,
+    autocompleteEndpoint: '/katello/api/v2/package_groups',
+    autocompleteQueryParams: { content_view_version_id: versionId },
+    bookmarkController: 'katello_content_view_components',
     fetchItems: params => getPackageGroups({ content_view_version_id: versionId, ...params }),
     columnHeaders: [
       { title: __('Name'), getProperty: item => item?.name },
@@ -174,7 +184,9 @@ export default ({ cvId, versionId }) => [
     getCountKey: item => item?.file_count,
     responseSelector: state => selectFiles(state),
     statusSelector: state => selectFilesStatus(state),
-    autocompleteEndpoint: `/files/auto_complete_search?content_view_version_id=${versionId}`,
+    autocompleteEndpoint: '/katello/api/v2/files',
+    autocompleteQueryParams: { content_view_version_id: versionId },
+    bookmarkController: 'katello_content_view_components',
     fetchItems: params => getFiles({ content_view_version_id: versionId, ...params }),
     columnHeaders: [
       {
@@ -194,7 +206,9 @@ export default ({ cvId, versionId }) => [
     getCountKey: item => item?.erratum_count,
     responseSelector: state => selectErrata(state),
     statusSelector: state => selectErrataStatus(state),
-    autocompleteEndpoint: `/errata/auto_complete_search?content_view_version_id=${versionId}`,
+    autocompleteEndpoint: '/katello/api/v2/errata',
+    autocompleteQueryParams: { content_view_version_id: versionId },
+    bookmarkController: 'katello_content_view_components',
     fetchItems: params => getErrata({ content_view_version_id: versionId, ...params }),
     columnHeaders: [
       {
@@ -249,7 +263,9 @@ export default ({ cvId, versionId }) => [
     getCountKey: item => item?.module_stream_count,
     responseSelector: state => selectModuleStreams(state),
     statusSelector: state => selectModuleStreamsStatus(state),
-    autocompleteEndpoint: `/module_streams/auto_complete_search?content_view_version_id=${versionId}`,
+    autocompleteEndpoint: '/katello/api/v2/module_streams',
+    autocompleteQueryParams: { content_view_version_id: versionId },
+    bookmarkController: 'katello_content_view_components',
     fetchItems: params => getModuleStreams({ content_view_version_id: versionId, ...params }),
     columnHeaders: [
       {
@@ -272,7 +288,9 @@ export default ({ cvId, versionId }) => [
     getCountKey: item => item?.deb_count,
     responseSelector: state => selectDebPackages(state),
     statusSelector: state => selectDebPackagesStatus(state),
-    autocompleteEndpoint: `/debs/auto_complete_search?content_view_version_id=${versionId}`,
+    autocompleteEndpoint: '/katello/api/v2/debs',
+    autocompleteQueryParams: { content_view_version_id: versionId },
+    bookmarkController: 'katello_content_view_components',
     fetchItems: params => getDebPackages({ content_view_version_id: versionId, ...params }),
     columnHeaders: [
       {
@@ -293,7 +311,9 @@ export default ({ cvId, versionId }) => [
     getCountKey: item => item?.docker_tag_count,
     responseSelector: state => selectDockerTags(state),
     statusSelector: state => selectDockerTagsStatus(state),
-    autocompleteEndpoint: `/docker_tags/auto_complete_search?content_view_version_id=${versionId}`,
+    autocompleteEndpoint: '/katello/api/v2/docker_tags',
+    autocompleteQueryParams: { content_view_version_id: versionId },
+    bookmarkController: 'katello_content_view_components',
     fetchItems: params => getDockerTags({ content_view_version_id: versionId, ...params }),
     columnHeaders: [
       {
@@ -323,7 +343,9 @@ export default ({ cvId, versionId }) => [
     getCountKey: item => item[`${singularLabel}_count`],
     responseSelector: state => selectContent(pluralLabel, state),
     statusSelector: state => selectContentStatus(pluralLabel, state),
-    autocompleteEndpoint: `/${pluralLabel}/auto_complete_search?content_view_version_id=${versionId}`,
+    autocompleteEndpoint: `/katello/api/v2/${pluralLabel}`,
+    autocompleteQueryParams: { content_view_version_id: versionId },
+    bookmarkController: 'katello_content_view_components',
     fetchItems: params =>
       getContent(pluralLabel, { content_view_version_id: versionId, ...params }),
     columnHeaders,
