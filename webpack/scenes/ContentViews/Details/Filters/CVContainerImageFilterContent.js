@@ -152,7 +152,8 @@ const CVContainerImageFilterContent = ({
             onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
             cells={columnHeaders}
             variant={TableVariant.compact}
-            autocompleteEndpoint={`/content_view_filters/${filterId}/rules/auto_complete_search`}
+            autocompleteEndpoint={`/katello/api/v2/content_view_filters/${filterId}/rules`}
+            bookmarkController="katello_content_view_docker_filter_rules"
             fetchItems={useCallback(params => getCVFilterRules(filterId, params), [filterId])}
             actionButtons={hasPermission(permissions, 'edit_content_views') &&
               <>

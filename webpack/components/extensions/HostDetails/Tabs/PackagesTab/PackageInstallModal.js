@@ -219,8 +219,7 @@ const PackageInstallModal = ({
         additionalListeners={[hostId]}
         fetchItems={fetchItems}
         searchPlaceholderText={__('Search available packages')}
-        autocompleteEndpoint={`/hosts/${hostId}/packages/auto_complete_search`}
-        foremanApiAutoComplete
+        autocompleteEndpoint={`/api/v2/hosts/${hostId}/packages`}
         variant={TableVariant.compact}
         {...selectAll}
         displaySelectAllCheckbox

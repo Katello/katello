@@ -1,11 +1,10 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../test-utils/nockWrapper';
 import katelloApi, { foremanApi } from '../../../../../services/api';
 import { REPOSITORY_SETS_KEY } from '../RepositorySetsTab/RepositorySetsConstants';
 import RepositorySetsTab from '../RepositorySetsTab/RepositorySetsTab';
 import mockRepoSetData from './repositorySets.fixtures.json';
-import mockBookmarkData from './bookmarks.fixtures.json';
 import mockContentOverride from './contentOverrides.fixtures.json';
 
 jest.mock('../../hostDetailsHelpers', () => ({
@@ -50,7 +49,6 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
 
 const hostRepositorySets = katelloApi.getApiUrl('/repository_sets');
 const autocompleteUrl = '/repository_sets/auto_complete_search';
-const repositorySetBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_product_contents');
 const contentOverride = foremanApi.getApiUrl('/hosts/1/subscriptions/content_override');
 
 const limitToEnvQuery = {
@@ -70,23 +68,11 @@ const showAllQuery = {
 
 let firstRepoSet;
 let secondRepoSet;
-let searchDelayScope;
-let autoSearchScope;
-let bookmarkScope;
 
 beforeEach(() => {
   // jest.resetModules();
   const { results } = mockRepoSetData;
   [firstRepoSet, secondRepoSet] = results;
-  bookmarkScope = nockInstance.get(repositorySetBookmarks).reply(200, mockBookmarkData);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(bookmarkScope);
 });
 
 test('Can call API for repository sets and show basic table', async (done) => {
@@ -415,8 +401,6 @@ test('Can filter by status', async (done) => {
   });
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
 });
 

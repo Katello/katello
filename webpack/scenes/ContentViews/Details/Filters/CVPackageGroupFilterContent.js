@@ -219,7 +219,9 @@ const CVPackageGroupFilterContent = ({
             defaultFilters={[allAddedNotAdded[0]]}
             cells={columnHeaders}
             variant={TableVariant.compact}
-            autocompleteEndpoint={`/package_groups/auto_complete_search?filterid=${filterId}`}
+            autocompleteEndpoint="/katello/api/v2/package_groups"
+            autocompleteQueryParams={{ filterid: filterId }}
+            bookmarkController="katello_content_view_package_group_filter_rules"
             fetchItems={fetchItems}
             actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
             onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}

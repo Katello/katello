@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 import { CONTENT_ID_KEY } from '../../ContentConstants';
 import ContentDetails from '../ContentDetails';
@@ -16,9 +16,6 @@ const ansibleCollectionDetailsPath = api.getApiUrl('/ansible_collections/51');
 const contentRepositoryDetailsPath = api.getApiUrl('/repositories');
 
 const withContentRoute = component => <Route path="/content/:content_type([a-z_]+)/:id([0-9]+)">{component}</Route>;
-
-let searchDelayScope;
-let autoSearchScope;
 
 jest.mock('react-intl', () => ({ addLocaleData: () => { }, FormattedDate: () => 'mocked' }));
 
@@ -59,8 +56,6 @@ test('Can call API for Python package details and show details tab on page load'
 test('Can call API for Python package repository details and show repositories tab', async (done) => {
   const autocompleteUrl = '/repositories/auto_complete_search';
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const results = pythonPackageRepositoryDetailsResponse.results[0];
   const repoName = results.name;
@@ -84,8 +79,6 @@ test('Can call API for Python package repository details and show repositories t
     expect(getAllByText(contentCountWords)[0]).toBeInTheDocument();
   });
 
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(searchDelayScope);
   assertNockRequest(autocompleteScope);
   assertNockRequest(pythonPackageRepositoryDetailsScope, done);
 });
@@ -122,8 +115,6 @@ test('Can call API for Ansible collection details and show details tab on page l
 test('Can call API for Ansible collection repository details and show repositories tab', async (done) => {
   const autocompleteUrl = '/repositories/auto_complete_search';
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const results = ansibleCollectionRepositoryDetailsResponse.results[0];
   const repoName = results.name;
@@ -147,8 +138,6 @@ test('Can call API for Ansible collection repository details and show repositori
     expect(getAllByText(contentCountWords)[0]).toBeInTheDocument();
   });
 
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(searchDelayScope);
   assertNockRequest(autocompleteScope);
   assertNockRequest(ansibleCollectionRepositoryDetailsScope, done);
 });

@@ -1,10 +1,9 @@
 import React from 'react';
 import { act } from 'react-test-renderer';
 import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { ModuleStreamsTab } from '../ModuleStreamsTab/ModuleStreamsTab.js';
 import mockModuleStreams from './moduleStreams.fixtures.json';
-import mockBookmarkData from './bookmarks.fixtures.json';
 import { MODULE_STREAMS_KEY } from '../../../../../scenes/ModuleStreams/ModuleStreamsConstants';
 import { foremanApi } from '../../../../../services/api';
 
@@ -14,8 +13,6 @@ jest.mock('../../hostDetailsHelpers', () => ({
     create_job_invocations: true,
   }),
 }));
-
-const moduleBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_host_available_module_streams');
 
 const contentFacetAttributes = {
   id: 11,
@@ -44,34 +41,10 @@ const hostModuleStreams = foremanApi.getApiUrl('/hosts/1/module_streams');
 const autocompleteUrl = '/hosts/1/module_streams/auto_complete_search';
 
 let firstModuleStreams;
-let searchDelayScope;
-let autoSearchScope;
-let bookmarkScope;
 
 beforeEach(() => {
   const { results } = mockModuleStreams;
   [firstModuleStreams] = results;
-  bookmarkScope = nockInstance.get(moduleBookmarks).reply(200, mockBookmarkData);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(bookmarkScope);
-});
-
-beforeEach(() => {
-  const { results } = mockModuleStreams;
-  [firstModuleStreams] = results;
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
 });
 
 test('Can call API for Module streams and show on screen on page load', async (done) => {

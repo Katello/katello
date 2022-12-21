@@ -253,7 +253,9 @@ const ContentViewVersions = ({ cvId, details }) => {
       }}
       ouiaId="content-view-versions-table"
       variant={TableVariant.compact}
-      autocompleteEndpoint={`/content_view_versions/auto_complete_search?content_view_id=${cvId}`}
+      autocompleteEndpoint="/katello/api/v2/content_view_versions"
+      autocompleteQueryParams={{ content_view_id: cvId }}
+      bookmarkController="katello_content_view_versions"
       fetchItems={fetchItems}
       {...hasActionPermissions ? selectionSetVars : []}
       actionButtons={

@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent, within } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import katelloApi, { foremanApi } from '../../../../../services/api';
 import mockPackagesData from './yumInstallablePackages.fixtures.json';
 import PackageInstallModal from '../PackagesTab/PackageInstallModal';
@@ -54,19 +54,10 @@ const defaultQuery = {
 
 let firstPackages;
 let secondPackages;
-let searchDelayScope;
-let autoSearchScope;
 
 beforeEach(() => {
   const { results } = mockPackagesData;
   [firstPackages, secondPackages] = results;
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
 });
 
 test('Can call API for installable packages and show on screen on page load', async (done) => {

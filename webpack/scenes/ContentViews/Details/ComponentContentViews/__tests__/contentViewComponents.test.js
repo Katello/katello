@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewComponents from '../ContentViewComponents';
@@ -15,27 +15,21 @@ const cvComponents = api.getApiUrl('/content_views/4/content_view_components/sho
 const addComponentURL = api.getApiUrl('/content_views/4/content_view_components/add');
 const publishedComponentDetailsURL = api.getApiUrl('/content_views/13');
 const removeComponentURL = api.getApiUrl('/content_views/4/content_view_components/remove');
-const cvComponentsSearchURL = api.getApiUrl('/content_views/4/content_view_components/show_all?per_page=20&page=1&search=name+%3D+%227%22&status=All');
 const autocompleteUrl = '/content_views/auto_complete_search';
+const autocompleteQuery = {
+  organization_id: 1,
+  search: '',
+};
 
 let firstComponent;
-let searchDelayScope;
-let autoSearchScope;
 
 beforeEach(() => {
   const { results } = cvComponentData;
   [firstComponent] = results;
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
 });
 
 test('Can call API and show components on page load', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponents)
     .reply(200, cvComponentData);
@@ -55,7 +49,7 @@ test('Can call API and show components on page load', async (done) => {
 });
 
 test('Can call API and show unpublished components', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponents)
     .reply(200, cvUnpublishedComponentData);
@@ -79,7 +73,7 @@ test('Can call API and show unpublished components', async (done) => {
 });
 
 test('Can link to view environment', async () => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponents)
     .reply(200, cvComponentData);
@@ -102,17 +96,36 @@ test('Can search for component content views in composite view', async (done) =>
   const lastComponent = cvComponentData.results[1];
   const { name: firstComponentName } = firstComponent.content_view;
   const { name: lastComponentName } = lastComponent.content_view;
-  const searchQueryMatcher = actualParams => actualParams?.search?.includes(lastComponentName);
+  const searchQueryMatcher = {
+    organization_id: 1,
+    search: `name = ${lastComponentName}`,
+  };
+  const searchResults = [
+    {
+      completed: `name = ${lastComponentName}`,
+      part: 'and',
+      label: `name = ${lastComponentName} and`,
+      category: 'Operators',
+    },
+    {
+      completed: `name = ${lastComponentName}`,
+      part: 'or',
+      label: `name = ${lastComponentName} or`,
+      category: 'Operators',
+    },
+  ];
 
   const cvComponentsScope = nockInstance
     .get(cvComponents)
     .reply(200, cvComponentData);
-  const cvComponentsSearchScope = nockInstance
-    .get(cvComponentsSearchURL)
-    .reply(200, { results: [lastComponent] });
 
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, searchQueryMatcher);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
+  const withSearchScope = mockAutocomplete(
+    nockInstance,
+    autocompleteUrl,
+    searchQueryMatcher,
+    searchResults,
+  );
   const { getByText, queryByText, getByLabelText } =
     renderWithRedux(<ContentViewComponents cvId={4} details={cvDetails} />, renderOptions);
 
@@ -123,23 +136,23 @@ test('Can search for component content views in composite view', async (done) =>
   });
 
   // Search and only searched result shows
-  const searchInput = getByLabelText(/text input for search/i);
+  const searchInput = getByLabelText('Search input');
   expect(searchInput).toBeInTheDocument();
-  fireEvent.change(searchInput, { target: { value: `name = "${lastComponentName}"` } });
+  searchInput.focus();
+  fireEvent.change(searchInput, { target: { value: `name = ${lastComponentName}` } });
 
   await patientlyWaitFor(() => {
-    expect(getByText(lastComponentName)).toBeInTheDocument();
-    expect(queryByText(firstComponentName)).not.toBeInTheDocument();
+    expect(getByText(`name = ${lastComponentName} and`)).toBeInTheDocument();
+    expect(queryByText(`name = ${firstComponentName} and`)).not.toBeInTheDocument();
   });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvComponentsScope);
-  assertNockRequest(withSearchScope);
-  assertNockRequest(cvComponentsSearchScope, done);
+  assertNockRequest(withSearchScope, done);
 });
 
 test('Can handle no components being present', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
 
   const noResults = {
     total: 0,
@@ -172,7 +185,7 @@ test('Can handle no components being present', async (done) => {
 });
 
 test('Can add published component views to content view with modal', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponentsWithoutSearch)
     .reply(200, cvComponentData);
@@ -225,7 +238,7 @@ test('Can add published component views to content view with modal', async (done
 });
 
 test('Can add unpublished component views to content view', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponentsWithoutSearch)
     .reply(200, cvComponentData);
@@ -261,7 +274,7 @@ test('Can add unpublished component views to content view', async (done) => {
 });
 
 test('Can remove component views from content view', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponentsWithoutSearch)
     .reply(200, cvComponentData);
@@ -297,7 +310,7 @@ test('Can remove component views from content view', async (done) => {
 });
 
 test('Can bulk add component views to content view with modal', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponentsWithoutSearch)
     .reply(200, cvComponentData);

@@ -47,6 +47,8 @@ export const TableType = PropTypes.shape({
   responseSelector: PropTypes.func,
   statusSelector: PropTypes.func,
   autocompleteEndpoint: PropTypes.string,
+  autocompleteQueryParams: PropTypes.shape({}),
+  bookmarkController: PropTypes.string,
   fetchItems: PropTypes.func,
   columnHeaders:
     PropTypes.arrayOf(PropTypes.shape({
@@ -90,7 +92,9 @@ export default ({
         selectRepositoriesComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>
         selectRepositoriesComparisonStatus(state, versionOneId, versionTwoId, viewBy),
-      autocompleteEndpoint: '/repositories/auto_complete_search?archived=true',
+      autocompleteEndpoint: '/katello/api/v2/repositories',
+      autocompleteQueryParams: { archived: true },
+      bookmarkController: 'katello_content_view_repositories',
       fetchItems: params => getRepositoriesComparison(
         versionOneId,
         versionTwoId,
@@ -133,7 +137,8 @@ export default ({
         selectRPMPackagesComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>
         selectRPMPackagesComparisonStatus(state, versionOneId, versionTwoId, viewBy),
-      autocompleteEndpoint: '/packages/auto_complete_search',
+      autocompleteEndpoint: 'katello/api/v2/packages',
+      bookmarkController: 'katello_content_view_components',
       fetchItems: params => getRPMPackagesComparison(
         versionOneId,
         versionTwoId,
@@ -170,7 +175,8 @@ export default ({
         selectPackageGroupsComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>
         selectPackageGroupsComparisonStatus(state, versionOneId, versionTwoId, viewBy),
-      autocompleteEndpoint: '/package_groups/auto_complete_search',
+      autocompleteEndpoint: '/katello/api/v2/package_groups',
+      bookmarkController: 'katello_content_view_components',
       fetchItems: params => getPackageGroupsComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         { title: __('Name'), getProperty: item => item?.name },
@@ -189,7 +195,8 @@ export default ({
       responseSelector: state => selectFilesComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>
         selectFilesComparisonStatus(state, versionOneId, versionTwoId, viewBy),
-      autocompleteEndpoint: '/files/auto_complete_search',
+      autocompleteEndpoint: '/katello/api/v2/files',
+      bookmarkController: 'katello_content_view_components',
       fetchItems: params => getFilesComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         {
@@ -214,7 +221,8 @@ export default ({
       responseSelector: state => selectErrataComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>
         selectErrataComparisonStatus(state, versionOneId, versionTwoId, viewBy),
-      autocompleteEndpoint: '/errata/auto_complete_search',
+      autocompleteEndpoint: '/katello/api/v2/errata',
+      bookmarkController: 'katello_content_view_components',
       fetchItems: params => getErrataComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         {
@@ -277,7 +285,8 @@ export default ({
         selectModuleStreamsComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>
         selectModuleStreamsComparisonStatus(state, versionOneId, versionTwoId, viewBy),
-      autocompleteEndpoint: '/module_streams/auto_complete_search',
+      autocompleteEndpoint: '/katello/api/v2/module_streams',
+      bookmarkController: 'katello_content_view_components',
       fetchItems: params => getModuleStreamsComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         {
@@ -310,7 +319,8 @@ export default ({
         selectDebPackagesComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>
         selectDebPackagesComparisonStatus(state, versionOneId, versionTwoId, viewBy),
-      autocompleteEndpoint: '/debs/auto_complete_search',
+      autocompleteEndpoint: '/katello/api/v2/debs',
+      bookmarkController: 'katello_content_view_components',
       fetchItems: params => getDebPackagesComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         {
@@ -339,7 +349,8 @@ export default ({
         selectDockerTagsComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>
         selectDockerTagsComparisonStatus(state, versionOneId, versionTwoId, viewBy),
-      autocompleteEndpoint: '/docker_tags/auto_complete_search',
+      autocompleteEndpoint: '/katello/api/v2/docker_tags',
+      bookmarkController: 'katello_content_view_components',
       fetchItems: params => getDockerTagsComparison(versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [
         {
@@ -381,7 +392,8 @@ export default ({
           pluralLabel,
           viewBy,
         ),
-      autocompleteEndpoint: `/${pluralLabel}/auto_complete_search`,
+      autocompleteEndpoint: `/katello/api/v2/${pluralLabel}`,
+      bookmarkController: 'katello_content_view_components',
       fetchItems: params =>
         getGenericContentComparison(pluralLabel, versionOneId, versionTwoId, viewBy, params),
       columnHeaders: [

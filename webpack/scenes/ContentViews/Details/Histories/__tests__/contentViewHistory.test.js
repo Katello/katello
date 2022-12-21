@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
 
-import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewHistories from '../ContentViewHistories';
@@ -12,19 +12,10 @@ const cvHistories = api.getApiUrl('/content_views/1/history');
 const autocompleteUrl = '/content_views/1/history/auto_complete_search';
 
 let firstHistory;
-let searchDelayScope;
-let autoSearchScope;
 
 beforeEach(() => {
   const { results } = historyData;
   [firstHistory] = results;
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
 });
 
 test('Can call API and show history on page load', async (done) => {

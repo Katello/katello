@@ -524,7 +524,7 @@ const RepositorySetsTab = () => {
           additionalListeners={[hostId, toggleGroupState, statusSelected,
             activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
-          autocompleteEndpoint="/repository_sets/auto_complete_search"
+          autocompleteEndpoint="/katello/api/v2/repository_sets"
           bookmarkController="katello_product_contents" // Katello::ProductContent.table_name
           readOnlyBookmarks={readOnlyBookmarks}
           rowsCount={results?.length}

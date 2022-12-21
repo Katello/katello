@@ -55,7 +55,7 @@ const AffectedActivationKeys = ({
         status,
       }}
       ouiaId="content-view-delete-modal-affected-activation-keys"
-      autocompleteEndpoint="/activation_keys/auto_complete_search"
+      autocompleteEndpoint="/katello/api/v2/activation_keys"
       variant={TableVariant.compact}
     >
       <Thead>

@@ -3,7 +3,7 @@ import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-
 import { Route } from 'react-router-dom';
 
 import api from '../../../../../services/api';
-import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../test-utils/nockWrapper';
 import ContentViewFilters from '../ContentViewFilters';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import cvFilterFixtures from './contentViewFilters.fixtures.json';
@@ -27,19 +27,10 @@ const autocompleteUrl = '/content_view_filters/auto_complete_search';
 
 let firstFilter;
 let lastFilter;
-let searchDelayScope;
-let autoSearchScope;
 beforeEach(() => {
   const { results } = cvFilterFixtures;
   [firstFilter] = results;
   [lastFilter] = results.slice(-1);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
 });
 
 test('Can call API and show filters on page load', async (done) => {
@@ -68,17 +59,39 @@ test('Can call API and show filters on page load', async (done) => {
 
 test('Can search for filter', async (done) => {
   const { name, description } = firstFilter;
-  const searchQueryMatcher = actualParams => actualParams?.search?.includes(name);
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, searchQueryMatcher);
+  const autocompleteQuery = {
+    organization_id: 1,
+    search: '',
+  };
+  const searchQueryMatcher = {
+    organization_id: 1,
+    search: 'name = f5',
+  };
+  const searchResults = [
+    {
+      completed: 'name = f5',
+      part: 'and',
+      label: 'name = f5 and',
+      category: 'Operators',
+    },
+    {
+      completed: 'name = f5',
+      part: 'or',
+      label: 'name = f5 or',
+      category: 'Operators',
+    },
+  ];
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
+  const withSearchScope = mockAutocomplete(
+    nockInstance,
+    autocompleteUrl,
+    searchQueryMatcher,
+    searchResults,
+  );
   const initialScope = nockInstance
     .get(cvFilters)
     .query(true)
     .reply(200, cvFilterFixtures);
-  const searchResultScope = nockInstance
-    .get(cvFilters)
-    .query(searchQueryMatcher)
-    .reply(200, { results: [firstFilter] });
 
   const { queryByText, getByLabelText, getByText } = renderWithRedux(
     withCVRoute(<ContentViewFilters cvId={1} details={details} />),
@@ -86,19 +99,23 @@ test('Can search for filter', async (done) => {
   );
 
   // Looking for description because the name is in the search bar and could match
-  await patientlyWaitFor(() => expect(getByText(description)).toBeInTheDocument());
-  // Search for a filter by name
-  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: `name = ${name}` } });
-  // Only the first filter should be showing, not the last one
   await patientlyWaitFor(() => {
     expect(getByText(description)).toBeInTheDocument();
-    expect(queryByText(lastFilter.name)).not.toBeInTheDocument();
+    expect(getByText(name)).toBeInTheDocument();
+    expect(getByText('f5')).toBeInTheDocument();
+  });
+  // Search for a filter by name
+  getByLabelText('Search input').focus();
+  fireEvent.change(getByLabelText('Search input'), { target: { value: `name = ${lastFilter.name}` } });
+  // Only the first filter should be showing, not the last one
+  await patientlyWaitFor(() => {
+    expect(getByText(`name = ${lastFilter.name} and`)).toBeInTheDocument();
+    expect(queryByText(`name = ${name} and`)).not.toBeInTheDocument();
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(withSearchScope);
   assertNockRequest(initialScope);
-  assertNockRequest(searchResultScope, done);
+  assertNockRequest(withSearchScope, done);
 });
 
 test('Can remove a filter', async (done) => {

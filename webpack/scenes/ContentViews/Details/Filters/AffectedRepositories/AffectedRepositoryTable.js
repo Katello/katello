@@ -204,7 +204,8 @@ const AffectedRepositoryTable = ({
       onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
       cells={columnHeaders}
       variant={TableVariant.compact}
-      autocompleteEndpoint="/repositories/auto_complete_search"
+      autocompleteEndpoint="/katello/api/v2/repositories"
+      bookmarkController="katello_content_view_filters"
       fetchItems={useCallback(params => getCVReposWithOptions(params), [getCVReposWithOptions])}
       additionalListeners={[productSelected]}
       actionButtons={

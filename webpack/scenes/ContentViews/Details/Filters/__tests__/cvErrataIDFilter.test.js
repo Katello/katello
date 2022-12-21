@@ -8,7 +8,6 @@ import {
   nockInstance,
   assertNockRequest,
   mockAutocomplete,
-  mockSetting,
 } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import allErrata from './allFilterErrata.fixtures.json';
@@ -36,18 +35,6 @@ const renderOptions = {
 };
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
-
-let searchDelayScope;
-let autoSearchScope;
-beforeEach(() => {
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-});
 
 test('Can enable and disable add filter button', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;

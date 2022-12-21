@@ -487,8 +487,7 @@ export const ErrataTab = () => {
           fetchItems={fetchItems}
           bookmarkController="katello_errata"
           readOnlyBookmarks={readOnlyBookmarks}
-          autocompleteEndpoint={`/hosts/${hostId}/errata/auto_complete_search`}
-          foremanApiAutoComplete
+          autocompleteEndpoint={`/api/v2/hosts/${hostId}/errata`}
           rowsCount={results?.length}
           variant={TableVariant.compact}
           {...selectAll}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../test-utils/nockWrapper';
 import api from '../../../services/api';
 import ContentPage from '../ContentPage';
 import ansibleCollectionsResponse from './ansibleCollections.fixtures';
@@ -11,19 +11,6 @@ import ContentTable from '../Table/ContentTable';
 const contentTypesPath = api.getApiUrl('/repositories/content_types');
 const pythonPackagesPath = api.getApiUrl('/python_packages');
 const ansibleCollectionsPath = api.getApiUrl('/ansible_collections');
-
-let searchDelayScope;
-let autoSearchScope;
-
-beforeEach(() => {
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(searchDelayScope);
-});
 
 test('Can call API for Python Packages and show table on page load', async (done) => {
   const autocompleteUrl = '/python_packages/auto_complete_search';

@@ -1,13 +1,12 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_PACKAGES_KEY, PACKAGES_SEARCH_QUERY, SELECTED_UPDATE_VERSIONS } from '../PackagesTab/HostPackagesConstants';
 import { PackagesTab } from '../PackagesTab/PackagesTab.js';
 import mockPackagesData from './packages.fixtures.json';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
 import * as hooks from '../../../../Table/TableHooks';
-import mockBookmarkData from './bookmarks.fixtures.json';
 
 jest.mock('../../hostDetailsHelpers', () => ({
   ...jest.requireActual('../../hostDetailsHelpers'),
@@ -25,8 +24,6 @@ const contentFacetAttributes = {
 };
 
 const hostname = 'test-host.example.com';
-const packageBookmarks = foremanApi.getApiUrl('/bookmarks?search=controller%3Dkatello_host_installed_packages');
-
 const renderOptions = (facetAttributes = contentFacetAttributes) => ({
   apiNamespace: HOST_PACKAGES_KEY,
   initialState: {
@@ -61,22 +58,10 @@ const defaultQuery = { ...defaultQueryWithoutSearch, search: '' };
 
 let firstPackage;
 let secondPackage;
-let searchDelayScope;
-let autoSearchScope;
-let bookmarkScope;
 
 beforeEach(() => {
   const { results } = mockPackagesData;
   [firstPackage, secondPackage] = results;
-  bookmarkScope = nockInstance.get(packageBookmarks).reply(200, mockBookmarkData);
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(bookmarkScope);
 });
 
 test('Can call API for packages and show on screen on page load', async (done) => {
@@ -159,8 +144,6 @@ test('Can filter by package status', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
 });
 

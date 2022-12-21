@@ -33,13 +33,15 @@ const renderOptions = {
     initialIndex: 1,
   },
 };
+const autocompleteQuery = {
+  organization_id: 1,
+  search: '',
+};
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
 
 test('Can show filter details and package groups on page load', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
-  const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   const cvFilterScope = nockInstance
     .get(cvFilterDetailsPath)
     .query(true)
@@ -52,7 +54,7 @@ test('Can show filter details and package groups on page load', async (done) => 
     .get(cvPackageFilterRulesPath)
     .query(true)
     .reply(200, cvPackageFilterRules);
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
 
   const { getByText, queryByText } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
@@ -67,8 +69,6 @@ test('Can show filter details and package groups on page load', async (done) => 
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvPackageFilterRulesScope);
@@ -81,10 +81,24 @@ test('Can search for package rules in package filter details', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
   const { name: firstPackageRuleName } = firstPackageRule;
   const { name: lastPackageRuleName } = lastPackageRule;
-  const searchQueryMatcher = actualParams =>
-    actualParams?.search?.includes(lastPackageRuleName);
-  const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
+  const searchQueryMatcher = {
+    organization_id: 1,
+    search: `name = ${lastPackageRuleName}`,
+  };
+  const searchResults = [
+    {
+      completed: `name = ${lastPackageRuleName}`,
+      part: 'and',
+      label: `name = ${lastPackageRuleName} and`,
+      category: 'Operators',
+    },
+    {
+      completed: `name = ${lastPackageRuleName}`,
+      part: 'or',
+      label: `name = ${lastPackageRuleName} or`,
+      category: 'Operators',
+    },
+  ];
 
   const cvFilterScope = nockInstance
     .get(cvFilterDetailsPath)
@@ -103,8 +117,13 @@ test('Can search for package rules in package filter details', async (done) => {
     .query(searchQueryMatcher)
     .reply(200, { results: [lastPackageRule] });
 
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, searchQueryMatcher);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
+  const withSearchScope = mockAutocomplete(
+    nockInstance,
+    autocompleteUrl,
+    searchQueryMatcher,
+    searchResults,
+  );
   const { getByText, queryByText, getByLabelText } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
       cvId={1}
@@ -117,15 +136,14 @@ test('Can search for package rules in package filter details', async (done) => {
   });
 
   // Search and only searched result shows
-  fireEvent.change(getByLabelText(/text input for search/i), { target: { value: `name = ${lastPackageRuleName}` } });
+  getByLabelText('Search input').focus();
+  fireEvent.change(getByLabelText('Search input'), { target: { value: `name = ${lastPackageRuleName}` } });
   await patientlyWaitFor(() => {
-    expect(getByText(lastPackageRuleName)).toBeInTheDocument();
-    expect(queryByText(firstPackageRuleName)).not.toBeInTheDocument();
+    expect(getByText(`name = ${lastPackageRuleName} and`)).toBeInTheDocument();
+    expect(queryByText(`name = ${firstPackageRuleName} and`)).not.toBeInTheDocument();
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvPackageFilterRulesScope);
@@ -190,12 +208,12 @@ test('Can add package rules to filter in a self-closing modal', async (done) => 
   });
   getByLabelText('add_rpm_rule').click();
   await patientlyWaitFor(() => {
+    expect(getAllByLabelText('text input for search')[0]).toBeInTheDocument();
     expect(getAllByLabelText('text input for search')[1]).toBeInTheDocument();
-    expect(getAllByLabelText('text input for search')[2]).toBeInTheDocument();
     expect(getByLabelText('add_package_filter_rule')).toBeInTheDocument();
   });
-  fireEvent.change(getAllByLabelText('text input for search')[1], { target: { value: 'elephant' } });
-  fireEvent.change(getAllByLabelText('text input for search')[2], { target: { value: 'noarch' } });
+  fireEvent.change(getAllByLabelText('text input for search')[0], { target: { value: 'elephant' } });
+  fireEvent.change(getAllByLabelText('text input for search')[1], { target: { value: 'noarch' } });
   fireEvent.submit(getByLabelText('add_package_filter_rule'));
 
   await patientlyWaitFor(() => {

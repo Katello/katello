@@ -142,7 +142,8 @@ const ContentViewFilters = ({ cvId, details }) => {
       onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
       cells={columnHeaders}
       variant={TableVariant.compact}
-      autocompleteEndpoint="/content_view_filters/auto_complete_search"
+      autocompleteEndpoint="/katello/api/v2/content_view_filters"
+      bookmarkController="katello_content_view_filters"
       fetchItems={useCallback(params => getContentViewFilters(cvId, params), [cvId])}
       actionButtons={hasPermission(permissions, 'edit_content_views') &&
         <>

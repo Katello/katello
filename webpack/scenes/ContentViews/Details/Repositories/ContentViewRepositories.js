@@ -251,7 +251,8 @@ const ContentViewRepositories = ({ cvId, details }) => {
       ouiaId="content-view-repositories-table"
       {...selectAll}
       variant={TableVariant.compact}
-      autocompleteEndpoint="/repositories/auto_complete_search"
+      autocompleteEndpoint="/katello/api/v2/repositories"
+      bookmarkController="katello_content_view_repositories"
       fetchItems={useCallback(params => getCVReposWithOptions(params), [getCVReposWithOptions])}
       additionalListeners={[typeSelected, statusSelected]}
       displaySelectAllCheckbox={hasPermission(permissions, 'edit_content_views')}

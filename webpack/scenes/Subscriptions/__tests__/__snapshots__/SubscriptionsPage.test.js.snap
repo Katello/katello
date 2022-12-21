@@ -37,13 +37,17 @@ exports[`subscriptions page should render 1`] = `
         Subscriptions
       </h1>
       <SubscriptionsToolbar
+        autocompleteQueryParams={
+          Object {
+            "organization_id": 1,
+          }
+        }
         canManageSubscriptionAllocations={false}
         disableAddButton={true}
         disableDeleteButton={true}
         disableDeleteReason="This is disabled because no connection could be made to the upstream Manifest."
         disableManifestActions={true}
         disableManifestReason="This is disabled because no connection could be made to the upstream Manifest."
-        getAutoCompleteParams={[Function]}
         isManifestImported={false}
         onDeleteButtonClick={[Function]}
         onExportCsvButtonClick={[Function]}

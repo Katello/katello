@@ -2,8 +2,9 @@ import React, { useCallback, useRef } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { isEqual } from 'lodash';
-import { STATUS } from 'foremanReact/constants';
+import { isEqual, isEmpty } from 'lodash';
+import SearchBar from 'foremanReact/components/SearchBar';
+import { STATUS, getControllerSearchProps } from 'foremanReact/constants';
 import { noop } from 'foremanReact/common/helpers';
 import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
 import { PaginationVariant, Flex, FlexItem } from '@patternfly/react-core';
@@ -11,7 +12,6 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import PageControls from './PageControls';
 import MainTable from './MainTable';
 import { getPageStats } from './helpers';
-import Search from '../../components/Search';
 import SelectAllCheckbox from '../SelectAllCheckbox';
 import { orgId } from '../../services/api';
 
@@ -25,7 +25,7 @@ const TableWrapper = ({
   metadata,
   fetchItems,
   autocompleteEndpoint,
-  foremanApiAutoComplete,
+  autocompleteQueryParams,
   searchQuery,
   updateSearchQuery,
   searchPlaceholderText,
@@ -131,14 +131,6 @@ const TableWrapper = ({
     spawnFetch();
   }, [searchQuery, spawnFetch, additionalListeners]);
 
-  const getAutoCompleteParams = search => ({
-    endpoint: autocompleteEndpoint,
-    params: {
-      organization_id: orgId(),
-      search,
-    },
-  });
-
   // If the new page wouldn't exist because of a perPage change,
   // we should set the current page to the last page.
   const validatePagination = (data) => {
@@ -164,6 +156,17 @@ const TableWrapper = ({
     spawnFetch(pagData);
     paginationChangePending.current = pagData;
   };
+
+  const extraSearchProps = (isEmpty(bookmarkController)) ?
+    { bookmarks: {} } :
+    { controller: bookmarkController };
+  const apiParams = { ...autocompleteQueryParams, organization_id: orgId() };
+  const searchDataProp = {
+    ...getControllerSearchProps(autocompleteEndpoint, `searchBar-${bookmarkController}`, !readOnlyBookmarks, apiParams),
+    ...extraSearchProps,
+    isDisabled: unresolvedStatusOrNoRows && !searchQuery,
+  };
+
   return (
     <>
       <Flex style={{ alignItems: 'center' }} className="margin-16-24">
@@ -186,16 +189,10 @@ const TableWrapper = ({
         }
         {!hideSearch && !hideToolbar &&
           <FlexItem>
-            <Search
-              isDisabled={unresolvedStatusOrNoRows && !searchQuery}
-              patternfly4
-              initialInputValue={searchQuery && searchQuery}
+            <SearchBar
+              data={searchDataProp}
+              initialQuery={searchQuery}
               onSearch={search => updateSearchQuery(search)}
-              getAutoCompleteParams={getAutoCompleteParams}
-              foremanApiAutoComplete={foremanApiAutoComplete}
-              bookmarkController={bookmarkController}
-              readOnlyBookmarks={readOnlyBookmarks}
-              placeholder={searchPlaceholderText}
             />
           </FlexItem>
         }
@@ -272,7 +269,7 @@ TableWrapper.propTypes = {
     search: PropTypes.string,
   }),
   autocompleteEndpoint: PropTypes.string.isRequired,
-  foremanApiAutoComplete: PropTypes.bool,
+  autocompleteQueryParams: PropTypes.shape({}),
   searchPlaceholderText: PropTypes.string,
   actionButtons: PropTypes.node,
   alwaysShowActionButtons: PropTypes.bool,
@@ -317,7 +314,6 @@ TableWrapper.defaultProps = {
   additionalListeners: [],
   activeFilters: [],
   defaultFilters: [],
-  foremanApiAutoComplete: false,
   searchPlaceholderText: undefined,
   actionButtons: null,
   alwaysShowActionButtons: true,
@@ -339,6 +335,7 @@ TableWrapper.defaultProps = {
   bookmarkController: undefined,
   readOnlyBookmarks: false,
   resetFilters: undefined,
+  autocompleteQueryParams: undefined,
 };
 
 export default TableWrapper;

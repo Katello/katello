@@ -379,8 +379,7 @@ export const ModuleStreamsTab = () => {
           fetchItems={fetchItems}
           bookmarkController="katello_host_available_module_streams"
           readOnlyBookmarks={hideBookmarkActions}
-          autocompleteEndpoint={`/hosts/${hostId}/module_streams/auto_complete_search`}
-          foremanApiAutoComplete
+          autocompleteEndpoint={`/api/v2/hosts/${hostId}/module_streams`}
           rowsCount={results?.length}
           variant={TableVariant.compact}
           requestKey={MODULE_STREAMS_KEY}
