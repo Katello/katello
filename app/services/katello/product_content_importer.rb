@@ -43,7 +43,7 @@ module Katello
       ::Katello::Product.find_by(cp_id: prod["id"]) if prod
     end
 
-    def handle_product_moves(product, prod_contents_json)
+    def fetch_product_contents_to_move(product, prod_contents_json)
       content_ids = prod_contents_json.map { |pc| pc[:content][:id] }
       # Identify if there are any product_content that should not be
       # part of this product.
@@ -51,12 +51,14 @@ module Katello
                                       product_contents.
                                       joins(:content).
                                       where.not(content: { cp_content_id: content_ids })
-
       # Identify if product content actually moved between 2 different products
-      product_contents_to_move = product_contents_to_delete_or_move.select do |pc|
+      product_contents_to_delete_or_move.select do |pc|
         content_exists?(product.organization, pc.content)
       end
+    end
 
+    def handle_product_moves(product, prod_contents_json)
+      product_contents_to_move = fetch_product_contents_to_move(product, prod_contents_json)
       product_contents_to_move.each do |pc|
         content = pc.content
         root_repo = product.root_repositories.find_by(content_id: content.cp_content_id)
