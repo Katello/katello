@@ -67,7 +67,7 @@ const EmptyStateMessage = ({
   };
 
   const actionButton = primaryActionButton ?? (
-    <Button>
+    <Button ouiaId="empty-state-primary-action-button">
       <a href={primaryActionLink} style={{ color: 'white', textDecoration: 'none' }}>{primaryActionTitle}</a>
     </Button>
   );
@@ -91,7 +91,7 @@ const EmptyStateMessage = ({
         {showPrimaryAction && actionButton}
         {showSecondaryActionAnchor &&
           <EmptyStateSecondaryActions>
-            <Button variant="link">
+            <Button variant="link" ouiaId="empty-state-secondary-action-link">
               <a href={secondaryActionLink} style={{ textDecoration: 'none' }}>{secondaryActionTitle}</a>
             </Button>
           </EmptyStateSecondaryActions>
@@ -99,7 +99,7 @@ const EmptyStateMessage = ({
 
         {(showSecondaryActionButton || searchIsActive || !!filtersAreActive) &&
           <EmptyStateSecondaryActions>
-            <Button variant="link" onClick={handleClick}>
+            <Button variant="link" onClick={handleClick} ouiaId="empty-state-secondary-action-router-link">
               {secondaryActionText}
             </Button>
           </EmptyStateSecondaryActions>

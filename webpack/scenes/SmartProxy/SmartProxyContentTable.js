@@ -138,7 +138,18 @@ const SmartProxyContentTable = ({ smartProxyId }) => {
 
 
   return (
-    <MainTable onCollapse={onCollapse(rows, setRows)} status={status} cells={columnHeaders} rows={rows} error={error} emptyContentTitle="No content synced" emptyContentBody="No content synced to smart proxy" emptySearchTitle="Empty" emptySearchBody="Empty" />
+    <MainTable
+      onCollapse={onCollapse(rows, setRows)}
+      ouiaId="smart-proxy-content-table"
+      status={status}
+      cells={columnHeaders}
+      rows={rows}
+      error={error}
+      emptyContentTitle="No content synced"
+      emptyContentBody="No content synced to smart proxy"
+      emptySearchTitle="Empty"
+      emptySearchBody="Empty"
+    />
   );
 };
 

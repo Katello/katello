@@ -51,14 +51,14 @@ const ContentRepositories = ({ contentType, id, tabKey }) => {
       )}
     >
       <Thead>
-        <Tr>
+        <Tr ouiaId="content-repositories-column-headers-row">
           {columnHeaders.map(col =>
             <Th key={col.title}>{col.title}</Th>)}
         </Tr>
       </Thead>
       <Tbody>
-        {results?.map(details => (
-          <Tr key={`${details.id}`}>
+        {results?.map((details, idx) => (
+          <Tr key={`${details.id}`} ouiaId={`content-repositories-row-${idx}`}>
             {columnHeaders.map((col, index) =>
               <Td key={index}>{col.getProperty(details, typeSingularLabel)}</Td>)
             }

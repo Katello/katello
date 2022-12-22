@@ -34,7 +34,7 @@ const CdnTypeForm = ({ typeChangeInProgress, onUpdate }) => {
   return (
     <Form isHorizontal>
       <div id="update-hint-cdn" className="margin-top-16">
-        <Text>
+        <Text ouiaId="update-hint-cdn-text">
           <FormattedMessage
             id="cdn-configuration-type"
             defaultMessage={__('Red Hat content will be consumed from the {type}.')}
