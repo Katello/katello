@@ -33,9 +33,9 @@ const EmptyStateMessage = ({
   let emptyStateTitle = title;
   let emptyStateBody = body;
   const {
-    primaryActionTitle, showPrimaryAction, showSecondaryAction,
+    primaryActionTitle, showPrimaryAction, showSecondaryAction, showSecondaryActionButton,
     secondaryActionTitle, primaryActionLink, secondaryActionLink, searchIsActive, resetFilters,
-    filtersAreActive, requestKey, primaryActionButton,
+    filtersAreActive, requestKey, primaryActionButton, secondaryActionTextOverride,
   } = extraTableProps;
   if (error) {
     if (error?.response?.data?.error) {
@@ -48,14 +48,16 @@ const EmptyStateMessage = ({
       emptyStateBody = error?.response?.data?.displayMessage || __('Something went wrong! Please check server logs!');
     }
   }
-  const secondaryActionText = searchIsActive ? __('Clear search') : __('Clear filters');
+  const defaultSecondaryActionText = searchIsActive ? __('Clear search') : __('Clear filters');
+  const secondaryActionText = secondaryActionTextOverride || defaultSecondaryActionText;
   const dispatch = useDispatch();
   const clearSearch = useSelector(selectHostDetailsClearSearch);
+  const showSecondaryActionAnchor = showSecondaryAction && secondaryActionLink;
   const handleClick = () => {
     if (searchIsActive) {
       clearSearch();
     }
-    if (filtersAreActive) {
+    if (filtersAreActive || showSecondaryActionButton) {
       resetFilters();
     }
     dispatch({
@@ -87,7 +89,7 @@ const EmptyStateMessage = ({
           {emptyStateBody}
         </EmptyStateBody>
         {showPrimaryAction && actionButton}
-        {showSecondaryAction &&
+        {showSecondaryActionAnchor &&
           <EmptyStateSecondaryActions>
             <Button variant="link">
               <a href={secondaryActionLink} style={{ textDecoration: 'none' }}>{secondaryActionTitle}</a>
@@ -95,7 +97,7 @@ const EmptyStateMessage = ({
           </EmptyStateSecondaryActions>
         }
 
-        {(searchIsActive || !!filtersAreActive) &&
+        {(showSecondaryActionButton || searchIsActive || !!filtersAreActive) &&
           <EmptyStateSecondaryActions>
             <Button variant="link" onClick={handleClick}>
               {secondaryActionText}
@@ -143,9 +145,10 @@ EmptyStateMessage.propTypes = {
   ])),
   // eslint-disable-next-line react/require-default-props
   resetFilters: (props, propName) => {
-    if (props.defaultFilters?.length || props.activeFilters?.length) {
+    if (props.showSecondaryActionButton || props.defaultFilters?.length
+        || props.activeFilters?.length) {
       if (typeof props[propName] !== 'function') {
-        return new Error(`A ${propName} function is required when using activeFilters or defaultFilters`);
+        return new Error(`A ${propName} function is required when using activeFilters, defaultFilters, or showSecondaryActionButton`);
       }
     }
     return null;
