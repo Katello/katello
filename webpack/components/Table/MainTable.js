@@ -16,8 +16,9 @@ import Loading from '../../components/Loading';
 
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
-  emptySearchTitle, emptySearchBody, errorSearchTitle, errorSearchBody,
-  happyEmptyContent, searchIsActive, activeFilters, defaultFilters, actionButtons, rowsCount,
+  emptyContentOverride, emptySearchTitle, emptySearchBody, errorSearchTitle, errorSearchBody,
+  happyEmptyContent, searchIsActive, activeFilters, defaultFilters,
+  activeToggleState, unfilteredToggleState, actionButtons, rowsCount,
   children, showPrimaryAction, showSecondaryAction, showSecondaryActionButton, primaryActionLink,
   secondaryActionLink, primaryActionTitle, secondaryActionTitle, secondaryActionTextOverride,
   resetFilters, updateSearchQuery, requestKey, primaryActionButton, ...extraTableProps
@@ -36,10 +37,13 @@ const MainTable = ({
     secondaryActionTitle,
     primaryActionButton,
     secondaryActionTextOverride,
+    emptyContentOverride,
   };
   const filtersAreActive = activeFilters?.length &&
     !isEqual(new Set(activeFilters), new Set(defaultFilters));
-  const isFiltering = searchIsActive || filtersAreActive;
+  const toggleIsActive = activeToggleState !== unfilteredToggleState;
+  const isSearchingOrFiltering = searchIsActive || filtersAreActive || toggleIsActive;
+
   if (status === STATUS.PENDING) return (<Loading />);
   const clearSearchProps = {
     resetFilters,
@@ -50,6 +54,10 @@ const MainTable = ({
     defaultFilters,
     activeFilters,
   };
+
+  const tableWouldBeEmpty = (status === STATUS.RESOLVED && tableHasNoRows());
+  const emptyContent = emptyContentOverride || (tableWouldBeEmpty && !isSearchingOrFiltering);
+  const emptySearch = (tableWouldBeEmpty && isSearchingOrFiltering);
   // Can we display the error message?
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
 
@@ -62,15 +70,7 @@ const MainTable = ({
       search
     />);
   }
-  if (status === STATUS.RESOLVED && isFiltering && tableHasNoRows()) {
-    return (<EmptyStateMessage
-      title={emptySearchTitle}
-      body={emptySearchBody}
-      search
-      {...clearSearchProps}
-    />);
-  }
-  if (status === STATUS.RESOLVED && tableHasNoRows()) {
+  if (emptyContent) {
     return (
       <EmptyStateMessage
         title={emptyContentTitle}
@@ -81,6 +81,14 @@ const MainTable = ({
         {...callToActionProps}
       />
     );
+  }
+  if (emptySearch) {
+    return (<EmptyStateMessage
+      title={emptySearchTitle}
+      body={emptySearchBody}
+      search
+      {...clearSearchProps}
+    />);
   }
 
   const tableProps = { cells, rows, ...extraTableProps };
@@ -132,6 +140,8 @@ MainTable.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ])),
+  activeToggleState: PropTypes.string,
+  unfilteredToggleState: PropTypes.string,
   actionButtons: PropTypes.bool,
   rowsCount: PropTypes.number,
   children: PropTypes.oneOfType([
@@ -139,6 +149,7 @@ MainTable.propTypes = {
     PropTypes.node,
   ]),
   happyEmptyContent: PropTypes.bool,
+  emptyContentOverride: PropTypes.bool,
   showPrimaryAction: PropTypes.bool,
   showSecondaryAction: PropTypes.bool,
   showSecondaryActionButton: PropTypes.bool,
@@ -158,6 +169,8 @@ MainTable.defaultProps = {
   searchIsActive: false,
   activeFilters: [],
   defaultFilters: [],
+  activeToggleState: '',
+  unfilteredToggleState: '',
   errorSearchTitle: __('Problem searching'),
   errorSearchBody: '',
   actionButtons: false,
@@ -166,6 +179,7 @@ MainTable.defaultProps = {
   rows: undefined,
   rowsCount: undefined,
   happyEmptyContent: false,
+  emptyContentOverride: false,
   showPrimaryAction: false,
   showSecondaryAction: false,
   showSecondaryActionButton: false,

@@ -15,6 +15,7 @@ import {
   useDispatch,
   useSelector,
 } from 'react-redux';
+import { isEqual } from 'lodash';
 
 import {
   ActionList,
@@ -198,22 +199,24 @@ const RepositorySetsTab = () => {
   const { searchParam, show, status: initialStatus } = useUrlParams();
 
   const toggleGroupStates = ['noLimit', 'limitToEnvironment'];
-  const [noLimit, limitToEnvironment] = toggleGroupStates;
-  const defaultToggleGroupState = nonLibraryHost ? limitToEnvironment : noLimit;
+  const [SHOW_ALL, LIMIT_TO_ENVIRONMENT] = toggleGroupStates;
+  const defaultToggleGroupState = nonLibraryHost ? LIMIT_TO_ENVIRONMENT : SHOW_ALL;
+  const unfilteredToggleGroupState = SHOW_ALL;
   const [toggleGroupState, setToggleGroupState] =
     useState(show ?? defaultToggleGroupState);
   const [statusSelected, setStatusSelected]
     = useState(PARAM_TO_FRIENDLY_NAME[initialStatus] ?? STATUS_LABEL);
-  const activeFilters = [statusSelected, toggleGroupState];
-  const defaultFilters = [STATUS_LABEL, defaultToggleGroupState];
+  const activeFilters = [statusSelected];
+  const defaultFilters = [STATUS_LABEL];
 
   const [alertShowing, setAlertShowing] = useState(false);
+
   const emptyContentTitle = __('No repository sets to show.');
-  const emptyContentBody = __('Repository sets will appear here after enabling Red Hat repositories or creating custom products.');
+  const emptyContentBody = toggleGroupState === SHOW_ALL ?
+    __('Repository sets will appear here after enabling Red Hat repositories or creating custom products.') :
+    __('Repository sets will appear here when the host\'s content view and environment has available content.');
   const emptySearchTitle = __('No matching repository sets found');
   const emptySearchBody = __('Try changing your search query.');
-  const showPrimaryAction = true;
-  const showSecondaryAction = true;
   const primaryActionTitle = __('Enable Red Hat repositories');
   const secondaryActionTitle = __('Create a custom product');
   const primaryActionLink = '/redhat_repositories';
@@ -248,14 +251,14 @@ const RepositorySetsTab = () => {
         modifiedParams.status = STATUS_TO_PARAM[statusSelected];
       }
       return getHostRepositorySets({
-        content_access_mode_env: toggleGroupState === limitToEnvironment,
+        content_access_mode_env: toggleGroupState === LIMIT_TO_ENVIRONMENT,
         content_access_mode_all: simpleContentAccess,
         host_id: hostId,
         ...apiSortParams,
         ...modifiedParams,
       });
     },
-    [hostId, toggleGroupState, limitToEnvironment,
+    [hostId, toggleGroupState, LIMIT_TO_ENVIRONMENT,
       simpleContentAccess, apiSortParams, statusSelected, STATUS_LABEL],
   );
 
@@ -265,9 +268,10 @@ const RepositorySetsTab = () => {
     }
   }, [orgId, orgNotLoaded, dispatch]);
 
+  const status = useSelector(state => selectRepositorySetsStatus(state));
   const response = useSelector(state => selectAPIResponse(state, REPOSITORY_SETS_KEY));
   const { results, error: errorSearchBody, ...metadata } = response;
-  const status = useSelector(state => selectRepositorySetsStatus(state));
+
   const repoSetSearchQuery = label => `cp_content_id = ${label}`;
   const {
     selectOne, isSelected, searchQuery, selectedCount, isSelectable,
@@ -280,9 +284,17 @@ const RepositorySetsTab = () => {
 
   const hostDetailsStatus = useSelector(state => selectHostDetailsStatus(state));
 
+  // Ignore the toggle group when deciding if there is emptyContent. This will
+  // ensure the correct EmptyStateMessage
+  const isFiltering = activeFilters?.length &&
+    !isEqual(new Set(activeFilters), new Set(defaultFilters));
+  const emptyContent = (results && results.length === 0) && !searchQuery && !isFiltering;
+  const showPrimaryAction = (toggleGroupState === SHOW_ALL) && emptyContent;
+  const showSecondaryAction = showPrimaryAction;
+
   const resetFilters = () => {
     setStatusSelected(STATUS_LABEL);
-    setToggleGroupState(defaultToggleGroupState);
+    if (emptyContent) setToggleGroupState(SHOW_ALL);
   };
   useEffect(() => {
     // wait until host details are loaded to set alertShowing
@@ -398,15 +410,15 @@ const RepositorySetsTab = () => {
               text={__('Show all')}
               buttonId="no-limit-toggle"
               aria-label="No limit"
-              isSelected={toggleGroupState === noLimit}
-              onChange={() => setToggleGroupState(noLimit)}
+              isSelected={toggleGroupState === SHOW_ALL}
+              onChange={() => setToggleGroupState(SHOW_ALL)}
             />
             <ToggleGroupItem
               text={__('Limit to environment')}
               buttonId="limit-to-env-toggle"
               aria-label="Limit to environment"
-              isSelected={toggleGroupState === limitToEnvironment}
-              onChange={() => setToggleGroupState(limitToEnvironment)}
+              isSelected={toggleGroupState === LIMIT_TO_ENVIRONMENT}
+              onChange={() => setToggleGroupState(LIMIT_TO_ENVIRONMENT)}
             />
           </ToggleGroup>
         </SplitItem>
@@ -445,11 +457,11 @@ const RepositorySetsTab = () => {
 
   const hostEnvText = 'the "{contentViewName}" content view and "{lifecycleEnvironmentName}" environment';
 
-  const scaAlert = (toggleGroupState === limitToEnvironment ?
+  const scaAlert = (toggleGroupState === LIMIT_TO_ENVIRONMENT ?
     `Showing only repositories in ${hostEnvText}.` :
     'Showing all available repositories.');
 
-  const nonScaAlert = (toggleGroupState === limitToEnvironment ?
+  const nonScaAlert = (toggleGroupState === LIMIT_TO_ENVIRONMENT ?
     `Showing repositories in ${hostEnvText} that are available through subscriptions.` :
     'Showing all repositories available through subscriptions.');
 
@@ -520,6 +532,12 @@ const RepositorySetsTab = () => {
             resetFilters,
           }
           }
+          alwaysHideToolbar={showPrimaryAction}
+          activeToggleState={toggleGroupState}
+          unfilteredToggleState={unfilteredToggleGroupState}
+          showSecondaryActionButton={toggleGroupState === LIMIT_TO_ENVIRONMENT}
+          secondaryActionTextOverride={__('Show all repository sets')}
+          emptyContentOverride={emptyContent}
           ouiaId="host-repository-sets-table"
           errorSearchTitle={errorSearchTitle}
           errorSearchBody={errorSearchBody}
