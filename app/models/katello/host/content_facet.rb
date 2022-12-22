@@ -96,6 +96,11 @@ module Katello
         unless lifecycle_environment_id
           fail _("Lifecycle environment must be specified")
         end
+
+        unless content_view_id
+          fail _("Content view must be specified")
+        end
+
         content_view_environment = ::Katello::ContentViewEnvironment
           .where(:content_view_id => content_view_id, :environment_id => lifecycle_environment_id)
           .first_or_create do |cve|

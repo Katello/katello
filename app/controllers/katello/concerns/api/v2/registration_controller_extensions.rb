@@ -20,8 +20,7 @@ module Katello
 
       def host_setup_extension
         if params['host']['lifecycle_environment_id']
-          new_lce = KTEnvironment.readable.find(params['host']['lifecycle_environment_id'])
-          @host.content_facet.lifecycle_environment = new_lce
+          @host.content_facet.assign_single_environment(content_view_id: @host&.content_views&.first&.id, lifecycle_environment_id: params['host']['lifecycle_environment_id'])
           @host.update_candlepin_associations
         end
 
