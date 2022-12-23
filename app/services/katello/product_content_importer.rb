@@ -95,7 +95,6 @@ module Katello
 
     private def existing_content_map
       if @existing_content_map.nil?
-
         @existing_content_map = {}
         Katello::Content.where(:organization_id => @product_mapping.keys.first.organization.id).to_a.each do |content|
           @existing_content_map[content[:cp_content_id]] = content
