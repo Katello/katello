@@ -59,6 +59,7 @@ module Katello
 
     def handle_product_moves(product, prod_contents_json)
       product_contents_to_move = fetch_product_contents_to_move(product, prod_contents_json)
+      moved_product_contents = []
       product_contents_to_move.each do |pc|
         content = pc.content
         root_repo = product.root_repositories.find_by(content_id: content.cp_content_id)
@@ -66,18 +67,21 @@ module Katello
         if actual_product.present? && root_repo.present? && root_repo.product != actual_product
           root_repo.update!(product_id: actual_product.id)
           pc.update!(product_id: actual_product.id)
+          moved_product_contents << pc
         else
           pc.destroy!
         end
       end
-
       product.reload unless product_contents_to_move.blank?
+
+      moved_product_contents
     end
 
     def import
       return if @product_mapping.blank?
+      moved_product_contents = []
       @product_mapping.each do |product, prod_contents_json|
-        handle_product_moves(product, prod_contents_json)
+        moved_product_contents += handle_product_moves(product, prod_contents_json)
         existing_product_contents = product.product_contents.to_a
         prod_contents_json.each do |prod_content_json|
           content = create_or_update_content(product, prod_content_json)
@@ -86,11 +90,12 @@ module Katello
         end
       end
       ::Katello::Content.import(@contents_to_create, recursive: true)
-      ::Katello::ProductContent.import(@product_contents_to_create)
+      ::Katello::ProductContent.import(fetch_product_contents_to_create(moved_product_contents))
     end
 
     private def existing_content_map
       if @existing_content_map.nil?
+
         @existing_content_map = {}
         Katello::Content.where(:organization_id => @product_mapping.keys.first.organization.id).to_a.each do |content|
           @existing_content_map[content[:cp_content_id]] = content
@@ -99,11 +104,17 @@ module Katello
       @existing_content_map
     end
 
-    def content_exists?(org, content)
+    private def content_exists?(org, content)
       Resources::Candlepin::Content.get(org.label, content.cp_content_id)
       true
     rescue RestClient::NotFound
       false
+    end
+
+    private def fetch_product_contents_to_create(moved_product_contents)
+      @product_contents_to_create.select do |pc|
+        moved_product_contents.none? { |mpc| mpc.content_id == pc.content_id && mpc.product_id == pc.product_id }
+      end
     end
 
     private def create_or_update_content(product, prod_content_json)
