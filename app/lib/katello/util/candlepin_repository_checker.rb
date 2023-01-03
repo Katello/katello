@@ -33,6 +33,8 @@ module Katello
       end
 
       def self.repository_exist_in_backend?(repository)
+        return false if repository.root.content_id.blank?
+
         ::Katello::Resources::Candlepin::Content.get(repository.organization.label, repository.root.content_id)
         true
       rescue RestClient::NotFound
