@@ -4,6 +4,8 @@ module Katello
   module Service
     class Repository
       class DistributionTest < ::ActiveSupport::TestCase
+        include Katello::Pulp3Support
+
         def setup
           @mock_pulp3_api = mock('pulp3_api')
           @mock_smart_proxy = mock('smart_proxy')

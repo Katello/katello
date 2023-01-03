@@ -4,6 +4,8 @@ module Katello
   module Service
     class Repository
       class AnsibleCollectionRepositoryMirrorOptionsTest < ::ActiveSupport::TestCase
+        include Katello::Pulp3Support
+
         def setup
           @mock_smart_proxy = mock('smart_proxy')
           @mock_smart_proxy.stubs(:pulp3_support?).returns(true)
