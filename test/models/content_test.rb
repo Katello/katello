@@ -40,7 +40,7 @@ module Katello
           }
         end
       end
-
+      Katello::ProductContentImporter.any_instance.stubs(:content_exists?).returns(false)
       Katello::Resources::Candlepin::Product.stubs(:all).returns(*org_products)
 
       Katello::Content.import_all

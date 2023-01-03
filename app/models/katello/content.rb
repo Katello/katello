@@ -41,7 +41,7 @@ module Katello
         cp_products = ::Katello::Resources::Candlepin::Product.all(org.label, [:id, :productContent])
         product_hash = cp_products.group_by { |prod| prod['id'] }
 
-        prod_content_importer = Katello::ProductContentImporter.new
+        prod_content_importer = Katello::ProductContentImporter.new(product_hash)
         org.products.each do |product|
           product_json = product_hash[product.cp_id]&.first
 
