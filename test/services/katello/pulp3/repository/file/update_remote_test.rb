@@ -4,6 +4,8 @@ module Katello
   module Service
     class Repository
       class UpdateRemoteTest < ::ActiveSupport::TestCase
+        include Katello::Pulp3Support
+
         def setup
           mock_remotes_create_response = mock('response')
           mock_remotes_create_response.stubs(:pulp_href).returns('http://someurl')

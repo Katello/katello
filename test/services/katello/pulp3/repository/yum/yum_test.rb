@@ -5,6 +5,8 @@ module Katello
     module Pulp3
       class Repository
         class YumTest < ::ActiveSupport::TestCase
+          include Katello::Pulp3Support
+
           def setup
             @repo = katello_repositories(:fedora_17_x86_64)
             @proxy = SmartProxy.pulp_primary
@@ -164,6 +166,8 @@ module Katello
         end
 
         class YumVcrTest < ::ActiveSupport::TestCase
+          include Katello::Pulp3Support
+
           def setup
             @repo = katello_repositories(:fedora_17_x86_64)
             @proxy = SmartProxy.pulp_primary
