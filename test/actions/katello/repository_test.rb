@@ -637,52 +637,6 @@ module ::Actions::Katello::Repository
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_ansible_collection_pulp3, proxy, :contents_changed => true)
     end
 
-    describe 'progress' do
-      let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
-      let(:pulp_action) { fixture_action(pulp_action_class, input: {repo_id: repository.id}, output: fixture_variant) }
-      let :action do
-        create_action(action_class).tap do |action|
-          action.stubs(all_planned_actions: [pulp_action])
-        end
-      end
-
-      describe 'successfully synchronized' do
-        let(:fixture_variant) { :success }
-
-        specify do
-          assert_equal 'New packages: 32 (76.7 KB).', action.humanized_output
-        end
-      end
-
-      describe 'successfully synchronized without new packages' do
-        let(:fixture_variant) { :success_no_packages }
-
-        specify do
-          assert_equal 'No new packages.', action.humanized_output
-        end
-      end
-
-      describe 'syncing packages in progress' do
-        let(:fixture_variant) { :progress_packages }
-
-        specify do
-          assert_equal 'New packages: 20/32 (48 KB/76.7 KB).', action.humanized_output
-        end
-
-        specify do
-          assert_in_delta pulp_action.run_progress, 0.6256
-        end
-      end
-
-      describe 'downloading metadata in progress' do
-        let(:fixture_variant) { :progress_metadata }
-
-        specify do
-          assert_equal 'Processing metadata', action.humanized_output
-        end
-      end
-    end
-
     describe 'pulp3 progress' do
       let(:pulp3_action_class) { ::Actions::Pulp3::Repository::Sync }
       let(:pulp3_action) { fixture_action(pulp3_action_class, input: {repo_id: repository.id, smart_proxy_id: SmartProxy.first.id}, output: fixture_variant) }
