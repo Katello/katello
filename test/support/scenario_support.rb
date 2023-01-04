@@ -41,12 +41,6 @@ class ScenarioSupport
     record("product_create") { ForemanTasks.sync_task(::Actions::Katello::Product::Create, product, org, Time.utc(2017, "jan", 1, 20, 15, 1).iso8601) }
   end
 
-  def create_repo(repo)
-    record("support/destroy_repo_if_exists") { destroy_repo_if_exists(repo) }
-    record("repo_create") { ForemanTasks.sync_task(::Actions::Katello::Repository::Create, repo, false, true) }
-    repo.root.reload
-  end
-
   def sync_repo(repo)
     record("repo_sync") { ForemanTasks.sync_task(::Actions::Katello::Repository::Sync, repo) }
   end
@@ -69,10 +63,6 @@ class ScenarioSupport
     raise
   ensure
     VCR.eject_cassette
-  end
-
-  def destroy_repo_if_exists(repo)
-    # TODO: Implement for Pulp 3
   end
 
   def destroy_org_if_exists(org)

@@ -15,29 +15,6 @@ module Scenarios
       @org.reload
     end
 
-    def test_scenarios
-      skip "Until we can figure out testing this with pulp3"
-      product = Katello::Product.new(:name => "Scenario Product")
-      @support.create_product(product, @org)
-
-      root = Katello::RootRepository.new(:name => "Scenario yum product", :url => "file:///var/lib/pulp/sync_imports/test_repos/zoo",
-                                             :content_type => 'yum', :product_id => product.id,
-                                             :download_policy => 'immediate')
-      repo = Katello::Repository.new(:content_view_version => @org.default_content_view.versions.first,
-                                    :environment => @org.library, :relative_path => 'scenario_test', :root => root)
-
-      repo.pulp_id = 'scenario_test'
-      @support.create_repo(repo)
-
-      @support.sleep_if_needed
-      @support.sync_repo(repo)
-      @support.sleep_if_needed
-
-      @support.update_repo(repo.root, :mirror_on_sync => false)
-      @support.sleep_if_needed
-      @support.destroy_org(@org, repo)
-    end
-
     def test_manifest_import
       manifest_path = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'manifest_small.zip')
       @support.import_manifest(@org.label, manifest_path)
