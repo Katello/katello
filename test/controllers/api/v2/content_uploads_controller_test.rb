@@ -27,7 +27,9 @@ module Katello
     end
 
     def test_create_upload_request
-      mock_pulp_server(:create_upload_request => [])
+      size = 100
+      checksum = 'test_checksum'
+      @repo.backend_content_service(SmartProxy.pulp_primary).expects(:create_upload).with(size, checksum, 'rpm', @repo)
       ::Katello::RepositoryTypeManager.expects(:check_content_matches_repo_type!).returns(true)
       post :create, params: { :repository_id => @repo.id, :size => 100, :checksum => 'test_checksum', :content_type => nil,
                               :repository => @repo }
@@ -35,9 +37,11 @@ module Katello
     end
 
     def test_create_generic_upload_request
-      mock_pulp_server(:create_upload_request => [])
+      size = 100
+      checksum = 'test_checksum'
+      @repo.backend_content_service(SmartProxy.pulp_primary).expects(:create_upload).with(size, checksum, 'python_package', @repo)
       ::Katello::RepositoryTypeManager.expects(:check_content_matches_repo_type!).returns(true)
-      post :create, params: { :repository_id => @repo.id, :size => 100, :checksum => 'test_checksum', :content_type => 'python_package',
+      post :create, params: { :repository_id => @repo.id, :size => size, :checksum => checksum, :content_type => 'python_package',
                               :repository => @generic_repo }
       assert_response :success
     end
@@ -59,8 +63,11 @@ module Katello
     end
 
     def test_update
-      mock_pulp_server(:upload_bits => true)
-      put :update, params: { :id => "1", :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id }
+      id = '1'
+      offset = '0'
+      content = '/tmp/my_file.rpm'
+      @repo.backend_content_service(SmartProxy.pulp_primary).expects(:upload_chunk).with(id, offset, content, nil)
+      put :update, params: { :id => id, :offset => offset, :content => content, :repository_id => @repo.id }
 
       assert_response :success
     end
@@ -75,8 +82,9 @@ module Katello
     end
 
     def test_delete_request
-      mock_pulp_server(:delete_upload_request => true)
-      delete :destroy, params: { :id => "1", :repository_id => @repo.id }
+      id = '1'
+      @repo.backend_content_service(SmartProxy.pulp_primary).expects(:delete_upload).with(id)
+      delete :destroy, params: { :id => id, :repository_id => @repo.id }
 
       assert_response :success
     end
@@ -88,19 +96,6 @@ module Katello
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, params: { :id => "1", :repository_id => @repo.id }
       end
-    end
-
-    private
-
-    def mock_pulp_server(content_hash)
-      content = mock(content_hash)
-      resources = mock(:content => content)
-      pulp_server = mock(:resources => resources)
-      pulp_primary = mock(pulp_api: pulp_server, pulp3_support?: false)
-      pulp_primary.stubs(:content_service).returns(stub(:content_type => "rpm"))
-      pulp_primary.stubs(:has_feature?).returns(true)
-      pulp_primary.stubs(:capabilities).returns(['rpm', 'file', 'deb', 'container', 'ansible'])
-      SmartProxy.expects(:pulp_primary).at_least_once.returns(pulp_primary)
     end
   end
 end
