@@ -80,7 +80,6 @@ class SourceCodeTest < ActiveSupport::TestCase
               %r{config/(application|boot)\.rb},
               %r{engines/bastion/test/test_helper\.rb},
               %r{test/support/vcr\.rb},
-              %r{test/support/runcible\.rb},
               %r{app/services/katello/authentication/client_authentication\.rb},
               %r{lib/util/puppet\.rb})
     end

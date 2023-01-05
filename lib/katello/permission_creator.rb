@@ -284,8 +284,7 @@ module Katello
                          :finder_scope => :readable
       @plugin.permission :create_products,
                          {
-                           'katello/api/v2/products' => [:create],
-                           'katello/api/v2/package_groups' => [:create]
+                           'katello/api/v2/products' => [:create]
                          },
                          :resource_type => 'Katello::Product',
                          :finder_scope => :editable
@@ -305,8 +304,7 @@ module Katello
                            'katello/api/v2/products' => [:destroy],
                            'katello/api/v2/repositories' => [:destroy],
                            'katello/api/v2/products_bulk_actions' => [:destroy_products],
-                           'katello/api/v2/repositories_bulk_actions' => [:destroy_repositories],
-                           'katello/api/v2/package_groups' => [:destroy]
+                           'katello/api/v2/repositories_bulk_actions' => [:destroy_repositories]
                          },
                          :resource_type => 'Katello::Product',
                          :finder_scope => :deletable

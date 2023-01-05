@@ -213,6 +213,7 @@ module Katello
       redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers, max_redirects: 0) }
     end
 
+    # FIXME: Reimplement for Pulp 3.
     def push_manifest
       repository = params[:repository]
       tag = params[:tag]
@@ -413,6 +414,7 @@ module Katello
       tar_file
     end
 
+    # FIXME: Reimplement for Pulp 3.
     def upload_manifest(tar_file)
       upload_id = pulp_content.create_upload_request['upload_id']
       filename = tmp_file(tar_file)
@@ -438,6 +440,7 @@ module Katello
       pulp_content.delete_upload_request(upload_id) if upload_id
     end
 
+    # FIXME: Reimplement for Pulp 3.
     def upload_tag(digest, tag)
       upload_id = pulp_content.create_upload_request['upload_id']
       uploads = [{
