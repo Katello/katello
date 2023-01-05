@@ -11,7 +11,6 @@ module Katello
       @provider = Provider.find(katello_providers(:anonymous).id)
       @product = Product.find(katello_products(:fedora).id)
       @product.stubs(:redhat?).returns(false)
-      Product.any_instance.stubs('sync_status').returns(PulpSyncStatus.new)
       Product.any_instance.stubs('sync_state_aggregated').returns(:stopped)
     end
 
