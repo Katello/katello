@@ -2,8 +2,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
-    include Support::ForemanTasks::Task
-
     def models
       @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
       @package_group_filter = katello_content_view_filters(:populated_package_group_filter)
@@ -142,27 +140,6 @@ module Katello
       get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id], :repository_id => @lib_repo.id }
       assert_response :success
       assert_template "katello/api/v2/package_groups/compare"
-    end
-
-    def test_create_and_delete
-      parameters = { :repository_id => @repo.id, :name => 'My_Group', :description => "My Group", :mandatory_package_names => ["katello-agent"]}
-      assert_sync_task(::Actions::Katello::Repository::UploadPackageGroup) do |repository, params|
-        assert_equal repository, @repo
-        assert_equal params[:name], parameters[:name]
-        assert_equal params[:description], parameters[:description]
-        assert_equal params[:mandatory_package_names], parameters[:mandatory_package_names]
-        assert_equal params[:user_visible], true
-      end
-
-      post(:create, params: parameters)
-      assert_response :success
-
-      assert_sync_task(::Actions::Katello::Repository::DestroyPackageGroup) do |repository, pkg_group_id|
-        assert_equal repository, @repo
-        assert_equal pkg_group_id, "My_Group"
-      end
-      delete(:destroy, params: { :name => "My_Group", :repository_id => @repo.id })
-      assert_response :success
     end
   end
 end

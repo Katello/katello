@@ -16,7 +16,6 @@ module Katello
     before do
       @routes = Katello::Engine.routes
       disable_org_orchestration
-      Katello.stubs(:pulp_server).returns(stub(:extensions => stub(:repository => stub(:search_by_repository_ids => []))))
       ProductTestData::PRODUCT_WITH_ATTRS.merge!(:provider => provider, :organization => provider.organization)
     end
 

@@ -49,7 +49,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "pg"
 
   # Pulp
-  gem.add_dependency "runcible", ">= 2.13.0", "< 3.0.0"
   gem.add_dependency "anemone"
 
   #pulp3
