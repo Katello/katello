@@ -521,80 +521,81 @@ module Katello
       end
     end
 
-    describe "docker push" do
-      it "push manifest - error" do
-        @controller.stubs(:authorize_repository_write).returns(true)
-        put :push_manifest, params: { repository: 'repository', tag: 'tag' }
-        assert_response 500
-        body = JSON.parse(response.body)
-        assert_equal "Unsupported schema ", body['error']['message']
-      end
+    # Disabling docker push tests until it is implemented for Pulp 3.
+    # describe "docker push" do
+    #   it "push manifest - error" do
+    #     @controller.stubs(:authorize_repository_write).returns(true)
+    #     put :push_manifest, params: { repository: 'repository', tag: 'tag' }
+    #     assert_response 500
+    #     body = JSON.parse(response.body)
+    #     assert_equal "Unsupported schema ", body['error']['message']
+    #   end
 
-      it "push manifest - manifest.json exists" do
-        File.open("#{Rails.root}/tmp/manifest.json", 'wb', 0600) do |file|
-          file.write "empty manifest"
-        end
+    #   it "push manifest - manifest.json exists" do
+    #     File.open("#{Rails.root}/tmp/manifest.json", 'wb', 0600) do |file|
+    #       file.write "empty manifest"
+    #     end
 
-        @controller.stubs(:authorize_repository_write).returns(true)
-        put :push_manifest, params: { repository: 'repository', tag: 'tag' }
-        assert_response 422
-        body = JSON.parse(response.body)
-        assert_equal "Upload already in progress", body['error']['message']
-      end
+    #     @controller.stubs(:authorize_repository_write).returns(true)
+    #     put :push_manifest, params: { repository: 'repository', tag: 'tag' }
+    #     assert_response 422
+    #     body = JSON.parse(response.body)
+    #     assert_equal "Upload already in progress", body['error']['message']
+    #   end
 
-      it "push manifest - success" do
-        @repository = katello_repositories(:busybox)
-        mock_pulp_server([
-                           { name: :create_upload_request, result: { 'upload_id' => 123 }, count: 2 },
-                           { name: :delete_upload_request, result: true, count: 2 },
-                           { name: :upload_bits, result: true, count: 1 }
-                         ])
-        @controller.expects(:sync_task)
-          .times(2)
-          .returns(stub('task', :output => {'upload_results' => [{ 'digest' => 'sha256:1234' }]}), true)
-          .with do |action_class, repository, uploads, params|
-            assert_equal ::Actions::Katello::Repository::ImportUpload, action_class
-            assert_equal @repository, repository
-            assert_equal [123], uploads.pluck(:id)
-            assert params[:generate_metadata]
-            assert params[:sync_capsule]
-          end
+    #   it "push manifest - success" do
+    #     @repository = katello_repositories(:busybox)
+    #     mock_pulp_server([
+    #                        { name: :create_upload_request, result: { 'upload_id' => 123 }, count: 2 },
+    #                        { name: :delete_upload_request, result: true, count: 2 },
+    #                        { name: :upload_bits, result: true, count: 1 }
+    #                      ])
+    #     @controller.expects(:sync_task)
+    #       .times(2)
+    #       .returns(stub('task', :output => {'upload_results' => [{ 'digest' => 'sha256:1234' }]}), true)
+    #       .with do |action_class, repository, uploads, params|
+    #         assert_equal ::Actions::Katello::Repository::ImportUpload, action_class
+    #         assert_equal @repository, repository
+    #         assert_equal [123], uploads.pluck(:id)
+    #         assert params[:generate_metadata]
+    #         assert params[:sync_capsule]
+    #       end
 
-        manifest = {
-          schemaVersion: 1
-        }
-        @controller.stubs(:authorize).returns(true)
-        @controller.stubs(:find_readable_repository).returns(@repository)
-        @controller.stubs(:find_writable_repository).returns(@repository)
-        put :push_manifest, params: { repository: 'repository', tag: 'tag' },
-            body: manifest.to_json
-        assert_response 200
-      end
+    #     manifest = {
+    #       schemaVersion: 1
+    #     }
+    #     @controller.stubs(:authorize).returns(true)
+    #     @controller.stubs(:find_readable_repository).returns(@repository)
+    #     @controller.stubs(:find_writable_repository).returns(@repository)
+    #     put :push_manifest, params: { repository: 'repository', tag: 'tag' },
+    #         body: manifest.to_json
+    #     assert_response 200
+    #   end
 
-      it "push manifest - disabled with false" do
-        SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt', allow_push: false}
-        put :push_manifest, params: { repository: 'repository', tag: 'tag' }
-        assert_response 404
-        body = JSON.parse(response.body)
-        assert_equal "Registry push not supported", body['error']['message']
-      end
+    #   it "push manifest - disabled with false" do
+    #     SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt', allow_push: false}
+    #     put :push_manifest, params: { repository: 'repository', tag: 'tag' }
+    #     assert_response 404
+    #     body = JSON.parse(response.body)
+    #     assert_equal "Registry push not supported", body['error']['message']
+    #   end
 
-      it "push manifest - disabled by omission" do
-        SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt'}
-        put :push_manifest, params: { repository: 'repository', tag: 'tag' }
-        assert_response 404
-        body = JSON.parse(response.body)
-        assert_equal "Registry push not supported", body['error']['message']
-      end
-    end
+    #   it "push manifest - disabled by omission" do
+    #     SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt'}
+    #     put :push_manifest, params: { repository: 'repository', tag: 'tag' }
+    #     assert_response 404
+    #     body = JSON.parse(response.body)
+    #     assert_equal "Registry push not supported", body['error']['message']
+    #   end
+    # end
 
-    def mock_pulp_server(content_hash)
-      content = mock
-      content_hash.each do |method|
-        content.stubs(method[:name]).times(method[:count]).returns(method[:result])
-      end
-      @controller.stubs(:pulp_content).returns(content)
-    end
+    # def mock_pulp_server(content_hash)
+    #   content = mock
+    #   content_hash.each do |method|
+    #     content.stubs(method[:name]).times(method[:count]).returns(method[:result])
+    #   end
+    #   @controller.stubs(:pulp_content).returns(content)
+    # end
   end
   #rubocop:enable Metrics/BlockLength
 end
