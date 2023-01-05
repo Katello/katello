@@ -12,7 +12,6 @@ module Katello
 
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Candlepin::Repository
-    include Glue::Pulp::Repo
 
     include Glue
     include Authorization::Repository

@@ -45,31 +45,6 @@ module Katello
         self.products.any? { |p| p.synced? }
       end
 
-      # Get the most relavant status for all the repos in this Provider
-      def sync_status
-        statuses = self.products.reject { |r| r.empty? }.map { |r| r.sync_status }
-        return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
-
-        [PulpSyncStatus::Status::RUNNING,
-         PulpSyncStatus::Status::NOT_SYNCED,
-         PulpSyncStatus::Status::CANCELED,
-         PulpSyncStatus::Status::ERROR].each do |interesting_status|
-          relevant_status = statuses.find { |s| s[:state].to_s == interesting_status.to_s }
-          return relevant_status if relevant_status
-        end
-
-        #else -> all finished
-        return statuses[0]
-      end
-
-      def sync_state
-        self.sync_status[:state]
-      end
-
-      def sync_size
-        self.products.inject(0) { |sum, v| sum + v.sync_status.progress.total_size }
-      end
-
       def last_sync
         sync_times = []
         self.products.each do |prod|
