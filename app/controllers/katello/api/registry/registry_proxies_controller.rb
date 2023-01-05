@@ -210,10 +210,7 @@ module Katello
     def pull_blob
       headers = {}
       headers['Accept'] = request.headers['Accept'] if request.headers['Accept']
-      if (blob_response = redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers, max_redirects: 0) })
-        #when pulp 2 is removed, this should no longer be needed, and all clients should be redirected
-        render json: blob_response
-      end
+      redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers, max_redirects: 0) }
     end
 
     def push_manifest

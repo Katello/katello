@@ -67,7 +67,7 @@ module Katello::Host
         @mock_smart_proxy.stubs(:has_feature?).with(::SmartProxy::PULP_FEATURE).returns(false)
         ::Host.expects(:find_by).returns(@host).at_least_once
         @host.expects(:import_package_profile).with do |packages|
-          expected_packages = rpm_profiles.map { |prof| ::Katello::Pulp::SimplePackage.new(prof) }
+          expected_packages = rpm_profiles.map { |prof| ::Katello::SimplePackage.new(prof) }
           assert_equal packages.map(&:nvra), expected_packages.map(&:nvra)
         end
         @host.expects(:import_enabled_repositories).with(enabled_repos)

@@ -245,11 +245,12 @@ module ::Actions::Katello::CapsuleContent
     end
 
     it 'fails when trying to sync to the default capsule' do
-      SmartProxy.any_instance.stubs(:pulp_primary?).returns(true)
+      proxy = SmartProxy.pulp_primary
+      proxy.stubs(:pulp_primary?).returns(true)
       action = create_action(action_class)
-      action.expects(:action_subject).with(capsule_content.smart_proxy)
+      action.expects(:action_subject).with(proxy)
       assert_raises(RuntimeError) do
-        plan_action(action, capsule_content.smart_proxy)
+        plan_action(action, proxy)
       end
     end
 

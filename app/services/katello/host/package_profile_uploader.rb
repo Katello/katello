@@ -29,7 +29,7 @@ module Katello
           Rails.logger.warn("Host with ID %s has no content facet; continuing" % host_id)
         else
           begin
-            simple_packages = profile.map { |item| ::Katello::Pulp::SimplePackage.new(item) }
+            simple_packages = profile.map { |item| ::Katello::SimplePackage.new(item) }
             host.import_package_profile(simple_packages)
           rescue ActiveRecord::InvalidForeignKey # this happens if the host gets deleted in between the "find_by" and "import_package_profile"
             Rails.logger.warn("Host installed package list with ID %s was not able to be written to the DB (host likely is deleted); continuing" % host_id)

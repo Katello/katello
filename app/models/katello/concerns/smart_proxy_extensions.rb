@@ -443,10 +443,6 @@ module Katello
         repos_in_env_cv(environment, content_view) - repos_in_sync_history
       end
 
-      def smart_proxy_service
-        @smart_proxy_service ||= Pulp::SmartProxyRepository.new(self)
-      end
-
       def rhsm_url
         # Since Foreman 3.1 this setting is set
         if (rhsm_url = setting(SmartProxy::PULP3_FEATURE, 'rhsm_url'))

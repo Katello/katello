@@ -135,9 +135,5 @@ module Katello
     def find_repository
       @repository = Katello::Repository.readable.find(params[:repository_id])
     end
-
-    def smart_proxy_service
-      Pulp::SmartProxyRepository.new(@capsule)
-    end
   end
 end
