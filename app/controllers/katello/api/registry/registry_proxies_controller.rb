@@ -242,6 +242,8 @@ module Katello
       render json: {}
     end
 
+    # FIXME: This is referring to a non-existent Pulp 2 server.
+    # Pulp 3 container push support is needed instead.
     def pulp_content
       Katello.pulp_server.resources.content
     end

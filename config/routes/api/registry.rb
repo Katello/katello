@@ -10,15 +10,16 @@ Katello::Engine.routes.draw do
       match '/v2/token' => 'registry_proxies#token', :via => :get
       match '/v2/token' => 'registry_proxies#token', :via => :post
       match '/v2/*repository/manifests/:tag' => 'registry_proxies#pull_manifest', :via => :get
-      match '/v2/*repository/manifests/:tag' => 'registry_proxies#push_manifest', :via => :put
+      # Push-related routes are disabled until there is support for pushing to Pulp 3.
+      # match '/v2/*repository/manifests/:tag' => 'registry_proxies#push_manifest', :via => :put
       match '/v2/*repository/blobs/:digest' => 'registry_proxies#pull_blob', :via => :get
       match '/v2/*repository/blobs/:digest' => 'registry_proxies#check_blob', :via => :head
-      match '/v2/*repository/blobs/uploads' => 'registry_proxies#start_upload_blob', :via => :post
-      match '/v2/*repository/blobs/uploads/:uuid' => 'registry_proxies#chunk_upload_blob', :via => :post
-      match '/v2/*repository/blobs/uploads/:uuid' => 'registry_proxies#finish_upload_blob', :via => :put
-      match '/v2/*repository/blobs/uploads/:uuid' => 'registry_proxies#upload_blob', :via => :patch
-      match '/v2/*repository/blobs/uploads/:uuid' => 'registry_proxies#status_upload_blob', :via => :get
-      match '/v2/*repository/blobs/uploads/:uuid' => 'registry_proxies#cancel_upload_blob', :via => :delete
+      # match '/v2/*repository/blobs/uploads' => 'registry_proxies#start_upload_blob', :via => :post
+      # match '/v2/*repository/blobs/uploads/:uuid' => 'registry_proxies#chunk_upload_blob', :via => :post
+      # match '/v2/*repository/blobs/uploads/:uuid' => 'registry_proxies#finish_upload_blob', :via => :put
+      # match '/v2/*repository/blobs/uploads/:uuid' => 'registry_proxies#upload_blob', :via => :patch
+      # match '/v2/*repository/blobs/uploads/:uuid' => 'registry_proxies#status_upload_blob', :via => :get
+      # match '/v2/*repository/blobs/uploads/:uuid' => 'registry_proxies#cancel_upload_blob', :via => :delete
       match '/v2/_catalog' => 'registry_proxies#catalog', :via => :get
       match '/v2/*repository/tags/list' => 'registry_proxies#tags_list', :via => :get
       match '/v2' => 'registry_proxies#ping', :via => :get
