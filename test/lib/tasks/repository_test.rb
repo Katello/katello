@@ -33,12 +33,6 @@ module Katello
       ENV['LIFECYCLE_ENVIRONMENT'] = nil
     end
 
-    def test_publish_unpublished_repositories
-      Katello::Repository.any_instance.stubs(:needs_metadata_publish?).returns(true)
-
-      Rake.application.invoke_task('katello:publish_unpublished_repositories')
-    end
-
     def test_regenerate_repo_metadata
       ForemanTasks.expects(:async_task).with(::Actions::Katello::Repository::BulkMetadataGenerate,
                                              Katello::Repository.all.order_by_root(:name)).returns(ForemanTasks::Task::DynflowTask::DynflowTask.new)

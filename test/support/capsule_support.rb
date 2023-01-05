@@ -27,12 +27,12 @@ module Support
 
     def capsule_content
       # This helper is useful for tests that only need a single capsule
-      @capsule_content ||= Katello::Pulp::SmartProxyRepository.new(proxy_with_pulp)
+      @capsule_content ||= Katello::Pulp3::SmartProxyMirrorRepository.new(proxy_with_pulp)
     end
 
     def new_capsule_content(proxy_resource)
       # This helper is useful for tests involving multiple capsules
-      Katello::Pulp::SmartProxyRepository.new(proxy_with_pulp(proxy_resource))
+      Katello::Pulp3::SmartProxyMirrorRepository.new(proxy_with_pulp(proxy_resource))
     end
   end
 end
