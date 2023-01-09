@@ -1,3 +1,9 @@
+# 4.6.2 Belgian Tripel (2023-01-09)
+
+## Bug Fixes
+
+### Repositories
+ * Mirror complete sync policy no longer allowed with ignored content types in the repo. ([#35829](https://projects.theforeman.org/issues/35829), [9af82fa6](https://github.com/Katello/katello.git/commit/9af82fa68d6d34928d8a3fd4cb12f84fc5afc96f), [33df1658](https://github.com/Katello/katello.git/commit/33df165811f946637d76903e5b78d01eec2f45de))
 # 4.6 Belgian Tripel (2022-09-15)
 
 ## Features
