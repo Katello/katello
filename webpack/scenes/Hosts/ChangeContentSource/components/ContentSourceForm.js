@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ActionGroup,
+  Alert,
   Button,
   Form,
   Grid,
@@ -24,6 +25,7 @@ const ContentSourceForm = ({
   contentSourceId,
   contentHosts,
   isLoading,
+  hostsUpdated,
 }) => {
   const formIsValid = () => (!!environmentId &&
     !!contentViewId &&
@@ -44,6 +46,16 @@ const ContentSourceForm = ({
       isHorizontal
     >
       <Grid hasGutter className="margin-top-16">
+        {(contentHosts.length === 0 && !isLoading) && (
+
+        <GridItem span={7}>
+          <Alert
+            variant="danger"
+            className="margin-top-20"
+            title={__('No hosts found')}
+          />
+        </GridItem>
+        )}
         <FormField label={__('Content source')} id="change_cs_content_source" value={contentSourceId} items={contentSources} onChange={handleContentSource} isDisabled={contentSourcesIsDisabled} />
         <FormField label={__('Environment')} id="change_cs_environment" value={environmentId} items={environments} onChange={handleEnvironment} isDisabled={environmentIsDisabled} />
         <FormField label={__('Content view')} id="change_cs_content_view" value={contentViewId} items={contentViews} onChange={handleContentView} isDisabled={viewIsDisabled} />
@@ -54,10 +66,10 @@ const ContentSourceForm = ({
               variant="primary"
               id="generate_btn"
               onClick={e => handleSubmit(e)}
-              isDisabled={isLoading || !formIsValid()}
+              isDisabled={isLoading || !formIsValid() || hostsUpdated}
               isLoading={isLoading}
             >
-              {__('Change content source')}
+              {__('Update')}
             </Button>
           </ActionGroup>
         </GridItem>
@@ -78,6 +90,7 @@ ContentSourceForm.propTypes = {
   contentSourceId: PropTypes.string,
   contentHosts: PropTypes.arrayOf(PropTypes.shape({})),
   isLoading: PropTypes.bool,
+  hostsUpdated: PropTypes.bool,
 };
 
 ContentSourceForm.defaultProps = {
@@ -89,6 +102,7 @@ ContentSourceForm.defaultProps = {
   contentSourceId: '',
   contentHosts: [],
   isLoading: false,
+  hostsUpdated: false,
 };
 
 export default ContentSourceForm;
