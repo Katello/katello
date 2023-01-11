@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
+  Alert,
   Grid,
   GridItem,
   CodeBlock,
@@ -39,25 +41,19 @@ const ContentSourceTemplate = ({ template, jobInvocationPath }) => {
   return (
     <Grid>
       <GridItem span={7}>
-        <h1>
-          {__("What's next?")}
-        </h1>
-        <p>
-          {jobInvocationPath && (
-            <>
-              <a href={jobInvocationPath}>
-                {__('Run job invocation')}
-              </a>
-          &nbsp;
-              {__('to update configuration on all hosts, or')}
-            </>
-          )}
-        &nbsp;
-          {__('update configuration on the hosts manually:')}
-        </p>
+        <Alert variant="warning" title={__('Host configurations are not updated yet')} className="margin-top-20" isInline>
+          <FormattedMessage
+            id="ccs_alert"
+            values={{
+              link: <a href={jobInvocationPath}>{__('run job invocation')}</a>,
+            }}
+            defaultMessage={jobInvocationPath ? __('To update the selected host configuration, {link}, or update hosts manually in the next section.') : __('To update the selected host configuration, update hosts manually in the next section.')}
+          />
+        </Alert>
+
       </GridItem>
       <GridItem span={7}>
-        <CodeBlock actions={actions} className="cs_template_code">
+        <CodeBlock actions={actions} className="cs_template_code margin-top-20">
           <CodeBlockCode>
             {__('Change content source')}
             <ExpandableSection isExpanded={isExpanded} isDetached>

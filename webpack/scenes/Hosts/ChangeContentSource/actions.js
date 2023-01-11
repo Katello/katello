@@ -27,7 +27,6 @@ export const changeContentSource = (environmentId, contentViewId, contentSourceI
       content_source_id: contentSourceId,
       host_ids: hostIds,
     },
-    successToast: () => __('Content source successfully updated.'),
     errorToast: () => __('Something went wrong while updating the content source. See the logs for more information'),
   });
 
