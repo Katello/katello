@@ -46,8 +46,9 @@ module Actions
                               product_id: product.cp_id,
                               content_id: pc.content.cp_content_id)
                 end
-                plan_action(Candlepin::Product::Destroy, cp_id: product.cp_id, :owner => product.organization.label)
               end
+
+              plan_action(Candlepin::Product::Destroy, cp_id: product.cp_id, :owner => product.organization.label)
             end
 
             clear_pool_associations(product)
