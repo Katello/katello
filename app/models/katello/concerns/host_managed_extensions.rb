@@ -271,9 +271,9 @@ module Katello
       def import_module_streams(module_streams)
         streams = {}
         module_streams.each do |module_stream|
-          stream = AvailableModuleStream.where(name: module_stream["name"],
+          stream = AvailableModuleStream.create_or_find_by!(name: module_stream["name"],
                                                context: module_stream["context"],
-                                               stream: module_stream["stream"]).first_or_create!
+                                               stream: module_stream["stream"])
           streams[stream.id] = module_stream
         end
         sync_available_module_stream_associations(streams)
