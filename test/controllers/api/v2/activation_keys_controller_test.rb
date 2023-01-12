@@ -295,6 +295,11 @@ module Katello
       assert_match 'Validation failed: Max hosts is not a number', @response.body
     end
 
+    def test_should_not_update_with_invalid_release
+      put(:update, params: { :organization_id => @organization.id, :id => @activation_key.id, :release_version => "foo" })
+      assert_response :bad_request
+    end
+
     test_attributes :pid => 'ec225dad-2d27-4b37-989d-1ba2c7f74ac4'
     def test_update_auto_attach
       new_auto_attach = !@activation_key.auto_attach

@@ -341,6 +341,7 @@ module Katello
     end
 
     def validate_release_version
+      @organization ||= find_organization
       if params[:release_version].present? && !@organization.library.available_releases.include?(params[:release_version])
         fail HttpErrors::BadRequest, _("Invalid release version: [%s]") % params[:release_version]
       end
