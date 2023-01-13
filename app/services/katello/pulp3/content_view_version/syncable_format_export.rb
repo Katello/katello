@@ -9,7 +9,13 @@ module Katello
         end
 
         def create_export(exporter_data, _options = {})
-          [api.yum_export_api.create(exporter_data[:pulp_href], publication: repository.publication_href)]
+          options = { publication: repository.publication_href }
+          if incremental?
+            from_exporter = Export.new(smart_proxy: smart_proxy, content_view_version: from_content_view_version)
+            from_repo = from_exporter.repositories.find_by(library_instance_id: repository.library_instance)
+            options[:start_repository_version] = from_repo.version_href unless from_repo.blank?
+          end
+          [api.yum_export_api.create(exporter_data[:pulp_href], options)]
         end
 
         def fetch_export(exporter_href)

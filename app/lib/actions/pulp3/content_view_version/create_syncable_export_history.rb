@@ -6,6 +6,7 @@ module Actions
           param :smart_proxy_id, Integer
           param :base_path, String
           param :content_view_version_id, Integer
+          param :from_content_view_version_id, Integer
           param :destination_server, String
         end
 
@@ -18,8 +19,10 @@ module Actions
           smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
           output[:path] = input[:base_path]
           cvv = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
+          from_cvv = ::Katello::ContentViewVersion.find(input[:from_content_view_version_id]) unless input[:from_content_view_version_id].blank?
           export_metadata = ::Katello::Pulp3::ContentViewVersion::Export.create(
                                                      content_view_version: cvv,
+                                                     from_content_view_version: from_cvv,
                                                      smart_proxy: smart_proxy,
                                                      format: input[:format]).generate_metadata
 
@@ -30,6 +33,7 @@ module Actions
             metadata: export_metadata,
             audit_comment: ::Katello::ContentViewVersionExportHistory.generate_audit_comment(content_view_version: cvv,
                                                                                              user: User.current,
+                                                                                             from_version: from_cvv,
                                                                                              metadata: export_metadata)
           )
           output[:export_history_id] = history.id

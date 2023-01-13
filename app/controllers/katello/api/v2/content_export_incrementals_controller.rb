@@ -16,12 +16,18 @@ module Katello
                                                  "If not provided the most recent export history will be used."), :required => false
     param :fail_on_missing_content, :bool, :desc => N_("Fails if any of the repositories belonging to this version"\
                                                          " are unexportable. False by default."), :required => false
+    param :format, ::Katello::Pulp3::ContentViewVersion::Export::FORMATS,
+                   :desc => N_("Export formats. Choose syncable if content is to be imported via repository sync. "\
+                               "Choose importable if content is to be imported via hammer content-import.
+                                Defaults to importable."),
+                   :required => false
     def version
       tasks = async_task(Actions::Katello::ContentViewVersion::Export,
                           content_view_version: @version,
                           destination_server: params[:destination_server],
                           chunk_size: params[:chunk_size_gb],
                           from_history: @history,
+                          format: find_export_format,
                           fail_on_missing_content: ::Foreman::Cast.to_bool(params[:fail_on_missing_content]))
 
       respond_for_async :resource => tasks
@@ -36,12 +42,18 @@ module Katello
                                                  "If not provided the most recent export history will be used."), :required => false
     param :fail_on_missing_content, :bool, :desc => N_("Fails if any of the repositories belonging to this organization"\
                                                          " are unexportable. False by default."), :required => false
+    param :format, ::Katello::Pulp3::ContentViewVersion::Export::FORMATS,
+                   :desc => N_("Export formats. Choose syncable if content is to be imported via repository sync. "\
+                               "Choose importable if content is to be imported via hammer content-import.
+                                Defaults to importable."),
+                   :required => false
     def library
       tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportLibrary,
                           @organization,
                           destination_server: params[:destination_server],
                           chunk_size: params[:chunk_size_gb],
                           from_history: @history,
+                          format: find_export_format,
                           fail_on_missing_content: ::Foreman::Cast.to_bool(params[:fail_on_missing_content]))
       respond_for_async :resource => tasks
     end
@@ -52,11 +64,17 @@ module Katello
                                                "no greater than the specified size in gigabytes."), :required => false
     param :from_history_id, :number, :desc => N_("Export history identifier used for incremental export. "\
                                                  "If not provided the most recent export history will be used."), :required => false
+    param :format, ::Katello::Pulp3::ContentViewVersion::Export::FORMATS,
+                   :desc => N_("Export formats. Choose syncable if content is to be imported via repository sync. "\
+                               "Choose importable if content is to be imported via hammer content-import.
+                                Defaults to importable."),
+                   :required => false
     def repository
       tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportRepository,
                           @repository,
                           chunk_size: params[:chunk_size_gb],
-                          from_history: @history)
+                          from_history: @history,
+                          format: find_export_format)
       respond_for_async :resource => tasks
     end
 
@@ -71,6 +89,7 @@ module Katello
     def find_library_export_view
       @view = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(destination_server: params[:destination_server],
                                                                 organization: @organization,
+                                                                format: find_export_format,
                                                                 create_by_default: false)
       if @view.blank?
         msg = _("Unable to incrementally export. Do a Full Export on the library content "\
@@ -82,7 +101,8 @@ module Katello
     def find_repository_export_view
       @view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(
                                                                 repository: @repository,
-                                                                create_by_default: false)
+                                                                create_by_default: false,
+                                                                format: find_export_format)
       if @view.blank?
         msg = _("Unable to incrementally export. Do a Full Export on the repository content.")
         fail HttpErrors::BadRequest, msg
@@ -121,6 +141,18 @@ module Katello
 
       unless @repository.organization.can_export_content?
         throw_resource_not_found(name: 'organization', id: @repository.organization.id)
+      end
+    end
+
+    def find_export_format
+      if params[:format]
+        unless ::Katello::Pulp3::ContentViewVersion::Export::FORMATS.include?(params[:format])
+          fail HttpErrors::UnprocessableEntity, _('Invalid export format provided. Format must be one of  %s ') %
+                                            ::Katello::Pulp3::ContentViewVersion::Export::FORMATS.join(',')
+        end
+        params[:format]
+      else
+        ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
       end
     end
   end

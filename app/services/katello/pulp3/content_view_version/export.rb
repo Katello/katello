@@ -51,6 +51,10 @@ module Katello
           end
         end
 
+        def incremental?
+          from_content_view_version.present?
+        end
+
         def generate_exporter_path
           return base_path if base_path
           export_path = "#{content_view_version.content_view.label}/#{content_view_version.version}/"
