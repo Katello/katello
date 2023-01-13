@@ -315,6 +315,13 @@
             options-format="id as name for (id, name) in options"
             on-save="save(repository)">
         </dd>
+        <dd>
+          <p bst-alert='info' ng-show="immediateDownloadPolicy && repository.download_policy == 'on_demand'">
+            <span translate>
+              Changing download policy to "On Demand" will also clear the checksum type if set. The repository will use the upstream checksum type to verify downloads.
+            </span>
+          </p>
+        </dd>
       </span>
       <span>
         <dt translate>Mirroring Policy</dt>
