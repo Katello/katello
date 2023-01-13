@@ -30,6 +30,16 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 $scope.applyingErrata = false;
             }
 
+            function formatBulkHostIds() {
+                var result = IncrementalUpdate.getBulkContentHosts();
+                return angular.toJson({
+                    included: {
+                        ids: result.included.ids,
+                        search: result.included.search
+                    }
+                });
+            }
+
             $scope.applyingErrata = false;
 
             $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
@@ -37,7 +47,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             $scope.errataActionFormValues = {
                 authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, ''),
                 errata: IncrementalUpdate.getErrataIds().join(','),
-                bulkHostIds: angular.toJson({ included: { ids: IncrementalUpdate.getBulkContentHosts().included.ids }}),
+                bulkHostIds: formatBulkHostIds(),
                 customize: false
             };
 
@@ -109,7 +119,6 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
 
             applyErrata = function () {
                 var params = IncrementalUpdate.getBulkContentHosts(), error;
-
                 $scope.applyingErrata = true;
 
                 params['content_type'] = 'errata';
@@ -122,7 +131,6 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                     });
                     $scope.applyingErrata = false;
                 };
-
                 HostBulkAction.installContent(params, transitionToTask, error);
             };
 

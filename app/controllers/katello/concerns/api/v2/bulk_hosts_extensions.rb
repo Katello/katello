@@ -14,7 +14,7 @@ module Katello
         bulk_params[:included] ||= {}
         bulk_params[:excluded] ||= {}
 
-        if bulk_params[:included][:ids].blank? && bulk_params[:included][:search].nil?
+        if !params[:install_all] && bulk_params[:included][:ids].blank? && bulk_params[:included][:search].nil?
           fail HttpErrors::BadRequest, _("No hosts have been specified.")
         end
 
@@ -25,9 +25,8 @@ module Katello
           @hosts = @hosts.where(id: bulk_params[:included][:ids])
         end
 
-        if bulk_params[:included][:search]
-          search_hosts = bulk_hosts_relation(permission, @organization).search_for(bulk_params[:included][:search])
-          @hosts = @hosts.merge(search_hosts)
+        if bulk_params[:included][:search].present?
+          @hosts = @hosts.search_for(bulk_params[:included][:search])
         end
 
         @hosts = restrict_to.call(@hosts) if restrict_to
@@ -35,8 +34,7 @@ module Katello
         if bulk_params[:excluded][:ids].present?
           @hosts = @hosts.where.not(id: bulk_params[:excluded][:ids])
         end
-
-        fail HttpErrors::Forbidden, _("Action unauthorized to be performed on selected hosts.") if @hosts.empty?
+        fail HttpErrors::Forbidden, _("No hosts matched search, or action unauthorized for selected hosts.") if @hosts.empty?
 
         @hosts
       end

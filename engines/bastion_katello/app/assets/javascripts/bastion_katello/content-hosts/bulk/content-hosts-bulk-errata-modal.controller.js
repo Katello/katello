@@ -119,7 +119,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
 
         $scope.installErrataViaRemoteExecution = function(customize) {
             var errataIds = $scope.selectedErrataIds();
-
             $scope.errataActionFormValues.bulkErrataIds = angular.toJson(errataIds);
 
             $scope.errataActionFormValues.remoteAction = 'errata_install';
