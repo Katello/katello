@@ -9,6 +9,7 @@ module Actions
           action_subject root.library_instance
 
           repo_params[:url] = nil if repo_params[:url] == ''
+          repo_params[:checksum_type] = nil if repo_params[:download_policy] == ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
           update_cv_cert_protected = repo_params.key?(:unprotected) && (repo_params[:unprotected] != repository.unprotected)
           create_acs = create_acs?(repository.url, repo_params[:url])
           delete_acs = delete_acs?(repository.url, repo_params[:url])
