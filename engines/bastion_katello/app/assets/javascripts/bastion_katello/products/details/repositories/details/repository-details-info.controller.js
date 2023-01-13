@@ -30,6 +30,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 $scope.repository['ignore_srpms'] = $scope.repository['ignorable_content'] && $scope.repository['ignorable_content'].includes("srpm");
                 $scope.repository['ansible_collection_auth_exists'] = $scope.repository['ansible_collection_auth_url'] && $scope.repository['ansible_collection_auth_token'];
                 $scope.genericContentTypes = RepositoryTypesService.genericContentTypes($scope.repository['content_type']);
+                $scope.immediateDownloadPolicy = $scope.repository['download_policy'] === 'immediate';
             });
 
             $scope.gpgKeys = function () {
@@ -140,6 +141,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 repository.os_versions = $scope.osVersionsParam();
                 repository.$update(function (response) {
                     deferred.resolve(response);
+                    $scope.immediateDownloadPolicy = repository['download_policy'] === 'immediate';
                     $scope.repository.ignore_srpms = $scope.repository.ignorable_content && $scope.repository.ignorable_content.includes("srpm");
                     if (!_.isEmpty(response["include_tags"])) {
                         repository.commaIncludeTags = repository["include_tags"].join(", ");
