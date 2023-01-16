@@ -214,6 +214,7 @@ module Katello
       ::Api::V2::HostsController.include Katello::Concerns::Api::V2::HostsControllerExtensions
       ::Api::V2::HostgroupsController.include Katello::Concerns::Api::V2::HostgroupsControllerExtensions
       ::Api::V2::SmartProxiesController.include Katello::Concerns::Api::V2::SmartProxiesControllerExtensions
+      ::Api::V2::RegistrationController.include ::Foreman::Controller::SmartProxyAuth
       ::Api::V2::RegistrationController.prepend Katello::Concerns::Api::V2::RegistrationControllerExtensions
       ::Api::V2::RegistrationCommandsController.include Katello::Concerns::Api::V2::RegistrationCommandsControllerExtensions
 
