@@ -2,7 +2,6 @@ module Katello
   module Concerns
     module Api::V2::RegistrationControllerExtensions
       extend ActiveSupport::Concern
-      include ::Foreman::Controller::SmartProxyAuth
 
       def prepare_host
         if params['uuid']
