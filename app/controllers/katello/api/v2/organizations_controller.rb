@@ -82,6 +82,9 @@ module Katello
       respond_for_create :resource => @organization
     rescue => e
       ::Foreman::Logging.exception('Could not create organization', e)
+      # Force @organization.errors to be populated
+      # Organization.new may raise so @organization may not be set
+      @organization&.valid?
       process_resource_error(message: e.message, resource: @organization)
     end
 
