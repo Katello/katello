@@ -31,6 +31,7 @@ const NameACS = () => {
             isRequired
             type="text"
             id="acs_name_field"
+            ouiaId="acs_name_field"
             name="acs_name_field"
             aria-label="acs_name_field"
             value={name}

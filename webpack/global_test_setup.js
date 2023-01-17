@@ -16,7 +16,7 @@ global.console.error = (error, stack) => {
   //    'The prop `ouiaId` is marked as required in `Modal`, but its value is `undefined`',
   //    'created by WizardHeader', 'created by Navigation',
   //    'created by ActionsColumn', 'created by InactiveText', 'created by Select',
-  //    'created by Context.Consumer'];
+  //    'created by Context.Consumer', 'created by DualListSelector'];
 
   /* eslint-disable-next-line no-console */
   if (stack) console.log(stack); // Prints out original stack trace

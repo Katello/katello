@@ -47,6 +47,7 @@ const ACSCredentials = () => {
         <Radio
           label={__('Manual authentication')}
           id="manual_auth"
+          ouiaId="manual_auth"
           name="manual_auth"
           aria-label="manual_auth"
           isChecked={authentication === 'manual'}
@@ -71,6 +72,7 @@ const ACSCredentials = () => {
                 isRequired
                 type="text"
                 id="acs_username_field"
+                ouiaId="acs_username_field"
                 name="acs_username_field"
                 aria-label="acs_username_field"
                 value={username}
@@ -87,6 +89,7 @@ const ACSCredentials = () => {
                 isRequired
                 type="password"
                 id="acs_password_field"
+                ouiaId="acs_password_field"
                 name="acs_password_field"
                 aria-label="acs_password_field"
                 value={password}
@@ -98,6 +101,7 @@ const ACSCredentials = () => {
         <Radio
           label={__('Content credentials')}
           id="content_credentials"
+          ouiaId="content_credentials"
           aria-label="content_credentials"
           name="content_cred_auth"
           isChecked={authentication === 'content_credentials'}
@@ -163,6 +167,7 @@ const ACSCredentials = () => {
           label={__('None')}
           id="none"
           name="none"
+          ouiaId="none"
           aria-label="none"
           isChecked={authentication === ''}
           onChange={() => {
@@ -178,6 +183,7 @@ const ACSCredentials = () => {
         <FormGroup label={__('Verify SSL')} fieldId="verify_ssl">
           <Switch
             id="verify-ssl-switch"
+            ouiaId="verify-ssl-switch"
             aria-label="verify-ssl-switch"
             isChecked={verifySSL}
             onChange={checked => setVerifySSL(checked)}

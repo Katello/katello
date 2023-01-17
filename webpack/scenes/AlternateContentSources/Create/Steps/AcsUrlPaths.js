@@ -57,6 +57,7 @@ const AcsUrlPaths = () => {
             isRequired
             type="url"
             id="acs_base_url_field"
+            ouiaId="acs_base_url_field"
             name="acs_base_url_field"
             aria-label="acs_base_url_field"
             placeholder={baseURLplaceholder}
