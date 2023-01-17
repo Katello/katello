@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, act } from 'react-testing-lib-wrapper';
 
 import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
@@ -37,6 +37,7 @@ test('Can call API and show ACS on page load', async (done) => {
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
   assertNockRequest(scope, done);
+  act(done);
 });
 
 test('Can handle no ACS being present', async (done) => {
@@ -62,4 +63,5 @@ test('Can handle no ACS being present', async (done) => {
   expect(queryByLabelText('Select all')).not.toBeInTheDocument();
   await patientlyWaitFor(() => expect(queryByText("You currently don't have any alternate content sources.")).toBeInTheDocument());
   assertNockRequest(scope, done);
+  act(done);
 });
