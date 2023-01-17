@@ -96,7 +96,8 @@ module Katello
 
       def delete_orphan_remotes
         tasks = []
-        repo_names = Katello::Repository.pluck(:pulp_id)
+        smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
+        repo_names = smart_proxy_helper.combined_repos_available_to_capsule.map(&:pulp_id)
         acs_remotes = Katello::SmartProxyAlternateContentSource.pluck(:remote_href)
         pulp3_enabled_repo_types.each do |repo_type|
           api = repo_type.pulp3_api(smart_proxy)
