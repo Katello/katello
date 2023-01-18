@@ -428,7 +428,7 @@ module Katello
 
     def format_arches
       if content_type == ::Katello::Repository::DEB_TYPE
-        self.deb_architectures
+        self.deb_architectures&.gsub(" ", ",")
       else
         self.arch == "noarch" ? nil : self.arch
       end
