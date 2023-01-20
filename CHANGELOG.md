@@ -1,3 +1,34 @@
+# 4.7.1 Whiskey Sour (2023-01-20)
+
+## Features
+
+### Hosts
+ * Add Virtual guests to System properties card ([#35741](https://projects.theforeman.org/issues/35741), [5d66a5e1](https://github.com/Katello/katello.git/commit/5d66a5e1053404d257f49779402a2cb8b232d390))
+
+## Bug Fixes
+
+### API
+ * Include SmartProxyAuth into RegistrationController ([#35926](https://projects.theforeman.org/issues/35926), [f432a51d](https://github.com/Katello/katello.git/commit/f432a51d8dd5913184fe8e80ae524c6e3d1e9f22))
+
+### Web UI
+ * UX on change content source page is ambiguous ([#35919](https://projects.theforeman.org/issues/35919), [0c258941](https://github.com/Katello/katello.git/commit/0c258941b12848d3932f6b24923585c3cc7b1fd6))
+ * new host details - Content view selector not scrollable ([#35742](https://projects.theforeman.org/issues/35742), [f9907675](https://github.com/Katello/katello.git/commit/f99076758b8bde89a4f4512cbf20201fb45ee402))
+
+### Hosts
+ * Module streams subtab in new host details UI is missing on RHEL 8.7 hosts ([#35915](https://projects.theforeman.org/issues/35915), [8349b751](https://github.com/Katello/katello.git/commit/8349b7512eb11cbf4279e2e00d9bc2603e83e1e2))
+ * Content host status refreshed even for hosts without content ([#35683](https://projects.theforeman.org/issues/35683), [329c1610](https://github.com/Katello/katello.git/commit/329c16105c209d385cb03dda845dc4c19ac8d260))
+ * New host details Repository sets - Sorting is incorrect ([#35213](https://projects.theforeman.org/issues/35213), [5b7ede35](https://github.com/Katello/katello.git/commit/5b7ede358cbf28c23c0f23c9840a5aecf2cecd8f))
+
+### Repositories
+ * [katello] Allow pulp_rest debugs for pulp3 ([#35906](https://projects.theforeman.org/issues/35906), [f2497b03](https://github.com/Katello/katello.git/commit/f2497b034770d4172be5df24dd9c7436d96211c3))
+ * Duplicate RepositorySet when manifest updated. ([#35848](https://projects.theforeman.org/issues/35848), [72a192cf](https://github.com/Katello/katello.git/commit/72a192cf398009661b98f5b87f4f0ffd490ca300))
+
+### Alternate Content Sources
+ * Refreshing ACS with --name instead of --id fails with "Error: Found more than one alternate_content_source." ([#35754](https://projects.theforeman.org/issues/35754), [d4d2d483](https://github.com/Katello/katello.git/commit/d4d2d48363171d37a6acf19c1650ec0fa4c1d9c2))
+
+### Hammer
+ * Hammer simplified ACS creation shouldn't allow user to enter product names ([#35815](https://projects.theforeman.org/issues/35815), [15cc4c08](https://github.com/Katello/hammer-cli-katello.git/commit/15cc4c0805131292ff186a55c8bf1880ff73bfc8))
+
 # 4.7.0 Whiskey Sour (2022-12-08)
 
 ## Features
