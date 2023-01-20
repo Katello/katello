@@ -27,7 +27,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: katello 2.4.0-RC1\n"
+"Project-Id-Version: katello 4.7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-12-19 20:14+0000\n"
 "Last-Translator: Patrick Dolinic, 2022\n"
@@ -1234,8 +1234,8 @@ msgstr "Attribut %{attr} kann für Inhaltstyp %{type} nicht festgelegt werden"
 msgid "Cannot set auto publish to a non-composite content view"
 msgstr "Automatische Veröffentlichung kann nicht auf eine nicht zusammengesetzte Inhaltsansicht eingestellt werden"
 
-msgid "Cannot skip metadata check on non-yum repositories."
-msgstr "Metadatenprüfung in Nicht-Yum-Repositorys kann nicht übersprungen werden."
+msgid "Cannot skip metadata check on non-yum/deb repositories."
+msgstr ""
 
 msgid "Cannot specify components for non-composite views"
 msgstr "Komponenten für Nicht-Verbundansichten können nicht angegeben werden"
@@ -1548,9 +1548,6 @@ msgstr ""
 
 msgid "Content source ID"
 msgstr "Inhaltsquellen-ID."
-
-msgid "Content source successfully updated."
-msgstr ""
 
 msgid "Content source was not set for host '%{host}'"
 msgstr "Inhaltsquelle wurde nicht für Host '%{host}' festgelegt"
@@ -2748,8 +2745,8 @@ msgstr "Erzwingen Sie die Anwendbarkeit der Regenerierung."
 msgid "Force sync even if no upstream changes are detected. Non-yum repositories are skipped."
 msgstr "Synchronisierung erzwingen, auch wenn keine Upstream-Änderungen erkannt werden. Nicht-yum-Repositorys werden übersprungen."
 
-msgid "Force sync even if no upstream changes are detected. Only used with yum repositories."
-msgstr "Synchronisierung erzwingen, auch wenn keine Upstream-Änderungen erkannt werden. Wird nur mit Yum-Repositorys verwendet."
+msgid "Force sync even if no upstream changes are detected. Only used with yum or deb repositories."
+msgstr ""
 
 msgid "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem."
 msgstr "Erzwingt eine erneute Veröffentlichung des angegebenen Repositorys, wobei Metadaten und symbolische Links im Dateisystem neu generiert werden."
@@ -2926,6 +2923,9 @@ msgid "Host collections"
 msgstr ""
 
 msgid "Host collections updated"
+msgstr ""
+
+msgid "Host configurations are not updated yet"
 msgstr ""
 
 msgid "Host content and subscription details"
@@ -3191,6 +3191,9 @@ msgstr ""
 
 msgid "Ignorable content can be only set for Yum repositories."
 msgstr "Ignorierbarer Inhalt kann nur für Yum-Repositorys festgelegt werden."
+
+msgid "Ignore SRPMs can not be set in combination with 'Complete Mirroring' mirroring policy."
+msgstr ""
 
 msgid "Ignore errors"
 msgstr "Fehler ignorieren"
@@ -4396,13 +4399,16 @@ msgstr "Keine Hostsammlungen gefunden"
 msgid "No host collections yet"
 msgstr ""
 
+msgid "No hosts found"
+msgstr ""
+
 msgid "No hosts have been specified."
 msgstr "Es wurden keine Hosts angegeben."
 
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr "Keine beim Subscription-Manager registrierten Hosts in der Auswahl gefunden."
 
-msgid "No hosts with content source found!"
+msgid "No hosts were specified"
 msgstr ""
 
 msgid "No installed packages and/or enabled repositories have been reported by %s."
@@ -5900,9 +5906,6 @@ msgstr ""
 msgid "Run Sync Plan:"
 msgstr "Synchronisierungsplan ausführen:"
 
-msgid "Run job invocation"
-msgstr ""
-
 msgid "Running"
 msgstr "Läuft"
 
@@ -7138,7 +7141,7 @@ msgstr "Dies ist kein verlinktes Repository"
 msgid "This organization has Simple Content Access enabled. Hosts are not required to have subscriptions attached to access repositories. {br} Learn more about your overall subscription usage with the {subscriptionsService}."
 msgstr ""
 
-msgid "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in a future version."
+msgid "This organization is not using {scaLink}. Legacy subscription management is deprecated and will be removed in a future version."
 msgstr ""
 
 msgid "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use."
@@ -7190,6 +7193,12 @@ msgid "Title"
 msgstr "Titel"
 
 msgid "To get started, add this host to a host collection."
+msgstr ""
+
+msgid "To update the selected host configuration, update hosts manually in the next section."
+msgstr ""
+
+msgid "To update the selected host configuration, {link}, or update hosts manually in the next section."
 msgstr ""
 
 msgid "Toggling Simple Content Access will refresh your manifest."
@@ -7839,9 +7848,6 @@ msgstr ""
 
 msgid "Warning"
 msgstr "Warnung"
-
-msgid "What's next?"
-msgstr ""
 
 msgid "When \"Releases/Distributions\" is set, \"Upstream URL\" must also be set!"
 msgstr ""
@@ -8683,6 +8689,9 @@ msgstr "Stammknoten von Antworten einzelner Ressourcen (optional)"
 msgid "rule identifier"
 msgstr "Regel-ID"
 
+msgid "run job invocation"
+msgstr ""
+
 msgid "service level"
 msgstr "Servicelevel"
 
@@ -8737,9 +8746,6 @@ msgstr "Die folgenden Attribute können nicht für den Red Hat Anbieter aktualis
 msgid "to"
 msgstr "bis"
 
-msgid "to update configuration on all hosts, or"
-msgstr ""
-
 msgid "true if the latest version of the component's content view is desired"
 msgstr "Wahr falls die aktuellste Version des Kontent-Views des Komponenten gewünscht ist"
 
@@ -8766,9 +8772,6 @@ msgstr "unbegrenzt"
 
 msgid "update a filter"
 msgstr "Filter aktualisieren"
-
-msgid "update configuration on the hosts manually:"
-msgstr ""
 
 msgid "updating package group..."
 msgstr "Paketgruppe wird aktualisiert …"
