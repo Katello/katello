@@ -1,5 +1,6 @@
 module Katello
   class Api::V2::ContentExportIncrementalsController < Api::V2::ApiController
+    include Katello::Concerns::Api::V2::ExportsController
     before_action :find_exportable_organization, :only => [:library]
     before_action :find_exportable_content_view_version, :only => [:version]
     before_action :find_exportable_repository, :only => [:repository]
@@ -22,15 +23,7 @@ module Katello
                                 Defaults to importable."),
                    :required => false
     def version
-      tasks = async_task(Actions::Katello::ContentViewVersion::Export,
-                          content_view_version: @version,
-                          destination_server: params[:destination_server],
-                          chunk_size: params[:chunk_size_gb],
-                          from_history: @history,
-                          format: find_export_format,
-                          fail_on_missing_content: ::Foreman::Cast.to_bool(params[:fail_on_missing_content]))
-
-      respond_for_async :resource => tasks
+      export_content_view_version
     end
 
     api :POST, "/content_export_incrementals/library", N_("Performs an incremental-export of the repositories in library.")
@@ -48,14 +41,7 @@ module Katello
                                 Defaults to importable."),
                    :required => false
     def library
-      tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportLibrary,
-                          @organization,
-                          destination_server: params[:destination_server],
-                          chunk_size: params[:chunk_size_gb],
-                          from_history: @history,
-                          format: find_export_format,
-                          fail_on_missing_content: ::Foreman::Cast.to_bool(params[:fail_on_missing_content]))
-      respond_for_async :resource => tasks
+      export_library
     end
 
     api :POST, "/content_export_incrementals/repository", N_("Performs a incremental-export of the repository in library.")
@@ -70,21 +56,10 @@ module Katello
                                 Defaults to importable."),
                    :required => false
     def repository
-      tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportRepository,
-                          @repository,
-                          chunk_size: params[:chunk_size_gb],
-                          from_history: @history,
-                          format: find_export_format)
-      respond_for_async :resource => tasks
+      export_repository
     end
 
     private
-
-    def find_exportable_content_view_version
-      @version = ContentViewVersion.exportable.find_by_id(params[:id])
-      throw_resource_not_found(name: 'content view version', id: params[:id]) if @version.blank?
-      @view = @version.content_view
-    end
 
     def find_library_export_view
       @view = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(destination_server: params[:destination_server],
@@ -106,53 +81,6 @@ module Katello
       if @view.blank?
         msg = _("Unable to incrementally export. Do a Full Export on the repository content.")
         fail HttpErrors::BadRequest, msg
-      end
-    end
-
-    def find_history
-      if params[:from_history_id].present?
-        @history = ::Katello::ContentViewVersionExportHistory.find(params[:from_history_id])
-        if @history.blank?
-          throw_resource_not_found(name: 'export history',
-                                   id: params[:from_history_id])
-        end
-      else
-        @history = ::Katello::ContentViewVersionExportHistory.
-                      latest(@view, destination_server: params[:destination_server])
-        if @history.blank?
-          msg = _("No existing export history was found to perform an incremental export. A full export must be performed")
-          fail HttpErrors::NotFound, msg
-        end
-      end
-    end
-
-    def find_exportable_organization
-      find_organization
-      unless @organization.can_export_content?
-        throw_resource_not_found(name: 'organization', id: params[:organization_id])
-      end
-    end
-
-    def find_exportable_repository
-      @repository = Repository.find_by_id(params[:id])
-      if @repository.blank?
-        throw_resource_not_found(name: 'repository', id: params[:id])
-      end
-
-      unless @repository.organization.can_export_content?
-        throw_resource_not_found(name: 'organization', id: @repository.organization.id)
-      end
-    end
-
-    def find_export_format
-      if params[:format]
-        unless ::Katello::Pulp3::ContentViewVersion::Export::FORMATS.include?(params[:format])
-          fail HttpErrors::UnprocessableEntity, _('Invalid export format provided. Format must be one of  %s ') %
-                                            ::Katello::Pulp3::ContentViewVersion::Export::FORMATS.join(',')
-        end
-        params[:format]
-      else
-        ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
       end
     end
   end

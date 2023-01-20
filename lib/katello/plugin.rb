@@ -346,6 +346,7 @@ Foreman::Plugin.register :katello do
       }]
       download_policies = proc { hashify_parameters(::Katello::RootRepository::DOWNLOAD_POLICIES) }
       proxy_download_policies = proc { hashify_parameters(::SmartProxy::DOWNLOAD_POLICIES) }
+      export_formats = proc { hashify_parameters(::Katello::Pulp3::ContentViewVersion::Export::FORMATS) }
 
       def hashify_parameters(parameters)
         Hash[parameters.map { |p| [p, p] }]
@@ -539,6 +540,13 @@ Foreman::Plugin.register :katello do
         default: "/var/lib/pulp/exports",
         full_name: N_('Pulp 3 export destination filepath'),
         description: N_("On-disk location for pulp 3 exported repositories")
+
+      setting 'default_export_format',
+        type: :string,
+        default: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE,
+        full_name: N_('Default export format'),
+        description: N_("Default export format for content-exports(either 'syncable' or 'importable')"),
+        collection: export_formats
 
       setting 'sync_total_timeout',
         type: :integer,
