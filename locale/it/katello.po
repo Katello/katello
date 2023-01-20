@@ -11,7 +11,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: katello 2.4.0-RC1\n"
+"Project-Id-Version: katello 4.7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-12-19 20:14+0000\n"
 "Last-Translator: Bryan Kearney <bryan.kearney@gmail.com>, 2022\n"
@@ -1216,7 +1216,7 @@ msgstr ""
 msgid "Cannot set auto publish to a non-composite content view"
 msgstr ""
 
-msgid "Cannot skip metadata check on non-yum repositories."
+msgid "Cannot skip metadata check on non-yum/deb repositories."
 msgstr ""
 
 msgid "Cannot specify components for non-composite views"
@@ -1529,9 +1529,6 @@ msgid "Content source"
 msgstr ""
 
 msgid "Content source ID"
-msgstr ""
-
-msgid "Content source successfully updated."
 msgstr ""
 
 msgid "Content source was not set for host '%{host}'"
@@ -2729,7 +2726,7 @@ msgstr ""
 msgid "Force sync even if no upstream changes are detected. Non-yum repositories are skipped."
 msgstr ""
 
-msgid "Force sync even if no upstream changes are detected. Only used with yum repositories."
+msgid "Force sync even if no upstream changes are detected. Only used with yum or deb repositories."
 msgstr ""
 
 msgid "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem."
@@ -2907,6 +2904,9 @@ msgid "Host collections"
 msgstr ""
 
 msgid "Host collections updated"
+msgstr ""
+
+msgid "Host configurations are not updated yet"
 msgstr ""
 
 msgid "Host content and subscription details"
@@ -3171,6 +3171,9 @@ msgid "If you would prefer to move some of these hosts to different content view
 msgstr ""
 
 msgid "Ignorable content can be only set for Yum repositories."
+msgstr ""
+
+msgid "Ignore SRPMs can not be set in combination with 'Complete Mirroring' mirroring policy."
 msgstr ""
 
 msgid "Ignore errors"
@@ -4373,13 +4376,16 @@ msgstr "Nessun insieme di host trovato."
 msgid "No host collections yet"
 msgstr ""
 
+msgid "No hosts found"
+msgstr ""
+
 msgid "No hosts have been specified."
 msgstr ""
 
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr ""
 
-msgid "No hosts with content source found!"
+msgid "No hosts were specified"
 msgstr ""
 
 msgid "No installed packages and/or enabled repositories have been reported by %s."
@@ -5875,9 +5881,6 @@ msgstr ""
 msgid "Run Sync Plan:"
 msgstr ""
 
-msgid "Run job invocation"
-msgstr ""
-
 msgid "Running"
 msgstr "In esecuzione"
 
@@ -7109,7 +7112,7 @@ msgstr ""
 msgid "This organization has Simple Content Access enabled. Hosts are not required to have subscriptions attached to access repositories. {br} Learn more about your overall subscription usage with the {subscriptionsService}."
 msgstr ""
 
-msgid "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in a future version."
+msgid "This organization is not using {scaLink}. Legacy subscription management is deprecated and will be removed in a future version."
 msgstr ""
 
 msgid "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use."
@@ -7161,6 +7164,12 @@ msgid "Title"
 msgstr "Titolo"
 
 msgid "To get started, add this host to a host collection."
+msgstr ""
+
+msgid "To update the selected host configuration, update hosts manually in the next section."
+msgstr ""
+
+msgid "To update the selected host configuration, {link}, or update hosts manually in the next section."
 msgstr ""
 
 msgid "Toggling Simple Content Access will refresh your manifest."
@@ -7810,9 +7819,6 @@ msgstr ""
 
 msgid "Warning"
 msgstr "Avvertenza"
-
-msgid "What's next?"
-msgstr ""
 
 msgid "When \"Releases/Distributions\" is set, \"Upstream URL\" must also be set!"
 msgstr ""
@@ -8654,6 +8660,9 @@ msgstr "root-node di risposte single-resource (opzionale)"
 msgid "rule identifier"
 msgstr "identificatore regole"
 
+msgid "run job invocation"
+msgstr ""
+
 msgid "service level"
 msgstr "livello di servizio"
 
@@ -8708,9 +8717,6 @@ msgstr "i seguenti attributi non possono essere caricati per il provider di Red 
 msgid "to"
 msgstr ""
 
-msgid "to update configuration on all hosts, or"
-msgstr ""
-
 msgid "true if the latest version of the component's content view is desired"
 msgstr ""
 
@@ -8736,9 +8742,6 @@ msgid "unlimited"
 msgstr ""
 
 msgid "update a filter"
-msgstr ""
-
-msgid "update configuration on the hosts manually:"
 msgstr ""
 
 msgid "updating package group..."
