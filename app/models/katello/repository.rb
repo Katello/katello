@@ -185,10 +185,13 @@ module Katello
     delegate :content_id, to: :root, allow_nil: true
     delegate :repository_type, to: :root
 
+    def self.exportable_types(format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
+      return [YUM_TYPE, FILE_TYPE] if format == ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
+      EXPORTABLE_TYPES
+    end
+
     def self.exportable(format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
-      types = EXPORTABLE_TYPES
-      types = [YUM_TYPE, FILE_TYPE] if format == ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
-      with_type(types)
+      with_type(exportable_types(format: format))
     end
 
     def self.with_type(content_type)

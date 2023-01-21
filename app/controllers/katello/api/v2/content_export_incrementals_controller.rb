@@ -9,52 +9,19 @@ module Katello
     before_action :find_history, :only => [:version, :library, :repository]
 
     api :POST, "/content_export_incrementals/version", N_("Performs an incremental-export of a content view version.")
-    param :id, :number, :desc => N_("Content view version identifier"), :required => true
-    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
-    param :chunk_size_gb, :number, :desc => N_("Split the exported content into archives "\
-                                               "no greater than the specified size in gigabytes."), :required => false
-    param :from_history_id, :number, :desc => N_("Export history identifier used for incremental export. "\
-                                                 "If not provided the most recent export history will be used."), :required => false
-    param :fail_on_missing_content, :bool, :desc => N_("Fails if any of the repositories belonging to this version"\
-                                                         " are unexportable. False by default."), :required => false
-    param :format, ::Katello::Pulp3::ContentViewVersion::Export::FORMATS,
-                   :desc => N_("Export formats. Choose syncable if content is to be imported via repository sync. "\
-                               "Choose importable if content is to be imported via hammer content-import.
-                                Defaults to importable."),
-                   :required => false
+    export_version_description(incremental: true)
     def version
       export_content_view_version
     end
 
     api :POST, "/content_export_incrementals/library", N_("Performs an incremental-export of the repositories in library.")
-    param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
-    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
-    param :chunk_size_gb, :number, :desc => N_("Split the exported content into archives "\
-                                               "no greater than the specified size in gigabytes."), :required => false
-    param :from_history_id, :number, :desc => N_("Export history identifier used for incremental export. "\
-                                                 "If not provided the most recent export history will be used."), :required => false
-    param :fail_on_missing_content, :bool, :desc => N_("Fails if any of the repositories belonging to this organization"\
-                                                         " are unexportable. False by default."), :required => false
-    param :format, ::Katello::Pulp3::ContentViewVersion::Export::FORMATS,
-                   :desc => N_("Export formats. Choose syncable if content is to be imported via repository sync. "\
-                               "Choose importable if content is to be imported via hammer content-import.
-                                Defaults to importable."),
-                   :required => false
+    export_library_description(incremental: true)
     def library
       export_library
     end
 
     api :POST, "/content_export_incrementals/repository", N_("Performs a incremental-export of the repository in library.")
-    param :id, :number, :desc => N_("Repository identifier"), :required => true
-    param :chunk_size_gb, :number, :desc => N_("Split the exported content into archives "\
-                                               "no greater than the specified size in gigabytes."), :required => false
-    param :from_history_id, :number, :desc => N_("Export history identifier used for incremental export. "\
-                                                 "If not provided the most recent export history will be used."), :required => false
-    param :format, ::Katello::Pulp3::ContentViewVersion::Export::FORMATS,
-                   :desc => N_("Export formats. Choose syncable if content is to be imported via repository sync. "\
-                               "Choose importable if content is to be imported via hammer content-import.
-                                Defaults to importable."),
-                   :required => false
+    export_repository_description(incremental: true)
     def repository
       export_repository
     end
