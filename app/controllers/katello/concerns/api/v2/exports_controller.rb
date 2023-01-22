@@ -8,15 +8,15 @@ module Katello
           export_format_description = N_("Export formats."\
                                "Choose syncable if the exported content needs to be in a yum format. "\
                                "This option is only available for %{syncable_repos} repositories. "\
-                               "Choose importable if the disconnected importing server uses the same version "\
+                               "Choose importable if the importing server uses the same version "\
                                " and exported content needs to be one "\
-                               "of %{importable_repos} repositories.")  % {
-                                  syncable_repos: ::Katello::Repository.exportable_types(format:
-                                      ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE).join(", "),
-                                  importable_repos: ::Katello::Repository.exportable_types(format:
-                                      ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE).join(", ")
-                                }
-
+                               "of %{importable_repos} repositories."\
+                                % {
+                                  syncable_repos: ::Katello::Repository.exportable_types(
+                                    format: ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE).join(", "),
+                                  importable_repos: ::Katello::Repository.exportable_types(
+                                    format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE).join(", ")
+                                })
 
           param :format, ::Katello::Pulp3::ContentViewVersion::Export::FORMATS,
                        :desc => export_format_description,
@@ -52,7 +52,6 @@ module Katello
         end
 
         def export_library_description(incremental: false)
-          param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
           destination_server_param
           chunk_size_param
           fail_on_missing_content_param(organization_or_version: :organization)
@@ -61,14 +60,12 @@ module Katello
         end
 
         def export_repository_description(incremental: false)
-          param :id, :number, :desc => N_("Repository identifier"), :required => true
           chunk_size_param
           export_format_param
           from_history_id_param if incremental
         end
 
         def export_version_description(incremental: false)
-          param :id, :number, :desc => N_("Content view version identifier"), :required => true
           destination_server_param
           chunk_size_param
           fail_on_missing_content_param(organization_or_version: :version)
@@ -82,7 +79,6 @@ module Katello
                      :desc => EXPORT_FORMAT_DESCRIPTION,
                      :required => false
       end
-
 
       def export_repository
         tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportRepository,

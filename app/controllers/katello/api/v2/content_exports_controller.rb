@@ -30,18 +30,21 @@ module Katello
     end
 
     api :POST, "/content_exports/version", N_("Performs a full-export of a content view version.")
+    param :id, :number, :desc => N_("Content view version identifier"), :required => true
     export_version_description
     def version
       export_content_view_version
     end
 
     api :POST, "/content_exports/library", N_("Performs a full-export of the repositories in library.")
+    param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
     export_library_description
     def library
       export_library
     end
 
     api :POST, "/content_exports/repository", N_("Performs a full-export of the repository in library.")
+    param :id, :number, :desc => N_("Repository identifier"), :required => true
     export_repository_description
     def repository
       export_repository

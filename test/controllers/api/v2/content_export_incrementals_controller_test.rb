@@ -120,7 +120,8 @@ module Katello
                  .expects(:find_library_export_view)
                  .with(create_by_default: false,
                        destination_server: destination,
-                       organization: org)
+                       organization: org,
+                       format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
                  .returns(@library_dev_staging_view)
 
       ContentViewVersionExportHistory.expects(:latest)

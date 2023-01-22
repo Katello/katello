@@ -9,18 +9,21 @@ module Katello
     before_action :find_history, :only => [:version, :library, :repository]
 
     api :POST, "/content_export_incrementals/version", N_("Performs an incremental-export of a content view version.")
+    param :id, :number, :desc => N_("Content view version identifier"), :required => true
     export_version_description(incremental: true)
     def version
       export_content_view_version
     end
 
     api :POST, "/content_export_incrementals/library", N_("Performs an incremental-export of the repositories in library.")
+    param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
     export_library_description(incremental: true)
     def library
       export_library
     end
 
     api :POST, "/content_export_incrementals/repository", N_("Performs a incremental-export of the repository in library.")
+    param :id, :number, :desc => N_("Repository identifier"), :required => true
     export_repository_description(incremental: true)
     def repository
       export_repository
