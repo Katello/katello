@@ -1,7 +1,6 @@
 module Katello
   class Api::V2::SimpleContentAccessController < Api::V2::ApiController
     before_action :find_organization
-    before_action :check_upstream_connection
 
     resource_description do
       description "Red Hat subscriptions management platform."
@@ -11,7 +10,8 @@ module Katello
     api :GET, "/organizations/:organization_id/simple_content_access/eligible",
       N_("Check if the specified organization is eligible for Simple Content Access")
     def eligible
-      eligible = @organization.upstream_consumer.simple_content_access_eligible?
+      ::Foreman::Deprecation.api_deprecation_warning("This endpoint is deprecated and will be removed in a future release. All organizations are now eligible for Simple Content Access.")
+      eligible = @organization.simple_content_access_eligible?
       render json: { simple_content_access_eligible: eligible }
     end
 
