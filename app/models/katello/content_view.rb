@@ -604,7 +604,7 @@ module Katello
         fail _("Import-only content views can not be published directly") if import_only? && !syncable
         check_composite_action_allowed!(organization.library)
         check_docker_repository_names!([organization.library])
-        check_orphaned_content_facets(environments: self.environments)
+        check_orphaned_content_facets!(environments: self.environments)
       end
 
       true
@@ -651,7 +651,7 @@ module Katello
       true
     end
 
-    def check_orphaned_content_facets(environments: [])
+    def check_orphaned_content_facets!(environments: [])
       ::Katello::Host::ContentFacet.in_content_views_and_environments(
         content_views: [self],
         lifecycle_environments: environments
