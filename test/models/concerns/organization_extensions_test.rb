@@ -31,9 +31,5 @@ module Katello
       @org.expects(:imports).returns([{'foo' => 'bar' }, {'foo' => 'bar'}])
       assert_equal 'bar', @org.manifest_history[0].foo
     end
-
-    def test_upstream_consumer
-      assert @org.upstream_consumer
-    end
   end
 end

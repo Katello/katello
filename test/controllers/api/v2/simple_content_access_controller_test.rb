@@ -18,7 +18,6 @@ module Katello
       setup_controller_defaults_api
       login_user(User.find(users(:admin).id))
       models
-      Katello::UpstreamConnectionChecker.any_instance.expects(:assert_connection)
     end
 
     def test_enable_protected
@@ -104,7 +103,7 @@ module Katello
     end
 
     def test_eligible
-      Katello::Candlepin::UpstreamConsumer.any_instance.expects(:simple_content_access_eligible?).returns(true)
+      Organization.any_instance.expects(:simple_content_access_eligible?).returns(true)
 
       get :eligible, params: { organization_id: @organization.id }
 

@@ -90,6 +90,10 @@ module Katello
           self.providers.anonymous.first
         end
 
+        def simple_content_access_eligible?
+          self.content_access_mode_list.include?('org_environment')
+        end
+
         def manifest_imported?(cached: false)
           Rails.cache.fetch("#{self.label}_manifest_imported?", expires_in: 1.minute, force: !cached) do
             owner_details['upstreamConsumer'].present?
@@ -237,10 +241,6 @@ module Katello
           # It would be hard to create any new invalid relationships at this step, so the validation
           # doesn't provide much benefit for the frustration it creates.
           self.save(validate: false)
-        end
-
-        def upstream_consumer
-          Katello::Candlepin::UpstreamConsumer.new(self)
         end
       end
     end
