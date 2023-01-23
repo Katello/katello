@@ -376,6 +376,7 @@ module Katello
       fail _("Default content view versions cannot be promoted") if default?
       content_view.check_composite_action_allowed!(to_env)
       content_view.check_docker_repository_names!(to_env)
+      content_view.check_orphaned_content_facets!(environments: [to_env])
     end
 
     def validate_destroyable!(skip_environment_check: false)
