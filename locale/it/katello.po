@@ -654,6 +654,9 @@ msgstr ""
 msgid "Allow Katello to update host installed packages, enabled repos, and module inventory directly instead of wrapped in Dynflow tasks (try turning off if Puma processes are using too much memory)"
 msgstr ""
 
+msgid "Allow a host to be registered to multiple content view environments with 'subscription-manager register --environments'."
+msgstr ""
+
 msgid "Allow deleting repositories in published content views"
 msgstr ""
 
@@ -661,6 +664,9 @@ msgid "Allow host registrations to bypass 'Host Profile Assume' as long as the h
 msgstr ""
 
 msgid "Allow hosts to re-register themselves only when they are in build mode"
+msgstr ""
+
+msgid "Allow multiple content views"
 msgstr ""
 
 msgid "Allow new host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host."
@@ -1489,9 +1495,6 @@ msgstr ""
 msgid "Content View Version: '%{cvv}', Product: '%{product}', Repository: '%{repo}' "
 msgstr ""
 
-msgid "Content View and Environment not set for registration."
-msgstr ""
-
 msgid "Content View id"
 msgstr ""
 
@@ -1508,6 +1511,12 @@ msgid "Content credential"
 msgstr ""
 
 msgid "Content credentials"
+msgstr ""
+
+msgid "Content facet for host %s has more than one content view. Use #content_views instead."
+msgstr ""
+
+msgid "Content facet for host %s has more than one lifecycle environment. Use #lifecycle_environments instead."
 msgstr ""
 
 msgid "Content files to upload. Can be a single file or array of files."
@@ -1534,9 +1543,6 @@ msgstr ""
 msgid "Content source ID"
 msgstr ""
 
-msgid "Content source successfully updated."
-msgstr ""
-
 msgid "Content source was not set for host '%{host}'"
 msgstr ""
 
@@ -1555,6 +1561,9 @@ msgstr ""
 msgid "Content view ${name} created"
 msgstr ""
 
+msgid "Content view '%{cv_name}' is a generated content view, which cannot be assigned to hosts or activation keys."
+msgstr ""
+
 msgid "Content view '%{view}' is not in environment '%{env}'"
 msgstr "La visualizzazione del contenuto '%{view}' non è presente nell'ambiente '%{env}'"
 
@@ -1564,7 +1573,16 @@ msgstr "La visualizzazione del contenuto '%{view}' non è presente nell'ambiente
 msgid "Content view ID"
 msgstr ""
 
+msgid "Content view and environment not set for registration."
+msgstr ""
+
 msgid "Content view details"
+msgstr ""
+
+msgid "Content view environments and activation key must all belong to the same organization"
+msgstr ""
+
+msgid "Content view environments must have both a content view and an environment"
 msgstr ""
 
 msgid "Content view has repository label '%s' which is not specified in repos_units parameter."
@@ -1575,6 +1593,9 @@ msgstr "Indentificatore visualizzazione del contenuto"
 
 msgid "Content view label"
 msgstr "Etichetta visualizzazione del contenuto"
+
+msgid "Content view must be specified"
+msgstr ""
 
 msgid "Content view name"
 msgstr ""
@@ -1753,7 +1774,7 @@ msgstr ""
 msgid "Couldn't find smart proxies with name '%s'"
 msgstr ""
 
-msgid "Couldn't find specified Content View and Lifecycle Environment."
+msgid "Couldn't find specified content view and lifecycle environment."
 msgstr ""
 
 msgid "Couldn't find subject of synchronization"
@@ -2765,7 +2786,7 @@ msgstr ""
 msgid "Generated"
 msgstr ""
 
-msgid "Generated Content views cannot be assigned to Host/Activation Keys"
+msgid "Generated content views cannot be assigned to hosts or activation keys"
 msgstr ""
 
 msgid "Generated content views cannot be directly published. They can updated only via export."
@@ -2910,6 +2931,9 @@ msgid "Host collections"
 msgstr ""
 
 msgid "Host collections updated"
+msgstr ""
+
+msgid "Host configurations are not updated yet"
 msgstr ""
 
 msgid "Host content and subscription details"
@@ -3174,6 +3198,9 @@ msgid "If you would prefer to move some of these hosts to different content view
 msgstr ""
 
 msgid "Ignorable content can be only set for Yum repositories."
+msgstr ""
+
+msgid "Ignore %s can not be set in combination with 'Complete Mirroring' mirroring policy."
 msgstr ""
 
 msgid "Ignore errors"
@@ -3704,6 +3731,9 @@ msgstr ""
 msgid "Lifecycle environment for the host."
 msgstr ""
 
+msgid "Lifecycle environment must be specified"
+msgstr ""
+
 msgid "Lifecycle environment was not attached to the smart proxy; therefore, no changes were made."
 msgstr ""
 
@@ -4130,9 +4160,6 @@ msgstr ""
 msgid "Multi-entitlement"
 msgstr "Entitlement-multipli"
 
-msgid "Multiple environments are not supported."
-msgstr ""
-
 msgid "Must supply at least one of mandatory_package_names, optional_package_names, conditional_package_names, default_package_names parameters"
 msgstr ""
 
@@ -4219,12 +4246,6 @@ msgstr "Mai"
 
 msgid "Never Synced"
 msgstr "Mai sincronizzato"
-
-msgid "Never checked in"
-msgstr ""
-
-msgid "Never registered"
-msgstr ""
 
 msgid "New Errata"
 msgstr "Nuovo errata"
@@ -4376,13 +4397,16 @@ msgstr "Nessun insieme di host trovato."
 msgid "No host collections yet"
 msgstr ""
 
+msgid "No hosts found"
+msgstr ""
+
 msgid "No hosts have been specified."
 msgstr ""
 
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr ""
 
-msgid "No hosts with content source found!"
+msgid "No hosts were specified"
 msgstr ""
 
 msgid "No installed packages and/or enabled repositories have been reported by %s."
@@ -4707,6 +4731,9 @@ msgid "Organization required"
 msgstr "Organizzazione necessaria"
 
 msgid "Orphaned Content Protection Time"
+msgstr ""
+
+msgid "Orphaned content facets for deleted hosts exist for the content view and environment. Please run rake task : katello:clean_orphaned_facets and try again!"
 msgstr ""
 
 msgid "Other"
@@ -5200,9 +5227,6 @@ msgstr ""
 msgid "Pulp 3 is not enabled on Smart proxy!"
 msgstr ""
 
-msgid "Pulp Docker registry port"
-msgstr ""
-
 msgid "Pulp bulk load size"
 msgstr ""
 
@@ -5435,6 +5459,9 @@ msgid "Registered by"
 msgstr ""
 
 msgid "Registered on"
+msgstr ""
+
+msgid "Registering to multiple environments is not enabled."
 msgstr ""
 
 msgid "Registration details"
@@ -5876,9 +5903,6 @@ msgid "Rules to be added"
 msgstr ""
 
 msgid "Run Sync Plan:"
-msgstr ""
-
-msgid "Run job invocation"
 msgstr ""
 
 msgid "Running"
@@ -6917,9 +6941,6 @@ msgstr "Per accedere alla pagina desiderata selezionare una organizzazione speci
 msgid "The path %{real_path} does not seem to be a valid repository. If you think this is an error, please try refreshing your manifest."
 msgstr ""
 
-msgid "The port used by Pulp Crane to provide Docker Registries"
-msgstr ""
-
 msgid "The product %{name} has no %{type} repositories with upstream URLs to add to the alternate content source."
 msgstr ""
 
@@ -7079,7 +7100,7 @@ msgstr ""
 msgid "This host does not have any packages."
 msgstr ""
 
-msgid "This host has errata that are applicable, but not installable."
+msgid "This host has errata that are applicable, but not installable. Adjust your filters and try again."
 msgstr ""
 
 msgid "This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled."
@@ -7164,6 +7185,12 @@ msgid "Title"
 msgstr "Titolo"
 
 msgid "To get started, add this host to a host collection."
+msgstr ""
+
+msgid "To update the selected host configuration, update hosts manually in the next section."
+msgstr ""
+
+msgid "To update the selected host configuration, {link}, or update hosts manually in the next section."
 msgstr ""
 
 msgid "Toggling Simple Content Access will refresh your manifest."
@@ -7284,6 +7311,9 @@ msgid "Unable to connect"
 msgstr "Impossibile collegarsi"
 
 msgid "Unable to connect. Got: %s"
+msgstr ""
+
+msgid "Unable to create ContentViewEnvironment. Check the logs for more information."
 msgstr ""
 
 msgid "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist."
@@ -7784,6 +7814,9 @@ msgstr ""
 msgid "View a report of the affected hosts"
 msgstr ""
 
+msgid "View applicable errata"
+msgstr ""
+
 msgid "View by"
 msgstr ""
 
@@ -7813,9 +7846,6 @@ msgstr ""
 
 msgid "Warning"
 msgstr "Avvertenza"
-
-msgid "What's next?"
-msgstr ""
 
 msgid "When \"Releases/Distributions\" is set, \"Upstream URL\" must also be set!"
 msgstr ""
@@ -7929,9 +7959,6 @@ msgid "You have subscriptions expiring within %s days"
 msgstr ""
 
 msgid "You have unsaved changes. Do you want to exit without saving your changes?"
-msgstr ""
-
-msgid "You may want to check the host's content view and lifecycle environment."
 msgstr ""
 
 msgid "You were not allowed to add %s"
@@ -8071,6 +8098,12 @@ msgstr "esegui l'auto attach delle sottoscrizioni previa registrazione"
 
 msgid "base url to perform repo discovery on"
 msgstr "url di base sul quale eseguire la scoperta dei repositori"
+
+msgid "bug fix"
+msgstr ""
+
+msgid "bug fixes"
+msgstr ""
 
 msgid "bulk add filter rules"
 msgstr ""
@@ -8245,6 +8278,12 @@ msgstr ""
 
 msgid "enables or disables synchronization"
 msgstr "abilita o disabilita la sincronizzazione"
+
+msgid "enhancement"
+msgstr ""
+
+msgid "enhancements"
+msgstr ""
 
 msgid "environment"
 msgstr "ambiente"
@@ -8657,6 +8696,15 @@ msgstr "root-node di risposte single-resource (opzionale)"
 msgid "rule identifier"
 msgstr "identificatore regole"
 
+msgid "run job invocation"
+msgstr ""
+
+msgid "security advisories"
+msgstr ""
+
+msgid "security advisory"
+msgstr ""
+
 msgid "service level"
 msgstr "livello di servizio"
 
@@ -8711,9 +8759,6 @@ msgstr "i seguenti attributi non possono essere caricati per il provider di Red 
 msgid "to"
 msgstr ""
 
-msgid "to update configuration on all hosts, or"
-msgstr ""
-
 msgid "true if the latest version of the component's content view is desired"
 msgstr ""
 
@@ -8739,9 +8784,6 @@ msgid "unlimited"
 msgstr ""
 
 msgid "update a filter"
-msgstr ""
-
-msgid "update configuration on the hosts manually:"
 msgstr ""
 
 msgid "updating package group..."
