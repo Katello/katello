@@ -45,6 +45,10 @@ module Katello
         self.owner_details['contentAccessMode']
       end
 
+      def content_access_mode_list
+        self.owner_details['contentAccessModeList'].split(',')
+      end
+
       def simple_content_access?(cached: true)
         Rails.cache.fetch("#{self.label}_simple_content_access?", expires_in: 1.minute, force: !cached) do
           content_access_mode == "org_environment"
