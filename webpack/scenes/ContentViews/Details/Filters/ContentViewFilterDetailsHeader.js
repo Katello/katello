@@ -67,6 +67,7 @@ const ContentViewFilterDetailsHeader = ({
   const dropDownItems = [
     <DropdownItem
       key="delete"
+      ouiaId="cv-filter-delete"
       onClick={() => {
         dispatch(deleteContentViewFilter(filterId, () => {
           push(`/content_views/${cvId}#/filters/`);

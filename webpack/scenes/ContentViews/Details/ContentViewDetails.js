@@ -82,6 +82,7 @@ export default () => {
   const dropDownItems = [
     <DropdownItem
       key="copy"
+      ouiaId="cv-copy"
       onClick={() => {
         setCopying(true);
       }}
@@ -90,6 +91,7 @@ export default () => {
     </DropdownItem>,
     <DropdownItem
       key="delete"
+      ouiaId="cv-delete"
       onClick={() => {
         setDeleting(true);
       }}

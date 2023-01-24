@@ -136,9 +136,15 @@ test('Can search for package rules in package filter details', async (done) => {
 
 test('Can add package rules to filter in a self-closing modal', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const autocompleteNameScope = mockAutocomplete(nockInstance, autocompleteNameUrl);
-  const autocompleteArchScope = mockAutocomplete(nockInstance, autocompleteArchUrl);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, true, undefined, 2);
+  const autocompleteNameScope = mockAutocomplete(
+    nockInstance, autocompleteNameUrl, true,
+    undefined, 2,
+  );
+  const autocompleteArchScope = mockAutocomplete(
+    nockInstance, autocompleteArchUrl, true,
+    undefined, 2,
+  );
   const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0, 3);
   const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 3);
 
@@ -259,6 +265,10 @@ test('Remove rpm filter rule in a self-closing modal', async (done) => {
   });
 
   getByText('Remove').click();
+  await patientlyWaitFor(() => {
+    expect(getByText(cvFilterName)).toBeInTheDocument();
+    expect(getAllByLabelText('Actions')[1]).toBeInTheDocument();
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(searchDelayScope);
@@ -274,8 +284,14 @@ test('Remove rpm filter rule in a self-closing modal', async (done) => {
 test('Edit rpm filter rule in a self-closing modal', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, true, undefined, 2);
-  const autocompleteNameScope = mockAutocomplete(nockInstance, autocompleteNameUrl);
-  const autocompleteArchScope = mockAutocomplete(nockInstance, autocompleteArchUrl);
+  const autocompleteNameScope = mockAutocomplete(
+    nockInstance, autocompleteNameUrl, true,
+    undefined, 2,
+  );
+  const autocompleteArchScope = mockAutocomplete(
+    nockInstance, autocompleteArchUrl, true,
+    undefined, 2,
+  );
   const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0, 3);
   const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', undefined, 3);
   const cvFiltersScope = nockInstance
