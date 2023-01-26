@@ -42,8 +42,8 @@ module Katello
             @repo.root.upstream_username = ''
             @repo.root.upstream_password = ''
 
-            assert_equal '', service.common_remote_options[:username]
-            assert_equal '', service.common_remote_options[:password]
+            assert_nil service.common_remote_options[:username]
+            assert_nil service.common_remote_options[:password]
           end
 
           def test_publication_options_wo_signing_service
