@@ -22,11 +22,10 @@ module Katello
           }
         }
 
-        if (ca_cert = SETTINGS[:katello][:pulp][:ca_cert_file])
+        if (ca_cert = ::Cert::Certs.backend_ca_cert_file(:pulp))
           runcible_params[:ca_cert_file] = ca_cert
+          runcible_params[:verify_ssl] = true
         end
-
-        runcible_params[:verify_ssl] = SETTINGS[:katello][:pulp][:verify_ssl] if SETTINGS[:katello][:pulp].key?(:verify_ssl)
 
         Runcible::Instance.new(runcible_params)
       end
