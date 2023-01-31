@@ -6,6 +6,30 @@ module Katello
       base.send :include, InstanceMethods
     end
 
+    def self.orphaned_custom_product?(cp_id, organization)
+      return unless cp_id.present? && orphaned_product?(cp_id, organization)
+      product_provider = provider_for_cp_id(cp_id: cp_id, organization: organization)
+      if product_provider.redhat_provider?
+        false
+      else
+        Rails.logger.warn "Found orphaned object with id #{cp_id} in Candlepin. Skipping import into Katello; run rake katello:delete_orphaned_custom_products to remove it from Candlepin."
+        true
+      end
+    end
+
+    def self.orphaned_product?(cp_id, organization)
+      !organization.products.where(:cp_id => cp_id).exists?
+    end
+
+    def self.provider_for_cp_id(cp_id:, organization:)
+      return organization.redhat_provider unless ::Katello::Glue::Candlepin::Product.engineering_product_id?(cp_id)
+      if ::Katello::Glue::Candlepin::Product.custom_product_id?(cp_id)
+        organization.anonymous_provider
+      else
+        organization.redhat_provider
+      end
+    end
+
     module InstanceMethods
       API_URL = 'https://subscription.rhsm.redhat.com/subscription/consumers/'.freeze
 
@@ -126,6 +150,7 @@ module Katello
 
         Katello::Logging.time("Imported #{cp_products.size} products") do
           cp_products.each do |product_json|
+            next if ::Katello::Glue::Provider.orphaned_custom_product?(product_json['id'], organization)
             product = import_product(product_json)
             prod_content_importer.add_product_content(product, product_json['productContent']) if product.redhat?
           end
@@ -144,7 +169,7 @@ module Katello
         if product&.redhat?
           product.update!(:name => product_json['name']) unless product.name == product_json['name']
         elsif product.nil?
-          product = Glue::Candlepin::Product.import_from_cp(product_json, organization)
+          product = Glue::Candlepin::Product.import_redhat_product_from_cp(product_json, organization)
         end
         product
       end

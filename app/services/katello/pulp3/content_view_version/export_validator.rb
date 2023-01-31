@@ -1,7 +1,6 @@
 module Katello
   module Pulp3
     module ContentViewVersion
-      class ExportValidationError < HttpErrors::BadRequest; end
       class ExportValidator
         delegate :content_view_version, :from_content_view_version, :format, :repositories,
                  :smart_proxy, :version_href_to_repository_href, to: :@export_service

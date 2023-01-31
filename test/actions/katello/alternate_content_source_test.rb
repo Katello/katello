@@ -111,7 +111,10 @@ module ::Actions::Katello::AlternateContentSource
 
     it 'fails to create simplified during update with empty product' do
       action.expects(:action_subject).with(simplified_acs)
-      empty_product = ::Katello::Product.create(name: 'empty', organization_id: ::Organization.first)
+      empty_product = ::Katello::Product.create(
+        name: 'empty',
+        organization_id: ::Organization.first.id,
+        provider: ::Organization.first.anonymous_provider)
       assert_raises ActiveRecord::RecordInvalid do
         plan_action action, simplified_acs, [proxy, mirror], [empty_product], {}
       end

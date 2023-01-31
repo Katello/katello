@@ -96,7 +96,7 @@ module Katello
             ::Katello::Pulp3::ContentViewVersion::ExportValidator.any_instance.expects(:version_href_to_repository_href).with("1").returns("1")
             ::Katello::Pulp3::ContentViewVersion::ExportValidator.any_instance.expects(:version_href_to_repository_href).with(nil).returns(nil).at_least_once
 
-            exception = assert_raises(Katello::Pulp3::ContentViewVersion::ExportValidationError) do
+            exception = assert_raises(::Katello::Pulp3::ContentViewVersion::ExportValidationError) do
               export.validate!(fail_on_missing_content: true, validate_incremental: true)
             end
             assert_match(/cannot be incrementally updated/, exception.message)
@@ -169,7 +169,7 @@ module Katello
           it "fails on validate! if chunk_size is >= 1_000_000GB" do
             export = setup_environment
 
-            exception = assert_raises(Katello::Pulp3::ContentViewVersion::ExportValidationError) do
+            exception = assert_raises(::Katello::Pulp3::ContentViewVersion::ExportValidationError) do
               export.validate!(fail_on_missing_content: false, validate_incremental: false, chunk_size: 1e6)
             end
             assert_match(/Specify an export chunk size less than 1_000_000 GB/, exception.message)
