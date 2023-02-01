@@ -1,7 +1,5 @@
 module Katello
-  class Api::V2::ContentExportsController < Api::V2::ApiController
-    include Katello::Concerns::Api::V2::ExportsController
-
+  class Api::V2::ContentExportsController < Concerns::Api::V2::ExportsController
     before_action :find_exportable_organization, :only => [:library]
     before_action :find_exportable_content_view_version, :only => [:version]
     before_action :find_exportable_repository, :only => [:repository]
@@ -31,21 +29,25 @@ module Katello
 
     api :POST, "/content_exports/version", N_("Performs a full-export of a content view version.")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
-    export_version_description
+    param_group :version_fail_on_missing_content, Concerns::Api::V2::ExportsController
+    param_group :destination_server, Concerns::Api::V2::ExportsController
+    param_group :export, Concerns::Api::V2::ExportsController
     def version
       export_content_view_version
     end
 
     api :POST, "/content_exports/library", N_("Performs a full-export of the repositories in library.")
     param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
-    export_library_description
+    param_group :org_fail_on_missing_content, Concerns::Api::V2::ExportsController
+    param_group :destination_server, Concerns::Api::V2::ExportsController
+    param_group :export, Concerns::Api::V2::ExportsController
     def library
       export_library
     end
 
     api :POST, "/content_exports/repository", N_("Performs a full-export of the repository in library.")
     param :id, :number, :desc => N_("Repository identifier"), :required => true
-    export_repository_description
+    param_group :export, Concerns::Api::V2::ExportsController
     def repository
       export_repository
     end
