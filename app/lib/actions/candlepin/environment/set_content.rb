@@ -52,7 +52,13 @@ module Actions
         def existing_ids
           ::Katello::Resources::Candlepin::Environment.
               find(input[:cp_environment_id])[:environmentContent].map do |content|
-            content[:content][:id]
+            if content.key?('contentId')
+              # Supports Candlepin 4.2.11 and up
+              content['contentId']
+            else
+              # Supports Candlepin versions below 4.2.11
+              content[:content][:id]
+            end
           end
         end
       end
