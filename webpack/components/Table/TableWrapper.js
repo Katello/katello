@@ -43,6 +43,7 @@ const TableWrapper = ({
   clearSelectedResults,
   emptySearchBody,
   hideSearch,
+  alwaysHideToolbar,
   nodesBelowSearch,
   bookmarkController,
   readOnlyBookmarks,
@@ -60,8 +61,8 @@ const TableWrapper = ({
   const showPagination = !unresolvedStatusOrNoRows;
   const filtersAreActive = activeFilters?.length &&
     !isEqual(new Set(activeFilters), new Set(allTableProps.defaultFilters));
-  const hideToolbar = !searchQuery && !filtersAreActive &&
-    allTableProps.status === STATUS.RESOLVED && total === 0;
+  const hideToolbar = alwaysHideToolbar || (!searchQuery && !filtersAreActive &&
+    allTableProps.status === STATUS.RESOLVED && total === 0);
   const showActionButtons = actionButtons && (alwaysShowActionButtons || !hideToolbar);
   const showToggleGroup = toggleGroup && (alwaysShowToggleGroup || !hideToolbar);
   const paginationParams = useCallback(() =>
@@ -305,6 +306,7 @@ TableWrapper.propTypes = {
   areAllRowsSelected: PropTypes.func,
   emptySearchBody: PropTypes.string,
   hideSearch: PropTypes.bool,
+  alwaysHideToolbar: PropTypes.bool,
   nodesBelowSearch: PropTypes.node,
   bookmarkController: PropTypes.string,
   readOnlyBookmarks: PropTypes.bool,
@@ -335,6 +337,7 @@ TableWrapper.defaultProps = {
   areAllRowsSelected: noop,
   emptySearchBody: __('Try changing your search settings.'),
   hideSearch: false,
+  alwaysHideToolbar: false,
   nodesBelowSearch: null,
   bookmarkController: undefined,
   readOnlyBookmarks: false,
