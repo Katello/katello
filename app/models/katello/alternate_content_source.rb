@@ -44,7 +44,13 @@ module Katello
     validates :content_type, inclusion: {
       in: ->(_) { RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES },
       allow_blank: false,
-      message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % (RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES).join(',') }
+      message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % (RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES).join(',') }    
+    }
+    # validates :content_type, if: -> { rhui? }, inclusion: [::Katello::Repository::YUM_TYPE], message: "RHUI ACS only allows for 'yum' content-type"
+
+    validates :content_type, if: -> { rhui? }, inclusion: {
+      in: [::Katello::Repository::YUM_TYPE],
+      message: "%'{value}' is not valid for RHUI ACS"
     }
     validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
 
