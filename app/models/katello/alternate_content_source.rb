@@ -34,7 +34,7 @@ module Katello
     validates :base_url, if: -> { custom? || rhui? }, presence: true
     validates :products, if: -> { custom? || rhui? }, absence: true
     validates :label, :uniqueness => true
-    validates :name, :uniqueness => true
+    validates :name, :uniqueness => true, presence: true
     validates :verify_ssl, if: :custom?, exclusion: [nil]
     validates :alternate_content_source_type, inclusion: {
       in: ->(_) { ACS_TYPES },
