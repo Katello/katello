@@ -6,6 +6,7 @@ module Katello
 
     def models
       @acs = katello_alternate_content_sources(:yum_alternate_content_source)
+      @acs_rhui = katello_alternate_content_sources(:yum_alternate_content_source_rhui)
       @ca = katello_gpg_keys(:fedora_ca)
       @cert = katello_gpg_keys(:fedora_cert)
       @key = katello_gpg_keys(:fedora_key)
@@ -78,6 +79,34 @@ module Katello
       assert_template 'api/v2/common/create'
     end
 
+    def test_create_rhui
+      ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@acs_rhui)
+
+      assert_sync_task(::Actions::Katello::AlternateContentSource::Create) do |acs, smart_proxies|
+        assert_equal acs.attributes.except('id', 'label'), @acs_rhui.attributes.except('id', 'label')
+        assert_equal [@smart_proxy.id], smart_proxies.pluck(:id)
+      end
+
+      post :create, params: {
+        name: @acs_rhui.name,
+        smart_proxy_ids: [@smart_proxy.id],
+        http_proxy_id: @http_proxy.id,
+        ssl_ca_cert_id: @ca.id,
+        ssl_client_cert_id: @cert.id,
+        ssl_client_key_id: @key.id,
+        content_type: @acs_rhui.content_type,
+        base_url: @acs_rhui.base_url,
+        subpaths: @acs_rhui.subpaths,
+        alternate_content_source_type: @acs_rhui.alternate_content_source_type,
+        verify_ssl: @acs_rhui.verify_ssl,
+        use_http_proxies: @acs_rhui.use_http_proxies,
+        upstream_username: @acs_rhui.upstream_username,
+        upstream_password: @acs_rhui.upstream_password
+      }
+      assert_response :success
+      assert_template 'api/v2/common/create'
+    end
+
     def test_create_bad_base_url
       @acs.base_url = 'not a path'
       ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@acs)
@@ -118,6 +147,29 @@ module Katello
         verify_ssl: @acs.verify_ssl,
         upstream_username: @acs.upstream_username,
         upstream_password: @acs.upstream_password
+      }
+      assert_response :unprocessable_entity
+    end
+
+    def test_create_bad_content_type_rhui
+      @acs_rhui.content_type = "file"
+      ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@acs_rhui)
+
+      post :create, params: {
+        name: @acs_rhui.name + "_bad_content_type_test",
+        smart_proxy_ids: [@smart_proxy.id],
+        http_proxy_id: @http_proxy.id,
+        ssl_ca_cert_id: @ca.id,
+        ssl_client_cert_id: @cert.id,
+        ssl_client_key_id: @key.id,
+        content_type: @acs_rhui.content_type,
+        base_url: @acs_rhui.base_url,
+        subpaths: @acs_rhui.subpaths,
+        alternate_content_source_type: @acs_rhui.alternate_content_source_type,
+        verify_ssl: @acs_rhui.verify_ssl,
+        use_http_proxies: @acs_rhui.use_http_proxies,
+        upstream_username: @acs_rhui.upstream_username,
+        upstream_password: @acs_rhui.upstream_password
       }
       assert_response :unprocessable_entity
     end
