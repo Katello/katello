@@ -1,11 +1,12 @@
 module Katello
-  class Api::V2::ContentExportIncrementalsController < Concerns::Api::V2::ExportsController
+  class Api::V2::ContentExportIncrementalsController < Api::V2::ExportsController
     before_action :find_exportable_organization, :only => [:library]
     before_action :find_exportable_content_view_version, :only => [:version]
     before_action :find_exportable_repository, :only => [:repository]
     before_action :find_library_export_view, :only => [:library]
     before_action :find_repository_export_view, :only => [:repository]
     before_action :find_history, :only => [:version, :library, :repository]
+
     def_param_group :incremental do
       param :from_history_id, :number, :desc => N_("Export history identifier used for incremental export. "\
                                          "If not provided the most recent export history will be used."), :required => false
@@ -13,9 +14,9 @@ module Katello
 
     api :POST, "/content_export_incrementals/version", N_("Performs an incremental-export of a content view version.")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
-    param_group :version_fail_on_missing_content, Concerns::Api::V2::ExportsController
-    param_group :destination_server, Concerns::Api::V2::ExportsController
-    param_group :export, Concerns::Api::V2::ExportsController
+    param_group :version_fail_on_missing_content, Api::V2::ExportsController
+    param_group :destination_server, Api::V2::ExportsController
+    param_group :export, Api::V2::ExportsController
     param_group :incremental
     def version
       export_content_view_version
@@ -23,9 +24,9 @@ module Katello
 
     api :POST, "/content_export_incrementals/library", N_("Performs an incremental-export of the repositories in library.")
     param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
-    param_group :org_fail_on_missing_content, Concerns::Api::V2::ExportsController
-    param_group :destination_server, Concerns::Api::V2::ExportsController
-    param_group :export, Concerns::Api::V2::ExportsController
+    param_group :org_fail_on_missing_content, Api::V2::ExportsController
+    param_group :destination_server, Api::V2::ExportsController
+    param_group :export, Api::V2::ExportsController
     param_group :incremental
     def library
       export_library
@@ -33,7 +34,7 @@ module Katello
 
     api :POST, "/content_export_incrementals/repository", N_("Performs a incremental-export of the repository in library.")
     param :id, :number, :desc => N_("Repository identifier"), :required => true
-    param_group :export, Concerns::Api::V2::ExportsController
+    param_group :export, Api::V2::ExportsController
     param_group :incremental
     def repository
       export_repository
