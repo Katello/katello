@@ -201,14 +201,23 @@ class SubscriptionsPage extends Component {
       loadTableColumns({ columns: getEnabledColumns(columns) });
     };
     const columns = subscriptions.selectedTableColumns;
-    const emptyStateData = {
-      header: __('There are no Subscriptions to display'),
-      description: __('Import a Manifest to manage your Entitlements.'),
-      action: {
-        onClick: () => openManageManifestModal(),
-        title: __('Import a Manifest'),
-      },
-    };
+    const emptyStateData = isManifestImported
+      ? {
+        header: __('There are no Subscriptions to display'),
+        description: __('Add Subscriptions using the Add Subscriptions button.'),
+        action: {
+          title: __('Add subscriptions'),
+          url: 'subscriptions/add',
+        },
+      }
+      : {
+        header: __('There are no Subscriptions to display'),
+        description: __('Import a Manifest to manage your Entitlements.'),
+        action: {
+          onClick: () => openManageManifestModal(),
+          title: __('Import a Manifest'),
+        },
+      };
 
     const SCAAlert = (
       <Alert type={simpleContentAccess ? 'info' : 'warning'}>
