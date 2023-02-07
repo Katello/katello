@@ -240,14 +240,15 @@ module Katello
           seen_host_ids &= only_host_ids if only_host_ids
 
           # preload errata in one query for this batch
-          preloaded_errata = Katello::Erratum.where(:errata_id => seen_errata_ids).pluck(:errata_id, :errata_type)
+          preloaded_errata = Katello::Erratum.where(:errata_id => seen_errata_ids).pluck(:errata_id, :errata_type, :issued)
           preloaded_hosts = ::Host.where(:id => seen_host_ids).includes(:reported_data)
 
           batch.each do |task|
             next if skip_task?(task)
             next unless only_host_ids.nil? || only_host_ids.include?(task.input['host']['id'].to_i)
             parse_errata(task).each do |erratum_id|
-              current_erratum_errata_type = preloaded_errata.find { |k, _| k == erratum_id }.last
+              current_erratum_errata_type = preloaded_errata.find { |k, _| k == erratum_id }[1]
+              current_erratum_issued = preloaded_errata.find { |k, _| k == erratum_id }.last
 
               if filter_errata_type != 'all'
                 next unless filter_errata_type == current_erratum_errata_type
@@ -258,6 +259,7 @@ module Katello
                 :hostname => get_task_input(task)['host']['name'],
                 :erratum_id => erratum_id,
                 :erratum_type => current_erratum_errata_type,
+                :issued => current_erratum_issued,
                 :status => task.result
               }
 
