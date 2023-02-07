@@ -53,7 +53,6 @@ module Katello
 
       class SrpmVcrInitialSyncTest < SrpmTestBase
         def test_sync_skipped_srpm
-          skip "broken due to https://pulp.plan.io/issues/8812"
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
           @repo.root.update!(ignorable_content: ["srpm"])
           ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
