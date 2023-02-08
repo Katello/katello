@@ -46,6 +46,10 @@ module Katello
       allow_blank: false,
       message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % (RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES).join(',') }
     }
+    validates :content_type, if: -> { rhui? }, inclusion: {
+      in: [::Katello::Repository::YUM_TYPE],
+      message: "'%{value}' is not valid for RHUI ACS"
+    }
     validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
 
     scope :uses_http_proxies, -> { where(use_http_proxies: true) }

@@ -7,6 +7,7 @@ module Katello
       @yum_acs = katello_alternate_content_sources(:yum_alternate_content_source)
       @file_acs = katello_alternate_content_sources(:file_alternate_content_source)
       @simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
+      @rhui_acs = katello_alternate_content_sources(:yum_alternate_content_source_rhui)
       @simplified_acs.verify_ssl = nil
       Setting['content_default_http_proxy'] = proxy.name
     end
@@ -110,8 +111,9 @@ module Katello
 
     def test_with_type
       @yum_acs.save!
+      @rhui_acs.save!
       @simplified_acs.save!
-      assert_equal [@yum_acs, @simplified_acs].sort, AlternateContentSource.with_type('yum').sort
+      assert_equal [@yum_acs, @rhui_acs, @simplified_acs].sort, AlternateContentSource.with_type('yum').sort
     end
   end
 
@@ -137,6 +139,8 @@ module Katello
       SmartProxyAlternateContentSource.create(alternate_content_source_id: @simplified_acs.id, smart_proxy_id: ::SmartProxy.pulp_primary.id, remote_href: 'remote_href2', alternate_content_source_href: 'acs_href2', repository_id: @repo2.id)
       @simplified_acs.save
       @simplified_acs.reload
+
+      @rhui_acs = katello_alternate_content_sources(:yum_alternate_content_source_rhui)
     end
 
     def test_search_name
@@ -151,7 +155,7 @@ module Katello
 
     def test_search_base_url
       acss = AlternateContentSource.search_for("base_url = \"#{@yum_acs.base_url}\"")
-      assert_equal acss.sort, [@file_acs, @yum_acs].sort
+      assert_equal acss.sort, [@file_acs, @yum_acs, @rhui_acs].sort
     end
 
     def test_search_subpath
@@ -163,7 +167,7 @@ module Katello
 
     def test_search_content_type
       acss = AlternateContentSource.search_for("content_type = \"#{@yum_acs.content_type}\"")
-      assert_equal acss.sort, [@yum_acs, @simplified_acs].sort
+      assert_equal acss.sort, [@yum_acs, @simplified_acs, @rhui_acs].sort
     end
 
     def test_search_acs_type
@@ -173,7 +177,7 @@ module Katello
 
     def test_search_upstream_username
       acss = AlternateContentSource.search_for("upstream_username = \"#{@yum_acs.upstream_username}\"")
-      assert_equal acss.sort, [@file_acs, @yum_acs].sort
+      assert_equal acss.sort, [@file_acs, @yum_acs, @rhui_acs].sort
     end
 
     def test_search_smart_proxy_id

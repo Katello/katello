@@ -11,6 +11,19 @@ yum_alternate_content_source:
   upstream_username:              admin
   upstream_password:              changeme
 
+yum_alternate_content_source_rhui:
+  name:                           Yum ACS RHUI
+  label:                          yum_acs_fixture_rhui
+  ssl_ca_cert_id:                 <%= ActiveRecord::FixtureSet.identify(:fedora_ca) %>
+  ssl_client_cert_id:             <%= ActiveRecord::FixtureSet.identify(:fedora_cert) %>
+  ssl_client_key_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_key) %>
+  content_type:                   yum
+  base_url:                       "https://fixtures.pulpproject.org/"
+  alternate_content_source_type:  rhui
+  verify_ssl:                     true
+  upstream_username:              admin
+  upstream_password:              changeme
+
 file_alternate_content_source:
   name:                           File ACS
   label:                          file_acs_fixture
