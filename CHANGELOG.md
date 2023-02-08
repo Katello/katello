@@ -1,3 +1,22 @@
+# 4.7.2 Whiskey Sour (2023-02-08)
+
+## Bug Fixes
+
+### Activation Keys
+* Hammer Allows Invalid Release Version to be Set on Activation Key ([#35236](https://projects.theforeman.org/issues/35236), [243704d67e](https://github.com/Katello/katello.git/commit/186a5038776205c1a4d8fcdc2b71489ac1d4227f))
+
+### Subscriptions
+ * Unable to disable SCA for an organization without manifest using API ([#35961](https://projects.theforeman.org/issues/35961), [186a5038](https://github.com/Katello/katello.git/commit/186a5038776205c1a4d8fcdc2b71489ac1d4227f))
+
+ ### Web UI
+* Pages Blank ([#35168](https://projects.theforeman.org/issues/35168), [2ab359ad](https://github.com/Katello/katello.git/commit/2ab359ad60d4b475e7499171868675093101bc59))
+
+### Repositories
+ * Unable to change download_policy to on_demand if the Red Hat Repository has any checksum_type set in Satellite ([#35953](https://projects.theforeman.org/issues/35953), [24a2ff83](https://github.com/Katello/katello.git/commit/24a2ff833df26d642142f387e9ff3f29e3248aea))
+ * Some custom repositories are failing to synchorize with error "This field may not be blank" after upgrading to Katello 4.3 ([#35927](https://projects.theforeman.org/issues/35927), [b1cce606](https://github.com/Katello/katello.git/commit/b1cce6066630e14e3c7ad930d63a3af14dca3bce))
+ * Remove orphan fails ([35657](https://projects.theforeman.org/issues/35657), [e6b6694a1](https://github.com/Katello/katello/pull/10340/commits/e6b6694a145db593f202b573b7ab47f7e27dfc35))
+
+
 # 4.7.1 Whiskey Sour (2023-01-20)
 
 ## Features
