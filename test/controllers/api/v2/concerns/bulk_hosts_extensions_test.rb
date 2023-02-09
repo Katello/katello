@@ -19,6 +19,9 @@ module Katello
       @host1 = hosts(:one)
       @host2 = hosts(:two)
       @host3 = hosts(:without_content_facet)
+      @host4 = hosts(:without_subscription_facet)
+      @host5 = hosts(:without_errata)
+      @host6 = hosts(:without_organization)
     end
 
     def permissions
@@ -71,6 +74,27 @@ module Katello
       refute_includes result, @host1
       assert_includes result, @host2
       assert_includes result, @host3
+    end
+
+    def test_select_all_hosts_for_errata_apply
+      @controller.instance_variable_set(
+        :@params,
+        {
+          :install_all => true
+        })
+      result = @controller.find_bulk_hosts(@edit, {})
+
+      assert_equal_arrays [@host1, @host2, @host3, @host4, @host5, @host6], result
+    end
+
+    def test_no_hosts_specified
+      bulk_params = {
+        :included => {}
+      }
+
+      assert_raises(HttpErrors::BadRequest) do
+        @controller.find_bulk_hosts(@edit, bulk_params)
+      end
     end
 
     def test_ids
