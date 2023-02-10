@@ -1,7 +1,9 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import { WizardContextConsumer } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import ACSCreateContext from '../ACSCreateContext';
@@ -9,10 +11,16 @@ import { selectCreateACS, selectCreateACSError, selectCreateACSStatus } from '..
 import getAlternateContentSources, { createACS } from '../../ACSActions';
 import Loading from '../../../../components/Loading';
 
-const ACSCreateFinish = () => {
+const ACSCreateFinishWrapper = () => (
+  <WizardContextConsumer>
+    {({ activeStep }) => <ACSCreateFinish activeStep={activeStep} />}
+  </WizardContextConsumer>
+);
+
+const ACSCreateFinish = ({ activeStep }) => {
   const { push } = useHistory();
+  const currentStep = activeStep.id;
   const {
-    currentStep,
     setIsOpen,
     acsType,
     contentType,
@@ -94,4 +102,10 @@ const ACSCreateFinish = () => {
   return <Loading loadingText={__('Saving alternate content source...')} />;
 };
 
-export default ACSCreateFinish;
+ACSCreateFinish.propTypes = {
+  activeStep: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
+export default ACSCreateFinishWrapper;

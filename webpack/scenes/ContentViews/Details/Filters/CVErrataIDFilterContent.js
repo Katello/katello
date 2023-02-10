@@ -206,12 +206,12 @@ const CVErrataIDFilterContent = ({
     } else setSelectedTypes([...selectedTypes, selection]);
   };
 
-  const setValidStartDate = (value) => {
+  const setValidStartDate = (e, value) => {
     setStartDate(value);
     if (validAPIDate(value)) setApiStartDate(value);
   };
 
-  const setValidEndDate = (value) => {
+  const setValidEndDate = (e, value) => {
     setEndDate(value);
     if (validAPIDate(value)) setApiEndDate(value);
   };

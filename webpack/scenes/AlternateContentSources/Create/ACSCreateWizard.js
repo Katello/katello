@@ -40,7 +40,6 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
   const [caCertName, setCACertName] = useState('');
   const [productIds, setProductIds] = useState([]);
   const [productNames, setProductNames] = useState([]);
-  const [currentStep, setCurrentStep] = useState(1);
   const dispatch = useDispatch();
 
   useEffect(
@@ -139,8 +138,6 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
     <ACSCreateContext.Provider value={{
       show,
       setIsOpen,
-      currentStep,
-      setCurrentStep,
       acsType,
       setAcsType,
       contentType,
@@ -186,10 +183,6 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
       <Wizard
         title={__('Add an alternate content source')}
         steps={steps}
-        startAtStep={currentStep}
-        onGoToStep={({ id }) => setCurrentStep(id)}
-        onNext={({ id }) => setCurrentStep(id)}
-        onBack={({ id }) => setCurrentStep(id)}
         onClose={() => {
           setIsOpen(false);
         }}
