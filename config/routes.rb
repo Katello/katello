@@ -47,4 +47,7 @@ Katello::Engine.routes.draw do
   match '/organization_select' => 'react#index', :via => [:get]
 
   get '/change_host_content_source', to: 'react#index'
+  constraints(id: /[^\/]+/) do
+    get 'new/hosts/:id/content', to: redirect('new/hosts/%{id}#/Content')
+  end
 end
