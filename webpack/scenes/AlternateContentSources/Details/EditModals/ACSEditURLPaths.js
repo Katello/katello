@@ -7,13 +7,19 @@ import { editACS, getACSDetails } from '../../ACSActions';
 import { areSubPathsValid, isValidUrl } from '../../helpers';
 
 const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
-  const { subpaths, base_url: url } = acsDetails;
+  const { subpaths, base_url: url, alternate_content_source_type: acsType } = acsDetails;
   const dispatch = useDispatch();
   const [acsUrl, setAcsUrl] = useState(url);
   const [acsSubpath, setAcsSubpath] = useState(subpaths.join() || '');
   const [saving, setSaving] = useState(false);
   const subPathValidated = areSubPathsValid(acsSubpath) ? 'default' : 'error';
-  const urlValidated = (acsUrl === '' || isValidUrl(acsUrl)) ? 'default' : 'error';
+  const urlValidated = (acsUrl === '' || isValidUrl(acsUrl, acsType)) ? 'default' : 'error';
+  const baseURLplaceholder = acsType === 'rhui' ?
+    'https://rhui-server.example.com/pulp/content' :
+    'http:// or https://';
+  const helperTextInvalid = acsType === 'rhui' ?
+    'http://rhui-server.example.com/pulp/content or https://rhui-server.example.com/pulp/content' :
+    'http://, https:// or file://';
 
   const onSubmit = () => {
     setSaving(true);
@@ -56,7 +62,7 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
           label={__('Base URL')}
           type="string"
           fieldId="acs_base_url"
-          helperTextInvalid="http://, https:// or file://"
+          helperTextInvalid={helperTextInvalid}
           validated={urlValidated}
           isRequired
         >
@@ -66,7 +72,7 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
             id="acs_base_url_field"
             name="acs_base_url_field"
             aria-label="acs_base_url_field"
-            placeholder="https:// or file://"
+            placeholder={baseURLplaceholder}
             value={acsUrl}
             validated={urlValidated}
             onChange={value => setAcsUrl(value)}
@@ -119,12 +125,14 @@ ACSEditURLPaths.propTypes = {
   acsDetails: PropTypes.shape({
     base_url: PropTypes.string,
     subpaths: PropTypes.arrayOf(PropTypes.string),
+    alternate_content_source_type: PropTypes.string,
     id: PropTypes.number,
   }),
 };
 
 ACSEditURLPaths.defaultProps = {
   acsDetails: {
+    alternate_content_source_type: '',
     base_url: '',
     subpaths: '',
     id: undefined,

@@ -16,16 +16,8 @@ const AcsUrlPaths = () => {
     acsType, url, setUrl, subpaths, setSubpaths,
   } = useContext(ACSCreateContext);
 
+  const urlValidated = (url === '' || isValidUrl(url, acsType)) ? 'default' : 'error';
   const subPathValidated = areSubPathsValid(subpaths) ? 'default' : 'error';
-  const [urlValidated, setUrlValidated] = React.useState('default');
-  const handleUrlChange = (newUrl, _event) => {
-    setUrl(newUrl);
-    if (isValidUrl(newUrl, acsType)) {
-      setUrlValidated('success');
-    } else {
-      setUrlValidated('error');
-    }
-  };
 
   const baseURLplaceholder = acsType === 'rhui' ?
     'https://rhui-server.example.com/pulp/content' :
@@ -63,7 +55,7 @@ const AcsUrlPaths = () => {
             placeholder={baseURLplaceholder}
             value={url}
             validated={urlValidated}
-            onChange={handleUrlChange}
+            onChange={value => setUrl(value)}
           />
         </FormGroup>
         {acsType === 'rhui' &&
