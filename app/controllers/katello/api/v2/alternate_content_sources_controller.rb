@@ -70,7 +70,6 @@ module Katello
     param_group :acs
     def create
       @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params.except(:smart_proxy_ids, :smart_proxy_names, :product_ids))
-      @alternate_content_source.verify_ssl = nil if @alternate_content_source.simplified?
       sync_task(::Actions::Katello::AlternateContentSource::Create, @alternate_content_source, @smart_proxies, @products)
       @alternate_content_source.reload
       respond_for_create(resource: @alternate_content_source)
@@ -88,6 +87,9 @@ module Katello
       else
         find_smart_proxies
       end
+
+      # Check for invalid params
+      check_params_for_invalid_updates
 
       if params[:product_ids].nil?
         @products = @alternate_content_source.products
@@ -117,10 +119,30 @@ module Katello
     protected
 
     def acs_params
-      keys = [:name, :label, :description, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type, :alternate_content_source_type, :use_http_proxies]
-      keys += [:base_url, {subpaths: []}, :upstream_username, :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :verify_ssl] if params[:action] == 'create' || @alternate_content_source&.custom? || @alternate_content_source&.rhui?
-      keys += [{product_ids: []}] if params[:action] == 'create' || @alternate_content_source&.simplified?
+      # In the past, this method flitered acs keys depending on what type the
+      # acs repo was. This caused silent failures. We're now passing everything
+      # to the model layer to mitigate.
+      keys = [
+        :name, :label, :description, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type,
+        :alternate_content_source_type, :use_http_proxies, :base_url, {subpaths: []}, :upstream_username,
+        :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :verify_ssl, {product_ids: []}
+      ]
+
       params.require(:alternate_content_source).permit(*keys).to_h.with_indifferent_access
+    end
+
+    def check_params_for_invalid_updates
+      # Check parameters which cannot be validated at the model level, throwing
+      # errors where neccessary
+
+      # Disallow users from updating ACS type or content type: these should be static
+      (fail HttpErrors::UnprocessableEntity, "Content type cannot be modified once ACS is created") if params[:content_type].nil?
+      (fail HttpErrors::UnprocessableEntity, "ACS type cannot be modified once ACS is created") if params[:alternate_content_source_type].nil?
+
+      # Check that this acs is simplified before allowing products to be cleared / updated
+      unless @alternate_content_source&.simplified? || params[:product_ids].nil?
+        (fail HttpErrors::UnprocessableEntity, "Products must remain blank for ACS of type #{@alternate_content_source&.alternate_content_source_type}")
+      end
     end
 
     def find_smart_proxies
