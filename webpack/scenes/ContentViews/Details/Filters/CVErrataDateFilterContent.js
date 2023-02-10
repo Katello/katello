@@ -205,7 +205,7 @@ const CVErrataDateFilterContent = ({
                     value={startDate}
                     invalidFormatText={invalidDateFormat}
                     dateFormat={dateFormat}
-                    onChange={setStartDate}
+                    onChange={(e, val) => setStartDate(val)}
                     dateParse={dateParse}
                     placeholder={startEntry ? 'MM/DD/YYYY' : __('Start date')}
                     isDisabled={!hasPermission(permissions, 'edit_content_views')}
@@ -227,7 +227,7 @@ const CVErrataDateFilterContent = ({
                     value={endDate}
                     invalidFormatText={invalidDateFormat}
                     dateFormat={dateFormat}
-                    onChange={setEndDate}
+                    onChange={(e, val) => setEndDate(val)}
                     dateParse={dateParse}
                     placeholder={endEntry ? 'MM/DD/YYYY' : __('End date')}
                     isDisabled={!hasPermission(permissions, 'edit_content_views')}

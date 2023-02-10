@@ -22,17 +22,13 @@ const RoutedTabs = ({
         className="margin-0-24"
       >
         {tabs.map(({ key, title }) => (
-          <a
-            key={key}
+          <Tab
             href={`#/${key}`}
-            style={{ textDecoration: 'none' }}
-          >
-            <Tab
-              eventKey={key}
-              aria-label={title}
-              title={<TabTitleText>{title}</TabTitleText>}
-            />
-          </a>
+            key={key}
+            eventKey={key}
+            aria-label={title}
+            title={<TabTitleText>{title}</TabTitleText>}
+          />
         ))}
       </Tabs>
       <div className="margin-16-0">
@@ -64,4 +60,3 @@ RoutedTabs.defaultProps = {
 };
 
 export default withRouter(RoutedTabs);
-
