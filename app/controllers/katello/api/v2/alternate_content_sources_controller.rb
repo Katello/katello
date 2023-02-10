@@ -129,11 +129,12 @@ module Katello
       # Check parameters which cannot be validated at the model level, throwing
       # errors where neccessary
 
-      # Disallow users from updating ACS type or content type: these should be static
-      (fail HttpErrors::UnprocessableEntity, "Content type cannot be modified once ACS is created") if params[:content_type].nil?
-      (fail HttpErrors::UnprocessableEntity, "ACS type cannot be modified once ACS is created") if params[:alternate_content_source_type].nil?
-
-      # Check that this acs is simplified before allowing products to be cleared / updated
+      # Check that the combination of params[:product_ids] and ACS type is allowed:
+      #            | simplified | custom  | rhui
+      # -----------+------------+---------+---------
+      # nil        | ok         | ok      | ok
+      # []         | ok         | invalid | invalid
+      # [foo, ...] | ok         | invalid | invalid
       unless @alternate_content_source&.simplified? || params[:product_ids].nil?
         (fail HttpErrors::UnprocessableEntity, "Products must remain blank for ACS of type #{@alternate_content_source&.alternate_content_source_type}")
       end
