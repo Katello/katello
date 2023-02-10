@@ -52,6 +52,8 @@ module Katello
       in: [::Katello::Repository::YUM_TYPE],
       message: "'%{value}' is not valid for RHUI ACS"
     }
+
+    validate :constraint_acs_update, on: :update
     validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
 
     scope :uses_http_proxies, -> { where(use_http_proxies: true) }
@@ -114,6 +116,16 @@ module Katello
 
     def self.humanize_class_name
       "Alternate Content Sources"
+    end
+
+    # Disallow static properties from being modified on update
+    def constraint_acs_update
+      if changes.keys.include? "content_type"
+        errors.add(:content_type, "cannot be modified once an ACS is created")
+      end
+      if changes.keys.include? "alternate_content_source_type"
+        errors.add(:alternate_content_source_type, "cannot be modified once an ACS is created")
+      end
     end
   end
 end
