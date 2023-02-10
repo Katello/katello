@@ -49,11 +49,16 @@ module Actions
           end
 
           def validate_export_types!(repository, format)
-            unless ::Katello::Repository.exportable(format: format).where(id: repository.id).exists?
+            return if ::Katello::Repository.exportable(format: format).where(id: repository.id).exists?
+            if format == ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
               fail _("NOTE: Unable to export repository '%{repository}' because"\
-                     " it does not have an exportable content type."\
+                     " it does not have an syncably exportable content type."\
                        % { repository: repository.name })
             end
+
+            fail _("NOTE: Unable to export repository '%{repository}' because"\
+                   " it does not have an exportable content type."\
+                     % { repository: repository.name })
           end
         end
       end

@@ -164,6 +164,10 @@ module Katello
       "#{major}.#{minor}"
     end
 
+    def incrementally_updated?
+      minor != 0
+    end
+
     def repos(env)
       self.repositories.in_environment(env)
     end

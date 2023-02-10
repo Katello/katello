@@ -67,6 +67,7 @@ module Katello
         :incremental,
         :destination_server,
         :format,
+        :base_path,
         gpg_keys: {},
         content_view: [:name, :label, :description, :generated_for],
         content_view_version: [:major, :minor, :description],
