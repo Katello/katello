@@ -405,7 +405,7 @@ test('Remove is disabled when in select all mode', async (done) => {
   fireEvent.click(selectAllCheckbox);
   getByRole('button', { name: 'bulk_actions' }).click();
 
-  const removeButton = getByRole('button', { name: 'bulk_remove' });
+  const removeButton = getByRole('menuitem', { name: 'bulk_remove' });
   await patientlyWaitFor(() => expect(removeButton).toBeInTheDocument());
   expect(removeButton).toHaveAttribute('aria-disabled', 'true');
 
