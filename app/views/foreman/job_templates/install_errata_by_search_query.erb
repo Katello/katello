@@ -24,5 +24,5 @@ foreign_input_sets:
     <% raise "No errata matching given search query" if !input("Errata search query").blank? && advisory_ids.empty? %>
 
     <% advisories = advisory_ids.map { |e| "--advisory=#{e}" }.join(' ') %>
-    <%= render_template('Package Action - Script Default', :action => 'update-minimal', :package => advisories) %>
+    <%= render_template('Package Action - Script Default', :action => 'update-minimal --nobest', :package => advisories) %>
 <% end %>

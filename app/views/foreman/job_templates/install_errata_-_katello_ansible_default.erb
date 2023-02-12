@@ -22,5 +22,5 @@ kind: job_template
 <%= render_template('Run Command - Ansible Default', :command => "apt-get -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" -y --only-upgrade install -y #{advisories}") %>
 <% else -%>
 <% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') -%>
-<%= render_template('Run Command - Ansible Default', :command => "yum -y update-minimal #{advisories}") -%>
+<%= render_template('Run Command - Ansible Default', :command => "yum -y update-minimal --nobest #{advisories}") -%>
 <% end -%>
