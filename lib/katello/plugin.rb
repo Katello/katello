@@ -566,7 +566,7 @@ Foreman::Plugin.register :katello do
 
       setting 'remote_execution_by_default',
         type: :boolean,
-        default: false,
+        default: true,
         full_name: N_('Use remote execution by default'),
         description: N_("If this is enabled, remote execution is used instead of katello-agent for remote actions")
 
