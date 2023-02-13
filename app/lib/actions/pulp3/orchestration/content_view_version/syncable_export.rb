@@ -59,6 +59,7 @@ module Actions
                   ::Actions::Pulp3::ContentViewVersion::CreateSyncableExportHistory,
                   smart_proxy_id: smart_proxy.id,
                   content_view_version_id: content_view_version.id,
+                  from_content_view_version_id:  from_content_view_version&.id,
                   destination_server: destination_server,
                   format: format,
                   base_path: base_path
