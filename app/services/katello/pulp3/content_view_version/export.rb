@@ -51,6 +51,10 @@ module Katello
           end
         end
 
+        def incremental?
+          from_content_view_version.present?
+        end
+
         def generate_exporter_path
           return base_path if base_path
           export_path = "#{content_view_version.content_view.label}/#{content_view_version.version}/"
@@ -114,72 +118,11 @@ module Katello
           api.exporter_api.delete(exporter_href)
         end
 
-        def validate_chunk_size(size)
-          return if size.blank?
-
-          unless size.is_a?(Numeric) && size > 0 && size < 1e6
-            fail _("Specify an export chunk size less than 1_000_000 GB")
-          end
-        end
-
         def validate!(fail_on_missing_content: true, validate_incremental: true, chunk_size: nil)
-          validate_repositories_immediate! if fail_on_missing_content
-          validate_incremental_export! if validate_incremental && !from_content_view_version.blank?
-          validate_chunk_size(chunk_size)
-          validate_export_types! if fail_on_missing_content
-        end
-
-        def validate_export_types!
-          repos = repositories(fetch_all: true).where.not(id: ::Katello::Repository.exportable(format: format))
-          if repos.any?
-            fail _("NOTE: Unable to fully export Content View Version '%{content_view} %{current}'"\
-                   " it contains repositories with un-exportable content types. \n %{repos}" %
-                   { content_view: content_view_version.content_view.name,
-                     current: content_view_version.version,
-                     repos: self.class.generate_product_repo_strings(repositories: repos)})
-
-          end
-        end
-
-        def validate_repositories_immediate!
-          non_immediate_repos = repositories(fetch_all: true).yum_type.non_immediate
-          if non_immediate_repos.any?
-            fail _("NOTE: Unable to fully export Content View Version '%{content_view} %{current}'"\
-                   " it contains repositories without the 'immediate' download policy."\
-                   " Update the download policy and sync affected repositories. Once synced republish the content view"\
-                   " and export the generated version. \n %{repos}" %
-                   { content_view: content_view_version.content_view.name,
-                     current: content_view_version.version,
-                     repos: self.class.generate_product_repo_strings(repositories: non_immediate_repos)})
-          end
-        end
-
-        def validate_incremental_export!
-          from_exporter = Export.new(smart_proxy: smart_proxy, content_view_version: from_content_view_version)
-
-          from_exporter_repos = generate_repo_mapping(from_exporter.repositories(fetch_all: true))
-          to_exporter_repos = generate_repo_mapping(repositories(fetch_all: true))
-
-          invalid_repos_exist = (from_exporter_repos.keys & to_exporter_repos.keys).any? do |repo_id|
-            from_exporter_repos[repo_id] != to_exporter_repos[repo_id]
-          end
-
-          if invalid_repos_exist
-            fail _("The exported Content View Version '%{content_view} %{current}' cannot be incrementally updated from version '%{from}'."\
-                   " Please do a full export." % { content_view: content_view_version.content_view.name,
-                                                   current: content_view_version.version,
-                                                   from: from_content_view_version.version})
-          end
-        end
-
-        def generate_repo_mapping(repositories)
-          # return a repo mapping with key being the  library_instance_id and value being the repostiory_href
-          # used by validate_incremental_export
-          repo_map = {}
-          repositories.each do |repo|
-            repo_map[repo.library_instance_id] = version_href_to_repository_href(repo.version_href)
-          end
-          repo_map
+          ExportValidator.new(export_service: self,
+                              fail_on_missing_content: fail_on_missing_content,
+                              validate_incremental: validate_incremental,
+                              chunk_size: chunk_size).validate!
         end
 
         def generate_metadata

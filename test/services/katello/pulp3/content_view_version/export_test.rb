@@ -43,7 +43,7 @@ module Katello
             repo1.root.update!(download_policy: "on_demand")
             export = fetch_exporter(smart_proxy: proxy,
                                     content_view_version: version.reload)
-            exception = assert_raises(RuntimeError) do
+            exception = assert_raises(::Katello::Pulp3::ContentViewVersion::ExportValidationError) do
               export.validate!(fail_on_missing_content: true)
             end
 
@@ -91,12 +91,12 @@ module Katello
                                      content_view_version: version,
                                      destination_server: destination_server,
                                      from_content_view_version: from_version)
-            ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:validate_repositories_immediate!)
-            ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with("0").returns("0")
-            ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with("1").returns("1")
-            ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with(nil).returns(nil).at_least_once
+            ::Katello::Pulp3::ContentViewVersion::ExportValidator.any_instance.expects(:validate_repositories_immediate!)
+            ::Katello::Pulp3::ContentViewVersion::ExportValidator.any_instance.expects(:version_href_to_repository_href).with("0").returns("0")
+            ::Katello::Pulp3::ContentViewVersion::ExportValidator.any_instance.expects(:version_href_to_repository_href).with("1").returns("1")
+            ::Katello::Pulp3::ContentViewVersion::ExportValidator.any_instance.expects(:version_href_to_repository_href).with(nil).returns(nil).at_least_once
 
-            exception = assert_raises(RuntimeError) do
+            exception = assert_raises(Katello::Pulp3::ContentViewVersion::ExportValidationError) do
               export.validate!(fail_on_missing_content: true, validate_incremental: true)
             end
             assert_match(/cannot be incrementally updated/, exception.message)
@@ -169,7 +169,7 @@ module Katello
           it "fails on validate! if chunk_size is >= 1_000_000GB" do
             export = setup_environment
 
-            exception = assert_raises(RuntimeError) do
+            exception = assert_raises(Katello::Pulp3::ContentViewVersion::ExportValidationError) do
               export.validate!(fail_on_missing_content: false, validate_incremental: false, chunk_size: 1e6)
             end
             assert_match(/Specify an export chunk size less than 1_000_000 GB/, exception.message)

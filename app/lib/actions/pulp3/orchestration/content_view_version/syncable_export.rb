@@ -8,6 +8,7 @@ module Actions
             param :content_view_version_id, Integer
             param :export_history_id, Integer
             param :export_path, String
+            param :from_content_view_version_id, Integer
           end
 
           output_format do
@@ -18,12 +19,14 @@ module Actions
           def plan(content_view_version:,
                    smart_proxy:,
                    fail_on_missing_content: false,
-                   destination_server:)
+                   destination_server:,
+                   from_content_view_version:)
             format = ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
             sequence do
               export_service = ::Katello::Pulp3::ContentViewVersion::Export.create(
                   smart_proxy: smart_proxy,
                   content_view_version: content_view_version,
+                  from_content_view_version: from_content_view_version,
                   format: format,
                   destination_server: destination_server)
               export_service.validate!(fail_on_missing_content: fail_on_missing_content)
@@ -42,7 +45,8 @@ module Actions
                             smart_proxy_id: smart_proxy.id,
                             exporter_data: action_output[:exporter_data],
                             format: format,
-                            repository_id: repository.id)
+                            repository_id: repository.id,
+                            from_content_view_version_id:  from_content_view_version&.id)
 
                 plan_action(::Actions::Pulp3::ContentViewVersion::DestroyExporter,
                           smart_proxy_id: smart_proxy.id,
@@ -55,6 +59,7 @@ module Actions
                   ::Actions::Pulp3::ContentViewVersion::CreateSyncableExportHistory,
                   smart_proxy_id: smart_proxy.id,
                   content_view_version_id: content_view_version.id,
+                  from_content_view_version_id:  from_content_view_version&.id,
                   destination_server: destination_server,
                   format: format,
                   base_path: base_path

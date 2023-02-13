@@ -64,7 +64,7 @@ module Katello
 
         def gpg_key_id(metadata_product)
           if metadata_product.gpg_key
-            @organization.gpg_keys.where(name: metadata_product.gpg_key.name).pluck(:id).first
+            @organization.gpg_keys.where(name: metadata_product.gpg_key.name).pick(:id)
           end
         end
       end

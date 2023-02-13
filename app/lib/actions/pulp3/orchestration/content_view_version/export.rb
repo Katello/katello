@@ -28,6 +28,7 @@ module Actions
               sequence do
                 export_output = plan_action(SyncableExport,
                           content_view_version: content_view_version,
+                          from_content_view_version: from_history&.content_view_version,
                           smart_proxy: smart_proxy,
                           destination_server: destination_server).output
                 plan_self(export_history_id: export_output[:export_history_id],

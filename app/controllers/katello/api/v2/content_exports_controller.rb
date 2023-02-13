@@ -1,5 +1,5 @@
 module Katello
-  class Api::V2::ContentExportsController < Api::V2::ApiController
+  class Api::V2::ContentExportsController < Api::V2::ExportsController
     before_action :find_exportable_organization, :only => [:library]
     before_action :find_exportable_content_view_version, :only => [:version]
     before_action :find_exportable_repository, :only => [:repository]
@@ -29,96 +29,27 @@ module Katello
 
     api :POST, "/content_exports/version", N_("Performs a full-export of a content view version.")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
-    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
-    param :chunk_size_gb, :number, :desc => N_("Split the exported content into archives "\
-                                               "no greater than the specified size in gigabytes."), :required => false
-    param :fail_on_missing_content, :bool, :desc => N_("Fails if any of the repositories belonging to this version"\
-                                                         " are unexportable. False by default."), :required => false
-    param :format, ::Katello::Pulp3::ContentViewVersion::Export::FORMATS,
-                   :desc => N_("Export formats. Choose syncable if content is to be imported via repository sync. "\
-                               "Choose importable if content is to be imported via hammer content-import.
-                                Defaults to importable."),
-                   :required => false
+    param_group :version_fail_on_missing_content, Api::V2::ExportsController
+    param_group :destination_server, Api::V2::ExportsController
+    param_group :export, Api::V2::ExportsController
     def version
-      tasks = async_task(::Actions::Katello::ContentViewVersion::Export,
-                          content_view_version: @version,
-                          destination_server: params[:destination_server],
-                          chunk_size: params[:chunk_size_gb],
-                          fail_on_missing_content: ::Foreman::Cast.to_bool(params[:fail_on_missing_content]),
-                          format: find_export_format)
-      respond_for_async :resource => tasks
+      export_content_view_version
     end
 
     api :POST, "/content_exports/library", N_("Performs a full-export of the repositories in library.")
     param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
-    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
-    param :chunk_size_gb, :number, :desc => N_("Split the exported content into archives "\
-                                               "no greater than the specified size in gigabytes."), :required => false
-    param :fail_on_missing_content, :bool, :desc => N_("Fails if any of the repositories belonging to this organization"\
-                                                         " are unexportable. False by default."), :required => false
-    param :format, ::Katello::Pulp3::ContentViewVersion::Export::FORMATS,
-                   :desc => N_("Export formats. Choose syncable if content is to be imported via repository sync. "\
-                               "Choose importable if content is to be imported via hammer content-import.
-                                Defaults to importable."),
-                   :required => false
+    param_group :org_fail_on_missing_content, Api::V2::ExportsController
+    param_group :destination_server, Api::V2::ExportsController
+    param_group :export, Api::V2::ExportsController
     def library
-      tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportLibrary,
-                          @organization,
-                          destination_server: params[:destination_server],
-                          chunk_size: params[:chunk_size_gb],
-                          fail_on_missing_content: ::Foreman::Cast.to_bool(params[:fail_on_missing_content]),
-                          format: find_export_format)
-      respond_for_async :resource => tasks
+      export_library
     end
 
     api :POST, "/content_exports/repository", N_("Performs a full-export of the repository in library.")
     param :id, :number, :desc => N_("Repository identifier"), :required => true
-    param :chunk_size_gb, :number, :desc => N_("Split the exported content into archives "\
-                                               "no greater than the specified size in gigabytes."), :required => false
-    param :format, ::Katello::Pulp3::ContentViewVersion::Export::FORMATS,
-                   :desc => N_("Export formats. Choose syncable if content is to be imported via repository sync. "\
-                               "Choose importable if content is to be imported via hammer content-import.
-                                Defaults to importable."),
-                   :required => false
+    param_group :export, Api::V2::ExportsController
     def repository
-      tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportRepository,
-                          @repository,
-                          chunk_size: params[:chunk_size_gb],
-                          format: find_export_format)
-      respond_for_async :resource => tasks
-    end
-
-    private
-
-    def find_exportable_repository
-      @repository = Repository.find_by_id(params[:id])
-      if @repository.blank? || !@repository.organization.can_export_content?
-        throw_resource_not_found(name: 'repository', id: params[:id])
-      end
-    end
-
-    def find_exportable_content_view_version
-      @version = ContentViewVersion.exportable.find_by_id(params[:id])
-      throw_resource_not_found(name: 'content view version', id: params[:id]) if @version.blank?
-    end
-
-    def find_exportable_organization
-      find_organization
-      unless @organization.can_export_content?
-        throw_resource_not_found(name: 'organization', id: params[:organization_id])
-      end
-    end
-
-    def find_export_format
-      if params[:format]
-        unless ::Katello::Pulp3::ContentViewVersion::Export::FORMATS.include?(params[:format])
-          fail HttpErrors::UnprocessableEntity, _('Invalid export format provided. Format must be one of  %s ') %
-                                            ::Katello::Pulp3::ContentViewVersion::Export::FORMATS.join(',')
-        end
-        params[:format]
-      else
-        ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
-      end
+      export_repository
     end
   end
 end
