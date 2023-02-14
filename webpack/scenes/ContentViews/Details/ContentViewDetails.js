@@ -199,6 +199,7 @@ export default () => {
               <FlexItem>
                 <Dropdown
                   position={DropdownPosition.right}
+                  ouiaId="cv-details-actions"
                   style={{ marginLeft: 'auto' }}
                   toggle={<KebabToggle onToggle={setDropdownOpen} id="toggle-dropdown" />}
                   isOpen={dropDownOpen}
