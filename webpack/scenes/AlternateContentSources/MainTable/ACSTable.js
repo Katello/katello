@@ -320,6 +320,7 @@ const ACSTable = () => {
                 fetchItems,
                 showPrimaryAction,
                 primaryActionButton,
+                selectedCount,
               }}
               ouiaId="alternate-content-sources-table"
               variant={TableVariant.compact}
