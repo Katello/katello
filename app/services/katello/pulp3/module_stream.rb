@@ -25,16 +25,25 @@ module Katello
       end
 
       def self.build_artifacts(katello_id, artifacts_json)
-        return [] if artifacts_json.nil?
-        artifacts = artifacts_json.map do |name|
-          {name: name,
-           module_stream_id: katello_id}
+        # TODO: Fully support artifact hashes
+        # => {"rpms"=>["swig"], "description"=>"Simplified Wrapper and Interface Generator (SWIG)"}
+        return [] if artifacts_json.empty?
+
+        if artifacts_json.is_a?(::Hash)
+          artifacts = artifacts_json['rpms'].map do |name|
+            {name: name, module_stream_id: katello_id}
+          end
+        else
+          # For compatibility with pulpcore 3.21 + pulp-rpm 3.18 and below.
+          artifacts = artifacts_json.map do |name|
+            {name: name, module_stream_id: katello_id}
+          end
         end
         add_timestamps(artifacts)
       end
 
       def self.build_profiles(katello_id, profiles_json)
-        return [] if profiles_json.nil?
+        return [] if profiles_json.empty?
         profiles = profiles_json.map do |profile, _rpms|
           {
             module_stream_id: katello_id,
@@ -45,14 +54,20 @@ module Katello
       end
 
       def self.build_profile_rpms(katello_id, profiles_json)
+        # TODO: Fully support artifact hashes
+        # => {"rpms"=>["swig"], "description"=>"Simplified Wrapper and Interface Generator (SWIG)"}
         return [] if profiles_json.nil?
-        profile_rpms = profiles_json.map do |profile, rpms|
+        profile_rpms = profiles_json.map do |profile, artifacts_json|
           profile_id = Katello::ModuleProfile.find_by(module_stream_id: katello_id, name: profile).id
-          rpms.map do |rpm|
-            {
-              module_profile_id: profile_id,
-              name: rpm
-            }
+          if artifacts_json.is_a?(::Hash)
+            artifacts_json['rpms'].map do |rpm|
+              {name: rpm, module_profile_id: profile_id}
+            end
+          else
+            # For compatibility with pulpcore 3.21 + pulp-rpm 3.18 and below.
+            artifacts_json.map do |rpm|
+              {name: rpm, module_profile_id: profile_id}
+            end
           end
         end
         add_timestamps(profile_rpms.flatten)
