@@ -45,7 +45,7 @@ const createSimplifiedACSDetails = {
 const createRHUIACSDetails = {
   name: 'acs_rhui_test',
   description: '',
-  base_url: 'https://test_url.com/',
+  base_url: 'https://test_url.com/pulp/content',
   subpaths: ['test/repo1/', 'test/repo2/'],
   smart_proxy_names: ['centos7-katello-devel-stable.example.com'],
   content_type: 'yum',
@@ -297,8 +297,8 @@ test('Can display create wizard and create RHUI ACS', async (done) => {
   // Go to URL and subpath step
   fireEvent.click(getByText('Next'));
 
-  fireEvent.change(getByLabelText('acs_base_url_field'), { target: { value: 'https://test_url.com/' } });
-  expect(getByLabelText('acs_base_url_field')).toHaveAttribute('value', 'https://test_url.com/');
+  fireEvent.change(getByLabelText('acs_base_url_field'), { target: { value: 'https://test_url.com/pulp/content' } });
+  expect(getByLabelText('acs_base_url_field')).toHaveAttribute('value', 'https://test_url.com/pulp/content');
   fireEvent.change(getByLabelText('acs_subpath_field'), { target: { value: 'test/repo1/,test/repo2/' } });
 
   // Mock content credential data

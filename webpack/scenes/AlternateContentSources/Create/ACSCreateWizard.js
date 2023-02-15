@@ -51,15 +51,17 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
     [dispatch],
   );
 
+  const subPathValidated = areSubPathsValid(subpaths) ? 'default' : 'error';
+  const urlValidated = (url === '' || isValidUrl(url, acsType)) ? 'default' : 'error';
+
+  const urlAndPathsValid = () => url !== '' && urlValidated !== 'error' && subPathValidated !== 'error';
+
   const credentialsFilled = () => {
     if (authentication === 'manual') {
       return username !== '';
     }
     return true;
   };
-
-  const subPathValidated = areSubPathsValid(subpaths) ? 'default' : 'error';
-  const urlValidated = (url === '' || isValidUrl(url)) ? 'default' : 'error';
 
   const sourceTypeStep = {
     id: 1,
@@ -88,7 +90,7 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
     id: 4,
     name: __('Select products'),
     component: <ACSProducts />,
-    canJumpTo: smartProxies.length,
+    canJumpTo: smartProxies.length && name !== '',
     enableNext: productIds.length,
   };
 
@@ -96,16 +98,16 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
     id: 5,
     name: __('URL and paths'),
     component: <AcsUrlPaths />,
-    canJumpTo: (acsType === 'custom' || acsType === 'rhui') && (smartProxies.length),
-    enableNext: url !== '' && urlValidated !== 'error' && subPathValidated !== 'error',
+    canJumpTo: (acsType === 'custom' || acsType === 'rhui') && (smartProxies.length) && name !== '',
+    enableNext: urlAndPathsValid(),
   };
 
   const credentialsStep = {
     id: 6,
     name: __('Credentials'),
     component: <ACSCredentials />,
-    canJumpTo: url !== '' && urlValidated !== 'error' && subPathValidated !== 'error',
-    enableNext: (url !== '' || productIds.length) && smartProxies.length && name !== '' && acsType && contentType && credentialsFilled(),
+    canJumpTo: urlAndPathsValid() && (smartProxies.length) && name !== '',
+    enableNext: (urlAndPathsValid() || productIds.length) && smartProxies.length && name !== '' && acsType && contentType && credentialsFilled(),
   };
 
   const reviewStep = {
@@ -113,8 +115,8 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
     name: __('Review details'),
     component: <ACSReview />,
     nextButtonText: __('Add'),
-    canJumpTo: (url !== '' || productIds.length) && smartProxies.length && name !== '' && acsType && contentType && credentialsFilled(),
-    enableNext: (url !== '' || productIds.length) && smartProxies.length && name !== '' && acsType && contentType,
+    canJumpTo: (urlAndPathsValid() || productIds.length) && smartProxies.length && name !== '' && acsType && contentType && credentialsFilled(),
+    enableNext: (urlAndPathsValid() || productIds.length) && smartProxies.length && name !== '' && acsType && contentType,
   };
 
   const finishStep = {
