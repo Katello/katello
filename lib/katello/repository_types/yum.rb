@@ -32,9 +32,6 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::YUM_TYPE) do
     :primary_content => true, :mutable => true
   content_type Katello::PackageGroup,
     :pulp3_service_class => ::Katello::Pulp3::PackageGroup
-  content_type Katello::YumMetadataFile,
-    :pulp3_service_class => ::Katello::Pulp3::YumMetadataFile,
-    :index_on_pulp3 => false
   content_type Katello::Srpm,
     :pulp3_service_class => ::Katello::Pulp3::Srpm,
     :removable => true, :uploadable => true

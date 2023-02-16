@@ -72,12 +72,7 @@ module Katello
     end
 
     def content_types_to_index
-      if SmartProxy.pulp_primary&.pulp3_repository_type_support?(self)
-        # type.index being false supersedes type.index_on_pulp3 being true
-        @content_types.select { |type| type.index && type.index_on_pulp3 }
-      else
-        @content_types.select { |type| type.index }
-      end
+      @content_types.select { |type| type.index }
     end
 
     def default_managed_content_type(label = nil)
@@ -146,7 +141,7 @@ module Katello
 
     class ContentType
       attr_accessor :model_class, :priority, :pulp3_service_class, :index, :uploadable, :removable, :mutable,
-                    :primary_content, :index_on_pulp3, :generic_browser, :content_type, :repository_import_on_upload,
+                    :primary_content, :generic_browser, :content_type, :repository_import_on_upload,
                     :test_upload_path
 
       def initialize(options)
@@ -155,7 +150,6 @@ module Katello
         self.priority = options[:priority] || 99
         self.pulp3_service_class = options[:pulp3_service_class]
         self.index = options[:index].nil? ? true : options[:index]
-        self.index_on_pulp3 = options[:index_on_pulp3].nil? ? true : options[:index_on_pulp3]
         self.uploadable = options[:uploadable] || false
         self.removable = options[:removable] || false
         self.primary_content = options[:primary_content] || false
@@ -176,7 +170,7 @@ module Katello
           generic: false,
           removable: removable,
           uploadable: uploadable,
-          indexed: index && index_on_pulp3
+          indexed: index
         }
       end
 
