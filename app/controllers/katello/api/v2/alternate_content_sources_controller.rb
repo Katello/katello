@@ -71,14 +71,7 @@ module Katello
     def create
       @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params.except(:smart_proxy_ids, :smart_proxy_names, :product_ids))
 
-      # Check that ssl-* params are not included if the ACS is of type 'simplified'
-      # This is handled in the controller to allow us to validate key absence before key value being valid.
-      # See https://bugzilla.redhat.com/show_bug.cgi?id=2159963 for more info
-      if @alternate_content_source.simplified?
-        (fail HttpErrors::UnprocessableEntity, "SSL ca cert must remain blank for ACS of type #{@alternate_content_source&.alternate_content_source_type}") unless @alternate_content_source.ssl_ca_cert_id.nil?
-        (fail HttpErrors::UnprocessableEntity, "SSL client cert must remain blank for ACS of type #{@alternate_content_source&.alternate_content_source_type}") unless @alternate_content_source.ssl_client_cert_id.nil?
-        (fail HttpErrors::UnprocessableEntity, "SSL ca cert must remain blank for ACS of type #{@alternate_content_source&.alternate_content_source_type}") unless @alternate_content_source.ssl_ca_cert_id.nil?
-      end
+      check_params_for_invalid_create
 
       sync_task(::Actions::Katello::AlternateContentSource::Create, @alternate_content_source, @smart_proxies, @products)
       @alternate_content_source.reload
