@@ -14,7 +14,6 @@ import { selectApiDataStatus,
   selectApiChangeContentStatus,
   selectContentHosts,
   selectContentHostsWithoutContent,
-  selectEnvironments,
   selectContentSources,
   selectJobInvocationPath,
   selectContentViews,
@@ -45,7 +44,6 @@ const ChangeContentSourcePage = () => {
 
   const contentHosts = useSelector(selectContentHosts);
   const hostsWithoutContent = useSelector(selectContentHostsWithoutContent);
-  const environments = useSelector(selectEnvironments);
   const contentSources = useSelector(selectContentSources);
   const jobInvocationPath = useSelector(selectJobInvocationPath);
 
@@ -53,10 +51,11 @@ const ChangeContentSourcePage = () => {
   const contentViews = useSelector(selectContentViews);
 
   const [contentSourceId, setCapsuleId] = useState('');
-  const [environmentId, setEnvironmentId] = useState('');
+  const [selectedEnvironment, setSelectedEnvironment] = useState([]);
   const [contentViewId, setContentViewId] = useState('');
 
   const noHostSpecified = getHostIds(urlParams.host_id).length === 0 && urlParams.searchParam === '';
+  const environmentId = selectedEnvironment[0]?.id;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -72,7 +71,7 @@ const ChangeContentSourcePage = () => {
 
   const handleContentSource = (id) => {
     setCapsuleId(id);
-    setEnvironmentId('');
+    setSelectedEnvironment([]);
     setContentViewId('');
 
     if (id) {
@@ -93,12 +92,12 @@ const ChangeContentSourcePage = () => {
     return ([linkHosts, linkContent]);
   };
 
-  const handleEnvironment = (envId) => {
-    setEnvironmentId(envId);
+  const handleEnvironment = (selection) => {
+    setSelectedEnvironment(selection);
     setContentViewId('');
 
-    if (envId) {
-      dispatch(getContentViews(envId));
+    if (selection[0].id) {
+      dispatch(getContentViews(selection[0].id));
     }
   };
   useEffect(() => {
@@ -146,9 +145,8 @@ const ChangeContentSourcePage = () => {
 
             <ContentSourceForm
               handleSubmit={handleSubmit}
-              environments={environments}
               handleEnvironment={handleEnvironment}
-              environmentId={environmentId}
+              environments={selectedEnvironment}
               contentViews={contentViews}
               handleContentView={setContentViewId}
               contentViewId={contentViewId}

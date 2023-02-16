@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ActionGroup,
   Alert,
@@ -6,17 +6,77 @@ import {
   Form,
   Grid,
   GridItem,
+  Select,
+  SelectOption,
+  SelectVariant,
+  TextContent,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
+import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
+import api, { orgId } from '../../../../services/api';
+import { ENVIRONMENT_PATHS_KEY } from '../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
+import EnvironmentPaths from '../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPaths';
+import ContentViewSelect from '../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelect';
+import ContentViewSelectOption from '../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelectOption';
 
-import FormField from './FormField';
+const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
+
+const ContentSourceSelect = ({
+  contentSources,
+  selections,
+  onToggle,
+  onSelect,
+  isOpen,
+  isDisabled,
+}) => (
+  <div className="content_source_section">
+    <TextContent>{__('Content source')}</TextContent>
+    <Select
+      variant={SelectVariant.single}
+      aria-label="content-source-select"
+      ouiaId="content-source-select"
+      onToggle={onToggle}
+      onSelect={onSelect}
+      selections={selections}
+      isOpen={isOpen}
+      isDisabled={isDisabled}
+      className="set-select-width"
+    >
+      {contentSources.map(cs => (
+        <SelectOption
+          key={cs.id}
+          value={`${cs.id}`}
+        >
+          {cs.name}
+        </SelectOption>
+      ))}
+    </Select>
+  </div>
+);
+
+ContentSourceSelect.propTypes = {
+  contentSources: PropTypes.arrayOf(PropTypes.shape({})),
+  selections: PropTypes.string,
+  onToggle: PropTypes.func,
+  onSelect: PropTypes.func,
+  isOpen: PropTypes.bool,
+  isDisabled: PropTypes.bool,
+};
+
+ContentSourceSelect.defaultProps = {
+  contentSources: [],
+  selections: null,
+  onToggle: undefined,
+  onSelect: undefined,
+  isOpen: false,
+  isDisabled: false,
+};
 
 const ContentSourceForm = ({
   handleSubmit,
   environments,
   handleEnvironment,
-  environmentId,
   contentViews,
   handleContentView,
   contentViewId,
@@ -27,17 +87,36 @@ const ContentSourceForm = ({
   isLoading,
   hostsUpdated,
 }) => {
-  const formIsValid = () => (!!environmentId &&
+  useAPI( // No TableWrapper here, so we can useAPI from Foreman
+    'get',
+    api.getApiUrl(`/organizations/${orgId()}/environments/paths?permission_type=promotable`),
+    ENV_PATH_OPTIONS,
+  );
+
+  const [csSelectOpen, setCSSelectOpen] = useState(false);
+  const [cvSelectOpen, setCVSelectOpen] = useState(false);
+
+  const handleCSSelect = (_event, selection) => {
+    handleContentSource(selection);
+    setCSSelectOpen(false);
+  };
+
+  const handleCVSelect = (_event, selection) => {
+    handleContentView(selection);
+    setCVSelectOpen(false);
+  };
+
+  const formIsValid = () => (!!environments &&
     !!contentViewId &&
     !!contentSourceId &&
     contentHosts.length !== 0);
 
   const contentSourcesIsDisabled = (isLoading || contentSources.length === 0 ||
     contentHosts.length === 0);
-  const environmentIsDisabled = (isLoading || environments.length === 0 ||
+  const environmentIsDisabled = (isLoading || environments === [] ||
     contentSourceId === '');
   const viewIsDisabled = (isLoading || contentViews.length === 0 ||
-    contentSourceId === '' || environmentId === '');
+    contentSourceId === '' || environments === []);
 
   return (
     <Form
@@ -56,9 +135,38 @@ const ContentSourceForm = ({
           />
         </GridItem>
         )}
-        <FormField label={__('Content source')} id="change_cs_content_source" value={contentSourceId} items={contentSources} onChange={handleContentSource} isDisabled={contentSourcesIsDisabled} />
-        <FormField label={__('Environment')} id="change_cs_environment" value={environmentId} items={environments} onChange={handleEnvironment} isDisabled={environmentIsDisabled} />
-        <FormField label={__('Content view')} id="change_cs_content_view" value={contentViewId} items={contentViews} onChange={handleContentView} isDisabled={viewIsDisabled} />
+        <ContentSourceSelect
+          contentSources={contentSources}
+          selections={contentSourceId}
+          onToggle={isExpanded => setCSSelectOpen(isExpanded)}
+          onSelect={handleCSSelect}
+          onClear={() => handleContentSource(null)}
+          isOpen={csSelectOpen}
+          isDisabled={contentSourcesIsDisabled}
+        />
+        <EnvironmentPaths
+          userCheckedItems={environments}
+          setUserCheckedItems={handleEnvironment}
+          publishing={false}
+          multiSelect={false}
+          headerText={__('Environment')}
+          isDisabled={environmentIsDisabled}
+        />
+        {environments.length > 0 &&
+        <ContentViewSelect
+          selections={contentViewId}
+          onClear={() => handleContentView(null)}
+          onSelect={handleCVSelect}
+          isOpen={cvSelectOpen}
+          isDisabled={viewIsDisabled}
+          onToggle={isExpanded => setCVSelectOpen(isExpanded)}
+          headerText={(contentViews.length === 0) ? __('No content views available') : __('Content view')}
+          ouiaId="SelectContentView"
+          className="set-select-width"
+        >
+          {contentViews?.map(cv => ContentViewSelectOption(cv, environments[0]))}
+        </ContentViewSelect>
+        }
 
         <GridItem>
           <ActionGroup>
@@ -81,7 +189,6 @@ ContentSourceForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   environments: PropTypes.arrayOf(PropTypes.shape({})),
   handleEnvironment: PropTypes.func.isRequired,
-  environmentId: PropTypes.string,
   contentViews: PropTypes.arrayOf(PropTypes.shape({})),
   handleContentView: PropTypes.func.isRequired,
   contentViewId: PropTypes.string,
@@ -95,7 +202,6 @@ ContentSourceForm.propTypes = {
 
 ContentSourceForm.defaultProps = {
   environments: [],
-  environmentId: '',
   contentViews: [],
   contentViewId: '',
   contentSources: [],
