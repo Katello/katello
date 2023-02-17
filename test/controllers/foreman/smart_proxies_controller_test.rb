@@ -1,8 +1,10 @@
 require 'katello_test_helper'
 
 class SmartProxiesControllerTest < ActionController::TestCase
+  include VCR::TestCase
+
   def models
-    @smart_proxy = FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
+    @smart_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
   end
 
   def proxy_storage_response

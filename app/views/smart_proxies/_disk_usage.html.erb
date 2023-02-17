@@ -4,6 +4,7 @@
       <%= disk['header'] %>
     </div>
 
+    <%- if disk['used'] >= 0 && disk['total'] >= 0 -%>
     <div class="progress progress-label-top-right">
       <div class="progress-bar progress-bar-<%= disk['size_status'] %>" role="progressbar" aria-valuenow="<%= disk['percentage'] %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= disk['percentage'] %>%;" data-toggle="tooltip" title="<%= _('%s Used') % humanize_bytes(disk['used']) %>">
         <span><strong><%= _('%{used} of %{total}') % {:used => humanize_bytes(disk['used']),:total => humanize_bytes(disk['total'])} %></strong> Used</span>
@@ -13,5 +14,6 @@
         <span class="sr-only"><%= _('%s Available') % humanize_bytes(disk['free']) %></span>
       </div>
     </div>
+    <%- end -%>
   </div>
 </div>
