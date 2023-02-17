@@ -21,6 +21,11 @@ module Katello
           !Glue::Candlepin::Product.engineering_product_id?(product['id']) || Katello::Product.find_by(:cp_id => product['id']).try(:custom?)
         end
       end
+
+      def import_candlepin_records(cp_subs, org)
+        cp_subs = cp_subs.reject { |cp_subscription| ::Katello::Glue::Provider.orphaned_custom_product?(cp_subscription['productId'], org) }
+        super(cp_subs, org)
+      end
     end
 
     module InstanceMethods

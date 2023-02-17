@@ -56,6 +56,12 @@ module Katello
         end
       end
 
+      def import_candlepin_records(pools, org)
+        # Skip import of pools that were associated with an orphaned custom product
+        pools = pools.reject { |cp_pool| ::Katello::Glue::Provider.orphaned_custom_product?(cp_pool['productId'], org) }
+        super(pools, org)
+      end
+
       def import_candlepin_record(record:, organization:)
         subscription = determine_subscription(
           product_id: record['productId'],

@@ -139,6 +139,7 @@ module Katello
       Katello::Resources::Candlepin::Pool.expects(:get_for_owner).returns([pool_data])
       Katello::Resources::Candlepin::Pool.expects(:find).returns(pool_data)
       Katello::Pool.any_instance.expects(:import_managed_associations).returns
+      Organization.any_instance.expects(:redhat_provider).returns(katello_providers(:redhat))
       Pool.import_all(org)
 
       refute_empty Katello::Pool.where(organization: org)

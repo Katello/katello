@@ -14,7 +14,6 @@ namespace :katello do
   desc "Reimports information from backend systems"
   task :reimport => ["dynflow:client", "katello:check_ping"] do
     User.current = User.anonymous_admin #set a user for orchestration
-    Dir.glob(Katello::Engine.root.to_s + '/app/models/katello/*.rb').each { |file| require file }
 
     models = [
       Katello::Subscription,
@@ -32,7 +31,7 @@ namespace :katello do
       ack_key.import_pools
     end
 
-    print "Importing Linked Repositories"
+    print "Importing Linked Repositories\n"
     Katello::Repository.linked_repositories.each(&:index_content)
   end
 end

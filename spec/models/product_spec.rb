@@ -89,12 +89,13 @@ module Katello
       specify { Product.new(:label => "shoo", :name => 'contains space', :provider => @provider).must_be :valid? }
       specify { Product.new(:label => "bar foo", :name => "foo", :provider => @provider).wont_be :valid? }
       it "should not be successful when creating a product with a duplicate name in one organization" do
-        @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge(:organization_id => @organization.id))
-
-        Product.new(:name => @p.name, :label => @p.name,
-                    :id => @p.cp_id,
-                    :provider => @p.provider
-                   ).wont_be :valid?
+        @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge(:organization_id => @organization.id, :provider_id => @provider.id))
+        np = Product.new(:name => @p.name, :label => @p.name,
+                    :cp_id => "42424242424",
+                    :provider => @p.provider,
+                    :organization => @organization
+                   )
+        np.wont_be :valid?
       end
     end
 
@@ -114,7 +115,13 @@ module Katello
     end
 
     it 'should be destroyable' do
-      product = create(:katello_product, :fedora, provider: create(:katello_provider), organization: @organization)
+      product = create(
+                       :katello_product,
+                       :fedora,
+                       name: 'to be destroyed',
+                       label: 'to_be_destroyed',
+                       provider: create(:katello_provider),
+                       organization: @organization)
       assert product.destroy
     end
   end

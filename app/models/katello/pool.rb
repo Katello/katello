@@ -56,7 +56,10 @@ module Katello
     validate :subscription_matches_organization
 
     def subscription_matches_organization
-      errors.add(:base, _("A Pool and its Subscription cannot belong to different organizations")) unless subscription&.organization_id == self.organization_id
+      return if errors[:subscription].any? || errors[:organization].any? # let other validations catch this
+      unless subscription&.organization_id == self.organization_id
+        errors.add(:base, _("A Pool and its Subscription cannot belong to different organizations."))
+      end
     end
 
     DAYS_RECENTLY_EXPIRED = 30

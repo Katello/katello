@@ -33,6 +33,7 @@ module Katello
 
     validates_lengths_from_database :except => [:label]
     validates :provider_id, :presence => true
+    validate :ensure_provider_type_matches_id
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
     validates_with Validators::ProductUniqueAttributeValidator, :attributes => :name
@@ -236,7 +237,7 @@ module Katello
     end
 
     def self.unused_product_id
-      id = SecureRandom.random_number(999_999_999_999)
+      id = (SecureRandom.random_number * (10**12 - 10**11) + 10**11).to_i # guarantee that we get 12 digits
       if ::Katello::Product.find_by(:cp_id => id)
         unused_product_id
       else
@@ -252,6 +253,15 @@ module Katello
     end
     class Jail < ::Safemode::Jail
       allow :name, :label
+    end
+
+    private
+
+    def ensure_provider_type_matches_id
+      return if errors[:provider_id].any?
+      if provider.redhat_provider? && ::Katello::Glue::Candlepin::Product.custom_product_id?(cp_id)
+        errors.add(:base, _("Cannot associate a Red Hat provider with a custom product"))
+      end
     end
   end
 end

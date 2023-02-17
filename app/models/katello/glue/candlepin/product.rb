@@ -32,7 +32,7 @@ module Katello
       id.match(/^\d+$/) #engineering products are numeric
     end
 
-    def self.import_from_cp(attrs, organization)
+    def self.import_redhat_product_from_cp(attrs, organization)
       import_logger = attrs[:import_logger]
 
       product_attrs = {'name' => attrs['name'],
@@ -48,6 +48,12 @@ module Katello
         logger&.error "Failed to create product #{attrs['name']}: #{e}"
       end
       raise e
+    end
+
+    def self.custom_product_id?(id)
+      # Engineering products with 12 digits are custom products (see Katello::Product#unused_product_id)
+      # however, previously generated ids are random and can be shorter than 12 digits
+      id =~ /^\d{8,12}$/
     end
 
     module InstanceMethods
