@@ -475,8 +475,8 @@ Foreman::Plugin.register :katello do
       setting 'errata_status_installable',
         type: :boolean,
         default: false,
-        full_name: N_('Installable errata from content view'),
-        description: N_("Calculate errata host status based only on errata in a host's content view and lifecycle environment")
+        full_name: N_('Generate errata status from directly-installable content'),
+        description: N_("If true, only errata that can be installed without an incremental update will affect the host's errata status.")
 
       setting 'restrict_composite_view',
         type: :boolean,
