@@ -1,3 +1,15 @@
+# 4.7.3 Whiskey Sour (2023-02-20)
+
+## Features
+
+### Web UI
+ * Update pf4 to 2022.16+ release ([#36044](https://projects.theforeman.org/issues/36044), [fe3eebd5](https://github.com/Katello/katello.git/commit/fe3eebd540deccfd50e70fef2f2ca38c84afe60b))
+
+## Bug Fixes
+
+### Subscriptions
+ * Candlepin 4.2.13 changes [:content][:id] to ['contentId'] ([#36033](https://projects.theforeman.org/issues/36033), [d2f2f2e7](https://github.com/Katello/katello.git/commit/d2f2f2e7da5f17ec79f0376b79897b76fd203766))
+
 # 4.7.2 Whiskey Sour (2023-02-08)
 
 ## Bug Fixes
