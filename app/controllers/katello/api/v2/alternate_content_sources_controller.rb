@@ -70,9 +70,6 @@ module Katello
     param_group :acs
     def create
       @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params.except(:smart_proxy_ids, :smart_proxy_names, :product_ids))
-
-      check_params_for_invalid_create
-
       sync_task(::Actions::Katello::AlternateContentSource::Create, @alternate_content_source, @smart_proxies, @products)
       @alternate_content_source.reload
       respond_for_create(resource: @alternate_content_source)

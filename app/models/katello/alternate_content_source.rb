@@ -31,7 +31,7 @@ module Katello
 
     validates :base_url, :subpaths, :upstream_username,
     validates :base_url, :subpaths, :upstream_username,
-              :upstream_password, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key, if: :simplified?, absence: true
+              :upstream_password, if: :simplified?, absence: true
     validates :base_url, if: -> { custom? || rhui? }, presence: true
     validates :products, if: -> { custom? || rhui? }, absence: true
     validates :label, :uniqueness => true
@@ -61,6 +61,8 @@ module Katello
     }
 
     validate :constraint_acs_update, on: :update
+    validate :validate_ssl_ids
+
     validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
 
     scope :uses_http_proxies, -> { where(use_http_proxies: true) }
@@ -132,6 +134,23 @@ module Katello
       end
       if changes.keys.include? "alternate_content_source_type"
         errors.add(:alternate_content_source_type, "cannot be modified once an ACS is created")
+      end
+    end
+
+    # Disallow --ssl-* properties from being set for simplified ACS
+    # Must be done in method as workaround for validation printing the incorrect
+    # field string.
+    def validate_ssl_ids
+      if simplified?
+        if changes.keys.include? "ssl_ca_cert_id"
+          errors.add(:ssl_ca_cert, "must be blank")
+        end
+        if changes.keys.include? "ssl_client_cert_id"
+          errors.add(:ssl_client_cert, "must be blank")
+        end
+        if changes.keys.include? "ssl_client_key_id"
+          errors.add(:ssl_client_key, "must be blank")
+        end
       end
     end
   end
