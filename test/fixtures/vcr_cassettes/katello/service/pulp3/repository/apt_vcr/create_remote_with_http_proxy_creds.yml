@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://centos8-katello-devel.sajha.example.com/pulp/api/v3/remotes/deb/apt/
+    uri: https://centos8-katello-devel.cannolo.example.com/pulp/api/v3/remotes/deb/apt/
     body:
       encoding: UTF-8
       base64_string: |
@@ -22,7 +22,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/2.20.0/ruby
+      - OpenAPI-Generator/2.20.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -35,13 +35,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Wed, 19 Oct 2022 17:06:09 GMT
+      - Wed, 15 Feb 2023 23:06:37 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/deb/apt/75f99d2c-c32f-4209-b843-16fb5c95508f/"
+      - "/pulp/api/v3/remotes/deb/apt/91a69cc1-ec48-4a40-bd37-bfc7762a129d/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -49,43 +49,47 @@ http_interactions:
       X-Frame-Options:
       - DENY
       Content-Length:
-      - '771'
+      - '976'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 7b6db44ef78e409a81aaee9de636e0a9
+      - 710dd41561364e6999356eda76fb954a
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos8-katello-devel.sajha.example.com
+      - 1.1 centos8-katello-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9kZWIvYXB0Lzc1
-        Zjk5ZDJjLWMzMmYtNDIwOS1iODQzLTE2ZmI1Yzk1NTA4Zi8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIyLTEwLTE5VDE3OjA2OjA5LjU4MTAyMVoiLCJuYW1lIjoi
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9kZWIvYXB0Lzkx
+        YTY5Y2MxLWVjNDgtNGE0MC1iZDM3LWJmYzc3NjJhMTI5ZC8iLCJwdWxwX2Ny
+        ZWF0ZWQiOiIyMDIzLTAyLTE1VDIzOjA2OjM3LjQwNTA2NVoiLCJuYW1lIjoi
         RGViaWFuIDkgYW1kNjQtdGVzdCIsInVybCI6Imh0dHA6Ly9mdHAuZGViaWFu
         Lm15bWlycm9yLm9yZy9kZWJpYW4iLCJjYV9jZXJ0IjpudWxsLCJjbGllbnRf
         Y2VydCI6bnVsbCwidGxzX3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6
         Imh0dHBzOi8vbXl0ZXN0LmNvbSIsInB1bHBfbGFiZWxzIjp7fSwicHVscF9s
-        YXN0X3VwZGF0ZWQiOiIyMDIyLTEwLTE5VDE3OjA2OjA5LjU4MTA0NVoiLCJk
+        YXN0X3VwZGF0ZWQiOiIyMDIzLTAyLTE1VDIzOjA2OjM3LjQwNTA5OVoiLCJk
         b3dubG9hZF9jb25jdXJyZW5jeSI6bnVsbCwibWF4X3JldHJpZXMiOm51bGws
         InBvbGljeSI6Im9uX2RlbWFuZCIsInRvdGFsX3RpbWVvdXQiOjM2MDAuMCwi
         Y29ubmVjdF90aW1lb3V0Ijo2MC4wLCJzb2NrX2Nvbm5lY3RfdGltZW91dCI6
         NjAuMCwic29ja19yZWFkX3RpbWVvdXQiOjM2MDAuMCwiaGVhZGVycyI6bnVs
-        bCwicmF0ZV9saW1pdCI6MCwiZGlzdHJpYnV0aW9ucyI6InN0cmV0Y2giLCJj
-        b21wb25lbnRzIjoibWFpbiIsImFyY2hpdGVjdHVyZXMiOiJhbWQ2NCIsInN5
-        bmNfc291cmNlcyI6ZmFsc2UsInN5bmNfdWRlYnMiOmZhbHNlLCJzeW5jX2lu
-        c3RhbGxlciI6ZmFsc2UsImdwZ2tleSI6IkFERiNGQ1NGQVNERiRAJEBaRkRE
-        U0ckIyUjJUFEUyIsImlnbm9yZV9taXNzaW5nX3BhY2thZ2VfaW5kaWNlcyI6
-        ZmFsc2V9
+        bCwicmF0ZV9saW1pdCI6MCwiaGlkZGVuX2ZpZWxkcyI6W3sibmFtZSI6ImNs
+        aWVudF9rZXkiLCJpc19zZXQiOmZhbHNlfSx7Im5hbWUiOiJwcm94eV91c2Vy
+        bmFtZSIsImlzX3NldCI6dHJ1ZX0seyJuYW1lIjoicHJveHlfcGFzc3dvcmQi
+        LCJpc19zZXQiOnRydWV9LHsibmFtZSI6InVzZXJuYW1lIiwiaXNfc2V0Ijpm
+        YWxzZX0seyJuYW1lIjoicGFzc3dvcmQiLCJpc19zZXQiOmZhbHNlfV0sImRp
+        c3RyaWJ1dGlvbnMiOiJzdHJldGNoIiwiY29tcG9uZW50cyI6Im1haW4iLCJh
+        cmNoaXRlY3R1cmVzIjoiYW1kNjQiLCJzeW5jX3NvdXJjZXMiOmZhbHNlLCJz
+        eW5jX3VkZWJzIjpmYWxzZSwic3luY19pbnN0YWxsZXIiOmZhbHNlLCJncGdr
+        ZXkiOiJBREYjRkNTRkFTREYkQCRAWkZERFNHJCMlIyVBRFMiLCJpZ25vcmVf
+        bWlzc2luZ19wYWNrYWdlX2luZGljZXMiOmZhbHNlfQ==
     http_version: 
-  recorded_at: Wed, 19 Oct 2022 17:06:09 GMT
+  recorded_at: Wed, 15 Feb 2023 23:06:37 GMT
 - request:
     method: delete
-    uri: https://centos8-katello-devel.sajha.example.com/pulp/api/v3/remotes/deb/apt/75f99d2c-c32f-4209-b843-16fb5c95508f/
+    uri: https://centos8-katello-devel.cannolo.example.com/pulp/api/v3/remotes/deb/apt/91a69cc1-ec48-4a40-bd37-bfc7762a129d/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -93,7 +97,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/2.20.0/ruby
+      - OpenAPI-Generator/2.20.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -106,7 +110,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Wed, 19 Oct 2022 17:06:09 GMT
+      - Wed, 15 Feb 2023 23:06:37 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -124,16 +128,16 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 2640187cabca44999b2ac1064ae94a4f
+      - da286976d6ce406aa24c3f3f390143d3
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos8-katello-devel.sajha.example.com
+      - 1.1 centos8-katello-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2YzMTJlOThjLThhZjktNDkz
-        MS04ZDM0LTczYzI1MmI1YmM3MC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzE2Y2ZiZDk5LTFmYTgtNGQw
+        OS04NDVhLTY5ODE2YWRiNDliYy8ifQ==
     http_version: 
-  recorded_at: Wed, 19 Oct 2022 17:06:09 GMT
+  recorded_at: Wed, 15 Feb 2023 23:06:37 GMT
 recorded_with: VCR 3.0.3

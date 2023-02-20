@@ -13,6 +13,7 @@ namespace :katello do
       system("sudo systemctl stop 'pulpcore-worker@*' --all")
       system("sudo runuser - postgres -c 'dropdb pulpcore'")
       system("sudo runuser - postgres -c 'createdb pulpcore'")
+      system("sudo runuser - postgres -c \"psql -d pulpcore -c 'create extension hstore'\"")
 
       Dir.chdir("/tmp") do
         fail "\e[31mCannot migrate Pulp3 database\e[0m\n\n" unless system("sudo -u pulp PULP_SETTINGS='/etc/pulp/settings.py' DJANGO_SETTINGS_MODULE='pulpcore.app.settings' pulpcore-manager migrate --no-input")

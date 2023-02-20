@@ -53,14 +53,14 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
 
   #pulp3
-  gem.add_dependency "pulpcore_client", ">= 3.21.0", "< 3.22.0"
-  gem.add_dependency "pulp_file_client", ">= 1.11.0", "< 1.12"
-  gem.add_dependency "pulp_ansible_client", ">= 0.15.0", "< 0.16"
+  gem.add_dependency "pulpcore_client", ">= 3.22.0", "< 3.23.0"
+  gem.add_dependency "pulp_file_client", ">= 1.12.0", "< 1.13"
+  gem.add_dependency "pulp_ansible_client", ">= 0.16.0", "< 0.17"
   gem.add_dependency "pulp_container_client", ">= 2.14.0", "< 2.15.0"
   gem.add_dependency "pulp_deb_client", ">= 2.20.0", "< 2.21"
-  gem.add_dependency "pulp_rpm_client", ">= 3.18.0", "< 3.19.0"
+  gem.add_dependency "pulp_rpm_client", ">= 3.19.0", "< 3.20.0"
   gem.add_dependency "pulp_certguard_client", "< 2.0"
-  gem.add_dependency "pulp_python_client", ">= 3.7.2", "< 3.8"
+  gem.add_dependency "pulp_python_client", ">= 3.8.0", "< 3.9"
   gem.add_dependency "pulp_ostree_client"
 
   # UI
