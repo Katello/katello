@@ -271,19 +271,22 @@ Foreman::Plugin.register :katello do
       common_td_class = "#{common_th_class} ellipsis"
       use_pagelet :hosts_table_column_header, :name
       use_pagelet :hosts_table_column_content, :name
-      add_pagelet :hosts_table_column_header, key: :subscription_status, label: _('Subscription status'), sortable: true, class: common_th_class, width: '10%'
+      add_pagelet :hosts_table_column_header, key: :subscription_status, label: _('Subscription status'), sortable: true, class: common_th_class, width: '10%', export_key: 'subscription_global_status'
       add_pagelet :hosts_table_column_content, key: :subscription_status, class: common_td_class, callback: ->(host) { host_status_icon(host.subscription_global_status) }
-      add_pagelet :hosts_table_column_header, key: :installable_updates, label: _('Installable updates'), class: common_th_class, width: '15%'
+      add_pagelet :hosts_table_column_header, key: :installable_updates, label: _('Installable updates'), class: common_th_class, width: '15%',
+                  export_data: [:security, :bugfix, :enhancement].map { |kind| CsvExporter::ExportDefinition.new("installable_updates.#{kind}", callback: ->(host) { (host.content_facet_attributes&.errata_counts || {})[kind] }) } +
+                               [:rpm, :deb].map { |kind| CsvExporter::ExportDefinition.new("installable_packages.#{kind}", callback: ->(host) { host&.content_facet_attributes&.public_send("upgradable_#{kind}_count".to_sym) || 0 }) }
       add_pagelet :hosts_table_column_content, key: :installable_updates, class: common_td_class, callback: ->(host) { errata_counts(host) }
       use_pagelet :hosts_table_column_header, :os_title
       use_pagelet :hosts_table_column_content, :os_title
-      add_pagelet :hosts_table_column_header, key: :lifecycle_environment, label: _('Lifecycle environment'), sortable: true, class: common_th_class, width: '10%'
+      add_pagelet :hosts_table_column_header, key: :lifecycle_environment, label: _('Lifecycle environment'), sortable: true, class: common_th_class, width: '10%',
+                  export_data: CsvExporter::ExportDefinition.new('single_lifecycle_environment', label: 'Lifecycle Environment')
       add_pagelet :hosts_table_column_content, key: :lifecycle_environment, class: common_td_class, callback: ->(host) { host.content_facet&.single_lifecycle_environment&.name }
-      add_pagelet :hosts_table_column_header, key: :content_view, label: _('Content view'), sortable: true, class: common_th_class, width: '10%'
+      add_pagelet :hosts_table_column_header, key: :content_view, label: _('Content view'), sortable: true, class: common_th_class, width: '10%', export_data: CsvExporter::ExportDefinition.new('single_content_view', label: 'Content View')
       add_pagelet :hosts_table_column_content, key: :content_view, class: common_td_class, callback: ->(host) { host.content_facet&.single_content_view&.name }
-      add_pagelet :hosts_table_column_header, key: :registered_at, label: _('Registered'), sortable: true, class: common_th_class, width: '10%'
+      add_pagelet :hosts_table_column_header, key: :registered_at, label: _('Registered'), sortable: true, class: common_th_class, width: '10%', export_data: CsvExporter::ExportDefinition.new('subscription_facet_attributes.registered_at', label: 'Registered')
       add_pagelet :hosts_table_column_content, key: :registered_at, class: common_td_class, callback: ->(host) { host_registered_time(host) }
-      add_pagelet :hosts_table_column_header, key: :last_checkin, label: _('Last checkin'), sortable: true, class: common_th_class, width: '10%'
+      add_pagelet :hosts_table_column_header, key: :last_checkin, label: _('Last checkin'), sortable: true, class: common_th_class, width: '10%', export_data: CsvExporter::ExportDefinition.new('subscription_facet_attributes.last_checkin', label: 'Last Checkin')
       add_pagelet :hosts_table_column_content, key: :last_checkin, class: common_td_class, callback: ->(host) { host_checkin_time(host) }
     end
   end
