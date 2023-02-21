@@ -138,8 +138,6 @@ module Katello
     end
 
     # Disallow --ssl-* properties from being set for simplified ACS
-    # Must be done in method as workaround for validation printing the incorrect
-    # field string.
     def validate_ssl_ids
       if simplified?
         if changes.keys.include? "ssl_ca_cert_id"
