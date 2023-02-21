@@ -36,7 +36,10 @@ module Katello
     validates :label, :uniqueness => true
     validates :name, :uniqueness => true, presence: true
     # verify ssl must be validated this way due to presence: <bool> failing on a value of false
-    validates :verify_ssl, if: -> { custom? || rhui? }, inclusion: [true, false]
+    validates :verify_ssl, if: -> { custom? || rhui? }, inclusion: {
+      in: [true, false],
+      message: "can't be blank"
+    }
     validates :verify_ssl, if: :custom?, exclusion: [nil]
     validates :alternate_content_source_type, inclusion: {
       in: ->(_) { ACS_TYPES },
