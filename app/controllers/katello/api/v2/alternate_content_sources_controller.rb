@@ -87,7 +87,6 @@ module Katello
       else
         find_smart_proxies
       end
-
       if params[:product_ids].nil?
         @products = @alternate_content_source.products
       elsif params[:product_ids] == []
@@ -95,6 +94,7 @@ module Katello
       else
         find_products
       end
+
       sync_task(::Actions::Katello::AlternateContentSource::Update, @alternate_content_source, @smart_proxies, @products, acs_params.except(:smart_proxy_ids, :smart_proxy_names, :product_ids))
       respond_for_show(:resource => @alternate_content_source)
     end
