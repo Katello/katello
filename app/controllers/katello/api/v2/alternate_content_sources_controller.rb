@@ -88,9 +88,6 @@ module Katello
         find_smart_proxies
       end
 
-      # Check for invalid params
-      check_params_for_invalid_updates
-
       if params[:product_ids].nil?
         @products = @alternate_content_source.products
       elsif params[:product_ids] == []
@@ -129,21 +126,6 @@ module Katello
       ]
 
       params.require(:alternate_content_source).permit(*keys).to_h.with_indifferent_access
-    end
-
-    def check_params_for_invalid_updates
-      # Check parameters which cannot be validated at the model level, throwing
-      # errors where neccessary
-
-      # Check that the combination of params[:product_ids] and ACS type is allowed:
-      #            | simplified | custom  | rhui
-      # -----------+------------+---------+---------
-      # nil        | ok         | ok      | ok
-      # []         | ok         | invalid | invalid
-      # [foo, ...] | ok         | invalid | invalid
-      unless @alternate_content_source&.simplified? || params[:product_ids].nil?
-        (fail HttpErrors::UnprocessableEntity, "Products must remain blank for ACS of type #{@alternate_content_source&.alternate_content_source_type}")
-      end
     end
 
     def find_smart_proxies
