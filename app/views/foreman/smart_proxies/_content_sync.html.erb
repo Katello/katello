@@ -19,7 +19,7 @@
   </div>
 
   <br>
-  <div ng-hide="syncStatus.unsyncable_content_types.length == 0">
+  <div ng-hide="syncStatus === undefined || syncStatus.unsyncable_content_types.length == 0">
     <span translate>
       Pulp plugin missing for synchronizable content types: <b>{{ syncStatus.unsyncable_content_types.join(", ") }}.</b><br />
       Repositories containing these content types will not be synced.
