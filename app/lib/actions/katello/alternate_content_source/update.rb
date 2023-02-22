@@ -19,12 +19,14 @@ module Actions
           products_to_associate = []
           products_to_disassociate = []
 
-          products = products.uniq
-          products_to_associate = products - acs.products
-          products_to_disassociate = acs.products - products
-          old_product_ids = acs.products.pluck(:id)
-          acs.products = products
-          acs.audit_updated_products(old_product_ids) unless products_to_associate.empty? && products_to_disassociate.empty?
+          if products.present?
+            products = products.uniq
+            products_to_associate = products - acs.products
+            products_to_disassociate = acs.products - products
+            old_product_ids = acs.products.pluck(:id)
+            acs.products = products
+            acs.audit_updated_products(old_product_ids) unless products_to_associate.empty? && products_to_disassociate.empty?
+          end
 
           acs.save!
 

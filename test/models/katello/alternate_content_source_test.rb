@@ -115,6 +115,24 @@ module Katello
       @simplified_acs.save!
       assert_equal [@yum_acs, @rhui_acs, @simplified_acs].sort, AlternateContentSource.with_type('yum').sort
     end
+
+    def test_update_acs_type
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @simplified_acs.update!(alternate_content_source_type: "custom")
+      end
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @rhui_acs.update!(alternate_content_source_type: "simplified")
+      end
+    end
+
+    def test_update_content_type
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @yum_acs.update!(content_type: "file")
+      end
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @file_acs.update!(content_type: "yum")
+      end
+    end
   end
 
   class AlternateContentSourceSearchTest < ActiveSupport::TestCase

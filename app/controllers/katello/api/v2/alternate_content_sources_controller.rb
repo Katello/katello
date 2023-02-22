@@ -116,9 +116,6 @@ module Katello
     protected
 
     def acs_params
-      # In the past, this method flitered acs keys depending on what type the
-      # acs repo was. This caused silent failures. We're now passing everything
-      # to the model layer to mitigate.
       keys = [
         :name, :label, :description, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type,
         :alternate_content_source_type, :use_http_proxies, :base_url, {subpaths: []}, :upstream_username,
