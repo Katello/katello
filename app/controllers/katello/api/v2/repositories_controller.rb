@@ -666,7 +666,7 @@ module Katello
 
     def handle_mirror_on_sync(repo_params)
       if !repo_params.key?(:mirroring_policy) && repo_params.key?(:mirror_on_sync)
-        ::Foreman::Deprecation.api_deprecation_warning("mirror_on_sync is deprecated in favor of mirroring_policy.  It will be removed in Katello 4.8.")
+        ::Foreman::Deprecation.api_deprecation_warning("mirror_on_sync is deprecated in favor of mirroring_policy.  It will be removed in Katello 4.9.")
         if ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync])
           repo_params[:mirroring_policy] = Katello::RootRepository::MIRRORING_POLICY_CONTENT
         else
