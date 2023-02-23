@@ -19,7 +19,7 @@ module Actions
           products_to_associate = []
           products_to_disassociate = []
 
-          if products.present?
+          if products.present? || acs.products.present?
             products = products.uniq
             products_to_associate = products - acs.products
             products_to_disassociate = acs.products - products
