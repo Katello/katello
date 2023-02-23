@@ -101,10 +101,16 @@
              <td bst-table-cell>{{ erratum.title }}</td>
              <td class="small" bst-table-cell>{{ erratum.issued }}</td>
              <td class="small" bst-table-cell class="number-cell">
-               <a target="_blank" href="{{ '/content_hosts?search=installable_errata%3D' + erratum.errata_id }}">
-                <span> {{ erratum.affected_hosts_count }} </span>
-                 <span class="fa fa-external-link"/>
-               </a>
+              <span ng-switch="newHostDetailsUI">
+                <a ng-switch-when="true" target="_blank" href="{{ '/hosts?search=installable_errata%3D' + erratum.errata_id }}">
+                  {{ erratum.affected_hosts_count }}
+                <span class="fa fa-external-link"/>
+                </a>
+                <a ng-switch-when="false" target="_blank" href="{{ '/content_hosts?search=installable_errata%3D' + erratum.errata_id }}">
+                {{ erratum.affected_hosts_count }}
+                <span class="fa fa-external-link"/>
+              </a>
+              </span>
              </td>
            </tr>
          </tbody>

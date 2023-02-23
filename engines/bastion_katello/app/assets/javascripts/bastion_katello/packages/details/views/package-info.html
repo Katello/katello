@@ -9,7 +9,10 @@
       <dd>
         <i class="fa fa-spinner fa-spin" ng-show="installedPackageCount === undefined"></i>
         <span ng-show="installedPackageCount !== undefined">
-          <a href="{{ encodedUrl('installed_package') }}" translate>
+          <a ng-if="newHostDetailsUI" href="{{ newHostUrl('installed_package') }}" translate>
+            {{ installedPackageCount }} Host(s)
+          </a>
+          <a ng-if="!newHostDetailsUI" href="{{ encodedUrl('installed_package') }}" translate>
             {{ installedPackageCount }} Host(s)
           </a>
         </span>
@@ -17,14 +20,20 @@
 
       <dt translate>Applicable To</dt>
       <dd>
-        <a href="{{ encodedUrl('applicable_rpms') }}" translate>
+        <a ng-if="newHostDetailsUI" href="{{ newHostUrl('applicable_rpms') }}" translate>
+          {{ package.hosts_applicable_count }} Host(s)
+        </a>
+        <a ng-if="!newHostDetailsUI" href="{{ encodedUrl('applicable_rpms') }}" translate>
           {{ package.hosts_applicable_count }} Host(s)
         </a>
       </dd>
 
       <dt translate>Upgradable For</dt>
       <dd>
-        <a href="{{ encodedUrl('upgradable_rpms') }}" translate>
+        <a ng-if="newHostDetailsUI" href="{{ newHostUrl('upgradable_rpms') }}" translate>
+          {{ package.hosts_available_count }} Host(s)
+        </a>
+        <a ng-if="!newHostDetailsUI" href="{{ encodedUrl('upgradable_rpms') }}" translate>
           {{ package.hosts_available_count }} Host(s)
         </a>
       </dd>

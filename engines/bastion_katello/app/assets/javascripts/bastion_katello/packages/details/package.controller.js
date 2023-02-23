@@ -7,13 +7,14 @@
  * @requires Host
  * @requires CurrentOrganization
  * @requires ApiErrorHandler
+ * @requires newHostDetailsUI
  *
  * @description
  *   Provides the functionality for the package page.
  */
 angular.module('Bastion.packages').controller('PackageController',
-    ['$scope', 'Package', 'Host', 'CurrentOrganization', 'ApiErrorHandler',
-    function ($scope, Package, Host, CurrentOrganization, ApiErrorHandler) {
+    ['$scope', 'Package', 'Host', 'CurrentOrganization', 'ApiErrorHandler', 'newHostDetailsUI', 'newHostDetailsUI',
+    function ($scope, Package, Host, CurrentOrganization, ApiErrorHandler, newHostDetailsUI) {
         $scope.panel = {
             error: false,
             loading: true
@@ -24,6 +25,7 @@ angular.module('Bastion.packages').controller('PackageController',
         }
 
         $scope.installedPackageCount = undefined;
+        $scope.newHostDetailsUI = (newHostDetailsUI === 'true');
 
         $scope.fetchHostCount = function() {
             Host.get({'per_page': 0, 'search': $scope.createSearchString('installed_package'), 'organization_id': CurrentOrganization}, function (data) {
@@ -38,6 +40,10 @@ angular.module('Bastion.packages').controller('PackageController',
 
         $scope.encodedUrl = function(field) {
             return '/content_hosts?search=' + encodeURIComponent($scope.createSearchString(field));
+        };
+
+        $scope.newHostUrl = function(field) {
+            return '/hosts?search=' + encodeURIComponent($scope.createSearchString(field));
         };
 
         $scope.package = Package.get({id: $scope.$stateParams.packageId}, function () {

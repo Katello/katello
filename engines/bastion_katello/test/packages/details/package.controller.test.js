@@ -23,7 +23,8 @@ describe('Controller: PackageController', function() {
             $scope: $scope,
             Package: Package,
             Host: Host,
-            CurrentOrganization: currentOrganization
+            CurrentOrganization: currentOrganization,
+            newHostDetailsUI: 'newHostDetailsUI'
         });
     }));
 

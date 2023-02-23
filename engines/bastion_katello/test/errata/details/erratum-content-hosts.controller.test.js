@@ -71,7 +71,8 @@ describe('Controller: ErratumContentHostsController', function() {
             IncrementalUpdate: IncrementalUpdate,
             Environment: Environment,
             ContentHostBulkAction: ContentHostBulkAction,
-            CurrentOrganization: CurrentOrganization                      
+            CurrentOrganization: CurrentOrganization,
+            newHostDetailsUI: 'newHostDetailsUI'
         });
     }));
 

@@ -6,11 +6,12 @@
      *
      * @requires Host
      * @requires CurrentOrganization
+     * @requires newHostDetailsUI
      *
      * @description
      *   Provides the functionality for the debs details action pane.
      */
-    function DebController($scope, Deb, Host, CurrentOrganization, ApiErrorHandler) {
+    function DebController($scope, Deb, Host, CurrentOrganization, ApiErrorHandler, newHostDetailsUI) {
         $scope.panel = {
             error: false,
             loading: true
@@ -21,6 +22,7 @@
         }
 
         $scope.installedPackageCount = undefined;
+        $scope.newHostDetailsUI = (newHostDetailsUI === 'true');
 
         $scope.fetchHostCount = function() {
             Host.get({'per_page': 0, 'search': $scope.createRawSearchString('installed_deb'), 'organization_id': CurrentOrganization}, function (data) {
@@ -49,6 +51,6 @@
         .module('Bastion.debs')
         .controller('DebController', DebController);
 
-    DebController.$inject = ['$scope', 'Deb', 'Host', 'CurrentOrganization', 'ApiErrorHandler'];
+    DebController.$inject = ['$scope', 'Deb', 'Host', 'CurrentOrganization', 'ApiErrorHandler', 'newHostDetailsUI'];
 
 })();

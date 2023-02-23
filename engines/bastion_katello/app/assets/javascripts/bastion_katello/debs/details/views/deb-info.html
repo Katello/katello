@@ -9,7 +9,10 @@
       <dd>
         <i class="fa fa-spinner fa-spin" ng-show="installedDebCount === undefined"></i>
         <span ng-show="installedDebCount !== undefined">
-          <a href="{{ '/content_hosts?search=' + createSearchString('installed_deb') }}" translate>
+          <a ng-if="newHostDetailsUI" href="{{ '/hosts?search=' + createSearchString('installed_deb') }}" translate>
+            {{ installedDebCount }} Host(s)
+          </a>
+          <a ng-if="!newHostDetailsUI" href="{{ '/content_hosts?search=' + createSearchString('installed_deb') }}" translate>
             {{ installedDebCount }} Host(s)
           </a>
         </span>
@@ -17,14 +20,20 @@
 
       <dt translate>Applicable To</dt>
       <dd>
-        <a href="{{ '/content_hosts?search=' + createSearchString('applicable_debs') }}" translate>
+        <a ng-if="newHostDetailsUI" href="{{ '/hosts?search=' + createSearchString('applicable_debs') }}" translate>
+          {{ deb.hosts_applicable_count }} Host(s)
+        </a>
+        <a ng-if="!newHostDetailsUI" href="{{ '/content_hosts?search=' + createSearchString('applicable_debs') }}" translate>
           {{ deb.hosts_applicable_count }} Host(s)
         </a>
       </dd>
 
       <dt translate>Upgradable For</dt>
       <dd>
-        <a href="{{ '/content_hosts?search=' + createSearchString('upgradable_debs') }}" translate>
+        <a ng-if="newHostDetailsUI" href="{{ '/hosts?search=' + createSearchString('upgradable_debs') }}" translate>
+          {{ deb.hosts_available_count }} Host(s)
+        </a>
+        <a ng-if="!newHostDetailsUI" href="{{ '/content_hosts?search=' + createSearchString('upgradable_debs') }}" translate>
           {{ deb.hosts_available_count }} Host(s)
         </a>
       </dd>

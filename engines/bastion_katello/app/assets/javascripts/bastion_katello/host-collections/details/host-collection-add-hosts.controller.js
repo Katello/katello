@@ -10,13 +10,14 @@
  * @requires Host
  * @requires HostCollection
  * @requires Notification
+ * @requires newHostDetailsUI
  *
  * @description
  *   Provides the functionality for the host collection add content hosts pane.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionAddHostsController',
-    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostCollection', 'Notification',
-    function ($scope, $state, $location, translate, Nutupane, CurrentOrganization, Host, HostCollection, Notification) {
+    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostCollection', 'Notification', 'newHostDetailsUI',
+    function ($scope, $state, $location, translate, Nutupane, CurrentOrganization, Host, HostCollection, Notification, newHostDetailsUI) {
         var contentNutupane, params, nutupaneParams;
 
         params = {
@@ -46,6 +47,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddHostsCon
         $scope.table = contentNutupane.table;
         $scope.isAdding = false;
         $scope.table.closeItem = function () {};
+        $scope.newHostDetailsUI = newHostDetailsUI;
 
         $scope.disableAddButton = function () {
             return $scope.table.numSelected === 0 || $scope.isAdding;

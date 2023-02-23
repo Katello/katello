@@ -40,7 +40,8 @@ describe('Controller: ActivationKeyAssociationsController', function() {
             ActivationKey: ActivationKey,
             Host: Host,
             ContentHostsHelper: {},
-            CurrentOrganization: 'ACME'
+            CurrentOrganization: 'ACME',
+            newHostDetailsUI: 'newHostDetailsUI'
         });
     }));
 

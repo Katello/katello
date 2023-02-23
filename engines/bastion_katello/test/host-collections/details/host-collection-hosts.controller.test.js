@@ -33,7 +33,8 @@ describe('Controller: HostCollectionHostsController', function() {
             translate: function(){},
             HostCollection: HostCollection,
             Host: Host,
-            CurrentOrganization: 'CurrentOrganization'
+            CurrentOrganization: 'CurrentOrganization',
+            newHostDetailsUI: 'newHostDetailsUI'
         });
     }));
 
