@@ -117,21 +117,26 @@ module Katello
     end
 
     def test_update_acs_type
-      assert_raises(ActiveRecord::RecordInvalid) do
+      excpetion = assert_raise(ActiveRecord::RecordInvalid) do
         @simplified_acs.update!(alternate_content_source_type: "custom")
       end
-      assert_raises(ActiveRecord::RecordInvalid) do
+      assert_match(/Alternate content source type cannot be modified once an ACS is created/, excpetion.message)
+
+      exception = assert_raises(ActiveRecord::RecordInvalid) do
         @rhui_acs.update!(alternate_content_source_type: "simplified")
       end
+      assert_match(/Alternate content source type cannot be modified once an ACS is created/, excpetion.message)
     end
 
     def test_update_content_type
-      assert_raises(ActiveRecord::RecordInvalid) do
+      exception = assert_raise(ActiveRecord::RecordInvalid) do
         @yum_acs.update!(content_type: "file")
       end
-      assert_raises(ActiveRecord::RecordInvalid) do
+      assert_match(/Content type cannot be modified once an ACS is created/, exception.message)
+      exception = assert_raises(ActiveRecord::RecordInvalid) do
         @file_acs.update!(content_type: "yum")
       end
+      assert_match(/Content type cannot be modified once an ACS is created/, exception.message)
     end
   end
 

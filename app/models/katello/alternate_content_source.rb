@@ -29,7 +29,7 @@ module Katello
              inverse_of: :alternate_content_source
     has_many :smart_proxies, -> { distinct }, through: :smart_proxy_alternate_content_sources
 
-    validates :base_url, :subpaths, :verify_ssl, :upstream_username,
+    validates :base_url, :subpaths, :upstream_username,
               :upstream_password, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key, if: :simplified?, absence: true
     validates :base_url, if: -> { custom? || rhui? }, presence: true
     validates :products, if: -> { custom? || rhui? }, absence: true
@@ -40,7 +40,7 @@ module Katello
       in: [true, false],
       message: "can't be blank"
     }
-    validates :verify_ssl, if: :custom?, exclusion: [nil]
+    validates :verify_ssl, if: :simplified?, inclusion: { in: [nil] }
     validates :alternate_content_source_type, inclusion: {
       in: ->(_) { ACS_TYPES },
       allow_blank: false,
