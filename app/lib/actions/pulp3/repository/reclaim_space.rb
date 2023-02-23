@@ -4,7 +4,7 @@ module Actions
       class ReclaimSpace < Pulp3::AbstractAsyncTask
         def plan(repo, smart_proxy = SmartProxy.pulp_primary)
           action_subject(repo)
-          repository_hrefs = ::Katello::Pulp3::RepositoryReference.default_cv_repository_hrefs([repo], Organization.current || repositories.first.organization)
+          repository_hrefs = ::Katello::Pulp3::RepositoryReference.default_cv_repository_hrefs([repo], repo.organization)
           plan_self(repository_hrefs: repository_hrefs, smart_proxy_id: smart_proxy.id)
         end
 
