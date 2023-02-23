@@ -28,9 +28,10 @@
         <tr bst-table-row ng-repeat="host in table.rows"
             ng-controller="ContentHostStatusController">
           <td bst-table-cell>
-            <a ui-sref="content-host.info({hostId: host.id})">
-              {{ host.name }}
-            </a>
+            <span ng-switch="newHostDetailsUI">
+              <a ng-switch-when="true" ng-href="/new/hosts/{{host.name}}">{{ host.name }}</a>
+              <a ng-switch-when="false" ui-sref="content-host.info({hostId: host.id})">{{ host.name }}</a>
+            </span>
           </td>
           <td bst-table-cell ng-if="!simpleContentAccessEnabled">
             <span ng-class="getHostStatusIcon(host.subscription_global_status)">

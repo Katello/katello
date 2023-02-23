@@ -10,13 +10,14 @@
  * @requires CurrentOrganization
  * @requires Host
  * @requires HostCollection
+ * @requires newHostDetailsUI
  *
  * @description
  *   Provides the functionality for the host collection details action pane.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionHostsController',
-    ['$scope', '$location', 'Notification', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostCollection',
-    function ($scope, $location, Notification, translate, Nutupane, CurrentOrganization, Host, HostCollection) {
+    ['$scope', '$location', 'Notification', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostCollection', 'newHostDetailsUI',
+    function ($scope, $location, Notification, translate, Nutupane, CurrentOrganization, Host, HostCollection, newHostDetailsUI) {
         var params, nutupaneParams;
 
         params = {
@@ -46,6 +47,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionHostsContro
         $scope.table = $scope.contentNutupane.table;
         $scope.table.closeItem = function () {};
         $scope.isRemoving = false;
+        $scope.newHostDetailsUI = newHostDetailsUI;
         $scope.contentNutupane.setSearchKey('contentHostSearch');
         $scope.contentNutupane.refresh();
 

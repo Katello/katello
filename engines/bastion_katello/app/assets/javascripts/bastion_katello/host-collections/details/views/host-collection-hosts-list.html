@@ -39,9 +39,10 @@
                    ng-change="itemSelected(host)"/>
           </td>
           <td bst-table-cell >
-            <a ui-sref="content-host.info({hostId: host.id})">
-              {{ host.name}}
-            </a>
+            <span ng-switch="newHostDetailsUI">
+              <a ng-switch-when="true" ng-href="/new/hosts/{{host.name}}">{{ host.name }}</a>
+              <a ng-switch-when="false" ui-sref="content-host.info({hostId: host.id})">{{ host.name }}</a>
+            </span>
           </td>
           <td bst-table-cell >{{ host.content_facet_attributes.lifecycle_environment.name}}</td>
           <td bst-table-cell >{{ host.content_facet_attributes.content_view.name}}</td>

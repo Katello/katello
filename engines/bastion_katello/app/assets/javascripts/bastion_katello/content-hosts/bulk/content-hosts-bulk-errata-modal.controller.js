@@ -16,13 +16,14 @@
  * @requires Notification
  * @requires BastionConfig
  * @requires hostIds
+ * @requires newHostDetailsUI
  *
  * @description
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalController',
-    ['$scope', '$http', '$location', '$window', '$timeout', '$uibModalInstance', 'HostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum', 'Notification', 'BastionConfig', 'hostIds',
-    function ($scope, $http, $location, $window, $timeout, $uibModalInstance, HostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum, Notification, BastionConfig, hostIds) {
+    ['$scope', '$http', '$location', '$window', '$timeout', '$uibModalInstance', 'HostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum', 'Notification', 'BastionConfig', 'hostIds', 'newHostDetailsUI',
+    function ($scope, $http, $location, $window, $timeout, $uibModalInstance, HostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum, Notification, BastionConfig, hostIds, newHostDetailsUI) {
         function installParams() {
             var params = hostIds;
             params['content_type'] = 'errata';
@@ -58,6 +59,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         $scope.katelloAgentPresent = BastionConfig.katelloAgentPresent;
         $scope.allHostsSelected = hostIds.allResultsSelected;
         $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
+        $scope.newHostDetailsUI = newHostDetailsUI;
 
         $scope.errataActionFormValues = {
             authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, '')

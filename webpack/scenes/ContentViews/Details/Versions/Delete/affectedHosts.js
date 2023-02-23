@@ -67,7 +67,7 @@ const AffectedHosts = ({
         }) => (
           <Tr ouiaId={`${id}`} key={`${id}`}>
             <Td>
-              <a rel="noreferrer" target="_blank" href={urlBuilder(`hosts/${id}`, '')}>{name}</a>
+              <a rel="noreferrer" target="_blank" href={urlBuilder(`new/hosts/${id}`, '')}>{name}</a>
             </Td>
             <Td><EnvironmentLabels environments={environment} /></Td>
           </Tr>

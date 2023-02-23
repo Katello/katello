@@ -9,13 +9,14 @@
  * @requires ActivationKey
  * @requires ContentHostsHelper
  * @requires CurrentOrganization
+ * @requires newHostDetailsUI
  *
  * @description
  *   Provides the functionality for activation key associations.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'ContentHostsHelper', 'CurrentOrganization', 'Host',
-    function ($scope, $location, translate, Nutupane, ActivationKey, ContentHostsHelper, CurrentOrganization, Host) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'ContentHostsHelper', 'CurrentOrganization', 'Host', 'newHostDetailsUI',
+    function ($scope, $location, translate, Nutupane, ActivationKey, ContentHostsHelper, CurrentOrganization, Host, newHostDetailsUI) {
         var contentHostsNutupane, nutupaneParams, params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
@@ -46,6 +47,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsC
 
         $scope.table = contentHostsNutupane.table;
         $scope.table.working = true;
+        $scope.newHostDetailsUI = newHostDetailsUI;
 
         if ($scope.contentHosts) {
             $scope.table.working = false;

@@ -23,7 +23,8 @@ describe('Controller: DebController', function() {
             $scope: $scope,
             Deb: Deb,
             Host: Host,
-            CurrentOrganization: currentOrganization
+            CurrentOrganization: currentOrganization,
+            newHostDetailsUI: 'newHostDetailsUI'
         });
     }));
 

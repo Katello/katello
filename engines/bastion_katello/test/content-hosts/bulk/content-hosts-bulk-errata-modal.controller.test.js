@@ -48,7 +48,8 @@ describe('Controller: ContentHostsBulkErrataModalController', function() {
             HostCollection: HostCollection,
             Nutupane: Nutupane,
             translate: translate,
-            CurrentOrganization: CurrentOrganization
+            CurrentOrganization: CurrentOrganization,
+            newHostDetailsUI: 'newHostDetailsUI'
         });
     }));
 
