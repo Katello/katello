@@ -70,7 +70,6 @@ module Katello
     param_group :acs
     def create
       @alternate_content_source = ::Katello::AlternateContentSource.new(acs_params.except(:smart_proxy_ids, :smart_proxy_names, :product_ids))
-      @alternate_content_source.verify_ssl = nil if @alternate_content_source.simplified?
       sync_task(::Actions::Katello::AlternateContentSource::Create, @alternate_content_source, @smart_proxies, @products)
       @alternate_content_source.reload
       respond_for_create(resource: @alternate_content_source)
@@ -88,7 +87,6 @@ module Katello
       else
         find_smart_proxies
       end
-
       if params[:product_ids].nil?
         @products = @alternate_content_source.products
       elsif params[:product_ids] == []
@@ -96,6 +94,7 @@ module Katello
       else
         find_products
       end
+
       sync_task(::Actions::Katello::AlternateContentSource::Update, @alternate_content_source, @smart_proxies, @products, acs_params.except(:smart_proxy_ids, :smart_proxy_names, :product_ids))
       respond_for_show(:resource => @alternate_content_source)
     end
@@ -117,9 +116,12 @@ module Katello
     protected
 
     def acs_params
-      keys = [:name, :label, :description, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type, :alternate_content_source_type, :use_http_proxies]
-      keys += [:base_url, {subpaths: []}, :upstream_username, :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :verify_ssl] if params[:action] == 'create' || @alternate_content_source&.custom? || @alternate_content_source&.rhui?
-      keys += [{product_ids: []}] if params[:action] == 'create' || @alternate_content_source&.simplified?
+      keys = [
+        :name, :label, :description, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type,
+        :alternate_content_source_type, :use_http_proxies, :base_url, {subpaths: []}, :upstream_username,
+        :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :verify_ssl, {product_ids: []}
+      ]
+
       params.require(:alternate_content_source).permit(*keys).to_h.with_indifferent_access
     end
 

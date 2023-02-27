@@ -7,11 +7,13 @@ module Katello
     def models
       @acs = katello_alternate_content_sources(:yum_alternate_content_source)
       @acs_rhui = katello_alternate_content_sources(:yum_alternate_content_source_rhui)
+      @acs_simplified = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
       @ca = katello_gpg_keys(:fedora_ca)
       @cert = katello_gpg_keys(:fedora_cert)
       @key = katello_gpg_keys(:fedora_key)
       @http_proxy = FactoryBot.create(:http_proxy)
       @smart_proxy = ::SmartProxy.pulp_primary
+      @product = katello_products(:fedora)
 
       @ca.save!
       @cert.save!
@@ -107,6 +109,25 @@ module Katello
       assert_template 'api/v2/common/create'
     end
 
+    def test_create_simplified
+      ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@acs_simplified)
+
+      assert_sync_task(::Actions::Katello::AlternateContentSource::Create) do |acs, smart_proxies|
+        assert_equal acs.attributes.except('id', 'label'), @acs_simplified.attributes.except('id', 'label')
+        assert_equal [@smart_proxy.id], smart_proxies.pluck(:id)
+      end
+
+      post :create, params: {
+        name: @acs_simplified.name,
+        smart_proxy_ids: [@smart_proxy.id],
+        content_type: @acs_simplified.content_type,
+        alternate_content_source_type: @acs_simplified.alternate_content_source_type,
+        product_ids: [@product.id]
+      }
+      assert_response :success
+      assert_template 'api/v2/common/create'
+    end
+
     def test_create_bad_base_url
       @acs.base_url = 'not a path'
       ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@acs)
@@ -171,6 +192,48 @@ module Katello
         upstream_username: @acs_rhui.upstream_username,
         upstream_password: @acs_rhui.upstream_password
       }
+      assert_response :unprocessable_entity
+    end
+
+    def test_create_custom_with_simplified_params
+      ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@acs_simplified)
+
+      post :create, params: {
+        name: @acs.name + "_test_create_custom_with_simplified_params",
+        smart_proxy_ids: [@smart_proxy.id],
+        http_proxy_id: @http_proxy.id,
+        ssl_ca_cert_id: @ca.id,
+        ssl_client_cert_id: @cert.id,
+        ssl_client_key_id: @key.id,
+        content_type: @acs.content_type,
+        base_url: @acs.base_url,
+        subpaths: @acs.subpaths,
+        alternate_content_source_type: @acs.alternate_content_source_type,
+        verify_ssl: @acs.verify_ssl,
+        use_http_proxies: @acs.use_http_proxies,
+        upstream_username: @acs.upstream_username,
+        upstream_password: @acs.upstream_password,
+
+        # illegal param
+        product_ids: [@product.id]
+      }
+      assert_response :unprocessable_entity
+    end
+
+    def test_create_simplified_with_custom_params
+      ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@acs_simplified)
+
+      post :create, params: {
+        name: @acs_simplified.name + "_test_create_simplified_with_custom_params",
+        smart_proxy_ids: [@smart_proxy.id],
+        content_type: @acs_simplified.content_type,
+        alternate_content_source_type: @acs_simplified.alternate_content_source_type,
+        product_ids: [@product.id],
+
+        # illegal param
+        verify_ssl: @acs.verify_ssl
+      }
+
       assert_response :unprocessable_entity
     end
 
@@ -241,6 +304,26 @@ module Katello
         verify_ssl: @acs.verify_ssl,
         upstream_username: @acs.upstream_username,
         upstream_password: @acs.upstream_password
+      }
+      assert_response :unprocessable_entity
+    end
+
+    def test_update_custom_with_simplified_params
+      put :update, params: {
+        id: @acs.id,
+
+        # illegal param
+        product_ids: [@product.id]
+      }
+      assert_response :unprocessable_entity
+    end
+
+    def test_update_simplified_with_custom_params
+      put :update, params: {
+        id: @acs_simplified.id,
+
+        # illegal param
+        verify_ssl: @acs.verify_ssl
       }
       assert_response :unprocessable_entity
     end
