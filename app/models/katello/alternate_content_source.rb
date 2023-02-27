@@ -16,22 +16,12 @@ module Katello
 
     encrypts :upstream_password
 
-    # Validate the ssl_id params.
     belongs_to :ssl_ca_cert, inverse_of: :ssl_ca_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_cert, inverse_of: :ssl_client_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_key, inverse_of: :ssl_key_alternate_content_sources, class_name: "Katello::ContentCredential"
-    # We breakout some validation into a function to allow for us to set
-    # the object name correctly in error messages
+    # We breakout ssl-* validation into a function to allow for us to set
+    # the object name correctly in complex error messages
     validate :validate_ssl_ids
-    validates :ssl_ca_cert, if: -> { ssl_ca_cert_id.present? }, presence: {
-      message: "id is invalid"
-    }
-    validates :ssl_client_cert, if: -> { ssl_client_cert_id.present? }, presence: {
-      message: "id is invalid"
-    }
-    validates :ssl_client_key, if: -> { ssl_client_key_id.present? }, presence: {
-      message: "id is invalid"
-    }
 
     has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :alternate_content_source,
              class_name: "Katello::AlternateContentSourceProduct"
@@ -146,8 +136,9 @@ module Katello
       end
     end
 
-    # Throw errors for non-blank ssl keys if the ACS is simplified
+    # Validate ssl-* ids which require complex/custom error messages
     def validate_ssl_ids
+      # Simplified ACS's should never have ssl-* params populated
       if simplified?
         if changes.keys.include? "ssl_ca_cert_id"
           errors.add(:ssl_ca_cert, "must be blank")
@@ -157,6 +148,18 @@ module Katello
         end
         if changes.keys.include? "ssl_client_key_id"
           errors.add(:ssl_client_key, "must be blank")
+        end
+
+      # Custom and RHUI ACS's should have valid keys where populated
+      else
+        if ssl_ca_cert_id.present? && ssl_ca_cert.nil?
+          errors.add(:ssl_ca_cert, "with ID '#{ssl_ca_cert_id}' couldn't be found")
+        end
+        if ssl_client_cert_id.present? && ssl_client_cert.nil?
+          errors.add(:ssl_client_cert, "with ID '#{ssl_client_cert_id}' couldn't be found")
+        end
+        if ssl_client_key_id.present? && ssl_client_key.nil?
+          errors.add(:ssl_client_key, "with ID '#{ssl_client_key_id}' couldn't be found")
         end
       end
     end
