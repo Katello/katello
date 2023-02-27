@@ -7,7 +7,9 @@ module Actions
         def plan(acs, smart_proxies, products = nil)
           acs.save!
           action_subject(acs)
-          acs.products << products if products.present?
+          if products.present?
+            acs.update!(products: products)
+          end
           smart_proxies = smart_proxies.present? ? smart_proxies.uniq : []
           concurrence do
             smart_proxies.each do |smart_proxy|

@@ -19,7 +19,7 @@ module Actions
           products_to_associate = []
           products_to_disassociate = []
 
-          if acs.simplified?
+          if products.present? || acs.products.present?
             products = products.uniq
             products_to_associate = products - acs.products
             products_to_disassociate = acs.products - products
@@ -27,6 +27,8 @@ module Actions
             acs.products = products
             acs.audit_updated_products(old_product_ids) unless products_to_associate.empty? && products_to_disassociate.empty?
           end
+
+          acs.save!
 
           concurrence do
             create_acss(acs, smart_proxies_to_associate)
