@@ -61,7 +61,7 @@ module Katello
 
     validate :constraint_acs_update, on: :update
 
-    # Validate the ssl_id params. 
+    # Validate the ssl_id params.
     # We breakout some validation into a function to allow for us to set
     # the object name correctly in error messages
     validate :validate_ssl_ids
@@ -150,7 +150,7 @@ module Katello
     # custom     | must be blank | keys required
     # rhui       | must be blank | keys required
     # simplified | must be blank | must be blank
-    # 
+    #
     def validate_ssl_ids
       if simplified? || !verify_ssl
         if changes.keys.include? "ssl_ca_cert_id"
