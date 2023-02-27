@@ -29,13 +29,21 @@ module Katello
              inverse_of: :alternate_content_source
     has_many :smart_proxies, -> { distinct }, through: :smart_proxy_alternate_content_sources
 
-    validates :base_url, :subpaths, :verify_ssl, :upstream_username,
+    validates :base_url, :subpaths, :upstream_username,
               :upstream_password, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key, if: :simplified?, absence: true
     validates :base_url, if: -> { custom? || rhui? }, presence: true
     validates :products, if: -> { custom? || rhui? }, absence: true
     validates :label, :uniqueness => true
     validates :name, :uniqueness => true, presence: true
-    validates :verify_ssl, if: :custom?, exclusion: [nil]
+    # verify ssl must be validated this way due to presence: <bool> failing on a value of false
+    validates :verify_ssl, if: -> { custom? || rhui? }, inclusion: {
+      in: [true, false],
+      message: "can't be blank"
+    }
+    validates :verify_ssl, if: :simplified?, inclusion: {
+      in: [nil],
+      message: "must be blank"
+    }
     validates :alternate_content_source_type, inclusion: {
       in: ->(_) { ACS_TYPES },
       allow_blank: false,
@@ -50,6 +58,8 @@ module Katello
       in: [::Katello::Repository::YUM_TYPE],
       message: "'%{value}' is not valid for RHUI ACS"
     }
+
+    validate :constraint_acs_update, on: :update
     validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
 
     scope :uses_http_proxies, -> { where(use_http_proxies: true) }
@@ -110,8 +120,18 @@ module Katello
       write_audit(action: 'update', comment: _('Products updated.'), audited_changes: { 'product_ids' => [old_product_ids, product_ids] })
     end
 
-    def self.humanize_class_name
+    def self.humanize_class_name(_name = nil)
       "Alternate Content Sources"
+    end
+
+    # Disallow static properties from being modified on update
+    def constraint_acs_update
+      if changes.keys.include? "content_type"
+        errors.add(:content_type, "cannot be modified once an ACS is created")
+      end
+      if changes.keys.include? "alternate_content_source_type"
+        errors.add(:alternate_content_source_type, "cannot be modified once an ACS is created")
+      end
     end
   end
 end
