@@ -60,7 +60,12 @@ module Katello
     }
 
     validate :constraint_acs_update, on: :update
+
+    # Validate the ssl_id params. 
+    # We breakout some validation into a function to allow for us to set
+    # the object name correctly in error messages
     validate :validate_ssl_ids
+    validates :ssl_ca_cert, :ssl_client_cert, :ssl_client_key, if: -> { (custom? && verify_ssl) || (rhui? && verify_ssl) }, presence: true
 
     validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
 
@@ -136,9 +141,18 @@ module Katello
       end
     end
 
-    # Disallow --ssl-* properties from being set for simplified ACS
+    # Throw errors for non-blank ssl keys based on the following valid states:
+    # (presence checks are handled by another validation rule)
+    #
+    #            |       Verify SSL Value
+    #            | false         | true
+    # -----------+---------------+---------------
+    # custom     | must be blank | keys required
+    # rhui       | must be blank | keys required
+    # simplified | must be blank | must be blank
+    # 
     def validate_ssl_ids
-      if simplified?
+      if simplified? || !verify_ssl
         if changes.keys.include? "ssl_ca_cert_id"
           errors.add(:ssl_ca_cert, "must be blank")
         end
