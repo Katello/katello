@@ -40,7 +40,10 @@ module Katello
       in: [true, false],
       message: "can't be blank"
     }
-    validates :verify_ssl, if: :simplified?, inclusion: { in: [nil] }
+    validates :verify_ssl, if: :simplified?, inclusion: {
+      in: [nil],
+      message: "must be blank"
+    }
     validates :alternate_content_source_type, inclusion: {
       in: ->(_) { ACS_TYPES },
       allow_blank: false,
