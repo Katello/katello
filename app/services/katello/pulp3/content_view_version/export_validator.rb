@@ -13,10 +13,26 @@ module Katello
         end
 
         def validate!
+          validate_has_repos!
           validate_repositories_immediate! if @fail_on_missing_content
           validate_incremental_export! if @validate_incremental && !from_content_view_version.blank?
           validate_chunk_size
           validate_export_types! if @fail_on_missing_content
+        end
+
+        def validate_has_repos!
+          repos = repositories(fetch_all: true).where(id: ::Katello::Repository.exportable(format: format))
+          if repos.empty?
+            fail ExportValidationError,
+                 _("NOTE: Content view version '%{content_view} %{current}'"\
+                   " does not have any exportable repositories. At least one repository among"\
+                   " any of the following types"\
+                   " is required to be able to export: '%{exportable_types}'." %
+                   { content_view: content_view_version.content_view.name,
+                     current: content_view_version.version,
+                     exportable_types: ::Katello::Repository.exportable_types(format: format).join("', '")
+                   })
+          end
         end
 
         def validate_chunk_size
