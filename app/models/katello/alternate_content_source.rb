@@ -30,7 +30,6 @@ module Katello
     has_many :smart_proxies, -> { distinct }, through: :smart_proxy_alternate_content_sources
 
     validates :base_url, :subpaths, :upstream_username,
-    validates :base_url, :subpaths, :upstream_username,
               :upstream_password, if: :simplified?, absence: true
     validates :base_url, if: -> { custom? || rhui? }, presence: true
     validates :products, if: -> { custom? || rhui? }, absence: true
