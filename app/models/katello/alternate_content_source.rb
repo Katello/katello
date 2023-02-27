@@ -19,6 +19,9 @@ module Katello
     belongs_to :ssl_ca_cert, inverse_of: :ssl_ca_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_cert, inverse_of: :ssl_client_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_key, inverse_of: :ssl_key_alternate_content_sources, class_name: "Katello::ContentCredential"
+    # We breakout ssl-* validation into a function to allow for us to set
+    # the object name correctly in complex error messages
+    validate :validate_ssl_ids
 
     has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :alternate_content_source,
              class_name: "Katello::AlternateContentSourceProduct"
@@ -30,7 +33,7 @@ module Katello
     has_many :smart_proxies, -> { distinct }, through: :smart_proxy_alternate_content_sources
 
     validates :base_url, :subpaths, :upstream_username,
-              :upstream_password, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key, if: :simplified?, absence: true
+              :upstream_password, if: :simplified?, absence: true
     validates :base_url, if: -> { custom? || rhui? }, presence: true
     validates :products, if: -> { custom? || rhui? }, absence: true
     validates :label, :uniqueness => true
@@ -58,7 +61,6 @@ module Katello
       in: [::Katello::Repository::YUM_TYPE],
       message: "'%{value}' is not valid for RHUI ACS"
     }
-
     validate :constraint_acs_update, on: :update
     validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
 
@@ -131,6 +133,34 @@ module Katello
       end
       if changes.keys.include? "alternate_content_source_type"
         errors.add(:alternate_content_source_type, "cannot be modified once an ACS is created")
+      end
+    end
+
+    # Validate ssl-* ids which require complex/custom error messages
+    def validate_ssl_ids
+      # Simplified ACS's should never have ssl-* params populated
+      if simplified?
+        if changes.keys.include? "ssl_ca_cert_id"
+          errors.add(:ssl_ca_cert, "must be blank")
+        end
+        if changes.keys.include? "ssl_client_cert_id"
+          errors.add(:ssl_client_cert, "must be blank")
+        end
+        if changes.keys.include? "ssl_client_key_id"
+          errors.add(:ssl_client_key, "must be blank")
+        end
+
+      # Custom and RHUI ACS's should have valid keys where populated
+      else
+        if ssl_ca_cert_id.present? && ssl_ca_cert.nil?
+          errors.add(:ssl_ca_cert, "with ID '#{ssl_ca_cert_id}' couldn't be found")
+        end
+        if ssl_client_cert_id.present? && ssl_client_cert.nil?
+          errors.add(:ssl_client_cert, "with ID '#{ssl_client_cert_id}' couldn't be found")
+        end
+        if ssl_client_key_id.present? && ssl_client_key.nil?
+          errors.add(:ssl_client_key, "with ID '#{ssl_client_key_id}' couldn't be found")
+        end
       end
     end
   end
