@@ -16,9 +16,22 @@ module Katello
 
     encrypts :upstream_password
 
+    # Validate the ssl_id params.
     belongs_to :ssl_ca_cert, inverse_of: :ssl_ca_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_cert, inverse_of: :ssl_client_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_key, inverse_of: :ssl_key_alternate_content_sources, class_name: "Katello::ContentCredential"
+    # We breakout some validation into a function to allow for us to set
+    # the object name correctly in error messages
+    validate :validate_ssl_ids
+    validates :ssl_ca_cert, if: -> { ssl_ca_cert_id.present? }, presence: {
+      message: "id is invalid"
+    }
+    validates :ssl_client_cert, if: -> { ssl_client_cert_id.present? }, presence: {
+      message: "id is invalid"
+    }
+    validates :ssl_client_key, if: -> { ssl_client_key_id.present? }, presence: {
+      message: "id is invalid"
+    }
 
     has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :alternate_content_source,
              class_name: "Katello::AlternateContentSourceProduct"
@@ -58,15 +71,7 @@ module Katello
       in: [::Katello::Repository::YUM_TYPE],
       message: "'%{value}' is not valid for RHUI ACS"
     }
-
     validate :constraint_acs_update, on: :update
-
-    # Validate the ssl_id params.
-    # We breakout some validation into a function to allow for us to set
-    # the object name correctly in error messages
-    validate :validate_ssl_ids
-    validates :ssl_ca_cert, :ssl_client_cert, :ssl_client_key, if: -> { (custom? && verify_ssl) || (rhui? && verify_ssl) }, presence: true
-
     validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
 
     scope :uses_http_proxies, -> { where(use_http_proxies: true) }
@@ -141,18 +146,9 @@ module Katello
       end
     end
 
-    # Throw errors for non-blank ssl keys based on the following valid states:
-    # (presence checks are handled by another validation rule)
-    #
-    #            |       Verify SSL Value
-    #            | false         | true
-    # -----------+---------------+---------------
-    # custom     | must be blank | keys required
-    # rhui       | must be blank | keys required
-    # simplified | must be blank | must be blank
-    #
+    # Throw errors for non-blank ssl keys if the ACS is simplified
     def validate_ssl_ids
-      if simplified? || !verify_ssl
+      if simplified?
         if changes.keys.include? "ssl_ca_cert_id"
           errors.add(:ssl_ca_cert, "must be blank")
         end
