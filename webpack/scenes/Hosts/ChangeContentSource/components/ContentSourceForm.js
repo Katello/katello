@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   ActionGroup,
   Alert,
@@ -14,11 +15,13 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
+import { STATUS } from 'foremanReact/constants';
 import api, { orgId } from '../../../../services/api';
 import { ENVIRONMENT_PATHS_KEY } from '../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
 import EnvironmentPaths from '../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPaths';
 import ContentViewSelect from '../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelect';
 import ContentViewSelectOption from '../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelectOption';
+import { selectContentViewsStatus } from '../selectors';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
 
@@ -29,6 +32,7 @@ const ContentSourceSelect = ({
   onSelect,
   isOpen,
   isDisabled,
+  onClear,
 }) => (
   <div className="content_source_section">
     <TextContent>{__('Content source')}</TextContent>
@@ -41,7 +45,9 @@ const ContentSourceSelect = ({
       selections={selections}
       isOpen={isOpen}
       isDisabled={isDisabled}
+      onClear={onClear}
       className="set-select-width"
+      placeholderText={__('Select a source')}
     >
       {contentSources.map(cs => (
         <SelectOption
@@ -60,6 +66,7 @@ ContentSourceSelect.propTypes = {
   selections: PropTypes.string,
   onToggle: PropTypes.func,
   onSelect: PropTypes.func,
+  onClear: PropTypes.func,
   isOpen: PropTypes.bool,
   isDisabled: PropTypes.bool,
 };
@@ -69,6 +76,7 @@ ContentSourceSelect.defaultProps = {
   selections: null,
   onToggle: undefined,
   onSelect: undefined,
+  onClear: undefined,
   isOpen: false,
   isDisabled: false,
 };
@@ -79,7 +87,7 @@ const ContentSourceForm = ({
   handleEnvironment,
   contentViews,
   handleContentView,
-  contentViewId,
+  contentViewName,
   contentSources,
   handleContentSource,
   contentSourceId,
@@ -92,7 +100,7 @@ const ContentSourceForm = ({
     api.getApiUrl(`/organizations/${orgId()}/environments/paths?permission_type=promotable`),
     ENV_PATH_OPTIONS,
   );
-
+  const contentViewsStatus = useSelector(selectContentViewsStatus);
   const [csSelectOpen, setCSSelectOpen] = useState(false);
   const [cvSelectOpen, setCVSelectOpen] = useState(false);
 
@@ -107,7 +115,7 @@ const ContentSourceForm = ({
   };
 
   const formIsValid = () => (!!environments &&
-    !!contentViewId &&
+    !!contentViewName &&
     !!contentSourceId &&
     contentHosts.length !== 0);
 
@@ -135,53 +143,64 @@ const ContentSourceForm = ({
           />
         </GridItem>
         )}
-        <ContentSourceSelect
-          contentSources={contentSources}
-          selections={contentSourceId}
-          onToggle={isExpanded => setCSSelectOpen(isExpanded)}
-          onSelect={handleCSSelect}
-          onClear={() => handleContentSource(null)}
-          isOpen={csSelectOpen}
-          isDisabled={contentSourcesIsDisabled}
-        />
-        <EnvironmentPaths
-          userCheckedItems={environments}
-          setUserCheckedItems={handleEnvironment}
-          publishing={false}
-          multiSelect={false}
-          headerText={__('Environment')}
-          isDisabled={environmentIsDisabled}
-        />
-        {environments.length > 0 &&
+        {contentViewsStatus === STATUS.RESOLVED &&
+            !!environments.length && contentViews.length === 0 &&
+            <Alert
+              variant="warning"
+              className="margin-top-20"
+              title={__('No content views available for the selected environment')}
+              style={{ marginBottom: '1rem' }}
+            >
+              <a href="/content_views">{__('View the Content Views page')}</a>
+              {__(' to manage and promote content views, or select a different environment.')}
+            </Alert>
+        }
+      </Grid>
+      <ContentSourceSelect
+        contentSources={contentSources}
+        selections={contentSourceId}
+        onToggle={isExpanded => setCSSelectOpen(isExpanded)}
+        onSelect={handleCSSelect}
+        onClear={() => handleContentSource(null)}
+        isOpen={csSelectOpen}
+        isDisabled={contentSourcesIsDisabled || hostsUpdated}
+      />
+      <EnvironmentPaths
+        style={{ display: 'block' }}
+        userCheckedItems={environments}
+        setUserCheckedItems={handleEnvironment}
+        publishing={false}
+        multiSelect={false}
+        headerText={__('Environment')}
+        isDisabled={environmentIsDisabled || hostsUpdated}
+      />
+      {environments.length > 0 && contentViewsStatus !== STATUS.PENDING &&
         <ContentViewSelect
-          selections={contentViewId}
+          selections={contentViewName}
           onClear={() => handleContentView(null)}
           onSelect={handleCVSelect}
           isOpen={cvSelectOpen}
-          isDisabled={viewIsDisabled}
+          isDisabled={viewIsDisabled || hostsUpdated}
           onToggle={isExpanded => setCVSelectOpen(isExpanded)}
-          headerText={(contentViews.length === 0) ? __('No content views available') : __('Content view')}
+          headerText={__('Content view')}
           ouiaId="SelectContentView"
           className="set-select-width"
+          placeholderText={(contentViews.length === 0) ? __('No content views available') : __('Select a content view')}
         >
-          {contentViews?.map(cv => ContentViewSelectOption(cv, environments[0]))}
+          {contentViews?.map(cv => <ContentViewSelectOption key={`${cv.id}`} cv={cv} env={environments[0]} />)}
         </ContentViewSelect>
         }
-
-        <GridItem>
-          <ActionGroup>
-            <Button
-              variant="primary"
-              id="generate_btn"
-              onClick={e => handleSubmit(e)}
-              isDisabled={isLoading || !formIsValid() || hostsUpdated}
-              isLoading={isLoading}
-            >
-              {__('Update')}
-            </Button>
-          </ActionGroup>
-        </GridItem>
-      </Grid>
+      <ActionGroup style={{ display: 'block' }}>
+        <Button
+          variant="primary"
+          id="generate_btn"
+          onClick={e => handleSubmit(e)}
+          isDisabled={isLoading || !formIsValid() || hostsUpdated}
+          isLoading={isLoading}
+        >
+          {__('Update')}
+        </Button>
+      </ActionGroup>
     </Form>);
 };
 
@@ -191,7 +210,7 @@ ContentSourceForm.propTypes = {
   handleEnvironment: PropTypes.func.isRequired,
   contentViews: PropTypes.arrayOf(PropTypes.shape({})),
   handleContentView: PropTypes.func.isRequired,
-  contentViewId: PropTypes.string,
+  contentViewName: PropTypes.string,
   contentSources: PropTypes.arrayOf(PropTypes.shape({})),
   handleContentSource: PropTypes.func.isRequired,
   contentSourceId: PropTypes.string,
@@ -203,7 +222,7 @@ ContentSourceForm.propTypes = {
 ContentSourceForm.defaultProps = {
   environments: [],
   contentViews: [],
-  contentViewId: '',
+  contentViewName: '',
   contentSources: [],
   contentSourceId: '',
   contentHosts: [],
