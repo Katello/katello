@@ -12,7 +12,7 @@ module Katello
       if product_provider.redhat_provider?
         false
       else
-        Rails.logger.warn "Found orphaned object with id #{cp_id} in Candlepin. Skipping import into Katello; run rake katello:delete_orphaned_custom_products to remove it from Candlepin."
+        Rails.logger.warn "Found orphaned object with id #{cp_id} in Candlepin. Skipping import into Katello; run rake katello:clean_candlepin_orphaned_products to remove it from Candlepin."
         true
       end
     end
