@@ -3,6 +3,7 @@ import {
   selectAPIResponse,
   selectAPIError,
 } from 'foremanReact/redux/API/APISelectors';
+import { STATUS } from 'foremanReact/constants';
 
 import { CHANGE_CONTENT_SOURCE_DATA, CHANGE_CONTENT_SOURCE_PROXY, CHANGE_CONTENT_SOURCE, CHANGE_CONTENT_SOURCE_VIEWS } from './constants';
 
@@ -36,6 +37,9 @@ export const selectJobInvocationPath = state =>
 
 export const selectContentViews = state =>
   selectAPIResponse(state, CHANGE_CONTENT_SOURCE_VIEWS).results || [];
+
+export const selectContentViewsStatus = state =>
+  selectAPIStatus(state, CHANGE_CONTENT_SOURCE_VIEWS) || STATUS.PENDING;
 
 export const selectTemplate = state =>
   selectAPIResponse(state, CHANGE_CONTENT_SOURCE) || '';

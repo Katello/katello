@@ -52,8 +52,9 @@ const ChangeContentSourcePage = () => {
 
   const [contentSourceId, setCapsuleId] = useState('');
   const [selectedEnvironment, setSelectedEnvironment] = useState([]);
-  const [contentViewId, setContentViewId] = useState('');
+  const [contentViewName, setContentViewName] = useState('');
 
+  const contentViewId = contentViews?.find(cv => cv.name === contentViewName)?.id;
   const noHostSpecified = getHostIds(urlParams.host_id).length === 0 && urlParams.searchParam === '';
   const environmentId = selectedEnvironment[0]?.id;
 
@@ -72,7 +73,7 @@ const ChangeContentSourcePage = () => {
   const handleContentSource = (id) => {
     setCapsuleId(id);
     setSelectedEnvironment([]);
-    setContentViewId('');
+    setContentViewName('');
 
     if (id) {
       dispatch(getProxy(id));
@@ -94,7 +95,7 @@ const ChangeContentSourcePage = () => {
 
   const handleEnvironment = (selection) => {
     setSelectedEnvironment(selection);
-    setContentViewId('');
+    setContentViewName('');
 
     if (selection[0].id) {
       dispatch(getContentViews(selection[0].id));
@@ -148,8 +149,8 @@ const ChangeContentSourcePage = () => {
               handleEnvironment={handleEnvironment}
               environments={selectedEnvironment}
               contentViews={contentViews}
-              handleContentView={setContentViewId}
-              contentViewId={contentViewId}
+              handleContentView={setContentViewName}
+              contentViewName={contentViewName}
               contentSources={contentSources}
               contentSourceId={contentSourceId}
               handleContentSource={handleContentSource}
