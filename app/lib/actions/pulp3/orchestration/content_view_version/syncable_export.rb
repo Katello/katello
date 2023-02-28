@@ -29,7 +29,6 @@ module Actions
                   from_content_view_version: from_content_view_version,
                   format: format,
                   destination_server: destination_server)
-              export_service.validate!(fail_on_missing_content: fail_on_missing_content)
               base_path = export_service.generate_exporter_path
               export_service.repositories.each do |repository|
                 action_output = plan_action(::Actions::Pulp3::ContentViewVersion::CreateExporter,

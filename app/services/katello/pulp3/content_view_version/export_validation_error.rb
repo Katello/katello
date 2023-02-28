@@ -1,7 +1,7 @@
 module Katello
   module Pulp3
     module ContentViewVersion
-      class ExportValidationError < HttpErrors::BadRequest; end
+      class ExportValidationError < StandardError; end
     end
   end
 end

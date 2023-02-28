@@ -25,7 +25,7 @@ module Katello
           if repos.empty?
             fail ExportValidationError,
                  _("NOTE: Content view version '%{content_view} %{current}'"\
-                   " does not have any exportable repositories. At least one repository among"\
+                   " does not have any exportable repositories. At least one repository with"\
                    " any of the following types"\
                    " is required to be able to export: '%{exportable_types}'." %
                    { content_view: content_view_version.content_view.name,

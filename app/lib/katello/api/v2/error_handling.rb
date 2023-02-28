@@ -21,6 +21,7 @@ module Katello
           rescue_from Errors::UnsupportedActionException, :with => :rescue_from_unsupported_action_exception
           rescue_from Errors::MaxHostsReachedException, :with => :rescue_from_max_hosts_reached_exception
           rescue_from Errors::CdnSubstitutionError, :with => :rescue_from_bad_data
+          rescue_from Katello::Pulp3::ContentViewVersion::ExportValidationError, :with => :rescue_from_export_validation_error
           rescue_from Errors::RegistrationError, :with => :rescue_from_bad_data
           rescue_from ActionController::ParameterMissing, :with => :rescue_from_missing_param
           rescue_from ::ForemanTasks::Lock::LockConflict, :with => :rescue_from_bad_data
@@ -85,6 +86,10 @@ module Katello
           respond_for_exception(exception, :status => :conflict, :with_logging => false)
         end
 
+        def rescue_from_export_validation_error(exception)
+          respond_for_exception(exception, :force_json => true, :status => :unprocessable_entity)
+        end
+
         def rescue_from_conflict_exception(exception)
           respond_for_exception(exception, :status => :conflict)
         end
@@ -122,11 +127,16 @@ module Katello
           options[:errors] = exception.try(:record).try(:errors) || [exception.message]
 
           logger.error pp_exception(exception) if options[:with_logging]
-
           respond_to do |format|
             #json has to be displayMessage for older RHEL 5.7 subscription managers
             format.json { render :json => { :displayMessage => options[:display_message], :errors => options[:errors]}, :status => options[:status] }
-            format.all { render :plain => options[:text], :status => options[:status] }
+            format.all do
+              if options[:force_json]
+                render :json => { :displayMessage => options[:display_message], :errors => options[:errors]}, :status => options[:status]
+              else
+                render :plain => options[:text], :status => options[:status]
+              end
+            end
           end
         end
 

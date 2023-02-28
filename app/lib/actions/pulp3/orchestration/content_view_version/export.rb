@@ -17,12 +17,23 @@ module Actions
             param :exported_file_checksum, Hash
             param :export_path, String
           end
+
           def plan(content_view_version:, destination_server: nil,
                    chunk_size: nil, from_history: nil,
                    validate_incremental: true,
                    fail_on_missing_content: false,
                    format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
             smart_proxy = SmartProxy.pulp_primary!
+            from_content_view_version = from_history&.content_view_version
+            export_service = ::Katello::Pulp3::ContentViewVersion::Export.create(
+                smart_proxy: smart_proxy,
+                content_view_version: content_view_version,
+                destination_server: destination_server,
+                from_content_view_version: from_content_view_version,
+                format: format)
+            export_service.validate!(fail_on_missing_content: fail_on_missing_content,
+                                     validate_incremental: validate_incremental,
+                                     chunk_size: chunk_size)
 
             if format == ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
               sequence do
@@ -38,17 +49,6 @@ module Actions
             end
 
             sequence do
-              from_content_view_version = from_history&.content_view_version
-              export_service = ::Katello::Pulp3::ContentViewVersion::Export.create(
-                  smart_proxy: smart_proxy,
-                  content_view_version: content_view_version,
-                  destination_server: destination_server,
-                  from_content_view_version: from_content_view_version,
-                  format: format)
-              export_service.validate!(fail_on_missing_content: fail_on_missing_content,
-                                       validate_incremental: validate_incremental,
-                                       chunk_size: chunk_size)
-
               action_output = plan_action(::Actions::Pulp3::ContentViewVersion::CreateExporter,
                                           content_view_version_id: content_view_version.id,
                                           smart_proxy_id: smart_proxy.id,
