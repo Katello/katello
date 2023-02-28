@@ -1,23 +1,15 @@
 import React from 'react';
-import { Flex, SelectOption } from '@patternfly/react-core';
-import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
+import { Flex, SelectOption } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
+import { translate as __ } from 'foremanReact/common/I18n';
 import {
   global_palette_black_600 as pfDescriptionColor,
 } from '@patternfly/react-tokens';
-import { uniq } from '../../../../utils/helpers';
 import ContentViewIcon from '../../../../scenes/ContentViews/components/ContentViewIcon';
+import { uniq } from '../../../../utils/helpers';
 
-const relevantVersionObjFromCv = (cv, env) => { // returns the entire version object
-  const versions = cv.versions.filter(version => new Set(version.environment_ids).has(env.id));
-  return uniq(versions)?.[0];
-};
-
-const relevantVersionFromCv = (cv, env) =>
-  relevantVersionObjFromCv(cv, env)?.version; // returns the version text e.g. "1.0"
-
-const ContentViewDescription = ({ cv, versionNumber }) => {
+export const ContentViewDescription = ({ cv, versionNumber }) => {
   const descriptionStyle = {
     fontSize: '12px',
     fontWeight: 400,
@@ -44,10 +36,18 @@ ContentViewDescription.propTypes = {
   versionNumber: PropTypes.string.isRequired,
 };
 
-const ContentViewSelectOption = (cv, env) => (
+export const relevantVersionObjFromCv = (cv, env) => { // returns the entire version object
+  const versions = cv.versions.filter(version => new Set(version.environment_ids).has(env.id));
+  return uniq(versions)?.[0];
+};
+
+export const relevantVersionFromCv = (cv, env) =>
+    relevantVersionObjFromCv(cv, env)?.version; // returns the version text e.g. "1.0"
+
+const ContentViewSelectOption = ({ cv, env }) => (
   <SelectOption
     key={cv.id}
-    value={`${cv.id}`}
+    value={`${cv.name}`}
   >
     <Flex
       direction={{ default: 'row', sm: 'row' }}
@@ -72,5 +72,16 @@ const ContentViewSelectOption = (cv, env) => (
     </Flex>
   </SelectOption>
 );
+
+ContentViewSelectOption.propTypes = {
+  cv: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    composite: PropTypes.bool.isRequired,
+  }).isRequired,
+  env: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export default ContentViewSelectOption;

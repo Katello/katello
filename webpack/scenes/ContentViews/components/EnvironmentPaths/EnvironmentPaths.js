@@ -47,7 +47,7 @@ const EnvironmentPaths = ({
           return (
             <div className="env-path" key={index}>
               {index === 0 && <hr />}
-              <FormGroup key={`fg-${index}`} isInline fieldId="environment-checkbox-group">
+              <FormGroup key={`fg-${index}`} isInline fieldId="environment-checkbox-group" style={{ display: 'block' }}>
                 {environments.map(env =>
                   (<CheckboxOrRadio
                     isChecked={(publishing && env.library) ||
