@@ -175,6 +175,14 @@ module Katello
             assert_match(/Specify an export chunk size less than 1_000_000 GB/, exception.message)
           end
 
+          it "fails on validate! if content view has no repos" do
+            export = setup_environment(version: :library_no_filter_view_version_1)
+            exception = assert_raises(::Katello::Pulp3::ContentViewVersion::ExportValidationError) do
+              export.validate!(fail_on_missing_content: false, validate_incremental: false, chunk_size: 1e6)
+            end
+            assert_match(/does not have any exportable repositories/, exception.message)
+          end
+
           it "Picks the right repos for syncable" do
             proxy = SmartProxy.pulp_primary
             SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
