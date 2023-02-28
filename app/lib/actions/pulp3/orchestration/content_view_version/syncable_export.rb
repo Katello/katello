@@ -18,7 +18,6 @@ module Actions
 
           def plan(content_view_version:,
                    smart_proxy:,
-                   fail_on_missing_content: false,
                    destination_server:,
                    from_content_view_version:)
             format = ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
