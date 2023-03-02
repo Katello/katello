@@ -7,7 +7,7 @@ module Katello
       generic_repo_wrap_params << option.name
     end
 
-    repo_wrap_params = RootRepository.attribute_names + [:mirror_on_sync] + generic_repo_wrap_params
+    repo_wrap_params = RootRepository.attribute_names + generic_repo_wrap_params
 
     wrap_parameters :repository, :include => repo_wrap_params
 
@@ -55,7 +55,6 @@ module Katello
       param :exclude_tags, Array, :desc => N_("Comma-separated list of tags to exclude when syncing a container image repository. Default: any tag ending in \"-source\"")
       param :download_policy, ["immediate", "on_demand"], :desc => N_("download policy for yum, deb, and docker repos (either 'immediate' or 'on_demand')")
       param :download_concurrency, :number, :desc => N_("Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10")
-      param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed (Deprecated)")
       param :mirroring_policy, Katello::RootRepository::MIRRORING_POLICIES, :desc => N_("Policy to set for mirroring content.  Must be one of %s.") % RootRepository::MIRRORING_POLICIES
       param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA")
       param :upstream_username, String, :desc => N_("Username of the upstream repository user used for authentication")
@@ -580,7 +579,7 @@ module Katello
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def repository_params
-      keys = [:download_policy, :mirror_on_sync, :mirroring_policy, :sync_policy, :arch, :verify_ssl_on_sync, :upstream_password,
+      keys = [:download_policy, :mirroring_policy, :sync_policy, :arch, :verify_ssl_on_sync, :upstream_password,
               :upstream_username, :download_concurrency, :upstream_authentication_token,
               {:os_versions => []}, :deb_releases, :deb_components, :deb_architectures, :description,
               :http_proxy_policy, :http_proxy_id, :retain_package_versions_count, {:ignorable_content => []}
@@ -604,8 +603,7 @@ module Katello
         keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :unprotected, :name,
                  :checksum_type]
       end
-      to_return = params.require(:repository).permit(*keys).to_h.with_indifferent_access
-      handle_mirror_on_sync(to_return)
+      params.require(:repository).permit(*keys).to_h.with_indifferent_access
     end
 
     def get_content_credential(repo_params, content_type)
@@ -663,19 +661,6 @@ module Katello
       root
     end
     # rubocop:enable Metrics/CyclomaticComplexity,Metrics/MethodLength
-
-    def handle_mirror_on_sync(repo_params)
-      if !repo_params.key?(:mirroring_policy) && repo_params.key?(:mirror_on_sync)
-        ::Foreman::Deprecation.api_deprecation_warning("mirror_on_sync is deprecated in favor of mirroring_policy.  It will be removed in Katello 4.9.")
-        if ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync])
-          repo_params[:mirroring_policy] = Katello::RootRepository::MIRRORING_POLICY_CONTENT
-        else
-          repo_params[:mirroring_policy] = Katello::RootRepository::MIRRORING_POLICY_ADDITIVE
-        end
-      end
-      repo_params.delete(:mirror_on_sync)
-      repo_params
-    end
 
     def error_on_rh_product
       fail HttpErrors::BadRequest, _("Red Hat products cannot be manipulated.") if @product.redhat?
