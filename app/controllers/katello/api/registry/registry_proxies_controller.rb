@@ -161,25 +161,9 @@ module Katello
       end
 
       if (manifest_response = redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers) })
-        #for some requests, we get a redirect, but for others we get the actual manifest in response
-        results = JSON.parse(manifest_response)
         response.header['Docker-Content-Digest'] = manifest_response.headers[:docker_content_digest]
-        # https://docs.docker.com/registry/spec/manifest-v2-2/
-        # If its v2 schema 2 only the mediaType attribute will be present in the manifest
-        media_type = results['mediaType']
-        if media_type.blank?
-          # so mediaType is not schema2 v2 only set the mediaType based on
-          # https://docs.docker.com/registry/spec/manifest-v2-1/
-          media_type = if results["signatures"].blank?
-                         'application/vnd.docker.distribution.manifest.v1+json'
-                       else
-                         'application/vnd.docker.distribution.manifest.v1+prettyjws'
-                       end
-        end
-        response.headers['Content-Type'] = media_type
-        length = manifest_response.try(:body).try(:size)
-        length ||= 0
-        response.header['Content-Length'] = "#{length}"
+        response.headers['Content-Type'] = manifest_response.headers[:content_type]
+        response.header['Content-Length'] = manifest_response.headers[:content_length]
         render json: manifest_response
       end
     end
