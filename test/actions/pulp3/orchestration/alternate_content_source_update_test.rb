@@ -85,24 +85,9 @@ module ::Actions::Pulp3
       assert_equal [''], pulp_acs.paths
     end
 
-    # Test that all ACS types update their http_proxy information correctly when use_http_proxies flag is toggled
-    def test_http_proxy_url_update
+    def test_http_proxy_url_update_file_acs
       proxy = FactoryBot.create(:http_proxy)
       proxy.update!(url: "https://test_url", username: "foo", password: "bar")
-
-      # We stub this function so that simplified ACS remote options don't query candlepin
-      ::Katello::Pulp3::Repository::Yum.any_instance.stubs(:remote_options).returns(
-        remote_options = {
-          tls_validation: @rhui_acs.verify_ssl,
-          name: "test_name",
-          url: @rhui_acs.base_url,
-          policy: 'on_demand',
-          proxy_url: "https://bad_url",
-          proxy_username: "bad_username",
-          proxy_password: "bad_password",
-          total_timeout: 8675309
-        }
-      )
 
       @file_acs.update!(use_http_proxies: true)
       ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @file_acs.id, smart_proxy_id: @primary.id)
@@ -117,6 +102,11 @@ module ::Actions::Pulp3
       assert_nil remote_options[:proxy_url]
       assert_nil remote_options[:proxy_username]
       assert_nil remote_options[:proxy_password]
+    end
+
+    def test_http_proxy_url_update_rhui_acs
+      proxy = FactoryBot.create(:http_proxy)
+      proxy.update!(url: "https://test_url", username: "foo", password: "bar")
 
       @rhui_acs.update!(use_http_proxies: true)
       ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @rhui_acs.id, smart_proxy_id: @primary.id)
@@ -131,6 +121,25 @@ module ::Actions::Pulp3
       assert_nil remote_options[:proxy_url]
       assert_nil remote_options[:proxy_username]
       assert_nil remote_options[:proxy_password]
+    end
+
+    def test_http_proxy_url_update_simplified_acs
+      proxy = FactoryBot.create(:http_proxy)
+      proxy.update!(url: "https://test_url", username: "foo", password: "bar")
+
+      # We stub this function so that simplified ACS remote options don't query candlepin
+      ::Katello::Pulp3::Repository::Yum.any_instance.stubs(:remote_options).returns(
+        {
+          tls_validation: @rhui_acs.verify_ssl,
+          name: "test_name",
+          url: @rhui_acs.base_url,
+          policy: 'on_demand',
+          proxy_url: "https://bad_url",
+          proxy_username: "bad_username",
+          proxy_password: "bad_password",
+          total_timeout: 42
+        }
+      )
 
       @simplified_acs.update!(use_http_proxies: true)
       ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @simplified_acs.id, smart_proxy_id: @primary.id, repository_id: @repository.id) # has repo
