@@ -10,11 +10,13 @@ module Katello
     end
 
     def self.with_latest(packages, host)
-      upgradable_packages_map = ::Katello::Rpm.installable_for_hosts([host]).select(:id, :name, :nvra, :evr).order(evr: :desc).all.group_by(&:name)
-      installed_packages_map = ::Katello::Rpm.where(nvra: packages.map(&:nvra)).select(:id, :name).group_by(&:name)
+      upgradable_packages_map = ::Katello::Rpm.installable_for_hosts([host]).select(:id, :name, :arch, :nvra, :evr).order(evr: :desc).group_by { |i| [i.name, i.arch] }
+      installed_packages_map = ::Katello::Rpm.where(nvra: packages.map(&:nvra)).select(:id, :arch, :name).group_by { |i| [i.name, i.arch] }
 
       packages.map do |p|
-        HostPackagePresenter.new(p, upgradable_packages_map[p.name]&.pluck(:nvra), installed_packages_map[p.name]&.first&.id)
+        upgrades = upgradable_packages_map[[p.name, p.arch]]&.pluck(:nvra)
+        installed = installed_packages_map[[p.name, p.arch]]&.first&.id
+        HostPackagePresenter.new(p, upgrades, installed)
       end
     end
   end

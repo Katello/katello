@@ -438,16 +438,16 @@ module Katello
         when 'update'
           return [] if search.empty?
 
-          versions_by_name = {}
+          versions_by_name_arch = {}
           if versions.present?
             JSON.parse(versions).each do |nvra|
-              nvra =~ /([^.]*)-\d+\.[-.\w]*/
-              versions_by_name[Regexp.last_match(1)] = nvra
+              nvra =~ /([^\.]*)-[-\.\w]*\.(\w+)/
+              versions_by_name_arch[[Regexp.last_match(1), Regexp.last_match(2)]] = nvra
             end
           end
-          pkg_names = installed_packages.search_for(search).distinct.pluck(:name)
-          upgrades = ::Katello::Rpm.installable_for_hosts([self]).select(:id, :name, :nvra, :evr).order(evr: :desc).group_by(&:name)
-          pkg_names.map { |p| versions_by_name[p] || upgrades[p]&.first&.nvra }.compact
+          pkg_name_archs = installed_packages.search_for(search).distinct.pluck(:name, :arch)
+          upgrades = ::Katello::Rpm.installable_for_hosts([self]).select(:id, :name, :arch, :nvra, :evr).order(evr: :desc).group_by { |i| [i.name, i.arch] }
+          pkg_name_archs.map { |name, arch| versions_by_name_arch[[name, arch]] || upgrades[[name, arch]]&.first&.nvra }.compact
         else
           fail ::Foreman::Exception.new(N_("package_names_for_job_template: Action must be one of %s"), actions.join(', '))
         end
