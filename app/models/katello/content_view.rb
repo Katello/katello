@@ -101,7 +101,7 @@ module Katello
                                    :library_export_syncable,
                                    :repository_export_syncable])
     }
-    scope :generated_for_library, -> { where(:generated_for => [:library_export, :library_import]) }
+    scope :generated_for_library, -> { where(:generated_for => [:library_export, :library_import, :library_export_syncable]) }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
@@ -157,11 +157,11 @@ module Katello
     end
 
     def generated_for_repository?
-      generated_for_repository_export? || generated_for_repository_import?
+      generated_for_repository_export? || generated_for_repository_import? || generated_for_repository_export_syncable?
     end
 
     def generated_for_library?
-      generated_for_library_export? || generated_for_library_import?
+      generated_for_library_export? || generated_for_library_import? || generated_for_library_export_syncable?
     end
 
     def content_host_count
