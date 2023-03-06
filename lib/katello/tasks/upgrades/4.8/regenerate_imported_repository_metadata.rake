@@ -23,7 +23,7 @@ namespace :katello do
                                          ::Actions::Katello::Repository::MetadataGenerate,
                                          repos,
                                          force_publication: true)
-          puts "Refreshing #{repo_ids.count} repositories.  You can monitor these on task id #{task.id}\n"
+          puts "Refreshing #{repos.count} repositories. You can monitor these on task id #{task.id}\n"
         else
           puts "No repositories found for regeneration."
         end
