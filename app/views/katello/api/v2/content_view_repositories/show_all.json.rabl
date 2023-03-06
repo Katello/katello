@@ -6,3 +6,9 @@ child @collection[:results] => :results do
   extends 'katello/api/v2/repositories/base'
   node(:added_to_content_view) { |repo| repo.in_content_view?(@content_view) }
 end
+
+if @organization
+  node :org_repository_count do
+    @organization.repositories.count
+  end
+end
