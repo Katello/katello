@@ -31,7 +31,7 @@ import { hasRequiredPermissions, hostIsNotRegistered } from '../../hostDetailsHe
 
 const SystemPurposeCard = ({ hostDetails }) => {
   const showEditButton = hasRequiredPermissions(['edit_hosts'], hostDetails?.permissions);
-  const orgId = hostDetails.organization_id;
+  const { organization_id: orgId, name: hostName } = hostDetails;
   const subscriptionFacetAttributes = hostDetails?.subscription_facet_attributes;
   const {
     purposeRole, purposeUsage, purposeAddons, releaseVersion, serviceLevel,
@@ -137,10 +137,11 @@ const SystemPurposeCard = ({ hostDetails }) => {
           </DescriptionList>
           {showEditButton && (
             <SystemPurposeEditModal
+              key={hostName}
               isOpen={editing}
               orgId={orgId}
               closeModal={() => setEditing(false)}
-              hostName={hostDetails.name}
+              hostName={hostName}
               hostId={hostDetails.id}
               {...sysPurposeProps}
             />
