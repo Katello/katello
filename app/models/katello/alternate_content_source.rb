@@ -35,7 +35,9 @@ module Katello
     validates :base_url, :subpaths, :upstream_username,
               :upstream_password, if: :simplified?, absence: true
     validates :base_url, if: -> { custom? || rhui? }, presence: true
-    validates :products, if: -> { custom? || rhui? }, absence: true
+    validates :products, if: -> { custom? || rhui? }, absence: {
+      message: "should not be set for any custom or rhui ACS"
+    }
     validates :label, :uniqueness => true
     validates :name, :uniqueness => true, presence: true
     # verify ssl must be validated this way due to presence: <bool> failing on a value of false
@@ -141,13 +143,13 @@ module Katello
       # Simplified ACS's should never have ssl-* params populated
       if simplified?
         if changes.keys.include? "ssl_ca_cert_id"
-          errors.add(:ssl_ca_cert, "must be blank")
+          errors.add(:ssl_ca_cert, "cannot be set for simplified ACS")
         end
         if changes.keys.include? "ssl_client_cert_id"
-          errors.add(:ssl_client_cert, "must be blank")
+          errors.add(:ssl_client_cert, "cannot be set for simplified ACS")
         end
         if changes.keys.include? "ssl_client_key_id"
-          errors.add(:ssl_client_key, "must be blank")
+          errors.add(:ssl_client_key, "cannot be set for simplified ACS")
         end
 
       # Custom and RHUI ACS's should have valid keys where populated
