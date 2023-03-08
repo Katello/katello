@@ -15,12 +15,9 @@ kind: job_template
 %>
 
 <% if @host.operatingsystem.family == 'Suse' -%>
-<% advisories = input(:errata).split(',').join(' ') -%>
-<%= render_template('Run Command - Ansible Default', :command => "zypper -n install -t patch #{advisories}") -%>
-<% elsif @host.operatingsystem.family == 'Debian' -%>
-<% advisories = input(:errata).split(',').map { |e| @host.debs_for_erratum(e) }.join(' ') -%>
-<%= render_template('Run Command - Ansible Default', :command => "apt-get -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" -y --only-upgrade install -y #{advisories}") %>
+  <% advisories = input(:errata).split(',').join(' ') -%>
+  <%= render_template('Run Command - Ansible Default', :command => "zypper -n install -t patch #{advisories}") %>
 <% else -%>
-<% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') -%>
-<%= render_template('Run Command - Ansible Default', :command => "yum -y update-minimal #{advisories}") -%>
+  <% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') -%>
+  <%= render_template('Run Command - Ansible Default', :command => "yum -y update-minimal #{advisories}") %>
 <% end -%>
