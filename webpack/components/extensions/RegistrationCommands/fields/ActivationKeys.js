@@ -47,7 +47,7 @@ const ActivationKeys = ({
       label={__('Activation Keys')}
       fieldId="reg_katello_ak"
       helperText={hostGroupActivationKeys && sprintf('From host group: %s', hostGroupActivationKeys)}
-      helperTextInvalid={__('No Activation Keys selected')}
+      helperTextInvalid={activationKeys?.length === 0 ? <a href="/activation_keys/new">{__('Create new activation key')}</a> : __('No Activation Keys selected')}
       validated={validateAKField(hostGroupId, pluginValues?.activationKeys, hostGroupActivationKeys)}
       labelIcon={<LabelIcon text={__('Activation key(s) for Subscription Manager.')} />}
       isRequired
