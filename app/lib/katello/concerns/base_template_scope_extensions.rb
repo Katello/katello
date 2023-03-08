@@ -245,10 +245,12 @@ module Katello
 
           batch.each do |task|
             next if skip_task?(task)
-            next unless only_host_ids.nil? || only_host_ids.include?(task.input['host']['id'].to_i)
+            next unless only_host_ids.nil? || only_host_ids.include?(get_task_input(task)['host']['id'].to_i)
             parse_errata(task).each do |erratum_id|
-              current_erratum_errata_type = preloaded_errata.find { |k, _| k == erratum_id }[1]
-              current_erratum_issued = preloaded_errata.find { |k, _| k == erratum_id }.last
+              current_erratum = preloaded_errata.find { |k, _| k == erratum_id }
+              next if current_erratum.nil?
+              current_erratum_errata_type = current_erratum[1]
+              current_erratum_issued = current_erratum.last
 
               if filter_errata_type != 'all'
                 next unless filter_errata_type == current_erratum_errata_type
