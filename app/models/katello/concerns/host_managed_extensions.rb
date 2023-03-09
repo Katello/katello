@@ -6,6 +6,20 @@ module Katello
       include ForemanTasks::Concerns::ActionSubject
 
       module Overrides
+        def update(attrs)
+          if attrs[:content_facet_attributes]
+            cv_id = attrs[:content_facet_attributes].delete(:content_view_id)
+            lce_id = attrs[:content_facet_attributes].delete(:lifecycle_environment_id)
+            if cv_id && lce_id
+              content_facet.assign_single_environment(content_view_id: cv_id, lifecycle_environment_id: lce_id)
+            end
+            if (cv_id.present? && lce_id.blank?) || (cv_id.blank? && lce_id.present?)
+              fail "content_view_id and lifecycle_environment_id must be provided together"
+            end
+          end
+          super
+        end
+
         def validate_media?
           (content_source_id.blank? || (content_facet && content_facet.kickstart_repository.blank?)) && super
         end
