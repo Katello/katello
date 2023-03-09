@@ -13,7 +13,7 @@ import {
   selectCreateFilterRuleStatus,
 } from '../../../ContentViewDetailSelectors';
 import { orgId } from '../../../../../../services/api';
-import Search from '../../../../../../components/Search/Search';
+import SearchText from '../../../../../../components/Search/SearchText';
 
 const AddEditPackageRuleModal = ({
   filterId, onClose, selectedFilterRuleData, repositoryIds,
@@ -27,8 +27,8 @@ const AddEditPackageRuleModal = ({
     max_version: editingMaxVersion,
   } = selectedFilterRuleData || {};
 
-  const architectureAutoCompleteEndpoint = '/packages/auto_complete_arch';
-  const nameAutoCompleteEndpoint = '/packages/auto_complete_name';
+  const architectureAutoCompleteEndpoint = '/katello/api/v2/packages/auto_complete_arch';
+  const nameAutoCompleteEndpoint = '/katello/api/v2/packages/auto_complete_name';
 
   const isEditing = !!selectedFilterRuleData;
 
@@ -118,14 +118,11 @@ const AddEditPackageRuleModal = ({
     }
   }, [status, setSaving]);
 
-  const getAutoCompleteParams = (term, autoCompleteEndpoint) => ({
-    endpoint: autoCompleteEndpoint,
-    params: {
-      organization_id: orgId(),
-      term,
-      repoids: repositoryIds,
-      non_modular: true,
-    },
+  const searchDataProp = term => ({
+    organization_id: orgId(),
+    term,
+    repoids: repositoryIds,
+    non_modular: true,
   });
 
   return (
@@ -142,26 +139,25 @@ const AddEditPackageRuleModal = ({
       }}
       >
         <FormGroup label={__('RPM name')} isRequired fieldId="name">
-          <Search
-            patternfly4
-            initialInputValue={name}
-            onSearch={() => {}}
-            getAutoCompleteParams={term => getAutoCompleteParams(term, nameAutoCompleteEndpoint)}
-            foremanApiAutoComplete={false}
-            isTextInput
-            setTextInputValue={setName}
+          <SearchText
+            data={{
+              autocomplete: {
+                url: nameAutoCompleteEndpoint,
+                apiParams: input => searchDataProp(input),
+              },
+            }}
+            onSearchChange={setName}
           />
         </FormGroup>
         <FormGroup label={__('Architecture')} fieldId="architecture">
-          <Search
-            patternfly4
-            initialInputValue={architecture}
-            onSearch={() => {}}
-            getAutoCompleteParams={term =>
-              getAutoCompleteParams(term, architectureAutoCompleteEndpoint)}
-            foremanApiAutoComplete={false}
-            isTextInput
-            setTextInputValue={setArchitecture}
+          <SearchText
+            data={{
+              autocomplete: {
+                url: architectureAutoCompleteEndpoint,
+                apiParams: arch => searchDataProp(arch),
+              },
+            }}
+            onSearchChange={setArchitecture}
           />
         </FormGroup>
         <FormGroup label={__('Version')} fieldId="version_comparator">

@@ -12,7 +12,6 @@ import { render, waitFor, waitForElementToBeRemoved } from '@testing-library/rea
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { MemoryRouter, BrowserRouter } from 'react-router-dom';
-import { initialSettingsState } from '../scenes/Settings/SettingsReducer';
 import allKatelloReducers from '../redux/reducers/index.js';
 
 // r-t-lib's print limit for debug() is quite small, setting it to a much higher char max here.
@@ -42,11 +41,6 @@ function renderWithRedux(
   const initialFullState = Immutable({
     API: {
       [apiNamespace]: initialApiState,
-    },
-    katello: {
-      settings: {
-        settings: initialSettingsState,
-      },
     },
     extendable: {},
     ...initialState,
