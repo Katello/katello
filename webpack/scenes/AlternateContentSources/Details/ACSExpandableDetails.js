@@ -286,6 +286,9 @@ const ACSExpandableDetails = ({ expandedId }) => {
                       <a href={urlBuilder(`products/${product?.id}`, '')}><b>{product?.name}</b></a>
                     </ListItem>
                   ))}
+                {products?.length === 0 &&
+                <InactiveText text="N/A" />
+                }
               </List>
             </ExpandableSection>
           </StackItem>
