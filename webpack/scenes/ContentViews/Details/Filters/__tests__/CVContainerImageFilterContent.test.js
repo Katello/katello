@@ -7,7 +7,6 @@ import {
   nockInstance,
   assertNockRequest,
   mockAutocomplete,
-  mockSetting,
 } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CVContainerImageFilterContent from '../CVContainerImageFilterContent';
@@ -140,8 +139,6 @@ test('Can add filter rules', async (done) => {
     2,
   );
   const autocompleteNameScope = mockAutocomplete(nockInstance, autocompleteNameUrl, true, [], 2);
-  const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const cvFiltersScope = nockInstance
     .get(cvFilterRulesPath)
@@ -158,7 +155,7 @@ test('Can add filter rules', async (done) => {
     .query(true)
     .reply(200, { ...cvFilterFixtures, results: [...cvFilterFixtures.results, addedRule] });
 
-  const { queryByText, getByLabelText } =
+  const { queryByText, getByLabelText, getAllByLabelText } =
     renderWithRedux(
       withCVRoute(<CVContainerImageFilterContent filterId={195} details={details} />),
       renderOptions,
@@ -177,7 +174,9 @@ test('Can add filter rules', async (done) => {
     expect(getByLabelText('add_edit_filter_rule')).toHaveAttribute('aria-disabled', 'true');
   });
 
-  fireEvent.change(getByLabelText('text input for search'), { target: { value: 'new-rule' } });
+  const searchInput = getAllByLabelText('Search input')[1];
+  searchInput.focus();
+  fireEvent.change(searchInput, { target: { value: 'new-rule' } });
   fireEvent.submit(getByLabelText('add_edit_filter_rule'));
 
   await patientlyWaitFor(() => {
@@ -185,8 +184,6 @@ test('Can add filter rules', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFilterAddScope);
   assertNockRequest(autocompleteNameScope);
@@ -205,8 +202,6 @@ test('Can edit filter rules', async (done) => {
     2,
   );
   const autocompleteNameScope = mockAutocomplete(nockInstance, autocompleteNameUrl, true, [], 2);
-  const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
 
   const cvFiltersScope = nockInstance
     .get(cvFilterRulesPath)
@@ -231,7 +226,9 @@ test('Can edit filter rules', async (done) => {
       }),
     });
 
-  const { queryByText, getAllByLabelText, getByLabelText } =
+  const {
+    queryByText, getAllByLabelText, getByLabelText,
+  } =
     renderWithRedux(
       withCVRoute(<CVContainerImageFilterContent filterId={195} details={details} />),
       renderOptions,
@@ -258,7 +255,9 @@ test('Can edit filter rules', async (done) => {
     expect(getByLabelText('add_edit_filter_rule')).toHaveAttribute('aria-disabled', 'false');
   });
 
-  fireEvent.change(getByLabelText('text input for search'), { target: { value: 'changed-name' } });
+  const searchInput = getAllByLabelText('Search input')[1];
+  searchInput.focus();
+  fireEvent.change(searchInput, { target: { value: 'changed-name' } });
   fireEvent.submit(getByLabelText('add_edit_filter_rule'));
 
   await patientlyWaitFor(() => {
@@ -266,8 +265,6 @@ test('Can edit filter rules', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFilterAddScope);
   assertNockRequest(autocompleteNameScope);
@@ -284,8 +281,6 @@ test('Shows call-to-action when there are no filter rules', async (done) => {
     2,
   );
   const autocompleteNameScope = mockAutocomplete(nockInstance, autocompleteNameUrl, true, [], 2);
-  const searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  const autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   const cvFiltersScope = nockInstance
     .get(cvFilterRulesPath)
     .times(2)
@@ -302,13 +297,11 @@ test('Shows call-to-action when there are no filter rules', async (done) => {
   await patientlyWaitFor(() => expect(queryByLabelText('add_filter_rule_empty_state')).toBeInTheDocument());
   fireEvent.click(queryByLabelText('add_filter_rule_empty_state'));
   await patientlyWaitFor(() => {
-    expect(getAllByLabelText('text input for search')[0]).toBeInTheDocument();
+    expect(getAllByLabelText('Search input')[0]).toBeInTheDocument();
   });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(autocompleteNameScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   assertNockRequest(cvFiltersScope, done);
   act(done);
 });

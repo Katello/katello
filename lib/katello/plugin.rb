@@ -651,18 +651,6 @@ Foreman::Plugin.register :katello do
         full_name: N_('Applicability Batch Size'),
         description: N_("Number of host applicability calculations to process per task.")
 
-      setting 'autosearch_while_typing',
-        type: :boolean,
-        default: true,
-        full_name: N_('Autosearch'),
-        description: N_('For pages that support it, automatically perform search while typing in search input.')
-
-      setting 'autosearch_delay',
-        type: :integer,
-        default: 500,
-        full_name: N_('Autosearch delay'),
-        description: N_('If Autosearch is enabled, delay in milliseconds before executing searches while typing.')
-
       setting 'bulk_load_size',
         type: :integer,
         default: 2000,

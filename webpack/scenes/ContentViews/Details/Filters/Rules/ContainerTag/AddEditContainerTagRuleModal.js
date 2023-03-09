@@ -5,7 +5,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { Modal, ModalVariant, Form, FormGroup, ActionGroup, Button } from '@patternfly/react-core';
 import { addCVFilterRule, editCVFilterRule, getCVFilterRules } from '../../../ContentViewDetailActions';
 import { orgId } from '../../../../../../services/api';
-import Search from '../../../../../../components/Search/Search';
+import SearchText from '../../../../../../components/Search/SearchText';
 
 const AddEditContainerTagRuleModal = ({
   onClose, filterId, selectedFilterRuleData, repositoryIds,
@@ -16,7 +16,7 @@ const AddEditContainerTagRuleModal = ({
   const [saving, setSaving] = useState(false);
   const isEditing = name && id;
 
-  const autoCompleteEndpoint = '/docker_tags/auto_complete_name';
+  const autoCompleteEndpoint = '/katello/api/v2/docker_tags/auto_complete_name';
 
   const onSubmit = () => {
     setSaving(true);
@@ -36,13 +36,10 @@ const AddEditContainerTagRuleModal = ({
     onClose();
   };
 
-  const getAutoCompleteParams = term => ({
-    endpoint: autoCompleteEndpoint,
-    params: {
-      organization_id: orgId(),
-      term,
-      repoids: repositoryIds,
-    },
+  const searchDataProp = term => ({
+    organization_id: orgId(),
+    term,
+    repoids: repositoryIds,
   });
 
   return (
@@ -59,14 +56,14 @@ const AddEditContainerTagRuleModal = ({
       }}
       >
         <FormGroup label={__('Tag name')} isRequired fieldId="tag_name">
-          <Search
-            patternfly4
-            initialInputValue={tagName}
-            onSearch={() => {}}
-            getAutoCompleteParams={getAutoCompleteParams}
-            foremanApiAutoComplete={false}
-            isTextInput
-            setTextInputValue={setTagName}
+          <SearchText
+            data={{
+              autocomplete: {
+                url: autoCompleteEndpoint,
+                apiParams: tag => searchDataProp(tag),
+              },
+            }}
+            onSearchChange={setTagName}
           />
         </FormGroup>
         <ActionGroup>

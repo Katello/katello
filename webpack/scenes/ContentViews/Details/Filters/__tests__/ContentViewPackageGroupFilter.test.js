@@ -46,8 +46,6 @@ const renderOptions = {
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
 
-jest.mock('../../../../../components/Search', () => () => 'mocked!');
-
 test('Can enable and disable add filter button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { name: cvFilterName } = cvFilterDetails;

@@ -3,7 +3,7 @@ import * as reactRedux from 'react-redux';
 import { Route } from 'react-router-dom';
 import { act, fireEvent, patientlyWaitFor, renderWithRedux } from 'react-testing-lib-wrapper';
 import api, { foremanApi } from '../../../../services/api';
-import { assertNockRequest, mockAutocomplete, mockSetting, nockInstance } from '../../../../test-utils/nockWrapper';
+import { assertNockRequest, mockAutocomplete, nockInstance } from '../../../../test-utils/nockWrapper';
 import ACSTable from '../../MainTable/ACSTable';
 import contentCredentialResult from './contentCredentials.fixtures';
 import smartProxyResult from './smartProxy.fixtures';
@@ -69,18 +69,6 @@ const renderOptions = {
     initialEntries: [{ pathname: '/alternate_content_sources/' }],
   },
 };
-
-let searchDelayScope;
-let autoSearchScope;
-beforeEach(() => {
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
-});
-
-afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
-});
 
 test('Can show add ACS button if can_create is true', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
