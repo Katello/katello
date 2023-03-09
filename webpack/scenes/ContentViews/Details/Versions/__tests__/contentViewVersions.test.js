@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
-import { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewVersions from '../ContentViewVersions';
@@ -36,15 +36,11 @@ const autocompleteUrl = '/content_view_versions/auto_complete_search';
 const taskPollingUrl = '/foreman_tasks/api/tasks/6b900ff8-62bb-42ac-8c45-da86b7258520';
 
 let firstVersion;
-let searchDelayScope;
-let autoSearchScope;
 let envScope;
 
 beforeEach(() => {
   const { results } = cvVersionsData;
   [firstVersion] = results;
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 0);
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing');
   envScope = nockInstance
     .get(environmentPathsPath)
     .query(true)
@@ -53,8 +49,6 @@ beforeEach(() => {
 
 afterEach(() => {
   assertNockRequest(envScope);
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
 });
 
 test('Can call API and show versions on page load', async (done) => {
