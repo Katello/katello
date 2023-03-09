@@ -9,8 +9,6 @@ import RelatedCompositeContentViewsModal from '../RelatedCompositeContentViewsMo
 
 import contentViewComponentsResponse from './contentViewComponentsResponse.fixtures.json';
 
-jest.mock('../../../../components/Search', () => () => 'Mocked!');
-
 test('Can call API and show Related Content Views Components Modal', async (done) => {
   const cvId = 5;
   const relatedCvCount = 2;
