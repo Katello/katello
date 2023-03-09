@@ -36,7 +36,7 @@ module Katello
               :upstream_password, if: :simplified?, absence: true
     validates :base_url, if: -> { custom? || rhui? }, presence: true
     validates :products, if: -> { custom? || rhui? }, absence: {
-      message: "should not be set for any custom or rhui ACS"
+      message: "cannot be set for custom or rhui ACS"
     }
     validates :label, :uniqueness => true
     validates :name, :uniqueness => true, presence: true
