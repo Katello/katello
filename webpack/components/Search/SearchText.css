@@ -1,0 +1,51 @@
+.autocomplete-wrapper {
+  width: 100%;
+  position: relative;
+  display: inline-block;
+}
+
+.autocomplete-wrapper > div {
+  width: 100%;
+}
+
+.autocomplete-wrapper input {
+  border: 1px solid #cecece;
+  padding: 12px 15px;
+  font-size: 18px;
+  width: 100%;
+}
+
+.autocomplete-wrapper input:focus {
+  border-color: #0F67FF;
+  box-shadow: none;
+  outline: none;
+}
+
+.autocomplete-wrapper .dropdown {
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  max-height: 280px;
+  overflow: hidden;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #0F67FF;
+  border-top: none;
+}
+
+.autocomplete-wrapper .item  {
+  display: block;
+  cursor: pointer;
+  font-size: 18;
+  padding: 5px;
+}
+
+.autocomplete-wrapper .item.selected-item {
+  background-color: #0069ff;
+  color: #FAFBFC;
+}
+
+.autocomplete-wrapper .item:hover {
+  background-color: #0069ff;
+  color: #FAFBFC;
+}
