@@ -19,8 +19,7 @@ module Katello
     belongs_to :ssl_ca_cert, inverse_of: :ssl_ca_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_cert, inverse_of: :ssl_client_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_key, inverse_of: :ssl_key_alternate_content_sources, class_name: "Katello::ContentCredential"
-    # We breakout ssl-* and product validation into a function to allow for us
-    # to set the object name correctly in complex error messages
+
     validate :validate_ssl_ids
     validate :validate_products
 
@@ -164,8 +163,6 @@ module Katello
       end
     end
 
-    # Check that products are not present for custom or rhui ACS's
-    # Requires complex/custom error message
     def validate_products
       if (custom? || rhui?) && products.present?
         errors.add(:product_ids, "cannot be set for custom or rhui ACS")
