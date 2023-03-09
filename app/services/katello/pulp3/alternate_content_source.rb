@@ -61,7 +61,6 @@ module Katello
         if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.empty? && !remote_options[:url].end_with?('/PULP_MANIFEST')
           remote_options[:url] = acs.base_url + '/PULP_MANIFEST'
         end
-        # If not using http proxies, set proxy options to nil
         unless acs.use_http_proxies
           remote_options[:proxy_url] = nil
           remote_options[:proxy_username] = nil
