@@ -19,9 +19,10 @@ module Katello
     belongs_to :ssl_ca_cert, inverse_of: :ssl_ca_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_cert, inverse_of: :ssl_client_alternate_content_sources, class_name: "Katello::ContentCredential"
     belongs_to :ssl_client_key, inverse_of: :ssl_key_alternate_content_sources, class_name: "Katello::ContentCredential"
-    # We breakout ssl-* validation into a function to allow for us to set
-    # the object name correctly in complex error messages
+    # We breakout ssl-* and product validation into a function to allow for us
+    # to set the object name correctly in complex error messages
     validate :validate_ssl_ids
+    validate :validate_products
 
     has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :alternate_content_source,
              class_name: "Katello::AlternateContentSourceProduct"
@@ -35,9 +36,6 @@ module Katello
     validates :base_url, :subpaths, :upstream_username,
               :upstream_password, if: :simplified?, absence: true
     validates :base_url, if: -> { custom? || rhui? }, presence: true
-    validates :products, if: -> { custom? || rhui? }, absence: {
-      message: "cannot be set for custom or rhui ACS"
-    }
     validates :label, :uniqueness => true
     validates :name, :uniqueness => true, presence: true
     # verify ssl must be validated this way due to presence: <bool> failing on a value of false
@@ -163,6 +161,14 @@ module Katello
         if ssl_client_key_id.present? && ssl_client_key.nil?
           errors.add(:ssl_client_key, "with ID '#{ssl_client_key_id}' couldn't be found")
         end
+      end
+    end
+
+    # Check that products are not present for custom or rhui ACS's
+    # Requires complex/custom error message
+    def validate_products
+      if (custom? || rhui?) && products.present?
+        errors.add(:product_ids, "cannot be set for custom or rhui ACS")
       end
     end
   end
