@@ -97,6 +97,13 @@ module Katello
         )
       end
     end
+
+    def test_update_with_blank_lifecycle_environment
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      assert_raises(RuntimeError, "content_view_id and lifecycle_environment_id must be provided together") do
+        host.update(content_facet_attributes: {content_view_id: @view.id, lifecycle_environment_id: nil})
+      end
+    end
   end
 
   class HostManagedExtensionsUpdateTest < HostManagedExtensionsTestBase
