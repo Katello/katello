@@ -40,11 +40,11 @@ module Katello
     # verify ssl must be validated this way due to presence: <bool> failing on a value of false
     validates :verify_ssl, if: -> { custom? || rhui? }, inclusion: {
       in: [true, false],
-      message: "can't be blank"
+      message: "must be provided for custom or rhui ACS"
     }
     validates :verify_ssl, if: :simplified?, inclusion: {
       in: [nil],
-      message: "must be blank"
+      message: "cannot be provided for simplified ACS"
     }
     validates :alternate_content_source_type, inclusion: {
       in: ->(_) { ACS_TYPES },
