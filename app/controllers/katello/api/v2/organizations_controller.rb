@@ -56,10 +56,21 @@ module Katello
     api :PUT, '/organizations/:id', N_('Update organization')
     param :id, :number, :desc => N_("organization ID"), :required => true
     param :redhat_repository_url, String, :desc => N_("Red Hat CDN URL"), deprecated: true
+    param :simple_content_access, :bool, :desc => N_('Whether Simple Content Access should be enabled for the organization.'), :required => false, :default => true
     param_group :resource
     def update
       if params[:redhat_repository_url]
         sync_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, url: params[:redhat_repository_url])
+      end
+      unless params[:simple_content_access].nil?
+        sca_param = ::Foreman::Cast.to_bool(params[:simple_content_access])
+        if sca_param && !@taxonomy.simple_content_access?(cached: false)
+          # user has requested SCA enable
+          sync_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:id])
+        elsif !sca_param && @taxonomy.simple_content_access?(cached: false)
+          # user has requested SCA disable
+          sync_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:id])
+        end
       end
       super
     end
