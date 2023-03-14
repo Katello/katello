@@ -4,14 +4,16 @@ module Katello
     before_action :disable_strong_params
     before_action :confirm_settings
     before_action :confirm_push_settings, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
-                                                 :chunk_upload_blob, :push_manifest]
+                                                 :push_manifest]
     skip_before_action :authorize
     before_action :optional_authorize, only: [:token, :catalog]
     before_action :registry_authorize, except: [:token, :v1_search, :catalog]
     before_action :authorize_repository_read, only: [:pull_manifest, :tags_list]
-    before_action :authorize_repository_write, only: [:push_manifest]
+    # TODO: authorize_repository_write commented out until Katello indexes Pulp container push repositories.
+    # before_action :authorize_repository_write, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
+    #                                                   :push_manifest]
     skip_before_action :check_media_type, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
-                                                 :chunk_upload_blob, :push_manifest]
+                                                 :push_manifest]
 
     wrap_parameters false
 
@@ -182,15 +184,8 @@ module Katello
     end
 
     def check_blob
-      begin
-        r = Resources::Registry::Proxy.get(@_request.fullpath, 'Accept' => request.headers['Accept'])
-        response.header['Content-Length'] = "#{r.body.size}"
-      rescue RestClient::NotFound
-        digest_file = tmp_file("#{params[:digest][7..-1]}.tar")
-        raise unless File.exist? digest_file
-        response.header['Content-Length'] = "#{File.size digest_file}"
-      end
-      render json: {}
+      pulp_response = Resources::Registry::Proxy.get(@_request.fullpath, 'Accept' => request.headers['Accept'])
+      head pulp_response.code
     end
 
     def redirect_client
@@ -210,94 +205,67 @@ module Katello
       redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers, max_redirects: 0) }
     end
 
-    # FIXME: Reimplement for Pulp 3.
     def push_manifest
-      repository = params[:repository]
-      tag = params[:tag]
-
-      manifest = create_manifest
-      return if manifest.nil?
-
-      begin
-        files = get_manifest_files(repository, manifest)
-        return if files.nil?
-
-        tar_file = create_tar_file(files, repository, tag)
-        return if tar_file.nil?
-
-        digest = upload_manifest(tar_file)
-        return if digest.nil?
-
-        tag = upload_tag(digest, tag)
-        return if tag.nil?
-      ensure
-        File.delete(tmp_file('manifest.json')) if File.exist? tmp_file('manifest.json')
+      headers = translated_headers_for_proxy
+      headers['Content-Type'] = request.headers['Content-Type'] if request.headers['Content-Type']
+      body = @_request.body.read
+      pulp_response = Resources::Registry::Proxy.put(@_request.fullpath, body, headers)
+      pulp_response.headers.each do |key, value|
+        response.header[key.to_s] = value
       end
-
-      render json: {}
-    end
-
-    # FIXME: This is referring to a non-existent Pulp 2 server.
-    # Pulp 3 container push support is needed instead.
-    def pulp_content
-      Katello.pulp_server.resources.content
+      head pulp_response.code
     end
 
     def start_upload_blob
-      uuid = SecureRandom.hex(16)
-      response.header['Location'] = "#{request_url}/v2/#{params[:repository]}/blobs/uploads/#{uuid}"
-      response.header['Docker-Upload-UUID'] = uuid
-      response.header['Range'] = '0-0'
-      head 202
+      headers = translated_headers_for_proxy
+      headers['Content-Type'] = request.headers['Content-Type'] if request.headers['Content-Type']
+      headers['Content-Length'] = request.headers['Content-Length'] if request.headers['Content-Length']
+      pulp_response = Resources::Registry::Proxy.post(@_request.fullpath, @_request.body, headers)
+
+      pulp_response.headers.each do |key, value|
+        response.header[key.to_s] = value
+      end
+      head pulp_response.code
     end
 
-    def status_upload_blob
-      response.header['Location'] = "#{request_url}/v2/#{params[:repository]}/blobs/uploads/#{params[:uuid]}"
-      response.header['Range'] = "123"
-      response.header['Docker-Upload-UUID'] = "123"
-      render plain: '', status: :no_content
-    end
-
-    def chunk_upload_blob
-      response.header['Location'] = "#{request_url}/v2/#{params[:repository]}/blobs/uploads/#{params[:uuid]}"
-      render plain: '', status: :accepted
+    def translated_headers_for_proxy
+      current_headers = {}
+      env = request.env.select do |key, _value|
+        key.match("^HTTP_.*")
+      end
+      env.each do |header|
+        current_headers[header[0].split('_')[1..-1].join('-')] = header[1]
+      end
+      current_headers
     end
 
     def upload_blob
-      File.open(tmp_file("#{params[:uuid]}.tar"), 'ab', 0600) do |file|
-        file.write request.body.read
+      headers = translated_headers_for_proxy
+      headers['Content-Type'] = request.headers['Content-Type'] if request.headers['Content-Type']
+      headers['Content-Range'] = request.headers['Content-Range'] if request.headers['Content-Range']
+      headers['Content-Length'] = request.headers['Content-Length'] if request.headers['Content-Length']
+      body = @_request.body.read
+      pulp_response = Resources::Registry::Proxy.patch(@_request.fullpath, body, headers)
+
+      pulp_response.headers.each do |key, value|
+        response.header[key.to_s] = value
       end
 
-      # ???? true chunked data?
-      if request.headers['Content-Range']
-        render_error 'unprocessable_entity', :status => :unprocessable_entity
-      end
-
-      response.header['Location'] = "#{request_url}/v2/#{params[:repository]}/blobs/uploads/#{params[:uuid]}"
-      response.header['Range'] = "1-#{request.body.size}"
-      response.header['Docker-Upload-UUID'] = params[:uuid]
-      head 204
+      head pulp_response.code
     end
 
     def finish_upload_blob
-      # error by client if no params[:digest]
+      headers = translated_headers_for_proxy
+      headers['Content-Type'] = request.headers['Content-Type'] if request.headers['Content-Type']
+      headers['Content-Range'] = request.headers['Content-Range'] if request.headers['Content-Range']
+      headers['Content-Length'] = request.headers['Content-Length'] if request.headers['Content-Length']
+      pulp_response = Resources::Registry::Proxy.put(@_request.fullpath, @_request.body, headers)
 
-      uuid_file = tmp_file("#{params[:uuid]}.tar")
-      digest_file = tmp_file("#{params[:digest][7..-1]}.tar")
+      pulp_response.headers.each do |key, value|
+        response.header[key.to_s] = value
+      end
 
-      File.delete(digest_file) if File.exist? digest_file
-      File.rename(uuid_file, digest_file)
-
-      response.header['Location'] = "#{request_url}/v2/#{params[:repository]}/blobs/#{params[:digest]}"
-      response.header['Docker-Content-Digest'] = params[:digest]
-      response.header['Content-Range'] = "1-#{File.size(digest_file)}"
-      response.header['Content-Length'] = "0"
-      response.header['Docker-Upload-UUID'] = params[:uuid]
-      head 201
-    end
-
-    def cancel_upload_blob
-      render plain: '', status: :ok
+      head pulp_response.code
     end
 
     def ping
@@ -409,47 +377,6 @@ module Katello
         File.delete(filename) if File.exist? filename
       end
       tar_file
-    end
-
-    # FIXME: Reimplement for Pulp 3.
-    def upload_manifest(tar_file)
-      upload_id = pulp_content.create_upload_request['upload_id']
-      filename = tmp_file(tar_file)
-      uploads = []
-
-      File.open(filename, 'rb') do |file|
-        content = file.read
-        pulp_content.upload_bits(upload_id, 0, content)
-
-        uploads << {
-          id: upload_id,
-          name: filename,
-          size: file.size,
-          checksum: Digest::SHA256.hexdigest(content)
-        }
-      end
-
-      File.delete(filename)
-      task = sync_task(::Actions::Katello::Repository::ImportUpload,
-                       @repository, uploads, generate_metadata: true, sync_capsule: true)
-      task.output['upload_results'][0]['digest']
-    ensure
-      pulp_content.delete_upload_request(upload_id) if upload_id
-    end
-
-    # FIXME: Reimplement for Pulp 3.
-    def upload_tag(digest, tag)
-      upload_id = pulp_content.create_upload_request['upload_id']
-      uploads = [{
-        id: upload_id,
-        name: tag,
-        digest: digest
-      }]
-      sync_task(::Actions::Katello::Repository::ImportUpload, @repository, uploads,
-                :generate_metadata => true, :sync_capsule => true)
-      tag
-    ensure
-      pulp_content.delete_upload_request(upload_id) if upload_id
     end
 
     def tmp_dir
