@@ -52,6 +52,7 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
       isOpen
       onClose={onClose}
       appendTo={document.body}
+      ouiaId="acs-edit-url-paths-modal"
     >
       <Form onSubmit={(e) => {
         e.preventDefault();

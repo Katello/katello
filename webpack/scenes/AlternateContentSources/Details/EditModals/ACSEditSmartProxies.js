@@ -80,6 +80,7 @@ const ACSEditSmartProxies = ({ onClose, acsId, acsDetails }) => {
       isOpen
       onClose={onClose}
       appendTo={document.body}
+      ouiaId="acs-edit-smart-proxies-modal"
     >
       <Form onSubmit={(e) => {
         e.preventDefault();
@@ -110,6 +111,7 @@ const ACSEditSmartProxies = ({ onClose, acsId, acsDetails }) => {
           <Switch
             id="use-http-proxies-switch"
             aria-label="use-http-proxies-switch"
+            ouiaId="use-http-proxies-switch"
             isChecked={acsUseHttpProxies}
             onChange={checked => setAcsUseHttpProxies(checked)}
           />
