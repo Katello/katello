@@ -34,6 +34,7 @@ const ACSEditDetails = ({ onClose, acsId, acsDetails }) => {
       isOpen
       onClose={onClose}
       appendTo={document.body}
+      ouiaId="acs-edit-details-modal"
     >
       <Form onSubmit={(e) => {
         e.preventDefault();
@@ -43,9 +44,9 @@ const ACSEditDetails = ({ onClose, acsId, acsDetails }) => {
         <FormGroup label={__('Name')} isRequired fieldId="acs_name">
           <TextInput
             isRequired
+            ouiaId="acs-edit-name-field"
             type="text"
-            id="acs_name_field"
-            ouiaId="acs_name_field"
+            id={`acs-edit-name-field-${acsId}`}
             name="acs_name_field"
             aria-label="acs_name_field"
             value={acsName}
