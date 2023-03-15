@@ -67,6 +67,7 @@ const ACSEditProducts = ({ onClose, acsId, acsDetails }) => {
       title={__('Edit products')}
       variant={ModalVariant.small}
       isOpen
+      ouiaId="acs-edit-products-modal"
       onClose={onClose}
       appendTo={document.body}
     >

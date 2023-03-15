@@ -122,6 +122,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
       isOpen
       onClose={onClose}
       appendTo={document.body}
+      ouiaId="acs-edit-credentials-modal"
     >
       <Form onSubmit={(e) => {
         e.preventDefault();
