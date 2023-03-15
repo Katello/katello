@@ -4,7 +4,13 @@ exports[`ActivationKeys renders 1`] = `
 <FormGroup
   fieldId="reg_katello_ak"
   helperText="From host group: "
-  helperTextInvalid="No Activation Keys selected"
+  helperTextInvalid={
+    <a
+      href="/activation_keys/new"
+    >
+      Create new activation key
+    </a>
+  }
   isRequired={true}
   label="Activation Keys"
   labelIcon={
