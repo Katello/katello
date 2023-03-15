@@ -65,10 +65,12 @@ module Katello
       end
 
       def multi_content_view_environment?
+        # returns false if there are no content view environments
         content_view_environments.size > 1
       end
 
       def single_content_view_environment?
+        # also returns false if there are no content view environments
         content_view_environments.size == 1
       end
 

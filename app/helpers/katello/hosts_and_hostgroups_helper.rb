@@ -212,10 +212,13 @@ module Katello
           new_host.content_facet = hostgroup_content_facet(host, param_host)
         elsif host.content_facet.present?
           new_host.content_facet = ::Katello::Host::ContentFacet.new(:content_source_id => host.content_source_id)
-          new_host.content_facet.assign_single_environment(
-            :lifecycle_environment => host.content_facet.single_lifecycle_environment,
-            :content_view => host.content_facet.single_content_view
-          )
+          if host.single_content_view_environment?
+            # assign new_host the same CVE as host
+            new_host.content_facet.assign_single_environment(
+              :lifecycle_environment => host.content_facet.single_lifecycle_environment,
+              :content_view => host.content_facet.single_content_view
+            )
+          end
         end
         new_host.operatingsystem.kickstart_repos(new_host).map { |repo| OpenStruct.new(repo) }
       else
@@ -344,10 +347,12 @@ module Katello
       lifecycle_environment_id, content_view_id = inherited_or_own_facet_attributes(param_host, hostgroup)
       content_source_id = inherited_or_own_content_source_id(param_host, hostgroup)
       facet = ::Katello::Host::ContentFacet.new(:content_source_id => content_source_id)
-      facet.assign_single_environment(
-        :lifecycle_environment_id => lifecycle_environment_id,
-        :content_view_id => content_view_id
-      )
+      if content_view_id && lifecycle_environment_id
+        facet.assign_single_environment(
+          :lifecycle_environment_id => lifecycle_environment_id,
+          :content_view_id => content_view_id
+        )
+      end
       facet
     end
   end
