@@ -61,6 +61,11 @@ module Katello
         if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.empty? && !remote_options[:url].end_with?('/PULP_MANIFEST')
           remote_options[:url] = acs.base_url + '/PULP_MANIFEST'
         end
+        unless acs.use_http_proxies
+          remote_options[:proxy_url] = nil
+          remote_options[:proxy_username] = nil
+          remote_options[:proxy_password] = nil
+        end
         remote_options.merge!(username: acs&.upstream_username, password: acs&.upstream_password)
         remote_options.merge!(ssl_remote_options)
       end
