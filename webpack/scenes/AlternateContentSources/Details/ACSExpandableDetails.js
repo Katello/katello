@@ -19,6 +19,7 @@ import {
   TextListItem,
   TextListItemVariants,
   TextListVariants,
+  Text,
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
@@ -104,7 +105,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                 }}
                 contentId="showDetails"
               >
-                {__('Details')}
+                <Text ouiaId="expandable-details-text">{__('Details')}</Text>
               </ExpandableSectionToggle>
             </SplitItem>
             {canEdit &&
@@ -184,7 +185,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                 }}
                 contentId="showSmartProxies"
               >
-                {__('Smart proxies')}
+                <Text ouiaId="expandable-smart-proxies-text">{__('Smart proxies')}</Text>
               </ExpandableSectionToggle>
             </SplitItem>
             {canEdit &&
@@ -255,7 +256,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   isExpanded={showProducts}
                   contentId="showProducts"
                 >
-                  {__('Products')}
+                  <Text ouiaId="expandable-products-text">{__('Products')}</Text>
                 </ExpandableSectionToggle>
               </SplitItem>
               {canEdit &&
@@ -306,7 +307,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   isExpanded={showUrlPaths}
                   contentId="showUrlPaths"
                 >
-                  {__('URL and subpaths')}
+                  <Text ouiaId="expandable-url-paths-text">{__('URL and subpaths')}</Text>
                 </ExpandableSectionToggle>
               </SplitItem>
               {canEdit &&
@@ -367,7 +368,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   isExpanded={showCredentials}
                   contentId="showCredentials"
                 >
-                  {__('Credentials')}
+                  <Text ouiaId="expandable-credentials-text">{__('Credentials')}</Text>
                 </ExpandableSectionToggle>
               </SplitItem>
               {canEdit &&
