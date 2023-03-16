@@ -92,12 +92,17 @@ const EmptyStateMessage = ({
         {showSecondaryActionAnchor &&
           <EmptyStateSecondaryActions>
             <Button variant="link" ouiaId="empty-state-secondary-action-link">
-              <a href={secondaryActionLink} style={{ textDecoration: 'none' }}>{secondaryActionTitle}</a>
+              {extraTableProps.secondaryActionTargetBlank ? (
+                <a href={secondaryActionLink} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }} >{secondaryActionTitle}</a>
+              ) : (
+                <a href={secondaryActionLink} style={{ textDecoration: 'none' }} >{secondaryActionTitle}</a>
+              )}
             </Button>
           </EmptyStateSecondaryActions>
         }
 
-        {(showSecondaryActionButton || searchIsActive || !!filtersAreActive) &&
+        {(!showSecondaryActionAnchor &&
+          (showSecondaryActionButton || searchIsActive || !!filtersAreActive)) &&
           <EmptyStateSecondaryActions>
             <Button variant="link" onClick={handleClick} ouiaId="empty-state-secondary-action-router-link">
               {secondaryActionText}

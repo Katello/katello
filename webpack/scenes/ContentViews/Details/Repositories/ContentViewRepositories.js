@@ -3,7 +3,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-
+import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { STATUS } from 'foremanReact/constants';
@@ -39,6 +39,7 @@ import {
   Th,
   Td,
 } from '@patternfly/react-table';
+import { useKatelloDocUrl } from '../../../../utils/useKatelloDocUrl';
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import SelectableDropdown from '../../../../components/SelectableDropdown';
 import TableWrapper from '../../../../components/Table/TableWrapper';
@@ -74,10 +75,27 @@ const repoTypeNames = {
   ostree: 'OSTree',
 };
 
+const NoReposInOrgCallsToAction = () => (
+  <FormattedMessage
+    id="truly-empty-calls-to-action"
+    defaultMessage={__('{enableRedHatRepos} or {createACustomProduct}.')}
+    values={{
+      enableRedHatRepos: (
+        <a href="/redhat_repositories" id="empty-state-primary-action-enable-red-hat-repos">{__('Enable Red Hat repositories')}</a>
+      ),
+      createACustomProduct: (
+        <a href="/products/" id="empty-state-primary-action-create-a-custom-product">{__('create a custom product')}</a>
+      ),
+    }}
+  />
+);
+
 const ContentViewRepositories = ({ cvId, details }) => {
   const dispatch = useDispatch();
   const response = useSelector(state => selectCVRepos(state, cvId), shallowEqual);
   const { results, ...metadata } = response;
+  const { org_repository_count: orgRepositoryCount } = metadata;
+  const [isLoading, setLoading] = useState(false);
   const status = useSelector(state => selectCVReposStatus(state, cvId), shallowEqual);
   const error = useSelector(state => selectCVReposError(state, cvId), shallowEqual);
   const repoTypesResponse = useSelector(state => selectRepoTypes(state), shallowEqual);
@@ -86,7 +104,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
   const generatedContentView = generatedFor !== 'none';
   const [searchQuery, updateSearchQuery] = useState('');
   const [typeSelected, setTypeSelected] = useState(allRepositories);
-  const [statusSelected, setStatusSelected] = useState(ALL_STATUSES);
+  const [statusSelected, setStatusSelected] = useState(ADDED);
   // repoTypes object format: [displayed_value]: API_value
   const [repoTypes, setRepoTypes] = useState({});
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
@@ -121,9 +139,17 @@ const ContentViewRepositories = ({ cvId, details }) => {
     __('Status'),
   ];
 
+  const documentationUrl = useKatelloDocUrl('Managing_Content', '#Products_and_Repositories_content-management');
+
   useEffect(() => {
     dispatch(getRepositoryTypes());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (status !== STATUS.PENDING) {
+      setLoading(false);
+    }
+  }, [status]);
 
   // Get repo type filter selections dynamically from the API
   useDeepCompareEffect(() => {
@@ -149,14 +175,16 @@ const ContentViewRepositories = ({ cvId, details }) => {
     dispatch(updateContentView(
       cvId,
       { repository_ids: repositoryIds.concat(repos) },
-      () =>
+      () => {
         dispatch(getContentViewRepositories(
           cvId,
           typeSelected !== 'All repositories' ? {
             content_type: repoTypes[typeSelected],
           } : {},
-          statusSelected,
-        )),
+          ADDED,
+        ));
+        setStatusSelected(ADDED);
+      },
     ));
   };
 
@@ -192,6 +220,11 @@ const ContentViewRepositories = ({ cvId, details }) => {
     onRemove(reposToDelete);
   };
 
+  const handleShow = () => {
+    setLoading(true);
+    setStatusSelected(ALL_STATUSES);
+  };
+
   const rowDropdownItems = ({ id }) => [
     {
       title: 'Add',
@@ -217,8 +250,35 @@ const ContentViewRepositories = ({ cvId, details }) => {
     return getContentViewRepositories(cvId, allParams, statusSelected);
   }, [cvId, repoTypes, statusSelected, typeSelected]);
 
-  const emptyContentTitle = __("You currently don't have any repositories to add to this content view.");
-  const emptyContentBody = __('Please add some repositories.'); // needs link
+  const noResults = (results && results.length === 0) && !searchQuery && status === STATUS.RESOLVED;
+  const emptyContentOverride =
+    noResults && statusSelected === ADDED;
+  const noReposInOrg =
+    (orgRepositoryCount === 0);
+  const emptyContentTitles = {
+    addRepos: __('No repositories added yet'),
+    noReposInOrg: __('No repositories available to add'),
+  };
+  const emptyContentBodies = {
+    addRepos: __('Click to see repositories available to add.'),
+    noReposInOrg: '',
+  };
+
+  const showPrimaryAction = emptyContentOverride || noReposInOrg;
+  const primaryActionButton = noReposInOrg ? (
+    <span style={{ fontSize: 'larger' }}><NoReposInOrgCallsToAction /></span>
+  ) : (
+    <Button ouiaId="empty-state-primary-action-button" onClick={handleShow}>
+      {__('Show repositories')}
+    </Button>
+  );
+
+  const secondaryActionLink = noReposInOrg ? documentationUrl : undefined;
+  const secondaryActionTitle = noReposInOrg ? __('View documentation') : undefined;
+  const emptyContentTitle =
+    noReposInOrg ? emptyContentTitles.noReposInOrg : emptyContentTitles.addRepos;
+  const emptyContentBody =
+    noReposInOrg ? emptyContentBodies.noReposInOrg : emptyContentBodies.addRepos;
   const emptySearchTitle = __('No matching repositories found');
   const emptySearchBody = __('Try changing your search settings.');
   const activeFilters = [typeSelected, statusSelected];
@@ -229,6 +289,8 @@ const ContentViewRepositories = ({ cvId, details }) => {
       {__('Remove')}
     </DropdownItem>,
   ];
+
+  const loadingStatus = (isLoading || status === STATUS.PENDING) ? STATUS.PENDING : status;
 
   return (
     <TableWrapper
@@ -241,13 +303,21 @@ const ContentViewRepositories = ({ cvId, details }) => {
         searchQuery,
         updateSearchQuery,
         error,
-        status,
         activeFilters,
         defaultFilters,
         selectedCount,
         selectNone,
         resetFilters,
+        emptyContentOverride,
+        showPrimaryAction,
+        primaryActionButton,
+        secondaryActionLink,
+        secondaryActionTitle,
       }}
+      status={loadingStatus}
+      showSecondaryAction={noReposInOrg}
+      showSecondaryActionButton={noReposInOrg}
+      secondaryActionTargetBlank={noReposInOrg}
       ouiaId="content-view-repositories-table"
       {...selectAll}
       variant={TableVariant.compact}

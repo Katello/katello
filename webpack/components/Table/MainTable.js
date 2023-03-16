@@ -21,7 +21,8 @@ const MainTable = ({
   activeToggleState, unfilteredToggleState, actionButtons, rowsCount,
   children, showPrimaryAction, showSecondaryAction, showSecondaryActionButton, primaryActionLink,
   secondaryActionLink, primaryActionTitle, secondaryActionTitle, secondaryActionTextOverride,
-  resetFilters, updateSearchQuery, requestKey, primaryActionButton, ...extraTableProps
+  resetFilters, updateSearchQuery, requestKey, primaryActionButton, secondaryActionTargetBlank,
+  ...extraTableProps
 }) => {
   const tableHasNoRows = () => {
     if (children) return rowsCount === 0;
@@ -76,7 +77,8 @@ const MainTable = ({
         title={emptyContentTitle}
         body={emptyContentBody}
         happy={happyEmptyContent}
-        search={!happyEmptyContent}
+        search={!happyEmptyContent && !emptyContentOverride}
+        secondaryActionTargetBlank={secondaryActionTargetBlank}
         {...clearSearchProps}
         {...callToActionProps}
       />
@@ -162,6 +164,7 @@ MainTable.propTypes = {
   updateSearchQuery: PropTypes.func,
   requestKey: PropTypes.string,
   primaryActionButton: PropTypes.element,
+  secondaryActionTargetBlank: PropTypes.bool,
 };
 
 MainTable.defaultProps = {
@@ -192,6 +195,7 @@ MainTable.defaultProps = {
   updateSearchQuery: undefined,
   requestKey: '',
   primaryActionButton: undefined,
+  secondaryActionTargetBlank: false,
 };
 
 export default MainTable;

@@ -1,17 +1,19 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, act } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, act, fireEvent } from 'react-testing-lib-wrapper';
 
 import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewRepositories from '../ContentViewRepositories';
 import repoData from './contentViewDetailRepos.fixtures.json';
+import noReposAddedData from './contentViewDetailNoReposAdded.fixtures.json';
 import cvDetailData from '../../__tests__/contentViewDetails.fixtures.json';
 import cvRepoAddData from './contentViewRepoAdd.fixture.json';
 
 const autocompleteUrl = '/repositories/auto_complete_search';
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvAllRepos = api.getApiUrl('/content_views/1/repositories/show_all');
+const cvAddedRepos = api.getApiUrl('/content_views/1/repositories');
 const repoTypesResponse = [{ name: 'deb' }, { name: 'docker' }, { name: 'file' }, { name: 'ostree' }, { name: 'yum' }];
 
 const cvDetailsPath = api.getApiUrl('/content_views/1');
@@ -33,6 +35,10 @@ jest.mock('react-intl', () => ({ addLocaleData: () => { }, FormattedDate: () => 
 test('Can enable and disable add repositories button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
+  const noReposScope = nockInstance
+    .get(cvAddedRepos)
+    .query(true)
+    .reply(200, noReposAddedData);
   const scope = nockInstance
     .get(cvAllRepos)
     .query(true)
@@ -43,14 +49,18 @@ test('Can enable and disable add repositories button', async (done) => {
     renderOptions,
   );
 
+  await patientlyWaitFor(() => expect(getByText('Show repositories')).toBeInTheDocument());
+  fireEvent.click(getByText('Show repositories'));
+
   await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
   expect(getByLabelText('Select all')).toBeInTheDocument();
   expect(getByLabelText('add_repositories')).toHaveAttribute('aria-disabled', 'true');
-  getByLabelText('Select all').click();
+  fireEvent.click(getByLabelText('Select all'));
   await patientlyWaitFor(() => {
     expect(getByLabelText('add_repositories')).toHaveAttribute('aria-disabled', 'false');
   });
   assertNockRequest(autocompleteScope);
+  assertNockRequest(noReposScope);
   assertNockRequest(scope, done);
 });
 
@@ -67,6 +77,11 @@ test('Can add repositories', async (done) => {
     .query(true)
     .reply(200, cvDetailData);
 
+  const noReposScope = nockInstance
+    .get(cvAddedRepos)
+    .query(true)
+    .reply(200, noReposAddedData);
+
   const scope = nockInstance
     .get(cvAllRepos)
     .query(true)
@@ -77,17 +92,21 @@ test('Can add repositories', async (done) => {
     renderOptions,
   );
 
+  await patientlyWaitFor(() => expect(getByText('Show repositories')).toBeInTheDocument());
+  fireEvent.click(getByText('Show repositories'));
+
   await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
   expect(getByLabelText('Select all')).toBeInTheDocument();
   expect(getByLabelText('add_repositories')).toHaveAttribute('aria-disabled', 'true');
-  getByLabelText('Select all').click();
-  getByLabelText('add_repositories').click();
+  fireEvent.click(getByLabelText('Select all'));
+  fireEvent.click(getByLabelText('add_repositories'));
   await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
 
   assertNockRequest(repoAddscope);
 
   assertNockRequest(cvDetailScope);
   assertNockRequest(autocompleteScope);
+  assertNockRequest(noReposScope);
   assertNockRequest(scope, done);
   act(done);
 });
@@ -96,7 +115,7 @@ test('Can remove repositories', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const cvRemoveParams = { include_permissions: true, repository_ids: [58, 62, 64] };
   const scope = nockInstance
-    .get(cvAllRepos)
+    .get(cvAddedRepos)
     .query(true)
     .reply(200, repoData);
   const cvDetailScope = nockInstance
@@ -114,16 +133,16 @@ test('Can remove repositories', async (done) => {
 
   await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
   expect(getByLabelText('Select all')).toBeInTheDocument();
-  getByLabelText('Select all').click();
+  fireEvent.click(getByLabelText('Select all'));
   await patientlyWaitFor(() => {
     expect(getByLabelText('bulk_actions')).toHaveAttribute('aria-expanded', 'false');
   });
-  getByLabelText('bulk_actions').click();
+  fireEvent.click(getByLabelText('bulk_actions'));
   await patientlyWaitFor(() => {
     expect(getByLabelText('bulk_actions')).toHaveAttribute('aria-expanded', 'true');
     expect(getByLabelText('bulk_remove')).toBeInTheDocument();
   });
-  getByLabelText('bulk_remove').click();
+  fireEvent.click(getByLabelText('bulk_remove'));
   await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
 
   assertNockRequest(repoRemoveScope);
