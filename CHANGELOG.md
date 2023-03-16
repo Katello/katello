@@ -1,3 +1,10 @@
+# 4.7.4 Whiskey Sour (2023-03-16)
+
+## Bug Fixes
+
+### Repositories
+ * 20230119003859_ensure_repo_username_password_nil_not_blank.rb tries to update repo.upstream_username rather than repo.root.upstream_username ([#36196](https://projects.theforeman.org/issues/36196), [623da34e](https://github.com/Katello/katello.git/commit/623da34ea7b1b29656096058ee4841c46ddd21fc))
+
 # 4.7.3 Whiskey Sour (2023-02-20)
 
 ## Features
