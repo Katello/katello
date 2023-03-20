@@ -22,6 +22,7 @@ import EnvironmentPaths from '../../../../scenes/ContentViews/components/Environ
 import ContentViewSelect from '../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelect';
 import ContentViewSelectOption from '../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelectOption';
 import { selectContentViewsStatus } from '../selectors';
+import { getCVPlaceholderText, shouldDisableCVSelect } from '../../../ContentViews/components/ContentViewSelect/helpers';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
 
@@ -126,6 +127,20 @@ const ContentSourceForm = ({
   const viewIsDisabled = (isLoading || contentViews.length === 0 ||
     contentSourceId === '' || environments === []);
 
+  const cvPlaceholderText = getCVPlaceholderText({
+    contentSourceId,
+    environments,
+    contentViewsStatus,
+    contentViews,
+  });
+
+  const disableCVSelect = shouldDisableCVSelect({
+    contentSourceId,
+    environments,
+    contentViewsStatus,
+    contentViews,
+  });
+
   return (
     <Form
       onSubmit={e => handleSubmit(e)}
@@ -174,22 +189,20 @@ const ContentSourceForm = ({
         headerText={__('Environment')}
         isDisabled={environmentIsDisabled || hostsUpdated}
       />
-      {environments.length > 0 && contentViewsStatus !== STATUS.PENDING &&
-        <ContentViewSelect
-          selections={contentViewName}
-          onClear={() => handleContentView(null)}
-          onSelect={handleCVSelect}
-          isOpen={cvSelectOpen}
-          isDisabled={viewIsDisabled || hostsUpdated}
-          onToggle={isExpanded => setCVSelectOpen(isExpanded)}
-          headerText={__('Content view')}
-          ouiaId="SelectContentView"
-          className="set-select-width"
-          placeholderText={(contentViews.length === 0) ? __('No content views available') : __('Select a content view')}
-        >
-          {contentViews?.map(cv => <ContentViewSelectOption key={`${cv.id}`} cv={cv} env={environments[0]} />)}
-        </ContentViewSelect>
-        }
+      <ContentViewSelect
+        selections={contentViewName}
+        onClear={() => handleContentView(null)}
+        onSelect={handleCVSelect}
+        isOpen={cvSelectOpen}
+        isDisabled={viewIsDisabled || hostsUpdated || disableCVSelect}
+        onToggle={isExpanded => setCVSelectOpen(isExpanded)}
+        headerText={__('Content view')}
+        ouiaId="SelectContentView"
+        className="set-select-width"
+        placeholderText={cvPlaceholderText}
+      >
+        {!environmentIsDisabled && contentViews?.map(cv => <ContentViewSelectOption key={`${cv.id}`} cv={cv} env={environments[0]} />)}
+      </ContentViewSelect>
       <ActionGroup style={{ display: 'block' }}>
         <Button
           variant="primary"

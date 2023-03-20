@@ -10,6 +10,7 @@ import CVDeleteContext from '../CVDeleteContext';
 import EnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPaths';
 import AffectedActivationKeys from '../../Details/Versions/Delete/affectedActivationKeys';
 import ContentViewSelect from '../../components/ContentViewSelect/ContentViewSelect';
+import { getCVPlaceholderText, shouldDisableCVSelect } from '../../components/ContentViewSelect/helpers';
 
 const CVDeletionReassignActivationKeysForm = () => {
   const dispatch = useDispatch();
@@ -78,6 +79,20 @@ const CVDeletionReassignActivationKeysForm = () => {
     setCVSelectOpen(false);
   };
 
+  const placeholderText = getCVPlaceholderText({
+    contentSourceId: null,
+    environments: selectedEnvForAK,
+    contentViewsStatus: contentViewsInEnvStatus,
+    contentViews: cvSelectOptions,
+  });
+
+  const disableCVSelect = shouldDisableCVSelect({
+    contentSourceId: null,
+    environments: selectedEnvForAK,
+    contentViewsStatus: contentViewsInEnvStatus,
+    contentViews: cvSelectOptions,
+  });
+
   return (
     <>
       <EnvironmentPaths
@@ -87,19 +102,17 @@ const CVDeletionReassignActivationKeysForm = () => {
         headerText={__('Select lifecycle environment')}
         multiSelect={false}
       />
-      {!cvInEnvLoading && selectedEnvForAK.length > 0 &&
-        <ContentViewSelect
-          selections={selectedCVForAK}
-          onSelect={onSelect}
-          onClear={onClear}
-          isOpen={cvSelectOpen}
-          isDisabled={cvSelectOptions.length === 0}
-          onToggle={isExpanded => setCVSelectOpen(isExpanded)}
-          placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
-        >
-          {cvSelectOptions}
-        </ContentViewSelect>
-      }
+      <ContentViewSelect
+        selections={selectedCVForAK}
+        onSelect={onSelect}
+        onClear={onClear}
+        isOpen={cvSelectOpen}
+        isDisabled={disableCVSelect}
+        onToggle={isExpanded => setCVSelectOpen(isExpanded)}
+        placeholderText={placeholderText}
+      >
+        {cvSelectOptions}
+      </ContentViewSelect>
       <ExpandableSection
         toggleText={showActivationKeys ?
           'Hide activation keys' :

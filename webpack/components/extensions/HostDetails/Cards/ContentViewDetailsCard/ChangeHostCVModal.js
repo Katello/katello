@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Button, Alert } from '@patternfly/react-core';
@@ -17,6 +17,7 @@ import { getHostDetails } from '../../HostDetailsActions';
 import ContentViewSelect from '../../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelect';
 import ContentViewSelectOption
   from '../../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelectOption';
+import { getCVPlaceholderText } from '../../../../../scenes/ContentViews/components/ContentViewSelect/helpers';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
 
@@ -94,11 +95,16 @@ const ChangeHostCVModal = ({
     ));
   };
 
-  const cvPlaceholderText = useCallback(() => {
-    if (contentViewsInEnvStatus === STATUS.PENDING) return __('Loading...');
-    if (contentViewsInEnvStatus === STATUS.ERROR) return __('Error loading content views');
-    return (contentViewsInEnv.length === 0) ? __('No content views available') : __('Select a content view');
-  }, [contentViewsInEnv.length, contentViewsInEnvStatus]);
+  const cvPlaceholderText = getCVPlaceholderText({
+    environments: selectedEnvForHost,
+    contentViews: contentViewsInEnv,
+    contentViewsStatus: contentViewsInEnvStatus,
+  });
+
+  const stillLoading =
+    (contentViewsInEnvStatus === STATUS.PENDING || hostUpdateStatus === STATUS.PENDING);
+  const noContentViewsAvailable =
+    (contentViewsInEnv.length === 0 || selectedEnvForHost.length === 0);
 
   const modalActions = ([
     <Button
@@ -147,21 +153,19 @@ const ChangeHostCVModal = ({
         headerText={__('Select environment')}
         isDisabled={hostUpdateStatus === STATUS.PENDING}
       />
-      {selectedEnvForHost.length > 0 && contentViewsInEnvStatus !== STATUS.PENDING &&
-        <ContentViewSelect
-          selections={selectedCVForHost}
-          onClear={() => setSelectedCVForHost(null)}
-          onSelect={handleCVSelect}
-          isOpen={cvSelectOpen}
-          isDisabled={contentViewsInEnv.length === 0 || hostUpdateStatus === STATUS.PENDING}
-          onToggle={isExpanded => setCVSelectOpen(isExpanded)}
-          placeholderText={cvPlaceholderText()}
-        >
-          {(contentViewsInEnv.length !== 0) &&
-              contentViewsInEnv?.map(cv =>
-                <ContentViewSelectOption key={cv.id} cv={cv} env={selectedEnvForHost[0]} />)}
-        </ContentViewSelect>
-      }
+      <ContentViewSelect
+        selections={selectedCVForHost}
+        onClear={() => setSelectedCVForHost(null)}
+        onSelect={handleCVSelect}
+        isOpen={cvSelectOpen}
+        isDisabled={stillLoading || noContentViewsAvailable}
+        onToggle={isExpanded => setCVSelectOpen(isExpanded)}
+        placeholderText={cvPlaceholderText}
+      >
+        {(contentViewsInEnv.length !== 0 && selectedEnvForHost.length !== 0) &&
+            contentViewsInEnv?.map(cv =>
+              <ContentViewSelectOption key={cv.id} cv={cv} env={selectedEnvForHost[0]} />)}
+      </ContentViewSelect>
     </Modal>
   );
 };
