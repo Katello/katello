@@ -201,7 +201,7 @@ const ContentSourceForm = ({
         className="set-select-width"
         placeholderText={cvPlaceholderText}
       >
-        {!environmentIsDisabled && contentViews?.map(cv => <ContentViewSelectOption key={`${cv.id}`} cv={cv} env={environments[0]} />)}
+        {!environmentIsDisabled && contentViews?.map(cv => <ContentViewSelectOption key={`${cv.id}`} value={`${cv.name}`} cv={cv} env={environments[0]} />)}
       </ContentViewSelect>
       <ActionGroup style={{ display: 'block' }}>
         <Button

@@ -163,8 +163,14 @@ const ChangeHostCVModal = ({
         placeholderText={cvPlaceholderText}
       >
         {(contentViewsInEnv.length !== 0 && selectedEnvForHost.length !== 0) &&
-            contentViewsInEnv?.map(cv =>
-              <ContentViewSelectOption key={cv.id} cv={cv} env={selectedEnvForHost[0]} />)}
+            contentViewsInEnv?.map(cv => (
+              <ContentViewSelectOption
+                key={cv.id}
+                value={cv.name}
+                cv={cv}
+                env={selectedEnvForHost[0]}
+              />
+            ))}
       </ContentViewSelect>
     </Modal>
   );
