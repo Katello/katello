@@ -95,7 +95,7 @@ export default () => {
     contentSourceId: null,
     environments: selectedEnvForHosts,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: results,
+    cvSelectOptions: selectOptions,
   });
 
   const setUserCheckedItems = (value) => {
@@ -128,7 +128,7 @@ export default () => {
     contentSourceId: null,
     environments: selectedEnvForHosts,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: results,
+    cvSelectOptions: selectOptions,
   });
 
   const contentHostHref =

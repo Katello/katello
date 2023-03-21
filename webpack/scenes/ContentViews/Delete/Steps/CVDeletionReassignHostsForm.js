@@ -84,14 +84,14 @@ const CVDeletionReassignHostsForm = () => {
     contentSourceId: null,
     environments: selectedEnvForHost,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: cvSelectOptions,
+    cvSelectOptions,
   });
 
   const disableCVSelect = shouldDisableCVSelect({
     contentSourceId: null,
     environments: selectedEnvForHost,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: cvSelectOptions,
+    cvSelectOptions,
   });
 
 

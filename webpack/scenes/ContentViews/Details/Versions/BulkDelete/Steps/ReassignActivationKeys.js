@@ -91,14 +91,14 @@ export default () => {
     contentSourceId: null,
     environments: selectedEnvForAK,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: results,
+    cvSelectOptions: selectOptions,
   });
 
   const disableCVSelect = shouldDisableCVSelect({
     contentSourceId: null,
     environments: selectedEnvForAK,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: results,
+    cvSelectOptions: selectOptions,
   });
 
   const setUserCheckedItems = (value) => {

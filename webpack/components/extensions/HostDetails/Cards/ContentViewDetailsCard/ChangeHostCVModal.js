@@ -97,7 +97,7 @@ const ChangeHostCVModal = ({
 
   const cvPlaceholderText = getCVPlaceholderText({
     environments: selectedEnvForHost,
-    contentViews: contentViewsInEnv,
+    cvSelectOptions: contentViewsInEnv,
     contentViewsStatus: contentViewsInEnvStatus,
   });
 

@@ -131,14 +131,14 @@ const ContentSourceForm = ({
     contentSourceId,
     environments,
     contentViewsStatus,
-    contentViews,
+    cvSelectOptions: contentViews,
   });
 
   const disableCVSelect = shouldDisableCVSelect({
     contentSourceId,
     environments,
     contentViewsStatus,
-    contentViews,
+    cvSelectOptions: contentViews,
   });
 
   return (

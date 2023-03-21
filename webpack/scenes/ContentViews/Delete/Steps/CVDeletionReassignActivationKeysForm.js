@@ -83,14 +83,14 @@ const CVDeletionReassignActivationKeysForm = () => {
     contentSourceId: null,
     environments: selectedEnvForAK,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: cvSelectOptions,
+    cvSelectOptions,
   });
 
   const disableCVSelect = shouldDisableCVSelect({
     contentSourceId: null,
     environments: selectedEnvForAK,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: cvSelectOptions,
+    cvSelectOptions,
   });
 
   return (

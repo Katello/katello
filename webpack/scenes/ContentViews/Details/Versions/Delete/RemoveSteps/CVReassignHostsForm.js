@@ -91,14 +91,14 @@ const CVReassignHostsForm = () => {
     contentSourceId: null,
     environments: selectedEnvForHost,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: contentViewsInEnvResponse,
+    cvSelectOptions,
   });
 
   const disableCVSelect = shouldDisableCVSelect({
     contentSourceId: null,
     environments: selectedEnvForHost,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: contentViewsInEnvResponse,
+    cvSelectOptions,
   });
 
   return (

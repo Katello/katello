@@ -92,14 +92,14 @@ const CVReassignActivationKeysForm = () => {
     contentSourceId: null,
     environments: selectedEnvForAK,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: contentViewsInEnvResponse,
+    cvSelectOptions,
   });
 
   const disableCVSelect = shouldDisableCVSelect({
     contentSourceId: null,
     environments: selectedEnvForAK,
     contentViewsStatus: contentViewsInEnvStatus,
-    contentViews: contentViewsInEnvResponse,
+    cvSelectOptions,
   });
 
   return (
