@@ -10,6 +10,7 @@ import CVDeleteContext from '../CVDeleteContext';
 import EnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPaths';
 import AffectedHosts from '../../Details/Versions/Delete/affectedHosts';
 import ContentViewSelect from '../../components/ContentViewSelect/ContentViewSelect';
+import { getCVPlaceholderText, shouldDisableCVSelect } from '../../components/ContentViewSelect/helpers';
 
 
 const CVDeletionReassignHostsForm = () => {
@@ -79,6 +80,21 @@ const CVDeletionReassignHostsForm = () => {
     setCVSelectOpen(false);
   };
 
+  const placeholderText = getCVPlaceholderText({
+    contentSourceId: null,
+    environments: selectedEnvForHost,
+    contentViewsStatus: contentViewsInEnvStatus,
+    cvSelectOptions,
+  });
+
+  const disableCVSelect = shouldDisableCVSelect({
+    contentSourceId: null,
+    environments: selectedEnvForHost,
+    contentViewsStatus: contentViewsInEnvStatus,
+    cvSelectOptions,
+  });
+
+
   return (
     <>
       <EnvironmentPaths
@@ -88,19 +104,17 @@ const CVDeletionReassignHostsForm = () => {
         headerText={__('Select lifecycle environment')}
         multiSelect={false}
       />
-      {selectedEnvForHost.length > 0 &&
-        <ContentViewSelect
-          selections={selectedCVForHosts}
-          onSelect={onSelect}
-          onClear={onClear}
-          isOpen={cvSelectOpen}
-          isDisabled={cvSelectOptions.length === 0}
-          onToggle={isExpanded => setCVSelectOpen(isExpanded)}
-          placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
-        >
-          {cvSelectOptions}
-        </ContentViewSelect>
-      }
+      <ContentViewSelect
+        selections={selectedCVForHosts}
+        onSelect={onSelect}
+        onClear={onClear}
+        isOpen={cvSelectOpen}
+        isDisabled={disableCVSelect}
+        onToggle={isExpanded => setCVSelectOpen(isExpanded)}
+        placeholderText={placeholderText}
+      >
+        {cvSelectOptions}
+      </ContentViewSelect>
       <ExpandableSection
         toggleText={showHosts ? 'Hide hosts' : 'Show hosts'}
         onToggle={expanded => setShowHosts(expanded)}

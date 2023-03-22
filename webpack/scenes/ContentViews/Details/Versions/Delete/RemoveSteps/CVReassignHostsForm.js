@@ -10,6 +10,7 @@ import { selectContentViewError, selectContentViews, selectContentViewStatus } f
 import AffectedHosts from '../affectedHosts';
 import DeleteContext from '../DeleteContext';
 import ContentViewSelect from '../../../../components/ContentViewSelect/ContentViewSelect';
+import { getCVPlaceholderText, shouldDisableCVSelect } from '../../../../components/ContentViewSelect/helpers';
 
 const CVReassignHostsForm = () => {
   const dispatch = useDispatch();
@@ -86,6 +87,20 @@ const CVReassignHostsForm = () => {
     setCVSelectOpen(false);
   };
 
+  const placeholderText = getCVPlaceholderText({
+    contentSourceId: null,
+    environments: selectedEnvForHost,
+    contentViewsStatus: contentViewsInEnvStatus,
+    cvSelectOptions,
+  });
+
+  const disableCVSelect = shouldDisableCVSelect({
+    contentSourceId: null,
+    environments: selectedEnvForHost,
+    contentViewsStatus: contentViewsInEnvStatus,
+    cvSelectOptions,
+  });
+
   return (
     <>
       <EnvironmentPaths
@@ -95,23 +110,21 @@ const CVReassignHostsForm = () => {
         headerText={__('Select lifecycle environment')}
         multiSelect={false}
       />
-      {selectedEnvForHost.length > 0 &&
-        <ContentViewSelect
-          onClear={onClear}
-          selections={selectedCVForHosts}
-          onSelect={onSelect}
-          isOpen={cvSelectOpen}
-          isDisabled={cvSelectOptions.length === 0}
-          onToggle={isExpanded => setCVSelectOpen(isExpanded)}
-          id="selectCV"
-          ouiaId="selectCV"
-          name="selectCV"
-          aria-label="selectCV"
-          placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
-        >
-          {cvSelectOptions}
-        </ContentViewSelect>
-      }
+      <ContentViewSelect
+        onClear={onClear}
+        selections={selectedCVForHosts}
+        onSelect={onSelect}
+        isOpen={cvSelectOpen}
+        isDisabled={disableCVSelect}
+        onToggle={isExpanded => setCVSelectOpen(isExpanded)}
+        id="selectCV"
+        ouiaId="selectCV"
+        name="selectCV"
+        aria-label="selectCV"
+        placeholderText={placeholderText}
+      >
+        {cvSelectOptions}
+      </ContentViewSelect>
       <ExpandableSection
         toggleText={showHosts ? 'Hide hosts' : 'Show hosts'}
         onToggle={expanded => setShowHosts(expanded)}

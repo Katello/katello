@@ -4,7 +4,6 @@ import React, {
 } from 'react';
 
 import { translate as __ } from 'foremanReact/common/I18n';
-import { STATUS } from 'foremanReact/constants';
 import { first } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -38,6 +37,7 @@ import {
   getNumberOfActivationKeys,
 } from '../BulkDeleteHelpers';
 import ContentViewSelect from '../../../../components/ContentViewSelect/ContentViewSelect';
+import { getCVPlaceholderText, shouldDisableCVSelect } from '../../../../components/ContentViewSelect/helpers';
 
 export default () => {
   const dispatch = useDispatch();
@@ -52,7 +52,6 @@ export default () => {
   const { results = [] } = useSelector(selectContentViews);
   const { content_view: { id: cvId } } = first(versions);
   const contentViewsInEnvStatus = useSelector(selectContentViewStatus);
-  const cvInEnvLoading = contentViewsInEnvStatus === STATUS.PENDING;
   const [toggleCVSelect, setToggleCVSelect] = useState(false);
 
   const numberOfActivationKeys = getNumberOfActivationKeys(versions);
@@ -88,18 +87,19 @@ export default () => {
         {name}
       </SelectOption>));
 
-  const placeHolder = (() => {
-    switch (true) {
-    case cvInEnvLoading && !!selectedEnvForAK.length:
-      return __('Loading...');
-    case selectedEnvForAK.length === 0:
-      return __('Select an environment above');
-    case selectOptions.length > 0:
-      return __('Select a content view');
-    default:
-      return __('No content views available');
-    }
-  })();
+  const placeholderText = getCVPlaceholderText({
+    contentSourceId: null,
+    environments: selectedEnvForAK,
+    contentViewsStatus: contentViewsInEnvStatus,
+    cvSelectOptions: selectOptions,
+  });
+
+  const disableCVSelect = shouldDisableCVSelect({
+    contentSourceId: null,
+    environments: selectedEnvForAK,
+    contentViewsStatus: contentViewsInEnvStatus,
+    cvSelectOptions: selectOptions,
+  });
 
   const setUserCheckedItems = (value) => {
     setSelectedCVForAK(null);
@@ -178,8 +178,8 @@ export default () => {
         selections={selectedCVForAK}
         onSelect={onSelect}
         onClear={onClear}
-        isDisabled={cvInEnvLoading || !selectOptions?.length || !selectedEnvForAK?.length}
-        placeholderText={placeHolder}
+        isDisabled={disableCVSelect}
+        placeholderText={placeholderText}
         isOpen={toggleCVSelect}
         onToggle={setToggleCVSelect}
         menuAppendTo={() => document.body}

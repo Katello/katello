@@ -30,11 +30,12 @@ const ContentViewSelect = ({
 ContentViewSelect.propTypes = {
   headerText: PropTypes.string,
   onClear: PropTypes.func.isRequired,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };
 
 ContentViewSelect.defaultProps = {
   headerText: __('Select content view'),
+  children: [],
 };
 
 export default ContentViewSelect;

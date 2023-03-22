@@ -44,10 +44,10 @@ export const relevantVersionObjFromCv = (cv, env) => { // returns the entire ver
 export const relevantVersionFromCv = (cv, env) =>
     relevantVersionObjFromCv(cv, env)?.version; // returns the version text e.g. "1.0"
 
-const ContentViewSelectOption = ({ cv, env }) => (
+const ContentViewSelectOption = ({ cv, env, value }) => (
   <SelectOption
     key={cv.id}
-    value={`${cv.name}`}
+    value={value}
   >
     <Flex
       direction={{ default: 'row', sm: 'row' }}
@@ -82,6 +82,7 @@ ContentViewSelectOption.propTypes = {
   env: PropTypes.shape({
     id: PropTypes.number.isRequired,
   }).isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 export default ContentViewSelectOption;
