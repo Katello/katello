@@ -13,6 +13,13 @@ $(document).on('ContentLoad', function(){
     KT.hosts.set_media_selection_bindings();
 });
 
+KT.hosts.contentSourceChanged = function() {
+  $("#hostgroup_lifecycle_environment_id").val("");
+  $("#host_lifecycle_environment_id").val("");
+  KT.hosts.fetchEnvironments();
+  KT.hosts.environmentChanged();
+};
+
 KT.hosts.environmentChanged = function() {
   // if we don't save the currently selected view it's likely
   // it will be undefined in toggle_installation_medium due to the CV dropdown reload
@@ -20,6 +27,23 @@ KT.hosts.environmentChanged = function() {
 
   KT.hosts.fetchContentViews();
   KT.hosts.toggle_installation_medium(previous_content_view);
+};
+
+KT.hosts.fetchEnvironments = function () {
+  var select = KT.hosts.getEnvironmentSelect();
+  var content_source_id = $('#content_source_id').val();
+  var option;
+  select.find('option').remove();
+  if (content_source_id) {
+    var url = tfm.tools.foremanUrl('/katello/api/capsules/' + content_source_id);
+    $.get(url, function (content_source) {
+      $.each(content_source.lifecycle_environments, function(index, env) {
+	option = $("<option />").val(env.id).text(env.name);
+	select.append(option);
+      });
+      select.trigger('change');
+    });
+  }
 };
 
 KT.hosts.fetchContentViews = function () {
@@ -31,7 +55,7 @@ KT.hosts.fetchContentViews = function () {
     select.find('option').remove();
     if (envId) {
         KT.hosts.signalContentViewFetch(true);
-        var url = tfm.tools.foremanUrl('/katello/api/v2/content_views/');
+        var url = tfm.tools.foremanUrl('/katello/api/v2/content_views');
         $.get(url, {environment_id: envId, full_result: true}, function (data) {
             if ($('#hostgroup_parent_id').length > 0) {
                 select.append($("<option />").text(previousInheritViewText).val(''));
@@ -86,12 +110,20 @@ KT.hosts.getSelectedContentView = function() {
     return select.val() || select.find("option:selected").data("id");
 };
 
+KT.hosts.getEnvironmentSelect = function() {
+    var select = $("#hostgroup_lifecycle_environment_id").first();
+    if(select.length === 0) {
+        select = $("#host_lifecycle_environment_id").first();
+    }
+    return select;
+};
+
 KT.hosts.getSelectedEnvironment = function () {
     var envId = $("#hostgroup_lifecycle_environment_id").val();
-    if(envId === undefined || envId.length === 0) {
+    if(envId === undefined || envId === null || envId.length === 0) {
         envId = $("#host_lifecycle_environment_id").val()
     }
-    if(envId === undefined || envId.length === 0) {
+    if(envId === undefined || envId === null || envId.length === 0) {
         envId = $("#hostgroup_lifecycle_environment_id > option:selected").data("id");
     }
 
@@ -114,6 +146,7 @@ KT.hosts.onKatelloHostEditLoad = function(){
     });
 
     $('body').on('change', '#content_source_id', function () {
+        KT.hosts.contentSourceChanged();
         KT.hosts.toggle_installation_medium();
     });
 };
