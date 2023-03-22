@@ -28,11 +28,10 @@ import { deleteContentViewFilterRules, getCVFilterRules, removeCVFilterRule } fr
 import AddEditContainerTagRuleModal from './Rules/ContainerTag/AddEditContainerTagRuleModal';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 import { hasPermission } from '../../helpers';
-
-const emptyContentTitle = __('No rules have been added to this filter.');
-const emptyContentBody = __('Items will appear here when a filter rule is added.');
-const emptySearchTitle = __('No matching filter rules found.');
-const emptySearchBody = __('Try changing your search settings.');
+import { emptyContentTitle,
+  emptyContentBody,
+  emptySearchTitle,
+  emptySearchBody } from './FilterRuleConstants';
 
 const CVContainerImageFilterContent = ({
   cvId, filterId, showAffectedRepos, setShowAffectedRepos, details,

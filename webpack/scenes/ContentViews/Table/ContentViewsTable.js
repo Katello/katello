@@ -129,8 +129,8 @@ const ContentViewTable = () => {
     [apiSortParams],
   );
 
-  const emptyContentTitle = __("You currently don't have any Content views.");
-  const emptyContentBody = __('A content view can be added by using the "Create content view" button below.');
+  const emptyContentTitle = __('No content views yet');
+  const emptyContentBody = __('You currently have no content views to display');
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');
   const showPrimaryAction = true;

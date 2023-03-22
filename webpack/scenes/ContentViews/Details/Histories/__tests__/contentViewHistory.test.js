@@ -77,7 +77,7 @@ test('Can handle no History being present', async (done) => {
   const { queryByText } = renderWithRedux(<ContentViewHistories cvId={1} />, renderOptions);
 
   expect(queryByText(firstHistory.description)).toBeNull();
-  await patientlyWaitFor(() => expect(queryByText("You currently don't have any history for this content view.")).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(queryByText('History will appear here when the content view is published or promoted.')).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });

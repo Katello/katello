@@ -107,8 +107,8 @@ const ContentViewFilters = ({ cvId, details }) => {
     },
   ];
 
-  const emptyContentTitle = __("You currently don't have any filters for this content view.");
-  const emptyContentBody = __('Filters will appear here when the filter is created.'); // needs link
+  const emptyContentTitle = __('No filters yet');
+  const emptyContentBody = __('To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.');
   const emptySearchTitle = __('No matching filters found');
   const emptySearchBody = __('Try changing your search settings.');
   const showPrimaryAction = true;

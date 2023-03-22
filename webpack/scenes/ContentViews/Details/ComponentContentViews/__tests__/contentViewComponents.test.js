@@ -179,7 +179,7 @@ test('Can handle no components being present', async (done) => {
     renderWithRedux(<ContentViewComponents cvId={4} details={mockDetails} />, renderOptions);
 
   expect(queryByText(firstComponent.content_view.label)).toBeNull();
-  await patientlyWaitFor(() => expect(queryByText('No content views belong to test_empty')).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(queryByText('No content views to add yet')).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });

@@ -194,8 +194,8 @@ const CVModuleStreamFilterContent = ({
     },
   ];
 
-  const emptyContentTitle = __('No rules have been added to this filter.');
-  const emptyContentBody = __("Add to this filter using the 'Add filter rule' button.");
+  const emptyContentTitle = __('No module stream filter rules yet');
+  const emptyContentBody = __('No module streams to add yet.');
   const emptySearchTitle = __('No matching filter rules found.');
   const emptySearchBody = __('Try changing your search settings.');
 
@@ -236,49 +236,50 @@ const CVModuleStreamFilterContent = ({
             actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
             onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
             actionButtons={hasPermission(permissions, 'edit_content_views') &&
-              <Split hasGutter>
-                <SplitItem data-testid="allAddedNotAdded">
-                  <Select
-                    variant={SelectVariant.single}
-                    onToggle={setSelectOpen}
-                    ouiaId="added-notAdded-selector"
-                    onSelect={(_event, selection) => {
-                      setSelectedIndex(allAddedNotAdded.indexOf(selection));
-                      setSelectOpen(false);
-                    }}
-                    selections={selectedAdded}
-                    isOpen={selectOpen}
-                    isCheckboxSelectionBadgeHidden
-                  >
-                    {allAddedNotAdded.map(item =>
-                      <SelectOption aria-label={item} key={item} value={item} />)}
-                  </Select>
-                </SplitItem>
-                <SplitItem>
-                  <Button
-                    ouiaId="add-module-stream-rule-button"
-                    isDisabled={!hasNotAddedSelected}
-                    onClick={bulkAdd}
-                    variant="primary"
-                    aria-label="add_filter_rule"
-                  >
-                    {__('Add filter rule')}
-                  </Button>
-                </SplitItem>
-                <SplitItem>
-                  <Dropdown
-                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                    isOpen={bulkActionOpen}
-                    ouiaId="bulk-actions-dropdown"
-                    isPlain
-                    dropdownItems={[
-                      <DropdownItem ouiaId="bulk-remove" aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
-                        {__('Remove')}
-                      </DropdownItem>]
+                status === STATUS.RESOLVED && rows.length !== 0 &&
+                <Split hasGutter>
+                  <SplitItem data-testid="allAddedNotAdded">
+                    <Select
+                      variant={SelectVariant.single}
+                      onToggle={setSelectOpen}
+                      ouiaId="added-notAdded-selector"
+                      onSelect={(_event, selection) => {
+                        setSelectedIndex(allAddedNotAdded.indexOf(selection));
+                        setSelectOpen(false);
+                      }}
+                      selections={selectedAdded}
+                      isOpen={selectOpen}
+                      isCheckboxSelectionBadgeHidden
+                    >
+                      {allAddedNotAdded.map(item =>
+                        <SelectOption aria-label={item} key={item} value={item} />)}
+                    </Select>
+                  </SplitItem>
+                  <SplitItem>
+                    <Button
+                      ouiaId="add-module-stream-rule-button"
+                      isDisabled={!hasNotAddedSelected}
+                      onClick={bulkAdd}
+                      variant="primary"
+                      aria-label="add_filter_rule"
+                    >
+                      {__('Add filter rule')}
+                    </Button>
+                  </SplitItem>
+                  <SplitItem>
+                    <Dropdown
+                      toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                      isOpen={bulkActionOpen}
+                      ouiaId="bulk-actions-dropdown"
+                      isPlain
+                      dropdownItems={[
+                        <DropdownItem ouiaId="bulk-remove" aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
+                          {__('Remove')}
+                        </DropdownItem>]
                     }
-                  />
-                </SplitItem>
-              </Split>
+                    />
+                  </SplitItem>
+                </Split>
             }
           />
         </div>

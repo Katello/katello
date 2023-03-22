@@ -18,6 +18,10 @@ import CVDebMatchContentModal from './MatchContentModal/CVDebMatchContentModal';
 import AddEditDebPackageRuleModal from './Rules/DebPackage/AddEditDebPackageRuleModal';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 import { hasPermission } from '../../helpers';
+import { emptyContentTitle,
+  emptyContentBody,
+  emptySearchTitle,
+  emptySearchBody } from './FilterRuleConstants';
 
 const CVDebFilterContent = ({
   cvId, filterId, inclusion, showAffectedRepos, setShowAffectedRepos, details,
@@ -104,10 +108,6 @@ const CVDebFilterContent = ({
     }
   }, [showAffectedRepos, repositories.length]);
 
-  const emptyContentTitle = __('No rules have been added to this filter.');
-  const emptyContentBody = __("Add to this filter using the 'Add Deb rule' button.");
-  const emptySearchTitle = __('No matching rules found.');
-  const emptySearchBody = __('Try changing your search settings.');
   const tabTitle = (inclusion ? __('Included') : __('Excluded')) + __(' DEBs');
 
 
