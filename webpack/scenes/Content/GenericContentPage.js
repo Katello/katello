@@ -12,7 +12,7 @@ import { getContentTypes } from './ContentActions';
 import Loading from '../../components/Loading';
 import EmptyStateMessage from '../../components/Table/EmptyStateMessage';
 
-const ContentPage = () => {
+const GenericContentPage = () => {
   const dispatch = useDispatch();
   const contentTypesResponse = useSelector(selectContentTypes);
   const contentTypesStatus = useSelector(selectContentTypesStatus);
@@ -86,4 +86,4 @@ const ContentPage = () => {
   );
 };
 
-export default ContentPage;
+export default GenericContentPage;

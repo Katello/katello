@@ -6,7 +6,7 @@ import { getControllerSearchProps } from 'foremanReact/constants';
 import ContentTable from './ContentTable';
 import { useClearSearch } from '../extensions/SearchBar/SearchBarHooks';
 
-const ContentPage = ({
+const GenericContentPage = ({
   header, onSearch, bookmarkController,
   autocompleteEndpoint, autocompleteQueryParams,
   updateSearchQuery, initialInputValue,
@@ -52,7 +52,7 @@ const ContentPage = ({
   );
 };
 
-ContentPage.propTypes = {
+GenericContentPage.propTypes = {
   header: PropTypes.string.isRequired,
   content: PropTypes.shape({}).isRequired,
   tableSchema: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -65,10 +65,10 @@ ContentPage.propTypes = {
   bookmarkController: PropTypes.string,
 };
 
-ContentPage.defaultProps = {
+GenericContentPage.defaultProps = {
   autocompleteEndpoint: undefined,
   autocompleteQueryParams: undefined,
   bookmarkController: undefined,
 };
 
-export default ContentPage;
+export default GenericContentPage;

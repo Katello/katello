@@ -9,7 +9,7 @@ import { default as TypeAheadSearchPf4 } from './pf4Search/TypeAheadSearch';
 import { getActiveItems } from './helpers/helpers';
 import './TypeAhead.scss';
 import useDebounce from '../../utils/useDebounce';
-import { selectHostDetailsClearSearch } from '../extensions/HostDetails/HostDetailsSelectors';
+import { selectSearchBarClearSearch } from '../extensions/SearchBar/SearchBarSelectors';
 
 
 const TypeAhead = ({
@@ -31,7 +31,7 @@ const TypeAhead = ({
   const [inputValue, setInputValue] = useState(initialInputValue);
   const debouncedValue = useDebounce(inputValue, autoSearchDelay);
   const dispatch = useDispatch();
-  const existingClearSearch = useSelector(selectHostDetailsClearSearch);
+  const existingClearSearch = useSelector(selectSearchBarClearSearch);
   useEffect(
     () => {
       onInputUpdate(debouncedValue);

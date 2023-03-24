@@ -1,4 +1,4 @@
 import { withRouter } from 'react-router-dom';
-import ContentPage from './ContentPage';
+import GenericContentPage from './GenericContentPage';
 
-export default withRouter(ContentPage);
+export default withRouter(GenericContentPage);
