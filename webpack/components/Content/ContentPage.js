@@ -4,6 +4,7 @@ import { Grid, Col, Row, Form, FormGroup } from 'react-bootstrap';
 import SearchBar from 'foremanReact/components/SearchBar';
 import { getControllerSearchProps } from 'foremanReact/constants';
 import ContentTable from './ContentTable';
+import { useClearSearch } from '../extensions/SearchBar/SearchBarHooks';
 
 const ContentPage = ({
   header, onSearch, bookmarkController,
@@ -15,6 +16,7 @@ const ContentPage = ({
     ...getControllerSearchProps(autocompleteEndpoint, `searchBar-content-page-${header}`, true, autocompleteQueryParams),
     controller: bookmarkController,
   };
+  const searchBarKey = useClearSearch({ updateSearchQuery });
   return (
     <Grid bsClass="container-fluid">
       <Row>
@@ -27,6 +29,7 @@ const ContentPage = ({
           <Form className="toolbar-pf-actions">
             <FormGroup className="toolbar-pf toolbar-pf-filter">
               <SearchBar
+                key={searchBarKey}
                 data={searchDataProp}
                 onSearch={onSearch}
                 onSearchChange={updateSearchQuery}

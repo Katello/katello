@@ -13,6 +13,7 @@ import { moduleStreamDetails } from '../../scenes/ModuleStreams/Details';
 import { reducers as systemStatuses } from '../../components/extensions/about';
 import { contentViewDetails } from '../../scenes/ContentViews/Details';
 import hostDetails from '../../components/extensions/HostDetails/HostDetailsReducer';
+import searchBar from '../../components/extensions/SearchBar/SearchBarReducer';
 
 export default combineReducers({
   organization,
@@ -27,6 +28,7 @@ export default combineReducers({
   moduleStreamDetails,
   contentViewDetails,
   hostDetails,
+  searchBar,
   ...organizationProductsReducers,
   ...systemStatuses,
 });
