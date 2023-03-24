@@ -65,7 +65,8 @@ module Katello
         prepend ::ForemanRemoteExecution::HostExtensions if ::Katello.with_remote_execution?
         prepend Overrides
 
-        delegate :content_source_id, :single_content_view, :single_lifecycle_environment, :default_environment?, :single_content_view_environment?, :multi_content_view_environment?, :kickstart_repository_id, :bound_repositories, to: :content_facet, allow_nil: true
+        delegate :content_source_id, :single_content_view, :single_lifecycle_environment, :default_environment?, :single_content_view_environment?, :multi_content_view_environment?, :kickstart_repository_id, :bound_repositories,
+          :installable_errata, :installable_rpms, to: :content_facet, allow_nil: true
 
         has_many :content_view_environment_content_facets, through: :content_facet, class_name: 'Katello::ContentViewEnvironmentContentFacet'
         has_many :content_view_environments, through: :content_view_environment_content_facets
