@@ -4,7 +4,7 @@ import qs from 'query-string';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { orgId } from '../../services/api';
 import TableSchema from '../ModuleStreams/ModuleStreamsTableSchema';
-import ContentPage from '../../components/Content/ContentPage';
+import GenericContentPage from '../../components/Content/GenericContentPage';
 
 class ModuleStreamsPage extends Component {
   constructor(props) {
@@ -39,7 +39,7 @@ class ModuleStreamsPage extends Component {
   render() {
     const { moduleStreams } = this.props;
     return (
-      <ContentPage
+      <GenericContentPage
         header={__('Module Streams')}
         content={moduleStreams}
         tableSchema={TableSchema}

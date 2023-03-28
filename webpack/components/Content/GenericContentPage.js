@@ -4,8 +4,9 @@ import { Grid, Col, Row, Form, FormGroup } from 'react-bootstrap';
 import SearchBar from 'foremanReact/components/SearchBar';
 import { getControllerSearchProps } from 'foremanReact/constants';
 import ContentTable from './ContentTable';
+import { useClearSearch } from '../extensions/SearchBar/SearchBarHooks';
 
-const ContentPage = ({
+const GenericContentPage = ({
   header, onSearch, bookmarkController,
   autocompleteEndpoint, autocompleteQueryParams,
   updateSearchQuery, initialInputValue,
@@ -15,6 +16,7 @@ const ContentPage = ({
     ...getControllerSearchProps(autocompleteEndpoint, `searchBar-content-page-${header}`, true, autocompleteQueryParams),
     controller: bookmarkController,
   };
+  const searchBarKey = useClearSearch({ updateSearchQuery });
   return (
     <Grid bsClass="container-fluid">
       <Row>
@@ -27,6 +29,7 @@ const ContentPage = ({
           <Form className="toolbar-pf-actions">
             <FormGroup className="toolbar-pf toolbar-pf-filter">
               <SearchBar
+                key={searchBarKey}
                 data={searchDataProp}
                 onSearch={onSearch}
                 onSearchChange={updateSearchQuery}
@@ -49,7 +52,7 @@ const ContentPage = ({
   );
 };
 
-ContentPage.propTypes = {
+GenericContentPage.propTypes = {
   header: PropTypes.string.isRequired,
   content: PropTypes.shape({}).isRequired,
   tableSchema: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -62,10 +65,10 @@ ContentPage.propTypes = {
   bookmarkController: PropTypes.string,
 };
 
-ContentPage.defaultProps = {
+GenericContentPage.defaultProps = {
   autocompleteEndpoint: undefined,
   autocompleteQueryParams: undefined,
   bookmarkController: undefined,
 };
 
-export default ContentPage;
+export default GenericContentPage;

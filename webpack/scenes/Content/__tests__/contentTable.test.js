@@ -2,7 +2,7 @@ import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../test-utils/nockWrapper';
 import api from '../../../services/api';
-import ContentPage from '../ContentPage';
+import GenericContentPage from '../GenericContentPage';
 import ansibleCollectionsResponse from './ansibleCollections.fixtures';
 import contentTypesResponse from './contentTypes.fixtures.json';
 import pythonPackagesResponse from './pythonPackages.fixtures.json';
@@ -29,7 +29,7 @@ test('Can call API for Python Packages and show table on page load', async (done
     .reply(200, contentTypesResponse);
 
   const { queryByText, getAllByText } =
-    renderWithRedux(<ContentPage />);
+    renderWithRedux(<GenericContentPage />);
 
   expect(queryByText(firstPackage.name)).toBeNull();
   await patientlyWaitFor(() => {

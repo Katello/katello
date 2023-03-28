@@ -1,3 +1,2 @@
-export const SET_CLEAR_SEARCH = 'SET_CLEAR_SEARCH';
 const HOST_DETAILS = 'HOST_DETAILS';
 export default HOST_DETAILS;
