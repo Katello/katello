@@ -14,6 +14,7 @@ import MainTable from './MainTable';
 import { getPageStats } from './helpers';
 import SelectAllCheckbox from '../SelectAllCheckbox';
 import { orgId } from '../../services/api';
+import { useClearSearch } from '../extensions/SearchBar/SearchBarHooks';
 
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
@@ -132,6 +133,8 @@ const TableWrapper = ({
     spawnFetch();
   }, [searchQuery, spawnFetch, additionalListeners]);
 
+  const searchBarKey = useClearSearch({ updateSearchQuery });
+
   // If the new page wouldn't exist because of a perPage change,
   // we should set the current page to the last page.
   const validatePagination = (data) => {
@@ -194,6 +197,7 @@ const TableWrapper = ({
               data={searchDataProp}
               initialQuery={searchQuery}
               onSearch={search => updateSearchQuery(search)}
+              key={searchBarKey}
             />
           </FlexItem>
         }

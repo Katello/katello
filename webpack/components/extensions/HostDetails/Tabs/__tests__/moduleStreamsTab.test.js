@@ -93,6 +93,82 @@ test('Can handle no Module streams being present', async (done) => {
   act(done);
 });
 
+test('When there are no search results, can display an empty state with a clear search link that works', async (done) => {
+  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const noResults = {
+    total: 0,
+    subtotal: 0,
+    page: 1,
+    search: 'bad search',
+    per_page: 20,
+    results: [],
+  };
+
+  const initialScope = nockInstance
+    .get(hostModuleStreams)
+    .query(true)
+    .times(1)
+    .reply(200, mockModuleStreams);
+
+  const badSearchScope = nockInstance
+    .get(hostModuleStreams)
+    .query({
+      sort_by: 'name',
+      sort_order: 'asc',
+      per_page: '20',
+      page: '1',
+      search: 'bad search',
+    })
+    .reply(200, noResults);
+
+  const badAutoCompleteScope =
+    mockForemanAutocomplete(
+      nockInstance,
+      autocompleteUrl,
+      true,
+      [],
+      2, // times
+    );
+
+  const scopeWithoutSearch = nockInstance
+    .get(hostModuleStreams)
+    .query(true)
+    .reply(200, mockModuleStreams);
+
+  const { queryByText, getByRole } = renderWithRedux(<ModuleStreamsTab />, renderOptions());
+
+
+  await patientlyWaitFor(() => expect(queryByText(firstModuleStreams.name)).toBeInTheDocument());
+
+  const searchInput = getByRole('textbox', { name: 'Search input' });
+  // Foreman SearchAutocomplete doesn't run onSearchChange unless the element is focused!
+  searchInput.focus();
+
+  fireEvent.change(searchInput, { target: { value: 'bad search' } });
+  expect(searchInput.value).toBe('bad search');
+  const searchButton = getByRole('button', { name: 'Search' });
+  expect(searchButton).not.toHaveAttribute('aria-disabled', true);
+  fireEvent.click(searchButton);
+
+  await patientlyWaitFor(() => expect(queryByText('Your search returned no matching Module streams.')).toBeInTheDocument());
+  // Now click the clear search link and assert that the search is cleared and the results are back
+  const clearSearchLink = getByRole('button', { name: 'Clear search' });
+  fireEvent.click(clearSearchLink);
+
+  await patientlyWaitFor(() => {
+    expect(queryByText(firstModuleStreams.name)).toBeInTheDocument();
+    expect(getByRole('textbox', { name: 'Search input' }).value).toBe('');
+    expect(queryByText('Clear search')).not.toBeInTheDocument();
+  });
+
+  assertNockRequest(initialScope);
+  assertNockRequest(badAutoCompleteScope);
+  assertNockRequest(badSearchScope);
+  assertNockRequest(scopeWithoutSearch);
+  assertNockRequest(autocompleteScope, done);
+});
+
 test('Can filter results based on status', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
