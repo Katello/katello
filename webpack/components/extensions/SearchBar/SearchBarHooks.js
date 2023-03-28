@@ -44,7 +44,7 @@ export const useClearSearch = ({
     };
   }, [dispatch]);
 
-  return counter.current;
+  return `search-bar-${counter.current}`;
 };
 
 export default useClearSearch;
