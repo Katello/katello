@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
-import ContentTable from '../ContentTable';
 import { LoadingState } from '../../../components/LoadingState';
 import { Table } from '../../../components/pf3Table';
+import ContentTable from '../ContentTable';
 
 describe('Content Table', () => {
   it('should render and contain appropriate components', async () => {

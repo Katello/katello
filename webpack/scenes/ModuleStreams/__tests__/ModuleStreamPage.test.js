@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import ModuleStreamsPage from '../ModuleStreamsPage';
-import ContentPage from '../../../components/Content/ContentPage';
+import GenericContentPage from '../../../components/Content/GenericContentPage';
 
 describe('Module streams page', () => {
   it('should render and contain appropiate components', async () => {
@@ -17,7 +17,7 @@ describe('Module streams page', () => {
     />);
 
     expect(toJson(wrapper)).toMatchSnapshot();
-    expect(wrapper.find(ContentPage)).toHaveLength(1);
+    expect(wrapper.find(GenericContentPage)).toHaveLength(1);
   });
 });
 

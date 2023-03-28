@@ -14,7 +14,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { CubeIcon, ExclamationCircleIcon, SearchIcon, CheckCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { global_danger_color_200 as dangerColor, global_success_color_100 as successColor } from '@patternfly/react-tokens';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectHostDetailsClearSearch } from '../extensions/HostDetails/HostDetailsSelectors';
+import { selectSearchBarClearSearch } from '../extensions/SearchBar/SearchBarSelectors';
 
 const KatelloEmptyStateIcon = ({
   error, search, customIcon, happyIcon,
@@ -51,7 +51,7 @@ const EmptyStateMessage = ({
   const defaultSecondaryActionText = searchIsActive ? __('Clear search') : __('Clear filters');
   const secondaryActionText = secondaryActionTextOverride || defaultSecondaryActionText;
   const dispatch = useDispatch();
-  const clearSearch = useSelector(selectHostDetailsClearSearch);
+  const clearSearch = useSelector(selectSearchBarClearSearch);
   const showSecondaryActionAnchor = showSecondaryAction && secondaryActionLink;
   const handleClick = () => {
     if (searchIsActive) {
