@@ -110,6 +110,7 @@ module Actions
         def finalize
           version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
           version.update_content_counts!
+          version.add_applied_filters!
           # update errata applicability counts for all hosts in the CV & Library
           unless input[:skip_promotion]
             content_view = ::Katello::ContentView.find(input[:content_view_id])
