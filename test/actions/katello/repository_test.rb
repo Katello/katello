@@ -111,6 +111,7 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::Update }
     let(:candlepin_action_class) { ::Actions::Candlepin::Product::ContentUpdate }
     let(:repository) { katello_repositories(:fedora_17_unpublished) }
+    let(:docker_repository) { katello_repositories(:redis) }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Update }
     let(:simplified_acs) { katello_alternate_content_sources(:yum_alternate_content_source) }
     let(:proxy) { SmartProxy.pulp_primary }
@@ -165,6 +166,37 @@ module ::Actions::Katello::Repository
       plan_action action, repository.root, :url => 'https://fixtures.pulpproject.org/rpm-with-modules/'
       assert_action_planned action, ::Actions::Pulp3::Orchestration::AlternateContentSource::Update
     end
+
+    it 'does not plan ACS product removal when removing one of many URLs for a product' do
+      ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: repository.id)
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+
+      # when removing one of the URLs, the product should not be removed
+      plan_action action, repository.root, :url => nil
+      simplified_acs.reload
+      assert_not_equal(0, simplified_acs.products.length)
+    end
+
+    it 'plans ACS product removal when removing the last URL for a product' do
+      ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: repository.id)
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+
+      # manually remove the URLs from all repos in product except repository
+      repository.product.repositories.each do |repo|
+        repo.root.update!(url: nil) unless repo.id == repository.id
+      end
+      url_sum = repository.product.repositories.count do |repo|
+        repo.root.url.present?
+      end
+      assert_equal(1, url_sum) # double check there's only one URL left
+
+      # Since there is only one URL remaining, the product should be removed
+      plan_action action, repository.root, :url => nil
+      simplified_acs.reload
+      assert_equal(0, simplified_acs.products.length)
+    end
   end
 
   class DestroyTest < TestBase
@@ -174,6 +206,11 @@ module ::Actions::Katello::Repository
     let(:in_use_repository) { katello_repositories(:fedora_17_no_arch) }
     let(:published_repository) { katello_repositories(:rhel_6_x86_64) }
     let(:published_fedora_repository) { katello_repositories(:fedora_17_x86_64) }
+    let(:simplified_acs) { katello_alternate_content_sources(:yum_alternate_content_source) }
+    def setup
+      simplified_acs.products << published_repository.product
+      ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id)
+    end
 
     it 'plans' do
       action = create_action action_class
@@ -299,6 +336,37 @@ module ::Actions::Katello::Repository
       assert_raises(RuntimeError) do
         plan_action action, published_repository
       end
+    end
+
+    it 'does not plan ACS product removal when deleting one of many repos with URL' do
+      ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: published_repository.id)
+      action = create_action action_class
+      action.stubs(:action_subject).with(published_repository)
+
+      # when removing one of the URLs, the product should not be removed
+      plan_action action, published_repository, remove_from_content_view_versions: true
+      simplified_acs.reload
+      assert_not_equal(0, simplified_acs.products.length)
+    end
+
+    it 'plans ACS product removal when removing the deleting the last repo with URL' do
+      ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: published_repository.id)
+      action = create_action action_class
+      action.stubs(:action_subject).with(published_repository)
+
+      # manually remove the URLs from all repos in product except repository
+      repository.product.repositories.each do |repo|
+        repo.root.url = nil unless repo.id == repository.id
+      end
+      url_sum = repository.product.repositories.count do |repo|
+        repo.root.url.present?
+      end
+      assert_equal(1, url_sum) # double check there's only one URL left
+
+      # Since there is only one URL remaining, the product should be removed
+      plan_action action, published_repository, remove_from_content_view_versions: true
+      simplified_acs.reload
+      assert_equal(0, simplified_acs.products.length)
     end
   end
 

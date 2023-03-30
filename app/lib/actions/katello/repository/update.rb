@@ -1,3 +1,5 @@
+require 'set'
+
 module Actions
   module Katello
     module Repository
@@ -73,12 +75,31 @@ module Actions
               end
             end
           elsif delete_acs
+            handle_acs_product_removal(repository)
             repository.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
               plan_action(Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs, old_url: old_url)
             end
           else
             repository.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
               plan_action(Pulp3::Orchestration::AlternateContentSource::Update, smart_proxy_acs)
+            end
+          end
+        end
+
+        def handle_acs_product_removal(repository)
+          # Remove products from ACS's that contain no repositories which both
+          # match the ACS content type and have a non-nil URL
+          product = repository.product
+          repo_content_types = Set.new
+          product.repositories.each do |test_repo|
+            # we need to check id because test_repo will still contain the old, non-nil url
+            repo_content_types.add(test_repo.content_type) if (repository.id != test_repo.id) && test_repo.url.present?
+          end
+          ::Katello::AlternateContentSource.with_products(product).each do |acs|
+            unless repo_content_types.include?(acs.content_type)
+              acs.products = acs.products - [product]
+              Rails.logger.info _('Removing product %{prod_name} with ID %{prod_id} from ACS %{acs_name} with ID %{acs_id}') %
+                { prod_name: product.name, prod_id: product.id, acs_name: acs.name, acs_id: acs.id }
             end
           end
         end
