@@ -107,6 +107,7 @@ const ACSTable = () => {
   const onBulkDelete = (ids) => {
     setDeleting(true);
     dispatch(bulkDeleteACS({ ids }, () => {
+      setDeleting(false);
       if (acsId && ids.has(Number(acsId))) {
         push('/alternate_content_sources');
       } else {
