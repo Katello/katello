@@ -52,9 +52,9 @@ module Actions
             new_content.vendor = ::Katello::Provider::CUSTOM
           end
 
-          #custom product content is always enabled by default
+          # custom product content is always disabled by default
           ::Katello::ProductContent.where(product: root.product, content: content).first_or_create do |pc|
-            pc.enabled = true
+            pc.enabled = false
           end
         end
       end

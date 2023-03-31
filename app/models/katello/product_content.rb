@@ -3,6 +3,8 @@ module Katello
     belongs_to :product, :class_name => 'Katello::Product', :inverse_of => :product_contents
     belongs_to :content, :class_name => 'Katello::Content', :inverse_of => :product_contents
 
+    validates :enabled, inclusion: { in: [true, false], message: N_("must be true or false") }
+
     default_scope { includes(:content) }
 
     delegate :content_type, to: :content
@@ -13,6 +15,9 @@ module Katello
 
     scope :redhat, -> {
       where(:product_id => Product.redhat.select(:id))
+    }
+    scope :custom, -> {
+      where.not(:product_id => Product.redhat.select(:id))
     }
 
     scoped_search :on => :name, :relation => :content
@@ -41,5 +46,23 @@ module Katello
     def repositories
       Katello::Repository.in_default_view.where(:root_id => product.root_repositories.has_url.where(:content_id => content.cp_content_id))
     end
+
+    def enabled_value_from_candlepin
+      cp_product = ::Katello::Resources::Candlepin::Product.get(product.organization.label, product.cp_id).first
+      cp_content = cp_product['productContent'].find { |pc| pc['content']['id'] == content.cp_content_id }
+      cp_content['enabled']
+    end
+
+    def set_enabled_from_candlepin!
+      new_value = enabled_value_from_candlepin
+      if self.enabled != new_value
+        Rails.logger.info "Setting enabled to #{new_value} for Candlepin content #{content.cp_content_id}, ProductContent #{self.id}"
+        self.update!(:enabled => new_value)
+      else
+        Rails.logger.info "No change in enabled value for Candlepin content #{content.cp_content_id}, ProductContent #{self.id}"
+        false
+      end
+    end
+
   end
 end

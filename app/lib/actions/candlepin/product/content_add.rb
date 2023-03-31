@@ -2,6 +2,8 @@ module Actions
   module Candlepin
     module Product
       class ContentAdd < Candlepin::Abstract
+        ENABLED = false
+
         input_format do
           param :product_id
           param :content_id
@@ -10,7 +12,17 @@ module Actions
 
         def run
           output[:response] = ::Katello::Resources::Candlepin::Product.
-              add_content(input[:owner], input[:product_id], input[:content_id], true)
+              add_content(input[:owner], input[:product_id], input[:content_id], ENABLED)
+        end
+
+        def humanized_name
+          _("Add content")
+        end
+
+        # results in correct grammar on Tasks page,
+        # e.g. "Import manifest for organization Default Organization"
+        def humanized_input
+          "for Candlepin product enabled=#{ENABLED}"
         end
       end
     end

@@ -107,7 +107,7 @@ module Katello
     end
 
     def enabled?
-      !self.provider.redhat_provider? || self.repositories.present?
+      self.repositories.present?
     end
 
     delegate :cdn_configuration, :library, to: :organization
