@@ -2,7 +2,7 @@ module Actions
   module Candlepin
     module Product
       class ContentAdd < Candlepin::Abstract
-        ENABLED = false
+        DEFAULT_ENABLEMENT = false
 
         input_format do
           param :product_id
@@ -12,7 +12,7 @@ module Actions
 
         def run
           output[:response] = ::Katello::Resources::Candlepin::Product.
-              add_content(input[:owner], input[:product_id], input[:content_id], ENABLED)
+              add_content(input[:owner], input[:product_id], input[:content_id], DEFAULT_ENABLEMENT)
         end
 
         def humanized_name

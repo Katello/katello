@@ -63,6 +63,5 @@ module Katello
         false
       end
     end
-
   end
 end

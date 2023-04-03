@@ -2,28 +2,35 @@ namespace :katello do
   namespace :upgrades do
     namespace '4.9' do
       desc "Update custom products enablement"
-      task :update_custom_products_enablement => ["dynflow:client"] do
-        ::ForemanTasks.dynflow.initialize!
-        User.current = User.anonymous_admin #set a user for orchestration
+      task :update_custom_products_enablement => ['environment'] do
+        include ActionView::Helpers::TextHelper
+        cp_errors = 0
         print "Updating custom products enablement in Candlepin\n"
         ::Katello::ProductContent.custom.each do |product_content|
-          ForemanTasks.sync_task(
-            ::Actions::Candlepin::Product::ContentAdd,
-            product_id: product_content.product.cp_id,
-            content_id: product_content.content.cp_content_id,
-            owner: product_content.product.organization.label
+          ::Katello::Resources::Candlepin::Product.add_content(
+            product_content.product.organization.label,
+            product_content.product.cp_id,
+            product_content.content.cp_content_id,
+            ::Actions::Candlepin::Product::ContentAdd::DEFAULT_ENABLEMENT
           )
         rescue => e
-          print "Failed to update ProductContent #{product_content.id}: #{e.message}"
+          cp_errors++
+          print("Failed to update ProductContent #{product_content.id}: #{e.message}")
         end
 
+        kt_errors = 0
         print "Updating custom products enablement in Katello\n"
         ::Katello::ProductContent.custom.each do |product_content|
           product_content.set_enabled_from_candlepin!
         rescue => e
-          print "Failed to update ProductContent #{product_content.id}: #{e.message}"
+          kt_errors++
+          print("Failed to update ProductContent #{product_content.id}: #{e.message}")
         end
-        print "Finished updating custom products enablement\n"
+        total_errors = cp_errors + kt_errors
+        print "Finished updating custom products enablement; "
+        print(total_errors = 0 ? "no errors\n" : "#{pluralize(total_errors, "error")}\n")
+        print("#{pluralize(cp_errors, "error")} updating Candlepin; see log messages above\n") if cp_errors > 0
+        print("#{pluralize(kt_errors, "error")} updating Katello; see log messages above\n") if kt_errors > 0
       end
     end
   end
