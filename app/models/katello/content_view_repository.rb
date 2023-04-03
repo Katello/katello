@@ -15,7 +15,6 @@ module Katello
                               :class_name => "Katello::ContentView"
     belongs_to :repository, :inverse_of => :content_view_repositories,
                             :class_name => "Katello::Repository"
-
     validates_lengths_from_database
     validates :repository_id, :uniqueness => {:scope => :content_view_id, :message => N_("already belongs to the content view") }
     validate :content_view_composite

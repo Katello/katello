@@ -734,6 +734,32 @@ module Katello
       content_views
     end
 
+    def audited_cv_repositories_since_last_publish
+      audited_repositories = Audit.where(auditable_id: self).filter do |a|
+        !a.audited_changes["repository_ids"].nil?
+      end
+      audited_repositories.filter! { |a| a.created_at > latest_version_object.created_at } if latest_version_object
+      audited_repositories
+    end
+
+    def audited_cv_repository_publications_changed
+      # last_published = latest_version_object&.created_at
+      # last_published &&
+      #   repositories.any? {|repo| repo.last_contents_changed > last_published}
+      audited_repositories_publication = Audit.where(auditable_id: repositories).filter do |a|
+        !a.audited_changes["publication_href"].nil?
+      end
+      audited_repositories_publication.filter! { |a| a.created_at > latest_version_object.created_at } if latest_version_object
+      audited_repositories_publication
+    end
+
+    def needs_publish?
+      audit_cv_repositories_count = audited_cv_repositories_since_last_publish&.size
+      audit_cv_repositories_publication_count = audited_cv_repository_publications_changed&.size
+      # audit_cv_repositories_count.to_i > 0 || cv_repository_contents_changed?
+      audit_cv_repositories_count.to_i > 0 || audit_cv_repositories_publication_count.to_i > 0
+    end
+
     protected
 
     def remove_repository(repository)
