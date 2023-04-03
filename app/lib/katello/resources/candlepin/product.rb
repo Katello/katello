@@ -63,7 +63,6 @@ module Katello
           end
 
           def add_content(owner_label, product_id, content_id, enabled)
-            puts "Adding content product_id=#{product_id} content_id=#{content_id} enabled=#{enabled}"
             self.post(join_path(path(owner_label, product_id), "content/#{content_id}?enabled=#{enabled}"), nil, self.default_headers).code.to_i
           end
 
