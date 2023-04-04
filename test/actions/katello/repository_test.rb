@@ -117,7 +117,7 @@ module ::Actions::Katello::Repository
     let(:proxy) { SmartProxy.pulp_primary }
     def setup
       content = FactoryBot.create(:katello_content, cp_content_id: repository.content_id, organization_id: repository.product.organization_id)
-      Katello::ProductContent.create!(:content_id => content.id, :product_id => repository.product_id)
+      Katello::ProductContent.create!(:content_id => content.id, :product_id => repository.product_id, :enabled => true)
       simplified_acs.products << repository.product
       ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id)
       super

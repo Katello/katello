@@ -21,7 +21,7 @@ describe ::Actions::Katello::SyncPlan::Run do
 
   it 'plans' do
     ForemanTasks::Task::DynflowTask.stubs(:where).returns(mock.tap { |m| m.stubs(:first! => task) })
-    products = katello_products(:fedora, :redhat, :empty_product)
+    products = katello_products(:fedora, :redhat)
     @sync_plan.products << products
     action.stubs(:action_subject).with(@sync_plan)
     plan_action(action, @sync_plan)

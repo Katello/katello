@@ -11,7 +11,7 @@ module Katello
           @content = Katello::Content.create!(:name => 'rhel7_content',
                                               :label => Katello::UINotifications::Subscriptions::ManifestExpiredWarning::CONTENT_LABEL,
                                               :organization_id => @product.organization.id)
-          @product.contents << @content
+          Katello::ProductContent.create!(:product => @product, :content => @content, :enabled => true)
           @product.organization.cdn_configuration.update(:url => "https://cdn.redhat.com")
           @class = Katello::UINotifications::Subscriptions::ManifestExpiredWarning
 

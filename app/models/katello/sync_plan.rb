@@ -55,7 +55,7 @@ module Katello
 
     def product_enabled
       products.each do |product|
-        errors.add :base, _("Can not add product %s because it is disabled.") % product.name unless product.enabled?
+        errors.add :base, _("Cannot add product %s because it is disabled.") % product.name unless product.enabled?
       end
     end
 
