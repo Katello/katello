@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Modal, Button, Alert } from '@patternfly/react-core';
+import { Modal, Button, Alert, Checkbox, TextContent, Text, TextVariants } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
@@ -11,13 +11,15 @@ import { ENVIRONMENT_PATHS_KEY } from '../../../../../scenes/ContentViews/compon
 import api from '../../../../../services/api';
 import getContentViews from '../../../../../scenes/ContentViews/ContentViewsActions';
 import { selectContentViews, selectContentViewStatus } from '../../../../../scenes/ContentViews/ContentViewSelectors';
-import updateHostContentViewAndEnvironment from './HostContentViewActions';
+import updateHostContentViewAndEnvironment, { runSubmanRepos } from './HostContentViewActions';
 import HOST_CV_AND_ENV_KEY from './HostContentViewConstants';
 import { getHostDetails } from '../../HostDetailsActions';
 import ContentViewSelect from '../../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelect';
 import ContentViewSelectOption
   from '../../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelectOption';
 import { getCVPlaceholderText } from '../../../../../scenes/ContentViews/components/ContentViewSelect/helpers';
+import { useRexJobPolling } from '../../Tabs/RemoteExecutionHooks';
+import './ChangeHostCVModal.scss';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
 
@@ -34,6 +36,7 @@ const ChangeHostCVModal = ({
 
   const [selectedCVForHost, setSelectedCVForHost] = useState(null);
   const [cvSelectOpen, setCVSelectOpen] = useState(false);
+  const [forceProfileUpload, setForceProfileUpload] = useState(false);
   const dispatch = useDispatch();
   const contentViewsInEnvResponse = useSelector(state => selectContentViews(state, `FOR_ENV_${hostEnvId}`));
   const { results } = contentViewsInEnvResponse;
@@ -48,6 +51,7 @@ const ChangeHostCVModal = ({
 
   const handleModalClose = () => {
     setCVSelectOpen(false);
+    setForceProfileUpload(false);
     setSelectedCVForHost(null);
     setSelectedEnvForHost([]);
     closeModal();
@@ -74,7 +78,13 @@ const ChangeHostCVModal = ({
   const { results: contentViewsInEnv = [] } = contentViewsInEnvResponse;
   const canSave = !!(selectedCVForHost && selectedEnvForHost.length);
 
+  const { triggerJobStart } =
+    useRexJobPolling(runSubmanRepos, () => getHostDetails({ hostname: hostName }));
+
   const refreshHostDetails = () => {
+    if (forceProfileUpload) {
+      triggerJobStart(hostName);
+    }
     handleModalClose();
     return dispatch(getHostDetails({ hostname: hostName }));
   };
@@ -131,6 +141,7 @@ const ChangeHostCVModal = ({
       position="top"
       actions={modalActions}
       id="change-host-cv-modal"
+      key={`change-host-cv-modal-${hostId}`}
       ouiaId="change-host-cv-modal"
     >
       {contentViewsInEnvStatus === STATUS.RESOLVED &&
@@ -172,6 +183,21 @@ const ChangeHostCVModal = ({
               />
             ))}
       </ContentViewSelect>
+      <hr />
+      <TextContent>
+        <Text component={TextVariants.small} ouiaId="force-profile-upload-text">
+          {forceProfileUpload ? __('Errata and package information will be updated immediately.') : __('Errata and package information will be updated at the next host check-in or package action.')}
+        </Text>
+      </TextContent>
+      <Checkbox
+        isChecked={forceProfileUpload}
+        onChange={setForceProfileUpload}
+        label={__('Update the host immediately via remote execution')}
+        id="force-profile-upload-checkbox"
+        ouiaId="force-profile-upload-checkbox"
+        isDisabled={!selectedCVForHost}
+      />
+      <hr />
     </Modal>
   );
 };

@@ -17,6 +17,13 @@ const baseParams = ({ feature, hostname, inputs = {} }) => ({
   },
 });
 
+const runCommandParams = ({ hostname, command }) =>
+  baseParams({
+    hostname,
+    inputs: { command },
+    feature: REX_FEATURES.RUN_COMMAND,
+  });
+
 // used when we know the package name
 const katelloPackageInstallParams = ({ hostname, packageName }) =>
   baseParams({
@@ -103,6 +110,18 @@ export const startPollingJob = ({
 export const stopPollingJob = ({ key }) => stopInterval(pollJobKey(key));
 
 // JOB INVOCATIONS
+export const runCommand = ({ hostname, command, handleSuccess }) => post({
+  type: API_OPERATIONS.POST,
+  key: REX_JOB_INVOCATIONS_KEY,
+  url: foremanApi.getApiUrl('/job_invocations'),
+  params: runCommandParams({ hostname, command }),
+  handleSuccess: (response) => {
+    showRexToast(response);
+    if (handleSuccess) handleSuccess(response);
+  },
+  errorToast,
+});
+
 export const installPackage = ({ hostname, packageName, handleSuccess }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
@@ -190,3 +209,4 @@ export const moduleStreamAction = ({ hostname, action, moduleSpec }) => post({
   handleSuccess: showRexToast,
   errorToast,
 });
+
