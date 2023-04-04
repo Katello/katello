@@ -55,7 +55,6 @@ const CVErrataIDFilterContent = ({
   const filterLoaded = filterLoad === 'RESOLVED';
   const loading = status === STATUS.PENDING;
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
-  const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
@@ -137,7 +136,6 @@ const CVErrataIDFilterContent = ({
       selected && !added).map(({ erratumId }) => ({ errata_ids: [erratumId] })); // eslint-disable-line max-len
     dispatch(addContentViewFilterRules(filterId, addData, () =>
       dispatch(getContentViewDetails(cvId))));
-    deselectAll();
   };
 
   const bulkRemove = () => {
@@ -147,7 +145,6 @@ const CVErrataIDFilterContent = ({
         selected && added).map(({ erratumRuleId }) => erratumRuleId);
     dispatch(deleteContentViewFilterRules(filterId, erratumRuleIds, () =>
       dispatch(getContentViewDetails(cvId))));
-    deselectAll();
   };
 
   useEffect(() => {
@@ -204,6 +201,7 @@ const CVErrataIDFilterContent = ({
       if (selectedTypes.length === 1) return;
       setSelectedTypes(selectedTypes.filter(e => e !== selection));
     } else setSelectedTypes([...selectedTypes, selection]);
+    setTypeSelectOpen(false);
   };
 
   const setValidStartDate = (e, value) => {
@@ -239,8 +237,8 @@ const CVErrataIDFilterContent = ({
     dateType === 'issued' &&
     statusSelected === ALL_STATUSES;
 
-  const emptyContentTitle = __('No errata available to add to this filter.');
-  const emptyContentBody = __('No errata available for this content view.');
+  const emptyContentTitle = __('No errata filter rules yet');
+  const emptyContentBody = __('No errata to add yet');
   const emptySearchTitle = __('No matching filter rules found.');
   const emptySearchBody = __('Try changing your search settings.');
 
@@ -283,56 +281,57 @@ const CVErrataIDFilterContent = ({
               dateType, apiStartDate, apiEndDate]}
             fetchItems={useCallback(params =>
               getCVFilterErrataWithOptions(params), [getCVFilterErrataWithOptions])}
-            actionButtons={
-              <Split hasGutter>
-                <SplitItem data-testid="allAddedNotAdded">
-                  <SelectableDropdown
-                    items={[ALL_STATUSES, ADDED, NOT_ADDED]}
-                    title=""
-                    selected={statusSelected}
-                    setSelected={setStatusSelected}
-                    placeholderText={__('Status')}
-                    aria-label="status_selector"
-                    ouiaId="status-selector"
-                  />
-                </SplitItem>
-                <SplitItem>
-                  <Select
-                    aria-label="errata_type_selector"
-                    ouiaId="errata_type_selector"
-                    variant={SelectVariant.checkbox}
-                    onToggle={setTypeSelectOpen}
-                    onSelect={(_event, selection) => onTypeSelect(selection)}
-                    selections={selectedTypes}
-                    isOpen={typeSelectOpen}
-                    placeholderText={__('Errata type')}
-                    isCheckboxSelectionBadgeHidden
-                  >
-                    <SelectOption aria-label="security_selection" isDisabled={singleSelection('security')} key="security" value="security">
-                      <p style={{ marginTop: '4px' }}>
-                        {__('Security')}
-                      </p>
-                    </SelectOption>
-                    <SelectOption isDisabled={singleSelection('enhancement')} key="enhancement" value="enhancement">
-                      <p style={{ marginTop: '4px' }}>
-                        {__('Enhancement')}
-                      </p>
-                    </SelectOption>
-                    <SelectOption isDisabled={singleSelection('bugfix')} key="bugfix" value="bugfix">
-                      <p style={{ marginTop: '4px' }}>
-                        {__('Bugfix')}
-                      </p>
-                    </SelectOption>
-                  </Select>
-                </SplitItem>
-                {hasPermission(permissions, 'edit_content_views') &&
+            actionButtons={hasPermission(permissions, 'edit_content_views') &&
+                status === STATUS.RESOLVED && rows.length !== 0 &&
+                <Split hasGutter>
+                  <SplitItem data-testid="allAddedNotAdded">
+                    <SelectableDropdown
+                      items={[ALL_STATUSES, ADDED, NOT_ADDED]}
+                      title=""
+                      selected={statusSelected}
+                      setSelected={setStatusSelected}
+                      placeholderText={__('Status')}
+                      aria-label="status_selector"
+                      ouiaId="status-selector"
+                    />
+                  </SplitItem>
+                  <SplitItem>
+                    <Select
+                      aria-label="errata_type_selector"
+                      ouiaId="errata_type_selector"
+                      variant={SelectVariant.checkbox}
+                      onToggle={setTypeSelectOpen}
+                      onSelect={(_event, selection) => onTypeSelect(selection)}
+                      selections={selectedTypes}
+                      isOpen={typeSelectOpen}
+                      placeholderText={__('Errata type')}
+                      isCheckboxSelectionBadgeHidden
+                    >
+                      <SelectOption aria-label="security_selection" isDisabled={singleSelection('security')} key="security" value="security">
+                        <p style={{ marginTop: '4px' }}>
+                          {__('Security')}
+                        </p>
+                      </SelectOption>
+                      <SelectOption isDisabled={singleSelection('enhancement')} key="enhancement" value="enhancement">
+                        <p style={{ marginTop: '4px' }}>
+                          {__('Enhancement')}
+                        </p>
+                      </SelectOption>
+                      <SelectOption isDisabled={singleSelection('bugfix')} key="bugfix" value="bugfix">
+                        <p style={{ marginTop: '4px' }}>
+                          {__('Bugfix')}
+                        </p>
+                      </SelectOption>
+                    </Select>
+                  </SplitItem>
+                  {hasPermission(permissions, 'edit_content_views') &&
                   <SplitItem>
                     <Button ouiaId="add-errata-id-button" isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="primary" aria-label="add_filter_rule">
                       {__('Add errata')}
                     </Button>
                   </SplitItem>
                 }
-                {hasPermission(permissions, 'edit_content_views') &&
+                  {hasPermission(permissions, 'edit_content_views') &&
                   <SplitItem>
                     <Dropdown
                       toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
@@ -347,9 +346,9 @@ const CVErrataIDFilterContent = ({
                     />
                   </SplitItem>
                 }
-              </Split>
+                </Split>
             }
-            nodesBelowSearch={
+            nodesBelowSearch={status === STATUS.RESOLVED && rows.length !== 0 &&
               <>
                 <Flex>
                   <FlexItem span={2} spacer={{ default: 'spacerNone' }}>

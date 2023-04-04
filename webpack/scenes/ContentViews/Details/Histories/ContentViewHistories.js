@@ -62,7 +62,7 @@ const ContentViewHistories = ({ cvId }) => {
     return '';
   };
 
-  const emptyContentTitle = __("You currently don't have any history for this content view.");
+  const emptyContentTitle = __('No history yet');
   const emptyContentBody = __('History will appear here when the content view is published or promoted.'); // needs link
   const emptySearchTitle = __('No matching history record found');
   const emptySearchBody = __('Try changing your search settings.');

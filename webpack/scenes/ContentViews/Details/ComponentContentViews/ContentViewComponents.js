@@ -73,7 +73,7 @@ const ContentViewComponents = ({ cvId, details }) => {
   const addComponentsResolved = componentAddedStatus === STATUS.RESOLVED;
   const removeComponentsResolved = componentRemovedStatus === STATUS.RESOLVED;
 
-  const { label, permissions } = details || {};
+  const { permissions } = details || {};
 
   const bulkRemoveEnabled = () => rows.some(row => row.selected && row.added);
   const bulkAddEnabled = () => rows.some(row => row.selected && !row.added);
@@ -216,8 +216,8 @@ const ContentViewComponents = ({ cvId, details }) => {
     </DropdownItem>,
   ];
 
-  const emptyContentTitle = __(`No content views belong to ${label}`);
-  const emptyContentBody = __('Please add some content views.');
+  const emptyContentTitle = __('No content views to add yet');
+  const emptyContentBody = __('Please create some content views.');
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');
   const activeFilters = [statusSelected];
@@ -257,19 +257,20 @@ const ContentViewComponents = ({ cvId, details }) => {
       fetchItems={useCallback(params =>
         getContentViewComponents(cvId, params, statusSelected), [cvId, statusSelected])}
       additionalListeners={[statusSelected, addComponentsResolved, removeComponentsResolved]}
-      actionButtons={
-        <>
-          <Split hasGutter>
-            <SplitItem>
-              <SelectableDropdown
-                items={[ALL_STATUSES, ADDED, NOT_ADDED]}
-                title={__('Status')}
-                selected={statusSelected}
-                setSelected={setStatusSelected}
-                placeholderText={__('Status')}
-              />
-            </SplitItem>
-            {hasPermission(permissions, 'edit_content_views') &&
+      actionButtons={hasPermission(permissions, 'edit_content_views') &&
+          status === STATUS.RESOLVED && rows.length !== 0 &&
+          <>
+            <Split hasGutter>
+              <SplitItem>
+                <SelectableDropdown
+                  items={[ALL_STATUSES, ADDED, NOT_ADDED]}
+                  title={__('Status')}
+                  selected={statusSelected}
+                  setSelected={setStatusSelected}
+                  placeholderText={__('Status')}
+                />
+              </SplitItem>
+              {hasPermission(permissions, 'edit_content_views') &&
               <SplitItem>
                 <ActionList>
                   <ActionListItem>
@@ -289,8 +290,8 @@ const ContentViewComponents = ({ cvId, details }) => {
                 </ActionList>
               </SplitItem>
             }
-          </Split>
-          {versionEditing &&
+            </Split>
+            {versionEditing &&
             <ComponentContentViewAddModal
               cvId={compositeCvEditing}
               componentCvId={componentCvEditing}
@@ -300,14 +301,14 @@ const ContentViewComponents = ({ cvId, details }) => {
               setIsOpen={setVersionEditing}
               aria-label="edit_component_modal"
             />}
-          {bulkAdding &&
+            {bulkAdding &&
             <ComponentContentViewBulkAddModal
               cvId={compositeCvEditing}
               rowsToAdd={selectedComponentsToAdd}
               onClose={() => setBulkAdding(false)}
               aria-label="bulk_add_components_modal"
             />}
-        </>
+          </>
       }
     />
   );

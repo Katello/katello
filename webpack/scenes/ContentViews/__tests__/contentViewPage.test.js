@@ -40,9 +40,7 @@ test('Can call API for CVs and show on screen on page load', async (done) => {
   await patientlyWaitFor(() => {
     expect(queryByText(firstCV.name)).toBeInTheDocument();
     expect(queryAllByText('Content views')[0]).toBeInTheDocument();
-    expect(queryByText('Composite content views')).toBeInTheDocument();
   });
-
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
@@ -159,7 +157,7 @@ test('Can handle no Content Views being present', async (done) => {
   const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
-  await patientlyWaitFor(() => expect(queryByText(/don't have any Content views/i)).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(queryByText('You currently have no content views to display')).toBeInTheDocument());
   assertNockRequest(scope, done);
 });
 

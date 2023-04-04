@@ -12,48 +12,58 @@ const ContentViewsCounter = () => {
     composite_content_views_count: composite,
     content_view_components_count: component,
   } = organization;
-  return (
-    <Grid>
-      <GridItem span={12}>
-        <b>
-          <Flex>
-            <FlexItem spacer={{ default: 'spacerXs' }}>
-              <ContentViewIcon composite={false} description={__('Content views')} count={(component || component === 0) ? component : <InProgressIcon />} />
-            </FlexItem>
-            <FlexItem>
-              <Tooltip
-                position="top"
-                content={
-                  __('Consists of repositories')
-                }
-              >
-                <OutlinedQuestionCircleIcon />
-              </Tooltip>
-            </FlexItem>
-          </Flex>
-        </b>
-      </GridItem>
-      <GridItem span={12}>
-        <b>
-          <Flex>
-            <FlexItem spacer={{ default: 'spacerXs' }}>
-              <ContentViewIcon composite description={__('Composite content views')} count={(composite || composite === 0) ? composite : <InProgressIcon />} />
-            </FlexItem>
-            <FlexItem>
-              <Tooltip
-                position="top"
-                content={
-                  __('Consists of content views')
-                }
-              >
-                <OutlinedQuestionCircleIcon />
-              </Tooltip>
-            </FlexItem>
-          </Flex>
-        </b>
-      </GridItem>
-    </Grid>
-  );
+  if (composite || component) {
+    return (
+      <Grid>
+        <GridItem span={12}>
+          <b>
+            <Flex>
+              <FlexItem spacer={{ default: 'spacerXs' }}>
+                <ContentViewIcon
+                  composite={false}
+                  description={__('Content views')}
+                  count={(component || component === 0) ? component : <InProgressIcon />}
+                />
+              </FlexItem>
+              <FlexItem>
+                <Tooltip
+                  position="top"
+                  content={
+                    __('Consists of repositories')
+                  }
+                >
+                  <OutlinedQuestionCircleIcon />
+                </Tooltip>
+              </FlexItem>
+            </Flex>
+          </b>
+        </GridItem>
+        <GridItem span={12}>
+          <b>
+            <Flex>
+              <FlexItem spacer={{ default: 'spacerXs' }}>
+                <ContentViewIcon
+                  composite
+                  description={__('Composite content views')}
+                  count={(composite || composite === 0) ? composite : <InProgressIcon />}
+                />
+              </FlexItem>
+              <FlexItem>
+                <Tooltip
+                  position="top"
+                  content={
+                    __('Consists of content views')
+                  }
+                >
+                  <OutlinedQuestionCircleIcon />
+                </Tooltip>
+              </FlexItem>
+            </Flex>
+          </b>
+        </GridItem>
+      </Grid>
+    );
+  } return <></>;
 };
 
 export default ContentViewsCounter;

@@ -213,7 +213,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       },
     ];
 
-  const emptyContentTitle = __("You currently don't have any versions for this content view.");
+  const emptyContentTitle = __('No versions yet');
   const emptyContentBody = __('Versions will appear here when the content view is published.');
   const emptySearchTitle = __('No matching version found');
   const emptySearchBody = __('Try changing your search settings.');

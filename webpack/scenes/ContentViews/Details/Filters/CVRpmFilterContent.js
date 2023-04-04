@@ -18,6 +18,10 @@ import CVRpmMatchContentModal from './MatchContentModal/CVRpmMatchContentModal';
 import AddEditPackageRuleModal from './Rules/Package/AddEditPackageRuleModal';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 import { hasPermission } from '../../helpers';
+import { emptyContentTitle,
+  emptyContentBody,
+  emptySearchTitle,
+  emptySearchBody } from './FilterRuleConstants';
 
 const CVRpmFilterContent = ({
   cvId, filterId, inclusion, showAffectedRepos, setShowAffectedRepos, details,
@@ -104,10 +108,6 @@ const CVRpmFilterContent = ({
     }
   }, [showAffectedRepos, repositories.length]);
 
-  const emptyContentTitle = __('No rules have been added to this filter.');
-  const emptyContentBody = __('Items will appear here when a filter rule is added.');
-  const emptySearchTitle = __('No matching rules found.');
-  const emptySearchBody = __('Try changing your search settings.');
   const tabTitle = (inclusion ? __('Included') : __('Excluded')) + __(' RPMs');
 
 

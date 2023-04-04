@@ -74,7 +74,7 @@ const EmptyStateMessage = ({
   return (
     <Bullseye>
       <EmptyState
-        variant={happy ? EmptyStateVariant.large : EmptyStateVariant.small}
+        variant={happy ? EmptyStateVariant.xl : EmptyStateVariant.small}
       >
         <KatelloEmptyStateIcon
           error={!!error}
