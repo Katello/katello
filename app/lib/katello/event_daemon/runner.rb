@@ -11,9 +11,11 @@ module Katello
         end
 
         def pid
-          return unless pid_file && File.exist?(pid_file)
+          return unless pid_file
 
-          File.read(pid_file).to_i
+          File.read(pid_file)&.to_i
+        rescue Errno::ENOENT
+          nil
         end
 
         def pid_file
@@ -44,7 +46,7 @@ module Katello
           @monitor_thread.kill
           @cache.clear
           @services.values.each(&:close)
-          File.unlink(pid_file) if pid_file && File.exist?(pid_file)
+          FileUtils.rm_f(pid_file) if pid_file
         end
 
         def start
@@ -78,7 +80,9 @@ module Katello
 
         def start_monitor_thread
           @monitor_thread = Thread.new do
-            Katello::EventDaemon::Monitor.new(@services).start
+            Rails.application.executor.wrap do
+              Katello::EventDaemon::Monitor.new(@services).start
+            end
           end
         end
 
