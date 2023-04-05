@@ -158,7 +158,7 @@ KT.hosts.toggle_installation_medium = function(content_view_id) {
       content_view_id = KT.hosts.getSelectedContentView();
     }
 
-    if ($('#hostgroup_parent_id').length > 0) {
+    if ($('#hostgroup_operatingsystem_id').data('type') == 'hostgroup') {
       lifecycle_environment_id = KT.hosts.getSelectedEnvironment();
       content_source_id = $('#content_source_id').val();
       architecture_id = $('#hostgroup_architecture_id').val();
