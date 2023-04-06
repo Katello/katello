@@ -39,7 +39,7 @@ child :ssl_client_alternate_content_sources => :ssl_client_alternate_content_sou
   attributes :id, :name
 end
 
-child :ssl_client_key_alternate_content_sources => :ssl_client_key_alternate_content_sources do
+child :ssl_key_alternate_content_sources => :ssl_key_alternate_content_sources do
   attributes :id, :name
 end
 
