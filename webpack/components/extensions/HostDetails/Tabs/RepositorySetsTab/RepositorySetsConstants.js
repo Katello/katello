@@ -20,3 +20,19 @@ export const PARAM_TO_FRIENDLY_NAME = {
   disabled: __('Disabled'),
   overridden: __('Overridden'),
 };
+
+export const PROVIDER_TYPES = {
+  CUSTOM: __('Custom'),
+  REDHAT: __('Red Hat'),
+};
+
+export const PROVIDER_TYPE_TO_PARAM = {
+  [PROVIDER_TYPES.CUSTOM]: 'custom',
+  [PROVIDER_TYPES.REDHAT]: 'redhat',
+};
+
+export const PROVIDER_TYPE_PARAM_TO_FRIENDLY_NAME = {
+  custom: __('Custom'),
+  redhat: __('Red Hat'),
+};
+

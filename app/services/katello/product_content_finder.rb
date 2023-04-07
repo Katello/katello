@@ -37,7 +37,7 @@ module Katello
       product_content.custom.map { |pc| pc.product.root_repositories.map(&:custom_content_label) }.flatten.uniq
     end
 
-    def self.wrap_with_overrides(product_contents:, overrides:, status: nil)
+    def self.wrap_with_overrides(product_contents:, overrides:, status: nil, repository_type: nil)
       pc_with_overrides = product_contents.map { |pc| ProductContentPresenter.new(pc, overrides) }
       if status
         pc_with_overrides.keep_if do |pc|
@@ -46,6 +46,11 @@ module Katello
           else
             pc.status[:status] == status
           end
+        end
+      end
+      if %w(custom redhat).include?(repository_type)
+        pc_with_overrides.keep_if do |pc|
+          pc.product.send("#{repository_type}?".to_sym) # pc.product.redhat? || pc.product.custom?
         end
       end
       pc_with_overrides

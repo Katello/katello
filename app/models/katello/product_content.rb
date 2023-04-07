@@ -29,6 +29,16 @@ module Katello
     scoped_search :on => :name, :relation => :product, :rename => :product_name
     scoped_search :on => :id, :relation => :product, :rename => :product_id, :only_explicit => true
     scoped_search :on => :label, :relation => :content, :rename => :content_label
+    scoped_search :on => :id, :rename => :redhat, :ext_method => :search_by_redhat, :complete_value => { :true => true, :false => false }, :only_explicit => true
+
+    def self.search_by_redhat(_key, _operator, value)
+      conditions = Arel.sql(value == 'true' ? "#{Provider.table_name}.provider_type = 'Red Hat'" : "#{Provider.table_name}.provider_type != 'Red Hat'")
+      {
+        :conditions => conditions, :order => "#{Product.table_name}.name",
+        :include => :product,
+        :joins => {:product => :provider}
+      }
+    end
 
     def self.content_table_name
       Katello::Content.table_name
