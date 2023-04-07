@@ -1,3 +1,5 @@
+require 'katello_test_helper'
+
 module Katello
   module Util
     class DefaultEnablementMigratorTest < ActiveSupport::TestCase
@@ -6,12 +8,12 @@ module Katello
       end
 
       def test_execute!
-        @migrator.expects(:create_disabled_overrides_for_non_sca_org_hosts)
-        @migrator.expects(:create_disabled_overrides_for_non_sca_org_activation_keys)
-        @migrator.expects(:create_activation_key_overrides)
-        @migrator.expects(:create_consumer_overrides)
-        @migrator.expects(:update_enablement_in_candlepin)
-        @migrator.expects(:update_enablement_in_katello)
+        @migrator.expects(:create_disabled_overrides_for_non_sca_org_hosts).returns(0)
+        @migrator.expects(:create_disabled_overrides_for_non_sca_org_activation_keys).returns(0)
+        @migrator.expects(:create_activation_key_overrides).returns(0)
+        @migrator.expects(:create_consumer_overrides).returns(0)
+        @migrator.expects(:update_enablement_in_candlepin).returns(0)
+        @migrator.expects(:update_enablement_in_katello).returns(0)
         Rails.logger.expects(:info).with("Finished updating custom products enablement; no errors")
         @migrator.execute!
       end
@@ -32,4 +34,16 @@ module Katello
         Rails.logger.expects(:info).with("6 errors updating default enablement in Katello; see log messages above")
         @migrator.execute!
       end
+
+      def test_update_enablement_in_candlepin
+        ::Katello::Resources::Candlepin::Product.expects(:add_content)
+        @migrator.update_enablement_in_candlepin
+      end
+
+      def test_update_enablement_in_katello
+        ::Katello::ProductContent.any_instance.expects(:set_enabled_from_candlepin!)
+        @migrator.update_enablement_in_katello
+      end
+    end
   end
+end

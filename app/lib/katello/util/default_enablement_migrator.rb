@@ -11,7 +11,7 @@ module Katello
         cp_errors = update_enablement_in_candlepin
         kt_errors = update_enablement_in_katello
 
-        total_errors = ds_errors + ak_errors + consumer_errors + cp_errors + kt_errors
+        total_errors = ds_errors + dsak_errors + ak_errors + consumer_errors + cp_errors + kt_errors
         finish_message = "Finished updating custom products enablement; #{total_errors == 0 ? "no errors" : "#{pluralize(total_errors, "error")}"}"
         Rails.logger.info finish_message
         Rails.logger.info("#{pluralize(ds_errors, "error")} updating disabled overrides for unsubscribed content; see log messages above") if ds_errors > 0
