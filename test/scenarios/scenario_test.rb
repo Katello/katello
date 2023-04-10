@@ -18,6 +18,7 @@ module Scenarios
     def test_manifest_import
       manifest_path = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'manifest_small.zip')
       @support.import_manifest(@org.label, manifest_path)
+      sleep 2
       @support.import_products(@org, manifest_path)
 
       assert_equal 2, @org.products.length
@@ -25,6 +26,7 @@ module Scenarios
 
       manifest_path = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'manifest_small_modified.zip')
       @support.import_manifest(@org.label, manifest_path)
+      sleep 2
       @support.import_products(@org, manifest_path)
       @org.reload
 
