@@ -22,7 +22,38 @@ module Katello
         Rails.logger.info("#{pluralize(kt_errors, "error")} updating default enablement in Katello; see log messages above") if kt_errors > 0
       end
 
-      # rubocop:disable Metrics/MethodLength
+      def create_disabled_overrides_for_non_sca(consumable:)
+        content_finder = ::Katello::ProductContentFinder.new(
+                match_subscription: false,
+                match_environment: false,
+                consumable: consumable
+              )
+        subscribed_content_finder = ::Katello::ProductContentFinder.new(
+          match_subscription: true,
+          match_environment: false,
+          consumable: consumable
+        )
+        unsubscribed_content = content_finder.custom_content_labels - subscribed_content_finder.custom_content_labels
+        new_overrides = unsubscribed_content.map do |repo_label|
+          ::Katello::ContentOverride.new(
+            repo_label,
+            { name: "enabled", value: "0" } # Override to disabled
+          )
+        end
+        return if new_overrides.blank?
+        if consumable.is_a? ::Katello::Host::SubscriptionFacet
+          ::Katello::Resources::Candlepin::Consumer.update_content_overrides(
+            consumable.uuid,
+            new_overrides.map(&:to_entitlement_hash)
+          )
+        else
+          ::Katello::Resources::Candlepin::ActivationKey.update_content_overrides(
+            consumable.cp_id,
+            new_overrides.map(&:to_entitlement_hash)
+          )
+        end
+      end
+
       def create_disabled_overrides_for_non_sca_org_hosts
         errors = 0
         Organization.all.each do |org|
@@ -30,28 +61,7 @@ module Katello
           Rails.logger.info("Creating disabled overrides for unsubscribed content in org #{org.name}")
           hosts_to_update = org.hosts.where.not(subscription_facet: nil)
           hosts_to_update.each do |host|
-            content_finder = ::Katello::ProductContentFinder.new(
-              match_subscription: false,
-              match_environment: false,
-              consumable: host.subscription_facet
-            )
-            subscribed_content_finder = ::Katello::ProductContentFinder.new(
-              match_subscription: true,
-              match_environment: false,
-              consumable: host.subscription_facet
-            )
-            unsubscribed_content = content_finder.custom_content_labels - subscribed_content_finder.custom_content_labels
-            new_overrides = unsubscribed_content.map do |repo_label|
-              ::Katello::ContentOverride.new(
-                repo_label,
-                { name: "enabled", value: "0" } # Override to disabled
-              )
-            end
-            next if new_overrides.blank?
-            ::Katello::Resources::Candlepin::Consumer.update_content_overrides(
-              host.subscription_facet.uuid,
-              new_overrides.map(&:to_entitlement_hash)
-            )
+            create_disabled_overrides_for_non_sca(consumable: host.subscription_facet)
           rescue => e
             errors += 1
             Rails.logger.info("Failed to update host #{host.name}: #{e.message}")
@@ -70,28 +80,7 @@ module Katello
           Rails.logger.info("Creating disabled overrides for unsubscribed content in activation keys in org #{org.name}")
           aks_to_update = org.activation_keys
           aks_to_update.each do |ak|
-            content_finder = ::Katello::ProductContentFinder.new(
-              match_subscription: false,
-              match_environment: false,
-              consumable: ak
-            )
-            subscribed_content_finder = ::Katello::ProductContentFinder.new(
-              match_subscription: true,
-              match_environment: false,
-              consumable: ak
-            )
-            unsubscribed_content = content_finder.custom_content_labels - subscribed_content_finder.custom_content_labels
-            new_overrides = unsubscribed_content.map do |repo_label|
-              ::Katello::ContentOverride.new(
-                repo_label,
-                { name: "enabled", value: "0" } # Override to disabled
-              )
-            end
-            next if new_overrides.blank?
-            ::Katello::Resources::Candlepin::ActivationKey.update_content_overrides(
-              ak.cp_id,
-              new_overrides.map(&:to_entitlement_hash)
-            )
+            create_disabled_overrides_for_non_sca(consumable: ak)
           rescue => e
             errors += 1
             Rails.logger.info("Failed to update activation key #{activation key.name}: #{e.message}")
@@ -103,30 +92,35 @@ module Katello
         errors
       end
 
+      def create_overrides(consumable_id:, candlepin_resource:, all_repos:)
+        repos_with_existing_overrides = candlepin_resource.content_overrides(consumable_id).map do |override|
+          override[:contentLabel]
+        end
+        new_overrides = (all_repos - repos_with_existing_overrides).map do |repo_label|
+          ::Katello::ContentOverride.new(
+            repo_label,
+            { name: "enabled", value: "1" } # Override to enabled
+          )
+        end
+        return if new_overrides.blank?
+
+        candlepin_resource.update_content_overrides(
+          consumable_id,
+          new_overrides.map(&:to_entitlement_hash)
+        )
+      end
+
       def create_activation_key_overrides
         Rails.logger.info "Creating content overrides for all activation keys"
         ak_errors = 0
         cp_aks_to_update = ::Katello::Resources::Candlepin::ActivationKey.get.map { |ak| ak['id'] }
         Organization.all.each do |org|
-          repos_to_update = ::Katello::RootRepository.custom.in_organization(org).map(&:custom_content_label) # update all custom repos
+          all_repos = ::Katello::RootRepository.custom.in_organization(org).map(&:custom_content_label) # update all custom repos
 
           org_aks_to_update = ::Katello::ActivationKey.where(organization: org, cp_id: cp_aks_to_update)
           org_aks_to_update.each do |ak|
             Rails.logger.info "Updating activation key #{ak.name}"
-            repos_with_existing_overrides = ::Katello::Resources::Candlepin::ActivationKey.content_overrides(ak.cp_id).map do |override|
-              override[:contentLabel]
-            end
-            new_overrides = (repos_to_update - repos_with_existing_overrides).map do |repo_label|
-              ::Katello::ContentOverride.new(
-                repo_label,
-                { name: "enabled", value: "1" } # Override to enabled
-              )
-            end
-            next if new_overrides.blank?
-            ::Katello::Resources::Candlepin::ActivationKey.update_content_overrides(
-              ak.cp_id,
-              new_overrides.map(&:to_entitlement_hash)
-            )
+            create_overrides(consumable_id: ak.cp_id, candlepin_resource: ::Katello::Resources::Candlepin::ActivationKey, all_repos: all_repos)
           rescue => e
             ak_errors += 1
             Rails.logger.info("Failed to update activation key #{ak.name}: #{e.message}")
@@ -137,38 +131,22 @@ module Katello
         end
         ak_errors
       end
-      # rubocop:enable Metrics/MethodLength
 
       def create_consumer_overrides
         consumer_errors = 0
         Rails.logger.info "Creating content overrides for all Candlepin consumers"
         consumers_to_update = ::Katello::Resources::Candlepin::Consumer.all_uuids
         # ["Default_Organization_Custom_Custom_Repo", "Default_Organization_TestProd2_TestRepo2"]
-        repos_to_update = ::Katello::RootRepository.custom.map(&:custom_content_label) # update all custom repos
+        all_repos = ::Katello::RootRepository.custom.map(&:custom_content_label) # update all custom repos
 
         consumers_to_update.each do |consumer_uuid|
           Rails.logger.info "Updating consumer #{consumer_uuid}"
-
-          # don't overwrite existing overrides
-          repos_with_existing_overrides = ::Katello::Resources::Candlepin::Consumer.content_overrides(consumer_uuid).map do |override|
-            override[:contentLabel]
-          end
-          new_overrides = (repos_to_update - repos_with_existing_overrides).map do |repo_label|
-            ::Katello::ContentOverride.new(
-              repo_label,
-              { name: "enabled", value: "1" } # Override to enabled
-            )
-          end
-          next if new_overrides.blank?
-          ::Katello::Resources::Candlepin::Consumer.update_content_overrides(
-            consumer_uuid,
-            new_overrides.map(&:to_entitlement_hash)
-          )
+          create_overrides(consumable_id: consumer_uuid, candlepin_resource: ::Katello::Resources::Candlepin::Consumer, all_repos: all_repos)
         rescue => e
           consumer_errors += 1
           Rails.logger.info("Failed to update consumer #{consumer_uuid}: #{e.message}")
         end
-        Rails.logger.info("Updated #{pluralize(consumers_to_update.count, 'consumer')} and #{pluralize(repos_to_update.count, 'repo')}")
+        Rails.logger.info("Updated #{pluralize(consumers_to_update.count, 'consumer')} and #{pluralize(all_repos.count, 'repo')}")
         consumer_errors
       end
 
