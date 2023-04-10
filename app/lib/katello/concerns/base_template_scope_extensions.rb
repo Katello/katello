@@ -143,7 +143,16 @@ module Katello
         returns array_of: Integer, desc: 'Array with applicable errata IDs of the host'
       end
       def host_applicable_errata_ids(host)
-        host.applicable_errata.map(&:errata_id)
+        host.applicable_errata.pluck(:errata_id)
+      end
+
+      apipie :method, 'Returns IDs of the installable errata on the host' do
+        required :host, 'Host::Managed', desc: 'Host object to get the installable errata for'
+        returns array_of: Integer, desc: 'Array with installable errata IDs of the host'
+      end
+      def host_installable_errata_ids(host)
+        return [] if host.content_facet.nil?
+        host.installable_errata.pluck(:errata_id)
       end
 
       apipie :method, 'Returns filtered applicable errata for the host' do
@@ -155,13 +164,36 @@ module Katello
         host.applicable_errata.includes(:cves).search_for(filter)
       end
 
+      apipie :method, 'Returns filtered installable errata for the host' do
+        required :host, 'Host::Managed', desc: 'Host object to get the installable errata for'
+        optional :filter, String, desc: 'Filter to apply on installable errata', default: ''
+        returns array_of: 'Erratum', desc: 'Filtered installable errata for the host'
+      end
+      def host_installable_errata_filtered(host, filter = '')
+        return [] if host.content_facet.nil?
+        host.installable_errata.includes(:cves).search_for(filter)
+      end
+
       apipie :method, 'Returns version of the latest applicable RPM package' do
         required :host, 'Host::Managed', desc: 'Host object to get the applicable RPM package version on'
         required :package, String, desc: 'Name of the package'
         returns String, desc: 'Package version'
       end
       def host_latest_applicable_rpm_version(host, package)
-        ::Katello::Rpm.latest(host.applicable_rpms.where(name: package)).first.nvra
+        return [] if host.content_facet.nil?
+        applicable = ::Katello::Rpm.latest(host.applicable_rpms.where(name: package))
+        applicable.present? ? applicable.first.nvra : []
+      end
+
+      apipie :method, 'Returns version of the latest installable RPM package' do
+        required :host, 'Host::Managed', desc: 'Host object to get the installable RPM package version on'
+        required :package, String, desc: 'Name of the package'
+        returns String, desc: 'Package version'
+      end
+      def host_latest_installable_rpm_version(host, package)
+        return [] if host.content_facet.nil?
+        installable = ::Katello::Rpm.latest(host.installable_rpms.where(name: package))
+        installable.present? ? installable.first.nvra : []
       end
 
       apipie :method, 'Loads Pool objects' do
