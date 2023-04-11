@@ -71,6 +71,7 @@ const CVVersionCompareTable = ({
           {columnHeaders.map(({ title }) =>
             (
               <Th
+                modifier="wrap"
                 key={`${title}-header`}
                 sort={sortConfig[title] ? pfSortParams(title) : undefined}
               >
