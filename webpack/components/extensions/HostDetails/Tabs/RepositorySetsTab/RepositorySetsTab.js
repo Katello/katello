@@ -317,6 +317,7 @@ const RepositorySetsTab = () => {
 
   const resetFilters = () => {
     setStatusSelected(STATUS_LABEL);
+    setRepoTypeSelected(REPO_TYPE_LABEL);
     if (emptyContent) setToggleGroupState(SHOW_ALL);
   };
   useEffect(() => {
