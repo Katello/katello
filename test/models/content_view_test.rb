@@ -629,5 +629,48 @@ module Katello
         end
       end
     end
+
+    def test_new_cv_needs_publish
+      content_view = FactoryBot.build(:katello_content_view, :name => "New CV")
+      content_view.save!
+      assert content_view.needs_publish?
+    end
+
+    def test_published_cv_needs_publish_on_repositories_update
+      org = @organization
+      product = create(:katello_product, provider: org.anonymous_provider,
+                       organization: org, name: 'Registry', label: 'registry')
+      repo = create(:docker_repository, content_view_version: org.default_content_view.versions.first,
+                    docker_upstream_name: 'image/one', :product => product)
+
+      content_view = FactoryBot.build(:katello_content_view, :name => "New CV")
+      content_view.organization_id = org.id
+      content_view.save!
+      assert content_view.needs_publish? #New CV needs publish
+      content_view.create_new_version
+      content_view.reload
+      refute content_view.needs_publish? #CV with newly created version doesn't need publish
+      content_view.update!(repository_ids: [repo.id])
+      assert content_view.needs_publish? #CV with newly updated repositories needs publish
+    end
+
+    def test_published_cv_needs_publish_on_repository_publication_update
+      org = @organization
+      product = create(:katello_product, provider: org.anonymous_provider,
+                       organization: org, name: 'Registry', label: 'registry')
+      repo = create(:docker_repository, content_view_version: org.default_content_view.versions.first,
+                    docker_upstream_name: 'image/one', :product => product)
+
+      content_view = FactoryBot.build(:katello_content_view, :name => "New CV")
+      content_view.organization_id = org.id
+      content_view.repository_ids = [repo.id]
+      content_view.save!
+      assert content_view.needs_publish? #New CV needs publish
+      content_view.create_new_version
+      content_view.reload
+      refute content_view.needs_publish? #CV with newly created version doesn't need publish
+      repo.update!(publication_href: "Updated_href")
+      assert content_view.needs_publish? #CV needs publish when child repo gets new publication
+    end
   end
 end
