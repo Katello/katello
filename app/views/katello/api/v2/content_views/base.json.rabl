@@ -12,7 +12,7 @@ attributes :import_only
 attributes :generated_for
 attributes :related_cv_count
 attributes :related_composite_cvs
-attributes :needs_publish?
+attributes :needs_publish? => :needs_publish
 
 node :next_version do |content_view|
   content_view.next_version.to_f.to_s
