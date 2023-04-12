@@ -236,7 +236,7 @@ module Katello
     end
 
     def test_add_products
-      product_ids = @products.collect { |p| p.id.to_s }
+      product_ids = katello_products(:fedora, :redhat).collect { |p| p.id.to_s }
       put :add_products, params: { :id => @sync_plan.id, :organization_id => @organization.id, :product_ids => product_ids }
       assert_response :success
       assert_template 'api/v2/sync_plans/show'

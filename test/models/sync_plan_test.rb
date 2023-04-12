@@ -336,7 +336,7 @@ module Katello
       product = katello_products(:empty_redhat)
       @plan.products << product
       refute(@plan.valid?, "Plan must be invalid")
-      assert_includes(@plan.errors.full_messages, "Can not add product #{product.name} because it is disabled.", "Validation should give proper error message")
+      assert_includes(@plan.errors.full_messages, "Cannot add product #{product.name} because it is disabled.", "Validation should give proper error message")
     end
 
     def test_audit_creation_on_new_sync_plan

@@ -29,7 +29,7 @@ module Katello
                                   name: 'content-123',
                                   cp_content_id: 'content-123')
       @content_id = @content.cp_content_id
-      FactoryBot.create(:katello_product_content, content: @content, product: @product)
+      FactoryBot.create(:katello_product_content, content: @content, product: @product, enabled: false)
     end
 
     def setup_activation_keys

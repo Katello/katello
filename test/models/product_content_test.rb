@@ -52,6 +52,39 @@ module Katello
       assert_includes Katello::ProductContent.enabled(@product.organization), @product_content
     end
 
+    def test_enabled_value_from_candlepin
+      ::Katello::Resources::Candlepin::Product.expects(:get).returns(
+        [
+          {
+            'productContent' => [
+              {
+                'content' => {
+                  'id' => @content_id
+                },
+                'enabled' => true
+              }
+            ]
+          }
+        ]
+      )
+      result = @product_content.enabled_value_from_candlepin
+      assert result
+    end
+
+    def test_set_enabled_from_candlepin!
+      @product_content.expects(:enabled_value_from_candlepin).returns(true)
+      @product_content.expects(:enabled).returns(false)
+      @product_content.expects(:update!).with(:enabled => true)
+      @product_content.set_enabled_from_candlepin!
+    end
+
+    def test_set_enabled_from_candlepin_no_change
+      @product_content.expects(:enabled_value_from_candlepin).returns(true)
+      @product_content.expects(:enabled).returns(true)
+      @product_content.expects(:update!).never
+      @product_content.set_enabled_from_candlepin!
+    end
+
     def test_redhat
       refute_includes Katello::ProductContent.redhat, katello_product_contents(:fedora_17_x86_64_content)
       assert_includes Katello::ProductContent.redhat, @product_content
