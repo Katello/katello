@@ -63,3 +63,9 @@ node :enabled_content_override do |pc|
     override&.computed_value
   end
 end
+
+node :redhat do |pc|
+  if pc&.product&.respond_to? :redhat?
+    pc.product.redhat?
+  end
+end

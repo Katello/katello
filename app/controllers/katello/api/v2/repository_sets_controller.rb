@@ -26,7 +26,7 @@ module Katello
     param :enabled, :bool, :required => false, :desc => N_("If true, only return repository sets that have been enabled. Defaults to false")
     param :with_active_subscription, :bool, :required => false, :desc => N_("If true, only return repository sets that are associated with an active subscriptions")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
-    param :with_custom, :bool, :required => false, :desc => N_("If true, return custom repository sets along with redhat repos")
+    param :with_custom, :bool, :required => false, :desc => N_("If true, return custom repository sets along with redhat repos. Will be ignored if repository_type is supplied.")
     param :activation_key_id, :number, :desc => N_("activation key identifier"), :required => false
     param :host_id, :number, :desc => N_("Id of the host"), :required => false
     param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions.")
@@ -34,6 +34,7 @@ module Katello
     param :status, [:enabled, :disabled, :overridden],
                                   :desc => N_("Limit content to enabled / disabled / overridden"),
                                   :required => false
+    param :repository_type, [:redhat, :custom], :desc => N_("Limit content to Red Hat / custom"), :required => false
 
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Katello::ProductContent)
@@ -128,6 +129,9 @@ module Katello
       else
         relation = @product.displayable_product_contents
       end
+      if %w(custom redhat).include?(params[:repository_type])
+        relation = relation.send(params[:repository_type].to_sym)
+      end
 
       if ::Foreman::Cast.to_bool(params[:enabled])
         relation = relation.enabled(@organization)
@@ -139,7 +143,10 @@ module Katello
       end
 
       relation = relation.where(Katello::Content.table_name => {:name => params[:name]}) if params[:name].present?
-      relation = relation.redhat unless ::Foreman::Cast.to_bool(params[:with_custom])
+      # ignore with_custom if repository_type is specified
+      if params[:repository_type].blank?
+        relation = relation.redhat unless ::Foreman::Cast.to_bool(params[:with_custom])
+      end
       index_relation_with_consumable_overrides(relation)
     end
 
@@ -154,11 +161,13 @@ module Katello
           :match_environment => content_access_mode_env,
           :consumable => @consumable)
       unfiltered = relation.merge(content_finder.product_content)
-      return unfiltered unless params[:status]
+      return unfiltered unless params[:status] || params[:repository_type]
       filtered_ids = ProductContentFinder.wrap_with_overrides(
         product_contents: unfiltered,
         overrides: @consumable&.content_overrides,
-        status: params[:status]).map(&:id).uniq
+        status: params[:status],
+        repository_type: params[:repository_type]
+      ).map(&:id).uniq
       unfiltered.where(id: filtered_ids)
     end
 

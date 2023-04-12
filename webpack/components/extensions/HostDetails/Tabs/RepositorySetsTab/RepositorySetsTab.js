@@ -5,7 +5,7 @@ import React, {
   useMemo,
 } from 'react';
 
-import { propsToCamelCase } from 'foremanReact/common/helpers';
+import { propsToCamelCase, noop } from 'foremanReact/common/helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import PropTypes from 'prop-types';
@@ -59,7 +59,7 @@ import {
 import { selectOrganization, selectOrganizationStatus } from '../../Cards/SystemPurposeCard/SystemPurposeSelectors';
 import { getOrganization } from '../../Cards/SystemPurposeCard/SystemPurposeActions';
 
-import { REPOSITORY_SETS_KEY, STATUSES, STATUS_TO_PARAM, PARAM_TO_FRIENDLY_NAME } from './RepositorySetsConstants.js';
+import { REPOSITORY_SETS_KEY, STATUSES, STATUS_TO_PARAM, PARAM_TO_FRIENDLY_NAME, PROVIDER_TYPES, PROVIDER_TYPE_PARAM_TO_FRIENDLY_NAME, PROVIDER_TYPE_TO_PARAM } from './RepositorySetsConstants.js';
 import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
 import './RepositorySetsTab.scss';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
@@ -181,6 +181,7 @@ const RepositorySetsTab = () => {
     userPermissionsFromHostDetails({ hostDetails }),
   );
   const STATUS_LABEL = __('Status');
+  const REPO_TYPE_LABEL = __('Repository type');
 
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
   const {
@@ -196,7 +197,10 @@ const RepositorySetsTab = () => {
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const dispatch = useDispatch();
-  const { searchParam, show, status: initialStatus } = useUrlParams();
+  const {
+    searchParam, show, status: initialStatus,
+    repository_type: initialRepoType,
+  } = useUrlParams();
 
   const toggleGroupStates = ['noLimit', 'limitToEnvironment'];
   const [SHOW_ALL, LIMIT_TO_ENVIRONMENT] = toggleGroupStates;
@@ -206,8 +210,10 @@ const RepositorySetsTab = () => {
     useState(show ?? defaultToggleGroupState);
   const [statusSelected, setStatusSelected]
     = useState(PARAM_TO_FRIENDLY_NAME[initialStatus] ?? STATUS_LABEL);
-  const activeFilters = [statusSelected];
-  const defaultFilters = [STATUS_LABEL];
+  const [repoTypeSelected, setRepoTypeSelected]
+    = useState(PROVIDER_TYPE_PARAM_TO_FRIENDLY_NAME[initialRepoType] ?? REPO_TYPE_LABEL);
+  const activeFilters = [statusSelected, repoTypeSelected];
+  const defaultFilters = [STATUS_LABEL, REPO_TYPE_LABEL];
 
   const [alertShowing, setAlertShowing] = useState(false);
 
@@ -227,12 +233,14 @@ const RepositorySetsTab = () => {
     __('Product'),
     __('Repository path'),
     __('Status'),
+    __('Repository type'),
   ], []);
 
   const COLUMNS_TO_SORT_PARAMS = {
     [columnHeaders[0]]: 'name',
     [columnHeaders[1]]: 'product',
     [columnHeaders[3]]: 'enabled_by_default',
+    [columnHeaders[4]]: 'redhat',
   };
 
   const {
@@ -250,6 +258,9 @@ const RepositorySetsTab = () => {
       if (statusSelected !== STATUS_LABEL) {
         modifiedParams.status = STATUS_TO_PARAM[statusSelected];
       }
+      if (repoTypeSelected !== REPO_TYPE_LABEL) {
+        modifiedParams.repository_type = PROVIDER_TYPE_TO_PARAM[repoTypeSelected];
+      }
       return getHostRepositorySets({
         content_access_mode_env: toggleGroupState === LIMIT_TO_ENVIRONMENT,
         content_access_mode_all: simpleContentAccess,
@@ -258,8 +269,8 @@ const RepositorySetsTab = () => {
         ...modifiedParams,
       });
     },
-    [hostId, toggleGroupState, LIMIT_TO_ENVIRONMENT,
-      simpleContentAccess, apiSortParams, statusSelected, STATUS_LABEL],
+    [hostId, statusSelected, STATUS_LABEL, repoTypeSelected,
+      REPO_TYPE_LABEL, toggleGroupState, LIMIT_TO_ENVIRONMENT, simpleContentAccess, apiSortParams],
   );
 
   useEffect(() => {
@@ -272,6 +283,14 @@ const RepositorySetsTab = () => {
   const response = useSelector(state => selectAPIResponse(state, REPOSITORY_SETS_KEY));
   const { results, error: errorSearchBody, ...metadata } = response;
 
+  const filtersQuery = () => {
+    const query = [];
+    if (repoTypeSelected !== REPO_TYPE_LABEL) {
+      query.push(`redhat=${PROVIDER_TYPE_TO_PARAM[repoTypeSelected] === 'redhat'}`);
+    }
+    return query.join(' and ');
+  };
+
   const repoSetSearchQuery = label => `cp_content_id = ${label}`;
   const {
     selectOne, isSelected, searchQuery, selectedCount, isSelectable,
@@ -280,7 +299,11 @@ const RepositorySetsTab = () => {
     results,
     metadata,
     initialSearchQuery: searchParam || '',
+    filtersQuery: filtersQuery(),
   });
+  if (statusSelected !== STATUS_LABEL) {
+    selectAll.selectAll = noop; // disable select all when filtering by status
+  }
 
   const hostDetailsStatus = useSelector(state => selectHostDetailsStatus(state));
 
@@ -325,6 +348,13 @@ const RepositorySetsTab = () => {
   const handleStatusSelected = newType => setStatusSelected((prevType) => {
     if (prevType === newType) {
       return STATUS_LABEL;
+    }
+    return newType;
+  });
+
+  const handleRepoTypeSelected = newType => setRepoTypeSelected((prevType) => {
+    if (prevType === newType) {
+      return REPO_TYPE_LABEL;
     }
     return newType;
   });
@@ -432,6 +462,17 @@ const RepositorySetsTab = () => {
           items={Object.values(STATUSES)}
           selected={statusSelected}
           setSelected={handleStatusSelected}
+        />
+      </SplitItem>
+      <SplitItem>
+        <SelectableDropdown
+          id="repository-type-dropdown"
+          ouiaId="repository-type-dropdown"
+          title={REPO_TYPE_LABEL}
+          showTitle={false}
+          items={Object.values(PROVIDER_TYPES)}
+          selected={repoTypeSelected}
+          setSelected={handleRepoTypeSelected}
         />
       </SplitItem>
     </Split>
@@ -542,7 +583,7 @@ const RepositorySetsTab = () => {
           errorSearchTitle={errorSearchTitle}
           errorSearchBody={errorSearchBody}
           additionalListeners={[hostId, toggleGroupState, statusSelected,
-            activeSortColumn, activeSortDirection]}
+            repoTypeSelected, activeSortColumn, activeSortDirection]}
           fetchItems={fetchItems}
           autocompleteEndpoint="/katello/api/v2/repository_sets"
           bookmarkController="katello_product_contents" // Katello::ProductContent.table_name
@@ -577,6 +618,7 @@ const RepositorySetsTab = () => {
                 product: { name: productName, id: productId },
                 osRestricted,
                 archRestricted,
+                redhat,
               } = repoSet;
               const { isEnabled, isOverridden } =
                 getEnabledValue({ enabled, enabledContentOverride });
@@ -604,6 +646,9 @@ const RepositorySetsTab = () => {
                   </Td>
                   <Td>
                     <span><EnabledIcon key={`enabled-icon-${id}`} {...{ isEnabled, isOverridden }} /></span>
+                  </Td>
+                  <Td>
+                    <span>{redhat ? __('Red Hat') : __('Custom')}</span>
                     {showArchRestricted &&
                       <span><ArchRestrictedIcon key={`arch-restricted-icon-${id}`} {...{ archRestricted }} /></span>
                     }
