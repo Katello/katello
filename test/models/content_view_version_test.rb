@@ -240,5 +240,16 @@ module Katello
         @cvv.validate_destroyable!
       end
     end
+
+    def test_filters_applied
+      @filter = FactoryBot.create(:katello_content_view_package_filter, :content_view => @cvv.content_view)
+      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "abc*")
+      @cvv.add_applied_filters!
+      filters_json = @cvv.applied_filters
+      assert_equal filters_json["applied_filters"].size, 1
+      assert_match(/Database_filter/, filters_json["applied_filters"].first["filter"]["name"])
+      assert_equal filters_json["applied_filters"].first["rules"].size, 1
+      assert_equal filters_json["applied_filters"].first["rules"].first["name"], "abc*"
+    end
   end
 end

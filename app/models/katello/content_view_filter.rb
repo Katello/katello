@@ -202,6 +202,10 @@ module Katello
       fail "setting original_module_streams not supported for #{self.class.name}"
     end
 
+    def rules
+      self.class.rule_class_for(self).where(content_view_filter_id: id)
+    end
+
     protected
 
     def validate_repos

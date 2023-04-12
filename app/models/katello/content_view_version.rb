@@ -428,6 +428,25 @@ module Katello
       end
     end
 
+    def add_applied_filters!
+      applied_filters_and_rules = content_view.filters.map do |f|
+        {
+          filter: f,
+          rules: f.rules,
+          affected_repos: f.applicable_repos.map do |repo|
+            repo.slice(:id, :name, :label, :arch, :major, :minor,
+                       :content_type, :os_versions, :url, :content_id).merge(redhat: repo.redhat?, root: repo.root.id,
+                                                                             product: repo.product.slice(:id, :label))
+          end
+        }
+      end
+      self.applied_filters = {
+        applied_filters: applied_filters_and_rules,
+        dependency_solving: content_view.solve_dependencies
+      }
+      save!
+    end
+
     def rabl_path
       "katello/api/v2/#{self.class.to_s.demodulize.tableize}/show"
     end

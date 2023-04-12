@@ -248,6 +248,7 @@ module Actions
         def finalize
           version = ::Katello::ContentViewVersion.find(input[:new_content_view_version_id])
           version.update_content_counts!
+          version.add_applied_filters!
           generate_description(version, output[:added_units]) if version.description.blank?
 
           history = ::Katello::ContentViewHistory.find(input[:history_id])
