@@ -32,6 +32,12 @@ child :products => :products do |_product|
   attributes :id, :name
 end
 
+if ::Foreman::Cast.to_bool(params.fetch(:show_hosts, false))
+  child :hosts do
+    attributes :id, :name
+  end
+end
+
 child :host_collections => :host_collections do
   attributes :id
   attributes :name

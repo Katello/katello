@@ -83,6 +83,10 @@ module Katello
       subscription_facet_activation_keys.count
     end
 
+    def hosts
+      subscription_facets.map(&:host)
+    end
+
     def related_resources
       self.organization
     end
