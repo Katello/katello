@@ -87,6 +87,7 @@ module Katello
     api :GET, "/activation_keys/:id", N_("Show an activation key")
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
+    param :show_hosts, :bool, :desc => N_("Show hosts associated to an activation key"), :required => false
     def show
       respond(:resource => @activation_key)
     end

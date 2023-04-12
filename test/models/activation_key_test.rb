@@ -171,6 +171,11 @@ module Katello
       assert @dev_key.valid?
     end
 
+    def test_hosts_mapping
+      total_hosts = hosts
+      assert_equal 6, total_hosts.count
+    end
+
     def test_products
       pool_one = katello_pools(:pool_one)
       cp_pools = [{'id' => pool_one.cp_id}]
