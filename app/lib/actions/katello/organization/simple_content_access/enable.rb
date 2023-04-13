@@ -3,6 +3,16 @@ module Actions
     module Organization
       module SimpleContentAccess
         class Enable < Toggle
+          def plan(organization_id, auto_create_overrides: true)
+            input[:auto_create_overrides] = auto_create_overrides
+            sequence do
+              if auto_create_overrides
+                plan_action(PrepareContentOverrides, organization_id)
+              end
+              super(organization_id) # puts plan_self inside the sequence
+            end
+          end
+
           def content_access_mode_value
             SIMPLE_CONTENT_ACCESS_ENABLED_VALUE
           end
