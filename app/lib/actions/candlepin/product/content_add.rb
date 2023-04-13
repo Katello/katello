@@ -22,7 +22,7 @@ module Actions
         # results in correct grammar on Tasks page,
         # e.g. "Import manifest for organization Default Organization"
         def humanized_input
-          "for Candlepin product enabled=#{ENABLED}"
+          "for Candlepin product #{input[:product_id]}"
         end
       end
     end
