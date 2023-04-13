@@ -1,7 +1,7 @@
 module Katello
   # rubocop:disable Metrics/ClassLength
   class ContentView < Katello::Model
-    audited :associations => [:repositories, :environments]
+    audited :associations => [:repositories, :environments, :filters], :except => [:name, :label, :description]
     has_associated_audits
     include Ext::LabelFromName
     include Katello::Authorization::ContentView
@@ -748,20 +748,38 @@ module Katello
       audited_repositories
     end
 
-    def audited_cv_repository_publications_changed
-      audited_repositories_publication = Audit.where(auditable_id: repositories, auditable_type: "Katello::Repository").filter do |a|
-        !a.audited_changes["publication_href"].nil?
+    def audited_cv_repository_changed
+      audited_repositories_changes = Audit.where(auditable_id: repositories, auditable_type: "Katello::Repository").filter do |a|
+        a.audited_changes["publication_href"].present? || a.audited_changes["version_href"].present?
       end
       if latest_version_object
-        audited_repositories_publication.filter! { |a| a.created_at > latest_version_object.created_at }
+        audited_repositories_changes = audited_repositories_changes.filter { |a| a.created_at > latest_version_object.created_at }
       end
-      audited_repositories_publication
+      audited_repositories_changes
+    end
+
+    def audited_cv_filters_changed
+      audited_filters = Audit.where(auditable_type: "Katello::ContentViewFilter",
+                                    associated_id: id,
+                                    associated_type: "Katello::ContentView")
+      if latest_version_object
+        audited_filters = audited_filters.filter { |a| a.created_at > latest_version_object.created_at }
+      end
+      audited_filters
+    end
+
+    def audited_cv_filter_rules_changed
+      audited_filter_rules = Audit.where(associated_id: id,
+                                    associated_type: "Katello::ContentView").where("auditable_type LIKE '%FilterRule%'")
+      if latest_version_object
+        audited_filter_rules = audited_filter_rules.filter { |a| a.created_at > latest_version_object.created_at }
+      end
+      audited_filter_rules
     end
 
     def needs_publish?
-      audit_cv_repositories_count = audited_cv_repositories_since_last_publish&.size
-      audit_cv_repositories_publication_count = audited_cv_repository_publications_changed&.size
-      audit_cv_repositories_count.to_i > 0 || audit_cv_repositories_publication_count.to_i > 0
+      audited_cv_repositories_since_last_publish.present? || audited_cv_repository_changed.present? ||
+        audited_cv_filters_changed.present? || audited_cv_filter_rules_changed.present?
     end
 
     protected
