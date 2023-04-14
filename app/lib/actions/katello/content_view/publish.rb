@@ -112,15 +112,8 @@ module Actions
           version.update_content_counts!
           # update errata applicability counts for all hosts in the CV & Library
           unless input[:skip_promotion]
-            content_view = ::Katello::ContentView.find(input[:content_view_id])
-            lifecycle_environment = ::Katello::KTEnvironment.find(input[:environment_id])
-            ::Katello::Host::ContentFacet.in_content_views_and_environments(
-              content_views: [content_view],
-              lifecycle_environments: [lifecycle_environment]
-            ).each do |facet|
-              facet.update_applicability_counts
-              facet.update_errata_status
-            end
+            environment = ::Katello::KTEnvironment.find(input[:environment_id])
+            ::Katello::ContentView.find(input[:content_view_id]).update_host_statuses(environment)
           end
 
           history = ::Katello::ContentViewHistory.find(input[:history_id])
