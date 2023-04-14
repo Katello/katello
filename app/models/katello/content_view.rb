@@ -652,12 +652,16 @@ module Katello
     end
 
     def check_orphaned_content_facets!(environments: [])
-      ::Katello::Host::ContentFacet.in_content_views_and_environments(
-        content_views: [self],
-        lifecycle_environments: environments
-      ).each do |facet|
-        unless facet.host
-          fail _("Orphaned content facets for deleted hosts exist for the content view and environment. Please run rake task : katello:clean_orphaned_facets and try again!")
+      Location.no_taxonomy_scope do
+        User.as_anonymous_admin do
+          ::Katello::Host::ContentFacet.in_content_views_and_environments(
+            content_views: [self],
+            lifecycle_environments: environments
+          ).each do |facet|
+            unless facet.host
+              fail _("Orphaned content facets for deleted hosts exist for the content view and environment. Please run rake task : katello:clean_orphaned_facets and try again!")
+            end
+          end
         end
       end
     end
