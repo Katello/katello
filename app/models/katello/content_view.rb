@@ -735,7 +735,7 @@ module Katello
     end
 
     def audited_cv_repositories_since_last_publish
-      audited_repositories = Audit.where(auditable_id: self).filter do |a|
+      audited_repositories = self.audits.filter do |a|
         !a.audited_changes["repository_ids"].nil?
       end
       if latest_version_object
@@ -745,7 +745,7 @@ module Katello
     end
 
     def audited_cv_repository_publications_changed
-      audited_repositories_publication = Audit.where(auditable_id: repositories).filter do |a|
+      audited_repositories_publication = Audit.where(auditable_id: repositories, auditable_type: "Katello::Repository").filter do |a|
         !a.audited_changes["publication_href"].nil?
       end
       if latest_version_object
