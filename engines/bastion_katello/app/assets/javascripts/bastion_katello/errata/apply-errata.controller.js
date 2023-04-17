@@ -77,7 +77,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 };
 
                 params['content_view_version_environments'] = [];
-                params['resolve_dependencies'] = true;
+                params['resolve_dependencies'] = !$scope.noDepSolve;
 
                 //get a list of unique content view version ids with their environments
                 angular.forEach($scope.updates, function (update) {
