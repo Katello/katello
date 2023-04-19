@@ -23,6 +23,7 @@ import ContentViewSelect from '../../../../scenes/ContentViews/components/Conten
 import ContentViewSelectOption from '../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelectOption';
 import { selectContentViewsStatus } from '../selectors';
 import { getCVPlaceholderText, shouldDisableCVSelect } from '../../../ContentViews/components/ContentViewSelect/helpers';
+import { selectEnvironmentPaths } from '../../../ContentViews/components/EnvironmentPaths/EnvironmentPathSelectors';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
 
@@ -96,12 +97,15 @@ const ContentSourceForm = ({
   isLoading,
   hostsUpdated,
 }) => {
+  const pathsUrl = `/organizations/${orgId()}/environments/paths?permission_type=promotable${contentSourceId ? `&content_source_id=${contentSourceId}` : ''}`;
   useAPI( // No TableWrapper here, so we can useAPI from Foreman
     'get',
-    api.getApiUrl(`/organizations/${orgId()}/environments/paths?permission_type=promotable`),
+    api.getApiUrl(pathsUrl),
     ENV_PATH_OPTIONS,
   );
   const contentViewsStatus = useSelector(selectContentViewsStatus);
+  const environmentPathResponse = useSelector(selectEnvironmentPaths);
+  const envList = environmentPathResponse?.results?.map(path => path.environments).flat();
   const [csSelectOpen, setCSSelectOpen] = useState(false);
   const [cvSelectOpen, setCVSelectOpen] = useState(false);
 
@@ -182,6 +186,16 @@ const ContentSourceForm = ({
         isOpen={csSelectOpen}
         isDisabled={contentSourcesIsDisabled || hostsUpdated}
       />
+      {envList?.some(env => env?.content_source?.environment_is_associated === false) &&
+        <Alert
+          variant="info"
+          isInline
+          title={__('Some environments are disabled because they are not associated with the selected content source.')}
+          style={{ marginBottom: '1rem' }}
+        >
+          {__('To enable them, add the environment to the content source, or select a different content source.')}
+        </Alert>
+      }
       <EnvironmentPaths
         style={{ display: 'block' }}
         userCheckedItems={environments}
