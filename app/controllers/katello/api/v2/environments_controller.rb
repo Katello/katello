@@ -132,6 +132,7 @@ module Katello
 
     api :GET, "/organizations/:organization_id/environments/paths", N_("List environment paths")
     param :organization_id, :number, :desc => N_("organization identifier")
+    param :content_source_id, :number, :desc => N_("Show whether each lifecycle environment is associated with the given Smart Proxy id.")
     param :permission_type, String, :desc => <<-DESC
       The associated permission type. One of (readable | promotable)
       Default: readable
@@ -142,7 +143,10 @@ module Katello
                   else
                     @organization.readable_promotion_paths
                   end
-
+      if params[:content_source_id]
+        @content_source_id = params[:content_source_id].to_i
+        @content_source = SmartProxy.authorized(:view_smart_proxies).find(@content_source_id)
+      end
       paths = env_paths.inject([]) do |result, path|
         result << { :environments => [@organization.library] + path.select(&:readable?) }
       end

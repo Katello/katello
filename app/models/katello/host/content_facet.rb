@@ -110,7 +110,7 @@ module Katello
           Rails.logger.info("ContentViewEnvironment not found for content view '#{cve.content_view_name}' and environment '#{cve.environment&.name}'; creating a new one.")
         end
         fail _("Unable to create ContentViewEnvironment. Check the logs for more information.") if content_view_environment.nil?
-        
+
         self.content_view_environments = [content_view_environment]
       end
 

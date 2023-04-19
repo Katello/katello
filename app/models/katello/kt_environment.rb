@@ -21,6 +21,12 @@ module Katello
     has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
     :inverse_of => :environment, :foreign_key => :katello_environment_id
 
+    has_many :capsule_lifecycle_environments, :foreign_key => :lifecycle_environment_id,
+                                              :dependent => :destroy, :inverse_of => :lifecycle_environment
+    has_many :capsules, :through => :capsule_lifecycle_environments,
+                                              :foreign_key => :capsule_id,
+                                              :class_name => "::SmartProxy", :inverse_of => :lifecycle_environments
+
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
              :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
     has_many :content_view_environment_content_facets, :through => :content_view_environments,
@@ -38,6 +44,8 @@ module Katello
                           :inverse_of => :lifecycle_environment, :dependent => :restrict_with_exception
     has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets,
                           :inverse_of => :lifecycle_environment
+
+    alias_method :content_sources, :capsules
 
     scope :completer_scope, ->(options = nil) { where('organization_id = ?', options[:organization_id]) if options[:organization_id].present? }
     scope :non_library, -> { where(library: false) }
@@ -59,9 +67,6 @@ module Katello
     validates_with Validators::PathDescendentsValidator
 
     validates_with Katello::Validators::EnvironmentDockerRepositoriesValidator
-
-    has_many :capsule_lifecycle_environments, :foreign_key => :lifecycle_environment_id,
-                                              :dependent => :destroy, :inverse_of => :lifecycle_environment
 
     # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
     before_destroy :assert_deletable, :prepend => true
@@ -127,6 +132,11 @@ module Katello
         fail HttpErrors::UnprocessableEntity, _('An environment is missing a prior') unless all_have_prior?
         new_successor
       end
+    end
+
+    def content_source_associated?(capsule)
+      return false if capsule.blank?
+      capsule.pulp_primary? || self.content_sources.ids.include?(capsule.id)
     end
 
     def display_name

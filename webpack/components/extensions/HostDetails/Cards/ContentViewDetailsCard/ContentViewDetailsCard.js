@@ -31,7 +31,7 @@ const requiredPermissions = [
 const HostContentViewDetails = ({
   contentView, lifecycleEnvironment, contentViewVersionId, contentViewDefault,
   contentViewVersion, contentViewVersionLatest, hostId, hostName, orgId, hostEnvId,
-  hostPermissions, permissions,
+  hostPermissions, permissions, contentSourceId,
 }) => {
   let versionLabel = `Version ${contentViewVersion}`;
   if (contentViewVersionLatest) {
@@ -142,6 +142,7 @@ const HostContentViewDetails = ({
           hostId={hostId}
           hostName={hostName}
           hostEnvId={hostEnvId}
+          contentSourceId={contentSourceId}
           orgId={orgId}
           key={`cv-change-modal-${hostId}`}
         />
@@ -156,6 +157,7 @@ const ContentViewDetailsCard = ({ hostDetails }) => {
     return (<HostContentViewDetails
       hostId={hostDetails.id}
       hostName={hostDetails.name}
+      contentSourceId={hostDetails.content_facet_attributes.content_source?.id}
       orgId={hostDetails.organization_id}
       hostEnvId={hostDetails.content_facet_attributes.lifecycle_environment_id}
       hostPermissions={hostDetails.permissions}
@@ -183,6 +185,7 @@ HostContentViewDetails.propTypes = {
   name: PropTypes.string,
   hostId: PropTypes.number,
   hostName: PropTypes.string,
+  contentSourceId: PropTypes.number,
   orgId: PropTypes.number,
   hostEnvId: PropTypes.number,
   hostPermissions: PropTypes.shape({
@@ -202,6 +205,7 @@ HostContentViewDetails.defaultProps = {
   hostId: null,
   hostName: '',
   orgId: null,
+  contentSourceId: null,
   contentViewDefault: false,
   hostPermissions: {},
   permissions: {},
@@ -214,6 +218,9 @@ ContentViewDetailsCard.propTypes = {
     organization_id: PropTypes.number,
     content_facet_attributes: PropTypes.shape({
       lifecycle_environment_id: PropTypes.number,
+      content_source: PropTypes.shape({
+        id: PropTypes.number,
+      }),
       permissions: PropTypes.shape({
         view_content_views: PropTypes.bool,
         view_lifecycle_environments: PropTypes.bool,
