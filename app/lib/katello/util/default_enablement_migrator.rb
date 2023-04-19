@@ -59,7 +59,7 @@ module Katello
         Organization.all.each do |org|
           next if org.simple_content_access? # subscription attachment is meaningless with SCA
           Rails.logger.info("Creating disabled overrides for unsubscribed content in org #{org.name}")
-          hosts_to_update = org.hosts.where.not(subscription_facet: nil)
+          hosts_to_update = org.hosts.joins(:subscription_facet).where.not("#{Katello::Host::SubscriptionFacet.table_name}.host_id" => nil)
           hosts_to_update.each do |host|
             create_disabled_overrides_for_non_sca(consumable: host.subscription_facet)
           rescue => e
