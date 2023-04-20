@@ -85,3 +85,7 @@ end
 child :active_history => :active_history do
   extends 'katello/api/v2/content_view_histories/show'
 end
+
+node :filters_applied do |cv_version|
+  cv_version.filters_applied?
+end
