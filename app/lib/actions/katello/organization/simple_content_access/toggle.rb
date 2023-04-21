@@ -12,9 +12,15 @@ module Actions
           attr_reader :organization
 
           def plan(organization_id)
-            @organization = ::Organization.find(organization_id)
+            organization = ::Organization.find(organization_id.to_i)
+            input[:organization_name] = organization.name
+            input[:organization_label] = organization.label
             action_subject organization
-            ::Katello::Resources::Candlepin::Owner.update(@organization.label, contentAccessMode: content_access_mode_value)
+            plan_self(organization_id: organization_id)
+          end
+
+          def run
+            ::Katello::Resources::Candlepin::Owner.update(input[:organization_label], contentAccessMode: content_access_mode_value)
           end
 
           def failure_notification(plan)
@@ -28,6 +34,10 @@ module Actions
             task_success_notification.deliver!(
               subject_organization
             )
+          end
+
+          def humanized_input
+            _("for organization %s") % input[:organization_name]
           end
 
           private

@@ -26,8 +26,10 @@ module Katello
     api :PUT, "/organizations/:organization_id/simple_content_access/enable",
       N_("Enable simple content access for a manifest")
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
+    param :auto_create_overrides, :bool, :desc => N_("Automatically create disabled content overrides for custom products which do not have an attached subscription"), :required => false, :default => true
     def enable
-      task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:organization_id])
+      auto_create = params.key?(:auto_create_overrides) ? ::Foreman::Cast.to_bool(params[:auto_create_overrides]) : true
+      task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:organization_id], auto_create_overrides: auto_create)
       respond_for_async :resource => task
     end
 
