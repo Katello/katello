@@ -129,11 +129,7 @@ module Katello
     end
 
     def sync_date_sans_tz
-      if User.current.try(:timezone)
-        return self.sync_date.strftime('%a, %d %b %Y %H:%M:%S')
-      else
-        sync_date
-      end
+      self.sync_date.strftime('%Y-%m-%d %H:%M:%S %z')
     end
 
     def next_sync
