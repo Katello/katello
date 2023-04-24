@@ -109,23 +109,14 @@ module Katello
     param :major, :number, :desc => N_("Override the major version number"), :required => false
     param :minor, :number, :desc => N_("Override the minor version number"), :required => false
     param :environment_ids, Array, :desc => N_("Identifiers for Lifecycle Environment"), :required => false
-    param :is_force_promote, :bool, :desc => N_("force content view promotion and bypass lifecycle environment restriction"), :required => false
+    param :publish_only_if_needed, :bool, :desc => N_("Check audited changes and proceed only if content or filters have changed since last publish"), :required => false
+    param :is_force_promote, :bool, :desc => N_("Force content view promotion and bypass lifecycle environment restriction"), :required => false
     param :repos_units, Array, :desc => N_("Specify the list of units in each repo"), :required => false do
       param :label, String, :desc => N_("repo label"), :required => true
       param :rpm_filenames, Array, of: String, :desc => N_("list of rpm filename strings to include in published version"), :required => true
     end
     def publish
-      if params[:repos_units].present? && @content_view.composite?
-        fail HttpErrors::BadRequest, _("Directly setting package lists on composite content views is not allowed. Please " \
-                                     "update the components, then re-publish the composite.")
-      end
-      if params[:major].present? && params[:minor].present? && ContentViewVersion.find_by(:content_view_id => params[:id], :major => params[:major], :minor => params[:minor]).present?
-        fail HttpErrors::BadRequest, _("A CV version already exists with the same major and minor version (%{major}.%{minor})") % {:major => params[:major], :minor => params[:minor]}
-      end
-
-      if params[:major].present? && params[:minor].nil? || params[:major].nil? && params[:minor].present?
-        fail HttpErrors::BadRequest, _("Both major and minor parameters have to be used to override a CV version")
-      end
+      validate_publish_params!
 
       task = async_task(::Actions::Katello::ContentView::Publish, @content_view, params[:description],
                         :environment_ids => params[:environment_ids],
@@ -253,6 +244,25 @@ module Katello
     end
 
     private
+
+    def validate_publish_params!
+      if params[:repos_units].present? && @content_view.composite?
+        fail HttpErrors::BadRequest, _("Directly setting package lists on composite content views is not allowed. Please " \
+                                     "update the components, then re-publish the composite.")
+      end
+      if params[:major].present? && params[:minor].present? && ContentViewVersion.find_by(:content_view_id => params[:id], :major => params[:major], :minor => params[:minor]).present?
+        fail HttpErrors::BadRequest, _("A CV version already exists with the same major and minor version (%{major}.%{minor})") % {:major => params[:major], :minor => params[:minor]}
+      end
+
+      if params[:major].present? && params[:minor].nil? || params[:major].nil? && params[:minor].present?
+        fail HttpErrors::BadRequest, _("Both major and minor parameters have to be used to override a CV version")
+      end
+
+      if (::Foreman::Cast.to_bool(params[:publish_only_if_needed]) && !@content_view.needs_publish?)
+        fail HttpErrors::BadRequest, _("Content view does not need a publish since there are no audited changes since the last publish." \
+                                     " Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.")
+      end
+    end
 
     def  ensure_non_default
       if @content_view.default? && !%w(show history).include?(params[:action])
