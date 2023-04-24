@@ -1,7 +1,7 @@
 module Katello
   class ContentViewFilter < Katello::Model
     include Authorization::ContentViewFilter
-    audited :associations => [:repositories]
+    audited :associations => [:repositories], :associated_with => :content_view, :except => [:name, :description]
     DOCKER = 'docker'.freeze
     RPM = Rpm::CONTENT_TYPE
     PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE

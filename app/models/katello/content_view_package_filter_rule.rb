@@ -1,7 +1,6 @@
 module Katello
   class ContentViewPackageFilterRule < Katello::Model
     include ::Katello::Concerns::ContentViewFilterRuleCommon
-
     belongs_to :filter,
                :class_name => "Katello::ContentViewPackageFilter",
                :inverse_of => :package_rules,
