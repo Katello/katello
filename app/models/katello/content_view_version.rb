@@ -447,6 +447,13 @@ module Katello
       save!
     end
 
+    def filters_applied?
+      # For older content view versions, we do not know if filters were applied.
+      # For these, return nil.
+      return nil if applied_filters.nil?
+      applied_filters["applied_filters"].present?
+    end
+
     def rabl_path
       "katello/api/v2/#{self.class.to_s.demodulize.tableize}/show"
     end
