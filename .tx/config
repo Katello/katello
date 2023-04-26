@@ -1,14 +1,14 @@
 [main]
-host = https://www.transifex.com
+host = https://app.transifex.com
 
-[foreman.katello]
-file_filter = locale/<lang>/katello.edit.po
-source_file = locale/katello.pot
-source_lang = en
-type = PO
-
-[foreman.bastion_katello]
+[o:foreman:p:foreman:r:bastion_katello]
 file_filter = engines/bastion_katello/app/assets/javascripts/bastion_katello/i18n/locale/<lang>.po
 source_file = engines/bastion_katello/app/assets/javascripts/bastion_katello/i18n/bastion_katello.pot
 source_lang = en
-type = PO
+type        = PO
+
+[o:foreman:p:foreman:r:katello]
+file_filter = locale/<lang>/katello.edit.po
+source_file = locale/katello.pot
+source_lang = en
+type        = PO
