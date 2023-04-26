@@ -152,9 +152,6 @@ msgstr "%s 是必需的"
 msgid "%s is unreachable. %s"
 msgstr "%s 无法访问。%s"
 
-msgid "%s must be an array."
-msgstr "%s 必须是一个数组。"
-
 msgid "%{errata} (%{total} other errata)"
 msgstr "%{errata} （%{total} 个其他勘误）"
 
@@ -389,14 +386,11 @@ msgstr "<b>同步</b>摘要"
 msgid "A CV version already exists with the same major and minor version (%{major}.%{minor})"
 msgstr "带有相同的主版本和次版本 (%{major}.%{minor}}) 的一个 CV 版本已存在"
 
-msgid "A Pool and its Subscription cannot belong to different organizations"
-msgstr "池及其订阅不能属于不同的机构"
+msgid "A Pool and its Subscription cannot belong to different organizations."
+msgstr ""
 
 msgid "A backend service [ %s ] is unreachable"
 msgstr "一个后端服务 [ %s ] 无法被访问"
-
-msgid "A content view can be added by using the \"Create content view\" button below."
-msgstr "您可以使用下面的 \"Create content view\" 按钮添加内容视图。"
 
 msgid "A content_type must be provided."
 msgstr "必須提供 content_type。"
@@ -464,9 +458,6 @@ msgstr "默认的智能代理不允许的操作。"
 msgid "Action unauthorized to be performed in this organization."
 msgstr "操作没有获得可以在这个机构上执行的授权。"
 
-msgid "Action unauthorized to be performed on selected hosts."
-msgstr "操作未经授权在选定主机上执行。"
-
 msgid "Action with sub plans"
 msgstr "有子计划的操作"
 
@@ -518,6 +509,9 @@ msgstr "添加 RPM 规则"
 msgid "Add Subscriptions"
 msgstr "添加订阅"
 
+msgid "Add Subscriptions using the Add Subscriptions button."
+msgstr ""
+
 msgid "Add a subscription to a host"
 msgstr "为主机添加一个订阅"
 
@@ -526,6 +520,9 @@ msgstr "添加一个备用内容源"
 
 msgid "Add components to the content view"
 msgstr "将组件添加到内容视图"
+
+msgid "Add content"
+msgstr ""
 
 msgid "Add content view"
 msgstr "添加内容视图"
@@ -569,11 +566,17 @@ msgstr "为同步计划添加产品"
 msgid "Add repositories"
 msgstr "添加仓库"
 
+msgid "Add repositories with package groups to content view to select them here."
+msgstr ""
+
 msgid "Add rule"
 msgstr "添加规则"
 
 msgid "Add source"
 msgstr "添加源"
+
+msgid "Add subscriptions"
+msgstr ""
 
 msgid "Add subscriptions consumed by a manifest from Red Hat Subscription Management"
 msgstr "从 Red Hat Subscription Management 添加被清单消耗的订阅"
@@ -583,12 +586,6 @@ msgstr "将订阅添加到一个或多个主机"
 
 msgid "Add to a host collection"
 msgstr "添加到一个主机集合"
-
-msgid "Add to this filter using the 'Add Deb rule' button."
-msgstr "使用 'Add RPM 规则' 按钮添加到此过滤器。"
-
-msgid "Add to this filter using the 'Add filter rule' button."
-msgstr "使用 'Add filter rule' 按钮添加到这个过滤。"
 
 msgid "Add-ons"
 msgstr "附加组件"
@@ -718,9 +715,6 @@ msgstr "可使用下面的\"添加源\"按钮添加备用内容源。"
 
 msgid "An environment is missing a prior"
 msgstr "环境缺少一个前"
-
-msgid "An error occurred during content removal. Could not find repository with id: %s"
-msgstr "内容删除期间发生错误。找不到 ID 为 %s 的仓库"
 
 msgid ""
 "An error occurred during the sync \n"
@@ -920,12 +914,6 @@ msgstr "自动发布"
 msgid "Autopublish"
 msgstr "自动发布"
 
-msgid "Autosearch"
-msgstr "自动搜寻"
-
-msgid "Autosearch delay"
-msgstr "自动搜寻延迟"
-
 msgid "Available"
 msgstr "可得到"
 
@@ -1061,23 +1049,11 @@ msgstr "根據特定內容視域，計算可套用的勘誤"
 msgid "Calculate Applicable Errata based on a particular Environment"
 msgstr "根據特定環境，計算可套用的勘誤"
 
-msgid "Calculate errata host status based only on errata in a host's content view and lifecycle environment"
-msgstr "仅根据主机的内容视图和生命周期环境中的勘误来计算勘误主机状态"
-
 msgid "Can communicate with the Red Hat Portal for subscriptions."
 msgstr "可与红帽门户网站沟通以获取订阅。"
 
-msgid "Can not add product %s because it is disabled."
-msgstr "无法添加产品 %s，因为已将其禁用。"
-
-msgid "Can only destroy on Yum Repositories."
-msgstr "只能在 Yum 仓库中销毁。"
-
 msgid "Can only remove content from within the Default Content View"
 msgstr "只能從預設的內容視域移除內容"
-
-msgid "Can only upload to Yum Repositories."
-msgstr "只能上传到 Yum 仓库。"
 
 msgid "Can't update the '%s' environment"
 msgstr "无法更新 '%s' 环境"
@@ -1136,8 +1112,14 @@ msgstr "无法将默认内容视图添加到复合内容视图"
 msgid "Cannot add generated content view versions to composite content view"
 msgstr "无法将默认内容视图添加到复合内容视图"
 
+msgid "Cannot add product %s because it is disabled."
+msgstr ""
+
 msgid "Cannot add repositories to a composite content view"
 msgstr "无法将仓库添加到复合内容视图"
+
+msgid "Cannot associate a Red Hat provider with a custom product"
+msgstr ""
 
 msgid "Cannot associate a component to a non composite content view"
 msgstr "无法将一个组件和一个非复合内容视图相关联"
@@ -1190,8 +1172,11 @@ msgstr "无法导入复合内容视图"
 msgid "Cannot import a custom subscription from a redhat product."
 msgstr "无法从红帽产品导入定制订阅。"
 
-msgid "Cannot pass content units without content unit type"
-msgstr "没有内容单元类型的内容单元无法通过"
+msgid "Cannot incrementally export from a filtered and a non-filtered content view version. The exported content view version '%{content_view} %{current}'  cannot be incrementally updated from version '%{from}.'.  Please do a full export."
+msgstr ""
+
+msgid "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export."
+msgstr ""
 
 msgid "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}"
 msgstr "无法在组合内容视图版本 (%{name} version version %{version} 上执行增量更新"
@@ -1262,6 +1247,9 @@ msgstr "更改内容源"
 msgid "Change host content source"
 msgstr "更改主机内容源"
 
+msgid "Check audited changes and proceed only if content or filters have changed since last publish"
+msgstr ""
+
 msgid "Check if a connection can be made to Red Hat Subscription Management."
 msgstr "检查是否可以与 Red Hat Subscription Management 建立连接。"
 
@@ -1303,6 +1291,9 @@ msgstr "清除搜索"
 
 msgid "Click here to go to the tasks page for the task."
 msgstr "单击此处进入任务的任务页面。"
+
+msgid "Click to see repositories available to add."
+msgstr ""
 
 msgid "Click {update} below to save changes."
 msgstr "点击下面的 {update} 来保存更改。"
@@ -1583,6 +1574,9 @@ msgstr ""
 msgid "Content view details"
 msgstr "内容视图详情"
 
+msgid "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish."
+msgstr ""
+
 msgid "Content view environments and activation key must all belong to the same organization"
 msgstr ""
 
@@ -1802,9 +1796,6 @@ msgstr "创建导出历史记录"
 msgid "Create Import History"
 msgstr "创建导入历史记录"
 
-msgid "Create Package Group"
-msgstr "创建软件包组"
-
 msgid "Create Repositories"
 msgstr "创建仓库"
 
@@ -1828,9 +1819,6 @@ msgstr "创建一个过滤规则。所包含的参数应基于过滤器类型。
 
 msgid "Create a host collection"
 msgstr "建立主機集"
-
-msgid "Create a package group"
-msgstr "创建软件包组"
 
 msgid "Create a product"
 msgstr "建立產品"
@@ -1864,6 +1852,9 @@ msgstr "创建过滤器"
 
 msgid "Create host collection"
 msgstr "创建主机集"
+
+msgid "Create new activation key"
+msgstr ""
 
 msgid "Create organization"
 msgstr "创建机构"
@@ -1997,6 +1988,12 @@ msgstr "用于自定义仓库的默认下载策略（'immediate' 或'on_demand'�
 msgid "Default download policy for enabled Red Hat repositories (either 'immediate' or 'on_demand')"
 msgstr "用于启用的红帽仓库默认下载策略（'immediate' 或'on_demand'）"
 
+msgid "Default export format"
+msgstr ""
+
+msgid "Default export format for content-exports(either 'syncable' or 'importable')"
+msgstr ""
+
 msgid "Default finish template for new Operating Systems created from synced content"
 msgstr "从同步内容创建的新操作系统的默认完成模板"
 
@@ -2072,9 +2069,6 @@ msgstr "删除生命周期环境"
 msgid "Delete Manifest"
 msgstr "删除清单"
 
-msgid "Delete Package Group"
-msgstr "删除软件包组"
-
 msgid "Delete Product"
 msgstr "删除产品"
 
@@ -2089,9 +2083,6 @@ msgstr "刪除內容視域"
 
 msgid "Delete a filter rule"
 msgstr "刪除过滤器规则"
-
-msgid "Delete a package group"
-msgstr "删除软件包组"
 
 msgid "Delete all subscriptions attached to activation keys."
 msgstr "删除激活码附带的所有订阅。"
@@ -2456,6 +2447,12 @@ msgstr "勘误安装"
 msgid "Errata Install scheduled by %s"
 msgstr "%s 调度的勘误安装"
 
+msgid "Errata and package information will be updated at the next host check-in or package action."
+msgstr ""
+
+msgid "Errata and package information will be updated immediately."
+msgstr ""
+
 msgid "Errata id of the erratum (RHSA-2012:108)"
 msgstr "勘误的勘误ID（RHSA-2012:108）"
 
@@ -2558,12 +2555,8 @@ msgstr "导出类型"
 msgid "Export as CSV"
 msgstr "导出为 CSV"
 
-msgid ""
-"Export formats. Choose syncable if content is to be imported via repository sync. Choose importable if content is to be imported via hammer content-import.\n"
-"                                Defaults to importable."
+msgid "Export formats.Choose syncable if the exported content needs to be in a yum format. This option is only available for %{syncable_repos} repositories. Choose importable if the importing server uses the same version  and exported content needs to be one of %{importable_repos} repositories."
 msgstr ""
-"导出格式。如果通过存储库同步导入内容，请选择可同步。如果通过 hammer 内容导入内容，可以选择可导入。 \n"
-" 默认为可导入。"
 
 msgid "Export history identifier used for incremental export. If not provided the most recent export history will be used."
 msgstr "用于增量导出的导出历史记录标识符。如果未提供，将使用最新的出口历史记录。"
@@ -2585,10 +2578,6 @@ msgstr "删除 %{host} 失败：%{errors}"
 
 msgid "Failed to delete latest content view version of Content View '%{subject}'."
 msgstr "删除内容视图 '%{subject}' 的最新内容视图版本失败。"
-
-msgid "Failed to download %s package."
-msgid_plural "Failed to download %s packages."
-msgstr[0] "下载 %s 软件包失败。"
 
 msgid "Failed to find %{content} with id '%{id}'."
 msgstr "找不到 id 为 '%{id}' 的 %{content}。"
@@ -2710,9 +2699,6 @@ msgstr "过滤器"
 msgid "Filters deleted"
 msgstr "删除的过滤"
 
-msgid "Filters will appear here when the filter is created."
-msgstr "过滤器会在创建过滤器时显示此过滤器。"
-
 msgid "Find the relative path for each RHUI repository and combine them in a comma-separated list."
 msgstr "查找每个 RHUI 仓库的相对路径，并将它们组合在以逗号分隔的列表中。"
 
@@ -2724,9 +2710,6 @@ msgstr "完成操纵超时"
 
 msgid "Finished"
 msgstr "完成"
-
-msgid "For pages that support it, automatically perform search while typing in search input."
-msgstr "对于支持它的页面，在搜索输入中输入时自动执行搜索。"
 
 msgid "Force"
 msgstr "强制"
@@ -2740,6 +2723,9 @@ msgstr ""
 
 msgid "Force a sync and validate the checksums of all content. Only used with yum repositories."
 msgstr "强制一个同步并验证所有内容的 checksums。仅用于yum仓库。"
+
+msgid "Force content view promotion and bypass lifecycle environment restriction"
+msgstr ""
 
 msgid "Force delete the repository by removing it from all content view versions"
 msgstr "从所有内容视图版本中删除存储库来强制删除存储库"
@@ -2782,6 +2768,9 @@ msgstr "根据需要为所需的仓库生成 RHUI 证书。"
 
 msgid "Generate and Download"
 msgstr "生成并下载"
+
+msgid "Generate errata status from directly-installable content"
+msgstr ""
 
 msgid "Generate host applicability"
 msgstr "产生主机适用性"
@@ -2845,9 +2834,6 @@ msgstr "转到任务页面"
 
 msgid "Greater than"
 msgstr "大于"
-
-msgid "Group %{id} already created."
-msgstr "组 %{id} 已创建。"
 
 msgid "Guests of"
 msgstr "的客户"
@@ -3155,9 +3141,6 @@ msgstr "指定是否应在操作系统版本不匹配的客户端上禁用存储
 msgid "Ids of smart proxies to associate"
 msgstr "要关联的智能代理的 ID"
 
-msgid "If Autosearch is enabled, delay in milliseconds before executing searches while typing."
-msgstr "如果启用了自动搜索，在键入时执行搜索之前延迟的毫秒数。"
-
 msgid "If SSL should be verified for the upstream URL"
 msgstr "是否应该对上游 URL 进行 SSL 验证"
 
@@ -3185,14 +3168,17 @@ msgstr "如果启用此项，可以删除仓库，即使它们属于公布的内
 msgid "If this is enabled, repositories of content view versions without environments (\"archived\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'."
 msgstr "如果启用此项，在没有环境的情况下，内容视图版本的软件仓库将在 '/pulp/content/<organization>//content_views/<content view>/X.Y/...' 中分发。"
 
+msgid "If true, only errata that can be installed without an incremental update will affect the host's errata status."
+msgstr ""
+
 msgid "If true, only return repository sets that are associated with an active subscriptions"
 msgstr "如果为 true，则仅返回与有效订阅关联的仓库集"
 
 msgid "If true, only return repository sets that have been enabled. Defaults to false"
 msgstr "如果为 true，则仅返回已启用的仓库集。默认为 false"
 
-msgid "If true, return custom repository sets along with redhat repos"
-msgstr "如果为 true，则返回自定义仓库集以及 redhat 仓库"
+msgid "If true, return custom repository sets along with redhat repos. Will be ignored if repository_type is supplied."
+msgstr ""
 
 msgid "If true, when adding the specified errata or packages, any needed dependencies will be copied as well. Defaults to true"
 msgstr "如果为 true，在添加指定勘误或软件包时，需要的依赖软件包也会被复制。默认为 true"
@@ -3440,9 +3426,6 @@ msgstr "可安装"
 msgid "Installable errata are applicable errata that are available in the host\\'s content view and lifecycle environment."
 msgstr "可安装勘误是主机的内容视图和生命周期环境中可用的适用勘误。"
 
-msgid "Installable errata from content view"
-msgstr "来自内容视图中的可安装勘误"
-
 msgid "Installable updates"
 msgstr "可安装的更新"
 
@@ -3580,9 +3563,6 @@ msgstr "发行"
 
 msgid "Issued from"
 msgstr "出自"
-
-msgid "Items will appear here when a filter rule is added."
-msgstr "添加过滤规则时，项目将出现在此处。"
 
 msgid "Job '${description}' completed"
 msgstr "作为 '${description}' 已完成"
@@ -3748,6 +3728,9 @@ msgstr "生命周期环境：{lce}"
 
 msgid "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy."
 msgstr "无法在默认的智能代理上修改生命周期环境。所有生命周期环境中的内容都将存在于此智能代理中。"
+
+msgid "Limit content to Red Hat / custom"
+msgstr ""
 
 msgid "Limit content to enabled / disabled / overridden"
 msgstr "将内容限制为 enabled / disabled / overridden"
@@ -4166,20 +4149,23 @@ msgstr "启用红帽存储库或创建自定义产品后，将在此处显示模
 msgid "Multi-entitlement"
 msgstr "多权利"
 
-msgid "Must supply at least one of mandatory_package_names, optional_package_names, conditional_package_names, default_package_names parameters"
-msgstr "必须最少提供 mandatory_package_names、optional_package_names、conditional_package_names、 default_package_names 参数中的一个"
-
 msgid "N/A"
 msgstr "不适用"
 
 msgid "NA"
 msgstr "不适用"
 
+msgid "NOTE: Content view version '%{content_view} %{current}' does not have any exportable repositories. At least one repository with any of the following types is required to be able to export: '%{exportable_types}'."
+msgstr ""
+
 msgid "NOTE: Katello-agent is deprecated and will be removed in %s. Consider using remote execution instead."
 msgstr "注：Katello-agent 已弃用并将在 %s 中删除。考虑迁移到远程执行。"
 
 msgid "NOTE: Unable to export repository '%{repository}' because it does not have an exportable content type."
 msgstr "注意：无法导出仓库 \"%{repository}\"，因为它没有可导出的内容类型。"
+
+msgid "NOTE: Unable to export repository '%{repository}' because it does not have an syncably exportable content type."
+msgstr ""
 
 msgid ""
 "NOTE: Unable to fully export '%{organization}' organization's library because it contains repositories without the 'immediate' download policy. Update the download policy and sync affected repositories to include them in the export. \n"
@@ -4262,12 +4248,6 @@ msgstr "從未同步"
 msgid "New Errata"
 msgstr "新勘誤"
 
-msgid "New Files: %s"
-msgstr "新文件 : %s"
-
-msgid "New blobs: %{count}."
-msgstr "新 blobs: %{count}。"
-
 msgid "New content view name"
 msgstr "新内容视图名称"
 
@@ -4279,9 +4259,6 @@ msgstr "新名称不能为空"
 
 msgid "New name for the content view"
 msgstr "內容視域的新名稱"
-
-msgid "New packages: %{count} (%{size})."
-msgstr "新软件包： %{count} (%{size})。"
 
 msgid "New version is available: Version ${latestVersion}"
 msgstr "有新版本可用：版本 ${latestVersion}"
@@ -4364,8 +4341,11 @@ msgstr "没有可用的内容视图"
 msgid "No content views available for the selected environment"
 msgstr "没有可用于所选环境的内容视图"
 
-msgid "No content views belong to ${label}"
-msgstr "没有内容视图属于 ${label}"
+msgid "No content views to add yet"
+msgstr ""
+
+msgid "No content views yet"
+msgstr ""
 
 msgid "No content_view_version_ids provided"
 msgstr "未提供 content_view_version_ids"
@@ -4385,11 +4365,14 @@ msgstr "没有环境"
 msgid "No environments"
 msgstr "没有环境"
 
-msgid "No errata available for this content view."
-msgstr "列出可用于内容主机的勘误。"
+msgid "No errata filter rules yet"
+msgstr ""
 
-msgid "No errata available to add to this filter."
-msgstr "没有可添加到此过滤器的勘误。"
+msgid "No errata matching given search query"
+msgstr ""
+
+msgid "No errata to add yet"
+msgstr ""
 
 msgid "No errors"
 msgstr "无错误"
@@ -4399,6 +4382,12 @@ msgstr "找不到现有的导出历史记录来执行增量导出。必须执行
 
 msgid "No file uploaded"
 msgstr "没有上传文件"
+
+msgid "No filters yet"
+msgstr ""
+
+msgid "No history yet"
+msgstr ""
 
 msgid "No host collections"
 msgstr "没有主机集合"
@@ -4414,6 +4403,9 @@ msgstr ""
 
 msgid "No hosts have been specified."
 msgstr "没有指定主机。"
+
+msgid "No hosts matched search, or action unauthorized for selected hosts."
+msgstr ""
 
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr "在选择中未找到 subscription-manager 注册的主机。"
@@ -4484,20 +4476,23 @@ msgstr "找不到匹配的仓库"
 msgid "No matching repository sets found"
 msgstr "找不到匹配的仓库"
 
-msgid "No matching rules found."
-msgstr "未找到匹配规则."
-
 msgid "No matching traces found"
 msgstr "未找到匹配的跟踪"
 
 msgid "No matching version found"
 msgstr "未找到匹配的版本"
 
+msgid "No module stream filter rules yet"
+msgstr ""
+
+msgid "No module streams to add yet."
+msgstr ""
+
 msgid "No new packages installed"
 msgstr "未安装新软件包"
 
-msgid "No new packages."
-msgstr "沒有新的软件包。"
+msgid "No package groups yet"
+msgstr ""
 
 msgid "No packages"
 msgstr "没有软件包"
@@ -4547,6 +4542,12 @@ msgstr "没有最近同步的产品"
 msgid "No recurring logic tied to the sync plan."
 msgstr "没有与同步计划相关的重复逻辑。"
 
+msgid "No repositories added yet"
+msgstr ""
+
+msgid "No repositories available to add"
+msgstr ""
+
 msgid "No repositories available."
 msgstr "没有可用的仓库。"
 
@@ -4565,8 +4566,8 @@ msgstr "没有仓库集符合您的搜索条件。"
 msgid "No repository sets to show."
 msgstr "没有要显示的仓库集。"
 
-msgid "No rules have been added to this filter."
-msgstr "没有规则被添加到此过滤器。"
+msgid "No rules yet"
+msgstr ""
 
 msgid "No services defined, is this class extended?"
 msgstr "未定义服务，是否已扩展此类？"
@@ -4582,6 +4583,9 @@ msgstr "找不到所选产品和选项的可同步仓库。"
 
 msgid "No uploads param specified. An array of uploads to import is required."
 msgstr "未指定上传参数。需要导入的上传阵列。"
+
+msgid "No versions yet"
+msgstr ""
 
 msgid "Non-security errata applicable"
 msgstr "可应用的非安全勘误"
@@ -4687,9 +4691,6 @@ msgstr "找不到一台或多台主机"
 
 msgid "One or more ids (%{ids}) were not found for %{assoc}.  You may not have permissions to see them."
 msgstr "找不到 %{assoc} 的一个或多个 ID（%{ids}）。您可能没有查看权限。"
-
-msgid "One or more packages failed to sync properly."
-msgstr "一个或多个软件包无法正确同步。"
 
 msgid "One or more processes require restarting"
 msgstr "一个或多个进程需要重新启动"
@@ -4973,9 +4974,6 @@ msgstr "查找备用内容的路径后缀"
 msgid "Paused"
 msgstr "暂停"
 
-msgid "Pending"
-msgstr "待处理"
-
 msgid "Perform a module stream action via Katello interface"
 msgstr "通过 Katello 接口执行模块流操作"
 
@@ -5009,11 +5007,11 @@ msgstr "物理"
 msgid "Plan numeric identifier"
 msgstr "计划数字标识符"
 
-msgid "Please add some content views."
-msgstr "请添加一些内容视图。"
-
 msgid "Please add some repositories."
 msgstr "请添加一些仓库。"
+
+msgid "Please create some content views."
+msgstr ""
 
 msgid "Please enter a positive number above zero"
 msgstr "请输入大于零的正数"
@@ -5089,12 +5087,6 @@ msgstr "搜索仓库集有问题"
 
 msgid "Problem searching traces"
 msgstr "搜索追踪有问题"
-
-msgid "Processing metadata"
-msgstr "处理元数据"
-
-msgid "Processing metadata."
-msgstr "处理元数据。"
 
 msgid "Product"
 msgstr "产品"
@@ -5400,6 +5392,9 @@ msgstr "重新声明来自 On Demand 存储库的空间"
 msgid "Recommended Repositories"
 msgstr "推荐的仓库"
 
+msgid "Red Hat"
+msgstr ""
+
 msgid "Red Hat CDN"
 msgstr "Red Hat CDN"
 
@@ -5697,9 +5692,6 @@ msgstr "仓库标识符"
 msgid "Repository label '%s' is not associated with content view."
 msgstr "仓库标签 '%s' 没有与内容视图关联。"
 
-msgid "Repository metadata publish"
-msgstr "仓库元数据发布"
-
 msgid "Repository not found"
 msgstr "找不到軟體庫"
 
@@ -5735,6 +5727,12 @@ msgstr "将仓库集设置为默认值"
 
 msgid "Repository sets will appear here after enabling Red Hat repositories or creating custom products."
 msgstr "在启用红帽存储库或创建自定义产品后，存储库集将出现在此处。"
+
+msgid "Repository sets will appear here when the host\\'s content view and environment has available content."
+msgstr ""
+
+msgid "Repository type"
+msgstr ""
 
 msgid "Republish Repositories of %{name} %{version}"
 msgstr "重新发布 %{name}%{version} 的仓库"
@@ -6033,6 +6031,9 @@ msgstr "选择客户端证书"
 msgid "Select a client key"
 msgstr "选择客户端密钥"
 
+msgid "Select a content source first"
+msgstr ""
+
 msgid "Select a content view"
 msgstr "选择一个内容视图"
 
@@ -6047,6 +6048,9 @@ msgstr "从可用的提升路径中选择生命周期环境来提升新版本。
 
 msgid "Select a provider to install katello-host-tools-tracer"
 msgstr "选择安装 katello-host-tools-tracer 的供应商"
+
+msgid "Select a source"
+msgstr ""
 
 msgid "Select add-ons"
 msgstr "选择附加组件"
@@ -6063,8 +6067,8 @@ msgstr "现在一个机构"
 msgid "Select an environment"
 msgstr "选择一个环境"
 
-msgid "Select an environment above"
-msgstr "选择上面的环境"
+msgid "Select an environment first"
+msgstr ""
 
 msgid "Select an option"
 msgstr "选择一个选项"
@@ -6228,6 +6232,9 @@ msgstr "显示受影响的主机"
 msgid "Show all"
 msgstr "显示所有"
 
+msgid "Show all repository sets"
+msgstr ""
+
 msgid "Show an activation key"
 msgstr "顯示啟動金鑰"
 
@@ -6249,6 +6256,9 @@ msgstr "显示过滤器规则信息"
 msgid "Show full description"
 msgstr "显示完整描述"
 
+msgid "Show hosts associated to an activation key"
+msgstr ""
+
 msgid "Show organization"
 msgstr "顯示組織"
 
@@ -6257,6 +6267,9 @@ msgstr "显示一个激活码可用的发行版本"
 
 msgid "Show releases available for the content host"
 msgstr "显示可用于内容主机的发行版本"
+
+msgid "Show repositories"
+msgstr ""
 
 msgid "Show repositories enabled on the host that are known to Katello"
 msgstr "显示主机上启用的仓库，被 Katello 知道"
@@ -6765,9 +6778,6 @@ msgstr "同步"
 msgid "Synchronize Now"
 msgstr "现在同步"
 
-msgid "Synchronize capsule content"
-msgstr "同步 capsule 內容"
-
 msgid "Synchronize repository"
 msgstr "同步仓库"
 
@@ -6878,9 +6888,6 @@ msgstr "勘誤篩選器規則的開始日期之格式或類型無效。"
 
 msgid "The erratum type must be an array. Invalid value provided"
 msgstr "勘误类型必须是数组。提供的值无效"
-
-msgid "The exported Content View Version '%{content_view} %{current}' cannot be incrementally updated from version '%{from}'. Please do a full export."
-msgstr "导出的内容视图版本 '%{content_view} %{current}' 无法从版本 '%{from}' 递增更新。请进行完全导出。"
 
 msgid "The field to sort the data by. Defaults to the created date."
 msgstr "数据排序依据的字段。默认为创建日期。"
@@ -7198,8 +7205,14 @@ msgstr "时间戳"
 msgid "Title"
 msgstr "提示"
 
+msgid "To get started, add a filter rule to this filter"
+msgstr ""
+
 msgid "To get started, add this host to a host collection."
 msgstr "要开始，将此主机添加到主机集合。"
+
+msgid "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories."
+msgstr ""
 
 msgid "To update the selected host configuration, update hosts manually in the next section."
 msgstr ""
@@ -7387,9 +7400,6 @@ msgstr "无法更新 user-repository 映射"
 msgid "Unapplied Errata"
 msgstr "未应用的勘误"
 
-msgid "Unassociate units in repository"
-msgstr "在仓库中取消关联单元"
-
 msgid "Unattach a subscription"
 msgstr "取消附加的订阅"
 
@@ -7575,6 +7585,9 @@ msgstr "更新一个或多个产品的仓库上的 HTTP 代理配置。"
 
 msgid "Update the content source for specified hosts and generate the reconfiguration script"
 msgstr "为指定主机更新内容源并生成重新配置脚本"
+
+msgid "Update the host immediately via remote execution"
+msgstr ""
 
 msgid "Update the information about enabled repositories"
 msgstr "更新关于启用的软件仓库的信息"
@@ -7834,6 +7847,9 @@ msgstr ""
 msgid "View by"
 msgstr "查看方法"
 
+msgid "View documentation"
+msgstr ""
+
 msgid "View matching content"
 msgstr "显示匹配内容"
 
@@ -7878,6 +7894,9 @@ msgstr "当设置为 \"True\"，可创建的仓库类型将会被返回"
 
 msgid "When unregistering a host via subscription-manager, also delete the host record. Managed resources linked to host such as virtual machines and DNS records may also be deleted."
 msgstr "当通过 subscription-manager 取消注册主机时，还需要同时删除主机记录。连接到主机的管理资源（例如虚拟机和 DNS 记录）也可能被删除。"
+
+msgid "Whether Simple Content Access should be enabled for the organization."
+msgstr ""
 
 msgid "Whether or not the host collection may have unlimited hosts"
 msgstr "主機集項目是否有無上限的主機"
@@ -7936,32 +7955,20 @@ msgstr "您无法设置机构的 parent_id。此功能被禁用。"
 msgid "You currently don't have any ${selectedContentType}."
 msgstr "您当前没有任何 ${selectedContentType}。"
 
-msgid "You currently don't have any Content views."
-msgstr "您目前没有任何内容视图。"
-
 msgid "You currently don't have any alternate content sources."
 msgstr "您目前没有备用内容源。"
-
-msgid "You currently don't have any filters for this content view."
-msgstr "您目前没有这个内容视图的过滤器。"
-
-msgid "You currently don't have any history for this content view."
-msgstr "您目前没有这个内容视图的历史记录。"
 
 msgid "You currently don't have any repositories associated with this content."
 msgstr "您目前没有与此内容关联的任何仓库。"
 
-msgid "You currently don't have any repositories to add to this content view."
-msgstr "您目前没有要添加到此内容视图的任何仓库。"
-
 msgid "You currently don't have any repositories to add to this filter."
 msgstr "您目前没有要添加到此过滤的仓库。"
 
-msgid "You currently don't have any versions for this content view."
-msgstr "您目前没有这个内容视图的版本。"
-
 msgid "You currently don\\'t have any related content views."
 msgstr "您目前没有任何相关的内容视图。"
+
+msgid "You currently have no content views to display"
+msgstr ""
 
 msgid "You do not have permissions to delete %s"
 msgstr "您没有权限删除 %s"
@@ -8016,9 +8023,6 @@ msgstr "您的搜索没有返回匹配的主机。"
 
 msgid "Yum"
 msgstr "Yum"
-
-msgid "Yum Metadata: %s"
-msgstr "Yum 元数据：%s"
 
 msgid "a content unit"
 msgstr "一个内容单元"
@@ -8197,9 +8201,6 @@ msgstr "组合内容视图标识符"
 msgid "composite content view numeric identifier"
 msgstr "组合内容的数字标识符"
 
-msgid "conditional package names to include in the package group"
-msgstr "要包含在软件包组中的条件软件包名称"
-
 msgid "content release version"
 msgstr "内容发行版本"
 
@@ -8254,6 +8255,9 @@ msgstr "要刪除的內容視域版本識別子"
 msgid "content view versions to compare"
 msgstr "欲進行比較的內容視域版本"
 
+msgid "create a custom product"
+msgstr ""
+
 msgid "create a filter for a content view"
 msgstr "为内容视图创建一个过滤器"
 
@@ -8262,9 +8266,6 @@ msgstr "deb、软件包、软件包组或 docker 标签名"
 
 msgid "deb_ids is not an array"
 msgstr "deb_ids 不是一个数组"
-
-msgid "default package names to include in the package group"
-msgstr "要包含在软件包组中的默认软件包名称"
 
 msgid "delete a filter"
 msgstr "删除过滤器"
@@ -8497,9 +8498,6 @@ msgstr "軟體庫 ID 的清單"
 msgid "list of rpm filename strings to include in published version"
 msgstr "包含在已发布版本中的 rpm 文件名字符串列表"
 
-msgid "mandatory package names to include in the package group"
-msgstr "必须包含在软件包组中的软件包名称"
-
 msgid "max_hosts must be given a value if this host collection is not unlimited."
 msgstr "如果此主机集合没有限制，则必须为 max_hosts 赋予一个值。"
 
@@ -8527,6 +8525,9 @@ msgstr "必須是以下其中之一：%s"
 msgid "must be one of: %s"
 msgstr "必须是 %s 之一"
 
+msgid "must be true or false"
+msgstr ""
+
 msgid "must be unique within one organization"
 msgstr "在机构中需要是唯一的"
 
@@ -8553,9 +8554,6 @@ msgstr "不得包含前导或尾随空格。"
 
 msgid "name"
 msgstr "name"
-
-msgid "name not defined."
-msgstr "未定义名称。"
 
 msgid "name of organization"
 msgstr "組織名稱"
@@ -8602,20 +8600,11 @@ msgstr "一个组织内环境必须是唯一的"
 msgid "only show the repositories readable by this user with this username"
 msgstr "仅显示带有此用户名的用户可读的软件仓库"
 
-msgid "optional package names to include in the package group"
-msgstr "可选的包含在软件包组中的软件包名称"
-
 msgid "organization ID"
 msgstr "組織 ID"
 
 msgid "organization identifier"
 msgstr "組織識別子"
-
-msgid "package group description. Defaults to params[:name]"
-msgstr "软件包组描述。默认为 params[:name]"
-
-msgid "package group name"
-msgstr "软件包组名称"
 
 msgid "package group: uuid"
 msgstr "软件包组 : uuid"
@@ -8695,12 +8684,6 @@ msgstr "仓库标识符"
 msgid "repository source url"
 msgstr "仓库源 URL"
 
-msgid "repository_id"
-msgstr "repository_id"
-
-msgid "repository_id not defined."
-msgstr "未定义的 repository_id。"
-
 msgid "root-node of collection contained in responses (default: 'results')"
 msgstr "包含在响应中集合的根节点（默认：'results'）"
 
@@ -8721,9 +8704,6 @@ msgstr ""
 
 msgid "service level"
 msgstr "服務等級"
-
-msgid "set \"user_visible\" flag on package group. Defaults to true"
-msgstr "在软件包组上设置 \"user_visible\" 标志。默认为 true"
 
 msgid "set true if you want to see only library environments"
 msgstr "如果僅想看函示庫環境，設為真"
@@ -8782,9 +8762,6 @@ msgstr "如果需要组件内容视图的最新版本，则为 true"
 msgid "true if this repository can be published via HTTP"
 msgstr "如果可以通过 HTTP 发布此存储库，则为 true"
 
-msgid "true if this repository when synced has to be mirrored from the source and stale rpms removed (Deprecated)"
-msgstr "如果此仓库在同步时必须从源镜像并且删除过时的 rpm，则为 true（已弃用）"
-
 msgid "type of filter (e.g. deb, rpm, package_group, erratum, erratum_id, erratum_date, docker, modulemd)"
 msgstr "过滤器类型 (例如 deb, rpm, package_group, erratum, erratum_id, erratum_date, docker, modulemd)"
 
@@ -8830,14 +8807,8 @@ msgstr "查看内容视图标签页。"
 msgid "waiting for %s to finish the task"
 msgstr "等待 %s 完成任务"
 
-msgid "waiting for Pulp to finish the task"
-msgstr "等待 Pulp 完成任务"
-
 msgid "waiting for Pulp to finish the task %s"
 msgstr "等待 Pulp 完成任务 %s"
-
-msgid "waiting for Pulp to start the task"
-msgstr "等待 Pulp 开始任务"
 
 msgid "waiting for Pulp to start the task %s"
 msgstr "等待 Pulp 开始任务 %s"
@@ -8859,6 +8830,9 @@ msgstr "是"
 
 msgid "{0} items selected"
 msgstr "已选择 {0} 个项目"
+
+msgid "{enableRedHatRepos} or {createACustomProduct}."
+msgstr ""
 
 msgid "{numberOfActivationKeys} activation key will be assigned to content view {cvName} in"
 msgstr "{numberOfActivationKeys} 激活码将分配给内容视图 {cvName}"

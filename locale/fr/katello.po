@@ -157,9 +157,6 @@ msgstr "%s est requis"
 msgid "%s is unreachable. %s"
 msgstr "%s est inaccessible. %s "
 
-msgid "%s must be an array."
-msgstr "%s doit correspondre à un tableau"
-
 msgid "%{errata} (%{total} other errata)"
 msgstr "%{errata} (%{total} autres errata )"
 
@@ -394,14 +391,11 @@ msgstr "<b>SYNC </b> RÉSUMÉ"
 msgid "A CV version already exists with the same major and minor version (%{major}.%{minor})"
 msgstr "Une version du CV existe déjà avec la même version majeure et mineure (%{major}.%{minor})"
 
-msgid "A Pool and its Subscription cannot belong to different organizations"
-msgstr "Un pool et son abonnement ne peuvent pas appartenir à des organisations différentes"
+msgid "A Pool and its Subscription cannot belong to different organizations."
+msgstr ""
 
 msgid "A backend service [ %s ] is unreachable"
 msgstr "Un service backend [ %s ] est injoignable"
-
-msgid "A content view can be added by using the \"Create content view\" button below."
-msgstr "Une vue du contenu peut être ajoutée en utilisant le bouton \"Créer affichage de contenu\" ci-dessous."
 
 msgid "A content_type must be provided."
 msgstr "Un content_type doit être fourni."
@@ -469,9 +463,6 @@ msgstr "Action non autorisée pour le proxy smart par défaut."
 msgid "Action unauthorized to be performed in this organization."
 msgstr "Action non autorisée à être exécutée dans cette organisation."
 
-msgid "Action unauthorized to be performed on selected hosts."
-msgstr "Action non autorisée à être exécutée sur des hôtes sélectionnés."
-
 msgid "Action with sub plans"
 msgstr "Action avec sous-plans"
 
@@ -523,6 +514,9 @@ msgstr "Ajouter une règle RPM"
 msgid "Add Subscriptions"
 msgstr "Ajouter Abonnements"
 
+msgid "Add Subscriptions using the Add Subscriptions button."
+msgstr ""
+
 msgid "Add a subscription to a host"
 msgstr "Ajouter un abonnement à un hôte"
 
@@ -531,6 +525,9 @@ msgstr "Montrer une autre source de contenu"
 
 msgid "Add components to the content view"
 msgstr "Ajouter des éléments à l’affichage du contenu"
+
+msgid "Add content"
+msgstr ""
 
 msgid "Add content view"
 msgstr "Ajouter un affichage de contenu"
@@ -574,11 +571,17 @@ msgstr "Ajouter des produits au plan de sync"
 msgid "Add repositories"
 msgstr "Ajouter référentiels"
 
+msgid "Add repositories with package groups to content view to select them here."
+msgstr ""
+
 msgid "Add rule"
 msgstr "Ajouter une règle"
 
 msgid "Add source"
 msgstr "Ajouter une source"
+
+msgid "Add subscriptions"
+msgstr ""
 
 msgid "Add subscriptions consumed by a manifest from Red Hat Subscription Management"
 msgstr "Ajouter les abonnements consommés par un manifeste de Red Hat Subscription Management"
@@ -588,12 +591,6 @@ msgstr "Ajouter des abonnements à un ou plusieurs hôtes"
 
 msgid "Add to a host collection"
 msgstr "Ajouter à une collection d'hôtes"
-
-msgid "Add to this filter using the 'Add Deb rule' button."
-msgstr "Ajoutez à ce filtre en utilisant le bouton \"Ajouter une règle Deb\" (Add Deb rule)"
-
-msgid "Add to this filter using the 'Add filter rule' button."
-msgstr "Ajoutez à ce filtre en utilisant le bouton \"Ajouter une règle de filtre\""
 
 msgid "Add-ons"
 msgstr "Add ons"
@@ -723,9 +720,6 @@ msgstr "Une autre source de contenu peut être ajoutée en utilisant le bouton \
 
 msgid "An environment is missing a prior"
 msgstr "Il manque à l'environnement un préalable"
-
-msgid "An error occurred during content removal. Could not find repository with id: %s"
-msgstr "Une erreur s'est produite lors du retrait du contenu. Impossible de trouver le référentiel avec l'identifiant : %s"
 
 msgid ""
 "An error occurred during the sync \n"
@@ -925,12 +919,6 @@ msgstr "Auto Publish"
 msgid "Autopublish"
 msgstr "Autopublication"
 
-msgid "Autosearch"
-msgstr "Recherche automatique"
-
-msgid "Autosearch delay"
-msgstr "Délai de recherche automatique"
-
 msgid "Available"
 msgstr "Disponible"
 
@@ -1066,23 +1054,11 @@ msgstr "Calculer les errata applicables selon un affichage de contenu particulie
 msgid "Calculate Applicable Errata based on a particular Environment"
 msgstr "Calculer les errata applicables selon un environnement particulier"
 
-msgid "Calculate errata host status based only on errata in a host's content view and lifecycle environment"
-msgstr "Calculer les errata du statut de l'hôte en se basant uniquement sur les errata de la vue du contenu et de l'environnement du cycle de vie d'un hôte"
-
 msgid "Can communicate with the Red Hat Portal for subscriptions."
 msgstr "Peut communiquer avec le portail Red Hat pour les abonnements."
 
-msgid "Can not add product %s because it is disabled."
-msgstr "Ne peut pas ajouter produit %s car désactivé."
-
-msgid "Can only destroy on Yum Repositories."
-msgstr "Ne peut détruire que sur les référentiels Yum."
-
 msgid "Can only remove content from within the Default Content View"
 msgstr "Peut uniquement supprimer les contenus à partir de l'Affichage de contenu par défaut"
-
-msgid "Can only upload to Yum Repositories."
-msgstr "Ne peut être téléchargé que sur les référentiels Yum."
 
 msgid "Can't update the '%s' environment"
 msgstr "Mise à jour de l'environnement  '%s' impossible"
@@ -1141,8 +1117,14 @@ msgstr "Impossible d'ajouter un affichage du contenu par défaut à la vue du co
 msgid "Cannot add generated content view versions to composite content view"
 msgstr "Impossible d'ajouter des versions de la vue de contenu générée à la vue de contenu composite"
 
+msgid "Cannot add product %s because it is disabled."
+msgstr ""
+
 msgid "Cannot add repositories to a composite content view"
 msgstr "Impossible d'ajouter des référentiels à un affichage du contenu composite"
+
+msgid "Cannot associate a Red Hat provider with a custom product"
+msgstr ""
 
 msgid "Cannot associate a component to a non composite content view"
 msgstr "Impossible d'ajouter un composant à un affichage de contenu non-composite"
@@ -1195,8 +1177,11 @@ msgstr "Ne peut importer une vue de contenu composite"
 msgid "Cannot import a custom subscription from a redhat product."
 msgstr "Impossible d'importer un abonnement personnalisé à partir d'un produit Red Hat."
 
-msgid "Cannot pass content units without content unit type"
-msgstr "Impossible de passer des unités de contenu sans type d'unité de contenu"
+msgid "Cannot incrementally export from a filtered and a non-filtered content view version. The exported content view version '%{content_view} %{current}'  cannot be incrementally updated from version '%{from}.'.  Please do a full export."
+msgstr ""
+
+msgid "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export."
+msgstr ""
 
 msgid "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}"
 msgstr "Ne peut effectuer une mise à jour croissante sur une version d'affichage de contenu composite (%{name} version version %{version}"
@@ -1267,6 +1252,9 @@ msgstr "Changer la source du contenu"
 msgid "Change host content source"
 msgstr "Changer la source du contenu de l'hôte"
 
+msgid "Check audited changes and proceed only if content or filters have changed since last publish"
+msgstr ""
+
 msgid "Check if a connection can be made to Red Hat Subscription Management."
 msgstr "Vérifiez si une connexion peut être établie avec Red Hat Subscription Management."
 
@@ -1308,6 +1296,9 @@ msgstr "Supprimer la recherche"
 
 msgid "Click here to go to the tasks page for the task."
 msgstr "Cliquez ici pour aller à la page des tâches."
+
+msgid "Click to see repositories available to add."
+msgstr ""
 
 msgid "Click {update} below to save changes."
 msgstr "Cliquez sur {update} ci-dessous pour enregistrer les modifications."
@@ -1588,6 +1579,9 @@ msgstr ""
 msgid "Content view details"
 msgstr "Détails d'affichage du contenu"
 
+msgid "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish."
+msgstr ""
+
 msgid "Content view environments and activation key must all belong to the same organization"
 msgstr ""
 
@@ -1807,9 +1801,6 @@ msgstr "Créer un historique des exportations"
 msgid "Create Import History"
 msgstr "Créer un historique des importations"
 
-msgid "Create Package Group"
-msgstr "Créer un groupe de packages"
-
 msgid "Create Repositories"
 msgstr "Créer des référentiels"
 
@@ -1833,9 +1824,6 @@ msgstr "Créer une règle de filtre. Les paramètres inclus doivent se baser sur
 
 msgid "Create a host collection"
 msgstr "Créer une collection d'hôte"
-
-msgid "Create a package group"
-msgstr "Créer un groupe de packages"
 
 msgid "Create a product"
 msgstr "Créer un produit"
@@ -1869,6 +1857,9 @@ msgstr "Créer un filtre"
 
 msgid "Create host collection"
 msgstr "Créer Collection d'hôtes"
+
+msgid "Create new activation key"
+msgstr ""
 
 msgid "Create organization"
 msgstr "Créer une organisation"
@@ -2002,6 +1993,12 @@ msgstr "Stratégie de téléchargement par défaut des référentiels personnali
 msgid "Default download policy for enabled Red Hat repositories (either 'immediate' or 'on_demand')"
 msgstr "Stratégie de téléchargement par défaut des référentiels Red Hat (soit 'immediate', 'on_demand')"
 
+msgid "Default export format"
+msgstr ""
+
+msgid "Default export format for content-exports(either 'syncable' or 'importable')"
+msgstr ""
+
 msgid "Default finish template for new Operating Systems created from synced content"
 msgstr "Modèle de finition par défaut pour les nouveaux systèmes d'exploitation créés à partir de contenu synchronisé"
 
@@ -2077,9 +2074,6 @@ msgstr "Supprimer l'environnement de cycle de vie"
 msgid "Delete Manifest"
 msgstr "Supprimer le manifeste"
 
-msgid "Delete Package Group"
-msgstr "Supprimer le groupe de packages"
-
 msgid "Delete Product"
 msgstr "Supprimer le produit"
 
@@ -2094,9 +2088,6 @@ msgstr "Supprimer un affichage de contenu"
 
 msgid "Delete a filter rule"
 msgstr "Supprimer une règle de filtre"
-
-msgid "Delete a package group"
-msgstr "Supprimer le groupe de packages"
 
 msgid "Delete all subscriptions attached to activation keys."
 msgstr "Supprimez tous les abonnements attachés aux clés d'activation."
@@ -2461,6 +2452,12 @@ msgstr "Installation d'errata"
 msgid "Errata Install scheduled by %s"
 msgstr "Installation de l'errata planifiée par %s"
 
+msgid "Errata and package information will be updated at the next host check-in or package action."
+msgstr ""
+
+msgid "Errata and package information will be updated immediately."
+msgstr ""
+
 msgid "Errata id of the erratum (RHSA-2012:108)"
 msgstr "Id de l'erratum (RHSA-2012:108)"
 
@@ -2563,12 +2560,8 @@ msgstr "Types d'exportation"
 msgid "Export as CSV"
 msgstr "Exporter en CSV"
 
-msgid ""
-"Export formats. Choose syncable if content is to be imported via repository sync. Choose importable if content is to be imported via hammer content-import.\n"
-"                                Defaults to importable."
+msgid "Export formats.Choose syncable if the exported content needs to be in a yum format. This option is only available for %{syncable_repos} repositories. Choose importable if the importing server uses the same version  and exported content needs to be one of %{importable_repos} repositories."
 msgstr ""
-"Formats d'exportation. Choisissez syncable si le contenu doit être importé via la synchronisation du référentiel. Choisissez importable si le contenu doit être importé via l'importation de contenu via hammer.\n"
-"                                La valeur par défaut est importable."
 
 msgid "Export history identifier used for incremental export. If not provided the most recent export history will be used."
 msgstr "Identifiant de l'historique d'exportation utilisé pour l'exportation incrémentielle. S'il n'est pas fourni, l'historique d'exportation le plus récent sera utilisé."
@@ -2590,12 +2583,6 @@ msgstr "N'a pas réussi à supprimer %{host}: %{errors}"
 
 msgid "Failed to delete latest content view version of Content View '%{subject}'."
 msgstr "Échec de la suppression de la dernière version de la vue de contenu de la vue de contenu '%{subject}'."
-
-msgid "Failed to download %s package."
-msgid_plural "Failed to download %s packages."
-msgstr[0] "Le téléchargement du package %s a échoué."
-msgstr[1] "Le téléchargement des packages %s a échoué."
-msgstr[2] "Le téléchargement des packages %s a échoué."
 
 msgid "Failed to find %{content} with id '%{id}'."
 msgstr "Impossible à trouver avec l'identifiant %{content} ayant pour id '%{id}'."
@@ -2717,9 +2704,6 @@ msgstr "Filtres"
 msgid "Filters deleted"
 msgstr "Filtres supprimés"
 
-msgid "Filters will appear here when the filter is created."
-msgstr "Les filtres apparaîtront ici lorsque le filtre sera créé."
-
 msgid "Find the relative path for each RHUI repository and combine them in a comma-separated list."
 msgstr "Trouvez le chemin relatif de chaque référentiel RHUI et combinez-les dans une liste séparée par des virgules."
 
@@ -2731,9 +2715,6 @@ msgstr "Fin du délai d'action"
 
 msgid "Finished"
 msgstr "Terminé"
-
-msgid "For pages that support it, automatically perform search while typing in search input."
-msgstr "Pour les pages qui le prennent en charge, effectuez automatiquement une recherche pendant que vous tapez une entrée de recherche."
 
 msgid "Force"
 msgstr "Force"
@@ -2747,6 +2728,9 @@ msgstr ""
 
 msgid "Force a sync and validate the checksums of all content. Only used with yum repositories."
 msgstr "Forcer une synchronisation et valider les sommes de contrôle de tous les contenus. Utilisé uniquement avec les référentiels yum."
+
+msgid "Force content view promotion and bypass lifecycle environment restriction"
+msgstr ""
 
 msgid "Force delete the repository by removing it from all content view versions"
 msgstr "Suppression forcée du référentiel en le supprimant de toutes les versions d’affichage de contenu"
@@ -2789,6 +2773,9 @@ msgstr "Générez les certificats RHUI pour les référentiels souhaités, si n�
 
 msgid "Generate and Download"
 msgstr "Générer et télécharger"
+
+msgid "Generate errata status from directly-installable content"
+msgstr ""
 
 msgid "Generate host applicability"
 msgstr "Générer l'applicabilité à l'hôte"
@@ -2852,9 +2839,6 @@ msgstr "Aller à la page des tâches"
 
 msgid "Greater than"
 msgstr "Plus grand que"
-
-msgid "Group %{id} already created."
-msgstr "Groupe %{id} déjà créé."
 
 msgid "Guests of"
 msgstr "Les invités de"
@@ -3162,9 +3146,6 @@ msgstr "Identifie si le référentiel doit être désactivé sur un client dont 
 msgid "Ids of smart proxies to associate"
 msgstr "Ids des proxies smart à associer"
 
-msgid "If Autosearch is enabled, delay in milliseconds before executing searches while typing."
-msgstr "Si la recherche automatique est activée, attendez quelques millisecondes avant d'exécuter des recherches pendant la frappe."
-
 msgid "If SSL should be verified for the upstream URL"
 msgstr "Si SSL doit être vérifié pour l'URL amont"
 
@@ -3192,14 +3173,17 @@ msgstr "Si cette option est activée, les référentiels peuvent être supprimé
 msgid "If this is enabled, repositories of content view versions without environments (\"archived\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'."
 msgstr "Si cette option est activée, les dépôts de versions de vues de contenu sans environnement (\"archivées\") seront distribués dans '/pulp/content/<organization>/content_views/<content view>/X.Y/...'."
 
+msgid "If true, only errata that can be installed without an incremental update will affect the host's errata status."
+msgstr ""
+
 msgid "If true, only return repository sets that are associated with an active subscriptions"
 msgstr "Si c’est le cas, ne renvoyez que les ensembles de référentiels associés à un abonnement actif"
 
 msgid "If true, only return repository sets that have been enabled. Defaults to false"
 msgstr "Si c’est le cas, ne renvoyez que les ensembles de référentiels qui ont été activés. La valeur par défaut est false"
 
-msgid "If true, return custom repository sets along with redhat repos"
-msgstr "Si c'est le cas, renvoyer les ensembles de référentiels personnalisés avec les référentiels Red Hat"
+msgid "If true, return custom repository sets along with redhat repos. Will be ignored if repository_type is supplied."
+msgstr ""
 
 msgid "If true, when adding the specified errata or packages, any needed dependencies will be copied as well. Defaults to true"
 msgstr "Si c’est le cas, toute dépendance nécessaire sera copiée lors de l'ajout des errata ou package spécifiés. Valeur par défaut true."
@@ -3447,9 +3431,6 @@ msgstr "Installable"
 msgid "Installable errata are applicable errata that are available in the host\\'s content view and lifecycle environment."
 msgstr "Les errata installables sont des errata applicables qui sont disponibles dans la vue du contenu et l'environnement du cycle de vie de l'hôte."
 
-msgid "Installable errata from content view"
-msgstr "Errata installables de la vue du contenu"
-
 msgid "Installable updates"
 msgstr "Mises à jour installables"
 
@@ -3587,9 +3568,6 @@ msgstr "Publié"
 
 msgid "Issued from"
 msgstr "Délivré par"
-
-msgid "Items will appear here when a filter rule is added."
-msgstr "Les éléments apparaîtront ici lorsqu'une règle de filtrage est ajoutée."
 
 msgid "Job '${description}' completed"
 msgstr "Job '${description}' terminé"
@@ -3755,6 +3733,9 @@ msgstr "Environnement de cycle de vie : {lce}"
 
 msgid "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy."
 msgstr "Les environnements du cycle de vie ne peuvent pas être modifiés sur le proxy smart par défaut.  Le contenu de tous les environnements de cycle de vie existera sur ce proxy smart."
+
+msgid "Limit content to Red Hat / custom"
+msgstr ""
 
 msgid "Limit content to enabled / disabled / overridden"
 msgstr "Limiter le contenu à activé / désactivé / écrasé"
@@ -4173,20 +4154,23 @@ msgstr "Les flux de modules apparaîtront ici après avoir activé les référen
 msgid "Multi-entitlement"
 msgstr "Droits d’accès multiples"
 
-msgid "Must supply at least one of mandatory_package_names, optional_package_names, conditional_package_names, default_package_names parameters"
-msgstr "Doit fournir au moins un des paramètres suivants : mandatory_package_names, optional_package_names, conditional_package_names, default_package_names"
-
 msgid "N/A"
 msgstr "Sans objet"
 
 msgid "NA"
 msgstr "N/A"
 
+msgid "NOTE: Content view version '%{content_view} %{current}' does not have any exportable repositories. At least one repository with any of the following types is required to be able to export: '%{exportable_types}'."
+msgstr ""
+
 msgid "NOTE: Katello-agent is deprecated and will be removed in %s. Consider using remote execution instead."
 msgstr "NOTE : Katello-agent est déprécié et sera supprimé dans %s. Pensez à utiliser l'exécution à distance à la place."
 
 msgid "NOTE: Unable to export repository '%{repository}' because it does not have an exportable content type."
 msgstr "NOTE : Impossible d'exporter le référentiel '%{repository}' car il n'a pas de type de contenu exportable."
+
+msgid "NOTE: Unable to export repository '%{repository}' because it does not have an syncably exportable content type."
+msgstr ""
 
 msgid ""
 "NOTE: Unable to fully export '%{organization}' organization's library because it contains repositories without the 'immediate' download policy. Update the download policy and sync affected repositories to include them in the export. \n"
@@ -4269,12 +4253,6 @@ msgstr "Jamais sync"
 msgid "New Errata"
 msgstr "Nouveaux errata"
 
-msgid "New Files: %s"
-msgstr "Nouveaux fichiers : %s"
-
-msgid "New blobs: %{count}."
-msgstr "Nouveaux blobs : %{count}."
-
 msgid "New content view name"
 msgstr "Nouveau nom de la vue de contenu"
 
@@ -4286,9 +4264,6 @@ msgstr "Le nouveau nom ne peut être vide."
 
 msgid "New name for the content view"
 msgstr "Nouveau nom de l'affichage du contenu"
-
-msgid "New packages: %{count} (%{size})."
-msgstr "Aucun nouveau package. %{count} (%{size} )."
 
 msgid "New version is available: Version ${latestVersion}"
 msgstr "Une version plus récente est disponible : Version {latestVersion}"
@@ -4371,8 +4346,11 @@ msgstr "Il n'existe pas d’affichages de contenu disponible"
 msgid "No content views available for the selected environment"
 msgstr "Aucune vue du contenu n'est disponible pour l'environnement sélectionné"
 
-msgid "No content views belong to ${label}"
-msgstr "Il n'existe pas d’affichages de contenu pour {label}"
+msgid "No content views to add yet"
+msgstr ""
+
+msgid "No content views yet"
+msgstr ""
 
 msgid "No content_view_version_ids provided"
 msgstr "Aucun content_view_version_ids fourni"
@@ -4392,11 +4370,14 @@ msgstr "Aucun Environnement"
 msgid "No environments"
 msgstr "Aucun environnement"
 
-msgid "No errata available for this content view."
-msgstr "Aucun errata disponible pour cet affichage de contenu"
+msgid "No errata filter rules yet"
+msgstr ""
 
-msgid "No errata available to add to this filter."
-msgstr "Aucun errata disponible à ajouter à ce filtre."
+msgid "No errata matching given search query"
+msgstr ""
+
+msgid "No errata to add yet"
+msgstr ""
 
 msgid "No errors"
 msgstr "Aucune erreur"
@@ -4406,6 +4387,12 @@ msgstr "Aucun historique d'exportation existant n'a été trouvé pour effectuer
 
 msgid "No file uploaded"
 msgstr "Aucun fichier téléchargé"
+
+msgid "No filters yet"
+msgstr ""
+
+msgid "No history yet"
+msgstr ""
 
 msgid "No host collections"
 msgstr "Aucune collection d'hôtes"
@@ -4421,6 +4408,9 @@ msgstr ""
 
 msgid "No hosts have been specified."
 msgstr "Aucun hôte n'a été spécifié."
+
+msgid "No hosts matched search, or action unauthorized for selected hosts."
+msgstr ""
 
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr "Aucun hôte enregistré avec le gestionnaire d'abonnement n'a été trouvé dans la sélection."
@@ -4491,20 +4481,23 @@ msgstr "Aucun référentiel correspondant n'a été trouvé"
 msgid "No matching repository sets found"
 msgstr "Aucun ensemble de référentiels correspondant n'a été trouvé"
 
-msgid "No matching rules found."
-msgstr "Aucune règle correspondante n'a été trouvée."
-
 msgid "No matching traces found"
 msgstr "Aucune règle de traces n'a été trouvée."
 
 msgid "No matching version found"
 msgstr "Aucune version correspondante trouvée"
 
+msgid "No module stream filter rules yet"
+msgstr ""
+
+msgid "No module streams to add yet."
+msgstr ""
+
 msgid "No new packages installed"
 msgstr "Aucun nouveau package installé"
 
-msgid "No new packages."
-msgstr "Aucun nouveau package."
+msgid "No package groups yet"
+msgstr ""
 
 msgid "No packages"
 msgstr "Aucun package"
@@ -4554,6 +4547,12 @@ msgstr "Aucun produit synchronisé récemment"
 msgid "No recurring logic tied to the sync plan."
 msgstr "Pas de logique récurrente liée au plan de synchronisation."
 
+msgid "No repositories added yet"
+msgstr ""
+
+msgid "No repositories available to add"
+msgstr ""
+
 msgid "No repositories available."
 msgstr "Aucun référentiel n'est disponible."
 
@@ -4572,8 +4571,8 @@ msgstr "Aucun ensemble de référentiels ne correspond à vos critères de reche
 msgid "No repository sets to show."
 msgstr "Aucun ensemble de référentiels à afficher."
 
-msgid "No rules have been added to this filter."
-msgstr "Aucune règle n'a été ajoutée à ce filtre."
+msgid "No rules yet"
+msgstr ""
 
 msgid "No services defined, is this class extended?"
 msgstr "Aucuns services définis, est-ce une classe étendue ?"
@@ -4589,6 +4588,9 @@ msgstr "Aucun référentiel synchronisable n'a été trouvé pour les produits e
 
 msgid "No uploads param specified. An array of uploads to import is required."
 msgstr "Aucun paramètre de téléchargement n'est spécifié. Un tableau des téléchargements à importer est nécessaire."
+
+msgid "No versions yet"
+msgstr ""
 
 msgid "Non-security errata applicable"
 msgstr "Errata non-sécurité applicable"
@@ -4694,9 +4696,6 @@ msgstr "Un ou plusieurs hôtes non trouvés"
 
 msgid "One or more ids (%{ids}) were not found for %{assoc}.  You may not have permissions to see them."
 msgstr "Un ou plusieurs ids (%{ids}) n'ont pas été trouvés pour %{assoc}.  Vous n'avez peut-être pas les autorisations nécessaires pour les voir."
-
-msgid "One or more packages failed to sync properly."
-msgstr "La synchronisation d'un ou plusieurs packages a échoué"
 
 msgid "One or more processes require restarting"
 msgstr "Un ou plusieurs processus doivent être relancés"
@@ -4980,9 +4979,6 @@ msgstr "Suffixes de chemin pour trouver un contenu alternatif"
 msgid "Paused"
 msgstr "Suspendue"
 
-msgid "Pending"
-msgstr "En attente"
-
 msgid "Perform a module stream action via Katello interface"
 msgstr "Effectuer une action de flux de module via l'interface Katello"
 
@@ -5016,11 +5012,11 @@ msgstr "Physique"
 msgid "Plan numeric identifier"
 msgstr "Identifiant numérique du plan"
 
-msgid "Please add some content views."
-msgstr "Veuillez ajouter des vues de contenu."
-
 msgid "Please add some repositories."
 msgstr "Veuillez ajouter quelques référentiels."
+
+msgid "Please create some content views."
+msgstr ""
 
 msgid "Please enter a positive number above zero"
 msgstr "Veuillez entrer un nombre positif au-dessus de zéro"
@@ -5096,12 +5092,6 @@ msgstr "Problème de recherche dans les ensembles de référentiels"
 
 msgid "Problem searching traces"
 msgstr "Problème de recherche de traces"
-
-msgid "Processing metadata"
-msgstr "Traitement des métadonnées"
-
-msgid "Processing metadata."
-msgstr "Traitement des métadonnées."
 
 msgid "Product"
 msgstr "Produit"
@@ -5407,6 +5397,9 @@ msgstr "Récupérer l’espace en provenance d’un référentiel Sur demande"
 msgid "Recommended Repositories"
 msgstr "Référentiels recommandés"
 
+msgid "Red Hat"
+msgstr ""
+
 msgid "Red Hat CDN"
 msgstr "Red Hat CDN"
 
@@ -5704,9 +5697,6 @@ msgstr "Identifiant de référentiel"
 msgid "Repository label '%s' is not associated with content view."
 msgstr "Le label de référentiel '%s' n'est pas associé à la vue du contenu."
 
-msgid "Repository metadata publish"
-msgstr "Métadonnées de référentiel publiées"
-
 msgid "Repository not found"
 msgstr "Référentiel introuvable"
 
@@ -5742,6 +5732,12 @@ msgstr "Ensembles de référentiels redéfinis à leur valeur par défaut"
 
 msgid "Repository sets will appear here after enabling Red Hat repositories or creating custom products."
 msgstr "Les ensembles de référentiels apparaîtront ici après avoir activé les référentiels Red Hat ou créé des produits personnalisés."
+
+msgid "Repository sets will appear here when the host\\'s content view and environment has available content."
+msgstr ""
+
+msgid "Repository type"
+msgstr ""
 
 msgid "Republish Repositories of %{name} %{version}"
 msgstr "Republier les référentiels de %{name}%{version} "
@@ -6040,6 +6036,9 @@ msgstr "Sélectionnez un certificat client"
 msgid "Select a client key"
 msgstr "Sélectionnez une clé client"
 
+msgid "Select a content source first"
+msgstr ""
+
 msgid "Select a content view"
 msgstr "Sélectionner un affichage de contenu"
 
@@ -6054,6 +6053,9 @@ msgstr "Sélectionnez un environnement de cycle de vie parmi les chemins de prom
 
 msgid "Select a provider to install katello-host-tools-tracer"
 msgstr "Sélectionner un fournisseur pour installer katello-host-tools-tracer"
+
+msgid "Select a source"
+msgstr ""
 
 msgid "Select add-ons"
 msgstr "Sélectionnez les add-ons"
@@ -6070,8 +6072,8 @@ msgstr "Sélectionner une organisation"
 msgid "Select an environment"
 msgstr "Sélectionnez un environnement"
 
-msgid "Select an environment above"
-msgstr "Sélectionnez un environnement ci-dessus"
+msgid "Select an environment first"
+msgstr ""
 
 msgid "Select an option"
 msgstr "Sélectionnez une option"
@@ -6235,6 +6237,9 @@ msgstr "Afficher les hôtes affectés"
 msgid "Show all"
 msgstr "Tout afficher"
 
+msgid "Show all repository sets"
+msgstr ""
+
 msgid "Show an activation key"
 msgstr "Afficher une clé d'activation"
 
@@ -6256,6 +6261,9 @@ msgstr "Afficher les informations de règle de filtre"
 msgid "Show full description"
 msgstr "Afficher Description complète"
 
+msgid "Show hosts associated to an activation key"
+msgstr ""
+
 msgid "Show organization"
 msgstr "Afficher l'organisation"
 
@@ -6264,6 +6272,9 @@ msgstr "Afficher les versions disponibles pour une clé d'activation"
 
 msgid "Show releases available for the content host"
 msgstr "Afficher les versions disponibles pour l'hôte de contenu"
+
+msgid "Show repositories"
+msgstr ""
 
 msgid "Show repositories enabled on the host that are known to Katello"
 msgstr "Afficher les référentiels activés sur l'hôte qui sont connus de Katello."
@@ -6772,9 +6783,6 @@ msgstr "Synchroniser"
 msgid "Synchronize Now"
 msgstr "Sync Maintenant"
 
-msgid "Synchronize capsule content"
-msgstr "Synchroniser le contenu de la capsule"
-
 msgid "Synchronize repository"
 msgstr "Synchroniser les référentiels"
 
@@ -6885,9 +6893,6 @@ msgstr "La date de début de la règle du filtre de l'erratum est un type ou un 
 
 msgid "The erratum type must be an array. Invalid value provided"
 msgstr "Le type d'erratum doit être une matrice. Valeur non valide fournie"
-
-msgid "The exported Content View Version '%{content_view} %{current}' cannot be incrementally updated from version '%{from}'. Please do a full export."
-msgstr "La version exportée de la vue du contenu '%{content_view} %%{current}' ne peut pas être mise à jour de manière incrémentielle à partir de la version '%%{from}'. Veuillez effectuer une exportation complète."
 
 msgid "The field to sort the data by. Defaults to the created date."
 msgstr "Le champ permettant de trier les données. Par défaut, la date de création."
@@ -7209,8 +7214,14 @@ msgstr "Horodatage"
 msgid "Title"
 msgstr "Titre"
 
+msgid "To get started, add a filter rule to this filter"
+msgstr ""
+
 msgid "To get started, add this host to a host collection."
 msgstr "Pour commencer, ajoutez cet hôte à une collection d'hôtes."
+
+msgid "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories."
+msgstr ""
 
 msgid "To update the selected host configuration, update hosts manually in the next section."
 msgstr ""
@@ -7398,9 +7409,6 @@ msgstr "Impossible de mettre à jour le mapping utilisateur-référentiel"
 msgid "Unapplied Errata"
 msgstr "Errata non appliqués"
 
-msgid "Unassociate units in repository"
-msgstr "Détacher les unités dans le référentiel"
-
 msgid "Unattach a subscription"
 msgstr "Détacher un abonnement"
 
@@ -7586,6 +7594,9 @@ msgstr "Mettre à jour la configuration du proxy HTTP sur les référentiels d'u
 
 msgid "Update the content source for specified hosts and generate the reconfiguration script"
 msgstr "Mettre à jour la source de contenu pour les hôtes spécifiés et générer le script de reconfiguration"
+
+msgid "Update the host immediately via remote execution"
+msgstr ""
 
 msgid "Update the information about enabled repositories"
 msgstr "Mettre à jour les informations sur les référentiels activés"
@@ -7845,6 +7856,9 @@ msgstr ""
 msgid "View by"
 msgstr "Afficher par"
 
+msgid "View documentation"
+msgstr ""
+
 msgid "View matching content"
 msgstr "Afficher le contenu correspondant"
 
@@ -7889,6 +7903,9 @@ msgstr "Si défini sur 'Vrai', les types de référentiels qui peuvent être cr�
 
 msgid "When unregistering a host via subscription-manager, also delete the host record. Managed resources linked to host such as virtual machines and DNS records may also be deleted."
 msgstr "Lorsque vous dés-enregistrez un hôte via le gestionnaire d'abonnement, supprimez également l'enregistrement de l'hôte. Les ressources gérées liées à l'hôte, telles que les machines virtuelles et les enregistrements DNS, peuvent également être supprimés."
+
+msgid "Whether Simple Content Access should be enabled for the organization."
+msgstr ""
 
 msgid "Whether or not the host collection may have unlimited hosts"
 msgstr "Que la collection d'hôte possède des hôtes illimités ou non."
@@ -7947,32 +7964,20 @@ msgstr "Vous ne pouvez pas définir un id de parent d'organisation . Cette fonct
 msgid "You currently don't have any ${selectedContentType}."
 msgstr "Vous n'avez actuellement aucun {selectedContentType}."
 
-msgid "You currently don't have any Content views."
-msgstr "Vous n'avez actuellement aucun affichage de contenu"
-
 msgid "You currently don't have any alternate content sources."
 msgstr "Vous n'avez pas actuellement de sources de contenu alternatives."
-
-msgid "You currently don't have any filters for this content view."
-msgstr "Vous n'avez actuellement aucun filtre pour cette vue de contenu."
-
-msgid "You currently don't have any history for this content view."
-msgstr "Vous n'avez actuellement pas d'historique pour cet affichage du contenu."
 
 msgid "You currently don't have any repositories associated with this content."
 msgstr "Vous n'avez actuellement aucun référentiel associé à ce contenu."
 
-msgid "You currently don't have any repositories to add to this content view."
-msgstr "Vous n'avez actuellement aucun référentiel à ajouter à cette vue de contenu."
-
 msgid "You currently don't have any repositories to add to this filter."
 msgstr "Vous n'avez actuellement aucun référentiel à ajouter à ce filtre."
 
-msgid "You currently don't have any versions for this content view."
-msgstr "Vous n'avez actuellement aucune version pour cette vue du contenu."
-
 msgid "You currently don\\'t have any related content views."
 msgstr "Vous n'avez actuellement aucun affichage de contenu associé"
+
+msgid "You currently have no content views to display"
+msgstr ""
 
 msgid "You do not have permissions to delete %s"
 msgstr "Vous ne disposez pas des droits nécessaires pour supprimer %s"
@@ -8027,9 +8032,6 @@ msgstr "Votre recherche n’a renvoyé aucun hôte."
 
 msgid "Yum"
 msgstr "Yum"
-
-msgid "Yum Metadata: %s"
-msgstr "Yum Metadata : %s "
 
 msgid "a content unit"
 msgstr "une unité de contenu"
@@ -8208,9 +8210,6 @@ msgstr "Identifiant d'affichage du contenu composite"
 msgid "composite content view numeric identifier"
 msgstr "Identifiant numérique d'affichage du contenu composite"
 
-msgid "conditional package names to include in the package group"
-msgstr "les noms de packages conditionnels à inclure dans le groupe de packages"
-
 msgid "content release version"
 msgstr "version du contenu de version"
 
@@ -8265,6 +8264,9 @@ msgstr "identifiants de la version de l'affichage du contenu à supprimer"
 msgid "content view versions to compare"
 msgstr "versions d'affichage de contenu à comparer"
 
+msgid "create a custom product"
+msgstr ""
+
 msgid "create a filter for a content view"
 msgstr "créer un filtre pour un affichage de contenu"
 
@@ -8273,9 +8275,6 @@ msgstr "deb, packages, groupes de packages ou noms de balises docker"
 
 msgid "deb_ids is not an array"
 msgstr "package_ids n'est pas sous forme de table"
-
-msgid "default package names to include in the package group"
-msgstr "les noms de packages par défaut à inclure dans le groupe de packages"
 
 msgid "delete a filter"
 msgstr "supprimer un filtre"
@@ -8508,9 +8507,6 @@ msgstr "liste d'ids de référentiel "
 msgid "list of rpm filename strings to include in published version"
 msgstr "liste des chaînes de noms de fichiers rpm à inclure dans la version publiée"
 
-msgid "mandatory package names to include in the package group"
-msgstr "noms de packages obligatoires à inclure dans le groupe de packages"
-
 msgid "max_hosts must be given a value if this host collection is not unlimited."
 msgstr "max_hosts doit recevoir une valeur si cette collection d'hôtes n'est pas illimitée."
 
@@ -8538,6 +8534,9 @@ msgstr "doit être une des valeurs suivantes : %s"
 msgid "must be one of: %s"
 msgstr "doit être une des valeurs suivantes : %s"
 
+msgid "must be true or false"
+msgstr ""
+
 msgid "must be unique within one organization"
 msgstr "doit être unique dans une organisation"
 
@@ -8564,9 +8563,6 @@ msgstr "ne doit pas contenir d'espace comme premier ou dernier caractère."
 
 msgid "name"
 msgstr "nom"
-
-msgid "name not defined."
-msgstr "nom non défini."
 
 msgid "name of organization"
 msgstr "nom de d'organisation"
@@ -8613,20 +8609,11 @@ msgstr "de l'environnement doit être unique dans l'organisation"
 msgid "only show the repositories readable by this user with this username"
 msgstr "afficher uniquement les dépôts lisibles par cet utilisateur avec ce nom d'utilisateur"
 
-msgid "optional package names to include in the package group"
-msgstr "les noms de packages optionnels à inclure dans le groupe de packages"
-
 msgid "organization ID"
 msgstr "ID d’organisation"
 
 msgid "organization identifier"
 msgstr "identifiant de l'organisation"
-
-msgid "package group description. Defaults to params[:name]"
-msgstr "description du groupe de packages. Paramètres par défaut : params[:name]"
-
-msgid "package group name"
-msgstr "Nom de groupe de packages"
 
 msgid "package group: uuid"
 msgstr "Mise à jour de groupes de packages"
@@ -8706,12 +8693,6 @@ msgstr "identifiant de référentiel"
 msgid "repository source url"
 msgstr "url de la source du référentiel"
 
-msgid "repository_id"
-msgstr "repository_id"
-
-msgid "repository_id not defined."
-msgstr "repository_id non défini."
-
 msgid "root-node of collection contained in responses (default: 'results')"
 msgstr "nœud racine de collection contenu dans les réponses (défaut : 'results')"
 
@@ -8732,9 +8713,6 @@ msgstr ""
 
 msgid "service level"
 msgstr "niveau de service"
-
-msgid "set \"user_visible\" flag on package group. Defaults to true"
-msgstr "mettre la balise \"user_visible\" sur le groupe de packages. La valeur par défaut est \"true\""
 
 msgid "set true if you want to see only library environments"
 msgstr "définir comme vrai si vous souhaitez voir les environnements de bibliothèque uniquement"
@@ -8793,9 +8771,6 @@ msgstr "vrai si la dernière version de la vue du contenu des composants est sou
 msgid "true if this repository can be published via HTTP"
 msgstr "vrai si ce référentiel peut être publié via HTTP"
 
-msgid "true if this repository when synced has to be mirrored from the source and stale rpms removed (Deprecated)"
-msgstr "vrai si ce référentiel, lorsqu'il est synchronisé, doit être reflété à partir de la source et que les rpm dépréciés sont supprimés (Déprécié)"
-
 msgid "type of filter (e.g. deb, rpm, package_group, erratum, erratum_id, erratum_date, docker, modulemd)"
 msgstr "type de filtre (e.g. deb, rpm, package_group, erratum, erratum_id, erratum_date, docker, modulemd)"
 
@@ -8841,14 +8816,8 @@ msgstr "voir onglets d’affichage de contenu"
 msgid "waiting for %s to finish the task"
 msgstr "en attendant que %s termine la tâche"
 
-msgid "waiting for Pulp to finish the task"
-msgstr "attend que Pulp termine la tâche"
-
 msgid "waiting for Pulp to finish the task %s"
 msgstr "attend que Pulp termine la tâche %s"
-
-msgid "waiting for Pulp to start the task"
-msgstr "attend que Pulp démarre la tâche"
 
 msgid "waiting for Pulp to start the task %s"
 msgstr "attend que Pulp démarre la tâche %s"
@@ -8870,6 +8839,9 @@ msgstr "oui"
 
 msgid "{0} items selected"
 msgstr "{0} éléments sélectionnés"
+
+msgid "{enableRedHatRepos} or {createACustomProduct}."
+msgstr ""
 
 msgid "{numberOfActivationKeys} activation key will be assigned to content view {cvName} in"
 msgstr "{numberOfActivationKeys} la clé d'activation sera attribuée à la vue du contenu {cvName} dans"
