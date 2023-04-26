@@ -21,7 +21,6 @@
           <th bst-table-column="name">{{ "Name" | translate }}</th>
           <th bst-table-column="schema_version">{{ "Available Schema Versions" | translate }}</th>
           <th bst-table-column="product">{{ "Product Name" | translate }}</th>
-          <th bst-table-column="repository">{{ "Repository Name" | translate }}</th>
         </tr>
       </thead>
 
@@ -37,9 +36,6 @@
           </td>
           <td bst-table-cell>
             {{ tag.product.name }}
-          </td>
-          <td bst-table-cell>
-            {{ getRepositoryNames(tag) }}
           </td>
         </tr>
       </tbody>

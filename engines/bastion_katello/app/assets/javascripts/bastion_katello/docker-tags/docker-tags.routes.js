@@ -50,5 +50,15 @@ angular.module('Bastion.docker-tags').config(['$stateProvider', function ($state
             label: "{{ 'Lifecycle Environments' | translate }}",
             parent: 'docker-tag.info'
         }
+    })
+    .state('docker-tag.repositories', {
+        url: '/repositories',
+        permission: 'view_products',
+        templateUrl: 'docker-tags/details/views/docker-tag-repositories.html',
+        controller: 'DockerTagRepositoriesController',
+        ncyBreadcrumb: {
+            label: "{{ 'Repositories' | translate }}",
+            parent: 'docker-tag.info'
+        }
     });
 }]);
