@@ -1,0 +1,60 @@
+<div data-extend-template="layouts/partials/table.html">
+    <div data-block="search">
+      <input type="text"
+             class="form-control"
+             placeholder="{{ 'Filter' | translate }}"
+             ng-model="dockerTagFilter"/>
+    </div>
+  
+    <span data-block="no-rows-message" translate>
+      This Container Image Tag is not present in any Repositories.
+    </span>
+  
+    <span data-block="no-search-results-message" translate>
+      Your search returned zero Repositories.
+    </span>
+  
+    <div data-block="table">
+      <table bst-table="table" class="table table-striped table-bordered" ng-class="{'table-mask': table.working}">
+        <thead>
+          <tr bst-table-head>
+            <th bst-table-column="name" translate>Name</th>
+            <th bst-table-column="product" translate>Product</th>
+            <th bst-table-column="contentView" translate>Content View</th>
+            <th bst-table-column="lastSync"><span translate>Last Sync</span></th>
+          </tr>
+        </thead>
+  
+        <tbody>
+          <tr bst-table-row
+              ng-repeat="repo in table.rows | filter:dockerTagFilter">
+            <td bst-table-cell>
+              <a ng-href="/products/{{ repo.product.id }}/repositories/{{ repo.library_instance_id || repo.id }}">
+                {{ repo.name }}
+              </a>
+            </td>
+            <td bst-table-cell>
+              <a ui-sref="product.info({productId: repo.product.id})">
+                {{ repo.product.name }}
+              </a>
+            </td>
+            <td bst-table-cell>
+              {{ repo.content_view.name }}
+            </td>
+            <td bst-table-cell>
+              <span ng-show="repo.url">
+              <span ng-show="repo.last_sync == null" translate>
+                Not Synced
+              </span>
+              <span ng-hide="repo.last_sync == null">
+                <a href="/foreman_tasks/tasks/{{repo.last_sync.id}}">{{ repo.last_sync.result | capitalize}}</a>
+                <span translate>{{ repo.last_sync_words }} ago</span>
+              </span>
+            </span>
+            <span ng-hide="repo.url" translate>N/A</span>
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

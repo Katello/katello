@@ -30,7 +30,7 @@
           <td>
             <span ng-repeat="tag in tagsForManifest(item) ">
               <a ui-sref="docker-tag.info({tagId: tag.id})">
-                <span class="registry-image-tag">{{ tag.name }}</span>
+               {{ tag.name }}
               </a>
             </span>
           </td>

@@ -116,7 +116,7 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
 
         $scope.tagsForManifest = function(manifest) {
             return _.filter(manifest.tags, function(tag) {
-                return tag.repository_id + '' === $scope.$stateParams.repositoryId;
+                return tag.name;
             });
         };
 

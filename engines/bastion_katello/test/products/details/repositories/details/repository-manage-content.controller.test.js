@@ -88,10 +88,11 @@ describe('Controller: RepositoryManageContentController', function() {
 
     it('can fetch tags from a manifest', function() {
         var tags, manifest;
-        manifest = {tags: [{id: 1, repository_id: 1}, {id: 2, repository_id: 2}]};
+        manifest = {tags: [{id: 1, name: "latest", repository_id: 1}, {id: 2, name: "pizza", repository_id: 2}]};
         tags = $scope.tagsForManifest(manifest);
-        expect(tags.length).toBe(1);
+        expect(tags.length).toBe(2);
         expect(tags[0].id).toBe(1);
+        expect(tags[0].name).toBe("latest")
     });
 
     it('updates selectability appropriately', function() {
