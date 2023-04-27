@@ -100,9 +100,9 @@
             ng-controller="ContentHostStatusController">
           <td bst-table-cell>
             <span ng-switch="newHostDetailsUI">
-              <a ng-switch-when="true" ng-if="host.subscription_facet_attributes.uuid" ng-href="/new/hosts/{{host.name}}/content">{{ host.name }}</a>
-              <a ng-switch-when="true" ng-if="!host.subscription_facet_attributes.uuid" ng-href="/new/hosts/{{host.name}}">{{ host.name}}</a>
-              <a ng-switch-when="false" ui-sref="content-host.info({hostId: host.id})">{{ host.name }}</a>
+              <a ng-switch-when="true" ng-if="host.subscription_facet_attributes.uuid" ng-href="/new/hosts/{{host.name}}/content">{{ host.display_name }}</a>
+              <a ng-switch-when="true" ng-if="!host.subscription_facet_attributes.uuid" ng-href="/new/hosts/{{host.name}}">{{ host.display_name }}</a>
+              <a ng-switch-when="false" ui-sref="content-host.info({hostId: host.id})">{{ host.display_name }}</a>
             </span>
           </td>
           <td bst-table-cell ng-hide="simpleContentAccessEnabled">

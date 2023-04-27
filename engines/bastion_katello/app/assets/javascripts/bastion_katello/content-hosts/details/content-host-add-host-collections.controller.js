@@ -46,7 +46,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
 
             success = function (response) {
                 Notification.setSuccessMessage(translate('Added %x host collections to content host "%y".')
-                    .replace('%x', $scope.table.numSelected).replace('%y', host.name));
+                    .replace('%x', $scope.table.numSelected).replace('%y', host.display_name));
                 $scope.table.working = false;
                 $scope.table.selectAll(false);
                 nutupane.refresh();

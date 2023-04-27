@@ -51,7 +51,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         controller: 'ContentHostDetailsInfoController',
         templateUrl: 'content-hosts/details/views/content-host-info.html',
         ncyBreadcrumb: {
-            label: "{{ host.name }}",
+            label: "{{ host.display_name }}",
             parent: 'content-hosts'
         }
     })

@@ -1,4 +1,4 @@
-<span page-title ng-model="host">{{ 'Traces for: ' | translate }} {{ host.name }}</span>
+<span page-title ng-model="host">{{ 'Traces for: ' | translate }} {{ host.display_name }}</span>
 
 <div ng-hide="host.hasContent()">
   <div data-extend-template="common/views/registration.html"></div>
@@ -39,9 +39,9 @@
   <div data-extend-template="layouts/partials/table.html">
     <span data-block="list-actions" ng-hide="contentHost.readonly">
       <div bst-modal="performViaRemoteExecution(false)" model="host">
-        <div data-block="modal-header" translate>Restart Services on Content Host "{{host.name}}"?</div>
+        <div data-block="modal-header" translate>Restart Services on Content Host "{{host.displayname}}"?</div>
         <div data-block="modal-body">
-          <span translate>Are you sure you want to restart services on content host "{{ host.name }}"?</span>
+          <span translate>Are you sure you want to restart services on content host "{{ host.displayname }}"?</span>
           <span ng-show="host.rebootRequired()">
             <strong translate>Resolving the selected Traces will reboot this host.</strong>
           </span>

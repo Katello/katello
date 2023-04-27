@@ -1,8 +1,8 @@
-<span page-title ng-model="host">{{ 'Content Host:' | translate }} {{ host.name }}</span>
+<span page-title ng-model="host">{{ 'Content Host:' | translate }} {{ host.display_name }}</span>
 
 <div data-extend-template="layouts/details-page-with-breadcrumbs.html">
   <header data-block="header" translate>
-    {{ host.name }}
+    {{ host.display_name }}
   </header>
 
   <nav data-block="item-actions">
@@ -15,7 +15,7 @@
 
     <div bst-modal="unregisterContentHost(host)" model="host">
       <div data-block="modal-header" translate>
-        Unregister Host "{{host.name}}"?
+        Unregister Host "{{host.display_name}}"?
       </div>
       <div data-block="modal-body">
         <p translate>

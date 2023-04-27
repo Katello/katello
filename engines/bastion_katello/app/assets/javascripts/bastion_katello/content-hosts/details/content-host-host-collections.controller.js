@@ -45,7 +45,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
 
             success = function (response) {
                 var message = translate('Removed %x host collections from content host "%y".')
-                    .replace('%x', $scope.table.numSelected).replace('%y', host.name);
+                    .replace('%x', $scope.table.numSelected).replace('%y', host.display_name);
 
                 Notification.setSuccessMessage(message);
                 $scope.table.working = false;
