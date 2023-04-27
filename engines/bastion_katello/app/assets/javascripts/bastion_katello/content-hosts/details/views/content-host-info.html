@@ -1,4 +1,4 @@
-<span page-title ng-model="host">{{ 'Content Host' | translate }} {{ host.name }}</span>
+<span page-title ng-model="host">{{ 'Content Host' | translate }} {{ host.display_name }}</span>
 
 <div ng-hide="host.hasSubscription()">
   <div data-extend-template="common/views/registration.html"></div>
@@ -79,7 +79,7 @@
 
         <dt ng-show="host.subscription_facet_attributes.virtual_host" translate>Virtual Host</dt>
         <dd ng-show="host.subscription_facet_attributes.virtual_host">
-          <a ui-sref="content-host.info({hostId: host.subscription_facet_attributes.virtual_host.id })">{{ host.subscription_facet_attributes.virtual_host.name }}</a>
+          <a ui-sref="content-host.info({hostId: host.subscription_facet_attributes.virtual_host.id })">{{ host.subscription_facet_attributes.virtual_host.display_name }}</a>
         </dd>
       </dl>
 
@@ -359,7 +359,7 @@
 
       <dl class="dl-horizontal dl-horizontal-left">
         <dt translate>Hostname</dt>
-        <dd>{{ host.name }}</dd>
+        <dd>{{ host.displayname }}</dd>
 
         <dt translate>IPv4 Address</dt>
         <dd>{{ host.facts["network::ipv4_address"] }}</dd>

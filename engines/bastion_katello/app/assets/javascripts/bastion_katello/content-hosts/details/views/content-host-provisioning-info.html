@@ -1,4 +1,4 @@
-<span page-title ng-model="host">{{ 'Content Host' | translate }} {{ host.name }}</span>
+<span page-title ng-model="host">{{ 'Content Host' | translate }} {{ host.display_name }}</span>
 
 <div data-extend-template="layouts/two-column-details.html">
   <div data-block="left-column">
@@ -8,7 +8,7 @@
       <dt translate>Name</dt>
       <dd>
         <a href="/hosts/{{ host.name }}">
-          {{ host.name }}
+          {{ host.display_name }}
         </a>
       </dd>
 

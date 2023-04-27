@@ -1,4 +1,4 @@
-<span page-title ng-model="host">{{ 'Errata for: ' | translate }} {{ host.name }}</span>
+<span page-title ng-model="host">{{ 'Errata for: ' | translate }} {{ host.display_name }}</span>
 
 <div bst-feature-flag="remote_actions">
   <h3 translate ng-hide="selectedErrataOption === 'current'">Applicable Errata</h3>
@@ -53,8 +53,8 @@
 
     <span data-block="list-actions" ng-hide="contentHost.readonly">
       <div bst-modal="applySelected()" model="host">
-        <div data-block="modal-header" translate>Apply Errata to Content Host "{{host.name}}"?</div>
-        <div data-block="modal-body" translate>Are you sure you want to apply Errata to content host "{{ host.name }}"?</div>
+        <div data-block="modal-header" translate>Apply Errata to Content Host "{{host.displayname}}"?</div>
+        <div data-block="modal-body" translate>Are you sure you want to apply Errata to content host "{{ host.displayname }}"?</div>
         <span data-block="modal-confirm-button">
           <button class="btn btn-primary" ng-click="ok()">
             <span translate>Apply</span>

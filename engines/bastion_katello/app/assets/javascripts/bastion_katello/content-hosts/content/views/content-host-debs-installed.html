@@ -1,4 +1,4 @@
-<span page-title ng-model="host">{{ 'Packages for: ' | translate }} {{ host.name }}</span>
+<span page-title ng-model="host">{{ 'Packages for: ' | translate }} {{ host.display_name }}</span>
 
 <section ng-hide="denied('edit_hosts', host)" bst-feature-flag="remote_actions">
   <p bst-alert="info" ng-hide="remoteExecutionPresent">
