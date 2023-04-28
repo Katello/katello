@@ -25,19 +25,9 @@ module Katello
       end
 
       def self.build_artifacts(katello_id, artifacts_json)
-        # TODO: Fully support artifact hashes
-        # => {"rpms"=>["swig"], "description"=>"Simplified Wrapper and Interface Generator (SWIG)"}
         return [] if artifacts_json.empty?
-
-        if artifacts_json.is_a?(::Hash)
-          artifacts = artifacts_json['rpms'].map do |name|
-            {name: name, module_stream_id: katello_id}
-          end
-        else
-          # For compatibility with pulpcore 3.21 + pulp-rpm 3.18 and below.
-          artifacts = artifacts_json.map do |name|
-            {name: name, module_stream_id: katello_id}
-          end
+        artifacts = artifacts_json.map do |name|
+          { name: name, module_stream_id: katello_id }
         end
         add_timestamps(artifacts)
       end

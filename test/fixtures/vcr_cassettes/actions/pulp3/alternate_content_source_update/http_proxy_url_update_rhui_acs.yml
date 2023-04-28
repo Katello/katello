@@ -1,0 +1,44 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://centos8-katello-devel-2.cannolo.example.com:9090/v2/features
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux x86_64) ruby/2.7.6p219
+      X-Request-Id:
+      - 565a8dee-2813-411f-a123-2544dc8a6d63
+      X-Session-Id:
+      - 0fc0f5b6-0e55-4bf2-935d-6fbd02f6401f
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 403
+      message: Forbidden
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '43'
+      X-Content-Type-Options:
+      - nosniff
+      Server:
+      - foreman-proxy/3.7.0-develop
+      Date:
+      - Thu, 27 Apr 2023 21:58:16 GMT
+      Connection:
+      - Keep-Alive
+    body:
+      encoding: UTF-8
+      base64_string: 'Y291bGQgbm90IHJlYWQgY2xpZW50IGNlcnQgZnJvbSBlbnZpcm9ubWVudA==
+
+'
+    http_version: 
+  recorded_at: Thu, 27 Apr 2023 21:58:16 GMT
+recorded_with: VCR 3.0.3
