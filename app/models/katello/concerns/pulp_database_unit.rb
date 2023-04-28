@@ -167,6 +167,14 @@ module Katello
         where("#{self.table_name}.id in (?) or #{self.table_name}.pulp_id in (?)", id_integers, ids)
       end
 
+      def orphaned
+        if many_repository_associations
+          where.not(:id => repository_association_class.where(:repository_id => ::Katello::Repository.all).select(unit_id_field))
+        else
+          where.not(:repository_id => ::Katello::Repository.all)
+        end
+      end
+
       def in_repositories(repos)
         if many_repository_associations
           where(:id => repository_association_class.where(:repository_id => repos).select(unit_id_field))

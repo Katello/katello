@@ -17,5 +17,17 @@ module Katello
 
       assert_empty ::Katello::YumMetadataFile.methods.grep(/complete_for/)
     end
+
+    def test_orphaned
+      river = katello_module_streams(:river)
+      river.repository_module_streams.destroy_all
+      one = katello_module_streams(:one)
+      unless one.repositories.include?(katello_repositories(:fedora_17_x86_64))
+        fail 'Ensure that one.repositories includes :fedora_17_x86_64'
+      end
+
+      assert ::Katello::ModuleStream.orphaned.include?(river)
+      refute ::Katello::ModuleStream.orphaned.include?(one)
+    end
   end
 end

@@ -25,6 +25,13 @@ module Katello
           assert_equal ::Katello::DockerManifest.find_by(id: ::Katello::DockerTag.first.docker_taggable_id).digest, "sha256:a6ecbb1553353a08936f50c275b010388ed1bd6d9d84743c7e8e7468e2acd82e"
         end
 
+        def test_copy_units_rewrites_missing_content_error
+          fake_content_href = '/pulp/api/v3/repositories/container/container/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/'
+          service = Katello::Pulp3::Repository::Docker.new(@repo, @primary)
+          error = assert_raises(::Katello::Errors::Pulp3Error) { service.add_content(fake_content_href) }
+          assert_match /Please run a complete sync on the following repository: Pulp3 Docker 1./, error.message
+        end
+
         def test_index_on_sync
           Katello::DockerTag.destroy_all
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
