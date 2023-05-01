@@ -275,6 +275,14 @@ module Katello
       host || URI.parse(Setting[:foreman_url]).host
     end
 
+    def get_content_source_id(hostname)
+      proxies = SmartProxy.authorized.filter do |sp|
+        hostname == URI.parse(sp.url).hostname
+      end
+      return nil if proxies.length != 1
+      proxies.first.id
+    end
+
     private
 
     # in case set taxonomy from core was skipped since the User.current was nil at that moment (typically AK was used instead of username/password)
@@ -466,6 +474,8 @@ module Katello
     def update_host_registered_through(host, headers)
       parent_host = get_parent_host(headers)
       host.subscription_facet.update_attribute(:registered_through, parent_host)
+      content_source_id = get_content_source_id(parent_host)
+      host.content_facet.update_attribute(:content_source_id, content_source_id)
     end
 
     def check_registration_services
