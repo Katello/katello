@@ -777,7 +777,18 @@ module Katello
       audited_filter_rules
     end
 
+    def composite_cv_components_changed?
+      return true unless latest_version_object
+      published_component_version_ids = latest_version_object.components.pluck(:id) || []
+      unpublished_component_version_ids = content_view_components.where(latest: false).pluck(:content_view_version_id) || []
+      content_view_components.where(latest: true).each do |latest_component|
+        unpublished_component_version_ids << latest_component.content_view&.latest_version_object&.id
+      end
+      published_component_version_ids.compact.uniq.sort != unpublished_component_version_ids.compact.uniq.sort
+    end
+
     def needs_publish?
+      return composite_cv_components_changed? if composite?
       audited_cv_repositories_since_last_publish.present? || audited_cv_repository_changed.present? ||
         audited_cv_filters_changed.present? || audited_cv_filter_rules_changed.present?
     end
