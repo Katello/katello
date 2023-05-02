@@ -112,6 +112,14 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :POST, '/capsules/:id/verify_checksum', N_('Check for missing or corrupted artifacts, and attempt to redownload them.')
+    param :id, :number, :required => true, :desc => N_('Id of the smart proxy')
+    def verify_checksum
+      find_capsule(true)
+      task = async_task(::Actions::Pulp3::CapsuleContent::VerifyChecksum, @capsule)
+      respond_for_async :resource => task
+    end
+
     protected
 
     def respond_for_lifecycle_environments_index(environments)
