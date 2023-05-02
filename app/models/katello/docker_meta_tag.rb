@@ -31,6 +31,10 @@ module Katello
       repositories.first
     end
 
+    def upstream_name
+      repository.docker_upstream_name
+    end
+
     def self.search_by_repo_name(_key, operator, value)
       conditions = sanitize_sql_for_conditions(["#{Katello::RootRepository.table_name}.name #{operator} ?", value_to_sql(operator, value)])
       query = self.joins(:repositories => :root).where(conditions).select('id')

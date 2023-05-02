@@ -367,7 +367,14 @@ export default ({
             return __('Schema Version 2');
           },
         },
-        { title: __('Product Name'), getProperty: item => item?.product?.name },
+        {
+          title: __('Product'),
+          getProperty: item => (
+            <a href={urlBuilder(`products/${item?.product?.id}`, '')}>
+              {item?.product?.name}
+            </a>),
+        },
+        { title: __('Image'), getProperty: item => item?.upstream_name },
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],
