@@ -22,6 +22,10 @@ child :repositories => :repositories do
   attributes :id, :name, :full_path
 end
 
+node :upstream_name do |item|
+  item.upstream_name
+end
+
 child :product => :product do
   attributes :id, :name
 end
