@@ -62,7 +62,9 @@ module Katello
         # Note: v2 endpoint does not support search
         request_params[:url] = "#{@uri}v2/_catalog"
         results = RestClient::Request.execute(request_params)
-        @found = JSON.parse(results)['repositories']
+        JSON.parse(results)['repositories'].each do |result|
+          @found << result
+        end
       end
       @found.sort!
     end
