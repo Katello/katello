@@ -27,6 +27,7 @@ module Katello
       :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE, Repository::DOCKER_TYPE]
     }.freeze
 
+    MAX_EXPIRE_TIME = 7 * 24 * 60 * 60
     NO_DEFAULT_HTTP_PROXY = 'none'.freeze
     GLOBAL_DEFAULT_HTTP_PROXY = 'global_default_http_proxy'.freeze
     USE_SELECTED_HTTP_PROXY = 'use_selected_http_proxy'.freeze
@@ -86,6 +87,7 @@ module Katello
     validate :ensure_no_checksum_on_demand
     validate :ensure_valid_mirroring_policy
     validate :ensure_valid_retain_package_versions_count
+    validate :ensure_metadata_expire_valid
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
     validates :product_id, :presence => true
     validates :content_type, :inclusion => {
@@ -101,6 +103,16 @@ module Katello
       :in => HTTP_PROXY_POLICIES,
       :message => _("must be one of the following: %s") % HTTP_PROXY_POLICIES.join(', ')
     }
+
+    validates :metadata_expire,
+      if: -> { custom? && yum? },
+      numericality: {
+        less_than_or_equal_to: MAX_EXPIRE_TIME,
+        greater_than: 0,
+        allow_nil: true,
+        only_integer: true
+      }
+
     scope :subscribable, -> { where(content_type: RootRepository::SUBSCRIBABLE_TYPES) }
     scope :skipable_metadata_check, -> { where(content_type: RootRepository::SKIPABLE_METADATA_TYPES) }
     scope :has_url, -> { where.not(:url => nil) }
@@ -319,6 +331,13 @@ module Katello
       end
       if self.retain_package_versions_count.to_i < 0
         errors.add(:retain_package_versions_count, N_("must not be a negative value."))
+      end
+    end
+
+    def ensure_metadata_expire_valid
+      return if self.metadata_expire.blank?
+      unless yum? && custom?
+        errors.add(:metadata_expire, N_("It is only allowed for Non-Redhat Yum repositories."))
       end
     end
 

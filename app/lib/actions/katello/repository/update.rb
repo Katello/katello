@@ -31,7 +31,8 @@ module Actions
                         :label => content.label,
                         :type => root.content_type,
                         :arches => root.format_arches,
-                        :os_versions => root.os_versions&.join(',')
+                        :os_versions => root.os_versions&.join(','),
+                        :metadata_expire => root.metadata_expire
                       )
 
             content.update!(name: root.name,

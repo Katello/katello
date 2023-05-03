@@ -70,6 +70,21 @@ module Katello
       assert_valid @root
     end
 
+    def test_valid_metadata_expire
+      @root.content_type = 'yum'
+      @root.metadata_expire = ::Katello::RootRepository::MAX_EXPIRE_TIME + 1
+      refute_valid @root
+
+      @root.metadata_expire = 0
+      refute_valid @root
+
+      @root.metadata_expire = 100
+      assert_valid @root
+
+      @root.content_type = "docker"
+      refute_valid @root
+    end
+
     def test_non_yum_retain_package_version_counts
       @root.content_type = 'docker'
       @root.retain_package_versions_count = 2

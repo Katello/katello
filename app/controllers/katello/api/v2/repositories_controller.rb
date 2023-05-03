@@ -71,7 +71,7 @@ module Katello
       param :http_proxy_id, :number, :desc => N_("ID of a HTTP Proxy")
       param :arch, String, :desc => N_("Architecture of content in the repository")
       param :retain_package_versions_count, :number, :desc => N_("The maximum number of versions of each package to keep.")
-
+      param :metadata_expire, :number, :desc => N_("Time to expire yum metadata in seconds. Only relevant for custom yum repositories.")
       RepositoryTypeManager.generic_remote_options(defined_only: true).each do |option|
         param option.name, option.type, :desc => N_(option.description)
       end
@@ -580,7 +580,7 @@ module Katello
     # rubocop:disable Metrics/CyclomaticComplexity
     def repository_params
       keys = [:download_policy, :mirroring_policy, :sync_policy, :arch, :verify_ssl_on_sync, :upstream_password,
-              :upstream_username, :download_concurrency, :upstream_authentication_token,
+              :upstream_username, :download_concurrency, :upstream_authentication_token, :metadata_expire,
               {:os_versions => []}, :deb_releases, :deb_components, :deb_architectures, :description,
               :http_proxy_policy, :http_proxy_id, :retain_package_versions_count, {:ignorable_content => []}
              ]
@@ -620,7 +620,8 @@ module Katello
     def construct_repo_from_params(repo_params) # rubocop:disable Metrics/AbcSize
       root = @product.add_repo(repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
-                                                            :checksum_type, :download_policy, :http_proxy_policy).to_h.with_indifferent_access)
+                                                            :checksum_type, :download_policy, :http_proxy_policy,
+                                                            :metadata_expire).to_h.with_indifferent_access)
       root.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       if root.docker?
         if repo_params[:docker_tags_whitelist].present?
