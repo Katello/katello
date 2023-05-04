@@ -232,6 +232,11 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 $scope.save($scope.repository);
             };
 
+            $scope.clearMetadataExpire = function () {
+                $scope.repository['metadata_expire'] = null;
+                $scope.save($scope.repository);
+            };
+
             $scope.clearAnsibleCollectionAuth = function () {
                 $scope.repository['ansible_collection_auth_url'] = null;
                 $scope.repository['ansible_collection_auth_token'] = null;
