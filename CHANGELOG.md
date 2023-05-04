@@ -1,3 +1,15 @@
+# 4.7.5 Whiskey Sour (2023-05-04)
+
+## Features
+
+### Subscriptions
+ * Add rake task to prepare for switching orgs to SCA ([#36301](https://projects.theforeman.org/issues/36301))
+
+## Bug Fixes
+
+### Other
+ * DB Migration fails because of missing Setting::Content ([#36343](https://projects.theforeman.org/issues/36343), [9b04cad4](https://github.com/Katello/katello.git/commit/9b04cad461e79b61bce8c60b57c720d391fd4a2d))
+
 # 4.7.4 Whiskey Sour (2023-03-16)
 
 ## Bug Fixes
