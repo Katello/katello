@@ -63,10 +63,16 @@ else
   attributes :repository_ids
 end
 
-child :versions => :versions do
-  attributes :id, :version
-  attributes :created_at => :published
-  attributes :environment_ids
+node :versions do |cv|
+  cv.versions.map do |version|
+    {
+      :id => version.id,
+      :version => version.version,
+      :published => version.created_at,
+      :environment_ids => version.environment_ids,
+      :filters_applied => version.filters_applied?
+    }
+  end
 end
 
 if params.key?(:include_permissions)
