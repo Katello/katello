@@ -117,6 +117,14 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect($scope.repository["ansible_collection_auth_exists"]).toBe(false);
     });
 
+    it('should clear the metadata_expire on clearMetadataExpire', function() {
+        spyOn($scope, 'save');
+        $scope.repository["metadata_expire"] = "500";
+        $scope.clearMetadataExpire($scope.repository);
+        expect($scope.save).toHaveBeenCalledWith($scope.repository);
+        expect($scope.repository["metadata_expire"]).toBe(null);
+    });
+
     it('should save the repository successfully', function() {
         spyOn(Notification, 'setSuccessMessage');
 

@@ -39,6 +39,16 @@
         </select>
       </div>
 
+      <div ng-show="repository.content_type === 'yum'" bst-form-group label="{{ 'Metadata Expiration (Seconds)' | translate }}">
+        <input id="metadataexpire"
+               name="metadataexire"
+               ng-model="repository.metadata_expire"
+               type="number"
+               min="1"
+               placeholder="default value is 1"
+               required/>
+      </div>
+
     </div>
 
     <div ng-show="repository.content_type === 'yum'">

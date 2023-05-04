@@ -25,6 +25,11 @@
 
       <dt translate>Type</dt>
       <dd>{{ repository.content_type }}</dd>
+      <dt ng-if="product.redhat != true" translate>Metadata Expiration (Seconds)</dt>
+      <dd bst-edit-number="repository.metadata_expire" on-save="save(repository)" readonly="product.redhat || denied('edit_products', product)"
+          deletable="repository.metadata_expire !== null"
+          on-delete="clearMetadataExpire()">
+      </dd>
     </dl>
 
     <div class="divider"></div>
