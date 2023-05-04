@@ -12,6 +12,7 @@ module Actions
           param :content_url
           param :gpg_key_url
           param :owner
+          param :metadata_expire
         end
 
         def run
@@ -25,7 +26,7 @@ module Actions
                      arches: input[:arches] || '',
                      requiredTags: input[:os_versions],
                      label: input[:label],
-                     metadataExpire: 1,
+                     metadataExpire: input[:metadata_expire] || 1,
                      vendor: ::Katello::Provider::CUSTOM)
         end
       end
