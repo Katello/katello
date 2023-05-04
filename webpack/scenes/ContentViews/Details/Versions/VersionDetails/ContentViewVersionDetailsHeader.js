@@ -24,11 +24,14 @@ import getEnvironmentPaths from '../../../components/EnvironmentPaths/Environmen
 import RemoveCVVersionWizard from '../Delete/RemoveCVVersionWizard';
 import ActionableDetail from '../../../../../components/ActionableDetail';
 import BulkDeleteModal from '../BulkDelete/BulkDeleteModal';
+import NeedsPublishIcon from '../../../components/NeedsPublishIcon';
 
 const ContentViewVersionDetailsHeader = ({
   versionDetails,
   onEdit,
-  details: { permissions },
+  details: {
+    permissions, latest_version_id: latestVersionId, needs_publish: needsPublish, composite,
+  },
   loading,
 }) => {
   const history = useHistory();
@@ -72,7 +75,11 @@ const ContentViewVersionDetailsHeader = ({
     <Grid className="margin-0-24">
       <GridItem sm={6} >
         <TextContent>
-          <Text ouiaId="cv-version" component={TextVariants.h2}>{__('Version ')}{version}</Text>
+          <Text ouiaId="cv-version" component={TextVariants.h2}>
+            {__('Version ')}{version}
+            {(latestVersionId === id && needsPublish) && <NeedsPublishIcon composite={composite} />}
+          </Text>
+
         </TextContent>
       </GridItem>
       <GridItem sm={6} style={{ display: 'flex' }}>
@@ -169,6 +176,9 @@ ContentViewVersionDetailsHeader.propTypes = {
   onEdit: PropTypes.func.isRequired,
   details: PropTypes.shape({
     permissions: PropTypes.shape({}),
+    needs_publish: PropTypes.bool,
+    composite: PropTypes.bool,
+    latest_version_id: PropTypes.number,
   }).isRequired,
   loading: PropTypes.bool.isRequired,
 };

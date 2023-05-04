@@ -15,7 +15,7 @@ const CVPublishForm = ({
   description,
   setDescription,
   details: {
-    name, composite, next_version: nextVersion,
+    name, composite, next_version: nextVersion, needs_publish: needsPublish,
   },
   userCheckedItems,
   setUserCheckedItems,
@@ -24,6 +24,7 @@ const CVPublishForm = ({
   forcePromote,
 }) => {
   const [alertDismissed, setAlertDismissed] = useState(false);
+  const [needsPublishAlertDismissed, setNeedsPublishAlertDismissed] = useState(false);
 
   const checkPromote = (checked) => {
     if (!checked) {
@@ -36,11 +37,31 @@ const CVPublishForm = ({
       <WizardHeader
         title={__('Publish')}
         description={
-          <>{__('A new version of ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {name}</b>
+          <>
+            {!needsPublishAlertDismissed && !needsPublish && (
+            <Alert
+              ouiaId="needs-publish-alert"
+              variant="info"
+              isInline
+              title={composite ?
+                __('No available component content view updates') :
+                __('No available repository or filter updates')}
+              actionClose={
+                <AlertActionCloseButton
+                  onClose={() => setNeedsPublishAlertDismissed(true)}
+                />
+            }
+              style={{ marginBottom: '24px' }}
+            >
+              <TextContent>{__('Newly published version will be the same as previous version.')}</TextContent>
+            </Alert>)
+            }
+            {__('A new version of ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {name}</b>
             {__(' will be created and automatically promoted to the ' +
               'Library environment. You can promote to other environments as well. ')
             }
-          </>}
+          </>
+      }
       />
       <TextContent>
         <Text ouiaId="next-version-text" component={TextVariants.h3}>
@@ -115,6 +136,7 @@ CVPublishForm.propTypes = {
       PropTypes.number,
       PropTypes.string,
     ]).isRequired,
+    needs_publish: PropTypes.bool,
   }).isRequired,
 };
 
