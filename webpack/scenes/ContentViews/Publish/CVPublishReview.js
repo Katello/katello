@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { Alert, TextContent } from '@patternfly/react-core';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
@@ -16,7 +17,7 @@ import WizardHeader from '../components/WizardHeader';
 
 const CVPublishReview = ({
   details: {
-    name, composite, next_version: nextVersion,
+    name, composite, filtered, next_version: nextVersion,
   },
   userCheckedItems,
 }) => {
@@ -40,7 +41,15 @@ const CVPublishReview = ({
         description={
           <>
             {__('Review your currently selected changes for ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {name}.</b>
-          </>}
+            {filtered && (
+            <Alert
+              ouiaId="filters-applied-alert"
+              variant="warning"
+              isInline
+              title={__('Filters will be applied to this content view version.')}
+            />)}
+          </>
+          }
       />
       <TableComposable ouiaId="cv-publish-review-table" aria-label="Review Table">
         <Thead>

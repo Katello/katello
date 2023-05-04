@@ -13,6 +13,7 @@ attributes :generated_for
 attributes :related_cv_count
 attributes :related_composite_cvs
 attributes :needs_publish? => :needs_publish
+attributes :filtered? => :filtered
 
 node :next_version do |content_view|
   content_view.next_version.to_f.to_s
@@ -63,16 +64,11 @@ else
   attributes :repository_ids
 end
 
-node :versions do |cv|
-  cv.versions.map do |version|
-    {
-      :id => version.id,
-      :version => version.version,
-      :published => version.created_at,
-      :environment_ids => version.environment_ids,
-      :filters_applied => version.filters_applied?
-    }
-  end
+child :versions => :versions do
+  attributes :id, :version
+  attributes :created_at => :published
+  attributes :environment_ids
+  attributes :filters_applied? => :filters_applied
 end
 
 if params.key?(:include_permissions)

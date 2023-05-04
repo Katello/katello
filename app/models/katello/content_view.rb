@@ -782,6 +782,10 @@ module Katello
         audited_cv_filters_changed.present? || audited_cv_filter_rules_changed.present?
     end
 
+    def filtered?
+      filters.present?
+    end
+
     protected
 
     def remove_repository(repository)
