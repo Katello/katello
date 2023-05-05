@@ -21,6 +21,7 @@ module.exports = {
     'react',
     'react-hooks',
     'promise',
+    '@theforeman/rules'
   ],
   parser: '@babel/eslint-parser',
   rules: {
@@ -75,6 +76,7 @@ module.exports = {
         ignoreRestSiblings: true,
         argsIgnorePattern: '^_'
       }
-    ]
+    ],
+    '@theforeman/rules/require-ouiaid': "error",
   }
 }
