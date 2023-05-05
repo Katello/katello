@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Switch } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { editCVFilter } from '../ContentViewDetailActions';
+import { CONTENT_VIEW_NEEDS_PUBLISH } from '../../ContentViewsConstants';
 
 export const ArtifactsWithNoErrataRenderer = ({ filterDetails }) => {
   const dispatch = useDispatch();
@@ -18,7 +19,10 @@ export const ArtifactsWithNoErrataRenderer = ({ filterDetails }) => {
   const setArtifactsNoErrata = (checked) => {
     enableArtifactsNoErrata(checked);
     setLoading(true);
-    dispatch(editCVFilter(id, { [artifactAttribute]: checked }, () => setLoading(false)));
+    dispatch(editCVFilter(id, { [artifactAttribute]: checked }, () => {
+      setLoading(false);
+      dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
+    }));
   };
   const getLabel = () => {
     switch (true) {

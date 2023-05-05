@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -24,17 +24,22 @@ import getEnvironmentPaths from '../../../components/EnvironmentPaths/Environmen
 import RemoveCVVersionWizard from '../Delete/RemoveCVVersionWizard';
 import ActionableDetail from '../../../../../components/ActionableDetail';
 import BulkDeleteModal from '../BulkDelete/BulkDeleteModal';
+import NeedsPublishIcon from '../../../components/NeedsPublishIcon';
+import { selectCVNeedsPublish } from '../../ContentViewDetailSelectors';
 
 const ContentViewVersionDetailsHeader = ({
   versionDetails,
   onEdit,
-  details: { permissions },
+  details: {
+    permissions, latest_version_id: latestVersionId, needs_publish: needsPublish, composite,
+  },
   loading,
 }) => {
   const history = useHistory();
   const {
     version, description, environments, content_view_id: cvId, id,
   } = versionDetails;
+  const needsPublishLocal = useSelector(state => selectCVNeedsPublish(state));
   const dispatch = useDispatch();
   useEffect(
     () => {
@@ -72,7 +77,13 @@ const ContentViewVersionDetailsHeader = ({
     <Grid className="margin-0-24">
       <GridItem sm={6} >
         <TextContent>
-          <Text ouiaId="cv-version" component={TextVariants.h2}>{__('Version ')}{version}</Text>
+          <Text ouiaId="cv-version" component={TextVariants.h2}>
+            {__('Version ')}{version}
+            {(latestVersionId === id && (needsPublish || needsPublishLocal)) &&
+            <NeedsPublishIcon composite={composite} />
+            }
+          </Text>
+
         </TextContent>
       </GridItem>
       <GridItem sm={6} style={{ display: 'flex' }}>
@@ -111,8 +122,10 @@ const ContentViewVersionDetailsHeader = ({
           />
         </TextContent>
         <Flex>
-          {environments?.map(({ name, id: envId }) =>
-            <FlexItem key={name}><Label isTruncated color="purple" href={`/lifecycle_environments/${envId}`}>{name}</Label></FlexItem>)}
+          {environments?.map(({ name, id: envId }) => (
+            <FlexItem key={name}>
+              <Label isTruncated color="purple" href={`/lifecycle_environments/${envId}`}>{name}</Label>
+            </FlexItem>))}
         </Flex>
       </GridItem>
       {promoting &&
@@ -169,6 +182,9 @@ ContentViewVersionDetailsHeader.propTypes = {
   onEdit: PropTypes.func.isRequired,
   details: PropTypes.shape({
     permissions: PropTypes.shape({}),
+    needs_publish: PropTypes.bool,
+    composite: PropTypes.bool,
+    latest_version_id: PropTypes.number,
   }).isRequired,
   loading: PropTypes.bool.isRequired,
 };

@@ -32,6 +32,7 @@ import { emptyContentTitle,
   emptyContentBody,
   emptySearchTitle,
   emptySearchBody } from './FilterRuleConstants';
+import { CONTENT_VIEW_NEEDS_PUBLISH } from '../../ContentViewsConstants';
 
 const CVContainerImageFilterContent = ({
   cvId, filterId, showAffectedRepos, setShowAffectedRepos, details,
@@ -79,8 +80,10 @@ const CVContainerImageFilterContent = ({
     setBulkActionOpen(false);
     const tagFilterIds =
       rows.filter(row => row.selected).map(selected => selected.id);
-    dispatch(deleteContentViewFilterRules(filterId, tagFilterIds, () =>
-      dispatch(getCVFilterRules(filterId))));
+    dispatch(deleteContentViewFilterRules(filterId, tagFilterIds, () => {
+      dispatch(getCVFilterRules(filterId));
+      dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
+    }));
     deselectAll();
   };
 
@@ -110,8 +113,10 @@ const CVContainerImageFilterContent = ({
     {
       title: __('Remove'),
       onClick: (_event, _rowId, { id }) => {
-        dispatch(removeCVFilterRule(filterId, id, () =>
-          dispatch(getCVFilterRules(filterId))));
+        dispatch(removeCVFilterRule(filterId, id, () => {
+          dispatch(getCVFilterRules(filterId));
+          dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
+        }));
       },
     },
     {

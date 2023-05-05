@@ -20,7 +20,7 @@ import { selectTaskPoll, selectTaskPollStatus } from '../Details/ContentViewDeta
 import { publishContentView } from '../ContentViewsActions';
 import Loading from '../../../components/Loading';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
-import { cvVersionTaskPollingKey } from '../ContentViewsConstants';
+import { CONTENT_VIEW_NEEDS_PUBLISH_RESET, cvVersionTaskPollingKey } from '../ContentViewsConstants';
 import { clearPollTaskData, startPollingTask, stopPollingTask, toastTaskFinished } from '../../Tasks/TaskActions';
 import getContentViewDetails from '../Details/ContentViewDetailActions';
 
@@ -84,6 +84,7 @@ const CVPublishFinish = ({
       dispatch(clearPollTaskData(POLLING_TASK_KEY));
       dispatch(getContentViewDetails(cvId));
       dispatch(toastTaskFinished(pollResponse));
+      dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH_RESET });
       history.push(`/content_views/${cvId}#/versions/${cvvID || ''}`);
       onClose();
     }

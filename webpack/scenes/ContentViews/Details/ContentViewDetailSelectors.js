@@ -389,3 +389,5 @@ export const selectRemoveCVVersionError = (state, versionId, versionEnvironments
 
 
 export const selectIsCVUpdating = state => state.katello?.contentViewDetails?.updating;
+
+export const selectCVNeedsPublish = state => state.katello?.contentViewDetails?.needsPublish;

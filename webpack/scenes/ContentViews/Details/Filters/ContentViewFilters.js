@@ -22,6 +22,7 @@ import ContentType from './ContentType';
 import CVFilterAddModal from './Add/CVFilterAddModal';
 import { hasPermission } from '../../helpers';
 import InactiveText from '../../components/InactiveText';
+import { CONTENT_VIEW_NEEDS_PUBLISH } from '../../ContentViewsConstants';
 
 const ContentViewFilters = ({ cvId, details }) => {
   const dispatch = useDispatch();
@@ -83,6 +84,7 @@ const ContentViewFilters = ({ cvId, details }) => {
     const filterIds = rows.filter(({ selected }) => selected).map(({ id }) => id);
     dispatch(deleteContentViewFilters(cvId, filterIds, () =>
       dispatch(getContentViewFilters(cvId, {}))));
+    dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
   };
 
   useEffect(() => {
@@ -103,6 +105,7 @@ const ContentViewFilters = ({ cvId, details }) => {
       onClick: (_event, _rowId, { id }) => {
         dispatch(deleteContentViewFilter(id, () =>
           dispatch(getContentViewFilters(cvId, {}))));
+        dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
       },
     },
   ];

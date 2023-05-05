@@ -19,7 +19,7 @@ import {
   selectCVVersions,
   selectCVVersionsStatus,
   selectCVVersionsError,
-  selectCVDetails,
+  selectCVDetails, selectCVNeedsPublish,
 } from '../ContentViewDetailSelectors';
 import getEnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPathActions';
 import ContentViewVersionPromote from '../Promote/ContentViewVersionPromote';
@@ -30,6 +30,7 @@ import BulkDeleteModal from './BulkDelete/BulkDeleteModal';
 import { selectEnvironmentPathsStatus } from '../../components/EnvironmentPaths/EnvironmentPathSelectors';
 import PublishContentViewWizard from '../../Publish/PublishContentViewWizard';
 import CVVersionCompare from './Compare/CVVersionCompare';
+import NeedsPublishIcon from '../../components/NeedsPublishIcon';
 
 const ContentViewVersions = ({ cvId, details }) => {
   const response = useSelector(state => selectCVVersions(state, cvId));
@@ -56,7 +57,10 @@ const ContentViewVersions = ({ cvId, details }) => {
   const [removingFromEnv, setRemovingFromEnv] = useState(false);
   const [deleteVersion, setDeleteVersion] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const { permissions } = details;
+  const {
+    permissions, needs_publish: needsPublish, composite, latest_version_id: latestVersionId,
+  } = details;
+  const needsPublishLocal = useSelector(state => selectCVNeedsPublish(state));
   const [kebabOpen, setKebabOpen] = useState(false);
   const hasActionPermissions = hasPermission(permissions, 'promote_or_remove_content_views');
   const hasPublishCvPermissions = hasPermission(permissions, 'publish_content_views');
@@ -147,7 +151,12 @@ const ContentViewVersions = ({ cvId, details }) => {
         isChecked={isSelected(versionId)}
         onChange={selected => selectOne(selected, versionId)}
       />,
-      <Link to={`/versions/${versionId}`}>{__('Version ')}{version}</Link>,
+      <>
+        <Link to={`/versions/${versionId}`}>{__('Version ')}{version}</Link>
+        {(latestVersionId === versionId && (needsPublish || needsPublishLocal)) &&
+        <NeedsPublishIcon composite={composite} />
+        }
+      </>,
       <ContentViewVersionEnvironments {...{ environments }} />,
       Number(packageCount) ?
         <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/packages`, '')}>{packageCount}</a> :
@@ -384,6 +393,9 @@ ContentViewVersions.propTypes = {
   cvId: PropTypes.number.isRequired,
   details: PropTypes.shape({
     permissions: PropTypes.shape({}),
+    needs_publish: PropTypes.bool,
+    composite: PropTypes.bool,
+    latest_version_id: PropTypes.number,
   }).isRequired,
 };
 

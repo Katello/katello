@@ -20,8 +20,7 @@ import {
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useDispatch } from 'react-redux';
-import {
-  getCVFilterDetails,
+import getContentViewDetails, {
   editCVFilter,
   deleteContentViewFilter,
 } from '../ContentViewDetailActions';
@@ -32,6 +31,7 @@ import { hasPermission } from '../../helpers';
 import { typeName } from './ContentType';
 import ActionableDetail from '../../../../components/ActionableDetail';
 import { ArtifactsWithNoErrataRenderer } from './ArtifactsWithNoErrata';
+import { CONTENT_VIEW_NEEDS_PUBLISH } from '../../ContentViewsConstants';
 
 const ContentViewFilterDetailsHeader = ({
   cvId, filterId, filterDetails, setShowAffectedRepos, details,
@@ -58,7 +58,7 @@ const ContentViewFilterDetailsHeader = ({
       { [attribute]: val },
       () => {
         setLoading(false);
-        dispatch(getCVFilterDetails(cvId, filterId));
+        dispatch(getContentViewDetails(cvId));
       },
       () => setLoading(false),
     ));
@@ -70,6 +70,7 @@ const ContentViewFilterDetailsHeader = ({
       ouiaId="cv-filter-delete"
       onClick={() => {
         dispatch(deleteContentViewFilter(filterId, () => {
+          dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
           push(`/content_views/${cvId}#/filters/`);
         }));
       }}
