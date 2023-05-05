@@ -15,6 +15,7 @@ import { selectCVFilterDetails } from '../ContentViewDetailSelectors';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 import { editCVFilterRule } from '../ContentViewDetailActions';
 import { hasPermission } from '../../helpers';
+import { CONTENT_VIEW_NEEDS_PUBLISH } from '../../ContentViewsConstants';
 
 export const dateFormat = date => `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
 
@@ -68,7 +69,10 @@ const CVErrataDateFilterContent = ({
         types: selectedTypes,
         date_type: dateType,
       },
-      () => push('/filters'),
+      () => {
+        dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
+        push('/filters');
+      },
     ));
   };
 

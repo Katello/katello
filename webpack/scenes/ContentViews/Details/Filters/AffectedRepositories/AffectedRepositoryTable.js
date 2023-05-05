@@ -28,6 +28,7 @@ import TableWrapper from '../../../../../components/Table/TableWrapper';
 import RepoIcon from '../../Repositories/RepoIcon';
 import SelectableDropdown from '../../../../../components/SelectableDropdown/SelectableDropdown';
 import { hasPermission } from '../../../helpers';
+import { CONTENT_VIEW_NEEDS_PUBLISH } from '../../../ContentViewsConstants';
 
 const allProducts = 'All products';
 
@@ -131,6 +132,7 @@ const AffectedRepositoryTable = ({
       filterId,
       { id: filterId, repository_ids: repositoryIds.concat(repos) }, () => {
         dispatch(getCVFilterDetails(cvId, filterId));
+        dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
       },
     ));
   };
@@ -142,7 +144,10 @@ const AffectedRepositoryTable = ({
     dispatch(editCVFilter(
       filterId,
       { id: filterId, repository_ids: deletedRepos },
-      () => dispatch(getCVFilterDetails(cvId, filterId, {})),
+      () => {
+        dispatch(getCVFilterDetails(cvId, filterId, {}));
+        dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
+      },
     ));
     if (deletedRepos.length === 0) setShowAffectedRepos(false);
   };

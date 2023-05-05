@@ -19,7 +19,7 @@ import {
   selectCVVersions,
   selectCVVersionsStatus,
   selectCVVersionsError,
-  selectCVDetails,
+  selectCVDetails, selectCVNeedsPublish,
 } from '../ContentViewDetailSelectors';
 import getEnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPathActions';
 import ContentViewVersionPromote from '../Promote/ContentViewVersionPromote';
@@ -60,6 +60,7 @@ const ContentViewVersions = ({ cvId, details }) => {
   const {
     permissions, needs_publish: needsPublish, composite, latest_version_id: latestVersionId,
   } = details;
+  const needsPublishLocal = useSelector(state => selectCVNeedsPublish(state));
   const [kebabOpen, setKebabOpen] = useState(false);
   const hasActionPermissions = hasPermission(permissions, 'promote_or_remove_content_views');
   const hasPublishCvPermissions = hasPermission(permissions, 'publish_content_views');
@@ -152,7 +153,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       />,
       <>
         <Link to={`/versions/${versionId}`}>{__('Version ')}{version}</Link>
-        {(latestVersionId === versionId && needsPublish) &&
+        {(latestVersionId === versionId && (needsPublish || needsPublishLocal)) &&
         <NeedsPublishIcon composite={composite} />
         }
       </>,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -25,6 +25,7 @@ import RemoveCVVersionWizard from '../Delete/RemoveCVVersionWizard';
 import ActionableDetail from '../../../../../components/ActionableDetail';
 import BulkDeleteModal from '../BulkDelete/BulkDeleteModal';
 import NeedsPublishIcon from '../../../components/NeedsPublishIcon';
+import { selectCVNeedsPublish } from '../../ContentViewDetailSelectors';
 
 const ContentViewVersionDetailsHeader = ({
   versionDetails,
@@ -38,6 +39,7 @@ const ContentViewVersionDetailsHeader = ({
   const {
     version, description, environments, content_view_id: cvId, id,
   } = versionDetails;
+  const needsPublishLocal = useSelector(state => selectCVNeedsPublish(state));
   const dispatch = useDispatch();
   useEffect(
     () => {
@@ -77,7 +79,9 @@ const ContentViewVersionDetailsHeader = ({
         <TextContent>
           <Text ouiaId="cv-version" component={TextVariants.h2}>
             {__('Version ')}{version}
-            {(latestVersionId === id && needsPublish) && <NeedsPublishIcon composite={composite} />}
+            {(latestVersionId === id && (needsPublish || needsPublishLocal)) &&
+            <NeedsPublishIcon composite={composite} />
+            }
           </Text>
 
         </TextContent>
@@ -118,8 +122,10 @@ const ContentViewVersionDetailsHeader = ({
           />
         </TextContent>
         <Flex>
-          {environments?.map(({ name, id: envId }) =>
-            <FlexItem key={name}><Label isTruncated color="purple" href={`/lifecycle_environments/${envId}`}>{name}</Label></FlexItem>)}
+          {environments?.map(({ name, id: envId }) => (
+            <FlexItem key={name}>
+              <Label isTruncated color="purple" href={`/lifecycle_environments/${envId}`}>{name}</Label>
+            </FlexItem>))}
         </Flex>
       </GridItem>
       {promoting &&

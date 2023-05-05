@@ -14,7 +14,7 @@ import { selectCreateContentViewFilter, selectCreateContentViewFilterStatus,
   selectCreateContentViewFilterError, selectCreateFilterRule,
   selectCreateFilterRuleError, selectCreateFilterRuleStatus,
   selectRepoTypes, selectRepoTypesStatus } from '../../../Details/ContentViewDetailSelectors';
-import { FILTER_TYPES } from '../../../ContentViewsConstants';
+import { CONTENT_VIEW_NEEDS_PUBLISH, FILTER_TYPES } from '../../../ContentViewsConstants';
 import ContentType from '../ContentType';
 
 const CVFilterAddModal = ({ cvId, onClose }) => {
@@ -46,7 +46,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
       cvId,
       {
         name, description, inclusion, type,
-      },
+      }, () => dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH }),
     ));
   };
 

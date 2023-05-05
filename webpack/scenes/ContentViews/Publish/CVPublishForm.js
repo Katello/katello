@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
@@ -10,6 +11,7 @@ import EnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPaths';
 import ComponentEnvironments from '../Details/ComponentContentViews/ComponentEnvironments';
 import './cvPublishForm.scss';
 import WizardHeader from '../components/WizardHeader';
+import { selectCVNeedsPublish } from '../Details/ContentViewDetailSelectors';
 
 const CVPublishForm = ({
   description,
@@ -25,6 +27,7 @@ const CVPublishForm = ({
 }) => {
   const [alertDismissed, setAlertDismissed] = useState(false);
   const [needsPublishAlertDismissed, setNeedsPublishAlertDismissed] = useState(false);
+  const needsPublishLocal = useSelector(state => selectCVNeedsPublish(state));
 
   const checkPromote = (checked) => {
     if (!checked) {
@@ -38,7 +41,7 @@ const CVPublishForm = ({
         title={__('Publish')}
         description={
           <>
-            {!needsPublishAlertDismissed && !needsPublish && (
+            {!needsPublishAlertDismissed && !(needsPublish || needsPublishLocal) && (
             <Alert
               ouiaId="needs-publish-alert"
               variant="info"
@@ -53,7 +56,7 @@ const CVPublishForm = ({
             }
               style={{ marginBottom: '24px' }}
             >
-              <TextContent>{__('Newly published version will be the same as previous version.')}</TextContent>
+              <TextContent>{__('Newly published version will be the same as the previous version.')}</TextContent>
             </Alert>)
             }
             {__('A new version of ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {name}</b>

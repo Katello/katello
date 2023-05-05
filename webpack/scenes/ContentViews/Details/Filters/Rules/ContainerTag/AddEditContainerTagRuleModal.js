@@ -6,6 +6,7 @@ import { Modal, ModalVariant, Form, FormGroup, ActionGroup, Button } from '@patt
 import { addCVFilterRule, editCVFilterRule, getCVFilterRules } from '../../../ContentViewDetailActions';
 import { orgId } from '../../../../../../services/api';
 import SearchText from '../../../../../../components/Search/SearchText';
+import { CONTENT_VIEW_NEEDS_PUBLISH } from '../../../../ContentViewsConstants';
 
 const AddEditContainerTagRuleModal = ({
   onClose, filterId, selectedFilterRuleData, repositoryIds,
@@ -24,13 +25,19 @@ const AddEditContainerTagRuleModal = ({
       dispatch(editCVFilterRule(
         filterId,
         { id, name: tagName },
-        () => dispatch(getCVFilterRules(filterId)),
+        () => {
+          dispatch(getCVFilterRules(filterId));
+          dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
+        },
       ));
     } else {
       dispatch(addCVFilterRule(
         filterId,
         { name: tagName },
-        () => dispatch(getCVFilterRules(filterId)),
+        () => {
+          dispatch(getCVFilterRules(filterId));
+          dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
+        },
       ));
     }
     onClose();

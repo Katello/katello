@@ -9,10 +9,10 @@ const NeedsPublishIcon = ({ composite }) => (
     position="auto"
     enableFlip
     entryDelay={400}
-    content={composite ? __('Available updates in component content views.') :
-      __('Audited updates on repositories and/or filters available.')}
+    content={composite ? __('Updates available: Component content view versions have been updated.') :
+      __('Updates available: Repositories and/or filters have changed.')}
   >
-    <ArrowCircleUpIcon size="sm" style={{ color: '#0066CC', margin: '0 9px' }} />
+    <ArrowCircleUpIcon size="sm" style={{ color: 'var(--pf-global--primary-color--100)', margin: '0 9px' }} />
   </Tooltip>
 );
 

@@ -229,29 +229,32 @@ export const updateContentView = (cvId, params, handleSuccess) => put({
   },
 });
 
-export const addComponent = params => put({
+export const addComponent = (params, handleSuccess) => put({
   type: API_OPERATIONS.PUT,
   key: cvAddComponentKey(params.compositeContentViewId),
   url: api.getApiUrl(`/content_views/${params.compositeContentViewId}/content_view_components/${params.components.id ? params.components.id : 'add'}`),
   params: params.components.id ? params.components : params,
+  handleSuccess,
   successToast: () => addComponentSuccessMessage(params.components.id),
   errorToast: error => __(`Something went wrong while adding component! ${getResponseErrorMsgs(error.response)}`),
 });
 
-export const removeComponent = params => put({
+export const removeComponent = (params, handleSuccess) => put({
   type: API_OPERATIONS.PUT,
   key: cvRemoveComponentKey(params.compositeContentViewId),
   url: api.getApiUrl(`/content_views/${params.compositeContentViewId}/content_view_components/remove`),
   params,
+  handleSuccess,
   successToast: () => removeComponentSuccessMessage(params.component_ids.length),
   errorToast: error => __(`Something went wrong while removing component! ${getResponseErrorMsgs(error.response)}`),
 });
 
-export const createContentViewFilter = (cvId, params) => post({
+export const createContentViewFilter = (cvId, params, handleSuccess) => post({
   type: API_OPERATIONS.POST,
   key: CREATE_CONTENT_VIEW_FILTER_KEY,
   url: api.getApiUrl(`/content_view_filters?content_view_id=${cvId}`),
   params,
+  handleSuccess,
   successToast: () => __('Filter created'),
   errorToast: error => __(`Something went wrong while creating the filter! ${getResponseErrorMsgs(error.response)}`),
 });

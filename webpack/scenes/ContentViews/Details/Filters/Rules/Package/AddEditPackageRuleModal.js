@@ -14,6 +14,7 @@ import {
 } from '../../../ContentViewDetailSelectors';
 import { orgId } from '../../../../../../services/api';
 import SearchText from '../../../../../../components/Search/SearchText';
+import { CONTENT_VIEW_NEEDS_PUBLISH } from '../../../../ContentViewsConstants';
 
 const AddEditPackageRuleModal = ({
   filterId, onClose, selectedFilterRuleData, repositoryIds,
@@ -109,6 +110,7 @@ const AddEditPackageRuleModal = ({
           onClose();
         },
       ));
+    dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
   };
 
 
