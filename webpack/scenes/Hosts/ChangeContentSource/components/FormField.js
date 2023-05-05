@@ -14,6 +14,7 @@ const FormField = ({
   <GridItem span={7}>
     <FormGroup label={label} fieldId={id} isRequired>
       <FormSelect
+        ouiaId={`${id}_select`}
         value={value}
         onChange={v => onChange(v)}
         className="without_select2"

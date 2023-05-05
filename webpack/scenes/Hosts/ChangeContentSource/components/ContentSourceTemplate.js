@@ -41,7 +41,13 @@ const ContentSourceTemplate = ({ template, jobInvocationPath }) => {
   return (
     <Grid>
       <GridItem span={7}>
-        <Alert variant="warning" title={__('Host configurations are not updated yet')} className="margin-top-20" isInline>
+        <Alert
+          ouiaId="host-configuration-alert"
+          variant="warning"
+          title={__('Host configurations are not updated yet')}
+          className="margin-top-20"
+          isInline
+        >
           <FormattedMessage
             id="ccs_alert"
             values={{

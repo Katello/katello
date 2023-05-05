@@ -59,6 +59,7 @@ class SetOrganization extends Component {
             <div className="form-group">
               <div className="col-sm-6 col-sm-offset-3">
                 <Select
+                  ouiaId="select-org-select"
                   value={this.state.id}
                   placeholder={__('Select an organization')}
                   id="organization"
@@ -72,7 +73,12 @@ class SetOrganization extends Component {
 
               <div className="col-sm-3">
                 <a href={`/organizations/${id}/select`}>
-                  <Button disabled={this.state.disabled} className="btn btn-primary" onClick={this.onSend}>
+                  <Button
+                    ouiaId="select-org-button"
+                    disabled={this.state.disabled}
+                    className="btn btn-primary"
+                    onClick={this.onSend}
+                  >
                     {__('Select')}
                   </Button>
                 </a>

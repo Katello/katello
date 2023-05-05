@@ -53,7 +53,7 @@ export class RepositorySetRepositories extends Component {
 
     if (data.error) {
       return (
-        <Alert type="danger">
+        <Alert type="danger" ouiaId="repo-set-alert">
           <span>{data.error.displayMessage}</span>
         </Alert>
       );

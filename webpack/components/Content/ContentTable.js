@@ -20,6 +20,7 @@ const ContentTable = ({ content, tableSchema, onPaginationChange }) => {
       loadingText={__('Loading')}
     >
       <Table
+        ouiaId="content-table-table"
         columns={tableSchema}
         rows={results}
         pagination={pagination}

@@ -60,6 +60,7 @@ const AddEditDebPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData 
 
   return (
     <Modal
+      ouiaId="add-edit-deb-filter-rule-modal"
       title={selectedFilterRuleData ? __('Edit package filter rule') : __('Create package filter rule')}
       variant={ModalVariant.small}
       isOpen
@@ -73,6 +74,7 @@ const AddEditDebPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData 
       >
         <FormGroup label={__('DEB name')} isRequired fieldId="name">
           <TextInput
+            ouiaId="input-name"
             isRequired
             type="text"
             id="name"
@@ -84,6 +86,7 @@ const AddEditDebPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData 
         </FormGroup>
         <FormGroup label={__('Architecture')} fieldId="architecture">
           <TextInput
+            ouiaId="input-architecture"
             type="text"
             id="architecture"
             aria-label="input_architecture"
@@ -94,6 +97,7 @@ const AddEditDebPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData 
         </FormGroup>
         <ActionGroup>
           <Button
+            ouiaId="create-deb-package-filter-rule"
             aria-label="create_deb_package_filter_rule"
             variant="primary"
             isDisabled={saving || submitDisabled}
@@ -101,7 +105,7 @@ const AddEditDebPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData 
           >
             {selectedFilterRuleData ? __('Edit rule') : __('Create rule')}
           </Button>
-          <Button variant="link" onClick={onClose}>
+          <Button ouiaId="cancel-button" variant="link" onClick={onClose}>
             {__('Cancel')}
           </Button>
         </ActionGroup>

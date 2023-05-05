@@ -97,6 +97,7 @@ const MainTable = ({
   if (children) {
     return (
       <TableComposable
+        ouiaId="content-view-table-composable"
         aria-label="Content View Table"
         className="katello-pf4-table"
         {...extraTableProps}
@@ -107,6 +108,7 @@ const MainTable = ({
   }
   return (
     <Table
+      ouiaId="Content-View-table"
       aria-label="Content View Table"
       className="katello-pf4-table"
       {...tableProps}

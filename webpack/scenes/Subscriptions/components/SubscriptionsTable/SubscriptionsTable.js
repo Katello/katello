@@ -270,7 +270,7 @@ class SubscriptionsTable extends Component {
   render() {
     return (
       <LoadingState {...this.getLoadingStateProps()}>
-        <Table {...this.getTableProps()} />
+        <Table ouiaId="subscriptions-table" {...this.getTableProps()} />
         <Dialogs {...this.getDialogsProps()} />
       </LoadingState>
     );

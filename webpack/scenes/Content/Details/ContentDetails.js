@@ -40,7 +40,7 @@ const ContentDetails = () => {
   return (
     <Grid>
       <Grid className="margin-16-24">
-        <Breadcrumb>
+        <Breadcrumb ouiaId="content-details-breadcrumb">
           <BreadcrumbItem
             aria-label="content_breadcrumb"
             render={() => (<Link to={`/content/${pluralLabel}`}>{pluralTitle}</Link>)}
@@ -54,7 +54,9 @@ const ContentDetails = () => {
         <GridItem span={12} className="margin-top-24">
           <Flex>
             <TextContent>
-              <Text component={TextVariants.h1}> {contentDetailsResponse.name} </Text>
+              <Text ouiaId="content-details-text" component={TextVariants.h1}>
+                {contentDetailsResponse.name}
+              </Text>
             </TextContent>
           </Flex>
         </GridItem>

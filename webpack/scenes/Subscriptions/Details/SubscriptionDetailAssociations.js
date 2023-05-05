@@ -10,7 +10,7 @@ const SubscriptionDetailAssociations = ({ subscriptionDetails }) => {
   return (
     <div>
       <h2>{__('Associations')}</h2>
-      <Table striped bordered condensed hover>
+      <Table ouiaId="associations-table" striped bordered condensed hover>
         <thead>
           <tr>
             <td><b>{__('Resource')}</b></td>

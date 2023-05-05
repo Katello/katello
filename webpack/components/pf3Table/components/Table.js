@@ -42,6 +42,7 @@ const Table = ({
         {body}
       </PfTable.PfProvider>
       {shouldRenderPagination && (
+        // eslint-disable-next-line @theforeman/rules/require-ouiaid
         <Pagination
           itemCount={itemCount}
           onChange={onPaginationChange}

@@ -127,6 +127,7 @@ const AddEditPackageRuleModal = ({
 
   return (
     <Modal
+      ouiaId="add-edit-rpm-rule-modal"
       title={selectedFilterRuleData ? __('Edit RPM rule') : __('Add RPM rule')}
       variant={ModalVariant.small}
       isOpen
@@ -162,6 +163,7 @@ const AddEditPackageRuleModal = ({
         </FormGroup>
         <FormGroup label={__('Version')} fieldId="version_comparator">
           <FormSelect
+            ouiaId="version-comparator"
             value={versionComparator}
             onChange={setVersionComparator}
             id="version_comparator"
@@ -177,6 +179,7 @@ const AddEditPackageRuleModal = ({
         {showVersion &&
           <FormGroup label={__('Version')} fieldId="version">
             <TextInput
+              ouiaId="input-version"
               type="text"
               id="version"
               aria-label="input_version"
@@ -188,6 +191,7 @@ const AddEditPackageRuleModal = ({
         {showMinVersion &&
           <FormGroup label={__('Minimum version')} fieldId="min_version">
             <TextInput
+              ouiaId="input-min-version"
               type="text"
               id="min_version"
               aria-label="input_min_version"
@@ -199,6 +203,7 @@ const AddEditPackageRuleModal = ({
         {showMaxVersion &&
           <FormGroup label={__('Maximum version')} fieldId="max_version">
             <TextInput
+              ouiaId="input-max-version"
               type="text"
               id="max_version"
               aria-label="input_max_version"

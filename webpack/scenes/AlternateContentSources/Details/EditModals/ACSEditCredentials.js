@@ -131,6 +131,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
       >
         <FormGroup label={__('Verify SSL')} fieldId="verify_ssl">
           <Switch
+            ouiaId="verify-ssl-switch"
             id="verify-ssl-switch"
             aria-label="verify-ssl-switch"
             isChecked={acsVerifySSL}
@@ -143,6 +144,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
           fieldId="ca_cert"
         >
           <FormSelect
+            ouiaId="sslCAcert-select"
             isRequired
             isDisabled={!acsVerifySSL}
             value={acsCAcert}
@@ -167,6 +169,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
           </FormSelect>
         </FormGroup>
         <Radio
+          ouiaId="manual-auth-radio"
           label={__('Manual authentication')}
           id="manual_auth"
           name="manual_auth"
@@ -187,6 +190,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             isRequired
           >
             <TextInput
+              ouiaId="acs-username-field"
               isRequired
               type="text"
               id="acs_username_field"
@@ -205,6 +209,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             fieldId="acs_password"
           >
             <TextInput
+              ouiaId="acs-password-field"
               isRequired
               type="password"
               id="acs_password_field"
@@ -219,6 +224,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
         </>
                 }
         <Radio
+          ouiaId="content-credentials-radio"
           label={__('Content credentials')}
           id="content_credentials"
           aria-label="content_credentials"
@@ -238,6 +244,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             fieldId="ssl_client_cert"
           >
             <FormSelect
+              ouiaId="ssl-client-cert-select"
               isRequired
               value={acsSslClientCert}
               onChange={value => setAcsSslClientCert(value)}
@@ -266,6 +273,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             fieldId="client_key"
           >
             <FormSelect
+              ouiaId="sslCAcert-select"
               isRequired
               value={acsSslClientKey}
               onChange={value => setAcsSslClientKey(value)}
@@ -290,6 +298,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
           </FormGroup>
         </>}
         <Radio
+          ouiaId="none-radio"
           label={__('None')}
           id="none"
           name="none"

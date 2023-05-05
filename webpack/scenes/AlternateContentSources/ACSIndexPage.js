@@ -8,7 +8,12 @@ const ACSIndexPage = () => (
     <Grid className="margin-24">
       <GridItem span={12}>
         <TextContent>
-          <Text component={TextVariants.h1}>{__('Alternate Content Sources')}</Text>
+          <Text
+            ouiaId="acs-text"
+            component={TextVariants.h1}
+          >
+            {__('Alternate Content Sources')}
+          </Text>
         </TextContent>
       </GridItem>
     </Grid>

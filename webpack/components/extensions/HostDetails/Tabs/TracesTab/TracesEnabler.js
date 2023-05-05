@@ -31,6 +31,7 @@ const EnableTracerButton = ({ setEnableTracerModalOpen, pollingStarted }) => (
 
 const ViewTaskButton = ({ jobId }) => (
   <Button
+    ouiaId="view-job-button"
     component="a"
     href={urlBuilder('job_invocations', '', jobId)}
     variant="secondary"

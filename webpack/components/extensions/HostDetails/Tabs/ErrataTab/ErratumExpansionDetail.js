@@ -38,7 +38,7 @@ const ErratumExpansionDetail = ({ erratum }) => {
             <span style={{ whiteSpace: 'pre-line' }}>{description}</span>
           </Description>
           <Term>
-            <Button variant="link" onClick={() => setShowDescription(false)}>
+            <Button ouiaId="hide-button" variant="link" onClick={() => setShowDescription(false)}>
               {__('Hide description')}
             </Button>
           </Term>
@@ -47,7 +47,7 @@ const ErratumExpansionDetail = ({ erratum }) => {
       {!showDescription &&
         <DescriptionListGroup>
           <Term>
-            <Button variant="link" onClick={() => setShowDescription(true)}>
+            <Button ouiaId="show-button" variant="link" onClick={() => setShowDescription(true)}>
               {__('Show full description')}
             </Button>
           </Term>

@@ -147,6 +147,7 @@ const ChangeHostCVModal = ({
       {contentViewsInEnvStatus === STATUS.RESOLVED &&
         !!selectedEnvForHost.length && contentViewsInEnv.length === 0 &&
         <Alert
+          ouiaId="no-cv-alert"
           variant="warning"
           isInline
           title={__('No content views available for the selected environment')}

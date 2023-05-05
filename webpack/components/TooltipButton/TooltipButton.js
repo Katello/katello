@@ -6,7 +6,7 @@ import './TooltipButton.scss';
 const TooltipButton = ({
   disabled, title, tooltipText, tooltipId, tooltipPlacement, renderedButton, ...props
 }) => {
-  if (!disabled) return renderedButton || (<Button {...props}>{title}</Button>);
+  if (!disabled) return renderedButton || (<Button {...props} ouiaId="tooltip-button">{title}</Button>);
   return (
     <OverlayTrigger
       placement={tooltipPlacement}
@@ -14,7 +14,7 @@ const TooltipButton = ({
       overlay={<Tooltip id={tooltipId}>{tooltipText}</Tooltip>}
     >
       <div className="tooltip-button-helper">
-        {renderedButton || (<Button {...props} disabled>{title}</Button>)}
+        {renderedButton || (<Button {...props} disabled ouiaId="tooltip-disabled-button">{title}</Button>)}
       </div>
     </OverlayTrigger>
   );

@@ -37,7 +37,7 @@ const SubscriptionDetailInfo = ({ subscriptionDetails }) => {
   return (
     <div>
       <h2>{__('Subscription Info')}</h2>
-      <Table>
+      <Table ouiaId="subscription-info-table">
         <tbody>
           {Object.keys(subscriptionAttributes).map(key => (
             <tr key={key}>
@@ -56,7 +56,7 @@ const SubscriptionDetailInfo = ({ subscriptionDetails }) => {
         </tbody>
       </Table>
       <h2>{__('System Purpose')}</h2>
-      <Table>
+      <Table ouiaId="system-purpose-table">
         <tbody>
           {Object.keys(subscriptionPurposeAttributes).map(key => (
             <tr key={key}>

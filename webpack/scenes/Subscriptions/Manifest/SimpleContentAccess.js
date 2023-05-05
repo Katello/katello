@@ -65,6 +65,7 @@ const SimpleContentAccess = (props) => {
         <div id="manifest-toggle-sca-switch">
           <Switch
             id="simple-switch"
+            ouiaId="simple-switch"
             isChecked={isSimpleContentAccessEnabled}
             onChange={toggleSimpleContentAccess}
             isDisabled={!canToggleSimpleContentAccess}

@@ -54,6 +54,7 @@ const CVEnvironmentSelectionForm = () => {
     <>
       {!alertDismissed && deleteFlow &&
         <Alert
+          ouiaId="delete-version-info-alert"
           variant="warning"
           isInline
           title={__('Warning')}
@@ -65,9 +66,10 @@ const CVEnvironmentSelectionForm = () => {
       {(!deleteFlow &&
         (removeDeletionFlow || areAllSelected() || versionEnvironments.length === 0))
         && (
-          <Alert variant="warning" isInline title={__('Warning')}>
+          <Alert variant="warning" isInline title={__('Warning')} ouiaId="delete-version-alert">
             <p style={{ marginBottom: '0.5em' }}>{removeDeletionFlow ? versionDeleteInfo : versionRemovalInfo}</p>
             <Checkbox
+              ouiaId="delete-version-checkbox"
               id="delete_version"
               label={__('Delete version')}
               isChecked={removeDeletionFlow}
@@ -119,7 +121,7 @@ const CVEnvironmentSelectionForm = () => {
         </TableComposable>}
       {(versionEnvironments.length === 0) &&
         <EmptyState variant={EmptyStateVariant.xs}>
-          <Title headingLevel="h4" size="md">
+          <Title headingLevel="h4" size="md" ouiaId="not-promoted-title">
             {__('This version has not been promoted to any environments.')}
           </Title>
           <EmptyStateBody>

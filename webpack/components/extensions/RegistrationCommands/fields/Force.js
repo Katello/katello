@@ -9,6 +9,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 const Force = ({ value, onChange, isLoading }) => (
   <FormGroup fieldId="reg_katello_force">
     <Checkbox
+      ouiaId="reg-katello-force"
       label={
         <span>
           {__('Force')}{' '}

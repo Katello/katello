@@ -19,7 +19,9 @@ const HostDisks = ({ totalDisks }) => {
   return (
     <>
       <DescriptionListTerm>{__('Storage')}</DescriptionListTerm>
-      <Text component={TextVariants.h4}><TranslatedPlural count={totalDisks} singular={__('disk')} id="total-disks" /></Text>
+      <Text component={TextVariants.h4} ouiaId="storage-text">
+        <TranslatedPlural count={totalDisks} singular={__('disk')} id="total-disks" />
+      </Text>
     </>
   );
 };

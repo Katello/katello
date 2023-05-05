@@ -14,6 +14,7 @@ const HostActionsBar = () => {
   return (
     <>
       <DropdownItem
+        ouiaId="katello-legacy-contenthost-ui"
         key="katello-legacy-contenthost-ui"
         href={foremanUrl(`/content_hosts/${hostDetails?.id}`)}
         icon={<UndoIcon />}
@@ -21,6 +22,7 @@ const HostActionsBar = () => {
         {__('Legacy content host UI')}
       </DropdownItem>
       <DropdownItem
+        ouiaId="katello-change-host-content-source"
         key="katello-change-host-content-source"
         href={foremanUrl(`/change_host_content_source?host_id=${hostDetails?.id}`)}
         icon={<CubeIcon />}

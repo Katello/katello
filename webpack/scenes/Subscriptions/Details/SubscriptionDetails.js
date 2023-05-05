@@ -81,16 +81,16 @@ class SubscriptionDetails extends Component {
         <TabContainer id="subscription-tabs-container" defaultActiveKey={1}>
           <div>
             <LoadingState loading={subscriptionDetails.loading} loadingText={__('Loading')}>
-              <Nav bsClass="nav nav-tabs">
-                <NavItem eventKey={1}>
+              <Nav bsClass="nav nav-tabs" ouiaId="subscription-details-nav">
+                <NavItem eventKey={1} ouiaId="details-nav-item">
                   <div>{__('Details')}</div>
                 </NavItem>
-                <NavItem eventKey={2}>
+                <NavItem eventKey={2} ouiaId="product-content-nav-item">
                   <div>{__('Product Content')}</div>
                 </NavItem>
               </Nav>
               <Grid bsClass="container-fluid">
-                <TabContent animation={false}>
+                <TabContent ouiaId="subscription-details-tab-content" animation={false}>
                   <TabPane eventKey={1}>
                     <div>
                       <Row>

@@ -19,6 +19,7 @@ const LifecycleEnvironment = ({
     helperText={hostGroupEnvironment && sprintf('From host group: %s', hostGroupEnvironment)}
   >
     <FormSelect
+      ouiaId="reg-katello-lce"
       value={pluginValues?.lifecycleEnvironmentId}
       onChange={v => onChange({ lifecycleEnvironmentId: v })}
       className="without_select2"

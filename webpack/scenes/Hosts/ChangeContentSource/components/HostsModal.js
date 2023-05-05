@@ -19,6 +19,7 @@ const HostsModal = ({
 
   return (
     <Modal
+      ouiaId="hosts-modal-modal"
       variant={ModalVariant.small}
       title={modalTitle}
       position="top"
@@ -35,6 +36,7 @@ const HostsModal = ({
         {(search ? hosts.filter(h => (`${h.name}`).includes(search)) : hosts).map(h => (
           <ListItem key={h.id}>
             <Button
+              ouiaId={`hosts-modal-button-${h.id}`}
               component="a"
               href={foremanUrl(`/new/hosts/${h.name}`)}
               variant="link"

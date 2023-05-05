@@ -68,6 +68,7 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
           isRequired
         >
           <TextInput
+            ouiaId="acs-base-url-field"
             isRequired
             type="text"
             id="acs_base_url_field"
