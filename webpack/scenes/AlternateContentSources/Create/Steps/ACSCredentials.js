@@ -118,7 +118,13 @@ const ACSCredentials = () => {
             type="string"
             fieldId="client_cert"
           >
-            <FormSelect isRequired value={sslCert} onChange={(value) => { setSslCert(value); setSslCertName(getCertName(value)); }} aria-label="sslCert_select">
+            <FormSelect
+              ouiaId="sslCert-select"
+              isRequired
+              value={sslCert}
+              onChange={(value) => { setSslCert(value); setSslCertName(getCertName(value)); }}
+              aria-label="sslCert_select"
+            >
               {
                 [
                   <FormSelectOption
@@ -142,7 +148,13 @@ const ACSCredentials = () => {
             type="string"
             fieldId="client_key"
           >
-            <FormSelect isRequired value={sslKey} onChange={(value) => { setSslKey(value); setSslKeyName(getCertName(value)); }} aria-label="sslKey_select">
+            <FormSelect
+              ouiaId="sslKey-select"
+              isRequired
+              value={sslKey}
+              onChange={(value) => { setSslKey(value); setSslKeyName(getCertName(value)); }}
+              aria-label="sslKey_select"
+            >
               {
                 [
                   <FormSelectOption
@@ -195,6 +207,7 @@ const ACSCredentials = () => {
           fieldId="ca_cert"
         >
           <FormSelect
+            ouiaId="sslCAcert-select"
             isDisabled={!verifySSL}
             isRequired
             value={caCert}

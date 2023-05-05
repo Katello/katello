@@ -132,6 +132,7 @@ class UpstreamSubscriptionsPage extends Component {
           <Row>
             <Col sm={12}>
               <Button
+                ouiaId="submit-button"
                 style={{ marginTop: '10px', marginRight: '5px' }}
                 bsStyle="primary"
                 type="submit"
@@ -143,7 +144,7 @@ class UpstreamSubscriptionsPage extends Component {
               </Button>
 
               <LinkContainer to="/subscriptions" style={{ marginTop: '10px' }}>
-                <Button>
+                <Button ouiaId="cancel-button">
                   {__('Cancel')}
                 </Button>
               </LinkContainer>
@@ -240,6 +241,7 @@ class UpstreamSubscriptionsPage extends Component {
           <Row>
             <Col sm={12}>
               <Table
+                ouiaId="upstream-subscriptions-table"
                 rows={rows}
                 columns={tableColumns}
                 emptyState={emptyStateData()}

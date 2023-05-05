@@ -117,6 +117,7 @@ const NetworkSyncForm = ({
         { !validated && (
           <FormAlert>
             <Alert
+              ouiaId="cdn-configuration-form-alert"
               variant="danger"
               title={__('Username, Password, Organization Label, and SSL CA Content Credential must be provided together.')}
               aria-live="polite"
@@ -126,7 +127,7 @@ const NetworkSyncForm = ({
         )}
 
         <div id="update-hint-upstream-server" className="margin-top-16">
-          <Text>
+          <Text ouiaId="upstream-server-text">
             <FormattedMessage
               id="cdn-configuration-type"
               defaultMessage={__('Red Hat content will be consumed from an {type}.')}

@@ -53,6 +53,7 @@ const ActivationKeys = ({
       isRequired
     >
       <Select
+        ouiaId="reg-katello-ak"
         selections={selectedKeys}
         variant={SelectVariant.typeaheadMulti}
         onToggle={() => setIsOpen(!isOpen)}

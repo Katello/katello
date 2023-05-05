@@ -87,7 +87,7 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
               />
             ))}
           </Tabs>
-          <Switch>
+          <Switch ouiaId="cv-version-details-switch">
             {filteredTableConfigs.map(config => (
               <Route
                 key={config.route}

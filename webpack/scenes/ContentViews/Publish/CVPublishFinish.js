@@ -102,7 +102,7 @@ const CVPublishFinish = ({
     <>
       <EmptyState style={{ marginTop: '10px' }} variant={EmptyStateVariant.large}>
         <EmptyStateIcon icon={InProgressIcon} />
-        <Title headingLevel="h2" size="lg">
+        <Title headingLevel="h2" size="lg" ouiaId="publish-cv-title">
           {__('Publishing content view')}
         </Title>
       </EmptyState>

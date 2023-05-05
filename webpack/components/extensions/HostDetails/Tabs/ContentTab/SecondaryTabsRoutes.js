@@ -7,7 +7,7 @@ import RepositorySetsTab from '../RepositorySetsTab/RepositorySetsTab';
 import { route } from './helpers';
 
 const SecondaryTabRoutes = () => (
-  <Switch>
+  <Switch ouiaId="secondary-tab-routes-switch">
     <Route path={route('packages')}>
       <PackagesTab />
     </Route>

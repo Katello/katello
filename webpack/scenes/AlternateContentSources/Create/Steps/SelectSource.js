@@ -107,6 +107,7 @@ const SelectSource = () => {
           isRequired
         >
           <FormSelect
+            ouiaId="content-type-select"
             isRequired
             isDisabled={acsType === 'rhui'}
             value={contentType}
@@ -128,7 +129,11 @@ const SelectSource = () => {
         </FormGroup>
         {acsType === 'rhui' &&
         <>
-          <Alert variant="info" title={__('Generate RHUI certificates for the desired repositories as necessary.')} />
+          <Alert
+            ouiaId="rhui-cert-alert"
+            variant="info"
+            title={__('Generate RHUI certificates for the desired repositories as necessary.')}
+          />
           <ClipboardCopy hoverTip="Copy" clickTip="Copied" variant="inline-compact" isBlock>
             rhui-manager client cert --name rhui-acs-certs --days 365 --dir /root
             --repo_label rhui-repo-1,rhui-repo-2

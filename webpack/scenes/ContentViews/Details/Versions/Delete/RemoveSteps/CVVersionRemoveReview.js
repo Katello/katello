@@ -29,6 +29,7 @@ const CVVersionRemoveReview = () => {
       <WizardHeader title={__('Review details')} />
       {!alertDismissed && (deleteFlow || removeDeletionFlow) &&
         <Alert
+          ouiaId="cvv-remove-review-alert"
           variant="warning"
           isInline
           title={__('Warning')}

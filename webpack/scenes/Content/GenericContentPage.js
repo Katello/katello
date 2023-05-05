@@ -73,7 +73,7 @@ const GenericContentPage = () => {
     <Grid>
       <GridItem span={12} className="margin-24">
         <TextContent>
-          <Text component={TextVariants.h1}>{__(`${selectedContentType}`)}</Text>
+          <Text ouiaId="page-text" component={TextVariants.h1}>{__(`${selectedContentType}`)}</Text>
         </TextContent>
       </GridItem>
       <GridItem span={12}>

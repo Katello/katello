@@ -22,7 +22,7 @@ const ActionSummary = ({ title, text, selectedEnv: { name, id } }) => (
           <ExclamationTriangleIcon color={warningColor.value} />
         </FlexItem>
         <FlexItem style={{ marginRight: '8px' }}>
-          <Text>{text}</Text>
+          <Text ouiaId="action-summary-text">{text}</Text>
         </FlexItem>
         {name && id &&
           <FlexItem>

@@ -35,6 +35,7 @@ const CVDebMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
 
   return (
     <Modal
+      ouiaId="cv-deb-match-content-modal"
       title={__('Matching content')}
       variant={ModalVariant.medium}
       isOpen
@@ -58,7 +59,7 @@ const CVDebMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
         variant={TableVariant.compact}
       >
         <Thead>
-          <Tr>
+          <Tr ouiaId="content-view-deb-match-content-tr">
             {columnHeaders.map(col =>
               <Th key={col}>{col}</Th>)}
           </Tr>
@@ -69,7 +70,7 @@ const CVDebMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
               nva, description = '-', id,
             } = result;
             return (
-              <Tr key={`${nva}_${description}_${id}`}>
+              <Tr key={`${nva}_${description}_${id}`} ouiaId={`${nva}-${id}-tr`}>
                 <Td>
                   <a rel="noreferrer" target="_blank" href={urlBuilder(`debs/${id}`, '')}>{nva}</a>
                 </Td>

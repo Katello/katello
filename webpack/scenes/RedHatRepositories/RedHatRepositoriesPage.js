@@ -49,6 +49,7 @@ class RedHatRepositoriesPage extends Component {
           <Row className="toolbar-pf">
             <Col>
               <Alert
+                ouiaId="repo-sets-alert"
                 variant="info"
                 className="repo-sets-alert"
                 isInline
@@ -96,6 +97,7 @@ class RedHatRepositoriesPage extends Component {
             <h2>
               {__('Enabled Repositories')}
               <Button
+                ouiaId="export-csv-button"
                 className="pull-right"
                 onClick={() => { api.open('/repositories.csv', repoParams); }}
               >

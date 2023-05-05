@@ -10,7 +10,7 @@ const ContentDetails = (props) => {
 
   const tabHeaders = () => {
     const tabs = schema.map(node => (
-      <NavItem key={node.key} eventKey={node.key}>
+      <NavItem key={node.key} eventKey={node.key} ouiaId={`${node.key}-nav-item`}>
         <div>{node.tabHeader}</div>
       </NavItem>
     ));
@@ -40,12 +40,12 @@ const ContentDetails = (props) => {
           <Grid>
             <Row>
               <Col sm={12}>
-                <Nav id="content-nav-container" bsClass="nav nav-tabs">
+                <Nav id="content-nav-container" bsClass="nav nav-tabs" ouiaId="content-details-nav">
                   {schema && tabHeaders()}
                 </Nav>
               </Col>
             </Row>
-            <TabContent animation={false}>
+            <TabContent animation={false} ouiaId="content-details-tab-content">
               {schema && tabPanes()}
             </TabContent>
           </Grid>

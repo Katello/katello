@@ -128,7 +128,7 @@ class ManageManifestModal extends Component {
 
     return (
       <ForemanModal id={MANAGE_MANIFEST_MODAL_ID} title={__('Manage Manifest')}>
-        <Tabs id="manifest-history-tabs">
+        <Tabs id="manifest-history-tabs" ouiaId="manifest-history-tabs">
           {showManifestTab &&
             <Tab eventKey={1} title={__('Manifest')}>
                 {showSubscriptionManifest &&
@@ -194,10 +194,10 @@ class ManageManifestModal extends Component {
                           <ForemanModal title={__('Confirm delete manifest')} id={DELETE_MANIFEST_MODAL_ID}>
                             <DeleteManifestModalText />
                             <ForemanModal.Footer>
-                              <Button bsStyle="default" onClick={this.hideDeleteManifestModal}>
+                              <Button ouiaId="cancel-button" bsStyle="default" onClick={this.hideDeleteManifestModal}>
                                 {__('Cancel')}
                               </Button>
-                              <Button bsStyle="danger" onClick={this.deleteManifest}>
+                              <Button ouiaId="delete-button" bsStyle="danger" onClick={this.deleteManifest}>
                                 {__('Delete')}
                               </Button>
                             </ForemanModal.Footer>
@@ -213,6 +213,7 @@ class ManageManifestModal extends Component {
           <Tab eventKey={2} title={__('Manifest History')}>
             <LoadingState loading={manifestHistory.loading} loadingText={__('Loading')}>
               <Table
+                ouiaId="manifest-history-table"
                 rows={manifestHistory.results}
                 columns={columns}
                 emptyState={emptyStateData()}
@@ -234,7 +235,7 @@ class ManageManifestModal extends Component {
           }
         </Tabs>
         <ForemanModal.Footer>
-          <Button bsStyle="primary" onClick={this.hideModal}>
+          <Button ouiaId="close-button" bsStyle="primary" onClick={this.hideModal}>
             {__('Close')}
           </Button>
         </ForemanModal.Footer>

@@ -122,6 +122,7 @@ const ChangeContentSourcePage = () => {
         <Grid className="margin-left-20">
           <GridItem span={7}>
             <Title
+              ouiaId="change-cs-title"
               headingLevel="h5"
               size="2xl"
             >
@@ -131,6 +132,7 @@ const ChangeContentSourcePage = () => {
           {noHostSpecified &&
             <GridItem span={7}>
               <Alert
+                ouiaId="no-host-alert"
                 variant="danger"
                 className="margin-top-20"
                 title={__('No hosts were specified')}

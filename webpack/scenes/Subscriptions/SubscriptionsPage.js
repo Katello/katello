@@ -220,7 +220,7 @@ class SubscriptionsPage extends Component {
       };
 
     const SCAAlert = (
-      <Alert type={simpleContentAccess ? 'info' : 'warning'}>
+      <Alert ouiaId="sca-alert" type={simpleContentAccess ? 'info' : 'warning'}>
         <FormattedMessage
           id="sca-alert"
           values={{

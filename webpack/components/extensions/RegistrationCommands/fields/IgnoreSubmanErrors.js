@@ -9,6 +9,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 const IgnoreSubmanErrors = ({ value, onChange, isLoading }) => (
   <FormGroup fieldId="reg_katello_ignore">
     <Checkbox
+      ouiaId="reg-katello-ignore"
       label={
         <span>
           {__('Ignore errors')}{' '}

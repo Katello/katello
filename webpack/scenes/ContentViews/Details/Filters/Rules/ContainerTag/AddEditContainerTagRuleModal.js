@@ -51,6 +51,7 @@ const AddEditContainerTagRuleModal = ({
 
   return (
     <Modal
+      ouiaId="add-edit-container-tag-rule-modal"
       title={isEditing ? __('Edit filter rule') : __('Add filter rule')}
       variant={ModalVariant.small}
       isOpen

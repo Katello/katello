@@ -58,14 +58,14 @@ const ContentTable = ({
       }
     >
       <Thead>
-        <Tr>
+        <Tr ouiaId="content-table-tr">
           {columnHeaders.map(col =>
             <Th key={col.title}>{col.title}</Th>)}
         </Tr>
       </Thead>
       <Tbody>
         {results?.map(details => (
-          <Tr key={`${details.id}`}>
+          <Tr key={`${details.id}`} ouiaId={`${details.id}-tr`}>
             {columnHeaders.map((col, index) =>
               <Td key={index}>{col.getProperty(details)}</Td>)
             }

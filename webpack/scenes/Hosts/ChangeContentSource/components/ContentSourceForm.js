@@ -152,6 +152,7 @@ const ContentSourceForm = ({
 
         <GridItem span={7}>
           <Alert
+            ouiaId="no-hosts-alert"
             variant="danger"
             className="margin-top-20"
             title={__('No hosts found')}
@@ -161,6 +162,7 @@ const ContentSourceForm = ({
         {contentViewsStatus === STATUS.RESOLVED &&
             !!environments.length && contentViews.length === 0 &&
             <Alert
+              ouiaId="no-cv-alert"
               variant="warning"
               className="margin-top-20"
               title={__('No content views available for the selected environment')}
@@ -205,6 +207,7 @@ const ContentSourceForm = ({
       </ContentViewSelect>
       <ActionGroup style={{ display: 'block' }}>
         <Button
+          ouiaId="generate_button"
           variant="primary"
           id="generate_btn"
           onClick={e => handleSubmit(e)}

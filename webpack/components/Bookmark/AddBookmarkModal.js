@@ -29,6 +29,7 @@ const AddBookmarkModal = ({ selectedItem, onClose, controller }) => {
 
   return (
     <Modal
+      ouiaId="add-bookmark-modal"
       title={__('Add Bookmark')}
       variant={ModalVariant.small}
       isOpen
@@ -38,6 +39,7 @@ const AddBookmarkModal = ({ selectedItem, onClose, controller }) => {
       <Form onSubmit={onSubmit}>
         <FormGroup label={__('Name')} isRequired fieldId="name">
           <TextInput
+            ouiaId="name-input"
             isRequired
             type="text"
             id="name"
@@ -49,6 +51,7 @@ const AddBookmarkModal = ({ selectedItem, onClose, controller }) => {
         </FormGroup>
         <FormGroup label={__('Search Query')} isRequired fieldId="query">
           <TextInput
+            ouiaId="query-inout"
             isRequired
             type="text"
             id="query"
@@ -60,6 +63,7 @@ const AddBookmarkModal = ({ selectedItem, onClose, controller }) => {
         </FormGroup>
         <FormGroup fieldId="public" isInline>
           <Checkbox
+            ouiaId="public-checkbox"
             id="public"
             name="public"
             label={__('Public')}
@@ -76,8 +80,10 @@ const AddBookmarkModal = ({ selectedItem, onClose, controller }) => {
           </Tooltip>
         </FormGroup>
         <ActionGroup>
-          <Button variant="primary" type="submit" isDisabled={submitDisabled}>{__('Save')}</Button>
-          <Button variant="link" onClick={onClose}>{__('Cancel')}</Button>
+          <Button variant="primary" type="submit" isDisabled={submitDisabled} ouiaId="save-button">
+            {__('Save')}
+          </Button>
+          <Button variant="link" onClick={onClose} ouiaId="cancel-button">{__('Cancel')}</Button>
         </ActionGroup>
       </Form>
     </Modal>);

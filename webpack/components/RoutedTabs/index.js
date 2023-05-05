@@ -33,7 +33,7 @@ const RoutedTabs = ({
       </Tabs>
       <div className="margin-16-0">
         <HashRouter key={locationKey}>
-          <Switch>
+          <Switch ouiaId="routed-tabs-switch">
             {tabs.map(({ key, content }) => (
               <Route key={`${key}-route`} path={`/${key}`}>
                 {content}

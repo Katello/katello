@@ -184,17 +184,30 @@ const CVDebFilterContent = ({
                   />}
                 <Split hasGutter>
                   <SplitItem>
-                    <Button onClick={() => setModalOpen(true)} variant="secondary" aria-label="create_deb_rule">
+                    <Button
+                      ouiaId="create-deb-rule-button"
+                      onClick={() => setModalOpen(true)}
+                      variant="secondary"
+                      aria-label="create_deb_rule"
+                    >
                       {__('Add DEB rule')}
                     </Button>
                   </SplitItem>
                   <SplitItem>
                     <Dropdown
+                      ouiaId="bulk-actions-dropdown"
                       toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
                       isOpen={bulkActionOpen}
                       isPlain
                       dropdownItems={[
-                        <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasSelected} component="button" onClick={bulkRemove}>
+                        <DropdownItem
+                          ouiaId="bulk-remove-dropdown-item"
+                          aria-label="bulk_remove"
+                          key="bulk_remove"
+                          isDisabled={!hasSelected}
+                          component="button"
+                          onClick={bulkRemove}
+                        >
                           {__('Remove')}
                         </DropdownItem>]
                       }

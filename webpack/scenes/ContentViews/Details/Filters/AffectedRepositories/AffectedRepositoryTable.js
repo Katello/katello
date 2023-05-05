@@ -187,7 +187,14 @@ const AffectedRepositoryTable = ({
     setProductSelected(allProducts);
   };
   const dropdownItems = [
-    <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={removeBulk}>
+    <DropdownItem
+      ouiaId="bulk-remove-dropdown-item"
+      aria-label="bulk_remove"
+      key="bulk_remove"
+      isDisabled={!hasAddedSelected}
+      component="button"
+      onClick={removeBulk}
+    >
       {__('Remove')}
     </DropdownItem>,
   ];
@@ -239,6 +246,7 @@ const AffectedRepositoryTable = ({
                   </ActionListItem>
                   <ActionListItem>
                     <Dropdown
+                      ouiaId="bulk-actions-dropdown"
                       toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
                       isOpen={bulkActionOpen}
                       isPlain
