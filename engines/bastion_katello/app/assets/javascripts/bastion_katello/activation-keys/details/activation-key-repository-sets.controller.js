@@ -27,10 +27,26 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
         $scope.nutupane = new Nutupane(RepositorySet, params);
         $scope.nutupane.primaryOnly = true;
         $scope.table = $scope.nutupane.table;
+        $scope.repositoryTypes = {
+            redhat: translate("Red Hat"),
+            custom: translate("Custom")
+        };
+
+        $scope.repositoryType = { value: ""};
+
         $scope.contentAccessModes = {
             contentAccessModeAll: $scope.simpleContentAccessEnabled,
             contentAccessModeEnv: false
         };
+
+        $scope.selectRepositoryType = function () {
+            delete $scope.nutupane.table.params['repository_type'];
+            if (!_.isEmpty($scope.repositoryType.value)) {
+                $scope.nutupane.table.params['repository_type'] = $scope.repositoryType.value;
+            }
+            $scope.nutupane.refresh();
+        };
+
         $scope.toggleFilters = function () {
             $scope.nutupane.table.params['content_access_mode_env'] = $scope.contentAccessModes.contentAccessModeEnv;
             $scope.nutupane.table.params['content_access_mode_all'] = $scope.contentAccessModes.contentAccessModeAll || $scope.simpleContentAccessEnabled;

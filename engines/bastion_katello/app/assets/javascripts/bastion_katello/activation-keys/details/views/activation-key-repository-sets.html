@@ -19,6 +19,15 @@
       <input type="checkbox" ng-model="contentAccessModes.contentAccessModeEnv" ng-change="toggleFilters()"/>
       <span translate>Limit to Environment</span>
     </label>
+
+    <select id="repositoryTypes"
+            name="repositoryTypes"
+            ng-model="repositoryType.value"
+            ng-options="id as name for (id, name) in repositoryTypes"
+            ng-change="selectRepositoryType()"
+            >
+        <option value=""></option>
+    </select>
   </div>
 
   <div data-block="list-actions">
