@@ -218,5 +218,29 @@ module Katello
       refute component.valid?
       assert component.errors.full_messages.first =~ error_message
     end
+
+    def test_needs_publish
+      view1 = create(:katello_content_view)
+      view2 = create(:katello_content_view)
+      assert_equal @composite.needs_publish?, true
+      @composite.create_new_version
+      assert_equal @composite.reload.needs_publish?, false
+      version1 = create(:katello_content_view_version, :content_view => view1)
+      assert ContentViewComponent.create(:composite_content_view => @composite,
+                                         :content_view_version => version1, :latest => false)
+      assert_equal @composite.reload.needs_publish?, true
+      @composite.create_new_version
+      assert_equal @composite.reload.needs_publish?, false
+      create(:katello_content_view_version, :content_view => view2)
+      assert ContentViewComponent.create(:composite_content_view => @composite,
+                                         :content_view => view2, :latest => true)
+      assert_equal @composite.reload.needs_publish?, true
+      @composite.create_new_version
+      assert_equal @composite.reload.needs_publish?, false
+      create(:katello_content_view_version, :content_view => view2, :major => "1000")
+      assert_equal @composite.reload.needs_publish?, true
+      @composite.create_new_version
+      assert_equal @composite.reload.needs_publish?, false
+    end
   end
 end
