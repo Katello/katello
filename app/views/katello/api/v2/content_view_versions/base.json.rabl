@@ -89,3 +89,9 @@ end
 node :filters_applied do |cv_version|
   cv_version.filters_applied?
 end
+
+if ::Foreman::Cast.to_bool(params.fetch(:include_applied_filters, false))
+  node :applied_filters do |cv_version|
+    cv_version.applied_filters
+  end
+end

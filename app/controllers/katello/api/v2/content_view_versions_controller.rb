@@ -20,6 +20,7 @@ module Katello
     param :version, String, :desc => N_("Filter versions by version number"), :required => false
     param :composite_version_id, :number, :desc => N_("Filter versions that are components in the specified composite version"), :required => false
     param :organization_id, :number, :desc => N_("Organization identifier")
+    param :include_applied_filters, :bool, :desc => N_("Whether or not to return filters applied to the content view version"), :required => false
     param :triggered_by_id, :number, :desc => N_("Filter composite versions whose publish was triggered by the specified component version"), :required => false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(ContentViewVersion)
@@ -44,6 +45,7 @@ module Katello
 
     api :GET, "/content_view_versions/:id", N_("Show content view version")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
+    param :include_applied_filters, :bool, :desc => N_("Whether or not to return filters applied to the content view version"), :required => false
     def show
       respond :resource => @content_view_version
     end
