@@ -25,6 +25,7 @@ import RemoveCVVersionWizard from '../Delete/RemoveCVVersionWizard';
 import ActionableDetail from '../../../../../components/ActionableDetail';
 import BulkDeleteModal from '../BulkDelete/BulkDeleteModal';
 import NeedsPublishIcon from '../../../components/NeedsPublishIcon';
+import FiltersAppliedIcon from '../../../components/FiltersAppliedIcon';
 import { selectCVNeedsPublish } from '../../ContentViewDetailSelectors';
 
 const ContentViewVersionDetailsHeader = ({
@@ -37,7 +38,7 @@ const ContentViewVersionDetailsHeader = ({
 }) => {
   const history = useHistory();
   const {
-    version, description, environments, content_view_id: cvId, id,
+    version, description, environments, filters_applied: filtersApplied, content_view_id: cvId, id,
   } = versionDetails;
   const needsPublishLocal = useSelector(state => selectCVNeedsPublish(state));
   const dispatch = useDispatch();
@@ -81,6 +82,9 @@ const ContentViewVersionDetailsHeader = ({
             {__('Version ')}{version}
             {(latestVersionId === id && (needsPublish || needsPublishLocal)) &&
             <NeedsPublishIcon composite={composite} />
+            }
+            {(filtersApplied) &&
+            <FiltersAppliedIcon />
             }
           </Text>
 
@@ -178,6 +182,7 @@ ContentViewVersionDetailsHeader.propTypes = {
       PropTypes.string,
       PropTypes.number,
     ]),
+    filters_applied: PropTypes.bool,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
   details: PropTypes.shape({

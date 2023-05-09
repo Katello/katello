@@ -398,7 +398,6 @@ ContentViewVersions.propTypes = {
   cvId: PropTypes.number.isRequired,
   details: PropTypes.shape({
     permissions: PropTypes.shape({}),
-    filters_applied: PropTypes.bool,
     needs_publish: PropTypes.bool,
     composite: PropTypes.bool,
     latest_version_id: PropTypes.number,

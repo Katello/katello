@@ -12,7 +12,7 @@ const NeedsPublishIcon = ({ composite }) => (
     content={composite ? __('Updates available: Component content view versions have been updated.') :
       __('Updates available: Repositories and/or filters have changed.')}
   >
-    <ArrowCircleUpIcon size="sm" style={{ color: 'var(--pf-global--primary-color--100)', margin: '0 9px' }} />
+    <ArrowCircleUpIcon size="sm" style={{ color: 'var(--pf-global--primary-color--100)', marginLeft: '9px' }} />
   </Tooltip>
 );
 

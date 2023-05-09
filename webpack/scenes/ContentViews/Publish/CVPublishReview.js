@@ -75,7 +75,7 @@ const CVPublishReview = ({
               <ComponentEnvironments environments={promotedToEnvironments} />
             </Td>
             {filtered
-              ? <Td><Link to={`/content_views/${id}#/filters`} target="_blank" rel="noopener noreferrer">Filters </Link> </Td>
+              ? <Td><Link to={`/content_views/${id}#/filters`} target="_blank" rel="noopener noreferrer">{__('View Filters')} </Link> </Td>
               : <Td>-</Td>
             }
           </Tr>
@@ -88,7 +88,10 @@ const CVPublishReview = ({
 CVPublishReview.propTypes = {
   userCheckedItems: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   details: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]).isRequired,
     name: PropTypes.string.isRequired,
     composite: PropTypes.bool.isRequired,
     filtered: PropTypes.bool.isRequired,
