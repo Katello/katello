@@ -149,13 +149,6 @@ module Katello
       Katello::EventDaemon::Runner.register_service(:candlepin_events, Katello::CandlepinEventListener)
       Katello::EventDaemon::Runner.register_service(:katello_events, Katello::EventMonitor::PollerThread)
       Katello::EventDaemon::Runner.register_service(:katello_agent_events, Katello::EventDaemon::Services::AgentEventReceiver) if ::Katello.with_katello_agent?
-      FastGettext.add_text_domain('katello',
-                                    :path => File.expand_path("../../../locale", __FILE__),
-                                    :type => :po,
-                                    :ignore_fuzzy => true,
-                                    :report_warning => false
-                                 )
-      FastGettext.default_text_domain = 'katello'
 
       # Lib Extensions
       ::Foreman::Renderer::Scope::Variables::Base.include Katello::Concerns::RendererExtensions

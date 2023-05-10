@@ -4,7 +4,8 @@ require 'katello/host_status_manager'
 # rubocop:disable Metrics/BlockLength
 
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 2.6'
+  requires_foreman '>= 3.7'
+  register_gettext
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'),
            :icon => 'fa fa-book', :after => :monitor_menu do
