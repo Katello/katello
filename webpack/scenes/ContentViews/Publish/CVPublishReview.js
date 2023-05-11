@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import { Alert } from '@patternfly/react-core';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
@@ -16,7 +18,7 @@ import WizardHeader from '../components/WizardHeader';
 
 const CVPublishReview = ({
   details: {
-    name, composite, next_version: nextVersion,
+    id, name, composite, filtered, next_version: nextVersion,
   },
   userCheckedItems,
 }) => {
@@ -40,7 +42,17 @@ const CVPublishReview = ({
         description={
           <>
             {__('Review your currently selected changes for ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {name}.</b>
-          </>}
+            {filtered && (
+            <Alert
+              ouiaId="filters-applied-alert"
+              variant="warning"
+              isInline
+              isPlain
+              title={__('Filters will be applied to this content view version.')}
+              style={{ marginTop: '24px' }}
+            />)}
+          </>
+          }
       />
       <TableComposable ouiaId="cv-publish-review-table" aria-label="Review Table">
         <Thead>
@@ -48,6 +60,7 @@ const CVPublishReview = ({
             <Th>{__('Content view name')}</Th>
             <Th>{__('Version')}</Th>
             <Th>{__('Environments')}</Th>
+            <Th>{__('Filters')}</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -61,6 +74,10 @@ const CVPublishReview = ({
             <Td>
               <ComponentEnvironments environments={promotedToEnvironments} />
             </Td>
+            {filtered
+              ? <Td><Link to={`/content_views/${id}#/filters`} target="_blank" rel="noopener noreferrer">{__('View Filters')} </Link> </Td>
+              : <Td>-</Td>
+            }
           </Tr>
         </Tbody>
       </TableComposable>
@@ -71,8 +88,13 @@ const CVPublishReview = ({
 CVPublishReview.propTypes = {
   userCheckedItems: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   details: PropTypes.shape({
+    id: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]).isRequired,
     name: PropTypes.string.isRequired,
     composite: PropTypes.bool.isRequired,
+    filtered: PropTypes.bool.isRequired,
     next_version: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string,

@@ -31,6 +31,7 @@ import { selectEnvironmentPathsStatus } from '../../components/EnvironmentPaths/
 import PublishContentViewWizard from '../../Publish/PublishContentViewWizard';
 import CVVersionCompare from './Compare/CVVersionCompare';
 import NeedsPublishIcon from '../../components/NeedsPublishIcon';
+import FiltersAppliedIcon from '../../components/FiltersAppliedIcon';
 
 const ContentViewVersions = ({ cvId, details }) => {
   const response = useSelector(state => selectCVVersions(state, cvId));
@@ -125,6 +126,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       rpm_count: packageCount,
       errata_counts: errataCounts,
       active_history: activeHistory,
+      filters_applied: filtersApplied,
     } = cvVersion;
 
     if (activeHistory?.length) {
@@ -155,6 +157,9 @@ const ContentViewVersions = ({ cvId, details }) => {
         <Link to={`/versions/${versionId}`}>{__('Version ')}{version}</Link>
         {(latestVersionId === versionId && (needsPublish || needsPublishLocal)) &&
         <NeedsPublishIcon composite={composite} />
+        }
+        {(filtersApplied) &&
+        <FiltersAppliedIcon />
         }
       </>,
       <ContentViewVersionEnvironments {...{ environments }} />,

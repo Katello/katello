@@ -13,6 +13,7 @@ attributes :generated_for
 attributes :related_cv_count
 attributes :related_composite_cvs
 attributes :needs_publish? => :needs_publish
+attributes :filtered? => :filtered
 
 node :next_version do |content_view|
   content_view.next_version.to_f.to_s
@@ -67,6 +68,7 @@ child :versions => :versions do
   attributes :id, :version
   attributes :created_at => :published
   attributes :environment_ids
+  attributes :filters_applied? => :filters_applied
 end
 
 if params.key?(:include_permissions)
