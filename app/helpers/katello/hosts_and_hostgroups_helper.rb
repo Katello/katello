@@ -208,8 +208,6 @@ module Katello
         new_host.operatingsystem = param_host.operatingsystem.present? ? param_host.operatingsystem : host.operatingsystem
         new_host.architecture = param_host.architecture.present? ? param_host.architecture : host.architecture
 
-        return [] unless new_host.operatingsystem.is_a?(Redhat)
-
         if (host.is_a? ::Hostgroup)
           new_host.content_facet = hostgroup_content_facet(host, param_host)
         elsif host.content_facet.present?
