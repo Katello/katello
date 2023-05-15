@@ -155,8 +155,12 @@ const ContentViewVersions = ({ cvId, details }) => {
       />,
       <>
         <Link to={`/versions/${versionId}`}>{__('Version ')}{version}</Link>
-        {(latestVersionId === versionId && (needsPublish || needsPublishLocal)) &&
-        <NeedsPublishIcon composite={composite} />
+        {(latestVersionId === versionId &&
+                (needsPublish === null || needsPublish || needsPublishLocal)) &&
+                <NeedsPublishIcon
+                  composite={composite}
+                  determinate={needsPublish !== null || needsPublishLocal}
+                />
         }
         {(filtersApplied) &&
         <FiltersAppliedIcon />

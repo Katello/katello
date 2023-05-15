@@ -80,8 +80,12 @@ const ContentViewVersionDetailsHeader = ({
         <TextContent>
           <Text ouiaId="cv-version" component={TextVariants.h2}>
             {__('Version ')}{version}
-            {(latestVersionId === id && (needsPublish || needsPublishLocal)) &&
-            <NeedsPublishIcon composite={composite} />
+            {(latestVersionId === id &&
+                    (needsPublish === null || needsPublish || needsPublishLocal)) &&
+                    <NeedsPublishIcon
+                      composite={composite}
+                      determinate={needsPublish !== null || needsPublishLocal}
+                    />
             }
             {(filtersApplied) &&
             <FiltersAppliedIcon />

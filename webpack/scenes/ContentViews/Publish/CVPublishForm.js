@@ -41,23 +41,25 @@ const CVPublishForm = ({
         title={__('Publish')}
         description={
           <>
-            {!needsPublishAlertDismissed && !(needsPublish || needsPublishLocal) && (
-            <Alert
-              ouiaId="needs-publish-alert"
-              variant="info"
-              isInline
-              title={composite ?
-                __('No available component content view updates') :
-                __('No available repository or filter updates')}
-              actionClose={
-                <AlertActionCloseButton
-                  onClose={() => setNeedsPublishAlertDismissed(true)}
-                />
+            {!needsPublishAlertDismissed &&
+                !(needsPublish === null || needsPublish || needsPublishLocal) &&
+                (
+                <Alert
+                  ouiaId="needs-publish-alert"
+                  variant="info"
+                  isInline
+                  title={composite ?
+                    __('No available component content view updates') :
+                    __('No available repository or filter updates')}
+                  actionClose={
+                    <AlertActionCloseButton
+                      onClose={() => setNeedsPublishAlertDismissed(true)}
+                    />
             }
-              style={{ marginBottom: '24px' }}
-            >
-              <TextContent>{__('Newly published version will be the same as the previous version.')}</TextContent>
-            </Alert>)
+                  style={{ marginBottom: '24px' }}
+                >
+                  <TextContent>{__('Newly published version will be the same as the previous version.')}</TextContent>
+                </Alert>)
             }
             {__('A new version of ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {name}</b>
             {__(' will be created and automatically promoted to the ' +
