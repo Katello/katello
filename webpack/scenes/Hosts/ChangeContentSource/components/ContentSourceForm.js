@@ -188,6 +188,7 @@ const ContentSourceForm = ({
       />
       {envList?.some(env => env?.content_source?.environment_is_associated === false) &&
         <Alert
+          ouiaId="disabled-environments-alert"
           variant="info"
           isInline
           title={__('Some environments are disabled because they are not associated with the selected content source.')}
@@ -221,9 +222,9 @@ const ContentSourceForm = ({
       </ContentViewSelect>
       <ActionGroup style={{ display: 'block' }}>
         <Button
-          ouiaId="generate_button"
           variant="primary"
           id="generate_btn"
+          ouiaId="update-source-button"
           onClick={e => handleSubmit(e)}
           isDisabled={isLoading || !formIsValid() || hostsUpdated}
           isLoading={isLoading}

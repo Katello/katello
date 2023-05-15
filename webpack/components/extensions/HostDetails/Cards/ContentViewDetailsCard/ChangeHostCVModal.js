@@ -165,6 +165,7 @@ const ChangeHostCVModal = ({
       {environments?.some(env => env?.content_source?.environment_is_associated === false) &&
         <Alert
           variant="info"
+          ouiaId="disabled-environments-alert"
           isInline
           title={__('Some environments are disabled because they are not associated with the host\'s content source.')}
           style={{ marginBottom: '1rem' }}
