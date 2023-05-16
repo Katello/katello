@@ -68,6 +68,7 @@ const CVPublishFinish = ({
             setSaving(false);
           },
         ));
+        dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH_RESET });
       }, () => { setSaving(false); }));
     }
   }, [POLLING_TASK_KEY, currentStep, cvId, description, dispatch, forcePromote,
