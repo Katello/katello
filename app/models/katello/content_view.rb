@@ -789,8 +789,20 @@ module Katello
 
     def needs_publish?
       return composite_cv_components_changed? if composite?
-      audited_cv_repositories_since_last_publish.present? || audited_cv_repository_changed.present? ||
-        audited_cv_filters_changed.present? || audited_cv_filter_rules_changed.present?
+      # return true if the audit records clearly show we have unpublished changes
+      return true if (audited_cv_repositories_since_last_publish.present? || audited_cv_repository_changed.present? ||
+        audited_cv_filters_changed.present? || audited_cv_filter_rules_changed.present?)
+      # if we didn't return `true` already, either the audit records show that we don't need to publish, or we may
+      # have insufficient data to make the determination (either audits were cleaned, or never got created at all).
+      # first, check for the `create` audit record; its absence indicates that audits were cleaned some time after
+      # the cv version was created (i.e. the first indeterminate state) so we return `nil` in that case.
+      return nil unless latest_version_object&.audits&.where(action: "create")&.exists?
+      # even when the `create` audit exists, the other audits could still be absent due to the latest cv version
+      # being created prior to the tracking of the other audits (i.e. the second indeterminate state), so we check the
+      # existence of the `applied_filters` field as a very ugly hack to determine that the cv version is recent enough
+      # to return a definitive `false` based on the audits; otherwise, we can't determine whether publishing is needed
+      # based on audit records that never got created in the first place, so we return `nil`.
+      latest_version_object.applied_filters.nil? ? nil : false
     end
 
     def filtered?
