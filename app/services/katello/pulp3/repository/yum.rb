@@ -39,6 +39,9 @@ module Katello
           if root.ignorable_content.try(:include?, "srpm")
             skip_types << "srpm"
           end
+          if root.ignorable_content.try(:include?, "treeinfo")
+            skip_types << "treeinfo"
+          end
           skip_types
         end
 

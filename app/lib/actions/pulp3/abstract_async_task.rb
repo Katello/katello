@@ -114,6 +114,8 @@ module Actions
         case message
         when 'This repository uses features which are incompatible with \'mirror\' sync. Please sync without mirroring enabled.'
           'The "Complete Mirroring" mirroring policy is not compatible with this repository.  You may want to update it to use "Content Only"'
+        when 'Treeinfo file should have INI format'
+          'This repository has a malformed or inaccessible treeinfo file. To sync, try enabling \'Ignore treeinfo\'. All kickstart contents will be skipped.'
         else
           message
         end

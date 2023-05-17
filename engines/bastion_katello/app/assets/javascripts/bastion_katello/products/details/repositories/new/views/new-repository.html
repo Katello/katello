@@ -202,10 +202,19 @@
           <input id="ignore_srpms" name="ignore_srpms" ng-model="repository.ignore_srpms" type="checkbox"/>
           <span translate>Ignore SRPMs</span>
         </label>
-
         <p class="help-block">
           <span translate>Selecting this option will exclude SRPMs from repository synchronization.</span><br />
         </p>
+
+        <label>
+          <input id="ignore_treeinfo" name="ignore_treeinfo" ng-model="repository.ignore_treeinfo" type="checkbox"/>
+          <span translate>Ignore treeinfo</span>
+        </label>
+        <p class="help-block">
+          <span translate>Selecting this option will exclude treeinfo files from repository synchronization.</span><br />
+          <span translate>Select this option if treeinfo files or other kickstart content is failing to syncronize from the upstream repository.</span><br />
+        </p>
+
       </div>
 
       <div class="checkbox">
