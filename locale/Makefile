@@ -50,14 +50,14 @@ tx-pull: $(EDITFILES)
 
 tx-update: tx-pull
 	@echo
-	@echo Run rake plugin:gettext[$(DOMAIN)] from the Foreman installation, then make -C locale mo-files to finish
+	@echo Run rake plugin:gettext[$(DOMAIN)] from the Foreman installation. \
+		If this is for a release, run make -C locale mo-files from the Katello directory to finish. \
+		.mo files should not be uploaded to GitHub, they should only be packed into the gem.
 	@echo
 
 mo-files: $(MOFILES)
-	git add $(POFILES) $(POTFILE) ../locale/*/LC_MESSAGES
-	git commit -m "i18n - pulling from tx"
 	@echo
-	@echo Changes commited!
+	@echo .mo files created. Do not push these up to GitHub.
 	@echo
 
 # Workaround when rake task fails (https://github.com/ruby/rake/pull/182)
