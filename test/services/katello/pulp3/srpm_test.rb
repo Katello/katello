@@ -62,6 +62,12 @@ module Katello
           total_repository_srpms = Katello::RepositorySrpm.where(repository_id: @repo.id).count
           assert_equal total_repository_srpms, 0
         end
+
+        def test_sync_skipped_treeinfo
+          sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+          @repo.root.update!(ignorable_content: ["treeinfo"])
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+        end
       end
 
       class SrpmNonVcrTest < ActiveSupport::TestCase

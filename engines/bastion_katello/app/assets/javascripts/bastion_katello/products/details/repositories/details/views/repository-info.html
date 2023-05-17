@@ -260,6 +260,15 @@
         </dd>
       </span>
 
+      <span ng-if="repository.content_type === 'yum'">
+        <dt translate>Ignore treeinfo</dt>
+        <dd bst-edit-checkbox="repository.ignore_treeinfo"
+            formatter="booleanToYesNo"
+            on-save="save(repository)"
+            readonly="denied('edit_products', product)">
+        </dd>
+      </span>
+
       <span ng-hide="repository.content_type === 'docker' || repository.content_type === 'ansible_collection'">
         <dt translate>Unprotected</dt>
         <dd bst-edit-checkbox="repository.unprotected"

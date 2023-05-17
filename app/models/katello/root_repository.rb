@@ -17,7 +17,7 @@ module Katello
     DOWNLOAD_ON_DEMAND = 'on_demand'.freeze
     DOWNLOAD_POLICIES = [DOWNLOAD_IMMEDIATE, DOWNLOAD_ON_DEMAND].freeze
 
-    IGNORABLE_CONTENT_UNIT_TYPES = %w(srpm).freeze
+    IGNORABLE_CONTENT_UNIT_TYPES = %w(srpm treeinfo).freeze
     CHECKSUM_TYPES = %w(sha1 sha256).freeze
 
     SUBSCRIBABLE_TYPES = [Repository::YUM_TYPE, Repository::OSTREE_TYPE, Repository::DEB_TYPE].freeze
@@ -240,7 +240,7 @@ module Katello
       elsif ignorable_content.any? { |item| !IGNORABLE_CONTENT_UNIT_TYPES.include?(item) }
         errors.add(:ignorable_content, N_("Invalid value specified for ignorable content. Permissible values %s") % IGNORABLE_CONTENT_UNIT_TYPES.join(","))
       elsif self.mirroring_policy == MIRRORING_POLICY_COMPLETE
-        errors.add(:ignorable_content, N_("Ignore %s can not be set in combination with 'Complete Mirroring' mirroring policy.") % IGNORABLE_CONTENT_UNIT_TYPES.join(","))
+        errors.add(:ignorable_content, N_("Ignore %s cannot be set in combination with the 'Complete Mirroring' mirroring policy.") % IGNORABLE_CONTENT_UNIT_TYPES.join(","))
       end
     end
 

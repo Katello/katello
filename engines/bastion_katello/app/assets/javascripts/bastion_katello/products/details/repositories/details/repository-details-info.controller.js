@@ -28,6 +28,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             $scope.repository.$promise.then(function () {
                 $scope.uploadURL = 'katello/api/v2/repositories/' + $scope.repository.id + '/upload_content';
                 $scope.repository['ignore_srpms'] = $scope.repository['ignorable_content'] && $scope.repository['ignorable_content'].includes("srpm");
+                $scope.repository['ignore_treeinfo'] = $scope.repository['ignorable_content'] && $scope.repository['ignorable_content'].includes("treeinfo");
                 $scope.repository['ansible_collection_auth_exists'] = $scope.repository['ansible_collection_auth_url'] && $scope.repository['ansible_collection_auth_token'];
                 $scope.genericContentTypes = RepositoryTypesService.genericContentTypes($scope.repository['content_type']);
                 $scope.immediateDownloadPolicy = $scope.repository['download_policy'] === 'immediate';
@@ -93,11 +94,13 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             $scope.save = function (repository) {
                 var deferred = $q.defer();
                 var fields = ['upstream_password', 'upstream_username', 'upstream_authentication_token', 'ansible_collection_auth_token', 'ansible_collection_auth_url', 'ansible_collection_requirements'];
-                if (repository.content_type === 'yum' && typeof repository.ignore_srpms !== 'undefined') {
+                if (repository.content_type === 'yum' && typeof repository.ignore_srpms !== 'undefined' && typeof repository.ignore_treeinfo !== 'undefined') {
+                    repository['ignorable_content'] = [];
                     if (repository['ignore_srpms']) {
-                        repository['ignorable_content'] = ["srpm"];
-                    } else {
-                        repository['ignorable_content'] = [];
+                        repository['ignorable_content'].push("srpm");
+                    }
+                    if (repository['ignore_treeinfo']) {
+                        repository['ignorable_content'].push("treeinfo");
                     }
                 }
                 if ($scope.genericRemoteOptions && $scope.genericRemoteOptions !== []) {
@@ -143,6 +146,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                     deferred.resolve(response);
                     $scope.immediateDownloadPolicy = repository['download_policy'] === 'immediate';
                     $scope.repository.ignore_srpms = $scope.repository.ignorable_content && $scope.repository.ignorable_content.includes("srpm");
+                    $scope.repository.ignore_treeinfo = $scope.repository.ignorable_content && $scope.repository.ignorable_content.includes("treeinfo");
                     if (!_.isEmpty(response["include_tags"])) {
                         repository.commaIncludeTags = repository["include_tags"].join(", ");
                     } else {

@@ -346,7 +346,16 @@ module Katello
       @root.ignorable_content = ['srpm']
       @root.mirroring_policy = 'mirror_complete'
       assert_not_valid @root
-      assert_equal @root.errors[:ignorable_content], ["Ignore srpm can not be set in combination with 'Complete Mirroring' mirroring policy."]
+      assert_equal @root.errors[:ignorable_content], ["Ignore srpm cannot be set in combination with the 'Complete Mirroring' mirroring policy."]
+    end
+
+    def test_invalid_ignore_treeinfo
+      @root.content_type = 'yum'
+      @root.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
+      @root.ignorable_content = ['treeinfo']
+      @root.mirroring_policy = 'mirror_complete'
+      assert_not_valid @root
+      assert_equal @root.errors[:ignorable_content], ["Ignore treeinfo cannot be set in combination with the 'Complete Mirroring' mirroring policy."]
     end
 
     test_attributes :pid => '1b428129-7cf9-449b-9e3b-74360c5f9eca'
