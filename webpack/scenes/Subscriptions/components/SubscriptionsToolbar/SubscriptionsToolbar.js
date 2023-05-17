@@ -4,6 +4,7 @@ import { Row, Col, Form, FormGroup, Button } from 'patternfly-react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { noop } from 'foremanReact/common/helpers';
 import SearchBar from 'foremanReact/components/SearchBar';
+import { getControllerSearchProps } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { SUBSCRIPTIONS_SERVICE_URL } from '../../SubscriptionConstants';
 
@@ -34,11 +35,8 @@ const SubscriptionsToolbar = ({
         <FormGroup className="toolbar-pf-filter">
           <SearchBar
             data={{
-              autocomplete: {
-                url: '/katello/api/v2/subscriptions/auto_complete_search',
-                apiParams: { ...autocompleteQueryParams },
-              },
-              bookmarks: {},
+              ...getControllerSearchProps('/katello/api/v2/subscriptions', 'searchBar-katello_subscriptions', true, autocompleteQueryParams),
+              controller: 'katello_subscriptions',
             }}
             onSearch={onSearch}
             onSearchChange={updateSearchQuery}
