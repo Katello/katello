@@ -636,6 +636,24 @@ module Katello
       assert content_view.needs_publish?
     end
 
+    def test_audits_cleaned_cv_needs_publish
+      content_view = FactoryBot.build(:katello_content_view, :name => "New CV cleaned audits")
+      content_view.save!
+      content_view.create_new_version
+      content_view.reload
+      content_view.latest_version_object.audits.destroy_all
+      assert_nil content_view.needs_publish?
+    end
+
+    def test_audits_never_created_cv_needs_publish
+      content_view = FactoryBot.build(:katello_content_view, :name => "New CV applied filters nil")
+      content_view.save!
+      content_view.create_new_version
+      content_view.reload
+      content_view.latest_version_object.update!(applied_filters: nil)
+      assert_nil content_view.needs_publish?
+    end
+
     def test_published_cv_needs_publish_on_repositories_update
       org = @organization
       product = create(:katello_product, provider: org.anonymous_provider,
