@@ -20,6 +20,7 @@ import ContentViewSelectOption
 import { getCVPlaceholderText } from '../../../../../scenes/ContentViews/components/ContentViewSelect/helpers';
 import { useRexJobPolling } from '../../Tabs/RemoteExecutionHooks';
 import './ChangeHostCVModal.scss';
+import { selectEnvironmentPaths } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathSelectors';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
 
@@ -29,6 +30,7 @@ const ChangeHostCVModal = ({
   hostEnvId,
   orgId,
   hostId,
+  contentSourceId,
   hostName,
 }) => {
   const [selectedEnvForHost, setSelectedEnvForHost]
@@ -39,12 +41,15 @@ const ChangeHostCVModal = ({
   const [forceProfileUpload, setForceProfileUpload] = useState(false);
   const dispatch = useDispatch();
   const contentViewsInEnvResponse = useSelector(state => selectContentViews(state, `FOR_ENV_${hostEnvId}`));
+  const environmentPathResponse = useSelector(selectEnvironmentPaths);
+  const environments = environmentPathResponse?.results?.map(path => path.environments).flat();
   const { results } = contentViewsInEnvResponse;
   const contentViewsInEnvStatus = useSelector(state => selectContentViewStatus(state, `FOR_ENV_${hostEnvId}`));
   const hostUpdateStatus = useSelector(state => selectAPIStatus(state, HOST_CV_AND_ENV_KEY));
+  const pathsUrl = `/organizations/${orgId}/environments/paths?permission_type=promotable${contentSourceId ? `&content_source_id=${contentSourceId}` : ''}`;
   useAPI( // No TableWrapper here, so we can useAPI from Foreman
     'get',
-    api.getApiUrl(`/organizations/${orgId}/environments/paths?permission_type=promotable`),
+    api.getApiUrl(pathsUrl),
     ENV_PATH_OPTIONS,
   );
   const selectedCVForHostId = results?.find(cv => cv.name === selectedCVForHost)?.id;
@@ -157,11 +162,24 @@ const ChangeHostCVModal = ({
           {__(' to manage and promote content views, or select a different environment.')}
         </Alert>
       }
+      {environments?.some(env => env?.content_source?.environment_is_associated === false) &&
+        <Alert
+          variant="info"
+          ouiaId="disabled-environments-alert"
+          isInline
+          title={__('Some environments are disabled because they are not associated with the host\'s content source.')}
+          style={{ marginBottom: '1rem' }}
+        >
+          {__('To enable them, add the environment to the host\'s content source, or ')}
+          <a href={`/change_host_content_source?host_id=${hostId}`}>{__('change the host\'s content source.')}</a>
+        </Alert>
+      }
       <EnvironmentPaths
         userCheckedItems={selectedEnvForHost}
         setUserCheckedItems={handleEnvSelect}
         publishing={false}
         multiSelect={false}
+        hostId={hostId}
         headerText={__('Select environment')}
         isDisabled={hostUpdateStatus === STATUS.PENDING}
       />
@@ -209,6 +227,7 @@ ChangeHostCVModal.propTypes = {
   hostEnvId: PropTypes.number,
   orgId: PropTypes.number.isRequired,
   hostId: PropTypes.number.isRequired,
+  contentSourceId: PropTypes.number,
   hostName: PropTypes.string.isRequired,
 };
 
@@ -216,6 +235,7 @@ ChangeHostCVModal.defaultProps = {
   isOpen: false,
   closeModal: () => {},
   hostEnvId: null,
+  contentSourceId: null,
 };
 
 

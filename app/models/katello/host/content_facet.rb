@@ -38,6 +38,7 @@ module Katello
 
       validates_with ::AssociationExistsValidator, attributes: [:content_source]
       validates_with Katello::Validators::GeneratedContentViewValidator
+      validates_associated :content_view_environment_content_facets
       validates :host, :presence => true, :allow_blank => false
 
       attr_accessor :cves_changed
@@ -109,6 +110,7 @@ module Katello
           Rails.logger.info("ContentViewEnvironment not found for content view '#{cve.content_view_name}' and environment '#{cve.environment&.name}'; creating a new one.")
         end
         fail _("Unable to create ContentViewEnvironment. Check the logs for more information.") if content_view_environment.nil?
+
         self.content_view_environments = [content_view_environment]
       end
 

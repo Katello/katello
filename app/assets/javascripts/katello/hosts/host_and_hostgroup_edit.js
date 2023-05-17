@@ -36,8 +36,11 @@ KT.hosts.fetchEnvironments = function () {
   select.find('option').remove();
   if (content_source_id) {
     var url = tfm.tools.foremanUrl('/katello/api/capsules/' + content_source_id);
+    var orgId = $('#host_organization_id').val();
     $.get(url, function (content_source) {
       $.each(content_source.lifecycle_environments, function(index, env) {
+    // Don't show environments that aren't in the selected org. See jQuery.each() docs    
+    if (orgId && env.organization_id != orgId) return true;
 	option = $("<option />").val(env.id).text(env.name);
 	select.append(option);
       });

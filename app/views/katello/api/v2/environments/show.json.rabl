@@ -6,6 +6,16 @@ extends 'katello/api/v2/common/org_reference'
 attributes :library
 attributes :registry_name_pattern, :registry_unauthenticated_pull
 
+if @content_source.present?
+  node :content_source do |env|
+    {
+      :name => @content_source.name,
+      :id => @content_source_id,
+      :environment_is_associated => env.content_source_associated?(@content_source)
+    }
+  end
+end
+
 node :prior do |env|
   if env.prior
     {name: env.prior.name, :id => env.prior.id}

@@ -54,6 +54,7 @@ const EnvironmentPaths = ({
                     envCheckedInList(env, userCheckedItems) ||
                     envCheckedInList(env, promotedEnvironments)}
                     isDisabled={isDisabled || (publishing && env.library)
+                    || env?.content_source?.environment_is_associated === false
                     || envCheckedInList(env, promotedEnvironments)}
                     className="env-path__labels-with-pointer"
                     key={`${env.id}${index}`}

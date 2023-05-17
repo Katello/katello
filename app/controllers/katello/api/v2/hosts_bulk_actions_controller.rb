@@ -326,12 +326,11 @@ module Katello
 
       hosts.each do |host|
         next unless host.content_facet
+        host.content_facet.content_source = content_source
         host.content_facet.assign_single_environment(
           :content_view_id => content_view.id,
           :environment_id => lifecycle_environment.id
         )
-        host.content_facet.content_source = content_source
-
         host.update_candlepin_associations
       end
 
