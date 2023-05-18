@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2023\n"
-"Language-Team: Georgian (https://www.transifex.com/foreman/teams/114/ka/)\n"
+"Language-Team: Georgian (https://app.transifex.com/foreman/teams/114/ka/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ka\n"
@@ -207,6 +207,8 @@ msgid ""
 "<a href=\"/foreman_tasks/tasks/{{repository.last_sync.id}}\">{{ "
 "repository.last_sync.result | capitalize}}</a>"
 msgstr ""
+"<a href=\"/foreman_tasks/tasks/{{repository.last_sync.id}}\">{{ "
+"repository.last_sync.result | capitalize}}</a>"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -555,7 +557,7 @@ msgstr "შეცდომა სინქის გეგმის განა
 
 #: app/assets/javascripts/bastion_katello/content-credentials/new/new-content-credential.controller.js
 msgid "An error occurred while creating the Content Credential:"
-msgstr ""
+msgstr "შეცდომა შემცველობის ავტორიზაციის დეტალების შექმნისას:"
 
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "An error occurred while creating the Product: %s"
@@ -716,6 +718,8 @@ msgstr ""
 msgid ""
 "Are you sure you want to add the sync plan to the selected products(s)?"
 msgstr ""
+"დარწმუნებული ბრძანდებით, რომ გნებავთ, მონიშნულ პროდუქტებს სინქრონიზაციის "
+"გეგმა დაამატოთ?"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
 msgid "Are you sure you want to apply Errata to content host \"{{ host.name }}\"?"
@@ -1169,6 +1173,13 @@ msgstr ""
 msgid ""
 "Changing default settings requires subscription-manager version 1.10 or "
 "newer to be installed on this host."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+msgid ""
+"Changing download policy to \"On Demand\" will also clear the checksum type "
+"if set. The repository will use the upstream checksum type to verify "
+"downloads."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
@@ -2924,7 +2935,7 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 msgid "Only the Applications with a Helper can be restarted."
-msgstr ""
+msgstr "მხოლოდ დამხმარის მქონე აპლიკაციების გადატვირთვა შეგიძლიათ."
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-provisioning-info.html
 msgid "Operating System"
@@ -3164,7 +3175,7 @@ msgstr "პროდუქტის ინფორმაცია:"
 
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "Product Management for Sync Plan:"
-msgstr ""
+msgstr "პროდუქტის მართვა სინქრონიზაციის გეგმისთვის:"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-repository-sets-modal.html
@@ -3184,15 +3195,15 @@ msgstr "პროდუქტი შენახულია"
 
 #: app/assets/javascripts/bastion_katello/products/products.controller.js
 msgid "Product sync has been initiated in the background."
-msgstr ""
+msgstr "პროდუქტის სინქრონიზაცია ფონურად გაეშვა."
 
 #: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-advanced-sync-modal.controller.js
 msgid "Product syncs has been initiated in the background."
-msgstr ""
+msgstr "პროდუქტების სინქრონიზაცია ფონურად გაეშვა."
 
 #: app/assets/javascripts/bastion_katello/products/products.controller.js
 msgid "Product verify checksum has been initiated in the background."
-msgstr ""
+msgstr "პროდუქტების საკონტროლო ჯამის გადამოწმება ფონურად გაეშვა."
 
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
@@ -3278,7 +3289,7 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories-reclaim-space-modal.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "Reclaim Space"
-msgstr ""
+msgstr "ადგილის თავიდან გამოთხოვა"
 
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 msgid "Recurring Logic"
@@ -3854,6 +3865,13 @@ msgstr "ორგანიზაციაში რეპოზიტორი�
 msgid "Size"
 msgstr "ზომა"
 
+#: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
+msgid ""
+"Skip dependency solving for a significant speed increase. If the update "
+"cannot be applied to the host, delete the incremental content view version "
+"and retry the application with dependency solving turned on."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy currently reclaiming space..."
 msgstr ""
@@ -4394,7 +4412,7 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 msgid "There are no Traces to display."
-msgstr ""
+msgstr "საჩვენებელი ტრეისების გარეშე."
 
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
 msgid ""
@@ -4426,7 +4444,7 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
 msgid "This change will be applied to <b>{{ hostCount }} systems.</b>"
-msgstr ""
+msgstr "ეს ცვლილება <b>{{ hostCount }} სისტემაზე</b> გადატარდება"
 
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-environments.html
 msgid "This Container Image Tag is not present in any Lifecycle Environments."
@@ -4467,7 +4485,7 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/common/views/select-action-dropdown.html
 msgid "Toggle Dropdown"
-msgstr ""
+msgstr "ჩართვა/გამორთვის ჩამოშლადი სია"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -5003,8 +5021,8 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts-list.html
 msgid ""
-"You currently don't have any Hosts in this Host Group, you can add Content "
-"Hosts after selecting the 'Add' tab."
+"You currently don't have any Hosts in this Host Collection, you can add "
+"Content Hosts after selecting the 'Add' tab."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
@@ -5069,7 +5087,7 @@ msgstr "დაყენებული პროდუქტები არ გ
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 msgid "You must select a content view in order to save your environment."
-msgstr ""
+msgstr "თქვენი გარემოს შესანახად ერთი შემცველობის ხედი მაინც უნდა აირჩიოთ."
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 msgid ""
@@ -5087,6 +5105,8 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
 msgid "You must select at least one Content Host in order to apply Errata."
 msgstr ""
+"მორჩენილი პაჩების გადასატარებლად მინიმუმ ერთი შემცველობის ჰოსტი უნდა "
+"მონიშნოთ."
 
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
 msgid "You must select at least one Errata to apply."
