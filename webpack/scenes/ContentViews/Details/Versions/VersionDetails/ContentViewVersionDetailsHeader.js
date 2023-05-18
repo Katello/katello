@@ -27,6 +27,7 @@ import BulkDeleteModal from '../BulkDelete/BulkDeleteModal';
 import NeedsPublishIcon from '../../../components/NeedsPublishIcon';
 import FiltersAppliedIcon from '../../../components/FiltersAppliedIcon';
 import { selectCVNeedsPublish } from '../../ContentViewDetailSelectors';
+import { republishCVVRepoMetadata } from '../../ContentViewDetailActions';
 
 const ContentViewVersionDetailsHeader = ({
   versionDetails,
@@ -39,6 +40,7 @@ const ContentViewVersionDetailsHeader = ({
   const history = useHistory();
   const {
     version, description, environments, filters_applied: filtersApplied, content_view_id: cvId, id,
+    repositories,
   } = versionDetails;
   const needsPublishLocal = useSelector(state => selectCVNeedsPublish(state));
   const dispatch = useDispatch();
@@ -53,6 +55,18 @@ const ContentViewVersionDetailsHeader = ({
   const [removingFromEnv, setRemovingFromEnv] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+
+  const handleRepublish = () => {
+    console.log({ cvId, id})
+    dispatch(republishCVVRepoMetadata(
+      { cvId, id },
+    ));
+    setDropdownOpen(false);
+  };
+
+  const anyReposUseCompleteMirroring =
+    repositories.some(repo => repo.mirroring_policy === 'mirror_complete');
+
   const dropDownItems = [
     <DropdownItem
       ouiaId="remove"
@@ -62,6 +76,16 @@ const ContentViewVersionDetailsHeader = ({
       }}
     >
       {__('Remove from environment')}
+    </DropdownItem>,
+    <DropdownItem
+      ouiaId="republish"
+      key="republish"
+      isDisabled={anyReposUseCompleteMirroring}
+      onClick={() => {
+        handleRepublish();
+      }}
+    >
+      {__('Republish repository metadata')}
     </DropdownItem>,
     <DropdownItem
       ouiaId="delete"

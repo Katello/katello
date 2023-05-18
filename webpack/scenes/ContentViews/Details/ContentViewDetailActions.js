@@ -37,6 +37,7 @@ import {
   addComponentSuccessMessage,
   removeComponentSuccessMessage,
   cvVersionPromoteKey,
+  cvVersionRepublishRepoMetadataKey,
   cvFilterRepoKey,
   cvVersionDetailsKey,
   cvRemoveVersionKey,
@@ -580,6 +581,18 @@ export const promoteContentViewVersion = (params, handleSuccess) => post({
   key: cvVersionPromoteKey(params.id, params.versionEnvironments),
   url: api.getApiUrl(`/content_view_versions/${params.id}/promote`),
   params,
+  handleSuccess: (response) => {
+    if (handleSuccess) return handleSuccess();
+    return renderTaskStartedToast(response.data);
+  },
+  errorToast: error => cvErrorToast(error),
+});
+
+export const republishCVVRepoMetadata = (params, handleSuccess) => put({
+  type: API_OPERATIONS.PUT,
+  key: cvVersionRepublishRepoMetadataKey(params.cvId, params.id),
+  url: api.getApiUrl(`/content_view_versions/${params.id}/republish_repositories`),
+  params: { ...params, force: true },
   handleSuccess: (response) => {
     if (handleSuccess) return handleSuccess();
     return renderTaskStartedToast(response.data);
