@@ -39,6 +39,12 @@
         </li>
 
         <li role="menuitem" ng-hide="hideSyncButton(repository, false)" ng-class="{disabled: disableSyncLink()}">
+          <a ng-click="republishMetadata(repository)" disable-link="disableSyncLink()" translate>
+            Republish Repository Metadata
+          </a>
+        </li>
+
+        <li role="menuitem" ng-hide="hideSyncButton(repository, false)" ng-class="{disabled: disableSyncLink()}">
           <a ng-click="openReclaimSpaceModal(repository)" disable-link="disableSyncLink()" translate>
             Reclaim Space
           </a>
