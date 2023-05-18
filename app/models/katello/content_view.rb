@@ -787,7 +787,14 @@ module Katello
       published_component_version_ids.compact.uniq.sort != unpublished_component_version_ids.compact.uniq.sort
     end
 
+    def last_publish_task_success?
+      last_publish_result = latest_version_object&.history&.publish&.first&.task&.result
+      return last_publish_result&.equal?('success')
+    end
+
     def needs_publish?
+      return true unless latest_version_object
+      return nil unless last_publish_task_success?
       return composite_cv_components_changed? if composite?
       audited_cv_repositories_since_last_publish.present? || audited_cv_repository_changed.present? ||
         audited_cv_filters_changed.present? || audited_cv_filter_rules_changed.present?
