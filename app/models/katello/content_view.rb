@@ -787,7 +787,28 @@ module Katello
       published_component_version_ids.compact.uniq.sort != unpublished_component_version_ids.compact.uniq.sort
     end
 
+    def last_publish_task_success?
+      last_publish_result = latest_version_object&.history&.publish&.first&.task&.result
+      return last_publish_result.present? && last_publish_result == 'success'
+    end
+
     def needs_publish?
+      #Returns
+      # True:
+      #     a) When content/repo/filter change audit records exist
+      #     b) CV hasn't ever been published
+      # nil:
+      #     a) When CV version creation audit is missing(Indicating audit cleanup)
+      #     b) Version doesn't have audited_filters set indicating
+      #     it was published before 4.9 upgrade when we started auditing changes on the CV.
+      #     c) Last publish task failed leaving us with no way of knowing if all content in the version is correct.
+      # False:
+      #     a) No changes were detected via audits *and*
+      #        Audit for CV publish exists (Audits haven't been cleaned up)
+      #        *and* applied_filters field is set(Published after upgrade)
+      #
+      return true unless latest_version_object
+      return nil unless last_publish_task_success?
       return composite_cv_components_changed? if composite?
       # return true if the audit records clearly show we have unpublished changes
       return true if (audited_cv_repositories_since_last_publish.present? || audited_cv_repository_changed.present? ||
@@ -798,10 +819,13 @@ module Katello
       # the cv version was created (i.e. the first indeterminate state) so we return `nil` in that case.
       return nil unless latest_version_object&.audits&.where(action: "create")&.exists?
       # even when the `create` audit exists, the other audits could still be absent due to the latest cv version
-      # being created prior to the tracking of the other audits (i.e. the second indeterminate state), so we check the
-      # existence of the `applied_filters` field as a very ugly hack to determine that the cv version is recent enough
-      # to return a definitive `false` based on the audits; otherwise, we can't determine whether publishing is needed
-      # based on audit records that never got created in the first place, so we return `nil`.
+      # being created prior to the tracking of the other audits that were added in katello 4.9 (i.e. the second indeterminate state).
+      # We determine that using the `applied_filters` field. This field was added in Katello 4.9 and is set to nil for
+      # all versions published before that upgrade.
+      # If `applied_filters` is nil we can not deterministically rule out changes before the upgrade
+      # not captured by newer content change and filter change audits.
+      # If that field is not nil, the version was published after upgrade, hence we have all the information to rule out
+      # any audited changes to the CV and we can deterministically return false
       latest_version_object.applied_filters.nil? ? nil : false
     end
 
