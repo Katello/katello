@@ -91,8 +91,12 @@
             return false;
         };
 
-        $scope.disableSyncLink = function (adavancedSync) {
-            return $scope.hideSyncButton($scope.repository, adavancedSync);
+        $scope.disableSyncLink = function (advancedSync) {
+            return $scope.hideSyncButton($scope.repository, advancedSync);
+        };
+
+        $scope.disableRegenerate = function(repository) {
+            return repository.mirroring_policy === 'mirror_complete';
         };
 
         $scope.syncRepository = function (repository) {
@@ -103,6 +107,12 @@
 
         $scope.verifyChecksum = function (repository) {
             Repository.verifyChecksum({id: repository.id}, function (task) {
+                $state.go('product.repository.tasks.details', {taskId: task.id});
+            }, errorHandler);
+        };
+
+        $scope.republishMetadata = function (repository) {
+            Repository.republishMetadata({id: repository.id}, function (task) {
                 $state.go('product.repository.tasks.details', {taskId: task.id});
             }, errorHandler);
         };
