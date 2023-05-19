@@ -97,7 +97,7 @@
 
         $scope.disableRegenerate = function(repository) {
             return repository.mirroring_policy === 'mirror_complete';
-        }
+        };
 
         $scope.syncRepository = function (repository) {
             Repository.sync({id: repository.id}, function (task) {

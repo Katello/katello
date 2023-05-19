@@ -57,10 +57,7 @@ const ContentViewVersionDetailsHeader = ({
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
 
   const handleRepublish = () => {
-    console.log({ cvId, id})
-    dispatch(republishCVVRepoMetadata(
-      { cvId, id },
-    ));
+    dispatch(republishCVVRepoMetadata({ cvId, id }));
     setDropdownOpen(false);
   };
 
@@ -198,6 +195,9 @@ ContentViewVersionDetailsHeader.propTypes = {
     version: PropTypes.string,
     environments: PropTypes.arrayOf(PropTypes.shape({})),
     description: PropTypes.string,
+    repositories: PropTypes.arrayOf(PropTypes.shape({
+      mirroring_policy: PropTypes.string,
+    })),
     content_view_id: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,
