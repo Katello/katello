@@ -38,8 +38,8 @@
           </a>
         </li>
 
-        <li role="menuitem" ng-hide="hideSyncButton(repository, false)" ng-class="{disabled: disableSyncLink()}">
-          <a ng-click="republishMetadata(repository)" disable-link="disableSyncLink()" translate>
+        <li role="menuitem" ng-hide="hideSyncButton(repository, false)" ng-class="{disabled: disableRegenerate(repository)}">
+          <a ng-click="republishMetadata(repository)" disable-link="disableRegenerate(repository)" translate>
             Republish Repository Metadata
           </a>
         </li>

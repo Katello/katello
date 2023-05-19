@@ -77,7 +77,7 @@
         });
 
         $scope.hideSyncButton = function(repository, advancedSync) {
-            var result = $scope.syncInProgress(repository.last_sync) || !repository.url || repository.mirroring_policy === 'mirror_complete' || $scope.denied('sync_products', $scope.product);
+            var result = $scope.syncInProgress(repository.last_sync) || !repository.url || $scope.denied('sync_products', $scope.product);
             if (advancedSync) {
                 result = result || (repository.content_type !== 'yum' && repository.content_type !== 'deb');
             }
@@ -91,9 +91,13 @@
             return false;
         };
 
-        $scope.disableSyncLink = function (adavancedSync) {
-            return $scope.hideSyncButton($scope.repository, adavancedSync);
+        $scope.disableSyncLink = function (advancedSync) {
+            return $scope.hideSyncButton($scope.repository, advancedSync);
         };
+
+        $scope.disableRegenerate = function(repository) {
+            return repository.mirroring_policy === 'mirror_complete';
+        }
 
         $scope.syncRepository = function (repository) {
             Repository.sync({id: repository.id}, function (task) {
