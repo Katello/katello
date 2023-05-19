@@ -110,6 +110,35 @@ module Katello
       post_repo_erratum_size = @repo.errata.size
       assert_equal post_repo_erratum_size, 70_000
     end
+
+    def test_clean_filter_rules
+      filter = FactoryBot.build(:katello_content_view_erratum_filter, :inclusion => true)
+      security_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule,
+                                   :filter => filter,
+                                   :errata_id => @security.errata_id)
+      bugfix_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule,
+                                   :filter => filter,
+                                   :errata_id => @bugfix.errata_id)
+      enhancement_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule,
+                                   :filter => filter,
+                                   :errata_id => @enhancement.errata_id)
+      @repo.errata << @enhancement
+      content_type = Katello::RepositoryTypeManager.find_content_type('erratum')
+      service_class = content_type.pulp3_service_class
+      indexer = Katello::ContentUnitIndexer.new(content_type: content_type, repository: @repo)
+      repo_associations = ::Katello::RepositoryErratum.where(erratum_id: [@bugfix.id, @enhancement.id], repository_id: @repo.id)
+      filter.content_view.update(organization_id: @repo.organization.id)
+      filter.content_view.repositories << @repo
+
+      indexer.clean_filter_rules(repo_associations)
+      security_rule.reload
+      assert_raises ActiveRecord::RecordNotFound do
+        bugfix_rule.reload
+      end
+      assert_raises ActiveRecord::RecordNotFound do
+        enhancement_rule.reload
+      end
+    end
   end
 
   class ErratumAvailableTest < ErratumTestBase

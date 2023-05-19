@@ -142,12 +142,40 @@ module Katello
     def sync_repository_associations(assocication_tracker, additive: false)
       unless additive
         ActiveRecord::Base.connection.uncached do
-          @model_class.repository_association_class.where(repository_id: @repository.id).where.
-            not(@model_class.unit_id_field => assocication_tracker.unit_ids).delete_all
+          repo_associations_to_destroy = @model_class.repository_association_class.where(repository_id: @repository.id).where.
+            not(@model_class.unit_id_field => assocication_tracker.unit_ids)
+          clean_filter_rules(repo_associations_to_destroy) if repo_associations_to_destroy.present? && [::Katello::ModuleStream, ::Katello::Erratum, ::Katello::PackageGroup].include?(@model_class)
+          repo_associations_to_destroy.destroy_all
         end
       end
       return if assocication_tracker.db_values.empty?
       @model_class.repository_association_class.upsert_all(assocication_tracker.db_values, :unique_by => association_class_uniqiness_attributes)
+    end
+
+    def clean_filter_rules(repo_associations_to_destroy)
+      affected_content_view_ids = @repository.content_views.non_default.pluck(:id)
+      case @model_class.to_s
+      when 'Katello::ModuleStream'
+        module_stream_ids = repo_associations_to_destroy.pluck(:module_stream_id)
+        filter_rules = ::Katello::ContentViewModuleStreamFilterRule.
+          joins('INNER JOIN katello_content_view_filters ON katello_content_view_module_stream_filter_rules.content_view_filter_id = katello_content_view_filters.id').
+          where("katello_content_view_filters.content_view_id IN (#{affected_content_view_ids.join(',')})").where(module_stream_id: module_stream_ids)
+        filter_rules.delete_all
+      when 'Katello::Erratum'
+        errata_ids = ::Katello::Erratum.where(id: repo_associations_to_destroy.select(:erratum_id)).pluck(:errata_id)
+        filter_rules = ::Katello::ContentViewErratumFilterRule.
+          joins('INNER JOIN katello_content_view_filters ON katello_content_view_erratum_filter_rules.content_view_filter_id = katello_content_view_filters.id').
+          where("katello_content_view_filters.content_view_id IN (#{affected_content_view_ids.join(',')})").where(errata_id: errata_ids)
+        filter_rules.delete_all
+      when 'Katello::PackageGroup'
+        package_group_uuids = ::Katello::PackageGroup.where(id: repo_associations_to_destroy.select(:package_group_id)).pluck(:pulp_id)
+        filter_rules = ::Katello::ContentViewPackageGroupFilterRule.
+          joins('INNER JOIN katello_content_view_filters ON katello_content_view_package_group_filter_rules.content_view_filter_id = katello_content_view_filters.id').
+          where("katello_content_view_filters.content_view_id IN (#{affected_content_view_ids.join(',')})").where(uuid: package_group_uuids)
+        filter_rules.delete_all
+      else
+        return false
+      end
     end
 
     def association_class_uniqiness_attributes
