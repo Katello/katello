@@ -154,6 +154,7 @@ module Katello
 
     def clean_filter_rules(repo_associations_to_destroy)
       affected_content_view_ids = @repository.content_views.non_default.pluck(:id)
+      return false if affected_content_view_ids.empty?
       case @model_class.to_s
       when 'Katello::ModuleStream'
         module_stream_ids = repo_associations_to_destroy.pluck(:module_stream_id)
