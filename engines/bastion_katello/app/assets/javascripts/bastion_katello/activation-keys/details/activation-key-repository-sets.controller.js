@@ -32,7 +32,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
             custom: translate("Custom")
         };
 
-        $scope.repositoryType = { value: ""};
+        $scope.repositoryType = {};
 
         $scope.contentAccessModes = {
             contentAccessModeAll: $scope.simpleContentAccessEnabled,

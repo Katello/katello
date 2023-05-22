@@ -15,19 +15,23 @@
       <input type="checkbox" ng-model="contentAccessModes.contentAccessModeAll" ng-change="toggleFilters()"/>
       <span translate>Show All</span>
     </label>
-    <label class="checkbox-inline" title="{{ 'Limit Repository Sets to only those available in this Activation Key\'s Lifecycle Environment' | translate }}">
+    <label style="border-right: 1px solid #d1d1d1; padding-right: 15px;"
+            class="checkbox-inline"
+            title="{{ 'Limit Repository Sets to only those available in this Activation Key\'s Lifecycle  Environment' | translate }}">
       <input type="checkbox" ng-model="contentAccessModes.contentAccessModeEnv" ng-change="toggleFilters()"/>
       <span translate>Limit to Environment</span>
     </label>
-
-    <select id="repositoryTypes"
-            name="repositoryTypes"
-            ng-model="repositoryType.value"
-            ng-options="id as name for (id, name) in repositoryTypes"
-            ng-change="selectRepositoryType()"
-            >
-        <option value=""></option>
-    </select>
+    <span style="padding-left: 15px;">
+      <select
+              id="repositoryTypes"
+              name="repositoryTypes"
+              ng-model="repositoryType.value"
+              ng-options="id as name for (id, name) in repositoryTypes"
+              ng-change="selectRepositoryType()"
+              >
+          <option value=""></option>
+      </select>
+    </span>
   </div>
 
   <div data-block="list-actions">
