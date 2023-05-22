@@ -159,20 +159,16 @@ module Katello
       when 'Katello::ModuleStream'
         module_stream_ids = repo_associations_to_destroy.pluck(:module_stream_id)
         filter_rules = ::Katello::ContentViewModuleStreamFilterRule.
-          joins('INNER JOIN katello_content_view_filters ON katello_content_view_module_stream_filter_rules.content_view_filter_id = katello_content_view_filters.id').
-          where("katello_content_view_filters.content_view_id IN (#{affected_content_view_ids.join(',')})").where(module_stream_id: module_stream_ids)
+          in_content_views(affected_content_view_ids).where(module_stream_id: module_stream_ids)
         filter_rules.delete_all
       when 'Katello::Erratum'
         errata_ids = ::Katello::Erratum.where(id: repo_associations_to_destroy.select(:erratum_id)).pluck(:errata_id)
-        filter_rules = ::Katello::ContentViewErratumFilterRule.
-          joins('INNER JOIN katello_content_view_filters ON katello_content_view_erratum_filter_rules.content_view_filter_id = katello_content_view_filters.id').
-          where("katello_content_view_filters.content_view_id IN (#{affected_content_view_ids.join(',')})").where(errata_id: errata_ids)
+        filter_rules = ::Katello::ContentViewErratumFilterRule.in_content_views(affected_content_view_ids).where(errata_id: errata_ids)
         filter_rules.delete_all
       when 'Katello::PackageGroup'
         package_group_uuids = ::Katello::PackageGroup.where(id: repo_associations_to_destroy.select(:package_group_id)).pluck(:pulp_id)
         filter_rules = ::Katello::ContentViewPackageGroupFilterRule.
-          joins('INNER JOIN katello_content_view_filters ON katello_content_view_package_group_filter_rules.content_view_filter_id = katello_content_view_filters.id').
-          where("katello_content_view_filters.content_view_id IN (#{affected_content_view_ids.join(',')})").where(uuid: package_group_uuids)
+          in_content_views(affected_content_view_ids).where(uuid: package_group_uuids)
         filter_rules.delete_all
       else
         return false

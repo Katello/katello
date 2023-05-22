@@ -345,6 +345,40 @@ module ::Actions::Katello::ContentView
       plan_action action, content_view, 'repository_ids' => [repository.id]
     end
 
+    it 'deletes old filter rules' do
+
+      content_view.repositories << repository
+      module_stream = katello_module_streams(:river)
+      erratum = repository.errata.find_by(pulp_id: 'partylikeits1999')
+      package_group = katello_package_groups(:server_pg)
+
+      repository.module_streams << module_stream
+      repository.package_groups << package_group
+
+      module_stream_filter = ::Katello::ContentViewModuleStreamFilter.create(name: 'module filter', content_view_id: content_view.id)
+      errata_filter = ::Katello::ContentViewErratumFilter.create(name: 'errata filter', content_view_id: content_view.id)
+      package_group_filter = ::Katello::ContentViewPackageGroupFilter.create(name: 'package group filter', content_view_id: content_view.id)
+
+      module_stream_rule = ::Katello::ContentViewModuleStreamFilterRule.create(content_view_filter_id: module_stream_filter.id, module_stream_id: module_stream.id)
+      errata_rule = ::Katello::ContentViewErratumFilterRule.create(content_view_filter_id: errata_filter.id, errata_id: erratum.errata_id)
+      package_group_rule = ::Katello::ContentViewPackageGroupFilterRule.create(content_view_filter_id: package_group_filter.id, uuid: package_group.pulp_id)
+
+      action.expects(:action_subject).with(content_view)
+      plan_action action, content_view, 'repository_ids' => []
+
+      assert_raises ActiveRecord::RecordNotFound do
+        module_stream_rule.reload
+      end
+
+      assert_raises ActiveRecord::RecordNotFound do
+        errata_rule.reload
+      end
+
+      assert_raises ActiveRecord::RecordNotFound do
+        package_group_rule.reload
+      end
+    end
+
     it 'raises error when validation fails' do
       ::Actions::Katello::ContentView::Update.any_instance.expects(:action_subject).with(content_view)
       assert_raises(ActiveRecord::RecordInvalid) { create_and_plan_action action_class, content_view, :name => '' }
