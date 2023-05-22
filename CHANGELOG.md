@@ -1,3 +1,12 @@
+# 4.8.1 Phoenix (2023-05-22)
+
+## Bug Fixes
+
+### Content Views
+ * Getting "NoMethodError undefined method `get_status' for nil:NilClass" when publishing content view (https://projects.theforeman.org/issues/36303[#36303], https://github.com/Katello/katello/commit/a331781372a75b37ea62027560979fea1027ccac[a3317813])
+
+### Other
+ * Enable tracer on host page (debian os) is always on (https://projects.theforeman.org/issues/36297[#36297], https://github.com/Katello/katello/commit/ac0b74a532885f240628c1581c88d13e9504dd20[ac0b74a5])
 # 4.8.0 Phoenix (2023-04-12)
 
 ## Features
