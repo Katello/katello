@@ -188,6 +188,15 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
             expect($scope.nutupane.table.params['content_access_mode_all']).toEqual($scope.contentAccessModes.contentAccessModeAll);
         });
     });
+
+    describe("can select repository type", function () {
+        it("correctly sets the repo params for redhat", function () {
+            $scope.repositoryType["value"] = "redhat";
+            $scope.selectRepositoryType();
+            expect($scope.nutupane.table.params['repository_type']).toEqual("redhat");
+        });
+    });
+
 });
 
 describe('Controller: ActivationKeyRepositorySetsControllerWithSCA', function () {
