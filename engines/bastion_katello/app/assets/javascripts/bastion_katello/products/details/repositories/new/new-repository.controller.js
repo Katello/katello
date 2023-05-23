@@ -133,10 +133,10 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 if (repository.content_type === 'yum') {
                     repository.os_versions = $scope.osVersionsParam();
                     repository.ignorable_content = [];
-                    if ($scope.repositoryForm.ignore_srpms.$modelValue) {
+                    if (repository.ignore_srpms) {
                         repository.ignorable_content.push("srpm");
                     }
-                    if ($scope.repositoryForm.ignore_treeinfo.$modelValue) {
+                    if (repository.ignore_treeinfo) {
                         repository.ignorable_content.push("treeinfo");
                     }
                 }
