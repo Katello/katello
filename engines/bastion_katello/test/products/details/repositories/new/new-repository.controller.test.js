@@ -124,6 +124,45 @@ describe('Controller: NewRepositoryController', function() {
         expect(repo.include_tags).toEqual(['a-tag', 'some-different-tag', '3']);
     })
 
+    it('should turn ignorable content into array', function() {
+        var repo = $scope.repository;
+        repo.content_type = 'yum';
+        repo.ignore_srpms = true;
+        repo.ignore_treeinfo = true;
+        spyOn($scope, 'transitionTo');
+        spyOn(repo, '$save').and.callThrough();
+        spyOn(Notification, "setSuccessMessage");
+        $scope.save(repo);
+        expect(repo.$save).toHaveBeenCalled();
+        expect(repo.ignorable_content).toEqual(['srpm', 'treeinfo']);
+    })
+
+    it('should return valid ignorable content array when ignore sprm is true and treeinfo is false', function() {
+        var repo = $scope.repository;
+        repo.content_type = 'yum';
+        repo.ignore_srpms = true;
+        repo.ignore_treeinfo = false;
+        spyOn($scope, 'transitionTo');
+        spyOn(repo, '$save').and.callThrough();
+        spyOn(Notification, "setSuccessMessage");
+        $scope.save(repo);
+        expect(repo.$save).toHaveBeenCalled();
+        expect(repo.ignorable_content).toEqual(['srpm']);
+    })
+
+    it('should return empty ignorable content array when sprm and treeinfo not set', function() {
+        var repo = $scope.repository;
+        repo.content_type = 'yum';
+        repo.ignore_srpms = undefined;
+        repo.ignore_treeinfo = undefined;
+        spyOn($scope, 'transitionTo');
+        spyOn(repo, '$save').and.callThrough();
+        spyOn(Notification, "setSuccessMessage");
+        $scope.save(repo);
+        expect(repo.$save).toHaveBeenCalled();
+        expect(repo.ignorable_content).toEqual([]);
+    })
+
     it('should clear out auth fields on save if blank', function() {
         var repo = $scope.repository;
         repo.upstream_username = '';
