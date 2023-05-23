@@ -270,7 +270,7 @@ module Katello
         options[:ssl_ca_file] = ca_file unless ca_file.nil?
         options[:verify_ssl] = SETTINGS[:katello][backend][:verify_ssl] if SETTINGS[:katello][backend].key?(:verify_ssl)
         options[:headers] = { 'Correlation-ID' => request_id } if request_id
-        client = RestClient::Resource.new("#{url}/status", options)
+        client = RestClient::Resource.new("#{url}/status/", options)
 
         response = client.get
         response.empty? ? {} : JSON.parse(response).with_indifferent_access
