@@ -124,7 +124,6 @@ module Katello
                                    :errata_id => @enhancement.errata_id)
       @repo.errata << @enhancement
       content_type = Katello::RepositoryTypeManager.find_content_type('erratum')
-      service_class = content_type.pulp3_service_class
       indexer = Katello::ContentUnitIndexer.new(content_type: content_type, repository: @repo)
       repo_associations = ::Katello::RepositoryErratum.where(erratum_id: [@bugfix.id, @enhancement.id], repository_id: @repo.id)
       filter.content_view.update(organization_id: @repo.organization.id)

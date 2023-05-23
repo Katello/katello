@@ -12,7 +12,7 @@ namespace :katello do
           content_view = rule.filter.content_view
           unless ::Katello::ModuleStream.in_repositories(content_view.repositories)&.pluck(:id)&.include?(rule.module_stream_id)
             rule.delete
-            module_stream_count+=1
+            module_stream_count += 1
           end
         end
         puts "#{module_stream_count} orphaned content view module stream filter rules were deleted."
@@ -21,7 +21,7 @@ namespace :katello do
           content_view = rule.filter.content_view
           unless ::Katello::Erratum.in_repositories(content_view.repositories)&.pluck(:errata_id)&.include?(rule.errata_id)
             rule.delete
-            erratum_count+=1
+            erratum_count += 1
           end
         end
         puts "#{erratum_count} orphaned content view erratum filter rules were deleted."
@@ -30,7 +30,7 @@ namespace :katello do
           content_view = rule.filter.content_view
           unless ::Katello::PackageGroup.in_repositories(content_view.repositories)&.pluck(:pulp_id)&.include?(rule.uuid)
             rule.delete
-            package_group_count+=1
+            package_group_count += 1
           end
         end
         puts "#{package_group_count} orphaned content view package group filter rules were deleted."

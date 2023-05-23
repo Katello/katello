@@ -12,6 +12,7 @@ module Katello
     end
 
     def test_clean_filter_rules
+      ::Katello::RepositoryModuleStream.create!(module_stream_id: @module_stream_empty.id, repository_id: @fedora_repo.id)
       filter = FactoryBot.build(:katello_content_view_module_stream_filter, :inclusion => true)
       river_rule = FactoryBot.create(:katello_content_view_module_stream_filter_rule,
                                    :filter => filter,
@@ -19,20 +20,18 @@ module Katello
       empty_rule = FactoryBot.create(:katello_content_view_module_stream_filter_rule,
                                    :filter => filter,
                                    :module_stream_id => @module_stream_empty.id)
-      content_type = Katello::RepositoryTypeManager.find_content_type('module_stream')
-      service_class = content_type.pulp3_service_class
+      content_type = Katello::RepositoryTypeManager.find_content_type('modulemd')
       indexer = Katello::ContentUnitIndexer.new(content_type: content_type, repository: @fedora_repo)
-      repo_associations = ::Katello::RepositoryErratum.where(module_stream_id: @module_stream_empty.id, repository_id: @fedora_repo.id)
+      repo_associations = ::Katello::RepositoryModuleStream.where(module_stream_id: @module_stream_empty.id, repository_id: @fedora_repo.id)
       filter.content_view.update(organization_id: @fedora_repo.organization.id)
       filter.content_view.repositories << @fedora_repo
-
       indexer.clean_filter_rules(repo_associations)
+
       river_rule.reload
       assert_raises ActiveRecord::RecordNotFound do
         empty_rule.reload
       end
     end
-  end
 
     def test_repositories_relation
       assert_includes @module_stream_river.repositories, @fedora_repo

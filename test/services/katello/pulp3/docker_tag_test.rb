@@ -29,7 +29,7 @@ module Katello
           fake_content_href = '/pulp/api/v3/repositories/container/container/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/'
           service = Katello::Pulp3::Repository::Docker.new(@repo, @primary)
           error = assert_raises(::Katello::Errors::Pulp3Error) { service.add_content(fake_content_href) }
-          assert_match /Please run a complete sync on the following repository: Pulp3 Docker 1./, error.message
+          assert_match(/Please run a complete sync on the following repository: Pulp3 Docker 1./, error.message)
         end
 
         def test_index_on_sync
@@ -69,6 +69,8 @@ module Katello
           meta_tag = @repo.docker_meta_tags.find_by(name: 'latest')
           dummy_cv_repo = ::Katello::Repository.find_by(pulp_id: 'Default_Organization-Test-busybox-dev')
           repo_meta_tag = ::Katello::RepositoryDockerMetaTag.create(docker_meta_tag_id: meta_tag.id, repository_id: dummy_cv_repo.id)
+          dummy_cv_repo.docker_manifests << repo_meta_tag.docker_meta_tag.schema2.docker_taggable
+          dummy_cv_repo.docker_tags << meta_tag.schema2
 
           @repo.root.update(:include_tags => ['doesntexist'])
           @repo.backend_service(SmartProxy.pulp_primary).refresh_if_needed

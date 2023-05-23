@@ -346,7 +346,6 @@ module ::Actions::Katello::ContentView
     end
 
     it 'deletes old filter rules' do
-
       content_view.repositories << repository
       module_stream = katello_module_streams(:river)
       erratum = repository.errata.find_by(pulp_id: 'partylikeits1999')

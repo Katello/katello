@@ -26,8 +26,8 @@ module Katello
         fail 'Ensure that one.repositories includes :fedora_17_x86_64'
       end
 
-      assert ::Katello::ModuleStream.orphaned.include?(river)
-      refute ::Katello::ModuleStream.orphaned.include?(one)
+      assert_includes ::Katello::ModuleStream.orphaned, river
+      refute_includes ::Katello::ModuleStream.orphaned, one
     end
   end
 end

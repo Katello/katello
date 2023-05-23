@@ -1,5 +1,4 @@
 require 'katello_test_helper'
-require 'pry-byebug'
 
 module Katello
   class PackageGroupTest < ActiveSupport::TestCase
@@ -46,7 +45,6 @@ module Katello
                                    :filter => filter,
                                    :uuid => @mammals_pg.pulp_id)
       content_type = Katello::RepositoryTypeManager.find_content_type('package_group')
-      service_class = content_type.pulp3_service_class
       indexer = Katello::ContentUnitIndexer.new(content_type: content_type, repository: @repo)
       repo_associations = ::Katello::RepositoryPackageGroup.where(package_group_id: @mammals_pg.id, repository_id: @repo.id)
       filter.content_view.update(organization_id: @repo.organization.id)
@@ -54,7 +52,6 @@ module Katello
 
       indexer.clean_filter_rules(repo_associations)
       server_rule.reload
-      binding.pry
       assert_raises ActiveRecord::RecordNotFound do
         mammals_rule.reload
       end

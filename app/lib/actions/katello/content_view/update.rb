@@ -7,7 +7,7 @@ module Actions
           content_view_params = content_view_params.with_indifferent_access
 
           # If we are removing repositories, remove their filter rules
-          if content_view.filters.present? && content_view.repository_ids.present? && content_view_params.has_key?(:repository_ids)
+          if content_view.filters.present? && content_view.repository_ids.present? && content_view_params.key?(:repository_ids)
             repo_ids_to_remove = content_view.repository_ids - content_view_params[:repository_ids]
             if repo_ids_to_remove.present?
               # Only yum-type repositories have by-ID filter rules
