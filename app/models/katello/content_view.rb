@@ -95,11 +95,13 @@ module Katello
                                :repository_import,
                                :repository_export_syncable])
     }
-    scope :ignore_generated, -> {
-      where.not(:generated_for => [:repository_export,
-                                   :repository_import,
-                                   :library_export_syncable,
-                                   :repository_export_syncable])
+    scope :ignore_generated, ->(include_library_generated: false) {
+      ignored_values = [:repository_export,
+                        :repository_import,
+                        :library_export_syncable,
+                        :repository_export_syncable]
+      ignored_values += [:library_export, :library_import] if include_library_generated
+      where.not(generated_for: ignored_values)
     }
     scope :generated_for_library, -> { where(:generated_for => [:library_export, :library_import, :library_export_syncable]) }
 

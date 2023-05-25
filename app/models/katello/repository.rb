@@ -673,7 +673,7 @@ module Katello
 
     def self.smart_proxy_syncable
       joins(:content_view_version => :content_view).
-        merge(ContentView.ignore_generated).
+        merge(ContentView.ignore_generated(include_library_generated: true)).
         where.not(environment_id: nil)
     end
 
