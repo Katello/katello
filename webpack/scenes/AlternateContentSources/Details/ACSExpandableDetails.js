@@ -144,7 +144,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   {__('Description')}
                 </TextListItem>
                 <TextListItem
-                  aria-label="name_text_value"
+                  aria-label="description_text_value"
                   component={TextListItemVariants.dd}
                 >
                   {description || <InactiveText text="N/A" />}
