@@ -19,11 +19,11 @@ module Katello
 
       class_methods do
         def katello_agent_deprecation_text
-          N_("NOTE: Katello-agent is deprecated and will be removed in %s. Consider using remote execution instead.") % katello_agent_removal_release
+          N_("WARNING: Katello-agent is deprecated and will be removed in %s. Migrate to remote execution now.") % katello_agent_removal_release
         end
 
         def katello_agent_removal_release
-          N_("a future release")
+          N_("Katello 4.10")
         end
       end
 
