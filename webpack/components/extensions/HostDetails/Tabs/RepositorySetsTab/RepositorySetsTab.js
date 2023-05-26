@@ -67,7 +67,7 @@ import SelectableDropdown from '../../../../SelectableDropdown';
 import {
   hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
-  userPermissionsFromHostDetails
+  userPermissionsFromHostDetails,
 } from '../../hostDetailsHelpers';
 
 const viewRepoSets = [
