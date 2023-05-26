@@ -64,9 +64,11 @@ import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
 import './RepositorySetsTab.scss';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import SelectableDropdown from '../../../../SelectableDropdown';
-import { hasRequiredPermissions as can,
+import {
+  hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
-  userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
+  userPermissionsFromHostDetails
+} from '../../hostDetailsHelpers';
 
 const viewRepoSets = [
   'view_hosts', 'view_activation_keys', 'view_products',
@@ -397,7 +399,7 @@ const RepositorySetsTab = () => {
   });
 
   const readOnlyBookmarks =
-  cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
+    cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
 
   const dropdownItems = [
     <DropdownItem
@@ -604,7 +606,6 @@ const RepositorySetsTab = () => {
                 pfSortParams={pfSortParams}
                 columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
               />
-              <Th />
               <Th key="action-menu" />
             </Tr>
           </Thead>
