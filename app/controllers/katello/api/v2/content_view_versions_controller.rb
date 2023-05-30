@@ -78,11 +78,8 @@ module Katello
 
     api :PUT, "/content_view_versions/:id/republish_repositories", N_("Forces a republish of the version's repositories' metadata")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
-    param :force, :bool, :desc => N_("Force metadata regeneration to proceed.  Dangerous when repositories use the 'Complete Mirroring' mirroring policy"), :required => true
+    param :force, :bool, :desc => N_("Force metadata regeneration to proceed. (Deprecated)"), deprecated: true
     def republish_repositories
-      unless ::Foreman::Cast.to_bool(params[:force])
-        fail HttpErrors::BadRequest, _("Metadata republishing must be forced because it is a dangerous operation.")
-      end
       task = async_task(::Actions::Katello::ContentViewVersion::RepublishRepositories, @content_view_version)
       respond_for_async :resource => task
     end

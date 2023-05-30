@@ -592,7 +592,7 @@ export const republishCVVRepoMetadata = (params, handleSuccess) => put({
   type: API_OPERATIONS.PUT,
   key: cvVersionRepublishRepoMetadataKey(params.cvId, params.id),
   url: api.getApiUrl(`/content_view_versions/${params.id}/republish_repositories`),
-  params: { ...params, force: true },
+  params,
   handleSuccess: (response) => {
     if (handleSuccess) return handleSuccess();
     return renderTaskStartedToast(response.data);

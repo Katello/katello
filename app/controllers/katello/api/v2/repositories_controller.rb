@@ -323,12 +323,12 @@ module Katello
       render :json => repo_types.values
     end
 
-    api :PUT, "/repositories/:id/republish", N_("Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem.")
+    api :PUT, "/repositories/:id/republish", N_("Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy.")
     param :id, :number, :desc => N_("Repository identifier"), :required => true
-    param :force, :bool, :desc => N_("Force metadata regeneration to proceed.  Dangerous when repositories use the 'Complete Mirroring' mirroring policy."), :required => true
+    param :force, :bool, :desc => N_("Force metadata regeneration to proceed. (Deprecated)"), deprecated: true
     def republish
-      unless ::Foreman::Cast.to_bool(params[:force])
-        fail HttpErrors::BadRequest, _('Metadata republishing must be forced because it is a dangerous operation.')
+      if @repository.mirroring_policy == Katello::RootRepository::MIRRORING_POLICY_COMPLETE
+        fail HttpErrors::BadRequest, _("Metadata republishing is not allowed on repositories with the 'Complete Mirroring' mirroring policy.")
       end
       task = async_task(::Actions::Katello::Repository::MetadataGenerate, @repository)
       respond_for_async :resource => task
