@@ -406,8 +406,8 @@ module Katello
     end
 
     def pulp_update_needed?
-      changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirroring_policy verify_ssl_on_sync
-                                 upstream_username upstream_password ignorable_content retain_package_versions_count
+      changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy verify_ssl_on_sync
+                                 upstream_username upstream_password retain_package_versions_count
                                  ssl_ca_cert_id ssl_client_cert_id ssl_client_key_id http_proxy_policy http_proxy_id download_concurrency)
       changeable_attributes += %w(name container_repository_name include_tags exclude_tags) if docker?
       changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?
