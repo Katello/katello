@@ -168,7 +168,7 @@ module Katello
         end
 
         def delete_orphans
-          [orphans_api.cleanup(PulpcoreClient::OrphansCleanup.new(orphan_protection_time: Setting[:orphan_protection_time]))]
+          [orphans_api.cleanup(PulpcoreClient::OrphansCleanup.new(orphan_protection_time: (smart_proxy.pulp_mirror? ? 0 : Setting[:orphan_protection_time])))]
         end
 
         def delete_remote(remote_href)
