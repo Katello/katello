@@ -18,6 +18,14 @@ module Katello
             service.copy_units(@repo, [], false)
           end
 
+          def test_copy_units_rewrites_missing_content_error
+            fake_content_href = '/pulp/api/v3/repositories/rpm/rpm/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/'
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            create_repo(@repo, @proxy)
+            error = assert_raises(::Katello::Errors::Pulp3Error) { service.copy_units(@repo, [fake_content_href], false) }
+            assert_match(/Please run a complete sync on the following repository: Fedora 17 x86_64./, error.message)
+          end
+
           def test_append_proxy_cacert
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
             http_proxy = FactoryBot.create(:http_proxy, :url => 'http://foo.com:1000',

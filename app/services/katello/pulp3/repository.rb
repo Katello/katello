@@ -493,11 +493,26 @@ module Katello
         else
           api.repositories_api.modify(repository_reference.repository_href, add_content_units: content_unit_href)
         end
+      rescue api.client_module::ApiError => e
+        if e.message.include? 'Could not find the following content units'
+          raise ::Katello::Errors::Pulp3Error, "Content units that do not exist in Pulp were requested to be copied."\
+            " Please run a complete sync on the following repository: #{repository_reference.root_repository.name}. Original error: #{e.message}"
+        else
+          raise e
+        end
       end
 
       def add_content_for_repo(repository_href, content_unit_href)
         content_unit_href = [content_unit_href] unless content_unit_href.is_a?(Array)
         api.repositories_api.modify(repository_href, add_content_units: content_unit_href)
+      rescue api.client_module::ApiError => e
+        if e.message.include? 'Could not find the following content units'
+          raise ::Katello::Errors::Pulp3Error, "Content units that do not exist in Pulp were requested to be copied."\
+            " Please run a complete sync on the following repository:"\
+            " #{::Katello::Pulp3::RepositoryReference.find_by(repository_href: repository_href).root_repository.name}. Original error: #{e.message}"
+        else
+          raise e
+        end
       end
 
       def unit_keys(uploads)
