@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Form, FormGroup, TextInput, TextArea, Checkbox, ActionGroup, Button, Tile, Grid, GridItem } from '@patternfly/react-core';
 import { createContentView } from '../ContentViewsActions';
 import { selectCreateContentViews, selectCreateContentViewStatus, selectCreateContentViewError } from './ContentViewCreateSelectors';
-import { LabelDependencies, LabelAutoPublish, LabelImportOnly } from './ContentViewFormComponents';
+import { LabelDependencies, LabelAutoPublish } from './ContentViewFormComponents';
 import ContentViewIcon from '../components/ContentViewIcon';
 import './CreateContentViewForm.scss';
 
@@ -19,7 +19,6 @@ const CreateContentViewForm = ({ setModalOpen }) => {
   const [composite, setComposite] = useState(false);
   const [component, setComponent] = useState(true);
   const [autoPublish, setAutoPublish] = useState(false);
-  const [importOnly, setImportOnly] = useState(false);
   const [dependencies, setDependencies] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -59,7 +58,6 @@ const CreateContentViewForm = ({ setModalOpen }) => {
       composite,
       solve_dependencies: dependencies,
       auto_publish: (autoPublish && composite),
-      import_only: importOnly,
     }));
   };
 
@@ -166,17 +164,6 @@ const CreateContentViewForm = ({ setModalOpen }) => {
             label={LabelDependencies()}
             isChecked={dependencies}
             onChange={checked => setDependencies(checked)}
-          />
-        </FormGroup>}
-      {!composite &&
-        <FormGroup isInline fieldId="importOnly">
-          <Checkbox
-            id="importOnly"
-            ouiaId="importOnly"
-            name="importOnly"
-            label={LabelImportOnly()}
-            isChecked={importOnly}
-            onChange={checked => setImportOnly(checked)}
           />
         </FormGroup>}
       {composite &&
