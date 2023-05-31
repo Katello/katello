@@ -35,5 +35,26 @@ module Katello
     def test_search_by_repository
       assert_includes PackageGroup.search_for('repository = "Fedora 17 x86_64"'), @mammals_pg
     end
+
+    def test_clean_filter_rules
+      filter = FactoryBot.build(:katello_content_view_package_group_filter, :inclusion => true)
+      server_rule = FactoryBot.create(:katello_content_view_package_group_filter_rule,
+                                   :filter => filter,
+                                   :uuid => @server_pg.pulp_id)
+      mammals_rule = FactoryBot.create(:katello_content_view_package_group_filter_rule,
+                                   :filter => filter,
+                                   :uuid => @mammals_pg.pulp_id)
+      content_type = Katello::RepositoryTypeManager.find_content_type('package_group')
+      indexer = Katello::ContentUnitIndexer.new(content_type: content_type, repository: @repo)
+      repo_associations = ::Katello::RepositoryPackageGroup.where(package_group_id: @mammals_pg.id, repository_id: @repo.id)
+      filter.content_view.update(organization_id: @repo.organization.id)
+      filter.content_view.repositories << @repo
+
+      indexer.clean_filter_rules(repo_associations)
+      server_rule.reload
+      assert_raises ActiveRecord::RecordNotFound do
+        mammals_rule.reload
+      end
+    end
   end
 end
