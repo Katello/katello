@@ -57,17 +57,17 @@ module Katello
       Katello::Repository.in_default_view.where(:root_id => product.root_repositories.has_url.where(:content_id => content.cp_content_id))
     end
 
-    def root_repositories
+    def unfiltered_repositories
       # don't filter by url, as we want to show all repos in the product
       Katello::Repository.in_default_view.where(:root_id => product.root_repositories.where(:content_id => content.cp_content_id))
     end
 
     def arch
-      root_repositories.first&.arch
+      unfiltered_repositories.first&.arch
     end
 
     def os_versions
-      root_repositories.first&.os_versions || []
+      unfiltered_repositories.first&.os_versions || []
     end
 
     def enabled_value_from_candlepin
