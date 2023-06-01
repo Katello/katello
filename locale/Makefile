@@ -10,6 +10,7 @@ DOMAIN = katello
 VERSION = $(shell git describe --abbrev=0 --tags)
 POTFILE = $(DOMAIN).pot
 MOFILE = $(DOMAIN).mo
+ACTIONFILE = action_names.rb
 POFILES = $(shell find . -name '$(DOMAIN).po')
 MOFILES = $(patsubst %.po,%.mo,$(POFILES))
 POXFILES = $(patsubst %.po,%.pox,$(POFILES))
@@ -50,11 +51,11 @@ tx-pull: $(EDITFILES)
 
 tx-update: tx-pull
 	@echo
-	@echo Run rake plugin:gettext[$(DOMAIN)] from the Foreman installation, then make -C locale mo-files to finish
+	@echo Run rake plugin:gettext[$(DOMAIN)] and rake plugin:po_to_json[$(DOMAIN)] from the Foreman installation, then make -C locale po-files to finish
 	@echo
 
-mo-files: $(MOFILES)
-	git add $(POFILES) $(POTFILE) ../locale/*/LC_MESSAGES
+commit-translation-files: $(POFILES)
+	git add $(POFILES) $(POTFILE) $(ACTIONFILE) ../app/assets/javascripts/katello/locale
 	git commit -m "i18n - pulling from tx"
 	@echo
 	@echo Changes commited!
