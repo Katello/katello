@@ -63,11 +63,11 @@ module Katello
     end
 
     def arch
-      root_repositories.first.arch
+      root_repositories.first&.arch
     end
 
     def os_versions
-      root_repositories.first.os_versions
+      root_repositories.first&.os_versions || []
     end
 
     def enabled_value_from_candlepin
