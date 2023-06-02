@@ -38,11 +38,11 @@ child @resource.repositories => :repositories do
 end
 
 node :archRestricted do |pc|
-  pc.repositories&.first&.arch
+  pc.arch
 end
 
 node :osRestricted do |pc|
-  pc.repositories&.first&.os_versions&.first
+  pc.os_versions&.first
 end
 
 node :override do |pc|

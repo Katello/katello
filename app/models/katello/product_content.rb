@@ -41,9 +41,39 @@ module Katello
       where(:product_id => Katello::PoolProduct.where(:pool_id => organization.pools).select(:product_id))
     end
 
-    # used by Katello::Api::V2::RepositorySetsController#index
+    # following 4 methods used by Katello::Api::V2::RepositorySetsController#index
     def repositories
       Katello::Repository.in_default_view.where(:root_id => product.root_repositories.has_url.where(:content_id => content.cp_content_id))
+    end
+
+    def unfiltered_repositories
+      # don't filter by url, as we want to show all repos in the product
+      Katello::Repository.in_default_view.where(:root_id => product.root_repositories.where(:content_id => content.cp_content_id))
+    end
+
+    def arch
+      unfiltered_repositories.first&.arch
+    end
+
+    def os_versions
+      unfiltered_repositories.first&.os_versions || []
+    end
+
+    def enabled_value_from_candlepin
+      cp_product = ::Katello::Resources::Candlepin::Product.get(product.organization.label, product.cp_id).first
+      cp_content = cp_product['productContent'].find { |pc| pc['content']['id'] == content.cp_content_id }
+      cp_content['enabled']
+    end
+
+    def set_enabled_from_candlepin!
+      new_value = enabled_value_from_candlepin
+      if self.enabled != new_value
+        Rails.logger.info "Setting enabled to #{new_value} for Candlepin content #{content.cp_content_id}, ProductContent #{self.id}"
+        self.update!(:enabled => new_value)
+      else
+        Rails.logger.info "No change in enabled value for Candlepin content #{content.cp_content_id}, ProductContent #{self.id}"
+        false
+      end
     end
   end
 end
