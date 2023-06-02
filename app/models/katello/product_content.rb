@@ -52,9 +52,22 @@ module Katello
       where(:product_id => Katello::PoolProduct.where(:pool_id => organization.pools).select(:product_id))
     end
 
-    # used by Katello::Api::V2::RepositorySetsController#index
+    # following 4 methods used by Katello::Api::V2::RepositorySetsController#index
     def repositories
       Katello::Repository.in_default_view.where(:root_id => product.root_repositories.has_url.where(:content_id => content.cp_content_id))
+    end
+
+    def unfiltered_repositories
+      # don't filter by url, as we want to show all repos in the product
+      Katello::Repository.in_default_view.where(:root_id => product.root_repositories.where(:content_id => content.cp_content_id))
+    end
+
+    def arch
+      unfiltered_repositories.first&.arch
+    end
+
+    def os_versions
+      unfiltered_repositories.first&.os_versions || []
     end
 
     def enabled_value_from_candlepin
