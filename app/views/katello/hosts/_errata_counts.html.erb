@@ -1,4 +1,8 @@
+<% if Setting["host_details_ui"] %>
+<a href="/new/hosts/<%= host.name %>#/Content/errata">
+<% else %>
 <a href="/content_hosts/<%= host.id %>/errata">
+<% end %>
   <span class="aligned-errata-count">
     <span class="errata-count <%= counts[:security].to_i.positive? ? 'red' : 'black' %>">
       <span>
@@ -20,8 +24,13 @@
     </span>
   </span>
 </a>
+
 <% if !host.operatingsystem_name&.match(/Debian|Ubuntu/) %>
+<% if Setting["host_details_ui"] %>
+<a href="/new/hosts/<%= host.name %>#/Content/packages">
+<% else %>
 <a href="/content_hosts/<%= host.id %>/packages/applicable">
+<% end %>
   <span class="aligned-errata-count">
     <span class="errata-count <%= host.content_facet_attributes&.upgradable_rpm_count&.positive? ? 'green' : 'black' %>"
       <span>
@@ -33,7 +42,11 @@
 </a>
 <% end %>
 <% if host.operatingsystem_name&.match(/Debian|Ubuntu/) %>
+<% if Setting["host_details_ui"] %>
+<a href="/new/hosts/<%= host.name %>#/Content/packages">
+<% else %>
 <a href="/content_hosts/<%= host.id %>/debs/applicable">
+<% end %>
   <span class="aligned-errata-count">
     <span class="errata-count <%= host.content_facet_attributes&.upgradable_deb_count&.positive? ? 'green' : 'black' %>"
       <span>
