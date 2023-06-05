@@ -723,5 +723,13 @@ module Katello
                                                          :action => "publish")
       assert_nil content_view.needs_publish?
     end
+
+    def test_ignore_generated
+      assert_equal Katello::ContentView.generated_for_library_export.count, 1
+      assert_equal Katello::ContentView.generated_for_library_import.count, 1
+      ignore_generated = Katello::ContentView.ignore_generated(include_library_generated: false).count
+      ignore_generated_include_library = Katello::ContentView.ignore_generated(include_library_generated: true).count
+      assert_equal (ignore_generated - ignore_generated_include_library), 2
+    end
   end
 end
