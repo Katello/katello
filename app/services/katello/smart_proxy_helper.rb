@@ -21,6 +21,11 @@ module Katello
       end
     end
 
+    def library_export_repo(repository = nil)
+      cv = repository.content_view if repository
+      cv.library_export?
+    end
+
     def clear_smart_proxy_sync_histories(repo_list = [])
       if repo_list.empty?
         @smart_proxy.smart_proxy_sync_histories.delete_all
@@ -32,7 +37,7 @@ module Katello
 
     def combined_repos_available_to_capsule(environment = nil, content_view = nil, repository = nil)
       lifecycle_environment_check(environment, repository)
-      if repository
+      if repository && !library_export_repo(repository)
         [repository]
       else
         repositories_available_to_capsule(environment, content_view)
