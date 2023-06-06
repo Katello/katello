@@ -1,4 +1,4 @@
-# 4.9.0 (2023-05-26)
+# 4.9.0 (2023-06-06)
 
 ## Features
 
@@ -40,6 +40,15 @@
 
 ## Bug Fixes
 
+### Localization
+ * split out mo file and po file adding to git ([#36444](https://projects.theforeman.org/issues/36444), [dc58136c](https://github.com/Katello/katello.git/commit/dc58136cad8b1c173dffcf90fb28c96171022e3a))
+ * Update webpack translations and edit mo-files command to ignore .gitignore ([#36409](https://projects.theforeman.org/issues/36409), [23528fab](https://github.com/Katello/katello.git/commit/23528fab117cd682b3b4748375ddd7ed5de2648d))
+ * migrate transifex configuration ([#36335](https://projects.theforeman.org/issues/36335), [cdc68b01](https://github.com/Katello/katello.git/commit/cdc68b01d4ad42d22c2375311b33b8c9b0c12cf5))
+
+### Foreman Proxy Content
+ * Capsule redundantly synces *-Export-Library repos ([#36436](https://projects.theforeman.org/issues/36436), [70c4a6fc](https://github.com/Katello/katello.git/commit/70c4a6fcbed33a958e266e53e97a9894079bddbe))
+ * Orphan cleanup runs fine but does not clears anything from /var/lib/pulp/media/artifact of Red Hat Capsule 6.10 ([#36390](https://projects.theforeman.org/issues/36390), [0c6298ab](https://github.com/Katello/katello.git/commit/0c6298ab7617c92ce48569d121cdebf3f3a086ab))
+
 ### Repositories
  * Make metadata_expire field optional ([#36435](https://projects.theforeman.org/issues/36435), [64c34c70](https://github.com/Katello/katello.git/commit/64c34c7094a61d47cc1abb7588c5eb90301b0981))
  * Bring back the option to Republish Repository\CV Version metadata in web UI ([#36417](https://projects.theforeman.org/issues/36417), [8c5426eb](https://github.com/Katello/katello.git/commit/8c5426ebf613d6d8cfe21e1805a9182e6593f7ba))
@@ -55,12 +64,9 @@
  * Refine empty states for CV UI ([#36204](https://projects.theforeman.org/issues/36204), [052ed6b7](https://github.com/Katello/katello.git/commit/052ed6b7a734e47523ac0751625571c63615cb51))
  * Columns are overlapping while adding columns through "Manage columns" tab in "All Hosts" - katello edition ([#36172](https://projects.theforeman.org/issues/36172), [3746b037](https://github.com/Katello/katello.git/commit/3746b0372da77f9547ff47f4bd982aea2753c93f))
 
-### Localization
- * Update webpack translations and edit mo-files command to ignore .gitignore ([#36409](https://projects.theforeman.org/issues/36409), [23528fab](https://github.com/Katello/katello.git/commit/23528fab117cd682b3b4748375ddd7ed5de2648d))
- * migrate transifex configuration ([#36335](https://projects.theforeman.org/issues/36335), [cdc68b01](https://github.com/Katello/katello.git/commit/cdc68b01d4ad42d22c2375311b33b8c9b0c12cf5))
-
 ### Content Views
  * Needs_publish icon doesn't refresh when publish wizard is closed with task running ([#36402](https://projects.theforeman.org/issues/36402), [23c269d7](https://github.com/Katello/katello.git/commit/23c269d7b4f78204ec2fe5f2ce8c4b3e3f095727))
+ * Content view publish with filters is getting failed with error "Could not find the following content units:" ([#36334](https://projects.theforeman.org/issues/36334), [aed62992](https://github.com/Katello/katello.git/commit/aed629926451904e6d00d679d10d1b68314bf4a4))
  * Add filters_applied? to cv version API. ([#36322](https://projects.theforeman.org/issues/36322), [918b22b4](https://github.com/Katello/katello.git/commit/918b22b4bc147b433f724a9f47eeffd731c32f24))
  * Incremental update of the content view takes long time to complete ([#36302](https://projects.theforeman.org/issues/36302), [ee56983f](https://github.com/Katello/katello.git/commit/ee56983f78da6b771f9846621f643c7f309d8f85))
  * Missing repository name (image name) in Container tags CVv comparison ([#36290](https://projects.theforeman.org/issues/36290), [1bab1087](https://github.com/Katello/katello.git/commit/1bab10879037e8c24d373b16b1e84c7994844d5c))
