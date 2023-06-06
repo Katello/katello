@@ -251,7 +251,11 @@ const CVErrataIDFilterContent = ({
       activeKey={activeTabKey}
       onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
     >
-      <Tab eventKey={0} title={<TabTitleText>{__('Errata')}</TabTitleText>}>
+      <Tab
+        ouiaId="errata-filter-table-tab"
+        eventKey={0}
+        title={<TabTitleText>{__('Errata')}</TabTitleText>}
+      >
         <div className="margin-24-0">
           <TableWrapper
             {...{
@@ -452,7 +456,11 @@ const CVErrataIDFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-        <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
+        <Tab
+          ouiaId="affected-repos-tab"
+          eventKey={1}
+          title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}
+        >
           <div className="margin-24-0">
             <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>

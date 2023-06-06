@@ -24,6 +24,7 @@ const ContentTab = ({ location: { pathname } }) => {
       >
         {filteredTabs.map(({ key, title }) => (
           <Tab
+            ouiaId={`host-content-tabs-tab-${key}`}
             key={key}
             eventKey={key}
             title={<TabTitleText>{title}</TabTitleText>}

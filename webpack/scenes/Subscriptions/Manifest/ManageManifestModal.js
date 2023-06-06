@@ -130,7 +130,11 @@ class ManageManifestModal extends Component {
       <ForemanModal id={MANAGE_MANIFEST_MODAL_ID} title={__('Manage Manifest')}>
         <Tabs id="manifest-history-tabs" ouiaId="manifest-history-tabs">
           {showManifestTab &&
-            <Tab eventKey={1} title={__('Manifest')}>
+            <Tab
+              ouiaId="subscription-manifest-tab"
+              eventKey={1}
+              title={__('Manifest')}
+            >
                 {showSubscriptionManifest &&
                   <React.Fragment>
                     <Grid>
@@ -210,7 +214,11 @@ class ManageManifestModal extends Component {
               <Slot id="katello-manage-manifest-form" multi />
             </Tab>
           }
-          <Tab eventKey={2} title={__('Manifest History')}>
+          <Tab
+            ouiaId="manifest-history-tab"
+            eventKey={2}
+            title={__('Manifest History')}
+          >
             <LoadingState loading={manifestHistory.loading} loadingText={__('Loading')}>
               <Table
                 ouiaId="manifest-history-table"
@@ -221,7 +229,11 @@ class ManageManifestModal extends Component {
             </LoadingState>
           </Tab>
           {showCdnConfigurationTab &&
-            <Tab eventKey={3} title={__('CDN Configuration')}>
+            <Tab
+              ouiaId="cdn-configuration-tab"
+              eventKey={3}
+              title={__('CDN Configuration')}
+            >
               <Grid>
                 <h3>{__('CDN Configuration for Red Hat Content')}</h3>
                 <hr />

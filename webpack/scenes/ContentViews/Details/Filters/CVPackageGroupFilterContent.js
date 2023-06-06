@@ -197,7 +197,11 @@ const CVPackageGroupFilterContent = ({
       activeKey={activeTabKey}
       onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
     >
-      <Tab eventKey={0} title={<TabTitleText>{__('Package groups')}</TabTitleText>}>
+      <Tab
+        ouiaId="cv-package-group-filter-content-table-tab"
+        eventKey={0}
+        title={<TabTitleText>{__('Package groups')}</TabTitleText>}
+      >
         <div className="margin-24-0">
           <TableWrapper
             {...{
@@ -275,7 +279,11 @@ const CVPackageGroupFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-        <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
+        <Tab
+          ouiaId="affected-repos-tab"
+          eventKey={1}
+          title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}
+        >
           <div className="margin-24-0">
             <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>
