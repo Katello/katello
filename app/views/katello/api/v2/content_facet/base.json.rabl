@@ -1,6 +1,4 @@
 attributes :id, :uuid
-attributes :content_view_id, :content_view_name
-attributes :lifecycle_environment_id, :lifecycle_environment_name
 attributes :content_source_id, :content_source_name
 attributes :kickstart_repository_id, :kickstart_repository_name
 attributes :errata_counts
@@ -9,6 +7,15 @@ attributes :upgradable_deb_count => :upgradable_deb_count
 attributes :applicable_rpm_count => :applicable_package_count
 attributes :upgradable_rpm_count => :upgradable_package_count
 attributes :applicable_module_stream_count, :upgradable_module_stream_count
+
+child :content_view_environments => :content_view_environments do
+  node :content_view do |cve|
+    { id: cve.content_view.id, name: cve.content_view.name, composite: cve.content_view.composite }
+  end
+  node :lifecycle_environment do |cve|
+    { id: cve.lifecycle_environment.id, name: cve.lifecycle_environment.name }
+  end
+end
 
 node :content_view do |content_facet|
   content_view = content_facet.single_content_view
@@ -29,14 +36,6 @@ node :lifecycle_environment do |content_facet|
       :name => lifecycle_environment.name
     }
   end
-end
-
-child :content_views => :content_views do
-  attributes :id, :name, :composite
-end
-
-child :lifecycle_environments => :lifecycle_environments do
-  attributes :id, :name
 end
 
 child :content_source => :content_source do
