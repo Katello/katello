@@ -150,7 +150,11 @@ const CVDebFilterContent = ({
       activeKey={activeTabKey}
       onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
     >
-      <Tab eventKey={0} title={<TabTitleText>{tabTitle}</TabTitleText>}>
+      <Tab
+        ouiaId="cv-deb-filter-content-table-tab"
+        eventKey={0}
+        title={<TabTitleText>{tabTitle}</TabTitleText>}
+      >
         <div className="tab-body-with-spacing">
           <TableWrapper
             {...{
@@ -225,7 +229,11 @@ const CVDebFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-        <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+        <Tab
+          ouiaId="cv-deb-filter-content-affected-repos-tab"
+          eventKey={1}
+          title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}
+        >
           <div className="tab-body-with-spacing">
             <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="deb" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>

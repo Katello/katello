@@ -76,6 +76,7 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
           >
             {filteredTableConfigs.map(({ route, name, getCountKey }) => (
               <Tab
+                ouiaId={`cv-version-details-tabs-tab-${route}`}
                 key={route}
                 eventKey={route}
                 title={

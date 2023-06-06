@@ -135,7 +135,11 @@ const CVContainerImageFilterContent = ({
       ouiaId="cv-container-image-filter-tabs"
       onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
     >
-      <Tab eventKey={0} title={<TabTitleText>{__('Tags')}</TabTitleText>}>
+      <Tab
+        ouiaId="cv-container-image-filter-tags-tab"
+        eventKey={0}
+        title={<TabTitleText>{__('Tags')}</TabTitleText>}
+      >
         <div className="margin-24-0">
           <TableWrapper
             {...{
@@ -200,7 +204,11 @@ const CVContainerImageFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-        <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
+        <Tab
+          ouiaId="cv-container-image-affected-repos-tab"
+          eventKey={1}
+          title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}
+        >
           <div className="margin-24-0">
             <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="docker" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>

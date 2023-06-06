@@ -23,6 +23,7 @@ const RoutedTabs = ({
       >
         {tabs.map(({ key, title }) => (
           <Tab
+            ouiaId={`routed-tabs-tab-${key}`}
             href={`#/${key}`}
             key={key}
             eventKey={key}
