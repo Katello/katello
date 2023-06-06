@@ -207,7 +207,11 @@ const CVModuleStreamFilterContent = ({
       activeKey={activeTabKey}
       onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
     >
-      <Tab eventKey={0} title={<TabTitleText>{__('Module Streams')}</TabTitleText>}>
+      <Tab
+        ouiaId="module-stream-filter-content-table-tab"
+        eventKey={0}
+        title={<TabTitleText>{__('Module Streams')}</TabTitleText>}
+      >
         <div className="margin-24-0">
           <TableWrapper
             {...{
@@ -285,7 +289,11 @@ const CVModuleStreamFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-        <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
+        <Tab
+          ouiaId="affected-repos-tab"
+          eventKey={1}
+          title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}
+        >
           <div className="margin-24-0">
             <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>

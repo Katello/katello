@@ -167,7 +167,11 @@ const CVRpmFilterContent = ({
       activeKey={activeTabKey}
       onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}
     >
-      <Tab eventKey={0} title={<TabTitleText>{tabTitle}</TabTitleText>}>
+      <Tab
+        ouiaId="cv-rpm-filter-content-table-tab"
+        eventKey={0}
+        title={<TabTitleText>{tabTitle}</TabTitleText>}
+      >
         <div className="margin-24-0">
           <TableWrapper
             {...{
@@ -239,7 +243,11 @@ const CVRpmFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-        <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
+        <Tab
+          ouiaId="cv-rpm-filter-content-affected-repos-tab"
+          eventKey={1}
+          title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}
+        >
           <div className="margin-24-0">
             <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>

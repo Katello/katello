@@ -106,6 +106,7 @@ const CVVersionCompare = ({
                 const { name } = config;
                 return (
                   <Tab
+                    ouiaId={`cv-version-compare-tab-${name}`}
                     key={name}
                     eventKey={name}
                     title={
