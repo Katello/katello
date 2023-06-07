@@ -105,39 +105,47 @@ export default () => {
     generated_for: generatedFor, import_only: importOnly,
   } = details;
   const generatedContentView = generatedFor !== 'none';
-  const tabs = [
-    {
-      key: 'details',
-      title: __('Details'),
-      content: <ContentViewInfo {...{ cvId, details }} />,
-    },
-    {
-      key: 'versions',
-      title: __('Versions'),
-      content: <ContentViewVersionsRoutes {...{ cvId, details }} />,
-    },
-    ...composite ? [{
-      key: 'contentviews',
-      title: __('Content views'),
-      content: <ContentViewComponents {...{ cvId, details }} />,
-    }] : [{
-      key: 'repositories',
-      title: __('Repositories'),
-      content: <ContentViewRepositories {...{ cvId, details }} />,
-    },
-    !(importOnly || generatedContentView) &&
-    {
-      key: 'filters',
-      title: __('Filters'),
-      content: <ContentViewFilterRoutes {...{ cvId, details }} />,
-    }],
-    {
-      key: 'history',
-      title: __('History'),
-      content: <ContentViewHistories cvId={cvId} />,
-    },
-  ];
+  const detailsTab = {
+    key: 'details',
+    title: __('Details'),
+    content: <ContentViewInfo {...{ cvId, details }} />,
+  };
+  const versionsTab = {
+    key: 'versions',
+    title: __('Versions'),
+    content: <ContentViewVersionsRoutes {...{ cvId, details }} />,
+  };
+  const contentViewsTab = {
+    key: 'contentviews',
+    title: __('Content views'),
+    content: <ContentViewComponents {...{ cvId, details }} />,
+  };
+  const repositoriesTab = {
+    key: 'repositories',
+    title: __('Repositories'),
+    content: <ContentViewRepositories {...{ cvId, details }} />,
+  };
+  const filtersTab = {
+    key: 'filters',
+    title: __('Filters'),
+    content: <ContentViewFilterRoutes {...{ cvId, details }} />,
+  };
+  const historyTab = {
+    key: 'history',
+    title: __('History'),
+    content: <ContentViewHistories cvId={cvId} />,
+  };
 
+  /* eslint-disable no-nested-ternary */
+  const tabs = [
+    detailsTab,
+    versionsTab,
+    ...(composite ? [contentViewsTab] :
+      ((importOnly || generatedContentView) ?
+        [repositoriesTab] : [repositoriesTab, filtersTab])),
+    historyTab,
+  ];
+  /* eslint-enable no-nested-ternary */
 
   return (
     <>

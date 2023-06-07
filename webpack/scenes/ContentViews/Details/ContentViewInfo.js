@@ -111,32 +111,38 @@ const ContentViewInfo = ({ cvId, details }) => {
             boolean
             {...{ currentAttribute, setCurrentAttribute }}
           />)}
-        <TextListItem component={TextListItemVariants.dt}>
-          {LabelImportOnly()}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
-          <Switch
-            id="import_only_switch"
-            ouiaId="import_only_switch"
-            aria-label="import_only_switch"
-            isChecked={importOnly}
-            className="foreman-spaced-list"
-            disabled
-          />
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dt}>
-          {LabelGenerated()}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
-          <Switch
-            id="generated_by_export_switch"
-            ouiaId="generated_by_export_switch"
-            aria-label="generated_by_export_switch"
-            isChecked={generatedContentView}
-            className="foreman-spaced-list"
-            disabled
-          />
-        </TextListItem>
+        {importOnly &&
+          <>
+            <TextListItem component={TextListItemVariants.dt}>
+              {LabelImportOnly()}
+            </TextListItem>
+            <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
+              <Switch
+                id="import_only_switch"
+                ouiaId="import_only_switch"
+                aria-label="import_only_switch"
+                isChecked={importOnly}
+                className="foreman-spaced-list"
+                disabled
+              />
+            </TextListItem>
+          </>}
+        {generatedContentView &&
+          <>
+            <TextListItem component={TextListItemVariants.dt}>
+              {LabelGenerated()}
+            </TextListItem>
+            <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
+              <Switch
+                id="generated_by_export_switch"
+                ouiaId="generated_by_export_switch"
+                aria-label="generated_by_export_switch"
+                isChecked={generatedContentView}
+                className="foreman-spaced-list"
+                disabled
+              />
+            </TextListItem>
+          </>}
       </TextList>
     </TextContent>
   );
