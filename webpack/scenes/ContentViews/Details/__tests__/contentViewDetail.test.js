@@ -28,7 +28,7 @@ test('Can call API and show details on page load', async (done) => {
     .query(true)
     .reply(200, cvDetailData);
 
-  const { getByLabelText } = renderWithRedux(
+  const { getByLabelText, queryByLabelText } = renderWithRedux(
     withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
@@ -40,6 +40,8 @@ test('Can call API and show details on page load', async (done) => {
     expect(getByLabelText('a_cv_index')).toBeInTheDocument();
     expect(getByLabelText(`b_${name}`)).toBeInTheDocument();
     expect(getByLabelText('c_details')).toBeInTheDocument();
+    expect(queryByLabelText('Import only')).not.toBeInTheDocument();
+    expect(queryByLabelText('Generated')).not.toBeInTheDocument();
   });
 
   assertNockRequest(scope, done);
@@ -98,7 +100,7 @@ test('Can edit boolean details such as solve dependencies', async (done) => {
     .query(true)
     .reply(200, updatedCVDetails);
 
-  const { getByLabelText } = renderWithRedux(
+  const { getByLabelText, queryByLabelText } = renderWithRedux(
     withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
@@ -110,8 +112,7 @@ test('Can edit boolean details such as solve dependencies', async (done) => {
   await patientlyWaitFor(() => expect(getByLabelText(checkboxLabel).checked).toBeTruthy());
 
   const disabledImportLabel = /import_only_switch/;
-  expect(getByLabelText(disabledImportLabel)).toBeInTheDocument();
-  expect(getByLabelText(disabledImportLabel)).toHaveAttribute('disabled');
+  expect(queryByLabelText(disabledImportLabel)).not.toBeInTheDocument();
 
   assertNockRequest(getscope);
   assertNockRequest(updatescope);
@@ -136,4 +137,27 @@ test('Can link to view tasks', async () => {
   });
 
   assertNockRequest(scope);
+});
+
+test('Can show import_only and generated when true', async (done) => {
+  const updatedCVDetails = { ...cvDetailData };
+  updatedCVDetails.generated_for = 'Library';
+  updatedCVDetails.import_only = true;
+
+  const scope = nockInstance
+    .get(cvDetailsPath)
+    .query(true)
+    .reply(200, updatedCVDetails);
+
+  const { getByLabelText } = renderWithRedux(
+    withCVRoute(<ContentViewDetails />),
+    renderOptions,
+  );
+
+  await patientlyWaitFor(() => {
+    expect(getByLabelText('import_only_switch')).toBeInTheDocument();
+    expect(getByLabelText('generated_by_export_switch')).toBeInTheDocument();
+  });
+
+  assertNockRequest(scope, done);
 });
