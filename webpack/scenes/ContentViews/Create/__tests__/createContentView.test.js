@@ -24,7 +24,6 @@ const createDetails = {
   composite: false,
   solve_dependencies: false,
   auto_publish: false,
-  import_only: false,
 };
 
 const createdCVDetails = { ...cvCreateData };
@@ -78,7 +77,6 @@ test('Displays dependent fields correctly', () => {
   expect(getByText('Content view')).toBeInTheDocument();
   expect(getByText('Solve dependencies')).toBeInTheDocument();
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
-  expect(getByText('Import only')).toBeInTheDocument();
 
   // label auto_set
   fireEvent.change(getByLabelText('input_name'), { target: { value: '123 2123' } });
@@ -88,13 +86,11 @@ test('Displays dependent fields correctly', () => {
   fireEvent.click(getByLabelText('composite_tile'));
   expect(queryByText('Solve dependencies')).not.toBeInTheDocument();
   expect(getByText('Auto publish')).toBeInTheDocument();
-  expect(queryByText('Import only')).not.toBeInTheDocument();
 
   // display Solve Dependencies when Component CV
   fireEvent.click(getByLabelText('component_tile'));
   expect(getByText('Solve dependencies')).toBeInTheDocument();
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
-  expect(getByText('Import only')).toBeInTheDocument();
 });
 
 test('Validates label field', () => {
