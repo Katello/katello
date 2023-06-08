@@ -33,6 +33,7 @@
     });
     angular.module('Bastion.auth').value('Permissions', angular.fromJson(`<%= User.current.cached_roles.collect { |role| role.permissions }.flatten.to_json.html_safe %>`));
     angular.module('Bastion').value('newHostDetailsUI', "<%= Setting[:host_details_ui] %>");
+    angular.module('Bastion').value('experimentalLabsSetting', "<%= Setting[:lab_features] %>");
   </script>
   <% Bastion.plugins.each do |name, plugin| %>
     <%= include_plugin_js(plugin) %>

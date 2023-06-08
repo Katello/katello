@@ -3,6 +3,7 @@ import Repos from '../../scenes/RedHatRepositories';
 import Subscriptions from '../../scenes/Subscriptions';
 import UpstreamSubscriptions from '../../scenes/Subscriptions/UpstreamSubscriptions/index';
 import SubscriptionDetails from '../../scenes/Subscriptions/Details';
+import ActivationKeyDetails from '../../scenes/ActivationKeys/Details/ActivationKeyDetails';
 import SetOrganization from '../../components/SelectOrg/SetOrganization';
 import WithOrganization from '../../components/WithOrganization/withOrganization';
 import ModuleStreams from '../../scenes/ModuleStreams';
@@ -28,6 +29,10 @@ export const links = [
   {
     path: 'subscriptions/add',
     component: WithOrganization(withHeader(UpstreamSubscriptions, { title: __('Add Subscriptions') })),
+  },
+  {
+    path: 'labs/activation_keys/:id',
+    component: WithOrganization(withHeader(ActivationKeyDetails, { title: __('Activation key details') })),
   },
   {
     // eslint-disable-next-line no-useless-escape
