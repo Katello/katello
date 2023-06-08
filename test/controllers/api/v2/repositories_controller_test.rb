@@ -777,12 +777,22 @@ module Katello
     end
 
     def test_republish_without_force
+      assert_async_task ::Actions::Katello::Repository::MetadataGenerate do |repo|
+        repo.id == @repository.id
+      end
+      put :republish, params: { :id => @repository.id }
+      assert_response :success
+    end
+
+    def test_republish_complete_mirroring
+      @repository.root.update!(mirroring_policy: Katello::RootRepository::MIRRORING_POLICY_COMPLETE)
       put :republish, params: { :id => @repository.id }
       assert_response 400
-      assert_match "Metadata republishing must be forced because it is a dangerous operation.", @response.body
+      assert_match "Metadata republishing is not allowed on repositories with the 'Complete Mirroring' mirroring policy.", @response.body
     end
 
     def test_republish
+      #force is deprecated and will be removed. Remove this test when that happens
       assert_async_task ::Actions::Katello::Repository::MetadataGenerate do |repo|
         repo.id == @repository.id
       end
