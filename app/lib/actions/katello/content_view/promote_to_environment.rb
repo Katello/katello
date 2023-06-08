@@ -55,7 +55,7 @@ module Actions
 
         def trigger_capsule_sync(_execution_plan)
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
-          if !input[:incremental_update] && sync_proxies?(environment)
+          if !input[:incremental_update] && sync_proxies?(environment) && Setting[:foreman_proxy_content_auto_sync]
             ForemanTasks.async_task(ContentView::CapsuleSync,
                                     ::Katello::ContentView.find(input[:content_view_id]),
                                     environment)
