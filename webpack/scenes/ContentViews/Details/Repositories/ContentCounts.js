@@ -12,9 +12,9 @@ const repoLabels = {
   erratum: ['errata', 'erratum', 'errata'], // need to handle link, its $URL/errata?repositoryId=107
   deb: ['deb packages', 'deb package', 'debs'],
   ansible_collection: ['Ansible collections', 'Ansible collection', 'ansible_collections'],
-  docker_manifest: ['container manifests', 'container manifest', 'content/docker_manifests'],
-  docker_manifest_list: ['container manifest lists', 'container manifest list', 'content/docker_manifest_lists'],
-  docker_tag: ['container tags', 'container tag', 'content/docker_tags'],
+  docker_manifest: ['container manifests', 'container manifest', 'docker_manifests'],
+  docker_manifest_list: ['container manifest lists', 'container manifest list', 'docker_manifest_lists'],
+  docker_tag: ['container tags', 'container tag', 'docker_tags'],
   file: ['files', 'file', 'content/files'],
   package_group: ['package groups', 'package group', 'package_groups'],
   srpm: ['source RPMs', 'source RPM', 'source_rpms'], // no link?
