@@ -36,7 +36,6 @@ const recommendedRepositoriesSatTools = [
 
 const recommendedRepositoriesMisc = [
   'satellite-capsule-6.14-for-rhel-8-x86_64-rpms',
-  'ansible-2-for-rhel-8-x86_64-rpms',
   'satellite-maintenance-6.14-for-rhel-8-x86_64-rpms',
   'satellite-utils-6.14-for-rhel-8-x86_64-rpms',
 ];
