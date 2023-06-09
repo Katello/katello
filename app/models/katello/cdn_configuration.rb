@@ -37,6 +37,10 @@ module Katello
       type == CUSTOM_CDN_TYPE
     end
 
+    def custom_cdn_auth_enabled?
+      custom_cdn_auth_enabled
+    end
+
     def redhat_cdn_url?
       Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
     end

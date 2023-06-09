@@ -51,7 +51,7 @@ module Katello
       assert config.network_sync?
 
       # Now update to custom cdn
-      config.update!(type: ::Katello::CdnConfiguration::CUSTOM_CDN_TYPE)
+      config.update!(type: ::Katello::CdnConfiguration::CUSTOM_CDN_TYPE, custom_cdn_auth_enabled: true)
       assert config.custom_cdn?
       assert_empty config.username
       assert_empty config.password

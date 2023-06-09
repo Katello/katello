@@ -161,9 +161,10 @@ module Katello
     param :upstream_content_view_label, String, :desc => N_("Upstream Content View Label, default: Default_Organization_View. Relevant only for 'upstream_server' type.")
     param :upstream_lifecycle_environment_label, String, :desc => N_("Upstream Lifecycle Environment, default: Library. Relevant only for 'upstream_server' type.")
     param :ssl_ca_credential_id, Integer, :desc => N_("Content Credential to use for SSL CA. Relevant only for 'upstream_server' type.")
+    param :custom_cdn_auth_enabled, :bool, :desc => N_("If product certificates should be used to authenticate to a custom CDN.")
     def cdn_configuration
       config_keys = [:url, :username, :password, :upstream_organization_label, :ssl_ca_credential_id, :type,
-                     :upstream_lifecycle_environment_label, :upstream_content_view_label]
+                     :upstream_lifecycle_environment_label, :upstream_content_view_label, :custom_cdn_auth_enabled]
       config_params = params.slice(*config_keys).permit!.to_h
 
       task = sync_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, config_params)
