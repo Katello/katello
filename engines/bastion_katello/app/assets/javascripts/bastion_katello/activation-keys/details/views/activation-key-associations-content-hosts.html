@@ -37,8 +37,8 @@
             <span ng-class="getHostStatusIcon(host.subscription_global_status)">
             </span>
           </td>
-          <td bst-table-cell>{{ host.content_facet_attributes.lifecycle_environment_name }}</td>
-          <td bst-table-cell>{{ host.content_facet_attributes.content_view_name || "" }}</td>
+          <td bst-table-cell>{{ host.content_facet_attributes.lifecycle_environment.name }}</td>
+          <td bst-table-cell>{{ host.content_facet_attributes.content_view.name || "" }}</td>
           <td bst-table-cell>{{ host.subscription_facet_attributes.service_level }}</td>
           <td bst-table-cell>{{ host.subscription_facet_attributes.release_version }}</td>
         </tr>
