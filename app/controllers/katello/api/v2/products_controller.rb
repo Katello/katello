@@ -17,10 +17,10 @@ module Katello
 
     def_param_group :product do
       param :description, String, :desc => N_("Product description")
-      param :gpg_key_id, :number, :desc => N_("Identifier of the GPG key")
-      param :ssl_ca_cert_id, :number, :desc => N_("Idenifier of the SSL CA Cert")
-      param :ssl_client_cert_id, :number, :desc => N_("Identifier of the SSL Client Cert")
-      param :ssl_client_key_id, :number, :desc => N_("Identifier of the SSL Client Key")
+      param :gpg_key_id, :number, :desc => N_("Identifier of the GPG key"), :allow_nil => true
+      param :ssl_ca_cert_id, :number, :desc => N_("Idenifier of the SSL CA Cert"), :allow_nil => true
+      param :ssl_client_cert_id, :number, :desc => N_("Identifier of the SSL Client Cert"), :allow_nil => true
+      param :ssl_client_key_id, :number, :desc => N_("Identifier of the SSL Client Key"), :allow_nil => true
       param :sync_plan_id, :number, :desc => N_("Plan numeric identifier"), :allow_nil => true
     end
 
