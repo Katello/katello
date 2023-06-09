@@ -33,10 +33,10 @@ module Katello
         def apply_inherited_attributes(attributes, initialized = true)
           attributes = super(attributes, initialized)
           facet_attrs = attributes['content_facet_attributes']
-          return attributes unless facet_attrs
+          return attributes if facet_attrs.blank?
           cv_id = facet_attrs['content_view_id']
           lce_id = facet_attrs['lifecycle_environment_id']
-          if cv_id.blank? || lce_id.blank?
+          if initialized && (cv_id.blank? || lce_id.blank?)
             if cv_id.blank?
               Rails.logger.info "Hostgroup has no content view assigned; using host's existing content view"
               facet_attrs['content_view_id'] = content_facet&.single_content_view&.id
