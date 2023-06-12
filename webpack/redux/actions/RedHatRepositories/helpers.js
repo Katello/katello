@@ -24,7 +24,6 @@ const recommendedRepositoriesRHEL = [
   'rhel-7-server-optional-rpms',
   'rhel-7-server-extras-rpms',
   'rhel-7-server-kickstart',
-  'rhel-6-server-els-rpms',
 ];
 
 const recommendedRepositoriesSatTools = [
