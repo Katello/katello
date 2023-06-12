@@ -748,7 +748,7 @@ Foreman::Plugin.register :katello do
     :attach_subscriptions, :view_host_collections,
     :view_organizations, :view_lifecycle_environments, :view_products,
     :view_locations, :view_domains, :view_architectures,
-    :view_operatingsystems, :view_smart_proxies
+    :view_operatingsystems, :view_smart_proxies, :view_params
   ]
 
   role 'Content Importer', [
