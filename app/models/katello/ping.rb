@@ -4,6 +4,9 @@ module Katello
     FAIL_RETURN_CODE = 'FAIL'.freeze
     PACKAGES = %w(katello candlepin pulp qpid foreman tfm hammer).freeze
 
+    KATELLO_EVENTS_CACHE_KEY = 'katello_events_heartbeat'.freeze
+    CANDLEPIN_EVENTS_CACHE_KEY = 'candlepin_events_heartbeat'.freeze
+
     class << self
       def services(capsule_id = nil)
         proxy = fetch_proxy(capsule_id)
@@ -39,7 +42,7 @@ module Katello
         }
       end
 
-      def event_daemon_status(status, result)
+      def events_status(status, result)
         running = status&.dig(:running)
 
         if running
@@ -52,22 +55,20 @@ module Katello
 
       def ping_katello_events(result)
         exception_watch(result) do
-          status = Katello::EventDaemon::Runner.service_status(:katello_events)
-          event_daemon_status(status, result)
+          events_status(katello_events_status, result)
         end
       end
 
       def ping_candlepin_events(result)
         exception_watch(result) do
-          status = Katello::EventDaemon::Runner.service_status(:candlepin_events)
-          event_daemon_status(status, result)
+          events_status(candlepin_events_status, result)
         end
       end
 
       def ping_katello_agent(result)
         exception_watch(result) do
           status = Katello::EventDaemon::Runner.service_status(:katello_agent_events)
-          event_daemon_status(status, result)
+          events_status(status, result)
         end
       end
 
@@ -226,6 +227,22 @@ module Katello
       end
 
       private
+
+      def katello_events_status
+        if Katello.with_event_daemon?
+          Katello::EventDaemon::Runner.service_status(:katello_events)
+        else
+          Rails.cache.read(KATELLO_EVENTS_CACHE_KEY)
+        end
+      end
+
+      def candlepin_events_status
+        if Katello.with_event_daemon?
+          Katello::EventDaemon::Runner.service_status(:candlepin_events)
+        else
+          Rails.cache.read(CANDLEPIN_EVENTS_CACHE_KEY)
+        end
+      end
 
       def failed_services(result)
         result[:services].select do |_name, details|

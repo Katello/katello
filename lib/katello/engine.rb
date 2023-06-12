@@ -121,6 +121,7 @@ module Katello
 
     initializer "katello.paths", :before => :sooner_routes_load do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/v2.rb"
+      app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/internal.rb"
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/rhsm.rb"
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/registry.rb"
       app.routes_reloader.paths.unshift("#{Katello::Engine.root}/config/routes/overrides.rb")
@@ -244,6 +245,14 @@ module Katello
 
   def self.with_katello_agent?
     !!SETTINGS.dig(:katello, :agent, :enabled)
+  end
+
+  def self.with_event_daemon?
+    !!SETTINGS.dig(:katello, :event_daemon, :enabled)
+  end
+
+  def self.internal_events_logger
+    ::Foreman::Logging.logger('katello/internal_events')
   end
 
   def self.remote_execution_by_default?

@@ -17,6 +17,7 @@ module Katello
                          "versions" => {"platform_version" => "2.9.1"
                           }
                         }
+      Katello.stubs(:with_event_daemon?).returns(true)
     end
 
     def test_ping_with_errors

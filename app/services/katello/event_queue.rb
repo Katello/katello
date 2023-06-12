@@ -12,6 +12,10 @@ module Katello
       end
     end
 
+    def self.logger
+      ::Foreman::Logging.logger('katello/katello_events')
+    end
+
     def self.queue_depth
       ::Katello::Event.all.size
     end

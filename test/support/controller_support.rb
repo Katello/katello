@@ -3,6 +3,10 @@ require "#{Katello::Engine.root}/test/support/auth_support"
 module ControllerSupport
   include Katello::AuthorizationSupportMethods
 
+  def stub_foreman_client_auth
+    ::Foreman::ClientCertificate.any_instance.expects(:verified?).returns true
+  end
+
   def check_permission(permission:, action:, request:, organizations:, authorized: true, expect_404: false)
     permissions = permission.is_a?(Array) ? permission : [permission]
 
