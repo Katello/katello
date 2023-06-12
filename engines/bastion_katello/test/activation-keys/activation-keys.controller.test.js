@@ -24,7 +24,8 @@ describe('Controller: ActivationKeysController', function() {
             translate: function(){},
             Nutupane: Nutupane,
             ActivationKey: ActivationKey,
-            CurrentOrganization: 'CurrentOrganization'
+            CurrentOrganization: 'CurrentOrganization',
+            experimentalLabsSetting: false
         });
     }));
 

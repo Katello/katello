@@ -35,9 +35,14 @@
       <tbody>
       <tr bst-table-row ng-repeat="activationKey in table.rows">
         <td bst-table-cell>
-          <a ui-sref="activation-key.info({activationKeyId: activationKey.id})">
-            {{ activationKey.name }}
-          </a>
+          <span ng-switch="experimentalLabsSetting">
+            <a ng-switch-when="true" ng-href="/labs/activation_keys/{{activationKey.id}}">
+              {{ activationKey.name }}
+            </a>
+            <a ng-switch-when="false" ui-sref="activation-key.info({activationKeyId: activationKey.id})">
+              {{ activationKey.name }}
+            </a>
+          </span>
           <i class="fa fa-chevron-right selected-icon" ng-show="activationKey.selected"></i>
         </td>
         <td bst-table-cell>{{ activationKey | activationKeyConsumedFilter }}</td>

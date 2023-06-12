@@ -8,6 +8,7 @@
  * @requires Nutupane
  * @requires ActivationKey
  * @requires CurrentOrganization
+ * @requires experimentalLabsSetting
  *
  * @description
  *   Provides the functionality specific to activation keys for use with the Nutupane UI pattern.
@@ -15,8 +16,8 @@
  *   within the table.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeysController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'CurrentOrganization',
-    function ($scope, $location, translate, Nutupane, ActivationKey, CurrentOrganization) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'CurrentOrganization', 'experimentalLabsSetting',
+    function ($scope, $location, translate, Nutupane, ActivationKey, CurrentOrganization, experimentalLabsSetting) {
 
         var params = {
             'organization_id': CurrentOrganization,
@@ -30,5 +31,6 @@ angular.module('Bastion.activation-keys').controller('ActivationKeysController',
         $scope.controllerName = 'katello_activation_keys';
         nutupane.primaryOnly = true;
         $scope.table = nutupane.table;
+        $scope.experimentalLabsSetting = experimentalLabsSetting;
     }]
 );
