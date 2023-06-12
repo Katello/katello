@@ -24,7 +24,6 @@ const recommendedRepositoriesRHEL = [
   'rhel-7-server-optional-rpms',
   'rhel-7-server-extras-rpms',
   'rhel-7-server-kickstart',
-  'rhel-6-server-els-rpms',
 ];
 
 const recommendedRepositoriesSatTools = [
@@ -35,10 +34,9 @@ const recommendedRepositoriesSatTools = [
 ];
 
 const recommendedRepositoriesMisc = [
-  'satellite-capsule-6.13-for-rhel-8-x86_64-rpms',
-  'ansible-2-for-rhel-8-x86_64-rpms',
-  'satellite-maintenance-6.13-for-rhel-8-x86_64-rpms',
-  'satellite-utils-6.13-for-rhel-8-x86_64-rpms',
+  'satellite-capsule-6.14-for-rhel-8-x86_64-rpms',
+  'satellite-maintenance-6.14-for-rhel-8-x86_64-rpms',
+  'satellite-utils-6.14-for-rhel-8-x86_64-rpms',
 ];
 
 const recommendedRepositorySetLables = recommendedRepositoriesRHEL
