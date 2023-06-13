@@ -10,7 +10,7 @@ module Actions
             plan_action(::Actions::Katello::Repository::MultiCloneContents, extended_repo_map,
                         copy_contents: true,
                         solve_dependencies: true,
-                        metadata_generate: !incremental)
+                        generate_metadata: true)
           end
         end
 
