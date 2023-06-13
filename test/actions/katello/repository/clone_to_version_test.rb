@@ -42,7 +42,7 @@ module Actions
 
       assert_action_planned_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true,
+                                :copy_contents => true, :generate_metadata => true,
                                 :solve_dependencies => false)
     end
 
@@ -58,7 +58,7 @@ module Actions
 
       assert_action_planned_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true,
+                                :copy_contents => true, :generate_metadata => true,
                                 :solve_dependencies => true)
     end
 
@@ -73,7 +73,7 @@ module Actions
 
       assert_action_planned_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true,
+                                :copy_contents => true, :generate_metadata => true,
                                 :solve_dependencies => false)
     end
 
@@ -88,7 +88,7 @@ module Actions
 
       assert_action_planned_with(action, Actions::Katello::Repository::CloneContents, [docker_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true,
+                                :copy_contents => true, :generate_metadata => true,
                                 :solve_dependencies => false)
     end
 
@@ -102,7 +102,7 @@ module Actions
 
       assert_action_planned_with(action, Actions::Katello::Repository::CloneContents, [file_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil, :copy_contents => true,
-                                :metadata_generate => true, :solve_dependencies => false)
+                                :generate_metadata => true, :solve_dependencies => false)
     end
 
     it 'fully plans out a clone with pulp3' do
