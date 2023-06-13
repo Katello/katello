@@ -23,7 +23,7 @@ module Actions
                         rpm_filenames: rpm_filenames,
                         copy_contents: copy_contents,
                         solve_dependencies: content_view.solve_dependencies,
-                        metadata_generate: !incremental)
+                        generate_metadata: true)
           end
         end
 
