@@ -39,6 +39,7 @@ module Katello
 
       def self.api(smart_proxy, repository_type_label)
         repo_type = RepositoryTypeManager.enabled_repository_types[repository_type_label]
+        fail _("%s content type is not enabled." % repository_type_label) unless repo_type
         repo_type.pulp3_api(smart_proxy)
       end
 
