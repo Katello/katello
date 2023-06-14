@@ -79,18 +79,19 @@ module Katello
         known_acss = smart_proxy.smart_proxy_alternate_content_sources
         known_acs_hrefs = known_acss.pluck(:alternate_content_source_href) if known_acss.present?
 
-        file_acs_api = ::Katello::Pulp3::Repository.api(smart_proxy, 'file').alternate_content_source_api
-        yum_acs_api = ::Katello::Pulp3::Repository.api(smart_proxy, 'yum').alternate_content_source_api
-
-        orphan_file_acs_hrefs = file_acs_api.list.results.map(&:pulp_href) - known_acs_hrefs
-        orphan_yum_acs_hrefs = yum_acs_api.list.results.map(&:pulp_href) - known_acs_hrefs
-
-        orphan_file_acs_hrefs.each do |orphan_file_acs_href|
-          tasks << file_acs_api.delete(orphan_file_acs_href)
+        if RepositoryTypeManager.enabled_repository_types['file']
+          file_acs_api = ::Katello::Pulp3::Repository.api(smart_proxy, 'file').alternate_content_source_api
+          orphan_file_acs_hrefs = file_acs_api.list.results.map(&:pulp_href) - known_acs_hrefs
+          orphan_file_acs_hrefs.each do |orphan_file_acs_href|
+            tasks << file_acs_api.delete(orphan_file_acs_href)
+          end
         end
-
-        orphan_yum_acs_hrefs.each do |orphan_yum_acs_href|
-          tasks << yum_acs_api.delete(orphan_yum_acs_href)
+        if RepositoryTypeManager.enabled_repository_types['yum']
+          yum_acs_api = ::Katello::Pulp3::Repository.api(smart_proxy, 'yum').alternate_content_source_api
+          orphan_yum_acs_hrefs = yum_acs_api.list.results.map(&:pulp_href) - known_acs_hrefs
+          orphan_yum_acs_hrefs.each do |orphan_yum_acs_href|
+            tasks << yum_acs_api.delete(orphan_yum_acs_href)
+          end
         end
       end
 
