@@ -12,11 +12,11 @@ module Katello
         ak_errors = create_disabled_overrides_for_non_sca_org_activation_keys(organization: @organization)
 
         total_errors = host_errors + ak_errors
-        finish_message = "Finished creating overrides in non-SCA orgs; #{total_errors == 0 ? "no errors" : "#{pluralize(total_errors, "error")}"}"
+        finish_message = "Finished creating overrides in non-SCA org; #{total_errors == 0 ? "no errors" : "#{pluralize(total_errors, "error")}"}"
         messages = { result: finish_message, errors: total_errors }
         messages[:host_errors] = "Hosts - #{pluralize(host_errors, "error")} creating disabled overrides for unsubscribed content; see log messages above" if host_errors > 0
         messages[:ak_errors] = "Activation keys - #{pluralize(ak_errors, "error")} creating disabled overrides for unsubscribed content; see log messages above" if ak_errors > 0
-        messages[:success_message] = "You may now switch all organizations to Simple Content Access mode without any change in access to content." if total_errors == 0
+        messages[:success_message] = "Organization may now be switched to Simple Content Access mode without any change in access to content." if total_errors == 0
         Rails.logger.info finish_message
         Rails.logger.info messages[:host_errors] if messages[:host_errors]
         Rails.logger.info messages[:ak_errors] if messages[:ak_errors]
