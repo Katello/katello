@@ -180,11 +180,14 @@ module Katello
     protected
 
     def action_permission
-      if %w(download_debug_certificate redhat_provider repo_discover cdn_configuration
-            cancel_repo_discover).include?(params[:action])
-        :edit
-      elsif params[:action] == "releases"
+      if params[:action] == "releases"
         :view
+      elsif params[:action] == "download_debug_certificate" &&
+          Organization.find(params[:id]).authorized?(:export_content)
+        :view
+      elsif %w(download_debug_certificate redhat_provider repo_discover cdn_configuration
+               cancel_repo_discover).include?(params[:action])
+        :edit
       else
         super
       end
