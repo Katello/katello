@@ -229,9 +229,9 @@ test('Can edit products in a simplified ACS details edit modal', async (done) =>
   // Can open modal
   await patientlyWaitFor(() => {
     expect(queryAllByText('Edit')).toHaveLength(4);
-    expect(getByLabelText('edit_acs_details')).toBeInTheDocument();
+    expect(getByLabelText('edit-acs-products')).toBeInTheDocument();
   });
-  const saveButton = getByLabelText('edit_acs_details');
+  const saveButton = getByLabelText('edit-acs-products');
   fireEvent.click(saveButton);
   // can close modal
   await patientlyWaitFor(() => {

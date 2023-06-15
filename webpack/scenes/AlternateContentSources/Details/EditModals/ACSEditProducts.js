@@ -88,8 +88,8 @@ const ACSEditProducts = ({ onClose, acsId, acsDetails }) => {
         />
         <ActionGroup>
           <Button
-            ouiaId="edit-acs-details-submit"
-            aria-label="edit_acs_details"
+            ouiaId="edit-acs-products-submit"
+            aria-label="edit-acs-products"
             variant="primary"
             isDisabled={saving}
             isLoading={saving}
@@ -97,7 +97,12 @@ const ACSEditProducts = ({ onClose, acsId, acsDetails }) => {
           >
             {__('Edit')}
           </Button>
-          <Button ouiaId="edit-acs-smart-proxies-cancel" variant="link" onClick={onClose}>
+          <Button
+            ouiaId="edit-acs-products-cancel"
+            aria-label="edit-acs-products-cancel"
+            variant="link"
+            onClick={onClose}
+          >
             {__('Cancel')}
           </Button>
         </ActionGroup>
