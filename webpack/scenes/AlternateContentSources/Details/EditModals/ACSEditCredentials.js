@@ -273,11 +273,11 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             fieldId="client_key"
           >
             <FormSelect
-              ouiaId="sslCAcert-select"
+              ouiaId="ssl_client_key_select"
               isRequired
               value={acsSslClientKey}
               onChange={value => setAcsSslClientKey(value)}
-              aria-label="sslCAcert_select"
+              aria-label="ssl_client_key_select"
             >
               {
                 [
