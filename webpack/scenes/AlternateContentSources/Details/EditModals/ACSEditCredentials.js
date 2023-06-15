@@ -314,8 +314,8 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
         />
         <ActionGroup>
           <Button
-            ouiaId="edit-acs-details-submit"
-            aria-label="edit_acs_details"
+            ouiaId="edit-acs-credentials-submit"
+            aria-label="edit_acs_credentials"
             variant="primary"
             isDisabled={saving}
             isLoading={saving}
@@ -323,7 +323,12 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
           >
             {__('Edit')}
           </Button>
-          <Button ouiaId="edit-acs-details-cancel" variant="link" onClick={onClose}>
+          <Button
+            ouiaId="edit-acs-credentials-cancel"
+            aria-label="edit-acs-credentials-cancel"
+            variant="link"
+            onClick={onClose}
+          >
             {__('Cancel')}
           </Button>
         </ActionGroup>
