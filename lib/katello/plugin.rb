@@ -523,12 +523,6 @@ Foreman::Plugin.register :katello do
         description: N_("Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')"),
         collection: proxy_download_policies
 
-      setting 'pulp_export_destination',
-        type: :string,
-        default: "/var/lib/pulp/katello-export",
-        full_name: N_('Pulp export destination filepath'),
-        description: N_("On-disk location for exported repositories")
-
       setting 'pulpcore_export_destination',
         type: :string,
         default: "/var/lib/pulp/exports",
