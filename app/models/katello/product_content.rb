@@ -15,6 +15,10 @@ module Katello
       where(:product_id => Product.redhat.select(:id))
     }
 
+    scope :custom, -> {
+      where.not(:product_id => Product.redhat.select(:id))
+    }
+
     scoped_search :on => :name, :relation => :content
     scoped_search :relation => :product, :on => :name, :rename => :product
     scoped_search :on => :content_type, :relation => :content, :complete_value => true
