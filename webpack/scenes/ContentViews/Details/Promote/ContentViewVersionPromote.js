@@ -92,10 +92,10 @@ const ContentViewVersionPromote = ({
   );
 
   const isValid = useCallback((env) => {
-    if (!env.prior) return true;
+    if (!env.prior || versionEnvironments.some(item => item.id === env.prior.id)) return true;
     if (!isChecked(prior(env))) return false;
     return isValid(prior(env));
-  }, [prior, isChecked]);
+  }, [prior, isChecked, versionEnvironments]);
 
   useDeepCompareEffect(() => {
     setForcePromote(userCheckedItems.filter(item => !isValid(item)));

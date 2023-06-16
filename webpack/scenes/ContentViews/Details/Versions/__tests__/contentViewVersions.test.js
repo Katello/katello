@@ -6,6 +6,7 @@ import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewVersions from '../ContentViewVersions';
 import cvVersionsData from './contentViewVersions.fixtures.json';
+import cvVersionsOutOfEnvData from './contentViewVersionsLatestEnvironment.fixtures.json';
 import emptyCVVersionData from './emptyCVVersion.fixtures.json';
 import cvVersionsTasksData from './contentViewVersionsWithTask.fixtures.json';
 import contentViewTaskInProgressResponseData from './contentViewTaskInProgressResponse.fixtures.json';
@@ -15,6 +16,7 @@ import environmentPathsData from '../../../Publish/__tests__/environmentPaths.fi
 import cvIndexData from '../../../__tests__/contentViewList.fixtures.json';
 
 const cvPromotePath = api.getApiUrl('/content_view_versions/10/promote');
+const cvPromotePath2 = api.getApiUrl('/content_view_versions/11/promote');
 const cvIndexPath = api.getApiUrl('/content_views');
 const promoteResponseData = contentViewTaskInProgressResponseData;
 
@@ -91,7 +93,7 @@ test('Can link to view environment and see publish time', async (done) => {
     expect(getAllByText('Library')[0].closest('a'))
       .toHaveAttribute('href', '/lifecycle_environments/1');
     expect(getByText('5 days ago')).toBeTruthy();
-    expect(getAllByText('dev')[0].closest('a'))
+    expect(getAllByText('dev1')[0].closest('a'))
       .toHaveAttribute('href', '/lifecycle_environments/2');
     expect(getAllByText('4 days ago')[0]).toBeTruthy();
 
@@ -256,6 +258,106 @@ test('Can open Promote Modal', async (done) => {
   });
   // Select env prod
   fireEvent.click(getByLabelText('prod'));
+  fireEvent.click(getByLabelText('promote_content_view'));
+  // Modal closes itself
+  await patientlyWaitFor(() => {
+    expect(queryByText('Select a lifecycle environment from the available promotion paths to promote new version.')).toBeNull();
+    expect(getByText(`Version ${firstVersion.version}`)).toBeInTheDocument();
+  });
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(promoteScope);
+  // Page is refreshed
+  assertNockRequest(scope);
+  assertNockRequest(cvScope);
+  act(done);
+});
+
+test('Can open Promote Modal and show out of path warnings', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const cvScope = nockInstance
+    .get(cvIndexPath)
+    .query(true)
+    .reply(200, cvIndexData);
+
+  const scope = nockInstance
+    .get(cvVersions)
+    .query(true)
+    .reply(200, cvVersionsOutOfEnvData);
+
+  const cvPromoteParams = {
+    id: 11,
+    versionEnvironments: [
+      {
+        id: 1,
+        name: 'Library',
+        label: 'Library',
+        publish_date: '5 days',
+        permissions: {
+          readable: true,
+          promotable_or_removable: true,
+          all_hosts_editable: true,
+          all_keys_editable: true,
+        },
+        host_count: 0,
+        activation_key_count: 0,
+      },
+      {
+        id: 3,
+        name: 'test',
+        label: 'test',
+        publish_date: '4 days',
+        permissions: {
+          readable: true,
+          promotable_or_removable: true,
+          all_hosts_editable: true,
+          all_keys_editable: true,
+        },
+        host_count: 0,
+        activation_key_count: 0,
+      },
+    ],
+    description: '',
+    environment_ids: [5, 4],
+    force: true,
+  };
+
+  const promoteScope = nockInstance
+    .post(cvPromotePath2, cvPromoteParams)
+    .reply(202, promoteResponseData);
+
+  const {
+    getByText, queryByText, getByLabelText, getAllByLabelText,
+  } = renderWithRedux(
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
+    renderOptions,
+  );
+
+  expect(queryByText(`Version ${firstVersion.version}`)).toBeNull();
+  await patientlyWaitFor(() => {
+    expect(getByText(`Version ${firstVersion.version}`)).toBeInTheDocument();
+  });
+  // Expand Row Action
+  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Actions')[0]);
+  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+  fireEvent.click(getByText('Promote'));
+  await patientlyWaitFor(() => {
+    expect(getByText('Select a lifecycle environment from the available promotion paths to promote new version.')).toBeInTheDocument();
+    expect(getByLabelText('prod')).toBeInTheDocument();
+  });
+  // Select env prod out of Env path: Library, dev1, test, test2, prod
+  fireEvent.click(getByLabelText('prod'));
+  await patientlyWaitFor(() => {
+    // Force promotion info is shown because test -> prod is out of order
+    expect(getByText('Force promotion')).toBeInTheDocument();
+  });
+  fireEvent.click(getByLabelText('test2'));
+  await patientlyWaitFor(() => {
+    // Force promotion info is shown because test -> test2 -> prod is out of order
+    expect(queryByText('Force promotion')).toBeNull();
+  });
+
   fireEvent.click(getByLabelText('promote_content_view'));
   // Modal closes itself
   await patientlyWaitFor(() => {
