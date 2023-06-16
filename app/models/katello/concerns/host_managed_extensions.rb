@@ -25,6 +25,7 @@ module Katello
         end
 
         def update(attrs)
+          return super if self.content_facet.blank?
           check_cve_attributes(attrs)
           super
         end
