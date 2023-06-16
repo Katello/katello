@@ -30,6 +30,28 @@ module Katello
           inherited_attrs
         end
 
+        def apply_inherited_attributes(attributes, initialized = true)
+          attributes = super(attributes, initialized)
+          facet_attrs = attributes['content_facet_attributes']
+          return attributes if facet_attrs.blank?
+          cv_id = facet_attrs['content_view_id']
+          lce_id = facet_attrs['lifecycle_environment_id']
+          if initialized && (cv_id.blank? || lce_id.blank?)
+            if cv_id.blank?
+              Rails.logger.info "Hostgroup has no content view assigned; using host's existing content view"
+              facet_attrs['content_view_id'] = content_facet&.single_content_view&.id
+            end
+            if lce_id.blank?
+              Rails.logger.info "Hostgroup has no lifecycle environment assigned; using host's existing lifecycle environment"
+              facet_attrs['lifecycle_environment_id'] = content_facet&.single_lifecycle_environment&.id
+            end
+            attributes['content_facet_attributes'] = facet_attrs
+          else
+            Rails.logger.info "Hostgroup has content view and lifecycle environment assigned; using those"
+          end
+          attributes
+        end
+
         def smart_proxy_ids
           ids = super
           ids << content_source_id
