@@ -10,6 +10,8 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   def models
     @content_view = katello_content_views(:acme_default)
     @environment = katello_environments(:library)
+    @dev = katello_environments(:dev)
+    @cv2 = katello_content_views(:library_view_no_version)
     @host = FactoryBot.create(:host)
   end
 
@@ -46,6 +48,27 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     assert_empty host.content_facet.content_view_environments
 
     host_index_and_show(host)
+  end
+
+  def test_content_facet_attributes_assigned_as_cve
+    host = FactoryBot.create(:host, :with_content, :with_subscription,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
+    orig_cves = host.content_facet.content_view_environment_ids.to_a
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_view_id => @cv2.id,
+        :lifecycle_environment_id => @dev.id
+      }
+    }, session: set_session_user
+    assert_response :success
+    host.content_facet.reload
+    target_cve = ::Katello::ContentViewEnvironment.where(:content_view_id => @cv2.id,
+      :environment_id => @dev.id).first
+    assert_equal 1, host.content_facet.content_view_environment_ids.count
+    refute_equal orig_cves, host.content_facet.content_view_environment_ids
+    assert_equal target_cve, host.content_facet.content_view_environments.first
   end
 
   def test_with_subscriptions
