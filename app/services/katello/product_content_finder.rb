@@ -30,6 +30,10 @@ module Katello
       consumable.organization.enabled_product_content_for(roots)
     end
 
+    def custom_content_labels
+      product_content.custom.map { |pc| pc.product.root_repositories.map(&:custom_content_label) }.flatten.uniq
+    end
+
     def self.wrap_with_overrides(product_contents:, overrides:, status: nil)
       pc_with_overrides = product_contents.map { |pc| ProductContentPresenter.new(pc, overrides) }
       if status
