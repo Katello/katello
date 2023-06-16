@@ -6,7 +6,7 @@ module Katello
         before_action :set_up_content_view_environment, only: [:update]
 
         def set_up_content_view_environment
-          return unless params[:host] && params[:host][:content_facet_attributes]
+          return unless @host&.content_facet.present? && params[:host]&.[](:content_facet_attributes)&.present?
           cv_id = params[:host][:content_facet_attributes].delete(:content_view_id)
           env_id = params[:host][:content_facet_attributes].delete(:lifecycle_environment_id)
           Rails.logger.info "set_up_content_view_environment: cv_id=#{cv_id}, env_id=#{env_id}"
