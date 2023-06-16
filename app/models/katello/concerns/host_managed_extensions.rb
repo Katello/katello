@@ -6,7 +6,7 @@ module Katello
       include ForemanTasks::Concerns::ActionSubject
 
       module Overrides
-        def update(attrs)
+        def check_cve_attributes(attrs)
           if attrs[:content_facet_attributes]
             cv_id = attrs[:content_facet_attributes].delete(:content_view_id)
             lce_id = attrs[:content_facet_attributes].delete(:lifecycle_environment_id)
@@ -17,6 +17,15 @@ module Katello
               fail "content_view_id and lifecycle_environment_id must be provided together"
             end
           end
+        end
+
+        def attributes=(attrs)
+          check_cve_attributes(attrs)
+          super
+        end
+
+        def update(attrs)
+          check_cve_attributes(attrs)
           super
         end
 
