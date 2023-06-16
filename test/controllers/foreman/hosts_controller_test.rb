@@ -59,7 +59,7 @@ class HostsControllerTest < ActionController::TestCase
         :content_source_id => ""
       }
     } }, session: set_session_user
-    assert_equal orig_cves, @host.content_facet.content_view_environment_ids
+    assert_equal_arrays orig_cves, @host.content_facet.content_view_environment_ids
   end
 
   context 'csv' do
