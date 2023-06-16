@@ -104,6 +104,24 @@ module Katello
         host.update(content_facet_attributes: {content_view_id: @view.id, lifecycle_environment_id: nil})
       end
     end
+
+    def test_check_cve_attributes_removes_cv_and_lce
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      host_attrs = host.attributes.deep_clone
+      host_attrs[:content_facet_attributes] = {content_view_id: @view.id, lifecycle_environment_id: @library.id}
+      # check_cve_attributes should remove the content_view_id and lifecycle_environment_id
+      # so the following should not error
+      host.attributes = host_attrs
+    end
+
+    def test_check_cve_attributes
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      host_attrs = host.attributes.deep_clone
+      host_attrs[:content_facet_attributes] = {content_view_id: @view.id, lifecycle_environment_id: @library.id}
+      host.check_cve_attributes(host_attrs)
+      refute host_attrs.key?(:content_view_id)
+      refute host_attrs.key?(:lifecycle_environment_id)
+    end
   end
 
   class HostManagedExtensionsUpdateTest < HostManagedExtensionsTestBase
