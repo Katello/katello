@@ -11,10 +11,14 @@ module Katello
           super
         end
 
-        def fetch_paths(content_path)
+        def fetch_repo_set(content_path)
           url = "/katello/api/v2/repository_sets?organization_id=#{organization['id']}&search=#{CGI.escape("path = #{content_path}")}"
           response = get(url)
-          repo_set = JSON.parse(response)['results'].first
+          JSON.parse(response)['results'].first
+        end
+
+        def fetch_paths(content_path)
+          repo_set = fetch_repo_set(content_path)
 
           fail _("Upstream organization %s does not provide this content path") % @organization_label if repo_set.nil?
 
@@ -33,8 +37,8 @@ module Katello
           results = json_body['results']
 
           results.map do |repo|
-            Katello::Content.substitute_content_path(arch: repo[:arch],
-                                                     releasever: repo[:minor],
+            Katello::Content.substitute_content_path(arch: repo['arch'],
+                                                     releasever: repo['minor'],
                                                      content_path: content_path)
           end
         end
