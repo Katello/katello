@@ -137,7 +137,7 @@ export default ({
         selectRPMPackagesComparison(state, versionOneId, versionTwoId, viewBy),
       statusSelector: state =>
         selectRPMPackagesComparisonStatus(state, versionOneId, versionTwoId, viewBy),
-      autocompleteEndpoint: 'katello/api/v2/packages',
+      autocompleteEndpoint: '/katello/api/v2/packages',
       bookmarkController: 'katello_content_view_components',
       fetchItems: params => getRPMPackagesComparison(
         versionOneId,
