@@ -1,3 +1,13 @@
+# 4.7.6 Whiskey Sour (2023-06-20)
+
+## Bug Fixes
+
+### Subscriptions
+* Add missing SCA code to release branches ([#36505](https://projects.theforeman.org/issues/36505)
+
+### Content Hosts
+* Handle nil in registered content host report ([#36486](https://projects.theforeman.org/issues/36486)
+
 # 4.7.5 Whiskey Sour (2023-05-04)
 
 ## Features
