@@ -24,12 +24,8 @@ This will set up a virtual machine with the Katello codebase checked out.
 Please use the forklift documentation found in the repository for how
 to get started with forklift.
 
-There is also
-[katello-devel-installer](https://github.com/Katello/katello-installer#development-usage)
-if you would like to use that.
-
-If you have questions or issues with any of the above methods, feel free to ask
-for assistance on #theforeman-dev IRC channel on freenode or via the 
+If you have questions about or issues with deploying a development environment, feel free to ask
+for assistance in #theforeman-dev IRC channel on libera.chat or via the
 [community forum](https://community.theforeman.org/)
 
 ### Test Run
@@ -41,10 +37,11 @@ At this point, the development environment should be completely setup and the Ka
     ```bash
     cd $GITDIR/foreman
 
-    rails s
+    bundle exec foreman start
     ```
 
 1. Access Foreman in your browser (e.g. `https://<hostname>/`). Note that while Rails will listen on port 3000, the dev installer will set up a reverse proxy so HTTPS on port 443 will work.
+1. The first time you do this, you will need to accept the self-signed certificate on port 3808 by first visiting `https://<hostname>:3808`
 1. Login to Foreman (default: `admin` and `changeme`)
 1. If you go to `https://<hostname>/about` and view the "Plugins" tab, you should see a "Katello" plugin listed.
 
