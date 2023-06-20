@@ -45,7 +45,7 @@ const ActivationKeys = ({
   return (
     <FormGroup
       label={__('Activation Keys')}
-      fieldId="reg_katello_ak"
+      fieldId="activation_keys_field"
       helperText={hostGroupActivationKeys && sprintf('From host group: %s', hostGroupActivationKeys)}
       helperTextInvalid={activationKeys?.length === 0 ? <a href="/activation_keys/new">{__('Create new activation key')}</a> : __('No Activation Keys selected')}
       validated={validateAKField(hostGroupId, pluginValues?.activationKeys, hostGroupActivationKeys)}
@@ -53,14 +53,14 @@ const ActivationKeys = ({
       isRequired
     >
       <Select
-        ouiaId="reg-katello-ak"
+        ouiaId="activation-keys-field"
         selections={selectedKeys}
         variant={SelectVariant.typeaheadMulti}
         onToggle={() => setIsOpen(!isOpen)}
         onSelect={onSelect}
         onClear={() => updatePluginValues([])}
         isOpen={isOpen}
-        id="reg_katello_ak"
+        id="activation_keys_field"
         className="without_select2"
         isDisabled={isLoading || activationKeys?.length === 0}
         placeholderText={activationKeys?.length === 0 ? __('No Activation keys to select') : ''}
