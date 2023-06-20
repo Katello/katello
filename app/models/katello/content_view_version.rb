@@ -106,6 +106,10 @@ module Katello
       name
     end
 
+    def self.contains_file(file_unit_id)
+      where(id: Katello::Repository.where(id: Katello::RepositoryFileUnit.where(file_unit_id: file_unit_id).select(:repository_id)).select(:content_view_version_id))
+    end
+
     def ansible_collections
       AnsibleCollection.in_repositories(archived_repos)
     end

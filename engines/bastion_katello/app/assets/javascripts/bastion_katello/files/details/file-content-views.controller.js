@@ -11,7 +11,8 @@
         var contentViewsNutupane,
             params = {
                 'file_id': $scope.$stateParams.fileId,
-                'organization_id': CurrentOrganization
+                'organization_id': CurrentOrganization,
+                'nondefault': true
             };
 
         contentViewsNutupane = new Nutupane(ContentViewVersion, params);
