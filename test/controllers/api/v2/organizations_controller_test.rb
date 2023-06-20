@@ -124,9 +124,10 @@ module Katello
       assert_sync_task(::Actions::Katello::CdnConfiguration::Update) do |organization, params|
         assert_equal organization.id, @organization.id
         assert_equal params[:url], url
+        assert_equal params[:custom_cdn_auth_enabled], true
       end
 
-      put(:cdn_configuration, params: { :id => @organization.id, :url => url })
+      put(:cdn_configuration, params: { :id => @organization.id, :url => url, :custom_cdn_auth_enabled => true })
       assert_response :success
     end
 

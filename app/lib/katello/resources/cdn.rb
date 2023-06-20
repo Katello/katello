@@ -67,6 +67,10 @@ module Katello
             self.new(cdn_configuration.url, options)
           elsif cdn_configuration.custom_cdn?
             options[:ssl_ca_cert] = cdn_configuration.ssl_ca
+            if cdn_configuration.custom_cdn_auth_enabled?
+              options[:ssl_client_cert] = OpenSSL::X509::Certificate.new(product.certificate)
+              options[:ssl_client_key] = OpenSSL::PKey::RSA.new(product.key)
+            end
             self.new(cdn_configuration.url, options)
           else
             options[:username] = cdn_configuration.username
