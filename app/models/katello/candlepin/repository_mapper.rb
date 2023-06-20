@@ -56,6 +56,7 @@ module Katello
       end
 
       def substitutor
+        fail _("Manifest does not have a valid subscription") if product.cdn_resource.nil?
         product.cdn_resource.substitutor
       end
 
