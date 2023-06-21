@@ -296,7 +296,7 @@ module Katello
       if self.upstream_username.blank? && self.upstream_password.blank?
         self.upstream_username = nil
         self.upstream_password = nil
-        if !self.url.blank? && self.url.start_with?('uln') && !self.content
+        if !self.url.blank? && self.url.start_with?('uln')
           errors.add(:base, N_("Upstream username and upstream password cannot be blank for ULN repositories"))
         end
         return
@@ -333,7 +333,7 @@ module Katello
       return if self.deb_releases.blank? && self.url.blank?
       if self.deb_releases.blank?
         errors.add(:base, N_("When \"Upstream URL\" is set, \"Releases/Distributions\" must also be set!"))
-      elsif self.url.blank? && !self.content
+      elsif self.url.blank?
         errors.add(:base, N_("When \"Releases/Distributions\" is set, \"Upstream URL\" must also be set!"))
       end
     end
@@ -370,10 +370,6 @@ module Katello
       "#{organization.label} #{product.label} #{label}".gsub(/\s/, "_")
     end
 
-    def content
-      Katello::Content.find_by(:cp_content_id => self.content_id, :organization_id => self.product.organization_id)
-    end
-
     def docker?
       self.content_type == Repository::DOCKER_TYPE
     end
@@ -392,6 +388,10 @@ module Katello
 
     def deb?
       self.content_type == Repository::DEB_TYPE
+    end
+
+    def deb_using_structured_apt?
+      self.deb? && !self.content_id
     end
 
     def ansible_collection?
@@ -420,12 +420,8 @@ module Katello
       changeable_attributes.any? { |key| previous_changes.key?(key) }
     end
 
-    def raw_content_path
-      self.content.content_url
-    end
-
     def repo_mapper
-      @repo_mapper ||= Katello::Candlepin::RepositoryMapper.new(self.product, self.content, self.substitutions)
+      @repo_mapper ||= Katello::Candlepin::RepositoryMapper.new(self.product, self.library_instance.content, self.substitutions)
     end
 
     def calculate_updated_name

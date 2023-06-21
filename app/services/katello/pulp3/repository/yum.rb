@@ -20,8 +20,8 @@ module Katello
           options.merge!(policy: root.download_policy)
         end
 
-        def publication_options(repository_version)
-          options = super(repository_version)
+        def publication_options(repository)
+          options = super(repository)
           # To work around https://projects.theforeman.org/issues/37715
           checksum_type = if root.checksum_type.nil?
                             'sha256'

@@ -214,9 +214,9 @@ module Katello
           products.any?(&:syncable_content?)
         end
 
-        def enabled_product_content_for(roots)
+        def enabled_product_content_for(content_ids)
           Katello::ProductContent.joins(:content).where(:product_id => self.products.enabled,
-                             "#{::Katello::Content.table_name}.cp_content_id" => roots.select(:content_id))
+                             "#{::Katello::Content.table_name}.cp_content_id" => content_ids)
         end
 
         def enabled_product_content

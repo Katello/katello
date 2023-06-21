@@ -73,8 +73,11 @@ module Katello
               .with(name: 'katello_deb_sign')
               .returns(signing_service_response_list)
             service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
+            repo = mock
+            repo.expects(:deb_using_structured_apt?).returns(false)
+            repo.expects(:version_href).returns(1)
 
-            pub_opts = service.publication_options(1)
+            pub_opts = service.publication_options(repo)
             assert pub_opts[:simple]
             assert pub_opts[:structured]
             refute pub_opts[:signing_service]
@@ -93,7 +96,11 @@ module Katello
               .returns(signing_service_response_list)
             service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
 
-            pub_opts = service.publication_options(1)
+            repo = mock
+            repo.expects(:deb_using_structured_apt?).returns(false)
+            repo.expects(:version_href).returns(1)
+
+            pub_opts = service.publication_options(repo)
             assert pub_opts[:simple]
             assert pub_opts[:structured]
             assert pub_opts[:signing_service]

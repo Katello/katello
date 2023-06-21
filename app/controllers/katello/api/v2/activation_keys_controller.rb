@@ -238,10 +238,10 @@ module Katello
           validate_content_overrides_enabled(override)
         end
         specified_labels.uniq!
-        existing_labels = organization.contents.where(label: specified_labels).uniq
+        existing_labels = organization.contents.where(label: specified_labels).pluck(:label).uniq
 
         unless specified_labels.size == existing_labels.size
-          missing_labels = specified_labels - existing_labels.pluck(:label)
+          missing_labels = specified_labels - existing_labels
           msg = "Content label(s) \"#{missing_labels.join(", ")}\" were not found in the Organization \"#{organization}\""
           fail HttpErrors::BadRequest, _(msg)
         end

@@ -65,7 +65,7 @@ module Actions
             if repo.root.repositories.where.not(id: repo.id).empty? &&
                 !repo.redhat? &&
                 !skip_environment_update
-              plan_action(::Actions::Katello::Product::ContentDestroy, repo.root)
+              plan_action(::Actions::Katello::Product::ContentDestroy, repo)
             end
           end
         end

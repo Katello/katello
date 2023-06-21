@@ -172,7 +172,7 @@ module Katello
     scoped_search :on => :label, :relation => :root, :complete_value => true, :only_explicit => true
     scoped_search :on => :content_label, :ext_method => :search_by_content_label, :default_operator => :like
 
-    delegate :product, :redhat?, :custom?, :to => :root
+    delegate :product, :redhat?, :custom?, :deb_using_structured_apt?, :to => :root
     delegate :yum?, :docker?, :deb?, :file?, :ostree?, :ansible_collection?, :generic?, :to => :root
     delegate :name, :label, :docker_upstream_name, :url, :download_concurrency, :to => :root
 
@@ -185,7 +185,6 @@ module Katello
              :ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token,
              :http_proxy_policy, :http_proxy_id, :prevent_updates, :to => :root
 
-    delegate :content_id, to: :root, allow_nil: true
     delegate :repository_type, to: :root
 
     def self.exportable_types(format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
@@ -209,6 +208,16 @@ module Katello
       path = content_path.sub(%r|^/|, '')
       path_prefix = [environment.organization.label, environment.label].join('/')
       "#{path_prefix}/#{path}"
+    end
+
+    def content_id
+      # Currently deb content will store a content_id on each Repository, while all other content
+      # types will store one on the RootRepository.
+      self[:content_id] || root.content_id
+    end
+
+    def content
+      Katello::Content.find_by(:cp_content_id => self.content_id, :organization_id => self.product.organization_id)
     end
 
     def to_label
@@ -270,6 +279,10 @@ module Katello
 
     def content_view
       self.content_view_version.content_view
+    end
+
+    def content_view_environment
+      self.content_view.content_view_environment(self.environment)
     end
 
     # Skip setting container name if the repository is not container type or
@@ -1022,6 +1035,27 @@ module Katello
 
     def in_content_view?(content_view)
       content_view.repositories.include? self
+    end
+
+    def deb_content_url_options
+      return '' unless version_href
+
+      components = deb_pulp_components.join(',')
+      distributions = deb_pulp_distributions.join(',')
+      "/?comp=#{components}&rel=#{distributions}"
+    end
+
+    def deb_pulp_components(version_href = self.version_href)
+      return [] if version_href.blank?
+
+      pulp_api = Katello::Pulp3::Repository.instance_for_type(self, SmartProxy.pulp_primary).api.content_release_components_api
+      pulp_api.list({:repository_version => version_href}).results.map { |x| x.component }.uniq
+    end
+
+    def deb_pulp_distributions(version_href = self.version_href)
+      return [] if version_href.blank?
+      pulp_api = Katello::Pulp3::Repository.instance_for_type(self, SmartProxy.pulp_primary).api.content_release_components_api
+      pulp_api.list({:repository_version => version_href}).results.map { |x| x.distribution }.uniq
     end
 
     def sync_status

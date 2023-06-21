@@ -4,7 +4,6 @@ module Actions
   module Katello
     module Repository
       class Update < Actions::EntryAction
-        # rubocop:disable Metrics/MethodLength
         def plan(root, repo_params)
           repository = root.library_instance
           action_subject root.library_instance
@@ -20,27 +19,19 @@ module Actions
           root.update!(repo_params)
 
           if update_content?(repository)
-            content = root.content
-
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
-                        :owner => repository.organization.label,
-                        :content_id => root.content_id,
-                        :name => root.name,
-                        :content_url => root.custom_content_path,
-                        :gpg_key_url => repository.yum_gpg_key_url,
-                        :label => content.label,
-                        :type => root.content_type,
-                        :arches => root.format_arches,
-                        :os_versions => root.os_versions&.join(','),
-                        :metadata_expire => root.metadata_expire
-                      )
-
-            content.update!(name: root.name,
-                                       content_url: root.custom_content_path,
-                                       content_type: repository.content_type,
-                                       label: content.label,
-                                       gpg_url: repository.yum_gpg_key_url)
+                        owner:           repository.organization.label,
+                        repository_id:   repository.id,
+                        name:            root.name,
+                        type:            root.content_type,
+                        arches:          root.format_arches,
+                        label:           repository.content.label,
+                        content_url:     root.custom_content_path,
+                        gpg_key_url:     repository.yum_gpg_key_url,
+                        os_versions:     root.os_versions&.join(','),
+                        metadata_expire: root.metadata_expire)
           end
+
           if root.pulp_update_needed?
             sequence do
               plan_action(::Actions::Pulp3::Orchestration::Repository::Update,
