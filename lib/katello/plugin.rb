@@ -668,6 +668,18 @@ Foreman::Plugin.register :katello do
         default: true,
         full_name: N_('Distribute archived content view versions'),
         description: N_("If this is enabled, repositories of content view versions without environments (\"archived\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'.")
+
+      setting 'deb_use_simple_publish',
+        type: :boolean,
+        default: true,
+        full_name: N_('Use simple publish for deb'),
+        description: N_("If enabled APT repos will publish a catch all Release file under /dists/default/ with a single component named 'all' in it.")
+
+      setting 'deb_use_structured_content',
+        type: :boolean,
+        default: false,
+        full_name: N_('Use structured content for deb clients'),
+        description: N_("If enabled, repo URL's for deb content hosts will be appended with structure information where available.")
     end
   end
 

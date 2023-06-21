@@ -447,6 +447,24 @@ module Katello
       end
     end
 
+    def format_custom_content_path
+      path = custom_content_path
+      if content_type == ::Katello::Repository::DEB_TYPE && Setting['deb_use_structured_content']
+        if deb_components.present? && deb_releases.present?
+          params = []
+          params << "comp=#{deb_components.gsub(" ", ",")}"
+          params << "rel=#{deb_releases.gsub(" ", ",")}"
+          path += "/?#{params.join('&')}"
+        else
+          Rails.logger.warn("deb_use_structured_content is set, but repository #{self.name} is lacking deb_releases or deb_components, so we are defaulting to using simple content.")
+          unless Setting['deb_use_simple_publish']
+            Rails.logger.warn("Defaulting to using simple content for repository #{self.name}, but deb_use_simple_publish is not set! This can lead to errors on the clients!")
+          end
+        end
+      end
+      path
+    end
+
     apipie :class, desc: 'A class representing Repository object' do
       name 'Repository'
       refs 'Repository'

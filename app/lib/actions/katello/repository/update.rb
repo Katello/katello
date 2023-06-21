@@ -26,7 +26,7 @@ module Actions
                         :owner => repository.organization.label,
                         :content_id => root.content_id,
                         :name => root.name,
-                        :content_url => root.custom_content_path,
+                        :content_url => root.format_custom_content_path,
                         :gpg_key_url => repository.yum_gpg_key_url,
                         :label => content.label,
                         :type => root.content_type,
@@ -36,7 +36,7 @@ module Actions
                       )
 
             content.update!(name: root.name,
-                                       content_url: root.custom_content_path,
+                                       content_url: root.format_custom_content_path,
                                        content_type: repository.content_type,
                                        label: content.label,
                                        gpg_url: repository.yum_gpg_key_url)
