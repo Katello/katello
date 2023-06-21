@@ -181,7 +181,6 @@ module Katello
              :ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token,
              :http_proxy_policy, :http_proxy_id, :to => :root
 
-    delegate :content_id, to: :root, allow_nil: true
     delegate :repository_type, to: :root
 
     def self.exportable_types(format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
@@ -205,6 +204,16 @@ module Katello
       path = content_path.sub(%r|^/|, '')
       path_prefix = [environment.organization.label, environment.label].join('/')
       "#{path_prefix}/#{path}"
+    end
+
+    def content_id
+      # Currently deb content will store a content_id on each Reposiotry, while all other content
+      # types will store one on the RootRepository.
+      self[:content_id] || root.content_id
+    end
+
+    def content
+      Katello::Content.find_by(:cp_content_id => self.content_id, :organization_id => self.product.organization_id)
     end
 
     def to_label
@@ -1012,6 +1021,39 @@ module Katello
 
     def in_content_view?(content_view)
       content_view.repositories.include? self
+    end
+
+    def deb_content_url_options
+      if self.version_href
+        deb_content_url_options = "/?comp=#{self.deb_components.join(",")}&rel=#{self.deb_distributions.join(",")}"
+      else
+        deb_content_url_options = ''
+      end
+      return deb_content_url_options
+    end
+
+    def deb_components(version_href = self.version_href)
+      if version_href.blank?
+        # I am not sure how best to handle this case. It is really a failure condition from a structured APT
+        # point of view. I am also not sure when and where this can happen.
+        components = []
+      else
+        pulp_api = self.backend_service(SmartProxy.pulp_primary).api
+        components = pulp_api.content_release_components_api.list({:repository_version => self.version_href}).results.map { |x| x.component }.uniq
+      end
+      return components
+    end
+
+    def deb_distributions(version_href = self.version_href)
+      if version_href.blank?
+        # I am not sure how best to handle this case. It is really a failure condition from a structured APT
+        # point of view. I am also not sure when and where this can happen.
+        distributions = []
+      else
+        pulp_api = self.backend_service(SmartProxy.pulp_primary).api.content_release_components_api
+        distributions = pulp_api.list({:repository_version => self.version_href}).results.map { |x| x.distribution }.uniq
+      end
+      return distributions
     end
 
     def sync_status

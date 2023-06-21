@@ -92,7 +92,7 @@ module Actions
         def handle_custom_content(repository, remove_from_content_view_versions)
           #if this is the last instance of a custom repo, destroy the content
           if remove_from_content_view_versions || repository.root.repositories.where.not(id: repository.id).empty?
-            plan_action(::Actions::Katello::Product::ContentDestroy, repository.root)
+            plan_action(::Actions::Katello::Product::ContentDestroy, repository)
           end
         end
 

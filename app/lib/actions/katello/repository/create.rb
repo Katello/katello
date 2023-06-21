@@ -7,36 +7,34 @@ module Actions
           clone = args[:clone] || false
           force_repo_create = args[:force_repo_create] || false
           repository.save!
-          root = repository.root
 
           action_subject(repository)
 
-          org = repository.organization
           sequence do
             # Container push repositories will already be in pulp. The version_href is
             # directly updated after a push.
-            unless root.is_container_push
+            unless repository.root.is_container_push
               create_action = plan_action(Pulp3::Orchestration::Repository::Create,
                                           repository, SmartProxy.pulp_primary, force_repo_create)
               return if create_action.error
             end
 
-            # when creating a clone, the following actions are handled by the
-            # publish/promote process
-            unless clone
-              view_env = org.default_content_view.content_view_environment(org.library)
+            # Needs to be performed for all library instances as well as deb clone repositories
+            if !clone || repository.deb? && Setting['deb_use_structured_content']
               if repository.product.redhat?
-                plan_action(Actions::Candlepin::Environment::AddContentToEnvironment, :view_env_cp_id => view_env.cp_id, :content_id => repository.content_id)
+                content_id = repository.content_id
               else
-                unless root.content
-                  content_create = plan_action(Katello::Product::ContentCreate, root)
-                  plan_action(Actions::Candlepin::Environment::AddContentToEnvironment, :view_env_cp_id => view_env.cp_id, :content_id => content_create.input[:content_id])
-                end
+                content_create = plan_action(Katello::Product::ContentCreate, repository)
+                content_id = content_create.input[:content_id]
               end
+              # TODO: For structured APT this may need an environment other than library!
+              environment = repository.organization.library
+              view_env = repository.organization.default_content_view.content_view_environment(environment)
+              plan_action(Actions::Candlepin::Environment::AddContentToEnvironment, :view_env_cp_id => view_env.cp_id, :content_id => content_id)
             end
 
             # Container push repos do not need metadata generation or ACS (they do not sync)
-            unless root.is_container_push
+            unless repository.root.is_container_push
               concurrence do
                 plan_self(:repository_id => repository.id, :clone => clone)
                 if !clone && repository.url.present?

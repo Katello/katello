@@ -15,6 +15,16 @@ module Actions
           generate_metadata = options.fetch(:generate_metadata, true)
           plan_action(Katello::Repository::MetadataGenerate, repository, :dependency => import_upload_task, :force_publication => true) if generate_metadata
 
+          if repository.deb? && Setting['deb_use_structured_content'] && generate_metadata
+            plan_action(::Actions::Candlepin::Product::ContentUpdate,
+                        owner:           repository.organization.label,
+                        repository_id:   repository.id,
+                        content_url:     repository.root.custom_content_path,
+                        arches:          repository.root.format_arches,
+                        gpg_key_url:     repository.yum_gpg_key_url,
+                        metadata_expire: repository.root.metadata_expire)
+          end
+
           recent_range = 5.minutes.ago.utc.iso8601
           plan_action(Katello::Repository::FilteredIndexContent,
                       id: repository.id,

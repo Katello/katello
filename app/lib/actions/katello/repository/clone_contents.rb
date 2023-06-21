@@ -25,6 +25,17 @@ module Actions
 
             index_options = {id: new_repository.id, force_index: true}
             index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
+
+            if new_repository.deb? && Setting['deb_use_structured_content'] && generate_metadata
+              plan_action(Candlepin::Product::ContentUpdate,
+                          owner:           new_repository.organization.label,
+                          repository_id:   new_repository.id,
+                          content_url:     new_repository.root.custom_content_path,
+                          arches:          new_repository.root.format_arches,
+                          gpg_key_url:     new_repository.yum_gpg_key_url,
+                          metadata_expire: new_repository.root.metadata_expire)
+            end
+
             plan_action(Katello::Repository::IndexContent, index_options)
           end
         end
