@@ -71,7 +71,7 @@ module Actions
               products_to_disassociate.each do |product|
                 product.repositories.library.with_type(acs.content_type).each do |repo|
                   smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id, repository_id: repo.id)
-                  plan_action(Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
+                  plan_action(Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs) if smart_proxy_acs.present?
                 end
               end
             end
