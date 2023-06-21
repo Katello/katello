@@ -663,6 +663,13 @@ Foreman::Plugin.register :katello do
         default: true,
         full_name: N_('Calculate content counts on smart proxies automatically'),
         description: N_("If this is enabled, content counts on smart proxies will be updated automatically after content sync.")
+
+      setting 'deb_enable_structured_apt',
+        type: :boolean,
+        default: false,
+        full_name: N_('Enable structured APT for deb content'),
+        description: N_("APT repos in katello will have the same repo structure as the remote repos they are syncronized from. " \
+                        "This feature must be enabled/disabled by running 'foreman-rake katello:enable_structured_content_for_deb' in order to migrate existing deb content.")
     end
   end
 

@@ -45,6 +45,8 @@ module Katello
         Katello::Repository.where("id not in (#{@library_repo.id})").destroy_all
         Katello::Repository.where("id not in (#{@library_repo.id})").destroy_all
 
+        ::Katello::Resources::Candlepin::Environment.expects(:add_content)
+
         Rake.application.invoke_task('katello:correct_repositories')
         @backend_service.read
       end

@@ -23,6 +23,10 @@ module Katello
         def copy_api
           PulpDebClient::DebCopyApi.new(api_client)
         end
+
+        def content_release_components_api
+          PulpDebClient::ContentReleaseComponentsApi.new(api_client)
+        end
       end
     end
   end
