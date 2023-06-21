@@ -668,6 +668,13 @@ Foreman::Plugin.register :katello do
         default: false,
         full_name: N_('Hide Reclaim Space Warning'),
         description: N_('If this is enabled, the Smart Proxy page will suppress the warning message about reclaiming space.')
+
+      setting 'deb_enable_structured_apt',
+        type: :boolean,
+        default: false,
+        full_name: N_('Enable structured APT for deb content'),
+        description: N_("If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. " \
+                        "You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.")
     end
   end
 

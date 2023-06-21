@@ -33,9 +33,9 @@ module Katello
       end
 
       def self.repository_exist_in_backend?(repository)
-        return false if repository.root.content_id.blank?
+        return false if repository.content_id.blank?
 
-        ::Katello::Resources::Candlepin::Content.get(repository.organization.label, repository.root.content_id)
+        ::Katello::Resources::Candlepin::Content.get(repository.organization.label, repository.content_id)
         true
       rescue RestClient::NotFound
         false

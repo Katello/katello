@@ -37,7 +37,7 @@ module ::Actions::Katello::Product
 
           action = create_action action_class
           action.stubs(:action_subject).with(@repository)
-          plan_action action, @repository.root
+          plan_action action, @repository
           assert_action_planned_with action, candlepin_remove_class, product_id: @product.cp_id,
                                                                     owner: @product.organization.label,
                                                                     content_id: @repository.content_id
@@ -46,11 +46,11 @@ module ::Actions::Katello::Product
         end
 
         it 'plans when Content is missing' do
-          @repository.root.expects(:content).returns(nil)
+          @repository.expects(:content).returns(nil)
 
           action = create_action action_class
           action.stubs(:action_subject).with(@repository)
-          plan_action action, @repository.root
+          plan_action action, @repository
           assert_action_planned_with action, candlepin_remove_class, product_id: @product.cp_id,
                                                                     owner: @product.organization.label,
                                                                     content_id: @repository.content_id
@@ -64,14 +64,14 @@ module ::Actions::Katello::Product
           action = create_action action_class
           action.stubs(:action_subject).with(@repository)
 
-          plan_action action, @repository.root
+          plan_action action, @repository
           assert_empty @content.product_contents
         end
 
         it 'remove contents if other content exists in different product' do
           action = create_action action_class
           action.stubs(:action_subject).with(@repository)
-          plan_action action, @repository.root
+          plan_action action, @repository
           assert_action_planed action, candlepin_remove_class
         end
       end
@@ -202,9 +202,9 @@ module ::Actions::Katello::Product
       plan_action(action, product)
 
       assert_action_planned_with(action, candlepin_destroy_class, cp_id: product.cp_id, owner: product.organization.label)
-      assert_action_planned_with(action, ::Actions::Katello::Product::ContentDestroy) do |root|
-        root.first.repositories.where.not(id: root.first.repositories.first.id).empty?
-        !root.first.repositories.first.redhat?
+      assert_action_planned_with(action, ::Actions::Katello::Product::ContentDestroy) do |repo|
+        repo.first.root.repositories.where.not(id: repo.first.root.repositories.first.id).empty?
+        !repo.first.root.repositories.first.redhat?
       end
       assert_action_planned_with(action, ::Actions::Katello::Repository::Destroy) do |repo|
         default_view_repos.include?(repo.first.id)
