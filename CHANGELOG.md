@@ -1,3 +1,22 @@
+# 4.8.2 Phoenix (2023-06-21)
+
+## Bug Fixes
+
+### Content Views
+ * Content View comparison - RPM packages search missing auto completion ([#36516](https://projects.theforeman.org/issues/36516), [76fdd41f](https://github.com/Katello/katello.git/commit/76fdd41fcf9f8650cf188612cd5cecc7d41125c7))
+
+### Hosts
+ * undefined method `content_view=' for #<Katello::Host::ContentFacet:0x00007fc530855ac8> ([#36504](https://projects.theforeman.org/issues/36504), [ccd234ac](https://github.com/Katello/katello.git/commit/ccd234acfa7c7294f036d3904b01ca74aed9a985))
+ * Editing a host results in an error "content_view_id and lifecycle_environment_id must be provided together" ([#36498](https://projects.theforeman.org/issues/36498), [08941da7](https://github.com/Katello/katello.git/commit/08941da7038f16286688e237824560442f8afb54))
+ * Can't add hostgroup to new host ([#36462](https://projects.theforeman.org/issues/36462), [2fdd82af](https://github.com/Katello/katello.git/commit/2fdd82af41cb95ea54b48a59f535ab0e40af6436))
+ * hammer host update fails with "unknown attribute ‘content_view_id’ for Katello::Host::ContentFacet" when you pass a content view / LCE ([#36440](https://projects.theforeman.org/issues/36440), [0a200518](https://github.com/Katello/katello.git/commit/0a200518702c6d87ade221a030701dfe6e8cab22))
+ * Arch restriction label missing from Repository sets for repos without URL ([#36430](https://projects.theforeman.org/issues/36430), [338eb1db](https://github.com/Katello/katello.git/commit/338eb1dbe72be020ea02bc088afed2e3607aacfc))
+
+### Inter Server Sync
+ *  Unable to enable any repository in network sync ([#36482](https://projects.theforeman.org/issues/36482), [03e1186c](https://github.com/Katello/katello.git/commit/03e1186c1922658a0f55bada97cda10959611966))
+
+### Other
+ * Failed to update host: undefined method `custom_content_labels' for #<Katello::ProductContentFinder> when turning on SCA ([#36505](https://projects.theforeman.org/issues/36505))
 # 4.8.1 Phoenix (2023-05-22)
 
 ## Bug Fixes
