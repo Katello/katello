@@ -164,10 +164,12 @@ module Katello
         prefixes = %w(/pulp/deb/ /pulp/repos/ /pulp/content/)
         relative_paths = []
 
-        # paths == ["/pulp/content/Default_Organization/Library/custom/Test_product/test2"]
+        # paths == ["/pulp/content/Default_Organization/Library/custom/Test_product/test2",
+        #           "/pulp/content/Org/Library/custom/Test_product/test2/%3Fcomp%3Dmain%26rel%3Dstable"]
         paths.each do |path|
           if (prefix = prefixes.find { |pre| path.start_with?(pre) })
-            relative_paths << path.gsub(prefix, '')
+            # strip prefix and structured_apt postfix before adding to relative_paths
+            relative_paths << path.sub(prefix, '').sub(/\/?(%3F|\?).*/, '')
           else
             Rails.logger.warn("System #{self.host.name} (#{self.host.id}) requested binding to repo with unknown prefix. #{path}")
           end

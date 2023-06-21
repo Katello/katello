@@ -27,9 +27,11 @@ class Actions::Candlepin::Product::ContentUpdateTest < ActiveSupport::TestCase
       create_and_plan_action action_class, id: 123
     end
 
-    it 'runs' do
+    it 'finalizes' do
+      repo = katello_repositories(:fedora_17_x86_64)
+      ::Katello::Repository.expects(:find).returns(repo)
       ::Katello::Resources::Candlepin::Content.expects(:update)
-      run_action planned_action
+      finalize_action planned_action
     end
   end
 end

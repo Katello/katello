@@ -72,7 +72,7 @@ module Katello
             @repo.version_href = 'a_version_href'
             @repo.root.checksum_type = 'sha512'
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
-            publication_options = service.publication_options(@repo.version_href)
+            publication_options = service.publication_options(@repo)
             assert_equal 'a_version_href', publication_options[:repository_version]
             assert_equal 'sha512', publication_options[:checksum_type]
           end
@@ -81,7 +81,7 @@ module Katello
             @repo.version_href = 'a_version_href'
             @repo.root.checksum_type = nil
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
-            publication_options = service.publication_options(@repo.version_href)
+            publication_options = service.publication_options(@repo)
             assert_equal 'a_version_href', publication_options[:repository_version]
             assert_equal 'sha256', publication_options[:checksum_type]
           end

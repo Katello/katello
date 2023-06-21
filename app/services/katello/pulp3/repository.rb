@@ -181,6 +181,12 @@ module Katello
         end
       end
 
+      def initialize_empty
+        # Can be used to initialize a newly created library instance repository with some initial content.
+        # Currently only used for deb type repositories!
+        fail NotImplementedError
+      end
+
       def update
         api.repositories_api.update(repository_reference.try(:repository_href), create_options)
       end
@@ -211,7 +217,7 @@ module Katello
       end
 
       def create_publication
-        publication_data = api.publication_class.new(publication_options(repo.version_href))
+        publication_data = api.publication_class.new(publication_options(repo))
         api.publications_api.create(publication_data)
       end
 
@@ -219,9 +225,9 @@ module Katello
         ignore_404_exception { api.publications_api.delete(repo.publication_href) } if repo.publication_href
       end
 
-      def publication_options(repository_version)
+      def publication_options(repository)
         {
-          repository_version: repository_version
+          repository_version: repository.version_href
         }
       end
 
