@@ -15,16 +15,20 @@ import InactiveText from '../components/InactiveText';
 import ComponentEnvironments from '../Details/ComponentContentViews/ComponentEnvironments';
 import { selectEnvironmentPaths, selectEnvironmentPathsStatus } from '../components/EnvironmentPaths/EnvironmentPathSelectors';
 import WizardHeader from '../components/WizardHeader';
+import { selectCVFilters, selectCVFiltersStatus } from '../Details/ContentViewDetailSelectors';
 
 const CVPublishReview = ({
   details: {
-    id, name, composite, filtered, next_version: nextVersion,
+    id, name, composite, next_version: nextVersion,
   },
   userCheckedItems,
 }) => {
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
+  const cvFiltersResponse = useSelector(state => selectCVFilters(state, id));
+  const cvFiltersStatus = useSelector(state => selectCVFiltersStatus(state, id));
   const environmentPathLoading = environmentPathStatus === STATUS.PENDING;
+  const cvFiltersLoading = cvFiltersStatus === STATUS.PENDING;
 
   const promotedToEnvironments = useMemo(() => {
     if (!environmentPathLoading) {
@@ -34,6 +38,14 @@ const CVPublishReview = ({
     }
     return [];
   }, [environmentPathResponse, environmentPathLoading, userCheckedItems]);
+
+  const filtered = useMemo(() => {
+    if (!cvFiltersLoading) {
+      const { results } = cvFiltersResponse || {};
+      return results.length > 0;
+    }
+    return [];
+  }, [cvFiltersResponse, cvFiltersLoading]);
 
   return (
     <>
@@ -94,7 +106,6 @@ CVPublishReview.propTypes = {
     ]).isRequired,
     name: PropTypes.string.isRequired,
     composite: PropTypes.bool.isRequired,
-    filtered: PropTypes.bool.isRequired,
     next_version: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string,
