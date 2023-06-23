@@ -2,7 +2,6 @@
 
 <section ng-hide="denied('edit_hosts', host)" bst-feature-flag="remote_actions">
   <h4 translate>Package Actions</h4>
-  <div ng-show="katelloAgentPresent" data-extend-template="common/views/katello-agent-notice.html"></div>
   <p bst-alert="warning" ng-hide="hostToolingEnabled">
     <span translate>
       Performing host package actions is disabled because Katello is not configured for Remote Execution or Katello Agent.
