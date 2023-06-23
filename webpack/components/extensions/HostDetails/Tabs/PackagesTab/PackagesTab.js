@@ -48,6 +48,7 @@ import { defaultRemoteActionMethod,
   userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
+import KatelloAgentDeprecationAlert from '../../common/KatelloAgentDeprecationAlert';
 
 const invokeRexJobs = ['create_job_invocations'];
 const doKatelloAgentActions = ['edit_hosts'];
@@ -491,6 +492,9 @@ export const PackagesTab = () => {
   return (
     <div>
       <div id="packages-tab">
+        {showKatelloAgent && (
+          <KatelloAgentDeprecationAlert />
+        )}
         <TableWrapper
           {...{
             metadata,
