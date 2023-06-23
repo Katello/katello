@@ -44,6 +44,7 @@ import { defaultRemoteActionMethod,
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
 import { errataStatusContemplation, friendlyErrataStatus } from '../../../../Errata/errataHelpers';
+import KatelloAgentDeprecationAlert from '../../common/KatelloAgentDeprecationAlert';
 
 const recalculateApplicability = ['edit_hosts'];
 const invokeRexJobs = ['create_job_invocations'];
@@ -465,6 +466,9 @@ export const ErrataTab = () => {
   return (
     <div>
       <div id="errata-tab">
+        {defaultRemoteAction === KATELLO_AGENT && (
+          <KatelloAgentDeprecationAlert />
+        )}
         <TableWrapper
           {...{
             metadata,
