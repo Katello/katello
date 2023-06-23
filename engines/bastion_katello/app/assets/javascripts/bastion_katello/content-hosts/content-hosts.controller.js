@@ -15,6 +15,7 @@
  * @requires ContentHostsHelper
  * @requires simpleContentAccessEnabled
  * @requires newHostDetailsUI
+ * @requires BastionConfig
  *
  * @description
  *   Provides the functionality specific to Content Hosts for use with the Nutupane UI pattern.
@@ -22,8 +23,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsController',
-    ['$scope', '$q', '$state', '$location', '$uibModal', 'translate', 'Nutupane', 'Host', 'HostBulkAction', 'Notification', 'CurrentOrganization', 'ContentHostsHelper', 'ContentHostsModalHelper', '$httpParamSerializer', 'simpleContentAccessEnabled', 'newHostDetailsUI',
-    function ($scope, $q, $state, $location, $uibModal, translate, Nutupane, Host, HostBulkAction, Notification, CurrentOrganization, ContentHostsHelper, ContentHostsModalHelper, $httpParamSerializer, simpleContentAccessEnabled, newHostDetailsUI) {
+    ['$scope', '$q', '$state', '$location', '$uibModal', 'translate', 'Nutupane', 'Host', 'HostBulkAction', 'Notification', 'CurrentOrganization', 'ContentHostsHelper', 'ContentHostsModalHelper', '$httpParamSerializer', 'simpleContentAccessEnabled', 'newHostDetailsUI', 'BastionConfig',
+    function ($scope, $q, $state, $location, $uibModal, translate, Nutupane, Host, HostBulkAction, Notification, CurrentOrganization, ContentHostsHelper, ContentHostsModalHelper, $httpParamSerializer, simpleContentAccessEnabled, newHostDetailsUI, BastionConfig) {
         var nutupane, params, query;
 
         if ($location.search().search) {
@@ -51,6 +52,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
         $scope.nutupane = nutupane;
         $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
         $scope.newHostDetailsUI = newHostDetailsUI;
+        $scope.katelloAgentPresent = BastionConfig.katelloAgentPresent;
 
         // @TODO begin hack necessary because of foreman API bug http://projects.theforeman.org/issues/13877
         $scope.table.sortBy = function (column) {
