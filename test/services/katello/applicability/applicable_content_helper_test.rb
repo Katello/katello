@@ -58,7 +58,7 @@ module Katello
                                                                    version: @rpm_one.version, release: @rpm_one.release,
                                                                    arch: @rpm_one.arch, nvrea: @rpm_one.nvrea)
 
-          trigger_evrs([@rpm_one, @rpm_two, @rpm_three, @rpm_one, @rpm_one_v2, @installed_package1])
+          trigger_evrs([@rpm_one, @rpm_two, @rpm_three, @rpm_one_v2, @installed_package1])
 
           HostInstalledPackage.create(host_id: @host.id, installed_package_id: @installed_package1.id)
 
@@ -120,6 +120,22 @@ module Katello
         def test_rpm_content_ids_returns_something
           package_content_ids = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).fetch_content_ids
           assert_equal [@rpm_one_v2.id], package_content_ids
+        end
+
+        def test_rpm_content_ids_returns_multiple_packages
+          rpm_i686 = katello_rpms(:one_i686)
+          rpm_i686_v2 = Rpm.find_by(nvra: "one-1.0-2.el7.i686")
+          installed_package2 = InstalledPackage.create(name: rpm_i686.name, nvra: rpm_i686.nvra, epoch: rpm_i686.epoch,
+                                                       version: rpm_i686.version, release: rpm_i686.release,
+                                                       arch: rpm_i686.arch, nvrea: rpm_i686.nvrea)
+          trigger_evrs([rpm_i686, rpm_i686_v2, installed_package2])
+          HostInstalledPackage.create(host_id: @host.id, installed_package_id: installed_package2.id)
+          [rpm_i686, rpm_i686_v2].each { |p| ::Katello::RepositoryRpm.create(rpm_id: p.id, repository_id: @repo.id) }
+
+          package_content_ids = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).fetch_content_ids
+          assert_equal 2, package_content_ids.size
+          assert_includes package_content_ids, @rpm_one_v2.id
+          assert_includes package_content_ids, rpm_i686_v2.id
         end
 
         def test_rpm_content_ids_returns_nothing

@@ -133,13 +133,13 @@ module Katello
       end
 
       def newest_distinct_installed_packages_query
-        "SELECT DISTINCT ON (katello_installed_packages.name) katello_installed_packages.id " \
+        "SELECT DISTINCT ON (katello_installed_packages.name, katello_installed_packages.arch) katello_installed_packages.id " \
           "FROM katello_installed_packages INNER JOIN " \
           "katello_host_installed_packages ON " \
           "katello_installed_packages.id = " \
           "katello_host_installed_packages.installed_package_id " \
           "WHERE katello_host_installed_packages.host_id = " \
-          "#{content_facet.host.id} ORDER BY katello_installed_packages.name, katello_installed_packages.evr DESC"
+          "#{content_facet.host.id} ORDER BY katello_installed_packages.name, katello_installed_packages.arch, katello_installed_packages.evr DESC"
       end
 
       def applicable_differences
