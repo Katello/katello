@@ -87,7 +87,7 @@ module Katello
       end
     end
 
-    api :POST, '/capsules/:id/reclaim_space', N_('Reclaim space from all On Demand repositories on a smart proxy')
+    api :POST, '/capsules/:id/content/reclaim_space', N_('Reclaim space from all On Demand repositories on a smart proxy')
     param :id, :number, :required => true, :desc => N_('Id of the smart proxy')
     def reclaim_space
       find_capsule(true)
