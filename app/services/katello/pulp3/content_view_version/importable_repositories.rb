@@ -29,10 +29,12 @@ module Katello
 
             root = product.root_repositories.find do |r|
               if repo.content&.id && repo.redhat
-                r.content.cp_content_id == repo.content.id &&
+                repo_exists = r.content.cp_content_id == repo.content.id &&
                   r.arch == repo.arch &&
                   r.major == repo.major &&
                   r.minor == repo.minor
+
+                repo_exists || r.label == repo.label
               else
                 r.label == repo.label
               end
@@ -46,11 +48,13 @@ module Katello
                 basearch: repo.arch,
                 releasever: repo.minor
               }
-              creatable << { product: product,
-                             content: product_content,
-                             substitutions: substitutions,
-                             override_url: fetch_feed_url(repo)
-                           }
+              creatable << {
+                product: product,
+                content: product_content,
+                substitutions: substitutions,
+                override_url: fetch_feed_url(repo),
+                override_arch: repo.arch
+              }
             else
               creatable << { repository: product.add_repo(create_repo_params(repo, product)) }
             end
