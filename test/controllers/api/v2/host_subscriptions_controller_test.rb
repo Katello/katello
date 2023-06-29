@@ -158,7 +158,7 @@ module Katello
       content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment).id)
       Resources::Candlepin::Consumer.stubs(:get)
 
-      ::Katello::RegistrationManager.expects(:process_registration).with(expected_consumer_params, content_view_environment).returns(@host)
+      ::Katello::RegistrationManager.expects(:process_registration).with(expected_consumer_params, [content_view_environment]).returns(@host)
       post(:create,
         params: {
           :lifecycle_environment_id => content_view_environment.environment_id,
