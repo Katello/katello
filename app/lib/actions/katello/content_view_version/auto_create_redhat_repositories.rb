@@ -15,7 +15,8 @@ module Actions
             helper.creatable.each do |root|
               plan_action(::Actions::Katello::RepositorySet::EnableRepository,
                             root[:product], root[:content], root[:substitutions],
-                            override_url: root[:override_url])
+                            override_url: root[:override_url],
+                            override_arch: root[:override_arch])
             end
             helper.updatable.each do |root|
               plan_action(::Actions::Katello::Repository::Update, root[:repository], root[:options])
