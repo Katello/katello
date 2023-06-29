@@ -6,7 +6,8 @@ module Actions
           _("Enable")
         end
 
-        def plan(product, content, substitutions, override_url: nil)
+        def plan(product, content, substitutions, override_url: nil,
+                 override_arch: nil)
           mapper = ::Katello::Candlepin::RepositoryMapper.new(product,
                                                                content,
                                                                substitutions)
@@ -15,6 +16,7 @@ module Actions
             fail ::Katello::Errors::ConflictException, _("The repository is already enabled")
           end
           repository = mapper.build_repository
+          repository.root.arch = override_arch if override_arch.present?
           if override_url
             repository.root.url = override_url
             repository.root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE if URI(override_url).scheme == 'file'
