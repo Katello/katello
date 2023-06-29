@@ -4,6 +4,7 @@ import HOST_DETAILS from '../../../HostDetailsConstants';
 import SystemPurposeCard from '../SystemPurposeCard';
 import katelloApi, { foremanApi } from '../../../../../../services/api';
 import { assertNockRequest, nockInstance } from '../../../../../../test-utils/nockWrapper';
+import { ACTIVATION_KEY } from '../../../../../../scenes/ActivationKeys/Details/ActivationKeyConstants';
 
 const organizationDetails = katelloApi.getApiUrl('/organizations/1');
 const availableReleaseVersions = foremanApi.getApiUrl('/hosts/1/subscriptions/available_release_versions');
@@ -24,11 +25,17 @@ const baseHostDetails = {
   },
 };
 
-const renderOptions = () => ({
-  apiNamespace: HOST_DETAILS,
+const akHostDetails = {
+  ...baseHostDetails,
+  subscription_facet_attributes: undefined,
+  ...baseHostDetails.subscription_facet_attributes,
+};
+
+const renderOptions = (apiNamespace = HOST_DETAILS) => ({
+  apiNamespace,
   initialState: {
     API: {
-      HOST_DETAILS: {
+      [apiNamespace]: {
         response: {
           id: 1,
           name: 'test-host',
@@ -40,7 +47,7 @@ const renderOptions = () => ({
   },
 });
 
-test('shows system purpose details', async (done) => {
+test('shows system purpose details for a host', async (done) => {
   const orgScope = nockInstance
     .get(organizationDetails)
     .reply(200, {
@@ -49,7 +56,6 @@ test('shows system purpose details', async (done) => {
   const availableReleaseVersionsScope = nockInstance
     .get(availableReleaseVersions)
     .reply(200, []);
-
   const { getByText }
     = renderWithRedux(<SystemPurposeCard hostDetails={baseHostDetails} />, renderOptions());
   expect(getByText('Red Hat Enterprise Linux Server')).toBeInTheDocument();
@@ -61,6 +67,19 @@ test('shows system purpose details', async (done) => {
 
   assertNockRequest(orgScope);
   assertNockRequest(availableReleaseVersionsScope, done);
+});
+
+test('shows system purpose details for an activation key', () => {
+  const { getByText } = renderWithRedux(
+    <SystemPurposeCard akDetails={akHostDetails} />,
+    renderOptions(`${ACTIVATION_KEY}_1`),
+  );
+  expect(getByText('Red Hat Enterprise Linux Server')).toBeInTheDocument();
+  expect(getByText('Production')).toBeInTheDocument();
+  expect(getByText('Premium')).toBeInTheDocument();
+  expect(getByText('Addon1')).toBeInTheDocument();
+  expect(getByText('Addon2')).toBeInTheDocument();
+  expect(getByText('8')).toBeInTheDocument();
 });
 
 

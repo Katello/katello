@@ -14,12 +14,13 @@ export const selectOrganizationStatus = (state, orgId) =>
 export const selectOrganizationError = (state, orgId) =>
   selectAPIError(state, `ORGANIZATION_${orgId}`);
 
-export const selectAvailableReleaseVersions = (state, hostId) =>
-  selectAPIResponse(state, `AVAILABLE_RELEASE_VERSIONS_${hostId}`) ?? {};
+export const selectAvailableReleaseVersions = (state, id, key = 'AVAILABLE_RELEASE_VERSIONS') =>
+  selectAPIResponse(state, `${key}_${id}`) ?? {};
 
-export const selectAvailableReleaseVersionsStatus = (state, hostId) =>
-  selectAPIStatus(state, `AVAILABLE_RELEASE_VERSIONS_${hostId}`) ??
+export const selectAvailableReleaseVersionsStatus = (state, id, key = 'AVAILABLE_RELEASE_VERSIONS') =>
+  selectAPIStatus(state, `${key}_${id}`) ??
   STATUS.PENDING;
 
-export const selectAvailableReleaseVersionsError = (state, hostId) =>
-  selectAPIError(state, `AVAILABLE_RELEASE_VERSIONS_${hostId}`);
+export const selectAvailableReleaseVersionsError = (state, id, key = 'AVAILABLE_RELEASE_VERSIONS') =>
+  selectAPIError(state, `${key}_${id}`);
+
