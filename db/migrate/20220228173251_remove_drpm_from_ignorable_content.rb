@@ -6,6 +6,7 @@ class RemoveDrpmFromIgnorableContent < ActiveRecord::Migration[6.0]
       else
         root.ignorable_content = []
       end
+      root.checksum_type = nil if root.download_policy == ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
       root.save!
     end
   end
