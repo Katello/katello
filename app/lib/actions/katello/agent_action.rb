@@ -14,8 +14,10 @@ module Actions
 
       def plan(host, options)
         action_subject(host, :hostname => host.name, :content => options[:content])
-
-        dispatch_history_id = options.dig(:dispatch_histories, host.id.to_s) || ::Katello::Agent::Dispatcher.create_histories(
+        # options[:dispatch_histories] keys might be strings or integers
+        dispatch_history_id = options.dig(:dispatch_histories, host.id.to_s) ||
+        options.dig(:dispatch_histories, host.id.to_i) ||
+          ::Katello::Agent::Dispatcher.create_histories(
           host_ids: [host.id]
         ).first.id
 
@@ -44,7 +46,6 @@ module Actions
             history.dynflow_execution_plan_id = suspended_action.execution_plan_id
             history.dynflow_step_id = suspended_action.step_id
             history.save!
-
             dispatch_message(history) unless input[:bulk]
 
             schedule_timeout(timeout, optional: true)
