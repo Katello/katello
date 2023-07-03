@@ -22,7 +22,7 @@ module Katello
     end
 
     def test_index
-      Product.any_instance.expects(:sync_status).returns([{}])
+      Product.any_instance.expects(:sync_status).returns([])
 
       get :index, params: { :product_id => @product.cp_id, :organization_id => @organization.id }
       assert_response :success

@@ -484,6 +484,7 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :sync_plans, :only => [:index, :show, :update, :destroy] do
+          api_resources :products, :only => [:index]
           get :auto_complete_search, :on => :collection
           put :sync
         end

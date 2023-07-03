@@ -947,6 +947,10 @@ module Katello
       content_view.repositories.include? self
     end
 
+    def sync_status
+      return latest_dynflow_sync
+    end
+
     protected
 
     def unit_type_for_removal(type_class = nil)
