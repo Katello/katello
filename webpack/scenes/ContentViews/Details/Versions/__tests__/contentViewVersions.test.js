@@ -13,6 +13,7 @@ import contentViewTaskResponseData from './contentViewTaskResponse.fixtures.json
 import cvDetailData from '../../../../ContentViews/__tests__/mockDetails.fixtures.json';
 import environmentPathsData from '../../../Publish/__tests__/environmentPaths.fixtures.json';
 import cvIndexData from '../../../__tests__/contentViewList.fixtures.json';
+import contentViewFilterData from '../../Filters/__tests__/contentViewFilters.fixtures.json';
 
 const cvPromotePath = api.getApiUrl('/content_view_versions/10/promote');
 const cvIndexPath = api.getApiUrl('/content_views');
@@ -34,6 +35,7 @@ const renderOptions = {
 const cvVersions = api.getApiUrl('/content_view_versions');
 const autocompleteUrl = '/content_view_versions/auto_complete_search';
 const taskPollingUrl = '/foreman_tasks/api/tasks/6b900ff8-62bb-42ac-8c45-da86b7258520';
+const cvFiltersPath = api.getApiUrl('/content_view_filters?content_view_id=5');
 
 let firstVersion;
 let envScope;
@@ -330,6 +332,10 @@ test('Shows call-to-action when there are no versions', async (done) => {
     .query(true)
     .reply(200, environmentPathsData);
 
+  const filterScope = nockInstance
+    .get(cvFiltersPath)
+    .reply(200, contentViewFilterData);
+
   const { getByText, queryByText } = renderWithRedux(
     withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
@@ -347,6 +353,7 @@ test('Shows call-to-action when there are no versions', async (done) => {
   assertNockRequest(scopeWizard);
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
+  assertNockRequest(filterScope);
   act(done);
 });
 

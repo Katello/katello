@@ -7,18 +7,21 @@ import PublishContentViewWizard from '../PublishContentViewWizard';
 import cvDetailData from '../../Details/__tests__/contentViewDetails.fixtures.json';
 import publishResponseData from './publishResponse.fixture.json';
 import environmentPathsData from './environmentPaths.fixtures.json';
+import contentViewFilterData from './../../Details/Filters/__tests__/contentViewFilters.fixtures.json';
 
 const cvPublishPath = api.getApiUrl('/content_views/1/publish');
 
 const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
+const cvFiltersPath = api.getApiUrl('/content_view_filters?content_view_id=1');
 
 test('Can call API and show Wizard', async (done) => {
   const scope = nockInstance
     .get(environmentPathsPath)
     .query(true)
     .reply(200, environmentPathsData);
-  const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
-  useSelectorMock.mockReturnValue(environmentPathsData);
+  const filterScope = nockInstance
+    .get(cvFiltersPath)
+    .reply(200, contentViewFilterData);
 
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
@@ -26,9 +29,13 @@ test('Can call API and show Wizard', async (done) => {
     onClose={() => { }}
   />);
 
-  await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeInTheDocument());
-  useSelectorMock.mockClear();
-  assertNockRequest(scope, done);
+  await patientlyWaitFor(() => {
+    expect(getByText('Publish new version - 6.0')).toBeInTheDocument();
+    expect(getByText('Newly published version will be the same as the previous version.')).toBeTruthy();
+  });
+
+  assertNockRequest(scope);
+  assertNockRequest(filterScope, done);
 });
 
 test('Can show Wizard and show environment paths', async (done) => {
@@ -36,6 +43,9 @@ test('Can show Wizard and show environment paths', async (done) => {
     .get(environmentPathsPath)
     .query(true)
     .reply(200, environmentPathsData);
+  const filterScope = nockInstance
+    .get(cvFiltersPath)
+    .reply(200, contentViewFilterData);
   const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
   useSelectorMock.mockReturnValue(environmentPathsData);
 
@@ -55,7 +65,8 @@ test('Can show Wizard and show environment paths', async (done) => {
     expect(getByText('dev1')).toBeTruthy();
   });
   useSelectorMock.mockClear();
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  assertNockRequest(filterScope, done);
 });
 
 test('Can show and hide force promotion alert', async (done) => {
@@ -63,6 +74,9 @@ test('Can show and hide force promotion alert', async (done) => {
     .get(environmentPathsPath)
     .query(true)
     .reply(200, environmentPathsData);
+  const filterScope = nockInstance
+    .get(cvFiltersPath)
+    .reply(200, contentViewFilterData);
   const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
   useSelectorMock.mockReturnValue(environmentPathsData);
 
@@ -109,15 +123,18 @@ test('Can show and hide force promotion alert', async (done) => {
   expect(queryByText('Force promotion')).not.toBeInTheDocument();
 
   useSelectorMock.mockClear();
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  assertNockRequest(filterScope, done);
 });
-
 
 test('Can show Wizard form and move to review', async (done) => {
   const scope = nockInstance
     .get(environmentPathsPath)
     .query(true)
     .reply(200, environmentPathsData);
+  const filterScope = nockInstance
+    .get(cvFiltersPath)
+    .reply(200, contentViewFilterData);
 
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
@@ -134,9 +151,12 @@ test('Can show Wizard form and move to review', async (done) => {
     expect(getByText('Newly published')).toBeInTheDocument();
     expect(getByText('Version 6.0')).toBeInTheDocument();
     expect(getByText('Library')).toBeTruthy();
+    expect(getByText('Filters')).toBeTruthy();
+    expect(getByText('Filters will be applied to this content view version.')).toBeTruthy();
   });
   useSelectorMock.mockClear();
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  assertNockRequest(filterScope, done);
 });
 
 test('Can move to Finish step and publish CV', async (done) => {
@@ -144,7 +164,9 @@ test('Can move to Finish step and publish CV', async (done) => {
     .get(environmentPathsPath)
     .query(true)
     .reply(200, environmentPathsData);
-
+  const filterScope = nockInstance
+    .get(cvFiltersPath)
+    .reply(200, contentViewFilterData);
   const cvPublishParams = {
     id: 1, versionCount: 5, description: '', environment_ids: [], is_force_promote: false,
   };
@@ -166,6 +188,7 @@ test('Can move to Finish step and publish CV', async (done) => {
   fireEvent.click(getByText('Finish'));
 
   assertNockRequest(scope);
+  assertNockRequest(filterScope);
   assertNockRequest(publishScope, done);
   act(done); // stop listening for nocks
 });
