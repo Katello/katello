@@ -14,6 +14,7 @@ import {
 } from '../components/EnvironmentPaths/EnvironmentPathSelectors';
 import { stopPollingTask } from '../../Tasks/TaskActions';
 import { cvVersionTaskPollingKey } from '../ContentViewsConstants';
+import { getContentViewFilters } from '../Details/ContentViewDetailActions';
 
 const PublishContentViewWizard = ({
   details, show, onClose,
@@ -29,6 +30,7 @@ const PublishContentViewWizard = ({
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
   const environmentPathLoading = environmentPathStatus === STATUS.PENDING;
+
 
   const steps = [
     {
@@ -71,8 +73,9 @@ const PublishContentViewWizard = ({
   useEffect(
     () => {
       dispatch(getEnvironmentPaths());
+      dispatch(getContentViewFilters(cvId, {}));
     },
-    [dispatch],
+    [dispatch, cvId],
   );
 
   const envPathFlat = useMemo(() => {

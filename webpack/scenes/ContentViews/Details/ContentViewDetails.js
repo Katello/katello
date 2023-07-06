@@ -37,7 +37,7 @@ import { hasPermission } from '../helpers';
 import CopyContentViewModal from '../Copy/CopyContentViewModal';
 import ContentViewDeleteWizard from '../Delete/ContentViewDeleteWizard';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
-import { cvVersionTaskPollingKey } from '../ContentViewsConstants';
+import { CONTENT_VIEW_NEEDS_PUBLISH_RESET, cvVersionTaskPollingKey } from '../ContentViewsConstants';
 import { clearPollTaskData, stopPollingTask } from '../../Tasks/TaskActions';
 
 export default () => {
@@ -73,6 +73,7 @@ export default () => {
 
   useEffect(() => {
     dispatch(getContentViewDetails(cvId));
+    dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH_RESET });
   }, [cvId, dispatch]);
 
 
