@@ -5,7 +5,7 @@ import {
 import PropTypes from 'prop-types';
 import { noop } from 'foremanReact/common/helpers';
 import { Modal, ModalVariant, Button, Icon, Title, Flex } from '@patternfly/react-core';
-import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { deleteActivationKey } from '../ActivationKeyActions';
 
 const DeleteModal = ({ isModalOpen, handleModalToggle, akId }) => {
