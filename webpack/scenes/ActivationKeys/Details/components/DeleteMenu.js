@@ -1,10 +1,13 @@
-import React from 'react';
+import React, {
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, DropdownItem, KebabToggle, DropdownPosition } from '@patternfly/react-core';
 import { noop } from 'foremanReact/common/helpers';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 const DeleteMenu = ({ handleModalToggle, akId }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const onToggle = (isOpenValue) => {
     setIsOpen(isOpenValue);
   };
@@ -23,38 +26,35 @@ const DeleteMenu = ({ handleModalToggle, akId }) => {
       component="button"
       onClick={handleModalToggle}
     >
-      Delete
+      {__('Delete')}
     </DropdownItem>,
     <DropdownItem
       ouiaId="linkbacktooldpage"
       key="link"
       href={`../../../activation_keys/${akId}`}
     >
-      Old Activation key Details Page
+      {__('Old Activation key Details Page')}
     </DropdownItem>];
   return (
-    <React.Fragment>
-      <Dropdown
-        ouiaId="dekete-action"
-        onSelect={onSelect}
-        position={DropdownPosition.right}
-        toggle={<KebabToggle id="toggle-kebab" onToggle={onToggle} />}
-        isOpen={isOpen}
-        isPlain
-        dropdownItems={dropdownItems}
-      />
-    </React.Fragment>
+    <Dropdown
+      ouiaId="dekete-action"
+      onSelect={onSelect}
+      position={DropdownPosition.right}
+      toggle={<KebabToggle id="toggle-kebab" onToggle={onToggle} />}
+      isOpen={isOpen}
+      isPlain
+      dropdownItems={dropdownItems}
+    />
   );
 };
 
 DeleteMenu.propTypes = {
   handleModalToggle: PropTypes.func,
-  akId: PropTypes.string,
+  akId: PropTypes.string.isRequired,
 };
 
 DeleteMenu.defaultProps = {
   handleModalToggle: noop,
-  akId: '',
 };
 
 export default DeleteMenu;

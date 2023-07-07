@@ -6,6 +6,7 @@ import {
   useDispatch,
   useSelector,
 } from 'react-redux';
+import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
@@ -53,7 +54,9 @@ const ActivationKeyDetails = ({ match }) => {
       <Panel className="ak-details-header">
         <div className="breadcrumb-bar-pf4">
           <Breadcrumb ouiaId="ak-breadcrumbs" className="breadcrumb-display">
-            <BreadcrumbItem className="breadcrumb-list" to="/activation_keys">Activation keys</BreadcrumbItem>
+            <BreadcrumbItem className="breadcrumb-list" to="/activation_keys">
+              {__('Activation keys')}
+            </BreadcrumbItem>
             <BreadcrumbItem to="#" isActive>
               {akDetails.name}
             </BreadcrumbItem>
@@ -71,7 +74,7 @@ const ActivationKeyDetails = ({ match }) => {
                 <Split hasGutter style={{ display: 'inline-flex' }}>
                   <SplitItem>
                     <Label>
-                      {akDetails.usageCount}/{akDetails.unlimitedHosts ? 'Unlimited' : akDetails.maxHosts}
+                      {akDetails.usageCount}/{akDetails.unlimitedHosts ? __('Unlimited') : akDetails.maxHosts}
                     </Label>
                   </SplitItem>
                 </Split>
@@ -94,7 +97,7 @@ const ActivationKeyDetails = ({ match }) => {
         <div className="ak-details-description">
           <TextContent>
             <Text ouiaId="ak-description" component={TextVariants.p}>
-              {akDetails.description ? akDetails.description : 'Description empty'}
+              {akDetails.description ? akDetails.description : <span style={{ color: '#c1c1c1' }}>{__('No description provided')}</span>}
             </Text>
           </TextContent>
         </div>

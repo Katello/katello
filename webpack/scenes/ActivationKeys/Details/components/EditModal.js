@@ -6,6 +6,7 @@ import {
   useDispatch,
 } from 'react-redux';
 import PropTypes from 'prop-types';
+import { translate as __ } from 'foremanReact/common/I18n';
 import {
   Modal,
   ModalVariant,
@@ -25,7 +26,7 @@ const EditModal = ({ akDetails, akId }) => {
   const dispatch = useDispatch();
 
   const {
-    name, description, maxHosts, unlimitedHosts,
+    name, description, maxHosts, unlimitedHosts, usageCount,
   } = akDetails;
 
   const [nameValue, setNameValue] = useState(name);
@@ -83,8 +84,8 @@ const EditModal = ({ akDetails, akId }) => {
   };
   const onChange = (event) => {
     let newValue = (event.target.value === '' ? event.target.value : Math.round(+event.target.value));
-    if (newValue < 0) {
-      newValue = 0;
+    if (newValue < 1) {
+      newValue = 1;
     }
     setMaxHostsValue(newValue);
   };
@@ -94,32 +95,33 @@ const EditModal = ({ akDetails, akId }) => {
 
   const handleCheckBox = () => {
     setUnlimited(prevUnlimited => !prevUnlimited);
+    setMaxHostsValue(usageCount);
   };
 
   return (
     <>
       <Button ouiaId="ak-edit-button" variant="secondary" onClick={handleModalToggle}>
-        Edit
+        {__('Edit')}
       </Button>
       <Modal
         ouiaId="ak-edit-modal"
         variant={ModalVariant.small}
-        title="Edit activation key"
-        description={`Select attributes for ${akDetails.name}`}
+        title={__('Edit activation key')}
+        description={__(`Select attributes for ${akDetails.name}`)}
         isOpen={isModalOpen}
         onClose={handleClose}
         actions={[
           <Button ouiaId="edit-modal-save-button" key="create" variant="primary" form="modal-with-form-form" onClick={handleSave}>
-            Save
+            {__('Save')}
           </Button>,
           <Button ouiaId="cancel-button" key="cancel" variant="link" onClick={handleClose}>
-            Cancel
+            {__('Cancel')}
           </Button>,
         ]}
       >
         <Form isHorizontal>
           <FormGroup
-            label="Name"
+            label={__('Name')}
           >
             <TextInput
               ouiaId="ak-name-input"
@@ -130,7 +132,7 @@ const EditModal = ({ akDetails, akId }) => {
             />
           </FormGroup>
           <FormGroup
-            label="Host limit"
+            label={__('Host Limit')}
           >
             <Stack hasGutter>
               <StackItem>
@@ -152,7 +154,7 @@ const EditModal = ({ akDetails, akId }) => {
                 <Checkbox
                   ouiaId="unlimited-checkbox"
                   id="unlimited-checkbox"
-                  label="Unlimited"
+                  label={__('Unlimited')}
                   isChecked={isUnlimited}
                   onChange={handleCheckBox}
                 />
@@ -160,12 +162,13 @@ const EditModal = ({ akDetails, akId }) => {
             </Stack>
           </FormGroup>
           <FormGroup
-            label="Description"
+            label={__('Description')}
           >
             <TextArea
               id="ak-description"
               type="text"
-              defaultValue={descriptionValue || 'Description empty'}
+              placeholder={__('Description')}
+              defaultValue={descriptionValue}
               value={descriptionValue}
               onChange={handleDescriptionInputChange}
             />
@@ -184,11 +187,11 @@ EditModal.propTypes = {
     maxHosts: PropTypes.number,
     description: PropTypes.string,
     unlimitedHosts: PropTypes.bool,
+    usageCount: PropTypes.number,
   }),
-  akId: PropTypes.string,
+  akId: PropTypes.string.isRequired,
 };
 
 EditModal.defaultProps = {
   akDetails: {},
-  akId: '',
 };
