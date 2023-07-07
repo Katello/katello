@@ -169,9 +169,9 @@ module Katello
 
       def orphaned
         if many_repository_associations
-          where.not(:id => repository_association_class.where(:repository_id => ::Katello::Repository.all).select(unit_id_field))
+          where.not(:id => repository_association_class.select(unit_id_field))
         else
-          where.not(:repository_id => ::Katello::Repository.all)
+          where.not(:repository_id => ::Katello::Repository.select(:id))
         end
       end
 

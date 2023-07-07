@@ -710,12 +710,12 @@ module Katello
       assert_includes Repository.with_errata([errata]), @rhel6
     end
 
-    def test_index_content_destroys_orphans
+    def test_orphaned_content_task_destroys_orphans
       rpm = katello_rpms(:one)
       ::Katello::ContentUnitIndexer.any_instance.stubs(:import_all).returns(true)
       ::Katello::Repository.any_instance.stubs(:import_distribution_data).returns(true)
       rpm.repository_rpms.destroy_all
-      @rhel6.index_content
+      ForemanTasks.sync_task(Actions::Katello::OrphanCleanup::RemoveOrphanedContentUnits, {repo_id: @rhel6.id})
       assert_raises(ActiveRecord::RecordNotFound) { rpm.reload }
     end
 

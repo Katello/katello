@@ -7,27 +7,16 @@ module Actions
         end
         def plan(proxy)
           sequence do
+            if proxy.pulp_primary?
+              ::Katello::RootRepository.orphaned.destroy_all
+              plan_action(RemoveOrphanedContentUnits, destroy_all: true)
+            end
             if proxy.pulp3_enabled?
               plan_action(
                 Actions::Pulp3::Orchestration::OrphanCleanup::RemoveOrphans,
                 proxy)
             end
-            plan_self
           end
-        end
-
-        def run
-          models = []
-          ::Katello::RepositoryTypeManager.enabled_repository_types.each_value do |repo_type|
-            indexable_types = repo_type.content_types_to_index
-            models += indexable_types&.map(&:model_class)
-            models.select! { |model| model.many_repository_associations }
-          end
-          models.each do |model|
-            model.joins("left join katello_#{model.repository_association} on #{model.table_name}.id = katello_#{model.repository_association}.#{model.unit_id_field}").where("katello_#{model.repository_association}.#{model.unit_id_field} IS NULL").destroy_all
-          end
-
-          ::Katello::RootRepository.orphaned.destroy_all
         end
       end
     end
