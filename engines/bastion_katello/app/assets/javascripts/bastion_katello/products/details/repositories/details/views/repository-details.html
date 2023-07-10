@@ -95,11 +95,11 @@
         </li>
       </ul>
 
-      <div bst-modal="removeRepository(repository)" model="repositoryWrapper">
+      <div bst-modal="removeRepository(repository, filterAction)" model="repositoryWrapper">
         <div data-block="modal-header" translate>Remove Repository {{ repositoryWrapper.repository.name }}?</div>
         <div data-block="modal-body">
             <div ng-show="repositoryWrapper.repository.content_view_versions.length !== 0" style="margin-bottom: 1em">
-                <span translate>Repository will also be removed from the following published content view versions!</span>
+                <b><span translate>Repository will also be removed from the following published content view versions!</span></b>
                 <table class="table table-striped table-bordered" style="margin-top: 1em">
                     <thead>
                         <tr>
@@ -127,13 +127,62 @@
             </div>
             <input type="checkbox"
                    ng-show="repositoryWrapper.repository.content_view_versions.length !== 0"
-                   ng-model="repositoryWrapper.forceDelete"
-                   ng-change="updateForceDelete()"/>
-            <span translate> Are you sure you want to remove repository {{ repositoryWrapper.repository.name }} from all content views?</span>
+                   ng-model="repositoryWrapper.forceDeleteCV"
+                   ng-change="updateForceDeleteCV()"/>
+            <span translate
+                  ng-show="repositoryWrapper.repository.content_view_versions.length !== 0"
+                  style="margin-bottom: 2em"
+            >
+                Are you sure you want to remove repository {{ repositoryWrapper.repository.name }} from all content views?
+            </span>
+            <div ng-show="repositoryWrapper.showLastFilterDeletion" style="margin-top: 1em; margin-bottom: 1em">
+                <b><span translate> The filters below have this repository as the last affected repository!</span></b>
+                <table class="table table-striped table-bordered" style="margin-top: 1em">
+                    <thead>
+                        <tr>
+                            <th translate>Content View</th>
+                            <th translate>Filters</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="filters in repositoryWrapper.repositoryFiltersToDelete">
+                        <td class="align-center">
+                            <a href="/content_views/{{filters[0]['content_view_id']}}/" target="_blank">
+                                {{filters[0]['content_view_name']}}
+                            </a>
+                        </td>
+                        <td class="align-center">
+                            <div ng-repeat="filter in filters">
+                                <a href="/content_views/{{filter['content_view_id']}}#/filters/{{filter['content_view_filter_id']}}" target="_blank">
+                                    {{filter['content_view_filter_name']}}
+                                </a>
+                            </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+                <div class="radio">
+                    <label>
+                      <input type="radio" ng-model="repositoryWrapper.filterAction" value="delete" />
+                      <span translate>
+                        Delete filters
+                      </span>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                      <input type="radio" ng-model="repositoryWrapper.filterAction" value="applyAll" />
+                      <span translate>
+                        Make filters apply to all repositories in the content view
+                      </span>
+                    </label>
+              </div>
+            </div>
         </div>
           <div data-block="modal-footer">
             <span data-block="modal-confirm-button">
-              <button class="btn btn-danger" ng-disabled="repositoryWrapper.repository.content_view_versions.length !== 0 && !repositoryWrapper.forceDelete" ng-click="ok()">
+              <button class="btn btn-danger" ng-disabled="(repositoryWrapper.repository.content_view_versions.length !== 0 &&
+              !repositoryWrapper.forceDeleteCV)" ng-click="ok()">
                 <span translate>Delete</span>
               </button>
             </span>
