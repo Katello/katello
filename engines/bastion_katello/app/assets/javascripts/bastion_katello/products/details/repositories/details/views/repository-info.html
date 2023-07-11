@@ -517,8 +517,9 @@
       <div class="divider" ng-if="repository.content_type === 'ostree'"/>
     </section>
 
+    <span ng-hide="(repository.content_type === 'deb' && repository.url)">
     <section class="well" ng-if="permitted('edit_products', product) && !product.redhat && repository.content_type !== 'docker' && repository.content_type !== 'ostree' && repository.content_type !== 'ansible_collection'">
-      <h5 translate ng-show="repository.content_type === 'yum'">Upload Package</h5>
+      <h5 translate ng-show="repository.content_type === 'yum' || 'deb'">Upload Package</h5>
       <h5 translate ng-show="repository.content_type === 'file'">Upload File</h5>
 
       <form role="form"
@@ -544,6 +545,13 @@
 
       </form>
     </section>
+    </span>
+    <span ng-show="(repository.content_type === 'deb' && repository.url)">
+      <section class="well">
+        <h5 translate>Upload Package</h5>
+        <div class="alert alert-info" role="alert" translate>If you want to upload individual packages, create a separate repository with an empty "Upstream URL" field.</div>
+      </section>
+    </span>
 
     <section ng-show="repository.content_type === 'yum'">
       <div class="divider"></div>

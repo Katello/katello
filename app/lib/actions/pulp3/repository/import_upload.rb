@@ -12,17 +12,25 @@ module Actions
         end
 
         def invoke_external_task
+          repo = ::Katello::Repository.find(input[:repository_id])
+          repo_backend_service = repo.backend_service(smart_proxy)
+
           if input[:save_artifact_output][:pulp_tasks]&.any?
-            content_unit_href = input[:save_artifact_output][:pulp_tasks].last[:created_resources].first
+            if repo.deb?
+              content_unit_href = input[:save_artifact_output][:pulp_tasks].last[:created_resources].find { |href| href.include?("/deb/packages") }
+            else
+              content_unit_href = input[:save_artifact_output][:pulp_tasks].last[:created_resources].first
+            end
           else
             content_unit_href = input[:save_artifact_output][:content_unit_href]
           end
 
-          repo = ::Katello::Repository.find(input[:repository_id])
-          repo_backend_service = repo.backend_service(smart_proxy)
-
           output[:content_unit_href] = content_unit_href
-          output[:pulp_tasks] = [repo_backend_service.add_content(content_unit_href)]
+          if repo.deb?
+            output[:pulp_tasks] = input[:save_artifact_output][:pulp_tasks]
+          else
+            output[:pulp_tasks] = [repo_backend_service.add_content(content_unit_href)]
+          end
         end
       end
     end
