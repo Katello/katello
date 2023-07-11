@@ -454,7 +454,7 @@ module Katello
           params = []
           params << "comp=#{deb_components.gsub(" ", ",")}"
           params << "rel=#{deb_releases.gsub(" ", ",")}"
-          path += "/?#{params.join('&')}"
+          path += "?#{params.join('&')}"
         else
           Rails.logger.warn("deb_use_structured_content is set, but repository #{self.name} is lacking deb_releases or deb_components, so we are defaulting to using simple content.")
           unless Setting['deb_use_simple_publish']
