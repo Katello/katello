@@ -9,7 +9,7 @@ module Actions
           sequence do
             if proxy.pulp_primary?
               ::Katello::RootRepository.orphaned.destroy_all
-              plan_action(RemoveOrphanedContentUnits, destroy_all: true)
+              plan_action(RemoveOrphanedContentUnits)
             end
             if proxy.pulp3_enabled?
               plan_action(

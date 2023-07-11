@@ -31,10 +31,6 @@ module Actions
             output[:new_content][content_type.label] = new_count - initial_counts[content_type.label]
           end
         end
-
-        def finalize
-          ForemanTasks.async_task(OrphanCleanup::RemoveOrphanedContentUnits, {repo_id: input[:id]})
-        end
       end
     end
   end

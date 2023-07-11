@@ -8,14 +8,7 @@ module Katello
     def test_orphaned_content_task_destroys_orphans
       rpm = katello_rpms(:one)
       rpm.repository_rpms.destroy_all
-      ForemanTasks.sync_task(Actions::Katello::OrphanCleanup::RemoveOrphanedContentUnits, {repo_id: @rhel6.id})
-      assert_raises(ActiveRecord::RecordNotFound) { rpm.reload }
-    end
-
-    def test_orphaned_content_task_destroy_all
-      rpm = katello_rpms(:one)
-      rpm.repository_rpms.destroy_all
-      ForemanTasks.sync_task(Actions::Katello::OrphanCleanup::RemoveOrphanedContentUnits, {destroy_all: true})
+      ForemanTasks.sync_task(Actions::Katello::OrphanCleanup::RemoveOrphanedContentUnits)
       assert_raises(ActiveRecord::RecordNotFound) { rpm.reload }
     end
   end
