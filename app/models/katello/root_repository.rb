@@ -130,7 +130,7 @@ module Katello
       where(:http_proxy_policy => RootRepository::USE_SELECTED_HTTP_PROXY).
       where(:http_proxy_id => http_proxy_id)
     }
-    scope :orphaned, -> { where.not(id: Katello::Repository.pluck(:root_id).uniq) }
+    scope :orphaned, -> { where.not(id: Katello::Repository.select(:root_id)) }
     scope :redhat, -> { joins(:provider).merge(Katello::Provider.redhat) }
     scope :custom, -> { where.not(:id => self.redhat) }
     delegate :redhat?, :provider, :organization, to: :product
