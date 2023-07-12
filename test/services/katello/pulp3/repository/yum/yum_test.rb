@@ -23,7 +23,7 @@ module Katello
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
             create_repo(@repo, @proxy)
             error = assert_raises(::Katello::Errors::Pulp3Error) { service.copy_units(@repo, [fake_content_href], false) }
-            assert_match(/Please run a complete sync on the following repository: Fedora 17 x86_64./, error.message)
+            assert_match(/Please run `foreman-rake katello:delete_orphaned_content` to fix the following repository: Fedora 17 x86_64./, error.message)
           end
 
           def test_append_proxy_cacert

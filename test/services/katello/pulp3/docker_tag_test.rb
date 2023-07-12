@@ -29,7 +29,7 @@ module Katello
           fake_content_href = '/pulp/api/v3/repositories/container/container/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/'
           service = Katello::Pulp3::Repository::Docker.new(@repo, @primary)
           error = assert_raises(::Katello::Errors::Pulp3Error) { service.add_content(fake_content_href) }
-          assert_match(/Please run a complete sync on the following repository: Pulp3 Docker 1./, error.message)
+          assert_match(/Please run `foreman-rake katello:delete_orphaned_content` to fix the following repository: Pulp3 Docker 1./, error.message)
         end
 
         def test_index_on_sync
