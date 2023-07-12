@@ -1,3 +1,25 @@
+# 4.8.3 Phoenix (2023-07-12)
+
+## Bug Fixes
+
+### Repositories
+ * Upgrade to Katello 4.5 can fail if some on_demand repositories have checksum_type set ([#36562](https://projects.theforeman.org/issues/36562), [f0ab69db](https://github.com/Katello/katello.git/commit/f0ab69db3927014c5e570366162d8bbb1fbc6044))
+
+### Hammer
+ * Update katello-agent deprecation warnings to show specific removal version ([#36546](https://projects.theforeman.org/issues/36546), [43d06395](https://github.com/Katello/hammer-cli-katello.git/commit/43d06395ff0f449c20b0be8c435d70a3afb3b983))
+ * hammer host info no longer shows content view and lifecycle environment ([#36401](https://projects.theforeman.org/issues/36401), [85e4eaea](https://github.com/Katello/katello.git/commit/85e4eaea613dd001d7f6f8975ef6990c26e4b1a9), [94b39e09](https://github.com/Katello/hammer-cli-katello.git/commit/94b39e092ae176849b992cde4d9263392757fed7))
+
+### Client/Agent
+ * tasks Actions::Katello::BulkAgentAction without any sub-plans and stuck in running/pending ([#36528](https://projects.theforeman.org/issues/36528), [f9bf7d00](https://github.com/Katello/katello.git/commit/f9bf7d0065c55e202275de84b9c69b5ebbca9ed0))
+
+### Hosts
+ * undefined method `each' for #<Katello::ContentViewEnvironment when running hammer host subscription register ([#36524](https://projects.theforeman.org/issues/36524), [f579e498](https://github.com/Katello/katello.git/commit/f579e4989f92f66c30608eac3c6d6426e6aa6dbe))
+
+### Foreman Proxy Content
+ * Optimized capsule sync doesn't sync recently published/promoted docker repositories ([#36523](https://projects.theforeman.org/issues/36523), [1429ec99](https://github.com/Katello/katello.git/commit/1429ec99c7916a6954fda50040397eb1f0142d6a))
+
+### Inter Server Sync
+ * hammer content import fails with undefined method `substitutor' for nil:NilClass during import content if product being imported is not covered by subscriptions on the manifest ([#36521](https://projects.theforeman.org/issues/36521), [58dcb484](https://github.com/Katello/katello.git/commit/58dcb484f07c16b033d238b57f3e77206b02f3f9))
 # 4.8.2 Phoenix (2023-06-21)
 
 ## Bug Fixes
