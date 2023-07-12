@@ -237,6 +237,18 @@ module Katello
       assert_equal @fedora_17_x86_64, @fedora_17_x86_64.archived_instance
     end
 
+    def test_long_relative_path
+      # Test to make sure we can have a relative_path bigger than 255 chars
+      repo = Repository.new(:root => katello_root_repositories(:busybox2_root),
+                            :content_view_version => @repo.organization.default_content_view.versions.first,
+                            :environment => @repo.organization.library,
+                            :relative_path => "/Fe34w5KviF38bTCcGy6KIfjor2UBRfdWYSno8xprufnKQMvLT4nwGD8mJ6HkE7t1vqgL6CBhyppgk4ZsVyNJSe1ciZlEk5Wlc0uzqKwIrADqD7Ucl5tN7LtXiThYwk8aF61D5ACtOZQcrblWxxR5TTccNfCWvY41eGAge6mn41fWbwppF2FH0ixQm21UmLvIgLkV5hUfxt2KKgyCkccdSkz3
+                                              IuP9cplkniFmtE7zAPVxD6GZtI8KRHhqUFM9UKzUZFtQlxvggTi6z5QO48963UOJePiz1PGh7lZtUokD4GN")
+      assert repo.save
+
+      assert_equal 347, repo.relative_path.size
+    end
+
     def test_docker_pulp_id
       # for docker repos, the pulp_id should be downcased
       repo = Repository.new(:root => katello_root_repositories(:busybox2_root),
