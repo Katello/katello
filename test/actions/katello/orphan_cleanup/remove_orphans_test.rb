@@ -30,36 +30,25 @@ module ::Actions::Katello::CapsuleContent
   class RemoveOrphansPlanTest < TestBase
     let(:action_class) { ::Actions::Katello::OrphanCleanup::RemoveOrphans }
 
-    it 'plans proxy orphans cleanup with pulp3 primary' do
+    it 'plans proxy orphans cleanup and content unit orphan cleanup on pulp3 primary' do
       smart_proxy = SmartProxy.pulp_primary
       tree = plan_action_tree(action_class, smart_proxy)
 
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::RemoveOrphans)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions)
+      assert_tree_planned_with(tree, ::Actions::Katello::OrphanCleanup::RemoveOrphanedContentUnits)
     end
 
-    it 'plans proxy orphans cleanup with pulp3 mirror' do
+    it 'plans proxy orphans cleanup without content unit orphan cleanup on pulp3 mirror' do
       smart_proxy = FactoryBot.create(:smart_proxy, :pulp_mirror, :with_pulp3)
+      smart_proxy.stubs(:pulp_primary?).returns(false)
       tree = plan_action_tree(action_class, smart_proxy)
 
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::RemoveOrphans)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanDistributions)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRemotes)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions)
-    end
-
-    it 'runs and removes orphan content units' do
-      smart_proxy = SmartProxy.pulp_primary
-      file_unit_orphan = Katello::FileUnit.new(:name => "file_unit", :pulp_id => "orphaned")
-      file_unit_orphan.save!
-      docker_unit_orphan = Katello::DockerTag.new(:name => "docker_unit", :pulp_id => "orphaned_docker")
-      docker_unit_orphan.save!
-      action = create_action(action_class)
-      action.expects(:plan_self)
-      plan_action action, smart_proxy
-      run_action action
-      assert_raises(ActiveRecord::RecordNotFound) { file_unit_orphan.reload }
-      assert_raises(ActiveRecord::RecordNotFound) { docker_unit_orphan.reload }
+      refute_tree_planned(tree, ::Actions::Katello::OrphanCleanup::RemoveOrphanedContentUnits)
     end
   end
 end

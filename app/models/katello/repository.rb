@@ -935,7 +935,6 @@ module Katello
         repository_type.content_types_to_index.each do |type|
           Katello::Logging.time("CONTENT_INDEX", data: {type: type.model_class}) do
             Katello::ContentUnitIndexer.new(content_type: type, repository: self, optimized: !full_index).import_all
-            type.model_class.orphaned.destroy_all
           end
         end
         repository_type.index_additional_data_proc&.call(self)
