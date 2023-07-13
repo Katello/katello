@@ -43,7 +43,7 @@ module Katello
         @simplified_acs.products << repo_no_url.product
       end
 
-      assert_equal "Validation failed: Product The product #{repo_no_url.product.name} has no yum repositories with upstream URLs to add to the alternate content source.", error.message
+      assert_equal "Validation failed: Product #{repo_no_url.product.name} has no yum repositories with upstream URLs to add to the alternate content source.", error.message
     end
 
     def test_cannot_add_product_with_no_repositories
@@ -54,7 +54,7 @@ module Katello
         @simplified_acs.products << empty_product
       end
 
-      assert_equal "Validation failed: Product The product #{empty_product.name} has no yum repositories with upstream URLs to add to the alternate content source.", error.message
+      assert_equal "Validation failed: Product #{empty_product.name} has no yum repositories with upstream URLs to add to the alternate content source.", error.message
     end
 
     def test_subpaths
