@@ -404,7 +404,7 @@ module Katello
       @plugin.permission :edit_alternate_content_sources,
                          {
                            'katello/api/v2/alternate_content_sources' => [:update, :refresh],
-                           'katello/api/v2/alternate_content_sources_bulk_actions' => [:refresh_alternate_content_sources]
+                           'katello/api/v2/alternate_content_sources_bulk_actions' => [:refresh_alternate_content_sources, :refresh_all_alternate_content_sources]
                          },
                          :resource_type => 'Katello::AlternateContentSource',
                          :finder_scope => :editable

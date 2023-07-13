@@ -353,6 +353,8 @@ Katello::Engine.routes.draw do
         ##############################
         ##############################
 
+        match '/alternate_content_sources/bulk/refresh_all' => 'alternate_content_sources_bulk_actions#refresh_all_alternate_content_sources', :via => :post
+
         api_resources :alternate_content_sources, :only => [], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
           collection do
             match '/bulk/destroy' => 'alternate_content_sources_bulk_actions#destroy_alternate_content_sources', :via => :put
