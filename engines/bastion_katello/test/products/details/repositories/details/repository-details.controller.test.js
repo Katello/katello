@@ -211,7 +211,7 @@ describe('Controller: RepositoryDetailsController', function() {
           });
   });
 
-    it('should provide a way to view orphaned filters on a repository', function() {
+    it('should provide a way to view empty-repo filters on a repository', function() {
         repository.id = 1;
         repository.filters = [
             {
