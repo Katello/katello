@@ -2,7 +2,8 @@ import React, {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, DropdownItem, KebabToggle, DropdownPosition } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, KebabToggle, DropdownPosition, Split, Icon, Text } from '@patternfly/react-core';
+import { UndoIcon, TrashIcon } from '@patternfly/react-icons';
 import { noop } from 'foremanReact/common/helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 
@@ -22,25 +23,40 @@ const DeleteMenu = ({ handleModalToggle, akId }) => {
   const dropdownItems = [
     <DropdownItem
       ouiaId="delete-menu-option"
-      key="delete"
+      aria-label="delete-link"
+      key="delete-link"
       component="button"
       onClick={handleModalToggle}
     >
-      {__('Delete')}
+      <Split hasGutter>
+        <Icon>
+          <TrashIcon />
+        </Icon>
+        <Text ouiaId="delete-text">
+          {__('Delete')}
+        </Text>
+      </Split>
     </DropdownItem>,
     <DropdownItem
-      ouiaId="linkbacktooldpage"
-      key="link"
+      ouiaId="ak-legacy-ui"
+      key="ak-legacy-ui-link"
       href={`../../../activation_keys/${akId}`}
     >
-      {__('Old Activation key Details Page')}
+      <Split hasGutter>
+        <Icon>
+          <UndoIcon />
+        </Icon>
+        <Text ouiaId="delete-text">
+          {__('Legacy UI')}
+        </Text>
+      </Split>
     </DropdownItem>];
   return (
     <Dropdown
       ouiaId="dekete-action"
       onSelect={onSelect}
       position={DropdownPosition.right}
-      toggle={<KebabToggle id="toggle-kebab" onToggle={onToggle} />}
+      toggle={<KebabToggle id="toggle-kebab" aria-label="delete-toggle" onToggle={onToggle} />}
       isOpen={isOpen}
       isPlain
       dropdownItems={dropdownItems}

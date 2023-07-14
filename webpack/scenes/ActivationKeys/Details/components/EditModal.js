@@ -29,17 +29,19 @@ const EditModal = ({ akDetails, akId }) => {
     name, description, maxHosts, unlimitedHosts, usageCount,
   } = akDetails;
 
+  const initialMaxHosts = maxHosts || '';
+
   const [nameValue, setNameValue] = useState(name);
   const [descriptionValue, setDescriptionValue] = useState(description);
-  const [maxHostsValue, setMaxHostsValue] = useState(maxHosts);
+  const [maxHostsValue, setMaxHostsValue] = useState(initialMaxHosts);
   const [isUnlimited, setUnlimited] = useState(unlimitedHosts);
 
   useEffect(() => {
     setNameValue(name);
     setDescriptionValue(description);
-    setMaxHostsValue(maxHosts);
+    setMaxHostsValue(initialMaxHosts);
     setUnlimited(unlimitedHosts);
-  }, [name, description, maxHosts, unlimitedHosts]);
+  }, [name, description, initialMaxHosts, unlimitedHosts]);
 
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -53,7 +55,7 @@ const EditModal = ({ akDetails, akId }) => {
       {
         name: nameValue,
         description: descriptionValue,
-        max_hosts: maxHostsValue,
+        max_hosts: maxHostsValue || (usageCount !== 0 ? usageCount : usageCount + 1),
         unlimited_hosts: isUnlimited,
       },
     ));
@@ -80,11 +82,11 @@ const EditModal = ({ akDetails, akId }) => {
   };
 
   const onMinus = () => {
-    maxHostsValue(oldValue => (oldValue || 0) - 1);
+    setMaxHostsValue(oldValue => (oldValue || 0) - 1);
   };
   const onChange = (event) => {
     let newValue = (event.target.value === '' ? event.target.value : Math.round(+event.target.value));
-    if (newValue < 1) {
+    if (newValue < 1 && newValue !== '') {
       newValue = 1;
     }
     setMaxHostsValue(newValue);
@@ -95,12 +97,12 @@ const EditModal = ({ akDetails, akId }) => {
 
   const handleCheckBox = () => {
     setUnlimited(prevUnlimited => !prevUnlimited);
-    setMaxHostsValue(usageCount);
+    setMaxHostsValue(usageCount > 0 ? usageCount : usageCount + 1);
   };
 
   return (
     <>
-      <Button ouiaId="ak-edit-button" variant="secondary" onClick={handleModalToggle}>
+      <Button ouiaId="ak-edit-button" aria-label="edit-button" variant="secondary" onClick={handleModalToggle}>
         {__('Edit')}
       </Button>
       <Modal
@@ -138,7 +140,7 @@ const EditModal = ({ akDetails, akId }) => {
               <StackItem>
                 <NumberInput
                   value={maxHostsValue}
-                  min={0}
+                  min={1}
                   onMinus={onMinus}
                   onChange={onChange}
                   onPlus={onPlus}
@@ -168,7 +170,6 @@ const EditModal = ({ akDetails, akId }) => {
               id="ak-description"
               type="text"
               placeholder={__('Description')}
-              defaultValue={descriptionValue}
               value={descriptionValue}
               onChange={handleDescriptionInputChange}
             />

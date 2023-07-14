@@ -23,11 +23,11 @@ const DeleteModal = ({ isModalOpen, handleModalToggle, akId }) => {
       ouiaId="ak-delete-modal"
       variant={ModalVariant.small}
       title={[
-        <Flex>
-          <Icon status="warning">
+        <Flex key="delete-modal-header">
+          <Icon status="warning" key="exclamation-triangle">
             <ExclamationTriangleIcon />
           </Icon>
-          <Title ouiaId="ak-delete-header" headingLevel="h5" size="2xl">
+          <Title ouiaId="ak-delete-header" key="delete-ak-title" headingLevel="h5" size="2xl">
             {__('Delete activation key?')}
           </Title>
         </Flex>,

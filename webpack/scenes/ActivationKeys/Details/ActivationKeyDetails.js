@@ -32,7 +32,6 @@ import DeleteMenu from './components/DeleteMenu';
 import { getActivationKey } from './ActivationKeyActions';
 import DeleteModal from './components/DeleteModal';
 
-
 const ActivationKeyDetails = ({ match }) => {
   const dispatch = useDispatch();
   const akId = match?.params?.id;
@@ -74,7 +73,7 @@ const ActivationKeyDetails = ({ match }) => {
                 <Split hasGutter style={{ display: 'inline-flex' }}>
                   <SplitItem>
                     <Label>
-                      {akDetails.usageCount}/{akDetails.unlimitedHosts ? __('Unlimited') : akDetails.maxHosts}
+                      {akDetails.usageCount ? akDetails.usageCount : 0}/{akDetails.unlimitedHosts ? __('Unlimited') : akDetails.maxHosts}
                     </Label>
                   </SplitItem>
                 </Split>
