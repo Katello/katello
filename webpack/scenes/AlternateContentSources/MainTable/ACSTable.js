@@ -172,7 +172,7 @@ const ACSTable = () => {
                   {__('Last refresh :')}
                 </TextListItem>
                 <TextListItem
-                  aria-label="ast_refresh_text_value"
+                  aria-label="last_refresh_text_value"
                   component={TextListItemVariants.dd}
                 >
                   <LastSync
