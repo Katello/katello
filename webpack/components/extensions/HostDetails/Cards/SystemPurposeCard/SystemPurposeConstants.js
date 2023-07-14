@@ -4,3 +4,5 @@ export const defaultServiceLevels = ['Self-Support', 'Standard', 'Premium'];
 
 export const ORGANIZATION = 'ORGANIZATION';
 export const AVAILABLE_RELEASE_VERSIONS = 'AVAILABLE_RELEASE_VERSIONS';
+
+export const RELEASES = 'RELEASES';
