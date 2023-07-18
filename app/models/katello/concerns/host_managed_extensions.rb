@@ -41,7 +41,7 @@ module Katello
         end
 
         def apply_inherited_attributes(attributes, initialized = true)
-          attributes = super(attributes, initialized)
+          attributes = super(attributes, initialized) || {}
           facet_attrs = attributes['content_facet_attributes']
           return attributes if facet_attrs.blank?
           cv_id = facet_attrs['content_view_id']
