@@ -664,6 +664,27 @@ module Katello
       assert_nil content_view.needs_publish?
     end
 
+    def test_published_cv_needs_publish_on_dependency_solving_update
+      org = @organization
+      content_view = FactoryBot.build(:katello_content_view, :name => "New CV")
+      content_view.organization_id = org.id
+      content_view.save!
+      assert content_view.needs_publish? #New CV needs publish
+      content_view.create_new_version
+      content_view.latest_version_object.update!(applied_filters: {"dependency_solving": false})
+      task = ForemanTasks::Task.create!(:label => 'Actions::Katello::ContentView::Publish', :state => 'stopped',
+                                        :type => 'ForemanTasks::Task::DynflowTask', :result => 'success')
+      ::Katello::ContentViewHistory.create!(:katello_content_view_version_id => content_view.latest_version_object.id,
+                                            :status => 'successful', :task_id => task.id, :user => User.first,
+                                            :action => "publish")
+      content_view.reload
+      refute content_view.needs_publish? #CV with newly created version doesn't need publish
+      content_view.update!(solve_dependencies: true)
+      assert content_view.needs_publish? #CV with updated dep_solving needs publish
+      content_view.update!(solve_dependencies: false)
+      refute content_view.needs_publish? #CV with same dep_solving doesn't need publish
+    end
+
     def test_published_cv_needs_publish_on_repositories_update
       org = @organization
       product = create(:katello_product, provider: org.anonymous_provider,
