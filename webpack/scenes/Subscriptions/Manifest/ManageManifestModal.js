@@ -84,6 +84,7 @@ class ManageManifestModal extends Component {
       disabledReason,
       canImportManifest,
       canDeleteManifest,
+      simpleContentAccess,
       isManifestImported,
       canEditOrganizations,
       taskInProgress,
@@ -196,7 +197,7 @@ class ManageManifestModal extends Component {
                             }
                           </div>
                           <ForemanModal title={__('Confirm delete manifest')} id={DELETE_MANIFEST_MODAL_ID}>
-                            <DeleteManifestModalText />
+                            <DeleteManifestModalText simpleContentAccess={simpleContentAccess} />
                             <ForemanModal.Footer>
                               <Button ouiaId="cancel-button" bsStyle="default" onClick={this.hideDeleteManifestModal}>
                                 {__('Cancel')}
@@ -282,6 +283,7 @@ ManageManifestModal.propTypes = {
   }).isRequired,
   canImportManifest: PropTypes.bool,
   canDeleteManifest: PropTypes.bool,
+  simpleContentAccess: PropTypes.bool,
   isManifestImported: PropTypes.bool,
   deleteManifestModalExists: PropTypes.bool,
   canEditOrganizations: PropTypes.bool,
@@ -309,6 +311,7 @@ ManageManifestModal.defaultProps = {
   disabledReason: '',
   canImportManifest: false,
   canDeleteManifest: false,
+  simpleContentAccess: true,
   isManifestImported: false,
   deleteManifestModalExists: false,
   canEditOrganizations: false,

@@ -264,6 +264,7 @@ class SubscriptionsPage extends Component {
               canImportManifest={canImportManifest}
               canDeleteManifest={canDeleteManifest}
               canEditOrganizations={canEditOrganizations}
+              simpleContentAccess={simpleContentAccess}
               taskInProgress={!!task}
               disableManifestActions={disableManifestActions}
               disabledReason={this.getDisabledReason()}
