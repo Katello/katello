@@ -2,21 +2,11 @@ module Actions
   module Katello
     module Product
       class Destroy < Actions::EntryAction
-        # rubocop:disable Metrics/MethodLength
         def plan(product, options = {})
           organization_destroy = options.fetch(:organization_destroy, false)
           skip_environment_update = options.fetch(:skip_environment_update, false) ||
               options.fetch(:organization_destroy, false)
-
-          unless organization_destroy || product.user_deletable?
-            if product.redhat?
-              fail _("Cannot delete Red Hat product: %{product}") % { :product => product.name }
-            elsif !product.published_content_view_versions.not_ignorable.empty?
-              fail _("Cannot delete product with repositories published in a content view.  Product: %{product}, %{view_versions}") %
-                       { :product => product.name, :view_versions => view_versions(product) }
-            end
-          end
-
+          check_ready_to_delete(product, organization_destroy)
           action_subject(product)
 
           # Candlepin::Product::ContentRemove is called with Katello::Repository::Destroy, so we only want to run ContentRemove
@@ -98,6 +88,20 @@ module Actions
             _("Content View %{view}: Versions: %{versions}") % {:view => view, :versions => versions.join(', ')}
           end
           results.join(', ')
+        end
+
+        def check_ready_to_delete(product, organization_destroy)
+          unless organization_destroy || product.user_deletable?
+            if product.redhat?
+              fail _("Cannot delete Red Hat product: %{product}") % { :product => product.name }
+            elsif !product.published_content_view_versions.not_ignorable.empty?
+              fail _("Cannot delete product with repositories published in a content view.  Product: %{product}, %{view_versions}") %
+                     { :product => product.name, :view_versions => view_versions(product) }
+            elsif product.repositories.any? { |repo| repo.filters.any? { |filter| filter.repositories.size == 1 } }
+              fail _("Cannot delete product: %{product} with repositories that are the last affected repository in content view filters. Delete these repositories before deleting product.") %
+                     { :product => product.name }
+            end
+          end
         end
       end
     end

@@ -45,7 +45,10 @@
       <div data-block="modal-body"
            translate
            translate-n="table.numSelected"
-           translate-plural="Are you sure you want to remove {{ table.getSelected().length }} repositories?">
+           translate-plural="Repositories that are published in content view
+                             versions or are the last affected repository in a content view filter will be skipped. You can delete those from the repository details page.
+                             "
+      >
         Are you sure you want to remove the {{ table.getSelected()[0].name }} repository?
       </div>
     </div>

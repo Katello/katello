@@ -71,6 +71,9 @@ node(:published_content_view_ids) do |product|
   product.published_content_views.map(&:id).uniq
 end
 
+node(:has_last_affected_repo_in_filter) do |product|
+  product.repositories.any? { |repo| repo.filters.any? { |filter| filter.repositories.size == 1 } }
+end
 node :redhat do |product|
   product.redhat?
 end
