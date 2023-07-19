@@ -7,7 +7,7 @@ module Katello
     def destroy_repositories
       deletion_authorized_repositories = @repositories.deletable
       unpromoted_repos = deletion_authorized_repositories.reject { |repo| repo.promoted? && repo.content_views.generated_for_none.exists? }
-
+      unpromoted_repos_non_last_affected_repo = unpromoted_repos.reject { |repo| repo.filters.any? { |filter| filter.repositories.size == 1 } }
       messages1 = format_bulk_action_messages(
           :success    => "",
           :error      => _("You do not have permissions to delete %s"),
@@ -17,16 +17,23 @@ module Katello
 
       messages2 = format_bulk_action_messages(
           :success    => "",
-          :error      => _("Repository %s cannot be deleted since it has already been included in a published Content View."),
+          :error      => _("Repository %s cannot be deleted since it has already been included in a published Content View. Use repository details page to delete"),
           :models     => deletion_authorized_repositories,
           :authorized => unpromoted_repos
       )
 
-      errors = messages1[:error] + messages2[:error]
+      messages3 = format_bulk_action_messages(
+        :success    => "",
+        :error      => _("Repository %s cannot be deleted since it is the last affected repository in a filter. Use repository details page to delete."),
+        :models     => unpromoted_repos,
+        :authorized => unpromoted_repos_non_last_affected_repo
+      )
+
+      errors = messages1[:error] + messages2[:error] + messages3[:error]
 
       task = nil
-      if unpromoted_repos.any?
-        task = async_task(::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, unpromoted_repos)
+      if unpromoted_repos_non_last_affected_repo.any?
+        task = async_task(::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, unpromoted_repos_non_last_affected_repo)
       else
         status = 400
       end

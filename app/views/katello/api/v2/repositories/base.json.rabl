@@ -36,6 +36,24 @@ child :published_in_versions => :content_view_versions do |_version|
   end
 end
 
+child :repository_content_view_filters => :filters do |_filters|
+  node :content_view_filter_id do |object|
+    object.filter.id
+  end
+  node :content_view_filter_name do |object|
+    object.filter.name
+  end
+  node :content_view_id do |object|
+    object.filter.content_view_id
+  end
+  node :content_view_name do |object|
+    object.filter.content_view_name
+  end
+  node :last_affected_repo do |object|
+    object.filter&.repositories&.size == 1
+  end
+end
+
 child :latest_dynflow_sync => :last_sync do |_object|
   attributes :id, :username, :started_at, :ended_at, :state, :result, :progress
 end
