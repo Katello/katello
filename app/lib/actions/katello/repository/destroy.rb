@@ -15,6 +15,7 @@ module Actions
               options.fetch(:organization_destroy, false)
           destroy_content = options.fetch(:destroy_content, true)
           remove_from_content_view_versions = options.fetch(:remove_from_content_view_versions, false)
+          delete_empty_repo_filters = options.fetch(:delete_empty_repo_filters, true)
           action_subject(repository)
           check_destroyable!(repository, remove_from_content_view_versions)
           remove_generated_content_views(repository)
@@ -29,6 +30,7 @@ module Actions
 
           handle_acs_product_removal(repository)
           handle_alternate_content_sources(repository)
+          delete_empty_repo_filters(repository) if delete_empty_repo_filters
 
           plan_self(:user_id => ::User.current.id, :affected_cvv_ids => affected_cvv_ids)
           sequence do
@@ -79,6 +81,11 @@ module Actions
                 { prod_name: product.name, prod_id: product.id, acs_name: acs.name, acs_id: acs.id }
             end
           end
+        end
+
+        def delete_empty_repo_filters(repository)
+          filters_to_delete = repository.filters.select { |filter| filter.repositories.size == 1 }
+          ::Katello::ContentViewFilter.where(id: filters_to_delete).destroy_all
         end
 
         def handle_custom_content(repository, remove_from_content_view_versions)

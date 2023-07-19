@@ -37,14 +37,25 @@
             });
         };
 
+        $scope.repositoryFiltersToDelete = function () {
+            return _.groupBy($scope.repository.filters && $scope.repository.filters.filter(function(filter) {
+                return filter.last_affected_repo === true;
+            }), function(filter) {
+                return filter.content_view_id;
+            });
+        };
+
         $scope.repositoryWrapper = {
             repository: $scope.repository,
             repositoryVersions: {},
-            forceDelete: false
+            repositoryFiltersToDelete: {},
+            forceDeleteCV: false,
+            filterAction: 'delete',
+            showLastFilterDeletion: false
         };
 
-        $scope.updateForceDelete = function () {
-            $scope.repositoryWrapper.forceDelete = !($scope.repositoryWrapper.forceDelete);
+        $scope.updateForceDeleteCV = function () {
+            $scope.repositoryWrapper.forceDeleteCV = !($scope.repositoryWrapper.forceDeleteCV);
         };
 
         $scope.product = Product.get({id: $scope.$stateParams.productId}, function () {
@@ -71,6 +82,8 @@
             $scope.page.loading = false;
             $scope.repositoryWrapper.repository = $scope.repository;
             $scope.repositoryWrapper.repositoryVersions = $scope.repositoryVersions();
+            $scope.repositoryWrapper.repositoryFiltersToDelete = $scope.repositoryFiltersToDelete();
+            $scope.repositoryWrapper.showLastFilterDeletion = Object.keys($scope.repositoryWrapper.repositoryFiltersToDelete).length !== 0;
         }, function (response) {
             $scope.page.loading = false;
             ApiErrorHandler.handleGETRequestErrors(response, $scope);
@@ -152,7 +165,7 @@
                 Notification.setSuccessMessage(translate('Repository "%s" successfully deleted').replace('%s', repositoryName));
             };
 
-            Repository.remove({id: repository.id}, success, errorHandler);
+            Repository.remove({id: repository.id, 'delete_orphaned_filters': ($scope.repositoryWrapper.filterAction === 'delete')}, success, errorHandler);
         };
 
         $scope.canRemove = function (repo, product) {

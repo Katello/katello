@@ -149,7 +149,15 @@ describe('Controller: RepositoryDetailsController', function() {
 
     it('should provide a way to remove a repository', function() {
         repository.id = 1;
-
+        repository.filters = [
+            {
+                "content_view_filter_id": 1,
+                "content_view_filter_name": "test",
+                "content_view_id": 38,
+                "content_view_name": "test",
+                "last_affected_repo": true
+            }
+        ];
         spyOn($scope, 'transitionTo');
 
         $scope.removeRepository(repository);
@@ -202,4 +210,63 @@ describe('Controller: RepositoryDetailsController', function() {
               }]
           });
   });
+
+    it('should provide a way to view empty-repo filters on a repository', function() {
+        repository.id = 1;
+        repository.filters = [
+            {
+                "content_view_filter_id": 1,
+                "content_view_filter_name": "test",
+                "content_view_id": 38,
+                "content_view_name": "test",
+                "last_affected_repo": true
+            },
+            {
+                "content_view_filter_id": 2,
+                "content_view_filter_name": "test2",
+                "content_view_id": 38,
+                "content_view_name": "test",
+                "last_affected_repo": false
+            },
+            {
+                "content_view_filter_id": 3,
+                "content_view_filter_name": "test3",
+                "content_view_id": 38,
+                "content_view_name": "test",
+                "last_affected_repo": true
+            },
+            {
+                "content_view_filter_id": 4,
+                "content_view_filter_name": "test4",
+                "content_view_id": 39,
+                "content_view_name": "test",
+                "last_affected_repo": true
+            }
+        ];
+        expect($scope.repositoryFiltersToDelete()).toEqual(
+            {
+                38: [{
+                    content_view_filter_id: 1,
+                    content_view_filter_name: 'test',
+                    content_view_id: 38,
+                    content_view_name: 'test',
+                    last_affected_repo: true
+                },
+                {
+                    content_view_filter_id: 3,
+                    content_view_filter_name: 'test3',
+                    content_view_id: 38,
+                    content_view_name: 'test',
+                    last_affected_repo: true
+                }
+                ],
+                39: [{
+                    content_view_filter_id: 4,
+                    content_view_filter_name: 'test4',
+                    content_view_id: 39,
+                    content_view_name: 'test',
+                    last_affected_repo: true
+                }]
+            });
+    });
 });

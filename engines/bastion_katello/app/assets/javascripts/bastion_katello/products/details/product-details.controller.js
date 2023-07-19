@@ -66,6 +66,8 @@ angular.module('Bastion.products').controller('ProductDetailsController',
                     readOnlyReason = 'permissions';
                 } else if (product['published_content_view_ids'].length > 0) {
                     readOnlyReason = 'published';
+                } else if (product['has_last_affected_repo_in_filter']) {
+                    readOnlyReason = 'last_affected_repo_on_filter';
                 }
             }
 
