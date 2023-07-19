@@ -799,6 +799,7 @@ module Katello
       # True:
       #     a) When content/repo/filter change audit records exist
       #     b) CV hasn't ever been published
+      #     c) CV dependency_solving != latest_version.applied_filters.dependency_solving
       # nil:
       #     a) When CV version creation audit is missing(Indicating audit cleanup)
       #     b) Version doesn't have audited_filters set indicating
@@ -815,6 +816,8 @@ module Katello
       # return true if the audit records clearly show we have unpublished changes
       return true if (audited_cv_repositories_since_last_publish.present? || audited_cv_repository_changed.present? ||
         audited_cv_filters_changed.present? || audited_cv_filter_rules_changed.present?)
+      # return true if the dependency solving changed for CV between last publish and now
+      return true if dependency_solving_changed?
       # if we didn't return `true` already, either the audit records show that we don't need to publish, or we may
       # have insufficient data to make the determination (either audits were cleaned, or never got created at all).
       # first, check for the `create` audit record; its absence indicates that audits were cleaned some time after
@@ -829,6 +832,10 @@ module Katello
       # If that field is not nil, the version was published after upgrade, hence we have all the information to rule out
       # any audited changes to the CV and we can deterministically return false
       latest_version_object.applied_filters.nil? ? nil : false
+    end
+
+    def dependency_solving_changed?
+      latest_version_object.applied_filters && solve_dependencies != latest_version_object.applied_filters['dependency_solving']
     end
 
     def filtered?
