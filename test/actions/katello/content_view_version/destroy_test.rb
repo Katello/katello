@@ -16,7 +16,7 @@ module Katello::Host
       let(:action) { create_action action_class }
 
       it 'plans with default values' do
-        options = {:skip_environment_check => true}
+        options = {:skip_environment_check => true, :docker_cleanup => false}
         plan_action(action, @version, options)
 
         @version.repositories.each do |repo|
