@@ -1,3 +1,30 @@
+# 4.9.1 (2023-07-20)
+
+## Bug Fixes
+
+### Subscriptions
+ * Reasons for not deleting the manifest don't apply with SCA enabled ([#36604](https://projects.theforeman.org/issues/36604), [1896c347](https://github.com/Katello/katello.git/commit/1896c34786d4ebdc8a4dc7027bb33dc3242da0ee))
+
+### Tests
+ * Pin ostree binding on nightly for tests to pass. ([#36586](https://projects.theforeman.org/issues/36586), [ba8eb2ae](https://github.com/Katello/katello.git/commit/ba8eb2ae61121065e80b9511bac0bd1ad5a3b049))
+
+### Content Views
+ * Hammer should treat indeterminate needs_publish as publish_needed. ([#36581](https://projects.theforeman.org/issues/36581), [945e2e7f](https://github.com/Katello/katello.git/commit/945e2e7f628fb9752e5ae79fc71a2234b71257ad))
+ * Content view dependency solving should be tracked for needs_publish ([#36580](https://projects.theforeman.org/issues/36580), [d1a991e9](https://github.com/Katello/katello.git/commit/d1a991e96a66171708907b936827d0902d5d97b4))
+ * CV page needs refresh to get the current filters state ([#36529](https://projects.theforeman.org/issues/36529), [009f5c64](https://github.com/Katello/katello.git/commit/009f5c64ae900957b9f895e725815561139a213f))
+
+### Repositories
+ * 4.9 is slow to sync and index repositories ([#36563](https://projects.theforeman.org/issues/36563), [51f7a12e](https://github.com/Katello/katello.git/commit/51f7a12e2c591ac7132faa822b9872528d8e5fd8))
+
+### Foreman Proxy Content
+ * The "POST /katello/api/capsules/:id/reclaim_space" endpoint is wrong ([#36545](https://projects.theforeman.org/issues/36545), [a29414b5](https://github.com/Katello/katello.git/commit/a29414b5650c99afe01ae8aa8f9aa1dde0ed17b3))
+
+### Upgrades
+ * Upgrade rake task will create bad content overrides on post-4.9 Katello upgrades ([#36540](https://projects.theforeman.org/issues/36540), [ee53d52f](https://github.com/Katello/katello.git/commit/ee53d52ff09b17f1204a88ef7f99207b1d332411))
+
+### Inter Server Sync
+ * Exporting repositories that have architecture restrictions results in bogus data that can't be properly imported ([#36477](https://projects.theforeman.org/issues/36477), [79ad3adf](https://github.com/Katello/katello.git/commit/79ad3adf14ed97a9bd3eaa13191cfc2dadab24ff))
+
 # 4.9.0 (2023-06-21)
 
 ## Features
