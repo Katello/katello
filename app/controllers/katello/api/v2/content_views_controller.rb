@@ -258,7 +258,8 @@ module Katello
         fail HttpErrors::BadRequest, _("Both major and minor parameters have to be used to override a CV version")
       end
 
-      if (::Foreman::Cast.to_bool(params[:publish_only_if_needed]) && !@content_view.needs_publish?)
+      cv_needs_publish = @content_view.needs_publish?
+      if (::Foreman::Cast.to_bool(params[:publish_only_if_needed]) && !cv_needs_publish.nil? && !cv_needs_publish)
         fail HttpErrors::BadRequest, _("Content view does not need a publish since there are no audited changes since the last publish." \
                                      " Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.")
       end
