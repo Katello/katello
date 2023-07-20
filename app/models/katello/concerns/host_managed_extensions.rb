@@ -11,7 +11,8 @@ module Katello
             cv_id = attrs[:content_facet_attributes].delete(:content_view_id)
             lce_id = attrs[:content_facet_attributes].delete(:lifecycle_environment_id)
             if cv_id && lce_id
-              content_facet.assign_single_environment(content_view_id: cv_id, lifecycle_environment_id: lce_id)
+              cve = content_facet&.assign_single_environment(content_view_id: cv_id, lifecycle_environment_id: lce_id)
+              Rails.logger.warn "Couldn't assign content view environment; host has no content facet" if cve.blank?
             end
             if (cv_id.present? && lce_id.blank?) || (cv_id.blank? && lce_id.present?)
               fail "content_view_id and lifecycle_environment_id must be provided together"
@@ -42,7 +43,7 @@ module Katello
 
         def apply_inherited_attributes(attributes, initialized = true)
           attributes = super(attributes, initialized) || {}
-          facet_attrs = attributes['content_facet_attributes']
+          facet_attrs = attributes&.[]('content_facet_attributes')
           return attributes if facet_attrs.blank?
           cv_id = facet_attrs['content_view_id']
           lce_id = facet_attrs['lifecycle_environment_id']
