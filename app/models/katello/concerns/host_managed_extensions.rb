@@ -129,6 +129,8 @@ module Katello
 
         has_many :hypervisor_pools, :class_name => '::Katello::Pool', :foreign_key => :hypervisor_id, :dependent => :nullify
 
+        validates :name, format: { with: Net::Validations::HOST_REGEXP, message: _("%{value} can contain only lowercase letters, numbers, dashes and dots.") }
+
         before_validation :correct_kickstart_repository
         after_validation :add_back_cve_errors
         after_update :clear_pending_cve_attributes

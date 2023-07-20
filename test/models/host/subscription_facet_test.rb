@@ -7,7 +7,7 @@ module Katello
     let(:dev) { katello_environments(:dev) }
     let(:view)  { katello_content_views(:library_dev_view) }
     let(:activation_key) { katello_activation_keys(:simple_key) }
-    let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
+    let(:empty_host) { ::Host::Managed.create!(:name => 'foobar.example.com', :managed => false) }
     let(:basic_subscription) { katello_subscriptions(:basic_subscription) }
     let(:host_one) { hosts(:one) }
     let(:host) do
@@ -462,7 +462,7 @@ module Katello
     end
 
     def test_audit_for_subscription_facet
-      sample_host = ::Host::Managed.create!(:name => 'foohost', :managed => false, :organization_id => org.id)
+      sample_host = ::Host::Managed.create!(:name => 'foohost.example.com', :managed => false, :organization_id => org.id)
       subfacet1 = Katello::Host::SubscriptionFacet.create!(:host => sample_host)
 
       recent_audit = Audit.where(auditable_id: subfacet1.id).last
