@@ -106,7 +106,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   def test_create_with_permitted_attributes
     cf_attrs = {:content_view_id => @content_view.id, :lifecycle_environment_id => @environment.id}
     sf_attrs = {:purpose_addons => ["Addon"]}
-    attrs = @host.clone.attributes.merge("name" => "contenthost", "content_facet_attributes" => cf_attrs, "subscription_facet_attributes" => sf_attrs).compact!
+    attrs = @host.clone.attributes.merge("name" => "contenthost.example.com", "content_facet_attributes" => cf_attrs, "subscription_facet_attributes" => sf_attrs).compact!
 
     assert_difference('Host.unscoped.count') do
       post :create, params: attrs
@@ -119,7 +119,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
                 :lifecycle_environment_id => @environment.id,
                 :uuid => "thisshouldntbeabletobesetbyuser"
                }
-    attrs = @host.clone.attributes.merge("name" => "contenthost1", "content_facet_attributes" => cf_attrs).compact!
+    attrs = @host.clone.attributes.merge("name" => "contenthost1.example.com", "content_facet_attributes" => cf_attrs).compact!
 
     post :create, params: attrs
     assert_response :success # the uuid is simply filtered out which allows the host to be still saved

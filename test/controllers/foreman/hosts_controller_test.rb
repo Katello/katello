@@ -53,7 +53,7 @@ class HostsControllerTest < ActionController::TestCase
   test 'empty content facet parameters are removed' do
     orig_cves = @host.content_facet.content_view_environment_ids.to_a
     post :create, params: { :host => {
-      :name => 'test_content',
+      :name => 'test-content',
       :content_facet_attributes => {
         :lifecycle_environment_id => "",
         :content_source_id => ""

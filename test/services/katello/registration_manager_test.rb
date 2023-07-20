@@ -28,7 +28,7 @@ module Katello
         @activation_key.host_collections.delete_all
       end
 
-      let(:rhsm_params) { {:name => 'foobar', :facts => @facts, :type => 'system'} }
+      let(:rhsm_params) { {:name => 'foobar.example.com', :facts => @facts, :type => 'system'} }
 
       class ValidateHostsTest < ActiveSupport::TestCase
         def setup
@@ -204,7 +204,7 @@ module Katello
       end
 
       def test_registration
-        new_host = ::Host::Managed.new(:name => 'foobar', :managed => false, :organization => @library.organization)
+        new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @library.organization)
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
 
@@ -220,7 +220,7 @@ module Katello
       end
 
       def test_registration_activation_key
-        new_host = ::Host::Managed.new(:name => 'foobar', :managed => false, :organization => @host_collection.organization)
+        new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @host_collection.organization)
         cvpe = Katello::ContentViewEnvironment.where(:content_view_id => @activation_key.content_view, :environment_id => @activation_key.environment).first
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
@@ -244,8 +244,8 @@ module Katello
 
       def test_registration_with_host_collection_max_hosts_exceeded
         @activation_key.host_collections << @one_host_limit_host_collection
-        existing_host = ::Host::Managed.create(:name => 'alreadyhere', :managed => false, :organization => @one_host_limit_host_collection.organization)
-        new_host = ::Host::Managed.new(:name => 'foobar', :managed => false, :organization => @one_host_limit_host_collection.organization)
+        existing_host = ::Host::Managed.create(:name => 'alreadyhere.example.com', :managed => false, :organization => @one_host_limit_host_collection.organization)
+        new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @one_host_limit_host_collection.organization)
         cvpe = Katello::ContentViewEnvironment.where(:content_view_id => @activation_key.content_view, :environment_id => @activation_key.environment).first
         @one_host_limit_host_collection.hosts << existing_host
         assert_equal 1, @one_host_limit_host_collection.hosts.count
@@ -353,7 +353,7 @@ module Katello
       end
 
       def test_registration_dead_candlepin
-        new_host = ::Host::Managed.new(:name => 'foobar', :managed => false, :organization => @library.organization)
+        new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @library.organization)
 
         ::Host.expects(:find).returns(new_host)
         new_host.expects(:destroy)

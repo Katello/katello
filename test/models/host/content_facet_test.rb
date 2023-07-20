@@ -6,7 +6,7 @@ module Katello
     let(:dev) { katello_environments(:dev) }
     let(:view)  { katello_content_views(:library_dev_view) }
     let(:environment) { katello_environments(:library) }
-    let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
+    let(:empty_host) { ::Host::Managed.create!(:name => 'foobar.example.com', :managed => false) }
     let(:host) do
       FactoryBot.create(:host,
                         :with_content,
@@ -58,7 +58,7 @@ module Katello
 
     def test_audit_for_content_facet
       org = taxonomies(:empty_organization)
-      host1 = ::Host::Managed.create!(:name => 'foohost', :managed => false, :organization_id => org.id)
+      host1 = ::Host::Managed.create!(:name => 'foohost.example.com', :managed => false, :organization_id => org.id)
       content_facet1 = Katello::Host::ContentFacet.create!(
         :content_view_id => view.id, :lifecycle_environment_id => library.id, :host => host1
       )
