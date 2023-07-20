@@ -65,7 +65,7 @@ const AffectedHosts = ({
           id,
           content_facet_attributes: { lifecycle_environment: environment },
         }) => (
-          <Tr ouiaId={`${id}`} key={`${id}`}>
+          <Tr ouiaId={id} key={id}>
             <Td>
               <a rel="noreferrer" target="_blank" href={urlBuilder(`hosts/${id}`, '')}>{name}</a>
             </Td>

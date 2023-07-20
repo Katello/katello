@@ -66,7 +66,7 @@ const AffectedActivationKeys = ({
       </Thead>
       <Tbody>
         {results?.map(({ name, id, environment }) => (
-          <Tr ouiaId={`${id}`} key={`${id}`}>
+          <Tr ouiaId={id} key={id}>
             <Td>
               <a rel="noreferrer" target="_blank" href={urlBuilder(`activation_keys/${id}`, '')}>{name}</a>
             </Td>
