@@ -580,7 +580,7 @@ export const PackagesTab = () => {
               }
 
               return (
-                <Tr key={`${id}`} ouiaId={`action-row-${id}`}>
+                <Tr key={id} ouiaId={`action-row-${id}`}>
                   {showActions ? (
                     <Td
                       select={{

@@ -106,7 +106,7 @@ const HostContentViewDetails = ({
               <h3>{__('Content view')}</h3>
             </Flex>
             <Flex direction={{ default: 'row', sm: 'row' }} flexWrap={{ default: 'wrap' }}>
-              <a style={{ fontSize: '14px' }} href={`/content_views/${contentView.id}`}>{`${contentView.name}`}</a>
+              <a style={{ fontSize: '14px' }} href={`/content_views/${contentView.id}`}>{contentView.name}</a>
               <Tooltip
                 position="top"
                 enableFlip
@@ -119,7 +119,7 @@ const HostContentViewDetails = ({
                   }}
                 />}
               >
-                <Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{`${lifecycleEnvironment.name}`}</Label>
+                <Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{lifecycleEnvironment.name}</Label>
               </Tooltip>
             </Flex>
           </Flex>
