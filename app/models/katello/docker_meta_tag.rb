@@ -134,7 +134,9 @@ module Katello
     end
 
     def self.cleanup_tags
-      self.where("id not in (?) OR (schema2_id IS NULL AND schema1_id IS NULL)", Katello::RepositoryDockerMetaTag.pluck(:docker_meta_tag_id) + [0]).delete_all
+      #Cleanup RepositoryMetaTag for nil schema meta tags
+      RepositoryDockerMetaTag.where(docker_meta_tag: where(schema1: nil, schema2: nil)).delete_all
+      self.where.not(id: RepositoryDockerMetaTag.select(:docker_meta_tag_id)).or(where(schema1: nil, schema2: nil)).delete_all
     end
 
     def self.import_meta_tags(repositories)

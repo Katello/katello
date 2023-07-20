@@ -16,6 +16,7 @@ module Actions
           destroy_content = options.fetch(:destroy_content, true)
           remove_from_content_view_versions = options.fetch(:remove_from_content_view_versions, false)
           delete_empty_repo_filters = options.fetch(:delete_empty_repo_filters, true)
+          docker_cleanup = options.fetch(:docker_cleanup, true)
           action_subject(repository)
           check_destroyable!(repository, remove_from_content_view_versions)
           remove_generated_content_views(repository)
@@ -32,7 +33,7 @@ module Actions
           handle_alternate_content_sources(repository)
           delete_empty_repo_filters(repository) if delete_empty_repo_filters
 
-          plan_self(:user_id => ::User.current.id, :affected_cvv_ids => affected_cvv_ids)
+          plan_self(:user_id => ::User.current.id, :affected_cvv_ids => affected_cvv_ids, :docker_cleanup => docker_cleanup)
           sequence do
             if repository.redhat?
               handle_redhat_content(repository) unless skip_environment_update
@@ -47,7 +48,7 @@ module Actions
         def finalize
           repository = ::Katello::Repository.find_by(id: input[:repository][:id])
           if repository
-            docker_cleanup = repository.content_type == ::Katello::Repository::DOCKER_TYPE
+            docker_cleanup = repository.docker? && input[:docker_cleanup]
             delete_record(repository, {docker_cleanup: docker_cleanup})
 
             if (affected_cvv_ids = input[:affected_cvv_ids]).any?
