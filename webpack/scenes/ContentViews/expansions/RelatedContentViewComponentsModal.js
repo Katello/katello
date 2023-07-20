@@ -83,7 +83,7 @@ const RelatedContentViewsModal = ({ cvName, cvId, relatedCVCount }) => {
               </Thead>
               <Tbody>
                 {results?.map(details => (
-                  <Tr key={`${details.content_view.id}`} ouiaId={`${details.content_view.id}`}>
+                  <Tr key={details.content_view.id} ouiaId={details.content_view.id}>
                     <Td>
                       <Link to={urlBuilder(`content_views/${details.content_view.id}`, '')}>{details.content_view.name}</Link>
                     </Td>

@@ -65,7 +65,7 @@ const ContentTable = ({
       </Thead>
       <Tbody>
         {results?.map(details => (
-          <Tr key={`${details.id}`} ouiaId={`${details.id}-tr`}>
+          <Tr key={details.id} ouiaId={`${details.id}-tr`}>
             {columnHeaders.map((col, index) =>
               <Td key={index}>{col.getProperty(details)}</Td>)
             }
