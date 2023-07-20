@@ -47,7 +47,7 @@ export const relevantVersionFromCv = (cv, env) =>
 const ContentViewSelectOption = ({ cv, env }) => (
   <SelectOption
     key={cv.id}
-    value={`${cv.name}`}
+    value={cv.name}
   >
     <Flex
       direction={{ default: 'row', sm: 'row' }}

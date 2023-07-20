@@ -10,7 +10,7 @@ const ComponentEnvironments = ({ environments }) => environments.map((env, index
     href={`/lifecycle_environments/${env.id}`}
     isTruncated
   >
-    {`${env.name}`}
+    {env.name}
   </Label>
 ));
 
