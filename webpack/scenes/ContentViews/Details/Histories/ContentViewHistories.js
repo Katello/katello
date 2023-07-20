@@ -49,9 +49,9 @@ const ContentViewHistories = ({ cvId }) => {
     const taskType = task ? task.label : taskTypes[action];
 
     if (taskType === taskTypes.removal) {
-      return <>{__('Deleted from ')} <Label isTruncated key="1" color="blue" href={`/lifecycle_environments/${environment?.id}`}>{`${environment?.name ?? __('all environments')}`}</Label></>;
+      return <>{__('Deleted from ')} <Label isTruncated key="1" color="blue" href={`/lifecycle_environments/${environment?.id}`}>{environment?.name ?? __('all environments')}</Label></>;
     } else if (action === 'promotion' || taskType === taskTypes.promotion) {
-      return <>{__('Promoted to ')}<Label isTruncated key="2" color="blue" href={`/lifecycle_environments/${environment?.id}`}>{`${environment?.name}`}</Label></>;
+      return <>{__('Promoted to ')}<Label isTruncated key="2" color="blue" href={`/lifecycle_environments/${environment?.id}`}>{environment?.name}</Label></>;
     } else if (taskType === taskTypes.publish) {
       return __('Published new version');
     } else if (taskType === taskTypes.export) {
