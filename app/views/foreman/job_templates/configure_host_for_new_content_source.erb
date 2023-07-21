@@ -1,0 +1,25 @@
+<%#
+kind: job_template
+name: Configure host for new content source
+job_category: Katello
+model: JobTemplate
+provider_type: script
+description_format: Configure subscription manager for new content source
+feature: katello_change_content_source
+%>
+#!/bin/sh
+
+# This job template alone will NOT change a host's content source!
+# It is invoked after changing a host's content source on the server,
+# which is done from the Change Content Source page in the web UI.
+
+<%= configure_host_for_new_content_source(@host, foreman_server_ca_cert) %>
+
+# If REX pull mode is enabled, update yggdrasil config to pull from the new content source.
+# If host is not configured for REX pull mode, this is a noop.
+
+if [ -f /etc/yggdrasil/config.toml ]; then
+  cp /etc/yggdrasil/config.toml /etc/yggdrasil/config.toml.bak
+  export YGGDRASIL_RESTART_DELAY=10
+  <%= snippet 'remote_execution_pull_setup' %>
+fi
