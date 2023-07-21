@@ -24,7 +24,7 @@
       <tbody>
         <tr bst-table-row ng-repeat="version in table.rows">
           <td bst-table-cell>
-            <a ui-sref="content-view.info({contentViewId: version.content_view.id})">
+            <a href="/content_views/{{version.content_view.id}}">
               {{ version.content_view.name }}
             </a>
           </td>

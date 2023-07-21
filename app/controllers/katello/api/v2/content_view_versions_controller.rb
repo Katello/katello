@@ -22,6 +22,8 @@ module Katello
     param :organization_id, :number, :desc => N_("Organization identifier")
     param :include_applied_filters, :bool, :desc => N_("Whether or not to return filters applied to the content view version"), :required => false
     param :triggered_by_id, :number, :desc => N_("Filter composite versions whose publish was triggered by the specified component version"), :required => false
+    param :file_id, :number, :desc => N_("Filter content view versions that contain the file")
+    param :nondefault, :bool, :desc => N_("Filter out default content views"), :required => false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(ContentViewVersion)
     def index
@@ -36,10 +38,12 @@ module Katello
       versions = ContentViewVersion.readable
       versions = versions.triggered_by(params[:triggered_by_id]) if params[:triggered_by_id]
       versions = versions.with_organization_id(params[:organization_id]) if params[:organization_id]
+      versions = versions.non_default_view if ::Foreman::Cast.to_bool(params[:nondefault])
       versions = versions.where(:content_view_id => @view.id) if @view
       versions = versions.for_version(version_number) if version_number
       versions = versions.in_environment(@environment) if @environment
       versions = versions.component_of(params[:composite_version_id]) if params[:composite_version_id]
+      versions = versions.contains_file(params[:file_id]) if params[:file_id]
       versions
     end
 
