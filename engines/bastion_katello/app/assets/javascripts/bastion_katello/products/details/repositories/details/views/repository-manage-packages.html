@@ -29,9 +29,20 @@
     <button type="button" class="btn btn-default"
             ng-hide="denied('edit_products')"
             ng-click="openModal()"
-            ng-disabled="table.working || table.numSelected === 0">
+            ng-disabled="table.working || table.numSelected === 0 || product.redhat">
       <i class="fa fa-trash-o" ng-hide="table.working"></i>
-      <span translate>Remove Packages</span>
+      <span ng-hide="product.redhat" translate>Remove Packages</span>
+      <span ng-show="product.redhat">
+            <span translate>Cannot Remove</span>
+            <span>
+              <i class="fa fa-question-circle" ng-show="product.redhat"
+                 uib-tooltip="{{ 'You cannot remove content from a redhat repository' | translate }}"
+                 tooltip-animation="false"
+                 tooltip-placement="left"
+                 tooltip-append-to-body="true">
+              </i>
+            </span>
+      </span>
     </button>
   </div>
 
