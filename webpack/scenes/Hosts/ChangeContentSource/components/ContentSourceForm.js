@@ -96,6 +96,7 @@ const ContentSourceForm = ({
   contentHosts,
   isLoading,
   hostsUpdated,
+  showTemplate,
 }) => {
   const pathsUrl = `/organizations/${orgId()}/environments/paths?permission_type=promotable${contentSourceId ? `&content_source_id=${contentSourceId}` : ''}`;
   useAPI( // No TableWrapper here, so we can useAPI from Foreman
@@ -203,7 +204,7 @@ const ContentSourceForm = ({
         setUserCheckedItems={handleEnvironment}
         publishing={false}
         multiSelect={false}
-        headerText={__('Environment')}
+        headerText={__('Lifecycle environment')}
         isDisabled={environmentIsDisabled || hostsUpdated}
       />
       <ContentViewSelect
@@ -230,12 +231,23 @@ const ContentSourceForm = ({
           variant="primary"
           id="generate_btn"
           ouiaId="update-source-button"
-          onClick={e => handleSubmit(e)}
+          onClick={e => handleSubmit(e, { shouldRedirect: true })}
           isDisabled={isLoading || !formIsValid() || hostsUpdated}
           isLoading={isLoading}
         >
-          {__('Update')}
+          {__('Run job invocation')}
         </Button>
+        <Button
+          variant="secondary"
+          id="generate_btn"
+          ouiaId="update-source-button"
+          onClick={showTemplate}
+          isDisabled={isLoading || !formIsValid() || hostsUpdated}
+          isLoading={isLoading}
+        >
+          {__('Update hosts manually')}
+        </Button>
+
       </ActionGroup>
     </Form>);
 };
@@ -253,6 +265,7 @@ ContentSourceForm.propTypes = {
   contentHosts: PropTypes.arrayOf(PropTypes.shape({})),
   isLoading: PropTypes.bool,
   hostsUpdated: PropTypes.bool,
+  showTemplate: PropTypes.func.isRequired,
 };
 
 ContentSourceForm.defaultProps = {

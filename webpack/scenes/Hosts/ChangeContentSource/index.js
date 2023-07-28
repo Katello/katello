@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Alert, Grid, GridItem, PageSection, Title } from '@patternfly/react-core';
+import { Alert, Grid, GridItem, PageSection, Title, Text } from '@patternfly/react-core';
 
 import { translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
@@ -53,12 +53,22 @@ const ChangeContentSourcePage = () => {
   const [contentSourceId, setCapsuleId] = useState('');
   const [selectedEnvironment, setSelectedEnvironment] = useState([]);
   const [contentViewName, setContentViewName] = useState('');
+  const [shouldShowTemplate, setShouldShowTemplate] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   const contentViewId = contentViews?.find(cv => cv.name === contentViewName)?.id;
   const noHostSpecified = getHostIds(urlParams.host_id).length === 0 && urlParams.searchParam === '';
   const environmentId = selectedEnvironment[0]?.id;
 
-  const handleSubmit = (e) => {
+  const redirectToJobInvocationForm = () => setRedirect(true);
+
+  const handleSuccess = ({ shouldRedirect }) => {
+    if (shouldRedirect) {
+      redirectToJobInvocationForm();
+    }
+  };
+
+  const handleSubmit = (e, { shouldRedirect = false }) => {
     e.preventDefault();
 
     dispatch(changeContentSource(
@@ -66,7 +76,7 @@ const ChangeContentSourcePage = () => {
       contentViewId,
       contentSourceId,
       contentHosts.map(h => h.id),
-      jobInvocationPath,
+      () => handleSuccess({ shouldRedirect }),
     ));
   };
 
@@ -78,6 +88,11 @@ const ChangeContentSourcePage = () => {
     if (id) {
       dispatch(getProxy(id));
     }
+  };
+
+  const showTemplate = (e) => {
+    handleSubmit(e, { shouldRedirect: false });
+    setShouldShowTemplate(true);
   };
 
   const breadcrumbItems = () => {
@@ -105,6 +120,10 @@ const ChangeContentSourcePage = () => {
     dispatch(getFormData(getHostIds(urlParams.host_id), urlParams.searchParam));
   }, [dispatch, urlParams.host_id, urlParams.searchParam]);
 
+  if (redirect && jobInvocationPath) {
+    window.location.assign(jobInvocationPath); // redirect to job invocation wizard
+  }
+
   return (
     <>
       <Head>
@@ -125,9 +144,13 @@ const ChangeContentSourcePage = () => {
               ouiaId="change-cs-title"
               headingLevel="h5"
               size="2xl"
+              className="margin-top-20"
             >
               {__('Change host content source')}
             </Title>
+            <Text ouiaId="change-content-source-description" id="ccs-description">
+              {__('Changing a host\'s content source will change the Smart Proxy from which the host gets its content.')}
+            </Text>
           </GridItem>
           {noHostSpecified &&
             <GridItem span={7}>
@@ -158,11 +181,12 @@ const ChangeContentSourcePage = () => {
               handleContentSource={handleContentSource}
               contentHosts={contentHosts}
               isLoading={isLoading}
-              hostsUpdated={apiChangeStatus === STATUS.RESOLVED}
+              hostsUpdated={apiChangeStatus === STATUS.RESOLVED || shouldShowTemplate}
+              showTemplate={showTemplate}
             />
           </> }
-          { apiChangeStatus === STATUS.RESOLVED &&
-          <ContentSourceTemplate template={template} jobInvocationPath={jobInvocationPath} /> }
+          { (apiChangeStatus === STATUS.RESOLVED && shouldShowTemplate) &&
+          <ContentSourceTemplate template={template} /> }
         </Grid>
       </PageSection>
     </>

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { FormattedMessage } from 'react-intl';
 import {
   Alert,
   Grid,
@@ -16,7 +15,7 @@ import PropTypes from 'prop-types';
 
 import { copyToClipboard } from '../helpers';
 
-const ContentSourceTemplate = ({ template, jobInvocationPath }) => {
+const ContentSourceTemplate = ({ template }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCopied, setCopied] = useState(false);
 
@@ -42,19 +41,20 @@ const ContentSourceTemplate = ({ template, jobInvocationPath }) => {
     <Grid>
       <GridItem span={7}>
         <Alert
+          ouiaId="host-server-content-source-complete"
+          variant="info"
+          title={__('Configuration updated on Foreman')}
+          className="margin-top-20"
+          isInline
+        />
+        <Alert
           ouiaId="host-configuration-alert"
           variant="warning"
-          title={__('Host configurations are not updated yet')}
+          title={__('Configuration still must be updated on hosts')}
           className="margin-top-20"
           isInline
         >
-          <FormattedMessage
-            id="ccs_alert"
-            values={{
-              link: <a href={jobInvocationPath}>{__('run job invocation')}</a>,
-            }}
-            defaultMessage={jobInvocationPath ? __('To update the selected host configuration, {link}, or update hosts manually in the next section.') : __('To update the selected host configuration, update hosts manually in the next section.')}
-          />
+          {__('To finish the process of changing hosts\' content source, run the following script manually on the host(s).')}
         </Alert>
 
       </GridItem>
@@ -81,12 +81,10 @@ const ContentSourceTemplate = ({ template, jobInvocationPath }) => {
 
 ContentSourceTemplate.propTypes = {
   template: PropTypes.string,
-  jobInvocationPath: PropTypes.string,
 };
 
 ContentSourceTemplate.defaultProps = {
   template: '',
-  jobInvocationPath: '',
 };
 
 export default ContentSourceTemplate;
