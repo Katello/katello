@@ -91,7 +91,7 @@ module Katello
                                       .distinct
 
           if Katello.with_remote_execution?
-            template_id = JobTemplate.find_by(name: 'Change content source')&.id
+            template_id = JobTemplate.find_by(name: 'Configure host for new content source')&.id
             job_invocation_path = new_job_invocation_path(template_id: template_id, host_ids: content_hosts.map { |h| h[:id] }) if template_id
           end
 
