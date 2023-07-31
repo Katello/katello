@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { Tabs, Tab, TabTitleText } from '@patternfly/react-core';
+import { Tabs, Tab, TabTitleText, PageSection } from '@patternfly/react-core';
 import { useSelector } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import SecondaryTabRoutes from './SecondaryTabsRoutes';
@@ -14,8 +14,13 @@ const ContentTab = ({ location: { pathname } }) => {
   const filteredTabs =
     SECONDARY_TABS?.filter(tab => !tab.hideTab?.({ hostDetails })) ?? [];
   return (
-    <>
+    <PageSection
+      variant="light"
+      padding={{ default: 'noPadding' }}
+      className="host-content-tabs-section"
+    >
       <Tabs
+        id="host-content-tabs"
         ouiaId="host-content-tabs"
         className="margin-0-24"
         onSelect={(evt, subTab) => hashHistory.push(subTab)}
@@ -32,7 +37,8 @@ const ContentTab = ({ location: { pathname } }) => {
         ))}
       </Tabs>
       <SecondaryTabRoutes />
-    </>
+    </PageSection>
+
   );
 };
 
