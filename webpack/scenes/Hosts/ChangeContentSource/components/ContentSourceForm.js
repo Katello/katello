@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 import {
   ActionGroup,
@@ -11,6 +12,7 @@ import {
   SelectOption,
   SelectVariant,
   TextContent,
+  Text,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
@@ -109,6 +111,7 @@ const ContentSourceForm = ({
   const envList = environmentPathResponse?.results?.map(path => path.environments).flat();
   const [csSelectOpen, setCSSelectOpen] = useState(false);
   const [cvSelectOpen, setCVSelectOpen] = useState(false);
+  const hostCount = contentHosts.length;
 
   const handleCSSelect = (_event, selection) => {
     handleContentSource(selection);
@@ -123,10 +126,10 @@ const ContentSourceForm = ({
   const formIsValid = () => (!!environments &&
     !!contentViewName &&
     !!contentSourceId &&
-    contentHosts.length !== 0);
+    hostCount !== 0);
 
   const contentSourcesIsDisabled = (isLoading || contentSources.length === 0 ||
-    contentHosts.length === 0);
+    hostCount === 0);
   const environmentIsDisabled = (isLoading || environments === [] ||
     contentSourceId === '');
   const viewIsDisabled = (isLoading || contentViews.length === 0 ||
@@ -153,7 +156,7 @@ const ContentSourceForm = ({
       isHorizontal
     >
       <Grid hasGutter className="margin-top-16">
-        {(contentHosts.length === 0 && !isLoading) && (
+        {(hostCount === 0 && !isLoading) && (
 
         <GridItem span={7}>
           <Alert
@@ -226,6 +229,29 @@ const ContentSourceForm = ({
           env={environments[0]}
         />))}
       </ContentViewSelect>
+      <TextContent>
+        <Text
+          ouiaId="ccs-options-description"
+        >
+          <FormattedMessage
+            defaultMessage={__('After configuring Foreman, configuration must also be updated on {hosts}. Choose one of the following options to update {hosts}:')}
+            values={{
+              hosts: (
+                <FormattedMessage
+                  defaultMessage="{count, plural, one {{singular}} other {# {plural}}}"
+                  values={{
+                    count: hostCount,
+                    singular: __('the host'),
+                    plural: __('hosts'),
+                  }}
+                  id="ccs-options-i18n"
+                />
+              ),
+            }}
+            id="ccs-options-description-i18n"
+          />
+        </Text>
+      </TextContent>
       <ActionGroup style={{ display: 'block' }}>
         <Button
           variant="primary"

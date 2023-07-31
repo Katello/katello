@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   Alert,
   Grid,
@@ -15,7 +16,7 @@ import PropTypes from 'prop-types';
 
 import { copyToClipboard } from '../helpers';
 
-const ContentSourceTemplate = ({ template }) => {
+const ContentSourceTemplate = ({ template, hostCount }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCopied, setCopied] = useState(false);
 
@@ -50,11 +51,45 @@ const ContentSourceTemplate = ({ template }) => {
         <Alert
           ouiaId="host-configuration-alert"
           variant="warning"
-          title={__('Configuration still must be updated on hosts')}
+          title={
+            <FormattedMessage
+              defaultMessage={__('Configuration still must be updated on {hosts}')}
+              values={{
+                hosts: (
+                  <FormattedMessage
+                    defaultMessage="{count, plural, one {{singular}} other {# {plural}}}"
+                    values={{
+                      count: hostCount,
+                      singular: __('the host'),
+                      plural: __('hosts'),
+                    }}
+                    id="ccs-status-i18n"
+                  />
+                ),
+              }}
+              id="ccs-status-description-i18n"
+            />
+          }
           className="margin-top-20"
           isInline
         >
-          {__('To finish the process of changing hosts\' content source, run the following script manually on the host(s).')}
+          <FormattedMessage
+            defaultMessage={__('To finish the process of changing the content source, run the following script manually on {hosts}.')}
+            values={{
+              hosts: (
+                <FormattedMessage
+                  defaultMessage="{count, plural, one {{singular}} other {{plural}}}"
+                  values={{
+                    count: hostCount,
+                    singular: __('the host'),
+                    plural: __('the hosts'),
+                  }}
+                  id="ccs-status2-i18n"
+                />
+              ),
+            }}
+            id="ccs-status2-description-i18n"
+          />
         </Alert>
 
       </GridItem>
@@ -81,10 +116,12 @@ const ContentSourceTemplate = ({ template }) => {
 
 ContentSourceTemplate.propTypes = {
   template: PropTypes.string,
+  hostCount: PropTypes.number,
 };
 
 ContentSourceTemplate.defaultProps = {
   template: '',
+  hostCount: 1,
 };
 
 export default ContentSourceTemplate;

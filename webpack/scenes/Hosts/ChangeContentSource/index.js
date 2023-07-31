@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Alert, Grid, GridItem, PageSection, Title, Text } from '@patternfly/react-core';
+import { Alert, Grid, GridItem, PageSection, Title, Text, TextContent } from '@patternfly/react-core';
 
 import { translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
@@ -57,7 +57,8 @@ const ChangeContentSourcePage = () => {
   const [redirect, setRedirect] = useState(false);
 
   const contentViewId = contentViews?.find(cv => cv.name === contentViewName)?.id;
-  const noHostSpecified = getHostIds(urlParams.host_id).length === 0 && urlParams.searchParam === '';
+  const hostIds = useMemo(() => getHostIds(urlParams.host_id), [urlParams.host_id]);
+  const noHostSpecified = (hostIds.length === 0 && urlParams.searchParam === '');
   const environmentId = selectedEnvironment[0]?.id;
 
   const redirectToJobInvocationForm = () => setRedirect(true);
@@ -117,8 +118,8 @@ const ChangeContentSourcePage = () => {
     }
   };
   useEffect(() => {
-    dispatch(getFormData(getHostIds(urlParams.host_id), urlParams.searchParam));
-  }, [dispatch, urlParams.host_id, urlParams.searchParam]);
+    dispatch(getFormData(hostIds, urlParams.searchParam));
+  }, [dispatch, hostIds, urlParams.searchParam]);
 
   if (redirect && jobInvocationPath) {
     window.location.assign(jobInvocationPath); // redirect to job invocation wizard
@@ -148,9 +149,11 @@ const ChangeContentSourcePage = () => {
             >
               {__('Change host content source')}
             </Title>
-            <Text ouiaId="change-content-source-description" id="ccs-description">
-              {__('Changing a host\'s content source will change the Smart Proxy from which the host gets its content.')}
-            </Text>
+            <TextContent>
+              <Text ouiaId="change-content-source-description" id="ccs-description">
+                {__('Changing a host\'s content source will change the Smart Proxy from which the host gets its content.')}
+              </Text>
+            </TextContent>
           </GridItem>
           {noHostSpecified &&
             <GridItem span={7}>
@@ -186,7 +189,7 @@ const ChangeContentSourcePage = () => {
             />
           </> }
           { (apiChangeStatus === STATUS.RESOLVED && shouldShowTemplate) &&
-          <ContentSourceTemplate template={template} /> }
+          <ContentSourceTemplate template={template} hostCount={contentHosts.length} /> }
         </Grid>
       </PageSection>
     </>
