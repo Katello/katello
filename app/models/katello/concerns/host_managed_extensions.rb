@@ -14,8 +14,9 @@ module Katello
               cve = content_facet&.assign_single_environment(content_view_id: cv_id, lifecycle_environment_id: lce_id)
               Rails.logger.warn "Couldn't assign content view environment; host has no content facet" if cve.blank?
             end
+
             if (cv_id.present? && lce_id.blank?) || (cv_id.blank? && lce_id.present?)
-              fail "content_view_id and lifecycle_environment_id must be provided together"
+              errors.add(:base, _("Content view and lifecycle environment must be provided together"))
             end
           end
         end
