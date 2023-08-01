@@ -321,7 +321,7 @@ test('Can bulk add component views to content view with modal', async (done) => 
 
   const addComponentParams = {
     compositeContentViewId: 4,
-    components: [{ content_view_version_id: 44 }, { latest: true, content_view_id: 9 }],
+    components: [{ content_view_version_id: 42 }, { latest: true, content_view_id: 9 }],
   };
 
   const addComponentScope = nockInstance
@@ -346,9 +346,10 @@ test('Can bulk add component views to content view with modal', async (done) => 
   fireEvent.click(getByLabelText('bulk_add_components'));
   await patientlyWaitFor(() => {
     expect(getAllByText('Add content views')[1]).toBeInTheDocument();
+    expect(queryByText('Version 4.0 (3 days ago)')).toBeInTheDocument();
   });
-  fireEvent.click(getByLabelText('version-select-cv-10'));
-  fireEvent.click(getByLabelText('cv-10-3.0'));
+  fireEvent.click(queryByText('Version 4.0 (3 days ago)'));
+  fireEvent.click(queryByText('Version 3.0'));
 
   fireEvent.click(getByLabelText('add_components'));
   await patientlyWaitFor(() => {

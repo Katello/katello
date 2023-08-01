@@ -29,5 +29,8 @@ child :latest_version => :content_view_version do
 end
 
 child :component_content_view_versions => :component_content_view_versions do
-  attributes :id, :version
+  attributes :id, :version, :description
+  node :published_at_words do |version|
+    time_ago_in_words(version.created_at)
+  end
 end
