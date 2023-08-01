@@ -33,7 +33,6 @@ import { hasRequiredPermissions, hostIsNotRegistered } from '../../hostDetailsHe
 
 const SystemPurposeCard = ({ hostDetails, akDetails }) => {
   const details = hostDetails?.id ? hostDetails : akDetails;
-  console.log(details);
   const sysPurposeCardType = details?.subscription_facet_attributes ? 'host' : 'ak';
   const requiredPermission = sysPurposeCardType === 'host' ? 'edit_hosts' : 'edit_activation_keys';
   const showEditButton = hasRequiredPermissions([requiredPermission], details?.permissions);
@@ -55,8 +54,6 @@ const SystemPurposeCard = ({ hostDetails, akDetails }) => {
 
   const statusSelector = sysPurposeCardType === 'host' ? selectHostDetailsStatus : selectAKDetailsStatus;
   const detailsStatus = useSelector(statusSelector);
-  console.log(sysPurposeCardType);
-  console.log(detailsStatus);
   const dataIsLoading = detailsStatus === STATUS.PENDING;
 
   const [editing, setEditing] = useState(false);
