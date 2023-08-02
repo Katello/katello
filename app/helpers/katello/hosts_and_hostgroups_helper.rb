@@ -4,6 +4,18 @@ module Katello
       "kt_activation_keys"
     end
 
+    def edit_action?
+      params[:action] == 'edit'
+    end
+
+    def cv_lce_disabled?
+      edit_action? && !using_discovered_hosts_page?
+    end
+
+    def using_discovered_hosts_page?
+      controller.controller_name == "discovered_hosts"
+    end
+
     def using_hostgroups_page?
       controller.controller_name == "hostgroups"
     end
@@ -164,7 +176,7 @@ module Katello
 
       views = []
       if lifecycle_environment
-        views = Katello::ContentView.in_environment(lifecycle_environment).readable.order(:name)
+        views = Katello::ContentView.in_environment(lifecycle_environment).ignore_generated.readable.order(:name)
         views |= [content_view] if content_view.present? && content_view.in_environment?(lifecycle_environment)
       elsif content_view
         views = [content_view]
