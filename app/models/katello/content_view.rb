@@ -794,12 +794,20 @@ module Katello
       return last_publish_result.present? && last_publish_result == 'success'
     end
 
+    def cv_repo_indexed_after_last_published?
+      repositories.any? { |repo| repo.last_indexed && repo.last_indexed > latest_version_object.created_at }
+    end
+
     def needs_publish?
       #Returns
       # True:
       #     a) When content/repo/filter change audit records exist
       #     b) CV hasn't ever been published
       #     c) CV dependency_solving != latest_version.applied_filters.dependency_solving
+      #     d) If repo was indexed after cv publish. This can happen under 3 cases:
+      #       i) Index runs because last index(before publish) had failed and repo is picked up for index even if pulp publication hasn't changed.
+      #       ii) Complete sync runs or sync adds/removes new content (Already true because new pulp publication/version gets created)
+      #       iii) repo.index_content is run. (This doesn't necessarily indicate contents changed. Corner case where we play safe and return true)
       # nil:
       #     a) When CV version creation audit is missing(Indicating audit cleanup)
       #     b) Version doesn't have audited_filters set indicating
@@ -814,10 +822,11 @@ module Katello
       return nil unless last_publish_task_success?
       return composite_cv_components_changed? if composite?
       # return true if the audit records clearly show we have unpublished changes
-      return true if (audited_cv_repositories_since_last_publish.present? || audited_cv_repository_changed.present? ||
-        audited_cv_filters_changed.present? || audited_cv_filter_rules_changed.present?)
+      return true if audited_changes_present?
       # return true if the dependency solving changed for CV between last publish and now
       return true if dependency_solving_changed?
+      # return true if any child repo's indexed_at > last_version.created_at
+      return true if cv_repo_indexed_after_last_published?
       # if we didn't return `true` already, either the audit records show that we don't need to publish, or we may
       # have insufficient data to make the determination (either audits were cleaned, or never got created at all).
       # first, check for the `create` audit record; its absence indicates that audits were cleaned some time after
@@ -832,6 +841,11 @@ module Katello
       # If that field is not nil, the version was published after upgrade, hence we have all the information to rule out
       # any audited changes to the CV and we can deterministically return false
       latest_version_object.applied_filters.nil? ? nil : false
+    end
+
+    def audited_changes_present?
+      audited_cv_repositories_since_last_publish.present? || audited_cv_repository_changed.present? ||
+        audited_cv_filters_changed.present? || audited_cv_filter_rules_changed.present?
     end
 
     def dependency_solving_changed?
