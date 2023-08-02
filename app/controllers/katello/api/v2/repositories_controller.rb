@@ -41,8 +41,8 @@ module Katello
 
     def_param_group :repo do
       param :url, String, :desc => N_("repository source url")
-      param :os_versions, Array,
-            :desc => N_("Identifies whether the repository should be disabled on a client with a non-matching OS version. Pass [] to enable regardless of OS version. Maximum length 1; allowed tags are: %s") % Katello::RootRepository::ALLOWED_OS_VERSIONS.join(', ')
+      param :os_versions, Array, :desc => N_("Identifies whether the repository should be unavailable on a client with a non-matching OS version.
+Pass [] to make repo available for clients regardless of OS version. Maximum length 1; allowed tags are: %s") % Katello::RootRepository::ALLOWED_OS_VERSIONS.join(', ')
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository"), :allow_nil => true
       param :ssl_ca_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL CA Cert"), :allow_nil => true
       param :ssl_client_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL Client Cert"), :allow_nil => true
