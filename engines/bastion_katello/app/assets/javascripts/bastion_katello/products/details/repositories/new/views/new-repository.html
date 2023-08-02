@@ -60,7 +60,7 @@
                 ng-options="arch.id as arch.name for arch in architecture">
         </select>
         <p class="help-block" translate>
-          The repository will be enabled by default on content hosts with the selected architecture.
+          The repository will only be available on content hosts with the selected architecture.
         </p>
       </div>
 
@@ -71,7 +71,7 @@
                 ng-options="tag as tag.name for tag in osVersionsOptions track by tag.id">
         </select>
         <p class="help-block" translate>
-          The repository will be enabled by default on content hosts with the selected OS version.
+          The repository will only be available on content hosts with the selected OS version.
         </p>
       </div>
     </div>

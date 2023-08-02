@@ -35,7 +35,7 @@
       <dl class="dl-horizontal dl-horizontal-left">
           <dt>
             <span translate>Restrict to architecture</span>
-            <i class="pficon-info" title="{{ 'The repository will be enabled by default on content hosts with the selected architecture.' | translate }}"></i>
+            <i class="pficon-info" title="{{ 'The repository will only be available on content hosts with the selected architecture.' | translate }}"></i>
           </dt>
           <dd bst-edit-select="repository.arch==='noarch'?'No restriction':repository.arch"
               selector="repository.arch"
@@ -45,7 +45,7 @@
 
           <dt>
             <span translate>Restrict to <br />OS version</span>
-            <i class="pficon-info" title="{{ 'The repository will be enabled by default on content hosts with the selected OS version.' | translate }}"></i>
+            <i class="pficon-info" title="{{ 'The repository will only be available on content hosts with the selected OS version.' | translate }}"></i>
           </dt>
           <dd bst-edit-select="repository.os_versions.length ? formatOSVersions() : 'No restriction'"
               selector="selectedOSVersion"
