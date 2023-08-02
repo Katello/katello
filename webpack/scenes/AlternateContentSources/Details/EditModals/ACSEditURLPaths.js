@@ -16,7 +16,7 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
   const urlValidated = (acsUrl === '' || isValidUrl(acsUrl, acsType)) ? 'default' : 'error';
   const baseURLplaceholder = acsType === 'rhui' ?
     'https://rhui-server.example.com/pulp/content' :
-    'http:// or https://';
+    'http://, https:// or file://';
   const helperTextInvalid = acsType === 'rhui' ?
     'http://rhui-server.example.com/pulp/content or https://rhui-server.example.com/pulp/content' :
     'http://, https:// or file://';
