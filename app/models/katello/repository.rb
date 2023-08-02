@@ -939,6 +939,7 @@ module Katello
         end
         repository_type.index_additional_data_proc&.call(self)
       end
+      self.update!(last_indexed: DateTime.now)
       true
     end
 
