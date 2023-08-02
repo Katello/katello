@@ -5,9 +5,8 @@
     option.kt-cv  { margin-left: 1em; }
 </style>
 <% spinner_path = asset_path('spinner.gif') %>
-<% edit_action = params[:action] == 'edit' %>
 
-<% if edit_action && !using_hostgroups_page? %>
+<% if edit_action? && !using_hostgroups_page? && !using_discovered_hosts_page? %>
   <div style="margin-left: 270px">
     <%= link_to _("Change content source"), "/change_host_content_source?host_id=#{@host.id}" %>
   </div>
@@ -22,7 +21,7 @@
     select_tag cs_select_id, content_source_options(@hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)), :data => {"spinner_path" => spinner_path},
                :class => 'form-control',  :name => cs_select_name
   else
-    select_tag cs_select_id, content_source_options(@host, :selected_host_group => @hostgroup || @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cs_select_name, :disabled => edit_action
+    select_tag cs_select_id, content_source_options(@host, :selected_host_group => @hostgroup || @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cs_select_name, :disabled => cv_lce_disabled?
   end
 end %>
 
@@ -35,7 +34,7 @@ end %>
     select_tag env_select_id, lifecycle_environment_options(@hostgroup, :include_blank => blank_or_inherit_with_id(f, :lifecycle_environment)),
                :class => 'form-control',  :name => env_select_name
   else
-    select_tag env_select_id, lifecycle_environment_options(@host, :selected_host_group => @hostgroup || @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :lifecycle_environment)), :class => 'form-control',  :name => env_select_name, :disabled => edit_action
+    select_tag env_select_id, lifecycle_environment_options(@host, :selected_host_group => @hostgroup || @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :lifecycle_environment)), :class => 'form-control',  :name => env_select_name, :disabled =>  cv_lce_disabled?
   end
 end %>
 
@@ -47,6 +46,6 @@ end %>
     select_tag cv_select_id,  content_views_for_host(@hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_view)), :data => {"spinner_path" => spinner_path},
                :class => 'form-control',  :name => cv_select_name
   else
-    select_tag cv_select_id,  content_views_for_host(@host, :selected_host_group => @hostgroup || @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_view)), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cv_select_name, :disabled => edit_action
+    select_tag cv_select_id,  content_views_for_host(@host, :selected_host_group => @hostgroup || @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_view)), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cv_select_name, :disabled =>  cv_lce_disabled?
   end
 end %>
