@@ -1,7 +1,7 @@
 module Katello
   # rubocop:disable Metrics/ClassLength
   class ContentView < Katello::Model
-    audited :associations => [:repositories, :environments, :filters], :except => [:name, :label, :description]
+    audited :associations => [:repositories, :environments, :filters]
     has_associated_audits
     include Ext::LabelFromName
     include Katello::Authorization::ContentView
