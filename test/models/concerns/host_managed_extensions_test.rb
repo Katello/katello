@@ -100,9 +100,9 @@ module Katello
 
     def test_update_with_blank_lifecycle_environment
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
-      assert_raises(RuntimeError, "content_view_id and lifecycle_environment_id must be provided together") do
-        host.update(content_facet_attributes: {content_view_id: @view.id, lifecycle_environment_id: nil})
-      end
+      refute host.update(content_facet_attributes: {content_view_id: @view.id, lifecycle_environment_id: nil})
+      refute_valid host
+      assert_equal host.errors[:base].first, "Content view and lifecycle environment must be provided together"
     end
 
     def test_check_cve_attributes_removes_cv_and_lce
