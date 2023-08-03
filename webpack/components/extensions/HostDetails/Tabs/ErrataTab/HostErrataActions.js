@@ -1,7 +1,7 @@
 import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
 import { foremanApi } from '../../../../../services/api';
-import { HOST_ERRATA_KEY, HOST_ERRATA_APPLICABILITY_KEY, HOST_ERRATA_APPLY_KEY } from './HostErrataConstants';
-import { errorToast, renderTaskStartedToast } from '../../../../../scenes/Tasks/helpers';
+import { HOST_ERRATA_KEY, HOST_ERRATA_APPLICABILITY_KEY } from './HostErrataConstants';
+import { errorToast } from '../../../../../scenes/Tasks/helpers';
 
 export const getInstallableErrata = (hostId, params) => get({
   type: API_OPERATIONS.GET,
@@ -26,15 +26,6 @@ export const regenerateApplicability = (hostId, params) => put({
       },
     });
   },
-  errorToast: error => errorToast(error),
-  params,
-});
-
-export const applyViaKatelloAgent = (hostId, params) => put({
-  type: API_OPERATIONS.PUT,
-  key: HOST_ERRATA_APPLY_KEY,
-  url: foremanApi.getApiUrl(`/hosts/${hostId}/errata/apply`),
-  handleSuccess: response => renderTaskStartedToast(response.data),
   errorToast: error => errorToast(error),
   params,
 });

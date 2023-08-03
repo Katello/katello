@@ -27,7 +27,7 @@ import SelectableDropdown from '../../../../SelectableDropdown';
 import { useSet, useBulkSelect, useUrlParams, useTableSort } from '../../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { ErrataType, ErrataSeverity, ErrataToggleGroupItem } from '../../../../../components/Errata';
-import { getInstallableErrata, regenerateApplicability, applyViaKatelloAgent } from './HostErrataActions';
+import { getInstallableErrata, regenerateApplicability } from './HostErrataActions';
 import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
 import { selectHostErrataStatus } from './HostErrataSelectors';
@@ -36,19 +36,15 @@ import { installErrata } from '../RemoteExecutionActions';
 import { errataInstallUrl } from '../customizedRexUrlHelpers';
 import './ErrataTab.scss';
 import hostIdNotReady, { getHostDetails } from '../../HostDetailsActions';
-import { defaultRemoteActionMethod,
-  hasRequiredPermissions as can,
+import { hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
-  KATELLO_AGENT,
   userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
 import { errataStatusContemplation, friendlyErrataStatus } from '../../../../Errata/errataHelpers';
-import KatelloAgentDeprecationAlert from '../../common/KatelloAgentDeprecationAlert';
 
 const recalculateApplicability = ['edit_hosts'];
 const invokeRexJobs = ['create_job_invocations'];
-const doKatelloAgentActions = ['edit_hosts'];
 const createBookmarks = ['create_bookmarks'];
 
 export const ErrataTab = () => {
@@ -261,7 +257,7 @@ export const ErrataTab = () => {
 
   const applyErratumViaRemoteExecution = id => triggerApply(id);
 
-  const applyViaRemoteExecution = () => {
+  const applyErrata = () => {
     triggerBulkApply();
     selectNone();
   };
@@ -275,30 +271,7 @@ export const ErrataTab = () => {
     dispatch(regenerateApplicability(hostId));
   };
 
-  const applyByKatelloAgent = () => {
-    const selected = fetchBulkParams();
-    setIsBulkActionOpen(false);
-    selectNone();
-    dispatch(applyViaKatelloAgent(hostId, { search: selected }));
-  };
-
-  const applyErratumViaKatelloAgent = id => dispatch(applyViaKatelloAgent(
-    hostId,
-    { errata_ids: [id] },
-  ));
-
-  const defaultRemoteAction = defaultRemoteActionMethod({ hostDetails });
-  const showActions = defaultRemoteAction === KATELLO_AGENT ?
-    can(doKatelloAgentActions, userPermissions) :
-    can(invokeRexJobs, userPermissions);
-
-  const apply = () => {
-    if (defaultRemoteAction === KATELLO_AGENT) {
-      applyByKatelloAgent();
-    } else {
-      applyViaRemoteExecution();
-    }
-  };
+  const showActions = can(invokeRexJobs, userPermissions);
 
   const readOnlyBookmarks =
   cannot(createBookmarks, userPermissionsFromHostDetails({ hostDetails }));
@@ -321,7 +294,7 @@ export const ErrataTab = () => {
       ouiaId="apply_via_remote_execution"
       key="apply_via_remote_execution"
       component="button"
-      onClick={applyViaRemoteExecution}
+      onClick={applyErrata}
       isDisabled={selectedCount === 0}
     >
       {__('Apply via remote execution')}
@@ -337,20 +310,6 @@ export const ErrataTab = () => {
       {__('Apply via customized remote execution')}
     </DropdownItem>,
   ];
-
-  if (defaultRemoteAction === KATELLO_AGENT) {
-    dropdownItems.unshift((
-      <DropdownItem
-        aria-label="apply_via_katello_agent"
-        ouiaId="apply_via_katello_agent"
-        key="apply_via_katello_agent"
-        component="button"
-        onClick={applyByKatelloAgent}
-        isDisabled={selectedCount === 0}
-      >
-        {__('Apply via Katello agent')}
-      </DropdownItem>));
-  }
 
   const handleErrataTypeSelected = newType => setErrataTypeSelected((prevType) => {
     if (prevType === newType) {
@@ -380,7 +339,7 @@ export const ErrataTab = () => {
                     aria-label="expand_errata_toggle"
                     ouiaId="expand_errata_toggle"
                     splitButtonItems={[
-                      <DropdownToggleAction key="action" aria-label="bulk_actions" onClick={apply}>
+                      <DropdownToggleAction key="action" aria-label="bulk_actions" onClick={applyErrata}>
                         {__('Apply')}
                       </DropdownToggleAction>,
                     ]}
@@ -466,9 +425,6 @@ export const ErrataTab = () => {
   return (
     <div>
       <div id="errata-tab">
-        {defaultRemoteAction === KATELLO_AGENT && (
-          <KatelloAgentDeprecationAlert />
-        )}
         <TableWrapper
           {...{
             metadata,
@@ -547,17 +503,10 @@ export const ErrataTab = () => {
                     href: errataInstallUrl({ hostname, search: errataSearchQuery(errataId) }),
                   },
                 ];
-
-                if (contentFacet.katelloAgentInstalled && contentFacet.katelloAgentEnabled) {
-                  rowActions.unshift({
-                    title: __('Apply via Katello agent'),
-                    onClick: () => applyErratumViaKatelloAgent(errataId),
-                  });
-                }
               } else {
                 rowActions = [
                   {
-                    title: __('Apply Erratum'),
+                    title: __('Apply erratum'), // Incremental update
                     component: 'a',
                     href: urlBuilder(`errata/${id}/content-hosts`, ''),
                   },

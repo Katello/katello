@@ -1,5 +1,4 @@
 import React from 'react';
-import { isEqual } from 'lodash';
 import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
@@ -101,7 +100,6 @@ const baseQueryWithSort = {
 const defaultQuery = { ...baseQueryWithSort, search: '' };
 const page2Query = { ...baseQueryWithSort, page: 2 };
 const jobInvocations = foremanApi.getApiUrl('/job_invocations');
-const applyByKatelloAgentUrl = foremanApi.getApiUrl('/hosts/1/errata/apply');
 
 let firstErrata;
 let thirdErrata;
@@ -839,173 +837,6 @@ test('Can filter by severity', async (done) => {
   assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
 });
 
-test('apply button chooses katello agent if enabled', async (done) => {
-  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-  const mockErrata = makeMockErrata({});
-  const options = renderOptions({
-    ...cfWithErrataTotal(mockErrata.total),
-    katelloAgentInstalled: true,
-    katelloAgentEnabled: true,
-  });
-
-  const scope = nockInstance
-    .get(hostErrata)
-    .query(defaultQuery)
-    .reply(200, mockErrata);
-
-  const resolveErrataScope = nockInstance
-    .put(applyByKatelloAgentUrl)
-    .reply(201, mockResolveErrataTask);
-
-  const { getAllByText, getByLabelText, queryByText } = renderWithRedux(
-    <ErrataTab />,
-    options,
-  );
-  // Assert that the errata are now showing on the screen, but wait for them to appear.
-  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-
-  getByLabelText('Select row 0').click();
-  getByLabelText('Select row 1').click();
-
-  const viaAction = queryByText('Apply');
-  expect(viaAction).toBeInTheDocument();
-  viaAction.click();
-
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(resolveErrataScope);
-  assertNockRequest(scope, done);
-});
-
-test('Can bulk apply via katello agent', async (done) => {
-  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-  const mockErrata = makeMockErrata({});
-  const { results } = mockErrata;
-  const options = renderOptions({
-    ...cfWithErrataTotal(mockErrata.total),
-    katelloAgentInstalled: true,
-    katelloAgentEnabled: true,
-  });
-
-  const scope = nockInstance
-    .get(hostErrata)
-    .query(defaultQuery)
-    .reply(200, mockErrata);
-
-  const postBody = ({ search }) => {
-    const [firstResult, secondResult] = results;
-    return isEqual(search, `errata_id ^ (${firstResult.errata_id},${secondResult.errata_id})`);
-  };
-  const resolveErrataScope = nockInstance
-    .put(applyByKatelloAgentUrl, postBody)
-    .reply(201, mockResolveErrataTask);
-
-  const { getAllByText, getByLabelText, queryByText } = renderWithRedux(
-    <ErrataTab />,
-    options,
-  );
-  // Assert that the errata are now showing on the screen, but wait for them to appear.
-  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-
-  getByLabelText('Select row 0').click();
-  getByLabelText('Select row 1').click();
-
-  const actionMenu = getByLabelText('expand_errata_toggle');
-  actionMenu.click();
-  const viaAction = queryByText('Apply via Katello agent');
-  expect(viaAction).toBeInTheDocument();
-  viaAction.click();
-
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(resolveErrataScope);
-  assertNockRequest(scope, done);
-});
-
-test('Can select all, exclude and bulk apply via katello agent', async (done) => {
-  // This is the same test as above,
-  // but using the table action bar instead of the Apply button
-  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-  const mockErrata = makeMockErrata({});
-  const { results } = mockErrata;
-  const options = renderOptions({
-    ...cfWithErrataTotal(mockErrata.total),
-    katelloAgentInstalled: true,
-    katelloAgentEnabled: true,
-  });
-
-  const scope = nockInstance
-    .get(hostErrata)
-    .query(defaultQuery)
-    .reply(200, mockErrata);
-
-  const postBody = ({ search }) => {
-    const [firstResult] = results;
-    return isEqual(search, `errata_id !^ (${firstResult.errata_id})`);
-  };
-
-  const resolveErrataScope = nockInstance
-    .put(applyByKatelloAgentUrl, postBody)
-    .reply(201, mockResolveErrataTask);
-
-  const { getAllByText, getByLabelText, queryByText } = renderWithRedux(
-    <ErrataTab />,
-    options,
-  );
-  // Assert that the errata are now showing on the screen, but wait for them to appear.
-  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-  const selectAllCheckbox = getByLabelText('Select all');
-  selectAllCheckbox.click();
-
-  getByLabelText('Select row 0').click(); // deselect
-
-  const actionMenu = getByLabelText('expand_errata_toggle');
-  actionMenu.click();
-  const viaAction = queryByText('Apply via Katello agent');
-  expect(viaAction).toBeInTheDocument();
-  viaAction.click();
-
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(resolveErrataScope);
-  assertNockRequest(scope, done);
-});
-
-test('Apply button chooses remote execution', async (done) => {
-  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-  const mockErrata = makeMockErrata({});
-  const options = renderOptions({
-    ...cfWithErrataTotal(mockErrata.total),
-    katelloAgentInstalled: true,
-    katelloAgentEnabled: true,
-    remoteExecutionByDefault: true,
-  });
-
-  const scope = nockInstance
-    .get(hostErrata)
-    .query(defaultQuery)
-    .reply(200, mockErrata);
-
-  const resolveErrataScope = nockInstance
-    .post(jobInvocations)
-    .reply(201, mockResolveErrataTask);
-
-  const { getAllByText, getByLabelText, queryByText } = renderWithRedux(
-    <ErrataTab />,
-    options,
-  );
-  // Assert that the errata are now showing on the screen, but wait for them to appear.
-  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-
-  getByLabelText('Select row 0').click();
-  getByLabelText('Select row 1').click();
-
-  const viaAction = queryByText('Apply');
-  expect(viaAction).toBeInTheDocument();
-  viaAction.click();
-
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(resolveErrataScope);
-  assertNockRequest(scope, done);
-});
-
 test('Can bulk apply via remote execution', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
@@ -1118,49 +949,6 @@ test('Can apply errata in bulk via customized remote execution', async (done) =>
 
   viaRexAction.click();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
-});
-
-test('Can apply a single erratum to the host via katello agent', async (done) => {
-  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-  const mockErrata = makeMockErrata({});
-  const { results } = mockErrata;
-  const options = renderOptions({
-    ...cfWithErrataTotal(mockErrata.total),
-    katelloAgentInstalled: true,
-    katelloAgentEnabled: true,
-  });
-
-  const scope = nockInstance
-    .get(hostErrata)
-    .query(defaultQuery)
-    .reply(200, mockErrata);
-
-  const postBody = ({ errata_ids: errataIds }) => isEqual(errataIds, [results[0].errata_id]);
-
-  const resolveErrataScope = nockInstance
-    .put(applyByKatelloAgentUrl, postBody)
-    .reply(201, mockResolveErrataTask);
-
-  const { getAllByText, getByLabelText, getByText } = renderWithRedux(
-    <ErrataTab />,
-    options,
-  );
-
-  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-  const erratumActionMenu = within(getByLabelText('Select row 0').closest('tr')).getByLabelText('Actions');
-  expect(erratumActionMenu).toHaveAttribute('aria-label', 'Actions');
-  erratumActionMenu.click();
-
-  let viaAction;
-  await patientlyWaitFor(() => {
-    viaAction = getByText('Apply via Katello agent');
-    expect(viaAction).toBeInTheDocument();
-  });
-  viaAction.click();
-
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(resolveErrataScope);
   assertNockRequest(scope, done);
 });
 
