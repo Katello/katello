@@ -221,13 +221,8 @@ HostCollectionsModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   hostId: PropTypes.number.isRequired,
   hostName: PropTypes.string.isRequired,
-  showKatelloAgent: PropTypes.bool,
   modalType: PropTypes.string.isRequired,
   existingHostCollectionIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-};
-
-HostCollectionsModal.defaultProps = {
-  showKatelloAgent: false,
 };
 
 export default HostCollectionsModal;
