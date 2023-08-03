@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 
 import { copyToClipboard } from '../helpers';
 
-const ContentSourceTemplate = ({ template, jobInvocationPath }) => {
+const ContentSourceTemplate = ({ template, hostCount }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCopied, setCopied] = useState(false);
 
@@ -42,18 +42,53 @@ const ContentSourceTemplate = ({ template, jobInvocationPath }) => {
     <Grid>
       <GridItem span={7}>
         <Alert
+          ouiaId="host-server-content-source-complete"
+          variant="info"
+          title={__('Configuration updated on Foreman')}
+          className="margin-top-20"
+          isInline
+        />
+        <Alert
           ouiaId="host-configuration-alert"
           variant="warning"
-          title={__('Host configurations are not updated yet')}
+          title={
+            <FormattedMessage
+              defaultMessage={__('Configuration still must be updated on {hosts}')}
+              values={{
+                hosts: (
+                  <FormattedMessage
+                    defaultMessage="{count, plural, one {{singular}} other {# {plural}}}"
+                    values={{
+                      count: hostCount,
+                      singular: __('the host'),
+                      plural: __('hosts'),
+                    }}
+                    id="ccs-status-i18n"
+                  />
+                ),
+              }}
+              id="ccs-status-description-i18n"
+            />
+          }
           className="margin-top-20"
           isInline
         >
           <FormattedMessage
-            id="ccs_alert"
+            defaultMessage={__('To finish the process of changing the content source, run the following script manually on {hosts}.')}
             values={{
-              link: <a href={jobInvocationPath}>{__('run job invocation')}</a>,
+              hosts: (
+                <FormattedMessage
+                  defaultMessage="{count, plural, one {{singular}} other {{plural}}}"
+                  values={{
+                    count: hostCount,
+                    singular: __('the host'),
+                    plural: __('the hosts'),
+                  }}
+                  id="ccs-status2-i18n"
+                />
+              ),
             }}
-            defaultMessage={jobInvocationPath ? __('To update the selected host configuration, {link}, or update hosts manually in the next section.') : __('To update the selected host configuration, update hosts manually in the next section.')}
+            id="ccs-status2-description-i18n"
           />
         </Alert>
 
@@ -81,12 +116,12 @@ const ContentSourceTemplate = ({ template, jobInvocationPath }) => {
 
 ContentSourceTemplate.propTypes = {
   template: PropTypes.string,
-  jobInvocationPath: PropTypes.string,
+  hostCount: PropTypes.number,
 };
 
 ContentSourceTemplate.defaultProps = {
   template: '',
-  jobInvocationPath: '',
+  hostCount: 1,
 };
 
 export default ContentSourceTemplate;

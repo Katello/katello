@@ -8,7 +8,7 @@ export const getCVPlaceholderText = ({
   cvSelectOptions = [],
 }) => {
   if (contentSourceId === '') return __('Select a content source first');
-  if (environments.length === 0) return __('Select an environment first');
+  if (environments.length === 0) return __('Select a lifecycle environment first');
   if (contentViewsStatus === STATUS.PENDING) return __('Loading...');
   if (contentViewsStatus === STATUS.ERROR) return __('Error loading content views');
   if (cvSelectOptions.length === 0) return __('No content views available');

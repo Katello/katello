@@ -17,18 +17,20 @@ export const getFormData = (hostIds, search) => (post({
   errorToast: () => __('Something went wrong while getting the data. See the logs for more information'),
 }));
 
-export const changeContentSource = (environmentId, contentViewId, contentSourceId, hostIds) =>
-  put({
-    key: CHANGE_CONTENT_SOURCE,
-    url: foremanUrl('/api/v2/hosts/bulk/change_content_source'),
-    params: {
-      environment_id: environmentId,
-      content_view_id: contentViewId,
-      content_source_id: contentSourceId,
-      host_ids: hostIds,
-    },
-    errorToast: () => __('Something went wrong while updating the content source. See the logs for more information'),
-  });
+export const changeContentSource =
+  (environmentId, contentViewId, contentSourceId, hostIds, handleSuccess) =>
+    put({
+      key: CHANGE_CONTENT_SOURCE,
+      url: foremanUrl('/api/v2/hosts/bulk/change_content_source'),
+      params: {
+        environment_id: environmentId,
+        content_view_id: contentViewId,
+        content_source_id: contentSourceId,
+        host_ids: hostIds,
+      },
+      errorToast: () => __('Something went wrong while updating the content source. See the logs for more information'),
+      handleSuccess,
+    });
 
 export const getProxy = id =>
   get({
