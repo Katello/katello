@@ -20,7 +20,7 @@ import {
   Stack,
   StackItem,
 } from '@patternfly/react-core';
-import { putActivationKey } from '../ActivationKeyActions';
+import { getActivationKey, putActivationKey } from '../ActivationKeyActions';
 
 const EditModal = ({ akDetails, akId }) => {
   const dispatch = useDispatch();
@@ -46,6 +46,8 @@ const EditModal = ({ akDetails, akId }) => {
 
   const [isModalOpen, setModalOpen] = useState(false);
 
+  const refreshActivationKeyDetails = () => dispatch(getActivationKey(akId));
+
   const handleModalToggle = () => {
     setModalOpen(!isModalOpen);
   };
@@ -58,6 +60,7 @@ const EditModal = ({ akDetails, akId }) => {
         max_hosts: maxHostsValue || (usageCount !== 0 ? usageCount : usageCount + 1),
         unlimited_hosts: isUnlimited,
       },
+      refreshActivationKeyDetails,
     ));
     handleModalToggle();
   };
@@ -65,7 +68,7 @@ const EditModal = ({ akDetails, akId }) => {
   const resetModalValues = () => {
     setNameValue(name);
     setDescriptionValue(description);
-    setMaxHostsValue(maxHosts);
+    setMaxHostsValue(initialMaxHosts);
     setUnlimited(unlimitedHosts);
   };
 

@@ -10,13 +10,14 @@ export const getActivationKey = akId => get({
   url: katelloApi.getApiUrl(`/activation_keys/${akId}`),
 });
 
-export const putActivationKey = (akId, params) => put({
+export const putActivationKey = (akId, params, refreshActivationKeyDetails) => put({
   type: API_OPERATIONS.PUT,
-  key: `${ACTIVATION_KEY}_${akId}`,
+  key: `ALTER_ACTIVATION_KEY_${akId}`,
   url: katelloApi.getApiUrl(`/activation_keys/${akId}`),
   successToast: () => __('Activation key details updated'),
   errorToast,
   params,
+  handleSuccess: refreshActivationKeyDetails,
 });
 
 export const deleteActivationKey = akId => APIActions.delete({
