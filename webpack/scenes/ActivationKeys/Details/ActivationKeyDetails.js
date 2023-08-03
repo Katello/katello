@@ -31,19 +31,21 @@ import EditModal from './components/EditModal';
 import DeleteMenu from './components/DeleteMenu';
 import { getActivationKey } from './ActivationKeyActions';
 import DeleteModal from './components/DeleteModal';
+import InactiveText from '../../ContentViews/components/InactiveText';
 
 const ActivationKeyDetails = ({ match }) => {
   const dispatch = useDispatch();
   const akId = match?.params?.id;
   const akDetailsResponse = useSelector(state => selectAPIResponse(state, `ACTIVATION_KEY_${akId}`));
   const akDetails = propsToCamelCase(akDetailsResponse);
+  const [isModalOpen, setModalOpen] = useState(false);
+
   useEffect(() => {
-    if (akId) { // TODO add back akNotLoaded condition
+    if (akId) {
       dispatch(getActivationKey(akId));
     }
   }, [akId, dispatch]);
 
-  const [isModalOpen, setModalOpen] = useState(false);
   const handleModalToggle = () => {
     setModalOpen(!isModalOpen);
   };
@@ -94,11 +96,14 @@ const ActivationKeyDetails = ({ match }) => {
           </GridItem>
         </Grid>
         <div className="ak-details-description">
-          <TextContent>
-            <Text ouiaId="ak-description" component={TextVariants.p}>
-              {akDetails.description ? akDetails.description : <span style={{ color: '#c1c1c1' }}>{__('No description provided')}</span>}
-            </Text>
-          </TextContent>
+          {akDetails.description ?
+            <TextContent>
+              <Text ouiaId="ak-description" component={TextVariants.p}>
+                {akDetails.description}
+              </Text>
+            </TextContent> :
+            <InactiveText text={__('No description provided')} />
+          }
         </div>
       </Panel>
       <DeleteModal isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} akId={akId} />

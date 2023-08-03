@@ -35,6 +35,7 @@ const EditModal = ({ akDetails, akId }) => {
   const [descriptionValue, setDescriptionValue] = useState(description);
   const [maxHostsValue, setMaxHostsValue] = useState(initialMaxHosts);
   const [isUnlimited, setUnlimited] = useState(unlimitedHosts);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     setNameValue(name);
@@ -42,9 +43,6 @@ const EditModal = ({ akDetails, akId }) => {
     setMaxHostsValue(initialMaxHosts);
     setUnlimited(unlimitedHosts);
   }, [name, description, initialMaxHosts, unlimitedHosts]);
-
-
-  const [isModalOpen, setModalOpen] = useState(false);
 
   const refreshActivationKeyDetails = () => dispatch(getActivationKey(akId));
 
