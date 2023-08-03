@@ -173,7 +173,7 @@ const EditModal = ({ akDetails, akId }) => {
               id="ak-description"
               type="text"
               placeholder={__('Description')}
-              value={descriptionValue}
+              value={descriptionValue || ''}
               onChange={handleDescriptionInputChange}
             />
           </FormGroup>
