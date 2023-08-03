@@ -1,3 +1,9 @@
+# 4.8.4 Phoenix (2023-08-03)
+
+## Bug Fixes
+
+### Hosts
+ * Error when autoprovision/provision for a discovered host ([#36601](https://projects.theforeman.org/issues/36601), [e834c88d](https://github.com/Katello/katello.git/commit/e834c88d8a8cb95bd24d6bc2de6ec0d7054aae62))
 # 4.8.3 Phoenix (2023-07-12)
 
 ## Bug Fixes
