@@ -54,6 +54,12 @@ module Katello
     def find_alternate_content_sources
       params.require(:ids)
       @alternate_content_sources = AlternateContentSource.readable.where(id: params[:ids])
+      unless params[:ids].size == @alternate_content_sources.size
+        missing_ids = params[:ids].map(&:to_s) - @alternate_content_sources.pluck(:id)&.map(&:to_s)
+        msg = "Could not find alternate content sources with id: #{missing_ids} . You either do not have required permissions"\
+                ", or these alternate content sources do not exist."
+        fail HttpErrors::UnprocessableEntity, msg
+      end
     end
   end
 end
