@@ -82,9 +82,15 @@ module Katello
 
     api :PUT, "/content_view_versions/:id/republish_repositories", N_("Forces a republish of the version's repositories' metadata")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
-    param :force, :bool, :desc => N_("Force metadata regeneration to proceed. (Deprecated)"), deprecated: true
+    param :force, :bool, :desc => N_("Force metadata regeneration to proceed. Dangerous operation when version has repositories with the 'Complete Mirroring' mirroring policy")
     def republish_repositories
-      task = async_task(::Actions::Katello::ContentViewVersion::RepublishRepositories, @content_view_version)
+      mirror_complete_repos = @content_view_version.repositories.joins(:root).where(root: { mirroring_policy: ::Katello::RootRepository::MIRRORING_POLICY_COMPLETE })
+      if mirror_complete_repos.size > 0 && !::Foreman::Cast.to_bool(params[:force])
+        fail HttpErrors::BadRequest, _("Metadata republishing is dangerous on content view versions with repositories with the 'Complete Mirroring' mirroring policy.
+Change the mirroring policy on these repositories: #{mirror_complete_repos.pluck(:name)} and try again.
+Alternatively, use the 'force' parameter to regenerate metadata locally. New versions of the content view will continue to use upstream metadata for repositories with 'Complete Mirroring'.")
+      end
+      task = async_task(::Actions::Katello::ContentViewVersion::RepublishRepositories, @content_view_version, force: ::Foreman::Cast.to_bool(params[:force]))
       respond_for_async :resource => task
     end
 

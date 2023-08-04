@@ -142,7 +142,7 @@ module Katello
     def test_republish_repositories
       #force is deprecated and will be removed. Remove this test when that happens
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::RepublishRepositories, version).returns({})
+      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::RepublishRepositories, version, :force => true).returns({})
       put :republish_repositories, params: { :id => version.id, :force => true }
 
       assert_response :success

@@ -2,10 +2,16 @@ module Actions
   module Katello
     module ContentViewVersion
       class RepublishRepositories < Actions::EntryAction
-        def plan(content_view_version)
+        def plan(content_view_version, options = {force: false})
+          force = options[:force]
           action_subject(content_view_version.content_view)
           plan_self(:version_id => content_view_version.id)
-          plan_action(::Actions::Katello::Repository::BulkMetadataGenerate, content_view_version.repositories.joins(:root).where.not(root: { mirroring_policy: ::Katello::RootRepository::MIRRORING_POLICY_COMPLETE }))
+          repositories = if force
+                           content_view_version.repositories
+                         else
+                           content_view_version.repositories.joins(:root).where.not(root: { mirroring_policy: ::Katello::RootRepository::MIRRORING_POLICY_COMPLETE })
+                         end
+          plan_action(::Actions::Katello::Repository::BulkMetadataGenerate, repositories)
         end
 
         def run

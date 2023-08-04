@@ -788,7 +788,7 @@ module Katello
       @repository.root.update!(mirroring_policy: Katello::RootRepository::MIRRORING_POLICY_COMPLETE)
       put :republish, params: { :id => @repository.id }
       assert_response 400
-      assert_match "Metadata republishing is not allowed on repositories with the 'Complete Mirroring' mirroring policy.", @response.body
+      assert_match(/Metadata republishing is risky on 'Complete Mirroring' repositories./, @response.body)
     end
 
     def test_republish
