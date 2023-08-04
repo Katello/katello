@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://centos8-katello-devel-2.cannolo.example.com/pulp/api/v3/remotes/deb/apt/
+    uri: https://centos8-katello-devel.cannolo.example.com/pulp/api/v3/remotes/deb/apt/
     body:
       encoding: UTF-8
       base64_string: |
@@ -22,7 +22,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/2.20.2/ruby
+      - OpenAPI-Generator/2.21.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -35,13 +35,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Thu, 27 Apr 2023 21:43:28 GMT
+      - Fri, 04 Aug 2023 20:37:08 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/deb/apt/db52bce2-53fa-4bde-a681-bde5941652ea/"
+      - "/pulp/api/v3/remotes/deb/apt/0189c244-ae29-773d-a954-c77e5c39846a/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -54,23 +54,25 @@ http_interactions:
       - nosniff
       Referrer-Policy:
       - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
       Correlation-Id:
-      - 1344d71932a74c7dabf33934ae8af526
+      - ac12bea1f21f4778b7b9fc682207f62a
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos8-katello-devel-2.cannolo.example.com
+      - 1.1 centos8-katello-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9kZWIvYXB0L2Ri
-        NTJiY2UyLTUzZmEtNGJkZS1hNjgxLWJkZTU5NDE2NTJlYS8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIzLTA0LTI3VDIxOjQzOjI4LjY1MzcwM1oiLCJuYW1lIjoi
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9kZWIvYXB0LzAx
+        ODljMjQ0LWFlMjktNzczZC1hOTU0LWM3N2U1YzM5ODQ2YS8iLCJwdWxwX2Ny
+        ZWF0ZWQiOiIyMDIzLTA4LTA0VDIwOjM3OjA4LjI2NTU5NVoiLCJuYW1lIjoi
         RGViaWFuIDkgYW1kNjQtdGVzdCIsInVybCI6Imh0dHA6Ly9mdHAuZGViaWFu
         Lm15bWlycm9yLm9yZy9kZWJpYW4iLCJjYV9jZXJ0IjpudWxsLCJjbGllbnRf
         Y2VydCI6bnVsbCwidGxzX3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6
         Imh0dHBzOi8vbXl0ZXN0LmNvbSIsInB1bHBfbGFiZWxzIjp7fSwicHVscF9s
-        YXN0X3VwZGF0ZWQiOiIyMDIzLTA0LTI3VDIxOjQzOjI4LjY1Mzc0N1oiLCJk
+        YXN0X3VwZGF0ZWQiOiIyMDIzLTA4LTA0VDIwOjM3OjA4LjI2NTYyMVoiLCJk
         b3dubG9hZF9jb25jdXJyZW5jeSI6bnVsbCwibWF4X3JldHJpZXMiOm51bGws
         InBvbGljeSI6Im9uX2RlbWFuZCIsInRvdGFsX3RpbWVvdXQiOjM2MDAuMCwi
         Y29ubmVjdF90aW1lb3V0Ijo2MC4wLCJzb2NrX2Nvbm5lY3RfdGltZW91dCI6
@@ -86,10 +88,10 @@ http_interactions:
         ZXkiOiJBREYjRkNTRkFTREYkQCRAWkZERFNHJCMlIyVBRFMiLCJpZ25vcmVf
         bWlzc2luZ19wYWNrYWdlX2luZGljZXMiOmZhbHNlfQ==
     http_version: 
-  recorded_at: Thu, 27 Apr 2023 21:43:28 GMT
+  recorded_at: Fri, 04 Aug 2023 20:37:08 GMT
 - request:
     method: delete
-    uri: https://centos8-katello-devel-2.cannolo.example.com/pulp/api/v3/remotes/deb/apt/db52bce2-53fa-4bde-a681-bde5941652ea/
+    uri: https://centos8-katello-devel.cannolo.example.com/pulp/api/v3/remotes/deb/apt/0189c244-ae29-773d-a954-c77e5c39846a/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -97,7 +99,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/2.20.2/ruby
+      - OpenAPI-Generator/2.21.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -110,7 +112,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Thu, 27 Apr 2023 21:43:28 GMT
+      - Fri, 04 Aug 2023 20:37:08 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -127,17 +129,19 @@ http_interactions:
       - nosniff
       Referrer-Policy:
       - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
       Correlation-Id:
-      - 97a2d879797e438c8a775d9b661cddab
+      - 9eba64d75fa24bf1ac9708481f97d08d
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos8-katello-devel-2.cannolo.example.com
+      - 1.1 centos8-katello-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2MyZTZmMTE3LWJjMjktNGY0
-        Yy1iZTEwLTNjOWMwMDI2ZmQ4NS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzAxODljMjQ0LWFlN2ItNzQw
+        Zi04YmNmLTQzMjU3YTFiZTZmYS8ifQ==
     http_version: 
-  recorded_at: Thu, 27 Apr 2023 21:43:28 GMT
+  recorded_at: Fri, 04 Aug 2023 20:37:08 GMT
 recorded_with: VCR 3.0.3

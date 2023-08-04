@@ -2,13 +2,13 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos8-katello-devel-2.cannolo.example.com/pulp/api/v3/tasks/?limit=1
+    uri: https://centos8-katello-devel.cannolo.example.com/pulp/api/v3/tasks/?limit=1
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.22.4/ruby
+      - OpenAPI-Generator/3.28.9/ruby
       Accept:
       - application/json
       Content-Type:
@@ -21,7 +21,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 27 Apr 2023 21:50:24 GMT
+      - Fri, 04 Aug 2023 20:47:26 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -33,37 +33,44 @@ http_interactions:
       X-Frame-Options:
       - DENY
       Content-Length:
-      - '752'
+      - '976'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
       Correlation-Id:
-      - 8f0ea38001334f4783bbaceb763bfcca
+      - e7e16153dd2341708fd0c7dda6904589
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos8-katello-devel-2.cannolo.example.com
+      - 1.1 centos8-katello-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6NTUzLCJuZXh0IjoiaHR0cHM6Ly9jZW50b3M4LWthdGVsbG8t
-        ZGV2ZWwtMi5jYW5ub2xvLmV4YW1wbGUuY29tOjQ0My9wdWxwL2FwaS92My90
-        YXNrcy8/bGltaXQ9MSZvZmZzZXQ9MSIsInByZXZpb3VzIjpudWxsLCJyZXN1
-        bHRzIjpbeyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvOGMxZmI5
-        YjUtMDcwOC00ODdhLWFkMjItYjljOGRjOTM3YjRlLyIsInB1bHBfY3JlYXRl
-        ZCI6IjIwMjMtMDQtMjdUMjE6NTA6MjMuOTAzMjQ5WiIsInN0YXRlIjoiY29t
-        cGxldGVkIiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVy
-        YWxfZGVsZXRlIiwibG9nZ2luZ19jaWQiOiIwMGRkNDc3YzU0ZmE0MDgzYjVi
-        YTBiMmNiOGU3Mzg1NyIsInN0YXJ0ZWRfYXQiOiIyMDIzLTA0LTI3VDIxOjUw
-        OjIzLjk1Mzc5M1oiLCJmaW5pc2hlZF9hdCI6IjIwMjMtMDQtMjdUMjE6NTA6
-        MjQuMDIwMzEzWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkv
-        djMvd29ya2Vycy8xNDg4OTc5Mi00NTBmLTQyZmUtOTZlNS03MWQ2NDUzYWY0
-        YmIvIiwicGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFz
-        a19ncm91cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRf
-        cmVzb3VyY2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIv
-        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2ZpbGUvZmlsZS81OThiYzJjYi1l
-        YTAzLTQ2MzAtOWViYy1mYmIzZGQwMThjNTkvIl19XX0=
+        eyJjb3VudCI6NDYwMiwibmV4dCI6Imh0dHBzOi8vY2VudG9zOC1rYXRlbGxv
+        LWRldmVsLmNhbm5vbG8uZXhhbXBsZS5jb206NDQzL3B1bHAvYXBpL3YzL3Rh
+        c2tzLz9saW1pdD0xJm9mZnNldD0xIiwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMTg5YzI0
+        ZS0xYzcyLTdmMmMtOWZmNy00ZTM4ZTJmZWMzOWUvIiwicHVscF9jcmVhdGVk
+        IjoiMjAyMy0wOC0wNFQyMDo0NzoyNi4zMjI5NjFaIiwic3RhdGUiOiJjb21w
+        bGV0ZWQiLCJuYW1lIjoicHVscGNvcmUuYXBwLnRhc2tzLm9ycGhhbi5vcnBo
+        YW5fY2xlYW51cCIsImxvZ2dpbmdfY2lkIjoiMTI3NTM3YjE3OTA2NDE5ZTky
+        OTk5YzI5Nzk2NzM5YjciLCJjcmVhdGVkX2J5IjoiL3B1bHAvYXBpL3YzL3Vz
+        ZXJzLzEvIiwic3RhcnRlZF9hdCI6IjIwMjMtMDgtMDRUMjA6NDc6MjYuMzgz
+        MzUwWiIsImZpbmlzaGVkX2F0IjoiMjAyMy0wOC0wNFQyMDo0NzoyNi40MDY3
+        MjFaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3Jr
+        ZXJzLzAxODljMGU5LWQ4YjctN2UzOC05YmQ4LTc2NmY1N2RlYTI2My8iLCJw
+        YXJlbnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3Vw
+        IjpudWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbeyJtZXNzYWdlIjoiQ2xlYW4g
+        dXAgb3JwaGFuIENvbnRlbnQiLCJjb2RlIjoiY2xlYW4tdXAuY29udGVudCIs
+        InN0YXRlIjoiY29tcGxldGVkIiwidG90YWwiOjAsImRvbmUiOjAsInN1ZmZp
+        eCI6bnVsbH0seyJtZXNzYWdlIjoiQ2xlYW4gdXAgb3JwaGFuIEFydGlmYWN0
+        cyIsImNvZGUiOiJjbGVhbi11cC5jb250ZW50Iiwic3RhdGUiOiJjb21wbGV0
+        ZWQiLCJ0b3RhbCI6MCwiZG9uZSI6MCwic3VmZml4IjpudWxsfV0sImNyZWF0
+        ZWRfcmVzb3VyY2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6
+        WyIvYXBpL3YzL29ycGhhbnMvY2xlYW51cC8iXX1dfQ==
     http_version: 
-  recorded_at: Thu, 27 Apr 2023 21:50:24 GMT
+  recorded_at: Fri, 04 Aug 2023 20:47:26 GMT
 recorded_with: VCR 3.0.3
