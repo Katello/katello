@@ -325,10 +325,11 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
 
     api :PUT, "/repositories/:id/republish", N_("Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy.")
     param :id, :number, :desc => N_("Repository identifier"), :required => true
-    param :force, :bool, :desc => N_("Force metadata regeneration to proceed. (Deprecated)"), deprecated: true
+    param :force, :bool, :desc => N_("Force metadata regeneration to proceed. Dangerous when repositories use the 'Complete Mirroring' mirroring policy")
     def republish
-      if @repository.mirroring_policy == Katello::RootRepository::MIRRORING_POLICY_COMPLETE
-        fail HttpErrors::BadRequest, _("Metadata republishing is not allowed on repositories with the 'Complete Mirroring' mirroring policy.")
+      if @repository.mirroring_policy == Katello::RootRepository::MIRRORING_POLICY_COMPLETE && !::Foreman::Cast.to_bool(params[:force])
+        fail HttpErrors::BadRequest, _("Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.
+Alternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.")
       end
       task = async_task(::Actions::Katello::Repository::MetadataGenerate, @repository)
       respond_for_async :resource => task
