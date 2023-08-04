@@ -154,17 +154,6 @@ module Katello
       assert_equal 'FAIL', result[:status]
       assert_equal 'Not running', result[:message]
     end
-
-    def test_ping_katello_agent_enabled
-      Katello::EventDaemon::Runner
-        .expects(:service_status).with(:katello_agent_events)
-        .returns(processed_count: 0, failed_count: 0, running: true)
-
-      result = Katello::Ping.ping_katello_agent({})
-
-      assert_equal 'ok', result[:status]
-      assert_equal '0 Processed, 0 Failed', result[:message]
-    end
   end
 
   class PingTestPulp3 < ActiveSupport::TestCase

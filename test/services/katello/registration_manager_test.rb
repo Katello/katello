@@ -275,25 +275,12 @@ module Katello
         ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
       end
 
-      def test_unregister_host_without_katello_agent
+      def test_unregister_host
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-        ::Katello.expects(:with_katello_agent?).returns(false)
         @host.content_facet.expects(:cves_changed?).returns(false)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Katello::EventQueue.expects(:push_event).never
-        ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
-      end
-
-      def test_unregister_host_with_katello_agent
-        # VCR.use_cassette(cassette_name, :match_requests_on => [:method, :path, :params]) do
-        # end
-        @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
-                                   :lifecycle_environment => @library, :organization => @content_view.organization)
-        ::Katello.expects(:with_katello_agent?).returns(true)
-        ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-        ::Katello::EventQueue.expects(:push_event)
-
         ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
       end
 
