@@ -21,20 +21,6 @@ module Katello
       @options = nil
     end
 
-    def test_check_katello_agent_not_disabled
-      ::Katello.expects(:with_katello_agent?).returns(true)
-      @controller.expects(:fail).never
-
-      @controller.check_katello_agent_not_disabled
-    end
-
-    def test_check_katello_agent_not_disabled_fail
-      ::Katello.expects(:with_katello_agent?).returns(false)
-      @controller.expects(:fail).with(HttpErrors::BadRequest, "This action uses katello-agent, which is currently disabled. Use remote execution instead.")
-
-      @controller.check_katello_agent_not_disabled
-    end
-
     def test_scoped_search
       params = {}
       @controller.stubs(:params).returns(params)

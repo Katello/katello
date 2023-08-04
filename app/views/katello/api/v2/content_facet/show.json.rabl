@@ -21,16 +21,8 @@ child :content_facet => :content_facet_attributes do
     content_facet.single_lifecycle_environment&.library? || false
   end
 
-  node :katello_agent_installed do |content_facet|
-    content_facet.katello_agent_installed?
-  end
-
   node :katello_tracer_installed do |content_facet|
     content_facet.tracer_installed?
-  end
-
-  node :katello_agent_enabled do
-    Katello.with_katello_agent?
   end
 
   node :remote_execution_by_default do
