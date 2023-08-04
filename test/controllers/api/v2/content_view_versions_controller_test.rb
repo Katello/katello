@@ -263,7 +263,7 @@ module Katello
       errata_id = Katello::Erratum.first.pulp_id
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::IncrementalUpdates,
                                             [{:content_view_version => version, :environments => [@beta]}], [],
-                                            {'errata_ids' => [errata_id]}, true, [], nil, false).returns({})
+                                            {'errata_ids' => [errata_id]}, true, [], nil).returns({})
 
       put :incremental_update, params: { :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => [@beta.id]}], :add_content => {:errata_ids => [errata_id]}, :resolve_dependencies => true }
 
@@ -276,7 +276,7 @@ module Katello
       deb_id = Katello::Deb.first.id
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::IncrementalUpdates,
                                             [{:content_view_version => version, :environments => [@beta]}], [],
-                                            {'errata_ids' => [errata_id], 'deb_ids' => [deb_id]}, true, [], nil, false).returns({})
+                                            {'errata_ids' => [errata_id], 'deb_ids' => [deb_id]}, true, [], nil).returns({})
 
       put :incremental_update, params: { :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => [@beta.id]}], :add_content => {:errata_ids => [errata_id], :deb_ids => [deb_id]}, :resolve_dependencies => true }
 
@@ -288,7 +288,7 @@ module Katello
       errata_id = Katello::Erratum.first.pulp_id
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::IncrementalUpdates,
                                             [{:content_view_version => version, :environments => []}], [],
-                                            {'errata_ids' => [errata_id]}, true, [], nil, false).returns({})
+                                            {'errata_ids' => [errata_id]}, true, [], nil).returns({})
 
       put :incremental_update, params: { :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => []}], :update_hosts => {:included => {:search => ''}}, :add_content => {:errata_ids => [errata_id]}, :resolve_dependencies => true }
 

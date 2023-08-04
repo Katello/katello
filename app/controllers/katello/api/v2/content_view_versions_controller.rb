@@ -131,8 +131,7 @@ module Katello
       validate_content(params[:add_content])
       resolve_dependencies = params.fetch(:resolve_dependencies, true)
       task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @content_view_version_environments, @composite_version_environments,
-                        params[:add_content], resolve_dependencies, hosts, params[:description],
-                        Setting[:remote_execution_by_default] && ::Katello.with_remote_execution?)
+                        params[:add_content], resolve_dependencies, hosts, params[:description])
       respond_for_async :resource => task
     end
 

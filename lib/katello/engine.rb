@@ -247,7 +247,7 @@ module Katello
   end
 
   def self.remote_execution_by_default?
-    self.with_katello_agent? ? Setting['remote_execution_by_default'] : true
+    true
   end
 
   def self.with_ansible?

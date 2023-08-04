@@ -575,12 +575,6 @@ Foreman::Plugin.register :katello do
         full_name: N_('Sync Sock Read Timeout'),
         description: N_("The maximum number of seconds that Pulp can take to download a file, not counting connection time.")
 
-      setting 'remote_execution_by_default',
-        type: :boolean,
-        default: false,
-        full_name: N_('Use remote execution by default'),
-        description: N_("If this is enabled, remote execution is used instead of katello-agent for remote actions")
-
       setting 'unregister_delete_host',
         type: :boolean,
         default: false,

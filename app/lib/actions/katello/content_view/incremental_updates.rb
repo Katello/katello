@@ -4,8 +4,8 @@ module Actions
       class IncrementalUpdates < Actions::EntryAction
         include Helpers::Presenter
 
-        def plan(version_environments, composite_version_environments, content, dep_solve, hosts, description,
-                use_remote_execution = false)
+        def plan(version_environments, composite_version_environments, content, dep_solve, hosts, description) # rubocop:disable Metrics/MethodLength
+          use_remote_execution = true # TODO: remove this when we remove katello-agent dynflow actions
           old_new_version_map = {}
           output_for_version_ids = []
 

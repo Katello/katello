@@ -33,10 +33,6 @@ child :content_facet => :content_facet_attributes do
     Katello.with_katello_agent?
   end
 
-  node :remote_execution_by_default do
-    Katello.remote_execution_by_default?
-  end
-
   user = User.current # current_user is not available here
   child :permissions do
     node(:view_lifecycle_environments) { user.can?("view_lifecycle_environments") }
