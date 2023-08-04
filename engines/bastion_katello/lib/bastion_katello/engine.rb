@@ -42,8 +42,7 @@ module BastionKatello
             'defaultDownloadPolicy' => !Foreman.in_rake? && db_migrated && Setting['default_download_policy'],
             'katelloAgentPresent' => ::Katello.with_katello_agent?,
             'remoteExecutionPresent' => ::Katello.with_remote_execution?,
-            'hostToolingEnabled' => (::Katello.with_katello_agent? || ::Katello.with_remote_execution?) ? true : false,
-            'remoteExecutionByDefault' => ::Katello.remote_execution_by_default?
+            'hostToolingEnabled' => (::Katello.with_katello_agent? || ::Katello.with_remote_execution?) ? true : false
           }
         end
       )

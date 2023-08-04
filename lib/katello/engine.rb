@@ -246,10 +246,6 @@ module Katello
     !!SETTINGS.dig(:katello, :agent, :enabled)
   end
 
-  def self.remote_execution_by_default?
-    self.with_katello_agent? ? Setting['remote_execution_by_default'] : true
-  end
-
   def self.with_ansible?
     Foreman::Plugin.installed?("foreman_ansible")
   end
