@@ -43,7 +43,6 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             $scope.applyingErrata = false;
 
             $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
-            $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
             $scope.errataActionFormValues = {
                 authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, ''),
                 errata: IncrementalUpdate.getErrataIds().join(','),
@@ -144,7 +143,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             $scope.confirmApply = function() {
                 $scope.applyingErrata = true;
                 if ($scope.updates.length === 0) {
-                    if ($scope.remoteExecutionPresent && $scope.remoteExecutionByDefault) {
+                    if ($scope.remoteExecutionPresent) {
                         angular.element('#errataActionForm').submit();
                     } else {
                         applyErrata();

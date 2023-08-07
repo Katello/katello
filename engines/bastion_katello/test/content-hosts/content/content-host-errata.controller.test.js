@@ -103,20 +103,9 @@ describe('Controller: ContentHostErrataController', function() {
         expect($scope.controllerName).toBe("katello_errata");
     });
 
-    it("provide a way to apply errata", function() {
-        var bulk_errata_ids = angular.toJson({included: { ids: [mockErratum.errata_id], params: {} }});
-
-        spyOn(HostErratum, "apply").and.callThrough();
-        spyOn($scope.table, "selectAll");
-        spyOn($scope, "transitionTo");
-        $scope.applySelected();
-        expect(HostErratum.apply).toHaveBeenCalledWith({id: host.id, bulk_errata_ids: bulk_errata_ids}, jasmine.any(Function));
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-host.tasks.details', {taskId: mockTask.id});
-        expect($scope.table.selectAll).toHaveBeenCalledWith(false);
-    });
-
     it("can apply errata with remote execution", function() {
-        $scope.remoteExecutionByDefault = true;
+        // Removed the test to apply errata because this one now covers it with REX being the only way
+        $scope.remoteExecutionPresent = true;
 
         $scope.applySelected();
 

@@ -30,7 +30,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDebsApplicableCon
             return $scope.getSelectedDebs().join(' ');
         };
 
-        $scope.performDefaultUpdateAction = function () {
+        $scope.performRexUpdate = function () {
             $scope.performViaRemoteExecution('packageUpdate', $scope.getRemoteExecutionCommand(), false);
         };
 

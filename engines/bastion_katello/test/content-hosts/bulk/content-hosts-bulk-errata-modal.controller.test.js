@@ -5,9 +5,6 @@ describe('Controller: ContentHostsBulkErrataModalController', function() {
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
     beforeEach(function() {
-        HostBulkAction = {
-            installContent: function() {}
-        };
         translate = function() {};
         CurrentOrganization = 'foo';
         selectedErrata = [1, 2, 3, 4]
@@ -54,16 +51,11 @@ describe('Controller: ContentHostsBulkErrataModalController', function() {
     }));
 
     it("can install errata on multiple content hosts", function () {
-        spyOn(HostBulkAction, 'installContent');
         $scope.installErrata();
 
-        expect(HostBulkAction.installContent).toHaveBeenCalledWith(
-            _.extend(hostIds, {
-                content_type: 'errata',
-                content: [1, 2, 3]
-            }),
-            jasmine.any(Function), jasmine.any(Function)
-        );
+        expect($scope.errataActionFormValues.remoteAction).toEqual('errata_install');
+        expect($scope.errataActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [1,2,3] }}));
+        expect($scope.errataActionFormValues.bulkErrataIds).toBe(angular.toJson( [1,2,3,4] ));
     });
 
     it("provides a function for closing the modal", function () {

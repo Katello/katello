@@ -42,8 +42,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         };
 
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
-        $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
-        $scope.katelloAgentPresent = BastionConfig.katelloAgentPresent;
         $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
         $scope.errataActionFormValues = {
             authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, '')
@@ -124,15 +122,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
             return $scope.nutupane.getAllSelectedResults('errata_id');
         };
 
-        $scope.performViaKatelloAgent = function () {
-            var errataIds = $scope.selectedErrataIds();
-            HostErratum.apply({id: $scope.host.id, 'bulk_errata_ids': angular.toJson(errataIds)},
-                               function (task) {
-                                    $scope.table.selectAll(false);
-                                    $scope.transitionTo('content-host.tasks.details', {taskId: task.id});
-                                });
-        };
-
         $scope.performViaRemoteExecution = function(customize) {
             var errataIds = $scope.selectedErrataIds();
 
@@ -148,11 +137,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         };
 
         $scope.applySelected = function () {
-            if ($scope.remoteExecutionByDefault) {
-                $scope.performViaRemoteExecution(false);
-            } else {
-                $scope.performViaKatelloAgent();
-            }
+            $scope.performViaRemoteExecution(false);
         };
 
         $scope.nutupane.enableSelectAllResults();

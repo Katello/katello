@@ -8,11 +8,10 @@
       </div>
     </div>
 
-    <div ng-show="katelloAgentPresent" data-extend-template="common/views/katello-agent-notice.html"></div>
     <div bst-feature-flag="remote_actions">
       <p bst-alert="warning" ng-hide="hostToolingEnabled">
         <span translate>
-          Performing host package actions is disabled because Katello is not configured for Remote Execution or Katello Agent.
+          Performing host package actions is disabled because Katello is not configured for Remote Execution.
           </span>
       </p>
       <p bst-alert="warning">
@@ -38,7 +37,6 @@
         <span class="caret"></span>
       </button>
       <ul uib-dropdown-menu role="menu" aria-labelledby="install-use-remote-execution">
-        <li ng-show="katelloAgentPresent" role="presentation"><a ng-click="performViaKatelloAgent('update all', content)" role="menuitem" tabindex="-1" href="#" translate>via Katello Agent</a></li>
         <li role="presentation"><a ng-click="performViaRemoteExecution('update all', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
         <li role="presentation"><a ng-click="performViaRemoteExecution('update all', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
       </ul>
@@ -99,7 +97,6 @@
           <span class="caret"></span>
         </button>
         <ul uib-dropdown-menu role="menu" aria-labelledby="install-use-remote-execution">
-          <li ng-show="katelloAgentPresent" role="presentation"><a ng-click="performViaKatelloAgent('install', content)" role="menuitem" tabindex="-1" href="#" translate>via Katello Agent</a></li>
           <li role="presentation"><a ng-click="performViaRemoteExecution('install', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
           <li role="presentation"><a ng-click="performViaRemoteExecution('install', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
         </ul>
@@ -121,7 +118,6 @@
           <span class="caret"></span>
         </button>
         <ul uib-dropdown-menu role="menu" aria-labelledby="update-use-remote-execution">
-          <li ng-show="katelloAgentPresent" role="presentation"><a ng-click="performViaKatelloAgent('update', content)" role="menuitem" tabindex="-1" href="#" translate>via Katello Agent</a></li>
           <li role="presentation"><a ng-click="performViaRemoteExecution('update', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
           <li role="presentation"><a ng-click="performViaRemoteExecution('update', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
         </ul>
@@ -142,7 +138,6 @@
           <span class="caret"></span>
         </button>
         <ul uib-dropdown-menu role="menu" aria-labelledby="remove-use-remote-execution">
-          <li ng-show="katelloAgentPresent" role="presentation"><a ng-click="performViaKatelloAgent('remove', content)" role="menuitem" tabindex="-1" href="#" translate>via Katello Agent</a></li>
           <li role="presentation"><a ng-click="performViaRemoteExecution('remove', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
           <li role="presentation"><a ng-click="performViaRemoteExecution('remove', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
         </ul>
