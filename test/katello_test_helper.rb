@@ -43,7 +43,7 @@ require "#{Katello::Engine.root}/test/support/foreman_tasks/task"
 FactoryBot.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryBot.find_definitions
 
-module MiniTest::Expectations
+module Minitest::Expectations
   infect_an_assertion :assert_redirected_to, :must_redirect_to
   infect_an_assertion :assert_template, :must_render_template
   infect_an_assertion :assert_response, :must_respond_with
