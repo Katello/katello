@@ -14,7 +14,7 @@ end
 
 class SourceCodeTest < ActiveSupport::TestCase
   class SourceCode
-    include MiniTest::Assertions
+    include Minitest::Assertions
     attr_reader :files
     attr_accessor :assertions
 
