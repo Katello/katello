@@ -6,7 +6,7 @@ describe('Controller: ApplyErrataController', function() {
 
     beforeEach(inject(function($injector, $window) {
         $controller = $injector.get('$controller'),
-        BastionConfig = { remoteExecutionPresent: false, remoteExecutionByDefault: false }
+        BastionConfig = { remoteExecutionPresent: false }
         $window.AUTH_TOKEN = 'secret_token';
 
         translate = function (string) {
@@ -81,7 +81,7 @@ describe('Controller: ApplyErrataController', function() {
 
     it("can apply errata with remote execution", function () {
         var bulkContentHosts;
-        dependencies.BastionConfig = { remoteExecutionPresent: true, remoteExecutionByDefault: true }
+        dependencies.BastionConfig = { remoteExecutionPresent: true }
 
         bulkContentHosts = {
             included: {

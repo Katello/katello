@@ -12,7 +12,6 @@
 angular.module('Bastion.content-hosts').controller('ContentHostPackagesActionsController',
     ['$scope', '$location', 'BastionConfig', function ($scope, $location, BastionConfig) {
         var packageName = $location.search().package_name;
-        $scope.katelloAgentPresent = BastionConfig.katelloAgentPresent;
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
 

@@ -51,20 +51,6 @@
           </button>
         </dd>
 
-        <dt bst-feature-flag="remote_actions" ng-show="katelloAgentPresent">
-          <span translate>Katello Agent</span>
-        </dt>
-        <dd bst-feature-flag="remote_actions" ng-show="katelloAgentPresent">
-          <span ng-show="host.content_facet_attributes.katello_agent_installed">
-            <span class="{{ getHostStatusIcon(0) }}"></span>
-            <span translate>Installed</span>
-          </span>
-          <span ng-hide="host.content_facet_attributes.katello_agent_installed">
-            <span class="{{ getHostStatusIcon(1) }}"></span>
-            <span translate>Not installed</span>
-          </span>
-        </dd>
-
         <dt ng-show="host.subscription_facet_attributes.virtual_guests" translate>Virtual Guests</dt>
         <dd ng-show="host.subscription_facet_attributes.virtual_guests">
           <a ng-href="/content_hosts?search={{virtualGuestIds(host)}}"

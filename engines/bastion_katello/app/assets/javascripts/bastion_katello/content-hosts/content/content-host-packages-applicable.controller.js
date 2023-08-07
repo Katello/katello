@@ -19,7 +19,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesApplicabl
     function ($scope, $timeout, $window, Package, HostPackage, translate, Nutupane, BastionConfig) {
         var packagesNutupane, openEventInfo;
 
-        $scope.katelloAgentPresent = BastionConfig.katelloAgentPresent;
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
 
@@ -35,16 +34,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesApplicabl
             return $scope.getSelectedPackages().join(' ');
         };
 
-        $scope.getKatelloAgentCommand = function () {
-            return $scope.getSelectedPackages().join(',');
-        };
-
-        $scope.performDefaultUpdateAction = function () {
-            if ($scope.remoteExecutionByDefault) {
-                $scope.performViaRemoteExecution('packageUpdate', $scope.getRemoteExecutionCommand(), false);
-            } else {
-                $scope.performViaKatelloAgent('packageUpdate', $scope.getKatelloAgentCommand());
-            }
+        $scope.performRexUpdate = function () {
+            $scope.performViaRemoteExecution('packageUpdate', $scope.getRemoteExecutionCommand(), false);
         };
 
         packagesNutupane = new Nutupane(Package, {'host_id': $scope.$stateParams.hostId, 'packages_restrict_upgradable': true});

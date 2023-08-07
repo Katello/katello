@@ -58,43 +58,35 @@ describe('Controller: ContentHostPackagesController', function() {
     });
 
     it("performs a package update", function() {
-        spyOn(HostPackage, 'update');
+        $scope.remoteExecutionPresent = true;
         $scope.performPackageAction('packageUpdate', 'foo');
-        expect(HostPackage.update).toHaveBeenCalledWith({id: mockHost.id, packages: ["foo"]},
-                                                          jasmine.any(Function), jasmine.any(Function));
-        expect($scope.working).toBe(true);
+        expect($scope.packageActionFormValues.package).toBe('foo');
+        expect($scope.packageActionFormValues.remoteAction).toBe('packageUpdate');
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [23434] }}));
+        expect($scope.packageActionFormValues.customize).toBe(false);
     });
 
     it("performs a package update with multiple packages", function() {
-        spyOn(HostPackage, 'update');
-        $scope.performPackageAction('packageUpdate', 'foo, bar');
-        expect(HostPackage.update).toHaveBeenCalledWith({id: mockHost.id, packages: ["foo", "bar"]},
-                                                          jasmine.any(Function), jasmine.any(Function));
-        expect($scope.working).toBe(true);
+        $scope.remoteExecutionPresent = true;
+        $scope.performPackageAction('packageUpdate', 'foo bar');
+        expect($scope.packageActionFormValues.package).toBe('foo bar');
+        expect($scope.packageActionFormValues.remoteAction).toBe('packageUpdate');
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [23434] }}));
+        expect($scope.packageActionFormValues.customize).toBe(false);
     });
 
     it("performs a package group install", function() {
-        spyOn(HostPackage, 'install');
+        $scope.remoteExecutionPresent = true;
         $scope.performPackageAction('groupInstall', 'bigGroup');
-        expect(HostPackage.install).toHaveBeenCalledWith({id: mockHost.id, groups: ["bigGroup"]},
-                                                          jasmine.any(Function), jasmine.any(Function));
-        expect($scope.working).toBe(true);
-    });
-
-    it("provides a way to upgrade all packages", function() {
-        $scope.katelloAgentPresent = true;
-        $scope.remoteExecutionPresent = false;
-        $scope.remoteExecutionByDefault = false;
-        spyOn(HostPackage, "updateAll");
-        $scope.updateAll();
-        expect(HostPackage.updateAll).toHaveBeenCalledWith({id: mockHost.id}, jasmine.any(Function),
-            jasmine.any(Function));
-        expect($scope.working).toBe(true);
+        expect($scope.packageActionFormValues.package).toBe('bigGroup');
+        expect($scope.packageActionFormValues.remoteAction).toBe('groupInstall');
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [23434] }}));
+        expect($scope.packageActionFormValues.customize).toBe(false);
     });
 
     it("provides a way to upgrade all packages via remoteExecution", function() {
+        // Removed the test to update all packages because this one now covers it with REX being the only way
         $scope.remoteExecutionPresent = true;
-        $scope.remoteExecutionByDefault = true;
         spyOn(HostPackage, "updateAll");
         $scope.updateAll();
         expect(HostPackage.updateAll).not.toHaveBeenCalled();
@@ -106,21 +98,12 @@ describe('Controller: ContentHostPackagesController', function() {
 
     it("performs a package install via remoteExecution", function() {
         $scope.remoteExecutionPresent = true;
-        $scope.remoteExecutionByDefault = true;
         spyOn(HostPackage, 'install');
         $scope.performPackageAction('packageInstall', 'foo, bar, baz');
         expect(HostPackage.install).not.toHaveBeenCalled();
         expect($scope.packageActionFormValues.package).toEqual('foo bar baz');
         expect($scope.packageActionFormValues.remoteAction).toEqual('packageInstall');
         expect($scope.packageActionFormValues.bulkHostIds).toEqual('{"included":{"ids":[' + mockHost.id + ']}}');
-        expect($scope.working).toBe(true);
-    });
-
-    it("performs a multi package install via katello agent", function() {
-        spyOn(HostPackage, 'install');
-        $scope.performPackageAction('packageInstall', 'foo, bar, baz');
-        expect(HostPackage.install).toHaveBeenCalledWith({id: mockHost.id, packages: ["foo","bar","baz"]},
-                                                          jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });
 });

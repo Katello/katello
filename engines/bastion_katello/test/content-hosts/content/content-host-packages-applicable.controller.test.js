@@ -37,7 +37,6 @@ describe('Controller: ContentHostPackagesApplicableController', function() {
         $scope.openEventInfo = function(){};
         $scope.errorHandler = function(){};
         $scope.performViaRemoteExecution = function() {};
-        $scope.performViaKatelloAgent = function() {};
         Package = $injector.get('MockResource').$new();
 
 
@@ -60,18 +59,10 @@ describe('Controller: ContentHostPackagesApplicableController', function() {
         expect($scope.getSelectedPackages()[0]).toBe("foo-3-14.noarch");
     });
 
-    it("performs default action as appropriate for katello agent", function() {
-        spyOn($scope, 'performViaKatelloAgent');
-        $scope.remoteExecutionByDefault = false;
-        $scope.performDefaultUpdateAction();
-
-        expect($scope.performViaKatelloAgent).toHaveBeenCalledWith('packageUpdate', $scope.getKatelloAgentCommand());
-    });
-
     it("performs default action as appropriate for rex", function() {
         spyOn($scope, 'performViaRemoteExecution');
-        $scope.remoteExecutionByDefault = true;
-        $scope.performDefaultUpdateAction();
+        $scope.remoteExecutionPresent = true;
+        $scope.performRexUpdate();
 
         expect($scope.performViaRemoteExecution).toHaveBeenCalledWith('packageUpdate', $scope.getRemoteExecutionCommand(), false);
     });

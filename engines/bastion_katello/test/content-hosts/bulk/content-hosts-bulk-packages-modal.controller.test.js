@@ -53,115 +53,85 @@ describe('Controller: ContentHostsBulkPackagesModalController', function() {
     it("can install packages on multiple content hosts", function() {
         $scope.content = {
             action: 'install',
-            contentType: 'package',
-            content: 'zip, zsh, xterm'
+            contentType: 'package'
         };
 
+        $scope.remoteExecutionPresent = true;
         spyOn(HostBulkAction, 'installContent');
         $scope.performContentAction();
 
-        expect(HostBulkAction.installContent).toHaveBeenCalledWith(
-            _.extend({}, hostIds, {
-                content_type: $scope.content.contentType,
-                content: $scope.content.content.split(/ *, */)
-            }),
-            jasmine.any(Function), jasmine.any(Function)
-        );
+        expect($scope.packageActionFormValues.remoteAction).toEqual('package_install');
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [1,2,3] }}));
     });
 
     it("can update packages on multiple content hosts", function() {
         $scope.content = {
             action: 'update',
             contentType: 'package',
-            content: 'zip, zsh, xterm'
         };
 
+        $scope.remoteExecutionPresent = true;
         spyOn(HostBulkAction, 'updateContent');
         $scope.performContentAction();
 
-        expect(HostBulkAction.updateContent).toHaveBeenCalledWith(
-            _.extend({}, hostIds, {
-                content_type: $scope.content.contentType,
-                content: $scope.content.content.split(/ *, */)
-            }),
-            jasmine.any(Function), jasmine.any(Function)
-        );
+        expect($scope.packageActionFormValues.remoteAction).toEqual('package_update');
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [1,2,3] }}));
     });
 
     it("can remove packages on multiple content hosts", function() {
         $scope.content = {
             action: 'remove',
             contentType: 'package',
-            content: 'zip, zsh, xterm'
         };
 
+        $scope.remoteExecutionPresent = true;
         spyOn(HostBulkAction, 'removeContent');
         $scope.performContentAction();
 
-        expect(HostBulkAction.removeContent).toHaveBeenCalledWith(
-            _.extend({}, hostIds, {
-                content_type: $scope.content.contentType,
-                content: $scope.content.content.split(/ *, */)
-            }),
-            jasmine.any(Function), jasmine.any(Function)
-        );
+        expect($scope.packageActionFormValues.remoteAction).toEqual('package_remove');
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [1,2,3] }}));
     });
 
     it("can install package groups on multiple content hosts", function() {
         $scope.content = {
             action: 'install',
-            contentType: 'package_group',
-            content: 'Backup Client, Development Tools'
+            contentType: 'package_group'
         };
 
+        $scope.remoteExecutionPresent = true;
         spyOn(HostBulkAction, 'installContent');
         $scope.performContentAction();
 
-        expect(HostBulkAction.installContent).toHaveBeenCalledWith(
-            _.extend({}, hostIds, {
-                content_type: $scope.content.contentType,
-                content: $scope.content.content.split(/ *, */)
-            }),
-            jasmine.any(Function), jasmine.any(Function)
-        );
+        expect($scope.packageActionFormValues.remoteAction).toEqual('group_install');
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [1,2,3] }}));
     });
 
     it("can update package groups on multiple content hosts", function() {
         $scope.content = {
             action: 'update',
-            contentType: 'package_group',
-            content: 'Backup Client, Development Tools'
+            contentType: 'package_group'
         };
 
+        $scope.remoteExecutionPresent = true;
         spyOn(HostBulkAction, 'updateContent');
         $scope.performContentAction();
 
-        expect(HostBulkAction.updateContent).toHaveBeenCalledWith(
-            _.extend({}, hostIds, {
-                content_type: $scope.content.contentType,
-                content: $scope.content.content.split(/ *, */)
-            }),
-            jasmine.any(Function), jasmine.any(Function)
-        );
+        expect($scope.packageActionFormValues.remoteAction).toEqual('group_update');
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [1,2,3] }}));
     });
 
     it("can remove package groups on multiple content hosts", function() {
         $scope.content = {
             action: 'remove',
-            contentType: 'package_group',
-            content: 'Backup Client, Development Tools'
+            contentType: 'package_group'
         };
 
+        $scope.remoteExecutionPresent = true;
         spyOn(HostBulkAction, 'removeContent');
         $scope.performContentAction();
 
-        expect(HostBulkAction.removeContent).toHaveBeenCalledWith(
-            _.extend({}, hostIds, {
-                content_type: $scope.content.contentType,
-                content: $scope.content.content.split(/ *, */)
-            }),
-            jasmine.any(Function), jasmine.any(Function)
-        );
+        expect($scope.packageActionFormValues.remoteAction).toEqual('group_remove');
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [1,2,3] }}));
     });
 
     it("provides a function for closing the modal", function () {
