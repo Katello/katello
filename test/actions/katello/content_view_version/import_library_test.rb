@@ -37,7 +37,7 @@ module ::Actions::Katello::ContentViewVersion
       end
     end
 
-    let(:metadata) do
+    let(:import_metadata) do
       {
         products: {
           prod.label => prod.slice(:name, :label).merge(redhat: prod.redhat?)
@@ -98,11 +98,11 @@ module ::Actions::Katello::ContentViewVersion
         assert_nil ::Katello::ContentView.where(organization: organization,
                                                 name: ::Katello::ContentView::IMPORT_LIBRARY).first
         action_class.any_instance.expects(:action_subject).with(organization)
-        plan_action(action, organization, path: path, metadata: metadata)
+        plan_action(action, organization, path: path, metadata: import_metadata)
         assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::Import) do |options|
           options = options.first if options.is_a? Array
           assert_equal options[:organization], organization
-          assert_equal options[:metadata], metadata
+          assert_equal options[:metadata], import_metadata
           assert_equal options[:path], path
         end
       end
@@ -111,7 +111,7 @@ module ::Actions::Katello::ContentViewVersion
         ::Katello::ContentViewManager.expects(:create_candlepin_environment).returns
         ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
 
-        tree = plan_action_tree(action_class, organization, path: path, metadata: metadata)
+        tree = plan_action_tree(action_class, organization, path: path, metadata: import_metadata)
 
         assert_empty tree.errors
         assert_tree_planned_with(tree, Actions::Pulp3::Repository::CopyContent) do |input|

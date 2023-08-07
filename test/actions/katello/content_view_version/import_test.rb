@@ -38,7 +38,7 @@ module ::Actions::Katello::ContentViewVersion
       katello_products(:redhat)
     end
 
-    let(:metadata) do
+    let(:import_metadata) do
       {
         products: {
           prod.label => prod.slice(:label, :name).merge(redhat: prod.redhat?)
@@ -95,34 +95,34 @@ module ::Actions::Katello::ContentViewVersion
     describe 'Import' do
       it 'should fail on importing content for an existing versions' do
         exception = assert_raises(RuntimeError) do
-          plan_action(action, organization: organization, path: path, metadata: metadata)
+          plan_action(action, organization: organization, path: path, metadata: import_metadata)
         end
         assert_match(/'#{content_view_version.name}' already exists/, exception.message)
       end
 
       it 'should plan properly' do
-        metadata[:content_view_version][:major] += 10
+        import_metadata[:content_view_version][:major] += 10
 
         ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
 
-        plan_action(action, organization: organization, path: path, metadata: metadata)
+        plan_action(action, organization: organization, path: path, metadata: import_metadata)
         assert_action_planned_with(action,
                                     ::Actions::Katello::ContentView::Publish,
                                     content_view, description,
                                     path: path,
-                                    metadata: metadata,
+                                    metadata: import_metadata,
                                     importing: true,
                                     syncable: false,
-                                    major: metadata[:content_view_version][:major],
-                                    minor: metadata[:content_view_version][:minor])
+                                    major: import_metadata[:content_view_version][:major],
+                                    minor: import_metadata[:content_view_version][:minor])
       end
 
       it 'should create a non existent cv and plan properly' do
-        metadata[:content_view] = { name: "non_existent_view", label: "nope", generated_for: :none }
+        import_metadata[:content_view] = { name: "non_existent_view", label: "nope", generated_for: :none }
         ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
 
-        plan_action(action, organization: organization, path: path, metadata: metadata)
-        content_view = ::Katello::ContentView.find_by(label: metadata[:content_view][:label],
+        plan_action(action, organization: organization, path: path, metadata: import_metadata)
+        content_view = ::Katello::ContentView.find_by(label: import_metadata[:content_view][:label],
                                                       organization: organization)
         refute_nil content_view
         assert content_view.import_only?
@@ -130,21 +130,21 @@ module ::Actions::Katello::ContentViewVersion
                                     ::Actions::Katello::ContentView::Publish,
                                     content_view, description,
                                     path: path,
-                                    metadata: metadata,
+                                    metadata: import_metadata,
                                     importing: true,
                                     syncable: false,
-                                    major: metadata[:content_view_version][:major],
-                                    minor: metadata[:content_view_version][:minor])
+                                    major: import_metadata[:content_view_version][:major],
+                                    minor: import_metadata[:content_view_version][:minor])
       end
 
       it 'should create the library cv and plan properly' do
-        metadata[:content_view] = { name: ::Katello::ContentView::EXPORT_LIBRARY,
-                                    label: ::Katello::ContentView::EXPORT_LIBRARY,
-                                    generated_for: :library_export
-                                  }
+        import_metadata[:content_view] = { name: ::Katello::ContentView::EXPORT_LIBRARY,
+                                           label: ::Katello::ContentView::EXPORT_LIBRARY,
+                                           generated_for: :library_export
+                                         }
         ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
 
-        plan_action(action, organization: organization, path: path, metadata: metadata)
+        plan_action(action, organization: organization, path: path, metadata: import_metadata)
         content_view = ::Katello::ContentView.find_by(label: ::Katello::ContentView::IMPORT_LIBRARY,
                                                       organization: organization)
         refute_nil content_view
@@ -153,20 +153,20 @@ module ::Actions::Katello::ContentViewVersion
                                     ::Actions::Katello::ContentView::Publish,
                                     content_view, description,
                                     path: path,
-                                    metadata: metadata,
+                                    metadata: import_metadata,
                                     importing: true,
                                     syncable: false,
-                                    major: metadata[:content_view_version][:major],
-                                    minor: metadata[:content_view_version][:minor])
+                                    major: import_metadata[:content_view_version][:major],
+                                    minor: import_metadata[:content_view_version][:minor])
       end
 
       it 'should plan the full tree appropriately' do
         ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
 
         ::Katello::ContentViewManager.expects(:create_candlepin_environment).returns
-        metadata[:content_view_version][:major] += 10
+        import_metadata[:content_view_version][:major] += 10
         generated_cvv = nil
-        tree = plan_action_tree(action_class, organization: organization, path: path, metadata: metadata)
+        tree = plan_action_tree(action_class, organization: organization, path: path, metadata: import_metadata)
 
         assert_empty tree.errors
         assert_tree_planned_steps(tree, Actions::Katello::ContentView::AddToEnvironment)
@@ -179,8 +179,8 @@ module ::Actions::Katello::ContentViewVersion
           assert_equal path, input[:path]
           generated_cvv = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
           assert_equal content_view_version.content_view.id, generated_cvv.content_view.id
-          assert_equal metadata[:content_view_version][:major], generated_cvv.major
-          assert_equal metadata[:content_view_version][:minor], generated_cvv.minor
+          assert_equal import_metadata[:content_view_version][:major], generated_cvv.major
+          assert_equal import_metadata[:content_view_version][:minor], generated_cvv.minor
         end
 
         assert_tree_planned_with(tree, Actions::Pulp3::ContentViewVersion::CreateImport) do |input|
