@@ -9,7 +9,7 @@ module Actions
         def plan(content_view, environment)
           sequence do
             concurrence do
-              smart_proxies = SmartProxy.with_environment(environment)
+              smart_proxies = SmartProxy.unscoped.with_environment(environment).select { |sp| sp.authorized?(:manage_capsule_content) && sp.authorized?(:view_capsule_content) }
               unless smart_proxies.blank?
                 plan_action(::Actions::BulkAction, ::Actions::Katello::CapsuleContent::Sync, smart_proxies.sort,
                             :content_view_id => content_view.id, :environment_id => environment.id)
