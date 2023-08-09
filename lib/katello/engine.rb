@@ -262,4 +262,8 @@ module Katello
   def self.with_ansible?
     Foreman::Plugin.installed?("foreman_ansible")
   end
+
+  def self.shutting_down?
+    ::Puma::Server.current.shutting_down?
+  end
 end

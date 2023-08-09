@@ -5,6 +5,7 @@ Katello::Engine.routes.draw do
         match '/heartbeat' => 'event_queue#heartbeat', via: :post
         match '/next' => 'event_queue#next', via: :post
         match '/reset' => 'event_queue#reset', via: :post
+        match '/subscribe' => 'event_queue#subscribe', via: :get
       end
 
       scope path: :candlepin_events, as: :candlepin_events do

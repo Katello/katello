@@ -8,6 +8,17 @@ module Katello
           EventQueue.reset_in_progress
         end
 
+        def subscribe
+          subscription = Katello::EventQueue::Subscription.new
+          result = subscription.wait
+
+          if result
+            render json: 'ok'
+          else
+            head :no_content
+          end
+        end
+
         def next
           event = ::Katello::EventQueue.next_event
 
