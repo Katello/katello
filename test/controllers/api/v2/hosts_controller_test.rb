@@ -71,6 +71,44 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     assert_equal target_cve, host.content_facet.content_view_environments.first
   end
 
+  def test_host_update_with_env_only
+    host = FactoryBot.create(:host, :with_content, :with_subscription,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :lifecycle_environment_id => @dev.id
+      }
+    }, session: set_session_user
+    assert_response :error
+  end
+
+  def test_host_update_with_cv_only
+    host = FactoryBot.create(:host, :with_content, :with_subscription,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_view_id => @cv2.id
+      }
+    }, session: set_session_user
+    assert_response :error
+  end
+
+  def test_host_update_with_invalid_env
+    host = FactoryBot.create(:host, :with_content, :with_subscription,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    @dev.destroy
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_view_id => @cv2.id,
+        :lifecycle_environment_id => @dev.id
+      }
+    }, session: set_session_user
+    assert_response :error
+  end
+
   def test_with_subscriptions
     host = FactoryBot.create(:host, :with_subscription)
     host_index_and_show(host)
