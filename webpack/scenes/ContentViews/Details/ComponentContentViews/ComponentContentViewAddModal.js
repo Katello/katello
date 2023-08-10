@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Flex, Modal, ModalVariant, Select,
+  Flex, Modal, ModalVariant, Select, SelectVariant,
   SelectOption, Checkbox, Form, FormGroup,
   ActionGroup, Button, Tooltip,
 } from '@patternfly/react-core';
@@ -69,7 +69,7 @@ const ComponentContentViewAddModal = ({
 
   const updateLatest = (checked) => {
     setFormLatest(checked);
-    if (checked) setSelected(options[0]);
+    if (checked) setSelected(options[0]?.value);
   };
 
   const onSubmit = () => {
@@ -108,6 +108,7 @@ const ComponentContentViewAddModal = ({
       >
         <FormGroup label={__('Version')} isRequired fieldId="version">
           <Select
+            variant={SelectVariant.typeahead}
             selections={selected}
             isDisabled={formLatest || options.length === 1}
             onSelect={(event, value) => { setSelected(value); setCvVersionSelectOpen(false); }}
@@ -117,6 +118,8 @@ const ComponentContentViewAddModal = ({
             onToggle={isExpanded => setCvVersionSelectOpen(isExpanded)}
             aria-label="CvVersion"
             ouiaId="select-cv-version"
+            menuAppendTo="parent"
+            maxHeight="20rem"
           >
             {options.map(option => (
               <SelectOption

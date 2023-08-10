@@ -329,7 +329,7 @@ test('Can bulk add component views to content view with modal', async (done) => 
     .reply(200, {});
 
   const {
-    getAllByText, getByLabelText, queryByText,
+    getAllByText, getByLabelText, queryByText, getAllByRole,
   } = renderWithRedux(
     <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
@@ -346,9 +346,9 @@ test('Can bulk add component views to content view with modal', async (done) => 
   fireEvent.click(getByLabelText('bulk_add_components'));
   await patientlyWaitFor(() => {
     expect(getAllByText('Add content views')[1]).toBeInTheDocument();
-    expect(queryByText('Version 4.0 (3 days ago)')).toBeInTheDocument();
+    expect(getAllByRole('textbox')[0]).toHaveValue('Version 4.0 (3 days ago)');
   });
-  fireEvent.click(queryByText('Version 4.0 (3 days ago)'));
+  fireEvent.click(getAllByRole('textbox')[0]);
   fireEvent.click(queryByText('Version 3.0'));
 
   fireEvent.click(getByLabelText('add_components'));

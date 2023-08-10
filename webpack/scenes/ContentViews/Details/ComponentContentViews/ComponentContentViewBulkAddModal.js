@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { last } from 'lodash';
 import PropTypes from 'prop-types';
 import {
-  Flex, Modal, ModalVariant, Select,
+  Flex, Modal, ModalVariant, Select, SelectVariant,
   SelectOption, Checkbox, Form, FormGroup,
   ActionGroup, Button, Card, CardTitle, CardBody, Tooltip,
 } from '@patternfly/react-core';
@@ -67,14 +67,20 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
       }}
       >
         {Object.keys(versionSelectOptions).sort().map(componentCvName => (
-          <Card ouiaId="componentCvName" key={componentCvName}>
+          <Card
+            ouiaId="componentCvName"
+            aria-label="componentCvName"
+            key={componentCvName}
+          >
             <CardTitle aria-label={componentCvName}>{componentCvName}</CardTitle>
             <CardBody>
               <FormGroup label={__('Version')} isRequired fieldId="version">
                 <Select
+                  variant={SelectVariant.typeahead}
                   selections={selectedVersion[componentCvName]}
                   ouiaId="select-version"
-                  isDisabled={versionSelectOptions[componentCvName].length <= 1}
+                  isDisabled={versionSelectOptions[componentCvName].length <= 1 ||
+                      selectedComponentLatest[componentCvName]}
                   onSelect={(__event, value) => {
                     setSelectedVersion({ ...selectedVersion, ...{ [componentCvName]: value } });
                     setCvVersionSelectOpen('');
@@ -85,6 +91,8 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
                   id={`horzontal-form-title-${componentCvName}-${cvVersionSelectOpen[componentCvName]}`}
                   name="horizontal-form-title"
                   aria-label={`version-select-${componentCvName}`}
+                  menuAppendTo="parent"
+                  maxHeight="20rem"
                 >
                   {versionSelectOptions[componentCvName].map(version => (
                     <SelectOption
