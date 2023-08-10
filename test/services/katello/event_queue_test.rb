@@ -154,6 +154,30 @@ module Katello
       assert deferred_event.in_progress
     end
 
+    def test_mark_in_progress_process_after
+      # two events with the same object_id but staggered
+      # process_after timestamps should not be marked in_progress
+      # if we are in between the process_after times
+
+      process_sooner = EventQueue.push_event(@type, 1) do |attrs|
+        attrs[:process_after] = 1.minute.from_now
+      end
+
+      process_later = EventQueue.push_event(@type, 1) do |attrs|
+        attrs[:process_after] = 2.minutes.from_now
+      end
+
+      travel_to 90.seconds.from_now do
+        Katello::EventQueue.mark_in_progress(process_sooner)
+
+        process_sooner.reload
+        process_later.reload
+
+        assert process_sooner.in_progress
+        refute process_later.in_progress
+      end
+    end
+
     def test_reschedule_event
       EventQueue.push_event(@type, 1)
       event = Katello::EventQueue.next_event
