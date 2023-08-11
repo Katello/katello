@@ -130,6 +130,9 @@ msgstr "%s 사용됨"
 msgid "%s ago"
 msgstr "%s 전 "
 
+msgid "%s content type is not enabled."
+msgstr ""
+
 msgid "%s guests"
 msgstr ""
 
@@ -253,6 +256,9 @@ msgstr "%{group} 패키지 그룹 업데이트 시간 초과 "
 msgid "%{group} package group updated"
 msgstr "%{group} 패키지 그룹 업데이트됨 "
 
+msgid "%{name} has no %{type} repositories with upstream URLs to add to the alternate content source."
+msgstr ""
+
 msgid "%{package} (%{total} other packages)"
 msgstr "%{package} (%{total} 기타 패키지)"
 
@@ -333,6 +339,9 @@ msgstr ""
 
 msgid "%{used} of %{total}"
 msgstr "%{used}(총: %{total})"
+
+msgid "%{value} can contain only lowercase letters, numbers, dashes and dots."
+msgstr ""
 
 msgid "%{view_label} could not be promoted to %{environment_label} because the content view and the environment are not in the same organization!"
 msgstr ""
@@ -457,6 +466,9 @@ msgstr ""
 msgid "Action with sub plans"
 msgstr "하위 계획이 있는 작업"
 
+msgid "Activation Key will no longer be available for use. This operation cannot be undone."
+msgstr ""
+
 msgid "Activation Keys"
 msgstr "활성키 "
 
@@ -465,6 +477,15 @@ msgstr ""
 
 msgid "Activation key ID"
 msgstr "활성키 ID"
+
+msgid "Activation key deleted"
+msgstr ""
+
+msgid "Activation key details"
+msgstr ""
+
+msgid "Activation key details updated"
+msgstr ""
 
 msgid "Activation key for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. For multiple keys use `activation_keys` param instead."
 msgstr ""
@@ -608,6 +629,9 @@ msgid "Affected Repositories"
 msgstr ""
 
 msgid "Affected repositories"
+msgstr ""
+
+msgid "After configuring Foreman, configuration must also be updated on {hosts}. Choose one of the following options to update {hosts}:"
 msgstr ""
 
 msgid "After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently."
@@ -1136,6 +1160,9 @@ msgstr "%s에서 삭제할 수 없습니다, 보기는 여기에 존재하지 �
 msgid "Cannot delete product with repositories published in a content view.  Product: %{product}, %{view_versions}"
 msgstr ""
 
+msgid "Cannot delete product: %{product} with repositories that are the last affected repository in content view filters. Delete these repositories before deleting product."
+msgstr ""
+
 msgid "Cannot delete provider with attached products"
 msgstr "할당된 제품을 갖는 공급자를 삭제할 수 없습니다 "
 
@@ -1226,9 +1253,6 @@ msgstr ""
 msgid "Cannot upload Container Image content."
 msgstr ""
 
-msgid "Cannot validate contents on non-yum/deb repositories."
-msgstr ""
-
 msgid "Capacity"
 msgstr "용량 "
 
@@ -1241,7 +1265,13 @@ msgstr ""
 msgid "Change host content source"
 msgstr ""
 
+msgid "Changing a host's content source will change the Smart Proxy from which the host gets its content."
+msgstr ""
+
 msgid "Check audited changes and proceed only if content or filters have changed since last publish"
+msgstr ""
+
+msgid "Check for long running tasks"
 msgstr ""
 
 msgid "Check if a connection can be made to Red Hat Subscription Management."
@@ -1351,6 +1381,12 @@ msgstr ""
 
 msgid "Compute resource IDs"
 msgstr "컴퓨터 리소스 ID "
+
+msgid "Configuration still must be updated on {hosts}"
+msgstr ""
+
+msgid "Configuration updated on Foreman"
+msgstr ""
 
 msgid "Confirm Deletion"
 msgstr ""
@@ -1563,6 +1599,9 @@ msgid "Content view ID"
 msgstr ""
 
 msgid "Content view and environment not set for registration."
+msgstr ""
+
+msgid "Content view and lifecycle environment must be provided together"
 msgstr ""
 
 msgid "Content view details"
@@ -2078,6 +2117,9 @@ msgstr "컨텐츠 뷰 삭제 "
 msgid "Delete a filter rule"
 msgstr "필터 규칙 삭제 "
 
+msgid "Delete activation key?"
+msgstr ""
+
 msgid "Delete all subscriptions attached to activation keys."
 msgstr ""
 
@@ -2091,6 +2133,9 @@ msgid "Delete an upload request"
 msgstr "업로드 요청 삭제 "
 
 msgid "Delete content view"
+msgstr ""
+
+msgid "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view."
 msgstr ""
 
 msgid "Delete manifest from Red Hat provider"
@@ -2124,6 +2169,9 @@ msgid "Deleting version {versionList}"
 msgstr ""
 
 msgid "Deleting versions: {versionList}"
+msgstr ""
+
+msgid "Deliver notifications about long running tasks"
 msgstr ""
 
 msgid "Description"
@@ -2283,6 +2331,9 @@ msgid "Edit RPM rule"
 msgstr ""
 
 msgid "Edit URL and subpaths"
+msgstr ""
+
+msgid "Edit activation key"
 msgstr ""
 
 msgid "Edit content view assignment"
@@ -2624,6 +2675,9 @@ msgstr ""
 msgid "Filter composite versions whose publish was triggered by the specified component version"
 msgstr ""
 
+msgid "Filter content view versions that contain the file"
+msgstr ""
+
 msgid "Filter created"
 msgstr "필터가 생성되었습니다 "
 
@@ -2728,10 +2782,10 @@ msgstr ""
 msgid "Force delete the repository by removing it from all content view versions"
 msgstr ""
 
-msgid "Force metadata regeneration to proceed.  Dangerous when repositories use the 'Complete Mirroring' mirroring policy"
+msgid "Force metadata regeneration to proceed. Dangerous operation when version has repositories with the 'Complete Mirroring' mirroring policy"
 msgstr ""
 
-msgid "Force metadata regeneration to proceed.  Dangerous when repositories use the 'Complete Mirroring' mirroring policy."
+msgid "Force metadata regeneration to proceed. Dangerous when repositories use the 'Complete Mirroring' mirroring policy"
 msgstr ""
 
 msgid "Force promotion"
@@ -2746,7 +2800,7 @@ msgstr ""
 msgid "Force sync even if no upstream changes are detected. Only used with yum or deb repositories."
 msgstr ""
 
-msgid "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem."
+msgid "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy."
 msgstr ""
 
 msgid "Forces a republish of the version's repositories' metadata"
@@ -2802,9 +2856,6 @@ msgstr "리포지터리 세트 정보 가져오기 "
 
 msgid "Get list of available repositories for the repository set"
 msgstr ""
-
-msgid "Get status of repo synchronisation for given product"
-msgstr "주어진 제품에 대한 리포지터리 동기화 상태 가져오기 "
 
 msgid "Get status of synchronisation for given repository"
 msgstr "주어진 리포지터리에 대한 동기화 상태 가져오기 "
@@ -2899,6 +2950,9 @@ msgstr "호스트 에라타 권고"
 msgid "Host ID"
 msgstr "호스트 ID"
 
+msgid "Host Limit"
+msgstr ""
+
 msgid "Host Profile Assume"
 msgstr ""
 
@@ -2924,9 +2978,6 @@ msgid "Host collections"
 msgstr ""
 
 msgid "Host collections updated"
-msgstr ""
-
-msgid "Host configurations are not updated yet"
 msgstr ""
 
 msgid "Host content and subscription details"
@@ -3136,7 +3187,9 @@ msgstr ""
 msgid "Identifiers for Lifecycle Environment"
 msgstr ""
 
-msgid "Identifies whether the repository should be disabled on a client with a non-matching OS version. Pass [] to enable regardless of OS version. Maximum length 1; allowed tags are: %s"
+msgid ""
+"Identifies whether the repository should be unavailable on a client with a non-matching OS version.\n"
+"Pass [] to make repo available for clients regardless of OS version. Maximum length 1; allowed tags are: %s"
 msgstr ""
 
 msgid "Ids of smart proxies to associate"
@@ -3146,6 +3199,9 @@ msgid "If SSL should be verified for the upstream URL"
 msgstr ""
 
 msgid "If hosts fail to register because of duplicate DMI UUIDs, add their comma-separated values here. Subsequent registrations will generate a unique DMI UUID for the affected hosts."
+msgstr ""
+
+msgid "If product certificates should be used to authenticate to a custom CDN."
 msgstr ""
 
 msgid "If specified, remove the first instance of a subscription with matching id and quantity"
@@ -3193,7 +3249,7 @@ msgstr ""
 msgid "Ignorable content can be only set for Yum repositories."
 msgstr ""
 
-msgid "Ignore %s can not be set in combination with 'Complete Mirroring' mirroring policy."
+msgid "Ignore %s cannot be set in combination with the 'Complete Mirroring' mirroring policy."
 msgstr ""
 
 msgid "Ignore errors"
@@ -3577,7 +3633,13 @@ msgstr ""
 msgid "Job '${description}' has started."
 msgstr ""
 
+msgid "Katello 4.10"
+msgstr ""
+
 msgid "Katello ID of local pool to update"
+msgstr ""
+
+msgid "Katello-agent is deprecated and will be removed in Katello 4.10."
 msgstr ""
 
 msgid "Katello: Install Errata"
@@ -3673,7 +3735,10 @@ msgstr "최신 에라타"
 msgid "Latest version"
 msgstr ""
 
-msgid "Learn more about adding Subscription Manifests"
+msgid "Learn more about adding Subscription Manifests "
+msgstr ""
+
+msgid "Legacy UI"
 msgstr ""
 
 msgid "Legacy content host UI"
@@ -4036,6 +4101,9 @@ msgstr "매니페스트 기록 "
 msgid "Manifest deleted"
 msgstr ""
 
+msgid "Manifest does not have a valid subscription"
+msgstr ""
+
 msgid "Manifest imported"
 msgstr ""
 
@@ -4108,7 +4176,9 @@ msgstr "메세지 "
 msgid "Messaging connection"
 msgstr "메시징 연결"
 
-msgid "Metadata republishing must be forced because it is a dangerous operation."
+msgid ""
+"Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\n"
+"Alternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories."
 msgstr ""
 
 msgid "Metadata taken from the upstream export history for this Content View Version"
@@ -4163,9 +4233,6 @@ msgid "NA"
 msgstr "해당 없음 "
 
 msgid "NOTE: Content view version '%{content_view} %{current}' does not have any exportable repositories. At least one repository with any of the following types is required to be able to export: '%{exportable_types}'."
-msgstr ""
-
-msgid "NOTE: Katello-agent is deprecated and will be removed in %s. Consider using remote execution instead."
 msgstr ""
 
 msgid "NOTE: Unable to export repository '%{repository}' because it does not have an exportable content type."
@@ -4632,6 +4699,9 @@ msgstr ""
 
 msgid "Not yet published"
 msgstr "아직 공개되지 않았습니다 "
+
+msgid "Note: Deleting a subscription manifest is STRONGLY discouraged."
+msgstr ""
 
 msgid "Note: Deleting a subscription manifest is STRONGLY discouraged. Deleting a manifest will:"
 msgstr ""
@@ -5445,6 +5515,9 @@ msgstr ""
 msgid "Refresh Manifest"
 msgstr "매니페스트 새로 고침 "
 
+msgid "Refresh all alternate content sources"
+msgstr ""
+
 msgid "Refresh alternate content sources"
 msgstr ""
 
@@ -5670,8 +5743,11 @@ msgstr "공개된 컨텐츠 뷰에서 리포지터리는 허용되지 않습니�
 msgid "Repository"
 msgstr "리포지터리 "
 
-msgid "Repository %s cannot be deleted since it has already been included in a published Content View."
-msgstr "리포지터리 %s는 공개된 컨텐츠 뷰에 이미 포함되어 있으므로 삭제할 수 없습니다. "
+msgid "Repository %s cannot be deleted since it has already been included in a published Content View. Use repository details page to delete"
+msgstr ""
+
+msgid "Repository %s cannot be deleted since it is the last affected repository in a filter. Use repository details page to delete."
+msgstr ""
 
 msgid "Repository '%(repoName)s' has been disabled."
 msgstr ""
@@ -5746,6 +5822,9 @@ msgid "Republish Repositories of %{name} %{version}"
 msgstr ""
 
 msgid "Republish Version Repositories"
+msgstr ""
+
+msgid "Republish repository metadata"
 msgstr ""
 
 msgid "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys."
@@ -5925,6 +6004,9 @@ msgstr ""
 msgid "Run Sync Plan:"
 msgstr ""
 
+msgid "Run job invocation"
+msgstr ""
+
 msgid "Running"
 msgstr "실행 중 "
 
@@ -6051,6 +6133,9 @@ msgstr ""
 msgid "Select a lifecycle environment and a content view to move this host."
 msgstr ""
 
+msgid "Select a lifecycle environment first"
+msgstr ""
+
 msgid "Select a lifecycle environment from the available promotion paths to promote new version."
 msgstr ""
 
@@ -6075,13 +6160,13 @@ msgstr "조직 선택 "
 msgid "Select an environment"
 msgstr ""
 
-msgid "Select an environment first"
-msgstr ""
-
 msgid "Select an option"
 msgstr ""
 
 msgid "Select an organization"
+msgstr ""
+
+msgid "Select attributes for ${akDetails.name}"
 msgstr ""
 
 msgid "Select available version of ${cvName} to use"
@@ -6979,9 +7064,6 @@ msgstr "액세스하려는 페이지에서 특정 조직을 선택해야 합니�
 msgid "The path %{real_path} does not seem to be a valid repository. If you think this is an error, please try refreshing your manifest."
 msgstr ""
 
-msgid "The product %{name} has no %{type} repositories with upstream URLs to add to the alternate content source."
-msgstr ""
-
 msgid "The promotion of %{content_view} to %{environment} has completed.  %{count} errata are available to your hosts."
 msgstr "%{content_view}의 %{environment}으로의 승격이 완료되었습니다.  %{count}개의 에라타를 호스트에서 사용할 수 있습니다. "
 
@@ -7105,6 +7187,9 @@ msgstr ""
 msgid "This action doesn't support package groups"
 msgstr "이 작업은 패키지 그룹을 지원하지 않습니다."
 
+msgid "This action should only be taken for debugging purposes."
+msgstr ""
+
 msgid "This action should only be taken in extreme circumstances or for debugging purposes."
 msgstr ""
 
@@ -7204,7 +7289,7 @@ msgstr "이 버전은 다음에서 삭제됩니다: "
 msgid "This will create a copy of {cv}, including details, repositories, and filters. Generated data such as history, tasks and versions will not be copied."
 msgstr ""
 
-msgid "Time in minutes to consider orphan content as orphaned."
+msgid "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned."
 msgstr ""
 
 msgid "Time in seconds to wait for a host to finish a katello-agent action"
@@ -7231,6 +7316,9 @@ msgstr ""
 msgid "To enable them, add the environment to the host's content source, or "
 msgstr ""
 
+msgid "To finish the process of changing the content source, run the following script manually on {hosts}."
+msgstr ""
+
 msgid "To get started, add a filter rule to this filter"
 msgstr ""
 
@@ -7238,12 +7326,6 @@ msgid "To get started, add this host to a host collection."
 msgstr ""
 
 msgid "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories."
-msgstr ""
-
-msgid "To update the selected host configuration, update hosts manually in the next section."
-msgstr ""
-
-msgid "To update the selected host configuration, {link}, or update hosts manually in the next section."
 msgstr ""
 
 msgid "Toggling Simple Content Access will refresh your manifest."
@@ -7405,6 +7487,9 @@ msgstr "컨텐츠 호스트를 재할당할 수 없습니다. system_content_vie
 msgid "Unable to reassign systems. Please check system_content_view_id and system_environment_id."
 msgstr "시스템을 재할당할 수 없습니다. system_content_view_id 및 system_environment_id를 확인하십시오. "
 
+msgid "Unable to refresh any alternate content source. You either do not have the permission to refresh, or no alternate content sources exist."
+msgstr ""
+
 msgid "Unable to refresh any alternate content source. You either do not have the permission to refresh, or none of the alternate content sources exist."
 msgstr ""
 
@@ -7554,6 +7639,9 @@ msgstr "호스트에 대한 업데이트"
 
 msgid "Update for host %s"
 msgstr "%s 호스트에 대한 업데이트"
+
+msgid "Update hosts manually"
+msgstr ""
 
 msgid "Update http proxy"
 msgstr ""
@@ -7906,6 +7994,9 @@ msgstr ""
 msgid "Virtual host"
 msgstr ""
 
+msgid "WARNING: Katello-agent is deprecated and will be removed in %s. Migrate to remote execution now."
+msgstr ""
+
 msgid "Waiting to start."
 msgstr ""
 
@@ -8081,9 +8172,6 @@ msgid "a docker tag"
 msgstr "Docker 태그"
 
 msgid "a file"
-msgstr ""
-
-msgid "a future release"
 msgstr ""
 
 msgid "a module stream"
@@ -8734,9 +8822,6 @@ msgstr "단일 리소스 응답의 root 노드 (옵션) "
 msgid "rule identifier"
 msgstr "규칙 ID "
 
-msgid "run job invocation"
-msgstr ""
-
 msgid "security advisories"
 msgstr ""
 
@@ -8790,6 +8875,12 @@ msgstr "동기화를 위한 임시 덮어쓰기 피드 URL"
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "다음 속성은 Red Hat 공급자 [ %s ]에 대해 업데이트될 수 없습니다 "
+
+msgid "the host"
+msgstr ""
+
+msgid "the hosts"
+msgstr ""
 
 msgid "to"
 msgstr ""
