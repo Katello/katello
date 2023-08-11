@@ -261,7 +261,7 @@ module Katello
       def test_registration_existing_host
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-        @host.expects(:update_candlepin_associations).twice
+        @host.expects(:update_candlepin_associations)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
@@ -291,7 +291,6 @@ module Katello
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
         ::Katello.expects(:with_katello_agent?).returns(true)
-        @host.expects(:update_candlepin_associations)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Katello::EventQueue.expects(:push_event)
 

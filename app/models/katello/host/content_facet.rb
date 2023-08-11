@@ -61,6 +61,10 @@ module Katello
         self.cves_changed = true
       end
 
+      def mark_cves_unchanged
+        self.cves_changed = false
+      end
+
       def cves_changed?
         cves_changed
       end
