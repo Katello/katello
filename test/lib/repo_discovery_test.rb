@@ -87,6 +87,12 @@ module Katello
       rd.run(to_follow.shift)
     end
 
+    module MockHeaders
+      def headers
+        {}
+      end
+    end
+
     def test_docker_with_v2_search_with_proxy
       base_url = "https://docker.io/"
       crawled = []
@@ -100,7 +106,7 @@ module Katello
 
       RestClient::Request.expects(:execute)
         .with(method: :get, url: base_url.to_s + "v2/_catalog", proxy: @proxy_url, headers: {:accept => :json})
-        .returns({'repositories' => ['busybox']}.to_json)
+        .returns({'repositories' => ['busybox']}.to_json.extend(MockHeaders))
 
       rd = RepoDiscovery.new(base_url, 'docker', nil, nil, search, crawled, found, to_follow)
       rd.stubs(:proxy).returns(@http_proxy)
