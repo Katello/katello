@@ -67,8 +67,12 @@ end
 child :versions => :versions do
   attributes :id, :version
   attributes :created_at => :published
+  attributes :description
   attributes :environment_ids
   attributes :filters_applied? => :filters_applied
+  node :published_at_words do |version|
+    time_ago_in_words(version.created_at)
+  end
 end
 
 if params.key?(:include_permissions)

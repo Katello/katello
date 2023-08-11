@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Flex, Modal, ModalVariant, FormSelect,
-  FormSelectOption, Checkbox, Form, FormGroup,
+  Flex, Modal, ModalVariant, Select, SelectVariant,
+  SelectOption, Checkbox, Form, FormGroup,
   ActionGroup, Button, Tooltip,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
@@ -37,6 +37,7 @@ const ComponentContentViewAddModal = ({
   const [options, setOptions] = useState([]);
   const [formLatest, setFormLatest] = useState(componentId ? latest : false);
   const [selected, setSelected] = useState(null);
+  const [cvVersionSelectOpen, setCvVersionSelectOpen] = useState(false);
   const versionsLoading = componentStatus === STATUS.PENDING;
 
   useEffect(() => {
@@ -44,7 +45,9 @@ const ComponentContentViewAddModal = ({
       const { name, versions } = componentDetails;
       const versionMutable = versions;
       setCvName(name);
-      const opt = versionMutable.map(item => ({ value: item.id, label: __(`Version ${item.version}`) }));
+      const opt = versionMutable.map(item => ({
+        value: item.id, label: __(`Version ${item.version}`), description: item.description, publishedAtWords: __(` (${item.published_at_words} ago)`),
+      }));
       setOptions([...opt].reverse());
       setSelected(opt.slice(-1)[0].value);
     }
@@ -66,7 +69,7 @@ const ComponentContentViewAddModal = ({
 
   const updateLatest = (checked) => {
     setFormLatest(checked);
-    if (checked) setSelected(options[0]);
+    if (checked) setSelected(options[0]?.value);
   };
 
   const onSubmit = () => {
@@ -104,20 +107,30 @@ const ComponentContentViewAddModal = ({
       }}
       >
         <FormGroup label={__('Version')} isRequired fieldId="version">
-          <FormSelect
-            value={selected}
+          <Select
+            variant={SelectVariant.typeahead}
+            selections={selected}
             isDisabled={formLatest || options.length === 1}
-            onChange={value => setSelected(value)}
+            onSelect={(event, value) => { setSelected(value); setCvVersionSelectOpen(false); }}
             id="horzontal-form-title"
             name="horizontal-form-title"
+            isOpen={cvVersionSelectOpen}
+            onToggle={isExpanded => setCvVersionSelectOpen(isExpanded)}
             aria-label="CvVersion"
             ouiaId="select-cv-version"
+            menuAppendTo="parent"
+            maxHeight="20rem"
           >
-            {options.map((option, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <FormSelectOption key={index} value={option.value} label={option.label} />
+            {options.map(option => (
+              <SelectOption
+                key={option.value}
+                value={option.value}
+                description={option.description}
+              >
+                <>{option.label}{option.publishedAtWords}</>
+              </SelectOption>
             ))}
-          </FormSelect>
+          </Select>
         </FormGroup>
         <FormGroup fieldId="latest">
           <Flex style={{ display: 'inline-flex' }}>

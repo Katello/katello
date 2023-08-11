@@ -2,8 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { last } from 'lodash';
 import PropTypes from 'prop-types';
 import {
-  Flex, Modal, ModalVariant, FormSelect,
-  FormSelectOption, Checkbox, Form, FormGroup,
+  Flex, Modal, ModalVariant, Select, SelectVariant,
+  SelectOption, Checkbox, Form, FormGroup,
   ActionGroup, Button, Card, CardTitle, CardBody, Tooltip,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
@@ -16,6 +16,8 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
   const [versionSelectOptions, setVersionSelectOptions] = useState({});
   const [selectedVersion, setSelectedVersion] = useState({});
   const [selectedComponentLatest, setSelectedComponentLatest] = useState({});
+  const [cvVersionSelectOpen, setCvVersionSelectOpen] = useState('');
+
 
   useMemo(() => {
     const versionSelect = {};
@@ -65,25 +67,44 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
       }}
       >
         {Object.keys(versionSelectOptions).sort().map(componentCvName => (
-          <Card ouiaId="componentCvName" key={componentCvName}>
+          <Card
+            ouiaId="componentCvName"
+            aria-label="componentCvName"
+            key={componentCvName}
+          >
             <CardTitle aria-label={componentCvName}>{componentCvName}</CardTitle>
             <CardBody>
               <FormGroup label={__('Version')} isRequired fieldId="version">
-                <FormSelect
-                  value={selectedVersion[componentCvName]}
+                <Select
+                  variant={SelectVariant.typeahead}
+                  selections={selectedVersion[componentCvName]}
                   ouiaId="select-version"
-                  isDisabled={versionSelectOptions[componentCvName].length <= 1}
-                  onChange={value =>
-                    setSelectedVersion({ ...selectedVersion, ...{ [componentCvName]: value } })}
-                  id={`horzontal-form-title-${componentCvName}`}
+                  isDisabled={versionSelectOptions[componentCvName].length <= 1 ||
+                      selectedComponentLatest[componentCvName]}
+                  onSelect={(__event, value) => {
+                    setSelectedVersion({ ...selectedVersion, ...{ [componentCvName]: value } });
+                    setCvVersionSelectOpen('');
+                  }
+                  }
+                  isOpen={cvVersionSelectOpen === componentCvName}
+                  onToggle={isExpanded => setCvVersionSelectOpen(isExpanded ? componentCvName : '')}
+                  id={`horzontal-form-title-${componentCvName}-${cvVersionSelectOpen[componentCvName]}`}
                   name="horizontal-form-title"
                   aria-label={`version-select-${componentCvName}`}
+                  menuAppendTo="parent"
+                  maxHeight="20rem"
                 >
-                  {versionSelectOptions[componentCvName].map((version, index) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <FormSelectOption aria-label={`${componentCvName}-${version.version}`} key={index} value={version.id} label={`${__('Version')} ${version.version}`} />
+                  {versionSelectOptions[componentCvName].map(version => (
+                    <SelectOption
+                      key={`${componentCvName}-${version.version}`}
+                      aria-label={`${componentCvName}-${version.version}`}
+                      value={version.id}
+                      description={version.description}
+                    >
+                      <>{`${__('Version')} ${version.version}`}{__(` (${version.published_at_words} ago)`)}</>
+                    </SelectOption>
                   ))}
-                </FormSelect>
+                </Select>
               </FormGroup>
               <FormGroup style={{ marginTop: '1em' }}>
                 <Flex style={{ display: 'inline-flex' }}>
