@@ -131,6 +131,9 @@ msgstr "%s 已使用"
 msgid "%s ago"
 msgstr "%s 之前"
 
+msgid "%s content type is not enabled."
+msgstr ""
+
 msgid "%s guests"
 msgstr ""
 
@@ -254,6 +257,9 @@ msgstr "%{group} 套件群組更新逾時"
 msgid "%{group} package group updated"
 msgstr "已更新 %{group} 套件群組"
 
+msgid "%{name} has no %{type} repositories with upstream URLs to add to the alternate content source."
+msgstr ""
+
 msgid "%{package} (%{total} other packages)"
 msgstr "%{package}（%{total} 個其它套件）"
 
@@ -334,6 +340,9 @@ msgstr ""
 
 msgid "%{used} of %{total}"
 msgstr "%{used} 之 %{total}"
+
+msgid "%{value} can contain only lowercase letters, numbers, dashes and dots."
+msgstr ""
 
 msgid "%{view_label} could not be promoted to %{environment_label} because the content view and the environment are not in the same organization!"
 msgstr ""
@@ -458,6 +467,9 @@ msgstr ""
 msgid "Action with sub plans"
 msgstr "有子計畫的動作"
 
+msgid "Activation Key will no longer be available for use. This operation cannot be undone."
+msgstr ""
+
 msgid "Activation Keys"
 msgstr "啟動金鑰"
 
@@ -466,6 +478,15 @@ msgstr ""
 
 msgid "Activation key ID"
 msgstr "啟動金鑰 ID"
+
+msgid "Activation key deleted"
+msgstr ""
+
+msgid "Activation key details"
+msgstr ""
+
+msgid "Activation key details updated"
+msgstr ""
 
 msgid "Activation key for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. For multiple keys use `activation_keys` param instead."
 msgstr ""
@@ -609,6 +630,9 @@ msgid "Affected Repositories"
 msgstr ""
 
 msgid "Affected repositories"
+msgstr ""
+
+msgid "After configuring Foreman, configuration must also be updated on {hosts}. Choose one of the following options to update {hosts}:"
 msgstr ""
 
 msgid "After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently."
@@ -1137,6 +1161,9 @@ msgstr "無法由 %s 進行刪除，視域不存在此。"
 msgid "Cannot delete product with repositories published in a content view.  Product: %{product}, %{view_versions}"
 msgstr ""
 
+msgid "Cannot delete product: %{product} with repositories that are the last affected repository in content view filters. Delete these repositories before deleting product."
+msgstr ""
+
 msgid "Cannot delete provider with attached products"
 msgstr "無法刪除有連接產品的供應方"
 
@@ -1227,9 +1254,6 @@ msgstr ""
 msgid "Cannot upload Container Image content."
 msgstr ""
 
-msgid "Cannot validate contents on non-yum/deb repositories."
-msgstr ""
-
 msgid "Capacity"
 msgstr "容量"
 
@@ -1242,7 +1266,13 @@ msgstr ""
 msgid "Change host content source"
 msgstr ""
 
+msgid "Changing a host's content source will change the Smart Proxy from which the host gets its content."
+msgstr ""
+
 msgid "Check audited changes and proceed only if content or filters have changed since last publish"
+msgstr ""
+
+msgid "Check for long running tasks"
 msgstr ""
 
 msgid "Check if a connection can be made to Red Hat Subscription Management."
@@ -1352,6 +1382,12 @@ msgstr ""
 
 msgid "Compute resource IDs"
 msgstr "運算資源 ID"
+
+msgid "Configuration still must be updated on {hosts}"
+msgstr ""
+
+msgid "Configuration updated on Foreman"
+msgstr ""
 
 msgid "Confirm Deletion"
 msgstr ""
@@ -1564,6 +1600,9 @@ msgid "Content view ID"
 msgstr ""
 
 msgid "Content view and environment not set for registration."
+msgstr ""
+
+msgid "Content view and lifecycle environment must be provided together"
 msgstr ""
 
 msgid "Content view details"
@@ -2079,6 +2118,9 @@ msgstr "刪除內容視域"
 msgid "Delete a filter rule"
 msgstr "刪除篩選器規則"
 
+msgid "Delete activation key?"
+msgstr ""
+
 msgid "Delete all subscriptions attached to activation keys."
 msgstr ""
 
@@ -2092,6 +2134,9 @@ msgid "Delete an upload request"
 msgstr "刪除上傳請求"
 
 msgid "Delete content view"
+msgstr ""
+
+msgid "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view."
 msgstr ""
 
 msgid "Delete manifest from Red Hat provider"
@@ -2125,6 +2170,9 @@ msgid "Deleting version {versionList}"
 msgstr ""
 
 msgid "Deleting versions: {versionList}"
+msgstr ""
+
+msgid "Deliver notifications about long running tasks"
 msgstr ""
 
 msgid "Description"
@@ -2284,6 +2332,9 @@ msgid "Edit RPM rule"
 msgstr ""
 
 msgid "Edit URL and subpaths"
+msgstr ""
+
+msgid "Edit activation key"
 msgstr ""
 
 msgid "Edit content view assignment"
@@ -2625,6 +2676,9 @@ msgstr ""
 msgid "Filter composite versions whose publish was triggered by the specified component version"
 msgstr ""
 
+msgid "Filter content view versions that contain the file"
+msgstr ""
+
 msgid "Filter created"
 msgstr "篩選器已建立"
 
@@ -2729,10 +2783,10 @@ msgstr ""
 msgid "Force delete the repository by removing it from all content view versions"
 msgstr ""
 
-msgid "Force metadata regeneration to proceed.  Dangerous when repositories use the 'Complete Mirroring' mirroring policy"
+msgid "Force metadata regeneration to proceed. Dangerous operation when version has repositories with the 'Complete Mirroring' mirroring policy"
 msgstr ""
 
-msgid "Force metadata regeneration to proceed.  Dangerous when repositories use the 'Complete Mirroring' mirroring policy."
+msgid "Force metadata regeneration to proceed. Dangerous when repositories use the 'Complete Mirroring' mirroring policy"
 msgstr ""
 
 msgid "Force promotion"
@@ -2747,7 +2801,7 @@ msgstr ""
 msgid "Force sync even if no upstream changes are detected. Only used with yum or deb repositories."
 msgstr ""
 
-msgid "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem."
+msgid "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy."
 msgstr ""
 
 msgid "Forces a republish of the version's repositories' metadata"
@@ -2803,9 +2857,6 @@ msgstr "取得有關於軟體庫集的資訊"
 
 msgid "Get list of available repositories for the repository set"
 msgstr ""
-
-msgid "Get status of repo synchronisation for given product"
-msgstr "為指定的產品取得軟體庫同步化的狀態"
 
 msgid "Get status of synchronisation for given repository"
 msgstr "為指定的軟體庫取得同步化的狀態"
@@ -2900,6 +2951,9 @@ msgstr "主機勘誤諮詢"
 msgid "Host ID"
 msgstr "主機 ID"
 
+msgid "Host Limit"
+msgstr ""
+
 msgid "Host Profile Assume"
 msgstr ""
 
@@ -2925,9 +2979,6 @@ msgid "Host collections"
 msgstr ""
 
 msgid "Host collections updated"
-msgstr ""
-
-msgid "Host configurations are not updated yet"
 msgstr ""
 
 msgid "Host content and subscription details"
@@ -3137,7 +3188,9 @@ msgstr ""
 msgid "Identifiers for Lifecycle Environment"
 msgstr ""
 
-msgid "Identifies whether the repository should be disabled on a client with a non-matching OS version. Pass [] to enable regardless of OS version. Maximum length 1; allowed tags are: %s"
+msgid ""
+"Identifies whether the repository should be unavailable on a client with a non-matching OS version.\n"
+"Pass [] to make repo available for clients regardless of OS version. Maximum length 1; allowed tags are: %s"
 msgstr ""
 
 msgid "Ids of smart proxies to associate"
@@ -3147,6 +3200,9 @@ msgid "If SSL should be verified for the upstream URL"
 msgstr ""
 
 msgid "If hosts fail to register because of duplicate DMI UUIDs, add their comma-separated values here. Subsequent registrations will generate a unique DMI UUID for the affected hosts."
+msgstr ""
+
+msgid "If product certificates should be used to authenticate to a custom CDN."
 msgstr ""
 
 msgid "If specified, remove the first instance of a subscription with matching id and quantity"
@@ -3194,7 +3250,7 @@ msgstr ""
 msgid "Ignorable content can be only set for Yum repositories."
 msgstr ""
 
-msgid "Ignore %s can not be set in combination with 'Complete Mirroring' mirroring policy."
+msgid "Ignore %s cannot be set in combination with the 'Complete Mirroring' mirroring policy."
 msgstr ""
 
 msgid "Ignore errors"
@@ -3578,7 +3634,13 @@ msgstr ""
 msgid "Job '${description}' has started."
 msgstr ""
 
+msgid "Katello 4.10"
+msgstr ""
+
 msgid "Katello ID of local pool to update"
+msgstr ""
+
+msgid "Katello-agent is deprecated and will be removed in Katello 4.10."
 msgstr ""
 
 msgid "Katello: Install Errata"
@@ -3674,7 +3736,10 @@ msgstr "最新勘誤"
 msgid "Latest version"
 msgstr ""
 
-msgid "Learn more about adding Subscription Manifests"
+msgid "Learn more about adding Subscription Manifests "
+msgstr ""
+
+msgid "Legacy UI"
 msgstr ""
 
 msgid "Legacy content host UI"
@@ -4037,6 +4102,9 @@ msgstr "清單紀錄"
 msgid "Manifest deleted"
 msgstr ""
 
+msgid "Manifest does not have a valid subscription"
+msgstr ""
+
 msgid "Manifest imported"
 msgstr ""
 
@@ -4109,7 +4177,9 @@ msgstr "訊息"
 msgid "Messaging connection"
 msgstr "訊息連線"
 
-msgid "Metadata republishing must be forced because it is a dangerous operation."
+msgid ""
+"Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\n"
+"Alternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories."
 msgstr ""
 
 msgid "Metadata taken from the upstream export history for this Content View Version"
@@ -4164,9 +4234,6 @@ msgid "NA"
 msgstr "NA"
 
 msgid "NOTE: Content view version '%{content_view} %{current}' does not have any exportable repositories. At least one repository with any of the following types is required to be able to export: '%{exportable_types}'."
-msgstr ""
-
-msgid "NOTE: Katello-agent is deprecated and will be removed in %s. Consider using remote execution instead."
 msgstr ""
 
 msgid "NOTE: Unable to export repository '%{repository}' because it does not have an exportable content type."
@@ -4633,6 +4700,9 @@ msgstr ""
 
 msgid "Not yet published"
 msgstr "尚未發佈"
+
+msgid "Note: Deleting a subscription manifest is STRONGLY discouraged."
+msgstr ""
 
 msgid "Note: Deleting a subscription manifest is STRONGLY discouraged. Deleting a manifest will:"
 msgstr ""
@@ -5446,6 +5516,9 @@ msgstr ""
 msgid "Refresh Manifest"
 msgstr "更新清單"
 
+msgid "Refresh all alternate content sources"
+msgstr ""
+
 msgid "Refresh alternate content sources"
 msgstr ""
 
@@ -5671,8 +5744,11 @@ msgstr "不允許來自於已發行之內容視域的軟體庫。"
 msgid "Repository"
 msgstr "軟體庫"
 
-msgid "Repository %s cannot be deleted since it has already been included in a published Content View."
-msgstr "無法刪除軟體庫 %s，因為它已被包含在一個已發行的內容視域中。"
+msgid "Repository %s cannot be deleted since it has already been included in a published Content View. Use repository details page to delete"
+msgstr ""
+
+msgid "Repository %s cannot be deleted since it is the last affected repository in a filter. Use repository details page to delete."
+msgstr ""
 
 msgid "Repository '%(repoName)s' has been disabled."
 msgstr ""
@@ -5747,6 +5823,9 @@ msgid "Republish Repositories of %{name} %{version}"
 msgstr ""
 
 msgid "Republish Version Repositories"
+msgstr ""
+
+msgid "Republish repository metadata"
 msgstr ""
 
 msgid "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys."
@@ -5926,6 +6005,9 @@ msgstr ""
 msgid "Run Sync Plan:"
 msgstr ""
 
+msgid "Run job invocation"
+msgstr ""
+
 msgid "Running"
 msgstr "執行中"
 
@@ -6052,6 +6134,9 @@ msgstr ""
 msgid "Select a lifecycle environment and a content view to move this host."
 msgstr ""
 
+msgid "Select a lifecycle environment first"
+msgstr ""
+
 msgid "Select a lifecycle environment from the available promotion paths to promote new version."
 msgstr ""
 
@@ -6076,13 +6161,13 @@ msgstr "選擇組織"
 msgid "Select an environment"
 msgstr ""
 
-msgid "Select an environment first"
-msgstr ""
-
 msgid "Select an option"
 msgstr ""
 
 msgid "Select an organization"
+msgstr ""
+
+msgid "Select attributes for ${akDetails.name}"
 msgstr ""
 
 msgid "Select available version of ${cvName} to use"
@@ -6980,9 +7065,6 @@ msgstr "您嘗試存取的網頁需要選擇特定組織。"
 msgid "The path %{real_path} does not seem to be a valid repository. If you think this is an error, please try refreshing your manifest."
 msgstr ""
 
-msgid "The product %{name} has no %{type} repositories with upstream URLs to add to the alternate content source."
-msgstr ""
-
 msgid "The promotion of %{content_view} to %{environment} has completed.  %{count} errata are available to your hosts."
 msgstr "推送 %{content_view} 至 %{environment} 的程序已完成。您的主機可使用 %{count} 個勘誤。"
 
@@ -7106,6 +7188,9 @@ msgstr ""
 msgid "This action doesn't support package groups"
 msgstr "這項動作不支援套件群組"
 
+msgid "This action should only be taken for debugging purposes."
+msgstr ""
+
 msgid "This action should only be taken in extreme circumstances or for debugging purposes."
 msgstr ""
 
@@ -7205,7 +7290,7 @@ msgstr "這版本將會由此移除："
 msgid "This will create a copy of {cv}, including details, repositories, and filters. Generated data such as history, tasks and versions will not be copied."
 msgstr ""
 
-msgid "Time in minutes to consider orphan content as orphaned."
+msgid "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned."
 msgstr ""
 
 msgid "Time in seconds to wait for a host to finish a katello-agent action"
@@ -7232,6 +7317,9 @@ msgstr ""
 msgid "To enable them, add the environment to the host's content source, or "
 msgstr ""
 
+msgid "To finish the process of changing the content source, run the following script manually on {hosts}."
+msgstr ""
+
 msgid "To get started, add a filter rule to this filter"
 msgstr ""
 
@@ -7239,12 +7327,6 @@ msgid "To get started, add this host to a host collection."
 msgstr ""
 
 msgid "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories."
-msgstr ""
-
-msgid "To update the selected host configuration, update hosts manually in the next section."
-msgstr ""
-
-msgid "To update the selected host configuration, {link}, or update hosts manually in the next section."
 msgstr ""
 
 msgid "Toggling Simple Content Access will refresh your manifest."
@@ -7406,6 +7488,9 @@ msgstr "無法重新指定內容主機。請指定 system_content_view_id 與 sy
 msgid "Unable to reassign systems. Please check system_content_view_id and system_environment_id."
 msgstr "無法重新指定系統。請檢查 system_content_view_id 與 system_environment_id。"
 
+msgid "Unable to refresh any alternate content source. You either do not have the permission to refresh, or no alternate content sources exist."
+msgstr ""
+
 msgid "Unable to refresh any alternate content source. You either do not have the permission to refresh, or none of the alternate content sources exist."
 msgstr ""
 
@@ -7555,6 +7640,9 @@ msgstr "給主機的更新"
 
 msgid "Update for host %s"
 msgstr "給主機 %s 的更新"
+
+msgid "Update hosts manually"
+msgstr ""
 
 msgid "Update http proxy"
 msgstr ""
@@ -7907,6 +7995,9 @@ msgstr ""
 msgid "Virtual host"
 msgstr ""
 
+msgid "WARNING: Katello-agent is deprecated and will be removed in %s. Migrate to remote execution now."
+msgstr ""
+
 msgid "Waiting to start."
 msgstr ""
 
@@ -8082,9 +8173,6 @@ msgid "a docker tag"
 msgstr "docker 標籤"
 
 msgid "a file"
-msgstr ""
-
-msgid "a future release"
 msgstr ""
 
 msgid "a module stream"
@@ -8735,9 +8823,6 @@ msgstr "單一資源回應的根節點（選用）"
 msgid "rule identifier"
 msgstr "規則識別子"
 
-msgid "run job invocation"
-msgstr ""
-
 msgid "security advisories"
 msgstr ""
 
@@ -8791,6 +8876,12 @@ msgstr "暫時覆寫同步的 feed URL"
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Red Hat 供應者的以下屬性可以更新：[ %s ]"
+
+msgid "the host"
+msgstr ""
+
+msgid "the hosts"
+msgstr ""
 
 msgid "to"
 msgstr ""

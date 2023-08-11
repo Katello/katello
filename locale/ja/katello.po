@@ -135,6 +135,9 @@ msgstr "使用済み %s 件"
 msgid "%s ago"
 msgstr "%s 前"
 
+msgid "%s content type is not enabled."
+msgstr ""
+
 msgid "%s guests"
 msgstr "%s ゲスト"
 
@@ -258,6 +261,9 @@ msgstr "%{group} パッケージグループの更新がタイムアウトにな
 msgid "%{group} package group updated"
 msgstr "%{group} パッケージグループが更新されました"
 
+msgid "%{name} has no %{type} repositories with upstream URLs to add to the alternate content source."
+msgstr ""
+
 msgid "%{package} (%{total} other packages)"
 msgstr "%{package} (他のパッケージ: %{total})"
 
@@ -338,6 +344,9 @@ msgstr "%{unused_substitutions} は、%{content_url} と置き換えることが
 
 msgid "%{used} of %{total}"
 msgstr "%{used} / %{total}"
+
+msgid "%{value} can contain only lowercase letters, numbers, dashes and dots."
+msgstr ""
 
 msgid "%{view_label} could not be promoted to %{environment_label} because the content view and the environment are not in the same organization!"
 msgstr "コンテンツビューと環境が同じ組織内にないため、%{view_label} を %{environment_label} にプロモートできませんでした!"
@@ -462,6 +471,9 @@ msgstr "この組織で実行権限がないアクション"
 msgid "Action with sub plans"
 msgstr "サブプランによるアクション"
 
+msgid "Activation Key will no longer be available for use. This operation cannot be undone."
+msgstr ""
+
 msgid "Activation Keys"
 msgstr "アクティベーションキー"
 
@@ -470,6 +482,15 @@ msgstr "アクティベーションキー"
 
 msgid "Activation key ID"
 msgstr "アクティベーションキー ID"
+
+msgid "Activation key deleted"
+msgstr ""
+
+msgid "Activation key details"
+msgstr ""
+
+msgid "Activation key details updated"
+msgstr ""
 
 msgid "Activation key for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. For multiple keys use `activation_keys` param instead."
 msgstr "CentOS および Red Hat Enterprise Linux に必要な subscription-manager クライアントのアクティベーションキー。複数のキーの場合は、代わりに `activation_keys` パラメーターを使用してください。"
@@ -614,6 +635,9 @@ msgstr "影響のあるリポジトリー"
 
 msgid "Affected repositories"
 msgstr "影響を受けるリポジトリー"
+
+msgid "After configuring Foreman, configuration must also be updated on {hosts}. Choose one of the following options to update {hosts}:"
+msgstr ""
 
 msgid "After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently."
 msgstr "指定のホストへの変更は、増分更新の生成後に適用します。現在、エラータのみがサポートされています。"
@@ -1143,6 +1167,9 @@ msgstr "%s から削除できません。ビューが存在しません。"
 msgid "Cannot delete product with repositories published in a content view.  Product: %{product}, %{view_versions}"
 msgstr "コンテンツビューに公開リポジトリーが含まれている場合には、製品を削除できません。製品: %{product}、{view_versions}"
 
+msgid "Cannot delete product: %{product} with repositories that are the last affected repository in content view filters. Delete these repositories before deleting product."
+msgstr ""
+
 msgid "Cannot delete provider with attached products"
 msgstr "製品が割り当てられたプロバイダーを削除できません"
 
@@ -1233,9 +1260,6 @@ msgstr "Ansible コレクションをアップロードできません。"
 msgid "Cannot upload Container Image content."
 msgstr "コンテナーイメージのコンテンツをアップロードできません。"
 
-msgid "Cannot validate contents on non-yum/deb repositories."
-msgstr "yum 以外/deb リポジトリーでコンテンツを検証できません。"
-
 msgid "Capacity"
 msgstr "容量"
 
@@ -1248,7 +1272,13 @@ msgstr "コンテンツソースの変更"
 msgid "Change host content source"
 msgstr "ホストコンテンツソースの変更"
 
+msgid "Changing a host's content source will change the Smart Proxy from which the host gets its content."
+msgstr ""
+
 msgid "Check audited changes and proceed only if content or filters have changed since last publish"
+msgstr ""
+
+msgid "Check for long running tasks"
 msgstr ""
 
 msgid "Check if a connection can be made to Red Hat Subscription Management."
@@ -1358,6 +1388,12 @@ msgstr "複合コンテンツビュー"
 
 msgid "Compute resource IDs"
 msgstr "コンピュートリソース ID"
+
+msgid "Configuration still must be updated on {hosts}"
+msgstr ""
+
+msgid "Configuration updated on Foreman"
+msgstr ""
 
 msgid "Confirm Deletion"
 msgstr "削除の確定"
@@ -1570,6 +1606,9 @@ msgid "Content view ID"
 msgstr "コンテンツビュー ID"
 
 msgid "Content view and environment not set for registration."
+msgstr ""
+
+msgid "Content view and lifecycle environment must be provided together"
 msgstr ""
 
 msgid "Content view details"
@@ -2085,6 +2124,9 @@ msgstr "コンテンツビューの削除"
 msgid "Delete a filter rule"
 msgstr "フィルタールールの削除"
 
+msgid "Delete activation key?"
+msgstr ""
+
 msgid "Delete all subscriptions attached to activation keys."
 msgstr "アクティベーションキーにアタッチされている全サブスクリプションを削除します。"
 
@@ -2099,6 +2141,9 @@ msgstr "アップロード要求の削除"
 
 msgid "Delete content view"
 msgstr "コンテンツビューの削除"
+
+msgid "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view."
+msgstr ""
 
 msgid "Delete manifest from Red Hat provider"
 msgstr "Red Hat プロバイダーからマニフェストを削除"
@@ -2132,6 +2177,9 @@ msgstr "バージョン {versionList} を削除しています"
 
 msgid "Deleting versions: {versionList}"
 msgstr "バージョンを削除しています: {versionList}"
+
+msgid "Deliver notifications about long running tasks"
+msgstr ""
 
 msgid "Description"
 msgstr "説明"
@@ -2291,6 +2339,9 @@ msgstr "RPM ルールの編集"
 
 msgid "Edit URL and subpaths"
 msgstr "URL およびサブパスの編集"
+
+msgid "Edit activation key"
+msgstr ""
 
 msgid "Edit content view assignment"
 msgstr "コンテンツビューの割り当てを編集"
@@ -2631,6 +2682,9 @@ msgstr "タイプ別に絞り込む"
 msgid "Filter composite versions whose publish was triggered by the specified component version"
 msgstr "指定したコンポーネントバージョンで公開がトリガーされた複合バージョンをフィルタリングする"
 
+msgid "Filter content view versions that contain the file"
+msgstr ""
+
 msgid "Filter created"
 msgstr "フィルターが作成されました"
 
@@ -2737,11 +2791,11 @@ msgstr ""
 msgid "Force delete the repository by removing it from all content view versions"
 msgstr "すべてのコンテンツビューバージョンからリポジトリーを削除して、リポジトリーを強制的に削除します"
 
-msgid "Force metadata regeneration to proceed.  Dangerous when repositories use the 'Complete Mirroring' mirroring policy"
-msgstr "メタデータの再生成を強制的に実行します。リポジトリーで「Complete Mirroring」ミラーリングポリシーを使用している場合には危険な操作です。"
+msgid "Force metadata regeneration to proceed. Dangerous operation when version has repositories with the 'Complete Mirroring' mirroring policy"
+msgstr ""
 
-msgid "Force metadata regeneration to proceed.  Dangerous when repositories use the 'Complete Mirroring' mirroring policy."
-msgstr "メタデータの再生成を強制的に実行します。リポジトリーで「Complete Mirroring」ミラーリングポリシーを使用している場合には危険な操作です。"
+msgid "Force metadata regeneration to proceed. Dangerous when repositories use the 'Complete Mirroring' mirroring policy"
+msgstr ""
 
 msgid "Force promotion"
 msgstr "プロモーションの強制"
@@ -2755,8 +2809,8 @@ msgstr "アップストリームの変更が検出されない場合でも、強
 msgid "Force sync even if no upstream changes are detected. Only used with yum or deb repositories."
 msgstr ""
 
-msgid "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem."
-msgstr "指定のリポジトリーを強制的に再公開し、ファイルシステムでメタデータとシンボリックリンクを再生成します。"
+msgid "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy."
+msgstr ""
 
 msgid "Forces a republish of the version's repositories' metadata"
 msgstr "バージョンのリポジトリーのメタデータを強制的に再公開します"
@@ -2811,9 +2865,6 @@ msgstr "リポジトリーセットの情報取得"
 
 msgid "Get list of available repositories for the repository set"
 msgstr "リポジトリーセットの利用可能なリポジトリーの一覧を取得します"
-
-msgid "Get status of repo synchronisation for given product"
-msgstr "指定製品のリポジトリーの同期状態を取得"
 
 msgid "Get status of synchronisation for given repository"
 msgstr "指定リポジトリーの同期状態を取得"
@@ -2908,6 +2959,9 @@ msgstr "ホストのエラータアドバイザリー"
 msgid "Host ID"
 msgstr "ホスト ID"
 
+msgid "Host Limit"
+msgstr ""
+
 msgid "Host Profile Assume"
 msgstr "ホストプロファイルの想定"
 
@@ -2934,9 +2988,6 @@ msgstr "ホストコレクション"
 
 msgid "Host collections updated"
 msgstr "ホストコレクションが更新されました"
-
-msgid "Host configurations are not updated yet"
-msgstr ""
 
 msgid "Host content and subscription details"
 msgstr "ホストコレクションおよびサブスクリプションの詳細"
@@ -3145,8 +3196,10 @@ msgstr "SSL クライアントキーを含むコンテンツ認証情報の ID"
 msgid "Identifiers for Lifecycle Environment"
 msgstr "ライフサイクル環境の ID"
 
-msgid "Identifies whether the repository should be disabled on a client with a non-matching OS version. Pass [] to enable regardless of OS version. Maximum length 1; allowed tags are: %s"
-msgstr "OS バージョンが一致しないクライアントでリポジトリーを無効にする必要があるかどうかを識別します。[] を渡すと、OS バージョンに関係なく有効になります。最大長は 1 で、許可されるタグは次のとおりです: %s"
+msgid ""
+"Identifies whether the repository should be unavailable on a client with a non-matching OS version.\n"
+"Pass [] to make repo available for clients regardless of OS version. Maximum length 1; allowed tags are: %s"
+msgstr ""
 
 msgid "Ids of smart proxies to associate"
 msgstr "関連付ける Smart Proxy の ID"
@@ -3156,6 +3209,9 @@ msgstr "アップストリーム URL に対して SSL を検証する必要が�
 
 msgid "If hosts fail to register because of duplicate DMI UUIDs, add their comma-separated values here. Subsequent registrations will generate a unique DMI UUID for the affected hosts."
 msgstr "DMI UUID が重複しているためにホストの登録に失敗した場合は、ここにコンマ区切りの値を追加します。今後の登録では、影響を受けるホストに対して一意の DMI UUID が生成されます。"
+
+msgid "If product certificates should be used to authenticate to a custom CDN."
+msgstr ""
 
 msgid "If specified, remove the first instance of a subscription with matching id and quantity"
 msgstr "指定された場合、ID と数量が一致するサブスクリプションの最初のインスタンスを削除します"
@@ -3202,7 +3258,7 @@ msgstr "これらのホストの一部を別のコンテンツビューまたは
 msgid "Ignorable content can be only set for Yum repositories."
 msgstr "無視できるコンテンツは、Yum リポジトリーにのみ設定できます。"
 
-msgid "Ignore %s can not be set in combination with 'Complete Mirroring' mirroring policy."
+msgid "Ignore %s cannot be set in combination with the 'Complete Mirroring' mirroring policy."
 msgstr ""
 
 msgid "Ignore errors"
@@ -3586,8 +3642,14 @@ msgstr "ジョブ '${description}' が完了しました"
 msgid "Job '${description}' has started."
 msgstr "ジョブ '${description}' が開始されました。"
 
+msgid "Katello 4.10"
+msgstr ""
+
 msgid "Katello ID of local pool to update"
 msgstr "更新するローカルプールの Katello ID"
+
+msgid "Katello-agent is deprecated and will be removed in Katello 4.10."
+msgstr ""
 
 msgid "Katello: Install Errata"
 msgstr "Katello: エラータのインストール"
@@ -3682,8 +3744,11 @@ msgstr "最新のエラータ"
 msgid "Latest version"
 msgstr "最新バージョン"
 
-msgid "Learn more about adding Subscription Manifests"
-msgstr "サブスクリプションマニフェストの追加に関する詳細"
+msgid "Learn more about adding Subscription Manifests "
+msgstr ""
+
+msgid "Legacy UI"
+msgstr ""
 
 msgid "Legacy content host UI"
 msgstr "レガシーコンテンツホストの UI"
@@ -4045,6 +4110,9 @@ msgstr "マニフェストの履歴"
 msgid "Manifest deleted"
 msgstr "マニフェストを削除しました"
 
+msgid "Manifest does not have a valid subscription"
+msgstr ""
+
 msgid "Manifest imported"
 msgstr "マニフェストをインポートしました"
 
@@ -4117,8 +4185,10 @@ msgstr "メッセージ"
 msgid "Messaging connection"
 msgstr "メッセージング接続"
 
-msgid "Metadata republishing must be forced because it is a dangerous operation."
-msgstr "メタデータの再公開は危険な操作であるため、強制する必要があります。"
+msgid ""
+"Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\n"
+"Alternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories."
+msgstr ""
 
 msgid "Metadata taken from the upstream export history for this Content View Version"
 msgstr "このコンテンツビューバージョンのアップストリームエクスポート履歴から取得したメタデータ"
@@ -4173,9 +4243,6 @@ msgstr "NA"
 
 msgid "NOTE: Content view version '%{content_view} %{current}' does not have any exportable repositories. At least one repository with any of the following types is required to be able to export: '%{exportable_types}'."
 msgstr ""
-
-msgid "NOTE: Katello-agent is deprecated and will be removed in %s. Consider using remote execution instead."
-msgstr "注記: Katello-agent は非推奨となり、%s で削除される予定です。代わりにリモート実行を使用することを検討してください。"
 
 msgid "NOTE: Unable to export repository '%{repository}' because it does not have an exportable content type."
 msgstr "注: エクスポート可能なコンテンツタイプがないので '%{repository}' リポジトリーをエクスポートできません。"
@@ -4647,6 +4714,9 @@ msgstr "指定なし"
 
 msgid "Not yet published"
 msgstr "公開前"
+
+msgid "Note: Deleting a subscription manifest is STRONGLY discouraged."
+msgstr ""
 
 msgid "Note: Deleting a subscription manifest is STRONGLY discouraged. Deleting a manifest will:"
 msgstr "注記: サブスクリプションマニフェストを削除することは、決して推奨されません。マニフェストを削除すると、以下のようになります。"
@@ -5462,6 +5532,9 @@ msgstr "%s のコンテンツホストステータスのリフレッシュ"
 msgid "Refresh Manifest"
 msgstr "マニフェストの更新"
 
+msgid "Refresh all alternate content sources"
+msgstr ""
+
 msgid "Refresh alternate content sources"
 msgstr "代替コンテンツソースの更新"
 
@@ -5687,8 +5760,11 @@ msgstr "公開されたコンテンツビューからのリポジトリーは許
 msgid "Repository"
 msgstr "リポジトリー"
 
-msgid "Repository %s cannot be deleted since it has already been included in a published Content View."
-msgstr "リポジトリー %s は、公開コンテンツビューにすでに含まれているので削除できません。"
+msgid "Repository %s cannot be deleted since it has already been included in a published Content View. Use repository details page to delete"
+msgstr ""
+
+msgid "Repository %s cannot be deleted since it is the last affected repository in a filter. Use repository details page to delete."
+msgstr ""
 
 msgid "Repository '%(repoName)s' has been disabled."
 msgstr "リポジトリー '%(repoName)s' が無効化されました。"
@@ -5764,6 +5840,9 @@ msgstr "%{name}%{version} のリポジトリーの再公開"
 
 msgid "Republish Version Repositories"
 msgstr "バージョンリポジトリーの再公開"
+
+msgid "Republish repository metadata"
+msgstr ""
 
 msgid "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys."
 msgstr "subscription-manifest をアップロードし、サブスクリプションをホストおよびアクティベーションキーに再度アタッチする必要があります。"
@@ -5942,6 +6021,9 @@ msgstr "追加するルール"
 msgid "Run Sync Plan:"
 msgstr "同期プランの実行:"
 
+msgid "Run job invocation"
+msgstr ""
+
 msgid "Running"
 msgstr "実行中"
 
@@ -6068,6 +6150,9 @@ msgstr "これらのホストを移動するには、ライフサイクル環境
 msgid "Select a lifecycle environment and a content view to move this host."
 msgstr "このホストを移動するには、ライフサイクル環境とコンテンツビューを選択してください。"
 
+msgid "Select a lifecycle environment first"
+msgstr ""
+
 msgid "Select a lifecycle environment from the available promotion paths to promote new version."
 msgstr "利用可能なプロモーションパスからライフサイクル環境を選択し、新しいバージョンをプロモートします。"
 
@@ -6092,14 +6177,14 @@ msgstr "組織の選択"
 msgid "Select an environment"
 msgstr "環境の選択"
 
-msgid "Select an environment first"
-msgstr ""
-
 msgid "Select an option"
 msgstr "オプションの選択"
 
 msgid "Select an organization"
 msgstr "組織の選択"
+
+msgid "Select attributes for ${akDetails.name}"
+msgstr ""
 
 msgid "Select available version of ${cvName} to use"
 msgstr "使用する {cvName} の利用可能なバージョンの選択"
@@ -7000,9 +7085,6 @@ msgstr "アクセス先のページには、特定の組織を選択する必要
 msgid "The path %{real_path} does not seem to be a valid repository. If you think this is an error, please try refreshing your manifest."
 msgstr "パス %{real_path} は、有効なリポジトリーではないようです。これがエラーだと思われる場合には、マニフェストを更新してみてください。"
 
-msgid "The product %{name} has no %{type} repositories with upstream URLs to add to the alternate content source."
-msgstr "製品 %{name} には、別のコンテンツソースに追加するアップストリーム URL を含む %{type} リポジトリーはありません。"
-
 msgid "The promotion of %{content_view} to %{environment} has completed.  %{count} errata are available to your hosts."
 msgstr "%{content_view} から %{environment} のプロモートが完了しました。エラータ %{count} 件がホストで利用できます。"
 
@@ -7126,6 +7208,9 @@ msgstr "この組織のサブスクリプションマニフェストは期限切
 msgid "This action doesn't support package groups"
 msgstr "このアクションはパッケージグループに対応していません"
 
+msgid "This action should only be taken for debugging purposes."
+msgstr ""
+
 msgid "This action should only be taken in extreme circumstances or for debugging purposes."
 msgstr "この操作は、特殊な状況またはデバッグの目的でのみ実行する必要があります。"
 
@@ -7225,8 +7310,8 @@ msgstr "このバージョンは以下から削除されます:"
 msgid "This will create a copy of {cv}, including details, repositories, and filters. Generated data such as history, tasks and versions will not be copied."
 msgstr "これにより、詳細、リポジトリー、およびフィルターを含め {cv} のコピーが作成されます。履歴、タスク、およびバージョン等の生成されたデータはコピーされません。"
 
-msgid "Time in minutes to consider orphan content as orphaned."
-msgstr "単独コンテンツを単独であるとみなす時間 (分単位)。"
+msgid "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned."
+msgstr ""
 
 msgid "Time in seconds to wait for a host to finish a katello-agent action"
 msgstr "ホストが katello-agent アクションを終了するまでの待機時間 (秒単位)"
@@ -7252,6 +7337,9 @@ msgstr ""
 msgid "To enable them, add the environment to the host's content source, or "
 msgstr ""
 
+msgid "To finish the process of changing the content source, run the following script manually on {hosts}."
+msgstr ""
+
 msgid "To get started, add a filter rule to this filter"
 msgstr ""
 
@@ -7259,12 +7347,6 @@ msgid "To get started, add this host to a host collection."
 msgstr "まず、このホストをホストコレクションに追加します。"
 
 msgid "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories."
-msgstr ""
-
-msgid "To update the selected host configuration, update hosts manually in the next section."
-msgstr ""
-
-msgid "To update the selected host configuration, {link}, or update hosts manually in the next section."
 msgstr ""
 
 msgid "Toggling Simple Content Access will refresh your manifest."
@@ -7426,6 +7508,9 @@ msgstr "コンテンツホストの再割り当てを実行できません。sys
 msgid "Unable to reassign systems. Please check system_content_view_id and system_environment_id."
 msgstr "システムの再割り当てを実行できません。system_content_view_id と system_environment_id を確認してください。"
 
+msgid "Unable to refresh any alternate content source. You either do not have the permission to refresh, or no alternate content sources exist."
+msgstr ""
+
 msgid "Unable to refresh any alternate content source. You either do not have the permission to refresh, or none of the alternate content sources exist."
 msgstr "代替コンテンツソースを更新できません。更新するパーミッションがないか、代替コンテンツソースが存在しません。"
 
@@ -7575,6 +7660,9 @@ msgstr "ホストの更新"
 
 msgid "Update for host %s"
 msgstr "ホスト %s の更新"
+
+msgid "Update hosts manually"
+msgstr ""
 
 msgid "Update http proxy"
 msgstr "http プロキシーの更新"
@@ -7927,6 +8015,9 @@ msgstr "仮想ゲスト"
 msgid "Virtual host"
 msgstr "仮想ホスト"
 
+msgid "WARNING: Katello-agent is deprecated and will be removed in %s. Migrate to remote execution now."
+msgstr ""
+
 msgid "Waiting to start."
 msgstr "開始を待機中です。"
 
@@ -8103,9 +8194,6 @@ msgstr "Docker タグ"
 
 msgid "a file"
 msgstr "ファイル"
-
-msgid "a future release"
-msgstr "今後のリリース"
 
 msgid "a module stream"
 msgstr "モジュールストリーム"
@@ -8755,9 +8843,6 @@ msgstr "単一リソース応答の root ノード (オプション)"
 msgid "rule identifier"
 msgstr "ルール ID"
 
-msgid "run job invocation"
-msgstr ""
-
 msgid "security advisories"
 msgstr ""
 
@@ -8811,6 +8896,12 @@ msgstr "フィード URL を一時的に上書きして同期"
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Red Hat プロバイダーの次の属性は更新できません: [ %s ]"
+
+msgid "the host"
+msgstr ""
+
+msgid "the hosts"
+msgstr ""
 
 msgid "to"
 msgstr "から"
