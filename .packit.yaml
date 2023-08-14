@@ -18,13 +18,14 @@ upstream_tag_template: "{version}"
 actions:
   post-upstream-clone:
     - "wget https://raw.githubusercontent.com/theforeman/foreman-packaging/rpm/develop/packages/katello/rubygem-katello/rubygem-katello.spec -O rubygem-katello.spec"
-    - "sed -i '/%global prerelease/d' rubygem-katello.spec"
   get-current-version:
-    - "sed -i 's/-master//' lib/katello/version.rb"
     - ruby -rrubygems -e 'puts Gem::Specification::load(Dir.glob("*.gemspec").first).version'
   create-archive:
     - gem build katello.gemspec
     - bash -c "ls -1t ./katello-*.gem | head -n 1"
+  fix-spec-file:
+    - 'bash -c "sed -i \"s/Source0:.*/Source0: ${PACKIT_PROJECT_ARCHIVE}/\" rubygem-katello.spec"'
+    - bash -c 'sed -i "/global release/a%global nightly $PACKIT_RPMSPEC_RELEASE" rubygem-katello.spec'
 
 jobs:
   - job: copr_build
