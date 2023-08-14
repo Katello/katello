@@ -64,7 +64,7 @@ else
   attributes :repository_ids
 end
 
-child :versions => :versions do
+child :sorted_versions => :versions do
   attributes :id, :version
   attributes :created_at => :published
   attributes :description

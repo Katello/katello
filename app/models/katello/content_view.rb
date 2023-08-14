@@ -178,6 +178,10 @@ module Katello
       content_view_components.map(&:latest_version).compact.freeze
     end
 
+    def sorted_versions
+      versions.order('created_at DESC')
+    end
+
     # Adds content view components based on the input
     # [{:content_view_version_id=>1, :latest=> false}, {:content_view_id=>1, :latest=> true} ..]
     def add_components(components_to_add)
