@@ -25,7 +25,7 @@ actions:
     - bash -c "ls -1t ./katello-*.gem | head -n 1"
   fix-spec-file:
     - 'bash -c "sed -i \"s/Source0:.*/Source0: ${PACKIT_PROJECT_ARCHIVE}/\" rubygem-katello.spec"'
-    - bash -c 'sed -i "/global release/a%global nightly $PACKIT_RPMSPEC_RELEASE" rubygem-katello.spec'
+    - bash -c 'sed -i "/global release/a%global nightly ${PACKIT_RPMSPEC_RELEASE:1}" rubygem-katello.spec'
 
 jobs:
   - job: copr_build
