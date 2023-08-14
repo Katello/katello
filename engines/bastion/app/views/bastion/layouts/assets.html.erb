@@ -25,7 +25,6 @@
     angular.module('Bastion').value('deleteHostOnUnregister', angular.fromJson(`<%= Setting[:unregister_delete_host] %>`));
     angular.module('Bastion').value('globalContentProxy', angular.fromJson(`<%= Setting[:content_default_http_proxy].empty? ? nil.to_json : Setting[:content_default_http_proxy].to_json.html_safe %>`));
     angular.module('Bastion').value('entriesPerPage', "<%= Setting[:entries_per_page] %>");
-    angular.module('Bastion').value('contentViewSolveDependencies', "<%= Setting[:content_view_solve_dependencies] %>");
     angular.module('Bastion').constant('BastionConfig', angular.fromJson(`<%= Bastion.config.to_json.html_safe %>`));
     angular.module('Bastion.auth').value('CurrentUser', {
         id: <%= User.current.id %>,

@@ -612,12 +612,6 @@ Foreman::Plugin.register :katello do
         full_name: N_('Expire soon days'),
         description: N_('The number of days remaining in a subscription before you will be reminded about renewing it.')
 
-      setting 'content_view_solve_dependencies',
-        type: :boolean,
-        default: false,
-        full_name: N_('content view Dependency Solving Default'),
-        description: N_('The default dependency solving value for new content views.')
-
       setting 'host_dmi_uuid_duplicates',
         type: :array,
         default: [],
