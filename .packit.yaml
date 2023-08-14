@@ -1,0 +1,44 @@
+# See the documentation for more information:
+# https://packit.dev/docs/configuration/
+
+specfile_path: rubygem-katello.spec
+
+# add or remove files that should be synced
+files_to_sync:
+    - rubygem-katello.spec
+    - .packit.yaml
+
+# name in upstream package repository or registry (e.g. in PyPI)
+upstream_package_name: katello
+# downstream (Fedora) RPM package name
+downstream_package_name: rubygem-katello
+
+upstream_tag_template: "{version}"
+
+actions:
+  post-upstream-clone:
+    - "wget https://raw.githubusercontent.com/theforeman/foreman-packaging/rpm/develop/packages/katello/rubygem-katello/rubygem-katello.spec -O rubygem-katello.spec"
+  get-current-version:
+    - ruby -rrubygems -e 'puts Gem::Specification::load(Dir.glob("*.gemspec").first).version'
+  create-archive:
+    - gem build katello.gemspec
+    - bash -c "ls -1t ./katello-*.gem | head -n 1"
+  fix-spec-file:
+    - 'bash -c "sed -i \"s/Source0:.*/Source0: ${PACKIT_PROJECT_ARCHIVE}/\" rubygem-katello.spec"'
+    - bash -c 'sed -i "/global release/a%global nightly ${PACKIT_RPMSPEC_RELEASE:1}" rubygem-katello.spec'
+
+jobs:
+  - job: copr_build
+    trigger: pull_request
+    targets:
+      centos-stream-8:
+        additional_modules: "katello:el8,nodejs:12"
+        additional_repos:
+          - http://koji.katello.org/releases/yum/foreman-nightly/el8/x86_64/
+          - http://yum.theforeman.org/plugins/nightly/el8/x86_64/
+          - http://yum.theforeman.org/katello/nightly/katello/el8/x86_64/
+    module_hotfixes: true
+
+srpm_build_deps:
+  - wget
+  - rubygems
