@@ -201,7 +201,7 @@ test('Can add published component views to content view with modal', async (done
 
   const addComponentParams = {
     compositeContentViewId: 4,
-    components: [{ content_view_version_id: 85 }],
+    components: [{ content_view_version_id: 13 }],
   };
 
   const addComponentScope = nockInstance

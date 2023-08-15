@@ -1,5 +1,4 @@
-import React, { useState, useMemo } from 'react';
-import { last } from 'lodash';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Flex, Modal, ModalVariant, Select, SelectVariant,
@@ -13,27 +12,18 @@ import { addComponent } from '../ContentViewDetailActions';
 
 const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
   const dispatch = useDispatch();
-  const [versionSelectOptions, setVersionSelectOptions] = useState({});
-  const [selectedVersion, setSelectedVersion] = useState({});
-  const [selectedComponentLatest, setSelectedComponentLatest] = useState({});
+  const versionSelect = {};
+  const versionSelectedOption = {};
+  const componentLatest = {};
+  rowsToAdd.forEach((row) => {
+    const { componentCvVersions: versions, componentCvName: name } = row;
+    versionSelect[name] = versions;
+    versionSelectedOption[name] = versions[0]?.id;
+    componentLatest[name] = versions && versions?.length === 0;
+  });
+  const [selectedVersion, setSelectedVersion] = useState(versionSelectedOption);
+  const [selectedComponentLatest, setSelectedComponentLatest] = useState(componentLatest);
   const [cvVersionSelectOpen, setCvVersionSelectOpen] = useState('');
-
-
-  useMemo(() => {
-    const versionSelect = {};
-    const versionSelectedOption = {};
-    const componentLatest = {};
-    rowsToAdd.forEach((row) => {
-      const { componentCvVersions: versions, componentCvName: name } = row;
-      const sortedVersions = [].concat(versions).sort((a, b) => (a.id > b.id ? 1 : -1));
-      versionSelect[name] = sortedVersions;
-      versionSelectedOption[name] = last(sortedVersions)?.id;
-      componentLatest[name] = sortedVersions && sortedVersions?.length === 0;
-    });
-    setVersionSelectOptions(versionSelect);
-    setSelectedVersion(versionSelectedOption);
-    setSelectedComponentLatest(componentLatest);
-  }, [rowsToAdd, setVersionSelectOptions, setSelectedVersion, setSelectedComponentLatest]);
 
   const bulkAddParams = () => rowsToAdd.map((row) => {
     const { componentCvId: id, componentCvName: name } = row;
@@ -66,7 +56,7 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
         onSubmit();
       }}
       >
-        {Object.keys(versionSelectOptions).sort().map(componentCvName => (
+        {Object.keys(versionSelect).sort().map(componentCvName => (
           <Card
             ouiaId="componentCvName"
             aria-label="componentCvName"
@@ -79,7 +69,7 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
                   variant={SelectVariant.typeahead}
                   selections={selectedVersion[componentCvName]}
                   ouiaId="select-version"
-                  isDisabled={versionSelectOptions[componentCvName].length <= 1 ||
+                  isDisabled={versionSelect[componentCvName].length <= 1 ||
                       selectedComponentLatest[componentCvName]}
                   onSelect={(__event, value) => {
                     setSelectedVersion({ ...selectedVersion, ...{ [componentCvName]: value } });
@@ -94,7 +84,7 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
                   menuAppendTo="parent"
                   maxHeight="20rem"
                 >
-                  {versionSelectOptions[componentCvName].map(version => (
+                  {versionSelect[componentCvName].map(version => (
                     <SelectOption
                       key={`${componentCvName}-${version.version}`}
                       aria-label={`${componentCvName}-${version.version}`}
@@ -115,11 +105,16 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
                     name="latest"
                     label={__('Always update to latest version')}
                     isChecked={selectedComponentLatest[componentCvName]}
-                    onChange={checked =>
+                    onChange={(checked) => {
                       setSelectedComponentLatest({
                         ...selectedComponentLatest,
                         ...{ [componentCvName]: checked },
-                      })
+                      });
+                      setSelectedVersion({
+                        ...selectedVersion,
+                        ...{ [componentCvName]: versionSelect[componentCvName][0]?.id },
+                      });
+                    }
                     }
                   />
                   <Tooltip

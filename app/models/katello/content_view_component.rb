@@ -32,7 +32,7 @@ module Katello
     end
 
     def component_content_view_versions
-      self.content_view&.versions
+      self.content_view&.versions&.order(created_at: :desc)
     end
 
     private

@@ -54,6 +54,7 @@ const ContentViewComponents = ({ cvId, details }) => {
   const [componentCvEditing, setComponentCvEditing] = useState(null);
   const [componentLatest, setComponentLatest] = useState(false);
   const [componentId, setComponentId] = useState(null);
+  const [componentVersionId, setComponentVersionId] = useState(null);
   const [selectedComponentsToAdd, setSelectedComponentsToAdd] = useState(null);
   const [bulkAdding, setBulkAdding] = useState(false);
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
@@ -86,6 +87,11 @@ const ContentViewComponents = ({ cvId, details }) => {
       setVersionEditing(true);
       setCompositeCvEditing(cvId);
       setComponentCvEditing(componentCvId);
+      if (added) {
+        setComponentVersionId(published?.id);
+      } else {
+        setComponentVersionId(null);
+      }
       setComponentLatest(latest);
       setComponentId(added);
     } else { // if no versions are present, default to always latest and add cv without modal
@@ -297,6 +303,7 @@ const ContentViewComponents = ({ cvId, details }) => {
               componentCvId={componentCvEditing}
               componentId={componentId}
               latest={componentLatest}
+              componentVersionId={componentVersionId}
               show={versionEditing}
               setIsOpen={setVersionEditing}
               aria-label="edit_component_modal"

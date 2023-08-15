@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   Flex, Modal, ModalVariant, Select, SelectVariant,
@@ -12,13 +12,12 @@ import { STATUS } from 'foremanReact/constants';
 import {
   selectCVDetails,
   selectCVDetailStatus,
-  selectCVDetailError,
 } from '../../Details/ContentViewDetailSelectors';
 import { addComponent } from '../ContentViewDetailActions';
 import { CONTENT_VIEW_NEEDS_PUBLISH } from '../../ContentViewsConstants';
 
 const ComponentContentViewAddModal = ({
-  cvId, componentCvId, componentId, latest, show, setIsOpen,
+  cvId, componentCvId, componentId, latest, componentVersionId, show, setIsOpen,
 }) => {
   const dispatch = useDispatch();
   const componentDetails = useSelector(
@@ -29,29 +28,20 @@ const ComponentContentViewAddModal = ({
     state => selectCVDetailStatus(state, componentCvId),
     shallowEqual,
   );
-  const componentError = useSelector(
-    state => selectCVDetailError(state, componentCvId),
-    shallowEqual,
-  );
-  const [cvName, setCvName] = useState('');
-  const [options, setOptions] = useState([]);
+  const cvName = componentDetails?.name ?? '';
+  const options = useMemo(() => (componentDetails?.versions ?? []).map(item => ({
+    value: item.id, label: __(`Version ${item.version}`), description: item.description, publishedAtWords: __(` (${item.published_at_words} ago)`),
+  })), [componentDetails?.versions]);
   const [formLatest, setFormLatest] = useState(componentId ? latest : false);
   const [selected, setSelected] = useState(null);
+  const [prevOptions, setPrevOptions] = useState(options);
   const [cvVersionSelectOpen, setCvVersionSelectOpen] = useState(false);
   const versionsLoading = componentStatus === STATUS.PENDING;
 
-  useEffect(() => {
-    if (!versionsLoading && componentDetails) {
-      const { name, versions } = componentDetails;
-      const versionMutable = versions;
-      setCvName(name);
-      const opt = versionMutable.map(item => ({
-        value: item.id, label: __(`Version ${item.version}`), description: item.description, publishedAtWords: __(` (${item.published_at_words} ago)`),
-      }));
-      setOptions([...opt].reverse());
-      setSelected(opt.slice(-1)[0].value);
-    }
-  }, [componentDetails, componentStatus, componentError, versionsLoading]);
+  if (options !== prevOptions) {
+    setPrevOptions(options);
+    setSelected(componentVersionId ?? options[0]?.value);
+  }
 
   const getAddParams = () => {
     if (formLatest) {
@@ -175,6 +165,10 @@ ComponentContentViewAddModal.propTypes = {
     PropTypes.string,
   ]),
   latest: PropTypes.bool,
+  componentVersionId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]),
   show: PropTypes.bool,
   setIsOpen: PropTypes.func,
 };
@@ -182,6 +176,7 @@ ComponentContentViewAddModal.propTypes = {
 ComponentContentViewAddModal.defaultProps = {
   componentId: null,
   latest: false,
+  componentVersionId: null,
   show: false,
   setIsOpen: null,
 };
