@@ -3,13 +3,17 @@ import { useSelector, shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
-  Modal, ModalVariant,
+  Modal, ModalVariant, Popover, Button,
 } from '@patternfly/react-core';
+import {
+  HelpIcon,
+} from '@patternfly/react-icons';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { getRPMPackages } from '../../ContentViewDetailActions';
 import { selectRPMPackages, selectRPMPackagesStatus } from '../../ContentViewDetailSelectors';
+import './matchContentModal.scss';
 
 
 const columnHeaders = [
@@ -17,9 +21,9 @@ const columnHeaders = [
   __('Summary'),
 ];
 
-const emptyContentTitle = __('No matching RPM found.');
-const emptyContentBody = __("Given criteria doesn't match any RPMs. Try changing your rule.");
-const emptySearchTitle = __('Your search returned no matching RPMs.');
+const emptyContentTitle = __('No matching non-modular RPM found.');
+const emptyContentBody = __("Given criteria doesn't match any non-modular RPMs. Try changing your rule.");
+const emptySearchTitle = __('Your search returned no matching non-modular RPMs.');
 const emptySearchBody = __('Try changing your search criteria.');
 
 const CVRpmMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
@@ -41,6 +45,16 @@ const CVRpmMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
       isOpen
       onClose={onClose}
       appendTo={document.body}
+      help={
+        <Popover
+          headerContent={__('Help')}
+          bodyContent={__("Matching RPMs based on your created filter rule. Remember, RPM filters don't apply to modular RPMs.")}
+        >
+          <Button variant="plain" aria-label="Help" ouiaId="matching-content-modal-help">
+            <HelpIcon />
+          </Button>
+        </Popover>
+      }
     >
       <TableWrapper
         {...{
