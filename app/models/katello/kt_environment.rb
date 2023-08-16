@@ -278,7 +278,7 @@ module Katello
       prop_group :katello_basic_props, Katello::Model, meta: { friendly_name: 'Katello Environment' }
     end
     class Jail < ::Safemode::Jail
-      allow :name, :label
+      allow :id, :name, :label
     end
 
     private

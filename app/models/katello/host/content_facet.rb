@@ -376,7 +376,8 @@ module Katello
         allow :applicable_deb_count, :applicable_module_stream_count, :applicable_rpm_count, :content_source, :content_source_id, :content_source_name,
               :errata_counts, :id, :kickstart_repository, :kickstart_repository_id, :kickstart_repository_name,
               :upgradable_deb_count, :upgradable_module_stream_count, :upgradable_rpm_count, :uuid,
-              :installable_security_errata_count, :installable_bugfix_errata_count, :installable_enhancement_errata_count
+              :installable_security_errata_count, :installable_bugfix_errata_count, :installable_enhancement_errata_count,
+              :single_content_view, :single_lifecycle_environment
       end
     end
   end
