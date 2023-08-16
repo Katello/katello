@@ -1,21 +1,3 @@
-import { propsToCamelCase } from 'foremanReact/common/helpers';
-
-export const REMOTE_EXECUTION = 'remoteExecution';
-export const KATELLO_AGENT = 'katelloAgent';
-
-export const defaultRemoteActionMethod = ({ hostDetails }) => {
-  const {
-    content_facet_attributes: contentFacetAttributes,
-  } = hostDetails;
-  const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
-  const katelloAgentAvailable = (contentFacet.katelloAgentInstalled &&
-    contentFacet.katelloAgentEnabled);
-  if (contentFacet.remoteExecutionByDefault || !katelloAgentAvailable) {
-    return REMOTE_EXECUTION;
-  }
-  return KATELLO_AGENT;
-};
-
 export const hostIsNotRegistered = ({ hostDetails }) => {
   const {
     subscription_facet_attributes: subscriptionFacetAttributes,
@@ -42,5 +24,3 @@ export const hasRequiredPermissions = (requiredPermissions = [], userPermissions
 
 export const missingRequiredPermissions = (requiredPermissions = [], userPermissions) =>
   !hasRequiredPermissions(requiredPermissions, userPermissions);
-
-export default defaultRemoteActionMethod;

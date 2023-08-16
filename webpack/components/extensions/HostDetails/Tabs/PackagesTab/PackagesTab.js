@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   ActionList,
   ActionListItem,
@@ -28,9 +28,6 @@ import { useBulkSelect, useTableSort, useUrlParams, useSet } from '../../../../.
 import PackagesStatus from '../../../../../components/Packages';
 import {
   getInstalledPackagesWithLatest,
-  removePackageViaKatelloAgent,
-  upgradeAllViaKatelloAgent,
-  upgradePackageViaKatelloAgent,
 } from './HostPackagesActions';
 import { selectHostPackagesStatus } from './HostPackagesSelectors';
 import {
@@ -41,17 +38,13 @@ import { katelloPackageUpdateUrl, packagesUpdateUrl } from '../customizedRexUrlH
 import './PackagesTab.scss';
 import hostIdNotReady, { getHostDetails } from '../../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
-import { defaultRemoteActionMethod,
-  hasRequiredPermissions as can,
+import { hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
-  KATELLO_AGENT,
   userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
-import KatelloAgentDeprecationAlert from '../../common/KatelloAgentDeprecationAlert';
 
 const invokeRexJobs = ['create_job_invocations'];
-const doKatelloAgentActions = ['edit_hosts'];
 const createBookmarks = ['create_bookmarks'];
 
 const UpdateVersionsSelect = ({
@@ -126,7 +119,6 @@ export const PackagesTab = () => {
   } = hostDetails;
 
   const { searchParam, status: statusParam } = useUrlParams();
-  const dispatch = useDispatch();
   const PACKAGE_STATUS = __('Status');
   const [packageStatusSelected, setPackageStatusSelected] = useState(statusParam ?? PACKAGE_STATUS);
   const activeFilters = [packageStatusSelected];
@@ -135,10 +127,7 @@ export const PackagesTab = () => {
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => setIsModalOpen(false);
-  const showKatelloAgent = (defaultRemoteActionMethod({ hostDetails }) === KATELLO_AGENT);
-  const showActions = showKatelloAgent ?
-    can(doKatelloAgentActions, userPermissionsFromHostDetails({ hostDetails })) :
-    can(invokeRexJobs, userPermissionsFromHostDetails({ hostDetails }));
+  const showActions = can(invokeRexJobs, userPermissionsFromHostDetails({ hostDetails }));
 
   const [isActionOpen, setIsActionOpen] = useState(false);
   const onActionSelect = () => {
@@ -295,11 +284,6 @@ export const PackagesTab = () => {
 
   const removePackageViaRemoteExecution = packageName => triggerPackageRemove(packageName);
 
-  const removeViaKatelloAgent = (packageName) => {
-    dispatch(removePackageViaKatelloAgent(hostId, { packages: [packageName] }));
-    selectNone();
-  };
-
   const removePackagesViaRemoteExecution = () => {
     const selected = fetchBulkParams();
     setIsBulkActionOpen(false);
@@ -307,32 +291,9 @@ export const PackagesTab = () => {
     triggerBulkPackageRemove(selected);
   };
 
-  const selectedPackageNames = () => selectedResults.map(({ name }) => name);
-  const selectedUpgradableVersions = () => selectedResults.map(({ name, upgradable_versions: v }) =>
-    selectedNewVersions.current[name] || v[0]);
+  const removeBulk = () => removePackagesViaRemoteExecution();
 
-  const removePackagesViaKatelloAgent = () => {
-    dispatch(removePackageViaKatelloAgent(hostId, { packages: selectedPackageNames() }));
-    selectNone();
-  };
-
-  const defaultRemoteAction = defaultRemoteActionMethod({ hostDetails });
-
-  const removeBulk = () => {
-    if (defaultRemoteAction === KATELLO_AGENT) {
-      removePackagesViaKatelloAgent();
-    } else {
-      removePackagesViaRemoteExecution();
-    }
-  };
-
-  const handlePackageRemove = (packageName) => {
-    if (defaultRemoteAction === KATELLO_AGENT) {
-      removeViaKatelloAgent(packageName);
-    } else {
-      removePackageViaRemoteExecution(packageName);
-    }
-  };
+  const handlePackageRemove = packageName => removePackageViaRemoteExecution(packageName);
 
   const upgradeViaRemoteExecution = ({ packageName, upgradableVersions }) => (
     triggerPackageUpgrade({ packageName, upgradableVersions })
@@ -345,22 +306,7 @@ export const PackagesTab = () => {
     triggerBulkPackageUpgrade(selected);
   };
 
-  const upgradeBulkViaKatelloAgent = () => {
-    if (areAllRowsSelected()) {
-      dispatch(upgradeAllViaKatelloAgent(hostId));
-    } else {
-      dispatch(upgradePackageViaKatelloAgent(hostId, { packages: selectedUpgradableVersions() }));
-    }
-    selectNone();
-  };
-
-  const upgradeBulk = () => {
-    if (defaultRemoteAction === KATELLO_AGENT) {
-      upgradeBulkViaKatelloAgent();
-    } else {
-      upgradeBulkViaRemoteExecution();
-    }
-  };
+  const upgradeBulk = () => upgradeBulkViaRemoteExecution();
 
   const upgradeViaCustomizedRemoteExecution = selectedCount ?
     packagesUpdateUrl({
@@ -375,7 +321,6 @@ export const PackagesTab = () => {
     selectedResults.every(item => item.upgradable_versions?.length > 0);
   const disableUpgrade = () => selectedCount === 0 ||
     (selectAllMode && packageStatusSelected !== 'Upgradable') ||
-    (defaultRemoteAction === KATELLO_AGENT && selectAllMode && !areAllRowsSelected()) ||
     (!selectAllMode && !allUpgradable());
 
   const readOnlyBookmarks =
@@ -492,9 +437,6 @@ export const PackagesTab = () => {
   return (
     <div>
       <div id="packages-tab">
-        {showKatelloAgent && (
-          <KatelloAgentDeprecationAlert />
-        )}
         <TableWrapper
           {...{
             metadata,
@@ -638,7 +580,6 @@ export const PackagesTab = () => {
           hostId={hostId}
           key={hostId}
           hostName={hostname}
-          showKatelloAgent={showKatelloAgent}
           triggerPackageInstall={triggerPackageInstall}
         />
       }
