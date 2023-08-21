@@ -8,6 +8,7 @@ module Katello
                                                                :add_products, :remove_products]
     before_action :set_organization, :only => [:update, :show, :destroy, :sync,
                                                :add_products, :remove_products]
+    before_action :validate_sync_plan_products, :only => [:update, :add_products, :remove_products]
 
     def_param_group :sync_plan do
       param :name, String, :desc => N_("sync plan name"), :required => true, :action_aware => true
@@ -126,6 +127,10 @@ module Katello
 
     def set_organization
       @organization ||= @sync_plan.try(:organization)
+    end
+
+    def validate_sync_plan_products
+      @sync_plan.validate_and_update_products force_update: true
     end
   end
 end
