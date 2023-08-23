@@ -67,9 +67,10 @@ module Katello
       return UNKNOWN unless operatingsystem.is_a?(::Operatingsystem)
       release = operatingsystem.rhel_eos_schedule
       return NOT_APPLICABLE unless release
+      return UNKNOWN if RHEL_EOS_SCHEDULES[release].nil?
       return FULL_SUPPORT if Date.today <= RHEL_EOS_SCHEDULES[release]['full_support']
       return MAINTENANCE_SUPPORT if Date.today <= RHEL_EOS_SCHEDULES[release]['maintenance_support']
-      return APPROACHING_END_OF_SUPPORT if Date.today <= warn_date
+      return APPROACHING_END_OF_SUPPORT if warn_date.present? && Date.today <= warn_date
       return EXTENDED_SUPPORT if Date.today <= RHEL_EOS_SCHEDULES[release]['extended_support']
       return SUPPORT_ENDED
     end
@@ -80,6 +81,32 @@ module Katello
 
     def self.humanized_name
       'rhel_lifecycle'
+    end
+
+    def self.full_support_end_date(eos_schedule: nil)
+      return nil unless eos_schedule
+      RHEL_EOS_SCHEDULES[eos_schedule]&.[]('full_support')
+    end
+
+    def self.maintenance_support_end_date(eos_schedule: nil)
+      return nil unless eos_schedule
+      RHEL_EOS_SCHEDULES[eos_schedule]&.[]('maintenance_support')
+    end
+
+    def self.extended_support_end_date(eos_schedule: nil)
+      return nil unless eos_schedule
+      RHEL_EOS_SCHEDULES[eos_schedule]&.[]('extended_support')
+    end
+
+    def self.approaching_end_of_support_date(eos_schedule: nil)
+      return nil unless eos_schedule
+      eos_date(eos_schedule: eos_schedule) - EOS_WARNING_THRESHOLD
+    end
+
+    def self.eos_date(eos_schedule: nil)
+      return nil unless eos_schedule
+      RHEL_EOS_SCHEDULES[eos_schedule]&.[]('extended_support') ||
+        RHEL_EOS_SCHEDULES[eos_schedule]&.[]('maintenance_support')
     end
 
     def self.to_label(status, eos_date: nil)
@@ -110,14 +137,15 @@ module Katello
     end
 
     def eos_date
-      release = host&.operatingsystem&.rhel_eos_schedule
-      return nil unless release
-      RHEL_EOS_SCHEDULES[release]&.[]('extended_support') ||
-        RHEL_EOS_SCHEDULES[release]&.[]('maintenance_support')
+      self.class.eos_date(eos_schedule: rhel_eos_schedule)
     end
 
     def warn_date
       eos_date - EOS_WARNING_THRESHOLD
+    end
+
+    def rhel_eos_schedule
+      host&.operatingsystem&.rhel_eos_schedule
     end
 
     def to_global(_options = {})
@@ -134,6 +162,10 @@ module Katello
 
     def to_status(operatingsystem: nil)
       self.class.to_status(operatingsystem: operatingsystem || self.host&.operatingsystem)
+    end
+
+    def relevant?(_options = {})
+      host&.operatingsystem&.rhel_eos_schedule
     end
   end
 end

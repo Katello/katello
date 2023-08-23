@@ -31,6 +31,7 @@ module Katello
         has_one :purpose_usage_status_object, :class_name => 'Katello::PurposeUsageStatus', :foreign_key => 'host_id', :dependent => :destroy
         has_one :purpose_addons_status_object, :class_name => 'Katello::PurposeAddonsStatus', :foreign_key => 'host_id', :dependent => :destroy
         has_one :purpose_status_object, :class_name => 'Katello::PurposeStatus', :foreign_key => 'host_id', :dependent => :destroy
+        has_one :rhel_lifecycle_status_object, :class_name => 'Katello::RhelLifecycleStatus', :foreign_key => 'host_id', :dependent => :destroy
         has_one :hypervisor_host, :through => :subscription_facet
 
         scoped_search :on => :status, :relation => :subscription_status_object, :rename => :subscription_status,
@@ -41,6 +42,7 @@ module Katello
         scoped_search on: :status, relation: :purpose_usage_status_object, rename: :usage_status, complete_value: purpose_status_map
         scoped_search on: :status, relation: :purpose_addons_status_object, rename: :addons_status, complete_value: purpose_status_map
         scoped_search on: :status, relation: :purpose_status_object, rename: :purpose_status, complete_value: purpose_status_map
+        scoped_search on: :status, relation: :rhel_lifecycle_status_object, rename: :rhel_lifecycle_status, complete_value: rhel_lifecycle_status_map
 
         scoped_search :on => :release_version, :relation => :subscription_facet, :complete_value => true, :only_explicit => true
         scoped_search :on => :autoheal, :relation => :subscription_facet, :complete_value => true, :only_explicit => true
@@ -98,6 +100,10 @@ module Katello
       module ClassMethods
         def purpose_status_map
           ::Katello::PurposeStatus.status_map
+        end
+
+        def rhel_lifecycle_status_map
+          ::Katello::RhelLifecycleStatus.status_map
         end
 
         def find_by_purpose_addon(_key, operator, value)
