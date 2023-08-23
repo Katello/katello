@@ -6,7 +6,6 @@ module Katello
     EXTENDED_SUPPORT = 3
     APPROACHING_END_OF_SUPPORT = 4
     SUPPORT_ENDED = 5
-    NOT_APPLICABLE = 6
 
     RHEL_EOS_SCHEDULES = { # dates that each support category ends
       'RHEL9' => {
@@ -66,7 +65,7 @@ module Katello
     def self.to_status(operatingsystem: nil)
       return UNKNOWN unless operatingsystem.is_a?(::Operatingsystem)
       release = operatingsystem.rhel_eos_schedule
-      return NOT_APPLICABLE unless release
+      return UNKNOWN unless release
       return UNKNOWN if RHEL_EOS_SCHEDULES[release].nil?
       return FULL_SUPPORT if Date.today <= RHEL_EOS_SCHEDULES[release]['full_support']
       return MAINTENANCE_SUPPORT if Date.today <= RHEL_EOS_SCHEDULES[release]['maintenance_support']
@@ -125,8 +124,6 @@ module Katello
         end
       when SUPPORT_ENDED
         N_('Support ended')
-      when NOT_APPLICABLE
-        N_('Not applicable')
       else
         N_('Unknown')
       end
@@ -149,7 +146,7 @@ module Katello
     end
 
     def to_global(_options = {})
-      if [FULL_SUPPORT, MAINTENANCE_SUPPORT, EXTENDED_SUPPORT, NOT_APPLICABLE].include?(status)
+      if [FULL_SUPPORT, MAINTENANCE_SUPPORT, EXTENDED_SUPPORT].include?(status)
         ::HostStatus::Global::OK
       elsif [APPROACHING_END_OF_SUPPORT].include?(status)
         ::HostStatus::Global::WARN
@@ -164,6 +161,7 @@ module Katello
       self.class.to_status(operatingsystem: operatingsystem || self.host&.operatingsystem)
     end
 
+    # this status is only relevant for RHEL
     def relevant?(_options = {})
       host&.operatingsystem&.rhel_eos_schedule
     end
