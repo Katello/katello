@@ -80,7 +80,7 @@ export const RegistrationActivationKeys = ({
     <ActivationKeys
       activationKeys={pluginData?.activationKeys}
       organizationId={organizationId}
-      selectedKeys={(pluginValues?.activationKeys || [])}
+      selectedKeys={pluginValues?.activationKeys || []}
       hostGroupActivationKeys={pluginData?.hostGroupActivationKeys}
       hostGroupId={hostGroupId}
       pluginValues={pluginValues}
