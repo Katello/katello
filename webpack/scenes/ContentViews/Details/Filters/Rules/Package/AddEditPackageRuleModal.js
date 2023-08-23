@@ -222,7 +222,7 @@ const AddEditPackageRuleModal = ({
             isDisabled={saving || submitDisabled}
             type="submit"
           >
-            {selectedFilterRuleData ? __('Edit rule') : __('Add rule')}
+            {selectedFilterRuleData ? __('Save') : __('Add rule')}
           </Button>
           <Button ouiaId="add-edit-package-modal-cancel" variant="link" onClick={onClose}>
             {__('Cancel')}

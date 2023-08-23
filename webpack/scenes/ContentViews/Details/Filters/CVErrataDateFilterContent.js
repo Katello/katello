@@ -300,7 +300,7 @@ const CVErrataDateFilterContent = ({
                   isDisabled={saveDisabled}
                   type="submit"
                 >
-                  {__('Edit rule')}
+                  {__('Save')}
                 </Button>
                 <Link to={`/content_views/${cvId}#/filters`}>
                   <Button ouiaId="cancel-save-filter-rule-button" variant="link">
