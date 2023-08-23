@@ -65,12 +65,16 @@ module Katello
     def self.to_status(operatingsystem: nil)
       return UNKNOWN unless operatingsystem.is_a?(::Operatingsystem)
       release = operatingsystem.rhel_eos_schedule
+      approach_date = warn_date(eos_schedule: release)
+      end_of_support_date = eos_date(eos_schedule: release)
       return UNKNOWN unless release
       return UNKNOWN if RHEL_EOS_SCHEDULES[release].nil?
       return FULL_SUPPORT if Date.today <= RHEL_EOS_SCHEDULES[release]['full_support']
       return MAINTENANCE_SUPPORT if Date.today <= RHEL_EOS_SCHEDULES[release]['maintenance_support']
-      return APPROACHING_END_OF_SUPPORT if warn_date.present? && Date.today <= warn_date
-      return EXTENDED_SUPPORT if Date.today <= RHEL_EOS_SCHEDULES[release]['extended_support']
+      if approach_date.present? && Date.today >= approach_date && Date.today <= end_of_support_date
+        return APPROACHING_END_OF_SUPPORT 
+      end
+      return EXTENDED_SUPPORT if Date.today <= end_of_support_date
       return SUPPORT_ENDED
     end
 
@@ -108,6 +112,13 @@ module Katello
         RHEL_EOS_SCHEDULES[eos_schedule]&.[]('maintenance_support')
     end
 
+    def self.warn_date(eos_schedule: nil)
+      return nil unless eos_schedule
+      end_of_support_date = eos_date(eos_schedule: eos_schedule)
+      return nil unless end_of_support_date
+      eos_date(eos_schedule: eos_schedule) - EOS_WARNING_THRESHOLD
+    end
+
     def self.to_label(status, eos_date: nil)
       case status
       when FULL_SUPPORT
@@ -138,7 +149,7 @@ module Katello
     end
 
     def warn_date
-      eos_date - EOS_WARNING_THRESHOLD
+      self.class.warn_date(eos_schedule: rhel_eos_schedule)
     end
 
     def rhel_eos_schedule
