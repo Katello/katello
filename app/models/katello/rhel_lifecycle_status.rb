@@ -72,7 +72,7 @@ module Katello
       return FULL_SUPPORT if Date.today <= RHEL_EOS_SCHEDULES[release]['full_support']
       return MAINTENANCE_SUPPORT if Date.today <= RHEL_EOS_SCHEDULES[release]['maintenance_support']
       if approach_date.present? && Date.today >= approach_date && Date.today <= end_of_support_date
-        return APPROACHING_END_OF_SUPPORT 
+        return APPROACHING_END_OF_SUPPORT
       end
       return EXTENDED_SUPPORT if Date.today <= end_of_support_date
       return SUPPORT_ENDED
@@ -99,11 +99,6 @@ module Katello
     def self.extended_support_end_date(eos_schedule: nil)
       return nil unless eos_schedule
       RHEL_EOS_SCHEDULES[eos_schedule]&.[]('extended_support')
-    end
-
-    def self.approaching_end_of_support_date(eos_schedule: nil)
-      return nil unless eos_schedule
-      eos_date(eos_schedule: eos_schedule) - EOS_WARNING_THRESHOLD
     end
 
     def self.eos_date(eos_schedule: nil)
@@ -153,7 +148,7 @@ module Katello
     end
 
     def rhel_eos_schedule
-      host&.operatingsystem&.rhel_eos_schedule
+      host&.operatingsystem&.rhel_eos_schedule(arch_name: host&.arch&.name)
     end
 
     def to_global(_options = {})

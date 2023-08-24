@@ -45,12 +45,11 @@ module Katello
         name.match(/.*atomic.*/i)
       end
 
-      def rhel_eos_schedule
+      def rhel_eos_schedule(arch_name: nil)
         return nil unless name == "RedHat" # using name and not title so we get specifically RHEL, not rebuilds
         return "RHEL#{major}" unless major == "7"
-        arch_name = self.host&.arch&.name
         case arch_name
-        when "x86_64"
+        when "x86_64", nil
           "RHEL7"
         when "ppc64le"
           "RHEL7 (POWER9)"

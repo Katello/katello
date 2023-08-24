@@ -504,7 +504,7 @@ module Katello
       end
 
       def approaching_end_of_support_date
-        ::Katello::RhelLifecycleStatus.approaching_end_of_support_date(eos_schedule: rhel_eos_schedule)
+        ::Katello::RhelLifecycleStatus.warn_date(eos_schedule: rhel_eos_schedule)
       end
 
       def end_of_support_date
