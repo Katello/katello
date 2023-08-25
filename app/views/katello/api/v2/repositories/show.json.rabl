@@ -7,7 +7,6 @@ extends 'katello/api/v2/repositories/base'
 glue(@resource.root) do
   attributes :content_type
   attributes :docker_upstream_name
-  attributes :docker_tags_whitelist
   attributes :include_tags
   attributes :exclude_tags
   attributes :verify_ssl_on_sync

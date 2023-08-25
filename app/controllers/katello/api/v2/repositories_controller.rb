@@ -50,7 +50,6 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
       param :checksum_type, String, :desc => N_("Checksum of the repository, currently 'sha1' & 'sha256' are supported")
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
-      param :docker_tags_whitelist, Array, :desc => N_("Comma-separated list of tags to sync for Container Image repository (Deprecated)"), :deprecated => true
       param :include_tags, Array, :desc => N_("Comma-separated list of tags to sync for a container image repository")
       param :exclude_tags, Array, :desc => N_("Comma-separated list of tags to exclude when syncing a container image repository. Default: any tag ending in \"-source\"")
       param :download_policy, ["immediate", "on_demand"], :desc => N_("download policy for yum, deb, and docker repos (either 'immediate' or 'on_demand')")
@@ -588,7 +587,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
               {:os_versions => []}, :deb_releases, :deb_components, :deb_architectures, :description,
               :http_proxy_policy, :http_proxy_id, :retain_package_versions_count, {:ignorable_content => []}
              ]
-      keys += [{:docker_tags_whitelist => []}, {:include_tags => []}, {:exclude_tags => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
+      keys += [{:include_tags => []}, {:exclude_tags => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
       keys += [:ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token] if params[:action] == 'create' || @repository&.ansible_collection?
       keys += [:label, :content_type] if params[:action] == "create"
 
@@ -628,11 +627,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
                                                             :metadata_expire).to_h.with_indifferent_access)
       root.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       if root.docker?
-        if repo_params[:docker_tags_whitelist].present?
-          root.include_tags = repo_params.fetch(:docker_tags_whitelist, [])
-        else
-          root.include_tags = repo_params.fetch(:include_tags, [])
-        end
+        root.include_tags = repo_params.fetch(:include_tags, [])
       end
       root.exclude_tags = repo_params.fetch(:exclude_tags, ['*-source']) if root.docker?
       root.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
