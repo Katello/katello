@@ -31,6 +31,7 @@ const tracerNotInstalledResponse = {
   ...tracerInstalledResponse,
   content_facet_attributes: {
     katello_tracer_installed: false,
+    katello_tracer_rpm_available: false,
   },
 };
 
@@ -393,6 +394,30 @@ describe('Without tracer installed', () => {
     expect(queryByText('via remote execution')).not.toBeInTheDocument();
 
     assertNockRequest(jobInvocationScope, done);
+  });
+
+  test('Detects if tracer package is not available to install', async () => {
+    const { getByText, queryByText }
+      = renderWithRedux(<TracesTab />, renderOptions(false));
+
+    await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
+    const enableTracesButton = getByText('Enable Traces');
+    enableTracesButton.click();
+
+    expect(getByText('Before continuing, ensure that all of the following prerequisites are met:')).toBeInTheDocument();
+  });
+
+  test('Detects when tracer package is available to install', async () => {
+    tracerNotInstalledResponse.content_facet_attributes.katello_tracer_rpm_available = true;
+
+    const { getByText, queryByText }
+      = renderWithRedux(<TracesTab />, renderOptions(false));
+
+    await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
+    const enableTracesButton = getByText('Enable Traces');
+    enableTracesButton.click();
+
+    expect(queryByText('Before continuing, ensure that all of the following prerequisites are met:')).not.toBeInTheDocument();
   });
 
   test('Can enable tracer via customized remote execution', async () => {

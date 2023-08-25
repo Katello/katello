@@ -36,6 +36,7 @@ const TracesTab = () => {
   } = hostDetails;
   const showActions = can(invokeRexJobs, userPermissionsFromHostDetails({ hostDetails }));
   const showEnableTracer = (contentFacetAttributes?.katello_tracer_installed === false);
+  const tracerRpmAvailable = contentFacetAttributes?.katello_tracer_rpm_available;
   const emptyContentTitle = showActions ? __('No applications to restart') : __('Traces not available');
   const tracesNotAvailBody = showEnableTracer ? __('Traces may be enabled by a user with the appropriate permissions.') :
     __('Traces will be shown here to a user with the appropriate permissions.');
@@ -180,7 +181,9 @@ const TracesTab = () => {
 
   ) : null;
   const status = useSelector(state => selectHostTracesStatus(state));
-  if (showEnableTracer && showActions) return <TracesEnabler hostname={hostname} />;
+  if (showEnableTracer && showActions) {
+    return <TracesEnabler hostname={hostname} tracerRpmAvailable={tracerRpmAvailable} />;
+  }
 
   if (!hostId) return <Skeleton />;
 
