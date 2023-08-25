@@ -3,7 +3,6 @@ module Katello
   class RootRepository < Katello::Model
     audited :except => [:content_id]
     serialize :ignorable_content
-    serialize :docker_tags_whitelist
     serialize :include_tags
     serialize :exclude_tags
     serialize :os_versions
@@ -358,11 +357,6 @@ module Katello
 
     def content
       Katello::Content.find_by(:cp_content_id => self.content_id, :organization_id => self.product.organization_id)
-    end
-
-    # For API support during deprecation period.
-    def docker_tags_whitelist
-      include_tags
     end
 
     def docker?
