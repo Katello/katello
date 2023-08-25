@@ -121,6 +121,36 @@ module Katello
         SmartProxy.joins(:smart_proxy_alternate_content_sources).where('katello_smart_proxy_alternate_content_sources.smart_proxy_id' => self.id)
       end
 
+      def update_content_counts!
+        # {:content_view_versions=>{87=>{:repositories=>{1=>{:rpms=>98, :module_streams=>9898}}}}}
+        new_content_counts = { content_view_versions: {} }
+        smart_proxy_helper = ::Katello::SmartProxyHelper.new(self)
+        repos = smart_proxy_helper.repositories_available_to_capsule
+        return new_content_counts if repos.empty?
+
+        repos.each do |repo|
+          repo_mirror_service = repo.backend_service(self).with_mirror_adapter
+          repo_content_counts = repo_mirror_service.latest_content_counts
+          translated_counts = {}
+          repo_content_counts.each do |name, count|
+            count = count[:count]
+            # Some content units in Pulp have the same model
+            if name == 'rpm.package' && repo.content_counts['srpm'] > 0
+              translated_counts['srpm'] = repo_mirror_service.count_by_pulpcore_type(::Katello::Pulp3::Srpm)
+              translated_counts['rpm'] = count - translated_counts['srpm']
+            elsif name == 'container.manifest' && repo.content_counts['docker_manifest_list'] > 0
+              translated_counts['docker_manifest_list'] = repo_mirror_service.count_by_pulpcore_type(::Katello::Pulp3::DockerManifestList)
+              translated_counts['docker_manifest'] = count - translated_counts['docker_manifest_list']
+            else
+              translated_counts[::Katello::Pulp3::PulpContentUnit.katello_name_from_pulpcore_name(name, repo)] = count
+            end
+          end
+          new_content_counts[:content_view_versions][repo.content_view_version_id] ||= { repositories: {} }
+          new_content_counts[:content_view_versions][repo.content_view_version_id][:repositories][repo.id] = translated_counts
+        end
+        update(content_counts: new_content_counts)
+      end
+
       def sync_container_gateway
         if has_feature?(::SmartProxy::CONTAINER_GATEWAY_FEATURE)
           update_container_repo_list

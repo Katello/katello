@@ -54,14 +54,14 @@ module Katello
       @plugin.permission :manage_capsule_content,
                          {
                            'katello/api/v2/capsule_content' => [:add_lifecycle_environment, :remove_lifecycle_environment,
-                                                                :sync, :reclaim_space, :cancel_sync],
+                                                                :update_counts, :sync, :reclaim_space, :cancel_sync],
                            'katello/api/v2/capsules' => [:index, :show]
                          },
                          :resource_type => 'SmartProxy'
 
       @plugin.permission :view_capsule_content,
                          {
-                           'katello/api/v2/capsule_content' => [:lifecycle_environments, :available_lifecycle_environments, :sync_status],
+                           'katello/api/v2/capsule_content' => [:counts, :lifecycle_environments, :available_lifecycle_environments, :sync_status],
                            'smart_proxies' => [:pulp_storage, :pulp_status, :show_with_content]
                          },
                          :resource_type => "SmartProxy"

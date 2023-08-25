@@ -2,6 +2,7 @@ module Katello
   module Pulp3
     class Erratum < PulpContentUnit
       include LazyAccessor
+      PULPCORE_CONTENT_TYPE = "rpm.advisory".freeze
 
       def self.content_api
         PulpRpmClient::ContentAdvisoriesApi.new(Katello::Pulp3::Api::Yum.new(SmartProxy.pulp_primary!).api_client)

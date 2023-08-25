@@ -3,6 +3,7 @@ module Katello
     class Deb < PulpContentUnit
       include LazyAccessor
       CONTENT_TYPE = "deb".freeze
+      PULPCORE_CONTENT_TYPE = "deb.package".freeze
 
       def self.content_api
         PulpDebClient::ContentPackagesApi.new(Katello::Pulp3::Api::Apt.new(SmartProxy.pulp_primary!).api_client)

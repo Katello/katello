@@ -216,6 +216,18 @@ module Katello
         end
       end
 
+      def count_by_pulpcore_type(service_class)
+        # Currently only supports SRPMs and Docker Manifest Lists
+        fail NotImplementedError unless [::Katello::Pulp3::Srpm, ::Katello::Pulp3::DockerManifestList].include?(service_class)
+        count = service_class.content_api(smart_proxy).list(service_class.page_options(limit: 1, fields: ['count'], repository_version: version_href)).count
+        return 0 if count.nil?
+        count
+      end
+
+      def latest_content_counts
+        api.repository_versions_api.read(version_href)&.content_summary&.present
+      end
+
       def pulp3_enabled_repo_types
         Katello::RepositoryTypeManager.enabled_repository_types.values.select do |repository_type|
           smart_proxy.pulp3_repository_type_support?(repository_type)

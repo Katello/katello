@@ -3,6 +3,7 @@ module Katello
     class FileUnit < PulpContentUnit
       include LazyAccessor
       CONTENT_TYPE = "file".freeze
+      PULPCORE_CONTENT_TYPE = "file.file".freeze
 
       def self.content_api
         PulpFileClient::ContentFilesApi.new(Katello::Pulp3::Api::File.new(SmartProxy.pulp_primary!).api_client)

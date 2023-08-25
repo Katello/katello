@@ -133,6 +133,21 @@ module Katello
       end
     end
 
+    def test_update_counts
+      assert_async_task ::Actions::Katello::CapsuleContent::UpdateContentCounts do |capsule|
+        assert_equal proxy_with_pulp.id, capsule.id
+      end
+
+      post :update_counts, params: { :id => proxy_with_pulp.id }
+      assert_response :success
+    end
+
+    def test_counts
+      SmartProxy.any_instance.expects(:content_counts).once
+      get :counts, params: { :id => proxy_with_pulp.id }
+      assert_response :success
+    end
+
     def test_reclaim_space
       assert_async_task ::Actions::Pulp3::CapsuleContent::ReclaimSpace do |capsule|
         assert_equal proxy_with_pulp.id, capsule.id

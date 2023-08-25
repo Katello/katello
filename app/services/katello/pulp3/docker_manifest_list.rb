@@ -2,9 +2,10 @@ module Katello
   module Pulp3
     class DockerManifestList < PulpContentUnit
       include LazyAccessor
+      PULPCORE_CONTENT_TYPE = "container.manifest".freeze
 
-      def self.content_api
-        PulpContainerClient::ContentManifestsApi.new(Katello::Pulp3::Api::Docker.new(SmartProxy.pulp_primary!).api_client)
+      def self.content_api(smart_proxy = SmartProxy.pulp_primary!)
+        PulpContainerClient::ContentManifestsApi.new(Katello::Pulp3::Api::Docker.new(smart_proxy).api_client)
       end
 
       def self.ids_for_repository(repo_id)
@@ -13,10 +14,14 @@ module Katello
         repo_content_list.map { |content| content.try(:pulp_href) }
       end
 
-      def self.content_unit_list(page_opts)
+      def self.page_options(page_opts = {})
         page_opts[:media_type] = ['application/vnd.docker.distribution.manifest.list.v2+json',
                                   'application/vnd.oci.image.index.v1+json']
-        self.content_api.list(page_opts)
+        page_opts
+      end
+
+      def self.content_unit_list(page_opts = {})
+        self.content_api.list(self.page_options(page_opts))
       end
 
       def self.generate_model_row(unit)

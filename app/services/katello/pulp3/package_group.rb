@@ -2,6 +2,7 @@ module Katello
   module Pulp3
     class PackageGroup < PulpContentUnit
       include LazyAccessor
+      PULPCORE_CONTENT_TYPE = "rpm.packagegroup".freeze
 
       lazy_accessor :optional_package_names, :mandatory_package_names,
                     :conditional_package_names, :default_package_names, :_id,

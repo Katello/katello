@@ -32,6 +32,7 @@ Katello::RepositoryTypeManager.register('python') do
 
   generic_content_type 'python_package',
                        pluralized_name: "Python Packages",
+                       pulpcore_name: "python.python",
                        model_class: Katello::GenericContentUnit,
                        pulp3_api: PulpPythonClient::ContentPackagesApi,
                        pulp3_model: PulpPythonClient::PythonPythonPackageContent,

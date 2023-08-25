@@ -2,6 +2,7 @@ module Katello
   module Pulp3
     class ModuleStream < PulpContentUnit
       include LazyAccessor
+      PULPCORE_CONTENT_TYPE = "rpm.modulemd".freeze
 
       def self.content_api
         PulpRpmClient::ContentModulemdsApi.new(Katello::Pulp3::Api::Yum.new(SmartProxy.pulp_primary!).api_client)
