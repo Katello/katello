@@ -7,6 +7,41 @@ module Katello
       # Any class that extends this class should define:
       # Class#update_model
 
+      def self.katello_name_from_pulpcore_name(pulpcore_name, repo)
+        # Counts shouldn't be needed for more than the default generic content unit type.
+        if repo.generic?
+          generic_unit = repo.repository_type.default_managed_content_type
+          if pulpcore_name == generic_unit.pulpcore_name
+            return generic_unit.content_type
+          end
+        end
+
+        case pulpcore_name
+        when ::Katello::Pulp3::Rpm::PULPCORE_CONTENT_TYPE
+          ::Katello::Rpm::CONTENT_TYPE
+        when ::Katello::Pulp3::Srpm::PULPCORE_CONTENT_TYPE
+          ::Katello::Srpm::CONTENT_TYPE
+        when ::Katello::Pulp3::PackageGroup::PULPCORE_CONTENT_TYPE
+          ::Katello::PackageGroup::CONTENT_TYPE
+        when ::Katello::Pulp3::Erratum::PULPCORE_CONTENT_TYPE
+          ::Katello::Erratum::CONTENT_TYPE
+        when ::Katello::Pulp3::DockerTag::PULPCORE_CONTENT_TYPE
+          ::Katello::DockerTag::CONTENT_TYPE
+        when ::Katello::Pulp3::DockerManifest::PULPCORE_CONTENT_TYPE
+          ::Katello::DockerManifest::CONTENT_TYPE
+        when ::Katello::Pulp3::DockerManifestList::PULPCORE_CONTENT_TYPE
+          ::Katello::DockerManifestList::CONTENT_TYPE
+        when ::Katello::Pulp3::FileUnit::PULPCORE_CONTENT_TYPE
+          ::Katello::FileUnit::CONTENT_TYPE
+        when ::Katello::Pulp3::Deb::PULPCORE_CONTENT_TYPE
+          ::Katello::Deb::CONTENT_TYPE
+        when ::Katello::Pulp3::AnsibleCollection::PULPCORE_CONTENT_TYPE
+          ::Katello::AnsibleCollection::CONTENT_TYPE
+        else
+          pulpcore_name
+        end
+      end
+
       def self.content_api
         fail NotImplementedError
       end

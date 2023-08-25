@@ -23,6 +23,8 @@ Katello::Engine.routes.draw do
             resource :content, :only => [], :controller => 'capsule_content' do
               get :lifecycle_environments
               get :available_lifecycle_environments
+              get :counts
+              post :update_counts
               post :sync
               get :sync, :action => :sync_status
               delete :sync, :action => :cancel_sync

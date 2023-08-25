@@ -22,6 +22,7 @@ Katello::RepositoryTypeManager.register('ostree') do
 
   generic_content_type 'ostree_ref',
                        pluralized_name: "OSTree Refs",
+                       pulpcore_name: "ostree.refs",
                        model_class: Katello::GenericContentUnit,
                        pulp3_api: PulpOstreeClient::ContentRefsApi,
                        pulp3_service_class: Katello::Pulp3::GenericContentUnit,

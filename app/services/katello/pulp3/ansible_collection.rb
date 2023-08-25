@@ -2,6 +2,7 @@ module Katello
   module Pulp3
     class AnsibleCollection < PulpContentUnit
       include LazyAccessor
+      PULPCORE_CONTENT_TYPE = "ansible.collection".freeze
 
       def self.content_api
         PulpAnsibleClient::ContentCollectionVersionsApi.new(Katello::Pulp3::Api::AnsibleCollection.new(SmartProxy.pulp_primary!).api_client)

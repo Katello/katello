@@ -20,6 +20,19 @@ module Katello
       param :environment_id, Integer, :desc => N_('Id of the lifecycle environment'), :required => true
     end
 
+    api :GET, '/capsules/:id/content/counts', N_('List content counts for the smart proxy')
+    param :id, Integer, :desc => N_('Id of the smart proxy'), :required => true
+    def counts
+      render json: @capsule.content_counts.to_json
+    end
+
+    api :POST, '/capsules/:id/content/update_counts', N_('Update content counts for the smart proxy')
+    param :id, Integer, :desc => N_('Id of the smart proxy'), :required => true
+    def update_counts
+      task = async_task(::Actions::Katello::CapsuleContent::UpdateContentCounts, @capsule)
+      respond_for_async :resource => task
+    end
+
     api :GET, '/capsules/:id/content/lifecycle_environments', N_('List the lifecycle environments attached to the smart proxy')
     param_group :lifecycle_environments
     def lifecycle_environments

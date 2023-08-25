@@ -2,6 +2,7 @@ module Katello
   module Pulp3
     class Srpm < PulpContentUnit
       include LazyAccessor
+      PULPCORE_CONTENT_TYPE = "rpm.package".freeze
 
       CONTENT_TYPE = "srpm".freeze
 
@@ -13,8 +14,8 @@ module Katello
                     :changelog, :group, :size, :url, :build_time, :group,
                     :initializer => :pulp_facts
 
-      def self.content_api
-        PulpRpmClient::ContentPackagesApi.new(Katello::Pulp3::Api::Yum.new(SmartProxy.pulp_primary!).api_client)
+      def self.content_api(smart_proxy = SmartProxy.pulp_primary!)
+        PulpRpmClient::ContentPackagesApi.new(Katello::Pulp3::Api::Yum.new(smart_proxy).api_client)
       end
 
       def self.page_options(page_opts = {})

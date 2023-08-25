@@ -3,6 +3,7 @@ module Actions
     module CapsuleContent
       class SyncCapsule < ::Actions::EntryAction
         # rubocop:disable Metrics/MethodLength
+        execution_plan_hooks.use :update_content_counts, :on => :success
         def plan(smart_proxy, options = {})
           plan_self(:smart_proxy_id => smart_proxy.id)
           action_subject(smart_proxy)
@@ -58,6 +59,11 @@ module Actions
             end
             repositories - repositories_to_skip
           end
+        end
+
+        def update_content_counts(_execution_plan)
+          smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
+          ::ForemanTasks.async_task(::Actions::Katello::CapsuleContent::UpdateContentCounts, smart_proxy)
         end
 
         def resource_locks
