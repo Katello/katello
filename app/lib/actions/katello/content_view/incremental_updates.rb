@@ -4,7 +4,7 @@ module Actions
       class IncrementalUpdates < Actions::EntryAction
         include Helpers::Presenter
 
-        def plan(version_environments, composite_version_environments, content, dep_solve, hosts, description) # rubocop:disable Metrics/MethodLength
+        def plan(version_environments, composite_version_environments, content, dep_solve, hosts, description)
           old_new_version_map = {}
           output_for_version_ids = []
 

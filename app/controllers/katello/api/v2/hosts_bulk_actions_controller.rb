@@ -1,5 +1,4 @@
 module Katello
-  # rubocop:disable Metrics/ClassLength
   class Api::V2::HostsBulkActionsController < Api::V2::ApiController
     include Concerns::Api::V2::BulkHostsExtensions
     include Katello::Concerns::Api::V2::ContentOverridesController
