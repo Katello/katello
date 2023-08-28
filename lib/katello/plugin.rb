@@ -242,7 +242,6 @@ Foreman::Plugin.register :katello do
   logger :registry_proxy, :enabled => true
   logger :katello_events, :enabled => true
   logger :candlepin_events, :enabled => true
-  logger :agent, :enabled => true
 
   widget 'errata_widget', :name => 'Latest Errata', :sizey => 1, :sizex => 6
   widget 'content_views_widget', :name => 'Content Views', :sizey => 1, :sizex => 6
@@ -456,18 +455,6 @@ Foreman::Plugin.register :katello do
         default: 60 * 20,
         full_name: N_('Timeout when refreshing a manifest (in seconds)'),
         description: N_("Manifest refresh timeout")
-
-      setting 'content_action_accept_timeout',
-        type: :integer,
-        default: 20,
-        full_name: N_('Accept action timeout'),
-        description: N_("Time in seconds to wait for a host to pick up a katello-agent action")
-
-      setting 'content_action_finish_timeout',
-        type: :integer,
-        default: 3600,
-        full_name: N_('Finish action timeout'),
-        description: N_("Time in seconds to wait for a host to finish a katello-agent action")
 
       setting 'subscription_connection_enabled',
         type: :boolean,

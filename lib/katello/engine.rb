@@ -56,14 +56,6 @@ module Katello
           :subscription_name => 'candlepin_events',
           :client_id => 'katello_candlepin_event_monitor'
         },
-        :agent => {
-          :client_queue_format => 'pulp.agent.%s',
-          :event_queue_name => 'katello.agent',
-          :broker_url => 'amqps://localhost:5671',
-          :broker_ssl_cert_file => SETTINGS[:ssl_certificate],
-          :broker_ssl_key_file => SETTINGS[:ssl_priv_key],
-          :broker_ssl_ca_file => SETTINGS[:ssl_ca_file]
-        }
       }
 
       SETTINGS[:katello] = default_settings.deep_merge(SETTINGS[:katello] || {})
@@ -148,7 +140,6 @@ module Katello
 
       Katello::EventDaemon::Runner.register_service(:candlepin_events, Katello::CandlepinEventListener)
       Katello::EventDaemon::Runner.register_service(:katello_events, Katello::EventMonitor::PollerThread)
-      Katello::EventDaemon::Runner.register_service(:katello_agent_events, Katello::EventDaemon::Services::AgentEventReceiver) if ::Katello.with_katello_agent?
 
       # Lib Extensions
       ::Foreman::Renderer::Scope::Variables::Base.include Katello::Concerns::RendererExtensions
@@ -226,7 +217,6 @@ module Katello
       Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
       Katello::EventQueue.register_event(Katello::Events::DeleteLatestContentViewVersion::EVENT_TYPE, Katello::Events::DeleteLatestContentViewVersion)
       Katello::EventQueue.register_event(Katello::Events::GenerateHostApplicability::EVENT_TYPE, Katello::Events::GenerateHostApplicability)
-      Katello::EventQueue.register_event(Katello::Events::DeleteHostAgentQueue::EVENT_TYPE, Katello::Events::DeleteHostAgentQueue)
       Katello::EventQueue.register_event(Katello::Events::DeletePool::EVENT_TYPE, Katello::Events::DeletePool)
     end
 
@@ -240,10 +230,6 @@ module Katello
   # check whether foreman_remote_execution to integrate is available in the system
   def self.with_remote_execution?
     Foreman::Plugin.installed?("foreman_remote_execution")
-  end
-
-  def self.with_katello_agent?
-    !!SETTINGS.dig(:katello, :agent, :enabled)
   end
 
   def self.with_ansible?
