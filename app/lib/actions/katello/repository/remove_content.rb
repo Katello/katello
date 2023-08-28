@@ -12,10 +12,14 @@ module Actions
           unless repository.content_view.default?
             fail _("Can only remove content from within the Default Content View")
           end
+          original_content_units = content_units
+          if (repository.docker? && content_units.first.class::CONTENT_TYPE == 'docker_manifest')
+            content_units = content_units.reject { |dm| dm.docker_tags.count > 0 || dm.docker_manifest_list.count > 0 }
+            Rails.logger.warn("Docker Manifests with tags or manifest lists will be ignored; continuing...") if original_content_units.count != content_units.count
+            fail _("No docker manifests to delete after ignoring manifests with tags or manifest lists") if content_units.count == 0
+          end
 
           action_subject(repository)
-
-          content_unit_ids = content_units.map(&:id)
           if repository.generic?
             content_unit_type = options[:content_type] || content_units.first.content_type
           else
