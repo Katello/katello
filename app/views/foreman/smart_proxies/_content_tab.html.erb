@@ -1,5 +1,3 @@
 <%= javascript_include_tag *webpack_asset_paths('katello', extension: 'js') %>
-
-<br />
 <% @smartProxyId= @smart_proxy.id %>
 <%= react_component('Content', smartProxyId: @smartProxyId,)  %>
