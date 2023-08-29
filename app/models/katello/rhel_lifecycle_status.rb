@@ -7,43 +7,47 @@ module Katello
     APPROACHING_END_OF_SUPPORT = 4
     SUPPORT_ENDED = 5
 
+    def self.end_of_day(date)
+      DateTime.parse(date.to_s).end_of_day.utc
+    end
+
     RHEL_EOS_SCHEDULE_INDEXES = { # dates that each support category ends
       'RHEL9' => {
-        'full_support' => Date.parse('2027-05-31'),
-        'maintenance_support' => Date.parse('2032-05-31'),
-        'extended_support' => Date.parse('2035-05-31')
+        'full_support' => end_of_day('2027-05-31'),
+        'maintenance_support' => end_of_day('2032-05-31'),
+        'extended_support' => end_of_day('2035-05-31')
       },
       'RHEL8' => {
-        'full_support' => Date.parse('2024-05-31'),
-        'maintenance_support' => Date.parse('2029-05-31'),
-        'extended_support' => Date.parse('2032-05-31')
+        'full_support' => end_of_day('2024-05-31'),
+        'maintenance_support' => end_of_day('2029-05-31'),
+        'extended_support' => end_of_day('2032-05-31')
       },
       'RHEL7' => {
-        'full_support' => Date.parse('2019-08-06'),
-        'maintenance_support' => Date.parse('2024-06-30'),
-        'extended_support' => Date.parse('2028-06-30')
+        'full_support' => end_of_day('2019-08-06'),
+        'maintenance_support' => end_of_day('2024-06-30'),
+        'extended_support' => end_of_day('2028-06-30')
       },
       'RHEL7 (System z (Structure A))' => {
-        'full_support' => Date.parse('2019-08-06'),
-        'maintenance_support' => Date.parse('2021-05-31')
+        'full_support' => end_of_day('2019-08-06'),
+        'maintenance_support' => end_of_day('2021-05-31')
       },
       'RHEL7 (ARM)' => {
-        'full_support' => Date.parse('2019-08-06'),
-        'maintenance_support' => Date.parse('2020-11-30')
+        'full_support' => end_of_day('2019-08-06'),
+        'maintenance_support' => end_of_day('2020-11-30')
       },
       'RHEL7 (POWER9)' => {
-        'full_support' => Date.parse('2019-08-06'),
-        'maintenance_support' => Date.parse('2021-05-31')
+        'full_support' => end_of_day('2019-08-06'),
+        'maintenance_support' => end_of_day('2021-05-31')
       },
       'RHEL6' => {
-        'full_support' => Date.parse('2016-05-10'),
-        'maintenance_support' => Date.parse('2020-11-30'),
-        'extended_support' => Date.parse('2024-06-30')
+        'full_support' => end_of_day('2016-05-10'),
+        'maintenance_support' => end_of_day('2020-11-30'),
+        'extended_support' => end_of_day('2024-06-30')
       },
       'RHEL5' => {
-        'full_support' => Date.parse('2013-01-08'),
-        'maintenance_support' => Date.parse('2017-03-31'),
-        'extended_support' => Date.parse('2020-11-30')
+        'full_support' => end_of_day('2013-01-08'),
+        'maintenance_support' => end_of_day('2017-03-31'),
+        'extended_support' => end_of_day('2020-11-30')
       }
     }.freeze
 

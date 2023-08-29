@@ -38,8 +38,8 @@ module Katello
       eos_schedule_data.each do |_, schedule|
         assert schedule.is_a?(Hash)
         %w[full_support maintenance_support].each { |support_category| assert schedule.key?(support_category) }
-        schedule.each do |support_category, date|
-          assert date.is_a?(Date)
+        schedule.each do |support_category, end_time|
+          assert end_time.is_a?(Time)
           assert_includes %w[full_support maintenance_support extended_support], support_category
         end
       end
