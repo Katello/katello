@@ -435,6 +435,12 @@ module Katello
       assert_equal expected_date, host.maintenance_support_end_date
     end
 
+    def test_approaching_end_of_maintenance_date
+      host.expects(:rhel_eos_schedule_index).returns('RHEL9')
+      expected_date = ::Katello::RhelLifecycleStatus.maintenance_warn_date(eos_schedule_index: 'RHEL9')
+      assert_equal expected_date, host.approaching_end_of_maintenance_date
+    end
+
     def test_extended_support_end_date
       host.expects(:rhel_eos_schedule_index).returns('RHEL9')
       expected_date = ::Katello::RhelLifecycleStatus.extended_support_end_date(eos_schedule_index: 'RHEL9')

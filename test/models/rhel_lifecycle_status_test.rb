@@ -72,6 +72,7 @@ module Katello
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
       host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
       fake_full_support_end_date(Date.today + 2.years)
+      fake_maintenance_support_end_date(Date.today + 5.years)
       fake_extended_support_end_date(Date.today + 10.years)
       assert_equal Katello::RhelLifecycleStatus::FULL_SUPPORT, status.to_status
     end
@@ -81,7 +82,7 @@ module Katello
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
       host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
       fake_full_support_end_date(Date.today - 1.year)
-      fake_maintenance_support_end_date(Date.today + 1.year)
+      fake_maintenance_support_end_date(Date.today + 2.years)
       fake_extended_support_end_date(Date.today + 10.years)
       assert_equal Katello::RhelLifecycleStatus::MAINTENANCE_SUPPORT, status.to_status
     end

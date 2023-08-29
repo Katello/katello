@@ -282,7 +282,6 @@ module Katello
       def test_unregister_host
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-        @host.content_facet.expects(:cves_changed?).returns(false)
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Katello::EventQueue.expects(:push_event).never

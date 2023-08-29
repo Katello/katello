@@ -495,6 +495,10 @@ module Katello
         ::Katello::RhelLifecycleStatus.full_support_end_date(eos_schedule_index: rhel_eos_schedule_index)
       end
 
+      def approaching_end_of_maintenance_date
+        ::Katello::RhelLifecycleStatus.maintenance_warn_date(eos_schedule_index: rhel_eos_schedule_index)
+      end
+
       def maintenance_support_end_date
         ::Katello::RhelLifecycleStatus.maintenance_support_end_date(eos_schedule_index: rhel_eos_schedule_index)
       end
