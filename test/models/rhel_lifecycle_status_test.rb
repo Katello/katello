@@ -20,7 +20,7 @@ module Katello
     end
 
     def test_eos_schedule_constants
-      eos_schedule_data = Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE_INDEXES
+      eos_schedule_data = Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE
       assert eos_schedule_data.is_a?(Hash)
       [
         'RHEL6',
@@ -56,15 +56,15 @@ module Katello
     end
 
     def fake_full_support_end_date(date)
-      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE_INDEXES[release].expects(:[]).with("full_support").at_least_once.returns(date)
+      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE[release].expects(:[]).with("full_support").at_least_once.returns(date)
     end
 
     def fake_maintenance_support_end_date(date)
-      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE_INDEXES[release].expects(:[]).with("maintenance_support").at_least_once.returns(date)
+      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE[release].expects(:[]).with("maintenance_support").at_least_once.returns(date)
     end
 
     def fake_extended_support_end_date(date)
-      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE_INDEXES[release].expects(:[]).with("extended_support").at_least_once.returns(date)
+      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE[release].expects(:[]).with("extended_support").at_least_once.returns(date)
     end
 
     def test_to_status_full_support
@@ -138,7 +138,7 @@ module Katello
 
     def test_eos_date_no_extended_support
       fake_maintenance_support_end_date(Date.today + 2.years)
-      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE_INDEXES[release].expects(:[]).with("extended_support").returns(nil)
+      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE[release].expects(:[]).with("extended_support").returns(nil)
       assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.eos_date(eos_schedule_index: release)
     end
 

@@ -11,7 +11,7 @@ module Katello
       DateTime.parse(date.to_s).end_of_day.utc
     end
 
-    RHEL_EOS_SCHEDULE_INDEXES = { # dates that each support category ends
+    RHEL_EOS_SCHEDULE = { # dates that each support category ends
       'RHEL9' => {
         'full_support' => end_of_day('2027-05-31'),
         'maintenance_support' => end_of_day('2032-05-31'),
@@ -72,9 +72,9 @@ module Katello
       approach_date = warn_date(eos_schedule_index: release)
       end_of_support_date = eos_date(eos_schedule_index: release)
       return UNKNOWN unless release
-      return UNKNOWN if RHEL_EOS_SCHEDULE_INDEXES[release].nil?
-      return FULL_SUPPORT if Date.today <= RHEL_EOS_SCHEDULE_INDEXES[release]['full_support']
-      return MAINTENANCE_SUPPORT if Date.today <= RHEL_EOS_SCHEDULE_INDEXES[release]['maintenance_support']
+      return UNKNOWN if RHEL_EOS_SCHEDULE[release].nil?
+      return FULL_SUPPORT if Date.today <= RHEL_EOS_SCHEDULE[release]['full_support']
+      return MAINTENANCE_SUPPORT if Date.today <= RHEL_EOS_SCHEDULE[release]['maintenance_support']
       if approach_date.present? && Date.today >= approach_date && Date.today <= end_of_support_date
         return APPROACHING_END_OF_SUPPORT
       end
@@ -92,23 +92,23 @@ module Katello
 
     def self.full_support_end_date(eos_schedule_index: nil)
       return nil unless eos_schedule_index
-      RHEL_EOS_SCHEDULE_INDEXES[eos_schedule_index]&.[]('full_support')
+      RHEL_EOS_SCHEDULE[eos_schedule_index]&.[]('full_support')
     end
 
     def self.maintenance_support_end_date(eos_schedule_index: nil)
       return nil unless eos_schedule_index
-      RHEL_EOS_SCHEDULE_INDEXES[eos_schedule_index]&.[]('maintenance_support')
+      RHEL_EOS_SCHEDULE[eos_schedule_index]&.[]('maintenance_support')
     end
 
     def self.extended_support_end_date(eos_schedule_index: nil)
       return nil unless eos_schedule_index
-      RHEL_EOS_SCHEDULE_INDEXES[eos_schedule_index]&.[]('extended_support')
+      RHEL_EOS_SCHEDULE[eos_schedule_index]&.[]('extended_support')
     end
 
     def self.eos_date(eos_schedule_index: nil)
       return nil unless eos_schedule_index
-      RHEL_EOS_SCHEDULE_INDEXES[eos_schedule_index]&.[]('extended_support') ||
-        RHEL_EOS_SCHEDULE_INDEXES[eos_schedule_index]&.[]('maintenance_support')
+      RHEL_EOS_SCHEDULE[eos_schedule_index]&.[]('extended_support') ||
+        RHEL_EOS_SCHEDULE[eos_schedule_index]&.[]('maintenance_support')
     end
 
     def self.warn_date(eos_schedule_index: nil)
