@@ -27,18 +27,10 @@ module Katello
       assert_equal view.version(library), host.content_facet.content_view_environments.first.content_view_version
     end
 
-    def test_katello_agent_installed?
-      refute host.content_facet.katello_agent_installed?
-
-      host.installed_packages << Katello::InstalledPackage.create!(:name => 'katello-agent', 'nvrea' => 'katello-agent-1.0.x86_64', 'nvra' => 'katello-agent-1.0.x86_64')
-
-      assert host.reload.content_facet.katello_agent_installed?
-    end
-
     def test_tracer_installed?
       refute host.content_facet.tracer_installed?
 
-      host.installed_packages << Katello::InstalledPackage.create!(:name => 'katello-host-tools-tracer', 'nvrea' => 'katello-host-tools-tracer-1.0.x86_64', 'nvra' => 'katello-agent-1.0.x86_64')
+      host.installed_packages << Katello::InstalledPackage.create!(:name => 'katello-host-tools-tracer', 'nvrea' => 'katello-host-tools-tracer-1.0.x86_64', 'nvra' => 'katello-host-tools-tracer-1.0.x86_64')
 
       assert host.reload.content_facet.tracer_installed?
     end

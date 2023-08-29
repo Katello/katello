@@ -17,16 +17,6 @@ module Katello
         User.current
       end
 
-      class_methods do
-        def katello_agent_deprecation_text
-          N_("WARNING: Katello-agent is deprecated and will be removed in %s. Migrate to remote execution now.") % katello_agent_removal_release
-        end
-
-        def katello_agent_removal_release
-          N_("Katello 4.10")
-        end
-      end
-
       protected
 
       def request_from_katello_cli?
