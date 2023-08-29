@@ -20,7 +20,7 @@ module Katello
     end
 
     def test_eos_schedule_constants
-      eos_schedule_data = Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULES
+      eos_schedule_data = Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE_INDEXES
       assert eos_schedule_data.is_a?(Hash)
       [
         'RHEL6',
@@ -56,21 +56,21 @@ module Katello
     end
 
     def fake_full_support_end_date(date)
-      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULES[release].expects(:[]).with("full_support").at_least_once.returns(date)
+      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE_INDEXES[release].expects(:[]).with("full_support").at_least_once.returns(date)
     end
 
     def fake_maintenance_support_end_date(date)
-      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULES[release].expects(:[]).with("maintenance_support").at_least_once.returns(date)
+      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE_INDEXES[release].expects(:[]).with("maintenance_support").at_least_once.returns(date)
     end
 
     def fake_extended_support_end_date(date)
-      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULES[release].expects(:[]).with("extended_support").at_least_once.returns(date)
+      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE_INDEXES[release].expects(:[]).with("extended_support").at_least_once.returns(date)
     end
 
     def test_to_status_full_support
       os.hosts << host
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
-      host.operatingsystem.expects(:rhel_eos_schedule).returns(release)
+      host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
       fake_full_support_end_date(Date.today + 2.years)
       fake_extended_support_end_date(Date.today + 10.years)
       assert_equal Katello::RhelLifecycleStatus::FULL_SUPPORT, status.to_status
@@ -79,7 +79,7 @@ module Katello
     def test_to_status_maintenance_support
       os.hosts << host
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
-      host.operatingsystem.expects(:rhel_eos_schedule).returns(release)
+      host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
       fake_full_support_end_date(Date.today - 1.year)
       fake_maintenance_support_end_date(Date.today + 1.year)
       fake_extended_support_end_date(Date.today + 10.years)
@@ -89,7 +89,7 @@ module Katello
     def test_to_status_approaching_end_of_support
       os.hosts << host
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
-      host.operatingsystem.expects(:rhel_eos_schedule).returns(release)
+      host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
       fake_full_support_end_date(Date.today - 5.years)
       fake_maintenance_support_end_date(Date.today - 3.years)
       fake_extended_support_end_date(Date.today + 10.days)
@@ -99,7 +99,7 @@ module Katello
     def test_to_status_extended_support
       os.hosts << host
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
-      host.operatingsystem.expects(:rhel_eos_schedule).returns(release)
+      host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
       fake_full_support_end_date(Date.today - 5.years)
       fake_maintenance_support_end_date(Date.today - 3.years)
       fake_extended_support_end_date(Date.today + 2.years)
@@ -109,7 +109,7 @@ module Katello
     def test_to_status_support_ended
       os.hosts << host
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
-      host.operatingsystem.expects(:rhel_eos_schedule).returns(release)
+      host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
       fake_full_support_end_date(Date.today - 5.years)
       fake_maintenance_support_end_date(Date.today - 3.years)
       fake_extended_support_end_date(Date.today - 1.year)
@@ -118,33 +118,33 @@ module Katello
 
     def test_full_support_end_date
       fake_full_support_end_date(Date.today + 2.years)
-      assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.full_support_end_date(eos_schedule: release)
+      assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.full_support_end_date(eos_schedule_index: release)
     end
 
     def test_maintenance_support_end_date
       fake_maintenance_support_end_date(Date.today + 2.years)
-      assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.maintenance_support_end_date(eos_schedule: release)
+      assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.maintenance_support_end_date(eos_schedule_index: release)
     end
 
     def test_extended_support_end_date
       fake_extended_support_end_date(Date.today + 2.years)
-      assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.extended_support_end_date(eos_schedule: release)
+      assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.extended_support_end_date(eos_schedule_index: release)
     end
 
     def test_eos_date
       fake_extended_support_end_date(Date.today + 2.years)
-      assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.eos_date(eos_schedule: release)
+      assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.eos_date(eos_schedule_index: release)
     end
 
     def test_eos_date_no_extended_support
       fake_maintenance_support_end_date(Date.today + 2.years)
-      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULES[release].expects(:[]).with("extended_support").returns(nil)
-      assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.eos_date(eos_schedule: release)
+      Katello::RhelLifecycleStatus::RHEL_EOS_SCHEDULE_INDEXES[release].expects(:[]).with("extended_support").returns(nil)
+      assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.eos_date(eos_schedule_index: release)
     end
 
     def test_warn_date
       fake_extended_support_end_date(Date.today + 2.years)
-      assert_equal Date.today + 2.years - Katello::RhelLifecycleStatus::EOS_WARNING_THRESHOLD, Katello::RhelLifecycleStatus.warn_date(eos_schedule: release)
+      assert_equal Date.today + 2.years - Katello::RhelLifecycleStatus::EOS_WARNING_THRESHOLD, Katello::RhelLifecycleStatus.warn_date(eos_schedule_index: release)
     end
 
     def test_relevant
