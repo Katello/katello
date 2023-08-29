@@ -137,47 +137,12 @@ module Katello
       assert env.library?
     end
 
-    def test_apply
-      ::Katello.stubs(:with_katello_agent?).returns(true)
-      assert_async_task ::Actions::Katello::Host::Erratum::Install do |host, options|
-        host.id == @host.id && options[:content] == %w(RHSA-1999-1231)
-      end
-
-      put :apply, params: { :host_id => @host.id, :errata_ids => %w(RHSA-1999-1231) }
-
-      assert_response :success
-    end
-
     def test_applicability
       put :applicability, params: { :host_id => @host.id }
 
       assert_response :success
 
       assert Katello::HostQueueElement.find_by(host_id: @host.id)
-    end
-
-    def test_apply_unknown_errata
-      put :apply, params: { :host_id => @host.id, :errata_ids => %w(non-existant-errata) }
-      assert_response 404
-    end
-
-    def test_apply_protected
-      ::Host.any_instance.stubs(:check_host_registration).returns(true)
-      ::Katello.stubs(:with_katello_agent?).returns(true)
-
-      good_perms = [@update_permission]
-      bad_perms = [@view_permission, @create_permission, @destroy_permission]
-
-      assert_protected_action(:apply, good_perms, bad_perms) do
-        user = User.current
-        as_admin do
-          @host.update_attribute(:organization, taxonomies(:organization1))
-          @host.update_attribute(:location, taxonomies(:location1))
-          user.organizations = [@host.organization]
-          user.locations = [@host.location]
-        end
-        put :apply, params: { :host_id => @host.id, :errata_ids => %w(RHSA-1999-1231) }
-      end
     end
   end
 end

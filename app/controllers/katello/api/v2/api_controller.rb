@@ -38,21 +38,6 @@ module Katello
       @resource_class ||= "Katello::#{resource_name.classify}".constantize
     end
 
-    def deprecate_katello_agent
-      check_katello_agent_not_disabled
-      ::Foreman::Deprecation.api_deprecation_warning("This action uses katello-agent, which is deprecated and will be removed in #{katello_agent_removal_release}.")
-    end
-
-    def check_katello_agent_not_disabled
-      unless ::Katello.with_katello_agent?
-        fail HttpErrors::BadRequest, _("This action uses katello-agent, which is currently disabled. Use remote execution instead.")
-      end
-    end
-
-    def katello_agent_removal_release
-      self.class.katello_agent_removal_release
-    end
-
     def full_result_response(collection)
       { :results => collection,
         :total => collection.count,
