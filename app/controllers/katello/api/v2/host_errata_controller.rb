@@ -14,7 +14,6 @@ module Katello
     before_action :find_errata_ids, only: :apply
     before_action :find_environment, only: :index
     before_action :find_content_view, only: :index
-    before_action :deprecate_katello_agent, only: :apply
 
     resource_description do
       api_version 'v2'
@@ -56,17 +55,6 @@ module Katello
       end
 
       respond_for_index :collection => collection
-    end
-
-    api :PUT, "/hosts/:host_id/errata/apply", N_("Schedule errata for installation using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
-    param :host_id, :number, :desc => N_("Host ID"), :required => true
-    param :errata_ids, Array, :desc => N_("List of Errata ids to install. Will be removed in %s") % katello_agent_removal_release, required: true
-
-    param_group :bulk_errata_ids
-    param_group :search, Api::V2::ApiController
-    def apply
-      task = async_task(::Actions::Katello::Host::Erratum::Install, @host, content: @errata_ids)
-      respond_for_async :resource => task
     end
 
     api :GET, "/hosts/:host_id/errata/:id", N_("Retrieve a single errata for a host")

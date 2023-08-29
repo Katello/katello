@@ -9,7 +9,6 @@ module Katello
         proxy = fetch_proxy(capsule_id)
         services = [:candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events]
         services += [:pulp3, :pulp3_content] if proxy&.pulp3_enabled?
-        services += [:katello_agent] if ::Katello.with_katello_agent?
         if proxy.nil? || proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) || proxy.has_feature?(SmartProxy::PULP_FEATURE)
           services += [:pulp, :pulp_auth]
         end
@@ -60,13 +59,6 @@ module Katello
       def ping_candlepin_events(result)
         exception_watch(result) do
           status = Katello::EventDaemon::Runner.service_status(:candlepin_events)
-          event_daemon_status(status, result)
-        end
-      end
-
-      def ping_katello_agent(result)
-        exception_watch(result) do
-          status = Katello::EventDaemon::Runner.service_status(:katello_agent_events)
           event_daemon_status(status, result)
         end
       end
@@ -233,7 +225,6 @@ module Katello
         end
       end
 
-      # rubocop:disable Metrics/CyclomaticComplexity
       def ping_services_for_capsule(services, capsule_id)
         services ||= self.services(capsule_id)
         result = {}
@@ -249,14 +240,12 @@ module Katello
         ping_foreman_tasks(result[:foreman_tasks]) if result.include?(:foreman_tasks)
         ping_katello_events(result[:katello_events]) if result.include?(:katello_events)
         ping_candlepin_events(result[:candlepin_events]) if result.include?(:candlepin_events)
-        ping_katello_agent(result[:katello_agent]) if result.include?(:katello_agent)
 
         # set overall status result code
         result = {:services => result}
         result[:status] = result[:services].each_value.any? { |v| v[:status] == FAIL_RETURN_CODE } ? FAIL_RETURN_CODE : OK_RETURN_CODE
         result
       end
-      # rubocop:enable Metrics/CyclomaticComplexity
 
       def fetch_proxy(capsule_id)
         capsule_id ? SmartProxy.unscoped.find(capsule_id) : SmartProxy.pulp_primary

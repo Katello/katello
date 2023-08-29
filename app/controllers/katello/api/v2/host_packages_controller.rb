@@ -10,7 +10,6 @@ module Katello
     before_action :require_packages_only, :only => [:upgrade]
     before_action :find_editable_host_with_facet, :except => :index
     before_action :find_host, :only => :index
-    before_action :deprecate_katello_agent, :only => [:install, :remove, :upgrade, :upgrade_all]
 
     resource_description do
       api_version 'v2'
@@ -33,60 +32,6 @@ module Katello
       collection = scoped_search(index_relation, :name, :asc, :resource_class => ::Katello::InstalledPackage)
       collection[:results] = HostPackagePresenter.with_latest(collection[:results], @host) if ::Foreman::Cast.to_bool(params[:include_latest_upgradable])
       respond_for_index(:collection => collection)
-    end
-
-    api :PUT, "/hosts/:host_id/packages/install", N_("Install packages remotely using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
-    param :host_id, :number, :required => true, :desc => N_("ID of the host")
-    param_group :packages_or_groups
-    def install
-      if params[:packages]
-        packages = validate_package_list_format(params[:packages])
-        task     = async_task(::Actions::Katello::Host::Package::Install, @host, content: packages)
-        respond_for_async :resource => task
-        return
-      end
-
-      if params[:groups]
-        groups = extract_group_names(params[:groups])
-        task   = async_task(::Actions::Katello::Host::PackageGroup::Install, @host, content: groups)
-        respond_for_async :resource => task
-      end
-    end
-
-    api :PUT, "/hosts/:host_id/packages/upgrade", N_("Update packages remotely using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
-    param :host_id, :number, :required => true, :desc => N_("ID of the host")
-    param :packages, Array, :desc => N_("list of packages names"), :required => true
-    def upgrade
-      if params[:packages]
-        packages = validate_package_list_format(params[:packages])
-        task     = async_task(::Actions::Katello::Host::Package::Update, @host, content: packages)
-        respond_for_async :resource => task
-      end
-    end
-
-    api :PUT, "/hosts/:host_id/packages/upgrade_all", N_("Update packages remotely using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
-    param :host_id, :number, :required => true, :desc => N_("ID of the host")
-    def upgrade_all
-      task = async_task(::Actions::Katello::Host::Package::Update, @host, content: [])
-      respond_for_async :resource => task
-    end
-
-    api :PUT, "/hosts/:host_id/packages/remove", N_("Uninstall packages remotely using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
-    param :host_id, :number, :required => true, :desc => N_("ID of the host")
-    param_group :packages_or_groups
-    def remove
-      if params[:packages]
-        packages = validate_package_list_format(params[:packages])
-        task     = async_task(::Actions::Katello::Host::Package::Remove, @host, content: packages)
-        respond_for_async :resource => task
-        return
-      end
-
-      if params[:groups]
-        groups = extract_group_names(params[:groups])
-        task   = async_task(::Actions::Katello::Host::PackageGroup::Remove, @host, content: groups)
-        respond_for_async :resource => task
-      end
     end
 
     def index_relation

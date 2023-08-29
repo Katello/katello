@@ -52,7 +52,6 @@ Foreman::Application.routes.draw do
         resources :hosts, :only => [] do
           resources :errata, :only => [:show, :index], :controller => :host_errata do
             collection do
-              put :apply
               get :auto_complete_search
               put :applicability
             end
@@ -69,11 +68,8 @@ Foreman::Application.routes.draw do
             match '/bulk/auto_attach' => 'hosts_bulk_actions#auto_attach', :via => :put
             match '/bulk/content_overrides' => 'hosts_bulk_actions#content_overrides', :via => :put
 
-            match '/bulk/install_content' => 'hosts_bulk_actions#install_content', :via => :put
             match '/bulk/applicable_errata' => 'hosts_bulk_actions#applicable_errata', :via => :post
             match '/bulk/installable_errata' => 'hosts_bulk_actions#installable_errata', :via => :post
-            match '/bulk/update_content' => 'hosts_bulk_actions#update_content', :via => :put
-            match '/bulk/remove_content' => 'hosts_bulk_actions#remove_content', :via => :put
             match '/bulk/destroy' => 'hosts_bulk_actions#destroy_hosts', :via => :put
             match '/bulk/environment_content_view' => 'hosts_bulk_actions#environment_content_view', :via => :put
             match '/bulk/release_version' => 'hosts_bulk_actions#release_version', :via => :put
@@ -88,13 +84,6 @@ Foreman::Application.routes.draw do
 
           resources :packages, :only => [:index], :controller => :host_packages do
             get :auto_complete_search, :on => :collection
-
-            collection do
-              put :remove
-              put :install
-              put :upgrade
-              put :upgrade_all
-            end
           end
 
           resources :module_streams, :only => [:index], :controller => :host_module_streams do

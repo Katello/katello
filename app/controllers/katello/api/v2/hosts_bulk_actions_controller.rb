@@ -15,7 +15,6 @@ module Katello
     before_action :find_errata, only: [:available_incremental_updates]
     before_action :find_organization, only: [:add_subscriptions]
     before_action :find_traces, only: [:resolve_traces]
-    before_action :deprecate_katello_agent, only: [:install_content, :update_content, :remove_content]
 
     before_action :validate_content_action, only: [:install_content, :update_content, :remove_content]
     before_action :validate_organization, only: [:add_subscriptions]
@@ -115,37 +114,6 @@ module Katello
     def installable_errata
       respond_for_index(:collection => scoped_search(Katello::Erratum.installable_for_hosts(@hosts), 'updated', 'desc',
                                                      :resource_class => Erratum))
-    end
-
-    api :PUT, "/hosts/bulk/install_content", N_("Install content on one or more hosts using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
-    param_group :bulk_params
-    param :content_type, String,
-          :desc => N_("The type of content.  The following types are supported: 'package', 'package_group' and 'errata'."),
-          :required => true
-    param :content, Array, :desc => N_("List of content (e.g. package names, package group names (Deprecated) or errata ids)")
-    def install_content
-      content_action
-    end
-
-    api :PUT, "/hosts/bulk/update_content", N_("Update content on one or more hosts using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
-    param_group :bulk_params
-    param :content_type, String,
-          :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
-          :required => true
-    param :content, Array, :desc => N_("List of content (e.g. package or package group names)"), :required => true
-    param :update_all, :bool, :desc => N_("Updates all packages on the host(s)")
-    def update_content
-      content_action
-    end
-
-    api :PUT, "/hosts/bulk/remove_content", N_("Remove content on one or more hosts using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
-    param_group :bulk_params
-    param :content_type, String,
-          :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
-          :required => true
-    param :content, Array, :desc => N_("List of content (e.g. package or package group names)"), :required => true
-    def remove_content
-      content_action
     end
 
     api :PUT, "/hosts/bulk/destroy", N_("Destroy one or more hosts")
