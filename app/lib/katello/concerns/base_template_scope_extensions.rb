@@ -353,9 +353,11 @@ module Katello
 
       def parse_errata(task)
         task_input = get_task_input(task)
+        agent_input = task_input['errata'] || task_input['content']
+        # agent_input retrieves past katello-agent tasks.
         # There are multiple template inputs, such as errata, pre_script and post_script.
         # We only need the errata input here.
-        @_tasks_errata_cache[task.id] ||= task_input['errata'].presence || errata_ids_from_template_invocation(task, task_input)
+        @_tasks_errata_cache[task.id] ||= agent_input.presence || errata_ids_from_template_invocation(task, task_input)
       end
 
       def errata_ids_from_template_invocation(task, task_input)
