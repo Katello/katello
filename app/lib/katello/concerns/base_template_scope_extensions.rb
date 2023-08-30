@@ -353,9 +353,9 @@ module Katello
 
       def parse_errata(task)
         task_input = get_task_input(task)
-        # There are multiple template inputs, such as errata, pre_script and post_script we only need the
-        # errata input here.
-        @_tasks_errata_cache[task.id] ||= errata_ids_from_template_invocation(task, task_input)
+        # There are multiple template inputs, such as errata, pre_script and post_script.
+        # We only need the errata input here.
+        @_tasks_errata_cache[task.id] ||= task_input['errata'].presence || errata_ids_from_template_invocation(task, task_input)
       end
 
       def errata_ids_from_template_invocation(task, task_input)
