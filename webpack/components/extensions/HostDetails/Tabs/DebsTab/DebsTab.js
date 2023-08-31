@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   ActionList,
   ActionListItem,
@@ -19,43 +19,41 @@ import {
 import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText } from '@patternfly/react-table';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
+
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { useSet, useBulkSelect, useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import SelectableDropdown from '../../../../SelectableDropdown';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
-
 import PackagesStatus from '../../../../../components/Packages';
 import {
-  getInstalledPackagesWithLatest,
-} from './HostPackagesActions';
-import { selectHostPackagesStatus } from './HostPackagesSelectors';
+  getInstalledDebs,
+} from './HostDebsActions';
+import { selectHostDebsStatus } from './HostDebsSelectors';
 import {
-  HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM,
-} from './HostPackagesConstants';
+  HOST_DEBS_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM,
+} from './HostDebsConstants';
 import { removePackage, updatePackage, removePackages, updatePackages, installPackageBySearch } from '../RemoteExecutionActions';
 import { katelloPackageUpdateUrl, packagesUpdateUrl } from '../customizedRexUrlHelpers';
-import './PackagesTab.scss';
+import './DebsTab.scss';
 import hostIdNotReady, { getHostDetails } from '../../HostDetailsActions';
-import PackageInstallModal from './PackageInstallModal';
+import DebInstallModal from './DebInstallModal';
 import { hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
   userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
-import { runSubmanRepos } from '../../Cards/ContentViewDetailsCard/HostContentViewActions';
 
-const invokeRexJobs = ['create_job_invocations'];
-const createBookmarks = ['create_bookmarks'];
-
-export const hidePackagesTab = ({ hostDetails }) => {
+export const hideDebsTab = ({ hostDetails }) => {
   const osMatch = hostDetails?.operatingsystem_name?.match(/(\D+) (\d+|\D+)/);
   if (!osMatch) return false;
   const [, os] = osMatch;
-  return !(osMatch && os.match(/RedHat|RHEL|CentOS|Rocky|AlmaLinux|Alma|Oracle Linux|Oracle|Suse Linux Enterprise Server|SLES/i));
+  return !(osMatch && os.match(/Debian|Ubuntu/i));
 };
+
+const invokeRexJobs = ['create_job_invocations'];
+const createBookmarks = ['create_bookmarks'];
 
 const UpdateVersionsSelect = ({
   packageName,
@@ -121,7 +119,7 @@ UpdateVersionsSelect.defaultProps = {
   upgradableVersionSelectOpen: null,
 };
 
-export const PackagesTab = () => {
+export const DebsTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const {
     id: hostId,
@@ -161,11 +159,6 @@ export const PackagesTab = () => {
     toggleUpgradableVersionSelect(false, rowIndex);
     selectedNewVersions.current[packageName] = selected;
   };
-  const selectedPackageUpgradeVersion = ({ packageName, upgradableVersions }) => (
-    selectedNewVersions.current[packageName] || upgradableVersions[0]
-  );
-  const selectedNVRAVersions = Object.keys(selectedNewVersions.current).map(k =>
-    selectedNewVersions.current[k]);
 
   const emptyContentTitle = __('This host does not have any packages.');
   const emptyContentBody = __('Packages will appear here when available.');
@@ -180,7 +173,7 @@ export const PackagesTab = () => {
   ];
 
   const COLUMNS_TO_SORT_PARAMS = {
-    [columnHeaders[0]]: 'nvra',
+    [columnHeaders[0]]: 'name',
     [columnHeaders[2]]: 'version',
   };
 
@@ -200,16 +193,15 @@ export const PackagesTab = () => {
       if (packageStatusSelected !== PACKAGE_STATUS) {
         modifiedParams.status = VERSION_STATUSES_TO_PARAM[packageStatusSelected];
       }
-      return getInstalledPackagesWithLatest(hostId, { ...apiSortParams, ...modifiedParams });
+      return getInstalledDebs(hostId, { ...apiSortParams, ...modifiedParams });
     },
     [hostId, PACKAGE_STATUS, packageStatusSelected, apiSortParams],
   );
 
-  const response = useSelector(state => selectAPIResponse(state, HOST_PACKAGES_KEY));
+  const response = useSelector(state => selectAPIResponse(state, HOST_DEBS_KEY));
   const { results, ...metadata } = response;
   const { error: errorSearchBody } = metadata;
-  const status = useSelector(state => selectHostPackagesStatus(state));
-  const dispatch = useDispatch();
+  const status = useSelector(state => selectHostDebsStatus(state));
   const {
     selectOne,
     isSelected,
@@ -239,10 +231,9 @@ export const PackagesTab = () => {
     isPolling: isRemoveInProgress,
   } = useRexJobPolling(packageRemoveAction);
 
-  const packageBulkRemoveAction = (bulkParams, packageNames) => removePackages({
+  const packageBulkRemoveAction = bulkParams => removePackages({
     hostname,
     search: bulkParams,
-    descriptionFormat: `Remove package(s) ${packageNames}`,
   });
 
   const {
@@ -251,9 +242,9 @@ export const PackagesTab = () => {
     isPolling: isBulkRemoveInProgress,
   } = useRexJobPolling(packageBulkRemoveAction);
 
-  const packageUpgradeAction = ({ packageName, upgradableVersions }) => updatePackage({
+  const packageUpgradeAction = ({ packageName }) => updatePackage({
     hostname,
-    packageName: selectedPackageUpgradeVersion({ packageName, upgradableVersions }),
+    packageName,
   });
 
   const {
@@ -262,11 +253,10 @@ export const PackagesTab = () => {
     isPolling: isUpgradeInProgress,
   } = useRexJobPolling(packageUpgradeAction, getHostDetails({ hostname }));
 
-  const packageBulkUpgradeAction = (bulkParams, descriptionFormat) => updatePackages({
+  const packageBulkUpgradeAction = bulkParams => updatePackages({
     hostname,
     search: bulkParams,
-    versions: JSON.stringify(selectedNVRAVersions || []),
-    descriptionFormat,
+    versions: JSON.stringify([]),
   });
 
   const {
@@ -276,30 +266,13 @@ export const PackagesTab = () => {
   } = useRexJobPolling(packageBulkUpgradeAction, getHostDetails({ hostname }));
 
   const packageInstallAction
-    = (bulkParams, packageNames) => installPackageBySearch({ hostname, search: bulkParams, descriptionFormat: `Install package(s) ${packageNames}` });
+    = bulkParams => installPackageBySearch({ hostname, search: bulkParams });
 
   const {
     triggerJobStart: triggerPackageInstall,
     lastCompletedJob: lastCompletedPackageInstall,
     isPolling: isInstallInProgress,
   } = useRexJobPolling(packageInstallAction, getHostDetails({ hostname }));
-
-  const refreshHostDetails = () => dispatch({
-    type: 'API_GET',
-    payload: {
-      key: HOST_DETAILS_KEY,
-      url: `/api/hosts/${hostname}`,
-    },
-  });
-
-  const {
-    triggerJobStart: triggerRecalculate, lastCompletedJob: lastCompletedRecalculate,
-  } = useRexJobPolling(() => runSubmanRepos(hostname, refreshHostDetails));
-
-  const handleRefreshApplicabilityClick = () => {
-    setIsBulkActionOpen(false);
-    triggerRecalculate();
-  };
 
   const actionInProgress = (isRemoveInProgress || isUpgradeInProgress
     || isBulkRemoveInProgress || isBulkUpgradeInProgress || isInstallInProgress);
@@ -316,10 +289,9 @@ export const PackagesTab = () => {
 
   const removePackagesViaRemoteExecution = () => {
     const selected = fetchBulkParams();
-    const packageNames = selectedResults.map(({ name }) => name);
     setIsBulkActionOpen(false);
     selectNone();
-    triggerBulkPackageRemove(selected, packageNames.join(', '));
+    triggerBulkPackageRemove(selected);
   };
 
   const removeBulk = () => removePackagesViaRemoteExecution();
@@ -332,13 +304,9 @@ export const PackagesTab = () => {
 
   const upgradeBulkViaRemoteExecution = () => {
     const selected = fetchBulkParams();
-    const packageNames = selectedResults.map(({ name }) => name);
-    const allRowsSelected = areAllRowsSelected();
-    let descriptionFormatText = allRowsSelected ? 'Upgrade all packages' : `Upgrade package(s) ${packageNames.join(', ')}`;
-    if (selectAllMode && !allRowsSelected) descriptionFormatText = 'Upgrade lots of packages'; // we don't know the package names in the exclusion set
     setIsBulkActionOpen(false);
     selectNone();
-    triggerBulkPackageUpgrade(selected, descriptionFormatText);
+    triggerBulkPackageUpgrade(selected);
   };
 
   const upgradeBulk = () => upgradeBulkViaRemoteExecution();
@@ -347,7 +315,7 @@ export const PackagesTab = () => {
     packagesUpdateUrl({
       hostname,
       search: fetchBulkParams(),
-      versions: JSON.stringify(selectedNVRAVersions),
+      versions: JSON.stringify([]),
     }) : '#';
 
   const disableRemove = () => selectedCount === 0 || selectAllMode;
@@ -382,7 +350,7 @@ export const PackagesTab = () => {
     </DropdownItem>,
   ];
 
-  const kebabItems = [
+  const dropdownRemoveItems = [
     <DropdownItem
       aria-label="bulk_remove"
       ouiaId="bulk_remove"
@@ -402,15 +370,6 @@ export const PackagesTab = () => {
       onClick={handleInstallPackagesClick}
     >
       {__('Install packages')}
-    </DropdownItem>,
-    <DropdownItem
-      aria-label="refresh_applicability"
-      ouiaId="refresh_applicability"
-      key="refresh_applicability"
-      component="button"
-      onClick={handleRefreshApplicabilityClick}
-    >
-      {__('Refresh package applicability')}
     </DropdownItem>,
   ];
 
@@ -452,7 +411,7 @@ export const PackagesTab = () => {
               toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
               isOpen={isBulkActionOpen}
               isPlain
-              dropdownItems={kebabItems}
+              dropdownItems={dropdownRemoveItems}
               ouiaId="bulk_actions_dropdown"
             />
           </ActionListItem>
@@ -477,9 +436,10 @@ export const PackagesTab = () => {
   );
 
   const resetFilters = () => setPackageStatusSelected(PACKAGE_STATUS);
+
   return (
     <div>
-      <div id="packages-tab">
+      <div id="debs-tab">
         <TableWrapper
           {...{
             metadata,
@@ -502,20 +462,20 @@ export const PackagesTab = () => {
             resetFilters,
           }
           }
-          ouiaId="host-packages-table"
+          ouiaId="host-debs-table"
           additionalListeners={[hostId, packageStatusSelected,
             activeSortDirection, activeSortColumn, lastCompletedPackageUpgrade,
             lastCompletedPackageRemove, lastCompletedBulkPackageRemove,
-            lastCompletedBulkPackageUpgrade, lastCompletedPackageInstall, lastCompletedRecalculate]}
+            lastCompletedBulkPackageUpgrade, lastCompletedPackageInstall]}
           fetchItems={fetchItems}
-          bookmarkController="katello_host_installed_packages"
+          bookmarkController="katello_host_installed_debs"
           readOnlyBookmarks={readOnlyBookmarks}
-          autocompleteEndpoint={`/api/v2/hosts/${hostId}/packages`}
+          autocompleteEndpoint={`/api/v2/hosts/${hostId}/debs`}
           rowsCount={results?.length}
           variant={TableVariant.compact}
           {...selectAll}
           displaySelectAllCheckbox={showActions}
-          requestKey={HOST_PACKAGES_KEY}
+          requestKey={HOST_DEBS_KEY}
           alwaysShowActionButtons={false}
         >
           <Thead>
@@ -534,8 +494,8 @@ export const PackagesTab = () => {
               const {
                 id,
                 name: packageName,
-                nvra: installedVersion,
-                rpm_id: rpmId,
+                version: installedVersion,
+                deb_id: debId,
                 upgradable_versions: upgradableVersions,
               } = pkg;
 
@@ -559,10 +519,7 @@ export const PackagesTab = () => {
                     component: 'a',
                     href: katelloPackageUpdateUrl({
                       hostname,
-                      packageName: selectedPackageUpgradeVersion({
-                        packageName,
-                        upgradableVersions,
-                      }),
+                      packageName,
                     }),
                   },
                 );
@@ -583,8 +540,8 @@ export const PackagesTab = () => {
                     />
                   ) : <Td>&nbsp;</Td>}
                   <Td>
-                    {rpmId
-                      ? <a href={urlBuilder(`packages/${rpmId}`, '')}>{packageName}</a>
+                    {debId
+                      ? <a href={urlBuilder(`debs/${debId}`, '')}>{packageName}</a>
                       : packageName
                     }
                   </Td>
@@ -617,7 +574,7 @@ export const PackagesTab = () => {
         </TableWrapper>
       </div>
       {hostId &&
-        <PackageInstallModal
+        <DebInstallModal
           isOpen={isModalOpen}
           closeModal={closeModal}
           hostId={hostId}
@@ -630,4 +587,4 @@ export const PackagesTab = () => {
   );
 };
 
-export default PackagesTab;
+export default DebsTab;

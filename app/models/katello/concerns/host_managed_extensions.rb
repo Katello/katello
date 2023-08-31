@@ -534,6 +534,14 @@ module Katello
       end
 
       def package_names_for_job_template(action:, search:, versions: nil)
+        if self.operatingsystem.family == 'Debian'
+          deb_names_for_job_template(action, search)
+        else
+          yum_names_for_job_template(action, search, versions)
+        end
+      end
+
+      def yum_names_for_job_template(action:, search:, versions: nil)
         actions = %w(install remove update).freeze
         case action
         when 'install'
@@ -557,6 +565,24 @@ module Katello
           pkg_name_archs.map { |name, arch| versions_by_name_arch[[name, arch]] || upgrades[[name, arch]]&.first&.nvra }.compact
         else
           fail ::Foreman::Exception.new(N_("package_names_for_job_template: Action must be one of %s"), actions.join(', '))
+        end
+      end
+
+      def deb_names_for_job_template(action:, search:)
+        actions = %w(install remove update).freeze
+        case action
+        when 'install'
+          ::Katello::Deb.apt_installable_for_host(self).search_for(search).distinct.pluck(:name)
+        when 'remove'
+          return [] if search.empty?
+
+          installed_debs.search_for(search).distinct.pluck(:name)
+        when 'update'
+          return [] if search.empty?
+
+          installed_debs.search_for(search).distinct.pluck(:name)
+        else
+          fail ::Foreman::Exception.new(N_("deb_names_for_job_template: Action must be one of %s"), actions.join(', '))
         end
       end
 
