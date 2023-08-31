@@ -320,11 +320,6 @@ module Katello
         Util::Package.sortable_version(version)
       end
 
-      apipie :method, 'Returns true if Katello Agent infrastructure is enabled on the server'
-      def katello_agent_enabled?
-        Katello.with_katello_agent?
-      end
-
       include Katello::ContentSourceHelper
 
       apipie :method, "Generate script to change a host's content source" do
@@ -359,9 +354,9 @@ module Katello
       def parse_errata(task)
         task_input = get_task_input(task)
         agent_input = task_input['errata'] || task_input['content']
-        # Pick katello agent errata if present
-        # Otherwise pick rex errata. There are multiple template inputs, such as errata, pre_script and post_script we only need the
-        # errata input here.
+        # agent_input retrieves past katello-agent tasks.
+        # There are multiple template inputs, such as errata, pre_script and post_script.
+        # We only need the errata input here.
         @_tasks_errata_cache[task.id] ||= agent_input.presence || errata_ids_from_template_invocation(task, task_input)
       end
 
