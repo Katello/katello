@@ -188,7 +188,7 @@ module Katello
 
     api :PUT, "/systems/:id/enabled_repos", N_("Update the information about enabled repositories")
     desc <<-DESC
-      Used by katello-agent to keep the information about enabled repositories up to date.
+      Used to keep the information about enabled repositories up to date.
       This information is then used for computing the errata available for the system.
     DESC
     param :enabled_repos, Hash, :required => true do
