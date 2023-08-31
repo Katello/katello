@@ -52,12 +52,6 @@ module Katello
       }
     }.freeze
 
-    def self.between_dates?(date1, date2)
-      return nil unless date1.present? && date2.present?
-      today = Date.today.beginning_of_day.utc
-      date1.present? && today >= date1.beginning_of_day.utc && today <= date2.end_of_day.utc
-    end
-
     EOS_WARNING_THRESHOLD = 1.year
 
     def self.status_map
@@ -75,7 +69,7 @@ module Katello
     end
 
     def self.approaching_end_of_category(eos_schedule_index:)
-      RHEL_EOS_SCHEDULE[eos_schedule_index].select { |k, v| (Time.now.utc .. Time.now.utc + EOS_WARNING_THRESHOLD).cover?(v) }
+      RHEL_EOS_SCHEDULE[eos_schedule_index].select { |_k, v| (Time.now.utc..Time.now.utc + EOS_WARNING_THRESHOLD).cover?(v) }
     end
 
     def self.to_status(rhel_eos_schedule_index: nil)
@@ -90,7 +84,7 @@ module Katello
           return APPROACHING_END_OF_MAINTENANCE
         end
       end
-        
+
       full_support_end_date = RHEL_EOS_SCHEDULE[release]['full_support']
       maintenance_support_end_date = RHEL_EOS_SCHEDULE[release]['maintenance_support']
       extended_support_end_date = RHEL_EOS_SCHEDULE[release]['extended_support']

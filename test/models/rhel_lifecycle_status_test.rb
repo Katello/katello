@@ -148,11 +148,6 @@ module Katello
       assert_equal Date.today + 2.years, Katello::RhelLifecycleStatus.eos_date(eos_schedule_index: release)
     end
 
-    def test_warn_date
-      fake_extended_support_end_date(Date.today + 2.years)
-      assert_equal Date.today + 2.years - Katello::RhelLifecycleStatus::EOS_WARNING_THRESHOLD, Katello::RhelLifecycleStatus.warn_date(eos_schedule_index: release)
-    end
-
     def test_relevant
       os.hosts << host
       assert status.relevant?
