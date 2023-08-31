@@ -423,37 +423,25 @@ module Katello
   class HostRhelEosSchedulesTest < ActiveSupport::TestCase
     let(:host) { FactoryBot.create(:host, :with_subscription) }
 
-    def test_full_support_end_date
+    def test_full_support_end_dates
       host.expects(:rhel_eos_schedule_index).returns('RHEL9')
-      expected_date = ::Katello::RhelLifecycleStatus.full_support_end_date(eos_schedule_index: 'RHEL9')
+      expected_date = ::Katello::RhelLifecycleStatus.full_support_end_dates['RHEL9']
       assert_equal expected_date, host.full_support_end_date
     end
 
-    def test_maintenance_support_end_date
+    def test_maintenance_support_end_dates
       host.expects(:rhel_eos_schedule_index).returns('RHEL9')
-      expected_date = ::Katello::RhelLifecycleStatus.maintenance_support_end_date(eos_schedule_index: 'RHEL9')
+      expected_date = ::Katello::RhelLifecycleStatus.maintenance_support_end_dates['RHEL9']
       assert_equal expected_date, host.maintenance_support_end_date
     end
 
-    def test_approaching_end_of_maintenance_date
+    def test_extended_support_end_dates
       host.expects(:rhel_eos_schedule_index).returns('RHEL9')
-      expected_date = ::Katello::RhelLifecycleStatus.maintenance_warn_date(eos_schedule_index: 'RHEL9')
-      assert_equal expected_date, host.approaching_end_of_maintenance_date
-    end
-
-    def test_extended_support_end_date
-      host.expects(:rhel_eos_schedule_index).returns('RHEL9')
-      expected_date = ::Katello::RhelLifecycleStatus.extended_support_end_date(eos_schedule_index: 'RHEL9')
+      expected_date = ::Katello::RhelLifecycleStatus.extended_support_end_dates['RHEL9']
       assert_equal expected_date, host.extended_support_end_date
     end
 
-    def test_approaching_end_of_support_date
-      host.expects(:rhel_eos_schedule_index).returns('RHEL9')
-      expected_date = ::Katello::RhelLifecycleStatus.warn_date(eos_schedule_index: 'RHEL9')
-      assert_equal expected_date, host.approaching_end_of_support_date
-    end
-
-    def test_end_of_support_date
+    def test_end_of_support_dates
       host.expects(:rhel_eos_schedule_index).returns('RHEL9')
       expected_date = ::Katello::RhelLifecycleStatus.eos_date(eos_schedule_index: 'RHEL9')
       assert_equal expected_date, host.end_of_support_date

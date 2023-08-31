@@ -74,33 +74,37 @@ module Katello
       map
     end
 
+    def self.approaching_end_of_category(eos_schedule_index:)
+      RHEL_EOS_SCHEDULE[eos_schedule_index].select { |k, v| (Time.now.utc .. Time.now.utc + EOS_WARNING_THRESHOLD).cover?(v) }
+    end
+
     def self.to_status(rhel_eos_schedule_index: nil)
       release = rhel_eos_schedule_index
       return UNKNOWN unless release.present? && RHEL_EOS_SCHEDULE.key?(release)
-
-      # Full support
-      full_support_end_date = full_support_end_date(eos_schedule_index: release)
-      return FULL_SUPPORT if Date.today <= full_support_end_date
-
-      # Approach warnings
-      maintenance_approach_date = maintenance_warn_date(eos_schedule_index: release)
-      maintenance_end_of_support_date = maintenance_support_end_date(eos_schedule_index: release)
-      if between_dates?(maintenance_approach_date, maintenance_end_of_support_date)
-        return APPROACHING_END_OF_MAINTENANCE
+      approach = approaching_end_of_category(eos_schedule_index: release)
+      if approach.present?
+        case approach.keys.first
+        when last_support_category(eos_schedule_index: release)
+          return APPROACHING_END_OF_SUPPORT
+        when 'maintenance_support'
+          return APPROACHING_END_OF_MAINTENANCE
+        end
       end
-      approach_date = warn_date(eos_schedule_index: release)
-      end_of_support_date = eos_date(eos_schedule_index: release)
-      if between_dates?(approach_date, end_of_support_date)
-        return APPROACHING_END_OF_SUPPORT
+        
+      full_support_end_date = RHEL_EOS_SCHEDULE[release]['full_support']
+      maintenance_support_end_date = RHEL_EOS_SCHEDULE[release]['maintenance_support']
+      extended_support_end_date = RHEL_EOS_SCHEDULE[release]['extended_support']
+
+      case
+      when Date.today <= full_support_end_date
+        return FULL_SUPPORT
+      when Date.today <= maintenance_support_end_date
+        return MAINTENANCE_SUPPORT
+      when extended_support_end_date.present? && Date.today <= extended_support_end_date
+        return EXTENDED_SUPPORT
+      else
+        return SUPPORT_ENDED
       end
-
-      # Maintenance support
-      return MAINTENANCE_SUPPORT if Date.today <= maintenance_end_of_support_date
-
-      # Extended support
-      return EXTENDED_SUPPORT if Date.today <= end_of_support_date
-
-      return SUPPORT_ENDED
     end
 
     def self.status_name
@@ -111,39 +115,34 @@ module Katello
       'rhel_lifecycle'
     end
 
-    def self.full_support_end_date(eos_schedule_index: nil)
-      return nil unless eos_schedule_index
-      RHEL_EOS_SCHEDULE[eos_schedule_index]&.[]('full_support')
+    # {"RHEL9"=>2035-05-31 23:59:59.999999999 UTC,
+    #  "RHEL8"=>2032-05-31 23:59:59.999999999 UTC, ... }
+    def self.schedule_slice(support_category)
+      {}.merge(*RHEL_EOS_SCHEDULE.keys.map do |release|
+        { release => RHEL_EOS_SCHEDULE[release]&.[](support_category) }
+      end)
     end
 
-    def self.maintenance_support_end_date(eos_schedule_index: nil)
-      return nil unless eos_schedule_index
-      RHEL_EOS_SCHEDULE[eos_schedule_index]&.[]('maintenance_support')
+    def self.full_support_end_dates
+      schedule_slice('full_support')
     end
 
-    def self.extended_support_end_date(eos_schedule_index: nil)
-      return nil unless eos_schedule_index
-      RHEL_EOS_SCHEDULE[eos_schedule_index]&.[]('extended_support')
+    def self.maintenance_support_end_dates
+      schedule_slice('maintenance_support')
+    end
+
+    def self.extended_support_end_dates
+      schedule_slice('extended_support')
+    end
+
+    def self.last_support_category(eos_schedule_index:)
+      RHEL_EOS_SCHEDULE[eos_schedule_index].keys.last
     end
 
     def self.eos_date(eos_schedule_index: nil)
       return nil unless eos_schedule_index
       RHEL_EOS_SCHEDULE[eos_schedule_index]&.[]('extended_support') ||
         RHEL_EOS_SCHEDULE[eos_schedule_index]&.[]('maintenance_support')
-    end
-
-    def self.warn_date(eos_schedule_index: nil)
-      return nil unless eos_schedule_index
-      end_of_support_date = eos_date(eos_schedule_index: eos_schedule_index)
-      return nil unless end_of_support_date
-      end_of_support_date - EOS_WARNING_THRESHOLD
-    end
-
-    def self.maintenance_warn_date(eos_schedule_index: nil)
-      return nil unless eos_schedule_index
-      end_of_maintenance_support_date = maintenance_support_end_date(eos_schedule_index: eos_schedule_index)
-      return nil unless end_of_maintenance_support_date
-      end_of_maintenance_support_date - EOS_WARNING_THRESHOLD
     end
 
     def self.to_label(status, eos_date: nil, maintenance_support_end_date: nil)
@@ -182,11 +181,7 @@ module Katello
     end
 
     def maintenance_support_end_date
-      self.class.maintenance_support_end_date(eos_schedule_index: rhel_eos_schedule_index)
-    end
-
-    def warn_date
-      self.class.warn_date(eos_schedule_index: rhel_eos_schedule_index)
+      self.class.maintenance_support_end_dates[rhel_eos_schedule_index]
     end
 
     def rhel_eos_schedule_index

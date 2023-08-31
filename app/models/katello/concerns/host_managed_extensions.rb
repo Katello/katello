@@ -492,23 +492,15 @@ module Katello
       end
 
       def full_support_end_date
-        ::Katello::RhelLifecycleStatus.full_support_end_date(eos_schedule_index: rhel_eos_schedule_index)
-      end
-
-      def approaching_end_of_maintenance_date
-        ::Katello::RhelLifecycleStatus.maintenance_warn_date(eos_schedule_index: rhel_eos_schedule_index)
+        ::Katello::RhelLifecycleStatus.full_support_end_dates[rhel_eos_schedule_index]
       end
 
       def maintenance_support_end_date
-        ::Katello::RhelLifecycleStatus.maintenance_support_end_date(eos_schedule_index: rhel_eos_schedule_index)
+        ::Katello::RhelLifecycleStatus.maintenance_support_end_dates[rhel_eos_schedule_index]
       end
 
       def extended_support_end_date
-        ::Katello::RhelLifecycleStatus.extended_support_end_date(eos_schedule_index: rhel_eos_schedule_index)
-      end
-
-      def approaching_end_of_support_date
-        ::Katello::RhelLifecycleStatus.warn_date(eos_schedule_index: rhel_eos_schedule_index)
+        ::Katello::RhelLifecycleStatus.extended_support_end_dates[rhel_eos_schedule_index]
       end
 
       def end_of_support_date
