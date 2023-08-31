@@ -1,5 +1,4 @@
 module Katello
-  # rubocop:disable Metrics/ClassLength
   class Api::V2::HostsBulkActionsController < Api::V2::ApiController
     include Concerns::Api::V2::BulkHostsExtensions
     include Katello::Concerns::Api::V2::ContentOverridesController
@@ -16,7 +15,6 @@ module Katello
     before_action :find_organization, only: [:add_subscriptions]
     before_action :find_traces, only: [:resolve_traces]
 
-    before_action :validate_content_action, only: [:install_content, :update_content, :remove_content]
     before_action :validate_organization, only: [:add_subscriptions]
 
     # disable *_count fields on erratum rabl, since they perform N+1 queries
@@ -26,22 +24,6 @@ module Katello
       api_version 'v2'
       api_base_url "/api"
     end
-
-    PARAM_ACTIONS = {
-      :install_content => {
-        :package => ::Actions::Katello::Host::Package::Install,
-        :package_group => ::Actions::Katello::Host::PackageGroup::Install,
-        :errata => :install_errata
-      },
-      :update_content => {
-        :package => ::Actions::Katello::Host::Package::Update,
-        :package_group => ::Actions::Katello::Host::PackageGroup::Install
-      },
-      :remove_content => {
-        :package => ::Actions::Katello::Host::Package::Remove,
-        :package_group => ::Actions::Katello::Host::PackageGroup::Remove
-      }
-    }.with_indifferent_access
 
     def_param_group :bulk_params do
       param :organization_id, :number, :required => true, :desc => N_("ID of the organization")
@@ -349,33 +331,6 @@ module Katello
 
       unless max_hosts_exceeded.empty?
         fail HttpErrors::BadRequest, _("Maximum number of content hosts exceeded for host collection(s): %s") % max_hosts_exceeded.join(', ')
-      end
-    end
-
-    def content_action
-      if params[:content_type] == 'errata'
-        options = {}
-        options[:update_all] = true if ::Foreman::Cast.to_bool(params[:install_all])
-        options[:errata_ids] = params[:content]
-
-        task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, @hosts, options)
-        respond_for_async :resource => task
-      else
-        content = params[:content]
-        if params[:action] == :update_content && params[:update_all]
-          content = []
-        end
-        task = async_task(Actions::Katello::BulkAgentAction, PARAM_ACTIONS[params[:action]][params[:content_type]], @hosts, content: content)
-        respond_for_async :resource => task
-      end
-    end
-
-    def validate_content_action
-      fail HttpErrors::BadRequest, _("A content_type must be provided.") if params[:content_type].blank?
-      fail HttpErrors::BadRequest, _("No content has been provided.") if params[:content].blank? && !params[:update_all]
-
-      if PARAM_ACTIONS[params[:action]][params[:content_type]].nil?
-        fail HttpErrors::BadRequest, _("Invalid content type %s") % params[:content_type]
       end
     end
 
