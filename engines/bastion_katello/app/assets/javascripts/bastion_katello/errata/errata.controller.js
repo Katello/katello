@@ -35,6 +35,7 @@ angular.module('Bastion.errata').controller('ErrataController',
         }
 
         nutupane = $scope.nutupane = new Nutupane(Erratum, params);
+        nutupane.enableSelectAllResults();
         $scope.controllerName = 'katello_errata';
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
