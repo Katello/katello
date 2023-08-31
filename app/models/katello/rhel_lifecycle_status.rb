@@ -74,25 +74,32 @@ module Katello
       map
     end
 
-    def self.to_status(operatingsystem: nil)
-      return UNKNOWN unless operatingsystem.is_a?(::Operatingsystem)
-      release = operatingsystem.rhel_eos_schedule_index
-      approach_date = warn_date(eos_schedule_index: release)
-      end_of_support_date = eos_date(eos_schedule_index: release)
+    def self.to_status(rhel_eos_schedule_index: nil)
+      release = rhel_eos_schedule_index
+      return UNKNOWN unless release.present? && RHEL_EOS_SCHEDULE.key?(release)
+
+      # Full support
+      full_support_end_date = full_support_end_date(eos_schedule_index: release)
+      return FULL_SUPPORT if Date.today <= full_support_end_date
+
+      # Approach warnings
       maintenance_approach_date = maintenance_warn_date(eos_schedule_index: release)
       maintenance_end_of_support_date = maintenance_support_end_date(eos_schedule_index: release)
-      return UNKNOWN unless release
-      return UNKNOWN if RHEL_EOS_SCHEDULE[release].nil?
-
-      return FULL_SUPPORT if Date.today <= RHEL_EOS_SCHEDULE[release]['full_support']
       if between_dates?(maintenance_approach_date, maintenance_end_of_support_date)
         return APPROACHING_END_OF_MAINTENANCE
       end
-      return MAINTENANCE_SUPPORT if Date.today <= maintenance_end_of_support_date
+      approach_date = warn_date(eos_schedule_index: release)
+      end_of_support_date = eos_date(eos_schedule_index: release)
       if between_dates?(approach_date, end_of_support_date)
         return APPROACHING_END_OF_SUPPORT
       end
+
+      # Maintenance support
+      return MAINTENANCE_SUPPORT if Date.today <= maintenance_end_of_support_date
+
+      # Extended support
       return EXTENDED_SUPPORT if Date.today <= end_of_support_date
+
       return SUPPORT_ENDED
     end
 
@@ -189,7 +196,7 @@ module Katello
     def to_global(_options = {})
       if [FULL_SUPPORT, MAINTENANCE_SUPPORT, EXTENDED_SUPPORT].include?(status)
         ::HostStatus::Global::OK
-      elsif [APPROACHING_END_OF_SUPPORT].include?(status)
+      elsif [APPROACHING_END_OF_SUPPORT, APPROACHING_END_OF_MAINTENANCE].include?(status)
         ::HostStatus::Global::WARN
       elsif [SUPPORT_ENDED].include?(status)
         ::HostStatus::Global::ERROR
@@ -198,8 +205,8 @@ module Katello
       end
     end
 
-    def to_status(operatingsystem: nil)
-      self.class.to_status(operatingsystem: operatingsystem || self.host&.operatingsystem)
+    def to_status
+      self.class.to_status(rhel_eos_schedule_index: self.host&.operatingsystem&.rhel_eos_schedule_index)
     end
 
     # this status is only relevant for RHEL
