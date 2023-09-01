@@ -8,6 +8,7 @@ module Katello
       Katello::PurposeUsageStatus,
       Katello::PurposeAddonsStatus,
       Katello::PurposeStatus,
+      Katello::RhelLifecycleStatus,
       Katello::TraceStatus].freeze
 
     PURPOSE_STATUS = [

@@ -184,6 +184,7 @@ module Katello
       def test_process_registration_existing_host
         host = FactoryBot.create(:host, :with_content, :organization_id => @org.id)
         @facts = {'network.hostname' => host.name}
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
 
         ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, [@content_view_environment], [])
 
@@ -214,6 +215,7 @@ module Katello
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [@content_view_environment])
 
         assert_equal new_host.subscription_facet.uuid, 'fake-uuid-from-candlepin'
@@ -230,6 +232,7 @@ module Katello
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
 
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
@@ -266,6 +269,7 @@ module Katello
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
 
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).returns(:uuid => 'fake-uuid-from-katello')
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
@@ -278,7 +282,7 @@ module Katello
       def test_unregister_host
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-        @host.content_facet.expects(:cves_changed?).returns(false)
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Katello::EventQueue.expects(:push_event).never
         ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)

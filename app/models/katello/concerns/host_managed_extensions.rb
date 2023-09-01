@@ -108,6 +108,8 @@ module Katello
         delegate :content_source_id, :single_content_view, :single_lifecycle_environment, :default_environment?, :single_content_view_environment?, :multi_content_view_environment?, :kickstart_repository_id, :bound_repositories,
           :installable_errata, :installable_rpms, to: :content_facet, allow_nil: true
 
+        delegate :rhel_eos_schedule_index, to: :operatingsystem, allow_nil: true
+
         has_many :content_view_environment_content_facets, through: :content_facet, class_name: 'Katello::ContentViewEnvironmentContentFacet'
         has_many :content_view_environments, through: :content_view_environment_content_facets
         has_many :content_views, through: :content_view_environments
@@ -479,6 +481,30 @@ module Katello
 
       def purpose_addons_status_label(options = {})
         @purpose_addons_status_label ||= get_status(::Katello::PurposeAddonsStatus).to_label(options)
+      end
+
+      def rhel_lifecycle_status
+        @rhel_lifecycle_status ||= get_status(::Katello::RhelLifecycleStatus).status
+      end
+
+      def rhel_lifecycle_status_label
+        @rhel_lifecycle_status_label ||= get_status(::Katello::RhelLifecycleStatus).to_label
+      end
+
+      def full_support_end_date
+        ::Katello::RhelLifecycleStatus.full_support_end_dates[rhel_eos_schedule_index]
+      end
+
+      def maintenance_support_end_date
+        ::Katello::RhelLifecycleStatus.maintenance_support_end_dates[rhel_eos_schedule_index]
+      end
+
+      def extended_support_end_date
+        ::Katello::RhelLifecycleStatus.extended_support_end_dates[rhel_eos_schedule_index]
+      end
+
+      def end_of_support_date
+        ::Katello::RhelLifecycleStatus.eos_date(eos_schedule_index: rhel_eos_schedule_index)
       end
 
       def traces_status

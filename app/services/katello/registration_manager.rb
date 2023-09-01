@@ -241,9 +241,11 @@ module Katello
         host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.
             consumer_attributes.except(:guestIds, :facts))
         host.subscription_facet.save!
-        host.subscription_facet.update_subscription_status
-        host.content_facet.update_errata_status
-        host.refresh_global_status!
+        host.refresh_statuses([
+                                ::Katello::ErrataStatus,
+                                ::Katello::SubscriptionStatus,
+                                ::Katello::RhelLifecycleStatus
+                              ])
       end
 
       def set_host_collections(host, activation_keys)
