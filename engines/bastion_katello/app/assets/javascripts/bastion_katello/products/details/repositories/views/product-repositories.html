@@ -168,9 +168,9 @@
 
             <span ng-show="repository.content_type == 'file'">
               <div>
-                <span translate>
+                <a translate ui-sref="product.repository.manage-content.files({productId: product.id, repositoryId: repository.id})">
                   {{ repository.content_counts.file || 0 }} Files
-                </span>
+                </a>
               </div>
             </span>
 
