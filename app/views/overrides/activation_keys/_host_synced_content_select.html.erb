@@ -1,11 +1,19 @@
 <%
-kickstart_repo_id = using_hostgroups_page? ? kickstart_repository_id(@hostgroup) : kickstart_repository_id(@host, :selected_host_group => @hostgroup)
-kickstart_repo_id = 'unset' if kickstart_repo_id.blank?
-host = using_hostgroups_page? ? @hostgroup : @host
-kickstart_options = kickstart_repository_options(host, :selected_host_group => @hostgroup)
-ks_repo_select_id =  using_hostgroups_page? ? :host_group_kickstart_repository_id : :host_kickstart_repository_id
-ks_repo_select_name =  using_hostgroups_page? ? 'hostgroup[kickstart_repository_id]' : 'host[content_facet_attributes][kickstart_repository_id]'
-ks_repo_select_attr = using_hostgroups_page? ? 'kickstart_repository' : 'content_facet.kickstart_repository'
+   if using_discovered_hosts_page?
+     kickstart_repo_id = kickstart_repository_id(@host, :selected_host_group => @host&.hostgroup)
+     kickstart_options = kickstart_repository_options(@host, :selected_host_group => @host&.hostgroup)
+   elsif using_hostgroups_page?
+     kickstart_repo_id = kickstart_repository_id(@host, :selected_host_group => @host&.hostgroup)
+     kickstart_options = kickstart_repository_options(@hostgroup)
+   else
+     kickstart_repo_id = kickstart_repository_id(@host, :selected_host_group => @hostgroup)
+     kickstart_options = kickstart_repository_options(@hostgroup)
+   end
+
+   kickstart_repo_id = 'unset' if kickstart_repo_id.blank?
+   ks_repo_select_id =  using_hostgroups_page? ? :host_group_kickstart_repository_id : :host_kickstart_repository_id
+   ks_repo_select_name =  using_hostgroups_page? ? 'hostgroup[kickstart_repository_id]' : 'host[content_facet_attributes][kickstart_repository_id]'
+   ks_repo_select_attr = using_hostgroups_page? ? 'kickstart_repository' : 'content_facet.kickstart_repository'
 %>
 
 <% spinner_path = asset_path('spinner.gif') %>

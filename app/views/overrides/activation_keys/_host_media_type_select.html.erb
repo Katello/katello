@@ -1,9 +1,17 @@
-<% media_selection = using_hostgroups_page? ? use_install_media(@hostgroup) : use_install_media(@host, :selected_host_group => @hostgroup)
+<%
+   if using_discovered_hosts_page?
+     media_selection =  use_install_media(@host, :selected_host_group => @host&.hostgroup)
+     kickstart_options = kickstart_repository_options(@host, :selected_host_group => @host&.hostgroup)
+   elsif using_hostgroups_page?
+     media_selection =  use_install_media(@hostgroup)
+     kickstart_options = kickstart_repository_options(@hostgroup)
+   else
+    media_selection = use_install_media(@host, :selected_host_group => @hostgroup)
+     kickstart_options = kickstart_repository_options(@host, :selected_host_group => @hostgroup)
+   end
    install_media_radio  = media_selection ? 'checked="checked"':''
    synced_content_radio  = media_selection ? '' : 'checked="checked"'
    install_media_disabled = os_media.empty? ? 'disabled = true' : ''
-
-   kickstart_options = using_hostgroups_page? ? kickstart_repository_options(@hostgroup) : kickstart_repository_options(@host, :selected_host_group => @hostgroup)
    synced_content_disabled = kickstart_options.empty? ? 'disabled = true' : ''
 %>
 
