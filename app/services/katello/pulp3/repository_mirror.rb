@@ -144,7 +144,12 @@ module Katello
 
       def common_remote_options
         remote_options = {
-          name: backend_object_name
+          name: backend_object_name,
+          total_timeout: Setting[:sync_total_timeout],
+          connect_timeout: Setting[:sync_connect_timeout_v2],
+          sock_connect_timeout: Setting[:sync_sock_connect_timeout],
+          sock_read_timeout: Setting[:sync_sock_read_timeout],
+          rate_limit: Setting[:download_rate_limit]
         }
         remote_options.merge!({download_concurrency: repo.download_concurrency}) if repo.download_concurrency
         remote_options.merge!(ssl_remote_options)
