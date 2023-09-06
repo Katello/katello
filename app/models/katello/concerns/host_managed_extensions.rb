@@ -29,7 +29,7 @@ module Katello
         end
 
         def attributes=(attrs)
-          check_cve_attributes(attrs)
+          check_cve_attributes(attrs) unless self.content_facet.blank?
           super
         end
 
