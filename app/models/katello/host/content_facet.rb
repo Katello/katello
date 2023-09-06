@@ -93,12 +93,13 @@ module Katello
         content_view_environments&.first&.lifecycle_environment
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def assign_single_environment(
         content_view_id: nil, lifecycle_environment_id: nil, environment_id: nil,
         content_view: nil, lifecycle_environment: nil, environment: nil
       )
         lifecycle_environment_id ||= environment_id || lifecycle_environment&.id || environment&.id || self.single_lifecycle_environment&.id
-        content_view_id ||= content_view&.id  || self.single_content_view&.id
+        content_view_id ||= content_view&.id || self.single_content_view&.id
 
         unless lifecycle_environment_id
           fail _("Lifecycle environment must be specified")
