@@ -7,7 +7,7 @@
      kickstart_options = kickstart_repository_options(@hostgroup)
    else
      kickstart_repo_id = kickstart_repository_id(@host, :selected_host_group => @hostgroup)
-     kickstart_options = kickstart_repository_options(@hostgroup)
+     kickstart_options = kickstart_repository_options(@host, :selected_host_group => @hostgroup)
    end
 
    kickstart_repo_id = 'unset' if kickstart_repo_id.blank?
