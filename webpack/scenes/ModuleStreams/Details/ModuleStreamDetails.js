@@ -50,8 +50,7 @@ class ModuleStreamDetails extends Component {
           breadcrumbItems={[
             {
               caption: __('Module Streams'),
-              onClick: () =>
-                this.props.history.push('/module_streams'),
+              url: '/module_streams/',
             },
             {
               caption: `${name} ${stream}`,
