@@ -483,6 +483,10 @@ module Katello
         @purpose_addons_status_label ||= get_status(::Katello::PurposeAddonsStatus).to_label(options)
       end
 
+      def rhel_lifecycle_global_status
+        @rhel_lifecycle_global_status ||= get_status(::Katello::RhelLifecycleStatus).to_global
+      end
+
       def rhel_lifecycle_status
         @rhel_lifecycle_status ||= get_status(::Katello::RhelLifecycleStatus).status
       end

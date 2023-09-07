@@ -272,6 +272,10 @@ Foreman::Plugin.register :katello do
       use_pagelet :hosts_table_column_content, :name
       add_pagelet :hosts_table_column_header, key: :subscription_status, label: _('Subscription status'), sortable: true, class: common_class, width: '10%', export_key: 'subscription_global_status'
       add_pagelet :hosts_table_column_content, key: :subscription_status, class: common_class, callback: ->(host) { host_status_icon(host.subscription_global_status) }
+
+      add_pagelet :hosts_table_column_header, key: :rhel_lifecycle_status, label: _('RHEL Lifecycle status'), sortable: true, class: common_class, width: '10%', export_key: 'rhel_lifecycle_status'
+      add_pagelet :hosts_table_column_content, key: :rhel_lifecycle_status, class: common_class, callback: ->(host) { host_status_icon(host.rhel_lifecycle_global_status) }
+
       add_pagelet :hosts_table_column_header, key: :installable_updates, label: _('Installable updates'), class: common_class, width: '15%',
                   export_data: [:security, :bugfix, :enhancement].map { |kind| CsvExporter::ExportDefinition.new("installable_updates.#{kind}", callback: ->(host) { (host.content_facet_attributes&.errata_counts || {})[kind] }) } +
                                [:rpm, :deb].map { |kind| CsvExporter::ExportDefinition.new("installable_packages.#{kind}", callback: ->(host) { host&.content_facet_attributes&.public_send("upgradable_#{kind}_count".to_sym) || 0 }) }
