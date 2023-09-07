@@ -16,6 +16,9 @@ describe('Controller: ContentHostsBulkErrataModalController', function() {
             };
 
             this.enableSelectAllResults = function () {};
+            this.getAllSelectedResults = function() {
+                return [1, 2, 3, 4]
+             };
             this.setParams = function () {}
         };
 
@@ -51,6 +54,7 @@ describe('Controller: ContentHostsBulkErrataModalController', function() {
     }));
 
     it("can install errata on multiple content hosts", function () {
+        $scope.remoteExecutionPresent = true;
         $scope.installErrata();
 
         expect($scope.errataActionFormValues.remoteAction).toEqual('errata_install');

@@ -79,7 +79,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         };
 
         $scope.selectedErrataIds = function () {
-            return $scope.table.getSelected();
+            return $scope.nutupane.getAllSelectedResults('errata_id');
         };
 
         $scope.installErrataViaRemoteExecution = function(customize) {
@@ -88,6 +88,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
             $scope.errataActionFormValues.remoteAction = 'errata_install';
             $scope.errataActionFormValues.bulkErrataIds = angular.toJson(errataIds);
             $scope.errataActionFormValues.customize = customize;
+
+            $timeout(function () {
+                angular.element('#errataActionForm').submit();
+            }, 0);
         };
 
         $scope.ok = function () {
