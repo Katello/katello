@@ -2,6 +2,7 @@ module Katello
   class Ping
     OK_RETURN_CODE = 'ok'.freeze
     FAIL_RETURN_CODE = 'FAIL'.freeze
+    PACKAGES = %w(katello candlepin pulp foreman hammer).freeze
 
     class << self
       def services(capsule_id = nil)
@@ -140,6 +141,13 @@ module Katello
         result[:status] = FAIL_RETURN_CODE
         result[:message] = e.message
         result
+      end
+
+      # get package information for katello and its components
+      def packages
+        names = PACKAGES.join("|")
+        packages = `rpm -qa | egrep "#{names}"`
+        packages.split("\n").sort
       end
 
       def pulp_url(capsule_id)
