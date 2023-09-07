@@ -25,6 +25,10 @@ child :content_facet => :content_facet_attributes do
     content_facet.tracer_installed?
   end
 
+  node :katello_tracer_rpm_available do |content_facet|
+    content_facet.tracer_rpm_available?
+  end
+
   user = User.current # current_user is not available here
   child :permissions do
     node(:view_lifecycle_environments) { user.can?("view_lifecycle_environments") }

@@ -8,6 +8,9 @@ module Katello
       HOST_TOOLS_PACKAGE_NAME = 'katello-host-tools'.freeze
       HOST_TOOLS_TRACER_PACKAGE_NAME = 'katello-host-tools-tracer'.freeze
       SUBSCRIPTION_MANAGER_PACKAGE_NAME = 'subscription-manager'.freeze
+      ALL_TRACER_PACKAGE_NAMES = [ "python-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
+                                   "python3-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
+                                   HOST_TOOLS_TRACER_PACKAGE_NAME ].freeze
 
       belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :inverse_of => :kickstart_content_facets
       belongs_to :content_source, :class_name => "::SmartProxy", :inverse_of => :content_facets
@@ -305,12 +308,12 @@ module Katello
       end
 
       def tracer_installed?
-        self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => [ "python-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
-                                                                                               "python3-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
-                                                                                               HOST_TOOLS_TRACER_PACKAGE_NAME ]).any? ||
-          self.host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => [ "python-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
-                                                                                         "python3-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
-                                                                                         HOST_TOOLS_TRACER_PACKAGE_NAME ]).any?
+        self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => ALL_TRACER_PACKAGE_NAMES).any? ||
+          self.host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => ALL_TRACER_PACKAGE_NAMES).any?
+      end
+
+      def tracer_rpm_available?
+        ::Katello::Rpm.yum_installable_for_host(self.host).where(name: ALL_TRACER_PACKAGE_NAMES).any?
       end
 
       def host_tools_installed?
