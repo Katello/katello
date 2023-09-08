@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { Skeleton, Alert } from '@patternfly/react-core';
-import { Button } from 'patternfly-react';
+import { Button, FieldLevelHelp } from 'patternfly-react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PermissionDenied from 'foremanReact/components/PermissionDenied';
 import { LoadingState } from '../../components/LoadingState';
@@ -96,6 +96,7 @@ class RedHatRepositoriesPage extends Component {
           <Col sm={6} className="enabled-repositories-container">
             <h2>
               {__('Enabled Repositories')}
+              <FieldLevelHelp content={__('Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.')} />
               <Button
                 ouiaId="export-csv-button"
                 className="pull-right"

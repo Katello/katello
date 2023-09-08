@@ -81,6 +81,12 @@ exports[`RedHatRepositories page should render 1`] = `
     >
       <h2>
         Enabled Repositories
+        <FieldLevelHelp
+          buttonClass=""
+          content="Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page."
+          placement="top"
+          rootClose={true}
+        />
         <Button
           active={false}
           block={false}
