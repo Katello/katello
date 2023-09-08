@@ -174,5 +174,22 @@ module Katello
     def cron_status_mismatch?
       self.interval != CUSTOM_CRON && !(self.cron_expression.nil? || self.cron_expression.eql?(''))
     end
+
+    def validate_and_update_products(force_update: false)
+      sync_plan_products = Product.where(id: self.product_ids).select { |p| p.enabled? }
+      return if sync_plan_products.length == self.product_ids.length
+      sync_plan_product_ids = sync_plan_products.pluck(:id)
+      if sync_plan_product_ids.length < self.product_ids.length
+        missing_ids = self.product_ids - sync_plan_product_ids
+        Rails.logger.warn "Sync plan products with following ids are either disabled or don't exist: #{missing_ids}"
+        if force_update
+          Rails.logger.info "Updating sync plan with valid and enabled product ids: #{sync_plan_product_ids}"
+          self.product_ids = sync_plan_product_ids
+          self.save!
+        else
+          Rails.logger.warn "Some sync plan products are invalid/disabled. Please run validate_and_update_products(force_update: true) on the sync_plan from `foreman-rake console`"
+        end
+      end
+    end
   end
 end
