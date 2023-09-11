@@ -55,6 +55,7 @@ export const requestSuccessResponse = Immutable({
         ],
       },
       last_sync: null,
+      content_view_versions: [],
       content_counts: {
         docker_manifest: 0,
         docker_manifest_list: 0,
@@ -95,6 +96,7 @@ export const requestSuccessResponse = Immutable({
         ],
       },
       last_sync: null,
+      content_view_versions: [1],
       content_counts: {
         docker_manifest: 0,
         docker_manifest_list: 0,
@@ -128,6 +130,7 @@ export const successState = Immutable({
       productId: 20,
       releasever: '7.0',
       type: 'yum',
+      canDisable: true,
     },
     {
       arch: 'x86_64',
@@ -139,6 +142,7 @@ export const successState = Immutable({
       productId: 20,
       releasever: '7.1',
       type: 'yum',
+      canDisable: false,
     },
   ],
   searchIsActive: false,

@@ -31,6 +31,7 @@ const mapRepo = (repo) => {
     orphaned: repo.product.orphaned,
     contentId: parseInt(repo.content_id, 10),
     productId: parseInt(repo.product.id, 10),
+    canDisable: repo.content_view_versions.length === 0,
   });
 };
 

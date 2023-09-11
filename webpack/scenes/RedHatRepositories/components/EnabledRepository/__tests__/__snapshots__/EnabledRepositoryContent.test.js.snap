@@ -16,7 +16,7 @@ exports[`Enabled Repositories Content Component should render 1`] = `
         id="disable-1"
         placement="right"
       >
-        Disable
+        Cannot be disabled because it is part of a published content view
       </Tooltip>
     }
     placement="bottom"
@@ -29,12 +29,13 @@ exports[`Enabled Repositories Content Component should render 1`] = `
     }
   >
     <button
+      disabled={true}
       onClick={[MockFunction]}
       style={
         Object {
           "backgroundColor": "initial",
           "border": "none",
-          "color": "#0388ce",
+          "color": "#d2d2d2",
         }
       }
     >

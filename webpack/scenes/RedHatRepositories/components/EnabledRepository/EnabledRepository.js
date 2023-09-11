@@ -62,7 +62,7 @@ class EnabledRepository extends Component {
 
   render() {
     const {
-      name, id, type, orphaned, label,
+      name, id, type, orphaned, label, canDisable,
     } = this.props;
 
     return (
@@ -73,6 +73,7 @@ class EnabledRepository extends Component {
             loading={this.props.loading}
             disableTooltipId={this.disableTooltipId}
             disableRepository={this.disableRepository}
+            canDisable={canDisable}
           />
         }
         leftContent={<RepositoryTypeIcon id={id} type={type} />}
@@ -106,6 +107,7 @@ EnabledRepository.propTypes = {
   loading: PropTypes.bool,
   releasever: PropTypes.string,
   orphaned: PropTypes.bool,
+  canDisable: PropTypes.bool,
   setRepositoryDisabled: PropTypes.func.isRequired,
   loadEnabledRepos: PropTypes.func.isRequired,
   disableRepository: PropTypes.func.isRequired,
@@ -116,6 +118,7 @@ EnabledRepository.defaultProps = {
   orphaned: false,
   search: {},
   loading: false,
+  canDisable: true,
 };
 
 export default EnabledRepository;

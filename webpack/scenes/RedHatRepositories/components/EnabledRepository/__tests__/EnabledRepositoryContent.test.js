@@ -12,6 +12,7 @@ describe('Enabled Repositories Content Component', () => {
       loading
       disableTooltipId="disable-1"
       disableRepository={mockCallBack}
+      canDisable={false}
     />);
   });
 
