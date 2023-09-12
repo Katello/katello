@@ -94,8 +94,9 @@ module Katello
     param :product_ids, Array, :desc => N_("List of product ids to add to the sync plan"), :required => true
     def add_products
       products = ::Katello::Product.where(:id => params[:product_ids]).editable
+      disabled_products = products.select { |p| p.redhat? && !p.enabled? }
+      fail _("Cannot add disabled products to sync plan!") if disabled_products.present?
       @sync_plan.product_ids = (@sync_plan.product_ids + products.collect { |p| p.id }).uniq
-      @sync_plan.save!
       respond_for_show
     end
 
@@ -105,8 +106,10 @@ module Katello
     param :product_ids, Array, :desc => N_("List of product ids to remove from the sync plan"), :required => true
     def remove_products
       products = ::Katello::Product.where(:id => params[:product_ids]).editable
-      @sync_plan.product_ids = (@sync_plan.product_ids - products.collect { |p| p.id }).uniq
-      @sync_plan.save!
+      begin
+        @sync_plan.product_ids = (@sync_plan.product_ids - products.collect { |p| p.id }).uniq
+      end
+
       respond_for_show
     end
 
