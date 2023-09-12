@@ -34,8 +34,16 @@ module Katello
     end
 
     def self.mark_in_progress(event)
-      ::Katello::Event.where(:in_progress => false, :object_id => event.object_id, :event_type => event.event_type).
-                       update_all(:in_progress => true)
+      query = ::Katello::Event.where(
+        in_progress: false,
+        object_id: event.object_id,
+        event_type: event.event_type
+      )
+
+      # Don't mark future events as in progress!
+      query = query.where('process_after <= ?', event.process_after) if event.process_after
+
+      query.update_all(in_progress: true)
     end
 
     def self.reset_in_progress
