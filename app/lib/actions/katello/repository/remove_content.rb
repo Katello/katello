@@ -12,7 +12,7 @@ module Actions
           unless repository.content_view.default?
             fail _("Can only remove content from within the Default Content View")
           end
-
+          content_units = valid_docker_manifests_to_delete!(content_units) if (repository.docker? && content_units.first.class::CONTENT_TYPE == 'docker_manifest')
           action_subject(repository)
 
           content_unit_ids = content_units.map(&:id)
@@ -56,6 +56,14 @@ module Actions
               content_unit.remove_from_repository(input[:repository][:id])
             end
           end
+        end
+
+        def valid_docker_manifests_to_delete!(content_units)
+          original_content_units = content_units
+          content_units = content_units.reject { |dm| dm.docker_tags.count > 0 || dm.docker_manifest_lists.count > 0 }
+          Rails.logger.warn("Docker Manifests with tags or manifest lists will be ignored; continuing...") if original_content_units.count != content_units.count
+          fail _("No docker manifests to delete after ignoring manifests with tags or manifest lists") if content_units.count == 0
+          content_units
         end
 
         def humanized_name
