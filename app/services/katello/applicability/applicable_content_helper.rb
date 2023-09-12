@@ -69,7 +69,7 @@ module Katello
         deb_version_compare = Arel::Nodes::NamedFunction.new('deb_version_cmp', [deb[:version], installed_deb[:version]]).gt(0)
 
         content = deb.join(repo_deb).on(repo_deb[:deb_id].eq(deb[:id]))
-                     .join(installed_deb).on(installed_deb[:name].eq(deb[:name]))
+                     .join(installed_deb).on(installed_deb[:name].eq(deb[:name]), installed_deb[:architecture].eq(deb[:architecture]))
                      .join(host_installed_deb).on(host_installed_deb[:installed_deb_id].eq(installed_deb[:id]))
                      .where(deb_version_compare)
                      .where(host_installed_deb[:host_id].eq(self.content_facet.host.id))
