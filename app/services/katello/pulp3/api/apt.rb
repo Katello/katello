@@ -21,7 +21,7 @@ module Katello
         end
 
         def copy_api
-          PulpDebClient::CopyApi.new(api_client)
+          PulpDebClient::DebCopyApi.new(api_client)
         end
       end
     end
