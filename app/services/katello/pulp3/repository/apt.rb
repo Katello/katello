@@ -73,18 +73,27 @@ module Katello
           "/pulp/deb/#{repo.relative_path}/".sub('//', '/')
         end
 
-        def multi_copy_units(repo_id_map, dependency_solving)
+        def multi_copy_units(repo_id_map, _dependency_solving)
           tasks = []
 
           if repo_id_map.values.pluck(:content_unit_hrefs).flatten.any?
             data = PulpDebClient::Copy.new
-            data.dependency_solving = dependency_solving
+            data.dependency_solving = false
             data.config = []
             repo_id_map.each do |source_repo_ids, dest_repo_id_map|
               dest_repo = ::Katello::Repository.find(dest_repo_id_map[:dest_repo])
               dest_repo_href = ::Katello::Pulp3::Repository::Apt.new(dest_repo, SmartProxy.pulp_primary).repository_reference.repository_href
               content_unit_hrefs = dest_repo_id_map[:content_unit_hrefs]
               # Not needed during incremental update due to dest_base_version
+              # -> Unless incrementally updating a CV repo that is a soft copy of its library instance.
+              # -> I.e. no filters and not an incremental version.
+              unless dest_repo_id_map[:base_version]
+                # Don't perform extra content actions if the repo is a soft copy of its library instance.
+                # Taken care of by the IncrementalUpdate action.
+                unless dest_repo.soft_copy_of_library?
+                  tasks << remove_all_content_from_repo(dest_repo_href)
+                end
+              end
               source_repo_ids.each do |source_repo_id|
                 source_repo_version = ::Katello::Repository.find(source_repo_id).version_href
                 config = { source_repo_version: source_repo_version, dest_repo: dest_repo_href, content: content_unit_hrefs }
@@ -203,9 +212,9 @@ module Katello
           filter_list_map
         end
 
-        def copy_content_from_mapping(repo_id_map, options = {})
+        def copy_content_from_mapping(repo_id_map, _options = {})
           repo_id_map.each do |source_repo_ids, dest_repo_map|
-            filters = ContentViewDebFilter.where(:id => options[:filter_ids])
+            filters = ContentViewDebFilter.where(:id => dest_repo_map[:filter_ids])
 
             filter_list_map = { whitelist_ids: [], blacklist_ids: [] }
             filter_list_map = add_filter_content(source_repo_ids, filters, filter_list_map)
@@ -218,7 +227,7 @@ module Katello
             dest_repo_map[:content_unit_hrefs] = content_unit_hrefs.uniq.sort
           end
 
-          dependency_solving = options[:solve_dependencies] || false
+          dependency_solving = false
 
           multi_copy_units(repo_id_map, dependency_solving)
         end
@@ -233,7 +242,8 @@ module Katello
               tasks << add_content(slice, first_slice)
               first_slice = false
             end
-          else
+          # If we're merging composite cv repositories, don't clear out the Pulp repository.
+          elsif remove_all
             tasks << remove_all_content
           end
           tasks
