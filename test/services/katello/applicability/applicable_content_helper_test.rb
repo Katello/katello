@@ -94,6 +94,13 @@ module Katello
           assert_equal [[@deb_one_new.id], []], deb_differences
         end
 
+        def test_applicable_differences_should_not_mix_deb_architectures
+          @installed_deb1.architecture = 'i386'
+          @installed_deb1.save
+          deb_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).applicable_differences
+          assert_equal [[], []], deb_differences
+        end
+
         def test_applicable_differences_adds_and_removes_no_deb_ids
           ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).calculate_and_import
           deb_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).applicable_differences
