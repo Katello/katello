@@ -9,6 +9,7 @@ User.as(::User.anonymous_api_admin.login) do
   N_('Host errata advisory')
   N_('Sync errata')
   N_('Promote errata')
+  N_('Repository sync failure')
 
   # Mail Notifications
   notifications = [
@@ -39,6 +40,13 @@ User.as(::User.anonymous_api_admin.login) do
      :method => 'subscription_expiry',
      :subscription_type => 'report',
      :queryable => true
+    },
+
+    {:name => :repository_sync_failure,
+     :description => N_('A notification about failed repository sync'),
+     :mailer => 'Katello::TaskMailer',
+     :method => 'repo_sync_failure',
+     :subscription_type => 'alert',
     }
   ]
 

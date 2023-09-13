@@ -8,6 +8,8 @@ module Actions
         include ::Actions::ObservableAction
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
+        execution_plan_hooks.use :notify_on_failure, :on => :failure
+
         input_format do
           param :id, Integer
           param :sync_result, Hash
@@ -94,6 +96,14 @@ module Actions
 
         def rescue_strategy
           Dynflow::Action::Rescue::Skip
+        end
+
+        def notify_on_failure(_plan)
+          notification = MailNotification[:repository_sync_failure]
+          repo = ::Katello::Repository.find(input.fetch(:repository, {})[:id])
+          notification.users.each do |user|
+            notification.deliver(user: user, repo: repo, task: task)
+          end
         end
 
         def repository_id

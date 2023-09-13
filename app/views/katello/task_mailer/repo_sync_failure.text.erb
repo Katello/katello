@@ -1,0 +1,15 @@
+<%= _("%{label} failed.") % { :label => @task.action } %>
+
+<%= _('Repo ID') %>: <%= @repo.id %>
+<%= _('Repo label') %>: <%= @repo.label %>
+<%= _('Product ID') %>: <%= @repo.product.id %>
+<%= _('Product label') %>: <%= @repo.product.label %>
+<%= _('Task ID') %>: <%= @task.id %>
+<%= _('Task state') %>: <%= @task.state %>
+<%= _('Task result') %>: <%= @task.result %>
+<%= _('Task details') %>: <%= foreman_tasks_task_url(@task) %>
+
+Errors:
+<% @task.execution_plan.errors.each do |error| %>
+- <%= error.exception_class %>: <%= error.message %>
+<% end %>

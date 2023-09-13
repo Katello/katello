@@ -1,0 +1,35 @@
+<p>
+  <%= _("%{label} failed.") % { :label => @task.action } %>
+</p>
+
+<div class="dashboard">
+  <table>
+    <tr>
+      <td><%= _('Repository') %></td>
+      <td><%= link_to @repo.label, "#{katello_url}products/#{@repo.product.id}/repositories/#{@repo.id}" %></td>
+    </tr>
+    <tr>
+      <td><%= _('Product') %></td>
+      <td><%= link_to @repo.product.label, "#{katello_url}products/#{@repo.product.id}" %></td>
+    </tr>
+    <tr>
+      <td><%= _('Task ID') %></td>
+      <td><%= link_to @task.id, foreman_tasks_task_url(@task.id) %></td>
+    </tr>
+    <tr>
+      <td><%= _('Task state') %></td>
+      <td><%= @task.state %></td>
+    </tr>
+    <tr>
+      <td><%= _('Task result') %></td>
+      <td><%= @task.result %></td>
+    </tr>
+  </table>
+
+  Errors:
+  <ul>
+  <% @task.execution_plan.errors.each do |error| %>
+    <li><%= error.exception_class %>: <%= error.message %></li>
+  <% end %>
+  </ul>
+</div>

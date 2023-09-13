@@ -1,0 +1,18 @@
+module Katello
+  class TaskMailer < ApplicationMailer
+    helper ApplicationHelper
+    include Rails.application.routes.url_helpers
+
+    def repo_sync_failure(options)
+      user, @repo, @task = options.values_at(:user, :repo, :task)
+
+      ::User.as(user.login) do
+        subject = _("Repository %{label} failed to synchronize") % { :label => @repo.label }
+
+        set_locale_for(user) do
+          mail(:to => user.mail, :subject => subject)
+        end
+      end
+    end
+  end
+end
