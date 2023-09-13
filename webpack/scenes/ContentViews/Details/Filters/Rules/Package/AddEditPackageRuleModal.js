@@ -6,8 +6,11 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   Modal, ModalVariant, Form, FormGroup, TextInput,
-  ActionGroup, Button, FormSelect, FormSelectOption,
+  ActionGroup, Button, FormSelect, FormSelectOption, Popover,
 } from '@patternfly/react-core';
+import {
+  HelpIcon,
+} from '@patternfly/react-icons';
 import { addCVFilterRule, editCVFilterRule, getCVFilterRules } from '../../../ContentViewDetailActions';
 import {
   selectCreateFilterRuleStatus,
@@ -135,6 +138,17 @@ const AddEditPackageRuleModal = ({
       isOpen
       onClose={onClose}
       appendTo={document.body}
+      help={
+        <Popover
+          headerContent={__('Help')}
+          bodyContent={__('Use filter rules to include or restrict certain content. ' +
+        "When selecting RPMs, be aware that RPM filters don't apply to modular RPMs.")}
+        >
+          <Button variant="plain" aria-label="Help" ouiaId="rpm-filter-rule-modal-help">
+            <HelpIcon />
+          </Button>
+        </Popover>
+      }
     >
       <Form onSubmit={(e) => {
         e.preventDefault();
