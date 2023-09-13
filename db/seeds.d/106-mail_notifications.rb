@@ -10,6 +10,7 @@ User.as(::User.anonymous_api_admin.login) do
   N_('Sync errata')
   N_('Promote errata')
   N_('Repository sync failure')
+  N_('Content view publish failure')
 
   # Mail Notifications
   notifications = [
@@ -46,6 +47,13 @@ User.as(::User.anonymous_api_admin.login) do
      :description => N_('A notification about failed repository sync'),
      :mailer => 'Katello::TaskMailer',
      :method => 'repo_sync_failure',
+     :subscription_type => 'alert',
+    },
+
+    {:name => :content_view_publish_failure,
+     :description => N_('A notification about failed content view publish'),
+     :mailer => 'Katello::TaskMailer',
+     :method => 'cv_publish_failure',
      :subscription_type => 'alert',
     }
   ]

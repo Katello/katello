@@ -1,0 +1,13 @@
+<%= _("%{label} failed.") % { :label => @task.action } %>
+
+<%= _('Content view ID') %>: <%= @content_view.id %>
+<%= _('Content view name') %>: <%= @content_view.name %>
+<%= _('Task ID') %>: <%= @task.id %>
+<%= _('Task state') %>: <%= @task.state %>
+<%= _('Task result') %>: <%= @task.result %>
+<%= _('Task details') %>: <%= foreman_tasks_task_url(@task) %>
+
+Errors:
+<% @task.execution_plan.errors.each do |error| %>
+- <%= error.exception_class %>: <%= error.message %>
+<% end %>
