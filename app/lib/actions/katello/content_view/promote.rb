@@ -4,6 +4,7 @@ module Actions
       class Promote < Actions::EntryAction
         extend ApipieDSL::Class
         include ::Actions::ObservableAction
+        execution_plan_hooks.use :notify_on_failure, :on => :failure
 
         def plan(version, environments, is_force = false, description = nil, incremental_update = false)
           action_subject(version.content_view)
@@ -20,6 +21,14 @@ module Actions
               plan_action(ContentView::PromoteToEnvironment, version, environment, description, incremental_update)
               plan_action(Katello::ContentViewVersion::AfterPromoteHook, :id => version.id)
             end
+          end
+        end
+
+        def notify_on_failure(_plan)
+          notification = MailNotification[:content_view_promote_failure]
+          view = ::Katello::ContentView.find(input.fetch(:content_view, {})[:id])
+          notification.users.each do |user|
+            notification.deliver(user: user, content_view: view, task: task)
           end
         end
 

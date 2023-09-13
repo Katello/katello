@@ -26,5 +26,17 @@ module Katello
         end
       end
     end
+
+    def cv_promote_failure(options)
+      user, @content_view, @task = options.values_at(:user, :content_view, :task)
+
+      ::User.as(user.login) do
+        subject = _("%{label} failed") % { :label => @task.action }
+
+        set_locale_for(user) do
+          mail(:to => user.mail, :subject => subject)
+        end
+      end
+    end
   end
 end
