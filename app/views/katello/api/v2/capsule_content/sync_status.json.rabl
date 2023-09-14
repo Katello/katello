@@ -43,7 +43,8 @@ child @lifecycle_environments => :lifecycle_environments do
           :up_to_date => @capsule.repos_pending_sync(env, content_view).empty?,
           :counts => {
             :repositories => ::Katello::ContentViewVersion.in_environment(env).find_by(:content_view => content_view)&.archived_repos&.count
-          }
+          },
+          :content_counts => @capsule.content_counts
         }
         attributes
       end
