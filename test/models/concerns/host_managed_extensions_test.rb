@@ -423,6 +423,43 @@ module Katello
   class HostRhelEosSchedulesTest < ActiveSupport::TestCase
     let(:host) { FactoryBot.create(:host, :with_subscription) }
 
+    def test_probably_rhel?
+      host.expects(:facts).returns({'distribution::name' => 'Red Hat Enterprise Linux', 'distribution::version' => '7.3'})
+      assert host.probably_rhel?
+    end
+
+    def test_probably_not_rhel
+      host.expects(:facts).returns({'distribution::name' => 'CentOS', 'distribution::version' => '7.3'})
+      refute host.probably_rhel?
+    end
+
+    def test_rhel_eos_schedule_index
+      os = Operatingsystem.create!(:name => "RedHat", :major => "7", :minor => "3")
+      host.expects(:facts).at_least_once.returns({'distribution::name' => 'Red Hat Enterprise Linux Server', 'distribution::version' => '7.3'})
+      host.operatingsystem = os
+      host.architecture = architectures(:x86_64)
+      host.architecture.expects(:name).at_least_once.returns("x86_64")
+      assert_equal "RHEL7", host.rhel_eos_schedule_index
+      host.architecture.expects(:name).returns("ppc64le")
+      assert_equal "RHEL7 (POWER9)", host.rhel_eos_schedule_index
+      host.architecture.expects(:name).returns("aarch64")
+      assert_equal "RHEL7 (ARM)", host.rhel_eos_schedule_index
+      host.architecture.expects(:name).returns("s390x")
+      assert_equal "RHEL7 (System z (Structure A))", host.rhel_eos_schedule_index
+
+      os = Operatingsystem.create!(:name => "RedHat", :major => "6", :minor => "3")
+      host.expects(:facts).returns({'distribution::name' => 'Red Hat Enterprise Linux', 'distribution::version' => '6.3'})
+      host.operatingsystem = os
+      assert_equal "RHEL6", host.rhel_eos_schedule_index
+    end
+
+    def test_rhel_eos_schedule_index_non_rhel
+      os = Operatingsystem.create!(:name => "CentOS_Stream", :major => "8", :minor => "")
+      host.operatingsystem = os
+      host.expects(:facts).returns({'distribution::name' => 'CentOS Stream', 'distribution::version' => '8'})
+      assert_nil host.rhel_eos_schedule_index
+    end
+
     def test_full_support_end_dates
       host.expects(:rhel_eos_schedule_index).returns('RHEL9')
       expected_date = ::Katello::RhelLifecycleStatus.full_support_end_dates['RHEL9']

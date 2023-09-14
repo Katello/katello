@@ -70,7 +70,7 @@ module Katello
     def test_to_status_full_support
       os.hosts << host
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
-      host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
+      host.expects(:rhel_eos_schedule_index).returns(release)
       Katello::RhelLifecycleStatus.expects(:approaching_end_of_category).returns({})
       fake_full_support_end_date(Date.today + 2.years)
       fake_maintenance_support_end_date(Date.today + 10.years)
@@ -81,7 +81,7 @@ module Katello
     def test_to_status_maintenance_support
       os.hosts << host
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
-      host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
+      host.expects(:rhel_eos_schedule_index).returns(release)
       fake_full_support_end_date(Date.today - 1.year)
       fake_maintenance_support_end_date(Date.today + 2.years)
       fake_extended_support_end_date(Date.today + 10.years)
@@ -91,7 +91,7 @@ module Katello
     def test_to_status_approaching_end_of_support
       os.hosts << host
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
-      host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
+      host.expects(:rhel_eos_schedule_index).returns(release)
       Katello::RhelLifecycleStatus.expects(:approaching_end_of_category).returns({ 'extended_support' => Date.today + 2.days })
       assert_equal Katello::RhelLifecycleStatus::APPROACHING_END_OF_SUPPORT, status.to_status
     end
@@ -99,7 +99,7 @@ module Katello
     def test_to_status_extended_support
       os.hosts << host
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
-      host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
+      host.expects(:rhel_eos_schedule_index).returns(release)
       fake_full_support_end_date(Date.today - 5.years)
       fake_maintenance_support_end_date(Date.today - 3.years)
       fake_extended_support_end_date(Date.today + 2.years)
@@ -109,7 +109,7 @@ module Katello
     def test_to_status_support_ended
       os.hosts << host
       host.operatingsystem.update(:name => "RedHat", :major => "9", :minor => "0")
-      host.operatingsystem.expects(:rhel_eos_schedule_index).returns(release)
+      host.expects(:rhel_eos_schedule_index).returns(release)
       fake_full_support_end_date(Date.today - 5.years)
       fake_maintenance_support_end_date(Date.today - 3.years)
       fake_extended_support_end_date(Date.today - 1.year)
@@ -149,13 +149,12 @@ module Katello
     end
 
     def test_relevant
-      os.hosts << host
+      host.expects(:rhel_eos_schedule_index).returns('RHEL9')
       assert status.relevant?
     end
 
     def test_relevant_non_rhel
-      os.update(:name => "CentOS_Stream")
-      os.hosts << host
+      host.expects(:rhel_eos_schedule_index).returns(nil)
       refute status.relevant?
     end
   end
