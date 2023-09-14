@@ -10,6 +10,7 @@ import {
   Text,
   TextVariants,
 } from '@patternfly/react-core';
+import { number_to_human_size as NumberToHumanSize } from 'number_helpers';
 import CardTemplate from 'foremanReact/components/HostDetails/Templates/CardItem/CardTemplate';
 import { TranslatedPlural } from '../../../Table/components/TranslatedPlural';
 import { hostIsNotRegistered } from '../hostDetailsHelpers';
@@ -43,7 +44,7 @@ const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
   const coreSocket = facts?.['cpu::core(s)_per_socket'];
   const reportedFacts = propsToCamelCase(hostDetails?.reported_data || {});
   const totalDisks = reportedFacts?.disksTotal;
-  const memory = facts?.['dmi::memory::maximum_capacity'];
+  const memory = facts?.['memory::memtotal'];
 
   return (
     <CardTemplate
@@ -71,7 +72,9 @@ const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
         </DescriptionListGroup>
         <DescriptionListGroup>
           <DescriptionListTerm>{__('RAM')}</DescriptionListTerm>
-          <DescriptionListDescription>{memory}</DescriptionListDescription>
+          <DescriptionListDescription>{NumberToHumanSize(memory*1024, {
+          strip_insignificant_zeros: true, precision: 2
+        })}</DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup>
           <HostDisks totalDisks={totalDisks} />
@@ -89,7 +92,7 @@ HwPropertiesCard.propTypes = {
       cpuCount: PropTypes.number,
       cpuSockets: PropTypes.number,
       coreSocket: PropTypes.number,
-      memory: PropTypes.string,
+      memory: PropTypes.number,
     }),
     reported_data: PropTypes.shape({
       totalDisks: PropTypes.number,
