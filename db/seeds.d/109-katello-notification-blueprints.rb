@@ -1,5 +1,11 @@
 blueprints = [
   {
+    group: N_('Hosts'),
+    name: 'host_lifecycle_expire_soon',
+    message: N_('%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.'),
+    level: 'warning'
+  },
+  {
     group: N_('Proxies'),
     name: 'pulp_low_disk_space',
     message: _("%{subject}'s disk is %{percentage} full. Since this proxy is running Pulp, it needs disk space to publish content views. Please ensure the disk does not get full."),

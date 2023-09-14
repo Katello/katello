@@ -69,7 +69,15 @@ module Katello
     end
 
     def self.approaching_end_of_category(eos_schedule_index:)
-      RHEL_EOS_SCHEDULE[eos_schedule_index].select { |_k, v| (Time.now.utc..Time.now.utc + EOS_WARNING_THRESHOLD).cover?(v) }
+      lifecycles_expire_soon[eos_schedule_index]
+    end
+
+    def self.lifecycles_expire_soon
+      expiring = RHEL_EOS_SCHEDULE.collect do |index, schedules|
+        expire_soon = schedules.except("full_support").select { |_k, v| (Time.now.utc..Time.now.utc + EOS_WARNING_THRESHOLD).cover?(v) }
+        {index => expire_soon} if expire_soon.present?
+      end
+      expiring.compact.reduce(:update) || {}
     end
 
     def self.to_status(rhel_eos_schedule_index: nil)

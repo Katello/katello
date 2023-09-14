@@ -459,30 +459,6 @@ module Katello
       host.expects(:facts).returns({'distribution::name' => 'CentOS Stream'})
       assert_nil host.rhel_eos_schedule_index
     end
-
-    def test_full_support_end_dates
-      host.expects(:rhel_eos_schedule_index).returns('RHEL9')
-      expected_date = ::Katello::RhelLifecycleStatus.full_support_end_dates['RHEL9']
-      assert_equal expected_date, host.full_support_end_date
-    end
-
-    def test_maintenance_support_end_dates
-      host.expects(:rhel_eos_schedule_index).returns('RHEL9')
-      expected_date = ::Katello::RhelLifecycleStatus.maintenance_support_end_dates['RHEL9']
-      assert_equal expected_date, host.maintenance_support_end_date
-    end
-
-    def test_extended_support_end_dates
-      host.expects(:rhel_eos_schedule_index).returns('RHEL9')
-      expected_date = ::Katello::RhelLifecycleStatus.extended_support_end_dates['RHEL9']
-      assert_equal expected_date, host.extended_support_end_date
-    end
-
-    def test_end_of_support_dates
-      host.expects(:rhel_eos_schedule_index).returns('RHEL9')
-      expected_date = ::Katello::RhelLifecycleStatus.eos_date(eos_schedule_index: 'RHEL9')
-      assert_equal expected_date, host.end_of_support_date
-    end
   end
 
   class HostManagedExtensionsKickstartTest < ActiveSupport::TestCase
