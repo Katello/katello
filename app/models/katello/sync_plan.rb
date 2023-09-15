@@ -24,6 +24,7 @@ module Katello
     validate :validate_sync_date
     validate :product_enabled
     validate :custom_cron_interval_expression
+    validates_associated :products
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
     before_destroy :cancel_recurring_logic
@@ -55,7 +56,7 @@ module Katello
 
     def product_enabled
       products.each do |product|
-        errors.add :base, _("Cannot add product %s because it is disabled.") % product.name unless product.enabled?
+        errors.add :base, _("Cannot add product %s because it is disabled.") % product.name if (product.redhat? && !product.enabled?)
       end
     end
 

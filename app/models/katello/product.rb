@@ -34,6 +34,7 @@ module Katello
     validates_lengths_from_database :except => [:label]
     validates :provider_id, :presence => true
     validate :ensure_provider_type_matches_id
+    validate :ensure_no_sync_plans_on_empty_product
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
     validates_with Validators::ProductUniqueAttributeValidator, :attributes => :name
@@ -261,6 +262,13 @@ module Katello
       return if errors[:provider_id].any?
       if provider.redhat_provider? && ::Katello::Glue::Candlepin::Product.custom_product_id?(cp_id)
         errors.add(:base, _("Cannot associate a Red Hat provider with a custom product"))
+      end
+    end
+
+    def ensure_no_sync_plans_on_empty_product
+      return if sync_plan_id.nil?
+      if redhat? && !enabled?
+        errors.add(:base, _("Cannot add disabled Red Hat product %s to sync plan!") % name)
       end
     end
   end
