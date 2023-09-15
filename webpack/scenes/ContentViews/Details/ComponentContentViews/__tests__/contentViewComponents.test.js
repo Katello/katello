@@ -8,12 +8,14 @@ import cvComponentData from './contentViewComponents.fixtures.json';
 import cvUnpublishedComponentData from './unpublishedCVComponents.fixtures.json';
 import cvPublishedComponentData from './publishedContentViewDetails.fixtures.json';
 import cvDetails from '../../__tests__/contentViewDetails.fixtures.json';
+import compositeCvDetails from './compositeCVDetails.fixtures.json';
 
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvComponentsWithoutSearch = api.getApiUrl('/content_views/4/content_view_components/show_all?per_page=20&page=1&status=All');
 const cvComponents = api.getApiUrl('/content_views/4/content_view_components/show_all?per_page=20&page=1&search=&status=All');
 const addComponentURL = api.getApiUrl('/content_views/4/content_view_components/add');
 const publishedComponentDetailsURL = api.getApiUrl('/content_views/13');
+const cvDetailsPath = api.getApiUrl('/content_views/4');
 const removeComponentURL = api.getApiUrl('/content_views/4/content_view_components/remove');
 const autocompleteUrl = '/content_views/auto_complete_search';
 const autocompleteQuery = {
@@ -208,6 +210,11 @@ test('Can add published component views to content view with modal', async (done
     .put(addComponentURL, addComponentParams)
     .reply(200, {});
 
+  const cvDetailsScope = nockInstance
+    .get(cvDetailsPath)
+    .query(true)
+    .reply(200, compositeCvDetails);
+
   const {
     getByText, getByLabelText, queryByLabelText, getAllByLabelText,
   } = renderWithRedux(
@@ -234,7 +241,8 @@ test('Can add published component views to content view with modal', async (done
   assertNockRequest(scope);
   assertNockRequest(publishedComponentVersionsScope);
   assertNockRequest(addComponentScope);
-  assertNockRequest(returnScope, done);
+  assertNockRequest(returnScope);
+  assertNockRequest(cvDetailsScope, done);
 });
 
 test('Can add unpublished component views to content view', async (done) => {
@@ -256,6 +264,11 @@ test('Can add unpublished component views to content view', async (done) => {
     .put(addComponentURL, addComponentParams)
     .reply(200, {});
 
+  const cvDetailsScope = nockInstance
+    .get(cvDetailsPath)
+    .query(true)
+    .reply(200, compositeCvDetails);
+
   const { getByText, getAllByLabelText } = renderWithRedux(
     <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
@@ -270,7 +283,8 @@ test('Can add unpublished component views to content view', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(addComponentScope);
-  assertNockRequest(returnScope, done);
+  assertNockRequest(returnScope);
+  assertNockRequest(cvDetailsScope, done);
 });
 
 test('Can remove component views from content view', async (done) => {
@@ -292,6 +306,11 @@ test('Can remove component views from content view', async (done) => {
     .put(removeComponentURL, removeComponentParams)
     .reply(200, {});
 
+  const cvDetailsScope = nockInstance
+    .get(cvDetailsPath)
+    .query(true)
+    .reply(200, compositeCvDetails);
+
   const { getByText, getAllByLabelText } = renderWithRedux(
     <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
@@ -306,7 +325,8 @@ test('Can remove component views from content view', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(removeComponentScope);
-  assertNockRequest(returnScope, done);
+  assertNockRequest(returnScope);
+  assertNockRequest(cvDetailsScope, done);
 });
 
 test('Can bulk add component views to content view with modal', async (done) => {
@@ -327,6 +347,11 @@ test('Can bulk add component views to content view with modal', async (done) => 
   const addComponentScope = nockInstance
     .put(addComponentURL, addComponentParams)
     .reply(200, {});
+
+  const cvDetailsScope = nockInstance
+    .get(cvDetailsPath)
+    .query(true)
+    .reply(200, compositeCvDetails);
 
   const {
     getAllByText, getByLabelText, queryByText, getAllByRole,
@@ -360,5 +385,6 @@ test('Can bulk add component views to content view with modal', async (done) => 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(addComponentScope);
-  assertNockRequest(returnScope, done);
+  assertNockRequest(returnScope);
+  assertNockRequest(cvDetailsScope, done);
 });
