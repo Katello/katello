@@ -47,7 +47,7 @@ import {
 } from '../../hostDetailsHelpers';
 
 const moduleStreamSupported = ({ os, version }) =>
-  os.match(/RedHat|RHEL|CentOS|Rocky|AlmaLinux|OracleLinux/i) && Number(version) > 7;
+  os.match(/RedHat|RHEL|CentOS|Rocky|AlmaLinux|Oracle Linux/i) && Number(version) > 7;
 export const hideModuleStreamsTab = ({ hostDetails }) => {
   const osMatch = hostDetails?.operatingsystem_name?.match(/(\D+) (\d+)/);
   if (!osMatch) return false;
