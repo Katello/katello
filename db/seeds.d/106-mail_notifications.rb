@@ -12,6 +12,7 @@ User.as(::User.anonymous_api_admin.login) do
   N_('Repository sync failure')
   N_('Content view publish failure')
   N_('Content view promote failure')
+  N_('Proxy sync failure')
 
   # Mail Notifications
   notifications = [
@@ -62,6 +63,13 @@ User.as(::User.anonymous_api_admin.login) do
      :description => N_('A notification about failed content view promotion'),
      :mailer => 'Katello::TaskMailer',
      :method => 'cv_promote_failure',
+     :subscription_type => 'alert',
+    },
+
+    {:name => :proxy_sync_failure,
+     :description => N_('A notification about failed proxy sync'),
+     :mailer => 'Katello::TaskMailer',
+     :method => 'proxy_sync_failure',
      :subscription_type => 'alert',
     }
   ]

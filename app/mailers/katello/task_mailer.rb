@@ -38,5 +38,17 @@ module Katello
         end
       end
     end
+
+    def proxy_sync_failure(options)
+      user, @environment, @repo, @content_view, @task, @smart_proxy = options.values_at(:user, :environment, :repository, :content_view, :task, :smart_proxy)
+
+      ::User.as(user.login) do
+        subject = _("%{label} failed") % { :label => @task.action }
+
+        set_locale_for(user) do
+          mail(:to => user.mail, :subject => subject)
+        end
+      end
+    end
   end
 end
