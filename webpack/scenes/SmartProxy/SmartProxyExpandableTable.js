@@ -71,7 +71,9 @@ const SmartProxyExpandableTable = ({ smartProxyId }) => {
       </Thead>
       {
         results?.map((env, rowIndex) => {
-          const { name, id, content_views: contentViews } = env;
+          const {
+            name, id, content_views: contentViews, counts,
+          } = env;
           const isExpanded = tableRowIsExpanded(id);
           return (
             <Tbody isExpanded={isExpanded} key={id}>
@@ -88,7 +90,7 @@ const SmartProxyExpandableTable = ({ smartProxyId }) => {
               </Tr>
               <Tr key="child_row" ouiaId={`ContentViewTableRowChild-${id}`} isExpanded={isExpanded}>
                 <Td colSpan={2}>
-                  <ExpandableCvDetails contentViews={contentViews} />
+                  <ExpandableCvDetails contentViews={contentViews} counts={counts} />
                 </Td>
               </Tr>
             </Tbody>

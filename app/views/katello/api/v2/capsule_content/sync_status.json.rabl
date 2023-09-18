@@ -27,7 +27,8 @@ child @lifecycle_environments => :lifecycle_environments do
   if @capsule.has_feature?(SmartProxy::PULP_NODE_FEATURE) || @capsule.has_feature?(SmartProxy::PULP3_FEATURE)
     node :counts do |env|
       {
-        :content_views => env.content_views.non_default.count
+        :content_views => env.content_views.non_default.count,
+        :content_counts => @capsule.content_counts
       }
     end
 
@@ -35,6 +36,7 @@ child @lifecycle_environments => :lifecycle_environments do
       env.content_views.ignore_generated.map do |content_view|
         attributes = {
           :id => content_view.id,
+          :cvv_id => ::Katello::ContentViewVersion.in_environment(env).find_by(:content_view => content_view)&.id,
           :label => content_view.label,
           :name => content_view.name,
           :composite => content_view.composite,
@@ -44,7 +46,13 @@ child @lifecycle_environments => :lifecycle_environments do
           :counts => {
             :repositories => ::Katello::ContentViewVersion.in_environment(env).find_by(:content_view => content_view)&.archived_repos&.count
           },
-          :content_counts => @capsule.content_counts
+          :repositories => ::Katello::ContentViewVersion.in_environment(env)&.find_by(:content_view => content_view)&.archived_repos&.map do |repo|
+                             {
+                               :id => repo.id,
+                               :name => repo.name,
+                               :library_id => repo.library_instance_id
+                             }
+                           end
         }
         attributes
       end

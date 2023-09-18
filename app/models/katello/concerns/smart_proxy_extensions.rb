@@ -145,23 +145,12 @@ module Katello
               translated_counts[::Katello::Pulp3::PulpContentUnit.katello_name_from_pulpcore_name(name, repo)] = count
             end
           end
-          new_content_counts[:content_view_versions][repo.content_view_version_id] ||= { repositories: {}, cv_version_content_counts: {}}
-          new_content_counts[:content_view_versions][repo.content_view_version_id][:repositories][repo.id] = translated_counts
-          new_content_counts = aggregated_cv_version_count!(repo.content_view_version_id, new_content_counts, translated_counts)
+          new_content_counts[:content_view_versions][repo.content_view_version_id] ||= { repositories: {}}
+          # Store counts on capsule of archived repos which are reused across environment copies
+          # of the archived repo corresponding to each environment CV version is promoted to.
+          new_content_counts[:content_view_versions][repo.content_view_version_id][:repositories][repo.content_view_version.archived_repos.find_by(library_instance_id: repo.library_instance_id)&.id] = translated_counts
         end
         update(content_counts: new_content_counts)
-      end
-
-      def aggregated_cv_version_count!(cv_version_id, cvv_content_counts, repo_counts)
-        repo_counts.keys.each do |content_type|
-          cvv_content_counts[:content_view_versions][cv_version_id][:cv_version_content_counts][content_type] =
-            if cvv_content_counts[:content_view_versions][cv_version_id][:cv_version_content_counts][content_type]
-              cvv_content_counts[:content_view_versions][cv_version_id][:cv_version_content_counts][content_type] + repo_counts[content_type]
-            else
-              repo_counts[content_type]
-            end
-        end
-        cvv_content_counts
       end
 
       def sync_container_gateway
