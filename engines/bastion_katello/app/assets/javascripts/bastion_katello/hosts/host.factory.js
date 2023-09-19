@@ -30,6 +30,10 @@ angular.module('Bastion.hosts').factory('Host',
             return _.isString(this.operatingsystem_name) && (this.operatingsystem_name.indexOf("Debian") >= 0 || this.operatingsystem_name.indexOf("Ubuntu") >= 0);
         };
 
+        resource.prototype.rhelLifecycleExpireSoon = function() {
+            return _.isString(this.rhel_lifecycle_status_label) && (this.rhel_lifecycle_status_label.indexOf("Approaching end of") >= 0);
+        };
+
         return resource;
     }]
 );
