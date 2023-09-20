@@ -211,7 +211,7 @@ module Katello
             assert_includes export.repositories(fetch_all: true).all.map(&:content_type), 'ansible_collection'
             assert_includes export.repositories(fetch_all: true).all.map(&:content_type), 'file'
             assert_includes export.repositories(fetch_all: true).all.map(&:content_type), 'yum'
-            refute_includes export.repositories(fetch_all: true).all.map(&:content_type), 'deb'
+            assert_includes export.repositories(fetch_all: true).all.map(&:content_type), 'deb'
           end
 
           it "Generates Exporter path correctly" do

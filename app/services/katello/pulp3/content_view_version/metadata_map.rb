@@ -102,6 +102,9 @@ module Katello
               download_policy: repo[:download_policy],
               mirroring_policy: repo[:mirroring_policy],
               redhat: repo[:redhat],
+              deb_releases: repo[:deb_releases],
+              deb_components: repo[:deb_components],
+              deb_architectures: repo[:deb_architectures],
               product: product_for_repo(repo),
               gpg_key: gpg_key_for_repo(repo),
               content: content
