@@ -102,6 +102,24 @@ module Katello
               ostree_repo.id.to_s => {"ostree_ref" => 30 },
               deb_repo.id.to_s => { "deb" => 987 },
               python_repo.id.to_s => { "python_package" => 42 }
+            },
+            "cv_version_content_counts" =>
+            {  "erratum" => 4,
+               "srpm" => 1,
+               "rpm" => 31,
+               "rpm.modulemd" => 7,
+               "rpm.modulemd_defaults" => 3,
+               "package_group" => 7,
+               "rpm.packagecategory" => 1,
+               "file" => 100,
+               "ansible_collection" => 802,
+               "container.blob" => 30,
+               "docker_manifest_list" => 1,
+               "docker_manifest" => 9,
+               "docker_tag" => 5,
+               "ostree_ref" => 30,
+               "deb" => 987,
+               "python_package" => 42
             }
           }
         }
