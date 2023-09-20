@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   DescriptionList,
@@ -14,7 +13,12 @@ import CardTemplate from 'foremanReact/components/HostDetails/Templates/CardItem
 import { TranslatedPlural } from '../../../Table/components/TranslatedPlural';
 import { hostIsNotRegistered } from '../hostDetailsHelpers';
 
-const HostDisks = ({ totalDisks }) => {
+const HostDisks = ({ blockDevices }) => {
+  if (!blockDevices) return null;
+  // blockDevices fact will look like this by default 'sr0,sda' and increment like sdb etc
+  const disks = blockDevices.split(',');
+  // We are filtering out the CDROM drive that gets added by default a lot of the time
+  const totalDisks = disks.filter(e => !e.startsWith('sr')).length;
   if (!totalDisks) return null;
   return (
     <>
@@ -27,11 +31,11 @@ const HostDisks = ({ totalDisks }) => {
 };
 
 HostDisks.propTypes = {
-  totalDisks: PropTypes.number,
+  blockDevices: PropTypes.string,
 };
 
 HostDisks.defaultProps = {
-  totalDisks: null,
+  blockDevices: '',
 };
 
 const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
@@ -41,8 +45,7 @@ const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
   const cpuCount = facts?.['cpu::cpu(s)'];
   const cpuSockets = facts?.['cpu::cpu_socket(s)'];
   const coreSocket = facts?.['cpu::core(s)_per_socket'];
-  const reportedFacts = propsToCamelCase(hostDetails?.reported_data || {});
-  const totalDisks = reportedFacts?.disksTotal;
+  const blockDevices = facts?.blockdevices;
   const memory = facts?.['dmi::memory::maximum_capacity'];
 
   return (
@@ -74,7 +77,7 @@ const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
           <DescriptionListDescription>{memory}</DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup>
-          <HostDisks totalDisks={totalDisks} />
+          <HostDisks blockDevices={blockDevices} />
         </DescriptionListGroup>
       </DescriptionList>
     </CardTemplate>
@@ -90,9 +93,7 @@ HwPropertiesCard.propTypes = {
       cpuSockets: PropTypes.number,
       coreSocket: PropTypes.number,
       memory: PropTypes.string,
-    }),
-    reported_data: PropTypes.shape({
-      totalDisks: PropTypes.number,
+      blockdevices: PropTypes.string,
     }),
   }),
 };
