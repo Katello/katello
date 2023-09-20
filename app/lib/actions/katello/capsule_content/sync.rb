@@ -2,6 +2,7 @@ module Actions
   module Katello
     module CapsuleContent
       class Sync < ::Actions::EntryAction
+        include ::Actions::ObservableAction
         def resource_locks
           :link
         end
