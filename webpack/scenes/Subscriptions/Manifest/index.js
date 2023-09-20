@@ -17,8 +17,6 @@ import { selectContentCredentials } from '../../ContentCredentials/ContentCreden
 
 import ManifestModal from './ManageManifestModal';
 
-import './Manifest.scss';
-
 // map state to props
 const mapStateToProps = state => ({
   organization: state.katello.organization,

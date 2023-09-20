@@ -236,7 +236,7 @@ class SubscriptionsPage extends Component {
       </Alert>
     );
     return (
-      <Grid bsClass="container-fluid">
+      <Grid bsClass="container-fluid" id="subscriptions-page">
         <Row>
           <Col sm={12}>
             <h1>{__('Subscriptions')}</h1>

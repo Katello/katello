@@ -76,10 +76,12 @@ const CreateContentViewForm = ({ setModalOpen }) => {
   const submitDisabled = !name?.length || !label?.length || saving || redirect || labelValidated === 'error';
 
   return (
-    <Form onSubmit={(e) => {
-      e.preventDefault();
-      onSave();
-    }}
+    <Form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSave();
+      }}
+      id="create-content-view-form"
     >
       <FormGroup label={__('Name')} isRequired fieldId="name">
         <TextInput

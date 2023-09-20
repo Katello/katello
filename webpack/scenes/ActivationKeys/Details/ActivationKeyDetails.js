@@ -51,7 +51,7 @@ const ActivationKeyDetails = ({ match }) => {
   };
 
   return (
-    <div >
+    <div id="ak-details-katello" >
       <Panel className="ak-details-header">
         <div className="breadcrumb-bar-pf4">
           <Breadcrumb ouiaId="ak-breadcrumbs" className="breadcrumb-display">

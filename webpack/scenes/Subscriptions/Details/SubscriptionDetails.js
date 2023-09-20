@@ -58,7 +58,7 @@ class SubscriptionDetails extends Component {
     }
 
     return (
-      <div>
+      <div id="subscription-details">
         {!subscriptionDetails.loading &&
           <BreadcrumbsBar
             onSwitcherItemClick={(e, url) => this.handleBreadcrumbSwitcherItem(e, url)}
