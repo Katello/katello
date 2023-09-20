@@ -45,6 +45,7 @@ module Katello
         def generate_repository_metadata(repo)
           repo.slice(:name, :label, :description, :arch, :content_type, :unprotected,
                      :checksum_type, :os_versions, :major, :minor,
+                     :deb_releases, :deb_components, :deb_architectures,
                      :download_policy, :mirroring_policy).
             merge(product: generate_product_metadata(repo.product),
                   gpg_key: generate_gpg_metadata(repo.gpg_key),
