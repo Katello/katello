@@ -16,11 +16,16 @@ module Actions
           param :exported_file_checksum, String
         end
 
-        def run
+        def run # rubocop:disable Metrics/AbcSize
           smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
           api = ::Katello::Pulp3::Api::Core.new(smart_proxy)
           export_data = api.export_api.list(input[:exporter_data][:pulp_href]).results.first
           output[:exported_file_checksum] = export_data.output_file_info
+          if output[:exported_file_checksum].blank?
+            output[:export_history_id] = nil
+            output[:message] = _("Export failed: One or more repositories needs to be synced (with Immediate download policy.)")
+            return
+          end
           file_name = output[:exported_file_checksum].first&.first
           path = File.dirname(file_name.to_s)
           output[:path] = path

@@ -110,6 +110,7 @@ module Katello
 
     class Pulp3Error < StandardError; end
     class Pulp3MigrationError < StandardError; end
+    class Pulp3ExportError < StandardError; end
 
     class PulpError < StandardError
       def self.from_task(task)

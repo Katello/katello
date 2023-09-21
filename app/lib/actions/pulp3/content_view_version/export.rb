@@ -24,6 +24,14 @@ module Actions
                                                    .create_export(input[:exporter_data],
                                                                         chunk_size: input[:chunk_size])
         end
+
+        def rescue_external_task(error)
+          if error.is_a?(::Katello::Errors::Pulp3Error) && error.message.match?(/Remote artifacts cannot be exported/)
+            fail ::Katello::Errors::Pulp3ExportError, "Failed to export: One or more repositories needs to be synced (with Immediate download policy.)"
+          else
+            super
+          end
+        end
       end
     end
   end
