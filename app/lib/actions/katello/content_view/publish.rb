@@ -7,7 +7,7 @@ module Actions
         include ::Actions::ObservableAction
         attr_accessor :version
         execution_plan_hooks.use :trigger_capsule_sync, :on => :success
-        execution_plan_hooks.use :notify_on_failure, :on => :failure
+        execution_plan_hooks.use :notify_on_failure, :on => [:failure, :paused]
 
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
         def plan(content_view, description = "", options = {importing: false, syncable: false}) # rubocop:disable Metrics/PerceivedComplexity

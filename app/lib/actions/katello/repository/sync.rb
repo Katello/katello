@@ -8,7 +8,7 @@ module Actions
         include ::Actions::ObservableAction
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
-        execution_plan_hooks.use :notify_on_failure, :on => :failure
+        execution_plan_hooks.use :notify_on_failure, :on => [:failure, :paused]
 
         input_format do
           param :id, Integer
