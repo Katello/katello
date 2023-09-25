@@ -860,20 +860,45 @@ module Katello
     end
 
     def self.safe_render_container_name(repository, pattern = nil)
-      if (pattern && !pattern.blank?) || (repository.environment && !repository.environment.registry_name_pattern.empty?)
+      #            pattern provided / env pattern provided
+      #                 |  00 |  01 |  11 |  10
+      # ----------------+-----+-----+-----+------
+      # env exists /  00|   4 | n/a | n/a |   4
+      # is cv default 01|   2 | n/a | n/a |   4
+      #               11|   2 |   1 |   1 |   1
+      #               10|   3 |   1 |   1 |   1
+      #
+      # This table shows the name to render given the properties of
+      # the container provided. Branches numbered as ordered below.
+      #
+      # 1 - Render promotion pattern (or env pattern if no promo pattern)
+      # 2 - <org label>-<product label>-<repo label>
+      # 3 - <org label>-<env label>-<cv label>-<product label>-<repo label>
+      # 4 - <org label>-<cv label>-<cvv label>-<product label>-<repo label>
+      is_pattern_provided = pattern.present?
+      env_exists = repository.environment.present?
+      is_env_pattern_provided = env_exists && repository.environment.registry_name_pattern.present?
+      is_cv_default = repository.content_view.default?
+
+      if is_env_pattern_provided || (is_pattern_provided && env_exists)
         pattern ||= repository.environment.registry_name_pattern
         allowed_methods = {}
         allowed_vars = {}
-        scope_variables = {repository: repository, organization: repository.organization, product: repository.product,
-                           lifecycle_environment: repository.environment, content_view: repository.content_view_version.content_view,
-                           content_view_version: repository.content_view_version}
+        scope_variables = {
+          repository: repository,
+          organization: repository.organization,
+          product: repository.product,
+          lifecycle_environment: repository.environment,
+          content_view: repository.content_view_version.content_view,
+          content_view_version: repository.content_view_version
+        }
         box = Safemode::Box.new(repository, allowed_methods)
         erb = ERB.new(pattern)
         pattern = box.eval(erb.src, allowed_vars, scope_variables)
         return Repository.clean_container_name(pattern)
-      elsif repository.content_view.default?
+      elsif is_cv_default && !is_pattern_provided
         items = [repository.organization.label, repository.product.label, repository.label]
-      elsif repository.environment
+      elsif env_exists
         items = [repository.organization.label, repository.environment.label, repository.content_view.label, repository.product.label, repository.label]
       else
         items = [repository.organization.label, repository.content_view.label, repository.content_view_version.version, repository.product.label, repository.label]
