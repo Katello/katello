@@ -25,9 +25,19 @@ exports[`subscriptions page should render 1`] = `
       componentClass="div"
       sm={12}
     >
-      <h1>
-        Subscriptions
-      </h1>
+      <Flex
+        alignItems={
+          Object {
+            "default": "alignItemsBaseline",
+          }
+        }
+      >
+        <FlexItem>
+          <h1>
+            Subscriptions
+          </h1>
+        </FlexItem>
+      </Flex>
       <SubscriptionsToolbar
         autocompleteQueryParams={
           Object {
@@ -71,24 +81,16 @@ exports[`subscriptions page should render 1`] = `
           type="warning"
         >
           <FormattedMessage
-            defaultMessage="This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in a future version."
+            defaultMessage="This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in Katello 4.12."
             id="sca-alert"
             values={
               Object {
-                "br": <br />,
                 "scaLink": <a
                   href="https://access.redhat.com/articles/simple-content-access"
                   rel="noreferrer"
                   target="_blank"
                 >
                   Simple Content Access
-                </a>,
-                "subscriptionsService": <a
-                  href="https://access.redhat.com/documentation/en-us/subscription_central/2021/html-single/getting_started_with_the_subscriptions_service/index"
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  Subscriptions service
                 </a>,
               }
             }
@@ -102,7 +104,7 @@ exports[`subscriptions page should render 1`] = `
                 "onClick": [Function],
                 "title": "Import a Manifest",
               },
-              "description": "Import a Manifest to manage your Entitlements.",
+              "description": "Import a subscription manifest to give hosts access to Red Hat content.",
               "header": "There are no Subscriptions to display",
             }
           }
