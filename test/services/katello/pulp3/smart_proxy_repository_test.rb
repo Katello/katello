@@ -24,7 +24,7 @@ module Katello
 
         smart_proxy_mirror_repo.expects(:pulp3_enabled_repo_types).once.returns([::Katello::RepositoryTypeManager.find(:yum)])
         ::Katello::SmartProxyHelper.any_instance.expects(:combined_repos_available_to_capsule).once.returns([fedora, rhel6])
-        ::Katello::Pulp3::Api::Yum.any_instance.expects(:remotes_list).once.returns(pulp_remotes)
+        ::Katello::Pulp3::Api::Yum.any_instance.expects(:remotes_list_all).once.returns(pulp_remotes)
         ::Katello::Pulp3::Api::Yum.any_instance.expects(:delete_remote).once.with(rhel7_href).returns('rhel-7-gone')
 
         assert_equal ['rhel-7-gone'], smart_proxy_mirror_repo.delete_orphan_remotes

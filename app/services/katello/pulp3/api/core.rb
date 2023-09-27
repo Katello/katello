@@ -224,7 +224,7 @@ module Katello
           remotes_api.list(args).results
         end
 
-        def remotes_list_all(_smart_proxy, options)
+        def remotes_list_all(_smart_proxy, options = {})
           self.class.fetch_from_list do |page_opts|
             remotes_api.list(page_opts.merge(options))
           end
