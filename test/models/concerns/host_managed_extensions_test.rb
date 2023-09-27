@@ -424,18 +424,18 @@ module Katello
     let(:host) { FactoryBot.create(:host, :with_subscription) }
 
     def test_probably_rhel?
-      host.expects(:facts).returns({'distribution::name' => 'Red Hat Enterprise Linux', 'distribution::version' => '7.3'})
+      host.expects(:facts).with('distribution::name').returns({'distribution::name' => 'Red Hat Enterprise Linux'})
       assert host.probably_rhel?
     end
 
     def test_probably_not_rhel
-      host.expects(:facts).returns({'distribution::name' => 'CentOS', 'distribution::version' => '7.3'})
+      host.expects(:facts).with('distribution::name').returns({'distribution::name' => 'CentOS'})
       refute host.probably_rhel?
     end
 
     def test_rhel_eos_schedule_index
       os = Operatingsystem.create!(:name => "RedHat", :major => "7", :minor => "3")
-      host.expects(:facts).at_least_once.returns({'distribution::name' => 'Red Hat Enterprise Linux Server', 'distribution::version' => '7.3'})
+      host.expects(:facts).at_least_once.returns({'distribution::name' => 'Red Hat Enterprise Linux Server'})
       host.operatingsystem = os
       host.architecture = architectures(:x86_64)
       host.architecture.expects(:name).at_least_once.returns("x86_64")
@@ -448,7 +448,7 @@ module Katello
       assert_equal "RHEL7 (System z (Structure A))", host.rhel_eos_schedule_index
 
       os = Operatingsystem.create!(:name => "RedHat", :major => "6", :minor => "3")
-      host.expects(:facts).returns({'distribution::name' => 'Red Hat Enterprise Linux', 'distribution::version' => '6.3'})
+      host.expects(:facts).returns({'distribution::name' => 'Red Hat Enterprise Linux'})
       host.operatingsystem = os
       assert_equal "RHEL6", host.rhel_eos_schedule_index
     end
@@ -456,7 +456,7 @@ module Katello
     def test_rhel_eos_schedule_index_non_rhel
       os = Operatingsystem.create!(:name => "CentOS_Stream", :major => "8", :minor => "")
       host.operatingsystem = os
-      host.expects(:facts).returns({'distribution::name' => 'CentOS Stream', 'distribution::version' => '8'})
+      host.expects(:facts).returns({'distribution::name' => 'CentOS Stream'})
       assert_nil host.rhel_eos_schedule_index
     end
 

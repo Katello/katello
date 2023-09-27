@@ -525,7 +525,7 @@ module Katello
       def probably_rhel?
         # Get the os name from sub-man facts rather than operatingsystem. This is
         # less likely to have been changed by the user.
-        os_name = facts['distribution::name']
+        os_name, = facts('distribution::name').values # only query for that one fact, then get its value
         # if this fact isn't there, we can ignore it because the host is not "managed"
         os_name.present? && os_name.start_with?('Red Hat Enterprise Linux')
       end
