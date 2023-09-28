@@ -106,6 +106,11 @@ export const ErrataTab = () => {
     setToggleGroupState(APPLICABLE);
   };
 
+  const recalculateErrata = () => {
+    setIsBulkActionOpen(false);
+    dispatch(regenerateApplicability(hostId));
+  };
+
   let resetFilters = resetFiltersOnly;
   let secondaryActionTextOverride;
   let emptyContentTitle;
@@ -114,6 +119,8 @@ export const ErrataTab = () => {
   case 'All up to date':
     emptyContentTitle = __('All up to date');
     emptyContentBody = __('No action is needed because there are no applicable errata for this host.');
+    resetFilters = recalculateErrata;
+    secondaryActionTextOverride = __('Recalculate');
     break;
   case 'Needed':
     emptyContentTitle = __('No matching errata found');
@@ -265,11 +272,6 @@ export const ErrataTab = () => {
   const bulkCustomizedRexUrl = () => errataInstallUrl({
     hostname, search: (selectedCount > 0) ? fetchBulkParams() : '',
   });
-
-  const recalculateErrata = () => {
-    setIsBulkActionOpen(false);
-    dispatch(regenerateApplicability(hostId));
-  };
 
   const showActions = can(invokeRexJobs, userPermissions);
 
@@ -447,7 +449,7 @@ export const ErrataTab = () => {
             secondaryActionTextOverride,
           }
           }
-          showSecondaryActionButton={neededErrata}
+          showSecondaryActionButton={neededErrata || showRecalculate}
           happyEmptyContent={allUpToDate}
           ouiaId="host-errata-table"
           additionalListeners={[
