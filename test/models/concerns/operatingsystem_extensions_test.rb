@@ -37,21 +37,5 @@ module Katello
       assert_equal "x86_64", os.architectures.first.name
       assert_equal "#{::Operatingsystem::REDHAT_ATOMIC_HOST_DISTRO_NAME} 7.3", os.description
     end
-
-    def test_rhel_eos_schedule_index
-      os = Operatingsystem.create!(:name => "RedHat", :major => "7", :minor => "3")
-      assert_equal "RHEL7", os.rhel_eos_schedule_index
-      assert_equal "RHEL7 (POWER9)", os.rhel_eos_schedule_index(arch_name: "ppc64le")
-      assert_equal "RHEL7 (ARM)", os.rhel_eos_schedule_index(arch_name: "aarch64")
-      assert_equal "RHEL7 (System z (Structure A))", os.rhel_eos_schedule_index(arch_name: "s390x")
-
-      os = Operatingsystem.create!(:name => "RedHat", :major => "6", :minor => "3")
-      assert_equal "RHEL6", os.rhel_eos_schedule_index
-    end
-
-    def test_rhel_eos_schedule_index_non_rhel
-      os = Operatingsystem.create!(:name => "CentOS_Stream", :major => "8", :minor => "3")
-      assert_nil os.rhel_eos_schedule_index
-    end
   end
 end

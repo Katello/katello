@@ -179,7 +179,7 @@ module Katello
     end
 
     def rhel_eos_schedule_index
-      host&.operatingsystem&.rhel_eos_schedule_index(arch_name: host&.arch&.name)
+      host&.rhel_eos_schedule_index
     end
 
     def to_global(_options = {})
@@ -195,12 +195,12 @@ module Katello
     end
 
     def to_status
-      self.class.to_status(rhel_eos_schedule_index: self.host&.operatingsystem&.rhel_eos_schedule_index)
+      self.class.to_status(rhel_eos_schedule_index: self.host&.rhel_eos_schedule_index)
     end
 
     # this status is only relevant for RHEL
     def relevant?(_options = {})
-      host&.operatingsystem&.rhel_eos_schedule_index
+      host&.rhel_eos_schedule_index.present?
     end
   end
 end

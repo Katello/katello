@@ -108,8 +108,6 @@ module Katello
         delegate :content_source_id, :single_content_view, :single_lifecycle_environment, :default_environment?, :single_content_view_environment?, :multi_content_view_environment?, :kickstart_repository_id, :bound_repositories,
           :installable_errata, :installable_rpms, to: :content_facet, allow_nil: true
 
-        delegate :rhel_eos_schedule_index, to: :operatingsystem, allow_nil: true
-
         has_many :content_view_environment_content_facets, through: :content_facet, class_name: 'Katello::ContentViewEnvironmentContentFacet'
         has_many :content_view_environments, through: :content_view_environment_content_facets
         has_many :content_views, through: :content_view_environments
@@ -522,6 +520,31 @@ module Katello
       def traces_helpers(search:)
         traces = host_traces.selectable.search_for(search)
         ::Katello::HostTracer.helpers_for(traces)
+      end
+
+      def probably_rhel?
+        # Get the os name from sub-man facts rather than operatingsystem. This is
+        # less likely to have been changed by the user.
+        os_name, = facts('distribution::name').values # only query for that one fact, then get its value
+        # if this fact isn't there, we can ignore it because the host is not "managed"
+        os_name.present? && os_name.start_with?('Red Hat Enterprise Linux')
+      end
+
+      def rhel_eos_schedule_index
+        return nil unless probably_rhel?
+        major = operatingsystem.major
+        return "RHEL#{major}" unless major == "7"
+        arch_name = architecture&.name
+        case arch_name
+        when "ppc64le"
+          "RHEL7 (POWER9)"
+        when "aarch64"
+          "RHEL7 (ARM)"
+        when "s390x"
+          "RHEL7 (System z (Structure A))"
+        else
+          "RHEL#{major}"
+        end
       end
 
       def package_names_for_job_template(action:, search:, versions: nil)
