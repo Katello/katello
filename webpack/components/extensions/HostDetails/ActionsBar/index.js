@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DropdownItem, DropdownSeparator } from '@patternfly/react-core';
 import { CubeIcon, UndoIcon, RedoIcon } from '@patternfly/react-icons';
 
 import { translate as __ } from 'foremanReact/common/I18n';
 import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
+import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
 import { foremanUrl } from 'foremanReact/common/helpers';
 
 import { selectHostDetails } from '../HostDetailsSelectors';
@@ -15,6 +16,7 @@ const HostActionsBar = () => {
   const hostDetails = useSelector(selectHostDetails);
   const dispatch = useDispatch();
   const hostname = hostDetails?.name;
+  const { onKebabToggle } = useContext(ForemanActionsBarContext);
 
   const refreshHostDetails = () => dispatch({
     type: 'API_GET',
@@ -29,8 +31,8 @@ const HostActionsBar = () => {
   } = useRexJobPolling(() => runSubmanRepos(hostname, refreshHostDetails));
 
   const handleRefreshApplicabilityClick = () => {
-    // setIsBulkActionOpen(false);
     triggerRecalculate();
+    onKebabToggle();
   };
 
   return (

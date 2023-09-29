@@ -29,7 +29,7 @@ export const useRexJobPolling = (initialAction, successAction = null, failureAct
   const tick = (resp) => {
     const { data } = resp;
     const { statusLabel, id, description } = propsToCamelCase(data);
-    setRexJobId(id);
+    if (!id) setRexJobId(id);
     if (statusLabel && statusLabel !== 'running') {
       stopRexJobPolling({ jobId: id, statusLabel });
       if (statusLabel === 'succeeded') {
