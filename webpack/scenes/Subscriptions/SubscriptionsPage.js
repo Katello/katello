@@ -6,6 +6,8 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { isEmpty } from 'lodash';
 import { Grid, Row, Col, Alert } from 'patternfly-react';
+import { Popover, Flex, FlexItem } from '@patternfly/react-core';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import ModalProgressBar from 'foremanReact/components/common/ModalProgressBar';
 import PermissionDenied from 'foremanReact/components/PermissionDenied';
 import ManageManifestModal from './Manifest/';
@@ -204,7 +206,7 @@ class SubscriptionsPage extends Component {
     const emptyStateData = isManifestImported
       ? {
         header: __('There are no Subscriptions to display'),
-        description: __('Add Subscriptions using the Add Subscriptions button.'),
+        description: __('Add subscriptions using the Add Subscriptions button.'),
         action: {
           title: __('Add subscriptions'),
           url: 'subscriptions/add',
@@ -212,7 +214,7 @@ class SubscriptionsPage extends Component {
       }
       : {
         header: __('There are no Subscriptions to display'),
-        description: __('Import a Manifest to manage your Entitlements.'),
+        description: __('Import a subscription manifest to give hosts access to Red Hat content.'),
         action: {
           onClick: () => openManageManifestModal(),
           title: __('Import a Manifest'),
@@ -220,26 +222,50 @@ class SubscriptionsPage extends Component {
       };
 
     const SCAAlert = (
-      <Alert ouiaId="sca-alert" type={simpleContentAccess ? 'info' : 'warning'}>
+      <Alert ouiaId="sca-alert" type="warning">
         <FormattedMessage
           id="sca-alert"
           values={{
-            subscriptionsService: <a href={SUBSCRIPTIONS_SERVICE_DOC_URL} target="_blank" rel="noreferrer">{__('Subscriptions service')}</a>,
-            br: <br />,
             scaLink: <a href={SCA_URL} target="_blank" rel="noreferrer">{__('Simple Content Access')}</a>,
           }}
-          defaultMessage={simpleContentAccess ? __(`This organization has Simple Content Access enabled.
-          Hosts are not required to have subscriptions attached to access repositories.
-          {br}
-          Learn more about your overall subscription usage with the {subscriptionsService}.`) : __('This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in a future version.')}
+          defaultMessage={__('This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in Katello 4.12.')}
         />
       </Alert>
+    );
+
+    const SCAPopoverContent = (
+      <FormattedMessage
+        id="sca-popover-content"
+        values={{
+          br: <br />,
+          subscriptionsService: <a href={SUBSCRIPTIONS_SERVICE_DOC_URL} target="_blank" rel="noreferrer">{__('Subscriptions service')}</a>,
+        }}
+        defaultMessage={__(`This page shows the subscriptions available from this organization's subscription manifest.
+        {br}
+        Learn more about your overall subscription usage with the {subscriptionsService}.`)}
+      />
     );
     return (
       <Grid bsClass="container-fluid">
         <Row>
           <Col sm={12}>
-            <h1>{__('Subscriptions')}</h1>
+            <Flex alignItems={{ default: 'alignItemsBaseline' }}>
+              <FlexItem>
+                <h1>{__('Subscriptions')}</h1>
+              </FlexItem>
+              {isManifestImported && (
+              <FlexItem>
+                <Popover
+                  aria-label="sca-popover"
+                  bodyContent={SCAPopoverContent}
+                >
+                  <span style={{ cursor: 'pointer', position: 'relative', top: '-0.2em' }}>
+                    <OutlinedQuestionCircleIcon>Toggle popover</OutlinedQuestionCircleIcon>
+                  </span>
+                </Popover>
+              </FlexItem>
+              )}
+            </Flex>
 
             <SubscriptionsToolbar
               canManageSubscriptionAllocations={canManageSubscriptionAllocations}
@@ -274,7 +300,7 @@ class SubscriptionsPage extends Component {
             />
 
             <div id="subscriptions-table" className="modal-container">
-              {!this.props.organization?.loading && SCAAlert}
+              {!this.props.organization?.loading && !simpleContentAccess ? SCAAlert : null}
               <SubscriptionsTable
                 canManageSubscriptionAllocations={canManageSubscriptionAllocations}
                 loadSubscriptions={this.props.loadSubscriptions}
