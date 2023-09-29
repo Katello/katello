@@ -19,6 +19,7 @@ import {
 } from '@patternfly/react-table';
 import { isEqual } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
@@ -27,7 +28,7 @@ import SelectableDropdown from '../../../../SelectableDropdown';
 import { useSet, useBulkSelect, useUrlParams, useTableSort } from '../../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { ErrataType, ErrataSeverity, ErrataToggleGroupItem } from '../../../../../components/Errata';
-import { getInstallableErrata, regenerateApplicability } from './HostErrataActions';
+import { getInstallableErrata } from './HostErrataActions';
 import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
 import { selectHostErrataStatus } from './HostErrataSelectors';
@@ -42,6 +43,7 @@ import { hasRequiredPermissions as can,
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
 import { errataStatusContemplation, friendlyErrataStatus } from '../../../../Errata/errataHelpers';
+import { runSubmanRepos } from '../../Cards/ContentViewDetailsCard/HostContentViewActions';
 
 const recalculateApplicability = ['edit_hosts'];
 const invokeRexJobs = ['create_job_invocations'];
@@ -106,9 +108,21 @@ export const ErrataTab = () => {
     setToggleGroupState(APPLICABLE);
   };
 
+  const refreshHostDetails = () => dispatch({
+    type: 'API_GET',
+    payload: {
+      key: HOST_DETAILS_KEY,
+      url: `/api/hosts/${hostname}`,
+    },
+  });
+
+  const {
+    triggerJobStart: triggerRecalculate, lastCompletedJob: lastCompletedRecalculate,
+  } = useRexJobPolling(() => runSubmanRepos(hostname, refreshHostDetails));
+
   const recalculateErrata = () => {
     setIsBulkActionOpen(false);
-    dispatch(regenerateApplicability(hostId));
+    triggerRecalculate();
   };
 
   let resetFilters = resetFiltersOnly;
@@ -120,7 +134,7 @@ export const ErrataTab = () => {
     emptyContentTitle = __('All up to date');
     emptyContentBody = __('No action is needed because there are no applicable errata for this host.');
     resetFilters = recalculateErrata;
-    secondaryActionTextOverride = __('Recalculate');
+    secondaryActionTextOverride = __('Refresh errata applicability');
     break;
   case 'Needed':
     emptyContentTitle = __('No matching errata found');
@@ -286,7 +300,7 @@ export const ErrataTab = () => {
       component="button"
       onClick={recalculateErrata}
     >
-      {__('Recalculate')}
+      {__('Refresh errata applicability')}
     </DropdownItem>,
   ];
 
@@ -455,7 +469,7 @@ export const ErrataTab = () => {
           additionalListeners={[
             hostId, toggleGroupState, errataTypeSelected,
             errataSeveritySelected, activeSortColumn, activeSortDirection,
-            lastCompletedApply, lastCompletedBulkApply]}
+            lastCompletedApply, lastCompletedBulkApply, lastCompletedRecalculate]}
           fetchItems={fetchItems}
           bookmarkController="katello_errata"
           readOnlyBookmarks={readOnlyBookmarks}

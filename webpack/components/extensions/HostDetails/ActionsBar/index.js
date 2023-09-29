@@ -1,15 +1,37 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { DropdownItem } from '@patternfly/react-core';
-import { CubeIcon, UndoIcon } from '@patternfly/react-icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { DropdownItem, DropdownSeparator } from '@patternfly/react-core';
+import { CubeIcon, UndoIcon, RedoIcon } from '@patternfly/react-icons';
 
 import { translate as __ } from 'foremanReact/common/I18n';
+import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
 import { foremanUrl } from 'foremanReact/common/helpers';
 
 import { selectHostDetails } from '../HostDetailsSelectors';
+import { useRexJobPolling } from '../Tabs/RemoteExecutionHooks';
+import { runSubmanRepos } from '../Cards/ContentViewDetailsCard/HostContentViewActions';
 
 const HostActionsBar = () => {
   const hostDetails = useSelector(selectHostDetails);
+  const dispatch = useDispatch();
+  const hostname = hostDetails?.name;
+
+  const refreshHostDetails = () => dispatch({
+    type: 'API_GET',
+    payload: {
+      key: HOST_DETAILS_KEY,
+      url: `/api/hosts/${hostname}`,
+    },
+  });
+
+  const {
+    triggerJobStart: triggerRecalculate,
+  } = useRexJobPolling(() => runSubmanRepos(hostname, refreshHostDetails));
+
+  const handleRefreshApplicabilityClick = () => {
+    // setIsBulkActionOpen(false);
+    triggerRecalculate();
+  };
 
   return (
     <>
@@ -20,6 +42,15 @@ const HostActionsBar = () => {
         icon={<UndoIcon />}
       >
         {__('Legacy content host UI')}
+      </DropdownItem>
+      <DropdownSeparator key="separator" ouiaId="katello-separator" />,
+      <DropdownItem
+        ouiaId="katello-refresh-applicability"
+        key="katello-refresh-applicability"
+        onClick={handleRefreshApplicabilityClick}
+        icon={<RedoIcon />}
+      >
+        {__('Refresh applicability')}
       </DropdownItem>
       <DropdownItem
         ouiaId="katello-change-host-content-source"
