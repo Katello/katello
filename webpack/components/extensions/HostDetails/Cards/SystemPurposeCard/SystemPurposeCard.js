@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { STATUS } from 'foremanReact/constants';
+import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
 import {
   Button,
   Card,
@@ -10,8 +11,8 @@ import {
   CardBody,
   DescriptionList,
   DescriptionListGroup,
-  DescriptionListDescription,
-  DescriptionListTerm,
+  DescriptionListDescription as Dd,
+  DescriptionListTerm as Dt,
   Flex,
   FlexItem,
   GridItem,
@@ -20,6 +21,7 @@ import {
   ListItem,
   Tooltip,
   Skeleton,
+  CardExpandableContent,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -29,13 +31,18 @@ import SystemPurposeEditModal from './SystemPurposeEditModal';
 import { selectHostDetailsStatus } from '../../HostDetailsSelectors';
 import { hasRequiredPermissions, hostIsNotRegistered } from '../../hostDetailsHelpers';
 
-const SystemPurposeCard = ({ hostDetails }) => {
-  const showEditButton = hasRequiredPermissions(['edit_hosts'], hostDetails?.permissions);
-  const { organization_id: orgId, name: hostName } = hostDetails;
-  const subscriptionFacetAttributes = hostDetails?.subscription_facet_attributes;
+const SystemPurposeCard = ({ hostDetails, akDetails }) => {
+  const sysPurposeCardType = hostDetails?.id ? 'host' : 'ak';
+  const isAKType = sysPurposeCardType === 'ak';
+  const isHostType = sysPurposeCardType === 'host';
+  const details = isHostType ? hostDetails : akDetails;
+  const requiredPermission = isHostType ? 'edit_hosts' : 'edit_activation_keys';
+  const showEditButton = hasRequiredPermissions([requiredPermission], details?.permissions);
+  const { organization_id: orgId, name } = details;
+  const subscriptionFacetAttributes = details?.subscription_facet_attributes;
   const {
     purposeRole, purposeUsage, purposeAddons, releaseVersion, serviceLevel,
-  } = propsToCamelCase(subscriptionFacetAttributes ?? {});
+  } = propsToCamelCase((subscriptionFacetAttributes || details) ?? {});
   const sysPurposeProps = {
     purposeRole,
     purposeUsage,
@@ -43,11 +50,26 @@ const SystemPurposeCard = ({ hostDetails }) => {
     releaseVersion,
     serviceLevel,
   };
-  const hostDetailsStatus = useSelector(selectHostDetailsStatus);
-  const dataIsLoading = hostDetailsStatus === STATUS.PENDING;
+  const selectAKDetailsStatus = state =>
+    selectAPIStatus(state, `ACTIVATION_KEY_${details.id}`) ?? STATUS.PENDING;
+
+  const statusSelector = isHostType ? selectHostDetailsStatus : selectAKDetailsStatus;
+  const detailsStatus = useSelector(statusSelector);
+  const dataIsLoading = detailsStatus === STATUS.PENDING;
 
   const [editing, setEditing] = useState(false);
-  if (!hostDetails?.id) {
+
+  const [isExpanded, setIsExpanded] = React.useState(true);
+
+  const onExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+  const cardHeaderProps = {
+    toggleButtonProps: { id: 'sys-purpose-toggle', 'aria-label': 'sys-purpose-toggle' },
+  };
+  if (isAKType) cardHeaderProps.onExpand = onExpand;
+
+  if (!details?.id) {
     return (
       <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
         <Card ouiaId="system-purpose-card">
@@ -57,12 +79,11 @@ const SystemPurposeCard = ({ hostDetails }) => {
     );
   }
 
-  if (hostIsNotRegistered({ hostDetails })) return null;
-
+  if (isHostType && hostIsNotRegistered({ hostDetails: details })) return null;
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3}>
-      <Card ouiaId="system-purpose-card">
-        <CardHeader>
+      <Card ouiaId="system-purpose-card" id="system-purpose-card" isExpanded={isHostType ? true : isExpanded}>
+        <CardHeader {...cardHeaderProps}>
           <Flex
             alignItems={{ default: 'alignItemsCenter' }}
             justifyContent={{ default: 'justifyContentSpaceBetween' }}
@@ -95,58 +116,63 @@ const SystemPurposeCard = ({ hostDetails }) => {
             }
           </Flex>
         </CardHeader>
-        <CardBody className="system-purpose-card-body">
-          <DescriptionList isHorizontal>
-            <DescriptionListGroup>
-              <DescriptionListTerm>{__('Role')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                {dataIsLoading ? <Skeleton /> : purposeRole}
-              </DescriptionListDescription>
-              <DescriptionListTerm>{__('SLA')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                {serviceLevel && (dataIsLoading ? <Skeleton /> : (
-                  <Label color="blue">{serviceLevel}</Label>
-                ))}
-              </DescriptionListDescription>
-              <DescriptionListTerm>{__('Usage type')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                {purposeUsage && (dataIsLoading ? <Skeleton /> : (
-                  <Label color="blue">{purposeUsage}</Label>
-                ))}
-              </DescriptionListDescription>
-              <DescriptionListTerm>{__('Release version')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                {dataIsLoading ? <Skeleton /> : releaseVersion}
-              </DescriptionListDescription>
-              {!!purposeAddons?.length && (
-                <>
-                  <DescriptionListTerm>{__('Add-ons')}</DescriptionListTerm>
-                  {dataIsLoading ? <Skeleton /> : (
-                    <DescriptionListDescription>
-                      <List isPlain>
-                        {purposeAddons.map(addon => (
-                          <ListItem key={addon}>{addon}</ListItem>
-                        ))}
-                      </List>
-                    </DescriptionListDescription>
-                  )}
-                </>
-              )
-              }
-            </DescriptionListGroup>
-          </DescriptionList>
-          {showEditButton && (
-            <SystemPurposeEditModal
-              key={hostName}
-              isOpen={editing}
-              orgId={orgId}
-              closeModal={() => setEditing(false)}
-              hostName={hostName}
-              hostId={hostDetails.id}
-              {...sysPurposeProps}
-            />
-          )}
-        </CardBody>
+        <CardExpandableContent>
+          <CardBody className="system-purpose-card-body">
+            <DescriptionList isHorizontal columnModifier={isAKType ? { default: '2Col' } : undefined}>
+              <DescriptionListGroup>
+                <Dt>{__('Role')}</Dt>
+                <Dd>
+                  {dataIsLoading ? <Skeleton /> : purposeRole}
+                </Dd>
+                <Dt>{__('SLA')}</Dt>
+                <Dd>
+                  {serviceLevel && (dataIsLoading ? <Skeleton /> : (
+                    <Label color="blue">{serviceLevel}</Label>
+                  ))}
+                </Dd>
+              </DescriptionListGroup>
+              <DescriptionListGroup>
+                <Dt>{__('Usage type')}</Dt>
+                <Dd>
+                  {purposeUsage && (dataIsLoading ? <Skeleton /> : (
+                    <Label color="blue">{purposeUsage}</Label>
+                  ))}
+                </Dd>
+                <Dt>{__('Release version')}</Dt>
+                <Dd>
+                  {dataIsLoading ? <Skeleton /> : releaseVersion}
+                </Dd>
+                {!!purposeAddons?.length && (
+                  <>
+                    <Dt>{__('Add-ons')}</Dt>
+                    {dataIsLoading ? <Skeleton /> : (
+                      <Dd>
+                        <List isPlain>
+                          {purposeAddons.map(addon => (
+                            <ListItem key={addon}>{addon}</ListItem>
+                          ))}
+                        </List>
+                      </Dd>
+                    )}
+                  </>
+                )
+                }
+              </DescriptionListGroup>
+            </DescriptionList>
+            {showEditButton && (
+              <SystemPurposeEditModal
+                key={name}
+                isOpen={editing}
+                orgId={orgId}
+                closeModal={() => setEditing(false)}
+                name={name}
+                id={details.id}
+                {...sysPurposeProps}
+                type={sysPurposeCardType}
+              />
+            )}
+          </CardBody>
+        </CardExpandableContent>
       </Card>
     </GridItem>
   );
@@ -167,10 +193,24 @@ SystemPurposeCard.propTypes = {
       edit_hosts: PropTypes.bool,
     }),
   }),
+  akDetails: PropTypes.shape({
+    name: PropTypes.string,
+    organization_id: PropTypes.number,
+    id: PropTypes.number,
+    purpose_usage: PropTypes.string,
+    purpose_role: PropTypes.string,
+    release_version: PropTypes.string,
+    service_level: PropTypes.string,
+    purpose_addons: PropTypes.arrayOf(PropTypes.string),
+    permissions: PropTypes.shape({
+      edit_activation_keys: PropTypes.bool,
+    }),
+  }),
 };
 
 SystemPurposeCard.defaultProps = {
   hostDetails: {},
+  akDetails: {},
 };
 
 export default SystemPurposeCard;

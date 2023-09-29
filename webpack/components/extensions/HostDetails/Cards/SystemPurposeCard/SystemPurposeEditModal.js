@@ -17,14 +17,20 @@ import {
 } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { selectOrganizationStatus, selectOrganization, selectAvailableReleaseVersions, selectAvailableReleaseVersionsStatus } from './SystemPurposeSelectors';
-import { getAvailableReleaseVersions, getOrganization, updateSystemPurposeAttributes } from './SystemPurposeActions';
+import {
+  selectOrganizationStatus,
+  selectOrganization,
+  selectAvailableReleaseVersions,
+  selectAvailableReleaseVersionsStatus,
+} from './SystemPurposeSelectors';
+import { getHostAvailableReleaseVersions, getAKAvailableReleaseVersions, getOrganization, updateHostSysPurposeAttributes, updateAKSysPurposeAttributes } from './SystemPurposeActions';
 import HOST_DETAILS_KEY from '../../HostDetailsConstants';
 import { defaultUsages, defaultRoles, defaultServiceLevels } from './SystemPurposeConstants';
+import { getActivationKey } from '../../../../../scenes/ActivationKeys/Details/ActivationKeyActions';
 
 const SystemPurposeEditModal = ({
-  closeModal, hostName, purposeRole, purposeUsage, purposeAddons,
-  serviceLevel, releaseVersion, isOpen, orgId, hostId,
+  closeModal, name, purposeRole, purposeUsage, purposeAddons,
+  serviceLevel, releaseVersion, isOpen, orgId, id, type,
 }) => {
   const initialPurposeRole = purposeRole ?? '';
   const initialServiceLevel = serviceLevel ?? '';
@@ -54,22 +60,24 @@ const SystemPurposeEditModal = ({
   const availableServiceLevels = orgDetails?.serviceLevels ?? [];
   const { addons: availableAddons, roles: availableRoles, usage: availableUsages }
     = availableSyspurposeAttributes;
+  const selectorAPIKey = type === 'host' ? 'AVAILABLE_RELEASE_VERSIONS' : 'RELEASES';
 
   const availableReleaseVersionsStatus
-    = useSelector(state => selectAvailableReleaseVersionsStatus(state, orgId));
+    = useSelector(state => selectAvailableReleaseVersionsStatus(state, id, selectorAPIKey));
   const availableReleaseVersions = useSelector(state =>
-    selectAvailableReleaseVersions(state, hostId))?.results ?? [];
+    selectAvailableReleaseVersions(state, id, selectorAPIKey))?.results ?? [];
   useEffect(() => {
     if (orgId && orgStatus !== STATUS.RESOLVED) {
       dispatch(getOrganization({ orgId }));
     }
   }, [orgId, orgStatus, dispatch]);
 
+  const actionToDispatch = type === 'host' ? getHostAvailableReleaseVersions : getAKAvailableReleaseVersions;
   useEffect(() => {
-    if (hostId && availableReleaseVersionsStatus !== STATUS.RESOLVED) {
-      dispatch(getAvailableReleaseVersions({ hostId }));
+    if (id && availableReleaseVersionsStatus !== STATUS.RESOLVED) {
+      dispatch(actionToDispatch({ id }));
     }
-  }, [hostId, availableReleaseVersionsStatus, dispatch]);
+  }, [type, id, availableReleaseVersionsStatus, actionToDispatch, dispatch]);
 
   const toggleAddonSelect = isOpenState => setAddonSelectOpen(isOpenState);
 
@@ -88,7 +96,7 @@ const SystemPurposeEditModal = ({
     type: 'API_GET',
     payload: {
       key: HOST_DETAILS_KEY,
-      url: `/api/hosts/${hostName}`,
+      url: `/api/hosts/${name}`,
     },
   });
 
@@ -133,18 +141,33 @@ const SystemPurposeEditModal = ({
     closeModal();
     const optionsToValue = (options, stateValue) =>
       options.find(option => option.value === stateValue)?.value;
-    dispatch(updateSystemPurposeAttributes({
-      hostId,
-      attributes: {
-        autoheal: true,
-        purpose_role: optionsToValue(roleOptions, selectedRole),
-        purpose_usage: optionsToValue(usageOptions, selectedUsage),
-        purpose_addons: selectedAddons,
-        release_version: optionsToValue(releaseVersionOptions, selectedReleaseVersion),
-        service_level: optionsToValue(serviceLevelOptions, selectedServiceLevel),
-      },
-      refreshHostDetails,
-    }));
+    if (type === 'host') {
+      dispatch(updateHostSysPurposeAttributes({
+        id,
+        attributes: {
+          autoheal: true,
+          purpose_role: optionsToValue(roleOptions, selectedRole),
+          purpose_usage: optionsToValue(usageOptions, selectedUsage),
+          purpose_addons: selectedAddons,
+          release_version: optionsToValue(releaseVersionOptions, selectedReleaseVersion),
+          service_level: optionsToValue(serviceLevelOptions, selectedServiceLevel),
+        },
+        refreshHostDetails,
+      }));
+    } else {
+      dispatch(updateAKSysPurposeAttributes({
+        id,
+        attributes: {
+          autoheal: true,
+          purpose_role: optionsToValue(roleOptions, selectedRole),
+          purpose_usage: optionsToValue(usageOptions, selectedUsage),
+          purpose_addons: selectedAddons,
+          release_version: optionsToValue(releaseVersionOptions, selectedReleaseVersion),
+          service_level: optionsToValue(serviceLevelOptions, selectedServiceLevel),
+        },
+        refreshAKDetails: () => dispatch(getActivationKey(id)),
+      }));
+    }
   };
 
   const handleCancel = () => {
@@ -180,9 +203,9 @@ const SystemPurposeEditModal = ({
       <FormattedMessage
         className="syspurpose-edit-modal-blurb"
         id="syspurpose-edit-modal-blurb"
-        defaultMessage={__('Select system purpose attributes for host {hostName}.')}
+        defaultMessage={type === 'host' ? __('Select system purpose attributes for host {name}.') : __('Select system purpose attributes for activation key {name}.')}
         values={{
-          hostName: <strong>{hostName}</strong>,
+          name: <strong>{name}</strong>,
         }}
       />
       <Form isHorizontal style={{ marginTop: '1.3rem' }}>
@@ -239,7 +262,7 @@ const SystemPurposeEditModal = ({
         </FormGroup>
         <FormGroup label={__('Release version')} fieldId="releaseVersion">
           <FormSelect
-            id="release_version"
+            id="releaseVersion"
             name="release_version"
             ouiaId="release-version-select"
             value={selectedReleaseVersion}
@@ -288,7 +311,7 @@ export default SystemPurposeEditModal;
 
 SystemPurposeEditModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
-  hostName: PropTypes.string,
+  name: PropTypes.string,
   purposeRole: PropTypes.string.isRequired,
   purposeUsage: PropTypes.string.isRequired,
   purposeAddons: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -296,12 +319,13 @@ SystemPurposeEditModal.propTypes = {
   releaseVersion: PropTypes.string,
   isOpen: PropTypes.bool.isRequired,
   orgId: PropTypes.number,
-  hostId: PropTypes.number,
+  id: PropTypes.number,
+  type: PropTypes.string.isRequired,
 };
 
 SystemPurposeEditModal.defaultProps = {
-  hostName: '',
+  name: '',
   orgId: null,
-  hostId: null,
+  id: null,
   releaseVersion: '',
 };

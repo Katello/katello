@@ -25,6 +25,7 @@ import {
   Flex,
   FlexItem,
   Panel,
+  PageSection,
 } from '@patternfly/react-core';
 import './ActivationKeyDetails.scss';
 import EditModal from './components/EditModal';
@@ -32,6 +33,7 @@ import DeleteMenu from './components/DeleteMenu';
 import { getActivationKey } from './ActivationKeyActions';
 import DeleteModal from './components/DeleteModal';
 import InactiveText from '../../ContentViews/components/InactiveText';
+import SystemPurposeCard from '../../../components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeCard';
 
 const ActivationKeyDetails = ({ match }) => {
   const dispatch = useDispatch();
@@ -106,6 +108,13 @@ const ActivationKeyDetails = ({ match }) => {
           }
         </div>
       </Panel>
+      <PageSection className="ak-details-tab-page">
+        <Grid className="ak-details-tab-page" hasGutter>
+          <GridItem span={6}>
+            <SystemPurposeCard akDetails={akDetails} />
+          </GridItem>
+        </Grid>
+      </PageSection>
       <DeleteModal isModalOpen={isModalOpen} handleModalToggle={handleModalToggle} akId={akId} />
     </div>
   );
