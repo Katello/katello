@@ -375,7 +375,28 @@ module Katello
       assert composite.errors.full_messages.first =~ /^Container Image repo '#{repo.name}' is present in multiple/
     end
 
-    def test_docker_repo_container_names
+    def test_docker_repo_container_name_overlap
+      product = create(:katello_product, provider: @organization.anonymous_provider, organization: @organization)
+      @dev.registry_name_pattern = "abcdef"
+
+      repo1_lib = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first)
+      view1 = create(:katello_content_view, organization: @organization)
+      view1.repositories << repo1_lib
+      repo1_cv = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo1_lib.id, environment: @dev)
+
+      repo2_lib = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first)
+      view2 = create(:katello_content_view, organization: @organization)
+      view2.repositories << repo2_lib
+
+      assert_equal repo1_cv.container_repository_name, "abcdef"
+      error = assert_raises(ActiveRecord::RecordInvalid) do
+        create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo2_lib.id, environment: @dev)
+      end
+      match_regex = /.*Container repository name for repository .* is not unique and cannot be created in .*\. Its Container .* conflicts with an existing repository\..*/
+      assert_match match_regex, error.message
+    end
+
+    def test_docker_repo_container_name_resolution # rubocop:disable Metrics/AbcSize
       composite = ContentView.find(katello_content_views(:composite_view).id)
       product = create(:katello_product, provider: @organization.anonymous_provider, organization: @organization)
 
@@ -391,15 +412,18 @@ module Katello
       repo2_cv = build(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo2_lib.id)
       version2 = create(:katello_content_view_version, :content_view => view2, :repositories => [repo2_cv])
 
-      composite.update(component_ids: [version1.id])
-      assert composite.valid?
-      @dev.registry_name_pattern = "abcdef"
-      assert composite.check_docker_repository_names!([@dev])
-
       composite.update(component_ids: [version1.id, version2.id])
       assert composite.valid?
-      assert_raises(RuntimeError) do
-        composite.check_docker_repository_names!([@dev])
+      assert composite.check_docker_repository_names!([@dev])
+
+      # ensure that all containers are stored with the proper auto-generated names
+      [version1, version2].each do |version|
+        name = "#{@dev.organization.name.downcase.sub!(" ", "_")}-"\
+          "#{version.content_view.label.downcase}-"\
+          "#{version.content_view.content_view_versions[0].version.sub!(".", "_")}-"\
+          "#{version.repositories[0].product.label.downcase}-"\
+          "#{version.repositories[0].name.downcase.sub!(" ", "_")}"
+        assert_equal name, version.repositories[0].container_repository_name
       end
     end
 
