@@ -54,16 +54,19 @@ const EmptyStateMessage = ({
   const clearSearch = useSelector(selectSearchBarClearSearch);
   const showSecondaryActionAnchor = showSecondaryAction && secondaryActionLink;
   const handleClick = () => {
+    const shouldReload = (searchIsActive || filtersAreActive);
     if (searchIsActive) {
       clearSearch();
     }
     if (filtersAreActive || showSecondaryActionButton) {
       resetFilters();
     }
-    dispatch({
-      type: `${requestKey}_REQUEST`,
-      key: requestKey,
-    });
+    if (shouldReload) {
+      dispatch({
+        type: `${requestKey}_REQUEST`,
+        key: requestKey,
+      });
+    }
   };
 
   const actionButton = primaryActionButton ?? (
