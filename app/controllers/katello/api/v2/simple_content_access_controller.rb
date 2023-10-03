@@ -8,15 +8,15 @@ module Katello
     end
 
     api :GET, "/organizations/:organization_id/simple_content_access/eligible",
-      N_("Check if the specified organization is eligible for Simple Content Access")
+      N_("Check if the specified organization is eligible for Simple Content Access. %s") % sca_only_deprecation_text, deprecated: true
     def eligible
-      ::Foreman::Deprecation.api_deprecation_warning("This endpoint is deprecated and will be removed in a future release. All organizations are now eligible for Simple Content Access.")
+      ::Foreman::Deprecation.api_deprecation_warning("This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access.")
       eligible = @organization.simple_content_access_eligible?
       render json: { simple_content_access_eligible: eligible }
     end
 
     api :GET, "/organizations/:organization_id/simple_content_access/status",
-      N_("Check if the specified organization has Simple Content Access enabled")
+      N_("Check if the specified organization has Simple Content Access enabled. %s") % sca_only_deprecation_text, deprecated: true
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     def status
       status = @organization.simple_content_access?
@@ -24,7 +24,7 @@ module Katello
     end
 
     api :PUT, "/organizations/:organization_id/simple_content_access/enable",
-      N_("Enable simple content access for a manifest")
+      N_("Enable simple content access for a manifest"), deprecated: true
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     def enable
       task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:organization_id])
@@ -32,7 +32,7 @@ module Katello
     end
 
     api :PUT, "/organizations/:organization_id/simple_content_access/disable",
-      N_("Disable simple content access for a manifest")
+      N_("Disable simple content access for a manifest. %s") % sca_only_deprecation_text, deprecated: true
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     def disable
       task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:organization_id])

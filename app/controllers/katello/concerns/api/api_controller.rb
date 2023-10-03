@@ -17,6 +17,12 @@ module Katello
         User.current
       end
 
+      class_methods do
+        def sca_only_deprecation_text
+          N_("WARNING: Simple Content Access will be required for all organizations in Katello 4.12.")
+        end
+      end
+
       protected
 
       def request_from_katello_cli?
