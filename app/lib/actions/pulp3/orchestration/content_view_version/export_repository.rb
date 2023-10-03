@@ -28,7 +28,7 @@ module Actions
           end
 
           def run
-            output[:export_history_id] = input[:export_action_output][:export_history_id]
+            output[:export_history_id] = input[:export_action_output]&.[](:export_history_id)
           end
 
           def humanized_name
