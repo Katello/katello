@@ -11,12 +11,17 @@ import { foremanUrl } from 'foremanReact/common/helpers';
 import { selectHostDetails } from '../HostDetailsSelectors';
 import { useRexJobPolling } from '../Tabs/RemoteExecutionHooks';
 import { runSubmanRepos } from '../Cards/ContentViewDetailsCard/HostContentViewActions';
+import { hasRequiredPermissions as can, userPermissionsFromHostDetails } from '../hostDetailsHelpers';
 
 const HostActionsBar = () => {
   const hostDetails = useSelector(selectHostDetails);
   const dispatch = useDispatch();
   const hostname = hostDetails?.name;
   const { onKebabToggle } = useContext(ForemanActionsBarContext);
+
+  const recalculateApplicability = ['edit_hosts', 'create_job_invocations'];
+  const showRecalculate =
+    can(recalculateApplicability, userPermissionsFromHostDetails({ hostDetails }));
 
   const refreshHostDetails = () => dispatch({
     type: 'API_GET',
@@ -45,15 +50,18 @@ const HostActionsBar = () => {
       >
         {__('Legacy content host UI')}
       </DropdownItem>
-      <DropdownSeparator key="separator" ouiaId="katello-separator" />,
-      <DropdownItem
-        ouiaId="katello-refresh-applicability"
-        key="katello-refresh-applicability"
-        onClick={handleRefreshApplicabilityClick}
-        icon={<RedoIcon />}
-      >
-        {__('Refresh applicability')}
-      </DropdownItem>
+      <DropdownSeparator key="separator" ouiaId="katello-separator" />
+      {showRecalculate && (
+        <DropdownItem
+          ouiaId="katello-refresh-applicability"
+          key="katello-refresh-applicability"
+          onClick={handleRefreshApplicabilityClick}
+          icon={<RedoIcon />}
+        >
+          {__('Refresh applicability')}
+        </DropdownItem>
+      )
+      }
       <DropdownItem
         ouiaId="katello-change-host-content-source"
         key="katello-change-host-content-source"
