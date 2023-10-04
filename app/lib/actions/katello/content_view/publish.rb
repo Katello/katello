@@ -7,6 +7,7 @@ module Actions
         include ::Actions::ObservableAction
         attr_accessor :version
         execution_plan_hooks.use :trigger_capsule_sync, :on => :success
+        execution_plan_hooks.use :notify_on_failure, :on => [:failure, :paused]
 
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
         def plan(content_view, description = "", options = {importing: false, syncable: false}) # rubocop:disable Metrics/PerceivedComplexity
@@ -129,6 +130,14 @@ module Actions
             ForemanTasks.async_task(ContentView::CapsuleSync,
                                     view,
                                     environment)
+          end
+        end
+
+        def notify_on_failure(_plan)
+          notification = MailNotification[:content_view_publish_failure]
+          view = ::Katello::ContentView.find(input.fetch(:content_view, {})[:id])
+          notification.users.each do |user|
+            notification.deliver(user: user, content_view: view, task: task)
           end
         end
 

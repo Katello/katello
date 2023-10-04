@@ -2,9 +2,12 @@ module Actions
   module Katello
     module CapsuleContent
       class Sync < ::Actions::EntryAction
+        include ::Actions::ObservableAction
         def resource_locks
           :link
         end
+
+        execution_plan_hooks.use :notify_on_failure, :on => [:failure, :paused]
 
         input_format do
           param :name
@@ -19,20 +22,16 @@ module Actions
         end
 
         def plan(smart_proxy, options = {})
+          input[:options] = options
+
           action_subject(smart_proxy)
           smart_proxy.verify_ueber_certs
-          environment_id = options.fetch(:environment_id, nil)
-          environment = ::Katello::KTEnvironment.find(environment_id) if environment_id
-          repository_id = options.fetch(:repository_id, nil)
-          repository = ::Katello::Repository.find(repository_id) if repository_id
-          content_view_id = options.fetch(:content_view_id, nil)
-          content_view = ::Katello::ContentView.find(content_view_id) if content_view_id
+
+          subjects = subjects(options)
 
           fail _("Action not allowed for the default smart proxy.") if smart_proxy.pulp_primary?
 
-          refresh_options = options.merge(content_view: content_view,
-                                          environment: environment,
-                                          repository: repository)
+          refresh_options = options.merge(subjects)
           sequence do
             if smart_proxy.has_feature?(SmartProxy::PULP3_FEATURE)
               plan_action(Actions::Pulp3::ContentGuard::Refresh, smart_proxy)
@@ -48,6 +47,28 @@ module Actions
           unless smart_proxy&.pulp_primary?
             smart_proxy&.audit_capsule_sync
           end
+        end
+
+        def notify_on_failure(_plan)
+          notification = MailNotification[:proxy_sync_failure]
+          proxy = SmartProxy.find(input.fetch(:smart_proxy, {})[:id])
+          subjects = subjects(input[:options]).merge(smart_proxy: proxy)
+          notification.users.each do |user|
+            notification.deliver(subjects.merge(user: user, task: task))
+          end
+        end
+
+        def subjects(options = {})
+          environment_id = options.fetch(:environment_id, nil)
+          environment = ::Katello::KTEnvironment.find(environment_id) if environment_id
+
+          repository_id = options.fetch(:repository_id, nil)
+          repository = ::Katello::Repository.find(repository_id) if repository_id
+
+          content_view_id = options.fetch(:content_view_id, nil)
+          content_view = ::Katello::ContentView.find(content_view_id) if content_view_id
+
+          {content_view: content_view, environment: environment, repository: repository}
         end
       end
     end
