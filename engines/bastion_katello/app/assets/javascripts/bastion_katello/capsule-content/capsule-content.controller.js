@@ -111,12 +111,27 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                         }
                         Notification.setErrorMessage(translate('Last sync failed: ') + errorMessage);
                     }
+                } else if (syncStatus['last_failed_reclaim_tasks'].length > 0) {
+                    activeOrFailedTask = pickLastTask(syncStatus['last_failed_reclaim_tasks']);
+                    $scope.syncTask = activeOrFailedTask;
+                    errorCount = $scope.syncTask.humanized.errors.length;
+
+                    if (errorCount > 0) {
+                        errorMessage = $scope.syncTask.humanized.errors[0];
+                        if (errorCount > 2) {
+                            errorMessage += " " + translate("Plus %y more errors").replace("%y", errorCount - 1);
+                        } else if (errorCount > 1) {
+                            errorMessage += " " + translate("Plus 1 more error");
+                        }
+                        Notification.setErrorMessage(translate('Last reclaim failed: ') + errorMessage);
+                    }
                 }
                 $scope.syncState.set(stateFromTask(activeOrFailedTask));
             }, function (response) {
                 $scope.syncStatus = {
                     'active_sync_tasks': [],
-                    'last_failed_sync_tasks': []
+                    'last_failed_sync_tasks': [],
+                    'last_failed_reclaim_tasks': []
                 };
                 processError(response, translate('Last sync failed: '));
             });
