@@ -102,7 +102,7 @@ module Katello
         acs_remotes = Katello::SmartProxyAlternateContentSource.pluck(:remote_href)
         pulp3_enabled_repo_types.each do |repo_type|
           api = repo_type.pulp3_api(smart_proxy)
-          remotes = api.remotes_list
+          remotes = api.remotes_list_all(smart_proxy)
 
           remotes.each do |remote|
             if !repo_names.include?(remote.name) && !acs_remotes.include?(remote.pulp_href)
