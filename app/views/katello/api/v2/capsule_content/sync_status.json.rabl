@@ -26,6 +26,10 @@ node :content_counts do
   @capsule.content_counts
 end
 
+child :last_failed_reclaim_tasks => :last_failed_reclaim_tasks do
+  extends 'foreman_tasks/api/tasks/show'
+end
+
 child @lifecycle_environments => :lifecycle_environments do
   extends 'katello/api/v2/common/identifier'
   extends 'katello/api/v2/common/org_reference'

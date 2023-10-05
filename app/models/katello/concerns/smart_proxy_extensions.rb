@@ -425,8 +425,16 @@ module Katello
         ForemanTasks::Task.for_resource(self).where(:label => 'Actions::Katello::CapsuleContent::Sync')
       end
 
+      def reclaim_space_tasks
+        ForemanTasks::Task.for_resource(self).where(:label => 'Actions::Pulp3::CapsuleContent::ReclaimSpace')
+      end
+
       def active_sync_tasks
         sync_tasks.where(:result => 'pending')
+      end
+
+      def last_failed_reclaim_tasks
+        reclaim_space_tasks.where('started_at > ?', last_sync_time).where.not(:result => 'pending')
       end
 
       def last_failed_sync_tasks

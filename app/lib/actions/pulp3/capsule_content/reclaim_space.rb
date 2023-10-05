@@ -3,6 +3,7 @@ module Actions
     module CapsuleContent
       class ReclaimSpace < Pulp3::AbstractAsyncTask
         def plan(smart_proxy)
+          action_subject(smart_proxy)
           if smart_proxy.pulp_primary?
             repository_hrefs = ::Katello::Pulp3::RepositoryReference.default_cv_repository_hrefs(::Katello::Repository.unscoped.on_demand, ::Organization.all)
             repository_hrefs.flatten!
@@ -19,6 +20,10 @@ module Actions
         def invoke_external_task
           output[:pulp_tasks] = ::Katello::Pulp3::Api::Core.new(SmartProxy.find(input[:smart_proxy_id])).
             repositories_reclaim_space_api.reclaim(repo_hrefs: input[:repository_hrefs])
+        end
+
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
         end
       end
     end
