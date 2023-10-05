@@ -38,6 +38,48 @@ test('Can call API and show Wizard', async (done) => {
   assertNockRequest(filterScope, done);
 });
 
+test('Can show wizard with duplicate repository warning for composite CV', async (done) => {
+  const cvCompositeDetailsData = cvDetailData;
+  cvCompositeDetailsData.composite = true;
+  cvCompositeDetailsData.duplicate_repositories_to_publish = [
+    {
+      id: 1,
+      name: 'repo1',
+      components: [
+        {
+          content_view_name: 'test',
+          content_view_version: '2.0',
+        },
+        {
+          content_view_name: 'dev',
+          content_view_version: '3.0',
+        },
+      ],
+    },
+  ];
+  const scope = nockInstance
+    .get(environmentPathsPath)
+    .query(true)
+    .reply(200, environmentPathsData);
+  const filterScope = nockInstance
+    .get(cvFiltersPath)
+    .reply(200, contentViewFilterData);
+
+  const { getByText } = renderWithRedux(<PublishContentViewWizard
+    details={cvCompositeDetailsData}
+    show
+    onClose={() => { }}
+  />);
+
+  await patientlyWaitFor(() => {
+    expect(getByText('Publish new version - 6.0')).toBeInTheDocument();
+    expect(getByText('Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.')).toBeTruthy();
+  });
+
+  assertNockRequest(scope);
+  assertNockRequest(filterScope, done);
+});
+
 test('Can show Wizard and show environment paths', async (done) => {
   const scope = nockInstance
     .get(environmentPathsPath)

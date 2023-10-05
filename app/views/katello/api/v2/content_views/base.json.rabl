@@ -2,7 +2,7 @@ extends 'katello/api/v2/common/identifier'
 extends 'katello/api/v2/common/org_reference'
 
 attributes :composite
-attributes :component_ids
+attributes :component_ids, :duplicate_repositories_to_publish
 attributes :default
 attributes :version_count
 attributes :latest_version, :latest_version_id

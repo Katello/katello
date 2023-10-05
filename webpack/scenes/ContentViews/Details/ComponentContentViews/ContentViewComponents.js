@@ -30,7 +30,7 @@ import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import ComponentVersion from './ComponentVersion';
 import ComponentEnvironments from './ComponentEnvironments';
 import ContentViewIcon from '../../components/ContentViewIcon';
-import { ADDED, ALL_STATUSES, CONTENT_VIEW_NEEDS_PUBLISH, NOT_ADDED } from '../../ContentViewsConstants';
+import { ADDED, ALL_STATUSES, NOT_ADDED } from '../../ContentViewsConstants';
 import SelectableDropdown from '../../../../components/SelectableDropdown/SelectableDropdown';
 import '../../../../components/EditableTextInput/editableTextInput.scss';
 import ComponentContentViewAddModal from './ComponentContentViewAddModal';
@@ -98,7 +98,7 @@ const ContentViewComponents = ({ cvId, details }) => {
       dispatch(addComponent({
         compositeContentViewId: cvId,
         components: [{ latest: true, content_view_id: componentCvId }],
-      }, () => dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH })));
+      }, () => dispatch(getContentViewDetails(cvId))));
     }
   }, [cvId, dispatch]);
 
@@ -108,7 +108,7 @@ const ContentViewComponents = ({ cvId, details }) => {
     dispatch(removeComponent({
       compositeContentViewId: cvId,
       component_ids: componentIds,
-    }, () => dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH })));
+    }, () => dispatch(getContentViewDetails(cvId))));
   };
 
   const addBulk = () => {
@@ -122,7 +122,7 @@ const ContentViewComponents = ({ cvId, details }) => {
     dispatch(removeComponent({
       compositeContentViewId: cvId,
       component_ids: [componentIdToRemove],
-    }, () => dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH })));
+    }, () => dispatch(getContentViewDetails(cvId))));
   };
 
   const toggleBulkAction = () => {

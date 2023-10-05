@@ -17,7 +17,10 @@ const CVPublishForm = ({
   description,
   setDescription,
   details: {
-    name, composite, next_version: nextVersion, needs_publish: needsPublish,
+    name, composite,
+    next_version: nextVersion,
+    needs_publish: needsPublish,
+    duplicate_repositories_to_publish: duplicateRepos,
   },
   userCheckedItems,
   setUserCheckedItems,
@@ -27,6 +30,7 @@ const CVPublishForm = ({
 }) => {
   const [alertDismissed, setAlertDismissed] = useState(false);
   const [needsPublishAlertDismissed, setNeedsPublishAlertDismissed] = useState(false);
+  const [duplicateReposAlertDismissed, setDuplicateReposAlertDismissed] = useState(false);
   const needsPublishLocal = useSelector(state => selectCVNeedsPublish(state));
 
   const checkPromote = (checked) => {
@@ -59,6 +63,24 @@ const CVPublishForm = ({
                   style={{ marginBottom: '24px' }}
                 >
                   <TextContent>{__('Newly published version will be the same as the previous version.')}</TextContent>
+                </Alert>)
+            }
+            {!duplicateReposAlertDismissed && composite &&
+                (duplicateRepos !== null || duplicateRepos.length > 0) &&
+                (
+                <Alert
+                  ouiaId="duplicate-repos-alert"
+                  variant="info"
+                  isInline
+                  title={__('Duplicate repositories in content view versions')}
+                  actionClose={
+                    <AlertActionCloseButton
+                      onClose={() => setDuplicateReposAlertDismissed(true)}
+                    />
+                        }
+                  style={{ marginBottom: '24px' }}
+                >
+                  <TextContent>{__('Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.')}</TextContent>
                 </Alert>)
             }
             {__('A new version of ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {name}</b>
@@ -142,6 +164,7 @@ CVPublishForm.propTypes = {
       PropTypes.string,
     ]).isRequired,
     needs_publish: PropTypes.bool,
+    duplicate_repositories_to_publish: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   }).isRequired,
 };
 

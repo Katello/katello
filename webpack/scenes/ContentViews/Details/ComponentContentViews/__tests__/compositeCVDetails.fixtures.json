@@ -1,0 +1,393 @@
+{
+  "content_host_count": 0,
+  "composite": true,
+  "component_ids": [
+    5,
+    7
+  ],
+  "duplicate_repositories_to_publish": [
+    {
+      "id": 1,
+      "name": "repo1",
+      "components": [
+        {
+          "content_view_name": "test",
+          "content_view_version": "2.0"
+        },
+        {
+          "content_view_name": "dev",
+          "content_view_version": "3.0"
+        }
+      ]
+    }
+  ],
+  "default": false,
+  "version_count": 1,
+  "latest_version": "1.0",
+  "latest_version_id": 10,
+  "auto_publish": false,
+  "solve_dependencies": false,
+  "import_only": false,
+  "generated_for": "none",
+  "related_cv_count": 2,
+  "related_composite_cvs": [],
+  "needs_publish": false,
+  "filtered": false,
+  "repository_ids": [
+    39,
+    50,
+    51,
+    52,
+    49
+  ],
+  "id": 4,
+  "name": "dup_container",
+  "label": "dup_container",
+  "description": "",
+  "organization_id": 1,
+  "organization": {
+    "name": "Default Organization",
+    "label": "Default_Organization",
+    "id": 1
+  },
+  "created_at": "2023-09-15 13:19:51 -0400",
+  "updated_at": "2023-09-15 14:34:29 -0400",
+  "last_task": {
+    "id": "14bb82d0-fdea-4316-a4dc-0e3f914acf8e",
+    "started_at": "2023-09-15 14:34:28 -0400",
+    "result": "success",
+    "last_sync_words": "3 days"
+  },
+  "latest_version_environments": [
+    {
+      "id": 1,
+      "name": "Library",
+      "label": "Library"
+    }
+  ],
+  "repositories": [
+    {
+      "id": 39,
+      "name": "repo1",
+      "label": "repo1",
+      "content_type": "yum"
+    },
+    {
+      "id": 50,
+      "name": "repo1",
+      "label": "repo1",
+      "content_type": "yum"
+    },
+    {
+      "id": 51,
+      "name": "docker_repo",
+      "label": "docker_repo",
+      "content_type": "docker"
+    },
+    {
+      "id": 52,
+      "name": "python-pulp",
+      "label": "python-pulp",
+      "content_type": "python"
+    },
+    {
+      "id": 49,
+      "name": "test_ansible",
+      "label": "test_ansible",
+      "content_type": "ansible_collection"
+    }
+  ],
+  "versions": [
+    {
+      "id": 10,
+      "version": "1.0",
+      "published": "2023-09-15 14:34:29 -0400",
+      "description": "",
+      "environment_ids": [
+        1
+      ],
+      "filters_applied": false,
+      "published_at_words": "3 days"
+    }
+  ],
+  "components": [
+    {
+      "id": 5,
+      "name": "test 2.0",
+      "content_view_id": 2,
+      "version": "2.0",
+      "environments": [
+        {
+          "id": 2,
+          "name": "dev",
+          "label": "dev"
+        },
+        {
+          "id": 3,
+          "name": "test",
+          "label": "test"
+        }
+      ],
+      "content_view": {
+        "id": 2,
+        "name": "test",
+        "label": "test",
+        "description": "",
+        "next_version": 4,
+        "latest_version": "3.0"
+      },
+      "repositories": [
+        {
+          "id": 39,
+          "name": "repo1",
+          "label": "repo1",
+          "description": null
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "dev 3.0",
+      "content_view_id": 3,
+      "version": "3.0",
+      "environments": [
+        {
+          "id": 2,
+          "name": "dev",
+          "label": "dev"
+        }
+      ],
+      "content_view": {
+        "id": 3,
+        "name": "dev",
+        "label": "dev",
+        "description": "",
+        "next_version": 5,
+        "latest_version": "4.0"
+      },
+      "repositories": [
+        {
+          "id": 50,
+          "name": "repo1",
+          "label": "repo1",
+          "description": null
+        },
+        {
+          "id": 51,
+          "name": "docker_repo",
+          "label": "docker_repo",
+          "description": null
+        },
+        {
+          "id": 52,
+          "name": "python-pulp",
+          "label": "python-pulp",
+          "description": null
+        },
+        {
+          "id": 49,
+          "name": "test_ansible",
+          "label": "test_ansible",
+          "description": null
+        }
+      ]
+    }
+  ],
+  "content_view_components": [
+    {
+      "latest": false,
+      "id": 2,
+      "created_at": "2023-09-15 13:28:32 -0400",
+      "updated_at": "2023-09-15 13:28:32 -0400",
+      "composite_content_view": {
+        "id": 6,
+        "name": "dup_container",
+        "label": "dup_container",
+        "description": "",
+        "next_version": 2,
+        "latest_version": "1.0",
+        "version_count": 1
+      },
+      "content_view": {
+        "id": 2,
+        "name": "test",
+        "label": "test",
+        "description": "",
+        "next_version": 4,
+        "latest_version": "3.0",
+        "version_count": 3
+      },
+      "content_view_version": {
+        "id": 5,
+        "name": "test 2.0",
+        "content_view_id": 2,
+        "version": "2.0",
+        "content_view": {
+          "id": 2,
+          "name": "test",
+          "label": "test",
+          "description": ""
+        },
+        "environments": [
+          {
+            "id": 2,
+            "name": "dev",
+            "label": "dev"
+          },
+          {
+            "id": 3,
+            "name": "test",
+            "label": "test"
+          }
+        ],
+        "repositories": [
+          {
+            "id": 39,
+            "name": "repo1",
+            "label": "repo1",
+            "description": null
+          }
+        ]
+      },
+      "component_content_view_versions": [
+        {
+          "id": 8,
+          "version": "3.0",
+          "description": "",
+          "published_at_words": "3 days"
+        },
+        {
+          "id": 5,
+          "version": "2.0",
+          "description": "",
+          "published_at_words": "4 days"
+        },
+        {
+          "id": 3,
+          "version": "1.0",
+          "description": "",
+          "published_at_words": "18 days"
+        }
+      ]
+    },
+    {
+      "latest": false,
+      "id": 1,
+      "created_at": "2023-09-15 13:28:32 -0400",
+      "updated_at": "2023-09-15 13:58:39 -0400",
+      "composite_content_view": {
+        "id": 6,
+        "name": "dup_container",
+        "label": "dup_container",
+        "description": "",
+        "next_version": 2,
+        "latest_version": "1.0",
+        "version_count": 1
+      },
+      "content_view": {
+        "id": 3,
+        "name": "dev",
+        "label": "dev",
+        "description": "",
+        "next_version": 5,
+        "latest_version": "4.0",
+        "version_count": 4
+      },
+      "content_view_version": {
+        "id": 7,
+        "name": "dev 3.0",
+        "content_view_id": 3,
+        "version": "3.0",
+        "content_view": {
+          "id": 3,
+          "name": "dev",
+          "label": "dev",
+          "description": ""
+        },
+        "environments": [
+          {
+            "id": 2,
+            "name": "dev",
+            "label": "dev"
+          }
+        ],
+        "repositories": [
+          {
+            "id": 50,
+            "name": "repo1",
+            "label": "repo1",
+            "description": null
+          },
+          {
+            "id": 51,
+            "name": "docker_repo",
+            "label": "docker_repo",
+            "description": null
+          },
+          {
+            "id": 52,
+            "name": "python-pulp",
+            "label": "python-pulp",
+            "description": null
+          },
+          {
+            "id": 49,
+            "name": "test_ansible",
+            "label": "test_ansible",
+            "description": null
+          }
+        ]
+      },
+      "component_content_view_versions": [
+        {
+          "id": 9,
+          "version": "4.0",
+          "description": "",
+          "published_at_words": "3 days"
+        },
+        {
+          "id": 7,
+          "version": "3.0",
+          "description": "",
+          "published_at_words": "4 days"
+        },
+        {
+          "id": 6,
+          "version": "2.0",
+          "description": "",
+          "published_at_words": "4 days"
+        },
+        {
+          "id": 2,
+          "version": "1.0",
+          "description": "",
+          "published_at_words": "18 days"
+        }
+      ]
+    }
+  ],
+  "activation_keys": [],
+  "hosts": [],
+  "next_version": "2.0",
+  "last_published": "2023-09-15 14:34:29 -0400",
+  "environments": [
+    {
+      "id": 1,
+      "label": "Library",
+      "name": "Library",
+      "activation_keys": [],
+      "hosts": [],
+      "permissions": {
+        "readable": true
+      }
+    }
+  ],
+  "permissions": {
+    "view_content_views": true,
+    "edit_content_views": true,
+    "destroy_content_views": true,
+    "publish_content_views": true,
+    "promote_or_remove_content_views": true
+  },
+  "errors": null
+}

@@ -8,7 +8,7 @@ import {
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useDispatch } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { addComponent } from '../ContentViewDetailActions';
+import getContentViewDetails, { addComponent } from '../ContentViewDetailActions';
 
 const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
     dispatch(addComponent({
       compositeContentViewId: cvId,
       components: bulkAddParams(),
-    }));
+    }, () => dispatch(getContentViewDetails(cvId))));
     onClose();
   };
 

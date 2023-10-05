@@ -13,8 +13,7 @@ import {
   selectCVDetails,
   selectCVDetailStatus,
 } from '../../Details/ContentViewDetailSelectors';
-import { addComponent } from '../ContentViewDetailActions';
-import { CONTENT_VIEW_NEEDS_PUBLISH } from '../../ContentViewsConstants';
+import getContentViewDetails, { addComponent } from '../ContentViewDetailActions';
 
 const ComponentContentViewAddModal = ({
   cvId, componentCvId, componentId, latest, componentVersionId, show, setIsOpen,
@@ -67,12 +66,12 @@ const ComponentContentViewAddModal = ({
       dispatch(addComponent({
         compositeContentViewId: cvId,
         components: getUpdateParams(),
-      }, () => dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH })));
+      }, () => dispatch(getContentViewDetails(cvId))));
     } else {
       dispatch(addComponent({
         compositeContentViewId: cvId,
         components: getAddParams(),
-      }, () => dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH })));
+      }, () => dispatch(getContentViewDetails(cvId))));
     }
     setIsOpen(false);
   };
