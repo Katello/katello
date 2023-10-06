@@ -25,6 +25,7 @@ module Katello
       yum_service = yum_repo.backend_service(@proxy).with_mirror_adapter
       yum_repo.expects(:backend_service).with(@proxy).once.returns(yum_service)
       yum_service.expects(:count_by_pulpcore_type).with(::Katello::Pulp3::Srpm).once.returns(1)
+      yum_repo.update(library_instance_id: yum_repo.id)
       yum_counts = {
         "rpm.advisory" => {count: 4, href: 'href'},
         "rpm.package" => {count: 32, href: 'href'},
@@ -36,6 +37,7 @@ module Katello
       yum_service.expects(:latest_content_counts).once.returns(yum_counts)
 
       file_repo = katello_repositories(:pulp3_file_1)
+      file_repo.update library_instance_id: file_repo.id
       file_service = file_repo.backend_service(@proxy).with_mirror_adapter
       file_repo.expects(:backend_service).with(@proxy).once.returns(file_service)
       file_counts = {
@@ -44,6 +46,7 @@ module Katello
       file_service.expects(:latest_content_counts).once.returns(file_counts)
 
       ansible_repo = katello_repositories(:pulp3_ansible_collection_1)
+      ansible_repo.update library_instance_id: ansible_repo.id
       ansible_service = ansible_repo.backend_service(@proxy).with_mirror_adapter
       ansible_repo.expects(:backend_service).with(@proxy).once.returns(ansible_service)
       ansible_counts = {
@@ -52,6 +55,7 @@ module Katello
       ansible_service.expects(:latest_content_counts).once.returns(ansible_counts)
 
       container_repo = katello_repositories(:pulp3_docker_1)
+      container_repo.update library_instance_id: container_repo.id
       container_repo.docker_manifest_lists << ::Katello::DockerManifestList.create(pulp_id: 'manifester-lister')
       container_service = container_repo.backend_service(@proxy).with_mirror_adapter
       container_repo.expects(:backend_service).with(@proxy).once.returns(container_service)
@@ -64,6 +68,7 @@ module Katello
       container_service.expects(:latest_content_counts).once.returns(container_counts)
 
       ostree_repo = katello_repositories(:pulp3_ostree_1)
+      ostree_repo.update library_instance_id: ostree_repo.id
       ostree_service = ostree_repo.backend_service(@proxy).with_mirror_adapter
       ostree_repo.expects(:backend_service).with(@proxy).once.returns(ostree_service)
       ostree_counts = {
@@ -72,6 +77,7 @@ module Katello
       ostree_service.expects(:latest_content_counts).once.returns(ostree_counts)
 
       deb_repo = katello_repositories(:pulp3_deb_1)
+      deb_repo.update library_instance_id: deb_repo.id
       deb_service = deb_repo.backend_service(@proxy).with_mirror_adapter
       deb_repo.expects(:backend_service).with(@proxy).once.returns(deb_service)
       deb_counts = {
@@ -80,15 +86,17 @@ module Katello
       deb_service.expects(:latest_content_counts).once.returns(deb_counts)
 
       python_repo = katello_repositories(:pulp3_python_1)
+      python_repo.update library_instance_id: python_repo.id
       python_service = python_repo.backend_service(@proxy).with_mirror_adapter
       python_repo.expects(:backend_service).with(@proxy).once.returns(python_service)
       python_counts = {
         "python.python" => {count: 42, href: 'href'}
       }
       python_service.expects(:latest_content_counts).once.returns(python_counts)
-
       repos = [yum_repo, file_repo, ansible_repo, container_repo,
                ostree_repo, deb_repo, python_repo]
+      yum_repo.content_view_version.expects(:archived_repos).returns(::Katello::Repository.where(id: [yum_repo, file_repo, ansible_repo, container_repo,
+                                                                                                      ostree_repo, deb_repo, python_repo]))
       ::Katello::SmartProxyHelper.any_instance.expects(:repositories_available_to_capsule).once.returns(repos)
       @proxy.update_content_counts!
       counts = @proxy.content_counts
@@ -97,29 +105,11 @@ module Katello
           { "repositories" =>
             { yum_repo.id.to_s => { "erratum" => 4, "srpm" => 1, "rpm" => 31, "rpm.modulemd" => 7, "rpm.modulemd_defaults" => 3, "package_group" => 7, "rpm.packagecategory" => 1 },
               file_repo.id.to_s => { "file" => 100 },
-              ansible_repo.id.to_s => { "ansible_collection" => 802 },
+              ansible_repo.id.to_s => { "ansible.collection" => 802 },
               container_repo.id.to_s => { "container.blob" => 30, "docker_manifest_list" => 1, "docker_manifest" => 9, "docker_tag" => 5 },
               ostree_repo.id.to_s => {"ostree_ref" => 30 },
               deb_repo.id.to_s => { "deb" => 987 },
               python_repo.id.to_s => { "python_package" => 42 }
-            },
-            "cv_version_content_counts" =>
-            {  "erratum" => 4,
-               "srpm" => 1,
-               "rpm" => 31,
-               "rpm.modulemd" => 7,
-               "rpm.modulemd_defaults" => 3,
-               "package_group" => 7,
-               "rpm.packagecategory" => 1,
-               "file" => 100,
-               "ansible_collection" => 802,
-               "container.blob" => 30,
-               "docker_manifest_list" => 1,
-               "docker_manifest" => 9,
-               "docker_tag" => 5,
-               "ostree_ref" => 30,
-               "deb" => 987,
-               "python_package" => 42
             }
           }
         }

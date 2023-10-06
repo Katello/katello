@@ -16,6 +16,7 @@ export default [
       singularLowercase: __('Python package'),
       pluralLabel: 'python_packages',
       singularLabel: 'python_package',
+      capsuleCountLabel: 'python_package',
     },
     columnHeaders: [
       { title: __('Name'), getProperty: unit => (<a href={urlBuilder(`content/python_packages/${unit?.id}`, '')}>{unit?.name}</a>) },
@@ -81,6 +82,7 @@ export default [
       singularLowercase: __('OSTree ref'),
       pluralLabel: 'ostree_refs',
       singularLabel: 'ostree_ref',
+      capsuleCountLabel: 'ostree_ref',
     },
     columnHeaders: [
       { title: __('Name'), getProperty: unit => (<a href={urlBuilder(`content/ostree_refs/${unit?.id}`, '')}>{unit?.name}</a>) },
@@ -142,6 +144,7 @@ export default [
       singularLowercase: __('Ansible collection'),
       pluralLabel: 'ansible_collections',
       singularLabel: 'ansible_collection',
+      capsuleCountLabel: 'ansible_collection',
     },
     columnHeaders: [
       { title: __('Name'), getProperty: unit => (<a href={urlBuilder(`content/ansible_collections/${unit?.id}`, '')}>{unit?.name}</a>) },

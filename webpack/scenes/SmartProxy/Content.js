@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SmartProxyContentTable from './SmartProxyContentTable';
+import SmartProxyExpandableTable from './SmartProxyExpandableTable';
 
 const Content = ({ smartProxyId }) => (
-  <SmartProxyContentTable smartProxyId={smartProxyId} />
+  <SmartProxyExpandableTable smartProxyId={smartProxyId} />
 );
 
 Content.propTypes = {
