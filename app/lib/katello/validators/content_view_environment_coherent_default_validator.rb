@@ -1,7 +1,7 @@
 module Katello
   module Validators
-    # used by activation key and content facet
-    class ContentViewEnvironmentValidator < ActiveModel::Validator
+    # ensures that the Default Organization View content view can only be used with the Library environment
+    class ContentViewEnvironmentCoherentDefaultValidator < ActiveModel::Validator
       def validate(record)
         #support lifecycle_environment_id for foreman models
         environment_id = record.respond_to?(:lifecycle_environment_id) ? record.lifecycle_environment_id : record.environment_id
@@ -9,13 +9,11 @@ module Katello
           view = ContentView.where(:id => record.content_view_id).first
           if environment_id
             env = KTEnvironment.where(:id => environment_id).first
-            unless view.blank? || env.blank? || view.in_environment?(env)
-              record.errors[:base] << _("Content view '%{view}' is not in environment '%{env}'") %
+            return if view.blank? || env.blank?
+            if view.default? && !env.library?
+              record.errors[:base] << _("Lifecycle environment '%{env}' cannot be used with content view '%{view}'") %
                                         {:view => view.name, :env => env.name}
             end
-          end
-          if view&.generated_for_repository?
-            record.errors[:base] << _("Generated content views cannot be assigned to hosts or activation keys")
           end
         end
       end

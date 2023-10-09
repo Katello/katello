@@ -19,6 +19,7 @@ module Katello
     validates :environment_id, uniqueness: {scope: :content_view_id}, presence: true
     validates :content_view_id, presence: true
     validates_with Validators::ContentViewEnvironmentOrgValidator
+    validates_with Validators::ContentViewEnvironmentCoherentDefaultValidator
 
     before_save :generate_info
 
@@ -42,6 +43,10 @@ module Katello
       content_view.activation_keys.in_environment(environment)
     end
 
+    def default_environment?
+      content_view.default? && environment.library?
+    end
+
     # TODO: uncomment when we need to start showing multiple CVE names in UI
     # def candlepin_name
     #   "#{environment.label}/#{content_view.label}"
@@ -52,7 +57,7 @@ module Katello
     def generate_info
       self.name ||= environment.name
 
-      if content_view.default?
+      if default_environment?
         self.label ||= environment.label
         self.cp_id ||= Katello::Util::Data.hexdigest(environment.organization.label)
       else
