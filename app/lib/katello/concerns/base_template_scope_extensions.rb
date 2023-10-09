@@ -370,7 +370,7 @@ module Katello
           (found.chomp.split('=', 2).last || '').split(',')
         else
           TemplateInvocationInputValue.joins(:template_input).where("template_invocation_id = ? AND template_inputs.name = ?", task.template_invocation_id, 'errata')
-            .first.value.split(',')
+            .first&.value&.split(',') || []
         end
       end
     end
