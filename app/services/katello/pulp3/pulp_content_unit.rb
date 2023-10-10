@@ -7,6 +7,7 @@ module Katello
       # Any class that extends this class should define:
       # Class#update_model
 
+      # rubocop:disable Metrics/MethodLength
       def self.katello_name_from_pulpcore_name(pulpcore_name, repo)
         # Counts shouldn't be needed for more than the default generic content unit type.
         if repo.generic?
@@ -25,6 +26,8 @@ module Katello
           ::Katello::PackageGroup::CONTENT_TYPE
         when ::Katello::Pulp3::Erratum::PULPCORE_CONTENT_TYPE
           ::Katello::Erratum::CONTENT_TYPE
+        when ::Katello::Pulp3::ModuleStream::PULPCORE_CONTENT_TYPE
+          'module_stream'
         when ::Katello::Pulp3::DockerTag::PULPCORE_CONTENT_TYPE
           ::Katello::DockerTag::CONTENT_TYPE
         when ::Katello::Pulp3::DockerManifest::PULPCORE_CONTENT_TYPE
@@ -41,6 +44,7 @@ module Katello
           pulpcore_name
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def self.content_api
         fail NotImplementedError

@@ -103,7 +103,7 @@ module Katello
       expected_counts = { "content_view_versions" =>
         { yum_repo.content_view_version.id.to_s =>
           { "repositories" =>
-            { yum_repo.id.to_s => { "erratum" => 4, "srpm" => 1, "rpm" => 31, "rpm.modulemd" => 7, "rpm.modulemd_defaults" => 3, "package_group" => 7, "rpm.packagecategory" => 1 },
+            { yum_repo.id.to_s => { "erratum" => 4, "srpm" => 1, "rpm" => 31, "module_stream" => 7, "rpm.modulemd_defaults" => 3, "package_group" => 7, "rpm.packagecategory" => 1 },
               file_repo.id.to_s => { "file" => 100 },
               ansible_repo.id.to_s => { "ansible.collection" => 802 },
               container_repo.id.to_s => { "container.blob" => 30, "docker_manifest_list" => 1, "docker_manifest" => 9, "docker_tag" => 5 },
