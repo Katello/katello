@@ -134,7 +134,7 @@ module Katello
 
     def token
       if !require_user_authorization?
-        personal_token = OpenStruct.new(token: 'unauthenticated', issued_at: Time.now, expires_at: Time.now + 3)
+        personal_token = OpenStruct.new(token: 'unauthenticated', issued_at: Time.now, expires_at: 3.minutes.from_now)
       else
         personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry').first
         if personal_token.nil?
@@ -147,8 +147,21 @@ module Katello
         end
       end
 
+      create_time = (personal_token.created_at || personal_token.issued_at).to_time
+      expiry_time = personal_token.expires_at.to_time
+      expiration_seconds = (expiry_time - create_time).to_int # result already in seconds
+
       response.headers['Docker-Distribution-API-Version'] = 'registry/2.0'
-      render json: { token: personal_token.token, expires_at: personal_token.expires_at, issued_at: personal_token.created_at }
+      render json: {
+        token: personal_token.token,
+        expires_in: expiration_seconds,
+        issued_at: create_time.rfc3339,
+
+        # We're keeping the 'expires_at' field for now to maintain compatibility with existing
+        # smart-proxies during 4.11 upgrades. This is not a part of OAuth2 spec.
+        # TODO - Remove 'expires_at' in Katello 4.13 or later.
+        expires_at: expiry_time.rfc3339
+      }
     end
 
     def pull_manifest
