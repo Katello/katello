@@ -111,6 +111,27 @@ module Katello
     scoped_search :on => :composite, :complete_value => true
     scoped_search :on => :generated_for, :complete_value => true
     scoped_search :on => :default # just for ordering
+    scoped_search :on => :name, :complete_value => true,
+                  :rename => :content_views,
+                  :operators => ['='],
+                  :ext_method => :find_components_by_cv_name
+
+    def self.find_components_by_cv_name(_key, operator, value)
+      kcv = Katello::ContentView.table_name
+      kcvc = Katello::ContentViewComponent.table_name
+      { :conditions => "#{kcv}.composite = 't' AND #{kcv}.id IN (SELECT #{kcvc}.composite_content_view_id FROM #{kcvc} WHERE #{kcvc}.content_view_id IN (SELECT #{kcv}.id FROM #{kcv} WHERE #{kcv}.name #{operator} ?))",
+        :parameter => [value]
+      }
+    end
+
+    def self.completer_scope_options(search)
+      if search.include?('content_views')
+        # Don't autocomplete CCV names when searching for components
+        { :value_filter => { :composite => false } }
+      else
+        {}
+      end
+    end
 
     enum generated_for: {
       none: 0,
