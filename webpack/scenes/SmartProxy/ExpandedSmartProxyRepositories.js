@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { DataList, DataListItem, DataListItemRow, DataListItemCells, DataListCell } from '@patternfly/react-core';
 import AdditionalCapsuleContent from './AdditionalCapsuleContent';
+import InactiveText from '../ContentViews/components/InactiveText';
 
 const ExpandedSmartProxyRepositories = ({ contentCounts, repositories }) => {
   const getRepositoryNameById = id => (repositories.find(repo =>
@@ -24,21 +25,22 @@ const ExpandedSmartProxyRepositories = ({ contentCounts, repositories }) => {
         <DataListItemRow>
           <DataListItemCells dataListCells={[
             <DataListCell key="primary content">
-              <b>{__('Repositories')}</b>
+              <b>{__('Repository')}</b>
             </DataListCell>,
-            <DataListCell key="Packages"><b>{__('Packages')}</b></DataListCell>,
-            <DataListCell key="Additional Content"><b>{__('Additional Content')}</b></DataListCell>,
+            <DataListCell key="Package count"><b>{__('Packages')}</b></DataListCell>,
+            <DataListCell key="Additional content"><b>{__('Additional content')}</b></DataListCell>,
           ]}
           />
         </DataListItemRow>
       </DataListItem>
-      {Object.keys(contentCounts).map((repo, index) => (
+      {Object.keys(contentCounts).length ? Object.keys(contentCounts).map((repo, index) => (
         <DataListItem key={`${repo.id}-${index}`}>
           <DataListItemRow>
             <DataListItemCells dataListCells={dataListCellLists(repo)} />
           </DataListItemRow>
         </DataListItem>
-      ))}
+      )) : <InactiveText text={__('No content available')} />
+      }
     </DataList>
   );
 };

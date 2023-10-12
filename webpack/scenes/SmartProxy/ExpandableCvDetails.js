@@ -13,7 +13,7 @@ const ExpandableCvDetails = ({ contentViews, counts }) => {
   const columnHeaders = [
     __('Content view'),
     __('Last published'),
-    __('Synced to smart proxy'),
+    __('Synced'),
   ];
   const { content_counts: contentCounts } = counts;
   const expandedTableRows = useSet([]);
@@ -46,6 +46,7 @@ const ExpandableCvDetails = ({ contentViews, counts }) => {
           <Tbody key={`${id} + ${version}`}isExpanded={isExpanded}>
             <Tr key={version} ouiaId={cv.name}>
               <Td
+                style={{ paddingTop: 0 }}
                 expand={{
                   rowIndex,
                   isExpanded,

@@ -148,7 +148,11 @@ module Katello
           new_content_counts[:content_view_versions][repo.content_view_version_id] ||= { repositories: {}}
           # Store counts on capsule of archived repos which are reused across environment copies
           # of the archived repo corresponding to each environment CV version is promoted to.
-          new_content_counts[:content_view_versions][repo.content_view_version_id][:repositories][repo.content_view_version.archived_repos.find_by(library_instance_id: repo.library_instance_id)&.id] = translated_counts
+          if repo.content_view_version.default?
+            new_content_counts[:content_view_versions][repo.content_view_version_id][:repositories][repo.id] = translated_counts
+          else
+            new_content_counts[:content_view_versions][repo.content_view_version_id][:repositories][repo.content_view_version.archived_repos.find_by(library_instance_id: repo.library_instance_id)&.id] = translated_counts
+          end
         end
         update(content_counts: new_content_counts)
       end
@@ -424,10 +428,12 @@ module Katello
         Audited::Audit.where(:auditable_id => self, :auditable_type => SmartProxy.name, action: "sync capsule").order(:created_at).last
       end
 
-      def last_sync_time
-        task = sync_tasks.where.not(:ended_at => nil).where(:result => 'success').order(:ended_at).last
+      def last_sync_task
+        sync_tasks.where.not(:ended_at => nil).where(:result => 'success').order(:ended_at).last
+      end
 
-        task&.ended_at || last_sync_audit&.created_at&.to_s
+      def last_sync_time
+        last_sync_task&.ended_at || last_sync_audit&.created_at&.to_s
       end
 
       def environment_syncable?(env)

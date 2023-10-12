@@ -1,6 +1,9 @@
 object @capsule
 
 attribute :last_sync_time
+node :last_sync_words do |_object|
+  @capsule&.last_sync_time ? time_ago_in_words(Time.parse(@capsule&.last_sync_time&.to_s)) : nil
+end
 
 attribute :download_policy
 
@@ -12,6 +15,10 @@ child :active_sync_tasks => :active_sync_tasks do
   extends 'foreman_tasks/api/tasks/show'
 end
 child :last_failed_sync_tasks => :last_failed_sync_tasks do
+  extends 'foreman_tasks/api/tasks/show'
+end
+
+child :last_sync_task => :last_sync_task do
   extends 'foreman_tasks/api/tasks/show'
 end
 

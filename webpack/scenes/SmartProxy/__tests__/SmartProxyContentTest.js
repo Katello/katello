@@ -23,8 +23,8 @@ test('Can display Smart proxy content table', async (done) => {
   await patientlyWaitFor(() => expect(getByText('Environment')).toBeInTheDocument());
   expect(getAllByText('Content view')[0]).toBeInTheDocument();
   expect(getAllByText('Last published')[0]).toBeInTheDocument();
-  expect(getAllByText('Repositories')[0]).toBeInTheDocument();
-  expect(getAllByText('Synced to smart proxy')[0]).toBeInTheDocument();
+  expect(getAllByText('Repository')[0]).toBeInTheDocument();
+  expect(getAllByText('Synced')[0]).toBeInTheDocument();
   expect(getAllByLabelText('Details')[0]).toHaveAttribute('aria-expanded', 'false');
   getAllByLabelText('Details')[0].click();
   expect(getAllByLabelText('Details')[0]).toHaveAttribute('aria-expanded', 'true');

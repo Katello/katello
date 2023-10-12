@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { Thead, Tbody, Th, Tr, Td } from '@patternfly/react-table';
-import getSmartProxyContent from './SmartProxyContentActions';
+import getSmartProxyContent, { updateSmartProxyContentCounts } from './SmartProxyContentActions';
 import {
   selectSmartProxyContent,
   selectSmartProxyContentStatus,
@@ -12,25 +12,39 @@ import {
 import { useSet } from '../../components/Table/TableHooks';
 import TableWrapper from '../../components/Table/TableWrapper';
 import ExpandableCvDetails from './ExpandableCvDetails';
+import ComponentEnvironments from '../ContentViews/Details/ComponentContentViews/ComponentEnvironments';
+import LastSync from '../ContentViews/Details/Repositories/LastSync';
 
-const SmartProxyExpandableTable = ({ smartProxyId }) => {
+const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
   const response = useSelector(selectSmartProxyContent);
   const status = useSelector(selectSmartProxyContentStatus);
   const error = useSelector(selectSmartProxyContentError);
   const [searchQuery, updateSearchQuery] = useState('');
   const expandedTableRows = useSet([]);
   const tableRowIsExpanded = id => expandedTableRows.has(id);
+  const dispatch = useDispatch();
   let metadata = {};
   const {
-    lifecycle_environments: results,
+    lifecycle_environments: results, last_sync_task: lastTask, last_sync_words: lastSyncWords,
   } = response;
   if (results) {
     metadata = { total: results.length, subtotal: results.length };
   }
   const columnHeaders = [
     __('Environment'),
+    __('Last sync'),
   ];
-  const fetchItems = useCallback(() => getSmartProxyContent({ smartProxyId }), [smartProxyId]);
+
+  const refreshCountAction = {
+    title: __('Refresh counts'),
+    onClick: () => {
+      dispatch(updateSmartProxyContentCounts(smartProxyId));
+    },
+  };
+  const fetchItems = useCallback(
+    () => getSmartProxyContent({ smartProxyId, organizationId }),
+    [smartProxyId, organizationId],
+  );
 
   const emptyContentTitle = __('No content views yet');
   const emptyContentBody = __('You currently have no content views to display');
@@ -38,6 +52,7 @@ const SmartProxyExpandableTable = ({ smartProxyId }) => {
   const emptySearchBody = __('Try changing your search settings.');
   const alwaysHideToolbar = true;
   const hidePagination = true;
+
   return (
     <TableWrapper
       {...{
@@ -67,37 +82,46 @@ const SmartProxyExpandableTable = ({ smartProxyId }) => {
               {col}
             </Th>
           ))}
+          <Th key="action-menu" />
         </Tr>
       </Thead>
       {
-        results?.map((env, rowIndex) => {
-          const {
-            name, id, content_views: contentViews, counts,
-          } = env;
-          const isExpanded = tableRowIsExpanded(id);
-          return (
-            <Tbody isExpanded={isExpanded} key={id}>
-              <Tr key={id} ouiaId={`EnvRow-${id}`}>
-                <Td
-                  expand={{
-                    rowIndex,
-                    isExpanded,
-                    onToggle: (_event, _rInx, isOpen) =>
-                      expandedTableRows.onToggle(isOpen, id),
-                  }}
-                />
-                <Td>{name}</Td>
-              </Tr>
-              <Tr key="child_row" ouiaId={`ContentViewTableRowChild-${id}`} isExpanded={isExpanded}>
-                <Td colSpan={2}>
-                  <ExpandableCvDetails contentViews={contentViews} counts={counts} />
-                </Td>
-              </Tr>
-            </Tbody>
-          );
-        })
-      }
-    </TableWrapper >
+          results?.map((env, rowIndex) => {
+            const {
+              id, content_views: contentViews, counts,
+            } = env;
+            const isExpanded = tableRowIsExpanded(id);
+            return (
+              <Tbody isExpanded={isExpanded} key={id} id="smart_proxy_table">
+                <Tr key={id} ouiaId={`EnvRow-${id}`}>
+                  <Td
+                    style={{ paddingTop: 0 }}
+                    expand={{
+                      rowIndex,
+                      isExpanded,
+                      onToggle: (_event, _rInx, isOpen) =>
+                        expandedTableRows.onToggle(isOpen, id),
+                    }}
+                  />
+                  <Td><ComponentEnvironments environments={[env]} /></Td>
+                  <Td><LastSync lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /></Td>
+                  <Td
+                    key={`rowActions-${id}`}
+                    actions={{
+                      items: [refreshCountAction],
+                    }}
+                  />
+                </Tr>
+                <Tr key="child_row" ouiaId={`ContentViewTableRowChild-${id}`} isExpanded={isExpanded}>
+                  <Td colSpan={4}>
+                    <ExpandableCvDetails contentViews={contentViews} counts={counts} />
+                  </Td>
+                </Tr>
+              </Tbody>
+            );
+          })
+        }
+    </TableWrapper>
   );
 };
 
@@ -106,6 +130,14 @@ SmartProxyExpandableTable.propTypes = {
     PropTypes.number,
     PropTypes.string, // The API can sometimes return strings
   ]).isRequired,
+  organizationId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string, // The API can sometimes return strings
+  ]),
+};
+
+SmartProxyExpandableTable.defaultProps = {
+  organizationId: null,
 };
 
 export default SmartProxyExpandableTable;

@@ -75,7 +75,7 @@ module Katello
       end
 
       def version_href
-        fetch_repository.latest_version_href
+        fetch_repository&.latest_version_href
       end
 
       def publication_href

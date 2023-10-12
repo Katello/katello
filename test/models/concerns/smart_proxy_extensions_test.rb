@@ -95,8 +95,7 @@ module Katello
       python_service.expects(:latest_content_counts).once.returns(python_counts)
       repos = [yum_repo, file_repo, ansible_repo, container_repo,
                ostree_repo, deb_repo, python_repo]
-      yum_repo.content_view_version.expects(:archived_repos).returns(::Katello::Repository.where(id: [yum_repo, file_repo, ansible_repo, container_repo,
-                                                                                                      ostree_repo, deb_repo, python_repo]))
+      yum_repo.content_view_version.expects(:default?).returns(true)
       ::Katello::SmartProxyHelper.any_instance.expects(:repositories_available_to_capsule).once.returns(repos)
       @proxy.update_content_counts!
       counts = @proxy.content_counts
