@@ -56,7 +56,7 @@ module Katello
     api :PUT, '/organizations/:id', N_('Update organization')
     param :id, :number, :desc => N_("organization ID"), :required => true
     param :redhat_repository_url, String, :desc => N_("Red Hat CDN URL"), deprecated: true
-    param :simple_content_access, :bool, :desc => N_('Whether Simple Content Access should be enabled for the organization.'), :required => false, :default => true
+    param :simple_content_access, :bool, :desc => N_('Whether Simple Content Access should be enabled for the organization.'), :required => false, :default => true, deprecated: true
     param_group :resource
     def update
       if params[:redhat_repository_url]
@@ -80,7 +80,7 @@ module Katello
     param :organization, Hash do
       param :label, String, :required => false
     end
-    param :simple_content_access, :bool, :desc => N_('Whether to turn on Simple Content Access for the organization.'), :required => false, :default => true
+    param :simple_content_access, :bool, :desc => N_('Whether to turn on Simple Content Access for the organization.'), :required => false, :default => true, deprecated: true
     def create
       @organization = Organization.new(resource_params)
       sca = params.key?(:simple_content_access) ? ::Foreman::Cast.to_bool(params[:simple_content_access]) : true
