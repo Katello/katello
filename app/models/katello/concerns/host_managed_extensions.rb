@@ -108,6 +108,8 @@ module Katello
         delegate :content_source_id, :single_content_view, :single_lifecycle_environment, :default_environment?, :single_content_view_environment?, :multi_content_view_environment?, :kickstart_repository_id, :bound_repositories,
           :installable_errata, :installable_rpms, to: :content_facet, allow_nil: true
 
+        delegate :release_version, :purpose_role, :purpose_usage, to: :subscription_facet, allow_nil: true
+
         has_many :content_view_environment_content_facets, through: :content_facet, class_name: 'Katello::ContentViewEnvironmentContentFacet'
         has_many :content_view_environments, through: :content_view_environment_content_facets
         has_many :content_views, through: :content_view_environments
@@ -587,7 +589,8 @@ class ::Host::Managed::Jail < Safemode::Jail
         :host_collections, :pools, :hypervisor_host, :installed_debs,
         :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template,
         :filtered_entitlement_quantity_consumed, :bound_repositories,
-        :single_content_view, :single_lifecycle_environment
+        :single_content_view, :single_lifecycle_environment, :purpose_role, :purpose_usage, :release_version,
+        :purpose_role_status_label, :purpose_usage_status_label
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail
