@@ -15,7 +15,7 @@ module Katello
       [repository]
     end
 
-    def self.completer_scope_options
+    def self.completer_scope_options(_search)
       {"#{Katello::Repository.table_name}" => lambda { |repo_class| repo_class.yum_type } }
     end
   end
