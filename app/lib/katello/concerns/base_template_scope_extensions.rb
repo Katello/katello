@@ -88,6 +88,19 @@ module Katello
         end
       end
 
+      apipie :method, 'Returns installed product names for the host with CP IDs' do
+        required :host, 'Host::Managed', desc: 'Host object to get products for'
+        returns array_of: String, desc: 'Array with names and CP IDs of installed products on the host'
+      end
+      def host_products_names_and_ids(host)
+        products = host_products(host)
+        if products
+          products.collect { |product| "#{product.name} (#{product.cp_product_id})" }
+        else
+          []
+        end
+      end
+
       apipie :method, 'Returns the host collections the host belongs to' do
         required :host, 'Host::Managed', desc: 'Host object to get the host collections for'
         returns array_of: 'HostCollection', desc: "Array of the host collection objects the host belongs to"

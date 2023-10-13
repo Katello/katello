@@ -248,5 +248,5 @@ module Katello
 end
 
 class ::Organization::Jail < ::Safemode::Jail
-  allow :label
+  allow :label, :simple_content_access?
 end
