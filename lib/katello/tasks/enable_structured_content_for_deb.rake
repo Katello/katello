@@ -6,6 +6,7 @@ namespace :katello do
       puts '  foreman-rake katello:enable_structured_content_for_deb[true]'
       puts '  foreman-rake katello:enable_structured_content_for_deb[false]'
       puts "Note that use of structured content is currently set to '#{Setting['deb_use_structured_content']}'!"
+      puts 'Note that after enabling structured content, you may need to resync your proxies!'
       exit 1
     end
 
@@ -15,8 +16,9 @@ namespace :katello do
     # Force deb_use_simple_publish to true, since we are not yet ready to drop simple publishing!
     Setting['deb_use_simple_publish'] = true
 
-    # Update deb_use_structured_content to the value requested by the user:
+    # Update deb_use_structured_content and deb_sue_structured_proxy_sync to the value requested by the user:
     Setting['deb_use_structured_content'] = deb_use_structured_content
+    Setting['deb_use_structured_proxy_sync'] = deb_use_structured_content
 
     # Ignore repositories where url is not set, since those are presumably empty or used for uploads!
     roots = Katello::RootRepository.deb_type.where.not(url: nil)

@@ -680,6 +680,12 @@ Foreman::Plugin.register :katello do
         default: false,
         full_name: N_('Use structured content for deb clients'),
         description: N_("If enabled, repo URL's for deb content hosts will be appended with structure information where available.")
+
+      setting 'deb_use_structured_proxy_sync',
+        type: :boolean,
+        default: false,
+        full_name: N_('Sync structured content for proxy syncs'),
+        description: N_("If enabled, any upstream distributions synced to the server will also be used for proxy syncs.")
     end
   end
 
