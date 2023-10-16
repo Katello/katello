@@ -156,7 +156,7 @@ const ContentViewComponents = ({ cvId, details }) => {
                 <SplitItem>
                   <Button
                     ouiaId={`edit-component-version-${componentCvId}`}
-                    className="foreman-edit-icon"
+                    className="katello-edit-icon foreman-edit-icon"
                     aria-label="edit_version"
                     variant="plain"
                     onClick={() => {

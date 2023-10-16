@@ -122,6 +122,7 @@ const PublishContentViewWizard = ({
         } else onClose();
       }}
       isOpen={show}
+      id="content-view-publish-wizard"
     />
   );
 };

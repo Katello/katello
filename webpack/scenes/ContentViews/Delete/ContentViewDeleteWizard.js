@@ -151,6 +151,7 @@ const ContentViewDeleteWizard =
             setIsOpen(false);
           }}
           isOpen={show}
+          id="content-view-delete-wizard"
         />
       </CVDeleteContext.Provider>
     );
