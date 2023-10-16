@@ -71,7 +71,7 @@ module Katello
       # It is not the errata "belonging" to the host. Its rather the errata that is "applicable"
       # which is calculated elsewhere.
 
-      self.joins(:content_facets).
+      self.group(:id).distinct.joins(:content_facets).
         where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts.select(:id))
     end
 
