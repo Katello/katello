@@ -25,7 +25,8 @@ import {
   SystemPropertiesCardVirtualization,
   SystemPropertiesCardTracer,
 } from './components/extensions/HostDetails/DetailsTabCards/SystemPropertiesCardExtensions';
-import HostActionsBar from './components/extensions/HostDetails/ActionsBar';
+import HostDetailsActionsBar from './components/extensions/HostDetails/ActionsBar';
+import HostsIndexActionsBar from './components/extensions/Hosts/ActionsBar';
 import RecentCommunicationCardExtensions from './components/extensions/HostDetails/DetailsTabCards/RecentCommunicationCardExtensions';
 import SystemPurposeCard from './components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeCard';
 
@@ -67,7 +68,15 @@ addGlobalFill('host-details-tab-properties-3', 'Virtualization', <SystemProperti
 addGlobalFill(
   'host-details-kebab',
   'katello-host-details-kebab',
-  <HostActionsBar key="katello-host-details-kebab" />,
+  <HostDetailsActionsBar key="katello-host-details-kebab" />,
   100,
 );
+
+addGlobalFill(
+  'hosts-index-kebab',
+  'katello-hosts-index-kebab',
+  <HostsIndexActionsBar key="katello-hosts-index-kebab" />,
+  100,
+);
+
 addGlobalFill('host-tab-details-cards', 'HW properties', <HwPropertiesCard key="hw-properties" />, 200);
