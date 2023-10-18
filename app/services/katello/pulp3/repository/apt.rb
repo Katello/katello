@@ -39,10 +39,6 @@ module Katello
             fail("It cannot work to set both deb_use_structured_proxy_sync and deb_use_simple_publish to False! Please set at least one of them to True!")
           end
 
-          if Setting['deb_use_simple_publish'] and not distributions.split(' ').include? 'default'
-            distributions.concat(' default')
-          end
-
           super.merge({distributions: distributions})
         end
 
