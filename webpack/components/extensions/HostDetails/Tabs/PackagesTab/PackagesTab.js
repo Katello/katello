@@ -231,9 +231,10 @@ export const PackagesTab = () => {
     isPolling: isRemoveInProgress,
   } = useRexJobPolling(packageRemoveAction);
 
-  const packageBulkRemoveAction = bulkParams => removePackages({
+  const packageBulkRemoveAction = (bulkParams, packageNames) => removePackages({
     hostname,
     search: bulkParams,
+    descriptionFormat: `Remove package(s) ${packageNames}`,
   });
 
   const {
@@ -253,10 +254,11 @@ export const PackagesTab = () => {
     isPolling: isUpgradeInProgress,
   } = useRexJobPolling(packageUpgradeAction, getHostDetails({ hostname }));
 
-  const packageBulkUpgradeAction = bulkParams => updatePackages({
+  const packageBulkUpgradeAction = (bulkParams, descriptionFormat) => updatePackages({
     hostname,
     search: bulkParams,
     versions: JSON.stringify(selectedNVRAVersions || []),
+    descriptionFormat,
   });
 
   const {
@@ -266,7 +268,7 @@ export const PackagesTab = () => {
   } = useRexJobPolling(packageBulkUpgradeAction, getHostDetails({ hostname }));
 
   const packageInstallAction
-    = bulkParams => installPackageBySearch({ hostname, search: bulkParams });
+    = (bulkParams, packageNames) => installPackageBySearch({ hostname, search: bulkParams, descriptionFormat: `Install package(s) ${packageNames}` });
 
   const {
     triggerJobStart: triggerPackageInstall,
@@ -306,9 +308,10 @@ export const PackagesTab = () => {
 
   const removePackagesViaRemoteExecution = () => {
     const selected = fetchBulkParams();
+    const packageNames = selectedResults.map(({ name }) => name);
     setIsBulkActionOpen(false);
     selectNone();
-    triggerBulkPackageRemove(selected);
+    triggerBulkPackageRemove(selected, packageNames.join(', '));
   };
 
   const removeBulk = () => removePackagesViaRemoteExecution();
@@ -321,9 +324,13 @@ export const PackagesTab = () => {
 
   const upgradeBulkViaRemoteExecution = () => {
     const selected = fetchBulkParams();
+    const packageNames = selectedResults.map(({ name }) => name);
+    const allRowsSelected = areAllRowsSelected();
+    let descriptionFormatText = allRowsSelected ? 'Upgrade all packages' : `Upgrade package(s) ${packageNames.join(', ')}`;
+    if (selectAllMode && !allRowsSelected) descriptionFormatText = 'Upgrade lots of packages'; // we don't know the package names in the exclusion set
     setIsBulkActionOpen(false);
     selectNone();
-    triggerBulkPackageUpgrade(selected);
+    triggerBulkPackageUpgrade(selected, descriptionFormatText);
   };
 
   const upgradeBulk = () => upgradeBulkViaRemoteExecution();
@@ -462,7 +469,6 @@ export const PackagesTab = () => {
   );
 
   const resetFilters = () => setPackageStatusSelected(PACKAGE_STATUS);
-
   return (
     <div>
       <div id="packages-tab">

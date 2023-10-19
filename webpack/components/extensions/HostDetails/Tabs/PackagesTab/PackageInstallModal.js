@@ -124,7 +124,7 @@ const PackageInstallModal = ({
   const selectedPackageNames = () => selectedResults.map(({ name }) => name);
 
   const installViaRex = () => {
-    triggerPackageInstall(fetchBulkParams());
+    triggerPackageInstall(fetchBulkParams(), selectedPackageNames().join(', '));
     selectNone();
     closeModal();
   };
