@@ -41,9 +41,11 @@ child @lifecycle_environments => :lifecycle_environments do
 
     node :content_views do |env|
       env.content_views.ignore_generated.map do |content_view|
+      cvv = ::Katello::ContentViewVersion.in_environment(env).find_by(:content_view => content_view)
         attributes = {
           :id => content_view.id,
-          :cvv_id => ::Katello::ContentViewVersion.in_environment(env).find_by(:content_view => content_view)&.id,
+          :cvv_id => cvv&.id,
+          :cvv_version => cvv&.version,
           :label => content_view.label,
           :name => content_view.name,
           :composite => content_view.composite,

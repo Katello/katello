@@ -12,6 +12,7 @@ import ExpandedSmartProxyRepositories from './ExpandedSmartProxyRepositories';
 const ExpandableCvDetails = ({ contentViews, counts }) => {
   const columnHeaders = [
     __('Content view'),
+    __('Version'),
     __('Last published'),
     __('Synced'),
   ];
@@ -38,19 +39,21 @@ const ExpandableCvDetails = ({ contentViews, counts }) => {
       </Thead>
       {contentViews.map((cv, rowIndex) => {
         const {
-          id, name: cvName, composite, up_to_date: upToDate, cvv_id: version, repositories,
+          id, name: cvName, composite, up_to_date: upToDate,
+          cvv_id: versionId, cvv_version: version, repositories,
         } = cv;
-        const upToDateVal = upToDate ? <CheckCircleIcon /> : <TimesCircleIcon />;
-        const isExpanded = tableRowIsExpanded(version);
+        const upToDateVal = upToDate ? <CheckCircleIcon style={{ color: 'green' }} /> : <TimesCircleIcon style={{ color: 'red' }} />;
+        const isExpanded = tableRowIsExpanded(versionId);
         return (
-          <Tbody key={`${id} + ${version}`}isExpanded={isExpanded}>
-            <Tr key={version} ouiaId={cv.name}>
+          <Tbody key={`${id} + ${versionId}`}isExpanded={isExpanded}>
+            <Tr key={versionId} ouiaId={cv.name}>
               <Td
                 style={{ paddingTop: 0 }}
                 expand={{
                   rowIndex,
                   isExpanded,
-                  onToggle: (_event, _rInx, isOpen) => expandedTableRows.onToggle(isOpen, version),
+                  onToggle: (_event, _rInx, isOpen) =>
+                    expandedTableRows.onToggle(isOpen, versionId),
                 }}
               />
               <Td>
@@ -59,14 +62,18 @@ const ExpandableCvDetails = ({ contentViews, counts }) => {
                   description={<a href={cv.default ? urlBuilder('products', '') : urlBuilder('content_views', '', id)}>{cvName}</a>}
                 />
               </Td>
+              <Td>
+                <a href={`/content_views/${id}#/versions/${versionId}/`}>{__('Version ')}{version}</a>
+              </Td>
               <Td><LongDateTime date={cv.last_published} showRelativeTimeTooltip /></Td>
               <Td>{upToDateVal}</Td>
             </Tr>
             <Tr key="child_row" ouiaId={`ContentViewTableRowChild-${id}`} isExpanded={isExpanded}>
               <Td colSpan={12}>
                 <ExpandedSmartProxyRepositories
-                  contentCounts={contentCounts?.content_view_versions[version]?.repositories}
+                  contentCounts={contentCounts?.content_view_versions[versionId]?.repositories}
                   repositories={repositories}
+                  syncedToCapsule={upToDate}
                 />
               </Td>
             </Tr>

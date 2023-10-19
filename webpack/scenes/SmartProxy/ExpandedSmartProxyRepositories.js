@@ -6,16 +6,19 @@ import { DataList, DataListItem, DataListItemRow, DataListItemCells, DataListCel
 import AdditionalCapsuleContent from './AdditionalCapsuleContent';
 import InactiveText from '../ContentViews/components/InactiveText';
 
-const ExpandedSmartProxyRepositories = ({ contentCounts, repositories }) => {
+const ExpandedSmartProxyRepositories = ({ contentCounts, repositories, syncedToCapsule }) => {
   const getRepositoryNameById = id => (repositories.find(repo =>
     Number(repo.id) === Number(id)) || {}).name;
-
   const dataListCellLists = (repo) => {
     const cellList = [];
     /* eslint-disable max-len */
-    cellList.push(<DataListCell key={`${repo.id}-name`}><span>{getRepositoryNameById(repo)}</span></DataListCell>);
-    cellList.push(<DataListCell key={`${repo.id}-rpm`}><span>{contentCounts[repo].rpm ? `${contentCounts[repo].rpm} Packages` : 'N/A'}</span></DataListCell>);
-    cellList.push(<DataListCell key={`${repo.id}-count`}><AdditionalCapsuleContent counts={contentCounts[repo]} /></DataListCell>);
+    if (syncedToCapsule) {
+      cellList.push(<DataListCell key={`${repo.id}-name`}><span>{getRepositoryNameById(repo)}</span></DataListCell>);
+      cellList.push(<DataListCell key={`${repo.id}-rpm`}><span>{contentCounts[repo].rpm ? `${contentCounts[repo].rpm} Packages` : 'N/A'}</span></DataListCell>);
+      cellList.push(<DataListCell key={`${repo.id}-count`}><AdditionalCapsuleContent counts={contentCounts[repo]} /></DataListCell>);
+    } else {
+      cellList.push(<DataListCell key={`${repo.id}-not-synced`}><InactiveText text={__('Content view is not synced to capsule')} /></DataListCell>);
+    }
     /* eslint-enable max-len */
     return cellList;
   };
@@ -33,13 +36,19 @@ const ExpandedSmartProxyRepositories = ({ contentCounts, repositories }) => {
           />
         </DataListItemRow>
       </DataListItem>
-      {Object.keys(contentCounts).length ? Object.keys(contentCounts).map((repo, index) => (
-        <DataListItem key={`${repo.id}-${index}`}>
+      {Object.keys(contentCounts).length ?
+        Object.keys(contentCounts).map((repo, index) => (
+          <DataListItem key={`${repo.id}-${index}`}>
+            <DataListItemRow>
+              <DataListItemCells dataListCells={dataListCellLists(repo)} />
+            </DataListItemRow>
+          </DataListItem>
+        )) :
+        <DataListItem key="empty">
           <DataListItemRow>
-            <DataListItemCells dataListCells={dataListCellLists(repo)} />
+            <DataListItemCells dataListCells={[<DataListCell key="cv-empty"><InactiveText text={__('Content view version is empty')} /></DataListCell>]} />
           </DataListItemRow>
         </DataListItem>
-      )) : <InactiveText text={__('No content available')} />
       }
     </DataList>
   );
@@ -48,11 +57,13 @@ const ExpandedSmartProxyRepositories = ({ contentCounts, repositories }) => {
 ExpandedSmartProxyRepositories.propTypes = {
   contentCounts: PropTypes.shape({}),
   repositories: PropTypes.arrayOf(PropTypes.shape({})),
+  syncedToCapsule: PropTypes.bool,
 };
 
 ExpandedSmartProxyRepositories.defaultProps = {
   contentCounts: {},
   repositories: [{}],
+  syncedToCapsule: false,
 };
 
 export default ExpandedSmartProxyRepositories;

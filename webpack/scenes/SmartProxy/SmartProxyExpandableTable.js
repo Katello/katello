@@ -114,7 +114,9 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
                 </Tr>
                 <Tr key="child_row" ouiaId={`ContentViewTableRowChild-${id}`} isExpanded={isExpanded}>
                   <Td colSpan={4}>
-                    <ExpandableCvDetails contentViews={contentViews} counts={counts} />
+                    {isExpanded ?
+                      <ExpandableCvDetails contentViews={contentViews} counts={counts} /> :
+                      <></>}
                   </Td>
                 </Tr>
               </Tbody>
