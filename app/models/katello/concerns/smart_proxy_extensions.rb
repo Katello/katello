@@ -132,7 +132,7 @@ module Katello
           repo_mirror_service = repo.backend_service(self).with_mirror_adapter
           repo_content_counts = repo_mirror_service.latest_content_counts
           translated_counts = {}
-          repo_content_counts.each do |name, count|
+          repo_content_counts&.each do |name, count|
             count = count[:count]
             # Some content units in Pulp have the same model
             if name == 'rpm.package' && repo.content_counts['srpm'] > 0

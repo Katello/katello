@@ -225,7 +225,9 @@ module Katello
       end
 
       def latest_content_counts
-        api.repository_versions_api.read(version_href)&.content_summary&.present
+        version_pulp_href = version_href
+        return unless version_pulp_href
+        api.repository_versions_api.read(version_pulp_href)&.content_summary&.present
       end
 
       def pulp3_enabled_repo_types

@@ -48,6 +48,7 @@ const ExpandableCvDetails = ({ contentViews, counts }) => {
           <Tbody key={`${id} + ${versionId}`}isExpanded={isExpanded}>
             <Tr key={versionId} ouiaId={cv.name}>
               <Td
+                aria-label={`expand-cv-${id}`}
                 style={{ paddingTop: 0 }}
                 expand={{
                   rowIndex,

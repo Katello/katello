@@ -14,6 +14,10 @@ module Actions
           smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
           smart_proxy.update_content_counts!
         end
+
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
+        end
       end
     end
   end

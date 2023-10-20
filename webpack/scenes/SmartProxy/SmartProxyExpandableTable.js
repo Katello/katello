@@ -95,6 +95,7 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
               <Tbody isExpanded={isExpanded} key={id} id="smart_proxy_table">
                 <Tr key={id} ouiaId={`EnvRow-${id}`}>
                   <Td
+                    aria-label={`expand-env-${id}`}
                     style={{ paddingTop: 0 }}
                     expand={{
                       rowIndex,

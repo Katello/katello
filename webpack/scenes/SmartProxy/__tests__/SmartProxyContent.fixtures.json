@@ -1,0 +1,1500 @@
+{
+  "last_sync_time": "2023-10-18 23:17:59 -0400",
+  "download_policy": "on_demand",
+  "active_sync_tasks": [],
+  "last_failed_sync_tasks": [],
+  "last_sync_task": {
+    "id": "d2f1e72c-d96a-467f-9c3c-cdf37f6de9a9",
+    "label": "Actions::Katello::CapsuleContent::Sync",
+    "pending": false,
+    "action": "Synchronize smart proxy 'centos8-proxy-devel2.sajha.example.com'",
+    "username": "admin",
+    "started_at": "2023-10-18 23:16:55 -0400",
+    "ended_at": "2023-10-18 23:17:59 -0400",
+    "state": "stopped",
+    "result": "success",
+    "progress": 1,
+    "input": {
+      "options": {
+        "environment_id": null,
+        "content_view_id": null,
+        "repository_id": null,
+        "skip_metadata_check": true
+      },
+      "smart_proxy": {
+        "id": 2,
+        "name": "centos8-proxy-devel2.sajha.example.com"
+      },
+      "services_checked": [
+        "pulp3"
+      ],
+      "smart_proxy_id": 2,
+      "locale": "en",
+      "current_request_id": "16b86c86-c972-44b4-8f23-c9990349f365",
+      "current_timezone": "America/New_York",
+      "current_organization_id": 1,
+      "current_location_id": 2,
+      "current_user_id": 4
+    },
+    "output": {},
+    "humanized": {
+      "action": "Synchronize smart proxy",
+      "input": [
+        "'centos8-proxy-devel2.sajha.example.com'"
+      ],
+      "output": "",
+      "errors": []
+    },
+    "cli_example": null,
+    "start_at": "2023-10-18 23:16:55 -0400",
+    "available_actions": {
+      "cancellable": false,
+      "resumable": false
+    }
+  },
+  "lifecycle_environments": [
+    {
+      "library": true,
+      "id": 1,
+      "name": "Library",
+      "label": "Library",
+      "description": null,
+      "organization_id": 1,
+      "organization": {
+        "name": "Default Organization",
+        "label": "Default_Organization",
+        "id": 1
+      },
+      "syncable": false,
+      "counts": {
+        "content_views": 7,
+        "content_counts": {
+          "content_view_versions": {
+            "1": {
+              "repositories": {
+                "1": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "3": {
+                  "ansible_collection": 10
+                },
+                "16": {
+                  "file": 3
+                },
+                "20": {
+                  "rpm": 71,
+                  "erratum": 31,
+                  "rpm.modulemd": 31,
+                  "rpm.repo_metadata_file": 1
+                },
+                "40": {
+                  "python_package": 275
+                },
+                "71": {},
+                "72": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "10": {
+              "repositories": {
+                "59": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "61": {
+                  "python_package": 243
+                },
+                "62": {
+                  "ansible_collection": 10
+                }
+              }
+            },
+            "12": {
+              "repositories": {
+                "73": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "75": {},
+                "76": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "13": {
+              "repositories": {
+                "84": {
+                  "ansible_collection": 10
+                },
+                "86": {
+                  "python_package": 243
+                }
+              }
+            },
+            "17": {
+              "repositories": {
+                "95": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "18": {
+              "repositories": {
+                "97": {
+                  "rpm": 14,
+                  "erratum": 6,
+                  "rpm.modulemd": 14,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "21": {
+              "repositories": {
+                "120": {
+                  "ansible_collection": 10
+                },
+                "121": {
+                  "python_package": 275
+                }
+              }
+            },
+            "22": {
+              "repositories": {
+                "122": {
+                  "rpm": 71,
+                  "erratum": 31,
+                  "rpm.modulemd": 31,
+                  "rpm.repo_metadata_file": 1
+                },
+                "123": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "124": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "23": {
+              "repositories": {
+                "125": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "24": {
+              "repositories": {
+                "127": {
+                  "rpm": 14,
+                  "erratum": 6,
+                  "rpm.modulemd": 14,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      "content_views": [
+        {
+          "id": 1,
+          "cvv_id": 1,
+          "cvv_version": "1.0",
+          "label": "Default_Organization_View",
+          "name": "Default Organization View",
+          "composite": false,
+          "last_published": "2023-08-22 14:50:34 -0400",
+          "default": true,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 7
+          },
+          "repositories": [
+            {
+              "id": 3,
+              "name": "test_ansible",
+              "library_id": null
+            },
+            {
+              "id": 20,
+              "name": "Advanced Virtualization CodeReady Builder for RHEL 8 Power little endian RPMs",
+              "library_id": null
+            },
+            {
+              "id": 1,
+              "name": "repo1",
+              "library_id": null
+            },
+            {
+              "id": 16,
+              "name": "file_repo",
+              "library_id": null
+            },
+            {
+              "id": 40,
+              "name": "python-pulp",
+              "library_id": null
+            },
+            {
+              "id": 71,
+              "name": "Advanced Virtualization CodeReady Builder for RHEL 8 IBM z Systems RPMs",
+              "library_id": null
+            },
+            {
+              "id": 72,
+              "name": "deb_test",
+              "library_id": null
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cvv_id": 22,
+          "cvv_version": "7.0",
+          "label": "test",
+          "name": "test",
+          "composite": false,
+          "last_published": "2023-10-06 11:13:11 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 3
+          },
+          "repositories": [
+            {
+              "id": 122,
+              "name": "Advanced Virtualization CodeReady Builder for RHEL 8 Power little endian RPMs",
+              "library_id": 20
+            },
+            {
+              "id": 123,
+              "name": "repo1",
+              "library_id": 1
+            },
+            {
+              "id": 124,
+              "name": "deb_test",
+              "library_id": 72
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "cvv_id": 21,
+          "cvv_version": "8.0",
+          "label": "dev",
+          "name": "dev",
+          "composite": false,
+          "last_published": "2023-10-06 11:12:57 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 2
+          },
+          "repositories": [
+            {
+              "id": 121,
+              "name": "python-pulp",
+              "library_id": 40
+            },
+            {
+              "id": 120,
+              "name": "test_ansible",
+              "library_id": 3
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "cvv_id": 4,
+          "cvv_version": "1.0",
+          "label": "redhat_test",
+          "name": "redhat_test",
+          "composite": false,
+          "last_published": "2023-09-07 17:01:41 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 0
+          },
+          "repositories": []
+        },
+        {
+          "id": 6,
+          "cvv_id": 10,
+          "cvv_version": "1.0",
+          "label": "dup_container",
+          "name": "dup_container",
+          "composite": true,
+          "last_published": "2023-09-15 14:34:29 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 3
+          },
+          "repositories": [
+            {
+              "id": 59,
+              "name": "repo1",
+              "library_id": 1
+            },
+            {
+              "id": 61,
+              "name": "python-pulp",
+              "library_id": 40
+            },
+            {
+              "id": 62,
+              "name": "test_ansible",
+              "library_id": 3
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "cvv_id": 24,
+          "cvv_version": "3.0",
+          "label": "c1",
+          "name": "c1",
+          "composite": false,
+          "last_published": "2023-10-11 12:14:34 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 1
+          },
+          "repositories": [
+            {
+              "id": 127,
+              "name": "repo1",
+              "library_id": 1
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "cvv_id": 23,
+          "cvv_version": "2.0",
+          "label": "c2",
+          "name": "c2",
+          "composite": false,
+          "last_published": "2023-10-11 11:55:34 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 1
+          },
+          "repositories": [
+            {
+              "id": 125,
+              "name": "repo1",
+              "library_id": 1
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "cvv_id": 17,
+          "cvv_version": "1.0",
+          "label": "ccv1",
+          "name": "ccv1",
+          "composite": true,
+          "last_published": "2023-10-05 16:08:39 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 1
+          },
+          "repositories": [
+            {
+              "id": 95,
+              "name": "repo1",
+              "library_id": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "library": false,
+      "id": 2,
+      "name": "dev",
+      "label": "dev",
+      "description": null,
+      "organization_id": 1,
+      "organization": {
+        "name": "Default Organization",
+        "label": "Default_Organization",
+        "id": 1
+      },
+      "syncable": false,
+      "counts": {
+        "content_views": 2,
+        "content_counts": {
+          "content_view_versions": {
+            "1": {
+              "repositories": {
+                "1": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "3": {
+                  "ansible_collection": 10
+                },
+                "16": {
+                  "file": 3
+                },
+                "20": {
+                  "rpm": 71,
+                  "erratum": 31,
+                  "rpm.modulemd": 31,
+                  "rpm.repo_metadata_file": 1
+                },
+                "40": {
+                  "python_package": 275
+                },
+                "71": {},
+                "72": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "10": {
+              "repositories": {
+                "59": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "61": {
+                  "python_package": 243
+                },
+                "62": {
+                  "ansible_collection": 10
+                }
+              }
+            },
+            "12": {
+              "repositories": {
+                "73": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "75": {},
+                "76": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "13": {
+              "repositories": {
+                "84": {
+                  "ansible_collection": 10
+                },
+                "86": {
+                  "python_package": 243
+                }
+              }
+            },
+            "17": {
+              "repositories": {
+                "95": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "18": {
+              "repositories": {
+                "97": {
+                  "rpm": 14,
+                  "erratum": 6,
+                  "rpm.modulemd": 14,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "21": {
+              "repositories": {
+                "120": {
+                  "ansible_collection": 10
+                },
+                "121": {
+                  "python_package": 275
+                }
+              }
+            },
+            "22": {
+              "repositories": {
+                "122": {
+                  "rpm": 71,
+                  "erratum": 31,
+                  "rpm.modulemd": 31,
+                  "rpm.repo_metadata_file": 1
+                },
+                "123": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "124": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "23": {
+              "repositories": {
+                "125": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "24": {
+              "repositories": {
+                "127": {
+                  "rpm": 14,
+                  "erratum": 6,
+                  "rpm.modulemd": 14,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      "content_views": [
+        {
+          "id": 2,
+          "cvv_id": 12,
+          "cvv_version": "5.0",
+          "label": "test",
+          "name": "test",
+          "composite": false,
+          "last_published": "2023-09-28 14:08:06 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 3
+          },
+          "repositories": [
+            {
+              "id": 75,
+              "name": "Advanced Virtualization CodeReady Builder for RHEL 8 Power little endian RPMs",
+              "library_id": 20
+            },
+            {
+              "id": 76,
+              "name": "deb_test",
+              "library_id": 72
+            },
+            {
+              "id": 73,
+              "name": "repo1",
+              "library_id": 1
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "cvv_id": 13,
+          "cvv_version": "5.0",
+          "label": "dev",
+          "name": "dev",
+          "composite": false,
+          "last_published": "2023-10-03 14:40:03 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 2
+          },
+          "repositories": [
+            {
+              "id": 84,
+              "name": "test_ansible",
+              "library_id": 3
+            },
+            {
+              "id": 86,
+              "name": "python-pulp",
+              "library_id": 40
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "library": false,
+      "id": 3,
+      "name": "test",
+      "label": "test",
+      "description": null,
+      "organization_id": 1,
+      "organization": {
+        "name": "Default Organization",
+        "label": "Default_Organization",
+        "id": 1
+      },
+      "syncable": false,
+      "counts": {
+        "content_views": 2,
+        "content_counts": {
+          "content_view_versions": {
+            "1": {
+              "repositories": {
+                "1": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "3": {
+                  "ansible_collection": 10
+                },
+                "16": {
+                  "file": 3
+                },
+                "20": {
+                  "rpm": 71,
+                  "erratum": 31,
+                  "rpm.modulemd": 31,
+                  "rpm.repo_metadata_file": 1
+                },
+                "40": {
+                  "python_package": 275
+                },
+                "71": {},
+                "72": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "10": {
+              "repositories": {
+                "59": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "61": {
+                  "python_package": 243
+                },
+                "62": {
+                  "ansible_collection": 10
+                }
+              }
+            },
+            "12": {
+              "repositories": {
+                "73": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "75": {},
+                "76": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "13": {
+              "repositories": {
+                "84": {
+                  "ansible_collection": 10
+                },
+                "86": {
+                  "python_package": 243
+                }
+              }
+            },
+            "17": {
+              "repositories": {
+                "95": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "18": {
+              "repositories": {
+                "97": {
+                  "rpm": 14,
+                  "erratum": 6,
+                  "rpm.modulemd": 14,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "21": {
+              "repositories": {
+                "120": {
+                  "ansible_collection": 10
+                },
+                "121": {
+                  "python_package": 275
+                }
+              }
+            },
+            "22": {
+              "repositories": {
+                "122": {
+                  "rpm": 71,
+                  "erratum": 31,
+                  "rpm.modulemd": 31,
+                  "rpm.repo_metadata_file": 1
+                },
+                "123": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "124": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "23": {
+              "repositories": {
+                "125": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "24": {
+              "repositories": {
+                "127": {
+                  "rpm": 14,
+                  "erratum": 6,
+                  "rpm.modulemd": 14,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      "content_views": [
+        {
+          "id": 2,
+          "cvv_id": 12,
+          "cvv_version": "5.0",
+          "label": "test",
+          "name": "test",
+          "composite": false,
+          "last_published": "2023-09-28 14:08:06 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 3
+          },
+          "repositories": [
+            {
+              "id": 75,
+              "name": "Advanced Virtualization CodeReady Builder for RHEL 8 Power little endian RPMs",
+              "library_id": 20
+            },
+            {
+              "id": 76,
+              "name": "deb_test",
+              "library_id": 72
+            },
+            {
+              "id": 73,
+              "name": "repo1",
+              "library_id": 1
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "cvv_id": 13,
+          "cvv_version": "5.0",
+          "label": "dev",
+          "name": "dev",
+          "composite": false,
+          "last_published": "2023-10-03 14:40:03 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 2
+          },
+          "repositories": [
+            {
+              "id": 84,
+              "name": "test_ansible",
+              "library_id": 3
+            },
+            {
+              "id": 86,
+              "name": "python-pulp",
+              "library_id": 40
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "library": false,
+      "id": 4,
+      "name": "qa",
+      "label": "qa",
+      "description": null,
+      "organization_id": 1,
+      "organization": {
+        "name": "Default Organization",
+        "label": "Default_Organization",
+        "id": 1
+      },
+      "syncable": false,
+      "counts": {
+        "content_views": 4,
+        "content_counts": {
+          "content_view_versions": {
+            "1": {
+              "repositories": {
+                "1": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "3": {
+                  "ansible_collection": 10
+                },
+                "16": {
+                  "file": 3
+                },
+                "20": {
+                  "rpm": 71,
+                  "erratum": 31,
+                  "rpm.modulemd": 31,
+                  "rpm.repo_metadata_file": 1
+                },
+                "40": {
+                  "python_package": 275
+                },
+                "71": {},
+                "72": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "10": {
+              "repositories": {
+                "59": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "61": {
+                  "python_package": 243
+                },
+                "62": {
+                  "ansible_collection": 10
+                }
+              }
+            },
+            "12": {
+              "repositories": {
+                "73": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "75": {},
+                "76": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "13": {
+              "repositories": {
+                "84": {
+                  "ansible_collection": 10
+                },
+                "86": {
+                  "python_package": 243
+                }
+              }
+            },
+            "17": {
+              "repositories": {
+                "95": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "18": {
+              "repositories": {
+                "97": {
+                  "rpm": 14,
+                  "erratum": 6,
+                  "rpm.modulemd": 14,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "21": {
+              "repositories": {
+                "120": {
+                  "ansible_collection": 10
+                },
+                "121": {
+                  "python_package": 275
+                }
+              }
+            },
+            "22": {
+              "repositories": {
+                "122": {
+                  "rpm": 71,
+                  "erratum": 31,
+                  "rpm.modulemd": 31,
+                  "rpm.repo_metadata_file": 1
+                },
+                "123": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "124": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "23": {
+              "repositories": {
+                "125": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "24": {
+              "repositories": {
+                "127": {
+                  "rpm": 14,
+                  "erratum": 6,
+                  "rpm.modulemd": 14,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      "content_views": [
+        {
+          "id": 2,
+          "cvv_id": 22,
+          "cvv_version": "7.0",
+          "label": "test",
+          "name": "test",
+          "composite": false,
+          "last_published": "2023-10-06 11:13:11 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 3
+          },
+          "repositories": [
+            {
+              "id": 122,
+              "name": "Advanced Virtualization CodeReady Builder for RHEL 8 Power little endian RPMs",
+              "library_id": 20
+            },
+            {
+              "id": 123,
+              "name": "repo1",
+              "library_id": 1
+            },
+            {
+              "id": 124,
+              "name": "deb_test",
+              "library_id": 72
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "cvv_id": 21,
+          "cvv_version": "8.0",
+          "label": "dev",
+          "name": "dev",
+          "composite": false,
+          "last_published": "2023-10-06 11:12:57 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 2
+          },
+          "repositories": [
+            {
+              "id": 121,
+              "name": "python-pulp",
+              "library_id": 40
+            },
+            {
+              "id": 120,
+              "name": "test_ansible",
+              "library_id": 3
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "cvv_id": 18,
+          "cvv_version": "2.0",
+          "label": "c1",
+          "name": "c1",
+          "composite": false,
+          "last_published": "2023-10-06 10:58:24 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 1
+          },
+          "repositories": [
+            {
+              "id": 97,
+              "name": "repo1",
+              "library_id": 1
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "cvv_id": 23,
+          "cvv_version": "2.0",
+          "label": "c2",
+          "name": "c2",
+          "composite": false,
+          "last_published": "2023-10-11 11:55:34 -0400",
+          "default": false,
+          "up_to_date": true,
+          "counts": {
+            "repositories": 1
+          },
+          "repositories": [
+            {
+              "id": 125,
+              "name": "repo1",
+              "library_id": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "library": false,
+      "id": 6,
+      "name": "qa2",
+      "label": "qa2",
+      "description": null,
+      "organization_id": 1,
+      "organization": {
+        "name": "Default Organization",
+        "label": "Default_Organization",
+        "id": 1
+      },
+      "syncable": true,
+      "counts": {
+        "content_views": 1,
+        "content_counts": {
+          "content_view_versions": {
+            "1": {
+              "repositories": {
+                "1": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "3": {
+                  "ansible_collection": 10
+                },
+                "16": {
+                  "file": 3
+                },
+                "20": {
+                  "rpm": 71,
+                  "erratum": 31,
+                  "rpm.modulemd": 31,
+                  "rpm.repo_metadata_file": 1
+                },
+                "40": {
+                  "python_package": 275
+                },
+                "71": {},
+                "72": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "10": {
+              "repositories": {
+                "59": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "61": {
+                  "python_package": 243
+                },
+                "62": {
+                  "ansible_collection": 10
+                }
+              }
+            },
+            "12": {
+              "repositories": {
+                "73": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "75": {},
+                "76": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "13": {
+              "repositories": {
+                "84": {
+                  "ansible_collection": 10
+                },
+                "86": {
+                  "python_package": 243
+                }
+              }
+            },
+            "17": {
+              "repositories": {
+                "95": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "18": {
+              "repositories": {
+                "97": {
+                  "rpm": 14,
+                  "erratum": 6,
+                  "rpm.modulemd": 14,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "21": {
+              "repositories": {
+                "120": {
+                  "ansible_collection": 10
+                },
+                "121": {
+                  "python_package": 275
+                }
+              }
+            },
+            "22": {
+              "repositories": {
+                "122": {
+                  "rpm": 71,
+                  "erratum": 31,
+                  "rpm.modulemd": 31,
+                  "rpm.repo_metadata_file": 1
+                },
+                "123": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                },
+                "124": {
+                  "deb": 6,
+                  "deb.release": 2,
+                  "deb.release_file": 2,
+                  "deb.package_index": 5,
+                  "deb.release_component": 2,
+                  "deb.release_architecture": 5,
+                  "deb.package_release_component": 6
+                }
+              }
+            },
+            "23": {
+              "repositories": {
+                "125": {
+                  "rpm": 22,
+                  "erratum": 7,
+                  "rpm.modulemd": 14,
+                  "package_group": 2,
+                  "rpm.packagecategory": 1,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            },
+            "24": {
+              "repositories": {
+                "127": {
+                  "rpm": 14,
+                  "erratum": 6,
+                  "rpm.modulemd": 14,
+                  "rpm.distribution_tree": 1,
+                  "rpm.modulemd_defaults": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      "content_views": [
+        {
+          "id": 8,
+          "cvv_id": 23,
+          "cvv_version": "2.0",
+          "label": "c2",
+          "name": "c2",
+          "composite": false,
+          "last_published": "2023-10-11 11:55:34 -0400",
+          "default": false,
+          "up_to_date": false,
+          "counts": {
+            "repositories": 1
+          },
+          "repositories": [
+            {
+              "id": 125,
+              "name": "repo1",
+              "library_id": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "last_sync_words": "1 day",
+  "unsyncable_content_types": []
+}
