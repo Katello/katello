@@ -22,6 +22,10 @@ child :last_sync_task => :last_sync_task do
   extends 'foreman_tasks/api/tasks/show'
 end
 
+node :content_counts do
+    @capsule.content_counts
+end
+
 child @lifecycle_environments => :lifecycle_environments do
   extends 'katello/api/v2/common/identifier'
   extends 'katello/api/v2/common/org_reference'
@@ -35,7 +39,6 @@ child @lifecycle_environments => :lifecycle_environments do
     node :counts do |env|
       {
         :content_views => env.content_views.non_default.count,
-        :content_counts => @capsule.content_counts
       }
     end
 

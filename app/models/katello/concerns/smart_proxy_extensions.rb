@@ -122,7 +122,7 @@ module Katello
       end
 
       def update_content_counts!
-        # {:content_view_versions=>{87=>{:repositories=>{1=>{:rpms=>98, :module_streams=>9898}}}}}
+        # {:content_view_versions=>{87=>{:repositories=>{1=>{:metadata=>{},:counts=>{:rpms=>98, :module_streams=>9898}}}}}
         new_content_counts = { content_view_versions: {} }
         smart_proxy_helper = ::Katello::SmartProxyHelper.new(self)
         repos = smart_proxy_helper.repositories_available_to_capsule
@@ -131,28 +131,25 @@ module Katello
         repos.each do |repo|
           repo_mirror_service = repo.backend_service(self).with_mirror_adapter
           repo_content_counts = repo_mirror_service.latest_content_counts
-          translated_counts = {}
+          translated_counts = {metadata: {}, counts: {}}
+          translated_counts[:metadata] = {env_id: repo.environment_id, library_instance_id: repo.library_instance_or_self.id }
           repo_content_counts&.each do |name, count|
             count = count[:count]
             # Some content units in Pulp have the same model
             if name == 'rpm.package' && repo.content_counts['srpm'] > 0
-              translated_counts['srpm'] = repo_mirror_service.count_by_pulpcore_type(::Katello::Pulp3::Srpm)
-              translated_counts['rpm'] = count - translated_counts['srpm']
+              translated_counts[:counts]['srpm'] = repo_mirror_service.count_by_pulpcore_type(::Katello::Pulp3::Srpm)
+              translated_counts[:counts]['rpm'] = count - translated_counts[:counts]['srpm']
             elsif name == 'container.manifest' && repo.content_counts['docker_manifest_list'] > 0
-              translated_counts['docker_manifest_list'] = repo_mirror_service.count_by_pulpcore_type(::Katello::Pulp3::DockerManifestList)
-              translated_counts['docker_manifest'] = count - translated_counts['docker_manifest_list']
+              translated_counts[:counts]['docker_manifest_list'] = repo_mirror_service.count_by_pulpcore_type(::Katello::Pulp3::DockerManifestList)
+              translated_counts[:counts]['docker_manifest'] = count - translated_counts[:counts]['docker_manifest_list']
             else
-              translated_counts[::Katello::Pulp3::PulpContentUnit.katello_name_from_pulpcore_name(name, repo)] = count
+              translated_counts[:counts][::Katello::Pulp3::PulpContentUnit.katello_name_from_pulpcore_name(name, repo)] = count
             end
           end
           new_content_counts[:content_view_versions][repo.content_view_version_id] ||= { repositories: {}}
           # Store counts on capsule of archived repos which are reused across environment copies
           # of the archived repo corresponding to each environment CV version is promoted to.
-          if repo.content_view_version.default?
-            new_content_counts[:content_view_versions][repo.content_view_version_id][:repositories][repo.id] = translated_counts
-          else
-            new_content_counts[:content_view_versions][repo.content_view_version_id][:repositories][repo.content_view_version.archived_repos.find_by(library_instance_id: repo.library_instance_id)&.id] = translated_counts
-          end
+          new_content_counts[:content_view_versions][repo.content_view_version_id][:repositories][repo.id] = translated_counts
         end
         update(content_counts: new_content_counts)
       end
