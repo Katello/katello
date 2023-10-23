@@ -23,7 +23,7 @@ child :last_sync_task => :last_sync_task do
 end
 
 node :content_counts do
-    @capsule.content_counts
+  @capsule.content_counts
 end
 
 child @lifecycle_environments => :lifecycle_environments do
@@ -38,7 +38,7 @@ child @lifecycle_environments => :lifecycle_environments do
   if @capsule.has_feature?(SmartProxy::PULP_NODE_FEATURE) || @capsule.has_feature?(SmartProxy::PULP3_FEATURE)
     node :counts do |env|
       {
-        :content_views => env.content_views.non_default.count,
+        :content_views => env.content_views.non_default.count
       }
     end
 
@@ -62,7 +62,9 @@ child @lifecycle_environments => :lifecycle_environments do
                              {
                                :id => repo.id,
                                :name => repo.name,
-                               :library_id => repo.library_instance_id
+                               :library_id => repo.library_instance_id,
+                               :product_id => repo.product_id,
+                               :content_type => repo.content_type
                              }
                            end
         }

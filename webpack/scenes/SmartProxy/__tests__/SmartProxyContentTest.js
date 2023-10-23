@@ -5,7 +5,7 @@ import { nockInstance, assertNockRequest } from '../../../test-utils/nockWrapper
 import api from '../../../services/api';
 import SmartProxyExpandableTable from '../SmartProxyExpandableTable';
 
-const smartProxyContentData = require('./SmartProxyContent.fixtures.json');
+const smartProxyContentData = require('./SmartProxyContentTest.fixtures.json');
 
 const smartProxyContentPath = api.getApiUrl('/capsules/1/content/sync');
 

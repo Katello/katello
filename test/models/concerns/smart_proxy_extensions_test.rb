@@ -95,20 +95,80 @@ module Katello
       python_service.expects(:latest_content_counts).once.returns(python_counts)
       repos = [yum_repo, file_repo, ansible_repo, container_repo,
                ostree_repo, deb_repo, python_repo]
-      yum_repo.content_view_version.expects(:default?).returns(true)
       ::Katello::SmartProxyHelper.any_instance.expects(:repositories_available_to_capsule).once.returns(repos)
       @proxy.update_content_counts!
       counts = @proxy.content_counts
       expected_counts = { "content_view_versions" =>
         { yum_repo.content_view_version.id.to_s =>
           { "repositories" =>
-            { yum_repo.id.to_s => { "erratum" => 4, "srpm" => 1, "rpm" => 31, "module_stream" => 7, "rpm.modulemd_defaults" => 3, "package_group" => 7, "rpm.packagecategory" => 1 },
-              file_repo.id.to_s => { "file" => 100 },
-              ansible_repo.id.to_s => { "ansible.collection" => 802 },
-              container_repo.id.to_s => { "container.blob" => 30, "docker_manifest_list" => 1, "docker_manifest" => 9, "docker_tag" => 5 },
-              ostree_repo.id.to_s => {"ostree_ref" => 30 },
-              deb_repo.id.to_s => { "deb" => 987 },
-              python_repo.id.to_s => { "python_package" => 42 }
+            { yum_repo.id.to_s => {
+              "metadata" => {
+                "env_id" => yum_repo.environment.id,
+                "library_instance_id" => yum_repo.library_instance_or_self.id,
+                "product_id" => yum_repo.product_id,
+                "content_type" => yum_repo.content_type
+              },
+              "counts" => { "erratum" => 4, "srpm" => 1, "rpm" => 31, "module_stream" => 7, "rpm.modulemd_defaults" => 3, "package_group" => 7, "rpm.packagecategory" => 1 }
+            },
+              file_repo.id.to_s => {
+                "metadata" => {
+                  "env_id" => file_repo.environment.id,
+                  "library_instance_id" => file_repo.library_instance_or_self.id,
+                  "product_id" => file_repo.product_id,
+                  "content_type" => file_repo.content_type
+                },
+                "counts" =>
+              { "file" => 100 }
+              },
+              ansible_repo.id.to_s => {
+                "metadata" => {
+                  "env_id" => ansible_repo.environment.id,
+                  "library_instance_id" => ansible_repo.library_instance_or_self.id,
+                  "product_id" => ansible_repo.product_id,
+                  "content_type" => ansible_repo.content_type},
+                "counts" =>
+                  { "ansible.collection" => 802 }
+              },
+              container_repo.id.to_s => {
+                "metadata" => {
+                  "env_id" => container_repo.environment.id,
+                  "library_instance_id" => container_repo.library_instance_or_self.id,
+                  "product_id" => container_repo.product_id,
+                  "content_type" => container_repo.content_type
+                },
+                "counts" =>
+                  { "container.blob" => 30, "docker_manifest_list" => 1, "docker_manifest" => 9, "docker_tag" => 5 }
+              },
+              ostree_repo.id.to_s => {
+                "metadata" => {
+                  "env_id" => ostree_repo.environment.id,
+                  "library_instance_id" => ostree_repo.library_instance_or_self.id,
+                  "product_id" => ostree_repo.product_id,
+                  "content_type" => ostree_repo.content_type
+                },
+                "counts" =>
+                  {"ostree_ref" => 30 }
+              },
+              deb_repo.id.to_s => {
+                "metadata" => {
+                  "env_id" => deb_repo.environment.id,
+                  "library_instance_id" => deb_repo.library_instance_or_self.id,
+                  "product_id" => deb_repo.product_id,
+                  "content_type" => deb_repo.content_type
+                },
+                "counts" =>
+                  { "deb" => 987 }
+              },
+              python_repo.id.to_s => {
+                "metadata" => {
+                  "env_id" => python_repo.environment.id,
+                  "library_instance_id" => python_repo.library_instance_or_self.id,
+                  "product_id" => python_repo.product_id,
+                  "content_type" => python_repo.content_type
+                },
+                "counts" =>
+                  { "python_package" => 42 }
+              }
             }
           }
         }

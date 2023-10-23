@@ -9,14 +9,14 @@ import ContentViewIcon from '../ContentViews/components/ContentViewIcon';
 import { useSet } from '../../components/Table/TableHooks';
 import ExpandedSmartProxyRepositories from './ExpandedSmartProxyRepositories';
 
-const ExpandableCvDetails = ({ contentViews, counts }) => {
+const ExpandableCvDetails = ({ contentViews, contentCounts, envId }) => {
   const columnHeaders = [
     __('Content view'),
     __('Version'),
     __('Last published'),
     __('Synced'),
   ];
-  const { content_counts: contentCounts } = counts;
+  // const { content_counts: contentCounts } = counts;
   const expandedTableRows = useSet([]);
   const tableRowIsExpanded = id => expandedTableRows.has(id);
 
@@ -75,6 +75,7 @@ const ExpandableCvDetails = ({ contentViews, counts }) => {
                   contentCounts={contentCounts?.content_view_versions[versionId]?.repositories}
                   repositories={repositories}
                   syncedToCapsule={upToDate}
+                  envId={envId}
                 />
               </Td>
             </Tr>
@@ -89,16 +90,18 @@ const ExpandableCvDetails = ({ contentViews, counts }) => {
 
 ExpandableCvDetails.propTypes = {
   contentViews: PropTypes.arrayOf(PropTypes.shape({})),
-  counts: PropTypes.shape({
-    content_counts: PropTypes.shape({
-      content_view_versions: PropTypes.shape({}),
-    }),
+  contentCounts: PropTypes.shape({
+    content_view_versions: PropTypes.shape({}),
   }),
+  envId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string, // The API can sometimes return strings
+  ]).isRequired,
 };
 
 ExpandableCvDetails.defaultProps = {
   contentViews: [],
-  counts: {},
+  contentCounts: {},
 };
 
 export default ExpandableCvDetails;

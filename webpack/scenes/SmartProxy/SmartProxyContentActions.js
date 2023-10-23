@@ -8,7 +8,7 @@ import { getResponseErrorMsgs } from '../../utils/helpers';
 const getSmartProxyContent = ({ smartProxyId, organizationId }) => get({
   type: API_OPERATIONS.GET,
   key: SMART_PROXY_CONTENT_KEY,
-  url: api.getApiUrl(`/capsules/${smartProxyId}/content/sync?organization_id=${organizationId}`),
+  url: api.getApiUrl(organizationId ? `/capsules/${smartProxyId}/content/sync?organization_id=${organizationId}` : `/capsules/${smartProxyId}/content/sync`),
 });
 
 export const getSmartProxies = () => get({

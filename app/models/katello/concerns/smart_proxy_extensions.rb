@@ -132,7 +132,12 @@ module Katello
           repo_mirror_service = repo.backend_service(self).with_mirror_adapter
           repo_content_counts = repo_mirror_service.latest_content_counts
           translated_counts = {metadata: {}, counts: {}}
-          translated_counts[:metadata] = {env_id: repo.environment_id, library_instance_id: repo.library_instance_or_self.id }
+          translated_counts[:metadata] = {
+            env_id: repo.environment_id,
+            library_instance_id: repo.library_instance_or_self.id,
+            product_id: repo.product_id,
+            content_type: repo.content_type
+          }
           repo_content_counts&.each do |name, count|
             count = count[:count]
             # Some content units in Pulp have the same model

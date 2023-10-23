@@ -26,6 +26,7 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
   let metadata = {};
   const {
     lifecycle_environments: results, last_sync_task: lastTask, last_sync_words: lastSyncWords,
+    content_counts: contentCounts,
   } = response;
   if (results) {
     metadata = { total: results.length, subtotal: results.length };
@@ -88,7 +89,7 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
       {
           results?.map((env, rowIndex) => {
             const {
-              id, content_views: contentViews, counts,
+              id, content_views: contentViews,
             } = env;
             const isExpanded = tableRowIsExpanded(id);
             return (
@@ -116,7 +117,11 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
                 <Tr key="child_row" ouiaId={`ContentViewTableRowChild-${id}`} isExpanded={isExpanded}>
                   <Td colSpan={4}>
                     {isExpanded ?
-                      <ExpandableCvDetails contentViews={contentViews} counts={counts} /> :
+                      <ExpandableCvDetails
+                        contentViews={contentViews}
+                        contentCounts={contentCounts}
+                        envId={id}
+                      /> :
                       <></>}
                   </Td>
                 </Tr>
