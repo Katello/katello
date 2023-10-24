@@ -126,9 +126,8 @@ module Katello
         new_content_counts = { content_view_versions: {} }
         smart_proxy_helper = ::Katello::SmartProxyHelper.new(self)
         repos = smart_proxy_helper.repositories_available_to_capsule
-        return new_content_counts if repos.empty?
 
-        repos.each do |repo|
+        repos&.each do |repo|
           repo_mirror_service = repo.backend_service(self).with_mirror_adapter
           repo_content_counts = repo_mirror_service.latest_content_counts
           translated_counts = {metadata: {}, counts: {}}
