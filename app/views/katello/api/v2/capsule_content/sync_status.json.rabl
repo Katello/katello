@@ -1,6 +1,9 @@
 object @capsule
 
 attribute :last_sync_time
+node :last_sync_words do |_object|
+  @capsule&.last_sync_time ? time_ago_in_words(Time.parse(@capsule&.last_sync_time&.to_s)) : nil
+end
 
 attribute :download_policy
 
@@ -15,6 +18,14 @@ child :last_failed_sync_tasks => :last_failed_sync_tasks do
   extends 'foreman_tasks/api/tasks/show'
 end
 
+child :last_sync_task => :last_sync_task do
+  extends 'foreman_tasks/api/tasks/show'
+end
+
+node :content_counts do
+  @capsule.content_counts
+end
+
 child @lifecycle_environments => :lifecycle_environments do
   extends 'katello/api/v2/common/identifier'
   extends 'katello/api/v2/common/org_reference'
@@ -27,16 +38,17 @@ child @lifecycle_environments => :lifecycle_environments do
   if @capsule.has_feature?(SmartProxy::PULP_NODE_FEATURE) || @capsule.has_feature?(SmartProxy::PULP3_FEATURE)
     node :counts do |env|
       {
-        :content_views => env.content_views.non_default.count,
-        :content_counts => @capsule.content_counts
+        :content_views => env.content_views.non_default.count
       }
     end
 
     node :content_views do |env|
       env.content_views.ignore_generated.map do |content_view|
+        cvv = ::Katello::ContentViewVersion.in_environment(env).find_by(:content_view => content_view)
         attributes = {
           :id => content_view.id,
-          :cvv_id => ::Katello::ContentViewVersion.in_environment(env).find_by(:content_view => content_view)&.id,
+          :cvv_id => cvv&.id,
+          :cvv_version => cvv&.version,
           :label => content_view.label,
           :name => content_view.name,
           :composite => content_view.composite,
@@ -50,7 +62,9 @@ child @lifecycle_environments => :lifecycle_environments do
                              {
                                :id => repo.id,
                                :name => repo.name,
-                               :library_id => repo.library_instance_id
+                               :library_id => repo.library_instance_id,
+                               :product_id => repo.product_id,
+                               :content_type => repo.content_type
                              }
                            end
         }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip } from '@patternfly/react-core';
-import { BundleIcon, MiddlewareIcon, BoxIcon, CodeBranchIcon, FanIcon, TenantIcon } from '@patternfly/react-icons';
+import { BundleIcon, MiddlewareIcon, BoxIcon, CodeBranchIcon, FanIcon, TenantIcon, AnsibleTowerIcon } from '@patternfly/react-icons';
 import PropTypes from 'prop-types';
 
 const RepoIcon = ({ type }) => {
@@ -10,6 +10,7 @@ const RepoIcon = ({ type }) => {
     ostree: CodeBranchIcon,
     file: TenantIcon,
     deb: FanIcon,
+    ansible_collection: AnsibleTowerIcon,
   };
   const Icon = iconMap[type] || BoxIcon;
 

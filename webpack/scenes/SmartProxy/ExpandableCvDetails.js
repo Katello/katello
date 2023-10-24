@@ -9,13 +9,14 @@ import ContentViewIcon from '../ContentViews/components/ContentViewIcon';
 import { useSet } from '../../components/Table/TableHooks';
 import ExpandedSmartProxyRepositories from './ExpandedSmartProxyRepositories';
 
-const ExpandableCvDetails = ({ contentViews, counts }) => {
+const ExpandableCvDetails = ({ contentViews, contentCounts, envId }) => {
   const columnHeaders = [
     __('Content view'),
+    __('Version'),
     __('Last published'),
-    __('Synced to smart proxy'),
+    __('Synced'),
   ];
-  const { content_counts: contentCounts } = counts;
+  // const { content_counts: contentCounts } = counts;
   const expandedTableRows = useSet([]);
   const tableRowIsExpanded = id => expandedTableRows.has(id);
 
@@ -38,18 +39,22 @@ const ExpandableCvDetails = ({ contentViews, counts }) => {
       </Thead>
       {contentViews.map((cv, rowIndex) => {
         const {
-          id, name: cvName, composite, up_to_date: upToDate, cvv_id: version, repositories,
+          id, name: cvName, composite, up_to_date: upToDate,
+          cvv_id: versionId, cvv_version: version, repositories,
         } = cv;
-        const upToDateVal = upToDate ? <CheckCircleIcon /> : <TimesCircleIcon />;
-        const isExpanded = tableRowIsExpanded(version);
+        const upToDateVal = upToDate ? <CheckCircleIcon style={{ color: 'green' }} /> : <TimesCircleIcon style={{ color: 'red' }} />;
+        const isExpanded = tableRowIsExpanded(versionId);
         return (
-          <Tbody key={`${id} + ${version}`}isExpanded={isExpanded}>
-            <Tr key={version} ouiaId={cv.name}>
+          <Tbody key={`${id} + ${versionId}`}isExpanded={isExpanded}>
+            <Tr key={versionId} ouiaId={cv.name}>
               <Td
+                aria-label={`expand-cv-${id}`}
+                style={{ paddingTop: 0 }}
                 expand={{
                   rowIndex,
                   isExpanded,
-                  onToggle: (_event, _rInx, isOpen) => expandedTableRows.onToggle(isOpen, version),
+                  onToggle: (_event, _rInx, isOpen) =>
+                    expandedTableRows.onToggle(isOpen, versionId),
                 }}
               />
               <Td>
@@ -58,14 +63,19 @@ const ExpandableCvDetails = ({ contentViews, counts }) => {
                   description={<a href={cv.default ? urlBuilder('products', '') : urlBuilder('content_views', '', id)}>{cvName}</a>}
                 />
               </Td>
+              <Td>
+                <a href={`/content_views/${id}#/versions/${versionId}/`}>{__('Version ')}{version}</a>
+              </Td>
               <Td><LongDateTime date={cv.last_published} showRelativeTimeTooltip /></Td>
               <Td>{upToDateVal}</Td>
             </Tr>
             <Tr key="child_row" ouiaId={`ContentViewTableRowChild-${id}`} isExpanded={isExpanded}>
               <Td colSpan={12}>
                 <ExpandedSmartProxyRepositories
-                  contentCounts={contentCounts?.content_view_versions[version]?.repositories}
+                  contentCounts={contentCounts?.content_view_versions[versionId]?.repositories}
                   repositories={repositories}
+                  syncedToCapsule={upToDate}
+                  envId={envId}
                 />
               </Td>
             </Tr>
@@ -80,16 +90,18 @@ const ExpandableCvDetails = ({ contentViews, counts }) => {
 
 ExpandableCvDetails.propTypes = {
   contentViews: PropTypes.arrayOf(PropTypes.shape({})),
-  counts: PropTypes.shape({
-    content_counts: PropTypes.shape({
-      content_view_versions: PropTypes.shape({}),
-    }),
+  contentCounts: PropTypes.shape({
+    content_view_versions: PropTypes.shape({}),
   }),
+  envId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string, // The API can sometimes return strings
+  ]).isRequired,
 };
 
 ExpandableCvDetails.defaultProps = {
   contentViews: [],
-  counts: {},
+  contentCounts: {},
 };
 
 export default ExpandableCvDetails;
