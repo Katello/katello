@@ -117,8 +117,8 @@ module Katello
         url: "#{@uri}v1/search?q=#{@search}"
       }
 
-      request_params[:headers][:user] = @upstream_username unless @upstream_username.empty?
-      request_params[:headers][:password] = @upstream_password unless @upstream_password.empty?
+      request_params[:user] = @upstream_username unless @upstream_username.empty?
+      request_params[:password] = @upstream_password unless @upstream_password.empty?
       request_params[:proxy] = proxy_uri if proxy
 
       begin
