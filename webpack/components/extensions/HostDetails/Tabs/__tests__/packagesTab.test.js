@@ -271,6 +271,7 @@ test('Can bulk upgrade via remote execution', async (done) => {
         },
         search_query: `name ^ (${hostname})`,
         feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
+        description_format: 'Upgrade package(s) chrony, coreutils',
       },
     })
     .reply(201);

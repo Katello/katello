@@ -9,10 +9,13 @@ import { PACKAGE_SEARCH_QUERY } from './PackagesTab/YumInstallablePackagesConsta
 import { PACKAGES_SEARCH_QUERY, SELECTED_UPDATE_VERSIONS } from './PackagesTab/HostPackagesConstants';
 
 // PARAM BUILDING
-const baseParams = ({ feature, hostname, inputs = {} }) => ({
+const baseParams = ({
+  feature, hostname, descriptionFormat, inputs = {},
+}) => ({
   job_invocation: {
     feature,
     inputs,
+    descriptionFormat,
     search_query: `name ^ (${hostname})`,
   },
 });
@@ -33,11 +36,12 @@ const katelloPackageInstallParams = ({ hostname, packageName }) =>
   });
 
 // used when we know package Id(s)
-const katelloPackageInstallBySearchParams = ({ hostname, search }) =>
+const katelloPackageInstallBySearchParams = ({ hostname, search, descriptionFormat }) =>
   baseParams({
     hostname,
     inputs: { [PACKAGE_SEARCH_QUERY]: search },
     feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH,
+    description_format: descriptionFormat,
   });
 
 const katelloPackageRemoveParams = ({ hostname, packageName }) =>
@@ -47,11 +51,12 @@ const katelloPackageRemoveParams = ({ hostname, packageName }) =>
     feature: REX_FEATURES.KATELLO_PACKAGE_REMOVE,
   });
 
-const katelloPackagesRemoveParams = ({ hostname, search }) =>
+const katelloPackagesRemoveParams = ({ hostname, search, descriptionFormat }) =>
   baseParams({
     hostname,
     inputs: { [PACKAGES_SEARCH_QUERY]: search },
     feature: REX_FEATURES.KATELLO_PACKAGES_REMOVE_BY_SEARCH,
+    description_format: descriptionFormat,
   });
 
 const katelloPackageUpdateParams = ({ hostname, packageName }) =>
@@ -61,11 +66,14 @@ const katelloPackageUpdateParams = ({ hostname, packageName }) =>
     feature: REX_FEATURES.KATELLO_PACKAGE_UPDATE,
   });
 
-const katelloPackagesUpdateParams = ({ hostname, search, versions }) => ({
+const katelloPackagesUpdateParams = ({
+  hostname, search, versions, descriptionFormat,
+}) => ({
   job_invocation: {
     feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
     inputs: { [PACKAGES_SEARCH_QUERY]: search, [SELECTED_UPDATE_VERSIONS]: versions },
     search_query: `name ^ (${hostname})`,
+    description_format: descriptionFormat,
   },
 });
 
@@ -134,11 +142,11 @@ export const installPackage = ({ hostname, packageName, handleSuccess }) => post
   errorToast,
 });
 
-export const installPackageBySearch = ({ hostname, search }) => post({
+export const installPackageBySearch = ({ hostname, search, descriptionFormat }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
-  params: katelloPackageInstallBySearchParams({ hostname, search }),
+  params: katelloPackageInstallBySearchParams({ hostname, search, descriptionFormat }),
   handleSuccess: showRexToast,
   errorToast,
 });
@@ -152,11 +160,11 @@ export const removePackage = ({ hostname, packageName }) => post({
   errorToast,
 });
 
-export const removePackages = ({ hostname, search }) => post({
+export const removePackages = ({ hostname, search, descriptionFormat }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
-  params: katelloPackagesRemoveParams({ hostname, search }),
+  params: katelloPackagesRemoveParams({ hostname, search, descriptionFormat }),
   handleSuccess: showRexToast,
   errorToast,
 });
@@ -170,11 +178,15 @@ export const updatePackage = ({ hostname, packageName }) => post({
   errorToast,
 });
 
-export const updatePackages = ({ hostname, search, versions }) => post({
+export const updatePackages = ({
+  hostname, search, versions, descriptionFormat,
+}) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
-  params: katelloPackagesUpdateParams({ hostname, search, versions }),
+  params: katelloPackagesUpdateParams({
+    hostname, search, versions, descriptionFormat,
+  }),
   handleSuccess: showRexToast,
   errorToast,
 });
