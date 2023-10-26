@@ -414,6 +414,14 @@ module Katello
         scope
       end
 
+      def last_complete_sync_task
+        ForemanTasks::Task.for_resource(self).where(:label => 'Actions::Katello::CapsuleContent::Sync').order(started_at: :desc).detect do |task|
+          task.input.with_indifferent_access[:options][:environment_id].nil? &&
+          task.input.with_indifferent_access[:options][:content_view_id].nil? &&
+          task.input.with_indifferent_access[:options][:repository_id].nil?
+        end
+      end
+
       def sync_tasks
         ForemanTasks::Task.for_resource(self).where(:label => 'Actions::Katello::CapsuleContent::Sync')
       end
@@ -440,6 +448,17 @@ module Katello
 
       def environment_syncable?(env)
         last_sync_time.nil? || env.content_view_environments.where('updated_at > ?', last_sync_time).any?
+      end
+
+      def last_env_sync_task(env)
+        last_env_sync_task = sync_tasks.order(ended_at: :desc).detect { |task| task.input.with_indifferent_access[:options][:environment_id] == env.id }
+        if (last_complete_sync_task&.ended_at && last_env_sync_task&.ended_at)
+          return last_complete_sync_task.ended_at > last_env_sync_task.ended_at ? last_complete_sync_task : last_env_sync_task
+        elsif last_env_sync_task
+          return last_env_sync_task
+        elsif last_complete_sync_task
+          return last_complete_sync_task
+        end
       end
 
       def cancel_sync

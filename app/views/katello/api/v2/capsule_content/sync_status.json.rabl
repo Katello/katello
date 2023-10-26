@@ -35,6 +35,17 @@ child @lifecycle_environments => :lifecycle_environments do
     @capsule.environment_syncable?(env)
   end
 
+  node :last_sync do |env|
+    last_env_sync_task = @capsule.last_env_sync_task(env)
+    attributes = {
+      :id => last_env_sync_task&.id,
+      :started_at => last_env_sync_task&.started_at,
+      :result => last_env_sync_task&.result,
+      :last_sync_words => last_env_sync_task.try(:started_at) ? time_ago_in_words(Time.parse(last_env_sync_task.started_at.to_s)) : nil
+    }
+    attributes
+  end
+
   if @capsule.has_feature?(SmartProxy::PULP_NODE_FEATURE) || @capsule.has_feature?(SmartProxy::PULP3_FEATURE)
     node :counts do |env|
       {
