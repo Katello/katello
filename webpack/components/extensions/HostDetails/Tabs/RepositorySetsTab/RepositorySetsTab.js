@@ -42,12 +42,12 @@ import {
   Thead,
   Tr,
 } from '@patternfly/react-table';
+import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
 
 import {
   useBulkSelect,
-  useTableSort,
   useUrlParams,
-} from '../../../../../components/Table/TableHooks';
+} from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import hostIdNotReady from '../../HostDetailsActions';
 import { selectHostDetailsStatus } from '../../HostDetailsSelectors.js';

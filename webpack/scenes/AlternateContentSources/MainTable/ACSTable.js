@@ -27,13 +27,15 @@ import {
   TextVariants,
 } from '@patternfly/react-core';
 import { TableVariant, Tbody, Td, Th, Thead, Tr, ActionsColumn } from '@patternfly/react-table';
+import { useSelectionSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
+import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
+
 import TableWrapper from '../../../components/Table/TableWrapper';
 import {
   selectAlternateContentSources,
   selectAlternateContentSourcesError,
   selectAlternateContentSourcesStatus,
 } from '../ACSSelectors';
-import { useSelectionSet, useTableSort } from '../../../components/Table/TableHooks';
 import getAlternateContentSources, { deleteACS, bulkDeleteACS, getACSDetails, refreshACS, bulkRefreshACS } from '../ACSActions';
 import ACSCreateWizard from '../Create/ACSCreateWizard';
 import LastSync from '../../ContentViews/Details/Repositories/LastSync';

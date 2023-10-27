@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Wizard } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import getEnvironmentPaths from '../../../components/EnvironmentPaths/EnvironmentPathActions';
 import CVEnvironmentSelectionForm from './RemoveSteps/CVEnvironmentSelectionForm';
 import CVReassignActivationKeysForm from './RemoveSteps/CVReassignActivationKeysForm';
@@ -12,7 +13,6 @@ import CVVersionDeleteFinish from './RemoveSteps/CVVersionDeleteFinish';
 import getContentViewDetails from '../../ContentViewDetailActions';
 import getContentViews from '../../../ContentViewsActions';
 import DeleteContext from './DeleteContext';
-import { useSet } from '../../../../../components/Table/TableHooks';
 
 const RemoveCVVersionWizard = ({
   cvId, versionIdToRemove, versionNameToRemove,

@@ -21,11 +21,12 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
-
+import { useSet, useBulkSelect, useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
+import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import SelectableDropdown from '../../../../SelectableDropdown';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
-import { useBulkSelect, useTableSort, useUrlParams, useSet } from '../../../../../components/Table/TableHooks';
+
 import PackagesStatus from '../../../../../components/Packages';
 import {
   getInstalledPackagesWithLatest,

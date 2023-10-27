@@ -17,7 +17,7 @@ const HostActionsBar = () => {
     const query = fetchBulkParams({ selectAllQuery: 'created_at < "1 second ago"' });
     href = foremanUrl(`/change_host_content_source?search=${query}`);
   } else if (selectedCount > 0) {
-    href = foremanUrl(`/change_host_content_source?search=${fetchBulkParams({})}`);
+    href = foremanUrl(`/change_host_content_source?search=${fetchBulkParams()}`);
   }
 
   const title = __('Change content source');

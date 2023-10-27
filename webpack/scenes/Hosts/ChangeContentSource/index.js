@@ -9,6 +9,7 @@ import { STATUS } from 'foremanReact/constants';
 import BreadcrumbBar from 'foremanReact/components/BreadcrumbBar';
 import Head from 'foremanReact/components/Head';
 import { useForemanHostsPageUrl } from 'foremanReact/Root/Context/ForemanContext';
+import { useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 
 import { selectApiDataStatus,
   selectApiContentViewStatus,
@@ -21,7 +22,6 @@ import { selectApiDataStatus,
   selectTemplate } from './selectors';
 
 import { getHostIds, formIsLoading } from './helpers';
-import { useUrlParams } from '../../../components/Table/TableHooks';
 import {
   getFormData,
   getProxy,

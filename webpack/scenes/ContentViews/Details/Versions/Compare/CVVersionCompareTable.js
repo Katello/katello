@@ -4,10 +4,10 @@ import {
 } from 'react-redux';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
 import { TableVariant, Tr, Th, Tbody, Td, Thead } from '@patternfly/react-table';
 import { TableType } from './CVVersionCompareConfig';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
-import { useTableSort } from '../../../../../components/Table/TableHooks';
 import './CVVersionCompare.scss';
 
 const CVVersionCompareTable = ({

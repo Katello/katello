@@ -39,6 +39,7 @@ import {
   Th,
   Td,
 } from '@patternfly/react-table';
+import { useSelectionSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { useKatelloDocUrl } from '../../../../utils/useKatelloDocUrl';
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import SelectableDropdown from '../../../../components/SelectableDropdown';
@@ -64,7 +65,6 @@ import {
 import ContentCounts from './ContentCounts';
 import LastSync from './LastSync';
 import RepoIcon from './RepoIcon';
-import { useSelectionSet } from '../../../../components/Table/TableHooks';
 
 const allRepositories = 'All repositories';
 
