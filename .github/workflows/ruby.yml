@@ -1,0 +1,27 @@
+---
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'master'
+      - 'KATELLO-*'
+
+concurrency:
+  group: ${{ github.ref_name }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  rubocop:
+    name: Rubocop
+    uses: theforeman/actions/.github/workflows/rubocop.yml@v0
+
+  test:
+    name: Ruby
+    needs: rubocop
+    uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v0
+    with:
+      plugin: katello
+      postgresql_container: ghcr.io/theforeman/postgresql-evr
+      test_existing_database: false
