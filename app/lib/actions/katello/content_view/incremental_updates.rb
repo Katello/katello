@@ -4,28 +4,41 @@ module Actions
       class IncrementalUpdates < Actions::EntryAction
         include Helpers::Presenter
 
+        def version_environments_by_cv_id(version_environments)
+          by_content_view = {}
+          version_environments.each do |version_environment|
+            by_content_view[version_environment[:content_view_version].content_view.id] ||= []
+            by_content_view[version_environment[:content_view_version].content_view.id] << version_environment
+          end
+          by_content_view
+        end
+
         def plan(version_environments, composite_version_environments, content, dep_solve, hosts, description)
           old_new_version_map = {}
           output_for_version_ids = []
 
           sequence do
             concurrence do
-              version_environments.each do |version_environment|
-                version = version_environment[:content_view_version]
-                if version.content_view.generated?
-                  fail _("Cannot perform an incremental update on a Generated Content View Version (%{name} version version %{version}") %
-                    {:name => version.content_view.name, :version => version.version}
-                end
+              version_environments_by_cv_id(version_environments).each_value do |version_environments_for_cv|
+                sequence do
+                  version_environments_for_cv.each do |version_environment|
+                    version = version_environment[:content_view_version]
+                    if version.content_view.generated?
+                      fail _("Cannot perform an incremental update on a Generated Content View Version (%{name} version version %{version}") %
+                        {:name => version.content_view.name, :version => version.version}
+                    end
 
-                if version.content_view.composite?
-                  fail _("Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}") %
-                    {:name => version.content_view.name, :version => version.version}
-                end
+                    if version.content_view.composite?
+                      fail _("Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}") %
+                        {:name => version.content_view.name, :version => version.version}
+                    end
 
-                action = plan_action(ContentViewVersion::IncrementalUpdate, version,
-                            version_environment[:environments], :resolve_dependencies => dep_solve, :content => content, :description => description)
-                old_new_version_map[version] = action.new_content_view_version
-                output_for_version_ids << {:version_id => action.new_content_view_version.id, :output => action.output}
+                    action = plan_action(ContentViewVersion::IncrementalUpdate, version,
+                                         version_environment[:environments], :resolve_dependencies => dep_solve, :content => content, :description => description)
+                    old_new_version_map[version] = action.new_content_view_version
+                    output_for_version_ids << {:version_id => action.new_content_view_version.id, :output => action.output}
+                  end
+                end
               end
             end
 
