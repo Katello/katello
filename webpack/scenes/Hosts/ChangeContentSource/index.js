@@ -8,6 +8,7 @@ import { foremanUrl } from 'foremanReact/common/helpers';
 import { STATUS } from 'foremanReact/constants';
 import BreadcrumbBar from 'foremanReact/components/BreadcrumbBar';
 import Head from 'foremanReact/components/Head';
+import { useForemanHostsPageUrl } from 'foremanReact/Root/Context/ForemanContext';
 
 import { selectApiDataStatus,
   selectApiContentViewStatus,
@@ -96,14 +97,14 @@ const ChangeContentSourcePage = () => {
     setShouldShowTemplate(true);
   };
 
+  const hostIndexUrl = useForemanHostsPageUrl();
   const breadcrumbItems = () => {
-    const linkHosts = { caption: __('Hosts'), url: foremanUrl('/hosts') };
+    const linkHosts = { caption: __('Hosts'), url: hostIndexUrl };
     const linkContent = { caption: __('Change host content source') };
 
     if (urlParams.host_id) {
       const hostName = contentHosts.concat(hostsWithoutContent)
         .find(h => `${h.id}` === urlParams.host_id)?.name;
-
       return ([linkHosts, { caption: hostName, url: foremanUrl(`/new/hosts/${hostName}`) }, linkContent]);
     }
     return ([linkHosts, linkContent]);
