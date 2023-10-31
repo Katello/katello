@@ -25,8 +25,7 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
   const dispatch = useDispatch();
   let metadata = {};
   const {
-    lifecycle_environments: results, last_sync_task: lastTask, last_sync_words: lastSyncWords,
-    content_counts: contentCounts,
+    lifecycle_environments: results, content_counts: contentCounts,
   } = response;
   if (results) {
     metadata = { total: results.length, subtotal: results.length };
@@ -89,7 +88,7 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
       {
           results?.map((env, rowIndex) => {
             const {
-              id, content_views: contentViews,
+              id, content_views: contentViews, last_sync: lastSync,
             } = env;
             const isExpanded = tableRowIsExpanded(id);
             return (
@@ -106,7 +105,7 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
                     }}
                   />
                   <Td><ComponentEnvironments environments={[env]} /></Td>
-                  <Td><LastSync lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /></Td>
+                  <Td><LastSync lastSync={lastSync} lastSyncWords={lastSync?.last_sync_words} emptyMessage="N/A" /></Td>
                   <Td
                     key={`rowActions-${id}`}
                     actions={{
