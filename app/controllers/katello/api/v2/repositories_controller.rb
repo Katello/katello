@@ -348,6 +348,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
     param :skip_metadata_check, :bool, :desc => N_("Force sync even if no upstream changes are detected. Only used with yum or deb repositories."), :required => false
     param :validate_contents, :bool, :desc => N_("Force a sync and validate the checksums of all content. Only used with yum repositories."), :required => false
     def sync
+      fail HttpErrors::BadRequest, _("attempted to sync a non-library repository.") unless @repository.library_instance?
       sync_options = {
         :skip_metadata_check => ::Foreman::Cast.to_bool(params[:skip_metadata_check]),
         :validate_contents => ::Foreman::Cast.to_bool(params[:validate_contents]),
