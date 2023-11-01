@@ -365,9 +365,6 @@
       "root-node of collection contained in responses (default: 'results')": [
         "包含在响应中集合的根节点（默认：'results'）"
       ],
-      "This action uses katello-agent, which is currently disabled. Use remote execution instead.": [
-        "此操作使用 katello-agent，当前已禁用。改为使用远程执行。"
-      ],
       "Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.": [
         "您的搜索查询无效。请对其进行修改，然后重试。完整的错误已发送到应用程序日志。"
       ],
@@ -394,6 +391,12 @@
       ],
       "Id of the lifecycle environment": [
         "生命周期环境 ID"
+      ],
+      "List content counts for the smart proxy": [
+        ""
+      ],
+      "Update content counts for the smart proxy": [
+        ""
       ],
       "List the lifecycle environments attached to the smart proxy": [
         "列出附加到智能代理的生命周期环境"
@@ -1394,17 +1397,11 @@
       "Return only errata of a particular severity (None, Low, Moderate, Important, Critical)": [
         "仅返回特定严重级别的勘误（无、低、中、重要、严重）"
       ],
-      "Schedule errata for installation using katello-agent. %s": [
-        "为使用 katello-agent 的安装调度勘误。%s"
+      "Retrieve a single errata for a host": [
+        "获取主机的单个勘误"
       ],
       "Host ID": [
         "主机 ID"
-      ],
-      "List of Errata ids to install. Will be removed in %s": [
-        "要安装的勘误 ID 列表。将在 %s 中删除"
-      ],
-      "Retrieve a single errata for a host": [
-        "获取主机的单个勘误"
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "勘误的勘误ID（RHSA-2012:108）"
@@ -1447,18 +1444,6 @@
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
         "仅返回特定状态的软件包（可升级或最新）"
-      ],
-      "Install packages remotely using katello-agent. %s": [
-        "使用 katello-agent 远程安装软件包。 %s"
-      ],
-      "Update packages remotely using katello-agent. %s": [
-        "使用 katello-agent 远程更新软件包。 %s"
-      ],
-      "list of packages names": [
-        "套件名稱清單"
-      ],
-      "Uninstall packages remotely using katello-agent. %s": [
-        "使用 katello-agent 远程卸载软件包。 %s"
       ],
       "Couldn't find host with host id '%s'": [
         "找不到主机 id 为 '%s' 的主机"
@@ -1646,30 +1631,6 @@
       "Fetch installable errata for one or more hosts.": [
         "为一台或多台主机获取可安装的勘误。"
       ],
-      "Install content on one or more hosts using katello-agent. %s": [
-        "使用 katello-agent 在一个或多个主机上安装内容。%s"
-      ],
-      "The type of content.  The following types are supported: 'package', 'package_group' and 'errata'.": [
-        "内容类型。支持以下类型：“ package”，“ package_group”和“ errata”。"
-      ],
-      "List of content (e.g. package names, package group names (Deprecated) or errata ids)": [
-        "内容列表（例如，软件包名称，软件包组名称（已弃用）或勘误 ID）"
-      ],
-      "Update content on one or more hosts using katello-agent. %s": [
-        "使用 katello-agent 在一个或多个主机上更新内容。%s"
-      ],
-      "The type of content.  The following types are supported: 'package' and 'package_group.": [
-        "内容类型。支持以下类型：'package' 和 'package_group。"
-      ],
-      "List of content (e.g. package or package group names)": [
-        "内容列表（例如，软件包或软件包组名称）"
-      ],
-      "Updates all packages on the host(s)": [
-        "更新主机上的所有软件包"
-      ],
-      "Remove content on one or more hosts using katello-agent. %s": [
-        "使用 katello-agent 在一个或多个主机上删除内容。%s"
-      ],
       "Destroy one or more hosts": [
         "銷毀一或更多个主机"
       ],
@@ -1747,15 +1708,6 @@
       ],
       "Maximum number of content hosts exceeded for host collection(s): %s": [
         "已超过主机集的最大內容主机数量：%s"
-      ],
-      "A content_type must be provided.": [
-        "必須提供 content_type。"
-      ],
-      "No content has been provided.": [
-        "未提供內容。"
-      ],
-      "Invalid content type %s": [
-        "无效的内容类型 %s"
       ],
       "Shows status of Katello system and it's subcomponents": [
         "显示 Katello 系统和它的子组件的状态"
@@ -2122,9 +2074,6 @@
       ],
       "Name of the upstream docker repository": [
         "上游 docker 仓库的名称"
-      ],
-      "Comma-separated list of tags to sync for Container Image repository (Deprecated)": [
-        "逗号分隔的标签列表，以同步容器镜像仓库（已弃用）"
       ],
       "Comma-separated list of tags to sync for a container image repository": [
         "逗号分隔的标签列表，以同步容器镜像仓库"
@@ -2510,17 +2459,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "当 CDN 配置设置为 Air-gapped（断开连接）时，仓库不可用。"
       ],
-      "Check if the specified organization is eligible for Simple Content Access": [
-        "检查指定的机构是否有资格进行简单内容访问"
+      "Check if the specified organization is eligible for Simple Content Access. %s": [
+        ""
       ],
-      "Check if the specified organization has Simple Content Access enabled": [
-        "检查指定机构是否启用了简单内容访问"
+      "Check if the specified organization has Simple Content Access enabled. %s": [
+        ""
       ],
       "Enable simple content access for a manifest": [
         "启用对一个清单的简单内容访问"
       ],
-      "Disable simple content access for a manifest": [
-        "禁用对一个清单的简单内容访问"
+      "Disable simple content access for a manifest. %s": [
+        ""
       ],
       "SRPM details": [
         "SRPM 详情"
@@ -2666,6 +2615,9 @@
       "List of product ids to add to the sync plan": [
         "要加入到同步计划的产品 ID 列表"
       ],
+      "Cannot add disabled products to sync plan!": [
+        ""
+      ],
       "Remove products from sync plan": [
         "从同步计划中删除产品"
       ],
@@ -2738,10 +2690,7 @@
       "Invalid parameters sent. You may have mistyped the address. If you continue having trouble with this, please contact an Administrator.": [
         "发送了无效的参数。您可能输入了错误的地址。如果您仍然遇到此问题，请与管理员联系。"
       ],
-      "WARNING: Katello-agent is deprecated and will be removed in %s. Migrate to remote execution now.": [
-        ""
-      ],
-      "Katello 4.10": [
+      "WARNING: Simple Content Access will be required for all organizations in Katello 4.12.": [
         ""
       ],
       "Could not find %{name} resource with id %{id}. %{perms_message}": [
@@ -3008,6 +2957,9 @@
       "Subscription Manifest validity check": [
         "订阅清单有效性检查"
       ],
+      "Host lifecycle support expiration notification": [
+        ""
+      ],
       "Pulp disk space notification": [
         "Pulp 磁盘空间通知"
       ],
@@ -3037,18 +2989,6 @@
       ],
       "Delete Activation Key": [
         "删除激活码"
-      ],
-      "No new packages installed": [
-        "未安装新软件包"
-      ],
-      "No packages removed": [
-        "没有删除软件包"
-      ],
-      "Host did not respond within %s seconds. The task has been cancelled. Is katello-agent installed and goferd running on the Host?": [
-        "主机在%s秒内没有响应。任务已取消。主机上是否已安装 katello-agent 并且 goferd 正在运行？"
-      ],
-      "Host did not finish content action in %s seconds.  The task has been cancelled.": [
-        "主机在%s秒内未完成内容操作。任务已取消。"
       ],
       "Create Alternate Content Source": [
         "创建备用内容源"
@@ -3082,6 +3022,9 @@
       ],
       "Action not allowed for the default smart proxy.": [
         "默认的智能代理不允许的操作。"
+      ],
+      "Update Content Counts": [
+        ""
       ],
       "Update CDN Configuration": [
         "更新 CDN 配置"
@@ -3227,74 +3170,11 @@
       "Destroy Content Host": [
         "销毁内容主机"
       ],
-      "errata_ids or update_all must be provided": [
-        "必须提供 errata_ids 或 update_all"
-      ],
-      "No applicable errata for %s, skipping": [
-        "没有适用于%s 的勘误，跳过"
-      ],
-      "Install Applicable Errata": [
-        "安装适用的勘误"
-      ],
-      "Install Applicable Errata on %s": [
-        "在 %s 上安装适用的勘误"
-      ],
-      "Install erratum for %s": [
-        "为 %s 安装勘误"
-      ],
-      "Install erratum": [
-        "安装勘误"
-      ],
-      "Installation of errata requested: %{errata}": [
-        "要求安装的勘误：%{errata}"
-      ],
       "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration.": [
         "主机创建已被跳过%s，因为它与 %s 共享一个 BIOS UUID。要报告此虚拟机管理程序，请覆盖其dmi.system.uuid fact，或在 Candlepin 配置中将 'candlepin.use_system_uuid_for_matching' 设置为'true'。"
       ],
       "Host '%{name}' does not belong to an organization": [
         "主机 '%{name}' 不属于一个机构"
-      ],
-      "Install package for %s": [
-        "为 %s 安装软件包"
-      ],
-      "Install package": [
-        "安装软件包"
-      ],
-      "Installation of package(s) requested: %{packages}": [
-        "要求安装的软件包：%{packages}"
-      ],
-      "Remove package for %s": [
-        "为 %s 删除软件包"
-      ],
-      "Remove package": [
-        "删除软件包"
-      ],
-      "Removal of package(s) requested: %{packages}": [
-        "要求删除的软件包：%{packages}"
-      ],
-      "Update package for %s": [
-        "为 %s 更新软件包"
-      ],
-      "Update package": [
-        "更新软件包"
-      ],
-      "Update of package(s) requested: %{packages}": [
-        "请求的软件包更新：%{packages}"
-      ],
-      "Update of all packages requested": [
-        "更新所有请求的软件包"
-      ],
-      "Install package group": [
-        "安裝软件包组"
-      ],
-      "Installation of package group(s) requested: %{groups}": [
-        "要求安装的软件包组：%{groups}"
-      ],
-      "Remove package group": [
-        "删除了软件包组"
-      ],
-      "Removal of package group(s) requested: %{groups}": [
-        "需要删除的软件包组 : %{groups}"
       ],
       "Error refreshing status for %s: ": [
         "%s 的错误刷新状态： "
@@ -3425,6 +3305,9 @@
       "Can only remove content from within the Default Content View": [
         "只能從預設的內容視域移除內容"
       ],
+      "No docker manifests to delete after ignoring manifests with tags or manifest lists": [
+        ""
+      ],
       "Remove Content": [
         "删除内容"
       ],
@@ -3508,6 +3391,9 @@
       ],
       "There is no downloaded content to clean.": [
         "没有要清理的下载内容。"
+      ],
+      "Export failed: One or more repositories needs to be synced (with Immediate download policy.)": [
+        ""
       ],
       "Create Export History": [
         "创建导出历史记录"
@@ -4064,6 +3950,9 @@
       "cannot be a binary file.": [
         "不能一个二进制文件。"
       ],
+      "Lifecycle environment '%{env}' cannot be used with content view '%{view}'": [
+        ""
+      ],
       "Content view environments must have both a content view and an environment": [
         ""
       ],
@@ -4213,6 +4102,12 @@
       ],
       "You have subscriptions expiring within %s days": [
         "您有订阅将在 %s 天内过期"
+      ],
+      "Repository %{label} failed to synchronize": [
+        ""
+      ],
+      "%{label} failed": [
+        ""
       ],
       "cannot contain commas": [
         "不能包含逗号"
@@ -4688,6 +4583,9 @@
       "Cannot associate a Red Hat provider with a custom product": [
         ""
       ],
+      "Cannot add disabled Red Hat product %s to sync plan!": [
+        ""
+      ],
       "must be true or false": [
         ""
       ],
@@ -4741,6 +4639,33 @@
       ],
       "This is not a linked repository": [
         "没有连接的仓库"
+      ],
+      "RHEL lifecycle": [
+        ""
+      ],
+      "Full support": [
+        ""
+      ],
+      "Maintenance support": [
+        ""
+      ],
+      "Approaching end of maintenance support (%s)": [
+        ""
+      ],
+      "Approaching end of maintenance support": [
+        ""
+      ],
+      "Extended support": [
+        ""
+      ],
+      "Approaching end of support (%s)": [
+        ""
+      ],
+      "Approaching end of support": [
+        ""
+      ],
+      "Support ended": [
+        ""
       ],
       "is not enabled. must be one of the following: %s": [
         "没有启用。需要是以下之一：%s"
@@ -4909,6 +4834,12 @@
       ],
       "No packages updated": [
         "为更新任何软件包"
+      ],
+      "No packages removed": [
+        "没有删除软件包"
+      ],
+      "No new packages installed": [
+        "未安装新软件包"
       ],
       "Traces": [
         "Traces"
@@ -5345,6 +5276,57 @@
       "Sync Plan: ": [
         "同步计划： "
       ],
+      "%{label} failed.": [
+        ""
+      ],
+      "Content view": [
+        "内容视图"
+      ],
+      "Task ID": [
+        ""
+      ],
+      "Task state": [
+        ""
+      ],
+      "Task result": [
+        ""
+      ],
+      "Content view name": [
+        "内容视图名称"
+      ],
+      "Task details": [
+        ""
+      ],
+      "Smart proxy ID": [
+        ""
+      ],
+      "Smart proxy name": [
+        ""
+      ],
+      "Environment ID": [
+        ""
+      ],
+      "Environment name": [
+        ""
+      ],
+      "Repository ID": [
+        ""
+      ],
+      "Repository name": [
+        ""
+      ],
+      "Repo ID": [
+        ""
+      ],
+      "Repo label": [
+        ""
+      ],
+      "Product ID": [
+        "产品 ID"
+      ],
+      "Product label": [
+        ""
+      ],
       "Installed Packages": [
         "已安装的软件包"
       ],
@@ -5392,6 +5374,9 @@
       ],
       "Generate and Download": [
         "生成并下载"
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         "备用内容源 HTTP 代理"
@@ -5471,6 +5456,18 @@
       "Promote errata": [
         "升级勘误"
       ],
+      "Repository sync failure": [
+        ""
+      ],
+      "Content view publish failure": [
+        ""
+      ],
+      "Content view promote failure": [
+        ""
+      ],
+      "Proxy sync failure": [
+        ""
+      ],
       "A summary of available and applicable errata for your hosts": [
         "主机的可用和适用的勘误摘要"
       ],
@@ -5482,6 +5479,24 @@
       ],
       "A list of subscriptions expiring soon": [
         "即将过期的订阅列表"
+      ],
+      "A notification about failed repository sync": [
+        ""
+      ],
+      "A notification about failed content view publish": [
+        ""
+      ],
+      "A notification about failed content view promotion": [
+        ""
+      ],
+      "A notification about failed proxy sync": [
+        ""
+      ],
+      "Hosts": [
+        "主机"
+      ],
+      "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
+        ""
       ],
       "Proxies": [
         "代理服务器"
@@ -5567,14 +5582,14 @@
       "Subscription status": [
         "订阅状态"
       ],
+      "RHEL Lifecycle status": [
+        ""
+      ],
       "Installable updates": [
         "可安装的更新"
       ],
       "Lifecycle environment": [
         "生命周期环境"
-      ],
-      "Content view": [
-        "内容视图"
       ],
       "Registered": [
         "注册"
@@ -5674,18 +5689,6 @@
       ],
       "Manifest refresh timeout": [
         "清单刷新超时"
-      ],
-      "Accept action timeout": [
-        "接受操作超时"
-      ],
-      "Time in seconds to wait for a host to pick up a katello-agent action": [
-        "等待主机获取 katello-agent 操作的时间（以秒为单位）"
-      ],
-      "Finish action timeout": [
-        "完成操纵超时"
-      ],
-      "Time in seconds to wait for a host to finish a katello-agent action": [
-        "等待主机完成 katello-agent 操作的时间（以秒为单位）"
       ],
       "Subscription connection enabled": [
         "启用订阅连接"
@@ -5789,12 +5792,6 @@
       "The maximum number of seconds that Pulp can take to download a file, not counting connection time.": [
         "在不计算连接时间的情况下，Pulp 可以用于下载文件的最长时间（以秒为单位）。"
       ],
-      "Use remote execution by default": [
-        "默认情况下使用远程执行"
-      ],
-      "If this is enabled, remote execution is used instead of katello-agent for remote actions": [
-        "如果这个被启用，使用远程执行替代 katello-agent 来进行远程操作"
-      ],
       "Delete Host upon unregister": [
         "取消注册后删除主机"
       ],
@@ -5824,12 +5821,6 @@
       ],
       "The number of days remaining in a subscription before you will be reminded about renewing it.": [
         "在提示您进行续订时订阅剩余的天数。"
-      ],
-      "content view Dependency Solving Default": [
-        "内容视图依赖性解决默认值"
-      ],
-      "The default dependency solving value for new content views.": [
-        "新的内容视图的默认依赖关系解决值。"
       ],
       "Host Duplicate DMI UUIDs": [
         "主机重复 DMI UUID"
@@ -6137,6 +6128,9 @@
       "Legacy content host UI": [
         "旧内容主机 UI"
       ],
+      "Refresh applicability": [
+        ""
+      ],
       "Edit content view assignment": [
         "编辑内容视图分配"
       ],
@@ -6317,8 +6311,11 @@
       "Edit system purpose attributes": [
         "编辑系统目的属性"
       ],
-      "Select system purpose attributes for host {hostName}.": [
-        "为主机 {hostName} 选择系统目的属性。"
+      "Select system purpose attributes for host {name}.": [
+        ""
+      ],
+      "Select system purpose attributes for activation key {name}.": [
+        ""
       ],
       "Select add-ons": [
         "选择附加组件"
@@ -6410,6 +6407,9 @@
       "No action is needed because there are no applicable errata for this host.": [
         "不需要操作，因为没有适用于此主机的勘误。"
       ],
+      "Refresh errata applicability": [
+        ""
+      ],
       "This host has errata that are applicable, but not installable. Adjust your filters and try again.": [
         ""
       ],
@@ -6428,23 +6428,17 @@
       "A remote execution job is in progress": [
         "远程执行作业正在进行"
       ],
-      "Recalculate": [
-        "重新计算"
-      ],
       "Apply via remote execution": [
         "通过远程执行应用"
       ],
       "Apply via customized remote execution": [
         "通过自定义远程执行应用"
       ],
-      "Apply via Katello agent": [
-        "通过 Katello 代理应用"
-      ],
       "Apply": [
         "应用"
       ],
-      "Apply Erratum": [
-        "应用勘误"
+      "Apply erratum": [
+        ""
       ],
       "Yes": [
         "是"
@@ -6539,9 +6533,6 @@
       "Uninstall and reset": [
         "卸载和重置"
       ],
-      "Install via katello-agent": [
-        "通过 katello-agent 安装"
-      ],
       "Install via remote execution": [
         "通过远程执行安装"
       ],
@@ -6592,6 +6583,9 @@
       ],
       "Upgrade via customized remote execution": [
         "通过自定义远程执行升级"
+      ],
+      "Refresh package applicability": [
+        ""
       ],
       "Upgrade": [
         "升级"
@@ -6686,17 +6680,44 @@
       "Enable Tracer": [
         "启用跟踪"
       ],
-      "Enabling will install the katello-host-tools-tracer package on the host.": [
-        "启用后 将在主机上安装 katello-host-tools-tracer 软件包。"
-      ],
       "via remote execution": [
         "通过远程执行"
       ],
       "via customized remote execution": [
         "通过自定义远程执行"
       ],
+      "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
+        ""
+      ],
+      "Before continuing, ensure that all of the following prerequisites are met:": [
+        ""
+      ],
+      "The Foreman Client repository is enabled. ": [
+        ""
+      ],
+      "The Foreman Client repository is synced. ": [
+        ""
+      ],
+      "View sync status": [
+        ""
+      ],
+      "The Foreman Client repository is available in the host's content view environment(s). ": [
+        ""
+      ],
+      "View content views": [
+        ""
+      ],
+      "The Foreman Client repository set is enabled for the host. ": [
+        ""
+      ],
+      "Remote execution is enabled.": [
+        ""
+      ],
       "Select a provider to install katello-host-tools-tracer": [
         "选择安装 katello-host-tools-tracer 的供应商"
+      ],
+      "Once the prerequisites are met, select a provider to install katello-host-tools-tracer": [
+        ""
       ],
       "Enable Traces": [
         "启用跟踪"
@@ -6758,17 +6779,14 @@
       "Traces that require logout cannot be restarted remotely": [
         "需要登出的跟踪无法远程重启"
       ],
-      "Katello-agent is deprecated and will be removed in Katello 4.10.": [
-        ""
-      ],
       "Create new activation key": [
         ""
       ],
       "No Activation Keys selected": [
         "没有选择激活码"
       ],
-      "Activation key(s) for Subscription Manager.": [
-        "Subscription Manager 的激活码。"
+      "Activation key(s) to use during registration": [
+        ""
       ],
       "No Activation keys to select": [
         "没有选择激活码"
@@ -6787,9 +6805,6 @@
       ],
       "Ignore subscription manager errors": [
         "忽略 subscription manager 错误"
-      ],
-      "No Lifecycle environment to select": [
-        "没有选择生命周期环境"
       ],
       "Backend System Status": [
         "后端系统状态"
@@ -7250,9 +7265,6 @@
       "Deleting content view : ": [
         "删除内容视图："
       ],
-      "Hosts": [
-        "主机"
-      ],
       "${pluralize(versionCount, 'content view version')} in the environments below will be removed when content view is deleted": [
         "${pluralize(versionCount, 'content view version')} 在以下环境中，会在内容视图被删除时删除"
       ],
@@ -7295,6 +7307,9 @@
       "Version ${item.version}": [
         "版本 ${item.version}"
       ],
+      " (${item.published_at_words} ago)": [
+        ""
+      ],
       "Update version": [
         "更新版本"
       ],
@@ -7318,6 +7333,9 @@
       ],
       "Select available version of content views to use": [
         "选择要使用的内容视图的可用版本"
+      ],
+      " (${version.published_at_words} ago)": [
+        ""
       ],
       "Not yet published": [
         "尚未发布"
@@ -7628,9 +7646,6 @@
       "Reset filters": [
         "重置过滤"
       ],
-      "Edit rule": [
-        "编辑规则"
-      ],
       "Issued": [
         "发行"
       ],
@@ -7733,17 +7748,26 @@
       "Matching content": [
         "匹配内容"
       ],
-      "No matching RPM found.": [
-        "未找到匹配的 RPM。"
+      "No matching non-modular RPM found.": [
+        ""
       ],
-      "Given criteria doesn't match any RPMs. Try changing your rule.": [
-        "给定条件与任何 RPM 都不匹配。尝试更改您的规则。"
+      "Given criteria doesn't match any non-modular RPMs. Try changing your rule.": [
+        ""
       ],
-      "Your search returned no matching RPMs.": [
-        "您的搜索没有返回匹配的 RPM。"
+      "Your search returned no matching non-modular RPMs.": [
+        ""
+      ],
+      "Help": [
+        ""
+      ],
+      "Matching RPMs based on your created filter rule. Remember, RPM filters don't apply to modular RPMs.": [
+        ""
       ],
       "Edit filter rule": [
         "列表过滤规则"
+      ],
+      "Edit rule": [
+        "编辑规则"
       ],
       "Add rule": [
         "添加规则"
@@ -8183,6 +8207,12 @@
       "Newly published version will be the same as the previous version.": [
         ""
       ],
+      "Duplicate repositories in content view versions": [
+        ""
+      ],
+      "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
+        ""
+      ],
       "A new version of ": [
         "一个新版本 "
       ],
@@ -8194,9 +8224,6 @@
       ],
       "Filters will be applied to this content view version.": [
         ""
-      ],
-      "Content view name": [
-        "内容视图名称"
       ],
       "Newly published": [
         "最新发布的"
@@ -8405,6 +8432,9 @@
       "Enabled Repositories": [
         "启用的仓库"
       ],
+      "Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.": [
+        ""
+      ],
       "Export as CSV": [
         "导出为 CSV"
       ],
@@ -8413,6 +8443,9 @@
       ],
       "(Orphaned)": [
         "（孤立）"
+      ],
+      "Cannot be disabled because it is part of a published content view": [
+        ""
       ],
       "Recommended Repositories": [
         "推荐的仓库"
@@ -8471,8 +8504,23 @@
       "No repositories enabled.": [
         "没有启用的仓库。"
       ],
-      "Synced to smart proxy": [
-        "同步到智能代理"
+      "Synced": [
+        ""
+      ],
+      "Content view version is empty": [
+        ""
+      ],
+      "Smart proxy content count refresh has started in the background": [
+        ""
+      ],
+      "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error.response)}": [
+        ""
+      ],
+      "Last sync": [
+        ""
+      ],
+      "Refresh counts": [
+        ""
       ],
       "Requires Virt-Who": [
         "需要 Virt-Who"
@@ -8485,9 +8533,6 @@
       ],
       "Ends": [
         "结束"
-      ],
-      "Product ID": [
-        "产品 ID"
       ],
       "Contract Number": [
         "合同号"
@@ -8726,26 +8771,26 @@
       "There are no Subscriptions to display": [
         "没有可显示的订阅"
       ],
-      "Add Subscriptions using the Add Subscriptions button.": [
+      "Add subscriptions using the Add Subscriptions button.": [
         ""
       ],
       "Add subscriptions": [
         ""
       ],
-      "Import a Manifest to manage your Entitlements.": [
-        "导入一个清单来管理您的权利。"
+      "Import a subscription manifest to give hosts access to Red Hat content.": [
+        ""
       ],
       "Import a Manifest": [
         "导入一个清单"
       ],
+      "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in Katello 4.12.": [
+        ""
+      ],
       "Subscriptions service": [
         "订阅服务"
       ],
-      "This organization has Simple Content Access enabled. Hosts are not required to have subscriptions attached to access repositories. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        "该机构已启用“简单内容访问”。不需要主机将订阅附加到访问仓库。{br} 了解总体订阅使用的详情{subscriptionsService}。"
-      ],
-      "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in a future version.": [
-        "这个机构没有使用 {scaLink}。基于权利的订阅管理已弃用，并将在以后的版本中删除。"
+      "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
+        ""
       ],
       "Please enter a positive number above zero": [
         "请输入大于零的正数"
@@ -8873,9 +8918,6 @@
       "Action with sub plans": [
         "有子计划的操作"
       ],
-      "Agent action": [
-        "代理操作"
-      ],
       "Auto attach subscriptions": [
         "自动附加订阅"
       ],
@@ -8936,9 +8978,6 @@
       "Remote action:": [
         "远程操作："
       ],
-      "Report": [
-        ""
-      ],
       "Sync capsule": [
         "同步 capsule"
       ],
@@ -8959,45 +8998,6 @@
       ],
       "Verify checksum": [
         "验证校验和"
-      ],
-      "Cannot validate contents on non-yum/deb repositories.": [
-        "无法验证非 yum/deb 仓库中的内容。"
-      ],
-      "#~ \"Force metadata regeneration to proceed.  Dangerous when repositories use the '\"#~ \"Complete Mirroring' mirroring policy\"": [
-        "强制元数据重新生成继续。当存储库使用 'Complete Mirroring' mirroring  策略时这样做是危险的"
-      ],
-      "#~ \"Force metadata regeneration to proceed.  Dangerous when repositories use the '\"#~ \"Complete Mirroring' mirroring policy.\"": [
-        "强制元数据重新生成继续。当存储库使用 'Complete Mirroring' mirroring  策略时这样做是危险的。"
-      ],
-      "#~ \"Forces a republish of the specified repository, regenerating metadata and syml\"#~ \"inks on the filesystem.\"": [
-        "强制重新发布指定的仓库，在文件系统上重新生成元数据和符号链接。"
-      ],
-      "Get status of repo synchronisation for given product": [
-        "為指定的產品取得軟體庫同步化的狀態"
-      ],
-      "#~ \"Identifies whether the repository should be disabled on a client with a non-ma\"#~ \"tching OS version. Pass [] to enable regardless of OS version. Maximum length \"#~ \"1; allowed tags are: %s\"": [
-        "指定是否应在操作系统版本不匹配的客户端上禁用存储库。传递 [] 以启用，而不考虑操作系统版本。最大长度1；允许的标签为： %s"
-      ],
-      "Learn more about adding Subscription Manifests": [
-        "了解有关添加订阅清单的更多信息"
-      ],
-      "Metadata republishing must be forced because it is a dangerous operation.": [
-        "必须强制进行元数据重新发布，因为它是一个危险的操作。"
-      ],
-      "#~ \"NOTE: Katello-agent is deprecated and will be removed in %s. Consider using re\"#~ \"mote execution instead.\"": [
-        "注：Katello-agent 已弃用并将在 %s 中删除。考虑迁移到远程执行。"
-      ],
-      "#~ \"Repository %s cannot be deleted since it has already been included in a publis\"#~ \"hed Content View.\"": [
-        "无法删除存储库 %s，因为它已包括在一个发布的内容视图中。"
-      ],
-      "#~ \"The product %{name} has no %{type} repositories with upstream URLs to add to t\"#~ \"he alternate content source.\"": [
-        "产品 %{name} 没有带有上游 URL 的 %{type} 软件仓库来添加到备用内容源中。"
-      ],
-      "Time in minutes to consider orphan content as orphaned.": [
-        "将孤立的内容视为孤立经过的时间（以分钟为单位）。"
-      ],
-      "a future release": [
-        "一个将来的发行版本"
       ]
     }
   }

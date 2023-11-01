@@ -9,18 +9,23 @@
  * @requires Environment
  * @requires CurrentOrganization
  * @requires newHostDetailsUI
+ * @requires translate
  *
  * @description
  *   Provides the functionality for the available host collection details action pane.
  */
 angular.module('Bastion.errata').controller('ErratumContentHostsController',
-    ['$scope', 'Nutupane', 'Host', 'IncrementalUpdate', 'Environment', 'CurrentOrganization', 'newHostDetailsUI',
-    function ($scope, Nutupane, Host, IncrementalUpdate, Environment, CurrentOrganization, newHostDetailsUI) {
+    ['$scope', 'Nutupane', 'Host', 'IncrementalUpdate', 'Environment', 'CurrentOrganization', 'newHostDetailsUI', 'translate',
+    function ($scope, Nutupane, Host, IncrementalUpdate, Environment, CurrentOrganization, newHostDetailsUI, translate) {
         var nutupane, params, searchString, nutupaneParams = {
             'overrideAutoLoad': true
         };
 
         $scope.restrictInstallable = false;
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Content Hosts');
+        $scope.selectLabel = translate('Select Content Host(s)');
 
         params = {
             'erratum_id': $scope.$stateParams.errataId,

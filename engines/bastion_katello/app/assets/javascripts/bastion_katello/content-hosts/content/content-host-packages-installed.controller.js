@@ -21,6 +21,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesInstalled
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Installed Packages');
+
         $scope.removeSelectedPackages = function () {
             var selected = _.map($scope.table.getSelected(), 'name');
 

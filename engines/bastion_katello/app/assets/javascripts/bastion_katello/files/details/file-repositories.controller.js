@@ -6,8 +6,11 @@
      *
      * @description
      *   Provides the functionality for the files details repositories page.
+     *
+     * @requires translate
+     *
      */
-    function FileRepositoriesController($scope, Nutupane, Repository, CurrentOrganization) {
+    function FileRepositoriesController($scope, Nutupane, Repository, CurrentOrganization, translate) {
         var repositoriesNutupane,
             params = {
                 'file_id': $scope.$stateParams.fileId,
@@ -16,6 +19,10 @@
 
         repositoriesNutupane = new Nutupane(Repository, params);
         $scope.controllerName = 'katello_repositories';
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Repositories');
+
         repositoriesNutupane.primaryOnly = true;
         repositoriesNutupane.setSearchKey('repositoriesSearch');
 

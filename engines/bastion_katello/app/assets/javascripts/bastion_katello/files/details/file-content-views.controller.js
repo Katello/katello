@@ -6,8 +6,11 @@
      *
      * @description
      *   Provides the functionality for the files details contentViews page.
+     *
+     *  @requires translate
+     *
      */
-    function FileContentViewsController($scope, Nutupane, ContentViewVersion, CurrentOrganization) {
+    function FileContentViewsController($scope, Nutupane, ContentViewVersion, CurrentOrganization, translate) {
         var contentViewsNutupane,
             params = {
                 'file_id': $scope.$stateParams.fileId,
@@ -17,6 +20,10 @@
 
         contentViewsNutupane = new Nutupane(ContentViewVersion, params);
         $scope.controllerName = 'katello_content_views';
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Content Views');
+
         contentViewsNutupane.primaryOnly = true;
         contentViewsNutupane.setSearchKey('contentViewsSearch');
 
@@ -39,7 +46,8 @@
         '$scope',
         'Nutupane',
         'ContentViewVersion',
-        'CurrentOrganization'
+        'CurrentOrganization',
+        'translate'
     ];
 
 })();

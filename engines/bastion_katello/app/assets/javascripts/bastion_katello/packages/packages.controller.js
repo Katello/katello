@@ -27,6 +27,13 @@ angular.module('Bastion.packages').controller('PackagesController',
 
         nutupane = $scope.nutupane = new Nutupane(Package, params);
         $scope.controllerName = 'katello_erratum_packages';
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Packages');
+        $scope.dependenciesLabel = translate('Dependencies');
+        $scope.filesLabel = translate('Files');
+        $scope.repositoriesLabel = translate('Repositories');
+
         nutupane.primaryOnly = true;
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;

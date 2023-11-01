@@ -23,6 +23,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
             'sort_order': 'ASC'
         };
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Subscriptions');
+
         $scope.nutupane = new Nutupane(HostSubscription, params);
         $scope.controllerName = 'katello_subscriptions';
         $scope.nutupane.table.initialLoad = false;

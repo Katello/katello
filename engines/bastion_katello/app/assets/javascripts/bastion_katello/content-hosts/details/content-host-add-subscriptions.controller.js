@@ -26,6 +26,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
             'host_id': $scope.$stateParams.hostId
         };
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Add Subscriptions');
+
         $scope.nutupane = new Nutupane(Subscription, params);
         $scope.controllerName = 'katello_subscriptions';
         $scope.nutupane.setSearchKey('subscriptionSearch');

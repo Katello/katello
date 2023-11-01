@@ -27,6 +27,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
             $scope.working = false;
         };
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Package Actions');
+
         $scope.errorHandler = function (response) {
             angular.forEach(response.data.errors, function (responseError) {
                 Notification.setErrorMessage(responseError);

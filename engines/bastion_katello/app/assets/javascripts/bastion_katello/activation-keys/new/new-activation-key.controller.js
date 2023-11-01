@@ -9,17 +9,21 @@
  * @requires Organization
  * @requires CurrentOrganization
  * @requires ContentView
+ * @requires translate
  *
  * @description
  *   Controls the creation of an empty ActivationKey object for use by sub-controllers.
  */
 angular.module('Bastion.activation-keys').controller('NewActivationKeyController',
-    ['$scope', '$q', 'FormUtils', 'ActivationKey', 'Organization', 'CurrentOrganization', 'ContentView',
-    function ($scope, $q, FormUtils, ActivationKey, Organization, CurrentOrganization, ContentView) {
+    ['$scope', '$q', 'FormUtils', 'ActivationKey', 'Organization', 'CurrentOrganization', 'ContentView', 'translate',
+    function ($scope, $q, FormUtils, ActivationKey, Organization, CurrentOrganization, ContentView, translate) {
 
         function success() {
             $scope.transitionTo('activation-key.info', {activationKeyId: $scope.activationKey.id});
         }
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('New Activation Key');
 
         function error(response) {
             $scope.working = false;

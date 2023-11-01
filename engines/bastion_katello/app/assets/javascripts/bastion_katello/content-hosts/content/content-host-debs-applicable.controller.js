@@ -18,6 +18,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostDebsApplicableCon
     function ($scope, $timeout, $window, Deb, HostDeb, translate, Nutupane) {
         var debsNutupane, openEventInfo;
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Applicable Deb Packages');
+
         $scope.getSelectedDebs = function () {
             var selected = $scope.table.getSelected();
             selected = _.map(selected, function(pkg) {

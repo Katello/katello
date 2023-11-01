@@ -32,6 +32,10 @@ angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
 
             productsNutupane = new Nutupane(Product, params);
             $scope.controllerName = 'katello_products';
+
+            // Labels so breadcrumb strings can be translated
+            $scope.label = translate('Add Products');
+
             $scope.table = productsNutupane.table;
 
             $scope.addProducts = function () {

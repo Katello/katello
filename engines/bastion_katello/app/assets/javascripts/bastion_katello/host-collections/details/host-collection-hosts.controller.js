@@ -20,6 +20,9 @@ angular.module('Bastion.host-collections').controller('HostCollectionHostsContro
     function ($scope, $location, Notification, translate, Nutupane, CurrentOrganization, Host, HostCollection, newHostDetailsUI) {
         var params, nutupaneParams;
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('List Hosts');
+
         params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",

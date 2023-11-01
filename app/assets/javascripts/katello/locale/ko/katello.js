@@ -365,9 +365,6 @@
       "root-node of collection contained in responses (default: 'results')": [
         "응답에 포함된 모음의 root 노드 (기본값: 'results')"
       ],
-      "This action uses katello-agent, which is currently disabled. Use remote execution instead.": [
-        ""
-      ],
       "Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.": [
         ""
       ],
@@ -394,6 +391,12 @@
       ],
       "Id of the lifecycle environment": [
         "라이프사이클 환경의 ID"
+      ],
+      "List content counts for the smart proxy": [
+        ""
+      ],
+      "Update content counts for the smart proxy": [
+        ""
       ],
       "List the lifecycle environments attached to the smart proxy": [
         ""
@@ -1394,17 +1397,11 @@
       "Return only errata of a particular severity (None, Low, Moderate, Important, Critical)": [
         ""
       ],
-      "Schedule errata for installation using katello-agent. %s": [
-        ""
+      "Retrieve a single errata for a host": [
+        "호스트에 대한 단일 에라타를 가져옵니다."
       ],
       "Host ID": [
         "호스트 ID"
-      ],
-      "List of Errata ids to install. Will be removed in %s": [
-        ""
-      ],
-      "Retrieve a single errata for a host": [
-        "호스트에 대한 단일 에라타를 가져옵니다."
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "에라타의 에라타 ID (RHSA-2012:108)"
@@ -1446,18 +1443,6 @@
         ""
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
-        ""
-      ],
-      "Install packages remotely using katello-agent. %s": [
-        ""
-      ],
-      "Update packages remotely using katello-agent. %s": [
-        ""
-      ],
-      "list of packages names": [
-        "패키지 이름 목록 "
-      ],
-      "Uninstall packages remotely using katello-agent. %s": [
         ""
       ],
       "Couldn't find host with host id '%s'": [
@@ -1646,30 +1631,6 @@
       "Fetch installable errata for one or more hosts.": [
         ""
       ],
-      "Install content on one or more hosts using katello-agent. %s": [
-        ""
-      ],
-      "The type of content.  The following types are supported: 'package', 'package_group' and 'errata'.": [
-        "컨텐츠 유형입니다. 다음 유형이 지원됩니다: 'package', 'package_group', 'errata'."
-      ],
-      "List of content (e.g. package names, package group names (Deprecated) or errata ids)": [
-        ""
-      ],
-      "Update content on one or more hosts using katello-agent. %s": [
-        ""
-      ],
-      "The type of content.  The following types are supported: 'package' and 'package_group.": [
-        "컨텐츠 유형입니다. 다음 유형이 지원됩니다: 'package' 및 'package_group."
-      ],
-      "List of content (e.g. package or package group names)": [
-        "컨텐츠 목록 (예: 패키지 또는 패키지 그룹 이름) "
-      ],
-      "Updates all packages on the host(s)": [
-        ""
-      ],
-      "Remove content on one or more hosts using katello-agent. %s": [
-        ""
-      ],
       "Destroy one or more hosts": [
         "하나 이상의 호스트 삭제"
       ],
@@ -1747,15 +1708,6 @@
       ],
       "Maximum number of content hosts exceeded for host collection(s): %s": [
         "호스트 컬렉션에 대해 최대 컨텐츠 호스트 수를 초과했습니다:  %s"
-      ],
-      "A content_type must be provided.": [
-        "content_type을 지정해야 합니다. "
-      ],
-      "No content has been provided.": [
-        "제공된 컨텐츠가 없습니다. "
-      ],
-      "Invalid content type %s": [
-        "잘못된 컨텐츠 유형 %s"
       ],
       "Shows status of Katello system and it's subcomponents": [
         ""
@@ -2121,9 +2073,6 @@
         ""
       ],
       "Name of the upstream docker repository": [
-        ""
-      ],
-      "Comma-separated list of tags to sync for Container Image repository (Deprecated)": [
         ""
       ],
       "Comma-separated list of tags to sync for a container image repository": [
@@ -2510,16 +2459,16 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
-      "Check if the specified organization is eligible for Simple Content Access": [
+      "Check if the specified organization is eligible for Simple Content Access. %s": [
         ""
       ],
-      "Check if the specified organization has Simple Content Access enabled": [
+      "Check if the specified organization has Simple Content Access enabled. %s": [
         ""
       ],
       "Enable simple content access for a manifest": [
         ""
       ],
-      "Disable simple content access for a manifest": [
+      "Disable simple content access for a manifest. %s": [
         ""
       ],
       "SRPM details": [
@@ -2666,6 +2615,9 @@
       "List of product ids to add to the sync plan": [
         "동기화 계획에 추가하기 위한 제품 ID 목록 "
       ],
+      "Cannot add disabled products to sync plan!": [
+        ""
+      ],
       "Remove products from sync plan": [
         "동기화 계획에서 제품 삭제 "
       ],
@@ -2738,10 +2690,7 @@
       "Invalid parameters sent. You may have mistyped the address. If you continue having trouble with this, please contact an Administrator.": [
         "잘못된 매개 변수가 전송되었습니다. 주소를 잘못 입력하신것 같습니다. 문제가 계속 발생하면 관리자에게 문의하십시오. "
       ],
-      "WARNING: Katello-agent is deprecated and will be removed in %s. Migrate to remote execution now.": [
-        ""
-      ],
-      "Katello 4.10": [
+      "WARNING: Simple Content Access will be required for all organizations in Katello 4.12.": [
         ""
       ],
       "Could not find %{name} resource with id %{id}. %{perms_message}": [
@@ -3008,6 +2957,9 @@
       "Subscription Manifest validity check": [
         ""
       ],
+      "Host lifecycle support expiration notification": [
+        ""
+      ],
       "Pulp disk space notification": [
         ""
       ],
@@ -3037,18 +2989,6 @@
       ],
       "Delete Activation Key": [
         "활성키 삭제 "
-      ],
-      "No new packages installed": [
-        "설치된 새 패키지가 없음 "
-      ],
-      "No packages removed": [
-        "삭제된 패키지가 없음 "
-      ],
-      "Host did not respond within %s seconds. The task has been cancelled. Is katello-agent installed and goferd running on the Host?": [
-        "호스트가 %s초 이내에 응답하지 않았습니다. 태스크가 취소되었습니다. 호스트에 katello-agent가 설치되어 있고 goferd가 실행 중입니까?"
-      ],
-      "Host did not finish content action in %s seconds.  The task has been cancelled.": [
-        "호스트가 %s초 이내에 컨텐츠 작업을 끝내지 않았습니다. 태스크가 취소되었습니다."
       ],
       "Create Alternate Content Source": [
         ""
@@ -3081,6 +3021,9 @@
         ""
       ],
       "Action not allowed for the default smart proxy.": [
+        ""
+      ],
+      "Update Content Counts": [
         ""
       ],
       "Update CDN Configuration": [
@@ -3227,74 +3170,11 @@
       "Destroy Content Host": [
         "컨텐츠 호스트 삭제 "
       ],
-      "errata_ids or update_all must be provided": [
-        ""
-      ],
-      "No applicable errata for %s, skipping": [
-        ""
-      ],
-      "Install Applicable Errata": [
-        "적용 가능한 에라타 설치 "
-      ],
-      "Install Applicable Errata on %s": [
-        "%s에 적용 가능한 에라타 설치"
-      ],
-      "Install erratum for %s": [
-        ""
-      ],
-      "Install erratum": [
-        "에라타 설치"
-      ],
-      "Installation of errata requested: %{errata}": [
-        ""
-      ],
       "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration.": [
         ""
       ],
       "Host '%{name}' does not belong to an organization": [
         "'%{name}' 호스트가 조직에 속해 있지 않습니다."
-      ],
-      "Install package for %s": [
-        ""
-      ],
-      "Install package": [
-        "패키지 설치 "
-      ],
-      "Installation of package(s) requested: %{packages}": [
-        ""
-      ],
-      "Remove package for %s": [
-        ""
-      ],
-      "Remove package": [
-        "패키지 삭제 "
-      ],
-      "Removal of package(s) requested: %{packages}": [
-        ""
-      ],
-      "Update package for %s": [
-        ""
-      ],
-      "Update package": [
-        "패키지 업데이트 "
-      ],
-      "Update of package(s) requested: %{packages}": [
-        ""
-      ],
-      "Update of all packages requested": [
-        ""
-      ],
-      "Install package group": [
-        "패키지 그룹 설치 "
-      ],
-      "Installation of package group(s) requested: %{groups}": [
-        ""
-      ],
-      "Remove package group": [
-        "패키지 그룹 삭제 "
-      ],
-      "Removal of package group(s) requested: %{groups}": [
-        ""
       ],
       "Error refreshing status for %s: ": [
         ""
@@ -3425,6 +3305,9 @@
       "Can only remove content from within the Default Content View": [
         "기본값 컨테츠 뷰에 있는 컨텐츠만 삭제할 수 있습니다 "
       ],
+      "No docker manifests to delete after ignoring manifests with tags or manifest lists": [
+        ""
+      ],
       "Remove Content": [
         "컨텐츠 삭제 "
       ],
@@ -3507,6 +3390,9 @@
         ""
       ],
       "There is no downloaded content to clean.": [
+        ""
+      ],
+      "Export failed: One or more repositories needs to be synced (with Immediate download policy.)": [
         ""
       ],
       "Create Export History": [
@@ -4064,6 +3950,9 @@
       "cannot be a binary file.": [
         "바이너리 파일을 지정할 수 없습니다. "
       ],
+      "Lifecycle environment '%{env}' cannot be used with content view '%{view}'": [
+        ""
+      ],
       "Content view environments must have both a content view and an environment": [
         ""
       ],
@@ -4212,6 +4101,12 @@
         "%{content_view}에 대한 승격 요약"
       ],
       "You have subscriptions expiring within %s days": [
+        ""
+      ],
+      "Repository %{label} failed to synchronize": [
+        ""
+      ],
+      "%{label} failed": [
         ""
       ],
       "cannot contain commas": [
@@ -4688,6 +4583,9 @@
       "Cannot associate a Red Hat provider with a custom product": [
         ""
       ],
+      "Cannot add disabled Red Hat product %s to sync plan!": [
+        ""
+      ],
       "must be true or false": [
         ""
       ],
@@ -4740,6 +4638,33 @@
         "게시된 컨텐츠 뷰에 이미 포함되었기 때문에 리포지터리를 삭제할 수 없습니다. 삭제하기 전에 이 리포지터리가 포함된 모든 컨텐츠 뷰 버전을 먼저 삭제하십시오."
       ],
       "This is not a linked repository": [
+        ""
+      ],
+      "RHEL lifecycle": [
+        ""
+      ],
+      "Full support": [
+        ""
+      ],
+      "Maintenance support": [
+        ""
+      ],
+      "Approaching end of maintenance support (%s)": [
+        ""
+      ],
+      "Approaching end of maintenance support": [
+        ""
+      ],
+      "Extended support": [
+        ""
+      ],
+      "Approaching end of support (%s)": [
+        ""
+      ],
+      "Approaching end of support": [
+        ""
+      ],
+      "Support ended": [
         ""
       ],
       "is not enabled. must be one of the following: %s": [
@@ -4909,6 +4834,12 @@
       ],
       "No packages updated": [
         "업데이트된 패키지가 없음 "
+      ],
+      "No packages removed": [
+        "삭제된 패키지가 없음 "
+      ],
+      "No new packages installed": [
+        "설치된 새 패키지가 없음 "
       ],
       "Traces": [
         "추적"
@@ -5346,6 +5277,57 @@
       "Sync Plan: ": [
         ""
       ],
+      "%{label} failed.": [
+        ""
+      ],
+      "Content view": [
+        ""
+      ],
+      "Task ID": [
+        ""
+      ],
+      "Task state": [
+        ""
+      ],
+      "Task result": [
+        ""
+      ],
+      "Content view name": [
+        ""
+      ],
+      "Task details": [
+        ""
+      ],
+      "Smart proxy ID": [
+        ""
+      ],
+      "Smart proxy name": [
+        ""
+      ],
+      "Environment ID": [
+        ""
+      ],
+      "Environment name": [
+        ""
+      ],
+      "Repository ID": [
+        ""
+      ],
+      "Repository name": [
+        ""
+      ],
+      "Repo ID": [
+        ""
+      ],
+      "Repo label": [
+        ""
+      ],
+      "Product ID": [
+        "제품 ID"
+      ],
+      "Product label": [
+        ""
+      ],
       "Installed Packages": [
         "설치된 패키지 "
       ],
@@ -5393,6 +5375,9 @@
       ],
       "Generate and Download": [
         "생성 및 다운로드 "
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         ""
@@ -5472,6 +5457,18 @@
       "Promote errata": [
         ""
       ],
+      "Repository sync failure": [
+        ""
+      ],
+      "Content view publish failure": [
+        ""
+      ],
+      "Content view promote failure": [
+        ""
+      ],
+      "Proxy sync failure": [
+        ""
+      ],
       "A summary of available and applicable errata for your hosts": [
         "호스트에 사용 가능하고 적용 가능한 에라타 요약 "
       ],
@@ -5482,6 +5479,24 @@
         "설치 가능한 에라타를 갖는 호스트의 승격 후 요약 "
       ],
       "A list of subscriptions expiring soon": [
+        ""
+      ],
+      "A notification about failed repository sync": [
+        ""
+      ],
+      "A notification about failed content view publish": [
+        ""
+      ],
+      "A notification about failed content view promotion": [
+        ""
+      ],
+      "A notification about failed proxy sync": [
+        ""
+      ],
+      "Hosts": [
+        "호스트"
+      ],
+      "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
         ""
       ],
       "Proxies": [
@@ -5568,13 +5583,13 @@
       "Subscription status": [
         ""
       ],
+      "RHEL Lifecycle status": [
+        ""
+      ],
       "Installable updates": [
         ""
       ],
       "Lifecycle environment": [
-        ""
-      ],
-      "Content view": [
         ""
       ],
       "Registered": [
@@ -5674,18 +5689,6 @@
         ""
       ],
       "Manifest refresh timeout": [
-        ""
-      ],
-      "Accept action timeout": [
-        ""
-      ],
-      "Time in seconds to wait for a host to pick up a katello-agent action": [
-        ""
-      ],
-      "Finish action timeout": [
-        ""
-      ],
-      "Time in seconds to wait for a host to finish a katello-agent action": [
         ""
       ],
       "Subscription connection enabled": [
@@ -5790,12 +5793,6 @@
       "The maximum number of seconds that Pulp can take to download a file, not counting connection time.": [
         ""
       ],
-      "Use remote execution by default": [
-        ""
-      ],
-      "If this is enabled, remote execution is used instead of katello-agent for remote actions": [
-        ""
-      ],
       "Delete Host upon unregister": [
         ""
       ],
@@ -5824,12 +5821,6 @@
         ""
       ],
       "The number of days remaining in a subscription before you will be reminded about renewing it.": [
-        ""
-      ],
-      "content view Dependency Solving Default": [
-        ""
-      ],
-      "The default dependency solving value for new content views.": [
         ""
       ],
       "Host Duplicate DMI UUIDs": [
@@ -6138,6 +6129,9 @@
       "Legacy content host UI": [
         ""
       ],
+      "Refresh applicability": [
+        ""
+      ],
       "Edit content view assignment": [
         ""
       ],
@@ -6318,7 +6312,10 @@
       "Edit system purpose attributes": [
         ""
       ],
-      "Select system purpose attributes for host {hostName}.": [
+      "Select system purpose attributes for host {name}.": [
+        ""
+      ],
+      "Select system purpose attributes for activation key {name}.": [
         ""
       ],
       "Select add-ons": [
@@ -6411,6 +6408,9 @@
       "No action is needed because there are no applicable errata for this host.": [
         ""
       ],
+      "Refresh errata applicability": [
+        ""
+      ],
       "This host has errata that are applicable, but not installable. Adjust your filters and try again.": [
         ""
       ],
@@ -6429,22 +6429,16 @@
       "A remote execution job is in progress": [
         ""
       ],
-      "Recalculate": [
-        ""
-      ],
       "Apply via remote execution": [
         ""
       ],
       "Apply via customized remote execution": [
         ""
       ],
-      "Apply via Katello agent": [
-        ""
-      ],
       "Apply": [
         "적용"
       ],
-      "Apply Erratum": [
+      "Apply erratum": [
         ""
       ],
       "Yes": [
@@ -6540,9 +6534,6 @@
       "Uninstall and reset": [
         ""
       ],
-      "Install via katello-agent": [
-        ""
-      ],
       "Install via remote execution": [
         ""
       ],
@@ -6592,6 +6583,9 @@
         ""
       ],
       "Upgrade via customized remote execution": [
+        ""
+      ],
+      "Refresh package applicability": [
         ""
       ],
       "Upgrade": [
@@ -6687,16 +6681,43 @@
       "Enable Tracer": [
         ""
       ],
-      "Enabling will install the katello-host-tools-tracer package on the host.": [
-        ""
-      ],
       "via remote execution": [
         "원격 실행을 통해"
       ],
       "via customized remote execution": [
         ""
       ],
+      "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
+        ""
+      ],
+      "Before continuing, ensure that all of the following prerequisites are met:": [
+        ""
+      ],
+      "The Foreman Client repository is enabled. ": [
+        ""
+      ],
+      "The Foreman Client repository is synced. ": [
+        ""
+      ],
+      "View sync status": [
+        ""
+      ],
+      "The Foreman Client repository is available in the host's content view environment(s). ": [
+        ""
+      ],
+      "View content views": [
+        ""
+      ],
+      "The Foreman Client repository set is enabled for the host. ": [
+        ""
+      ],
+      "Remote execution is enabled.": [
+        ""
+      ],
       "Select a provider to install katello-host-tools-tracer": [
+        ""
+      ],
+      "Once the prerequisites are met, select a provider to install katello-host-tools-tracer": [
         ""
       ],
       "Enable Traces": [
@@ -6759,16 +6780,13 @@
       "Traces that require logout cannot be restarted remotely": [
         ""
       ],
-      "Katello-agent is deprecated and will be removed in Katello 4.10.": [
-        ""
-      ],
       "Create new activation key": [
         ""
       ],
       "No Activation Keys selected": [
         ""
       ],
-      "Activation key(s) for Subscription Manager.": [
+      "Activation key(s) to use during registration": [
         ""
       ],
       "No Activation keys to select": [
@@ -6787,9 +6805,6 @@
         ""
       ],
       "Ignore subscription manager errors": [
-        ""
-      ],
-      "No Lifecycle environment to select": [
         ""
       ],
       "Backend System Status": [
@@ -7251,9 +7266,6 @@
       "Deleting content view : ": [
         ""
       ],
-      "Hosts": [
-        "호스트"
-      ],
       "${pluralize(versionCount, 'content view version')} in the environments below will be removed when content view is deleted": [
         ""
       ],
@@ -7296,6 +7308,9 @@
       "Version ${item.version}": [
         ""
       ],
+      " (${item.published_at_words} ago)": [
+        ""
+      ],
       "Update version": [
         ""
       ],
@@ -7318,6 +7333,9 @@
         ""
       ],
       "Select available version of content views to use": [
+        ""
+      ],
+      " (${version.published_at_words} ago)": [
         ""
       ],
       "Not yet published": [
@@ -7629,9 +7647,6 @@
       "Reset filters": [
         ""
       ],
-      "Edit rule": [
-        ""
-      ],
       "Issued": [
         "발행됨 "
       ],
@@ -7734,16 +7749,25 @@
       "Matching content": [
         ""
       ],
-      "No matching RPM found.": [
+      "No matching non-modular RPM found.": [
         ""
       ],
-      "Given criteria doesn't match any RPMs. Try changing your rule.": [
+      "Given criteria doesn't match any non-modular RPMs. Try changing your rule.": [
         ""
       ],
-      "Your search returned no matching RPMs.": [
+      "Your search returned no matching non-modular RPMs.": [
+        ""
+      ],
+      "Help": [
+        ""
+      ],
+      "Matching RPMs based on your created filter rule. Remember, RPM filters don't apply to modular RPMs.": [
         ""
       ],
       "Edit filter rule": [
+        ""
+      ],
+      "Edit rule": [
         ""
       ],
       "Add rule": [
@@ -8184,6 +8208,12 @@
       "Newly published version will be the same as the previous version.": [
         ""
       ],
+      "Duplicate repositories in content view versions": [
+        ""
+      ],
+      "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
+        ""
+      ],
       "A new version of ": [
         ""
       ],
@@ -8194,9 +8224,6 @@
         ""
       ],
       "Filters will be applied to this content view version.": [
-        ""
-      ],
-      "Content view name": [
         ""
       ],
       "Newly published": [
@@ -8406,6 +8433,9 @@
       "Enabled Repositories": [
         "활성화된 리포지터리 "
       ],
+      "Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.": [
+        ""
+      ],
       "Export as CSV": [
         ""
       ],
@@ -8414,6 +8444,9 @@
       ],
       "(Orphaned)": [
         "(종속된 패키지가 없음)"
+      ],
+      "Cannot be disabled because it is part of a published content view": [
+        ""
       ],
       "Recommended Repositories": [
         ""
@@ -8472,7 +8505,22 @@
       "No repositories enabled.": [
         ""
       ],
-      "Synced to smart proxy": [
+      "Synced": [
+        ""
+      ],
+      "Content view version is empty": [
+        ""
+      ],
+      "Smart proxy content count refresh has started in the background": [
+        ""
+      ],
+      "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error.response)}": [
+        ""
+      ],
+      "Last sync": [
+        ""
+      ],
+      "Refresh counts": [
         ""
       ],
       "Requires Virt-Who": [
@@ -8486,9 +8534,6 @@
       ],
       "Ends": [
         "종료"
-      ],
-      "Product ID": [
-        "제품 ID"
       ],
       "Contract Number": [
         "계약 번호 "
@@ -8727,25 +8772,25 @@
       "There are no Subscriptions to display": [
         ""
       ],
-      "Add Subscriptions using the Add Subscriptions button.": [
+      "Add subscriptions using the Add Subscriptions button.": [
         ""
       ],
       "Add subscriptions": [
         ""
       ],
-      "Import a Manifest to manage your Entitlements.": [
+      "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
       "Import a Manifest": [
         ""
       ],
+      "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in Katello 4.12.": [
+        ""
+      ],
       "Subscriptions service": [
         ""
       ],
-      "This organization has Simple Content Access enabled. Hosts are not required to have subscriptions attached to access repositories. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        ""
-      ],
-      "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in a future version.": [
+      "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
         ""
       ],
       "Please enter a positive number above zero": [
@@ -8874,9 +8919,6 @@
       "Action with sub plans": [
         "하위 계획이 있는 작업"
       ],
-      "Agent action": [
-        ""
-      ],
       "Auto attach subscriptions": [
         "서브스크립션 자동 첨부"
       ],
@@ -8937,9 +8979,6 @@
       "Remote action:": [
         "원격 작업:"
       ],
-      "Report": [
-        ""
-      ],
       "Sync capsule": [
         ""
       ],
@@ -8960,12 +8999,6 @@
       ],
       "Verify checksum": [
         ""
-      ],
-      "Get status of repo synchronisation for given product": [
-        "주어진 제품에 대한 리포지터리 동기화 상태 가져오기 "
-      ],
-      "#~ \"Repository %s cannot be deleted since it has already been included in a publis\"#~ \"hed Content View.\"": [
-        "리포지터리 %s는 공개된 컨텐츠 뷰에 이미 포함되어 있으므로 삭제할 수 없습니다. "
       ]
     }
   }

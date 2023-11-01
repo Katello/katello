@@ -21,6 +21,9 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
             $scope.syncPlan.startDate = new Date();
             $scope.isWorking = false;
 
+            // Labels so breadcrumb strings can be translated
+            $scope.label = translate('Sync Plans');
+
             function success(syncPlan) {
                 $scope.isWorking = false;
                 $scope.$state.go('sync-plan.info', {syncPlanId: syncPlan.id});

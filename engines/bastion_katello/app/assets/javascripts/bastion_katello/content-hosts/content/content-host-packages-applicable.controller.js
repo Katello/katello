@@ -19,6 +19,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesApplicabl
     function ($scope, $timeout, $window, Package, HostPackage, translate, Nutupane, BastionConfig) {
         var packagesNutupane, openEventInfo;
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Applicable Packages');
+
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
 

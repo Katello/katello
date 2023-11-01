@@ -6,13 +6,14 @@
  * @requires $location
  * @requires DockerTag
  * @requires CurrentOrganization
+ * @requires translate
  *
  * @description
  *   Provides the functionality for the docker tags details environments list.
  */
 angular.module('Bastion.docker-tags').controller('DockerTagEnvironmentsController',
-    ['$scope', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization',
-    function ($scope, $location, Nutupane, DockerTag, CurrentOrganization) {
+    ['$scope', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization', 'translate',
+    function ($scope, $location, Nutupane, DockerTag, CurrentOrganization, translate) {
         var params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
@@ -31,6 +32,8 @@ angular.module('Bastion.docker-tags').controller('DockerTagEnvironmentsControlle
             nutupane.refresh();
         };
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Lifecycle Environments');
         $scope.table = nutupane.table;
 
         $scope.controllerName = 'katello_docker_tags';

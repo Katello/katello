@@ -30,6 +30,10 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsC
             'disableAutoLoad': true
         };
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Content Hosts');
+
+
         contentHostsNutupane = new Nutupane(Host, params, undefined, nutupaneParams);
         $scope.controllerName = 'hosts';
         contentHostsNutupane.searchTransform = function (term) {

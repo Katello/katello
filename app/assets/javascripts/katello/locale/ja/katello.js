@@ -365,9 +365,6 @@
       "root-node of collection contained in responses (default: 'results')": [
         "応答に含まれるコレクションの root ノード (デフォルト: 'results')"
       ],
-      "This action uses katello-agent, which is currently disabled. Use remote execution instead.": [
-        "このアクションでは、現在無効になっている katello-agent を使用します。代わりにリモート実行を使用してください。"
-      ],
       "Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.": [
         "検索クエリーが無効でした。確認してからもう一度お試しください。このエラーの詳細はアプリケーションログに送信されました。"
       ],
@@ -394,6 +391,12 @@
       ],
       "Id of the lifecycle environment": [
         "ライフサイクル環境の ID"
+      ],
+      "List content counts for the smart proxy": [
+        ""
+      ],
+      "Update content counts for the smart proxy": [
+        ""
       ],
       "List the lifecycle environments attached to the smart proxy": [
         "Smart Proxy に割り当てられたライフサイクル環境を一覧表示します"
@@ -1394,17 +1397,11 @@
       "Return only errata of a particular severity (None, Low, Moderate, Important, Critical)": [
         "特定の重大度 (影響なし、低、中程度、重要、重大) のエラータのみを返します"
       ],
-      "Schedule errata for installation using katello-agent. %s": [
-        "katello-agent を使用してインストールするエラータをスケジュールします。%s"
+      "Retrieve a single errata for a host": [
+        "ホストに関するエラータを 1 つ取得する"
       ],
       "Host ID": [
         "ホスト ID"
-      ],
-      "List of Errata ids to install. Will be removed in %s": [
-        "インストールするエラータ ID の一覧。%s で削除されます。"
-      ],
-      "Retrieve a single errata for a host": [
-        "ホストに関するエラータを 1 つ取得する"
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "エラータのエラータ ID (RHSA-2012:108)"
@@ -1447,18 +1444,6 @@
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
         "特定ステータス (アップグレード可能または最新) のパッケージのみを返します"
-      ],
-      "Install packages remotely using katello-agent. %s": [
-        "katello-agent を使用してパッケージをリモートでインストールします。%s"
-      ],
-      "Update packages remotely using katello-agent. %s": [
-        "katello-agent を使用してパッケージをリモートで更新します。 %s"
-      ],
-      "list of packages names": [
-        "パッケージ名の一覧"
-      ],
-      "Uninstall packages remotely using katello-agent. %s": [
-        "katello-agent を使用してパッケージをリモートでアンインストールします。 %s"
       ],
       "Couldn't find host with host id '%s'": [
         "ホスト ID 「%s」のホストが見つかりませんでした"
@@ -1646,30 +1631,6 @@
       "Fetch installable errata for one or more hosts.": [
         "1 つまたは複数のホストにインストール可能なエラータを取得します。"
       ],
-      "Install content on one or more hosts using katello-agent. %s": [
-        "katello-agent を使用して 1 つ以上のホストにコンテンツをインストールします。 %s"
-      ],
-      "The type of content.  The following types are supported: 'package', 'package_group' and 'errata'.": [
-        "コンテンツのタイプです。次のタイプがサポートされています: 'package'、'package_group' および 'errata'"
-      ],
-      "List of content (e.g. package names, package group names (Deprecated) or errata ids)": [
-        "コンテンツの一覧 (例: パッケージ名、パッケージグループ名 (非推奨) またはエラータ ID)"
-      ],
-      "Update content on one or more hosts using katello-agent. %s": [
-        "katello-agent を使用して、1 つ以上のホストのコンテンツを更新します。 %s"
-      ],
-      "The type of content.  The following types are supported: 'package' and 'package_group.": [
-        "コンテンツのタイプです。次のタイプがサポートされています: 'package' および 'package_group'"
-      ],
-      "List of content (e.g. package or package group names)": [
-        "コンテンツの一覧 (例: パッケージ名、パッケージグループ名)"
-      ],
-      "Updates all packages on the host(s)": [
-        "ホスト上の全パッケージを更新します"
-      ],
-      "Remove content on one or more hosts using katello-agent. %s": [
-        "katello-agent を使用して、1 つ以上のホスト上のコンテンツを削除します。 %s"
-      ],
       "Destroy one or more hosts": [
         "1 つまたは複数のホストを破棄します"
       ],
@@ -1747,15 +1708,6 @@
       ],
       "Maximum number of content hosts exceeded for host collection(s): %s": [
         "ホストコレクションの最大コンテンツホスト数を超えました: %s"
-      ],
-      "A content_type must be provided.": [
-        "content_type を指定する必要があります。"
-      ],
-      "No content has been provided.": [
-        "コンテンツが提供されていません。"
-      ],
-      "Invalid content type %s": [
-        "無効なコンテンツタイプ %s"
       ],
       "Shows status of Katello system and it's subcomponents": [
         "Katello システムとそのサブコンポーネントのステータスを表示します"
@@ -2122,9 +2074,6 @@
       ],
       "Name of the upstream docker repository": [
         "アップストリーム Docker リポジトリー名"
-      ],
-      "Comma-separated list of tags to sync for Container Image repository (Deprecated)": [
-        "コンテナーイメージリポジトリーに同期するコンマ区切りのタグ一覧 (非推奨)"
       ],
       "Comma-separated list of tags to sync for a container image repository": [
         "コンテナーイメージリポジトリーに同期するコンマ区切りのタグ一覧"
@@ -2510,17 +2459,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "CDN 設定がエアギャップ (切断) に設定されている間、リポジトリーは有効にできません。"
       ],
-      "Check if the specified organization is eligible for Simple Content Access": [
-        "指定された組織がシンプルコンテンツアクセスの対象かどうかを確認します"
+      "Check if the specified organization is eligible for Simple Content Access. %s": [
+        ""
       ],
-      "Check if the specified organization has Simple Content Access enabled": [
-        "指定された組織でシンプルコンテンツアクセスが有効になっているかどうかを確認します"
+      "Check if the specified organization has Simple Content Access enabled. %s": [
+        ""
       ],
       "Enable simple content access for a manifest": [
         "マニフェストのシンプルコンテンツアクセスを有効化します"
       ],
-      "Disable simple content access for a manifest": [
-        "マニフェストのシンプルコンテンツアクセスを無効化します"
+      "Disable simple content access for a manifest. %s": [
+        ""
       ],
       "SRPM details": [
         "SRPM の詳細"
@@ -2666,6 +2615,9 @@
       "List of product ids to add to the sync plan": [
         "同期プランに追加する製品 ID の一覧"
       ],
+      "Cannot add disabled products to sync plan!": [
+        ""
+      ],
       "Remove products from sync plan": [
         "同期プランから製品を削除"
       ],
@@ -2738,10 +2690,7 @@
       "Invalid parameters sent. You may have mistyped the address. If you continue having trouble with this, please contact an Administrator.": [
         "無効なパラメーターが送信されました。アドレスの入力間違いの可能性があります。問題が引き続き発生する場合は、管理者に連絡してください。"
       ],
-      "WARNING: Katello-agent is deprecated and will be removed in %s. Migrate to remote execution now.": [
-        ""
-      ],
-      "Katello 4.10": [
+      "WARNING: Simple Content Access will be required for all organizations in Katello 4.12.": [
         ""
       ],
       "Could not find %{name} resource with id %{id}. %{perms_message}": [
@@ -3008,6 +2957,9 @@
       "Subscription Manifest validity check": [
         "サブスクリプションマニフェストの有効性チェック"
       ],
+      "Host lifecycle support expiration notification": [
+        ""
+      ],
       "Pulp disk space notification": [
         "Pulp ディスク容量の通知"
       ],
@@ -3037,18 +2989,6 @@
       ],
       "Delete Activation Key": [
         "アクティベーションキーの削除"
-      ],
-      "No new packages installed": [
-        "インストール済みの新規パッケージはありません"
-      ],
-      "No packages removed": [
-        "削除済みのパッケージはありません"
-      ],
-      "Host did not respond within %s seconds. The task has been cancelled. Is katello-agent installed and goferd running on the Host?": [
-        "ホストが %s 秒以内に応答しなかったため、タスクはキャンセルされました。katello-agent がインストールされており、goferd がホストで実行されていますか?"
-      ],
-      "Host did not finish content action in %s seconds.  The task has been cancelled.": [
-        "ホストがコンテンツアクションを %s 秒以内に終了しませんでした。タスクはキャンセルされました。"
       ],
       "Create Alternate Content Source": [
         "代替コンテンツソースの作成"
@@ -3082,6 +3022,9 @@
       ],
       "Action not allowed for the default smart proxy.": [
         "デフォルトの Smart Proxy で許可されないアクションです。"
+      ],
+      "Update Content Counts": [
+        ""
       ],
       "Update CDN Configuration": [
         "CDN 設定の更新"
@@ -3227,74 +3170,11 @@
       "Destroy Content Host": [
         "コンテンツホストの破棄"
       ],
-      "errata_ids or update_all must be provided": [
-        "errata_ids または update_all を指定する必要があります"
-      ],
-      "No applicable errata for %s, skipping": [
-        "%s に適用可能なエラータがありません。省略します。"
-      ],
-      "Install Applicable Errata": [
-        "適用可能なエラータのインストール"
-      ],
-      "Install Applicable Errata on %s": [
-        "%s への適用可能なエラータのインストール"
-      ],
-      "Install erratum for %s": [
-        "%s のエラータのインストール"
-      ],
-      "Install erratum": [
-        "エラータのインストール"
-      ],
-      "Installation of errata requested: %{errata}": [
-        "エラータのインストールが要求されました: %{errata}"
-      ],
       "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration.": [
         "%s と BIOS UUID を共有するため、%s のホスト作成は省略されました。このハイパーバイザーをレポートするには、dmi.system.uuid ファクトを上書きするか、Candlepin 設定の 'candlepin.use_system_uuid_for_matching' を「true」に設定してください。"
       ],
       "Host '%{name}' does not belong to an organization": [
         "ホスト '%{name}' は組織に所属していません"
-      ],
-      "Install package for %s": [
-        "%s のパッケージのインストール"
-      ],
-      "Install package": [
-        "パッケージのインストール"
-      ],
-      "Installation of package(s) requested: %{packages}": [
-        "要求されたパッケージのインストール: %{packages}"
-      ],
-      "Remove package for %s": [
-        "%s のパッケージグループの削除"
-      ],
-      "Remove package": [
-        "パッケージの削除"
-      ],
-      "Removal of package(s) requested: %{packages}": [
-        "要求されたパッケージの削除: %{packages}"
-      ],
-      "Update package for %s": [
-        "%s のパッケージの更新"
-      ],
-      "Update package": [
-        "パッケージの更新"
-      ],
-      "Update of package(s) requested: %{packages}": [
-        "要求されたパッケージの更新: %{packages}"
-      ],
-      "Update of all packages requested": [
-        "要求された全パッケージの更新"
-      ],
-      "Install package group": [
-        "パッケージグループのインストール"
-      ],
-      "Installation of package group(s) requested: %{groups}": [
-        "要求されたパッケージグループのインストール: %{groups}"
-      ],
-      "Remove package group": [
-        "パッケージグループの削除"
-      ],
-      "Removal of package group(s) requested: %{groups}": [
-        "要求されたパッケージグループの削除: %{groups}"
       ],
       "Error refreshing status for %s: ": [
         "%s のステータスの更新エラー: "
@@ -3425,6 +3305,9 @@
       "Can only remove content from within the Default Content View": [
         "デフォルトコンテンツビューからコンテンツのみを削除できます"
       ],
+      "No docker manifests to delete after ignoring manifests with tags or manifest lists": [
+        ""
+      ],
       "Remove Content": [
         "コンテンツの削除"
       ],
@@ -3508,6 +3391,9 @@
       ],
       "There is no downloaded content to clean.": [
         "クリーンアップするダウンロード済みのコンテンツはありません。"
+      ],
+      "Export failed: One or more repositories needs to be synced (with Immediate download policy.)": [
+        ""
       ],
       "Create Export History": [
         "エクスポート履歴の作成"
@@ -4064,6 +3950,9 @@
       "cannot be a binary file.": [
         "バイナリーファイルは指定できません。"
       ],
+      "Lifecycle environment '%{env}' cannot be used with content view '%{view}'": [
+        ""
+      ],
       "Content view environments must have both a content view and an environment": [
         ""
       ],
@@ -4213,6 +4102,12 @@
       ],
       "You have subscriptions expiring within %s days": [
         "%s 日以内に期限切れになるサブスクリプションがあります"
+      ],
+      "Repository %{label} failed to synchronize": [
+        ""
+      ],
+      "%{label} failed": [
+        ""
       ],
       "cannot contain commas": [
         "コンマを含めることはできません"
@@ -4688,6 +4583,9 @@
       "Cannot associate a Red Hat provider with a custom product": [
         ""
       ],
+      "Cannot add disabled Red Hat product %s to sync plan!": [
+        ""
+      ],
       "must be true or false": [
         ""
       ],
@@ -4741,6 +4639,33 @@
       ],
       "This is not a linked repository": [
         "これは、リンクされたリポジトリーではありません"
+      ],
+      "RHEL lifecycle": [
+        ""
+      ],
+      "Full support": [
+        ""
+      ],
+      "Maintenance support": [
+        ""
+      ],
+      "Approaching end of maintenance support (%s)": [
+        ""
+      ],
+      "Approaching end of maintenance support": [
+        ""
+      ],
+      "Extended support": [
+        ""
+      ],
+      "Approaching end of support (%s)": [
+        ""
+      ],
+      "Approaching end of support": [
+        ""
+      ],
+      "Support ended": [
+        ""
       ],
       "is not enabled. must be one of the following: %s": [
         "有効になっていません。次のいずれかである必要があります: %s"
@@ -4909,6 +4834,12 @@
       ],
       "No packages updated": [
         "更新済みのパッケージはありません"
+      ],
+      "No packages removed": [
+        "削除済みのパッケージはありません"
+      ],
+      "No new packages installed": [
+        "インストール済みの新規パッケージはありません"
       ],
       "Traces": [
         "トレース"
@@ -5345,6 +5276,57 @@
       "Sync Plan: ": [
         "同期プラン: "
       ],
+      "%{label} failed.": [
+        ""
+      ],
+      "Content view": [
+        "コンテンツビュー"
+      ],
+      "Task ID": [
+        ""
+      ],
+      "Task state": [
+        ""
+      ],
+      "Task result": [
+        ""
+      ],
+      "Content view name": [
+        "コンテンツビュー名"
+      ],
+      "Task details": [
+        ""
+      ],
+      "Smart proxy ID": [
+        ""
+      ],
+      "Smart proxy name": [
+        ""
+      ],
+      "Environment ID": [
+        ""
+      ],
+      "Environment name": [
+        ""
+      ],
+      "Repository ID": [
+        ""
+      ],
+      "Repository name": [
+        ""
+      ],
+      "Repo ID": [
+        ""
+      ],
+      "Repo label": [
+        ""
+      ],
+      "Product ID": [
+        "製品 ID"
+      ],
+      "Product label": [
+        ""
+      ],
       "Installed Packages": [
         "インストール済みパッケージ"
       ],
@@ -5392,6 +5374,9 @@
       ],
       "Generate and Download": [
         "生成してダウンロード"
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         "代替コンテンツソースの HTTP プロキシー"
@@ -5471,6 +5456,18 @@
       "Promote errata": [
         "エラータのプロモート"
       ],
+      "Repository sync failure": [
+        ""
+      ],
+      "Content view publish failure": [
+        ""
+      ],
+      "Content view promote failure": [
+        ""
+      ],
+      "Proxy sync failure": [
+        ""
+      ],
       "A summary of available and applicable errata for your hosts": [
         "ホストに利用可能かつ適用可能なエラータの概要"
       ],
@@ -5482,6 +5479,24 @@
       ],
       "A list of subscriptions expiring soon": [
         "まもなく期限切れになるサブスクリプションの一覧"
+      ],
+      "A notification about failed repository sync": [
+        ""
+      ],
+      "A notification about failed content view publish": [
+        ""
+      ],
+      "A notification about failed content view promotion": [
+        ""
+      ],
+      "A notification about failed proxy sync": [
+        ""
+      ],
+      "Hosts": [
+        "ホスト"
+      ],
+      "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
+        ""
       ],
       "Proxies": [
         "プロキシー"
@@ -5567,14 +5582,14 @@
       "Subscription status": [
         "サブスクリプションのステータス"
       ],
+      "RHEL Lifecycle status": [
+        ""
+      ],
       "Installable updates": [
         "インストール可能な更新"
       ],
       "Lifecycle environment": [
         "ライフサイクル環境"
-      ],
-      "Content view": [
-        "コンテンツビュー"
       ],
       "Registered": [
         "登録済み"
@@ -5674,18 +5689,6 @@
       ],
       "Manifest refresh timeout": [
         "マニフェストの更新のタイムアウト"
-      ],
-      "Accept action timeout": [
-        "アクションのタイムアウトを受け入れる"
-      ],
-      "Time in seconds to wait for a host to pick up a katello-agent action": [
-        "ホストが katello-agent アクションを取得するまでの待機時間 (秒単位)"
-      ],
-      "Finish action timeout": [
-        "アクションのタイムアウトを終了"
-      ],
-      "Time in seconds to wait for a host to finish a katello-agent action": [
-        "ホストが katello-agent アクションを終了するまでの待機時間 (秒単位)"
       ],
       "Subscription connection enabled": [
         "サブスクリプション接続の有効化"
@@ -5789,12 +5792,6 @@
       "The maximum number of seconds that Pulp can take to download a file, not counting connection time.": [
         "Pulp がファイルのダウンロードに使用できる最大秒数 (接続時間は除く)。"
       ],
-      "Use remote execution by default": [
-        "デフォルトでリモート実行を使用する"
-      ],
-      "If this is enabled, remote execution is used instead of katello-agent for remote actions": [
-        "これが有効な場合は、リモートアクションに katello-agent の代わりにリモート実行が使用されます"
-      ],
       "Delete Host upon unregister": [
         "登録解除時にホストを削除します"
       ],
@@ -5824,12 +5821,6 @@
       ],
       "The number of days remaining in a subscription before you will be reminded about renewing it.": [
         "更新日が通知されるまでのサブスクリプションの残りの日数。"
-      ],
-      "content view Dependency Solving Default": [
-        "コンテンツビューの依存関係解決のデフォルト"
-      ],
-      "The default dependency solving value for new content views.": [
-        "新規コンテンツビューのデフォルト依存関係を解決する値。"
       ],
       "Host Duplicate DMI UUIDs": [
         "ホストの重複 DMI UUID"
@@ -6137,6 +6128,9 @@
       "Legacy content host UI": [
         "レガシーコンテンツホストの UI"
       ],
+      "Refresh applicability": [
+        ""
+      ],
       "Edit content view assignment": [
         "コンテンツビューの割り当てを編集"
       ],
@@ -6317,8 +6311,11 @@
       "Edit system purpose attributes": [
         "システム目的の属性の編集"
       ],
-      "Select system purpose attributes for host {hostName}.": [
-        "ホスト {hostName} のシステム目的の属性を選択します。"
+      "Select system purpose attributes for host {name}.": [
+        ""
+      ],
+      "Select system purpose attributes for activation key {name}.": [
+        ""
       ],
       "Select add-ons": [
         "アドオンの選択"
@@ -6410,6 +6407,9 @@
       "No action is needed because there are no applicable errata for this host.": [
         "このホストに適用可能なエラータがないため、アクションは必要ありません。"
       ],
+      "Refresh errata applicability": [
+        ""
+      ],
       "This host has errata that are applicable, but not installable. Adjust your filters and try again.": [
         ""
       ],
@@ -6428,23 +6428,17 @@
       "A remote execution job is in progress": [
         "リモート実行ジョブが進行中です"
       ],
-      "Recalculate": [
-        "再計算"
-      ],
       "Apply via remote execution": [
         "リモート実行による適用"
       ],
       "Apply via customized remote execution": [
         "カスタマイズされたリモート実行による適用"
       ],
-      "Apply via Katello agent": [
-        "Katello エージェントによる適用"
-      ],
       "Apply": [
         "適用"
       ],
-      "Apply Erratum": [
-        "エラータの適用"
+      "Apply erratum": [
+        ""
       ],
       "Yes": [
         "はい"
@@ -6539,9 +6533,6 @@
       "Uninstall and reset": [
         "アンインストールとリセット"
       ],
-      "Install via katello-agent": [
-        "katello-agent によるインストール"
-      ],
       "Install via remote execution": [
         "リモート実行によるインストール"
       ],
@@ -6592,6 +6583,9 @@
       ],
       "Upgrade via customized remote execution": [
         "カスタマイズされたリモート実行によるアップグレード"
+      ],
+      "Refresh package applicability": [
+        ""
       ],
       "Upgrade": [
         "アップグレード"
@@ -6686,17 +6680,44 @@
       "Enable Tracer": [
         "トレーサーの有効化"
       ],
-      "Enabling will install the katello-host-tools-tracer package on the host.": [
-        "有効にすると、ホストに katello-host-tools-tracer パッケージがインストールされます。"
-      ],
       "via remote execution": [
         "リモート実行経由"
       ],
       "via customized remote execution": [
         "カスタマイズされたリモート実行経由"
       ],
+      "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
+        ""
+      ],
+      "Before continuing, ensure that all of the following prerequisites are met:": [
+        ""
+      ],
+      "The Foreman Client repository is enabled. ": [
+        ""
+      ],
+      "The Foreman Client repository is synced. ": [
+        ""
+      ],
+      "View sync status": [
+        ""
+      ],
+      "The Foreman Client repository is available in the host's content view environment(s). ": [
+        ""
+      ],
+      "View content views": [
+        ""
+      ],
+      "The Foreman Client repository set is enabled for the host. ": [
+        ""
+      ],
+      "Remote execution is enabled.": [
+        ""
+      ],
       "Select a provider to install katello-host-tools-tracer": [
         "katello-host-tools-tracer をインストールするプロバイダーの選択"
+      ],
+      "Once the prerequisites are met, select a provider to install katello-host-tools-tracer": [
+        ""
       ],
       "Enable Traces": [
         "トレースの有効化"
@@ -6758,17 +6779,14 @@
       "Traces that require logout cannot be restarted remotely": [
         "ログアウトが必要なトレースをリモートで再起動することはできません"
       ],
-      "Katello-agent is deprecated and will be removed in Katello 4.10.": [
-        ""
-      ],
       "Create new activation key": [
         ""
       ],
       "No Activation Keys selected": [
         "アクティベーションキーが選択されていません"
       ],
-      "Activation key(s) for Subscription Manager.": [
-        "Subscription Manager のアクティベーションキー。"
+      "Activation key(s) to use during registration": [
+        ""
       ],
       "No Activation keys to select": [
         "選択するアクティベーションキーがありません"
@@ -6787,9 +6805,6 @@
       ],
       "Ignore subscription manager errors": [
         "サブスクリプションマネージャーのエラーを無視します"
-      ],
-      "No Lifecycle environment to select": [
-        "選択するライフサイクル環境がありません"
       ],
       "Backend System Status": [
         "バックエンドシステムのステータス"
@@ -7250,9 +7265,6 @@
       "Deleting content view : ": [
         "コンテンツビューを削除中: "
       ],
-      "Hosts": [
-        "ホスト"
-      ],
       "${pluralize(versionCount, 'content view version')} in the environments below will be removed when content view is deleted": [
         "コンテンツビューが削除されると、以下の環境の {pluralize(versionCount, 'content view version')}(versionCount, 'content view version')} は削除されます"
       ],
@@ -7295,6 +7307,9 @@
       "Version ${item.version}": [
         "バージョン ${item.version}"
       ],
+      " (${item.published_at_words} ago)": [
+        ""
+      ],
       "Update version": [
         "バージョンの更新"
       ],
@@ -7318,6 +7333,9 @@
       ],
       "Select available version of content views to use": [
         "使用するコンテンツビューの利用可能なバージョンの選択"
+      ],
+      " (${version.published_at_words} ago)": [
+        ""
       ],
       "Not yet published": [
         "公開前"
@@ -7628,9 +7646,6 @@
       "Reset filters": [
         "フィルターのリセット"
       ],
-      "Edit rule": [
-        "ルールの編集"
-      ],
       "Issued": [
         "発行済み"
       ],
@@ -7733,17 +7748,26 @@
       "Matching content": [
         "マッチするコンテンツ"
       ],
-      "No matching RPM found.": [
-        "マッチする RPM が見つかりませんでした。"
+      "No matching non-modular RPM found.": [
+        ""
       ],
-      "Given criteria doesn't match any RPMs. Try changing your rule.": [
-        "指定された条件はどの RPM ともマッチしません。ルールを変更してみてください。"
+      "Given criteria doesn't match any non-modular RPMs. Try changing your rule.": [
+        ""
       ],
-      "Your search returned no matching RPMs.": [
-        "検索条件にマッチする RPM はありませんでした。"
+      "Your search returned no matching non-modular RPMs.": [
+        ""
+      ],
+      "Help": [
+        ""
+      ],
+      "Matching RPMs based on your created filter rule. Remember, RPM filters don't apply to modular RPMs.": [
+        ""
       ],
       "Edit filter rule": [
         "フィルタールールの編集"
+      ],
+      "Edit rule": [
+        "ルールの編集"
       ],
       "Add rule": [
         "ルールの追加"
@@ -8183,6 +8207,12 @@
       "Newly published version will be the same as the previous version.": [
         ""
       ],
+      "Duplicate repositories in content view versions": [
+        ""
+      ],
+      "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
+        ""
+      ],
       "A new version of ": [
         "新しいバージョン:"
       ],
@@ -8194,9 +8224,6 @@
       ],
       "Filters will be applied to this content view version.": [
         ""
-      ],
-      "Content view name": [
-        "コンテンツビュー名"
       ],
       "Newly published": [
         "最新公開日"
@@ -8405,6 +8432,9 @@
       "Enabled Repositories": [
         "有効化されたリポジトリー"
       ],
+      "Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.": [
+        ""
+      ],
       "Export as CSV": [
         "CSVとしてエクスポート"
       ],
@@ -8413,6 +8443,9 @@
       ],
       "(Orphaned)": [
         "(単独)"
+      ],
+      "Cannot be disabled because it is part of a published content view": [
+        ""
       ],
       "Recommended Repositories": [
         "推奨リポジトリー"
@@ -8471,8 +8504,23 @@
       "No repositories enabled.": [
         "有効なリポジトリーがありません。"
       ],
-      "Synced to smart proxy": [
-        "Smart Proxy に同期しています"
+      "Synced": [
+        ""
+      ],
+      "Content view version is empty": [
+        ""
+      ],
+      "Smart proxy content count refresh has started in the background": [
+        ""
+      ],
+      "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error.response)}": [
+        ""
+      ],
+      "Last sync": [
+        ""
+      ],
+      "Refresh counts": [
+        ""
       ],
       "Requires Virt-Who": [
         "Virt-Who が必要です"
@@ -8485,9 +8533,6 @@
       ],
       "Ends": [
         "終了"
-      ],
-      "Product ID": [
-        "製品 ID"
       ],
       "Contract Number": [
         "コントラクト番号"
@@ -8726,26 +8771,26 @@
       "There are no Subscriptions to display": [
         "表示するサブスクリプションはありません"
       ],
-      "Add Subscriptions using the Add Subscriptions button.": [
+      "Add subscriptions using the Add Subscriptions button.": [
         ""
       ],
       "Add subscriptions": [
         ""
       ],
-      "Import a Manifest to manage your Entitlements.": [
-        "マニフェストをインポートしてエンタイトルメントを管理します。"
+      "Import a subscription manifest to give hosts access to Red Hat content.": [
+        ""
       ],
       "Import a Manifest": [
         "マニフェストのインポート"
       ],
+      "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in Katello 4.12.": [
+        ""
+      ],
       "Subscriptions service": [
         "サブスクリプションサービス"
       ],
-      "This organization has Simple Content Access enabled. Hosts are not required to have subscriptions attached to access repositories. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        "この組織ではシンプルコンテンツアクセスが有効です。リポジトリーにアクセスするのに、ホストにサブスクリプションをアタッチする必要はありません。{br}全体的なサブスクリプションの使用状況は、{subscriptionsService} で確認してください。"
-      ],
-      "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in a future version.": [
-        "この組織は {scaLink} を使用していません。エンタイトルツーベースのサブスクリプション管理は非推奨となり、今後のバージョンで削除されます。"
+      "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
+        ""
       ],
       "Please enter a positive number above zero": [
         "0 より大きい正の数を入力してください"
@@ -8873,9 +8918,6 @@
       "Action with sub plans": [
         "サブプランによるアクション"
       ],
-      "Agent action": [
-        "エージェントのアクション"
-      ],
       "Auto attach subscriptions": [
         "サブスクリプションの自動割り当て"
       ],
@@ -8936,9 +8978,6 @@
       "Remote action:": [
         "リモートアクション:"
       ],
-      "Report": [
-        ""
-      ],
       "Sync capsule": [
         "Capsule の同期"
       ],
@@ -8959,45 +8998,6 @@
       ],
       "Verify checksum": [
         "チェックサムの確認"
-      ],
-      "Cannot validate contents on non-yum/deb repositories.": [
-        "yum 以外/deb リポジトリーでコンテンツを検証できません。"
-      ],
-      "#~ \"Force metadata regeneration to proceed.  Dangerous when repositories use the '\"#~ \"Complete Mirroring' mirroring policy\"": [
-        "メタデータの再生成を強制的に実行します。リポジトリーで「Complete Mirroring」ミラーリングポリシーを使用している場合には危険な操作です。"
-      ],
-      "#~ \"Force metadata regeneration to proceed.  Dangerous when repositories use the '\"#~ \"Complete Mirroring' mirroring policy.\"": [
-        "メタデータの再生成を強制的に実行します。リポジトリーで「Complete Mirroring」ミラーリングポリシーを使用している場合には危険な操作です。"
-      ],
-      "#~ \"Forces a republish of the specified repository, regenerating metadata and syml\"#~ \"inks on the filesystem.\"": [
-        "指定のリポジトリーを強制的に再公開し、ファイルシステムでメタデータとシンボリックリンクを再生成します。"
-      ],
-      "Get status of repo synchronisation for given product": [
-        "指定製品のリポジトリーの同期状態を取得"
-      ],
-      "#~ \"Identifies whether the repository should be disabled on a client with a non-ma\"#~ \"tching OS version. Pass [] to enable regardless of OS version. Maximum length \"#~ \"1; allowed tags are: %s\"": [
-        "#~ \"OS バージョンが一致しないクライアントでリポジトリーを無効にする必要があるかどうかを識別します。[] を渡すと、OS バージョンに関係なく有効になります。\"#~ \"最大長は 1 で、許可されるタグは次のとおりです: %s\""
-      ],
-      "Learn more about adding Subscription Manifests": [
-        "サブスクリプションマニフェストの追加に関する詳細"
-      ],
-      "Metadata republishing must be forced because it is a dangerous operation.": [
-        "メタデータの再公開は危険な操作であるため、強制する必要があります。"
-      ],
-      "#~ \"NOTE: Katello-agent is deprecated and will be removed in %s. Consider using re\"#~ \"mote execution instead.\"": [
-        "注記: Katello-agent は非推奨となり、%s で削除される予定です。代わりにリモート実行を使用することを検討してください。"
-      ],
-      "#~ \"Repository %s cannot be deleted since it has already been included in a publis\"#~ \"hed Content View.\"": [
-        "リポジトリー %s は、公開コンテンツビューにすでに含まれているので削除できません。"
-      ],
-      "#~ \"The product %{name} has no %{type} repositories with upstream URLs to add to t\"#~ \"he alternate content source.\"": [
-        "製品 %{name} には、別のコンテンツソースに追加するアップストリーム URL を含む %{type} リポジトリーはありません。"
-      ],
-      "Time in minutes to consider orphan content as orphaned.": [
-        "単独コンテンツを単独であるとみなす時間 (分単位)。"
-      ],
-      "a future release": [
-        "今後のリリース"
       ]
     }
   }

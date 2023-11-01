@@ -9,6 +9,7 @@
  * @requires ContentCredential
  * @requires SyncPlan
  * @requires FormUtils
+ * @requires translate
  *
  *
  * @description
@@ -17,8 +18,8 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductFormController',
-    ['$scope', '$q', '$uibModal', 'Product', 'ContentCredential', 'SyncPlan', 'FormUtils', 'Notification',
-    function ($scope, $q, $uibModal, Product, ContentCredential, SyncPlan, FormUtils, Notification) {
+    ['$scope', '$q', '$uibModal', 'Product', 'ContentCredential', 'SyncPlan', 'FormUtils', 'Notification', 'translate',
+    function ($scope, $q, $uibModal, Product, ContentCredential, SyncPlan, FormUtils, Notification, translate) {
 
         function fetchContentCredentials() {
             return ContentCredential.queryUnpaged(function (contentCredentials) {
@@ -47,6 +48,9 @@ angular.module('Bastion.products').controller('ProductFormController',
                 }
             });
         }
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('New Product');
 
         $scope.product = $scope.product || new Product();
 

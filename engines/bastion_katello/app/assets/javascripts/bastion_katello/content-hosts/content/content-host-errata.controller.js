@@ -8,6 +8,7 @@
  * @requires HostErratum
  * @requires Nutupane
  * @requires BastionConfig
+ * @requires translate
  *
  * @description
  *   Provides the functionality for the content host package list and actions.
@@ -22,6 +23,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
             'errata_restrict_applicable': true,
             'id': $scope.$stateParams.hostId
         };
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Errata');
 
         function loadErratum(errataId) {
             $scope.erratum = HostErratum.get({'id': $scope.host.id,

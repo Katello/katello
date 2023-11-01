@@ -7,6 +7,9 @@
      *
      * @description
      *   Enter a description!
+     *
+     * @requires translate
+     *
      */
     function EnvironmentController($scope, Environment, translate, ContentService, ApiErrorHandler, Notification, RepositoryTypesService) {
 
@@ -17,6 +20,9 @@
         };
 
         $scope.controllerName = 'katello_environments';
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Environments');
 
         $scope.repositoryTypeEnabled = RepositoryTypesService.repositoryTypeEnabled;
         $scope.environment = Environment.get({id: $scope.$stateParams.environmentId}, function () {

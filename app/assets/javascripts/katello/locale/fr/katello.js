@@ -365,9 +365,6 @@
       "root-node of collection contained in responses (default: 'results')": [
         "nœud racine de collection contenu dans les réponses (défaut : 'results')"
       ],
-      "This action uses katello-agent, which is currently disabled. Use remote execution instead.": [
-        "Cette action utilise katello-agent, actuellement désactivé. Utilisez l'exécution à distance à la place."
-      ],
       "Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.": [
         "Votre requête de recherche n'était pas valide. Veuillez la réviser et réessayer. L'erreur complète a été envoyée aux journaux des applications."
       ],
@@ -394,6 +391,12 @@
       ],
       "Id of the lifecycle environment": [
         "Id de l'environnement du cycle de vie"
+      ],
+      "List content counts for the smart proxy": [
+        ""
+      ],
+      "Update content counts for the smart proxy": [
+        ""
       ],
       "List the lifecycle environments attached to the smart proxy": [
         "Répertorier les environnements de cycle de vie attachés au proxy smart"
@@ -1394,17 +1397,11 @@
       "Return only errata of a particular severity (None, Low, Moderate, Important, Critical)": [
         "Retourner uniquement les errata d'une gravité particulière (Aucune, Faible, Modérée, Importante, Critique)"
       ],
-      "Schedule errata for installation using katello-agent. %s": [
-        "Planifier l'installation des errata en utilisant katello-agent. %s"
+      "Retrieve a single errata for a host": [
+        "Extraire un seul errata de l'hôte"
       ],
       "Host ID": [
         "ID Hôte"
-      ],
-      "List of Errata ids to install. Will be removed in %s": [
-        "Liste d'identifiants d'Errata à installer. Seront supprimés dans %s"
-      ],
-      "Retrieve a single errata for a host": [
-        "Extraire un seul errata de l'hôte"
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "Id de l'erratum (RHSA-2012:108)"
@@ -1447,18 +1444,6 @@
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
         "Renvoyer uniquement les packages comportant un statut particulier (upgradable ou up-to-date)"
-      ],
-      "Install packages remotely using katello-agent. %s": [
-        "Installer les packages à distance en utilisant katello-agent. %s"
-      ],
-      "Update packages remotely using katello-agent. %s": [
-        "Mettre à jour les packages à distance en utilisant katello-agent. %s"
-      ],
-      "list of packages names": [
-        "liste des noms de packages"
-      ],
-      "Uninstall packages remotely using katello-agent. %s": [
-        "Désinstaller les packages à distance en utilisant katello-agent. %s"
       ],
       "Couldn't find host with host id '%s'": [
         "N'a pas pu trouver l'hôte avec l'id d'hôte '%s'"
@@ -1646,30 +1631,6 @@
       "Fetch installable errata for one or more hosts.": [
         "Récupérer les errata installables pour un ou plusieurs hôtes."
       ],
-      "Install content on one or more hosts using katello-agent. %s": [
-        "Installer le contenu sur un ou plusieurs hôtes en utilisant katello-agent. %s"
-      ],
-      "The type of content.  The following types are supported: 'package', 'package_group' and 'errata'.": [
-        "Le type de contenu. Les types suivants sont pris en charge : « package » (package), « groupe de packages » (package_group) et « errata »."
-      ],
-      "List of content (e.g. package names, package group names (Deprecated) or errata ids)": [
-        "Liste de contenu (par exemple, noms de packages, noms de groupes de packages (dépréciés) ou identifiants d'errata)"
-      ],
-      "Update content on one or more hosts using katello-agent. %s": [
-        "Mettre à jour le contenu sur un ou plusieurs hôtes en utilisant katello-agent. %s"
-      ],
-      "The type of content.  The following types are supported: 'package' and 'package_group.": [
-        "Le type de contenu. Les types suivants sont pris en charge : « package » (package) et « groupe de packages » (package_group)."
-      ],
-      "List of content (e.g. package or package group names)": [
-        "Liste de contenu (ex : noms de package ou de groupe de packages)"
-      ],
-      "Updates all packages on the host(s)": [
-        "Mise à jour de tous les packages sur le(s) hôte(s)"
-      ],
-      "Remove content on one or more hosts using katello-agent. %s": [
-        "Supprimer le contenu sur un ou plusieurs hôtes en utilisant katello-agent. %s"
-      ],
       "Destroy one or more hosts": [
         "Détruire un ou plusieurs hôtes"
       ],
@@ -1747,15 +1708,6 @@
       ],
       "Maximum number of content hosts exceeded for host collection(s): %s": [
         "Nombre maximum d'hôtes de contenu dépassé pour la ou les collection(s) d'hôtes : %s"
-      ],
-      "A content_type must be provided.": [
-        "Un content_type doit être fourni."
-      ],
-      "No content has been provided.": [
-        "Aucun contenu n'a été fourni"
-      ],
-      "Invalid content type %s": [
-        "type de contenu %s invalide"
       ],
       "Shows status of Katello system and it's subcomponents": [
         "Afficher le statut du système Katello et ses sous-composants"
@@ -2122,9 +2074,6 @@
       ],
       "Name of the upstream docker repository": [
         "Nom du référentiel docker en amont"
-      ],
-      "Comma-separated list of tags to sync for Container Image repository (Deprecated)": [
-        "Liste de balises séparées par des virgules à synchroniser pour le référentiel d'images des conteneurs (déprécié)"
       ],
       "Comma-separated list of tags to sync for a container image repository": [
         "Liste de balises séparées par des virgules à synchroniser pour le référentiel d'images des conteneurs"
@@ -2510,17 +2459,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "Les référentiels ne sont pas disponibles pour l'activation lorsque la configuration du CDN est définie sur Air-gapped (déconnecté)."
       ],
-      "Check if the specified organization is eligible for Simple Content Access": [
-        "Vérifiez si l'organisation spécifiée est éligible à l'accès au contenu simple"
+      "Check if the specified organization is eligible for Simple Content Access. %s": [
+        ""
       ],
-      "Check if the specified organization has Simple Content Access enabled": [
-        "Vérifiez si l'organisation spécifiée a accès au contenu simple"
+      "Check if the specified organization has Simple Content Access enabled. %s": [
+        ""
       ],
       "Enable simple content access for a manifest": [
         "Permettre un accès simple au contenu d'un manifeste"
       ],
-      "Disable simple content access for a manifest": [
-        "Désactiver l'accès au contenu simple pour un manifeste"
+      "Disable simple content access for a manifest. %s": [
+        ""
       ],
       "SRPM details": [
         "Détails SRPM"
@@ -2666,6 +2615,9 @@
       "List of product ids to add to the sync plan": [
         "Liste d'id de produits à ajouter au plan de sync"
       ],
+      "Cannot add disabled products to sync plan!": [
+        ""
+      ],
       "Remove products from sync plan": [
         "Supprimer les produits du plan de sync"
       ],
@@ -2738,10 +2690,7 @@
       "Invalid parameters sent. You may have mistyped the address. If you continue having trouble with this, please contact an Administrator.": [
         "Paramètres envoyés incorrects. Vous avez peut-être mal saisi l'adresse. Si ce problème persiste, veuillez contacter un administrateur."
       ],
-      "WARNING: Katello-agent is deprecated and will be removed in %s. Migrate to remote execution now.": [
-        ""
-      ],
-      "Katello 4.10": [
+      "WARNING: Simple Content Access will be required for all organizations in Katello 4.12.": [
         ""
       ],
       "Could not find %{name} resource with id %{id}. %{perms_message}": [
@@ -3008,6 +2957,9 @@
       "Subscription Manifest validity check": [
         "Contrôle de la validité du manifeste abonnement"
       ],
+      "Host lifecycle support expiration notification": [
+        ""
+      ],
       "Pulp disk space notification": [
         "Notification de l'espace disque Pulp"
       ],
@@ -3037,18 +2989,6 @@
       ],
       "Delete Activation Key": [
         "Supprimer la clé d'activation"
-      ],
-      "No new packages installed": [
-        "Aucun nouveau package installé"
-      ],
-      "No packages removed": [
-        "Aucun package supprimé"
-      ],
-      "Host did not respond within %s seconds. The task has been cancelled. Is katello-agent installed and goferd running on the Host?": [
-        "L'hôte n'a pas répondu dans les %s secondes. La tâche a été annulée. Est-ce que katello-agent est installé et que goferd exécute sur l'hôte?"
-      ],
-      "Host did not finish content action in %s seconds.  The task has been cancelled.": [
-        "L'hôte n'a pas terminé l'action de contenu sous %s secondes. La tâche a été annulée."
       ],
       "Create Alternate Content Source": [
         "Créer une autre source de contenu"
@@ -3082,6 +3022,9 @@
       ],
       "Action not allowed for the default smart proxy.": [
         "Action non autorisée pour le proxy smart par défaut."
+      ],
+      "Update Content Counts": [
+        ""
       ],
       "Update CDN Configuration": [
         "Mise à jour de la configuration CDN"
@@ -3227,74 +3170,11 @@
       "Destroy Content Host": [
         "Détruire l'hôte du contenu"
       ],
-      "errata_ids or update_all must be provided": [
-        "errata_ids ou update_all doivent être fournis"
-      ],
-      "No applicable errata for %s, skipping": [
-        "Aucune errata applicable à %s, ignorer"
-      ],
-      "Install Applicable Errata": [
-        "Installer des errata applicables"
-      ],
-      "Install Applicable Errata on %s": [
-        "Installer des errata applicables sur %s"
-      ],
-      "Install erratum for %s": [
-        "Installer erratum pour %s"
-      ],
-      "Install erratum": [
-        "Installer erratum"
-      ],
-      "Installation of errata requested: %{errata}": [
-        "Installation d'errata demandée : %{errata}"
-      ],
       "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration.": [
         "La création d'un hôte a été ignorée pour %scar il partage un BIOS UUID avec %s. Pour signaler cet hyperviseur, surchargez son dmi.system.uuid fact ou mettez \\\"candlepin.use_system_uuid_for_matching\\\" à \\\"true\\\" dans la configuration de Candlepin."
       ],
       "Host '%{name}' does not belong to an organization": [
         "L'hôte '%{name}' n'appartient pas à une organisation"
-      ],
-      "Install package for %s": [
-        "Installation du package pour %s"
-      ],
-      "Install package": [
-        "Installer le packages"
-      ],
-      "Installation of package(s) requested: %{packages}": [
-        "Installation du/des package(s) demandé(s) : %{packages}"
-      ],
-      "Remove package for %s": [
-        "Supprimer le package pour %s"
-      ],
-      "Remove package": [
-        "Supprimer le package"
-      ],
-      "Removal of package(s) requested: %{packages}": [
-        "Retrait du ou des packages demandé : %{packages}"
-      ],
-      "Update package for %s": [
-        "Mettre à jour le package pour %s"
-      ],
-      "Update package": [
-        "Mettre à jour le package"
-      ],
-      "Update of package(s) requested: %{packages}": [
-        "Mise à jour du/des package(s) demandé(s) : %{packages}"
-      ],
-      "Update of all packages requested": [
-        "Mise à jour de tous les packages demandés"
-      ],
-      "Install package group": [
-        "installation du groupe de packages"
-      ],
-      "Installation of package group(s) requested: %{groups}": [
-        "Installation du/des groupe(s) de packages demandé(s) : %{groups}"
-      ],
-      "Remove package group": [
-        "Supprimer le groupe de packages"
-      ],
-      "Removal of package group(s) requested: %{groups}": [
-        "Suppression de groupe(s) de packages demandée : %{groups}"
       ],
       "Error refreshing status for %s: ": [
         "Erreur Statut de rafraîchissement pour %s : "
@@ -3425,6 +3305,9 @@
       "Can only remove content from within the Default Content View": [
         "Peut uniquement supprimer les contenus à partir de l'Affichage de contenu par défaut"
       ],
+      "No docker manifests to delete after ignoring manifests with tags or manifest lists": [
+        ""
+      ],
       "Remove Content": [
         "Supprimer le contenu"
       ],
@@ -3508,6 +3391,9 @@
       ],
       "There is no downloaded content to clean.": [
         "Il n'y a pas de contenu téléchargé à nettoyer."
+      ],
+      "Export failed: One or more repositories needs to be synced (with Immediate download policy.)": [
+        ""
       ],
       "Create Export History": [
         "Créer un historique des exportations"
@@ -4064,6 +3950,9 @@
       "cannot be a binary file.": [
         "ne peut pas être un fichier binaire."
       ],
+      "Lifecycle environment '%{env}' cannot be used with content view '%{view}'": [
+        ""
+      ],
       "Content view environments must have both a content view and an environment": [
         ""
       ],
@@ -4213,6 +4102,12 @@
       ],
       "You have subscriptions expiring within %s days": [
         "Vous avez des abonnements qui expirent dans %s jours"
+      ],
+      "Repository %{label} failed to synchronize": [
+        ""
+      ],
+      "%{label} failed": [
+        ""
       ],
       "cannot contain commas": [
         "ne peut pas contenir de virgules"
@@ -4688,6 +4583,9 @@
       "Cannot associate a Red Hat provider with a custom product": [
         ""
       ],
+      "Cannot add disabled Red Hat product %s to sync plan!": [
+        ""
+      ],
       "must be true or false": [
         ""
       ],
@@ -4741,6 +4639,33 @@
       ],
       "This is not a linked repository": [
         "Il ne s'agit pas d'un référentiel associé"
+      ],
+      "RHEL lifecycle": [
+        ""
+      ],
+      "Full support": [
+        ""
+      ],
+      "Maintenance support": [
+        ""
+      ],
+      "Approaching end of maintenance support (%s)": [
+        ""
+      ],
+      "Approaching end of maintenance support": [
+        ""
+      ],
+      "Extended support": [
+        ""
+      ],
+      "Approaching end of support (%s)": [
+        ""
+      ],
+      "Approaching end of support": [
+        ""
+      ],
+      "Support ended": [
+        ""
       ],
       "is not enabled. must be one of the following: %s": [
         "n’est pas activé. Doit correspondre à un parmi :%s"
@@ -4909,6 +4834,12 @@
       ],
       "No packages updated": [
         "Aucun package mis à jour"
+      ],
+      "No packages removed": [
+        "Aucun package supprimé"
+      ],
+      "No new packages installed": [
+        "Aucun nouveau package installé"
       ],
       "Traces": [
         "Traces"
@@ -5347,6 +5278,57 @@
       "Sync Plan: ": [
         "Plan de Sync : "
       ],
+      "%{label} failed.": [
+        ""
+      ],
+      "Content view": [
+        "Affichage de contenu"
+      ],
+      "Task ID": [
+        ""
+      ],
+      "Task state": [
+        ""
+      ],
+      "Task result": [
+        ""
+      ],
+      "Content view name": [
+        "Nom de la vue de contenu"
+      ],
+      "Task details": [
+        ""
+      ],
+      "Smart proxy ID": [
+        ""
+      ],
+      "Smart proxy name": [
+        ""
+      ],
+      "Environment ID": [
+        ""
+      ],
+      "Environment name": [
+        ""
+      ],
+      "Repository ID": [
+        ""
+      ],
+      "Repository name": [
+        ""
+      ],
+      "Repo ID": [
+        ""
+      ],
+      "Repo label": [
+        ""
+      ],
+      "Product ID": [
+        "ID Produit"
+      ],
+      "Product label": [
+        ""
+      ],
       "Installed Packages": [
         "Packages installés"
       ],
@@ -5394,6 +5376,9 @@
       ],
       "Generate and Download": [
         "Générer et télécharger"
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         "Source de contenu alternatif Proxy HTTP"
@@ -5475,6 +5460,18 @@
       "Promote errata": [
         "Promouvoir les errata"
       ],
+      "Repository sync failure": [
+        ""
+      ],
+      "Content view publish failure": [
+        ""
+      ],
+      "Content view promote failure": [
+        ""
+      ],
+      "Proxy sync failure": [
+        ""
+      ],
       "A summary of available and applicable errata for your hosts": [
         "Un sommaire d'errata disponibles et applicables pour vos hôtes"
       ],
@@ -5486,6 +5483,24 @@
       ],
       "A list of subscriptions expiring soon": [
         "Une liste des abonnements arrivant à échéance prochainement"
+      ],
+      "A notification about failed repository sync": [
+        ""
+      ],
+      "A notification about failed content view publish": [
+        ""
+      ],
+      "A notification about failed content view promotion": [
+        ""
+      ],
+      "A notification about failed proxy sync": [
+        ""
+      ],
+      "Hosts": [
+        "Hôtes"
+      ],
+      "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
+        ""
       ],
       "Proxies": [
         "Proxies"
@@ -5571,14 +5586,14 @@
       "Subscription status": [
         "Statut de l’abonnement"
       ],
+      "RHEL Lifecycle status": [
+        ""
+      ],
       "Installable updates": [
         "Mises à jour installables"
       ],
       "Lifecycle environment": [
         "Environnement de cycle de vie"
-      ],
-      "Content view": [
-        "Affichage de contenu"
       ],
       "Registered": [
         "Enregistré"
@@ -5678,18 +5693,6 @@
       ],
       "Manifest refresh timeout": [
         "Échec de l'actualisation du manifeste"
-      ],
-      "Accept action timeout": [
-        "Accepter un délai d'action"
-      ],
-      "Time in seconds to wait for a host to pick up a katello-agent action": [
-        "Temps en secondes pour attendre qu'un hôte prenne en charge une action de katello-agent."
-      ],
-      "Finish action timeout": [
-        "Fin du délai d'action"
-      ],
-      "Time in seconds to wait for a host to finish a katello-agent action": [
-        "Temps en secondes pour attendre qu'un hôte termine une action de katello-agent."
       ],
       "Subscription connection enabled": [
         "Connexion de l'abonnement activée"
@@ -5793,12 +5796,6 @@
       "The maximum number of seconds that Pulp can take to download a file, not counting connection time.": [
         "Le nombre maximum de secondes que Pulp peut prendre pour télécharger un fichier, sans compter le temps de connexion."
       ],
-      "Use remote execution by default": [
-        "Utiliser l'exécution à distance par défaut"
-      ],
-      "If this is enabled, remote execution is used instead of katello-agent for remote actions": [
-        "Si cette option est activée, utilisez l'exécution à distance par l'intermédiaire de l'agent katello pour les actions à distance"
-      ],
       "Delete Host upon unregister": [
         "Supprimer l'hôte lors de la désinscription"
       ],
@@ -5828,12 +5825,6 @@
       ],
       "The number of days remaining in a subscription before you will be reminded about renewing it.": [
         "Le nombre de jours restants dans un abonnement avant que l'on vous rappelle de le renouveler."
-      ],
-      "content view Dependency Solving Default": [
-        "Résolution des dépendances par défaut de l’affichage de contenu"
-      ],
-      "The default dependency solving value for new content views.": [
-        "La valeur de résolution de la dépendance par défaut pour les nouveaux affichages de contenu."
       ],
       "Host Duplicate DMI UUIDs": [
         "Duplicata des UUID des DMI de l'hôte"
@@ -6141,6 +6132,9 @@
       "Legacy content host UI": [
         "Interface utilisateur de l'hôte de contenu hérité"
       ],
+      "Refresh applicability": [
+        ""
+      ],
       "Edit content view assignment": [
         "Modifier l'affectation de la vue du contenu"
       ],
@@ -6321,8 +6315,11 @@
       "Edit system purpose attributes": [
         "Modifier les attributs system purpose"
       ],
-      "Select system purpose attributes for host {hostName}.": [
-        "Sélectionner les attributs system purpose de l'hôte {hostName}."
+      "Select system purpose attributes for host {name}.": [
+        ""
+      ],
+      "Select system purpose attributes for activation key {name}.": [
+        ""
       ],
       "Select add-ons": [
         "Sélectionnez les add-ons"
@@ -6414,6 +6411,9 @@
       "No action is needed because there are no applicable errata for this host.": [
         "Aucune action n'est nécessaire car il n'y a pas d'errata applicable pour cet hôte."
       ],
+      "Refresh errata applicability": [
+        ""
+      ],
       "This host has errata that are applicable, but not installable. Adjust your filters and try again.": [
         ""
       ],
@@ -6432,23 +6432,17 @@
       "A remote execution job is in progress": [
         "Un travail d'exécution à distance est en cours"
       ],
-      "Recalculate": [
-        "Recalculer"
-      ],
       "Apply via remote execution": [
         "Appliquer via exécution à distante"
       ],
       "Apply via customized remote execution": [
         "Appliquer via exécution à distance personnalisée"
       ],
-      "Apply via Katello agent": [
-        "Appliquer via l'agent Katello"
-      ],
       "Apply": [
         "Appliquer"
       ],
-      "Apply Erratum": [
-        "Appliquer l'errata"
+      "Apply erratum": [
+        ""
       ],
       "Yes": [
         "Oui"
@@ -6543,9 +6537,6 @@
       "Uninstall and reset": [
         "Désinstaller et réinitialiser"
       ],
-      "Install via katello-agent": [
-        "Installation via katello-agent"
-      ],
       "Install via remote execution": [
         "Installation par exécution à distance"
       ],
@@ -6596,6 +6587,9 @@
       ],
       "Upgrade via customized remote execution": [
         "Mettre à niveau via exécution à distance personnalisée"
+      ],
+      "Refresh package applicability": [
+        ""
       ],
       "Upgrade": [
         "Mettre à niveau"
@@ -6690,17 +6684,44 @@
       "Enable Tracer": [
         "Activer Traceur"
       ],
-      "Enabling will install the katello-host-tools-tracer package on the host.": [
-        "L’activation va installer le package katello-host-tools-tracer sur l’hôte."
-      ],
       "via remote execution": [
         "via Exécution à distante"
       ],
       "via customized remote execution": [
         "via exécution à distance personnalisée"
       ],
+      "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
+        ""
+      ],
+      "Before continuing, ensure that all of the following prerequisites are met:": [
+        ""
+      ],
+      "The Foreman Client repository is enabled. ": [
+        ""
+      ],
+      "The Foreman Client repository is synced. ": [
+        ""
+      ],
+      "View sync status": [
+        ""
+      ],
+      "The Foreman Client repository is available in the host's content view environment(s). ": [
+        ""
+      ],
+      "View content views": [
+        ""
+      ],
+      "The Foreman Client repository set is enabled for the host. ": [
+        ""
+      ],
+      "Remote execution is enabled.": [
+        ""
+      ],
       "Select a provider to install katello-host-tools-tracer": [
         "Sélectionner un fournisseur pour installer katello-host-tools-tracer"
+      ],
+      "Once the prerequisites are met, select a provider to install katello-host-tools-tracer": [
+        ""
       ],
       "Enable Traces": [
         "Activer Traces"
@@ -6762,17 +6783,14 @@
       "Traces that require logout cannot be restarted remotely": [
         "Traces nécessitant une déconnexion ne peut pas être redémarré à distance"
       ],
-      "Katello-agent is deprecated and will be removed in Katello 4.10.": [
-        ""
-      ],
       "Create new activation key": [
         ""
       ],
       "No Activation Keys selected": [
         "Aucune clé d'activation n'est affectée."
       ],
-      "Activation key(s) for Subscription Manager.": [
-        "Clé(s) d'activation pour le Gestionnaire d'abonnements."
+      "Activation key(s) to use during registration": [
+        ""
       ],
       "No Activation keys to select": [
         "Aucune clé d'activation n'est affectée."
@@ -6791,9 +6809,6 @@
       ],
       "Ignore subscription manager errors": [
         "Ignorer les erreurs du gestionnaire d'abonnement"
-      ],
-      "No Lifecycle environment to select": [
-        "Aucun environnement de cycle de vie à sélectionner"
       ],
       "Backend System Status": [
         "Statut du système backend"
@@ -7254,9 +7269,6 @@
       "Deleting content view : ": [
         "Supprimer l’affichage de contenu :"
       ],
-      "Hosts": [
-        "Hôtes"
-      ],
       "${pluralize(versionCount, 'content view version')} in the environments below will be removed when content view is deleted": [
         "{pluralize(versionCount, 'content view version')}(versionCount, 'content view version')} présent dans l’environnement ci-dessous sera supprimé une fois le contenu supprimé"
       ],
@@ -7299,6 +7311,9 @@
       "Version ${item.version}": [
         "Version"
       ],
+      " (${item.published_at_words} ago)": [
+        ""
+      ],
       "Update version": [
         "Mise à jour de la version"
       ],
@@ -7322,6 +7337,9 @@
       ],
       "Select available version of content views to use": [
         "Sélectionnez la version disponible des vues de contenu à utiliser"
+      ],
+      " (${version.published_at_words} ago)": [
+        ""
       ],
       "Not yet published": [
         "Pas encore publié"
@@ -7632,9 +7650,6 @@
       "Reset filters": [
         "Réinitialiser les filtres"
       ],
-      "Edit rule": [
-        "Modifier la règle"
-      ],
       "Issued": [
         "Publié"
       ],
@@ -7737,17 +7752,26 @@
       "Matching content": [
         "Contenu correspondant"
       ],
-      "No matching RPM found.": [
-        "Aucun RPM correspondant n’a été trouvé."
+      "No matching non-modular RPM found.": [
+        ""
       ],
-      "Given criteria doesn't match any RPMs. Try changing your rule.": [
-        "Le critère donné ne correspond à aucun RPM. Essayez de changer la règle."
+      "Given criteria doesn't match any non-modular RPMs. Try changing your rule.": [
+        ""
       ],
-      "Your search returned no matching RPMs.": [
-        "Votre recherche n’a renvoyé aucun RPM."
+      "Your search returned no matching non-modular RPMs.": [
+        ""
+      ],
+      "Help": [
+        ""
+      ],
+      "Matching RPMs based on your created filter rule. Remember, RPM filters don't apply to modular RPMs.": [
+        ""
       ],
       "Edit filter rule": [
         "Modifier la règle de filtrage"
+      ],
+      "Edit rule": [
+        "Modifier la règle"
       ],
       "Add rule": [
         "Ajouter une règle"
@@ -8187,6 +8211,12 @@
       "Newly published version will be the same as the previous version.": [
         ""
       ],
+      "Duplicate repositories in content view versions": [
+        ""
+      ],
+      "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
+        ""
+      ],
       "A new version of ": [
         "Une nouvelle version de "
       ],
@@ -8198,9 +8228,6 @@
       ],
       "Filters will be applied to this content view version.": [
         ""
-      ],
-      "Content view name": [
-        "Nom de la vue de contenu"
       ],
       "Newly published": [
         "Dernière publication"
@@ -8409,6 +8436,9 @@
       "Enabled Repositories": [
         "Référentiels activés"
       ],
+      "Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.": [
+        ""
+      ],
       "Export as CSV": [
         "Exporter en CSV"
       ],
@@ -8417,6 +8447,9 @@
       ],
       "(Orphaned)": [
         "(Abandonné)"
+      ],
+      "Cannot be disabled because it is part of a published content view": [
+        ""
       ],
       "Recommended Repositories": [
         "Référentiels recommandés"
@@ -8475,8 +8508,23 @@
       "No repositories enabled.": [
         "Aucun référentiel activé"
       ],
-      "Synced to smart proxy": [
-        "Synchronisé avec le proxy smart"
+      "Synced": [
+        ""
+      ],
+      "Content view version is empty": [
+        ""
+      ],
+      "Smart proxy content count refresh has started in the background": [
+        ""
+      ],
+      "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error.response)}": [
+        ""
+      ],
+      "Last sync": [
+        ""
+      ],
+      "Refresh counts": [
+        ""
       ],
       "Requires Virt-Who": [
         "Nécessite Virt-Who"
@@ -8489,9 +8537,6 @@
       ],
       "Ends": [
         "Se termine"
-      ],
-      "Product ID": [
-        "ID Produit"
       ],
       "Contract Number": [
         "Numéro de contrat"
@@ -8730,26 +8775,26 @@
       "There are no Subscriptions to display": [
         "Il n'y a pas d'Abonnements à afficher"
       ],
-      "Add Subscriptions using the Add Subscriptions button.": [
+      "Add subscriptions using the Add Subscriptions button.": [
         ""
       ],
       "Add subscriptions": [
         ""
       ],
-      "Import a Manifest to manage your Entitlements.": [
-        "Importez un manifeste pour gérer vos droits d’accès."
+      "Import a subscription manifest to give hosts access to Red Hat content.": [
+        ""
       ],
       "Import a Manifest": [
         "Importer un manifeste"
       ],
+      "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in Katello 4.12.": [
+        ""
+      ],
       "Subscriptions service": [
         "Service d'abonnements"
       ],
-      "This organization has Simple Content Access enabled. Hosts are not required to have subscriptions attached to access repositories. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        "Cette organisation a activé l'accès au contenu simple. Les hôtes ne sont pas tenus de souscrire un abonnement pour accéder aux référentiels. {br} Pour en savoir davantage sur les abonnements, visitez {subscriptionsService}."
-      ],
-      "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in a future version.": [
-        "Cette organisation n'utilise pas {scaLink}. L'ancienne gestion des abonnements est dépréciée et sera supprimée dans une prochaine version."
+      "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
+        ""
       ],
       "Please enter a positive number above zero": [
         "Veuillez entrer un nombre positif au-dessus de zéro"
@@ -8877,9 +8922,6 @@
       "Action with sub plans": [
         "Action avec sous-plans"
       ],
-      "Agent action": [
-        "Action de l'agent"
-      ],
       "Auto attach subscriptions": [
         "Attacher automatiquement des abonnements"
       ],
@@ -8940,9 +8982,6 @@
       "Remote action:": [
         "Action distante :"
       ],
-      "Report": [
-        ""
-      ],
       "Sync capsule": [
         "Sync capsule"
       ],
@@ -8963,45 +9002,6 @@
       ],
       "Verify checksum": [
         "Vérifier la somme de contrôle"
-      ],
-      "Cannot validate contents on non-yum/deb repositories.": [
-        "Impossible de valider le contenu des référentiels non-yum/deb."
-      ],
-      "#~ \"Force metadata regeneration to proceed.  Dangerous when repositories use the '\"#~ \"Complete Mirroring' mirroring policy\"": [
-        "#~ \"Force la régénération des métadonnées à se poursuivre.  Dangereux lorsque les \"#~ \"référentiels utilisent la politique de mise en miroir \\\"Complete Mirroring\\\".\""
-      ],
-      "#~ \"Force metadata regeneration to proceed.  Dangerous when repositories use the '\"#~ \"Complete Mirroring' mirroring policy.\"": [
-        "#~ \"Force la régénération des métadonnées à se poursuivre.  Dangereux lorsque les \"#~ \"référentiels utilisent la politique de mise en miroir \\\"Complete Mirroring\\\".\""
-      ],
-      "#~ \"Forces a republish of the specified repository, regenerating metadata and syml\"#~ \"inks on the filesystem.\"": [
-        "#~ \"Force une nouvelle publication du référentiel spécifié, en régénérant les méta\"#~ \"données et les liens symboliques sur le système de fichiers.\""
-      ],
-      "Get status of repo synchronisation for given product": [
-        "Obtenir l'état de la synchronisation des référentiels pour un produit donné"
-      ],
-      "#~ \"Identifies whether the repository should be disabled on a client with a non-ma\"#~ \"tching OS version. Pass [] to enable regardless of OS version. Maximum length \"#~ \"1; allowed tags are: %s\"": [
-        "#~ \"Identifie si le référentiel doit être désactivé sur un client dont la version \"#~ \"du système d'exploitation ne correspond pas. Passez [] pour activer le dépôt i\"#~ \"ndépendamment de la version du système d'exploitation. Longueur maximale 1 ; l\"#~ \"es balises autorisées sont : %s\""
-      ],
-      "Learn more about adding Subscription Manifests": [
-        "En savoir plus sur l'ajout de manifestes de souscription"
-      ],
-      "Metadata republishing must be forced because it is a dangerous operation.": [
-        "#~ \"La republication des métadonnées doit être forcée car c'est une opération dang\"#~ \"ereuse.\""
-      ],
-      "#~ \"NOTE: Katello-agent is deprecated and will be removed in %s. Consider using re\"#~ \"mote execution instead.\"": [
-        "#~ \"NOTE : Katello-agent est déprécié et sera supprimé dans %s. Pensez à utiliser \"#~ \"l'exécution à distance à la place.\""
-      ],
-      "#~ \"Repository %s cannot be deleted since it has already been included in a publis\"#~ \"hed Content View.\"": [
-        "#~ \"Le référentiel %s ne peut pas être supprimé car il a déjà été inclus dans un a\"#~ \"ffichage de contenu publié.\""
-      ],
-      "#~ \"The product %{name} has no %{type} repositories with upstream URLs to add to t\"#~ \"he alternate content source.\"": [
-        "#~ \"Le produit %{name} n'a pas de référentiels %{type} avec des URL en amont à ajo\"#~ \"uter à la source de contenu alternative.\""
-      ],
-      "Time in minutes to consider orphan content as orphaned.": [
-        "Durée (en minutes) pour considérer un contenu comme orphelin."
-      ],
-      "a future release": [
-        "une version ultérieure"
       ]
     }
   }

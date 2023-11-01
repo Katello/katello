@@ -5,18 +5,22 @@
  * @requires $scope
  * @requires Errata
  * @requires ApiErrorHandler
+ * @requires translate
  *
  * @description
  *   Provides the functionality for the errata pages.
  */
-angular.module('Bastion.errata').controller('ErratumController', ['$scope', 'Erratum', 'ApiErrorHandler',
-    function ($scope, Erratum, ApiErrorHandler) {
+angular.module('Bastion.errata').controller('ErratumController', ['$scope', 'Erratum', 'ApiErrorHandler', 'translate',
+    function ($scope, Erratum, ApiErrorHandler, translate) {
         $scope.panel = {
             error: false,
             loading: true
         };
 
         $scope.moduleStreamShowMap = {};
+
+        // Labels so breadcrumb strings can be translated
+        $scope.packagesLabel = translate('Packages');
 
         if ($scope.errata) {
             $scope.panel.loading = false;

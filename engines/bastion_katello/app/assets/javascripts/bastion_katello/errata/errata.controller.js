@@ -36,6 +36,11 @@ angular.module('Bastion.errata').controller('ErrataController',
 
         nutupane = $scope.nutupane = new Nutupane(Erratum, params);
         $scope.controllerName = 'katello_errata';
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Errata');
+        $scope.tasksLabel = translate('Tasks');
+
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 

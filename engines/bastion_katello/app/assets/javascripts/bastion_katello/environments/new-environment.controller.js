@@ -7,8 +7,11 @@
      *
      * @description
      *   Handles creating a new environment.
+     *
+     * @requires translate
+     *
      */
-    function NewEnvironmentController($scope, Environment, FormUtils, Notification, PathsService) {
+    function NewEnvironmentController($scope, Environment, FormUtils, Notification, PathsService, translate) {
 
         function success() {
             $scope.transitionTo('environments');
@@ -25,6 +28,9 @@
                 }
             });
         }
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('New Environment');
 
         $scope.loading = true;
         $scope.environment = new Environment();
@@ -65,6 +71,6 @@
         .module('Bastion.environments')
         .controller('NewEnvironmentController', NewEnvironmentController);
 
-    NewEnvironmentController.$inject = ['$scope', 'Environment', 'FormUtils', 'Notification', 'PathsService'];
+    NewEnvironmentController.$inject = ['$scope', 'Environment', 'FormUtils', 'Notification', 'PathsService', 'translate'];
 
 })();

@@ -30,6 +30,11 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             'paged': true
         });
         $scope.controllerName = 'katello_repositories';
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Repositories');
+        $scope.tasksLabel = translate('Tasks');
+
         repositoriesNutupane.primaryOnly = true;
 
         function getParams() {
