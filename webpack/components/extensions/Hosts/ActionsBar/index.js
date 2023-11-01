@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { DropdownItem } from '@patternfly/react-core';
-import { CubeIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
 import { ForemanHostsIndexActionsBarContext } from 'foremanReact/components/HostsIndex';
@@ -20,18 +19,15 @@ const HostActionsBar = () => {
     href = foremanUrl(`/change_host_content_source?search=${fetchBulkParams({})}`);
   }
 
-  const title = __('Change content source');
   return (
     <>
       <DropdownItem
         ouiaId="change-content-s-dropdown-item"
         key="change-content-source-dropdown-item"
-        title={title}
         href={href}
         isDisabled={selectedCount === 0}
-        icon={<CubeIcon />}
       >
-        {title}
+        {__('Change content source')}
       </DropdownItem>
     </>
   );
