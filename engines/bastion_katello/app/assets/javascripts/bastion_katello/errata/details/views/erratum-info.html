@@ -24,10 +24,10 @@
       <dd>{{ errata.severity | errataSeverity }}</dd>
 
       <dt translate>Issued</dt>
-      <dd><long-date-time date="errata.issued" /></dd>
+      <dd>{{ errata.issued }}</dd>
 
       <dt translate>Last Updated On</dt>
-      <dd><long-date-time date="errata.updated" /></dd>
+      <dd>{{ errata.updated }}</dd>
 
       <dt translate>Reboot Suggested?</dt>
       <dd>{{ errata.reboot_suggested | booleanToYesNo }}</dd>
