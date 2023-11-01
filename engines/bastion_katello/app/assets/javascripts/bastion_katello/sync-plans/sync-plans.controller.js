@@ -28,6 +28,10 @@ angular.module('Bastion.sync-plans').controller('SyncPlansController',
 
             nutupane = new Nutupane(SyncPlan, params);
             $scope.controllerName = 'katello_sync_plans';
+
+            // Labels so breadcrumb strings can be translated
+            $scope.label = translate('Sync Plans');
+
             nutupane.primaryOnly = true;
 
             $scope.syncPlanTable = nutupane.table;

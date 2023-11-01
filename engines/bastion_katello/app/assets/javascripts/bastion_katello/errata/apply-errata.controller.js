@@ -42,6 +42,10 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
 
             $scope.applyingErrata = false;
 
+            // Labels so breadcrumb strings can be translated
+            $scope.label = translate('Apply');
+            $scope.confirmLabel = translate('Confirm');
+
             $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
             $scope.errataActionFormValues = {
                 authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, ''),

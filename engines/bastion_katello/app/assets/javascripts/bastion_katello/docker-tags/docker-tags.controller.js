@@ -7,6 +7,7 @@
  * @requires Nutupane
  * @requires DockerTag
  * @requires CurrentOrganization
+ * @requires translate
  *
  * @description
  *   Provides the functionality specific to docker tags for use with the Nutupane UI pattern.
@@ -14,8 +15,8 @@
  *   within the table.
  */
 angular.module('Bastion.docker-tags').controller('DockerTagsController',
-    ['$scope', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization',
-    function ($scope, $location, Nutupane, DockerTag, CurrentOrganization) {
+    ['$scope', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization', 'translate',
+    function ($scope, $location, Nutupane, DockerTag, CurrentOrganization, translate) {
 
         var params = {
             'organization_id': CurrentOrganization,
@@ -27,7 +28,9 @@ angular.module('Bastion.docker-tags').controller('DockerTagsController',
         var nutupane = new Nutupane(DockerTag, params);
         $scope.controllerName = 'katello_docker_tags';
         $scope.table = nutupane.table;
-        $scope.controllerName = 'katello_docker_tags';
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Container Image Tags');
 
         $scope.table.closeItem = function () {
             $scope.transitionTo('docker-tags');

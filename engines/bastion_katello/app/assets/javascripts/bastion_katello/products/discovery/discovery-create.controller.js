@@ -21,6 +21,9 @@ angular.module('Bastion.products').controller('DiscoveryCreateController',
     ['$scope', '$q', 'Notification', 'CurrentOrganization', 'Product', 'Repository', 'ContentCredential', 'FormUtils', 'DiscoveryRepositories', 'translate', 'ApiErrorHandler',
     function ($scope, $q, Notification, CurrentOrganization, Product, Repository, ContentCredential, FormUtils, DiscoveryRepositories, translate, ApiErrorHandler) {
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Create Repositories');
+
         $scope.table = {
             rows: DiscoveryRepositories.getRows(),
             resource: {

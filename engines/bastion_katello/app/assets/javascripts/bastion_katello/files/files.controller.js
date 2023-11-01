@@ -8,8 +8,11 @@
      * @description
      *   Handles fetching files and populating Nutupane based on the current
      *   ui-router state.
+     *
+     * @requires translate
+     *
      */
-    function FilesController($scope, Nutupane, File, CurrentOrganization) {
+    function FilesController($scope, Nutupane, File, CurrentOrganization, translate) {
         var nutupane;
 
         var params = {
@@ -20,6 +23,10 @@
 
         nutupane = new Nutupane(File, params);
         $scope.controllerName = 'katello_files';
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Files');
+
         nutupane.primaryOnly = true;
 
         $scope.table = nutupane.table;
@@ -30,6 +37,6 @@
         .module('Bastion.files')
         .controller('FilesController', FilesController);
 
-    FilesController.$inject = ['$scope', 'Nutupane', 'File', 'CurrentOrganization'];
+    FilesController.$inject = ['$scope', 'Nutupane', 'File', 'CurrentOrganization', 'translate'];
 
 })();

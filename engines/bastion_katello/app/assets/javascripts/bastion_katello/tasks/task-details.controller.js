@@ -5,16 +5,20 @@
  * @requires $scope
  * @requires $rootScope
  * @requires Task
+ * @requires translate
  *
  * @description
  *   Provides the functionality for the details of a task.
  */
 angular.module('Bastion.tasks').controller('TaskDetailsController',
-    ['$scope', '$rootScope', 'Task',
-    function ($scope, $rootScope, Task) {
+    ['$scope', '$rootScope', 'Task', 'translate',
+    function ($scope, $rootScope, Task, translate) {
         var taskId;
 
         taskId = $scope.$stateParams.taskId;
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Bulk Task');
 
         $scope.unregisterSearch = function () {
             Task.unregisterSearch($scope.searchId);

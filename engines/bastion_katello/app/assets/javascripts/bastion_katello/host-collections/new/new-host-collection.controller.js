@@ -5,16 +5,20 @@
  * @requires $scope
  * @requires HostCollection
  * @requires CurrentOrganization
+ * @requires translate
  *
  * @description
  *   Controls the creation of an empty HostCollection object for use by sub-controllers.
  */
 angular.module('Bastion.host-collections').controller('NewHostCollectionController',
-    ['$scope', 'HostCollection', 'CurrentOrganization',
-    function ($scope, HostCollection, CurrentOrganization) {
+    ['$scope', 'HostCollection', 'CurrentOrganization', 'translate',
+    function ($scope, HostCollection, CurrentOrganization, translate) {
 
         $scope.hostCollection = new HostCollection();
         $scope.panel = {loading: false};
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('New Host Collection');
 
         function success() {
             $scope.transitionTo('host-collection.info', {hostCollectionId: $scope.hostCollection.id});

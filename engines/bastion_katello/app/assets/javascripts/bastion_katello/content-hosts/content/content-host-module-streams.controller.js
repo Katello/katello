@@ -18,6 +18,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsCont
     function ($scope, $timeout, $window, HostModuleStream, Nutupane, BastionConfig, ModuleStreamActions, translate) {
         $scope.moduleStreamActions = ModuleStreamActions.getActions();
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Module Streams');
+
         $scope.working = false;
 
         $scope.nutupaneParams = { id: $scope.$stateParams.hostId };

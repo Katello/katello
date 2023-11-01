@@ -28,6 +28,17 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
     function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, DockerManifest, DockerManifestList, DockerTag, File, Deb, ModuleStream, AnsibleCollection, GenericContent, RepositoryTypesService) {
         var contentTypes, nutupaneParams;
 
+        // Labels so breadcrumb strings can be translated
+        $scope.packagesLabel = translate('Packages');
+        $scope.packageGroupsLabel = translate('Package Groups');
+        $scope.dockerManifestsLabel = translate('Container Image Manifests');
+        $scope.dockerTagsLabel = translate('Docker Tags');
+        $scope.dockerManifestListsLabel = translate('Container Image Manifest Lists');
+        $scope.filesLabel = translate('Files');
+        $scope.moduleStreamsLabel = translate('Module Streams');
+        $scope.debsLabel = translate('Debs');
+        $scope.ansibleCollectionsLabel = translate('Ansible Collections');
+
         function success(response, selected) {
             var message;
 

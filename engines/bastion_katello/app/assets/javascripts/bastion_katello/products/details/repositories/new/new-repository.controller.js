@@ -56,6 +56,9 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 }
             }
 
+            // Labels so breadcrumb strings can be translated
+            $scope.label = translate('New Repository');
+
             $scope.page = {
                 error: false,
                 loading: true

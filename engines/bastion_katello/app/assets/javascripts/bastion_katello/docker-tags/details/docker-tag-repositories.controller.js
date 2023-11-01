@@ -6,13 +6,14 @@
  * @requires $location
  * @requires DockerTag
  * @requires CurrentOrganization
+ * @requires translate
  *
  * @description
  *   Provides the functionality for the docker tags details repositories list.
  */
 angular.module('Bastion.docker-tags').controller('DockerTagRepositoriesController',
-    ['$scope', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization',
-    function ($scope, $location, Nutupane, DockerTag, CurrentOrganization) {
+    ['$scope', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization', 'translate',
+    function ($scope, $location, Nutupane, DockerTag, CurrentOrganization, translate) {
         var params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
@@ -30,6 +31,9 @@ angular.module('Bastion.docker-tags').controller('DockerTagRepositoriesControlle
             nutupane.setParams(params);
             nutupane.refresh();
         };
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Repositories');
 
         $scope.table = nutupane.table;
 

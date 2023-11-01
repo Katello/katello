@@ -7,11 +7,24 @@
      *
      * @description
      *   Controls displaying content tables for a given environment along with appropriate filtering.
+     *
+     * @requires translate
+     *
      */
     function EnvironmentContentController($scope, ContentService, ContentView, Repository, translate, $location) {
         var nutupane, allRepositories, nutupaneParams;
 
         $scope.controllerName = 'katello_environments';
+
+        // Labels so breadcrumb strings can be translated
+        $scope.errataLabel = translate('Errata');
+        $scope.repositoriesLabel = translate('Repositories');
+        $scope.packagesLabel = translate('Packages');
+        $scope.debReposLabel = translate('Deb Repositories');
+        $scope.debsLabel = translate('Deb Packages');
+        $scope.moduleStreamsLabel = translate('Module Streams');
+        $scope.dockerLabel = translate('Docker');
+        $scope.contentViewsLabel = translate('Content Views');
 
         function fetchContentViews(environmentId) {
             ContentView.queryUnpaged({'environment_id': environmentId}, function (data) {

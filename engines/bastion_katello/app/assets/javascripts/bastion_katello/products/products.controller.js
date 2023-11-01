@@ -50,6 +50,10 @@ angular.module('Bastion.products').controller('ProductsController',
         nutupaneParams = {
             'disableAutoLoad': true
         };
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Products');
+
         $scope.disableRepoDiscovery = true;
         nutupane = new Nutupane(Product, params, undefined, nutupaneParams);
         $scope.controllerName = 'katello_products';

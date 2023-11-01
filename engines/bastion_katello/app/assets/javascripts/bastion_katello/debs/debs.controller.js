@@ -8,6 +8,9 @@
      * @description
      *   Handles fetching deb packages and populating Nutupane based on the current
      *   ui-router state.
+     *
+     * @requires translate
+     *
      */
     function DebsController($scope, $location, translate, Nutupane, Deb, CurrentOrganization) {
         var nutupane;
@@ -24,6 +27,10 @@
         nutupane.primaryOnly = true;
 
         $scope.table = nutupane.table;
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Debs');
+
         $scope.controllerName = 'katello_debs';
 
         Deb.queryPaged({'organization_id': CurrentOrganization}, function (result) {

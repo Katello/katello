@@ -26,6 +26,10 @@ angular.module('Bastion.host-collections').controller('HostCollectionsController
         };
 
         var nutupane = new Nutupane(HostCollection, params);
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Host Collections');
+
         $scope.controllerName = 'katello_host_collections';
         nutupane.primaryOnly = true;
 

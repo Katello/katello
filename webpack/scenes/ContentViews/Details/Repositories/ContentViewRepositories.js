@@ -227,7 +227,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
 
   const rowDropdownItems = ({ id }) => [
     {
-      title: 'Add',
+      title: __('Add'),
       ouiaId: `add-repository-${id}`,
       isDisabled: importOnly || generatedContentView || repositoryIds.includes(id),
       onClick: () => {
@@ -235,7 +235,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
       },
     },
     {
-      title: 'Remove',
+      title: __('Remove'),
       ouiaId: `remove-repository-${id}`,
       isDisabled: importOnly || generatedContentView || !repositoryIds.includes(id),
       onClick: () => {

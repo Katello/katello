@@ -21,6 +21,9 @@ angular.module('Bastion.content-credentials').controller('NewContentCredentialCo
         $scope.progress = {uploading: false};
         $scope.uploadURL = 'katello/api/v2/content_credentials?organization_id=' + CurrentOrganization;
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('New Content Credential');
+
         $scope.uploadContent = function (response) {
             if (response) {
                 if (angular.isUndefined(response.errors)) {

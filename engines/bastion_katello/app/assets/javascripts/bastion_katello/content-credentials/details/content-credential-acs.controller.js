@@ -6,16 +6,21 @@
  * @requires Nutupane
  * @requires ContentCredential
  * @requires ApiErrorHandler
+ * @requires translate
  *
  * @description
  *   Page for Content Credential acs
  */
 (function () {
-    function ContentCredentialACSController($scope, Nutupane, ContentCredential, ApiErrorHandler) {
+    function ContentCredentialACSController($scope, Nutupane, ContentCredential, ApiErrorHandler, translate) {
       var nutupane = new Nutupane(ContentCredential, {
           id: $scope.$stateParams.contentCredentialId
       }, 'acs');
       $scope.controllerName = 'katello_content_credentials';
+
+      // Labels so breadcrumb strings can be translated
+      $scope.label = translate('Alternate Content Sources');
+
       nutupane.primaryOnly = true;
 
       $scope.panel = $scope.panel || {error: false, loading: false};
@@ -32,5 +37,5 @@
   }
 
     angular.module('Bastion.content-credentials').controller('ContentCredentialACSController', ContentCredentialACSController);
-    ContentCredentialACSController.$inject = ['$scope', 'Nutupane', 'ContentCredential', 'ApiErrorHandler'];
+    ContentCredentialACSController.$inject = ['$scope', 'Nutupane', 'ContentCredential', 'ApiErrorHandler', 'translate'];
 })();

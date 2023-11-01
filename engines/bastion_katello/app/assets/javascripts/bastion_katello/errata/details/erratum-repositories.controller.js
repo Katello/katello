@@ -10,13 +10,14 @@
  * @requires ContentView
  * @requires CurrentOrganization
  * @requires RepositoriesFilters
+ * @requires translate
  *
  * @description
  *   Provides the functionality for the errata details repositories page.
  */
 angular.module('Bastion.errata').controller('ErratumRepositoriesController',
-['$scope', '$q', 'Nutupane', 'Repository', 'Environment', 'ContentView', 'CurrentOrganization', 'RepositoriesFilters',
-function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrganization, RepositoriesFilters) {
+['$scope', '$q', 'Nutupane', 'Repository', 'Environment', 'ContentView', 'CurrentOrganization', 'RepositoriesFilters', 'translate',
+function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrganization, RepositoriesFilters, translate) {
     var repositoriesNutupane, environment, contentView, params = {
         'erratum_id': $scope.$stateParams.errataId,
         'organization_id': CurrentOrganization
@@ -24,6 +25,10 @@ function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrg
 
     repositoriesNutupane = new Nutupane(Repository, params);
     $scope.controllerName = 'katello_repositories';
+
+    // Labels so breadcrumb strings can be translated
+    $scope.label = translate('Repositories');
+
     $scope.table = repositoriesNutupane.table;
     $scope.table.initialLoad = false;
     repositoriesNutupane.primaryOnly = true;

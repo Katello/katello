@@ -18,6 +18,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
     function ($scope, translate, Nutupane, ActivationKey, RepositorySet, ContentOverrideHelper, Notification) {
         var params, saveContentOverride, success, error;
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Repository Sets');
+
         params = {
             'activation_key_id': $scope.$stateParams.activationKeyId,
             'content_access_mode_all': $scope.simpleContentAccessEnabled,

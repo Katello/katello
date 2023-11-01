@@ -1,5 +1,5 @@
 (function () {
-    function ContentCredentialRepositoriesController($scope, Nutupane, ContentCredential, ApiErrorHandler) {
+    function ContentCredentialRepositoriesController($scope, Nutupane, ContentCredential, ApiErrorHandler, translate) {
         /**
          * @ngdoc object
          * @name  Bastion.content-credentials.controller:ContentCredentialRepositoriesController
@@ -8,6 +8,7 @@
          * @requires Nutupane
          * @requires ContentCredential
          * @requires ApiErrorHandler
+         * @requires translate
          *
          * @description
          *   Page for Content Credential repositories
@@ -16,6 +17,10 @@
             id: $scope.$stateParams.contentCredentialId
         }, 'repositories');
         $scope.controllerName = 'katello_content_credentials';
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Repositories');
+
         nutupane.primaryOnly = true;
 
         $scope.panel = $scope.panel || {error: false, loading: false};
@@ -32,5 +37,5 @@
     }
 
     angular.module('Bastion.content-credentials').controller('ContentCredentialRepositoriesController', ContentCredentialRepositoriesController);
-    ContentCredentialRepositoriesController.$inject = ['$scope', 'Nutupane', 'ContentCredential', 'ApiErrorHandler'];
+    ContentCredentialRepositoriesController.$inject = ['$scope', 'Nutupane', 'ContentCredential', 'ApiErrorHandler', 'translate'];
 })();

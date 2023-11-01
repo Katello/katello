@@ -20,6 +20,9 @@ angular.module('Bastion.products').controller('DiscoveryController',
     function ($scope, $q, $filter, Notification, Task, Organization, CurrentOrganization, DiscoveryRepositories, ContainerRegistries, translate) {
         var transformRows, setDiscoveryDetails;
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Discover Repositories');
+
         $scope.discovery = {
             url: '',
             contentType: 'yum'

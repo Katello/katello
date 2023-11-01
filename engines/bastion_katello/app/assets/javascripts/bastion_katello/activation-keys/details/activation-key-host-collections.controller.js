@@ -26,6 +26,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyHostCollectio
             'full_result': true
         };
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('List Host Collections');
+
         hostCollectionsPane = new Nutupane(ActivationKey, params, 'hostCollections');
         $scope.controllerName = 'katello_host_collections';
         $scope.table = hostCollectionsPane.table;

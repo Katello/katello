@@ -17,6 +17,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostDebsInstalledCont
     function ($scope, $timeout, $window, HostDeb, translate, Nutupane) {
         var debsNutupane;
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Installed Deb Packages');
+
         $scope.removeSelectedDebs = function () {
             var selected;
 

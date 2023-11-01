@@ -28,6 +28,10 @@ angular.module('Bastion.activation-keys').controller('ActivationKeysController',
         };
 
         var nutupane = new Nutupane(ActivationKey, params);
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Activation Keys');
+
         $scope.controllerName = 'katello_activation_keys';
         nutupane.primaryOnly = true;
         $scope.table = nutupane.table;

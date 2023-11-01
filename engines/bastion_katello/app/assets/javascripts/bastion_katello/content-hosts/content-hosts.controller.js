@@ -39,6 +39,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             'sort_order': 'ASC'
         };
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Content Hosts');
+        $scope.provisioningLabel = translate('Provisioning');
+        $scope.tasksLabel = translate('Tasks');
+
         $scope.csvQuery = function () {
             return $httpParamSerializer(params);
         };

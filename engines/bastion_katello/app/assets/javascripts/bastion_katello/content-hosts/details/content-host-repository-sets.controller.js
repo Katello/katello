@@ -25,6 +25,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostRepositorySetsCon
             'paged': true
         };
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Products');
+
         $scope.nutupane = new Nutupane(RepositorySet, params);
         $scope.table = $scope.nutupane.table;
         $scope.nutupane.primaryOnly = true;

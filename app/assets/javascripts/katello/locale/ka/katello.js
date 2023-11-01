@@ -365,9 +365,6 @@
       "root-node of collection contained in responses (default: 'results')": [
         ""
       ],
-      "This action uses katello-agent, which is currently disabled. Use remote execution instead.": [
-        "ქმედება იყენებს katello-agent-ს, რომელიც ამჟამად გამორთულია. ამის ნაცვლად გამოიყენეთ დაშორებული შესრულება."
-      ],
       "Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.": [
         "ძებნის თქვენი მოთხოვნა არასწორია. გადახედეთ და ხელახლა სცადეთ. სრული შეცდომა აპლიკაციის ჟურნალში გაიგზავნა."
       ],
@@ -394,6 +391,12 @@
       ],
       "Id of the lifecycle environment": [
         "ცხოვრების ციკლის გარემოს ID"
+      ],
+      "List content counts for the smart proxy": [
+        ""
+      ],
+      "Update content counts for the smart proxy": [
+        ""
       ],
       "List the lifecycle environments attached to the smart proxy": [
         "ჭკვიან პროქსიზე მიმაგრებული სიცოცხლის ციკლის გარემოების სია"
@@ -1394,17 +1397,11 @@
       "Return only errata of a particular severity (None, Low, Moderate, Important, Critical)": [
         ""
       ],
-      "Schedule errata for installation using katello-agent. %s": [
-        "მორჩენილი პაჩების katello-agent-ით დაყენების დაგეგმვა. %ს"
+      "Retrieve a single errata for a host": [
+        "ჰოსტის ერთი მორჩენილი პაჩის მიღება"
       ],
       "Host ID": [
         "ჰოსტის ID"
-      ],
-      "List of Errata ids to install. Will be removed in %s": [
-        "დასაყენებელი მორჩენილი პაჩების ID-ები. წაიშლება %s-ში"
-      ],
-      "Retrieve a single errata for a host": [
-        "ჰოსტის ერთი მორჩენილი პაჩის მიღება"
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "მორჩენილი პაჩის ID (RHSA-2012:108)"
@@ -1447,18 +1444,6 @@
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
         ""
-      ],
-      "Install packages remotely using katello-agent. %s": [
-        "პაკეტების დაშორებულად დაყენება katello-agent-ის საშუალებით. %s"
-      ],
-      "Update packages remotely using katello-agent. %s": [
-        "პაკეტების დაშორებულად განახლება katello-agent-ის საშუალებით. %s"
-      ],
-      "list of packages names": [
-        "პაკეტების სახელების სია"
-      ],
-      "Uninstall packages remotely using katello-agent. %s": [
-        "პაკეტების დაშორებულად წაშლა katello-agent-ის საშუალებით. %s"
       ],
       "Couldn't find host with host id '%s'": [
         "ჰოსტი id-ით %s არ არსებობს"
@@ -1646,30 +1631,6 @@
       "Fetch installable errata for one or more hosts.": [
         "დაყენებადი მორჩენილი პაჩების გამოთხოვა ერთი ან მეტი ჰოსტისთვის."
       ],
-      "Install content on one or more hosts using katello-agent. %s": [
-        "ერთ ან მეტ ჰოსტზე შემცველობის katello-agent -ის გამოყენებით დაყენება. %s"
-      ],
-      "The type of content.  The following types are supported: 'package', 'package_group' and 'errata'.": [
-        ""
-      ],
-      "List of content (e.g. package names, package group names (Deprecated) or errata ids)": [
-        ""
-      ],
-      "Update content on one or more hosts using katello-agent. %s": [
-        "ერთი ან მეტი ჰოსტის შემცველობის განახლება katello-agent-ის საშუალებით. %s"
-      ],
-      "The type of content.  The following types are supported: 'package' and 'package_group.": [
-        ""
-      ],
-      "List of content (e.g. package or package group names)": [
-        ""
-      ],
-      "Updates all packages on the host(s)": [
-        "ჰოსტზე არსებული ყველა პაკეტის განახლება"
-      ],
-      "Remove content on one or more hosts using katello-agent. %s": [
-        ""
-      ],
       "Destroy one or more hosts": [
         "ერთ"
       ],
@@ -1747,15 +1708,6 @@
       ],
       "Maximum number of content hosts exceeded for host collection(s): %s": [
         ""
-      ],
-      "A content_type must be provided.": [
-        "content_type-ის მითითება აუცილებელია."
-      ],
-      "No content has been provided.": [
-        "შემცველობა მიწოდებული არაა."
-      ],
-      "Invalid content type %s": [
-        "შემცველობის არასწორი ტიპი: %s"
       ],
       "Shows status of Katello system and it's subcomponents": [
         "აჩვენებს Katello-ის სისტემისა და მისი ქვეკომპონენტების სტატუსს"
@@ -2122,9 +2074,6 @@
       ],
       "Name of the upstream docker repository": [
         "Docker-ის აღმავალი რეპოზიტორიის სახელი"
-      ],
-      "Comma-separated list of tags to sync for Container Image repository (Deprecated)": [
-        ""
       ],
       "Comma-separated list of tags to sync for a container image repository": [
         ""
@@ -2510,17 +2459,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
-      "Check if the specified organization is eligible for Simple Content Access": [
+      "Check if the specified organization is eligible for Simple Content Access. %s": [
         ""
       ],
-      "Check if the specified organization has Simple Content Access enabled": [
+      "Check if the specified organization has Simple Content Access enabled. %s": [
         ""
       ],
       "Enable simple content access for a manifest": [
         "მანიფესტისთვის შემცველობის ადვილი წვდომის ჩართვა"
       ],
-      "Disable simple content access for a manifest": [
-        "მანიფესტისთვის შემცველობის ადვილი წვდომის გამორთვა"
+      "Disable simple content access for a manifest. %s": [
+        ""
       ],
       "SRPM details": [
         "SRPM-ების დეტალები"
@@ -2666,6 +2615,9 @@
       "List of product ids to add to the sync plan": [
         "სინქის გეგმაში დასამატებელი პროდუქტის ID-ები"
       ],
+      "Cannot add disabled products to sync plan!": [
+        ""
+      ],
       "Remove products from sync plan": [
         "სინქრის გეგმიდან პროდუქტების წაშლა"
       ],
@@ -2738,10 +2690,7 @@
       "Invalid parameters sent. You may have mistyped the address. If you continue having trouble with this, please contact an Administrator.": [
         ""
       ],
-      "WARNING: Katello-agent is deprecated and will be removed in %s. Migrate to remote execution now.": [
-        ""
-      ],
-      "Katello 4.10": [
+      "WARNING: Simple Content Access will be required for all organizations in Katello 4.12.": [
         ""
       ],
       "Could not find %{name} resource with id %{id}. %{perms_message}": [
@@ -3008,6 +2957,9 @@
       "Subscription Manifest validity check": [
         "გამოწერის მანიფესტის ნამდვილობის შემოწმება"
       ],
+      "Host lifecycle support expiration notification": [
+        ""
+      ],
       "Pulp disk space notification": [
         "Pulp-ის დისკის ადგილის გაფრთხილება"
       ],
@@ -3037,18 +2989,6 @@
       ],
       "Delete Activation Key": [
         "აქტივაციის გასაღების წაშლა"
-      ],
-      "No new packages installed": [
-        "ახალი პაკეტები არ დაყენებულა"
-      ],
-      "No packages removed": [
-        "პაკეტები არ წაშლილა"
-      ],
-      "Host did not respond within %s seconds. The task has been cancelled. Is katello-agent installed and goferd running on the Host?": [
-        ""
-      ],
-      "Host did not finish content action in %s seconds.  The task has been cancelled.": [
-        "ჰოსტმა შემცველობის ქმედება %s წამში ვერ დაასრულა.   ამოცანა გაუქმებულია."
       ],
       "Create Alternate Content Source": [
         "შემცველობის ალტერნატიული წყაროს შექმნა"
@@ -3082,6 +3022,9 @@
       ],
       "Action not allowed for the default smart proxy.": [
         "ნაგულისხმებ ჭკვიან პროქსიზე ეს ქმედება დაუშვებელია."
+      ],
+      "Update Content Counts": [
+        ""
       ],
       "Update CDN Configuration": [
         "CDN-ის კონფიგურაციის განახლება"
@@ -3227,74 +3170,11 @@
       "Destroy Content Host": [
         "შემცველობის ჰოსტის განადგურება"
       ],
-      "errata_ids or update_all must be provided": [
-        "საჭურა errata_ids-ის ან update_all-ის მითითება"
-      ],
-      "No applicable errata for %s, skipping": [
-        "%s-სთვს განკუთვნილი მორჩენილი პაჩები არ არსებობს"
-      ],
-      "Install Applicable Errata": [
-        "განკუთვნილი მორჩენილი პაჩების დაყენება"
-      ],
-      "Install Applicable Errata on %s": [
-        "განკუთვნილი მორჩენილი პაჩების დაყენება %s-ზე"
-      ],
-      "Install erratum for %s": [
-        "%s-სთვის მორჩენილი პაჩის დაყენება"
-      ],
-      "Install erratum": [
-        "მორჩენილი პაჩის დაყენება"
-      ],
-      "Installation of errata requested: %{errata}": [
-        "მოთხოვილია მორჩენილი პაჩების დაყენება: %{errata}"
-      ],
       "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration.": [
         ""
       ],
       "Host '%{name}' does not belong to an organization": [
         "ჰოსტი (%{name}) ორგანიზაციას არ მიეკუთვნება"
-      ],
-      "Install package for %s": [
-        "პაკეტის დაყენება %s-სთვის"
-      ],
-      "Install package": [
-        "პაკეტის დაყენება"
-      ],
-      "Installation of package(s) requested: %{packages}": [
-        "მოთხოვნილია პაკეტების დაყენება: %{packages}"
-      ],
-      "Remove package for %s": [
-        "პაკეტის წაშლა %s-სთვის"
-      ],
-      "Remove package": [
-        "პაკეტის წაშლა"
-      ],
-      "Removal of package(s) requested: %{packages}": [
-        "მოთხოვნილია პაკეტების წაშლა: %{packages}"
-      ],
-      "Update package for %s": [
-        "პაკეტის განახლება %s-სთვის"
-      ],
-      "Update package": [
-        "პაკეტის განახლება"
-      ],
-      "Update of package(s) requested: %{packages}": [
-        "მოთხოვნილია პაკეტების განახლება: %{packages}"
-      ],
-      "Update of all packages requested": [
-        "ყველა მოთხოვნილი პაკეტის განახლება"
-      ],
-      "Install package group": [
-        "პაკეტის ჯგუფის დაყენება"
-      ],
-      "Installation of package group(s) requested: %{groups}": [
-        "მოთხოვნილია პაკეტის ჯგუფების დაყენება: %{groups}"
-      ],
-      "Remove package group": [
-        "პაკეტის ჯგუფის წაშლა"
-      ],
-      "Removal of package group(s) requested: %{groups}": [
-        "მოთხოვნილია პაკეტის ჯგუფების წაშლა: %{groups}"
       ],
       "Error refreshing status for %s: ": [
         "%s-ის სტატუსის განახლების შეცდომა: "
@@ -3425,6 +3305,9 @@
       "Can only remove content from within the Default Content View": [
         ""
       ],
+      "No docker manifests to delete after ignoring manifests with tags or manifest lists": [
+        ""
+      ],
       "Remove Content": [
         "შემცველობის წაშლა"
       ],
@@ -3508,6 +3391,9 @@
       ],
       "There is no downloaded content to clean.": [
         "გასასუფთავებელი გადმოწერილი შემცველობის გარეშე."
+      ],
+      "Export failed: One or more repositories needs to be synced (with Immediate download policy.)": [
+        ""
       ],
       "Create Export History": [
         "გატანის ისტორიის შექმნა"
@@ -4064,6 +3950,9 @@
       "cannot be a binary file.": [
         "არ შეიძლება იყოს ბინარული ფაილი."
       ],
+      "Lifecycle environment '%{env}' cannot be used with content view '%{view}'": [
+        ""
+      ],
       "Content view environments must have both a content view and an environment": [
         ""
       ],
@@ -4213,6 +4102,12 @@
       ],
       "You have subscriptions expiring within %s days": [
         "თქვენი გამოწერის ვადა %s დღეში გადის"
+      ],
+      "Repository %{label} failed to synchronize": [
+        ""
+      ],
+      "%{label} failed": [
+        ""
       ],
       "cannot contain commas": [
         "არ შეიძლება მძიმეებს შეიცავდეს"
@@ -4688,6 +4583,9 @@
       "Cannot associate a Red Hat provider with a custom product": [
         ""
       ],
+      "Cannot add disabled Red Hat product %s to sync plan!": [
+        ""
+      ],
       "must be true or false": [
         ""
       ],
@@ -4741,6 +4639,33 @@
       ],
       "This is not a linked repository": [
         "ბმულ რეპოზიტორიას არ წარმოადგენს"
+      ],
+      "RHEL lifecycle": [
+        ""
+      ],
+      "Full support": [
+        ""
+      ],
+      "Maintenance support": [
+        ""
+      ],
+      "Approaching end of maintenance support (%s)": [
+        ""
+      ],
+      "Approaching end of maintenance support": [
+        ""
+      ],
+      "Extended support": [
+        ""
+      ],
+      "Approaching end of support (%s)": [
+        ""
+      ],
+      "Approaching end of support": [
+        ""
+      ],
+      "Support ended": [
+        ""
       ],
       "is not enabled. must be one of the following: %s": [
         "ჩართული არაა. უნდა იყოს ერთ-ერთი: %s"
@@ -4909,6 +4834,12 @@
       ],
       "No packages updated": [
         "პაკეტები არ განახლებულა"
+      ],
+      "No packages removed": [
+        "პაკეტები არ წაშლილა"
+      ],
+      "No new packages installed": [
+        "ახალი პაკეტები არ დაყენებულა"
       ],
       "Traces": [
         "ტრეისები"
@@ -5346,6 +5277,57 @@
       "Sync Plan: ": [
         "სინქრონიზაციის გეგმა: "
       ],
+      "%{label} failed.": [
+        ""
+      ],
+      "Content view": [
+        "შემცველობის ხედი"
+      ],
+      "Task ID": [
+        ""
+      ],
+      "Task state": [
+        ""
+      ],
+      "Task result": [
+        ""
+      ],
+      "Content view name": [
+        "შემცველობის ხედის სახელი"
+      ],
+      "Task details": [
+        ""
+      ],
+      "Smart proxy ID": [
+        ""
+      ],
+      "Smart proxy name": [
+        ""
+      ],
+      "Environment ID": [
+        ""
+      ],
+      "Environment name": [
+        ""
+      ],
+      "Repository ID": [
+        ""
+      ],
+      "Repository name": [
+        ""
+      ],
+      "Repo ID": [
+        ""
+      ],
+      "Repo label": [
+        ""
+      ],
+      "Product ID": [
+        "პროდუქტის ID"
+      ],
+      "Product label": [
+        ""
+      ],
       "Installed Packages": [
         "დაყენებული პაკეტები"
       ],
@@ -5393,6 +5375,9 @@
       ],
       "Generate and Download": [
         "გენერაცია და გადმოწერა"
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         ""
@@ -5473,6 +5458,18 @@
       "Promote errata": [
         "მორჩენილი პაჩის დაწინაურება"
       ],
+      "Repository sync failure": [
+        ""
+      ],
+      "Content view publish failure": [
+        ""
+      ],
+      "Content view promote failure": [
+        ""
+      ],
+      "Proxy sync failure": [
+        ""
+      ],
       "A summary of available and applicable errata for your hosts": [
         ""
       ],
@@ -5484,6 +5481,24 @@
       ],
       "A list of subscriptions expiring soon": [
         "გამოწერები, რომლებსაც ვადა მალე გასდით"
+      ],
+      "A notification about failed repository sync": [
+        ""
+      ],
+      "A notification about failed content view publish": [
+        ""
+      ],
+      "A notification about failed content view promotion": [
+        ""
+      ],
+      "A notification about failed proxy sync": [
+        ""
+      ],
+      "Hosts": [
+        "ჰოსტები"
+      ],
+      "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
+        ""
       ],
       "Proxies": [
         "პროქსები"
@@ -5569,14 +5584,14 @@
       "Subscription status": [
         "გამოწერის სტატუსი"
       ],
+      "RHEL Lifecycle status": [
+        ""
+      ],
       "Installable updates": [
         ""
       ],
       "Lifecycle environment": [
         "ცხოვრების ციკლის გარემო"
-      ],
-      "Content view": [
-        "შემცველობის ხედი"
       ],
       "Registered": [
         "რეგისტრირებულია"
@@ -5675,18 +5690,6 @@
         ""
       ],
       "Manifest refresh timeout": [
-        ""
-      ],
-      "Accept action timeout": [
-        "თანხმობის ქმედების მოლოდინის ვადა"
-      ],
-      "Time in seconds to wait for a host to pick up a katello-agent action": [
-        ""
-      ],
-      "Finish action timeout": [
-        "დასრულების ქმედების მოლოდინის ვადა"
-      ],
-      "Time in seconds to wait for a host to finish a katello-agent action": [
         ""
       ],
       "Subscription connection enabled": [
@@ -5791,12 +5794,6 @@
       "The maximum number of seconds that Pulp can take to download a file, not counting connection time.": [
         ""
       ],
-      "Use remote execution by default": [
-        "დაშორებული გაშვების ნაგულისხმებად გამოყენება"
-      ],
-      "If this is enabled, remote execution is used instead of katello-agent for remote actions": [
-        ""
-      ],
       "Delete Host upon unregister": [
         "რეგისტრაციის მოხსნის შემდეგ ჰოსტის წაშლა"
       ],
@@ -5825,12 +5822,6 @@
         "ვადა მალე გასდით"
       ],
       "The number of days remaining in a subscription before you will be reminded about renewing it.": [
-        ""
-      ],
-      "content view Dependency Solving Default": [
-        ""
-      ],
-      "The default dependency solving value for new content views.": [
         ""
       ],
       "Host Duplicate DMI UUIDs": [
@@ -6139,6 +6130,9 @@
       "Legacy content host UI": [
         ""
       ],
+      "Refresh applicability": [
+        ""
+      ],
       "Edit content view assignment": [
         "შემცველობის ხედის მინიჭების ჩასწორება"
       ],
@@ -6319,7 +6313,10 @@
       "Edit system purpose attributes": [
         "სისტემის დანიშნულების ატრიბუტების ჩასწორება"
       ],
-      "Select system purpose attributes for host {hostName}.": [
+      "Select system purpose attributes for host {name}.": [
+        ""
+      ],
+      "Select system purpose attributes for activation key {name}.": [
         ""
       ],
       "Select add-ons": [
@@ -6412,6 +6409,9 @@
       "No action is needed because there are no applicable errata for this host.": [
         ""
       ],
+      "Refresh errata applicability": [
+        ""
+      ],
       "This host has errata that are applicable, but not installable. Adjust your filters and try again.": [
         ""
       ],
@@ -6430,23 +6430,17 @@
       "A remote execution job is in progress": [
         "დაშორებულად გაშვებული დავალება ჯერ კიდევ მიმდინარეობს"
       ],
-      "Recalculate": [
-        "თავიდან დათვლა"
-      ],
       "Apply via remote execution": [
         "დაშორებული გაშვებით გადატარება"
       ],
       "Apply via customized remote execution": [
         "თქვენზე მორგებული დაშორებული გაშვებით გადატარება"
       ],
-      "Apply via Katello agent": [
-        "Katello-agent-ის გავლით გადატარება"
-      ],
       "Apply": [
         "გამოყენება"
       ],
-      "Apply Erratum": [
-        "მორჩენილი პაჩის გადატარება"
+      "Apply erratum": [
+        ""
       ],
       "Yes": [
         "დიახ"
@@ -6541,9 +6535,6 @@
       "Uninstall and reset": [
         "წაშლა და საწყისი მდგომარეობის დაბრუნება"
       ],
-      "Install via katello-agent": [
-        "Katello-agent-ის გავლით დაყენება"
-      ],
       "Install via remote execution": [
         "დაშორებული გაშვების გავლით დაყენება"
       ],
@@ -6594,6 +6585,9 @@
       ],
       "Upgrade via customized remote execution": [
         "მორგებული დაშორებული გაშვების გავლით განახლება"
+      ],
+      "Refresh package applicability": [
+        ""
       ],
       "Upgrade": [
         "განახლება"
@@ -6688,16 +6682,43 @@
       "Enable Tracer": [
         ""
       ],
-      "Enabling will install the katello-host-tools-tracer package on the host.": [
-        ""
-      ],
       "via remote execution": [
         "დაშორებულ გაშვების გავლით"
       ],
       "via customized remote execution": [
         "მორგებული დაშორებული გაშვების გავლით"
       ],
+      "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
+        ""
+      ],
+      "Before continuing, ensure that all of the following prerequisites are met:": [
+        ""
+      ],
+      "The Foreman Client repository is enabled. ": [
+        ""
+      ],
+      "The Foreman Client repository is synced. ": [
+        ""
+      ],
+      "View sync status": [
+        ""
+      ],
+      "The Foreman Client repository is available in the host's content view environment(s). ": [
+        ""
+      ],
+      "View content views": [
+        ""
+      ],
+      "The Foreman Client repository set is enabled for the host. ": [
+        ""
+      ],
+      "Remote execution is enabled.": [
+        ""
+      ],
       "Select a provider to install katello-host-tools-tracer": [
+        ""
+      ],
+      "Once the prerequisites are met, select a provider to install katello-host-tools-tracer": [
         ""
       ],
       "Enable Traces": [
@@ -6760,17 +6781,14 @@
       "Traces that require logout cannot be restarted remotely": [
         ""
       ],
-      "Katello-agent is deprecated and will be removed in Katello 4.10.": [
-        ""
-      ],
       "Create new activation key": [
         ""
       ],
       "No Activation Keys selected": [
         "აქტივაცის გასაღებები არჩეული არაა"
       ],
-      "Activation key(s) for Subscription Manager.": [
-        "აქტივაციის გასაღებები გამოწერის მმართველისთვის."
+      "Activation key(s) to use during registration": [
+        ""
       ],
       "No Activation keys to select": [
         "ასარჩევი აქტივაციის გასაღებების გარეშე"
@@ -6789,9 +6807,6 @@
       ],
       "Ignore subscription manager errors": [
         "გამოწერის მმართველის შეცდომების იგნორი"
-      ],
-      "No Lifecycle environment to select": [
-        "ცხოვრების ციკლის გარემოს გარეშე"
       ],
       "Backend System Status": [
         "უკანაბოლო სისტემის სტატუსი"
@@ -7252,9 +7267,6 @@
       "Deleting content view : ": [
         "შემცველობის ხედის წაშლა : "
       ],
-      "Hosts": [
-        "ჰოსტები"
-      ],
       "${pluralize(versionCount, 'content view version')} in the environments below will be removed when content view is deleted": [
         ""
       ],
@@ -7297,6 +7309,9 @@
       "Version ${item.version}": [
         "ვერსია ${item.version}"
       ],
+      " (${item.published_at_words} ago)": [
+        ""
+      ],
       "Update version": [
         "ერსიის განახლება"
       ],
@@ -7320,6 +7335,9 @@
       ],
       "Select available version of content views to use": [
         "აირჩიეთ გამოსაყენებელი შემცველობის ხედების ვერსია"
+      ],
+      " (${version.published_at_words} ago)": [
+        ""
       ],
       "Not yet published": [
         "ჯერ გამოქვეყნებული არაა"
@@ -7630,9 +7648,6 @@
       "Reset filters": [
         "ფილტრების ჩამოყრა"
       ],
-      "Edit rule": [
-        "წესის ჩასწორება"
-      ],
       "Issued": [
         "გამოშვება"
       ],
@@ -7735,17 +7750,26 @@
       "Matching content": [
         "შესატყვისი შემცველობა"
       ],
-      "No matching RPM found.": [
-        "შესატყვისი RPM ვერ ვიპოვე."
-      ],
-      "Given criteria doesn't match any RPMs. Try changing your rule.": [
+      "No matching non-modular RPM found.": [
         ""
       ],
-      "Your search returned no matching RPMs.": [
+      "Given criteria doesn't match any non-modular RPMs. Try changing your rule.": [
+        ""
+      ],
+      "Your search returned no matching non-modular RPMs.": [
+        ""
+      ],
+      "Help": [
+        ""
+      ],
+      "Matching RPMs based on your created filter rule. Remember, RPM filters don't apply to modular RPMs.": [
         ""
       ],
       "Edit filter rule": [
         "ფილტრის წესის ჩასწორება"
+      ],
+      "Edit rule": [
+        "წესის ჩასწორება"
       ],
       "Add rule": [
         "წესის დამატება"
@@ -8185,6 +8209,12 @@
       "Newly published version will be the same as the previous version.": [
         ""
       ],
+      "Duplicate repositories in content view versions": [
+        ""
+      ],
+      "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
+        ""
+      ],
       "A new version of ": [
         "ახალი ვერსია პაკეტისთვის "
       ],
@@ -8196,9 +8226,6 @@
       ],
       "Filters will be applied to this content view version.": [
         ""
-      ],
-      "Content view name": [
-        "შემცველობის ხედის სახელი"
       ],
       "Newly published": [
         "ახლახანს გამოქვეყნებული"
@@ -8407,6 +8434,9 @@
       "Enabled Repositories": [
         "ჩართული რეპოზიტორიები"
       ],
+      "Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.": [
+        ""
+      ],
       "Export as CSV": [
         "CVS-ში გატანა"
       ],
@@ -8415,6 +8445,9 @@
       ],
       "(Orphaned)": [
         "(მიტოვებული)"
+      ],
+      "Cannot be disabled because it is part of a published content view": [
+        ""
       ],
       "Recommended Repositories": [
         "რეკომდენდებული რეპოზიტორიები"
@@ -8473,8 +8506,23 @@
       "No repositories enabled.": [
         "ჩართული რეპოზიტორიების გარეშე."
       ],
-      "Synced to smart proxy": [
-        "სინქრონიზებულია ჭკვიან პროქსისთან"
+      "Synced": [
+        ""
+      ],
+      "Content view version is empty": [
+        ""
+      ],
+      "Smart proxy content count refresh has started in the background": [
+        ""
+      ],
+      "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error.response)}": [
+        ""
+      ],
+      "Last sync": [
+        ""
+      ],
+      "Refresh counts": [
+        ""
       ],
       "Requires Virt-Who": [
         "ესაჭიროება Virt-Who"
@@ -8487,9 +8535,6 @@
       ],
       "Ends": [
         "საბოლოო"
-      ],
-      "Product ID": [
-        "პროდუქტის ID"
       ],
       "Contract Number": [
         "საკონტაქტო ნომერი"
@@ -8728,25 +8773,25 @@
       "There are no Subscriptions to display": [
         "საჩვენებელი გამოწერების გარეშე"
       ],
-      "Add Subscriptions using the Add Subscriptions button.": [
+      "Add subscriptions using the Add Subscriptions button.": [
         ""
       ],
       "Add subscriptions": [
         ""
       ],
-      "Import a Manifest to manage your Entitlements.": [
+      "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
       "Import a Manifest": [
         "მანიფესტის შემოტანა"
       ],
+      "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in Katello 4.12.": [
+        ""
+      ],
       "Subscriptions service": [
         "გამოწერის სერვისი"
       ],
-      "This organization has Simple Content Access enabled. Hosts are not required to have subscriptions attached to access repositories. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        ""
-      ],
-      "This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in a future version.": [
+      "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
         ""
       ],
       "Please enter a positive number above zero": [
@@ -8875,9 +8920,6 @@
       "Action with sub plans": [
         "ქმედება ქვე-გეგმებით"
       ],
-      "Agent action": [
-        "აგენტის ქმედება"
-      ],
       "Auto attach subscriptions": [
         "გამოწერების ავტომატური მიმაგრება"
       ],
@@ -8938,9 +8980,6 @@
       "Remote action:": [
         "დაშორებული ქმედება:"
       ],
-      "Report": [
-        ""
-      ],
       "Sync capsule": [
         "სინქრონიზაციის კაპსულა"
       ],
@@ -8961,15 +9000,6 @@
       ],
       "Verify checksum": [
         "საკონტროლო ჯამის შემოწმება"
-      ],
-      "Get status of repo synchronisation for given product": [
-        "მითითებული პროდუქტის რეპოზიტორიის სინქრონიზაციის სტატუსის მიღება"
-      ],
-      "Learn more about adding Subscription Manifests": [
-        "შეიტყვეთ მეტი გამოწერის მანიფესტების დამატების შესახებ"
-      ],
-      "a future release": [
-        "მომავალი რელიზი"
       ]
     }
   }

@@ -5,6 +5,7 @@
  * @requires $scope
  * @resource $timeout
  * @resource $window
+ * @requires translate
  * @requires HostTraces
  * @requires Nutupane
  * @requires BastionConfig
@@ -20,6 +21,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostTracesController'
         var tracesNutupane, params = {
             'paged': true
         };
+
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('Traces');
 
         tracesNutupane = new Nutupane(HostTraces, params, 'get', {'disableAutoLoad': true});
         tracesNutupane.primaryOnly = true;

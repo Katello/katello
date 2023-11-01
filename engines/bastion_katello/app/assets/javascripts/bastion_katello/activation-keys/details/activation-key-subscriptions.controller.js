@@ -25,6 +25,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeySubscriptions
             'paged': true
         };
 
+        // Labels so breadcrumb strings can be translated
+        $scope.label = translate('List Subscriptions');
+
         $scope.contentNutupane = new Nutupane(ActivationKey, params, "subscriptions");
         $scope.controllerName = 'katello_subscriptions';
         $scope.table = $scope.contentNutupane.table;
