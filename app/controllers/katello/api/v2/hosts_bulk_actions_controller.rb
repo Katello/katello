@@ -1,4 +1,5 @@
 module Katello
+  # this is Katello's host bulk actions controller, not to be confused with Foreman's
   class Api::V2::HostsBulkActionsController < Api::V2::ApiController
     include Concerns::Api::V2::BulkHostsExtensions
     include Katello::Concerns::Api::V2::ContentOverridesController
