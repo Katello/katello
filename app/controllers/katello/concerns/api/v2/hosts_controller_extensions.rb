@@ -3,7 +3,6 @@ module Katello
     module Api::V2::HostsControllerExtensions
       extend ActiveSupport::Concern
       include ForemanTasks::Triggers
-      require 'active_support/core_ext/string/inflections'
 
       module Overrides
         def action_permission
@@ -23,14 +22,6 @@ module Katello
         def destroy
           Katello::RegistrationManager.unregister_host(@host, :unregistering => false)
           process_response(:object => @host)
-        end
-
-        def bulk_destroy
-          destroyed_count = @hosts.count
-          @hosts.in_batches.each_record do |host|
-            Katello::RegistrationManager.unregister_host(host, :unregistering => false)
-          end
-          process_response(true, { :message => _("Deleted %{host_count} %{hosts}") % { :host_count => destroyed_count, :hosts => 'host'.pluralize(destroyed_count) }})
         end
 
         api :PUT, "/hosts/:host_id/host_collections", N_("Alter a host's host collections")
