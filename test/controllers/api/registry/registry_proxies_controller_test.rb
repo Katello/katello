@@ -136,13 +136,16 @@ module Katello
         PersonalAccessToken.expects(:where)
                            .with(user_id: User.current.id, name: 'registry')
                            .returns([])
-        expiration = Time.now
+        issue_time = Time.now
+        expiry_time = 30.minutes.from_now
+        tolerance = 3.seconds
+
         token = mock('token')
         token.stubs(:token).returns("12345")
         token.stubs(:generate_token).returns("12345")
         token.stubs(:user_id).returns(User.current.id)
-        token.stubs(:expires_at).returns("#{expiration}")
-        token.stubs(:created_at).returns("#{expiration}")
+        token.stubs(:expires_at).returns("#{expiry_time.rfc3339}")
+        token.stubs(:created_at).returns("#{issue_time.rfc3339}")
         token.stubs('save!').returns(true)
         PersonalAccessToken.expects(:new).returns(token)
 
@@ -151,18 +154,24 @@ module Katello
         assert_equal 'registry/2.0', response.headers['Docker-Distribution-API-Version']
         body = JSON.parse(response.body)
         assert_equal "12345", body['token']
-        assert_equal "#{expiration}", body['expires_at']
-        assert_equal "#{expiration}", body['issued_at']
+
+        response_issue_time = body['issued_at'].to_time
+        response_expiry_time = response_issue_time + body['expires_in'].seconds
+        assert (response_expiry_time - tolerance) < expiry_time
+        assert (response_expiry_time + tolerance) > expiry_time
       end
 
       it "token - has 'registry' token" do
-        expiration = Time.now
+        issue_time = Time.now
+        expiry_time = 30.minutes.from_now
+        tolerance = 3.seconds
+
         token = mock('token')
         token.stubs(:token).returns("12345")
         token.stubs(:generate_token).returns("12345")
         token.stubs(:user_id).returns(User.current.id)
-        token.stubs(:expires_at).returns("#{expiration}")
-        token.stubs(:created_at).returns("#{expiration}")
+        token.stubs(:expires_at).returns(expiry_time.rfc3339)
+        token.stubs(:created_at).returns(issue_time.rfc3339)
         token.stubs('save!').returns(true)
         token.expects('expires_at=').returns(true)
         PersonalAccessToken.expects(:where)
@@ -175,8 +184,11 @@ module Katello
         assert_equal 'registry/2.0', response.headers['Docker-Distribution-API-Version']
         body = JSON.parse(response.body)
         assert_equal "12345", body['token']
-        assert_equal "#{expiration}", body['expires_at']
-        assert_equal "#{expiration}", body['issued_at']
+
+        response_issue_time = body['issued_at'].to_time
+        response_expiry_time = response_issue_time + body['expires_in'].seconds
+        assert (response_expiry_time - tolerance) < expiry_time
+        assert (response_expiry_time + tolerance) > expiry_time
       end
 
       it "token - unscoped is authorized" do
