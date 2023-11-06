@@ -1,7 +1,7 @@
 module Katello
   if Katello.with_remote_execution?
     class RemoteExecutionController < JobInvocationsController
-      include Concerns::Api::V2::BulkHostsExtensions
+      include ::Api::V2::BulkHostsExtension
       include Concerns::Api::V2::HostErrataExtensions
 
       def new
