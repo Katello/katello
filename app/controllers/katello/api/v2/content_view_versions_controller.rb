@@ -1,6 +1,6 @@
 module Katello
   class Api::V2::ContentViewVersionsController < Api::V2::ApiController
-    include Concerns::Api::V2::BulkHostsExtensions
+    include ::Api::V2::BulkHostsExtension
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_action :find_authorized_katello_resource, :only => [:show, :update, :promote, :destroy, :republish_repositories]
