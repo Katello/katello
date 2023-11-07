@@ -18,7 +18,7 @@ import { PlusCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
-import { useSet } from '../../../../Table/TableHooks';
+import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { HostCollectionsAddModal, HostCollectionsRemoveModal } from './HostCollectionsModal';
 import { hasRequiredPermissions, hostIsRegistered, userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 import EmptyStateMessage from '../../../../Table/EmptyStateMessage';

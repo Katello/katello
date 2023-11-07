@@ -21,7 +21,7 @@ import {
   Thead,
   Tr,
 } from '@patternfly/react-table';
-import { useUrlParams } from '../../../../../components/Table/TableHooks';
+import { useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { TableType } from './ContentViewVersionDetailConfig';
 

@@ -24,8 +24,9 @@ import {
   LongArrowAltUpIcon,
   CheckIcon,
 } from '@patternfly/react-icons';
+import { useBulkSelect, useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
+import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
 import { selectModuleStreamStatus, selectModuleStream } from './ModuleStreamsSelectors';
-import { useBulkSelect, useTableSort, useUrlParams } from '../../../../Table/TableHooks';
 import { getHostModuleStreams } from './ModuleStreamsActions';
 import InactiveText from '../../../../../scenes/ContentViews/components/InactiveText';
 import TableWrapper from '../../../../../components/Table/TableWrapper';

@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { omit } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
+import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
+import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
 import { Button } from '@patternfly/react-core';
 import { TableVariant, Thead, Tbody, Th, Tr, Td, ExpandableRowContent } from '@patternfly/react-table';
 import TableWrapper from '../../../components/Table/TableWrapper';
@@ -15,7 +17,6 @@ import { selectContentViews, selectContentViewStatus, selectContentViewError } f
 import ContentViewVersionPromote from '../Details/Promote/ContentViewVersionPromote';
 import getEnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPathActions';
 import { hasPermission } from '../helpers';
-import { useSet, useTableSort } from '../../../components/Table/TableHooks';
 import ContentViewIcon from '../components/ContentViewIcon';
 import { urlBuilder } from '../../../__mocks__/foremanReact/common/urlHelpers';
 import LastSync from '../Details/Repositories/LastSync';

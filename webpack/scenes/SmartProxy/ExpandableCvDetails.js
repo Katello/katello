@@ -5,8 +5,8 @@ import { TableComposable, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-tab
 import { CheckCircleIcon, TimesCircleIcon } from '@patternfly/react-icons';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import ContentViewIcon from '../ContentViews/components/ContentViewIcon';
-import { useSet } from '../../components/Table/TableHooks';
 import ExpandedSmartProxyRepositories from './ExpandedSmartProxyRepositories';
 
 const ExpandableCvDetails = ({ contentViews, contentCounts, envId }) => {

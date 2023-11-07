@@ -8,7 +8,7 @@ import { STATUS } from 'foremanReact/constants';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { first } from 'lodash';
-import { useSelectionSet } from '../../../../components/Table/TableHooks';
+import { useSelectionSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import InactiveText from '../../components/InactiveText';
 import ContentViewVersionEnvironments from './ContentViewVersionEnvironments';

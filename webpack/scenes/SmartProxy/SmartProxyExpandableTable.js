@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { Thead, Tbody, Th, Tr, Td } from '@patternfly/react-table';
+import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import getSmartProxyContent, { updateSmartProxyContentCounts } from './SmartProxyContentActions';
 import {
   selectSmartProxyContent,
   selectSmartProxyContentStatus,
   selectSmartProxyContentError,
 } from './SmartProxyContentSelectors';
-import { useSet } from '../../components/Table/TableHooks';
 import TableWrapper from '../../components/Table/TableWrapper';
 import ExpandableCvDetails from './ExpandableCvDetails';
 import ComponentEnvironments from '../ContentViews/Details/ComponentContentViews/ComponentEnvironments';

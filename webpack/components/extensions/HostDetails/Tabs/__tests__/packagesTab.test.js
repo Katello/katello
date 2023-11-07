@@ -1,12 +1,12 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import * as hooks from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_PACKAGES_KEY, PACKAGES_SEARCH_QUERY, SELECTED_UPDATE_VERSIONS } from '../PackagesTab/HostPackagesConstants';
 import { PackagesTab } from '../PackagesTab/PackagesTab.js';
 import mockPackagesData from './packages.fixtures.json';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
-import * as hooks from '../../../../Table/TableHooks';
 
 jest.mock('../../hostDetailsHelpers', () => ({
   ...jest.requireActual('../../hostDetailsHelpers'),
