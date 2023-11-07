@@ -21,7 +21,9 @@ export const dateFormat = date => `${(date.getMonth() + 1).toString().padStart(2
 
 export const convertAPIDateToUIFormat = (dateString) => {
   if (!dateString || dateString === '') return '';
-  return dateFormat(new Date(dateString));
+  const dateTZ = new Date(dateString);
+  dateTZ.setMinutes(dateTZ.getMinutes() + dateTZ.getTimezoneOffset());
+  return dateFormat(dateTZ);
 };
 
 export const dateParse = (date) => {
