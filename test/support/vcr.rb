@@ -71,6 +71,7 @@ def configure_vcr
 
   if mode != :none
     system("sudo cp -rf #{Katello::Engine.root}/test/fixtures/test_repos /var/lib/pulp/sync_imports/")
+    system("sudo chown -R pulp:pulp /var/lib/pulp/sync_imports/")
   end
 
   VCR.configure do |c|
