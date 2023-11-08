@@ -100,6 +100,14 @@ module Katello
       end
     end
 
+    api :POST, '/capsules/:id/content/verify_content', N_('Validate the checksums of all content.')
+    param :id, :number, :required => true, :desc => N_('Id of the smart proxy')
+    def validate_content
+      find_capsule(true)
+      task = async_task(::Actions::Pulp3::CapsuleContent::ValidateContent, @capsule)
+      respond_for_async :resource => task
+    end
+
     api :POST, '/capsules/:id/content/reclaim_space', N_('Reclaim space from all On Demand repositories on a smart proxy')
     param :id, :number, :required => true, :desc => N_('Id of the smart proxy')
     def reclaim_space

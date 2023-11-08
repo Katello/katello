@@ -121,6 +121,10 @@ module Katello
           PulpcoreClient::OrphansCleanupApi.new(core_api_client)
         end
 
+        def repair_api
+          PulpcoreClient::RepairApi.new(core_api_client)
+        end
+
         def artifacts_api
           PulpcoreClient::ArtifactsApi.new(core_api_client)
         end
@@ -228,6 +232,10 @@ module Katello
           self.class.fetch_from_list do |page_opts|
             remotes_api.list(page_opts.merge(options))
           end
+        end
+
+        def repair_all(verify_checksums = true)
+          [repair_api.post(PulpcoreClient::Repair.new(verify_checksums: verify_checksums))]
         end
 
         def self.fetch_from_list

@@ -53,6 +53,13 @@
         </a>
       </li>
       <li>
+        <a ng-click="validateContent()">
+          <span translate><strong>Validate Content Checksums</strong></span>
+          <p translate>Verifies all the content and if broken tries to re-sync it.</p>
+          <p translate>Attention: this task can take a long time to finish and be resource-intensive.</p>
+        </a>
+      </li>
+      <li>
         <a ng-click="reclaimSpace()" ng-hide="syncStatus.download_policy != 'on_demand'">
           <span translate><strong>Reclaim Space</strong></span>
           <p translate> Delete cached content units from an "On Demand" Smart Proxy.</p>

@@ -156,5 +156,14 @@ module Katello
       post :reclaim_space, params: { :id => proxy_with_pulp.id }
       assert_response :success
     end
+
+    def test_validate_content
+      assert_async_task ::Actions::Pulp3::CapsuleContent::ValidateContent do |capsule|
+        assert_equal proxy_with_pulp.id, capsule.id
+      end
+
+      post :validate_content, params: { :id => proxy_with_pulp.id }
+      assert_response :success
+    end
   end
 end
