@@ -124,4 +124,3 @@ export default {
   apiError,
 };
 
-export const friendlySearchParam = searchParam => decodeURIComponent(searchParam.replace(/\+/g, ' '));
