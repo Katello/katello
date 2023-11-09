@@ -73,12 +73,16 @@ module Katello
       find_content_view if params[:content_view_id]
       find_repository if params[:repository_id]
       skip_metadata_check = ::Foreman::Cast.to_bool(params[:skip_metadata_check])
+      sync_options = {
+        :environment_id => @environment.try(:id),
+        :content_view_id => @content_view.try(:id),
+        :repository_id => @repository.try(:id),
+        :skip_metadata_check => skip_metadata_check
+      }
+      sync_options[:environment_ids] = @capsule.lifecycle_environments&.pluck(:id) unless (@environment || @content_view || @repository)
       task = async_task(::Actions::Katello::CapsuleContent::Sync,
                         @capsule,
-                        :environment_id => @environment.try(:id),
-                        :content_view_id => @content_view.try(:id),
-                        :repository_id => @repository.try(:id),
-                        :skip_metadata_check => skip_metadata_check)
+                        sync_options)
       respond_for_async :resource => task
     end
 

@@ -450,7 +450,13 @@ module Katello
       end
 
       def last_env_sync_task(env)
-        last_env_sync_task = sync_tasks.order(ended_at: :desc).detect { |task| task.input.with_indifferent_access[:options][:environment_id] == env.id }
+        last_env_sync_task = sync_tasks.order(ended_at: :desc).detect { |task| task.input.with_indifferent_access[:options][:environment_id] == env.id || task.input.with_indifferent_access[:options][:environment_ids]&.include?(env.id) }
+
+        # env_ids_task_exists checks if any full syncs have run since we started tracking env_ids at time of sync.
+        # If yes, return last_env_sync_task which checks for env_id specific sync + full syncs which contain env as part of env_ids
+        env_ids_task_exists = sync_tasks.order(ended_at: :desc).any? { |task| task.input.with_indifferent_access[:options][:environment_ids] }
+        return last_env_sync_task if env_ids_task_exists
+
         if (last_complete_sync_task&.ended_at && last_env_sync_task&.ended_at)
           return last_complete_sync_task.ended_at > last_env_sync_task.ended_at ? last_complete_sync_task : last_env_sync_task
         elsif last_env_sync_task
