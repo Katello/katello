@@ -4,6 +4,7 @@ module Katello
     include Katello::Concerns::Api::V2::RepositoryContentController
 
     before_action :find_repositories, :only => [:auto_complete_name]
+    before_action :find_optional_organization, :only => [:repositories, :index, :show, :auto_complete_search]
 
     def auto_complete_name
       page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
@@ -31,6 +32,7 @@ module Katello
 
       if tag.repositories.size > 1 #pulp3
         repos = tag.repositories.non_archived
+        repos = repos.in_organization(@organization) if @organization
       else
         repos = []
         tag.related_tags.each do |related|

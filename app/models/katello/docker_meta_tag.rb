@@ -111,7 +111,7 @@ module Katello
       if grouped
         grouped_fields = "#{table_name}.name, katello_repositories.root_id"
         ids = distinct.select("ON (#{grouped_fields}) #{table_name}.id").joins(:repositories)
-        self.where(:id => ids)
+        self.where(:id => ids).where("#{self.table_name}.schema1_id in (#{sql}) or #{self.table_name}.schema2_id in (#{sql})")
       else
         self.where("#{self.table_name}.schema1_id in (#{sql}) or #{self.table_name}.schema2_id in (#{sql})")
       end
