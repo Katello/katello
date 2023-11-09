@@ -18,16 +18,38 @@ child :docker_manifest => :manifest do
   attributes :schema_version, :digest, :manifest_type
 end
 
-child :repositories => :repositories do
-  attributes :id, :name, :full_path
+if @organization
+  node :repositories do
+    @object.repositories.in_organization(@organization).map do |repo|
+      attributes = {
+        :id => repo.id,
+        :name => repo.name,
+        :full_path => repo.full_path
+      }
+      attributes
+    end
+  end
+  node :product do
+    first_repo = @object.repositories.in_organization(@organization)&.first
+    product = first_repo&.product
+    attributes = {
+      :id => product&.id,
+      :name => product&.name
+    }
+    attributes
+  end
+else
+  child :repositories => :repositories do
+    attributes :id, :name, :full_path
+  end
+
+  child :product => :product do
+    attributes :id, :name
+  end
 end
 
 node :upstream_name do |item|
   item.upstream_name
-end
-
-child :product => :product do
-  attributes :id, :name
 end
 
 child :environment => :environment do
