@@ -27,7 +27,7 @@ module Actions
         def notify_on_failure(_plan)
           notification = MailNotification[:content_view_promote_failure]
           view = ::Katello::ContentView.find(input.fetch(:content_view, {})[:id])
-          notification.users.each do |user|
+          notification.users.where(disabled: [nil, false], mail_enabled: true).each do |user|
             notification.deliver(user: user, content_view: view, task: task)
           end
         end

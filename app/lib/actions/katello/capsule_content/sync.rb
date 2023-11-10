@@ -53,7 +53,7 @@ module Actions
           notification = MailNotification[:proxy_sync_failure]
           proxy = SmartProxy.find(input.fetch(:smart_proxy, {})[:id])
           subjects = subjects(input[:options]).merge(smart_proxy: proxy)
-          notification.users.each do |user|
+          notification.users.where(disabled: [nil, false], mail_enabled: true).each do |user|
             notification.deliver(subjects.merge(user: user, task: task))
           end
         end
