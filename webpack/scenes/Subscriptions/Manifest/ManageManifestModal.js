@@ -129,10 +129,9 @@ class ManageManifestModal extends Component {
 
     return (
       <ForemanModal id={MANAGE_MANIFEST_MODAL_ID} title={__('Manage Manifest')}>
-        <Tabs id="manifest-history-tabs" ouiaId="manifest-history-tabs">
+        <Tabs id="manifest-history-tabs">
           {showManifestTab &&
             <Tab
-              ouiaId="subscription-manifest-tab"
               eventKey={1}
               title={__('Manifest')}
             >
@@ -199,10 +198,10 @@ class ManageManifestModal extends Component {
                           <ForemanModal title={__('Confirm delete manifest')} id={DELETE_MANIFEST_MODAL_ID}>
                             <DeleteManifestModalText simpleContentAccess={simpleContentAccess} />
                             <ForemanModal.Footer>
-                              <Button ouiaId="cancel-button" bsStyle="default" onClick={this.hideDeleteManifestModal}>
+                              <Button bsStyle="default" onClick={this.hideDeleteManifestModal}>
                                 {__('Cancel')}
                               </Button>
-                              <Button ouiaId="delete-button" bsStyle="danger" onClick={this.deleteManifest}>
+                              <Button bsStyle="danger" onClick={this.deleteManifest}>
                                 {__('Delete')}
                               </Button>
                             </ForemanModal.Footer>
@@ -216,13 +215,11 @@ class ManageManifestModal extends Component {
             </Tab>
           }
           <Tab
-            ouiaId="manifest-history-tab"
             eventKey={2}
             title={__('Manifest History')}
           >
             <LoadingState loading={manifestHistory.loading} loadingText={__('Loading')}>
               <Table
-                ouiaId="manifest-history-table"
                 rows={manifestHistory.results}
                 columns={columns}
                 emptyState={emptyStateData()}
@@ -231,7 +228,6 @@ class ManageManifestModal extends Component {
           </Tab>
           {showCdnConfigurationTab &&
             <Tab
-              ouiaId="cdn-configuration-tab"
               eventKey={3}
               title={__('CDN Configuration')}
             >
@@ -248,7 +244,7 @@ class ManageManifestModal extends Component {
           }
         </Tabs>
         <ForemanModal.Footer>
-          <Button ouiaId="close-button" bsStyle="primary" onClick={this.hideModal}>
+          <Button bsStyle="primary" onClick={this.hideModal}>
             {__('Close')}
           </Button>
         </ForemanModal.Footer>
