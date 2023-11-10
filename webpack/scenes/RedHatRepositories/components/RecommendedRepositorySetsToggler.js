@@ -19,7 +19,6 @@ const RecommendedRepositorySetsToggler = ({
   return (
     <div className={classes} {...props}>
       <Switch
-        ouiaId="enabled-repo-set-switch"
         bsSize="mini"
         value={enabled}
         onChange={() => onChange(!enabled)}

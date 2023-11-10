@@ -34,7 +34,6 @@ export const getSetsComponent = (repoSetsState, onPaginationChange) => {
     <ListView>
       <div className="sticky-pagination">
         <Pagination
-          ouiaId="repos-pagination"
           itemCount={itemCount}
           onChange={onPaginationChange}
           isCompact
@@ -65,7 +64,6 @@ export const getEnabledComponent = (enabledReposState, onPaginationChange) => {
     <ListView>
       <div className="sticky-pagination sticky-pagination-grey">
         <Pagination
-          ouiaId="enabled-repos-pagination"
           isCompact
           itemCount={itemCount}
           onChange={onPaginationChange}
