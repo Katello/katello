@@ -74,14 +74,11 @@ const SubscriptionsToolbar = ({
               </a>
             }
 
-            <Button ouiaId="manage-manifest-button" onClick={onManageManifestButtonClick}>
+            <Button onClick={onManageManifestButtonClick}>
               {__('Manage Manifest')}
             </Button>
 
-            <Button
-              ouiaId="export-csv-button"
-              onClick={onExportCsvButtonClick}
-            >
+            <Button onClick={onExportCsvButtonClick}>
               {__('Export CSV')}
             </Button>
             {canManageSubscriptionAllocations &&

@@ -74,7 +74,6 @@ class SetOrganization extends Component {
               <div className="col-sm-3">
                 <a href={`/organizations/${id}/select`}>
                   <Button
-                    ouiaId="select-org-button"
                     disabled={this.state.disabled}
                     className="btn btn-primary"
                     onClick={this.onSend}

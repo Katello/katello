@@ -222,7 +222,7 @@ class SubscriptionsPage extends Component {
       };
 
     const SCAAlert = (
-      <Alert ouiaId="sca-alert" type="warning">
+      <Alert type="warning">
         <FormattedMessage
           id="sca-alert"
           values={{
