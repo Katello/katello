@@ -55,9 +55,12 @@ const RegistrationCard = ({ isExpandedGlobal, hostDetails }) => {
   const subscriptionFacetAttributes
     = propsToCamelCase(hostDetails?.subscription_facet_attributes || {});
   const {
-    registeredAt, registeredThrough, activationKeys, user,
+    registeredAt, activationKeys, user,
   }
     = subscriptionFacetAttributes;
+  const contentFacetAttributes
+    = propsToCamelCase(hostDetails?.content_facet_attributes || {});
+  const { contentSourceName } = contentFacetAttributes;
   const login = user?.login;
   if (!registeredAt) return null;
   return (
@@ -78,7 +81,7 @@ const RegistrationCard = ({ isExpandedGlobal, hostDetails }) => {
         </DescriptionListGroup>
         <DescriptionListGroup>
           <DescriptionListTerm>{__('Content source')}</DescriptionListTerm>
-          <DescriptionListDescription>{registeredThrough}</DescriptionListDescription>
+          <DescriptionListDescription>{contentSourceName}</DescriptionListDescription>
         </DescriptionListGroup>
       </DescriptionList>
     </CardTemplate>
@@ -98,6 +101,9 @@ RegistrationCard.propTypes = {
         id: PropTypes.number,
         name: PropTypes.string,
       })),
+    }),
+    content_facet_attributes: PropTypes.shape({
+      content_source_name: PropTypes.string,
     }),
   }),
 };
