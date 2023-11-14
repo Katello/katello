@@ -20,6 +20,47 @@ module Katello
     #    },
     #    "enabled":false
     # }
+    #
+    #Example cp_products json structure (key:values where values are arrays and productContent is an array of contents inside value array)
+    # {
+    #    "230"=>
+    #   [{"id"=>"230",
+    #     "productContent"=>
+    #      [{"content"=>
+    #         {"created"=>"2023-11-01T18:02:54+0000",
+    #          "updated"=>"2023-11-01T18:02:54+0000",
+    #          "uuid"=>"ff8080818b715841018b8c0d76d90190",
+    #          "id"=>"3996",
+    #          "type"=>"yum",
+    #          "label"=>"rhel-7-server-rt-htb-rpms",
+    #          "name"=>"Red Hat Enterprise Linux for Real Time HTB (RHEL 7 Server) (RPMs)",
+    #          "vendor"=>"Red Hat",
+    #          "contentUrl"=>"/content/htb/rhel/server/7/$basearch/rt/os",
+    #          "requiredTags"=>"rhel-7-server",
+    #          "releaseVer"=>nil,
+    #          "gpgUrl"=>"file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release",
+    #          "modifiedProductIds"=>[],
+    #          "arches"=>nil,
+    #          "metadataExpire"=>1},
+    #        "enabled"=>false},
+    #       {"content"=>
+    #         {"created"=>"2023-11-01T18:02:54+0000",
+    #          "updated"=>"2023-11-01T18:02:54+0000",
+    #          "uuid"=>"ff8080818b715841018b8c0d76d90181",
+    #          "id"=>"2165",
+    #          "type"=>"yum",
+    #          "label"=>"rhel-7-server-optional-htb-debug-rpms",
+    #          "name"=>"Red Hat Enterprise Linux 7 Server - Optional HTB (Debug RPMs)",
+    #          "vendor"=>"Red Hat",
+    #          "contentUrl"=>"/content/htb/rhel/server/7/$basearch/optional/debug",
+    #          "requiredTags"=>"rhel-7-server",
+    #          "releaseVer"=>nil,
+    #          "gpgUrl"=>"file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release",
+    #          "modifiedProductIds"=>[],
+    #          "arches"=>nil,
+    #          "metadataExpire"=>1},
+    #        "enabled"=>false}]}]
+    # }
     attr_reader :content_url_updated
 
     def initialize(cp_products = [])
@@ -35,12 +76,13 @@ module Katello
     end
 
     def find_product_for_content(content_id)
-      prod = @cp_products.find do |prod_json|
-        prod_json['productContent'].any? do |product_content_json|
+      #Hash.find converts hash into enumerable iterating over each key,value pair which we can capture based on find result
+      cp_product_id, __cp_product_value = @cp_products.find do |prod_json|
+        prod_json&.last&.first&.[]('productContent')&.any? do |product_content_json|
           product_content_json["content"]["id"] == content_id
         end
       end
-      ::Katello::Product.find_by(cp_id: prod["id"]) if prod
+      ::Katello::Product.find_by(cp_id: cp_product_id)
     end
 
     def fetch_product_contents_to_move(product, prod_contents_json)
