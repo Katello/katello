@@ -306,6 +306,7 @@ module Katello
           host.content_facet.applicable_errata = []
           host.content_facet.uuid = nil
           host.content_facet.content_view_environments = []
+          host.content_facet.content_source = ::SmartProxy.pulp_primary
           host.content_facet.save!
           Rails.logger.debug "remove_host_artifacts: marking CVEs unchanged to prevent backend update"
           host.content_facet.mark_cves_unchanged

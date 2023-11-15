@@ -308,6 +308,19 @@ module Katello
         assert_empty @host.rhsm_fact_values
       end
 
+      def test_unregister_host_resets_content_source
+        @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+                                    :lifecycle_environment => @library, :organization => @content_view.organization)
+        pulp3_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
+        @host.content_facet.update(:content_source_id => pulp3_proxy.id)
+        ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
+
+        ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
+
+        refute_nil @host.content_facet.content_source
+        assert_equal ::SmartProxy.pulp_primary, @host.content_facet.content_source
+      end
+
       def test_destroy_host_not_found
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
