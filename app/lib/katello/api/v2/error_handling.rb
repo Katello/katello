@@ -75,7 +75,7 @@ module Katello
         end
 
         def rescue_from_unsupported_action_exception(exception)
-          respond_for_exception(exception, :status => :bad_request)
+          respond_for_exception(exception, :status => :bad_request, :force_json => true)
         end
 
         def rescue_from_bad_data(exception)
