@@ -212,7 +212,6 @@ module Katello
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
       host = Katello::RegistrationManager.process_registration(rhsm_params, find_content_view_environments)
-
       host.reload
 
       update_host_registered_through(host, request.headers)
@@ -240,8 +239,8 @@ module Katello
       activation_keys = find_activation_keys
 
       host = Katello::RegistrationManager.process_registration(rhsm_params, nil, activation_keys)
-
       update_host_registered_through(host, request.headers)
+
       host.reload
 
       render :json => Resources::Candlepin::Consumer.get(host.subscription_facet.uuid)
@@ -273,6 +272,7 @@ module Katello
       hostnames = headers["HTTP_X_FORWARDED_HOST"]
       host = hostnames.split(/[,,:]/)[0].strip if hostnames
       host || URI.parse(Setting[:foreman_url]).host
+      "loadbalancer.example.com"
     end
 
     def get_content_source_id(hostname)
@@ -474,7 +474,20 @@ module Katello
     def update_host_registered_through(host, headers)
       parent_host = get_parent_host(headers)
       host.subscription_facet.update_attribute(:registered_through, parent_host)
-      content_source_id = get_content_source_id(parent_host)
+      set_host_content_source(host, parent_host)
+    end
+
+    def registering_thru_load_balancer?(hostname)
+      ::SmartProxy.behind_load_balancer(hostname).present?
+    end
+
+    def set_host_content_source(host, content_source_hostname)
+      content_source_id = get_content_source_id(content_source_hostname)
+      if registering_thru_load_balancer?(content_source_hostname)
+        Rails.logger.info "Host %s registered through load balancer %s" % [host.name, parent_host]
+        content_source_id = ::SmartProxy.behind_load_balancer(content_source_hostname)&.first&.id
+      end
+      Rails.logger.warn "Host %s registered through unknown proxy %s" % [host.name, parent_host] if content_source_id.nil?
       host.content_facet.update_attribute(:content_source_id, content_source_id)
     end
 

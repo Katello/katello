@@ -91,12 +91,17 @@ module Katello
 
         def remote_execution_proxies(provider, *_rest)
           proxies = super
-          if (name = subscription_facet&.registered_through)
-            registered_through = SmartProxy.with_features(provider)
+          name = subscription_facet&.registered_through
+          result = []
+          if name.present?
+            result = SmartProxy.with_features(provider)
                                            .authorized
                                            .where(name: name)
+            if result.blank?
+              result = SmartProxy.behind_load_balancer(name)
+            end
           end
-          proxies[:registered_through] = registered_through || []
+          proxies[:registered_through] = result
           proxies
         end
       end
