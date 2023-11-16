@@ -59,24 +59,21 @@ class SubscriptionDetails extends Component {
 
     return (
       <div id="subscription-details">
-        {!subscriptionDetails.loading &&
-          <BreadcrumbsBar
-            onSwitcherItemClick={(e, url) => this.handleBreadcrumbSwitcherItem(e, url)}
-            data={{
-              isSwitchable: true,
-              breadcrumbItems: [
-                {
-                  caption: __('Subscriptions'),
-                  onClick: () =>
-                    this.props.history.push('/subscriptions'),
-                },
-                {
-                  caption: String(subscriptionDetails.name || __('Subscription Details')),
-                },
-              ],
-              resource,
-            }}
-          />}
+        {!subscriptionDetails.loading && <BreadcrumbsBar
+          isLoadingResources={subscriptionDetails.loading}
+          onSwitcherItemClick={(e, url) => this.handleBreadcrumbSwitcherItem(e, url)}
+          isSwitchable
+          breadcrumbItems={[
+            {
+              caption: __('Subscriptions'),
+              url: '/subscriptions/',
+            },
+            {
+              caption: String(subscriptionDetails.name || __('Subscription Details')),
+            },
+          ]}
+          resource={resource}
+        />}
 
         <TabContainer id="subscription-tabs-container" defaultActiveKey={1}>
           <div>
