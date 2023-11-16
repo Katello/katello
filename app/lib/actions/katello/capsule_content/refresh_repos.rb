@@ -18,7 +18,8 @@ module Actions
           plan_self(:smart_proxy_id => smart_proxy.id,
                     :environment_id => options[:environment]&.id,
                     :content_view_id => options[:content_view]&.id,
-                    :repository_id => options[:repository]&.id)
+                    :repository_id => options[:repository]&.id,
+                    :repository_ids_list => options[:repository_ids_list])
         end
 
         def invoke_external_task
@@ -33,7 +34,12 @@ module Actions
           current_repos_on_capsule = smart_proxy_service.current_repositories(environment, content_view)
           current_repos_on_capsule_ids = current_repos_on_capsule.pluck(:id)
 
-          list_of_repos_to_sync = smart_proxy_helper.combined_repos_available_to_capsule(environment, content_view, repository)
+          if input[:repository_ids_list].nil?
+            list_of_repos_to_sync = smart_proxy_helper.combined_repos_available_to_capsule(environment, content_view, repository)
+          else
+            list_of_repos_to_sync = ::Katello::Repository.where(:id => input[:repository_ids_list])
+          end
+
           list_of_repos_to_sync.each do |repo|
             next unless act_on_repo?(repo, smart_proxy)
 
