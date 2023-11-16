@@ -15,6 +15,13 @@ module Actions
             repos = repos_to_sync(smart_proxy, environment, content_view, repository, skip_metadata_check)
             return nil if repos.empty?
 
+            if environment.nil? && content_view.nil? && repository.nil?
+              options[:repository_ids_list] = repos.pluck(:id)
+            end
+            if smart_proxy.has_feature?(SmartProxy::PULP3_FEATURE)
+              plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, options)
+            end
+
             repos.in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repo_batch|
               concurrence do
                 repo_batch.each do |repo|
