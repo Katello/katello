@@ -5,26 +5,27 @@ exports[`subscriptions details page should render and contain appropiate compone
   id="subscription-details"
 >
   <BreadcrumbsBar
-    data={
-      Object {
-        "breadcrumbItems": Array [
-          Object {
-            "caption": "Subscriptions",
-            "onClick": [Function],
-          },
-          Object {
-            "caption": "OpenShift Employee Subscription",
-          },
-        ],
-        "isSwitchable": true,
-        "resource": Object {
-          "nameField": "name",
-          "resourceUrl": "/katello/api/v2/organizations/1/subscriptions",
-          "switcherItemUrl": "/subscriptions/:id",
+    breadcrumbItems={
+      Array [
+        Object {
+          "caption": "Subscriptions",
+          "url": "/subscriptions/",
         },
+        Object {
+          "caption": "OpenShift Employee Subscription",
+        },
+      ]
+    }
+    isLoadingResources={false}
+    isSwitchable={true}
+    onSwitcherItemClick={[Function]}
+    resource={
+      Object {
+        "nameField": "name",
+        "resourceUrl": "/katello/api/v2/organizations/1/subscriptions",
+        "switcherItemUrl": "/subscriptions/:id",
       }
     }
-    onSwitcherItemClick={[Function]}
   />
   <ForwardRef
     defaultActiveKey={1}
