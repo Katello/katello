@@ -135,7 +135,7 @@ module Katello
 
       def registration_host
         url = self.setting('Registration', 'registration_url').presence || self.url
-        name == "rhel8b.fedora.example.com" ? "loadbalancer.example.com" : URI.parse(url).host
+        URI.parse(url).host
       end
 
       def load_balanced?

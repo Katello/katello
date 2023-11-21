@@ -272,7 +272,6 @@ module Katello
       hostnames = headers["HTTP_X_FORWARDED_HOST"]
       host = hostnames.split(/[,,:]/)[0].strip if hostnames
       host || URI.parse(Setting[:foreman_url]).host
-      "loadbalancer.example.com"
     end
 
     def get_content_source_id(hostname)
