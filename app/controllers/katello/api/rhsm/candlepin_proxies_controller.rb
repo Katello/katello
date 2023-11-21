@@ -212,6 +212,7 @@ module Katello
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
       host = Katello::RegistrationManager.process_registration(rhsm_params, find_content_view_environments)
+
       host.reload
 
       update_host_registered_through(host, request.headers)
@@ -239,8 +240,8 @@ module Katello
       activation_keys = find_activation_keys
 
       host = Katello::RegistrationManager.process_registration(rhsm_params, nil, activation_keys)
-      update_host_registered_through(host, request.headers)
 
+      update_host_registered_through(host, request.headers)
       host.reload
 
       render :json => Resources::Candlepin::Consumer.get(host.subscription_facet.uuid)
