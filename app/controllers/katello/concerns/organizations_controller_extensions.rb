@@ -25,7 +25,7 @@ module Katello
             begin
               @taxonomy = Organization.new(resource_params)
               sca = ::Foreman::Cast.to_bool(params[:simple_content_access])
-              ::Foreman::Deprecation.api_deprecation_warning("Simple Content Access will be required for all organizations in Katello 4.12.")
+              ::Foreman::Deprecation.api_deprecation_warning(N_("Simple Content Access will be required for all organizations in Katello 4.12."))
               ::Katello::OrganizationCreator.new(@taxonomy, sca: sca).create!
               @taxonomy.reload
               switch_taxonomy
