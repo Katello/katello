@@ -10,7 +10,7 @@ module Katello
     api :GET, "/organizations/:organization_id/simple_content_access/eligible",
       N_("Check if the specified organization is eligible for Simple Content Access. %s") % sca_only_deprecation_text, deprecated: true
     def eligible
-      ::Foreman::Deprecation.api_deprecation_warning("This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access.")
+      ::Foreman::Deprecation.api_deprecation_warning(N_("This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access."))
       eligible = @organization.simple_content_access_eligible?
       render json: { simple_content_access_eligible: eligible }
     end
