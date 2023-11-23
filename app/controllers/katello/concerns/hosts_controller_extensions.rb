@@ -20,6 +20,10 @@ module Katello
       included do
         prepend Overrides
 
+        def included_associations(include = [])
+          [:host_traces] + super
+        end
+
         def update_multiple_taxonomies(type)
           if type == :organization
             new_org_id = params.dig(type, 'id')

@@ -4,6 +4,7 @@ module Katello
     REQUIRE_PROCESS_RESTART = 1
     UP_TO_DATE = 0
     UNKNOWN = -1
+
     def self.status_name
       N_("Traces")
     end
@@ -35,9 +36,12 @@ module Katello
     end
 
     def to_status(_options = {})
-      if host.host_traces.reboot_required.any?
+      traces = host.host_traces.pluck(:app_type)
+      traces.delete(Katello::HostTracer::TRACE_APP_TYPE_SESSION)
+
+      if traces.include?(Katello::HostTracer::TRACE_APP_TYPE_STATIC)
         REQUIRE_REBOOT
-      elsif host.host_traces.where.not(:app_type => "session").any?
+      elsif !traces.empty?
         REQUIRE_PROCESS_RESTART
       else
         UP_TO_DATE
