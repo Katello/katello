@@ -6,15 +6,20 @@ module Katello
         @host = host
       end
 
+      # rubocop:disable Metrics/MethodLength
       def upload
+        if @host.nil?
+          Rails.logger.warn("Host was not specified; skipping")
+          return false
+        elsif @host.content_facet.nil? || @host.content_facet.uuid.nil?
+          Rails.logger.warn("Host with ID %s has no content facet; skipping" % @host.id)
+          return false
+        end
+
         profiles = JSON.parse(@profile_string)
         #free the huge string from the memory
         @profile_string = 'TRIMMED'.freeze
-        if @host.nil?
-          Rails.logger.warn("Host was not specified; continuing")
-        elsif @host.content_facet.nil? || @host.content_facet.uuid.nil?
-          Rails.logger.warn("Host with ID %s has no content facet; continuing" % @host.id)
-        elsif profiles.try(:has_key?, "deb_package_profile")
+        if profiles.try(:has_key?, "deb_package_profile")
           # remove this when deb_package_profile API is removed
           payload = profiles.dig("deb_package_profile", "deb_packages") || []
           import_deb_package_profile(payload)
@@ -37,9 +42,15 @@ module Katello
           module_streams.each do |module_stream_payload|
             import_module_streams(module_stream_payload)
           end
-
         end
+
+        # Just to update the internal cache
+        @host.content_facet.tracer_installed?(force_update_cache: true)
+        @host.content_facet.host_tools_installed?(force_update_cache: true)
+
+        true
       end
+      # rubocop:enable Metrics/MethodLength
 
       def trigger_applicability_generation
         if @host.nil?
