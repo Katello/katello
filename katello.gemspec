@@ -75,4 +75,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "simplecov"
   gem.add_development_dependency "simplecov-rcov"
   gem.add_development_dependency "robottelo_reporter"
+
+  # Rubocop
+  gem.add_development_dependency 'theforeman-rubocop', '~> 0.0.6'
 end
