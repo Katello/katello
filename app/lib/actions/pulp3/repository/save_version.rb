@@ -34,7 +34,12 @@ module Actions
               repo.update(:version_href => version_href)
             end
           else
-            output[:contents_changed] = false
+            # get publication and check if repo-version and publication match. Otherwise, contents_changed: false
+            if !repo.repository_type.pulp3_skip_publication && fetch_current_published_version_href(repo) != repo.version_href
+              output[:contents_changed] = true
+            else
+              output[:contents_changed] = false
+            end
           end
         end
 
@@ -43,6 +48,13 @@ module Actions
           repo_backend_service = repo.backend_service(SmartProxy.pulp_primary)
           repo_href = repo_backend_service.repository_reference.repository_href
           repo_backend_service.api.repositories_api.read(repo_href).latest_version_href
+        end
+
+        def fetch_current_published_version_href(repo)
+          # Fetch latest Pulp 3 repo version
+          return nil if repo.publication_href.nil?
+          repo_backend_service = repo.backend_service(SmartProxy.pulp_primary)
+          repo_backend_service.api.publications_api.read(repo.publication_href).repository_version
         end
       end
     end
