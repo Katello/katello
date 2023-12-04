@@ -10,7 +10,7 @@ const AdditionalCapsuleContent = ({ counts }) => {
     file: fileCount = 0,
     erratum: errataCount = 0,
     package_group: packageGroup = 0,
-    'rpm.modulemd': moduleStreamCount = 0,
+    module_stream: moduleStreamCount = 0,
   } = counts;
 
   const contentConfigTypes = ContentConfig.filter(({ names: { capsuleCountLabel } }) =>
@@ -82,7 +82,7 @@ AdditionalCapsuleContent.propTypes = {
     file: PropTypes.number,
     erratum: PropTypes.number,
     package_group: PropTypes.number,
-    'rpm.modulemd': PropTypes.number,
+    module_stream: PropTypes.number,
   }),
 };
 
