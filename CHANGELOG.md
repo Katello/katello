@@ -1,4 +1,4 @@
-# 4.11.0 (2023-11-28)
+# 4.11.0 (2023-12-05)
 
 ## Features
 
@@ -26,6 +26,7 @@
  * Prepare for SCA-Only: Update Hammer ([#36795](https://projects.theforeman.org/issues/36795), [3bc7d4c6](https://github.com/Katello/hammer-cli-katello.git/commit/3bc7d4c6182eb9b615ef7123a4ea06a0fd701df8))
 
 ### Subscriptions
+ * Prepare for SCA-Only: Deprecate API endpoints and params ([#36797](https://projects.theforeman.org/issues/36797), [27ce2b78](https://github.com/Katello/katello.git/commit/27ce2b78787f5d5104353d6eafbe5296948b4cb5), [9ee9dfcd](https://github.com/Katello/katello.git/commit/9ee9dfcd9f827ac51cae7fa42c176f424a6f35de))
  * Prepare for SCA-Only: Update Web UI ([#36782](https://projects.theforeman.org/issues/36782), [dbfa00bd](https://github.com/Katello/katello.git/commit/dbfa00bdc1c4de147b2a4503e4815d81ed64c55f))
 
 ### Repositories
@@ -34,9 +35,6 @@
 ### Activation Key
  * Add system purpose card to new AK details page ([#36610](https://projects.theforeman.org/issues/36610), [4867c8a2](https://github.com/Katello/katello.git/commit/4867c8a28e1eab1b0eae126bb4a7a8097c3b43f9))
  * Add new activation key details page under experimental labs ([#36493](https://projects.theforeman.org/issues/36493), [2fdde824](https://github.com/Katello/katello.git/commit/2fdde824c39c48cb6e1efb002af7d73fe5ed6b4a))
-
-### Other
- * Prepare for SCA-Only: Deprecate API endpoints and params ([#36797](https://projects.theforeman.org/issues/36797), [27ce2b78](https://github.com/Katello/katello.git/commit/27ce2b78787f5d5104353d6eafbe5296948b4cb5))
 
 ## Bug Fixes
 
@@ -61,6 +59,8 @@
 
 ### Container
  * Taxonomy filtration on Container Image Tags page does not work as expected ([#36911](https://projects.theforeman.org/issues/36911), [9309d121](https://github.com/Katello/katello.git/commit/9309d121d8b0cf88777ba0fe853ebd9955c03d9c))
+ *  Cannot discovery container repositories on private registries or on registries that only support api v2 ([#36861](https://projects.theforeman.org/issues/36861), [6619b6d3](https://github.com/Katello/katello.git/commit/6619b6d3824f0afdb7e0a0edcc20e2b2fc561db3))
+ * Container registries for Sat and Capsule set wrong token expiration field ([#36827](https://projects.theforeman.org/issues/36827), [63ebb473](https://github.com/Katello/smart_proxy_container_gateway.git/commit/63ebb4732511057820a9529b20b7696a2145f8fe), [ad53ad96](https://github.com/Katello/smart_proxy_container_gateway.git/commit/ad53ad96924edd6086e9f6c0d9c99e1a142bc2f1), [ad424635](https://github.com/Katello/katello.git/commit/ad42463519fbb8e063a0ec3417f5155b0f77d7c7))
 
 ### Tooling
  * Upgrade to Pulpcore 3.39 ([#36903](https://projects.theforeman.org/issues/36903), [7436bf11](https://github.com/Katello/katello.git/commit/7436bf113a4bcd28a322d6df9b363e4f42009e7f))
@@ -68,6 +68,7 @@
 
 ### Tests
  * Update Candlepin VCR's with new Candlepin 4.3.10 ([#36901](https://projects.theforeman.org/issues/36901), [a69f9846](https://github.com/Katello/katello.git/commit/a69f9846c55c3a1f91f0049bcfb7e39de2995d92))
+ * Fix SIGKILL in test and nightly pipelines ([#36853](https://projects.theforeman.org/issues/36853), [f59a21a5](https://github.com/Katello/katello.git/commit/f59a21a5cc47904ff20e7fbf1345e5ed0bc343b8))
  * Hammer katello has random test failures around cv promote ([#36788](https://projects.theforeman.org/issues/36788), [a54dc018](https://github.com/Katello/hammer-cli-katello.git/commit/a54dc0180084a379e4603f2c5291fe8667940920))
 
 ### Content Views
@@ -134,7 +135,5 @@
 ### Activation Key
  * Environment and Content View info is not visible on the Associations Content Host page for Activation keys ([#36501](https://projects.theforeman.org/issues/36501), [b8857514](https://github.com/Katello/katello.git/commit/b8857514670e82f88a1d03e859fc76535504f44f))
 
-### Other
- *  Cannot discovery container repositories on private registries or on registries that only support api v2 ([#36861](https://projects.theforeman.org/issues/36861), [6619b6d3](https://github.com/Katello/katello.git/commit/6619b6d3824f0afdb7e0a0edcc20e2b2fc561db3))
- * Fix SIGKILL in test and nightly pipelines ([#36853](https://projects.theforeman.org/issues/36853), [f59a21a5](https://github.com/Katello/katello.git/commit/f59a21a5cc47904ff20e7fbf1345e5ed0bc343b8))
- * Container registries for Sat and Capsule set wrong token expiration field ([#36827](https://projects.theforeman.org/issues/36827), [63ebb473](https://github.com/Katello/smart_proxy_container_gateway.git/commit/63ebb4732511057820a9529b20b7696a2145f8fe), [ad53ad96](https://github.com/Katello/smart_proxy_container_gateway.git/commit/ad53ad96924edd6086e9f6c0d9c99e1a142bc2f1), [ad424635](https://github.com/Katello/katello.git/commit/ad42463519fbb8e063a0ec3417f5155b0f77d7c7))
+### Ansible Collections
+ * Cannot sync ansible collections repositories to smart proxy ([#35746](https://projects.theforeman.org/issues/35746))
