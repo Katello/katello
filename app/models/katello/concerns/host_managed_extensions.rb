@@ -98,7 +98,7 @@ module Katello
                                            .authorized
                                            .where(name: name)
             if result.blank?
-              result = SmartProxy.behind_load_balancer(name)
+              result = SmartProxy.authorized.behind_load_balancer(name)
             end
           end
           proxies[:registered_through] = result
@@ -198,7 +198,7 @@ module Katello
           property :content_views, 'ContentView', desc: 'Returns content views associated with the host'
           property :installed_packages, array_of: 'InstalledPackage', desc: 'Returns a list of packages installed on the host'
         end
-      end
+      end # of included block
 
       def check_host_registration
         if subscription_facet

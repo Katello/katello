@@ -484,10 +484,10 @@ module Katello
     def set_host_content_source(host, content_source_hostname)
       content_source_id = get_content_source_id(content_source_hostname)
       if registering_thru_load_balancer?(content_source_hostname)
-        Rails.logger.info "Host %s registered through load balancer %s" % [host.name, parent_host]
+        Rails.logger.info "Host %s registered through load balancer %s" % [host.name, content_source_hostname]
         content_source_id = ::SmartProxy.behind_load_balancer(content_source_hostname)&.first&.id
       end
-      Rails.logger.warn "Host %s registered through unknown proxy %s" % [host.name, parent_host] if content_source_id.nil?
+      Rails.logger.warn "Host %s registered through unknown proxy %s" % [host.name, content_source_hostname] if content_source_id.nil?
       host.content_facet.update_attribute(:content_source_id, content_source_id)
     end
 
