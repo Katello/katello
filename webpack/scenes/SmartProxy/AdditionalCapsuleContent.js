@@ -6,6 +6,7 @@ const AdditionalCapsuleContent = ({ counts }) => {
   const {
     deb: debPackageCount = 0,
     docker_manifest: dockerManifestCount = 0,
+    docker_manifest_list: dockerManifestListCount = 0,
     docker_tag: dockerTagCount = 0,
     file: fileCount = 0,
     erratum: errataCount = 0,
@@ -55,6 +56,11 @@ const AdditionalCapsuleContent = ({ counts }) => {
         {`${dockerManifestCount} Container manifests`}<br />
       </>
             }
+      {dockerManifestListCount > 0 &&
+      <>
+        {`${dockerManifestListCount} Container manifest lists`}<br />
+      </>
+      }
       {fileCount > 0 &&
       <>
         {`${fileCount} Files`}<br />
@@ -78,6 +84,7 @@ AdditionalCapsuleContent.propTypes = {
   counts: PropTypes.shape({
     deb: PropTypes.number,
     docker_manifest: PropTypes.number,
+    docker_manifest_list: PropTypes.number,
     docker_tag: PropTypes.number,
     file: PropTypes.number,
     erratum: PropTypes.number,

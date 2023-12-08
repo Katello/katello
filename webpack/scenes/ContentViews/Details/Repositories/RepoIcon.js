@@ -14,7 +14,7 @@ const RepoIcon = ({ type }) => {
   };
   const Icon = iconMap[type] || BoxIcon;
 
-  return <Tooltip content={<div>{type}</div>}><Icon /></Tooltip>;
+  return <Tooltip content={<div>{type}</div>}><Icon aria-label={`${type}_type_icon`} /></Tooltip>;
 };
 
 RepoIcon.propTypes = {
