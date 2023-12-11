@@ -122,6 +122,23 @@ module Katello
       refute host_attrs.key?(:content_view_id)
       refute host_attrs.key?(:lifecycle_environment_id)
     end
+
+    def test_remote_execution_proxies_registered_through
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      host.subscription_facet.expects(:registered_through).returns('test-proxy.example.com')
+      rex_feature = Feature.where(:name => "Remote Execution").first_or_create
+      test_proxy = FactoryBot.create(:smart_proxy, :features => [rex_feature], :url => 'http://test-proxy.example.com:9090', :name => 'test-proxy.example.com')
+      assert_equal host.remote_execution_proxies(rex_feature.name)[:registered_through], [test_proxy]
+    end
+
+    def test_remote_execution_proxies_registered_through_load_balancer
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      host.subscription_facet.expects(:registered_through).returns('unknown-proxy.example.com')
+      rex_feature = Feature.where(:name => "Remote Execution").first_or_create
+      proxy_behind_lb = FactoryBot.create(:smart_proxy, :features => [rex_feature], :url => 'http://test-proxy.example.com:9090', :name => 'test-proxy.example.com')
+      ::SmartProxy.expects(:behind_load_balancer).with('unknown-proxy.example.com').returns([proxy_behind_lb])
+      assert_equal host.remote_execution_proxies(rex_feature.name)[:registered_through], [proxy_behind_lb]
+    end
   end
 
   class HostManagedExtensionsUpdateTest < HostManagedExtensionsTestBase
