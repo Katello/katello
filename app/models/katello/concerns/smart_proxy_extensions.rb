@@ -68,6 +68,18 @@ module Katello
         }
         scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE, PULP3_FEATURE) }
 
+        def self.load_balanced
+          proxies = self.with_content # load balancing is only supported for pulp proxies
+          ids = proxies.select { |proxy| proxy.load_balanced? }.map(&:id)
+          proxies.where(id: ids)
+        end
+
+        def self.behind_load_balancer(load_balancer_hostname)
+          proxies = self.with_content
+          ids = proxies.select { |proxy| proxy.load_balanced? && proxy.registration_host == load_balancer_hostname }.map(&:id)
+          proxies.where(id: ids)
+        end
+
         def self.with_repo(repo)
           joins(:capsule_lifecycle_environments).
             where("#{Katello::CapsuleLifecycleEnvironment.table_name}.lifecycle_environment_id" => repo.environment_id)
@@ -119,6 +131,15 @@ module Katello
 
       def alternate_content_sources
         SmartProxy.joins(:smart_proxy_alternate_content_sources).where('katello_smart_proxy_alternate_content_sources.smart_proxy_id' => self.id)
+      end
+
+      def registration_host
+        url = self.setting('Registration', 'registration_url').presence || self.url
+        URI.parse(url).host
+      end
+
+      def load_balanced?
+        URI.parse(self.url).host != self.registration_host
       end
 
       def update_content_counts!
