@@ -377,12 +377,12 @@ Foreman::Plugin.register :katello do
         collection: proc { http_proxy_select },
         include_blank: N_("no global default")
 
-      setting 'cdn_ssl_version',
+      setting 'cdn_min_tls_version',
         type: :string,
-        default: nil,
-        full_name: N_('CDN SSL version'),
-        description: N_("SSL version used to communicate with the CDN"),
-        collection: proc { hashify_parameters(Katello::Resources::CDN::SUPPORTED_SSL_VERSIONS) }
+        default: Katello::Resources::CDN::SUPPORTED_TLS_VERSIONS.include?('TLSv1.3') ? 'TLSv1.3' : 'TLSv1.2',
+        full_name: N_('CDN minimum allowed TLS version'),
+        description: N_("Minimum allowed TLS version used to communicate with the CDN. WARNING: Older versions of the TLS standard than TLSv1.2 are deprecated and should only be enabled when required for backwards compatibility with HTTP proxy servers."),
+        collection: proc { hashify_parameters(Katello::Resources::CDN::SUPPORTED_TLS_VERSIONS) }
 
       setting 'katello_default_provision',
         type: :string,

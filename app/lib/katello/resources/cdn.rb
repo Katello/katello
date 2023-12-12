@@ -1,7 +1,18 @@
 module Katello
   module Resources
     module CDN
-      SUPPORTED_SSL_VERSIONS = ['SSLv23', 'TLSv1'].freeze
+      # the if defined? check is included for TLSv1.3 because it is not available on all platforms.
+      # at the time of writing, TLSv1 through TLSv1.2 should be available on all supported platforms,
+      # but we check regardless in case they are removed from any platform in the future.
+      # any unavailable protocols will be removed from the final Hash by the compact method.
+      SUPPORTED_TLS_VERSIONS_MAPPING = {
+        'TLSv1' => (OpenSSL::SSL::TLS1_VERSION if defined?(OpenSSL::SSL::TLS1_VERSION)),
+        'TLSv1.1' => (OpenSSL::SSL::TLS1_1_VERSION if defined?(OpenSSL::SSL::TLS1_1_VERSION)),
+        'TLSv1.2' => (OpenSSL::SSL::TLS1_2_VERSION if defined?(OpenSSL::SSL::TLS1_2_VERSION)),
+        'TLSv1.3' => (OpenSSL::SSL::TLS1_3_VERSION if defined?(OpenSSL::SSL::TLS1_3_VERSION))
+      }.compact.freeze
+
+      SUPPORTED_TLS_VERSIONS = SUPPORTED_TLS_VERSIONS_MAPPING.keys.freeze
 
       class Utils
         # takes releasever from contentUrl (e.g. 6Server, 6.0, 6.1)
@@ -24,9 +35,9 @@ module Katello
         end
 
         def initialize(url, options = {})
-          @ssl_version = Setting[:cdn_ssl_version]
-          if @ssl_version && !SUPPORTED_SSL_VERSIONS.include?(@ssl_version)
-            fail("Invalid SSL version specified. Check the 'CDN SSL Version' setting")
+          @cdn_min_tls_version = Setting[:cdn_min_tls_version]
+          if @cdn_min_tls_version && !SUPPORTED_TLS_VERSIONS.include?(@cdn_min_tls_version)
+            fail("Invalid TLS min_version specified. Check the 'CDN Minimum Allowed TLS Version' setting")
           end
 
           options.reverse_merge!(:verify_ssl => 9)
@@ -106,12 +117,10 @@ module Katello
             net.cert_store = @cert_store
           end
 
-          # NOTE: This was added because some proxies dont support SSLv23 and do not handle TLS 1.2
-          # Valid values in ruby 1.9.3 are 'SSLv23' or 'TLSV1'
-          # Run the following command in rails console to figure out other
-          # valid constants in other ruby versions
-          # "OpenSSL::SSL::SSLContext::METHODS"
-          net.ssl_version = @ssl_version
+          # NOTE: This was originally added because some proxies dont support SSLv23 and do not handle TLS 1.2
+          # Run the following command in rails console to figure out valid constants on your platform:
+          # "OpenSSL::SSL.constants.select { |sym| sym.to_s.include?('VERSION') }"
+          net.min_version = SUPPORTED_TLS_VERSIONS_MAPPING[@cdn_min_tls_version]
 
           if (@options[:verify_ssl] == false) || (@options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE)
             net.verify_mode = OpenSSL::SSL::VERIFY_NONE

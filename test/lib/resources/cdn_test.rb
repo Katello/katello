@@ -1,20 +1,41 @@
 require 'katello_test_helper'
 class CdnResourceTest < ActiveSupport::TestCase
-  def test_http_downloader_v2
-    Setting[:cdn_ssl_version] = 'SSLv23'
+  def test_http_downloader_tlsv1
+    Setting[:cdn_min_tls_version] = 'TLSv1'
     cdn_resource = Katello::Resources::CDN::CdnResource.new('http://foo.com')
-    assert_equal cdn_resource.http_downloader.ssl_version, 'SSLv23'
+    assert_equal cdn_resource.http_downloader.min_version, OpenSSL::SSL::TLS1_VERSION
   end
 
-  def test_http_downloader_tls
-    Setting[:cdn_ssl_version] = 'TLSv1'
+  def test_http_downloader_tlsv11
+    Setting[:cdn_min_tls_version] = 'TLSv1.1'
     cdn_resource = Katello::Resources::CDN::CdnResource.new('http://foo.com')
-    assert_equal cdn_resource.http_downloader.ssl_version, 'TLSv1'
+    assert_equal cdn_resource.http_downloader.min_version, OpenSSL::SSL::TLS1_1_VERSION
   end
 
-  def test_http_downloader_no_version
+  def test_http_downloader_tlsv12
+    Setting[:cdn_min_tls_version] = 'TLSv1.2'
     cdn_resource = Katello::Resources::CDN::CdnResource.new('http://foo.com')
-    assert_nil cdn_resource.http_downloader.ssl_version
+    assert_equal cdn_resource.http_downloader.min_version, OpenSSL::SSL::TLS1_2_VERSION
+  end
+
+  def test_http_downloader_tlsv13
+    # TLSv1.3 is unavailable in some environments, for example the EL7 builders at
+    # ci.theforeman.org. This check should be removable when those are upgraded to
+    # EL8 or later. See https://github.com/theforeman/foreman-infra/issues/1706
+    unless defined?(OpenSSL::SSL::TLS1_3_VERSION)
+      skip "TLSv1.3 is unavailable in the current environment"
+    end
+
+    Setting[:cdn_min_tls_version] = 'TLSv1.3'
+    cdn_resource = Katello::Resources::CDN::CdnResource.new('http://foo.com')
+    assert_equal cdn_resource.http_downloader.min_version, OpenSSL::SSL::TLS1_3_VERSION
+  end
+
+  def test_http_downloader_default_version
+    cdn_resource = Katello::Resources::CDN::CdnResource.new('http://foo.com')
+
+    default_min_tls_version = defined?(OpenSSL::SSL::TLS1_3_VERSION) ? OpenSSL::SSL::TLS1_3_VERSION : OpenSSL::SSL::TLS1_2_VERSION
+    assert_equal cdn_resource.http_downloader.min_version, default_min_tls_version
   end
 
   def test_http_proxy_no_cacert
@@ -29,7 +50,7 @@ class CdnResourceTest < ActiveSupport::TestCase
   end
 
   def test_http_downloader_bad_param
-    Setting[:cdn_ssl_version] = 'Foo'
+    Setting[:cdn_min_tls_version] = 'Foo'
     assert_raise RuntimeError do
       Katello::Resources::CDN::CdnResource.new('http://foo.com')
     end
