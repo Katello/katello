@@ -140,9 +140,69 @@ describe('With tracer installed', () => {
     assertNockRequest(scope, done);
   });
 
+  test('Warns you when one of the selected traces requires reboot', async (done) => {
+    const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+
+    const scope = nockInstance
+      .get(hostTraces)
+      .query(true)
+      .reply(200, mockTraceData);
+
+    const { getByLabelText, queryByText } = renderWithRedux(
+      <TracesTab />,
+      renderOptions(true),
+    );
+
+    let traceCheckbox;
+    // Find the trace checkbox.
+    await patientlyWaitFor(() => {
+      traceCheckbox = getByLabelText('Select row 3'); // this should be dbus, our static trace
+    });
+    fireEvent.click(traceCheckbox);
+    expect(traceCheckbox.checked).toEqual(true);
+
+    await patientlyWaitFor(() => {
+      expect(queryByText('1 selected')).toBeInTheDocument();
+      expect(queryByText('Reboot host')).toBeInTheDocument();
+      expect(queryByText('At least one of the selected items requires the host to reboot')).toBeInTheDocument();
+    });
+    assertNockRequest(autocompleteScope);
+    assertNockRequest(scope, done);
+  });
+
+  test('Warns about reboot when using select all', async (done) => {
+    const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+
+    const scope = nockInstance
+      .get(hostTraces)
+      .query(true)
+      .reply(200, mockTraceData);
+
+    const { getByLabelText, queryByText } = renderWithRedux(
+      <TracesTab />,
+      renderOptions(true),
+    );
+
+    let traceCheckbox;
+    // Find the trace checkbox.
+    await patientlyWaitFor(() => {
+      traceCheckbox = getByLabelText('Select all');
+    });
+    fireEvent.click(traceCheckbox);
+    expect(traceCheckbox.checked).toEqual(true);
+
+    await patientlyWaitFor(() => {
+      expect(queryByText('20 selected')).toBeInTheDocument();
+      expect(queryByText('Reboot host')).toBeInTheDocument();
+      expect(queryByText('At least one of the selected items requires the host to reboot')).toBeInTheDocument();
+    });
+    assertNockRequest(autocompleteScope);
+    assertNockRequest(scope, done);
+  });
+
   test('Can bulk restart traces via remote execution', async (done) => {
-    // This is the same test as above,
-    // but using the table action bar instead of the Restart app button
+    // This is the same test as 'Can bulk restart traces via Restart App button',
+    // but using the table action bar instead
     const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
 
     const scope = nockInstance
@@ -214,7 +274,7 @@ describe('With tracer installed', () => {
     fireEvent.click(getByLabelText('Select row 0')); // de select
     fireEvent.click(getByLabelText('Select row 2')); // de select
 
-    fireEvent.click(getByText('Restart app'));
+    fireEvent.click(getByText('Reboot host'));
 
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
