@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { translate as __ } from 'foremanReact/common/I18n';
 import ContentConfig from '../Content/ContentConfig';
 
 const AdditionalCapsuleContent = ({ counts }) => {
@@ -33,42 +34,42 @@ const AdditionalCapsuleContent = ({ counts }) => {
     <>
       {errataCount > 0 &&
       <>
-        {`${errataCount} Errata`}<br />
+        {`${errataCount} ${__('Errata')}`}<br />
       </>
             }
       {moduleStreamCount > 0 &&
       <>
-        {`${moduleStreamCount} Module streams`}<br />
+        {`${moduleStreamCount} ${__('Module streams')}`}<br />
       </>
             }
       {packageGroup > 0 &&
       <>
-        {`${packageGroup} Package groups`}<br />
+        {`${packageGroup} ${__('Package groups')}`}<br />
       </>
             }
       {dockerTagCount > 0 &&
       <>
-        {`${dockerTagCount} Container tags`}<br />
+        {`${dockerTagCount} ${__('Container tags')}`}<br />
       </>
             }
       {dockerManifestCount > 0 &&
       <>
-        {`${dockerManifestCount} Container manifests`}<br />
+        {`${dockerManifestCount} ${__('Container manifests')}`}<br />
       </>
             }
       {dockerManifestListCount > 0 &&
       <>
-        {`${dockerManifestListCount} Container manifest lists`}<br />
+        {`${dockerManifestListCount} ${__('Container manifest lists')}`}<br />
       </>
       }
       {fileCount > 0 &&
       <>
-        {`${fileCount} Files`}<br />
+        {`${fileCount} ${__('Files')}`}<br />
       </>
             }
       {debPackageCount > 0 &&
       <>
-        {`${debPackageCount} Debian packages`}<br />
+        {`${debPackageCount} ${__('Debian packages')}`}<br />
       </>}
       {contentConfigTypes?.length > 0 &&
                 contentConfigTypes.map(({ count, pluralLowercase }) => (
