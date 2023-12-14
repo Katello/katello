@@ -69,13 +69,13 @@ module Katello
         scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE, PULP3_FEATURE) }
 
         def self.load_balanced
-          proxies = self.with_content # load balancing is only supported for pulp proxies
+          proxies = unscoped.with_content # load balancing is only supported for pulp proxies
           ids = proxies.select { |proxy| proxy.load_balanced? }.map(&:id)
           proxies.where(id: ids)
         end
 
         def self.behind_load_balancer(load_balancer_hostname)
-          proxies = self.with_content
+          proxies = unscoped.with_content
           ids = proxies.select { |proxy| proxy.load_balanced? && proxy.registration_host == load_balancer_hostname }.map(&:id)
           proxies.where(id: ids)
         end
