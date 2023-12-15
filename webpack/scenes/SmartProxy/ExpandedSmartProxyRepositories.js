@@ -31,8 +31,8 @@ const ExpandedSmartProxyRepositories = ({
     const cellList = [];
     /* eslint-disable max-len */
     cellList.push(<DataListCell key={`${repo.id}-name`}><span><a href={`/products/${envContentCounts[repo].metadata.product_id}/repositories/${envContentCounts[repo].metadata.library_instance_id}/`}>{getRepositoryNameById(envContentCounts[repo].metadata.library_instance_id)}</a></span></DataListCell>);
-    cellList.push(<DataListCell key={`${repo.id}-type`}><RepoIcon type={envContentCounts[repo].metadata.content_type} /></DataListCell>);
-    cellList.push(<DataListCell key={`${repo.id}-rpm`}><span>{envContentCounts[repo].counts.rpm ? `${envContentCounts[repo].counts.rpm} Packages` : 'N/A'}</span></DataListCell>);
+    cellList.push(<DataListCell key={`${repo.id}-type`}><RepoIcon type={envContentCounts[repo].metadata.content_type} identifier={repo.id} /></DataListCell>);
+    cellList.push(<DataListCell key={`${repo.id}-rpm`}><span>{envContentCounts[repo].counts.rpm ? `${envContentCounts[repo].counts.rpm} ${__('Packages')}` : 'N/A'}</span></DataListCell>);
     cellList.push(<DataListCell key={`${repo.id}-count`}><AdditionalCapsuleContent counts={envContentCounts[repo].counts} /></DataListCell>);
     /* eslint-enable max-len */
     return cellList;
@@ -42,7 +42,7 @@ const ExpandedSmartProxyRepositories = ({
     const cellList = [];
     /* eslint-disable max-len */
     cellList.push(<DataListCell key={`${repo.id}-name`}><span><a href={`/products/${repo.product_id}/repositories/${repo.library_id}/`}>{repo.name}</a></span></DataListCell>);
-    cellList.push(<DataListCell key={`${repo.id}-type`}><RepoIcon type={repo.content_type} /></DataListCell>);
+    cellList.push(<DataListCell key={`${repo.id}-type`}><RepoIcon type={repo.content_type} identifier={repo.id} /></DataListCell>);
     cellList.push(<DataListCell key={`${repo.id}-rpm`}><span><InactiveText text="N/A" /></span></DataListCell>);
     cellList.push(<DataListCell key={`${repo.id}-count`}><InactiveText text="N/A" /></DataListCell>);
     /* eslint-enable max-len */
