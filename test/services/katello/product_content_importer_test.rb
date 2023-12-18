@@ -95,5 +95,39 @@ module Katello
 
       assert_empty(@service.content_url_updated)
     end
+
+    def test_find_product_for_content
+      cp_products = [{"id" => "590",
+                      "productContent" =>
+                        [{"content" =>
+                            {
+                              "id" => "11210",
+                              "type" => "yum",
+                              "label" => "codeready-builder-for-rhel-9-s390x-eus-rpms",
+                              "name" => "Red Hat CodeReady Linux Builder for RHEL 9 IBM z Systems - Extended Update Support (RPMs)"
+                            },
+                          "enabled" => false},
+                         {"content" =>
+                            {"id" => "9268",
+                             "type" => "yum",
+                             "label" => "codeready-builder-for-rhel-8-s390x-eus-debug-rpms",
+                             "name" => "Red Hat CodeReady Linux Builder for RHEL 8 IBM z Systems - Extended Update Support (Debug RPMs)"
+                             },
+                          "enabled" => false}]},
+                     {"id" => "350", "productContent" => []},
+                     {"id" => "380"}]
+      prod_content_importer = Katello::ProductContentImporter.new(cp_products)
+      test_product = ::Katello::Product.create(
+        name: 'empty',
+        organization_id: ::Organization.first.id,
+        provider: ::Organization.first.anonymous_provider,
+        cp_id: '590'
+      )
+      assert_equal test_product, prod_content_importer.find_product_for_content("11210")
+      assert_nil prod_content_importer.find_product_for_content(nil)
+      assert_nil prod_content_importer.find_product_for_content("")
+      assert_nil prod_content_importer.find_product_for_content('350')
+      assert_nil prod_content_importer.find_product_for_content('380')
+    end
   end
 end
