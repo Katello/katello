@@ -21,13 +21,11 @@ module Actions
         def plan(repo, options = {})
           action_subject(repo)
 
-          source_url = options.fetch(:source_url, nil)
           validate_contents = options.fetch(:validate_contents, false)
           skip_metadata_check = options.fetch(:skip_metadata_check, false) || (validate_contents && (repo.yum? || repo.deb?))
           generate_applicability =  options.fetch(:generate_applicability, repo.yum? || repo.deb?)
 
           validate_repo!(repo: repo,
-                        source_url: source_url,
                         skip_metadata_check: skip_metadata_check,
                         skip_candlepin_check: options.fetch(:skip_candlepin_check, false))
 
@@ -82,8 +80,8 @@ module Actions
           end
         end
 
-        def validate_repo!(repo:, source_url:, skip_metadata_check:, skip_candlepin_check:)
-          fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank? && source_url.blank?
+        def validate_repo!(repo:, skip_metadata_check:, skip_candlepin_check:)
+          fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank?
           fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum/deb repositories.") if skip_metadata_check && !repo.yum? && !repo.deb?
           fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository is not a library instance repository.") unless repo.library_instance?
           ::Katello::Util::CandlepinRepositoryChecker.check_repository_for_sync!(repo) if repo.yum? && !skip_candlepin_check

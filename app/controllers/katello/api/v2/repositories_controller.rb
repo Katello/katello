@@ -343,7 +343,6 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
 
     api :POST, "/repositories/:id/sync", N_("Sync a repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
-    param :source_url, String, :desc => N_("temporarily override feed URL for sync"), :required => false
     param :incremental, :bool, :desc => N_("perform an incremental import"), :required => false
     param :skip_metadata_check, :bool, :desc => N_("Force sync even if no upstream changes are detected. Only used with yum or deb repositories."), :required => false
     param :validate_contents, :bool, :desc => N_("Force a sync and validate the checksums of all content. Only used with yum repositories."), :required => false
@@ -352,15 +351,10 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       sync_options = {
         :skip_metadata_check => ::Foreman::Cast.to_bool(params[:skip_metadata_check]),
         :validate_contents => ::Foreman::Cast.to_bool(params[:validate_contents]),
-        :incremental => ::Foreman::Cast.to_bool(params[:incremental]),
-        :source_url => params[:source_url]
+        :incremental => ::Foreman::Cast.to_bool(params[:incremental])
       }
 
-      if params[:source_url].present? && params[:source_url] !~ /\A#{URI::DEFAULT_PARSER.make_regexp}\z/
-        fail HttpErrors::BadRequest, _("source URL is malformed")
-      end
-
-      if params[:source_url].blank? && @repository.url.blank?
+      if @repository.url.blank?
         fail HttpErrors::BadRequest, _("attempted to sync without a feed URL")
       end
 

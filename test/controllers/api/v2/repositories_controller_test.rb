@@ -819,28 +819,13 @@ module Katello
       assert_response :success
     end
 
-    def test_sync_with_url_override
-      assert_async_task ::Actions::Katello::Repository::Sync do |repo, options|
-        assert_equal @repository.id, repo.id
-        assert_equal options[:source_url], 'file:///tmp/'
-      end
-      post :sync, params: { :id => @repository.id, :source_url => 'file:///tmp/' }
-      assert_response :success
-    end
-
     def test_sync_with_incremental_flag
       assert_async_task ::Actions::Katello::Repository::Sync do |repo, options|
         assert_equal @repository.id, repo.id
-        assert_equal options[:source_url], 'file:///tmp/'
         assert_equal options[:incremental], true
       end
-      post :sync, params: { :id => @repository.id, :source_url => 'file:///tmp/', :incremental => true }
+      post :sync, params: { :id => @repository.id, :incremental => true }
       assert_response :success
-    end
-
-    def test_sync_with_bad_url_override
-      post :sync, params: { :id => @repository.id, :source_url => 'file:|||tmp/' }
-      assert_response 400
     end
 
     def test_sync_no_feed_urls
@@ -856,13 +841,6 @@ module Katello
       task_attrs[:output] = {}
 
       stub('task', task_attrs).mimic!(::ForemanTasks::Task)
-    end
-
-    def test_sync_no_feed_urls_with_override
-      repo = katello_repositories(:feedless_fedora_17_x86_64)
-      @controller.stubs(:async_task).returns(build_task_stub)
-      post :sync, params: { :id => repo.id, :source_url => 'http://www.wikipedia.org' }
-      assert_response :success
     end
 
     def test_sync_protected
