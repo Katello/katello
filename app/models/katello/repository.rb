@@ -752,7 +752,8 @@ module Katello
           return true
         else
           errors.add(:base, _("Repository cannot be deleted since it has already been included in a published Content View. " \
-                              "Please delete all Content View versions containing this repository before attempting to delete it."))
+                              "Please delete all Content View versions containing this repository before attempting to delete it "\
+                              "or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions."))
 
           return false
         end
