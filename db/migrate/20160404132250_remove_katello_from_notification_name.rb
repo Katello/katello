@@ -1,26 +1,8 @@
 class RemoveKatelloFromNotificationName < ActiveRecord::Migration[4.2]
-  class FakeMailNotification < ApplicationRecord
-    self.table_name = 'mail_notifications'
-  end
-
   def up
-    FakeMailNotification.all.each do |notification|
-      if notification_names.keys.include?(notification.name)
-        new_name = notification_names[notification.name]
-        FakeMailNotification.where(:name => new_name).destroy_all
-        notification.name = new_name
-        notification.save!
-      end
-    end
-  end
-
-  private
-
-  def notification_names
-    {
-      :katello_promote_errata => 'promote_errata',
-      :katello_sync_errata => 'sync_errata',
-      :katello_host_advisory => 'host_errata_advisory'
-    }.with_indifferent_access
+    # historical placeholder
+    # only required on setups before https://projects.theforeman.org/issues/14459
+    # we can safely assume that fresh installs have the above change already
+    # and existing install had this migration applied back in 2016
   end
 end
