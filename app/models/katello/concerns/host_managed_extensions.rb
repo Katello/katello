@@ -168,6 +168,8 @@ module Katello
 
         scoped_search relation: :pools, on: :pools_expiring_in_days, ext_method: :find_with_expiring_pools, only_explicit: true
 
+        smart_proxy_reference :content_facet => [:content_source_id]
+
         def add_back_cve_errors
           if @pending_cve_attrs&.[](:content_view_id).present? || @pending_cve_attrs&.[](:lifecycle_environment_id).present?
             check_cve_attributes({ content_facet_attributes: @pending_cve_attrs })
