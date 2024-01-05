@@ -72,7 +72,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "mocha"
   gem.add_development_dependency "vcr", "< 4.0.0"
   gem.add_development_dependency "webmock"
-  gem.add_development_dependency "rubocop-checkstyle_formatter"
   gem.add_development_dependency "simplecov"
   gem.add_development_dependency "simplecov-rcov"
   gem.add_development_dependency "robottelo_reporter"
