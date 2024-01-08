@@ -377,7 +377,7 @@ const RepositorySetsTab = () => {
       singular: singular || selectedCount === 1,
     }));
   };
-  const bulkParams = () => fetchBulkParams('cp_content_id');
+  const bulkParams = () => fetchBulkParams({ idColumnName: 'cp_content_id' });
   const enableRepoSets = () => updateOverrides({ enabled: true, search: bulkParams() });
   const disableRepoSets = () => updateOverrides({ enabled: false, search: bulkParams() });
   const resetToDefaultRepoSets = () => updateOverrides({ remove: true, search: bulkParams() });
