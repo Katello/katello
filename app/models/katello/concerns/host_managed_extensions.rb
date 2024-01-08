@@ -219,6 +219,8 @@ module Katello
         if !new_record? && !build && self.changes.key?('build')
           queue.create(id: "refresh_content_host_status_#{id}", name: _("Refresh Content Host Statuses for %s") % self,
             priority: 300, action: [self, :refresh_content_host_status])
+        else
+          true
         end
       end
 
@@ -230,14 +232,14 @@ module Katello
         true
       end
 
-      def reset_content_host_status
-        logger.debug "Scheduling host status cleanup"
-        queue.create(id: "reset_content_host_status_#{id}", name: _("Mark Content Host Statuses as Unknown for %s") % self,
-          priority: 200, action: [self, :reset_katello_status])
-      end
-
       def queue_reset_content_host_status
-        should_reset_content_host_status? && reset_content_host_status
+        if should_reset_content_host_status?
+          logger.debug "Scheduling host status cleanup"
+          queue.create(id: "reset_content_host_status_#{id}", name: _("Mark Content Host Statuses as Unknown for %s") % self,
+            priority: 200, action: [self, :reset_katello_status])
+        else
+          true
+        end
       end
 
       def should_reset_content_host_status?
