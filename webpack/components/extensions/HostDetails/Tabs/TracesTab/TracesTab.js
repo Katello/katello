@@ -2,10 +2,11 @@ import React, { useState, useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
   Skeleton, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, DropdownToggle, DropdownToggleAction,
+  DropdownItem, DropdownToggle, DropdownToggleAction, Alert,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { useSelector } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { useBulkSelect, useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
@@ -27,6 +28,7 @@ import { HOST_TRACES_KEY } from './HostTracesConstants';
 
 const invokeRexJobs = ['create_job_invocations'];
 const createBookmarks = ['create_bookmarks'];
+const containsStaticType = (results = []) => results.some(result => result.app_type === 'static');
 
 const TracesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
@@ -78,13 +80,16 @@ const TracesTab = () => {
   const tracesSearchQuery = id => `id = ${id}`;
   const {
     selectOne, isSelected, searchQuery, selectedCount, isSelectable,
-    updateSearchQuery, selectNone, fetchBulkParams, ...selectAll
+    updateSearchQuery, selectNone, fetchBulkParams, selectedResults,
+    selectAllMode, ...selectAll
   } = useBulkSelect({
     results,
     metadata: meta,
     isSelectable: result => !!result.restart_command,
     initialSearchQuery: searchParam || '',
   });
+  const willRestartHost = containsStaticType(selectedResults)
+    || (selectAllMode && containsStaticType(results));
 
   const BulkRestartTracesAction = () => resolveTraces({
     hostname, search: fetchBulkParams(),
@@ -163,7 +168,7 @@ const TracesTab = () => {
                   ouiaId="bulk_actions"
                   splitButtonItems={[
                     <DropdownToggleAction key="action" onClick={onBulkRestartApp}>
-                      {__('Restart app')}
+                      {willRestartHost ? __('Reboot host') : __('Restart app')}
                     </DropdownToggleAction>,
                   ]}
                   isDisabled={selectedCount === 0}
@@ -192,6 +197,9 @@ const TracesTab = () => {
   return (
     <div id="traces-tab">
       <h3>{__('Tracer helps administrators identify applications that need to be restarted after a system is patched.')}</h3>
+      {willRestartHost && (
+      <Alert isInline variant="warning" ouiaId="host-will-reboot-alert" title={__('At least one of the selected items requires the host to reboot')} />
+      )}
       <TableWrapper
         {...{
           emptyContentTitle,
@@ -267,7 +275,7 @@ const TracesTab = () => {
                         'aria-label': `check-${application}`,
                       },
                       isSelected: isSelected(id),
-                      onSelect: (event, selected) => selectOne(selected, id),
+                      onSelect: (event, selected) => selectOne(selected, id, result),
                       rowIndex,
                       variant: 'checkbox',
                     }}
@@ -277,7 +285,7 @@ const TracesTab = () => {
                 }
                 <Td>{application}</Td>
                 <Td>{appType}</Td>
-                <Td>{helper}</Td>
+                <Td>{appType === 'static' ? <ExclamationTriangleIcon /> : null} {helper}</Td>
                 {showActions && (
                   <Td
                     actions={{
