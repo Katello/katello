@@ -2279,9 +2279,6 @@
       "Sync a repository": [
         "Синхронизация репозитория"
       ],
-      "temporarily override feed URL for sync": [
-        "временно переопределить URL-адрес источника синхронизации"
-      ],
       "perform an incremental import": [
         "разрешить инкрементный импорт"
       ],
@@ -2291,8 +2288,8 @@
       "Force a sync and validate the checksums of all content. Only used with yum repositories.": [
         ""
       ],
-      "source URL is malformed": [
-        "URL-адрес источника синхронизации неверно сформирован"
+      "attempted to sync a non-library repository.": [
+        ""
       ],
       "attempted to sync without a feed URL": [
         "попытка синхронизации без указания URL-адреса источника"
@@ -2460,6 +2457,9 @@
         ""
       ],
       "Check if the specified organization is eligible for Simple Content Access. %s": [
+        ""
+      ],
+      "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access.": [
         ""
       ],
       "Check if the specified organization has Simple Content Access enabled. %s": [
@@ -2711,12 +2711,6 @@
       "Sending a list of included IDs is not allowed when all items are being selected.": [
         ""
       ],
-      "No hosts have been specified.": [
-        "Не задан ни один узел."
-      ],
-      "No hosts matched search, or action unauthorized for selected hosts.": [
-        ""
-      ],
       "Value must either be a boolean or 'default' for 'enabled'": [
         ""
       ],
@@ -2733,6 +2727,9 @@
         ""
       ],
       "Kickstart repository ID": [
+        ""
+      ],
+      "Deleted %{host_count} %{hosts}": [
         ""
       ],
       "Alter a host's host collections": [
@@ -2893,6 +2890,9 @@
       ],
       "Organization %s is being deleted.": [
         "Организация %s удаляется."
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Error connecting. Got: %s": [
         ""
@@ -3324,6 +3324,9 @@
         "Не удалось синхронизировать репозиторий: не задан URL источника синхронизации"
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
+        ""
+      ],
+      "Unable to sync repo. This repository is not a library instance repository.": [
         ""
       ],
       "Disable": [
@@ -4634,8 +4637,8 @@
       "Repository has already been cloned to %{cv_name} in environment %{to_env}": [
         "Репозиторий уже скопирован в %{cv_name} в окружении %{to_env}"
       ],
-      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it.": [
-        "Репозиторий не может быть удален, так как он включен в опубликованное представление. Удалите все версии представления, содержащие репозиторий, и повторите попытку."
+      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions.": [
+        ""
       ],
       "This is not a linked repository": [
         ""
@@ -5375,9 +5378,6 @@
       ],
       "Generate and Download": [
         "Создать и загрузить"
-      ],
-      "Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         ""
@@ -8506,6 +8506,9 @@
       "No repositories enabled.": [
         ""
       ],
+      "Debian packages": [
+        ""
+      ],
       "Synced": [
         ""
       ],
@@ -9000,6 +9003,18 @@
       ],
       "Verify checksum": [
         ""
+      ],
+      "No hosts have been specified.": [
+        "Не задан ни один узел."
+      ],
+      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
+        "#~ \"Репозиторий не может быть удален, так как он включен в опубликованное представ\"#~ \"ление. Удалите все версии представления, содержащие репозиторий, и повторите п\"#~ \"опытку.\""
+      ],
+      "source URL is malformed": [
+        "URL-адрес источника синхронизации неверно сформирован"
+      ],
+      "temporarily override feed URL for sync": [
+        "временно переопределить URL-адрес источника синхронизации"
       ]
     }
   }

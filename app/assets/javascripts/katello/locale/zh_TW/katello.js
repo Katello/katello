@@ -2279,9 +2279,6 @@
       "Sync a repository": [
         "同步軟體庫"
       ],
-      "temporarily override feed URL for sync": [
-        "暫時覆寫同步的 feed URL"
-      ],
       "perform an incremental import": [
         "進行累進匯入"
       ],
@@ -2291,8 +2288,8 @@
       "Force a sync and validate the checksums of all content. Only used with yum repositories.": [
         ""
       ],
-      "source URL is malformed": [
-        "來源 URL 格式錯誤"
+      "attempted to sync a non-library repository.": [
+        ""
       ],
       "attempted to sync without a feed URL": [
         "試圖在沒有 feed URL 的情況下同步"
@@ -2460,6 +2457,9 @@
         ""
       ],
       "Check if the specified organization is eligible for Simple Content Access. %s": [
+        ""
+      ],
+      "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access.": [
         ""
       ],
       "Check if the specified organization has Simple Content Access enabled. %s": [
@@ -2711,12 +2711,6 @@
       "Sending a list of included IDs is not allowed when all items are being selected.": [
         ""
       ],
-      "No hosts have been specified.": [
-        "未指定主機。"
-      ],
-      "No hosts matched search, or action unauthorized for selected hosts.": [
-        ""
-      ],
       "Value must either be a boolean or 'default' for 'enabled'": [
         ""
       ],
@@ -2733,6 +2727,9 @@
         ""
       ],
       "Kickstart repository ID": [
+        ""
+      ],
+      "Deleted %{host_count} %{hosts}": [
         ""
       ],
       "Alter a host's host collections": [
@@ -2893,6 +2890,9 @@
       ],
       "Organization %s is being deleted.": [
         "組織 %s 已被刪除。"
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Error connecting. Got: %s": [
         "連線錯誤。收到：%s"
@@ -3324,6 +3324,9 @@
         "無法同步軟體庫。此軟體庫並沒有發送用的網址。"
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
+        ""
+      ],
+      "Unable to sync repo. This repository is not a library instance repository.": [
         ""
       ],
       "Disable": [
@@ -4634,8 +4637,8 @@
       "Repository has already been cloned to %{cv_name} in environment %{to_env}": [
         "軟體庫已經複製給 %{cv_name} 於環境 %{to_env} 中"
       ],
-      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it.": [
-        "無法刪除軟體庫，因為它已被包含在一個已發佈的內容視域中。請在嘗試刪除此軟體庫之前，刪除所有包含了此軟體庫的內容視域版本。"
+      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions.": [
+        ""
       ],
       "This is not a linked repository": [
         ""
@@ -5375,9 +5378,6 @@
       ],
       "Generate and Download": [
         "產生與下載"
-      ],
-      "Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         ""
@@ -8505,6 +8505,9 @@
       "No repositories enabled.": [
         ""
       ],
+      "Debian packages": [
+        ""
+      ],
       "Synced": [
         ""
       ],
@@ -8999,6 +9002,18 @@
       ],
       "Verify checksum": [
         ""
+      ],
+      "No hosts have been specified.": [
+        "未指定主機。"
+      ],
+      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
+        "無法刪除軟體庫，因為它已被包含在一個已發佈的內容視域中。請在嘗試刪除此軟體庫之前，刪除所有包含了此軟體庫的內容視域版本。"
+      ],
+      "source URL is malformed": [
+        "來源 URL 格式錯誤"
+      ],
+      "temporarily override feed URL for sync": [
+        "暫時覆寫同步的 feed URL"
       ]
     }
   }

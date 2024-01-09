@@ -2279,9 +2279,6 @@
       "Sync a repository": [
         "同步軟體庫"
       ],
-      "temporarily override feed URL for sync": [
-        "临时覆盖 feed 网址以进行同步"
-      ],
       "perform an incremental import": [
         "执行增量导入"
       ],
@@ -2291,8 +2288,8 @@
       "Force a sync and validate the checksums of all content. Only used with yum repositories.": [
         "强制一个同步并验证所有内容的 checksums。仅用于yum仓库。"
       ],
-      "source URL is malformed": [
-        "来源 URL 格式错误"
+      "attempted to sync a non-library repository.": [
+        ""
       ],
       "attempted to sync without a feed URL": [
         "尝试在没有 Feed URL 的情况下进行同步"
@@ -2460,6 +2457,9 @@
         "当 CDN 配置设置为 Air-gapped（断开连接）时，仓库不可用。"
       ],
       "Check if the specified organization is eligible for Simple Content Access. %s": [
+        ""
+      ],
+      "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access.": [
         ""
       ],
       "Check if the specified organization has Simple Content Access enabled. %s": [
@@ -2711,12 +2711,6 @@
       "Sending a list of included IDs is not allowed when all items are being selected.": [
         "当选择所有项目时，不允许发送包含 ID 的列表。"
       ],
-      "No hosts have been specified.": [
-        "没有指定主机。"
-      ],
-      "No hosts matched search, or action unauthorized for selected hosts.": [
-        ""
-      ],
       "Value must either be a boolean or 'default' for 'enabled'": [
         "值需要是一个布尔值，或 'default' 代表 'enabled'"
       ],
@@ -2734,6 +2728,9 @@
       ],
       "Kickstart repository ID": [
         "Kickstart 仓库 ID"
+      ],
+      "Deleted %{host_count} %{hosts}": [
+        ""
       ],
       "Alter a host's host collections": [
         "更改主机的主机集合"
@@ -2893,6 +2890,9 @@
       ],
       "Organization %s is being deleted.": [
         "机构 %s 已被删除。"
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Error connecting. Got: %s": [
         "连接错误。获得：%s"
@@ -3324,6 +3324,9 @@
         "无法同步仓库。该仓库没有 feed URL。"
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
+        ""
+      ],
+      "Unable to sync repo. This repository is not a library instance repository.": [
         ""
       ],
       "Disable": [
@@ -4634,8 +4637,8 @@
       "Repository has already been cloned to %{cv_name} in environment %{to_env}": [
         "仓库已被克隆到环境 %{to_env} 中的 %{cv_name}"
       ],
-      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it.": [
-        "因为已包含在已发布的“内容视图”中，因此无法删除仓库。在尝试删除它之前，删除包含该仓库的所有内容视图版本。"
+      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions.": [
+        ""
       ],
       "This is not a linked repository": [
         "没有连接的仓库"
@@ -5374,9 +5377,6 @@
       ],
       "Generate and Download": [
         "生成并下载"
-      ],
-      "Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         "备用内容源 HTTP 代理"
@@ -8504,6 +8504,9 @@
       "No repositories enabled.": [
         "没有启用的仓库。"
       ],
+      "Debian packages": [
+        ""
+      ],
       "Synced": [
         ""
       ],
@@ -8998,6 +9001,18 @@
       ],
       "Verify checksum": [
         "验证校验和"
+      ],
+      "No hosts have been specified.": [
+        "没有指定主机。"
+      ],
+      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
+        "因为已包含在已发布的“内容视图”中，因此无法删除仓库。在尝试删除它之前，删除包含该仓库的所有内容视图版本。"
+      ],
+      "source URL is malformed": [
+        "来源 URL 格式错误"
+      ],
+      "temporarily override feed URL for sync": [
+        "临时覆盖 feed 网址以进行同步"
       ]
     }
   }
