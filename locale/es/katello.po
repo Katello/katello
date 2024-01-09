@@ -2029,6 +2029,9 @@ msgstr ""
 msgid "Deb packages"
 msgstr ""
 
+msgid "Debian packages"
+msgstr ""
+
 msgid "Debug Certificate"
 msgstr "Depurar certificado"
 
@@ -2204,6 +2207,9 @@ msgid "Delete version"
 msgstr ""
 
 msgid "Delete versions"
+msgstr ""
+
+msgid "Deleted %{host_count} %{hosts}"
 msgstr ""
 
 msgid "Deleted consumer '%s'"
@@ -4500,12 +4506,6 @@ msgstr ""
 msgid "No hosts found"
 msgstr ""
 
-msgid "No hosts have been specified."
-msgstr "No se han especificado hosts."
-
-msgid "No hosts matched search, or action unauthorized for selected hosts."
-msgstr ""
-
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr "No se encontraron hosts registrados con el gestor de suscripciones en la selección."
 
@@ -5806,8 +5806,8 @@ msgstr ""
 msgid "Repository Id associated with the kickstart repo used for provisioning"
 msgstr "ID del repositorio asociado con el repositorio de kickstart utilizado para el aprovisionamiento"
 
-msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it."
-msgstr "El repositorio no se puede eliminar dado que ya se ha incluido en una vista de contenido publicada. Elimine todas las versiones de la vista de contenido que contengan este repositorio antes de intentar eliminarlo."
+msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions."
+msgstr ""
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "El repositorio no puede inhabilitarse porque ya está siendo promovido."
@@ -7298,6 +7298,9 @@ msgstr ""
 msgid "This content view will be deleted. Changes will be effective after clicking Delete."
 msgstr ""
 
+msgid "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access."
+msgstr ""
+
 msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
 msgstr ""
 
@@ -7576,6 +7579,9 @@ msgstr "No se puede enviar la notificación de errata por correo electrónico: %
 
 msgid "Unable to sync repo. This repository does not have a feed url."
 msgstr "No se pudo sincronizar el repositorio. Este repositorio no tiene una URL de fuente."
+
+msgid "Unable to sync repo. This repository is not a library instance repository."
+msgstr ""
 
 msgid "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url."
 msgstr "No se puede sincronizar ningún repositorio. Es posible que usted no tenga permiso para sincronizar o que los repositorios seleccionados no tengan una URL de fuente.  "
@@ -8297,6 +8303,9 @@ msgstr "una organización"
 msgid "are only allowed for Yum repositories."
 msgstr ""
 
+msgid "attempted to sync a non-library repository."
+msgstr ""
+
 msgid "attempted to sync without a feed URL"
 msgstr "se intentó sincronizar sin una URL de fuente"
 
@@ -8903,9 +8912,6 @@ msgstr "mostrar los repositorios en la biblioteca y la vista de contenido predet
 msgid "some executors are not responding, check %{status_url}"
 msgstr "Algunos ejecutores no responden, compruebe %.{status_url}"
 
-msgid "source URL is malformed"
-msgstr "la URL de fuente no está bien formada"
-
 msgid "specifies if content should be included or excluded, default: inclusion=false"
 msgstr "especifica si se debe incluir o excluir el contenido, predeterminado: inclusion=false"
 
@@ -8923,9 +8929,6 @@ msgstr "nombre del plan de sincronización"
 
 msgid "sync plan numeric identifier"
 msgstr "identificador numérico del plan de sincronización"
-
-msgid "temporarily override feed URL for sync"
-msgstr "sustituir la URL de fuente temporalmente para sincronizar"
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "los siguientes atributos no pueden ser actualizados para el proveedor Red Hat: [ %s ]"

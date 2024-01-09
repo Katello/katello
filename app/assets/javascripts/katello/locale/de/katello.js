@@ -2279,9 +2279,6 @@
       "Sync a repository": [
         "Repository synchronisieren"
       ],
-      "temporarily override feed URL for sync": [
-        "Feed-URL für Synchronisation vorübergehend außer Kraft setzen"
-      ],
       "perform an incremental import": [
         "einen inkrementellen Import durchführen"
       ],
@@ -2291,8 +2288,8 @@
       "Force a sync and validate the checksums of all content. Only used with yum repositories.": [
         "Erzwingen Sie eine Synchronisierung und validieren Sie die Prüfsummen aller Inhalte. Wird nur mit Yum-Repositorys verwendet."
       ],
-      "source URL is malformed": [
-        "Quell-URL ist fehlerhaft"
+      "attempted to sync a non-library repository.": [
+        ""
       ],
       "attempted to sync without a feed URL": [
         "Synchronisation ohne Feed-URL versucht"
@@ -2460,6 +2457,9 @@
         ""
       ],
       "Check if the specified organization is eligible for Simple Content Access. %s": [
+        ""
+      ],
+      "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access.": [
         ""
       ],
       "Check if the specified organization has Simple Content Access enabled. %s": [
@@ -2711,12 +2711,6 @@
       "Sending a list of included IDs is not allowed when all items are being selected.": [
         ""
       ],
-      "No hosts have been specified.": [
-        "Es wurden keine Hosts angegeben."
-      ],
-      "No hosts matched search, or action unauthorized for selected hosts.": [
-        ""
-      ],
       "Value must either be a boolean or 'default' for 'enabled'": [
         "Der Wert muss entweder ein boolescher Wert oder 'Standard' für 'aktiviert' sein."
       ],
@@ -2734,6 +2728,9 @@
       ],
       "Kickstart repository ID": [
         "Kickstart-Repository-ID"
+      ],
+      "Deleted %{host_count} %{hosts}": [
+        ""
       ],
       "Alter a host's host collections": [
         ""
@@ -2893,6 +2890,9 @@
       ],
       "Organization %s is being deleted.": [
         "Organisation %s wurde gelöscht."
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Error connecting. Got: %s": [
         "Verbindungsfehler. Ausgabe: %s"
@@ -3324,6 +3324,9 @@
         "Repo konnte nicht synchronisiert werden. Dieses Repository hat keine Feed-URL."
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
+        ""
+      ],
+      "Unable to sync repo. This repository is not a library instance repository.": [
         ""
       ],
       "Disable": [
@@ -4634,8 +4637,8 @@
       "Repository has already been cloned to %{cv_name} in environment %{to_env}": [
         "Repository wurde bereits geklont auf %{cv_name} in der Umgebung %{to_env}"
       ],
-      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it.": [
-        "Repository kann nicht gelöscht werden, da es bereits in einer veröffentlichten Inhaltsansicht enthalten ist. Bitte löschen Sie alle Inhaltsansichtsversionen, die dieses Repository enthalten, bevor Sie versuchen es zu löschen."
+      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions.": [
+        ""
       ],
       "This is not a linked repository": [
         "Dies ist kein verlinktes Repository"
@@ -5375,9 +5378,6 @@
       ],
       "Generate and Download": [
         "Generieren und herunterladen"
-      ],
-      "Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         ""
@@ -8506,6 +8506,9 @@
       "No repositories enabled.": [
         "Keine Repositorys aktiviert."
       ],
+      "Debian packages": [
+        ""
+      ],
       "Synced": [
         ""
       ],
@@ -9000,6 +9003,18 @@
       ],
       "Verify checksum": [
         "Prüfsumme überprüfen"
+      ],
+      "No hosts have been specified.": [
+        "Es wurden keine Hosts angegeben."
+      ],
+      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
+        "#~ \"Repository kann nicht gelöscht werden, da es bereits in einer veröffentlichten\"#~ \" Inhaltsansicht enthalten ist. Bitte löschen Sie alle Inhaltsansichtsversionen\"#~ \", die dieses Repository enthalten, bevor Sie versuchen es zu löschen.\""
+      ],
+      "source URL is malformed": [
+        "Quell-URL ist fehlerhaft"
+      ],
+      "temporarily override feed URL for sync": [
+        "Feed-URL für Synchronisation vorübergehend außer Kraft setzen"
       ]
     }
   }

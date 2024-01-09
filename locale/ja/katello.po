@@ -2025,6 +2025,9 @@ msgstr "コンテンツをフィルタリングするための deb パッケー�
 msgid "Deb packages"
 msgstr "Deb パッケージ"
 
+msgid "Debian packages"
+msgstr ""
+
 msgid "Debug Certificate"
 msgstr "デバッグ証明書"
 
@@ -2201,6 +2204,9 @@ msgstr "バージョンの削除"
 
 msgid "Delete versions"
 msgstr "バージョンの削除"
+
+msgid "Deleted %{host_count} %{hosts}"
+msgstr ""
 
 msgid "Deleted consumer '%s'"
 msgstr "コンシューマー '%s' を削除しました"
@@ -4502,12 +4508,6 @@ msgstr "ホストコレクションはまだありません"
 msgid "No hosts found"
 msgstr ""
 
-msgid "No hosts have been specified."
-msgstr "指定されているホストがありません。"
-
-msgid "No hosts matched search, or action unauthorized for selected hosts."
-msgstr ""
-
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr "subscription-manager に登録されているホストが選択肢に含まれていません。"
 
@@ -5808,8 +5808,8 @@ msgstr ""
 msgid "Repository Id associated with the kickstart repo used for provisioning"
 msgstr "プロビジョニングに使用する Kickstart リポジトリーに関連付けられたリポジトリー ID"
 
-msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it."
-msgstr "リポジトリーは公開されたコンテンツビューにすでに含まれるため、削除できません。この削除を試行する前にこのリポジトリーが含まれるすべてのコンテンツビューバージョンを削除してください。"
+msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions."
+msgstr ""
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "リポジトリーはすでにプロモート済みのため無効にできません。"
@@ -7304,6 +7304,9 @@ msgstr "このコンテンツビューは、最新バージョンに自動的に
 msgid "This content view will be deleted. Changes will be effective after clicking Delete."
 msgstr "このコンテンツビューは削除されます。変更は、削除 をクリックした後に有効になります。"
 
+msgid "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access."
+msgstr ""
+
 msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
 msgstr "このホストのコンテンツビューおよびライフサイクル環境に含まれていないため、このエラータはインストール可能ではありません。"
 
@@ -7582,6 +7585,9 @@ msgstr "エラータのメール通知を送信できません: %{error}"
 
 msgid "Unable to sync repo. This repository does not have a feed url."
 msgstr "リポジトリーを同期できません。このリポジトリーにはフィード URL がありません。"
+
+msgid "Unable to sync repo. This repository is not a library instance repository."
+msgstr ""
 
 msgid "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url."
 msgstr "リポジトリーを同期できません。同期する権限がないか、または選択されたリポジトリーにフィード URL がないかのいずれかです。"
@@ -8303,6 +8309,9 @@ msgstr "組織"
 msgid "are only allowed for Yum repositories."
 msgstr "Yum リポジトリーでのみ許可されています。"
 
+msgid "attempted to sync a non-library repository."
+msgstr ""
+
 msgid "attempted to sync without a feed URL"
 msgstr "フィード URL なしで同期が試行されました"
 
@@ -8909,9 +8918,6 @@ msgstr "ライブラリーのリポジトリーおよびデフォルトコンテ
 msgid "some executors are not responding, check %{status_url}"
 msgstr "一部のエグゼキューターが応答していません。{status_url} を確認してください"
 
-msgid "source URL is malformed"
-msgstr "ソース URL の形式が正しくありません"
-
 msgid "specifies if content should be included or excluded, default: inclusion=false"
 msgstr "コンテンツの組み込みまたは除外の指定。デフォルト: inclusion=false"
 
@@ -8929,9 +8935,6 @@ msgstr "同期プラン名"
 
 msgid "sync plan numeric identifier"
 msgstr "同期プランの数値 ID"
-
-msgid "temporarily override feed URL for sync"
-msgstr "フィード URL を一時的に上書きして同期"
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Red Hat プロバイダーの次の属性は更新できません: [ %s ]"

@@ -2024,6 +2024,9 @@ msgstr "用于过滤内容的 Deb 软件包标识符"
 msgid "Deb packages"
 msgstr "Deb 软件包"
 
+msgid "Debian packages"
+msgstr ""
+
 msgid "Debug Certificate"
 msgstr "除錯憑證"
 
@@ -2200,6 +2203,9 @@ msgstr "删除版本"
 
 msgid "Delete versions"
 msgstr "删除版本"
+
+msgid "Deleted %{host_count} %{hosts}"
+msgstr ""
 
 msgid "Deleted consumer '%s'"
 msgstr "删除消费者 '%s'"
@@ -4501,12 +4507,6 @@ msgstr "还没有主机集合"
 msgid "No hosts found"
 msgstr ""
 
-msgid "No hosts have been specified."
-msgstr "没有指定主机。"
-
-msgid "No hosts matched search, or action unauthorized for selected hosts."
-msgstr ""
-
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr "在选择中未找到 subscription-manager 注册的主机。"
 
@@ -5807,8 +5807,8 @@ msgstr ""
 msgid "Repository Id associated with the kickstart repo used for provisioning"
 msgstr "与用于配置的 kickstart 仓库关联的仓库 ID"
 
-msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it."
-msgstr "因为已包含在已发布的“内容视图”中，因此无法删除仓库。在尝试删除它之前，删除包含该仓库的所有内容视图版本。"
+msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions."
+msgstr ""
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "軟體庫無法停用，因為該軟體庫已推送。"
@@ -7299,6 +7299,9 @@ msgstr "此内容视图将自动更新至最新版本。"
 msgid "This content view will be deleted. Changes will be effective after clicking Delete."
 msgstr "此内容视图将被删除。改变将在点 Delete 后生效。"
 
+msgid "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access."
+msgstr ""
+
 msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
 msgstr "此勘误不可安装，因为它不在此主机的内容视图和生命周期环境中。"
 
@@ -7577,6 +7580,9 @@ msgstr "无法发送勘误电子邮件通知：%{error}"
 
 msgid "Unable to sync repo. This repository does not have a feed url."
 msgstr "无法同步仓库。该仓库没有 feed URL。"
+
+msgid "Unable to sync repo. This repository is not a library instance repository."
+msgstr ""
 
 msgid "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url."
 msgstr "无法同步任何存储库。您或者没有同步权限，或者所选存储库没有提要URL。"
@@ -8298,6 +8304,9 @@ msgstr "机构"
 msgid "are only allowed for Yum repositories."
 msgstr "仅允许用于Yum存储库。"
 
+msgid "attempted to sync a non-library repository."
+msgstr ""
+
 msgid "attempted to sync without a feed URL"
 msgstr "尝试在没有 Feed URL 的情况下进行同步"
 
@@ -8904,9 +8913,6 @@ msgstr "在库和默认内容视图中显示仓库"
 msgid "some executors are not responding, check %{status_url}"
 msgstr "一些执行程序没有响应，请检查％{status_url}"
 
-msgid "source URL is malformed"
-msgstr "来源 URL 格式错误"
-
 msgid "specifies if content should be included or excluded, default: inclusion=false"
 msgstr "指定内容应该被包括还是排除，默认：inclusion=false"
 
@@ -8924,9 +8930,6 @@ msgstr "同步計畫的名稱"
 
 msgid "sync plan numeric identifier"
 msgstr "同步计划数字标识符"
-
-msgid "temporarily override feed URL for sync"
-msgstr "临时覆盖 feed 网址以进行同步"
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "以下属性不能为红帽供应商更新： [ %s ]"

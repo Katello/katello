@@ -2279,9 +2279,6 @@
       "Sync a repository": [
         "리포지터리 동기화 "
       ],
-      "temporarily override feed URL for sync": [
-        "동기화를 위한 임시 덮어쓰기 피드 URL"
-      ],
       "perform an incremental import": [
         "증분 가져오기 수행"
       ],
@@ -2291,8 +2288,8 @@
       "Force a sync and validate the checksums of all content. Only used with yum repositories.": [
         ""
       ],
-      "source URL is malformed": [
-        "소스 URL의 형식이 잘못되었습니다."
+      "attempted to sync a non-library repository.": [
+        ""
       ],
       "attempted to sync without a feed URL": [
         "피드 URL 없이 동기화를 시도했습니다."
@@ -2460,6 +2457,9 @@
         ""
       ],
       "Check if the specified organization is eligible for Simple Content Access. %s": [
+        ""
+      ],
+      "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access.": [
         ""
       ],
       "Check if the specified organization has Simple Content Access enabled. %s": [
@@ -2711,12 +2711,6 @@
       "Sending a list of included IDs is not allowed when all items are being selected.": [
         ""
       ],
-      "No hosts have been specified.": [
-        "호스트를 지정하지 않았습니다."
-      ],
-      "No hosts matched search, or action unauthorized for selected hosts.": [
-        ""
-      ],
       "Value must either be a boolean or 'default' for 'enabled'": [
         ""
       ],
@@ -2733,6 +2727,9 @@
         ""
       ],
       "Kickstart repository ID": [
+        ""
+      ],
+      "Deleted %{host_count} %{hosts}": [
         ""
       ],
       "Alter a host's host collections": [
@@ -2893,6 +2890,9 @@
       ],
       "Organization %s is being deleted.": [
         "조직 %s이 삭제되어 있습니다. "
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Error connecting. Got: %s": [
         "연결하는 도중 오류가 발생했습니다. 오류 메시지: %s"
@@ -3324,6 +3324,9 @@
         "리포지터리를 동기화할 수 없습니다. 이 리포지터리에는 피드 URL이 없습니다."
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
+        ""
+      ],
+      "Unable to sync repo. This repository is not a library instance repository.": [
         ""
       ],
       "Disable": [
@@ -4634,8 +4637,8 @@
       "Repository has already been cloned to %{cv_name} in environment %{to_env}": [
         "리포지터리가 이미 환경 %{to_env}에 있는 %{cv_name}에 복제되어 있습니다 "
       ],
-      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it.": [
-        "게시된 컨텐츠 뷰에 이미 포함되었기 때문에 리포지터리를 삭제할 수 없습니다. 삭제하기 전에 이 리포지터리가 포함된 모든 컨텐츠 뷰 버전을 먼저 삭제하십시오."
+      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions.": [
+        ""
       ],
       "This is not a linked repository": [
         ""
@@ -5375,9 +5378,6 @@
       ],
       "Generate and Download": [
         "생성 및 다운로드 "
-      ],
-      "Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         ""
@@ -8505,6 +8505,9 @@
       "No repositories enabled.": [
         ""
       ],
+      "Debian packages": [
+        ""
+      ],
       "Synced": [
         ""
       ],
@@ -8999,6 +9002,18 @@
       ],
       "Verify checksum": [
         ""
+      ],
+      "No hosts have been specified.": [
+        "호스트를 지정하지 않았습니다."
+      ],
+      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
+        "#~ \"게시된 컨텐츠 뷰에 이미 포함되었기 때문에 리포지터리를 삭제할 수 없습니다. 삭제하기 전에 이 리포지터리가 포함된 모든 컨텐츠 뷰 버전을 먼\"#~ \"저 삭제하십시오.\""
+      ],
+      "source URL is malformed": [
+        "소스 URL의 형식이 잘못되었습니다."
+      ],
+      "temporarily override feed URL for sync": [
+        "동기화를 위한 임시 덮어쓰기 피드 URL"
       ]
     }
   }
