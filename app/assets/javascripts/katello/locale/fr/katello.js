@@ -2279,9 +2279,6 @@
       "Sync a repository": [
         "Synchroniser un référentiel"
       ],
-      "temporarily override feed URL for sync": [
-        "remplace l'URL de flux pour la sync de façon temporaire"
-      ],
       "perform an incremental import": [
         "effectuer une importation progressive"
       ],
@@ -2291,8 +2288,8 @@
       "Force a sync and validate the checksums of all content. Only used with yum repositories.": [
         "Forcer une synchronisation et valider les sommes de contrôle de tous les contenus. Utilisé uniquement avec les référentiels yum."
       ],
-      "source URL is malformed": [
-        "URL source mal formé"
+      "attempted to sync a non-library repository.": [
+        ""
       ],
       "attempted to sync without a feed URL": [
         "a tenté de sync sans URL de flux"
@@ -2460,6 +2457,9 @@
         "Les référentiels ne sont pas disponibles pour l'activation lorsque la configuration du CDN est définie sur Air-gapped (déconnecté)."
       ],
       "Check if the specified organization is eligible for Simple Content Access. %s": [
+        ""
+      ],
+      "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access.": [
         ""
       ],
       "Check if the specified organization has Simple Content Access enabled. %s": [
@@ -2711,12 +2711,6 @@
       "Sending a list of included IDs is not allowed when all items are being selected.": [
         "L'envoi d'une liste d'identifiants inclus n'est pas autorisé lorsque tous les éléments sont sélectionnés."
       ],
-      "No hosts have been specified.": [
-        "Aucun hôte n'a été spécifié."
-      ],
-      "No hosts matched search, or action unauthorized for selected hosts.": [
-        ""
-      ],
       "Value must either be a boolean or 'default' for 'enabled'": [
         "La valeur doit être soit un booléen, soit la valeur par défaut de \\\"enabled\\\""
       ],
@@ -2734,6 +2728,9 @@
       ],
       "Kickstart repository ID": [
         "ID du référentiel Kickstart"
+      ],
+      "Deleted %{host_count} %{hosts}": [
+        ""
       ],
       "Alter a host's host collections": [
         "Modifier les collections d'hôtes d'un hôte"
@@ -2893,6 +2890,9 @@
       ],
       "Organization %s is being deleted.": [
         "L'organisation %s a été supprimée"
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Error connecting. Got: %s": [
         "Error de connexion. %s"
@@ -3324,6 +3324,9 @@
         "Impossible de sync le référentiel. Ce référentiel ne possède pas d'url de flux."
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
+        ""
+      ],
+      "Unable to sync repo. This repository is not a library instance repository.": [
         ""
       ],
       "Disable": [
@@ -4634,8 +4637,8 @@
       "Repository has already been cloned to %{cv_name} in environment %{to_env}": [
         "Le référentiel a déjà été cloné sur %{cv_name} dans l'environnement %{to_env} "
       ],
-      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it.": [
-        "Le référentiel ne peut pas être supprimé car il a déjà été inclus dans un affichage de contenu publié. Veuillez supprimer toutes les versions d'affichage de contenu contenant ce référentiel avant de tenter de le supprimer."
+      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions.": [
+        ""
       ],
       "This is not a linked repository": [
         "Il ne s'agit pas d'un référentiel associé"
@@ -5376,9 +5379,6 @@
       ],
       "Generate and Download": [
         "Générer et télécharger"
-      ],
-      "Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         "Source de contenu alternatif Proxy HTTP"
@@ -8508,6 +8508,9 @@
       "No repositories enabled.": [
         "Aucun référentiel activé"
       ],
+      "Debian packages": [
+        ""
+      ],
       "Synced": [
         ""
       ],
@@ -9002,6 +9005,18 @@
       ],
       "Verify checksum": [
         "Vérifier la somme de contrôle"
+      ],
+      "No hosts have been specified.": [
+        "Aucun hôte n'a été spécifié."
+      ],
+      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
+        "#~ \"Le référentiel ne peut pas être supprimé car il a déjà été inclus dans un affi\"#~ \"chage de contenu publié. Veuillez supprimer toutes les versions d'affichage de\"#~ \" contenu contenant ce référentiel avant de tenter de le supprimer.\""
+      ],
+      "source URL is malformed": [
+        "URL source mal formé"
+      ],
+      "temporarily override feed URL for sync": [
+        "remplace l'URL de flux pour la sync de façon temporaire"
       ]
     }
   }

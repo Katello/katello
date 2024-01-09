@@ -2279,9 +2279,6 @@
       "Sync a repository": [
         "リポジトリーの同期"
       ],
-      "temporarily override feed URL for sync": [
-        "フィード URL を一時的に上書きして同期"
-      ],
       "perform an incremental import": [
         "増分インポートの実行"
       ],
@@ -2291,8 +2288,8 @@
       "Force a sync and validate the checksums of all content. Only used with yum repositories.": [
         "強制的に同期し、全コンテンツのチェックサムを検証します。Yum リポジトリーでのみ使用されます。"
       ],
-      "source URL is malformed": [
-        "ソース URL の形式が正しくありません"
+      "attempted to sync a non-library repository.": [
+        ""
       ],
       "attempted to sync without a feed URL": [
         "フィード URL なしで同期が試行されました"
@@ -2460,6 +2457,9 @@
         "CDN 設定がエアギャップ (切断) に設定されている間、リポジトリーは有効にできません。"
       ],
       "Check if the specified organization is eligible for Simple Content Access. %s": [
+        ""
+      ],
+      "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access.": [
         ""
       ],
       "Check if the specified organization has Simple Content Access enabled. %s": [
@@ -2711,12 +2711,6 @@
       "Sending a list of included IDs is not allowed when all items are being selected.": [
         "すべての項目が選択されている場合、含まれる ID の一覧を送信することはできません。"
       ],
-      "No hosts have been specified.": [
-        "指定されているホストがありません。"
-      ],
-      "No hosts matched search, or action unauthorized for selected hosts.": [
-        ""
-      ],
       "Value must either be a boolean or 'default' for 'enabled'": [
         "値は、ブール値またはデフォルト (「有効」) のいずれかである必要があります"
       ],
@@ -2734,6 +2728,9 @@
       ],
       "Kickstart repository ID": [
         "Kickstart リポジトリー ID"
+      ],
+      "Deleted %{host_count} %{hosts}": [
+        ""
       ],
       "Alter a host's host collections": [
         "ホストのホストコレクションを変更"
@@ -2893,6 +2890,9 @@
       ],
       "Organization %s is being deleted.": [
         "組織 %s を削除しています。"
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
+        ""
       ],
       "Error connecting. Got: %s": [
         "接続エラー。結果: %s"
@@ -3324,6 +3324,9 @@
         "リポジトリーを同期できません。このリポジトリーにはフィード URL がありません。"
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
+        ""
+      ],
+      "Unable to sync repo. This repository is not a library instance repository.": [
         ""
       ],
       "Disable": [
@@ -4634,8 +4637,8 @@
       "Repository has already been cloned to %{cv_name} in environment %{to_env}": [
         "リポジトリーのクローンはすでに環境 %{to_env} の %{cv_name} に作成されています。"
       ],
-      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it.": [
-        "リポジトリーは公開されたコンテンツビューにすでに含まれるため、削除できません。この削除を試行する前にこのリポジトリーが含まれるすべてのコンテンツビューバージョンを削除してください。"
+      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions.": [
+        ""
       ],
       "This is not a linked repository": [
         "これは、リンクされたリポジトリーではありません"
@@ -5374,9 +5377,6 @@
       ],
       "Generate and Download": [
         "生成してダウンロード"
-      ],
-      "Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         "代替コンテンツソースの HTTP プロキシー"
@@ -8504,6 +8504,9 @@
       "No repositories enabled.": [
         "有効なリポジトリーがありません。"
       ],
+      "Debian packages": [
+        ""
+      ],
       "Synced": [
         ""
       ],
@@ -8998,6 +9001,18 @@
       ],
       "Verify checksum": [
         "チェックサムの確認"
+      ],
+      "No hosts have been specified.": [
+        "指定されているホストがありません。"
+      ],
+      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
+        "#~ \"リポジトリーは公開されたコンテンツビューにすでに含まれるため、削除できません。この削除を試行する前にこのリポジトリーが含まれるすべてのコンテンツビューバージ\"#~ \"ョンを削除してください。\""
+      ],
+      "source URL is malformed": [
+        "ソース URL の形式が正しくありません"
+      ],
+      "temporarily override feed URL for sync": [
+        "フィード URL を一時的に上書きして同期"
       ]
     }
   }
