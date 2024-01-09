@@ -2279,9 +2279,6 @@
       "Sync a repository": [
         ""
       ],
-      "temporarily override feed URL for sync": [
-        ""
-      ],
       "perform an incremental import": [
         ""
       ],
@@ -2291,7 +2288,7 @@
       "Force a sync and validate the checksums of all content. Only used with yum repositories.": [
         ""
       ],
-      "source URL is malformed": [
+      "attempted to sync a non-library repository.": [
         ""
       ],
       "attempted to sync without a feed URL": [
@@ -2460,6 +2457,9 @@
         ""
       ],
       "Check if the specified organization is eligible for Simple Content Access. %s": [
+        ""
+      ],
+      "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access.": [
         ""
       ],
       "Check if the specified organization has Simple Content Access enabled. %s": [
@@ -2711,12 +2711,6 @@
       "Sending a list of included IDs is not allowed when all items are being selected.": [
         ""
       ],
-      "No hosts have been specified.": [
-        ""
-      ],
-      "No hosts matched search, or action unauthorized for selected hosts.": [
-        ""
-      ],
       "Value must either be a boolean or 'default' for 'enabled'": [
         ""
       ],
@@ -2733,6 +2727,9 @@
         ""
       ],
       "Kickstart repository ID": [
+        ""
+      ],
+      "Deleted %{host_count} %{hosts}": [
         ""
       ],
       "Alter a host's host collections": [
@@ -2892,6 +2889,9 @@
         ""
       ],
       "Organization %s is being deleted.": [
+        ""
+      ],
+      "Simple Content Access will be required for all organizations in Katello 4.12.": [
         ""
       ],
       "Error connecting. Got: %s": [
@@ -3324,6 +3324,9 @@
         ""
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
+        ""
+      ],
+      "Unable to sync repo. This repository is not a library instance repository.": [
         ""
       ],
       "Disable": [
@@ -4634,7 +4637,7 @@
       "Repository has already been cloned to %{cv_name} in environment %{to_env}": [
         "தொகுப்பதிவகம் ஏற்கனவே %{to_env} சூழலில் உள்ள %{cv_name} க்கு குளோன் செய்யப்பட்டது"
       ],
-      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it.": [
+      "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions.": [
         ""
       ],
       "This is not a linked repository": [
@@ -5375,9 +5378,6 @@
       ],
       "Generate and Download": [
         "உருவாக்கிப் பதிவிறக்கவும்"
-      ],
-      "Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
       ],
       "Alternate Content Source HTTP Proxy": [
         ""
@@ -8504,6 +8504,9 @@
         ""
       ],
       "No repositories enabled.": [
+        ""
+      ],
+      "Debian packages": [
         ""
       ],
       "Synced": [

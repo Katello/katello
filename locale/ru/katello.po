@@ -2026,6 +2026,9 @@ msgstr ""
 msgid "Deb packages"
 msgstr ""
 
+msgid "Debian packages"
+msgstr ""
+
 msgid "Debug Certificate"
 msgstr "Сертификат отладки"
 
@@ -2201,6 +2204,9 @@ msgid "Delete version"
 msgstr ""
 
 msgid "Delete versions"
+msgstr ""
+
+msgid "Deleted %{host_count} %{hosts}"
 msgstr ""
 
 msgid "Deleted consumer '%s'"
@@ -4495,12 +4501,6 @@ msgstr ""
 msgid "No hosts found"
 msgstr ""
 
-msgid "No hosts have been specified."
-msgstr "Не задан ни один узел."
-
-msgid "No hosts matched search, or action unauthorized for selected hosts."
-msgstr ""
-
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr "Среди выбранных узлов нет узлов, зарегистрированных с помощью subscription-manager"
 
@@ -5799,8 +5799,8 @@ msgstr ""
 msgid "Repository Id associated with the kickstart repo used for provisioning"
 msgstr ""
 
-msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it."
-msgstr "Репозиторий не может быть удален, так как он включен в опубликованное представление. Удалите все версии представления, содержащие репозиторий, и повторите попытку."
+msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions."
+msgstr ""
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "Репозиторий не может быть отключен, так как он уже был перенесен."
@@ -7291,6 +7291,9 @@ msgstr ""
 msgid "This content view will be deleted. Changes will be effective after clicking Delete."
 msgstr ""
 
+msgid "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access."
+msgstr ""
+
 msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
 msgstr ""
 
@@ -7569,6 +7572,9 @@ msgstr ""
 
 msgid "Unable to sync repo. This repository does not have a feed url."
 msgstr "Не удалось синхронизировать репозиторий: не задан URL источника синхронизации"
+
+msgid "Unable to sync repo. This repository is not a library instance repository."
+msgstr ""
 
 msgid "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url."
 msgstr "Не удалось синхронизировать репозитории. Недостаточно разрешений или не определен URL репозитория."
@@ -8290,6 +8296,9 @@ msgstr "организация"
 msgid "are only allowed for Yum repositories."
 msgstr ""
 
+msgid "attempted to sync a non-library repository."
+msgstr ""
+
 msgid "attempted to sync without a feed URL"
 msgstr "попытка синхронизации без указания URL-адреса источника"
 
@@ -8896,9 +8905,6 @@ msgstr "показать репозитории в Library и в выбранн�
 msgid "some executors are not responding, check %{status_url}"
 msgstr "некоторые исполнители не отвечают; проверьте %{status_url}"
 
-msgid "source URL is malformed"
-msgstr "URL-адрес источника синхронизации неверно сформирован"
-
 msgid "specifies if content should be included or excluded, default: inclusion=false"
 msgstr ""
 
@@ -8916,9 +8922,6 @@ msgstr "имя плана синхронизации"
 
 msgid "sync plan numeric identifier"
 msgstr "числовой идентификатор плана синхронизации"
-
-msgid "temporarily override feed URL for sync"
-msgstr "временно переопределить URL-адрес источника синхронизации"
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr ""

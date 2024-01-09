@@ -2018,6 +2018,9 @@ msgstr ""
 msgid "Deb packages"
 msgstr ""
 
+msgid "Debian packages"
+msgstr ""
+
 msgid "Debug Certificate"
 msgstr "디버그 인증서 "
 
@@ -2193,6 +2196,9 @@ msgid "Delete version"
 msgstr ""
 
 msgid "Delete versions"
+msgstr ""
+
+msgid "Deleted %{host_count} %{hosts}"
 msgstr ""
 
 msgid "Deleted consumer '%s'"
@@ -4487,12 +4493,6 @@ msgstr ""
 msgid "No hosts found"
 msgstr ""
 
-msgid "No hosts have been specified."
-msgstr "호스트를 지정하지 않았습니다."
-
-msgid "No hosts matched search, or action unauthorized for selected hosts."
-msgstr ""
-
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr ""
 
@@ -5791,8 +5791,8 @@ msgstr ""
 msgid "Repository Id associated with the kickstart repo used for provisioning"
 msgstr ""
 
-msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it."
-msgstr "게시된 컨텐츠 뷰에 이미 포함되었기 때문에 리포지터리를 삭제할 수 없습니다. 삭제하기 전에 이 리포지터리가 포함된 모든 컨텐츠 뷰 버전을 먼저 삭제하십시오."
+msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions."
+msgstr ""
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "리포지터리는 이미 승격되었기 때문에 이를 비활성화할 수 없습니다. "
@@ -7283,6 +7283,9 @@ msgstr ""
 msgid "This content view will be deleted. Changes will be effective after clicking Delete."
 msgstr ""
 
+msgid "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access."
+msgstr ""
+
 msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
 msgstr ""
 
@@ -7561,6 +7564,9 @@ msgstr "에라타 이메일 통지를 보낼 수 없습니다: %{error}"
 
 msgid "Unable to sync repo. This repository does not have a feed url."
 msgstr "리포지터리를 동기화할 수 없습니다. 이 리포지터리에는 피드 URL이 없습니다."
+
+msgid "Unable to sync repo. This repository is not a library instance repository."
+msgstr ""
 
 msgid "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url."
 msgstr "리포지터리를 동기화할 수 없습니다. 동기화할 권한이 없거나 선택한 리포지터리에 피드 URL이  없을 수 있습니다. "
@@ -8282,6 +8288,9 @@ msgstr "조직 "
 msgid "are only allowed for Yum repositories."
 msgstr ""
 
+msgid "attempted to sync a non-library repository."
+msgstr ""
+
 msgid "attempted to sync without a feed URL"
 msgstr "피드 URL 없이 동기화를 시도했습니다."
 
@@ -8888,9 +8897,6 @@ msgstr "라이브러리 및 기본값 컨텐츠 뷰에서 리포지터리 표시
 msgid "some executors are not responding, check %{status_url}"
 msgstr "일부 실행자가 응답하지 않습니다. %{status_url}을(를) 확인하십시오."
 
-msgid "source URL is malformed"
-msgstr "소스 URL의 형식이 잘못되었습니다."
-
 msgid "specifies if content should be included or excluded, default: inclusion=false"
 msgstr "컨텐츠 포함 또는 제외 여부를 지정합니다. 기본값: inclusion=false"
 
@@ -8908,9 +8914,6 @@ msgstr "동기화 계획 이름 "
 
 msgid "sync plan numeric identifier"
 msgstr "숫자로된 동기화 계획 ID "
-
-msgid "temporarily override feed URL for sync"
-msgstr "동기화를 위한 임시 덮어쓰기 피드 URL"
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "다음 속성은 Red Hat 공급자 [ %s ]에 대해 업데이트될 수 없습니다 "

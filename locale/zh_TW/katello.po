@@ -2019,6 +2019,9 @@ msgstr ""
 msgid "Deb packages"
 msgstr ""
 
+msgid "Debian packages"
+msgstr ""
+
 msgid "Debug Certificate"
 msgstr "除錯憑證"
 
@@ -2194,6 +2197,9 @@ msgid "Delete version"
 msgstr ""
 
 msgid "Delete versions"
+msgstr ""
+
+msgid "Deleted %{host_count} %{hosts}"
 msgstr ""
 
 msgid "Deleted consumer '%s'"
@@ -4488,12 +4494,6 @@ msgstr ""
 msgid "No hosts found"
 msgstr ""
 
-msgid "No hosts have been specified."
-msgstr "未指定主機。"
-
-msgid "No hosts matched search, or action unauthorized for selected hosts."
-msgstr ""
-
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr ""
 
@@ -5792,8 +5792,8 @@ msgstr ""
 msgid "Repository Id associated with the kickstart repo used for provisioning"
 msgstr ""
 
-msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it."
-msgstr "無法刪除軟體庫，因為它已被包含在一個已發佈的內容視域中。請在嘗試刪除此軟體庫之前，刪除所有包含了此軟體庫的內容視域版本。"
+msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions."
+msgstr ""
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "軟體庫無法停用，因為該軟體庫已推送。"
@@ -7284,6 +7284,9 @@ msgstr ""
 msgid "This content view will be deleted. Changes will be effective after clicking Delete."
 msgstr ""
 
+msgid "This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access."
+msgstr ""
+
 msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
 msgstr ""
 
@@ -7562,6 +7565,9 @@ msgstr "無法收到勘誤的電子郵件通知：%{error}"
 
 msgid "Unable to sync repo. This repository does not have a feed url."
 msgstr "無法同步軟體庫。此軟體庫並沒有發送用的網址。"
+
+msgid "Unable to sync repo. This repository is not a library instance repository."
+msgstr ""
 
 msgid "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url."
 msgstr "無法同步任何軟體庫。您可能沒有同步的權限，或是選擇的軟體庫沒有摘要 url。"
@@ -8283,6 +8289,9 @@ msgstr "組織"
 msgid "are only allowed for Yum repositories."
 msgstr ""
 
+msgid "attempted to sync a non-library repository."
+msgstr ""
+
 msgid "attempted to sync without a feed URL"
 msgstr "試圖在沒有 feed URL 的情況下同步"
 
@@ -8889,9 +8898,6 @@ msgstr "在函示庫與預設內容視域中顯示軟體庫"
 msgid "some executors are not responding, check %{status_url}"
 msgstr "一些執行者沒有回應，請檢查 %{status_url}"
 
-msgid "source URL is malformed"
-msgstr "來源 URL 格式錯誤"
-
 msgid "specifies if content should be included or excluded, default: inclusion=false"
 msgstr "指定要納入或排除內容，預設值：inclusion=false"
 
@@ -8909,9 +8915,6 @@ msgstr "同步計畫的名稱"
 
 msgid "sync plan numeric identifier"
 msgstr "同步計畫的數字型態識別子"
-
-msgid "temporarily override feed URL for sync"
-msgstr "暫時覆寫同步的 feed URL"
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Red Hat 供應者的以下屬性可以更新：[ %s ]"

@@ -4,8 +4,8 @@
     "katello": {
       "": {
         "Project-Id-Version": "",
-        "Last-Translator": "Amit Upadhye <aupadhye@redhat.com>, 2023",
-        "Language-Team": "French (https://www.transifex.com/foreman/teams/114/fr/)",
+        "Last-Translator": "Baptiste Agasse <baptiste.agasse@gmail.com>, 2023",
+        "Language-Team": "French (https://app.transifex.com/foreman/teams/114/fr/)",
         "Content-Type": "text/plain; charset=UTF-8",
         "Content-Transfer-Encoding": "8bit",
         "Language": "fr",
@@ -16,9 +16,6 @@
       },
       "-- select an interval --": [
         "-- sélectionner un intervalle --"
-      ],
-      "New Content Credential": [
-        "Big Doggy"
       ],
       "(future)": [
         "(future)"
@@ -56,6 +53,9 @@
       "{{ host.name }}": [
         "{{ host.name }}"
       ],
+      "{{ host.rhel_lifecycle_status_label }}": [
+        "{{ host.rhel_lifecycle_status_label }}"
+      ],
       "{{ host.subscription_facet_attributes.user.login }}": [
         "{{ host.subscription_facet_attributes.user.login }}"
       ],
@@ -75,16 +75,19 @@
         "{{ package.hosts_available_count }} Hôte(s)"
       ],
       "{{ package.hosts_available_count || 0 }} Upgradable": [
-        "{{ package.hosts_available_count || 0 }} Mise à jour"
+        "{{ package.hosts_available_count || 0 }} pouvant être mis à niveau"
       ],
       "{{ package.human_readable_size }} ({{ package.size }} Bytes)": [
-        "{{ package.human_readable_size }} ( {{ package.size }} Bytes )"
+        "{{ package.human_readable_size }} ( {{ package.size }} Octets )"
       ],
       "{{ product.active_task_count }}": [
         "{{ product.active_task_count }}"
       ],
       "{{ product.name }}": [
         "{{ product.name }}"
+      ],
+      "{{ repo.last_sync_words }} ago": [
+        "Il y a {{ repo.last_sync_words }}"
       ],
       "{{ repository.content_counts.ansible_collection || 0 }} Ansible Collections": [
         "{{ repository.content_counts.ansible_collection || 0 }} Collections Ansible"
@@ -141,7 +144,7 @@
         "/job_invocations"
       ],
       "%(consumed)s out of %(quantity)s": [
-        "%(consumed)s de %(quantity)s"
+        "%(consumed)s sur %(quantity)s"
       ],
       "%count environment(s) can be synchronized: %envs": [
         "Les environnements %count peuvent être synchronisés : %envs"
@@ -168,7 +171,7 @@
         "<b>Flux de modules</b>"
       ],
       "<b>Packages</b>": [
-        "<b>Packages</b>"
+        "<b>Paquets</b>"
       ],
       "<b>Reboot Suggested</b>": [
         "<b>Redémarrage suggéré</b>"
@@ -183,7 +186,7 @@
         "<b>Type</b>"
       ],
       "<b>Updated</b>": [
-        "<b>Mis à jour </b> "
+        "<b>Mis à jour</b>"
       ],
       "<i class=\\\"fa fa-warning inline-icon\\\"></i>\\n  This Host is not currently registered with subscription-manager. Use the <a href=\\\"/hosts/register\\\">Register Host</a> workflow to complete registration.": [
         "<i class=\\\"fa fa-warning inline-icon\\\"></i>\\n  Cet hôte n'est pas actuellement enregistré dans subscription-manager. Cliquer sur <a href=\\\"/hosts/register\\\">Enregistrer Hôte</a> pour compléter l’enregistrement."
@@ -241,7 +244,7 @@
         "Clé d'activation mise à jour"
       ],
       "Activation Key:": [
-        "Clé d'activation :"
+        "Clé d'activation :"
       ],
       "Activation Keys": [
         "Clés d'activation"
@@ -253,7 +256,10 @@
         "Ajouter"
       ],
       "Add Content Hosts to:": [
-        "Ajouter Hôtes de contenu à :"
+        "Ajouter des hôtes de contenu à :"
+      ],
+      "Add Host Collections": [
+        ""
       ],
       "Add hosts to the host collection to see available actions.": [
         "Ajoutez des hôtes à la collection d'hôtes pour voir les actions disponibles."
@@ -267,8 +273,14 @@
       "Add ons:": [
         "Add ons :"
       ],
+      "Add Products": [
+        "Ajouter des produits"
+      ],
       "Add Selected": [
-        "Ajouter une sélection"
+        "Ajouter les éléments sélectionnés"
+      ],
+      "Add Subscriptions": [
+        "Ajouter Abonnements"
       ],
       "Add Subscriptions for Activation Key:": [
         "Ajouter les abonnements pour la clé d'activation :"
@@ -302,6 +314,9 @@
       ],
       "Affected Hosts": [
         "Hôtes affectés"
+      ],
+      "All": [
+        "Tout"
       ],
       "All Content Views": [
         "Affichages de contenu"
@@ -388,7 +403,7 @@
         "Hôtes de contenu applicables"
       ],
       "Applicable Deb Packages": [
-        "Packages Deb applicables"
+        "Paquets Deb applicables"
       ],
       "Applicable Errata": [
         "Errata applicables"
@@ -424,7 +439,7 @@
         "Appliquer {{ errataIds.length }} errata à tous les hôtes de contenu ?"
       ],
       "Apply Errata": [
-        "Appliquer l'errata"
+        "Appliquer les errata"
       ],
       "Apply Errata to Content Host \\\"{{host.name}}\\\"?": [
         "Appliquer les errata à l'hôte de contenu \\\"{{host.name}}\\\"?"
@@ -466,7 +481,7 @@
         "Êtes-vous sûr de vouloir ajouter le plan de synchronisation aux produits sélectionnés ?"
       ],
       "Are you sure you want to apply Errata to content host \\\"{{ host.name }}\\\"?": [
-        "Êtes-vous sûr de vouloir appliquer l'Errata à l'hôte de contenu \\\"{{ host.name }}\\\" ?"
+        "Êtes-vous sûr de vouloir appliquer les Errata à l'hôte de contenu \\\"{{ host.name }}\\\" ?"
       ],
       "Are you sure you want to apply the {{ table.numSelected }} selected errata to the content hosts chosen?": [
         "Êtes-vous sûr de vouloir appliquer les errata sélectionnés {{ table.numSelected }} aux hôtes de contenu choisis ?"
@@ -531,9 +546,9 @@
         "Etes-vous certain de vouloir supprimer les {{ table.getSelected().length }} produits ?"
       ],
       "Are you sure you want to remove the {{ table.getSelected()[0].name }} repository?": [
-        "Êtes-vous sûr de vouloir supprimer le référentiel {{ table.getSelected()[0].name }} ?",
-        "Êtes-vous sûr de vouloir supprimer les référentiels {{ table.getSelected().length }} ?",
-        "Êtes-vous sûr de vouloir supprimer les référentiels {{ table.getSelected().length }} ?"
+        "",
+        "",
+        ""
       ],
       "Are you sure you want to remove the {{ table.numSelected }} Container Image manifest selected?": [
         "Êtes-vous sûr de vouloir supprimer le manifeste de l'image du conteneur {{ table.numSelected }} sélectionné ?",
@@ -583,10 +598,10 @@
         "Associations"
       ],
       "At least one Errata needs to be selected to Apply.": [
-        "Au moins un errata doit être sélectionné pour pouvoir appliquer."
+        "Au moins un erratum doit être sélectionné pour pouvoir appliquer."
       ],
       "Attached": [
-        "Joint"
+        "Attaché"
       ],
       "Auth Token": [
         "Jeton d'authentification"
@@ -600,8 +615,14 @@
       "Auto-Attach": [
         "Auto-Attach"
       ],
+      "Auto-attach available subscriptions to all selected hosts.": [
+        "Attacher automatiquement les abonnements disponibles à tous les hôtes sélectionnés."
+      ],
       "Auto-Attach Details": [
         "Détails Auto-Attach"
+      ],
+      "Auto-attach uses all available subscriptions, not a selected subset.": [
+        "L'attachement automatique utilise tous les abonnements disponibles, et non pas juste un sous-ensemble sélectionné."
       ],
       "Automatic": [
         "Automatique"
@@ -619,7 +640,7 @@
         "Identifiant du back-end"
       ],
       "Basic Information": [
-        "Informations sur le système"
+        "Informations de base"
       ],
       "Below are the repository content sets currently available for this content host through its subscriptions. For Red Hat subscriptions, additional content can be made available through the": [
         "Vous trouverez ci-dessous les ensembles de contenu du référentiel actuellement disponibles pour cet hébergeur de contenu par le biais de ses abonnements. Pour les abonnements à Red Hat, du contenu supplémentaire peut être mis à disposition par le biais de la"
@@ -640,13 +661,16 @@
         "Avis de correction de bogue"
       ],
       "Build Host": [
-        "Création des hôtes"
+        "Hôte de création"
       ],
       "Build Information": [
-        "Informations Build"
+        "Informations de création"
       ],
       "Build Time": [
         "Temps de Création"
+      ],
+      "Bulk Task": [
+        ""
       ],
       "Cancel": [
         "Annuler"
@@ -658,7 +682,7 @@
         "Impossible de nettoyer le référentiel, une synchronisation est déjà en cours."
       ],
       "Cannot Remove": [
-        "Ne peut pas supprimer"
+        "Suppression impossible"
       ],
       "Cannot republish Repository without the proper permissions.": [
         "Ne peut pas republier le référentiel sans les autorisations nécessaires."
@@ -696,6 +720,9 @@
       "Changing default settings requires subscription-manager version 1.10 or newer to be installed on this host.": [
         "La modification des paramètres par défaut nécessite l'installation sur cet hôte de la version 1.10 ou d'une version plus récente du gestionnaire d'abonnement."
       ],
+      "Changing download policy to \\\"On Demand\\\" will also clear the checksum type if set. The repository will use the upstream checksum type to verify downloads.": [
+        "La modification de la politique de téléchargement en \\\"A la demande\\\" effacera également le type de somme de contrôle si défini. Le référentiel utilisera le type de somme de contrôle en amont pour vérifier les téléchargements."
+      ],
       "Changing the Content View will not affect the Content Host until its next checkin.\\n                To update the Content Host immediately run the following command:": [
         "La modification de la vue du contenu n'affectera pas l'hôte du contenu jusqu'à son prochain contrôle.\\n                Pour mettre à jour l'hôte de contenu, exécutez immédiatement la commande suivante :"
       ],
@@ -703,10 +730,10 @@
         "La modification de la vue du contenu n'affectera pas les hôtes de contenu jusqu'à leur prochaine vérification.\\n        Pour mettre à jour les hôtes de contenu, exécutez immédiatement la commande suivante :"
       ],
       "Checksum": [
-        "Somme de vérification"
+        "Somme de contrôle"
       ],
       "Checksum Type": [
-        "Type de somme de vérification"
+        "Type de somme de contrôle"
       ],
       "Choose one of the registry options to discover containers. To examine a private registry choose \\\"Custom\\\" and provide the url for the private registry.": [
         "Choisissez l'une des options du registre pour découvrir les conteneurs. Pour examiner un registre privé, choisissez \\\"Custom\\\" et indiquez l'adresse du registre privé."
@@ -745,7 +772,7 @@
         "Composants"
       ],
       "Components:": [
-        "Composants :"
+        "Composants :"
       ],
       "Composite View": [
         "Affichage composite"
@@ -780,6 +807,9 @@
       "Content Counts": [
         "Nombre de contenus"
       ],
+      "Content Credential": [
+        "Identifiants de contenu"
+      ],
       "Content Credential %s has been created.": [
         "L’identifiant de contenu %s a été créée."
       ],
@@ -813,6 +843,9 @@
       "Content Host Limit": [
         "Limite Hôte de contenu"
       ],
+      "Content Host Module Stream Management": [
+        "Gestion des flux de modules Hôte de contenu"
+      ],
       "Content Host Properties": [
         "Propriétés Hôte de contenu"
       ],
@@ -821,6 +854,9 @@
       ],
       "Content Host Status": [
         "Statut Hôte de contenu"
+      ],
+      "Content Host Traces Management": [
+        "Gestion des traces Hôte de contenu"
       ],
       "Content Host:": [
         "Hôte du contenu :"
@@ -895,10 +931,13 @@
         "Créer une copie de {{ hostCollection.name }}"
       ],
       "Create Activation Key": [
-        "Supprimer Clé d'activation"
+        "Créer une clé d'activation"
       ],
       "Create Content Credential": [
         "Créer identifiant de contenu"
+      ],
+      "Create Copy": [
+        "Créer une copie"
       ],
       "Create Discovered Repositories": [
         "Créer référentiels de découvertes"
@@ -910,10 +949,13 @@
         "Créer Collection d'hôtes"
       ],
       "Create Product": [
-        "Supprimer le produit"
+        "Créer un produit"
+      ],
+      "Create Repositories": [
+        "Créer des référentiels"
       ],
       "Create Selected": [
-        "Reprendre Sélectionné"
+        "Créer sélectionné"
       ],
       "Create Status": [
         "Créer un statut"
@@ -939,11 +981,14 @@
       "Current Subscriptions for Activation Key:": [
         "Abonnements actuels pour la clé d'activation :"
       ],
+      "Custom": [
+        "Personnalisé"
+      ],
       "custom cron": [
-        "custom cron"
+        "cron personnalisé"
       ],
       "Custom Cron": [
-        "Custom Cron"
+        "Cron personnalisé"
       ],
       "Custom Cron : {{ product.sync_plan.cron_expression }}": [
         "Custom Cron : {{ product.sync_plan.cron_expression }}"
@@ -966,26 +1011,35 @@
       "deb metadata generation has been initiated in the background.  Click <a href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
         "la génération des métadonnées deb a été lancée en arrière-plan.  Cliquez <a href=\\\"{{ taskUrl() }}\\\">ici</a> pour suivre les progrès."
       ],
+      "Deb Package Actions": [
+        ""
+      ],
       "deb Package Updates": [
-        "deb Mises à jour de packages"
+        "deb Mises à jour de paquets"
       ],
       "deb Packages": [
-        "deb Packages"
+        "deb paquets"
       ],
       "Deb Packages": [
-        "Packages Deb"
+        "Paquets Deb"
       ],
       "Deb Packages <div>{{ library.counts.debs || 0 }}</div>": [
-        "Packages Deb <div>{{ library.counts.debs || 0 }}</div>"
+        "Paquets Deb <div>{{ library.counts.debs || 0 }}</div>"
       ],
       "Deb Packages for:": [
-        "Packages Deb pour :"
+        "Paquets Deb pour :"
+      ],
+      "Deb Repositories": [
+        "Référentiels deb"
       ],
       "Deb Repositories <div>{{ library.counts.deb_repositories || 0 }}</div>": [
-        "Dépôts Deb <div>{{ library.counts.deb_repositories || 0 }}</div>"
+        "Référentiels Deb <div>{{ library.counts.deb_repositories || 0 }}</div>"
       ],
       "Deb:": [
         "Deb:"
+      ],
+      "Debs": [
+        "Debs"
       ],
       "Default": [
         "Par défaut"
@@ -998,6 +1052,9 @@
       ],
       "Delete {{ table.numSelected  }} Hosts?": [
         "Supprimer {{ table.numSelected  }}hôtes ?"
+      ],
+      "Delete filters": [
+        "Supprimer les filtres"
       ],
       "Delete Hosts": [
         "Supprimer ces hôtes"
@@ -1039,16 +1096,19 @@
         "Désactivé"
       ],
       "Disabled (overridden)": [
-        "Désactivés (remplacés)"
+        "Désactivé (remplacé)"
       ],
       "Discover": [
-        "Discover"
+        "Découvrir"
+      ],
+      "Discover Repositories": [
+        "Découvrir des référentiels"
       ],
       "Discovered Repository": [
         "Référentiel des découvertes"
       ],
       "Discovery failed. Error: %s": [
-        "La découverte a échoué. Erreur : %s"
+        "La détection a échoué. Erreur : %s"
       ],
       "Distribution": [
         "Distribution"
@@ -1059,11 +1119,17 @@
       "Do not require a subscription entitlement certificate for accessing this repository.": [
         "Nul besoin de certificat de droit d'abonnement pour accéder à ce référentiel."
       ],
+      "Docker": [
+        "Docker"
+      ],
       "Docker metadata generation has been initiated in the background.  Click\\n            <a ng-href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
         "La génération de métadonnées Docker a été lancée en arrière-plan.  Cliquez sur\\n            <a ng-href=\\\"{{ taskUrl() }}\\\">Ici</a>  pour suivre les progrès."
       ],
       "Docker Repositories <div>{{ library.counts.docker_repositories || 0 }}</div>": [
         "Référentiels Docker <div>{{ library.counts.docker_repositories || 0 }} </div>"
+      ],
+      "Docker Tags": [
+        "Balises Docker"
       ],
       "Done": [
         "Fait"
@@ -1101,6 +1167,9 @@
       "Environment will also be removed from the following published content views!": [
         "L'environnement sera également supprimé des vues de contenu publiées suivantes !"
       ],
+      "Environments": [
+        "Environnements"
+      ],
       "Environments List": [
         "Liste des environnements"
       ],
@@ -1120,16 +1189,16 @@
         "Errata pour :"
       ],
       "Errata ID": [
-        "ID d'errata"
+        "ID des errata"
       ],
       "Errata Installation": [
-        "Installation d'errata"
+        "Installation des errata"
       ],
       "Errata Task List": [
-        "Liste des tâches d'errata"
+        "Liste des tâches des errata"
       ],
       "Errata Tasks": [
-        "Tâches d’errata"
+        "Tâches des errata"
       ],
       "Errata:": [
         "Errata:"
@@ -1171,7 +1240,7 @@
         "Fichier trop volumineux. Veuillez utiliser le CLI à la place."
       ],
       "File:": [
-        "Fichier :"
+        "Fichier :"
       ],
       "Filename": [
         "Nom du fichier"
@@ -1185,11 +1254,17 @@
       "Filter": [
         "Filtre"
       ],
+      "Filter by Environment": [
+        "Filtrer par environnement"
+      ],
       "Filter by Status:": [
         "Filtrer par état :"
       ],
       "Filter...": [
         "Filtrer..."
+      ],
+      "Filters": [
+        "Filtres"
       ],
       "Finished At": [
         "Terminé à"
@@ -1225,7 +1300,7 @@
         "Les invités de"
       ],
       "Helper": [
-        "Aide"
+        "Assistant"
       ],
       "Host %s has been deleted.": [
         "L’hôte %s a été supprimé."
@@ -1238,6 +1313,9 @@
       ],
       "Host Collection Membership": [
         "Abonnement à la collection d'hôtes"
+      ],
+      "Host Collection Membership Management": [
+        "Gestion Abonnement à la collection d'hôtes"
       ],
       "Host Collection removed.": [
         "Collection d'hôtes supprimée."
@@ -1278,6 +1356,9 @@
       "HTTP Proxy": [
         "HTTP Proxy"
       ],
+      "HTTP Proxy Management": [
+        "Gestion du proxy HTTP"
+      ],
       "HTTP Proxy Policy": [
         "Politique de proxy HTTP"
       ],
@@ -1295,6 +1376,9 @@
       ],
       "Ignore SRPMs": [
         "Ignorer les SRPM"
+      ],
+      "Ignore treeinfo": [
+        ""
       ],
       "Image": [
         "Image"
@@ -1315,7 +1399,7 @@
         "Packages indépendants"
       ],
       "Install": [
-        "Installez"
+        "Installer"
       ],
       "Install Selected": [
         "Installer Sélectionné"
@@ -1342,10 +1426,10 @@
         "Installé le"
       ],
       "Installed Package": [
-        "Packages installés"
+        "Paquet installé"
       ],
       "Installed Packages": [
-        "Packages installés"
+        "Paquets installés"
       ],
       "Installed Products": [
         "Produits installés"
@@ -1368,14 +1452,8 @@
       "Issued": [
         "Publié"
       ],
-      "Katello Agent": [
-        "Agent Katello"
-      ],
       "Katello Tracer": [
         "Katello Tracer"
-      ],
-      "Katello-agent is deprecated and will be removed in a future release.": [
-        "Katello-agent est déprécié et sera supprimé dans une prochaine version."
       ],
       "Label": [
         "Balise"
@@ -1437,8 +1515,8 @@
       "Limit": [
         "Limite"
       ],
-      "Limit Repository Sets to only those available in this Activation Key's Lifecycle Environment": [
-        "Limiter les ensembles de référentiel aux seuls éléments disponibles dans l'environnement du cycle de vie de cette clé d'activation"
+      "Limit Repository Sets to only those available in this Activation Key's Lifecycle  Environment": [
+        ""
       ],
       "Limit Repository Sets to only those available in this Host's Lifecycle Environment": [
         "Limiter les ensembles de référentiel aux seuls éléments disponibles dans l'environnement du cycle de vie de cet hôte"
@@ -1458,6 +1536,18 @@
       "List": [
         "Liste"
       ],
+      "List Host Collections": [
+        "Lister les collections d'hôtes"
+      ],
+      "List Hosts": [
+        "Lister les hôtes"
+      ],
+      "List Products": [
+        "Lister les produits"
+      ],
+      "List Subscriptions": [
+        "Lister les abonnements"
+      ],
       "List/Remove": [
         "Liste/Enlever"
       ],
@@ -1466,6 +1556,9 @@
       ],
       "Loading...\\\"": [
         "Chargement..."
+      ],
+      "Make filters apply to all repositories in the content view": [
+        ""
       ],
       "Manage Ansible Collections for Repository:": [
         "Gérer les collections accessibles pour le référentiel :"
@@ -1477,7 +1570,7 @@
         "Gérer le contenu du référentiel :"
       ],
       "Manage deb Packages for Repository:": [
-        "Gérer les packages deb pour le référentiel :"
+        "Gérer les paquets deb pour le référentiel :"
       ],
       "Manage Errata": [
         "Gérer les errata"
@@ -1489,7 +1582,7 @@
         "Gérer les traces d’hôte"
       ],
       "Manage HTTP Proxy": [
-        "Mettre à jour proxy http"
+        "Gérer le proxy HTTP"
       ],
       "Manage Module Streams": [
         "Indexer les flux de module"
@@ -1498,19 +1591,19 @@
         "Gérer les flux de modules pour le référentiel :"
       ],
       "Manage Packages": [
-        "Gérer les packages"
+        "Gérer les paquets"
       ],
       "Manage Packages for Repository:": [
-        "Gérer les packages pour le référentiel :"
+        "Gérer les paquets pour le référentiel :"
       ],
       "Manage Repository Sets": [
-        "Répertorier les ensembles de référentiels"
+        "Gérer les ensembles de référentiels"
       ],
       "Manage Subscriptions": [
         "Gérer les abonnements"
       ],
       "Manage Sync Plan": [
-        "Mettre à jour le plan de sync"
+        "Gérer le plan de synchronisation"
       ],
       "Manage System Purpose": [
         "Gérer Objectif system"
@@ -1520,6 +1613,9 @@
       ],
       "Manifest Type": [
         "Types de manifestes"
+      ],
+      "Metadata Expiration (Seconds)": [
+        "Expiration des métadonnées (secondes)"
       ],
       "Mirroring Policy": [
         "Politique de mise en miroir"
@@ -1540,7 +1636,7 @@
         "La génération des métadonnées du flux de module a été lancée en arrière-plan.  Cliquez ici </a> pour suivre les progrès."
       ],
       "Module Stream Packages": [
-        "Packages de flux de modules"
+        "Paquets de flux de modules"
       ],
       "Module Streams": [
         "Flux de module"
@@ -1581,11 +1677,17 @@
       "New Activation Key": [
         "Nouvelles clé d'activation"
       ],
+      "New Content Credential": [
+        ""
+      ],
       "New Environment": [
         "Nouvel environnement"
       ],
+      "New Host Collection": [
+        ""
+      ],
       "New Name:": [
-        "Nouveau nom :"
+        "Nouveau nom :"
       ],
       "New Product": [
         "Nouveau produit"
@@ -1594,7 +1696,7 @@
         "Nouveau référentiel"
       ],
       "New Sync Plan": [
-        "Nouveau Plan Sync"
+        "Nouveau plan de synchronisation"
       ],
       "New sync plan successfully created.": [
         "Nouveau plan de synchronisation créé."
@@ -1603,7 +1705,7 @@
         "Suivant"
       ],
       "Next Sync": [
-        "Prochaine Sync"
+        "Prochaine synchronisation"
       ],
       "No": [
         "Non"
@@ -1639,13 +1741,16 @@
         "Aucune collection d'hôtes à afficher, vous pouvez ajouter des collections d'hôtes après avoir sélectionné l'onglet \\\"Ajouter\\\"."
       ],
       "No HTTP Proxies found": [
-        "Aucun Smart Proxy trouvé"
+        "Aucun Proxy HTTP trouvé"
       ],
       "No HTTP Proxy": [
-        "Aucun Proxy HTTP"
+        "Aucun proxy HTTP"
       ],
       "No matching results.": [
         "Aucun résultat correspondant."
+      ],
+      "No Packages to show": [
+        "Aucun paquet mis à afficher"
       ],
       "No products are available to add to this Sync Plan.": [
         "Aucun produit n'est disponible pour ajouter à ce plan de synchronisation."
@@ -1666,7 +1771,7 @@
         "Aucun référentiel ne contient ce fichier"
       ],
       "No Repositories contain this Package.": [
-        "Aucun référentiel ne contient ce package."
+        "Aucun référentiel ne contient ce paquet."
       ],
       "No repository sets provided through subscriptions.": [
         "Aucun ensemble de référentiels n'est fourni par le biais d'abonnements."
@@ -1686,9 +1791,6 @@
       "Not Applicable": [
         "Non applicable"
       ],
-      "Not installed": [
-        "Non installé"
-      ],
       "Not started": [
         "Non démarré"
       ],
@@ -1705,13 +1807,13 @@
         "Sur demande"
       ],
       "One or more of the selected Errata are not Installable via your published Content View versions running on the selected hosts.  The new Content View Versions (specified below)\\n      will be created which will make this Errata Installable in the host's Environment.  This new version will replace the current version in your host's Lifecycle\\n      Environment.  To install these errata immediately on hosts after publishing check the box below.": [
-        "Un ou plusieurs des errata sélectionnés ne sont pas installables via les versions de Content View que vous avez publiées et qui fonctionnent sur les hôtes sélectionnés.  Les nouvelles versions de Content View (spécifiées ci-dessous)\\n      sera créé, ce qui rendra cet errata installable dans l'environnement de l'hôte.  Cette nouvelle version remplacera la version actuelle dans le cycle de vie de votre hôte\\n      Environnement.  Pour installer ces errata immédiatement sur les hôtes après leur publication, cochez la case ci-dessous."
+        "Un ou plusieurs des errata sélectionnés ne sont pas installables via les versions de Content View que vous avez publiées et qui fonctionnent sur les hôtes sélectionnés.  Les nouvelles versions de Content View (spécifiées ci-dessous)\\n      sera créé, ce qui rendra ces errata installable dans l'environnement de l'hôte.  Cette nouvelle version remplacera la version actuelle dans le cycle de vie de votre hôte\\n      Environnement.  Pour installer ces errata immédiatement sur les hôtes après leur publication, cochez la case ci-dessous."
       ],
       "One or more packages are not showing up in the local repository even though they exist in the upstream repository.": [
-        ""
+        "Un ou plusieurs paquets n'apparaissent pas dans le référentiel local alors qu'ils existent dans le référentiel en amont."
       ],
       "Only show content hosts where the errata is currently installable in the host's Lifecycle Environment.": [
-        "N'affichez que les hôtes de contenu où l'errata est actuellement installable dans l'environnement du cycle de vie de l'hôte."
+        "N'affichez que les hôtes de contenu où les errata sont actuellement installables dans l'environnement du cycle de vie de l'hôte."
       ],
       "Only show Errata that are Applicable to one or more Content Hosts": [
         "N'afficher que les errata applicables à un ou plusieurs hôtes de contenu"
@@ -1720,10 +1822,10 @@
         "Ne montrer que les errata qui sont installables sur un ou plusieurs hôtes de contenu"
       ],
       "Only show Packages that are Applicable to one or more Content Hosts": [
-        "Ne montrer que les packages applicables à un ou plusieurs hôtes de contenu"
+        "Ne montrer que les paquets applicables à un ou plusieurs hôtes de contenu"
       ],
       "Only show Packages that are Upgradable on one or more Content Hosts": [
-        "Renvoyer les packages qui sont évolutifs sur un ou plusieurs hôtes de contenu"
+        "Renvoyer les paquets qui sont évolutifs sur un ou plusieurs hôtes de contenu"
       ],
       "Only show Subscriptions for products not already covered by a Subscription": [
         "Afficher uniquement les abonnements pour les produits qui ne sont pas déjà couverts par un abonnement"
@@ -1762,61 +1864,61 @@
         "Remplacer par «Activer»"
       ],
       "Package": [
-        "Package"
+        "Paquet"
       ],
       "Package Actions": [
-        "Actions Package"
+        "Actions paquet"
       ],
       "Package Group (Deprecated)": [
         "Groupe de paquets (déprécié)"
       ],
       "Package Groups": [
-        "Groupes de packages"
+        "Groupes de paquets"
       ],
       "Package Groups for Repository:": [
         "Groupes de paquets pour le référentiel :"
       ],
       "Package Information": [
-        "Informations Package"
+        "Informations paquet"
       ],
       "Package Install": [
-        "Installation de packages"
+        "Installation de paquets"
       ],
       "Package Installation, Removal, and Update": [
-        "Installation, retrait et mise à jour des packages"
+        "Installation, retrait et mise à jour des paquets"
       ],
       "Package Remove": [
-        "Suppression de packages"
+        "Suppression de paquets"
       ],
       "Package Update": [
-        "Mise à jour de packages"
+        "Mise à jour de paquets"
       ],
       "Package:": [
-        "Package :"
+        "Paquet :"
       ],
       "Package/Group Name": [
-        "Nom de Packages/Groupe"
+        "Nom de Paquet/Groupe"
       ],
       "Packages": [
-        "Packages"
+        "Paquets"
       ],
       "Packages <div>{{ library.counts.packages || 0 }}</div>": [
         "Packages <div>{{ library.counts.packages || 0 }} </div>"
       ],
       "Packages are automatically Applicable if they are Upgradable": [
-        "Les packages sont automatiquement applicables s'ils sont évolutifs"
+        "Les paquets sont automatiquement applicables s'ils sont évolutifs"
       ],
       "Packages for Errata:": [
-        "Packages pour Errata :"
+        "Paquets pour les Errata :"
       ],
       "Packages for:": [
-        "Packages pour :"
+        "Paquets pour :"
       ],
       "Parameters": [
         "Paramètres"
       ],
       "Part of a manifest list": [
-        "Partie d'une liste de manifestes"
+        "Partie d'une liste de manifeste"
       ],
       "Password": [
         "Mot de passe"
@@ -1825,22 +1927,25 @@
         "Mot de passe de l'utilisateur du référentiel en amont pour l'authentification. Laissez vide si le référentiel ne nécessite pas d'authentification."
       ],
       "Paste contents of Content Credential": [
-        "Coller le contenu des identifiants de contenu"
+        "Coller le contenu des références de contenu"
       ],
       "Path": [
         "Chemin"
       ],
       "Perform": [
-        "Performer"
+        "Effectuer"
       ],
-      "Performing host package actions is disabled because Katello is not configured for Remote Execution or Katello Agent.": [
-        "L'exécution d'actions sur le paquetage de l'hôte est désactivée car Katello n'est pas configuré pour l'exécution à distance ou l'agent Katello."
+      "Performing host package actions is disabled because Katello is not configured for remote execution.": [
+        ""
+      ],
+      "Performing host package actions is disabled because Katello is not configured for Remote Execution.": [
+        ""
       ],
       "Physical": [
         "Physique"
       ],
       "Please enter cron below": [
-        "Veuillez entrer le cron ci-dessous"
+        "Veuillez entrer le code ci-dessous"
       ],
       "Please make sure a Content View is selected.": [
         "Veuillez vous assurer qu'une vue de contenu est sélectionnée."
@@ -1858,10 +1963,10 @@
         "Plus 1 erreur supplémentaire"
       ],
       "Previous Lifecycle Environment (%e/%cv)": [
-        "Environnement de cycle de vie antérieur ( %e /%cv )"
+        "Environnement de cycle de vie précédent (%e/%cv)"
       ],
       "Prior Environment": [
-        "Environnement préalable"
+        "Environnement précédent"
       ],
       "Product": [
         "Produit"
@@ -1873,16 +1978,16 @@
         "Avis sur l'amélioration des produits"
       ],
       "Product information for:": [
-        "Informations sur les produits pour :"
+        "Information de produit pour :"
       ],
       "Product Management for Sync Plan:": [
-        "Gestion des produits pour Plan Sync :"
+        "Gestion de produits pour le plan de synchronisation :"
       ],
       "Product Name": [
         "Nom du produit"
       ],
       "Product Options": [
-        "Options des produits"
+        "Options du produit"
       ],
       "Product Saved": [
         "Produit sauvegardé"
@@ -1910,6 +2015,9 @@
       ],
       "Provides": [
         "Procure"
+      ],
+      "Provisioning": [
+        ""
       ],
       "Provisioning Details": [
         "Provisionnement - Détails"
@@ -1942,7 +2050,7 @@
         "Redémarrage suggéré"
       ],
       "Reboot Suggested?": [
-        "Redémarrage suggéré ?"
+        "Redémarrage suggéré ?"
       ],
       "Recalculate\\n          <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"calculatingApplicability\\\"></i>": [
         "Recalculer\\n          <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"calculatingApplicability\\\"></i>"
@@ -1953,11 +2061,14 @@
       "Recurring Logic": [
         "Logique récurrente"
       ],
+      "Red Hat": [
+        "Red Hat"
+      ],
       "Red Hat Repositories page": [
-        "Page Référentiels Red Hat"
+        "Page des référentiels Red Hat"
       ],
       "Red Hat Repositories page.": [
-        "Page Référentiels Red Hat."
+        "Page des référentiels Red Hat."
       ],
       "Refresh Table": [
         "Rafraîchir le tableau"
@@ -1996,7 +2107,7 @@
         "Version de sortie"
       ],
       "Release Version:": [
-        "Version de sortie :"
+        "Version de sortie :"
       ],
       "Releases/Distributions": [
         "Sorties/Distributions"
@@ -2022,10 +2133,10 @@
         "Supprimer le contenu"
       ],
       "Remove Content Credential": [
-        "Supprimer les identifiants de contenu"
+        "Supprimer les références de contenu"
       ],
       "Remove Content Credential {{ contentCredential.name }}": [
-        "Supprimer les identifiants de contenu {{ contentCredential.name }}"
+        "Supprimer les références de contenu {{ contentCredential.name }}"
       ],
       "Remove Content?": [
         "Supprimer le contenu ?",
@@ -2053,12 +2164,12 @@
         "Afficher une collection d'hôtes \\\"{{ hostCollection.name }}\\\"?"
       ],
       "Remove Package?": [
-        "Supprimer le package ?",
-        "Supprimer {{ table.numSelected }} packages ?",
-        "Supprimer {{ table.numSelected }} packages ?"
+        "Supprimer le paquet ?",
+        "Supprimer {{ table.numSelected }} paquets ?",
+        "Supprimer {{ table.numSelected }} paquets ?"
       ],
       "Remove Packages": [
-        "Supprimer packages"
+        "Supprimer paquets"
       ],
       "Remove Product": [
         "Supprimer un produit"
@@ -2092,7 +2203,7 @@
         "Suppression réussie."
       ],
       "Remove Sync Plan": [
-        "Supprimer le plan de sync"
+        "Supprimer le plan de synchronisation"
       ],
       "Remove Sync Plan \\\"{{ syncPlan.name }}\\\"?": [
         "Supprimer le plan de synchronisation \\\"{{ syncPlan.name }}\\\" ?"
@@ -2101,7 +2212,7 @@
         "Supprimer %x collections d'hôtes de la clé d'activation \\\"%y\\\"."
       ],
       "Removed %x host collections from content host \\\"%y\\\".": [
-        "Supprimer %x collections d'hôtes de l’hôte de contenu \\\"%y\\\"."
+        "Supprimer %x collections de l'hôtes de l’hôte de contenu \\\"%y\\\"."
       ],
       "Removed %x products from sync plan \\\"%y\\\".": [
         "Supprimer %x produits du plan de synchronisation \\\"%y\\\"."
@@ -2119,7 +2230,7 @@
         "Référentiels contenant des errata {{ errata.errata_id }}"
       ],
       "Repositories containing package {{ package.nvrea }}": [
-        "Référentiels contenant le package {{ package.nvrea }}"
+        "Référentiels contenant le paquet {{ package.nvrea }}"
       ],
       "Repositories for": [
         "Référentiels pour"
@@ -2128,13 +2239,13 @@
         "Référentiels de Deb :"
       ],
       "Repositories for Errata:": [
-        "Référentiels pour Errata :"
+        "Référentiels pour les Errata :"
       ],
       "Repositories for File:": [
         "Référentiels pour Fichier :"
       ],
       "Repositories for Package:": [
-        "Référentiels pour Package :"
+        "Référentiels pour paquet :"
       ],
       "Repositories for Product:": [
         "Référentiels pour Produit :"
@@ -2161,7 +2272,7 @@
         "Les changements de proxy HTTP du référentiel ont été initiés en arrière-plan."
       ],
       "Repository Label": [
-        "Étiquette du référentiel"
+        "Balise du référentiel"
       ],
       "Repository Name": [
         "Nom du référentiel"
@@ -2178,8 +2289,14 @@
       "Repository Sets": [
         "Ensembles de référentiels"
       ],
+      "Repository Sets Management": [
+        "Gestion des ensembles de référentiels"
+      ],
       "Repository Sets settings saved successfully.": [
         "Paramètres d’ensembles de référentiels enregistrés."
+      ],
+      "Repository type": [
+        "Type de référentiel"
       ],
       "Repository Type": [
         "Type de référentiel"
@@ -2191,7 +2308,10 @@
         "L'environnement sera également supprimé des vues de contenu des versions publiées suivantes !"
       ],
       "Repository:": [
-        "Référentiel :"
+        "Référentiel :"
+      ],
+      "Republish Repository Metadata": [
+        "Republier Métadonnées de référentiel"
       ],
       "Requirements": [
         "Exigences"
@@ -2251,7 +2371,7 @@
         "RPM"
       ],
       "rpm Package Updates": [
-        "rpm Mises à jour de packages"
+        "rpm Mises à jour de paquets"
       ],
       "Run Auto-Attach": [
         "Lancer l'Auto-Attach"
@@ -2295,14 +2415,23 @@
       "Select an Organization": [
         "Sélectionner une organisation"
       ],
+      "Select Content Host(s)": [
+        ""
+      ],
       "Select Content View": [
         "Sélectionner l'affichage de contenu"
       ],
-      "Selecting \\\"Complete Sync\\\" will cause only yum/deb repositories of the selected product to be synced.": [
+      "Select this option if treeinfo files or other kickstart content is failing to syncronize from the upstream repository.": [
         ""
+      ],
+      "Selecting \\\"Complete Sync\\\" will cause only yum/deb repositories of the selected product to be synced.": [
+        "En sélectionnant \\\"Complete Sync\\\", seuls les référentiels yum /deb du produit sélectionné seront synchronisés."
       ],
       "Selecting this option will exclude SRPMs from repository synchronization.": [
         "En sélectionnant cette option, les SRPM seront exclus de la synchronisation du référentiel."
+      ],
+      "Selecting this option will exclude treeinfo files from repository synchronization.": [
+        ""
       ],
       "Selecting this option will result in Katello verifying that the upstream url's SSL certificates are signed by a trusted CA. Unselect if you do not want this verification.": [
         "En sélectionnant cette option, Katello vérifiera que les certificats SSL de l'url en amont sont signés par une AC de confiance. Désélectionnez cette option si vous ne voulez pas de cette vérification."
@@ -2330,6 +2459,9 @@
       ],
       "Size": [
         "Taille"
+      ],
+      "Skip dependency solving for a significant speed increase. If the update cannot be applied to the host, delete the incremental content view version and retry the application with dependency solving turned on.": [
+        "Ignorez la résolution des dépendances pour obtenir une augmentation significative de la vitesse. Si la mise à jour ne peut pas être appliquée à l'hôte, supprimez la version incrémentielle de l’affichage de contenu et réessayez l'application en activant la résolution des dépendances."
       ],
       "Smart proxy currently reclaiming space...": [
         "Le smart proxy est entrain de récupérer le l’espace ..."
@@ -2362,7 +2494,7 @@
         "RPM source"
       ],
       "Source RPMs": [
-        "RPM source"
+        "RPMs source"
       ],
       "Space reclamation is about to start...": [
         "La récupération d’espace est sur le point de commencer..."
@@ -2374,16 +2506,16 @@
         "Certificat SSL"
       ],
       "SSL Client Cert": [
-        "Env cert client SSL"
+        "Certificat client SSL"
       ],
       "SSL Client Key": [
-        "Clé client Pulp"
+        "Clé client SSL"
       ],
       "Standard sync, optimized for speed by bypassing any unneeded steps.": [
         "Synchronisation standard, optimisée pour la vitesse en contournant les étapes inutiles."
       ],
       "Start Date": [
-        "Date de départ"
+        "Date de début"
       ],
       "Start Time": [
         "Date de lancement"
@@ -2392,10 +2524,10 @@
         "Démarré à"
       ],
       "Starting": [
-        "A partir de"
+        "Démarrage"
       ],
       "Starts": [
-        "Démarrage"
+        "Commence"
       ],
       "State": [
         "État"
@@ -2425,13 +2557,13 @@
         "Abonnements"
       ],
       "Subscriptions for Activation Key:": [
-        "Abonnements pour la clé d'activation :"
+        "Abonnements pour la clé d'activation :"
       ],
       "Subscriptions for Content Host:": [
         "Abonnements pour l'hôte de contenu :"
       ],
       "Subscriptions for:": [
-        "Abonnements pour :"
+        "Abonnements pour :"
       ],
       "Success!": [
         "Réussi."
@@ -2443,31 +2575,19 @@
         "Lancement réussi du redémarrage des services."
       ],
       "Successfully removed %s items.": [
-        "%sitems supprimés."
+        "%s éléments supprimés."
       ],
       "Successfully removed %s subscriptions.": [
         "%s abonnements supprimés."
       ],
       "Successfully removed 1 item.": [
-        "1 item supprimé."
-      ],
-      "Successfully scheduled an update of all packages": [
-        "A réussi à programmer une mise à jour de tous les packages"
-      ],
-      "Successfully scheduled package installation": [
-        "Installation des packages programmée avec succès"
-      ],
-      "Successfully scheduled package removal": [
-        "Le retrait des packages a été programmé avec succès"
-      ],
-      "Successfully scheduled package update": [
-        "Mise à jour du package programmée avec succès"
+        "1 élément supprimé."
       ],
       "Successfully updated subscriptions.": [
         "Mise à jour des abonnements réussie."
       ],
       "Successfully uploaded content:": [
-        "Contenu téléchargé avec succès :"
+        "Téléchargement du contenu réussi :"
       ],
       "Summary": [
         "Résumé"
@@ -2482,7 +2602,7 @@
         "Sync activée"
       ],
       "Sync even if the upstream metadata appears to have no change. This option is only relevant for yum/deb repositories and will take longer than an optimized sync. Choose this option if:": [
-        ""
+        "Synchroniser même si les métadonnées en amont ne semblent pas avoir changé. Cette option ne concerne que les dépôts yum/deb et prendra plus de temps qu'une synchronisation optimisée. Choisissez cette option si :"
       ],
       "Sync Interval": [
         "Sync Intervalle"
@@ -2497,7 +2617,10 @@
         "Plan de Sync %s a été supprimé."
       ],
       "Sync Plan created and assigned to product.": [
-        "Plan de Sync créé et affecté au produit."
+        "Plan de Synchronisation créé et affecté au produit."
+      ],
+      "Sync Plan Management": [
+        "Gestion du Plan de Sync"
       ],
       "Sync Plan saved": [
         "Plan de Sync sauvegardé"
@@ -2509,7 +2632,7 @@
         "Plan de Sync :"
       ],
       "Sync Plans": [
-        "Plans de sync"
+        "Plans de Sync"
       ],
       "Sync Selected": [
         "Sync Sélectionnée"
@@ -2518,7 +2641,7 @@
         "Paramètres de configuration de Sync"
       ],
       "Sync State": [
-        "État de synchronisation"
+        "État de Sync"
       ],
       "Sync Status": [
         "Sync Statut"
@@ -2533,7 +2656,7 @@
         "La synchronisation est annulée..."
       ],
       "System Purpose": [
-        "Objectif system"
+        "Objectif système"
       ],
       "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console.": [
         "L'objectif du système vous permet de définir l'utilisation prévue du système sur votre réseau et améliore la précision des rapports dans le service Abonnements de la console Red Hat Hybrid Cloud."
@@ -2557,40 +2680,43 @@
         "Temporaire"
       ],
       "The <i>Registry Name Pattern</i> overrides the default name by which container images may be pulled from the server. (By default this name is a combination of Organization, Lifecycle Environment, Content View, Product, and Repository labels.)\\n\\n          <br><br>The name may be constructed using ERB syntax. Variables available for use are:\\n\\n          <pre>\\norganization.name\\norganization.label\\nrepository.name\\nrepository.label\\nrepository.docker_upstream_name\\ncontent_view.label\\ncontent_view.name\\ncontent_view_version.version\\nproduct.name\\nproduct.label\\nlifecycle_environment.name\\nlifecycle_environment.label</pre>\\n\\n          Examples:\\n            <pre>\\n&lt;%= organization.label %&gt;-&lt;%= lifecycle_environment.label %&gt;-&lt;%= content_view.label %&gt;-&lt;%= product.label %&gt;-&lt;%= repository.label %&gt;\\n&lt;%= organization.label %&gt;/&lt;%= repository.docker_upstream_name %&gt;</pre>": [
-        "Le <i> modèle de nom de registre</i> remplace le nom par défaut par lequel les images des conteneurs peuvent être extraites du serveur. (Par défaut, ce nom est une combinaison des étiquettes Organisation, Environnement de cycle de vie, Vue du contenu, Produit et référentiel)\\n\\n            <br><br>Le nom peut être construit en utilisant la syntaxe ERB. Les variables disponibles pour l'utilisation sont :\\n\\n          <pre>\\norganisation.nom\\norganisation.label\\nréférentiel.nom\\nrepository.label\\nrepository.docker_upstream_name\\ncontent_view.label\\ncontent_view.name\\ncontent_view_version.version\\nnom.du produit\\nproduit.label\\nlifecycle_environment.name\\nlifecycle_environment.label </pre>\\n          Exemples :  <pre>\\n            \\n&lt;%= organization.label %&gt;-&lt;%= lifecycle_environment.label %&gt;-&lt;%= content_view.label %&gt;-&lt;%= product.label %&gt;-&lt;%= repository.label %&gt ;\\n&lt;%= organization.label %&gt;/&lt;%= repository.docker_upstream_name %&gt ;</pre>"
+        "Le <i> modèle de nom de registre</i> remplace le nom par défaut par lequel les images des conteneurs peuvent être extraites du serveur. (Par défaut, ce nom est une combinaison des balises Organisation, Environnement de cycle de vie, Vue du contenu, Produit et référentiel)\\n\\n            <br><br>Le nom peut être construit en utilisant la syntaxe ERB. Les variables disponibles pour l'utilisation sont :\\n\\n          <pre>\\norganisation.nom\\norganisation.laebeel\\nréférentiel.nom\\nrepository.label\\nrepository.docker_upstream_name\\ncontent_view.label\\ncontent_view.namBalisee\\ncontent_view_version.version\\nnom.du produit\\nproduit.label\\nlifecycle_environment.name\\nlifecycle_environment.label </pre>\\n          Exemples :  <pre>\\n            \\n&lt;%= organization.labeBalisel %&gt;-&lt;%= lifecycle_environment.label %&gt;-&lt;%= content_view.label %&gt;-&lt;%= product.label %&gt;-&lt;%= repository.label %&gt ;\\n&lt;%= organization.label %&gt;/&lt;%= repository.docker_upstream_name %&gt ;</pre>"
       ],
       "The Content View or Lifecycle Environment needs to be updated in order to make errata available to these hosts.": [
         "La vue du contenu ou l'environnement du cycle de vie doit être mis à jour afin de rendre les errata disponibles pour ces hôtes."
+      ],
+      "The filters below have this repository as the last affected repository!": [
+        ""
       ],
       "The following actions can be performed on content hosts in this host collection:": [
         "Les actions suivantes peuvent être effectuées sur les hôtes de contenu de cette collection d'hôtes :"
       ],
       "The host has not reported any applicable packages for upgrade.": [
-        "L'hôte n'a signalé aucun package applicable pour la mise à niveau."
+        "L'hôte n'a signalé aucun paquet applicable pour la mise à niveau."
       ],
       "The host has not reported any installed packages, registering with subscription-manager should cause these to be reported.": [
-        "L'hôte n'a pas signalé de packages installés, l'enregistrement auprès du gestionnaire d'abonnement devrait permettre de le faire."
+        "L'hôte n'a pas signalé de paquets installés, l'enregistrement auprès du gestionnaire d'abonnement devrait permettre de le faire."
       ],
       "The host requires being attached to a content view and the lifecycle environment you have chosen has no content views promoted to it.\\n              See the <a href=\\\"/content_views\\\">content views page</a> to manage and promote a content view.": [
         "L'hôte doit être attaché à une vue de contenu et l'environnement de cycle de vie que vous avez choisi n'a pas de vues de contenu qui lui sont promues.\\n              Consultez la <a href=\\\"/content_views\\\">page des vues de contenu</a> pour gérer et promouvoir une vue de contenu."
       ],
       "The maximum number of versions of each package to keep.": [
-        "Le nombre maximum de versions de chaque package à conserver."
+        "Le nombre maximum de versions de chaque paquet à conserver."
       ],
       "The page you are attempting to access requires selecting a specific organization.": [
         "La page à laquelle vous tentez d'accéder nécessite la sélection d'une organisation spécifique."
       ],
       "The remote execution feature is required to manage packages on this Host.": [
-        "La fonction d'exécution à distance est nécessaire pour gérer les packages sur cet hôte."
+        "La fonction d'exécution à distance est nécessaire pour gérer les paquets sur cet hôte."
       ],
       "The Remote Execution plugin needs to be installed in order to resolve Traces.": [
         "Le plugin d'exécution à distance doit être installé afin de résoudre les traces."
       ],
-      "The repository will be enabled by default on content hosts with the selected architecture.": [
-        "Le référentiel sera activé par défaut sur les hôtes de contenu avec l'architecture sélectionnée."
+      "The repository will only be available on content hosts with the selected architecture.": [
+        ""
       ],
-      "The repository will be enabled by default on content hosts with the selected OS version.": [
-        "Le référentiel sera activé par défaut sur les hôtes de contenu avec la version d'OS sélectionnée."
+      "The repository will only be available on content hosts with the selected OS version.": [
+        ""
       ],
       "The selected environment contains no Content Views, please select a different environment.": [
         "L'environnement sélectionné ne contient pas d’affichages de contenu, veuillez sélectionner un autre environnement."
@@ -2605,10 +2731,10 @@
         "L'URL à partir de laquelle recevoir un jeton de session, par exemple utilisé avec Automation Hub."
       ],
       "There are {{ errataCount }} total Errata in this organization but none match the above filters.": [
-        "Il y a un total de {{ errataCount }} errata dans cette organisation mais aucun ne correspond aux filtres ci-dessus."
+        "Il y a {{ errataCount }} errata dans cette organisation mais aucun ne correspond aux filtres ci-dessus."
       ],
       "There are {{ packageCount }} total Packages in this organization but none match the above filters.": [
-        "Il y a un nombre total de {{ packageCount }} packages dans cette organisation mais aucun ne correspond aux filtres ci-dessus."
+        "Il y a un nombre total de {{ packageCount }} paquets dans cette organisation mais aucun ne correspond aux filtres ci-dessus."
       ],
       "There are no %(contentType)s that match the criteria.": [
         "Il n'y a pas de %(contentType)s qui corresponde aux critères."
@@ -2635,7 +2761,7 @@
         "Il n'y a pas de flux de modules à afficher."
       ],
       "There are no Packages in this organization.  Create one or more Products with Packages to view Packages on this page.": [
-        "Il n'y a pas de packages dans cette organisation.  Créez un ou plusieurs produits avec des packages pour voir les packages sur cette page."
+        "Il n'y a pas de paquets dans cette organisation.  Créez un ou plusieurs produits avec des paquets pour voir les paquets sur cette page."
       ],
       "There are no Sync Plans available. You can create new Sync Plans after selecting 'Sync Plans' under 'Hosts' in main menu.": [
         "Il n'y a pas de plans de synchronisation disponibles. Vous pouvez créer de nouveaux plans de synchronisation après avoir sélectionné \\\"Plans de synchronisation\\\" sous \\\"Hôtes\\\" dans le menu principal."
@@ -2662,7 +2788,10 @@
         "Cette modification sera appliquée aux <b>{{ hostCount }} systèmes.</b>"
       ],
       "This Container Image Tag is not present in any Lifecycle Environments.": [
-        "Cette étiquette d'image de conteneur n'est présente dans aucun environnement de cycle de vie."
+        "Cette balise d'image de conteneur n'est présente dans aucun environnement de cycle de vie."
+      ],
+      "This Container Image Tag is not present in any Repositories.": [
+        "Cette balise d'image de conteneur n'est présente dans aucun référentiel."
       ],
       "This operation may also remove managed resources linked to the host such as virtual machines and DNS records.\\n          Change the setting \\\"Delete Host upon Unregister\\\" to false on the <a href=\\\"/settings\\\">settings page</a> to prevent this.": [
         "Cette opération peut également supprimer les ressources gérées liées à l'hôte, telles que les machines virtuelles et les enregistrements DNS.\\n          Pour éviter cela, modifiez le paramètre \\\"Delete Host upon Unregister\\\" sur false dans la <a href=\\\"/settings\\\">page des paramètres</a>."
@@ -2670,8 +2799,8 @@
       "This organization has Simple Content Access enabled.  Hosts are not required to have subscriptions attached to access repositories.": [
         "Cette organisation a activé l'accès au contenu simple.  Les hôtes ne sont pas tenus de souscrire un abonnement pour accéder aux référentiels d'accès."
       ],
-      "This organization is not using <a target=\\\"_blank\\\" href=\\\"https://access.redhat.com/articles/simple-content-access\\\">Simple Content Access.</a> Entitlement-based subscription management is deprecated and will be removed in a future version.": [
-        "Cette organisation n'utilise pas <a target=\\\"_blank\\\" href=\\\"https://access.redhat.com/articles/simple-content-access\\\">Simple Content Access.</a> L'ancienne gestion des abonnements basée sur des niveaux de privilèges est dépréciée et sera supprimée dans une prochaine version."
+      "This organization is not using <a target=\\\"_blank\\\" href=\\\"https://access.redhat.com/articles/simple-content-access\\\">Simple Content Access.</a> Entitlement-based subscription management is deprecated and will be removed in Katello 4.12.": [
+        ""
       ],
       "Title": [
         "Titre"
@@ -2713,7 +2842,7 @@
         "Hôtes de contenu illimité :"
       ],
       "Unlimited Hosts": [
-        "Hôtes Illimités"
+        "Hôtes illimités"
       ],
       "Unprotected": [
         "Non protégé"
@@ -2722,7 +2851,7 @@
         "Désenregistrer l'hôte"
       ],
       "Unregister Host \\\"{{host.name}}\\\"?": [
-        "Désenregistrer l'hôte \\\"{{host.name}}\\\"?"
+        "Désenregistrer l'hôte « {{host.name}} » ?"
       ],
       "Unregister Options:": [
         "Désenregistrer les options :"
@@ -2737,7 +2866,7 @@
         "Mise à jour"
       ],
       "Update All Deb Packages": [
-        "Mise à jour de tous les packages deb"
+        "Mise à jour de tous les paquets deb"
       ],
       "Update All Packages": [
         "Mise à jour de tous les packages"
@@ -2862,14 +2991,8 @@
       "Versions": [
         "Versions"
       ],
-      "via Katello agent": [
-        "via l'agent Katello"
-      ],
-      "via Katello Agent": [
-        "via l'agent Katello"
-      ],
       "via remote execution": [
-        "via Exécution à distante"
+        "via exécution distante"
       ],
       "via remote execution - customize first": [
         "via Exécution à distance - personnaliser d'abord"
@@ -2907,6 +3030,9 @@
       "When Auto Attach is disabled, registering systems will be attached to all associated subscriptions.": [
         "Lorsque l'option \\\"Auto Attach\\\" est désactivée, les systèmes d'enregistrement seront rattachés à tous les abonnements associés."
       ],
+      "When Auto Attach is enabled, registering systems will be attached to all associated custom products and only associated Red Hat subscriptions required to satisfy the system's installed products.": [
+        "Lorsque l'attachement automatique est activé, les systèmes d'enregistrement seront attachés à tous les produits personnalisés associés et uniquement aux abonnements Red Hat associés nécessaires pour satisfaire les produits installés du système."
+      ],
       "Whitespace-separated list of components to sync (leave clear to sync all). Example: main <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"componentPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Components\\\">\\n        </a>": [
         "Liste séparée par des espaces des composants à synchroniser (laisser vide pour tout synchroniser). Exemple : main <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"componentPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Components\\\">\\n        </a>"
       ],
@@ -2917,7 +3043,7 @@
         "Liste de versions/distributions séparées par des virgules à sync (requis pour la sync). Exemple: buster <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"distPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Releases/Distributions\\\">\\n        </a>"
       ],
       "Working": [
-        "Working"
+        "Fonctionne"
       ],
       "Yes": [
         "Oui"
@@ -2928,8 +3054,14 @@
       "You can upload a requirements.yml file below to auto-fill contents or paste contents of requirement.yml here": [
         "Vous pouvez télécharger un fichier requirements.yml ci-dessous pour remplir automatiquement le contenu ou coller le contenu de requirement.yml ici"
       ],
+      "You cannot remove content from a redhat repository": [
+        "Impossible de supprimer le contenu d'un référentiel Red Hat"
+      ],
       "You cannot remove these repositories because you do not have permission.": [
         "Vous ne pouvez pas supprimer ces référentiels parce que vous n'en avez pas l'autorisation."
+      ],
+      "You cannot remove this product because it has repositories that are the last affected repository on content view filters": [
+        ""
       ],
       "You cannot remove this product because it is a Red Hat product.": [
         "Vous ne pouvez pas retirer ce produit car il s'agit d'un produit Red Hat."
@@ -2953,7 +3085,7 @@
         "Vous n'avez actuellement aucune étiquette d’image de contenu."
       ],
       "You currently don't have any Content Credential, you can add Content Credentials using the button on the right.": [
-        "Vous n'avez actuellement aucun identifiant de contenu, vous pouvez en ajouter en utilisant le bouton de droite."
+        "Vous n'avez actuellement aucun justificatif de contenu, vous pouvez en ajouter en utilisant le bouton de droite."
       ],
       "You currently don't have any Content Hosts, you can create new Content Hosts by selecting Contents Host from main menu and then clicking the button on the right.": [
         "Vous n'avez actuellement aucun hôte de contenu, vous pouvez créer de nouveaux hôtes de contenu en sélectionnant Hôte de contenu dans le menu principal et en cliquant sur le bouton de droite."
@@ -2967,11 +3099,11 @@
       "You currently don't have any Host Collections, you can add Host Collections using the button on the right.": [
         "Vous n'avez actuellement aucune collection d'hôtes, vous pouvez en ajouter en utilisant le bouton de droite."
       ],
-      "You currently don't have any Hosts in this Host Group, you can add Content Hosts after selecting the 'Add' tab.": [
-        "Vous n'avez actuellement aucun hôte dans ce groupe d'hôtes, vous pouvez ajouter des hôtes de contenu après avoir sélectionné l'onglet \\\"Ajouter\\\"."
+      "You currently don't have any Hosts in this Host Collection, you can add Content Hosts after selecting the 'Add' tab.": [
+        "Vous n'avez actuellement aucun hôte dans cette collection d'hôtes. Vous pouvez ajouter des hôtes de contenu en sélectionnant l'onglet \\\"Ajouter\\\"."
       ],
       "You currently don't have any Products associated with this Content Credential.": [
-        "Vous n'avez actuellement aucun produit associé à cet identifiant de contenu."
+        "Vous n'avez actuellement aucun produit associé à cette référence de contenu."
       ],
       "You currently don't have any Products to subscribe to, you can add Products after selecting 'Products' under 'Content' in the main menu": [
         "Vous n'avez actuellement aucun produit à souscrire, vous pouvez ajouter des produits après avoir sélectionné \\\"Produits\\\" sous \\\"Contenu\\\" dans le menu principal"
@@ -2983,7 +3115,7 @@
         "Vous n'avez actuellement aucun produit <span bst-feature-flag=\\\"custom_products\\\">, vous pouvez ajouter des produits en utilisant le bouton de droite</span>."
       ],
       "You currently don't have any Repositories associated with this Content Credential.": [
-        "Vous n'avez actuellement aucun référentiel associé à cet identifiant de contenu."
+        "Vous n'avez actuellement aucun référentiel associé à cette référence de contenu."
       ],
       "You currently don't have any Repositories included in this Product, you can add Repositories using the button on the right.": [
         "Vous n'avez actuellement aucun référentiel inclus dans ce produit, vous pouvez ajouter des référentiels en utilisant le bouton à droite."
@@ -3013,7 +3145,7 @@
         "Vous devez sélectionner au moins un hôte de contenu afin d'appliquer les errata."
       ],
       "You must select at least one Errata to apply.": [
-        "Vous devez sélectionner un errata au moins."
+        "Vous devez sélectionner au moins un erratum."
       ],
       "Your search returned zero %(contentType)s that match the criteria.": [
         "Votre recherche a donné zéro %(contentType)s correspondant aux critères."
@@ -3025,7 +3157,7 @@
         "Votre recherche n'a donné aucun label d’image de conteneur."
       ],
       "Your search returned zero Content Credential.": [
-        "Votre recherche n'a donné aucune identifiant de contenu."
+        "Votre recherche n'a donné aucune référence de contenu."
       ],
       "Your search returned zero Content Hosts.": [
         "Votre recherche n'a donné aucun hôte de contenu."
@@ -3064,7 +3196,7 @@
         "Votre recherche n'a donné aucun flux de modules."
       ],
       "Your search returned zero Packages.": [
-        "Votre recherche a donné zéro package."
+        "Votre recherche a donné zéro paquet."
       ],
       "Your search returned zero Products.": [
         "Votre recherche a donné zéro produit."
@@ -3088,7 +3220,7 @@
         "Votre recherche a donné zéro Abonnement."
       ],
       "Your search returned zero Sync Plans.": [
-        "Votre recherche a donné zéro plan de synchronisation."
+        "Votre recherche a donné zéro Plan de synchronisation."
       ],
       "Your search returned zero Traces.": [
         "Votre recherche a donné zéro Traces."
