@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { noop } from 'foremanReact/common/helpers';
+import { useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 
 import ActivationKeys from './fields/ActivationKeys';
 import IgnoreSubmanErrors from './fields/IgnoreSubmanErrors';
@@ -48,9 +49,17 @@ export const RegistrationActivationKeys = ({
   handleInvalidField,
   isLoading,
 }) => {
+  const { initialAKSelection } = useUrlParams();
   useEffect(() => {
     onChange({ activationKeys: [] });
   }, [onChange, organizationId, hostGroupId]);
+
+  useEffect(() => {
+    if (initialAKSelection &&
+       (pluginData?.activationKeys ?? []).some(ak => ak.name === initialAKSelection)) {
+      onChange({ activationKeys: initialAKSelection.split(',') });
+    }
+  }, [initialAKSelection, onChange, pluginData?.activationKeys]);
 
   return (
     <ActivationKeys
