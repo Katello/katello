@@ -80,7 +80,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
         :lifecycle_environment_id => @dev.id
       }
     }, session: set_session_user
-    assert_response :error
+    assert_response 422
   end
 
   def test_host_update_with_cv_only
@@ -92,7 +92,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
         :content_view_id => @cv2.id
       }
     }, session: set_session_user
-    assert_response :error
+    assert_response 422
   end
 
   def test_host_update_with_invalid_env
