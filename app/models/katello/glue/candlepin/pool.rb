@@ -129,7 +129,6 @@ module Katello
         providers.any?
       end
 
-      # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
       # rubocop:disable Metrics/CyclomaticComplexity
       def import_data(index_hosts_and_activation_keys = false)
         pool_attributes = {}.with_indifferent_access
@@ -161,11 +160,7 @@ module Katello
           pool_attributes[:unmapped_guest] = true
         end
 
-        if subscription.try(:redhat?)
-          pool_attributes[:virt_who] = pool_attributes['virt_limit'] != "0" && pool_attributes['virt_limit'].present?
-        else
-          pool_attributes[:virt_who] = false
-        end
+        pool_attributes[:virt_who] = (pool_attributes['virt_limit'].present? && pool_attributes['virt_limit'] != "0")
 
         pool_attributes['stack_id'] = pool_json['stackId']
         exceptions = pool_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
@@ -175,7 +170,7 @@ module Katello
         self.create_product_associations
         self.import_hosts if index_hosts_and_activation_keys
       end
-      # rubocop:enable Metrics/MethodLength,Metrics/AbcSize
+      # rubocop:enable
 
       def create_product_associations
         products = self.backend_data["providedProducts"] + self.backend_data["derivedProvidedProducts"]
