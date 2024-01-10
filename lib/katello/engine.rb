@@ -156,7 +156,6 @@ module Katello
 
       #Controller extensions
       ::HostsController.include Katello::Concerns::HostsControllerExtensions
-      ::HostsController.include Katello::Concerns::ContentFacetHostsControllerExtensions
       ::SmartProxiesController.include Katello::Concerns::SmartProxiesControllerExtensions
       ::RegistrationCommandsController.prepend Katello::Concerns::RegistrationCommandsControllerExtensions
 
@@ -194,7 +193,6 @@ module Katello
 
       #Api controller extensions
       ::Api::V2::HostsController.include Katello::Concerns::Api::V2::HostsControllerExtensions
-      ::Api::V2::HostsController.include Katello::Concerns::ContentFacetHostsControllerExtensions
       ::Api::V2::HostsBulkActionsController.include Katello::Concerns::Api::V2::HostsBulkActionsControllerExtensions
       ::Api::V2::HostgroupsController.include Katello::Concerns::Api::V2::HostgroupsControllerExtensions
       ::Api::V2::SmartProxiesController.include Katello::Concerns::Api::V2::SmartProxiesControllerExtensions

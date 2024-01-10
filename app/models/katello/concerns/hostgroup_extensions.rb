@@ -122,7 +122,9 @@ module Katello
           # it will return the value 2.
           facet_model = Facets.registered_facets[facet].hostgroup_configuration.model
           value = facet_model.where.not(attribute => nil).joins(:hostgroup).merge(
-            ::Hostgroup.where(id: self.ancestor_ids).reorder(ancestry: :desc)
+            ::Hostgroup.where(id: self.ancestor_ids).reorder(
+              "#{::Hostgroup.table_name}.ancestry desc nulls last"
+            )
           ).pick(attribute)
         end
         value
