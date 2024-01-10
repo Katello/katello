@@ -10,6 +10,7 @@ module Katello
              :dependent => :destroy, :inverse_of => :deb
     has_many :content_facets, :through => :content_facet_applicable_debs, :class_name => "Katello::Host::ContentFacet"
 
+    scoped_search :on => :id, :complete_value => true
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :version, :complete_value => true
     scoped_search :on => :architecture, :complete_value => true
@@ -93,6 +94,13 @@ module Katello
     def self.applicable_to_hosts(hosts)
       self.joins(:content_facets).
         where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).distinct
+    end
+
+    # Return deb packages that are not installed on a host, but could be installed
+    # the word 'installable' has a different meaning here than elsewhere
+    def self.apt_installable_for_host(host)
+      repos = host.content_facet.bound_repositories.pluck(:id)
+      Katello::Deb.in_repositories(repos).where.not(name: host.installed_debs.pluck(:name)).order(:name)
     end
 
     def self.latest(_relation)

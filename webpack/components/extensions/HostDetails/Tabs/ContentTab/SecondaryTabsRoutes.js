@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { PackagesTab } from '../PackagesTab/PackagesTab.js';
+import { DebsTab } from '../DebsTab/DebsTab.js';
 import { ErrataTab } from '../ErrataTab/ErrataTab.js';
 import { ModuleStreamsTab } from '../ModuleStreamsTab/ModuleStreamsTab';
 import RepositorySetsTab from '../RepositorySetsTab/RepositorySetsTab';
@@ -10,6 +11,9 @@ const SecondaryTabRoutes = () => (
   <Switch ouiaId="secondary-tab-routes-switch">
     <Route path={route('packages')}>
       <PackagesTab />
+    </Route>
+    <Route path={route('debs')}>
+      <DebsTab />
     </Route>
     <Route path={route('errata')}>
       <ErrataTab />
