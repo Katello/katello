@@ -16,20 +16,31 @@ module Actions
           content_type = input[:unit_type_id]
           content_backend_service = SmartProxy.pulp_primary.content_service(content_type)
 
-          existing_content = ::Katello::Pulp3::PulpContentUnit.find_duplicate_unit(repository, input[:unit_type_id], {filename: input[:options][:file_name]}, input[:options][:sha256])
-          existing_content_href = existing_content&.results&.first&.pulp_href
-
-          if ::Katello::RepositoryTypeManager.find_content_type(input[:unit_type_id]).repository_import_on_upload
-            output[:pulp_tasks] = [repository.backend_service(smart_proxy).repository_import_content(artifact_href, input[:options])]
+          if repository.deb?
+            repo_url = repository.backend_service(smart_proxy).repository_reference.repository_href
+            output[:pulp_tasks] = [content_backend_service.content_api_create(relative_path: input[:options][:file_name],
+                                                                              repository: repo_url,
+                                                                              repository_id: repository.id,
+                                                                              distribution: "katello",
+                                                                              component: "upload",
+                                                                              artifact: artifact_href,
+                                                                              content_type: content_type)]
           else
-            if existing_content_href
-              output[:content_unit_href] = existing_content_href
-              []
+            existing_content = ::Katello::Pulp3::PulpContentUnit.find_duplicate_unit(repository, input[:unit_type_id], {filename: input[:options][:file_name]}, input[:options][:sha256])
+            existing_content_href = existing_content&.results&.first&.pulp_href
+
+            if ::Katello::RepositoryTypeManager.find_content_type(input[:unit_type_id]).repository_import_on_upload
+              output[:pulp_tasks] = [repository.backend_service(smart_proxy).repository_import_content(artifact_href, input[:options])]
             else
-              output[:pulp_tasks] = [content_backend_service.content_api_create(relative_path: input[:options][:file_name],
-                                                                                repository_id: repository.id,
-                                                                                artifact: artifact_href,
-                                                                                content_type: content_type)]
+              if existing_content_href
+                output[:content_unit_href] = existing_content_href
+                []
+              else
+                output[:pulp_tasks] = [content_backend_service.content_api_create(relative_path: input[:options][:file_name],
+                                                                                  repository_id: repository.id,
+                                                                                  artifact: artifact_href,
+                                                                                  content_type: content_type)]
+              end
             end
           end
         end
