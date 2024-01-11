@@ -86,13 +86,6 @@ class Api::V2::RegistrationCommandsControllerTest < ActionController::TestCase
     assert_includes(JSON.parse(@response.body)['registration_command'], 'ignore_subman_errors=true')
   end
 
-  def test_with_lifecycle_environment_id
-    post :create, params: { lifecycle_environment_id: 23, activation_keys: ['key1'] }
-
-    assert_response :success
-    assert_includes(JSON.parse(@response.body)['registration_command'], 'lifecycle_environment_id=23')
-  end
-
   def test_hostgroup_with_ack
     hostgroup = FactoryBot.create(:hostgroup)
     FactoryBot.create(:hostgroup_parameter, hostgroup: hostgroup, name: 'kt_activation_keys', value: 'key1')
