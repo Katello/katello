@@ -11,6 +11,7 @@ module Katello
             fail ActiveRecord::RecordNotFound, msg
           end
           @host.assign_attributes(host_params('host'))
+          @host.owner = User.current
           @host.save!
         else
           super
