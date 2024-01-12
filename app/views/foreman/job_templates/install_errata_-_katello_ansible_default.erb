@@ -15,9 +15,9 @@ kind: job_template
 %>
 
 <% if @host.operatingsystem.family == 'Suse' -%>
-  <% advisories = input(:errata).split(',').join(' ') -%>
-  <%= render_template('Run Command - Ansible Default', :command => "zypper -n install -t patch #{advisories}") %>
+<% advisories = input(:errata).split(',').join(' ') -%>
+<%= render_template('Run Command - Ansible Default', :command => "zypper -n install -t patch #{advisories}") %>
 <% else -%>
-  <% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') -%>
-  <%= render_template('Run Command - Ansible Default', :command => "yum -y update-minimal #{advisories}") %>
+<% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') -%>
+<%= render_template('Run Command - Ansible Default', :command => "yum -y update-minimal #{advisories}") %>
 <% end -%>
