@@ -568,6 +568,28 @@ module ::Actions::Pulp3
       assert_equal @repo.module_streams.pluck(:id).sort, @repo_clone.module_streams.pluck(:id).sort
     end
 
+    def test_module_streams_copied_from_actual_source_repo
+      # Try to copy a module stream from a source repository that doesn't have it.
+      filter = FactoryBot.build(:katello_content_view_module_stream_filter, :inclusion => true)
+      duck = @repo.module_streams.where(:name => "duck").first
+      FactoryBot.create(:katello_content_view_module_stream_filter_rule,
+                                   :filter => filter,
+                                   :module_stream => duck)
+      @repo.root.update!(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+
+      index_args = {:id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
+                             @repo_clone, @primary, [@repo], filters: [filter])
+
+      @repo_clone.reload.index_content
+      assert_empty @repo_clone.reload.module_streams
+    end
+
     def test_module_streams_copied_with_include_modular_filter_rules
       filter = FactoryBot.build(:katello_content_view_module_stream_filter, :inclusion => true)
       duck = @repo.module_streams.where(:name => "duck").first
