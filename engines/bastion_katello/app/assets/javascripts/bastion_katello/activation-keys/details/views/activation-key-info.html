@@ -2,11 +2,8 @@
 
 <div bst-alert="info">
   <span translate>
-    This activation key may be used during system registration. For example:
+    This activation key may be used during <a href="/hosts/register?initialAKSelection={{ activationKey.name }}">system registration.</a>
   </span>
-  <p translate>
-    subscription-manager register --org="{{ activationKey.organization.label }}" --activationkey="{{ activationKey.name }}"
-  </p>
 </div>
 
 <div data-extend-template="layouts/two-column-details.html">
