@@ -169,7 +169,7 @@ module Katello
 
       def orphaned
         if many_repository_associations
-          where.not(:id => repository_association_class.select(unit_id_field))
+          left_joins(repository_association.to_sym).where("#{repository_association_class.table_name}.#{unit_id_field}" => nil)
         else
           where.not(:repository_id => ::Katello::Repository.select(:id))
         end
