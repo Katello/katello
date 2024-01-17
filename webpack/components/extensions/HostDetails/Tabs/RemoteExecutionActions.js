@@ -15,7 +15,7 @@ const baseParams = ({
   job_invocation: {
     feature,
     inputs,
-    descriptionFormat,
+    description_format: descriptionFormat,
     search_query: `name ^ (${hostname})`,
   },
 });
@@ -41,7 +41,7 @@ const katelloPackageInstallBySearchParams = ({ hostname, search, descriptionForm
     hostname,
     inputs: { [PACKAGE_SEARCH_QUERY]: search },
     feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH,
-    description_format: descriptionFormat,
+    descriptionFormat,
   });
 
 const katelloPackageRemoveParams = ({ hostname, packageName }) =>
@@ -56,7 +56,7 @@ const katelloPackagesRemoveParams = ({ hostname, search, descriptionFormat }) =>
     hostname,
     inputs: { [PACKAGES_SEARCH_QUERY]: search },
     feature: REX_FEATURES.KATELLO_PACKAGES_REMOVE_BY_SEARCH,
-    description_format: descriptionFormat,
+    descriptionFormat,
   });
 
 const katelloPackageUpdateParams = ({ hostname, packageName }) =>
@@ -73,7 +73,7 @@ const katelloPackagesUpdateParams = ({
     feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
     inputs: { [PACKAGES_SEARCH_QUERY]: search, [SELECTED_UPDATE_VERSIONS]: versions },
     search_query: `name ^ (${hostname})`,
-    description_format: descriptionFormat,
+    descriptionFormat,
   },
 });
 
