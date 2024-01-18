@@ -29,7 +29,7 @@ module ::Actions::Katello::ActivationKey
 
       plan_action action, activation_key, service_level: 'Self-support'
 
-      assert_action_planned_with(action, ::Actions::Candlepin::ActivationKey::Create, candlepin_input)
+      assert_action_planned_with(action, ::Actions::Candlepin::ActivationKey::Create, **candlepin_input)
     end
 
     it 'raises error when validation fails' do

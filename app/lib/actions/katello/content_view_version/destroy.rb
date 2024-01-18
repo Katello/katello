@@ -14,7 +14,7 @@ module Actions
               repos.each do |repo|
                 repo_options = options.clone
                 repo_options[:docker_cleanup] = false
-                plan_action(Repository::Destroy, repo, repo_options)
+                plan_action(Repository::Destroy, repo, **repo_options)
                 docker_cleanup ||= repo.docker?
               end
             end

@@ -7,7 +7,7 @@ module Actions
           sequence do
             sync_task = plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :options => options)
             options[:sync_task_output] = sync_task.output[:pulp_tasks]
-            plan_action(GenerateMetadata, repository, smart_proxy, options)
+            plan_action(GenerateMetadata, repository, smart_proxy, **options)
           end
         end
 

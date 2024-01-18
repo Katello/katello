@@ -42,7 +42,7 @@ module Actions
             metadata_options[:source_repository] = source_repositories.first
           end
 
-          plan_action(Katello::Repository::MetadataGenerate, new_repository, metadata_options)
+          plan_action(Katello::Repository::MetadataGenerate, new_repository, **metadata_options)
           unless source_repositories.first.saved_checksum_type == new_repository.saved_checksum_type
             plan_self(:source_checksum_type => source_repositories.first.saved_checksum_type,
                       :target_repo_id => new_repository.id)

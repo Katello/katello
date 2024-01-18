@@ -172,8 +172,8 @@ end
 module DynflowFullTreePlanning
   IGNORED_INPUT = [:remote_user, :remote_cp_user].freeze
 
-  def plan_action_tree(action_class, *args)
-    Rails.application.dynflow.world.plan(action_class, *args)
+  def plan_action_tree(action_class, *args, **kwargs)
+    Rails.application.dynflow.world.plan(action_class, *args, **kwargs)
   end
 
   def assert_tree_planned_steps(execution_plan, action_class)

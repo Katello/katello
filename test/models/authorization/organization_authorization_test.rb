@@ -42,8 +42,8 @@ module Katello
 
     def test_read_promotion_paths_one
       environment = katello_environments(:staging_path1)
-      setup_current_user_with_permissions(:name => "view_lifecycle_environments",
-                                          :search => "name=\"#{environment.name}\"")
+      setup_current_user_with_permissions({ :name => "view_lifecycle_environments",
+                                            :search => "name=\"#{environment.name}\"" })
 
       refute_equal(@org.promotion_paths, @org.readable_promotion_paths)
       assert_equal(1, @org.readable_promotion_paths.size)
@@ -51,8 +51,8 @@ module Katello
 
     def test_promotable_promotion_paths_one
       environment = katello_environments(:staging_path1)
-      setup_current_user_with_permissions(:name => "promote_or_remove_content_views_to_environments",
-                                          :search => "name=\"#{environment.name}\"")
+      setup_current_user_with_permissions({ :name => "promote_or_remove_content_views_to_environments",
+                                            :search => "name=\"#{environment.name}\"" })
 
       refute_equal(@org.promotion_paths, @org.promotable_promotion_paths)
       assert_equal(1, @org.promotable_promotion_paths.size)

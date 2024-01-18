@@ -940,7 +940,7 @@ module Katello
       # this is yum repo. So unit keys should accept name
       @controller.expects(:sync_task)
         .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads,
-              generate_metadata: true, content_type: nil, sync_capsule: true)
+              { generate_metadata: true, content_type: nil, sync_capsule: true })
         .returns(build_task_stub)
 
       put :import_uploads, params: { id: @repository.id, uploads: uploads }
@@ -979,7 +979,7 @@ module Katello
       uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
       @controller.expects(:sync_task)
         .with(::Actions::Katello::Repository::ImportUpload, file_repo, uploads,
-              generate_metadata: true, content_type: 'file', sync_capsule: true)
+              { generate_metadata: true, content_type: 'file', sync_capsule: true })
         .returns(build_task_stub)
 
       put :import_uploads, params: { id: file_repo, uploads: uploads, content_type: 'file' }
@@ -993,7 +993,7 @@ module Katello
       uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
       @controller.expects(:sync_task)
         .with(::Actions::Katello::Repository::ImportUpload, @docker_repo, uploads,
-              generate_metadata: true, content_type: 'docker_manifest', sync_capsule: true)
+              { generate_metadata: true, content_type: 'docker_manifest', sync_capsule: true })
         .returns(build_task_stub)
 
       put :import_uploads, params: { id: @docker_repo.id, uploads: uploads, content_type: 'docker_manifest' }
@@ -1007,7 +1007,7 @@ module Katello
       # this is docker repo so unit keys should acccept name
       @controller.expects(:sync_task)
         .with(::Actions::Katello::Repository::ImportUpload, @docker_repo, uploads,
-              generate_metadata: true, content_type: nil, sync_capsule: true)
+              { generate_metadata: true, content_type: nil, sync_capsule: true })
         .returns(build_task_stub)
 
       put :import_uploads, params: { id: @docker_repo.id, uploads: uploads }
@@ -1021,7 +1021,7 @@ module Katello
       # this is yum repo. So unit keys should accept name
       @controller.expects(:sync_task)
         .with(::Actions::Katello::Repository::ImportUpload, @srpm_repo, uploads,
-              generate_metadata: true, content_type: 'srpm', sync_capsule: true)
+              { generate_metadata: true, content_type: 'srpm', sync_capsule: true })
         .returns(build_task_stub)
 
       put :import_uploads, params: { id: @srpm_repo.id, uploads: uploads, content_type: 'srpm' }

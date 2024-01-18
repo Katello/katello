@@ -31,7 +31,7 @@ module Katello
         def setup
           super
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
           @repo.reload
           Katello::Srpm.import_for_repository(@repo)
           @repo.reload
@@ -55,7 +55,7 @@ module Katello
         def test_sync_skipped_srpm
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
           @repo.root.update!(ignorable_content: ["srpm"])
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
           @repo.reload
           Katello::Srpm.import_for_repository(@repo)
           @repo.reload
@@ -66,7 +66,7 @@ module Katello
         def test_sync_skipped_treeinfo
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
           @repo.root.update!(ignorable_content: ["treeinfo"])
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
         end
       end
 

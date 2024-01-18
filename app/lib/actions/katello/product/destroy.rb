@@ -73,7 +73,7 @@ module Actions
         def plan_repo_destruction(product, options)
           product.repositories.in_default_view.each do |repo|
             repo_options = options.clone
-            plan_action(Katello::Repository::Destroy, repo, repo_options.merge(destroy_content: false))
+            plan_action(Katello::Repository::Destroy, repo, **repo_options.merge(destroy_content: false))
           end
         end
 

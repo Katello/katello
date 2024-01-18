@@ -14,7 +14,7 @@ module ::Actions::Pulp3
       sync_args = {:smart_proxy_id => smart_proxy.id, :repo_id => repo.id}
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Sync,
-        repo, smart_proxy, sync_args)
+        repo, smart_proxy, **sync_args)
     end
 
     def repo_reference(repo)

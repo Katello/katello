@@ -218,7 +218,7 @@ module ::Actions::Katello::Organization
                                  ::Actions::Candlepin::Owner::ImportProducts,
                                  organization_id: organization.id
                                 )
-      assert_action_planned_with(action, ::Actions::Katello::Repository::RefreshRepository) do |args|
+      assert_action_planned_with(action, ::Actions::Katello::Repository::RefreshRepository) do |*args|
         assert args.first.library_instance?
       end
     end
@@ -298,7 +298,7 @@ module ::Actions::Katello::Organization
                                  ::Actions::Candlepin::Owner::DestroyImports,
                                  label: organization.label
                                 )
-      assert_action_planned_with(action, ::Actions::Katello::Repository::RefreshRepository) do |args|
+      assert_action_planned_with(action, ::Actions::Katello::Repository::RefreshRepository) do |*args|
         assert args.first.library_instance?
       end
     end

@@ -1,7 +1,7 @@
 module Actions
   module Middleware
     class BackendServicesCheck < Dynflow::Middleware
-      def plan(*args)
+      def plan(*args, **kwargs)
         if Setting[:check_services_before_actions]
           #To prevent the ping from happening multiple times, keep track on the initial entry action
           #If capsule_id is passed as in args from an action, Katello::Ping checks the pulp server on the capsule
@@ -10,7 +10,7 @@ module Actions
           to_check = services - parent.input[:services_checked]
 
           if to_check.any?
-            result = User.as_anonymous_admin { ::Katello::Ping.ping(services: to_check, capsule_id: capsule_id(args))[:services] }
+            result = User.as_anonymous_admin { ::Katello::Ping.ping(services: to_check, capsule_id: capsule_id(args, kwargs))[:services] }
 
             to_check.each do |service|
               if result[service][:status] != ::Katello::Ping::OK_RETURN_CODE
@@ -20,13 +20,14 @@ module Actions
             parent.input[:services_checked].concat(to_check)
           end
         end
-        pass(*args)
+        pass(*args, **kwargs)
       end
 
       protected
 
-      def capsule_id(args)
-        capsule_id = nil
+      def capsule_id(args, kwargs)
+        capsule_id = kwargs[:capsule_id] || kwargs[:smart_proxy_id]
+        return capsule_id if capsule_id
         args.each do |arg|
           if arg.is_a? SmartProxy
             capsule_id = arg.id

@@ -42,7 +42,7 @@ module Katello
       @host.subscription_facet.update!(:uuid => nil)
       mock_cp
 
-      Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => true).once
+      Katello::RegistrationManager.expects(:unregister_host).with(@host, { :unregistering => true }).once
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
@@ -55,7 +55,7 @@ module Katello
       @host.subscription_facet.update!(:uuid => nil)
       mock_cp
 
-      Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => true).once
+      Katello::RegistrationManager.expects(:unregister_host).with(@host, { :unregistering => true }).once
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end

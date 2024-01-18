@@ -13,7 +13,7 @@ module Actions
               if options[:source_repository] && publication_content_type
                 plan_self(source_repository_id: options[:source_repository].id, target_repository_id: repository.id, smart_proxy_id: smart_proxy.id)
               elsif publication_content_type && (force_publication || repository.publication_href.nil? || !repository.using_mirrored_metadata?)
-                plan_action(Actions::Pulp3::Repository::CreatePublication, repository, smart_proxy, options)
+                plan_action(Actions::Pulp3::Repository::CreatePublication, repository, smart_proxy, **options)
               elsif !publication_content_type
                 plan_self(target_repository_id: repository.id, contents_changed: options[:contents_changed], skip_publication: true)
               end

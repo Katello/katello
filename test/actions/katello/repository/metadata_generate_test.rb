@@ -23,7 +23,7 @@ module Actions
       plan_action(action, yum_repo)
 
       assert_action_planned_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
-            action_options)
+            **action_options)
     end
 
     it 'plans a yum refresh in other location' do
@@ -34,7 +34,7 @@ module Actions
       plan_action(action, yum_repo)
 
       assert_action_planned_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
-                                action_options)
+                                **action_options)
     ensure
       Location.current = old_location
     end
@@ -47,7 +47,7 @@ module Actions
       yum_action_options[:source_repository] = yum_repo2
 
       assert_action_planned_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
-            yum_action_options)
+            **yum_action_options)
     end
 
     it 'plans a yum refresh with matching content true' do
@@ -57,7 +57,7 @@ module Actions
       yum_action_options = action_options.clone
       yum_action_options[:matching_content] = true
       assert_action_planned_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
-                                yum_action_options)
+                                **yum_action_options)
     end
 
     it 'plans a yum refresh with matching content set to some deferred object' do
@@ -68,7 +68,7 @@ module Actions
       yum_action_options = action_options.clone
       yum_action_options[:matching_content] = not_falsey
       assert_action_planned_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
-                                yum_action_options)
+                                **yum_action_options)
     end
   end
 end

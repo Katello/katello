@@ -43,7 +43,7 @@ module Actions
                   action_class = ::Actions::Pulp3::Orchestration::Repository::ImportUpload
                 end
 
-                import_upload = plan_action(action_class, repository, SmartProxy.pulp_primary, import_upload_args)
+                import_upload = plan_action(action_class, repository, SmartProxy.pulp_primary, **import_upload_args)
                 plan_action(FinishUpload, repository, :import_upload_task => import_upload.output,
                             generate_metadata: false, content_type: options[:content_type])
                 import_upload.output

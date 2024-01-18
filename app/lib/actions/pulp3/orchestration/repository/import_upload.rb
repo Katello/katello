@@ -16,7 +16,7 @@ module Actions
                                                   smart_proxy,
                                                   args).output
                 plan_self(:commit_output => tag_manifest_output[:pulp_tasks])
-                plan_action(Pulp3::Repository::SaveVersion, repository, {force_fetch_version: true, tasks: tag_manifest_output[:pulp_tasks]})
+                plan_action(Pulp3::Repository::SaveVersion, repository, force_fetch_version: true, tasks: tag_manifest_output[:pulp_tasks])
               else
                 if content_unit_href
                   artifact_output = { :content_unit_href => content_unit_href }
@@ -33,7 +33,7 @@ module Actions
                                                 repository,
                                                 smart_proxy,
                                                 commit_output[:pulp_tasks],
-                                                args.dig(:unit_type_id), args).output
+                                                args.dig(:unit_type_id), **args).output
                 end
 
                 plan_self(:commit_output => commit_output[:pulp_tasks], :artifact_output => artifact_output)

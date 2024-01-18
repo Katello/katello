@@ -11,7 +11,7 @@ module Actions
           action_subject(options.fetch(:content_view_version))
 
           sequence do
-            export_output = plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, options).output
+            export_output = plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, **options).output
 
             plan_self(export_history_id: export_output[:export_history_id],
                       exported_file_checksum: export_output[:exported_file_checksum],

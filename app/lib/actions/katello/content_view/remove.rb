@@ -31,7 +31,7 @@ module Actions
               concurrence do
                 all_cv_envs.each do |cv_env|
                   if cv_env.hosts.any? || cv_env.activation_keys.any?
-                    plan_action(ContentViewEnvironment::ReassignObjects, cv_env, options)
+                    plan_action(ContentViewEnvironment::ReassignObjects, cv_env, **options)
                   end
                 end
               end

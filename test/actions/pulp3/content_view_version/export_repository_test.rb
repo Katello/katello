@@ -28,13 +28,14 @@ module ::Actions::Pulp3::ContentView
       action_class.any_instance.expects(:action_subject).with(repository)
 
       plan_action(action, repository)
-      assert_action_planned_with(action, ::Actions::Katello::ContentView::Publish) do |content_view, _|
+      assert_action_planned_with(action, ::Actions::Katello::ContentView::Publish) do |*args|
+        content_view = args.first
         assert_equal content_view.name, "Export-#{repository.label}-#{repository.id}"
         assert_equal content_view.repository_ids.sort, [repository.id]
         assert content_view.generated_for_repository?
       end
 
-      assert_action_planned_with(action, Actions::Katello::ContentViewVersion::Export) do |**options|
+      assert_action_planned_with(action, Actions::Katello::ContentViewVersion::Export) do |_, **options|
         assert_equal version, options[:content_view_version]
       end
     end

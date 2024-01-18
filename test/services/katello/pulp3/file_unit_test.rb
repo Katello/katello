@@ -19,7 +19,7 @@ module Katello
         def test_index_model
           Katello::FileUnit.destroy_all
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
           @repo.reload
           @repo.index_content
           post_unit_count = Katello::FileUnit.all.count
@@ -32,7 +32,7 @@ module Katello
         def test_index_on_sync
           Katello::FileUnit.destroy_all
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
           index_args = {:id => @repo.id, :contents_changed => true}
           ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
           @repo.reload

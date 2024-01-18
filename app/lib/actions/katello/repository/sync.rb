@@ -42,7 +42,7 @@ module Actions
               sync_action = plan_action(Actions::Pulp3::Orchestration::Repository::Sync,
                                         repo,
                                         SmartProxy.pulp_primary,
-                                        pulp_sync_options)
+                                        **pulp_sync_options)
               output = sync_action.output
 
               plan_action(Katello::Repository::IndexContent, :id => repo.id, :force_index => skip_metadata_check)

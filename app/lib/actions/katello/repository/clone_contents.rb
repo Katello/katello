@@ -25,7 +25,7 @@ module Actions
 
             index_options = {id: new_repository.id, force_index: true}
             index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
-            plan_action(Katello::Repository::IndexContent, index_options)
+            plan_action(Katello::Repository::IndexContent, **index_options)
           end
         end
 
@@ -38,7 +38,7 @@ module Actions
             metadata_options[:source_repository] = source_repositories.first
           end
 
-          plan_action(Katello::Repository::MetadataGenerate, new_repository, metadata_options)
+          plan_action(Katello::Repository::MetadataGenerate, new_repository, **metadata_options)
           unless source_repositories.first.saved_checksum_type == new_repository.saved_checksum_type
             plan_self(:source_checksum_type => source_repositories.first.saved_checksum_type,
                       :target_repo_id => new_repository.id)

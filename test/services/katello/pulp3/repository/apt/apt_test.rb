@@ -52,7 +52,7 @@ module Katello
             PulpcoreClient::SigningServicesApi
               .any_instance
               .expects(:list)
-              .with({name: 'katello_deb_sign'})
+              .with(name: 'katello_deb_sign')
               .returns(signing_service_response_list)
             service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
 
@@ -71,7 +71,7 @@ module Katello
             PulpcoreClient::SigningServicesApi
               .any_instance
               .expects(:list)
-              .with({name: 'katello_deb_sign'})
+              .with(name: 'katello_deb_sign')
               .returns(signing_service_response_list)
             service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
 

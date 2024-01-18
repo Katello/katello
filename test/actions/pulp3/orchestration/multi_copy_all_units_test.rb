@@ -20,7 +20,7 @@ module ::Actions::Pulp3
       create_repo(@repo_clone, @primary)
 
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
 
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -293,7 +293,7 @@ module ::Actions::Pulp3
       create_repo(@repo_clone, @primary)
 
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
 
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -336,7 +336,7 @@ module ::Actions::Pulp3
       create_repo(@repo_clone, @primary)
 
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
 
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -429,7 +429,7 @@ module ::Actions::Pulp3
       create_repo(@repo_clone, @primary)
 
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
 
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -517,7 +517,7 @@ module ::Actions::Pulp3
       create_repo(@repo_clone, @primary)
 
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
 
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -605,7 +605,7 @@ module ::Actions::Pulp3
       create_repo(@repo_clone, @primary)
 
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
 
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -671,7 +671,7 @@ module ::Actions::Pulp3
       create_repo(@repo_clone, @primary)
 
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
 
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -717,7 +717,7 @@ module ::Actions::Pulp3
       create_repo(@repo_clone, @primary)
 
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
 
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)

@@ -4,10 +4,10 @@ module Actions
       module Repository
         class Sync < Pulp3::Abstract
           include Actions::Helpers::OutputPropagator
-          def plan(repository, smart_proxy, options)
+          def plan(repository, smart_proxy, **options)
             sequence do
               plan_action(Actions::Pulp3::Repository::RefreshRemote, repository, smart_proxy)
-              action_output = plan_action(Actions::Pulp3::Repository::Sync, repository, smart_proxy, options).output
+              action_output = plan_action(Actions::Pulp3::Repository::Sync, repository, smart_proxy, **options).output
 
               force_fetch_version = true if options[:optimize] == false
               version_output = plan_action(Pulp3::Repository::SaveVersion, repository, tasks: action_output[:pulp_tasks], :force_fetch_version => force_fetch_version).output

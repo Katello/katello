@@ -32,7 +32,7 @@ module Actions
             repository.clear_smart_proxy_sync_histories
             pulp_action = plan_action(
               Pulp3::Orchestration::Repository::RemoveUnits,
-              repository, SmartProxy.pulp_primary, remove_content_args)
+              repository, SmartProxy.pulp_primary, **remove_content_args)
             return if pulp_action.error
             plan_self(:content_unit_class => content_units.first.class.name, :content_unit_ids => content_unit_ids)
             plan_action(CapsuleSync, repository) if sync_capsule

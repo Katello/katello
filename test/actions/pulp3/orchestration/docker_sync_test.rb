@@ -29,7 +29,7 @@ module ::Actions::Pulp3
 
     def test_sync
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
       @repo.reload
       refute_equal @repo.version_href, @repo_version_href
       repository_reference = Katello::Pulp3::RepositoryReference.find_by(

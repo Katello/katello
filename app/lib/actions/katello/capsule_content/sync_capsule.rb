@@ -19,7 +19,7 @@ module Actions
               options[:repository_ids_list] = repos.pluck(:id)
             end
             if smart_proxy.has_feature?(SmartProxy::PULP3_FEATURE)
-              plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, options)
+              plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, **options)
             end
 
             repos.in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repo_batch|

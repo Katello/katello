@@ -26,7 +26,7 @@ module Actions
 
       assert_action_planned_with(action, pulp3_import_class,
                                 repo, SmartProxy.pulp_primary,
-                                import_upload_args)
+                                **import_upload_args)
     end
   end
 end

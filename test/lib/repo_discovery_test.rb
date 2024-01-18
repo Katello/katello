@@ -61,7 +61,7 @@ module Katello
       search = 'busybox'
 
       RestClient::Request.expects(:execute)
-        .with(method: :get, url: base_url.to_s + "v1/search?q=#{search}", headers: {:accept => :json})
+        .with({ method: :get, url: base_url.to_s + "v1/search?q=#{search}", headers: {:accept => :json} })
         .returns({results: ['busybox']}.to_json)
 
       rd = RepoDiscovery.new(base_url, 'docker', nil, nil, search, crawled, found, to_follow)
@@ -78,7 +78,7 @@ module Katello
       search = 'busybox'
 
       RestClient::Request.expects(:execute)
-        .with(method: :get, url: base_url.to_s + "v1/search?q=#{search}", proxy: @proxy_url, headers: {:accept => :json})
+        .with({ method: :get, url: base_url.to_s + "v1/search?q=#{search}", proxy: @proxy_url, headers: {:accept => :json} })
         .returns({results: ['busybox']}.to_json)
 
       rd = RepoDiscovery.new(base_url, 'docker', nil, nil, search, crawled, found, to_follow)
@@ -101,11 +101,11 @@ module Katello
       search = 'busybox'
 
       RestClient::Request.expects(:execute)
-        .with(method: :get, url: base_url.to_s + "v1/search?q=#{search}", proxy: @proxy_url, headers: {:accept => :json})
+        .with({ method: :get, url: base_url.to_s + "v1/search?q=#{search}", proxy: @proxy_url, headers: {:accept => :json} })
         .returns({code: Net::HTTPNotFound}.to_json)
 
       RestClient::Request.expects(:execute)
-        .with(method: :get, url: base_url.to_s + "v2/_catalog", proxy: @proxy_url, headers: {:accept => :json})
+        .with({ method: :get, url: base_url.to_s + "v2/_catalog", proxy: @proxy_url, headers: {:accept => :json} })
         .returns({'repositories' => ['busybox']}.to_json.extend(MockHeaders))
 
       rd = RepoDiscovery.new(base_url, 'docker', nil, nil, search, crawled, found, to_follow)

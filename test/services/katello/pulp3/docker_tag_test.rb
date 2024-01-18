@@ -18,7 +18,7 @@ module Katello
         def test_index_model
           Katello::DockerTag.destroy_all
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
           @repo.reload
           @repo.index_content
           assert_equal @repo, ::Katello::Repository.find_by(:id => ::Katello::RepositoryDockerTag.first.repository_id)
@@ -35,7 +35,7 @@ module Katello
         def test_index_on_sync
           Katello::DockerTag.destroy_all
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
           index_args = {:id => @repo.id, :contents_changed => true}
           ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
           @repo.reload
@@ -50,7 +50,7 @@ module Katello
           @repo.root.update(url: 'https://quay.io', docker_upstream_name: 'ansible/ansible-runner')
           Katello::DockerTag.destroy_all
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
           index_args = {:id => @repo.id, :contents_changed => true}
 
           # Test that indexing works
@@ -61,7 +61,7 @@ module Katello
           # https://projects.theforeman.org/issues/34257
           Katello::DockerTag.destroy_all
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
           index_args = {:id => @repo.id, :contents_changed => true}
           ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
           @repo.reload
@@ -75,7 +75,7 @@ module Katello
           @repo.root.update(:include_tags => ['doesntexist'])
           @repo.backend_service(SmartProxy.pulp_primary).refresh_if_needed
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, **sync_args)
           index_args = {:id => @repo.id, :contents_changed => true}
           ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
           @repo.reload

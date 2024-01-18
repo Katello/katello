@@ -90,7 +90,7 @@ module Katello
       refute_empty repository_reference.repository_href
       refute_empty Katello::Pulp3::DistributionReference.where(repository_id: repo.id)
       sync_args = {:smart_proxy_id => smart_proxy.id, :repo_id => repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, repo, smart_proxy, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, repo, smart_proxy, **sync_args)
       repo
     end
   end

@@ -23,7 +23,7 @@ module ::Actions::Pulp3
 
       sync_args = { :smart_proxy_id => proxy.id, :repo_id => repo.id, :full_index => true }
       sync_action = ForemanTasks.sync_task(
-        ::Actions::Pulp3::Orchestration::Repository::Sync, repo, proxy, sync_args)
+        ::Actions::Pulp3::Orchestration::Repository::Sync, repo, proxy, **sync_args)
 
       contents_changed = sync_action.output[:contents_changed]
       ForemanTasks.sync_task(

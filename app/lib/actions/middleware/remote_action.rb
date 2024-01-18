@@ -4,9 +4,9 @@ module Actions
     # wraps the plan/run/finalize methods to include the info about the user
     # that triggered the action.
     class RemoteAction < Dynflow::Middleware
-      def plan(*args)
+      def plan(*args, **kwargs)
         fail "No current user is set. Please set User.current to perform a remote action" if User.current.nil?
-        pass(*args).tap do
+        pass(*args, **kwargs).tap do
           action.input[:remote_user] = User.remote_user
           action.input[:remote_cp_user] = User.remote_user
         end

@@ -20,7 +20,7 @@ module Katello::Host
         plan_action(action, @version, options)
 
         @version.repositories.each do |repo|
-          assert_action_planned_with(action, Actions::Katello::Repository::Destroy, repo, options)
+          assert_action_planned_with(action, Actions::Katello::Repository::Destroy, repo, **options)
         end
       end
     end

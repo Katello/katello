@@ -590,7 +590,7 @@ module ::Actions::Katello::Repository
       }
       assert_action_planned_with(action, ::Actions::Pulp3::Orchestration::Repository::ImportUpload,
                                  docker_repository, SmartProxy.pulp_primary,
-                                 import_upload_args
+                                 **import_upload_args
                                 )
     end
 
@@ -616,7 +616,7 @@ module ::Actions::Katello::Repository
       }
       assert_action_planned_with(action, ::Actions::Pulp3::Orchestration::Repository::ImportUpload,
                                  docker_repository, SmartProxy.pulp_primary,
-                                 import_upload_args
+                                 **import_upload_args
                                 )
     end
   end
@@ -662,8 +662,8 @@ module ::Actions::Katello::Repository
     it 'plans pulp3 orchestration actions with file repo' do
       action = create_action pulp3_action_class
       action.stubs(:action_subject).with(repository_pulp3)
-      plan_action action, repository_pulp3, proxy, {}
-      assert_action_planned_with(action, ::Actions::Pulp3::Repository::Sync, repository_pulp3, proxy, {})
+      plan_action action, repository_pulp3, proxy
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::Sync, repository_pulp3, proxy)
       assert_action_planed action, ::Actions::Pulp3::Repository::SaveVersion
       assert_action_planed action, ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata
     end
@@ -679,8 +679,8 @@ module ::Actions::Katello::Repository
     it 'plans pulp3 orchestration actions with apt repo' do
       action = create_action pulp3_action_class
       action.stubs(:action_subject).with(repository_apt_pulp3)
-      plan_action action, repository_apt_pulp3, proxy, {}
-      assert_action_planned_with(action, ::Actions::Pulp3::Repository::Sync, repository_apt_pulp3, proxy, {})
+      plan_action action, repository_apt_pulp3, proxy
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::Sync, repository_apt_pulp3, proxy)
       assert_action_planed action, ::Actions::Pulp3::Repository::SaveVersion
       assert_action_planed action, ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata
     end
