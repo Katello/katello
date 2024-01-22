@@ -8,6 +8,9 @@ module Katello
       HOST_TOOLS_PACKAGE_NAME = 'katello-host-tools'.freeze
       HOST_TOOLS_TRACER_PACKAGE_NAME = 'katello-host-tools-tracer'.freeze
       SUBSCRIPTION_MANAGER_PACKAGE_NAME = 'subscription-manager'.freeze
+      ALL_HOST_TOOLS_PACKAGE_NAMES = [ "python-#{HOST_TOOLS_PACKAGE_NAME}",
+                                       "python3-#{HOST_TOOLS_PACKAGE_NAME}",
+                                       HOST_TOOLS_PACKAGE_NAME ].freeze
       ALL_TRACER_PACKAGE_NAMES = [ "python-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
                                    "python3-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
                                    HOST_TOOLS_TRACER_PACKAGE_NAME ].freeze
@@ -309,22 +312,22 @@ module Katello
         end
       end
 
-      def tracer_installed?
-        self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => ALL_TRACER_PACKAGE_NAMES).any? ||
-          self.host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => ALL_TRACER_PACKAGE_NAMES).any?
+      def tracer_installed?(force_update_cache: false)
+        Rails.cache.fetch("#{self.host.id}/tracer_installed", expires_in: 7.days, force: force_update_cache) do
+          self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => ALL_TRACER_PACKAGE_NAMES).any? ||
+            self.host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => ALL_TRACER_PACKAGE_NAMES).any?
+        end
       end
 
       def tracer_rpm_available?
         ::Katello::Rpm.yum_installable_for_host(self.host).where(name: ALL_TRACER_PACKAGE_NAMES).any?
       end
 
-      def host_tools_installed?
-        host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => [ "python-#{HOST_TOOLS_PACKAGE_NAME}",
-                                                                                          "python3-#{HOST_TOOLS_PACKAGE_NAME}",
-                                                                                          HOST_TOOLS_PACKAGE_NAME ]).any? ||
-          host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => [ "python-#{HOST_TOOLS_PACKAGE_NAME}",
-                                                                                    "python3-#{HOST_TOOLS_PACKAGE_NAME}",
-                                                                                    HOST_TOOLS_PACKAGE_NAME ]).any?
+      def host_tools_installed?(force_update_cache: false)
+        Rails.cache.fetch("#{self.host.id}/host_tools_installed", expires_in: 7.days, force: force_update_cache) do
+          self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => ALL_HOST_TOOLS_PACKAGE_NAMES).any? ||
+            self.host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => ALL_HOST_TOOLS_PACKAGE_NAMES).any?
+        end
       end
 
       def update_errata_status

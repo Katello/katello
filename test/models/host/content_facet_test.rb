@@ -32,7 +32,21 @@ module Katello
 
       host.installed_packages << Katello::InstalledPackage.create!(:name => 'katello-host-tools-tracer', 'nvrea' => 'katello-host-tools-tracer-1.0.x86_64', 'nvra' => 'katello-host-tools-tracer-1.0.x86_64')
 
+      # make sure the cache is gets updated
+      host.reload.content_facet.tracer_installed?(force_update_cache: true)
+
       assert host.reload.content_facet.tracer_installed?
+    end
+
+    def test_host_tools_installed?
+      refute host.content_facet.host_tools_installed?
+
+      host.installed_packages << Katello::InstalledPackage.create!(:name => 'katello-host-tools', 'nvrea' => 'katello-host-tools-1.0.x86_64', 'nvra' => 'katello-host-tools-1.0.x86_64')
+
+      # make sure the cache is gets updated
+      host.reload.content_facet.host_tools_installed?(force_update_cache: true)
+
+      assert host.reload.content_facet.host_tools_installed?
     end
 
     def test_in_content_view_version_environments
