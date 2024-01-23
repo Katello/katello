@@ -59,21 +59,22 @@ const katelloPackagesRemoveParams = ({ hostname, search, descriptionFormat }) =>
     descriptionFormat,
   });
 
-const katelloPackageUpdateParams = ({ hostname, packageName }) =>
+const katelloPackageUpdateParams = ({ hostname, packageName, descriptionFormat }) =>
   baseParams({
     hostname,
     inputs: { package: packageName },
     feature: REX_FEATURES.KATELLO_PACKAGE_UPDATE,
+    descriptionFormat,
   });
 
 const katelloPackagesUpdateParams = ({
   hostname, search, versions, descriptionFormat,
-}) => ({
+}) => ({ // this doesn't use baseParams so looks different from the others
   job_invocation: {
     feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
     inputs: { [PACKAGES_SEARCH_QUERY]: search, [SELECTED_UPDATE_VERSIONS]: versions },
     search_query: `name ^ (${hostname})`,
-    descriptionFormat,
+    description_format: descriptionFormat,
   },
 });
 
