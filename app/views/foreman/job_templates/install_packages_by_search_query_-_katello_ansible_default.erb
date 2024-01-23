@@ -1,0 +1,28 @@
+<%#
+kind: job_template
+name: Install packages by search query - Katello Ansible Default
+job_category: Katello
+description_format: 'Install package(s) %{Package search query}'
+feature: katello_package_install_by_search
+provider_type: Ansible
+template_inputs:
+- name: Package search query
+  description: Filter criteria for packages to be installed. IMPORTANT- If left blank, the job will attempt to install all possible packages.
+  input_type: user
+  required: false
+%>
+<% package_names = @host.package_names_for_job_template(
+  action: 'install',
+  search: input('Package search query')
+) -%>
+---
+- hosts: all
+  tasks:
+    - package:
+<% if package_names.empty? -%>
+        name: []
+<% else -%>
+        name: <%= indent(10) { to_yaml(package_names).gsub(/---/, "") } -%>
+        state: present
+<% end -%>
+
