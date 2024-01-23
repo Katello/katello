@@ -1,0 +1,33 @@
+<%#
+kind: job_template
+name: Update packages by search query - Katello Ansible Default
+job_category: Katello
+description_format: 'Update package(s) %{Packages search query}'
+feature: katello_package_remove_by_search
+provider_type: Ansible
+template_inputs:
+- name: Packages search query
+  description: Filter criteria for packages to be updated.
+  input_type: user
+  required: false
+- name: Selected update versions
+  description: JSON string of selected package versions to be updated, in the format [ nvra ]. Leave blank to upgrade to latest available version.
+  input_type: user
+  required: false
+  value_type: plain
+%>
+<% package_names = @host.package_names_for_job_template(
+  action: 'update',
+  search: input('Packages search query'),
+  versions: input('Selected update versions')
+) -%>
+<% if package_names.empty? -%>
+<%= render_template('Run Command - Ansible Default', :command => "yum -y update") %>
+<% else -%>
+---
+- hosts: all
+  tasks:
+    - package:
+        name: <%= indent(10) { to_yaml(package_names).gsub(/---/, "") } -%>
+        state: latest
+<% end -%>

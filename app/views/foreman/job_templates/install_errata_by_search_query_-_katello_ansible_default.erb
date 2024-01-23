@@ -1,0 +1,24 @@
+<%#
+kind: job_template
+name: Install errata by search query - Katello Ansible Default
+job_category: Katello
+description_format: 'Install errata %{Errata search query}'
+feature: katello_errata_install_by_search
+provider_type: Ansible
+template_inputs:
+- name: Errata search query
+  description: Filter criteria for errata to be installed.
+  input_type: user
+  required: false
+%>
+
+<% advisory_ids = @host.advisory_ids(search: input("Errata search query")) -%>
+<% render_error(N_("No errata matching given search query")) if !input("Errata search query").blank? && advisory_ids.blank? -%>
+# RESOLVED_ERRATA_IDS=<%= advisory_ids.join(',') %>
+
+<% if @host.operatingsystem.family == 'Suse' -%>
+<%= render_template('Run Command - Ansible Default', :command => "zypper -n install -t patch #{advisory_ids.join(' ')}") %>
+<% else -%>
+<% advisories = advisory_ids.map { |e| "--advisory=#{e}" }.join(' ') -%>
+<%= render_template('Run Command - Ansible Default', :command => "yum -y update-minimal #{advisories}") %>
+<% end -%>
