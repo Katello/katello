@@ -79,7 +79,7 @@ module Katello
         end
 
         def redhat_account_number
-          pools.upstream.pluck(:account_number).first
+          pools.upstream.pick(:account_number)
         end
 
         def active_pools_count
