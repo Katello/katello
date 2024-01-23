@@ -50,9 +50,9 @@ module Katello
 
     def errata_counts(errata)
       counts = {:total => errata.count}
-      counts.merge(Hash[[:security, :bugfix, :enhancement].collect do |errata_type|
-        [errata_type, errata.send(errata_type).count]
-      end])
+      counts.merge([:security, :bugfix, :enhancement].index_with do |errata_type|
+        errata.send(errata_type).count
+      end)
     end
   end
 end
