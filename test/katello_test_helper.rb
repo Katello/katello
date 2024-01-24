@@ -1,24 +1,9 @@
-require 'simplecov'
-require 'simplecov-rcov'
-
 require 'test_helper'
 require 'factory_bot_rails'
 require "webmock/minitest"
 require 'mocha/minitest'
 require 'set'
 require 'robottelo/reporter/attributes'
-
-SimpleCov.formatters = [
-  SimpleCov::Formatter::RcovFormatter,
-  SimpleCov::Formatter::HTMLFormatter
-]
-
-SimpleCov.start do
-  filters.clear
-  add_filter do |src|
-    !src.filename.include?('/plugin/app/') && !src.filename.include?('/plugin/lib/')
-  end
-end
 
 require "#{Katello::Engine.root}/test/support/minitest/spec/shared_examples"
 require "#{Katello::Engine.root}/spec/models/model_spec_helper"
