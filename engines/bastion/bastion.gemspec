@@ -24,5 +24,4 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "angular-rails-templates", "~> 1.1.0"
-  s.add_development_dependency "uglifier"
 end
