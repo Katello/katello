@@ -7,6 +7,9 @@ child :subscription_facet => :subscription_facet_attributes do |_facet|
 
   child :hypervisor_host => :virtual_host do
     attributes :id, :name
+    node :display_name do |host|
+      host.to_label
+    end
   end
 
   child :virtual_guests => :virtual_guests do
