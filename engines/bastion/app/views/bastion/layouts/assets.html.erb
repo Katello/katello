@@ -10,11 +10,13 @@
 <% end %>
 
 <% content_for(:javascripts) do %>
-  <%= javascript_include_tag 'bastion/bastion' %>
+
+  <%=  javascript_tag("window.tfm.tools.loadPluginModule('/webpack/katello','katello','./common_index');".html_safe) %>
+  <%= javascript_include_tag('bastion/bastion', {type: 'module'})%>
   <% if File.exist?("#{Bastion::Engine.root}/vendor/assets/javascripts/#{Bastion.localization_path(I18n.locale)}") %>
     <%= javascript_include_tag(Bastion.localization_path(I18n.locale)) %>
   <% end %>
-  <script type="text/javascript">
+  <script type="module">
     angular.module('Bastion.features').value('FeatureSettings', angular.fromJson(<%= SETTINGS[:features].nil? ? {} : SETTINGS[:features].to_json.html_safe %>));
     angular.module('Bastion').value('currentLocale', '<%= I18n.locale %>');
     angular.module('Bastion').value('CurrentOrganization', "<%= Organization.current.id if Organization.current %>");
@@ -34,6 +36,8 @@
     angular.module('Bastion').value('newHostDetailsUI', "<%= Setting[:host_details_ui] %>");
     angular.module('Bastion').value('experimentalLabsSetting', "<%= Setting[:lab_features] %>");
   </script>
+
+  <%= javascript_include_tag('bastion_katello/bastion_katello',  {type: 'module'}) %>
   <% Bastion.plugins.each do |name, plugin| %>
     <%= include_plugin_js(plugin) %>
   <% end %>
