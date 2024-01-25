@@ -260,6 +260,7 @@ module Katello
       User.current = User.anonymous_admin
       @host.update_candlepin_associations(rhsm_params)
       update_host_registered_through(@host, request.headers)
+      @host.refresh_statuses([::Katello::RhelLifecycleStatus])
       render :json => {:content => _("Facts successfully updated.")}, :status => :ok
     end
 
