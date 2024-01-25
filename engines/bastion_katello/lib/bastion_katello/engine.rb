@@ -14,12 +14,6 @@ module BastionKatello
 
       Bastion.register_plugin(
         :name => 'bastion_katello',
-        :javascript => proc do
-          [
-            javascript_include_tag(*webpack_asset_paths('katello:common', :extension => 'js'), "data-turbolinks-track" => true),
-            javascript_include_tag('bastion_katello/bastion_katello')
-          ]
-        end,
         :stylesheet => 'bastion_katello/bastion_katello',
         :pages => %w(
           activation_keys

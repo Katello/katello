@@ -36,5 +36,3 @@
 
 //= require "bastion/features/features.module"
 //= require_tree "./features"
-
-//= require "bastion/bastion-bootstrap"

@@ -23,7 +23,9 @@
              :class => 'form-control',  :name => ks_repo_select_name, :disabled => kickstart_options.empty?
 end %>
 
-<script>
-  KT.hosts.set_media_selection_bindings();
-  KT.hosts.update_media_enablement();
-</script>
+<% content_for(:javascripts) do -%>
+  <script>
+    KT.hosts.set_media_selection_bindings();
+    KT.hosts.update_media_enablement();
+  </script>
+<% end -%>
