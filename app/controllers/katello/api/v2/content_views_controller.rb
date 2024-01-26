@@ -59,7 +59,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(ContentView)
     def index
-      content_view_includes = [:activation_keys, :content_view_versions,
+      content_view_includes = [:activation_keys, :content_view_versions, :content_view_components,
                                :environments, :organization, :repositories]
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc, :includes => content_view_includes))
     end
