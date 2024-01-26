@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require "katello_test_helper"
+require 'fact_importer_test_helper'
 
 #rubocop:disable Metrics/ModuleLength
 module Katello
@@ -443,6 +444,33 @@ module Katello
         get :serials, params: { :id => uuid }
         assert_response 200
         refute_nil @host.subscription_facet.reload.last_checkin
+      end
+    end
+
+    describe "consumer_facts" do
+      include FactImporterIsolation
+
+      it "can update the rhel lifecycle status" do
+        allow_transactions_for_any_importer
+        os = operatingsystems(:redhat)
+        os.update!(major: "8", minor: "6")
+        @host.update(:operatingsystem => os)
+        uuid = @host.subscription_facet.uuid
+        stub_cp_consumer_with_uuid(uuid)
+        @controller.stubs(:update_host_registered_through)
+        Katello::Resources::Candlepin::Consumer.stubs(:update)
+        Katello::Resources::Candlepin::Consumer.stubs(:refresh_entitlements)
+        Katello::Host::SubscriptionFacet.any_instance.stubs(:update_from_consumer_attributes)
+        ::Host::Managed.any_instance.stubs(:refresh_global_status!)
+        assert_equal ::Katello::RhelLifecycleStatus::UNKNOWN, @host.get_status(::Katello::RhelLifecycleStatus).status
+        facts = {
+          "distribution.id" => "Ootpa",
+          "distribution::version" => "8.6",
+          "distribution::name" => "Red Hat Enterprise Linux"
+        }
+        put :facts, params: { :id => uuid, :facts => facts }
+        assert_response 200
+        assert_equal ::Katello::RhelLifecycleStatus::FULL_SUPPORT, @host.reload.get_status(::Katello::RhelLifecycleStatus).status
       end
     end
 
