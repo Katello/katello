@@ -18,7 +18,7 @@ module Katello
               :displayName => description,
               :contentPrefix => "/#{key}/$env",
               :contentAccessMode => content_access_mode,
-              :contentAccessModeList => ['entitlement', 'org_environment'].join(',')
+              :contentAccessModeList => 'org_environment'
             }
             owner_json = self.post(path, attrs.to_json, self.default_headers).body
             JSON.parse(owner_json).with_indifferent_access
@@ -42,7 +42,7 @@ module Katello
           def update(key, attrs)
             owner = find(key)
             owner.merge!(attrs)
-            owner.merge!(:contentAccessModeList => ['entitlement', 'org_environment'].join(','))
+            owner.merge!(:contentAccessModeList => 'org_environment')
             self.put(path(key), JSON.generate(owner), self.default_headers).body
           end
 
