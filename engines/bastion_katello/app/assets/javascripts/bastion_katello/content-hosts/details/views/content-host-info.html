@@ -51,8 +51,8 @@
           </button>
         </dd>
 
-        <dt ng-show="host.subscription_facet_attributes.virtual_guests" translate>Virtual Guests</dt>
-        <dd ng-show="host.subscription_facet_attributes.virtual_guests">
+        <dt ng-show="host.subscription_facet_attributes.virtual_guests.length" translate>Virtual Guests</dt>
+        <dd ng-show="host.subscription_facet_attributes.virtual_guests.length">
           <a ng-href="/content_hosts?search={{virtualGuestIds(host)}}"
              translate translate-n="host.subscription_facet_attributes.virtual_guests.length"
              translate-plural="{{ host.subscription_facet_attributes.virtual_guests.length }} Content Hosts">
