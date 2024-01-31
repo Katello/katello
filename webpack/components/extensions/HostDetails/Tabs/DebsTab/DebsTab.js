@@ -45,12 +45,7 @@ import { hasRequiredPermissions as can,
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
 
-export const hideDebsTab = ({ hostDetails }) => {
-  const osMatch = hostDetails?.operatingsystem_name?.match(/(\D+) (\d+|\D+)/);
-  if (!osMatch) return false;
-  const [, os] = osMatch;
-  return !(osMatch && os.match(/Debian|Ubuntu/i));
-};
+export const hideDebsTab = ({ hostDetails }) => !(hostDetails?.operatingsystem_family === 'Debian');
 
 const invokeRexJobs = ['create_job_invocations'];
 const createBookmarks = ['create_bookmarks'];

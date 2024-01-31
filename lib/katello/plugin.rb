@@ -303,6 +303,7 @@ Foreman::Plugin.register :katello do
 
   extend_rabl_template 'api/v2/smart_proxies/main', 'katello/api/v2/smart_proxies/pulp_info'
   extend_rabl_template 'api/v2/hosts/show', 'katello/api/v2/hosts/host_collections'
+  extend_rabl_template 'api/v2/hosts/show', 'katello/api/v2/hosts/show'
 
   # Katello variables for Host Registration
   extend_allowed_registration_vars :activation_keys

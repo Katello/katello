@@ -12,7 +12,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     @environment = katello_environments(:library)
     @dev = katello_environments(:dev)
     @cv2 = katello_content_views(:library_view_no_version)
-    @host = FactoryBot.create(:host)
+    @host = FactoryBot.create(:host, :with_operatingsystem)
   end
 
   def host_index_and_show(host)
@@ -32,26 +32,26 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   end
 
   def test_content_and_subscriptions
-    host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+    host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem, :content_view => @content_view,
                               :lifecycle_environment => @environment)
     host_index_and_show(host)
   end
 
   def test_with_content
-    host = FactoryBot.create(:host, :with_content, :content_view => @content_view,
+    host = FactoryBot.create(:host, :with_content, :with_operatingsystem, :content_view => @content_view,
                               :lifecycle_environment => @environment)
     host_index_and_show(host)
   end
 
   def test_no_content_view_environments
-    host = FactoryBot.create(:host, :with_content, :with_subscription)
+    host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem)
     assert_empty host.content_facet.content_view_environments
 
     host_index_and_show(host)
   end
 
   def test_content_facet_attributes_assigned_as_cve
-    host = FactoryBot.create(:host, :with_content, :with_subscription,
+    host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem,
                               :content_view => @content_view, :lifecycle_environment => @environment)
     Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
     orig_cves = host.content_facet.content_view_environment_ids.to_a
@@ -110,7 +110,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   end
 
   def test_with_subscriptions
-    host = FactoryBot.create(:host, :with_subscription)
+    host = FactoryBot.create(:host, :with_subscription, :with_operatingsystem)
     host_index_and_show(host)
   end
 
@@ -122,7 +122,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     Katello::Candlepin::Consumer.any_instance.stubs(:virtual_guests).returns([])
     Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
 
-    host = FactoryBot.create(:host, :with_subscription)
+    host = FactoryBot.create(:host, :with_subscription, :with_operatingsystem)
     host.subscription_facet.update!(:autoheal => true,
                                                :installed_products_attributes => [{:product_name => 'foo', :version => '6', :product_id => '69'}])
 
@@ -136,7 +136,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
 
   def test_with_smartproxy
     smart_proxy = FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
-    host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+    host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem, :content_view => @content_view,
                               :lifecycle_environment => @environment, :content_source => smart_proxy)
     host_show(host, smart_proxy)
   end

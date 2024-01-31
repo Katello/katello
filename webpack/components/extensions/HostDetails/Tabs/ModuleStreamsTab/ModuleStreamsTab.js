@@ -47,14 +47,7 @@ import {
   userPermissionsFromHostDetails,
 } from '../../hostDetailsHelpers';
 
-const moduleStreamSupported = ({ os, version }) =>
-  os.match(/RedHat|RHEL|CentOS|Rocky|AlmaLinux|Oracle Linux/i) && Number(version) > 7;
-export const hideModuleStreamsTab = ({ hostDetails }) => {
-  const osMatch = hostDetails?.operatingsystem_name?.match(/(\D+) (\d+)/);
-  if (!osMatch) return false;
-  const [, os, version] = osMatch;
-  return !(osMatch && moduleStreamSupported({ os, version }));
-};
+export const hideModuleStreamsTab = ({ hostDetails }) => !(hostDetails?.operatingsystem_family === 'Redhat' && Number(hostDetails?.operatingsystem_major > 7));
 
 const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
   switch (true) {
