@@ -1361,6 +1361,12 @@
       "ID of the host": [
         "ID de l'hôte"
       ],
+      "Also include the latest upgradable package version for each host package": [
+        "Inclure également la dernière version de package de mise à jour pour chaque package d’hôte."
+      ],
+      "Return only packages of a particular status (upgradable or up-to-date)": [
+        "Renvoyer uniquement les packages comportant un statut particulier (upgradable ou up-to-date)"
+      ],
       "Errata to exclusively include in the action": [
         "Errata à inclure exclusivement dans l'action"
       ],
@@ -1438,12 +1444,6 @@
       ],
       "List packages installed on the host": [
         "Répertorier les packages installés sur l'hôte"
-      ],
-      "Also include the latest upgradable package version for each host package": [
-        "Inclure également la dernière version de package de mise à jour pour chaque package d’hôte."
-      ],
-      "Return only packages of a particular status (upgradable or up-to-date)": [
-        "Renvoyer uniquement les packages comportant un statut particulier (upgradable ou up-to-date)"
       ],
       "Couldn't find host with host id '%s'": [
         "N'a pas pu trouver l'hôte avec l'id d'hôte '%s'"
@@ -2746,9 +2746,6 @@
       ],
       "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.": [
         "Clés d'activation pour le client subscription-manager, requises pour CentOS et Red Hat Enterprise Linux. Requis uniquement si le groupe d'hôtes n'a pas de clés d'activation."
-      ],
-      "Lifecycle environment for the host.": [
-        "Environnement du cycle de vie de l'hôte."
       ],
       "Clear any previous registration and run subscription-manager with --force.": [
         "Effacez tout enregistrement précédent et exécutez subscription-manager avec --force."
@@ -4181,6 +4178,9 @@
       "package_names_for_job_template: Action must be one of %s": [
         "package_names_for_job_template : l'action doit être l'une des suivantes %s"
       ],
+      "deb_names_for_job_template: Action must be one of %s": [
+        ""
+      ],
       "Cannot delete the last Location.": [
         "Impossible de supprimer le dernier emplacement"
       ],
@@ -5362,8 +5362,8 @@
       "Activation keys and subscriptions can be managed": [
         "Les clés d'activation et les abonnements peuvent être gérés"
       ],
-      "here": [
-        "ici"
+      "here.": [
+        ""
       ],
       "Reload data": [
         "Recharger les données"
@@ -5754,12 +5754,6 @@
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         "Stratégie de téléchargement par défaut des syncs de Proxy Smart (soit 'immediate', 'on_demand')"
       ],
-      "Pulp export destination filepath": [
-        "Chemin de fichier de destination d'exportation Pulp"
-      ],
-      "On-disk location for exported repositories": [
-        "Emplacement-disque des référentiels exportés"
-      ],
       "Pulp 3 export destination filepath": [
         "Chemin de fichier de destination d'exportation Pulp3"
       ],
@@ -5975,6 +5969,12 @@
       ],
       "Resolve traces via Katello interface": [
         "Résoudre les traces via l'interface Katello"
+      ],
+      "Katello: Configure host for new content source": [
+        ""
+      ],
+      "Replace content source on the target machine": [
+        ""
       ],
       "Katello: Module Stream Actions": [
         "Katello : Module Stream Actions"
@@ -6402,6 +6402,60 @@
       "Repository sets": [
         "Ensembles de référentiels"
       ],
+      "Install via remote execution": [
+        "Installation par exécution à distance"
+      ],
+      "Install via customized remote execution": [
+        "Redémarrer via exécution à distance personnalisée"
+      ],
+      "No packages available to install": [
+        "Aucun paquet disponible pour l'installation"
+      ],
+      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+        ""
+      ],
+      "No matching packages found": [
+        "Aucun paquet correspondant n'a été trouvé."
+      ],
+      "Version": [
+        "Version"
+      ],
+      "Install packages": [
+        "Installer les packages"
+      ],
+      "Select packages to install to the host {hostName}.": [
+        "Sélectionnez les paquets à installer sur l'hôte {hostName}."
+      ],
+      "Search available Debian packages": [
+        ""
+      ],
+      "This host does not have any packages.": [
+        "Cet hôte n’a pas d’errata installable."
+      ],
+      "Packages will appear here when available.": [
+        "Les packages apparaîtront ici une fois disponibles."
+      ],
+      "Problem searching packages": [
+        "Problème de recherche de paquets"
+      ],
+      "Installed version": [
+        "Version installée"
+      ],
+      "Upgradable to": [
+        "Pouvant être mis à niveau à"
+      ],
+      "A remote execution job is in progress.": [
+        "Un travail d'exécution à distance est en cours."
+      ],
+      "Upgrade via remote execution": [
+        "Mettre à niveau via exécution à distante"
+      ],
+      "Upgrade via customized remote execution": [
+        "Mettre à niveau via exécution à distance personnalisée"
+      ],
+      "Upgrade": [
+        "Mettre à niveau"
+      ],
       "No matching errata found": [
         "Aucune errata correspondante n’a été trouvée"
       ],
@@ -6537,62 +6591,11 @@
       "Uninstall and reset": [
         "Désinstaller et réinitialiser"
       ],
-      "Install via remote execution": [
-        "Installation par exécution à distance"
-      ],
-      "Install via customized remote execution": [
-        "Redémarrer via exécution à distance personnalisée"
-      ],
-      "No packages available to install": [
-        "Aucun paquet disponible pour l'installation"
-      ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
-        ""
-      ],
-      "No matching packages found": [
-        "Aucun paquet correspondant n'a été trouvé."
-      ],
-      "Version": [
-        "Version"
-      ],
-      "Install packages": [
-        "Installer les packages"
-      ],
-      "Select packages to install to the host {hostName}.": [
-        "Sélectionnez les paquets à installer sur l'hôte {hostName}."
-      ],
       "Search available packages": [
         "Rechercher les paquets disponibles"
       ],
-      "This host does not have any packages.": [
-        "Cet hôte n’a pas d’errata installable."
-      ],
-      "Packages will appear here when available.": [
-        "Les packages apparaîtront ici une fois disponibles."
-      ],
-      "Problem searching packages": [
-        "Problème de recherche de paquets"
-      ],
-      "Installed version": [
-        "Version installée"
-      ],
-      "Upgradable to": [
-        "Pouvant être mis à niveau à"
-      ],
-      "A remote execution job is in progress.": [
-        "Un travail d'exécution à distance est en cours."
-      ],
-      "Upgrade via remote execution": [
-        "Mettre à niveau via exécution à distante"
-      ],
-      "Upgrade via customized remote execution": [
-        "Mettre à niveau via exécution à distance personnalisée"
-      ],
       "Refresh package applicability": [
         ""
-      ],
-      "Upgrade": [
-        "Mettre à niveau"
       ],
       "Repository set enabled": [
         "Ensemble de référentiels activé"
@@ -6774,11 +6777,17 @@
       "Restart via customized remote execution": [
         "Redémarrer via exécution à distance personnalisée"
       ],
+      "Reboot host": [
+        ""
+      ],
       "Restart app": [
         "Redémarrer app"
       ],
       "Tracer helps administrators identify applications that need to be restarted after a system is patched.": [
         "Tracer aide les administrateurs à identifier les applications qui doivent être redémarrées après qu'un système a été corrigé."
+      ],
+      "At least one of the selected items requires the host to reboot": [
+        ""
       ],
       "Traces that require logout cannot be restarted remotely": [
         "Traces nécessitant une déconnexion ne peut pas être redémarré à distance"
@@ -8922,20 +8931,11 @@
       "Abstract": [
         "Résumé"
       ],
-      "Action with sub plans": [
-        "Action avec sous-plans"
-      ],
       "Auto attach subscriptions": [
         "Attacher automatiquement des abonnements"
       ],
-      "Check for long running tasks": [
-        ""
-      ],
       "Copy version units to library": [
         "Copier les unités de version dans la bibliothèque"
-      ],
-      "Deliver notifications about long running tasks": [
-        ""
       ],
       "Discover": [
         "Discover"
@@ -8954,12 +8954,6 @@
       ],
       "Hypervisors": [
         "Hyperviseurs"
-      ],
-      "Import Puppet classes": [
-        "Importer des classes Puppet"
-      ],
-      "Import facts": [
-        "Importer des faits"
       ],
       "Incremental Update of  Content View Version(s) ": [
         "Mise à jour incrémentielle Version(s) d'affichage de contenu"
@@ -8982,9 +8976,6 @@
       "Reindex subscriptions": [
         "Ré-indexer les abonnements"
       ],
-      "Remote action:": [
-        "Action distante :"
-      ],
       "Sync capsule": [
         "Sync capsule"
       ],
@@ -9006,17 +8997,29 @@
       "Verify checksum": [
         "Vérifier la somme de contrôle"
       ],
-      "No hosts have been specified.": [
-        "Aucun hôte n'a été spécifié."
+      "Action with sub plans": [
+        "Action avec sous-plans"
       ],
-      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
-        "#~ \"Le référentiel ne peut pas être supprimé car il a déjà été inclus dans un affi\"#~ \"chage de contenu publié. Veuillez supprimer toutes les versions d'affichage de\"#~ \" contenu contenant ce référentiel avant de tenter de le supprimer.\""
+      "Import Puppet classes": [
+        "Importer des classes Puppet"
       ],
-      "source URL is malformed": [
-        "URL source mal formé"
+      "Import facts": [
+        "Importer des faits"
       ],
-      "temporarily override feed URL for sync": [
-        "remplace l'URL de flux pour la sync de façon temporaire"
+      "Lifecycle environment for the host.": [
+        "Environnement du cycle de vie de l'hôte."
+      ],
+      "On-disk location for exported repositories": [
+        "Emplacement-disque des référentiels exportés"
+      ],
+      "Pulp export destination filepath": [
+        "Chemin de fichier de destination d'exportation Pulp"
+      ],
+      "Remote action:": [
+        "Action distante :"
+      ],
+      "here": [
+        "ici"
       ]
     }
   }

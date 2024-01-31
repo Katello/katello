@@ -1361,6 +1361,12 @@
       "ID of the host": [
         "主機的 ID"
       ],
+      "Also include the latest upgradable package version for each host package": [
+        ""
+      ],
+      "Return only packages of a particular status (upgradable or up-to-date)": [
+        ""
+      ],
       "Errata to exclusively include in the action": [
         ""
       ],
@@ -1438,12 +1444,6 @@
       ],
       "List packages installed on the host": [
         "列出安裝在主機上的套件"
-      ],
-      "Also include the latest upgradable package version for each host package": [
-        ""
-      ],
-      "Return only packages of a particular status (upgradable or up-to-date)": [
-        ""
       ],
       "Couldn't find host with host id '%s'": [
         "找不到主機 ID 為「%s」的主機"
@@ -2745,9 +2745,6 @@
         ""
       ],
       "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.": [
-        ""
-      ],
-      "Lifecycle environment for the host.": [
         ""
       ],
       "Clear any previous registration and run subscription-manager with --force.": [
@@ -4181,6 +4178,9 @@
       "package_names_for_job_template: Action must be one of %s": [
         ""
       ],
+      "deb_names_for_job_template: Action must be one of %s": [
+        ""
+      ],
       "Cannot delete the last Location.": [
         ""
       ],
@@ -5361,8 +5361,8 @@
       "Activation keys and subscriptions can be managed": [
         "可管理啟動金鑰與訂閱"
       ],
-      "here": [
-        "這裡"
+      "here.": [
+        ""
       ],
       "Reload data": [
         "重新載入資料"
@@ -5751,12 +5751,6 @@
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         ""
       ],
-      "Pulp export destination filepath": [
-        ""
-      ],
-      "On-disk location for exported repositories": [
-        "匯入軟體庫的磁碟位置"
-      ],
       "Pulp 3 export destination filepath": [
         ""
       ],
@@ -5971,6 +5965,12 @@
         ""
       ],
       "Resolve traces via Katello interface": [
+        ""
+      ],
+      "Katello: Configure host for new content source": [
+        ""
+      ],
+      "Replace content source on the target machine": [
         ""
       ],
       "Katello: Module Stream Actions": [
@@ -6399,6 +6399,60 @@
       "Repository sets": [
         ""
       ],
+      "Install via remote execution": [
+        ""
+      ],
+      "Install via customized remote execution": [
+        ""
+      ],
+      "No packages available to install": [
+        ""
+      ],
+      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+        ""
+      ],
+      "No matching packages found": [
+        ""
+      ],
+      "Version": [
+        "版本"
+      ],
+      "Install packages": [
+        ""
+      ],
+      "Select packages to install to the host {hostName}.": [
+        ""
+      ],
+      "Search available Debian packages": [
+        ""
+      ],
+      "This host does not have any packages.": [
+        ""
+      ],
+      "Packages will appear here when available.": [
+        ""
+      ],
+      "Problem searching packages": [
+        ""
+      ],
+      "Installed version": [
+        ""
+      ],
+      "Upgradable to": [
+        ""
+      ],
+      "A remote execution job is in progress.": [
+        ""
+      ],
+      "Upgrade via remote execution": [
+        ""
+      ],
+      "Upgrade via customized remote execution": [
+        ""
+      ],
+      "Upgrade": [
+        ""
+      ],
       "No matching errata found": [
         ""
       ],
@@ -6534,61 +6588,10 @@
       "Uninstall and reset": [
         ""
       ],
-      "Install via remote execution": [
-        ""
-      ],
-      "Install via customized remote execution": [
-        ""
-      ],
-      "No packages available to install": [
-        ""
-      ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
-        ""
-      ],
-      "No matching packages found": [
-        ""
-      ],
-      "Version": [
-        "版本"
-      ],
-      "Install packages": [
-        ""
-      ],
-      "Select packages to install to the host {hostName}.": [
-        ""
-      ],
       "Search available packages": [
         ""
       ],
-      "This host does not have any packages.": [
-        ""
-      ],
-      "Packages will appear here when available.": [
-        ""
-      ],
-      "Problem searching packages": [
-        ""
-      ],
-      "Installed version": [
-        ""
-      ],
-      "Upgradable to": [
-        ""
-      ],
-      "A remote execution job is in progress.": [
-        ""
-      ],
-      "Upgrade via remote execution": [
-        ""
-      ],
-      "Upgrade via customized remote execution": [
-        ""
-      ],
       "Refresh package applicability": [
-        ""
-      ],
-      "Upgrade": [
         ""
       ],
       "Repository set enabled": [
@@ -6771,10 +6774,16 @@
       "Restart via customized remote execution": [
         ""
       ],
+      "Reboot host": [
+        ""
+      ],
       "Restart app": [
         ""
       ],
       "Tracer helps administrators identify applications that need to be restarted after a system is patched.": [
+        ""
+      ],
+      "At least one of the selected items requires the host to reboot": [
         ""
       ],
       "Traces that require logout cannot be restarted remotely": [
@@ -8919,19 +8928,10 @@
       "Abstract": [
         ""
       ],
-      "Action with sub plans": [
-        "有子計畫的動作"
-      ],
       "Auto attach subscriptions": [
         "自動連接訂閱"
       ],
-      "Check for long running tasks": [
-        ""
-      ],
       "Copy version units to library": [
-        ""
-      ],
-      "Deliver notifications about long running tasks": [
         ""
       ],
       "Discover": [
@@ -8951,12 +8951,6 @@
       ],
       "Hypervisors": [
         "Hypervisor"
-      ],
-      "Import Puppet classes": [
-        "匯入 Puppet 類別"
-      ],
-      "Import facts": [
-        "匯入詳情"
       ],
       "Incremental Update of  Content View Version(s) ": [
         ""
@@ -8979,9 +8973,6 @@
       "Reindex subscriptions": [
         "重新索引訂閱服務"
       ],
-      "Remote action:": [
-        "遠端動作："
-      ],
       "Sync capsule": [
         ""
       ],
@@ -9003,17 +8994,23 @@
       "Verify checksum": [
         ""
       ],
-      "No hosts have been specified.": [
-        "未指定主機。"
+      "Action with sub plans": [
+        "有子計畫的動作"
       ],
-      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
-        "無法刪除軟體庫，因為它已被包含在一個已發佈的內容視域中。請在嘗試刪除此軟體庫之前，刪除所有包含了此軟體庫的內容視域版本。"
+      "Import Puppet classes": [
+        "匯入 Puppet 類別"
       ],
-      "source URL is malformed": [
-        "來源 URL 格式錯誤"
+      "Import facts": [
+        "匯入詳情"
       ],
-      "temporarily override feed URL for sync": [
-        "暫時覆寫同步的 feed URL"
+      "On-disk location for exported repositories": [
+        "匯入軟體庫的磁碟位置"
+      ],
+      "Remote action:": [
+        "遠端動作："
+      ],
+      "here": [
+        "這裡"
       ]
     }
   }

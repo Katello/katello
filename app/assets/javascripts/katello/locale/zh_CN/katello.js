@@ -1361,6 +1361,12 @@
       "ID of the host": [
         "主机 ID"
       ],
+      "Also include the latest upgradable package version for each host package": [
+        "还包括每个主机软件包的最新可升级软件包版本"
+      ],
+      "Return only packages of a particular status (upgradable or up-to-date)": [
+        "仅返回特定状态的软件包（可升级或最新）"
+      ],
       "Errata to exclusively include in the action": [
         "仅包含在操作中的勘误"
       ],
@@ -1438,12 +1444,6 @@
       ],
       "List packages installed on the host": [
         "列出主机上安装的软件包"
-      ],
-      "Also include the latest upgradable package version for each host package": [
-        "还包括每个主机软件包的最新可升级软件包版本"
-      ],
-      "Return only packages of a particular status (upgradable or up-to-date)": [
-        "仅返回特定状态的软件包（可升级或最新）"
       ],
       "Couldn't find host with host id '%s'": [
         "找不到主机 id 为 '%s' 的主机"
@@ -2746,9 +2746,6 @@
       ],
       "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.": [
         "subscription-manager 客户端的激活码，CentOS 和 Red Hat Enterprise Linux 需要它。只有在主机组没有激活码时才需要。"
-      ],
-      "Lifecycle environment for the host.": [
-        "主机的生命周期环境。"
       ],
       "Clear any previous registration and run subscription-manager with --force.": [
         "清除之前的所有注册，并使用 --force 运行 subscription-manager。"
@@ -4181,6 +4178,9 @@
       "package_names_for_job_template: Action must be one of %s": [
         "package_names_for_job_template: 操作必须是 %s 中的一个"
       ],
+      "deb_names_for_job_template: Action must be one of %s": [
+        ""
+      ],
       "Cannot delete the last Location.": [
         "无法删除最后一个位置。"
       ],
@@ -5360,8 +5360,8 @@
       "Activation keys and subscriptions can be managed": [
         "可管理激的活密钥和订阅"
       ],
-      "here": [
-        "这里"
+      "here.": [
+        ""
       ],
       "Reload data": [
         "重新载入数据"
@@ -5750,12 +5750,6 @@
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         "智能代理同步默认下载策略（'inherit'、immediate' 或'on_demand'）"
       ],
-      "Pulp export destination filepath": [
-        "Pulp 导出目的地文件路径"
-      ],
-      "On-disk location for exported repositories": [
-        "导入仓库的磁盘位置"
-      ],
       "Pulp 3 export destination filepath": [
         "Pulp 3 导出目的地文件路径"
       ],
@@ -5971,6 +5965,12 @@
       ],
       "Resolve traces via Katello interface": [
         "通过 Katello 接口重启服务"
+      ],
+      "Katello: Configure host for new content source": [
+        ""
+      ],
+      "Replace content source on the target machine": [
+        ""
       ],
       "Katello: Module Stream Actions": [
         "Katello：模块流操作"
@@ -6398,6 +6398,60 @@
       "Repository sets": [
         "仓库集"
       ],
+      "Install via remote execution": [
+        "通过远程执行安装"
+      ],
+      "Install via customized remote execution": [
+        "通过自定义远程执行安装"
+      ],
+      "No packages available to install": [
+        "没有可安装的软件包"
+      ],
+      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+        ""
+      ],
+      "No matching packages found": [
+        "没有找到匹配的软件包组"
+      ],
+      "Version": [
+        "版本"
+      ],
+      "Install packages": [
+        "安装软件包"
+      ],
+      "Select packages to install to the host {hostName}.": [
+        "选择安装到主机 {hostName} 的软件包。"
+      ],
+      "Search available Debian packages": [
+        ""
+      ],
+      "This host does not have any packages.": [
+        "该主机没有任何软件包。"
+      ],
+      "Packages will appear here when available.": [
+        "当软件包可用时，将在此处显示。"
+      ],
+      "Problem searching packages": [
+        "搜索软件包有问题"
+      ],
+      "Installed version": [
+        "安装的版本"
+      ],
+      "Upgradable to": [
+        "可升级到"
+      ],
+      "A remote execution job is in progress.": [
+        "远程执行作业正在进行中。"
+      ],
+      "Upgrade via remote execution": [
+        "通过远程执行升级"
+      ],
+      "Upgrade via customized remote execution": [
+        "通过自定义远程执行升级"
+      ],
+      "Upgrade": [
+        "升级"
+      ],
       "No matching errata found": [
         "未找到匹配的勘误"
       ],
@@ -6533,62 +6587,11 @@
       "Uninstall and reset": [
         "卸载和重置"
       ],
-      "Install via remote execution": [
-        "通过远程执行安装"
-      ],
-      "Install via customized remote execution": [
-        "通过自定义远程执行安装"
-      ],
-      "No packages available to install": [
-        "没有可安装的软件包"
-      ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
-        ""
-      ],
-      "No matching packages found": [
-        "没有找到匹配的软件包组"
-      ],
-      "Version": [
-        "版本"
-      ],
-      "Install packages": [
-        "安装软件包"
-      ],
-      "Select packages to install to the host {hostName}.": [
-        "选择安装到主机 {hostName} 的软件包。"
-      ],
       "Search available packages": [
         "搜索可用的软件包"
       ],
-      "This host does not have any packages.": [
-        "该主机没有任何软件包。"
-      ],
-      "Packages will appear here when available.": [
-        "当软件包可用时，将在此处显示。"
-      ],
-      "Problem searching packages": [
-        "搜索软件包有问题"
-      ],
-      "Installed version": [
-        "安装的版本"
-      ],
-      "Upgradable to": [
-        "可升级到"
-      ],
-      "A remote execution job is in progress.": [
-        "远程执行作业正在进行中。"
-      ],
-      "Upgrade via remote execution": [
-        "通过远程执行升级"
-      ],
-      "Upgrade via customized remote execution": [
-        "通过自定义远程执行升级"
-      ],
       "Refresh package applicability": [
         ""
-      ],
-      "Upgrade": [
-        "升级"
       ],
       "Repository set enabled": [
         "启用的仓库集"
@@ -6770,11 +6773,17 @@
       "Restart via customized remote execution": [
         "通过自定义远程执行重启"
       ],
+      "Reboot host": [
+        ""
+      ],
       "Restart app": [
         "重启应用"
       ],
       "Tracer helps administrators identify applications that need to be restarted after a system is patched.": [
         "跟踪器可帮助管理员识别修补系统后需要重新启动的应用程序。"
+      ],
+      "At least one of the selected items requires the host to reboot": [
+        ""
       ],
       "Traces that require logout cannot be restarted remotely": [
         "需要登出的跟踪无法远程重启"
@@ -8918,20 +8927,11 @@
       "Abstract": [
         "摘要"
       ],
-      "Action with sub plans": [
-        "有子计划的操作"
-      ],
       "Auto attach subscriptions": [
         "自动附加订阅"
       ],
-      "Check for long running tasks": [
-        ""
-      ],
       "Copy version units to library": [
         "将版本单位复制到库"
-      ],
-      "Deliver notifications about long running tasks": [
-        ""
       ],
       "Discover": [
         "发现"
@@ -8950,12 +8950,6 @@
       ],
       "Hypervisors": [
         "Hypervisor"
-      ],
-      "Import Puppet classes": [
-        "导入 Puppet 类"
-      ],
-      "Import facts": [
-        "导入事实"
       ],
       "Incremental Update of  Content View Version(s) ": [
         "内容视图版本的增量更新"
@@ -8978,9 +8972,6 @@
       "Reindex subscriptions": [
         "重新索引订阅"
       ],
-      "Remote action:": [
-        "远程操作："
-      ],
       "Sync capsule": [
         "同步 capsule"
       ],
@@ -9002,17 +8993,29 @@
       "Verify checksum": [
         "验证校验和"
       ],
-      "No hosts have been specified.": [
-        "没有指定主机。"
+      "Action with sub plans": [
+        "有子计划的操作"
       ],
-      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
-        "因为已包含在已发布的“内容视图”中，因此无法删除仓库。在尝试删除它之前，删除包含该仓库的所有内容视图版本。"
+      "Import Puppet classes": [
+        "导入 Puppet 类"
       ],
-      "source URL is malformed": [
-        "来源 URL 格式错误"
+      "Import facts": [
+        "导入事实"
       ],
-      "temporarily override feed URL for sync": [
-        "临时覆盖 feed 网址以进行同步"
+      "Lifecycle environment for the host.": [
+        "主机的生命周期环境。"
+      ],
+      "On-disk location for exported repositories": [
+        "导入仓库的磁盘位置"
+      ],
+      "Pulp export destination filepath": [
+        "Pulp 导出目的地文件路径"
+      ],
+      "Remote action:": [
+        "远程操作："
+      ],
+      "here": [
+        "这里"
       ]
     }
   }
