@@ -326,11 +326,21 @@ module Katello
       end
 
       def import_module_streams(module_streams)
+        # create_or_find_by avoids race conditions during concurrent registrations but clogs postgres logs with harmless errors.
+        # So we'll use create_or_find_by! during registration and first_or_create! otherwise.
+        registered_time = subscription_facet&.registered_at
+        use_create_or_find_by = registered_time.nil? || registered_time > 1.minute.ago
         streams = {}
         module_streams.each do |module_stream|
-          stream = AvailableModuleStream.create_or_find_by!(name: module_stream["name"],
-                                               context: module_stream["context"],
-                                               stream: module_stream["stream"])
+          if use_create_or_find_by
+            stream = AvailableModuleStream.create_or_find_by!(name: module_stream["name"],
+                                                context: module_stream["context"],
+                                                stream: module_stream["stream"])
+          else
+            stream = AvailableModuleStream.where(name: module_stream["name"],
+            context: module_stream["context"],
+            stream: module_stream["stream"]).first_or_create!
+          end
           streams[stream.id] = module_stream
         end
         sync_available_module_stream_associations(streams)
