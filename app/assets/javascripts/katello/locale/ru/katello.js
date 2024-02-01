@@ -1361,6 +1361,12 @@
       "ID of the host": [
         "Идентификатор узла"
       ],
+      "Also include the latest upgradable package version for each host package": [
+        ""
+      ],
+      "Return only packages of a particular status (upgradable or up-to-date)": [
+        ""
+      ],
       "Errata to exclusively include in the action": [
         ""
       ],
@@ -1438,12 +1444,6 @@
       ],
       "List packages installed on the host": [
         "Возвращает список установленных на узле пакетов"
-      ],
-      "Also include the latest upgradable package version for each host package": [
-        ""
-      ],
-      "Return only packages of a particular status (upgradable or up-to-date)": [
-        ""
       ],
       "Couldn't find host with host id '%s'": [
         "Узел с идентификатором «%s» не найден"
@@ -2745,9 +2745,6 @@
         ""
       ],
       "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.": [
-        ""
-      ],
-      "Lifecycle environment for the host.": [
         ""
       ],
       "Clear any previous registration and run subscription-manager with --force.": [
@@ -4181,6 +4178,9 @@
       "package_names_for_job_template: Action must be one of %s": [
         ""
       ],
+      "deb_names_for_job_template: Action must be one of %s": [
+        ""
+      ],
       "Cannot delete the last Location.": [
         ""
       ],
@@ -5361,8 +5361,8 @@
       "Activation keys and subscriptions can be managed": [
         "Управление ключами активации и подписками: "
       ],
-      "here": [
-        "здесь"
+      "here.": [
+        ""
       ],
       "Reload data": [
         "Перезагрузить"
@@ -5752,12 +5752,6 @@
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         ""
       ],
-      "Pulp export destination filepath": [
-        ""
-      ],
-      "On-disk location for exported repositories": [
-        "Расположение экспортируемых репозиториев на диске"
-      ],
       "Pulp 3 export destination filepath": [
         ""
       ],
@@ -5972,6 +5966,12 @@
         ""
       ],
       "Resolve traces via Katello interface": [
+        ""
+      ],
+      "Katello: Configure host for new content source": [
+        ""
+      ],
+      "Replace content source on the target machine": [
         ""
       ],
       "Katello: Module Stream Actions": [
@@ -6400,6 +6400,60 @@
       "Repository sets": [
         ""
       ],
+      "Install via remote execution": [
+        ""
+      ],
+      "Install via customized remote execution": [
+        ""
+      ],
+      "No packages available to install": [
+        ""
+      ],
+      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+        ""
+      ],
+      "No matching packages found": [
+        ""
+      ],
+      "Version": [
+        "Версия"
+      ],
+      "Install packages": [
+        ""
+      ],
+      "Select packages to install to the host {hostName}.": [
+        ""
+      ],
+      "Search available Debian packages": [
+        ""
+      ],
+      "This host does not have any packages.": [
+        ""
+      ],
+      "Packages will appear here when available.": [
+        ""
+      ],
+      "Problem searching packages": [
+        ""
+      ],
+      "Installed version": [
+        ""
+      ],
+      "Upgradable to": [
+        ""
+      ],
+      "A remote execution job is in progress.": [
+        ""
+      ],
+      "Upgrade via remote execution": [
+        ""
+      ],
+      "Upgrade via customized remote execution": [
+        ""
+      ],
+      "Upgrade": [
+        ""
+      ],
       "No matching errata found": [
         ""
       ],
@@ -6535,61 +6589,10 @@
       "Uninstall and reset": [
         ""
       ],
-      "Install via remote execution": [
-        ""
-      ],
-      "Install via customized remote execution": [
-        ""
-      ],
-      "No packages available to install": [
-        ""
-      ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
-        ""
-      ],
-      "No matching packages found": [
-        ""
-      ],
-      "Version": [
-        "Версия"
-      ],
-      "Install packages": [
-        ""
-      ],
-      "Select packages to install to the host {hostName}.": [
-        ""
-      ],
       "Search available packages": [
         ""
       ],
-      "This host does not have any packages.": [
-        ""
-      ],
-      "Packages will appear here when available.": [
-        ""
-      ],
-      "Problem searching packages": [
-        ""
-      ],
-      "Installed version": [
-        ""
-      ],
-      "Upgradable to": [
-        ""
-      ],
-      "A remote execution job is in progress.": [
-        ""
-      ],
-      "Upgrade via remote execution": [
-        ""
-      ],
-      "Upgrade via customized remote execution": [
-        ""
-      ],
       "Refresh package applicability": [
-        ""
-      ],
-      "Upgrade": [
         ""
       ],
       "Repository set enabled": [
@@ -6772,10 +6775,16 @@
       "Restart via customized remote execution": [
         ""
       ],
+      "Reboot host": [
+        ""
+      ],
       "Restart app": [
         ""
       ],
       "Tracer helps administrators identify applications that need to be restarted after a system is patched.": [
+        ""
+      ],
+      "At least one of the selected items requires the host to reboot": [
         ""
       ],
       "Traces that require logout cannot be restarted remotely": [
@@ -8920,19 +8929,10 @@
       "Abstract": [
         ""
       ],
-      "Action with sub plans": [
-        "Действия с подпланами"
-      ],
       "Auto attach subscriptions": [
         "Выбрать подписки автоматически"
       ],
-      "Check for long running tasks": [
-        ""
-      ],
       "Copy version units to library": [
-        ""
-      ],
-      "Deliver notifications about long running tasks": [
         ""
       ],
       "Discover": [
@@ -8952,12 +8952,6 @@
       ],
       "Hypervisors": [
         "Гипервизоры"
-      ],
-      "Import Puppet classes": [
-        "Импорт классов Puppet"
-      ],
-      "Import facts": [
-        "Импорт фактов"
       ],
       "Incremental Update of  Content View Version(s) ": [
         ""
@@ -8980,9 +8974,6 @@
       "Reindex subscriptions": [
         "Повторно индексировать подписки"
       ],
-      "Remote action:": [
-        "Удаленное действие:"
-      ],
       "Sync capsule": [
         ""
       ],
@@ -9004,17 +8995,23 @@
       "Verify checksum": [
         ""
       ],
-      "No hosts have been specified.": [
-        "Не задан ни один узел."
+      "Action with sub plans": [
+        "Действия с подпланами"
       ],
-      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
-        "#~ \"Репозиторий не может быть удален, так как он включен в опубликованное представ\"#~ \"ление. Удалите все версии представления, содержащие репозиторий, и повторите п\"#~ \"опытку.\""
+      "Import Puppet classes": [
+        "Импорт классов Puppet"
       ],
-      "source URL is malformed": [
-        "URL-адрес источника синхронизации неверно сформирован"
+      "Import facts": [
+        "Импорт фактов"
       ],
-      "temporarily override feed URL for sync": [
-        "временно переопределить URL-адрес источника синхронизации"
+      "On-disk location for exported repositories": [
+        "Расположение экспортируемых репозиториев на диске"
+      ],
+      "Remote action:": [
+        "Удаленное действие:"
+      ],
+      "here": [
+        "здесь"
       ]
     }
   }

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: katello 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-09 20:09+0000\n"
-"PO-Revision-Date: 2024-01-09 20:09+0000\n"
+"POT-Creation-Date: 2024-02-01 15:14+0000\n"
+"PO-Revision-Date: 2024-02-01 15:14+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -58,45 +58,45 @@ msgstr ""
 msgid "Deleted consumer '%s'"
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:263
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:264
 msgid "Facts successfully updated."
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:326
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:327
 msgid "Registering to multiple environments is not enabled."
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:337
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:338
 msgid ""
 "User '%s' did not specify an organization ID and does not have a default organ"
 "ization."
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:361
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:362
 msgid "Couldn't find Organization '%s'."
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:366
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:367
 msgid "User '%{user}' does not belong to Organization '%{organization}'."
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:385
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:386
 msgid "Organization not found"
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:389
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:390
 msgid "Couldn't find activation key '%s'"
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:392
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:393
 msgid "Max Hosts (%{limit}) reached for activation key '%{name}'"
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:401
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:402
 msgid "At least one activation key must be provided"
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:410
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:411
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:269
 msgid "Couldn't find environment '%s'"
 msgstr ""
@@ -1822,7 +1822,7 @@ msgid ""
 " 'content_view_version' is supported."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/debs_controller.rb:107
+#: ../app/controllers/katello/api/v2/debs_controller.rb:111
 #: ../app/controllers/katello/api/v2/errata_controller.rb:73
 #: ../app/controllers/katello/api/v2/packages_controller.rb:102
 msgid "Could not find a host with id %s"
@@ -2187,6 +2187,16 @@ msgstr ""
 msgid "ID of the host"
 msgstr ""
 
+#: ../app/controllers/katello/api/v2/host_debs_controller.rb:14
+#: ../app/controllers/katello/api/v2/host_packages_controller.rb:26
+msgid "Also include the latest upgradable package version for each host package"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/host_debs_controller.rb:15
+#: ../app/controllers/katello/api/v2/host_packages_controller.rb:27
+msgid "Return only packages of a particular status (upgradable or up-to-date)"
+msgstr ""
+
 #: ../app/controllers/katello/api/v2/host_errata_controller.rb:28
 msgid "Errata to exclusively include in the action"
 msgstr ""
@@ -2297,14 +2307,6 @@ msgstr ""
 
 #: ../app/controllers/katello/api/v2/host_packages_controller.rb:24
 msgid "List packages installed on the host"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/host_packages_controller.rb:26
-msgid "Also include the latest upgradable package version for each host package"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/host_packages_controller.rb:27
-msgid "Return only packages of a particular status (upgradable or up-to-date)"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/host_packages_controller.rb:57
@@ -4278,21 +4280,16 @@ msgstr ""
 
 #:
 #: ../app/controllers/katello/concerns/api/v2/registration_commands_controller_extensions.rb:32
-msgid "Lifecycle environment for the host."
-msgstr ""
-
-#:
-#: ../app/controllers/katello/concerns/api/v2/registration_commands_controller_extensions.rb:33
 msgid "Clear any previous registration and run subscription-manager with --force."
 msgstr ""
 
 #:
-#: ../app/controllers/katello/concerns/api/v2/registration_commands_controller_extensions.rb:34
+#: ../app/controllers/katello/concerns/api/v2/registration_commands_controller_extensions.rb:33
 msgid "Ignore subscription-manager errors for `subscription-manager register` command"
 msgstr ""
 
 #:
-#: ../app/controllers/katello/concerns/api/v2/registration_commands_controller_extensions.rb:54
+#: ../app/controllers/katello/concerns/api/v2/registration_commands_controller_extensions.rb:53
 msgid "Missing activation key!"
 msgstr ""
 
@@ -4304,12 +4301,12 @@ msgid ""
 msgstr ""
 
 #:
-#: ../app/controllers/katello/concerns/api/v2/registration_controller_extensions.rb:39
+#: ../app/controllers/katello/concerns/api/v2/registration_controller_extensions.rb:40
 msgid "Smart proxy content source not found!"
 msgstr ""
 
 #:
-#: ../app/controllers/katello/concerns/api/v2/registration_controller_extensions.rb:40
+#: ../app/controllers/katello/concerns/api/v2/registration_controller_extensions.rb:41
 msgid "Pulp 3 is not enabled on Smart proxy!"
 msgstr ""
 
@@ -4423,8 +4420,10 @@ msgstr ""
 
 #:
 #: ../app/controllers/katello/concerns/api/v2/repository_content_controller.rb:269
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:93
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:169
 #: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:93
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:169
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:176
 msgid "Package"
 msgstr ""
 
@@ -4683,7 +4682,8 @@ msgstr ""
 #: ../app/lib/actions/katello/activation_key/create.rb:21
 #: ../app/lib/actions/katello/content_view/create.rb:10
 #: ../app/lib/actions/katello/repository/create.rb:60
-#: ../app/lib/actions/katello/repository/create_root.rb:17 action_names.rb:15
+#: ../app/lib/actions/katello/repository/create_root.rb:17 action_names.rb:13
+#: action_names.rb:14 action_names.rb:15
 msgid "Create"
 msgstr ""
 
@@ -4692,17 +4692,17 @@ msgid "Delete Activation Key"
 msgstr ""
 
 #: ../app/lib/actions/katello/alternate_content_source/create.rb:27
-#: action_names.rb:11
+#: action_names.rb:9
 msgid "Create Alternate Content Source"
 msgstr ""
 
 #: ../app/lib/actions/katello/alternate_content_source/destroy.rb:21
-#: action_names.rb:21
+#: action_names.rb:22
 msgid "Destroy Alternate Content Source"
 msgstr ""
 
 #: ../app/lib/actions/katello/alternate_content_source/refresh.rb:20
-#: action_names.rb:56
+#: action_names.rb:57
 msgid "Refresh Alternate Content Source"
 msgstr ""
 
@@ -4712,7 +4712,7 @@ msgid "Update Alternate Content Source"
 msgstr ""
 
 #: ../app/lib/actions/katello/applicability/host/generate.rb:22
-#: action_names.rb:33
+#: action_names.rb:36
 msgid "Generate host applicability"
 msgstr ""
 
@@ -4727,12 +4727,12 @@ msgid "Bulk generate applicability for host %s"
 msgstr ""
 
 #: ../app/lib/actions/katello/applicability/hosts/bulk_generate.rb:48
-#: action_names.rb:7
+#: action_names.rb:6
 msgid "Bulk generate applicability for hosts"
 msgstr ""
 
 #: ../app/lib/actions/katello/applicability/repository/regenerate.rb:25
-#: action_names.rb:34
+#: action_names.rb:37
 msgid "Generate repository applicability"
 msgstr ""
 
@@ -4779,7 +4779,7 @@ msgstr ""
 #: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:205
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/DeleteDialog.js:27
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:92
-#: action_names.rb:19
+#: action_names.rb:19 action_names.rb:20 action_names.rb:21
 msgid "Delete"
 msgstr ""
 
@@ -4845,7 +4845,7 @@ msgid "Cannot promote environment out of sequence. Use force to bypass restricti
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view/promote_to_environment.rb:40
-#: action_names.rb:53
+#: action_names.rb:54
 msgid "Promotion to Environment"
 msgstr ""
 
@@ -4864,7 +4864,7 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Publish/PublishContentViewWizard.js:38
 #: ../webpack/scenes/ContentViews/Publish/PublishContentViewWizard.js:110
 #: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:91
-#: action_names.rb:55
+#: action_names.rb:56
 msgid "Publish"
 msgstr ""
 
@@ -4914,27 +4914,27 @@ msgid "Create Repositories"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/export.rb:31
-#: action_names.rb:30
+#: action_names.rb:32 action_names.rb:33
 msgid "Export"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/import.rb:56
-#: action_names.rb:37
+#: action_names.rb:40
 msgid "Import Content View Version"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/import_library.rb:13
-#: action_names.rb:38
+#: action_names.rb:41
 msgid "Import Default Content View"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/import_repository.rb:16
-#: action_names.rb:40
+#: action_names.rb:42
 msgid "Import Repository"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/incremental_update.rb:15
-#: action_names.rb:44
+#: action_names.rb:45
 msgid "Incremental Update"
 msgstr ""
 
@@ -4970,7 +4970,7 @@ msgid "Delete Lifecycle Environment"
 msgstr ""
 
 #: ../app/lib/actions/katello/environment/publish_repositories.rb:34
-#: action_names.rb:54
+#: action_names.rb:55
 msgid "Publish Lifecycle Environment Repositories"
 msgstr ""
 
@@ -4993,7 +4993,7 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/attach_subscriptions.rb:49 action_names.rb:5
+#: ../app/lib/actions/katello/host/attach_subscriptions.rb:49 action_names.rb:4
 msgid "Attach subscriptions"
 msgstr ""
 
@@ -5001,7 +5001,7 @@ msgstr ""
 msgid "Destroy Content Host %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/destroy.rb:32 action_names.rb:22
+#: ../app/lib/actions/katello/host/destroy.rb:32 action_names.rb:23
 msgid "Destroy Content Host"
 msgstr ""
 
@@ -5074,7 +5074,7 @@ msgid "Updating System Purpose for host %s"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/update_system_purpose.rb:25
-#: action_names.rb:81
+#: action_names.rb:86
 msgid "Updating System Purpose for host"
 msgstr ""
 
@@ -5083,7 +5083,7 @@ msgid "Package Profile Update for %s"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/upload_package_profile.rb:21
-#: action_names.rb:50
+#: action_names.rb:51
 msgid "Package Profile Update"
 msgstr ""
 
@@ -5091,11 +5091,11 @@ msgstr ""
 msgid "Combined Profile Update for %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/upload_profiles.rb:23 action_names.rb:9
+#: ../app/lib/actions/katello/host/upload_profiles.rb:23 action_names.rb:7
 msgid "Combined Profile Update"
 msgstr ""
 
-#: ../app/lib/actions/katello/organization/destroy.rb:30 action_names.rb:23
+#: ../app/lib/actions/katello/organization/destroy.rb:30 action_names.rb:24
 msgid "Destroy"
 msgstr ""
 
@@ -5135,7 +5135,7 @@ msgstr ""
 msgid "Cannot delete redhat product content"
 msgstr ""
 
-#: ../app/lib/actions/katello/product/create.rb:37 action_names.rb:51
+#: ../app/lib/actions/katello/product/create.rb:37 action_names.rb:52
 msgid "Product Create"
 msgstr ""
 
@@ -5193,7 +5193,8 @@ msgid ""
 msgstr ""
 
 #: ../app/lib/actions/katello/repository/import_upload.rb:73
-#: ../app/lib/actions/katello/repository/upload_files.rb:53 action_names.rb:82
+#: ../app/lib/actions/katello/repository/upload_files.rb:53 action_names.rb:87
+#: action_names.rb:88
 msgid "Upload into"
 msgstr ""
 
@@ -5245,7 +5246,7 @@ msgstr ""
 #: ../webpack/components/extensions/HostDetails/Tabs/ModuleStreamsTab/ModuleStreamsTab.js:470
 #: ../webpack/components/extensions/HostDetails/Tabs/ModuleStreamsTab/ModuleStreamsTab.js:550
 #: ../webpack/scenes/RedHatRepositories/components/EnabledRepository/EnabledRepositoryContent.js:12
-#: action_names.rb:24
+#: action_names.rb:25
 msgid "Disable"
 msgstr ""
 
@@ -5257,7 +5258,7 @@ msgstr ""
 #: ../webpack/components/extensions/HostDetails/Tabs/ModuleStreamsTab/ModuleStreamsTab.js:459
 #: ../webpack/components/extensions/HostDetails/Tabs/ModuleStreamsTab/ModuleStreamsTab.js:533
 #: ../webpack/scenes/RedHatRepositories/components/RepositorySetRepository/RepositorySetRepository.js:109
-#: action_names.rb:26
+#: action_names.rb:27
 msgid "Enable"
 msgstr ""
 
@@ -5348,24 +5349,24 @@ msgid ""
 msgstr ""
 
 #: ../app/lib/actions/pulp3/content_view_version/create_export_history.rb:59
-#: action_names.rb:12
+#: action_names.rb:10
 msgid "Create Export History"
 msgstr ""
 
 #: ../app/lib/actions/pulp3/content_view_version/create_import_history.rb:28
-#: action_names.rb:13
+#: action_names.rb:11
 msgid "Create Import History"
 msgstr ""
 
 #:
 #: ../app/lib/actions/pulp3/content_view_version/create_syncable_export_history.rb:44
-#: action_names.rb:14
+#: action_names.rb:12
 msgid "Create Syncable Export History"
 msgstr ""
 
 #:
 #: ../app/lib/actions/pulp3/orchestration/content_view_version/export_library.rb:39
-#: action_names.rb:28
+#: action_names.rb:30
 msgid "Export Library"
 msgstr ""
 
@@ -5380,7 +5381,7 @@ msgstr ""
 
 #:
 #: ../app/lib/actions/pulp3/orchestration/content_view_version/export_repository.rb:35
-#: action_names.rb:29
+#: action_names.rb:31
 msgid "Export Repository"
 msgstr ""
 
@@ -5407,7 +5408,7 @@ msgid ""
 msgstr ""
 
 #: ../app/lib/actions/pulp3/orchestration/content_view_version/import.rb:54
-#: action_names.rb:42
+#: action_names.rb:43
 msgid "Import"
 msgstr ""
 
@@ -6527,16 +6528,20 @@ msgstr ""
 msgid "Refresh_Content_Host_Status"
 msgstr ""
 
-#: ../app/models/katello/concerns/host_managed_extensions.rb:220
+#: ../app/models/katello/concerns/host_managed_extensions.rb:222
 msgid "Refresh Content Host Statuses for %s"
 msgstr ""
 
-#: ../app/models/katello/concerns/host_managed_extensions.rb:235
+#: ../app/models/katello/concerns/host_managed_extensions.rb:240
 msgid "Mark Content Host Statuses as Unknown for %s"
 msgstr ""
 
-#: ../app/models/katello/concerns/host_managed_extensions.rb:564
+#: ../app/models/katello/concerns/host_managed_extensions.rb:576
 msgid "package_names_for_job_template: Action must be one of %s"
+msgstr ""
+
+#: ../app/models/katello/concerns/host_managed_extensions.rb:594
+msgid "deb_names_for_job_template: Action must be one of %s"
 msgstr ""
 
 #: ../app/models/katello/concerns/location_extensions.rb:34
@@ -6830,7 +6835,8 @@ msgid "Security"
 msgstr ""
 
 #: ../app/models/katello/content_view_filter.rb:12 ../lib/katello/plugin.rb:137
-#: ../webpack/components/extensions/HostDetails/Tabs/ContentTab/constants.js:6
+#: ../webpack/components/extensions/HostDetails/Tabs/ContentTab/constants.js:8
+#: ../webpack/components/extensions/HostDetails/Tabs/ContentTab/constants.js:9
 #: ../webpack/components/extensions/HostDetails/Tabs/ErrataTab/ErratumExpansionContents.js:26
 #: ../webpack/scenes/ContentViews/Details/Versions/ContentViewVersions.js:101
 #: ../webpack/scenes/SmartProxy/ExpandedSmartProxyRepositories.js:35
@@ -6857,7 +6863,7 @@ msgstr ""
 #: ../app/views/dashboard/_errata_widget.html.erb:16
 #: ../lib/katello/plugin.rb:147
 #: ../webpack/components/extensions/HostDetails/Cards/ErrataOverviewCard.js:120
-#: ../webpack/components/extensions/HostDetails/Tabs/ContentTab/constants.js:7
+#: ../webpack/components/extensions/HostDetails/Tabs/ContentTab/constants.js:10
 #: ../webpack/components/extensions/HostDetails/Tabs/ErrataTab/ErrataTab.js:157
 #: ../webpack/scenes/ContentViews/Details/Filters/CVErrataIDFilterContent.js:257
 #: ../webpack/scenes/ContentViews/Details/Filters/ContentType.js:14
@@ -7035,27 +7041,27 @@ msgstr ""
 msgid "Subscription was not persisted - %{error_message}"
 msgstr ""
 
-#: ../app/models/katello/host/content_facet.rb:87
+#: ../app/models/katello/host/content_facet.rb:90
 msgid ""
 "Content facet for host %s has more than one content view. Use #content_views i"
 "nstead."
 msgstr ""
 
-#: ../app/models/katello/host/content_facet.rb:94
+#: ../app/models/katello/host/content_facet.rb:97
 msgid ""
 "Content facet for host %s has more than one lifecycle environment. Use #lifecy"
 "cle_environments instead."
 msgstr ""
 
-#: ../app/models/katello/host/content_facet.rb:108
+#: ../app/models/katello/host/content_facet.rb:111
 msgid "Lifecycle environment must be specified"
 msgstr ""
 
-#: ../app/models/katello/host/content_facet.rb:112
+#: ../app/models/katello/host/content_facet.rb:115
 msgid "Content view must be specified"
 msgstr ""
 
-#: ../app/models/katello/host/content_facet.rb:120
+#: ../app/models/katello/host/content_facet.rb:123
 msgid "Unable to create ContentViewEnvironment. Check the logs for more information."
 msgstr ""
 
@@ -7872,9 +7878,11 @@ msgstr ""
 
 #: ../app/views/dashboard/_content_views_widget.html.erb:17
 #: ../app/views/dashboard/_sync_widget.html.erb:18
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:130
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:170
 #: ../webpack/components/extensions/HostDetails/Tabs/ModuleStreamsTab/ModuleStreamsTab.js:242
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:125
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:170
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:132
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:177
 #: ../webpack/components/extensions/HostDetails/Tabs/RepositorySetsTab/RepositorySetsTab.js:185
 #: ../webpack/components/extensions/HostDetails/Tabs/RepositorySetsTab/RepositorySetsTab.js:237
 #: ../webpack/components/extensions/about/SystemStatuses.js:24
@@ -7908,7 +7916,7 @@ msgstr ""
 #: ../app/views/katello/subscription_mailer/subscription_expiry.text.erb:7
 #: ../webpack/components/extensions/HostDetails/Tabs/ErrataTab/ErrataTab.js:72
 #: ../webpack/components/extensions/HostDetails/Tabs/ErrataTab/ErrataTab.js:158
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:56
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:58
 #: ../webpack/scenes/AlternateContentSources/Details/ACSExpandableDetails.js:153
 #: ../webpack/scenes/AlternateContentSources/MainTable/ACSTable.js:238
 #: ../webpack/scenes/Content/Table/ContentTable.js:51
@@ -8111,6 +8119,7 @@ msgid "Finished"
 msgstr ""
 
 #: ../app/views/foreman/job_templates/install_errata_by_search_query.erb:4
+#: ../app/views/foreman/job_templates/install_errata_by_search_query_-_katello_ansible_default.erb:4
 msgid "No errata matching given search query"
 msgstr ""
 
@@ -8649,10 +8658,10 @@ msgid "Activation keys and subscriptions can be managed"
 msgstr ""
 
 #: ../app/views/overrides/activation_keys/_host_tab_pane.html.erb:24
-msgid "here"
+msgid "here."
 msgstr ""
 
-#: ../app/views/overrides/activation_keys/_host_tab_pane.html.erb:27
+#: ../app/views/overrides/activation_keys/_host_tab_pane.html.erb:29
 msgid "Reload data"
 msgstr ""
 
@@ -9263,346 +9272,346 @@ msgid ""
 msgstr ""
 
 #: ../lib/katello/plugin.rb:529
-msgid "Pulp export destination filepath"
-msgstr ""
-
-#: ../lib/katello/plugin.rb:530
-msgid "On-disk location for exported repositories"
-msgstr ""
-
-#: ../lib/katello/plugin.rb:535
 msgid "Pulp 3 export destination filepath"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:536
+#: ../lib/katello/plugin.rb:530
 msgid "On-disk location for pulp 3 exported repositories"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:541
+#: ../lib/katello/plugin.rb:535
 msgid "Default export format"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:542
+#: ../lib/katello/plugin.rb:536
 msgid "Default export format for content-exports(either 'syncable' or 'importable')"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:548
+#: ../lib/katello/plugin.rb:542
 msgid "Sync Total Timeout"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:549
+#: ../lib/katello/plugin.rb:543
 msgid ""
 "The maximum number of second that Pulp can take to do a single sync operation,"
 " e.g., download a single metadata file."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:554
+#: ../lib/katello/plugin.rb:548
 msgid "Sync Connect Timeout"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:555
+#: ../lib/katello/plugin.rb:549
 msgid ""
 "The maximum number of seconds for Pulp to establish a new connection or for wa"
 "iting for a free connection from a pool if pool connection limits are exceeded"
 "."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:560
+#: ../lib/katello/plugin.rb:554
 msgid "Sync Sock Connect Timeout"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:561
+#: ../lib/katello/plugin.rb:555
 msgid ""
 "The maximum number of seconds for Pulp to connect to a peer for a new connecti"
 "on not given from a pool."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:566
+#: ../lib/katello/plugin.rb:560
 msgid "Sync Sock Read Timeout"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:567
+#: ../lib/katello/plugin.rb:561
 msgid ""
 "The maximum number of seconds that Pulp can take to download a file, not count"
 "ing connection time."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:572
+#: ../lib/katello/plugin.rb:566
 msgid "Delete Host upon unregister"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:573
+#: ../lib/katello/plugin.rb:567
 msgid ""
 "When unregistering a host via subscription-manager, also delete the host recor"
 "d. Managed resources linked to host such as virtual machines and DNS records m"
 "ay also be deleted."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:578
+#: ../lib/katello/plugin.rb:572
 msgid "Subscription manager name registration fact"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:579
+#: ../lib/katello/plugin.rb:573
 msgid ""
 "When registering a host via subscription-manager, force use the specified fact"
 " (in the form of 'fact.fact')"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:584
+#: ../lib/katello/plugin.rb:578
 msgid "Subscription manager name registration fact strict matching"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:585
+#: ../lib/katello/plugin.rb:579
 msgid ""
 "If this is enabled, and register_hostname_fact is set and provided, registrati"
 "on will look for a new host by name only using that fact, and will skip all ho"
 "stname matching"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:590
+#: ../lib/katello/plugin.rb:584
 msgid "Default location for subscribed hosts"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:591
+#: ../lib/katello/plugin.rb:585
 msgid "Default Location where new subscribed hosts will put upon registration"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:597
+#: ../lib/katello/plugin.rb:591
 msgid "Expire soon days"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:598
+#: ../lib/katello/plugin.rb:592
 msgid ""
 "The number of days remaining in a subscription before you will be reminded abo"
 "ut renewing it."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:603
+#: ../lib/katello/plugin.rb:597
 msgid "Host Duplicate DMI UUIDs"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:604
+#: ../lib/katello/plugin.rb:598
 msgid ""
 "If hosts fail to register because of duplicate DMI UUIDs, add their comma-sepa"
 "rated values here. Subsequent registrations will generate a unique DMI UUID fo"
 "r the affected hosts."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:609
+#: ../lib/katello/plugin.rb:603
 msgid "Host Profile Assume"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:610
+#: ../lib/katello/plugin.rb:604
 msgid ""
 "Allow new host registrations to assume registered profiles with matching hostn"
 "ame as long as the registering DMI UUID is not used by another host."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:615
+#: ../lib/katello/plugin.rb:609
 msgid "Host Profile Can Change In Build"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:616
+#: ../lib/katello/plugin.rb:610
 msgid ""
 "Allow host registrations to bypass 'Host Profile Assume' as long as the host i"
 "s in build mode."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:621
+#: ../lib/katello/plugin.rb:615
 msgid "Host Can Re-Register Only In Build"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:622
+#: ../lib/katello/plugin.rb:616
 msgid "Allow hosts to re-register themselves only when they are in build mode"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:627
+#: ../lib/katello/plugin.rb:621
 msgid "Host Tasks Workers Pool Size"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:628
+#: ../lib/katello/plugin.rb:622
 msgid ""
 "Amount of workers in the pool to handle the execution of host-related tasks. W"
 "hen set to 0, the default queue will be used instead. Restart of the dynflowd/"
 "foreman-tasks service is required."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:633
+#: ../lib/katello/plugin.rb:627
 msgid "Applicability Batch Size"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:634
+#: ../lib/katello/plugin.rb:628
 msgid "Number of host applicability calculations to process per task."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:639
+#: ../lib/katello/plugin.rb:633
 msgid "Pulp bulk load size"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:640
+#: ../lib/katello/plugin.rb:634
 msgid "The number of items fetched from a single paged Pulp API call."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:645
+#: ../lib/katello/plugin.rb:639
 msgid "Upload profiles without Dynflow"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:646
+#: ../lib/katello/plugin.rb:640
 msgid ""
 "Allow Katello to update host installed packages, enabled repos, and module inv"
 "entory directly instead of wrapped in Dynflow tasks (try turning off if Puma p"
 "rocesses are using too much memory)"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:651
+#: ../lib/katello/plugin.rb:645
 msgid "Orphaned Content Protection Time"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:652
+#: ../lib/katello/plugin.rb:646
 msgid ""
 "Time in minutes before content that is not contained within a repository and h"
 "as not been accessed is considered orphaned."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:657
+#: ../lib/katello/plugin.rb:651
 msgid "Prefer registered through proxy for remote execution"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:658
+#: ../lib/katello/plugin.rb:652
 msgid "Prefer using a proxy to which a host is registered when using remote execution"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:663
+#: ../lib/katello/plugin.rb:657
 msgid "Allow deleting repositories in published content views"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:664
+#: ../lib/katello/plugin.rb:658
 msgid ""
 "If this is enabled, repositories can be deleted even when they belong to publi"
 "shed content views. The deleted repository will be removed from all content vi"
 "ew versions."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:669
+#: ../lib/katello/plugin.rb:663
 msgid "Distribute archived content view versions"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:670
+#: ../lib/katello/plugin.rb:664
 msgid ""
 "If this is enabled, repositories of content view versions without environments"
 " (\"archived\") will be distributed at '/pulp/content/<organization>/content_vie"
 "ws/<content view>/X.Y/...'."
 msgstr ""
 
-#: ../lib/katello/plugin.rb:675
+#: ../lib/katello/plugin.rb:669
 msgid "Katello: Install Package"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:675
+#: ../lib/katello/plugin.rb:669
 msgid "Install package via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:676
+#: ../lib/katello/plugin.rb:670
 msgid "Katello: Install packages by search query"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:676
+#: ../lib/katello/plugin.rb:670
 msgid "Install packages via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:677
+#: ../lib/katello/plugin.rb:671
 msgid "Katello: Update Package"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:677
+#: ../lib/katello/plugin.rb:671
 msgid "Update package via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:678
+#: ../lib/katello/plugin.rb:672
 msgid "Katello: Update Packages by search query"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:678
+#: ../lib/katello/plugin.rb:672
 msgid "Update packages via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:679
+#: ../lib/katello/plugin.rb:673
 msgid "Katello: Remove Package"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:679
+#: ../lib/katello/plugin.rb:673
 msgid "Remove package via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:680
+#: ../lib/katello/plugin.rb:674
 msgid "Katello: Remove Packages by search query"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:680
+#: ../lib/katello/plugin.rb:674
 msgid "Remove packages via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:681
+#: ../lib/katello/plugin.rb:675
 msgid "Katello: Install Package Group"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:681
+#: ../lib/katello/plugin.rb:675
 msgid "Install package group via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:682
+#: ../lib/katello/plugin.rb:676
 msgid "Katello: Update Package Group"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:682
+#: ../lib/katello/plugin.rb:676
 msgid "Update package group via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:683
+#: ../lib/katello/plugin.rb:677
 msgid "Katello: Remove Package Group"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:683
+#: ../lib/katello/plugin.rb:677
 msgid "Remove package group via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:684
+#: ../lib/katello/plugin.rb:678
 msgid "Katello: Install Errata"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:684
+#: ../lib/katello/plugin.rb:678
 msgid "Install errata via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:685
+#: ../lib/katello/plugin.rb:679
 msgid "Katello: Install errata by search query"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:685
+#: ../lib/katello/plugin.rb:679
 msgid "Install errata using scoped search query"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:686
+#: ../lib/katello/plugin.rb:680
 msgid "Katello: Service Restart"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:686
+#: ../lib/katello/plugin.rb:680
 msgid "Restart Services via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:687
+#: ../lib/katello/plugin.rb:681
 msgid "Katello: Resolve Traces"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:687
+#: ../lib/katello/plugin.rb:681
 msgid "Resolve traces via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:688
+#: ../lib/katello/plugin.rb:682
+msgid "Katello: Configure host for new content source"
+msgstr ""
+
+#: ../lib/katello/plugin.rb:682
+msgid "Replace content source on the target machine"
+msgstr ""
+
+#: ../lib/katello/plugin.rb:683
 msgid "Katello: Module Stream Actions"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:689
+#: ../lib/katello/plugin.rb:684
 msgid "Perform a module stream action via Katello interface"
 msgstr ""
 
@@ -9828,10 +9837,12 @@ msgstr ""
 
 #: ../webpack/components/Table/TableWrapper.js:340
 #: ../webpack/components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsModal.js:30
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:92
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:166
 #: ../webpack/components/extensions/HostDetails/Tabs/ErrataTab/ErrataTab.js:101
 #: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:92
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:166
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:52
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:173
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:54
 #: ../webpack/scenes/AlternateContentSources/MainTable/ACSTable.js:301
 #: ../webpack/scenes/Content/Details/ContentRepositories.js:30
 #: ../webpack/scenes/Content/Table/ContentTable.js:41
@@ -10121,11 +10132,13 @@ msgstr ""
 
 #:
 #: ../webpack/components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsModal.js:124
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:362
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:504
 #: ../webpack/components/extensions/HostDetails/Tabs/ModuleStreamsTab/ModuleStreamsTab.js:145
 #: ../webpack/components/extensions/HostDetails/Tabs/ModuleStreamsTab/ModuleStreamsTab.js:514
 #: ../webpack/components/extensions/HostDetails/Tabs/ModuleStreamsTab/ModuleStreamsTab.js:616
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:387
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:537
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:394
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:544
 #: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ContentViewComponents.js:211
 #: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ContentViewComponents.js:221
 #: ../webpack/scenes/ContentViews/Details/Filters/AffectedRepositories/AffectedRepositoryTable.js:198
@@ -10370,7 +10383,7 @@ msgstr ""
 msgid "Not installed"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/ContentTab/constants.js:8
+#: ../webpack/components/extensions/HostDetails/Tabs/ContentTab/constants.js:11
 #: ../webpack/components/extensions/HostDetails/Tabs/ErrataTab/ErratumExpansionContents.js:32
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:281
 #: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionRepositoryCell.js:30
@@ -10378,8 +10391,149 @@ msgstr ""
 msgid "Module streams"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/ContentTab/constants.js:9
+#: ../webpack/components/extensions/HostDetails/Tabs/ContentTab/constants.js:12
 msgid "Repository sets"
+msgstr ""
+
+#:
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:35
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:35
+msgid "Install via remote execution"
+msgstr ""
+
+#:
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:44
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:44
+msgid "Install via customized remote execution"
+msgstr ""
+
+#:
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:89
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:89
+msgid "No packages available to install"
+msgstr ""
+
+#:
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:90
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:90
+msgid ""
+"No packages available to install on this host. Please check the host's content"
+" view and lifecycle environment."
+msgstr ""
+
+#:
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:91
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:165
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:91
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:172
+msgid "No matching packages found"
+msgstr ""
+
+#:
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:93
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:93
+#: ../webpack/scenes/Content/ContentConfig.js:23
+#: ../webpack/scenes/Content/ContentConfig.js:33
+#: ../webpack/scenes/Content/ContentConfig.js:89
+#: ../webpack/scenes/Content/ContentConfig.js:98
+#: ../webpack/scenes/Content/ContentConfig.js:152
+#: ../webpack/scenes/Content/ContentConfig.js:164
+#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewAddModal.js:98
+#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewBulkAddModal.js:67
+#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewBulkAddModal.js:94
+#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ContentViewComponents.js:67
+#: ../webpack/scenes/ContentViews/Details/Filters/CVModuleStreamFilterContent.js:65
+#: ../webpack/scenes/ContentViews/Details/Filters/Rules/Package/AddEditPackageRuleModal.js:180
+#: ../webpack/scenes/ContentViews/Details/Filters/Rules/Package/AddEditPackageRuleModal.js:196
+#: ../webpack/scenes/ContentViews/Details/Histories/ContentViewHistories.js:27
+#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ConfirmBulkDelete.js:50
+#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ReviewEnvironments.js:59
+#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ReviewEnvironments.js:95
+#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:156
+#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:165
+#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:300
+#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:309
+#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:333
+#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:340
+#: ../webpack/scenes/ContentViews/Details/Versions/ContentViewVersions.js:99
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:91
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:158
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:279
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:303
+#: ../webpack/scenes/ContentViews/Publish/CVPublishReview.js:73
+#: ../webpack/scenes/ContentViews/Publish/CVPublishReview.js:84
+#: ../webpack/scenes/ModuleStreams/Details/ModuleDetailsSchema.js:13
+#: ../webpack/scenes/ModuleStreams/ModuleStreamsTableSchema.js:41
+#: ../webpack/scenes/SmartProxy/ExpandableCvDetails.js:15
+msgid "Version"
+msgstr ""
+
+#:
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:160
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:372
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:160
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:404
+msgid "Install packages"
+msgstr ""
+
+#:
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:169
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:169
+msgid "Select packages to install to the host {hostName}."
+msgstr ""
+
+#:
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:191
+msgid "Search available Debian packages"
+msgstr ""
+
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:163
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:170
+msgid "This host does not have any packages."
+msgstr ""
+
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:164
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:171
+msgid "Packages will appear here when available."
+msgstr ""
+
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:167
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:174
+msgid "Problem searching packages"
+msgstr ""
+
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:171
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:178
+msgid "Installed version"
+msgstr ""
+
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:172
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:179
+msgid "Upgradable to"
+msgstr ""
+
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:279
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:306
+msgid "A remote execution job is in progress."
+msgstr ""
+
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:340
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:513
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:372
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:553
+msgid "Upgrade via remote execution"
+msgstr ""
+
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:349
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:518
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:381
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:558
+msgid "Upgrade via customized remote execution"
+msgstr ""
+
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:396
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:437
+msgid "Upgrade"
 msgstr ""
 
 #: ../webpack/components/extensions/HostDetails/Tabs/ErrataTab/ErrataTab.js:100
@@ -10425,7 +10579,7 @@ msgid "Published date"
 msgstr ""
 
 #: ../webpack/components/extensions/HostDetails/Tabs/ErrataTab/ErrataTab.js:250
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:248
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:256
 msgid "A remote execution job is in progress"
 msgstr ""
 
@@ -10634,7 +10788,8 @@ msgstr ""
 #: ../webpack/scenes/Subscriptions/Manifest/CdnConfigurationTab/ExportSyncForm.js:65
 #: ../webpack/scenes/Subscriptions/Manifest/CdnConfigurationTab/NetworkSyncForm.js:144
 #: ../webpack/scenes/Subscriptions/Manifest/CdnConfigurationTab/NetworkSyncForm.js:253
-#: action_names.rb:80
+#: action_names.rb:80 action_names.rb:81 action_names.rb:82 action_names.rb:83
+#: action_names.rb:84 action_names.rb:85
 msgid "Update"
 msgstr ""
 
@@ -10651,137 +10806,13 @@ msgid "Uninstall and reset"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:35
-msgid "Install via remote execution"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:44
-msgid "Install via customized remote execution"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:89
-msgid "No packages available to install"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:90
-msgid ""
-"No packages available to install on this host. Please check the host's content"
-" view and lifecycle environment."
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:91
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:165
-msgid "No matching packages found"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:93
-#: ../webpack/scenes/Content/ContentConfig.js:23
-#: ../webpack/scenes/Content/ContentConfig.js:33
-#: ../webpack/scenes/Content/ContentConfig.js:89
-#: ../webpack/scenes/Content/ContentConfig.js:98
-#: ../webpack/scenes/Content/ContentConfig.js:152
-#: ../webpack/scenes/Content/ContentConfig.js:164
-#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewAddModal.js:98
-#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewBulkAddModal.js:67
-#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewBulkAddModal.js:94
-#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ContentViewComponents.js:67
-#: ../webpack/scenes/ContentViews/Details/Filters/CVModuleStreamFilterContent.js:65
-#: ../webpack/scenes/ContentViews/Details/Filters/Rules/Package/AddEditPackageRuleModal.js:180
-#: ../webpack/scenes/ContentViews/Details/Filters/Rules/Package/AddEditPackageRuleModal.js:196
-#: ../webpack/scenes/ContentViews/Details/Histories/ContentViewHistories.js:27
-#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ConfirmBulkDelete.js:50
-#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ReviewEnvironments.js:59
-#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ReviewEnvironments.js:95
-#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:156
-#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:165
-#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:300
-#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:309
-#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:333
-#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:340
-#: ../webpack/scenes/ContentViews/Details/Versions/ContentViewVersions.js:99
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:91
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:158
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:279
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:303
-#: ../webpack/scenes/ContentViews/Publish/CVPublishReview.js:73
-#: ../webpack/scenes/ContentViews/Publish/CVPublishReview.js:84
-#: ../webpack/scenes/ModuleStreams/Details/ModuleDetailsSchema.js:13
-#: ../webpack/scenes/ModuleStreams/ModuleStreamsTableSchema.js:41
-#: ../webpack/scenes/SmartProxy/ExpandableCvDetails.js:15
-msgid "Version"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:160
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:397
-msgid "Install packages"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:169
-msgid "Select packages to install to the host {hostName}."
-msgstr ""
-
-#:
 #: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:191
 msgid "Search available packages"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:163
-msgid "This host does not have any packages."
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:164
-msgid "Packages will appear here when available."
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:167
-msgid "Problem searching packages"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:171
-msgid "Installed version"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:172
-msgid "Upgradable to"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:299
-msgid "A remote execution job is in progress."
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:365
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:546
-msgid "Upgrade via remote execution"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:374
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:551
-msgid "Upgrade via customized remote execution"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:406
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:413
 msgid "Refresh package applicability"
-msgstr ""
-
-#:
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackagesTab.js:430
-msgid "Upgrade"
 msgstr ""
 
 #:
@@ -11061,66 +11092,74 @@ msgid ""
 "er a system is patched."
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:41
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:43
 msgid "No applications to restart"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:41
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:43
 msgid "Traces not available"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:42
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:44
 msgid "Traces may be enabled by a user with the appropriate permissions."
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:43
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:45
 msgid "Traces will be shown here to a user with the appropriate permissions."
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:47
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:49
 msgid "installing or updating packages"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:49
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:51
 msgid "Traces may be listed here after {pkgLink}."
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:51
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:53
 msgid "No matching traces found"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:53
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:55
 msgid "Problem searching traces"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:55
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:57
 msgid "Application"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:57
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:59
 msgid "Helper"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:138
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:143
 msgid "Restart via remote execution"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:148
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:153
 msgid "Restart via customized remote execution"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:166
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:171
+msgid "Reboot host"
+msgstr ""
+
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:171
 msgid "Restart app"
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:194
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:199
 msgid ""
 "Tracer helps administrators identify applications that need to be restarted af"
 "ter a system is patched."
 msgstr ""
 
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:247
-#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:257
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:201
+msgid "At least one of the selected items requires the host to reboot"
+msgstr ""
+
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:255
+#: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:265
 msgid "Traces that require logout cannot be restarted remotely"
 msgstr ""
 
@@ -13023,7 +13062,7 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailsHeader.js:126
 #: ../webpack/scenes/ContentViews/Publish/CVPublishForm.js:110
 #: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:97
-#: action_names.rb:52
+#: action_names.rb:53
 msgid "Promote"
 msgstr ""
 
@@ -14787,88 +14826,64 @@ msgstr ""
 msgid "Abstract"
 msgstr ""
 
-#: action_names.rb:4
-msgid "Action with sub plans"
-msgstr ""
-
-#: action_names.rb:6
+#: action_names.rb:5
 msgid "Auto attach subscriptions"
 msgstr ""
 
 #: action_names.rb:8
-msgid "Check for long running tasks"
-msgstr ""
-
-#: action_names.rb:10
 msgid "Copy version units to library"
 msgstr ""
 
-#: action_names.rb:20
-msgid "Deliver notifications about long running tasks"
-msgstr ""
-
-#: action_names.rb:25
+#: action_names.rb:26
 msgid "Discover"
 msgstr ""
 
-#: action_names.rb:27
+#: action_names.rb:28 action_names.rb:29
 msgid "Errata mail"
 msgstr ""
 
-#: action_names.rb:31
+#: action_names.rb:34
 msgid "Fetch pxe files"
 msgstr ""
 
-#: action_names.rb:32
+#: action_names.rb:35
 msgid "Filtered index content"
 msgstr ""
 
-#: action_names.rb:35
+#: action_names.rb:38
 msgid "Hypervisors update"
 msgstr ""
 
-#: action_names.rb:36
+#: action_names.rb:39
 msgid "Hypervisors"
 msgstr ""
 
-#: action_names.rb:39
-msgid "Import Puppet classes"
-msgstr ""
-
-#: action_names.rb:41
-msgid "Import facts"
-msgstr ""
-
-#: action_names.rb:43
+#: action_names.rb:44
 msgid "Incremental Update of  Content View Version(s) "
 msgstr ""
 
-#: action_names.rb:45
+#: action_names.rb:46
 msgid "Index content"
 msgstr ""
 
-#: action_names.rb:46
+#: action_names.rb:47
 msgid "Index errata"
 msgstr ""
 
-#: action_names.rb:47
+#: action_names.rb:48
 msgid "Index module streams"
 msgstr ""
 
-#: action_names.rb:48
+#: action_names.rb:49
 msgid "Index package groups"
 msgstr ""
 
-#: action_names.rb:49
+#: action_names.rb:50
 msgid "Instance update"
 msgstr ""
 
-#: action_names.rb:57
-msgid "Reindex subscriptions"
-msgstr ""
-
 #: action_names.rb:58
-msgid "Remote action:"
+msgid "Reindex subscriptions"
 msgstr ""
 
 #: action_names.rb:66
@@ -14895,6 +14910,6 @@ msgstr ""
 msgid "Update redhat repository"
 msgstr ""
 
-#: action_names.rb:83
+#: action_names.rb:89
 msgid "Verify checksum"
 msgstr ""

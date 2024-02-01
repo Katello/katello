@@ -1361,6 +1361,12 @@
       "ID of the host": [
         "ჰოსტის ID"
       ],
+      "Also include the latest upgradable package version for each host package": [
+        ""
+      ],
+      "Return only packages of a particular status (upgradable or up-to-date)": [
+        ""
+      ],
       "Errata to exclusively include in the action": [
         "ამ ქმედებაში ექსკლუზიურად ჩასართავი მორჩენილი პაჩი"
       ],
@@ -1438,12 +1444,6 @@
       ],
       "List packages installed on the host": [
         "ჰოსტზე დაყენებული პაკეტების სია"
-      ],
-      "Also include the latest upgradable package version for each host package": [
-        ""
-      ],
-      "Return only packages of a particular status (upgradable or up-to-date)": [
-        ""
       ],
       "Couldn't find host with host id '%s'": [
         "ჰოსტი id-ით %s არ არსებობს"
@@ -2746,9 +2746,6 @@
       ],
       "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.": [
         ""
-      ],
-      "Lifecycle environment for the host.": [
-        "ჰოსტის ცხოვრების ციკლის გარემო."
       ],
       "Clear any previous registration and run subscription-manager with --force.": [
         ""
@@ -4181,6 +4178,9 @@
       "package_names_for_job_template: Action must be one of %s": [
         "package_names_for_job_template: ქმედება უნდა იყოს ერთ-ერთი სიიდან: %s"
       ],
+      "deb_names_for_job_template: Action must be one of %s": [
+        ""
+      ],
       "Cannot delete the last Location.": [
         "ბოლო მდებარეობის წაშლა შეუძლებელია."
       ],
@@ -5361,8 +5361,8 @@
       "Activation keys and subscriptions can be managed": [
         "აქტივაციის გასაღებების და გამოწერების მართვა შესაძლებელია"
       ],
-      "here": [
-        "აქ"
+      "here.": [
+        ""
       ],
       "Reload data": [
         "მონაცემების თავიდან ცატვირთვა"
@@ -5752,12 +5752,6 @@
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         ""
       ],
-      "Pulp export destination filepath": [
-        ""
-      ],
-      "On-disk location for exported repositories": [
-        ""
-      ],
       "Pulp 3 export destination filepath": [
         ""
       ],
@@ -5972,6 +5966,12 @@
         ""
       ],
       "Resolve traces via Katello interface": [
+        ""
+      ],
+      "Katello: Configure host for new content source": [
+        ""
+      ],
+      "Replace content source on the target machine": [
         ""
       ],
       "Katello: Module Stream Actions": [
@@ -6400,6 +6400,60 @@
       "Repository sets": [
         "რეპოზიტორიების სეტები"
       ],
+      "Install via remote execution": [
+        "დაშორებული გაშვების გავლით დაყენება"
+      ],
+      "Install via customized remote execution": [
+        "მორგებული დაშორებული გაშვების გავლით დაყენება"
+      ],
+      "No packages available to install": [
+        "დასაყენებელი პაკეტები მიუწვდომელია"
+      ],
+      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+        ""
+      ],
+      "No matching packages found": [
+        "შესატყვისი პაკეტი ვერ მოიძებნა"
+      ],
+      "Version": [
+        "ვერსია"
+      ],
+      "Install packages": [
+        "პაკეტების დაყენება"
+      ],
+      "Select packages to install to the host {hostName}.": [
+        "აირჩიეთ პაკეტები, რომლებიც ჰოსტზე {hostName} გნებავთ, დააყენოთ."
+      ],
+      "Search available Debian packages": [
+        ""
+      ],
+      "This host does not have any packages.": [
+        "ამ ჰოსტს პაკეტები არ გააჩნია."
+      ],
+      "Packages will appear here when available.": [
+        "პაკეტები, როცა ხელმისაწვდომი იქნება, აქ გამოჩნდება."
+      ],
+      "Problem searching packages": [
+        "პაკეტების ძებნის პრობლემა"
+      ],
+      "Installed version": [
+        "დაყენებული ვერსია"
+      ],
+      "Upgradable to": [
+        "განახლებადი ვერსიამდე"
+      ],
+      "A remote execution job is in progress.": [
+        "დაშორებულად გაშვებული დავალება ჯერ კიდევ მიმდინარეობს."
+      ],
+      "Upgrade via remote execution": [
+        "დაშორებულ გაშვებით განახლება"
+      ],
+      "Upgrade via customized remote execution": [
+        "მორგებული დაშორებული გაშვების გავლით განახლება"
+      ],
+      "Upgrade": [
+        "განახლება"
+      ],
       "No matching errata found": [
         "შესაბამისი მორჩენილი პაჩი არ არსებობს"
       ],
@@ -6535,62 +6589,11 @@
       "Uninstall and reset": [
         "წაშლა და საწყისი მდგომარეობის დაბრუნება"
       ],
-      "Install via remote execution": [
-        "დაშორებული გაშვების გავლით დაყენება"
-      ],
-      "Install via customized remote execution": [
-        "მორგებული დაშორებული გაშვების გავლით დაყენება"
-      ],
-      "No packages available to install": [
-        "დასაყენებელი პაკეტები მიუწვდომელია"
-      ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
-        ""
-      ],
-      "No matching packages found": [
-        "შესატყვისი პაკეტი ვერ მოიძებნა"
-      ],
-      "Version": [
-        "ვერსია"
-      ],
-      "Install packages": [
-        "პაკეტების დაყენება"
-      ],
-      "Select packages to install to the host {hostName}.": [
-        "აირჩიეთ პაკეტები, რომლებიც ჰოსტზე {hostName} გნებავთ, დააყენოთ."
-      ],
       "Search available packages": [
         "ხელმისაწვდომი პაკეტების ძებნა"
       ],
-      "This host does not have any packages.": [
-        "ამ ჰოსტს პაკეტები არ გააჩნია."
-      ],
-      "Packages will appear here when available.": [
-        "პაკეტები, როცა ხელმისაწვდომი იქნება, აქ გამოჩნდება."
-      ],
-      "Problem searching packages": [
-        "პაკეტების ძებნის პრობლემა"
-      ],
-      "Installed version": [
-        "დაყენებული ვერსია"
-      ],
-      "Upgradable to": [
-        "განახლებადი ვერსიამდე"
-      ],
-      "A remote execution job is in progress.": [
-        "დაშორებულად გაშვებული დავალება ჯერ კიდევ მიმდინარეობს."
-      ],
-      "Upgrade via remote execution": [
-        "დაშორებულ გაშვებით განახლება"
-      ],
-      "Upgrade via customized remote execution": [
-        "მორგებული დაშორებული გაშვების გავლით განახლება"
-      ],
       "Refresh package applicability": [
         ""
-      ],
-      "Upgrade": [
-        "განახლება"
       ],
       "Repository set enabled": [
         "რეპოზიტორიების სეტი ჩართულია"
@@ -6772,10 +6775,16 @@
       "Restart via customized remote execution": [
         "მორგებული დაშორებული გაშვების გავლით გადატვირთვა"
       ],
+      "Reboot host": [
+        ""
+      ],
       "Restart app": [
         "აპის რესტარტი"
       ],
       "Tracer helps administrators identify applications that need to be restarted after a system is patched.": [
+        ""
+      ],
+      "At least one of the selected items requires the host to reboot": [
         ""
       ],
       "Traces that require logout cannot be restarted remotely": [
@@ -8920,20 +8929,11 @@
       "Abstract": [
         "ანოტაცია"
       ],
-      "Action with sub plans": [
-        "ქმედება ქვე-გეგმებით"
-      ],
       "Auto attach subscriptions": [
         "გამოწერების ავტომატური მიმაგრება"
       ],
-      "Check for long running tasks": [
-        ""
-      ],
       "Copy version units to library": [
         "ვერსიის ერთეულების ბიბლიოთეკაში კოპირება"
-      ],
-      "Deliver notifications about long running tasks": [
-        ""
       ],
       "Discover": [
         "აღმოაჩინეთ"
@@ -8952,12 +8952,6 @@
       ],
       "Hypervisors": [
         "ჰაიპერვაიზორები"
-      ],
-      "Import Puppet classes": [
-        "Puppet-ის კლასების შემოტანა"
-      ],
-      "Import facts": [
-        "ფაქტების შემოტანა"
       ],
       "Incremental Update of  Content View Version(s) ": [
         "შემცველობის ხედის ვერსიების ინკრემენტული განახლება "
@@ -8980,9 +8974,6 @@
       "Reindex subscriptions": [
         "გამოწერების თავიდან ინდექსირება"
       ],
-      "Remote action:": [
-        "დაშორებული ქმედება:"
-      ],
       "Sync capsule": [
         "სინქრონიზაციის კაპსულა"
       ],
@@ -9004,14 +8995,23 @@
       "Verify checksum": [
         "საკონტროლო ჯამის შემოწმება"
       ],
-      "No hosts have been specified.": [
-        "ჰოსტები მითითებული არაა."
+      "Action with sub plans": [
+        "ქმედება ქვე-გეგმებით"
       ],
-      "source URL is malformed": [
-        "წყაროს URL-ი არასწორია"
+      "Import Puppet classes": [
+        "Puppet-ის კლასების შემოტანა"
       ],
-      "temporarily override feed URL for sync": [
-        "სინქრონიზაციისთვის წყაროს URL-ის დროებითი გადაფარვა"
+      "Import facts": [
+        "ფაქტების შემოტანა"
+      ],
+      "Lifecycle environment for the host.": [
+        "ჰოსტის ცხოვრების ციკლის გარემო."
+      ],
+      "Remote action:": [
+        "დაშორებული ქმედება:"
+      ],
+      "here": [
+        "აქ"
       ]
     }
   }

@@ -4,3235 +4,3066 @@
     "katello": {
       "": {
         "Project-Id-Version": "",
-        "Last-Translator": "Baptiste Agasse <baptiste.agasse@gmail.com>, 2023",
-        "Language-Team": "French (https://app.transifex.com/foreman/teams/114/fr/)",
+        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2022",
+        "Language-Team": "Chinese (Taiwan) (https://www.transifex.com/foreman/teams/114/zh_TW/)",
         "Content-Type": "text/plain; charset=UTF-8",
         "Content-Transfer-Encoding": "8bit",
-        "Language": "fr",
-        "Plural-Forms": "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;",
+        "Language": "zh_TW",
+        "Plural-Forms": "nplurals=1; plural=0;",
         "lang": "locale",
         "domain": "katello",
-        "plural_forms": "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
+        "plural_forms": "nplurals=1; plural=0;"
       },
       "-- select an interval --": [
-        "-- sélectionner un intervalle --"
+        "-- 選擇一個間隔 --"
       ],
       "(future)": [
-        "(future)"
+        ""
       ],
       "{{ 'Add Selected' | translate }}": [
-        "{{ 'Add Selected' | translate }}"
+        "{{ 'Add Selected' | 新增選擇 }}"
       ],
       "{{ contentCredential.name }}": [
-        "{{ contentCredential.name }}"
+        ""
       ],
       "{{ deb.hosts_applicable_count }} Host(s)": [
-        "{{ deb.hosts_applicable_count }} Hôte(s)"
+        ""
       ],
       "{{ deb.hosts_applicable_count || 0 }} Applicable,": [
-        "{{ deb.hosts_applicable_count || 0 }} Applicable,"
+        ""
       ],
       "{{ deb.hosts_available_count }} Host(s)": [
-        "{{ deb.hosts_available_count }} Hôte(s)"
+        ""
       ],
       "{{ deb.hosts_available_count || 0 }} Upgradable": [
-        "{{ deb.hosts_available_count || 0 }} Mise à jour"
+        ""
       ],
       "{{ errata.hosts_applicable_count || 0 }} Applicable,": [
-        "{{ errata.hosts_applicable_count || 0 }} Applicable,"
+        "{{ errata.hosts_applicable_count || 0 }} 可套用，"
       ],
       "{{ errata.hosts_available_count || 0 }} Installable": [
-        "{{ errata.hosts_available_count || 0 }} Installable"
+        "{{ errata.hosts_available_count || 0 }} 可安裝"
       ],
       "{{ errata.title }}": [
-        "{{ errata.title }}"
+        ""
       ],
       "{{ file.name }}": [
-        "{{ file.name }}"
+        ""
       ],
       "{{ host.name }}": [
-        "{{ host.name }}"
-      ],
-      "{{ host.rhel_lifecycle_status_label }}": [
-        "{{ host.rhel_lifecycle_status_label }}"
+        ""
       ],
       "{{ host.subscription_facet_attributes.user.login }}": [
-        "{{ host.subscription_facet_attributes.user.login }}"
+        ""
       ],
       "{{ installedDebCount }} Host(s)": [
-        "{{ installedDebCount }} Hôte(s)"
+        ""
       ],
       "{{ installedPackageCount }} Host(s)": [
-        "{{ installedPackageCount }} Hôte(s)"
+        ""
       ],
       "{{ package.hosts_applicable_count }} Host(s)": [
-        "{{ package.hosts_applicable_count }} Hôte(s)"
+        ""
       ],
       "{{ package.hosts_applicable_count || 0 }} Applicable,": [
-        "{{ package.hosts_applicable_count || 0 }} Applicable,"
+        ""
       ],
       "{{ package.hosts_available_count }} Host(s)": [
-        "{{ package.hosts_available_count }} Hôte(s)"
+        ""
       ],
       "{{ package.hosts_available_count || 0 }} Upgradable": [
-        "{{ package.hosts_available_count || 0 }} pouvant être mis à niveau"
+        ""
       ],
       "{{ package.human_readable_size }} ({{ package.size }} Bytes)": [
-        "{{ package.human_readable_size }} ( {{ package.size }} Octets )"
+        ""
       ],
       "{{ product.active_task_count }}": [
-        "{{ product.active_task_count }}"
+        ""
       ],
       "{{ product.name }}": [
-        "{{ product.name }}"
-      ],
-      "{{ repo.last_sync_words }} ago": [
-        "Il y a {{ repo.last_sync_words }}"
+        ""
       ],
       "{{ repository.content_counts.ansible_collection || 0 }} Ansible Collections": [
-        "{{ repository.content_counts.ansible_collection || 0 }} Collections Ansible"
+        ""
       ],
       "{{ repository.content_counts.deb || 0 }} deb Packages": [
-        "{{ repository.content_counts.deb || 0 }} deb Packages"
+        ""
       ],
       "{{ repository.content_counts.docker_manifest || 0 }} Container Image Manifests": [
-        "{{ repository.content_counts.docker_manifest || 0 }} Manifeste de l'image du conteneur"
+        ""
       ],
       "{{ repository.content_counts.docker_manifest_list || 0 }} Container Image Manifest Lists": [
-        "{{ repository.content_counts.docker_manifest_list || 0 }} Listes des manifestes d'images du conteneur"
+        ""
       ],
       "{{ repository.content_counts.docker_tag || 0 }} Container Image Tags": [
-        "{{ repository.content_counts.docker_tag || 0 }} Étiquettes d'images de conteneurs"
+        ""
       ],
       "{{ repository.content_counts.erratum || 0 }} Errata": [
-        "{{ repository.content_counts.erratum || 0 }} Errata"
+        "{{ repository.content_counts.erratum || 0 }} 個勘誤"
       ],
       "{{ repository.content_counts.file || 0 }} Files": [
-        "{{ repository.content_counts.file || 0 }} Fichiers"
+        ""
       ],
       "{{ repository.content_counts.rpm || 0 }} Packages": [
-        "{{ repository.content_counts.rpm || 0 }} Packages"
+        "{{ repository.content_counts.rpm || 0 }} 個套件"
       ],
       "{{ repository.content_counts.srpm }} Source RPMs": [
-        "{{ repository.content_counts.srpm }} RPM source"
+        ""
       ],
       "{{ repository.last_sync_words }} ago": [
-        "Il y a {{ repository.last_sync_words }}"
+        "{{ repository.last_sync_words }} 前"
       ],
       "{{ repository.name }}": [
-        "{{ repository.name }}"
+        ""
       ],
       "{{ type.display }}": [
         "{{ type.display }}"
       ],
       "{{header}}": [
-        "{{header}}"
+        ""
       ],
       "{{option.description}}": [
-        "{{option.description}}"
+        ""
       ],
       "{{urlDescription}}": [
-        "{{urlDescription}}"
+        ""
       ],
       "* These marked Content View Versions are from Composite Content Views.  Their components needing updating are listed underneath.": [
-        "* Ces versions marquées d’affichages de contenu sont issues des affichages de contenus composites.  Leurs composants nécessitant une mise à jour sont énumérés ci-dessous."
+        "* 這些被標記的內容視域來自於複合式內容視域。它們需要更新的元件列在下方。"
       ],
       "/foreman_tasks/tasks/%taskId": [
-        "/foreman_tasks/tasks/%taskId"
+        ""
       ],
       "/job_invocations": [
-        "/job_invocations"
+        ""
       ],
       "%(consumed)s out of %(quantity)s": [
-        "%(consumed)s sur %(quantity)s"
+        "%(consumed)s，總數為 %(quantity)s"
       ],
       "%count environment(s) can be synchronized: %envs": [
-        "Les environnements %count peuvent être synchronisés : %envs"
+        "%count 個環境可以被同步：%envs"
       ],
       "<a href=\\\"/foreman_tasks/tasks/{{repository.last_sync.id}}\\\">{{ repository.last_sync.result | capitalize}}</a>": [
         "<a href=\\\"/foreman_tasks/tasks/{{repository.last_sync.id}}\\\">{{ repository.last_sync.result | capitalize}}</a>"
       ],
       "<b>Additive:</b> new content available during sync will be added to the repository, and no content will be removed.": [
-        "<b>Additions :</b> le nouveau contenu disponible lors de la sync sera ajouté au référentiel, et aucun contenu ne sera supprimé."
-      ],
-      "<b>Description</b>": [
-        "<b>Description</b>"
-      ],
-      "<b>Issued</b>": [
-        "<b>publié sur</b>"
-      ],
-      "<b>Mirror Complete</b>: a sync behaves exactly like \\\"Mirror Content Only\\\", but also mirrors metadata as well.  This is the fastest method, and preserves repository signatures, but is only supported by yum and not by all upstream repositories.": [
-        "<b>Mirrorisation terminée</b>: une synchronisation se comporte exactement comme \\\"Mirror Content Only\\\", mais fait également le miroir des métadonnées.  C'est la méthode la plus rapide, et qui préserve les signatures du référentiel, mais elle n'est supportée que par yum et pas par tous les référentiels en amont."
-      ],
-      "<b>Mirror Content Only</b>: any new content available during sync will be added to the repository and any content removed from the upstream repository will be removed from the local repository.": [
-        "<b>Contenu de mirrorisation uniquement</b>: tout nouveau contenu disponible pendant la sync sera ajouté au référentiel et tout contenu supprimé du référentiel amont sera supprimé du référentiel local."
-      ],
-      "<b>Module Streams</b>": [
-        "<b>Flux de modules</b>"
-      ],
-      "<b>Packages</b>": [
-        "<b>Paquets</b>"
-      ],
-      "<b>Reboot Suggested</b>": [
-        "<b>Redémarrage suggéré</b>"
-      ],
-      "<b>Solution</b>": [
-        "<b>Solution</b>"
-      ],
-      "<b>Title</b>": [
-        "<b>Titre</b>"
-      ],
-      "<b>Type</b>": [
-        "<b>Type</b>"
-      ],
-      "<b>Updated</b>": [
-        "<b>Mis à jour</b>"
-      ],
-      "<i class=\\\"fa fa-warning inline-icon\\\"></i>\\n  This Host is not currently registered with subscription-manager. Use the <a href=\\\"/hosts/register\\\">Register Host</a> workflow to complete registration.": [
-        "<i class=\\\"fa fa-warning inline-icon\\\"></i>\\n  Cet hôte n'est pas actuellement enregistré dans subscription-manager. Cliquer sur <a href=\\\"/hosts/register\\\">Enregistrer Hôte</a> pour compléter l’enregistrement."
-      ],
-      "1 Content Host": [
-        "1 Hôte du contenu",
-        "{{ host.subscription_facet_attributes.virtual_guests.length }} Hôtes du contenu",
-        "{{ host.subscription_facet_attributes.virtual_guests.length }} Hôtes du contenu"
-      ],
-      "1 repository sync has errors.": [
-        "1 La synchronisation du référentiel comporte des erreurs.",
-        "{{ product.sync_summary.error || product.sync_summary.warning }} les synchronisations des référentiels comportent des erreurs.",
-        "{{ product.sync_summary.error || product.sync_summary.warning }} les synchronisations des référentiels comportent des erreurs."
-      ],
-      "1 repository sync in progress.": [
-        "1 synchronisation du référentiel en cours.",
-        "{{ product.sync_summary.pending}} synchronisation des référentiels en cours..",
-        "{{ product.sync_summary.pending}} synchronisation des référentiels en cours.."
-      ],
-      "1 successfully synced repository.": [
-        "1 référentiel synchronisé avec succès.",
-        "{{ product.sync_summary.success}} des référentiels synchronisés avec succès.",
-        "{{ product.sync_summary.success}} des référentiels synchronisés avec succès."
-      ],
-      "A comma-separated list of container image tags to exclude when syncing. Source images are excluded by default because they are often large and unwanted.": [
-        "Une liste de balises d'images de conteneurs, séparées par des virgules, à exclure lors de la synchronisation. Les images sources sont exclues par défaut car elles sont souvent volumineuses et indésirables."
-      ],
-      "A comma-separated list of container image tags to include when syncing.": [
-        "Une liste de balises d'images de conteneurs, séparées par des virgules, à inclure lors de la synchronisation."
-      ],
-      "A sync has been initiated in the background, <a href=\\\"/foreman_tasks/tasks/{{ task.id }}\\\">click for more details</a>": [
-        "Une synchronisation a été lancée en arrière-plan, <a href=\\\"/foreman_tasks/tasks/{{ task.id }}\\\">cliquez pour plus de détails</a>"
-      ],
-      "Account": [
-        "Compte"
-      ],
-      "Action Type": [
-        "Type d'action"
-      ],
-      "Actions": [
-        "Actions"
-      ],
-      "Activation Key": [
-        "Clé d'activation",
-        "Clés d'activation",
-        "Clés d'activation"
-      ],
-      "Activation Key Content": [
-        "Contenu Clé d'activation"
-      ],
-      "Activation Key removed.": [
-        "Clé d'activation supprimée"
-      ],
-      "Activation Key updated": [
-        "Clé d'activation mise à jour"
-      ],
-      "Activation Key:": [
-        "Clé d'activation :"
-      ],
-      "Activation Keys": [
-        "Clés d'activation"
-      ],
-      "Active Tasks": [
-        "Tâches actives"
-      ],
-      "Add": [
-        "Ajouter"
-      ],
-      "Add Content Hosts to:": [
-        "Ajouter des hôtes de contenu à :"
-      ],
-      "Add Host Collections": [
         ""
       ],
+      "<b>Description</b>": [
+        ""
+      ],
+      "<b>Issued</b>": [
+        ""
+      ],
+      "<b>Mirror Complete</b>: a sync behaves exactly like \\\"Mirror Content Only\\\", but also mirrors metadata as well.  This is the fastest method, and preserves repository signatures, but is only supported by yum and not by all upstream repositories.": [
+        ""
+      ],
+      "<b>Mirror Content Only</b>: any new content available during sync will be added to the repository and any content removed from the upstream repository will be removed from the local repository.": [
+        ""
+      ],
+      "<b>Module Streams</b>": [
+        ""
+      ],
+      "<b>Packages</b>": [
+        ""
+      ],
+      "<b>Reboot Suggested</b>": [
+        ""
+      ],
+      "<b>Solution</b>": [
+        ""
+      ],
+      "<b>Title</b>": [
+        ""
+      ],
+      "<b>Type</b>": [
+        ""
+      ],
+      "<b>Updated</b>": [
+        ""
+      ],
+      "<i class=\\\"fa fa-warning inline-icon\\\"></i>\\n  This Host is not currently registered with subscription-manager. Use the <a href=\\\"/hosts/register\\\">Register Host</a> workflow to complete registration.": [
+        ""
+      ],
+      "1 Content Host": [
+        ""
+      ],
+      "1 repository sync has errors.": [
+        ""
+      ],
+      "1 repository sync in progress.": [
+        "1 個軟體庫同步正在進行中。"
+      ],
+      "1 successfully synced repository.": [
+        "1 個軟體庫已成功同步。"
+      ],
+      "A comma-separated list of container image tags to exclude when syncing. Source images are excluded by default because they are often large and unwanted.": [
+        ""
+      ],
+      "A comma-separated list of container image tags to include when syncing.": [
+        ""
+      ],
+      "A sync has been initiated in the background, <a href=\\\"/foreman_tasks/tasks/{{ task.id }}\\\">click for more details</a>": [
+        ""
+      ],
+      "Account": [
+        "帳號"
+      ],
+      "Action Type": [
+        "動作類型"
+      ],
+      "Actions": [
+        "動作"
+      ],
+      "Activation Key": [
+        "啟動金鑰"
+      ],
+      "Activation Key Content": [
+        "啟動金鑰的內容"
+      ],
+      "Activation Key removed.": [
+        "啟動金鑰已移除。"
+      ],
+      "Activation Key updated": [
+        "啟動金鑰已更新"
+      ],
+      "Activation Key:": [
+        "啟動金鑰："
+      ],
+      "Activation Keys": [
+        "啟動金鑰"
+      ],
+      "Active Tasks": [
+        ""
+      ],
+      "Add": [
+        "新增"
+      ],
+      "Add Content Hosts to:": [
+        "新增內容主機至："
+      ],
       "Add hosts to the host collection to see available actions.": [
-        "Ajoutez des hôtes à la collection d'hôtes pour voir les actions disponibles."
+        ""
       ],
       "Add New Environment": [
-        "Ajouter un nouvel environnement"
+        "新增環境"
       ],
       "Add ons": [
-        "Add ons"
+        ""
       ],
       "Add ons:": [
-        "Add ons :"
-      ],
-      "Add Products": [
-        "Ajouter des produits"
+        ""
       ],
       "Add Selected": [
-        "Ajouter les éléments sélectionnés"
-      ],
-      "Add Subscriptions": [
-        "Ajouter Abonnements"
+        "加入選擇的項目"
       ],
       "Add Subscriptions for Activation Key:": [
-        "Ajouter les abonnements pour la clé d'activation :"
+        "為啟動金鑰新增訂閱："
       ],
       "Add Subscriptions for Content Host:": [
-        "Ajouter des abonnements pour l'hôte de contenu :"
+        "為內容主機新增訂閱："
       ],
       "Add To": [
-        "Ajouter à"
+        "加至"
       ],
       "Added %x host collections to activation key \\\"%y\\\".": [
-        "Énumérer les collections d'hôtes %x dans une clé d'activation \\\"%y\\\"."
+        "已新增 %x 主機集項目至啟動金鑰「%y」。"
       ],
       "Added %x host collections to content host \\\"%y\\\".": [
-        "Ajout %x collections hôtes à l'hôte de contenu \\\"%y\\\"."
+        "已新增 %x 主機集項目至內容主機「%y」。"
       ],
       "Added %x products to sync plan \\\"%y\\\".": [
-        "Ajouter %x produits au plan de synchronisation \\\"%y\\\"."
+        "已新增 %x 產品至同步計畫「%y」。"
       ],
       "Adding Lifecycle Environment to the end of \\\"{{ priorEnvironment.name }}\\\"": [
-        "Ajouter l'environnement sur le cycle de vie à la fin de \\\"{{ priorEnvironment.name }}\\\""
+        "新增生命週期環境至 \\\"{{ priorEnvironment.name }}\\\" 之後"
       ],
       "Additive": [
-        "Addition"
+        ""
       ],
       "Advanced Sync": [
-        "Sync Avancée"
+        ""
       ],
       "Advisory": [
-        "Avis"
+        "諮詢"
       ],
       "Affected Hosts": [
-        "Hôtes affectés"
-      ],
-      "All": [
-        "Tout"
+        "受影響的主機"
       ],
       "All Content Views": [
-        "Affichages de contenu"
+        "所有內容視域"
       ],
       "All Lifecycle Environments": [
-        "Environnements de cycle de vie"
+        ""
       ],
       "All Repositories": [
-        "Référentiels"
+        "所有軟體庫"
       ],
       "Alternate Content Sources": [
-        "Autres sources de contenu"
+        ""
       ],
       "Alternate Content Sources for": [
-        "Autres sources de contenu pour"
+        ""
       ],
       "An error occured: %s": [
-        "Une erreur s'est produite : %s"
+        ""
       ],
       "An error occurred initiating the sync:": [
-        "Une erreur s'est produite en initiant la synchronisation :"
+        ""
       ],
       "An error occurred removing the Activation Key:": [
-        "Une erreur s'est produite lors de la suppression de la clé d'activation :"
+        "移除啟動金鑰時發生錯誤："
       ],
       "An error occurred removing the content hosts.": [
-        "Une erreur s'est produite lors de la suppression des hôtes de contenu."
+        "移除內容主機時發生錯誤："
       ],
       "An error occurred removing the environment:": [
-        "Une erreur s'est produite en supprimant l'environnement :"
+        "移除環境時發生錯誤："
       ],
       "An error occurred removing the Host Collection:": [
-        "Une erreur s'est produite lors de la suppression de la collection d'hôtes :"
+        "移除主機集項目時發生錯誤："
       ],
       "An error occurred removing the subscriptions.": [
-        "Une erreur s'est produite lors de la suppression des abonnements."
+        "移除訂閱時發生錯誤："
       ],
       "An error occurred saving the Activation Key:": [
-        "Une erreur s'est produite lors de la sauvegarde de la clé d'activation :"
+        "儲存啟動金鑰時發生錯誤："
       ],
       "An error occurred saving the Content Host:": [
-        "Une erreur s'est produite lors de la sauvegarde de l'hôte de contenu :"
+        "儲存內容主機時發生錯誤："
       ],
       "An error occurred saving the Environment:": [
-        "Une erreur s'est produite en sauvegardant l'environnement :"
+        "儲存環境時發生了錯誤："
       ],
       "An error occurred saving the Host Collection:": [
-        "Une erreur s'est produite lors de la sauvegarde de la collection de l’hôte :"
+        "儲存主機集項目時發生錯誤："
       ],
       "An error occurred saving the Product:": [
-        "Une erreur s'est produite lors de la sauvegarde du produit :"
+        "儲存產品時發生錯誤："
       ],
       "An error occurred saving the Repository:": [
-        "Une erreur s'est produite lors de la sauvegarde du référentiel :"
+        "儲存軟體庫時發生錯誤："
       ],
       "An error occurred saving the Sync Plan:": [
-        "Une erreur s'est produite lors de la sauvegarde du plan de synchronisation :"
+        "儲存同步計畫時發生錯誤："
       ],
       "An error occurred trying to auto-attach subscriptions.  Please check your log for further information.": [
-        "Une erreur s'est produite en essayant de joindre automatiquement les abonnements.  Veuillez consulter votre journal pour plus d'informations."
+        "試圖自動連接訂閱服務時發生錯誤。請檢查日誌檔，以取得進一步訊息。"
       ],
       "An error occurred updating the sync plan:": [
-        "Une erreur s'est produite lors de la mise à jour du plan de synchronisation :"
+        ""
       ],
       "An error occurred while creating the Content Credential:": [
-        "Une erreur s'est produite lors de la création des Identifiants de contenu :"
+        ""
       ],
       "An error occurred while creating the Product: %s": [
-        "Une erreur s'est produite lors de la création du produit : %s"
+        ""
       ],
       "An error occurred:": [
-        "Une erreur s'est produite :"
+        ""
       ],
       "Ansible Collection Authorization": [
-        "Autorisation de la collection Ansible"
+        ""
       ],
       "Ansible Collections": [
-        "Collections Ansible"
+        ""
       ],
       "Applicable": [
-        "Applicable"
+        "可套用"
       ],
       "Applicable Content Hosts": [
-        "Hôtes de contenu applicables"
+        ""
       ],
       "Applicable Deb Packages": [
-        "Paquets Deb applicables"
+        ""
       ],
       "Applicable Errata": [
-        "Errata applicables"
+        "可套用勘誤"
       ],
       "Applicable Packages": [
-        "Packages applicables"
+        "套件"
       ],
       "Applicable To": [
-        "Applicable à"
+        ""
       ],
       "Applicable to Host": [
-        "Applicable à l'hôte"
+        ""
       ],
       "Application": [
-        "Application"
+        "應用程式"
       ],
       "Apply": [
-        "Appliquer"
+        "套用"
       ],
       "Apply {{ errata.errata_id }}": [
-        "Appliquer {{ errata.errata_id }}"
+        "套用 {{ errata.errata_id }}"
       ],
       "Apply {{ errata.errata_id }} to {{ contentHostIds.length  }} Content Host(s)?": [
-        "Appliquer {{ errata.errata_id }} à {{ contentHostIds.length  }} hôte(s) de contenu ?"
+        ""
       ],
       "Apply {{ errata.errata_id }} to all Content Host(s)?": [
-        "Appliquer {{ errata.errata_id }} à tous les hôtes de contenu ?"
+        ""
       ],
       "Apply {{ errataIds.length }} Errata to {{ contentHostIds.length }} Content Host(s)?": [
-        "Appliquer {{ errataIds.length }} errata aux {{ contentHostIds.length }} hôtes de contenu ?"
+        ""
       ],
       "Apply {{ errataIds.length }} Errata to all Content Host(s)?": [
-        "Appliquer {{ errataIds.length }} errata à tous les hôtes de contenu ?"
+        ""
       ],
       "Apply Errata": [
-        "Appliquer les errata"
+        "套用勘誤"
       ],
       "Apply Errata to Content Host \\\"{{host.name}}\\\"?": [
-        "Appliquer les errata à l'hôte de contenu \\\"{{host.name}}\\\"?"
+        "是否要套用勘誤至內容主機 \\\"{{host.name}}\\\"？"
       ],
       "Apply Errata to Content Hosts": [
-        "Appliquer les errata aux hôtes de contenu"
+        "套用勘誤至內容主機"
       ],
       "Apply Errata to Content Hosts immediately after publishing.": [
-        "Appliquez les errata aux hôtes de contenu immédiatement après leur publication."
+        "發佈後即刻套用勘誤至內容主機。"
       ],
       "Apply Selected": [
-        "Appliquer la sélection"
+        "套用所選項目"
       ],
       "Apply to Content Hosts": [
-        "Appliquer aux Hôtes de contenu"
+        "套用內容主機"
       ],
       "Apply to Hosts": [
-        "Appliquer aux hôtes"
+        "套用至主機"
       ],
       "Applying": [
-        "Application"
+        "正在套用"
       ],
       "Apt Actions": [
-        "Actions Apt"
+        ""
       ],
       "Arch": [
-        "Arch"
+        "架構"
       ],
       "Architecture": [
-        "Architecture"
+        "架構"
       ],
       "Architectures": [
-        "Architectures"
+        "架構"
       ],
       "Are you sure you want to add the {{ table.numSelected }} content host(s) selected to the host collection(s) chosen?": [
-        "Êtes-vous sûr de vouloir ajouter le(s) hôte(s) de contenu {{ table.numSelected }} sélectionné(s) à la (aux) collection(s) d'hôtes choisie(s) ?"
+        "確定要新增所選的 {{ table.numSelected }} 部內容主機至選擇的主機集項目中？"
       ],
       "Are you sure you want to add the sync plan to the selected products(s)?": [
-        "Êtes-vous sûr de vouloir ajouter le plan de synchronisation aux produits sélectionnés ?"
+        ""
       ],
       "Are you sure you want to apply Errata to content host \\\"{{ host.name }}\\\"?": [
-        "Êtes-vous sûr de vouloir appliquer les Errata à l'hôte de contenu \\\"{{ host.name }}\\\" ?"
+        "確定要套用勘誤至內容主機 \\\"{{ host.name }}\\\"？"
       ],
       "Are you sure you want to apply the {{ table.numSelected }} selected errata to the content hosts chosen?": [
-        "Êtes-vous sûr de vouloir appliquer les errata sélectionnés {{ table.numSelected }} aux hôtes de contenu choisis ?"
+        ""
       ],
       "Are you sure you want to assign the {{ table.numSelected }} content host(s) selected to {{ selected.contentView.name }} in {{ selected.environment.name }}?": [
-        "Êtes-vous sûr de vouloir attribuer le(s) hôte(s) de contenu sélectionné(s) {{ table.numSelected }} à {{ selected.contentView.name }} dans {{ selected.environment.name }} ?"
+        "確定要指定所選的 {{ table.numSelected }} 部內容主機至 {{ selected.environment.name }} 的 {{ selected.contentView.name }}？"
       ],
       "Are you sure you want to delete the {{ table.numSelected }} host(s) selected?": [
-        "Êtes-vous sûr de vouloir supprimer le(s) hôte(s) {{ table.numSelected }} sélectionnés ?"
+        ""
       ],
       "Are you sure you want to disable the {{ table.numSelected }} repository set(s) chosen?": [
-        "Êtes-vous sûr de vouloir désactiver le(s) ensemble(s) de référentiels {{ table.numSelected }} choisi(s) ?"
+        ""
       ],
       "Are you sure you want to enable the {{ table.numSelected }} repository set(s) chosen?": [
-        "Êtes-vous sûr de vouloir activer le(s) ensemble(s) de référentiels {{ table.numSelected }} choisi(s) ?"
+        ""
       ],
       "Are you sure you want to install {{ content.content }} on the {{ getSelectedSystemIds().length }} system(s) selected?": [
-        "Êtes-vous sûr de vouloir installer sur le(s){{ content.content }} sur les {{ getSelectedSystemIds().length }} système(s) sélectionné(s) ?"
+        "確定要在所選的 {{ getSelectedSystemIds().length }} 部系統上安裝 {{ content.content }}？"
       ],
       "Are you sure you want to remove {{ content.content }} from the {{ getSelectedSystemIds().length }} system(s) selected?": [
-        "Êtes-vous sûr de vouloir supprimer {{ content.content }} de(s) {{ getSelectedSystemIds().length }} système(s) sélectionné(s) ?"
+        "確定要從所選擇的 {{ getSelectedSystemIds().length }} 部系統中移除 {{ content.content }}？"
       ],
       "Are you sure you want to remove Activation Key \\\"{{ activationKey.name }}\\\"?": [
-        "Êtes-vous sûr de vouloir retirer la clé d'activation \\\"{{ activationKey.name }}\\\" ?"
+        "確定要移除啟動金鑰 \\\"{{ activationKey.name }}\\\"？"
       ],
       "Are you sure you want to remove Content Credential {{ contentCredential.name }}?": [
-        "Êtes-vous sûr de vouloir retirer votre Identifiant de contenu {{ contentCredential.name }}?"
+        ""
       ],
       "Are you sure you want to remove environment {{ environment.name }}?": [
-        "Êtes-vous certain de vouloir supprimer l’environnement {{ environment.name }} ?"
+        ""
       ],
       "Are you sure you want to remove Host Collection \\\"{{ hostCollection.name }}\\\"?": [
-        "Êtes-vous sûr de vouloir supprimer la collection d'hôtes \\\"{{ hostCollection.name }}\\\" ?"
+        "確定要移除主機集項目 \\\"{{ hostCollection.name }}\\\"？"
       ],
       "Are you sure you want to remove product \\\"{{ product.name }}\\\"?": [
-        "Etes-vous certain de vouloir supprimer le produit \\\"{{ product.name }}\\\" ?"
+        "確定要移除產品 \\\"{{ product.name }}\\\"？"
       ],
       "Are you sure you want to remove repository {{ repositoryWrapper.repository.name }} from all content views?": [
-        "Êtes-vous sûr de vouloir supprimer le référentiel {{ repositoryWrapper.repository.name }} de toutes les vues de contenu ?"
+        ""
       ],
       "Are you sure you want to remove Sync Plan \\\"{{ syncPlan.name }}\\\"?": [
-        "Etes-vous certain de vouloir supprimer le Plan Sync \\\"{{ syncPlan.name }}\\\" ?"
+        "確定要移除同步計畫 \\\"{{ syncPlan.name }}\\\"？"
       ],
       "Are you sure you want to remove the {{ table.getSelected()[0].name }} content unit?": [
-        "Êtes-vous sûr de vouloir supprimer l’unité de contenu \\\"{{ table.getSelected()[0].name }}\\\" ?",
-        "Êtes-vous sûr de vouloir supprimer les {{ table.numSelected }} unités de contenu sélectionnées ?",
-        "Êtes-vous sûr de vouloir supprimer les {{ table.numSelected }} unités de contenu sélectionnées ?"
+        ""
       ],
       "Are you sure you want to remove the {{ table.getSelected()[0].name }} file?": [
-        "Etes-vous certain de vouloir supprimer le fichier {{ table.getSelected()[0].name }} ?",
-        "Êtes-vous sûr de vouloir supprimer les {{ table.numSelected }} fichiers sélectionnés ?",
-        "Êtes-vous sûr de vouloir supprimer les {{ table.numSelected }} fichiers sélectionnés ?"
+        ""
       ],
       "Are you sure you want to remove the {{ table.getSelected()[0].name }} package?": [
-        "Êtes-vous sûr de vouloir retirer le package {{ table.getSelected()[0].name }}?",
-        "Êtes-vous sûr de vouloir supprimer les {{ table.numSelected }}packages sélectionnés ?",
-        "Êtes-vous sûr de vouloir supprimer les {{ table.numSelected }}packages sélectionnés ?"
+        ""
       ],
       "Are you sure you want to remove the {{ table.getSelected()[0].name }} product?": [
-        "Êtes-vous sûr de vouloir retirer le produit {{ table.getSelected()[0].name }} ?",
-        "Etes-vous certain de vouloir supprimer les {{ table.getSelected().length }} produits ?",
-        "Etes-vous certain de vouloir supprimer les {{ table.getSelected().length }} produits ?"
+        ""
       ],
       "Are you sure you want to remove the {{ table.getSelected()[0].name }} repository?": [
-        "",
-        "",
         ""
       ],
       "Are you sure you want to remove the {{ table.numSelected }} Container Image manifest selected?": [
-        "Êtes-vous sûr de vouloir supprimer le manifeste de l'image du conteneur {{ table.numSelected }} sélectionné ?",
-        "Êtes-vous sûr de vouloir supprimer les manifestes d'images de conteneurs {{ table.numSelected }} sélectionnés ?",
-        "Êtes-vous sûr de vouloir supprimer les manifestes d'images de conteneurs {{ table.numSelected }} sélectionnés ?"
-      ],
-      "Are you sure you want to remove the {{ table.numSelected }} content host(s) selected from the host collection(s) chosen?": [
-        "Êtes-vous sûr de vouloir supprimer le(s) hôte(s) de contenu {{ table.numSelected }} sélectionné(s) dans la (les) collection(s) d'hôtes choisie(s) ?"
-      ],
-      "Are you sure you want to remove the sync plan from the selected product(s)?": [
-        "Êtes-vous sûr de vouloir supprimer le plan de synchronisation du ou des produits sélectionnés ?"
-      ],
-      "Are you sure you want to reset to default the {{ table.numSelected }} repository set(s) chosen?": [
-        "Êtes-vous sûr de vouloir remettre par défaut le(s) ensemble(s) de référentiels {{ table.numSelected }} choisi(s) ?"
-      ],
-      "Are you sure you want to restart services on content host \\\"{{ host.name }}\\\"?": [
-        "Êtes-vous sûr de vouloir redémarrer les services sur l'hôte de contenu \\\"{{ host.name }}\\\" ?"
-      ],
-      "Are you sure you want to restart the services on the selected content hosts?": [
-        "Êtes-vous sûr de vouloir redémarrer les services sur les hôtes de contenu sélectionnés ?"
-      ],
-      "Are you sure you want to set the HTTP Proxy to the selected products(s)?": [
-        "Êtes-vous sûr de vouloir configurer le proxy HTTP pour le(s) produit(s) sélectionné(s) ?"
-      ],
-      "Are you sure you want to set the Release Version the {{ table.numSelected }} content host(s) selected to {{ selected.release }}?. This action will affect only those Content Hosts that belong to the appropriate Content View and Lifecycle Environment containining that release version.": [
-        "Êtes-vous sûr de vouloir régler la version de sortie du ou des hôtes de contenu {{ table.numSelected }} sélectionnés sur {{ selected.release }} ? Cette action n'affectera que les hôtes de contenu qui appartiennent à la vue de contenu et à l'environnement de cycle de vie appropriés contenant cette version de publication."
-      ],
-      "Are you sure you want to update {{ content.content }} on the {{ getSelectedSystemIds().length }} system(s) selected?": [
-        "Êtes-vous sûr de vouloir faire une mise à jour de {{ content.content }} parmi le(s) {{ getSelectedSystemIds().length }} système(s) sélectionné(s) ?"
-      ],
-      "Are you sure you want to update all packages on the {{ getSelectedSystemIds().length }} system(s) selected?": [
-        "Êtes-vous sûr de vouloir mettre à jour tous les packages sur le(s) système(s) {{ getSelectedSystemIds().length }} sélectionné(s) ?"
-      ],
-      "Assign": [
-        "Attribuer"
-      ],
-      "Assign Lifecycle Environment and Content View": [
-        "Attribuer la vue Environnement et contenu du cycle de vie"
-      ],
-      "Assign Release Version": [
-        "Attribuer une version sortie"
-      ],
-      "Assign System Purpose": [
-        "Attribuer un objectif système"
-      ],
-      "Associations": [
-        "Associations"
-      ],
-      "At least one Errata needs to be selected to Apply.": [
-        "Au moins un erratum doit être sélectionné pour pouvoir appliquer."
-      ],
-      "Attached": [
-        "Attaché"
-      ],
-      "Auth Token": [
-        "Jeton d'authentification"
-      ],
-      "Auth URL": [
-        "URL d'authentification"
-      ],
-      "Author": [
-        "Auteur"
-      ],
-      "Auto-Attach": [
-        "Auto-Attach"
-      ],
-      "Auto-attach available subscriptions to all selected hosts.": [
-        "Attacher automatiquement les abonnements disponibles à tous les hôtes sélectionnés."
-      ],
-      "Auto-Attach Details": [
-        "Détails Auto-Attach"
-      ],
-      "Auto-attach uses all available subscriptions, not a selected subset.": [
-        "L'attachement automatique utilise tous les abonnements disponibles, et non pas juste un sous-ensemble sélectionné."
-      ],
-      "Automatic": [
-        "Automatique"
-      ],
-      "Available Module Streams": [
-        "Flux de modules disponibles"
-      ],
-      "Available Schema Versions": [
-        "Versions de schémas disponibles"
-      ],
-      "Back To Errata List": [
-        "Retour à la liste des errata"
-      ],
-      "Backend Identifier": [
-        "Identifiant du back-end"
-      ],
-      "Basic Information": [
-        "Informations de base"
-      ],
-      "Below are the repository content sets currently available for this content host through its subscriptions. For Red Hat subscriptions, additional content can be made available through the": [
-        "Vous trouverez ci-dessous les ensembles de contenu du référentiel actuellement disponibles pour cet hébergeur de contenu par le biais de ses abonnements. Pour les abonnements à Red Hat, du contenu supplémentaire peut être mis à disposition par le biais de la"
-      ],
-      "Below are the Repository Sets currently available for this activation key through its subscriptions. For Red Hat subscriptions, additional content can be made available through the": [
-        "Vous trouverez ci-dessous les ensembles de référentiels actuellement disponibles pour cette clé d'activation par le biais de ses abonnements. Pour les abonnements Red Hat, du contenu supplémentaire peut être mis à disposition par le biais du"
-      ],
-      "BIOS UUID": [
-        "BIOS UUID"
-      ],
-      "Bootable": [
-        "Amorçable"
-      ],
-      "Bug Fix": [
-        "Correctif de bogue"
-      ],
-      "Bug Fix Advisory": [
-        "Avis de correction de bogue"
-      ],
-      "Build Host": [
-        "Hôte de création"
-      ],
-      "Build Information": [
-        "Informations de création"
-      ],
-      "Build Time": [
-        "Temps de Création"
-      ],
-      "Bulk Task": [
         ""
       ],
+      "Are you sure you want to remove the {{ table.numSelected }} content host(s) selected from the host collection(s) chosen?": [
+        "確定要從所選擇的主機集項目中移除所選擇的 {{ table.numSelected }} 部內容主機？"
+      ],
+      "Are you sure you want to remove the sync plan from the selected product(s)?": [
+        ""
+      ],
+      "Are you sure you want to reset to default the {{ table.numSelected }} repository set(s) chosen?": [
+        ""
+      ],
+      "Are you sure you want to restart services on content host \\\"{{ host.name }}\\\"?": [
+        ""
+      ],
+      "Are you sure you want to restart the services on the selected content hosts?": [
+        ""
+      ],
+      "Are you sure you want to set the HTTP Proxy to the selected products(s)?": [
+        ""
+      ],
+      "Are you sure you want to set the Release Version the {{ table.numSelected }} content host(s) selected to {{ selected.release }}?. This action will affect only those Content Hosts that belong to the appropriate Content View and Lifecycle Environment containining that release version.": [
+        ""
+      ],
+      "Are you sure you want to update {{ content.content }} on the {{ getSelectedSystemIds().length }} system(s) selected?": [
+        "確定要在所選的 {{ getSelectedSystemIds().length }} 部系統上更新 {{ content.content }}？"
+      ],
+      "Are you sure you want to update all packages on the {{ getSelectedSystemIds().length }} system(s) selected?": [
+        ""
+      ],
+      "Assign": [
+        "指定"
+      ],
+      "Assign Lifecycle Environment and Content View": [
+        ""
+      ],
+      "Assign Release Version": [
+        ""
+      ],
+      "Assign System Purpose": [
+        ""
+      ],
+      "Associations": [
+        "相聯性"
+      ],
+      "At least one Errata needs to be selected to Apply.": [
+        "需要選擇至少一項勘誤來套用。"
+      ],
+      "Attached": [
+        "已連接"
+      ],
+      "Auth Token": [
+        ""
+      ],
+      "Auth URL": [
+        ""
+      ],
+      "Author": [
+        "作者"
+      ],
+      "Auto-Attach": [
+        "自動連接"
+      ],
+      "Auto-Attach Details": [
+        ""
+      ],
+      "Automatic": [
+        "自動"
+      ],
+      "Available Module Streams": [
+        ""
+      ],
+      "Available Schema Versions": [
+        ""
+      ],
+      "Back To Errata List": [
+        "回到勘誤清單"
+      ],
+      "Backend Identifier": [
+        ""
+      ],
+      "Basic Information": [
+        "基本資訊"
+      ],
+      "Below are the repository content sets currently available for this content host through its subscriptions. For Red Hat subscriptions, additional content can be made available through the": [
+        "以下是目前可以讓此內容透過其訂閱來使用的軟體庫內容。Red Hat 訂閱的額外內容可透過這裡取得："
+      ],
+      "Below are the Repository Sets currently available for this activation key through its subscriptions. For Red Hat subscriptions, additional content can be made available through the": [
+        ""
+      ],
+      "BIOS UUID": [
+        ""
+      ],
+      "Bootable": [
+        "可開機"
+      ],
+      "Bug Fix": [
+        "錯誤修正"
+      ],
+      "Bug Fix Advisory": [
+        "錯誤修正諮詢"
+      ],
+      "Build Host": [
+        "組建主機"
+      ],
+      "Build Information": [
+        ""
+      ],
+      "Build Time": [
+        "組建時間"
+      ],
       "Cancel": [
-        "Annuler"
+        "取消"
       ],
       "Cannot clean Repository without the proper permissions.": [
-        "Impossible de nettoyer le référentiel sans les autorisations appropriées."
+        ""
       ],
       "Cannot clean Repository, a sync is already in progress.": [
-        "Impossible de nettoyer le référentiel, une synchronisation est déjà en cours."
+        ""
       ],
       "Cannot Remove": [
-        "Suppression impossible"
+        ""
       ],
       "Cannot republish Repository without the proper permissions.": [
-        "Ne peut pas republier le référentiel sans les autorisations nécessaires."
+        ""
       ],
       "Cannot republish Repository, a sync is already in progress.": [
-        "Impossible de republier le référentiel, une synchronisation est déjà en cours."
+        ""
       ],
       "Cannot sync Repository without a URL.": [
-        "Impossible de synchroniser le référentiel sans URL."
+        ""
       ],
       "Cannot sync Repository without the proper permissions.": [
-        "Impossible de synchroniser le référentiel sans les autorisations appropriées."
+        ""
       ],
       "Cannot sync Repository, a sync is already in progress.": [
-        "Impossible de synchroniser le référentiel, une synchronisation est déjà en cours."
+        ""
       ],
       "Capacity": [
-        "Capacité"
+        "容量"
       ],
       "Certificate": [
-        "Certificat"
+        "憑證"
       ],
       "Change assigned Lifecycle Environment or Content View": [
-        "Changer l'environnement ou la vue du contenu du cycle de vie attribué"
+        "變更已指定的生命週期環境或內容視域"
       ],
       "Change Host Collections": [
-        "Répertorier les collections d'hôtes"
+        ""
       ],
       "Change Lifecycle Environment": [
-        "Supprimer l'environnement de cycle de vie"
+        ""
       ],
       "Changing default settings for content hosts that register with this activation key requires subscription-manager version 1.10 or newer to be installed on that host.": [
-        "Pour modifier les paramètres par défaut des hôtes de contenu qui s'enregistrent avec cette clé d'activation, il faut que la version 1.10 ou une version plus récente du gestionnaire d'abonnement soit installée sur cet hôte."
+        "為向此註冊金鑰註冊的內容主機改變預設設定，需要在那台主機上安裝 1.10 以上版本的 subscription-manager。"
       ],
       "Changing default settings requires subscription-manager version 1.10 or newer to be installed on this host.": [
-        "La modification des paramètres par défaut nécessite l'installation sur cet hôte de la version 1.10 ou d'une version plus récente du gestionnaire d'abonnement."
-      ],
-      "Changing download policy to \\\"On Demand\\\" will also clear the checksum type if set. The repository will use the upstream checksum type to verify downloads.": [
-        "La modification de la politique de téléchargement en \\\"A la demande\\\" effacera également le type de somme de contrôle si défini. Le référentiel utilisera le type de somme de contrôle en amont pour vérifier les téléchargements."
+        "改變預設設定需要在此主機上安裝 1.10 以上版本的 subscription-manager。"
       ],
       "Changing the Content View will not affect the Content Host until its next checkin.\\n                To update the Content Host immediately run the following command:": [
-        "La modification de la vue du contenu n'affectera pas l'hôte du contenu jusqu'à son prochain contrôle.\\n                Pour mettre à jour l'hôte de contenu, exécutez immédiatement la commande suivante :"
+        ""
       ],
       "Changing the Content View will not affect the Content Hosts until their next checkin.\\n        To update the Content Hosts immediately run the following command:": [
-        "La modification de la vue du contenu n'affectera pas les hôtes de contenu jusqu'à leur prochaine vérification.\\n        Pour mettre à jour les hôtes de contenu, exécutez immédiatement la commande suivante :"
+        ""
       ],
       "Checksum": [
-        "Somme de contrôle"
+        "Checksum"
       ],
       "Checksum Type": [
-        "Type de somme de contrôle"
+        "Checksum 類型"
       ],
       "Choose one of the registry options to discover containers. To examine a private registry choose \\\"Custom\\\" and provide the url for the private registry.": [
-        "Choisissez l'une des options du registre pour découvrir les conteneurs. Pour examiner un registre privé, choisissez \\\"Custom\\\" et indiquez l'adresse du registre privé."
+        ""
       ],
       "Click here to check the status of the task.": [
-        "Cliquez ici pour vérifier l'état d'avancement de la tâche."
+        "點選此處以檢查任務的狀態。"
       ],
       "Click here to select Errata for an Incremental Update.": [
-        "Cliquez ici pour sélectionner les errata pour une mise à jour progressive."
+        "點選此處以選擇勘誤進行遞增更新。"
       ],
       "Click to monitor task progress.": [
-        "Cliquez pour suivre l'avancement de la tâche."
+        ""
       ],
       "Click to view task": [
-        "Cliquez pour voir la tâche"
+        ""
       ],
       "Close": [
-        "Fermer"
+        "關閉"
       ],
       "Collection Name": [
-        "Nom de la collection"
+        ""
       ],
       "Complete Mirroring": [
-        "Terminer Mirrorisation"
+        ""
       ],
       "Complete Sync": [
-        "Terminer Sync"
+        ""
       ],
       "Completed {{ repository.last_sync_words }} ago": [
-        "Terminé il y a {{ repository.last_sync_words }}"
+        ""
       ],
       "Completely deletes the host including VM and disks, and removes all reporting, provisioning, and configuration information.": [
-        "Supprime complètement l'hôte, y compris la VM et les disques, et supprime toutes les informations de rapport, de provisionnement et de configuration."
+        ""
       ],
       "Components": [
-        "Composants"
+        "元件"
       ],
       "Components:": [
-        "Composants :"
+        "元件："
       ],
       "Composite View": [
-        "Affichage composite"
+        "複合視域"
       ],
       "Confirm": [
-        "Confirmer"
+        "確認"
       ],
       "Confirm services restart": [
-        "Confirmer le redémarrage des services"
+        ""
       ],
       "Container Image Manifest": [
-        "Manifeste de l'image du conteneur"
+        ""
       ],
       "Container Image Manifest Lists": [
-        "Listes de manifestes d'images de conteneur"
+        ""
       ],
       "Container Image Manifests": [
-        "Manifeste d'image de conteneur"
+        ""
       ],
       "Container Image metadata generation has been initiated in the background.  Click\\n      <a ng-href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        "La génération des métadonnées de l'image du conteneur a été lancée en arrière-plan.  Cliquez sur\\n      <a ng-href=\\\"{{ taskUrl() }}\\\"> Ici</a>  pour suivre les progrès."
+        ""
       ],
       "Container Image Registry": [
-        "Registre d'images de conteneur"
+        ""
       ],
       "Container Image Tags": [
-        "Balises d'images de conteneurs"
+        ""
       ],
       "Content": [
-        "Contenu"
+        "內容"
       ],
       "Content Counts": [
-        "Nombre de contenus"
-      ],
-      "Content Credential": [
-        "Identifiants de contenu"
+        "內容的數量"
       ],
       "Content Credential %s has been created.": [
-        "L’identifiant de contenu %s a été créée."
+        ""
       ],
       "Content Credential Contents": [
-        "Contenus d’identifiants de contenu"
+        ""
       ],
       "Content Credential successfully uploaded": [
-        "Les identifiants de contenu ont été téléchargés"
+        ""
       ],
       "Content credential updated": [
-        "Identifiants de contenu mises à jour"
+        ""
       ],
       "Content Credentials": [
-        "Identifiants de contenu"
+        ""
       ],
       "Content Host": [
-        "Hôte de contenu"
+        "內容主機"
       ],
       "Content Host Bulk Content": [
-        "Contenu en vrac Hôte de contenu"
+        "內容主機的大批內容"
       ],
       "Content Host Bulk Subscriptions": [
-        "Ensemble des abonnements Hôte de contenu"
+        "內容主機的大批訂閱"
       ],
       "Content Host Content": [
-        "Contenu Hôte de contenu"
+        "內容主機的內容"
       ],
       "Content Host Counts": [
-        "Nombre Hôte de contenu"
+        "內容主機計數"
       ],
       "Content Host Limit": [
-        "Limite Hôte de contenu"
-      ],
-      "Content Host Module Stream Management": [
-        "Gestion des flux de modules Hôte de contenu"
+        "內容主機的限制"
       ],
       "Content Host Properties": [
-        "Propriétés Hôte de contenu"
+        "內容主機的屬性"
       ],
       "Content Host Registration": [
-        "Enregistrement Hôte de contenu"
+        "內容主機的註冊"
       ],
       "Content Host Status": [
-        "Statut Hôte de contenu"
-      ],
-      "Content Host Traces Management": [
-        "Gestion des traces Hôte de contenu"
+        "內容主機的狀態"
       ],
       "Content Host:": [
-        "Hôte du contenu :"
+        "{{ contentHost.name }"
       ],
       "Content Hosts": [
-        "Hôtes du contenu"
+        "內容主機"
       ],
       "Content Hosts for Activation Key:": [
-        "Annuler le contenu pour la clé d'activation :"
+        "給啟動金鑰的內容主機："
       ],
       "Content Hosts for:": [
-        "Hôtes du contenu pour :"
+        "給以下使用的內容主機："
       ],
       "Content Only": [
-        "Contenu uniquement"
+        ""
       ],
       "Content synced depends on the specifity of the URL and/or the optional requirements.yaml specified below <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'ansible_collection'\\\" uib-popover-html=\\\"collectionURLPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Upstream URL\\\">\\n        </a>": [
-        "Le contenu synchronisé dépend de la spécificité de l'URL et/ou des exigences facultatives .yaml spécifiées ci-dessous <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'ansible_collection'\\\" uib-popover-html=\\\"collectionURLPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Upstream URL\\\">\\n        </a>"
+        ""
       ],
       "Content Type": [
-        "Type de contenu"
+        "內容類型"
       ],
       "Content View": [
-        "Vue du contenu"
+        "內容視域"
       ],
       "Content View Version": [
-        "Version d'affichage de contenu"
+        "內容視域版本"
       ],
       "Content View:": [
-        "Affichage de contenu :"
+        "內容視域："
       ],
       "Content Views": [
-        "Affichages du contenu"
+        "內容視域"
       ],
       "Content Views <div>{{ library.counts.content_views || 0 }}</div>": [
-        "Affichages de contenu <div>{{ library.counts.content_views || 0 }}</div>"
+        "內容視域 <div>{{ library.counts.content_views || 0 }}</div>"
       ],
       "Content Views for Deb:": [
-        "Affichages de contenu pour Deb :"
+        ""
       ],
       "Content Views for File:": [
-        "Affichages de contenu pour le dossier :"
+        ""
       ],
       "Content Views that contain this Deb": [
-        "Affichage de contenu qui contiennent cette Deb"
+        ""
       ],
       "Content Views that contain this File": [
-        "Affichage de contenu qui contiennent ce fichier"
+        ""
       ],
       "Context": [
-        "Contexte"
+        "內容"
       ],
       "Contract": [
-        "Contrat"
+        "合約"
       ],
       "Copy Activation Key": [
-        "Copier Clé d’activation"
+        "複製啟動金鑰"
       ],
       "Copy Host Collection": [
-        "Nom de la collection d'hôtes"
+        ""
       ],
       "Cores per Socket": [
-        "Cores par socket"
+        "每個插槽的核心數"
       ],
       "Create": [
-        "Créer"
+        "建立"
       ],
       "Create a copy of {{ activationKey.name }}": [
-        "Créer une copie de {{ activationKey.name }}"
+        ""
       ],
       "Create a copy of {{ hostCollection.name }}": [
-        "Créer une copie de {{ hostCollection.name }}"
+        ""
       ],
       "Create Activation Key": [
-        "Créer une clé d'activation"
+        "建立啟動金鑰"
       ],
       "Create Content Credential": [
-        "Créer identifiant de contenu"
-      ],
-      "Create Copy": [
-        "Créer une copie"
+        ""
       ],
       "Create Discovered Repositories": [
-        "Créer référentiels de découvertes"
+        ""
       ],
       "Create Environment Path": [
-        "Créer Chemin d’environnement"
+        ""
       ],
       "Create Host Collection": [
-        "Créer Collection d'hôtes"
+        ""
       ],
       "Create Product": [
-        "Créer un produit"
-      ],
-      "Create Repositories": [
-        "Créer des référentiels"
+        ""
       ],
       "Create Selected": [
-        "Créer sélectionné"
+        "建立所選項目"
       ],
       "Create Status": [
-        "Créer un statut"
+        ""
       ],
       "Create Sync Plan": [
-        "Créer Plan Sync"
+        "建立同步計畫"
       ],
       "Creating repository...": [
-        "Création d'un référentiel..."
+        ""
       ],
       "Critical": [
-        "Critique"
+        "重要"
       ],
       "Cron Logic": [
-        "Cron Logic"
+        ""
       ],
       "ctrl-click or shift-click to select multiple Add ons": [
-        "ctrl-clic ou shift-clic pour sélectionner plusieurs modules d'extension"
+        ""
       ],
       "Current Lifecycle Environment (%e/%cv)": [
-        "Environnement de cycle de vie antérieur (%e/%cv )"
+        ""
       ],
       "Current Subscriptions for Activation Key:": [
-        "Abonnements actuels pour la clé d'activation :"
-      ],
-      "Custom": [
-        "Personnalisé"
+        "供啟動金鑰使用的現有訂閱："
       ],
       "custom cron": [
-        "cron personnalisé"
+        ""
       ],
       "Custom Cron": [
-        "Cron personnalisé"
+        ""
       ],
       "Custom Cron : {{ product.sync_plan.cron_expression }}": [
-        "Custom Cron : {{ product.sync_plan.cron_expression }}"
+        ""
       ],
       "Customize": [
-        "Personnaliser"
+        ""
       ],
       "CVEs": [
         "CVE"
       ],
       "daily": [
-        "quotidiennement"
+        "每日"
       ],
       "Daily at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)": [
-        "Tous les jours à {{ product.sync_plan.sync_date | date:'mediumTime' }} (heure du serveur)"
+        "每日的 {{ product.sync_plan.sync_date | date:'mediumTime' }}（伺服器時間）"
       ],
       "Date": [
-        "Date"
+        "日期"
       ],
       "deb metadata generation has been initiated in the background.  Click <a href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        "la génération des métadonnées deb a été lancée en arrière-plan.  Cliquez <a href=\\\"{{ taskUrl() }}\\\">ici</a> pour suivre les progrès."
-      ],
-      "Deb Package Actions": [
         ""
       ],
       "deb Package Updates": [
-        "deb Mises à jour de paquets"
+        ""
       ],
       "deb Packages": [
-        "deb paquets"
+        ""
       ],
       "Deb Packages": [
-        "Paquets Deb"
+        ""
       ],
       "Deb Packages <div>{{ library.counts.debs || 0 }}</div>": [
-        "Paquets Deb <div>{{ library.counts.debs || 0 }}</div>"
+        ""
       ],
       "Deb Packages for:": [
-        "Paquets Deb pour :"
-      ],
-      "Deb Repositories": [
-        "Référentiels deb"
+        ""
       ],
       "Deb Repositories <div>{{ library.counts.deb_repositories || 0 }}</div>": [
-        "Référentiels Deb <div>{{ library.counts.deb_repositories || 0 }}</div>"
+        ""
       ],
       "Deb:": [
-        "Deb:"
-      ],
-      "Debs": [
-        "Debs"
+        ""
       ],
       "Default": [
-        "Par défaut"
+        "預設值"
       ],
       "Default Status": [
-        "Statut par défaut"
+        ""
       ],
       "Delete": [
-        "Supprimer"
+        "刪除"
       ],
       "Delete {{ table.numSelected  }} Hosts?": [
-        "Supprimer {{ table.numSelected  }}hôtes ?"
-      ],
-      "Delete filters": [
-        "Supprimer les filtres"
+        ""
       ],
       "Delete Hosts": [
-        "Supprimer ces hôtes"
+        "刪除主機"
       ],
       "Delta RPM": [
-        "Delta RPM"
+        ""
       ],
       "Dependencies": [
-        "Dépendances"
+        "相依性"
       ],
       "Description": [
-        "Description"
+        "描述"
       ],
       "Details": [
-        "Détails"
+        "詳細資料"
       ],
       "Details for Activation Key:": [
-        "Détails pour la clé d'activation :"
+        "啟動金鑰的詳細資料："
       ],
       "Details for Container Image Tag:": [
-        "Détails pour les noms d'images de conteneurs :"
+        ""
       ],
       "Details for Product:": [
-        "Détails pour le produit :"
+        "產品的詳細資料："
       ],
       "Details for Repository:": [
-        "Détails pour le référentiel :"
+        ""
       ],
       "Determines whether to require login to pull container images in this lifecycle environment.": [
-        "Détermine s'il est nécessaire de se connecter pour extraire des images de conteneurs dans cet environnement de cycle de vie."
+        ""
       ],
       "Digest": [
-        "Digest"
+        "消化"
       ],
       "Disable": [
-        "Désactiver"
+        "停用"
       ],
       "Disabled": [
-        "Désactivé"
+        "已停用"
       ],
       "Disabled (overridden)": [
-        "Désactivé (remplacé)"
+        ""
       ],
       "Discover": [
-        "Découvrir"
-      ],
-      "Discover Repositories": [
-        "Découvrir des référentiels"
+        "尋找"
       ],
       "Discovered Repository": [
-        "Référentiel des découvertes"
+        ""
       ],
       "Discovery failed. Error: %s": [
-        "La détection a échoué. Erreur : %s"
+        ""
       ],
       "Distribution": [
-        "Distribution"
+        "發行套件"
       ],
       "Distribution Information": [
-        "Informations sur la distribution"
+        "散佈資訊"
       ],
       "Do not require a subscription entitlement certificate for accessing this repository.": [
-        "Nul besoin de certificat de droit d'abonnement pour accéder à ce référentiel."
-      ],
-      "Docker": [
-        "Docker"
+        ""
       ],
       "Docker metadata generation has been initiated in the background.  Click\\n            <a ng-href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        "La génération de métadonnées Docker a été lancée en arrière-plan.  Cliquez sur\\n            <a ng-href=\\\"{{ taskUrl() }}\\\">Ici</a>  pour suivre les progrès."
+        ""
       ],
       "Docker Repositories <div>{{ library.counts.docker_repositories || 0 }}</div>": [
-        "Référentiels Docker <div>{{ library.counts.docker_repositories || 0 }} </div>"
-      ],
-      "Docker Tags": [
-        "Balises Docker"
+        "Docker 軟體庫 <div>{{ library.counts.docker_repositories || 0 }}</div>"
       ],
       "Done": [
-        "Fait"
+        "完成"
       ],
       "Download Policy": [
-        "Télécharger la politique"
+        "下載政策"
       ],
       "Enable": [
-        "Activer"
+        "啟用"
       ],
       "Enable Traces": [
-        "Activer Traces"
+        ""
       ],
       "Enabled": [
-        "Activé"
+        "已啟用"
       ],
       "Enabled (overridden)": [
-        "Activé (remplacé)"
+        ""
       ],
       "Enhancement": [
-        "Amélioration"
+        "增強"
       ],
       "Enter Package Group Name(s)...": [
-        "Nom de groupe(s) de packages..."
+        "輸入套件群組名稱……"
       ],
       "Enter Package Name(s)...": [
-        "Entrez le(s) nom(s) de packages..."
+        "輸入套件名稱……"
       ],
       "Environment": [
-        "Environnement"
+        "環境"
       ],
       "Environment saved": [
-        "Environnement sauvegardé"
+        "環境已儲存"
       ],
       "Environment will also be removed from the following published content views!": [
-        "L'environnement sera également supprimé des vues de contenu publiées suivantes !"
-      ],
-      "Environments": [
-        "Environnements"
+        ""
       ],
       "Environments List": [
-        "Liste des environnements"
+        "環境清單"
       ],
       "Errata": [
-        "Errata"
+        "勘誤"
       ],
       "Errata <div>{{ library.counts.errata.total || 0 }}</div>": [
-        "Errata <div>{{ library.counts.errata.total || 0 }}</div>"
+        "勘誤 <div>{{ library.counts.errata.total || 0 }}</div>"
       ],
       "Errata are automatically Applicable if they are Installable": [
-        "Les errata sont automatiquement applicables si installables"
+        ""
       ],
       "Errata Details": [
-        "Infos Errata"
+        "勘誤的詳細資料"
       ],
       "Errata for:": [
-        "Errata pour :"
+        "給以下使用的勘誤："
       ],
       "Errata ID": [
-        "ID des errata"
+        "勘誤 ID"
       ],
       "Errata Installation": [
-        "Installation des errata"
+        "安裝勘誤"
       ],
       "Errata Task List": [
-        "Liste des tâches des errata"
+        "勘誤任務清單"
       ],
       "Errata Tasks": [
-        "Tâches des errata"
+        "勘誤任務"
       ],
       "Errata:": [
-        "Errata:"
+        "勘誤："
       ],
       "Error during upload:": [
-        "Erreur lors du téléchargement :"
+        "上傳時發生錯誤。"
       ],
       "Error saving the Sync Plan:": [
-        "Erreur de sauvegarde du plan de synchronisation :"
+        ""
       ],
       "Event": [
-        "Événement"
+        "事件"
       ],
       "Exclude Tags": [
-        "Exclure les balises"
+        ""
       ],
       "Existing Product": [
-        "Produit existant"
+        "既有的產品"
       ],
       "Expires": [
-        "Expire"
+        "有效期限"
       ],
       "Export": [
-        "Exporter"
+        "匯出"
       ],
       "Family": [
-        "Famille"
+        "家族"
       ],
       "File Information": [
-        "Information Fichier"
+        "檔案資訊"
       ],
       "File removal been initiated in the background.  Click <a href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        "La suppression des fichiers a été initiée en arrière-plan.  Cliquez <a href=\\\"{{ taskUrl() }}\\\">ici</a>  pour suivre l'évolution de la situation."
+        ""
       ],
       "File too large.": [
-        "Fichier trop volumineux."
+        ""
       ],
       "File too large. Please use the CLI instead.": [
-        "Fichier trop volumineux. Veuillez utiliser le CLI à la place."
+        "檔案太大。請使用 CLI 來代替。"
       ],
       "File:": [
-        "Fichier :"
+        ""
       ],
       "Filename": [
-        "Nom du fichier"
+        "檔案名稱"
       ],
       "Files": [
-        "Fichiers"
+        "檔案"
       ],
       "Files in package {{ package.nvrea }}": [
-        "Fichiers dans le package {{ package.nvrea }}"
+        ""
       ],
       "Filter": [
-        "Filtre"
-      ],
-      "Filter by Environment": [
-        "Filtrer par environnement"
+        "篩選器"
       ],
       "Filter by Status:": [
-        "Filtrer par état :"
+        ""
       ],
       "Filter...": [
-        "Filtrer..."
-      ],
-      "Filters": [
-        "Filtres"
+        "篩選器……"
       ],
       "Finished At": [
-        "Terminé à"
+        "完成於"
       ],
       "For older operating systems such as Red Hat Enterprise Linux 5 or CentOS 5 it is recommended to use sha1.": [
-        "Pour les anciens systèmes d'exploitation tels que Red Hat Enterprise Linux 5 ou CentOS 5, il est recommandé d'utiliser le sha1."
+        "建議在較舊的作業系統上（例如 Red Hat Enterprise Linux 5 或是 CentOS 5）使用 sha1。"
       ],
       "For On Demand synchronization, only the metadata is downloaded during sync and packages are fetched and stored on the filesystem when clients request them.\\n          On Demand is not recommended for custom repositories unless the upstream repository maintains older versions of packages within the repository.\\n          The Immediate option will download all metadata and packages immediately during the sync.": [
-        "Pour la synchronisation à la demande, seules les métadonnées sont téléchargées pendant la synchronisation et les paquets sont récupérés et stockés sur le système de fichiers lorsque les clients les demandent.\\n          La synchronisation à la demande n'est pas recommandée pour les référentiels personnalisés, sauf si le référentiel en amont maintient des versions plus anciennes des paquets dans le référentiel.\\n          L'option Immédiate permet de télécharger toutes les métadonnées et tous les paquets immédiatement pendant la synchronisation."
+        ""
       ],
       "Global Default": [
-        "Par Défaut Global"
+        ""
       ],
       "Global Default (None)": [
-        "Pas de Par Défaut Global"
+        ""
       ],
       "GPG Key": [
-        "Clé GPG"
+        "GPG 金鑰"
       ],
       "Group": [
-        "Groupe"
+        "群組"
       ],
       "Group Install (Deprecated)": [
-        "Installation de groupe (déprécié)"
+        ""
       ],
       "Group package actions are being deprecated, and will be removed in a future version.": [
-        "Les actions de groupe de paquets sont dépréciées et seront supprimées dans une prochaine version."
+        ""
       ],
       "Group Remove (Deprecated)": [
-        "Suppression de groupe (déprécié)"
+        ""
       ],
       "Guests of": [
-        "Les invités de"
+        "客座"
       ],
       "Helper": [
-        "Assistant"
+        ""
       ],
       "Host %s has been deleted.": [
-        "L’hôte %s a été supprimé."
+        ""
       ],
       "Host %s has been unregistered.": [
-        "L'hôte %s a été dés-enregistré."
+        ""
       ],
       "Host Collection Management": [
-        "Gestion de la collection d'hôtes"
+        "管理主機集"
       ],
       "Host Collection Membership": [
-        "Abonnement à la collection d'hôtes"
-      ],
-      "Host Collection Membership Management": [
-        "Gestion Abonnement à la collection d'hôtes"
+        "主機集的成員"
       ],
       "Host Collection removed.": [
-        "Collection d'hôtes supprimée."
+        "已移除主機集。"
       ],
       "Host Collection updated": [
-        "Collection d'hôtes mise à jour"
+        "已更新主機集"
       ],
       "Host Collection:": [
-        "Collection d'hôtes :"
+        "主機集："
       ],
       "Host Collections": [
-        "Collections d'hôtes"
+        "主機集"
       ],
       "Host Collections for:": [
-        "Collections d'hôtes pour :"
+        "給以下使用的主機集："
       ],
       "Host Count": [
-        "Nombre d'hôtes"
+        "主機計數"
       ],
       "Host Group": [
-        "Groupe d'hôtes"
+        "主機群組"
       ],
       "Host Limit": [
-        "Limite d'hôtes"
+        "主機限制"
       ],
       "Hostname": [
-        "Nom d'hôte"
+        "主機名稱"
       ],
       "Hosts": [
-        "Hôtes"
+        "主機"
       ],
       "hourly": [
-        "toutes les heures"
+        "每小時"
       ],
       "Hourly at {{ product.sync_plan.sync_date | date:'m' }} minutes and {{ product.sync_plan.sync_date | date:'s' }} seconds": [
-        "Toutes les heures {{ product.sync_plan.sync_date | date:'m' }} minutes et {{ product.sync_plan.sync_date | date:'s' }} secondes"
+        "每小時於 {{ product.sync_plan.sync_date | date:'m' }} 分 {{ product.sync_plan.sync_date | date:'s' }} 秒"
       ],
       "HTTP Proxy": [
-        "HTTP Proxy"
-      ],
-      "HTTP Proxy Management": [
-        "Gestion du proxy HTTP"
+        "HTTP 代理"
       ],
       "HTTP Proxy Policy": [
-        "Politique de proxy HTTP"
+        ""
       ],
       "HTTP Proxy Policy:": [
-        "Politique de proxy HTTP :"
+        ""
       ],
       "HTTP Proxy:": [
-        "HTTP Proxy:"
+        ""
       ],
       "HttpProxyPolicy": [
-        "HttpProxyPolicy"
+        ""
       ],
       "Id": [
         "Id"
       ],
       "Ignore SRPMs": [
-        "Ignorer les SRPM"
-      ],
-      "Ignore treeinfo": [
         ""
       ],
       "Image": [
-        "Image"
+        "影像"
       ],
       "Immediate": [
-        "Immédiat"
+        "立即"
       ],
       "Important": [
-        "Important"
+        "重要"
       ],
       "In order to browse this repository you must <a ng-href=\\\"/organizations/{{ organization }}/edit\\\">download the certificate</a>\\n            or ask your admin for a certificate.": [
-        "Pour pouvoir consulter ce répertoire, vous devez <a ng-href=\\\"/organizations/{{ organization }}/edit\\\">télécharger le certificat</a> \\n            ou demandez un certificat à votre administrateur.."
+        ""
       ],
       "Include Tags": [
-        "Inclure les balises"
+        ""
       ],
       "Independent Packages": [
-        "Packages indépendants"
+        ""
       ],
       "Install": [
-        "Installer"
+        "安裝"
       ],
       "Install Selected": [
-        "Installer Sélectionné"
+        "安裝所選項目"
       ],
       "Install the pre-built bootstrap RPM:": [
-        "Installez le RPM du bootstrap préinstallé :"
+        "安裝預建立的 bootstrap RPM："
       ],
       "Installable": [
-        "Installable"
+        "可安裝"
       ],
       "Installable Errata": [
-        "Hôtes avec errata installables"
+        "可安裝的勘誤"
       ],
       "Installable Updates": [
-        "Mises à jour installables"
+        ""
       ],
       "Installed": [
-        "Installé"
+        "已安裝"
       ],
       "Installed Deb Packages": [
-        "Packages deb installés"
+        ""
       ],
       "Installed On": [
-        "Installé le"
+        ""
       ],
       "Installed Package": [
-        "Paquet installé"
+        "已安裝的套件"
       ],
       "Installed Packages": [
-        "Paquets installés"
+        "已安裝的套件"
       ],
       "Installed Products": [
-        "Produits installés"
+        "已安裝的產品"
       ],
       "Installed Profile": [
-        "Profil installé"
+        ""
       ],
       "Interfaces": [
-        "Interfaces"
+        "介面"
       ],
       "Interval": [
-        "Intervalle"
+        "間隔"
       ],
       "IPv4 Address": [
-        "Adresse IPv4"
+        "IPv4 位址"
       ],
       "IPv6 Address": [
-        "Adresse IPv6"
+        "IPv6 位址"
       ],
       "Issued": [
-        "Publié"
+        "已簽發"
+      ],
+      "Katello Agent": [
+        "Katello 代理程式"
       ],
       "Katello Tracer": [
-        "Katello Tracer"
+        ""
+      ],
+      "Katello-agent is deprecated and will be removed in a future release.": [
+        ""
       ],
       "Label": [
-        "Balise"
+        "標籤"
       ],
       "Last Checkin": [
-        "Dernière vérification"
+        "前一次簽入"
       ],
       "Last Published": [
-        "Dernière publication"
+        "前一次出版"
       ],
       "Last Puppet Report": [
-        "Dernier rapport Puppet"
+        "前一次 Puppet 報告"
       ],
       "Last reclaim space failed:": [
-        "La dernière récupération d'espace a échoué :"
+        ""
       ],
       "Last Sync": [
-        "Dernière Sync"
+        "前一次同步"
       ],
       "Last sync failed:": [
-        "La dernière synchronisation a échoué :"
+        ""
       ],
       "Last synced": [
-        "Dernière synchronisation"
+        ""
       ],
       "Last Updated On": [
-        "Dernière mise à jour le"
+        "最後更新於"
       ],
       "Library": [
-        "Bibliothèque"
+        "函示庫"
       ],
       "Library Repositories": [
-        "Référentiels de bibliothèques"
+        "函式庫軟體庫"
       ],
       "Library Repositories that contain this Deb.": [
-        "Les référentiels des bibliothèques qui contiennent cette Deb."
+        ""
       ],
       "Library Repositories that contain this File.": [
-        "Les référentiels des bibliothèques qui contiennent ce fichier."
+        ""
       ],
       "Library Synced Content": [
-        "Contenu de bibliothèque synchronisé"
+        "函式庫已同步內容"
       ],
       "License": [
-        "Licence"
+        "授權條款"
       ],
       "Lifecycle Environment": [
-        "Environnement de cycle de vie"
+        "生命週期環境"
       ],
       "Lifecycle Environment Paths": [
-        "Chemins d’accès d’environnement de cycle de vie"
+        "生命週期環境的路徑"
       ],
       "Lifecycle Environment:": [
-        "Environnement de cycle de vie :"
+        ""
       ],
       "Lifecycle Environments": [
-        "Environnements de cycle de vie"
+        "生命週期環境"
       ],
       "Limit": [
-        "Limite"
+        "限制"
       ],
-      "Limit Repository Sets to only those available in this Activation Key's Lifecycle  Environment": [
+      "Limit Repository Sets to only those available in this Activation Key's Lifecycle Environment": [
         ""
       ],
       "Limit Repository Sets to only those available in this Host's Lifecycle Environment": [
-        "Limiter les ensembles de référentiel aux seuls éléments disponibles dans l'environnement du cycle de vie de cet hôte"
+        ""
       ],
       "Limit to environment": [
-        "Limiter à l'environnement"
+        ""
       ],
       "Limit to Environment": [
-        "Limiter à l'Environnement"
+        ""
       ],
       "Limit to Lifecycle Environment": [
-        "Limiter à l’environnement Cycle de vie"
+        ""
       ],
       "Limit:": [
-        "Limite :"
+        "限制："
       ],
       "List": [
-        "Liste"
-      ],
-      "List Host Collections": [
-        "Lister les collections d'hôtes"
-      ],
-      "List Hosts": [
-        "Lister les hôtes"
-      ],
-      "List Products": [
-        "Lister les produits"
-      ],
-      "List Subscriptions": [
-        "Lister les abonnements"
+        "清單"
       ],
       "List/Remove": [
-        "Liste/Enlever"
+        "列出/移除"
       ],
       "Loading...": [
-        "Chargement..."
+        "載入中……"
       ],
       "Loading...\\\"": [
-        "Chargement..."
-      ],
-      "Make filters apply to all repositories in the content view": [
         ""
       ],
       "Manage Ansible Collections for Repository:": [
-        "Gérer les collections accessibles pour le référentiel :"
+        ""
       ],
       "Manage Container Image Manifests for Repository:": [
-        "Gérer les manifestes d'images de conteneurs pour le référentiel :"
+        ""
       ],
       "Manage Content for Repository:": [
-        "Gérer le contenu du référentiel :"
+        ""
       ],
       "Manage deb Packages for Repository:": [
-        "Gérer les paquets deb pour le référentiel :"
+        ""
       ],
       "Manage Errata": [
-        "Gérer les errata"
+        "管理勘誤"
       ],
       "Manage Files for Repository:": [
-        "Gérer les fichiers pour le référentiel :"
+        ""
       ],
       "Manage Host Traces": [
-        "Gérer les traces d’hôte"
+        ""
       ],
       "Manage HTTP Proxy": [
-        "Gérer le proxy HTTP"
+        ""
       ],
       "Manage Module Streams": [
-        "Indexer les flux de module"
+        ""
       ],
       "Manage Module Streams for Repository:": [
-        "Gérer les flux de modules pour le référentiel :"
+        ""
       ],
       "Manage Packages": [
-        "Gérer les paquets"
+        "管理套件"
       ],
       "Manage Packages for Repository:": [
-        "Gérer les paquets pour le référentiel :"
+        "管理軟體庫的套件："
       ],
       "Manage Repository Sets": [
-        "Gérer les ensembles de référentiels"
+        ""
       ],
       "Manage Subscriptions": [
-        "Gérer les abonnements"
+        ""
       ],
       "Manage Sync Plan": [
-        "Gérer le plan de synchronisation"
+        ""
       ],
       "Manage System Purpose": [
-        "Gérer Objectif system"
+        ""
       ],
       "Manifest Lists": [
-        "Listes de manifestes"
+        ""
       ],
       "Manifest Type": [
-        "Types de manifestes"
-      ],
-      "Metadata Expiration (Seconds)": [
-        "Expiration des métadonnées (secondes)"
+        ""
       ],
       "Mirroring Policy": [
-        "Politique de mise en miroir"
+        ""
       ],
       "Model": [
-        "Modéliser"
+        "型號"
       ],
       "Moderate": [
-        "Modéré"
+        "控管"
       ],
       "Modular": [
-        "Modulaire"
+        ""
       ],
       "Module Stream Management": [
-        "Gestion des flux de modules"
+        ""
       ],
       "Module Stream metadata generation has been initiated in the background.  Click\\n      <a ng-href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        "La génération des métadonnées du flux de module a été lancée en arrière-plan.  Cliquez ici </a> pour suivre les progrès."
+        ""
       ],
       "Module Stream Packages": [
-        "Paquets de flux de modules"
+        ""
       ],
       "Module Streams": [
-        "Flux de module"
+        ""
       ],
       "Module Streams <div>{{ library.counts.module_streams || 0 }}</div>": [
-        "Flux de module <div>{{ library.counts.module_streams || 0 }}</div>"
+        ""
       ],
       "Module Streams for:": [
-        "Flux de module pour :"
+        ""
       ],
       "More Details": [
-        "Plus de détails"
+        "更多詳細資訊"
       ],
       "N/A": [
-        "Sans objet"
+        "N/A"
       ],
       "Name": [
-        "Nom"
+        "名稱"
       ],
       "Name of the upstream repository you want to sync. Example: 'quay/busybox' or 'fedora/ssh'.": [
-        "Nom du référentiel en amont que vous souhaitez synchroniser. Exemple : \\\"quay/busybox\\\" ou \\\"fedora/ssh\\\"."
+        ""
       ],
       "Networking": [
-        "Networking"
+        "網路"
       ],
       "Never": [
-        "Jamais"
+        "永不"
       ],
       "Never checked in": [
-        "Jamais enregistré dans"
+        ""
       ],
       "Never registered": [
-        "Jamais enregistré"
+        ""
       ],
       "Never synced": [
-        "Jamais synchronisé"
+        "從未同步"
       ],
       "New Activation Key": [
-        "Nouvelles clé d'activation"
-      ],
-      "New Content Credential": [
-        ""
+        "新增啟動金鑰"
       ],
       "New Environment": [
-        "Nouvel environnement"
-      ],
-      "New Host Collection": [
-        ""
+        "新增環境"
       ],
       "New Name:": [
-        "Nouveau nom :"
+        "新名稱："
       ],
       "New Product": [
-        "Nouveau produit"
+        "新產品"
       ],
       "New Repository": [
-        "Nouveau référentiel"
+        "新軟體庫"
       ],
       "New Sync Plan": [
-        "Nouveau plan de synchronisation"
+        "新增同步計劃"
       ],
       "New sync plan successfully created.": [
-        "Nouveau plan de synchronisation créé."
+        "已建立新的同步計劃。"
       ],
       "Next": [
-        "Suivant"
+        "下一步"
       ],
       "Next Sync": [
-        "Prochaine synchronisation"
+        "下個同步"
       ],
       "No": [
-        "Non"
+        "否"
       ],
       "No alternate release version choices are available. The available releases are based upon what is available in \\\"{{ host.content_facet_attributes.content_view.name }}\\\", the selected <a href=\\\"/content_views\\\">content view</a> this content host is attached to for the given <a href=\\\"/lifecycle_environments\\\">lifecycle environment</a>, \\\"{{ host.content_facet_attributes.lifecycle_environment.name }}\\\".": [
-        "Il n'y a pas d'autres choix de versions de diffusion. Les versions disponibles sont basées sur ce qui est disponible dans \\\"{{ host.content_facet_attributes.content_view.name }}\\\", <a href=\\\"/content_views\\\"> l’affichage de contenu </a> sélectionné auquel ce contenu est attaché pour un <a href=\\\"/lifecycle_environments\\\">environnement de cycle de vie</a>, \\\"{{ host.content_facet_attributes.lifecycle_environment.name }}\\\"."
-      ],
-      "No Content Hosts match this Erratum.": [
-        "Aucun hôte de contenu ne correspond à cet Erratum."
-      ],
-      "No Content Views contain this Deb": [
-        "Aucun affichage de contenu ne contient cette Deb"
-      ],
-      "No Content Views contain this File": [
-        "Ce fichier ne contient pas d’affichages de contenu"
-      ],
-      "No content views exist for {{selected.environment.name}}": [
-        "Il n'existe pas d’affichages de contenu pour {{selected.environment.name}}"
-      ],
-      "No discovered repositories.": [
-        "Aucun référentiel découvert."
-      ],
-      "No enabled Repository Sets provided through subscriptions.": [
-        "Aucun ensemble de référentiel activé n'est fourni par les abonnements."
-      ],
-      "No Host Collections match your search.": [
-        "Aucune collection d'hôtes ne correspond à votre recherche."
-      ],
-      "No Host Collections to show, you can add Host Collections after selecting 'Host Collections' under 'Hosts' in main menu.": [
-        "Aucune collection d'hôtes à afficher, vous pouvez ajouter des collections d'hôtes après avoir sélectionné \\\"Collections d'hôtes\\\" sous \\\"Hôtes\\\" dans le menu principal."
-      ],
-      "No Host Collections to show, you can add Host Collections after selecting the 'Add' tab.": [
-        "Aucune collection d'hôtes à afficher, vous pouvez ajouter des collections d'hôtes après avoir sélectionné l'onglet \\\"Ajouter\\\"."
-      ],
-      "No HTTP Proxies found": [
-        "Aucun Proxy HTTP trouvé"
-      ],
-      "No HTTP Proxy": [
-        "Aucun proxy HTTP"
-      ],
-      "No matching results.": [
-        "Aucun résultat correspondant."
-      ],
-      "No Packages to show": [
-        "Aucun paquet mis à afficher"
-      ],
-      "No products are available to add to this Sync Plan.": [
-        "Aucun produit n'est disponible pour ajouter à ce plan de synchronisation."
-      ],
-      "No products have been added to this Sync Plan.": [
-        "Aucun produit n'a été ajouté à ce plan de synchronisation."
-      ],
-      "No releases exist in the Library.": [
-        "Il n'existe pas de version dans la bibliothèque."
-      ],
-      "No Repositories contain this Deb": [
-        "Aucun référentiel ne contient ce Deb"
-      ],
-      "No Repositories contain this Erratum.": [
-        "Aucun référentiel ne contient cet Erratum."
-      ],
-      "No Repositories contain this File": [
-        "Aucun référentiel ne contient ce fichier"
-      ],
-      "No Repositories contain this Package.": [
-        "Aucun référentiel ne contient ce paquet."
-      ],
-      "No repository sets provided through subscriptions.": [
-        "Aucun ensemble de référentiels n'est fourni par le biais d'abonnements."
-      ],
-      "No restriction": [
-        "Aucune restriction"
-      ],
-      "No sync information available.": [
-        "Aucune information de synchronisation disponible."
-      ],
-      "No tasks exist for this resource.": [
-        "Il n'existe aucune tâche pour cette ressource."
-      ],
-      "None": [
-        "Aucun(e)"
-      ],
-      "Not Applicable": [
-        "Non applicable"
-      ],
-      "Not started": [
-        "Non démarré"
-      ],
-      "Not Synced": [
-        "Pas synchronisé"
-      ],
-      "Number of CPUs": [
-        "Nombre de processeurs"
-      ],
-      "Number of Repositories": [
-        "Nombre de référentiels"
-      ],
-      "On Demand": [
-        "Sur demande"
-      ],
-      "One or more of the selected Errata are not Installable via your published Content View versions running on the selected hosts.  The new Content View Versions (specified below)\\n      will be created which will make this Errata Installable in the host's Environment.  This new version will replace the current version in your host's Lifecycle\\n      Environment.  To install these errata immediately on hosts after publishing check the box below.": [
-        "Un ou plusieurs des errata sélectionnés ne sont pas installables via les versions de Content View que vous avez publiées et qui fonctionnent sur les hôtes sélectionnés.  Les nouvelles versions de Content View (spécifiées ci-dessous)\\n      sera créé, ce qui rendra ces errata installable dans l'environnement de l'hôte.  Cette nouvelle version remplacera la version actuelle dans le cycle de vie de votre hôte\\n      Environnement.  Pour installer ces errata immédiatement sur les hôtes après leur publication, cochez la case ci-dessous."
-      ],
-      "One or more packages are not showing up in the local repository even though they exist in the upstream repository.": [
-        "Un ou plusieurs paquets n'apparaissent pas dans le référentiel local alors qu'ils existent dans le référentiel en amont."
-      ],
-      "Only show content hosts where the errata is currently installable in the host's Lifecycle Environment.": [
-        "N'affichez que les hôtes de contenu où les errata sont actuellement installables dans l'environnement du cycle de vie de l'hôte."
-      ],
-      "Only show Errata that are Applicable to one or more Content Hosts": [
-        "N'afficher que les errata applicables à un ou plusieurs hôtes de contenu"
-      ],
-      "Only show Errata that are Installable on one or more Content Hosts": [
-        "Ne montrer que les errata qui sont installables sur un ou plusieurs hôtes de contenu"
-      ],
-      "Only show Packages that are Applicable to one or more Content Hosts": [
-        "Ne montrer que les paquets applicables à un ou plusieurs hôtes de contenu"
-      ],
-      "Only show Packages that are Upgradable on one or more Content Hosts": [
-        "Renvoyer les paquets qui sont évolutifs sur un ou plusieurs hôtes de contenu"
-      ],
-      "Only show Subscriptions for products not already covered by a Subscription": [
-        "Afficher uniquement les abonnements pour les produits qui ne sont pas déjà couverts par un abonnement"
-      ],
-      "Only show Subscriptions which can be applied to products installed on this Host": [
-        "Afficher uniquement les Abonnements qui peuvent être appliqués aux produits installés sur cet Hôte"
-      ],
-      "Only show Subscriptions which can be attached to this Host": [
-        "Afficher uniquement les abonnements qui peuvent être rattachés à cet hôte"
-      ],
-      "Only the Applications with a Helper can be restarted.": [
-        "Seules les applications avec un assistant peuvent être relancées."
-      ],
-      "Operating System": [
-        "Système d'exploitation"
-      ],
-      "Optimized Sync": [
-        "Synchronisation optimisée"
-      ],
-      "Organization": [
-        "Organisation"
-      ],
-      "Original Sync Date": [
-        "Date de Sync d’origine"
-      ],
-      "OS": [
-        "OS"
-      ],
-      "OSTree Repositories <div>{{ library.counts.ostree_repositories || 0 }}</div>": [
-        "Créer des référentiels <div>{{ library.counts.ostree_repositories || 0 }} </div>"
-      ],
-      "Override to Disabled": [
-        "Remplacer par «Désactiver»"
-      ],
-      "Override to Enabled": [
-        "Remplacer par «Activer»"
-      ],
-      "Package": [
-        "Paquet"
-      ],
-      "Package Actions": [
-        "Actions paquet"
-      ],
-      "Package Group (Deprecated)": [
-        "Groupe de paquets (déprécié)"
-      ],
-      "Package Groups": [
-        "Groupes de paquets"
-      ],
-      "Package Groups for Repository:": [
-        "Groupes de paquets pour le référentiel :"
-      ],
-      "Package Information": [
-        "Informations paquet"
-      ],
-      "Package Install": [
-        "Installation de paquets"
-      ],
-      "Package Installation, Removal, and Update": [
-        "Installation, retrait et mise à jour des paquets"
-      ],
-      "Package Remove": [
-        "Suppression de paquets"
-      ],
-      "Package Update": [
-        "Mise à jour de paquets"
-      ],
-      "Package:": [
-        "Paquet :"
-      ],
-      "Package/Group Name": [
-        "Nom de Paquet/Groupe"
-      ],
-      "Packages": [
-        "Paquets"
-      ],
-      "Packages <div>{{ library.counts.packages || 0 }}</div>": [
-        "Packages <div>{{ library.counts.packages || 0 }} </div>"
-      ],
-      "Packages are automatically Applicable if they are Upgradable": [
-        "Les paquets sont automatiquement applicables s'ils sont évolutifs"
-      ],
-      "Packages for Errata:": [
-        "Paquets pour les Errata :"
-      ],
-      "Packages for:": [
-        "Paquets pour :"
-      ],
-      "Parameters": [
-        "Paramètres"
-      ],
-      "Part of a manifest list": [
-        "Partie d'une liste de manifeste"
-      ],
-      "Password": [
-        "Mot de passe"
-      ],
-      "Password of the upstream repository user for authentication. Leave empty if repository does not require authentication.": [
-        "Mot de passe de l'utilisateur du référentiel en amont pour l'authentification. Laissez vide si le référentiel ne nécessite pas d'authentification."
-      ],
-      "Paste contents of Content Credential": [
-        "Coller le contenu des références de contenu"
-      ],
-      "Path": [
-        "Chemin"
-      ],
-      "Perform": [
-        "Effectuer"
-      ],
-      "Performing host package actions is disabled because Katello is not configured for remote execution.": [
         ""
       ],
-      "Performing host package actions is disabled because Katello is not configured for Remote Execution.": [
+      "No Content Hosts match this Erratum.": [
+        "沒有符合此勘誤的內容主機。"
+      ],
+      "No Content Views contain this Deb": [
+        ""
+      ],
+      "No Content Views contain this File": [
+        ""
+      ],
+      "No content views exist for {{selected.environment.name}}": [
+        "{{selected.environment.name}} 沒有存在的內容視域"
+      ],
+      "No discovered repositories.": [
+        ""
+      ],
+      "No enabled Repository Sets provided through subscriptions.": [
+        ""
+      ],
+      "No Host Collections match your search.": [
+        ""
+      ],
+      "No Host Collections to show, you can add Host Collections after selecting 'Host Collections' under 'Hosts' in main menu.": [
+        "沒有可顯示的主機集，您可在選擇了主選單中，「主機」下的「主機集」之後新增主機集。"
+      ],
+      "No Host Collections to show, you can add Host Collections after selecting the 'Add' tab.": [
+        "沒有可顯示的主機集，您可在選擇了「新增」分頁後新增主機集。"
+      ],
+      "No HTTP Proxies found": [
+        ""
+      ],
+      "No HTTP Proxy": [
+        ""
+      ],
+      "No matching results.": [
+        ""
+      ],
+      "No products are available to add to this Sync Plan.": [
+        ""
+      ],
+      "No products have been added to this Sync Plan.": [
+        ""
+      ],
+      "No releases exist in the Library.": [
+        ""
+      ],
+      "No Repositories contain this Deb": [
+        ""
+      ],
+      "No Repositories contain this Erratum.": [
+        "沒有包含了此勘誤的軟體庫。"
+      ],
+      "No Repositories contain this File": [
+        ""
+      ],
+      "No Repositories contain this Package.": [
+        "沒有包含此套件的軟體庫。"
+      ],
+      "No repository sets provided through subscriptions.": [
+        ""
+      ],
+      "No restriction": [
+        ""
+      ],
+      "No sync information available.": [
+        ""
+      ],
+      "No tasks exist for this resource.": [
+        ""
+      ],
+      "None": [
+        "無"
+      ],
+      "Not Applicable": [
+        ""
+      ],
+      "Not installed": [
+        "未安裝"
+      ],
+      "Not started": [
+        ""
+      ],
+      "Not Synced": [
+        "未同步"
+      ],
+      "Number of CPUs": [
+        "CPU 數量"
+      ],
+      "Number of Repositories": [
+        ""
+      ],
+      "On Demand": [
+        "視需求"
+      ],
+      "One or more of the selected Errata are not Installable via your published Content View versions running on the selected hosts.  The new Content View Versions (specified below)\\n      will be created which will make this Errata Installable in the host's Environment.  This new version will replace the current version in your host's Lifecycle\\n      Environment.  To install these errata immediately on hosts after publishing check the box below.": [
+        "一或多個勘誤無法透過您在所選主機上執行的已發佈內容視域版本來進行安裝。新的內容視域版本（指定在下列部分中）\\n      將會被建立，以讓此勘誤能安裝在主機的環境中。這個新版本將會取代您主機的生命週期\\n      環境中的目前版本。若要在發佈之後即刻在主機上安裝這些勘誤，請選取下方的方塊。"
+      ],
+      "One or more packages are not showing up in the local repository even though they exist in the upstream repository.": [
+        ""
+      ],
+      "Only show content hosts where the errata is currently installable in the host's Lifecycle Environment.": [
+        "僅顯示主機生命週期環境中目前能安裝勘誤的內容主機。"
+      ],
+      "Only show Errata that are Applicable to one or more Content Hosts": [
+        ""
+      ],
+      "Only show Errata that are Installable on one or more Content Hosts": [
+        ""
+      ],
+      "Only show Packages that are Applicable to one or more Content Hosts": [
+        ""
+      ],
+      "Only show Packages that are Upgradable on one or more Content Hosts": [
+        ""
+      ],
+      "Only show Subscriptions for products not already covered by a Subscription": [
+        ""
+      ],
+      "Only show Subscriptions which can be applied to products installed on this Host": [
+        ""
+      ],
+      "Only show Subscriptions which can be attached to this Host": [
+        ""
+      ],
+      "Only the Applications with a Helper can be restarted.": [
+        ""
+      ],
+      "Operating System": [
+        "作業系統"
+      ],
+      "Optimized Sync": [
+        ""
+      ],
+      "Organization": [
+        "組織"
+      ],
+      "Original Sync Date": [
+        "原始同步日期"
+      ],
+      "OS": [
+        "作業系統"
+      ],
+      "OSTree Repositories <div>{{ library.counts.ostree_repositories || 0 }}</div>": [
+        "OSTree 軟體庫 <div>{{ library.counts.ostree_repositories || 0 }}</div>"
+      ],
+      "Override to Disabled": [
+        ""
+      ],
+      "Override to Enabled": [
+        ""
+      ],
+      "Package": [
+        "套件"
+      ],
+      "Package Actions": [
+        "套件動作"
+      ],
+      "Package Group (Deprecated)": [
+        ""
+      ],
+      "Package Groups": [
+        "套件群組"
+      ],
+      "Package Groups for Repository:": [
+        "軟體庫的套件群組："
+      ],
+      "Package Information": [
+        ""
+      ],
+      "Package Install": [
+        "套件安裝"
+      ],
+      "Package Installation, Removal, and Update": [
+        "套件安裝、移除與更新"
+      ],
+      "Package Remove": [
+        "套件移除"
+      ],
+      "Package Update": [
+        "套件更新"
+      ],
+      "Package:": [
+        "套件："
+      ],
+      "Package/Group Name": [
+        "套件/群組名稱"
+      ],
+      "Packages": [
+        "套件"
+      ],
+      "Packages <div>{{ library.counts.packages || 0 }}</div>": [
+        "套件 <div>{{ library.counts.packages || 0 }}</div>"
+      ],
+      "Packages are automatically Applicable if they are Upgradable": [
+        ""
+      ],
+      "Packages for Errata:": [
+        ""
+      ],
+      "Packages for:": [
+        "套件屬於："
+      ],
+      "Parameters": [
+        "參數"
+      ],
+      "Part of a manifest list": [
+        ""
+      ],
+      "Password": [
+        "密碼"
+      ],
+      "Password of the upstream repository user for authentication. Leave empty if repository does not require authentication.": [
+        ""
+      ],
+      "Paste contents of Content Credential": [
+        ""
+      ],
+      "Path": [
+        "路徑"
+      ],
+      "Perform": [
+        "執行"
+      ],
+      "Performing host package actions is disabled because Katello is not configured for Remote Execution or Katello Agent.": [
         ""
       ],
       "Physical": [
-        "Physique"
+        "實體的"
       ],
       "Please enter cron below": [
-        "Veuillez entrer le code ci-dessous"
-      ],
-      "Please make sure a Content View is selected.": [
-        "Veuillez vous assurer qu'une vue de contenu est sélectionnée."
-      ],
-      "Please select an environment.": [
-        "Tout d'abord, sélectionner un environnement"
-      ],
-      "Please select one from the list below and you will be redirected.": [
-        "Veuillez en choisir un dans la liste ci-dessous et vous serez redirigé."
-      ],
-      "Plus %y more errors": [
-        "Plus %y erreurs supplémentaires"
-      ],
-      "Plus 1 more error": [
-        "Plus 1 erreur supplémentaire"
-      ],
-      "Previous Lifecycle Environment (%e/%cv)": [
-        "Environnement de cycle de vie précédent (%e/%cv)"
-      ],
-      "Prior Environment": [
-        "Environnement précédent"
-      ],
-      "Product": [
-        "Produit"
-      ],
-      "Product delete operation has been initiated in the background.": [
-        "L'opération de suppression du produit a été lancée en arrière-plan."
-      ],
-      "Product Enhancement Advisory": [
-        "Avis sur l'amélioration des produits"
-      ],
-      "Product information for:": [
-        "Information de produit pour :"
-      ],
-      "Product Management for Sync Plan:": [
-        "Gestion de produits pour le plan de synchronisation :"
-      ],
-      "Product Name": [
-        "Nom du produit"
-      ],
-      "Product Options": [
-        "Options du produit"
-      ],
-      "Product Saved": [
-        "Produit sauvegardé"
-      ],
-      "Product sync has been initiated in the background.": [
-        "La synchronisation des produits a été lancée en arrière-plan."
-      ],
-      "Product syncs has been initiated in the background.": [
-        "Des synchronisations de produits ont été lancées en arrière-plan."
-      ],
-      "Product verify checksum has been initiated in the background.": [
-        "La somme de contrôle de la vérification des produits a été initiée en arrière-plan."
-      ],
-      "Products": [
-        "Produits"
-      ],
-      "Products <div>{{ library.counts.products || 0 }}</div>": [
-        "Produits <div>{{ library.counts.products || 0 }} </div>"
-      ],
-      "Products for": [
-        "Produits pour"
-      ],
-      "Products not covered": [
-        "Produits non couverts"
-      ],
-      "Provides": [
-        "Procure"
-      ],
-      "Provisioning": [
         ""
       ],
+      "Please make sure a Content View is selected.": [
+        ""
+      ],
+      "Please select an environment.": [
+        "請選擇一個環境。"
+      ],
+      "Please select one from the list below and you will be redirected.": [
+        "請從下方清單中選擇一項，而您將會被重新導向。"
+      ],
+      "Plus %y more errors": [
+        "加上 %y 個錯誤"
+      ],
+      "Plus 1 more error": [
+        "加上 1 個錯誤"
+      ],
+      "Previous Lifecycle Environment (%e/%cv)": [
+        ""
+      ],
+      "Prior Environment": [
+        ""
+      ],
+      "Product": [
+        "產品"
+      ],
+      "Product delete operation has been initiated in the background.": [
+        ""
+      ],
+      "Product Enhancement Advisory": [
+        "產品功能增強諮詢"
+      ],
+      "Product information for:": [
+        "產品資訊："
+      ],
+      "Product Management for Sync Plan:": [
+        "產品管理以進行同步計劃："
+      ],
+      "Product Name": [
+        "產品名稱"
+      ],
+      "Product Options": [
+        ""
+      ],
+      "Product Saved": [
+        "產品已儲存"
+      ],
+      "Product sync has been initiated in the background.": [
+        ""
+      ],
+      "Product syncs has been initiated in the background.": [
+        ""
+      ],
+      "Product verify checksum has been initiated in the background.": [
+        ""
+      ],
+      "Products": [
+        "產品"
+      ],
+      "Products <div>{{ library.counts.products || 0 }}</div>": [
+        "產品 <div>{{ library.counts.products || 0 }}</div>"
+      ],
+      "Products for": [
+        ""
+      ],
+      "Products not covered": [
+        ""
+      ],
+      "Provides": [
+        "供應方"
+      ],
       "Provisioning Details": [
-        "Provisionnement - Détails"
+        "佈建詳細資訊"
       ],
       "Provisioning Host Details": [
-        "Provisionnement - Détails sur l'hôte"
+        "佈建主機詳細資訊"
       ],
       "Published At": [
-        "Publié à"
+        "已發佈於"
       ],
       "Published Repository Information": [
-        "Informations sur les référentiels publiés"
+        "已發佈的軟體庫資訊"
       ],
       "Publishing Settings": [
-        "Paramètres de publication"
+        ""
       ],
       "Puppet Environment": [
-        "Environnement Puppet"
+        "Puppet 環境"
       ],
       "Quantity": [
-        "Quantité"
+        "數量"
       ],
       "Quantity (To Add)": [
-        "Quantité (à ajouter)"
+        ""
       ],
       "RAM (GB)": [
-        "RAM (GB)"
+        "記憶體 (GB)"
       ],
       "Reboot Suggested": [
-        "Redémarrage suggéré"
+        "建議重新啟動"
       ],
       "Reboot Suggested?": [
-        "Redémarrage suggéré ?"
+        "建議重新啟動？"
       ],
       "Recalculate\\n          <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"calculatingApplicability\\\"></i>": [
-        "Recalculer\\n          <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"calculatingApplicability\\\"></i>"
+        ""
       ],
       "Reclaim Space": [
-        "Récupération d’espace"
+        ""
       ],
       "Recurring Logic": [
-        "Logique récurrente"
-      ],
-      "Red Hat": [
-        "Red Hat"
+        ""
       ],
       "Red Hat Repositories page": [
-        "Page des référentiels Red Hat"
+        "Red Hat 軟體庫頁面"
       ],
       "Red Hat Repositories page.": [
-        "Page des référentiels Red Hat."
+        "Red Hat 軟體庫頁面。"
       ],
       "Refresh Table": [
-        "Rafraîchir le tableau"
+        "更新表格"
       ],
       "Register a Content Host": [
-        "Enregistrer un hôte de contenu"
+        "註冊內容主機"
       ],
       "Register Content Host": [
-        "Enregistrer l'hôte du contenu"
+        "註冊內容主機"
       ],
       "Registered": [
-        "Enregistré"
+        "已註冊"
       ],
       "Registered By": [
-        "Enregistré par"
+        "由...註冊"
       ],
       "Registered Through": [
-        "Enregistré via"
+        ""
       ],
       "Registry Name Pattern": [
-        "Modèle de nom de registre"
+        "名稱"
       ],
       "Registry Search Parameter": [
-        "Paramètre de recherche du registre"
+        ""
       ],
       "Registry to Discover": [
-        "Registre à découvrir"
+        ""
       ],
       "Registry URL": [
-        "URL du registre"
+        "登錄檔網址"
       ],
       "Release": [
-        "Sortie"
+        "發行版"
       ],
       "Release Version": [
-        "Version de sortie"
+        "發行版本"
       ],
       "Release Version:": [
-        "Version de sortie :"
+        "發行版本："
       ],
       "Releases/Distributions": [
-        "Sorties/Distributions"
+        ""
       ],
       "Remote execution plugin is required to be able to run any helpers.": [
-        "Le plugin d'exécution à distance est nécessaire pour pouvoir faire fonctionner les aides."
+        ""
       ],
       "Remove": [
-        "Supprimer"
+        "移除"
       ],
       "Remove {{ table.numSelected  }} Container Image manifest?": [
-        "Supprimer {{ table.numSelected  }} manifeste d'images de conteneur ?",
-        "Supprimer {{ table.numSelected  }} manifestes d'images de conteneur ?",
-        "Supprimer {{ table.numSelected  }} manifestes d'images de conteneur ?"
+        ""
       ],
       "Remove Activation Key \\\"{{ activationKey.name }}\\\"?": [
-        "Supprimer la clé d'activation \\\"{{ activationKey.name }}\\\" ?"
+        "確定要移除啟動金鑰 \\\"{{ activationKey.name }}\\\"？"
       ],
       "Remove Container Image Manifests": [
-        "Supprimer les manifestes d'images de conteneurs"
+        ""
       ],
       "Remove Content": [
-        "Supprimer le contenu"
+        "移除內容"
       ],
       "Remove Content Credential": [
-        "Supprimer les références de contenu"
+        ""
       ],
       "Remove Content Credential {{ contentCredential.name }}": [
-        "Supprimer les références de contenu {{ contentCredential.name }}"
+        ""
       ],
       "Remove Content?": [
-        "Supprimer le contenu ?",
-        "Supprimer le unités de contenu {{ table.numSelected }}  ?",
-        "Supprimer le unités de contenu {{ table.numSelected }}  ?"
+        ""
       ],
       "Remove Environment": [
-        "Supprimer environnement"
+        ""
       ],
       "Remove environment {{ environment.name }}?": [
-        "Supprimer environnement {{ environment.name }}?"
+        ""
       ],
       "Remove File?": [
-        "Supprimer un fichier ?",
-        "Supprimer {{ table.numSelected }} fichiers ?",
-        "Supprimer {{ table.numSelected }} fichiers ?"
+        ""
       ],
       "Remove Files": [
-        "Supprimer des fichiers"
+        ""
       ],
       "Remove From": [
-        "Retirer de"
+        "從...移除"
       ],
       "Remove Host Collection \\\"{{ hostCollection.name }}\\\"?": [
-        "Afficher une collection d'hôtes \\\"{{ hostCollection.name }}\\\"?"
+        "確定要移除主機集 \\\"{{ hostCollection.name }}\\\"？"
       ],
       "Remove Package?": [
-        "Supprimer le paquet ?",
-        "Supprimer {{ table.numSelected }} paquets ?",
-        "Supprimer {{ table.numSelected }} paquets ?"
+        ""
       ],
       "Remove Packages": [
-        "Supprimer paquets"
+        "移除套件"
       ],
       "Remove Product": [
-        "Supprimer un produit"
+        "移除產品"
       ],
       "Remove Product \\\"{{ product.name }}\\\"?": [
-        "Supprimer le produit \\\"{{ product.name }}\\\" ?"
+        "確定要移除產品 \\\"{{ product.name }}\\\"？"
       ],
       "Remove product?": [
-        "Retirer un produit ?",
-        "Supprimer {{ table.getSelected().length }} produits ?",
-        "Supprimer {{ table.getSelected().length }} produits ?"
+        ""
       ],
       "Remove Repositories": [
-        "Supprimer référentiels"
+        "移除軟體庫"
       ],
       "Remove Repository": [
-        "Supprimer référentiel"
+        "移除軟體庫"
       ],
       "Remove Repository {{ repositoryWrapper.repository.name }}?": [
-        "Supprimer le référentiel {{ repositoryWrapper.repository.name }} ?"
+        ""
       ],
       "Remove repository?": [
-        "Supprimer le référentiel ?",
-        "Supprimer {{ table.numSelected }} référentiels ?",
-        "Supprimer {{ table.numSelected }} référentiels ?"
+        ""
       ],
       "Remove Selected": [
-        "Supprimer Sélectionné"
+        "移除已選擇的項目"
       ],
       "Remove Successful.": [
-        "Suppression réussie."
+        "移除成功。"
       ],
       "Remove Sync Plan": [
-        "Supprimer le plan de synchronisation"
+        "移除同步計劃"
       ],
       "Remove Sync Plan \\\"{{ syncPlan.name }}\\\"?": [
-        "Supprimer le plan de synchronisation \\\"{{ syncPlan.name }}\\\" ?"
+        "確定要移除同步計畫 \\\"{{ syncPlan.name }}\\\"？"
       ],
       "Removed %x host collections from activation key \\\"%y\\\".": [
-        "Supprimer %x collections d'hôtes de la clé d'activation \\\"%y\\\"."
+        "已從啟動金鑰 \\\"%y\\\" 移除了 %x 個主機集。"
       ],
       "Removed %x host collections from content host \\\"%y\\\".": [
-        "Supprimer %x collections de l'hôtes de l’hôte de contenu \\\"%y\\\"."
+        "已從內容主機 \\\"%y\\\" 移除了 %x 個主機集。"
       ],
       "Removed %x products from sync plan \\\"%y\\\".": [
-        "Supprimer %x produits du plan de synchronisation \\\"%y\\\"."
+        "已從同步計劃 \\\"%y\\\" 移除了 %x 個產品。"
       ],
       "Removing Repositories": [
-        "Suppression des référentiels"
+        "移除軟體庫"
       ],
       "Repo Discovery": [
-        "Repo Discovery"
+        "搜尋軟體庫"
       ],
       "Repositories": [
-        "Référentiels"
+        "軟體庫"
       ],
       "Repositories containing Errata {{ errata.errata_id }}": [
-        "Référentiels contenant des errata {{ errata.errata_id }}"
+        "包含勘誤 {{ errata.errata_id }} 的軟體庫"
       ],
       "Repositories containing package {{ package.nvrea }}": [
-        "Référentiels contenant le paquet {{ package.nvrea }}"
+        "軟體庫包含套件 {{ package.nvrea }}"
       ],
       "Repositories for": [
-        "Référentiels pour"
+        ""
       ],
       "Repositories for Deb:": [
-        "Référentiels de Deb :"
+        ""
       ],
       "Repositories for Errata:": [
-        "Référentiels pour les Errata :"
+        "勘誤的軟體庫："
       ],
       "Repositories for File:": [
-        "Référentiels pour Fichier :"
+        ""
       ],
       "Repositories for Package:": [
-        "Référentiels pour paquet :"
+        "套件的軟體庫："
       ],
       "Repositories for Product:": [
-        "Référentiels pour Produit :"
+        "產品的軟體庫："
       ],
       "Repositories to Create": [
-        "Référentiels à créer"
+        ""
       ],
       "Repository": [
-        "Référentiel"
+        "軟體庫"
       ],
       "Repository \\\"%s\\\" successfully deleted": [
-        "Suppression du référentiel \\\"%s\\\" réussie"
+        "已成功刪除軟體庫 \\\"%s\\\""
       ],
       "Repository %s successfully created.": [
-        "Création du référentiel %s réussie."
+        "已成功建立軟體庫 %s。"
       ],
       "Repository created": [
-        "Référentiel créé"
+        "軟體庫已建立"
       ],
       "Repository Discovery": [
-        "Découvert Référentiel"
+        "探索軟體庫"
       ],
       "Repository HTTP proxy changes have been initiated in the background.": [
-        "Les changements de proxy HTTP du référentiel ont été initiés en arrière-plan."
+        ""
       ],
       "Repository Label": [
-        "Balise du référentiel"
+        "軟體庫標籤"
       ],
       "Repository Name": [
-        "Nom du référentiel"
+        "軟體庫名稱"
       ],
       "Repository Options": [
-        "Options de référentiel"
+        ""
       ],
       "Repository Path": [
-        "Chemin d’accès du référentiel"
+        ""
       ],
       "Repository Saved.": [
-        "Référentiel sauvegardé."
+        "已儲存軟體庫。"
       ],
       "Repository Sets": [
-        "Ensembles de référentiels"
-      ],
-      "Repository Sets Management": [
-        "Gestion des ensembles de référentiels"
+        ""
       ],
       "Repository Sets settings saved successfully.": [
-        "Paramètres d’ensembles de référentiels enregistrés."
-      ],
-      "Repository type": [
-        "Type de référentiel"
+        ""
       ],
       "Repository Type": [
-        "Type de référentiel"
+        "存放庫類型"
       ],
       "Repository URL": [
-        "URL du référentiel"
+        "軟體庫 URL"
       ],
       "Repository will also be removed from the following published content view versions!": [
-        "L'environnement sera également supprimé des vues de contenu des versions publiées suivantes !"
+        ""
       ],
       "Repository:": [
-        "Référentiel :"
-      ],
-      "Republish Repository Metadata": [
-        "Republier Métadonnées de référentiel"
+        "軟體庫："
       ],
       "Requirements": [
-        "Exigences"
+        ""
       ],
       "Requirements.yml": [
-        "Exigences.yml"
+        ""
       ],
       "Requires": [
-        "Nécessite"
+        "需要"
       ],
       "Reset": [
-        "Restauration"
+        ""
       ],
       "Reset to Default": [
-        "Réinitialiser à la valeur par défaut"
+        ""
       ],
       "Resolving the selected Traces will reboot the selected content hosts.": [
-        "La résolution des traces sélectionnées redémarrera les hôtes de contenu sélectionnés."
+        ""
       ],
       "Resolving the selected Traces will reboot this host.": [
-        "La résolution des traces sélectionnées redémarrera cet hôte."
+        ""
       ],
       "Restart": [
-        "Redémarrer"
+        "重新啟動"
       ],
       "Restart Selected": [
-        "Redémarrage sélectionné"
+        ""
       ],
       "Restart Services on Content Host \\\"{{host.name}}\\\"?": [
-        "Redémarrer les services sur l'hôte de contenu \\\"{{host.name}}\\\" ?"
+        ""
       ],
       "Restrict to <br>OS version": [
-        "Restreindre à version <br> du système d'exploitation"
+        ""
       ],
       "Restrict to architecture": [
-        "Se limiter à l'architecture"
+        ""
       ],
       "Restrict to Architecture": [
-        "Se limiter à l'Architecture"
+        ""
       ],
       "Restrict to OS version": [
-        "Restreindre à la version du système d'exploitation"
+        ""
       ],
       "Result": [
-        "Résultat"
+        "結果"
       ],
       "Retain package versions": [
-        "Conserver les versions du paquet"
+        ""
       ],
       "Role": [
-        "Rôle"
+        "角色"
       ],
       "Role:": [
-        "Rôle :"
+        ""
       ],
       "RPM": [
         "RPM"
       ],
       "rpm Package Updates": [
-        "rpm Mises à jour de paquets"
+        ""
       ],
       "Run Auto-Attach": [
-        "Lancer l'Auto-Attach"
+        "執行自動連結"
       ],
       "Run Repository Creation\\n      <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"creating()\\\"></i>": [
-        "Exécuter Création Référentiel créé <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"creating()\\\"></i>"
+        ""
       ],
       "Run Sync Plan": [
-        "Exécuter Plan Sync"
+        "執行同步計劃"
       ],
       "Save": [
-        "Enregistrer"
+        "儲存"
       ],
       "Save Successful.": [
-        "Enregistrement réussi."
+        "儲存成功。"
       ],
       "Schema Version": [
-        "Version du schéma"
+        ""
       ],
       "Schema Version 1": [
-        "Schéma Version 1"
+        ""
       ],
       "Schema Version 2": [
-        "Schéma Version 2"
+        ""
       ],
       "Security": [
-        "Sécurité"
+        "安全性"
       ],
       "Security Advisory": [
-        "Avis de sécurité"
+        "安全性諮詢"
       ],
       "Select": [
-        "Sélectionner"
+        "選擇"
       ],
       "Select a Content Source:": [
-        "Sélectionner un affichage de contenu:"
+        "選擇一項內容來源："
       ],
       "Select Action": [
-        "Choisir l'action"
+        "選擇動作"
       ],
       "Select an Organization": [
-        "Sélectionner une organisation"
-      ],
-      "Select Content Host(s)": [
-        ""
+        "選擇組織"
       ],
       "Select Content View": [
-        "Sélectionner l'affichage de contenu"
-      ],
-      "Select this option if treeinfo files or other kickstart content is failing to syncronize from the upstream repository.": [
-        ""
+        "選擇內容視域"
       ],
       "Selecting \\\"Complete Sync\\\" will cause only yum/deb repositories of the selected product to be synced.": [
-        "En sélectionnant \\\"Complete Sync\\\", seuls les référentiels yum /deb du produit sélectionné seront synchronisés."
+        ""
       ],
       "Selecting this option will exclude SRPMs from repository synchronization.": [
-        "En sélectionnant cette option, les SRPM seront exclus de la synchronisation du référentiel."
-      ],
-      "Selecting this option will exclude treeinfo files from repository synchronization.": [
         ""
       ],
       "Selecting this option will result in Katello verifying that the upstream url's SSL certificates are signed by a trusted CA. Unselect if you do not want this verification.": [
-        "En sélectionnant cette option, Katello vérifiera que les certificats SSL de l'url en amont sont signés par une AC de confiance. Désélectionnez cette option si vous ne voulez pas de cette vérification."
+        ""
       ],
       "Service Level": [
-        "Niveau de service"
+        "服務等級"
       ],
       "Service Level (SLA)": [
-        "Niveau de service (SLA)"
+        ""
       ],
       "Service Level (SLA):": [
-        "Niveau de service (SLA) :"
+        ""
       ],
       "Set Release Version": [
-        "Définir Version"
+        ""
       ],
       "Severity": [
-        "Sévérité"
+        "嚴重性"
       ],
       "Show All": [
-        "Tout afficher"
+        "顯示全部"
       ],
       "Show all Repository Sets in Organization": [
-        "Afficher tous les ensembles de référentiels d’ Organisation"
+        ""
       ],
       "Size": [
-        "Taille"
-      ],
-      "Skip dependency solving for a significant speed increase. If the update cannot be applied to the host, delete the incremental content view version and retry the application with dependency solving turned on.": [
-        "Ignorez la résolution des dépendances pour obtenir une augmentation significative de la vitesse. Si la mise à jour ne peut pas être appliquée à l'hôte, supprimez la version incrémentielle de l’affichage de contenu et réessayez l'application en activant la résolution des dépendances."
+        "大小"
       ],
       "Smart proxy currently reclaiming space...": [
-        "Le smart proxy est entrain de récupérer le l’espace ..."
+        ""
       ],
       "Smart proxy currently syncing to your locations...": [
-        "Le smart proxy se synchronise actuellement avec vos emplacements..."
+        ""
       ],
       "Smart proxy is synchronized": [
-        "Le smart proxy est synchronisé"
+        ""
       ],
       "Sockets": [
-        "Sockets"
+        "插槽"
       ],
       "Solution": [
-        "Solution"
+        "解決方案"
       ],
       "Some of the Errata shown below may not be installable as they are not in this Content Host's\\n        Content View and Lifecycle Environment.  In order to apply such Errata an Incremental Update is required.": [
-        "Certains des errata indiqués ci-dessous peuvent ne pas être installables car ils ne se trouvent pas dans le répertoire de cet hôte de contenu\\n        Vue du contenu et environnement du cycle de vie.  Afin d'appliquer ces errata, une mise à jour progressive est nécessaire."
+        ""
       ],
       "Something went wrong when deleting the resource.": [
-        "Quelque chose s'est mal passé lors de la suppression de la ressource."
+        ""
       ],
       "Something went wrong when retrieving the resource.": [
-        "Quelque chose s'est mal passé lors de la récupération de la ressource."
+        "取得資源時發生錯誤："
       ],
       "Something went wrong when saving the resource.": [
-        "Quelque chose a mal tourné lors de la sauvegarde de la ressource."
+        ""
       ],
       "Source RPM": [
-        "RPM source"
+        "來源 RPM"
       ],
       "Source RPMs": [
-        "RPMs source"
+        "來源 RPM"
       ],
       "Space reclamation is about to start...": [
-        "La récupération d’espace est sur le point de commencer..."
+        ""
       ],
       "SSL CA Cert": [
-        "SSL CA Cert"
+        ""
       ],
       "SSL Certificate": [
-        "Certificat SSL"
+        ""
       ],
       "SSL Client Cert": [
-        "Certificat client SSL"
+        ""
       ],
       "SSL Client Key": [
-        "Clé client SSL"
+        "SSL 客戶端金鑰"
       ],
       "Standard sync, optimized for speed by bypassing any unneeded steps.": [
-        "Synchronisation standard, optimisée pour la vitesse en contournant les étapes inutiles."
+        ""
       ],
       "Start Date": [
-        "Date de début"
+        "起始日期"
       ],
       "Start Time": [
-        "Date de lancement"
+        "起始時間"
       ],
       "Started At": [
-        "Démarré à"
+        "起始於"
       ],
       "Starting": [
-        "Démarrage"
+        "正在開始"
       ],
       "Starts": [
-        "Commence"
+        "起始"
       ],
       "State": [
-        "État"
+        "狀態"
       ],
       "Status": [
-        "Statut"
+        "狀態"
       ],
       "Stream": [
-        "Flux"
+        ""
       ],
       "Subscription Details": [
-        "Détails de l’abonnement"
+        "訂閱詳細資訊"
       ],
       "Subscription Management": [
-        "Gestion des abonnements"
+        "訂閱管理"
       ],
       "Subscription Status": [
-        "Statut des abonnements"
+        "訂閱狀態"
       ],
       "Subscription UUID": [
-        "UUID de l’abonnement"
+        ""
       ],
       "subscription-manager register --org=\\\"{{ activationKey.organization.label }}\\\" --activationkey=\\\"{{ activationKey.name }}\\\"": [
         "subscription-manager register --org=\\\"{{ activationKey.organization.label }}\\\" --activationkey=\\\"{{ activationKey.name }}\\\""
       ],
       "Subscriptions": [
-        "Abonnements"
+        "訂閱服務"
       ],
       "Subscriptions for Activation Key:": [
-        "Abonnements pour la clé d'activation :"
+        "啟動金鑰的訂閱："
       ],
       "Subscriptions for Content Host:": [
-        "Abonnements pour l'hôte de contenu :"
+        "內容主機的訂閱："
       ],
       "Subscriptions for:": [
-        "Abonnements pour :"
+        "訂閱屬於："
       ],
       "Success!": [
-        "Réussi."
+        "成功！"
       ],
       "Successfully added %s subscriptions.": [
-        "Ajout de %s abonnements avec succès."
+        "已成功新增了 %s 個訂閱。"
       ],
       "Successfully initiated restart of services.": [
-        "Lancement réussi du redémarrage des services."
+        ""
       ],
       "Successfully removed %s items.": [
-        "%s éléments supprimés."
+        "成功移除了 %s 個項目。"
       ],
       "Successfully removed %s subscriptions.": [
-        "%s abonnements supprimés."
+        "已成功移除了 %s 項訂閱。"
       ],
       "Successfully removed 1 item.": [
-        "1 élément supprimé."
+        "已成功移除了 1 個項目。"
+      ],
+      "Successfully scheduled an update of all packages": [
+        ""
+      ],
+      "Successfully scheduled package installation": [
+        ""
+      ],
+      "Successfully scheduled package removal": [
+        ""
+      ],
+      "Successfully scheduled package update": [
+        ""
       ],
       "Successfully updated subscriptions.": [
-        "Mise à jour des abonnements réussie."
+        "已成功更新了訂閱。"
       ],
       "Successfully uploaded content:": [
-        "Téléchargement du contenu réussi :"
+        ""
       ],
       "Summary": [
-        "Résumé"
+        "概要"
       ],
       "Support Level": [
-        "Niveau de support"
+        "支援等級"
       ],
       "Sync": [
-        "Sync"
+        "同步"
       ],
       "Sync Enabled": [
-        "Sync activée"
+        "已啟用同步"
       ],
       "Sync even if the upstream metadata appears to have no change. This option is only relevant for yum/deb repositories and will take longer than an optimized sync. Choose this option if:": [
-        "Synchroniser même si les métadonnées en amont ne semblent pas avoir changé. Cette option ne concerne que les dépôts yum/deb et prendra plus de temps qu'une synchronisation optimisée. Choisissez cette option si :"
+        ""
       ],
       "Sync Interval": [
-        "Sync Intervalle"
+        "同步間隔"
       ],
       "Sync Now": [
-        "Sync Now"
+        "現在同步"
       ],
       "Sync Plan": [
-        "Plan de Sync"
+        "同步計劃"
       ],
       "Sync Plan %s has been deleted.": [
-        "Plan de Sync %s a été supprimé."
+        "已刪除同步計劃 %s。"
       ],
       "Sync Plan created and assigned to product.": [
-        "Plan de Synchronisation créé et affecté au produit."
-      ],
-      "Sync Plan Management": [
-        "Gestion du Plan de Sync"
+        ""
       ],
       "Sync Plan saved": [
-        "Plan de Sync sauvegardé"
+        ""
       ],
       "Sync Plan Saved": [
-        "Plan de Sync sauvegardé"
+        "已儲存同步計劃"
       ],
       "Sync Plan:": [
-        "Plan de Sync :"
+        "同步計劃："
       ],
       "Sync Plans": [
-        "Plans de Sync"
+        "同步計劃"
       ],
       "Sync Selected": [
-        "Sync Sélectionnée"
+        ""
       ],
       "Sync Settings": [
-        "Paramètres de configuration de Sync"
+        ""
       ],
       "Sync State": [
-        "État de Sync"
+        "同步狀態"
       ],
       "Sync Status": [
-        "Sync Statut"
+        "同步狀態"
       ],
       "Synced manually, no interval set.": [
-        "Synchronisation manuelle, pas d'intervalle défini."
+        "已手動同步，未設置間隔。"
       ],
       "Synchronization is about to start...": [
-        "La synchronisation est sur le point de commencer..."
+        "同步即將開始……"
       ],
       "Synchronization is being cancelled...": [
-        "La synchronisation est annulée..."
+        "同步即將取消……"
       ],
       "System Purpose": [
-        "Objectif système"
+        ""
       ],
       "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console.": [
-        "L'objectif du système vous permet de définir l'utilisation prévue du système sur votre réseau et améliore la précision des rapports dans le service Abonnements de la console Red Hat Hybrid Cloud."
+        ""
       ],
       "System Purpose Management": [
-        "Gestion des objectifs système"
+        ""
       ],
       "System Purpose Status": [
-        "Statut Objectif system"
+        ""
       ],
       "Tags": [
-        "Balises"
+        "標籤"
       ],
       "Task Details": [
-        "Détails de la tâche"
+        "任務的詳細資訊"
       ],
       "Tasks": [
-        "Tâches"
+        "任務"
       ],
       "Temporary": [
-        "Temporaire"
+        "暫時性"
       ],
       "The <i>Registry Name Pattern</i> overrides the default name by which container images may be pulled from the server. (By default this name is a combination of Organization, Lifecycle Environment, Content View, Product, and Repository labels.)\\n\\n          <br><br>The name may be constructed using ERB syntax. Variables available for use are:\\n\\n          <pre>\\norganization.name\\norganization.label\\nrepository.name\\nrepository.label\\nrepository.docker_upstream_name\\ncontent_view.label\\ncontent_view.name\\ncontent_view_version.version\\nproduct.name\\nproduct.label\\nlifecycle_environment.name\\nlifecycle_environment.label</pre>\\n\\n          Examples:\\n            <pre>\\n&lt;%= organization.label %&gt;-&lt;%= lifecycle_environment.label %&gt;-&lt;%= content_view.label %&gt;-&lt;%= product.label %&gt;-&lt;%= repository.label %&gt;\\n&lt;%= organization.label %&gt;/&lt;%= repository.docker_upstream_name %&gt;</pre>": [
-        "Le <i> modèle de nom de registre</i> remplace le nom par défaut par lequel les images des conteneurs peuvent être extraites du serveur. (Par défaut, ce nom est une combinaison des balises Organisation, Environnement de cycle de vie, Vue du contenu, Produit et référentiel)\\n\\n            <br><br>Le nom peut être construit en utilisant la syntaxe ERB. Les variables disponibles pour l'utilisation sont :\\n\\n          <pre>\\norganisation.nom\\norganisation.laebeel\\nréférentiel.nom\\nrepository.label\\nrepository.docker_upstream_name\\ncontent_view.label\\ncontent_view.namBalisee\\ncontent_view_version.version\\nnom.du produit\\nproduit.label\\nlifecycle_environment.name\\nlifecycle_environment.label </pre>\\n          Exemples :  <pre>\\n            \\n&lt;%= organization.labeBalisel %&gt;-&lt;%= lifecycle_environment.label %&gt;-&lt;%= content_view.label %&gt;-&lt;%= product.label %&gt;-&lt;%= repository.label %&gt ;\\n&lt;%= organization.label %&gt;/&lt;%= repository.docker_upstream_name %&gt ;</pre>"
+        ""
       ],
       "The Content View or Lifecycle Environment needs to be updated in order to make errata available to these hosts.": [
-        "La vue du contenu ou l'environnement du cycle de vie doit être mis à jour afin de rendre les errata disponibles pour ces hôtes."
-      ],
-      "The filters below have this repository as the last affected repository!": [
-        ""
+        "內容視域或生命週期環境需要更新才能讓這些主機使用勘誤。"
       ],
       "The following actions can be performed on content hosts in this host collection:": [
-        "Les actions suivantes peuvent être effectuées sur les hôtes de contenu de cette collection d'hôtes :"
+        "下列動作能在此主機集中的內容主機上執行："
       ],
       "The host has not reported any applicable packages for upgrade.": [
-        "L'hôte n'a signalé aucun paquet applicable pour la mise à niveau."
-      ],
-      "The host has not reported any installed packages, registering with subscription-manager should cause these to be reported.": [
-        "L'hôte n'a pas signalé de paquets installés, l'enregistrement auprès du gestionnaire d'abonnement devrait permettre de le faire."
-      ],
-      "The host requires being attached to a content view and the lifecycle environment you have chosen has no content views promoted to it.\\n              See the <a href=\\\"/content_views\\\">content views page</a> to manage and promote a content view.": [
-        "L'hôte doit être attaché à une vue de contenu et l'environnement de cycle de vie que vous avez choisi n'a pas de vues de contenu qui lui sont promues.\\n              Consultez la <a href=\\\"/content_views\\\">page des vues de contenu</a> pour gérer et promouvoir une vue de contenu."
-      ],
-      "The maximum number of versions of each package to keep.": [
-        "Le nombre maximum de versions de chaque paquet à conserver."
-      ],
-      "The page you are attempting to access requires selecting a specific organization.": [
-        "La page à laquelle vous tentez d'accéder nécessite la sélection d'une organisation spécifique."
-      ],
-      "The remote execution feature is required to manage packages on this Host.": [
-        "La fonction d'exécution à distance est nécessaire pour gérer les paquets sur cet hôte."
-      ],
-      "The Remote Execution plugin needs to be installed in order to resolve Traces.": [
-        "Le plugin d'exécution à distance doit être installé afin de résoudre les traces."
-      ],
-      "The repository will only be available on content hosts with the selected architecture.": [
         ""
       ],
-      "The repository will only be available on content hosts with the selected OS version.": [
+      "The host has not reported any installed packages, registering with subscription-manager should cause these to be reported.": [
+        "主機未回報任何以安裝套件，使用 subscription-manager 註冊會導致這些被回報。"
+      ],
+      "The host requires being attached to a content view and the lifecycle environment you have chosen has no content views promoted to it.\\n              See the <a href=\\\"/content_views\\\">content views page</a> to manage and promote a content view.": [
+        ""
+      ],
+      "The maximum number of versions of each package to keep.": [
+        ""
+      ],
+      "The page you are attempting to access requires selecting a specific organization.": [
+        "您嘗試存取的網頁需要選擇特定組織。"
+      ],
+      "The remote execution feature is required to manage packages on this Host.": [
+        ""
+      ],
+      "The Remote Execution plugin needs to be installed in order to resolve Traces.": [
+        ""
+      ],
+      "The repository will be enabled by default on content hosts with the selected architecture.": [
+        ""
+      ],
+      "The repository will be enabled by default on content hosts with the selected OS version.": [
         ""
       ],
       "The selected environment contains no Content Views, please select a different environment.": [
-        "L'environnement sélectionné ne contient pas d’affichages de contenu, veuillez sélectionner un autre environnement."
+        "選擇的環境不包含內容視域，請選擇一個不同的環境。"
       ],
       "The time the sync should happen in your current time zone.": [
-        "L'heure à laquelle la synchronisation doit avoir lieu dans votre fuseau horaire actuel."
+        ""
       ],
       "The token key to use for authentication.": [
-        "La clé de jeton à utiliser pour l'authentification."
+        ""
       ],
       "The URL to receive a session token from, e.g. used with Automation Hub.": [
-        "L'URL à partir de laquelle recevoir un jeton de session, par exemple utilisé avec Automation Hub."
+        ""
       ],
       "There are {{ errataCount }} total Errata in this organization but none match the above filters.": [
-        "Il y a {{ errataCount }} errata dans cette organisation mais aucun ne correspond aux filtres ci-dessus."
+        "此組織總共有 {{ errataCount }} 個勘誤，但沒有一個與上述篩選相符。"
       ],
       "There are {{ packageCount }} total Packages in this organization but none match the above filters.": [
-        "Il y a un nombre total de {{ packageCount }} paquets dans cette organisation mais aucun ne correspond aux filtres ci-dessus."
+        ""
       ],
       "There are no %(contentType)s that match the criteria.": [
-        "Il n'y a pas de %(contentType)s qui corresponde aux critères."
+        ""
       ],
       "There are no Content Views in this Environment.": [
-        "Il n'y a pas d’affichages de contenus dans cet environnement."
+        "此環境中沒有內容視域。"
       ],
       "There are no Content Views that match the criteria.": [
-        "Il n'y a pas d’affichages de contenus qui correspondent aux critères."
+        "沒有符合條件的內容視域。"
       ],
       "There are no Errata associated with this Content Host to display.": [
-        "Il n'y a pas d'errata associé à cet hôte de contenu à afficher."
+        "沒有與此內容主機相聯的勘誤可顯示。"
       ],
       "There are no Errata in this organization.  Create one or more Products with Errata to view Errata on this page.": [
-        "Il n'y a pas d'errata dans cette organisation.  Créez un ou plusieurs produits avec des errata pour afficher les errata sur cette page."
+        "這個組織中沒有勘誤。請建立一或更多項產品與勘誤以在此網站上檢視勘誤。"
       ],
       "There are no Errata to display.": [
-        "Il n'y a pas d'errata à afficher."
+        "沒有可顯示的勘誤。"
       ],
       "There are no Host Collections available. You can create new Host Collections after selecting 'Host Collections' under 'Hosts' in main menu.": [
-        "Il n'y a pas de collections d'hôtes disponibles. Vous pouvez créer de nouvelles collections d'hôtes après avoir sélectionné \\\"Collections d'hôtes\\\" sous \\\"Hôtes\\\" dans le menu principal."
+        "沒有可用的主機集。您可在選擇了主選單中，「主機」下的「主機集」之後建立新的主機集。"
       ],
       "There are no Module Streams to display.": [
-        "Il n'y a pas de flux de modules à afficher."
+        ""
       ],
       "There are no Packages in this organization.  Create one or more Products with Packages to view Packages on this page.": [
-        "Il n'y a pas de paquets dans cette organisation.  Créez un ou plusieurs produits avec des paquets pour voir les paquets sur cette page."
+        "這個組織中沒有套件。請建立一或更多項產品與套件以在此網站上檢視套件。"
       ],
       "There are no Sync Plans available. You can create new Sync Plans after selecting 'Sync Plans' under 'Hosts' in main menu.": [
-        "Il n'y a pas de plans de synchronisation disponibles. Vous pouvez créer de nouveaux plans de synchronisation après avoir sélectionné \\\"Plans de synchronisation\\\" sous \\\"Hôtes\\\" dans le menu principal."
+        ""
       ],
       "There are no Traces to display.": [
-        "Il n'y a pas de Traces à afficher."
+        ""
       ],
       "There is currently an Incremental Update task in progress.  This update must finish before applying existing updates.": [
-        "Une mise à jour progressive est actuellement en cours.  Cette mise à jour doit se terminer avant d'appliquer les mises à jour existantes."
+        "目前正有一項遞增更新任務進行中。在套用既有更新之前，這項更新必須先完成。"
       ],
       "These instructions will be removed in a future release. NEW: To register a content host without following these manual steps, see <a href=\\\"https://{{ katelloHostname }}/hosts/register\\\">Register Host</a>": [
-        "Ces instructions seront supprimées dans une prochaine version. NOUVEAU : Pour enregistrer un hôte de contenu sans suivre ces étapes manuelles, voir <a href=\\\"https://{{ katelloHostname }}/hosts/register\\\">Enregistrer un hôte</a>"
+        ""
       ],
       "This action will affect only those Content Hosts that require a change.\\n        If the Content Host does not have the selected Subscription no action will take place.": [
-        "Cette action ne concernera que les hôtes de contenu qui nécessitent un changement.\\n        Si l'hôte de contenu ne dispose pas de l'abonnement sélectionné, aucune action n'aura lieu."
+        ""
       ],
       "This activation key is not associated with any content hosts.": [
-        "Cette clé d'activation n'est associée à aucun hôte de contenu."
+        "此啟動金鑰不與任何內容主機相聯。"
       ],
       "This activation key may be used during system registration. For example:": [
-        "Cette clé d'activation peut être utilisée lors de l'enregistrement du système. Par exemple :"
+        "此啟動金鑰能在進行系統註冊時使用。例如："
       ],
       "This change will be applied to <b>{{ hostCount }} systems.</b>": [
-        "Cette modification sera appliquée aux <b>{{ hostCount }} systèmes.</b>"
+        ""
       ],
       "This Container Image Tag is not present in any Lifecycle Environments.": [
-        "Cette balise d'image de conteneur n'est présente dans aucun environnement de cycle de vie."
-      ],
-      "This Container Image Tag is not present in any Repositories.": [
-        "Cette balise d'image de conteneur n'est présente dans aucun référentiel."
+        ""
       ],
       "This operation may also remove managed resources linked to the host such as virtual machines and DNS records.\\n          Change the setting \\\"Delete Host upon Unregister\\\" to false on the <a href=\\\"/settings\\\">settings page</a> to prevent this.": [
-        "Cette opération peut également supprimer les ressources gérées liées à l'hôte, telles que les machines virtuelles et les enregistrements DNS.\\n          Pour éviter cela, modifiez le paramètre \\\"Delete Host upon Unregister\\\" sur false dans la <a href=\\\"/settings\\\">page des paramètres</a>."
+        ""
       ],
       "This organization has Simple Content Access enabled.  Hosts are not required to have subscriptions attached to access repositories.": [
-        "Cette organisation a activé l'accès au contenu simple.  Les hôtes ne sont pas tenus de souscrire un abonnement pour accéder aux référentiels d'accès."
+        ""
       ],
-      "This organization is not using <a target=\\\"_blank\\\" href=\\\"https://access.redhat.com/articles/simple-content-access\\\">Simple Content Access.</a> Entitlement-based subscription management is deprecated and will be removed in Katello 4.12.": [
+      "This organization is not using <a target=\\\"_blank\\\" href=\\\"https://access.redhat.com/articles/simple-content-access\\\">Simple Content Access.</a> Entitlement-based subscription management is deprecated and will be removed in a future version.": [
         ""
       ],
       "Title": [
-        "Titre"
+        "標題"
       ],
       "To register a content host to this server, follow these steps.": [
-        "Pour enregistrer un hôte de contenu sur ce serveur, suivez les étapes suivantes."
+        "若要向這部伺服器註冊內容主機，請依照下列步驟進行："
       ],
       "Toggle Dropdown": [
-        "Basculer la liste déroulante"
-      ],
-      "Token of the upstream repository user for authentication. Leave empty if repository does not require authentication.": [
-        "Jeton de l'utilisateur du référentiel en amont pour l'authentification. Laissez vide si le référentiel ne nécessite pas d'authentification."
-      ],
-      "Topic": [
-        "Sujet"
-      ],
-      "Tracer helps administrators identify applications that need to be restarted after a system is patched.": [
-        "Tracer aide les administrateurs à identifier les applications qui doivent être redémarrées après qu'un système a été corrigé."
-      ],
-      "Traces": [
-        "Traces"
-      ],
-      "Traces for:": [
-        "Traces pour :"
-      ],
-      "Turn on Setting > Content > Allow deleting repositories in published content views": [
-        "Activez Configuration > Contenu > Autoriser la suppression des référentiels dans les affichages de contenu publié"
-      ],
-      "Type": [
-        "Type"
-      ],
-      "Unauthenticated Pull": [
-        "Pull non authentifié"
-      ],
-      "Unknown": [
-        "Inconnu"
-      ],
-      "Unlimited Content Hosts:": [
-        "Hôtes de contenu illimité :"
-      ],
-      "Unlimited Hosts": [
-        "Hôtes illimités"
-      ],
-      "Unprotected": [
-        "Non protégé"
-      ],
-      "Unregister Host": [
-        "Désenregistrer l'hôte"
-      ],
-      "Unregister Host \\\"{{host.name}}\\\"?": [
-        "Désenregistrer l'hôte « {{host.name}} » ?"
-      ],
-      "Unregister Options:": [
-        "Désenregistrer les options :"
-      ],
-      "Unregister the host as a subscription consumer.  Provisioning and configuration information is preserved.": [
-        "Désinscrire l'hôte en tant que consommateur d'abonnement.  Les informations relatives au provisionnement et à la configuration sont conservées."
-      ],
-      "Unsupported Type!": [
-        "Type non pris en charge !"
-      ],
-      "Update": [
-        "Mise à jour"
-      ],
-      "Update All Deb Packages": [
-        "Mise à jour de tous les paquets deb"
-      ],
-      "Update All Packages": [
-        "Mise à jour de tous les packages"
-      ],
-      "Update Packages": [
-        "Mettre à jour les packages"
-      ],
-      "Update Sync Plan": [
-        "Mettre à jour le plan de synchronisation"
-      ],
-      "Updated": [
-        "Mis à jour"
-      ],
-      "Upgradable": [
-        "Pouvant être mis à niveau"
-      ],
-      "Upgradable For": [
-        "Mise à niveau pour"
-      ],
-      "Upgradable Package": [
-        "Package pouvant être mis à niveau"
-      ],
-      "Upgrade Available": [
-        "Mise à niveau disponible"
-      ],
-      "Upgrade Selected": [
-        "Mise à niveau sélectionnée"
-      ],
-      "Upload": [
-        "Télécharger"
-      ],
-      "Upload Content Credential file": [
-        "Télécharger fichier d’identifiants de contenu"
-      ],
-      "Upload File": [
-        "Télécharger un fichier"
-      ],
-      "Upload Package": [
-        "Télécharger le package"
-      ],
-      "Upload Requirements": [
-        "Exigences en matière de téléchargement"
-      ],
-      "Upload Requirements.yml file <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'ansible_collection'\\\" uib-popover-html=\\\"requirementPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\">\\n        </a>": [
-        "Télécharger le fichier Requirements.yml <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'ansible_collection'\\\" uib-popover-html=\\\"requirementPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\">\\n        </a>"
-      ],
-      "Uploading...": [
-        "Téléchargement..."
-      ],
-      "Upstream Authentication Token": [
-        "Jeton d’authentification en amont"
-      ],
-      "Upstream Authorization": [
-        "Autorisation en amont"
-      ],
-      "Upstream Image Name": [
-        "Nom de l'image en amont"
-      ],
-      "Upstream Password": [
-        "Mot de passe en amont"
-      ],
-      "Upstream Repository Name": [
-        "Nom du référentiel en amont"
-      ],
-      "Upstream URL": [
-        "URL en amont"
-      ],
-      "Upstream Username": [
-        "Nom d'utilisateur en amont"
-      ],
-      "Url": [
-        "Url"
-      ],
-      "URL of the registry you want to sync. Example: https://registry-1.docker.io/ or https://quay.io/": [
-        "URL du registre que vous souhaitez synchroniser. Exemple : https://registry-1.docker.io/ ou https://quay.io/"
-      ],
-      "URL to Discover": [
-        "URL à découvrir"
-      ],
-      "URL to the repository base. Example: http://ftp.de.debian.org/debian/ <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"debURLPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Upstream URL\\\">\\n        </a>": [
-        "URL du référentiel de base. Exemple : http://ftp.de.debian.org/debian/ <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"debURLPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Upstream URL\\\">\\n        </a>"
-      ],
-      "Usage Type": [
-        "Type d'utilisation"
-      ],
-      "Usage Type:": [
-        "Type d'utilisation :"
-      ],
-      "Use specific HTTP Proxy": [
-        "Utiliser un proxy HTTP spécifique"
-      ],
-      "Use the cancel button on content view selection to revert your lifecycle environment selection.": [
-        "Utilisez le bouton d'annulation de la sélection de la vue du contenu pour revenir à la sélection de l'environnement du cycle de vie."
-      ],
-      "Used as": [
-        "Utilisé comme"
-      ],
-      "User": [
-        "Utilisateur"
-      ],
-      "Username": [
-        "Nom d'utilisateur"
-      ],
-      "Username of the upstream repository user for authentication. Leave empty if repository does not require authentication.": [
-        "Nom d'utilisateur de l'utilisateur du référentiel en amont pour l'authentification. Laissez vide si le référentiel ne nécessite pas d'authentification."
-      ],
-      "Variant": [
-        "Variante"
-      ],
-      "Verify Content Checksum": [
-        "Vérifier la somme de contrôle du contenu"
-      ],
-      "Verify SSL": [
-        "Vérifier SSL"
-      ],
-      "Version": [
-        "Version"
-      ],
-      "Version {{ cvVersions['version'] }}": [
-        "Version {{ cvVersions['version'] }}"
-      ],
-      "Versions": [
-        "Versions"
-      ],
-      "via remote execution": [
-        "via exécution distante"
-      ],
-      "via remote execution - customize first": [
-        "via Exécution à distance - personnaliser d'abord"
-      ],
-      "View Container Image Manifest Lists for Repository:": [
-        "Voir les listes de manifestes d'images de conteneurs pour le référentiel :"
-      ],
-      "View Docker Tags for Repository:": [
-        "Voir les étiquettes Docker pour le référentiel :"
-      ],
-      "View job invocations.": [
-        "Afficher les jobs lancés."
-      ],
-      "Virtual": [
-        "Virtuel"
-      ],
-      "Virtual Guest": [
-        "Invité virtuel"
-      ],
-      "Virtual Guests": [
-        "Invités virtuels"
-      ],
-      "Virtual Host": [
-        "Hôte virtuel"
-      ],
-      "Warning: reclaiming space for an \\\"On Demand\\\" repository will delete all cached content units.  Take precaution when cleaning custom repositories whose upstream parents don't keep old package versions.": [
-        "Attention : la récupération d'espace pour un référentiel \\\"À la Demande\\\" supprimera toutes les unités de contenu mises en cache.  Prenez des précautions lorsque vous nettoyez des référentiels personnalisés dont les parents en amont ne conservent pas les anciennes versions des paquets."
-      ],
-      "weekly": [
-        "hebdomadaire"
-      ],
-      "Weekly on {{ product.sync_plan.sync_date | date:'EEEE' }} at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)": [
-        "Hebdomadaire le {{ product.sync_plan.sync_date | date:'EEEE' }} à {{ product.sync_plan.sync_date | date:'mediumTime' }}(heure du serveur)"
-      ],
-      "When Auto Attach is disabled, registering systems will be attached to all associated subscriptions.": [
-        "Lorsque l'option \\\"Auto Attach\\\" est désactivée, les systèmes d'enregistrement seront rattachés à tous les abonnements associés."
-      ],
-      "When Auto Attach is enabled, registering systems will be attached to all associated custom products and only associated Red Hat subscriptions required to satisfy the system's installed products.": [
-        "Lorsque l'attachement automatique est activé, les systèmes d'enregistrement seront attachés à tous les produits personnalisés associés et uniquement aux abonnements Red Hat associés nécessaires pour satisfaire les produits installés du système."
-      ],
-      "Whitespace-separated list of components to sync (leave clear to sync all). Example: main <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"componentPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Components\\\">\\n        </a>": [
-        "Liste séparée par des espaces des composants à synchroniser (laisser vide pour tout synchroniser). Exemple : main <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"componentPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Components\\\">\\n        </a>"
-      ],
-      "Whitespace-separated list of processor architectures to sync (leave clear to sync all). Example: amd64 <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"archPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Architectures\\\">\\n        </a>": [
-        "Liste séparée par des espaces des architectures de processeur pour filtrer la synchronisation. Exemple : amd64 <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"archPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Architectures\\\">\\n        </a>"
-      ],
-      "Whitespace-separated list of releases/distributions to sync (required for syncing). Example: buster <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"distPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Releases/Distributions\\\">\\n        </a>": [
-        "Liste de versions/distributions séparées par des virgules à sync (requis pour la sync). Exemple: buster <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"distPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Releases/Distributions\\\">\\n        </a>"
-      ],
-      "Working": [
-        "Fonctionne"
-      ],
-      "Yes": [
-        "Oui"
-      ],
-      "You can upload a requirements.yml file above to auto-fill contents <b>OR</b> paste contents of <a ng-href=\\\"https://docs.ansible.com/ansible/latest/galaxy/user_guide.html#install-multiple-collections-with-a-requirements-file\\\" target=\\\"_blank\\\"> Requirements.yml </a>below.": [
-        "Vous pouvez télécharger un fichier requirements.yml ci-dessus pour remplir automatiquement le contenu <b> OU </b>coller le contenu de <a ng-href=\\\"https://docs.ansible.com/ansible/latest/galaxy/user_guide.html#install-multiple-collections-with-a-requirements-file\\\" target=\\\"_blank\\\"> Requirements.yml</a> ci-dessous."
-      ],
-      "You can upload a requirements.yml file below to auto-fill contents or paste contents of requirement.yml here": [
-        "Vous pouvez télécharger un fichier requirements.yml ci-dessous pour remplir automatiquement le contenu ou coller le contenu de requirement.yml ici"
-      ],
-      "You cannot remove content from a redhat repository": [
-        "Impossible de supprimer le contenu d'un référentiel Red Hat"
-      ],
-      "You cannot remove these repositories because you do not have permission.": [
-        "Vous ne pouvez pas supprimer ces référentiels parce que vous n'en avez pas l'autorisation."
-      ],
-      "You cannot remove this product because it has repositories that are the last affected repository on content view filters": [
         ""
       ],
+      "Token of the upstream repository user for authentication. Leave empty if repository does not require authentication.": [
+        ""
+      ],
+      "Topic": [
+        "主題"
+      ],
+      "Tracer helps administrators identify applications that need to be restarted after a system is patched.": [
+        ""
+      ],
+      "Traces": [
+        ""
+      ],
+      "Traces for:": [
+        ""
+      ],
+      "Turn on Setting > Content > Allow deleting repositories in published content views": [
+        ""
+      ],
+      "Type": [
+        "類型"
+      ],
+      "Unauthenticated Pull": [
+        ""
+      ],
+      "Unknown": [
+        "不明"
+      ],
+      "Unlimited Content Hosts:": [
+        "無限的內容主機："
+      ],
+      "Unlimited Hosts": [
+        ""
+      ],
+      "Unprotected": [
+        ""
+      ],
+      "Unregister Host": [
+        "取消註冊主機"
+      ],
+      "Unregister Host \\\"{{host.name}}\\\"?": [
+        ""
+      ],
+      "Unregister Options:": [
+        ""
+      ],
+      "Unregister the host as a subscription consumer.  Provisioning and configuration information is preserved.": [
+        ""
+      ],
+      "Unsupported Type!": [
+        ""
+      ],
+      "Update": [
+        "更新"
+      ],
+      "Update All Deb Packages": [
+        ""
+      ],
+      "Update All Packages": [
+        ""
+      ],
+      "Update Packages": [
+        "升級套件"
+      ],
+      "Update Sync Plan": [
+        "更新同步計劃"
+      ],
+      "Updated": [
+        "已更新"
+      ],
+      "Upgradable": [
+        ""
+      ],
+      "Upgradable For": [
+        ""
+      ],
+      "Upgradable Package": [
+        ""
+      ],
+      "Upgrade Available": [
+        ""
+      ],
+      "Upgrade Selected": [
+        ""
+      ],
+      "Upload": [
+        "上傳"
+      ],
+      "Upload Content Credential file": [
+        ""
+      ],
+      "Upload File": [
+        "上傳檔案"
+      ],
+      "Upload Package": [
+        "上傳套件"
+      ],
+      "Upload Requirements": [
+        ""
+      ],
+      "Upload Requirements.yml file <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'ansible_collection'\\\" uib-popover-html=\\\"requirementPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\">\\n        </a>": [
+        ""
+      ],
+      "Uploading...": [
+        "正在上傳..."
+      ],
+      "Upstream Authentication Token": [
+        ""
+      ],
+      "Upstream Authorization": [
+        ""
+      ],
+      "Upstream Image Name": [
+        ""
+      ],
+      "Upstream Password": [
+        ""
+      ],
+      "Upstream Repository Name": [
+        "上游軟體庫名稱"
+      ],
+      "Upstream URL": [
+        ""
+      ],
+      "Upstream Username": [
+        ""
+      ],
+      "Url": [
+        "網址"
+      ],
+      "URL of the registry you want to sync. Example: https://registry-1.docker.io/ or https://quay.io/": [
+        ""
+      ],
+      "URL to Discover": [
+        ""
+      ],
+      "URL to the repository base. Example: http://ftp.de.debian.org/debian/ <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"debURLPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Upstream URL\\\">\\n        </a>": [
+        ""
+      ],
+      "Usage Type": [
+        ""
+      ],
+      "Usage Type:": [
+        ""
+      ],
+      "Use specific HTTP Proxy": [
+        ""
+      ],
+      "Use the cancel button on content view selection to revert your lifecycle environment selection.": [
+        ""
+      ],
+      "Used as": [
+        ""
+      ],
+      "User": [
+        "使用者"
+      ],
+      "Username": [
+        "使用者名稱"
+      ],
+      "Username of the upstream repository user for authentication. Leave empty if repository does not require authentication.": [
+        ""
+      ],
+      "Variant": [
+        "變體"
+      ],
+      "Verify Content Checksum": [
+        ""
+      ],
+      "Verify SSL": [
+        "驗證 SSL"
+      ],
+      "Version": [
+        "版本"
+      ],
+      "Version {{ cvVersions['version'] }}": [
+        ""
+      ],
+      "Versions": [
+        "版本"
+      ],
+      "via Katello agent": [
+        "透過 Katello 代理程式"
+      ],
+      "via Katello Agent": [
+        "透過 Katello 代理程式"
+      ],
+      "via remote execution": [
+        "透過遠端執行"
+      ],
+      "via remote execution - customize first": [
+        "透過遠端執行 - 先自訂"
+      ],
+      "View Container Image Manifest Lists for Repository:": [
+        ""
+      ],
+      "View Docker Tags for Repository:": [
+        ""
+      ],
+      "View job invocations.": [
+        ""
+      ],
+      "Virtual": [
+        "虛擬"
+      ],
+      "Virtual Guest": [
+        "虛擬客座"
+      ],
+      "Virtual Guests": [
+        "虛擬客座端"
+      ],
+      "Virtual Host": [
+        "虛擬主機"
+      ],
+      "Warning: reclaiming space for an \\\"On Demand\\\" repository will delete all cached content units.  Take precaution when cleaning custom repositories whose upstream parents don't keep old package versions.": [
+        ""
+      ],
+      "weekly": [
+        "每週"
+      ],
+      "Weekly on {{ product.sync_plan.sync_date | date:'EEEE' }} at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)": [
+        "每週在 {{ product.sync_plan.sync_date | date:'EEEE' }} 上於 {{ product.sync_plan.sync_date | date:'mediumTime' }}（伺服器時間）"
+      ],
+      "When Auto Attach is disabled, registering systems will be attached to all associated subscriptions.": [
+        "當停用了自動連接時，註冊的系統將會被連至所有相聯的訂閱。"
+      ],
+      "Whitespace-separated list of components to sync (leave clear to sync all). Example: main <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"componentPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Components\\\">\\n        </a>": [
+        ""
+      ],
+      "Whitespace-separated list of processor architectures to sync (leave clear to sync all). Example: amd64 <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"archPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Architectures\\\">\\n        </a>": [
+        ""
+      ],
+      "Whitespace-separated list of releases/distributions to sync (required for syncing). Example: buster <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"distPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Releases/Distributions\\\">\\n        </a>": [
+        ""
+      ],
+      "Working": [
+        "處理"
+      ],
+      "Yes": [
+        "是"
+      ],
+      "You can upload a requirements.yml file above to auto-fill contents <b>OR</b> paste contents of <a ng-href=\\\"https://docs.ansible.com/ansible/latest/galaxy/user_guide.html#install-multiple-collections-with-a-requirements-file\\\" target=\\\"_blank\\\"> Requirements.yml </a>below.": [
+        ""
+      ],
+      "You can upload a requirements.yml file below to auto-fill contents or paste contents of requirement.yml here": [
+        ""
+      ],
+      "You cannot remove these repositories because you do not have permission.": [
+        "您無法移除這些軟體庫，因為您沒有權限。"
+      ],
       "You cannot remove this product because it is a Red Hat product.": [
-        "Vous ne pouvez pas retirer ce produit car il s'agit d'un produit Red Hat."
+        "您無法移除這項產品，因為這是一項 Red Hat 產品。"
       ],
       "You cannot remove this product because it was published to a content view.": [
-        "Vous ne pouvez pas supprimer ce produit parce qu'il a été publié dans une vue de contenu."
+        "您無法移除這項產品，因為它已發佈至某個內容視域。"
       ],
       "You cannot remove this product because you do not have permission.": [
-        "Vous ne pouvez pas retirer ce produit parce que vous n'avez pas d'autorisation."
+        "您無法移除這項產品，因為您沒有權限。"
       ],
       "You cannot remove this repository because you do not have permission.": [
-        "Vous ne pouvez pas supprimer ce référentiel parce que vous n'en avez pas l'autorisation."
+        "您無法移除此軟體庫，因為您沒有權限。"
       ],
       "You currently don't have any Activation Keys, you can add Activation Keys using the button on the right.": [
-        "Vous n'avez actuellement aucune clé d'activation, vous pouvez en ajouter en utilisant le bouton de droite."
+        "您目前沒有任何啟動金鑰，您可使用右方的按鈕來新增啟動金鑰。"
       ],
       "You currently don't have any Alternate Content Sources associated with this Content Credential.": [
-        "Vous n'avez actuellement aucune autre source de contenu associée à cette référence de contenu."
+        ""
       ],
       "You currently don't have any Container Image Tags.": [
-        "Vous n'avez actuellement aucune étiquette d’image de contenu."
+        ""
       ],
       "You currently don't have any Content Credential, you can add Content Credentials using the button on the right.": [
-        "Vous n'avez actuellement aucun justificatif de contenu, vous pouvez en ajouter en utilisant le bouton de droite."
+        ""
       ],
       "You currently don't have any Content Hosts, you can create new Content Hosts by selecting Contents Host from main menu and then clicking the button on the right.": [
-        "Vous n'avez actuellement aucun hôte de contenu, vous pouvez créer de nouveaux hôtes de contenu en sélectionnant Hôte de contenu dans le menu principal et en cliquant sur le bouton de droite."
+        "您目前沒有任何內容主機，您可藉由從主選單選擇內容主機然後按下右方的按鈕來建立新的內容主機。"
       ],
       "You currently don't have any Content Hosts, you can register one by clicking the button on the right and following the instructions.": [
-        "Vous n'avez actuellement aucun hôte de contenu, vous pouvez en enregistrer un en cliquant sur le bouton à droite et en suivant les instructions."
+        "您目前沒有任何內容主機，您可藉由點選右方的按鈕並依照指示進行，以註冊內容主機。"
       ],
       "You currently don't have any Files.": [
-        "Vous n'avez actuellement aucun Fichier."
+        ""
       ],
       "You currently don't have any Host Collections, you can add Host Collections using the button on the right.": [
-        "Vous n'avez actuellement aucune collection d'hôtes, vous pouvez en ajouter en utilisant le bouton de droite."
+        "您目前沒有任何主機集，您可藉由使用右方的按鈕來新增主機集。"
       ],
-      "You currently don't have any Hosts in this Host Collection, you can add Content Hosts after selecting the 'Add' tab.": [
-        "Vous n'avez actuellement aucun hôte dans cette collection d'hôtes. Vous pouvez ajouter des hôtes de contenu en sélectionnant l'onglet \\\"Ajouter\\\"."
+      "You currently don't have any Hosts in this Host Group, you can add Content Hosts after selecting the 'Add' tab.": [
+        "您目前在這個主機群組中沒有任何主機，您可在選擇了「新增」分頁後新增內容主機。"
       ],
       "You currently don't have any Products associated with this Content Credential.": [
-        "Vous n'avez actuellement aucun produit associé à cette référence de contenu."
+        ""
       ],
       "You currently don't have any Products to subscribe to, you can add Products after selecting 'Products' under 'Content' in the main menu": [
-        "Vous n'avez actuellement aucun produit à souscrire, vous pouvez ajouter des produits après avoir sélectionné \\\"Produits\\\" sous \\\"Contenu\\\" dans le menu principal"
+        "您目前沒有任何能訂閱的產品，您可在選擇了主選單中「內容」下的「產品」之後來新增產品。"
       ],
       "You currently don't have any Products to subscribe to. You can add Products after selecting 'Products' under 'Content' in the main menu.": [
-        "Vous n'avez actuellement aucun produit auquel vous pouvez vous abonner. Vous pouvez ajouter des produits après avoir sélectionné \\\"Produits\\\" sous \\\"Contenu\\\" dans le menu principal."
+        ""
       ],
       "You currently don't have any Products<span bst-feature-flag=\\\"custom_products\\\">, you can add Products using the button on the right</span>.": [
-        "Vous n'avez actuellement aucun produit <span bst-feature-flag=\\\"custom_products\\\">, vous pouvez ajouter des produits en utilisant le bouton de droite</span>."
+        "您目前沒有任何產品<span bst-feature-flag=\\\"custom_products\\\">，您可藉由使用右方的的按鈕來新增產品。</span>。"
       ],
       "You currently don't have any Repositories associated with this Content Credential.": [
-        "Vous n'avez actuellement aucun référentiel associé à cette référence de contenu."
+        ""
       ],
       "You currently don't have any Repositories included in this Product, you can add Repositories using the button on the right.": [
-        "Vous n'avez actuellement aucun référentiel inclus dans ce produit, vous pouvez ajouter des référentiels en utilisant le bouton à droite."
+        "您目前沒有任何軟體庫包含在這項產品中，您可藉由使用右方的按鈕來新增軟體庫。"
       ],
       "You currently don't have any Subscriptions associated with this Activation Key, you can add Subscriptions after selecting the 'Add' tab.": [
-        "Vous n'avez actuellement aucun abonnement associé à cette clé d'activation, vous pouvez ajouter des abonnements après avoir sélectionné l'onglet \\\"Ajouter\\\"."
+        "您目前沒有任何與此啟動金鑰相聯的訂閱，您可在選擇了「新增」分頁後新增訂閱。"
       ],
       "You currently don't have any Subscriptions associated with this Content Host. You can add Subscriptions after selecting the 'Add' tab.": [
-        "Vous n'avez actuellement aucun abonnement associé à cet hôte de contenu. Vous pouvez ajouter des abonnements après avoir sélectionné l'onglet \\\"Ajouter\\\"."
+        ""
       ],
       "You currently don't have any Sync Plans.  A Sync Plan can be created by using the button on the right.": [
-        "Vous n'avez actuellement aucun plan de synchronisation.  Un plan de synchronisation peut être créé en utilisant le bouton de droite."
+        "您目前沒有任何同步計畫。同步計畫能藉由使用右方的按鈕來建立。"
       ],
       "You do not have any Installed Products": [
-        "Vous n'avez pas de produits installés"
+        "您尚未安裝任何產品"
       ],
       "You must select a content view in order to save your environment.": [
-        "Vous devez sélectionner une vue du contenu afin de sauvegarder votre environnement."
+        "您必須選擇一項內容視域以儲存您的環境。"
       ],
       "You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.": [
-        "Vous devez sélectionner une nouvelle vue du contenu avant de pouvoir enregistrer votre changement d'environnement. Utilisez le bouton d'annulation de la sélection de la vue du contenu pour revenir à votre sélection d'environnement."
+        "若要儲存您的環境變更，您必須先選擇新的內容視域。請使用內容視域上的取消按鈕來復原您的環境選擇。"
       ],
       "You must select a new content view before your change of lifecycle environment can be saved.": [
-        "Vous devez sélectionner une nouvelle vue du contenu avant de pouvoir enregistrer votre changement d'environnement de cycle de vie."
+        ""
       ],
       "You must select at least one Content Host in order to apply Errata.": [
-        "Vous devez sélectionner au moins un hôte de contenu afin d'appliquer les errata."
+        "您必須選擇至少一個內容主機才能套用勘誤。"
       ],
       "You must select at least one Errata to apply.": [
-        "Vous devez sélectionner au moins un erratum."
+        "您至少必須選擇一個勘誤。"
       ],
       "Your search returned zero %(contentType)s that match the criteria.": [
-        "Votre recherche a donné zéro %(contentType)s correspondant aux critères."
+        ""
       ],
       "Your search returned zero Activation Keys.": [
-        "Votre recherche a donné zéro clé d'activation."
+        ""
       ],
       "Your search returned zero Container Image Tags.": [
-        "Votre recherche n'a donné aucun label d’image de conteneur."
+        ""
       ],
       "Your search returned zero Content Credential.": [
-        "Votre recherche n'a donné aucune référence de contenu."
+        ""
       ],
       "Your search returned zero Content Hosts.": [
-        "Votre recherche n'a donné aucun hôte de contenu."
+        ""
       ],
       "Your search returned zero Content Views": [
-        "Votre recherche a donné zéro Affichage de contenu"
+        ""
       ],
       "Your search returned zero Content Views.": [
-        "Votre recherche a donné zéro Affichages de contenu."
+        ""
       ],
       "Your search returned zero Deb Packages.": [
-        "Votre recherche a donné zéro paquet Deb."
+        ""
       ],
       "Your search returned zero Debs.": [
-        "Votre recherche a donné zéro Debs."
+        ""
       ],
       "Your search returned zero Errata.": [
-        "Votre recherche a donné zéro Errata."
+        ""
       ],
       "Your search returned zero Erratum.": [
-        "Votre recherche a donné zéro Erratum."
+        ""
       ],
       "Your search returned zero Files.": [
-        "Votre recherche a donné zéro Fichier."
+        ""
       ],
       "Your search returned zero Host Collections.": [
-        "Votre recherche a donné zéro collection d'hôtes."
+        ""
       ],
       "Your search returned zero Hosts.": [
-        "Votre recherche n'a donné aucun hôte."
+        ""
       ],
       "Your search returned zero Lifecycle Environments.": [
-        "Votre recherche a donné zéro environnement de cycle de vie."
+        ""
       ],
       "Your search returned zero Module Streams.": [
-        "Votre recherche n'a donné aucun flux de modules."
+        ""
       ],
       "Your search returned zero Packages.": [
-        "Votre recherche a donné zéro paquet."
+        ""
       ],
       "Your search returned zero Products.": [
-        "Votre recherche a donné zéro produit."
+        ""
       ],
       "Your search returned zero Repositories": [
-        "Votre recherche a donné zéro référentiels"
+        ""
       ],
       "Your search returned zero Repositories.": [
-        "Votre recherche a donné zéro référentiels."
+        ""
       ],
       "Your search returned zero repository sets.": [
-        "Votre recherche a donné zéro ensemble de référentiels."
+        ""
       ],
       "Your search returned zero Repository Sets.": [
-        "Votre recherche a donné zéro ensemble de référentiels."
+        ""
       ],
       "Your search returned zero results.": [
-        "Votre recherche n'a donné aucun résultat."
+        ""
       ],
       "Your search returned zero Subscriptions.": [
-        "Votre recherche a donné zéro Abonnement."
+        ""
       ],
       "Your search returned zero Sync Plans.": [
-        "Votre recherche a donné zéro Plan de synchronisation."
+        ""
       ],
       "Your search returned zero Traces.": [
-        "Votre recherche a donné zéro Traces."
+        ""
       ],
       "Yum Metadata Checksum": [
         "Yum Metadata Checksum"
       ],
       "Yum metadata generation has been initiated in the background.  Click <a href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        "La génération de métadonnées a été lancée en arrière-plan.  Cliquez <a href=\\\"{{ taskUrl() }}\\\">ici</a> pour suivre les progrès."
+        "已在背景開始了 Yum metadata 的產生。請按<a href=\\\"{{ taskUrl() }}\\\">此</a>來監控進度。"
       ],
       "Yum Repositories <div>{{ library.counts.yum_repositories || 0 }}</div>": [
-        "Référentiels Yum <div>{{ library.counts.yum_repositories || 0 }} </div>"
+        "Yum 軟體庫 <div>{{ library.counts.yum_repositories || 0 }}</div>"
       ]
     }
   }
