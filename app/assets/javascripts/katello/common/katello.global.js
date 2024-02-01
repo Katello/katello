@@ -1,5 +1,5 @@
 //Katello global object namespace that all others should be attached to
-var KT = {};
+var KT = KT ? KT : {};
 
 //i18n global variable
 var katelloI18n = {};
