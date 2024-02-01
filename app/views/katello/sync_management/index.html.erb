@@ -1,16 +1,18 @@
-<%= javascript 'katello/sync_management' %>
+<% content_for(:javascripts) do -%>
+  <%= javascript_include_tag 'katello/sync_management' %>
 
-<%= javascript do %>
-  localize({
-    "cancel": "<%= escape_javascript(_('Cancel')) %>",
-    "cancelled": "<%= escape_javascript(_('Sync Canceled')) %>",
-    "error": "<%= escape_javascript(_('Error')) %>",
-    "complete": "<%= escape_javascript(_('Sync complete.')) %>",
-    "no_start_time": "<%= escape_javascript(_('No start time currently available.')) %>"
-  });
+  <script>
+    localize({
+      "cancel": "<%= escape_javascript(_('Cancel')) %>",
+      "cancelled": "<%= escape_javascript(_('Sync Canceled')) %>",
+      "error": "<%= escape_javascript(_('Error')) %>",
+      "complete": "<%= escape_javascript(_('Sync complete.')) %>",
+      "no_start_time": "<%= escape_javascript(_('No start time currently available.')) %>"
+    });
 
     KT.repo_status = $.parseJSON('<%= escape_javascript(@repo_status.to_json.html_safe) %>');
     KT.permissions = { "syncable" : <%= any_syncable? %> };
+  </script>
 <% end %>
 
 <% if Organization.current -%>
