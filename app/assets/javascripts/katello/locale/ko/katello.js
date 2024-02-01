@@ -1361,6 +1361,12 @@
       "ID of the host": [
         "호스트의 ID"
       ],
+      "Also include the latest upgradable package version for each host package": [
+        ""
+      ],
+      "Return only packages of a particular status (upgradable or up-to-date)": [
+        ""
+      ],
       "Errata to exclusively include in the action": [
         ""
       ],
@@ -1438,12 +1444,6 @@
       ],
       "List packages installed on the host": [
         "호스트에 설치된 패키지 나열"
-      ],
-      "Also include the latest upgradable package version for each host package": [
-        ""
-      ],
-      "Return only packages of a particular status (upgradable or up-to-date)": [
-        ""
       ],
       "Couldn't find host with host id '%s'": [
         "호스트 ID가 '%s'인 호스트를 찾을 수 없습니다."
@@ -2745,9 +2745,6 @@
         ""
       ],
       "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.": [
-        ""
-      ],
-      "Lifecycle environment for the host.": [
         ""
       ],
       "Clear any previous registration and run subscription-manager with --force.": [
@@ -4181,6 +4178,9 @@
       "package_names_for_job_template: Action must be one of %s": [
         ""
       ],
+      "deb_names_for_job_template: Action must be one of %s": [
+        ""
+      ],
       "Cannot delete the last Location.": [
         ""
       ],
@@ -5361,8 +5361,8 @@
       "Activation keys and subscriptions can be managed": [
         "활성키 및 서브스크립션을 관리할 수 있습니다 "
       ],
-      "here": [
-        "여기 "
+      "here.": [
+        ""
       ],
       "Reload data": [
         "데이터 다시 불러오기 "
@@ -5751,12 +5751,6 @@
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         ""
       ],
-      "Pulp export destination filepath": [
-        ""
-      ],
-      "On-disk location for exported repositories": [
-        "내보낸 리포지터리의 디스크상 위치"
-      ],
       "Pulp 3 export destination filepath": [
         ""
       ],
@@ -5971,6 +5965,12 @@
         ""
       ],
       "Resolve traces via Katello interface": [
+        ""
+      ],
+      "Katello: Configure host for new content source": [
+        ""
+      ],
+      "Replace content source on the target machine": [
         ""
       ],
       "Katello: Module Stream Actions": [
@@ -6399,6 +6399,60 @@
       "Repository sets": [
         ""
       ],
+      "Install via remote execution": [
+        ""
+      ],
+      "Install via customized remote execution": [
+        ""
+      ],
+      "No packages available to install": [
+        ""
+      ],
+      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+        ""
+      ],
+      "No matching packages found": [
+        ""
+      ],
+      "Version": [
+        "버전 "
+      ],
+      "Install packages": [
+        ""
+      ],
+      "Select packages to install to the host {hostName}.": [
+        ""
+      ],
+      "Search available Debian packages": [
+        ""
+      ],
+      "This host does not have any packages.": [
+        ""
+      ],
+      "Packages will appear here when available.": [
+        ""
+      ],
+      "Problem searching packages": [
+        ""
+      ],
+      "Installed version": [
+        ""
+      ],
+      "Upgradable to": [
+        ""
+      ],
+      "A remote execution job is in progress.": [
+        ""
+      ],
+      "Upgrade via remote execution": [
+        ""
+      ],
+      "Upgrade via customized remote execution": [
+        ""
+      ],
+      "Upgrade": [
+        ""
+      ],
       "No matching errata found": [
         ""
       ],
@@ -6534,61 +6588,10 @@
       "Uninstall and reset": [
         ""
       ],
-      "Install via remote execution": [
-        ""
-      ],
-      "Install via customized remote execution": [
-        ""
-      ],
-      "No packages available to install": [
-        ""
-      ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
-        ""
-      ],
-      "No matching packages found": [
-        ""
-      ],
-      "Version": [
-        "버전 "
-      ],
-      "Install packages": [
-        ""
-      ],
-      "Select packages to install to the host {hostName}.": [
-        ""
-      ],
       "Search available packages": [
         ""
       ],
-      "This host does not have any packages.": [
-        ""
-      ],
-      "Packages will appear here when available.": [
-        ""
-      ],
-      "Problem searching packages": [
-        ""
-      ],
-      "Installed version": [
-        ""
-      ],
-      "Upgradable to": [
-        ""
-      ],
-      "A remote execution job is in progress.": [
-        ""
-      ],
-      "Upgrade via remote execution": [
-        ""
-      ],
-      "Upgrade via customized remote execution": [
-        ""
-      ],
       "Refresh package applicability": [
-        ""
-      ],
-      "Upgrade": [
         ""
       ],
       "Repository set enabled": [
@@ -6771,11 +6774,17 @@
       "Restart via customized remote execution": [
         ""
       ],
+      "Reboot host": [
+        ""
+      ],
       "Restart app": [
         ""
       ],
       "Tracer helps administrators identify applications that need to be restarted after a system is patched.": [
         "추적기는 관리자가 시스템에 패치를 적용한 후 다시 시작해야 하는 응용프로그램을 식별하는 데 도움이 됩니다."
+      ],
+      "At least one of the selected items requires the host to reboot": [
+        ""
       ],
       "Traces that require logout cannot be restarted remotely": [
         ""
@@ -8919,19 +8928,10 @@
       "Abstract": [
         ""
       ],
-      "Action with sub plans": [
-        "하위 계획이 있는 작업"
-      ],
       "Auto attach subscriptions": [
         "서브스크립션 자동 첨부"
       ],
-      "Check for long running tasks": [
-        ""
-      ],
       "Copy version units to library": [
-        ""
-      ],
-      "Deliver notifications about long running tasks": [
         ""
       ],
       "Discover": [
@@ -8951,12 +8951,6 @@
       ],
       "Hypervisors": [
         "하이퍼바이저"
-      ],
-      "Import Puppet classes": [
-        "Puppet 클래스 가져오기"
-      ],
-      "Import facts": [
-        "팩트 불러오기"
       ],
       "Incremental Update of  Content View Version(s) ": [
         ""
@@ -8979,9 +8973,6 @@
       "Reindex subscriptions": [
         "서브스크립션 다시 인덱싱"
       ],
-      "Remote action:": [
-        "원격 작업:"
-      ],
       "Sync capsule": [
         ""
       ],
@@ -9003,17 +8994,23 @@
       "Verify checksum": [
         ""
       ],
-      "No hosts have been specified.": [
-        "호스트를 지정하지 않았습니다."
+      "Action with sub plans": [
+        "하위 계획이 있는 작업"
       ],
-      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
-        "#~ \"게시된 컨텐츠 뷰에 이미 포함되었기 때문에 리포지터리를 삭제할 수 없습니다. 삭제하기 전에 이 리포지터리가 포함된 모든 컨텐츠 뷰 버전을 먼\"#~ \"저 삭제하십시오.\""
+      "Import Puppet classes": [
+        "Puppet 클래스 가져오기"
       ],
-      "source URL is malformed": [
-        "소스 URL의 형식이 잘못되었습니다."
+      "Import facts": [
+        "팩트 불러오기"
       ],
-      "temporarily override feed URL for sync": [
-        "동기화를 위한 임시 덮어쓰기 피드 URL"
+      "On-disk location for exported repositories": [
+        "내보낸 리포지터리의 디스크상 위치"
+      ],
+      "Remote action:": [
+        "원격 작업:"
+      ],
+      "here": [
+        "여기 "
       ]
     }
   }

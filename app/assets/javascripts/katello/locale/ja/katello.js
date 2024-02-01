@@ -1361,6 +1361,12 @@
       "ID of the host": [
         "ホストの ID"
       ],
+      "Also include the latest upgradable package version for each host package": [
+        "各ホストパッケージの最新のアップグレード可能なパッケージバージョンも含めます"
+      ],
+      "Return only packages of a particular status (upgradable or up-to-date)": [
+        "特定ステータス (アップグレード可能または最新) のパッケージのみを返します"
+      ],
       "Errata to exclusively include in the action": [
         "アクションにだけ含めるエラータ"
       ],
@@ -1438,12 +1444,6 @@
       ],
       "List packages installed on the host": [
         "ホストにインストールされているパッケージの一覧表示"
-      ],
-      "Also include the latest upgradable package version for each host package": [
-        "各ホストパッケージの最新のアップグレード可能なパッケージバージョンも含めます"
-      ],
-      "Return only packages of a particular status (upgradable or up-to-date)": [
-        "特定ステータス (アップグレード可能または最新) のパッケージのみを返します"
       ],
       "Couldn't find host with host id '%s'": [
         "ホスト ID 「%s」のホストが見つかりませんでした"
@@ -2746,9 +2746,6 @@
       ],
       "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.": [
         "CentOS および Red Hat Enterprise Linux に必要な subscription-manager クライアントのアクティベーションキー。ホストグループにアクティベーションキーがない場合にのみ必要です。"
-      ],
-      "Lifecycle environment for the host.": [
-        "ホストのライフサイクル環境"
       ],
       "Clear any previous registration and run subscription-manager with --force.": [
         "以前の登録をすべてクリアし、--force を指定して subscription-manager を実行します。"
@@ -4181,6 +4178,9 @@
       "package_names_for_job_template: Action must be one of %s": [
         "package_names_for_job_template: アクションは %s のいずれかでなければなりません。"
       ],
+      "deb_names_for_job_template: Action must be one of %s": [
+        ""
+      ],
       "Cannot delete the last Location.": [
         "最終ロケーションを削除できません"
       ],
@@ -5360,8 +5360,8 @@
       "Activation keys and subscriptions can be managed": [
         "アクティベーションキーとサブスクリプションを管理できます"
       ],
-      "here": [
-        "こちら"
+      "here.": [
+        ""
       ],
       "Reload data": [
         "データの再読み込み"
@@ -5750,12 +5750,6 @@
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         "Smart Proxy 同期のデフォルトのダウンロードポリシー ('inherit'、'immediate'、または 'on_demand' のいずれか)"
       ],
-      "Pulp export destination filepath": [
-        "Pulp のエクスポート先のファイルパス"
-      ],
-      "On-disk location for exported repositories": [
-        "エクスポートされたリポジトリーのディスク上ロケーション"
-      ],
       "Pulp 3 export destination filepath": [
         "Pulp 3 のエクスポート先のファイルパス"
       ],
@@ -5971,6 +5965,12 @@
       ],
       "Resolve traces via Katello interface": [
         "Katello インターフェイスでのトレースの解決"
+      ],
+      "Katello: Configure host for new content source": [
+        ""
+      ],
+      "Replace content source on the target machine": [
+        ""
       ],
       "Katello: Module Stream Actions": [
         "Katello: モジュールストリームアクション"
@@ -6398,6 +6398,60 @@
       "Repository sets": [
         "リポジトリーセット"
       ],
+      "Install via remote execution": [
+        "リモート実行によるインストール"
+      ],
+      "Install via customized remote execution": [
+        "カスタマイズされたリモート実行によるインストール"
+      ],
+      "No packages available to install": [
+        "インストール可能なパッケージはありません"
+      ],
+      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+        ""
+      ],
+      "No matching packages found": [
+        "マッチするパッケージが見つかりませんでした"
+      ],
+      "Version": [
+        "バージョン"
+      ],
+      "Install packages": [
+        "パッケージのインストール"
+      ],
+      "Select packages to install to the host {hostName}.": [
+        "ホスト {hostName} にインストールするパッケージを選択します。"
+      ],
+      "Search available Debian packages": [
+        ""
+      ],
+      "This host does not have any packages.": [
+        "このホストにはパッケージがありません。"
+      ],
+      "Packages will appear here when available.": [
+        "パッケージが利用可能になると、ここに表示されます。"
+      ],
+      "Problem searching packages": [
+        "パッケージの検索中に問題が発生しました"
+      ],
+      "Installed version": [
+        "インストールされたバージョン"
+      ],
+      "Upgradable to": [
+        "以下にアップグレード可能:"
+      ],
+      "A remote execution job is in progress.": [
+        "リモート実行ジョブが進行中です。"
+      ],
+      "Upgrade via remote execution": [
+        "リモート実行によるアップグレード"
+      ],
+      "Upgrade via customized remote execution": [
+        "カスタマイズされたリモート実行によるアップグレード"
+      ],
+      "Upgrade": [
+        "アップグレード"
+      ],
       "No matching errata found": [
         "マッチするエラータが見つかりませんでした"
       ],
@@ -6533,62 +6587,11 @@
       "Uninstall and reset": [
         "アンインストールとリセット"
       ],
-      "Install via remote execution": [
-        "リモート実行によるインストール"
-      ],
-      "Install via customized remote execution": [
-        "カスタマイズされたリモート実行によるインストール"
-      ],
-      "No packages available to install": [
-        "インストール可能なパッケージはありません"
-      ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
-        ""
-      ],
-      "No matching packages found": [
-        "マッチするパッケージが見つかりませんでした"
-      ],
-      "Version": [
-        "バージョン"
-      ],
-      "Install packages": [
-        "パッケージのインストール"
-      ],
-      "Select packages to install to the host {hostName}.": [
-        "ホスト {hostName} にインストールするパッケージを選択します。"
-      ],
       "Search available packages": [
         "利用可能なパッケージの検索"
       ],
-      "This host does not have any packages.": [
-        "このホストにはパッケージがありません。"
-      ],
-      "Packages will appear here when available.": [
-        "パッケージが利用可能になると、ここに表示されます。"
-      ],
-      "Problem searching packages": [
-        "パッケージの検索中に問題が発生しました"
-      ],
-      "Installed version": [
-        "インストールされたバージョン"
-      ],
-      "Upgradable to": [
-        "以下にアップグレード可能:"
-      ],
-      "A remote execution job is in progress.": [
-        "リモート実行ジョブが進行中です。"
-      ],
-      "Upgrade via remote execution": [
-        "リモート実行によるアップグレード"
-      ],
-      "Upgrade via customized remote execution": [
-        "カスタマイズされたリモート実行によるアップグレード"
-      ],
       "Refresh package applicability": [
         ""
-      ],
-      "Upgrade": [
-        "アップグレード"
       ],
       "Repository set enabled": [
         "リポジトリーセットが有効です"
@@ -6770,11 +6773,17 @@
       "Restart via customized remote execution": [
         "カスタマイズされたリモート実行による再起動"
       ],
+      "Reboot host": [
+        ""
+      ],
       "Restart app": [
         "アプリケーションの再起動"
       ],
       "Tracer helps administrators identify applications that need to be restarted after a system is patched.": [
         "トレーサーを使用することで、管理者はシステムにパッチ修正を適用した後に再起動する必要のあるアプリケーションを特定しやすくなります。"
+      ],
+      "At least one of the selected items requires the host to reboot": [
+        ""
       ],
       "Traces that require logout cannot be restarted remotely": [
         "ログアウトが必要なトレースをリモートで再起動することはできません"
@@ -8918,20 +8927,11 @@
       "Abstract": [
         "概要"
       ],
-      "Action with sub plans": [
-        "サブプランによるアクション"
-      ],
       "Auto attach subscriptions": [
         "サブスクリプションの自動割り当て"
       ],
-      "Check for long running tasks": [
-        ""
-      ],
       "Copy version units to library": [
         "バージョンユニットのライブラリーへのコピー"
-      ],
-      "Deliver notifications about long running tasks": [
-        ""
       ],
       "Discover": [
         "検出"
@@ -8950,12 +8950,6 @@
       ],
       "Hypervisors": [
         "ハイパーバイザー"
-      ],
-      "Import Puppet classes": [
-        "Puppet クラスのインポート"
-      ],
-      "Import facts": [
-        "ファクトのインポート"
       ],
       "Incremental Update of  Content View Version(s) ": [
         "コンテンツビューバージョンの増分更新"
@@ -8978,9 +8972,6 @@
       "Reindex subscriptions": [
         "サブスクリプションのインデックス再作成"
       ],
-      "Remote action:": [
-        "リモートアクション:"
-      ],
       "Sync capsule": [
         "Capsule の同期"
       ],
@@ -9002,17 +8993,29 @@
       "Verify checksum": [
         "チェックサムの確認"
       ],
-      "No hosts have been specified.": [
-        "指定されているホストがありません。"
+      "Action with sub plans": [
+        "サブプランによるアクション"
       ],
-      "#~ \"Repository cannot be deleted since it has already been included in a published\"#~ \" Content View. Please delete all Content View versions containing this reposit\"#~ \"ory before attempting to delete it.\"": [
-        "#~ \"リポジトリーは公開されたコンテンツビューにすでに含まれるため、削除できません。この削除を試行する前にこのリポジトリーが含まれるすべてのコンテンツビューバージ\"#~ \"ョンを削除してください。\""
+      "Import Puppet classes": [
+        "Puppet クラスのインポート"
       ],
-      "source URL is malformed": [
-        "ソース URL の形式が正しくありません"
+      "Import facts": [
+        "ファクトのインポート"
       ],
-      "temporarily override feed URL for sync": [
-        "フィード URL を一時的に上書きして同期"
+      "Lifecycle environment for the host.": [
+        "ホストのライフサイクル環境"
+      ],
+      "On-disk location for exported repositories": [
+        "エクスポートされたリポジトリーのディスク上ロケーション"
+      ],
+      "Pulp export destination filepath": [
+        "Pulp のエクスポート先のファイルパス"
+      ],
+      "Remote action:": [
+        "リモートアクション:"
+      ],
+      "here": [
+        "こちら"
       ]
     }
   }

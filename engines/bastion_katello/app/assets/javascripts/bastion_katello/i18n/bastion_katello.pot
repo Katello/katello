@@ -2101,6 +2101,10 @@ msgid "Id"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+msgid "If you want to upload individual packages, create a separate repository with an empty \"Upstream URL\" field."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Ignore SRPMs"
 msgstr ""
@@ -4000,10 +4004,6 @@ msgstr ""
 msgid "Subscription UUID"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
-msgid "subscription-manager register --org=\"{{ activationKey.organization.label }}\" --activationkey=\"{{ activationKey.name }}\""
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
@@ -4377,7 +4377,7 @@ msgid "This activation key is not associated with any content hosts."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
-msgid "This activation key may be used during system registration. For example:"
+msgid "This activation key may be used during <a href=\"/hosts/register?initialAKSelection={{ activationKey.name }}\">system registration.</a>"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
