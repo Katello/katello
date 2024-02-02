@@ -25,9 +25,6 @@ export const selectManifestHref = state =>
 export const selectIsManifestImported = state =>
   !!selectOrganizationState(state).owner_details?.upstreamConsumer?.webUrl;
 
-export const selectSimpleContentAccessEnabled = state =>
-  selectOrganizationState(state).simple_content_access;
-
 export const selectCdnConfigurationUpdateStatus = state =>
   selectAPIStatus(state, UPDATE_CDN_CONFIGURATION_KEY);
 

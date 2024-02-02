@@ -18,7 +18,7 @@ import { filterRHSubscriptions } from './SubscriptionHelpers';
 import api, { orgId } from '../../services/api';
 
 import { createSubscriptionParams } from './SubscriptionActions.js';
-import { SUBSCRIPTION_TABLE_NAME, SUBSCRIPTIONS_SERVICE_DOC_URL, SCA_URL } from './SubscriptionConstants';
+import { SUBSCRIPTION_TABLE_NAME, SUBSCRIPTIONS_SERVICE_DOC_URL } from './SubscriptionConstants';
 import './SubscriptionsPage.scss';
 
 class SubscriptionsPage extends Component {
@@ -52,7 +52,6 @@ class SubscriptionsPage extends Component {
       pingUpstreamSubscriptions,
       subscriptions,
       task,
-      checkSimpleContentAccessEligible,
     } = this.props;
 
     if (task) {
@@ -76,10 +75,6 @@ class SubscriptionsPage extends Component {
     }
 
     if (hasUpstreamConnection) {
-      if (hasUpstreamConnection !== prevProps.hasUpstreamConnection) {
-        checkSimpleContentAccessEligible();
-      }
-
       const subscriptionsChanged = subscriptions.results !== prevProps.subscriptions.results;
       if (subscriptionsChanged || !this.state.availableQuantitiesLoaded) {
         const poolIds = filterRHSubscriptions(subscriptions.results).map(subs => subs.id);
@@ -140,7 +135,7 @@ class SubscriptionsPage extends Component {
     const {
       deleteModalOpened, openDeleteModal, closeDeleteModal,
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
-      searchQuery, updateSearchQuery, simpleContentAccess, hasUpstreamConnection,
+      searchQuery, updateSearchQuery, hasUpstreamConnection,
       task, activePermissions, subscriptions, subscriptionTableSettings, isManifestImported,
     } = this.props;
     // Basic permissions - should we even show this page?
@@ -221,18 +216,6 @@ class SubscriptionsPage extends Component {
         },
       };
 
-    const SCAAlert = (
-      <Alert type="warning">
-        <FormattedMessage
-          id="sca-alert"
-          values={{
-            scaLink: <a href={SCA_URL} target="_blank" rel="noreferrer">{__('Simple Content Access')}</a>,
-          }}
-          defaultMessage={__('This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in Katello 4.12.')}
-        />
-      </Alert>
-    );
-
     const SCAPopoverContent = (
       <FormattedMessage
         id="sca-popover-content"
@@ -290,7 +273,6 @@ class SubscriptionsPage extends Component {
               canImportManifest={canImportManifest}
               canDeleteManifest={canDeleteManifest}
               canEditOrganizations={canEditOrganizations}
-              simpleContentAccess={simpleContentAccess}
               taskInProgress={!!task}
               disableManifestActions={disableManifestActions}
               disabledReason={this.getDisabledReason()}
@@ -300,7 +282,6 @@ class SubscriptionsPage extends Component {
             />
 
             <div id="subscriptions-table" className="modal-container">
-              {!this.props.organization?.loading && !simpleContentAccess ? SCAAlert : null}
               <SubscriptionsTable
                 canManageSubscriptionAllocations={canManageSubscriptionAllocations}
                 loadSubscriptions={this.props.loadSubscriptions}
@@ -333,7 +314,6 @@ class SubscriptionsPage extends Component {
 
 SubscriptionsPage.propTypes = {
   pingUpstreamSubscriptions: PropTypes.func.isRequired,
-  checkSimpleContentAccessEligible: PropTypes.func.isRequired,
   loadSubscriptions: PropTypes.func.isRequired,
   loadAvailableQuantities: PropTypes.func.isRequired,
   uploadManifest: PropTypes.func.isRequired,
@@ -341,7 +321,6 @@ SubscriptionsPage.propTypes = {
   resetTasks: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
   loadTableColumns: PropTypes.func.isRequired,
-  simpleContentAccess: PropTypes.bool,
   isManifestImported: PropTypes.bool,
   subscriptions: PropTypes.shape({
     // Disabling rule as existing code failed due to an eslint-plugin-react update
@@ -408,7 +387,6 @@ SubscriptionsPage.defaultProps = {
   deleteModalOpened: false,
   deleteButtonDisabled: true,
   subscriptionTableSettings: {},
-  simpleContentAccess: false,
   isManifestImported: false,
   hasUpstreamConnection: false,
   activePermissions: {

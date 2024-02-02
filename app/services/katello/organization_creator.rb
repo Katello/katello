@@ -27,9 +27,9 @@ module Katello
       end
     end
 
-    def initialize(organization, sca: true)
+    def initialize(organization)
       @organization = organization
-      @content_access_mode = sca ? 'org_environment' : 'entitlement'
+      @content_access_mode = 'org_environment'
     end
 
     def seed!

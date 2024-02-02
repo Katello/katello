@@ -8,11 +8,10 @@ import * as contentCredentialActions from '../../ContentCredentials/ContentCrede
 import * as tasksActions from '../../Tasks/TaskActions';
 import history from './ManifestHistoryReducer';
 import {
-  selectSimpleContentAccessEnabled,
   selectIsManifestImported,
   selectUpdatingCdnConfiguration,
 } from '../../Organizations/OrganizationSelectors';
-import { selectManifestActionStarted, selectSimpleContentAccessEligible } from '../SubscriptionsSelectors';
+import { selectManifestActionStarted } from '../SubscriptionsSelectors';
 import { selectContentCredentials } from '../../ContentCredentials/ContentCredentialSelectors';
 
 import ManifestModal from './ManageManifestModal';
@@ -21,11 +20,9 @@ import ManifestModal from './ManageManifestModal';
 const mapStateToProps = state => ({
   organization: state.katello.organization,
   manifestHistory: state.katello.manifestHistory,
-  simpleContentAccess: selectSimpleContentAccessEnabled(state),
   isManifestImported: selectIsManifestImported(state),
   deleteManifestModalExists: !!state.foremanModals.deleteManifestModal,
   manifestActionStarted: selectManifestActionStarted(state),
-  simpleContentAccessEligible: selectSimpleContentAccessEligible(state),
   updatingCdnConfiguration: selectUpdatingCdnConfiguration(state),
   contentCredentials: selectContentCredentials(state),
 });

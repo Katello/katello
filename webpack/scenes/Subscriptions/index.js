@@ -19,7 +19,7 @@ import {
 } from './SubscriptionsSelectors';
 import { selectTableSettings } from '../../scenes/Settings/SettingsSelectors';
 import { selectIsPollingTask } from '../Tasks/TaskSelectors';
-import { selectOrganizationState, selectSimpleContentAccessEnabled, selectIsManifestImported } from '../Organizations/OrganizationSelectors';
+import { selectOrganizationState, selectIsManifestImported } from '../Organizations/OrganizationSelectors';
 import { pingUpstreamSubscriptions } from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
 import reducer from './SubscriptionReducer';
 import { SUBSCRIPTION_TABLE_NAME, SUBSCRIPTIONS } from './SubscriptionConstants';
@@ -34,7 +34,6 @@ const mapStateToProps = (state) => {
     subscriptions,
     subscriptionTableSettings,
     activePermissions: selectActivePermissions(state),
-    simpleContentAccess: selectSimpleContentAccessEnabled(state),
     isManifestImported: selectIsManifestImported(state),
     hasUpstreamConnection: selectHasUpstreamConnection(state),
     task: selectSubscriptionsTask(state),

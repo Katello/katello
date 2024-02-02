@@ -24,9 +24,7 @@ module Katello
           if taxonomy_class == Organization
             begin
               @taxonomy = Organization.new(resource_params)
-              sca = ::Foreman::Cast.to_bool(params[:simple_content_access])
-              ::Foreman::Deprecation.api_deprecation_warning(N_("Simple Content Access will be required for all organizations in Katello 4.12."))
-              ::Katello::OrganizationCreator.new(@taxonomy, sca: sca).create!
+              ::Katello::OrganizationCreator.new(@taxonomy).create!
               @taxonomy.reload
               switch_taxonomy
               if @count_nil_hosts > 0
@@ -43,20 +41,6 @@ module Katello
             super
           end
         end
-      end
-
-      def update
-        return if params[:simple_content_access].nil?
-        sca_param = ::Foreman::Cast.to_bool(params[:simple_content_access])
-        ::Foreman::Deprecation.api_deprecation_warning("Simple Content Access will be required for all organizations in Katello 4.12.")
-        if sca_param && !@taxonomy.simple_content_access?(cached: false)
-          # user has requested SCA enable
-          sync_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:id])
-        elsif !sca_param && @taxonomy.simple_content_access?(cached: false)
-          # user has requested SCA disable
-          sync_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:id])
-        end
-        super
       end
 
       included do
