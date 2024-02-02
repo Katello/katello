@@ -64,14 +64,4 @@ Gem::Specification.new do |gem|
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'
   gem.add_dependency "angular-rails-templates", "~> 1.1.0"
-
-  # Testing
-  gem.add_development_dependency "factory_bot_rails", "~> 4.5"
-  gem.add_development_dependency "mocha"
-  gem.add_development_dependency "vcr", "~> 6.1"
-  gem.add_development_dependency "webmock"
-  gem.add_development_dependency "robottelo_reporter"
-
-  # Rubocop
-  gem.add_development_dependency 'theforeman-rubocop', '~> 0.0.6'
 end
