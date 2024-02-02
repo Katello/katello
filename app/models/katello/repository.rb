@@ -641,6 +641,18 @@ module Katello
                                 for_resource(self).order(:started_at).last
     end
 
+    def blocking_tasks
+      blocking_task_labels = [
+        ::Actions::Katello::Repository::Sync.name,
+        ::Actions::Katello::Repository::UploadFiles.name
+      ]
+      ForemanTasks::Task::DynflowTask.where(:label => blocking_task_labels)
+                                     .where.not(state: 'stopped')
+                                     .for_resource(self)
+                                     .order(:started_at)
+                                     .last
+    end
+
     # returns other instances of this repo with the same library
     # equivalent of repo
     def environmental_instances(view)
