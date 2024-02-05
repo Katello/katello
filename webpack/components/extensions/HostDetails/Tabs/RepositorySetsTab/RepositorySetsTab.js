@@ -56,7 +56,7 @@ import {
   setContentOverrides,
 } from './RepositorySetsActions';
 
-import { selectOrganization, selectOrganizationStatus } from '../../Cards/SystemPurposeCard/SystemPurposeSelectors';
+import { selectOrganizationStatus } from '../../Cards/SystemPurposeCard/SystemPurposeSelectors';
 import { getOrganization } from '../../Cards/SystemPurposeCard/SystemPurposeActions';
 
 import { REPOSITORY_SETS_KEY, STATUSES, STATUS_TO_PARAM, PARAM_TO_FRIENDLY_NAME, PROVIDER_TYPES, PROVIDER_TYPE_PARAM_TO_FRIENDLY_NAME, PROVIDER_TYPE_TO_PARAM } from './RepositorySetsConstants.js';
@@ -172,9 +172,6 @@ const RepositorySetsTab = () => {
     organization_id: orgId,
   } = hostDetails;
 
-  const {
-    simple_content_access: simpleContentAccess,
-  } = useSelector(state => selectOrganization(state, orgId));
   const orgStatus = useSelector(state => selectOrganizationStatus(state, orgId));
   const orgNotLoaded = orgStatus !== STATUS.RESOLVED;
 
@@ -265,14 +262,14 @@ const RepositorySetsTab = () => {
       }
       return getHostRepositorySets({
         content_access_mode_env: toggleGroupState === LIMIT_TO_ENVIRONMENT,
-        content_access_mode_all: simpleContentAccess,
+        content_access_mode_all: true,
         host_id: hostId,
         ...apiSortParams,
         ...modifiedParams,
       });
     },
     [hostId, statusSelected, STATUS_LABEL, repoTypeSelected,
-      REPO_TYPE_LABEL, toggleGroupState, LIMIT_TO_ENVIRONMENT, simpleContentAccess, apiSortParams],
+      REPO_TYPE_LABEL, toggleGroupState, LIMIT_TO_ENVIRONMENT, apiSortParams],
   );
 
   useEffect(() => {
@@ -501,20 +498,9 @@ const RepositorySetsTab = () => {
 
   const hostEnvText = 'the "{contentViewName}" content view and "{lifecycleEnvironmentName}" environment';
 
-  const scaAlert = (toggleGroupState === LIMIT_TO_ENVIRONMENT ?
+  const alertText = (toggleGroupState === LIMIT_TO_ENVIRONMENT ?
     `Showing only repositories in ${hostEnvText}.` :
     'Showing all available repositories.');
-
-  const nonScaAlert = (toggleGroupState === LIMIT_TO_ENVIRONMENT ?
-    `Showing repositories in ${hostEnvText} that are available through subscriptions.` :
-    'Showing all repositories available through subscriptions.');
-
-  let alertText;
-  if (simpleContentAccess) {
-    alertText = scaAlert;
-  } else {
-    alertText = nonScaAlert;
-  }
 
   return (
     <div>
