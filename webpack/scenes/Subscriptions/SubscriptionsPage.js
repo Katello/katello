@@ -5,7 +5,7 @@ import Immutable from 'seamless-immutable';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { isEmpty } from 'lodash';
-import { Grid, Row, Col, Alert } from 'patternfly-react';
+import { Grid, Row, Col } from 'patternfly-react';
 import { Popover, Flex, FlexItem } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import ModalProgressBar from 'foremanReact/components/common/ModalProgressBar';

@@ -80,11 +80,9 @@ module Katello
     param :organization, Hash do
       param :label, String, :required => false
     end
-    param :simple_content_access, :bool, :desc => N_('Whether to turn on Simple Content Access for the organization.'), :required => false, :default => true, deprecated: true
     def create
       @organization = Organization.new(resource_params)
-      sca = params.key?(:simple_content_access) ? ::Foreman::Cast.to_bool(params[:simple_content_access]) : true
-      creator = ::Katello::OrganizationCreator.new(@organization, sca: sca)
+      creator = ::Katello::OrganizationCreator.new(@organization)
       creator.create!
       @organization.reload
       # @taxonomy instance variable is necessary for foreman side
