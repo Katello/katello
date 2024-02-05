@@ -8,6 +8,7 @@ module Actions
       class UploadFiles < Actions::EntryAction
         def plan(repository, files, content_type = nil, options = {})
           action_subject(repository)
+          repository.check_ready_to_act!
           repository.clear_smart_proxy_sync_histories
           tmp_files = prepare_tmp_files(files)
 

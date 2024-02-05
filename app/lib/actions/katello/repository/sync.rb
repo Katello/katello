@@ -20,6 +20,7 @@ module Actions
         #   of Katello and we just need to finish the rest of the orchestration
         def plan(repo, options = {})
           action_subject(repo)
+          repo.check_ready_to_act!
 
           validate_contents = options.fetch(:validate_contents, false)
           skip_metadata_check = options.fetch(:skip_metadata_check, false) || (validate_contents && (repo.yum? || repo.deb?))

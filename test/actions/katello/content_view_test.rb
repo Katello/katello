@@ -1,5 +1,4 @@
 require 'katello_test_helper'
-
 module ::Actions::Katello::ContentView
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
@@ -8,7 +7,7 @@ module ::Actions::Katello::ContentView
 
     let(:action) { create_action action_class }
     let(:success_task) { ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good") }
-
+    let(:pending_task) { ForemanTasks::Task::DynflowTask.create!(state: :pending, result: "good", id: 123) }
     before(:all) do
       set_user
     end
@@ -17,6 +16,7 @@ module ::Actions::Katello::ContentView
   class PublishTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::Publish }
     let(:content_view) { katello_content_views(:no_environment_view) }
+    let(:repository) { katello_repositories(:fedora_17_x86_64) }
     before do
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns({})
     end
@@ -31,6 +31,15 @@ module ::Actions::Katello::ContentView
       content_view = katello_content_views(:import_only_view)
       action.stubs(:task).returns(success_task)
 
+      assert_raises(RuntimeError) do
+        plan_action(action, content_view)
+      end
+    end
+
+    it 'fails when planning if child repo is being acted upon' do
+      content_view.repositories = [repository]
+      repository.expects(:blocking_task).returns(pending_task)
+      action.stubs(:task).returns(success_task)
       assert_raises(RuntimeError) do
         plan_action(action, content_view)
       end

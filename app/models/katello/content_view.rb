@@ -639,10 +639,12 @@ module Katello
     end
 
     def check_repositories_blocking_publish!
-      repositories_with_blocking_tasks = repositories.select { |repo| repo.blocking_tasks }
+      blocking_tasks = repositories&.map { |repo| repo.blocking_task }&.compact
 
-      if repositories_with_blocking_tasks.any?
-        fail _("Pending tasks detected in repositories of this content view. Please wait before publishing.")
+      if blocking_tasks&.any?
+        errored_tasks = blocking_tasks.uniq.map { |task| "- #{Setting['foreman_url']}/foreman_tasks/tasks/#{task&.id}" }.join("\n")
+        fail _("Pending tasks detected in repositories of this content view. Please wait for the tasks: " +
+                 errored_tasks + " before publishing.")
       end
     end
 
@@ -888,6 +890,17 @@ module Katello
 
     def filtered?
       filters.present?
+    end
+
+    def blocking_task
+      blocking_task_labels = [
+        ::Actions::Katello::ContentView::Publish.name
+      ]
+      ForemanTasks::Task::DynflowTask.where(:label => blocking_task_labels)
+                                     .where.not(state: 'stopped')
+                                     .for_resource(self)
+                                     .order(:started_at)
+                                     .last
     end
 
     protected

@@ -641,16 +641,31 @@ module Katello
                                 for_resource(self).order(:started_at).last
     end
 
-    def blocking_tasks
+    def blocking_task
       blocking_task_labels = [
         ::Actions::Katello::Repository::Sync.name,
-        ::Actions::Katello::Repository::UploadFiles.name
+        ::Actions::Katello::Repository::UploadFiles.name,
+        ::Actions::Katello::Repository::RemoveContent.name,
+        ::Actions::Katello::Repository::MetadataGenerate.name
       ]
       ForemanTasks::Task::DynflowTask.where(:label => blocking_task_labels)
                                      .where.not(state: 'stopped')
                                      .for_resource(self)
                                      .order(:started_at)
                                      .last
+    end
+
+    def check_ready_to_act!
+      blocking_tasks = content_views&.map { |cv| cv.blocking_task }&.compact
+
+      if blocking_tasks&.any?
+        errored_tasks = blocking_tasks
+                          .uniq
+                          .map { |task| "- #{Setting['foreman_url']}/foreman_tasks/tasks/#{task&.id}" }
+                          .join("\n")
+        fail _("This repository has pending tasks in associated content views. Please wait for the tasks: " + errored_tasks +
+               " to complete before proceeding.")
+      end
     end
 
     # returns other instances of this repo with the same library

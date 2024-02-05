@@ -5,6 +5,7 @@ module Actions
         include Dynflow::Action::WithSubPlans
 
         def plan(repository, content_units, options = {})
+          repository.check_ready_to_act!
           sync_capsule = options.fetch(:sync_capsule, true)
           if repository.redhat?
             fail _("Cannot remove content from a non-custom repository")

@@ -634,6 +634,8 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::Sync }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Sync }
     let(:pulp3_metadata_generate_action_class) { ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata }
+    let(:content_view) { katello_content_views(:no_environment_view) }
+    let(:pending_task) { ForemanTasks::Task::DynflowTask.create!(state: :pending, result: "good", id: 123) }
 
     it 'skips applicability if non-yum and non-deb' do
       action = create_action action_class
@@ -644,7 +646,7 @@ module ::Actions::Katello::Repository
       refute_action_planed action, ::Actions::Katello::Applicability::Repository::Regenerate
     end
 
-    it 'plans verift checksum when validate_contents is passed' do
+    it 'plans verify checksum when validate_contents is passed' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, :validate_contents => true, :skip_candlepin_check => true
@@ -657,6 +659,16 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, :skip_candlepin_check => true
       assert_action_planned(action, ::Actions::Katello::Repository::ErrataMail)
+    end
+
+    it 'fails when planning if parent CV is being published' do
+      action = create_action action_class
+      repository.content_views = [content_view]
+      content_view.expects(:blocking_task).returns(pending_task)
+      action.stubs(:action_subject).with(repository)
+      assert_raises(RuntimeError) do
+        plan_action(action, repository)
+      end
     end
 
     it 'plans pulp3 orchestration actions with file repo' do
