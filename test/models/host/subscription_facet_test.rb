@@ -73,41 +73,6 @@ module Katello
       assert_empty subscription_facet.purpose_usage
       assert_empty subscription_facet.purpose_addons
     end
-
-    def test_purpose_status_search
-      searches = {
-        Katello::PurposeSlaStatus => "sla_status",
-        Katello::PurposeAddonsStatus => "addons_status",
-        Katello::PurposeRoleStatus => "role_status",
-        Katello::PurposeUsageStatus => "usage_status",
-        Katello::PurposeStatus => "purpose_status"
-      }
-
-      searches.each do |status_class, query|
-        status = status_class.new(host: host)
-        status.status = Katello::PurposeStatus::MISMATCHED
-        status.reported_at = Time.now
-        status.save!
-
-        assert_includes ::Host::Managed.search_for("#{query} = mismatched"), host
-      end
-    end
-
-    def test_update_purpose_status
-      host.organization.stubs(:simple_content_access?).returns(false)
-      subscription_facet.update_purpose_status(sla_status: :mismatched,
-                                               role_status: :unknown,
-                                               usage_status: :not_specified,
-                                               addons_status: :matched,
-                                               purpose_status: :matched
-                                              )
-
-      assert_equal host.purpose_sla_status, Katello::PurposeStatus::MISMATCHED
-      assert_equal host.purpose_role_status, Katello::PurposeStatus::UNKNOWN
-      assert_equal host.purpose_usage_status, Katello::PurposeStatus::NOT_SPECIFIED
-      assert_equal host.purpose_addons_status, Katello::PurposeStatus::MATCHED
-      assert_equal host.purpose_status, Katello::PurposeStatus::MATCHED
-    end
   end
 
   class SubscriptionFacetTest < SubscriptionFacetBase
@@ -281,15 +246,6 @@ module Katello
       assert_equal 'CentOS', host.operatingsystem.name
       assert_equal '7', host.operatingsystem.major
       assert_equal "6", host.operatingsystem.minor
-    end
-
-    def test_subscription_status
-      status = Katello::SubscriptionStatus.new(:host => host)
-      status.status = Katello::SubscriptionStatus::INVALID
-      status.reported_at = Time.now
-      status.save!
-
-      assert_includes ::Host::Managed.search_for("subscription_status = invalid"), host
     end
 
     def test_remove_subscriptions

@@ -83,7 +83,6 @@ class HostsControllerTest < ActionController::TestCase
 
       expected_columns = [
         'Name',
-        'Subscription Status',
         'Installable Updates - Security',
         'Installable Updates - Bug Fixes',
         'Installable Updates - Enhancements',

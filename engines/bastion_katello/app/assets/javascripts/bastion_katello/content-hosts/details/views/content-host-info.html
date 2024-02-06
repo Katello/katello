@@ -74,12 +74,6 @@
       <h4 translate>Subscriptions</h4>
 
       <dl class="dl-horizontal dl-horizontal-left">
-        <dt translate>Subscription Status</dt>
-        <dd>
-          <i ng-class="getHostStatusIcon(host.subscription_global_status)"></i>
-          {{ host.subscription_status_label }}
-        </dd>
-
         <dt translate ng-if="!simpleContentAccessEnabled">Details</dt>
         <dd ng-if="!simpleContentAccessEnabled">
           <ul class="compliance-reasons">
@@ -104,16 +98,9 @@
       <div style="display: inline-block"><i class="pficon-info" title="{{ 'System purpose enables you to set the system\'s intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console.' | translate }}"></i></div>
 
       <dl class="dl-horizontal dl-horizontal-left">
-        <dt translate ng-hide="simpleContentAccessEnabled">System Purpose Status</dt>
-        <dd ng-hide="simpleContentAccessEnabled">
-          <i ng-class="getHostPurposeStatusIcon(host.purpose_status)"></i>
-          {{ host.purpose_status_label }}
-        </dd>
         <dt translate>Service Level (SLA)</dt>
         <dd bst-edit-select="host.subscription_facet_attributes.service_level"
             readonly="denied('edit_hosts', host)"
-            icon-class="getHostPurposeStatusIcon(host.purpose_sla_status)"
-            icon-show="host.purpose_sla_status > 0"
             selector="host.subscription_facet_attributes.service_level"
             options="serviceLevels()"
             options-format="option for option in options"
@@ -125,8 +112,6 @@
         <dt translate>Usage Type</dt>
         <dd bst-edit-select="host.subscription_facet_attributes.purpose_usage"
             readonly="denied('edit_hosts', host)"
-            icon-class="getHostPurposeStatusIcon(host.purpose_usage_status)"
-            icon-show="host.purpose_usage_status > 0"
             selector="host.subscription_facet_attributes.purpose_usage"
             options="purposeUsages()"
             options-format="option for option in options"
@@ -138,8 +123,6 @@
         <dt translate>Role</dt>
         <dd bst-edit-select="host.subscription_facet_attributes.purpose_role"
             readonly="denied('edit_hosts', host)"
-            icon-class="getHostPurposeStatusIcon(host.purpose_role_status)"
-            icon-show="host.purpose_role_status > 0"
             selector="host.subscription_facet_attributes.purpose_role"
             options="purposeRoles()"
             options-format="option for option in options"
@@ -151,8 +134,6 @@
         <dt translate>Add ons</dt>
         <dd bst-edit-multiselect="host.subscription_facet_attributes.purpose_addons"
             readonly="denied('edit_hosts', host) || purposeAddonsCount === 0"
-            icon-class="getHostPurposeStatusIcon(host.purpose_addons_status)"
-            icon-show="host.purpose_addons_status > 0"
             formatter="arrayToString"
             deletable="true"
             on-delete="clearAddOns()"

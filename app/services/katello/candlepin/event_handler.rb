@@ -26,9 +26,9 @@ module Katello
           when /pool\.deleted/
             message_handler.delete_pool
           when /^compliance\.created/
-            reindex_subscription_status
+            event_no_longer_handled
           when /system_purpose_compliance\.created/
-            reindex_purpose_status
+            event_no_longer_handled
           when /owner_content_access_mode\.modified/
             message_handler.handle_content_access_mode_modified
           end
@@ -37,31 +37,12 @@ module Katello
 
       private
 
+      def event_no_longer_handled
+        @logger.error "Received #{message_handler.subject} event from Candlepin. Handling of this event is no longer supported."
+      end
+
       def subscription_facet
         message_handler.subscription_facet
-      end
-
-      def reindex_subscription_status
-        if message_handler.status.nil?
-          @logger.debug "skip re-indexing of empty #{message_handler.subject} status #{message_handler.consumer_uuid}"
-          return
-        end
-
-        reindex_consumer do
-          subscription_facet.update_subscription_status(message_handler.status)
-          subscription_facet.update_compliance_reasons(message_handler.reasons)
-        end
-      end
-
-      def reindex_purpose_status
-        reindex_consumer do
-          return if subscription_facet.host.organization.simple_content_access?
-          subscription_facet.update_purpose_status(role_status: message_handler.system_purpose.role_status,
-                                                   usage_status: message_handler.system_purpose.usage_status,
-                                                   addons_status: message_handler.system_purpose.addons_status,
-                                                   sla_status: message_handler.system_purpose.sla_status,
-                                                   purpose_status: message_handler.system_purpose.overall_status)
-        end
       end
 
       def reindex_consumer

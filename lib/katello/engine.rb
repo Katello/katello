@@ -201,7 +201,6 @@ module Katello
       ::Api::V2::RegistrationCommandsController.include Katello::Concerns::Api::V2::RegistrationCommandsControllerExtensions
 
       ::AuditSearch::ClassMethods.prepend Katello::Concerns::AuditSearch
-      ::Widget.singleton_class.prepend Katello::Concerns::WidgetExtensions::ClassMethods
 
       if ::Katello.with_remote_execution?
         ::RemoteExecutionProxySelector.prepend Katello::Concerns::RemoteExecutionProxySelectorExtensions

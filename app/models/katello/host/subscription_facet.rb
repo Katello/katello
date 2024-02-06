@@ -49,7 +49,6 @@ module Katello
       end
 
       def import_database_attributes(consumer_params = candlepin_consumer.consumer_attributes)
-        update_subscription_status(consumer_params[:entitlementStatus]) unless consumer_params[:entitlementStatus].blank?
         update_hypervisor(consumer_params)
         update_guests(consumer_params)
 
@@ -180,24 +179,6 @@ module Katello
         param = HostParameter.find_or_create_by(name: DMI_UUID_OVERRIDE_PARAM, host: host)
         param.update!(value: host_uuid)
         param
-      end
-
-      def update_subscription_status(status_override = nil)
-        update_status(::Katello::SubscriptionStatus, status_override: status_override)
-
-        host.refresh_global_status!
-      end
-
-      def update_purpose_status(sla_status: nil, role_status: nil, usage_status: nil, addons_status: nil, purpose_status: nil)
-        # if this method is ever called such that we aren't sending the status params, we should pass along the candlepin_consumer
-        # in order to reduce HTTP requests into candlepin for each Status
-        update_status(::Katello::PurposeSlaStatus, status_override: sla_status)
-        update_status(::Katello::PurposeRoleStatus, status_override: role_status)
-        update_status(::Katello::PurposeUsageStatus, status_override: usage_status)
-        update_status(::Katello::PurposeAddonsStatus, status_override: addons_status)
-        update_status(::Katello::PurposeStatus, status_override: purpose_status)
-
-        host.refresh_global_status!
       end
 
       def self.override_dmi_uuid?(host_uuid)

@@ -148,7 +148,7 @@ module Katello
         end
       end
 
-      def register_host(host, consumer_params, content_view_environments, activation_keys = []) # rubocop:disable Metrics/MethodLength
+      def register_host(host, consumer_params, content_view_environments, activation_keys = [])
         new_host = host.new_record?
         unless new_host
           host.save!
@@ -172,7 +172,6 @@ module Katello
         host.content_facet.cves_changed = false # prevent backend_update_needed from triggering an update on a nonexistent consumer
         host.subscription_facet = populate_subscription_facet(host, activation_keys, consumer_params, host_uuid)
         host.save! # the host has content and subscription facets at this point
-        create_initial_subscription_status(host)
 
         User.as_anonymous_admin do
           begin
@@ -219,10 +218,6 @@ module Katello
         destroy_host_record(host.id)
       end
 
-      def create_initial_subscription_status(host)
-        host.subscription_facet.update_subscription_status(::Katello::SubscriptionStatus::UNKNOWN)
-      end
-
       def create_in_candlepin(host, content_view_environments, consumer_params, activation_keys)
         # if CP fails, nothing to clean up yet w.r.t. backend services
         cp_create = ::Katello::Resources::Candlepin::Consumer.create(content_view_environments.map(&:cp_id), consumer_params, activation_keys.map(&:cp_name), host.organization)
@@ -243,7 +238,6 @@ module Katello
         host.subscription_facet.save!
         host.refresh_statuses([
                                 ::Katello::ErrataStatus,
-                                ::Katello::SubscriptionStatus,
                                 ::Katello::RhelLifecycleStatus
                               ])
       end
@@ -314,12 +308,6 @@ module Katello
         end
 
         host.get_status(::Katello::ErrataStatus).destroy
-        host.get_status(::Katello::PurposeSlaStatus).destroy
-        host.get_status(::Katello::PurposeRoleStatus).destroy
-        host.get_status(::Katello::PurposeUsageStatus).destroy
-        host.get_status(::Katello::PurposeAddonsStatus).destroy
-        host.get_status(::Katello::PurposeStatus).destroy
-        host.get_status(::Katello::SubscriptionStatus).destroy
         host.get_status(::Katello::TraceStatus).destroy
         host.installed_packages.delete_all
 

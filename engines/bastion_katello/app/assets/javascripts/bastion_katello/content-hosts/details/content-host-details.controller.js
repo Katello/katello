@@ -24,7 +24,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         $scope.menuExpander = MenuExpander;
 
         $scope.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
-        $scope.getHostPurposeStatusIcon = ContentHostsHelper.getHostPurposeStatusIcon;
 
         $scope.organization = Organization.get({id: CurrentOrganization}, function(org) {
             $scope.purposeAddonsCount += org.system_purposes.addons.length;
