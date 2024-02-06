@@ -33,9 +33,9 @@ Gem::Specification.new do |gem|
   gem.add_dependency "rest-client"
 
   gem.add_dependency "rabl"
-  gem.add_dependency "foreman-tasks", ">= 5.0"
+  gem.add_dependency "foreman-tasks"
   gem.add_dependency "foreman_remote_execution", ">= 7.1.0"
-  gem.add_dependency "dynflow", ">= 1.6.1"
+  gem.add_dependency "dynflow"
   gem.add_dependency "activerecord-import"
   gem.add_dependency "stomp"
   gem.add_dependency "scoped_search", ">= 4.1.9"
