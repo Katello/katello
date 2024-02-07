@@ -58,6 +58,8 @@ module Actions
 
             if options[:importing]
               handle_import(version, options.slice(:path, :metadata))
+            elsif separated_repo_map[:pulp3_deb_multicopy].keys.flatten.present?
+              plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_deb_multicopy], version)
             elsif separated_repo_map[:pulp3_yum_multicopy].keys.flatten.present?
               plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum_multicopy], version)
             end
