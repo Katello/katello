@@ -47,6 +47,7 @@ import {
   MODULE_STREAMS_CONTENT,
   DEB_PACKAGES_CONTENT,
   DOCKER_TAGS_CONTENT,
+  CONTAINER_MANIFEST_LIST_CONTENT,
   generatedContentKey,
   STATUS_TRANSLATIONS_ENUM,
   bulkRemoveVersionKey,
@@ -58,7 +59,7 @@ import {
   cvDebPackagesCompareKey,
   filesCompareKey,
   genericContentCompareKey,
-  cvRepositoriesCompareKey,
+  cvRepositoriesCompareKey, cvContainerManifestListsCompareKey,
 } from '../ContentViewsConstants';
 import api, { foremanApi, orgId } from '../../../services/api';
 import { getResponseErrorMsgs } from '../../../utils/helpers';
@@ -179,6 +180,19 @@ export const getDockerTagsComparison = (versionOne, versionTwo, viewBy, params) 
   });
 };
 
+export const getContainerManifestListsComparison = (versionOne, versionTwo, viewBy, params) => {
+  const versions = { content_view_version_ids: [versionOne, versionTwo] };
+  const restrictComparison = { restrict_comparison: viewBy };
+  const apiParams = { ...versions, ...restrictComparison, ...params };
+  const apiUrl = '/docker_manifest_lists/compare';
+  return get({
+    key: cvContainerManifestListsCompareKey(versionOne, versionTwo, viewBy),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the container tags! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
+
 export const getFilesComparison = (versionOne, versionTwo, viewBy, params) => {
   const versions = { content_view_version_ids: [versionOne, versionTwo] };
   const restrictComparison = { restrict_comparison: viewBy };
@@ -266,6 +280,14 @@ export const getDockerTags = params => get({
   url: api.getApiUrl('/docker_tags'),
   params,
   errorToast: error => __(`Something went wrong while getting container tags! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const getContainerManifestLists = params => get({
+  type: API_OPERATIONS.GET,
+  key: CONTAINER_MANIFEST_LIST_CONTENT,
+  url: api.getApiUrl('/docker_manifest_lists'),
+  params,
+  errorToast: error => __(`Something went wrong while getting container manifest lists! ${getResponseErrorMsgs(error.response)}`),
 });
 
 export const getErrata = params => get({
