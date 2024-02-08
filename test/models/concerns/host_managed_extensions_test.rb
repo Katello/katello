@@ -218,7 +218,7 @@ module Katello
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
       host.content_facet.expects(:save!)
       host.subscription_facet.stubs(:consumer_attributes).returns('autoheal' => true)
-      host.subscription_facet.expects(:update_from_consumer_attributes).with('autoheal' => true)
+      host.subscription_facet.expects(:update_from_consumer_attributes).with({ 'autoheal' => true })
       ::Katello::Resources::Candlepin::Consumer.expects(:update).with(host.subscription_facet.uuid, host.subscription_facet.consumer_attributes)
       ::Katello::Resources::Candlepin::Consumer.expects(:refresh_entitlements).never
       ::Katello::Host::SubscriptionFacet.expects(:update_facts).never

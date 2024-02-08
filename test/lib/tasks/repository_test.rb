@@ -140,7 +140,7 @@ module Katello
       Katello::Repository.stubs(:in_environment).returns(Katello::Repository.where(:id => @library_repo))
       PulpRpmClient::RepositoriesRpmApi.any_instance.expects(:read).once.with("test_repo_1/").raises(PulpRpmClient::ApiError)
 
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Repository::Create, @library_repo, { force_repo_create: true })
+      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Repository::Create, @library_repo, force_repo_create: true)
 
       Rake.application.invoke_task('katello:correct_repositories')
     end

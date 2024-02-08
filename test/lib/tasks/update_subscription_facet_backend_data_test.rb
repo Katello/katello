@@ -19,7 +19,7 @@ module Katello
       Katello::Resources::Candlepin::Consumer.stubs(:virtual_guests).returns([])
       Katello::Resources::Candlepin::Consumer.stubs(:virtual_host).returns(nil)
 
-      Katello::Host::SubscriptionFacet.expects(:update_facts).with(@host, :foo => :bar).once
+      Katello::Host::SubscriptionFacet.expects(:update_facts).with(@host, { :foo => :bar }).once
 
       Rake.application.invoke_task('katello:update_subscription_facet_backend_data')
     end
