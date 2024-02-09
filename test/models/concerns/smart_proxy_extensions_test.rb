@@ -248,9 +248,9 @@ module Katello
       with_pulp3_features(capsule_content.smart_proxy)
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
 
-      repo_list_update_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:repository_list).with(
-        :repositories => [{:repository => "empty_organization-puppet_product-busybox", :auth_required => true}, {:repository => "busybox", :auth_required => true}]
-      )
+      repo_list_update_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:repository_list).with({
+                                                                                                              :repositories => [{:repository => "empty_organization-puppet_product-busybox", :auth_required => true}, {:repository => "busybox", :auth_required => true}]
+                                                                                                            })
       repo_list_update_expectation.once.returns(true)
 
       repo_mapping_update_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:user_repository_mapping).with do |arg|
