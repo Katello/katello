@@ -5,3 +5,6 @@ gemspec
 Dir[File.join(__dir__, 'gemfile.d', '*.rb')].each do |bundle|
   eval_gemfile(bundle)
 end
+
+gem 'dynflow', git: 'https://github.com/adamruzicka/dynflow', branch: 'kwargs-extravaganza'
+gem 'foreman-tasks', git: 'https://github.com/ofedoren/foreman-tasks', branch: 'feat-37103-kwargs-compat'
