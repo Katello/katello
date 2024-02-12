@@ -17,6 +17,16 @@ module Katello
     scoped_search :on => :filename, :complete_value => true
     scoped_search :on => :checksum
 
+    # for given list/query of Katello::ErratumDebPackages in `erratum_deb_packages`,
+    # find all deb-packages with corresponding name and newer or equal version
+    # aka. find all debs that 'solve' the ErratumDebPackages
+    def self.solving_erratum_debs(erratum_deb_packages)
+      joins("INNER JOIN #{::Katello::ErratumDebPackage.table_name} edp" \
+            " ON #{::Katello::Deb.table_name}.name = edp.name " \
+            " AND deb_version_cmp(#{::Katello::Deb.table_name}.version, edp.version) >= 0")
+        .where('edp.id' => erratum_deb_packages).distinct
+    end
+
     def self.default_sort
       order(:name).order(:version).order(:architecture)
     end

@@ -75,6 +75,13 @@ module Katello
       @content_types.select { |type| type.index }
     end
 
+    def supports_content_type(model_class)
+      @content_types.each do |type|
+        return true if type.model_class == model_class
+      end
+      false
+    end
+
     def default_managed_content_type(label = nil)
       if label
         @default_managed_content_type_label = label.to_s

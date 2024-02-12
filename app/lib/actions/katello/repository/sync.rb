@@ -49,6 +49,7 @@ module Actions
               plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
               plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
               concurrence do
+                plan_action(Katello::Repository::SyncDebErrata, repo, skip_metadata_check) if repo.deb? && repo.root.deb_errata_url.present?
                 plan_action(Katello::Repository::ErrataMail, repo)
                 plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repo.id]) if generate_applicability
               end

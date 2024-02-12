@@ -31,7 +31,7 @@ module Katello
 
         result = @controller.find_bulk_errata_ids(@hosts, bulk_params)
 
-        assert_equal ["RHSA-1999-1231"].sort, result.sort
+        assert_equal ["DEBIAN-1-1", "DEBIAN-2-1", "RHSA-1999-1231"].sort, result.sort
       end
     end
   end

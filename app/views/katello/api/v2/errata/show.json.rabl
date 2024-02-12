@@ -29,3 +29,7 @@ end
 node :module_streams do |e|
   e.module_streams
 end
+
+child :deb_packages => :deb_packages do
+  attributes :name, :version, :release
+end

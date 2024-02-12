@@ -134,6 +134,13 @@ module Katello
     scope :custom, -> { where.not(:id => self.redhat) }
     delegate :redhat?, :provider, :organization, to: :product
     delegate :cdn_configuration, to: :organization
+    before_save :reset_deb_errata_url_etag
+
+    def reset_deb_errata_url_etag
+      if self.deb? && !self.changed.include?('deb_errata_url_etag')
+        self.deb_errata_url_etag = nil
+      end
+    end
 
     def library_instance
       repositories.in_default_view.first
@@ -407,6 +414,14 @@ module Katello
       changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?
       changeable_attributes += %w(ansible_collection_requirements ansible_collection_auth_url ansible_collection_auth_token) if ansible_collection?
       changeable_attributes.any? { |key| previous_changes.key?(key) }
+    end
+
+    def supports_errata?
+      if deb?
+        self.deb_errata_url.present?
+      else
+        self.repository_type.supports_content_type Katello::Erratum
+      end
     end
 
     def raw_content_path

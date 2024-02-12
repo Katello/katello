@@ -180,6 +180,13 @@
                   {{ repository.content_counts.deb || 0 }} deb Packages
                 </a>
               </div>
+              <span ng-show="repository.supports_errata">
+                <div>
+                  <a ui-sref="errata({repositoryId: repository.id})" translate>
+                    {{ repository.content_counts.erratum || 0 }} Errata
+                  </a>
+                </div>
+              </span>
             </span>
 
             <span ng-show="repository.content_type == 'ansible_collection'">

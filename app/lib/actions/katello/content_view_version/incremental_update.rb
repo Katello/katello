@@ -1,7 +1,7 @@
 module Actions
   module Katello
     module ContentViewVersion
-      class IncrementalUpdate < Actions::EntryAction
+      class IncrementalUpdate < Actions::EntryAction # rubocop:disable Metrics/ClassLength
         include ::Katello::ContentViewHelper
         attr_accessor :new_content_view_version, :new_content_view_version_id
 
@@ -74,21 +74,34 @@ module Actions
               end
 
               concurrence do
-                if separated_repo_map[:pulp3_yum_multicopy].keys.flatten.present?
-                  extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[:pulp3_yum_multicopy], old_version)
-                  unit_map = pulp3_content_mapping(content)
+                [:pulp3_deb_multicopy, :pulp3_yum_multicopy].each do |mapping|
+                  if separated_repo_map[mapping].keys.flatten.present?
+                    extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[mapping], old_version)
+                    local_content = {}
+                    if mapping == :pulp3_deb_multicopy
+                      local_content[:errata_ids], local_content[:deb_ids] = resolve_deb_errata(content, extended_repo_mapping)
+                    end
 
-                  unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
+                    # makes sure that all keys in local_content are symbols!
+                    # content is of type ActionController::Parameters and uses string and symbol keys synonymically.
+                    # Hash (local_content) does not and we only access with symbol-keys, so make sure we only use symbols.
+                    local_content.keys.union(content.keys.map(&:to_sym)).each do |content_type|
+                      local_content[content_type] = local_content.fetch(content_type, []) + content.fetch(content_type, [])
+                    end
+                    unit_map = pulp3_content_mapping(local_content)
+
                     sequence do
-                      # Pre-copy content if dest_repo is a soft copy of its library instance.
-                      # Don't use extended_repo_mapping because the source repositories are library instances.
-                      # We want the old CV snapshot repositories here so as to not pull in excess new content.
-                      separated_repo_map[:pulp3_yum_multicopy].each do |source_repos, dest_repo|
-                        if dest_repo.soft_copy_of_library?
-                          source_repos.each do |source_repo|
-                            # remove_all flag is set to cover the case of incrementally updating more than once with different content.
-                            # Without it, content from the previous incremental update will be copied as well due to how Pulp repo versions work.
-                            plan_action(Pulp3::Repository::CopyContent, source_repo, SmartProxy.pulp_primary, dest_repo, copy_all: true, remove_all: true)
+                      unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
+                        # Pre-copy content if dest_repo is a soft copy of its library instance.
+                        # Don't use extended_repo_mapping because the source repositories are library instances.
+                        # We want the old CV snapshot repositories here so as to not pull in excess new content.
+                        separated_repo_map[mapping].each do |source_repos, dest_repo|
+                          if dest_repo.soft_copy_of_library?
+                            source_repos.each do |source_repo|
+                              # remove_all flag is set to cover the case of incrementally updating more than once with different content.
+                              # Without it, content from the previous incremental update will be copied as well due to how Pulp repo versions work.
+                              plan_action(Pulp3::Repository::CopyContent, source_repo, SmartProxy.pulp_primary, dest_repo, copy_all: true, remove_all: true)
+                            end
                           end
                         end
                       end
@@ -97,6 +110,19 @@ module Actions
                       repos_to_clone.each do |source_repos|
                         if separated_repo_map[:pulp3_yum_multicopy].keys.include?(source_repos)
                           copy_repos(repository_mapping[source_repos])
+                        end
+                      end
+
+                      separated_repo_map[mapping].each do |_source_repos, dest_repo|
+                        next unless dest_repo.deb?
+
+                        # find errata belonging to this repo
+                        errata = ::Katello::Erratum.with_identifiers(local_content[:errata_ids]).joins(:root_repositories).where(::Katello::RootRepository.table_name => {id: dest_repo.root}).distinct
+                        if errata.present?
+                          # attach deb errata to the dest_repo
+                          copy_action_outputs << plan_action(Actions::Katello::Repository::CopyDebErratum,
+                                                             target_repo_id: dest_repo.id,
+                                                             erratum_ids: errata.pluck(:errata_id)).output
                         end
                       end
                     end
@@ -212,6 +238,36 @@ module Actions
           end
         end
 
+        def resolve_deb_errata(content, extended_repo_mapping)
+          needed_errata = []
+          needed_debs = []
+          content[:errata_ids].each do |erratum_id|
+            extended_repo_mapping.each do |source_repos, _dest_repo|
+              source_repos.each do |source_repo|
+                re = ::Katello::RepositoryErratum.joins(:erratum).find_by(::Katello::Erratum.table_name => { errata_id: erratum_id }, repository_id: source_repo)
+
+                next if re.nil? # Erratum not in Repository
+
+                # find packages
+                # FIXME: if multiple packages with the same name exist, we have to make sure we install the newest version
+                #       but (for now) at least a version bigger or equal the one from the erratum!
+                pkgs = ::Katello::Deb.joins(repositories: { repository_errata: { erratum: :deb_packages }})
+                  .where("#{::Katello::Deb.table_name}.name = #{::Katello::ErratumDebPackage.table_name}.name AND deb_version_cmp(#{::Katello::Deb.table_name}.version,#{::Katello::ErratumDebPackage.table_name}.version) >=0")
+                  .where(::Katello::RepositoryErratum.table_name => { id: re })
+                  .distinct.pluck(:id)
+                errata = ::Katello::Erratum.joins({ repositories: :debs }, :deb_packages)
+                  .where(::Katello::RepositoryErratum.table_name => { repository_id: source_repo })
+                  .where(::Katello::Deb.table_name => { id: pkgs })
+                  .where("#{::Katello::Deb.table_name}.name = #{::Katello::ErratumDebPackage.table_name}.name AND deb_version_cmp(#{::Katello::Deb.table_name}.version,#{::Katello::ErratumDebPackage.table_name}.version) >=0")
+                  .distinct.pluck(:errata_id)
+                needed_errata.concat errata
+                needed_debs.concat pkgs
+              end
+            end
+          end
+          return needed_errata, needed_debs
+        end
+
         def run
           content = { ::Katello::Erratum::CONTENT_TYPE => [],
                       ::Katello::Rpm::CONTENT_TYPE => [],
@@ -229,6 +285,7 @@ module Actions
               new_errata = new_repo.errata - (matched_old_repo&.errata || [])
               new_module_streams = new_repo.module_streams - (matched_old_repo&.module_streams || [])
               new_rpms = new_repo.rpms - (matched_old_repo&.rpms || [])
+              new_debs = new_repo.debs - (matched_old_repo&.debs || [])
 
               new_errata.each do |erratum|
                 content[::Katello::Erratum::CONTENT_TYPE] << erratum.errata_id
@@ -239,6 +296,9 @@ module Actions
               end
               new_rpms.each do |rpm|
                 content[::Katello::Rpm::CONTENT_TYPE] << rpm.nvra
+              end
+              new_debs.each do |deb|
+                content[::Katello::Deb::CONTENT_TYPE] << deb.nva
               end
             end
           end
@@ -281,10 +341,11 @@ module Actions
 
         def generate_description(version, content)
           humanized_lines = []
-          [::Katello::Erratum, ::Katello::Rpm].each do |content_type|
+          [::Katello::Erratum, ::Katello::Rpm, ::Katello::Deb].each do |content_type|
             unless content[content_type::CONTENT_TYPE].blank?
               humanized_lines << "#{HUMANIZED_TYPES[content_type::CONTENT_TYPE]}:"
-              humanized_lines += content[content_type::CONTENT_TYPE].sort.map { |unit| "    #{unit}" }
+              #FIXME: solves duplicate Deb-Errata displayed, here (might need deeper inspection)
+              humanized_lines += content[content_type::CONTENT_TYPE].uniq.sort.map { |unit| "    #{unit}" }
             end
             humanized_lines << ''
           end

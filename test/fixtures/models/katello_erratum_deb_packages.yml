@@ -1,0 +1,17 @@
+testpackage_1:
+  erratum_id: <%= ActiveRecord::FixtureSet.identify(:deb_1) %>
+  name: testpackage
+  version: 1.1
+  filename: "testpackage-1.1_all.deb"
+  release: buster
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+testpackage_2:
+  erratum_id: <%= ActiveRecord::FixtureSet.identify(:deb_2) %>
+  name: "testpackage"
+  version: 2.0
+  filename: "testpackage-2.0_all.deb"
+  release: buster
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
