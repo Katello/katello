@@ -56,21 +56,21 @@ module Katello
         @changed_remote_attributes = val
       end
 
-      def save(*)
-        if (status = super)
+      def save(...)
+        if (status = super(...))
           changed_remote_attributes.clear
         end
         status
       end
 
-      def save!(*)
-        super.tap do
+      def save!(...)
+        super(...).tap do
           changed_remote_attributes.clear
         end
       end
 
-      def reload(*)
-        super.tap do
+      def reload(...)
+        super(...).tap do
           changed_remote_attributes.clear
         end
       end

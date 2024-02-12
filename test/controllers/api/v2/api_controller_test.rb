@@ -73,8 +73,8 @@ module Katello
 
       User.current = users(:restricted)
       key = katello_activation_keys(:simple_key)
-      setup_current_user_with_permissions(:name => "view_activation_keys",
-                                          :search => "environment = #{key.environment}")
+      setup_current_user_with_permissions({ :name => "view_activation_keys",
+                                            :search => "environment = #{key.environment}" })
 
       @options = { :resource_class => Katello::ActivationKey }
       keys = @controller.scoped_search(ActivationKey.readable, @default_sort[0], @default_sort[1], @options)

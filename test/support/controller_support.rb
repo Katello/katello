@@ -67,11 +67,11 @@ module ControllerSupport
 
   def assert_authorized(params)
     check_params = params.merge(authorized: true)
-    check_permission(check_params)
+    check_permission(**check_params)
   end
 
   def refute_authorized(params)
     check_params = params.merge(authorized: false)
-    check_permission(check_params)
+    check_permission(**check_params)
   end
 end

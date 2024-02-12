@@ -3,7 +3,7 @@ module Actions
     module Orchestration
       module ContentViewVersion
         class Import < Actions::EntryAction
-          def plan(content_view_version, path:, metadata:)
+          def plan(content_view_version, opts = {})
             action_subject(content_view_version)
             sequence do
               smart_proxy = SmartProxy.pulp_primary!
@@ -11,8 +11,8 @@ module Actions
                 ::Actions::Pulp3::ContentViewVersion::CreateImporter,
                 content_view_version_id: content_view_version.id,
                 smart_proxy_id: smart_proxy.id,
-                path: path,
-                metadata: metadata
+                path: opts[:path],
+                metadata: opts[:metadata]
               ).output
 
               plan_action(
@@ -20,8 +20,8 @@ module Actions
                 organization_id: content_view_version.content_view.organization_id,
                 smart_proxy_id: smart_proxy.id,
                 importer_data: importer_output[:importer_data],
-                path: path,
-                metadata: metadata
+                path: opts[:path],
+                metadata: opts[:metadata]
               )
               concurrence do
                 content_view_version.importable_repositories.each do |repo|
@@ -31,20 +31,20 @@ module Actions
               plan_action(
                 ::Actions::Pulp3::ContentViewVersion::CreateImportHistory,
                 content_view_version_id: content_view_version.id,
-                path: path,
-                metadata: metadata,
+                path: opts[:path],
+                metadata: opts[:metadata],
                 content_view_name: content_view_version.name
               )
               plan_action(::Actions::Pulp3::ContentViewVersion::DestroyImporter,
                             organization_id: content_view_version.content_view.organization_id,
                             smart_proxy_id: smart_proxy.id,
-                            path: path,
-                            metadata: metadata,
+                            path: opts[:path],
+                            metadata: opts[:metadata],
                             importer_data: importer_output[:importer_data])
               plan_self(
                 content_view_name: content_view_version.name,
-                metadata: metadata,
-                path: path,
+                metadata: opts[:metadata],
+                path: opts[:path],
                 content_view_version_id: content_view_version.id
               )
             end
