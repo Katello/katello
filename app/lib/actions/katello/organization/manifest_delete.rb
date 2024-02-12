@@ -10,7 +10,7 @@ module Actions
           action_subject(organization)
 
           sequence do
-            plan_action(Candlepin::Owner::DestroyImports, label: organization.label)
+            plan_action(Candlepin::Owner::DestroyImports, { label: organization.label })
 
             repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(organization))
             repositories.each do |repo|

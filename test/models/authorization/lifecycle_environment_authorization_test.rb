@@ -75,8 +75,8 @@ module Katello
 
     def test_readables
       environment = katello_environments(:staging_path1)
-      setup_current_user_with_permissions(:name => "view_lifecycle_environments",
-                                          :search => "name=\"#{environment.name}\"")
+      setup_current_user_with_permissions({ :name => "view_lifecycle_environments",
+                                            :search => "name=\"#{environment.name}\"" })
       assert_equal([environment.id], KTEnvironment.readable.pluck(:id))
       assert environment.readable?
       refute environment.prior.readable?
@@ -84,8 +84,8 @@ module Katello
 
     def test_promotables
       environment = katello_environments(:staging_path1)
-      setup_current_user_with_permissions(:name => "promote_or_remove_content_views_to_environments",
-                                          :search => "name=\"#{environment.name}\"")
+      setup_current_user_with_permissions({ :name => "promote_or_remove_content_views_to_environments",
+                                            :search => "name=\"#{environment.name}\"" })
       assert_equal([environment.id], KTEnvironment.promotable.pluck(:id))
       assert environment.promotable_or_removable?
       refute environment.prior.promotable_or_removable?

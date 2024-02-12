@@ -166,7 +166,7 @@ module ::Actions::Katello::ContentViewVersion
         ::Katello::ContentViewManager.expects(:create_candlepin_environment).returns
         import_metadata[:content_view_version][:major] += 10
         generated_cvv = nil
-        tree = plan_action_tree(action_class, organization: organization, path: path, metadata: import_metadata)
+        tree = plan_action_tree(action_class, { organization: organization, path: path, metadata: import_metadata })
 
         assert_empty tree.errors
         assert_tree_planned_steps(tree, Actions::Katello::ContentView::AddToEnvironment)

@@ -10,9 +10,9 @@ module Katello
         attr_reader :smart_proxy, :content_view_version, :destination_server, :from_content_view_version, :repository, :base_path
         def self.create(options)
           if options.delete(:format) == SYNCABLE
-            SyncableFormatExport.new(options)
+            SyncableFormatExport.new(**options)
           else
-            self.new(options)
+            self.new(**options)
           end
         end
 

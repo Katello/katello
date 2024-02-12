@@ -2,13 +2,13 @@ module Actions
   module Katello
     module ContentViewVersion
       class ImportRepository < Actions::EntryAction
-        def plan(organization, path:, metadata:)
+        def plan(organization, opts = {})
           action_subject(organization)
           sequence do
             plan_action(::Actions::Katello::ContentViewVersion::Import,
                                             organization: organization,
-                                            path: path,
-                                            metadata: metadata)
+                                            path: opts[:path],
+                                            metadata: opts[:metadata])
           end
         end
 

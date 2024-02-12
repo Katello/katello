@@ -101,8 +101,8 @@ module Katello
 
     def test_readable_repositories_with_search
       repo = @fedora_17_x86_64
-      setup_current_user_with_permissions(:name => "view_products",
-                                          :search => "name=\"#{repo.product.name}\"")
+      setup_current_user_with_permissions({ :name => "view_products",
+                                            :search => "name=\"#{repo.product.name}\"" })
 
       assert_equal([repo], Product.readable_repositories([repo.id]))
       assert_empty(Product.readable_repositories(

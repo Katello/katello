@@ -100,25 +100,25 @@ module Katello
 
     def test_readable_with_product
       refute_includes Repository.readable, @fedora_17_x86_64
-      setup_current_user_with_permissions(:name => "view_products", :search => nil)
+      setup_current_user_with_permissions({ :name => "view_products", :search => nil })
       assert_includes Repository.readable, @fedora_17_x86_64
     end
 
     def test_readable_with_content_view
       refute_includes Repository.readable, @fedora_17_x86_64
-      setup_current_user_with_permissions(:name => "view_content_views", :search => nil)
+      setup_current_user_with_permissions({ :name => "view_content_views", :search => nil })
       assert_includes Repository.readable, @fedora_17_x86_64
     end
 
     def test_readable_with_versions
       refute_includes Repository.readable, @fedora_17_x86_64_dev
-      setup_current_user_with_permissions(:name => "view_content_views", :search => "name = \"#{@fedora_17_x86_64_dev.content_view_version.content_view.name}\"")
+      setup_current_user_with_permissions({ :name => "view_content_views", :search => "name = \"#{@fedora_17_x86_64_dev.content_view_version.content_view.name}\"" })
       assert_includes Repository.readable, @fedora_17_x86_64_dev
     end
 
     def test_readable_with_environment
       refute_includes Repository.readable, @fedora_17_x86_64
-      setup_current_user_with_permissions(:name => "view_lifecycle_environments", :search => "name = \"#{@fedora_17_x86_64.environment.name}\"")
+      setup_current_user_with_permissions({ :name => "view_lifecycle_environments", :search => "name = \"#{@fedora_17_x86_64.environment.name}\"" })
       repos = Repository.readable
       refute_empty repos
       assert repos.all? { |repo| repo.environment_id == @fedora_17_x86_64.environment_id }

@@ -13,7 +13,7 @@ module Actions
         def plan(content_view, description = "", options = {importing: false, syncable: false}) # rubocop:disable Metrics/PerceivedComplexity
           action_subject(content_view)
 
-          content_view.check_ready_to_publish!(options.slice(:importing, :syncable))
+          content_view.check_ready_to_publish!(**options.slice(:importing, :syncable))
           unless options[:importing] || options[:syncable]
             ::Katello::Util::CandlepinRepositoryChecker.check_repositories_for_publish!(content_view)
           end
@@ -57,7 +57,7 @@ module Actions
             separated_repo_map = separated_repo_mapping(repository_mapping, content_view.solve_dependencies)
 
             if options[:importing]
-              handle_import(version, options.slice(:path, :metadata))
+              handle_import(version, **options.slice(:path, :metadata))
             elsif separated_repo_map[:pulp3_yum_multicopy].keys.flatten.present?
               plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum_multicopy], version)
             end
@@ -203,7 +203,7 @@ module Actions
 
         def handle_import(version, path:, metadata:)
           sequence do
-            plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Import, version, path: path, metadata: metadata)
+            plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Import, version, { path: path, metadata: metadata })
             concurrence do
               version.importable_repositories.pluck(:id).each do |id|
                 # need to force full_indexing for these version repositories

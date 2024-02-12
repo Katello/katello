@@ -3,30 +3,33 @@ module Actions
     module Orchestration
       module ContentViewVersion
         class ExportLibrary < Actions::EntryAction
-          def plan(organization, destination_server: nil,
-                                 chunk_size: nil,
-                                 from_history: nil,
-                                 fail_on_missing_content: false,
-                                 format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
+          def plan(organization, opts = {})
+            options = {
+              destination_server: nil,
+              chunk_size: nil,
+              from_history: nil,
+              fail_on_missing_content: false,
+              format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
+            }.merge(opts)
             action_subject(organization)
-            validate_repositories_immediate!(organization) if fail_on_missing_content
-            content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(destination_server: destination_server,
+            validate_repositories_immediate!(organization) if options[:fail_on_missing_content]
+            content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(destination_server: options[:destination_server],
                                                                            organization: organization,
                                                                            create_by_default: true,
-                                                                           format: format)
-            repo_ids_in_library = organization.default_content_view_version.repositories.exportable(format: format).immediate_or_none.pluck(:id)
+                                                                           format: options[:format])
+            repo_ids_in_library = organization.default_content_view_version.repositories.exportable(format: options[:format]).immediate_or_none.pluck(:id)
             content_view.update!(repository_ids: repo_ids_in_library)
 
             sequence do
               publish_action = plan_action(::Actions::Katello::ContentView::Publish, content_view, '')
               export_action = plan_action(Actions::Katello::ContentViewVersion::Export,
                                           content_view_version: publish_action.version,
-                                          destination_server: destination_server,
-                                          chunk_size: chunk_size,
-                                          from_history: from_history,
+                                          destination_server: options[:destination_server],
+                                          chunk_size: options[:chunk_size],
+                                          from_history: options[:from_history],
                                           validate_incremental: false,
-                                          fail_on_missing_content: fail_on_missing_content,
-                                          format: format)
+                                          fail_on_missing_content: options[:fail_on_missing_content],
+                                          format: options[:format])
               plan_self(export_action_output: export_action.output)
             end
           end
