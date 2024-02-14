@@ -66,6 +66,8 @@ module Katello
       joins(:repositories).includes(:content_view).merge(repositories).distinct
     end
 
+    scope :latest, -> { order('major DESC', 'minor DESC').limit(1) }
+
     scoped_search :on => :content_view_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :major, :rename => :version, :complete_value => true, :ext_method => :find_by_version
     serialize :content_counts

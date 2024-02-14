@@ -229,6 +229,7 @@ module Katello
                                                       :action => "publish")
       assert_equal @composite.needs_publish?, true
       @composite.create_new_version
+      @composite.reload
       cv_history.update!(katello_content_view_version_id: @composite.latest_version_object.id)
       assert_equal @composite.reload.needs_publish?, false
       version1 = create(:katello_content_view_version, :content_view => view1)
@@ -236,6 +237,7 @@ module Katello
                                          :content_view_version => version1, :latest => false)
       assert_equal @composite.reload.needs_publish?, true
       @composite.create_new_version
+      @composite.reload
       cv_history.update!(katello_content_view_version_id: @composite.latest_version_object.id)
       assert_equal @composite.reload.needs_publish?, false
       create(:katello_content_view_version, :content_view => view2)
@@ -243,11 +245,13 @@ module Katello
                                          :content_view => view2, :latest => true)
       assert_equal @composite.reload.needs_publish?, true
       @composite.create_new_version
+      @composite.reload
       cv_history.update!(katello_content_view_version_id: @composite.latest_version_object.id)
       assert_equal @composite.reload.needs_publish?, false
       create(:katello_content_view_version, :content_view => view2, :major => "1000")
       assert_equal @composite.reload.needs_publish?, true
       @composite.create_new_version
+      @composite.reload
       cv_history.update!(katello_content_view_version_id: @composite.latest_version_object.id)
       assert_equal @composite.reload.needs_publish?, false
     end

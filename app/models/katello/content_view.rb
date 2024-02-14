@@ -18,6 +18,7 @@ module Katello
 
     has_many :content_view_versions, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
     alias_method :versions, :content_view_versions
+    has_one :latest_version_object, -> { latest }, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
     # Note the difference between content_view_components and component_composites both refer to
     # ContentViewComponent but mean different things.
     # content_view_components -> Topdown, given I am a composite CV get the associated components belonging to me
@@ -341,10 +342,6 @@ module Katello
       latest_version_object.try(:environments) || []
     end
 
-    def latest_version_object
-      self.versions.order('major DESC').order('minor DESC').first
-    end
-
     def last_task
       last_task_id = history.order(:created_at)&.last&.task_id
       last_task_id ? ForemanTasks::Task.find_by(id: last_task_id) : nil
@@ -610,6 +607,14 @@ module Katello
                                            :content_view => self,
                                            :components => components
       )
+
+      # TODO: If a controller creates a new version and then uses latest_version_object, the old data is displayed.
+      #       To prevent this, a 'reload' would currently be necessary, but this is not very performant.
+      #       However, this is currently not a problem because after your create_new_version there is no immediate
+      #       access to latest_version_object, but the ContentView object is first completely reloaded.
+      #
+      #       In Rails 7.1, individual connections can be reloaded:
+      #       https://www.shakacode.com/blog/rails-7-1-allows-resetting-singular-associations/
 
       update(:next_version => major.to_i + 1) unless major.to_i < next_version
       version

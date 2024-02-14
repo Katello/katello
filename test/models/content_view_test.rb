@@ -664,6 +664,7 @@ module Katello
       content_view = FactoryBot.build(:katello_content_view, :name => "New CV cleaned audits")
       content_view.save!
       content_view.create_new_version
+      content_view.reload
       task = ForemanTasks::Task.create!(:label => 'Actions::Katello::ContentView::Publish', :state => 'stopped',
                                         :type => 'ForemanTasks::Task::DynflowTask', :result => 'success')
       ::Katello::ContentViewHistory.create!(:katello_content_view_version_id => content_view.latest_version_object.id,
@@ -678,6 +679,7 @@ module Katello
       content_view = FactoryBot.build(:katello_content_view, :name => "New CV applied filters nil")
       content_view.save!
       content_view.create_new_version
+      content_view.reload
       task = ForemanTasks::Task.create!(:label => 'Actions::Katello::ContentView::Publish', :state => 'stopped',
                                         :type => 'ForemanTasks::Task::DynflowTask', :result => 'success')
       ::Katello::ContentViewHistory.create!(:katello_content_view_version_id => content_view.latest_version_object.id,
@@ -695,6 +697,7 @@ module Katello
       content_view.save!
       assert content_view.needs_publish? #New CV needs publish
       content_view.create_new_version
+      content_view.reload
       content_view.latest_version_object.update!(applied_filters: {"dependency_solving": false})
       task = ForemanTasks::Task.create!(:label => 'Actions::Katello::ContentView::Publish', :state => 'stopped',
                                         :type => 'ForemanTasks::Task::DynflowTask', :result => 'success')
@@ -721,6 +724,7 @@ module Katello
       content_view.save!
       assert content_view.needs_publish? #New CV needs publish
       content_view.create_new_version
+      content_view.reload
       task = ForemanTasks::Task.create!(:label => 'Actions::Katello::ContentView::Publish', :state => 'stopped',
                                         :type => 'ForemanTasks::Task::DynflowTask', :result => 'success')
       ::Katello::ContentViewHistory.create!(:katello_content_view_version_id => content_view.latest_version_object.id,
@@ -745,6 +749,7 @@ module Katello
       content_view.save!
       assert content_view.needs_publish? #New CV needs publish
       content_view.create_new_version
+      content_view.reload
       task = ForemanTasks::Task.create!(:label => 'Actions::Katello::ContentView::Publish', :state => 'stopped',
                                         :type => 'ForemanTasks::Task::DynflowTask', :result => 'success')
       ::Katello::ContentViewHistory.create!(:katello_content_view_version_id => content_view.latest_version_object.id,
@@ -761,6 +766,7 @@ module Katello
       content_view.save!
       assert content_view.needs_publish? #no version needs publish
       content_view.create_new_version
+      content_view.reload
       task = ForemanTasks::Task.create!(:label => 'Actions::Katello::ContentView::Publish', :state => 'stopped',
                                         :type => 'ForemanTasks::Task::DynflowTask', :result => 'failed')
       ::Katello::ContentViewHistory.create!(:katello_content_view_version_id => content_view.latest_version_object.id,
