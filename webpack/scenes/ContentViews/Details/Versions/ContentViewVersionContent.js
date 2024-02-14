@@ -11,12 +11,12 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
   const {
     deb_count: debCount = 0,
     docker_manifest_count: dockerManifestCount = 0,
+    docker_manifest_list_count: dockerManifestListCount = 0,
     docker_tag_count: dockerTagCount = 0,
     file_count: fileCount = 0,
     module_stream_count: moduleStreamCount = 0,
     ansible_collection_count: ansibleCollectionCount = 0,
   } = cvVersion;
-
 
   const contentConfigTypes = ContentConfig.filter(({ names: { singularLabel } }) =>
     !!cvVersion[`${singularLabel}_count`])
@@ -37,7 +37,7 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
   const noCounts =
     !Number(debCount) && !Number(dockerManifestCount) && !Number(dockerTagCount) &&
     !Number(fileCount) && !Number(moduleStreamCount) && !Number(ansibleCollectionCount) &&
-    !contentConfigTypes?.length;
+    !Number(dockerManifestListCount) && !contentConfigTypes?.length;
 
   if (noCounts) {
     return <InactiveText text={__('No content')} />;
@@ -67,6 +67,13 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
           <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/dockerTags`, '')}>{`${dockerManifestCount} Container manifests`}</a><br />
         </>
       }
+      {dockerManifestListCount > 0 &&
+      <>
+        <Link to={`/versions/${versionId}/dockerManifestList`}>
+          {`${dockerManifestListCount} Container manifest lists`}
+        </Link><br />
+      </>
+      }
       {fileCount > 0 &&
         <>
           <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/files`, '')}>{`${fileCount} Files`}</a><br />
@@ -90,6 +97,7 @@ ContentViewVersionContent.propTypes = {
   cvVersion: PropTypes.shape({
     deb_count: PropTypes.number,
     docker_manifest_count: PropTypes.number,
+    docker_manifest_list_count: PropTypes.number,
     docker_tag_count: PropTypes.number,
     file_count: PropTypes.number,
     module_stream_count: PropTypes.number,

@@ -44,7 +44,10 @@ import {
   cvDockerTagsCompareKey,
   cvDebPackagesCompareKey,
   filesCompareKey,
-  genericContentCompareKey, cvRepositoriesCompareKey,
+  genericContentCompareKey,
+  cvRepositoriesCompareKey,
+  CONTAINER_MANIFEST_LIST_CONTENT,
+  cvContainerManifestListsCompareKey,
 } from '../ContentViewsConstants';
 
 export const selectCVDetails = (state, cvId) =>
@@ -191,6 +194,15 @@ export const selectDockerTagsComparisonStatus = (state, versionOne, versionTwo, 
 export const selectDockerTagsComparisonError = (state, versionOne, versionTwo, viewBy) =>
   selectAPIError(state, cvDockerTagsCompareKey(versionOne, versionTwo, viewBy));
 
+export const selectContainerManifestListsComparison = (state, versionOne, versionTwo, viewBy) =>
+  selectAPIResponse(state, cvContainerManifestListsCompareKey(versionOne, versionTwo, viewBy))
+    || {};
+
+export const selectContainerManifestListsComparisonStatus =
+    (state, versionOne, versionTwo, viewBy) =>
+      selectAPIStatus(state, cvContainerManifestListsCompareKey(versionOne, versionTwo, viewBy))
+    || STATUS.PENDING;
+
 export const selectDebPackagesComparison = (state, versionOne, versionTwo, viewBy) =>
   selectAPIResponse(state, cvDebPackagesCompareKey(versionOne, versionTwo, viewBy)) || {};
 
@@ -242,6 +254,12 @@ export const selectDockerTags = state =>
 
 export const selectDockerTagsStatus = state =>
   selectAPIStatus(state, DOCKER_TAGS_CONTENT) || STATUS.PENDING;
+
+export const selectContainerManifestLists = state =>
+  selectAPIResponse(state, CONTAINER_MANIFEST_LIST_CONTENT);
+
+export const selectContainerManifestListsStatus = state =>
+  selectAPIStatus(state, CONTAINER_MANIFEST_LIST_CONTENT) || STATUS.PENDING;
 
 export const selectRepositories = state =>
   selectAPIResponse(state, REPOSITORY_CONTENT);

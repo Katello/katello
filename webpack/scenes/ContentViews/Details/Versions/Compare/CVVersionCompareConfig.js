@@ -21,6 +21,8 @@ import {
   selectDebPackagesComparisonStatus,
   selectDockerTagsComparison,
   selectDockerTagsComparisonStatus,
+  selectContainerManifestListsComparison,
+  selectContainerManifestListsComparisonStatus,
   selectGenericContentComparison,
   selectGenericContentComparisonStatus,
   selectRepositoriesComparison,
@@ -34,6 +36,7 @@ import {
   getModuleStreamsComparison,
   getDebPackagesComparison,
   getDockerTagsComparison,
+  getContainerManifestListsComparison,
   getGenericContentComparison,
   getRepositoriesComparison,
 } from '../../ContentViewDetailActions';
@@ -361,10 +364,10 @@ export default ({
             </a>),
         },
         {
-          title: __('Available Schema Versions'),
+          title: __('Available schema versions'),
           getProperty: (item) => {
-            if (item?.manifest_schema1) return __('Schema Version 1');
-            return __('Schema Version 2');
+            if (item?.manifest_schema1) return __('Schema version 1');
+            return __('Schema version 2');
           },
         },
         {
@@ -380,6 +383,37 @@ export default ({
       ],
       sortConfig: {
         [__('Name')]: 'name',
+      },
+    },
+    {
+      name: __('Container manifest lists'),
+      getCountKey: (itemVersionOne, itemVersionTwo) =>
+          itemVersionOne?.docker_manifest_list_count || itemVersionTwo?.docker_manifest_list_count,
+      responseSelector: state =>
+        selectContainerManifestListsComparison(state, versionOneId, versionTwoId, viewBy),
+      statusSelector: state =>
+        selectContainerManifestListsComparisonStatus(state, versionOneId, versionTwoId, viewBy),
+      autocompleteEndpoint: '/katello/api/v2/docker_manifest_lists',
+      bookmarkController: 'katello_content_view_components',
+      fetchItems: params =>
+        getContainerManifestListsComparison(versionOneId, versionTwoId, viewBy, params),
+      columnHeaders: [
+        {
+          title: __('Digest'),
+          getProperty: item => item?.digest,
+        },
+        {
+          title: __('Available schema versions'),
+          getProperty: (item) => {
+            if (item?.manifest_schema1) return __('Schema version 1');
+            return __('Schema version 2');
+          },
+        },
+        { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
+        { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
+      ],
+      sortConfig: {
+        [__('Digest')]: 'digest',
       },
     },
     ...ContentConfig.filter(config => !(config.names.pluralLabel === 'ostree_refs')).map(({

@@ -20,7 +20,7 @@ import {
   getPackageGroups,
   getRepositories,
   getRPMPackages,
-  getContent,
+  getContent, getContainerManifestLists,
 } from '../../ContentViewDetailActions';
 import {
   selectCVVersions,
@@ -42,7 +42,7 @@ import {
   selectRPMPackages,
   selectRPMPackagesStatus,
   selectContent,
-  selectContentStatus,
+  selectContentStatus, selectContainerManifestLists, selectContainerManifestListsStatus,
 } from '../../ContentViewDetailSelectors';
 import ContentViewVersionRepositoryCell from './ContentViewVersionRepositoryCell';
 import ContentConfig from '../../../../Content/ContentConfig';
@@ -324,10 +324,10 @@ export default ({ cvId, versionId }) => [
           </a>),
       },
       {
-        title: __('Available Schema Versions'),
+        title: __('Available schema versions'),
         getProperty: (item) => {
-          if (item?.manifest_schema1) return __('Schema Version 1');
-          return __('Schema Version 2');
+          if (item?.manifest_schema1) return __('Schema version 1');
+          return __('Schema version 2');
         },
       },
       {
@@ -338,6 +338,32 @@ export default ({ cvId, versionId }) => [
           </a>),
       },
       { title: __('Image'), getProperty: item => item?.upstream_name },
+    ],
+  },
+  {
+    name: __('Container manifest lists'),
+    route: 'dockerManifestList',
+    repoType: 'docker',
+    getCountKey: item => item?.docker_manifest_list_count,
+    responseSelector: state => selectContainerManifestLists(state),
+    statusSelector: state => selectContainerManifestListsStatus(state),
+    autocompleteEndpoint: '/katello/api/v2/docker_manifest_lists',
+    autocompleteQueryParams: { content_view_version_id: versionId },
+    bookmarkController: 'katello_content_view_components',
+    fetchItems: params =>
+      getContainerManifestLists({ content_view_version_id: versionId, ...params }),
+    columnHeaders: [
+      {
+        title: __('Digest'),
+        getProperty: item => item?.digest,
+      },
+      {
+        title: __('Available schema versions'),
+        getProperty: (item) => {
+          if (item?.manifest_schema1) return __('Schema version 1');
+          return __('Schema version 2');
+        },
+      },
     ],
   },
   ...ContentConfig.map(({
