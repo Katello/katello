@@ -11,15 +11,4 @@
                :type => :button, :style => 'margin-top: 8px;', :class => 'btn btn-small',
                'data-url' => "/katello/api/v2/organizations/#{@taxonomy.id}/download_debug_certificate"
   end %>
-
-  <%= field(f, _('Simple Content Access')) do
-    tag1 = hidden_field_tag 'simple_content_access', '0'
-    tag2 = check_box_tag 'simple_content_access', '1', @taxonomy.simple_content_access?(cached: false)
-    tag1 + tag2
-  end %>
-
-  <div class="alert alert-warning" role="alert">
-    <%= _('Simple Content Access will be required for all organizations in Katello 4.12.') %>
-  </div>
-
 <% end %>

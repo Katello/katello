@@ -29,6 +29,3 @@ export const selectManifestActionStarted = state =>
 
 export const selectHasUpstreamConnection = state =>
   selectSubscriptionsState(state).hasUpstreamConnection;
-
-export const selectSimpleContentAccessEligible = state =>
-  selectSubscriptionsState(state).simpleContentAccessEligible;

@@ -67,7 +67,6 @@ exports[`subscriptions page should render 1`] = `
         disableManifestActions={true}
         disabledReason="This is disabled because no connection could be made to the upstream Manifest."
         refresh={[Function]}
-        simpleContentAccess={false}
         taskInProgress={false}
         upload={[Function]}
       />
@@ -75,27 +74,6 @@ exports[`subscriptions page should render 1`] = `
         className="modal-container"
         id="subscriptions-table"
       >
-        <Alert
-          className=""
-          onDismiss={null}
-          type="warning"
-        >
-          <FormattedMessage
-            defaultMessage="This organization is not using {scaLink}. Entitlement-based subscription management is deprecated and will be removed in Katello 4.12."
-            id="sca-alert"
-            values={
-              Object {
-                "scaLink": <a
-                  href="https://access.redhat.com/articles/simple-content-access"
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  Simple Content Access
-                </a>,
-              }
-            }
-          />
-        </Alert>
         <SubscriptionsTable
           canManageSubscriptionAllocations={false}
           emptyState={

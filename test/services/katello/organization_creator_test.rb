@@ -53,22 +53,6 @@ module Katello
       validate_creator(creator)
     end
 
-    def test_create_with_sca_off
-      org = FactoryBot.build(:organization)
-      creator = Katello::OrganizationCreator.new(org, sca: false)
-
-      Katello::Ping.expects(:ping!).returns(true)
-      org.expects(:candlepin_owner_exists?).returns(false)
-      Katello::Resources::Candlepin::Owner.expects(:create).with(org.name, org.name, content_access_mode: 'entitlement').returns(true)
-      Katello::Resources::Candlepin::Owner.expects(:get_ueber_cert).returns(true)
-      Katello::ContentViewEnvironment.any_instance.expects(:exists_in_candlepin?).returns(false)
-      Katello::Resources::Candlepin::Environment.expects(:create).returns(true)
-
-      creator.create!
-      validate_org(org)
-      validate_creator(creator)
-    end
-
     def test_create_rollback
       org = FactoryBot.build(:organization, name: 'rollback_org')
       creator = Katello::OrganizationCreator.new(org)
