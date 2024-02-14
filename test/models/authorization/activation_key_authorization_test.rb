@@ -83,8 +83,8 @@ module Katello
 
       clause = keys.map { |key| "name=\"#{key.name}\"" }.join(" or ")
 
-      setup_current_user_with_permissions(:name => "edit_activation_keys",
-                                          :search => clause)
+      setup_current_user_with_permissions({ :name => "edit_activation_keys",
+                                            :search => clause })
       assert ActivationKey.all_editable?(ak.content_view, ak.environment)
     end
   end

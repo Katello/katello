@@ -19,26 +19,26 @@ module Actions
               :organization_name => organization.name
             )
             upstream_update = plan_action(Candlepin::Owner::UpstreamUpdate,
-                        :organization_id => organization.id,
-                        :upstream => upstream)
+                        { :organization_id => organization.id,
+                          :upstream => upstream })
             export_action = plan_action(Candlepin::Owner::StartUpstreamExport,
-                        :organization_id => organization.id,
-                        :upstream => upstream,
-                        :path => path,
-                        :dependency => upstream_update.output)
+                        { :organization_id => organization.id,
+                          :upstream => upstream,
+                          :path => path,
+                          :dependency => upstream_update.output })
             retrieved_export = plan_action(Candlepin::Owner::RetrieveUpstreamExport,
-                        :export_id => export_action.output[:task]['resultData']['exportId'],
-                        :organization_id => organization.id,
-                        :upstream => upstream,
-                        :path => path,
-                        :dependency => export_action.output)
+                        { :export_id => export_action.output[:task]['resultData']['exportId'],
+                          :organization_id => organization.id,
+                          :upstream => upstream,
+                          :path => path,
+                          :dependency => export_action.output })
             owner_import = plan_action(Candlepin::Owner::Import,
-                        :label => organization.label,
-                        :path => path,
-                        :dependency => retrieved_export.output)
+                        { :label => organization.label,
+                          :path => path,
+                          :dependency => retrieved_export.output })
             import_products = plan_action(Candlepin::Owner::ImportProducts,
-              :organization_id => organization.id,
-              :dependency => owner_import.output)
+              { :organization_id => organization.id,
+                :dependency => owner_import.output })
             plan_action(Katello::Organization::EnvironmentContentsRefresh,
               organization)
             if manifest_update

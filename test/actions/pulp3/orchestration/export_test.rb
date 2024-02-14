@@ -61,9 +61,9 @@ module ::Actions::Katello::ContentViewVersion
     def test_export
       Actions::Katello::ContentViewVersion::Export.any_instance.expects(:action_subject).with(@content_view_version)
       output = ForemanTasks.sync_task(Actions::Katello::ContentViewVersion::Export,
-                                       content_view_version: @content_view_version,
-                                       destination_server: "foo",
-                                       chunk_size: 0.1).output
+                                      { content_view_version: @content_view_version,
+                                        destination_server: "foo",
+                                        chunk_size: 0.1 }).output
       export_history = Katello::ContentViewVersionExportHistory.find_by(content_view_version_id: @content_view_version.id, destination_server: 'foo')
       assert export_history.metadata
       refute_empty output[:export_path]

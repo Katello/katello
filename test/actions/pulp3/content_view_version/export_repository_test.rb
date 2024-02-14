@@ -34,7 +34,7 @@ module ::Actions::Pulp3::ContentView
         assert content_view.generated_for_repository?
       end
 
-      assert_action_planned_with(action, Actions::Katello::ContentViewVersion::Export) do |**options|
+      assert_action_planned_with(action, Actions::Katello::ContentViewVersion::Export) do |options, _|
         assert_equal version, options[:content_view_version]
       end
     end

@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.homepage    = "http://www.katello.org"
   gem.summary     = "Content and Subscription Management plugin for Foreman"
   gem.description = "Katello adds Content and Subscription Management to Foreman. For this it relies on Candlepin and Pulp."
-  gem.required_ruby_version = '~> 2.5'
+  gem.required_ruby_version = '>= 2.7', '< 4'
 
   gem.files = Dir["{app,webpack,vendor,lib,db,ca,config,locale}/**/*"] +
     Dir['LICENSE.txt', 'README.md', 'package.json']
@@ -33,7 +33,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "rest-client"
 
   gem.add_dependency "rabl"
-  gem.add_dependency "foreman-tasks", ">= 5.0"
+  gem.add_dependency "foreman-tasks", ">= 9.1"
   gem.add_dependency "foreman_remote_execution", ">= 7.1.0"
   gem.add_dependency "dynflow", ">= 1.6.1"
   gem.add_dependency "activerecord-import"
@@ -49,7 +49,9 @@ Gem::Specification.new do |gem|
 
   # Pulp
   gem.add_dependency "anemone"
-
+  # required by anemone: https://github.com/chriskite/anemone/blob/next/lib/anemone/page.rb#L3
+  # webrick is no longer a part of Ruby's stdlib: https://bugs.ruby-lang.org/issues/17303
+  gem.add_dependency "webrick"
   #pulp3
   gem.add_dependency "pulpcore_client", ">= 3.39.0", "< 3.40.0"
   gem.add_dependency "pulp_file_client", ">= 1.15.0", "< 1.16.0"
