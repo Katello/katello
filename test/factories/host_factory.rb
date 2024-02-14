@@ -6,6 +6,10 @@ FactoryBot.modify do
       content_source { nil }
     end
 
+    trait :with_operatingsystem do
+      operatingsystem
+    end
+
     trait :with_content do
       association :content_facet, :factory => :content_facet, :strategy => :build
 

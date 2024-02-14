@@ -8,7 +8,7 @@ module Katello
     tests Katello::Api::V2::HostSubscriptionsController
 
     def models
-      @host = FactoryBot.create(:host, :with_subscription)
+      @host = FactoryBot.create(:host, :with_subscription, :with_operatingsystem)
       users(:restricted).update_attribute(:organizations, [@host.organization])
       users(:restricted).update_attribute(:locations, [@host.location])
       @pool = katello_pools(:pool_one)

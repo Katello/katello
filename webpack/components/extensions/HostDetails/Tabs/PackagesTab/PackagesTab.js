@@ -50,12 +50,7 @@ import { runSubmanRepos } from '../../Cards/ContentViewDetailsCard/HostContentVi
 const invokeRexJobs = ['create_job_invocations'];
 const createBookmarks = ['create_bookmarks'];
 
-export const hidePackagesTab = ({ hostDetails }) => {
-  const osMatch = hostDetails?.operatingsystem_name?.match(/(\D+) (\d+|\D+)/);
-  if (!osMatch) return false;
-  const [, os] = osMatch;
-  return !(osMatch && os.match(/RedHat|RHEL|CentOS|Rocky|AlmaLinux|Alma|Oracle Linux|Oracle|Suse Linux Enterprise Server|SLES/i));
-};
+export const hidePackagesTab = ({ hostDetails }) => !(hostDetails?.operatingsystem_family?.match(/RedHat|SUSE/i));
 
 const UpdateVersionsSelect = ({
   packageName,
