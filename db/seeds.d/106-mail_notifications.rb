@@ -37,14 +37,6 @@ User.as(::User.anonymous_api_admin.login) do
      :subscription_type => 'alert'
     },
 
-    {:name => :subscriptions_expiring_soon,
-     :description => N_('A list of subscriptions expiring soon'),
-     :mailer => 'Katello::SubscriptionMailer',
-     :method => 'subscription_expiry',
-     :subscription_type => 'report',
-     :queryable => true
-    },
-
     {:name => :repository_sync_failure,
      :description => N_('A notification about failed repository sync'),
      :mailer => 'Katello::TaskMailer',
