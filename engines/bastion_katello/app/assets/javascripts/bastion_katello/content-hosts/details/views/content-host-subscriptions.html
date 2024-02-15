@@ -10,11 +10,6 @@
       <h4 translate>Subscription Details</h4>
 
       <dl class="dl-horizontal dl-horizontal-left">
-        <dt translate>Status</dt>
-        <dd>
-          <i ng-class="getHostStatusIcon(host.subscription_global_status)"></i>
-          {{ host.subscription_status_label | translate }}
-        </dd>
 
         <dt ng-show="host.subscription_facet_attributes.compliance_reasons.length > 0" translate>Details</dt>
         <dd ng-show="host.subscription_facet_attributes.compliance_reasons.length > 0">

@@ -9,26 +9,6 @@ module Katello
         host_query.size
       end
 
-      def partial_consumer_count
-        host_query.search_for("subscription_status = partial").size
-      end
-
-      def valid_consumer_count
-        host_query.search_for("subscription_status = valid").size
-      end
-
-      def invalid_consumer_count
-        host_query.search_for("subscription_status = invalid").size
-      end
-
-      def unknown_consumer_count
-        host_query.search_for("subscription_status = unknown or (null? subscription_uuid)").size
-      end
-
-      def unsubscribed_hypervisor_count
-        host_query.search_for("subscription_status = unsubscribed_hypervisor").size
-      end
-
       def removed_widgets
         widgets = super
 

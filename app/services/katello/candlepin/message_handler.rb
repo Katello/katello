@@ -42,13 +42,6 @@ module Katello
         content['consumerUuid']
       end
 
-      def system_purpose
-        if subject == 'system_purpose_compliance.created' && @system_purpose.nil?
-          @system_purpose = Katello::Candlepin::SystemPurpose.new(event_data)
-        end
-        @system_purpose
-      end
-
       def pool_id
         if subject == 'pool.created' || subject == 'pool.deleted'
           content['entityId']
@@ -105,21 +98,8 @@ module Katello
         end
 
         org = ::Organization.find_by!(label: owner['key'])
-        hosts = org.hosts
 
-        if event_data['contentAccessMode'] == 'org_environment'
-          Katello::HostStatusManager.clear_syspurpose_status(hosts)
-          Katello::HostStatusManager.update_subscription_status_to_sca(hosts)
-        elsif event_data['contentAccessMode'] == 'entitlement'
-          cp_consumer_uuids = hosts.joins(:subscription_facet).pluck("#{Katello::Host::SubscriptionFacet.table_name}.uuid")
-          cp_consumer_uuids.each do |uuid|
-            Katello::Resources::Candlepin::Consumer.compliance(uuid)
-            Katello::Resources::Candlepin::Consumer.purpose_compliance(uuid)
-          rescue => e
-            Rails.logger.error("Error encountered while fetching compliance for consumer #{uuid}: #{e.message}")
-          end
-        end
-
+        Rails.logger.error "Received content_access_mode_modified event for org #{org.label}. This event is no longer supported."
         org.simple_content_access?(cached: false)
       end
 

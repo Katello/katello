@@ -410,64 +410,12 @@ module Katello
         update_trace_status
       end
 
-      def subscription_status
-        @subscription_status ||= get_status(::Katello::SubscriptionStatus).status
-      end
-
-      def subscription_status_label(options = {})
-        @subscription_status_label ||= get_status(::Katello::SubscriptionStatus).to_label(options)
-      end
-
-      def subscription_global_status
-        @subscription_global_status ||= get_status(::Katello::SubscriptionStatus).to_global
-      end
-
       def errata_status
         @errata_status ||= get_status(::Katello::ErrataStatus).status
       end
 
       def errata_status_label(options = {})
         @errata_status_label ||= get_status(::Katello::ErrataStatus).to_label(options)
-      end
-
-      def purpose_status
-        @purpose_status ||= get_status(::Katello::PurposeStatus).status
-      end
-
-      def purpose_status_label(options = {})
-        @purpose_status_label ||= get_status(::Katello::PurposeStatus).to_label(options)
-      end
-
-      def purpose_sla_status
-        @purpose_sla_status ||= get_status(::Katello::PurposeSlaStatus).status
-      end
-
-      def purpose_sla_status_label(options = {})
-        @purpose_sla_status_label ||= get_status(::Katello::PurposeSlaStatus).to_label(options)
-      end
-
-      def purpose_role_status
-        @purpose_role_status ||= get_status(::Katello::PurposeRoleStatus).status
-      end
-
-      def purpose_role_status_label(options = {})
-        @purpose_role_status_label ||= get_status(::Katello::PurposeRoleStatus).to_label(options)
-      end
-
-      def purpose_usage_status
-        @purpose_usage_status ||= get_status(::Katello::PurposeUsageStatus).status
-      end
-
-      def purpose_usage_status_label(options = {})
-        @purpose_usage_status_label ||= get_status(::Katello::PurposeUsageStatus).to_label(options)
-      end
-
-      def purpose_addons_status
-        @purpose_addons_status ||= get_status(::Katello::PurposeAddonsStatus).status
-      end
-
-      def purpose_addons_status_label(options = {})
-        @purpose_addons_status_label ||= get_status(::Katello::PurposeAddonsStatus).to_label(options)
       end
 
       def rhel_lifecycle_global_status
@@ -602,8 +550,7 @@ class ::Host::Managed::Jail < Safemode::Jail
         :host_collections, :pools, :hypervisor_host, :installed_debs,
         :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template,
         :filtered_entitlement_quantity_consumed, :bound_repositories,
-        :single_content_view, :single_lifecycle_environment, :purpose_role, :purpose_usage, :release_version,
-        :purpose_role_status_label, :purpose_usage_status_label
+        :single_content_view, :single_lifecycle_environment, :release_version
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail

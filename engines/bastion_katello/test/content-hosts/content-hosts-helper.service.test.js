@@ -10,17 +10,6 @@ describe('Controller: ContentHostsController', function() {
         ContentHostsHelper = $injector.get('ContentHostsHelper');
     }));
 
-    it("provides a way to get the status icon for system purpose on a host.", function() {
-        expect(ContentHostsHelper.getHostPurposeStatusIcon(2)).toBe("pficon pficon-ok");
-        expect(ContentHostsHelper.getHostPurposeStatusIcon(1)).toBe("pficon pficon-warning-triangle-o");
-    });
-
-    it("provides a way to get the global status color.", function() {
-        expect(ContentHostsHelper.getHostStatusIcon(0)).toBe(greenStatus);
-        expect(ContentHostsHelper.getHostStatusIcon(1)).toBe(yellowStatus);
-        expect(ContentHostsHelper.getHostStatusIcon(2)).toBe(redStatus);
-    });
-
     it('should convert Memory to GB', function() {
         expect(ContentHostsHelper.convertMemToGB(1020120)).toBe('0.97')
         expect(ContentHostsHelper.convertMemToGB('5946304')).toBe('5.67')

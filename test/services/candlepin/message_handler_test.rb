@@ -21,18 +21,6 @@ module Katello
     end
   end
 
-  class SystemPurposeComplianceCreatedTest < MessageHandlerTestBase
-    let(:event_name) { 'system_purpose_compliance.created' }
-
-    def test_system_purpose
-      assert_equal handler.system_purpose.overall_status, :mismatched
-      assert_equal handler.system_purpose.sla_status, :mismatched
-      assert_equal handler.system_purpose.role_status, :not_specified
-      assert_equal handler.system_purpose.usage_status, :not_specified
-      assert_equal handler.system_purpose.addons_status, :not_specified
-    end
-  end
-
   class ComplianceCreatedTest < MessageHandlerTestBase
     let(:event_name) { 'compliance.created' }
 
@@ -142,24 +130,9 @@ module Katello
       super
     end
 
-    def test_sca_enabled
-      Katello::HostStatusManager.expects(:clear_syspurpose_status)
-      Katello::HostStatusManager.expects(:update_subscription_status_to_sca)
+    def test_content_access_mode_modified
       Organization.any_instance.expects(:simple_content_access?).with(cached: false)
-
-      handler.handle_content_access_mode_modified
-    end
-
-    def test_sca_disabled
-      Katello::HostStatusManager.expects(:clear_syspurpose_status).never
-      Katello::HostStatusManager.expects(:update_subscription_status_to_sca).never
-      Organization.any_instance.expects(:simple_content_access?).with(cached: false)
-      handler.expects(:event_data).returns('contentAccessMode' => 'entitlement').twice
-
-      @org.hosts.joins(:subscription_facet).count.times do
-        Katello::Resources::Candlepin::Consumer.expects(:compliance)
-        Katello::Resources::Candlepin::Consumer.expects(:purpose_compliance)
-      end
+      Rails.logger.expects(:error).with("Received content_access_mode_modified event for org #{@org.label}. This event is no longer supported.")
 
       handler.handle_content_access_mode_modified
     end

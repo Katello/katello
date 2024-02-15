@@ -34,7 +34,6 @@ module Katello::Host
       }.with_indifferent_access
       @consumer = {
         uuid: @host.subscription_facet.uuid,
-        entitlementStatus: Katello::SubscriptionStatus::UNKNOWN,
         guestIds: ['test-id-1'],
         entitlementCount: 0,
         facts: @facts,

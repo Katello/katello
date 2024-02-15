@@ -38,16 +38,6 @@ angular.module('Bastion.content-hosts').service('ContentHostsHelper',
             return icons[globalStatus];
         };
 
-        this.getHostPurposeStatusIcon = function (statusCode) {
-            var code = parseInt(statusCode);
-
-            if (code === 2) { // matched
-                return 'pficon pficon-ok';
-            } else if (code === 1) { // mismatched
-                return 'pficon pficon-warning-triangle-o';
-            }
-        };
-
         this.rebootRequired = function(traces) {
             return traces.some(function(trace) {
                 return trace.reboot_required;

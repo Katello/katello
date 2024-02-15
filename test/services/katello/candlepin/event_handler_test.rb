@@ -28,23 +28,6 @@ module Katello
       let(:mymessage) do
         message("compliance.created", 'eventData' => "{\"status\":\"invalid\"}")
       end
-
-      it 're-indexes the subscription status' do
-        subscription_facet.expects(:update_subscription_status)
-        subscription_facet.expects(:update_compliance_reasons)
-        handler.handle(mymessage)
-      end
-    end
-
-    describe 'handles system_purpose_compliance.created' do
-      let(:mymessage) do
-        message("system_purpose_compliance.created", 'eventData' => "{\"reasons\":[]}")
-      end
-
-      it 're-indexes the purpose status' do
-        subscription_facet.expects(:update_purpose_status)
-        handler.handle(mymessage)
-      end
     end
 
     describe 'handles entitlement.created' do

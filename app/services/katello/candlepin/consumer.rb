@@ -118,10 +118,6 @@ module Katello
         self.class.friendly_compliance_reasons(Resources::Candlepin::Consumer.compliance(uuid)['reasons'])
       end
 
-      def system_purpose
-        @system_purpose ||= Katello::Candlepin::SystemPurpose.new(purpose_compliance)
-      end
-
       def entitlements?
         # use cahced consumer_attributes if possible
         count = @consumer_attributes.try(:[], 'entitlementCount')

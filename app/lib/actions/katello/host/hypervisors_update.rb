@@ -170,7 +170,6 @@ module Actions
             host.subscription_facet.candlepin_consumer.consumer_attributes = @candlepin_attributes[uuid]
             host.subscription_facet.import_database_attributes
             host.subscription_facet.save!
-            host.subscription_facet.update_subscription_status(@candlepin_attributes[uuid].try(:[], :entitlementStatus))
           end
         end
 

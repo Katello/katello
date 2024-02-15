@@ -10,38 +10,15 @@ module Katello
       included do
         audited :associations => [:pools]
 
-        SUBSCRIPTION_STATUS_MAP = {
-          :valid => Katello::SubscriptionStatus::VALID,
-          :partial => Katello::SubscriptionStatus::PARTIAL,
-          :invalid => Katello::SubscriptionStatus::INVALID,
-          :unknown => Katello::SubscriptionStatus::UNKNOWN,
-          :disabled => Katello::SubscriptionStatus::DISABLED,
-          :unsubscribed_hypervisor => Katello::SubscriptionStatus::UNSUBSCRIBED_HYPERVISOR
-        }.freeze
-
         accepts_nested_attributes_for :subscription_facet, :update_only => true, :reject_if => lambda { |attrs| attrs.values.compact.empty? }
 
         has_many :activation_keys, :through => :subscription_facet
         has_many :pools, :through => :subscription_facet
         has_many :purpose_addons, :through => :subscription_facet
         has_many :subscriptions, :through => :pools
-        has_one :subscription_status_object, :class_name => 'Katello::SubscriptionStatus', :foreign_key => 'host_id', :dependent => :destroy
-        has_one :purpose_sla_status_object, :class_name => 'Katello::PurposeSlaStatus', :foreign_key => 'host_id', :dependent => :destroy
-        has_one :purpose_role_status_object, :class_name => 'Katello::PurposeRoleStatus', :foreign_key => 'host_id', :dependent => :destroy
-        has_one :purpose_usage_status_object, :class_name => 'Katello::PurposeUsageStatus', :foreign_key => 'host_id', :dependent => :destroy
-        has_one :purpose_addons_status_object, :class_name => 'Katello::PurposeAddonsStatus', :foreign_key => 'host_id', :dependent => :destroy
-        has_one :purpose_status_object, :class_name => 'Katello::PurposeStatus', :foreign_key => 'host_id', :dependent => :destroy
         has_one :rhel_lifecycle_status_object, :class_name => 'Katello::RhelLifecycleStatus', :foreign_key => 'host_id', :dependent => :destroy
         has_one :hypervisor_host, :through => :subscription_facet
 
-        scoped_search :on => :status, :relation => :subscription_status_object, :rename => :subscription_status,
-                      :complete_value => SUBSCRIPTION_STATUS_MAP
-
-        scoped_search on: :status, relation: :purpose_sla_status_object, rename: :sla_status, complete_value: purpose_status_map
-        scoped_search on: :status, relation: :purpose_role_status_object, rename: :role_status, complete_value: purpose_status_map
-        scoped_search on: :status, relation: :purpose_usage_status_object, rename: :usage_status, complete_value: purpose_status_map
-        scoped_search on: :status, relation: :purpose_addons_status_object, rename: :addons_status, complete_value: purpose_status_map
-        scoped_search on: :status, relation: :purpose_status_object, rename: :purpose_status, complete_value: purpose_status_map
         scoped_search on: :status, relation: :rhel_lifecycle_status_object, rename: :rhel_lifecycle_status, complete_value: rhel_lifecycle_status_map
 
         scoped_search :on => :release_version, :relation => :subscription_facet, :complete_value => true, :only_explicit => true
@@ -98,10 +75,6 @@ module Katello
       end
 
       module ClassMethods
-        def purpose_status_map
-          ::Katello::PurposeStatus.status_map
-        end
-
         def rhel_lifecycle_status_map
           ::Katello::RhelLifecycleStatus.status_map
         end

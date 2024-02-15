@@ -246,8 +246,6 @@ Foreman::Plugin.register :katello do
   widget 'errata_widget', :name => 'Latest Errata', :sizey => 1, :sizex => 6
   widget 'content_views_widget', :name => 'Content Views', :sizey => 1, :sizex => 6
   widget 'sync_widget', :name => 'Sync Overview', :sizey => 1, :sizex => 6
-  widget 'subscription_widget', :name => 'Host Subscription Status', :sizey => 1, :sizex => 6
-  widget 'subscription_status_widget', :name => 'Subscription Status', :sizey => 1, :sizex => 6
   widget 'host_collection_widget', :name => 'Host Collections', :sizey => 1, :sizex => 6
 
   extend_page("smart_proxies/show") do |context|
@@ -270,9 +268,6 @@ Foreman::Plugin.register :katello do
       common_class = 'hidden-tablet hidden-xs ellipsis'
       use_pagelet :hosts_table_column_header, :name
       use_pagelet :hosts_table_column_content, :name
-      add_pagelet :hosts_table_column_header, key: :subscription_status, label: _('Subscription status'), sortable: true, class: common_class, width: '10%', export_key: 'subscription_global_status'
-      add_pagelet :hosts_table_column_content, key: :subscription_status, class: common_class, callback: ->(host) { host_status_icon(host.subscription_global_status) }
-
       add_pagelet :hosts_table_column_header, key: :rhel_lifecycle_status, label: _('RHEL Lifecycle status'), sortable: true, class: common_class, width: '10%', export_key: 'rhel_lifecycle_status'
       add_pagelet :hosts_table_column_content, key: :rhel_lifecycle_status, class: common_class, callback: ->(host) { host_status_icon(host.rhel_lifecycle_global_status) }
 

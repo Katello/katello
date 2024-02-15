@@ -130,7 +130,6 @@ namespace :katello do
       if sub_facet
         sub_facet.host = provisioning_host
         sub_facet.save!
-        sub_facet.update_subscription_status
       end
 
       provisioning_host.name = provisioning_host.name.downcase
