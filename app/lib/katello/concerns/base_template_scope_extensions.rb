@@ -216,9 +216,14 @@ module Katello
         keyword :includes, Array, of: [String, Symbol], desc: 'An array of associations represented by strings or symbols, to be included in the SQL query. The list can be extended
           from plugins and can not be fully documented here. Most used associations are :subscription, :products, :organization', default: nil
         returns array_of: 'Pool', desc: 'The collection that can be iterated over using each_record'
+        keyword :expiring_in_days, String, desc: "Return subscriptions expiring in the given number of days. Leave blank to return all subscriptions.", default: nil
       end
-      def load_pools(search: '', includes: nil)
-        load_resource(klass: Pool.readable, search: search, permission: nil, includes: includes)
+      def load_pools(search: '', includes: nil, expiring_in_days: nil)
+        pools = Pool.readable
+        if expiring_in_days
+          pools = pools.expiring_in_days(expiring_in_days)
+        end
+        load_resource(klass: pools, search: search, permission: nil, includes: includes)
       end
 
       apipie :method, 'Returns the last time the host checked in via RHSM' do
