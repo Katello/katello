@@ -1,3 +1,45 @@
+# 4.11.1 (2024-02-16)
+
+## Features
+
+### Subscriptions
+ * Message under "Simple content access" button on organization edit page can be improved and a hyperlink can be provided to reference the document. ([#37117](https://projects.theforeman.org/issues/37117))
+
+## Bug Fixes
+
+### Tests
+ * transient test failure test_sync_container_gateway – Katello::SmartProxyExtensionsTest ([#34044](https://projects.theforeman.org/issues/34044), [1b9a08b7](https://github.com/Katello/katello/commit/1b9a08b7596c30a97ccb1b602094576e7c3c4b01))
+
+### Foreman Proxy Content
+ * PG::ProgramLimitExceeded error for Update content counts task on a big setup ([#37080](https://projects.theforeman.org/issues/37080), [acbe320a](https://github.com/Katello/katello.git/commit/acbe320a17c16bf4239fbdd3ee78bb576f1b9fb4))
+ * After upgrade checking sync status/content info fails till next sync ([#37023](https://projects.theforeman.org/issues/37023), [90a8ba09](https://github.com/Katello/katello.git/commit/90a8ba09f2512a30d854b2598a13ea3f96de7724))
+
+### Errata Management
+ * When applying errata on host using "apply via custom remote execution" => "katello via ansible" method shows  errata field blank ([#37051](https://projects.theforeman.org/issues/37051), [4f236c7d](https://github.com/Katello/katello.git/commit/4f236c7dbff1038fa1bf96bad9c7cd458e163016))
+
+### Hammer
+ * Fix ContentViewVersion undefined error in republish repositories test ([#37046](https://projects.theforeman.org/issues/37046), [9e09e6a6](https://github.com/Katello/hammer-cli-katello.git/commit/9e09e6a6863e81621766d5f53e7f445d5033492f))
+ * hammer proxy content info fails when DB has no content counts ([#37031](https://projects.theforeman.org/issues/37031), [f1f74767](https://github.com/Katello/hammer-cli-katello.git/commit/f1f747679d597f0ee716f9d0df2a43e0ee615a22))
+
+### Activation Key
+ * The Activation Keys page asks user to register hosts using old deprecated method ([#37040](https://projects.theforeman.org/issues/37040), [9e3e5cac](https://github.com/Katello/katello.git/commit/9e3e5cac342628b48dc1192c45fd469c4bc595ad))
+
+### Web UI
+ * Field 'id' not recognized for searching! when trying to bulk override repository sets ([#37018](https://projects.theforeman.org/issues/37018), [2ffd1464](https://github.com/Katello/katello.git/commit/2ffd1464470503b88cc0f3dcc4f716423dd56f20))
+
+### Hosts
+ * Configuration rebuild failed for: Content_Host_Status and Refresh_Content_Host_Status. ([#36996](https://projects.theforeman.org/issues/36996), [12579551](https://github.com/Katello/katello.git/commit/125795515a320eca031217bb0f5fd5948f4533eb))
+ * When installing a new package, the job is labeled with a job ID and not the package. ([#36846](https://projects.theforeman.org/issues/36846), [586f2fee](https://github.com/Katello/katello.git/commit/586f2feec6879586165abda2ab11d5cdee2845b6), [dfe70e85](https://github.com/Katello/katello.git/commit/dfe70e850b364751a30f6ba63c46c3cf03124226), [7e7d6d3c](https://github.com/Katello/katello.git/commit/7e7d6d3ca0e813d59438cba6a4388fc8308c58e9))
+
+### Repositories
+ * Bump recommended repos for 6-15 ([#36995](https://projects.theforeman.org/issues/36995), [cce79ff5](https://github.com/Katello/katello.git/commit/cce79ff5b50c09dee04440352c33146f2330a12d))
+ * A re-sync should always recover from a previous syncs failed publication ([#36859](https://projects.theforeman.org/issues/36859), [df80f7bc](https://github.com/Katello/katello.git/commit/df80f7bc568d90d81a8ed4397630b457897b933e))
+
+### Content Views
+ * Race Condition during Incremental Update ([#36871](https://projects.theforeman.org/issues/36871), [fb6f7075](https://github.com/Katello/katello.git/commit/fb6f7075558c31c716a4628804a35d347aed18b4))
+
+### Localization
+ * Bad translation in french in webui ([#36829](https://projects.theforeman.org/issues/36829), [ae7ee107](https://github.com/Katello/katello.git/commit/ae7ee1075949423ba9a07f8fe1ae99ec30ce06bf))
 # 4.11.0 (2023-12-19)
 
 ## Features
