@@ -15,4 +15,13 @@ attributes :architecture, :if => lambda { |rule| rule.respond_to?(:architecture)
 attributes :types, :if => lambda { |rule| rule.respond_to?(:types) && !rule.types.blank? }
 attributes :date_type, :if => lambda { |rule| rule.respond_to?(:date_type) }
 attributes :module_stream_id, :if => lambda { |rule| rule.respond_to?(:module_stream_id) && !rule.module_stream_id.blank? }
+if @resource&.try(:module_stream)
+  node :module_stream do |rule|
+    {
+      :module_stream_id => rule.module_stream.id,
+      :module_stream_name => rule.module_stream.name,
+      :module_stream_stream => rule.module_stream.stream
+    }
+  end
+end
 extends 'katello/api/v2/common/timestamps'
