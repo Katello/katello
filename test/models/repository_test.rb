@@ -752,7 +752,7 @@ module Katello
 
     def test_repository_smart_proxy_syncable
       view = katello_content_views(:library_view)
-      repo = view.versions.map(&:repositories).flatten.find(&:yum?)
+      repo = view.versions.map(&:repositories).flatten.find { |repository| repository.yum? && !repository.environment_id.nil? }
       assert_includes ::Katello::Repository.smart_proxy_syncable.map(&:pulp_id), repo.pulp_id
       view.generated_for_repository_export!
       refute_includes ::Katello::Repository.smart_proxy_syncable.map(&:pulp_id), repo.pulp_id
