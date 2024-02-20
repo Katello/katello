@@ -325,50 +325,73 @@ module Katello
         content_facet.update_repositories_by_paths(paths.compact)
       end
 
+      def available_module_stream_id_from(name:, stream:, context:)
+        AvailableModuleStream.find_by!(name: name, stream: stream, context: context).id
+      rescue ActiveRecord::RecordNotFound
+        Rails.logger.warn("Module stream not found: name: #{name}, stream: #{stream}, context: #{context}")
+        nil
+      end
+
       def import_module_streams(module_streams)
-        # create_or_find_by avoids race conditions during concurrent registrations but clogs postgres logs with harmless errors.
-        # So we'll use create_or_find_by! during registration and first_or_create! otherwise.
-        registered_time = subscription_facet&.registered_at
-        use_create_or_find_by = registered_time.nil? || registered_time > 1.minute.ago
-        streams = {}
-        module_streams.each do |module_stream|
-          if use_create_or_find_by
-            stream = AvailableModuleStream.create_or_find_by!(name: module_stream["name"],
-                                                context: module_stream["context"],
-                                                stream: module_stream["stream"])
-          else
-            stream = AvailableModuleStream.where(name: module_stream["name"],
-            context: module_stream["context"],
-            stream: module_stream["stream"]).first_or_create!
-          end
-          streams[stream.id] = module_stream
+        Rails.logger.debug "INSERT_ALL-------------------------------------"
+        Rails.logger.debug module_streams.first(3)
+        streams = module_streams.map do |module_stream|
+          {
+            name: module_stream["name"],
+            stream: module_stream["stream"],
+            context: module_stream["context"]
+          }
         end
-        sync_available_module_stream_associations(streams)
+        newly_added_records = AvailableModuleStream.insert_all(
+          streams,
+          unique_by: %w[name stream context],
+          returning: %w[id name stream context]
+        )
+        Rails.logger.debug "newly_added_records-------------------------------------"
+        Rails.logger.debug newly_added_records.to_a
+        # module_streams looks like this
+        # {"name"=>"389-ds", "stream"=>"1.4", "version"=>"8030020201203210520", "context"=>"e114a9e7", "arch"=>"x86_64", "profiles"=>[], "installed_profiles"=>[], "status"=>"default", "active"=>false}
+
+        indexed_module_streams = module_streams.index_by do |module_stream|
+          available_module_stream_id_from(
+                  name: module_stream["name"],
+                  stream: module_stream["stream"],
+                  context: module_stream["context"]
+                )
+        end
+        Rails.logger.debug "INDEXED_MODULE_STREAMS-------------------------------------"
+        Rails.logger.debug indexed_module_streams
+
+        sync_available_module_stream_associations(indexed_module_streams)
       end
 
       def sync_available_module_stream_associations(new_available_module_streams)
         upgradable_streams = self.host_available_module_streams.where(:available_module_stream_id => new_available_module_streams.keys)
+        new_associated_ids = new_available_module_streams.keys.compact
         old_associated_ids = self.available_module_stream_ids
-        delete_ids = old_associated_ids - new_available_module_streams.keys
+        delete_ids = old_associated_ids - new_associated_ids
 
         if delete_ids.any?
           self.host_available_module_streams.where(:available_module_stream_id => delete_ids).delete_all
         end
 
-        new_ids = new_available_module_streams.keys - old_associated_ids
-        new_ids.each do |new_id|
+        new_ids = new_associated_ids - old_associated_ids
+
+        hams_to_create = new_ids.map do |new_id|
           module_stream = new_available_module_streams[new_id]
           status = module_stream["status"]
           # Set status to "unknown" only if the active field is in use and set to false and the module is enabled
           if enabled_module_stream_inactive?(module_stream)
             status = "unknown"
           end
-          self.host_available_module_streams.create!(host_id: self.id,
-                                                     available_module_stream_id: new_id,
-                                                     installed_profiles: module_stream["installed_profiles"],
-                                                     status: status)
+          {
+            host_id: self.id,
+            available_module_stream_id: new_id,
+            installed_profiles: module_stream["installed_profiles"],
+            status: status
+          }
         end
-
+        HostAvailableModuleStream.insert_all(hams_to_create) if hams_to_create.any?
         upgradable_streams.each do |hams|
           module_stream = new_available_module_streams[hams.available_module_stream_id]
           shared_keys = hams.attributes.keys & module_stream.keys
