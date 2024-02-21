@@ -100,7 +100,7 @@ module Actions
         def notify_on_failure(_plan)
           notification = MailNotification[:repository_sync_failure]
           repo = ::Katello::Repository.find(input.fetch(:repository, {})[:id])
-          notification.users.where(disabled: [nil, false], mail_enabled: true).each do |user|
+          notification.users.with_enabled_email.each do |user|
             notification.deliver(user: user, repo: repo, task: task)
           end
         end
