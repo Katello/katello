@@ -250,6 +250,10 @@ module Katello
       self.pulp_id = SecureRandom.uuid if self.pulp_id.length > PULP_ID_MAX_LENGTH
     end
 
+    def self.attribute_name
+      :name
+    end
+
     def set_container_repository_name
       self.container_repository_name = Repository.safe_render_container_name(self)
     end
