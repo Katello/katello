@@ -56,6 +56,11 @@ module Katello
         Katello::KTEnvironment.find_by(:id => inherited_lifecycle_environment_id)
       end
 
+      def kickstart_repository
+        return super if ancestry.nil? || self.kickstart_repository_id.present?
+        Katello::Repository.find_by(:id => inherited_kickstart_repository_id)
+      end
+
       # instead of calling nested_attribute_for(:content_source_id) in Foreman, define the methods explictedly
       def content_source
         return super if ancestry.nil? || self.content_source_id.present?
