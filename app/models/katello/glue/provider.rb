@@ -63,7 +63,7 @@ module Katello
         end
 
         # Default to Red Hat
-        url = upstream['apiUrl'] || API_URL
+        url = upstream_api_url(upstream)
 
         params = {}
         params[:capabilities] = Resources::Candlepin::CandlepinPing.ping['managerCapabilities'].inject([]) do |result, element|
@@ -74,9 +74,13 @@ module Katello
                                                       upstream['idCert']['key'], ca_file, params)
       end
 
+      def upstream_api_url(upstream)
+        upstream['apiUrl'] || ENV['UPSTREAM_REDHAT_RHSM_API_URL'] ||  API_URL
+      end
+
       def start_owner_upstream_export(upstream)
         validate_upstream_identity_cert!(upstream)
-        url = upstream['apiUrl'] || API_URL
+        url = upstream_api_url(upstream)
 
         response = Resources::Candlepin::UpstreamConsumer.get_export("#{url}#{upstream['uuid']}/export/async", upstream['idCert']['cert'],
           upstream['idCert']['key'], ca_file)
@@ -85,7 +89,7 @@ module Katello
 
       def retrieve_owner_upstream_export(upstream, zip_file_path, export_id)
         validate_upstream_identity_cert!(upstream)
-        url = upstream['apiUrl'] || API_URL
+        url = upstream_api_url(upstream)
 
         data = Resources::Candlepin::UpstreamConsumer.get_export("#{url}#{upstream['uuid']}/export/#{export_id}", upstream['idCert']['cert'],
                                                              upstream['idCert']['key'], ca_file)
