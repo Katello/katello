@@ -676,6 +676,7 @@ Foreman::Plugin.register :katello do
     RemoteExecutionFeature.register(:katello_service_restart, N_("Katello: Service Restart"), :description => N_("Restart Services via Katello interface"), :provided_inputs => ['helpers'])
     RemoteExecutionFeature.register(:katello_host_tracer_resolve, N_("Katello: Resolve Traces"), :description => N_("Resolve traces via Katello interface"), :provided_inputs => ['ids'])
     RemoteExecutionFeature.register(:katello_change_content_source, N_("Katello: Configure host for new content source"), :description => N_("Replace content source on the target machine"), :provided_inputs => [])
+    RemoteExecutionFeature.register(:katello_upload_profile, N_("Katello: Upload Profile"), :description => N_("Upload package / repos profile"), :provided_inputs => [])
     RemoteExecutionFeature.register(:katello_module_stream_action, N_("Katello: Module Stream Actions"),
                                     :description => N_("Perform a module stream action via Katello interface"),
                                     :provided_inputs => ['action', 'module_spec', 'options'])
