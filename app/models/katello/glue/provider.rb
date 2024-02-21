@@ -34,7 +34,7 @@ module Katello
       API_URL = 'https://subscription.rhsm.redhat.com/subscription/consumers/'.freeze
       def api_url(upstream = {})
         # Default to Red Hat
-        upstream['apiUrl'] || API_URL
+        ENV['REDHAT_RHSM_API_URL'] || upstream['apiUrl'] || API_URL
       end
 
       def sync
@@ -65,7 +65,6 @@ module Katello
           Rails.logger.error "Upstream identity certificate not available"
           fail _("Upstream identity certificate not available")
         end
-
         params = {}
         params[:capabilities] = Resources::Candlepin::CandlepinPing.ping['managerCapabilities'].inject([]) do |result, element|
           result << {'name' => element}
