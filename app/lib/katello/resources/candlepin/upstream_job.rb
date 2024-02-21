@@ -11,7 +11,7 @@ module Katello
           end
 
           def get(id, upstream)
-            url = API_URL
+            url = ENV['REDHAT_RHSM_API_URL'] || API_URL
             response = Resources::Candlepin::UpstreamConsumer.start_upstream_export("#{url}#{path(id)}", upstream['idCert']['cert'],
               upstream['idCert']['key'], nil)
             job = JSON.parse(response)
