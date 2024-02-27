@@ -203,7 +203,7 @@ const RepositorySetsTab = () => {
 
   const toggleGroupStates = ['noLimit', 'limitToEnvironment'];
   const [SHOW_ALL, LIMIT_TO_ENVIRONMENT] = toggleGroupStates;
-  const defaultToggleGroupState = nonLibraryHost ? LIMIT_TO_ENVIRONMENT : SHOW_ALL;
+  const defaultToggleGroupState = LIMIT_TO_ENVIRONMENT;
   const unfilteredToggleGroupState = SHOW_ALL;
   const [toggleGroupState, setToggleGroupState] =
     useState(show ?? defaultToggleGroupState);
