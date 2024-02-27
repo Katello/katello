@@ -61,10 +61,6 @@ const limitToEnvQuery = {
   sort_by: 'name',
   sort_order: 'asc',
 };
-const showAllQuery = {
-  ...limitToEnvQuery,
-  content_access_mode_env: false,
-};
 
 let firstRepoSet;
 let secondRepoSet;
@@ -191,7 +187,7 @@ test('Toggle Group does not show if it\'s the library environment and default co
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostRepositorySets)
-    .query(showAllQuery)
+    .query(limitToEnvQuery)
     .reply(200, mockRepoSetData);
 
   const {

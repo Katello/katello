@@ -39,7 +39,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
 
         $scope.contentAccessModes = {
             contentAccessModeAll: $scope.simpleContentAccessEnabled,
-            contentAccessModeEnv: false
+            contentAccessModeEnv: true
         };
 
         $scope.selectRepositoryType = function () {
@@ -55,6 +55,8 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
             $scope.nutupane.table.params['content_access_mode_all'] = $scope.contentAccessModes.contentAccessModeAll || $scope.simpleContentAccessEnabled;
             $scope.nutupane.refresh();
         };
+
+        $scope.toggleFilters();
 
         success = function () {
             $scope.table.working = false;
