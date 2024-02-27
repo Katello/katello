@@ -326,15 +326,15 @@ module Katello
       end
 
       def available_module_stream_id_from(name:, stream:, context:)
-        AvailableModuleStream.find_by!(name: name, stream: stream, context: context).id
-      rescue ActiveRecord::RecordNotFound
-        Rails.logger.warn("Module stream not found: name: #{name}, stream: #{stream}, context: #{context}")
-        nil
+        @indexed_available_module_streams ||= Katello::AvailableModuleStream.all.index_by do |available_module_stream|
+          "#{available_module_stream.name}-#{available_module_stream.stream}-#{available_module_stream.context}"
+        end
+        @indexed_available_module_streams["#{name}-#{stream}-#{context}"]&.id
       end
 
       def import_module_streams(module_streams)
-        Rails.logger.debug "INSERT_ALL-------------------------------------"
-        Rails.logger.debug module_streams.first(3)
+        # module_streams looks like this
+        # {"name"=>"389-ds", "stream"=>"1.4", "version"=>"8030020201203210520", "context"=>"e114a9e7", "arch"=>"x86_64", "profiles"=>[], "installed_profiles"=>[], "status"=>"default", "active"=>false}
         streams = module_streams.map do |module_stream|
           {
             name: module_stream["name"],
@@ -342,15 +342,11 @@ module Katello
             context: module_stream["context"]
           }
         end
-        newly_added_records = AvailableModuleStream.insert_all(
+        AvailableModuleStream.insert_all(
           streams,
           unique_by: %w[name stream context],
           returning: %w[id name stream context]
         )
-        Rails.logger.debug "newly_added_records-------------------------------------"
-        Rails.logger.debug newly_added_records.to_a
-        # module_streams looks like this
-        # {"name"=>"389-ds", "stream"=>"1.4", "version"=>"8030020201203210520", "context"=>"e114a9e7", "arch"=>"x86_64", "profiles"=>[], "installed_profiles"=>[], "status"=>"default", "active"=>false}
 
         indexed_module_streams = module_streams.index_by do |module_stream|
           available_module_stream_id_from(
@@ -359,15 +355,13 @@ module Katello
                   context: module_stream["context"]
                 )
         end
-        Rails.logger.debug "INDEXED_MODULE_STREAMS-------------------------------------"
-        Rails.logger.debug indexed_module_streams
 
         sync_available_module_stream_associations(indexed_module_streams)
       end
 
       def sync_available_module_stream_associations(new_available_module_streams)
-        upgradable_streams = self.host_available_module_streams.where(:available_module_stream_id => new_available_module_streams.keys)
         new_associated_ids = new_available_module_streams.keys.compact
+        upgradable_streams = self.host_available_module_streams.where(:available_module_stream_id => new_associated_ids)
         old_associated_ids = self.available_module_stream_ids
         delete_ids = old_associated_ids - new_associated_ids
 
