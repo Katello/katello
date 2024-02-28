@@ -342,12 +342,13 @@ module Katello
             context: module_stream["context"]
           }
         end
-        AvailableModuleStream.insert_all(
-          streams,
-          unique_by: %w[name stream context],
-          returning: %w[id name stream context]
-        )
-
+        if streams.any?
+          AvailableModuleStream.insert_all(
+            streams,
+            unique_by: %w[name stream context],
+            returning: %w[id name stream context]
+          )
+        end
         indexed_module_streams = module_streams.index_by do |module_stream|
           available_module_stream_id_from(
                   name: module_stream["name"],
@@ -355,7 +356,6 @@ module Katello
                   context: module_stream["context"]
                 )
         end
-
         sync_available_module_stream_associations(indexed_module_streams)
       end
 

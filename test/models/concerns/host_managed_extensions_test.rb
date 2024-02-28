@@ -367,6 +367,10 @@ module Katello
       assert_equal 2, @foreman_host.host_available_module_streams.unknown.count
     end
 
+    def clear_cached_available_module_streams
+      @foreman_host.instance_variable_set(:@indexed_available_module_streams, nil)
+    end
+
     def test_import_modules_with_update
       modules_json = [make_module_json("enabled21111", "enabled")]
       prior_count = HostAvailableModuleStream.count
@@ -384,6 +388,7 @@ module Katello
       assert_empty @foreman_host.reload.host_available_module_streams
       assert_equal prior_count, HostAvailableModuleStream.count
 
+      clear_cached_available_module_streams
       @foreman_host.import_module_streams([make_module_json("xxxx", "enabled", 'blah', ["default"])])
       assert_equal "enabled", @foreman_host.reload.host_available_module_streams.first.status
       assert_equal ["default"], @foreman_host.reload.host_available_module_streams.first.installed_profiles
