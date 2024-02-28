@@ -6,11 +6,11 @@ object @resource
 attributes :id, :name, :description
 
 node :operatingsystem_family do |resource|
-  resource.operatingsystem.family
+  resource.operatingsystem&.family
 end
 
 node :operatingsystem_major do |resource|
-  resource.operatingsystem.major
+  resource.operatingsystem&.major
 end
 
 if @facet
