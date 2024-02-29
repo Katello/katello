@@ -121,6 +121,7 @@ export const PackagesTab = () => {
   const {
     id: hostId,
     name: hostname,
+    display_name: display_name,
   } = hostDetails;
 
   const { searchParam, status: statusParam } = useUrlParams();
@@ -617,7 +618,7 @@ export const PackagesTab = () => {
           closeModal={closeModal}
           hostId={hostId}
           key={hostId}
-          hostName={hostname}
+          hostName={display_name}
           triggerPackageInstall={triggerPackageInstall}
         />
       }
