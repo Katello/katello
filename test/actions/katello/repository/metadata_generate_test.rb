@@ -8,6 +8,7 @@ module Actions
 
     let(:action_class) { ::Actions::Katello::Repository::MetadataGenerate }
     let(:pulp_metadata_generate_class) { ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata }
+    let(:success_task) { ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good") }
     let(:yum_repo) { katello_repositories(:fedora_17_x86_64) }
     let(:yum_repo2) { katello_repositories(:fedora_17_x86_64_dev) }
     let(:action_options) do
@@ -20,6 +21,8 @@ module Actions
 
     it 'plans a yum metadata generate' do
       action = create_action(action_class)
+      action.stubs(:task).returns(success_task)
+      action.expects(:action_subject).with(yum_repo)
       plan_action(action, yum_repo)
 
       assert_action_planned_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
@@ -31,6 +34,7 @@ module Actions
       Location.current = taxonomies(:location1)
 
       action = create_action(action_class)
+      action.stubs(:task).returns(success_task)
       plan_action(action, yum_repo)
 
       assert_action_planned_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
@@ -41,6 +45,7 @@ module Actions
 
     it 'plans a yum refresh with source repo' do
       action = create_action(action_class)
+      action.stubs(:task).returns(success_task)
       plan_action(action, yum_repo, :source_repository => yum_repo2)
 
       yum_action_options = action_options.clone
@@ -52,6 +57,7 @@ module Actions
 
     it 'plans a yum refresh with matching content true' do
       action = create_action(action_class)
+      action.stubs(:task).returns(success_task)
       plan_action(action, yum_repo, :matching_content => true)
 
       yum_action_options = action_options.clone
@@ -62,6 +68,7 @@ module Actions
 
     it 'plans a yum refresh with matching content set to some deferred object' do
       action = create_action(action_class)
+      action.stubs(:task).returns(success_task)
       not_falsey = Object.new
       plan_action(action, yum_repo, :matching_content => not_falsey)
 
