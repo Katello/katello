@@ -1,42 +1,29 @@
 module Katello
   class Api::V2::SimpleContentAccessController < Api::V2::ApiController
-    before_action :find_organization
-
     resource_description do
       description "Red Hat subscriptions management platform."
       api_version 'v2'
     end
 
-    api :GET, "/organizations/:organization_id/simple_content_access/eligible",
-      N_("Check if the specified organization is eligible for Simple Content Access. %s") % sca_only_deprecation_text, deprecated: true
+    def render_sca_410_error
+      render_error 'custom_error', status: :gone,
+                                    locals: { message: N_('Simple Content Access is the only supported content access mode') }
+    end
+
     def eligible
-      ::Foreman::Deprecation.api_deprecation_warning(N_("This endpoint is deprecated and will be removed in Katello 4.12. All organizations are now eligible for Simple Content Access."))
-      eligible = @organization.simple_content_access_eligible?
-      render json: { simple_content_access_eligible: eligible }
+      render_sca_410_error
     end
 
-    api :GET, "/organizations/:organization_id/simple_content_access/status",
-      N_("Check if the specified organization has Simple Content Access enabled. %s") % sca_only_deprecation_text, deprecated: true
-    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     def status
-      status = @organization.simple_content_access?
-      render json: { simple_content_access: status }
+      render_sca_410_error
     end
 
-    api :PUT, "/organizations/:organization_id/simple_content_access/enable",
-      N_("Enable simple content access for a manifest"), deprecated: true
-    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     def enable
-      task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:organization_id])
-      respond_for_async :resource => task
+      render_sca_410_error
     end
 
-    api :PUT, "/organizations/:organization_id/simple_content_access/disable",
-      N_("Disable simple content access for a manifest. %s") % sca_only_deprecation_text, deprecated: true
-    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     def disable
-      task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:organization_id])
-      respond_for_async :resource => task
+      render_sca_410_error
     end
   end
 end
