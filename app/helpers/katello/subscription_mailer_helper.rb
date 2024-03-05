@@ -13,7 +13,7 @@ module Katello
     end
 
     def start_report_task(days_from_now)
-      @report_template = ReportTemplate.find_by(name: "Subscription - Entitlement Report")
+      @report_template = ReportTemplate.find_by(name: "Subscription - General Report")
       template_input_id = @report_template.template_inputs.find_by_name("Days from Now").id.to_s
       params = { format: 'csv', template_id: @report_template.id, input_values: { template_input_id => { value: days_from_now} } }
       composer = ReportComposer.new(params)

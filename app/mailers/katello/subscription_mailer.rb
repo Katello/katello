@@ -10,14 +10,11 @@ module Katello
 
       ::User.as(user.login) do
         @pools = Katello::Pool.readable.expiring_in_days(days_from_now)
-        @affected_hosts = ::Host::Managed.with_pools_expiring_in_days(days_from_now)
       end
 
-      if @affected_hosts.any?
-        start_report_task(days_from_now)
-        @report_url = report_url
-        @report_link = report_link
-      end
+      start_report_task(days_from_now)
+      @report_url = report_url
+      @report_link = report_link
 
       set_locale_for(user) do
         mail(:to => user.mail, :subject => _("You have subscriptions expiring within %s days") % days_from_now)
