@@ -1,0 +1,16 @@
+<%#
+kind: job_template
+name: Upload profile - Katello Script Default
+job_category: Katello
+model: JobTemplate
+provider_type: script
+description_format: Upload package profile for a host
+feature: katello_upload_profile
+%>
+#!/bin/sh
+<% if @host.operatingsystem.family == 'Redhat' -%>
+dnf uploadprofile --force-upload
+<% else -%>
+package-profile-upload --force-upload
+<% end -%>
+subscription-manager repos
