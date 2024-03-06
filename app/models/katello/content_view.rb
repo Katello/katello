@@ -770,45 +770,6 @@ module Katello
       content_views
     end
 
-    def audited_cv_repositories_since_last_publish
-      audited_repositories = self.audits.filter do |a|
-        !a.audited_changes["repository_ids"].nil?
-      end
-      if latest_version_object
-        audited_repositories.filter! { |a| a.created_at > latest_version_object.created_at }
-      end
-      audited_repositories
-    end
-
-    def audited_cv_repository_changed
-      audited_repositories_changes = Audit.where(auditable_id: repositories, auditable_type: "Katello::Repository").filter do |a|
-        a.audited_changes["publication_href"].present? || a.audited_changes["version_href"].present?
-      end
-      if latest_version_object
-        audited_repositories_changes = audited_repositories_changes.filter { |a| a.created_at > latest_version_object.created_at }
-      end
-      audited_repositories_changes
-    end
-
-    def audited_cv_filters_changed
-      audited_filters = Audit.where(auditable_type: "Katello::ContentViewFilter",
-                                    associated_id: id,
-                                    associated_type: "Katello::ContentView")
-      if latest_version_object
-        audited_filters = audited_filters.filter { |a| a.created_at > latest_version_object.created_at }
-      end
-      audited_filters
-    end
-
-    def audited_cv_filter_rules_changed
-      audited_filter_rules = Audit.where(associated_id: id,
-                                    associated_type: "Katello::ContentView").where("auditable_type LIKE '%FilterRule%'")
-      if latest_version_object
-        audited_filter_rules = audited_filter_rules.filter { |a| a.created_at > latest_version_object.created_at }
-      end
-      audited_filter_rules
-    end
-
     def composite_cv_components_changed?
       return true unless latest_version_object
       published_component_version_ids = latest_version_object.components.pluck(:id) || []
@@ -874,8 +835,29 @@ module Katello
     end
 
     def audited_changes_present?
-      audited_cv_repositories_since_last_publish.present? || audited_cv_repository_changed.present? ||
-        audited_cv_filters_changed.present? || audited_cv_filter_rules_changed.present?
+      latest_version_created_at = latest_version_object.created_at
+      cv_repository_ids = repositories.pluck(:id)
+
+      audited_changes_like = ->(param) {
+        Arel.sql("#{Audit.table_name}.audited_changes ilike '%#{param}%'")
+      }
+
+      table = Audit.arel_table
+      repository_condition = table[:auditable_id].eq(id).and(audited_changes_like.call("repository_ids"))
+
+      cv_repository_condition = table[:auditable_id].in(cv_repository_ids)
+                                                    .and(table[:auditable_type].eq('Katello::Repository'))
+                                                    .and(Arel.sql("(#{audited_changes_like.call("publication_href")} OR #{audited_changes_like.call("version_href")})"))
+
+      content_view_filter_condition = table[:auditable_type].eq('Katello::ContentViewFilter').and(table[:associated_id].eq(id))
+
+      filter_rule_condition = table[:associated_id].eq(id).and(table[:auditable_type].matches('%FilterRule%'))
+
+      base_query = table[:created_at].gt(latest_version_created_at)
+
+      final_query = base_query.and(repository_condition.or(cv_repository_condition).or(content_view_filter_condition).or(filter_rule_condition))
+
+      Audit.where(final_query).exists?
     end
 
     def dependency_solving_changed?
