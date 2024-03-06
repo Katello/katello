@@ -3,6 +3,7 @@ object @resource
 extends "katello/api/v2/content_views/base"
 
 attributes :content_host_count
+attributes :needs_publish? => :needs_publish
 
 node :errors do
   unless @resource.valid?
