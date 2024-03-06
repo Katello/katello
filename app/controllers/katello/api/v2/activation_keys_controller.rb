@@ -40,7 +40,7 @@ module Katello
     param :unlimited_hosts, :bool, :desc => N_("can the activation key have unlimited hosts")
     param :release_version, String, :desc => N_("content release version")
     param :service_level, String, :desc => N_("service level")
-    param :auto_attach, :bool, :desc => N_("auto attach subscriptions upon registration")
+    param :auto_attach, :bool, :desc => N_("auto attach subscriptions upon registration"), deprecated: true
     param :purpose_usage, String, :desc => N_("Sets the system purpose usage")
     param :purpose_role, String, :desc => N_("Sets the system purpose usage")
     param :purpose_addons, Array, :desc => N_("Sets the system add-ons")
@@ -163,7 +163,11 @@ module Katello
       respond_for_show(:resource => @activation_key)
     end
 
-    api :PUT, "/activation_keys/:id/add_subscriptions", N_("Attach a subscription")
+    def deprecate_entitlement_mode_endpoint
+      ::Foreman::Deprecation.api_deprecation_warning(N_("This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode."))
+    end
+
+    api :PUT, "/activation_keys/:id/add_subscriptions", N_("Attach a subscription"), deprecated: true
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :subscription_id, :number, :desc => N_("Subscription identifier"), :required => false
     param :quantity, :number, :desc => N_("Quantity of this subscription to add"), :required => false
@@ -172,6 +176,7 @@ module Katello
       param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
     end
     def add_subscriptions
+      deprecate_entitlement_mode_endpoint
       if params[:subscriptions]
         params[:subscriptions].each { |subscription| @activation_key.subscribe(subscription[:id], subscription[:quantity]) }
       elsif params[:subscription_id]
@@ -181,13 +186,14 @@ module Katello
       respond_for_index(:collection => subscription_index, :template => 'subscriptions')
     end
 
-    api :PUT, "/activation_keys/:id/remove_subscriptions", N_("Unattach a subscription")
+    api :PUT, "/activation_keys/:id/remove_subscriptions", N_("Unattach a subscription"), deprecated: true
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :subscription_id, String, :desc => N_("Subscription ID"), :required => false
     param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
       param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
     end
     def remove_subscriptions
+      deprecate_entitlement_mode_endpoint
       if params[:subscriptions]
         params[:subscriptions].each { |subscription| @activation_key.unsubscribe(subscription[:id]) }
       elsif params[:subscription_id]
