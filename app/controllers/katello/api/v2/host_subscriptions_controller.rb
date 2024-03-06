@@ -33,7 +33,7 @@ module Katello
       api_base_url "/api"
     end
 
-    api :GET, "/hosts/:host_id/subscriptions", N_("List a host's subscriptions")
+    api :GET, "/hosts/:host_id/subscriptions", N_("List a host's subscriptions"), deprecated: true
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     def index
       @collection = index_response
@@ -47,7 +47,7 @@ module Katello
       full_result_response(presenter.subscriptions)
     end
 
-    api :PUT, "/hosts/:host_id/subscriptions/auto_attach", N_("Trigger an auto-attach of subscriptions")
+    api :PUT, "/hosts/:host_id/subscriptions/auto_attach", N_("Trigger an auto-attach of subscriptions"), deprecated: true
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     def auto_attach
       if @host.organization.simple_content_access?
@@ -111,7 +111,7 @@ module Katello
       rhsm_params
     end
 
-    api :PUT, "/hosts/:host_id/subscriptions/remove_subscriptions"
+    api :PUT, "/hosts/:host_id/subscriptions/remove_subscriptions", deprecated: true
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     param :subscriptions, Array, :desc => N_("Array of subscriptions to remove") do
       param :id, String, :desc => N_("Subscription Pool id"), :required => true
@@ -129,7 +129,7 @@ module Katello
       respond_for_index(:collection => index_response(reload_host: true), :template => "index")
     end
 
-    api :PUT, "/hosts/:host_id/subscriptions/add_subscriptions", N_("Add a subscription to a host")
+    api :PUT, "/hosts/:host_id/subscriptions/add_subscriptions", N_("Add a subscription to a host"), deprecated: true
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => true do
       param :id, String, :desc => N_("Subscription Pool id"), :required => true
