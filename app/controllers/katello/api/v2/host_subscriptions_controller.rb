@@ -33,9 +33,14 @@ module Katello
       api_base_url "/api"
     end
 
+    def deprecate_entitlement_mode_endpoint
+      ::Foreman::Deprecation.api_deprecation_warning(N_("This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode."))
+    end
+
     api :GET, "/hosts/:host_id/subscriptions", N_("List a host's subscriptions"), deprecated: true
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     def index
+      deprecate_entitlement_mode_endpoint
       @collection = index_response
       respond_for_index :collection => @collection
     end
@@ -50,6 +55,7 @@ module Katello
     api :PUT, "/hosts/:host_id/subscriptions/auto_attach", N_("Trigger an auto-attach of subscriptions"), deprecated: true
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     def auto_attach
+      deprecate_entitlement_mode_endpoint
       if @host.organization.simple_content_access?
         fail ::Katello::HttpErrors::BadRequest, _("This host's organization is in Simple Content Access mode. Auto-attach is disabled")
       end
@@ -111,13 +117,14 @@ module Katello
       rhsm_params
     end
 
-    api :PUT, "/hosts/:host_id/subscriptions/remove_subscriptions", deprecated: true
+    api :PUT, "/hosts/:host_id/subscriptions/remove_subscriptions", N_("Remove subscriptions from a host"), deprecated: true
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     param :subscriptions, Array, :desc => N_("Array of subscriptions to remove") do
       param :id, String, :desc => N_("Subscription Pool id"), :required => true
       param :quantity, Integer, :desc => N_("If specified, remove the first instance of a subscription with matching id and quantity"), :required => false
     end
     def remove_subscriptions
+      deprecate_entitlement_mode_endpoint
       #combine the quantities for duplicate pools into PoolWithQuantities objects
       pool_id_quantities = params.require(:subscriptions).inject({}) do |new_hash, subscription|
         new_hash[subscription['id']] ||= PoolWithQuantities.new(Pool.with_identifier(subscription['id']))
@@ -136,6 +143,7 @@ module Katello
       param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
     end
     def add_subscriptions
+      deprecate_entitlement_mode_endpoint
       if @host.organization.simple_content_access?
         fail ::Katello::HttpErrors::BadRequest, _("This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled.")
       end

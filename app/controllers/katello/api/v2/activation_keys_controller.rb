@@ -163,6 +163,10 @@ module Katello
       respond_for_show(:resource => @activation_key)
     end
 
+    def deprecate_entitlement_mode_endpoint
+      ::Foreman::Deprecation.api_deprecation_warning(N_("This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode."))
+    end
+
     api :PUT, "/activation_keys/:id/add_subscriptions", N_("Attach a subscription"), deprecated: true
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :subscription_id, :number, :desc => N_("Subscription identifier"), :required => false
@@ -172,6 +176,7 @@ module Katello
       param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
     end
     def add_subscriptions
+      deprecate_entitlement_mode_endpoint
       if params[:subscriptions]
         params[:subscriptions].each { |subscription| @activation_key.subscribe(subscription[:id], subscription[:quantity]) }
       elsif params[:subscription_id]
@@ -188,6 +193,7 @@ module Katello
       param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
     end
     def remove_subscriptions
+      deprecate_entitlement_mode_endpoint
       if params[:subscriptions]
         params[:subscriptions].each { |subscription| @activation_key.unsubscribe(subscription[:id]) }
       elsif params[:subscription_id]
