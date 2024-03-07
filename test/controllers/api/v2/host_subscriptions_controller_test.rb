@@ -241,6 +241,38 @@ module Katello
       refute_equal result, "wrong"
     end
 
+    def test_find_content_overrides_with_empty_string_search_limited_to_environment
+      # Create Host with "fedora" and "rhel" as content
+      content_view = katello_content_views(:library_dev_view)
+      library = katello_environments(:library)
+      activation_key = katello_activation_keys(:library_dev_staging_view_key)
+      host_collection = katello_host_collections(:simple_host_collection)
+      activation_key.host_collections << host_collection
+
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => content_view,
+                                :lifecycle_environment => library, :organization => content_view.organization)
+
+      # Get content_id and label of first product of host
+      products = ::Katello::Content.joins(:product_contents)
+                                         .where("#{Katello::ProductContent.table_name}.product_id": host.organization.products.subscribable.enabled)
+      in_env_id = products.pluck(:content_id)[0]
+      label = products.pluck(:label)[0]
+
+      # Create fake product with content_id and stub ProductContentFinder
+      content = FactoryBot.build(:katello_content, label: label, name: label)
+      pc = [FactoryBot.build(:katello_product_content, content: content, content_id: in_env_id)]
+      ProductContentFinder.any_instance.stubs(:product_content).returns(pc)
+
+      controller = ::Katello::Api::V2::HostSubscriptionsController.new
+      controller.params = { :host_id => host.id, :content_overrides_search => { :search => '', :limit_to_env => true} }
+      controller.instance_variable_set(:@host, host)
+      controller.send(:find_content_overrides)
+
+      result = controller.instance_variable_get(:@content_overrides)
+      assert_equal(1, result.length)
+      assert_equal(label, result[0][:content_label])
+    end
+
     def test_content_override_bulk
       content_overrides = [{:content_label => 'some-content', :value => 1}]
       expected_content_labels = content_overrides.map { |co| co[:content_label] }
