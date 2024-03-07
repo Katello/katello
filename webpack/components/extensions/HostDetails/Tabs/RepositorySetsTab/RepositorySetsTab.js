@@ -369,6 +369,7 @@ const RepositorySetsTab = () => {
       hostId,
       search,
       enabled,
+      limit_to_env: toggleGroupState === LIMIT_TO_ENVIRONMENT,
       remove,
       updateResults: resp => updateResults(resp),
       singular: singular || selectedCount === 1,
