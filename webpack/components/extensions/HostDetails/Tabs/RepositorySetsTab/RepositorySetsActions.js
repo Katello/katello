@@ -24,6 +24,7 @@ export const setContentOverrides = ({
   hostId,
   search,
   enabled,
+  limit_to_env: limitToEnv,
   remove = false,
   updateResults,
   singular,
@@ -35,6 +36,7 @@ export const setContentOverrides = ({
     content_overrides_search: {
       search,
       enabled,
+      limit_to_env: limitToEnv,
       remove,
     },
   },
