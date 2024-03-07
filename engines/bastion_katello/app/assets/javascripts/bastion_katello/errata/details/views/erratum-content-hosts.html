@@ -63,8 +63,8 @@
             ng-controller="ContentHostStatusController">
           <td bst-table-cell>
             <span ng-switch="newHostDetailsUI">
-              <a ng-switch-when="true" ng-href="/new/hosts/{{contentHost.name}}/content">{{ contentHost.name }}</a>
-              <a ng-switch-when="false" ui-sref="content-host.info({hostId: contentHost.id})">{{ contentHost.name }}</a>
+              <a ng-switch-when="true" ng-href="/new/hosts/{{contentHost.name}}/content">{{ contentHost.display_name }}</a>
+              <a ng-switch-when="false" ui-sref="content-host.info({hostId: contentHost.id})">{{ contentHost.display_name }}</a>
             </span>
           </td>
           <td bst-table-cell>{{ contentHost.operatingsystem_name }}</td>

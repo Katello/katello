@@ -170,6 +170,7 @@ module Katello
     param :content_overrides_search, Hash, :desc => N_("Content override search parameters") do
       param_group :search, Api::V2::ApiController
       param :enabled, :bool, :desc => N_("Set true to override to enabled; Set false to override to disabled.'"), :required => false
+      param :limit_to_env, :bool, :desc => N_("Limit actions to content in the host's environment."), :required => false
       param :remove, :bool, :desc => N_("Set true to remove an override and reset it to 'default'"), :required => false
     end
     def content_override
@@ -232,10 +233,22 @@ module Katello
 
     def find_content_overrides
       if !params.dig(:content_overrides_search, :search).nil?
+
         content_labels = ::Katello::Content.joins(:product_contents)
                             .where("#{Katello::ProductContent.table_name}.product_id": @host.organization.products.subscribable.enabled)
                             .search_for(params[:content_overrides_search][:search])
                             .pluck(:label)
+
+        if Foreman::Cast.to_bool(params.dig(:content_overrides_search, :limit_to_env))
+          env_content = ProductContentFinder.new(
+              :match_subscription => false,
+              :match_environment => true,
+              :consumable => @host.subscription_facet
+          ).product_content
+          env_content_labels = ::Katello::Content.find(env_content.pluck(:content_id)).pluck(:label)
+          content_labels &= env_content_labels
+        end
+
         @content_overrides = content_labels.map do |label|
           { content_label: label,
             value: Foreman::Cast.to_bool(params[:content_overrides_search][:enabled]),
