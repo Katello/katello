@@ -189,12 +189,14 @@
                  type="{{ repository.upstream_password.length < 1 ? 'text': 'password' }}"
                  autocomplete="{{ (repository.upstream_username==null || repository.upstream_username=='') ? 'new-password' : '' }}"
                  ng-model="repository.upstream_password"/>
-          <div translate>Upstream Authentication Token</div>
-          <input id="upstream_authentication_token"
-                  name="upstream_authentication_token"
-                  type="{{ repository.upstream_authentication_token.length < 1 ? 'text': 'password' }}"
-                  autocomplete="off"
-                  ng-model="repository.upstream_authentication_token"/>
+          <span ng-show="repository.content_type === 'yum'">
+            <div translate>Upstream Authentication Token</div>
+            <input id="upstream_authentication_token"
+                   name="upstream_authentication_token"
+                   type="{{ repository.upstream_authentication_token.length < 1 ? 'text': 'password' }}"
+                   autocomplete="off"
+                   ng-model="repository.upstream_authentication_token"/>
+          </span>
         </dd>
       </span>
 

@@ -250,16 +250,18 @@
         </p>
       </div>
 
-      <div bst-form-group label="{{ 'Upstream Authentication Token' | translate }}" >
-        <input id="upstream_authentication_token"
-              name="upstream_authentication_token"
-              type="text"
-              autocomplete="off"
-              ng-model="repository.upstream_authentication_token"/>
-        <p class="help-block" translate>
-          Token of the upstream repository user for authentication. Leave empty if repository does not require authentication.
-        </p>
-      </div>
+      <span ng-show="repository.content_type === 'yum'">
+        <div bst-form-group label="{{ 'Upstream Authentication Token' | translate }}" >
+          <input id="upstream_authentication_token"
+                name="upstream_authentication_token"
+                type="text"
+                autocomplete="off"
+                ng-model="repository.upstream_authentication_token"/>
+          <p class="help-block" translate>
+            Token of the upstream repository user for authentication. Leave empty if repository does not require authentication.
+          </p>
+        </div>
+      </span>
 
       <div ng-repeat="option in genericRemoteOptions" ng-if="repository.generic_remote_options !== []">
         <div ng-if='option.input_type=="text"' bst-form-group label="{{ option.title | translate }}">
