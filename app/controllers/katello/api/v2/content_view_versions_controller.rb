@@ -3,8 +3,8 @@ module Katello
     include ::Api::V2::BulkHostsExtension
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_authorized_katello_resource, :only => [:show, :update, :promote, :destroy, :republish_repositories]
-    before_action :find_content_view_from_version, :only => [:show, :update, :promote, :destroy, :republish_repositories]
+    before_action :find_authorized_katello_resource, :only => [:show, :update, :promote, :destroy, :republish_repositories, :verify_checksum]
+    before_action :find_content_view_from_version, :only => [:show, :update, :promote, :destroy, :republish_repositories, :verify_checksum]
     before_action :find_optional_readable_content_view, :only => [:index]
 
     before_action :find_environment, :only => [:index]
@@ -138,6 +138,13 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. New ver
       resolve_dependencies = params.fetch(:resolve_dependencies, true)
       task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @content_view_version_environments, @composite_version_environments,
                         params[:add_content], resolve_dependencies, hosts, params[:description])
+      respond_for_async :resource => task
+    end
+
+    api :POST, "/content_view_versions/:id/verify_checksum", N_("Verify checksum of repository contents in the content view version")
+    param :id, :number, :required => true, :desc => N_("Content view version identifier")
+    def verify_checksum
+      task = async_task(::Actions::Katello::ContentViewVersion::VerifyChecksum, @content_view_version)
       respond_for_async :resource => task
     end
 

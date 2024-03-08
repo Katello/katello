@@ -149,6 +149,7 @@ Katello::Engine.routes.draw do
             post :promote
             post :export
             put :republish_repositories
+            post :verify_checksum
           end
           collection do
             get :auto_complete_search

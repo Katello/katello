@@ -49,7 +49,7 @@ module Katello
 
         # promote_or_remove_content_views_to_environments has a special relationship to promote_or_remove_content_views
         if path_to_authenticate["controller"] == "katello/api/v2/content_view_versions" &&
-            path_to_authenticate["action"].in?(["promote", "remove_from_environment", "remove", "republish_repositories"])
+            path_to_authenticate["action"].in?(["promote", "remove_from_environment", "remove", "republish_repositories", "verify_checksum"])
           missing_perms << ::Permission.find_by(name: "promote_or_remove_content_views_to_environments")
         end
         missing_perms
