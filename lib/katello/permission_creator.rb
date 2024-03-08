@@ -134,7 +134,7 @@ module Katello
       @plugin.permission :publish_content_views,
                          {
                            'katello/api/v2/content_views' => [:publish],
-                           'katello/api/v2/content_view_versions' => [:incremental_update, :republish_repositories],
+                           'katello/api/v2/content_view_versions' => [:incremental_update, :republish_repositories, :verify_checksum],
                            'katello/api/v2/content_imports' => [:version, :index]
                          },
                          :resource_type => 'Katello::ContentView',
@@ -142,7 +142,7 @@ module Katello
       @plugin.permission :promote_or_remove_content_views,
                          {
                            'katello/api/v2/content_view_versions' => [:promote],
-                           'katello/api/v2/content_views' => [:remove_from_environment, :remove, :republish_repositories]
+                           'katello/api/v2/content_views' => [:remove_from_environment, :remove, :republish_repositories, :verify_checksum]
                          },
                          :resource_type => 'Katello::ContentView',
                          :finder_scope => :promotable_or_removable
