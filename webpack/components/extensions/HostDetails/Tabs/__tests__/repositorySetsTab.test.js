@@ -61,10 +61,6 @@ const limitToEnvQuery = {
   sort_by: 'name',
   sort_order: 'asc',
 };
-const showAllQuery = {
-  ...limitToEnvQuery,
-  content_access_mode_env: false,
-};
 
 let firstRepoSet;
 let secondRepoSet;
@@ -191,7 +187,7 @@ test('Toggle Group does not show if it\'s the library environment and default co
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostRepositorySets)
-    .query(showAllQuery)
+    .query(limitToEnvQuery)
     .reply(200, mockRepoSetData);
 
   const {
@@ -370,6 +366,39 @@ test('Can override in bulk', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(contentOverrideScope, done); // Pass jest callback to confirm test is done});
+});
+test('Can override in bulk when limited to environment', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostRepositorySets)
+    .query(limitToEnvQuery)
+    .reply(200, mockRepoSetData);
+  const contentOverrideScope = nockInstance
+    .put(contentOverride, {
+      content_overrides_search:
+        {
+          search: '',
+          limit_to_env: true,
+          remove: true,
+        },
+    })
+    .reply(200, mockContentOverride);
+
+  const {
+    getByText, getByLabelText, queryByText,
+  } = renderWithRedux(<RepositorySetsTab />, renderOptions());
+
+  await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
+  getByLabelText('Select all').click();
+  const actionMenu = getByLabelText('bulk_actions');
+  actionMenu.click();
+  const resetToDefault = queryByText('Reset to default');
+  expect(resetToDefault).toBeInTheDocument();
+  resetToDefault.click();
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(contentOverrideScope, done);
 });
 
 test('Can filter by status', async (done) => {
