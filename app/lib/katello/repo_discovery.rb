@@ -1,4 +1,5 @@
 require 'uri'
+require 'spidr'
 
 module Katello
   class RepoDiscovery
@@ -8,8 +9,8 @@ module Katello
 
     # rubocop:disable Metrics/ParameterLists
     def initialize(url, content_type = 'yum', upstream_username = nil,
-      upstream_password = nil, search = '*', crawled = [],
-      found = [], to_follow = [])
+                   upstream_password = nil, search = '*', crawled = [],
+                   found = [], to_follow = [])
       @uri = uri(url)
       @content_type = content_type
       @upstream_username = upstream_username.empty? ? nil : upstream_username
@@ -35,7 +36,8 @@ module Katello
         if @uri.scheme == 'file'
           file_crawl(uri(resume_point))
         elsif %w(http https).include?(@uri.scheme)
-          http_crawl(uri(resume_point))
+          #http_crawl(resume_point)
+          spidr_crawl(resume_point)
         else
           fail _("Unsupported URL protocol %s.") % @uri.scheme
         end
@@ -150,7 +152,7 @@ module Katello
         details[:proxy_port] = proxy_port
         details[:proxy_user] = proxy.username
         details[:proxy_password] = proxy.password
-      end
+        end
 
       details
     end
@@ -172,13 +174,69 @@ module Katello
               @found << page_url.to_s
             else
               @to_follow << link.to_s if should_follow?(link.path)
-            end
-          end
+      end
+      end
           page.discard_doc! #saves memory, doc not needed
           []
         end
       end
     end
+
+    def spidr_proxy_details
+      details = {}
+
+      if proxy
+        details[:host] = proxy_host
+        details[:port] = proxy_port
+        details[:user] = proxy.username
+        details[:password] = proxy.password
+      end
+
+      details
+    end
+
+    def spidr_crawl(url)
+      user = @upstream_username if @upstream_username
+      password = @upstream_password if @upstream_password
+      #Spidr crawl the url over every url and add urls with repodata to found
+      Spidr.site(url, proxy: spidr_proxy_details) do |spider|
+        spider.authorized.add(url, user, password)
+        spider.every_url do |url|
+          if @found.include?(url.to_s.split('repodata/').first)
+            puts ">>> Skipping #{url.to_s}"
+            spider.skip_link!
+          end
+          if url.to_s.include? 'repodata/'
+            @found << url.to_s.split('repodata/').first
+            puts ">>> Found #{url.to_s.split('repodata/').first}"
+          end
+        end
+      end
+    end
+
+    def spidr_crawl_url(url)
+      Spidr.site(url) do |spider|
+        spider.every_page do |page|
+          next if page.url.to_s.include?('bigzoo') || page.url.to_s.include?('ostree') || page.url.to_s.include?('?')
+          page.each_url do |crawl_link|
+            break if @crawled.include?(crawl_link.to_s) or crawl_link.to_s.include?('bigzoo') or crawl_link.to_s.include?('ostree')
+              @crawled << crawl_link.to_s
+              puts "Processing page > #{page.url.to_s}"
+              puts "Processing link > #{crawl_link.to_s}"
+              if(crawl_link.to_s.include? 'repodata/')
+                @found << (crawl_link).to_s
+                  puts ">>> Found #{crawl_link.to_s}"
+                  break
+              elsif !crawl_link.to_s.include?("http") && should_follow?((crawl_link).to_s)
+                puts ">>> Following #{crawl_link.to_s}"
+                @to_follow << (crawl_link).to_s
+              end
+          end
+          []
+        end
+        end
+      end
+
 
     def file_crawl(resume_point)
       if resume_point.path.ends_with?('/repodata/')
@@ -200,7 +258,7 @@ module Katello
       # * link doesn't end with '/Packages/', as this increases
       #       processing time and memory usage considerably
       return path.starts_with?(@uri.path) && !@crawled.include?(path) &&
-           path.ends_with?('/') && !path.ends_with?('/Packages/')
+        path.ends_with?('/') && !path.ends_with?('/Packages/')
     end
   end
 end
