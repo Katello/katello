@@ -17,15 +17,6 @@ module Katello
       assert setting.valid?
     end
 
-    def test_cdn_ssl_setting
-      # TODO: assert an error raised by the SettingRegistry
-      # setting = Foreman.settings.set_user_value('cdn_ssl_version', nil)
-      # assert setting.valid?
-
-      setting = Foreman.settings.set_user_value('cdn_ssl_version', 'SSLv23')
-      assert setting.valid?
-    end
-
     def test_recalculate_errata_status
       ForemanTasks.expects(:async_task).with(::Actions::Katello::Host::RecalculateErrataStatus)
       Setting['errata_status_installable'] = !Setting['errata_status_installable']

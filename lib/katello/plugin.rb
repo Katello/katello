@@ -373,13 +373,6 @@ Foreman::Plugin.register :katello do
         collection: proc { http_proxy_select },
         include_blank: N_("no global default")
 
-      setting 'cdn_ssl_version',
-        type: :string,
-        default: nil,
-        full_name: N_('CDN SSL version'),
-        description: N_("SSL version used to communicate with the CDN"),
-        collection: proc { hashify_parameters(Katello::Resources::CDN::SUPPORTED_SSL_VERSIONS) }
-
       setting 'katello_default_provision',
         type: :string,
         default: 'Kickstart default',
