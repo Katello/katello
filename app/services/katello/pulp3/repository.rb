@@ -91,16 +91,21 @@ module Katello
       end
 
       def remote_partial_update
-        if remote_options[:url]&.start_with?('uln')
-          api.remotes_uln_api.partial_update(repo.remote_href, remote_options)
-        else
-          api.remotes_api.partial_update(repo.remote_href, remote_options)
+        url_type = remote_options[:url]&.start_with?('uln') ? 'uln' : 'default'
+        remote_type = repo.remote_href.start_with?('/pulp/api/v3/remotes/rpm/uln/') ? 'uln' : 'default'
+        href = repo.remote_href
+
+        if url_type == remote_type
+          api.get_remotes_api(href: href).partial_update(href, remote_options)
+        else # We need to recreate a remote of the correct type!
+          create_remote
+          delete_remote(href: href)
         end
       end
 
       def delete_remote(options = {})
         options[:href] ||= repo.remote_href
-        ignore_404_exception { remote_options[:url]&.start_with?('uln') ? api.remotes_uln_api.delete(options[:href]) : api.remotes_api.delete(options[:href]) } if options[:href]
+        ignore_404_exception { api.get_remotes_api(href: options[:href]).delete(options[:href]) } if options[:href]
       end
 
       def self.instance_for_type(repo, smart_proxy)
@@ -139,7 +144,7 @@ module Katello
       end
 
       def get_remote(href = repo.remote_href)
-        repo.url&.start_with?('uln') ? api.remotes_uln_api.read(href) : api.remotes_api.read(href)
+        api.get_remotes_api(href: href).read(href)
       end
 
       def get_distribution(href = distribution_reference.href)
