@@ -74,7 +74,6 @@ See the [annotation docs](./test/scenarios/annotations/README.md) for more infor
  * Archived mailing lists:
     * [Foreman User Mailing List](https://groups.google.com/forum/?fromgroups#!forum/foreman-users)
     * [Foreman Developer mailing list](https://groups.google.com/forum/?fromgroups#!forum/foreman-dev)
- * [IRC Freenode](https://theforeman.org/support.html#IRClivechat): #theforeman-dev, #theforeman
 
 ## Documentation
 
