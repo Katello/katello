@@ -66,7 +66,7 @@ const CVPublishForm = ({
                 </Alert>)
             }
             {!duplicateReposAlertDismissed && composite &&
-                (duplicateRepos !== null || duplicateRepos.length > 0) &&
+                (duplicateRepos !== null && duplicateRepos.length > 0) &&
                 (
                 <Alert
                   ouiaId="duplicate-repos-alert"
