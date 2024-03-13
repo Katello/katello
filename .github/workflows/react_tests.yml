@@ -39,6 +39,13 @@ jobs:
       run:  npm i --package-lock-only --no-audit
     - name: Install Katello dependencies
       run:  npm ci --no-audit
+    - name: Archive package-lock.json
+      uses: actions/upload-artifact@v4
+      with:
+        name: package-lock.json
+        path: |
+          foreman/package-lock.json
+          katello/package-lock.json
     - name: Run Katello linting
       run: npm run lint
     - name: Run Katello tests
