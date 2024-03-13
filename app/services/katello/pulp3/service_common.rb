@@ -9,11 +9,7 @@ module Katello
           remote_file_data = api.remote_class.new(remote_options)
         end
         reformat_api_exception do
-          if remote_options[:url]&.start_with?('uln')
-            response = api.remotes_uln_api.create(remote_file_data)
-          else
-            response = api.remotes_api.create(remote_file_data)
-          end
+          response = api.get_remotes_api(url: remote_options[:url]).create(remote_file_data)
         end
         response
       end
@@ -37,11 +33,7 @@ module Katello
         end
 
         reformat_api_exception do
-          if remote_options[:url]&.start_with?('uln')
-            response = api.remotes_uln_api.create(remote_file_data)
-          else
-            response = api.remotes_api.create(remote_file_data)
-          end
+          response = api.get_remotes_api(url: remote_options[:url]).create(remote_file_data)
           #delete is async, but if its not properly deleted, orphan cleanup will take care of it later
           delete_remote(href: response.pulp_href)
         end

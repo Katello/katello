@@ -24,11 +24,9 @@ module Katello
       def refresh_entities
         href = remote_href
         if href
-          if remote_options[:url]&.start_with?('uln')
-            [api.remotes_uln_api.partial_update(href, remote_options)]
-          else
-            [api.remotes_api.partial_update(href, remote_options)]
-          end
+          # Do not consider remotes_uln_api, since the Katello server is not a ULN server. Even if the sync
+          # to Katello used ULN, the sync from Katello server to smart proxy will use a normal RPM remote!
+          [api.remotes_api.partial_update(href, remote_options)]
         else
           create_remote
           []
@@ -111,13 +109,10 @@ module Katello
       end
 
       def create_remote
-        if remote_options[:url]&.start_with?('uln')
-          remote_file_data = @repo_service.api.class.remote_uln_class.new(remote_options)
-          api.remotes_uln_api.create(remote_file_data)
-        else
-          remote_file_data = @repo_service.api.remote_class.new(remote_options)
-          api.remotes_api.create(remote_file_data)
-        end
+        # Do not consider remotes_uln_api, since the Katello server is not a ULN server. Even if the sync
+        # to Katello used ULN, the sync from Katello server to smart proxy will use a normal RPM remote!
+        remote_file_data = @repo_service.api.remote_class.new(remote_options)
+        api.remotes_api.create(remote_file_data)
       end
 
       def compute_remote_options
