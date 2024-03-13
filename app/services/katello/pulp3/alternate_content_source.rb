@@ -88,18 +88,16 @@ module Katello
       end
 
       def get_remote(href = smart_proxy_acs.remote_href)
-        acs.base_url&.start_with?('uln') ? api.remotes_uln_api.read(href) : api.remotes_api.read(href)
+        api.get_remotes_api(href: href).read(href)
       end
 
-      def update_remote
-        api.remotes_api.partial_update(smart_proxy_acs.remote_href, remote_options)
+      def update_remote(href = smart_proxy_acs.remote_href)
+        api.get_remotes_api(href: href).partial_update(href, remote_options)
       end
 
-      # The old repo URL is needed to determine which remote API to use.
       def delete_remote(options = {})
         options[:href] ||= smart_proxy_acs.remote_href
-        options[:old_url] ||= remote_options[:url]
-        ignore_404_exception { options[:old_url]&.start_with?('uln') ? api.remotes_uln_api.delete(options[:href]) : api.remotes_api.delete(options[:href]) } if options[:href]
+        ignore_404_exception { api.get_remotes_api(href: options[:href]).delete(options[:href]) } if options[:href]
       end
 
       def create

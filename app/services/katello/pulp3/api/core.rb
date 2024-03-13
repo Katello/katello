@@ -47,6 +47,11 @@ module Katello
           fail NotImplementedError
         end
 
+        # Method is called with either :url or :href parameters for the sake of yum content.
+        def get_remotes_api(*)
+          remotes_api
+        end
+
         def publications_api
           repository_type.publications_api_class.new(api_client) #Optional
         end

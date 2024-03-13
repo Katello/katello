@@ -20,7 +20,7 @@ module Katello
           @file_repo_service = @file_repo.backend_service(@mock_smart_proxy)
           @file_repo.root.update(url: 'my-files.org')
           @file_repo_service.stubs(:api).returns(@mock_api_wrapper)
-          @mock_api_wrapper.stubs(:remotes_api).returns(@mock_pulp3_api)
+          @mock_api_wrapper.stubs(:get_remotes_api).returns(@mock_pulp3_api)
 
           @file_repo.remote_href = '193874298udsfsdf'
           refute_empty @file_repo.remote_href
