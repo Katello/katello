@@ -240,6 +240,11 @@ module Katello
         distribution_data = api.distribution_class.new(distribution_options(path))
         repo_service.distributions_api.create(distribution_data)
       end
+
+      def repair
+        data = api.repair_class.new
+        api.repository_versions_api.repair(version_href, data)
+      end
     end
   end
 end
