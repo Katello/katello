@@ -8,16 +8,6 @@ module Katello
       def total_host_count
         host_query.size
       end
-
-      def removed_widgets
-        widgets = super
-
-        if Organization.current&.simple_content_access?
-          widgets.reject! { |widget| ::Widget.singleton_class::SUBSCRIPTION_TEMPLATES.include? widget[:template] }
-        end
-
-        widgets
-      end
     end
   end
 end
