@@ -100,11 +100,26 @@ module Katello
           end
         end
 
-        def manifest_expired?
+        def manifest_expiration_date
+          unless manifest_imported?
+            Rails.logger.error "Manifest not imported for organization #{self.label}"
+            return nil
+          end
           manifest_expiry = owner_details.dig(:upstreamConsumer, :idCert, :serial, :expiration)
 
+          if manifest_expiry.present?
+            DateTime.parse(manifest_expiry)
+          else
+            Rails.logger.error "Unable to parse manifest expiration date from owner details"
+            nil
+          end
+        end
+
+        def manifest_expired?
+          manifest_expiry = manifest_expiration_date
+
           if manifest_expiry
-            DateTime.parse(manifest_expiry) < DateTime.now
+            manifest_expiry < DateTime.now
           else
             false
           end

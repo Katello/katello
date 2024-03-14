@@ -12,7 +12,7 @@ module Katello
 
           def get(id, upstream)
             url = API_URL
-            response = Resources::Candlepin::UpstreamConsumer.get_export("#{url}#{path(id)}", upstream['idCert']['cert'],
+            response = Resources::Candlepin::UpstreamConsumer.start_upstream_export("#{url}#{path(id)}", upstream['idCert']['cert'],
               upstream['idCert']['key'], nil)
             job = JSON.parse(response)
             job.with_indifferent_access
