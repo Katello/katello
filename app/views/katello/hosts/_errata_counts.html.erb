@@ -43,7 +43,7 @@
 <% end %>
 <% if host.operatingsystem_name&.match(/Debian|Ubuntu/) %>
 <% if Setting["host_details_ui"] %>
-<a href="/new/hosts/<%= host.name %>#/Content/packages?status=Upgradable">
+<a href="/new/hosts/<%= host.name %>#/Content/debs?status=Upgradable">
 <% else %>
 <a href="/content_hosts/<%= host.id %>/debs/applicable">
 <% end %>
