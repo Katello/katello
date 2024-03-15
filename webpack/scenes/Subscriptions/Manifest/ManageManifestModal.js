@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Col, Row, Tabs, Tab, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormattedMessage } from 'react-intl';
 import { Button, Spinner } from 'patternfly-react';
+import { Alert } from '@patternfly/react-core';
+import { propsToCamelCase } from 'foremanReact/common/helpers';
 import ForemanModal from 'foremanReact/components/ForemanModal';
 import Slot from 'foremanReact/components/common/Slot';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -92,22 +95,29 @@ class ManageManifestModal extends Component {
       contentCredentials,
     } = this.props;
 
+    const {
+      manifestExpiringSoon,
+      manifestExpired,
+      manifestExpirationDate,
+      manifestExpireDaysRemaining,
+    } = propsToCamelCase(organization);
+
     const actionInProgress = (taskInProgress || manifestActionStarted);
     const showCdnConfigurationTab = canEditOrganizations;
     const showSubscriptionManifest = (canImportManifest || canDeleteManifest);
     const showManifestTab = (canEditOrganizations || showSubscriptionManifest);
 
     const emptyStateData = () => ({
-      header: __('There is no Manifest History to display.'),
-      description: __('Import a Manifest using the manifest tab above.'),
+      header: __('There is no manifest history to display.'),
+      description: __('Import a manifest using the Manifest tab above.'),
       documentation: {
-        label: __('Learn more about adding Subscription Manifests '),
+        label: __('Learn more about adding subscription manifests '),
         url: 'https://access.redhat.com/solutions/3410771',
       },
     });
 
     const getManifestName = () => {
-      let name = __('No Manifest Uploaded');
+      let name = __('No manifest imported');
 
       if (
         organization.owner_details &&
@@ -139,6 +149,46 @@ class ManageManifestModal extends Component {
                   <React.Fragment>
                     <Grid>
                       <h3>{__('Subscription Manifest')}</h3>
+                      {manifestExpiringSoon &&
+                        <Alert
+                          ouiaId="manifest-expiring-soon-alert"
+                          variant="warning"
+                          title={__('Manifest expiring soon')}
+                        >
+                          <FormattedMessage
+                            defaultMessage={__('Your manifest will expire in {daysMessage}. To extend the expiration date, refresh your manifest. Or, if your Foreman is disconnected, import a new manifest.')}
+                            values={{
+                              daysMessage: (
+                                <FormattedMessage
+                                  defaultMessage="{daysRemaining, plural, one {{singular}} other {# {plural}}}"
+                                  values={{
+                                    daysRemaining: manifestExpireDaysRemaining,
+                                    singular: __('day'),
+                                    plural: __('days'),
+                                  }}
+                                  id="manage-manifest-expire-days-i18n"
+                                />
+                              ),
+                            }}
+                            id="manage-manifest-expire-i18n"
+                          />
+                        </Alert>
+                      }
+                      {manifestExpired &&
+                        <Alert
+                          ouiaId="manifest-expired-alert"
+                          variant="danger"
+                          title={__('Manifest expired')}
+                        >
+                          <FormattedMessage
+                            defaultMessage={__('Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.')}
+                            values={{
+                              expirationDate: new Date(manifestExpirationDate).toDateString(),
+                            }}
+                            id="manage-manifest-expired-i18n"
+                          />
+                        </Alert>
+                      }
                       <hr />
                       <Row>
                         <Col sm={5}>
@@ -148,13 +198,22 @@ class ManageManifestModal extends Component {
                           {getManifestName()}
                         </Col>
                       </Row>
+                      {isManifestImported &&
+                        <Row>
+                          <Col sm={5} />
+                          <Col sm={7}>
+                            {manifestExpired ? __('Expired ') : __('Expires ')}
+                            {new Date(manifestExpirationDate).toDateString()}
+                          </Col>
+                        </Row>
+                      }
                       <Row>
                         <Col sm={5}>
                           {canImportManifest &&
                           <ControlLabel
                             style={{ paddingTop: '10px' }}
                           >
-                            <div>{__('Import New Manifest')}</div>
+                            <div>{__('Import new manifest')}</div>
                           </ControlLabel>
                           }
                         </Col>

@@ -3,9 +3,17 @@ object @organization
 extends "api/v2/taxonomies/show"
 
 attributes :task_id, :label, :redhat_repository_url
-
+attributes :manifest_expiration_date, :manifest_expire_days_remaining
 attributes :system_purposes, :system_purposes
 attributes :service_levels, :service_level
+
+node :manifest_expiring_soon do |org|
+  org.manifest_expiring_soon?
+end
+
+node :manifest_expired do |org|
+  org.manifest_expired?
+end
 
 node :simple_content_access do |org|
   org.simple_content_access?
