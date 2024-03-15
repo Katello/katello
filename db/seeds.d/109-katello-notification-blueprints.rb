@@ -27,6 +27,12 @@ blueprints = [
   },
   {
     group: N_('Subscriptions'),
+    name: 'manifest_expire_soon_warning',
+    message: N_('Manifest in organization %{subject} has an identity certificate that will expire in %{days_remaining} days, on %{manifest_expire_date}. To extend the expiration date, please refresh your manifest.'),
+    level: 'info'
+  },
+  {
+    group: N_('Subscriptions'),
     name: 'manifest_expired_warning',
     message: N_('The manifest imported within Organization %{subject} is no longer valid. Please import a new manifest.'),
     level: 'warning'

@@ -100,18 +100,20 @@ module Katello
           end
         end
 
-        def manifest_expiration_date
-          unless manifest_imported?
-            Rails.logger.error "Manifest not imported for organization #{self.label}"
-            return nil
-          end
-          manifest_expiry = owner_details.dig(:upstreamConsumer, :idCert, :serial, :expiration)
+        def manifest_expiration_date(cached: true)
+          Rails.cache.fetch("#{self.label}_manifest_expiration_date", expires_in: 1.minute, force: !cached) do
+            unless manifest_imported?(cached: true)
+              Rails.logger.error "Manifest not imported for organization #{self.label}"
+              return nil
+            end
+            manifest_expiry = owner_details.dig(:upstreamConsumer, :idCert, :serial, :expiration)
 
-          if manifest_expiry.present?
-            DateTime.parse(manifest_expiry)
-          else
-            Rails.logger.error "Unable to parse manifest expiration date from owner details"
-            nil
+            if manifest_expiry.present?
+              DateTime.parse(manifest_expiry)
+            else
+              Rails.logger.error "Unable to parse manifest expiration date from owner details"
+              nil
+            end
           end
         end
 
@@ -122,6 +124,28 @@ module Katello
             manifest_expiry < DateTime.now
           else
             false
+          end
+        end
+
+        def manifest_expiring_soon?(days = Setting[:expire_soon_days])
+          return false if !manifest_imported? || manifest_expired?
+          manifest_expiry = manifest_expiration_date
+
+          if manifest_expiry
+            manifest_expiry < DateTime.now + days.days
+          else
+            false
+          end
+        end
+
+        def manifest_expire_days_remaining
+          manifest_expiry = manifest_expiration_date
+          return 0 if manifest_expired?
+
+          if manifest_expiry
+            (manifest_expiry - DateTime.now).to_i
+          else
+            0
           end
         end
 
