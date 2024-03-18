@@ -108,7 +108,7 @@ module Katello
           if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.present?
             paths = insert_pulp_manifest!(paths)
           end
-          response = api.alternate_content_source_api.create(name: generate_backend_object_name, paths: paths,
+          response = api.alternate_content_source_api.create(name: generate_backend_object_name, paths: paths.sort,
                                                              remote: smart_proxy_acs.remote_href)
           smart_proxy_acs.update!(alternate_content_source_href: response.pulp_href)
           return response
@@ -125,7 +125,7 @@ module Katello
         if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.present?
           paths = insert_pulp_manifest!(paths)
         end
-        api.alternate_content_source_api.update(href, name: generate_backend_object_name, paths: paths, remote: smart_proxy_acs.remote_href)
+        api.alternate_content_source_api.update(href, name: generate_backend_object_name, paths: paths.sort, remote: smart_proxy_acs.remote_href)
       end
 
       def delete_alternate_content_source
