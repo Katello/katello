@@ -3,7 +3,7 @@ module Katello
     class Repository
       class Generic < ::Katello::Pulp3::Repository
         def copy_content_for_source(source_repository, _options = {})
-          copy_units_by_href(source_repository.files.pluck(:pulp_id))
+          copy_units_by_href(source_repository.generic_content_units&.pluck(:pulp_id))
         end
 
         def distribution_options(path)
