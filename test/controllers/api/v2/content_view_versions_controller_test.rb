@@ -173,10 +173,10 @@ module Katello
     def test_bad_promote_out_of_sequence
       version = @library_dev_staging_view.versions.first
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], false, nil).
-          raises(::Katello::HttpErrors::BadRequest)
+          raises(::Katello::HttpErrors::BadRequest.new('Cannot promote environment out of sequence. Use force to bypass restriction.'))
       post :promote, params: { :id => version.id, :environment_ids => [@beta.id] }
 
-      assert_response 500
+      assert_response 400
     end
 
     def test_promote_out_of_sequence_force
