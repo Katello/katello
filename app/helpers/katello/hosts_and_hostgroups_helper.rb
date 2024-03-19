@@ -72,6 +72,10 @@ module Katello
     def fetch_lifecycle_environment(host_or_hostgroup, options = {})
       return host_or_hostgroup.single_lifecycle_environment if host_or_hostgroup.try(:single_lifecycle_environment)
       return host_or_hostgroup.lifecycle_environment if host_or_hostgroup.try(:lifecycle_environment)
+      if host_or_hostgroup.is_a?(::Hostgroup) && host_or_hostgroup.content_facet.present?
+        # to handle cloned hostgroups that are new records
+        return host_or_hostgroup.content_facet.lifecycle_environment
+      end
       selected_host_group = options.fetch(:selected_host_group, nil)
       return selected_host_group.lifecycle_environment if selected_host_group.present?
     end
@@ -79,12 +83,20 @@ module Katello
     def fetch_content_view(host_or_hostgroup, options = {})
       return host_or_hostgroup.single_content_view if host_or_hostgroup.try(:single_content_view)
       return host_or_hostgroup.content_view if host_or_hostgroup.try(:content_view)
+      if host_or_hostgroup.is_a?(::Hostgroup) && host_or_hostgroup.content_facet.present?
+        # to handle cloned hostgroups that are new records
+        return host_or_hostgroup.content_facet.content_view
+      end
       selected_host_group = options.fetch(:selected_host_group, nil)
       return selected_host_group.content_view if selected_host_group.present?
     end
 
-    def fetch_content_source(host, options = {})
-      return host.content_source if host.try(:content_source_id)
+    def fetch_content_source(host_or_hostgroup, options = {})
+      return host_or_hostgroup.content_source if host_or_hostgroup.content_source_id&.present? && host_or_hostgroup.persisted?
+      if host_or_hostgroup.is_a?(::Hostgroup) && host_or_hostgroup.content_facet.present?
+        # to handle cloned hostgroups that are new records
+        return host_or_hostgroup.content_facet.content_source
+      end
       selected_host_group = options.fetch(:selected_host_group, nil)
       return selected_host_group.content_source if selected_host_group.present?
     end

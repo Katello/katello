@@ -1,6 +1,9 @@
 import React from 'react';
 import * as reactRedux from 'react-redux';
 import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
+import { screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 import PublishContentViewWizard from '../PublishContentViewWizard';
@@ -74,6 +77,33 @@ test('Can show wizard with duplicate repository warning for composite CV', async
   await patientlyWaitFor(() => {
     expect(getByText('Publish new version - 6.0')).toBeInTheDocument();
     expect(getByText('Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.')).toBeTruthy();
+  });
+
+  assertNockRequest(scope);
+  assertNockRequest(filterScope, done);
+});
+
+test('Can show wizard without duplicate repository warning for composite CV', async (done) => {
+  const cvCompositeDetailsData = cvDetailData;
+  cvCompositeDetailsData.composite = true;
+  cvCompositeDetailsData.duplicate_repositories_to_publish = [];
+  const scope = nockInstance
+    .get(environmentPathsPath)
+    .query(true)
+    .reply(200, environmentPathsData);
+  const filterScope = nockInstance
+    .get(cvFiltersPath)
+    .reply(200, contentViewFilterData);
+
+  const { getByText } = renderWithRedux(<PublishContentViewWizard
+    details={cvCompositeDetailsData}
+    show
+    onClose={() => { }}
+  />);
+
+  await patientlyWaitFor(() => {
+    expect(getByText('Publish new version - 6.0')).toBeInTheDocument();
+    expect(screen.queryByText('Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.')).not.toBeInTheDocument();
   });
 
   assertNockRequest(scope);
