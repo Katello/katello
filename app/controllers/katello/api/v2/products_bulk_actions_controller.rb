@@ -55,7 +55,7 @@ module Katello
       repairable_products = @products.syncable
       repairable_roots = RootRepository.where(:product_id => repairable_products).has_url.select { |r| r.library_instance }.uniq
 
-      repairable_repositories = Katello::Repository.where(:root_id => repairable_roots)
+      repairable_repositories = Katello::Repository.library.where(:root_id => repairable_roots)
       task = async_task(::Actions::BulkAction,
                         ::Actions::Katello::Repository::VerifyChecksum,
                         repairable_repositories)
