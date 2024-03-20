@@ -58,7 +58,7 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
       param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA")
       param :upstream_username, String, :desc => N_("Username of the upstream repository user used for authentication")
       param :upstream_password, String, :desc => N_("Password of the upstream repository user used for authentication")
-      param :upstream_authentication_token, String, :desc => N_("Password of the upstream authentication token.")
+      param :upstream_authentication_token, String, :desc => N_("Upstream authentication token string for yum repositories.")
       param :deb_releases, String, :desc => N_("whitespace-separated list of releases to be synced from deb-archive")
       param :deb_components, String, :desc => N_("whitespace-separated list of repo components to be synced from deb-archive")
       param :deb_architectures, String, :desc => N_("whitespace-separated list of architectures to be synced from deb-archive")
@@ -576,13 +576,15 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
     end
 
     # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def repository_params
       keys = [:download_policy, :mirroring_policy, :sync_policy, :arch, :verify_ssl_on_sync, :upstream_password,
-              :upstream_username, :download_concurrency, :upstream_authentication_token, :metadata_expire,
+              :upstream_username, :download_concurrency, :metadata_expire,
               {:os_versions => []}, :deb_releases, :deb_components, :deb_architectures, :description,
               :http_proxy_policy, :http_proxy_id, :retain_package_versions_count, {:ignorable_content => []}
              ]
       keys += [{:include_tags => []}, {:exclude_tags => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
+      keys += [:upstream_authentication_token] if params[:action] == 'create' || @repository&.yum?
       keys += [:ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token] if params[:action] == 'create' || @repository&.ansible_collection?
       keys += [:label, :content_type] if params[:action] == "create"
 
@@ -614,27 +616,31 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       credential_value
     end
 
-    # rubocop:disable Metrics/PerceivedComplexity,Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength
     def construct_repo_from_params(repo_params) # rubocop:disable Metrics/AbcSize
       root = @product.add_repo(repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
                                                             :checksum_type, :download_policy, :http_proxy_policy,
                                                             :metadata_expire).to_h.with_indifferent_access)
-      root.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
-      if root.docker?
-        root.include_tags = repo_params.fetch(:include_tags, [])
-      end
-      root.exclude_tags = repo_params.fetch(:exclude_tags, ['*-source']) if root.docker?
       root.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
       root.mirroring_policy = repo_params[:mirroring_policy] || Katello::RootRepository::MIRRORING_POLICY_CONTENT
       root.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
       root.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
-      root.upstream_authentication_token = repo_params[:upstream_authentication_token] if repo_params.key?(:upstream_authentication_token)
-      root.ignorable_content = repo_params[:ignorable_content] if root.yum? && repo_params.key?(:ignorable_content)
       root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
       root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)
-      root.os_versions = repo_params.fetch(:os_versions, []) if root.yum?
-      root.retain_package_versions_count = repo_params[:retain_package_versions_count] if root.yum? && repo_params.key?(:retain_package_versions_count)
+
+      if root.yum?
+        root.upstream_authentication_token = repo_params[:upstream_authentication_token] if repo_params.key?(:upstream_authentication_token)
+        root.retain_package_versions_count = repo_params[:retain_package_versions_count] if repo_params.key?(:retain_package_versions_count)
+        root.ignorable_content = repo_params[:ignorable_content] if repo_params.key?(:ignorable_content)
+        root.os_versions = repo_params.fetch(:os_versions, [])
+      end
+
+      if root.docker?
+        root.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
+        root.include_tags = repo_params.fetch(:include_tags, [])
+        root.exclude_tags = repo_params.fetch(:exclude_tags, ['*-source'])
+      end
 
       if root.generic?
         generic_remote_options = generic_remote_options_hash(repo_params)
