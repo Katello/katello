@@ -103,8 +103,13 @@ module Katello
       Katello::Deb.in_repositories(repos).where.not(name: host.installed_debs.pluck(:name)).order(:name)
     end
 
-    def self.latest(_relation)
-      fail 'NotImplemented'
+    def self.latest(relation)
+      # This might be very slow
+      return relation.joins(
+        "LEFT OUTER JOIN(#{relation.to_sql}) AS katello_debs2 ON " \
+        'katello_debs.name = katello_debs2.name AND katello_debs.architecture = katello_debs2.architecture AND ' \
+        'deb_version_cmp(katello_debs.version, katello_debs2.version) < 0 ' \
+      ).where('katello_debs2.id IS NULL')
     end
   end
 end
