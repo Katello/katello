@@ -5,7 +5,6 @@ import {
   Bullseye, Split, SplitItem, Button, ActionList,
   ActionListItem, Dropdown, DropdownItem, KebabToggle,
 } from '@patternfly/react-core';
-import { Link } from 'react-router-dom';
 import { TableVariant, fitContent, TableText } from '@patternfly/react-table';
 import { PencilAltIcon } from '@patternfly/react-icons';
 import { STATUS } from 'foremanReact/constants';
@@ -136,7 +135,7 @@ const ContentViewComponents = ({ cvId, details }) => {
         id: componentCvId, content_view: cv, content_view_version: cvVersion,
         latest, component_content_view_versions: componentCvVersions,
       } = componentCV;
-      const { environments, repositories } = cvVersion || {};
+      const { environments, repositories, id: cvVersionId } = cvVersion || {};
       const {
         id,
         name,
@@ -171,7 +170,11 @@ const ContentViewComponents = ({ cvId, details }) => {
             </Split>),
         },
         { title: environments ? <ComponentEnvironments {...{ environments }} /> : <InactiveText text={__('Not yet published')} /> },
-        { title: <Link to={urlBuilder(`content_views/${id}#repositories`, '')}>{repositories ? repositories.length : 0}</Link> },
+        {
+          title: cvVersionId ?
+            <a href={urlBuilder(`content_views/${id}#/versions/${cvVersionId}/repositories`, '')}>{repositories ? repositories.length : 0}</a> :
+            0,
+        },
         {
           title: <AddedStatusLabel added={!!componentCvId} />,
         },
