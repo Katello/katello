@@ -800,6 +800,10 @@ module Katello
       repositories.any? { |repo| repo.last_indexed && repo.last_indexed > latest_version_object.created_at }
     end
 
+    def unpublishable?
+      default? || import_only? || generated?
+    end
+
     def needs_publish?
       #Returns
       # True:
@@ -819,7 +823,9 @@ module Katello
       #     a) No changes were detected via audits *and*
       #        Audit for CV publish exists (Audits haven't been cleaned up)
       #        *and* applied_filters field is set(Published after upgrade)
+      #     b) Default, import only and generated CVs can not be published, hence these will always return false.
       #
+      return false if unpublishable?
       return true unless latest_version_object
       return nil unless last_publish_task_success?
       return composite_cv_components_changed? if composite?

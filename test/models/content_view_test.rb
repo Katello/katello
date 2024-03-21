@@ -654,6 +654,18 @@ module Katello
       end
     end
 
+    def test_unpublishable?
+      default_content_view = ContentView.default.first
+      import_only_content_view = FactoryBot.create(:katello_content_view, :import_only)
+      generated_content_view = FactoryBot.create(:katello_content_view, generated_for: "repository_export")
+      normal_content_view = FactoryBot.create(:katello_content_view, generated_for: "none")
+
+      assert default_content_view.unpublishable?
+      assert import_only_content_view.unpublishable?
+      assert generated_content_view.unpublishable?
+      refute normal_content_view.unpublishable?
+    end
+
     def test_new_cv_needs_publish
       content_view = FactoryBot.build(:katello_content_view, :name => "New CV")
       content_view.save!
