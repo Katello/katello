@@ -622,12 +622,6 @@ Foreman::Plugin.register :katello do
         full_name: N_('Pulp bulk load size'),
         description: N_('The number of items fetched from a single paged Pulp API call.')
 
-      setting 'upload_profiles_without_dynflow',
-        type: :boolean,
-        default: true,
-        full_name: N_('Upload profiles without Dynflow'),
-        description: N_('Allow Katello to update host installed packages, enabled repos, and module inventory directly instead of wrapped in Dynflow tasks (try turning off if Puma processes are using too much memory)')
-
       setting 'orphan_protection_time',
         type: :integer,
         default: 1440,
