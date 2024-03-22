@@ -21,6 +21,9 @@ module Actions
             upstream_update = plan_action(Candlepin::Owner::UpstreamUpdate,
                         { :organization_id => organization.id,
                           :upstream => upstream })
+            plan_action(Candlepin::Owner::RegenerateUpstreamIdentityCert,
+                        { :organization_id => organization.id,
+                          :upstream => upstream })
             export_action = plan_action(Candlepin::Owner::StartUpstreamExport,
                         { :organization_id => organization.id,
                           :upstream => upstream,

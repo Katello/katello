@@ -40,19 +40,31 @@ module Katello
             raise ::Katello::Errors::UpstreamEntitlementGone
           end
 
-          def get_export(url, client_cert, client_key, ca_file)
+          def start_upstream_export(url, client_cert, client_key, ca_file)
             logger.debug "Sending GET request to upstream Candlepin: #{url}"
-            return resource(url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file).get
+            resource(url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file).get
           rescue RestClient::Exception => e
             raise e
           end
 
+          alias_method :retrieve_upstream_export, :start_upstream_export
+
           def update(url, client_cert, client_key, ca_file, attributes)
             logger.debug "Sending PUT request to upstream Candlepin: #{url} #{attributes.to_json}"
-            return resource(url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file).put(attributes.to_json,
-                                                                       'accept' => 'application/json',
-                                                                       'accept-language' => I18n.locale,
-                                                                       'content-type' => 'application/json')
+            resource(
+              url: url,
+              client_cert: client_cert,
+              client_key: client_key,
+              ca_file: ca_file).put(
+                attributes.to_json,
+                'accept' => 'application/json',
+                'accept-language' => I18n.locale,
+                'content-type' => 'application/json')
+          end
+
+          def regenerate_upstream_identity(url, client_cert, client_key, ca_file)
+            logger.debug "Sending POST request to upstream Candlepin: #{url}"
+            resource(url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file).post(nil)
           end
 
           def bind_entitlement(**pool)

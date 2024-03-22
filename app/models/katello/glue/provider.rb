@@ -32,6 +32,10 @@ module Katello
 
     module InstanceMethods
       API_URL = 'https://subscription.rhsm.redhat.com/subscription/consumers/'.freeze
+      def api_url(upstream = {})
+        # Default to Red Hat
+        upstream['apiUrl'] || API_URL
+      end
 
       def sync
         Rails.logger.debug "Syncing provider #{name}"
@@ -62,34 +66,37 @@ module Katello
           fail _("Upstream identity certificate not available")
         end
 
-        # Default to Red Hat
-        url = upstream['apiUrl'] || API_URL
-
         params = {}
         params[:capabilities] = Resources::Candlepin::CandlepinPing.ping['managerCapabilities'].inject([]) do |result, element|
           result << {'name' => element}
         end
         params[:facts] = {:distributor_version => DISTRIBUTOR_VERSION }
-        Resources::Candlepin::UpstreamConsumer.update("#{url}#{upstream['uuid']}", upstream['idCert']['cert'],
+        Resources::Candlepin::UpstreamConsumer.update("#{api_url(upstream)}#{upstream['uuid']}", upstream['idCert']['cert'],
                                                       upstream['idCert']['key'], ca_file, params)
+      end
+
+      def owner_upstream_regenerate_identity_cert(upstream)
+        validate_upstream_identity_cert!(upstream)
+        Rails.logger.debug "Sending request to regenerate identity certificate for upstream consumer: #{upstream['uuid']}"
+        response = Resources::Candlepin::UpstreamConsumer.regenerate_upstream_identity("#{api_url(upstream)}#{upstream['uuid']}", upstream['idCert']['cert'],
+          upstream['idCert']['key'], ca_file)
+        JSON.parse(response)
       end
 
       def start_owner_upstream_export(upstream)
         validate_upstream_identity_cert!(upstream)
-        url = upstream['apiUrl'] || API_URL
-
-        response = Resources::Candlepin::UpstreamConsumer.get_export("#{url}#{upstream['uuid']}/export/async", upstream['idCert']['cert'],
+        response = Resources::Candlepin::UpstreamConsumer.start_upstream_export("#{api_url(upstream)}#{upstream['uuid']}/export/async", upstream['idCert']['cert'],
           upstream['idCert']['key'], ca_file)
         JSON.parse(response)
       end
 
       def retrieve_owner_upstream_export(upstream, zip_file_path, export_id)
         validate_upstream_identity_cert!(upstream)
-        url = upstream['apiUrl'] || API_URL
-
-        data = Resources::Candlepin::UpstreamConsumer.get_export("#{url}#{upstream['uuid']}/export/#{export_id}", upstream['idCert']['cert'],
-                                                             upstream['idCert']['key'], ca_file)
-
+        data = Resources::Candlepin::UpstreamConsumer.retrieve_upstream_export(
+          "#{api_url(upstream)}#{upstream['uuid']}/export/#{export_id}",
+          upstream['idCert']['cert'],
+          upstream['idCert']['key'], ca_file
+        )
         File.write(zip_file_path, data, mode: 'wb')
 
         true
