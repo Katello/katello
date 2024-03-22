@@ -7,7 +7,7 @@ module Katello
         class << self
           def all_uuids
             cp_consumers = Organization.all.map do |org|
-              ::Katello::Resources::Candlepin::Consumer.get('owner' => org.label, :include_only => [:uuid])
+              ::Katello::Resources::Candlepin::Consumer.get('owner' => org.label, :include_only => [:uuid], :sort_by => "uuid")
             end
             cp_consumers.flatten!
             cp_consumers.map { |consumer| consumer["uuid"] }
