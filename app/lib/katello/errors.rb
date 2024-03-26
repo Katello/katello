@@ -10,6 +10,10 @@ module Katello
 
     class RegistrationError < StandardError; end
 
+    class InvalidRepositoryTypeError < StandardError; end
+
+    class MultiEnvironmentNotSupportedError < StandardError; end
+
     # unauthorized access
     class SecurityViolation < StandardError; end
 

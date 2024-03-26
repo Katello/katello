@@ -74,7 +74,7 @@ module Katello
       end
 
       def relative_path
-        ::Katello::Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, path)
+        ::Katello::Repository.repo_path_from_content_path(product.organization.library, path)
       end
 
       def prune_substitutions(subs, url)
