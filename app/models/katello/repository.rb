@@ -201,6 +201,12 @@ module Katello
       joins(:root).where("#{Katello::RootRepository.table_name}.product_id" => products)
     end
 
+    def self.repo_path_from_content_path(environment, content_path)
+      path = content_path.sub(%r|^/|, '')
+      path_prefix = [environment.organization.label, environment.label].join('/')
+      "#{path_prefix}/#{path}"
+    end
+
     def to_label
       name
     end
