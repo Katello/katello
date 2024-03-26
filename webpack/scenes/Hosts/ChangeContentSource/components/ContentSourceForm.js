@@ -114,7 +114,7 @@ const ContentSourceForm = ({
   const hostCount = contentHosts.length;
 
   const handleCSSelect = (_event, selection) => {
-    handleContentSource(selection);
+    handleContentSource(typeof selection === 'number' ? selection.toString() : selection);
     setCSSelectOpen(false);
   };
 
