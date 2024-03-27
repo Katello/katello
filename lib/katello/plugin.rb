@@ -578,7 +578,7 @@ Foreman::Plugin.register :katello do
         type: :integer,
         default: 120,
         full_name: N_('Expire soon days'),
-        description: N_('The number of days remaining in a subscription before you will be reminded about renewing it.')
+        description: N_('The number of days remaining in a subscription before you will be reminded about renewing it. Also used for manifest expiration warnings.')
 
       setting 'host_dmi_uuid_duplicates',
         type: :array,
