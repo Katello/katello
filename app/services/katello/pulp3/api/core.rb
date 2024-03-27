@@ -136,6 +136,10 @@ module Katello
           client
         end
 
+        def repair_api
+          PulpcoreClient::RepairApi.new(core_api_client)
+        end
+
         def uploads_api
           PulpcoreClient::UploadsApi.new(core_api_client)
         end
@@ -228,6 +232,10 @@ module Katello
           self.class.fetch_from_list do |page_opts|
             remotes_api.list(page_opts.merge(options))
           end
+        end
+
+        def repair
+          repair_api.post(PulpcoreClient::Repair.new(verify_checksums: true))
         end
 
         def self.fetch_from_list
