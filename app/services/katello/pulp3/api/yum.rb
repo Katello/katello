@@ -32,6 +32,17 @@ module Katello
           PulpRpmClient::RemotesUlnApi.new(api_client)
         end
 
+        def get_remotes_api(opts = {})
+          fail 'Provide exactly one of href or url for yum remote selection!' unless opts.include?(:href) != opts.include?(:url)
+          fail 'The href must be a pulp_rpm remote href!' if opts.include?(:href) && !opts[:href].start_with?('/pulp/api/v3/remotes/rpm/')
+
+          if opts[:href]&.start_with?('/pulp/api/v3/remotes/rpm/uln/') || opts[:url]&.start_with?('uln')
+            remotes_uln_api
+          else
+            remotes_api
+          end
+        end
+
         def copy_api
           PulpRpmClient::RpmCopyApi.new(api_client)
         end
