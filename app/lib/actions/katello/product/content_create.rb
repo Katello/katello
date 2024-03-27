@@ -14,7 +14,7 @@ module Actions
                                            arches:        root.format_arches,
                                            label:         root.custom_content_label,
                                            os_versions:   root.os_versions&.join(','),
-                                           content_url:   root.custom_content_path)
+                                           content_url:   root.format_custom_content_path)
               content_id = content_create.output[:response][:id]
               plan_action(Candlepin::Product::ContentAdd, owner: root.product.organization.label,
                                     product_id: root.product.cp_id,
@@ -32,7 +32,7 @@ module Actions
                           type:        root.content_type,
                           arches:      root.format_arches,
                           label:       root.custom_content_label,
-                          content_url: root.custom_content_path,
+                          content_url: root.format_custom_content_path,
                           gpg_key_url: root.library_instance.yum_gpg_key_url)
             end
 
@@ -48,7 +48,7 @@ module Actions
             new_content.name = root.name
             new_content.content_type = root.content_type
             new_content.label = root.custom_content_label
-            new_content.content_url = root.custom_content_path
+            new_content.content_url = root.format_custom_content_path
             new_content.vendor = ::Katello::Provider::CUSTOM
           end
 
