@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos8-katello-devel.cannolo.example.com/pulp/api/v3/tasks/?limit=1
+    uri: https://centos8-katello-devel-stable.example.com/pulp/api/v3/tasks/?limit=1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.39.1/ruby
+      - OpenAPI-Generator/3.49.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -23,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Tue, 07 Nov 2023 19:44:05 GMT
+      - Tue, 26 Mar 2024 19:08:57 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -35,7 +35,7 @@ http_interactions:
       X-Frame-Options:
       - DENY
       Content-Length:
-      - '852'
+      - '944'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
@@ -43,33 +43,34 @@ http_interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Correlation-Id:
-      - b5c5ceb0139c44da9407f271de337268
+      - 894bdab93baf4ebc822bd5064825d4a2
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos8-katello-devel.cannolo.example.com
+      - 1.1 centos8-katello-devel-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6MzM4NCwibmV4dCI6Imh0dHBzOi8vY2VudG9zOC1rYXRlbGxv
-        LWRldmVsLmNhbm5vbG8uZXhhbXBsZS5jb20vcHVscC9hcGkvdjMvdGFza3Mv
-        P2xpbWl0PTEmb2Zmc2V0PTEiLCJwcmV2aW91cyI6bnVsbCwicmVzdWx0cyI6
-        W3sicHVscF9ocmVmIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzAxOGJhYjUwLTNl
-        OTgtN2NiYi1hYjYzLWUzZmY1MGExNzc0YS8iLCJwdWxwX2NyZWF0ZWQiOiIy
-        MDIzLTExLTA3VDE5OjQ0OjA0Ljc2MTYwOVoiLCJzdGF0ZSI6ImNvbXBsZXRl
-        ZCIsIm5hbWUiOiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX2Rl
-        bGV0ZSIsImxvZ2dpbmdfY2lkIjoiNDIwZmQwMGMyMjdlNDMwOGFjNjdkYzUx
-        ZTJkYzBlZDAiLCJjcmVhdGVkX2J5IjoiL3B1bHAvYXBpL3YzL3VzZXJzLzEv
-        Iiwic3RhcnRlZF9hdCI6IjIwMjMtMTEtMDdUMTk6NDQ6MDQuODIyNjYxWiIs
-        ImZpbmlzaGVkX2F0IjoiMjAyMy0xMS0wN1QxOTo0NDowNC45NDAzMjBaIiwi
-        ZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJzLzAx
-        OGJhYWI0LThkZjMtNzc3OC1iMjlmLTZiOWI1MWU1ZTNlZS8iLCJwYXJlbnRf
-        dGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpudWxs
-        LCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOltd
-        LCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9y
-        ZXBvc2l0b3JpZXMvZmlsZS9maWxlLzAxOGJhYjUwLTM0MmYtNzQ4OS05NTU1
-        LTVlNGMzODZlZTQ2OC8iLCJzaGFyZWQ6L3B1bHAvYXBpL3YzL2RvbWFpbnMv
-        MDE4YmFhYjMtYTM4Yy03Nzc0LWJhODktMDg4OTg5ZjJkODk5LyJdfV19
-    http_version: 
-  recorded_at: Tue, 07 Nov 2023 19:44:05 GMT
-recorded_with: VCR 3.0.3
+        eyJjb3VudCI6MjgwMiwibmV4dCI6Imh0dHBzOi8vY2VudG9zOC1rYXRlbGxv
+        LWRldmVsLXN0YWJsZS5leGFtcGxlLmNvbS9wdWxwL2FwaS92My90YXNrcy8/
+        bGltaXQ9MSZvZmZzZXQ9MSIsInByZXZpb3VzIjpudWxsLCJyZXN1bHRzIjpb
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMDE4ZTdjMmEtNjQ5
+        Ni03NDY1LTk2YWItOTRiOWM2MzEwYjk2LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjQtMDMtMjZUMTk6MDg6NTYuODU1MDIzWiIsInB1bHBfbGFzdF91cGRhdGVk
+        IjoiMjAyNC0wMy0yNlQxOTowODo1Ni44NTUwNTRaIiwic3RhdGUiOiJjb21w
+        bGV0ZWQiLCJuYW1lIjoicHVscGNvcmUuYXBwLnRhc2tzLmJhc2UuZ2VuZXJh
+        bF9kZWxldGUiLCJsb2dnaW5nX2NpZCI6IjMyOWMxODgwNzE5YTRiZjlhZWZi
+        OTI0M2UwZWM1YmRkIiwiY3JlYXRlZF9ieSI6Ii9wdWxwL2FwaS92My91c2Vy
+        cy8xLyIsInVuYmxvY2tlZF9hdCI6IjIwMjQtMDMtMjZUMTk6MDg6NTYuODY4
+        MTc4WiIsInN0YXJ0ZWRfYXQiOiIyMDI0LTAzLTI2VDE5OjA4OjU2Ljk3ODcy
+        MFoiLCJmaW5pc2hlZF9hdCI6IjIwMjQtMDMtMjZUMTk6MDg6NTcuMjExMjEx
+        WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29ya2Vy
+        cy8wMThlN2IzNy05ZDhiLTcyYjQtYTZkNC1jNGYzYWYzZmYyZWYvIiwicGFy
+        ZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91cCI6
+        bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3VyY2Vz
+        IjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9hcGkv
+        djMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vMDE4ZTdjMmEtNGRhMC03MDRkLWJl
+        NjAtYmY4OWJmMGM0NzQwLyIsInNoYXJlZDovcHVscC9hcGkvdjMvZG9tYWlu
+        cy8wMThlN2IzNi02OGI0LTczYjYtOWVmMS1jZDRkMTkyNDFlY2IvIl19XX0=
+  recorded_at: Tue, 26 Mar 2024 19:08:57 GMT
+recorded_with: VCR 6.2.0
