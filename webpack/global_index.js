@@ -2,6 +2,8 @@ import React from 'react';
 import { addGlobalFill } from 'foremanReact/components/common/Fill/GlobalFill';
 import { registerReducer } from 'foremanReact/common/MountingService';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { registerColumns } from 'foremanReact/components/HostsIndex/Columns/core';
+import RelativeDateTime from 'foremanReact/components/common/dates/RelativeDateTime';
 
 import SystemStatuses from './components/extensions/about';
 import {
@@ -80,3 +82,22 @@ addGlobalFill(
 );
 
 addGlobalFill('host-tab-details-cards', 'HW properties', <HwPropertiesCard key="hw-properties" />, 200);
+
+const hostsIndexColumnExtensions = [
+  {
+    columnName: 'last_checkin',
+    title: __('Last seen'),
+    wrapper: (hostDetails) => {
+      const lastCheckin =
+        hostDetails?.subscription_facet_attributes?.last_checkin;
+      return <RelativeDateTime defaultValue={__('Who knows')} date={lastCheckin} />;
+    },
+    weight: 400,
+  },
+];
+
+hostsIndexColumnExtensions.forEach((column) => {
+  // eslint-disable-next-line no-param-reassign
+  column.tableName = 'hosts';
+});
+registerColumns(hostsIndexColumnExtensions);
