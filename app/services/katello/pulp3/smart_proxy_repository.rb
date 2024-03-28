@@ -33,9 +33,41 @@ module Katello
         katello_repos.select { |repo| repo_ids.include? repo.pulp_id }
       end
 
+      def delete_dangling_distributions
+        distribution_deletion_tasks = []
+        distro_hrefs = []
+        orphan_repository_versions.each do |api, version_hrefs|
+          next if api.repository_type.id == :deb
+          if api.repository_type.pulp3_skip_publication
+            version_hrefs.collect do |href|
+              #hrefs are like /pulp/api/v3/repositories/container/container/018e7c36-cb03-79c5-858b-86aac147ce06/versions/1/ and we will need to strip the url upto versions and use the repo url to delete all distributions around it
+              repo_href = href.split("/versions").first
+              distro_hrefs = RepositoryReference.where(repository_href: repo_href).collect do |repo_reference|
+                repos_id = RootRepository.where(id: repo_reference.root_repository_id).repositories.pluck(:id)
+                DistributionReference.where(repository_id: repos_id).collect(&:href)
+              end
+            end
+            distro_hrefs.flatten!
+          distribution_deletion_tasks << distro_hrefs.collect do |href|
+            api.delete_distribution(href)
+          end
+
+          else
+          distribution_deletion_tasks << version_hrefs.collect do |href|
+            api.publications_api.list({repository_version: href}).results.collect do |publication|
+              publication.distributions.each do |distribution|
+                api.delete_distribution(distribution)
+              end
+            end
+          end
+          end
+          end
+          distribution_deletion_tasks.flatten!
+      end
+
       def delete_orphan_repository_versions
         tasks = []
-
+        tasks << delete_dangling_distributions
         orphan_repository_versions.each do |api, version_hrefs|
           tasks << version_hrefs.collect do |href|
             api.repository_versions_api.delete(href)
@@ -61,6 +93,10 @@ module Katello
         end
 
         repo_version_map
+      end
+
+      def publication_for_repository_href(repository_version_href)
+        api.publications_api.list({repository_version: repository_version_href}).results
       end
 
       def delete_orphan_repositories
