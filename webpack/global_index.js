@@ -2,7 +2,9 @@ import React from 'react';
 import { addGlobalFill } from 'foremanReact/components/common/Fill/GlobalFill';
 import { registerReducer } from 'foremanReact/common/MountingService';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { registerColumns } from 'foremanReact/components/HostsIndex/Columns/core';
 
+import hostsIndexColumnExtensions from './ForemanColumnExtensions/index';
 import SystemStatuses from './components/extensions/about';
 import {
   RegistrationCommands,
@@ -80,3 +82,5 @@ addGlobalFill(
 );
 
 addGlobalFill('host-tab-details-cards', 'HW properties', <HwPropertiesCard key="hw-properties" />, 200);
+
+registerColumns(hostsIndexColumnExtensions);
