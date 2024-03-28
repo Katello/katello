@@ -7,10 +7,10 @@ module ::Actions::Pulp3
       @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
-      @repo.root.update!(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+      @repo.root.update!(:url => 'https://fixtures.pulpproject.org/rpm-no-comps/')
       @repo_clone = katello_repositories(:fedora_17_x86_64_dev)
       @repo_clone.update!(:environment_id => nil)
-      @repo_clone.root.update!(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+      @repo_clone.root.update!(:url => 'https://fixtures.pulpproject.org/rpm-no-comps/')
 
       ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(false)
 

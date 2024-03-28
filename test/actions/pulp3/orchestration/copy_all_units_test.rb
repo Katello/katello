@@ -101,10 +101,10 @@ module ::Actions::Pulp3
       @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
-      @repo.root.update!(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+      @repo.root.update!(:url => 'https://fixtures.pulpproject.org/rpm-no-comps/')
       @repo_clone = katello_repositories(:fedora_17_x86_64_dev)
       @repo_clone.update!(:environment_id => nil)
-      @repo_clone.root.update!(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+      @repo_clone.root.update!(:url => 'https://fixtures.pulpproject.org/rpm-no-comps/')
 
       ensure_creatable(@repo, @primary)
       create_repo(@repo, @primary)
@@ -601,7 +601,7 @@ module ::Actions::Pulp3
       FactoryBot.create(:katello_content_view_module_stream_filter_rule,
                                    :filter => filter,
                                    :module_stream => duck)
-      @repo.root.update!(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+      @repo.root.update!(:url => 'https://fixtures.pulpproject.org/rpm-no-comps/')
 
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)

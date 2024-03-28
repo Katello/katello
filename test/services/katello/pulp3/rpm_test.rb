@@ -10,7 +10,7 @@ module Katello
         def setup
           @primary = SmartProxy.pulp_primary
           @repo = katello_repositories(:fedora_17_x86_64_duplicate)
-          @repo.root.update(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+          @repo.root.update(:url => 'https://fixtures.pulpproject.org/rpm-no-comps/')
           ensure_creatable(@repo, @primary)
           create_repo(@repo, @primary)
 
