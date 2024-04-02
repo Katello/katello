@@ -222,19 +222,20 @@ class UpstreamSubscriptionsPage extends Component {
 
     return (
       <Grid bsClass="container-fluid">
-        <BreadcrumbsBar data={{
-          isSwitchable: false,
-          breadcrumbItems: [
-            {
-              caption: __('Subscriptions'),
-              onClick: () => this.props.history.push('/subscriptions'),
-            },
-            {
-              caption: __('Add Subscriptions'),
-            },
-          ],
-        }}
-        />
+        {!upstreamSubscriptions.loading && <div style={{marginBottom: "10px"}}>
+          <BreadcrumbsBar
+            isLoadingResources={upstreamSubscriptions.loading}
+            breadcrumbItems={[
+              {
+                caption: __('Subscriptions'),
+                url: '/subscriptions/',
+              },
+              {
+                caption: String(__('Add Subscriptions')),
+              },
+            ]}
+          />
+        </div>}
 
         <LoadingState loading={upstreamSubscriptions.loading} loadingText={__('Loading')}>
           <Row>

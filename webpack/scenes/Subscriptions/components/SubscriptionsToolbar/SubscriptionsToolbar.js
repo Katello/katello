@@ -49,7 +49,7 @@ const SubscriptionsToolbar = ({
           <FormGroup>
             {canManageSubscriptionAllocations &&
               <LinkContainer
-                to="subscriptions/add"
+                to="/subscriptions/add"
                 disabled={disableManifestActions || disableAddButton}
               >
                 <TooltipButton

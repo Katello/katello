@@ -6,22 +6,28 @@ exports[`upstream subscriptions page should render 1`] = `
   componentClass="div"
   fluid={false}
 >
-  <BreadcrumbsBar
-    data={
+  <div
+    style={
       Object {
-        "breadcrumbItems": Array [
+        "marginBottom": "10px",
+      }
+    }
+  >
+    <BreadcrumbsBar
+      breadcrumbItems={
+        Array [
           Object {
             "caption": "Subscriptions",
-            "onClick": [Function],
+            "url": "/subscriptions/",
           },
           Object {
             "caption": "Add Subscriptions",
           },
-        ],
-        "isSwitchable": false,
+        ]
       }
-    }
-  />
+      isLoadingResources={false}
+    />
+  </div>
   <LoadingState
     loading={false}
     loadingText="Loading"
