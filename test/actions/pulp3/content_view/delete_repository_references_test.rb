@@ -11,6 +11,10 @@ module ::Actions::Pulp3::ContentView
       ensure_creatable(@repo, @primary)
     end
 
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+    end
+
     def test_create
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Create, @repo, @primary)
       repo_reference = Katello::Pulp3::RepositoryReference.find_by(:content_view => @content_view, :root_repository_id => @repo.root.id)

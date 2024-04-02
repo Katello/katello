@@ -15,6 +15,10 @@ module Katello
           @repo.reload
         end
 
+        def teardown
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+        end
+
         def test_index_model
           Katello::DockerTag.destroy_all
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}

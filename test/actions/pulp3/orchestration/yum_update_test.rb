@@ -23,6 +23,15 @@ module ::Actions::Pulp3
            "Expected a distribution reference."
     end
 
+    def teardown
+      @repo.backend_service(@primary).delete_distributions
+      @repo.backend_service(@primary).delete_publication
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::OrphanCleanup::RemoveOrphans, @primary)
+    end
+
     def test_update_http_proxy_with_no_url
       @repo.root.update(url: nil)
       @repo.root.update(http_proxy_policy: ::Katello::RootRepository::USE_SELECTED_HTTP_PROXY)

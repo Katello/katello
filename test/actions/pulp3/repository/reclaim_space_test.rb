@@ -9,6 +9,10 @@ module ::Actions::Pulp3::Repository
       @repo.root.update(download_policy: 'on_demand')
     end
 
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, SmartProxy.pulp_primary)
+    end
+
     def test_repository_has_space_reclaimed
       task = ForemanTasks.async_task(::Actions::Pulp3::Repository::ReclaimSpace,
                                       @repo)

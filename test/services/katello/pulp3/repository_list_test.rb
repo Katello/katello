@@ -46,6 +46,9 @@ module Katello
           Katello::Pulp3::RepositoryReference.all.each do |repo_reference|
             assert_includes repository_list.flatten.map(&:pulp_href), repo_reference.repository_href
           end
+
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, repo1, @primary)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, repo2, @primary)
         end
       end
     end

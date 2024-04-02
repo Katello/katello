@@ -27,6 +27,11 @@ module ::Actions::Pulp3
       @repo.reload
     end
 
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+    end
+
     def test_yum_copy_all_no_filter_rules
       ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
       filter = FactoryBot.build(:katello_content_view_package_filter)

@@ -14,6 +14,12 @@ module ::Actions::Pulp3::Repository
         ::Actions::Katello::Repository::MetadataGenerate, @repo)
     end
 
+    def teardown
+      User.current = users(:admin)
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+    end
+
     def test_repair_task_succeeds
       task = ForemanTasks.sync_task(::Actions::Pulp3::Repository::Repair,
                                      @repo.id, @primary)

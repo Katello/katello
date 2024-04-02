@@ -11,6 +11,13 @@ module ::Actions::Pulp3
       ensure_creatable(@repo, @primary)
     end
 
+    def teardown
+      @repo.backend_service(@primary).delete_distributions
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      @repo.reload
+    end
+
     def test_create
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Create, @repo, @primary)
       @repo.reload

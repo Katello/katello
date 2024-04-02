@@ -34,6 +34,11 @@ module ::Actions::Pulp3
       create_repo(@docker_clone, @primary)
     end
 
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @docker_repo, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @docker_clone, @primary)
+    end
+
     def test_inclusion_docker_filters
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @docker_repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @docker_repo, @primary, sync_args)
@@ -112,6 +117,11 @@ module ::Actions::Pulp3
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
+    end
+
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
     end
 
     def test_yum_copy_all_no_filter_rules
@@ -412,6 +422,11 @@ module ::Actions::Pulp3
       @repo.reload
     end
 
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+    end
+
     def test_all_srpms_copied_despite_filter_rules
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "kangaroo")
@@ -451,6 +466,11 @@ module ::Actions::Pulp3
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
+    end
+
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
     end
 
     def test_all_errata_copied_if_no_filter_rules
@@ -541,6 +561,11 @@ module ::Actions::Pulp3
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
+    end
+
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
     end
 
     def test_all_module_streams_copied_if_no_modular_filter_rules
@@ -651,6 +676,11 @@ module ::Actions::Pulp3
       @repo.reload
     end
 
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+    end
+
     def test_all_package_groups_copied_with_no_filter_rules
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
 
@@ -707,6 +737,11 @@ module ::Actions::Pulp3
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
+    end
+
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
     end
 
     def test_all_package_environments_are_copied_by_default
@@ -773,6 +808,11 @@ module ::Actions::Pulp3
       @repo.reload
     end
 
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+    end
+
     def test_all_modulemd_defaults_are_copied_by_default
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
 
@@ -815,6 +855,11 @@ module ::Actions::Pulp3
       index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
+    end
+
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
     end
 
     def test_all_distribution_trees_are_copied_by_default
