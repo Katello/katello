@@ -17,8 +17,6 @@ module ::Actions::Pulp3
       @repo.backend_service(@primary).delete_publication
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-      ForemanTasks.sync_task(
-        ::Actions::Pulp3::Orchestration::OrphanCleanup::RemoveOrphans, @primary)
     end
 
     def test_upload

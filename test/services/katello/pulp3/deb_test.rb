@@ -16,7 +16,7 @@ module Katello
         end
 
         def teardown
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+          ensure_creatable(@repo, @primary)
         end
 
         def test_index_model

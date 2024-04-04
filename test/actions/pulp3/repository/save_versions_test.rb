@@ -10,6 +10,11 @@ module ::Actions::Pulp3::Repository
       @repo2 = katello_repositories(:pulp3_file_1)
     end
 
+    def teardown
+      ensure_creatable(@repo1, @primary)
+      ensure_creatable(@repo2, @primary)
+    end
+
     def test_save_new_version_in_map
       @repo1.update(version_href: "test_repo_1/1/")
       @repo2.update(version_href: "test_repo_2/2/")

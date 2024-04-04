@@ -61,10 +61,6 @@ module Katello
         repo_version_map
       end
 
-      def publication_for_repository_href(repository_version_href)
-        api.publications_api.list({repository_version: repository_version_href}).results
-      end
-
       def delete_orphan_repositories
         tasks = []
         orphan_repositories.each do |api, hrefs|

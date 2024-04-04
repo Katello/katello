@@ -29,7 +29,7 @@ types.values.each do |repository_type|
 
       def teardown
         User.as_anonymous_admin do
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+          ensure_creatable(@repo, @primary)
           orphan_cleanup
         end
       end

@@ -47,8 +47,8 @@ module Katello
             assert_includes repository_list.flatten.map(&:pulp_href), repo_reference.repository_href
           end
 
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, repo1, @primary)
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, repo2, @primary)
+          ensure_creatable(repo1, @primary)
+          ensure_creatable(repo2, @primary)
         end
       end
     end

@@ -44,8 +44,6 @@ module ::Actions::Pulp3
     end
 
     def teardown
-      @repo.backend_service(@primary).delete_distributions
-      @repo.backend_service(@primary).delete_publication
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
       @repo.reload

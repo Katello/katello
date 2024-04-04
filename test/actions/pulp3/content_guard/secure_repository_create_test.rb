@@ -10,6 +10,13 @@ module ::Actions::Pulp3
       @repo.root.update(:url => 'http://test/test/', :unprotected => false)
     end
 
+    def teardown
+      @repo.backend_service(@primary).delete_distributions
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      @repo.reload
+    end
+
     def test_create
       content_guard = ::Katello::Pulp3::ContentGuard.first
       assert_nil content_guard

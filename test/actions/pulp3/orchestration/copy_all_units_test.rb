@@ -9,6 +9,11 @@ module ::Actions::Pulp3
       @file_clone = katello_repositories(:generic_file_dev)
     end
 
+    def teardown
+      ensure_creatable(@file_repo, @primary)
+      ensure_creatable(@file_clone, @primary)
+    end
+
     def test_file_repo_copy_all_units_uses_same_version_href
       @file_repo.update!(:version_href => "my/custom/path")
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits, @file_clone, @primary, [@file_repo])
@@ -35,8 +40,8 @@ module ::Actions::Pulp3
     end
 
     def teardown
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @docker_repo, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @docker_clone, @primary)
+      ensure_creatable(@docker_repo, @primary)
+      ensure_creatable(@docker_clone, @primary)
     end
 
     def test_inclusion_docker_filters
@@ -63,11 +68,6 @@ module ::Actions::Pulp3
       refute_nil(@docker_clone.version_href)
       assert_not_equal @docker_repo.version_href, @docker_clone.version_href
       assert_equal @docker_clone.docker_tags.pluck(:name).sort, ["latest", "glibc"].sort
-
-      @file_clone = katello_repositories(:generic_file_dev)
-      @docker_clone = katello_repositories(:busybox_dev)
-      @rule = FactoryBot.build(:katello_content_view_docker_filter_rule)
-      @rule2 = FactoryBot.build(:katello_content_view_docker_filter_rule)
     end
 
     def test_exclusion_docker_filters
@@ -91,7 +91,7 @@ module ::Actions::Pulp3
       refute_nil(@docker_repo.version_href)
       refute_nil(@docker_clone.version_href)
       assert_not_equal @docker_repo.version_href, @docker_clone.version_href
-      assert_equal @docker_clone.docker_tags.pluck(:name), @docker_repo.docker_tags.pluck(:name) - ["latest"]
+      assert_equal @docker_clone.docker_tags.pluck(:name).sort, @docker_repo.docker_tags.pluck(:name).sort - ["latest"]
     end
   end
 
@@ -120,8 +120,8 @@ module ::Actions::Pulp3
     end
 
     def teardown
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+      ensure_creatable(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
     end
 
     def test_yum_copy_all_no_filter_rules
@@ -236,9 +236,10 @@ module ::Actions::Pulp3
       assert_equal ['armadillo'], @repo_clone.rpms.pluck(:name)
       assert_equal ["KATELLO-RHEA-2010:0001", "KATELLO-RHEA-2010:99143", "KATELLO-RHSA-2010:0858", "RHEA-2021:9999"].sort, @repo_clone.errata.pluck(:pulp_id).sort
     ensure
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, repo2, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, repo3, @primary)
+      ensure_creatable(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
+      ensure_creatable(repo2, @primary)
+      ensure_creatable(repo3, @primary)
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
@@ -423,8 +424,8 @@ module ::Actions::Pulp3
     end
 
     def teardown
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+      ensure_creatable(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
     end
 
     def test_all_srpms_copied_despite_filter_rules
@@ -469,8 +470,8 @@ module ::Actions::Pulp3
     end
 
     def teardown
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+      ensure_creatable(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
     end
 
     def test_all_errata_copied_if_no_filter_rules
@@ -564,8 +565,8 @@ module ::Actions::Pulp3
     end
 
     def teardown
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+      ensure_creatable(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
     end
 
     def test_all_module_streams_copied_if_no_modular_filter_rules
@@ -677,8 +678,8 @@ module ::Actions::Pulp3
     end
 
     def teardown
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+      ensure_creatable(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
     end
 
     def test_all_package_groups_copied_with_no_filter_rules
@@ -740,8 +741,8 @@ module ::Actions::Pulp3
     end
 
     def teardown
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+      ensure_creatable(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
     end
 
     def test_all_package_environments_are_copied_by_default
@@ -809,8 +810,8 @@ module ::Actions::Pulp3
     end
 
     def teardown
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+      ensure_creatable(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
     end
 
     def test_all_modulemd_defaults_are_copied_by_default
@@ -858,8 +859,8 @@ module ::Actions::Pulp3
     end
 
     def teardown
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo_clone, @primary)
+      ensure_creatable(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
     end
 
     def test_all_distribution_trees_are_copied_by_default

@@ -18,6 +18,16 @@ module ::Actions::Pulp3::CapsuleContent
       @repo2.root.update(download_policy: 'on_demand')
     end
 
+    def teardown
+      #destroy the repositories
+      @repo.backend_service(@primary).delete_distributions
+      @repo2.backend_service(@primary).delete_distributions
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo2, @primary)
+    end
+
     def test_pulp_primary_has_space_reclaimed
       task = ForemanTasks.async_task(::Actions::Pulp3::CapsuleContent::ReclaimSpace, @primary)
       # Check that at least repo and repo2 are among the cleaned repositories
