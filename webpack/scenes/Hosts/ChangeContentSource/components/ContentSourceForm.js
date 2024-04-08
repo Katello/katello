@@ -23,7 +23,7 @@ import { ENVIRONMENT_PATHS_KEY } from '../../../../scenes/ContentViews/component
 import EnvironmentPaths from '../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPaths';
 import ContentViewSelect from '../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelect';
 import ContentViewSelectOption from '../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelectOption';
-import { selectContentViewsStatus } from '../selectors';
+import { selectContentViewsStatus, selectJobInvocationPath } from '../selectors';
 import { getCVPlaceholderText, shouldDisableCVSelect } from '../../../ContentViews/components/ContentViewSelect/helpers';
 import { selectEnvironmentPaths } from '../../../ContentViews/components/EnvironmentPaths/EnvironmentPathSelectors';
 
@@ -95,6 +95,9 @@ const ContentSourceForm = ({
   contentSources,
   handleContentSource,
   contentSourceId,
+  showCVOnlyAlert,
+  hostDetailsPath,
+  hostEditPath,
   contentHosts,
   isLoading,
   hostsUpdated,
@@ -108,6 +111,7 @@ const ContentSourceForm = ({
   );
   const contentViewsStatus = useSelector(selectContentViewsStatus);
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
+  const jobInvocationPath = useSelector(selectJobInvocationPath);
   const envList = environmentPathResponse?.results?.map(path => path.environments).flat();
   const [csSelectOpen, setCSSelectOpen] = useState(false);
   const [cvSelectOpen, setCVSelectOpen] = useState(false);
@@ -127,13 +131,12 @@ const ContentSourceForm = ({
     !!contentViewName &&
     !!contentSourceId &&
     hostCount !== 0);
-
   const contentSourcesIsDisabled = (isLoading || contentSources.length === 0 ||
     hostCount === 0);
-  const environmentIsDisabled = (isLoading || environments === [] ||
+  const environmentIsDisabled = (isLoading ||
     contentSourceId === '');
   const viewIsDisabled = (isLoading || contentViews.length === 0 ||
-    contentSourceId === '' || environments === []);
+    contentSourceId === '');
 
   const cvPlaceholderText = getCVPlaceholderText({
     contentSourceId,
@@ -229,6 +232,15 @@ const ContentSourceForm = ({
           env={environments[0]}
         />))}
       </ContentViewSelect>
+      {showCVOnlyAlert &&
+        <Alert
+          ouiaId="cv-only-alert"
+          variant="info"
+          className="margin-top-20"
+          title={__('Host content source will remain the same. Click Save below to update the host\'s content view environment.')}
+        />
+      }
+      {!showCVOnlyAlert &&
       <TextContent>
         <Text
           ouiaId="ccs-options-description"
@@ -252,27 +264,49 @@ const ContentSourceForm = ({
           />
         </Text>
       </TextContent>
+      }
       <ActionGroup style={{ display: 'block' }}>
-        <Button
-          variant="primary"
-          id="generate_btn"
-          ouiaId="update-source-button"
-          onClick={e => handleSubmit(e, { shouldRedirect: true })}
-          isDisabled={isLoading || !formIsValid() || hostsUpdated}
-          isLoading={isLoading}
-        >
-          {__('Run job invocation')}
-        </Button>
-        <Button
-          variant="secondary"
-          id="generate_btn"
-          ouiaId="update-source-button"
-          onClick={showTemplate}
-          isDisabled={isLoading || !formIsValid() || hostsUpdated}
-          isLoading={isLoading}
-        >
-          {__('Update hosts manually')}
-        </Button>
+        {!showCVOnlyAlert &&
+        <>
+          <Button
+            variant="primary"
+            id="generate_btn"
+            ouiaId="run-job-invocation-button"
+            onClick={e => handleSubmit(e, { redirectTo: jobInvocationPath })}
+            isDisabled={isLoading || !formIsValid() || hostsUpdated}
+            isLoading={isLoading}
+          >
+            {__('Run job invocation')}
+          </Button>
+          <Button
+            variant="secondary"
+            id="generate_btn"
+            ouiaId="update-source-button"
+            onClick={showTemplate}
+            isDisabled={isLoading || !formIsValid() || hostsUpdated}
+            isLoading={isLoading}
+          >
+            {__('Update hosts manually')}
+          </Button>
+        </>
+        }
+        {showCVOnlyAlert &&
+          <Button
+            variant="primary"
+            id="generate_btn"
+            ouiaId="change-cv-button"
+            onClick={e =>
+              handleSubmit(e, {
+                redirectTo: hostEditPath || hostDetailsPath,
+                showSuccessToast: true,
+              })
+            }
+            isDisabled={isLoading || !formIsValid() || hostsUpdated}
+            isLoading={isLoading}
+          >
+            {__('Save')}
+          </Button>
+        }
 
       </ActionGroup>
     </Form>);
@@ -288,6 +322,9 @@ ContentSourceForm.propTypes = {
   contentSources: PropTypes.arrayOf(PropTypes.shape({})),
   handleContentSource: PropTypes.func.isRequired,
   contentSourceId: PropTypes.string,
+  showCVOnlyAlert: PropTypes.bool,
+  hostDetailsPath: PropTypes.string.isRequired,
+  hostEditPath: PropTypes.string.isRequired,
   contentHosts: PropTypes.arrayOf(PropTypes.shape({})),
   isLoading: PropTypes.bool,
   hostsUpdated: PropTypes.bool,
@@ -300,6 +337,7 @@ ContentSourceForm.defaultProps = {
   contentViewName: '',
   contentSources: [],
   contentSourceId: '',
+  showCVOnlyAlert: false,
   contentHosts: [],
   isLoading: false,
   hostsUpdated: false,

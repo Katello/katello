@@ -65,7 +65,7 @@ const HostActionsBar = () => {
       <DropdownItem
         ouiaId="katello-change-host-content-source"
         key="katello-change-host-content-source"
-        href={foremanUrl(`/change_host_content_source?host_id=${hostDetails?.id}`)}
+        href={foremanUrl(`/change_host_content_source?host_id=${hostDetails?.id}&initialContentSourceId=${hostDetails?.content_facet_attributes?.content_source_id}`)}
         icon={<CubeIcon />}
       >
         {__('Change content source')}

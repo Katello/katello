@@ -18,7 +18,7 @@ export const getFormData = (hostIds, search) => (post({
 }));
 
 export const changeContentSource =
-  (environmentId, contentViewId, contentSourceId, hostIds, handleSuccess) =>
+  (environmentId, contentViewId, contentSourceId, hostIds, handleSuccess, successToast) =>
     put({
       key: CHANGE_CONTENT_SOURCE,
       url: foremanUrl('/api/v2/hosts/bulk/change_content_source'),
@@ -29,6 +29,7 @@ export const changeContentSource =
         host_ids: hostIds,
       },
       errorToast: () => __('Something went wrong while updating the content source. See the logs for more information'),
+      successToast,
       handleSuccess,
     });
 
