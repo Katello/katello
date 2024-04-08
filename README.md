@@ -67,7 +67,7 @@ See the [developer documentation](https://www.theforeman.org/plugins/katello/dev
 
 See the [annotation docs](./test/scenarios/annotations/README.md) for more information.
 
-## Contact & Resources
+## Contact & Resources 
 
  * [theforeman.org](https://theforeman.org/plugins/katello)
  * [Discourse Forum](https://theforeman.org/support.html#DiscourseForum)
