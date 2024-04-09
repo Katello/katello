@@ -222,7 +222,8 @@ class UpstreamSubscriptionsPage extends Component {
 
     return (
       <Grid bsClass="container-fluid">
-        {!upstreamSubscriptions.loading && <div style={{marginBottom: "10px"}}>
+        {!upstreamSubscriptions.loading &&
+        <div style={{ marginBottom: '10px' }}>
           <BreadcrumbsBar
             isLoadingResources={upstreamSubscriptions.loading}
             breadcrumbItems={[
@@ -235,7 +236,8 @@ class UpstreamSubscriptionsPage extends Component {
               },
             ]}
           />
-        </div>}
+        </div>
+        }
 
         <LoadingState loading={upstreamSubscriptions.loading} loadingText={__('Loading')}>
           <Row>
