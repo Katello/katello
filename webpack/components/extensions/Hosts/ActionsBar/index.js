@@ -1,8 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { DropdownItem } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
 import { ForemanHostsIndexActionsBarContext } from 'foremanReact/components/HostsIndex';
+import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
+import { addModal } from 'foremanReact/components/ForemanModal/ForemanModalActions';
 
 const HostActionsBar = () => {
   const {
@@ -10,6 +13,14 @@ const HostActionsBar = () => {
     selectedCount,
     selectAllMode,
   } = useContext(ForemanHostsIndexActionsBarContext);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(addModal({
+      id: 'bulk-change-cv-modal',
+    }));
+  }, [dispatch]);
+  const { setModalOpen } = useForemanModal({ id: 'bulk-change-cv-modal' });
 
   let href = '';
   if (selectAllMode) {
@@ -28,6 +39,14 @@ const HostActionsBar = () => {
         isDisabled={selectedCount === 0}
       >
         {__('Change content source')}
+      </DropdownItem>
+      <DropdownItem
+        ouiaId="bulk-change-cv-dropdown-item"
+        key="bulk-change-cv-dropdown-item"
+        onClick={setModalOpen}
+        isDisabled={selectedCount === 0}
+      >
+        {__('Change content view environments')}
       </DropdownItem>
     </>
   );
