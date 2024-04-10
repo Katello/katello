@@ -46,6 +46,7 @@ export const getContentViews = environmentId =>
     params: {
       environment_id: environmentId,
       full_result: true,
+      order: 'default DESC', // shows the default CV before all other options
     },
     errorToast: () => __('Something went wrong while loading the content views. See the logs for more information'),
   });
