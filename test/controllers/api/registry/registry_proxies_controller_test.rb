@@ -534,81 +534,93 @@ module Katello
       end
     end
 
-    # Disabling docker push tests until it is implemented for Pulp 3.
-    # describe "docker push" do
-    #   it "push manifest - error" do
-    #     @controller.stubs(:authorize_repository_write).returns(true)
-    #     put :push_manifest, params: { repository: 'repository', tag: 'tag' }
-    #     assert_response 500
-    #     body = JSON.parse(response.body)
-    #     assert_equal "Unsupported schema ", body['error']['message']
-    #   end
+    describe 'container push' do
+      it 'starts a blob upload to Pulp' do
+        repo_name = 'a repo'
+        # The content type should be octet-stream, but action controller
+        # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
+        Resources::Registry::Proxy.expects(:post).with(
+              "/v2/#{ERB::Util.url_encode(repo_name)}/blobs/uploads",
+              is_a(StringIO),
+              has_entries('MOCK-TEST' => 123,
+                          'Content-Type' => 'application/json',
+                          'Content-Length' => '2')
+            ).returns(mock_pulp_response(202, { 'Location' => 'Mars' }))
+        request.env['HTTP_MOCK_TEST'] = 123
+        request.headers['Content-Type'] = 'application/json'
+        resp = post :start_upload_blob, params: { repository: repo_name }
+        assert_equal 'Mars', resp.headers['Location']
+        assert_equal resp.code, '202'
+      end
 
-    #   it "push manifest - manifest.json exists" do
-    #     File.open("#{Rails.root}/tmp/manifest.json", 'wb', 0600) do |file|
-    #       file.write "empty manifest"
-    #     end
+      it 'uploads a blob chunk' do
+        repo_name = 'repo'
+        uuid = 'uuid'
+        # The content type should be octet-stream, but action controller
+        # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
+        Resources::Registry::Proxy.expects(:patch).with(
+              "/v2/#{repo_name}/blobs/uploads/#{uuid}",
+              '{}',
+              has_entries('MOCK-TEST' => 123,
+                          'Content-Type' => 'application/json',
+                          'Content-Range' => 'bytes 500-1000/65989',
+                          'Content-Length' => '2')
+            ).returns(mock_pulp_response(202, { 'Location' => 'Mars' }))
+        request.env['HTTP_MOCK_TEST'] = 123
+        request.headers['Content-Type'] = 'application/json'
+        request.headers['Content-Range'] = 'bytes 500-1000/65989'
+        request.env['HTTP_MOCK_TEST'] = 123
+        resp = patch :upload_blob, params: { repository: repo_name, uuid: uuid }
+        assert_equal 'Mars', resp.headers['Location']
+        assert_equal resp.code, '202'
+      end
 
-    #     @controller.stubs(:authorize_repository_write).returns(true)
-    #     put :push_manifest, params: { repository: 'repository', tag: 'tag' }
-    #     assert_response 422
-    #     body = JSON.parse(response.body)
-    #     assert_equal "Upload already in progress", body['error']['message']
-    #   end
+      it 'finishes a blob upload to Pulp' do
+        repo_name = 'repo'
+        uuid = 'uuid'
+        # The content type should be octet-stream, but action controller
+        # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
+        Resources::Registry::Proxy.expects(:put).with(
+              "/v2/#{repo_name}/blobs/uploads/#{uuid}",
+              is_a(StringIO),
+              has_entries('MOCK-TEST' => 123,
+                          'Content-Type' => 'application/json',
+                          'Content-Range' => 'bytes 500-1000/65989',
+                          'Content-Length' => '2')
+            ).returns(mock_pulp_response(201, { 'Location' => 'Mars' }))
+        request.env['HTTP_MOCK_TEST'] = 123
+        request.headers['Content-Type'] = 'application/json'
+        request.headers['Content-Range'] = 'bytes 500-1000/65989'
+        resp = put :finish_upload_blob, params: { repository: repo_name, uuid: uuid }
+        assert_equal 'Mars', resp.headers['Location']
+        assert_equal resp.code, '201'
+      end
 
-    #   it "push manifest - success" do
-    #     @repository = katello_repositories(:busybox)
-    #     mock_pulp_server([
-    #                        { name: :create_upload_request, result: { 'upload_id' => 123 }, count: 2 },
-    #                        { name: :delete_upload_request, result: true, count: 2 },
-    #                        { name: :upload_bits, result: true, count: 1 }
-    #                      ])
-    #     @controller.expects(:sync_task)
-    #       .times(2)
-    #       .returns(stub('task', :output => {'upload_results' => [{ 'digest' => 'sha256:1234' }]}), true)
-    #       .with do |action_class, repository, uploads, params|
-    #         assert_equal ::Actions::Katello::Repository::ImportUpload, action_class
-    #         assert_equal @repository, repository
-    #         assert_equal [123], uploads.pluck(:id)
-    #         assert params[:generate_metadata]
-    #         assert params[:sync_capsule]
-    #       end
+      it 'pushes a manifest' do
+        repo_name = 'repo'
+        tag = 'latest'
+        # The content type should be application/vnd.oci.image.manifest.v1+json, but action controller
+        # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
+        Resources::Registry::Proxy.expects(:put).with(
+              "/v2/#{repo_name}/manifests/#{tag}",
+              '{}',
+              has_entries('MOCK-TEST' => 123,
+                          'Content-Type' => 'application/json')
+            ).returns(mock_pulp_response(201, { 'Location' => 'Mars' }))
+        request.env['HTTP_MOCK_TEST'] = 123
+        request.headers['Content-Type'] = 'application/json'
+        resp = put :push_manifest, params: { repository: repo_name, tag: tag }
+        assert_equal 'Mars', resp.headers['Location']
+        assert_equal resp.code, '201'
+      end
 
-    #     manifest = {
-    #       schemaVersion: 1
-    #     }
-    #     @controller.stubs(:authorize).returns(true)
-    #     @controller.stubs(:find_readable_repository).returns(@repository)
-    #     @controller.stubs(:find_writable_repository).returns(@repository)
-    #     put :push_manifest, params: { repository: 'repository', tag: 'tag' },
-    #         body: manifest.to_json
-    #     assert_response 200
-    #   end
-
-    #   it "push manifest - disabled with false" do
-    #     SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt', allow_push: false}
-    #     put :push_manifest, params: { repository: 'repository', tag: 'tag' }
-    #     assert_response 404
-    #     body = JSON.parse(response.body)
-    #     assert_equal "Registry push not supported", body['error']['message']
-    #   end
-
-    #   it "push manifest - disabled by omission" do
-    #     SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt'}
-    #     put :push_manifest, params: { repository: 'repository', tag: 'tag' }
-    #     assert_response 404
-    #     body = JSON.parse(response.body)
-    #     assert_equal "Registry push not supported", body['error']['message']
-    #   end
-    # end
-
-    # def mock_pulp_server(content_hash)
-    #   content = mock
-    #   content_hash.each do |method|
-    #     content.stubs(method[:name]).times(method[:count]).returns(method[:result])
-    #   end
-    #   @controller.stubs(:pulp_content).returns(content)
-    # end
+      def mock_pulp_response(code, headers)
+        mock_response = mock
+        mock_response.stubs(:code).returns(code)
+        mock_response.stubs(:headers).returns(headers)
+        mock_response
+      end
+    end
+    #rubocop:enable Metrics/BlockLength
   end
-  #rubocop:enable Metrics/BlockLength
 end
