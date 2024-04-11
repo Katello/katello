@@ -3,7 +3,7 @@ kind: job_template
 name: Update packages by search query - Katello Ansible Default
 job_category: Katello
 description_format: 'Update package(s) %{Packages search query}'
-feature: katello_package_remove_by_search
+feature: katello_package_update_by_search
 provider_type: Ansible
 template_inputs:
 - name: Packages search query
@@ -22,7 +22,7 @@ template_inputs:
   versions: input('Selected update versions')
 ) -%>
 <% if package_names.empty? -%>
-<%= render_template('Run Command - Ansible Default', :command => "yum -y update") %>
+<%= render_template('Package Action - Ansible Default', :state => 'latest', :name => '"*"') %>
 <% else -%>
 ---
 - hosts: all

@@ -13,4 +13,8 @@ provider_type: Ansible
 kind: job_template
 %>
 
-<%= render_template('Run Command - Ansible Default', :command => "yum -y update #{input('package')}") %>
+<%
+pkgs = input('package')
+pkgs = '"*"' if pkgs.empty?
+-%>
+<%= render_template('Package Action - Ansible Default', :state => 'latest', :name => pkgs) %>
