@@ -61,7 +61,7 @@ module Katello
     end
 
     def total_hosts
-      hosts.length
+      hosts.count
     end
 
     # Retrieve the list of accessible host collections in the organization specified, returning
