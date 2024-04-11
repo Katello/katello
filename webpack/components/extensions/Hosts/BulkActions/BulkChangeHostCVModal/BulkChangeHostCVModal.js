@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 import { Modal, Button, Alert, TextContent, Text, TextVariants } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
@@ -15,7 +16,6 @@ import getContentViews from '../../../../../scenes/ContentViews/ContentViewsActi
 import { selectContentViews, selectContentViewStatus } from '../../../../../scenes/ContentViews/ContentViewSelectors';
 import { bulkUpdateHostContentViewAndEnvironment } from './actions';
 import { getCVPlaceholderText } from '../../../../../scenes/ContentViews/components/ContentViewSelect/helpers';
-import { selectEnvironmentPaths } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathSelectors';
 import HOST_CV_AND_ENV_KEY from '../../../HostDetails/Cards/ContentViewDetailsCard/HostContentViewConstants';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
@@ -23,6 +23,7 @@ const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
 const BulkChangeHostCVModal = ({
   isOpen,
   closeModal,
+  selectedCount,
   orgId,
   fetchBulkParams,
 }) => {
@@ -33,8 +34,6 @@ const BulkChangeHostCVModal = ({
   const [cvSelectOpen, setCVSelectOpen] = useState(false);
   const dispatch = useDispatch();
   const contentViewsInEnvResponse = useSelector(state => selectContentViews(state, '_FOR_DEFAULT_ENV'));
-  const environmentPathResponse = useSelector(selectEnvironmentPaths);
-  const environments = environmentPathResponse?.results?.map(path => path.environments).flat();
   const { results } = contentViewsInEnvResponse;
   const contentViewsInEnvStatus = useSelector(state => selectContentViewStatus(state, '_FOR_DEFAULT_ENV'));
   const hostUpdateStatus = useSelector(state => selectAPIStatus(state, HOST_CV_AND_ENV_KEY));
@@ -128,6 +127,31 @@ const BulkChangeHostCVModal = ({
       key="bulk-change-host-cv-modal"
       ouiaId="bulk-change-host-cv-modal"
     >
+      <TextContent>
+        <Text
+          ouiaId="bulk-change-cv-options-description"
+        >
+          <FormattedMessage
+            defaultMessage={__('This will update the content view environments for {hosts}.')}
+            values={{
+              hosts: (
+                <strong>
+                  <FormattedMessage
+                    defaultMessage="{count, plural, one {# {singular}} other {# {plural}}}"
+                    values={{
+                      count: selectedCount,
+                      singular: __('selected host'),
+                      plural: __('selected hosts'),
+                    }}
+                    id="ccs-options-i18n"
+                  />
+                </strong>
+              ),
+            }}
+            id="bulk-change-cv-options-description-i18n"
+          />
+        </Text>
+      </TextContent>
       {contentViewsInEnvStatus === STATUS.RESOLVED &&
         !!selectedLifecycleEnv.length && contentViewsInEnv.length === 0 &&
         <Alert
@@ -139,18 +163,6 @@ const BulkChangeHostCVModal = ({
         >
           <a href="/content_views">{__('View the Content Views page')}</a>
           {__(' to manage and promote content views, or select a different environment.')}
-        </Alert>
-      }
-      {environments?.some(env => env?.content_source?.environment_is_associated === false) &&
-        <Alert
-          variant="info"
-          ouiaId="disabled-environments-alert"
-          isInline
-          title={__('Some environments are disabled because they are not associated with the host\'s content source.')}
-          style={{ marginBottom: '1rem' }}
-        >
-          {__('To enable them, add the environment to the host\'s content source, or ')}
-          <a href={`/change_host_content_source?search=${fetchBulkParams()}`}>{__('change the host\'s content source.')}</a>
         </Alert>
       }
       <EnvironmentPaths
@@ -194,6 +206,7 @@ const BulkChangeHostCVModal = ({
 BulkChangeHostCVModal.propTypes = {
   isOpen: PropTypes.bool,
   closeModal: PropTypes.func,
+  selectedCount: PropTypes.number.isRequired,
   orgId: PropTypes.number.isRequired,
   fetchBulkParams: PropTypes.func.isRequired,
 };
