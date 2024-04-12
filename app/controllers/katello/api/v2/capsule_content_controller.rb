@@ -112,6 +112,30 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :POST, '/capsules/:id/content/verify_checksum', N_('Check for missing or corrupted artifacts, and attempt to redownload them.')
+    param :id, :number, :required => true, :desc => N_('Id of the smart proxy')
+    param :environment_id, Integer, :desc => N_('Id of the environment to limit verifying checksum on')
+    param :content_view_id, Integer, :desc => N_('Id of the content view to limit verifying checksum on')
+    param :repository_id, Integer, :desc => N_('Id of the repository to limit verifying checksum on')
+    def verify_checksum
+      find_capsule(false)
+      find_environment if params[:environment_id]
+      find_content_view if params[:content_view_id]
+      find_repository if params[:repository_id]
+
+      repair_options = {
+        :environment_id => @environment.try(:id),
+        :content_view_id => @content_view.try(:id),
+        :repository_id => @repository.try(:id)
+      }
+      repair_options[:environment_ids] = @capsule.lifecycle_environments&.pluck(:id) unless (@environment || @content_view || @repository)
+
+      task = async_task(::Actions::Katello::CapsuleContent::VerifyChecksum,
+                        @capsule,
+                        repair_options)
+      respond_for_async :resource => task
+    end
+
     protected
 
     def respond_for_lifecycle_environments_index(environments)

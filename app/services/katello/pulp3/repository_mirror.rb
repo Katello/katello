@@ -240,6 +240,12 @@ module Katello
         distribution_data = api.distribution_class.new(distribution_options(path))
         repo_service.distributions_api.create(distribution_data)
       end
+
+      def repair
+        data = api.repair_class.new
+        fail "Could not lookup a version_href for repo #{repo_service.repo.id}" if version_href.nil?
+        api.repository_versions_api.repair(version_href, data)
+      end
     end
   end
 end
