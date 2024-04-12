@@ -17,11 +17,15 @@ const HostActionsBar = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(addModal({
-      id: 'bulk-change-cv-modal',
-    }));
+    [
+      'bulk-change-cv-modal',
+      'bulk-packages-wizard',
+    ].forEach((id) => {
+      dispatch(addModal({ id }));
+    });
   }, [dispatch]);
-  const { setModalOpen } = useForemanModal({ id: 'bulk-change-cv-modal' });
+  const { setModalOpen: openBulkChangeCVModal } = useForemanModal({ id: 'bulk-change-cv-modal' });
+  const { setModalOpen: openBulkPackagesWizardModal } = useForemanModal({ id: 'bulk-packages-wizard' });
 
   const orgId = useForemanOrganization()?.id;
 
@@ -46,10 +50,18 @@ const HostActionsBar = () => {
       <DropdownItem
         ouiaId="bulk-change-cv-dropdown-item"
         key="bulk-change-cv-dropdown-item"
-        onClick={setModalOpen}
+        onClick={openBulkChangeCVModal}
         isDisabled={selectedCount === 0 || !orgId}
       >
         {__('Change content view environments')}
+      </DropdownItem>
+      <DropdownItem
+        ouiaId="bulk-packages-wizard-dropdown-item"
+        key="bulk-packages-wizard-dropdown-item"
+        onClick={openBulkPackagesWizardModal}
+        isDisabled={selectedCount === 0}
+      >
+        {__('Manage packages')}
       </DropdownItem>
     </>
   );

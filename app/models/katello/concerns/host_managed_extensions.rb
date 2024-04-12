@@ -503,11 +503,16 @@ module Katello
         end
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def yum_names_for_job_template(action:, search:, versions: nil)
         actions = %w(install remove update).freeze
         case action
         when 'install'
-          ::Katello::Rpm.yum_installable_for_host(self).search_for(search).distinct.pluck(:name)
+          yum_installable = ::Katello::Rpm.yum_installable_for_host(self).search_for(search).distinct.pluck(:name)
+          if yum_installable.empty?
+            fail _("No available packages found for search term '%s'. Check the host's content view environments and already-installed packages.") % search
+          end
+          yum_installable
         when 'remove'
           return [] if search.empty?
 
@@ -523,26 +528,41 @@ module Katello
             end
           end
           pkg_name_archs = installed_packages.search_for(search).distinct.pluck(:name, :arch)
+          if pkg_name_archs.empty?
+            fail _("Cannot upgrade packages: No installed packages found for search term '%s'") % search
+          end
           upgrades = ::Katello::Rpm.installable_for_hosts([self]).select(:id, :name, :arch, :nvra, :evr).order(evr: :desc).group_by { |i| [i.name, i.arch] }
-          pkg_name_archs.map { |name, arch| versions_by_name_arch[[name, arch]] || upgrades[[name, arch]]&.first&.nvra }.compact
+          result = pkg_name_archs.map { |name, arch| versions_by_name_arch[[name, arch]] || upgrades[[name, arch]]&.first&.nvra }.compact
+          if result.empty?
+            fail _("No upgradable packages found for search term '%s'. The host may already have the latest version(s) installed.") % search
+          end
+          result
         else
           fail ::Foreman::Exception.new(N_("package_names_for_job_template: Action must be one of %s"), actions.join(', '))
         end
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def deb_names_for_job_template(action:, search:)
         actions = %w(install remove update).freeze
         case action
         when 'install'
-          ::Katello::Deb.apt_installable_for_host(self).search_for(search).distinct.pluck(:name)
+          deb_installable = ::Katello::Deb.apt_installable_for_host(self).search_for(search).distinct.pluck(:name)
+          if deb_installable.empty?
+            fail _("No available debs found for search term '%s'. Check the host's content view environments and already-installed debs.") % search
+          end
+          deb_installable
         when 'remove'
           return [] if search.empty?
 
           installed_debs.search_for(search).distinct.pluck(:name)
         when 'update'
           return [] if search.empty?
-
-          installed_debs.search_for(search).distinct.pluck(:name)
+          deb_results = installed_debs.search_for(search).distinct.pluck(:name)
+          if deb_results.empty?
+            fail _("No installed debs found for search term '%s'") % search
+          end
+          deb_results
         else
           fail ::Foreman::Exception.new(N_("deb_names_for_job_template: Action must be one of %s"), actions.join(', '))
         end
