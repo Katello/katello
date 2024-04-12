@@ -102,10 +102,10 @@ const BulkChangeHostCVModal = ({
   const modalActions = ([
     <Button
       key="add"
-      ouiaId="change-host-cv-modal-add-button"
+      ouiaId="bulk-change-host-cv-modal-add-button"
       variant="primary"
       onClick={handleSave}
-      isDisabled={!canSave}
+      isDisabled={!canSave || hostUpdateStatus === STATUS.PENDING}
       isLoading={hostUpdateStatus === STATUS.PENDING}
     >
       {__('Save')}
@@ -123,7 +123,7 @@ const BulkChangeHostCVModal = ({
       width="50%"
       position="top"
       actions={modalActions}
-      id="change-host-cv-modal"
+      id="bulk-change-host-cv-modal"
       key="bulk-change-host-cv-modal"
       ouiaId="bulk-change-host-cv-modal"
     >
