@@ -235,7 +235,7 @@ module Katello
 
     api :GET, "/activation_keys/:id/product_content", N_("Show content available for an activation key")
     param :id, String, :desc => N_("ID of the activation key"), :required => true
-    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions")
+    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions"), deprecated: true, default: true
     param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the activation key's content view version")
     param_group :search, Api::V2::ApiController
     def product_content

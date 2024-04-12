@@ -20,7 +20,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostRepositorySetsCon
 
         params = {
             'host_id': $scope.$stateParams.hostId,
-            'content_access_mode_all': $scope.simpleContentAccessEnabled,
+            'content_access_mode_all': true,
             'sort_order': 'ASC',
             'paged': true
         };
@@ -33,11 +33,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostRepositorySetsCon
         $scope.nutupane.primaryOnly = true;
 
         $scope.contentAccessModes = {
-            contentAccessModeAll: $scope.simpleContentAccessEnabled,
+            contentAccessModeAll: true,
             contentAccessModeEnv: false
         };
         $scope.toggleFilters = function () {
-            $scope.nutupane.table.params['content_access_mode_all'] = $scope.contentAccessModes.contentAccessModeAll || $scope.simpleContentAccessEnabled;
+            $scope.nutupane.table.params['content_access_mode_all'] = true;
             $scope.nutupane.table.params['content_access_mode_env'] = $scope.contentAccessModes.contentAccessModeEnv;
             $scope.nutupane.refresh();
         };

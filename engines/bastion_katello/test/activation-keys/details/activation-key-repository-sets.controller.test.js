@@ -178,17 +178,6 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
         });
     });
 
-    describe("can toggle repository set filters", function () {
-        it("all and env toggles correctly with no SCA", function () {
-            $scope.contentAccessModes.contentAccessModeAll = false;
-            $scope.contentAccessModes.contentAccessModeEnv = false;
-            $scope.simpleContentAccessEnabled = false;
-            $scope.toggleFilters();
-            expect($scope.nutupane.table.params['content_access_mode_env']).toEqual($scope.contentAccessModes.contentAccessModeEnv);
-            expect($scope.nutupane.table.params['content_access_mode_all']).toEqual($scope.contentAccessModes.contentAccessModeAll);
-        });
-    });
-
     describe("can select repository type", function () {
         it("correctly sets the repo params for redhat", function () {
             $scope.repositoryType["value"] = "redhat";
