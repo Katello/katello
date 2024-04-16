@@ -67,7 +67,7 @@ module Katello
           self.purpose_addon_ids = consumer_params['addOns'].map { |addon_name| ::Katello::PurposeAddon.find_or_create_by(name: addon_name).id }
         end
 
-        unless consumer_params['releaseVer'].blank?
+        unless consumer_params['releaseVer'].nil?
           release = consumer_params['releaseVer']
           release = release['releaseVer'] if release.is_a?(Hash)
           self.release_version = release
