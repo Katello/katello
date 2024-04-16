@@ -21,6 +21,8 @@ module Katello
 
           def teardown
             User.current = User.anonymous_admin
+            @repo.backend_service(@primary).delete_distributions
+            @repo.backend_service(@primary).delete_publication
             ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
           end
 

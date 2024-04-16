@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos8-katello-devel.cannolo.example.com/pulp/api/v3/tasks/?limit=2000&offset=0&state__in=failed&task_group=/pulp/api/v3/task-groups/d9841aaa-8a47-4e31-9018-10e4430766bf/
+    uri: https://centos8-katello-devel-stable.example.com/pulp/api/v3/tasks/?limit=2000&offset=0&state__in=failed&task_group=/pulp/api/v3/task-groups/d9841aaa-8a47-4e31-9018-10e4430766bf/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.39.1/ruby
+      - OpenAPI-Generator/3.49.3/ruby
       Accept:
       - application/json
       Authorization:
@@ -23,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Tue, 07 Nov 2023 19:45:37 GMT
+      - Thu, 04 Apr 2024 23:10:10 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -43,16 +43,15 @@ http_interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Correlation-Id:
-      - c118dde6a3c046afb501247f2979f7e8
+      - 717872bacd984870a9c26c12edfca68f
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos8-katello-devel.cannolo.example.com
+      - 1.1 centos8-katello-devel-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
-    http_version: 
-  recorded_at: Tue, 07 Nov 2023 19:45:37 GMT
-recorded_with: VCR 3.0.3
+  recorded_at: Thu, 04 Apr 2024 23:10:10 GMT
+recorded_with: VCR 6.2.0

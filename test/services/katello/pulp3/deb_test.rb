@@ -15,6 +15,10 @@ module Katello
           @repo.reload
         end
 
+        def teardown
+          ensure_creatable(@repo, @primary)
+        end
+
         def test_index_model
           Katello::Deb.destroy_all
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}

@@ -10,6 +10,12 @@ module ::Actions::Pulp3
       create_repo(@repo, @primary)
     end
 
+    def teardown
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      @repo.reload
+    end
+
     def test_invalid_update
       ::Katello::Pulp3::Repository::AnsibleCollection.any_instance.stubs(:test_remote_name).returns(:test_remote_name)
 

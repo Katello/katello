@@ -40,6 +40,8 @@ module ::Actions::Pulp3
       assert_equal @repo.publication_href, @clone.reload.publication_href
       assert_equal 1, Katello::Pulp3::DistributionReference.where(repository_id: @clone.id).count
       assert_equal @clone.smart_proxy_sync_histories.count, 0
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @clone, @primary)
     end
   end
 end

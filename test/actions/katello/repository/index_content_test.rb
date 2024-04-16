@@ -11,6 +11,10 @@ module ::Actions::Katello::Repository
       @repo.update(last_contents_changed: @now - 600.seconds)
     end
 
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+    end
+
     def test_index_not_performed_if_last_contents_changed_older_than_last_indexed
       @repo.update(last_indexed: (@now - 300.seconds).to_datetime)
       indexed_time = @repo.last_indexed

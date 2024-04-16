@@ -15,6 +15,11 @@ module ::Actions::Pulp3
       @rpm = Katello::Rpm.find_by(filename: "frog-0.1-1.noarch.rpm")
     end
 
+    def teardown
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+    end
+
     def create_and_sync_repo(repo, proxy)
       create_repo(repo, proxy)
 

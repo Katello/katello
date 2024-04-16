@@ -12,6 +12,10 @@ module Katello
             @proxy = SmartProxy.pulp_primary
           end
 
+          def teardown
+            ensure_creatable(@repo, @proxy)
+          end
+
           def test_copy_units_does_not_clear_repo_during_composite_merger
             service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
             service.expects(:remove_all_content).never
@@ -103,6 +107,10 @@ module Katello
             @repo = katello_repositories(:debian_9_amd64)
             @proxy = SmartProxy.pulp_primary
             @service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
+          end
+
+          def teardown
+            ensure_creatable(@repo, @proxy)
           end
 
           def test_create_remote_with_http_proxy_creds

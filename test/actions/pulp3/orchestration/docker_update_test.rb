@@ -22,6 +22,10 @@ module ::Actions::Pulp3
         ssl_client_key: katello_gpg_keys(:unassigned_gpg_key))
     end
 
+    def teardown
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+    end
+
     def test_update_ssl_validation
       refute @repo.root.verify_ssl_on_sync, "Respository verify_ssl_on_sync option was false."
       @repo.root.update(

@@ -53,15 +53,15 @@ Gem::Specification.new do |gem|
   # webrick is no longer a part of Ruby's stdlib: https://bugs.ruby-lang.org/issues/17303
   gem.add_dependency "webrick"
   #pulp3
-  gem.add_dependency "pulpcore_client", ">= 3.39.0", "< 3.40.0"
-  gem.add_dependency "pulp_file_client", ">= 1.15.0", "< 1.16.0"
-  gem.add_dependency "pulp_ansible_client", ">= 0.20.0", "< 0.21.0"
-  gem.add_dependency "pulp_container_client", ">= 2.16.0", "< 2.17.0"
-  gem.add_dependency "pulp_deb_client", ">= 3.0.0", "< 3.1.0"
-  gem.add_dependency "pulp_rpm_client", ">= 3.23.0", "< 3.24.0"
-  gem.add_dependency "pulp_certguard_client", "< 2.0.0"
-  gem.add_dependency "pulp_python_client", ">= 3.10.0", "< 3.11.0"
-  gem.add_dependency "pulp_ostree_client", ">= 2.1.0", "< 2.2.0"
+  gem.add_dependency "pulpcore_client", ">= 3.49.1", "< 3.50.0"
+  gem.add_dependency "pulp_file_client", ">= 3.49.1", "< 3.50.0"
+  gem.add_dependency "pulp_ansible_client", ">= 0.21.3", "< 0.22.0"
+  gem.add_dependency "pulp_container_client", ">= 2.19.2", "< 2.20.0"
+  gem.add_dependency "pulp_deb_client", ">= 3.2.0", "< 3.3.0"
+  gem.add_dependency "pulp_rpm_client", ">= 3.25.2", "< 3.26.0"
+  gem.add_dependency "pulp_certguard_client", ">= 3.49.1", "< 3.50.0"
+  gem.add_dependency "pulp_python_client", ">= 3.11.0", "< 3.12.0"
+  gem.add_dependency "pulp_ostree_client", ">= 2.3.0", "< 2.4.0"
 
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'

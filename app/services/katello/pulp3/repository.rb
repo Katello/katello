@@ -210,6 +210,10 @@ module Katello
         api.publications_api.create(publication_data)
       end
 
+      def delete_publication
+        ignore_404_exception { api.publications_api.delete(repo.publication_href) } if repo.publication_href
+      end
+
       def publication_options(repository_version)
         {
           repository_version: repository_version

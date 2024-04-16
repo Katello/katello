@@ -35,13 +35,11 @@ module Katello
 
       def delete_orphan_repository_versions
         tasks = []
-
         orphan_repository_versions.each do |api, version_hrefs|
           tasks << version_hrefs.collect do |href|
             api.repository_versions_api.delete(href)
           end
         end
-
         tasks.flatten
       end
 

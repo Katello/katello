@@ -17,6 +17,11 @@ module Katello
             @repo.reload
           end
 
+          def teardown
+            ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+            @repo.reload
+          end
+
           def test_update
             ForemanTasks.sync_task(
               ::Actions::Pulp3::Repository::UpdateRepository, @repo, @primary)

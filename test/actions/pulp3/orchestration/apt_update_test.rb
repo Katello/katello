@@ -21,6 +21,13 @@ module ::Actions::Pulp3
         ssl_client_key: katello_gpg_keys(:unassigned_gpg_key))
     end
 
+    def teardown
+      @repo.backend_service(@primary).delete_distributions
+      @repo.backend_service(@primary).delete_publication
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+    end
+
     def test_update_http_proxy_with_no_url
       @repo.root.update(url: nil)
       @repo.root.update(http_proxy_policy: ::Katello::RootRepository::USE_SELECTED_HTTP_PROXY)
@@ -66,6 +73,13 @@ module ::Actions::Pulp3
 
       @repo.root.update(url: nil)
       create_repo(@repo, @primary)
+    end
+
+    def teardown
+      @repo.backend_service(@primary).delete_distributions
+      @repo.backend_service(@primary).delete_publication
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
     end
 
     def test_addurl

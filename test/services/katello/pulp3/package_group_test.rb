@@ -31,9 +31,7 @@ module Katello
         end
 
         def teardown
-          ForemanTasks.sync_task(
-            ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-          @repo.reload
+          ensure_creatable(@repo, @primary)
         end
       end
 

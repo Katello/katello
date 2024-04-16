@@ -19,6 +19,12 @@ module ::Actions::Pulp3
       refute_empty Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
     end
 
+    def teardown
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      @repo.reload
+    end
+
     def test_repository_reference_is_deleted
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)

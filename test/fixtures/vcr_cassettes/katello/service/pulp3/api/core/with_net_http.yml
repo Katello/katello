@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos8-katello-devel.cannolo.example.com/pulp/api/v3/tasks/?limit=1
+    uri: https://centos8-katello-devel-stable.example.com/pulp/api/v3/tasks/?limit=1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -10,7 +10,9 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.39.1/ruby
+      - OpenAPI-Generator/3.49.3/ruby
+      Correlation-Id:
+      - abc123
       Accept:
       - application/json
       Authorization:
@@ -23,7 +25,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Tue, 07 Nov 2023 19:44:05 GMT
+      - Thu, 04 Apr 2024 23:13:59 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -35,7 +37,7 @@ http_interactions:
       X-Frame-Options:
       - DENY
       Content-Length:
-      - '852'
+      - '943'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
@@ -43,33 +45,34 @@ http_interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Correlation-Id:
-      - b5c5ceb0139c44da9407f271de337268
+      - 19b8ad30a6ae421d864c98c25f6261c0
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos8-katello-devel.cannolo.example.com
+      - 1.1 centos8-katello-devel-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6MzM4NCwibmV4dCI6Imh0dHBzOi8vY2VudG9zOC1rYXRlbGxv
-        LWRldmVsLmNhbm5vbG8uZXhhbXBsZS5jb20vcHVscC9hcGkvdjMvdGFza3Mv
-        P2xpbWl0PTEmb2Zmc2V0PTEiLCJwcmV2aW91cyI6bnVsbCwicmVzdWx0cyI6
-        W3sicHVscF9ocmVmIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzAxOGJhYjUwLTNl
-        OTgtN2NiYi1hYjYzLWUzZmY1MGExNzc0YS8iLCJwdWxwX2NyZWF0ZWQiOiIy
-        MDIzLTExLTA3VDE5OjQ0OjA0Ljc2MTYwOVoiLCJzdGF0ZSI6ImNvbXBsZXRl
-        ZCIsIm5hbWUiOiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX2Rl
-        bGV0ZSIsImxvZ2dpbmdfY2lkIjoiNDIwZmQwMGMyMjdlNDMwOGFjNjdkYzUx
-        ZTJkYzBlZDAiLCJjcmVhdGVkX2J5IjoiL3B1bHAvYXBpL3YzL3VzZXJzLzEv
-        Iiwic3RhcnRlZF9hdCI6IjIwMjMtMTEtMDdUMTk6NDQ6MDQuODIyNjYxWiIs
-        ImZpbmlzaGVkX2F0IjoiMjAyMy0xMS0wN1QxOTo0NDowNC45NDAzMjBaIiwi
-        ZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJzLzAx
-        OGJhYWI0LThkZjMtNzc3OC1iMjlmLTZiOWI1MWU1ZTNlZS8iLCJwYXJlbnRf
-        dGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpudWxs
-        LCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOltd
-        LCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9y
-        ZXBvc2l0b3JpZXMvZmlsZS9maWxlLzAxOGJhYjUwLTM0MmYtNzQ4OS05NTU1
-        LTVlNGMzODZlZTQ2OC8iLCJzaGFyZWQ6L3B1bHAvYXBpL3YzL2RvbWFpbnMv
-        MDE4YmFhYjMtYTM4Yy03Nzc0LWJhODktMDg4OTg5ZjJkODk5LyJdfV19
-    http_version: 
-  recorded_at: Tue, 07 Nov 2023 19:44:05 GMT
-recorded_with: VCR 3.0.3
+        eyJjb3VudCI6NTE4LCJuZXh0IjoiaHR0cHM6Ly9jZW50b3M4LWthdGVsbG8t
+        ZGV2ZWwtc3RhYmxlLmV4YW1wbGUuY29tL3B1bHAvYXBpL3YzL3Rhc2tzLz9s
+        aW1pdD0xJm9mZnNldD0xIiwicHJldmlvdXMiOm51bGwsInJlc3VsdHMiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMThlYWI2My1mMmQ4
+        LTc2OTktYTg0My1jMjRkNjIyMjViOWUvIiwicHVscF9jcmVhdGVkIjoiMjAy
+        NC0wNC0wNFQyMzoxMzo1Ny45NzcxNzBaIiwicHVscF9sYXN0X3VwZGF0ZWQi
+        OiIyMDI0LTA0LTA0VDIzOjEzOjU3Ljk3NzE4M1oiLCJzdGF0ZSI6ImNvbXBs
+        ZXRlZCIsIm5hbWUiOiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFs
+        X2RlbGV0ZSIsImxvZ2dpbmdfY2lkIjoiM2I0M2UxMWUyNDRlNGQzNzhhNTlj
+        OTg4YmI3Y2I3MTMiLCJjcmVhdGVkX2J5IjoiL3B1bHAvYXBpL3YzL3VzZXJz
+        LzEvIiwidW5ibG9ja2VkX2F0IjoiMjAyNC0wNC0wNFQyMzoxMzo1Ny45OTYw
+        MTFaIiwic3RhcnRlZF9hdCI6IjIwMjQtMDQtMDRUMjM6MTM6NTguMDYyMjMw
+        WiIsImZpbmlzaGVkX2F0IjoiMjAyNC0wNC0wNFQyMzoxMzo1OC4xMjI0MDJa
+        IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
+        LzAxOGVhYjVlLTE3ZTAtNzAxMi04MmE1LWY0Yzg4YzFmMGRiNC8iLCJwYXJl
+        bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
+        dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
+        OltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92
+        My9yZXBvc2l0b3JpZXMvcnBtL3JwbS8wMThlYWI2My1lYjkxLTcxNGEtOTdm
+        NS0wNzMwODk0NTJlYWMvIiwic2hhcmVkOi9wdWxwL2FwaS92My9kb21haW5z
+        LzAxOGVhYjVkLTFjMDItNzQyNi05OWYyLWZjNjYwZGE0OWEyYi8iXX1dfQ==
+  recorded_at: Thu, 04 Apr 2024 23:13:59 GMT
+recorded_with: VCR 6.2.0
