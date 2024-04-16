@@ -29,7 +29,10 @@ module Katello
     scoped_search :relation => :hosts, :on => :name, :rename => :host, :complete_value => true
 
     def max_hosts_check
-      if !unlimited_hosts && (hosts.length > 0 && (hosts.length.to_i > max_hosts.to_i)) && max_hosts_changed?
+      # NOTE: max_hosts_check and max_hosts_no_exceeded use size() instead of count() because
+      # the host list exists as an array rather than a DB query when run as a validation.
+      host_count = hosts.size
+      if !unlimited_hosts && (host_count > 0 && (host_count.to_i > max_hosts.to_i)) && max_hosts_changed?
         errors.add :max_host, N_("may not be less than the number of hosts associated with the host collection.")
       end
     end
@@ -60,8 +63,14 @@ module Katello
       type ? query.of_type(type) : query
     end
 
-    def total_hosts
-      hosts.length
+    def cache_key
+      "#{self.class.name}/#{self.id}"
+    end
+
+    def total_hosts(cached: false)
+      Rails.cache.fetch("#{cache_key}/total_hosts", expires_in: 1.minute, force: !cached) do
+        hosts.count
+      end
     end
 
     # Retrieve the list of accessible host collections in the organization specified, returning
