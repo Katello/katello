@@ -1,31 +1,3 @@
-
-<%= javascript "katello/hosts/activation_key_edit" %>
-
-
 <div class="tab-pane" id="activation_keys">
-  <div id="ak-load-error" class="alert alert-danger" style="display: none;">
-    <%= _("There was a problem retrieving Activation Key data from the server.") %>
-  </div>
-
-  <%= field(f, _("Activation Keys"),
-            :help_inline => _("The value will be available in templates as @host.params['#{kt_ak_label}']")) do
-    react_component('TypeAheadSelect', { id: 'kt_activation_keys', multiple: true, allowNew: true })
-  end %>
-
-  <div class="alert alert-info">
-    <p><b><%= _('Subscriptions information based on selected activation keys:') %></b></p>
-    <ul id="ak-subscriptions-info"></ul>
-
-    <div id="ak-subscriptions-spinner" style="display: none">
-      <%= image_tag "spinner.gif" %>
-    </div>
-
-    <p><%= _('Activation keys and subscriptions can be managed') %>
-      <b><a href="/activation_keys" target="_blank"> <%= _('here.') %></a></b>
-    </p>
-    <p translate>
-    Activation keys may be used during <a href="/hosts/register">system registration.</a>
-  </p>
-    <p><a href="" id="ak_refresh_subscriptions"><%= _('Reload data') %></a></p>
-  </div>
+  <%= react_component('ActivationKeysSearch')%> 
 </div>
