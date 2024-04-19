@@ -17,15 +17,12 @@ upstream_tag_template: "{version}"
 
 actions:
   post-upstream-clone:
-    - "wget https://raw.githubusercontent.com/theforeman/foreman-packaging/rpm/develop/packages/katello/rubygem-katello/rubygem-katello.spec -O rubygem-katello.spec"
+    - "wget https://raw.githubusercontent.com/theforeman/foreman-packaging/rpm/3.9/packages/katello/rubygem-katello/rubygem-katello.spec -O rubygem-katello.spec"
   get-current-version:
     - ruby -rrubygems -e 'puts Gem::Specification::load(Dir.glob("*.gemspec").first).version'
   create-archive:
     - gem build katello.gemspec
     - bash -c "ls -1t ./katello-*.gem | head -n 1"
-  fix-spec-file:
-    - 'bash -c "sed -i \"s/Source0:.*/Source0: ${PACKIT_PROJECT_ARCHIVE}/\" rubygem-katello.spec"'
-    - bash -c 'sed -i "/global release/a%global nightly ${PACKIT_RPMSPEC_RELEASE:1}" rubygem-katello.spec'
 
 jobs:
   - job: copr_build
@@ -34,9 +31,9 @@ jobs:
       centos-stream-8:
         additional_modules: "katello:el8,foreman-devel:el8"
         additional_repos:
-          - http://yum.theforeman.org/releases/nightly/el8/x86_64/
-          - http://yum.theforeman.org/plugins/nightly/el8/x86_64/
-          - http://yum.theforeman.org/katello/nightly/katello/el8/x86_64/
+          - http://yum.theforeman.org/releases/3.9/el8/x86_64/
+          - http://yum.theforeman.org/plugins/3.9/el8/x86_64/
+          - http://yum.theforeman.org/katello/4.11/katello/el8/x86_64/
     module_hotfixes: true
 
 srpm_build_deps:
