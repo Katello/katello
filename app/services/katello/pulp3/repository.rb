@@ -333,6 +333,17 @@ module Katello
 
       def delete_version
         ignore_404_exception { api.repository_versions_api.delete(repo.version_href) } unless version_zero?
+      rescue api.api_exception_class => e
+        if e.message.include?("are currently being used to distribute content")
+          Rails.logger.warn "Exception when calling repository_versions_api->delete: #{e}"
+          publication_href = repo.publication_href
+          Rails.logger.warn "Trying to delete publication #{publication_href} for repository #{repo.id}}"
+          Rails.logger.error "Could not delete version: #{repo.version_href} because conflicting publication could not be looked up" unless publication_href
+          if publication_href
+            ignore_404_exception { api.publications_api.delete(publication_href) }
+            ignore_404_exception { api.repository_versions_api.delete(repo.version_href) }
+          end
+        end
       end
 
       def create_version(options = {})
