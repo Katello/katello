@@ -23,5 +23,6 @@ jobs:
     uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v0
     with:
       plugin: katello
+      foreman_version: 3.9-stable
       postgresql_container: ghcr.io/theforeman/postgresql-evr
       test_existing_database: false
