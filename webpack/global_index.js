@@ -2,6 +2,7 @@ import React from 'react';
 import { addGlobalFill } from 'foremanReact/components/common/Fill/GlobalFill';
 import { registerReducer } from 'foremanReact/common/MountingService';
 import { translate as __ } from 'foremanReact/common/I18n';
+import componentRegistry from 'foremanReact/components/componentRegistry';
 
 import SystemStatuses from './components/extensions/about';
 import {
@@ -29,6 +30,9 @@ import HostDetailsActionsBar from './components/extensions/HostDetails/ActionsBa
 import HostsIndexActionsBar from './components/extensions/Hosts/ActionsBar';
 import RecentCommunicationCardExtensions from './components/extensions/HostDetails/DetailsTabCards/RecentCommunicationCardExtensions';
 import SystemPurposeCard from './components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeCard';
+
+
+import ActivationKeysSearch from './components/ActivationKeysSearch';
 
 registerReducer('katelloExtends', extendReducer);
 registerReducer('katello', rootReducer);
@@ -80,3 +84,9 @@ addGlobalFill(
 );
 
 addGlobalFill('host-tab-details-cards', 'HW properties', <HwPropertiesCard key="hw-properties" />, 200);
+
+componentRegistry.register({
+  name: 'ActivationKeysSearch',
+  type: ActivationKeysSearch,
+});
+
