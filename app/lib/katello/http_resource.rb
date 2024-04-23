@@ -87,7 +87,7 @@ module Katello
         logger.debug "Headers: #{headers.to_json}"
         begin
           logger.debug "Body: #{filter_sensitive_data(payload.to_json)}"
-        rescue JSON::GeneratorError
+        rescue JSON::GeneratorError, Encoding::UndefinedConversionError
           logger.debug "Body: Error: could not render payload as json"
         end
 
