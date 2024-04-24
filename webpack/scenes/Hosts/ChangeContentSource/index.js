@@ -17,7 +17,6 @@ import { selectApiDataStatus,
   selectContentHosts,
   selectContentHostsWithoutContent,
   selectContentSources,
-  selectJobInvocationPath,
   selectContentViews,
   selectTemplate } from './selectors';
 
@@ -46,31 +45,36 @@ const ChangeContentSourcePage = () => {
   const contentHosts = useSelector(selectContentHosts);
   const hostsWithoutContent = useSelector(selectContentHostsWithoutContent);
   const contentSources = useSelector(selectContentSources);
-  const jobInvocationPath = useSelector(selectJobInvocationPath);
 
   const template = useSelector(selectTemplate);
   const contentViews = useSelector(selectContentViews);
-
-  const [contentSourceId, setCapsuleId] = useState('');
+  const { initialContentSourceId } = urlParams;
+  const [contentSourceId, setCapsuleId] = useState(initialContentSourceId ?? '');
+  // if this matches, we'll trust you that initialContentSourceId is the host's content source
+  const showCVOnlyAlert = (contentHosts.length === 1 &&
+    hostsWithoutContent.length === 0 &&
+    !!initialContentSourceId &&
+    initialContentSourceId === contentSourceId
+  );
+  const hostDetailsPath = showCVOnlyAlert ? `new/hosts/${contentHosts[0].name}` : '';
+  const hostEditPath = urlParams.fromPage === 'hostEdit' ? foremanUrl(`/hosts/${contentHosts[0]?.name}/edit`) : '';
   const [selectedEnvironment, setSelectedEnvironment] = useState([]);
   const [contentViewName, setContentViewName] = useState('');
   const [shouldShowTemplate, setShouldShowTemplate] = useState(false);
-  const [redirect, setRedirect] = useState(false);
+  const [redirect, setRedirect] = useState('');
 
   const contentViewId = contentViews?.find(cv => cv.name === contentViewName)?.id;
   const hostIds = useMemo(() => getHostIds(urlParams.host_id), [urlParams.host_id]);
   const noHostSpecified = (hostIds.length === 0 && urlParams.searchParam === '');
   const environmentId = selectedEnvironment[0]?.id;
 
-  const redirectToJobInvocationForm = () => setRedirect(true);
-
-  const handleSuccess = ({ shouldRedirect }) => {
-    if (shouldRedirect) {
-      redirectToJobInvocationForm();
+  const handleSuccess = ({ redirectTo = '' }) => {
+    if (redirectTo) {
+      setRedirect(redirectTo);
     }
   };
 
-  const handleSubmit = (e, { shouldRedirect = false }) => {
+  const handleSubmit = (e, { redirectTo = '', showSuccessToast = false } = {}) => {
     e.preventDefault();
 
     dispatch(changeContentSource(
@@ -78,7 +82,8 @@ const ChangeContentSourcePage = () => {
       contentViewId,
       contentSourceId,
       contentHosts.map(h => h.id),
-      () => handleSuccess({ shouldRedirect }),
+      () => handleSuccess({ redirectTo }),
+      showSuccessToast ? () => __('Host content view environment(s) updated') : undefined,
     ));
   };
 
@@ -93,7 +98,7 @@ const ChangeContentSourcePage = () => {
   };
 
   const showTemplate = (e) => {
-    handleSubmit(e, { shouldRedirect: false });
+    handleSubmit(e);
     setShouldShowTemplate(true);
   };
 
@@ -122,8 +127,8 @@ const ChangeContentSourcePage = () => {
     dispatch(getFormData(hostIds, urlParams.searchParam));
   }, [dispatch, hostIds, urlParams.searchParam]);
 
-  if (redirect && jobInvocationPath) {
-    window.location.assign(jobInvocationPath); // redirect to job invocation wizard
+  if (redirect && redirect !== '') {
+    window.location.assign(redirect);
   }
 
   return (
@@ -165,7 +170,7 @@ const ChangeContentSourcePage = () => {
                 title={__('No hosts were specified')}
               />
             </GridItem>
-        }
+          }
           { !noHostSpecified &&
           <>
             <Hosts
@@ -182,6 +187,9 @@ const ChangeContentSourcePage = () => {
               contentViewName={contentViewName}
               contentSources={contentSources}
               contentSourceId={contentSourceId}
+              showCVOnlyAlert={showCVOnlyAlert}
+              hostDetailsPath={hostDetailsPath}
+              hostEditPath={hostEditPath}
               handleContentSource={handleContentSource}
               contentHosts={contentHosts}
               isLoading={isLoading}
