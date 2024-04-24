@@ -36,10 +36,12 @@ const TableWrapper = ({
   selectAll,
   selectAllMode,
   selectNone,
+  selectDefault,
   selectPage,
   areAllRowsOnPageSelected,
   areAllRowsSelected,
   selectedCount,
+  selectedDefaultCount,
   selectedResults,
   clearSelectedResults,
   emptySearchBody,
@@ -49,6 +51,8 @@ const TableWrapper = ({
   nodesBelowSearch,
   bookmarkController,
   readOnlyBookmarks,
+  inclusionSet,
+  exclusionSet,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
@@ -182,7 +186,9 @@ const TableWrapper = ({
                 selectAll,
                 selectPage,
                 selectNone,
+                selectDefault,
                 selectedCount,
+                selectedDefaultCount,
                 pageRowCount,
               }
               }
@@ -298,11 +304,13 @@ TableWrapper.propTypes = {
   ])),
   displaySelectAllCheckbox: PropTypes.bool,
   selectedCount: PropTypes.number,
+  selectedDefaultCount: PropTypes.number,
   selectedResults: PropTypes.arrayOf(PropTypes.shape({})),
   clearSelectedResults: PropTypes.func,
   selectAll: PropTypes.func,
   selectAllMode: PropTypes.bool,
   selectNone: PropTypes.func,
+  selectDefault: PropTypes.func,
   selectPage: PropTypes.func,
   areAllRowsOnPageSelected: PropTypes.func,
   areAllRowsSelected: PropTypes.func,
@@ -314,6 +322,8 @@ TableWrapper.propTypes = {
   bookmarkController: PropTypes.string,
   readOnlyBookmarks: PropTypes.bool,
   resetFilters: PropTypes.func,
+  inclusionSet: PropTypes.oneOfType([PropTypes.array, PropTypes.element]),
+  exclusionSet: PropTypes.oneOfType([PropTypes.array, PropTypes.element]),
 };
 
 TableWrapper.defaultProps = {
@@ -329,11 +339,13 @@ TableWrapper.defaultProps = {
   toggleGroup: null,
   displaySelectAllCheckbox: false,
   selectedCount: 0,
+  selectedDefaultCount: 0,
   selectedResults: [],
   clearSelectedResults: noop,
   selectAll: undefined,
   selectAllMode: false,
   selectNone: undefined,
+  selectDefault: undefined,
   selectPage: undefined,
   areAllRowsOnPageSelected: noop,
   areAllRowsSelected: noop,
@@ -346,6 +358,8 @@ TableWrapper.defaultProps = {
   readOnlyBookmarks: false,
   resetFilters: undefined,
   autocompleteQueryParams: undefined,
+  inclusionSet: [],
+  exclusionSet: [],
 };
 
 export default TableWrapper;
