@@ -322,8 +322,8 @@ TableWrapper.propTypes = {
   bookmarkController: PropTypes.string,
   readOnlyBookmarks: PropTypes.bool,
   resetFilters: PropTypes.func,
-  inclusionSet: PropTypes.oneOfType([PropTypes.array, PropTypes.element]),
-  exclusionSet: PropTypes.oneOfType([PropTypes.array, PropTypes.element]),
+  inclusionSet: PropTypes.oneOfType([PropTypes.array, PropTypes.element, PropTypes.object]),
+  exclusionSet: PropTypes.oneOfType([PropTypes.array, PropTypes.element, PropTypes.object]),
 };
 
 TableWrapper.defaultProps = {
@@ -358,8 +358,8 @@ TableWrapper.defaultProps = {
   readOnlyBookmarks: false,
   resetFilters: undefined,
   autocompleteQueryParams: undefined,
-  inclusionSet: [],
-  exclusionSet: [],
+  inclusionSet: new Set([]),
+  exclusionSet: new Set([]),
 };
 
 export default TableWrapper;
