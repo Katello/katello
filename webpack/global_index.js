@@ -32,6 +32,7 @@ import HostDetailsActionsBar from './components/extensions/HostDetails/ActionsBa
 import HostsIndexActionsBar from './components/extensions/Hosts/ActionsBar';
 import RecentCommunicationCardExtensions from './components/extensions/HostDetails/DetailsTabCards/RecentCommunicationCardExtensions';
 import SystemPurposeCard from './components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeCard';
+import BulkChangeHostCVModal from './components/extensions/Hosts/BulkActions/BulkChangeHostCVModal/index.js';
 
 
 import ActivationKeysSearch from './components/ActivationKeysSearch';
@@ -86,6 +87,9 @@ addGlobalFill(
 );
 
 addGlobalFill('host-tab-details-cards', 'HW properties', <HwPropertiesCard key="hw-properties" />, 200);
+
+// Hosts Index page extensions
+addGlobalFill('_all-hosts-modals', 'BulkChangeHostCVModal', <BulkChangeHostCVModal key="bulk-change-host-cv-modal" />, 100);
 
 registerColumns(hostsIndexColumnExtensions);
 

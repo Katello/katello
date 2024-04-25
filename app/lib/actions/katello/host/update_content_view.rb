@@ -17,9 +17,9 @@ module Actions
 
         def humanized_name
           if input.try(:[], :hostname).nil?
-            _("Update for host")
+            _("Update content view environments for host")
           else
-            _("Update for host %s") % input[:hostname]
+            _("Update content view environments for host %s") % input[:hostname]
           end
         end
       end
