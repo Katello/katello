@@ -5,7 +5,7 @@ module Katello
 
     validates :content_view_environment_id, presence: true
     validates :content_facet_id, presence: true, unless: :new_record?
-    validate :ensure_valid_content_source
+    validate :ensure_valid_content_source, if: proc { Setting['validate_host_lce_content_source_coherence'] }
 
     def ensure_valid_content_source
       source = self.content_facet&.content_source
