@@ -512,6 +512,12 @@ Foreman::Plugin.register :katello do
         description: N_("Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')"),
         collection: proxy_download_policies
 
+      setting 'validate_host_lce_content_source_coherence',
+        type: :boolean,
+        default: true,
+        full_name: N_('Validate host/lifecycle environment/content source coherence'),
+        description: N_("Validate that a host's assigned lifecycle environment is synced by the smart proxy from which the host will get its content. Applies only to API requests; does not affect web UI checks")
+
       setting 'pulpcore_export_destination',
         type: :string,
         default: "/var/lib/pulp/exports",
