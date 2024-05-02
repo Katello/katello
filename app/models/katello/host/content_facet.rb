@@ -44,7 +44,7 @@ module Katello
 
       validates_with ::AssociationExistsValidator, attributes: [:content_source]
       validates_with Katello::Validators::GeneratedContentViewValidator
-      validates_associated :content_view_environment_content_facets
+      validates_associated :content_view_environment_content_facets, :message => _("invalid: The content source must sync the lifecycle environment assigned to the host. See the logs for more information.")
       validates :host, :presence => true, :allow_blank => false
 
       attr_accessor :cves_changed

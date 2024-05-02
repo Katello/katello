@@ -14,7 +14,9 @@ module Katello
       hostname = self.content_facet&.host&.name
       return unless [source, env].all? { |x| x.present? }
       unless source.lifecycle_environments.include?(env)
-        errors.add(:base, _("Host %{hostname}: Cannot add content view environment to content facet. The host's content source '%{content_source}' does not sync lifecycle environment '%{lce}'.") % { hostname: hostname, content_source: source.name, lce: env.name })
+        error_msg = _("Host %{hostname}: Cannot add content view environment to content facet. The host's content source '%{content_source}' does not sync lifecycle environment '%{lce}'.") % { hostname: hostname, content_source: source.name, lce: env.name }
+        Rails.logger.warn error_msg
+        errors.add(:base, error_msg)
       end
     end
   end
