@@ -136,6 +136,7 @@ const BulkPackagesTable = ({
         isSelected={isSelected}
         idColumn="name"
         updateParamsByUrl={false}
+        bookmarksPosition="right"
       />
     </>
   );

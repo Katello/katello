@@ -134,6 +134,7 @@ const HostReview = ({
         selectOne={selectOne}
         isSelected={isSelected}
         updateParamsByUrl={false}
+        bookmarksPosition="right"
       />
     </>
   );
