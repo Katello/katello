@@ -26,7 +26,11 @@ module Katello
         {
           schema_version: unit['schema_version'],
           digest: unit['digest'],
-          pulp_id: unit[unit_identifier]
+          pulp_id: unit[unit_identifier],
+          annotations: unit['annotations'],
+          labels: unit['labels'],
+          is_bootable: unit['is_bootable'],
+          is_flatpak: unit['is_flatpak']
         }
       end
     end
