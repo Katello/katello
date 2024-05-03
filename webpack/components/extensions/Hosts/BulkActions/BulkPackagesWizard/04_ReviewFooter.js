@@ -39,13 +39,13 @@ export const BulkPackagesReviewFooter = () => {
     katelloPackageInstallBySearchUrl : packagesUpdateUrl;
   const customizedRexUrl = getCustomizedRexUrl({
     hostSearch: hostsBulkParams,
-    search: packagesBulkParams,
+    search: selectedAction === UPGRADE_ALL ? '' : packagesBulkParams,
   });
 
   // REX
   const packageBulkUpgradeAction = () => updatePackages({
     hostSearch: hostsBulkParams,
-    search: packagesBulkParams,
+    search: selectedAction === UPGRADE_ALL ? '' : packagesBulkParams,
     descriptionFormat: selectedAction === UPGRADE_ALL ? __('Upgrade all packages') : undefined,
   });
 
@@ -84,6 +84,7 @@ export const BulkPackagesReviewFooter = () => {
         ouiaId="bulk-packages-wizard-finish-button-via-rex"
         type="submit"
         variant="primary"
+        className="pf-m-progress"
         isLoading={finishButtonLoading || isBulkActionInProgress}
         isDisabled={finishButtonLoading || isBulkActionInProgress}
         onClick={handleFinishButtonClick}

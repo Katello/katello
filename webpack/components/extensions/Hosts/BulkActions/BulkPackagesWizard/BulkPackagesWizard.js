@@ -125,7 +125,11 @@ const BulkPackagesWizard = () => {
         title="Manage packages wizard"
         header={<WizardHeader title={__('Manage packages')} onClose={closeModal} />}
       >
-        <WizardStep name={__('Select action')} id="mpw-step-1">
+        <WizardStep
+          name={__('Select action')}
+          id="mpw-step-1"
+          footer={{ onClose: closeModal }}
+        >
           <TextContent>
             <Text ouiaId="mpw-step-1-header" component={TextVariants.h2}>
               {__('Select action')}
@@ -166,7 +170,7 @@ const BulkPackagesWizard = () => {
           name={selectedAction === INSTALL ? __('Install packages') : __('Upgrade packages')}
           id="mpw-step-2"
           isHidden={selectedAction === UPGRADE_ALL}
-          footer={{ isNextDisabled: !step2Valid }}
+          footer={{ isNextDisabled: !step2Valid, onClose: closeModal }}
           status={step2Valid ? 'default' : 'error'}
         >
           {selectedAction === INSTALL ? (
@@ -179,7 +183,7 @@ const BulkPackagesWizard = () => {
           name={__('Review hosts')}
           id="mpw-step-3"
           status={step3Valid ? 'default' : 'error'}
-          footer={{ isNextDisabled: !step4Valid }}
+          footer={{ isNextDisabled: !step4Valid, onClose: closeModal }}
         >
           <HostReview
             key={modalOpen}

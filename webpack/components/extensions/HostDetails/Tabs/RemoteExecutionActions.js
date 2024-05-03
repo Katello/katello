@@ -80,10 +80,11 @@ const katelloPackagesUpdateParams = (options) => {
     hostname, search, hostSearch, versions, descriptionFormat,
   } = options;
   const searchQuery = hostSearch ?? `name ^ (${hostname})`;
+  console.log(versions)
   return ({
     job_invocation: {
       feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
-      inputs: { [PACKAGES_SEARCH_QUERY]: search, [SELECTED_UPDATE_VERSIONS]: versions },
+      inputs: { [PACKAGES_SEARCH_QUERY]: search, [SELECTED_UPDATE_VERSIONS]: versions ?? [] },
       search_query: searchQuery,
       description_format: descriptionFormat,
     },
