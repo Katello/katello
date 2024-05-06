@@ -387,10 +387,6 @@ module Katello
       Katello::RepositoryTypeManager.generic_repository_types(false).values.map(&:id).map(&:to_s).flatten.include? self.content_type
     end
 
-    def metadata_generate_needed?
-      (%w(unprotected checksum_type container_repsoitory_name) & previous_changes.keys).any?
-    end
-
     def using_mirrored_content?
       self.mirroring_policy != Katello::RootRepository::MIRRORING_POLICY_ADDITIVE
     end
