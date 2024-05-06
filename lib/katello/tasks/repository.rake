@@ -71,6 +71,12 @@ namespace :katello do
     end
   end
 
+  desc "Re-import all container manifests to populate labels and annotations."
+  task :import_container_manifest_labels => ["dynflow:client", "check_ping"] do
+    User.current = User.anonymous_api_admin
+    handle_manifest_label_updates
+  end
+
   def lookup_repositories
     lifecycle_envs = Katello::KTEnvironment.where(:name => ENV['LIFECYCLE_ENVIRONMENT']) if ENV['LIFECYCLE_ENVIRONMENT']
     content_views = Katello::ContentView.where(:name => ENV['CONTENT_VIEW']) if ENV['CONTENT_VIEW']
@@ -105,6 +111,22 @@ namespace :katello do
     else
       puts "Deleting #{repo.id}"
       ForemanTasks.sync_task(::Actions::Katello::Repository::Destroy, repo) if commit?
+    end
+  end
+
+  def handle_manifest_label_updates
+    batch_size = 1000
+    Katello::DockerManifest.
+      where(schema_version: 2).
+      where(annotations: {}, labels: {}).
+      where(is_bootable: false, is_flatpak: false).
+      find_in_batches(batch_size: batch_size) do |group|
+      manifest_unit_ids = group.pluck(:pulp_id)
+      index_service = Katello::ContentUnitIndexer.new(
+        content_type: Katello::RepositoryTypeManager.find_content_type("docker_manifest"),
+        pulp_content_ids: manifest_unit_ids
+      )
+      index_service.reimport_units
     end
   end
 

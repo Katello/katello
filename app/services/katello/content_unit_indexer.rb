@@ -55,6 +55,15 @@ module Katello
       end
     end
 
+    def reimport_units
+      units_from_pulp.each do |units|
+        to_update = units.map do |unit|
+          @service_class.generate_model_row(unit)
+        end
+        @model_class.upsert_all(to_update, unique_by: :pulp_id)
+      end
+    end
+
     def import_associations(units)
       pulp_id_to_id = self.class.pulp_id_to_id_map(@content_type, units.map { |unit| unit[@service_class.unit_identifier] })
       @service_class.insert_child_associations(units, pulp_id_to_id) if @service_class.respond_to?(:insert_child_associations)
