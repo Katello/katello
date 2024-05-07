@@ -617,7 +617,7 @@ export const PackagesTab = () => {
           closeModal={closeModal}
           hostId={hostId}
           key={hostId}
-          hostName={hostname}
+          hostName={hostDetails.display_name}
           triggerPackageInstall={triggerPackageInstall}
         />
       }
