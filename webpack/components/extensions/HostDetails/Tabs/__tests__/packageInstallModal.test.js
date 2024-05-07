@@ -31,6 +31,7 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
           id: 1,
           name: 'test-host',
           content_facet_attributes: { ...facetAttributes },
+          display_name: 'test-host',
         },
         status: 'RESOLVED',
       },
