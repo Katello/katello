@@ -56,7 +56,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "pulpcore_client", ">= 3.49.1", "< 3.50.0"
   gem.add_dependency "pulp_file_client", ">= 3.49.1", "< 3.50.0"
   gem.add_dependency "pulp_ansible_client", ">= 0.21.3", "< 0.22.0"
-  gem.add_dependency "pulp_container_client", ">= 2.19.2", "< 2.20.0"
+  gem.add_dependency "pulp_container_client", ">= 2.20.0", "< 2.21.0"
   gem.add_dependency "pulp_deb_client", ">= 3.2.0", "< 3.3.0"
   gem.add_dependency "pulp_rpm_client", ">= 3.25.2", "< 3.26.0"
   gem.add_dependency "pulp_certguard_client", ">= 3.49.1", "< 3.50.0"
