@@ -721,7 +721,7 @@ Foreman::Plugin.register :katello do
   ], 'Role granting permission to import content views in an organization'
 
   role 'Content Exporter', [
-    :export_content, :view_products, :view_content_views, :view_organizations
+    :export_content, :view_products, :view_content_views, :create_content_views, :view_organizations
   ], 'Role granting permission to export content views in an organization'
 
   def find_katello_assets(args = {})
