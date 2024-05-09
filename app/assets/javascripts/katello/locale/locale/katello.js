@@ -4,21 +4,21 @@
     "katello": {
       "": {
         "Project-Id-Version": "",
-        "Last-Translator": "Amit Upadhye <aupadhye@redhat.com>, 2023",
-        "Language-Team": "Portuguese (Brazil) (https://app.transifex.com/foreman/teams/114/pt_BR/)",
+        "Last-Translator": "Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2024",
+        "Language-Team": "Chinese (China) (https://app.transifex.com/foreman/teams/114/zh_CN/)",
         "Content-Type": "text/plain; charset=UTF-8",
         "Content-Transfer-Encoding": "8bit",
-        "Language": "pt_BR",
-        "Plural-Forms": "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;",
+        "Language": "zh_CN",
+        "Plural-Forms": "nplurals=1; plural=0;",
         "lang": "locale",
         "domain": "katello",
-        "plural_forms": "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
+        "plural_forms": "nplurals=1; plural=0;"
       },
       "-- select an interval --": [
-        "-- selecione um intervalo --"
+        "-- 选择间隔 --"
       ],
       "(future)": [
-        "(futuro)"
+        "（未来）"
       ],
       "{{ 'Add Selected' | translate }}": [
         "{{ 'Add Selected' | translate }}"
@@ -27,22 +27,22 @@
         "{{ contentCredential.name }}"
       ],
       "{{ deb.hosts_applicable_count }} Host(s)": [
-        ""
+        "{{ deb.hosts_applicable_count }} 主机"
       ],
       "{{ deb.hosts_applicable_count || 0 }} Applicable,": [
-        ""
+        "{{ deb.hosts_applicable_count || 0 }} 适用。"
       ],
       "{{ deb.hosts_available_count }} Host(s)": [
-        ""
+        "{{ deb.hosts_available_count }} 主机"
       ],
       "{{ deb.hosts_available_count || 0 }} Upgradable": [
-        ""
+        "{{ deb.hosts_available_count || 0 }} 可升级"
       ],
       "{{ errata.hosts_applicable_count || 0 }} Applicable,": [
-        "{{ errata.hosts_applicable_count || 0 }} Aplicável,"
+        "{{ errata.hosts_applicable_count || 0 }} 适用。"
       ],
       "{{ errata.hosts_available_count || 0 }} Installable": [
-        "{{ errata.hosts_available_count || 0 }} Instalável"
+        "{{ errata.hosts_available_count || 0 }} 可安装"
       ],
       "{{ errata.title }}": [
         "{{ errata.title }}"
@@ -51,34 +51,34 @@
         "{{ file.name }}"
       ],
       "{{ host.display_name }}": [
-        ""
+        "{{ host.display_name }}"
       ],
       "{{ host.rhel_lifecycle_status_label }}": [
-        ""
+        "{{ host.rhel_lifecycle_status_label }}"
       ],
       "{{ host.subscription_facet_attributes.user.login }}": [
         "{{ host.subscription_facet_attributes.user.login }}"
       ],
       "{{ installedDebCount }} Host(s)": [
-        ""
+        "{{ installedDebCount }} 主机"
       ],
       "{{ installedPackageCount }} Host(s)": [
-        "{{ installedPackageCount }} Hospedeiro(s)"
+        "{{ installedPackageCount }} 主机"
       ],
       "{{ package.hosts_applicable_count }} Host(s)": [
-        "{{ package.hosts_applicable_count }} Hospedeiro(s)"
+        "{{ package.hosts_applicable_count }} 主机"
       ],
       "{{ package.hosts_applicable_count || 0 }} Applicable,": [
-        "{{ package.hosts_applicable_count || 0 }} Aplicável,"
+        "{{ package.hosts_applicable_count || 0 }} 适用"
       ],
       "{{ package.hosts_available_count }} Host(s)": [
-        "{{ package.hosts_available_count }} Hospedeiro(s)"
+        "{{ package.hosts_available_count }} 主机"
       ],
       "{{ package.hosts_available_count || 0 }} Upgradable": [
-        "{{ package.hosts_available_count || 0 }} Atualizável"
+        "{{ package.hosts_available_count || 0 }} 可升级"
       ],
       "{{ package.human_readable_size }} ({{ package.size }} Bytes)": [
-        "{{ package.human_readable_size }} ({{ package.size }} Bytes)"
+        "{{ package.human_readable_size }} （{{ package.size }}字节）"
       ],
       "{{ product.active_task_count }}": [
         "{{ product.active_task_count }}"
@@ -87,37 +87,37 @@
         "{{ product.name }}"
       ],
       "{{ repo.last_sync_words }} ago": [
-        ""
+        "{{ repo.last_sync_words }} 前"
       ],
       "{{ repository.content_counts.ansible_collection || 0 }} Ansible Collections": [
-        ""
+        "{{ repository.content_counts.ansible_collection || 0 }} Ansible 集"
       ],
       "{{ repository.content_counts.deb || 0 }} deb Packages": [
-        "{{ repository.content_counts.deb || 0 }} Pacotes deb"
+        "{{ repository.content_counts.deb || 0 }} deb 软件包"
       ],
       "{{ repository.content_counts.docker_manifest || 0 }} Container Image Manifests": [
-        ""
+        "{{ repository.content_counts.docker_manifest || 0 }} 容器镜像清单"
       ],
       "{{ repository.content_counts.docker_manifest_list || 0 }} Container Image Manifest Lists": [
-        ""
+        "{{ repository.content_counts.docker_manifest_list || 0 }} 容器镜像清单列表"
       ],
       "{{ repository.content_counts.docker_tag || 0 }} Container Image Tags": [
-        ""
+        "{{ repository.content_counts.docker_tag || 0 }} 容器镜像标签"
       ],
       "{{ repository.content_counts.erratum || 0 }} Errata": [
-        "{{ repository.content_counts.erratum || 0 }} Errata"
+        "{{ repository.content_counts.erratum || 0 }} 勘误"
       ],
       "{{ repository.content_counts.file || 0 }} Files": [
-        "{{ repository.content_counts.file || 0 }} Arquivos"
+        "{{ repository.content_counts.file || 0 }} 文件"
       ],
       "{{ repository.content_counts.rpm || 0 }} Packages": [
-        "{{ repository.content_counts.rpm || 0 }} Pacotes"
+        "{{ repository.content_counts.rpm || 0 }} 软件包"
       ],
       "{{ repository.content_counts.srpm }} Source RPMs": [
-        "{{ repository.content_counts.srpm }} Fonte RPMs"
+        "{{ repository.content_counts.srpm }} 源 RPM"
       ],
       "{{ repository.last_sync_words }} ago": [
-        "{{ repository.last_sync_words }} atrás"
+        "{{ repository.last_sync_words }} 前"
       ],
       "{{ repository.name }}": [
         "{{ repository.name }}"
@@ -135,3107 +135,3073 @@
         "{{urlDescription}}"
       ],
       "* These marked Content View Versions are from Composite Content Views.  Their components needing updating are listed underneath.": [
-        "* Estas Versões marcadas de Conteúdo Visualizado são de Composite Content Views.  Seus componentes que precisam de atualização estão listados abaixo."
+        "*这些标记的内容视图版本来自复合内容视图。它们的需要更新的组件在下面列出。"
       ],
       "/foreman_tasks/tasks/%taskId": [
         "/foreman_tasks/tasks/%taskId"
       ],
       "/job_invocations": [
-        ""
+        "/job_invocations"
       ],
       "%(consumed)s out of %(quantity)s": [
-        "%(consumed)s de %(quantity)s"
+        "%(consumed)s（共%(quantity)s）"
       ],
       "%count environment(s) can be synchronized: %envs": [
-        "%count ambiente(s) pode(m) ser sincronizado(s): %envs"
+        "%count 个可以同步的环境： %envs"
       ],
       "<a href=\\\"/foreman_tasks/tasks/{{repository.last_sync.id}}\\\">{{ repository.last_sync.result | capitalize}}</a>": [
         "<a href=\\\"/foreman_tasks/tasks/{{repository.last_sync.id}}\\\">{{ repository.last_sync.result | capitalize}}</a>"
       ],
       "<b>Additive:</b> new content available during sync will be added to the repository, and no content will be removed.": [
-        ""
+        "<b>Additive:</b> 同步时的新内容将添加到仓库中，且不会删除任何内容。"
       ],
       "<b>Description</b>": [
-        ""
+        "<b>描述</b>"
       ],
       "<b>Issued</b>": [
-        ""
+        "<b>发行</b>"
       ],
       "<b>Mirror Complete</b>: a sync behaves exactly like \\\"Mirror Content Only\\\", but also mirrors metadata as well.  This is the fastest method, and preserves repository signatures, but is only supported by yum and not by all upstream repositories.": [
-        ""
+        "<b>Mirror Complete</b> ：与 \\\"Mirror Content Only\\\" 完全相同的同步行为，同时还会镜像元数据。这是最快的方法，并保留存储库签名，但只被 yum 支持，并不是所有上游仓库都支持。"
       ],
       "<b>Mirror Content Only</b>: any new content available during sync will be added to the repository and any content removed from the upstream repository will be removed from the local repository.": [
-        ""
+        "<b>Mirror Content Only</b> ：同步期间可用的任何新内容都将添加到仓库中，所有从上游仓库中删除的内容都将从本地仓库中删除。"
       ],
       "<b>Module Streams</b>": [
-        ""
+        "<b>模块流</b>"
       ],
       "<b>Packages</b>": [
-        ""
+        "<b> 软件包</b>"
       ],
       "<b>Reboot Suggested</b>": [
-        ""
+        "<b>建议重启</b>"
       ],
       "<b>Solution</b>": [
-        ""
+        "<b>解决</b>"
       ],
       "<b>Title</b>": [
-        ""
+        "<b>标题</b>"
       ],
       "<b>Type</b>": [
-        ""
+        "<b>类型</b>"
       ],
       "<b>Updated</b>": [
-        ""
+        "<b>已更新</b>"
       ],
       "<i class=\\\"fa fa-warning inline-icon\\\"></i>\\n  This Host is not currently registered with subscription-manager. Use the <a href=\\\"/hosts/register\\\">Register Host</a> workflow to complete registration.": [
-        ""
+        "<i class=\\\"fa fa-warning inline-icon\\\"></i>\\n  该主机当前未使用 subscription-manager 注册。使用<a href=\\\"/hosts/register\\\">注册主机</a>流程来完成注册。"
       ],
       "1 Content Host": [
-        "",
-        "",
-        ""
+        "1 个内容主机"
       ],
       "1 repository sync has errors.": [
-        "",
-        "",
-        ""
+        "1 个存储库同步有错误。"
       ],
       "1 repository sync in progress.": [
-        "1 sincronia de repositório em andamento.",
-        "{{ product.sync_summary.pending}} sincronia dos repositórios em andamento.",
-        "{{ product.sync_summary.pending}} sincronia dos repositórios em andamento."
+        "1 个存储库正在进行同步。"
       ],
       "1 successfully synced repository.": [
-        "1 repositório sincronizado com sucesso.",
-        "{{ product.sync_summary.success}} sincronizou com sucesso os repositórios.",
-        "{{ product.sync_summary.success}} sincronizou com sucesso os repositórios."
+        "1 个成功同步的存储库。"
       ],
       "A comma-separated list of container image tags to exclude when syncing. Source images are excluded by default because they are often large and unwanted.": [
-        ""
+        "同步时要排除的容器镜像标签列表(以逗号分隔)。默认会排除源镜像，因为它们通常很大且不需要。"
       ],
       "A comma-separated list of container image tags to include when syncing.": [
-        ""
+        "同步时要包含的容器镜像标签列表(以逗号分隔)。"
       ],
       "A sync has been initiated in the background, <a href=\\\"/foreman_tasks/tasks/{{ task.id }}\\\">click for more details</a>": [
-        "Uma sincronização foi iniciada em segundo plano, <a href=\\\"/foreman_tasks/tasks/{{ task.id }}\\\">clique para mais detalhes</a>"
+        "同步已在后台启动，<a href=\\\"/foreman_tasks/tasks/{{ task.id }}\\\">点击查看详情</a>"
       ],
       "Account": [
-        "Conta"
+        "帐号"
       ],
       "Action Type": [
-        "Tipo de ação"
+        "操作类型"
       ],
       "Actions": [
-        "Ações"
+        "操作"
       ],
       "Activation Key": [
-        "Chave de ativação",
-        "Chaves de ativação ",
-        "Chaves de ativação "
+        "激活码"
       ],
       "Activation Key Content": [
-        "Conteúdo da chave de ativação"
+        "激活码内容"
       ],
       "Activation Key removed.": [
-        "Chave de ativação removida."
+        "激活码已刪除"
       ],
       "Activation Key updated": [
-        "Chave de ativação atualizada"
+        "激活码已更新"
       ],
       "Activation Key:": [
-        "Chave de ativação:"
+        "激活码："
       ],
       "Activation Keys": [
-        "Chaves de ativação "
+        "激活码"
       ],
       "Active Tasks": [
-        "Tarefas ativas"
+        "活跃的任务"
       ],
       "Add": [
-        "Adicionar"
+        "添加"
       ],
       "Add Content Hosts to:": [
-        "Adicionar Hosts de Conteúdo a:"
+        "添加内容主机到："
       ],
       "Add Host Collections": [
-        ""
+        "添加主机集合"
       ],
       "Add hosts to the host collection to see available actions.": [
-        ""
+        "将主机添加到主机集合以查看可用操作。"
       ],
       "Add New Environment": [
-        "Adicionar Novo Ambiente"
+        "添加新环境"
       ],
       "Add ons": [
-        "Complementos"
+        "附加组件"
       ],
       "Add ons:": [
-        ""
+        "附加组件："
       ],
       "Add Products": [
-        ""
+        "添加产品"
       ],
       "Add Selected": [
-        "Adicionar selecionado"
+        "添加所选"
       ],
       "Add Subscriptions": [
-        "Adicionar subscrições"
+        "添加订阅"
       ],
       "Add Subscriptions for Activation Key:": [
-        "Adicionar Assinaturas para Chave de Ativação:"
+        "为激活码添加订阅："
       ],
       "Add Subscriptions for Content Host:": [
-        "Adicionar Assinaturas para Host de Conteúdo:"
+        "为内容主机添加订阅："
       ],
       "Add To": [
-        "Adicione a"
+        "添加到"
       ],
       "Added %x host collections to activation key \\\"%y\\\".": [
-        "Acrescentei %x coleções de host à chave de ativação \\\"%y\\\"."
+        "将 %x 主机集添加到激活码 \\\"%y\\\"。"
       ],
       "Added %x host collections to content host \\\"%y\\\".": [
-        "Acrescentei %x coleções de anfitriões a anfitriões de conteúdo \\\"%y\\\"."
+        "将 %x 主机集添加到内容主机 \\\"%y\\\"。"
       ],
       "Added %x products to sync plan \\\"%y\\\".": [
-        "Acrescentado %x produtos para plano de sincronização \\\"%y\\\"."
+        "将 %x 产品添加到同步计划 \\\"%y\\\"。"
       ],
       "Adding Lifecycle Environment to the end of \\\"{{ priorEnvironment.name }}\\\"": [
-        "Adicionando Ambiente de Ciclo de Vida ao final de \\\"{{ priorEnvironment.name }}\\\""
+        "将生命周期环境添加到“{{ priorEnvironment.name }}”的后面"
       ],
       "Additive": [
-        ""
+        "Additive"
       ],
       "Advanced Sync": [
-        "Sincronia Avançada"
+        "高级同步"
       ],
       "Advisory": [
-        "Assessoria"
+        "公告"
       ],
       "Affected Hosts": [
-        "Anfitriões afetados"
+        "受影响的主机"
       ],
       "All": [
-        ""
+        "全部"
       ],
       "All Content Views": [
-        "Todas as visualizações de conteúdo"
+        "所有内容视图"
       ],
       "All Lifecycle Environments": [
-        ""
+        "所有生命周期环境"
       ],
       "All Repositories": [
-        "Todos os Repositórios"
+        "所有仓库"
       ],
       "Alternate Content Sources": [
-        ""
+        "备用内容源"
       ],
       "Alternate Content Sources for": [
-        ""
+        "备用内容源"
       ],
       "An error occured: %s": [
-        "Ocorreu um erro: %s"
+        "发生了一个错误：%s"
       ],
       "An error occurred initiating the sync:": [
-        "Ocorreu um erro ao iniciar a sincronização:"
+        "初始化同步时发生错误："
       ],
       "An error occurred removing the Activation Key:": [
-        "Ocorreu um erro ao remover a chave de ativação:"
+        "删除激活码时发生错误："
       ],
       "An error occurred removing the content hosts.": [
-        "Ocorreu um erro ao remover os hosts de conteúdo."
+        "删除内容主机时发生错误。"
       ],
       "An error occurred removing the environment:": [
-        "Ocorreu um erro ao remover o ambiente:"
+        "删除环境时发生错误："
       ],
       "An error occurred removing the Host Collection:": [
-        "Ocorreu um erro ao remover a Coleção Anfitriã:"
+        "删除主机集合时发生错误："
       ],
       "An error occurred removing the subscriptions.": [
-        "Ocorreu um erro ao remover as assinaturas."
+        "删除订阅时发生错误。"
       ],
       "An error occurred saving the Activation Key:": [
-        "Ocorreu um erro ao salvar a chave de ativação:"
+        "保存激活码时发生错误："
       ],
       "An error occurred saving the Content Host:": [
-        "Ocorreu um erro ao salvar o Host de Conteúdo:"
+        "保存内容主机时发生错误："
       ],
       "An error occurred saving the Environment:": [
-        "Ocorreu um erro ao salvar o Meio Ambiente:"
+        "保存环境时发生错误："
       ],
       "An error occurred saving the Host Collection:": [
-        "Ocorreu um erro ao salvar a Coleção Anfitriã:"
+        "保存主机集合时发生错误："
       ],
       "An error occurred saving the Product:": [
-        "Ocorreu um erro ao salvar o Produto:"
+        "保存产品时发生错误："
       ],
       "An error occurred saving the Repository:": [
-        "Ocorreu um erro ao salvar o Repositório:"
+        "保存仓库时发生错误："
       ],
       "An error occurred saving the Sync Plan:": [
-        "Ocorreu um erro ao salvar o Plano de Sincronização:"
+        "保存同步计划时发生错误："
       ],
       "An error occurred trying to auto-attach subscriptions.  Please check your log for further information.": [
-        "Ocorreu um erro na tentativa de autoatacar assinaturas.  Por favor, verifique seu log para maiores informações."
+        "尝试自动附加订阅时发生错误。请检查您的日志以获取更多信息。"
       ],
       "An error occurred updating the sync plan:": [
-        "Ocorreu um erro ao atualizar o plano de sincronização:"
+        "更新同步计划时发生错误："
       ],
       "An error occurred while creating the Content Credential:": [
-        "Ocorreu um erro durante a criação da Credencial de Conteúdo:"
+        "创建内容凭证时发生错误："
       ],
       "An error occurred while creating the Product: %s": [
-        "Ocorreu um erro durante a criação do Produto: %s"
+        "创建产品时发生错误： %s"
       ],
       "An error occurred:": [
-        "Ocorreu um erro:"
+        "发生了一个错误："
       ],
       "Ansible Collection Authorization": [
-        ""
+        "Ansible 集合授权"
       ],
       "Ansible Collections": [
-        "Coleções do Ansible"
+        "Ansible 系列"
       ],
       "Applicable": [
-        "Aplicável"
+        "适用"
       ],
       "Applicable Content Hosts": [
-        "Hosts de Conteúdo Aplicável"
+        "适用的内容主机"
       ],
       "Applicable Deb Packages": [
-        ""
+        "适用的 Deb 软件包"
       ],
       "Applicable Errata": [
-        "Errata Aplicável"
+        "适用的勘误"
       ],
       "Applicable Packages": [
-        "Pacotes aplicáveis"
+        "适用软件包"
       ],
       "Applicable To": [
-        "Aplicável a"
+        "适用于"
       ],
       "Applicable to Host": [
-        "Aplicável ao Host"
+        "适用于主机"
       ],
       "Application": [
-        "Aplicação"
+        "应用"
       ],
       "Apply": [
-        "Aplicar"
+        "应用"
       ],
       "Apply {{ errata.errata_id }}": [
-        "Aplicar {{ errata.errata_id }}"
+        "应用 {{ errata.errata_id }}"
       ],
       "Apply {{ errata.errata_id }} to {{ contentHostIds.length  }} Content Host(s)?": [
-        "Aplicar {{ errata.errata_id }} para {{ contentHostIds.length  }} Host(s) de conteúdo?"
+        "应用{{ errata.errata_id }}至{{ contentHostIds.length  }}内容主机？"
       ],
       "Apply {{ errata.errata_id }} to all Content Host(s)?": [
-        "Aplicar {{ errata.errata_id }} a todo(s) Host(s) de Conteúdo?"
+        "应用{{ errata.errata_id }}到内容主机？"
       ],
       "Apply {{ errataIds.length }} Errata to {{ contentHostIds.length }} Content Host(s)?": [
-        "Aplicar {{ errataIds.length }} Errata para {{ contentHostIds.length }} Content Host(s)?"
+        "应用 {{ errataIds.length }} 勘误到 {{ contentHostIds.length }} 内容主机?"
       ],
       "Apply {{ errataIds.length }} Errata to all Content Host(s)?": [
-        "Aplicar {{ errataIds.length }} Errata a todo(s) Host(s) de Conteúdo?"
+        "应用{{ errataIds.length }} 勘误到所有内容主机？"
       ],
       "Apply Errata": [
-        "Aplicar Errata"
+        "应用勘误"
       ],
       "Apply Errata to Content Host \\\"{{host.display_name}}\\\"?": [
-        ""
+        "将勘误应用于内容主机“{{host.display_name}} “？"
       ],
       "Apply Errata to Content Hosts": [
-        "Aplicar Errata aos Hosts de Conteúdo"
+        "将勘误应用于内容主机"
       ],
       "Apply Errata to Content Hosts immediately after publishing.": [
-        "Aplique Errata aos Hosts de Conteúdo imediatamente após a publicação."
+        "发布后立即将勘误应用于内容主机。"
       ],
       "Apply Selected": [
-        "Aplicar Selecionado"
+        "应用选定"
       ],
       "Apply to Content Hosts": [
-        "Aplicar aos Hosts de Conteúdo"
+        "应用到内容主机"
       ],
       "Apply to Hosts": [
-        "Aplicar para Anfitriões"
+        "应用到主机"
       ],
       "Applying": [
-        "Aplicando"
+        "应用"
       ],
       "Apt Actions": [
-        ""
+        "Apt 操作"
       ],
       "Arch": [
-        "Arq."
+        "架构"
       ],
       "Architecture": [
-        "Arquitetura"
+        "架构"
       ],
       "Architectures": [
-        "Arquiteturas"
+        "架构"
       ],
       "Are you sure you want to add the {{ table.numSelected }} content host(s) selected to the host collection(s) chosen?": [
-        "Você tem certeza de que deseja adicionar o(s) anfitrião(s) de conteúdo {{ table.numSelected }} selecionado(s) à(s) coleção(ões) anfitriã(s) escolhida(s)?"
+        "您确定要添加{{ table.numSelected }}选定的内容主机到选定的主机集合？"
       ],
       "Are you sure you want to add the sync plan to the selected products(s)?": [
-        "Você tem certeza de que deseja adicionar o plano de sincronização aos produtos selecionados?"
+        "您确定要将同步计划添加到所选产品吗？"
       ],
       "Are you sure you want to apply Errata to content host \\\"{{ host.display_name }}\\\"?": [
-        ""
+        "确定要将勘误应用于内容主机“{{ host.display_name }} “？"
       ],
       "Are you sure you want to apply the {{ table.numSelected }} selected errata to the content hosts chosen?": [
-        "Você tem certeza de que deseja aplicar as erratas selecionadas {{ table.numSelected }} aos anfitriões de conteúdo escolhidos?"
+        "您确定要应用{{ table.numSelected }}选择的勘误表到选择的内容主机？"
       ],
       "Are you sure you want to assign the {{ table.numSelected }} content host(s) selected to {{ selected.contentView.name }} in {{ selected.environment.name }}?": [
-        "Você tem certeza de que deseja designar o(s) anfitrião(s) de conteúdo {{ table.numSelected }} selecionado(s) para {{ selected.contentView.name }} em {{ selected.environment.name }}?"
+        "您确定要分配{{ table.numSelected }}所选的内容主机到{{ selected.environment.name }} 中的 {{ selected.contentView.name }}？"
       ],
       "Are you sure you want to delete the {{ table.numSelected }} host(s) selected?": [
-        ""
+        "您确定要删除{{ table.numSelected }} 个选定的主机？"
       ],
       "Are you sure you want to disable the {{ table.numSelected }} repository set(s) chosen?": [
-        "Você tem certeza de que quer desativar o(s) conjunto(s) de repositório(s) {{ table.numSelected }} escolhido(s)?"
+        "您确定要禁用{{ table.numSelected }} 个选择的仓库？"
       ],
       "Are you sure you want to enable the {{ table.numSelected }} repository set(s) chosen?": [
-        "Você tem certeza de que quer habilitar o(s) conjunto(s) de repositório(s) {{ table.numSelected }} escolhido(s)?"
+        "您确定要启用{{ table.numSelected }} 个选择的仓库集？"
       ],
       "Are you sure you want to install {{ content.content }} on the {{ getSelectedSystemIds().length }} system(s) selected?": [
-        "Você tem certeza de que deseja instalar {{ content.content }} no(s) sistema(s) {{ getSelectedSystemIds().length }} selecionado(s)?"
+        "您确定要在 {{ getSelectedSystemIds().length }} 个选择的系统中安装 {{ content.content }}？"
       ],
       "Are you sure you want to remove {{ content.content }} from the {{ getSelectedSystemIds().length }} system(s) selected?": [
-        "Você tem certeza de que quer remover {{ content.content }} do(s) sistema(s) {{ getSelectedSystemIds().length }} selecionado(s)?"
+        "您确定要从 {{ getSelectedSystemIds().length }} 个选择的系统中删除 {{ content.content }}？"
       ],
       "Are you sure you want to remove Activation Key \\\"{{ activationKey.name }}\\\"?": [
-        "Você tem certeza que quer remover a Chave de Ativação \\\"{{ activationKey.name }}\\\"?"
+        "您确定要删除激活码 \\\"{{ activationKey.name }}\\\"?"
       ],
       "Are you sure you want to remove Content Credential {{ contentCredential.name }}?": [
-        "Você tem certeza de que deseja remover a Credencial de Conteúdo {{ contentCredential.name }}?"
+        "您确定要删除内容凭据{{ contentCredential.name }}？"
       ],
       "Are you sure you want to remove environment {{ environment.name }}?": [
-        ""
+        "您确定要删除环境 {{ environment.name }}?"
       ],
       "Are you sure you want to remove Host Collection \\\"{{ hostCollection.name }}\\\"?": [
-        "Você tem certeza de que quer remover a Coleção Host \\\"{{ hostCollection.name }}\\\"?"
+        "您确定要删除主机集合”{{ hostCollection.name }}“？"
       ],
       "Are you sure you want to remove product \\\"{{ product.name }}\\\"?": [
-        "Você tem certeza de que quer remover o produto \\\"{{ product.name }}\\\"?"
+        "您确定要删除产品\\\"{{ product.name }}\\\"？"
       ],
       "Are you sure you want to remove repository {{ repositoryWrapper.repository.name }} from all content views?": [
-        ""
+        "您确定要从所有内容视图中删除存储库 {{ repositoryWrapper.repository.name }} 吗？"
       ],
       "Are you sure you want to remove Sync Plan \\\"{{ syncPlan.name }}\\\"?": [
-        "Você tem certeza de que quer remover o Sync Plan \\\"{{ syncPlan.name }}\\\"?"
+        "您确定要删除同步计划“{{ syncPlan.name }}”？"
       ],
       "Are you sure you want to remove the {{ table.getSelected()[0].name }} content unit?": [
-        "",
-        "",
-        ""
+        "您确定要删除 {{ table.getSelected()[0].name }} 内容单元？"
       ],
       "Are you sure you want to remove the {{ table.getSelected()[0].name }} file?": [
-        "",
-        "",
-        ""
+        "您确定要删除 {{ table.getSelected()[0].name }} 文件?"
       ],
       "Are you sure you want to remove the {{ table.getSelected()[0].name }} package?": [
-        "",
-        "",
-        ""
+        "您确定要删除{{ table.getSelected()[0].name }} 软件包？"
       ],
       "Are you sure you want to remove the {{ table.getSelected()[0].name }} product?": [
-        "",
-        "",
-        ""
+        "您确定要删除{{ table.getSelected()[0].name }}产品？"
       ],
       "Are you sure you want to remove the {{ table.getSelected()[0].name }} repository?": [
-        "",
-        "",
-        ""
+        "您确定要删除{{ table.getSelected()[0].name }} 仓库？"
       ],
       "Are you sure you want to remove the {{ table.numSelected }} Container Image manifest selected?": [
-        "",
-        "",
-        ""
+        "您确定要删除{{ table.numSelected }} 个选择了的容器镜像清单？"
       ],
       "Are you sure you want to remove the {{ table.numSelected }} content host(s) selected from the host collection(s) chosen?": [
-        "Você tem certeza de que deseja remover o(s) anfitrião(s) de conteúdo {{ table.numSelected }} selecionado(s) da(s) coleção(ões) anfitriã(s) escolhida(s)?"
+        "您确定要从所选的主机集合中删除{{ table.numSelected }}个选择的内容主机？"
       ],
       "Are you sure you want to remove the sync plan from the selected product(s)?": [
-        "Você tem certeza de que deseja remover o plano de sincronização do(s) produto(s) selecionado(s)?"
+        "您确定要从所选产品中删除同步计划吗？"
       ],
       "Are you sure you want to reset to default the {{ table.numSelected }} repository set(s) chosen?": [
-        "Você tem certeza de que quer redefinir para o padrão o(s) conjunto(s) de repositório(s) {{ table.numSelected }} escolhido(s)?"
+        "您确定要重置到选择的默认 {{ table.numSelected }} 仓库集？"
       ],
       "Are you sure you want to restart services on content host \\\"{{ host.display_name }}\\\"?": [
-        ""
+        "您确定要重启内容主机 \\\"{{ host.display_name }}\\\" 上的服务?"
       ],
       "Are you sure you want to restart the services on the selected content hosts?": [
-        ""
+        "您确定要在所选内容主机上重新启动服务吗？"
       ],
       "Are you sure you want to set the HTTP Proxy to the selected products(s)?": [
-        ""
+        "您确定要将HTTP代理设置为所选产品吗？"
       ],
       "Are you sure you want to set the Release Version the {{ table.numSelected }} content host(s) selected to {{ selected.release }}?. This action will affect only those Content Hosts that belong to the appropriate Content View and Lifecycle Environment containining that release version.": [
-        "Você tem certeza de que deseja definir a Versão de Lançamento o(s) host(s) de conteúdo {{ table.numSelected }} selecionado(s) para {{ selected.release }}?. Esta ação afetará somente aqueles Hosts de conteúdo que pertencem à Visão de Conteúdo e Ambiente de Ciclo de Vida apropriados, contendo aquela versão de lançamento."
+        "您确定要将{{ table.numSelected }}个选择的内容主机的发布版本设置到{{ selected.release }}？此操作将仅影响属于包含该发行版本的相应内容视图和生命周期环境的那些内容主机。"
       ],
       "Are you sure you want to update {{ content.content }} on the {{ getSelectedSystemIds().length }} system(s) selected?": [
-        "Você tem certeza de que deseja atualizar {{ content.content }} no(s) sistema(s) {{ getSelectedSystemIds().length }} selecionado(s)?"
+        "您确定要在所选的 {{ getSelectedSystemIds().length }} 系统上更新 {{ content.content }}"
       ],
       "Are you sure you want to update all packages on the {{ getSelectedSystemIds().length }} system(s) selected?": [
-        "Você tem certeza de querer atualizar todos os pacotes no(s) sistema(s) {{ getSelectedSystemIds().length }} selecionado(s)?"
+        "您确定要在所选 {{ getSelectedSystemIds().length }} 系统上更新所有软件包?"
       ],
       "Assign": [
-        "Atribuir"
+        "分配"
       ],
       "Assign Lifecycle Environment and Content View": [
-        ""
+        "分配生命周期环境和内容视图"
       ],
       "Assign Release Version": [
-        "Atribuir Versão de Lançamento"
+        "分配发行版本"
       ],
       "Assign System Purpose": [
-        ""
+        "分配系统目的"
       ],
       "Associations": [
-        "Associações"
+        "关联"
       ],
       "At least one Errata needs to be selected to Apply.": [
-        "Pelo menos uma Errata precisa ser selecionada para se candidatar."
+        "至少需要选择一个勘误才能应用。"
       ],
       "Attached": [
-        "Anexado"
+        "已附加"
       ],
       "Auth Token": [
-        ""
+        "验证令牌"
       ],
       "Auth URL": [
-        ""
+        "验证网址"
       ],
       "Author": [
-        "Autor"
+        "作者"
       ],
       "Auto-Attach": [
-        "Auto-Attach"
+        "自动附加"
       ],
       "Auto-attach available subscriptions to all selected hosts.": [
-        ""
+        "自动附加所有所选主机的可用订阅。"
       ],
       "Auto-Attach Details": [
-        ""
+        "自动附加详细信息"
       ],
       "Auto-attach uses all available subscriptions, not a selected subset.": [
-        ""
+        "auto-attach 使用所有可用的订阅，而不是所选子集。"
       ],
       "Automatic": [
-        "Automático"
+        "自动"
       ],
       "Available Module Streams": [
-        ""
+        "可用的模块流"
       ],
       "Available Schema Versions": [
-        "Versões disponíveis do esquema"
+        "可用的 Schema 版本"
       ],
       "Back To Errata List": [
-        "Voltar à lista de erros"
+        "返回勘误列表"
       ],
       "Backend Identifier": [
-        "Identificador backend"
+        "后端识别码"
       ],
       "Basic Information": [
-        "Informações básicas"
+        "基本信息"
       ],
       "Below are the repository content sets currently available for this content host through its subscriptions. For Red Hat subscriptions, additional content can be made available through the": [
-        "Abaixo estão os conjuntos de conteúdo de repositório atualmente disponíveis para este hospedeiro de conteúdo através de suas assinaturas. Para as assinaturas da Red Hat, conteúdo adicional pode ser disponibilizado através do"
+        "以下是此内容主机当前可通过其订阅获得的存储库内容集。对于红帽订阅，可以通过以下方式提供其他内容："
       ],
       "Below are the Repository Sets currently available for this activation key through its subscriptions. For Red Hat subscriptions, additional content can be made available through the": [
-        "Abaixo estão os Conjuntos de Repositório atualmente disponíveis para esta chave de ativação através de suas assinaturas. Para as assinaturas da Red Hat, conteúdo adicional pode ser disponibilizado através do"
+        "以下是当前通过其订阅可用于此激活码的存储库集。对于红帽订阅，可以通过以下方式提供其他内容："
       ],
       "BIOS UUID": [
-        ""
+        "BIOS UUID"
       ],
       "Bootable": [
-        "Inicializavel"
+        "可引导的"
       ],
       "Bug Fix": [
-        "Correção de erro"
+        "程序漏洞修正"
       ],
       "Bug Fix Advisory": [
-        "Consultoria em correção de erros"
+        "错误修复公告"
       ],
       "Build Host": [
-        "Construir Host"
+        "构建主机"
       ],
       "Build Information": [
-        "Construir informações"
+        "构建信息"
       ],
       "Build Time": [
-        "Tempo de construção"
+        "构建时间"
       ],
       "Bulk Task": [
-        ""
+        "批量任务"
       ],
       "Cancel": [
-        "Cancelar"
+        "取消"
       ],
       "Cannot clean Repository without the proper permissions.": [
-        ""
+        "没有适当的权限来清理仓库。"
       ],
       "Cannot clean Repository, a sync is already in progress.": [
-        ""
+        "无法清理仓库，一个同步已在进行中。"
       ],
       "Cannot Remove": [
-        "Não é possível remover"
+        "无法删除"
       ],
       "Cannot republish Repository without the proper permissions.": [
-        "Não é possível republicar o Repositório sem as devidas permissões."
+        "没有适当的权限，无法重新发布仓库。"
       ],
       "Cannot republish Repository, a sync is already in progress.": [
-        "Não é possível republicar o Repositório, uma sincronização já está em andamento."
+        "无法重新发布仓库，同步已在进行中。"
       ],
       "Cannot sync Repository without a URL.": [
-        "Não é possível sincronizar o Repositório sem uma URL."
+        "没有URL，无法同步仓库。"
       ],
       "Cannot sync Repository without the proper permissions.": [
-        "Não é possível sincronizar o Repositório sem as devidas permissões."
+        "没有适当的权限，无法同步仓库。"
       ],
       "Cannot sync Repository, a sync is already in progress.": [
-        "Não é possível sincronizar o Repositório, uma sincronização já está em andamento."
+        "一个同步已在进行中，无法同步仓库。"
       ],
       "Capacity": [
-        "Capacidade"
+        "容量"
       ],
       "Certificate": [
-        "Certificado"
+        "证书"
       ],
       "Change assigned Lifecycle Environment or Content View": [
-        "Mudança atribuída ao Ambiente do Ciclo de Vida ou Visão de Conteúdo"
+        "更改分配的生命周期环境或内容视图"
       ],
       "Change Host Collections": [
-        "Mudança de coleções de anfitriões"
+        "修改主机集"
       ],
       "Change Lifecycle Environment": [
-        "Mudar o ambiente do ciclo de vida"
+        "修改生命周期环境"
       ],
       "Changing default settings for content hosts that register with this activation key requires subscription-manager version 1.10 or newer to be installed on that host.": [
-        "A mudança das configurações padrão para hosts de conteúdo que se registram com esta chave de ativação requer que a versão 1.10 ou mais recente do gerenciador de assinatura seja instalada naquele host."
+        "更改使用此激活密钥注册的内容主机的默认设置，需要在该主机上安装 subscription-manager 1.10 或更高版本。"
       ],
       "Changing default settings requires subscription-manager version 1.10 or newer to be installed on this host.": [
-        "A mudança das configurações padrão requer que a versão 1.10 ou mais recente do gerenciador de assinatura seja instalada neste host."
+        "更改默认设置需要在此主机上安装 subscription-manager 版本 1.10 或更高版本。"
       ],
       "Changing download policy to \\\"On Demand\\\" will also clear the checksum type if set. The repository will use the upstream checksum type to verify downloads.": [
-        ""
+        "将下载策略更改为\\\"On Demand\\\"也会清除 checksum 类型（如果设置）。存储库将使用上游校验和类型来验证下载。"
       ],
       "Changing the Content View will not affect the Content Host until its next checkin.\\n                To update the Content Host immediately run the following command:": [
-        ""
+        "更改内容视图将不会影响内容主机，直到其下一次签入。要立即更新内容主机，请运行以下命令："
       ],
       "Changing the Content View will not affect the Content Hosts until their next checkin.\\n        To update the Content Hosts immediately run the following command:": [
-        ""
+        "更改内容视图将不会影响内容主机，直到它们下次签入。要立即更新内容主机，请运行以下命令："
       ],
       "Checksum": [
-        "Checksum"
+        "校验和"
       ],
       "Checksum Type": [
-        "Tipo de Checksum"
+        "Checksum 类型"
       ],
       "Choose one of the registry options to discover containers. To examine a private registry choose \\\"Custom\\\" and provide the url for the private registry.": [
-        ""
+        "选择一个 registry 选项以发现容器。要检查私有 registry，请选择“自定义”，并提供私有 registry 的URL。"
       ],
       "Click here to check the status of the task.": [
-        "Clique aqui para verificar o status da tarefa."
+        "单击此处检查任务的状态。"
       ],
       "Click here to select Errata for an Incremental Update.": [
-        "Clique aqui para selecionar Errata para uma Atualização Incremental."
+        "单击此处以选择勘误表进行增量更新。"
       ],
       "Click to monitor task progress.": [
-        ""
+        "单击以监视任务进度。"
       ],
       "Click to view task": [
-        ""
+        "点击查看任务"
       ],
       "Close": [
-        "Fechar"
+        "关闭"
       ],
       "Collection Name": [
-        ""
+        "集合名称"
       ],
       "Complete Mirroring": [
-        ""
+        "完整镜像"
       ],
       "Complete Sync": [
-        "Sincronia completa"
+        "完成同步"
       ],
       "Completed {{ repository.last_sync_words }} ago": [
-        ""
+        "已完成{{ repository.last_sync_words }}前"
       ],
       "Completely deletes the host including VM and disks, and removes all reporting, provisioning, and configuration information.": [
-        ""
+        "完全删除主机（包括VM和磁盘），并删除所有报告，设置和配置信息。"
       ],
       "Components": [
-        "Componentes"
+        "组件"
       ],
       "Components:": [
-        "Componentes:"
+        "组件："
       ],
       "Composite View": [
-        "Vista Composta"
+        "复合视图"
       ],
       "Confirm": [
-        "Confirmar"
+        "确认"
       ],
       "Confirm services restart": [
-        ""
+        "确认服务重启"
       ],
       "Container Image Manifest": [
-        "Manifesto de imagem de contêiner"
+        "容器图像清单"
       ],
       "Container Image Manifest Lists": [
-        "Listas de Manifestos de Imagens de Contêineres"
+        "容器镜像清单列表"
       ],
       "Container Image Manifests": [
-        "Manifestos de imagens de contêineres"
+        "容器图像清单"
       ],
       "Container Image metadata generation has been initiated in the background.  Click\\n      <a ng-href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        ""
+        "容器镜像元数据生成已在后台启动。请点击<a ng-href=\\\"{{ taskUrl() }}\\\">这里</a>监视进度。"
       ],
       "Container Image Registry": [
-        ""
+        "容器镜像 registry"
       ],
       "Container Image Tags": [
-        "Tags de imagem de contêiner"
+        "容器镜像标签"
       ],
       "Content": [
-        "Conteúdo"
+        "内容"
       ],
       "Content Counts": [
-        "Contas de Conteúdo"
+        "内容计数"
       ],
       "Content Credential": [
-        ""
+        "内容凭证"
       ],
       "Content Credential %s has been created.": [
-        "Foi criada a Credencial de Conteúdo %s."
+        "内容凭证%s已被创造。"
       ],
       "Content Credential Contents": [
-        "Conteúdo Conteúdo Credencial"
+        "内容凭证内容"
       ],
       "Content Credential successfully uploaded": [
-        "Conteúdo Credencial carregado com sucesso"
+        "内容凭证已成功上传"
       ],
       "Content credential updated": [
-        "Credencial de conteúdo atualizada"
+        "內容凭证已更新"
       ],
       "Content Credentials": [
-        "Credenciais de conteúdo"
+        "内容凭证"
       ],
       "Content Host": [
-        "Host de Conteúdo"
+        "內容主机"
       ],
       "Content Host Bulk Content": [
-        "Conteúdo Conteúdo do Host Bulk"
+        "内容主机批量内容"
       ],
       "Content Host Bulk Subscriptions": [
-        "Assinaturas em massa de conteúdo"
+        "内容主机批量订阅"
       ],
       "Content Host Content": [
-        "Conteúdo Conteúdo do Host"
+        "內容主机内容"
       ],
       "Content Host Counts": [
-        "Conteúdos Contém"
+        "內容主机数"
       ],
       "Content Host Limit": [
-        "Limite do Host de Conteúdo"
+        "内容主机限制"
       ],
       "Content Host Module Stream Management": [
-        ""
+        "内容主机模块流管理"
       ],
       "Content Host Properties": [
-        "Propriedades do hospedeiro de conteúdo"
+        "内容主机属性"
       ],
       "Content Host Registration": [
-        "Registro de anfitrião de conteúdo"
+        "内容主机注册"
       ],
       "Content Host Status": [
-        "Status do hospedeiro de conteúdo"
+        "内容主机状态"
       ],
       "Content Host Traces Management": [
-        ""
+        "内容主机跟踪管理"
       ],
       "Content Host:": [
-        "Host de conteúdo:"
+        "內容主机"
       ],
       "Content Hosts": [
-        "Hosts de Conteúdo"
+        "內容主机"
       ],
       "Content Hosts for Activation Key:": [
-        "Chave de ativação de conteúdo:"
+        "激活码的内容主机："
       ],
       "Content Hosts for:": [
-        "Hosts de conteúdo para:"
+        "內容主机用于："
       ],
       "Content Only": [
-        ""
+        "只包括内容"
       ],
       "Content synced depends on the specifity of the URL and/or the optional requirements.yaml specified below <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'ansible_collection'\\\" uib-popover-html=\\\"collectionURLPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Upstream URL\\\">\\n        </a>": [
-        ""
+        "同步的内容取决于URL的特殊性和/或下面指定的可选要求。 <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'ansible_collection'\\\" uib-popover-html=\\\"collectionURLPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Upstream URL\\\">\\n        </a>"
       ],
       "Content Type": [
-        "Tipo de Conteúdo"
+        "内容类型"
       ],
       "Content View": [
-        "Visão do conteúdo"
+        "内容视图"
       ],
       "Content View Version": [
-        "Versão de visualização do conteúdo"
+        "內容视图版本"
       ],
       "Content View:": [
-        "Vista do conteúdo:"
+        "内容视图："
       ],
       "Content Views": [
-        "Exibições de conteúdo"
+        "内容视图"
       ],
       "Content Views <div>{{ library.counts.content_views || 0 }}</div>": [
-        "Visualizações de conteúdo <div>{{ library.counts.content_views || 0 }}</div>"
+        "内容视图 <div>{{ library.counts.content_views || 0 }}</div>"
       ],
       "Content Views for Deb:": [
-        "Visualizações de conteúdo para Deb:"
+        "用于 Deb 的内容视图："
       ],
       "Content Views for File:": [
-        "Visualizações de conteúdo para arquivo:"
+        "用于文件的内容视图："
       ],
       "Content Views that contain this Deb": [
-        "Visualizações de conteúdo que contêm esta Deb"
+        "包含此 Deb 的内容视图"
       ],
       "Content Views that contain this File": [
-        "Visualizações de conteúdo que contêm este arquivo"
+        "包含此文件的内容视图"
       ],
       "Context": [
-        "Contexto"
+        "上下文"
       ],
       "Contract": [
-        "Contrato"
+        "合同"
       ],
       "Copy Activation Key": [
-        "Chave de ativação de cópia"
+        "复制激活码"
       ],
       "Copy Host Collection": [
-        "Cópia da Coleção Host"
+        "复制主机集"
       ],
       "Cores per Socket": [
-        "Núcleos por Tomada"
+        "每个插槽的内核数"
       ],
       "Create": [
-        "Criar"
+        "创建"
       ],
       "Create a copy of {{ activationKey.name }}": [
-        "Crie uma cópia de {{ activationKey.name }}"
+        "创建一个 {{ activationKey.name }} 副本"
       ],
       "Create a copy of {{ hostCollection.name }}": [
-        "Crie uma cópia de {{ hostCollection.name }}"
+        "创建一个 {{ hostCollection.name }} 副本"
       ],
       "Create Activation Key": [
-        "Criar chave de ativação"
+        "创建激活码"
       ],
       "Create Content Credential": [
-        "Criar Credencial de Conteúdo"
+        "建立內容凭证"
       ],
       "Create Copy": [
-        ""
+        "创建复制"
       ],
       "Create Discovered Repositories": [
-        "Criar Repositórios Descobertos"
+        "创建发现的仓库"
       ],
       "Create Environment Path": [
-        "Criar caminho ambiental"
+        "创建环境路径"
       ],
       "Create Host Collection": [
-        "Criar coleção de anfitriões"
+        "创建主机集"
       ],
       "Create Product": [
-        "Criar Produto"
+        "创建产品"
       ],
       "Create Repositories": [
-        "Criar repositórios"
+        "创建仓库"
       ],
       "Create Selected": [
-        "Criar Selecionado"
+        "创建所选"
       ],
       "Create Status": [
-        "Criar status"
+        "创建状态"
       ],
       "Create Sync Plan": [
-        "Criar Plano de Sincronização"
+        "创建同步计划"
       ],
       "Creating repository...": [
-        "Criando repositório..."
+        "正在创建仓库..."
       ],
       "Critical": [
-        "Crítico"
+        "关键"
       ],
       "Cron Logic": [
-        ""
+        "Cron 逻辑"
       ],
       "ctrl-click or shift-click to select multiple Add ons": [
-        ""
+        "按 Ctrl 或 Shift 以选择多个附加组件"
       ],
       "Current Lifecycle Environment (%e/%cv)": [
-        ""
+        "当前的生命周期环境 (%e/%cv)"
       ],
       "Current Subscriptions for Activation Key:": [
-        "Assinaturas atuais para chave de ativação:"
+        "当前的激活码订阅："
       ],
       "Custom": [
-        ""
+        "定制"
       ],
       "custom cron": [
-        ""
+        "自定义 cron"
       ],
       "Custom Cron": [
-        ""
+        "自定义Cron"
       ],
       "Custom Cron : {{ product.sync_plan.cron_expression }}": [
-        ""
+        "自定义Cron： {{ product.sync_plan.cron_expression }}"
       ],
       "Customize": [
-        ""
+        "自定义"
       ],
       "CVEs": [
-        "CVEs"
+        "CVE"
       ],
       "daily": [
-        "diariamente"
+        "每日"
       ],
       "Daily at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)": [
-        "Diariamente em {{ product.sync_plan.sync_date | date:'mediumTime' }} (horário do servidor)"
+        "每天在{{ product.sync_plan.sync_date | date:'mediumTime' }}（服务器时间）"
       ],
       "Date": [
-        "Data"
+        "日期"
       ],
       "deb metadata generation has been initiated in the background.  Click <a href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        "A geração de metadados deb foi iniciada em segundo plano.  Clique <a href=\\\"{{ taskUrl() }}\\\">Aqui</a> para monitorar o progresso."
+        "deb元数据生成已在后台启动。请点击<a href=\\\"{{ taskUrl() }}\\\">这里</a>监视进度。"
       ],
       "Deb Package Actions": [
-        ""
+        "deb 软件包操作"
       ],
       "deb Package Updates": [
-        ""
+        "deb 软件包更新"
       ],
       "deb Packages": [
-        "pacotes deb"
+        "deb 软件包"
       ],
       "Deb Packages": [
-        "Pacotes deb"
+        "Deb 软件包"
       ],
       "Deb Packages <div>{{ library.counts.debs || 0 }}</div>": [
-        ""
+        "Deb 软件包 <div>{{ library.counts.debs || 0 }}</div>"
       ],
       "Deb Packages for:": [
-        ""
+        "Deb 软件包用于："
       ],
       "Deb Repositories": [
-        "Repositórios de depuração"
+        "Deb 存储库"
       ],
       "Deb Repositories <div>{{ library.counts.deb_repositories || 0 }}</div>": [
-        ""
+        "Deb 软件仓库 <div>{{ library.counts.deb_repositories || 0 }}</div>"
       ],
       "Deb:": [
         "Deb:"
       ],
       "Debs": [
-        "Depurações"
+        "Debs"
       ],
       "Default": [
-        "Padrão"
+        "默认"
       ],
       "Default Status": [
-        ""
+        "默认状态"
       ],
       "Delete": [
-        "Excluir"
+        "刪除"
       ],
       "Delete {{ table.numSelected  }} Hosts?": [
-        ""
+        "删除 {{ table.numSelected  }} 主机?"
       ],
       "Delete filters": [
-        ""
+        "删除过滤"
       ],
       "Delete Hosts": [
-        "Apagar hosts"
+        "删除主机"
       ],
       "Delta RPM": [
-        ""
+        "Delta RPM"
       ],
       "Dependencies": [
-        "Dependências"
+        "依赖性"
       ],
       "Description": [
-        "Descrição"
+        "描述"
       ],
       "Details": [
-        "Detalhes"
+        "详情"
       ],
       "Details for Activation Key:": [
-        "Detalhes da chave de ativação:"
+        "激活码详情："
       ],
       "Details for Container Image Tag:": [
-        ""
+        "容器镜像标签的详情："
       ],
       "Details for Product:": [
-        "Detalhes do Produto:"
+        "产品详情："
       ],
       "Details for Repository:": [
-        "Detalhes para Repositório:"
+        "仓库详情："
       ],
       "Determines whether to require login to pull container images in this lifecycle environment.": [
-        ""
+        "确定是否需要登录才能在此生命周期环境中提取容器镜像。"
       ],
       "Digest": [
-        "Digest"
+        "文摘值"
       ],
       "Disable": [
-        "Desabilitar"
+        "禁用"
       ],
       "Disabled": [
-        "Desativado"
+        "禁用"
       ],
       "Disabled (overridden)": [
-        "Deficiente (anulado)"
+        "禁用（已覆盖）"
       ],
       "Discover": [
-        "Descubra"
+        "发现"
       ],
       "Discover Repositories": [
-        "Descobrir Repositórios "
+        "发现软件仓库"
       ],
       "Discovered Repository": [
-        "Repositório Descoberto"
+        "发现的仓库"
       ],
       "Discovery failed. Error: %s": [
-        "A descoberta falhou. Erro: %s"
+        "发现失败。错误： %s"
       ],
       "Distribution": [
-        "Distribuição"
+        "发布"
       ],
       "Distribution Information": [
-        "Informações sobre distribuição"
+        "发布信息"
       ],
       "Do not require a subscription entitlement certificate for accessing this repository.": [
-        ""
+        "访问这个仓库不需要订阅授权证书。"
       ],
       "Docker": [
         "Docker"
       ],
       "Docker metadata generation has been initiated in the background.  Click\\n            <a ng-href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        ""
+        "Docker元数据生成已在后台启动。请点击<a ng-href=\\\"{{ taskUrl() }}\\\">这里</a>监视进度。"
       ],
       "Docker Repositories <div>{{ library.counts.docker_repositories || 0 }}</div>": [
-        "Repositórios de Docker <div>{{ library.counts.docker_repositories || 0 }}</div>"
+        "Docker 仓库 <div>{{ library.counts.docker_repositories || 0 }}</div>"
       ],
       "Docker Tags": [
-        "Tags do Docker "
+        "Docker 标签"
       ],
       "Done": [
-        "Feito"
+        "完成"
       ],
       "Download Policy": [
-        "Política de download"
+        "下载政策"
       ],
       "Enable": [
-        "Habilitar"
+        "启用"
       ],
       "Enable Traces": [
-        ""
+        "启用跟踪"
       ],
       "Enabled": [
-        "Ativado"
+        "启用"
       ],
       "Enabled (overridden)": [
-        "Ativado (anulado)"
+        "已启用（已覆盖）"
       ],
       "Enhancement": [
-        "Melhoria"
+        "功能增强"
       ],
       "Enter Package Group Name(s)...": [
-        "Digite o(s) nome(s) do(s) grupo(s) de pacote(s)..."
+        "输入软件包组名称"
       ],
       "Enter Package Name(s)...": [
-        "Digite o(s) nome(s) do(s) pacote(s)..."
+        "输入软件包名称..."
       ],
       "Environment": [
-        "Ambiente"
+        "环境"
       ],
       "Environment saved": [
-        "Meio ambiente economizado"
+        "保存环境"
       ],
       "Environment will also be removed from the following published content views!": [
-        ""
+        "环境也将从以下发布的内容视图中移除！"
       ],
       "Environments": [
-        "Ambientes"
+        "环境"
       ],
       "Environments List": [
-        "Lista de Ambientes"
+        "环境列表"
       ],
       "Errata": [
-        "Erratas"
+        "勘误"
       ],
       "Errata <div>{{ library.counts.errata.total || 0 }}</div>": [
-        "Errata <div>{{ library.counts.errata.total || 0 }}</div>"
+        "勘误<div>{{ library.counts.errata.total || 0 }}"
       ],
       "Errata are automatically Applicable if they are Installable": [
-        "Os erros são automaticamente aplicáveis se forem instaláveis"
+        "如果是可安装的，勘误将会自动可适用"
       ],
       "Errata Details": [
-        "Detalhes da Errata"
+        "勘误详情"
       ],
       "Errata for:": [
-        "Errata para:"
+        "勘误："
       ],
       "Errata ID": [
-        "Errata ID"
+        "勘误 ID"
       ],
       "Errata Installation": [
-        "Instalação de Errata"
+        "勘误安装"
       ],
       "Errata Task List": [
-        "Lista de tarefas de erros"
+        "勘误任务列表"
       ],
       "Errata Tasks": [
-        "Errata Tarefas"
+        "勘误任务"
       ],
       "Errata:": [
-        "Errata:"
+        "勘误："
       ],
       "Error during upload:": [
-        "Erro durante o upload:"
+        "上载时发生错误："
       ],
       "Error saving the Sync Plan:": [
-        ""
+        "保存同步计划时出错："
       ],
       "Event": [
-        "Evento"
+        "事件"
       ],
       "Exclude Tags": [
-        ""
+        "排除标签"
       ],
       "Existing Product": [
-        "Produto Existente"
+        "现有产品"
       ],
       "Expires": [
-        "Expira"
+        "过期"
       ],
       "Export": [
-        "Exportar"
+        "导出"
       ],
       "Family": [
-        "Família"
+        "系列"
       ],
       "File Information": [
-        "Informações do arquivo"
+        "文件信息"
       ],
       "File removal been initiated in the background.  Click <a href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        "A remoção do arquivo foi iniciada em segundo plano.  Clique <a href=\\\"{{ taskUrl() }}\\\">Aqui</a> para monitorar o progresso."
+        "文件删除已在后台启动。请点击<a href=\\\"{{ taskUrl() }}\\\">这里</a>监视进度。"
       ],
       "File too large.": [
-        "Arquivo muito grande."
+        "文件过大。"
       ],
       "File too large. Please use the CLI instead.": [
-        "Arquivo muito grande. Por favor, use o CLI em seu lugar."
+        "文件过大。请使用 CLI。"
       ],
       "File:": [
-        "Arquivo:"
+        "文件："
       ],
       "Filename": [
-        "Nome do arquivo"
+        "文件名"
       ],
       "Files": [
-        "Arquivos"
+        "文件"
       ],
       "Files in package {{ package.nvrea }}": [
-        "Arquivos em pacote {{ package.nvrea }}"
+        "软件包 {{ package.nvrea }} 中的文件"
       ],
       "Filter": [
-        "Flitro"
+        "过滤器"
       ],
       "Filter by Environment": [
-        ""
+        "按环境过滤"
       ],
       "Filter by Status:": [
-        ""
+        "根据状态过滤："
       ],
       "Filter...": [
-        "Filtro..."
+        "过滤器......"
       ],
       "Filters": [
-        ""
+        "过滤器"
       ],
       "Finished At": [
-        "Concluído em"
+        "完成于"
       ],
       "For older operating systems such as Red Hat Enterprise Linux 5 or CentOS 5 it is recommended to use sha1.": [
-        "Para sistemas operacionais mais antigos como o Red Hat Enterprise Linux 5 ou CentOS 5 é recomendado o uso do sha1."
+        "对于较旧的操作系统，如 Red Hat Enterprise Linux 5 或CentOS 5，建议使用 sha1。"
       ],
       "For On Demand synchronization, only the metadata is downloaded during sync and packages are fetched and stored on the filesystem when clients request them.\\n          On Demand is not recommended for custom repositories unless the upstream repository maintains older versions of packages within the repository.\\n          The Immediate option will download all metadata and packages immediately during the sync.": [
-        ""
+        "对于按需同步，仅在同步期间下载元数据，并在客户端请求时将软件包提取并存储在文件系统中。对于自定义仓库，建议不要使用按需存储，除非上游仓库在仓库中维护较旧版本的软件包。 “立即”选项将在同步期间立即下载所有元数据和程序包。"
       ],
       "Global Default": [
-        ""
+        "全局默认值"
       ],
       "Global Default (None)": [
-        ""
+        "全局默认值（无）"
       ],
       "GPG Key": [
-        "Chave GPG"
+        "GPG 密钥"
       ],
       "Group": [
-        "Grupo"
+        "组"
       ],
       "Group Install (Deprecated)": [
-        ""
+        "组安装（已弃用）"
       ],
       "Group package actions are being deprecated, and will be removed in a future version.": [
-        ""
+        "组软件包操作已被弃用，并将在以后的版本中删除。"
       ],
       "Group Remove (Deprecated)": [
-        ""
+        "组删除（已弃用）"
       ],
       "Guests of": [
-        "Convidados de"
+        "的客户"
       ],
       "Helper": [
-        "Ajudante"
+        "帮助"
       ],
       "Host %s has been deleted.": [
-        "O host %s foi excluído."
+        "主机 %s 已被删除。"
       ],
       "Host %s has been unregistered.": [
-        "O host %s não foi registrado."
+        "主机 %s 已被取消注册。"
       ],
       "Host Collection Management": [
-        "Gerenciamento de coleta de hospedagem"
+        "主机集合管理"
       ],
       "Host Collection Membership": [
-        "Afiliação a Coleta de Anfitriões"
+        "主机集合成员"
       ],
       "Host Collection Membership Management": [
-        ""
+        "主机集合成员资格管理"
       ],
       "Host Collection removed.": [
-        "Coleção de anfitriões removida."
+        "主机集合已删除"
       ],
       "Host Collection updated": [
-        "Coleção de anfitriões atualizada"
+        "主机集合已更新"
       ],
       "Host Collection:": [
-        "Coleção de anfitriões:"
+        "主机集合："
       ],
       "Host Collections": [
-        "Coleções de Host"
+        "主机集合"
       ],
       "Host Collections for:": [
-        "Coleções de anfitriões para:"
+        "主机集合："
       ],
       "Host Count": [
-        "Contagem de anfitriões"
+        "主机数"
       ],
       "Host Group": [
-        "Grupo de Host"
+        "主机组"
       ],
       "Host Limit": [
-        "Limite do anfitrião"
+        "主机限制"
       ],
       "Hostname": [
-        "Nome da máquina"
+        "主机名"
       ],
       "Hosts": [
-        "Hosts"
+        "主机"
       ],
       "hourly": [
-        "de hora em hora"
+        "每小时"
       ],
       "Hourly at {{ product.sync_plan.sync_date | date:'m' }} minutes and {{ product.sync_plan.sync_date | date:'s' }} seconds": [
-        "De hora em hora em {{ product.sync_plan.sync_date | date:'m' }} minutos e {{ product.sync_plan.sync_date | date:'s' }} segundos"
+        "每小时{{ product.sync_plan.sync_date | date:'m' }}分钟和{{ product.sync_plan.sync_date | date:'s' }}秒"
       ],
       "HTTP Proxy": [
-        "Proxy HTTP"
+        "HTTP 代理"
       ],
       "HTTP Proxy Management": [
-        ""
+        "HTTP 代理管理"
       ],
       "HTTP Proxy Policy": [
-        ""
+        "HTTP 代理策略"
       ],
       "HTTP Proxy Policy:": [
-        ""
+        "HTTP 代理策略："
       ],
       "HTTP Proxy:": [
-        ""
+        "HTTP 代理："
       ],
       "HttpProxyPolicy": [
         "HttpProxyPolicy"
       ],
       "Id": [
-        "Id"
+        "ID"
+      ],
+      "If you want to upload individual packages, create a separate repository with an empty \\\"Upstream URL\\\" field.": [
+        "如果要上传单个软件包，请使用一个空的 \\\"Upstream URL\\\" 字段创建单独的仓库。"
       ],
       "Ignore SRPMs": [
-        ""
+        "忽略 SRPM"
       ],
       "Ignore treeinfo": [
-        ""
+        "忽略 treeinfo"
       ],
       "Image": [
-        "Imagem"
+        "镜像"
       ],
       "Immediate": [
-        "Imediato(a)"
+        "立即"
       ],
       "Important": [
-        "Importante"
+        "重要"
       ],
       "In order to browse this repository you must <a ng-href=\\\"/organizations/{{ organization }}/edit\\\">download the certificate</a>\\n            or ask your admin for a certificate.": [
-        "Para navegar por este repositório você deve <a ng-href=\\\"/organizations/{{ organization }}/edit\\\">baixar o certificado</a>\\n            ou peça um certificado a seu administrador."
+        "为了浏览此仓库，您必须<a ng-href=\\\"/organizations/{{ organization }}/edit\\\">下载证书</a>或向管理员询问证书。"
       ],
       "Include Tags": [
-        ""
+        "包含标签"
       ],
       "Independent Packages": [
-        ""
+        "独立软件包"
       ],
       "Install": [
-        "Instalar"
+        "安装"
       ],
       "Install Selected": [
-        "Instalação Selecionada"
+        "安装所选"
       ],
       "Install the pre-built bootstrap RPM:": [
-        "Instalar o RPM do bootstrap pré-construído:"
+        "安装预构建的引导程序 RPM："
       ],
       "Installable": [
-        "Instalável"
+        "可安装"
       ],
       "Installable Errata": [
-        "Errata instalável"
+        "可安装的勘误"
       ],
       "Installable Updates": [
-        "Atualizações instaláveis"
+        "可安装的更新"
       ],
       "Installed": [
-        "Instalados"
+        "已安裝"
       ],
       "Installed Deb Packages": [
-        ""
+        "安装的 Deb 软件包"
       ],
       "Installed On": [
-        "Instalado em"
+        "安装于"
       ],
       "Installed Package": [
-        "Pacote instalado"
+        "已安装的软件包"
       ],
       "Installed Packages": [
-        "Pacotes instalados"
+        "已安装的软件包"
       ],
       "Installed Products": [
-        "Produtos Instalados"
+        "安装的产品"
       ],
       "Installed Profile": [
-        ""
+        "安装的配置集"
       ],
       "Interfaces": [
-        "Interfaces"
+        "接口"
       ],
       "Interval": [
-        "Intervalo"
+        "间隔"
       ],
       "IPv4 Address": [
-        "Endereço IPv4"
+        "IPv4 位址"
       ],
       "IPv6 Address": [
-        "Endereço IPv6"
+        "IPv6 地址"
       ],
       "Issued": [
-        "Emitido em"
+        "发行"
       ],
       "Katello Tracer": [
-        ""
+        "Katello Tracer"
       ],
       "Label": [
-        "Rótulo"
+        "标签"
       ],
       "Last Checkin": [
-        "Último Checkin"
+        "最后签到"
       ],
       "Last Published": [
-        "Publicado pela última vez"
+        "最后发布的"
       ],
       "Last Puppet Report": [
-        "Último Relatório de Marionetes"
+        "最后的 Puppet 报告"
       ],
       "Last reclaim failed:": [
-        ""
+        "最后重新声明失败："
       ],
       "Last reclaim space failed:": [
-        ""
+        "最后的重新声明空间失败："
       ],
       "Last Sync": [
-        "Última Sincronia"
+        "最后同步"
       ],
       "Last sync failed:": [
-        ""
+        "最后的同步失败："
       ],
       "Last synced": [
-        ""
+        "最后同步的"
       ],
       "Last Updated On": [
-        "Última Atualização em"
+        "最后更新于："
       ],
       "Library": [
-        "Biblioteca"
+        "库"
       ],
       "Library Repositories": [
-        "Repositórios de bibliotecas"
+        "库仓库"
       ],
       "Library Repositories that contain this Deb.": [
-        "Repositórios de bibliotecas que contêm esta Deb."
+        "包含此 Deb 的库仓库。"
       ],
       "Library Repositories that contain this File.": [
-        "Repositórios da biblioteca que contêm este arquivo."
+        "包含此文件的库仓库。"
       ],
       "Library Synced Content": [
-        "Biblioteca Conteúdo Sincronizado"
+        "库更新的内容"
       ],
       "License": [
-        "Licença"
+        "许可证"
       ],
       "Lifecycle Environment": [
-        "Ambiente de Ciclo de Vida"
+        "生命周期环境"
       ],
       "Lifecycle Environment Paths": [
-        "Caminhos do ambiente do ciclo de vida"
+        "生命周期环境路径"
       ],
       "Lifecycle Environment:": [
-        ""
+        "生命周期环境："
       ],
       "Lifecycle Environments": [
-        "Ambientes de ciclo de vida"
+        "生命周期环境"
       ],
       "Limit": [
-        "Limite"
+        "限制"
       ],
       "Limit Repository Sets to only those available in this Activation Key's Lifecycle  Environment": [
-        ""
+        "将仓库集限制为仅此激活码的生命周期环境中可用的仓库集"
       ],
       "Limit Repository Sets to only those available in this Host's Lifecycle Environment": [
-        "Limitar os Conjuntos de Repositório a apenas aqueles disponíveis no Ambiente de Ciclo de Vida deste Host"
+        "将仓库集限制为仅此主机的生命周期环境中可用的仓库集"
       ],
       "Limit to environment": [
-        "Limite ao meio ambiente"
+        "限制到环境"
       ],
       "Limit to Environment": [
-        "Limite ao meio ambiente"
+        "限制到环境"
       ],
       "Limit to Lifecycle Environment": [
-        ""
+        "限制到生命周期环境"
       ],
       "Limit:": [
-        "Limite:"
+        "限制："
       ],
       "List": [
-        "Lista"
+        "列出"
       ],
       "List Host Collections": [
-        ""
+        "列出主机集合"
       ],
       "List Hosts": [
-        ""
+        "列出主机"
       ],
       "List Products": [
-        ""
+        "列出产品"
       ],
       "List Subscriptions": [
-        ""
+        "列出订阅"
       ],
       "List/Remove": [
-        "Lista/Remover"
+        "列出/删除"
       ],
       "Loading...": [
-        "Carregando..."
+        "载入中..."
       ],
       "Loading...\\\"": [
-        "Carregando...\\\""
+        "加载...\\\""
       ],
       "Make filters apply to all repositories in the content view": [
-        ""
+        "使过滤应用到内容视图中的所有仓库"
       ],
       "Manage Ansible Collections for Repository:": [
-        ""
+        "管理仓库的 Ansible 集合："
       ],
       "Manage Container Image Manifests for Repository:": [
-        ""
+        "管理仓库的容器镜像清单："
       ],
       "Manage Content for Repository:": [
-        ""
+        "管理仓库的内容："
       ],
       "Manage deb Packages for Repository:": [
-        "Gerenciar pacotes de deb para Repositório:"
+        "管理仓库的 deb 软件包："
       ],
       "Manage Errata": [
-        "Gerenciar Errata"
+        "管理勘误"
       ],
       "Manage Files for Repository:": [
-        "Gerenciar Arquivos para Repositório:"
+        "管理仓库文件："
       ],
       "Manage Host Traces": [
-        ""
+        "管理主机 Traces"
       ],
       "Manage HTTP Proxy": [
-        ""
+        "管理 HTTP 代理"
       ],
       "Manage Module Streams": [
-        ""
+        "管理模块流"
       ],
       "Manage Module Streams for Repository:": [
-        ""
+        "管理仓库的模块流："
       ],
       "Manage Packages": [
-        "Gerenciar pacotes"
+        "管理软件包"
       ],
       "Manage Packages for Repository:": [
-        "Gerenciar Pacotes para Repositório:"
+        "管理仓库软件包："
       ],
       "Manage Repository Sets": [
-        "Gerenciar Conjuntos de Repositórios"
+        "管理仓库集"
       ],
       "Manage Subscriptions": [
-        "Gerenciar Assinaturas"
+        "管理订阅"
       ],
       "Manage Sync Plan": [
-        "Gerenciar Plano de Sincronização"
+        "管理同步计划"
       ],
       "Manage System Purpose": [
-        ""
+        "管理系统目的"
       ],
       "Manifest Lists": [
-        "Listas Manifestativas"
+        "清单列表"
       ],
       "Manifest Type": [
-        "Tipo de Manifesto"
+        "清单类型"
       ],
       "Metadata Expiration (Seconds)": [
-        ""
+        "元数据过期 (以秒为单位)"
       ],
       "Mirroring Policy": [
-        ""
+        "镜像策略"
       ],
       "Model": [
-        "Modelar"
+        "模型"
       ],
       "Moderate": [
-        "Moderado"
+        "中等"
       ],
       "Modular": [
-        ""
+        "模块化"
       ],
       "Module Stream Management": [
-        ""
+        "模块流管理"
       ],
       "Module Stream metadata generation has been initiated in the background.  Click\\n      <a ng-href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        ""
+        "模块流元数据生成已在后台启动。请点击<a ng-href=\\\"{{ taskUrl() }}\\\">这里</a>监视进度。"
       ],
       "Module Stream Packages": [
-        ""
+        "模块流软件包"
       ],
       "Module Streams": [
-        "Fluxos de módulo"
+        "模块流"
       ],
       "Module Streams <div>{{ library.counts.module_streams || 0 }}</div>": [
-        ""
+        "模块流<div>{{ library.counts.module_streams || 0 }}"
       ],
       "Module Streams for:": [
-        ""
+        "模块流："
       ],
       "More Details": [
-        "Mais detalhes"
+        "更多详情"
       ],
       "N/A": [
-        "N/D"
+        "不适用"
       ],
       "Name": [
-        "Nome"
+        "名称"
       ],
       "Name of the upstream repository you want to sync. Example: 'quay/busybox' or 'fedora/ssh'.": [
-        ""
+        "您要同步的上游仓库的名称。例如：'quay/busybox' 或 'fedora/ssh'。"
       ],
       "Networking": [
-        "Trabalho em rede"
+        "网络"
       ],
       "Never": [
-        "Nunca"
+        "决不"
       ],
       "Never checked in": [
-        ""
+        "从未签到"
       ],
       "Never registered": [
-        ""
+        "从未注册"
       ],
       "Never synced": [
-        "Nunca sincronizado"
+        "从未同步"
       ],
       "New Activation Key": [
-        "Nova chave de ativação"
+        "新激活码"
       ],
       "New Content Credential": [
-        ""
+        "新内容凭证"
       ],
       "New Environment": [
-        "Novo Ambiente"
+        "新环境"
       ],
       "New Host Collection": [
-        ""
+        "新主机集合"
       ],
       "New Name:": [
-        "Novo nome:"
+        "新名称："
       ],
       "New Product": [
-        "Novo produto"
+        "新产品"
       ],
       "New Repository": [
-        "Novo Repositório"
+        "新仓库"
       ],
       "New Sync Plan": [
-        "Novo Plano de Sincronização"
+        "新同步计划"
       ],
       "New sync plan successfully created.": [
-        "Novo plano de sincronização criado com sucesso."
+        "已成功创建新的同步计划。"
       ],
       "Next": [
-        "Próximo"
+        "下一个"
       ],
       "Next Sync": [
-        "Próxima Sincronia"
+        "下一个同步"
       ],
       "No": [
-        "Não"
+        "否"
       ],
       "No alternate release version choices are available. The available releases are based upon what is available in \\\"{{ host.content_facet_attributes.content_view.name }}\\\", the selected <a href=\\\"/content_views\\\">content view</a> this content host is attached to for the given <a href=\\\"/lifecycle_environments\\\">lifecycle environment</a>, \\\"{{ host.content_facet_attributes.lifecycle_environment.name }}\\\".": [
-        "Não há opções de versões alternativas disponíveis. As versões disponíveis são baseadas no que está disponível em \\\"{{ host.content_facet_attributes.content_view.name }}\\\", a visão de conteúdo selecionada <a href=\\\"/content_views\\\"></a> a que este anfitrião de conteúdo está anexado para o ambiente <a href=\\\"/lifecycle_environments\\\">dado ciclo de vida</a>, \\\"{{ host.content_facet_attributes.lifecycle_environment.name }}\\\"."
+        "没有其他可用的发行版本选择。可用版本基于“{{ host.content_facet_attributes.content_view.name }} ”，选中<a href=\\\"/content_views\\\">内容检视</a>此内容主机已附加到给定的<a href=\\\"/lifecycle_environments\\\">生命周期环境</a>，“{{ host.content_facet_attributes.lifecycle_environment.name }} ”。"
       ],
       "No Content Hosts match this Erratum.": [
-        "Nenhum hospedeiro de conteúdo corresponde a este erro."
+        "没有内容主机与此勘误匹配。"
       ],
       "No Content Views contain this Deb": [
-        "Nenhuma Vista de Conteúdo contém esta Deb"
+        "没有内容视图包含此 Deb"
       ],
       "No Content Views contain this File": [
-        "Nenhuma vista de conteúdo contém este arquivo"
+        "没有内容视图包含此文件"
       ],
       "No content views exist for {{selected.environment.name}}": [
-        "Não existem visualizações de conteúdo para {{selected.environment.name}}"
+        "没有用于 {{selected.environment.name}} 的内容视图"
       ],
       "No discovered repositories.": [
-        "Nenhum repositório descoberto."
+        "没有发现的仓库。"
       ],
       "No enabled Repository Sets provided through subscriptions.": [
-        ""
+        "没有通过订阅提供的已启用仓库集。"
       ],
       "No Host Collections match your search.": [
-        "Nenhuma coleção de anfitriões corresponde à sua busca."
+        "没有主机集合与您的搜索匹配。"
       ],
       "No Host Collections to show, you can add Host Collections after selecting 'Host Collections' under 'Hosts' in main menu.": [
-        "Não há coleções de anfitriões para mostrar, você pode adicionar Coleções de anfitriões após selecionar 'Coleções de anfitriões' em 'Anfitriões' no menu principal."
+        "没有主机集合显示，您可以在主菜单中的“主机”下选择“主机集合”后添加主机集合。"
       ],
       "No Host Collections to show, you can add Host Collections after selecting the 'Add' tab.": [
-        "Sem Coleções Hospedeiras para mostrar, você pode adicionar Coleções Hospedeiras após selecionar a guia 'Adicionar'."
+        "没有主机集合可显示，您可以在选择“添加”选项卡后添加主机集合。"
       ],
       "No HTTP Proxies found": [
-        ""
+        "没有找到 HTTP 代理"
       ],
       "No HTTP Proxy": [
-        ""
+        "没有 HTTP 代理"
       ],
       "No matching results.": [
-        "Sem resultados correspondentes."
+        "没有匹配的结果。"
       ],
       "No Packages to show": [
-        ""
+        "没有要显示的软件包"
       ],
       "No products are available to add to this Sync Plan.": [
-        "Não há produtos disponíveis para adicionar a este Plano de Sincronização."
+        "没有可用于添加到此同步计划的产品。"
       ],
       "No products have been added to this Sync Plan.": [
-        ""
+        "未将任何产品添加到此同步计划中。"
       ],
       "No releases exist in the Library.": [
-        "Não existem lançamentos na Biblioteca."
+        "库中没有发行版本。"
       ],
       "No Repositories contain this Deb": [
-        "Nenhum Repositório contém este Deb"
+        "没有仓库包含此 Deb"
       ],
       "No Repositories contain this Erratum.": [
-        "Nenhum Repositório contém este erro."
+        "没有仓库包含此勘误。"
       ],
       "No Repositories contain this File": [
-        "Nenhum Repositório contém este arquivo"
+        "没有仓库包含此文件"
       ],
       "No Repositories contain this Package.": [
-        "Nenhum Repositório contém este pacote."
+        "没有仓库含此软件包。"
       ],
       "No repository sets provided through subscriptions.": [
-        "Não são fornecidos conjuntos de repositórios através de assinaturas."
+        "没有通过订阅提供的仓库集。"
       ],
       "No restriction": [
-        ""
+        "没有限制"
       ],
       "No sync information available.": [
-        "Não há informações de sincronização disponíveis."
+        "没有可用的同步信息。"
       ],
       "No tasks exist for this resource.": [
-        "Não existem tarefas para este recurso."
+        "此资源不存在任何任务。"
       ],
       "None": [
-        "Nenhum"
+        "没有"
       ],
       "Not Applicable": [
-        ""
+        "不适用"
       ],
       "Not started": [
-        "Não iniciado"
+        "未启动"
       ],
       "Not Synced": [
-        "Não foi Sincronizado"
+        "未同步"
       ],
       "Number of CPUs": [
-        "Número de CPUs"
+        "CPU 的数量"
       ],
       "Number of Repositories": [
-        "Número de Repositórios"
+        "仓库数量"
       ],
       "On Demand": [
-        "Sob demanda"
+        "按需"
       ],
       "One or more of the selected Errata are not Installable via your published Content View versions running on the selected hosts.  The new Content View Versions (specified below)\\n      will be created which will make this Errata Installable in the host's Environment.  This new version will replace the current version in your host's Lifecycle\\n      Environment.  To install these errata immediately on hosts after publishing check the box below.": [
-        "Uma ou mais das Erratas selecionadas não podem ser instaladas através de suas versões publicadas de Visualização de Conteúdo rodando nos hosts selecionados.  As novas Versões de Visualização de Conteúdo (especificadas abaixo)\\n      que tornará esta Errata Instalável no Ambiente do hospedeiro.  Esta nova versão substituirá a versão atual no Ciclo de Vida do seu host\\n      Meio ambiente.  Para instalar estas erratas imediatamente nos hosts após a publicação, marque a caixa abaixo."
+        "无法通过在选定主机上运行的已发布内容视图版本来安装一个或多个选定勘误。将创建新的内容视图版本（在下面指定），使该勘误可在主机的环境中安装。此新版本将替换主机的生命周期环境中的当前版本。要在发布后立即在主机上安装这些勘误，请选中以下框。"
       ],
       "One or more packages are not showing up in the local repository even though they exist in the upstream repository.": [
-        ""
+        "即使上游仓库中存在一个或多个软件包，它们也不会出现在本地仓库中。"
       ],
       "Only show content hosts where the errata is currently installable in the host's Lifecycle Environment.": [
-        "Mostrar apenas os hosts de conteúdo onde a errata é atualmente instalável no ambiente do ciclo de vida do host."
+        "仅显示内容主机当前在主机的生命周期环境中可安装勘误的主机。"
       ],
       "Only show Errata that are Applicable to one or more Content Hosts": [
-        "Mostrar apenas Erratas que se aplicam a um ou mais Hosts de Conteúdo"
+        "仅显示适用于一个或多个内容主机的勘误"
       ],
       "Only show Errata that are Installable on one or more Content Hosts": [
-        "Mostrar apenas Erratas que podem ser instaladas em um ou mais Hosts de Conteúdo"
+        "仅显示可在一个或多个内容主机上安装的勘误"
       ],
       "Only show Packages that are Applicable to one or more Content Hosts": [
-        "Mostrar apenas Pacotes que são aplicáveis a um ou mais Hosts de Conteúdo"
+        "仅显示适用于一个或多个内容主机的软件包"
       ],
       "Only show Packages that are Upgradable on one or more Content Hosts": [
-        "Mostrar apenas pacotes que podem ser atualizados em um ou mais Hosts de Conteúdo"
+        "仅返回可在一个或多个主机上升级的软件包"
       ],
       "Only show Subscriptions for products not already covered by a Subscription": [
-        "Mostrar apenas Assinaturas para produtos ainda não cobertos por uma Assinatura"
+        "仅显示订阅尚未涵盖的产品的订阅"
       ],
       "Only show Subscriptions which can be applied to products installed on this Host": [
-        "Mostrar apenas Assinaturas que podem ser aplicadas aos produtos instalados neste Host"
+        "仅显示可应用于此主机上安装的产品的订阅"
       ],
       "Only show Subscriptions which can be attached to this Host": [
-        "Mostrar apenas Assinaturas que podem ser anexadas a este Host"
+        "仅显示可以附加到该主机的订阅"
       ],
       "Only the Applications with a Helper can be restarted.": [
-        "Somente as aplicações com um Helper podem ser reiniciadas."
+        "只有带有 Helper 的应用程序才能重新启动。"
       ],
       "Operating System": [
-        "Sistema Operacional"
+        "操作系统"
       ],
       "Optimized Sync": [
-        "Sincronia Otimizada"
+        "优化同步"
       ],
       "Organization": [
-        "Organização"
+        "机构"
       ],
       "Original Sync Date": [
-        "Data de Sincronização Original"
+        "原始同步日期"
       ],
       "OS": [
         "OS"
       ],
       "OSTree Repositories <div>{{ library.counts.ostree_repositories || 0 }}</div>": [
-        "OSTree Repositórios <div>{{ library.counts.ostree_repositories || 0 }}</div>"
+        "OSTree 仓库 <div>{{ library.counts.ostree_repositories || 0 }}</div>"
       ],
       "Override to Disabled": [
-        "Substituição para Deficientes"
+        "覆盖禁用"
       ],
       "Override to Enabled": [
-        "Anular para Ativado"
+        "覆盖启用"
       ],
       "Package": [
-        "Pacote"
+        "软件包"
       ],
       "Package Actions": [
-        "Ações do pacote"
+        "软件包操作"
       ],
       "Package Group (Deprecated)": [
-        ""
+        "软件包组（已弃用）"
       ],
       "Package Groups": [
-        "Grupos de Pacote"
+        "软件包组"
       ],
       "Package Groups for Repository:": [
-        "Grupos de Pacotes para Repositório:"
+        "仓库的软件包组："
       ],
       "Package Information": [
-        "Informações sobre o pacote"
+        "软件包信息"
       ],
       "Package Install": [
-        "Instalar Pacote"
+        "软件包安装"
       ],
       "Package Installation, Removal, and Update": [
-        "Instalação, remoção e atualização de pacotes"
+        "程序包的安装，删除和更新"
       ],
       "Package Remove": [
-        "Remover Pacote"
+        "软件包删除"
       ],
       "Package Update": [
-        "Atualizar Pacote"
+        "软件包更新"
       ],
       "Package:": [
-        "Pacote:"
+        "软件包："
       ],
       "Package/Group Name": [
-        "Nome do pacote/grupo"
+        "软件包/组名称"
       ],
       "Packages": [
-        "Pacotes"
+        "软件包"
       ],
       "Packages <div>{{ library.counts.packages || 0 }}</div>": [
-        "Pacotes <div>{{ library.counts.packages || 0 }}</div>"
+        "软件包<div>{{ library.counts.packages || 0 }}</div>"
       ],
       "Packages are automatically Applicable if they are Upgradable": [
-        "Os pacotes são automaticamente aplicáveis se forem atualizáveis"
+        "如果软件包是可升级的，则自动适用"
       ],
       "Packages for Errata:": [
-        ""
+        "勘误软件包："
       ],
       "Packages for:": [
-        "Embalagens para:"
+        "软件包："
       ],
       "Parameters": [
-        "Parâmetros"
+        "参数"
       ],
       "Part of a manifest list": [
-        "Parte de uma lista manifesta"
+        "清单列表的一部分"
       ],
       "Password": [
-        "Senha"
+        "密码"
       ],
       "Password of the upstream repository user for authentication. Leave empty if repository does not require authentication.": [
-        "Senha do usuário do repositório upstream para autenticação. Deixe em branco se o repositório não exigir autenticação."
+        "用于身份验证的上游仓库用户的密码。如果仓库不需要身份验证，则保留为空。"
       ],
       "Paste contents of Content Credential": [
-        "Colar o conteúdo da Credencial de Conteúdo"
+        "上载内容凭证内容"
       ],
       "Path": [
-        "Caminho"
+        "路径"
       ],
       "Perform": [
-        "Realizar"
+        "执行"
       ],
       "Performing host package actions is disabled because Katello is not configured for remote execution.": [
-        ""
+        "执行主机软件包操作被禁用，因为没有为远程执行配置 Katello。"
       ],
       "Performing host package actions is disabled because Katello is not configured for Remote Execution.": [
-        ""
+        "执行主机软件包操作被禁用，因为没有为远程执行配置 Katello。"
       ],
       "Physical": [
-        "Físico"
+        "物理"
       ],
       "Please enter cron below": [
-        ""
+        "请在下面输入 cron"
       ],
       "Please make sure a Content View is selected.": [
-        ""
+        "请确保选择了内容视图。"
       ],
       "Please select an environment.": [
-        "Por favor, selecione um ambiente."
+        "请先选择一个环境"
       ],
       "Please select one from the list below and you will be redirected.": [
-        "Selecione uma opção na lista abaixo e você será redirecionado."
+        "请从下面的列表中选择一个，您将被重定向。"
       ],
       "Plus %y more errors": [
-        "Mais %y mais erros"
+        "加%y个更多的错误"
       ],
       "Plus 1 more error": [
-        "Mais 1 erro"
+        "再加上 1 个错误"
       ],
       "Previous Lifecycle Environment (%e/%cv)": [
-        ""
+        "前面的生命周期环境 (%e/%cv)"
       ],
       "Prior Environment": [
-        ""
+        "前面的环境"
       ],
       "Product": [
-        "Produto"
+        "产品"
       ],
       "Product delete operation has been initiated in the background.": [
-        ""
+        "产品删除操作已在后台启动。"
       ],
       "Product Enhancement Advisory": [
-        "Assessoria para Melhoria de Produtos"
+        "产品增强公告"
       ],
       "Product information for:": [
-        "Informações sobre produtos para:"
+        "产品信息："
       ],
       "Product Management for Sync Plan:": [
-        "Gestão de Produtos para Sync Plan:"
+        "同步计划的产品管理："
       ],
       "Product Name": [
-        "Nome do produto"
+        "产品名称"
       ],
       "Product Options": [
-        "Opções de produtos"
+        "产品选项"
       ],
       "Product Saved": [
-        "Produto Salvo"
+        "产品已保存"
       ],
       "Product sync has been initiated in the background.": [
-        ""
+        "产品同步已在后台启动。"
       ],
       "Product syncs has been initiated in the background.": [
-        ""
+        "产品同步已在后台启动。"
       ],
       "Product verify checksum has been initiated in the background.": [
-        ""
+        "产品验证校验和已在后台启动。"
       ],
       "Products": [
-        "Produtos"
+        "产品"
       ],
       "Products <div>{{ library.counts.products || 0 }}</div>": [
-        "Produtos <div>{{ library.counts.products || 0 }}</div>"
+        "产品<div>{{ library.counts.products || 0 }}"
       ],
       "Products for": [
-        "Produtos para"
+        "产品"
       ],
       "Products not covered": [
-        "Produtos não cobertos"
+        "未涵盖的产品"
       ],
       "Provides": [
-        "Fornece"
+        "提供"
       ],
       "Provisioning": [
-        ""
+        "置备"
       ],
       "Provisioning Details": [
-        "Detalhes do provisionamento"
+        "置备详情"
       ],
       "Provisioning Host Details": [
-        "Detalhes sobre o provisionamento do host"
+        "设置主机详情"
       ],
       "Published At": [
-        "Publicado em"
+        "发表于"
       ],
       "Published Repository Information": [
-        "Informações de Repositório Publicadas"
+        "发布的仓库信息"
       ],
       "Publishing Settings": [
-        ""
+        "发布设置"
       ],
       "Puppet Environment": [
-        "Ambiente puppet"
+        "Puppet 环境"
       ],
       "Quantity": [
-        "Quantidade"
+        "数量"
       ],
       "Quantity (To Add)": [
-        ""
+        "数量（要添加的）"
       ],
       "RAM (GB)": [
         "RAM (GB)"
       ],
       "Reboot Suggested": [
-        "Reinicialização sugerida"
+        "建议重启"
       ],
       "Reboot Suggested?": [
-        "Sugestão de reinicialização?"
+        "重新启动建议？"
       ],
       "Recalculate\\n          <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"calculatingApplicability\\\"></i>": [
-        "Recalcule\\n          <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"calculatingApplicability\\\"></i>"
+        "重新计算\\n          <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"calculatingApplicability\\\"></i>"
       ],
       "Reclaim Space": [
-        ""
+        "重新声明空间"
       ],
       "Recurring Logic": [
-        ""
+        "重复逻辑"
       ],
       "Red Hat": [
-        ""
+        "Red Hat"
       ],
       "Red Hat Repositories page": [
-        "Página de Repositórios Red Hat"
+        "红帽仓库页"
       ],
       "Red Hat Repositories page.": [
-        "Página de Repositórios Red Hat."
+        "红帽仓库页。"
       ],
       "Refresh Table": [
-        "Tabela de Atualização"
+        "刷新表"
       ],
       "Register a Content Host": [
-        "Registrar um hospedeiro de conteúdo"
+        "注册一个内容主机"
       ],
       "Register Content Host": [
-        "Registro de Conteúdo Host"
+        "注册内容主机"
       ],
       "Registered": [
-        "Registrado"
+        "注册"
       ],
       "Registered By": [
-        "Registrado por"
+        "注册人"
       ],
       "Registered Through": [
-        "Registrado através de"
+        "注册通过"
       ],
       "Registry Name Pattern": [
-        "Padrão de nome de registro"
+        "Registry 名称特征"
       ],
       "Registry Search Parameter": [
-        ""
+        "Registry 搜索参数"
       ],
       "Registry to Discover": [
-        "Registro para descobrir"
+        "发现的 Registry"
       ],
       "Registry URL": [
-        "URL do registro"
+        "Registry URL"
       ],
       "Release": [
-        "Lançamento"
+        "发行"
       ],
       "Release Version": [
-        "Versão de Lançamento"
+        "发行版本"
       ],
       "Release Version:": [
-        "Versão de lançamento:"
+        "发行版本："
       ],
       "Releases/Distributions": [
-        ""
+        "发行版本/发行"
       ],
       "Remote execution plugin is required to be able to run any helpers.": [
-        "O plugin de execução remota é necessário para poder executar qualquer ajudante."
+        "需要远程执行插件才能运行任何帮助程序。"
       ],
       "Remove": [
-        "Remover"
+        "移除"
       ],
       "Remove {{ table.numSelected  }} Container Image manifest?": [
-        "",
-        "",
-        ""
+        "删除{{ table.numSelected  }}容器图像清单？"
       ],
       "Remove Activation Key \\\"{{ activationKey.name }}\\\"?": [
-        "Remover chave de ativação \\\"{{ activationKey.name }}\\\"?"
+        "删除激活码 \\\"{{ activationKey.name }}\\\"?"
       ],
       "Remove Container Image Manifests": [
-        ""
+        "删除容器图像清单"
       ],
       "Remove Content": [
-        "Remover Conteúdo"
+        "删除内容"
       ],
       "Remove Content Credential": [
-        "Remover Credencial de Conteúdo"
+        "显示内容凭证"
       ],
       "Remove Content Credential {{ contentCredential.name }}": [
-        "Remover Credencial de Conteúdo {{ contentCredential.name }}"
+        "显示内容凭证{{ contentCredential.name }}"
       ],
       "Remove Content?": [
-        "",
-        "",
-        ""
+        "删除内容？"
       ],
       "Remove Environment": [
-        "Remover Ambiente"
+        "删除环境"
       ],
       "Remove environment {{ environment.name }}?": [
-        ""
+        "删除环境 {{ environment.name }}？"
       ],
       "Remove File?": [
-        "",
-        "",
-        ""
+        "删除文件？"
       ],
       "Remove Files": [
-        "Remover arquivos"
+        "删除文件"
       ],
       "Remove From": [
-        "Remover de"
+        "从......中删除"
       ],
       "Remove Host Collection \\\"{{ hostCollection.name }}\\\"?": [
-        "Remover coleção de anfitriões \\\"{{ hostCollection.name }}\\\"?"
+        "删除主机集合 \\\"{{ hostCollection.name }}\\\"?"
       ],
       "Remove Package?": [
-        "",
-        "",
-        ""
+        "删除软件包？"
       ],
       "Remove Packages": [
-        "Remover pacotes"
+        "删除软件包"
       ],
       "Remove Product": [
-        "Remover Produto"
+        "删除产品"
       ],
       "Remove Product \\\"{{ product.name }}\\\"?": [
-        "Remover Produto \\\"{{ product.name }}\\\"?"
+        "删除产品“{{ product.name }} “？"
       ],
       "Remove product?": [
-        "",
-        "",
-        ""
+        "删除产品？"
       ],
       "Remove Repositories": [
-        "Retirar os Repositórios"
+        "删除仓库"
       ],
       "Remove Repository": [
-        "Remover Repositório"
+        "删除仓库"
       ],
       "Remove Repository {{ repositoryWrapper.repository.name }}?": [
-        ""
+        "删除仓库 {{ repositoryWrapper.repository.name }}？"
       ],
       "Remove repository?": [
-        "",
-        "",
-        ""
+        "删除仓库？"
       ],
       "Remove Selected": [
-        "Remover Selecionado"
+        "继续选择"
       ],
       "Remove Successful.": [
-        "Retirar com sucesso."
+        "删除成功。"
       ],
       "Remove Sync Plan": [
-        "Remover Plano de Sincronização"
+        "更新同步计划"
       ],
       "Remove Sync Plan \\\"{{ syncPlan.name }}\\\"?": [
-        "Remover Plano de Sincronização \\\"{{ syncPlan.name }}\\\"?"
+        "更新同步计划{{ syncPlan.name }}？"
       ],
       "Removed %x host collections from activation key \\\"%y\\\".": [
-        "Removido %x coleções de host da chave de ativação \\\"%y\\\"."
+        "从激活码 \\\"%y\\\" 中删除的 %x 主机集合。"
       ],
       "Removed %x host collections from content host \\\"%y\\\".": [
-        "Removido %x coleções de anfitriões de conteúdo de anfitriões \\\"%y\\\"."
+        "从内容主机 \\\"%y\\\" 中删除的 %x 主机集合。"
       ],
       "Removed %x products from sync plan \\\"%y\\\".": [
-        "Removido %x produtos do plano de sincronização \\\"%y\\\"."
+        "从同步计划 \\\"%y\\\" 中删除 %x。"
       ],
       "Removing Repositories": [
-        "Remoção de Repositórios"
+        "删除仓库"
       ],
       "Repo Discovery": [
-        "Descoberta do Repo"
+        "仓库发现"
       ],
       "Repositories": [
-        "Repositórios"
+        "软件仓库"
       ],
       "Repositories containing Errata {{ errata.errata_id }}": [
-        "Repositórios contendo Errata {{ errata.errata_id }}"
+        "包含勘误 {{ errata.errata_id }} 的仓库"
       ],
       "Repositories containing package {{ package.nvrea }}": [
-        "Repositórios contendo pacote {{ package.nvrea }}"
+        "包含软件包 {{ package.nvrea }} 的仓库"
       ],
       "Repositories for": [
-        "Repositórios para"
+        "仓库"
       ],
       "Repositories for Deb:": [
-        "Repositórios para Deb:"
+        "用于 Deb 的仓库："
       ],
       "Repositories for Errata:": [
-        "Repositórios de Errata:"
+        "用于勘误的仓库："
       ],
       "Repositories for File:": [
-        "Repositórios para arquivo:"
+        "用于文件的仓库："
       ],
       "Repositories for Package:": [
-        "Repositórios para embalagem:"
+        "用于软件包的仓库："
       ],
       "Repositories for Product:": [
-        "Repositórios de Produtos:"
+        "用于产品的仓库："
       ],
       "Repositories to Create": [
-        "Repositórios para criar"
+        "创建的仓库"
       ],
       "Repository": [
-        "Repo"
+        "仓库"
       ],
       "Repository \\\"%s\\\" successfully deleted": [
-        "Repositório \\\"%s\\\" apagado com sucesso"
+        "仓库 \\\"%s\\\" 成功删除"
       ],
       "Repository %s successfully created.": [
-        "Repositório %s criado com sucesso."
+        "仓库 %s 成功创建。"
       ],
       "Repository created": [
-        "Repositório criado"
+        "仓库已建立"
       ],
       "Repository Discovery": [
-        "Descoberta do Repositório"
+        "仓库发现"
       ],
       "Repository HTTP proxy changes have been initiated in the background.": [
-        ""
+        "仓库 HTTP 代理更改已在后台启动。"
       ],
       "Repository Label": [
-        "Rótulo Repositório"
+        "仓库标签"
       ],
       "Repository Name": [
-        "Nome do Repositório"
+        "仓库名称"
       ],
       "Repository Options": [
-        "Opções de Repositório"
+        "仓库选项"
       ],
       "Repository Path": [
-        "Caminho Repositório"
+        "仓库路径"
       ],
       "Repository Saved.": [
-        "Repositório Salvo."
+        "仓库已保存。"
       ],
       "Repository Sets": [
-        "Conjuntos Repositórios"
+        "仓库集"
       ],
       "Repository Sets Management": [
-        ""
+        "仓库设置管理"
       ],
       "Repository Sets settings saved successfully.": [
-        "Repositório Define as configurações salvas com sucesso."
+        "仓库集设置已成功保存。"
       ],
       "Repository type": [
-        ""
+        "仓库类型"
       ],
       "Repository Type": [
-        "Tipo de Repositório"
+        "仓库类型"
       ],
       "Repository URL": [
-        "URL do Repositório"
+        "仓库 URL"
       ],
       "Repository will also be removed from the following published content view versions!": [
-        ""
+        "仓库也将从以下发布的内容视图版本中移除！"
       ],
       "Repository:": [
-        "Repositório:"
+        "仓库："
       ],
       "Republish Repository Metadata": [
-        "Republicar metadados de repositórios"
+        "重新发布仓库元数据"
       ],
       "Requirements": [
-        ""
+        "要求"
       ],
       "Requirements.yml": [
-        ""
+        "Requirements.yml"
       ],
       "Requires": [
-        "Requer"
+        "需要"
       ],
       "Reset": [
-        ""
+        "重置"
       ],
       "Reset to Default": [
-        "Redefinir para o padrão"
+        "重置为默认"
       ],
       "Resolving the selected Traces will reboot the selected content hosts.": [
-        ""
+        "解决选择的跟踪将重新启动选择的内容主机。"
       ],
       "Resolving the selected Traces will reboot this host.": [
-        ""
+        "重新启动该主机解决选定的跟踪。"
       ],
       "Restart": [
-        "Reinicie"
+        "重新开始"
       ],
       "Restart Selected": [
-        "Reinício Selecionado"
+        "重新启动所选"
       ],
       "Restart Services on Content Host \\\"{{host.display_name}}\\\"?": [
-        ""
+        "重新启动内容主机\\\"{{host.display_name}}\\\"上的服务？"
       ],
       "Restrict to <br>OS version": [
-        ""
+        "仅限 <br>操作系统版本"
       ],
       "Restrict to architecture": [
-        "Restringir-se à arquitetura"
+        "限制架构"
       ],
       "Restrict to Architecture": [
-        "Restringir-se à arquitetura"
+        "限制架构"
       ],
       "Restrict to OS version": [
-        ""
+        "仅限操作系统版本"
       ],
       "Result": [
-        "Resultado"
+        "结果"
       ],
       "Retain package versions": [
-        ""
+        "保持软件包版本"
       ],
       "Role": [
-        "Função"
+        "角色"
       ],
       "Role:": [
-        ""
+        "角色："
       ],
       "RPM": [
         "RPM"
       ],
       "rpm Package Updates": [
-        ""
+        "rpm 软件包更新"
       ],
       "Run Auto-Attach": [
-        "Executar Auto-Attach"
+        "运行自动附加"
       ],
       "Run Repository Creation\\n      <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"creating()\\\"></i>": [
-        "Criação do Repositório Run\\n      <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"creating()\\\"></i>"
+        "运行仓库创建\\n      <i class=\\\"fa fa-spinner fa-spin\\\" ng-show=\\\"creating()\\\"></i>"
       ],
       "Run Sync Plan": [
-        "Executar Plano de Sincronização"
+        "运行同步计划"
       ],
       "Save": [
-        "Salvar"
+        "保存"
       ],
       "Save Successful.": [
-        "Salvar o sucesso."
+        "保存成功。"
       ],
       "Schema Version": [
-        "Versão esquemática"
+        "模式版本"
       ],
       "Schema Version 1": [
-        "Esquema Versão 1"
+        "模式版本1"
       ],
       "Schema Version 2": [
-        "Esquema Versão 2"
+        "模式版本2"
       ],
       "Security": [
-        "Segurança"
+        "安全"
       ],
       "Security Advisory": [
-        "Assessoria de Segurança"
+        "安全公告"
       ],
       "Select": [
-        "Selecionar"
+        "选择"
       ],
       "Select a Content Source:": [
-        "Selecione uma Fonte de Conteúdo:"
+        "选择一个内容源："
       ],
       "Select Action": [
-        "Selecionar Ação"
+        "选择操作"
       ],
       "Select an Organization": [
-        "Selecionar uma organização"
+        "现在一个机构"
       ],
       "Select Content Host(s)": [
-        ""
+        "选择内容主机"
       ],
       "Select Content View": [
-        "Selecionar Visualização de Conteúdo"
+        "选择内容视图"
       ],
       "Select this option if treeinfo files or other kickstart content is failing to syncronize from the upstream repository.": [
-        ""
+        "如果 treeinfo 文件或其他 kickstart 内容无法从上游存储库同步，请选择这个选项。"
       ],
       "Selecting \\\"Complete Sync\\\" will cause only yum/deb repositories of the selected product to be synced.": [
-        ""
+        "选择\\\"完成同步\\\"将导致仅所选产品的 yum/deb 存储库被同步。"
       ],
       "Selecting this option will exclude SRPMs from repository synchronization.": [
-        ""
+        "选择此选项将从存储库同步中排除 SRPM。"
       ],
       "Selecting this option will exclude treeinfo files from repository synchronization.": [
-        ""
+        "选择这个选项将从存储库同步中排除 treeinfo 文件。"
       ],
       "Selecting this option will result in Katello verifying that the upstream url's SSL certificates are signed by a trusted CA. Unselect if you do not want this verification.": [
-        "Selecionando esta opção, a Katello verificará se os certificados SSL da url upstream são assinados por uma CA de confiança. Desselecione se você não quiser esta verificação."
+        "选择此选项将导致Katello验证上游URL的SSL证书是否由受信任的CA签名。如果您不希望进行此验证，请取消选择。"
       ],
       "Service Level": [
-        "Nível de serviço"
+        "服务等级"
       ],
       "Service Level (SLA)": [
-        "Nível de serviço (SLA)"
+        "服务等级 (SLA)"
       ],
       "Service Level (SLA):": [
-        ""
+        "服务等级 (SLA)："
       ],
       "Set Release Version": [
-        "Versão de lançamento do conjunto"
+        "设置发行版本"
       ],
       "Severity": [
-        "Severidade"
+        "严重性"
       ],
       "Show All": [
-        "Mostrar tudo"
+        "显示所有"
       ],
       "Show all Repository Sets in Organization": [
-        "Mostrar todos os Conjuntos Repositórios em Organização"
+        "显示组织中的所有仓库集"
       ],
       "Size": [
-        "Tam."
+        "大小"
       ],
       "Skip dependency solving for a significant speed increase. If the update cannot be applied to the host, delete the incremental content view version and retry the application with dependency solving turned on.": [
-        ""
+        "跳过对显著增长速度的依赖关系。如果无法对主机应用更新，请删除增量内容视图版本，并在打开依赖项的情况下重试应用程序。"
       ],
       "Smart proxy currently reclaiming space...": [
-        ""
+        "智能代理当前正在重新声明空间..."
       ],
       "Smart proxy currently syncing to your locations...": [
-        "Proxy inteligente atualmente em sincronia com seus locais..."
+        "智能代理当前正在同步到您的位置..."
       ],
       "Smart proxy is synchronized": [
-        "O proxy inteligente é sincronizado"
+        "智能代理已同步"
       ],
       "Sockets": [
-        "Sockets"
+        "插槽"
       ],
       "Solution": [
-        "Solução"
+        "解决"
       ],
       "Some of the Errata shown below may not be installable as they are not in this Content Host's\\n        Content View and Lifecycle Environment.  In order to apply such Errata an Incremental Update is required.": [
-        "Algumas das Erratas mostradas abaixo podem não ser instaláveis, pois não estão neste Host de Conteúdo\\n        Visão do conteúdo e ambiente do ciclo de vida.  Para aplicar tais Erratas é necessária uma Atualização Incremental."
+        "下面显示的某些勘误可能无法安装，因为它们不在此内容主机的内容视图和生命周期环境中。为了应用此类勘误，需要进行增量更新。"
       ],
       "Something went wrong when deleting the resource.": [
-        ""
+        "删除资源时出错。"
       ],
       "Something went wrong when retrieving the resource.": [
-        "Algo deu errado quando se recuperou o recurso."
+        "获取资源时出错。"
       ],
       "Something went wrong when saving the resource.": [
-        "Algo deu errado ao salvar o recurso."
+        "保存资源时出错。"
       ],
       "Source RPM": [
-        "RPM de origem"
+        "源 RPM"
       ],
       "Source RPMs": [
-        "RPMs de Origem"
+        "來源 RPM"
       ],
       "Space reclamation is about to start...": [
-        ""
+        "重新声明空间即将开始..."
       ],
       "SSL CA Cert": [
-        "SSL CA Cert"
+        "SSL CA 证书"
       ],
       "SSL Certificate": [
-        "Certificado SSL"
+        "SSL 证书"
       ],
       "SSL Client Cert": [
-        "Cliente SSL Cert"
+        "SSL 客户端证书"
       ],
       "SSL Client Key": [
-        "Chave do cliente SSL"
+        "Pulp 客户端密钥"
       ],
       "Standard sync, optimized for speed by bypassing any unneeded steps.": [
-        "Sincronização padrão, otimizada para a velocidade, contornando quaisquer passos desnecessários."
+        "标准同步，通过绕过不需要的步骤来优化速度。"
       ],
       "Start Date": [
-        "Data de Início"
+        "开始日期"
       ],
       "Start Time": [
-        "Hora de início"
+        "起始时间"
       ],
       "Started At": [
-        "Começou em"
+        "起始于"
       ],
       "Starting": [
-        "Início"
+        "开始"
       ],
       "Starts": [
-        "Inicia"
+        "开始"
       ],
       "State": [
-        "Estado"
+        "状态"
       ],
       "Status": [
-        "Estado"
+        "状态"
       ],
       "Stream": [
-        "Fluxo"
+        "流"
       ],
       "Subscription Details": [
-        "Detalhes de subscrição"
+        "订阅详情"
       ],
       "Subscription Management": [
-        "Gestão de Assinaturas"
+        "订阅管理"
       ],
       "Subscription Status": [
-        "Estado de subscrição"
+        "订阅状态"
       ],
       "Subscription UUID": [
-        ""
-      ],
-      "subscription-manager register --org=\\\"{{ activationKey.organization.label }}\\\" --activationkey=\\\"{{ activationKey.name }}\\\"": [
-        "subscription-manager register --org=\\\"{{ activationKey.organization.label }}\\\" --activationkey=\\\"{{ activationKey.name }}\\\""
+        "订阅 UUID"
       ],
       "Subscriptions": [
-        "Subscrições"
+        "订阅"
       ],
       "Subscriptions for Activation Key:": [
-        "Assinaturas para chave de ativação:"
+        "激活码订阅："
       ],
       "Subscriptions for Content Host:": [
-        "Assinaturas para Host de Conteúdo:"
+        "内容主机订阅："
       ],
       "Subscriptions for:": [
-        "Assinaturas para:"
+        "订阅："
       ],
       "Success!": [
-        "Sucesso!"
+        "成功！"
       ],
       "Successfully added %s subscriptions.": [
-        "Acrescentou com sucesso %s subscrições."
+        "已成功新增 %s 个订阅。"
       ],
       "Successfully initiated restart of services.": [
-        ""
+        "成功启动服务重启。"
       ],
       "Successfully removed %s items.": [
-        "Removido com sucesso %s itens."
+        "成功删除 %s 个项。"
       ],
       "Successfully removed %s subscriptions.": [
-        "Eliminadas com sucesso as assinaturas %s."
+        "成功删除 %s 个订阅。"
       ],
       "Successfully removed 1 item.": [
-        "Removido com sucesso 1 item."
+        "成功删除 1 个项。"
       ],
       "Successfully updated subscriptions.": [
-        "Assinaturas atualizadas com sucesso."
+        "成功更新的订阅。"
       ],
       "Successfully uploaded content:": [
-        "Conteúdo carregado com sucesso:"
+        "成功上传的内容："
       ],
       "Summary": [
-        "Sumário"
+        "摘要"
       ],
       "Support Level": [
-        "Nível de suporte"
+        "支持级别"
       ],
       "Sync": [
-        "Sincronizar"
+        "同步"
       ],
       "Sync Enabled": [
-        "Sinc Enabled"
+        "已启用同步"
       ],
       "Sync even if the upstream metadata appears to have no change. This option is only relevant for yum/deb repositories and will take longer than an optimized sync. Choose this option if:": [
-        ""
+        "即使上游元数据没有变化，也要同步。此选项仅与 yum/deb 仓库相关，并且比优化的同步花费的时间更长。如果出现以下情况，请选择此选项："
       ],
       "Sync Interval": [
-        "Intervalo de sincronização"
+        "同步间隔"
       ],
       "Sync Now": [
-        "Sync Now"
+        "立即同步"
       ],
       "Sync Plan": [
-        "Plano de sincronização"
+        "同步计划"
       ],
       "Sync Plan %s has been deleted.": [
-        "O Sync Plan %s foi eliminado."
+        "同步计划 %s 已删除。"
       ],
       "Sync Plan created and assigned to product.": [
-        "Plano de sincronização criado e atribuído ao produto."
+        "同步计划已创建并分配给产品。"
       ],
       "Sync Plan Management": [
-        ""
+        "同步计划管理"
       ],
       "Sync Plan saved": [
-        ""
+        "同步计划已保存"
       ],
       "Sync Plan Saved": [
-        "Plano de Sincronização Salvo"
+        "同步计划已保存"
       ],
       "Sync Plan:": [
-        "Plano de sincronização:"
+        "同步计划："
       ],
       "Sync Plans": [
-        "Planos de Sincronização"
+        "同步计划"
       ],
       "Sync Selected": [
-        "Sinc Selected"
+        "同步计划已选定"
       ],
       "Sync Settings": [
-        "Configurações de Sincronização"
+        "同步设置"
       ],
       "Sync State": [
-        "Estado do Sync"
+        "同步状态"
       ],
       "Sync Status": [
-        "Estado da Sincronização"
+        "同步状态"
       ],
       "Synced manually, no interval set.": [
-        "Sincronizado manualmente, sem intervalo definido."
+        "手动同步，未设置间隔。"
       ],
       "Synchronization is about to start...": [
-        "A sincronização está prestes a começar..."
+        "同步即将开始..."
       ],
       "Synchronization is being cancelled...": [
-        "A sincronização está sendo cancelada..."
+        "同步正在取消..."
       ],
       "System Purpose": [
-        "Objetivo do sistema"
+        "系统目的"
       ],
       "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console.": [
-        ""
+        "系统目的用于设置系统在网络中的使用目的，以便在 Red Hat Hybrid Cloud Console 的订阅服务中提高报告准确性。"
       ],
       "System Purpose Management": [
-        ""
+        "系统目的管理"
       ],
       "System Purpose Status": [
-        ""
+        "系统目的"
       ],
       "Tags": [
-        "Tags"
+        "标签"
       ],
       "Task Details": [
-        "Detalhes da tarefa"
+        "任务详情"
       ],
       "Tasks": [
-        "Tarefas"
+        "任务"
       ],
       "Temporary": [
-        "Temporário"
+        "临时"
       ],
       "The <i>Registry Name Pattern</i> overrides the default name by which container images may be pulled from the server. (By default this name is a combination of Organization, Lifecycle Environment, Content View, Product, and Repository labels.)\\n\\n          <br><br>The name may be constructed using ERB syntax. Variables available for use are:\\n\\n          <pre>\\norganization.name\\norganization.label\\nrepository.name\\nrepository.label\\nrepository.docker_upstream_name\\ncontent_view.label\\ncontent_view.name\\ncontent_view_version.version\\nproduct.name\\nproduct.label\\nlifecycle_environment.name\\nlifecycle_environment.label</pre>\\n\\n          Examples:\\n            <pre>\\n&lt;%= organization.label %&gt;-&lt;%= lifecycle_environment.label %&gt;-&lt;%= content_view.label %&gt;-&lt;%= product.label %&gt;-&lt;%= repository.label %&gt;\\n&lt;%= organization.label %&gt;/&lt;%= repository.docker_upstream_name %&gt;</pre>": [
-        ""
+        "<i>Registry Name Pattern</i> 会覆盖容器镜像可能从服务器抓取的默认名称。（默认情况下，这个名称是一个组合了机构、生命周期环境、内容视图和仓库的标签）\\n\\n          <br><br>The name may be constructed using ERB syntax. Variables available for use are:\\n\\n          <pre>\\norganization.name\\norganization.label\\nrepository.name\\nrepository.label\\nrepository.docker_upstream_name\\ncontent_view.label\\ncontent_view.name\\ncontent_view_version.version\\nproduct.name\\nproduct.label\\nlifecycle_environment.name\\nlifecycle_environment.label</pre>\\n\\n          Examples:\\n            <pre>\\n&lt;%= organization.label %&gt;-&lt;%= lifecycle_environment.label %&gt;-&lt;%= content_view.label %&gt;-&lt;%= product.label %&gt;-&lt;%= repository.label %&gt;\\n&lt;%= organization.label %&gt;/&lt;%= repository.docker_upstream_name %&gt;</pre>"
       ],
       "The Content View or Lifecycle Environment needs to be updated in order to make errata available to these hosts.": [
-        "A Visão do Conteúdo ou Ambiente do Ciclo de Vida precisa ser atualizada a fim de tornar as erratas disponíveis para esses anfitriões."
+        "需要更新内容视图或生命周期环境，以使勘误可用于这些主机。"
       ],
       "The filters below have this repository as the last affected repository!": [
-        ""
+        "以下过滤器将此存储库作为最后一个受影响的存储库！"
       ],
       "The following actions can be performed on content hosts in this host collection:": [
-        "As seguintes ações podem ser realizadas em hosts de conteúdo nesta coleção de hosts:"
+        "可以在此主机集合中的内容主机上执行以下操作："
       ],
       "The host has not reported any applicable packages for upgrade.": [
-        "O anfitrião não relatou nenhum pacote aplicável para atualização."
+        "主机尚未报告任何适用的软件包进行升级。"
       ],
       "The host has not reported any installed packages, registering with subscription-manager should cause these to be reported.": [
-        "O anfitrião não relatou nenhum pacote instalado, o registro no gerenciador de assinaturas deve fazer com que estes sejam relatados."
+        "主机尚未报告任何已安装的软件包，请向subscription-manager注册以报告这些软件包。"
       ],
       "The host requires being attached to a content view and the lifecycle environment you have chosen has no content views promoted to it.\\n              See the <a href=\\\"/content_views\\\">content views page</a> to manage and promote a content view.": [
-        ""
+        "主机需要附加到内容视图，并且您选择的生命周期环境没有提升为内容视图的内容。见<a href=\\\"/content_views\\\">内容观看页面</a>管理和提升内容视图。"
       ],
       "The maximum number of versions of each package to keep.": [
-        ""
+        "要保留的每个软件包的最大版本数。"
       ],
       "The page you are attempting to access requires selecting a specific organization.": [
-        "A página que você está tentando acessar requer a seleção de uma organização específica."
+        "您尝试访问的页面需要选择一个特定的机构。"
       ],
       "The remote execution feature is required to manage packages on this Host.": [
-        ""
+        "需要远程执行功能才能管理此主机上的程序包。"
       ],
       "The Remote Execution plugin needs to be installed in order to resolve Traces.": [
-        ""
+        "需要安装远程执行插件才能解决跟踪。"
       ],
       "The repository will only be available on content hosts with the selected architecture.": [
-        ""
+        "该存储库将仅在具有所选架构的内容主机上可用。"
       ],
       "The repository will only be available on content hosts with the selected OS version.": [
-        ""
+        "存储库仅在带有所选操作系统版本的内容主机上可用。"
       ],
       "The selected environment contains no Content Views, please select a different environment.": [
-        "O ambiente selecionado não contém visualizações de conteúdo, favor selecionar um ambiente diferente."
+        "所选环境不包含“内容视图”，请选择其他环境。"
       ],
       "The time the sync should happen in your current time zone.": [
-        "A hora em que a sincronização deve acontecer em seu fuso horário atual."
+        "同步应该在您当前时区中发生的时间。"
       ],
       "The token key to use for authentication.": [
-        ""
+        "用于身份验证的令牌密钥。"
       ],
       "The URL to receive a session token from, e.g. used with Automation Hub.": [
-        ""
+        "从以下网址接收会话令牌的网址：与 Automation Hub 一起使用。"
       ],
       "There are {{ errataCount }} total Errata in this organization but none match the above filters.": [
-        "Há {{ errataCount }} Errata total nesta organização, mas nenhuma corresponde aos filtros acima."
+        "该机构中有{{ errataCount }}个总勘误，但没有一个与上述过滤器匹配。"
       ],
       "There are {{ packageCount }} total Packages in this organization but none match the above filters.": [
-        "Há {{ packageCount }} pacotes totais nesta organização, mas nenhum corresponde aos filtros acima."
+        "此组织中有{{ packageCount }}个软件包，但没有与上述过滤器匹配的软件包。"
       ],
       "There are no %(contentType)s that match the criteria.": [
-        ""
+        "没有符合条件的%(contentType)s"
       ],
       "There are no Content Views in this Environment.": [
-        "Não há visualizações de conteúdo neste Ambiente."
+        "此环境中没有内容视图。"
       ],
       "There are no Content Views that match the criteria.": [
-        "Não há Visualizações de Conteúdo que correspondam aos critérios."
+        "没有符合条件的内容视图。"
       ],
       "There are no Errata associated with this Content Host to display.": [
-        "Não há Errata associada a este Host de Conteúdo para exibir."
+        "没有与此内容主机关联的勘误可供显示。"
       ],
       "There are no Errata in this organization.  Create one or more Products with Errata to view Errata on this page.": [
-        "Não há Errata nesta organização.  Crie um ou mais Produtos com Errata para ver Errata nesta página."
+        "该组织中没有勘误。使用带有勘误的一个或多个产品以在此页面上查看勘误。"
       ],
       "There are no Errata to display.": [
-        "Não há erros a serem exibidos."
+        "没有要显示的勘误。"
       ],
       "There are no Host Collections available. You can create new Host Collections after selecting 'Host Collections' under 'Hosts' in main menu.": [
-        "Não há coleções de anfitriões disponíveis. Você pode criar novas Coleções Host após selecionar 'Host Collections' em 'Hosts' no menu principal."
+        "没有可用的主机集合。在主菜单的“主机”下选择“主机集合”后，可以创建新的主机集合。"
       ],
       "There are no Module Streams to display.": [
-        ""
+        "没有要显示的模块流。"
       ],
       "There are no Packages in this organization.  Create one or more Products with Packages to view Packages on this page.": [
-        "Não há pacotes nesta organização.  Crie um ou mais Produtos com Pacotes para ver os Pacotes nesta página."
+        "该机构中没有软件包。创建带有软件包的一个或多个产品以在此页面上查看软件包。"
       ],
       "There are no Sync Plans available. You can create new Sync Plans after selecting 'Sync Plans' under 'Hosts' in main menu.": [
-        "Não há Planos de Sincronização disponíveis. Você pode criar novos Planos de Sincronização após selecionar 'Planos de Sincronização' em 'Anfitriões' no menu principal."
+        "没有可用的同步计划。在主菜单中的“主机”下选择“同步计划”后，您可以创建新的同步计划。"
       ],
       "There are no Traces to display.": [
-        "Não há traços a serem exibidos."
+        "没有要显示的 Traces。"
       ],
       "There is currently an Incremental Update task in progress.  This update must finish before applying existing updates.": [
-        "Há atualmente uma tarefa de Atualização Incremental em andamento.  Esta atualização deve ser concluída antes de aplicar as atualizações existentes."
+        "当前正在执行一个增量更新任务。在应用现有更新之前，此更新必须完成。"
       ],
       "These instructions will be removed in a future release. NEW: To register a content host without following these manual steps, see <a href=\\\"https://{{ katelloHostname }}/hosts/register\\\">Register Host</a>": [
-        ""
+        "这些说明将在以后的版本中删除。新增：要在不按照这些手动步骤注册内容主机，请参阅<a href=\\\"https://{{ katelloHostname }}/hosts/register\\\">注册主机</a>"
       ],
       "This action will affect only those Content Hosts that require a change.\\n        If the Content Host does not have the selected Subscription no action will take place.": [
-        "Esta ação afetará somente aqueles Hosts de Conteúdo que requerem uma mudança.\\n        Se o Host de Conteúdo não tiver a Assinatura selecionada, nenhuma ação ocorrerá."
+        "此操作将仅影响那些需要更改的内容主机。如果内容主机没有所选的订阅，则不会执行任何操作。"
       ],
       "This activation key is not associated with any content hosts.": [
-        "Esta chave de ativação não está associada a nenhum anfitrião de conteúdo."
+        "此激活码没有与任何内容主机关联。"
       ],
-      "This activation key may be used during system registration. For example:": [
-        "Esta chave de ativação pode ser usada durante o registro do sistema. Por exemplo, esta chave de ativação pode ser usada durante o registro do sistema:"
+      "This activation key may be used during <a href=\\\"/hosts/register?initialAKSelection={{ activationKey.name }}\\\">system registration.</a>": [
+        "这个激活码可用于在<a href=\\\"/hosts/register?initialAKSelection={{ activationKey.name }}\\\">系统注册</a>过程中使用。"
       ],
       "This change will be applied to <b>{{ hostCount }} systems.</b>": [
-        ""
+        "此更改将应用于 <b>{{ hostCount }}系统。</b>"
       ],
       "This Container Image Tag is not present in any Lifecycle Environments.": [
-        ""
+        "此容器镜像标记在任何生命周期环境中均不存在。"
       ],
       "This Container Image Tag is not present in any Repositories.": [
-        ""
+        "此容器镜像标签没有任何软件仓库。"
       ],
       "This operation may also remove managed resources linked to the host such as virtual machines and DNS records.\\n          Change the setting \\\"Delete Host upon Unregister\\\" to false on the <a href=\\\"/settings\\\">settings page</a> to prevent this.": [
-        "Esta operação também pode remover recursos gerenciados ligados ao host, tais como máquinas virtuais e registros DNS.\\n          Altere a configuração \\\"Delete Host upon Unregister\\\" para falsa na página de configuração <a href=\\\"/settings\\\"></a> para evitar isso."
+        "此操作还可以删除链接到主机的受管资源，例如虚拟机和DNS记录。将“取消注册时删除主机”设置更改为false<a href=\\\"/settings\\\">设定页面</a>为了防止这种情况。"
       ],
       "This organization has Simple Content Access enabled.  Hosts are not required to have subscriptions attached to access repositories.": [
-        ""
+        "该机构已启用“简单内容访问”。不需要主机将订阅附加到访问仓库。"
       ],
       "This organization is not using <a target=\\\"_blank\\\" href=\\\"https://access.redhat.com/articles/simple-content-access\\\">Simple Content Access.</a> Entitlement-based subscription management is deprecated and will be removed in Katello 4.12.": [
-        ""
+        "这个机构没有使用 <a target=\\\"_blank\\\" href=\\\"https://access.redhat.com/articles/simple-content-access\\\">简单内容访问。</a>基于权利的订阅管理已弃用，并将在 Katello 4.12 版本中删除。"
       ],
       "Title": [
-        "Título"
+        "提示"
       ],
       "To register a content host to this server, follow these steps.": [
-        "Para registrar um host de conteúdo para este servidor, siga estes passos."
+        "要将内容主机注册到此服务器，请按照下列步骤操作。"
       ],
       "Toggle Dropdown": [
-        "Alternância de queda"
+        "切换下拉"
       ],
       "Token of the upstream repository user for authentication. Leave empty if repository does not require authentication.": [
-        ""
+        "用于认证的上游仓库用户的令牌。如果仓库不需要身份验证，则保留为空。"
       ],
       "Topic": [
-        "Tema"
+        "主题"
       ],
       "Tracer helps administrators identify applications that need to be restarted after a system is patched.": [
-        ""
+        "跟踪器可帮助管理员识别修补系统后需要重新启动的应用程序。"
       ],
       "Traces": [
-        "Rastreamentos"
+        "Traces"
       ],
       "Traces for:": [
-        "Traços para:"
+        "Traces"
       ],
       "Turn on Setting > Content > Allow deleting repositories in published content views": [
-        ""
+        "打开 Setting > Content > Allow 在发布的内容视图中删除仓库"
       ],
       "Type": [
-        "Tipo"
+        "类型"
       ],
       "Unauthenticated Pull": [
-        "Puxada não autenticada"
+        "未经身份验证的 pull 操作"
       ],
       "Unknown": [
-        "Desconhecido"
+        "未知"
       ],
       "Unlimited Content Hosts:": [
-        "Hosts de Conteúdo Ilimitado:"
+        "无限的内容主机："
       ],
       "Unlimited Hosts": [
-        "Anfitriões Ilimitados"
+        "无限的主机"
       ],
       "Unprotected": [
-        ""
+        "未受保护"
       ],
       "Unregister Host": [
-        "Cancelar registro de Host"
+        "取消注册主机"
       ],
       "Unregister Host \\\"{{host.display_name}}\\\"?": [
-        ""
+        "取消注册主机 \\\"{{host.display_name}}\\\"?"
       ],
       "Unregister Options:": [
-        "Opções para cancelar o registro:"
+        "取消注册选项："
       ],
       "Unregister the host as a subscription consumer.  Provisioning and configuration information is preserved.": [
-        "Desregistrar o anfitrião como um consumidor de assinatura.  As informações de provisionamento e configuração são preservadas."
+        "取消将主机注册为订阅消费者。设置和配置信息将保留。"
       ],
       "Unsupported Type!": [
-        "Tipo sem suporte!"
+        "不支持的类型！"
       ],
       "Update": [
-        "Atualizar"
+        "更新"
       ],
       "Update All Deb Packages": [
-        ""
+        "更新所有 Deb 软件包"
       ],
       "Update All Packages": [
-        "Atualização de todos os pacotes"
+        "更新所有软件包"
       ],
       "Update Packages": [
-        "Pacotes de atualização"
+        "更新软件包"
       ],
       "Update Sync Plan": [
-        "Atualizar Plano de Sinc"
+        "更新同步计划"
       ],
       "Updated": [
-        "Atualizados"
+        "已更新"
       ],
       "Upgradable": [
-        "Atualizável"
+        "可升级"
       ],
       "Upgradable For": [
-        "Atualizável para"
+        "可升级"
       ],
       "Upgradable Package": [
-        "Pacote atualizável"
+        "可升级包"
       ],
       "Upgrade Available": [
-        ""
+        "升级可用"
       ],
       "Upgrade Selected": [
-        "Atualização Selecionada"
+        "升级所选"
       ],
       "Upload": [
-        "Upload"
+        "上载"
       ],
       "Upload Content Credential file": [
-        "Upload do arquivo de credenciais de conteúdo"
+        "上载内容凭证文件"
       ],
       "Upload File": [
-        "Carregar arquivo"
+        "上传文件"
       ],
       "Upload Package": [
-        "Pacote de Upload"
+        "上传软件包"
       ],
       "Upload Requirements": [
-        ""
+        "上传要求"
       ],
       "Upload Requirements.yml file <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'ansible_collection'\\\" uib-popover-html=\\\"requirementPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\">\\n        </a>": [
-        ""
+        "上载Requirements.yml文件 <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'ansible_collection'\\\" uib-popover-html=\\\"requirementPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\">\\n        </a>"
       ],
       "Uploading...": [
-        "Carregando..."
+        "上载中..."
       ],
       "Upstream Authentication Token": [
-        ""
+        "上游验证令牌"
       ],
       "Upstream Authorization": [
-        ""
+        "上游授权"
       ],
       "Upstream Image Name": [
-        "Nome da imagem a montante"
+        "上游镜像名称"
       ],
       "Upstream Password": [
-        "Senha upstream"
+        "上游密码"
       ],
       "Upstream Repository Name": [
-        "Nome do Repositório Upstream"
+        "上游仓库名称"
       ],
       "Upstream URL": [
-        "URL a montante"
+        "上游 URL"
       ],
       "Upstream Username": [
-        "Nome de usuário upstream"
+        "上游用户名"
       ],
       "Url": [
         "Url"
       ],
       "URL of the registry you want to sync. Example: https://registry-1.docker.io/ or https://quay.io/": [
-        ""
+        "您要同步的 registry 的URL。例如：https：//registry-1.docker.io/或https://quay.io/"
       ],
       "URL to Discover": [
-        "URL a descobrir"
+        "发现 URL"
       ],
       "URL to the repository base. Example: http://ftp.de.debian.org/debian/ <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"debURLPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Upstream URL\\\">\\n        </a>": [
-        ""
+        "到仓库基础的 URL。示例：http://ftp.de.debian.org/debian/ <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"debURLPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Upstream URL\\\">\\n        </a>"
       ],
       "Usage Type": [
-        "Tipo de uso"
+        "使用类型"
       ],
       "Usage Type:": [
-        ""
+        "使用类型："
       ],
       "Use specific HTTP Proxy": [
-        ""
+        "使用特定的 HTTP 代理"
       ],
       "Use the cancel button on content view selection to revert your lifecycle environment selection.": [
-        ""
+        "使用内容视图选择上的“取消”按钮可以还原生命周期环境选择。"
       ],
       "Used as": [
-        "Usado como"
+        "用作"
       ],
       "User": [
-        "Usuário"
+        "用户"
       ],
       "Username": [
-        "Nome do usuário"
+        "用户名"
       ],
       "Username of the upstream repository user for authentication. Leave empty if repository does not require authentication.": [
-        "Nome de usuário do usuário do repositório upstream para autenticação. Deixe em branco se o repositório não exigir autenticação."
+        "用于认证的上游仓库用户的用户名。如果仓库不需要身份验证，则保留为空。"
       ],
       "Variant": [
-        "Variante"
+        "变体"
       ],
       "Verify Content Checksum": [
-        ""
+        "验证内容校验和"
       ],
       "Verify SSL": [
-        "Verifique o SSL"
+        "验证 SSL"
       ],
       "Version": [
-        "Versão"
+        "版本"
       ],
       "Version {{ cvVersions['version'] }}": [
-        ""
+        "版本 {{ cvVersions['version'] }}"
       ],
       "Versions": [
-        "Versões"
+        "版本"
       ],
       "via remote execution": [
-        "via execução remota"
+        "通过远程执行"
       ],
       "via remote execution - customize first": [
-        "via execução remota - personalizar primeiro"
+        "通过远程执行 - 首先进行自定义"
       ],
       "View Container Image Manifest Lists for Repository:": [
-        ""
+        "查看仓库的容器镜像清单列表："
       ],
       "View Docker Tags for Repository:": [
-        ""
+        "查看仓库的 Docker 标签："
       ],
       "View job invocations.": [
-        ""
+        "列出工作调用"
       ],
       "Virtual": [
-        "Virtual"
+        "虚拟"
       ],
       "Virtual Guest": [
-        "Sistema Virtual"
+        "虚拟客户系统"
       ],
       "Virtual Guests": [
-        "Convidados virtuais"
+        "虚拟客户系统"
       ],
       "Virtual Host": [
-        "Anfitrião virtual"
+        "虚拟主机"
       ],
       "Warning: reclaiming space for an \\\"On Demand\\\" repository will delete all cached content units.  Take precaution when cleaning custom repositories whose upstream parents don't keep old package versions.": [
-        ""
+        "警告：为 \\\"On Demand\\\" 仓库重新声明空间将删除所有缓存的内容单元。在清理其上游父项没有保留旧软件包版本的自定义软件仓库时需要非常小心。"
       ],
       "weekly": [
-        "semanalmente"
+        "每周"
       ],
       "Weekly on {{ product.sync_plan.sync_date | date:'EEEE' }} at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)": [
-        "Semanalmente em {{ product.sync_plan.sync_date | date:'EEEE' }} em {{ product.sync_plan.sync_date | date:'mediumTime' }} (horário do servidor)"
+        "每周 {{ product.sync_plan.sync_date | date:'EEEE' }}在 {{ product.sync_plan.sync_date | date:'mediumTime' }}（服务器时间）"
       ],
       "When Auto Attach is disabled, registering systems will be attached to all associated subscriptions.": [
-        "Quando o Auto Attach estiver desativado, os sistemas de registro serão anexados a todas as assinaturas associadas."
+        "禁用“自动附加”后，注册系统将附加到所有关联的订阅中。"
       ],
       "When Auto Attach is enabled, registering systems will be attached to all associated custom products and only associated Red Hat subscriptions required to satisfy the system's installed products.": [
-        ""
+        "启用自动附加后，注册系统将附加到所有相关自定义产品中，且只有相关的红帽订阅以满足系统安装的产品。"
       ],
       "Whitespace-separated list of components to sync (leave clear to sync all). Example: main <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"componentPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Components\\\">\\n        </a>": [
-        ""
+        "以空格分隔的要同步的组件列表（留空可以同步所有组件）。例如：<a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"componentPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Components\\\">\\n        </a>"
       ],
       "Whitespace-separated list of processor architectures to sync (leave clear to sync all). Example: amd64 <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"archPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Architectures\\\">\\n        </a>": [
-        ""
+        "空格分隔的要同步的处理器体系结构列表留空可以同步所有组件）。例如：amd64 <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"archPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Architectures\\\">\\n        </a>"
       ],
       "Whitespace-separated list of releases/distributions to sync (required for syncing). Example: buster <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"distPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Releases/Distributions\\\">\\n        </a>": [
-        ""
+        "空格分隔的发行版本/发行列表（同步需要）。示例： buster <a class=\\\"fa fa-question-circle\\\" ng-show=\\\"repository.content_type === 'deb'\\\" uib-popover-html=\\\"distPopover\\\" popover-class=\\\"popover-large\\\" popover-trigger=\\\"'outsideClick'\\\" popover-append-to-body=\\\"true\\\" popover-title=\\\"Releases/Distributions\\\">\\n        </a>"
       ],
       "Working": [
-        "Trabalhando"
+        "工作"
       ],
       "Yes": [
-        "Sim"
+        "是"
       ],
       "You can upload a requirements.yml file above to auto-fill contents <b>OR</b> paste contents of <a ng-href=\\\"https://docs.ansible.com/ansible/latest/galaxy/user_guide.html#install-multiple-collections-with-a-requirements-file\\\" target=\\\"_blank\\\"> Requirements.yml </a>below.": [
-        ""
+        "您可以上传上面的 requirements.yml 文件以自动填充内容<b>或</b>粘贴下面的<a ng-href=\\\"https://docs.ansible.com/ansible/latest/galaxy/user_guide.html#install-multiple-collections-with-a-requirements-file\\\" target=\\\"_blank\\\">Requirements.yml</a>内容。"
       ],
       "You can upload a requirements.yml file below to auto-fill contents or paste contents of requirement.yml here": [
-        ""
+        "您可以上传下面的 requirements.yml 文件以自动填充内容，或在此处粘贴 requirement.yml 的内容"
       ],
       "You cannot remove content from a redhat repository": [
-        ""
+        "您无法从 redhat 存储库中删除内容"
       ],
       "You cannot remove these repositories because you do not have permission.": [
-        "Você não pode remover estes repositórios porque não tem permissão."
+        "您无权删除这些仓库。"
       ],
       "You cannot remove this product because it has repositories that are the last affected repository on content view filters": [
-        ""
+        "您无法删除此产品，因为它具有在内容视图过滤中最后一个受影响的存储库的存储库"
       ],
       "You cannot remove this product because it is a Red Hat product.": [
-        "Você não pode remover este produto porque é um produto da Red Hat."
+        "您不能删除此产品，因为它是红帽产品。"
       ],
       "You cannot remove this product because it was published to a content view.": [
-        "Você não pode remover este produto porque ele foi publicado para uma visualização de conteúdo."
+        "您无法删除此产品，因为它已发布到内容视图。"
       ],
       "You cannot remove this product because you do not have permission.": [
-        "Você não pode remover este produto porque não tem permissão."
+        "您无权删除此产品。"
       ],
       "You cannot remove this repository because you do not have permission.": [
-        "Você não pode remover este repositório porque não tem permissão."
+        "您无权删除此仓库。"
       ],
       "You currently don't have any Activation Keys, you can add Activation Keys using the button on the right.": [
-        "Atualmente você não tem nenhuma Chave de Ativação, você pode adicionar Chaves de Ativação usando o botão da direita."
+        "您目前没有任何激活码，可以使用右侧的按钮添加激活码。"
       ],
       "You currently don't have any Alternate Content Sources associated with this Content Credential.": [
-        ""
+        "您当前没有与此内容凭证关联的 Alternate 内容源。"
       ],
       "You currently don't have any Container Image Tags.": [
-        ""
+        "您目前没有任何内容视图。"
       ],
       "You currently don't have any Content Credential, you can add Content Credentials using the button on the right.": [
-        "Atualmente você não tem nenhuma Credencial de Conteúdo, você pode adicionar Credenciais de Conteúdo usando o botão à direita."
+        "您目前没有任何内容凭据，您可以使用右侧的按钮添加内容凭据。"
       ],
       "You currently don't have any Content Hosts, you can create new Content Hosts by selecting Contents Host from main menu and then clicking the button on the right.": [
-        "Atualmente você não tem nenhum Host de Conteúdo, você pode criar novos Hosts de Conteúdo selecionando Host de Conteúdo no menu principal e depois clicando no botão à direita."
+        "当前您没有任何内容主机，可以通过从主菜单中选择“内容主机”，然后单击右侧的按钮来创建新的内容主机。"
       ],
       "You currently don't have any Content Hosts, you can register one by clicking the button on the right and following the instructions.": [
-        "Atualmente você não tem nenhum Hosts de Conteúdo, você pode registrar um clicando no botão à direita e seguindo as instruções."
+        "您目前没有任何内容主机，您可以通过单击右侧的按钮并按照说明进行注册。"
       ],
       "You currently don't have any Files.": [
-        "Atualmente você não tem nenhum Arquivo."
+        "您目前没有任何内容视图。"
       ],
       "You currently don't have any Host Collections, you can add Host Collections using the button on the right.": [
-        "Atualmente você não tem nenhuma Coleção Host, você pode adicionar Coleções Host usando o botão à direita."
+        "您目前没有任何主机集合，您可以使用右侧的按钮添加主机集合。"
       ],
       "You currently don't have any Hosts in this Host Collection, you can add Content Hosts after selecting the 'Add' tab.": [
-        ""
+        "您目前在此主机集合中没有任何主机，可以在选择“添加”选项卡后添加内容主机。"
       ],
       "You currently don't have any Products associated with this Content Credential.": [
-        "Atualmente você não tem nenhum Produto associado a esta Credencial de Conteúdo."
+        "您目前没有与此内容证书关联的任何产品。"
       ],
       "You currently don't have any Products to subscribe to, you can add Products after selecting 'Products' under 'Content' in the main menu": [
-        "Atualmente você não tem nenhum Produto para assinar, você pode adicionar Produtos após selecionar 'Produtos' em 'Conteúdo' no menu principal"
+        "您目前没有要订阅的产品，可以在主菜单中的“内容”下选择“产品”后添加产品"
       ],
       "You currently don't have any Products to subscribe to. You can add Products after selecting 'Products' under 'Content' in the main menu.": [
-        ""
+        "您目前没有要订阅的任何产品。您可以在主菜单中的“内容”下选择“产品”后添加产品。"
       ],
       "You currently don't have any Products<span bst-feature-flag=\\\"custom_products\\\">, you can add Products using the button on the right</span>.": [
-        "Atualmente você não tem nenhum Produto<span bst-feature-flag=\\\"custom_products\\\">, você pode adicionar Produtos usando o botão da direita</span>."
+        "您目前没有任何产品<span bst-feature-flag=\\\"custom_products\\\">，您可以使用右侧的按钮添加产品</span>。"
       ],
       "You currently don't have any Repositories associated with this Content Credential.": [
-        "Atualmente você não tem nenhum Repositório associado a esta Credencial de Conteúdo."
+        "您目前没有与此内容证书关联的任何仓库。"
       ],
       "You currently don't have any Repositories included in this Product, you can add Repositories using the button on the right.": [
-        "Atualmente você não tem nenhum Repositório incluído neste Produto, você pode adicionar Repositórios usando o botão à direita."
+        "您目前没有此产品中包含的任何仓库，您可以使用右侧的按钮添加仓库。"
       ],
       "You currently don't have any Subscriptions associated with this Activation Key, you can add Subscriptions after selecting the 'Add' tab.": [
-        "Atualmente você não tem nenhuma Assinatura associada a esta Chave de Ativação, você pode adicionar Assinaturas após selecionar a guia 'Adicionar'."
+        "您目前没有与此激活码关联的任何订阅，可以在选择“添加”标签后添加订阅。"
       ],
       "You currently don't have any Subscriptions associated with this Content Host. You can add Subscriptions after selecting the 'Add' tab.": [
-        ""
+        "您目前没有与此内容主机关联的任何订阅。您可以在选择“添加”标签后添加订阅。"
       ],
       "You currently don't have any Sync Plans.  A Sync Plan can be created by using the button on the right.": [
-        "Atualmente você não tem nenhum Plano de Sincronização.  Um Plano de Sincronização pode ser criado usando o botão à direita."
+        "您目前没有任何同步计划。可以使用右侧的按钮创建同步计划。"
       ],
       "You do not have any Installed Products": [
-        "Você não tem nenhum produto instalado"
+        "您没有任何安装的产品"
       ],
       "You must select a content view in order to save your environment.": [
-        "Você deve selecionar uma visão de conteúdo para salvar seu ambiente."
+        "您必须选择一个内容视图才能保存环境。"
       ],
       "You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.": [
-        "Você deve selecionar uma nova visão de conteúdo antes que sua mudança de ambiente possa ser salva. Use o botão cancelar na seleção da visualização do conteúdo para reverter a seleção de seu ambiente."
+        "必须先选择一个新的内容视图，然后才能保存环境更改。使用内容视图选择上的取消按钮可以还原您的环境选择。"
       ],
       "You must select a new content view before your change of lifecycle environment can be saved.": [
-        ""
+        "必须先选择一个新的内容视图，然后才能保存生命周期环境更改。"
       ],
       "You must select at least one Content Host in order to apply Errata.": [
-        "Você deve selecionar pelo menos um Host de Conteúdo para poder aplicar Errata."
+        "您必须至少选择一个内容主机才能应用勘误。"
       ],
       "You must select at least one Errata to apply.": [
-        "Você deve selecionar pelo menos uma Errata para se candidatar."
+        "您必须至少选择一个勘误来应用。"
       ],
       "Your search returned zero %(contentType)s that match the criteria.": [
-        ""
+        "您的搜索返回零个%(contentType)s符合条件"
       ],
       "Your search returned zero Activation Keys.": [
-        "Sua busca retornou zero Chaves de ativação."
+        "您的搜索返回了零个激活码。"
       ],
       "Your search returned zero Container Image Tags.": [
-        ""
+        "您的搜索返回了零个容器镜像标签。"
       ],
       "Your search returned zero Content Credential.": [
-        "Sua busca retornou Credencial de Conteúdo zero."
+        "您的搜索返回了零个内容凭证。"
       ],
       "Your search returned zero Content Hosts.": [
-        "Sua busca retornou Hosts de conteúdo zero."
+        "您的搜索返回了零个内容主机。"
       ],
       "Your search returned zero Content Views": [
-        "Sua busca retornou zero visualizações de conteúdo"
+        "您的搜索返回了零个内容视图"
       ],
       "Your search returned zero Content Views.": [
-        "Sua busca retornou zero visualizações de conteúdo."
+        "您的搜索返回了零个内容视图。"
       ],
       "Your search returned zero Deb Packages.": [
-        ""
+        "您的搜索返回了零个 Deb 软件包。"
       ],
       "Your search returned zero Debs.": [
-        "Sua busca retornou zero débitos."
+        "您的搜索返回了零个 Debs。"
       ],
       "Your search returned zero Errata.": [
-        "Sua busca retornou zero Errata."
+        "您的搜索返回了零个勘误。"
       ],
       "Your search returned zero Erratum.": [
-        "Sua busca retornou zero Erratum."
+        "您的搜索返回了零个勘误。"
       ],
       "Your search returned zero Files.": [
-        "Sua busca retornou zero arquivos."
+        "您的搜索返回了零个文件。"
       ],
       "Your search returned zero Host Collections.": [
-        "Sua busca retornou zero Coleções Host."
+        "您的搜索返回了零个主机集合。"
       ],
       "Your search returned zero Hosts.": [
-        "Sua busca retornou zero Hosts."
+        "您的搜索返回了零个主机。"
       ],
       "Your search returned zero Lifecycle Environments.": [
-        "Sua busca retornou ambientes com ciclo de vida zero."
+        "您的搜索返回了零个生命周期环境。"
       ],
       "Your search returned zero Module Streams.": [
-        ""
+        "您的搜索返回了零个模块流。"
       ],
       "Your search returned zero Packages.": [
-        "Sua busca retornou zero pacotes."
+        "您的搜索返回了零个软件包。"
       ],
       "Your search returned zero Products.": [
-        "Sua busca retornou zero Produtos."
+        "您的搜索返回了零个产品。"
       ],
       "Your search returned zero Repositories": [
-        "Sua busca retornou zero Repositórios"
+        "您的搜索返回了零个仓库"
       ],
       "Your search returned zero Repositories.": [
-        "Sua busca retornou zero Repositórios."
+        "您的搜索返回了零个仓库。"
       ],
       "Your search returned zero repository sets.": [
-        "Sua busca retornou conjuntos de repositório zero."
+        "您的搜索返回了零个仓库集。"
       ],
       "Your search returned zero Repository Sets.": [
-        "Sua busca retornou zero Repositório Sets."
+        "您的搜索返回了零个仓库集。"
       ],
       "Your search returned zero results.": [
-        "Sua busca retornou zero resultados."
+        "您的搜索返回了零个结果。"
       ],
       "Your search returned zero Subscriptions.": [
-        "Sua busca retornou zero Assinaturas."
+        "您的搜索返回了零个订阅。"
       ],
       "Your search returned zero Sync Plans.": [
-        "Sua busca retornou planos de sincronização zero."
+        "您的搜索返回了零个同步计划。"
       ],
       "Your search returned zero Traces.": [
-        "Sua busca retornou zero Traços."
+        "您的搜索返回了零个 Traces。"
       ],
       "Yum Metadata Checksum": [
-        "Yum Metadata Checksum"
+        "Yum 元数据校验和"
       ],
       "Yum metadata generation has been initiated in the background.  Click <a href=\\\"{{ taskUrl() }}\\\">Here</a> to monitor the progress.": [
-        "A geração de metadados Yum foi iniciada em segundo plano.  Clique <a href=\\\"{{ taskUrl() }}\\\">Aqui</a> para monitorar o progresso."
+        "Yum元数据生成已在后台启动。请点击<a href=\\\"{{ taskUrl() }}\\\">这里</a>监视进度。"
       ],
       "Yum Repositories <div>{{ library.counts.yum_repositories || 0 }}</div>": [
-        "Repositórios Yum <div>{{ library.counts.yum_repositories || 0 }}</div>"
+        "Yum 仓库 <div>{{ library.counts.yum_repositories || 0 }}</div>"
       ]
     }
   }
