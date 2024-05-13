@@ -333,6 +333,7 @@ KT.content_actions = (function () {
           updater.stop();
         }
       );
+      updater.restart();
     };
 
   return {
