@@ -112,6 +112,8 @@ module Katello
         only_integer: true
       }
 
+    validates :container_push_name_format, inclusion: { in: ['label', 'id'].freeze, allow_nil: true}
+
     scope :subscribable, -> { where(content_type: RootRepository::SUBSCRIBABLE_TYPES) }
     scope :skipable_metadata_check, -> { where(content_type: RootRepository::SKIPABLE_METADATA_TYPES) }
     scope :has_url, -> { where.not(:url => nil) }
@@ -195,7 +197,7 @@ module Katello
     def ensure_docker_repo_unprotected
       unless unprotected
         errors.add(:base, _("Container Image Repositories are not protected at this time. " \
-                             "They need to be published via http to be available to containers."))
+                            "They need to be published via http to be available to containers."))
       end
     end
 
