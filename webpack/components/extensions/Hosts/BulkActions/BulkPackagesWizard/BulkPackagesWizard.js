@@ -51,6 +51,9 @@ export const useHostsBulkSelect = ({ initialSelectedHosts, modalIsOpen }) => {
   };
 };
 
+export const getPackagesUrl = selectedAction =>
+  `${katelloApi.getApiUrl('/packages/thindex')}?per_page=7&include_permissions=true&packages_restrict_upgradable=${selectedAction === 'upgrade'}`;
+
 const BulkPackagesWizard = () => {
   const { modalOpen, setModalClosed: closeModal } = useForemanModal({ id: 'bulk-packages-wizard' });
 
@@ -65,9 +68,8 @@ const BulkPackagesWizard = () => {
   const [finishButtonLoading, setFinishButtonLoading] = useState(false);
   const [selectedRexOption, setSelectedRexOption] = useState(dropdownOptions[0]);
   const finishButtonText = selectedAction === 'install' ? __('Install') : __('Upgrade');
-  const tableType = selectedAction === INSTALL ? 'install' : 'upgrade';
 
-  const PACKAGES_URL = `${katelloApi.getApiUrl('/packages')}?distinct=true&per_page=7&include_permissions=true&packages_restrict_upgradable=${tableType === 'upgrade'}`;
+  const PACKAGES_URL = getPackagesUrl(selectedAction);
   const apiOptions = { key: 'BULK_HOST_PACKAGES' };
   const replacementResponse = !modalOpen ? { response: {} } : false;
   const packagesResponse = useTableIndexAPIResponse({

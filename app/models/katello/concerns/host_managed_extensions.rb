@@ -504,13 +504,14 @@ module Katello
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/MethodLength
       def yum_names_for_job_template(action:, search:, versions: nil)
         actions = %w(install remove update).freeze
         case action
         when 'install'
           yum_installable = ::Katello::Rpm.yum_installable_for_host(self).search_for(search).distinct.pluck(:name)
           if yum_installable.empty?
-            fail _("No available packages found for search term '%s'. Check the host's content view environments and already-installed packages.") % search
+            fail N_("No available packages found for search term '%s'. Check the host's content view environments and already-installed packages.") % search
           end
           yum_installable
         when 'remove'

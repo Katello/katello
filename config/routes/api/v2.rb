@@ -266,6 +266,8 @@ Katello::Engine.routes.draw do
           end
         end
 
+        match "/packages/thindex" => "packages#thindex", :via => :get
+
         api_resources :packages, :only => [:index, :show] do
           collection do
             get :auto_complete_search

@@ -14,7 +14,7 @@ import { getControllerSearchProps } from 'foremanReact/constants';
 import { noop } from 'foremanReact/common/helpers';
 import { RowSelectTd } from 'foremanReact/components/HostsIndex/RowSelectTd';
 import { getPageStats } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
-import { BulkPackagesWizardContext } from './BulkPackagesWizard';
+import { BulkPackagesWizardContext, getPackagesUrl } from './BulkPackagesWizard';
 import katelloApi from '../../../../../services/api';
 
 export const BulkPackagesUpgradeTable = props => <BulkPackagesTable {...props} tableType="upgrade" />;
@@ -32,7 +32,7 @@ const BulkPackagesTable = ({
     },
     packagesResponse: response,
   } = useContext(BulkPackagesWizardContext);
-  const PACKAGES_URL = `${katelloApi.getApiUrl('/packages')}?distinct=true&per_page=7&include_permissions=true&packages_restrict_upgradable=${tableType === 'upgrade'}`;
+  const PACKAGES_URL = getPackagesUrl(tableType);
   const apiOptions = { key: 'BULK_HOST_PACKAGES' };
 
   const origSearchProps = getControllerSearchProps('packages', 'searchBar-packages');
@@ -50,7 +50,6 @@ const BulkPackagesTable = ({
     selectOne,
     isSelected,
     selectedCount,
-    // selectedResults: selectedPackageResults,
     areAllRowsSelected,
     areAllRowsOnPageSelected,
     updateSearchQuery,

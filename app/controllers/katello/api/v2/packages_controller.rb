@@ -43,17 +43,19 @@ module Katello
     param :available_for, String, :desc => N_("Return packages that can be added to the specified object.  Only the value 'content_view_version' is supported.")
     param_group :search, ::Katello::Api::V2::ApiController
     def index
-      if params[:distinct]
-        sort_by, sort_order, options = sort_options
+      super # RepositoryContentController
+    end
 
-        options[:select] = "DISTINCT ON (#{Rpm.table_name}.name) #{Rpm.table_name}.id, #{Rpm.table_name}.name"
-        final_relation = custom_index_relation(Rpm.all)
+    api :GET, "/packages/thindex", N_("List all packages unique by name")
+    param_group :search, ::Katello::Api::V2::ApiController
+    def thindex
+      sort_by, sort_order, options = sort_options
 
-        result = scoped_search(final_relation, sort_by, sort_order, options)
-        respond(:collection => result, :template => "thindex")
-      else
-        super
-      end
+      options[:select] = "DISTINCT ON (#{Rpm.table_name}.name) #{Rpm.table_name}.id, #{Rpm.table_name}.name"
+      final_relation = custom_index_relation(Rpm.all)
+
+      result = scoped_search(final_relation, sort_by, sort_order, options)
+      respond_for_index(:collection => result, :template => "thindex")
     end
 
     def available_for_content_view_version(version)

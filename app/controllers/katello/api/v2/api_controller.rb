@@ -88,7 +88,7 @@ module Katello
       query = query.order("#{query.table_name}.id DESC") unless group #secondary order to ensure sort is deterministic
       query = query.includes(includes) if includes.length > 0
 
-      if params[:distinct] && options[:select]
+      if options[:select].present? # used in /packages/thindex
         query = query.select(options[:select])
         dist_total = ActiveRecord::Base.connection.execute("SELECT COUNT(*) FROM (#{query.to_sql}) AS result_rows").first['count']
         total = dist_total
