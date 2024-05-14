@@ -50,7 +50,7 @@ module Katello
       end
 
       def last_sync_audit
-        Audited::Audit.where(:auditable_id => self.repositories, :auditable_type => Katello::Repository.name).order(:created_at).last
+        Audited::Audit.where(:auditable_id => self.repositories, :auditable_type => Katello::Repository.name, :action => "sync").order(:created_at).last
       end
 
       def last_sync
@@ -58,13 +58,14 @@ module Katello
       end
 
       def last_repo_sync_task
-        @last_sync_task ||= last_repo_sync_tasks.first
+        @last_sync_task ||= last_repo_sync_tasks&.first
       end
 
       def last_repo_sync_tasks
         ids = repos(self.library, nil, false).pluck(:id).join(',')
         label = ::Actions::Katello::Repository::Sync.name
         type = ::Katello::Repository.name
+        return nil if ids.empty?
         ForemanTasks::Task.search_for("label = #{label} and resource_type = #{type} and resource_id ^ (#{ids})")
           .order("started_at desc")
       end
