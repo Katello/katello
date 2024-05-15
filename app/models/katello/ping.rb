@@ -2,7 +2,7 @@ module Katello
   class Ping
     OK_RETURN_CODE = 'ok'.freeze
     FAIL_RETURN_CODE = 'FAIL'.freeze
-    PACKAGES = %w(katello candlepin pulp foreman hammer).freeze
+    PACKAGES = %w(katello candlepin pulp foreman hammer dynflow).freeze
 
     class << self
       def services(capsule_id = nil)
