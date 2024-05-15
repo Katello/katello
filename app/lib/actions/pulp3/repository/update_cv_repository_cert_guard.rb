@@ -1,7 +1,7 @@
 module Actions
   module Pulp3
     module Repository
-      class UpdateCVRepositoryCertGuard < Pulp3::Abstract
+      class UpdateCvRepositoryCertGuard < Pulp3::Abstract
         def plan(repository, smart_proxy)
           root = repository.root
           cv_repositories = root.repositories - [root.library_instance]
