@@ -1,4 +1,4 @@
-class RepoRenameFeedToUrl < ActiveRecord::Migration[4.2]
+class RepoRenameFeedToURL < ActiveRecord::Migration[4.2]
   def up
     rename_column :katello_repositories, :feed, :url
   end

@@ -19,7 +19,7 @@ module Katello
     validates :upstream_organization_label, presence: true, if: :network_sync?
 
     validates :url, presence: true, unless: :export_sync?
-    validates_with Validators::KatelloUrlFormatValidator, attributes: :url, unless: :export_sync?
+    validates_with Validators::KatelloURLFormatValidator, attributes: :url, unless: :export_sync?
     validates_with Validators::KatelloLabelFormatValidator, attributes: :upstream_organization_label, if: proc { upstream_organization_label.present? }
     validate :non_redhat_configuration, if: :network_sync?
 

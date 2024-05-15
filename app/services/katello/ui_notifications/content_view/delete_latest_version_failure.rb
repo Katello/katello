@@ -1,7 +1,7 @@
 module Katello
   module UINotifications
     module ContentView
-      class DelelteLatestVersionFailure < ::UINotifications::Base
+      class DeleteLatestVersionFailure < ::UINotifications::Base
         private
 
         def create

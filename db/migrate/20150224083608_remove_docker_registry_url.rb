@@ -1,4 +1,4 @@
-class RemoveDockerRegistryUrl < ActiveRecord::Migration[4.2]
+class RemoveDockerRegistryURL < ActiveRecord::Migration[4.2]
   def up
     remove_column :katello_providers, :docker_registry_url
   end
