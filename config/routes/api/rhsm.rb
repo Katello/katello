@@ -1,6 +1,3 @@
-require 'katello/api/constraints/activation_key_constraint'
-require 'katello/api/mapper_extensions'
-
 class ActionDispatch::Routing::Mapper
   include Katello::Routing::MapperExtensions
 end
@@ -11,7 +8,7 @@ Katello::Engine.routes.draw do
 
     scope :path => :rhsm, :module => :rhsm, :as => :rhsm do
       # subscription-manager support
-      scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
+      scope :constraints => Katello::Api::Constraints::RegisterWithActivationKeyConstraint.new do
         match '/consumers' => 'candlepin_proxies#consumer_activate', :via => :post
       end
       match '/consumers' => 'candlepin_proxies#consumer_create', :via => :post

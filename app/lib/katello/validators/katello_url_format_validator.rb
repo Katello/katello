@@ -1,7 +1,7 @@
 module Katello
   module Validators
-    class KatelloUrlFormatValidator < ActiveModel::EachValidator
-      include KatelloUrlHelper
+    class KatelloURLFormatValidator < ActiveModel::EachValidator
+      include KatelloURLHelper
 
       def validate_each(record, attribute, value)
         if options[:nil_allowed]

@@ -1,5 +1,3 @@
-require 'katello/api/mapper_extensions'
-
 class ActionDispatch::Routing::Mapper
   include Katello::Routing::MapperExtensions
 end

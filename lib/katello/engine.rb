@@ -79,12 +79,14 @@ module Katello
 
     # make sure the Katello plugin is initialized before `after_initialize`
     # hook so that the resumed Dynflow tasks can rely on everything ready.
-    initializer 'katello.register_plugin', :before => :finisher_hook, :after => 'foreman_remote_execution.register_plugin' do
-      ::Foreman::AccessControl::Permission.prepend ::Katello::Concerns::PermissionExtensions
-      require 'katello/plugin'
+    initializer 'katello.register_plugin', :before => :finisher_hook, :after => 'foreman_remote_execution.register_plugin' do |app|
+      app.reloader.to_prepare do
+        ::Foreman::AccessControl::Permission.prepend ::Katello::Concerns::PermissionExtensions
+        require 'katello/plugin'
 
-      # extend builtin permissions from core with new actions
-      require 'katello/permissions'
+        # extend builtin permissions from core with new actions
+        require 'katello/permissions'
+      end
     end
 
     initializer "katello.set_dynflow_middlewares", :before => :finisher_hook do |_app|
@@ -185,11 +187,11 @@ module Katello
       # We need to explicitly load this files because Foreman has
       # similar strucuture and if the Foreman files are loaded first,
       # autoloading doesn't work.
-      require_dependency "#{Katello::Engine.root}/app/lib/katello/api/v2/rendering"
-      require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/api_controller"
-      require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
-      require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp"
-      require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp_node"
+      # require_dependency "#{Katello::Engine.root}/app/lib/katello/api/v2/rendering"
+      # require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/api_controller"
+      # require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
+      # require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp"
+      # require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp_node"
 
       #Api controller extensions
       ::Api::V2::HostsController.include Katello::Concerns::Api::V2::HostsControllerExtensions

@@ -33,7 +33,7 @@ module Katello
       private
 
       def deliver_failure_notification
-        ::Katello::UINotifications::ContentView::DelelteLatestVersionFailure.deliver!(content_view)
+        ::Katello::UINotifications::ContentView::DeleteLatestVersionFailure.deliver!(content_view)
       end
     end
   end
