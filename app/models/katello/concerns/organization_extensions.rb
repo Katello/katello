@@ -102,7 +102,7 @@ module Katello
 
         def manifest_expiration_date(cached: true)
           Rails.cache.fetch("#{self.label}_manifest_expiration_date", expires_in: 1.minute, force: !cached) do
-            unless manifest_imported?(cached: true)
+            unless manifest_imported?(cached: cached)
               Rails.logger.error "Manifest not imported for organization #{self.label}"
               return nil
             end
@@ -117,8 +117,8 @@ module Katello
           end
         end
 
-        def manifest_expired?
-          manifest_expiry = manifest_expiration_date
+        def manifest_expired?(cached: true)
+          manifest_expiry = manifest_expiration_date(cached: cached)
 
           if manifest_expiry
             manifest_expiry < DateTime.now

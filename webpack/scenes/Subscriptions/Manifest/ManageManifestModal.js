@@ -174,7 +174,7 @@ class ManageManifestModal extends Component {
                           />
                         </Alert>
                       }
-                      {manifestExpired &&
+                      {manifestExpired && isManifestImported &&
                         <Alert
                           ouiaId="manifest-expired-alert"
                           variant="danger"
@@ -198,7 +198,7 @@ class ManageManifestModal extends Component {
                           {getManifestName()}
                         </Col>
                       </Row>
-                      {isManifestImported &&
+                      {isManifestImported && manifestExpirationDate &&
                         <Row>
                           <Col sm={5} />
                           <Col sm={7}>
