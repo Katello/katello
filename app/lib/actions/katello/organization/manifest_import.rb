@@ -27,6 +27,11 @@ module Actions
           end
         end
 
+        def run
+          organization = ::Organization.find_by(name: input[:organization_name])
+          organization&.manifest_expiration_date(cached: false) # update the date
+        end
+
         def failure_notification(plan)
           ::Katello::UINotifications::Subscriptions::ManifestImportError.deliver!(
             :subject => subject_organization,
