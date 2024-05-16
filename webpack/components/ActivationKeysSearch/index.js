@@ -20,27 +20,29 @@ import { foremanUrl } from 'foremanReact/common/helpers';
 import { STATUS } from 'foremanReact/constants';
 import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
 
+const getSelectedEnvId = () => {
+  const selectElement = document.querySelector('#hostgroup_lifecycle_environment_id');
+  const selectedOption = selectElement.options[selectElement.selectedIndex];
+  let dataId = selectedOption?.getAttribute?.('data-id');
+  if (!dataId) {
+    dataId = selectElement.value;
+  }
+  return dataId;
+};
+const getSelectedContentViewId = () => {
+  const selectElement = document.querySelector('#hostgroup_content_view_id');
+  const selectedOption = selectElement.options[selectElement.selectedIndex];
+  let dataId = selectedOption?.getAttribute?.('data-id');
+  if (!dataId) {
+    dataId = selectElement.value;
+  }
+  return dataId;
+};
 const ActivationKeysSearch = () => {
   const ACTIVATION_KEYS = 'ACTIVATION_KEYS';
   const KT_AK_LABEL = 'kt_activation_keys';
-  const selectedEnvId = useMemo(() => {
-    const selectElement = document.querySelector('#hostgroup_lifecycle_environment_id');
-    const selectedOption = selectElement.options[selectElement.selectedIndex];
-    let dataId = selectedOption?.getAttribute?.('data-id');
-    if (!dataId) {
-      dataId = selectElement.value;
-    }
-    return dataId;
-  }, []);
-  const selectedContentViewId = useMemo(() => {
-    const selectElement = document.querySelector('#hostgroup_content_view_id');
-    const selectedOption = selectElement.options[selectElement.selectedIndex];
-    let dataId = selectedOption?.getAttribute?.('data-id');
-    if (!dataId) {
-      dataId = selectElement.value;
-    }
-    return dataId;
-  }, []);
+  const [selectedEnvId, setSelectedEnvId] = useState(getSelectedEnvId());
+  const [selectedContentViewId, setSelectedContentViewId] = useState(getSelectedContentViewId());
   const isLoading =
     useSelector(state => selectAPIStatus(state, ACTIVATION_KEYS)) === STATUS.PENDING;
   const [activationKeys, setActivationKeys] = useState([]);
@@ -72,9 +74,11 @@ const ActivationKeysSearch = () => {
     });
     return ret;
   }, []);
+
   useEffect(() => {
-    $('#hostgroup_lifecycle_environment_id').on('change', ktLoadActivationKeys); // cant use eventlistener on select2
-    $('#hostgroup_content_view_id').on('change', ktLoadActivationKeys); // cant use eventlistener on select2
+    $('#hostgroup_lifecycle_environment_id').on('change', () => setSelectedEnvId(getSelectedEnvId)); // cant use eventlistener on select2
+    $('#hostgroup_content_view_id').on('change', () =>
+      setSelectedContentViewId(getSelectedContentViewId())); // cant use eventlistener on select2
     if (selectedEnvId && selectedContentViewId) {
       ktLoadActivationKeys();
     }
@@ -160,7 +164,7 @@ const ActivationKeysSearch = () => {
             isCreatable
             shouldResetOnSelect
             isDisabled={isLoading || isEmptyResults}
-            placeholder={
+            placeholderText={
               isEmptyResults
                 ? __('The selected lifecycle environment contains no activation keys')
                 : null
