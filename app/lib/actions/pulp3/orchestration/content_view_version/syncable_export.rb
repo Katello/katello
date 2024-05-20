@@ -16,10 +16,11 @@ module Actions
             param :export_history_id, Integer
           end
 
-          def plan(content_view_version:,
-                   smart_proxy:,
-                   destination_server:,
-                   from_content_view_version:)
+          def plan(opts = {})
+            content_view_version = opts[:content_view_version]
+            smart_proxy = opts[:smart_proxy]
+            destination_server = opts[:destination_server]
+            from_content_view_version = opts[:from_content_view_version]
             format = ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
             sequence do
               export_service = ::Katello::Pulp3::ContentViewVersion::Export.create(

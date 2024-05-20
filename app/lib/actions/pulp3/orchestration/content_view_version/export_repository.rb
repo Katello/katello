@@ -3,26 +3,24 @@ module Actions
     module Orchestration
       module ContentViewVersion
         class ExportRepository < Actions::EntryAction
-          def plan(repository,
-                    chunk_size: nil,
-                    from_history: nil,
-                    format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE)
+          def plan(repository, opts = {})
+            opts[:format] ||= ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
             action_subject(repository)
             validate_repositories_immediate!(repository)
-            validate_export_types!(repository, format)
+            validate_export_types!(repository, opts[:format])
             content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(
                                                                            repository: repository,
                                                                            create_by_default: true,
-                                                                           format: format)
+                                                                           format: opts[:format])
             content_view.update!(repository_ids: [repository.library_instance_or_self.id])
 
             sequence do
               publish_action = plan_action(::Actions::Katello::ContentView::Publish, content_view, '')
               export_action = plan_action(Actions::Katello::ContentViewVersion::Export,
                                           content_view_version: publish_action.version,
-                                          chunk_size: chunk_size,
-                                          from_history: from_history,
-                                          format: format)
+                                          chunk_size: opts[:chunk_size],
+                                          from_history: opts[:from_history],
+                                          format: opts[:format])
               plan_self(export_action_output: export_action.output)
             end
           end
