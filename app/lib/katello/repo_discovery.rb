@@ -9,8 +9,8 @@ module Katello
 
     # rubocop:disable Metrics/ParameterLists
     def initialize(url, content_type = 'yum', upstream_username = nil,
-                   upstream_password = nil, search = '*', crawled = [],
-                   found = [], to_follow = [])
+      upstream_password = nil, search = '*', crawled = [],
+      found = [], to_follow = [])
       @uri = uri(url)
       @content_type = content_type
       @upstream_username = upstream_username.empty? ? nil : upstream_username
@@ -36,8 +36,7 @@ module Katello
         if @uri.scheme == 'file'
           file_crawl(uri(resume_point))
         elsif %w(http https).include?(@uri.scheme)
-          #http_crawl(resume_point)
-          spidr_crawl(resume_point)
+          spidr_crawl_pages(resume_point)
         else
           fail _("Unsupported URL protocol %s.") % @uri.scheme
         end
@@ -144,44 +143,6 @@ module Katello
       @found.sort!
     end
 
-    def anemone_proxy_details
-      details = {}
-
-      if proxy
-        details[:proxy_host] = proxy_host
-        details[:proxy_port] = proxy_port
-        details[:proxy_user] = proxy.username
-        details[:proxy_password] = proxy.password
-        end
-
-      details
-    end
-
-    def http_crawl(resume_point)
-      resume_point_uri = URI(resume_point)
-      resume_point_uri.user = @upstream_username if @upstream_username
-      resume_point_uri.password = @upstream_password if @upstream_password
-
-      Anemone.crawl(resume_point_uri, anemone_proxy_details) do |anemone|
-        anemone.focus_crawl do |page|
-          @crawled << page.url.path
-
-          page.links.each do |link|
-            if link.path.ends_with?('/repodata/')
-              page_url = page.url.clone
-              page_url.user = nil
-              page_url.password = nil
-              @found << page_url.to_s
-            else
-              @to_follow << link.to_s if should_follow?(link.path)
-      end
-      end
-          page.discard_doc! #saves memory, doc not needed
-          []
-        end
-      end
-    end
-
     def spidr_proxy_details
       details = {}
 
@@ -195,48 +156,28 @@ module Katello
       details
     end
 
-    def spidr_crawl(url)
-      user = @upstream_username if @upstream_username
-      password = @upstream_password if @upstream_password
-      #Spidr crawl the url over every url and add urls with repodata to found
+    def spidr_crawl_pages(url)
+      user, password = @upstream_username, @upstream_password
       Spidr.site(url, proxy: spidr_proxy_details) do |spider|
-        spider.authorized.add(url, user, password)
-        spider.every_url do |url|
-          if @found.include?(url.to_s.split('repodata/').first)
-            puts ">>> Skipping #{url.to_s}"
-            spider.skip_link!
-          end
-          if url.to_s.include? 'repodata/'
-            @found << url.to_s.split('repodata/').first
-            puts ">>> Found #{url.to_s.split('repodata/').first}"
-          end
+        spider.authorized.add(url, user, password) if user && password
+        spider.every_page do |page|
+          @crawled << page.url.to_s
+          process_page_urls(page.urls)
+          spider.skip_page!
         end
       end
     end
 
-    def spidr_crawl_url(url)
-      Spidr.site(url) do |spider|
-        spider.every_page do |page|
-          next if page.url.to_s.include?('bigzoo') || page.url.to_s.include?('ostree') || page.url.to_s.include?('?')
-          page.each_url do |crawl_link|
-            break if @crawled.include?(crawl_link.to_s) or crawl_link.to_s.include?('bigzoo') or crawl_link.to_s.include?('ostree')
-              @crawled << crawl_link.to_s
-              puts "Processing page > #{page.url.to_s}"
-              puts "Processing link > #{crawl_link.to_s}"
-              if(crawl_link.to_s.include? 'repodata/')
-                @found << (crawl_link).to_s
-                  puts ">>> Found #{crawl_link.to_s}"
-                  break
-              elsif !crawl_link.to_s.include?("http") && should_follow?((crawl_link).to_s)
-                puts ">>> Following #{crawl_link.to_s}"
-                @to_follow << (crawl_link).to_s
-              end
-          end
-          []
-        end
+    def process_page_urls(urls)
+      urls.each do |url|
+        url = url.to_s
+        if url.include? 'repodata/'
+          @found << url.split('repodata/').first
+        else
+          @to_follow << url if should_follow?(url)
         end
       end
-
+    end
 
     def file_crawl(resume_point)
       if resume_point.path.ends_with?('/repodata/')
@@ -252,12 +193,13 @@ module Katello
 
     def should_follow?(path)
       #Verify:
-      # * link's path starts with the base url
+      # * link's path includes the base url
       # * link hasn't already been crawled
       # * link ends with '/' so it should be a directory
       # * link doesn't end with '/Packages/', as this increases
       #       processing time and memory usage considerably
-      return path.starts_with?(@uri.path) && !@crawled.include?(path) &&
+      #
+      return path.include?(@uri.hostname) && !@crawled.include?(path) &&
         path.ends_with?('/') && !path.ends_with?('/Packages/')
     end
   end
