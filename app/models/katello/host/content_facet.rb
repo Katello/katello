@@ -64,6 +64,7 @@ module Katello
       end
 
       def mark_cves_changed(_cve)
+        Rails.logger.debug("ContentFacet: Marking CVEs changed for host #{host.name}")
         self.cves_changed = true
       end
 
@@ -99,6 +100,14 @@ module Katello
         content_view_environments&.first&.lifecycle_environment
       end
 
+      def content_view_environments=(new_cves)
+        super(new_cves)
+        Rails.logger.debug("ContentFacet: Setting CVEs for host #{host.name}: #{new_cves.map(&:candlepin_name).join(', ')}")
+        Katello::ContentViewEnvironmentContentFacet.reprioritize_for_content_facet(self, new_cves)
+        self.content_view_environments.reload
+        self.host&.update_candlepin_associations
+      end
+
       # rubocop:disable Metrics/CyclomaticComplexity
       def assign_single_environment(
         content_view_id: nil, lifecycle_environment_id: nil, environment_id: nil,
@@ -126,9 +135,10 @@ module Katello
       end
 
       def default_environment?
-        content_view_environments.any? do |cve|
-          cve.content_view.default? && cve.lifecycle_environment.library?
-        end
+        return if content_view_environments.blank?
+        # if default cve is first, this is equivalent to default being the only one.
+        # if default cve is not first, candlepin will prioritize CV repos over library repos in case of conflicts.
+        content_view_environments.first.default_environment?
       end
 
       def update_repositories_by_paths(paths)
