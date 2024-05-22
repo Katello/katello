@@ -64,6 +64,7 @@ module Katello
       end
 
       def mark_cves_changed(_cve)
+        Rails.logger.debug("ContentFacet: Marking CVEs changed for host #{host.name}")
         self.cves_changed = true
       end
 
@@ -97,6 +98,15 @@ module Katello
           Rails.logger.warn _("Content facet for host %s has more than one lifecycle environment. Use #lifecycle_environments instead.") % host.name
         end
         content_view_environments&.first&.lifecycle_environment
+      end
+
+      def content_view_environments=(new_cves)
+        super(new_cves)
+        return unless new_cves.length > 1
+        Rails.logger.debug("ContentFacet: Setting CVEs for host #{host.name}: #{new_cves.map(&:candlepin_name).join(', ')}")
+        Katello::ContentViewEnvironmentContentFacet.reprioritize_for_content_facet(self, new_cves)
+        self.content_view_environments.reload
+        self.host&.update_candlepin_associations
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity

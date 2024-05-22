@@ -3,6 +3,8 @@ module Katello
     belongs_to :content_view_environment, :class_name => "::Katello::ContentViewEnvironment", :inverse_of => :content_view_environment_content_facets
     belongs_to :content_facet, :class_name => "::Katello::Host::ContentFacet", :inverse_of => :content_view_environment_content_facets
 
+    default_scope { order(:priority => :asc) }
+
     validates :content_view_environment_id, presence: true
     validates :content_facet_id, presence: true, unless: :new_record?
     validate :ensure_valid_content_source, if: proc { Setting['validate_host_lce_content_source_coherence'] }
@@ -19,5 +21,15 @@ module Katello
         errors.add(:base, error_msg)
       end
     end
+
+    def self.reprioritize_for_content_facet(content_facet, new_cves)
+      new_order = new_cves.map do |cve|
+        content_facet.content_view_environment_content_facets.find_by(:content_view_environment_id => cve.id)
+      end.compact
+      new_order.each_with_index do |cvecf, index|
+        cvecf.update_column(:priority, index)
+      end
+    end
+    
   end
 end
