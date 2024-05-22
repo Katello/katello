@@ -47,10 +47,9 @@ module Katello
       content_view.default? && environment.library?
     end
 
-    # TODO: uncomment when we need to start showing multiple CVE names in UI
-    # def candlepin_name
-    #   "#{environment.label}/#{content_view.label}"
-    # end
+    def candlepin_name
+      "#{environment.label}/#{content_view.label}"
+    end
 
     private
 
