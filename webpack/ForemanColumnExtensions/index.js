@@ -7,9 +7,11 @@ import {
   PackageIcon,
 } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
-import { Flex, FlexItem } from '@patternfly/react-core';
+import { Flex, FlexItem, Popover, Badge } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import RelativeDateTime from 'foremanReact/components/common/dates/RelativeDateTime';
+import { ContentViewEnvironmentDisplay } from '../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
+import { truncate } from '../utils/helpers';
 
 const hostsIndexColumnExtensions = [
   {
@@ -96,6 +98,47 @@ const hostsIndexColumnExtensions = [
     },
     weight: 2400,
     isSorted: true,
+  },
+  {
+    columnName: 'content_view_environments',
+    title: __('Content view environments'),
+    wrapper: (hostDetails) => {
+      const contentViewEnvironments =
+        hostDetails?.content_facet_attributes?.content_view_environments ?? [];
+      if (contentViewEnvironments.length === 0) return '—'; // don't show popover
+      return (
+        <Flex>
+          {contentViewEnvironments.length > 1 &&
+            <FlexItem>
+              <Badge isRead>{contentViewEnvironments.length}</Badge>
+            </FlexItem>
+          }
+          <Popover
+            id="content-view-environments-tooltip"
+            className="content-view-environments-tooltip"
+            maxWidth="34rem"
+            headerContent={hostDetails.display_name}
+            bodyContent={
+              <Flex direction={{ default: 'column' }}>
+                {contentViewEnvironments.map(env => (
+                  <ContentViewEnvironmentDisplay
+                    key={`${env.lifecycle_environment.name}-${env.content_view.name}`}
+                    contentView={env.content_view}
+                    lifecycleEnvironment={env.lifecycle_environment}
+                  />
+                ))}
+              </Flex>
+            }
+          >
+            <FlexItem>
+              {truncate(contentViewEnvironments.map(cve => cve.candlepin_name).join(', '), 35)}
+            </FlexItem>
+          </Popover>
+        </Flex>
+      );
+    },
+    weight: 2290,
+    isSorted: false,
   },
   {
     columnName: 'content_source',
