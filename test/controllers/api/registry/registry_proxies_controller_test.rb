@@ -324,7 +324,7 @@ module Katello
       it "blocks search for podman" do
         @docker_repo.set_container_repository_name
         @docker_env_repo.set_container_repository_name
-        @request.env['HTTP_USER_AGENT'] = "libpod/1.8.0"
+        @request.env['HTTP_DOCKER_DISTRIBUTION_API_VERSION'] = "registry/2.0"
         get :v1_search, params: { q: "abc", n: 2 }
         assert_response 404
       end
