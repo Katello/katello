@@ -1,3 +1,3 @@
 module Katello
-  VERSION = "4.13.0-master".freeze
+  VERSION = "4.14.0-master".freeze
 end
