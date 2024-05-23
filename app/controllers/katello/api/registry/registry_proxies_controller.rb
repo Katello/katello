@@ -577,10 +577,10 @@ module Katello
     end
 
     def v1_search
-      # Checks for podman client and issues a 404 in that case. Podman
+      # Checks for v2 client and issues a 404 in that case. Podman
       # examines the response from a /v1_search request. If the result
       # is a 4XX, it will then proceed with a request to /_catalog
-      if request.headers['HTTP_USER_AGENT'].downcase.include?('libpod')
+      if request.headers['HTTP_DOCKER_DISTRIBUTION_API_VERSION'] == 'registry/2.0'
         render json: {}, status: :not_found
         return
       end
