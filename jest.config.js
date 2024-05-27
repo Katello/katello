@@ -20,6 +20,7 @@ module.exports = {
     '<rootDir>/foreman/',
     '<rootDir>/.+fixtures.+',
     '<rootDir>/engines',
+    '<rootDir>/vendor/',
   ],
   moduleDirectories: [
     `${foremanFull}/node_modules`,
