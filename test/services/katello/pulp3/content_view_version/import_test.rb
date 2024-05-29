@@ -42,7 +42,7 @@ module Katello
                     arch: repo.arch,
                     major: repo.major,
                     minor: repo.minor
-              )
+              ),
             ]
 
             import.reset_content_view_repositories!
@@ -59,7 +59,7 @@ module Katello
             metadata_product = stub('metadata_product', label: repo.product.label, cp_id: nil)
             @metadata_repos = [
               stub('library repo', label: repo.label, product: metadata_product, redhat: false),
-              stub('non-library repo', label: "unknown-007", product: metadata_product, redhat: false)
+              stub('non-library repo', label: "unknown-007", product: metadata_product, redhat: false),
             ]
 
             repos = import.intersecting_repos_library_and_metadata
@@ -81,7 +81,7 @@ module Katello
                       major: repo.major,
                       minor: repo.minor,
                       redhat: true),
-              stub('non-library repo', content: nil, label: "unknown-007", product: metadata_product, redhat: true)
+              stub('non-library repo', content: nil, label: "unknown-007", product: metadata_product, redhat: true),
             ]
 
             repos = import.intersecting_repos_library_and_metadata.pluck(:id)

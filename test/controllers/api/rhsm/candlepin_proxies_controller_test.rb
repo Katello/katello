@@ -143,18 +143,18 @@ module Katello
         {
           "repos" => [
             {
-              "baseurl" => ["https://hostname/pulp/content/foo"]
+              "baseurl" => ["https://hostname/pulp/content/foo"],
             },
             {
-              "baseurl" => ["https://hostname/pulp/content/bar"]
+              "baseurl" => ["https://hostname/pulp/content/bar"],
             },
             {
-              "baseurl" => ["https://hostname/pulp/content/bar"]
+              "baseurl" => ["https://hostname/pulp/content/bar"],
             },
             {
-              "baseurl" => ["https://hostname/pulp/content/baz"]
-            }
-          ]
+              "baseurl" => ["https://hostname/pulp/content/baz"],
+            },
+          ],
         }
       end
 
@@ -164,7 +164,7 @@ module Katello
             "/pulp/content/foo",
             "/pulp/content/bar",
             "/pulp/content/bar",
-            "/pulp/content/baz"
+            "/pulp/content/baz",
           ])
         put :enabled_repos, params: { :id => @host.subscription_facet.uuid, :enabled_repos => enabled_repos }
         assert_equal 200, response.status
@@ -467,7 +467,7 @@ module Katello
         facts = {
           "distribution.id" => "Ootpa",
           "distribution::version" => "8.6",
-          "distribution::name" => "Red Hat Enterprise Linux"
+          "distribution::name" => "Red Hat Enterprise Linux",
         }
         put :facts, params: { :id => uuid, :facts => facts }
         assert_response 200

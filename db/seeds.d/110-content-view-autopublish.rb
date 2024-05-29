@@ -9,8 +9,8 @@
     {
       links:
       [
-      ]
-    }
+      ],
+    },
   },
   {
     group: N_('Content View'),
@@ -21,8 +21,8 @@
     {
       links:
       [
-      ]
-    }
+      ],
+    },
 
-  }
+  },
 ].each { |blueprint| UINotifications::Seed.new(blueprint).configure }

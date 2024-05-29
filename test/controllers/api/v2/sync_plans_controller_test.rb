@@ -62,7 +62,7 @@ module Katello
         :sync_date => '2014-01-09 17:46:00 +0000',
         :interval => 'hourly',
         :description => 'This is my cool new product.',
-        :enabled => true
+        :enabled => true,
       }
       post :create, params: { :organization_id => @organization.id, :sync_plan => valid_attr }
 
@@ -88,7 +88,7 @@ module Katello
         :sync_date => '2014-01-09 17:46:00 +0000',
         :interval => 'hourly',
         :description => 'This is my cool new product.',
-        :enabled => true
+        :enabled => true,
       }
       post :create, params: { :organization_id => @organization.id, :sync_plan => valid_attr }
 
@@ -142,7 +142,7 @@ module Katello
         :interval => 'weekly',
         :sync_date => Time.now.utc.strftime(datetime_format),
         :description => 'New Description',
-        :enabled => true
+        :enabled => true,
       }
       old_rec_logic = @sync_plan.foreman_tasks_recurring_logic_id
       put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => update_attrs }
@@ -159,7 +159,7 @@ module Katello
     def test_recurring_logic_update_with_sync_date
       datetime_format = '%Y/%m/%d %H:%M:%S %z'
       update_attrs = {
-        :sync_date => Time.now.utc.strftime(datetime_format)
+        :sync_date => Time.now.utc.strftime(datetime_format),
       }
       old_rec_logic = @sync_plan.foreman_tasks_recurring_logic_id
       put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => update_attrs }
@@ -172,7 +172,7 @@ module Katello
 
     def test_recurring_logic_update_with_interval
       update_attrs = {
-        :interval => 'weekly'
+        :interval => 'weekly',
       }
       old_rec_logic = @sync_plan.foreman_tasks_recurring_logic_id
       put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => update_attrs }
@@ -190,7 +190,7 @@ module Katello
         :interval => 'weekly',
         :sync_date => Time.now.utc.strftime(datetime_format),
         :description => 'New Description',
-        :enabled => false
+        :enabled => false,
       }
       old_rec_logic = @sync_plan.foreman_tasks_recurring_logic_id
       put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => update_attrs }

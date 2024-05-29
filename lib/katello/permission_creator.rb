@@ -25,26 +25,26 @@ module Katello
                            'katello/activation_keys' => [:all, :index],
                            'katello/api/v2/activation_keys' => [:index, :show, :available_host_collections, :available_releases,
                                                                 :product_content, :auto_complete_search],
-                           'katello/api/v2/repository_sets' => [:index, :auto_complete_search]
+                           'katello/api/v2/repository_sets' => [:index, :auto_complete_search],
                          },
                          :resource_type => 'Katello::ActivationKey',
                          :finder_scope => :readable
       @plugin.permission :create_activation_keys,
                          {
-                           'katello/api/v2/activation_keys' => [:create, :copy]
+                           'katello/api/v2/activation_keys' => [:create, :copy],
                          },
                          :resource_type => 'Katello::ActivationKey'
       @plugin.permission :edit_activation_keys,
                          {
                            'katello/api/v2/activation_keys' => [:update, :content_override,
                                                                 :add_subscriptions, :remove_subscriptions,
-                                                                :add_host_collections, :remove_host_collections]
+                                                                :add_host_collections, :remove_host_collections],
                          },
                          :resource_type => 'Katello::ActivationKey',
                          :finder_scope => :editable
       @plugin.permission :destroy_activation_keys,
                          {
-                           'katello/api/v2/activation_keys' => [:destroy]
+                           'katello/api/v2/activation_keys' => [:destroy],
                          },
                          :resource_type => 'Katello::ActivationKey',
                          :finder_scope => :deletable
@@ -53,22 +53,22 @@ module Katello
     def capsule_content_permissions
       @plugin.permission :view_smart_proxies,
                          {
-                           'katello/api/v2/capsules' => [:index, :show]
+                           'katello/api/v2/capsules' => [:index, :show],
                          },
                          :resource_type => "SmartProxy"
       @plugin.permission :manage_capsule_content,
                          {
                            'katello/api/v2/capsule_content' => [:add_lifecycle_environment, :remove_lifecycle_environment,
                                                                 :update_counts, :sync, :reclaim_space, :verify_checksum, :cancel_sync],
-                           'katello/api/v2/capsules' => [:index, :show]
+                           'katello/api/v2/capsules' => [:index, :show],
                          },
                          :resource_type => 'SmartProxy'
 
       @plugin.permission :view_capsule_content,
                          {
                            'katello/api/v2/capsule_content' => [:counts, :lifecycle_environments, :available_lifecycle_environments, :sync_status],
-                           'smart_proxies' => [:pulp_storage, :pulp_status, :show_with_content, :index],
-                           'katello/api/v2/capsules' => [:index, :show]
+                           'smart_proxies' => [:pulp_storage, :pulp_status, :show_with_content],
+                           'katello/api/v2/capsules' => [:index, :show],
                          },
                          :resource_type => "SmartProxy"
     end
@@ -112,13 +112,13 @@ module Katello
                                                 :repo_compare_packages,
                                                 :view_compare_errata,
                                                 :view_compare_packages,
-                                                :views]
+                                                :views],
                  },
                  :resource_type => 'Katello::ContentView',
                  :finder_scope => :readable
       @plugin.permission :create_content_views,
                          {
-                           'katello/api/v2/content_views' => [:create, :copy]
+                           'katello/api/v2/content_views' => [:create, :copy],
                          },
                          :resource_type => 'Katello::ContentView'
       @plugin.permission :edit_content_views,
@@ -127,14 +127,14 @@ module Katello
                            'katello/api/v2/content_view_versions' => [:update],
                            'katello/api/v2/content_view_filters' => [:create, :update, :destroy, :remove_filter_rules, :add_filter_rules],
                            'katello/api/v2/content_view_filter_rules' => [:create, :update, :destroy],
-                           'katello/api/v2/content_view_components' => [:add_components, :remove_components, :update]
+                           'katello/api/v2/content_view_components' => [:add_components, :remove_components, :update],
                          },
                          :resource_type => 'Katello::ContentView',
                          :finder_scope => :editable
       @plugin.permission :destroy_content_views,
                          {
                            'katello/api/v2/content_views' => [:destroy, :remove, :bulk_delete_versions],
-                           'katello/api/v2/content_view_versions' => [:destroy]
+                           'katello/api/v2/content_view_versions' => [:destroy],
                          },
                          :resource_type => 'Katello::ContentView',
                          :finder_scope => :deletable
@@ -142,14 +142,14 @@ module Katello
                          {
                            'katello/api/v2/content_views' => [:publish],
                            'katello/api/v2/content_view_versions' => [:incremental_update, :republish_repositories, :verify_checksum],
-                           'katello/api/v2/content_imports' => [:version, :index]
+                           'katello/api/v2/content_imports' => [:version, :index],
                          },
                          :resource_type => 'Katello::ContentView',
                          :finder_scope => :publishable
       @plugin.permission :promote_or_remove_content_views,
                          {
                            'katello/api/v2/content_view_versions' => [:promote],
-                           'katello/api/v2/content_views' => [:remove_from_environment, :remove, :republish_repositories, :verify_checksum]
+                           'katello/api/v2/content_views' => [:remove_from_environment, :remove, :republish_repositories, :verify_checksum],
                          },
                          :resource_type => 'Katello::ContentView',
                          :finder_scope => :promotable_or_removable
@@ -159,27 +159,27 @@ module Katello
       @plugin.permission :view_content_credentials,
                          {
                            'katello/api/v2/content_credentials' => [:index, :show, :content, :auto_complete_search],
-                           'katello/api/v2/gpg_keys' => [:index, :show, :content, :auto_complete_search]
+                           'katello/api/v2/gpg_keys' => [:index, :show, :content, :auto_complete_search],
                          },
                          :resource_type => 'Katello::ContentCredential',
                          :finder_scope => :readable
       @plugin.permission :create_content_credentials,
                          {
                            'katello/api/v2/content_credentials' => [:create],
-                           'katello/api/v2/gpg_keys' => [:create]
+                           'katello/api/v2/gpg_keys' => [:create],
                          },
                          :resource_type => 'Katello::ContentCredential'
       @plugin.permission :edit_content_credentials,
                          {
                            'katello/api/v2/content_credentials' => [:update, :set_content],
-                           'katello/api/v2/gpg_keys' => [:update, :set_content]
+                           'katello/api/v2/gpg_keys' => [:update, :set_content],
                          },
                          :resource_type => 'Katello::ContentCredential',
                          :finder_scope => :editable
       @plugin.permission :destroy_content_credentials,
                          {
                            'katello/api/v2/content_credentials' => [:destroy],
-                           'katello/api/v2/gpg_keys' => [:destroy]
+                           'katello/api/v2/gpg_keys' => [:destroy],
                          },
                          :resource_type => 'Katello::ContentCredential',
                          :finder_scope => :deletable
@@ -188,25 +188,25 @@ module Katello
     def host_collections_permissions
       @plugin.permission :view_host_collections,
                          {
-                           'katello/api/v2/host_collections' => [:index, :show, :auto_complete_search]
+                           'katello/api/v2/host_collections' => [:index, :show, :auto_complete_search],
                          },
                          :resource_type => 'Katello::HostCollection',
                          :finder_scope => :readable
       @plugin.permission :create_host_collections,
                          {
-                           'katello/api/v2/host_collections' => [:create, :copy]
+                           'katello/api/v2/host_collections' => [:create, :copy],
                          },
                          :resource_type => 'Katello::HostCollection',
                          :finder_scope => :creatable
       @plugin.permission :edit_host_collections,
                          {
-                           'katello/api/v2/host_collections' => [:update, :add_hosts, :remove_hosts]
+                           'katello/api/v2/host_collections' => [:update, :add_hosts, :remove_hosts],
                          },
                          :resource_type => 'Katello::HostCollection',
                          :finder_scope => :editable
       @plugin.permission :destroy_host_collections,
                          {
-                           'katello/api/v2/host_collections' => [:destroy]
+                           'katello/api/v2/host_collections' => [:destroy],
                          },
                          :resource_type => 'Katello::HostCollection',
                          :finder_scope => :deletable
@@ -217,25 +217,25 @@ module Katello
                          {
                            'katello/api/v2/environments' => [:index, :show, :paths, :repositories, :auto_complete_search],
                            'katello/api/rhsm/candlepin_proxies' => [:rhsm_index],
-                           'katello/api/v2/content_view_environments' => [:index]
+                           'katello/api/v2/content_view_environments' => [:index],
                          },
                          :resource_type => 'Katello::KTEnvironment',
                          :finder_scope => :readable
       @plugin.permission :create_lifecycle_environments,
                          {
-                           'katello/api/v2/environments' => [:create]
+                           'katello/api/v2/environments' => [:create],
                          },
                          :resource_type => 'Katello::KTEnvironment',
                          :finder_scope => :creatable
       @plugin.permission :edit_lifecycle_environments,
                          {
-                           'katello/api/v2/environments' => [:update]
+                           'katello/api/v2/environments' => [:update],
                          },
                          :resource_type => 'Katello::KTEnvironment',
                          :finder_scope => :editable
       @plugin.permission :destroy_lifecycle_environments,
                          {
-                           'katello/api/v2/environments' => [:destroy]
+                           'katello/api/v2/environments' => [:destroy],
                          },
                          :resource_type => 'Katello::KTEnvironment',
                          :finder_scope => :deletable
@@ -287,13 +287,13 @@ module Katello
                                                         :repo_compare_errata,
                                                         :repo_compare_packages],
                            'katello/api/v2/repository_sets' => [:index, :show, :available_repositories, :auto_complete_search],
-                           'katello/api/v2/host_packages' => [:installed_packages]
+                           'katello/api/v2/host_packages' => [:installed_packages],
                          },
                          :resource_type => 'Katello::Product',
                          :finder_scope => :readable
       @plugin.permission :create_products,
                          {
-                           'katello/api/v2/products' => [:create]
+                           'katello/api/v2/products' => [:create],
                          },
                          :resource_type => 'Katello::Product',
                          :finder_scope => :editable
@@ -304,7 +304,7 @@ module Katello
                            'katello/api/v2/products_bulk_actions' => [:update_sync_plans, :update_http_proxy, :verify_checksum_products],
                            'katello/api/v2/content_uploads' => [:create, :update, :destroy],
                            'katello/api/v2/organizations' => [:repo_discover, :cancel_repo_discover],
-                           'katello/api/v2/repository_sets' => [:enable, :disable]
+                           'katello/api/v2/repository_sets' => [:enable, :disable],
                          },
                          :resource_type => 'Katello::Product',
                          :finder_scope => :editable
@@ -313,7 +313,7 @@ module Katello
                            'katello/api/v2/products' => [:destroy],
                            'katello/api/v2/repositories' => [:destroy],
                            'katello/api/v2/products_bulk_actions' => [:destroy_products],
-                           'katello/api/v2/repositories_bulk_actions' => [:destroy_repositories]
+                           'katello/api/v2/repositories_bulk_actions' => [:destroy_repositories],
                          },
                          :resource_type => 'Katello::Product',
                          :finder_scope => :deletable
@@ -324,7 +324,7 @@ module Katello
                            'katello/api/v2/products_bulk_actions' => [:sync_products],
                            'katello/api/v2/repositories_bulk_actions' => [:sync_repositories, :reclaim_space_from_repositories],
                            'katello/api/v2/sync' => [:index],
-                           'katello/sync_management' => [:index, :sync_status, :product_status, :sync, :destroy]
+                           'katello/sync_management' => [:index, :sync_status, :product_status, :sync, :destroy],
                          },
                          :resource_type => 'Katello::Product',
                          :finder_scope => :syncable
@@ -333,33 +333,33 @@ module Katello
     def subscription_permissions
       @plugin.permission :view_subscriptions,
                          {
-                           'katello/api/v2/subscriptions' => [:index, :show, :available, :manifest_history, :auto_complete_search]
+                           'katello/api/v2/subscriptions' => [:index, :show, :available, :manifest_history, :auto_complete_search],
                          },
                          :resource_type => 'Katello::Subscription'
       @plugin.permission :attach_subscriptions,
                          {
-                           'katello/api/v2/subscriptions' => [:create]
+                           'katello/api/v2/subscriptions' => [:create],
                          },
                          :resource_type => 'Katello::Subscription'
       @plugin.permission :unattach_subscriptions,
                          {
-                           'katello/api/v2/subscriptions' => [:destroy]
+                           'katello/api/v2/subscriptions' => [:destroy],
                          },
                          :resource_type => 'Katello::Subscription'
       @plugin.permission :import_manifest,
                          {
-                           'katello/api/v2/subscriptions' => [:upload, :refresh_manifest]
+                           'katello/api/v2/subscriptions' => [:upload, :refresh_manifest],
                          },
                          :resource_type => 'Katello::Subscription'
       @plugin.permission :delete_manifest,
                          {
-                           'katello/api/v2/subscriptions' => [:delete_manifest]
+                           'katello/api/v2/subscriptions' => [:delete_manifest],
                          },
                          :resource_type => 'Katello::Subscription'
       @plugin.permission :manage_subscription_allocations,
                          {
                            'katello/api/v2/upstream_subscriptions' => [:index, :create, :destroy, :update, :ping, :enable_simple_content_access, :disable_simple_content_access, :simple_content_access_eligible, :simple_content_access_status],
-                           'katello/api/v2/simple_content_access' => [:enable, :disable, :eligible, :status]
+                           'katello/api/v2/simple_content_access' => [:enable, :disable, :eligible, :status],
                          },
                          :resource_type => 'Katello::Subscription'
     end
@@ -367,31 +367,31 @@ module Katello
     def sync_plan_permissions
       @plugin.permission :view_sync_plans,
                          {
-                           'katello/api/v2/sync_plans' => [:index, :show, :add_products, :remove_products, :available_products, :auto_complete_search]
+                           'katello/api/v2/sync_plans' => [:index, :show, :add_products, :remove_products, :available_products, :auto_complete_search],
                          },
                          :resource_type => 'Katello::SyncPlan',
                          :finder_scope => :readable
       @plugin.permission :create_sync_plans,
                          {
-                           'katello/api/v2/sync_plans' => [:create]
+                           'katello/api/v2/sync_plans' => [:create],
                          },
                          :resource_type => 'Katello::SyncPlan',
                          :finder_scope => :editable
       @plugin.permission :edit_sync_plans,
                          {
-                           'katello/api/v2/sync_plans' => [:update]
+                           'katello/api/v2/sync_plans' => [:update],
                          },
                          :resource_type => 'Katello::SyncPlan',
                          :finder_scope => :editable
       @plugin.permission :destroy_sync_plans,
                          {
-                           'katello/api/v2/sync_plans' => [:destroy]
+                           'katello/api/v2/sync_plans' => [:destroy],
                          },
                          :resource_type => 'Katello::SyncPlan',
                          :finder_scope => :deletable
       @plugin.permission :sync_sync_plans,
                          {
-                           'katello/api/v2/sync_plans' => [:sync]
+                           'katello/api/v2/sync_plans' => [:sync],
                          },
                          :resource_type => 'Katello::SyncPlan',
                          :finder_scope => :syncable
@@ -400,27 +400,27 @@ module Katello
     def alternate_content_source_permissions
       @plugin.permission :view_alternate_content_sources,
                          {
-                           'katello/api/v2/alternate_content_sources' => [:index, :show, :auto_complete_search]
+                           'katello/api/v2/alternate_content_sources' => [:index, :show, :auto_complete_search],
                          },
                          :resource_type => 'Katello::AlternateContentSource',
                          :finder_scope => :readable
       @plugin.permission :create_alternate_content_sources,
                          {
-                           'katello/api/v2/alternate_content_sources' => [:create]
+                           'katello/api/v2/alternate_content_sources' => [:create],
                          },
                          :resource_type => 'Katello::AlternateContentSource',
                          :finder_scope => :editable
       @plugin.permission :edit_alternate_content_sources,
                          {
                            'katello/api/v2/alternate_content_sources' => [:update, :refresh],
-                           'katello/api/v2/alternate_content_sources_bulk_actions' => [:refresh_alternate_content_sources, :refresh_all_alternate_content_sources]
+                           'katello/api/v2/alternate_content_sources_bulk_actions' => [:refresh_alternate_content_sources, :refresh_all_alternate_content_sources],
                          },
                          :resource_type => 'Katello::AlternateContentSource',
                          :finder_scope => :editable
       @plugin.permission :destroy_alternate_content_sources,
                          {
                            'katello/api/v2/alternate_content_sources' => [:destroy],
-                           'katello/api/v2/alternate_content_sources_bulk_actions' => [:destroy_alternate_content_sources]
+                           'katello/api/v2/alternate_content_sources_bulk_actions' => [:destroy_alternate_content_sources],
                          },
                          :resource_type => 'Katello::AlternateContentSource',
                          :finder_scope => :deletable
@@ -429,7 +429,7 @@ module Katello
     def user_permissions
       @plugin.permission :my_organizations,
                          {
-                           'katello/api/rhsm/candlepin_proxies' => [:list_owners]
+                           'katello/api/rhsm/candlepin_proxies' => [:list_owners],
                          },
                          :public => true
     end
@@ -437,7 +437,7 @@ module Katello
     def organization_permissions
       @plugin.permission :import_content,
                          {
-                           'katello/api/v2/content_imports' => [:library, :version, :index, :repository]
+                           'katello/api/v2/content_imports' => [:library, :version, :index, :repository],
                          },
                          :resource_type => 'Organization'
 
@@ -445,7 +445,7 @@ module Katello
                          {
                            'katello/api/v2/content_view_versions' => [:export, :repository],
                            'katello/api/v2/content_exports' => [:library, :version, :index, :repository],
-                           'katello/api/v2/content_export_incrementals' => [:library, :version, :repository]
+                           'katello/api/v2/content_export_incrementals' => [:library, :version, :repository],
                          },
                          :resource_type => 'Organization'
     end

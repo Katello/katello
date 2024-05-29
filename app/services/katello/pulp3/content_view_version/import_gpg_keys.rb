@@ -22,7 +22,7 @@ module Katello
             params = {
               name: gpg.name,
               content_type: ::Katello::ContentCredential::GPG_KEY_TYPE,
-              content: gpg.content
+              content: gpg.content,
             }
 
             create_or_update_gpg!(params)

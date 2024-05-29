@@ -70,7 +70,7 @@ module Katello
         :environment_id => @environment.try(:id),
         :content_view_id => @content_view.try(:id),
         :repository_id => @repository.try(:id),
-        :skip_metadata_check => skip_metadata_check
+        :skip_metadata_check => skip_metadata_check,
       }
       sync_options[:environment_ids] = @capsule.lifecycle_environments&.pluck(:id) unless (@environment || @content_view || @repository)
       task = async_task(::Actions::Katello::CapsuleContent::Sync,
@@ -91,7 +91,7 @@ module Katello
       count_options = {
         :environment_id => @environment.try(:id),
         :content_view_id => @content_view.try(:id),
-        :repository_id => @repository.try(:id)
+        :repository_id => @repository.try(:id),
       }
       task = async_task(::Actions::Katello::CapsuleContent::UpdateContentCounts, @capsule, count_options)
       respond_for_async :resource => task
@@ -137,7 +137,7 @@ module Katello
       repair_options = {
         :environment_id => @environment.try(:id),
         :content_view_id => @content_view.try(:id),
-        :repository_id => @repository.try(:id)
+        :repository_id => @repository.try(:id),
       }
       repair_options[:environment_ids] = @capsule.lifecycle_environments&.pluck(:id) unless (@environment || @content_view || @repository)
 
@@ -153,7 +153,7 @@ module Katello
       collection = {
         :results => environments,
         :total => environments.size,
-        :subtotal => environments.size
+        :subtotal => environments.size,
       }
       respond_for_index(:collection => collection, :template => :lifecycle_environments)
     end

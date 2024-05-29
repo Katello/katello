@@ -252,7 +252,7 @@ module Katello
         host.subscription_facet.save!
         host.refresh_statuses([
                                 ::Katello::ErrataStatus,
-                                ::Katello::RhelLifecycleStatus
+                                ::Katello::RhelLifecycleStatus,
                               ])
       end
 

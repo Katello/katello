@@ -23,7 +23,7 @@ module Katello
     SKIPABLE_METADATA_TYPES = [Repository::YUM_TYPE, Repository::DEB_TYPE].freeze
 
     CONTENT_ATTRIBUTE_RESTRICTIONS = {
-      :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE, Repository::DOCKER_TYPE]
+      :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE, Repository::DOCKER_TYPE],
     }.freeze
 
     MAX_EXPIRE_TIME = 7 * 24 * 60 * 60
@@ -96,15 +96,15 @@ module Katello
     validates :content_type, :inclusion => {
       :in => ->(_) { Katello::RepositoryTypeManager.enabled_repository_types.keys },
       :allow_blank => false,
-      :message => ->(_, _) { _("is not enabled. must be one of the following: %s") % Katello::RepositoryTypeManager.enabled_repository_types.keys.join(', ') }
+      :message => ->(_, _) { _("is not enabled. must be one of the following: %s") % Katello::RepositoryTypeManager.enabled_repository_types.keys.join(', ') },
     }
     validates :download_policy, inclusion: {
       :in => DOWNLOAD_POLICIES,
-      :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', ')
+      :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', '),
     }, if: :yum?
     validates :http_proxy_policy, inclusion: {
       :in => HTTP_PROXY_POLICIES,
-      :message => _("must be one of the following: %s") % HTTP_PROXY_POLICIES.join(', ')
+      :message => _("must be one of the following: %s") % HTTP_PROXY_POLICIES.join(', '),
     }
 
     validates :metadata_expire,
@@ -113,7 +113,7 @@ module Katello
         less_than_or_equal_to: MAX_EXPIRE_TIME,
         greater_than: 0,
         allow_nil: true,
-        only_integer: true
+        only_integer: true,
       }
 
     validates :container_push_name_format, inclusion: { in: ['label', 'id'].freeze, allow_nil: true}
@@ -432,7 +432,7 @@ module Katello
     def substitutions
       {
         :releasever => self.minor,
-        :basearch => self.arch
+        :basearch => self.arch,
       }.compact
     end
 

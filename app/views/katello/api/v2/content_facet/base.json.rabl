@@ -17,14 +17,14 @@ child :content_view_environments => :content_view_environments do
       content_view_version: cve.content_view_version&.version,
       content_view_version_id: cve.content_view_version&.id,
       content_view_version_latest: cve.content_view_version&.latest?,
-      content_view_default: cve.content_view&.default?
+      content_view_default: cve.content_view&.default?,
     }
   end
   node :lifecycle_environment do |cve|
     {
       id: cve.lifecycle_environment&.id,
       name: cve.lifecycle_environment&.name,
-      lifecycle_environment_library: cve.lifecycle_environment&.library?
+      lifecycle_environment_library: cve.lifecycle_environment&.library?,
     }
   end
   node :label do |cve|
@@ -45,7 +45,7 @@ node :content_view do |content_facet|
     {
       :id => content_view.id,
       :name => content_view.name,
-      :composite => content_view.composite?
+      :composite => content_view.composite?,
     }
   end
 end
@@ -55,7 +55,7 @@ node :lifecycle_environment do |content_facet|
   if lifecycle_environment.present?
     {
       :id => lifecycle_environment.id,
-      :name => lifecycle_environment.name
+      :name => lifecycle_environment.name,
     }
   end
 end

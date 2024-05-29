@@ -15,7 +15,8 @@ module Katello
       Setting['allow_multiple_content_views'] = true
       @activation_key.content_view_environments = [
         katello_content_view_environments(:library_dev_view_dev),
-        katello_content_view_environments(:library_dev_staging_view_dev)]
+        katello_content_view_environments(:library_dev_staging_view_dev),
+      ]
 
       cve1 = @activation_key.content_view_environments.first
       cve2 = @activation_key.content_view_environments.last

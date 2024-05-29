@@ -17,14 +17,14 @@ child :content_view_environments => :content_view_environments do
       content_view_version_id: cve.content_view_version&.id,
       content_view_version_latest: cve.content_view_version&.latest?,
       content_view_default: cve.content_view&.default?,
-      content_view_environment_id: cve.id
+      content_view_environment_id: cve.id,
     }
   end
   node :lifecycle_environment do |cve|
     {
       id: cve.lifecycle_environment&.id,
       name: cve.lifecycle_environment&.name,
-      lifecycle_environment_library: cve.lifecycle_environment&.library?
+      lifecycle_environment_library: cve.lifecycle_environment&.library?,
     }
   end
   node :label do |cve|
@@ -59,7 +59,7 @@ node :permissions do |activation_key|
   {
     :view_activation_keys => activation_key.readable?,
     :edit_activation_keys => activation_key.editable?,
-    :destroy_activation_keys => activation_key.deletable?
+    :destroy_activation_keys => activation_key.deletable?,
   }
 end
 

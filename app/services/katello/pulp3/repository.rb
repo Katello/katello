@@ -227,7 +227,7 @@ module Katello
 
       def publication_options(repository)
         {
-          repository_version: repository.version_href
+          repository_version: repository.version_href,
         }
       end
 
@@ -325,7 +325,7 @@ module Katello
           data = api.class.copy_class.new
           data.config = [{
             source_repo_version: source_repository.version_href,
-            dest_repo: repository_reference.repository_href
+            dest_repo: repository_reference.repository_href,
           }]
           tasks << api.copy_api.copy_content(data)
           tasks
@@ -406,7 +406,7 @@ module Katello
           connect_timeout: Setting[:sync_connect_timeout_v2],
           sock_connect_timeout: Setting[:sync_sock_connect_timeout],
           sock_read_timeout: Setting[:sync_sock_read_timeout],
-          rate_limit: Setting[:download_rate_limit]
+          rate_limit: Setting[:download_rate_limit],
         }
         remote_options[:url] = root.url unless root.url.blank?
         remote_options[:download_concurrency] = root.download_concurrency unless root.download_concurrency.blank?
@@ -452,23 +452,23 @@ module Katello
           options = {
             client_cert: root.product.certificate,
             client_key: root.product.key,
-            ca_cert: Katello::Repository.feed_ca_cert(root.url)
+            ca_cert: Katello::Repository.feed_ca_cert(root.url),
           }
         elsif root.redhat? && root.cdn_configuration.custom_cdn?
           options = {
-            ca_cert: root.cdn_configuration.ssl_ca
+            ca_cert: root.cdn_configuration.ssl_ca,
           }
         elsif root.redhat? && root.cdn_configuration.network_sync?
           options = {
             client_cert: root.cdn_configuration.ssl_cert,
             client_key: root.cdn_configuration.ssl_key,
-            ca_cert: root.cdn_configuration.ssl_ca
+            ca_cert: root.cdn_configuration.ssl_ca,
           }
         elsif root.custom?
           options = {
             client_cert: root.ssl_client_cert&.content,
             client_key: root.ssl_client_key&.content,
-            ca_cert: root.ssl_ca_cert&.content
+            ca_cert: root.ssl_ca_cert&.content,
           }
         end
         append_proxy_cacert(options) if options.key?(:cacert)

@@ -40,7 +40,7 @@ module Katello
           section: unit[:section],
           maintainer: unit[:maintainer],
           homepage: unit[:homepage],
-          installed_size: unit[:installed_size]
+          installed_size: unit[:installed_size],
         }
       end
 

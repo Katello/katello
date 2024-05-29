@@ -63,7 +63,7 @@ module Katello
             'accountNumber' => '',
             'productId' => product_id,
             'providedProducts' => [],
-            'contractNumber' => ''
+            'contractNumber' => '',
           }
 
           ::Katello::Resources::Candlepin::Pool.expects(:create).with(owner.label, expected_pool).returns('{}')

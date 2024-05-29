@@ -9,7 +9,7 @@ module Foreman
         :public => false,
         :controller => "katello_host_collections",
         :name => "new-katello-controller-bookmark",
-        :query => "name = my_collection"
+        :query => "name = my_collection",
       }
     end
 

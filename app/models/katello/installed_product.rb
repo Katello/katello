@@ -11,7 +11,7 @@ module Katello
         :arch => consumer_attributes['arch'],
         :version => consumer_attributes['version'],
         :name => consumer_attributes['productName'],
-        :cp_product_id => consumer_attributes['productId']
+        :cp_product_id => consumer_attributes['productId'],
       }
       Katello::Util::Support.active_record_retry do
         unless self.where(attributes).exists?
@@ -26,7 +26,7 @@ module Katello
         :arch => arch,
         :version => version,
         :productName => name,
-        :productId => cp_product_id
+        :productId => cp_product_id,
       }
     end
   end

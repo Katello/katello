@@ -27,7 +27,7 @@ module Katello
             organization_id: organization['id'],
             content_view_id: content_view_id,
             environment_id: lifecycle_environment_id,
-            search: CGI.escape("content_label = #{repo_set['label']}")
+            search: CGI.escape("content_label = #{repo_set['label']}"),
           }
           query_params = params.map { |key, value| "#{key}=#{value}" }
 
@@ -78,7 +78,7 @@ module Katello
 
         def repository_url(content_label:, arch:, major:, minor:)
           params = {
-            search: CGI.escape("content_label = #{content_label}")
+            search: CGI.escape("content_label = #{content_label}"),
           }
 
           params[:content_view_id] = content_view_id if @content_view_label
@@ -95,7 +95,7 @@ module Katello
                            minor: minor,
                            org_label: @organization_label,
                            cv_label: @content_view_label || Katello::OrganizationCreator::DEFAULT_CONTENT_VIEW_LABEL,
-                           env_label: @lifecycle_environment_label || Katello::OrganizationCreator::DEFAULT_LIFECYCLE_ENV_LABEL
+                           env_label: @lifecycle_environment_label || Katello::OrganizationCreator::DEFAULT_LIFECYCLE_ENV_LABEL,
             }
 
             fail _("Repository with content label: '%{content_label}'#{arch ? ', arch: \'%{arch}\'' : ''}#{minor ? ', version: \'%{minor}\'' : ''} was not found in upstream organization '%{org_label}',"\

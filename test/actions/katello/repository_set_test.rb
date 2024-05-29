@@ -112,8 +112,8 @@ module ::Actions::Katello::RepositorySet
           "pulp_id" => 'foobar',
           "repository_id" => nil,
           "enabled" => false,
-          "promoted" => false
-        }]
+          "promoted" => false,
+        }],
       }
 
       assert_equal expected, action.output

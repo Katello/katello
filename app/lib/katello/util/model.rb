@@ -4,7 +4,7 @@ module Katello
       # hardcoded model names (uses kp_ prefix)
       def self.table_to_model_hash
         {
-          "kt_environment" => "KTEnvironment"
+          "kt_environment" => "KTEnvironment",
         }
       end
 
@@ -29,7 +29,7 @@ module Katello
 
       def self.controller_path_to_model_hash
         {
-          "katello/environments" => "Katello::KTEnvironment"
+          "katello/environments" => "Katello::KTEnvironment",
         }
       end
 

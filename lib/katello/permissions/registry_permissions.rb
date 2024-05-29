@@ -13,5 +13,5 @@ Foreman::AccessControl.permission(:create_personal_access_tokens).actions.concat
   'katello/api/registry/registry_proxies/check_blob',
   'katello/api/registry/registry_proxies/start_upload_blob',
   'katello/api/registry/registry_proxies/upload_blob',
-  'katello/api/registry/registry_proxies/finish_upload_blob'
+  'katello/api/registry/registry_proxies/finish_upload_blob',
 ]

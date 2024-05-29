@@ -39,7 +39,7 @@ module Katello
           super.merge(
             {
               url: "https://#{SmartProxy.pulp_primary.pulp3_host!.downcase}",
-              upstream_name: repo.container_repository_name
+              upstream_name: repo.container_repository_name,
             }
           )
         end
@@ -48,7 +48,7 @@ module Katello
           {
             base_path: path,
             repository_version: repo.version_href,
-            name: "#{generate_backend_object_name}"
+            name: "#{generate_backend_object_name}",
           }
         end
 

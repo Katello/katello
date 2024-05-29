@@ -95,7 +95,7 @@ module Katello
           :canceled,
           :error,
           :paused,
-          :running
+          :running,
         ]
 
         presented.each do |_repoid, task|

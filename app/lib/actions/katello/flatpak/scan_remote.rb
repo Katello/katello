@@ -15,7 +15,7 @@ module Actions
           request_params = {
             method: :get,
             headers: { accept: :json },
-            url: url
+            url: url,
           }
           results = RestClient::Request.execute(request_params)
           results = JSON.parse(results)
@@ -51,11 +51,10 @@ module Actions
           end
           params = [
             ['tag', 'latest'],
-            ['label:org.flatpak.ref:exists', '1']
+            ['label:org.flatpak.ref:exists', '1'],
           ]
           encoded_params = params.map { |k, v| "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}" }
-          url = "#{url}#{encoded_params.sort.join('&')}"
-          url
+          "#{url}#{encoded_params.sort.join('&')}"
         end
       end
     end

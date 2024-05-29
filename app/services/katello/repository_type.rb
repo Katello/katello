@@ -123,7 +123,7 @@ module Katello
         :generic_remote_options => translated_generic_remote_options,
         :import_attributes => translated_import_attributes,
         :url_description => _(@url_description),
-        :content_types => content_types.as_json
+        :content_types => content_types.as_json,
       }
     end
 
@@ -170,7 +170,7 @@ module Katello
           generic: false,
           removable: removable,
           uploadable: uploadable,
-          indexed: index
+          indexed: index,
         }
       end
 
@@ -220,7 +220,7 @@ module Katello
             :generic => true,
             :pluralized_label => content_type.pluralize,
             :pluralized_name => pluralized_name,
-            :details_columns => details_columns
+            :details_columns => details_columns,
           }
         )
       end

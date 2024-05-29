@@ -8,7 +8,7 @@ module Katello
       :never_synced => _("Never Synced"),
       :running => _("Running"),
       :canceled => _("Canceled"),
-      :paused => _("Paused")
+      :paused => _("Paused"),
     }.with_indifferent_access
 
     def initialize(repo, task)
@@ -34,7 +34,7 @@ module Katello
         :display_size => display_output,
         :size => display_output,
         :is_running => @task.pending && @task.state != 'paused',
-        :error_details => @task.errors
+        :error_details => @task.errors,
       }
     end
 
@@ -47,7 +47,7 @@ module Katello
         :product_id => repo.product.id,
         :progress => {},
         :state => format_state(OpenStruct.new(:state => state)),
-        :raw_state => state
+        :raw_state => state,
       }
     end
 

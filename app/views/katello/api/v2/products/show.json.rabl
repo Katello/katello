@@ -54,7 +54,7 @@ node :sync_status do |product|
     :display_size => local_sync_status[:display_size],
     :size => local_sync_status[:size],
     :is_running => local_sync_status[:is_running],
-    :error_details => local_sync_status[:error_details]
+    :error_details => local_sync_status[:error_details],
   }
 end
 
@@ -63,7 +63,7 @@ node :permissions do |product|
     :view_products => product.readable?,
     :edit_products => product.editable?,
     :destroy_products => product.deletable?,
-    :sync_products => product.syncable?
+    :sync_products => product.syncable?,
   }
 end
 

@@ -10,12 +10,12 @@ module Katello
         elsif ids.present?
           fail HttpErrors::UnprocessableEntity, "No content view environments found with ids: #{ids}"
         end
-      rescue HttpErrors::UnprocessableEntity => error
+      rescue HttpErrors::UnprocessableEntity => e
         respond_for_exception(
-          error,
+          e,
           :status => :unprocessable_entity,
-          :text => error.message,
-          :errors => [error.message],
+          :text => e.message,
+          :errors => [e.message],
           :with_logging => true
         )
       end

@@ -156,7 +156,7 @@ module Katello
 
       post :create, params: {
         :organization_id => @organization.id,
-        :activation_key => {:name => 'limited Key', :unlimited_hosts => false, :max_hosts => max_hosts}
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => false, :max_hosts => max_hosts},
       }
 
       assert_response :success
@@ -197,7 +197,7 @@ module Katello
 
       post :create, params: {
         :organization_id => @organization.id,
-        :activation_key => {:name => 'new key', :description => key_description}
+        :activation_key => {:name => 'new key', :description => key_description},
       }
 
       assert_response :success
@@ -220,7 +220,7 @@ module Katello
       post :create, params: {
         :organization_id => @organization.id,
         :content_view_environments => content_view_environments,
-        :activation_key => {:name => 'new key'}
+        :activation_key => {:name => 'new key'},
       }
 
       assert_response :success
@@ -241,7 +241,7 @@ module Katello
         :organization_id => @organization.id,
         :environment => {:id => @library.id},
         :content_view_id => @acme_view.id,
-        :activation_key => {:name => 'new key'}
+        :activation_key => {:name => 'new key'},
       }
 
       assert_response :success
@@ -261,7 +261,7 @@ module Katello
       post :create, params: {
         :organization_id => @organization.id,
         :content_view_environment_ids => content_view_environment_ids,
-        :activation_key => {:name => 'new key'}
+        :activation_key => {:name => 'new key'},
       }
 
       assert_response :success
@@ -272,7 +272,7 @@ module Katello
     def test_should_not_create_with_no_hosts_limit
       post :create, params: {
         :organization_id => @organization.id,
-        :activation_key => {:name => 'limited Key', :unlimited_hosts => false}
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => false},
       }
       assert_response :unprocessable_entity
       assert_match 'Validation failed: Max hosts cannot be nil', @response.body
@@ -292,7 +292,7 @@ module Katello
     def test_should_not_create_with_invalid_hosts_limit
       post :create, params: {
         :organization_id => @organization.id,
-        :activation_key => {:name => 'limited Key', :unlimited_hosts => false, :max_hosts => 0}
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => false, :max_hosts => 0},
       }
       assert_response :unprocessable_entity
       assert_match 'Validation failed: Max hosts cannot be less than one', @response.body
@@ -302,7 +302,7 @@ module Katello
     def test_should_not_create_unlimited_and_invalid_max_hosts
       post :create, params: {
         :organization_id => @organization.id,
-        :activation_key => {:name => 'limited Key', :unlimited_hosts => true, :max_hosts => 0}
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => true, :max_hosts => 0},
       }
       assert_response :error
     end
@@ -334,7 +334,7 @@ module Katello
       put :update, params: {
         :id => @activation_key.id,
         :organization_id => @organization.id,
-        :activation_key => { :unlimited_hosts => false, :max_hosts => 0 }
+        :activation_key => { :unlimited_hosts => false, :max_hosts => 0 },
       }
       assert_response :unprocessable_entity
       assert_match 'Validation failed: Max hosts cannot be less than one', @response.body
@@ -345,7 +345,7 @@ module Katello
       put :update, params: {
         :id => @activation_key.id,
         :organization_id => @organization.id,
-        :activation_key => { :unlimited_hosts => false, :max_hosts => 0 }
+        :activation_key => { :unlimited_hosts => false, :max_hosts => 0 },
       }
       assert_response :unprocessable_entity
       assert_match 'Validation failed: Max hosts cannot be less than one', @response.body
@@ -360,7 +360,7 @@ module Katello
       put :update, params: {
         :id => activation_key.id,
         :organization_id => @organization.id,
-        :activation_key => { :max_hosts => 'foo' }
+        :activation_key => { :max_hosts => 'foo' },
       }
       assert_response :unprocessable_entity
       assert_match 'Validation failed: Max hosts is not a number', @response.body
@@ -392,7 +392,7 @@ module Katello
       put :update, params: {
         :organization_id => @organization.id,
         :id => @activation_key.id,
-        :content_view_environments => []
+        :content_view_environments => [],
       }
 
       assert_response :success
@@ -410,7 +410,7 @@ module Katello
       put :update, params: {
         :organization_id => @organization.id,
         :id => @activation_key.id,
-        :content_view_environment_ids => []
+        :content_view_environment_ids => [],
       }
 
       assert_response :success
@@ -429,7 +429,7 @@ module Katello
         :organization_id => @organization.id,
         :id => @activation_key.id,
         :content_view_id => nil,
-        :environment_id => nil
+        :environment_id => nil,
       }
 
       assert_response :success
@@ -450,11 +450,11 @@ module Katello
         :content_view_id => nil,
         :environment_id => nil,
         :content_view => {
-          :id => @view.id
+          :id => @view.id,
         },
         :environment => {
-          :id => @library.id
-        }
+          :id => @library.id,
+        },
       }
 
       assert_response :success
@@ -471,7 +471,7 @@ module Katello
       put :update, params: {
         :id => @activation_key.id,
         :organization_id => @organization.id,
-        :activation_key => { :auto_attach => new_auto_attach }
+        :activation_key => { :auto_attach => new_auto_attach },
       }
       assert_response :success
     end
@@ -570,7 +570,7 @@ module Katello
       assert_protected_action(:content_override, allowed_perms, denied_perms) do
         put(:content_override,
             params: { id: @activation_key.id,
-                      content_overrides: [{:content_label => 'fedora', :name => "enabled", :value => true}]
+                      content_overrides: [{:content_label => 'fedora', :name => "enabled", :value => true}],
                     }
            )
       end
@@ -579,7 +579,7 @@ module Katello
     def test_bulk_content_override
       overrides = [{:content_label => 'fedora', :name => "enabled", :value => true},
                    {:content_label => 'fedora', :value => 0},
-                   {:content_label => 'fedora', :name => "mirrorlist", :remove => true}
+                   {:content_label => 'fedora', :name => "mirrorlist", :remove => true},
                   ]
 
       expected_content_labels = overrides.map { |o| o[:content_label] }
@@ -604,7 +604,7 @@ module Katello
       overrides = [{:content_label => 'fedora', :name => "enabled", :value => true},
                    {:content_label => 'fedora', :value => 0},
                    {:content_label => 'croissant', :name => "mirrorlist", :remove => true},
-                   {:content_label => 'crepe', :name => "mirrorlist", :remove => true}
+                   {:content_label => 'crepe', :name => "mirrorlist", :remove => true},
                   ]
 
       put(:content_override, params: { :id => @activation_key.id, :content_overrides => overrides })

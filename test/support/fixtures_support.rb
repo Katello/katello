@@ -70,7 +70,7 @@ module Katello
       :katello_generic_content_units => Katello::GenericContentUnit,
       :katello_flatpak_remotes => Katello::FlatpakRemote,
       :katello_flatpak_remote_repositories => Katello::FlatpakRemoteRepository,
-      :katello_flatpak_remote_repository_manifests => Katello::FlatpakRemoteRepositoryManifest
+      :katello_flatpak_remote_repository_manifests => Katello::FlatpakRemoteRepositoryManifest,
     }.freeze
 
     # rubocop:disable Naming/AccessorMethodName

@@ -16,7 +16,7 @@ child :duplicate_repositories_to_publish => :duplicate_repositories_to_publish d
     @resource.components_with_repo(repo).map do |component|
       {
         :content_view_name => component.content_view.name,
-        :content_view_version => component.version
+        :content_view_version => component.version,
       }
     end
   end

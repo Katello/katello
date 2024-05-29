@@ -33,7 +33,7 @@ module Katello
       promotion: 2,
       removal: 3,
       export: 4,
-      importing: 5
+      importing: 5,
     }
 
     def content_view

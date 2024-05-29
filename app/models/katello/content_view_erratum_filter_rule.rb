@@ -23,7 +23,7 @@ module Katello
       :inclusion => {
         :in => DATE_TYPES,
         :allow_blank => false,
-        :message => (_("must be one of the following: %s") % DATE_TYPES.join(', '))
+        :message => (_("must be one of the following: %s") % DATE_TYPES.join(', ')),
       }
 
     def self.in_content_views(content_view_ids)

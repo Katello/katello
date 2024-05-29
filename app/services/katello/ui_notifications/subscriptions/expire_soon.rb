@@ -48,9 +48,9 @@ module Katello
                 {
                   :href => "/subscriptions?search=expires<\"#{Setting[:expire_soon_days]} days from now\"",
                   :title => _('Subscriptions'),
-                  :external => true
-                }
-              ]
+                  :external => true,
+                },
+              ],
             }
           end
 

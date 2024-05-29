@@ -27,7 +27,7 @@ module ::Actions::Katello::CdnConfiguration
       {
         cert: cert,
         key: key,
-        joined: "#{key.to_pem}#{cert.to_pem}"
+        joined: "#{key.to_pem}#{cert.to_pem}",
       }
     end
 
@@ -40,7 +40,7 @@ module ::Actions::Katello::CdnConfiguration
         password: 'test_password',
         upstream_organization_label: @organization.label,
         upstream_content_view_label: @library_view.label,
-        upstream_lifecycle_environment_label: @library.label
+        upstream_lifecycle_environment_label: @library.label,
       }
       ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:organization).returns(@organization)
       ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:content_view_id).returns(2)
@@ -75,7 +75,7 @@ module ::Actions::Katello::CdnConfiguration
 
     def test_plans_redhat_cdn
       attrs = {
-        type: ::Katello::CdnConfiguration::CDN_TYPE
+        type: ::Katello::CdnConfiguration::CDN_TYPE,
       }
 
       plan_action(@action, @cdn_configuration, attrs)
@@ -95,7 +95,7 @@ module ::Actions::Katello::CdnConfiguration
       attrs = {
         type: ::Katello::CdnConfiguration::CUSTOM_CDN_TYPE,
         url: 'http://newcdn.example.com',
-        ssl_ca_credential_id: @credential.id
+        ssl_ca_credential_id: @credential.id,
       }
 
       plan_action(@action, @cdn_configuration, attrs)
@@ -111,7 +111,7 @@ module ::Actions::Katello::CdnConfiguration
 
     def test_plans_airgapped
       attrs = {
-        type: ::Katello::CdnConfiguration::EXPORT_SYNC
+        type: ::Katello::CdnConfiguration::EXPORT_SYNC,
       }
       refute @cdn_configuration.export_sync?
       refute_nil @cdn_configuration.url

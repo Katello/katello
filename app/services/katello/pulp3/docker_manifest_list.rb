@@ -32,7 +32,7 @@ module Katello
           annotations: unit['annotations'],
           labels: unit['labels'],
           is_bootable: unit['is_bootable'],
-          is_flatpak: unit['is_flatpak']
+          is_flatpak: unit['is_flatpak'],
         }
       end
 
@@ -44,7 +44,7 @@ module Katello
           manifest_list_manifests += manifest_ids.map do |manifest_id|
             {
               docker_manifest_list_id: katello_id,
-              docker_manifest_id: manifest_id
+              docker_manifest_id: manifest_id,
             }
           end
         end

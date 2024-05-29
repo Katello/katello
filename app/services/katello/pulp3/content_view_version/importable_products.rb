@@ -39,7 +39,7 @@ module Katello
             gpg_key_id: gpg_key_id(metadata_product),
             name: find_unique_name(metadata_product),
             label: metadata_product.label,
-            description: metadata_product.description
+            description: metadata_product.description,
           }
         end
 
@@ -56,7 +56,7 @@ module Katello
         def update_params(metadata_product)
           {
             gpg_key_id: gpg_key_id(metadata_product),
-            description: metadata_product.description
+            description: metadata_product.description,
           }
         end
 

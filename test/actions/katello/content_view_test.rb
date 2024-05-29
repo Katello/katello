@@ -284,7 +284,7 @@ module ::Actions::Katello::ContentView
 
       options = {content_view_environments: [cv_env],
                  system_content_view_id: default_content_view.id,
-                 system_environment_id: library.id
+                 system_environment_id: library.id,
                 }
       action.expects(:action_subject).with(content_view)
       plan_action(action, content_view, options)
@@ -299,7 +299,7 @@ module ::Actions::Katello::ContentView
       version = cve.content_view_version
       cve.hosts.each { |h| h.content_facet.destroy }
       options = {content_view_environments: [cv_env, library_cv_env],
-                 content_view_versions: [version]
+                 content_view_versions: [version],
                 }
       action.expects(:action_subject).with(content_view)
 
@@ -316,7 +316,7 @@ module ::Actions::Katello::ContentView
       cve.hosts.each { |h| h.content_facet.destroy }
       options = {content_view_environments: content_view.content_view_environments,
                  content_view_versions: content_view.versions,
-                 destroy_content_view: true
+                 destroy_content_view: true,
       }
       action.expects(:action_subject).with(content_view)
 
@@ -507,10 +507,10 @@ module ::Actions::Katello::ContentView
                      :rpm =>
                       ["shark-0.1-1.noarch",
                        "penguin-0.9.1-1.noarch",
-                       "walrus-5.21-1.noarch"]
-                    }
-                  }
-                }]
+                       "walrus-5.21-1.noarch"],
+                    },
+                  },
+                }],
               }
       total_count = action.total_counts(data)
       assert_equal total_count[:errata_count], 1

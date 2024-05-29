@@ -30,7 +30,7 @@ module Katello
         'RHEL7 (System z (Structure A))',
         'RHEL7 (ARM)',
         'RHEL7 (POWER9)',
-        'RHEL5'
+        'RHEL5',
       ].each do |rhel_version|
         assert eos_schedule_data.key?(rhel_version)
         assert eos_schedule_data[rhel_version].is_a?(Hash)

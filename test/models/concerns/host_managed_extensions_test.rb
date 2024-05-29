@@ -372,6 +372,7 @@ module Katello
   end
 
   class HostAvailableModulesTest < HostManagedExtensionsTestBase
+    # rubocop:disable Metrics/ParameterLists
     def make_module_json(name = "foo", status = "unknown", context = nil, installed_profiles = [], active = nil)
       {
         "name" => name,
@@ -382,11 +383,11 @@ module Katello
         "profiles" => [
           "development",
           "minimal",
-          "default"
+          "default",
         ],
         "installed_profiles" => installed_profiles,
         "status" => status,
-        "active" => active
+        "active" => active,
       }
     end
 
@@ -395,7 +396,7 @@ module Katello
         make_module_json("enabled-installed", "enabled", 'blahcontext', ["default"]),
         make_module_json("enabled2", "enabled"),
         make_module_json("disabled", "disabled", "abacadaba"),
-        make_module_json("unknown", "unknown")
+        make_module_json("unknown", "unknown"),
       ]
       @foreman_host.import_module_streams(modules_json)
       assert_equal 1, @foreman_host.host_available_module_streams.installed.size
@@ -419,7 +420,7 @@ module Katello
       modules_json = [
         make_module_json("enabled-varying-activity", "enabled", "12347", [], true),
         make_module_json("enabled-varying-activity", "enabled", "12345", [], false),
-        make_module_json("enabled-varying-activity", "enabled", "12346", [], false)
+        make_module_json("enabled-varying-activity", "enabled", "12346", [], false),
       ]
 
       @foreman_host.import_module_streams(modules_json)
@@ -469,12 +470,12 @@ module Katello
       tracer_json = {
         "sshd": {
           "type": "daemon",
-          "helper": "sudo systemctl restart sshd"
+          "helper": "sudo systemctl restart sshd",
         },
         "tuned": {
           "type": "daemon",
-          "helper": ""
-        }
+          "helper": "",
+        },
       }
       @foreman_host.import_tracer_profile(tracer_json)
       @foreman_host.reload

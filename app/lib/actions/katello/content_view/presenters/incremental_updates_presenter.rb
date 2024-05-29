@@ -6,7 +6,7 @@ module Actions
           HUMANIZED_TYPES = {
             ::Katello::Erratum::CONTENT_TYPE => "Errata",
             ::Katello::ModuleStream::CONTENT_TYPE => "Module Streams",
-            ::Katello::Rpm::CONTENT_TYPE => "Packages"
+            ::Katello::Rpm::CONTENT_TYPE => "Packages",
           }.freeze
 
           def humanized_output

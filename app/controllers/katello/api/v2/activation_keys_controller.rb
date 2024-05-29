@@ -157,7 +157,7 @@ module Katello
       response = {
         :results => @activation_key.available_releases,
         :total => @activation_key.available_releases.size,
-        :subtotal => @activation_key.available_releases.size
+        :subtotal => @activation_key.available_releases.size,
       }
       respond_for_index :collection => response
     end
@@ -276,14 +276,13 @@ module Katello
 
     def subscription_index
       subs = @activation_key.subscriptions
-      subscriptions = {
+      {
         :results => subs,
         :subtotal => subs.count,
         :total => subs.count,
         :page => 1,
-        :per_page => subs.count
+        :per_page => subs.count,
       }
-      subscriptions
     end
 
     def find_cve_for_single
