@@ -1,15 +1,11 @@
-require:
-  - rubocop-performance
-  - rubocop-rails
-  - rubocop-minitest
-
 # TODO: Remove the following once the rules in the file is addressed
 inherit_from:
   - .rubocop_todo.yml
 # end TODO
 
-Rails:
-  Enabled: true
+inherit_gem:
+  theforeman-rubocop:
+    - lenient.yml
 
 Rails/ContentTag:
   Enabled: false
@@ -87,9 +83,6 @@ Style/RedundantSelf:
 
 Style/RedundantReturn:
   Enabled: false
-
-Style/Documentation:
-  Enabled: false # don't require documentation
 
 Style/Encoding:
   Enabled: false # don't require utf-8 encoding on every file
