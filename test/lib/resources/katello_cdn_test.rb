@@ -10,7 +10,7 @@ class KatelloCdnResourceTest < ActiveSupport::TestCase
     katello_cdn = ::Katello::Resources::CDN::KatelloCdn.new('https://test.com', {
                                                               organization_label: 'test',
                                                               content_view_label: 'test',
-                                                              lifecycle_environment_label: 'test'
+                                                              lifecycle_environment_label: 'test',
                                                             })
 
     ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:organization).returns(@organization)
@@ -26,7 +26,7 @@ class KatelloCdnResourceTest < ActiveSupport::TestCase
     katello_cdn = ::Katello::Resources::CDN::KatelloCdn.new('https://test.com', {
                                                               organization_label: 'test',
                                                               content_view_label: 'test',
-                                                              lifecycle_environment_label: 'test'
+                                                              lifecycle_environment_label: 'test',
                                                             })
 
     ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:organization).returns(@organization)
@@ -42,7 +42,7 @@ class KatelloCdnResourceTest < ActiveSupport::TestCase
     katello_cdn = ::Katello::Resources::CDN::KatelloCdn.new('https://test.com', {
                                                               organization_label: 'test',
                                                               content_view_label: 'test',
-                                                              lifecycle_environment_label: 'test'
+                                                              lifecycle_environment_label: 'test',
                                                             })
 
     ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:organization).returns(@organization)
@@ -60,21 +60,21 @@ class KatelloCdnResourceTest < ActiveSupport::TestCase
     katello_cdn = ::Katello::Resources::CDN::KatelloCdn.new('https://test.com', {
                                                               organization_label: 'test',
                                                               content_view_label: 'test',
-                                                              lifecycle_environment_label: 'test'
+                                                              lifecycle_environment_label: 'test',
                                                             })
 
     content_path = 'rhel-6-server-els-rpms'
     repo_set = {
-      'label' => content_path
+      'label' => content_path,
     }
 
     response_body = {
       'results' => [
         {
           'arch' => 'i386',
-          'minor' => '6Server'
-        }
-      ]
+          'minor' => '6Server',
+        },
+      ],
     }
 
     expected_url = "/katello/api/v2/repositories?full_result=true&organization_id=#{@organization['id']}&content_view_id=2&environment_id=2&search=#{CGI.escape("content_label = #{content_path}")}"

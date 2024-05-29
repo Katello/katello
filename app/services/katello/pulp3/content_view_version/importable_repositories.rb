@@ -46,14 +46,14 @@ module Katello
               product_content = fetch_product_content(repo.content, product)
               substitutions = {
                 basearch: repo.arch,
-                releasever: repo.minor
+                releasever: repo.minor,
               }
               creatable << {
                 product: product,
                 content: product_content,
                 substitutions: substitutions,
                 override_url: fetch_feed_url(repo),
-                override_arch: repo.arch
+                override_arch: repo.arch,
               }
             else
               creatable << { repository: product.add_repo(create_repo_params(repo, product)) }
@@ -109,7 +109,7 @@ module Katello
             :major,
             :minor,
             :download_policy,
-            :mirroring_policy
+            :mirroring_policy,
           ]
 
           params = { name: find_unique_name(metadata_repo, product) }
@@ -142,7 +142,7 @@ module Katello
             :major,
             :minor,
             :download_policy,
-            :mirroring_policy
+            :mirroring_policy,
           ]
           params = {}
           url = fetch_feed_url(metadata_repo)

@@ -25,7 +25,7 @@ module Katello
       {
         :results => results.uniq,
         :subtotal => results.count,
-        :total => results.count
+        :total => results.count,
       }
     end
 

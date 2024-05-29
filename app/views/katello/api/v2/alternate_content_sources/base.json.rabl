@@ -33,7 +33,7 @@ if ::Foreman::Cast.to_bool(params.fetch(:include_permissions, false))
     {
       :view_alternate_content_sources => alternate_content_source.readable?,
       :edit_alternate_content_sources => alternate_content_source.editable?,
-      :destroy_alternate_content_sources => alternate_content_source.deletable?
+      :destroy_alternate_content_sources => alternate_content_source.deletable?,
     }
   end
 end

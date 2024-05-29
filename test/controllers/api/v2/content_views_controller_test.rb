@@ -401,10 +401,10 @@ module Katello
         system_environment_id: @library.id,
         bulk_content_view_version_ids: {
           included: {
-            ids: @library_dev_staging_view.versions.map(&:id)
-          }
+            ids: @library_dev_staging_view.versions.map(&:id),
+          },
         },
-        id: @library_dev_staging_view.id
+        id: @library_dev_staging_view.id,
       }
 
       assert_response :success
@@ -431,7 +431,7 @@ module Katello
       allowed_perms = [[:promote_or_remove_content_views_to_environments, :promote_or_remove_content_views, dev_env_read_permission],
                        [dev_env_remove_permission, library_dev_staging_view_remove_permission, dev_env_read_permission],
                        [dev_env_remove_permission, :promote_or_remove_content_views, dev_env_read_permission],
-                       [:promote_or_remove_content_views_to_environments, library_dev_staging_view_remove_permission, dev_env_read_permission]
+                       [:promote_or_remove_content_views_to_environments, library_dev_staging_view_remove_permission, dev_env_read_permission],
                       ]
       denied_perms = [@view_permission,
                       @create_permission,
@@ -440,7 +440,7 @@ module Katello
                       :promote_or_remove_content_views_to_environments,
                       :promote_or_remove_content_views,
                       [diff_env_remove_permission, :promote_or_remove_content_views],
-                      [:promote_or_remove_content_views_to_environments, diff_view_remove_permission]
+                      [:promote_or_remove_content_views_to_environments, diff_view_remove_permission],
                      ]
 
       assert_protected_action(:remove_from_environment, allowed_perms, denied_perms) do
@@ -467,7 +467,7 @@ module Katello
                        [input_envs_remove_permission, library_dev_staging_view_remove_permission],
                        [input_envs_remove_permission, library_dev_staging_view_remove_permission, library_dev_staging_view_destroy_permission],
                        [input_envs_remove_permission, :promote_or_remove_content_views],
-                       [:promote_or_remove_content_views_to_environments, library_dev_staging_view_remove_permission]
+                       [:promote_or_remove_content_views_to_environments, library_dev_staging_view_remove_permission],
                       ]
       denied_perms = [@view_permission,
                       @create_permission,
@@ -477,7 +477,7 @@ module Katello
                       :promote_or_remove_content_views,
                       [diff_env_remove_permission, :promote_or_remove_content_views],
                       [single_env_remove_permission, :promote_or_remove_content_views],
-                      [:promote_or_remove_content_views_to_environments, diff_view_remove_permission]
+                      [:promote_or_remove_content_views_to_environments, diff_view_remove_permission],
                      ]
 
       env_ids = [@dev.id.to_s, @staging.id.to_s]
@@ -504,7 +504,7 @@ module Katello
                       @create_permission,
                       @update_permission,
                       diff_view_destroy_permission,
-                      [:promote_or_remove_content_views_to_environments, :promote_or_remove_content_views]
+                      [:promote_or_remove_content_views_to_environments, :promote_or_remove_content_views],
                      ]
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
@@ -547,7 +547,7 @@ module Katello
       allowed_perms = [[:edit_hosts, :promote_or_remove_content_views, :view_content_views,
                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
                        [host_edit_permission, host_cv_remove_permission, host_env_remove_permission,
-                        alternate_env_read_permission, alternate_cv_read_permission]
+                        alternate_env_read_permission, alternate_cv_read_permission],
                       ]
 
       denied_perms = [[:edit_hosts, :promote_or_remove_content_views,
@@ -555,7 +555,7 @@ module Katello
                       [host_edit_permission, host_cv_remove_permission, host_env_remove_permission,
                        bad_env_read_permission, alternate_cv_read_permission],
                       [host_edit_permission, host_cv_remove_permission, host_env_remove_permission,
-                       alternate_env_read_permission, bad_cv_read_permission]
+                       alternate_env_read_permission, bad_cv_read_permission],
                      ]
       env_ids = [environment.id.to_s]
       with_environments = mock
@@ -600,7 +600,7 @@ module Katello
       allowed_perms = [[:edit_activation_keys, :promote_or_remove_content_views, :view_content_views,
                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
                        [ak_edit_permission, ak_cv_remove_permission, ak_env_remove_permission,
-                        alternate_env_read_permission, alternate_cv_read_permission]
+                        alternate_env_read_permission, alternate_cv_read_permission],
                       ]
 
       denied_perms = [[:edit_activation_keys, :promote_or_remove_content_views,
@@ -608,7 +608,7 @@ module Katello
                       [ak_edit_permission, ak_cv_remove_permission, ak_env_remove_permission,
                        bad_env_read_permission, alternate_cv_read_permission],
                       [ak_edit_permission, ak_cv_remove_permission, ak_env_remove_permission,
-                       alternate_env_read_permission, bad_cv_read_permission]
+                       alternate_env_read_permission, bad_cv_read_permission],
                      ]
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do

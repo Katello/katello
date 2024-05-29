@@ -42,7 +42,7 @@ end
 
 node :permissions do |cvv|
   {
-    :deletable => cvv.removable?
+    :deletable => cvv.removable?,
   }
 end
 
@@ -61,7 +61,7 @@ child :environments => :environments do
       :readable => env.readable?,
       :promotable_or_removable => env.promotable_or_removable?,
       :all_hosts_editable => version.all_hosts_editable?(env),
-      :all_keys_editable => Katello::ActivationKey.all_editable?(version.content_view_id, env.id)
+      :all_keys_editable => Katello::ActivationKey.all_editable?(version.content_view_id, env.id),
     }
   end
 

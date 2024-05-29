@@ -39,7 +39,7 @@ module Katello
 
       assert_response :success
       assert resp.total > 0
-      assert resp.results.all? { |result| result.organization.id == @organization.id }
+      assert(resp.results.all? { |result| result.organization.id == @organization.id })
       assert_template 'api/v2/content_view_environments/index'
     end
 
@@ -48,7 +48,7 @@ module Katello
 
       assert_response :success
       assert resp.total > 0
-      assert resp.results.all? { |result| result.lifecycle_environment.id == @staging.id }
+      assert(resp.results.all? { |result| result.lifecycle_environment.id == @staging.id })
       assert_template 'api/v2/content_view_environments/index'
     end
 
@@ -57,7 +57,7 @@ module Katello
 
       assert_response :success
       assert resp.total > 0
-      assert resp.results.all? { |result| result.content_view.id == @library_dev_staging_view.id }
+      assert(resp.results.all? { |result| result.content_view.id == @library_dev_staging_view.id })
       assert_template 'api/v2/content_view_environments/index'
     end
 
@@ -66,7 +66,7 @@ module Katello
 
       assert_response :success
       assert resp.total > 0
-      assert resp.results.all? { |result| result.activation_keys.map(&:id).include? @library_dev_staging_ak.id }
+      assert(resp.results.all? { |result| result.activation_keys.map(&:id).include? @library_dev_staging_ak.id })
       assert_template 'api/v2/content_view_environments/index'
     end
 

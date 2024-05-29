@@ -27,7 +27,7 @@ namespace :katello do
 
         permission_map = {
           Permission.find_by(name: :export_library_content) => Permission.find_by(name: :export_content),
-          Permission.find_by(name: :import_library_content) => Permission.find_by(name: :import_content)
+          Permission.find_by(name: :import_library_content) => Permission.find_by(name: :import_content),
         }
 
         permission_map.each do |old_perm, new_perm|

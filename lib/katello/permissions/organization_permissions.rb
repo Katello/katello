@@ -6,18 +6,18 @@ Foreman::AccessControl.permission(:view_organizations).actions.concat [
   'katello/api/v2/organizations/redhat_provider',
   'katello/api/v2/organizations/download_debug_certificate',
   'katello/api/v2/organizations/releases',
-  'katello/api/v2/tasks/index'
+  'katello/api/v2/tasks/index',
 ]
 
 Foreman::AccessControl.permission(:create_organizations).actions.concat [
-  'katello/api/v2/organizations/create'
+  'katello/api/v2/organizations/create',
 ]
 
 Foreman::AccessControl.permission(:edit_organizations).actions.concat [
   'katello/api/v2/organizations/update',
-  'katello/api/v2/organizations/cdn_configuration'
+  'katello/api/v2/organizations/cdn_configuration',
 ]
 
 Foreman::AccessControl.permission(:destroy_organizations).actions.concat [
-  'katello/api/v2/organizations/destroy'
+  'katello/api/v2/organizations/destroy',
 ]

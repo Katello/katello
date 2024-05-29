@@ -236,11 +236,11 @@ module Katello
           hosts = debs.joins(:host_installed_debs).select("#{Katello::HostInstalledDeb.table_name}.host_id as host_id").pluck(:host_id)
           if hosts.empty?
             {
-              :conditions => "1=0"
+              :conditions => "1=0",
             }
           else
             {
-              :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.join(',')})"
+              :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.join(',')})",
             }
           end
         end
@@ -339,7 +339,7 @@ module Katello
           {
             name: module_stream["name"],
             stream: module_stream["stream"],
-            context: module_stream["context"]
+            context: module_stream["context"],
           }
         end
         if streams.any?
@@ -382,7 +382,7 @@ module Katello
             host_id: self.id,
             available_module_stream_id: new_id,
             installed_profiles: module_stream["installed_profiles"],
-            status: status
+            status: status,
           }
         end
         HostAvailableModuleStream.insert_all(hams_to_create) if hams_to_create.any?

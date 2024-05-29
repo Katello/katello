@@ -7,13 +7,13 @@ module Katello
         {
           "kt_name_analyzer" => {
             "type" => "custom",
-            "tokenizer" => "keyword"
+            "tokenizer" => "keyword",
           },
           "autcomplete_name_analyzer" => {
             "type" => "custom",
             "tokenizer" => "keyword",
-            "filter" => %w(standard lowercase ngram_filter)
-          }
+            "filter" => %w(standard lowercase ngram_filter),
+          },
         }
       end
 
@@ -23,8 +23,8 @@ module Katello
             "type" => "edgeNGram",
             "side" => "front",
             "min_gram" => 1,
-            "max_gram" => 30
-          }
+            "max_gram" => 30,
+          },
         }
       end
 

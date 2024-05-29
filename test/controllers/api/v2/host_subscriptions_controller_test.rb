@@ -142,7 +142,7 @@ module Katello
       facts = { 'network.hostname' => @host.name}
       installed_products = [{
         'product_id' => '1',
-        'product_name' => 'name'
+        'product_name' => 'name',
       }]
       expected_consumer_params = {
         'type' => 'system',
@@ -152,8 +152,8 @@ module Katello
         'facts' => facts,
         'installedProducts' => [{
           'productId' => '1',
-          'productName' => 'name'
-        }]
+          'productName' => 'name',
+        }],
       }
       content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment).id)
       Resources::Candlepin::Consumer.stubs(:get)
@@ -167,7 +167,7 @@ module Katello
           :installed_products => installed_products,
           :purpose_role => 'MyRole',
           :purpose_usage => 'MyUsage',
-          :purpose_addons => 'Addon1,Addon2'
+          :purpose_addons => 'Addon1,Addon2',
         }
       )
 
@@ -178,7 +178,7 @@ module Katello
       facts = { 'network.hostname' => @host.name}
       installed_products = [{
         'product_id' => '1',
-        'product_name' => 'name'
+        'product_name' => 'name',
       }]
       content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment).id)
 

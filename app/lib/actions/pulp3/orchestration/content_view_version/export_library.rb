@@ -9,7 +9,7 @@ module Actions
               chunk_size: nil,
               from_history: nil,
               fail_on_missing_content: false,
-              format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
+              format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE,
             }.merge(opts)
             action_subject(organization)
             validate_repositories_immediate!(organization) if options[:fail_on_missing_content]

@@ -20,7 +20,7 @@ module Katello
         :missing_content_source => 'Please select a content source before assigning a kickstart repository',
         :missing_content_view => 'The selected/Inherited Content View is not available for this Lifecycle Environment',
         :mismatched_ks_repo => 'The selected kickstart repository is not part of the assigned content view, lifecycle environment, ' \
-                               'content source, operating system, and architecture'
+                               'content source, operating system, and architecture',
       }
       @content_facet = Katello::Hostgroup::ContentFacet.new(
         :kickstart_repository_id => 4,

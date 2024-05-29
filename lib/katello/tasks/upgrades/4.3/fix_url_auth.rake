@@ -14,7 +14,7 @@ namespace :katello do
             repo_params = {
               upstream_username: user,
               upstream_password: password,
-              url: upstream_url
+              url: upstream_url,
             }
             ForemanTasks.sync_task(Actions::Katello::Repository::Update, repo.root, repo_params)
           end

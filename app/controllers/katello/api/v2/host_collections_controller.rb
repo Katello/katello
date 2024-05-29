@@ -8,7 +8,7 @@ module Katello
       :destroy,
       :add_hosts,
       :remove_hosts,
-      :hosts
+      :hosts,
     ]
     before_action :find_readable_activation_key, :only => [:index]
     before_action :find_editable_host, :only => [:index]
@@ -187,7 +187,7 @@ module Katello
                :description,
                :max_hosts,
                :unlimited_hosts,
-               { :host_ids => [] }
+               { :host_ids => [] },
               ]
       params.fetch(:host_collection).permit(*attrs)
     end

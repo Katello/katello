@@ -47,7 +47,7 @@ node :environments do |cv|
       name: env.name,
       activation_keys: cv&.activation_keys&.in_environments([env])&.ids,
       hosts: cv&.hosts&.in_environments([env])&.ids,
-      permissions: {readable: env.readable?}
+      permissions: {readable: env.readable?},
     }
   end
 end
@@ -82,7 +82,7 @@ if params.key?(:include_permissions)
       :edit_content_views => cv.editable?,
       :destroy_content_views => cv.deletable?,
       :publish_content_views => cv.publishable?,
-      :promote_or_remove_content_views => cv.promotable_or_removable?
+      :promote_or_remove_content_views => cv.promotable_or_removable?,
     }
   end
 end

@@ -32,7 +32,7 @@ module Katello
       sp_history_args = {
         :smart_proxy_id => proxy_with_pulp.id,
         :repository_id => @repo.id,
-        :started_at => Time.now
+        :started_at => Time.now,
       }
       assert_raises(ActiveRecord::RecordNotUnique) do
         ::Katello::SmartProxySyncHistory.create sp_history_args

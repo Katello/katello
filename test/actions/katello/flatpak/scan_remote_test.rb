@@ -14,7 +14,7 @@ module ::Actions::Katello::Flatpak
     let(:input) do
       {
         remote_id: remote.id,
-        url: 'https://flatpaks.redhat.io/rhel//index/static?label%3Aorg.flatpak.ref%3Aexists=1&tag=latest'
+        url: 'https://flatpaks.redhat.io/rhel//index/static?label%3Aorg.flatpak.ref%3Aexists=1&tag=latest',
       }
     end
 

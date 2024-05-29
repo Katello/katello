@@ -74,7 +74,7 @@ module Katello
         end
       end
 
-      def determine_subscription(product_id: nil, source_stack_id: nil, organization:)
+      def determine_subscription(organization:, product_id: nil, source_stack_id: nil)
         if source_stack_id
           self.stacking_subscription(organization, source_stack_id)
           # isn't it an error if we have a sourceStackID but no stacking subscription?

@@ -19,7 +19,7 @@ module Katello
         pulp_remotes = [
           PulpRpmClient::RpmRpmRemoteResponse.new(name: rhel7.pulp_id, pulp_href: rhel7_href),
           PulpRpmClient::RpmRpmRemoteResponse.new(name: rhel6.pulp_id, pulp_href: 'rhel6'),
-          PulpRpmClient::RpmRpmRemoteResponse.new(name: fedora.pulp_id, pulp_href: 'fedora')
+          PulpRpmClient::RpmRpmRemoteResponse.new(name: fedora.pulp_id, pulp_href: 'fedora'),
         ]
 
         smart_proxy_mirror_repo.expects(:pulp3_enabled_repo_types).once.returns([::Katello::RepositoryTypeManager.find(:yum)])

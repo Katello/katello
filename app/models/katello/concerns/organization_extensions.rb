@@ -201,7 +201,7 @@ module Katello
           defaults = {
             :message => _("Informable Type must be one of the following [ %{list} ]") %
                 { :list => ALLOWED_DEFAULT_INFO_TYPES.join(", ") },
-            :error => RuntimeError
+            :error => RuntimeError,
           }
           options = defaults.merge(options)
 

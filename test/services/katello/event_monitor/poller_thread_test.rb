@@ -26,7 +26,7 @@ module Katello
         status = {
           processed_count: 0,
           failed_count: 0,
-          running: false
+          running: false,
         }
         Katello::EventMonitor::PollerThread.initialize
 

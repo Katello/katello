@@ -19,7 +19,7 @@ class CdnResourceTest < ActiveSupport::TestCase
       type: ::Katello::CdnConfiguration::CUSTOM_CDN_TYPE,
       url: 'http://newcdn.example.com',
       ssl_ca_credential_id: credential.id,
-      custom_cdn_auth_enabled: true
+      custom_cdn_auth_enabled: true,
     }
     organization.cdn_configuration.update(attrs)
     product.expects(:certificate).once.returns('')

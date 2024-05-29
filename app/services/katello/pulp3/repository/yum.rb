@@ -50,7 +50,7 @@ module Katello
           {
             base_path: path,
             publication: repo.publication_href,
-            name: "#{generate_backend_object_name}"
+            name: "#{generate_backend_object_name}",
           }
         end
 
@@ -141,7 +141,7 @@ module Katello
             config_hash = {
               source_repo_version: repo_config[:source_repo_version],
               dest_repo: repo_config[:dest_repo],
-              content: []
+              content: [],
             }
             config_hash[:dest_base_version] = repo_config[:dest_base_version] if repo_config[:dest_base_version]
             data_dup.config << config_hash
@@ -253,7 +253,7 @@ module Katello
               source_repo_ids.each do |repo_id|
                 filter_list_map[:whitelist_ids] += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id))
               end
-            elsif filter.class == ContentViewErratumFilter
+            elsif filter.instance_of?(ContentViewErratumFilter)
               source_repo_ids.each do |repo_id|
                 filter_list_map[:blacklist_ids] += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id), additional_included_errata)
               end
@@ -280,7 +280,7 @@ module Katello
           inclusion_modular_filters = modular_filters.select { |filter| filter.inclusion }
           exclusion_modular_filters = modular_filters - inclusion_modular_filters
           if inclusion_modular_filters.empty? &&
-              !(filters.any? { |filter| filter.class == ContentViewErratumFilter && filter.inclusion })
+              !(filters.any? { |filter| filter.instance_of?(ContentViewErratumFilter) && filter.inclusion })
             source_repo_ids.each do |source_repo_id|
               source_repo = ::Katello::Repository.find(source_repo_id)
               filter_list_map[:whitelist_ids] += source_repo.rpms.where(:modular => true).pluck(:pulp_id).sort
@@ -401,7 +401,7 @@ module Katello
           (errata_filters + package_filters).each do |filter|
             if filter.inclusion
               whitelist_ids += filter.content_unit_pulp_ids(source_repository)
-            elsif filter.class == ContentViewErratumFilter
+            elsif filter.instance_of?(ContentViewErratumFilter)
               blacklist_ids += filter.content_unit_pulp_ids(source_repository, additional_included_errata)
             else
               blacklist_ids += filter.content_unit_pulp_ids(source_repository)

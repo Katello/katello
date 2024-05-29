@@ -647,7 +647,7 @@ module Katello
       sp_history_args = {
         :smart_proxy_id => smart_proxy.id,
         :repository_id => self.id,
-        :started_at => Time.now
+        :started_at => Time.now,
       }
       sp_history = ::Katello::SmartProxySyncHistory.create sp_history_args
       sp_history.save!
@@ -680,7 +680,7 @@ module Katello
         ::Actions::Katello::Repository::Sync.name,
         ::Actions::Katello::Repository::UploadFiles.name,
         ::Actions::Katello::Repository::RemoveContent.name,
-        ::Actions::Katello::Repository::MetadataGenerate.name
+        ::Actions::Katello::Repository::MetadataGenerate.name,
       ]
       ForemanTasks::Task::DynflowTask.where(:label => blocking_task_labels)
                                      .where.not(state: 'stopped')
@@ -798,7 +798,7 @@ module Katello
         distribution_arch: self.distribution_arch,
         distribution_family: self.distribution_family,
         distribution_variant: self.distribution_variant,
-        distribution_bootable: self.distribution_bootable
+        distribution_bootable: self.distribution_bootable,
       }
     end
 
@@ -954,7 +954,7 @@ module Katello
           product: repository.product,
           lifecycle_environment: repository.environment,
           content_view: repository.content_view_version.content_view,
-          content_view_version: repository.content_view_version
+          content_view_version: repository.content_view_version,
         }
         box = Safemode::Box.new(repository, allowed_methods)
         erb = ERB.new(pattern)

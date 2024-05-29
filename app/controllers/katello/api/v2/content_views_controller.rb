@@ -41,7 +41,7 @@ module Katello
     def filtered_associations
       {
         :component_ids => Katello::ContentViewVersion,
-        :repository_ids => Katello::Repository
+        :repository_ids => Katello::Repository,
       }
     end
 
