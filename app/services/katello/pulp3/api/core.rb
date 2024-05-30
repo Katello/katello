@@ -176,6 +176,14 @@ module Katello
           nil
         end
 
+        def purge_class
+          PulpcoreClient::Purge
+        end
+
+        def purge_completed_tasks
+          tasks_api.purge(purge_class.new(finished_before: DateTime.now - Setting[:completed_pulp_task_protection_days]))
+        end
+
         def delete_orphans
           [orphans_api.cleanup(PulpcoreClient::OrphansCleanup.new(orphan_protection_time: (smart_proxy.pulp_mirror? ? 0 : Setting[:orphan_protection_time])))]
         end
