@@ -20,6 +20,8 @@ module Katello
         assert_includes smart_proxies, parsed_stack
         smart_proxies.delete parsed_stack
       end
+
+      Setting[:completed_pulp_task_protection_days] = 0
       Rake.application.invoke_task('katello:delete_orphaned_content')
     end
 
@@ -29,6 +31,8 @@ module Katello
         assert_equal(::Actions::Katello::OrphanCleanup::RemoveOrphans, main_task)
         assert_equal @mirror, parsed_stack
       end
+
+      Setting[:completed_pulp_task_protection_days] = 0
       Rake.application.invoke_task('katello:delete_orphaned_content')
     end
   end

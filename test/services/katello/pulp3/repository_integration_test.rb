@@ -30,6 +30,9 @@ types.values.each do |repository_type|
       def teardown
         User.as_anonymous_admin do
           ensure_creatable(@repo, @primary)
+
+          Setting[:completed_pulp_task_protection_days] = 0
+          DateTime.expects(:now).returns(DateTime.new(3000, 1, 1))
           orphan_cleanup
         end
       end

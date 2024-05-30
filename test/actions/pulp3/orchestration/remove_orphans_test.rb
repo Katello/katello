@@ -39,6 +39,8 @@ module ::Actions::Pulp3
 
       sync_and_reload_repo(@repo, @primary)
 
+      Setting[:completed_pulp_task_protection_days] = 0
+      DateTime.expects(:now).returns(DateTime.new(3000, 1, 1))
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::OrphanCleanup::RemoveOrphans, @primary)
     end
@@ -52,6 +54,8 @@ module ::Actions::Pulp3
     def test_orphans_are_removed
       repository_reference = repo_reference(@repo)
       versions = ::Katello::Pulp3::Api::File.new(@primary).repository_versions_api.list(repository_reference.repository_href, {}).results.collect(&:pulp_href)
+      tasks = ::Katello::Pulp3::Api::File.new(@primary).tasks_api.list(state__in: ['completed']).results
+      assert_empty tasks
       refute_includes versions, repository_reference.repository_href + "versions/1/"
       assert_includes versions, repository_reference.repository_href + "versions/2/"
     end
