@@ -14,6 +14,7 @@ module Actions
                   plan_action(Actions::Pulp3::OrphanCleanup::DeleteOrphanRemotes, proxy)
                 end
                 plan_action(Actions::Pulp3::OrphanCleanup::RemoveOrphans, proxy)
+                plan_action(Actions::Pulp3::OrphanCleanup::PurgeCompletedTasks, proxy)
               end
             end
           end

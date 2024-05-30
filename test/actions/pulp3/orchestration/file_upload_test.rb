@@ -19,6 +19,9 @@ module ::Actions::Pulp3
       @repo.backend_service(@primary).delete_publication
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+
+      Setting[:completed_pulp_task_protection_days] = 0
+      DateTime.expects(:now).returns(DateTime.new(3000, 1, 1))
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::OrphanCleanup::RemoveOrphans, @primary)
     end
