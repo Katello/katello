@@ -13,7 +13,7 @@ module Katello
       crawled = []
       found = []
       to_follow = [base_url]
-      rd = RepoDiscovery.new(base_url, 'yum', nil, nil, crawled, found, to_follow)
+      rd = RepoDiscovery.create_for('yum').new(base_url, nil, nil, crawled, found, to_follow)
 
       rd.run(to_follow.shift)
       assert_equal 1, rd.crawled.size

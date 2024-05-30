@@ -47,10 +47,10 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "pg"
 
-  #Required for repo discovery
+  # Required for repo discovery
   gem.add_dependency "spidr"
 
-  #Pulp dependencies
+  # Pulp dependencies
   gem.add_dependency "pulpcore_client", ">= 3.49.1", "< 3.50.0"
   gem.add_dependency "pulp_file_client", ">= 3.49.1", "< 3.50.0"
   gem.add_dependency "pulp_ansible_client", ">= 0.21.3", "< 0.22.0"
