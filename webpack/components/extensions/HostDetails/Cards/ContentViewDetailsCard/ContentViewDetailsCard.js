@@ -28,7 +28,7 @@ const requiredPermissions = [
   'promote_or_remove_content_views_to_environments',
 ];
 
-const ContentViewEnvironmentDisplay = ({
+export const ContentViewEnvironmentDisplay = ({
   contentView, lifecycleEnvironment,
 }) => {
   const {
@@ -53,7 +53,8 @@ const ContentViewEnvironmentDisplay = ({
             defaultMessage={__('Lifecycle environment: {lce}')}
             values={{
               lce: lifecycleEnvironment.name,
-            }} />}
+            }}
+          />}
         >
           <Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{lifecycleEnvironment.name}</Label>
         </Tooltip>
