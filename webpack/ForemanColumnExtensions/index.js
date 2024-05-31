@@ -107,33 +107,33 @@ const hostsIndexColumnExtensions = [
         hostDetails?.content_facet_attributes?.content_view_environments ?? [];
       if (contentViewEnvironments.length === 0) return '—'; // don't show popover
       return (
-        <Popover
-          id="content-view-environments-tooltip"
-          className="content-view-environments-tooltip"
-          headerContent={hostDetails.display_name}
-          bodyContent={
-            <Flex direction={{ default: 'column' }}>
-              {contentViewEnvironments.map(env => (
-                <ContentViewEnvironmentDisplay
-                  key={`${env.lifecycle_environment.name}-${env.content_view.name}`}
-                  contentView={env.content_view}
-                  lifecycleEnvironment={env.lifecycle_environment}
-                />
-              ))}
-            </Flex>
+        <Flex>
+          {contentViewEnvironments.length > 1 &&
+            <FlexItem>
+              <Badge isRead>{contentViewEnvironments.length}</Badge>
+            </FlexItem>
           }
-        >
-          <Flex>
-            {contentViewEnvironments.length > 1 &&
-              <FlexItem>
-                <Badge isRead>{contentViewEnvironments.length}</Badge>
-              </FlexItem>
+          <Popover
+            id="content-view-environments-tooltip"
+            className="content-view-environments-tooltip"
+            headerContent={hostDetails.display_name}
+            bodyContent={
+              <Flex direction={{ default: 'column' }}>
+                {contentViewEnvironments.map(env => (
+                  <ContentViewEnvironmentDisplay
+                    key={`${env.lifecycle_environment.name}-${env.content_view.name}`}
+                    contentView={env.content_view}
+                    lifecycleEnvironment={env.lifecycle_environment}
+                  />
+                ))}
+              </Flex>
             }
+          >
             <FlexItem>
               {truncate(contentViewEnvironments.map(cve => cve.candlepin_name).join(', '), 35)}
             </FlexItem>
-          </Flex>
-        </Popover>
+          </Popover>
+        </Flex>
       );
     },
     weight: 2290,
