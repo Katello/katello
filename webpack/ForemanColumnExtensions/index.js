@@ -116,6 +116,7 @@ const hostsIndexColumnExtensions = [
           <Popover
             id="content-view-environments-tooltip"
             className="content-view-environments-tooltip"
+            maxWidth="34rem"
             headerContent={hostDetails.display_name}
             bodyContent={
               <Flex direction={{ default: 'column' }}>
