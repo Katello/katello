@@ -113,7 +113,7 @@ const HostContentViewDetails = ({
       component="button"
       onClick={openModal}
     >
-      {__('Edit content view assignment')}
+      {__('Edit content view environments')}
     </DropdownItem>,
   ];
 
@@ -179,6 +179,7 @@ const HostContentViewDetails = ({
           hostEnvId={hostEnvId}
           contentSourceId={contentSourceId}
           orgId={orgId}
+          multiEnv={contentViewEnvironments.length > 1}
           key={`cv-change-modal-${hostId}`}
         />
       }

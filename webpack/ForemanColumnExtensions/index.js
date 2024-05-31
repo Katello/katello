@@ -8,7 +8,6 @@ import {
 } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 import { Flex, FlexItem, Popover, Badge } from '@patternfly/react-core';
-import { TableText } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import RelativeDateTime from 'foremanReact/components/common/dates/RelativeDateTime';
 import { ContentViewEnvironmentDisplay } from '../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';

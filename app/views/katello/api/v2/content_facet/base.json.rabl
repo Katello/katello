@@ -10,14 +10,14 @@ attributes :applicable_module_stream_count, :upgradable_module_stream_count
 
 child :content_view_environments => :content_view_environments do
   node :content_view do |cve|
-    { 
+    {
       id: cve.content_view.id,
       name: cve.content_view.name,
       composite: cve.content_view.composite,
       content_view_version: cve.content_view_version.version,
       content_view_version_id: cve.content_view_version.id,
       content_view_version_latest: cve.content_view_version.latest?,
-      content_view_default: cve.content_view.default?,
+      content_view_default: cve.content_view.default?
     }
   end
   node :lifecycle_environment do |cve|
