@@ -59,7 +59,11 @@ export const ContentViewEnvironmentDisplay = ({
           <Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{lifecycleEnvironment.name}</Label>
         </Tooltip>
         <ContentViewIcon composite={contentView.composite} style={{ marginRight: '2px' }} position="left" />
-        <a style={{ fontSize: '14px' }} href={`/content_views/${contentView.id}`}>{contentView.name}</a>
+        {contentViewDefault ? <span>{contentView.name}</span> :
+        <a style={{ fontSize: '14px' }} href={`/content_views/${contentView.id}`}>
+          {contentView.name}
+        </a>
+        }
         {!contentViewDefault &&
           <FlexItem>
             <a style={{ fontSize: '14px' }} href={urlBuilder(`content_views/${contentView.id}/versions/${contentViewVersionId}`, '')}>
