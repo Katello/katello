@@ -371,9 +371,6 @@
                 ng-model="repository.checksum_type"
                 ng-options="type.id as type.name for type in checksums">
         </select>
-        <p class="help-block" translate>
-          For older operating systems such as Red Hat Enterprise Linux 5 or CentOS 5 it is recommended to use sha1.
-        </p>
       </div>
 
       <div class="checkbox" ng-hide="repository.content_type === 'docker' || repository.content_type === 'ansible_collection'">

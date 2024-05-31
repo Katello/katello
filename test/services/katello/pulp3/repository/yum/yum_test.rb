@@ -70,12 +70,11 @@ module Katello
 
           def test_publication_options
             @repo.version_href = 'a_version_href'
-            @repo.root.checksum_type = 'sha1'
+            @repo.root.checksum_type = 'sha512'
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
             publication_options = service.publication_options(@repo.version_href)
             assert_equal 'a_version_href', publication_options[:repository_version]
-            assert_equal 'sha1', publication_options[:metadata_checksum_type]
-            assert_equal 'sha1', publication_options[:package_checksum_type]
+            assert_equal 'sha512', publication_options[:checksum_type]
           end
 
           def test_refresh_distributions_distribution_ref_wrong

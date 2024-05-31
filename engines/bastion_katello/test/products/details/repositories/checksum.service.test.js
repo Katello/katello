@@ -14,7 +14,8 @@ describe('Service: Checksum', function() {
     it("provides a method to convert a checksum to human readable version", function() {
         expect(Checksum.checksumType(null)).toBe('Default');
         expect(Checksum.checksumType('sha256')).toBe('sha256');
-        expect(Checksum.checksumType('sha1')).toBe('sha1');
+        expect(Checksum.checksumType('sha384')).toBe('sha384');
+        expect(Checksum.checksumType('sha512')).toBe('sha512');
     });
 
 });

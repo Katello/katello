@@ -17,7 +17,7 @@ module Katello
     DOWNLOAD_POLICIES = [DOWNLOAD_IMMEDIATE, DOWNLOAD_ON_DEMAND].freeze
 
     IGNORABLE_CONTENT_UNIT_TYPES = %w(srpm treeinfo).freeze
-    CHECKSUM_TYPES = %w(sha1 sha256).freeze
+    CHECKSUM_TYPES = %w(sha256 sha384 sha512).freeze
 
     SUBSCRIBABLE_TYPES = [Repository::YUM_TYPE, Repository::OSTREE_TYPE, Repository::DEB_TYPE].freeze
     SKIPABLE_METADATA_TYPES = [Repository::YUM_TYPE, Repository::DEB_TYPE].freeze
