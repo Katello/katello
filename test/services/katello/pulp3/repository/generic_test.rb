@@ -15,7 +15,7 @@ module Katello
 
           def test_distribution_options_includes_publication_attribute_if_content_type_publishes
             @repo.publication_href = 'a_version_href'
-            @repo.root.checksum_type = 'sha1'
+            @repo.root.checksum_type = 'sha512'
 
             publication_options = @service.distribution_options('/')
 
@@ -25,7 +25,7 @@ module Katello
           def test_distribution_options_excludes_publication_attribute_if_content_type_skips_publish
             Katello::RepositoryTypeManager.find("yum").stubs(:pulp3_skip_publication).returns(true)
             @repo.publication_href = 'a_version_href'
-            @repo.root.checksum_type = 'sha1'
+            @repo.root.checksum_type = '512'
 
             publication_options = @service.distribution_options('/')
 
