@@ -29,7 +29,7 @@ module Actions
     end
 
     def test_metadata_generation_with_changed_checksum_type
-      @repo.update(saved_checksum_type: "sha1")
+      @repo.update(saved_checksum_type: "sha512")
       @repo_clone.update(saved_checksum_type: "sha256")
       task = ForemanTasks.sync_task(action_class, @repo_mapping, copy_contents: false)
       assert_equal "success", task.result

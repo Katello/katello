@@ -48,7 +48,7 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
       param :ssl_client_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL Client Cert"), :allow_nil => true
       param :ssl_client_key_id, :number, :desc => N_("Identifier of the content credential containing the SSL Client Key"), :allow_nil => true
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
-      param :checksum_type, String, :desc => N_("Checksum of the repository, currently 'sha1' & 'sha256' are supported")
+      param :checksum_type, String, :desc => N_("Checksum used for published repository contents. Supported types: %s") % Katello::RootRepository::CHECKSUM_TYPES.join(', ')
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
       param :include_tags, Array, :desc => N_("Comma-separated list of tags to sync for a container image repository")
       param :exclude_tags, Array, :desc => N_("Comma-separated list of tags to exclude when syncing a container image repository. Default: any tag ending in \"-source\"")

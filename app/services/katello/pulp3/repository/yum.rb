@@ -22,12 +22,7 @@ module Katello
 
         def publication_options(repository_version)
           options = super(repository_version)
-          options.merge(
-            {
-              metadata_checksum_type: root.checksum_type,
-              package_checksum_type: root.checksum_type
-            }
-          )
+          options.merge(checksum_type: root.checksum_type)
         end
 
         def specific_create_options

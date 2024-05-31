@@ -860,7 +860,7 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::CloneContents }
 
     it 'plans' do
-      custom_repository.saved_checksum_type = "sha1"
+      custom_repository.saved_checksum_type = "sha512"
       repository.saved_checksum_type = "sha256"
       planned_action = plan_action action, [repository], custom_repository, :copy_contents => false
 

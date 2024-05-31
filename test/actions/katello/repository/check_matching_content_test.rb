@@ -47,7 +47,7 @@ module Actions
       action_class.any_instance.stubs(:yum_metadata_files_match?).returns(true)
       #::Katello::Repository.any_instance.expects(:published?).returns(true)
 
-      yum_repo.update_attribute(:saved_checksum_type, "sha1")
+      yum_repo.update_attribute(:saved_checksum_type, "sha512")
       yum_repo2.update_attribute(:saved_checksum_type, "sha256")
 
       plan = plan_action(action, :source_repo_id => yum_repo.id, :target_repo_id => yum_repo2.id)
