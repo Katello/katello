@@ -767,6 +767,26 @@ module Katello
       assert_response :success
     end
 
+    def test_skip_candlepin_environment_update
+      assert_sync_task(::Actions::Katello::Repository::Destroy) do |repo|
+        repo.id == @repository.id
+      end
+
+      delete :destroy, params: { :id => @repository.id, :skip_candlepin_environment_update => true }
+
+      assert_response :success
+    end
+
+    def test_skip_candlepin_remove_content
+      assert_sync_task(::Actions::Katello::Repository::Destroy) do |repo|
+        repo.id == @repository.id
+      end
+
+      delete :destroy, params: { :id => @repository.id, :skip_candlepin_remove_content => true }
+
+      assert_response :success
+    end
+
     def test_destroy_protected
       allowed_perms = [@destroy_permission]
       denied_perms = [@read_permission, @create_permission, @update_permission]

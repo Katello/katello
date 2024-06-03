@@ -40,7 +40,9 @@ module Actions
               output[:delete_response] = ::Katello::Resources::Candlepin::Environment.delete_content(input[:cp_environment_id], output[:delete_ids])
               break
             rescue RestClient::ResourceNotFound => e
-              raise e if ((retries += 1) == max_retries)
+              if ((retries += 1) == max_retries)
+                Rails.logger.warn("Skipping deleting content with ID #{e} because it was not found")
+              end
               # Candlepin raises a 404 in case a content id is not found in this environment
               # If thats the case lets just refresh the existing ids list (which hopefully will not have the 404'd content)
               # and try again.
