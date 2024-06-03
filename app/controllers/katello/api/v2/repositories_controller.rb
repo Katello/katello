@@ -410,12 +410,16 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
 
     api :DELETE, "/repositories/:id", N_("Destroy a custom repository")
     param :id, :number, :required => true
+    param :skip_candlepin_environment_update, :bool, :required => false, :desc => N_('Skip updating the candlepin environment section in the destroy task.')
+    param :skip_candlepin_remove_content, :bool, :required => false, :desc => N_('Skip remove content in candlepin section in the destroy task.')
     param :remove_from_content_view_versions, :bool, :required => false, :desc => N_("Force delete the repository by removing it from all content view versions")
     param :delete_empty_repo_filters, :bool, :required => false, :desc => N_("Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.")
     def destroy
       sync_task(::Actions::Katello::Repository::Destroy, @repository,
                 remove_from_content_view_versions: ::Foreman::Cast.to_bool(params.fetch(:remove_from_content_view_versions, false)),
-                delete_empty_repo_filters: ::Foreman::Cast.to_bool(params.fetch(:delete_empty_repo_filters, true))
+                delete_empty_repo_filters: ::Foreman::Cast.to_bool(params.fetch(:delete_empty_repo_filters, true)),
+                skip_environment_update: ::Foreman::Cast.to_bool(params.fetch(:skip_candlepin_environment_update, false)),
+                destroy_content: ::Foreman::Cast.to_bool(params.fetch(:skip_candlepin_remove_content, true))
                 )
       respond_for_destroy
     end
