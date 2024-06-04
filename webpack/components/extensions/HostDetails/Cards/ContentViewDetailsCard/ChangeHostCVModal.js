@@ -180,7 +180,7 @@ const ChangeHostCVModal = ({
           variant="warning"
           ouiaId="multi-env-alert"
           isInline
-          title={__('This host is associated with multiple content view environments. If you assign a lifecycle environment or content view here, the host will be removed from the other environments.')}
+          title={__('This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments.')}
           style={{ marginBottom: '1rem' }}
         />
       }
