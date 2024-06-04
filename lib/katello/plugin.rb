@@ -651,6 +651,12 @@ Foreman::Plugin.register :katello do
         default: true,
         full_name: N_('Distribute archived content view versions'),
         description: N_("If this is enabled, repositories of content view versions without environments (\"archived\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'.")
+
+      setting 'automatic_content_count_updates',
+        type: :boolean,
+        default: true,
+        full_name: N_('Calculate content counts on smart proxies automatically'),
+        description: N_("If this is enabled, content counts on smart proxies will be updated automatically after content sync.")
     end
   end
 
