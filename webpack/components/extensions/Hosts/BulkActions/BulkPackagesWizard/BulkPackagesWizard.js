@@ -98,10 +98,12 @@ const BulkPackagesWizard = () => {
 
   // eslint-disable-next-line no-restricted-globals
   const selectionIsValid = count => count > 0 || isNaN(count);
+  const packagesResultsPresent = packagesResults?.length > 0;
   const packageSelectionIsValid =
     selectionIsValid(packagesBulkSelect.selectedCount) || selectedAction === UPGRADE_ALL;
   const hostSelectionIsValid = selectionIsValid(hostsBulkSelect.hostsBulkSelect.selectedCount);
-  const step2Valid = shouldValidateStep2 ? packageSelectionIsValid : true;
+  let step2Valid = shouldValidateStep2 ? packageSelectionIsValid : true;
+  if (!packagesResultsPresent) step2Valid = false;
   const step3Valid = shouldValidateStep3 ? hostSelectionIsValid : true;
   const step4Valid = hostSelectionIsValid && packageSelectionIsValid;
 
@@ -185,7 +187,7 @@ const BulkPackagesWizard = () => {
           name={__('Review hosts')}
           id="mpw-step-3"
           status={step3Valid ? 'default' : 'error'}
-          footer={{ isNextDisabled: !step4Valid, onClose: closeModal }}
+          footer={{ isNextDisabled: !step4Valid || !packagesResultsPresent, onClose: closeModal }}
         >
           <HostReview
             key={modalOpen}
@@ -198,7 +200,7 @@ const BulkPackagesWizard = () => {
           name={__('Review')}
           id="mpw-review-step"
           footer={<BulkPackagesReviewFooter />}
-          isDisabled={!step4Valid}
+          isDisabled={!step4Valid || !packagesResultsPresent}
         >
           <BulkPackagesReview />
         </WizardStep>

@@ -116,6 +116,15 @@ const BulkPackagesTable = ({
           style={{ marginBottom: '1rem' }}
         />
       )}
+      {!results?.length && (
+        <Alert
+          ouiaId="no-packages-found-alert"
+          variant="info"
+          isInline
+          title={__('No upgradable packages found.')}
+          style={{ marginBottom: '1rem' }}
+        />
+      )}
       <TableIndexPage
         columns={columns}
         showCheckboxes
