@@ -116,7 +116,7 @@ const BulkPackagesTable = ({
           style={{ marginBottom: '1rem' }}
         />
       )}
-      {!results?.length && (
+      {tableType === 'upgrade' && !results?.length && (
         <Alert
           ouiaId="no-packages-found-alert"
           variant="info"

@@ -74,7 +74,6 @@ module Katello
       elsif applicable
         collection = collection.applicable_to_hosts(@hosts)
       end
-
       collection
     end
 

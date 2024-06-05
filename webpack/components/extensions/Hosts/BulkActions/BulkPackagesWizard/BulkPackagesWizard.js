@@ -1,11 +1,12 @@
 import React, { useState, createContext, useContext } from 'react';
-import { Radio, Text, TextVariants, TextContent } from '@patternfly/react-core';
+import { Radio, Text, TextVariants, TextContent, Alert } from '@patternfly/react-core';
 import { Wizard, WizardHeader, WizardStep } from '@patternfly/react-core/next';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
 import { useTableIndexAPIResponse } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
+import { STATUS } from 'foremanReact/constants';
 import { HOSTS_API_PATH } from 'foremanReact/routes/Hosts/constants';
 import HostReview from './03_HostReview';
 import { BulkPackagesReview, dropdownOptions } from './04_Review';
@@ -83,6 +84,7 @@ const BulkPackagesWizard = () => {
       results: packagesResults,
       ...packagesMetadata
     },
+    status: packagesStatus,
   } = packagesResponse;
 
   const { total, page, subtotal } = packagesMetadata;
@@ -142,6 +144,15 @@ const BulkPackagesWizard = () => {
               {__('To manage packages, select an action.')}
             </Text>
           </TextContent>
+          {packagesStatus === STATUS.RESOLVED && !packagesResultsPresent && (
+            <Alert
+              ouiaId="no-packages-found-alert"
+              variant="info"
+              isInline
+              title={__('No upgradable packages found.')}
+              style={{ marginBottom: '1rem' }}
+            />
+          )}
           <div style={{ marginBottom: '1rem' }} />
           <div style={{ marginLeft: '1rem' }}>
             <Radio
