@@ -1,7 +1,7 @@
 <%#
 kind: job_template
 name: Remove packages by search query - Katello Ansible Default
-job_category: Katello
+job_category: Katello via Ansible
 description_format: 'Remove package(s) %{Packages search query}'
 feature: katello_package_remove_by_search
 provider_type: Ansible
@@ -19,7 +19,7 @@ template_inputs:
 - hosts: all
   tasks:
     - package:
-        name: 
+        name:
 <% package_names.each do |package_name| -%>
           - <%= package_name %>
 <% end -%>
