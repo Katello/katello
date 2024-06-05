@@ -463,6 +463,7 @@ module Katello
         Katello::Host::SubscriptionFacet.any_instance.stubs(:update_from_consumer_attributes)
         ::Host::Managed.any_instance.stubs(:refresh_global_status!)
         assert_equal ::Katello::RhelLifecycleStatus::UNKNOWN, @host.get_status(::Katello::RhelLifecycleStatus).status
+        Date.expects(:today).returns(Date.new(2024, 5, 30))
         facts = {
           "distribution.id" => "Ootpa",
           "distribution::version" => "8.6",
