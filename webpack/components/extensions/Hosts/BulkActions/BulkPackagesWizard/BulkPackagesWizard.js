@@ -95,8 +95,10 @@ const BulkPackagesWizard = () => {
     idColumn: 'name',
   });
 
+  const initialSelectedHosts = fetchBulkParams();
+
   const hostsBulkSelect =
-    useHostsBulkSelect({ initialSelectedHosts: fetchBulkParams(), modalIsOpen: modalOpen });
+    useHostsBulkSelect({ initialSelectedHosts, modalIsOpen: modalOpen });
 
   // eslint-disable-next-line no-restricted-globals
   const selectionIsValid = count => count > 0 || isNaN(count);
@@ -204,6 +206,7 @@ const BulkPackagesWizard = () => {
             key={modalOpen}
             selectedAction={selectedAction}
             hostsBulkSelect={hostsBulkSelect}
+            initialSelectedHosts={initialSelectedHosts}
             setShouldValidateStep={setShouldValidateStep3}
           />
         </WizardStep>
