@@ -137,6 +137,8 @@ class ManageManifestModal extends Component {
       return name;
     };
 
+    const manifestExpiredMessage = manifestExpirationDate ? __('Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.') : __('Your manifest has expired. To continue using Red Hat content, import a new manifest.');
+
     return (
       <ForemanModal id={MANAGE_MANIFEST_MODAL_ID} title={__('Manage Manifest')}>
         <Tabs id="manifest-history-tabs">
@@ -181,7 +183,7 @@ class ManageManifestModal extends Component {
                           title={__('Manifest expired')}
                         >
                           <FormattedMessage
-                            defaultMessage={__('Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.')}
+                            defaultMessage={manifestExpiredMessage}
                             values={{
                               expirationDate: new Date(manifestExpirationDate).toDateString(),
                             }}
@@ -198,7 +200,7 @@ class ManageManifestModal extends Component {
                           {getManifestName()}
                         </Col>
                       </Row>
-                      {isManifestImported && manifestExpirationDate &&
+                      {isManifestImported && !!manifestExpirationDate &&
                         <Row>
                           <Col sm={5} />
                           <Col sm={7}>
