@@ -454,6 +454,8 @@ module Katello
           ).each do |facet|
             facet.update_applicability_counts
             facet.update_errata_status
+          rescue NoMethodError
+            Rails.logger.warn _('Errata statuses not updated for deleted content facet with UUID %s') % facet.uuid
           end
         end
       end

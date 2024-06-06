@@ -654,6 +654,22 @@ module Katello
       end
     end
 
+    def test_update_host_statuses_host_deleted
+      other_location = taxonomies(:location2)
+      facet = katello_content_facets(:content_facet_two)
+      org = facet.host.organization
+      ::Katello::Host::ContentFacet.any_instance.stubs(:host).returns(nil)
+      Rails.logger.expects(:warn).once
+
+      assert_nothing_raised do
+        Location.as_taxonomy(org, other_location) do
+          facet.content_view_environments.each do |cve|
+            cve.content_view.update_host_statuses(cve.lifecycle_environment)
+          end
+        end
+      end
+    end
+
     def test_unpublishable?
       default_content_view = ContentView.default.first
       import_only_content_view = FactoryBot.create(:katello_content_view, :import_only)
