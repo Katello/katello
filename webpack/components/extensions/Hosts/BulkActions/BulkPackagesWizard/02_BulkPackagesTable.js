@@ -93,9 +93,6 @@ const BulkPackagesTable = ({
     },
   };
 
-  // to pass in so that TableIndexPage doesn't alter browser URL
-  const restrictedSearchQuery = query => query;
-
   return (
     <>
       <TextContent>
@@ -138,7 +135,6 @@ const BulkPackagesTable = ({
         replacementResponse={response}
         selectionToolbar={selectionToolbar}
         updateSearchQuery={updateSearchQuery}
-        restrictedSearchQuery={restrictedSearchQuery}
         rowSelectTd={RowSelectTd}
         selectOne={selectOne}
         isSelected={isSelected}
