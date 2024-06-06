@@ -1,3 +1,5 @@
-<%= javascript_include_tag *webpack_asset_paths('katello', extension: 'js') %>
+<% content_for(:javascripts) do %>
+    <%= webpacked_plugins_js_for :katello %>
+<% end %>
 <% @smartProxyId= @smart_proxy.id %>
 <%= react_component('Content', smartProxyId: @smartProxyId, organizationId: Organization.current&.id,)  %>
