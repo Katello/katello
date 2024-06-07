@@ -1,26 +1,13 @@
 require 'uri'
-require 'spidr'
 
 module Katello
   class RepoDiscovery
     include Katello::Util::HttpProxy
 
-    def self.create_for(content_type = 'yum')
-      class_for(content_type)
-    end
-
     def self.class_for(content_type)
-      case content_type
-      when 'file'
-        FileDiscovery
-      when 'yum'
-        YumDiscovery
-      when 'docker'
-        ContainerDiscovery
-      else
-        fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") %
-               { :content_type => content_type, :content_types => ["yum", "docker", "file"].join(", ") }
-      end
+      repo_discovery_class = RepositoryTypeManager.find_repository_type(content_type)&.repo_discovery_class
+      fail _("Content type does not support repo discovery") unless repo_discovery_class
+      repo_discovery_class
     end
 
     def uri(url)

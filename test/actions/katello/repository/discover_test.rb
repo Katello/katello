@@ -21,8 +21,10 @@ module Actions
 
       mock_discovery = mock
       url = 'http://foo.com'
-      ::Katello::RepoDiscovery.expects(:create_for).with(url, 'yum', 'admin', 'secret', nil, [], [], [url]).returns(mock_discovery)
-      mock_discovery.expects(:run).with("http://foo.com").once
+      repo_discovery_class = mock
+      ::Katello::RepoDiscovery.expects(:class_for).with('yum').returns(repo_discovery_class)
+      repo_discovery_class.expects(:new).with(url, [], [], [url], {upstream_username: 'admin', upstream_password: 'secret', search: nil}).returns(mock_discovery)
+      mock_discovery.expects(:run).with(url).once
 
       task = ForemanTasks.sync_task(action_class, url, 'yum', 'admin', 'secret', nil)
 
@@ -35,8 +37,10 @@ module Actions
 
       mock_discovery = mock
       url = 'http://foo.com'
-      ::Katello::RepoDiscovery.expects(:create_for).with(url, 'yum', 'admin', 'secret', nil, [], [], [url]).returns(mock_discovery)
-      mock_discovery.expects(:run).with("http://foo.com").once
+      repo_discovery_class = mock
+      ::Katello::RepoDiscovery.expects(:class_for).with('yum').returns(repo_discovery_class)
+      repo_discovery_class.expects(:new).with(url, [], [], [url], {upstream_username: 'admin', upstream_password: 'secret', search: nil}).returns(mock_discovery)
+      mock_discovery.expects(:run).with(url).once
 
       task = ForemanTasks.sync_task(action_class, url, 'yum', 'admin', 'secret', nil)
 
