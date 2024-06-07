@@ -6,6 +6,7 @@ import { foremanUrl } from 'foremanReact/common/helpers';
 import { ForemanHostsIndexActionsBarContext } from 'foremanReact/components/HostsIndex';
 import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import { addModal } from 'foremanReact/components/ForemanModal/ForemanModalActions';
+import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
 
 const HostActionsBar = () => {
   const {
@@ -21,6 +22,8 @@ const HostActionsBar = () => {
     }));
   }, [dispatch]);
   const { setModalOpen } = useForemanModal({ id: 'bulk-change-cv-modal' });
+
+  const orgId = useForemanOrganization()?.id;
 
   let href = '';
   if (selectAllMode) {
@@ -44,7 +47,7 @@ const HostActionsBar = () => {
         ouiaId="bulk-change-cv-dropdown-item"
         key="bulk-change-cv-dropdown-item"
         onClick={setModalOpen}
-        isDisabled={selectedCount === 0}
+        isDisabled={selectedCount === 0 || !orgId}
       >
         {__('Change content view environments')}
       </DropdownItem>
