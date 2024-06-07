@@ -18,7 +18,7 @@
 
 <% spinner_path = asset_path('spinner.gif') %>
 
-<%= field(f, ks_repo_select_attr, {:label => _("Synced Content"), :help_inline => kickstart_repo_inherited? ? 'Inherited' : nil}) do %>
+<%= field(f, ks_repo_select_attr, {:label => _("Synced Content"), :help_inline => kickstart_repo_inheritable?(@host) ? 'Automatically selected from content source, lifecycle environment, content_view, architecture, and operating system' : nil}) do %>
   <%= select_tag ks_repo_select_id,  view_to_options(kickstart_options, kickstart_repo_id, blank_or_inherit_with_id(f, :kickstart_repository)), :data => {"spinner_path" => spinner_path, "kickstart-repository-id" => kickstart_repo_id},
              :class => 'form-control',  :name => ks_repo_select_name, :disabled => kickstart_options.empty? %>
 <% end %>
