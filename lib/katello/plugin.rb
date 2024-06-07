@@ -459,7 +459,7 @@ Foreman::Plugin.register :katello do
         type: :boolean,
         default: false,
         full_name: N_('Generate errata status from directly-installable content'),
-        description: N_("If true, only errata that can be installed without an incremental update will affect the host's errata status.")
+        description: N_("If true, only errata that can be installed without an incremental update will affect the host's errata status. Also affects the Host Collections dashboard widget.")
 
       setting 'restrict_composite_view',
         type: :boolean,
