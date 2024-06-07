@@ -12,20 +12,20 @@ module Katello
       edit_action? && !using_discovered_hosts_page?
     end
 
-    def content_source_inherited?
-      !using_hostgroups_page? && @host.content_source.blank? && @host&.hostgroup&.content_source.present? && cv_lce_disabled?
+    def content_source_inherited?(host)
+      !using_hostgroups_page? && host&.content_source.blank? && host&.hostgroup&.content_source.present? && cv_lce_disabled?
     end
 
-    def lifecycle_environment_inherited?
-      !using_hostgroups_page? && @host.lifecycle_environments.empty? && @host&.hostgroup&.lifecycle_environment.present? && cv_lce_disabled?
+    def lifecycle_environment_inherited?(host)
+      !using_hostgroups_page? && host&.lifecycle_environments&.empty? && host&.hostgroup&.lifecycle_environment.present? && cv_lce_disabled?
     end
 
-    def content_view_inherited?
-      !using_hostgroups_page? && @host.content_views.empty? && @host&.hostgroup&.content_view.present? && cv_lce_disabled?
+    def content_view_inherited?(host)
+      !using_hostgroups_page? && host&.content_views&.empty? && host&.hostgroup&.content_view.present? && cv_lce_disabled?
     end
 
-    def kickstart_repo_inherited?
-      !using_hostgroups_page? && @host.kickstart_repository_id.blank? && @host&.hostgroup&.kickstart_repository.present? && cv_lce_disabled?
+    def kickstart_repo_inheritable?(host)
+      host&.kickstart_repository_id.blank?
     end
 
     def using_discovered_hosts_page?
