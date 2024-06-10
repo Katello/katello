@@ -133,7 +133,14 @@ module Katello
 
         repo_param[:mirroring_policy] = Katello::RootRepository::MIRRORING_POLICY_ADDITIVE if repo_param[:mirroring_policy].blank?
 
-        RootRepository.new(repo_param.merge(:product_id => self.id))
+        repo_param = repo_param.merge(:product_id => self.id)
+
+        # Container push may concurrently call root add several times before the db can update.
+        if repo_param[:is_container_push]
+          RootRepository.create_or_find_by!(repo_param)
+        else
+          RootRepository.new(repo_param)
+        end
       end
     end
   end

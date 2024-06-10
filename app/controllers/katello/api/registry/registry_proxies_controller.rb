@@ -3,15 +3,14 @@ module Katello
   class Api::Registry::RegistryProxiesController < Api::V2::ApiController
     before_action :disable_strong_params
     before_action :confirm_settings
-    before_action :confirm_push_settings, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
-                                                 :push_manifest]
     skip_before_action :authorize
     before_action :optional_authorize, only: [:token, :catalog]
     before_action :registry_authorize, except: [:token, :v1_search, :catalog]
     before_action :authorize_repository_read, only: [:pull_manifest, :tags_list]
-    # TODO: authorize_repository_write commented out until Katello indexes Pulp container push repositories.
-    # before_action :authorize_repository_write, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
-    #                                                   :push_manifest]
+    # TODO: authorize_repository_write commented out due to container push changes. Additional task needed to fix.
+    # before_action :authorize_repository_write, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
+    before_action :container_push_prop_validation, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
+    before_action :create_container_repo_if_needed, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
     skip_before_action :check_media_type, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
                                                  :push_manifest]
 
@@ -83,6 +82,301 @@ module Katello
       redirect_authorization_headers
       render_error('unauthorized', :status => :unauthorized)
       return false
+    end
+
+    def container_push_prop_validation(props = nil)
+      # Handle validation and repo creation for container pushes before talking to pulp
+      return false unless confirm_push_settings
+      props = parse_blob_push_props if props.nil?
+      return false unless check_blob_push_field_syntax(props)
+
+      # validate input and find the org and product either using downcase label or id
+      if props[:schema] == "label"
+        return false unless check_blob_push_org_label(props)
+        return false unless check_blob_push_product_label(props)
+      else
+        return false unless check_blob_push_org_id(props)
+        return false unless check_blob_push_product_id(props)
+      end
+
+      return false unless check_blob_push_container(props)
+      true
+    end
+
+    def parse_blob_push_props(path_string = nil)
+      # path string should follow one of these formats:
+      #   - /v2/{org_label}/{product_label}/{name}/blobs/uploads...
+      #   - /v2/id/{org_id}/{product_id}/{name}/blobs/uploads...
+      #   - /v2/{org_label}/{product_label}/{name}/manifests/...
+      #   - /v2/id/{org_id}/{product_id}/{name}/manifests/...
+      # inputs not matching format will return {valid_format: false}
+      path_string = @_request.fullpath if path_string.nil?
+      segments = path_string.split('/')
+
+      if segments.length >= 7 && segments[0] == "" && segments[1] == "v2" &&
+        segments[2] != "id" && (segments[5] == "blobs" || segments[5] == "manifests")
+
+        return {
+          valid_format: true,
+          schema: "label",
+          organization: segments[2],
+          product: segments[3],
+          name: segments[4]
+        }
+      elsif segments.length >= 8 && segments[0] == "" && segments[1] == "v2" &&
+        segments[2] == "id" && (segments[6] == "blobs" || segments[6] == "manifests")
+
+        return {
+          valid_format: true,
+          schema: "id",
+          organization: segments[3],
+          product: segments[4],
+          name: segments[5]
+        }
+      else
+        return {valid_format: false}
+      end
+    end
+
+    def check_blob_push_field_syntax(props)
+      # check basic url field syntax
+      unless props[:valid_format]
+        return render_podman_error(
+          "NAME_INVALID",
+          "Invalid format. Container pushes should follow 'organization_label/product_label/name' OR 'id/organization_id/product_id/name' schema.",
+          :bad_request
+        )
+      end
+      return true
+    end
+
+    # rubocop:disable Metrics/MethodLength
+    def check_blob_push_org_label(props)
+      org_label = props[:organization]
+      unless org_label.present? && org_label.length > 0
+        return render_podman_error(
+          "NAME_INVALID",
+          "Invalid format. Organization label cannot be blank.",
+          :bad_request
+        )
+      end
+      org = Organization.where("LOWER(label) = '#{org_label}'") # convert to lowercase
+      # reject ambiguous orgs (possible due to lowercase conversion)
+      if org.length > 1
+        # Determine if the repo already exists in one of the possible products. If yes,
+        # inform the user they need to destroy the existing repo and use the ID format
+        unless props[:product].blank? || props[:name].blank?
+          org.each do |o|
+            products = get_matching_products_from_org(o, props[:product])
+            products.each do |prod|
+              root_repos = get_root_repo_from_product(prod, props[:name])
+              unless root_repos.empty?
+                return render_podman_error(
+                  "NAME_INVALID",
+                  "Due to a change in your organizations, this container name has become "\
+                    "ambiguous (org name '#{org_label}'). If you wish to continue using this "\
+                    "container name, destroy the organization in conflict with '#{o.name} (id "\
+                    "#{o.id}). If you wish to keep both orgs, destroy '#{o.label}/#{prod.label}/"\
+                    "#{root_repos.first.label}' and retry your push using the id format.",
+                  :conflict
+                )
+              end
+            end
+          end
+        end
+
+        # Otherwise tell them to try pushing with ID format
+        return render_podman_error(
+          "NAME_INVALID",
+          "Organization label '#{org_label}' is ambiguous. Try using an id-based container name.",
+          :conflict
+        )
+      end
+      if org.length == 0
+        return render_podman_error(
+          "NAME_UNKNOWN",
+          "Organization not found: '#{org_label}'",
+          :not_found
+        )
+      end
+      @organization = org.first
+      true
+    end
+
+    def check_blob_push_org_id(props)
+      org_id = props[:organization]
+      unless org_id.present? && org_id == org_id.to_i.to_s
+        return render_podman_error(
+          "NAME_INVALID",
+          "Invalid format. Organization id must be an integer without leading zeros.",
+          :bad_request
+        )
+      end
+      @organization = Organization.find_by_id(org_id.to_i)
+      if @organization.nil?
+        return render_podman_error(
+          "NAME_UNKNOWN",
+          "Organization id not found: '#{org_id}'",
+          :not_found
+        )
+      end
+      true
+    end
+
+    def check_blob_push_product_label(props)
+      prod_label = props[:product]
+      unless prod_label.present? && prod_label.length > 0
+        return render_podman_error(
+          "NAME_INVALID",
+          "Invalid format. Product label cannot be blank.",
+          :bad_request
+        )
+      end
+      product = get_matching_products_from_org(@organization, prod_label)
+      # reject ambiguous products (possible due to lowercase conversion)
+      if product.length > 1
+        # Determine if the repo already exists in one of the possible products. If yes,
+        # inform the user they need to destroy the existing repo and use the ID format
+        unless props[:name].blank?
+          product.each do |prod|
+            root_repos = get_root_repo_from_product(prod, props[:name])
+            unless root_repos.empty?
+              return render_podman_error(
+                "NAME_INVALID",
+                "Due to a change in your products, this container name has become ambiguous "\
+                  "(product name '#{prod_label}'). If you wish to continue using this container "\
+                  "name, destroy the product in conflict with '#{prod.name}' (id #{prod.id}). If "\
+                  "you wish to keep both products, destroy '#{@organization.label}/#{prod.label}/"\
+                  "#{root_repos.first.label}' and retry your push using the id format.",
+                :conflict
+              )
+            end
+          end
+        end
+
+        return render_podman_error(
+          "NAME_INVALID",
+          "Product label '#{prod_label}' is ambiguous. Try using an id-based container name.",
+          :conflict
+        )
+      end
+      if product.length == 0
+        return render_podman_error(
+          "NAME_UNKNOWN",
+          "Product not found: '#{prod_label}'",
+          :not_found
+        )
+      end
+      @product = product.first
+      true
+    end
+
+    def check_blob_push_product_id(props)
+      prod_id = props[:product]
+      unless prod_id.present? && prod_id == prod_id.to_i.to_s
+        return render_podman_error(
+          "NAME_INVALID",
+          "Invalid format. Product id must be an integer without leading zeros.",
+          :bad_request
+        )
+      end
+      @product = @organization.products.find_by_id(prod_id.to_i)
+      if @product.nil?
+        return render_podman_error(
+          "NAME_UNKNOWN",
+          "Product id not found: '#{prod_id}'",
+          :not_found
+        )
+      end
+      true
+    end
+
+    def get_matching_products_from_org(organization, product_label)
+      return organization.products.where("LOWER(label) = '#{product_label}'") # convert to lowercase
+    end
+
+    def get_root_repo_from_product(product, root_repo_name)
+      return product.root_repositories.where(label: root_repo_name)
+    end
+
+    def check_blob_push_container(props)
+      unless props[:name].present? && props[:name].length > 0
+        return render_podman_error(
+          "NAME_INVALID",
+          "Invalid format. Container name cannot be blank.",
+          :bad_request
+        )
+      end
+
+      @container_name = props[:name]
+      @container_push_name_format = props[:schema]
+      if @container_push_name_format == "label"
+        @container_path_input = "#{props[:organization]}/#{props[:product]}/#{props[:name]}"
+      else
+        @container_path_input = "id/#{props[:organization]}/#{props[:product]}/#{props[:name]}"
+      end
+
+      # If the repo already exists, check if the existing push format matches
+      root_repo = get_root_repo_from_product(@product, @container_name).first
+      if !root_repo.nil? && @container_push_name_format != root_repo.container_push_name_format
+        return render_podman_error(
+          "NAME_INVALID",
+          "Repository name '#{@container_name}' already exists in this product using a different naming scheme. Please retry your request with the #{root_repo.container_push_name_format} format or destroy and recreate the repository using your preferred schema.",
+          :conflict
+        )
+      end
+
+      true
+    end
+
+    def create_container_repo_if_needed
+      if get_root_repo_from_product(@product, @container_name).empty?
+        root = @product.add_repo(
+          name: @container_name,
+          label: @container_name,
+          download_policy: 'immediate',
+          content_type: Repository::DOCKER_TYPE,
+          unprotected: true,
+          is_container_push: true,
+          container_push_name: @container_path_input,
+          container_push_name_format: @container_push_name_format
+        )
+        sync_task(::Actions::Katello::Repository::CreateRoot, root, @container_path_input)
+      end
+    end
+
+    def blob_push_cleanup
+      # after manifest upload, index content and set version href using pulp api
+      root_repo = get_root_repo_from_product(@product, @container_name)&.first
+      instance_repo = root_repo&.library_instance
+
+      unless root_repo.present? && instance_repo.present?
+        return render_podman_error(
+          "BLOB_UPLOAD_UNKNOWN",
+          "Could not locate local uploaded repository for content indexing.",
+          :not_found
+        )
+      end
+
+      api = ::Katello::Pulp3::Repository.api(SmartProxy.pulp_primary, ::Katello::Repository::DOCKER_TYPE).container_push_api
+      api_response = api.list(name: @container_path_input)&.results&.first
+      latest_version_href = api_response&.latest_version_href
+      pulp_href = api_response&.pulp_href
+
+      if latest_version_href.empty? || pulp_href.empty?
+        return render_podman_error(
+          "BLOB_UPLOAD_UNKNOWN",
+          "Could not locate repository properties for content indexing.",
+          :not_found
+        )
+      end
+
+      instance_repo.update!(version_href: latest_version_href)
+      ::Katello::Pulp3::RepositoryReference.where(root_repository_id: instance_repo.root_id,
+        content_view_id: instance_repo.content_view.id, repository_href: pulp_href).create!
+      instance_repo.index_content
+
+      true
     end
 
     def find_writable_repository
@@ -205,17 +499,6 @@ module Katello
       redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers, max_redirects: 0) }
     end
 
-    def push_manifest
-      headers = translated_headers_for_proxy
-      headers['Content-Type'] = request.headers['Content-Type'] if request.headers['Content-Type']
-      body = @_request.body.read
-      pulp_response = Resources::Registry::Proxy.put(@_request.fullpath, body, headers)
-      pulp_response.headers.each do |key, value|
-        response.header[key.to_s] = value
-      end
-      head pulp_response.code
-    end
-
     def start_upload_blob
       headers = translated_headers_for_proxy
       headers['Content-Type'] = request.headers['Content-Type'] if request.headers['Content-Type']
@@ -225,6 +508,7 @@ module Katello
       pulp_response.headers.each do |key, value|
         response.header[key.to_s] = value
       end
+
       head pulp_response.code
     end
 
@@ -264,6 +548,21 @@ module Katello
       pulp_response.headers.each do |key, value|
         response.header[key.to_s] = value
       end
+
+      head pulp_response.code
+    end
+
+    def push_manifest
+      headers = translated_headers_for_proxy
+      headers['Content-Type'] = request.headers['Content-Type'] if request.headers['Content-Type']
+      body = @_request.body.read
+      pulp_response = Resources::Registry::Proxy.put(@_request.fullpath, body, headers)
+      pulp_response.headers.each do |key, value|
+        response.header[key.to_s] = value
+      end
+
+      cleanup_result = blob_push_cleanup if pulp_response.code.between?(200, 299)
+      return false unless cleanup_result
 
       head pulp_response.code
     end
@@ -423,8 +722,11 @@ module Katello
 
     def confirm_push_settings
       return true if SETTINGS.dig(:katello, :container_image_registry, :allow_push)
-      render_error('custom_error', :status => :not_found,
-                   :locals => { :message => "Registry push not supported" })
+      render_podman_error(
+        "UNSUPPORTED",
+        "Registry push is not enabled. To enable, add ':katello:'->':container_image_registry:'->':allow_push: true' in the katello settings file.",
+        :unprocessable_entity
+      )
     end
 
     def request_url
@@ -446,10 +748,19 @@ module Katello
       Rails.logger.debug "With body: #{filter_sensitive_data(response.body)}\n" unless route_name == 'pull_blob'
     end
 
+    def render_podman_error(code, message, status = :bad_request)
+      # Renders a podman-compatible error and returns false.
+      #     code: uppercase string code from opencontainer error code spec:
+      #         https://specs.opencontainers.org/distribution-spec/?v=v1.0.0#DISTRIBUTION-SPEC-140
+      #     message: a custom error string
+      #     status: a symbol in the 400 block of the rails response code table:
+      #         https://guides.rubyonrails.org/layouts_and_rendering.html#the-status-option
+      render json: {errors: [{code: code, message: message}]}, status: status
+      false
+    end
+
     def item_not_found(item)
-      msg = "#{item} was not found!"
-      # returning errors based on registry specifications in https://docs.docker.com/registry/spec/api/#errors
-      render json: {errors: [code: :invalid_request, message: msg, details: msg]}, status: :not_found
+      render_podman_error("NAME_UNKNOWN", "#{item} was not found!", :not_found)
     end
   end
 end
