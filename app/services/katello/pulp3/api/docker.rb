@@ -15,6 +15,10 @@ module Katello
         def recursive_add_api
           PulpContainerClient::ContainerRecursiveAddApi.new(api_client)
         end
+
+        def container_push_api
+          PulpContainerClient::RepositoriesContainerPushApi.new(api_client)
+        end
       end
     end
   end

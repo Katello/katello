@@ -118,7 +118,7 @@ module Katello
     end}
 
     before_validation :set_pulp_id
-    before_validation :set_container_repository_name, :if => :docker?
+    before_validation :set_container_repository_name, :unless => :skip_container_name?
 
     scope :has_url, -> { joins(:root).where.not("#{RootRepository.table_name}.url" => nil) }
     scope :on_demand, -> { joins(:root).where("#{RootRepository.table_name}.download_policy" => ::Katello::RootRepository::DOWNLOAD_ON_DEMAND) }
@@ -266,6 +266,10 @@ module Katello
 
     def content_view
       self.content_view_version.content_view
+    end
+
+    def skip_container_name?
+      self.library_instance? && self.root.docker? && self.root.is_container_push
     end
 
     def library_instance?

@@ -13,10 +13,13 @@ module Actions
 
           org = repository.organization
           sequence do
-            create_action = plan_action(Pulp3::Orchestration::Repository::Create,
-                                        repository, SmartProxy.pulp_primary, force_repo_create)
-
-            return if create_action.error
+            # Container push repositories will already be in pulp. The version_href is
+            # directly updated after a push.
+            unless root.is_container_push
+              create_action = plan_action(Pulp3::Orchestration::Repository::Create,
+                                          repository, SmartProxy.pulp_primary, force_repo_create)
+              return if create_action.error
+            end
 
             # when creating a clone, the following actions are handled by the
             # publish/promote process
@@ -32,13 +35,16 @@ module Actions
               end
             end
 
-            concurrence do
-              plan_self(:repository_id => repository.id, :clone => clone)
-              if !clone && repository.url.present?
-                repository.product.alternate_content_sources.with_type(repository.content_type).each do |acs|
-                  acs.smart_proxies.each do |smart_proxy|
-                    smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id, repository_id: repository.id)
-                    plan_action(Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+            # Container push repos do not need metadata generation or ACS (they do not sync)
+            unless root.is_container_push
+              concurrence do
+                plan_self(:repository_id => repository.id, :clone => clone)
+                if !clone && repository.url.present?
+                  repository.product.alternate_content_sources.with_type(repository.content_type).each do |acs|
+                    acs.smart_proxies.each do |smart_proxy|
+                      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id, repository_id: repository.id)
+                      plan_action(Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+                    end
                   end
                 end
               end
