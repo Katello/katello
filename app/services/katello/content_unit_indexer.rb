@@ -38,6 +38,12 @@ module Katello
             end
           end
 
+          # Even after this bug (https://github.com/pulp/pulp_rpm/issues/2821) is fixed,
+          # it is possible to have duplicate errata asosociated to a repo.
+          if @content_type.label == 'erratum'
+            to_insert.uniq! { |row| row["pulp_id"] || row[:pulp_id] }
+          end
+
           next if to_insert.empty?
           insert_timestamps(to_insert)
           if @content_type.mutable
