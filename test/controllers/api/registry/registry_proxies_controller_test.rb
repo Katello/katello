@@ -536,11 +536,16 @@ module Katello
 
     describe 'container push' do
       it 'starts a blob upload to Pulp' do
-        repo_name = 'a repo'
+        repo_name = 'test_org/test_product/test_name'
+        @controller.expects(:check_blob_push_org_label).returns(true)
+        @controller.expects(:check_blob_push_product_label).returns(true)
+        @controller.expects(:check_blob_push_container).returns(true)
+        @controller.expects(:create_container_repo_if_needed)
+
         # The content type should be octet-stream, but action controller
         # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
         Resources::Registry::Proxy.expects(:post).with(
-              "/v2/#{ERB::Util.url_encode(repo_name)}/blobs/uploads",
+              "/v2/#{repo_name}/blobs/uploads",
               is_a(StringIO),
               has_entries('MOCK-TEST' => 123,
                           'Content-Type' => 'application/json',
@@ -549,13 +554,18 @@ module Katello
         request.env['HTTP_MOCK_TEST'] = 123
         request.headers['Content-Type'] = 'application/json'
         resp = post :start_upload_blob, params: { repository: repo_name }
-        assert_equal 'Mars', resp.headers['Location']
         assert_equal resp.code, '202'
+        assert_equal 'Mars', resp.headers['Location']
       end
 
       it 'uploads a blob chunk' do
-        repo_name = 'repo'
+        repo_name = 'test_org/test_product/test_name'
         uuid = 'uuid'
+        @controller.expects(:check_blob_push_org_label).returns(true)
+        @controller.expects(:check_blob_push_product_label).returns(true)
+        @controller.expects(:check_blob_push_container).returns(true)
+        @controller.expects(:create_container_repo_if_needed)
+
         # The content type should be octet-stream, but action controller
         # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
         Resources::Registry::Proxy.expects(:patch).with(
@@ -571,13 +581,18 @@ module Katello
         request.headers['Content-Range'] = 'bytes 500-1000/65989'
         request.env['HTTP_MOCK_TEST'] = 123
         resp = patch :upload_blob, params: { repository: repo_name, uuid: uuid }
-        assert_equal 'Mars', resp.headers['Location']
         assert_equal resp.code, '202'
+        assert_equal 'Mars', resp.headers['Location']
       end
 
       it 'finishes a blob upload to Pulp' do
-        repo_name = 'repo'
+        repo_name = 'test_org/test_product/test_name'
         uuid = 'uuid'
+        @controller.expects(:check_blob_push_org_label).returns(true)
+        @controller.expects(:check_blob_push_product_label).returns(true)
+        @controller.expects(:check_blob_push_container).returns(true)
+        @controller.expects(:create_container_repo_if_needed)
+
         # The content type should be octet-stream, but action controller
         # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
         Resources::Registry::Proxy.expects(:put).with(
@@ -592,13 +607,19 @@ module Katello
         request.headers['Content-Type'] = 'application/json'
         request.headers['Content-Range'] = 'bytes 500-1000/65989'
         resp = put :finish_upload_blob, params: { repository: repo_name, uuid: uuid }
-        assert_equal 'Mars', resp.headers['Location']
         assert_equal resp.code, '201'
+        assert_equal 'Mars', resp.headers['Location']
       end
 
       it 'pushes a manifest' do
-        repo_name = 'repo'
+        repo_name = 'test_org/test_product/test_name'
         tag = 'latest'
+        @controller.expects(:check_blob_push_org_label).returns(true)
+        @controller.expects(:check_blob_push_product_label).returns(true)
+        @controller.expects(:check_blob_push_container).returns(true)
+        @controller.expects(:create_container_repo_if_needed)
+        @controller.expects(:blob_push_cleanup).returns(true)
+
         # The content type should be application/vnd.oci.image.manifest.v1+json, but action controller
         # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
         Resources::Registry::Proxy.expects(:put).with(
@@ -614,11 +635,561 @@ module Katello
         assert_equal resp.code, '201'
       end
 
+      it 'parses valid blob push properties' do
+        path_strings = [
+          "/v2/foo/bar/baz/blobs/uploads",
+          "/v2/foo/bar/baz/manifests/q",
+          "/v2/underscore_org/product-dashed/name_numbered_12/blobs/uploads",
+          "/v2/foo/bar/baz/blobs/uploads?qwertyuiop=asdfghjkl",
+          "/v2/foo/bar/baz/manifests/additional/directories/after/name",
+          "/v2/id/0/0/foo/blobs/uploads",
+          "/v2/id/867/5309/foo/blobs/uploads?qwertyuiop=asdfghjkl"
+        ]
+        results = [
+          {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"},
+          {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"},
+          {valid_format: true, schema: "label", organization: "underscore_org", product: "product-dashed", name: "name_numbered_12"},
+          {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"},
+          {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"},
+          {valid_format: true, schema: "id", organization: "0", product: "0", name: "foo"},
+          {valid_format: true, schema: "id", organization: "867", product: "5309", name: "foo"}
+        ]
+        path_strings.each_index do |i|
+          actual_result = @controller.parse_blob_push_props(path_strings[i])
+
+          # checking like this because actual result will contain path strings, etc
+          results[i].each do |key, value|
+            assert_equal value, actual_result[key]
+          end
+        end
+      end
+
+      it 'rejects invalid blob push properties' do
+        path_strings = [
+          "/wrong",
+          "/v2/wrong",
+          "/v2/foo/wrong",
+          "/v2/foo/bar/wrong",
+          "/v2/foo/bar/baz/wrong",
+          "/v2/foo/bar/baz/blobs/",
+          "/v2/foo/bar/baz/manifests",
+          "/v2/id/",
+          "/v2/id/wrong",
+          "/v2/id/0/wrong",
+          "/v2/id/0/0/wrong",
+          "/v2/id/0/0/foo/wrong",
+          "/v2/id/0/0/foo/blobs/",
+          "/v2/id/0/0/foo/manifests/"
+        ]
+        path_strings.each do |path_string|
+          result = @controller.parse_blob_push_props(path_string)
+          refute result[:valid_format]
+        end
+      end
+
+      it 'renders error on invalid blob properties' do
+        expect_render_podman_error("NAME_INVALID", :bad_request)
+        refute @controller.check_blob_push_field_syntax({valid_format: false})
+      end
+
+      it 'determines correct org with label' do
+        mock_org = mock('Organization')
+        props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
+        Organization.stubs(:where).with("LOWER(label) = '#{props[:organization]}'").returns([mock_org])
+        assert @controller.check_blob_push_org_label(props)
+        assert_equal mock_org, @controller.instance_variable_get(:@organization)
+      end
+
+      it 'determines correct org with id' do
+        mock_org = mock('Organization')
+        props = {valid_format: true, schema: "id", organization: "0", product: "0", name: "foo"}
+        Organization.stubs(:find_by_id).with(props[:organization].to_i).returns(mock_org)
+        assert @controller.check_blob_push_org_id(props)
+        assert_equal mock_org, @controller.instance_variable_get(:@organization)
+      end
+
+      it 'rejects missing org label' do
+        props = {valid_format: true, schema: "label", product: "bar", name: "baz"}
+        expect_render_podman_error("NAME_INVALID", :bad_request)
+        refute @controller.check_blob_push_org_label(props)
+      end
+
+      it 'rejects blank org label' do
+        props = {valid_format: true, schema: "label", organization: "", product: "bar", name: "baz"}
+        expect_render_podman_error("NAME_INVALID", :bad_request)
+        refute @controller.check_blob_push_org_label(props)
+      end
+
+      it 'rejects ambiguous org label with existing repo' do
+        props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
+        mock_root_repo1 = mock('root_repository')
+        mock_root_repo1.stubs(:label).returns(props[:name])
+        mock_root_repos1 = mock('root_repositories')
+        mock_root_repos1.stubs(:where).with(label: props[:name]).returns([mock_root_repo1])
+        mock_prod1 = mock('product')
+        mock_prod1.stubs(:root_repositories).returns(mock_root_repos1)
+        mock_prod1.stubs(:label).returns(props[:product])
+        mock_products1 = mock('products')
+        mock_products1.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([mock_prod1])
+        mock_org1 = mock('Organization')
+        mock_org1.stubs(:products).returns(mock_products1)
+        mock_org1.stubs(:name).returns(props[:organization])
+        mock_org1.stubs(:id).returns(0)
+        mock_org1.stubs(:label).returns(props[:organization])
+        mock_org2 = mock('Organization')
+        Organization.stubs(:where).with("LOWER(label) = '#{props[:organization]}'").returns([mock_org1, mock_org2])
+        expect_render_podman_error("NAME_INVALID", :conflict)
+        refute @controller.check_blob_push_org_label(props)
+      end
+
+      it 'rejects ambiguous org label without existing repo' do
+        props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
+        mock_products1 = mock('products')
+        mock_products1.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([])
+        mock_org1 = mock('Organization')
+        mock_org1.stubs(:products).returns(mock_products1)
+        mock_products2 = mock('products')
+        mock_products2.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([])
+        mock_org2 = mock('Organization')
+        mock_org2.stubs(:products).returns(mock_products2)
+        Organization.stubs(:where).with("LOWER(label) = '#{props[:organization]}'").returns([mock_org1, mock_org2])
+        expect_render_podman_error("NAME_INVALID", :conflict)
+        refute @controller.check_blob_push_org_label(props)
+      end
+
+      it 'rejects org label when no org exists' do
+        props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
+        Organization.stubs(:where).with("LOWER(label) = '#{props[:organization]}'").returns([])
+        expect_render_podman_error("NAME_UNKNOWN", :not_found)
+        refute @controller.check_blob_push_org_label(props)
+      end
+
+      it 'rejects missing org id' do
+        props = {valid_format: true, schema: "id", product: "0", name: "foo"}
+        expect_render_podman_error("NAME_INVALID", :bad_request)
+        refute @controller.check_blob_push_org_id(props)
+      end
+
+      it 'rejects non-integer org id' do
+        props = {valid_format: true, schema: "id", organization: "invalid", product: "0", name: "foo"}
+        expect_render_podman_error("NAME_INVALID", :bad_request)
+        refute @controller.check_blob_push_org_id(props)
+      end
+
+      it 'rejects org id when no org exists' do
+        props = {valid_format: true, schema: "id", organization: "0", product: "0", name: "foo"}
+        Organization.stubs(:find_by_id).with(props[:organization].to_i).returns([])
+        expect_render_podman_error("NAME_UNKNOWN", :not_found)
+        refute @controller.check_blob_push_org_label(props)
+      end
+
+      it 'determines correct prod with label' do
+        props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
+        mock_prod = mock('Product')
+        mock_products = mock('products')
+        mock_products.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([mock_prod])
+        mock_org = mock('Organization')
+        mock_org.stubs(:products).returns(mock_products)
+        @controller.instance_variable_set(:@organization, mock_org)
+
+        assert @controller.check_blob_push_product_label(props)
+        assert_equal mock_prod, @controller.instance_variable_get(:@product)
+      end
+
+      it 'determines correct prod with id' do
+        props = {valid_format: true, schema: "id", organization: "0", product: "0", name: "foo"}
+        mock_prod = mock('Product')
+        mock_products = mock('products')
+        mock_products.stubs(:find_by_id).with(props[:product].to_i).returns(mock_prod)
+        mock_org = mock('Organization')
+        mock_org.stubs(:products).returns(mock_products)
+        @controller.instance_variable_set(:@organization, mock_org)
+
+        assert @controller.check_blob_push_product_id(props)
+        assert_equal mock_prod, @controller.instance_variable_get(:@product)
+      end
+
+      it 'rejects missing prod label' do
+        props = {valid_format: true, schema: "label", organization: "foo", name: "baz"}
+        expect_render_podman_error("NAME_INVALID", :bad_request)
+        refute @controller.check_blob_push_product_label(props)
+      end
+
+      it 'rejects blank prod label' do
+        props = {valid_format: true, schema: "label", organization: "foo", product: "", name: "baz"}
+        expect_render_podman_error("NAME_INVALID", :bad_request)
+        refute @controller.check_blob_push_product_label(props)
+      end
+
+      it 'rejects ambiguous prod label with existing repo' do
+        props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
+        mock_root_repo1 = mock('root_repository')
+        mock_root_repo1.stubs(:label).returns(props[:name])
+        mock_root_repos1 = mock('root_repositories')
+        mock_root_repos1.stubs(:where).with(label: props[:name]).returns([mock_root_repo1])
+        mock_prod1 = mock('Product')
+        mock_prod1.stubs(:root_repositories).returns(mock_root_repos1)
+        mock_prod1.stubs(:name).returns(props[:product])
+        mock_prod1.stubs(:label).returns(props[:product])
+        mock_prod1.stubs(:id).returns(0)
+        mock_prod2 = mock('Product')
+        mock_products = mock('products')
+        mock_products.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([mock_prod1, mock_prod2])
+        mock_org = mock('Organization')
+        mock_org.stubs(:label).returns(props[:organization])
+        mock_org.stubs(:products).returns(mock_products)
+        @controller.instance_variable_set(:@organization, mock_org)
+        expect_render_podman_error("NAME_INVALID", :conflict)
+        refute @controller.check_blob_push_product_label(props)
+      end
+
+      it 'rejects ambiguous prod label without existing repo' do
+        props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
+        mock_root_repos1 = mock('root_repositories')
+        mock_root_repos1.stubs(:where).with(label: props[:name]).returns([])
+        mock_prod1 = mock('Product')
+        mock_prod1.stubs(:root_repositories).returns(mock_root_repos1)
+        mock_root_repos2 = mock('root_repositories')
+        mock_root_repos2.stubs(:where).with(label: props[:name]).returns([])
+        mock_prod2 = mock('Product')
+        mock_prod2.stubs(:root_repositories).returns(mock_root_repos1)
+        mock_products = mock('products')
+        mock_products.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([mock_prod1, mock_prod2])
+        mock_org = mock('Organization')
+        mock_org.stubs(:label).returns(props[:organization])
+        mock_org.stubs(:products).returns(mock_products)
+        @controller.instance_variable_set(:@organization, mock_org)
+        expect_render_podman_error("NAME_INVALID", :conflict)
+        refute @controller.check_blob_push_product_label(props)
+      end
+
+      it 'rejects prod label when no prod exists' do
+        props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
+        mock_products = mock('products')
+        mock_products.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([])
+        mock_org = mock('Organization')
+        mock_org.stubs(:products).returns(mock_products)
+        @controller.instance_variable_set(:@organization, mock_org)
+        expect_render_podman_error("NAME_UNKNOWN", :not_found)
+        refute @controller.check_blob_push_product_label(props)
+      end
+
+      it 'rejects missing prod id' do
+        props = {valid_format: true, schema: "id", organization: "0", name: "foo"}
+        expect_render_podman_error("NAME_INVALID", :bad_request)
+        refute @controller.check_blob_push_product_id(props)
+      end
+
+      it 'rejects non-integer prod id' do
+        props = {valid_format: true, schema: "id", organization: "0", product: "invalid", name: "foo"}
+        expect_render_podman_error("NAME_INVALID", :bad_request)
+        refute @controller.check_blob_push_product_id(props)
+      end
+
+      it 'rejects prod id when no prod exists' do
+        props = {valid_format: true, schema: "id", organization: "0", product: "0", name: "foo"}
+        mock_products = mock('products')
+        mock_products.stubs(:find_by_id).with(props[:product].to_i).returns(nil)
+        mock_org = mock('Organization')
+        mock_org.stubs(:products).returns(mock_products)
+        @controller.instance_variable_set(:@organization, mock_org)
+        expect_render_podman_error("NAME_UNKNOWN", :not_found)
+        refute @controller.check_blob_push_product_id(props)
+      end
+
+      it 'sets container names correctly with label format' do
+        prop_list = [
+          {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"},
+          {valid_format: true, schema: "label", organization: "default_organization", product: "test_product", name: "test_name"},
+          {valid_format: true, schema: "id", organization: "0", product: "0", name: "test_name"},
+          {valid_format: true, schema: "id", organization: "867", product: "5309", name: "foo"}
+        ]
+        prop_list.each do |props|
+          mock_root_repo = mock('root_repository')
+          mock_root_repo.stubs(:container_push_name_format).returns(props[:schema])
+          mock_root_repositories = mock('root_repositories')
+          mock_root_repositories.stubs(:where).with(label: props[:name]).returns([mock_root_repo])
+          mock_product = mock('Product')
+          mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+          @controller.instance_variable_set(:@product, mock_product)
+
+          assert @controller.check_blob_push_container(props)
+          assert_equal props[:name], @controller.instance_variable_get(:@container_name)
+          assert_equal props[:schema], @controller.instance_variable_get(:@container_push_name_format)
+          if props[:schema] == "label"
+            assert_equal "#{props[:organization]}/#{props[:product]}/#{props[:name]}", @controller.instance_variable_get(:@container_path_input)
+          else
+            assert_equal "id/#{props[:organization]}/#{props[:product]}/#{props[:name]}", @controller.instance_variable_get(:@container_path_input)
+          end
+        end
+      end
+
+      it 'rejects container when name is missing' do
+        props = {valid_format: true, schema: "label", organization: "foo", product: "bar"}
+        expect_render_podman_error("NAME_INVALID", :bad_request)
+        refute @controller.check_blob_push_container(props)
+      end
+
+      it 'rejects container when name is blank' do
+        props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: ""}
+        expect_render_podman_error("NAME_INVALID", :bad_request)
+        refute @controller.check_blob_push_container(props)
+      end
+
+      it 'rejects containers with mismatching push name format' do
+        props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
+        mock_root_repo = mock('root_repository')
+        mock_root_repo.stubs(:container_push_name_format).returns("id")
+        mock_root_repositories = mock('root_repositories')
+        mock_root_repositories.stubs(:where).with(label: props[:name]).returns([mock_root_repo])
+        mock_product = mock('Product')
+        mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+        @controller.instance_variable_set(:@product, mock_product)
+        expect_render_podman_error("NAME_INVALID", :conflict)
+        refute @controller.check_blob_push_container(props)
+      end
+
+      it 'creates container repo when needed' do
+        container_name = "foo"
+        container_push_name = "default_org/test/foo"
+        container_push_name_format = "label"
+        mock_root_repo = mock('root_repository')
+        mock_root_repositories = mock('root_repositories')
+        mock_root_repositories.stubs(:where).with(label: container_name).returns([])
+        mock_product = mock('Product')
+        mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+        mock_product.expects(:add_repo).with(
+          name: container_name,
+          label: container_name,
+          download_policy: 'immediate',
+          content_type: Repository::DOCKER_TYPE,
+          unprotected: true,
+          is_container_push: true,
+          container_push_name: container_push_name,
+          container_push_name_format: container_push_name_format
+        ).returns(mock_root_repo)
+        @controller.instance_variable_set(:@product, mock_product)
+        @controller.instance_variable_set(:@container_name, container_name)
+        @controller.instance_variable_set(:@container_path_input, container_push_name)
+        @controller.instance_variable_set(:@container_push_name_format, container_push_name_format)
+        @controller.expects(:sync_task).with(
+          ::Actions::Katello::Repository::CreateRoot,
+          mock_root_repo,
+          container_push_name
+        ).returns(true)
+        assert @controller.create_container_repo_if_needed
+      end
+
+      it 'does not create container repo if it already exists' do
+        container_name = "foo"
+        mock_root_repo = mock('root_repository')
+        mock_root_repositories = mock('root_repositories')
+        mock_root_repositories.stubs(:where).with(label: container_name).returns([mock_root_repo])
+        mock_product = mock('Product')
+        mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+        mock_product.expects(:add_repo).never
+        @controller.instance_variable_set(:@product, mock_product)
+        @controller.instance_variable_set(:@container_name, container_name)
+        @controller.expects(:sync_task).never
+        @controller.create_container_repo_if_needed
+      end
+
+      it 'updates hrefs and triggers content indexing' do
+        container_name = "foo"
+        container_push_name = "default_org/test/foo"
+        latest_version_href = "asdfghjk"
+        pulp_href = "qwertyui"
+        root_id = 8_675_309
+        content_view_id = 2
+
+        # mock the product, root repo, instance repo, content view
+        mock_content_view = mock('content_view')
+        mock_content_view.stubs(:id).returns(content_view_id)
+        mock_instance_repo = mock('library_instance')
+        mock_instance_repo.expects(:update!).with(version_href: latest_version_href)
+        mock_instance_repo.stubs(:root_id).returns(root_id)
+        mock_instance_repo.stubs(:content_view).returns(mock_content_view)
+        mock_instance_repo.expects(:index_content)
+        mock_root_repo = mock('root_repository')
+        mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
+        mock_root_repositories = mock('root_repositories')
+        mock_root_repositories.stubs(:where).with(label: container_name).returns([mock_root_repo])
+        mock_product = mock('Product')
+        mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+        mock_product.expects(:add_repo).never
+
+        # mock the pulp api endpoint
+        mock_api_response_results = mock('mock_api_response_results')
+        mock_api_response_results.stubs(:latest_version_href).returns(latest_version_href)
+        mock_api_response_results.stubs(:pulp_href).returns(pulp_href)
+        mock_api_response = mock('mock_api_response')
+        mock_api_response.stubs(:results).returns([mock_api_response_results])
+        mock_container_push_api = mock('container_push_api')
+        mock_container_push_api.expects(:list).with(name: container_push_name).returns(mock_api_response)
+        mock_repo_api = mock('repo_api')
+        mock_repo_api.stubs(:container_push_api).returns(mock_container_push_api)
+
+        # mock the repository reference
+        mock_repo_reference = mock('repo_reference')
+        mock_repo_reference.expects(:create!)
+
+        # set up pulp stubs
+        mock_pulp_primary = mock('pulp_primary')
+        SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
+        ::Katello::Pulp3::Repository.expects(:api).with(mock_pulp_primary, ::Katello::Repository::DOCKER_TYPE).returns(mock_repo_api)
+        ::Katello::Pulp3::RepositoryReference.stubs(:where).with(
+          root_repository_id: root_id,
+          content_view_id: content_view_id,
+          repository_href: pulp_href
+        ).returns(mock_repo_reference)
+
+        # set up the controller
+        @controller.instance_variable_set(:@product, mock_product)
+        @controller.instance_variable_set(:@container_name, container_name)
+        @controller.instance_variable_set(:@container_path_input, container_push_name)
+
+        assert @controller.blob_push_cleanup
+      end
+
+      it 'rejects missing root repo on content indexing' do
+        container_name = "foo"
+
+        mock_root_repositories = mock('root_repositories')
+        mock_root_repositories.stubs(:where).with(label: container_name).returns([])
+        mock_product = mock('Product')
+        mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+
+        @controller.instance_variable_set(:@product, mock_product)
+        @controller.instance_variable_set(:@container_name, container_name)
+        expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
+        refute @controller.blob_push_cleanup
+      end
+
+      it 'rejects missing instance repo on content indexing' do
+        container_name = "foo"
+
+        mock_root_repo = mock('root_repository')
+        mock_root_repo.expects(:library_instance).returns(nil)
+        mock_root_repositories = mock('root_repositories')
+        mock_root_repositories.stubs(:where).with(label: container_name).returns([mock_root_repo])
+        mock_product = mock('Product')
+        mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+
+        @controller.instance_variable_set(:@product, mock_product)
+        @controller.instance_variable_set(:@container_name, container_name)
+        expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
+        refute @controller.blob_push_cleanup
+      end
+
+      it 'rejects missing api response on content indexing' do
+        container_name = "foo"
+        container_push_name = "default_org/test/foo"
+
+        mock_instance_repo = mock('library_instance')
+        mock_root_repo = mock('root_repository')
+        mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
+        mock_root_repositories = mock('root_repositories')
+        mock_root_repositories.stubs(:where).with(label: container_name).returns([mock_root_repo])
+        mock_product = mock('Product')
+        mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+
+        mock_container_push_api = mock('container_push_api')
+        mock_container_push_api.expects(:list).with(name: container_push_name).returns(nil)
+        mock_repo_api = mock('repo_api')
+        mock_repo_api.stubs(:container_push_api).returns(mock_container_push_api)
+
+        mock_pulp_primary = mock('pulp_primary')
+        SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
+        ::Katello::Pulp3::Repository.expects(:api).with(mock_pulp_primary, ::Katello::Repository::DOCKER_TYPE).returns(mock_repo_api)
+
+        @controller.instance_variable_set(:@product, mock_product)
+        @controller.instance_variable_set(:@container_name, container_name)
+        @controller.instance_variable_set(:@container_path_input, container_push_name)
+        expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
+        refute @controller.blob_push_cleanup
+      end
+
+      it 'rejects missing latest_version_href on content indexing' do
+        container_name = "foo"
+        container_push_name = "default_org/test/foo"
+        pulp_href = "qwertyui"
+
+        mock_instance_repo = mock('library_instance')
+        mock_root_repo = mock('root_repository')
+        mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
+        mock_root_repositories = mock('root_repositories')
+        mock_root_repositories.stubs(:where).with(label: container_name).returns([mock_root_repo])
+        mock_product = mock('Product')
+        mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+
+        mock_api_response_results = mock('mock_api_response_results')
+        mock_api_response_results.stubs(:latest_version_href).returns(nil)
+        mock_api_response_results.stubs(:pulp_href).returns(pulp_href)
+        mock_api_response = mock('mock_api_response')
+        mock_api_response.stubs(:results).returns([mock_api_response_results])
+        mock_container_push_api = mock('container_push_api')
+        mock_container_push_api.expects(:list).with(name: container_push_name).returns(mock_api_response)
+        mock_repo_api = mock('repo_api')
+        mock_repo_api.stubs(:container_push_api).returns(mock_container_push_api)
+
+        mock_pulp_primary = mock('pulp_primary')
+        SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
+        ::Katello::Pulp3::Repository.expects(:api).with(mock_pulp_primary, ::Katello::Repository::DOCKER_TYPE).returns(mock_repo_api)
+
+        @controller.instance_variable_set(:@product, mock_product)
+        @controller.instance_variable_set(:@container_name, container_name)
+        @controller.instance_variable_set(:@container_path_input, container_push_name)
+        expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
+        refute @controller.blob_push_cleanup
+      end
+
+      it 'rejects missing pulp_href on content indexing' do
+        container_name = "foo"
+        container_push_name = "default_org/test/foo"
+        latest_version_href = "asdfghjk"
+
+        mock_instance_repo = mock('library_instance')
+        mock_root_repo = mock('root_repository')
+        mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
+        mock_root_repositories = mock('root_repositories')
+        mock_root_repositories.stubs(:where).with(label: container_name).returns([mock_root_repo])
+        mock_product = mock('Product')
+        mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+        mock_product.expects(:add_repo).never
+
+        mock_api_response_results = mock('mock_api_response_results')
+        mock_api_response_results.stubs(:latest_version_href).returns(latest_version_href)
+        mock_api_response_results.stubs(:pulp_href).returns(nil)
+        mock_api_response = mock('mock_api_response')
+        mock_api_response.stubs(:results).returns([mock_api_response_results])
+        mock_container_push_api = mock('container_push_api')
+        mock_container_push_api.expects(:list).with(name: container_push_name).returns(mock_api_response)
+        mock_repo_api = mock('repo_api')
+        mock_repo_api.stubs(:container_push_api).returns(mock_container_push_api)
+
+        mock_pulp_primary = mock('pulp_primary')
+        SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
+        ::Katello::Pulp3::Repository.expects(:api).with(mock_pulp_primary, ::Katello::Repository::DOCKER_TYPE).returns(mock_repo_api)
+
+        @controller.instance_variable_set(:@product, mock_product)
+        @controller.instance_variable_set(:@container_name, container_name)
+        @controller.instance_variable_set(:@container_path_input, container_push_name)
+        expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
+        refute @controller.blob_push_cleanup
+      end
+
       def mock_pulp_response(code, headers)
         mock_response = mock
         mock_response.stubs(:code).returns(code)
         mock_response.stubs(:headers).returns(headers)
         mock_response
+      end
+
+      def expect_render_podman_error(error_code, error_status)
+        error = @controller.expects(:render_podman_error).with do |code, _message, status|
+          code == error_code && status == error_status
+        end
+        error.returns(false)
       end
     end
     #rubocop:enable Metrics/BlockLength
