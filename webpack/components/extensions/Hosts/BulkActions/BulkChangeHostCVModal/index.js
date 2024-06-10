@@ -5,9 +5,12 @@ import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanMod
 import BulkChangeHostCVModal from './BulkChangeHostCVModal';
 
 const BulkChangeHostCVModalScene = () => {
-  const org = useForemanOrganization();
+  const orgId = useForemanOrganization()?.id;
   const { selectedCount, fetchBulkParams } = useContext(ForemanActionsBarContext);
   const { modalOpen, setModalClosed } = useForemanModal({ id: 'bulk-change-cv-modal' });
+
+  if (!orgId) return null;
+
 
   return (
     <BulkChangeHostCVModal
@@ -16,7 +19,7 @@ const BulkChangeHostCVModalScene = () => {
       fetchBulkParams={fetchBulkParams}
       isOpen={modalOpen}
       closeModal={setModalClosed}
-      orgId={org?.id}
+      orgId={orgId}
     />
 
   );
