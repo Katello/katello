@@ -43,7 +43,19 @@ module Katello
     param :available_for, String, :desc => N_("Return packages that can be added to the specified object.  Only the value 'content_view_version' is supported.")
     param_group :search, ::Katello::Api::V2::ApiController
     def index
-      super
+      super # RepositoryContentController
+    end
+
+    api :GET, "/packages/thindex", N_("List all packages unique by name")
+    param_group :search, ::Katello::Api::V2::ApiController
+    def thindex
+      sort_by, sort_order, options = sort_options
+
+      options[:select] = "DISTINCT ON (#{Rpm.table_name}.name) #{Rpm.table_name}.id, #{Rpm.table_name}.name"
+      final_relation = custom_index_relation(Rpm.all)
+
+      result = scoped_search(final_relation, sort_by, sort_order, options)
+      respond_for_index(:collection => result, :template => "thindex")
     end
 
     def available_for_content_view_version(version)
@@ -54,7 +66,6 @@ module Katello
       applicable = ::Foreman::Cast.to_bool(params[:packages_restrict_applicable]) || params[:host_id]
       upgradable = ::Foreman::Cast.to_bool(params[:packages_restrict_upgradable])
       not_installed = ::Foreman::Cast.to_bool(params[:packages_restrict_not_installed])
-
       if upgradable
         collection = collection.installable_for_hosts(@hosts)
       elsif not_installed && params[:host_id]
@@ -63,7 +74,6 @@ module Katello
       elsif applicable
         collection = collection.applicable_to_hosts(@hosts)
       end
-
       collection
     end
 

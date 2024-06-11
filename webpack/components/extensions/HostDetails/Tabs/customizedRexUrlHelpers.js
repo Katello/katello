@@ -4,13 +4,16 @@ import { ERRATA_SEARCH_QUERY } from './ErrataTab/HostErrataConstants';
 import { PACKAGE_SEARCH_QUERY } from './PackagesTab/YumInstallablePackagesConstants';
 import { PACKAGES_SEARCH_QUERY, SELECTED_UPDATE_VERSIONS } from './PackagesTab/HostPackagesConstants';
 
-export const createJob = ({
-  hostname, feature, inputs,
-}) => {
+export const createJob = (options) => {
+  const {
+    hostname, hostSearch, feature, inputs,
+  } = options;
+  if (inputs[SELECTED_UPDATE_VERSIONS] === undefined) delete inputs[SELECTED_UPDATE_VERSIONS];
   const inputParams = Object.keys(inputs).map(key => `inputs[${key}]=${inputs[key]}`);
+  const search = hostSearch ?? `name ^ (${hostname})`;
   const params = [
     `feature=${feature}`,
-    `search=name ^ (${hostname})`,
+    `search=${search}`,
     ...inputParams,
   ];
   const urlQuery = encodeURI(params.join('&'));
@@ -23,8 +26,9 @@ export const katelloPackageInstallUrl = ({ hostname, packages }) => createJob({
   inputs: { package: packages },
 });
 
-export const katelloPackageInstallBySearchUrl = ({ hostname, search }) => createJob({
+export const katelloPackageInstallBySearchUrl = ({ hostname, hostSearch, search }) => createJob({
   hostname,
+  hostSearch,
   feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH,
   inputs: { [PACKAGE_SEARCH_QUERY]: search },
 });
@@ -35,8 +39,11 @@ export const katelloPackageUpdateUrl = ({ hostname, packageName }) => createJob(
   inputs: { package: packageName },
 });
 
-export const packagesUpdateUrl = ({ hostname, search, versions }) => createJob({
+export const packagesUpdateUrl = ({
+  hostname, hostSearch, search, versions,
+}) => createJob({
   hostname,
+  hostSearch,
   feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
   inputs: { [PACKAGES_SEARCH_QUERY]: search, [SELECTED_UPDATE_VERSIONS]: versions },
 });

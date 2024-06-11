@@ -243,7 +243,7 @@ module Katello
                            'katello/products' => [:auto_complete, :auto_complete_search],
                            'katello/api/v2/products' => [:index, :show, :auto_complete_search],
                            'katello/api/v2/repositories' => [:index, :show, :repository_types, :content_types, :auto_complete_search, :cancel],
-                           'katello/api/v2/packages' => [:index, :show, :auto_complete_search, :auto_complete_name, :auto_complete_arch, :compare],
+                           'katello/api/v2/packages' => [:index, :thindex, :show, :auto_complete_search, :auto_complete_name, :auto_complete_arch, :compare],
                            'katello/api/v2/srpms' => [:index, :show, :auto_complete_search, :compare],
                            'katello/api/v2/debs' => [:index, :show, :auto_complete_search, :auto_complete_name, :auto_complete_arch, :compare],
                            'katello/api/v2/package_groups' => [:index, :show, :auto_complete_search, :compare],

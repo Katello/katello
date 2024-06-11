@@ -6,6 +6,8 @@ module Katello
       @repo = katello_repositories(:fedora_17_x86_64_dev)
       @version = ContentViewVersion.first
       @rpm = katello_rpms(:one)
+      @rpm2 = katello_rpms(:two)
+      @rpm3 = katello_rpms(:one_two)
       @host = hosts(:one)
       @simple_filter = katello_content_view_filters(:simple_filter)
       @one_package_rule = katello_content_view_package_filter_rules(:one_package_rule)
@@ -41,6 +43,31 @@ module Katello
 
       assert_response :success
       assert_template "katello/api/v2/packages/index"
+    end
+
+    def test_thindex
+      response = get :thindex
+
+      assert_response :success
+      assert_template "katello/api/v2/packages/thindex"
+
+      response_data = JSON.parse(response.body)
+      results = response_data['results'] || []
+      assert_includes results.map { |rpm| rpm['id'] }, @rpm.id
+      refute_includes results.map { |rpm| rpm['id'] }, @rpm3.id
+    end
+
+    def test_index_not_distinct_by_name
+      response = get :index
+
+      assert_response :success
+      assert_template "katello/api/v2/packages/index"
+
+      response_data = JSON.parse(response.body)
+      results = response_data['results'] || []
+      [@rpm, @rpm3].each do |rpm|
+        assert_includes results.map { |result| result['id'] }, rpm.id
+      end
     end
 
     def test_index_parameters

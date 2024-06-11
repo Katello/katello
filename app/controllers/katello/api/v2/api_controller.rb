@@ -88,6 +88,13 @@ module Katello
       query = query.order("#{query.table_name}.id DESC") unless group #secondary order to ensure sort is deterministic
       query = query.includes(includes) if includes.length > 0
 
+      if options[:select].present? # used in /packages/thindex
+        query = query.select(options[:select])
+        dist_total = ActiveRecord::Base.connection.execute("SELECT COUNT(*) FROM (#{query.to_sql}) AS result_rows").first['count']
+        total = dist_total
+        subtotal = dist_total
+        selectable = dist_total
+      end
       if ::Foreman::Cast.to_bool(params[:full_result])
         params[:per_page] = total
       else

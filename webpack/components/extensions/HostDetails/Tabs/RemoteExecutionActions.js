@@ -9,16 +9,20 @@ import { PACKAGE_SEARCH_QUERY } from './PackagesTab/YumInstallablePackagesConsta
 import { PACKAGES_SEARCH_QUERY, SELECTED_UPDATE_VERSIONS } from './PackagesTab/HostPackagesConstants';
 
 // PARAM BUILDING
-const baseParams = ({
-  feature, hostname, descriptionFormat, inputs = {},
-}) => ({
-  job_invocation: {
-    feature,
-    inputs,
-    description_format: descriptionFormat,
-    search_query: `name ^ (${hostname})`,
-  },
-});
+const baseParams = (options) => {
+  const {
+    feature, hostname, hostSearch, descriptionFormat, inputs = {},
+  } = options;
+  const search = hostSearch ?? `name ^ (${hostname})`;
+  return ({
+    job_invocation: {
+      feature,
+      inputs,
+      description_format: descriptionFormat,
+      search_query: search,
+    },
+  });
+};
 
 const runCommandParams = ({ hostname, command }) =>
   baseParams({
@@ -36,9 +40,12 @@ const katelloPackageInstallParams = ({ hostname, packageName }) =>
   });
 
 // used when we know package Id(s)
-const katelloPackageInstallBySearchParams = ({ hostname, search, descriptionFormat }) =>
+const katelloPackageInstallBySearchParams = ({
+  hostname, hostSearch, search, descriptionFormat,
+}) =>
   baseParams({
     hostname,
+    hostSearch,
     inputs: { [PACKAGE_SEARCH_QUERY]: search },
     feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH,
     descriptionFormat,
@@ -67,16 +74,21 @@ const katelloPackageUpdateParams = ({ hostname, packageName, descriptionFormat }
     descriptionFormat,
   });
 
-const katelloPackagesUpdateParams = ({
-  hostname, search, versions, descriptionFormat,
-}) => ({ // this doesn't use baseParams so looks different from the others
-  job_invocation: {
-    feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
-    inputs: { [PACKAGES_SEARCH_QUERY]: search, [SELECTED_UPDATE_VERSIONS]: versions },
-    search_query: `name ^ (${hostname})`,
-    description_format: descriptionFormat,
-  },
-});
+const katelloPackagesUpdateParams = (options) => {
+  // this doesn't use baseParams so looks different from the others
+  const {
+    hostname, search, hostSearch, versions, descriptionFormat,
+  } = options;
+  const searchQuery = hostSearch ?? `name ^ (${hostname})`;
+  return ({
+    job_invocation: {
+      feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
+      inputs: { [PACKAGES_SEARCH_QUERY]: search, [SELECTED_UPDATE_VERSIONS]: versions ?? [] },
+      search_query: searchQuery,
+      description_format: descriptionFormat,
+    },
+  });
+};
 
 const katelloTracerResolveParams = ({ hostname, search }) =>
   baseParams({
@@ -143,11 +155,15 @@ export const installPackage = ({ hostname, packageName, handleSuccess }) => post
   errorToast,
 });
 
-export const installPackageBySearch = ({ hostname, search, descriptionFormat }) => post({
+export const installPackageBySearch = ({
+  hostname, hostSearch, search, descriptionFormat,
+}) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
-  params: katelloPackageInstallBySearchParams({ hostname, search, descriptionFormat }),
+  params: katelloPackageInstallBySearchParams({
+    hostname, hostSearch, search, descriptionFormat,
+  }),
   handleSuccess: showRexToast,
   errorToast,
 });
@@ -180,13 +196,13 @@ export const updatePackage = ({ hostname, packageName }) => post({
 });
 
 export const updatePackages = ({
-  hostname, search, versions, descriptionFormat,
+  hostname, hostSearch, search, versions, descriptionFormat,
 }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackagesUpdateParams({
-    hostname, search, versions, descriptionFormat,
+    hostname, search, hostSearch, versions, descriptionFormat,
   }),
   handleSuccess: showRexToast,
   errorToast,
