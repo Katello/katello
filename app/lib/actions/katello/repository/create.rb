@@ -15,7 +15,7 @@ module Actions
           sequence do
             # Container push repositories will already be in pulp. The version_href is
             # directly updated after a push.
-            unless root.is_container_push
+            unless root.is_container_push && repository.in_default_view?
               create_action = plan_action(Pulp3::Orchestration::Repository::Create,
                                           repository, SmartProxy.pulp_primary, force_repo_create)
               return if create_action.error
@@ -36,7 +36,7 @@ module Actions
             end
 
             # Container push repos do not need metadata generation or ACS (they do not sync)
-            unless root.is_container_push
+            unless root.is_container_push && repository.in_default_view?
               concurrence do
                 plan_self(:repository_id => repository.id, :clone => clone)
                 if !clone && repository.url.present?

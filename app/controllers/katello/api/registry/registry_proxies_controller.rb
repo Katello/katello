@@ -358,12 +358,16 @@ module Katello
         )
       end
 
-      api = ::Katello::Pulp3::Repository.api(SmartProxy.pulp_primary, ::Katello::Repository::DOCKER_TYPE).container_push_api
-      api_response = api.list(name: @container_path_input)&.results&.first
-      latest_version_href = api_response&.latest_version_href
-      pulp_href = api_response&.pulp_href
+      pulp_api = instance_repo.backend_service(SmartProxy.pulp_primary).api
+      push_repo_api_response = pulp_api.container_push_repo_for_name(@container_path_input)
 
-      if latest_version_href.empty? || pulp_href.empty?
+      latest_version_href = push_repo_api_response&.latest_version_href
+      pulp_repo_href = push_repo_api_response&.pulp_href
+
+      distribution_api_response = pulp_api.container_push_distribution_for_repository(pulp_repo_href)
+      pulp_distribution_href = distribution_api_response&.pulp_href
+
+      if latest_version_href.empty? || pulp_repo_href.empty?
         return render_podman_error(
           "BLOB_UPLOAD_UNKNOWN",
           "Could not locate repository properties for content indexing.",
@@ -371,9 +375,21 @@ module Katello
         )
       end
 
+      if pulp_distribution_href.empty?
+        return render_podman_error(
+          "BLOB_UPLOAD_UNKNOWN",
+          "Could not locate Pulp distribution.",
+          :not_found
+        )
+      end
+
       instance_repo.update!(version_href: latest_version_href)
       ::Katello::Pulp3::RepositoryReference.where(root_repository_id: instance_repo.root_id,
-        content_view_id: instance_repo.content_view.id, repository_href: pulp_href).create!
+                                                  content_view_id: instance_repo.content_view.id,
+                                                  repository_href: pulp_repo_href).create!
+      ::Katello::Pulp3::DistributionReference.where(path: @container_path_input,
+                                                    href: pulp_distribution_href,
+                                                    repository_id: instance_repo.id).create!
       instance_repo.index_content
 
       true
