@@ -15,10 +15,12 @@ module Actions
           concurrence do
             repositories.each do |repository|
               sequence do
-                repository.set_container_repository_name
-                repository.clear_smart_proxy_sync_histories
-                plan_action(::Actions::Katello::Repository::InstanceUpdate, repository)
-                plan_action(::Actions::Katello::Repository::CapsuleSync, repository)
+                unless repository.root.is_container_push && repository.library_instance?
+                  repository.set_container_repository_name
+                  repository.clear_smart_proxy_sync_histories
+                  plan_action(::Actions::Katello::Repository::InstanceUpdate, repository)
+                  plan_action(::Actions::Katello::Repository::CapsuleSync, repository)
+                end
               end
             end
 

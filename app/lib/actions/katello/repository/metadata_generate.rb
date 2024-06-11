@@ -3,6 +3,7 @@ module Actions
     module Repository
       class MetadataGenerate < Actions::EntryAction
         def plan(repository, options = {})
+          return if repository.root.is_container_push && repository.library_instance?
           action_subject(repository)
           repository.check_ready_to_act!
           source_repository = options.fetch(:source_repository, nil)

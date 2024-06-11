@@ -6,7 +6,7 @@ module Katello
     skip_before_action :authorize
     before_action :optional_authorize, only: [:token, :catalog]
     before_action :registry_authorize, except: [:token, :v1_search, :catalog]
-    before_action :authorize_repository_read, only: [:pull_manifest, :tags_list]
+    before_action :authorize_repository_read, only: [:pull_manifest, :tags_list, :check_blob, :pull_blob]
     # TODO: authorize_repository_write commented out due to container push changes. Additional task needed to fix.
     # before_action :authorize_repository_write, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
     before_action :container_push_prop_validation, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
@@ -330,6 +330,15 @@ module Katello
     end
 
     def create_container_repo_if_needed
+      unless @product.organization.library.registry_unauthenticated_pull
+        unless @product.syncable?
+          return render_podman_error(
+            'DENIED',
+            _("Requested access to '#{@container_name}' is denied")
+          )
+        end
+      end
+
       if get_root_repo_from_product(@product, @container_name).empty?
         root = @product.add_repo(
           name: @container_name,
