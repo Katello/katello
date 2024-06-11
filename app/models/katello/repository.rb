@@ -166,7 +166,7 @@ module Katello
     scoped_search :on => :name, :relation => :product, :rename => :product_name
     scoped_search :on => :id, :relation => :product, :rename => :product_id, :only_explicit => true
     scoped_search :on => :label, :relation => :root, :complete_value => true, :only_explicit => true
-    scoped_search :on => :content_label, :ext_method => :search_by_content_label
+    scoped_search :on => :content_label, :ext_method => :search_by_content_label, :default_operator => :like
 
     delegate :product, :redhat?, :custom?, :to => :root
     delegate :yum?, :docker?, :deb?, :file?, :ostree?, :ansible_collection?, :generic?, :to => :root
