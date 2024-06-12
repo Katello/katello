@@ -36,7 +36,7 @@ module Katello
     end
 
     def to_status(_options = {})
-      traces = host.host_traces.pluck(:app_type)
+      traces = host.host_traces.reload.pluck(:app_type)
       traces.delete(Katello::HostTracer::TRACE_APP_TYPE_SESSION)
 
       if traces.include?(Katello::HostTracer::TRACE_APP_TYPE_STATIC)
