@@ -200,7 +200,7 @@ class ManageManifestModal extends Component {
                           {getManifestName()}
                         </Col>
                       </Row>
-                      {isManifestImported && !!manifestExpirationDate &&
+                      {isManifestImported && Boolean(manifestExpirationDate) &&
                         <Row>
                           <Col sm={5} />
                           <Col sm={7}>
