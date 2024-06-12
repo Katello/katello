@@ -16,8 +16,13 @@ module Actions
             repositories.each do |repo|
               plan_action(Katello::Repository::RefreshRepository, repo)
             end
-            plan_self
+            plan_self(:organization_name => organization.name)
           end
+        end
+
+        def run
+          organization = ::Organization.find_by(name: input[:organization_name])
+          organization&.manifest_expiration_date(cached: false) # update organization.manifest_imported? value
         end
 
         def failure_notification(plan)
