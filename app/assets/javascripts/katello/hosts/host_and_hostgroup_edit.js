@@ -36,15 +36,19 @@ KT.hosts.fetchEnvironments = function () {
   select.find('option').remove();
   if (content_source_id) {
     var url = tfm.tools.foremanUrl('/katello/api/capsules/' + content_source_id);
-    var orgId = $('#host_organization_id').val();
+    var orgIds = $("#hostgroup_organization_ids").val();
+    if(orgIds === undefined || orgIds === null || orgIds.length === 0) {
+        orgIds = [$("#host_organization_id").val()];
+    };
+    orgIds = orgIds.map(id => Number(id));
     $.get(url, function (content_source) {
-      $.each(content_source.lifecycle_environments, function(index, env) {
-    // Don't show environments that aren't in the selected org. See jQuery.each() docs    
-    if (orgId && env.organization_id != orgId) return true;
-	option = $("<option />").val(env.id).text(env.name);
-	select.append(option);
-      });
-      select.trigger('change');
+        $.each(content_source.lifecycle_environments, function(index, env) {
+            // Don't show environments that aren't in the selected org. See jQuery.each() docs    
+            if (!orgIds.includes(env.organization_id)) return true;
+            option = $("<option />").val(env.id).text(env.name);
+            select.append(option);
+        });
+        select.trigger('change');
     });
   }
 };
