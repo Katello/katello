@@ -712,6 +712,7 @@ module Katello
     end
 
     def check_remove_from_environment!(env)
+      check_orphaned_content_facets!(environments: [env])
       errors = []
 
       dependencies = { hosts: _("hosts"),
@@ -730,6 +731,7 @@ module Katello
     end
 
     def check_ready_to_destroy!
+      check_orphaned_content_facets!(environments: self.environments)
       errors = []
 
       dependencies = { environments: _("environments"),
