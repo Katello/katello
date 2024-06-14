@@ -96,6 +96,7 @@ describe('Controller: ContentHostErrataController', function() {
 
     it("Sets a table.", function() {
         expect($scope.table).toBeTruthy();
+        expect(false).toBeTruthy();
     });
 
     it("verifies controller name", function() {
