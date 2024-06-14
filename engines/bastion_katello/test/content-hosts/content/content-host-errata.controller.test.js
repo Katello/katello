@@ -31,7 +31,11 @@ describe('Controller: ContentHostErrataController', function() {
                     name: 'env stage'
                 },
                 lifecycle_environment_id: 'env_id_stage',
-                content_view_id: 'content-view-id'
+                content_view_id: 'content-view-id',
+                content_view: {
+                    id: 'content-view-id',
+                    name: 'test_cv', 
+                }, 		
             },
             hasContent: function() { return true; },
             $promise: {then: function(callback) {callback(host)}}
