@@ -10,6 +10,8 @@ feature: katello_upload_profile
 #!/bin/sh
 <% if @host.operatingsystem.family == 'Redhat' -%>
 dnf uploadprofile --force-upload
+<% elsif @host.operatingsystem.family == 'Suse' -%>
+katello-package-upload --force
 <% else -%>
 package-profile-upload --force-upload
 <% end -%>
