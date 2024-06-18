@@ -98,11 +98,13 @@ const katelloTracerResolveParams = ({ hostname, search }) =>
   });
 
 const katelloHostErrataInstallParams = ({
-  hostname, search,
+  hostname, hostSearch, search, descriptionFormat,
 }) => baseParams({
   hostname,
+  hostSearch,
   inputs: { [ERRATA_SEARCH_QUERY]: search },
   feature: REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH,
+  descriptionFormat,
 });
 
 const katelloModuleStreamActionsParams = ({ hostname, action, moduleSpec }) =>
@@ -218,13 +220,13 @@ export const resolveTraces = ({ hostname, search }) => post({
 });
 
 export const installErrata = ({
-  hostname, search,
+  hostname, hostSearch, search, descriptionFormat,
 }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloHostErrataInstallParams({
-    hostname, search,
+    hostname, search, hostSearch, descriptionFormat,
   }),
   handleSuccess: showRexToast,
   errorToast,
