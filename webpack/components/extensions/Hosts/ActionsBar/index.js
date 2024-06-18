@@ -20,12 +20,14 @@ const HostActionsBar = () => {
     [
       'bulk-change-cv-modal',
       'bulk-packages-wizard',
+      'bulk-errata-wizard',
     ].forEach((id) => {
       dispatch(addModal({ id }));
     });
   }, [dispatch]);
   const { setModalOpen: openBulkChangeCVModal } = useForemanModal({ id: 'bulk-change-cv-modal' });
   const { setModalOpen: openBulkPackagesWizardModal } = useForemanModal({ id: 'bulk-packages-wizard' });
+  const { setModalOpen: openBulkErrataWizardModal } = useForemanModal({ id: 'bulk-errata-wizard' });
 
   const orgId = useForemanOrganization()?.id;
 
@@ -67,6 +69,15 @@ const HostActionsBar = () => {
       >
         {__('Manage packages')}
       </DropdownItem>
+      <DropdownItem
+        ouiaId="bulk-errata-wizard-dropdown-item"
+        key="bulk-errata-wizard-dropdown-item"
+        onClick={openBulkErrataWizardModal}
+        isDisabled={selectedCount === 0}
+      >
+        {__('Manage errata')}
+      </DropdownItem>
+
     </>
   );
 };
