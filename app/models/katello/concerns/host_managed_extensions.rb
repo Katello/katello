@@ -570,7 +570,11 @@ module Katello
       end
 
       def advisory_ids(search:)
-        ::Katello::Erratum.installable_for_hosts([self]).search_for(search).pluck(:errata_id)
+        ids = ::Katello::Erratum.installable_for_hosts([self]).search_for(search).pluck(:errata_id)
+        if ids.empty?
+          fail _("Cannot install errata: No installable errata found for search term '%s'") % search
+        end
+        ids
       end
 
       def filtered_entitlement_quantity_consumed(pool)
