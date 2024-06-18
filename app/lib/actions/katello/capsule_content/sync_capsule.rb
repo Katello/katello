@@ -69,8 +69,13 @@ module Actions
         end
 
         def update_content_counts(_execution_plan)
-          smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
-          ::ForemanTasks.async_task(::Actions::Katello::CapsuleContent::UpdateContentCounts, smart_proxy)
+          if Setting[:automatic_content_count_updates]
+            smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
+            ::ForemanTasks.async_task(::Actions::Katello::CapsuleContent::UpdateContentCounts, smart_proxy)
+          else
+            Rails.logger.info "Skipping content counts update as automatic content count updates are disabled. To enable automatic content count updates, set the 'automatic_content_count_updates' setting to true.
+To update content counts manually, run the 'Update Content Counts' action."
+          end
         end
 
         def resource_locks
