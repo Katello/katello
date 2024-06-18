@@ -28,7 +28,7 @@ module Katello
         update_api(:create) do
           param :registration_command, Hash do
             param :activation_key, String, desc: N_('Activation key for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. For multiple keys use `activation_keys` param instead.'), deprecated: true
-            param :activation_keys, Array, desc: N_('Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.')
+            param :activation_keys, Array, desc: N_('Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys or if you do not provide a host group.')
             param :force, :bool, required: false, desc: N_('Clear any previous registration and run subscription-manager with --force.')
             param :ignore_subman_errors, :bool, required: false, desc: N_('Ignore subscription-manager errors for `subscription-manager register` command')
           end
