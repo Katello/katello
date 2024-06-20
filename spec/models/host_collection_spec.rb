@@ -88,12 +88,12 @@ module Katello
 
       it "should retrieve errata for the hosts in the host collection" do
         errata = @host_collection.errata
-        errata.count.must_equal(2)
+        errata.length.must_equal(2)
       end
 
       it "should retrieve a specific type of errata for the hosts in the host collection" do
         errata = @host_collection.errata("security")
-        errata.count.must_equal(1)
+        errata.length.must_equal(1)
         errata.must_include(katello_errata("security"))
       end
     end

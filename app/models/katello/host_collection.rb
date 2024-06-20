@@ -58,8 +58,12 @@ module Katello
       consumer_ids
     end
 
-    def errata(type = nil)
-      query = Erratum.joins(:content_facets).where("#{Katello::Host::ContentFacet.table_name}.host_id" => self.host_ids)
+    def errata(type = nil, installable_only: false)
+      query = if installable_only
+                Katello::Erratum.installable_for_hosts(self.hosts)
+              else
+                Katello::Erratum.applicable_to_hosts(self.hosts)
+              end
       type ? query.of_type(type) : query
     end
 
@@ -95,16 +99,16 @@ module Katello
       return host_collections_hash[:critical].to_a, host_collections_hash[:warning].to_a, host_collections_hash[:ok].to_a
     end
 
-    def security_updates?
-      errata(Erratum::SECURITY).any?
+    def security_updates?(installable_only: false)
+      errata(Erratum::SECURITY, installable_only: installable_only).any?
     end
 
-    def bugzilla_updates?
-      errata(Erratum::BUGZILLA).any?
+    def bugzilla_updates?(installable_only: false)
+      errata(Erratum::BUGZILLA, installable_only: installable_only).any?
     end
 
-    def enhancement_updates?
-      errata(Erratum::ENHANCEMENT).any?
+    def enhancement_updates?(installable_only: false)
+      errata(Erratum::ENHANCEMENT, installable_only: installable_only).any?
     end
 
     def self.humanize_class_name(_name = nil)

@@ -18,13 +18,14 @@
       </tr>
     </thead>
     <tbody>
+      <% installable_only = Setting['errata_status_installable'] %>
       <% host_collections.each do |host_collection| %>
         <tr>
           <td>
-            <% if host_collection.security_updates? %>
-              <a href="/host_collections/<%= host_collection.id %>" style="text-align: center"><i class="label label-danger">&nbsp;</i></a>
-            <% elsif host_collection.bugzilla_updates? || host_collection.enhancement_updates? %>
-              <a href="/host_collections/<%= host_collection.id %>" style="text-align: center"><i class="label label-warning">&nbsp;</i></a>
+            <% if host_collection.security_updates?(installable_only: installable_only) %>
+              <a href="/host_collections/<%= host_collection.id %>" style="text-align: center" title="<%= installable_only ? _('Installable security errata') : _('Applicable security errata') %>"><i class="label label-danger">&nbsp;</i></a>
+            <% elsif host_collection.bugzilla_updates?(installable_only: installable_only) || host_collection.enhancement_updates?(installable_only: installable_only) %>
+              <a href="/host_collections/<%= host_collection.id %>" style="text-align: center" title="<%= installable_only ? _('Installable bugfix/enhancement errata') : _('Applicable bugfix/enhancement errata') %>"><i class="label label-warning">&nbsp;</i></a>
             <% else %>
               <a href="/host_collections/<%= host_collection.id %>" style="text-align: center"><i class="label label-success">&nbsp;</i></a>
             <% end %>
