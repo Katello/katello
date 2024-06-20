@@ -51,7 +51,9 @@ const HostActionsBar = () => {
         ouiaId="bulk-change-cv-dropdown-item"
         key="bulk-change-cv-dropdown-item"
         onClick={openBulkChangeCVModal}
-        isDisabled={selectedCount === 0 || !orgId}
+        isDisabled={selectedCount === 0}
+        isAriaDisabled={!orgId}
+        tooltip={!orgId && __('To change content view environments, a specific organization must be selected from the organization context.')}
       >
         {__('Change content view environments')}
       </DropdownItem>
@@ -60,6 +62,8 @@ const HostActionsBar = () => {
         key="bulk-packages-wizard-dropdown-item"
         onClick={openBulkPackagesWizardModal}
         isDisabled={selectedCount === 0}
+        isAriaDisabled={!orgId}
+        tooltip={!orgId && __('To manage host packages, a specific organization must be selected from the organization context.')}
       >
         {__('Manage packages')}
       </DropdownItem>
