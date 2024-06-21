@@ -4,7 +4,7 @@ module Actions
       class BindEntitlement < Actions::Base
         def run
           output[:response] = ::Katello::Resources::Candlepin::UpstreamConsumer
-            .bind_entitlement(pool)
+            .bind_entitlement(**pool)
         end
 
         def humanized_name

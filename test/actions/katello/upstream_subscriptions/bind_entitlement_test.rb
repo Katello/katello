@@ -13,7 +13,7 @@ describe ::Actions::Katello::UpstreamSubscriptions::BindEntitlement do
   end
 
   it 'runs' do
-    ::Katello::Resources::Candlepin::UpstreamConsumer.expects(:bind_entitlement).with(@pool)
+    ::Katello::Resources::Candlepin::UpstreamConsumer.expects(:bind_entitlement).with(**@pool)
 
     @action = run_action(@action)
   end
