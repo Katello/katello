@@ -31,7 +31,7 @@ const EnableTracerModal = ({
   const [buttonLoading, setButtonLoading] = useState(false);
   const toggleDropdownOpen = () => setIsDropdownOpen(prev => !prev);
   const dropdownOptions = [
-    __('via remote execution'),
+    __('immediately'),
     __('via customized remote execution'),
   ];
   const [selectedOption, setSelectedOption] = useState(dropdownOptions[0]);
