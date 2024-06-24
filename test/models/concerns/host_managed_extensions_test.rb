@@ -322,7 +322,7 @@ module Katello
         ],
         "installed_profiles" => installed_profiles,
         "status" => status,
-        "active" => active
+        "active" => active,
       }
     end
 
@@ -405,12 +405,12 @@ module Katello
       tracer_json = {
         "sshd": {
           "type": "daemon",
-          "helper": "sudo systemctl restart sshd"
+          "helper": "sudo systemctl restart sshd",
         },
         "tuned": {
           "type": "daemon",
-          "helper": ""
-        }
+          "helper": "",
+        },
       }
       @foreman_host.import_tracer_profile(tracer_json)
       @foreman_host.reload

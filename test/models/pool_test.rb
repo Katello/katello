@@ -111,8 +111,8 @@ module Katello
         {
           @pool_one.cp_id => {
             'productId' => @pool_one.subscription.cp_id,
-            'id' => @pool_one.cp_id
-          }
+            'id' => @pool_one.cp_id,
+          },
         }
       )
       Pool.expects(:in_organization).with(org).returns([@pool_one])
@@ -131,8 +131,8 @@ module Katello
         'providedProducts' => [],
         'derivedProvidedProducts' => [],
         'owner' => {
-          'key' => org.label
-        }
+          'key' => org.label,
+        },
       }
 
       FactoryBot.create(:katello_subscription, cp_id: 'SKU001', organization: org)
@@ -151,8 +151,8 @@ module Katello
         {
           @pool_one.cp_id => {
             'productId' => @pool_one.subscription.cp_id,
-            'id' => @pool_one.cp_id
-          }
+            'id' => @pool_one.cp_id,
+          },
         }
       )
       Pool.expects(:in_organization).with(org).returns([@pool_one])
@@ -178,7 +178,7 @@ module Katello
         'providedProducts' => [],
         'derivedProvidedProducts' => [],
         'owner' => {
-          'key' => @organization.label
+          'key' => @organization.label,
         }
       )
 
@@ -202,7 +202,7 @@ module Katello
         'providedProducts' => [],
         'derivedProvidedProducts' => [],
         'owner' => {
-          'key' => @organization.label
+          'key' => @organization.label,
         }
       )
 

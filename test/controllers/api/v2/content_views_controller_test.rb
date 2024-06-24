@@ -401,10 +401,10 @@ module Katello
         system_environment_id: @library.id,
         bulk_content_view_version_ids: {
           included: {
-            ids: @library_dev_staging_view.versions.map(&:id)
-          }
+            ids: @library_dev_staging_view.versions.map(&:id),
+          },
         },
-        id: @library_dev_staging_view.id
+        id: @library_dev_staging_view.id,
       }
 
       assert_response :success

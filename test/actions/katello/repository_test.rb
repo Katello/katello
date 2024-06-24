@@ -586,7 +586,7 @@ module ::Actions::Katello::Repository
         unit_metadata: nil,
         generate_metadata: true,
         sync_capsule: true,
-        content_type: 'docker_manifest'
+        content_type: 'docker_manifest',
       }
       assert_action_planned_with(action, ::Actions::Pulp3::Orchestration::Repository::ImportUpload,
                                  docker_repository, SmartProxy.pulp_primary,
@@ -612,7 +612,7 @@ module ::Actions::Katello::Repository
         unit_metadata: unit_keys[0],
         generate_metadata: true,
         sync_capsule: true,
-        content_type: 'docker_tag'
+        content_type: 'docker_tag',
       }
       assert_action_planned_with(action, ::Actions::Pulp3::Orchestration::Repository::ImportUpload,
                                  docker_repository, SmartProxy.pulp_primary,

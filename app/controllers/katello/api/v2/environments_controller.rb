@@ -155,7 +155,7 @@ module Katello
       collection = {
         :results => paths,
         :total => paths.size,
-        :subtotal => paths.size
+        :subtotal => paths.size,
       }
       respond_for_index(:collection => collection, :template => :paths)
     end

@@ -24,7 +24,7 @@ module Katello
         {
           pools: pools,
           total: total,
-          subtotal: pools.count
+          subtotal: pools.count,
         }
       end
 
@@ -59,7 +59,7 @@ module Katello
           consumed: 'consumed',
           product_name: 'productName',
           product_id: 'productId',
-          subscription_id: 'subscriptionId'
+          subscription_id: 'subscriptionId',
         }
       end
 

@@ -10,6 +10,6 @@ node(:search)   { params[:search] }
 node(:sort) do
   {
     :by => params[:sort_by],
-    :order => params[:sort_order]
+    :order => params[:sort_order],
   }
 end

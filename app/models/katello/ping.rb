@@ -34,7 +34,7 @@ module Katello
       def status
         {
           version: Katello::VERSION,
-          timeUTC: Time.now.getutc
+          timeUTC: Time.now.getutc,
         }
       end
 

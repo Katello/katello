@@ -8,7 +8,7 @@ child :content_facet => :content_facet_attributes do
       {
         :content_view_version => version.version,
         :content_view_version_id => version.id,
-        :content_view_version_latest => version.latest?
+        :content_view_version_latest => version.latest?,
       }
     end
   end

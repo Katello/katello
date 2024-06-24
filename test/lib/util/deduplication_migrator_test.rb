@@ -10,14 +10,14 @@ module Katello
       let(:model) do
         {
           :model => ::Katello::CapsuleLifecycleEnvironment,
-          :fields => [:lifecycle_environment_id, :capsule_id]
+          :fields => [:lifecycle_environment_id, :capsule_id],
         }
       end
 
       let(:content_view) do
         {
           :model => ::Katello::ContentView,
-          :fields => [:name, :organization_id]
+          :fields => [:name, :organization_id],
         }
       end
 
@@ -37,7 +37,7 @@ module Katello
           .expects(:count)
           .returns({
                      [1, 1] => 2,
-                     [6, 1] => 2
+                     [6, 1] => 2,
                    })
         mock_relation
           .expects(:pluck).with('min(id)')

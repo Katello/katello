@@ -133,7 +133,7 @@ module Katello
       response = {
         :results => available_releases,
         :total => available_releases.size,
-        :subtotal => available_releases.size
+        :subtotal => available_releases.size,
       }
       respond_for_index :collection => response
     end

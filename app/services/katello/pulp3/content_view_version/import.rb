@@ -134,7 +134,7 @@ module Katello
               name: metadata_map.content_view.name,
               label: metadata_map.content_view.label,
               description: metadata_map.content_view.description,
-              generated_for: generated_for
+              generated_for: generated_for,
             }
           end
 
@@ -148,7 +148,7 @@ module Katello
             name: import_cv_name_from_export(name: metadata_map.content_view.name, generated_for: generated_for),
             label: import_cv_name_from_export(name: metadata_map.content_view.label, generated_for: generated_for),
             description: "Content View used for importing into library",
-            generated_for: generated_for
+            generated_for: generated_for,
           }
         end
 

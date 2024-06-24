@@ -7,7 +7,7 @@ module Katello
         :name => "some name",
         :description => "a description",
         :provider_type => Provider::REDHAT,
-        :organization => @organization
+        :organization => @organization,
       }
     end
 
@@ -16,7 +16,7 @@ module Katello
         :name => "some name",
         :description => "a description",
         :provider_type => Provider::CUSTOM,
-        :organization => @organization
+        :organization => @organization,
       }
     end
 

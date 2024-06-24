@@ -260,7 +260,7 @@ module Katello
         @content_overrides = content_labels.map do |label|
           { content_label: label,
             value: Foreman::Cast.to_bool(params[:content_overrides_search][:enabled]),
-            remove: Foreman::Cast.to_bool(params[:content_overrides_search][:remove])
+            remove: Foreman::Cast.to_bool(params[:content_overrides_search][:remove]),
           }
         end
       else

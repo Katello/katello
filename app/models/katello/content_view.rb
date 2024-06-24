@@ -121,7 +121,7 @@ module Katello
       kcv = Katello::ContentView.table_name
       kcvc = Katello::ContentViewComponent.table_name
       { :conditions => "#{kcv}.composite = 't' AND #{kcv}.id IN (SELECT #{kcvc}.composite_content_view_id FROM #{kcvc} WHERE #{kcvc}.content_view_id IN (SELECT #{kcv}.id FROM #{kcv} WHERE #{kcv}.name #{operator} ?))",
-        :parameter => [value]
+        :parameter => [value],
       }
     end
 
@@ -141,7 +141,7 @@ module Katello
       library_import: 3,
       repository_import: 4,
       library_export_syncable: 5,
-      repository_export_syncable: 6
+      repository_export_syncable: 6,
     }, _prefix: true
 
     set_crud_hooks :content_view
@@ -298,7 +298,7 @@ module Katello
         {
           :version => v.version,
           :published => v.created_at.to_s,
-          :environments => v.environments.map { |e| e.name }
+          :environments => v.environments.map { |e| e.name },
         }
       end
 
@@ -716,7 +716,7 @@ module Katello
       errors = []
 
       dependencies = { hosts: _("hosts"),
-                       activation_keys: _("activation keys")
+                       activation_keys: _("activation keys"),
       }
 
       dependencies.each do |key, name|
@@ -736,7 +736,7 @@ module Katello
 
       dependencies = { environments: _("environments"),
                        hosts: _("hosts"),
-                       activation_keys: _("activation keys")
+                       activation_keys: _("activation keys"),
       }
 
       dependencies.each do |key, name|
@@ -778,7 +778,7 @@ module Katello
         content_views.push(
           {
             id: cv_id,
-            name: cv_name
+            name: cv_name,
           }
         )
       end
