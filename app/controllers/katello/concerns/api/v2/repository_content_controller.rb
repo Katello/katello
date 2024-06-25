@@ -145,7 +145,7 @@ module Katello
       def compare_same(collection, content_view_versions = nil)
         cv_version_first = content_view_versions[0]
         collection_ids = collection.in_repositories(Katello::Repository.where(:content_view_version_id => cv_version_first&.id))&.pluck(:id)
-        content_view_versions[1..-1].each do |version|
+        content_view_versions[1..].each do |version|
           collection_version_ids = collection.in_repositories(Katello::Repository.where(:content_view_version_id => version&.id))&.pluck(:id)
           collection_ids = collection_ids.intersection collection_version_ids
         end

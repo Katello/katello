@@ -25,7 +25,7 @@ module Katello
       def substitutions_needed
         # e.g. if content_url = "/content/dist/rhel/server/7/$releasever/$basearch/kickstart"
         #      return ['releasever', 'basearch']
-        split_path.map { |word| word.start_with?('$') ? word[1..-1] : nil }.compact
+        split_path.map { |word| word.start_with?('$') ? word[1..] : nil }.compact
       end
 
       def substitutable?
