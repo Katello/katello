@@ -515,7 +515,7 @@ module Katello
         key.match("^HTTP_.*")
       end
       env.each do |header|
-        headers[header[0].split('_')[1..-1].join('-')] = header[1]
+        headers[header[0].split('_')[1..].join('-')] = header[1]
       end
 
       if (manifest_response = redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers) })
@@ -554,7 +554,7 @@ module Katello
         key.match("^HTTP_.*")
       end
       env.each do |header|
-        current_headers[header[0].split('_')[1..-1].join('-')] = header[1]
+        current_headers[header[0].split('_')[1..].join('-')] = header[1]
       end
       current_headers
     end
@@ -697,7 +697,7 @@ module Katello
       if manifest['schemaVersion'] == 1
         if manifest['fsLayers']
           files += manifest['fsLayers'].collect do |layer|
-            layerfile = "#{layer['blobSum'][7..-1]}.tar"
+            layerfile = "#{layer['blobSum'][7..]}.tar"
             force_include_layer(repository, layer['blobSum'], layerfile)
             layerfile
           end
@@ -705,12 +705,12 @@ module Katello
       elsif manifest['schemaVersion'] == 2
         if manifest['layers']
           files += manifest['layers'].collect do |layer|
-            layerfile = "#{layer['digest'][7..-1]}.tar"
+            layerfile = "#{layer['digest'][7..]}.tar"
             force_include_layer(repository, layer['digest'], layerfile)
             layerfile
           end
         end
-        files << "#{manifest['config']['digest'][7..-1]}.tar"
+        files << "#{manifest['config']['digest'][7..]}.tar"
       else
         render_error 'custom_error', :status => :internal_server_error,
                              :locals => { :message => "Unsupported schema #{manifest['schemaVersion']}" }

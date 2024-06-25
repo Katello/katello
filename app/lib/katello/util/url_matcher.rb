@@ -63,7 +63,7 @@ module Katello
           self.parts.each_with_index do |part, i|
             a << @match.parts[i] if part[0] == ':'
           end
-          a << @match.ext[1..-1] if self.ext[1] == ':'
+          a << @match.ext[1..] if self.ext[1] == ':'
           a
         end
         alias_method :vars, :variables
