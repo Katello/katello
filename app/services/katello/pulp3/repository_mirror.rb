@@ -166,21 +166,13 @@ module Katello
         uri.to_s
       end
 
-      def publication_options(repository_version)
-        popts = {repository_version: repository_version}
-        if (type_specific_options = repo_service.try(:mirror_publication_options))
-          popts.merge!(type_specific_options)
-        end
-        popts
-      end
-
       def create_publication
         if (href = version_href)
           if repo_service.repo.content_type == "deb"
             publication_data = api.publication_verbatim_class.new({repository_version: href})
             api.publications_verbatim_api.create(publication_data)
           else
-            publication_data = api.publication_class.new(publication_options(href))
+            publication_data = api.publication_class.new(repository_version: href)
             api.publications_api.create(publication_data)
           end
         end

@@ -51,16 +51,6 @@ module Katello
           popts
         end
 
-        def mirror_publication_options
-          {
-            # Since we are synchronizing the "default" distribution from the simple publisher on the server,
-            # it will be included in the structured publish. Therefore, we MUST NOT use the simple publisher
-            # on the proxy, since this would collide!
-            #simple: true,
-            structured: true # publish real suites (e.g. 'stable')
-          }
-        end
-
         def distribution_options(path)
           {
             base_path: path,
