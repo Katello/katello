@@ -3,11 +3,12 @@ module Katello
     class AlternateContentSourcePathValidator < ActiveModel::EachValidator
       def validate_each(record, attribute, value)
         if value
-          if attribute == :base_url
+          case attribute
+          when :base_url
             unless AlternateContentSourcePathValidator.validate_base_url(value)
               record.errors[attribute] << N_("%s is not a valid path") % value
             end
-          elsif attribute == :subpaths
+          when :subpaths
             unless AlternateContentSourcePathValidator.validate_subpaths(value)
               record.errors[attribute] << N_('All subpaths must have a slash at the end and none at the front')
             end

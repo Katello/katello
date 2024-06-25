@@ -51,9 +51,10 @@ module Katello
         user.update!(organizations: organizations) unless organizations.blank?
         user.update!(locations: locations) unless locations.blank?
 
-        actual_permissions = if permissions.is_a?(Hash)
+        actual_permissions = case permissions
+                             when Hash
                                [permissions]
-                             elsif permissions.is_a?(Array)
+                             when Array
                                permissions.collect do |perm|
                                  if perm.is_a?(Hash)
                                    perm

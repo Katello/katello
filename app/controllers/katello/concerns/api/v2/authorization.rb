@@ -99,9 +99,10 @@ module Katello
       def find_param_arrays(hash = params)
         list_of_paths = []
         hash.each do |key, value|
-          if value.is_a?(ActionController::Parameters) || value.is_a?(Hash)
+          case value
+          when ActionController::Parameters, Hash
             list_of_paths += find_param_arrays(value).compact.map { |inner_keys| [key] + inner_keys }
-          elsif value.is_a?(Array)
+          when Array
             list_of_paths << [key]
           end
         end

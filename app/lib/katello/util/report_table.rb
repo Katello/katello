@@ -19,9 +19,10 @@ module Katello
       end
 
       def as(type)
-        if type == :csv
+        case type
+        when :csv
           as_csv(transform_data)
-        elsif type == :text
+        when :text
           as_text(transform_data)
         end
       end

@@ -28,9 +28,10 @@ module Actions
       def capsule_id(args)
         capsule_id = nil
         args.each do |arg|
-          if arg.is_a? SmartProxy
+          case arg
+          when SmartProxy
             capsule_id = arg.id
-          elsif arg.is_a? Hash
+          when Hash
             capsule_id = arg[:capsule_id] || arg[:smart_proxy_id]
           end
           break if capsule_id
