@@ -107,9 +107,10 @@ module Katello
         end
 
         def import_cv_name_from_export(name:, generated_for:)
-          if generated_for == :library_import
+          case generated_for
+          when :library_import
             ::Katello::ContentView::IMPORT_LIBRARY
-          elsif generated_for == :repository_import
+          when :repository_import
             name.gsub(/^Export/, 'Import')
           else
             name
@@ -138,9 +139,10 @@ module Katello
             }
           end
 
-          if generated_for == :library_export
+          case generated_for
+          when :library_export
             generated_for = :library_import
-          elsif generated_for == :repository_export
+          when :repository_export
             generated_for = :repository_import
           end
 

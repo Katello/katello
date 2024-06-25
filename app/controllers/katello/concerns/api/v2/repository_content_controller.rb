@@ -101,9 +101,10 @@ module Katello
       end
 
       def sort_options
-        if default_sort.is_a?(Array)
+        case default_sort
+        when Array
           return [default_sort[0], default_sort[1], {}]
-        elsif default_sort.is_a?(Proc)
+        when Proc
           return [nil, nil, { :custom_sort => default_sort }]
         else
           fail "Unsupported default_sort type"

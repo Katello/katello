@@ -127,9 +127,10 @@ module Actions
             ::Katello::Rpm.with_identifiers(content[:package_ids])
           unit_map = { :errata => [], :rpms => [] }
           units.each do |unit|
-            if unit.class.name == "Katello::Erratum"
+            case unit.class.name
+            when "Katello::Erratum"
               unit_map[:errata] << unit.id
-            elsif unit.class.name == "Katello::Rpm"
+            when "Katello::Rpm"
               unit_map[:rpms] << unit.id
             end
           end

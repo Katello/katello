@@ -29,11 +29,12 @@ module Katello
 
       def get_pulp_filter_type(type)
         filter_type = type.downcase
-        if filter_type == "bugfix"
+        case filter_type
+        when "bugfix"
           return ::Katello::Erratum::BUGZILLA
-        elsif filter_type == "enhancement"
+        when "enhancement"
           return ::Katello::Erratum::ENHANCEMENT
-        elsif filter_type == "security"
+        when "security"
           return ::Katello::Erratum::SECURITY
         end
       end
