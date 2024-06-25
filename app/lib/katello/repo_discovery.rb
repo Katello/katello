@@ -114,7 +114,7 @@ module Katello
       request_params = {
         method: :get,
         headers: { accept: :json },
-        url: "#{@uri}v1/search?q=#{@search}"
+        url: "#{@uri}v1/search?q=#{@search}",
       }
 
       request_params[:user] = @upstream_username unless @upstream_username.empty?

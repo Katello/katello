@@ -71,7 +71,7 @@ end
 node :permissions do |repo|
   {
     :deletable => repo.deletable?,
-    :deletable_across_cv => Setting[:delete_repo_across_cv]
+    :deletable_across_cv => Setting[:delete_repo_across_cv],
   }
 end
 

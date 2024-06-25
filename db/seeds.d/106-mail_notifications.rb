@@ -20,21 +20,21 @@ User.as(::User.anonymous_api_admin.login) do
      :description => N_('A summary of available and applicable errata for your hosts'),
      :mailer => 'Katello::ErrataMailer',
      :method => 'host_errata',
-     :subscription_type => 'report'
+     :subscription_type => 'report',
     },
 
     {:name => :sync_errata,
      :description => N_('A summary of new errata after a repository is synchronized'),
      :mailer => 'Katello::ErrataMailer',
      :method => 'sync_errata',
-     :subscription_type => 'alert'
+     :subscription_type => 'alert',
     },
 
     {:name => :promote_errata,
      :description => N_('A post-promotion summary of hosts with installable errata'),
      :mailer => 'Katello::ErrataMailer',
      :method => 'promote_errata',
-     :subscription_type => 'alert'
+     :subscription_type => 'alert',
     },
 
     {:name => :subscriptions_expiring_soon,
@@ -42,35 +42,35 @@ User.as(::User.anonymous_api_admin.login) do
      :mailer => 'Katello::SubscriptionMailer',
      :method => 'subscription_expiry',
      :subscription_type => 'report',
-     :queryable => true
+     :queryable => true,
     },
 
     {:name => :repository_sync_failure,
      :description => N_('A notification about failed repository sync'),
      :mailer => 'Katello::TaskMailer',
      :method => 'repo_sync_failure',
-     :subscription_type => 'alert'
+     :subscription_type => 'alert',
     },
 
     {:name => :content_view_publish_failure,
      :description => N_('A notification about failed content view publish'),
      :mailer => 'Katello::TaskMailer',
      :method => 'cv_publish_failure',
-     :subscription_type => 'alert'
+     :subscription_type => 'alert',
     },
 
     {:name => :content_view_promote_failure,
      :description => N_('A notification about failed content view promotion'),
      :mailer => 'Katello::TaskMailer',
      :method => 'cv_promote_failure',
-     :subscription_type => 'alert'
+     :subscription_type => 'alert',
     },
 
     {:name => :proxy_sync_failure,
      :description => N_('A notification about failed proxy sync'),
      :mailer => 'Katello::TaskMailer',
      :method => 'proxy_sync_failure',
-     :subscription_type => 'alert'
+     :subscription_type => 'alert',
     }
   ]
 

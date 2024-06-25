@@ -59,11 +59,11 @@ module Katello
             'productContent' => [
               {
                 'content' => {
-                  'id' => @content_id
+                  'id' => @content_id,
                 },
-                'enabled' => true
+                'enabled' => true,
               }
-            ]
+            ],
           }
         ]
       )

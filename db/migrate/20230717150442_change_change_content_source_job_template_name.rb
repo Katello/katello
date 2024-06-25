@@ -1,6 +1,6 @@
 class ChangeChangeContentSourceJobTemplateName < ActiveRecord::Migration[6.1]
   TEMPLATE_NAMES = {
-    "Change content source" => "Configure host for new content source"
+    "Change content source" => "Configure host for new content source",
   }.freeze
 
   def up

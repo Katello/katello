@@ -49,7 +49,7 @@ module ::Actions::Katello::CapsuleContent
                   content_view_id: nil,
                   repository_id: repo.id,
                   repository_ids_list: nil,
-                  environment_id: nil
+                  environment_id: nil,
                 }
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
@@ -89,7 +89,7 @@ module ::Actions::Katello::CapsuleContent
                   content_view_id: nil,
                   repository_id: repo.id,
                   repository_ids_list: nil,
-                  environment_id: nil
+                  environment_id: nil,
       }
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
@@ -148,7 +148,7 @@ module ::Actions::Katello::CapsuleContent
                   content_view_id: nil,
                   repository_id: repo.id,
                   repository_ids_list: nil,
-                  environment_id: nil
+                  environment_id: nil,
                 }
 
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
@@ -178,7 +178,7 @@ module ::Actions::Katello::CapsuleContent
                   content_view_id: nil,
                   repository_id: repo.id,
                   repository_ids_list: nil,
-                  environment_id: nil
+                  environment_id: nil,
                 }
 
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
@@ -193,7 +193,7 @@ module ::Actions::Katello::CapsuleContent
                   content_view_id: nil,
                   repository_id: repo.id,
                   repository_ids_list: nil,
-                  environment_id: nil
+                  environment_id: nil,
                 }
 
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
@@ -208,7 +208,7 @@ module ::Actions::Katello::CapsuleContent
                   content_view_id: nil,
                   repository_id: repo.id,
                   repository_ids_list: nil,
-                  environment_id: nil
+                  environment_id: nil,
                 }
 
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
@@ -225,7 +225,7 @@ module ::Actions::Katello::CapsuleContent
                   content_view_id: nil,
                   repository_id: nil,
                   repository_ids_list: nil,
-                  environment_id: dev_environment.id
+                  environment_id: dev_environment.id,
                 }
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
 

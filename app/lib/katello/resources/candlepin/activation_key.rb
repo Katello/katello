@@ -20,7 +20,7 @@ module Katello
               releaseVer: release_version,
               role: purpose_role,
               usage: purpose_usage,
-              addOns: purpose_addons
+              addOns: purpose_addons,
             }
             response = self.post(url, params.to_json, self.default_headers)
             JSON.parse(response.body).with_indifferent_access

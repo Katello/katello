@@ -55,10 +55,10 @@ module Katello
                                     "version" => "1.26.3",
                                     "arch" => "noarch",
                                     "epoch" => "0",
-                                    "release" => "5"}]
-                  }
-              }
-            }
+                                    "release" => "5"}],
+                  },
+              },
+            },
           }.with_indifferent_access
         end
 
@@ -104,10 +104,10 @@ module Katello
                                   "version" => "1.26.3",
                                   "arch" => "noarch",
                                   "epoch" => "0",
-                                  "release" => "5"}]
-                }
-              }
-            }
+                                  "release" => "5"}],
+                },
+              },
+            },
           }.with_indifferent_access
         end
 
@@ -153,10 +153,10 @@ module Katello
                                   "version" => "8.8",
                                   "arch" => "noarch",
                                   "epoch" => "0",
-                                  "release" => "1"}]
-                }
-              }
-            }
+                                  "release" => "1"}],
+                },
+              },
+            },
           }.with_indifferent_access
         end
 
@@ -202,10 +202,10 @@ module Katello
                                   "version" => "1.26.3",
                                   "arch" => "noarch",
                                   "epoch" => "0",
-                                  "release" => "5"}]
-                }
-              }
-            }
+                                  "release" => "5"}],
+                },
+              },
+            },
           }.with_indifferent_access
         end
 
@@ -251,10 +251,10 @@ module Katello
                                   "version" => "1.26.3",
                                   "arch" => "noarch",
                                   "epoch" => "0",
-                                  "release" => "5"}]
-                }
-              }
-            }
+                                  "release" => "5"}],
+                },
+              },
+            },
           }.with_indifferent_access
         end
 

@@ -358,8 +358,8 @@ module Katello
           :security => 0,
           :bugfix => 0,
           :enhancement => 0,
-          :total => 0
-        }
+          :total => 0,
+        },
       }
 
       assert_equal expected, content_facet.errata_counts

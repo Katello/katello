@@ -18,15 +18,15 @@ module Katello
       entitlements = [
         {
           'pool' => {
-            'id' => redhat_pool.cp_id
+            'id' => redhat_pool.cp_id,
           },
-          quantity: 15
+          quantity: 15,
         },
         {
           'pool' => {
-            'id' => custom_pool.cp_id
+            'id' => custom_pool.cp_id,
           },
-          quantity: 4
+          quantity: 4,
         }
       ]
 

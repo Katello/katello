@@ -15,7 +15,7 @@ module Actions
       {
         :source_repository => nil,
         :matching_content => false,
-        :force_publication => false
+        :force_publication => false,
       }
     end
 

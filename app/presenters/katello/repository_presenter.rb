@@ -14,12 +14,12 @@ module Katello
           {
             :content_view_version => {
               :id => repository.content_view_version.id,
-              :name => repository.content_view_version.name
+              :name => repository.content_view_version.name,
             },
             :environment => {
               :id => repository.environment.id,
-              :name => repository.environment.name
-            }
+              :name => repository.environment.name,
+            },
           }
         end
       end

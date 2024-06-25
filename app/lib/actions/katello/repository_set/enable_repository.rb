@@ -31,7 +31,7 @@ module Actions
           output[:repository] = {
             :name => repo.name,
             :id => repo.id,
-            :content_type => repo.content_type
+            :content_type => repo.content_type,
           }
         end
       end

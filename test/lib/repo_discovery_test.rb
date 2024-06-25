@@ -34,7 +34,7 @@ module Katello
         proxy_host: @proxy_uri.host,
         proxy_port: @proxy_uri.port,
         proxy_user: @http_proxy.username,
-        proxy_password: @http_proxy.password
+        proxy_password: @http_proxy.password,
       }
 
       Anemone.expects(:crawl).with(rd.uri(base_url), expected_proxy_params).returns
