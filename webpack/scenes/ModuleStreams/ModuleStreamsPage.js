@@ -1,59 +1,53 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import qs from 'query-string';
+import { useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { orgId } from '../../services/api';
 import TableSchema from '../ModuleStreams/ModuleStreamsTableSchema';
 import GenericContentPage from '../../components/Content/GenericContentPage';
 
-class ModuleStreamsPage extends Component {
-  constructor(props) {
-    super(props);
+const ModuleStreamsPage = (props) => {
+  const { searchParam } = useUrlParams();
+  const [searchQuery, setSearchQuery] = useState(searchParam || '');
+  const { getModuleStreams } = props;
 
-    const queryParams = qs.parse(this.props.location.search);
-    this.state = {
-      searchQuery: queryParams.search || '',
-    };
-  }
-
-  componentDidMount() {
-    this.props.getModuleStreams({
-      search: this.state.searchQuery,
+  useEffect(() => {
+    getModuleStreams({
+      search: searchQuery,
     });
-  }
+  }, [getModuleStreams, searchQuery]);
 
-  onPaginationChange = (pagination) => {
-    this.props.getModuleStreams({
+  const onPaginationChange = (pagination) => {
+    props.getModuleStreams({
       ...pagination,
     });
   };
 
-  onSearch = (search) => {
-    this.props.getModuleStreams({ search });
+  const onSearch = (search) => {
+    props.getModuleStreams({ search });
   };
 
-  updateSearchQuery = (searchQuery) => {
-    this.setState({ searchQuery });
+  const updateSearchQuery = (newSearchQuery) => {
+    setSearchQuery(newSearchQuery);
   };
 
-  render() {
-    const { moduleStreams } = this.props;
-    return (
-      <GenericContentPage
-        header={__('Module Streams')}
-        content={moduleStreams}
-        tableSchema={TableSchema}
-        onSearch={this.onSearch}
-        autocompleteEndpoint="/katello/api/v2/module_streams"
-        autocompleteQueryParams={{ organization_id: orgId() }}
-        bookmarkController="katello_module_streams"
-        updateSearchQuery={this.updateSearchQuery}
-        initialInputValue={this.state.searchQuery}
-        onPaginationChange={this.onPaginationChange}
-      />
-    );
-  }
-}
+  const { moduleStreams } = props;
+  return (
+    <GenericContentPage
+      header={__('Module Streams')}
+      content={moduleStreams}
+      tableSchema={TableSchema}
+      onSearch={onSearch}
+      autocompleteEndpoint="/katello/api/v2/module_streams"
+      autocompleteQueryParams={{ organization_id: orgId() }}
+      bookmarkController="katello_module_streams"
+      updateSearchQuery={updateSearchQuery}
+      initialInputValue={searchQuery}
+      onPaginationChange={onPaginationChange}
+    />
+  );
+};
+
 
 ModuleStreamsPage.propTypes = {
   location: PropTypes.shape({
