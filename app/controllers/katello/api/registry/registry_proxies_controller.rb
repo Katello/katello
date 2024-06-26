@@ -172,10 +172,11 @@ module Katello
                 return render_podman_error(
                   "NAME_INVALID",
                   _("Due to a change in your organizations, this container name has become "\
-                    "ambiguous (org name '#{org_label}'). If you wish to continue using this "\
-                    "container name, destroy the organization in conflict with '#{o.name} (id "\
-                    "#{o.id}). If you wish to keep both orgs, destroy '#{o.label}/#{prod.label}/"\
-                    "#{root_repos.first.label}' and retry your push using the id format."),
+                    "ambiguous (org name '%{org_label}'). If you wish to continue using this "\
+                    "container name, destroy the organization in conflict with '%{o_name} (id "\
+                    "%{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/"\
+                    "%{root_repo_label}' and retry your push using the id format.") %
+                      { org_label: org_label, o_name: o.name, o_id: o.id, o_label: o.label, prod_label: prod.label, root_repo_label: root_repos.first.label },
                   :conflict
                 )
               end
@@ -186,14 +187,14 @@ module Katello
         # Otherwise tell them to try pushing with ID format
         return render_podman_error(
           "NAME_INVALID",
-          _("Organization label '#{org_label}' is ambiguous. Try using an id-based container name."),
+          _("Organization label '%s' is ambiguous. Try using an id-based container name.") % org_label,
           :conflict
         )
       end
       if org.length == 0
         return render_podman_error(
           "NAME_UNKNOWN",
-          _("Organization not found: '#{org_label}'"),
+          _("Organization not found: '%s'") % org_label,
           :not_found
         )
       end
@@ -214,7 +215,7 @@ module Katello
       if @organization.nil?
         return render_podman_error(
           "NAME_UNKNOWN",
-          _("Organization id not found: '#{org_id}'"),
+          _("Organization id not found: '%s'") % org_id,
           :not_found
         )
       end
@@ -242,10 +243,11 @@ module Katello
               return render_podman_error(
                 "NAME_INVALID",
                 _("Due to a change in your products, this container name has become ambiguous "\
-                  "(product name '#{prod_label}'). If you wish to continue using this container "\
-                  "name, destroy the product in conflict with '#{prod.name}' (id #{prod.id}). If "\
-                  "you wish to keep both products, destroy '#{@organization.label}/#{prod.label}/"\
-                  "#{root_repos.first.label}' and retry your push using the id format."),
+                  "(product name '%{prod_label}'). If you wish to continue using this container "\
+                  "name, destroy the product in conflict with '%{prod_name}' (id %{prod_id}). If "\
+                  "you wish to keep both products, destroy '%{org_label}/%{prod_dot_label}/"\
+                  "%{root_repo_label}' and retry your push using the id format.") %
+                    { prod_label: prod_label, prod_name: prod.name, prod_id: prod.id, org_label: @organization.label, prod_dot_label: prod.label, root_repo_label: root_repos.first.label },
                 :conflict
               )
             end
@@ -254,14 +256,14 @@ module Katello
 
         return render_podman_error(
           "NAME_INVALID",
-          _("Product label '#{prod_label}' is ambiguous. Try using an id-based container name."),
+          _("Product label '%s' is ambiguous. Try using an id-based container name.") % prod_label,
           :conflict
         )
       end
       if product.length == 0
         return render_podman_error(
           "NAME_UNKNOWN",
-          _("Product not found: '#{prod_label}'"),
+          _("Product not found: '%s'") % prod_label,
           :not_found
         )
       end
@@ -282,7 +284,7 @@ module Katello
       if @product.nil?
         return render_podman_error(
           "NAME_UNKNOWN",
-          _("Product id not found: '#{prod_id}'"),
+          _("Product id not found: '%s'") % prod_id,
           :not_found
         )
       end
@@ -319,7 +321,8 @@ module Katello
       if !root_repo.nil? && @container_push_name_format != root_repo.container_push_name_format
         return render_podman_error(
           "NAME_INVALID",
-          _("Repository name '#{@container_name}' already exists in this product using a different naming scheme. Please retry your request with the #{root_repo.container_push_name_format} format or destroy and recreate the repository using your preferred schema."),
+          _("Repository name '%{container_name}' already exists in this product using a different naming scheme. Please retry your request with the %{root_repo_container_push_name} format or destroy and recreate the repository using your preferred schema.") %
+            {container_name: @container_name, root_repo_container_push_name: root_repo.container_push_name_format},
           :conflict
         )
       end
@@ -328,13 +331,12 @@ module Katello
     end
 
     def create_container_repo_if_needed
-      unless @product.organization.library.registry_unauthenticated_pull
-        unless @product.syncable?
-          return render_podman_error(
-            'DENIED',
-            _("Requested access to '#{@container_name}' is denied")
-          )
-        end
+      unless @product.syncable?
+        return render_podman_error(
+          'DENIED',
+          _("Requested access to '%s' is denied") % @container_name,
+          :not_found
+        )
       end
 
       if get_root_repo_from_product(@product, @container_name).empty?
@@ -371,9 +373,6 @@ module Katello
       latest_version_href = push_repo_api_response&.latest_version_href
       pulp_repo_href = push_repo_api_response&.pulp_href
 
-      distribution_api_response = pulp_api.container_push_distribution_for_repository(pulp_repo_href)
-      pulp_distribution_href = distribution_api_response&.pulp_href
-
       if latest_version_href.empty? || pulp_repo_href.empty?
         return render_podman_error(
           "BLOB_UPLOAD_UNKNOWN",
@@ -381,6 +380,9 @@ module Katello
           :not_found
         )
       end
+
+      distribution_api_response = pulp_api.container_push_distribution_for_repository(pulp_repo_href)
+      pulp_distribution_href = distribution_api_response&.pulp_href
 
       if pulp_distribution_href.empty?
         return render_podman_error(
@@ -783,7 +785,7 @@ module Katello
     end
 
     def item_not_found(item)
-      render_podman_error("NAME_UNKNOWN", _("#{item} was not found!"), :not_found)
+      render_podman_error("NAME_UNKNOWN", _("%s was not found!") % item, :not_found)
     end
   end
 end

@@ -10,7 +10,7 @@ module Actions
         end
 
         def plan(env)
-          repositories = env.repositories
+          repositories = env.repositories.docker_type
           action_subject(env)
           concurrence do
             repositories.each do |repository|

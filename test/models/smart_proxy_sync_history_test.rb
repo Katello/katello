@@ -53,12 +53,13 @@ module Katello
 
     def test_clear_history_on_publish_repositories
       User.current = users(:admin)
-      @repo.create_smart_proxy_sync_history(proxy_with_pulp)
+      busybox = katello_repositories(:busybox)
+      busybox.create_smart_proxy_sync_history(proxy_with_pulp)
       library = katello_environments(:library)
-      library.expects(:repositories).returns([@repo])
+      library.expects(:repositories).returns(::Katello::Repository.where(id: busybox.id))
       ::Actions::Katello::Environment::PublishContainerRepositories.any_instance.expects(:plan_action).twice
       ::ForemanTasks.sync_task(::Actions::Katello::Environment::PublishContainerRepositories, library)
-      assert_equal @repo.smart_proxy_sync_histories.count, 0
+      assert_equal busybox.smart_proxy_sync_histories.count, 0
     end
   end
 end
