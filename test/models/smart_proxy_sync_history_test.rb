@@ -56,8 +56,8 @@ module Katello
       @repo.create_smart_proxy_sync_history(proxy_with_pulp)
       library = katello_environments(:library)
       library.expects(:repositories).returns([@repo])
-      ::Actions::Katello::Environment::PublishRepositories.any_instance.expects(:plan_action).twice
-      ::ForemanTasks.sync_task(::Actions::Katello::Environment::PublishRepositories, library)
+      ::Actions::Katello::Environment::PublishContainerRepositories.any_instance.expects(:plan_action).twice
+      ::ForemanTasks.sync_task(::Actions::Katello::Environment::PublishContainerRepositories, library)
       assert_equal @repo.smart_proxy_sync_histories.count, 0
     end
   end

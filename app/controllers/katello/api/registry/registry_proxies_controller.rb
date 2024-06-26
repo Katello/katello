@@ -7,8 +7,6 @@ module Katello
     before_action :optional_authorize, only: [:token, :catalog]
     before_action :registry_authorize, except: [:token, :v1_search, :catalog]
     before_action :authorize_repository_read, only: [:pull_manifest, :tags_list, :check_blob, :pull_blob]
-    # TODO: authorize_repository_write commented out due to container push changes. Additional task needed to fix.
-    # before_action :authorize_repository_write, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
     before_action :container_push_prop_validation, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
     before_action :create_container_repo_if_needed, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
     skip_before_action :check_media_type, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
