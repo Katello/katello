@@ -45,6 +45,7 @@ const BulkErrataTable = () => {
   };
 
   const {
+    selectAll,
     selectPage,
     selectNone,
     selectOne,
@@ -74,7 +75,7 @@ const BulkErrataTable = () => {
           areAllRowsSelected,
           areAllRowsOnPageSelected,
         }}
-        selectAll={noop}
+        selectAll={selectAll}
         totalCount={total}
         areAllRowsOnPageSelected={areAllRowsOnPageSelected()}
         areAllRowsSelected={areAllRowsSelected()}
@@ -119,10 +120,10 @@ const BulkErrataTable = () => {
   return (
     <>
       <TextContent>
-        <Text ouiaId="mpw-step-3-header" component={TextVariants.h3}>
+        <Text ouiaId="mew-step-3-header" component={TextVariants.h3}>
           {__('Apply errata')}
         </Text>
-        <Text ouiaId="mpw-step-3-content" component={TextVariants.p}>
+        <Text ouiaId="mew-step-3-content" component={TextVariants.p}>
           {__('Select errata to apply on the selected hosts. Some errata may already be applied on some hosts.')}
         </Text>
       </TextContent>

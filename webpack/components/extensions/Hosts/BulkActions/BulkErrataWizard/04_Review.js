@@ -44,8 +44,8 @@ export const BulkErrataReview = () => {
       id: 'errata-treeview-title',
       customBadgeContent: currentSelectedErrataCount,
       children:
-        selectedErrataResults.map(({ id, name }) => ({
-          name: `${id}: ${name}`,
+        selectedErrataResults.map(({ id, name, errata_id: errataId }) => ({
+          name: `${errataId}: ${name}`,
           id,
           key: id,
         })),
@@ -78,7 +78,7 @@ export const BulkErrataReview = () => {
           variant="link"
           type="button"
           aria-label="Edit host selection"
-          onClick={() => goToStepById('mpw-step-3')}
+          onClick={() => goToStepById('mew-step-3')}
         >
           {__('Edit')}
         </Button>
@@ -92,10 +92,10 @@ export const BulkErrataReview = () => {
   return (
     <>
       <TextContent>
-        <Text ouiaId="mpw-step-3-header" component={TextVariants.h3}>
+        <Text ouiaId="mew-step-3-header" component={TextVariants.h3}>
           {__('Review')}
         </Text>
-        <Text ouiaId="mpw-step-3-content" component={TextVariants.p}>
+        <Text ouiaId="mew-step-3-content" component={TextVariants.p}>
           <FormattedMessage
             id="bulkErrataReviewContent"
             defaultMessage={__('Review and then click {submitBtnText}.')}
@@ -120,12 +120,11 @@ export const BulkErrataReview = () => {
       <Flex direction={{ default: 'row' }}>
         <FlexItem>
           <TextContent>
-            <Text ouiaId="mpw-step-3-content" component={TextVariants.p}>
+            <Text ouiaId="mew-step-3-content" component={TextVariants.p}>
               <FormattedMessage
                 id="bulkErrataReviewContent"
-                defaultMessage={__('Selected errata will be {submitAction} on {hostCount} hosts')}
+                defaultMessage={__('Selected errata will be applied on {hostCount} hosts')}
                 values={{
-                  submitAction: __('applied'),
                   hostCount: currentSelectedHostsCount,
                 }}
               />

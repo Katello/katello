@@ -86,7 +86,7 @@ export const BulkErrataReviewFooter = () => {
   return (
     <WizardFooterWrapper>
       {finishButton}
-      <Button variant="secondary" onClick={() => goToStepById('mpw-step-3')} isDisabled={finishButtonLoading} ouiaId="bulk-pkg-wiz-step4-back">
+      <Button variant="secondary" onClick={() => goToStepById('mew-step-3')} isDisabled={finishButtonLoading} ouiaId="bulk-pkg-wiz-step4-back">
         {__('Back')}
       </Button>
       <Button variant="link" onClick={closeModal} isDisabled={finishButtonLoading} ouiaId="bulk-pkg-wiz-step4-cancel">

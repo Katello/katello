@@ -58,7 +58,7 @@ const BulkErrataWizard = () => {
   const [shouldValidateStep3, setShouldValidateStep3] = useState(false);
   const [finishButtonLoading, setFinishButtonLoading] = useState(false);
   const [selectedRexOption, setSelectedRexOption] = useState(dropdownOptions[0]);
-  const finishButtonText = __('Review and Finish');
+  const finishButtonText = __('Apply');
   const replacementResponse = !modalOpen ? { response: {} } : false;
   const initialSelectedHosts = fetchBulkParams();
   const apiOptions = { key: 'BULK_HOST_ERRATA' };
