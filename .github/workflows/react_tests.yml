@@ -1,45 +1,16 @@
-name: React Tests (non-blocking)
-
+name: React Tests
 on: [pull_request]
 
-defaults:
-  run:
-    working-directory: ./katello
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.ref_name }}-${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        path: ${{ github.workspace }}/katello
-    - name: Use Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '14'
-    # We could update the postinstall action for foreman to look for an environment variable for plugin webpack dirs
-    # before kicking off the ruby script to find them, this would eliminate the ruby dep and running `npm i` in Katello.
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '2.7'
-    - name: Checkout Foreman repo
-      uses: actions/checkout@v2
-      with:
-        repository: theforeman/foreman
-        path: ${{ github.workspace }}/foreman # checkout Foreman and Katello as siblings, same as dev env
-        ref: develop
-    - name: Generate Foreman dependencies package-lock
-      run:  npm i --package-lock-only --no-audit
-      working-directory: ${{ github.workspace }}/foreman
-    - name: Install Foreman dependencies
-      run:  npm ci --no-audit
-      working-directory: ${{ github.workspace }}/foreman
-    - name: Generate Katello dependencies package-lock
-      run:  npm i --package-lock-only --no-audit
-    - name: Install Katello dependencies
-      run:  npm ci --no-audit
-    - name: Run Katello linting
-      run: npm run lint
-    - name: Run Katello tests
-      run: npm test
+  react-tests:
+    uses: theforeman/actions/.github/workflows/foreman_plugin_js.yml@v0
+    with:
+      plugin: katello
+      foreman_version: develop # set to the Foreman release branch after branching :)
