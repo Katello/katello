@@ -21,6 +21,7 @@ export const BulkErrataReview = () => {
     errataBulkSelect: {
       selectedResults: selectedErrataResults,
       selectedCount: currentSelectedErrataCount,
+      areAllRowsSelected: allErrataSelected,
     },
     hostsBulkSelect: {
       selectedCount: currentSelectedHostsCount,
@@ -42,8 +43,8 @@ export const BulkErrataReview = () => {
     {
       name: treeViewTitle,
       id: 'errata-treeview-title',
-      customBadgeContent: currentSelectedErrataCount,
-      children:
+      customBadgeContent:  allErrataSelected ? 'All' : currentSelectedErrataCount,
+      children: allErrataSelected ? undefined :
         selectedErrataResults.map(({ id, name, errata_id: errataId }) => ({
           name: `${errataId}: ${name}`,
           id,
