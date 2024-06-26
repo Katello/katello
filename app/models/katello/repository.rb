@@ -791,6 +791,8 @@ module Katello
           return true
         elsif !self.custom? && self.redhat_deletable?(remove_from_content_view_versions)
           return true
+        elsif Setting.find_by(name: 'delete_repo_across_cv')&.value
+          return true
         else
           errors.add(:base, _("Repository cannot be deleted since it has already been included in a published Content View. " \
                               "Please delete all Content View versions containing this repository before attempting to delete it "\
