@@ -7,6 +7,7 @@ module Katello
     def models
       @organization = get_organization
       @repositories = katello_repositories(:fedora_17_unpublished, :fedora_17_unpublished_2)
+      @repositories_published = katello_repositories(:debian_10_amd64, :fedora_17_x86_64)
       @provider = katello_providers(:fedora_hosted)
     end
 
@@ -43,6 +44,25 @@ module Katello
       assert_protected_action(:destroy_repositories, allowed_perms, denied_perms, [@organization]) do
         put :destroy_repositories, params: { :ids => @repositories.collect(&:id), :organization_id => @organization.id }
       end
+    end
+
+    def test_destroy_respositories_in_published_cv
+      Setting['delete_repo_across_cv'] = true
+      assert_async_task(::Actions::BulkAction) do |action_class|
+        assert_equal action_class, ::Actions::Katello::Repository::Destroy
+      end
+
+      put :destroy_repositories, params: { :ids => @repositories_published.collect(&:id), :organization_id => @organization.id }
+
+      assert_response :success
+    end
+
+    def test_destroy_respositories_in_published_cv_prohibited
+      Setting['delete_repo_across_cv'] = false
+
+      put :destroy_repositories, params: { :ids => @repositories_published.collect(&:id), :organization_id => @organization.id }
+
+      assert_response :bad_request
     end
 
     def test_sync
