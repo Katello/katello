@@ -5,6 +5,7 @@ import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanMod
 import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
 import { useTableIndexAPIResponse } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
+import { STATUS } from 'foremanReact/constants';
 import { HOSTS_API_PATH } from 'foremanReact/routes/Hosts/constants';
 import HostReview from '../HostReview';
 import { BulkErrataReview, dropdownOptions } from './04_Review';
@@ -75,6 +76,7 @@ const BulkErrataWizard = () => {
   });
 
   const {
+    status: errataStatus,
     response: {
       results: errataResults,
       ...errataMetadata
@@ -96,7 +98,7 @@ const BulkErrataWizard = () => {
     selectionIsValid(errataBulkSelect.selectedCount);
   const hostSelectionIsValid = selectionIsValid(hostsBulkSelect.hostsBulkSelect.selectedCount);
   let step2Valid = shouldValidateStep2 ? errataSelectionIsValid : true;
-  if (!errataResultsPresent) step2Valid = false;
+  if (errataStatus === STATUS.RESOLVED && !errataResultsPresent) step2Valid = false;
   const step3Valid = shouldValidateStep3 ? hostSelectionIsValid : true;
   const step4Valid = hostSelectionIsValid && errataSelectionIsValid;
 
