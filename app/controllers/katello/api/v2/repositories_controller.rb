@@ -439,7 +439,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemoveContent, @repository, @content, content_type: params[:content_type], sync_capsule: sync_capsule)
     end
 
-    api :POST, "/repositories/:id/upload_content", N_("Upload content into the repository")
+    api :POST, "/repositories/:id/upload_content", N_("This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.")
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :content, File, :required => true, :desc => N_("Content files to upload. Can be a single file or array of files.")
     param :content_type, String, :required => false, :desc => N_("The type of content to upload (srpm, file, etc.). Check uploadable types here: /katello/api/repositories/repository_types")
