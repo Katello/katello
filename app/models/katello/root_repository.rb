@@ -60,6 +60,8 @@ module Katello
     has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference',
              :dependent => :destroy, :inverse_of => :root_repository
 
+    before_validation :remove_sha1_checksum_type, if: :sha1_checksum?
+
     validates_lengths_from_database :except => [:label]
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -155,6 +157,14 @@ module Katello
 
     def self.in_organization(org)
       joins(:product).where("#{Katello::Product.table_name}.organization_id" => org)
+    end
+
+    def sha1_checksum?
+      checksum_type == 'sha1'
+    end
+
+    def remove_sha1_checksum_type
+      self.checksum_type = nil
     end
 
     def ensure_content_attribute_restrictions
