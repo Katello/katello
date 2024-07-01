@@ -249,7 +249,7 @@ module ::Actions::Katello::Repository
         ::Actions::Katello::Repository::Destroy,
         in_use_repository.library_instances_inverse
 
-      assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, in_use_repository.root
+      assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, in_use_repository
     end
 
     it 'It removes repo generated content views' do
@@ -313,7 +313,7 @@ module ::Actions::Katello::Repository
       action.expects(:plan_self)
       plan_action action, unpublished_repository
 
-      assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, unpublished_repository.root
+      assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, unpublished_repository
     end
 
     it 'does not plan content destroy when custom and 1 clone with planned destroy' do
