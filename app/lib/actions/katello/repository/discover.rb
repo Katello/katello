@@ -31,10 +31,17 @@ module Actions
             (on nil do
               unless output[:to_follow].empty?
                 password = decrypt_field(input[:upstream_password])
-                repo_discovery = ::Katello::RepoDiscovery.new(input[:url], input[:content_type],
-                                                              input[:upstream_username], password,
-                                                              input[:search],
-                                                              output[:crawled], output[:repo_urls], output[:to_follow])
+                repo_discovery = ::Katello::RepoDiscovery.class_for(input[:content_type]).new(
+                                                                                                input[:url],
+                                                                                                output[:crawled],
+                                                                                                output[:repo_urls],
+                                                                                                output[:to_follow],
+                                                                                                {
+                                                                                                  upstream_username: input[:upstream_username],
+                                                                                                  upstream_password: password,
+                                                                                                  search: input[:search]
+                                                                                                }
+                                                                                              )
 
                 repo_discovery.run(output[:to_follow].shift)
                 suspend { |suspended_action| world.clock.ping suspended_action, 0.001 }

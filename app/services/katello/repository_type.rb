@@ -17,7 +17,7 @@ module Katello
               :repositories_api_class, :api_class, :remotes_api_class, :repository_versions_api_class,
               :distributions_api_class, :remote_class, :repo_sync_url_class, :client_module_class,
               :distribution_class, :publication_class, :publications_api_class, :url_description,
-              :test_url, :test_url_root_options
+              :test_url, :test_url_root_options, :repo_discovery_class
 
     attr_accessor :metadata_publish_matching_check, :index_additional_data_proc
     attr_reader :id, :unique_content_per_repo

@@ -47,12 +47,10 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "pg"
 
-  # Pulp
-  gem.add_dependency "anemone"
-  # required by anemone: https://github.com/chriskite/anemone/blob/next/lib/anemone/page.rb#L3
-  # webrick is no longer a part of Ruby's stdlib: https://bugs.ruby-lang.org/issues/17303
-  gem.add_dependency "webrick"
-  #pulp3
+  # Required for repo discovery
+  gem.add_dependency "spidr"
+
+  # Pulp dependencies
   gem.add_dependency "pulpcore_client", ">= 3.49.1", "< 3.50.0"
   gem.add_dependency "pulp_file_client", ">= 3.49.1", "< 3.50.0"
   gem.add_dependency "pulp_ansible_client", ">= 0.21.3", "< 0.22.0"
