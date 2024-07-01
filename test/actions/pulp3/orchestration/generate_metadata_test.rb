@@ -43,5 +43,14 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Delete, @clone, @primary)
     end
+
+    def test_generate_with_sha1_root_repo_checksum
+      root = @repo.root
+      root.checksum_type = 'sha1'
+      root.save!(validate: false)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, @repo, @primary, force_publication: true)
+      root.reload
+      assert_nil root.checksum_type
+    end
   end
 end

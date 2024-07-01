@@ -585,6 +585,14 @@ module Katello
       assert @root.valid?
     end
 
+    def test_sha1_checksum_removed
+      @root.checksum_type = 'sha1'
+      @root.save!(validate: false)
+      @root.save!
+      @root.reload
+      assert_nil @root.checksum_type
+    end
+
     def test_docker_limit_tags
       @docker_root.url = "http://foo.com"
       @docker_root.include_tags = nil

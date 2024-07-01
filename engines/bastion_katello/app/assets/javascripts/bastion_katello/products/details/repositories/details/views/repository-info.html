@@ -208,6 +208,9 @@
             options="checksums"
             on-save="save(repository)">
         </dd>
+        <p ng-hide="repository.checksum_type !== 'sha1'" class="help-block" translate>
+          The sha1 checksum type is no longer supported. The checksum type will reset to 'Default' at the next edit or change in content.
+        </p>
       </span>
 
       <span ng-show="repository.content_type === 'yum' && repository.mirroring_policy === 'additive'">
