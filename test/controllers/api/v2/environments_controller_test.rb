@@ -160,8 +160,7 @@ module Katello
     def test_update_pattern_async
       original_label = @staging.label
 
-      assert_async_task(::Actions::Katello::Environment::PublishRepositories, @staging,
-                        content_type: Katello::Repository::DOCKER_TYPE)
+      assert_async_task(::Actions::Katello::Environment::PublishContainerRepositories, @staging)
       put :update, params: {
         :organization_id => @organization.id, :id => @staging.id,
         :environment => {
@@ -180,8 +179,7 @@ module Katello
     def test_update_pattern_sync
       original_label = @staging.label
 
-      assert_sync_task(::Actions::Katello::Environment::PublishRepositories, @staging,
-                        content_type: Katello::Repository::DOCKER_TYPE)
+      assert_sync_task(::Actions::Katello::Environment::PublishContainerRepositories, @staging)
       put :update, params: {
         :organization_id => @organization.id, :id => @staging.id,
         :async => false,
@@ -201,8 +199,7 @@ module Katello
     def test_update_pull_async
       original_label = @staging.label
 
-      assert_async_task(::Actions::Katello::Environment::PublishRepositories, @staging,
-                        content_type: Katello::Repository::DOCKER_TYPE)
+      assert_async_task(::Actions::Katello::Environment::PublishContainerRepositories, @staging)
       put :update, params: {
         :organization_id => @organization.id, :id => @staging.id,
         :environment => {
@@ -221,8 +218,7 @@ module Katello
     def test_update_pull_sync
       original_label = @staging.label
 
-      assert_sync_task(::Actions::Katello::Environment::PublishRepositories, @staging,
-                       content_type: Katello::Repository::DOCKER_TYPE)
+      assert_sync_task(::Actions::Katello::Environment::PublishContainerRepositories, @staging)
       put :update, params: {
         :organization_id => @organization.id, :id => @staging.id,
         :async => false,

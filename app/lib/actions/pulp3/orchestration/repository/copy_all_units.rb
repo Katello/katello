@@ -32,6 +32,10 @@ module Actions
                   plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, tasks: copy_actions.last.output[:pulp_tasks])
                 end
               end
+            elsif source_repositories.first.root.is_container_push
+              copy_action = plan_action(Actions::Pulp3::Repository::CopyContent, source_repositories.first, smart_proxy, target_repo,
+                                        copy_all: true)
+              plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, tasks: copy_action.output[:pulp_tasks])
             else
               plan_self(source_version_repo_id: source_repositories.first.id,
                         target_repo_id: target_repo.id)

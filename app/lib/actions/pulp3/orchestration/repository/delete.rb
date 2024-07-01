@@ -9,10 +9,13 @@ module Actions
               plan_action(Actions::Pulp3::Repository::DeleteDistributions, repository.id, smart_proxy)
 
               if repository.content_view.default?
-                #we're deleting the library instance, so just delete the whole pulp3 repo
+                # Container push repositories must be deleted through the distribution
+                return if repository.root.is_container_push
+
+                # We're deleting the library instance, so just delete the whole pulp3 repo
                 plan_action(Actions::Pulp3::Repository::Delete, repository.id, smart_proxy)
               elsif repository.environment.nil?
-                #we're deleting the archived instance, so delete the version
+                # We're deleting the archived instance, so delete the version
                 plan_action(Actions::Pulp3::Repository::DeleteVersion, repository, smart_proxy)
               end
             end

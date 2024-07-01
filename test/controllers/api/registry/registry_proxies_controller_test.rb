@@ -949,7 +949,7 @@ module Katello
         refute @controller.check_blob_push_container(props)
       end
 
-      it 'creates container repo when needed' do
+      it 'creates a container repo if authorized' do
         container_name = "foo"
         container_push_name = "default_org/test/foo"
         container_push_name_format = "label"
@@ -957,6 +957,7 @@ module Katello
         mock_root_repositories = mock('root_repositories')
         mock_root_repositories.stubs(:where).with(label: container_name).returns([])
         mock_product = mock('Product')
+        mock_product.expects(:syncable?).returns(true)
         mock_product.stubs(:root_repositories).returns(mock_root_repositories)
         mock_product.expects(:add_repo).with(
           name: container_name,
@@ -980,12 +981,30 @@ module Katello
         assert @controller.create_container_repo_if_needed
       end
 
+      it 'does not create container repo when unauthorized' do
+        container_name = "foo"
+        container_push_name = "default_org/test/foo"
+        container_push_name_format = "label"
+        mock_root_repositories = mock('root_repositories')
+        mock_root_repositories.stubs(:where).with(label: container_name).returns([])
+        mock_product = mock('Product')
+        mock_product.expects(:syncable?).returns(false)
+        mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+        @controller.instance_variable_set(:@product, mock_product)
+        @controller.instance_variable_set(:@container_name, container_name)
+        @controller.instance_variable_set(:@container_path_input, container_push_name)
+        @controller.instance_variable_set(:@container_push_name_format, container_push_name_format)
+        expect_render_podman_error("DENIED", :not_found)
+        refute @controller.create_container_repo_if_needed
+      end
+
       it 'does not create container repo if it already exists' do
         container_name = "foo"
         mock_root_repo = mock('root_repository')
         mock_root_repositories = mock('root_repositories')
         mock_root_repositories.stubs(:where).with(label: container_name).returns([mock_root_repo])
         mock_product = mock('Product')
+        mock_product.expects(:syncable?).returns(true)
         mock_product.stubs(:root_repositories).returns(mock_root_repositories)
         mock_product.expects(:add_repo).never
         @controller.instance_variable_set(:@product, mock_product)
@@ -998,8 +1017,10 @@ module Katello
         container_name = "foo"
         container_push_name = "default_org/test/foo"
         latest_version_href = "asdfghjk"
-        pulp_href = "qwertyui"
+        pulp_repo_href = "repo_href"
+        pulp_distribution_href = "distribution_href"
         root_id = 8_675_309
+        instance_id = ::Katello::RootRepository.find_by(name: 'busybox').library_instance.id
         content_view_id = 2
 
         # mock the product, root repo, instance repo, content view
@@ -1010,6 +1031,7 @@ module Katello
         mock_instance_repo.stubs(:root_id).returns(root_id)
         mock_instance_repo.stubs(:content_view).returns(mock_content_view)
         mock_instance_repo.expects(:index_content)
+        mock_instance_repo.expects(:id).returns(instance_id)
         mock_root_repo = mock('root_repository')
         mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
         mock_root_repositories = mock('root_repositories')
@@ -1019,15 +1041,15 @@ module Katello
         mock_product.expects(:add_repo).never
 
         # mock the pulp api endpoint
-        mock_api_response_results = mock('mock_api_response_results')
-        mock_api_response_results.stubs(:latest_version_href).returns(latest_version_href)
-        mock_api_response_results.stubs(:pulp_href).returns(pulp_href)
-        mock_api_response = mock('mock_api_response')
-        mock_api_response.stubs(:results).returns([mock_api_response_results])
-        mock_container_push_api = mock('container_push_api')
-        mock_container_push_api.expects(:list).with(name: container_push_name).returns(mock_api_response)
-        mock_repo_api = mock('repo_api')
-        mock_repo_api.stubs(:container_push_api).returns(mock_container_push_api)
+        mock_push_repo_api_response_results = mock('mock_push_repo_api_response_results')
+        mock_push_repo_api_response_results.stubs(:latest_version_href).returns(latest_version_href)
+        mock_push_repo_api_response_results.stubs(:pulp_href).returns(pulp_repo_href)
+        mock_distribution_api_response_results = mock('mock_distribution_api_response_results')
+        mock_distribution_api_response_results.stubs(:pulp_href).returns(pulp_distribution_href)
+
+        mock_pulp_api = mock('pulp_api')
+        mock_pulp_api.expects(:container_push_repo_for_name).with(container_push_name).returns(mock_push_repo_api_response_results)
+        mock_pulp_api.expects(:container_push_distribution_for_repository).with(pulp_repo_href).returns(mock_distribution_api_response_results)
 
         # mock the repository reference
         mock_repo_reference = mock('repo_reference')
@@ -1035,12 +1057,15 @@ module Katello
 
         # set up pulp stubs
         mock_pulp_primary = mock('pulp_primary')
+        mock_backend_service = mock('backend_service')
         SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
-        ::Katello::Pulp3::Repository.expects(:api).with(mock_pulp_primary, ::Katello::Repository::DOCKER_TYPE).returns(mock_repo_api)
+        #::Katello::Pulp3::Repository.expects(:api).with(mock_pulp_primary, ::Katello::Repository::DOCKER_TYPE).returns(mock_repo_api)
+        mock_instance_repo.expects(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
+        mock_backend_service.expects(:api).returns(mock_pulp_api)
         ::Katello::Pulp3::RepositoryReference.stubs(:where).with(
           root_repository_id: root_id,
           content_view_id: content_view_id,
-          repository_href: pulp_href
+          repository_href: pulp_repo_href
         ).returns(mock_repo_reference)
 
         # set up the controller
@@ -1081,7 +1106,7 @@ module Katello
         refute @controller.blob_push_cleanup
       end
 
-      it 'rejects missing api response on content indexing' do
+      it 'rejects missing repo api response on content indexing' do
         container_name = "foo"
         container_push_name = "default_org/test/foo"
 
@@ -1093,14 +1118,51 @@ module Katello
         mock_product = mock('Product')
         mock_product.stubs(:root_repositories).returns(mock_root_repositories)
 
-        mock_container_push_api = mock('container_push_api')
-        mock_container_push_api.expects(:list).with(name: container_push_name).returns(nil)
-        mock_repo_api = mock('repo_api')
-        mock_repo_api.stubs(:container_push_api).returns(mock_container_push_api)
+        mock_pulp_api = mock('pulp_api')
+        mock_pulp_api.expects(:container_push_repo_for_name).with(container_push_name).returns(nil)
 
         mock_pulp_primary = mock('pulp_primary')
         SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
-        ::Katello::Pulp3::Repository.expects(:api).with(mock_pulp_primary, ::Katello::Repository::DOCKER_TYPE).returns(mock_repo_api)
+        mock_backend_service = mock('backend_service')
+        mock_instance_repo.expects(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
+        mock_backend_service.expects(:api).returns(mock_pulp_api)
+
+        @controller.instance_variable_set(:@product, mock_product)
+        @controller.instance_variable_set(:@container_name, container_name)
+        @controller.instance_variable_set(:@container_path_input, container_push_name)
+        expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
+        refute @controller.blob_push_cleanup
+      end
+
+      it 'rejects missing pulp_distribution_href on content indexing' do
+        container_name = "foo"
+        container_push_name = "default_org/test/foo"
+        pulp_repo_href = "repo_href"
+        latest_version_href = "latest_version_href"
+
+        mock_instance_repo = mock('library_instance')
+        mock_root_repo = mock('root_repository')
+        mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
+        mock_root_repositories = mock('root_repositories')
+        mock_root_repositories.stubs(:where).with(label: container_name).returns([mock_root_repo])
+        mock_product = mock('Product')
+        mock_product.stubs(:root_repositories).returns(mock_root_repositories)
+
+        mock_push_repo_api_response_results = mock('mock_push_repo_api_response_results')
+        mock_push_repo_api_response_results.stubs(:latest_version_href).returns(latest_version_href)
+        mock_push_repo_api_response_results.stubs(:pulp_href).returns(pulp_repo_href)
+        mock_distribution_api_response_results = mock('mock_distribution_api_response_results')
+        mock_distribution_api_response_results.stubs(:pulp_href).returns(nil)
+
+        mock_pulp_api = mock('pulp_api')
+        mock_pulp_api.expects(:container_push_repo_for_name).with(container_push_name).returns(mock_push_repo_api_response_results)
+        mock_pulp_api.expects(:container_push_distribution_for_repository).with(pulp_repo_href).returns(mock_distribution_api_response_results)
+
+        mock_pulp_primary = mock('pulp_primary')
+        SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
+        mock_backend_service = mock('backend_service')
+        mock_instance_repo.expects(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
+        mock_backend_service.expects(:api).returns(mock_pulp_api)
 
         @controller.instance_variable_set(:@product, mock_product)
         @controller.instance_variable_set(:@container_name, container_name)
@@ -1112,7 +1174,7 @@ module Katello
       it 'rejects missing latest_version_href on content indexing' do
         container_name = "foo"
         container_push_name = "default_org/test/foo"
-        pulp_href = "qwertyui"
+        pulp_repo_href = "repo_href"
 
         mock_instance_repo = mock('library_instance')
         mock_root_repo = mock('root_repository')
@@ -1122,19 +1184,18 @@ module Katello
         mock_product = mock('Product')
         mock_product.stubs(:root_repositories).returns(mock_root_repositories)
 
-        mock_api_response_results = mock('mock_api_response_results')
-        mock_api_response_results.stubs(:latest_version_href).returns(nil)
-        mock_api_response_results.stubs(:pulp_href).returns(pulp_href)
-        mock_api_response = mock('mock_api_response')
-        mock_api_response.stubs(:results).returns([mock_api_response_results])
-        mock_container_push_api = mock('container_push_api')
-        mock_container_push_api.expects(:list).with(name: container_push_name).returns(mock_api_response)
-        mock_repo_api = mock('repo_api')
-        mock_repo_api.stubs(:container_push_api).returns(mock_container_push_api)
+        mock_push_repo_api_response_results = mock('mock_push_repo_api_response_results')
+        mock_push_repo_api_response_results.stubs(:latest_version_href).returns(nil)
+        mock_push_repo_api_response_results.stubs(:pulp_href).returns(pulp_repo_href)
+
+        mock_pulp_api = mock('pulp_api')
+        mock_pulp_api.expects(:container_push_repo_for_name).with(container_push_name).returns(mock_push_repo_api_response_results)
 
         mock_pulp_primary = mock('pulp_primary')
         SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
-        ::Katello::Pulp3::Repository.expects(:api).with(mock_pulp_primary, ::Katello::Repository::DOCKER_TYPE).returns(mock_repo_api)
+        mock_backend_service = mock('backend_service')
+        mock_instance_repo.expects(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
+        mock_backend_service.expects(:api).returns(mock_pulp_api)
 
         @controller.instance_variable_set(:@product, mock_product)
         @controller.instance_variable_set(:@container_name, container_name)
@@ -1155,21 +1216,19 @@ module Katello
         mock_root_repositories.stubs(:where).with(label: container_name).returns([mock_root_repo])
         mock_product = mock('Product')
         mock_product.stubs(:root_repositories).returns(mock_root_repositories)
-        mock_product.expects(:add_repo).never
 
-        mock_api_response_results = mock('mock_api_response_results')
-        mock_api_response_results.stubs(:latest_version_href).returns(latest_version_href)
-        mock_api_response_results.stubs(:pulp_href).returns(nil)
-        mock_api_response = mock('mock_api_response')
-        mock_api_response.stubs(:results).returns([mock_api_response_results])
-        mock_container_push_api = mock('container_push_api')
-        mock_container_push_api.expects(:list).with(name: container_push_name).returns(mock_api_response)
-        mock_repo_api = mock('repo_api')
-        mock_repo_api.stubs(:container_push_api).returns(mock_container_push_api)
+        mock_push_repo_api_response_results = mock('mock_push_repo_api_response_results')
+        mock_push_repo_api_response_results.stubs(:latest_version_href).returns(latest_version_href)
+        mock_push_repo_api_response_results.stubs(:pulp_href).returns(nil)
+
+        mock_pulp_api = mock('pulp_api')
+        mock_pulp_api.expects(:container_push_repo_for_name).with(container_push_name).returns(mock_push_repo_api_response_results)
 
         mock_pulp_primary = mock('pulp_primary')
         SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
-        ::Katello::Pulp3::Repository.expects(:api).with(mock_pulp_primary, ::Katello::Repository::DOCKER_TYPE).returns(mock_repo_api)
+        mock_backend_service = mock('backend_service')
+        mock_instance_repo.expects(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
+        mock_backend_service.expects(:api).returns(mock_pulp_api)
 
         @controller.instance_variable_set(:@product, mock_product)
         @controller.instance_variable_set(:@container_name, container_name)

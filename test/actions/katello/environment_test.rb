@@ -14,6 +14,26 @@ module ::Actions::Katello::Environment
     end
   end
 
+  class PublishContainerRepositoriesTest < TestBase
+    let(:action_class) { ::Actions::Katello::Environment::PublishContainerRepositories }
+    let(:action) { create_action action_class }
+
+    let(:environment) { stub }
+
+    it 'does not plan for container push library repos' do
+      container_push_repo = ::Katello::RootRepository.find_by(name: 'busybox').library_instance
+      container_push_repo.root.update(is_container_push: true)
+      environment.stubs(:repositories).returns(::Katello::Repository.where(id: container_push_repo.id))
+      container_push_repo.expects(:set_container_repository_name).never
+      container_push_repo.expects(:clear_smart_proxy_sync_histories).never
+      action.stubs(:action_subject).with(environment)
+
+      plan_action(action, environment)
+      refute_action_planned(action, ::Actions::Katello::Repository::InstanceUpdate)
+      refute_action_planned(action, ::Actions::Katello::Repository::CapsuleSync)
+    end
+  end
+
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::Environment::Destroy }
     let(:action) { create_action action_class }

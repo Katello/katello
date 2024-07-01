@@ -1,7 +1,7 @@
 module Actions
   module Katello
     module Environment
-      class PublishRepositories < Actions::EntryAction
+      class PublishContainerRepositories < Actions::EntryAction
         middleware.use ::Actions::Middleware::RemoteAction
 
         input_format do
@@ -9,16 +9,18 @@ module Actions
           param :name
         end
 
-        def plan(env, options = {})
-          repositories = options[:content_type] ? env.repositories.with_type(options[:content_type]) : env.repositories
+        def plan(env)
+          repositories = env.repositories.docker_type
           action_subject(env)
           concurrence do
             repositories.each do |repository|
               sequence do
-                repository.set_container_repository_name
-                repository.clear_smart_proxy_sync_histories
-                plan_action(::Actions::Katello::Repository::InstanceUpdate, repository)
-                plan_action(::Actions::Katello::Repository::CapsuleSync, repository)
+                unless repository.root.is_container_push && repository.library_instance?
+                  repository.set_container_repository_name
+                  repository.clear_smart_proxy_sync_histories
+                  plan_action(::Actions::Katello::Repository::InstanceUpdate, repository)
+                  plan_action(::Actions::Katello::Repository::CapsuleSync, repository)
+                end
               end
             end
 
@@ -31,7 +33,7 @@ module Actions
         end
 
         def humanized_name
-          _("Publish Lifecycle Environment Repositories")
+          _("Publish Lifecycle Environment Container Repositories")
         end
 
         def humanized_input
