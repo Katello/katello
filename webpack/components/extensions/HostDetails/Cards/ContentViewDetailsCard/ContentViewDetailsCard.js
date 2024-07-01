@@ -28,16 +28,75 @@ const requiredPermissions = [
   'promote_or_remove_content_views_to_environments',
 ];
 
-const HostContentViewDetails = ({
-  contentView, lifecycleEnvironment, contentViewVersionId, contentViewDefault,
-  contentViewVersion, contentViewVersionLatest, hostId, hostName, orgId, hostEnvId,
-  hostPermissions, permissions, contentSourceId,
+export const ContentViewEnvironmentDisplay = ({
+  contentView, lifecycleEnvironment,
 }) => {
-  let versionLabel = `Version ${contentViewVersion}`;
+  const {
+    contentViewDefault,
+    contentViewVersionId,
+    contentViewVersion,
+    contentViewVersionLatest,
+  } = propsToCamelCase(contentView);
+  let versionLabel = 'Version {version}';
   if (contentViewVersionLatest) {
     versionLabel += ' (latest)';
   }
+  return (
+    <FlexItem>
+      <Flex direction={{ default: 'row', sm: 'row' }} flexWrap={{ default: 'wrap' }}>
+        <Tooltip
+          position="top"
+          enableFlip
+          entryDelay={400}
+          content={<FormattedMessage
+            id="cv-card-lce-tooltip"
+            defaultMessage={__('Lifecycle environment: {lce}')}
+            values={{
+              lce: lifecycleEnvironment.name,
+            }}
+          />}
+        >
+          <Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{lifecycleEnvironment.name}</Label>
+        </Tooltip>
+        <ContentViewIcon composite={contentView.composite} style={{ marginRight: '2px' }} position="left" />
+        {contentViewDefault ? <span>{contentView.name}</span> :
+        <a style={{ fontSize: '14px' }} href={`/content_views/${contentView.id}`}>
+          {contentView.name}
+        </a>
+        }
+        {!contentViewDefault &&
+          <FlexItem>
+            <a style={{ fontSize: '14px' }} href={urlBuilder(`content_views/${contentView.id}/versions/${contentViewVersionId}`, '')}>
+              <FormattedMessage
+                id={`lce-${lifecycleEnvironment.name}-cv-version-${contentViewVersion}`}
+                defaultMessage={versionLabel}
+                values={{
+                  version: contentViewVersion,
+                }}
+              />
+            </a>
+          </FlexItem>}
+      </Flex>
+    </FlexItem>
+  );
+};
 
+ContentViewEnvironmentDisplay.propTypes = {
+  contentView: PropTypes.shape({
+    name: PropTypes.string,
+    id: PropTypes.number,
+    composite: PropTypes.bool,
+  }).isRequired,
+  lifecycleEnvironment: PropTypes.shape({
+    name: PropTypes.string,
+    id: PropTypes.number,
+  }).isRequired,
+};
+
+const HostContentViewDetails = ({
+  contentViewEnvironments, hostId, hostName, orgId, hostEnvId,
+  hostPermissions, permissions, contentSourceId,
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleHamburger = () => setIsDropdownOpen(prev => !prev);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,7 +117,7 @@ const HostContentViewDetails = ({
       component="button"
       onClick={openModal}
     >
-      {__('Edit content view assignment')}
+      {__('Edit content view environments')}
     </DropdownItem>,
   ];
 
@@ -77,7 +136,15 @@ const HostContentViewDetails = ({
                 justifyContent={{ default: 'justifyContentSpaceBetween' }}
               >
                 <FlexItem>
-                  <CardTitle>{__('Content view details')}</CardTitle>
+                  <CardTitle>
+                    <FormattedMessage
+                      id="cv-card-title"
+                      defaultMessage="{count, plural, =0 {Content view environments} one {Content view environment} other {Content view environments}}"
+                      values={{
+                        count: contentViewEnvironments.length,
+                      }}
+                    />
+                  </CardTitle>
                 </FlexItem>
               </Flex>
             </FlexItem>
@@ -97,42 +164,14 @@ const HostContentViewDetails = ({
         </CardHeader>
         <CardBody>
           <Flex direction={{ default: 'column' }}>
-            <Flex
-              direction={{ default: 'row', sm: 'row' }}
-              flexWrap={{ default: 'nowrap' }}
-              alignItems={{ default: 'alignItemsCenter', sm: 'alignItemsCenter' }}
-            >
-              <ContentViewIcon composite={contentView.composite} style={{ marginRight: '2px' }} position="left" />
-              <h3>{__('Content view')}</h3>
-            </Flex>
-            <Flex direction={{ default: 'row', sm: 'row' }} flexWrap={{ default: 'wrap' }}>
-              <a style={{ fontSize: '14px' }} href={`/content_views/${contentView.id}`}>{contentView.name}</a>
-              <Tooltip
-                position="top"
-                enableFlip
-                entryDelay={400}
-                content={<FormattedMessage
-                  id="cv-card-lce-tooltip"
-                  defaultMessage={__('Lifecycle environment: {lce}')}
-                  values={{
-                    lce: lifecycleEnvironment.name,
-                  }}
-                />}
-              >
-                <Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{lifecycleEnvironment.name}</Label>
-              </Tooltip>
-            </Flex>
+            {contentViewEnvironments.map(env => (
+              <ContentViewEnvironmentDisplay
+                key={`${env.lifecycle_environment.name}-${env.content_view.name}`}
+                contentView={env.content_view}
+                lifecycleEnvironment={env.lifecycle_environment}
+              />
+            ))}
           </Flex>
-          {!contentViewDefault &&
-          <Flex direction={{ default: 'column' }}>
-            <FlexItem>
-              <h3>{__('Version in use')}</h3>
-              <a style={{ fontSize: '14px' }} href={urlBuilder(`content_views/${contentView.id}/versions/${contentViewVersionId}`, '')}>
-                {versionLabel}
-              </a>
-            </FlexItem>
-          </Flex>
-      }
         </CardBody>
       </Card>
       {hostId &&
@@ -144,11 +183,50 @@ const HostContentViewDetails = ({
           hostEnvId={hostEnvId}
           contentSourceId={contentSourceId}
           orgId={orgId}
+          multiEnv={contentViewEnvironments.length > 1}
           key={`cv-change-modal-${hostId}`}
         />
       }
     </GridItem>
   );
+};
+
+HostContentViewDetails.propTypes = {
+  contentViewEnvironments: PropTypes.arrayOf(PropTypes.shape({
+    content_view: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number,
+      composite: PropTypes.bool,
+    }),
+    lifecycle_environment: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number,
+    }),
+  })),
+  hostId: PropTypes.number,
+  hostName: PropTypes.string,
+  orgId: PropTypes.number,
+  hostEnvId: PropTypes.number,
+  hostPermissions: PropTypes.shape({
+    edit_hosts: PropTypes.bool,
+  }),
+  permissions: PropTypes.shape({
+    view_content_views: PropTypes.bool,
+    view_lifecycle_environments: PropTypes.bool,
+    promote_or_remove_content_views_to_environments: PropTypes.bool,
+  }),
+  contentSourceId: PropTypes.number,
+};
+
+HostContentViewDetails.defaultProps = {
+  contentViewEnvironments: [],
+  hostId: null,
+  hostName: '',
+  orgId: null,
+  hostEnvId: null,
+  hostPermissions: {},
+  permissions: {},
+  contentSourceId: null,
 };
 
 const ContentViewDetailsCard = ({ hostDetails }) => {
@@ -173,16 +251,6 @@ HostContentViewDetails.propTypes = {
     id: PropTypes.number,
     composite: PropTypes.bool,
   }).isRequired,
-  contentViewDefault: PropTypes.bool,
-  lifecycleEnvironment: PropTypes.shape({
-    name: PropTypes.string,
-    id: PropTypes.number,
-  }).isRequired,
-  contentViewVersionId: PropTypes.number.isRequired,
-  contentViewVersion: PropTypes.string.isRequired,
-  contentViewVersionLatest: PropTypes.bool.isRequired,
-  id: PropTypes.number,
-  name: PropTypes.string,
   hostId: PropTypes.number,
   hostName: PropTypes.string,
   contentSourceId: PropTypes.number,
@@ -199,14 +267,11 @@ HostContentViewDetails.propTypes = {
 };
 
 HostContentViewDetails.defaultProps = {
-  id: null,
-  name: '',
   hostEnvId: null,
   hostId: null,
   hostName: '',
   orgId: null,
   contentSourceId: null,
-  contentViewDefault: false,
   hostPermissions: {},
   permissions: {},
 };
