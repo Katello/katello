@@ -7,7 +7,7 @@ import { CaretDownIcon } from '@patternfly/react-icons';
 import { BulkPackagesWizardContext, INSTALL, UPGRADE_ALL } from './BulkPackagesWizard';
 
 export const dropdownOptions = [
-  __('via remote execution'),
+  __('immediately'),
   __('via customized remote execution'),
 ];
 
