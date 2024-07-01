@@ -8,7 +8,7 @@ import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/Ac
 import { useTableIndexAPIResponse } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
 import { STATUS } from 'foremanReact/constants';
 import { HOSTS_API_PATH } from 'foremanReact/routes/Hosts/constants';
-import HostReview from './03_HostReview';
+import HostReview from '../HostReview';
 import { BulkPackagesReview, dropdownOptions } from './04_Review';
 import { BulkPackagesUpgradeTable, BulkPackagesInstallTable } from './02_BulkPackagesTable';
 import { BulkPackagesReviewFooter } from './04_ReviewFooter';
