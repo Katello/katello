@@ -27,7 +27,6 @@ export const BulkErrataReview = () => {
       selectedCount: currentSelectedHostsCount,
     },
   } = useContext(BulkErrataWizardContext);
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleDropdownOpen = () => setIsDropdownOpen(prev => !prev);
   const handleSelect = () => {
@@ -43,8 +42,8 @@ export const BulkErrataReview = () => {
     {
       name: treeViewTitle,
       id: 'errata-treeview-title',
-      customBadgeContent:  allErrataSelected ? 'All' : currentSelectedErrataCount,
-      children: allErrataSelected ? undefined :
+      customBadgeContent: allErrataSelected() ? 'All' : currentSelectedErrataCount,
+      children: allErrataSelected() ? undefined :
         selectedErrataResults.map(({ id, name, errata_id: errataId }) => ({
           name: `${errataId}: ${name}`,
           id,

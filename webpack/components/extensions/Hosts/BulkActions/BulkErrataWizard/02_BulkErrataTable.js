@@ -11,10 +11,9 @@ import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableInde
 import { translate as __ } from 'foremanReact/common/I18n';
 import SelectAllCheckbox from 'foremanReact/components/PF4/TableIndexPage/Table/SelectAllCheckbox';
 import { STATUS, getControllerSearchProps } from 'foremanReact/constants';
-import { noop } from 'foremanReact/common/helpers';
 import { RowSelectTd } from 'foremanReact/components/HostsIndex/RowSelectTd';
 import { getPageStats } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
-import { BulkErrataWizardContext, getErrataUrl } from './BulkErrataWizard';
+import { BulkErrataWizardContext, ERRATA_URL } from './BulkErrataWizard';
 import { ErrataType, ErrataSeverity } from '../../../../../components/Errata';
 import katelloApi from '../../../../../services/api';
 
@@ -28,7 +27,6 @@ const BulkErrataTable = () => {
     },
     errataResponse: response,
   } = useContext(BulkErrataWizardContext);
-  const ERRATA_URL = getErrataUrl();
   const apiOptions = { key: 'BULK_HOST_ERRATA' };
   const {
     status: errataStatus,

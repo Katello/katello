@@ -11,7 +11,7 @@ import HostReview from '../HostReview';
 import { BulkErrataReview, dropdownOptions } from './04_Review';
 import BulkErrataTable from './02_BulkErrataTable';
 import { BulkErrataReviewFooter } from './04_ReviewFooter';
-import { foremanApi } from '../../../../../services/api';
+import katelloApi from '../../../../../services/api';
 
 export const BulkErrataWizardContext = createContext({});
 
@@ -47,8 +47,7 @@ export const useErrataHostsBulkSelect = ({ initialSelectedHosts, modalIsOpen }) 
   };
 };
 
-export const getErrataUrl = () =>
-  `${foremanApi.getApiUrl('/hosts/bulk/installable_errata')}?per_page=7&include_permissions=true`;
+export const ERRATA_URL = `${katelloApi.getApiUrl('/errata')}?per_page=7&include_permissions=true`;
 
 const BulkErrataWizard = () => {
   const { modalOpen, setModalClosed: closeModal } = useForemanModal({ id: 'bulk-errata-wizard' });
@@ -69,10 +68,9 @@ const BulkErrataWizard = () => {
 
   const errataResponse = useTableIndexAPIResponse({
     replacementResponse, // don't fetch data if modal is closed
-    apiUrl: getErrataUrl(),
+    apiUrl: ERRATA_URL,
     apiOptions,
     defaultParams,
-    method: 'post',
   });
 
   const {
