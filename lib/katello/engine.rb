@@ -156,7 +156,6 @@ module Katello
 
       #Controller extensions
       ::HostsController.include Katello::Concerns::HostsControllerExtensions
-      ::SmartProxiesController.include Katello::Concerns::SmartProxiesControllerExtensions
       ::RegistrationCommandsController.prepend Katello::Concerns::RegistrationCommandsControllerExtensions
 
       #Helper Extensions
@@ -178,8 +177,6 @@ module Katello
       ::OrganizationsController.include Katello::Concerns::OrganizationsControllerExtensions
 
       # Service extensions
-      require "#{Katello::Engine.root}/lib/proxy_api/pulp"
-      require "#{Katello::Engine.root}/lib/proxy_api/pulp_node"
       require "#{Katello::Engine.root}/lib/proxy_api/container_gateway"
 
       # We need to explicitly load this files because Foreman has
@@ -188,14 +185,11 @@ module Katello
       require_dependency "#{Katello::Engine.root}/app/lib/katello/api/v2/rendering"
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/api_controller"
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
-      require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp"
-      require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp_node"
 
       #Api controller extensions
       ::Api::V2::HostsController.include Katello::Concerns::Api::V2::HostsControllerExtensions
       ::Api::V2::HostsBulkActionsController.include Katello::Concerns::Api::V2::HostsBulkActionsControllerExtensions
       ::Api::V2::HostgroupsController.include Katello::Concerns::Api::V2::HostgroupsControllerExtensions
-      ::Api::V2::SmartProxiesController.include Katello::Concerns::Api::V2::SmartProxiesControllerExtensions
       ::Api::V2::RegistrationController.include ::Foreman::Controller::SmartProxyAuth
       ::Api::V2::RegistrationController.prepend Katello::Concerns::Api::V2::RegistrationControllerExtensions
       ::Api::V2::RegistrationCommandsController.include Katello::Concerns::Api::V2::RegistrationCommandsControllerExtensions
