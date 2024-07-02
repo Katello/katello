@@ -65,7 +65,7 @@ module Katello
             response = JSON.parse(response_json).with_indifferent_access
             if wait_until_complete && response['state'] == 'CREATED'
               while !response['state'].nil? && response['state'] != 'FINISHED' && response['state'] != 'ERROR'
-                path = join_path('candlepin', response['statusPath'][1..-1])
+                path = join_path('candlepin', response['statusPath'][1..])
                 response_json = self.get(path, self.default_headers)
                 response = JSON.parse(response_json).with_indifferent_access
               end
