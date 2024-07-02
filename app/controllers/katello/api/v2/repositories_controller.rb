@@ -537,7 +537,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       if @repository.root.gpg_key && @repository.root.gpg_key.content.present?
         render(:plain => @repository.root.gpg_key.content, :layout => false)
       else
-        head(404)
+        head(:not_found)
       end
     end
 
