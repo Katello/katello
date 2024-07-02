@@ -13,15 +13,15 @@
 #
 # ===== Examples
 #
-#   UrlMatcher.match('/foo', ['/', '/foo', '/bar/baz'])   #=> ['/foo']
-#   UrlMatcher.match('/80/07/01', ['/:year/:month/:day']) #=> ['/80/07/01', '80', '07', '01']
+#   URLMatcher.match('/foo', ['/', '/foo', '/bar/baz'])   #=> ['/foo']
+#   URLMatcher.match('/80/07/01', ['/:year/:month/:day']) #=> ['/80/07/01', '80', '07', '01']
 #
 
 require 'pathname'
 
 module Katello
   module Util
-    module UrlMatcher
+    module URLMatcher
       def self.match(path, routes)
         path     = Path.new(path)
         patterns = routes.map { |route| Pattern.new(Array(route).first) }

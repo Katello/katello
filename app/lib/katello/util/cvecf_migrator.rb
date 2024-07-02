@@ -1,6 +1,6 @@
 module Katello
   module Util
-    class CVECFMigrator # used in db/migrate/20220929204746_add_content_view_environment_content_facet.rb
+    class CvecfMigrator # used in db/migrate/20220929204746_add_content_view_environment_content_facet.rb
       def execute!
         hosts_with_no_cve = []
         hosts_with_missing_cve = []
