@@ -254,10 +254,11 @@ module Katello
       end
 
       def pulp3_ssl_configuration(config, connection_adapter = Faraday.default_adapter)
-        if connection_adapter == :excon
+        case connection_adapter
+        when :excon
           config.ssl_client_cert = ::Cert::Certs.ssl_client_cert_filename
           config.ssl_client_key = ::Cert::Certs.ssl_client_key_filename
-        elsif connection_adapter == :net_http
+        when :net_http
           config.ssl_client_cert = ::Cert::Certs.ssl_client_cert
           config.ssl_client_key = ::Cert::Certs.ssl_client_key
         else

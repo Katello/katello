@@ -148,13 +148,14 @@ module Katello
       if interval.nil?
         fail _("Interval cannot be nil")
       end
-      if (interval.downcase.eql? "hourly")
+      case interval.downcase
+      when "hourly"
         cron = min.to_s + " * * * *"
-      elsif (interval.downcase.eql? "daily")
+      when "daily"
         cron = min.to_s + " " + hour.to_s + " * * *"
-      elsif (interval.downcase.eql? "weekly")
+      when "weekly"
         cron = min.to_s + " " + hour.to_s + " * * " + day.to_s
-      elsif (interval.downcase.eql? CUSTOM_CRON)
+      when CUSTOM_CRON
         cron = cron_expression
       else
         fail _("Interval not set correctly")
