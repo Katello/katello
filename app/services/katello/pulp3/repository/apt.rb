@@ -7,6 +7,14 @@ module Katello
         UNIT_LIMIT = 10_000
         SIGNING_SERVICE_NAME = 'katello_deb_sign'.freeze
 
+        def initialize_empty
+          # For every empty APT library instance repository we must add at least a release component to
+          # ensure we have a publishable repo with consumable metadata. Otherwise smart proxy syncs will
+          # fail, and consuming hosts will choke on empty repos.
+          opts = {:repository => repository_reference.repository_href, :component => "empty", :distribution => "katello"}
+          api.content_release_components_api.create(opts)
+        end
+
         def remote_options
           deb_remote_options = {
             policy: root.download_policy,
@@ -31,22 +39,22 @@ module Katello
         end
 
         def mirror_remote_options
-          super.merge(
-            {
-              distributions: repo.deb_releases + "#{' default' unless repo.deb_releases.include? 'default'}"
-            }
-          )
+          if Setting['deb_use_structured_proxy_sync']
+            distributions = repo.deb_distributions.join(' ')
+          elsif Setting['deb_use_simple_publish']
+            distributions = 'default'
+          else
+            fail("It cannot work to set both deb_use_structured_proxy_sync and deb_use_simple_publish to False! Please set at least one of them to True!")
+          end
+
+          super.merge({distributions: distributions})
         end
 
         def publication_options(repository_version)
           ss = api.signing_services_api.list(name: SIGNING_SERVICE_NAME).results
           popts = super(repository_version)
-          popts.merge!(
-            {
-              structured: true, # publish real suites (e.g. 'stable')
-              simple: true # publish all into 'default'-suite
-            }
-          )
+          popts.merge!({ simple: true }) if Setting['deb_use_simple_publish']
+          popts.merge!({ structured: true })
           popts[:signing_service] = ss[0].pulp_href if ss && ss.length == 1
           popts
         end

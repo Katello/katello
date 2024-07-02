@@ -663,6 +663,24 @@ Foreman::Plugin.register :katello do
         default: true,
         full_name: N_('Calculate content counts on smart proxies automatically'),
         description: N_("If this is enabled, content counts on smart proxies will be updated automatically after content sync.")
+
+      setting 'deb_use_simple_publish',
+        type: :boolean,
+        default: true,
+        full_name: N_('Use simple publish for deb'),
+        description: N_("If enabled APT repos will publish a catch all Release file under /dists/default/ with a single component named 'all' in it.")
+
+      setting 'deb_use_structured_content',
+        type: :boolean,
+        default: false,
+        full_name: N_('Use structured content for deb clients'),
+        description: N_("If enabled, repo URL's for deb content hosts will be appended with structure information where available.")
+
+      setting 'deb_use_structured_proxy_sync',
+        type: :boolean,
+        default: false,
+        full_name: N_('Sync structured content for proxy syncs'),
+        description: N_("If enabled, any upstream distributions synced to the server will also be used for proxy syncs.")
     end
   end
 
