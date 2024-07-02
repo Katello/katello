@@ -7,6 +7,7 @@ module Katello
       @version = ContentViewVersion.first
       @deb = katello_debs(:one)
       @host = hosts(:one)
+      @org = get_organization
     end
 
     def setup
@@ -68,6 +69,15 @@ module Katello
       assert_response :success
       ids = JSON.parse(response.body)['results'].map { |p| p['id'] }
       assert_includes ids, @deb.id
+    end
+
+    def test_index_with_latest
+      response = get :index, params: { :packages_restrict_latest => true, :organization_id => @org.id }
+
+      assert_response :success
+      ids = JSON.parse(response.body)['results'].map { |p| p['id'] }
+      assert_includes ids, katello_debs(:one_new).id
+      refute_includes ids, @deb.id
     end
 
     def test_index_protected
