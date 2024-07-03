@@ -541,6 +541,11 @@ module Katello
         @controller.expects(:check_blob_push_product_label).returns(true)
         @controller.expects(:check_blob_push_container).returns(true)
         @controller.expects(:create_container_repo_if_needed)
+        @controller.expects(:save_push_repo_hrefs).returns(true)
+        mock_root_repo = mock('root_repo')
+        mock_instance_repo = mock('instance_repo')
+        mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
+        @controller.stubs(:root_repository).returns(mock_root_repo)
 
         # The content type should be octet-stream, but action controller
         # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
@@ -565,6 +570,11 @@ module Katello
         @controller.expects(:check_blob_push_product_label).returns(true)
         @controller.expects(:check_blob_push_container).returns(true)
         @controller.expects(:create_container_repo_if_needed)
+        @controller.expects(:save_push_repo_hrefs).returns(true)
+        mock_root_repo = mock('root_repo')
+        mock_instance_repo = mock('instance_repo')
+        mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
+        @controller.stubs(:root_repository).returns(mock_root_repo)
 
         # The content type should be octet-stream, but action controller
         # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
@@ -592,6 +602,11 @@ module Katello
         @controller.expects(:check_blob_push_product_label).returns(true)
         @controller.expects(:check_blob_push_container).returns(true)
         @controller.expects(:create_container_repo_if_needed)
+        @controller.expects(:save_push_repo_hrefs).returns(true)
+        mock_root_repo = mock('root_repo')
+        mock_instance_repo = mock('instance_repo')
+        mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
+        @controller.stubs(:root_repository).returns(mock_root_repo)
 
         # The content type should be octet-stream, but action controller
         # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
@@ -611,14 +626,19 @@ module Katello
         assert_equal 'Mars', resp.headers['Location']
       end
 
-      it 'pushes a manifest' do
+      it 'pushes a manifest and indexes content' do
         repo_name = 'test_org/test_product/test_name'
         tag = 'latest'
         @controller.expects(:check_blob_push_org_label).returns(true)
         @controller.expects(:check_blob_push_product_label).returns(true)
         @controller.expects(:check_blob_push_container).returns(true)
         @controller.expects(:create_container_repo_if_needed)
-        @controller.expects(:blob_push_cleanup).returns(true)
+        @controller.expects(:save_push_repo_hrefs).returns(true)
+        mock_root_repo = mock('root_repo')
+        mock_instance_repo = mock('instance_repo')
+        mock_instance_repo.expects(:index_content)
+        mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
+        @controller.stubs(:root_repository).returns(mock_root_repo)
 
         # The content type should be application/vnd.oci.image.manifest.v1+json, but action controller
         # throws a non-existence error since Mime::Type.lookup('application/octet-stream').to_sym is nil.
@@ -1013,7 +1033,7 @@ module Katello
         @controller.create_container_repo_if_needed
       end
 
-      it 'updates hrefs and triggers content indexing' do
+      it 'updates hrefs' do
         container_name = "foo"
         container_push_name = "default_org/test/foo"
         latest_version_href = "asdfghjk"
@@ -1030,10 +1050,10 @@ module Katello
         mock_instance_repo.expects(:update!).with(version_href: latest_version_href)
         mock_instance_repo.stubs(:root_id).returns(root_id)
         mock_instance_repo.stubs(:content_view).returns(mock_content_view)
-        mock_instance_repo.expects(:index_content)
-        mock_instance_repo.expects(:id).returns(instance_id)
+        mock_instance_repo.stubs(:id).returns(instance_id)
         mock_root_repo = mock('root_repository')
         mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
+        mock_root_repo.stubs(:repository_references).returns([])
         mock_root_repositories = mock('root_repositories')
         mock_root_repositories.stubs(:where).with(label: container_name).returns([mock_root_repo])
         mock_product = mock('Product')
@@ -1060,8 +1080,8 @@ module Katello
         mock_backend_service = mock('backend_service')
         SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
         #::Katello::Pulp3::Repository.expects(:api).with(mock_pulp_primary, ::Katello::Repository::DOCKER_TYPE).returns(mock_repo_api)
-        mock_instance_repo.expects(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
-        mock_backend_service.expects(:api).returns(mock_pulp_api)
+        mock_instance_repo.stubs(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
+        mock_backend_service.stubs(:api).returns(mock_pulp_api)
         ::Katello::Pulp3::RepositoryReference.stubs(:where).with(
           root_repository_id: root_id,
           content_view_id: content_view_id,
@@ -1073,12 +1093,15 @@ module Katello
         @controller.instance_variable_set(:@container_name, container_name)
         @controller.instance_variable_set(:@container_path_input, container_push_name)
 
-        assert @controller.blob_push_cleanup
+        assert @controller.save_push_repo_hrefs
       end
 
       it 'rejects missing root repo on content indexing' do
         container_name = "foo"
 
+        mock_pulp_api = mock('pulp_api')
+        mock_instance_repo = mock('instance repo')
+        mock_instance_repo.stubs(:backend_service).returns(mock_pulp_api)
         mock_root_repositories = mock('root_repositories')
         mock_root_repositories.stubs(:where).with(label: container_name).returns([])
         mock_product = mock('Product')
@@ -1087,7 +1110,7 @@ module Katello
         @controller.instance_variable_set(:@product, mock_product)
         @controller.instance_variable_set(:@container_name, container_name)
         expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
-        refute @controller.blob_push_cleanup
+        refute @controller.save_push_repo_hrefs
       end
 
       it 'rejects missing instance repo on content indexing' do
@@ -1103,7 +1126,7 @@ module Katello
         @controller.instance_variable_set(:@product, mock_product)
         @controller.instance_variable_set(:@container_name, container_name)
         expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
-        refute @controller.blob_push_cleanup
+        refute @controller.save_push_repo_hrefs
       end
 
       it 'rejects missing repo api response on content indexing' do
@@ -1124,14 +1147,14 @@ module Katello
         mock_pulp_primary = mock('pulp_primary')
         SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
         mock_backend_service = mock('backend_service')
-        mock_instance_repo.expects(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
-        mock_backend_service.expects(:api).returns(mock_pulp_api)
+        mock_instance_repo.stubs(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
+        mock_backend_service.stubs(:api).returns(mock_pulp_api)
 
         @controller.instance_variable_set(:@product, mock_product)
         @controller.instance_variable_set(:@container_name, container_name)
         @controller.instance_variable_set(:@container_path_input, container_push_name)
         expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
-        refute @controller.blob_push_cleanup
+        refute @controller.save_push_repo_hrefs
       end
 
       it 'rejects missing pulp_distribution_href on content indexing' do
@@ -1142,6 +1165,7 @@ module Katello
 
         mock_instance_repo = mock('library_instance')
         mock_root_repo = mock('root_repository')
+        mock_root_repo.stubs(:repository_references).returns(['salmon'])
         mock_root_repo.stubs(:library_instance).returns(mock_instance_repo)
         mock_root_repositories = mock('root_repositories')
         mock_root_repositories.stubs(:where).with(label: container_name).returns([mock_root_repo])
@@ -1161,14 +1185,15 @@ module Katello
         mock_pulp_primary = mock('pulp_primary')
         SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
         mock_backend_service = mock('backend_service')
-        mock_instance_repo.expects(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
-        mock_backend_service.expects(:api).returns(mock_pulp_api)
+        mock_instance_repo.expects(:update!).with(version_href: latest_version_href)
+        mock_instance_repo.stubs(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
+        mock_backend_service.stubs(:api).returns(mock_pulp_api)
 
         @controller.instance_variable_set(:@product, mock_product)
         @controller.instance_variable_set(:@container_name, container_name)
         @controller.instance_variable_set(:@container_path_input, container_push_name)
         expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
-        refute @controller.blob_push_cleanup
+        refute @controller.save_push_repo_hrefs
       end
 
       it 'rejects missing latest_version_href on content indexing' do
@@ -1194,14 +1219,14 @@ module Katello
         mock_pulp_primary = mock('pulp_primary')
         SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
         mock_backend_service = mock('backend_service')
-        mock_instance_repo.expects(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
-        mock_backend_service.expects(:api).returns(mock_pulp_api)
+        mock_instance_repo.stubs(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
+        mock_backend_service.stubs(:api).returns(mock_pulp_api)
 
         @controller.instance_variable_set(:@product, mock_product)
         @controller.instance_variable_set(:@container_name, container_name)
         @controller.instance_variable_set(:@container_path_input, container_push_name)
         expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
-        refute @controller.blob_push_cleanup
+        refute @controller.save_push_repo_hrefs
       end
 
       it 'rejects missing pulp_href on content indexing' do
@@ -1227,14 +1252,14 @@ module Katello
         mock_pulp_primary = mock('pulp_primary')
         SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
         mock_backend_service = mock('backend_service')
-        mock_instance_repo.expects(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
-        mock_backend_service.expects(:api).returns(mock_pulp_api)
+        mock_instance_repo.stubs(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
+        mock_backend_service.stubs(:api).returns(mock_pulp_api)
 
         @controller.instance_variable_set(:@product, mock_product)
         @controller.instance_variable_set(:@container_name, container_name)
         @controller.instance_variable_set(:@container_path_input, container_push_name)
         expect_render_podman_error("BLOB_UPLOAD_UNKNOWN", :not_found)
-        refute @controller.blob_push_cleanup
+        refute @controller.save_push_repo_hrefs
       end
 
       def mock_pulp_response(code, headers)

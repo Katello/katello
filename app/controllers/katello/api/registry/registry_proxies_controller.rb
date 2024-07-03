@@ -299,6 +299,11 @@ module Katello
       return product.root_repositories.where(label: root_repo_name)
     end
 
+    def root_repository
+      @root_repository ||= get_root_repo_from_product(@product, @container_name)&.first
+      @root_repository
+    end
+
     def check_blob_push_container(props)
       unless props[:name].present? && props[:name].length > 0
         return render_podman_error(
@@ -354,12 +359,10 @@ module Katello
       end
     end
 
-    def blob_push_cleanup
-      # after manifest upload, index content and set version href using pulp api
-      root_repo = get_root_repo_from_product(@product, @container_name)&.first
-      instance_repo = root_repo&.library_instance
+    def save_pulp_push_repository_href
+      instance_repo = root_repository&.library_instance
 
-      unless root_repo.present? && instance_repo.present?
+      unless root_repository.present? && instance_repo.present?
         return render_podman_error(
           "BLOB_UPLOAD_UNKNOWN",
           _("Could not locate local uploaded repository for content indexing."),
@@ -380,7 +383,20 @@ module Katello
           :not_found
         )
       end
+      instance_repo.update!(version_href: latest_version_href)
+      # The Pulp repository should not change after first creation
+      if root_repository.repository_references.empty?
+        ::Katello::Pulp3::RepositoryReference.where(root_repository_id: instance_repo.root_id,
+                                                    content_view_id: instance_repo.content_view.id,
+                                                    repository_href: pulp_repo_href).create!
+      end
+      return pulp_repo_href
+    end
 
+    def save_pulp_push_distribution_href(pulp_repo_href)
+      instance_repo = root_repository&.library_instance
+      pulp_api = instance_repo.backend_service(SmartProxy.pulp_primary).api
+      instance_repo = root_repository&.library_instance
       distribution_api_response = pulp_api.container_push_distribution_for_repository(pulp_repo_href)
       pulp_distribution_href = distribution_api_response&.pulp_href
 
@@ -391,17 +407,25 @@ module Katello
           :not_found
         )
       end
+      dist = ::Katello::Pulp3::DistributionReference.where(path: @container_path_input,
+                                                           href: pulp_distribution_href,
+                                                           repository_id: instance_repo.id).first
+      if dist
+        if dist.href != pulp_distribution_href
+          dist.update(href: pulp_distribution_href)
+        end
+      else
+        ::Katello::Pulp3::DistributionReference.create!(path: @container_path_input,
+                                                       href: pulp_distribution_href,
+                                                       repository_id: instance_repo.id)
+      end
+    end
 
-      instance_repo.update!(version_href: latest_version_href)
-      ::Katello::Pulp3::RepositoryReference.where(root_repository_id: instance_repo.root_id,
-                                                  content_view_id: instance_repo.content_view.id,
-                                                  repository_href: pulp_repo_href).create!
-      ::Katello::Pulp3::DistributionReference.where(path: @container_path_input,
-                                                    href: pulp_distribution_href,
-                                                    repository_id: instance_repo.id).create!
-      instance_repo.index_content
-
-      true
+    def save_push_repo_hrefs
+      # After content upload, save Pulp hrefs.
+      pulp_repo_href = save_pulp_push_repository_href
+      return unless pulp_repo_href
+      save_pulp_push_distribution_href(pulp_repo_href)
     end
 
     def find_writable_repository
@@ -524,6 +548,17 @@ module Katello
       redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers, max_redirects: 0) }
     end
 
+    def translated_headers_for_proxy
+      current_headers = {}
+      env = request.env.select do |key, _value|
+        key.match("^HTTP_.*")
+      end
+      env.each do |header|
+        current_headers[header[0].split('_')[1..-1].join('-')] = header[1]
+      end
+      current_headers
+    end
+
     def start_upload_blob
       headers = translated_headers_for_proxy
       headers['Content-Type'] = request.headers['Content-Type'] if request.headers['Content-Type']
@@ -534,18 +569,8 @@ module Katello
         response.header[key.to_s] = value
       end
 
+      save_push_repo_hrefs if pulp_response.code.between?(200, 299)
       head pulp_response.code
-    end
-
-    def translated_headers_for_proxy
-      current_headers = {}
-      env = request.env.select do |key, _value|
-        key.match("^HTTP_.*")
-      end
-      env.each do |header|
-        current_headers[header[0].split('_')[1..-1].join('-')] = header[1]
-      end
-      current_headers
     end
 
     def upload_blob
@@ -560,6 +585,7 @@ module Katello
         response.header[key.to_s] = value
       end
 
+      save_push_repo_hrefs if pulp_response.code.between?(200, 299)
       head pulp_response.code
     end
 
@@ -574,6 +600,7 @@ module Katello
         response.header[key.to_s] = value
       end
 
+      save_push_repo_hrefs if pulp_response.code.between?(200, 299)
       head pulp_response.code
     end
 
@@ -586,9 +613,9 @@ module Katello
         response.header[key.to_s] = value
       end
 
-      cleanup_result = blob_push_cleanup if pulp_response.code.between?(200, 299)
-      return false unless cleanup_result
-
+      save_push_repo_hrefs if pulp_response.code.between?(200, 299)
+      # Indexing content is only needed after pushing manifests
+      root_repository.library_instance.index_content
       head pulp_response.code
     end
 
