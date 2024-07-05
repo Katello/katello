@@ -4,6 +4,7 @@ import React, {
   useState,
 } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { getDocsURL } from 'foremanReact/common/helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { STATUS } from 'foremanReact/constants';
@@ -40,7 +41,6 @@ import {
   Td,
 } from '@patternfly/react-table';
 import { useSelectionSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
-import { useKatelloDocUrl } from '../../../../utils/useKatelloDocUrl';
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import SelectableDropdown from '../../../../components/SelectableDropdown';
 import TableWrapper from '../../../../components/Table/TableWrapper';
@@ -139,7 +139,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
     __('Status'),
   ];
 
-  const documentationUrl = useKatelloDocUrl('Managing_Content', '#Products_and_Repositories_content-management');
+  const documentationUrl = getDocsURL('Managing_Content', 'Products_and_Repositories_content-management');
 
   useEffect(() => {
     dispatch(getRepositoryTypes());
