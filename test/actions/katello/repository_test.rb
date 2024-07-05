@@ -75,6 +75,16 @@ module ::Actions::Katello::Repository
       assert_action_planned action, acs_create_action_class
     end
 
+    it 'does not plan acs creation if ULN' do
+      simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
+      simplified_acs.verify_ssl = nil
+      repository.root.update(url: 'uln://uln-repo.org')
+      simplified_acs.products << repository.product
+      ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: simplified_acs.id, smart_proxy_id: ::SmartProxy.pulp_primary.id, remote_href: 'remote_href', alternate_content_source_href: 'acs_href')
+      plan_action action, repository
+      refute_action_planned action, acs_create_action_class
+    end
+
     it 'does not plan acs creation if cloning' do
       plan_action action, repository, clone: true
       refute_action_planned action, acs_create_action_class
@@ -148,12 +158,31 @@ module ::Actions::Katello::Repository
       assert_action_planned action, ::Actions::Pulp3::Orchestration::AlternateContentSource::Create
     end
 
+    it 'does not plan ACS creation when adding a ULN URL' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+
+      repository.root.update(url: nil)
+      plan_action action, repository.root, :url => 'uln://some-uln-repo'
+      refute_action_planned action, ::Actions::Pulp3::Orchestration::AlternateContentSource::Create
+    end
+
     it 'plans ACS deletion when removing the URL' do
       ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: repository.id)
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
 
       plan_action action, repository.root, :url => ''
+      assert_action_planned_with action, ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, ::Katello::SmartProxyAlternateContentSource.where(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: repository.id).first,
+                                         old_url: "http://www.pleaseack.com"
+    end
+
+    it 'plans ACS deletion when changing to a ULN repo' do
+      ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: repository.id)
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+
+      plan_action action, repository.root, :url => 'uln://a-uln-repo'
       assert_action_planned_with action, ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, ::Katello::SmartProxyAlternateContentSource.where(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: repository.id).first,
                                          old_url: "http://www.pleaseack.com"
     end

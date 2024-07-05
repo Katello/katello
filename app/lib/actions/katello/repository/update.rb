@@ -92,7 +92,7 @@ module Actions
           # match the ACS content type and have a non-nil URL
           product = repository.product
           repo_content_types = Set.new
-          product.repositories.each do |test_repo|
+          product.acs_compatible_repositories.each do |test_repo|
             # we need to check id because test_repo will still contain the old, non-nil url
             repo_content_types.add(test_repo.content_type) if (repository.id != test_repo.id) && test_repo.url.present?
           end
@@ -110,11 +110,11 @@ module Actions
         end
 
         def create_acs?(old_url, new_url)
-          old_url.nil? && new_url.present?
+          (old_url.nil? || old_url.start_with?('uln')) && new_url.present? && !new_url.start_with?('uln')
         end
 
         def delete_acs?(old_url, new_url)
-          old_url.present? && new_url.nil?
+          old_url.present? && (new_url.nil? || new_url.start_with?('uln'))
         end
       end
     end

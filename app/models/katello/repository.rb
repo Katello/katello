@@ -121,6 +121,7 @@ module Katello
     before_validation :set_container_repository_name, :unless => :skip_container_name?
 
     scope :has_url, -> { joins(:root).where.not("#{RootRepository.table_name}.url" => nil) }
+    scope :not_uln, -> { joins(:root).where("#{RootRepository.table_name}.url NOT LIKE 'uln%'") }
     scope :on_demand, -> { joins(:root).where("#{RootRepository.table_name}.download_policy" => ::Katello::RootRepository::DOWNLOAD_ON_DEMAND) }
     scope :immediate, -> { joins(:root).where("#{RootRepository.table_name}.download_policy" => ::Katello::RootRepository::DOWNLOAD_IMMEDIATE) }
     scope :non_immediate, -> { joins(:root).where.not("#{RootRepository.table_name}.download_policy" => ::Katello::RootRepository::DOWNLOAD_IMMEDIATE) }

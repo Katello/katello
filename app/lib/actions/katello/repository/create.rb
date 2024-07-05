@@ -39,7 +39,7 @@ module Actions
             unless root.is_container_push && repository.in_default_view?
               concurrence do
                 plan_self(:repository_id => repository.id, :clone => clone)
-                if !clone && repository.url.present?
+                if !clone && repository.url.present? && !repository.url.start_with?('uln')
                   repository.product.alternate_content_sources.with_type(repository.content_type).each do |acs|
                     acs.smart_proxies.each do |smart_proxy|
                       smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id, repository_id: repository.id)

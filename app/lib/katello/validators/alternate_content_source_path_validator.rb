@@ -17,7 +17,7 @@ module Katello
       end
 
       def self.validate_base_url(base_url)
-        base_url =~ /\A#{URI::DEFAULT_PARSER.make_regexp}\z/
+        base_url =~ /\A(?!uln:\/\/)(#{URI::DEFAULT_PARSER.make_regexp})\z/
       end
 
       # Subpaths must have a slash at the end and none at the front: 'path/'
