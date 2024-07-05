@@ -63,12 +63,13 @@ module Actions
               plan_action(Pulp3::Orchestration::AlternateContentSource::Update, smart_proxy_acs)
             elsif acs.simplified?
               products_to_associate.each do |product|
-                product.repositories.library.with_type(acs.content_type).each do |repo|
+                product.acs_compatible_repositories.with_type(acs.content_type).each do |repo|
                   smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id, repository_id: repo.id)
                   plan_action(Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
                 end
               end
               products_to_disassociate.each do |product|
+                # Don't use the acs_compatible_repositories filter here to ensure the proper repositories get disassociated
                 product.repositories.library.with_type(acs.content_type).each do |repo|
                   smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.find_by(alternate_content_source_id: acs.id, smart_proxy_id: smart_proxy.id, repository_id: repo.id)
                   plan_action(Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs) if smart_proxy_acs.present?

@@ -76,32 +76,34 @@ module Katello
       assert @yum_acs.use_http_proxies
     end
 
+    def test_custom_uln_base_url
+      @yum_acs.base_url = 'uln://uln-repo'
+      error = assert_raises(ActiveRecord::RecordInvalid) { @yum_acs.save! }
+      assert_match 'Validation failed: Base url uln://uln-repo is not a valid path', error.message
+    end
+
     def test_custom_missing_base_url
       @yum_acs.base_url = nil
-      assert_raises(ActiveRecord::RecordInvalid, "Base url can\'t be blank") do
-        @yum_acs.save!
-      end
+      error = assert_raises(ActiveRecord::RecordInvalid) { @yum_acs.save! }
+      assert_match "Base url can\'t be blank", error.message
     end
 
     def test_custom_missing_verify_ssl
       @yum_acs.verify_ssl = nil
-      assert_raises(ActiveRecord::RecordInvalid, "Verify ssl can\'t be blank") do
-        @yum_acs.save!
-      end
+      error = assert_raises(ActiveRecord::RecordInvalid) { @yum_acs.save! }
+      assert_match 'Validation failed: Verify ssl must be provided for custom or rhui ACS', error.message
     end
 
     def test_wrong_acs_type
       @yum_acs.alternate_content_source_type = 'definitely not an ACS type'
-      assert_raises(ActiveRecord::RecordInvalid, "Alternate content source type is not a valid type. Must be one of the following: #{AlternateContentSource::ACS_TYPES.join(',')}") do
-        @yum_acs.save!
-      end
+      error = assert_raises(ActiveRecord::RecordInvalid) { @yum_acs.save! }
+      assert_match "Alternate content source type is not a valid type. Must be one of the following: #{AlternateContentSource::ACS_TYPES.join(',')}", error.message
     end
 
     def test_wrong_content_type
       @yum_acs.content_type = 'emu'
-      assert_raises(ActiveRecord::RecordInvalid, "Content type is not allowed for ACS. Must be one of the following: #{AlternateContentSource::CONTENT_TYPES.join(',')}") do
-        @yum_acs.save!
-      end
+      error = assert_raises(ActiveRecord::RecordInvalid) { @yum_acs.save! }
+      assert_match "Validation failed: Content type is not allowed for ACS. Must be one of the following: #{AlternateContentSource::CONTENT_TYPES.sort.join(',')}, Content type cannot be modified once an ACS is created", error.message
     end
 
     def test_custom?

@@ -84,6 +84,10 @@ module Katello
 
     before_create :assign_unique_label
 
+    def acs_compatible_repositories
+      repositories.has_url.not_uln.library
+    end
+
     def orphaned?
       self.pool_products.empty?
     end
