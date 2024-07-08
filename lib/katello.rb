@@ -12,8 +12,6 @@ require "securerandom"
 
 require "deface"
 
-require "securerandom"
-
 # to make Foreman#in_rake? helper available if Foreman's lib is available
 lib_foreman = File.expand_path('lib/foreman', Rails.root)
 require lib_foreman if Dir.exist?(lib_foreman)
