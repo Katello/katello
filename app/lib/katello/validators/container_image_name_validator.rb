@@ -8,7 +8,7 @@ module Katello
       end
 
       def self.validate_name(name)
-        if name.empty? || name.length > 255 || !/\A([a-z0-9]+[a-z0-9\-\_\.]*)+(\/[a-z0-9]+[a-z0-9\-\_\.]*)*\z/.match?(name)
+        if name.empty? || name.length > 255 || !/\A([a-z0-9]+[a-z0-9\-_.]*)+(\/[a-z0-9]+[a-z0-9\-_.]*)*\z/.match?(name)
           return false
         end
         true

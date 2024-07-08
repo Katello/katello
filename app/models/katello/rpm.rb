@@ -53,7 +53,7 @@ module Katello
       # https://github.com/wvanbergen/scoped_search/blob/master/lib/scoped_search/query_builder.rb
       if ['LIKE', 'NOT LIKE'].include?(operator)
         conditions = "#{self.table_name}.#{column} #{operator} ?"
-        parameter = (value !~ /^\%|\*/ && value !~ /\%|\*$/) ? "%#{value}%" : value.tr_s('%*', '%')
+        parameter = (value !~ /^%|\*/ && value !~ /%|\*$/) ? "%#{value}%" : value.tr_s('%*', '%')
         return { :conditions => conditions, :parameter => [parameter] }
       elsif ['IN', 'NOT IN'].include?(operator)
         conditions = "#{self.table_name}.#{column} #{operator} (#{value.split(',').collect { '?' }.join(',')})"
@@ -124,7 +124,7 @@ module Katello
     end
 
     def self.scoped_search_evr_like(operator, value)
-      val = (value !~ /^\%|\*/ && value !~ /\%|\*$/) ? "%#{value}%" : value.tr_s('%*', '%')
+      val = (value !~ /^%|\*/ && value !~ /%|\*$/) ? "%#{value}%" : value.tr_s('%*', '%')
       evr = Util::Package.parse_evr(val)
       (e, v, r) = [evr[:epoch], evr[:version], evr[:release]]
       conditions = []

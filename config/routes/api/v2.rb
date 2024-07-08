@@ -431,7 +431,7 @@ Katello::Engine.routes.draw do
           api_resources :packages, :only => [:index, :show]
           api_resources :package_groups, :only => [:index, :show]
           api_resources :files, :only => [:index, :show], :controller => 'file_units'
-          api_resources :errata, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z\-\+%_.:]+/}
+          api_resources :errata, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z\-+%_.:]+/}
           api_resources :docker_manifests, :only => [:index, :show]
           api_resources :docker_manifest_lists, :only => [:index, :show]
           api_resources :docker_tags, :only => [:index, :show]

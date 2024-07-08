@@ -135,7 +135,7 @@ module Katello
       end
 
       def self.valid_package_characters
-        /[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/
+        /[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-._+,]+/
       end
 
       def self.setup_shared_unique_filter(repoids, search_mode, search_results)

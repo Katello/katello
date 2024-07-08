@@ -44,7 +44,7 @@ module Katello
       returns String, desc: 'Absolute path to a file'
     end
     def repository_url(content_path, _content_type = nil, schema = 'http')
-      return content_path if content_path =~ %r|^([\w\-\+]+)://|
+      return content_path if content_path =~ %r|^([\w\-+]+)://|
       url = if @host.content_source
               "#{schema}://#{@host.content_source.hostname}"
             else

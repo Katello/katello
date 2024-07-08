@@ -528,7 +528,7 @@ module Katello
           versions_by_name_arch = {}
           if versions.present?
             JSON.parse(versions).each do |nvra|
-              nvra =~ /([^\.]*)-[-\.\w]*\.(\w+)/
+              nvra =~ /([^.]*)-[-.\w]*\.(\w+)/
               versions_by_name_arch[[Regexp.last_match(1), Regexp.last_match(2)]] = nvra
             end
           end
