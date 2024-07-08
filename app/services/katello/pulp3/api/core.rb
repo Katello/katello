@@ -264,7 +264,7 @@ module Katello
             (response.count && (page_opts['offset'] < response.count)) ||
                 page_opts["offset"] == 0)
             response = yield page_opts
-            results = results.concat(response.results)
+            results.concat(response.results)
             page_opts[:offset] += page_size
           end
 
