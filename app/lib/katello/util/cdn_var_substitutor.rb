@@ -1,8 +1,7 @@
 module Katello
   module Util
     class CdnVarSubstitutor
-      attr_reader :good_listings
-      attr_reader :bad_listings
+      attr_reader :good_listings, :bad_listings
 
       # cdn_resource - an object providing access to CDN. It has to
       # provide a get method that takes a path (e.g.

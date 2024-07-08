@@ -5,8 +5,7 @@ module Katello
     class Repository
       include Katello::Util::HttpProxy
       include Katello::Pulp3::ServiceCommon
-      attr_accessor :repo
-      attr_accessor :smart_proxy
+      attr_accessor :repo, :smart_proxy
 
       delegate :root, to: :repo
       delegate :pulp3_api, to: :smart_proxy

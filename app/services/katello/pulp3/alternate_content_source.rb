@@ -3,9 +3,7 @@ module Katello
   module Pulp3
     class AlternateContentSource
       include Katello::Pulp3::ServiceCommon
-      attr_accessor :acs
-      attr_accessor :smart_proxy
-      attr_accessor :repository
+      attr_accessor :acs, :smart_proxy, :repository
 
       def initialize(acs, smart_proxy, repository = nil)
         @acs = acs
