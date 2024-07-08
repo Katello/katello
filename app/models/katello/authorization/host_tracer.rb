@@ -6,8 +6,7 @@ module Katello
 
     module ClassMethods
       def resolvable
-        relation = joins_authorized(::Host::Managed, :edit_hosts)
-        relation
+        joins_authorized(::Host::Managed, :edit_hosts)
       end
     end
   end

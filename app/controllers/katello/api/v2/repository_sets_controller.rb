@@ -240,18 +240,17 @@ module Katello
     end
 
     def sort_score(pc) # sort order for enabled
-      score = if pc.enabled_content_override&.value == "1"
-                4 # overridden to enabled
-              elsif pc.enabled_content_override.nil? && pc.enabled
-                3 # enabled
-              elsif pc.enabled_content_override.nil? && !pc.enabled
-                2 # disabled
-              elsif pc.enabled_content_override&.value == "0"
-                1 # overridden to disabled
-              else
-                0
-              end
-      score
+      if pc.enabled_content_override&.value == "1"
+        4 # overridden to enabled
+      elsif pc.enabled_content_override.nil? && pc.enabled
+        3 # enabled
+      elsif pc.enabled_content_override.nil? && !pc.enabled
+        2 # disabled
+      elsif pc.enabled_content_override&.value == "0"
+        1 # overridden to disabled
+      else
+        0
+      end
     end
 
     def custom_sort_results(unsorted_relation)

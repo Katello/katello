@@ -54,12 +54,10 @@ module Katello
         end
 
         def update_params(metadata_product)
-          params = {
+          {
             gpg_key_id: gpg_key_id(metadata_product),
-            description: metadata_product.description
+            description: metadata_product.description,
           }
-
-          params
         end
 
         def gpg_key_id(metadata_product)

@@ -96,10 +96,9 @@ module Actions
       def transform_task_response(response)
         response = [] if response.nil?
         response = [response] unless response.is_a?(Array)
-        response = response.map do |task|
+        response.map do |task|
           task.as_json
         end
-        response
       end
 
       def check_for_errors
@@ -166,8 +165,8 @@ module Actions
       def get_task_label(name, href)
         name = name.split('.').last if name
         href = href.split('-').last[0...-1] if href
-        label = "%s (ID: %s)" % [name, href]
-        label
+        "%s (ID: %s)" % [name, href]
+
       end
     end
   end
