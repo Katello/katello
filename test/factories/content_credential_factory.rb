@@ -6,7 +6,7 @@ FactoryBot.define do
       cert.public_key = key.public_key
       cert.not_before  = Time.now
       cert.not_after   = Time.now + 1000
-      cert.sign key, OpenSSL::Digest::SHA256.new
+      cert.sign key, OpenSSL::Digest.new('SHA256')
       cert.to_pem
     end
 
