@@ -33,6 +33,8 @@ module Actions
             end
           end
 
+          return if @duplicate_uuid_hypervisors.empty?
+
           @duplicate_uuid_hypervisors.each do |hypervisor, existing_host|
             fail _("Host creation was skipped for %s because it shares a BIOS UUID with %s. " \
                    "To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' " \
