@@ -28,6 +28,8 @@ glue(@resource.root) do
   attributes :http_proxy_name
   attributes :retain_package_versions_count
   attributes :metadata_expire
+  attributes :allow_updates? => :allow_updates
+  attributes :is_container_push? => :is_container_push
 
   node :http_proxy do
     attributes :id => @resource.root&.http_proxy&.id, :name => @resource.root&.http_proxy&.name, :policy => @resource.root&.http_proxy_policy

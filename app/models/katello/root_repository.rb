@@ -46,6 +46,8 @@ module Katello
     MIRRORING_POLICY_COMPLETE = 'mirror_complete'.freeze
     MIRRORING_POLICIES = [MIRRORING_POLICY_ADDITIVE, MIRRORING_POLICY_COMPLETE, MIRRORING_POLICY_CONTENT].freeze
 
+    ALLOWED_UPDATE_FIELDS = ['updated_at', 'content_id'].freeze
+
     belongs_to :product, :inverse_of => :root_repositories, :class_name => "Katello::Product"
     has_one :provider, :through => :product
 
@@ -115,6 +117,7 @@ module Katello
       }
 
     validates :container_push_name_format, inclusion: { in: ['label', 'id'].freeze, allow_nil: true}
+    before_update :prevent_updates, :unless => :allow_updates?
 
     scope :subscribable, -> { where(content_type: RootRepository::SUBSCRIBABLE_TYPES) }
     scope :skipable_metadata_check, -> { where(content_type: RootRepository::SKIPABLE_METADATA_TYPES) }
@@ -453,6 +456,22 @@ module Katello
       else
         self.arch == "noarch" ? nil : self.arch
       end
+    end
+
+    def allow_updates?(additional_allowed_fields = [])
+      # allow updates for non-container-push repos, repos not in default view, and
+      # repos with a library instance
+      return true unless is_container_push && library_instance.present?
+
+      # let updates that contain ONLY allowed strings through
+      allowed_fields = ::Katello::RootRepository::ALLOWED_UPDATE_FIELDS + additional_allowed_fields
+      return true if (changed - allowed_fields).empty?
+
+      false
+    end
+
+    def prevent_updates
+      fail _("Cannot update properties of a container push repository")
     end
 
     apipie :class, desc: 'A class representing Repository object' do

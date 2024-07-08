@@ -8,7 +8,7 @@
       <dt translate>Name</dt>
       <dd bst-edit-text="repository.name"
           on-save="save(repository)"
-          readonly="product.redhat || denied('edit_products', product)">
+          readonly="product.redhat || denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
       </dd>
 
       <dt translate>Label</dt>
@@ -17,7 +17,7 @@
       <dt translate>Description</dt>
       <dd bst-edit-textarea="repository.description"
 	  on-save="save(repository)"
-	  readonly="product.redhat || denied('edit_products', product)">
+	  readonly="product.redhat || denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
       </dd>
 
       <dt translate>Backend Identifier</dt>
@@ -54,7 +54,8 @@
           </dd>
 
           <dt ng-if="product.redhat != true" translate>Metadata Expiration (Seconds)</dt>
-          <dd bst-edit-number="repository.metadata_expire" on-save="save(repository)" readonly="product.redhat || denied('edit_products', product)"
+          <dd bst-edit-number="repository.metadata_expire" on-save="save(repository)" 
+              readonly="product.redhat || denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
               deletable="repository.metadata_expire !== null"
               on-delete="clearMetadataExpire()"
               min="1"
@@ -72,7 +73,7 @@
       <dt ng-show="repository.content_type === 'docker'" translate>Registry URL</dt>
       <dd bst-edit-text="repository.url"
           on-save="save(repository)"
-          readonly="product.redhat || denied('edit_products', product)">
+          readonly="product.redhat || denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
       </dd>
 
       <span ng-show="repository.generic_remote_options !== []">
@@ -93,21 +94,21 @@
         <dt translate>Releases/Distributions</dt>
         <dd bst-edit-text="repository.deb_releases"
             on-save="save(repository)"
-            readonly="denied('edit_products', product)">
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
         </dd>
       </span>
       <span ng-if="repository.content_type == 'deb'">
         <dt translate>Components</dt>
         <dd bst-edit-text="repository.deb_components"
             on-save="save(repository)"
-            readonly="denied('edit_products', product)">
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
         </dd>
       </span>
       <span ng-if="repository.content_type == 'deb'">
         <dt translate>Architectures</dt>
         <dd bst-edit-text="repository.deb_architectures"
             on-save="save(repository)"
-            readonly="denied('edit_products', product)">
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
         </dd>
       </span>
 
@@ -115,7 +116,7 @@
         <dt translate>Upstream Repository Name</dt>
         <dd bst-edit-text="repository.docker_upstream_name"
             on-save="save(repository)"
-            readonly="product.redhat || denied('edit_products', product)">
+            readonly="product.redhat || denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
         </dd>
       </span>
 
@@ -135,13 +136,13 @@
         <dt translate>Requirements</dt>
         <dd class="overflow-span" bst-edit-textarea="repository.ansible_collection_requirements"
             on-save="save(repository)"
-            readonly="denied('edit_products', product)"
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
             edit-trigger="uploadedFile">
         </dd>
 
         <dt translate>Ansible Collection Authorization</dt>
         <dd bst-edit-custom="repository.ansible_collection_auth_exists"
-            readonly="denied('edit_products', product)"
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
             on-save="save(repository)"
             formatter="ansibleAuthFilter"
             formatter-options="repository"
@@ -166,13 +167,13 @@
       <dd bst-edit-checkbox="repository.verify_ssl_on_sync"
           formatter="booleanToYesNo"
           on-save="save(repository)"
-          readonly="denied('edit_products', product)">
+          readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
       </dd>
 
       <span ng-if="!product.redhat">
         <dt translate>Upstream Authorization</dt>
         <dd bst-edit-custom="repository.upstream_auth_exists"
-            readonly="denied('edit_products', product)"
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
             on-save="save(repository)"
             formatter="upstreamPasswordFilter"
             formatter-options="repository"
@@ -203,7 +204,7 @@
       <span ng-show="repository.content_type === 'yum'">
         <dt translate>Yum Metadata Checksum</dt>
         <dd bst-edit-select="checksumTypeDisplay(repository.checksum_type)"
-            readonly="product.redhat || denied('edit_products', product)"
+            readonly="product.redhat || denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
             selector="repository.checksum_type"
             options="checksums"
             on-save="save(repository)">
@@ -217,14 +218,14 @@
         <dt translate>Retain package versions</dt>
         <dd bst-edit-number="repository.retain_package_versions_count"
             on-save="save(repository)"
-            readonly="denied('edit_products', product)">
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
         </dd>
       </span>
 
       <span>
         <dt translate>HTTP Proxy</dt>
         <dd bst-edit-custom="repository.http_proxy_policy"
-            readonly="denied('edit_products', product)"
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
             on-save="save(repository)"
             formatter="httpProxyDetailsFilter"
             formatter-options="repository"
@@ -264,7 +265,7 @@
         <dd bst-edit-checkbox="repository.ignore_srpms"
             formatter="booleanToYesNo"
             on-save="save(repository)"
-            readonly="denied('edit_products', product)">
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
         </dd>
       </span>
 
@@ -273,7 +274,7 @@
         <dd bst-edit-checkbox="repository.ignore_treeinfo"
             formatter="booleanToYesNo"
             on-save="save(repository)"
-            readonly="denied('edit_products', product)">
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
         </dd>
       </span>
 
@@ -282,7 +283,7 @@
         <dd bst-edit-checkbox="repository.unprotected"
             formatter="booleanToYesNo"
             on-save="save(repository)"
-            readonly="product.redhat || denied('edit_products', product)">
+            readonly="product.redhat || denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
         </dd>
       </span>
 
@@ -301,7 +302,7 @@
       <span ng-if="(repository.content_type === 'yum' && !product.redhat) || repository.content_type === 'deb'">
         <dt translate>GPG Key</dt>
         <dd bst-edit-select="repository.gpg_key.name"
-            readonly="product.redhat ||denied('edit_products', product)"
+            readonly="product.redhat ||denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
             selector="repository.gpg_key_id"
             options="gpgKeys()"
             on-save="save(repository)">
@@ -309,21 +310,21 @@
       </span>
       <dt translate>SSL CA Cert</dt>
       <dd bst-edit-select="repository.ssl_ca_cert.name"
-          readonly="product.redhat ||denied('edit_products', product)"
+          readonly="product.redhat ||denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
           selector="repository.ssl_ca_cert_id"
           options="certs()"
           on-save="save(repository)">
       </dd>
       <dt translate>SSL Client Cert</dt>
       <dd bst-edit-select="repository.ssl_client_cert.name"
-          readonly="product.redhat ||denied('edit_products', product)"
+          readonly="product.redhat ||denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
           selector="repository.ssl_client_cert_id"
           options="certs()"
           on-save="save(repository)">
       </dd>
       <dt translate>SSL Client Key</dt>
       <dd bst-edit-select="repository.ssl_client_key.name"
-          readonly="product.redhat ||denied('edit_products', product)"
+          readonly="product.redhat ||denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
           selector="repository.ssl_client_key_id"
           options="certs()"
           on-save="save(repository)">
@@ -331,7 +332,7 @@
       <span ng-if="repository.content_type == 'yum' || repository.content_type == 'deb' || repository.content_type == 'docker'">
         <dt translate>Download Policy</dt>
         <dd bst-edit-select="downloadPolicyDisplay(repository.download_policy)"
-            readonly="denied('edit_products', product)"
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
             selector="repository.download_policy"
             options="downloadPolicies"
             options-format="id as name for (id, name) in options"
@@ -349,7 +350,7 @@
         <dt translate>Mirroring Policy</dt>
 
         <dd bst-edit-select="mirroringPolicyDisplay(repository.mirroring_policy, repository.content_type)"
-            readonly="denied('edit_products', product)"
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
             selector="repository.mirroring_policy"
             options="mirroringPolicies(repository.content_type)"
             options-format="id as name for (id, name) in options"
@@ -360,12 +361,12 @@
         <dt translate>Include Tags</dt>
         <dd bst-edit-text="repository.commaIncludeTags"
             on-save="save(repository)"
-            readonly="denied('edit_products', product)">
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
         </dd>
         <dt translate>Exclude Tags</dt>
         <dd bst-edit-text="repository.commaExcludeTags"
             on-save="save(repository)"
-            readonly="denied('edit_products', product)">
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
         </dd>
       </span>
     </dl>
