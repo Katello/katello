@@ -67,7 +67,7 @@ module Katello
     end
 
     def self.applicable_to_hosts(hosts)
-      # Note: ContentFacetErrata actually holds the "Applicable Errata" to that host
+      # NOTE: ContentFacetErrata actually holds the "Applicable Errata" to that host
       # It is not the errata "belonging" to the host. Its rather the errata that is "applicable"
       # which is calculated elsewhere.
 

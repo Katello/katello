@@ -153,7 +153,7 @@ module Katello
       assert_equal new_name, @staging.name
       assert_equal new_description, @staging.description
       assert @staging.registry_unauthenticated_pull
-      # note: label is not editable; therefore, confirm that it is unchanged
+      # NOTE: label is not editable; therefore, confirm that it is unchanged
       assert_equal original_label, @staging.label
     end
 
@@ -172,7 +172,7 @@ module Katello
 
       assert_response :success
       assert_equal 'New Name', @staging.reload.name
-      # note: label is not editable; therefore, confirm that it is unchanged
+      # NOTE: label is not editable; therefore, confirm that it is unchanged
       assert_equal original_label, @staging.label
     end
 
@@ -192,7 +192,7 @@ module Katello
 
       assert_response :success
       assert_equal 'New Name', @staging.reload.name
-      # note: label is not editable; therefore, confirm that it is unchanged
+      # NOTE: label is not editable; therefore, confirm that it is unchanged
       assert_equal original_label, @staging.label
     end
 
@@ -211,7 +211,7 @@ module Katello
 
       assert_response :success
       assert_equal 'New Name', @staging.reload.name
-      # note: label is not editable; therefore, confirm that it is unchanged
+      # NOTE: label is not editable; therefore, confirm that it is unchanged
       assert_equal original_label, @staging.label
     end
 
@@ -231,7 +231,7 @@ module Katello
 
       assert_response :success
       assert_equal 'New Name', @staging.reload.name
-      # note: label is not editable; therefore, confirm that it is unchanged
+      # NOTE: label is not editable; therefore, confirm that it is unchanged
       assert_equal original_label, @staging.label
     end
 
