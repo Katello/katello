@@ -28,23 +28,23 @@ module Katello
       end
 
       it "should call initializer when instance variable is nil" do
-        @c.a.must_equal(Something::DEFAULT_VALUE)
+        value(@c.a).must_equal(Something::DEFAULT_VALUE)
       end
 
       it "shouldn't call initializer when instance variable is not nil" do
         @c.a = Something::ANOTHER_VALUE
-        @c.a.must_equal(Something::ANOTHER_VALUE)
+        value(@c.a).must_equal(Something::ANOTHER_VALUE)
       end
 
       it "shouldn't call initializer unless evaluates to true" do
         @c.run_b_initializer = false
-        @c.b.must_be_nil
+        value(@c.b).must_be_nil
       end
 
       it "shouldn't call initializer if :unless evaluates to false but instance variable is set" do
         @c.run_b_initializer = false
         @c.b = Something::ANOTHER_VALUE
-        @c.b.must_equal(Something::ANOTHER_VALUE)
+        value(@c.b).must_equal(Something::ANOTHER_VALUE)
       end
     end
   end
