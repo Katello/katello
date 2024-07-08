@@ -19,7 +19,7 @@ module Katello
     end
 
     def test_filter_by_pulp_id_returns_nothing_with_empty_list_of_metadatafiles
-      assert_equal [], filter_metadatafiles_by_pulp_hrefs([], ["/some/content/href"])
+      assert_empty filter_metadatafiles_by_pulp_hrefs([], ["/some/content/href"])
     end
 
     def test_filter_by_pulp_id_returns_every_metadata_pulp_href_with_any_package_pulp_id
@@ -45,7 +45,7 @@ module Katello
     end
 
     def test_filter_by_pulp_id_returns_nothing_with_empty_list_of_distribution_trees
-      assert_equal [], filter_distribution_trees_by_pulp_hrefs([], ["/some/content/href"])
+      assert_empty filter_distribution_trees_by_pulp_hrefs([], ["/some/content/href"])
     end
 
     def test_filter_by_pulp_id_returns_every_distribution_tree_pulp_href_with_any_package_pulp_id
@@ -67,11 +67,11 @@ module Katello
     end
 
     def test_filter_by_pulp_id_returns_no_package_groups_with_empty_package_href_list
-      assert_equal [], filter_package_groups_by_pulp_href([@package_group], [])
+      assert_empty filter_package_groups_by_pulp_href([@package_group], [])
     end
 
     def test_filter_by_pulp_id_returns_nothing_with_empty_list_of_package_groups
-      assert_equal [], filter_package_groups_by_pulp_href([], [@rpm2.pulp_id])
+      assert_empty filter_package_groups_by_pulp_href([], [@rpm2.pulp_id])
     end
 
     def test_filter_by_pulp_id_includes_incomplete_package_groups
@@ -79,12 +79,12 @@ module Katello
     end
 
     def test_filter_by_pulp_id_returns_nothing_if_no_package_group_matches
-      assert_equal [], filter_package_groups_by_pulp_href([@package_group], [@packagegroup3_href])
+      assert_empty filter_package_groups_by_pulp_href([@package_group], [@packagegroup3_href])
     end
 
     def test_filter_by_pulp_id_ignores_empty_package_group_names
       @package_group.stubs(:package_names).returns([])
-      assert_equal [], filter_package_groups_by_pulp_href([@package_group], [@packagegroup3_href])
+      assert_empty filter_package_groups_by_pulp_href([@package_group], [@packagegroup3_href])
     end
   end
 end

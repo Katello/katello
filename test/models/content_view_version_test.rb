@@ -162,7 +162,7 @@ module Katello
       assert_includes ContentViewVersion.search_for("version <= 1.0"), @cvv
       assert_includes ContentViewVersion.search_for("version < 1.1"), @cvv
       assert_includes ContentViewVersion.search_for("version < 2"), @cvv
-      assert_equal [], ContentViewVersion.search_for("version < 1")
+      assert_empty ContentViewVersion.search_for("version < 1")
       assert ContentViewVersion.search_for("version > 0").length > 1
       assert ContentViewVersion.search_for("version < 2").length > 1
     end

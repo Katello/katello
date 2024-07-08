@@ -7,7 +7,7 @@ module Katello
     end
 
     def test_pop_nothing
-      assert_equal [], ApplicableHostQueue.pop_hosts
+      assert_empty ApplicableHostQueue.pop_hosts
     end
 
     def test_pop_1_host

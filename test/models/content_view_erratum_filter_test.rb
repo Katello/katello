@@ -82,7 +82,7 @@ module Katello
 
       filter = ContentViewErratumFilter.new
 
-      assert_equal [], filter.content_unit_pulp_ids(@repo)
+      assert_empty filter.content_unit_pulp_ids(@repo)
     end
 
     def test_content_unit_pulp_ids_by_errata_id_returns_errata_package_pulp_hrefs
