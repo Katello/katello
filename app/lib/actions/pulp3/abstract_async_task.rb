@@ -166,7 +166,6 @@ module Actions
         name = name.split('.').last if name
         href = href.split('-').last[0...-1] if href
         "%s (ID: %s)" % [name, href]
-
       end
     end
   end
