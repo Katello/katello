@@ -517,7 +517,11 @@ module Katello
         when 'remove'
           return [] if search.empty?
 
-          installed_packages.search_for(search).distinct.pluck(:name)
+          yum_removable = installed_packages.search_for(search).distinct.pluck(:name)
+          if yum_removable.empty?
+            fail N_("Cannot remove package(s): This host does not have any installed packages matching the search term '%s'.") % search
+          end
+          yum_removable
         when 'update'
           return [] if search.empty?
 

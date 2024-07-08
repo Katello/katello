@@ -10,13 +10,14 @@ import { STATUS } from 'foremanReact/constants';
 import { HOSTS_API_PATH } from 'foremanReact/routes/Hosts/constants';
 import HostReview from '../HostReview';
 import { BulkPackagesReview, dropdownOptions } from './04_Review';
-import { BulkPackagesUpgradeTable, BulkPackagesInstallTable } from './02_BulkPackagesTable';
+import { BulkPackagesUpgradeTable, BulkPackagesInstallTable, BulkPackagesRemoveTable } from './02_BulkPackagesTable';
 import { BulkPackagesReviewFooter } from './04_ReviewFooter';
 import katelloApi from '../../../../../services/api';
 
 export const UPGRADE_ALL = 'upgradeAll';
 export const UPGRADE = 'upgrade';
 export const INSTALL = 'install';
+export const REMOVE = 'remove';
 
 export const BulkPackagesWizardContext = createContext({});
 
@@ -68,8 +69,30 @@ const BulkPackagesWizard = () => {
   const [shouldValidateStep3, setShouldValidateStep3] = useState(false);
   const [finishButtonLoading, setFinishButtonLoading] = useState(false);
   const [selectedRexOption, setSelectedRexOption] = useState(dropdownOptions[0]);
-  const finishButtonText = selectedAction === 'install' ? __('Install') : __('Upgrade');
+  const packageActionsNames = {
+    install: __('Install packages'), remove: __('Remove packages'), upgrade: __('Upgrade packages'), upgradeAll: __('Upgrade packages'),
+  };
+  const packageActions = () => {
+    switch (selectedAction) {
+    case INSTALL:
+      return (
+        <BulkPackagesInstallTable modalIsOpen={modalOpen} />
+      );
+    case REMOVE:
+      return (
+        <BulkPackagesRemoveTable modalIsOpen={modalOpen} />
+      );
+    default:
+      return (
+        <BulkPackagesUpgradeTable modalIsOpen={modalOpen} />
+      );
+    }
+  };
 
+  const finishButtonTextValues = {
+    install: __('Install'), remove: __('Remove'), upgrade: __('Upgrade'), upgradeAll: __('Upgrade'),
+  };
+  const finishButtonText = finishButtonTextValues[selectedAction];
   const PACKAGES_URL = getPackagesUrl(selectedAction);
   const apiOptions = { key: 'BULK_HOST_PACKAGES' };
   const replacementResponse = !modalOpen ? { response: {} } : false;
@@ -181,20 +204,24 @@ const BulkPackagesWizard = () => {
               id="r3-install-packages"
               ouiaId="r3-install-packages"
             />
+            <Radio
+              isChecked={selectedAction === REMOVE}
+              name="packageActionRadioGroup"
+              onChange={() => setSelectedAction(REMOVE)}
+              label={__('Remove packages')}
+              id="r4-remove-packages"
+              ouiaId="r4-remove-packages"
+            />
           </div>
         </WizardStep>
         <WizardStep
-          name={selectedAction === INSTALL ? __('Install packages') : __('Upgrade packages')}
+          name={packageActionsNames[selectedAction]}
           id="mpw-step-2"
           isHidden={selectedAction === UPGRADE_ALL}
           footer={{ isNextDisabled: !step2Valid, onClose: closeModal }}
           status={step2Valid ? 'default' : 'error'}
         >
-          {selectedAction === INSTALL ? (
-            <BulkPackagesInstallTable modalIsOpen={modalOpen} />
-          ) : (
-            <BulkPackagesUpgradeTable modalIsOpen={modalOpen} />
-          )}
+          {packageActions()}
         </WizardStep>
         <WizardStep
           name={__('Review hosts')}
