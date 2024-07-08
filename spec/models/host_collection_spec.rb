@@ -44,7 +44,7 @@ module Katello
         create = lambda do
           HostCollection.create!(:name => "TestHostCollection", :organization => @org, :unlimited_hosts => false)
         end
-        value { create }.must_raise(ActiveRecord::RecordInvalid)
+        value(create).must_raise(ActiveRecord::RecordInvalid)
       end
     end
 
