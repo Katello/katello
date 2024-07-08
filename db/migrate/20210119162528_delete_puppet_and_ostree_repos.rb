@@ -14,12 +14,15 @@ class DeletePuppetAndOstreeRepos < ActiveRecord::Migration[6.0]
   class FakeContentViewPuppetEnvironment < Katello::Model
     self.table_name = 'katello_content_view_puppet_environments'
   end
+
   class FakePuppetModule < Katello::Model
     self.table_name = 'katello_puppet_modules'
   end
+
   class FakeRepositoryOstreeBranch < Katello::Model
     self.table_name = 'katello_repository_ostree_branches'
   end
+
   class FakeOstreeBranch < Katello::Model
     self.table_name = 'katello_ostree_branches'
   end

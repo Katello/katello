@@ -9,6 +9,7 @@ if defined? ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
       super
     end
   end
+
   module ActiveRecord
     module ConnectionAdapters
       module PostgreSQL
@@ -16,6 +17,7 @@ if defined? ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
           class EvrT < Type::String; end # :nodoc:
         end
       end
+
       class PostgreSQLAdapter < AbstractAdapter
         prepend PostgreSQLAdapterExtensions
       end
