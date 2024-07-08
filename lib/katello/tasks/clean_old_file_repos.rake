@@ -12,10 +12,8 @@ namespace :katello do
         Dir.foreach(dir) do |entry|
           # If directory is a file repo, then it was published using
           # the UUID.  It's a target for deletion.
-          if (repo = Katello::Repository.find_by(pulp_id: File.basename(entry)))
-            if repo.content_type == Katello::Repository::FILE_TYPE
-              delete << "#{dir}#{entry}"
-            end
+          if (repo = Katello::Repository.find_by(pulp_id: File.basename(entry))) && (repo.content_type == Katello::Repository::FILE_TYPE)
+            delete << "#{dir}#{entry}"
           end
         end
       end

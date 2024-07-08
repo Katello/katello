@@ -457,8 +457,8 @@ module Katello
     end
 
     def authorize_client_or_admin
-      unless client_authorized?
-        deny_access unless authorize
+      if !client_authorized? && !authorize
+        deny_access
       end
     end
 

@@ -266,12 +266,12 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. New ver
         end
       end
 
-      if content[:package_ids]
-        fail _("package_ids is not an array") unless content[:package_ids].is_a?(Array)
+      if content[:package_ids] && !content[:package_ids].is_a?(Array)
+        fail _("package_ids is not an array")
       end
 
-      if content[:deb_ids]
-        fail _("deb_ids is not an array") unless content[:deb_ids].is_a?(Array)
+      if content[:deb_ids] && !content[:deb_ids].is_a?(Array)
+        fail _("deb_ids is not an array")
       end
     end
 

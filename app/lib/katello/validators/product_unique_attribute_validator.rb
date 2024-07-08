@@ -12,10 +12,8 @@ module Katello
       def unique_attribute?(record, attribute, value)
         unique = true
 
-        if record.provider && !record.provider.redhat_provider? && record.send("#{attribute}_changed?")
-          if Product.in_org(record.provider.organization).where(attribute => value).exists?
-            unique = false
-          end
+        if record.provider && !record.provider.redhat_provider? && record.send("#{attribute}_changed?") && Product.in_org(record.provider.organization).where(attribute => value).exists?
+          unique = false
         end
 
         unique

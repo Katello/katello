@@ -75,8 +75,8 @@ module Katello
         vrea =  [package[:version], package[:release]].compact.join('-')
         vrea = vrea + '.' + package[:arch] unless package[:arch].nil?
         vrea = vrea + '.' + package[:suffix] unless package[:suffix].nil?
-        unless package[:epoch].nil?
-          vrea = package[:epoch] + ':' + vrea if package[:epoch].to_i != 0 || include_zero_epoch
+        if !package[:epoch].nil? && (package[:epoch].to_i != 0 || include_zero_epoch)
+          vrea = package[:epoch] + ':' + vrea
         end
         vrea
       end

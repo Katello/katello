@@ -302,8 +302,8 @@ module Katello
               current_erratum_errata_type = current_erratum[1]
               current_erratum_issued = current_erratum.last
 
-              if filter_errata_type != 'all'
-                next unless filter_errata_type == current_erratum_errata_type
+              if filter_errata_type != 'all' && !(filter_errata_type == current_erratum_errata_type)
+                next
               end
 
               hash = {

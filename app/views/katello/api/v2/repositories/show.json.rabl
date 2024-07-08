@@ -58,14 +58,12 @@ attributes :promoted? => :promoted
 attributes :content_view_version_id, :library_instance_id
 attributes :last_contents_changed
 
-if @resource.is_a?(Katello::Repository)
-  if @resource.distribution_version || @resource.distribution_arch || @resource.distribution_family || @resource.distribution_variant
-    attributes :distribution_version
-    attributes :distribution_arch
-    attributes :distribution_bootable? => :distribution_bootable
-    attributes :distribution_family
-    attributes :distribution_variant
-  end
+if @resource.is_a?(Katello::Repository) && (@resource.distribution_version || @resource.distribution_arch || @resource.distribution_family || @resource.distribution_variant)
+  attributes :distribution_version
+  attributes :distribution_arch
+  attributes :distribution_bootable? => :distribution_bootable
+  attributes :distribution_family
+  attributes :distribution_variant
 end
 
 node :permissions do |repo|

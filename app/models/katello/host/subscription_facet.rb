@@ -229,10 +229,8 @@ module Katello
         setting_fact = Setting[:register_hostname_fact]
         only_use_custom_fact = Setting[:register_hostname_fact_strict_match]
 
-        if !setting_fact.blank? && !facts[setting_fact].blank?
-          if only_use_custom_fact || ::Host.where(:name => setting_fact.downcase).any?
-            facts[setting_fact]
-          end
+        if !setting_fact.blank? && !facts[setting_fact].blank? && (only_use_custom_fact || ::Host.where(:name => setting_fact.downcase).any?)
+          facts[setting_fact]
         end
       end
 

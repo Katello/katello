@@ -13,8 +13,8 @@ module Katello
       end
 
       def self.validate_length(record, attribute, value, min_length = 1)
-        if value
-          record.errors[attribute] << _("must contain at least %s character") % min_length unless value.length >= min_length
+        if value && !(value.length >= min_length)
+          record.errors[attribute] << _("must contain at least %s character") % min_length
         end
       end
     end

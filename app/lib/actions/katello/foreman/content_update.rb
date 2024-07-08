@@ -20,12 +20,10 @@ module Actions
             content_view = ::Katello::ContentView.find(input[:content_view_id])
             repository = ::Katello::Repository.find(input[:repository_id]) if input[:repository_id]
 
-            if content_view.default? && repository
-              if repository.distribution_bootable?
-                os = Redhat.find_or_create_operating_system(repository)
-                arch = Architecture.where(:name => repository.distribution_arch).first_or_create!
-                os.architectures << arch unless os.architectures.include?(arch)
-              end
+            if content_view.default? && repository && repository.distribution_bootable?
+              os = Redhat.find_or_create_operating_system(repository)
+              arch = Architecture.where(:name => repository.distribution_arch).first_or_create!
+              os.architectures << arch unless os.architectures.include?(arch)
             end
           end
         end

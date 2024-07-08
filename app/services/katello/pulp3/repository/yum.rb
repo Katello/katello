@@ -57,10 +57,8 @@ module Katello
               :distribution_family => distribution.results.first.release_name,
               :distribution_bootable => self.class.distribution_bootable?(distribution)
             )
-            unless distribution.results.first.variants.empty?
-              unless distribution.results.first.variants.first.name.nil?
-                repo.update!(:distribution_variant => distribution.results.first.variants.map(&:name).join(','))
-              end
+            if !distribution.results.first.variants.empty? && !distribution.results.first.variants.first.name.nil?
+              repo.update!(:distribution_variant => distribution.results.first.variants.map(&:name).join(','))
             end
           end
         end

@@ -39,10 +39,8 @@ module Katello
           self.medium = nil
         end
 
-        if content_facet&.kickstart_repository_id && !matching_kickstart_repository?(content_facet)
-          if (equivalent = equivalent_kickstart_repository)
-            self.content_facet.kickstart_repository_id = equivalent[:id]
-          end
+        if content_facet&.kickstart_repository_id && !matching_kickstart_repository?(content_facet) && (equivalent = equivalent_kickstart_repository)
+          self.content_facet.kickstart_repository_id = equivalent[:id]
         end
       end
 
