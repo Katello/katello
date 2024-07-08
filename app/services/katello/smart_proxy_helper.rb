@@ -1,6 +1,7 @@
 module Katello
   class SmartProxyHelper
     attr_accessor :smart_proxy
+
     def initialize(smart_proxy)
       @smart_proxy = smart_proxy
     end

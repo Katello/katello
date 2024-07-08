@@ -4,6 +4,7 @@ module Actions
       class CreateRepos < Actions::Base
         # allows accessing the build object from the superior action
         attr_accessor :repository_mapping
+
         def plan(version, source_repositories = [])
           self.repository_mapping = {}
           concurrence do

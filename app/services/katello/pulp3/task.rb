@@ -39,6 +39,7 @@ module Katello
       #needed for serialization in dynflow
 
       attr_reader :pulp_data
+
       delegate :[], :key?, :dig, :to_hash, :to => :task_data
 
       def initialize(smart_proxy, data)

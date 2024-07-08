@@ -2,6 +2,7 @@ module Katello
   module Pulp3
     class RepositoryMirror
       attr_accessor :repo_service
+
       delegate :repo, to: :repo_service
       delegate :smart_proxy, to: :repo_service
 

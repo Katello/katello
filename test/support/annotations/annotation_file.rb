@@ -2,6 +2,7 @@ module Katello
   module Annotations
     class AnnotationFile
       attr_accessor :name, :annotations, :cassette_name
+
       def initialize(hash)
         self.name = hash['name']
         self.annotations = hash['annotations'].map { |annotation| MatchedAnnotation.new(annotation) }
