@@ -168,8 +168,8 @@ module Katello
       self.label = Util::Model.labelize(self.name) if self.label.blank?
 
       # if the object label is already being used in this org, append the id to make it unique
-      if Product.all_in_org(self.organization).where("#{Katello::Product.table_name}.label = ?", self.label).count > 0
-        self.label = self.label + "_" + self.cp_id unless self.cp_id.blank?
+      if Product.all_in_org(self.organization).where("#{Katello::Product.table_name}.label = ?", self.label).count > 0 && !self.cp_id.blank?
+        self.label = self.label + "_" + self.cp_id
       end
     end
 

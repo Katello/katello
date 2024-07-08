@@ -154,18 +154,16 @@ module Katello
       when :package
         p = self.parameters[:packages]
         first_package = p.first.is_a?(Hash) ? p.first[:name] : p.first
-        unless p && p.length > 0
-          if self.task_type == "package_update"
-            case self.overall_status
-            when "running"
-              return "updating"
-            when "waiting"
-              return "updating"
-            when "error"
-              return _("all packages update failed")
-            else
-              return _("all packages update")
-            end
+        if !p && p.length > 0 && (self.task_type == "package_update")
+          case self.overall_status
+          when "running"
+            return "updating"
+          when "waiting"
+            return "updating"
+          when "error"
+            return _("all packages update failed")
+          else
+            return _("all packages update")
           end
         end
 

@@ -37,8 +37,8 @@ module Katello
     end
 
     def ensure_library
-      unless @repository.nil?
-        fail HttpErrors::NotFound, _("You can check sync status for repositories only in the library lifecycle environment.'") unless @repository.environment.library?
+      if !@repository.nil? && !@repository.environment.library?
+        fail HttpErrors::NotFound, _("You can check sync status for repositories only in the library lifecycle environment.'")
       end
     end
   end

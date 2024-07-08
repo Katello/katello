@@ -144,8 +144,8 @@ module Katello
 
       relation = relation.where(Katello::Content.table_name => {:name => params[:name]}) if params[:name].present?
       # ignore with_custom if repository_type is specified
-      if params[:repository_type].blank?
-        relation = relation.redhat unless ::Foreman::Cast.to_bool(params[:with_custom])
+      if params[:repository_type].blank? && !::Foreman::Cast.to_bool(params[:with_custom])
+        relation = relation.redhat
       end
       index_relation_with_consumable_overrides(relation)
     end

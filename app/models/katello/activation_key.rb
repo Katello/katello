@@ -182,12 +182,10 @@ module Katello
     end
 
     def validate_destroyable!
-      unless organization.being_deleted?
-        if Parameter.where(name: 'kt_activation_keys').pluck(:value).any? { |value| value.split(",").include?(name) }
-          fail _("This activation key is associated to one or more Hosts/Hostgroups. "\
-                  "Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \"%{name}\" "\
-                  "before deleting." % {name: name})
-        end
+      if !organization.being_deleted? && Parameter.where(name: 'kt_activation_keys').pluck(:value).any? { |value| value.split(",").include?(name) }
+        fail _("This activation key is associated to one or more Hosts/Hostgroups. "\
+                "Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \"%{name}\" "\
+                "before deleting." % {name: name})
       end
       true
     end

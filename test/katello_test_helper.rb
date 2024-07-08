@@ -157,12 +157,10 @@ class ActionController::TestCase
   end
 
   def assert_response(type, message = nil)
-    if type == :success
-      if response.body.present? && /json/.match(response.headers['Content-Type'])
-        json_body = JSON.parse(response.body)
-        if json_body.is_a?(Hash)
-          assert_nil json_body['error']
-        end
+    if type == :success && (response.body.present? && /json/.match(response.headers['Content-Type']))
+      json_body = JSON.parse(response.body)
+      if json_body.is_a?(Hash)
+        assert_nil json_body['error']
       end
     end
     super(type, message)

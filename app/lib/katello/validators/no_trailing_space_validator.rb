@@ -6,8 +6,8 @@ module Katello
       end
 
       def self.validate_trailing_space(record, attribute, value)
-        if value
-          record.errors[attribute] << _("must not contain leading or trailing white spaces.") unless value.strip == value
+        if value && !(value.strip == value)
+          record.errors[attribute] << _("must not contain leading or trailing white spaces.")
         end
       end
     end

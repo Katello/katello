@@ -80,8 +80,8 @@ module Katello
       end
 
       def assign_templates!
-        if [ 'Suse', 'Debian' ].include?(self.family)
-          return if assign_related_os_templates
+        if [ 'Suse', 'Debian' ].include?(self.family) && assign_related_os_templates
+          return
         end
 
         # Automatically assign default templates
@@ -98,8 +98,8 @@ module Katello
 
         partition_table_name = partition_table_name_for_os
         return if partition_table_name.nil?
-        if (ptable = Ptable.unscoped.find_by_name(partition_table_name))
-          ptables << ptable unless ptables.include?(ptable)
+        if (ptable = Ptable.unscoped.find_by_name(partition_table_name)) && !ptables.include?(ptable)
+          ptables << ptable
         end
       end
 

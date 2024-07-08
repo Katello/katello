@@ -8,12 +8,10 @@ unless Rails.env.test?
   ::Katello::OrganizationCreator.seed_all_organizations!
 end
 
-if ENV['SEED_ORGANIZATION']
-  if Setting['db_pending_seed']
-    admin = User.where(:login => ENV['SEED_ADMIN_USER'].present? ? ENV['SEED_ADMIN_USER'] : 'admin').first
-    if admin && admin.default_organization.nil?
-      admin.default_organization = Organization.find_by(:name => ENV['SEED_ORGANIZATION'])
-      admin.save!
-    end
+if ENV['SEED_ORGANIZATION'] && (Setting['db_pending_seed'])
+  admin = User.where(:login => ENV['SEED_ADMIN_USER'].present? ? ENV['SEED_ADMIN_USER'] : 'admin').first
+  if admin && admin.default_organization.nil?
+    admin.default_organization = Organization.find_by(:name => ENV['SEED_ORGANIZATION'])
+    admin.save!
   end
 end

@@ -77,12 +77,10 @@ module Katello
               # Not needed during incremental update due to dest_base_version
               # -> Unless incrementally updating a CV repo that is a soft copy of its library instance.
               # -> I.e. no filters and not an incremental version.
-              unless dest_repo_id_map[:base_version]
-                # Don't perform extra content actions if the repo is a soft copy of its library instance.
-                # Taken care of by the IncrementalUpdate action.
-                unless dest_repo.soft_copy_of_library?
-                  tasks << remove_all_content_from_repo(dest_repo_href)
-                end
+              # Don't perform extra content actions if the repo is a soft copy of its library instance.
+              # Taken care of by the IncrementalUpdate action.
+              if !dest_repo_id_map[:base_version] && !dest_repo.soft_copy_of_library?
+                tasks << remove_all_content_from_repo(dest_repo_href)
               end
               source_repo_ids.each do |source_repo_id|
                 source_repo_version = ::Katello::Repository.find(source_repo_id).version_href

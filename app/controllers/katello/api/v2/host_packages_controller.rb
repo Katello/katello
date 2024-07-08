@@ -98,8 +98,8 @@ module Katello
     end
 
     def validate_index_params!
-      if params[:status].present?
-        fail _("Status must be one of: %s" % VERSION_STATUSES.join(', ')) unless VERSION_STATUSES.include?(params[:status])
+      if params[:status].present? && !VERSION_STATUSES.include?(params[:status])
+        fail _("Status must be one of: %s" % VERSION_STATUSES.join(', '))
       end
     end
   end

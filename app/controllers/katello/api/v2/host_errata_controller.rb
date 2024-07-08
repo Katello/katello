@@ -146,11 +146,11 @@ module Katello
       if (params[:content_view_id] && params[:environment_id].nil?) || (params[:environment_id] && params[:content_view_id].nil?)
         fail _("Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified")
       end
-      if params[:type].present?
-        fail _("Type must be one of: %s" % TYPES_FROM_PARAMS.keys.join(', ')) unless TYPES_FROM_PARAMS.key?(params[:type].to_sym)
+      if params[:type].present? && !TYPES_FROM_PARAMS.key?(params[:type].to_sym)
+        fail _("Type must be one of: %s" % TYPES_FROM_PARAMS.keys.join(', '))
       end
-      if params[:severity].present?
-        fail _("Severity must be one of: %s") % Katello::Erratum::SEVERITIES.join(', ') unless Katello::Erratum::SEVERITIES.include?(params[:severity])
+      if params[:severity].present? && !Katello::Erratum::SEVERITIES.include?(params[:severity])
+        fail _("Severity must be one of: %s") % Katello::Erratum::SEVERITIES.join(', ')
       end
     end
   end

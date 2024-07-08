@@ -20,11 +20,9 @@ module Actions
           end
 
           output[:publication_provided] = false
-          if input[:tasks].present?
-            if (publication_href = ::Katello::Pulp3::Task.publication_href(input[:tasks]))
-              repo.update(:publication_href => publication_href)
-              output[:publication_provided] = true
-            end
+          if input[:tasks].present? && (publication_href = ::Katello::Pulp3::Task.publication_href(input[:tasks]))
+            repo.update(:publication_href => publication_href)
+            output[:publication_provided] = true
           end
 
           if version_href
