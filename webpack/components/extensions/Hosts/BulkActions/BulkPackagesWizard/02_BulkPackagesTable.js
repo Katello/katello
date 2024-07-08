@@ -19,6 +19,7 @@ import katelloApi from '../../../../../services/api';
 
 export const BulkPackagesUpgradeTable = props => <BulkPackagesTable {...props} tableType="upgrade" />;
 export const BulkPackagesInstallTable = props => <BulkPackagesTable {...props} tableType="install" />;
+export const BulkPackagesRemoveTable = props => <BulkPackagesTable {...props} tableType="remove" />;
 
 const BulkPackagesTable = ({
   tableType,
@@ -34,6 +35,12 @@ const BulkPackagesTable = ({
   } = useContext(BulkPackagesWizardContext);
   const PACKAGES_URL = getPackagesUrl(tableType);
   const apiOptions = { key: 'BULK_HOST_PACKAGES' };
+  const packageActionsNames = { install: __('Install packages'), remove: __('Remove packages'), upgrade: __('Upgrade packages') };
+  const packageActionsDescriptions = {
+    install: __('Select packages to install on the selected hosts. Some packages may already be installed on some hosts.'),
+    remove: __('Select packages to remove on the selected hosts.'),
+    upgrade: __('Select packages to upgrade to the latest version. Packages may have different versions on different hosts.'),
+  };
 
   const origSearchProps = getControllerSearchProps('packages', 'searchBar-packages');
   const customSearchProps = {
@@ -97,11 +104,10 @@ const BulkPackagesTable = ({
     <>
       <TextContent>
         <Text ouiaId="mpw-step-3-header" component={TextVariants.h3}>
-          {tableType === 'install' ? __('Install packages') : __('Upgrade packages')}
+          {packageActionsNames[tableType]}
         </Text>
         <Text ouiaId="mpw-step-3-content" component={TextVariants.p}>
-          {tableType === 'install' ? __('Select packages to install on the selected hosts. Some packages may already be installed on some hosts.') :
-            __('Select packages to upgrade to the latest version. Packages may have different versions on different hosts.')}
+          {packageActionsDescriptions[tableType]}
         </Text>
       </TextContent>
       {selectedCount === 0 && hasInteracted && (

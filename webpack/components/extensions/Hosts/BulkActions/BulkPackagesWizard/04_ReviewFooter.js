@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { Button } from '@patternfly/react-core';
 import { WizardFooterWrapper, useWizardContext } from '@patternfly/react-core/next';
-import { BulkPackagesWizardContext, INSTALL, UPGRADE, UPGRADE_ALL } from './BulkPackagesWizard';
+import { BulkPackagesWizardContext, INSTALL, UPGRADE, UPGRADE_ALL, REMOVE } from './BulkPackagesWizard';
 import { dropdownOptions } from './04_Review';
-import { katelloPackageInstallBySearchUrl, packagesUpdateUrl } from '../../../HostDetails/Tabs/customizedRexUrlHelpers';
-import { installPackageBySearch, updatePackages } from '../../../HostDetails/Tabs/RemoteExecutionActions';
+import { katelloPackageInstallBySearchUrl, packagesUpdateUrl, katelloPackageRemoveBySearchUrl } from '../../../HostDetails/Tabs/customizedRexUrlHelpers';
+import { installPackageBySearch, updatePackages, removePackagesBySearch } from '../../../HostDetails/Tabs/RemoteExecutionActions';
 import { useRexJobPolling } from '../../../HostDetails/Tabs/RemoteExecutionHooks';
 
 export const BulkPackagesReviewFooter = () => {
@@ -35,8 +35,12 @@ export const BulkPackagesReviewFooter = () => {
 
   // Customized REX
   const [viaRex] = dropdownOptions;
-  const getCustomizedRexUrl = selectedAction === INSTALL ?
-    katelloPackageInstallBySearchUrl : packagesUpdateUrl;
+  const packageRexUrls = {
+    [INSTALL]: katelloPackageInstallBySearchUrl,
+    [REMOVE]: katelloPackageRemoveBySearchUrl,
+    [UPGRADE]: packagesUpdateUrl,
+  };
+  const getCustomizedRexUrl = packageRexUrls[selectedAction];
   const customizedRexUrl = getCustomizedRexUrl({
     hostSearch: hostsBulkParams,
     search: selectedAction === UPGRADE_ALL ? '' : packagesBulkParams,
@@ -59,6 +63,16 @@ export const BulkPackagesReviewFooter = () => {
     search: packagesBulkParams,
   });
 
+  const packageBulkRemoveAction = () => removePackagesBySearch({
+    hostSearch: hostsBulkParams,
+    search: packagesBulkParams,
+  });
+
+  const {
+    triggerJobStart: triggerBulkPackageRemove,
+    isPolling: isBulkRemoveInProgress,
+  } = useRexJobPolling(packageBulkRemoveAction);
+
   const {
     triggerJobStart: triggerBulkPackageInstall,
     isPolling: isBulkInstallInProgress,
@@ -72,10 +86,14 @@ export const BulkPackagesReviewFooter = () => {
     if (selectedAction === INSTALL) {
       triggerBulkPackageInstall();
     }
+    if (selectedAction === REMOVE) {
+      triggerBulkPackageRemove();
+    }
     closeModal();
   };
 
-  const isBulkActionInProgress = isBulkUpgradeInProgress || isBulkInstallInProgress;
+  const isBulkActionInProgress = isBulkUpgradeInProgress ||
+    isBulkInstallInProgress || isBulkRemoveInProgress;
 
   const finishButton = (selectedRexOption === viaRex) ?
     (

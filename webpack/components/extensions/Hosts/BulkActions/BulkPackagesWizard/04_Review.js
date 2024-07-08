@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { TreeView, Button, Text, TextContent, TextVariants, Flex, FlexItem, Dropdown, DropdownItem, DropdownToggle } from '@patternfly/react-core';
 import { useWizardContext } from '@patternfly/react-core/next';
 import { CaretDownIcon } from '@patternfly/react-icons';
-import { BulkPackagesWizardContext, INSTALL, UPGRADE_ALL } from './BulkPackagesWizard';
+import { BulkPackagesWizardContext, UPGRADE_ALL, INSTALL, REMOVE, UPGRADE } from './BulkPackagesWizard';
 
 export const dropdownOptions = [
   __('via remote execution'),
@@ -38,7 +38,13 @@ export const BulkPackagesReview = () => {
     <DropdownItem key={`option_${text}`} ouiaId={`option_${text}`} onClick={() => setSelectedRexOption(text)}>{text}</DropdownItem>
   ));
 
-  const treeViewTitle = selectedAction === INSTALL ? __('Packages to install') : __('Packages to be updated');
+  const packageActionsDescriptions = {
+    [INSTALL]: __('Packages to install'),
+    [REMOVE]: __('Packages to be removed'),
+    [UPGRADE]: __('Packages to be updated'),
+  };
+
+  const treeViewTitle = packageActionsDescriptions[selectedAction];
   const treeViewData = [
     {
       name: treeViewTitle,

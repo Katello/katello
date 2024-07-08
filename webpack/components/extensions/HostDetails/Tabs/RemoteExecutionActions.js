@@ -58,9 +58,12 @@ const katelloPackageRemoveParams = ({ hostname, packageName }) =>
     feature: REX_FEATURES.KATELLO_PACKAGE_REMOVE,
   });
 
-const katelloPackagesRemoveParams = ({ hostname, search, descriptionFormat }) =>
+const katelloPackageRemoveBySearchParams = ({
+  hostname, hostSearch, search, descriptionFormat,
+}) =>
   baseParams({
     hostname,
+    hostSearch,
     inputs: { [PACKAGES_SEARCH_QUERY]: search },
     feature: REX_FEATURES.KATELLO_PACKAGES_REMOVE_BY_SEARCH,
     descriptionFormat,
@@ -179,11 +182,15 @@ export const removePackage = ({ hostname, packageName }) => post({
   errorToast,
 });
 
-export const removePackages = ({ hostname, search, descriptionFormat }) => post({
+export const removePackagesBySearch = ({
+  hostname, hostSearch, search, descriptionFormat,
+}) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
-  params: katelloPackagesRemoveParams({ hostname, search, descriptionFormat }),
+  params: katelloPackageRemoveBySearchParams({
+    hostname, hostSearch, search, descriptionFormat,
+  }),
   handleSuccess: showRexToast,
   errorToast,
 });
