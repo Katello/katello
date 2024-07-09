@@ -21,6 +21,7 @@ module Katello
         subscription_id: ActiveRecord::FixtureSet.identify(:other_subscription)) # Setting[:expire_soon_days] || 120
     end
   end
+
   class SubscriptionMailerTest < TestBase
     def setup
       @user = User.find(users('admin').id)

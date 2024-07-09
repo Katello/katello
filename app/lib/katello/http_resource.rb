@@ -8,6 +8,7 @@ module Katello
 
     class RestClientException < StandardError
       attr_reader :service_code, :code
+
       def initialize(params)
         super params[:message]
         @service_code = params[:service_code]

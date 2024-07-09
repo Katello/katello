@@ -6,6 +6,7 @@ module Actions
         include ::Katello::ContentViewHelper
         include ::Actions::ObservableAction
         attr_accessor :version
+
         execution_plan_hooks.use :trigger_capsule_sync, :on => :success
         execution_plan_hooks.use :notify_on_failure, :on => [:failure, :paused]
 

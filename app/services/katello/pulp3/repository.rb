@@ -7,6 +7,7 @@ module Katello
       include Katello::Pulp3::ServiceCommon
       attr_accessor :repo
       attr_accessor :smart_proxy
+
       delegate :root, to: :repo
       delegate :pulp3_api, to: :smart_proxy
 
