@@ -54,6 +54,7 @@ module Katello
     def test_promote_errata
       view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
       @errata_host.content_facet.bound_repositories = [view_repo]
+      @errata_host.stubs(:update_candlepin_associations)
       @errata_host.content_facet.assign_single_environment(
         content_view: katello_content_views(:acme_default),
         lifecycle_environment: katello_environments(:library)
