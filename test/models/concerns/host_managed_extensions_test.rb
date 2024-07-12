@@ -96,6 +96,7 @@ module Katello
     end
 
     def test_check_cve_attributes_removes_cv_and_lce
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
       host_attrs = host.attributes.deep_clone
       host_attrs[:content_facet_attributes] = {content_view_id: @view.id, lifecycle_environment_id: @library.id}
@@ -105,6 +106,7 @@ module Katello
     end
 
     def test_check_cve_attributes
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
       host_attrs = host.attributes.deep_clone
       host_attrs[:content_facet_attributes] = {content_view_id: @view.id, lifecycle_environment_id: @library.id}
@@ -216,6 +218,7 @@ module Katello
     end
 
     def test_backend_update_needed?
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
       subscription_facet = host.subscription_facet
       host.content_facet.cves_changed = false

@@ -51,6 +51,10 @@ module Katello
       "#{environment.label}/#{content_view.label}"
     end
 
+    def priority(content_facet)
+      content_view_environment_content_facets.find_by(:content_facet_id => content_facet.id).try(:priority)
+    end
+
     private
 
     def generate_info

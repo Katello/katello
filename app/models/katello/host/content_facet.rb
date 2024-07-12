@@ -64,7 +64,7 @@ module Katello
       end
 
       def mark_cves_changed(_cve)
-        Rails.logger.debug("ContentFacet: Marking CVEs changed for host #{host.name}")
+        Rails.logger.debug("ContentFacet: Marking CVEs changed for host #{host&.to_label}")
         self.cves_changed = true
       end
 
@@ -102,10 +102,9 @@ module Katello
 
       def content_view_environments=(new_cves)
         super(new_cves)
-        Rails.logger.debug("ContentFacet: Setting CVEs for host #{host.name}: #{new_cves.map(&:candlepin_name).join(', ')}")
         Katello::ContentViewEnvironmentContentFacet.reprioritize_for_content_facet(self, new_cves)
-        self.content_view_environments.reload
-        self.host&.update_candlepin_associations
+        self.content_view_environments.reload unless self.new_record?
+        self.host&.update_candlepin_associations unless self.host&.new_record?
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
