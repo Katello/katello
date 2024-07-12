@@ -14,6 +14,7 @@ import {
   selectCVDetailStatus,
 } from '../../Details/ContentViewDetailSelectors';
 import getContentViewDetails, { addComponent } from '../ContentViewDetailActions';
+import { truncate } from '../../../../utils/helpers';
 
 const ComponentContentViewAddModal = ({
   cvId, componentCvId, componentId, latest, componentVersionId, show, setIsOpen,
@@ -84,7 +85,7 @@ const ComponentContentViewAddModal = ({
       variant={ModalVariant.small}
       isOpen={show}
       ouiaId="add-update-cv-modal"
-      description={__(`Select available version of ${cvName} to use`)}
+      description={__(`Select available version of ${truncate(cvName)} to use`)}
       onClose={() => {
         setIsOpen(false);
       }}

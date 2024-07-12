@@ -12,6 +12,7 @@ import ComponentEnvironments from '../Details/ComponentContentViews/ComponentEnv
 import './cvPublishForm.scss';
 import WizardHeader from '../components/WizardHeader';
 import { selectCVNeedsPublish } from '../Details/ContentViewDetailSelectors';
+import { truncate } from '../../../utils/helpers';
 
 const CVPublishForm = ({
   description,
@@ -83,7 +84,7 @@ const CVPublishForm = ({
                   <TextContent>{__('Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.')}</TextContent>
                 </Alert>)
             }
-            {__('A new version of ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {name}</b>
+            {__('A new version of ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {truncate(name)}</b>
             {__(' will be created and automatically promoted to the ' +
               'Library environment. You can promote to other environments as well. ')
             }

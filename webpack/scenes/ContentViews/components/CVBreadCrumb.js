@@ -10,6 +10,7 @@ import {
   selectCVDetails, selectCVDetailStatus, selectCVFilterDetails, selectCVFilterDetailStatus,
   selectCVVersionDetails, selectCVVersionDetailsStatus,
 } from '../Details/ContentViewDetailSelectors';
+import { truncate } from '../../../utils/helpers';
 
 const CVBreadcrumb = () => {
   const { id } = useParams();
@@ -47,7 +48,7 @@ const CVBreadcrumb = () => {
       Object.keys(breadcrumbItems).length === 1) {
       const cvRecordCrumb = {
         [`b_${cvDetails?.name}`]: {
-          render: () => (<Link to={`/content_views/${cvId}`}>{cvDetails?.name}</Link>),
+          render: () => (<Link to={`/content_views/${cvId}`}>{truncate(cvDetails?.name)}</Link>),
         },
       };
       const tabName = splitHash[1];

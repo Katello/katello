@@ -9,6 +9,7 @@ import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useDispatch } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import getContentViewDetails, { addComponent } from '../ContentViewDetailActions';
+import { truncate } from '../../../../utils/helpers';
 
 const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
             aria-label="componentCvName"
             key={componentCvName}
           >
-            <CardTitle aria-label={componentCvName}>{componentCvName}</CardTitle>
+            <CardTitle aria-label={componentCvName}>{truncate(componentCvName)}</CardTitle>
             <CardBody>
               <FormGroup label={__('Version')} isRequired fieldId="version">
                 <Select

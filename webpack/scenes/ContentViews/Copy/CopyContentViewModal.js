@@ -4,6 +4,7 @@ import { Modal, ModalVariant } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import CopyContentViewForm from './CopyContentViewForm';
+import { truncate } from '../../../utils/helpers';
 
 const CopyContentViewModal = ({
   cvId, cvName, show, setIsOpen,
@@ -11,7 +12,7 @@ const CopyContentViewModal = ({
   const description = (
     <FormattedMessage
       id="copy-cv-description"
-      values={{ cv: <b>{cvName}</b> }}
+      values={{ cv: <b>{truncate(cvName)}</b> }}
       defaultMessage={__('This will create a copy of {cv}, including details, repositories, and filters. Generated data such as history, tasks and versions will not be copied.')}
     />
   );

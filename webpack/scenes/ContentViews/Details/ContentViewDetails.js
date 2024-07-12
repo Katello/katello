@@ -39,6 +39,7 @@ import ContentViewDeleteWizard from '../Delete/ContentViewDeleteWizard';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 import { CONTENT_VIEW_NEEDS_PUBLISH_RESET, cvVersionTaskPollingKey } from '../ContentViewsConstants';
 import { clearPollTaskData, stopPollingTask } from '../../Tasks/TaskActions';
+import { truncate } from '../../../utils/helpers';
 
 export default () => {
   const { id } = useParams();
@@ -161,7 +162,7 @@ export default () => {
               <FlexItem>
                 <TextContent>
                   <Text ouiaId="cv-details-header-name" component={TextVariants.h1}>
-                    <ContentViewIcon count={name} composite={composite} />
+                    <ContentViewIcon count={truncate(name)} composite={composite} />
                   </Text>
                 </TextContent>
               </FlexItem>
