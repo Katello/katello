@@ -7,6 +7,8 @@ module Katello
       @repo = katello_repositories(:rhel_6_x86_64)
       @host = hosts(:one)
       @host.content_facet.content_source = smart_proxies(:one)
+      @host.expects(:update_candlepin_associations)
+      @host.content_facet.content_source.lifecycle_environments << katello_environments(:library)
       @host.operatingsystem = operatingsystems(:redhat)
       @host.content_facet.kickstart_repository = @repo
       @host.content_facet.assign_single_environment(
@@ -28,6 +30,7 @@ module Katello
     end
 
     def test_render_hostgroup
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
       scope = ::Foreman::Renderer::Scope::Provisioning.new(host: @hostgroup, source: Template.first)
 
       assert_include scope.allowed_variables.keys, :mediapath

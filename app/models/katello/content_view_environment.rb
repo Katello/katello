@@ -47,10 +47,13 @@ module Katello
       content_view.default? && environment.library?
     end
 
-    # TODO: uncomment when we need to start showing multiple CVE names in UI
-    # def candlepin_name
-    #   "#{environment.label}/#{content_view.label}"
-    # end
+    def candlepin_name
+      "#{environment.label}/#{content_view.label}"
+    end
+
+    def priority(content_facet)
+      content_view_environment_content_facets.find_by(:content_facet_id => content_facet.id).try(:priority)
+    end
 
     private
 

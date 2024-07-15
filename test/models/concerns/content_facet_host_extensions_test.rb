@@ -35,7 +35,7 @@ module Katello
 
     def test_action_triggered_on_facet_cve_update
       host.reload
-      host.expects(:update_candlepin_associations)
+      host.expects(:update_candlepin_associations).twice
       host.content_facet.assign_single_environment(
         :content_view => view,
         :lifecycle_environment => dev
@@ -43,7 +43,7 @@ module Katello
       host.save!
 
       host.reload
-      host.expects(:update_candlepin_associations)
+      host.expects(:update_candlepin_associations).twice
       host.content_facet.assign_single_environment(
         :content_view => view2,
         :lifecycle_environment => dev
@@ -52,7 +52,7 @@ module Katello
     end
 
     def test_content_facet_cve_update
-      host.expects(:update_candlepin_associations)
+      host.expects(:update_candlepin_associations).twice
       host.content_facet.assign_single_environment(
         :content_view => view2,
         :lifecycle_environment => dev

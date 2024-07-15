@@ -262,9 +262,9 @@ module Katello
       end
 
       def test_registration_existing_host
+        ::Host::Managed.any_instance.expects(:update_candlepin_associations).times(3)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-        @host.expects(:update_candlepin_associations)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
@@ -280,6 +280,7 @@ module Katello
       end
 
       def test_unregister_host
+        ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
@@ -309,6 +310,7 @@ module Katello
       end
 
       def test_unregister_host_resets_content_source
+        ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                     :lifecycle_environment => @library, :organization => @content_view.organization)
         pulp3_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
@@ -370,9 +372,9 @@ module Katello
 
       # this case can only happen if candlepin/pulp dies after the host is unregistered, but before it's re-registered.
       def test_registration_existing_host_dead_backend_service
+        ::Host::Managed.any_instance.stubs(:update_candlepin_associations).twice
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-        @host.expects(:update_candlepin_associations)
         @host.content_facet.expects(:destroy).never
         @host.expects(:destroy).never
 

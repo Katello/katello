@@ -162,8 +162,20 @@ module Katello
         end
       end
 
+      def candlepin_environments_cp_ids
+        candlepin_environments.map { |e| e[:id] }
+      end
+
       def content_view_environments
         self.host.content_facet.try(:content_view_environments)
+      end
+
+      def consumer_cve_order_from_candlepin
+        Katello::Resources::Candlepin::Consumer.get(uuid)['environments'].map { |e| e['id'] }
+      end
+
+      def cves_ordered_correctly?
+        consumer_cve_order_from_candlepin == candlepin_environments_cp_ids
       end
 
       def organization

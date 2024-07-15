@@ -144,6 +144,7 @@ module Katello
     def setup
       super
       @host = hosts(:one)
+      @host.expects(:update_candlepin_associations)
       @host.content_facet.assign_single_environment(
         content_view: katello_content_views(:library_dev_view),
         lifecycle_environment: katello_environments(:library)
@@ -201,6 +202,7 @@ module Katello
       @repo = katello_repositories(:rhel_6_x86_64)
       @security = katello_errata(:security)
       @host = hosts(:one)
+      @host.expects(:update_candlepin_associations)
       @host.content_facet.assign_single_environment(
         content_view: katello_content_views(:library_dev_view),
         lifecycle_environment: katello_environments(:library)
