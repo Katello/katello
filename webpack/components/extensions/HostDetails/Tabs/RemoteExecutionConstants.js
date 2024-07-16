@@ -10,4 +10,5 @@ export const REX_FEATURES = {
   KATELLO_HOST_ERRATA_INSTALL_BY_SEARCH: 'katello_errata_install_by_search',
   KATELLO_HOST_MODULE_STREAM_ACTION: 'katello_module_stream_action',
   RUN_COMMAND: 'run_script',
+  KATELLO_UPLOAD_PROFILE: 'katello_upload_profile',
 };
