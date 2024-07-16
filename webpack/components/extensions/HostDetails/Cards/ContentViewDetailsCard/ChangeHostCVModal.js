@@ -32,6 +32,7 @@ const ChangeHostCVModal = ({
   hostId,
   contentSourceId,
   hostName,
+  multiEnv,
 }) => {
   const [selectedEnvForHost, setSelectedEnvForHost]
     = useState([]);
@@ -174,13 +175,22 @@ const ChangeHostCVModal = ({
           <a href={`/change_host_content_source?host_id=${hostId}`}>{__('change the host\'s content source.')}</a>
         </Alert>
       }
+      {multiEnv &&
+        <Alert
+          variant="warning"
+          ouiaId="multi-env-alert"
+          isInline
+          title={__('This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments.')}
+          style={{ marginBottom: '1rem' }}
+        />
+      }
       <EnvironmentPaths
         userCheckedItems={selectedEnvForHost}
         setUserCheckedItems={handleEnvSelect}
         publishing={false}
         multiSelect={false}
         hostId={hostId}
-        headerText={__('Select environment')}
+        headerText={__('Select lifecycle environment')}
         isDisabled={hostUpdateStatus === STATUS.PENDING}
       />
       <ContentViewSelect
@@ -229,6 +239,7 @@ ChangeHostCVModal.propTypes = {
   hostId: PropTypes.number.isRequired,
   contentSourceId: PropTypes.number,
   hostName: PropTypes.string.isRequired,
+  multiEnv: PropTypes.bool,
 };
 
 ChangeHostCVModal.defaultProps = {
@@ -236,6 +247,7 @@ ChangeHostCVModal.defaultProps = {
   closeModal: () => {},
   hostEnvId: null,
   contentSourceId: null,
+  multiEnv: false,
 };
 
 

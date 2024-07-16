@@ -10,13 +10,29 @@ attributes :applicable_module_stream_count, :upgradable_module_stream_count
 
 child :content_view_environments => :content_view_environments do
   node :content_view do |cve|
-    { id: cve.content_view.id, name: cve.content_view.name, composite: cve.content_view.composite }
+    {
+      id: cve.content_view&.id,
+      name: cve.content_view&.name,
+      composite: cve.content_view&.composite,
+      content_view_version: cve.content_view_version&.version,
+      content_view_version_id: cve.content_view_version&.id,
+      content_view_version_latest: cve.content_view_version&.latest?,
+      content_view_default: cve.content_view&.default?
+    }
   end
   node :lifecycle_environment do |cve|
-    { id: cve.lifecycle_environment.id, name: cve.lifecycle_environment.name }
+    {
+      id: cve.lifecycle_environment&.id,
+      name: cve.lifecycle_environment&.name,
+      lifecycle_environment_library: cve.lifecycle_environment&.library?
+    }
+  end
+  node :candlepin_name do |cve|
+    cve.candlepin_name
   end
 end
 
+# single cv/lce for backward compatibility
 node :content_view do |content_facet|
   content_view = content_facet.single_content_view
   if content_view.present?
