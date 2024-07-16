@@ -2,7 +2,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { API_OPERATIONS, put } from 'foremanReact/redux/API';
 import { errorToast } from '../../../../../scenes/Tasks/helpers';
 import { foremanApi } from '../../../../../services/api';
-import { runCommand } from '../../Tabs/RemoteExecutionActions';
+import { uploadProfile } from '../../Tabs/RemoteExecutionActions';
 import HOST_CV_AND_ENV_KEY from './HostContentViewConstants';
 
 const updateHostContentViewAndEnvironment = (params, hostId, handleSuccess, handleError) => put({
@@ -17,9 +17,8 @@ const updateHostContentViewAndEnvironment = (params, hostId, handleSuccess, hand
 });
 
 export const runSubmanRepos =
-  (hostname, handleSuccess) => runCommand({
+  (hostname, handleSuccess) => uploadProfile({
     hostname,
-    command: 'subscription-manager repos',
     handleSuccess,
   });
 

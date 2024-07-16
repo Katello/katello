@@ -31,6 +31,13 @@ const runCommandParams = ({ hostname, command }) =>
     feature: REX_FEATURES.RUN_COMMAND,
   });
 
+const uploadProfileParams = ({ hostname }) =>
+  baseParams({
+    hostname,
+    inputs: {},
+    feature: REX_FEATURES.KATELLO_UPLOAD_PROFILE,
+  });
+
 // used when we know the package name
 const katelloPackageInstallParams = ({ hostname, packageName }) =>
   baseParams({
@@ -141,6 +148,18 @@ export const runCommand = ({ hostname, command, handleSuccess }) => post({
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: runCommandParams({ hostname, command }),
+  handleSuccess: (response) => {
+    showRexToast(response);
+    if (handleSuccess) handleSuccess(response);
+  },
+  errorToast,
+});
+
+export const uploadProfile = ({ hostname, handleSuccess }) => post({
+  type: API_OPERATIONS.POST,
+  key: REX_JOB_INVOCATIONS_KEY,
+  url: foremanApi.getApiUrl('/job_invocations'),
+  params: uploadProfileParams({ hostname }),
   handleSuccess: (response) => {
     showRexToast(response);
     if (handleSuccess) handleSuccess(response);
