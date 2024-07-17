@@ -63,6 +63,7 @@ export const requestSuccessResponse = Immutable({
       unmapped_guest: false,
       virt_only: false,
       virt_who: false,
+      product_host_count: 1,
     },
     {
       id: 4,
@@ -89,6 +90,7 @@ export const requestSuccessResponse = Immutable({
       unmapped_guest: false,
       virt_only: false,
       virt_who: false,
+      product_host_count: 0,
     },
   ],
 });
@@ -110,6 +112,7 @@ export const quantitiesRequestSuccessResponse = Immutable({
         4,
         5,
       ],
+      product_host_count: 9469,
     },
     {
       id: '6b123381519abf020151ab082c5e4678',
@@ -125,6 +128,7 @@ export const quantitiesRequestSuccessResponse = Immutable({
       local_pool_ids: [
         6,
       ],
+      product_host_count: 9469,
     },
   ],
   page: 1,
@@ -167,6 +171,7 @@ export const groupedSubscriptions = Immutable({
       unmapped_guest: false,
       virt_only: false,
       virt_who: false,
+      product_host_count: 1,
     },
     {
       id: 4,
@@ -193,6 +198,7 @@ export const groupedSubscriptions = Immutable({
       unmapped_guest: false,
       virt_only: false,
       virt_who: false,
+      product_host_count: 0,
     },
   ],
   searchIsActive: false,
@@ -236,6 +242,7 @@ export const successState = Immutable({
       unmapped_guest: false,
       virt_only: false,
       virt_who: false,
+      product_host_count: 1,
     },
     {
       id: 4,
@@ -262,6 +269,7 @@ export const successState = Immutable({
       unmapped_guest: false,
       virt_only: false,
       virt_who: false,
+      product_host_count: 0,
     },
   ],
   searchIsActive: false,
@@ -454,6 +462,11 @@ export const tableColumns = [
     label: 'Entitlements',
     value: true,
   },
+  {
+    key: 'product_host_count',
+    label: 'Product Host Count',
+    value: true,
+  },
 ];
 
 export const loadTableColumnsSuccessAction = [
@@ -470,6 +483,7 @@ export const loadTableColumnsSuccessAction = [
         'consumed',
         'quantity',
         'type',
+        'product_host_count',
       ],
     },
   },

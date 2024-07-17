@@ -6,6 +6,7 @@ attributes :arch
 attributes :description
 attributes :support_type
 attributes :roles, :usage, :addons
+attributes :product_host_count
 
 node(:host_count) do |subscription|
   subscription.hosts.count

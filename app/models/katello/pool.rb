@@ -55,6 +55,10 @@ module Katello
 
     validate :subscription_matches_organization
 
+    def product_host_count
+      Katello::Host::ContentFacet.joins(bound_repositories: { product: :pools }).where(pools: { id: id }).distinct.count
+    end
+
     def subscription_matches_organization
       return if errors[:subscription].any? || errors[:organization].any? # let other validations catch this
       unless subscription&.organization_id == self.organization_id

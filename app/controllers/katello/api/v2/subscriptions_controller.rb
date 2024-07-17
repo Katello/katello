@@ -29,6 +29,7 @@ module Katello
     param :match_host, :bool, :desc => N_("Ignore subscriptions that are unavailable to the specified host")
     param :match_installed, :bool, :desc => N_("Return subscriptions that match installed products of the specified host")
     param :no_overlap, :bool, :desc => N_("Return subscriptions which do not overlap with a currently-attached subscription")
+    param :product_host_count, :bool, :desc => N_("Return the number of hosts that are subscribed to this product")
     def index
       unless @organization || @activation_key
         fail HttpErrors::NotFound, _("Organization Information not provided.")
@@ -41,15 +42,7 @@ module Katello
         format.csv do
           options[:csv] = true
           collection = scoped_search(*base_args, options)
-          csv_response(collection,
-                       [:id, :subscription_id, :name, :cp_id, :organization_id, :sockets, :cores,
-                        :start_date, :end_date, :consumed, :quantity, :account_number, :contract_number,
-                        :support_level, :ram, :stacking_id, :multi_entitlement, :type, :product_id,
-                        :unmapped_guest, :virt_only, :virt_who, :upstream?],
-                       ['Pool Id Number', 'Subscription Id', 'Name', 'Pool Id', 'Organization Id',
-                        'Sockets', 'Cores', 'Start Date', 'End Date', 'Consumed', 'Quantity', 'Account Number',
-                        'Contract Number', 'Support Level', 'RAM', 'Stacking Id', 'Multi Entitlement', 'Type',
-                        'Product Id', 'Unmapped Guest', 'Virt Only', 'Requires Virt Who', 'Upstream'])
+          compose_csv_response(collection)
         end
         format.any do
           collection = scoped_search(*base_args, options)
@@ -57,6 +50,11 @@ module Katello
             key_pools = @activation_key.get_key_pools
             collection[:results] = collection[:results].map do |pool|
               ActivationKeySubscriptionsPresenter.new(pool, key_pools)
+            end
+          end
+          if params[:product_host_count]
+            collection[:results] = collection[:results].map do |pool|
+              ProductHostCountPresenter.new(pool)
             end
           end
           respond(:collection => collection)
@@ -79,6 +77,7 @@ module Katello
     api :GET, "/subscriptions/:id", N_("Show a subscription")
     param :organization_id, :number, :desc => N_("Organization identifier")
     param :id, :number, :desc => N_("Subscription identifier"), :required => true
+    param :product_host_count, :bool, :desc => N_("Returns the number of hosts that are subscribed to this product")
     def show
       @resource = Katello::Pool.with_identifier(params[:id])
 
@@ -86,6 +85,10 @@ module Katello
 
       if params[:organization_id] && @resource.organization_id != params[:organization_id].to_i
         fail HttpErrors::BadRequest, N_('This subscription is not relevant to the current organization.')
+      end
+
+      if params[:product_host_count]
+        @resource = ProductHostCountPresenter.new(@resource)
       end
 
       respond(:resource => @resource)
@@ -128,6 +131,22 @@ module Katello
     def manifest_history
       @manifest_history = @organization.manifest_history
       respond_with_template_collection(params[:action], "subscriptions", collection: @manifest_history)
+    end
+
+    def compose_csv_response(collection)
+      fields = [:id, :subscription_id, :name, :cp_id, :organization_id, :sockets, :cores,
+                :start_date, :end_date, :consumed, :quantity, :account_number, :contract_number,
+                :support_level, :ram, :stacking_id, :multi_entitlement, :type, :product_id,
+                :unmapped_guest, :virt_only, :virt_who, :upstream? ]
+      headers = ['Pool Id Number', 'Subscription Id', 'Name', 'Pool Id', 'Organization Id',
+                 'Sockets', 'Cores', 'Start Date', 'End Date', 'Consumed', 'Quantity', 'Account Number',
+                 'Contract Number', 'Support Level', 'RAM', 'Stacking Id', 'Multi Entitlement', 'Type',
+                 'Product Id', 'Unmapped Guest', 'Virt Only', 'Requires Virt Who', 'Upstream']
+      if params[:product_host_count]
+        fields.push(:product_host_count)
+        headers.push('Product Host Count')
+      end
+      csv_response(collection, fields, headers)
     end
 
     def for_host

@@ -168,7 +168,7 @@ class SubscriptionsPage extends Component {
     const toggleDeleteButton = rowsSelected =>
       (rowsSelected ? enableDeleteButton() : disableDeleteButton());
 
-    const csvParams = createSubscriptionParams({ search: searchQuery });
+    const csvParams = createSubscriptionParams({ product_host_count: 1, search: searchQuery });
     const getEnabledColumns = (columns) => {
       const enabledColumns = [];
       columns.forEach((column) => {
