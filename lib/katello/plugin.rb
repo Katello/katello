@@ -643,8 +643,8 @@ Foreman::Plugin.register :katello do
       setting 'remote_execution_prefer_registered_through_proxy',
         type: :boolean,
         default: false,
-        full_name: N_('Prefer registered through proxy for remote execution'),
-        description: N_('Prefer using a proxy to which a host is registered when using remote execution')
+        full_name: N_('Prefer registered through Smart Proxy for remote execution'),
+        description: N_('Prefer using a Smart Proxy to which a host is registered when using remote execution')
 
       setting 'delete_repo_across_cv',
         type: :boolean,
