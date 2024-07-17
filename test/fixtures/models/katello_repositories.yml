@@ -396,3 +396,17 @@ pulp3_ostree_1:
   relative_path:        'Default_Organization/library/pulp3_OSTree_1'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+
+product_host_count_repo1:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:product_host_count_repo1_root) %>
+  pulp_id:              "default_organization-my-product-host-count-repo1"
+  relative_path:        'default_organization/library/my-product-host-count-repo1'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+
+product_host_count_repo2:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:product_host_count_repo2_root) %>
+  pulp_id:              "default_organization-my-product-host-count-repo2"
+  relative_path:        'default_organization/library/my-product-host-count-repo2'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>

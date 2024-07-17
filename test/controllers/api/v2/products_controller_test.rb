@@ -70,7 +70,7 @@ module Katello
       get :index, params: { organization_id: @organization.id, custom: true }
       body = JSON.parse(response.body)
 
-      assert_equal 7, body['total']
+      assert_equal Katello::Product.custom.count, body['total']
     end
 
     def test_index_no_custom_products

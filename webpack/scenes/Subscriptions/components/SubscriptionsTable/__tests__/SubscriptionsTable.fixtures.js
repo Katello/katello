@@ -69,6 +69,7 @@ export const genericRow = Immutable({
   product_id: 'RH00001',
   start_date: 'NA',
   virt_only: undefined,
+  product_host_count: 'NA',
 });
 
 export const subOneRowOne = Immutable({
