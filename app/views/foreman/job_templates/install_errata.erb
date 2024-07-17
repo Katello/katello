@@ -14,6 +14,7 @@ foreign_input_sets:
 - template: Package Action - Script Default
   exclude: action,package
 %>
+<%= snippet_if_exists(template_name + " custom pre") %>
 <% if @host.operatingsystem.family == 'Suse' -%>
     <% advisories = input(:errata).split(',').join(' ') -%>
     <%= render_template('Package Action - Script Default', :action => 'install -n -t patch', :package => advisories) %>
@@ -21,3 +22,4 @@ foreign_input_sets:
     <% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') -%>
     <%= render_template('Package Action - Script Default', :action => 'update-minimal', :package => advisories) %>
 <% end -%>
+<%= snippet_if_exists(template_name + " custom post") %>

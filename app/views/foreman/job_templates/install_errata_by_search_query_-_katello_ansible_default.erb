@@ -16,9 +16,11 @@ template_inputs:
 <% render_error(N_("No errata matching given search query")) if !input("Errata search query").blank? && advisory_ids.blank? -%>
 # RESOLVED_ERRATA_IDS=<%= advisory_ids.join(',') %>
 
+<%= snippet_if_exists(template_name + " custom pre") %>
 <% if @host.operatingsystem.family == 'Suse' -%>
 <%= render_template('Run Command - Ansible Default', :command => "zypper -n install -t patch #{advisory_ids.join(' ')}") %>
 <% else -%>
 <% advisories = advisory_ids.map { |e| "--advisory=#{e}" }.join(' ') -%>
 <%= render_template('Run Command - Ansible Default', :command => "yum -y update-minimal #{advisories}") %>
 <% end -%>
+<%= snippet_if_exists(template_name + " custom post") %>
