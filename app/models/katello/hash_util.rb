@@ -16,7 +16,7 @@ module Katello
       subhash = hash[params.first]
       # If we don't have a subhash don't try and recurse down
       if !subhash.nil? && !subhash.empty?
-        self.null_safe_get(subhash, default, params[1..-1])
+        self.null_safe_get(subhash, default, params[1..])
       else
         default
       end

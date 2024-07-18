@@ -25,7 +25,7 @@ module Katello
     end
 
     def resource_type_from_name(name)
-      resource_name = name.to_s.split('_')[1..-1].join('_').singularize
+      resource_name = name.to_s.split('_')[1..].join('_').singularize
       mapping = {
         "capsule_content" => "SmartProxy",
         "manifest" => "Katello::Subscription",
