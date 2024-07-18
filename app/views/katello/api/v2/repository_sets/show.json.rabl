@@ -65,7 +65,7 @@ node :enabled_content_override do |pc|
 end
 
 node :redhat do |pc|
-  if pc&.product&.respond_to? :redhat?
+  if pc&.product.respond_to? :redhat?
     pc.product.redhat?
   end
 end

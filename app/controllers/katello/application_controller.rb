@@ -108,7 +108,7 @@ module Katello
       exception = args.find { |o| o.is_a? Exception }
       message   = args.find { |o| o.is_a? String } || exception.try(:message) || default_message
 
-      status = if exception&.respond_to?(:status_code)
+      status = if exception.respond_to?(:status_code)
                  exception.status_code
                else
                  400
