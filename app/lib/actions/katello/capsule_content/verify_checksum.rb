@@ -36,8 +36,7 @@ module Actions
           if repository
             [repository]
           else
-            repositories = smart_proxy_helper.repositories_available_to_capsule(environment, content_view).by_rpm_count
-            repositories
+            smart_proxy_helper.repositories_available_to_capsule(environment, content_view).by_rpm_count
           end
         end
 

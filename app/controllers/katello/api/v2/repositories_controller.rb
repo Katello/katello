@@ -155,8 +155,7 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
       query = query.where(:root_id => RootRepository.where(:label => params[:label])) if params[:label]
       query = index_relation_content_unit(query)
       query = index_relation_content_view(query)
-      query = index_relation_environment(query)
-      query
+      index_relation_environment(query)
     end
 
     def index_relation_product(query)

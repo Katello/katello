@@ -13,8 +13,7 @@ module Katello
           end
 
           def create(owner_key, attrs)
-            pool = self.post("/candlepin/owners/#{owner_key}/pools", attrs.to_json, self.default_headers).body
-            pool
+            self.post("/candlepin/owners/#{owner_key}/pools", attrs.to_json, self.default_headers).body
           end
 
           def find(pool_id)

@@ -239,7 +239,7 @@ module Katello
     param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the activation key's content view version")
     param_group :search, Api::V2::ApiController
     def product_content
-      # note this is just there as a place holder for apipie.
+      # NOTE: this is just there as a place holder for apipie.
       # The routing would automatically redirect it to repository_sets#index
     end
 

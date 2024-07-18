@@ -122,13 +122,12 @@ module Katello
       options = {} if options.nil?
 
       hash = super(options.merge(:except => [:cp_id, :id]))
-      hash = hash.merge(:multiplier => self.multiplier,
+      hash.merge(:multiplier => self.multiplier,
                         :attributes => self.attrs,
                         :id => self.cp_id,
                         :sync_plan_name => self.sync_plan ? self.sync_plan.name : nil,
                         :sync_state => self.sync_state,
                         :last_sync => self.last_sync)
-      hash
     end
 
     def redhat?

@@ -7,7 +7,7 @@ module Katello
 
     def setup
       skip "TODO: Until the ostree support is present in pulp packaging"
-      # NOTE in order for these tests to work the 'ostree' fixture will have to be enabled in
+      # NOTE: in order for these tests to work the 'ostree' fixture will have to be enabled in
       # test/fixtures/models/katello_smart_proxy_features.yml
       #   capabilities:
       #     - ostree

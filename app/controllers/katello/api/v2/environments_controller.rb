@@ -188,8 +188,7 @@ module Katello
         attrs = [:name, :description, :registry_name_pattern, :registry_unauthenticated_pull]
       end
       attrs << :label if params[:action] == "create"
-      parms = params.require(:environment).permit(*attrs)
-      parms
+      params.require(:environment).permit(*attrs)
     end
 
     def find_content_view

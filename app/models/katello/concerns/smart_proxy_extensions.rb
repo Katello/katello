@@ -11,8 +11,7 @@ module Katello
 
       module Overrides
         def refresh
-          errors = super
-          errors
+          super
         end
       end
 

@@ -24,7 +24,7 @@ module Katello
       def lazy_accessor(*args)
         options = args.extract_options!
         @lazy_attributes = [] if @lazy_attributes.nil?
-        @lazy_attributes = @lazy_attributes.concat args
+        @lazy_attributes.concat args
         @lazy_attributes_options ||= {}
         fail ArgumentError, "Attribute names must be symbols" if args.any? { |attribute| !attribute.is_a?(Symbol) }
         redefined_attr = args.find { |attribute| instance_methods.include?(attribute.to_s) }

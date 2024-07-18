@@ -1,7 +1,7 @@
 module Katello
   class Event < Katello::Model
     validate :validate_event_type
-    # Note: Do not use active record call backs or dependent references on this class
+    # NOTE: Do not use active record call backs or dependent references on this class
     # Direct deletes are made in EventQueue#clear_events (instead of destroys).
 
     serialize :metadata, Hash

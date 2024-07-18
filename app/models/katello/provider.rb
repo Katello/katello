@@ -84,9 +84,8 @@ module Katello
     def serializable_hash(options = {})
       options = {} if options.nil?
       hash = super(options)
-      hash = hash.merge(:sync_state => self.sync_state,
+      hash.merge(:sync_state => self.sync_state,
                         :last_sync => self.last_sync)
-      hash
     end
 
     def manifest_task
