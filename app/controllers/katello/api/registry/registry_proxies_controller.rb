@@ -625,7 +625,7 @@ module Katello
     end
 
     def v1_ping
-      head 200
+      head :ok
     end
 
     def v1_search
