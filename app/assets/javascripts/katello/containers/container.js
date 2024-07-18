@@ -55,6 +55,7 @@ KT.container = (function(){
     getTag = function() {
         return $('#tag_id').val();
     },
+    // TODO: This only returns Pulp 2 proxies, which no longer exist
     populateCapsules = function() {
         var capsuleDropdown = $('#capsule_id'),
             noCapsules = $("#no_capsules"),
