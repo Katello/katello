@@ -2,7 +2,7 @@ require 'katello_test_helper'
 
 class Api::V2::SmartProxiesControllerTest < ActionController::TestCase
   def models
-    @smart_proxy = FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
+    @smart_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
     @http_proxy = http_proxies(:myhttpproxy)
   end
 

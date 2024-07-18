@@ -378,7 +378,7 @@ module Katello
     def test_save_with_organization_location
       set_default_location
       @proxy.destroy!
-      @proxy = FactoryBot.build(:smart_proxy, :default_smart_proxy, :url => 'http://fakepath.com/foo')
+      @proxy = FactoryBot.build(:smart_proxy, :with_pulp3)
       @proxy.save!
       @proxy_mirror.save!
 

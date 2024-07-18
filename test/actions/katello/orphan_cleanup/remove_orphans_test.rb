@@ -22,7 +22,6 @@ module ::Actions::Katello::CapsuleContent
 
     before do
       set_user
-      SmartProxy.any_instance.stubs(:ping_pulp).returns({})
       SmartProxy.any_instance.stubs(:ping_pulp3).returns({})
     end
   end
@@ -40,8 +39,7 @@ module ::Actions::Katello::CapsuleContent
     end
 
     it 'plans proxy orphans cleanup without content unit orphan cleanup on pulp3 mirror' do
-      smart_proxy = FactoryBot.create(:smart_proxy, :pulp_mirror, :with_pulp3)
-      smart_proxy.stubs(:pulp_primary?).returns(false)
+      smart_proxy = FactoryBot.create(:smart_proxy, :pulp_mirror)
       tree = plan_action_tree(action_class, smart_proxy)
 
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::RemoveOrphans)
