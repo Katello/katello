@@ -864,7 +864,9 @@ module Katello
       }
 
       table = Audit.arel_table
-      repository_condition = table[:auditable_id].eq(id).and(audited_changes_like.call("repository_ids"))
+      repository_condition = table[:auditable_id].eq(id)
+                                                 .and(table[:auditable_type].eq('Katello::ContentView'))
+                                                 .and(audited_changes_like.call("repository_ids"))
 
       cv_repository_condition = table[:auditable_id].in(cv_repository_ids)
                                                     .and(table[:auditable_type].eq('Katello::Repository'))
