@@ -1,3 +1,15 @@
+# 4.13.1 Sosta (2024-07-18)
+
+## Features
+
+### Hosts
+ * Katello should be able to handle subscription-manager environments --set ([#37618](https://projects.theforeman.org/issues/37618), [799e0996](https://github.com/Katello/katello.git/commit/799e09960512f9787d1251ab40089f50324097e6))
+
+## Bug Fixes
+
+### Repositories
+ * Migrate sha1 repos only at the next edit time ([#37609](https://projects.theforeman.org/issues/37609), [2072d3fd](https://github.com/Katello/katello.git/commit/2072d3fd73260858983a37b98ddf43dcd46fcf44))
+ * Get rid of unmaintained anemone ([#37159](https://projects.theforeman.org/issues/37159), [e55b8d1d](https://github.com/Katello/katello.git/commit/e55b8d1ddc2aee494d099af56eda81ed7ec33e24))
 # 4.13.0 Sosta (2024-06-26)
 
 ## Features
