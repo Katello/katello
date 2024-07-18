@@ -136,26 +136,26 @@ module Katello
       def self.distribution_to_puppet_os(name)
         return ::Operatingsystem::REDHAT_ATOMIC_HOST_OS if name == ::Operatingsystem::REDHAT_ATOMIC_HOST_DISTRO_NAME
 
-        name = name.downcase
-        if name =~ /red\s*hat/
+        case name.downcase
+        when /red\s*hat/
           'RedHat'
-        elsif name =~ /centos/
+        when /centos/
           'CentOS'
-        elsif name =~ /fedora/
+        when /fedora/
           'Fedora'
-        elsif name =~ /sles/ || name =~ /suse.*enterprise.*/
+        when /sles/, /suse.*enterprise.*/
           'SLES'
-        elsif name =~ /debian/
+        when /debian/
           'Debian'
-        elsif name =~ /ubuntu/
+        when /ubuntu/
           'Ubuntu'
-        elsif name =~ /oracle/
+        when /oracle/
           'OracleLinux'
-        elsif name =~ /almalinux/
+        when /almalinux/
           'AlmaLinux'
-        elsif name =~ /rocky/
+        when /rocky/
           'Rocky'
-        elsif name =~ /amazon/
+        when /amazon/
           'Amazon'
         else
           'Unknown'

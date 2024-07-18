@@ -14,9 +14,10 @@ module Katello
       page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
       debs = Deb.in_repositories(@repositories)
       col = ''
-      if search == 'name'
+      case search
+      when 'name'
         col = "#{Deb.table_name}.name"
-      elsif search == 'arch'
+      when 'arch'
         col = "#{Deb.table_name}.architecture"
       end
       debs = debs.where("#{col} ILIKE ?", "#{params[:term]}%").select(col).group(col).order(col).limit(page_size)

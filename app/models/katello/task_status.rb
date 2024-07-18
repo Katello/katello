@@ -227,14 +227,15 @@ module Katello
       ret = []
       task_type = self.task_type.to_s
 
-      if task_type =~ /^package_group/
+      case task_type
+      when /^package_group/
         action = task_type.include?("remove") ? :removed : :installed
         ret = packages_change_description(result[:details][:package_group], action)
-      elsif task_type == "package_install" || task_type == "errata_install"
+      when "package_install", "errata_install"
         ret = packages_change_description(result[:details][:rpm], :installed)
-      elsif task_type == "package_update"
+      when "package_update"
         ret = packages_change_description(result[:details][:rpm], :updated)
-      elsif task_type == "package_remove"
+      when "package_remove"
         ret = packages_change_description(result[:details][:rpm], :removed)
       end
       ret
@@ -244,13 +245,14 @@ module Katello
       errors, stacktrace = self.result[:errors]
       return "" unless errors
       # Handle not very friendly Pulp message
-      if errors =~ /^\(.*\)$/
+      case errors
+      when /^\(.*\)$/
         if stacktrace.class == Array
           stacktrace.last.split(":").first
         else
           stacktrace.split("(").first
         end
-      elsif errors =~ /^\[.*,.*\]$/m
+      when /^\[.*,.*\]$/m
         result = errors.split(",").map do |error|
           error.gsub(/^\W+|\W+$/, "")
         end

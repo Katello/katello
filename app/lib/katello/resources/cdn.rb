@@ -104,9 +104,10 @@ module Katello
           # very old infrastructure for now, but that was considered better than having an insecure default.
           net.min_version = OpenSSL::SSL::TLS1_2_VERSION
 
-          if (@options[:verify_ssl] == false) || (@options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE)
+          case @options[:verify_ssl]
+          when false, OpenSSL::SSL::VERIFY_NONE
             net.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          elsif @options[:verify_ssl].is_a? Integer
+          when Integer
             net.verify_mode = @options[:verify_ssl]
             net.verify_callback = lambda do |preverify_ok, ssl_context|
               if !preverify_ok || ssl_context.error != 0

@@ -154,9 +154,10 @@ module Katello
       all_options = []
       orgs.each do |org|
         content_object_options = ""
-        accessible_content_objects = if object_type == :lifecycle_environment
+        accessible_content_objects = case object_type
+                                     when :lifecycle_environment
                                        accessible_lifecycle_environments(org, host)
-                                     elsif object_type == :content_source
+                                     when :content_source
                                        accessible_content_proxies(host)
                                      end
         accessible_content_objects.each do |content_object|

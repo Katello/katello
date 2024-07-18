@@ -43,9 +43,10 @@ module Katello
       end
 
       def pool_id
-        if subject == 'pool.created' || subject == 'pool.deleted'
+        case subject
+        when 'pool.created', 'pool.deleted'
           content['entityId']
-        elsif subject == 'entitlement.created' ||  subject == 'entitlement.deleted'
+        when 'entitlement.created', 'entitlement.deleted'
           content['referenceId']
         end
       end

@@ -694,7 +694,8 @@ module Katello
 
     def get_manifest_files(repository, manifest)
       files = ['manifest.json']
-      if manifest['schemaVersion'] == 1
+      case manifest['schemaVersion']
+      when 1
         if manifest['fsLayers']
           files += manifest['fsLayers'].collect do |layer|
             layerfile = "#{layer['blobSum'][7..-1]}.tar"
@@ -702,7 +703,7 @@ module Katello
             layerfile
           end
         end
-      elsif manifest['schemaVersion'] == 2
+      when 2
         if manifest['layers']
           files += manifest['layers'].collect do |layer|
             layerfile = "#{layer['digest'][7..-1]}.tar"

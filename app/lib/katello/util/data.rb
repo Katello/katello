@@ -13,7 +13,8 @@ module Katello
         options[:prefix_keys] ||= []
         options[:prefix] ||= '_'
 
-        if obj.is_a? Hash
+        case obj
+        when Hash
 
           ostructized_hash = {}
           obj.each do |key, value|
@@ -31,7 +32,7 @@ module Katello
           end
           return OpenStruct.new ostructized_hash
 
-        elsif obj.is_a? Array
+        when Array
 
           return obj.map { |r| ostructize(r, options) }
 

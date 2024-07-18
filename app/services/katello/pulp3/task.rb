@@ -106,9 +106,10 @@ module Katello
       end
 
       def error
-        if task_data[:state] == CANCELED
+        case task_data[:state]
+        when CANCELED
           _("Task canceled")
-        elsif task_data[:state] == FAILED
+        when FAILED
           if task_data[:error][:description].blank?
             _("Pulp task error")
           else
