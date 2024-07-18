@@ -63,10 +63,19 @@ module Katello
     end
 
     def test_content_view_environments=
+      Setting['allow_multiple_content_views'] = true
       Katello::ContentViewEnvironmentContentFacet.expects(:reprioritize_for_content_facet).twice
       content_facet.content_view_environments.reload
       content_facet.content_view_environments = [katello_content_view_environments(:library_dev_view_dev), katello_content_view_environments(:library_dev_staging_view_dev)]
       assert_equal 2, content_facet.content_view_environments.length
+    end
+
+    def test_multi_cv_not_enabled
+      Setting['allow_multiple_content_views'] = false
+      assert_equal 1, content_facet.content_view_environments.length
+      assert_raises(::Katello::Errors::MultiEnvironmentNotSupportedError) do
+        content_facet.content_view_environments = [katello_content_view_environments(:library_dev_view_dev), katello_content_view_environments(:library_dev_staging_view_dev)]
+      end
     end
 
     def test_audit_for_content_facet
@@ -439,6 +448,10 @@ module Katello
     def setup
       assert host #force lazy load
       assert host_one
+    end
+
+    def teardown
+      Setting['allow_multiple_content_views'] = false
     end
 
     def test_content_view_search
