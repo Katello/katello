@@ -38,8 +38,8 @@ module Katello
         @product = Product.create!(:cp_id => "product_id", :label => "prod", :name => "prod", :provider => @provider, :organization => @organization)
       end
 
-      specify { @product.wont_be_nil }
-      specify { @product.provider.must_equal(@provider) }
+      specify { value(@product).wont_be_nil }
+      specify { value(@product.provider).must_equal(@provider) }
     end
 
     describe "sync provider" do
@@ -66,15 +66,15 @@ module Katello
       it "should be invalid without repository type" do
         @provider.name = "some name"
 
-        @provider.wont_be :valid?
-        @provider.errors[:provider_type].wont_be_empty
+        value(@provider).wont_be :valid?
+        value(@provider.errors[:provider_type]).wont_be_empty
       end
 
       it "should be invalid without name" do
         @provider.provider_type = Provider::REDHAT
 
-        @provider.wont_be :valid?
-        @provider.errors[:name].wont_be_empty
+        value(@provider).wont_be :valid?
+        value(@provider.errors[:name]).wont_be_empty
       end
 
       it "should be invalid to create two providers with the same name" do
@@ -86,8 +86,8 @@ module Katello
         @provider2.name = "some name"
         @provider2.provider_type = Provider::REDHAT
 
-        @provider2.wont_be :valid?
-        @provider2.errors[:name].wont_be_empty
+        value(@provider2).wont_be :valid?
+        value(@provider2.errors[:name]).wont_be_empty
       end
 
       describe "Red Hat provider" do
@@ -95,7 +95,7 @@ module Katello
 
         it "should not allow updating name" do
           subject.name = "another name"
-          subject.wont_be :valid?
+          value(subject).wont_be :valid?
         end
       end
     end
@@ -103,12 +103,12 @@ module Katello
     describe "Provider in valid state" do
       it "should be valid for RH provider" do
         @provider = Provider.create(to_create_rh)
-        @provider.must_be :valid?
+        value(@provider).must_be :valid?
       end
 
       it "should be valid for Custom provider" do
         @provider = Provider.create(to_create_custom)
-        @provider.must_be :valid?
+        value(@provider).must_be :valid?
       end
     end
 
@@ -116,7 +116,7 @@ module Katello
       it "should not delete the RH provider" do
         @provider = Provider.create(to_create_rh)
         @provider.destroy
-        @provider.destroyed?.must_equal(false)
+        value(@provider.destroyed?).must_equal(false)
       end
 
       it "should delete the Custom provider" do

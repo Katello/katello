@@ -90,7 +90,7 @@ module Katello
 
       @hq_env_dev.registry_name_pattern = "<%= organization.label %>/<%= repository.label %>"
       @validator.validate(@hq_env_dev)
-      assert_equal [], @hq_env_dev.errors[:registry_name_pattern]
+      assert_empty @hq_env_dev.errors[:registry_name_pattern]
     end
 
     test "fails same name in two orgs" do

@@ -25,14 +25,14 @@ module Katello
       let(:state) { "finished" }
 
       it "has a valid description" do
-        subject.description.must_equal("Package Install: cheetah, penguin")
+        value(subject.description).must_equal("Package Install: cheetah, penguin")
       end
 
       describe "No packages installed" do
         let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
 
         it "has a result description of with no new packages installed" do
-          subject.result_description.must_equal(["No new packages installed"])
+          value(subject.result_description).must_equal(["No new packages installed"])
         end
       end
 
@@ -63,7 +63,7 @@ module Katello
         end
 
         it "has a result description of with packages" do
-          subject.result_description.must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
+          value(subject.result_description).must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
         end
       end
     end
@@ -74,14 +74,14 @@ module Katello
       let(:state) { "finished" }
 
       it "has a valid description" do
-        subject.description.must_equal("Package Group Install: @mammals, @FTP Server")
+        value(subject.description).must_equal("Package Group Install: @mammals, @FTP Server")
       end
 
       describe "No packages installed" do
         let(:result) { { :details => {:package_group => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
 
         it "has a result description of with no new packages installed" do
-          subject.result_description.must_equal(["No new packages installed"])
+          value(subject.result_description).must_equal(["No new packages installed"])
         end
       end
 
@@ -112,7 +112,7 @@ module Katello
         end
 
         it "has a result description of with packages" do
-          subject.result_description.must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
+          value(subject.result_description).must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
         end
       end
     end
@@ -123,14 +123,14 @@ module Katello
       let(:state) { "finished" }
 
       it "has a valid description" do
-        subject.description.must_equal("Package Remove: elephant")
+        value(subject.description).must_equal("Package Remove: elephant")
       end
 
       describe "No packages removed" do
         let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
 
         it "has a result description of with no packates removed" do
-          subject.result_description.must_equal(["No packages removed"])
+          value(subject.result_description).must_equal(["No packages removed"])
         end
       end
 
@@ -161,7 +161,7 @@ module Katello
         end
 
         it "has a result description of with packages" do
-          subject.result_description.must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
+          value(subject.result_description).must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
         end
       end
     end
@@ -172,14 +172,14 @@ module Katello
       let(:state) { "finished" }
 
       it "has a valid description" do
-        subject.description.must_equal("Package Group Remove: @mammals, @FTP Server")
+        value(subject.description).must_equal("Package Group Remove: @mammals, @FTP Server")
       end
 
       describe "No packages removed" do
         let(:result) { { :details => {:package_group => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
 
         it "has a result description of with no packates removed" do
-          subject.result_description.must_equal(["No packages removed"])
+          value(subject.result_description).must_equal(["No packages removed"])
         end
       end
 
@@ -210,7 +210,7 @@ module Katello
         end
 
         it "has a result description with packages" do
-          subject.result_description.must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
+          value(subject.result_description).must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
         end
       end
     end
@@ -221,14 +221,14 @@ module Katello
       let(:state) { "finished" }
 
       it "has a valid description" do
-        subject.description.must_equal("Package Update: cheetah")
+        value(subject.description).must_equal("Package Update: cheetah")
       end
 
       describe "No packages updated" do
         let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
 
         it "has a result description of with no packates updated" do
-          subject.result_description.must_equal(["No packages updated"])
+          value(subject.result_description).must_equal(["No packages updated"])
         end
       end
 
@@ -259,7 +259,7 @@ module Katello
         end
 
         it "has a result description with packages" do
-          subject.result_description.must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
+          value(subject.result_description).must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
         end
       end
     end
@@ -287,7 +287,7 @@ module Katello
         message += "katello-all-0.1.149-1.fc16.noarch: failure: "
         message += "katello-all-0.1.149-1.fc16.noarch.rpm from katello: "
         message += "[Errno 256] No more mirrors to try"
-        subject.result_description.must_equal(message)
+        value(subject.result_description).must_equal(message)
       end
     end
 
@@ -307,7 +307,7 @@ module Katello
       let(:state) { "error" }
 
       it "has a result description" do
-        subject.result_description.must_equal('RequestTimeout')
+        value(subject.result_description).must_equal('RequestTimeout')
       end
     end
   end

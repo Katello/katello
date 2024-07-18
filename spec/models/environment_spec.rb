@@ -29,13 +29,13 @@ module Katello
                                                 content_view_version_id: @environment.content_view_versions.first.id)
       end
 
-      specify { @environment.prior.wont_be :nil? }
-      specify { @environment.successor.must_be :nil? }
-      specify { @organization.kt_environments.must_include(@environment) }
-      specify { @environment.organization.must_equal(@organization) }
-      specify { @environment.products.size.must_equal(2) }
-      specify { @environment.products.must_include(@first_product) }
-      specify { @environment.products.must_include(@third_product) }
+      specify { value(@environment.prior).wont_be :nil? }
+      specify { value(@environment.successor).must_be :nil? }
+      specify { value(@organization.kt_environments).must_include(@environment) }
+      specify { value(@environment.organization).must_equal(@organization) }
+      specify { value(@environment.products.size).must_equal(2) }
+      specify { value(@environment.products).must_include(@first_product) }
+      specify { value(@environment.products).must_include(@third_product) }
 
       describe "prior environment can be set" do
         before do
@@ -47,14 +47,14 @@ module Katello
           )
         end
 
-        specify { @new_env.prior.must_equal(@environment) }
-        specify { @environment.successor.must_equal(@new_env) }
+        specify { value(@new_env.prior).must_equal(@environment) }
+        specify { value(@environment.successor).must_equal(@new_env) }
       end
 
       describe "update an environment" do
         specify "name should not be changed" do
           @environment.name = "changed_name"
-          @environment.must_be :valid?
+          value(@environment).must_be :valid?
         end
       end
 
@@ -94,15 +94,15 @@ module Katello
         it "should return products from prior env" do
           @environment.prior = @prior_env.id
           product_size = @prior_env.products.size - @environment.products.size
-          @environment.available_products.size.must_equal(product_size)
-          @environment.available_products.must_include(@second_product)
+          value(@environment.available_products.size).must_equal(product_size)
+          value(@environment.available_products).must_include(@second_product)
         end
 
         it "should return products from the library if there is no prior env" do
           product_size = @organization.library.products.size - @environment.products.size
-          @environment.available_products.size.must_equal(product_size)
-          @environment.available_products.must_include(@second_product)
-          @environment.available_products.must_include(@fourth_product)
+          value(@environment.available_products.size).must_equal(product_size)
+          value(@environment.available_products).must_include(@second_product)
+          value(@environment.available_products).must_include(@fourth_product)
         end
       end
 
@@ -111,16 +111,16 @@ module Katello
           @environment2 = KTEnvironment.new(:name => @env_name)
           @organization.kt_environments << @environment2
 
-          @environment2.wont_be :valid?
-          @environment2.errors[:name].wont_be :empty?
+          value(@environment2).wont_be :valid?
+          value(@environment2.errors[:name]).wont_be :empty?
         end
 
         it "should be valid to create an environment without a prior" do
           @environment2 = KTEnvironment.new(:name => "random env")
           @organization.kt_environments << @environment2
 
-          @environment2.must_be :valid?
-          @environment2.errors[:prior].must_be :empty?
+          value(@environment2).must_be :valid?
+          value(@environment2.errors[:prior]).must_be :empty?
         end
       end
 
@@ -132,9 +132,9 @@ module Katello
                                      :prior => @environment)
         end
 
-        specify { @environment.path.size.must_equal(2) }
-        specify { @environment.path.must_include(@env1) }
-        specify { @environment.path.must_include(@environment) }
+        specify { value(@environment.path.size).must_equal(2) }
+        specify { value(@environment.path).must_include(@env1) }
+        specify { value(@environment.path).must_include(@environment) }
       end
 
       describe "libraries" do
@@ -146,10 +146,10 @@ module Katello
           @env3 = KTEnvironment.new(:name => @env_name + '3', :label => @env_name + '3',
                                     :organization => @organization, :prior => @organization.library)
 
-          @env1.must_be :valid?
-          @env2.must_be :valid?
-          @env3.must_be :valid?
-          @organization.library.must_be :valid?
+          value(@env1).must_be :valid?
+          value(@env2).must_be :valid?
+          value(@env3).must_be :valid?
+          value(@organization.library).must_be :valid?
         end
       end
     end

@@ -127,7 +127,7 @@ module Katello
       results = @controller.scoped_search(query, "errata_id", "desc", options)
       refute results[:error].blank?
       assert_includes results[:error], bad_column
-      assert_equal [], results[:results]
+      assert_empty results[:results]
       assert_equal 0, results[:subtotal]
       assert_equal 0, results[:total]
       assert_nil results[:page]
@@ -157,7 +157,7 @@ module Katello
 
       results = @controller.scoped_search(@query, 'errata_type', @default_sort[1], @options)
 
-      assert_equal [], results[:results]
+      assert_empty results[:results]
       assert_equal 0, results[:subtotal]
       assert_equal 0, results[:total]
       assert_nil results[:page]
@@ -172,7 +172,7 @@ module Katello
 
       results = @controller.scoped_search(@query, 'errata_type', @default_sort[1], @options)
 
-      assert_equal [], results[:results]
+      assert_empty results[:results]
       assert_equal 0, results[:subtotal]
       assert_equal 0, results[:total]
       assert_nil results[:page]

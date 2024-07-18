@@ -26,7 +26,7 @@ module Katello
       def test_filter_entitlements_simple
         assert_equal ENTITLEMENTS, @consumer.filter_entitlements
         assert_equal [ENTITLEMENT_A], @consumer.filter_entitlements(1, [1])
-        assert_equal [], @consumer.filter_entitlements(1, [7])
+        assert_empty @consumer.filter_entitlements(1, [7])
         assert_equal [ENTITLEMENT_A, ENTITLEMENT_B, ENTITLEMENT_C], @consumer.filter_entitlements(1, [])
         assert_equal [ENTITLEMENT_A, ENTITLEMENT_B, ENTITLEMENT_C], @consumer.filter_entitlements(1, nil)
         assert_equal [ENTITLEMENT_A, ENTITLEMENT_B], @consumer.filter_entitlements(1, [1, 1])

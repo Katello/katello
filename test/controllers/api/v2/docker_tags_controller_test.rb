@@ -69,7 +69,7 @@ module Katello
       assert_template 'api/v2/docker_tags/index'
 
       results = JSON.parse(response.body)["results"].map { |tag| tag["name"] }
-      assert_equal [], results
+      assert_empty results
     end
 
     def test_show

@@ -20,7 +20,7 @@ class DashboardHelperTest < ActiveSupport::TestCase
 
   def test_total_host_count
     total = total_host_count
-    refute total.nil?
+    refute_nil total
     assert_equal 1, total
   end
 end

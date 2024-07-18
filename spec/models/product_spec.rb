@@ -52,41 +52,41 @@ module Katello
       end
 
       it "should initialize lazily-loaded attributes" do
-        @p.multiplier.must_equal(ProductTestData::SIMPLE_PRODUCT[:multiplier])
+        value(@p.multiplier).must_equal(ProductTestData::SIMPLE_PRODUCT[:multiplier])
       end
 
       it "should replace 'attributes' with 'attrs'" do
         Resources::Candlepin::Product.stubs(:get).returns([ProductTestData::SIMPLE_PRODUCT.merge(:attributes => [{:name => 'blah'}])])
-        @p.attrs.wont_be_nil
+        value(@p.attrs).wont_be_nil
       end
 
       describe "arch attribute" do
         it "should be no_arch if arch attribute is not present" do
-          @p.arch.must_equal(@p.default_arch)
+          value(@p.arch).must_equal(@p.default_arch)
         end
 
         it "should have the value of 'arch' attribute" do
           Resources::Candlepin::Product.stubs(:get).returns([ProductTestData::SIMPLE_PRODUCT.merge(:attrs => [{:name => 'arch', :value => 'i386'}])])
-          Product.find(@p.id).arch.must_equal('i386')
+          value(Product.find(@p.id).arch).must_equal('i386')
         end
       end
 
       it "should receive valid certificate" do
         Resources::Candlepin::Product.stubs(:product_certificate).returns('cert' => "---SOME CERT---")
-        @p.certificate.must_equal("---SOME CERT---")
+        value(@p.certificate).must_equal("---SOME CERT---")
       end
 
       it "should receive valid key from candlepin" do
         Resources::Candlepin::Product.stubs(:product_certificate).returns('key' => "---SOME KEY---")
-        @p.key.must_equal("---SOME KEY---")
+        value(@p.key).must_equal("---SOME KEY---")
       end
     end
 
     describe "validation" do
-      specify { Product.new(:label => "goo", :name => 'contains /', :provider => @provider).must_be :valid? }
-      specify { Product.new(:label => "boo", :name => 'contains #', :provider => @provider).must_be :valid? }
-      specify { Product.new(:label => "shoo", :name => 'contains space', :provider => @provider).must_be :valid? }
-      specify { Product.new(:label => "bar foo", :name => "foo", :provider => @provider).wont_be :valid? }
+      specify { value(Product.new(:label => "goo", :name => 'contains /', :provider => @provider)).must_be :valid? }
+      specify { value(Product.new(:label => "boo", :name => 'contains #', :provider => @provider)).must_be :valid? }
+      specify { value(Product.new(:label => "shoo", :name => 'contains space', :provider => @provider)).must_be :valid? }
+      specify { value(Product.new(:label => "bar foo", :name => "foo", :provider => @provider)).wont_be :valid? }
       it "should not be successful when creating a product with a duplicate name in one organization" do
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge(:organization_id => @organization.id, :provider_id => @provider.id))
         np = Product.new(:name => @p.name, :label => @p.name,
@@ -94,7 +94,7 @@ module Katello
                     :provider => @p.provider,
                     :organization => @organization
                    )
-        np.wont_be :valid?
+        value(np).wont_be :valid?
       end
     end
 
@@ -106,10 +106,10 @@ module Katello
           create(:katello_repository, :root_id => root.id, :content_view_version => @organization.library.default_content_view_version,
                                           :environment => @organization.library)
         end
-        product.repositories.length.must_equal(2)
-        product.repositories.map(&:environment).length.must_be(:>, product.environments.length)
-        product.repositories.map(&:environment).uniq.length.must_equal(product.environments.length)
-        product.environments.map(&:id).must_equal([@organization.library.id])
+        value(product.repositories.length).must_equal(2)
+        value(product.repositories.map(&:environment).length).must_be(:>, product.environments.length)
+        value(product.repositories.map(&:environment).uniq.length).must_equal(product.environments.length)
+        value(product.environments.map(&:id)).must_equal([@organization.library.id])
       end
     end
 
