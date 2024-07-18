@@ -7,7 +7,7 @@ import {
   global_palette_black_600 as pfDescriptionColor,
 } from '@patternfly/react-tokens';
 import ContentViewIcon from '../../../../scenes/ContentViews/components/ContentViewIcon';
-import { uniq } from '../../../../utils/helpers';
+import { truncate, uniq } from '../../../../utils/helpers';
 
 export const ContentViewDescription = ({ cv, versionNumber }) => {
   const descriptionStyle = {
@@ -63,7 +63,7 @@ const ContentViewSelectOption = ({ cv, env, value }) => (
         flexWrap={{ default: 'nowrap' }}
         alignItems={{ default: 'alignItemsFlexStart', sm: 'alignItemsFlexStart' }}
       >
-        {cv.name}
+        {truncate(cv.name)}
         <ContentViewDescription
           cv={cv}
           versionNumber={relevantVersionFromCv(cv, env)}

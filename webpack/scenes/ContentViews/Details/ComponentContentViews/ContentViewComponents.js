@@ -36,6 +36,7 @@ import ComponentContentViewAddModal from './ComponentContentViewAddModal';
 import ComponentContentViewBulkAddModal from './ComponentContentViewBulkAddModal';
 import { hasPermission } from '../../helpers';
 import InactiveText from '../../components/InactiveText';
+import { truncate } from '../../../../utils/helpers';
 
 
 const ContentViewComponents = ({ cvId, details }) => {
@@ -144,7 +145,7 @@ const ContentViewComponents = ({ cvId, details }) => {
 
       const cells = [
         { title: <Bullseye><ContentViewIcon composite={false} /></Bullseye> },
-        { title: <a href={urlBuilder('content_views', '') + id}>{name}</a> },
+        { title: <a href={urlBuilder('content_views', '') + id}>{truncate(name)}</a> },
         {
           title: (
             <Split>

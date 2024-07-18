@@ -24,6 +24,7 @@ import InactiveText from '../components/InactiveText';
 import ContentViewVersionCell from './ContentViewVersionCell';
 import DetailsExpansion from '../expansions/DetailsExpansion';
 import ContentViewDeleteWizard from '../Delete/ContentViewDeleteWizard';
+import { truncate } from '../../../utils/helpers';
 
 const ContentViewTable = () => {
   const response = useSelector(selectContentViews);
@@ -265,7 +266,7 @@ const ContentViewTable = () => {
                   }}
                 />
                 <Td><ContentViewIcon position="right" composite={composite} /></Td>
-                <Td><Link to={`${urlBuilder('content_views', '')}${cvId}`}>{name}</Link></Td>
+                <Td><Link to={`${urlBuilder('content_views', '')}${cvId}`}>{truncate(name)}</Link></Td>
                 <Td>{lastPublished ? <LongDateTime date={lastPublished} showRelativeTimeTooltip /> : <InactiveText text={__('Not yet published')} />}</Td>
                 <Td><LastSync startedAt={startedAt} lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /></Td>
                 <Td>{latestVersion ?

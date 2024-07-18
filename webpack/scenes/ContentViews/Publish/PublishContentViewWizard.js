@@ -15,6 +15,7 @@ import {
 import { stopPollingTask } from '../../Tasks/TaskActions';
 import { cvVersionTaskPollingKey } from '../ContentViewsConstants';
 import { getContentViewFilters } from '../Details/ContentViewDetailActions';
+import { truncate } from '../../../utils/helpers';
 
 const PublishContentViewWizard = ({
   details, show, onClose,
@@ -108,7 +109,7 @@ const PublishContentViewWizard = ({
   return (
     <Wizard
       title={__('Publish')}
-      description={currentStep === 3 ? __(`Publishing ${name}`) : __(`Determining settings for ${name}`)}
+      description={currentStep === 3 ? __(`Publishing ${truncate(name)}`) : __(`Determining settings for ${truncate(name)}`)}
       steps={steps}
       startAtStep={currentStep}
       // Let the wizard handle step change

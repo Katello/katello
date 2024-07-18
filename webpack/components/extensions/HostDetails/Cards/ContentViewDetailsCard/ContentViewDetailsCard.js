@@ -22,6 +22,7 @@ import PropTypes from 'prop-types';
 import ContentViewIcon from '../../../../../scenes/ContentViews/components/ContentViewIcon';
 import { hasRequiredPermissions, hostIsRegistered } from '../../hostDetailsHelpers';
 import ChangeHostCVModal from './ChangeHostCVModal';
+import { truncate } from '../../../../../utils/helpers';
 
 const requiredPermissions = [
   'view_lifecycle_environments', 'view_content_views',
@@ -61,7 +62,7 @@ export const ContentViewEnvironmentDisplay = ({
         <ContentViewIcon composite={contentView.composite} style={{ marginRight: '2px' }} position="left" />
         {contentViewDefault ? <span>{contentView.name}</span> :
         <a style={{ fontSize: '14px' }} href={`/content_views/${contentView.id}`}>
-          {contentView.name}
+          {truncate(contentView.name)}
         </a>
         }
         {!contentViewDefault &&

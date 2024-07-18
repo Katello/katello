@@ -16,6 +16,7 @@ import ComponentEnvironments from '../Details/ComponentContentViews/ComponentEnv
 import { selectEnvironmentPaths, selectEnvironmentPathsStatus } from '../components/EnvironmentPaths/EnvironmentPathSelectors';
 import WizardHeader from '../components/WizardHeader';
 import { selectCVFilters, selectCVFiltersStatus } from '../Details/ContentViewDetailSelectors';
+import { truncate } from '../../../utils/helpers';
 
 const CVPublishReview = ({
   details: {
@@ -53,7 +54,7 @@ const CVPublishReview = ({
         title={__('Review details')}
         description={
           <>
-            {__('Review your currently selected changes for ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {name}.</b>
+            {__('Review your currently selected changes for ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {truncate(name)}.</b>
             {filtered && (
             <Alert
               ouiaId="filters-applied-alert"
@@ -78,7 +79,7 @@ const CVPublishReview = ({
         <Tbody>
           <Tr ouiaId="cv-publish-review-table-row">
             <Td>
-              <><ContentViewIcon composite={composite} description={name} /><InactiveText text={__('Newly published')} /></>
+              <><ContentViewIcon composite={composite} description={truncate(name)} /><InactiveText text={__('Newly published')} /></>
             </Td>
             <Td>
               {__('Version')} {nextVersion}
