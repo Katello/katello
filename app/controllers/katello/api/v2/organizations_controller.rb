@@ -59,7 +59,7 @@ module Katello
     param_group :resource
     def update
       if params[:redhat_repository_url]
-        sync_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, url: params[:redhat_repository_url])
+        sync_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, url: params[:redhat_repository_url], type: CdnConfiguration::CUSTOM_CDN_TYPE)
       end
       super
     end
