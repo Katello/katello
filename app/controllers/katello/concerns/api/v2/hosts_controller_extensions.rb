@@ -46,7 +46,7 @@ module Katello
             (cve_params[:content_view_id].present? && cve_params[:lifecycle_environment_id].present?)
           new_cve_ids = nil
           if cve_params[:environments].present? && cve_params[:content_view_environment_ids].blank?
-            environment_names = cve_params[:environments].split(',').map(&:strip)
+            environment_names = cve_params[:environments].map(&:strip)
             Rails.logger.debug "new environment names: #{environment_names}"
             new_cve_ids = environment_names.map do |name|
               ::Katello::ContentViewEnvironment.with_candlepin_name(name, organization: @host.organization)&.id
@@ -60,7 +60,7 @@ module Katello
         end
 
         def cve_params
-          params.require(:host).require(:content_facet_attributes).permit(:content_view_id, :lifecycle_environment_id, :environments, content_view_environment_ids: [])
+          params.require(:host).require(:content_facet_attributes).permit(:content_view_id, :lifecycle_environment_id, environments: [], content_view_environment_ids: [])
         end
       end
     end
