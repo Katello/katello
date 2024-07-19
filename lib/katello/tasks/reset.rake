@@ -30,10 +30,9 @@ namespace :katello do
       puts "\e[33mStarting Candlepin Reset\e[0m\n\n"
 
       system(service_stop.gsub("%s", 'tomcat'))
-      system("sudo runuser - postgres -c 'dropdb candlepin'")
-      system("sudo runuser - postgres -c 'createdb candlepin'")
-      system("sudo /usr/share/candlepin/cpdb --create --schema-only")
-      system("sudo /usr/share/candlepin/cpdb --update")
+      system("sudo /usr/share/candlepin/cpdb --drop -u postgres")
+      system("sudo /usr/share/candlepin/cpdb --create -u postgres")
+      system("sudo /usr/share/candlepin/cpdb --update-schema")
       system(service_start.gsub("%s", 'tomcat'))
       puts "\e[32mCandlepin Database Reset Complete\e[0m\n\n"
     end
