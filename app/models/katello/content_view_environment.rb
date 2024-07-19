@@ -24,10 +24,21 @@ module Katello
     before_save :generate_info
 
     scope :non_default, -> { joins(:content_view).where("katello_content_views.default" => false) }
+    scope :default, -> { joins(:content_view).where("katello_content_views.default" => true) }
     alias :lifecycle_environment :environment
 
     def self.for_content_facets(content_facets)
       joins(:content_view_environment_content_facets, :content_facets).where("#{Katello::ContentViewEnvironmentContentFacet.table_name}.content_facet_id" => content_facets).uniq
+    end
+
+    def self.with_candlepin_name(cp_name, organization: Organization.current)
+      lce_name, cv_name = cp_name.split('/')
+      if cv_name.blank? && lce_name == 'Library'
+        return default.find_by(
+          environment: ::Katello::KTEnvironment.library.where(organization: organization)&.first
+        )
+      end
+      joins(:environment, :content_view).where("#{Katello::KTEnvironment.table_name}.label" => lce_name, "#{Katello::ContentView.table_name}.label" => cv_name).first
     end
 
     # retrieve the owning environment for this content view environment.
@@ -48,6 +59,7 @@ module Katello
     end
 
     def candlepin_name
+      return environment.label if default_environment?
       "#{environment.label}/#{content_view.label}"
     end
 
