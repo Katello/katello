@@ -22,7 +22,7 @@ module ::Actions::Katello::Environment
 
     it 'does not plan for container push library repos' do
       container_push_repo = ::Katello::RootRepository.find_by(name: 'busybox').library_instance
-      container_push_repo.root.update(is_container_push: true)
+      container_push_repo.root.update_column(:is_container_push, true)
       environment.stubs(:repositories).returns(::Katello::Repository.where(id: container_push_repo.id))
       container_push_repo.expects(:set_container_repository_name).never
       container_push_repo.expects(:clear_smart_proxy_sync_histories).never

@@ -383,6 +383,7 @@ module Katello
           :not_found
         )
       end
+
       instance_repo.update!(version_href: latest_version_href)
       # The Pulp repository should not change after first creation
       if root_repository.repository_references.empty?

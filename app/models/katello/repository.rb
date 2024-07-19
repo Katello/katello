@@ -32,6 +32,8 @@ module Katello
 
     EXPORTABLE_TYPES = [YUM_TYPE, FILE_TYPE, ANSIBLE_COLLECTION_TYPE, DOCKER_TYPE, DEB_TYPE].freeze
 
+    ALLOWED_UPDATE_FIELDS = ['version_href', 'last_indexed'].freeze
+
     define_model_callbacks :sync, :only => :after
 
     belongs_to :root, :inverse_of => :repositories, :class_name => "Katello::RootRepository"
@@ -119,6 +121,7 @@ module Katello
 
     before_validation :set_pulp_id
     before_validation :set_container_repository_name, :unless => :skip_container_name?
+    before_update :prevent_updates, :unless => :allow_updates?
 
     scope :has_url, -> { joins(:root).where.not("#{RootRepository.table_name}.url" => nil) }
     scope :not_uln, -> { joins(:root).where("#{RootRepository.table_name}.url NOT LIKE 'uln%'") }
@@ -180,7 +183,7 @@ module Katello
              :deb_components, :deb_architectures, :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id,
              :ssl_client_key_id, :os_versions, :ssl_client_key, :ignorable_content, :description, :include_tags, :exclude_tags,
              :ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token,
-             :http_proxy_policy, :http_proxy_id, :to => :root
+             :http_proxy_policy, :http_proxy_id, :prevent_updates, :to => :root
 
     delegate :content_id, to: :root, allow_nil: true
     delegate :repository_type, to: :root
@@ -1011,6 +1014,7 @@ module Katello
         repository_type.index_additional_data_proc&.call(self)
       end
       self.update!(last_indexed: DateTime.now)
+
       true
     end
 
@@ -1050,6 +1054,12 @@ module Katello
         manifest.destroy
       end
       DockerMetaTag.cleanup_tags
+    end
+
+    def allow_updates?
+      # allow the update if this repo is not in the default view
+      return true unless in_default_view?
+      root.allow_updates?(::Katello::Repository::ALLOWED_UPDATE_FIELDS)
     end
 
     apipie :class, desc: "A class representing #{model_name.human} object" do
