@@ -42,7 +42,7 @@ module Katello
         end
 
         def set_content_view_environments
-          return if @host.content_facet.blank? || 
+          return if @host.content_facet.blank? ||
             (cve_params[:content_view_id].present? && cve_params[:lifecycle_environment_id].present?)
           new_cve_ids = nil
           if cve_params[:environments].present? && cve_params[:content_view_environment_ids].blank?
