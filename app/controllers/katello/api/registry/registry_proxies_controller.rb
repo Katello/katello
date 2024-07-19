@@ -84,7 +84,6 @@ module Katello
 
     def container_push_prop_validation(props = nil)
       # Handle validation and repo creation for container pushes before talking to pulp
-      return false unless confirm_push_settings
       props = parse_blob_push_props if props.nil?
       return false unless check_blob_push_field_syntax(props)
 
@@ -772,15 +771,6 @@ module Katello
       end
       render_error('custom_error', :status => :not_found,
                    :locals => { :message => "Registry not configured" })
-    end
-
-    def confirm_push_settings
-      return true if SETTINGS.dig(:katello, :container_image_registry, :allow_push)
-      render_podman_error(
-        "UNSUPPORTED",
-        _("Registry push is not enabled. To enable, add ':katello:'->':container_image_registry:'->':allow_push: true' in the katello settings file."),
-        :unprocessable_entity
-      )
     end
 
     def request_url
