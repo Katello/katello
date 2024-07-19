@@ -29,7 +29,6 @@ module Katello
       setup_permissions
       setup_controller_defaults_api
 
-      SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt', allow_push: true}
       File.delete("#{Rails.root}/tmp/manifest.json") if File.exist?("#{Rails.root}/tmp/manifest.json")
     end
 
