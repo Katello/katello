@@ -3,6 +3,8 @@ module Katello
     module Discovery
       class Container < RepoDiscovery
         attr_reader :found, :crawled, :to_follow
+
+        # rubocop:disable Metrics/ParameterLists
         def initialize(url, crawled = [], found = [], to_follow = [],
                        upstream_credentials_and_search = {
                          upstream_username: nil,

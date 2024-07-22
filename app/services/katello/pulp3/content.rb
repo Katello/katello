@@ -4,6 +4,7 @@ module Katello
     class Content
       extend Katello::Abstract::Pulp::Content
       class << self
+        # rubocop:disable Metrics/ParameterLists
         def create_upload(size = 0, checksum = nil, content_type = nil, repository = nil)
           content_unit_href = nil
           content_type = ::Katello::RepositoryTypeManager.find_content_type(content_type)
