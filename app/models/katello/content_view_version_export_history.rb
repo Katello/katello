@@ -51,7 +51,7 @@ module Katello
       self.export_type ||= self.class.export_type_from_metadata(metadata)
     end
 
-    def self.generate_audit_comment(user:, content_view_version:, from_version: nil, metadata:)
+    def self.generate_audit_comment(user:, content_view_version:, metadata:, from_version: nil)
       export_type = export_type_from_metadata(metadata)
       if content_view_version.content_view.generated_for_library?
         export_descriptor = "library export"

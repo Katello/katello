@@ -130,11 +130,7 @@ module Katello
           MetadataGenerator.new(export_service: self).generate!
         end
 
-        def self.find_generated_export_view(create_by_default: false,
-                                            destination_server:,
-                                            organization:,
-                                            name:,
-                                            generated_for:)
+        def self.find_generated_export_view(destination_server:, organization:, name:, generated_for:, create_by_default: false)
           name += "-#{destination_server}" unless destination_server.blank?
           select_method = create_by_default ? :first_or_create : :first
           ::Katello::ContentView.where(name: name,
@@ -146,9 +142,7 @@ module Katello
           is_a?(SyncableFormatExport) ? SYNCABLE : IMPORTABLE
         end
 
-        def self.find_library_export_view(create_by_default: false,
-                                          destination_server:,
-                                          organization:,
+        def self.find_library_export_view(destination_server:, organization:, create_by_default: false,
                                           format: IMPORTABLE)
           if format == IMPORTABLE
             generated_for = :library_export
@@ -165,8 +159,7 @@ module Katello
                                      generated_for: generated_for)
         end
 
-        def self.find_repository_export_view(create_by_default: false,
-                                              repository:,
+        def self.find_repository_export_view(repository:, create_by_default: false,
                                               format: IMPORTABLE)
           if format == IMPORTABLE
             generated_for = :repository_export
