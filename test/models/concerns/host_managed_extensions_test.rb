@@ -311,6 +311,7 @@ module Katello
   end
 
   class HostAvailableModulesTest < HostManagedExtensionsTestBase
+    # rubocop:disable Metrics/ParameterLists
     def make_module_json(name = "foo", status = "unknown", context = nil, installed_profiles = [], active = nil)
       {
         "name" => name,
