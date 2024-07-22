@@ -20,7 +20,7 @@ module Bastion
     url_root = ENV['RAILS_RELATIVE_URL_ROOT']
     base_config = {
       'markTranslated' => SETTINGS[:mark_translated] || false,
-      'relativeUrlRoot' => url_root ? url_root + '/' : '/'
+      'relativeUrlRoot' => url_root ? url_root + '/' : '/',
     }
 
     Bastion.plugins.each do |_name, plugin|

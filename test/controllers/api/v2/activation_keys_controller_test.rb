@@ -156,7 +156,7 @@ module Katello
 
       post :create, params: {
         :organization_id => @organization.id,
-        :activation_key => {:name => 'limited Key', :unlimited_hosts => false, :max_hosts => max_hosts}
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => false, :max_hosts => max_hosts},
       }
 
       assert_response :success
@@ -197,7 +197,7 @@ module Katello
 
       post :create, params: {
         :organization_id => @organization.id,
-        :activation_key => {:name => 'new key', :description => key_description}
+        :activation_key => {:name => 'new key', :description => key_description},
       }
 
       assert_response :success
@@ -211,7 +211,7 @@ module Katello
     def test_should_not_create_with_no_hosts_limit
       post :create, params: {
         :organization_id => @organization.id,
-        :activation_key => {:name => 'limited Key', :unlimited_hosts => false}
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => false},
       }
       assert_response :unprocessable_entity
       assert_match 'Validation failed: Max hosts cannot be nil', @response.body
@@ -221,7 +221,7 @@ module Katello
     def test_should_not_create_with_invalid_hosts_limit
       post :create, params: {
         :organization_id => @organization.id,
-        :activation_key => {:name => 'limited Key', :unlimited_hosts => false, :max_hosts => 0}
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => false, :max_hosts => 0},
       }
       assert_response :unprocessable_entity
       assert_match 'Validation failed: Max hosts cannot be less than one', @response.body
@@ -231,7 +231,7 @@ module Katello
     def test_should_not_create_unlimited_and_invalid_max_hosts
       post :create, params: {
         :organization_id => @organization.id,
-        :activation_key => {:name => 'limited Key', :unlimited_hosts => true, :max_hosts => 0}
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => true, :max_hosts => 0},
       }
       assert_response :error
     end
@@ -263,7 +263,7 @@ module Katello
       put :update, params: {
         :id => @activation_key.id,
         :organization_id => @organization.id,
-        :activation_key => { :unlimited_hosts => false, :max_hosts => 0 }
+        :activation_key => { :unlimited_hosts => false, :max_hosts => 0 },
       }
       assert_response :unprocessable_entity
       assert_match 'Validation failed: Max hosts cannot be less than one', @response.body
@@ -274,7 +274,7 @@ module Katello
       put :update, params: {
         :id => @activation_key.id,
         :organization_id => @organization.id,
-        :activation_key => { :unlimited_hosts => false, :max_hosts => 0 }
+        :activation_key => { :unlimited_hosts => false, :max_hosts => 0 },
       }
       assert_response :unprocessable_entity
       assert_match 'Validation failed: Max hosts cannot be less than one', @response.body
@@ -289,7 +289,7 @@ module Katello
       put :update, params: {
         :id => activation_key.id,
         :organization_id => @organization.id,
-        :activation_key => { :max_hosts => 'foo' }
+        :activation_key => { :max_hosts => 'foo' },
       }
       assert_response :unprocessable_entity
       assert_match 'Validation failed: Max hosts is not a number', @response.body
@@ -310,7 +310,7 @@ module Katello
       put :update, params: {
         :id => @activation_key.id,
         :organization_id => @organization.id,
-        :activation_key => { :auto_attach => new_auto_attach }
+        :activation_key => { :auto_attach => new_auto_attach },
       }
       assert_response :success
     end
@@ -409,7 +409,7 @@ module Katello
       assert_protected_action(:content_override, allowed_perms, denied_perms) do
         put(:content_override,
             params: { id: @activation_key.id,
-                      content_overrides: [{:content_label => 'fedora', :name => "enabled", :value => true}]
+                      content_overrides: [{:content_label => 'fedora', :name => "enabled", :value => true}],
                     }
            )
       end

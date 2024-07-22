@@ -74,7 +74,7 @@ module Katello
         ContentViewErratumFilter => ERRATA,
         ContentViewPackageGroupFilter => PACKAGE_GROUP,
         ContentViewDockerFilter => DOCKER,
-        ContentViewModuleStreamFilter => MODULE_STREAM
+        ContentViewModuleStreamFilter => MODULE_STREAM,
       }[self.class]
     end
 

@@ -41,21 +41,21 @@ module ::Actions::Katello::ContentViewVersion
     let(:import_metadata) do
       {
         products: {
-          prod.label => prod.slice(:label, :name).merge(redhat: prod.redhat?)
+          prod.label => prod.slice(:label, :name).merge(redhat: prod.redhat?),
         },
         repositories: {
           "misc-24037" => { label: prod.repositories.first.label,
                             product: prod.slice(:label),
-                            redhat: prod.redhat?
-          }
+                            redhat: prod.redhat?,
+          },
         },
         gpg_keys: {},
         content_view_version: {
           major: content_view_version.major,
           minor: content_view_version.minor,
-          description: description
+          description: description,
         },
-        content_view: content_view.slice(:label, :name, :description, :generated_for)
+        content_view: content_view.slice(:label, :name, :description, :generated_for),
       }.with_indifferent_access
     end
 
@@ -140,7 +140,7 @@ module ::Actions::Katello::ContentViewVersion
       it 'should create the library cv and plan properly' do
         import_metadata[:content_view] = { name: ::Katello::ContentView::EXPORT_LIBRARY,
                                            label: ::Katello::ContentView::EXPORT_LIBRARY,
-                                           generated_for: :library_export
+                                           generated_for: :library_export,
                                          }
         ::Katello::Pulp3::ContentViewVersion::Import.any_instance.expects(:check!).returns
 

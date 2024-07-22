@@ -71,7 +71,7 @@ module Katello
       post :version, params: { id: @library_view_version.id,
                                destination_server: destination,
                                chunk_size_gb: chunk_size_gb,
-                               fail_on_missing_content: true
+                               fail_on_missing_content: true,
                              }
       assert_response :success
     end
@@ -91,7 +91,7 @@ module Katello
       export_task.returns(build_task_stub)
       post :library, params: { organization_id: org.id,
                                destination_server: destination,
-                               chunk_size_gb: chunk_size_gb
+                               chunk_size_gb: chunk_size_gb,
                              }
       assert_response :success
     end

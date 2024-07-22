@@ -26,12 +26,12 @@ node :activation_keys do |subscription|
       service_level: key.service_level,
       environment: {
         id: key.environment.try(:id),
-        name: key.environment.try(:name)
+        name: key.environment.try(:name),
       },
       content_view: {
         id: key.content_view.try(:id),
-        name: key.content_view.try(:name)
-      }
+        name: key.content_view.try(:name),
+      },
     }
   end
 end

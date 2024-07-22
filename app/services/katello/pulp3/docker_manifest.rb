@@ -30,7 +30,7 @@ module Katello
           annotations: unit['annotations'],
           labels: unit['labels'],
           is_bootable: unit['is_bootable'],
-          is_flatpak: unit['is_flatpak']
+          is_flatpak: unit['is_flatpak'],
         }
       end
     end

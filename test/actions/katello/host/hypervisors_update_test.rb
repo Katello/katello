@@ -30,14 +30,14 @@ module Katello::Host
       @facts = {
         'hypervisor.type': 'VMware ESXi',
         'cpu.cpu_socket(s)' => '2',
-        'hypervisor.version' => '6.7.0'
+        'hypervisor.version' => '6.7.0',
       }.with_indifferent_access
       @consumer = {
         uuid: @host.subscription_facet.uuid,
         guestIds: ['test-id-1'],
         entitlementCount: 0,
         facts: @facts,
-        hypervisorId: {hypervisorId: old_name}
+        hypervisorId: {hypervisorId: old_name},
       }.with_indifferent_access
       ::Katello::Resources::Candlepin::Consumer.stubs(:get_all_with_facts).returns([@consumer])
     end
@@ -99,7 +99,7 @@ module Katello::Host
         "entitlementStatus" => nil,
         "entitlementCount" => 0,
         "hypervisorId" => {"hypervisorId" => "hypervisor1.example.com"},
-        "type" => {"id" => "1004", "label" => "hypervisor", "manifest" => false}
+        "type" => {"id" => "1004", "label" => "hypervisor", "manifest" => false},
       }
       Katello::Resources::Candlepin::Consumer.expects(:get_all_with_facts).returns([consumer.with_indifferent_access])
       Katello::Resources::Candlepin::Consumer.expects(:virtual_guests).returns({})

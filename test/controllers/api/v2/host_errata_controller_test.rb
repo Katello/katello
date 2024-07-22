@@ -41,8 +41,8 @@ module Katello
     def test_search_bulk_errata
       bulk_params = {
         :included => {
-          :search => "errata_id = #{@errata.errata_id}"
-        }
+          :search => "errata_id = #{@errata.errata_id}",
+        },
       }
       result = @controller.find_bulk_errata_ids([@host], bulk_params.to_json)
 
@@ -52,11 +52,11 @@ module Katello
     def test_search_bulk_errata_exclude
       bulk_params = {
         :included => {
-          :search => "issued <  Yesterday"
+          :search => "issued <  Yesterday",
         },
         :excluded => {
-          :ids => [@bugfix.errata_id]
-        }
+          :ids => [@bugfix.errata_id],
+        },
       }
       result = @controller.find_bulk_errata_ids([@host], bulk_params.to_json)
 
@@ -67,8 +67,8 @@ module Katello
     def test_search_bulk_errata_ids
       bulk_params = {
         :included => {
-          :ids => [@bugfix.errata_id]
-        }
+          :ids => [@bugfix.errata_id],
+        },
       }
       result = @controller.find_bulk_errata_ids([@host], bulk_params.to_json)
 
@@ -81,9 +81,9 @@ module Katello
         :included => {
         },
         :excluded => {
-          :ids => [@bugfix.errata_id]
+          :ids => [@bugfix.errata_id],
         },
-        all: true
+        all: true,
       }
       result = @controller.find_bulk_errata_ids([@host], bulk_params.to_json)
 
@@ -93,7 +93,7 @@ module Katello
 
     def test_excludes_only_case
       bulk_params = {
-        :excluded => {}
+        :excluded => {},
       }
       exception = assert_raises(HttpErrors::BadRequest) do
         @controller.find_bulk_errata_ids([@host], bulk_params.to_json)

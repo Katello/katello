@@ -193,7 +193,7 @@ module Katello
         installable_hash = {
           :security => installable_security_errata_count,
           :bugfix => installable_bugfix_errata_count,
-          :enhancement => installable_enhancement_errata_count
+          :enhancement => installable_enhancement_errata_count,
         }
         installable_hash[:total] = installable_hash.values.inject(:+)
         # same for applicable, but we need to get the counts from the db
@@ -201,13 +201,13 @@ module Katello
         applicable_hash = {
           :bugfix => applicable_errata_counts.values_at(*Katello::Erratum::BUGZILLA).compact.sum,
           :security => applicable_errata_counts.values_at(*Katello::Erratum::SECURITY).compact.sum,
-          :enhancement => applicable_errata_counts.values_at(*Katello::Erratum::ENHANCEMENT).compact.sum
+          :enhancement => applicable_errata_counts.values_at(*Katello::Erratum::ENHANCEMENT).compact.sum,
         }
         applicable_hash[:total] = applicable_errata_counts.values.sum
 
         # keeping installable at the top level for backward compatibility
         installable_hash.merge({
-                                 :applicable => applicable_hash
+                                 :applicable => applicable_hash,
                                })
       end
 

@@ -29,12 +29,12 @@ module Katello
       if overidden_value.nil?
         {
           status: enabled ? "enabled" : "disabled",
-          overridden: false
+          overridden: false,
         }
       else
         {
           status: overidden_value ? "enabled" : "disabled",
-          overridden: true
+          overridden: true,
         }
       end
     end

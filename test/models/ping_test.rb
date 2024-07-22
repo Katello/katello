@@ -14,8 +14,8 @@ module Katello
                          "messaging_connection" => {"connected" => true},
                          "database_connection" => {"connected" => true},
                          "api_version" => "2",
-                         "versions" => {"platform_version" => "2.9.1"
-                          }
+                         "versions" => {"platform_version" => "2.9.1",
+                          },
                         }
     end
 
@@ -212,21 +212,21 @@ module Katello
 
     def test_failure_on_all_workers
       run_exception_test({ "database_connection" => {"connected" => true},
-                           "redis_connection" => {"connected" => true}
+                           "redis_connection" => {"connected" => true},
                           }, /No pulpcore workers are running at/)
     end
 
     def test_failure_on_all_workers_empty
       run_exception_test({ "database_connection" => {"connected" => true},
                            "redis_connection" => {"connected" => true},
-                           "online_workers" => []
+                           "online_workers" => [],
                           }, /No pulpcore workers are running at/)
     end
 
     def test_failure_on_no_reserved_resource_worker
       run_exception_test({ "database_connection" => {"connected" => true},
                            "redis_connection" => {"connected" => true},
-                           "online_workers" => []
+                           "online_workers" => [],
                           }, /No pulpcore workers are running at/)
     end
 
@@ -234,7 +234,7 @@ module Katello
       json = { "database_connection" => {"connected" => true},
                "redis_connection" => {"connected" => true},
                "online_workers" => @ok_pulp_status['online_workers'],
-               "online_content_apps" => []
+               "online_content_apps" => [],
       }
       message = /No pulpcore content apps are running at/
 

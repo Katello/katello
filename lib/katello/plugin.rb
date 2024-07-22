@@ -344,7 +344,7 @@ Foreman::Plugin.register :katello do
         class: 'HttpProxy',
         scope: 'all',
         value_method: 'name',
-        text_method: 'name_and_url'
+        text_method: 'name_and_url',
       }]
       download_policies = proc { hashify_parameters(::Katello::RootRepository::DOWNLOAD_POLICIES) }
       proxy_download_policies = proc { hashify_parameters(::SmartProxy::DOWNLOAD_POLICIES) }

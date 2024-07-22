@@ -27,7 +27,7 @@ module Katello
           pulp_id: unit[unit_identifier],
           name: filename,
           path: unit['relative_path'],
-          checksum: unit['sha256']
+          checksum: unit['sha256'],
         }
       end
     end

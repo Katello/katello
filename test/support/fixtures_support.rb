@@ -66,7 +66,7 @@ module Katello
       :katello_repository_ansible_collections => Katello::RepositoryAnsibleCollection,
       :katello_smart_proxies => SmartProxy,
       :katello_smart_proxy_features => SmartProxyFeature,
-      :katello_features => Feature
+      :katello_features => Feature,
     }.freeze
 
     # rubocop:disable Naming/AccessorMethodName

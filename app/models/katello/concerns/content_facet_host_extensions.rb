@@ -8,13 +8,13 @@ module Katello
           :security_needed => Katello::ErrataStatus::NEEDED_SECURITY_ERRATA,
           :errata_needed => Katello::ErrataStatus::NEEDED_ERRATA,
           :updated => Katello::ErrataStatus::UP_TO_DATE,
-          :unknown => Katello::ErrataStatus::UNKNOWN
+          :unknown => Katello::ErrataStatus::UNKNOWN,
         }.freeze
 
         TRACE_STATUS_MAP = {
           :reboot_needed => Katello::TraceStatus::REQUIRE_REBOOT,
           :process_restart_needed => Katello::TraceStatus::REQUIRE_PROCESS_RESTART,
-          :updated => Katello::TraceStatus::UP_TO_DATE
+          :updated => Katello::TraceStatus::UP_TO_DATE,
         }.freeze
 
         has_one :errata_status_object, :class_name => 'Katello::ErrataStatus', :foreign_key => 'host_id', :dependent => :destroy

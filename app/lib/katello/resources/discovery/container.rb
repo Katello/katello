@@ -7,7 +7,7 @@ module Katello
                        upstream_credentials_and_search = {
                          upstream_username: nil,
                          upstream_password: nil,
-                         search: '*'
+                         search: '*',
                        })
           @uri = uri(url)
           @upstream_username = upstream_credentials_and_search[:upstream_username].presence
@@ -94,7 +94,7 @@ module Katello
           request_params = {
             method: :get,
             headers: { accept: :json },
-            url: "#{@uri}v1/search?q=#{@search}"
+            url: "#{@uri}v1/search?q=#{@search}",
           }
 
           request_params[:user] = @upstream_username if @upstream_username

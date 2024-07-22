@@ -32,11 +32,11 @@ module Katello
                   "id" => SecureRandom.uuid,
                   "type" => "file",
                   "name" => "import_all_content",
-                  "contentUrl" => "/content/dist/rhel/server/6/$releasever/$basearch/satellite/5.7/iso"
+                  "contentUrl" => "/content/dist/rhel/server/6/$releasever/$basearch/satellite/5.7/iso",
                 },
-                "enabled" => false
+                "enabled" => false,
               }
-            ]
+            ],
           }
         end
       end

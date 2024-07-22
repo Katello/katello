@@ -62,8 +62,8 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
       :id => host.id,
       :content_facet_attributes => {
         :content_view_id => @cv2.id,
-        :lifecycle_environment_id => @dev.id
-      }
+        :lifecycle_environment_id => @dev.id,
+      },
     }, session: set_session_user
     assert_response :success
     host.content_facet.reload
@@ -127,8 +127,8 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     put :update, params: {
       :id => host.id,
       :content_facet_attributes => {
-        :lifecycle_environment_id => @dev.id
-      }
+        :lifecycle_environment_id => @dev.id,
+      },
     }, session: set_session_user
     assert_response 422
   end
@@ -139,8 +139,8 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     put :update, params: {
       :id => host.id,
       :content_facet_attributes => {
-        :content_view_id => @cv2.id
-      }
+        :content_view_id => @cv2.id,
+      },
     }, session: set_session_user
     assert_response 422
   end
@@ -153,8 +153,8 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
       :id => host.id,
       :content_facet_attributes => {
         :content_view_id => @cv2.id,
-        :lifecycle_environment_id => @dev.id
-      }
+        :lifecycle_environment_id => @dev.id,
+      },
     }, session: set_session_user
     assert_response :error
   end
@@ -205,7 +205,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   def test_create_with_unpermitted_attributes
     cf_attrs = {:content_view_id => @content_view.id,
                 :lifecycle_environment_id => @environment.id,
-                :uuid => "thisshouldntbeabletobesetbyuser"
+                :uuid => "thisshouldntbeabletobesetbyuser",
                }
     attrs = @host.clone.attributes.merge("name" => "contenthost1.example.com", "content_facet_attributes" => cf_attrs).compact!
 

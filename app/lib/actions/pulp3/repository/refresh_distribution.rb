@@ -13,7 +13,7 @@ module Actions
 
             refresh_options = {
               :repository_id => repository.id,
-              :smart_proxy_id => smart_proxy.id
+              :smart_proxy_id => smart_proxy.id,
             }
             action = plan_self(refresh_options)
 

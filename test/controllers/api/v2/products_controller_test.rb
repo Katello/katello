@@ -84,7 +84,7 @@ module Katello
       product_params = {
         :name => 'fedora product',
         :description => 'this is my cool new product.',
-        :label => 'product_label'
+        :label => 'product_label',
       }
       Api::V2::ProductsController.any_instance.expects(:sync_task).with do |action_class, prod, org|
         assert_equal action_class, ::Actions::Katello::Product::Create
@@ -126,7 +126,7 @@ module Katello
     def test_create_with_bad_org
       product_params = {
         :name => 'fedora product',
-        :description => 'this is my cool new product.'
+        :description => 'this is my cool new product.',
       }
       post :create, params: { :product => product_params, :organization_id => 'asdfdsafds' }
 

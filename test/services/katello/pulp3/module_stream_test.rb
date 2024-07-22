@@ -45,7 +45,7 @@ module Katello
             "dependencies": [
 
             ],
-            "packages": ["pulp3/href1", "pulp3/href2"]
+            "packages": ["pulp3/href1", "pulp3/href2"],
           }.with_indifferent_access
         end
 

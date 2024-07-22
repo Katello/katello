@@ -312,7 +312,7 @@ module Katello
       post :module_streams, params: {
         included: {:ids => @host_ids},
         organization_id: @org.id,
-        host_collection_ids: [@host_collection1.id, @host_collection2.id]
+        host_collection_ids: [@host_collection1.id, @host_collection2.id],
       }
 
       assert_response :success
@@ -324,7 +324,7 @@ module Katello
 
       post :traces, params: {
         organization_id: @org.id,
-        included: {:ids => @host_ids}
+        included: {:ids => @host_ids},
       }
 
       assert_response :success

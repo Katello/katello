@@ -13,8 +13,8 @@ node :repository do |package_group|
       :name => repo.name,
       :product => {
         :id => repo.product.id,
-        :name => repo.product.name
-      }
+        :name => repo.product.name,
+      },
     }
   end
 end

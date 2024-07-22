@@ -72,7 +72,7 @@ module Katello
     def test_include_permissions
       get :index, params: {
         organization_id: @organization.id,
-        include_permissions: true
+        include_permissions: true,
       }
       nodes = JSON.parse(response.body).keys
       expected_permissions = %w[

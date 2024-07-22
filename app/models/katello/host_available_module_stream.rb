@@ -22,7 +22,7 @@ module Katello
       DISABLED => :disabled,
       UNKNOWN => :unknown,
       INSTALLED => :installed,
-      UPGRADABLE => :upgradable
+      UPGRADABLE => :upgradable,
     }.with_indifferent_access
 
     scoped_search :on => :name, :relation => :available_module_stream, :complete_value => true

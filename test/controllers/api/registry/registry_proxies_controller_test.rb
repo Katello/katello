@@ -306,7 +306,7 @@ module Katello
           subtotal: 2,
           page: 1,
           per_page: per_page,
-          results: [@docker_repo, @docker_env_repo]
+          results: [@docker_repo, @docker_env_repo],
         }
         @controller.stubs(:scoped_search).returns(scoped_results)
         get :v1_search, params: { q: "abc", n: 2 }

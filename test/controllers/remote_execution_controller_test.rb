@@ -26,8 +26,8 @@ module Katello
       bulk_host_ids =
         {
           included: {
-            ids: [hosts(:one).id]
-          }
+            ids: [hosts(:one).id],
+          },
         }.to_json
 
       @controller.expects(:render).with(:action => "new")
@@ -43,8 +43,8 @@ module Katello
       bulk_host_ids =
         {
           included: {
-            ids: [hosts(:one).id]
-          }
+            ids: [hosts(:one).id],
+          },
         }.to_json
 
       @controller.expects(:render).with(:action => "new")
@@ -61,15 +61,15 @@ module Katello
       bulk_host_ids =
         {
           included: {
-            ids: [hosts(:one).id]
-          }
+            ids: [hosts(:one).id],
+          },
         }.to_json
 
       bulk_errata_ids =
         {
           included: {
-            ids: []
-          }
+            ids: [],
+          },
         }.to_json
 
       @controller.expects(:render).with(:action => "new")

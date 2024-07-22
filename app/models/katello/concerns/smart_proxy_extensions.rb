@@ -63,7 +63,7 @@ module Katello
 
         validates :download_policy, inclusion: {
           :in => DOWNLOAD_POLICIES,
-          :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', ')
+          :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', '),
         }
         scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE, PULP3_FEATURE) }
 
@@ -155,7 +155,7 @@ module Katello
             env_id: repo.environment_id,
             library_instance_id: repo.library_instance_or_self.id,
             product_id: repo.product_id,
-            content_type: repo.content_type
+            content_type: repo.content_type,
           }
           repo_content_counts&.each do |name, count|
             count = count[:count]
@@ -276,7 +276,7 @@ module Katello
                 used: -1,
                 free: -1,
                 percentage: -1,
-                label: 'cloud-storage'
+                label: 'cloud-storage',
               }.with_indifferent_access
             ]
           else
@@ -287,7 +287,7 @@ module Katello
                 used: storage['used'],
                 free: storage['free'],
                 percentage: (storage['used'] / storage['total'].to_f * 100).to_i,
-                label: 'pulp_dir'
+                label: 'pulp_dir',
               }.with_indifferent_access
             ]
           end
