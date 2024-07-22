@@ -1,5 +1,6 @@
 module Katello
   module Host
+    # rubocop:disable Metrics/ClassLength
     class ContentFacet < Katello::Model
       audited :associated_with => :host
       self.table_name = 'katello_content_facets'
