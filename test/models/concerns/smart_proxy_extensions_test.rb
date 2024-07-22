@@ -32,7 +32,7 @@ module Katello
         "rpm.modulemd" => {count: 7, href: 'href'},
         "rpm.modulemd_defaults" => {count: 3, href: 'href'},
         "rpm.packagegroup" => {count: 7, href: 'href'},
-        "rpm.packagecategory" => {count: 1, href: 'href'}
+        "rpm.packagecategory" => {count: 1, href: 'href'},
       }
       yum_service.expects(:latest_content_counts).once.returns(yum_counts)
 
@@ -41,7 +41,7 @@ module Katello
       file_service = file_repo.backend_service(@proxy).with_mirror_adapter
       file_repo.expects(:backend_service).with(@proxy).once.returns(file_service)
       file_counts = {
-        "file.file" => {count: 100, href: 'href'}
+        "file.file" => {count: 100, href: 'href'},
       }
       file_service.expects(:latest_content_counts).once.returns(file_counts)
 
@@ -50,7 +50,7 @@ module Katello
       ansible_service = ansible_repo.backend_service(@proxy).with_mirror_adapter
       ansible_repo.expects(:backend_service).with(@proxy).once.returns(ansible_service)
       ansible_counts = {
-        "ansible.collection" => {count: 802, href: 'href'}
+        "ansible.collection" => {count: 802, href: 'href'},
       }
       ansible_service.expects(:latest_content_counts).once.returns(ansible_counts)
 
@@ -63,7 +63,7 @@ module Katello
       container_counts = {
         "container.blob" => {count: 30, href: 'href'},
         "container.manifest" => {count: 10, href: 'href'},
-        "container.tag" => {count: 5, href: 'href'}
+        "container.tag" => {count: 5, href: 'href'},
       }
       container_service.expects(:latest_content_counts).once.returns(container_counts)
 
@@ -72,7 +72,7 @@ module Katello
       ostree_service = ostree_repo.backend_service(@proxy).with_mirror_adapter
       ostree_repo.expects(:backend_service).with(@proxy).once.returns(ostree_service)
       ostree_counts = {
-        "ostree.refs" => {count: 30, href: 'href'}
+        "ostree.refs" => {count: 30, href: 'href'},
       }
       ostree_service.expects(:latest_content_counts).once.returns(ostree_counts)
 
@@ -81,7 +81,7 @@ module Katello
       deb_service = deb_repo.backend_service(@proxy).with_mirror_adapter
       deb_repo.expects(:backend_service).with(@proxy).once.returns(deb_service)
       deb_counts = {
-        "deb.package" => {count: 987, href: 'href'}
+        "deb.package" => {count: 987, href: 'href'},
       }
       deb_service.expects(:latest_content_counts).once.returns(deb_counts)
 
@@ -90,7 +90,7 @@ module Katello
       python_service = python_repo.backend_service(@proxy).with_mirror_adapter
       python_repo.expects(:backend_service).with(@proxy).once.returns(python_service)
       python_counts = {
-        "python.python" => {count: 42, href: 'href'}
+        "python.python" => {count: 42, href: 'href'},
       }
       python_service.expects(:latest_content_counts).once.returns(python_counts)
       repos = [yum_repo, file_repo, ansible_repo, container_repo,
@@ -106,19 +106,19 @@ module Katello
                 "env_id" => yum_repo.environment.id,
                 "library_instance_id" => yum_repo.library_instance_or_self.id,
                 "product_id" => yum_repo.product_id,
-                "content_type" => yum_repo.content_type
+                "content_type" => yum_repo.content_type,
               },
-              "counts" => { "erratum" => 4, "srpm" => 1, "rpm" => 31, "module_stream" => 7, "rpm.modulemd_defaults" => 3, "package_group" => 7, "rpm.packagecategory" => 1 }
+              "counts" => { "erratum" => 4, "srpm" => 1, "rpm" => 31, "module_stream" => 7, "rpm.modulemd_defaults" => 3, "package_group" => 7, "rpm.packagecategory" => 1 },
             },
               file_repo.id.to_s => {
                 "metadata" => {
                   "env_id" => file_repo.environment.id,
                   "library_instance_id" => file_repo.library_instance_or_self.id,
                   "product_id" => file_repo.product_id,
-                  "content_type" => file_repo.content_type
+                  "content_type" => file_repo.content_type,
                 },
                 "counts" =>
-              { "file" => 100 }
+              { "file" => 100 },
               },
               ansible_repo.id.to_s => {
                 "metadata" => {
@@ -127,51 +127,51 @@ module Katello
                   "product_id" => ansible_repo.product_id,
                   "content_type" => ansible_repo.content_type},
                 "counts" =>
-                  { "ansible.collection" => 802 }
+                  { "ansible.collection" => 802 },
               },
               container_repo.id.to_s => {
                 "metadata" => {
                   "env_id" => container_repo.environment.id,
                   "library_instance_id" => container_repo.library_instance_or_self.id,
                   "product_id" => container_repo.product_id,
-                  "content_type" => container_repo.content_type
+                  "content_type" => container_repo.content_type,
                 },
                 "counts" =>
-                  { "container.blob" => 30, "docker_manifest_list" => 1, "docker_manifest" => 9, "docker_tag" => 5 }
+                  { "container.blob" => 30, "docker_manifest_list" => 1, "docker_manifest" => 9, "docker_tag" => 5 },
               },
               ostree_repo.id.to_s => {
                 "metadata" => {
                   "env_id" => ostree_repo.environment.id,
                   "library_instance_id" => ostree_repo.library_instance_or_self.id,
                   "product_id" => ostree_repo.product_id,
-                  "content_type" => ostree_repo.content_type
+                  "content_type" => ostree_repo.content_type,
                 },
                 "counts" =>
-                  {"ostree_ref" => 30 }
+                  {"ostree_ref" => 30 },
               },
               deb_repo.id.to_s => {
                 "metadata" => {
                   "env_id" => deb_repo.environment.id,
                   "library_instance_id" => deb_repo.library_instance_or_self.id,
                   "product_id" => deb_repo.product_id,
-                  "content_type" => deb_repo.content_type
+                  "content_type" => deb_repo.content_type,
                 },
                 "counts" =>
-                  { "deb" => 987 }
+                  { "deb" => 987 },
               },
               python_repo.id.to_s => {
                 "metadata" => {
                   "env_id" => python_repo.environment.id,
                   "library_instance_id" => python_repo.library_instance_or_self.id,
                   "product_id" => python_repo.product_id,
-                  "content_type" => python_repo.content_type
+                  "content_type" => python_repo.content_type,
                 },
                 "counts" =>
-                  { "python_package" => 42 }
-              }
-            }
-          }
-        }
+                  { "python_package" => 42 },
+              },
+            },
+          },
+        },
       }
       assert_equal expected_counts, counts
     end
@@ -249,7 +249,7 @@ module Katello
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
 
       expected_repo_list_args = {
-        :repositories => [{:repository => "empty_organization-puppet_product-busybox", :auth_required => true}, {:repository => "busybox", :auth_required => true}]
+        :repositories => [{:repository => "empty_organization-puppet_product-busybox", :auth_required => true}, {:repository => "busybox", :auth_required => true}],
       }
       repo_list_update_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:repository_list).with do |value|
         Set.new(value[:repositories]) == Set.new(expected_repo_list_args[:repositories])
@@ -318,7 +318,7 @@ module Katello
       'ansible': Katello::Repository::ANSIBLE_COLLECTION_TYPE,
       'deb': Katello::Repository::DEB_TYPE,
       'ostree': Katello::Repository::OSTREE_TYPE,
-      'python': 'python'
+      'python': 'python',
     }
 
     pulpcore_features.each_pair do |feature_name, repo_type|

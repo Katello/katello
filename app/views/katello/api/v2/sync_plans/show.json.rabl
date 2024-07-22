@@ -25,6 +25,6 @@ node :permissions do |sync_plan|
   {
     :view_sync_plans => sync_plan.readable?,
     :edit_sync_plans => sync_plan.editable?,
-    :destroy_sync_plans => sync_plan.deletable?
+    :destroy_sync_plans => sync_plan.deletable?,
   }
 end

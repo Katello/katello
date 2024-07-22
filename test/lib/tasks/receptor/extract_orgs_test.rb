@@ -31,8 +31,8 @@ module Katello
           upstreamConsumer: {
             idCert: {
               cert: "#{org.label}_cert",
-              key: "#{org.label}_key"
-            }
+              key: "#{org.label}_key",
+            },
           }
         )
       end

@@ -11,7 +11,7 @@ if @content_source.present?
     {
       :name => @content_source.name,
       :id => @content_source_id,
-      :environment_is_associated => env.content_source_associated?(@content_source)
+      :environment_is_associated => env.content_source_associated?(@content_source),
     }
   end
 end
@@ -31,7 +31,7 @@ end
 node :counts do |env|
   counts = {
     :content_hosts => env.hosts.authorized("view_hosts").count,
-    :content_views => env.content_views.non_default.count
+    :content_views => env.content_views.non_default.count,
   }
   if env.library?
     repos = env.repositories.in_default_view
@@ -54,7 +54,7 @@ node :permissions do |env|
     :view_lifecycle_environments => env.readable?,
     :edit_lifecycle_environments => env.editable?,
     :destroy_lifecycle_environments => env.deletable?,
-    :promote_or_remove_content_views_to_environments => env.promotable_or_removable?
+    :promote_or_remove_content_views_to_environments => env.promotable_or_removable?,
   }
 end
 
@@ -62,7 +62,7 @@ node :content_views do |env|
   env.content_views.non_default.map do |cv|
     {
       :name => cv.name,
-      :id => cv.id
+      :id => cv.id,
     }
   end
 end

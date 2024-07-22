@@ -16,40 +16,40 @@ module Katello
       'RHEL9' => {
         'full_support' => end_of_day('2027-05-31'),
         'maintenance_support' => end_of_day('2032-05-31'),
-        'extended_support' => end_of_day('2035-05-31')
+        'extended_support' => end_of_day('2035-05-31'),
       },
       'RHEL8' => {
         'full_support' => end_of_day('2024-05-31'),
         'maintenance_support' => end_of_day('2029-05-31'),
-        'extended_support' => end_of_day('2032-05-31')
+        'extended_support' => end_of_day('2032-05-31'),
       },
       'RHEL7' => {
         'full_support' => end_of_day('2019-08-06'),
         'maintenance_support' => end_of_day('2024-06-30'),
-        'extended_support' => end_of_day('2028-06-30')
+        'extended_support' => end_of_day('2028-06-30'),
       },
       'RHEL7 (System z (Structure A))' => {
         'full_support' => end_of_day('2019-08-06'),
-        'maintenance_support' => end_of_day('2021-05-31')
+        'maintenance_support' => end_of_day('2021-05-31'),
       },
       'RHEL7 (ARM)' => {
         'full_support' => end_of_day('2019-08-06'),
-        'maintenance_support' => end_of_day('2020-11-30')
+        'maintenance_support' => end_of_day('2020-11-30'),
       },
       'RHEL7 (POWER9)' => {
         'full_support' => end_of_day('2019-08-06'),
-        'maintenance_support' => end_of_day('2021-05-31')
+        'maintenance_support' => end_of_day('2021-05-31'),
       },
       'RHEL6' => {
         'full_support' => end_of_day('2016-05-10'),
         'maintenance_support' => end_of_day('2020-11-30'),
-        'extended_support' => end_of_day('2024-06-30')
+        'extended_support' => end_of_day('2024-06-30'),
       },
       'RHEL5' => {
         'full_support' => end_of_day('2013-01-08'),
         'maintenance_support' => end_of_day('2017-03-31'),
-        'extended_support' => end_of_day('2020-11-30')
-      }
+        'extended_support' => end_of_day('2020-11-30'),
+      },
     }.freeze
 
     EOS_WARNING_THRESHOLD = 1.year
@@ -61,7 +61,7 @@ module Katello
         approaching_end_of_maintenance: APPROACHING_END_OF_MAINTENANCE,
         extended_support: EXTENDED_SUPPORT,
         approaching_end_of_support: APPROACHING_END_OF_SUPPORT,
-        support_ended: SUPPORT_ENDED
+        support_ended: SUPPORT_ENDED,
       }
 
       map.default = UNKNOWN

@@ -11,7 +11,7 @@ glue :content do
       vendor: content.vendor,
       type: content.content_type,
       gpgUrl: content.gpg_url,
-      contentUrl: content.content_url
+      contentUrl: content.content_url,
     }
   end
 

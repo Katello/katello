@@ -22,7 +22,7 @@ module Katello
           expected_options = {
             :name => "some_repo",
             :url => "/a/path/to/content",
-            :mirror_remote_option1 => "an option"
+            :mirror_remote_option1 => "an option",
           }
           assert_equal expected_options, @repo_mirror.remote_options
         end
@@ -32,7 +32,7 @@ module Katello
           @repo_mirror.stubs(:remote_feed_url).returns('/a/path/to/content')
           expected_options = {
             :name => "some_repo",
-            :url => "/a/path/to/content"
+            :url => "/a/path/to/content",
           }
           assert_equal expected_options, @repo_mirror.remote_options
         end

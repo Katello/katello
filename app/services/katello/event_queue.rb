@@ -53,7 +53,7 @@ module Katello
     def self.push_event(event_type, id)
       attrs = {
         event_type: event_type,
-        object_id: id
+        object_id: id,
       }
 
       yield(attrs) if block_given?

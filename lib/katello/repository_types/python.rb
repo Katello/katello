@@ -43,7 +43,7 @@ Katello::RepositoryTypeManager.register('python') do
                        model_additional_metadata: lambda { |pulp_unit|
                          {
                            "package_type": pulp_unit["packagetype"],
-                           "sha256": pulp_unit["sha256"]
+                           "sha256": pulp_unit["sha256"],
                          }
                        },
                        removable: true,

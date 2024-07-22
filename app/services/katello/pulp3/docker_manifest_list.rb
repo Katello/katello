@@ -28,7 +28,7 @@ module Katello
         {
           schema_version: unit['schema_version'],
           digest: unit['digest'],
-          pulp_id: unit[unit_identifier]
+          pulp_id: unit[unit_identifier],
         }
       end
 
@@ -40,7 +40,7 @@ module Katello
           manifest_list_manifests += manifest_ids.map do |manifest_id|
             {
               docker_manifest_list_id: katello_id,
-              docker_manifest_id: manifest_id
+              docker_manifest_id: manifest_id,
             }
           end
         end

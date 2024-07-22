@@ -83,7 +83,7 @@ module Katello
             data.config << {
               source_repo_version: "repo version",
               dest_repo: "dest repo",
-              content: []
+              content: [],
             }
           end
           data.config[0][:content] = (0..9_999).to_a

@@ -8,7 +8,7 @@ module Support
           content_view_version: content_view_version,
           destination_server: destination_server,
           from_content_view_version: from_content_view_version,
-          format: format
+          format: format,
         }
       )
       version_repositories = content_view_version.archived_repos.yum_type

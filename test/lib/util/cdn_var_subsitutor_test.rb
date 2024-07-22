@@ -67,15 +67,15 @@ module Katello
             path: '/content/dist/rhel/server/5/5.8/i386/os',
             substitutions: {
               releasever: '5.8',
-              basearch: 'i386'
-            }
+              basearch: 'i386',
+            },
           },
           {
             path: '/content/dist/rhel/server/5/5Server/x86_64/os',
             substitutions: {
               releasever: '5Server',
-              basearch: 'x86_64'
-            }
+              basearch: 'x86_64',
+            },
           }
         ]
 

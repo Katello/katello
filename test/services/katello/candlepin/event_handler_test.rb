@@ -19,7 +19,7 @@ module Katello
     def message(subject, content = {})
       result = {
         subject: subject,
-        content: JSON.generate(content)
+        content: JSON.generate(content),
       }
       OpenStruct.new(result)
     end

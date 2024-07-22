@@ -312,7 +312,7 @@ module Katello
                 :erratum_id => erratum_id,
                 :erratum_type => current_erratum_errata_type,
                 :issued => current_erratum_issued,
-                :status => task.result
+                :status => task.result,
               }
 
               if include_last_reboot == 'yes'

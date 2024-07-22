@@ -18,7 +18,7 @@ module Katello
     validates :export_type, :presence => true,
               :inclusion => { :in => EXPORT_TYPES,
                               :allow_blank => false,
-                              :message => _("must be one of the following: %s" % EXPORT_TYPES.join(', '))
+                              :message => _("must be one of the following: %s" % EXPORT_TYPES.join(', ')),
                             }
     validates :metadata, :presence => true
     serialize :metadata, Hash

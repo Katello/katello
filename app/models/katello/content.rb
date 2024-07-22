@@ -77,14 +77,14 @@ module Katello
       arch = nil if arch == "noarch"
       substitutions = {
         :releasever => releasever,
-        :basearch => arch
+        :basearch => arch,
       }.compact
       path = substitutions.inject(content_path) do |path_url, (key, value)|
         path_url.gsub("$#{key}", value)
       end
       {
         path: path,
-        substitutions: substitutions
+        substitutions: substitutions,
       }
     end
   end

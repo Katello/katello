@@ -28,7 +28,7 @@ module Katello
     add_scoped_search_description_for(ContentViewVersion)
     def index
       options = {
-        :includes => [:content_view, :environments, :composite_content_views, :history => :task]
+        :includes => [:content_view, :environments, :composite_content_views, :history => :task],
       }
       respond(:collection => scoped_search(index_relation.distinct, :version, :desc, options))
     end
@@ -200,7 +200,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. New ver
       list.each do |combination|
         version_environment = {
           :content_view_version => ContentViewVersion.find(combination[:content_view_version_id]),
-          :environments => KTEnvironment.where(:id => combination[:environment_ids])
+          :environments => KTEnvironment.where(:id => combination[:environment_ids]),
         }
 
         view = version_environment[:content_view_version].content_view
@@ -230,7 +230,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. New ver
       component.composites.select { |c| c.environments.any? }.map do |composite|
         {
           :content_view_version => composite,
-          :environments => composite.environments
+          :environments => composite.environments,
         }
       end
     end

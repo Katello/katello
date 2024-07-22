@@ -83,7 +83,7 @@ module Actions
           output[:changed_content] = input[:version_outputs].map do |version_output|
             {
               :content_view_version => {:id => version_output[:version_id]},
-              :added_units => version_output[:output][:added_units]
+              :added_units => version_output[:output][:added_units],
             }
           end
         end

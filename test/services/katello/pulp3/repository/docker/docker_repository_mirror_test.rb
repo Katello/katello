@@ -48,7 +48,7 @@ module Katello
           {
             :base_path => "mock relative_path",
             :name => "Default_Organization-Cabinet-pulp3_Docker_1",
-            :repository_version => "repo_href"
+            :repository_version => "repo_href",
           }).returns(distribution_data)
           PulpContainerClient::DistributionsContainerApi.any_instance.expects(:create).with(distribution_data)
           @repo_mirror.refresh_distributions(name: "test name", base_path: "test base_path", content_guard: "test content_guard")

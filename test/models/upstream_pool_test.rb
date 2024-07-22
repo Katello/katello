@@ -14,7 +14,7 @@ module Katello
         'consumed' => :consumed,
         'productName' => :product_name,
         'productId' => :product_id,
-        'subscriptionId' => :subscription_id
+        'subscriptionId' => :subscription_id,
       }]
       @response = stub(to_str: @raw_pool.to_json, headers: {})
     end

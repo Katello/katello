@@ -8,7 +8,7 @@ module Katello
         def initialize(url, crawled = [], found = [], to_follow = [],
                        upstream_credentials_and_search = {
                          upstream_username: nil,
-                         upstream_password: nil
+                         upstream_password: nil,
                        })
           @uri = uri(url)
           @upstream_username = upstream_credentials_and_search[:upstream_username].presence

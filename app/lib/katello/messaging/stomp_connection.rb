@@ -16,7 +16,7 @@ module Katello
             {
               host: settings[:broker_host],
               port: settings[:broker_port],
-              ssl: ssl_params
+              ssl: ssl_params,
             }
           ],
           logger: Rails.logger,
@@ -27,8 +27,8 @@ module Katello
             'accept-version': '1.2',
             'host': settings[:broker_host],
             'heart-beat': '30000,30000',
-            'client-id': settings[:client_id]
-          }
+            'client-id': settings[:client_id],
+          },
         }
 
         @queue_name = settings[:queue_name]

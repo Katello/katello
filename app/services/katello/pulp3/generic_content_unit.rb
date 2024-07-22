@@ -24,7 +24,7 @@ module Katello
           version: content_type&.model_version&.call(unit),
           filename: content_type&.model_filename&.call(unit),
           additional_metadata: content_type&.model_additional_metadata&.call(unit),
-          content_type: content_type&.label
+          content_type: content_type&.label,
         }
       end
     end

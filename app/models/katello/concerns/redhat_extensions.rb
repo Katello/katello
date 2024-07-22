@@ -32,7 +32,7 @@ module Katello
             'name' => name,
             'major' => major.to_s,
             'minor' => minor.to_s,
-            'family' => 'Redhat'
+            'family' => 'Redhat',
           }
 
           return ::Redhat.create!(params)

@@ -33,29 +33,29 @@ module Katello
         :consumer_cert_rpm => 'katello-ca-consumer-latest.noarch.rpm',
         :consumer_cert_sh => 'katello-rhsm-consumer',
         :event_daemon => {
-          enabled: true
+          enabled: true,
         },
         :pulp => {
           :default_login => 'admin',
           :skip_checksum_validation => false,
           :upload_chunk_size => 1_048_575, # upload size in bytes to pulp. see SSLRenegBufferSize in apache
           :sync_threads => 4,
-          :sync_KBlimit => nil
+          :sync_KBlimit => nil,
         },
         :candlepin => {
           :url => 'https://localhost:8443/candlepin',
           :oauth_key => 'katello',
           :oauth_secret => 'katello',
           :ca_cert_file => nil,
-          :bulk_load_size => 1000
+          :bulk_load_size => 1000,
         },
         :candlepin_events => {
           :broker_host => 'localhost',
           :broker_port => 61_613,
           :queue_name => 'katello.candlepin',
           :subscription_name => 'candlepin_events',
-          :client_id => 'katello_candlepin_event_monitor'
-        }
+          :client_id => 'katello_candlepin_event_monitor',
+        },
       }
 
       SETTINGS[:katello] = default_settings.deep_merge(SETTINGS[:katello] || {})

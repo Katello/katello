@@ -317,7 +317,7 @@ module Katello
         :product_id => @product.id,
         :description => 'My Description',
         :url => 'http://www.google.com',
-        :content_type => 'yum'
+        :content_type => 'yum',
       }
       assert_response 201
       assert_template 'api/v2/common/create'
