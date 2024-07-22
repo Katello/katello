@@ -265,14 +265,13 @@ module Katello
 
     def subscription_index
       subs = @activation_key.subscriptions
-      subscriptions = {
+      {
         :results => subs,
         :subtotal => subs.count,
         :total => subs.count,
         :page => 1,
         :per_page => subs.count,
       }
-      subscriptions
     end
 
     def find_cve_for_single
