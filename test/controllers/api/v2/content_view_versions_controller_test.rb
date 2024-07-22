@@ -204,7 +204,7 @@ module Katello
       allowed_perms = [[@env_promote_permission, @cv_promote_permission],
                        [@dev_env_promote_permission, @library_dev_staging_view_promote_permission],
                        [@dev_env_promote_permission, @cv_promote_permission],
-                       [@env_promote_permission, @library_dev_staging_view_promote_permission]
+                       [@env_promote_permission, @library_dev_staging_view_promote_permission],
                       ]
 
       #ENV['test'] = 'asd'

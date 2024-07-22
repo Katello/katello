@@ -220,7 +220,7 @@ Foreman::Plugin.register :katello do
   apipie_ignored_controllers %w(::Api::V2::OrganizationsController)
   ApipieDSL.configuration.dsl_classes_matchers.concat [
     "#{Katello::Engine.root}/app/models/katello/**/*.rb",
-    "#{Katello::Engine.root}/app/lib/actions/**/*.rb"
+    "#{Katello::Engine.root}/app/lib/actions/**/*.rb",
   ]
 
   parameter_filter ::Host::Managed, :host_collection_ids => [],
@@ -693,7 +693,7 @@ Foreman::Plugin.register :katello do
   tests_to_skip("AccessPermissionsTest" => [
                   'foreman_tasks/api/tasks/callback should have a permission that grants access',
                   'bastion/bastion/index should have a permission that grants access',
-                  'bastion/bastion/index_ie should have a permission that grants access'
+                  'bastion/bastion/index_ie should have a permission that grants access',
                 ])
 
   add_controller_action_scope('HostsController', :index) do |base_scope|
@@ -769,7 +769,7 @@ Foreman::Plugin.register :katello do
     'bastion_katello/bastion_katello.css',
     'bastion_katello/bastion_katello.js',
     'katello/sync_management',
-    'katello/common'
+    'katello/common',
   ]
 
   precompile.concat(javascripts)

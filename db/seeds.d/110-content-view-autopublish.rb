@@ -24,5 +24,5 @@
       ],
     },
 
-  }
+  },
 ].each { |blueprint| UINotifications::Seed.new(blueprint).configure }

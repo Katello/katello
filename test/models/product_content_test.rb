@@ -62,9 +62,9 @@ module Katello
                   'id' => @content_id,
                 },
                 'enabled' => true,
-              }
+              },
             ],
-          }
+          },
         ]
       )
       result = @product_content.enabled_value_from_candlepin

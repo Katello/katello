@@ -7,7 +7,7 @@ namespace :test do
       spec_task = Rake::TestTask.new('katello_spec_task') do |t|
         t.libs << ["test", "#{Katello::Engine.root}/test", "spec", "#{Katello::Engine.root}/spec"]
         t.test_files = [
-          "#{Katello::Engine.root}/spec/**/*_spec.rb"
+          "#{Katello::Engine.root}/spec/**/*_spec.rb",
         ]
         t.verbose = true
         t.warning = false
@@ -22,7 +22,7 @@ namespace :test do
         spec_task = Rake::TestTask.new('katello_spec_task') do |t|
           t.libs << ["test", "#{Katello::Engine.root}/test", "spec", "#{Katello::Engine.root}/spec"]
           t.test_files = [
-            "#{Katello::Engine.root}/spec/routing/**/*_spec.rb"
+            "#{Katello::Engine.root}/spec/routing/**/*_spec.rb",
           ]
           t.verbose = true
           t.warning = false
@@ -51,7 +51,7 @@ namespace :test do
             "#{Katello::Engine.root}/test/scenarios/*_test.rb",
             "#{Katello::Engine.root}/test/models/**/*_test.rb",
             "#{Katello::Engine.root}/test/controllers/**/*_test.rb",
-            "#{Katello::Engine.root}/test/**/*_test.rb"
+            "#{Katello::Engine.root}/test/**/*_test.rb",
           ]
         end
         t.verbose = true
@@ -67,7 +67,7 @@ namespace :test do
         test_task = Rake::TestTask.new('katello_models_test_task') do |t|
           t.libs << ["test", "#{Katello::Engine.root}/test"]
           t.test_files = [
-            "#{Katello::Engine.root}/test/models/**/*_test.rb"
+            "#{Katello::Engine.root}/test/models/**/*_test.rb",
           ]
           t.verbose = true
           t.warning = false
@@ -81,7 +81,7 @@ namespace :test do
         test_task = Rake::TestTask.new('katello_actions_test_task') do |t|
           t.libs << ["test", "#{Katello::Engine.root}/test"]
           t.test_files = [
-            "#{Katello::Engine.root}/test/actions/**/*_test.rb"
+            "#{Katello::Engine.root}/test/actions/**/*_test.rb",
           ]
           t.verbose = true
           t.warning = false
@@ -95,7 +95,7 @@ namespace :test do
         test_task = Rake::TestTask.new('katello_controllers_test_task') do |t|
           t.libs << ["test", "#{Katello::Engine.root}/test"]
           t.test_files = [
-            "#{Katello::Engine.root}/test/controllers/**/*_test.rb"
+            "#{Katello::Engine.root}/test/controllers/**/*_test.rb",
           ]
           t.verbose = true
           t.warning = false
@@ -113,7 +113,7 @@ namespace :test do
         test_task = Rake::TestTask.new('katello_scenario_test_task') do |t|
           t.libs << ["test", "#{Katello::Engine.root}/test"]
           t.test_files = [
-            "#{Katello::Engine.root}/test/scenarios/*_test.rb"
+            "#{Katello::Engine.root}/test/scenarios/*_test.rb",
           ]
           t.verbose = true
           t.warning = false
@@ -127,7 +127,7 @@ namespace :test do
         test_task = Rake::TestTask.new('katello_glue_test_task') do |t|
           t.libs << ["test", "#{Katello::Engine.root}/test"]
           t.test_files = [
-            "#{Katello::Engine.root}/test/glue/**/*_test.rb"
+            "#{Katello::Engine.root}/test/glue/**/*_test.rb",
           ]
           t.verbose = true
           t.warning = false
@@ -141,7 +141,7 @@ namespace :test do
         test_task = Rake::TestTask.new('katello_services_test_task') do |t|
           t.libs << ["test", "#{Katello::Engine.root}/test"]
           t.test_files = [
-            "#{Katello::Engine.root}/test/services/**/*_test.rb"
+            "#{Katello::Engine.root}/test/services/**/*_test.rb",
           ]
           t.verbose = true
           t.warning = false
@@ -155,7 +155,7 @@ namespace :test do
         test_task = Rake::TestTask.new('katello_services_test_task') do |t|
           t.libs << ["test", "#{Katello::Engine.root}/test"]
           t.test_files = [
-            "#{Katello::Engine.root}/test/**/pulp3/**/*_test.rb"
+            "#{Katello::Engine.root}/test/**/pulp3/**/*_test.rb",
           ]
           t.verbose = true
           t.warning = false
@@ -169,7 +169,7 @@ namespace :test do
         test_task = Rake::TestTask.new('katello_lib_test_task') do |t|
           t.libs << ["test", "#{Katello::Engine.root}/test"]
           t.test_files = [
-            "#{Katello::Engine.root}/test/lib/**/*_test.rb"
+            "#{Katello::Engine.root}/test/lib/**/*_test.rb",
           ]
           t.verbose = true
           t.warning = false

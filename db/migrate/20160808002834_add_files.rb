@@ -12,7 +12,7 @@ class AddFiles < ActiveRecord::Migration[4.2]
     add_index :katello_files, [
       :id,
       :uuid,
-      :name
+      :name,
     ],
     :name => 'katello_files_fields_index'
 

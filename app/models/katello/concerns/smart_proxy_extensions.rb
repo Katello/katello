@@ -277,7 +277,7 @@ module Katello
                 free: -1,
                 percentage: -1,
                 label: 'cloud-storage',
-              }.with_indifferent_access
+              }.with_indifferent_access,
             ]
           else
             [
@@ -288,7 +288,7 @@ module Katello
                 free: storage['free'],
                 percentage: (storage['used'] / storage['total'].to_f * 100).to_i,
                 label: 'pulp_dir',
-              }.with_indifferent_access
+              }.with_indifferent_access,
             ]
           end
         end

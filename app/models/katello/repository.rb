@@ -665,7 +665,7 @@ module Katello
         ::Actions::Katello::Repository::Sync.name,
         ::Actions::Katello::Repository::UploadFiles.name,
         ::Actions::Katello::Repository::RemoveContent.name,
-        ::Actions::Katello::Repository::MetadataGenerate.name
+        ::Actions::Katello::Repository::MetadataGenerate.name,
       ]
       ForemanTasks::Task::DynflowTask.where(:label => blocking_task_labels)
                                      .where.not(state: 'stopped')
