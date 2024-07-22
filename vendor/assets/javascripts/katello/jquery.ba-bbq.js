@@ -1021,7 +1021,7 @@
   //   example) use $(window).trigger( 'hashchange' );
   // * The event can be bound before DOM ready, but since it won't be usable
   //   before then in IE6/7 (due to the necessary Iframe), recommended usage is
-  //   to bind it inside a $(document).ready() callback.
+  //   to bind it inside a $(document).on('loadJS', ) callback.
   
   jq_event_special[ str_hashchange ] = $.extend( jq_event_special[ str_hashchange ], {
     

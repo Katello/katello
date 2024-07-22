@@ -52,7 +52,7 @@ KT.path_select = function(div_id, name, environments, options_in){
             }
 
             if(options.submit_button_text){
-                path_selector.find('.KT_path_select_submit_button').click(function(e){
+                path_selector.find('.KT_path_select_submit_button').on("click", function(e){
                     if(!options.inline) {
                         path_selector.hide();
                     }
@@ -61,7 +61,7 @@ KT.path_select = function(div_id, name, environments, options_in){
             }
 
             if(options.cancel_button_text){
-                path_selector.find('.KT_path_select_cancel_button').click(function(e){
+                path_selector.find('.KT_path_select_cancel_button').on("click", function(e){
                     clear_selected();
                     if(!options.inline) {
                         path_selector.hide();
@@ -77,7 +77,7 @@ KT.path_select = function(div_id, name, environments, options_in){
                 path_selector.hide();
 
                 if(options.activate_on_click)  {
-                    div.click(function(e) { path_selector.show(); });
+                    div.on("click", function(e) { path_selector.show(); });
                 } else {
                     div.hoverIntent({
                         over:function(){ path_selector.show(); },
@@ -96,7 +96,7 @@ KT.path_select = function(div_id, name, environments, options_in){
                 disable_all();
             }
 
-            $(document).mouseup(function(e){
+            $(document).on("mouseup", function(e){
                 if(path_selector.has(e.target).length === 0 && !options.inline) {
                     path_selector.hide();
                 }
@@ -259,11 +259,11 @@ KT.path_select = function(div_id, name, environments, options_in){
            }
            if(!options.inline){
                path_selector.show();
-               scroll_obj.bind('#' + KT.common.escapeId(paths_id));
+               scroll_obj.on('#' + KT.common.escapeId(paths_id));
                path_selector.hide();
            }
            else {
-               scroll_obj.bind('#' + KT.common.escapeId(paths_id));
+               scroll_obj.on('#' + KT.common.escapeId(paths_id));
            }
         },
         get_submit_event = function(){

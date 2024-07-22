@@ -6,8 +6,8 @@ $(document).on('ContentLoad', function(){
     window.tfm.hosts.registerPluginAttributes("os",
          ['lifecycle_environment_id', 'content_view_id', 'environment_id', 'content_source_id', 'architecture_id', 'parent_id']);
 
-    $("#hostgroup_lifecycle_environment_id").change(KT.hosts.environmentChanged);
-    $("#host_lifecycle_environment_id").change(KT.hosts.environmentChanged);
+    $("#hostgroup_lifecycle_environment_id").on("change",KT.hosts.environmentChanged);
+    $("#host_lifecycle_environment_id").on("change", KT.hosts.environmentChanged);
 
     KT.hosts.update_media_enablement();
     KT.hosts.set_media_selection_bindings();
@@ -266,10 +266,10 @@ KT.hosts.on_synced_content_dropdown_change = function() {
 
 KT.hosts.set_install_media_bindings = function() {
     // reset the host medium id
-    $("#host_medium_id").change(KT.hosts.on_install_media_dropdown_change);
-    $("#s2id_host_medium_id").change(KT.hosts.on_install_media_dropdown_change);
-    $("#hostgroup_medium_id").change(KT.hosts.on_install_media_dropdown_change);
-    $("#s2id_hostgroup_medium_id").change(KT.hosts.on_install_media_dropdown_change);
+    $("#host_medium_id").on("change", KT.hosts.on_install_media_dropdown_change);
+    $("#s2id_host_medium_id").on("change", KT.hosts.on_install_media_dropdown_change);
+    $("#hostgroup_medium_id").on("change", KT.hosts.on_install_media_dropdown_change);
+    $("#s2id_hostgroup_medium_id").on("change", KT.hosts.on_install_media_dropdown_change);
 };
 
 KT.hosts.set_synced_content_bindings = function() {

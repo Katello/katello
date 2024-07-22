@@ -20,13 +20,13 @@ KT.env_content_view_selector = (function() {
             saved_content_view_id = current_content_view_id;
 
             env_select = KT.path_select(env_div_id, name, envs, {select_mode:'single', inline: true});
-            $(document).unbind(env_select.get_select_event());
+            $(document).off(env_select.get_select_event());
 
             // select the current environment
             env_select.select(current_env_id);
 
             // if the user changes the environment, update the available content views
-            $(document).bind(env_select.get_select_event(), function(event) {
+            $(document).on(env_select.get_select_event(), function(event) {
                 update_content_views(KT.utils.keys(env_select.get_selected()));
                 enable_buttons();
             });
@@ -34,7 +34,7 @@ KT.env_content_view_selector = (function() {
             // render the content view selector and the save/cancel buttons
             render_selector(content_view_div, selector_buttons_div, content_views, current_content_view_id);
 
-            $('#content_view_select').unbind('change').change(function() {
+            $('#content_view_select').off('change').on("change", function() {
                 enable_buttons();
             });
             disable_buttons();
@@ -44,7 +44,7 @@ KT.env_content_view_selector = (function() {
         },
         register_cancel = function() {
             var cancel_button = $('.cancel_env_content_view');
-            cancel_button.unbind('click').click(function(e) {
+            cancel_button.off('click').on("click", function(e) {
                var current_env = KT.utils.values(env_select.get_selected());
 
                 if ((current_env.length === 0) || (current_env[0]['id'] !== saved_env_id)) {
@@ -60,7 +60,7 @@ KT.env_content_view_selector = (function() {
         },
         register_save = function() {
             var save_button = $('.save_env_content_view');
-            save_button.unbind('click').click(function(e) {
+            save_button.off('click').on("click", function(e) {
                 e.preventDefault();
                 disable_buttons();
 
