@@ -73,7 +73,7 @@ module Katello
       current_subs == new_url_subs
     end
 
-    def self.substitute_content_path(arch: nil, releasever: nil, content_path:)
+    def self.substitute_content_path(content_path:, arch: nil, releasever: nil)
       arch = nil if arch == "noarch"
       substitutions = {
         :releasever => releasever,

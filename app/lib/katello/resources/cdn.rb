@@ -51,7 +51,7 @@ module Katello
           @options = options
         end
 
-        def self.create(product: nil, cdn_configuration:)
+        def self.create(cdn_configuration:, product: nil)
           options = {}
           if cdn_configuration.redhat_cdn?
             options[:ssl_client_cert] = OpenSSL::X509::Certificate.new(product.certificate)

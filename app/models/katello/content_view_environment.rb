@@ -75,7 +75,7 @@ module Katello
       end
     end
 
-    def self.fetch_content_view_environments(labels: [], ids: [], organization:)
+    def self.fetch_content_view_environments(organization:, labels: [], ids: [])
       # Must do maps here to ensure CVEs remain in the same order.
       # Using ActiveRecord .where will return them in a different order.
       if ids.present?
