@@ -123,7 +123,7 @@ module Katello
         [
           {
             'displayName' => @org.name,
-            'key' => @org.label
+            'key' => @org.label,
           }
         ]
       )

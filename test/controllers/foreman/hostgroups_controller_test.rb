@@ -24,9 +24,9 @@ class HostgroupsControllerTest < ActionController::TestCase
         :name => "foobar",
         :content_facet_attributes => {
           :content_view_id => @library_view.id,
-          :lifecycle_environment_id => @library.id
-        }
-      }
+          :lifecycle_environment_id => @library.id,
+        },
+      },
     }
 
     assert_equal 1, ::Hostgroup.unscoped.where(:name => "foobar").count
@@ -49,8 +49,8 @@ class HostgroupsControllerTest < ActionController::TestCase
         :content_view_id => repo.content_view.id,
         :lifecycle_environment_id => repo.environment.id,
         :content_source_id => smart_proxy.id,
-        :kickstart_repository_id => repo.id
-      }
+        :kickstart_repository_id => repo.id,
+      },
 
     }
 

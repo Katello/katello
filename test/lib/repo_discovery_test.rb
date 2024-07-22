@@ -34,7 +34,7 @@ module Katello
         host: "mytest.com",
         port: 443,
         user: nil,
-        password: nil
+        password: nil,
       }
 
       Spidr.expects(:site).with(base_url, proxy: expected_proxy_params).returns
@@ -59,7 +59,7 @@ module Katello
       found = []
       to_follow = [base_url]
       upstream_credentials_and_search = {
-        search: 'busybox'
+        search: 'busybox',
       }
 
       RestClient::Request.expects(:execute)
@@ -78,7 +78,7 @@ module Katello
       found = []
       to_follow = [base_url]
       upstream_credentials_and_search = {
-        search: 'busybox'
+        search: 'busybox',
       }
 
       RestClient::Request.expects(:execute)
@@ -103,7 +103,7 @@ module Katello
       found = []
       to_follow = [base_url]
       upstream_credentials_and_search = {
-        search: 'busybox'
+        search: 'busybox',
       }
 
       RestClient::Request.expects(:execute)

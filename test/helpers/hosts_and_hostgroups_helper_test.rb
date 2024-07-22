@@ -88,7 +88,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
       "content_view_id" => @cv.id,
       "lifecycle_environment_id" => @env.id,
       "content_source_id" => @content_source.id,
-      "architecture_id" => @arch.id
+      "architecture_id" => @arch.id,
     }}.with_indifferent_access
     ret = [{:name => "boo" }]
     ::Operatingsystem.expects(:find).with(@os.id).returns(@os).at_least_once

@@ -31,7 +31,7 @@ module Katello
         key_pools.map do |key_pool|
           {
             :amount => (key_pool[:quantity] || 0),
-            :id => key_pool[:poolId]
+            :id => key_pool[:poolId],
           }.with_indifferent_access
         end
       end

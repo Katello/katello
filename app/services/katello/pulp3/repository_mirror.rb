@@ -92,7 +92,7 @@ module Katello
       def distribution_options(path, options = {})
         ret = {
           base_path: path,
-          name: "#{backend_object_name}"
+          name: "#{backend_object_name}",
         }
         ret[:content_guard] = repo.unprotected ? nil : content_guard_href
         ret[:publication] = options[:publication] if options.key? :publication
@@ -145,7 +145,7 @@ module Katello
           connect_timeout: Setting[:sync_connect_timeout_v2],
           sock_connect_timeout: Setting[:sync_sock_connect_timeout],
           sock_read_timeout: Setting[:sync_sock_read_timeout],
-          rate_limit: Setting[:download_rate_limit]
+          rate_limit: Setting[:download_rate_limit],
         }
         remote_options.merge!({download_concurrency: repo.download_concurrency}) if repo.download_concurrency
         remote_options.merge!(ssl_remote_options)
@@ -157,7 +157,7 @@ module Katello
           client_cert: ueber_cert[:cert],
           client_key: ueber_cert[:key],
           ca_cert: ::Cert::Certs.ca_cert,
-          tls_validation: true
+          tls_validation: true,
         }
       end
 

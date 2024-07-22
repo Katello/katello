@@ -146,7 +146,7 @@ module Katello
           :releaseVer => release_version,
           :environments => self.candlepin_environments,
           :installedProducts => self.installed_products.map(&:consumer_attributes),
-          :guestIds => virtual_guest_uuids
+          :guestIds => virtual_guest_uuids,
         }
         attrs[:facts] = facts if facts
         HashWithIndifferentAccess.new(attrs)
@@ -305,7 +305,7 @@ module Katello
         # might make you think it was converted2rhel but not with satellite, that is why I have the tenary below.
         facet = host.subscription_facet || host.build_subscription_facet
         facet.attributes = {
-          convert2rhel_through_foreman: has_convert2rhel ? ::Foreman::Cast.to_bool(parser.facts['conversions.env.CONVERT2RHEL_THROUGH_FOREMAN']) : nil
+          convert2rhel_through_foreman: has_convert2rhel ? ::Foreman::Cast.to_bool(parser.facts['conversions.env.CONVERT2RHEL_THROUGH_FOREMAN']) : nil,
         }.compact
         facet.save unless facet.new_record?
       end

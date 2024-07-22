@@ -315,7 +315,7 @@ module Katello
           "/content_hosts/#{host.id}",
           :title => _("Host content and subscription details"),
           :class => 'btn btn-default'),
-        :priority => 900
+        :priority => 900,
       }]
     end
 
@@ -331,7 +331,7 @@ module Katello
       icons = {
         green: "#{colour} host-status pficon pficon-ok status-ok",
         yellow: "#{colour} host-status pficon pficon-info status-warn",
-        red: "#{colour} host-status pficon pficon-error-circle-o status-error"
+        red: "#{colour} host-status pficon pficon-error-circle-o status-error",
       }
 
       "<span class=\"#{icons[colour]}\"></span>".html_safe

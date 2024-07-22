@@ -45,7 +45,7 @@ child @lifecycle_environments => :lifecycle_environments do
       :id => last_env_sync_task&.id,
       :started_at => last_env_sync_task&.started_at,
       :result => last_env_sync_task&.result,
-      :last_sync_words => last_env_sync_task.try(:started_at) ? time_ago_in_words(Time.parse(last_env_sync_task.started_at.to_s)) : nil
+      :last_sync_words => last_env_sync_task.try(:started_at) ? time_ago_in_words(Time.parse(last_env_sync_task.started_at.to_s)) : nil,
     }
     attributes
   end
@@ -53,7 +53,7 @@ child @lifecycle_environments => :lifecycle_environments do
   if @capsule.has_feature?(SmartProxy::PULP_NODE_FEATURE) || @capsule.has_feature?(SmartProxy::PULP3_FEATURE)
     node :counts do |env|
       {
-        :content_views => env.content_views.non_default.count
+        :content_views => env.content_views.non_default.count,
       }
     end
 
@@ -71,7 +71,7 @@ child @lifecycle_environments => :lifecycle_environments do
           :default => content_view.default,
           :up_to_date => @capsule.repos_pending_sync(env, content_view).empty?,
           :counts => {
-            :repositories => ::Katello::ContentViewVersion.in_environment(env).find_by(:content_view => content_view)&.archived_repos&.count
+            :repositories => ::Katello::ContentViewVersion.in_environment(env).find_by(:content_view => content_view)&.archived_repos&.count,
           },
           :repositories => ::Katello::ContentViewVersion.in_environment(env)&.find_by(:content_view => content_view)&.archived_repos&.map do |repo|
                              {
@@ -79,9 +79,9 @@ child @lifecycle_environments => :lifecycle_environments do
                                :name => repo.name,
                                :library_id => repo.library_instance_id,
                                :product_id => repo.product_id,
-                               :content_type => repo.content_type
+                               :content_type => repo.content_type,
                              }
-                           end
+                           end,
         }
         attributes
       end

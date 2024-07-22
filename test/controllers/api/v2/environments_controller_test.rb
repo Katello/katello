@@ -36,7 +36,7 @@ module Katello
         :name => name,
         :label => label,
         :description => description,
-        :prior => @library.id
+        :prior => @library.id,
       } }
 
       assert_response :success
@@ -56,7 +56,7 @@ module Katello
       assert_difference('KTEnvironment.count') do
         post :create, params: { :organization_id => @organization.id, :environment => {
           :name => env_name,
-          :prior => @library.id
+          :prior => @library.id,
         } }
       end
       assert_response :success
@@ -70,7 +70,7 @@ module Katello
       assert_difference('KTEnvironment.count', 0) do
         post :create, params: { :organization_id => @organization.id, :environment => {
           :name => '',
-          :prior => @library.id
+          :prior => @library.id,
         } }
       end
       assert_response :unprocessable_entity
@@ -79,7 +79,7 @@ module Katello
     test_attributes :pid => '55723382-9d98-43c8-85fb-df4702ca7478'
     def test_update_with_invalid_name
       put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
-        :name => ''
+        :name => '',
       } }
       assert_response :unprocessable_entity
     end
@@ -91,7 +91,7 @@ module Katello
         :label => 'dev_env',
         :description => 'This environment is for development.',
         :prior => @library.id,
-        :registry_name_pattern => '<%= repository.label %>'
+        :registry_name_pattern => '<%= repository.label %>',
       } }
 
       assert_response :success
@@ -104,7 +104,7 @@ module Katello
         :label => 'dev_env',
         :description => 'This environment is for development.',
         :prior => @library.id,
-        :registry_name_pattern => '<%= repository.label %> <%= lifecycle_environment.label %>'
+        :registry_name_pattern => '<%= repository.label %> <%= lifecycle_environment.label %>',
       } }
 
       assert_response :success
@@ -113,7 +113,7 @@ module Katello
     def test_create_fail
       Organization.any_instance.stubs(:save!).returns(@organization)
       post :create, params: { :organization_id => @organization.id, :environment => {
-        :description => 'This environment is for development.'
+        :description => 'This environment is for development.',
       } }
 
       assert_response :bad_request
@@ -130,7 +130,7 @@ module Katello
           :name => 'dev env',
           :label => 'dev_env',
           :description => 'This environment is for development.',
-          :prior => @library.id
+          :prior => @library.id,
         } }
       end
     end
@@ -144,7 +144,7 @@ module Katello
         :new_name => new_name,
         :label => 'New Label',
         :description => new_description,
-        :registry_unauthenticated_pull => true
+        :registry_unauthenticated_pull => true,
       } }
 
       assert_response :success
@@ -166,7 +166,7 @@ module Katello
         :environment => {
           :new_name => 'New Name',
           :label => 'New Label',
-          :registry_name_pattern => '<%= repository.label %>'
+          :registry_name_pattern => '<%= repository.label %>',
         }
       }
 
@@ -186,7 +186,7 @@ module Katello
         :environment => {
           :new_name => 'New Name',
           :label => 'New Label',
-          :registry_name_pattern => '<%= repository.label %>'
+          :registry_name_pattern => '<%= repository.label %>',
         }
       }
 
@@ -205,7 +205,7 @@ module Katello
         :environment => {
           :new_name => 'New Name',
           :label => 'New Label',
-          :registry_unauthenticated_pull => true
+          :registry_unauthenticated_pull => true,
         }
       }
 
@@ -225,7 +225,7 @@ module Katello
         :environment => {
           :new_name => 'New Name',
           :label => 'New Label',
-          :registry_unauthenticated_pull => true
+          :registry_unauthenticated_pull => true,
         }
       }
 
@@ -239,7 +239,7 @@ module Katello
       put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
         :new_name => 'New Name',
         :label => 'New Label',
-        :registry_name_pattern => '<%= repository.label %> <%= organization.label %>'
+        :registry_name_pattern => '<%= repository.label %> <%= organization.label %>',
       } }
 
       assert_response :success
@@ -251,7 +251,7 @@ module Katello
 
       assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
         put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
-          :new_name => 'New Name'
+          :new_name => 'New Name',
         } }
       end
     end

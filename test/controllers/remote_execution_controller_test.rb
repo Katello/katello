@@ -24,8 +24,8 @@ module Katello
       bulk_host_ids =
         {
           included: {
-            ids: [hosts(:one).id]
-          }
+            ids: [hosts(:one).id],
+          },
         }.to_json
 
       post :create, params: {
@@ -39,8 +39,8 @@ module Katello
       bulk_host_ids =
         {
           included: {
-            ids: [hosts(:one).id]
-          }
+            ids: [hosts(:one).id],
+          },
         }.to_json
 
       post :create, params: {
@@ -55,15 +55,15 @@ module Katello
       bulk_host_ids =
         {
           included: {
-            ids: [hosts(:one).id]
-          }
+            ids: [hosts(:one).id],
+          },
         }.to_json
 
       bulk_errata_ids =
         {
           included: {
-            ids: [katello_errata(:security).errata_id]
-          }
+            ids: [katello_errata(:security).errata_id],
+          },
         }.to_json
 
       post :create, params: {

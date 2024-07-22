@@ -40,7 +40,7 @@ module Katello
       {
         processed_count: @processed_count,
         failed_count: @failed_count,
-        running: running?
+        running: running?,
       }
     end
 

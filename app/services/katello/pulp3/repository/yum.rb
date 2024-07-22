@@ -50,7 +50,7 @@ module Katello
           {
             base_path: path,
             publication: repo.publication_href,
-            name: "#{generate_backend_object_name}"
+            name: "#{generate_backend_object_name}",
           }
         end
 
@@ -141,7 +141,7 @@ module Katello
             config_hash = {
               source_repo_version: repo_config[:source_repo_version],
               dest_repo: repo_config[:dest_repo],
-              content: []
+              content: [],
             }
             config_hash[:dest_base_version] = repo_config[:dest_base_version] if repo_config[:dest_base_version]
             data_dup.config << config_hash

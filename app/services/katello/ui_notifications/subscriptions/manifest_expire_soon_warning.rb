@@ -58,9 +58,9 @@ module Katello
                 {
                   :href => "/subscriptions",
                   :title => _('Subscriptions'),
-                  :external => false
+                  :external => false,
                 }
-              ]
+              ],
             }
           end
 

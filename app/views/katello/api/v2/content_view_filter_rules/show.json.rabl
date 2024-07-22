@@ -20,7 +20,7 @@ if @resource&.try(:module_stream)
     {
       :module_stream_id => rule.module_stream.id,
       :module_stream_name => rule.module_stream.name,
-      :module_stream_stream => rule.module_stream.stream
+      :module_stream_stream => rule.module_stream.stream,
     }
   end
 end

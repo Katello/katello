@@ -44,7 +44,7 @@ module Katello
         content_source_id: @content_source.id,
         lifecycle_environment_id: @env.id,
         content_view_id: @cv.id,
-        kickstart_repository_id: @distro.id
+        kickstart_repository_id: @distro.id,
       }.with_indifferent_access
 
       audits = [ mock_audit(expected.slice(:content_source_id, :lifecycle_environment_id)),
@@ -68,7 +68,7 @@ module Katello
       expected = {
         content_source_id: @content_source.id,
         lifecycle_environment_id: @env.id,
-        content_view_id: nil
+        content_view_id: nil,
       }.with_indifferent_access
       assert_equal expected, @helper.pick_facet_values(@hostgroup)
     end

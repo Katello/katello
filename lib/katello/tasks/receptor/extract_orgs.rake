@@ -13,7 +13,7 @@ namespace :katello do
           id: org.id,
           redhat_account_number: org.redhat_account_number,
           cert: org.owner_details.dig(:upstreamConsumer, :idCert, :cert),
-          key: org.owner_details.dig(:upstreamConsumer, :idCert, :key)
+          key: org.owner_details.dig(:upstreamConsumer, :idCert, :key),
         }
       end
 

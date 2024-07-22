@@ -118,7 +118,7 @@ module Katello
           schema: "label",
           organization: segments[2],
           product: segments[3],
-          name: segments[4]
+          name: segments[4],
         }
       elsif segments.length >= 8 && segments[0] == "" && segments[1] == "v2" &&
         segments[2] == "id" && (segments[6] == "blobs" || segments[6] == "manifests")
@@ -128,7 +128,7 @@ module Katello
           schema: "id",
           organization: segments[3],
           product: segments[4],
-          name: segments[5]
+          name: segments[5],
         }
       else
         return {valid_format: false}
@@ -505,7 +505,7 @@ module Katello
         # We're keeping the 'expires_at' field for now to maintain compatibility with existing
         # smart-proxies during 4.11 upgrades. This is not a part of OAuth2 spec.
         # TODO - Remove 'expires_at' in Katello 4.13 or later.
-        expires_at: expiry_time.rfc3339
+        expires_at: expiry_time.rfc3339,
       }
     end
 
@@ -639,7 +639,7 @@ module Katello
 
       authenticate # to set current_user, not to enforce
       options = {
-        resource_class: Katello::Repository
+        resource_class: Katello::Repository,
       }
       params[:per_page] = params[:n] || 25
       params[:search] = params[:q]
@@ -649,7 +649,7 @@ module Katello
 
       results = {
         num_results: search_results[:subtotal],
-        query: params[:search]
+        query: params[:search],
       }
       results[:results] = search_results[:results].collect do |repository|
         { name: repository[:container_repository_name], description: repository[:description] }
@@ -672,7 +672,7 @@ module Katello
       tags.sort!
       render json: {
         name: @repository.container_repository_name,
-        tags: tags
+        tags: tags,
       }
     end
 

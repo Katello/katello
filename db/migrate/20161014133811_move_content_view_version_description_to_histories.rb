@@ -15,7 +15,7 @@ class MoveContentViewVersionDescriptionToHistories < ActiveRecord::Migration[4.2
       publish: 1,
       promotion: 2,
       removal: 3,
-      export: 4
+      export: 4,
     }
   end
 

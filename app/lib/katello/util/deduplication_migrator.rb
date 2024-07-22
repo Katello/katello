@@ -7,24 +7,24 @@ module Katello
         [
           {
             :model => ::Katello::CapsuleLifecycleEnvironment,
-            :fields => [:lifecycle_environment_id, :capsule_id]
+            :fields => [:lifecycle_environment_id, :capsule_id],
           },
           {
             :model => ::Katello::ContentViewErratumFilterRule,
-            :fields => [:errata_id, :content_view_filter_id]
+            :fields => [:errata_id, :content_view_filter_id],
           },
           {
             :model => ::Katello::ContentViewModuleStreamFilterRule,
-            :fields => [:module_stream_id, :content_view_filter_id]
+            :fields => [:module_stream_id, :content_view_filter_id],
           },
           {
             :model => ::Katello::ContentViewPackageGroupFilterRule,
-            :fields => [:uuid, :content_view_filter_id]
+            :fields => [:uuid, :content_view_filter_id],
           },
           {
             :model =>
             ::Katello::ContentViewRepository,
-            :fields => [:content_view_id, :repository_id]
+            :fields => [:content_view_id, :repository_id],
           }
         ]
       end
@@ -33,7 +33,7 @@ module Katello
         [
           {
             :model => ::Katello::ContentView,
-            :fields => [:name, :organization_id]
+            :fields => [:name, :organization_id],
           }
         ]
       end
