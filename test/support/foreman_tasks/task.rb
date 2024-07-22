@@ -32,7 +32,7 @@ module Support
 
         valid_args = lambda do |*args|
           msg = "ActionController::Parameters were sent to an action. Please convert to a Hash"
-          fail(msg) if args.any? { |a| a.class == ActionController::Parameters }
+          fail(msg) if args.any? { |a| a.instance_of?(ActionController::Parameters) }
           true
         end
 
