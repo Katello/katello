@@ -8,7 +8,7 @@
 /**
  * Document Ready function
  */
-$(document).ready(function (){
+$(document).on('loadJS', function (){
   KT.menu.menuSetup();
 });
 
@@ -60,19 +60,19 @@ KT.menu = (function(){
         var currentSubnav = subnav.find('.' + tabType + '.second_level').parent();
         var enter = function(){topLevelTab.trigger("mouseenter");};
         var leave = function(){topLevelTab.delay("800").trigger("mouseout")};
-        currentSubnav.hover(function(){enter()},function(){leave()});
+        currentSubnav.on('mouseenter', enter).on('mouseleave', leave);
 
-        topLevelTab.bind("open", function(){
+        topLevelTab.on("open", function(){
             //make the tab "highlight" on hover
             $(this).addClass('selected');
             activeSubnav.hide();
             //show the current subnav and trigger it to stay open
             currentSubnav.slideDown('fast');
             topLevelTab.trigger("hovering");
-          }).bind("hovering", function(){
+          }).on("hovering", function(){
             currentSubnav.show();
           })
-          .bind("close.menu", function(){
+          .on("close.menu", function(){
             //take away tab highlight
             if(!$(this).hasClass('active')) {
                 $(this).removeClass('selected');
@@ -100,13 +100,13 @@ KT.menu = (function(){
 
       li.hoverIntent(
           function(){
-            $(document).mouseup();
+            $(document).trigger("mouseup");
             ul.addClass("third_level").slideDown('fast');
           },
           function(){
             ul.slideUp('fast').removeClass("third_level");
       });
-      li.mouseenter().mouseleave();
+      li.trigger("mouseenter").trigger("mouseleave");
     }
   };
 })();

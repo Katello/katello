@@ -342,7 +342,7 @@
       this.search_results.mouseout(__bind(function(evt) {
         return this.search_results_mouseout(evt);
       }, this));
-      this.form_field_jq.bind("liszt:updated", __bind(function(evt) {
+      this.form_field_jq.on("liszt:updated", __bind(function(evt) {
         return this.results_update_field(evt);
       }, this));
       this.search_field.blur(__bind(function(evt) {
@@ -358,7 +358,7 @@
         this.search_choices.click(__bind(function(evt) {
           return this.choices_click(evt);
         }, this));
-        return this.search_field.focus(__bind(function(evt) {
+        return this.search_field.on("focus", __bind(function(evt) {
           return this.input_focus(evt);
         }, this));
       }
@@ -376,7 +376,7 @@
         this.container.removeClass('chzn-disabled');
         this.search_field.attr('disabled', false);
         if (!this.is_multiple) {
-          return this.selected_item.bind("focus", this.activate_action);
+          return this.selected_item.on("focus", this.activate_action);
         }
       }
     };
