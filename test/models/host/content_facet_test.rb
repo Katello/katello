@@ -405,7 +405,7 @@ module Katello
       content_facet.update_repositories_by_paths([
                                                    "/pulp/content/#{repo.relative_path}",
                                                    "/pulp/content/#{deb_repo.relative_path}",
-                                                   "/pulp/content/Library/test/"
+                                                   "/pulp/content/Library/test/",
                                                  ])
 
       assert_equal_arrays content_facet.bound_repositories, [deb_repo, repo]

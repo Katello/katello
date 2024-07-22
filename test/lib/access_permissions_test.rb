@@ -27,7 +27,7 @@ module Katello
       'katello/api/rhsm/candlepin_proxies/post',
       'katello/api/rhsm/candlepin_proxies/get',
       'katello/api/rhsm/candlepin_proxies/delete',
-      'katello/api/rhsm/candlepin_proxies/serials'
+      'katello/api/rhsm/candlepin_proxies/serials',
     ].freeze
 
     KATELLO_NON_AUTH = [
@@ -39,7 +39,7 @@ module Katello
       'katello/api/v2/katello_ping/index',
       'katello/api/v2/katello_ping/server_status',
       'katello/api/v2/root/rhsm_resource_list',
-      'katello/react/index'
+      'katello/react/index',
     ].freeze
 
     check_routes(Katello::Engine.routes, KATELLO_SUB_MAN_AUTH + KATELLO_NON_AUTH)

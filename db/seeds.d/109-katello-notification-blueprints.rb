@@ -15,7 +15,7 @@ blueprints = [
       links:
       [
         path_method: :smart_proxy_path,
-        title: N_('Details')
+        title: N_('Details'),
       ],
     },
   },
@@ -105,10 +105,10 @@ blueprints = [
     actions: {
       links: [
         path_method: :about_index_path,
-        title: N_('About page')
+        title: N_('About page'),
       ],
     },
-  }
+  },
 ]
 
 blueprints.each { |blueprint| UINotifications::Seed.new(blueprint).configure }

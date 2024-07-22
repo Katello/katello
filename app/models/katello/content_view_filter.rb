@@ -41,7 +41,7 @@ module Katello
     def self.yum(include_module_streams = true)
       types = [::Katello::ContentViewPackageGroupFilter.name,
                ::Katello::ContentViewErratumFilter.name,
-               ::Katello::ContentViewPackageFilter.name
+               ::Katello::ContentViewPackageFilter.name,
               ]
       types << ::Katello::ContentViewModuleStreamFilter.name if include_module_streams
       where(:type => types)

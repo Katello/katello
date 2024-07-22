@@ -92,7 +92,7 @@ module Katello::Host
     def test_hypervisor_duplicate_bios_uuid
       hypervisor_results = [
         {name: "hypervisor1.example.com", uuid: "040d7c29-5075-4173-a8e2-64ebbdef03ca", organization_label: @organization.label},
-        {name: "hypervisor2.example.com", uuid: "040d7c29-5075-4173-a8e2-64ebbdef03ca", organization_label: @organization.label}
+        {name: "hypervisor2.example.com", uuid: "040d7c29-5075-4173-a8e2-64ebbdef03ca", organization_label: @organization.label},
       ]
       consumer = {
         "uuid" => "040d7c29-5075-4173-a8e2-64ebbdef03ca",

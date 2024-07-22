@@ -18,7 +18,7 @@ namespace :katello do
     models = [
       Katello::Subscription,
       Katello::Pool,
-      Katello::Content
+      Katello::Content,
     ]
 
     models.each do |model|

@@ -5,7 +5,7 @@ class UpdateSystemPurposeStatus < ActiveRecord::Migration[6.0]
       "Katello::PurposeAddonsStatus",
       "Katello::PurposeRoleStatus",
       "Katello::PurposeSlaStatus",
-      "Katello::PurposeUsageStatus"
+      "Katello::PurposeUsageStatus",
     ]
 
     # load both sets of host statuses and *then* update them to make sure we update the correct statuses

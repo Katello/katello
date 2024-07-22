@@ -60,7 +60,7 @@ module Katello
         mock_audit(content_source_id: @content_source.id,
                    lifecycle_environment_id: @env.id,
                    content_view_id: @cv.id),
-        mock_audit(content_view_id: nil)
+        mock_audit(content_view_id: nil),
       ]
       @hostgroup.expects(:audits).returns(audits)
 

@@ -25,7 +25,7 @@ module Katello
             :model =>
             ::Katello::ContentViewRepository,
             :fields => [:content_view_id, :repository_id],
-          }
+          },
         ]
       end
 
@@ -34,7 +34,7 @@ module Katello
           {
             :model => ::Katello::ContentView,
             :fields => [:name, :organization_id],
-          }
+          },
         ]
       end
 

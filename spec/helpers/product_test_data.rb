@@ -7,7 +7,7 @@ module Katello
         { 'productId' => 'product_1' },
         { 'productId' => 'product_2', 'providedProductIds' => ['p product 1', 'p product 2'] },
         { 'productId' => 'product_3', 'providedProductIds' => ['p product 1', 'p product 3'] },
-        { 'productId' => 'product_4', 'providedProductIds' => ['p product 4', 'p product 3'] }
+        { 'productId' => 'product_4', 'providedProductIds' => ['p product 4', 'p product 3'] },
       ].freeze
 
     PRODUCT_NAME ||= "Load_Balancing".freeze
@@ -84,7 +84,7 @@ module Katello
         },
         "enabled" => true,
         "flexEntitlement" => 0,
-        "physicalEntitlement" => 0}
+        "physicalEntitlement" => 0},
                          ],
       :attrs => {'name' => ProductTestData::PRODUCT_NAME}
     )
@@ -106,7 +106,7 @@ module Katello
           "productId" => "20",
           "updated" => "2011-07-11T20=>26=>26.511+0000",
           "created" => "2011-07-11T20=>26=>26.511+0000",
-        }
+        },
       ],
       "endDate" => "2025-05-29T00=>00=>00.000+0000",
       "startDate" => "2011-07-11T20=>10=>22.519+0000",

@@ -48,7 +48,7 @@ module Katello
                    download_policy: 'immediate',
                    mirroring_policy: nil,
                    content: nil
-                  )
+                  ),
             ]
 
             helper = Katello::Pulp3::ContentViewVersion::ImportableRepositories.new(
@@ -111,7 +111,7 @@ module Katello
                    download_policy: 'immediate',
                    mirroring_policy: nil,
                    content: stub(label: new_repo_1, id: nil, url: content_url)
-                  )
+                  ),
             ]
 
             helper = Katello::Pulp3::ContentViewVersion::ImportableRepositories.new(
@@ -141,7 +141,7 @@ module Katello
                 arch: repo.arch,
                 major: repo.major,
                 minor: repo.minor
-              )
+              ),
             ]
 
             helper = Katello::Pulp3::ContentViewVersion::ImportableRepositories.new(
@@ -174,7 +174,7 @@ module Katello
                 arch: repo.arch,
                 major: repo.major,
                 minor: repo.minor
-              )
+              ),
             ]
             path = "/var/lib/pulp/exports/Default_Org/CV/2.0"
             helper = Katello::Pulp3::ContentViewVersion::ImportableRepositories.new(
@@ -209,7 +209,7 @@ module Katello
                 arch: repo.arch,
                 major: repo.major,
                 minor: repo.minor
-              )
+              ),
             ]
 
             helper = Katello::Pulp3::ContentViewVersion::ImportableRepositories.new(
@@ -250,7 +250,7 @@ module Katello
                    download_policy: 'immediate',
                    mirroring_policy: nil,
                    content: nil
-                  )
+                  ),
             ]
 
             helper = Katello::Pulp3::ContentViewVersion::ImportableRepositories.new(

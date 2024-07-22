@@ -42,7 +42,7 @@ module Katello
           {
             :name => _("Inherit from Repository"),
             :label => SmartProxy::DOWNLOAD_INHERIT,
-          }
+          },
         ]
 
         policies.map { |p| OpenStruct.new(p) }

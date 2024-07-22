@@ -124,7 +124,7 @@ module Katello
           {
             'displayName' => @org.name,
             'key' => @org.label,
-          }
+          },
         ]
       )
       super

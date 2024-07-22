@@ -71,7 +71,7 @@ User.as(::User.anonymous_api_admin.login) do
      :mailer => 'Katello::TaskMailer',
      :method => 'proxy_sync_failure',
      :subscription_type => 'alert',
-    }
+    },
   ]
 
   notifications.each do |notification|

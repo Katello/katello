@@ -40,7 +40,7 @@ module Katello
             "arch": "x86_64",
             "artifacts": [
               "walrus-0:5.21-1.noarch",
-              "foobar-8.noarch"
+              "foobar-8.noarch",
             ],
             "dependencies": [
 

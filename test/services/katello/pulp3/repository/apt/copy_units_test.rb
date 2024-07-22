@@ -25,7 +25,7 @@ module Katello
             { source_repo_version: "another source repo",
               dest_repo: "another dest repo",
               content: ["4", "5", "6"],
-              dest_base_version: 1 }
+              dest_base_version: 1 },
           ]
           data.dependency_solving = false
 
@@ -44,7 +44,7 @@ module Katello
             { source_repo_version: "another source repo",
               dest_repo: "another dest repo",
               content: ["4", "5", "6"],
-              dest_base_version: 1 }
+              dest_base_version: 1 },
           ]
           data.dependency_solving = false
 

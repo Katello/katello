@@ -90,7 +90,7 @@ class HostsControllerTest < ActionController::TestCase
         'OS',
         'Content View Environments',
         'Registered',
-        'Last Checkin'
+        'Last Checkin',
       ]
 
       assert_equal expected_columns, csv_body.first

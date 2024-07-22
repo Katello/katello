@@ -23,7 +23,7 @@ module Katello
       assert_not_valid yum_acs_dup_name
       assert_equal yum_acs_dup_name.errors.full_messages, [
         "Label has already been taken",
-        "Name has already been taken"
+        "Name has already been taken",
       ]
     end
 

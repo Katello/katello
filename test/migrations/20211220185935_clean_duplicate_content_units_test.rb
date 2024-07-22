@@ -13,7 +13,7 @@ module Katello
     let(:migrations) do
       [
         ActiveRecord::MigrationProxy.new("AddContentViewAndLifecycleEnvironment", previous_version, "#{Katello::Engine.root}/db/migrate//20211208034230_add_content_view_and_lifecycle_environment.rb", ""),
-        ActiveRecord::MigrationProxy.new("CleanDuplicateContentUnits", current_version, "#{Katello::Engine.root}/db/migrate/20211220185935_clean_duplicate_content_units.rb", "")
+        ActiveRecord::MigrationProxy.new("CleanDuplicateContentUnits", current_version, "#{Katello::Engine.root}/db/migrate/20211220185935_clean_duplicate_content_units.rb", ""),
       ]
     end
 

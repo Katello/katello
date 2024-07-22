@@ -153,7 +153,7 @@ module Katello
             },
             {
               "baseurl" => ["https://hostname/pulp/content/baz"],
-            }
+            },
           ],
         }
       end
@@ -164,7 +164,7 @@ module Katello
             "/pulp/content/foo",
             "/pulp/content/bar",
             "/pulp/content/bar",
-            "/pulp/content/baz"
+            "/pulp/content/baz",
           ])
         put :enabled_repos, params: { :id => @host.subscription_facet.uuid, :enabled_repos => enabled_repos }
         assert_equal 200, response.status

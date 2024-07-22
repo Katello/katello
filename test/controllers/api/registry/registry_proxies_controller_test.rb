@@ -662,7 +662,7 @@ module Katello
           "/v2/foo/bar/baz/blobs/uploads?qwertyuiop=asdfghjkl",
           "/v2/foo/bar/baz/manifests/additional/directories/after/name",
           "/v2/id/0/0/foo/blobs/uploads",
-          "/v2/id/867/5309/foo/blobs/uploads?qwertyuiop=asdfghjkl"
+          "/v2/id/867/5309/foo/blobs/uploads?qwertyuiop=asdfghjkl",
         ]
         results = [
           {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"},
@@ -671,7 +671,7 @@ module Katello
           {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"},
           {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"},
           {valid_format: true, schema: "id", organization: "0", product: "0", name: "foo"},
-          {valid_format: true, schema: "id", organization: "867", product: "5309", name: "foo"}
+          {valid_format: true, schema: "id", organization: "867", product: "5309", name: "foo"},
         ]
         path_strings.each_index do |i|
           actual_result = @controller.parse_blob_push_props(path_strings[i])
@@ -698,7 +698,7 @@ module Katello
           "/v2/id/0/0/wrong",
           "/v2/id/0/0/foo/wrong",
           "/v2/id/0/0/foo/blobs/",
-          "/v2/id/0/0/foo/manifests/"
+          "/v2/id/0/0/foo/manifests/",
         ]
         path_strings.each do |path_string|
           result = @controller.parse_blob_push_props(path_string)
@@ -921,7 +921,7 @@ module Katello
           {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"},
           {valid_format: true, schema: "label", organization: "default_organization", product: "test_product", name: "test_name"},
           {valid_format: true, schema: "id", organization: "0", product: "0", name: "test_name"},
-          {valid_format: true, schema: "id", organization: "867", product: "5309", name: "foo"}
+          {valid_format: true, schema: "id", organization: "867", product: "5309", name: "foo"},
         ]
         prop_list.each do |props|
           mock_root_repo = mock('root_repository')
