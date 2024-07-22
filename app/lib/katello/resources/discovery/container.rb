@@ -109,7 +109,7 @@ module Katello
               @found << result['name']
             end
           rescue
-            # Note: v2 endpoint does not support search
+            # NOTE: v2 endpoint does not support search
             request_params[:url] = "#{@uri}v2/_catalog"
             loop do
               results = RestClient::Request.execute(request_params)
