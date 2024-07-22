@@ -59,7 +59,7 @@ module Katello
                   :href => "/subscriptions",
                   :title => _('Subscriptions'),
                   :external => false,
-                }
+                },
               ],
             }
           end

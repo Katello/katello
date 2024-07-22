@@ -84,8 +84,8 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     put :update, params: {
       :id => host.id,
       :content_facet_attributes => {
-        :content_view_environments => ["#{@dev.label}/#{@cv4.label}", "#{@dev.label}/#{@cv3.label}"]
-      }
+        :content_view_environments => ["#{@dev.label}/#{@cv4.label}", "#{@dev.label}/#{@cv3.label}"],
+      },
     }, session: set_session_user
     assert_response :success
     host.content_facet.reload
@@ -110,8 +110,8 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     put :update, params: {
       :id => host.id,
       :content_facet_attributes => {
-        :content_view_environment_ids => target_cves_ids
-      }
+        :content_view_environment_ids => target_cves_ids,
+      },
     }, session: set_session_user
     assert_response :success
     host.content_facet.reload

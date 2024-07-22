@@ -76,7 +76,7 @@ module Katello
               releasever: '5Server',
               basearch: 'x86_64',
             },
-          }
+          },
         ]
 
         resource.expects(:fetch_paths).with(@el5_path).returns(response)
@@ -85,7 +85,7 @@ module Katello
 
         expected_paths = [
           PathWithSubstitutions.new('/content/dist/rhel/server/5/5.8/i386/os', releasever: '5.8', basearch: 'i386'),
-          PathWithSubstitutions.new('/content/dist/rhel/server/5/5Server/x86_64/os', releasever: '5Server', basearch: 'x86_64')
+          PathWithSubstitutions.new('/content/dist/rhel/server/5/5Server/x86_64/os', releasever: '5Server', basearch: 'x86_64'),
         ]
 
         assert_equal expected_paths.sort, resolved_list.sort

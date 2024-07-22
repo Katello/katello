@@ -893,7 +893,7 @@ module Katello
 
     def blocking_task
       blocking_task_labels = [
-        ::Actions::Katello::ContentView::Publish.name
+        ::Actions::Katello::ContentView::Publish.name,
       ]
       ForemanTasks::Task::DynflowTask.where(:label => blocking_task_labels)
                                      .where.not(state: 'stopped')

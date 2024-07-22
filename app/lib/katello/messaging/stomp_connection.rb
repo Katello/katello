@@ -17,7 +17,7 @@ module Katello
               host: settings[:broker_host],
               port: settings[:broker_port],
               ssl: ssl_params,
-            }
+            },
           ],
           logger: Rails.logger,
           max_reconnect_attempts: 2,

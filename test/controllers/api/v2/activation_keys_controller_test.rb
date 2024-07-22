@@ -418,7 +418,7 @@ module Katello
     def test_bulk_content_override
       overrides = [{:content_label => 'fedora', :name => "enabled", :value => true},
                    {:content_label => 'fedora', :value => 0},
-                   {:content_label => 'fedora', :name => "mirrorlist", :remove => true}
+                   {:content_label => 'fedora', :name => "mirrorlist", :remove => true},
                   ]
 
       expected_content_labels = overrides.map { |o| o[:content_label] }
@@ -443,7 +443,7 @@ module Katello
       overrides = [{:content_label => 'fedora', :name => "enabled", :value => true},
                    {:content_label => 'fedora', :value => 0},
                    {:content_label => 'croissant', :name => "mirrorlist", :remove => true},
-                   {:content_label => 'crepe', :name => "mirrorlist", :remove => true}
+                   {:content_label => 'crepe', :name => "mirrorlist", :remove => true},
                   ]
 
       put(:content_override, params: { :id => @activation_key.id, :content_overrides => overrides })

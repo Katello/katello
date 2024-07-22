@@ -73,7 +73,7 @@ class KatelloCdnResourceTest < ActiveSupport::TestCase
         {
           'arch' => 'i386',
           'minor' => '6Server',
-        }
+        },
       ],
     }
 

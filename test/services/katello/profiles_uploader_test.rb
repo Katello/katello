@@ -23,7 +23,7 @@ module Katello
         [
           {"content_type" => "rpm", "profile" => rpm_profiles},
           {"content_type" => "enabled_repos", "profile" => enabled_repos},
-          {"content_type" => "modulemd", "profile" => modulemd_inventory}
+          {"content_type" => "modulemd", "profile" => modulemd_inventory},
         ]
       end
       let(:profile_string) { profile.to_json }

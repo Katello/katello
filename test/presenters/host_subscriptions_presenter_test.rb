@@ -27,7 +27,7 @@ module Katello
             'id' => custom_pool.cp_id,
           },
           quantity: 4,
-        }
+        },
       ]
 
       ::Katello::Candlepin::Consumer.any_instance.expects(:entitlements).returns(entitlements)

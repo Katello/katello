@@ -25,7 +25,7 @@ module Katello
       subscriptions = [
         stub(redhat?: false, quantity_consumed: 4),
         stub(redhat?: true, quantity_consumed: 15),
-        stub(redhat?: true, quantity_consumed: 2)
+        stub(redhat?: true, quantity_consumed: 2),
       ]
 
       ::Katello::Candlepin::Consumer.any_instance.stubs(:entitlements).returns([])

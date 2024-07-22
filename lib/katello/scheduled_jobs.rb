@@ -5,7 +5,7 @@
     CreateHostLifecycleExpireSoonNotifications,
     CreatePulpDiskSpaceNotifications,
     SendExpireSoonNotifications,
-    CreateManifestExpireSoonWarningNotifications
+    CreateManifestExpireSoonWarningNotifications,
   ].each do |job_class|
     job_class.spawn_if_missing(world)
   end

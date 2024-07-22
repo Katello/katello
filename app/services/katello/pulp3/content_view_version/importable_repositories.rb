@@ -109,7 +109,7 @@ module Katello
             :major,
             :minor,
             :download_policy,
-            :mirroring_policy
+            :mirroring_policy,
           ]
 
           params = { name: find_unique_name(metadata_repo, product) }
@@ -142,7 +142,7 @@ module Katello
             :major,
             :minor,
             :download_policy,
-            :mirroring_policy
+            :mirroring_policy,
           ]
           params = {}
           url = fetch_feed_url(metadata_repo)
