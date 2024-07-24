@@ -7,7 +7,12 @@ module Katello
       @content_facet = katello_content_facets(:content_facet_one)
     end
 
+    def teardown
+      Setting['allow_multiple_content_views'] = false
+    end
+
     def test_reprioritize_for_content_facet
+      Setting['allow_multiple_content_views'] = true
       ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
       @content_facet.content_view_environments = [
         katello_content_view_environments(:library_dev_view_dev),
