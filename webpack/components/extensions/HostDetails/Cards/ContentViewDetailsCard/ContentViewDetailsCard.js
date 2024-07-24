@@ -18,6 +18,7 @@ import { FormattedMessage } from 'react-intl';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
+import { useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import PropTypes from 'prop-types';
 import ContentViewIcon from '../../../../../scenes/ContentViews/components/ContentViewIcon';
 import { hasRequiredPermissions, hostIsRegistered } from '../../hostDetailsHelpers';
@@ -100,7 +101,8 @@ const HostContentViewDetails = ({
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleHamburger = () => setIsDropdownOpen(prev => !prev);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { content_view_assignment: initialCVModalOpen } = useUrlParams();
+  const [isModalOpen, setIsModalOpen] = useState(!!initialCVModalOpen);
   const closeModal = () => setIsModalOpen(false);
   const openModal = () => {
     setIsDropdownOpen(false);
