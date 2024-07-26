@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { Menu, MenuItem } from '@patternfly/react-core';
+import { Menu, MenuItem, MenuContent, MenuList } from '@patternfly/react-core';
 import { BanIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
@@ -65,40 +65,44 @@ const HostActionsBar = () => {
       isDisabled={selectedCount === 0}
       flyoutMenu={(
         <Menu ouiaId="content-flyout-menu" onSelect={() => setMenuOpen(false)}>
-          <MenuItem
-            itemId="bulk-packages-wizard-dropdown-item"
-            key="bulk-packages-wizard-dropdown-item"
-            onClick={openBulkPackagesWizardModal}
-            isDisabled={selectedCount === 0 || !orgId}
-            description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage host packages, a specific organization must be selected from the organization context.')} />}
-          >
-            {__('Packages')}
-          </MenuItem>
-          <MenuItem
-            itemId="bulk-errata-wizard-dropdown-item"
-            key="bulk-errata-wizard-dropdown-item"
-            onClick={openBulkErrataWizardModal}
-            isDisabled={selectedCount === 0}
-          >
-            {__('Errata')}
-          </MenuItem>
-          <MenuItem
-            itemId="change-content-s-dropdown-item"
-            key="change-content-source-dropdown-item"
-            to={href}
-            isDisabled={selectedCount === 0}
-          >
-            {__('Content source')}
-          </MenuItem>
-          <MenuItem
-            itemId="bulk-change-cv-dropdown-item"
-            key="bulk-change-cv-dropdown-item"
-            onClick={openBulkChangeCVModal}
-            isDisabled={selectedCount === 0 || !orgId}
-            description={!orgId && <DisabledMenuItemDescription disabledReason={__('To change content view environments, a specific organization must be selected from the organization context.')} />}
-          >
-            {__('Content view environments')}
-          </MenuItem>
+          <MenuContent>
+            <MenuList>
+              <MenuItem
+                itemId="bulk-packages-wizard-dropdown-item"
+                key="bulk-packages-wizard-dropdown-item"
+                onClick={openBulkPackagesWizardModal}
+                isDisabled={selectedCount === 0 || !orgId}
+                description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage host packages, a specific organization must be selected from the organization context.')} />}
+              >
+                {__('Packages')}
+              </MenuItem>
+              <MenuItem
+                itemId="bulk-errata-wizard-dropdown-item"
+                key="bulk-errata-wizard-dropdown-item"
+                onClick={openBulkErrataWizardModal}
+                isDisabled={selectedCount === 0}
+              >
+                {__('Errata')}
+              </MenuItem>
+              <MenuItem
+                itemId="change-content-s-dropdown-item"
+                key="change-content-source-dropdown-item"
+                to={href}
+                isDisabled={selectedCount === 0}
+              >
+                {__('Content source')}
+              </MenuItem>
+              <MenuItem
+                itemId="bulk-change-cv-dropdown-item"
+                key="bulk-change-cv-dropdown-item"
+                onClick={openBulkChangeCVModal}
+                isDisabled={selectedCount === 0 || !orgId}
+                description={!orgId && <DisabledMenuItemDescription disabledReason={__('To change content view environments, a specific organization must be selected from the organization context.')} />}
+              >
+                {__('Content view environments')}
+              </MenuItem>
+            </MenuList>
+          </MenuContent>
         </Menu>
         )}
     >
