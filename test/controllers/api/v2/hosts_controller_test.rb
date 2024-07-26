@@ -12,6 +12,8 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     @environment = katello_environments(:library)
     @dev = katello_environments(:dev)
     @cv2 = katello_content_views(:library_view_no_version)
+    @cv3 = katello_content_views(:library_dev_staging_view)
+    @cv4 = katello_content_views(:library_dev_view)
     @host = FactoryBot.create(:host, :with_operatingsystem)
   end
 
@@ -70,6 +72,53 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     assert_equal 1, host.content_facet.content_view_environment_ids.count
     refute_equal orig_cves, host.content_facet.content_view_environment_ids
     assert_equal target_cve, host.content_facet.content_view_environments.first
+  end
+
+  def test_host_contents_environments_param
+    Setting[:allow_multiple_content_views] = true
+    ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+    host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
+    orig_cves = host.content_facet.content_view_environment_ids.to_a
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_view_environments => ["#{@dev.label}/#{@cv4.label}", "#{@dev.label}/#{@cv3.label}"]
+      }
+    }, session: set_session_user
+    assert_response :success
+    host.content_facet.reload
+    target_cves_ids = [::Katello::ContentViewEnvironment.where(:content_view_id => @cv4.id,
+      :environment_id => @dev.id).first, ::Katello::ContentViewEnvironment.where(:content_view_id => @cv3.id,
+      :environment_id => @dev.id).first].map(&:id)
+    assert_equal 2, host.content_facet.content_view_environment_ids.count
+    refute_equal orig_cves, host.content_facet.content_view_environment_ids
+    assert_equal_arrays target_cves_ids, host.content_facet.content_view_environments.ids
+  end
+
+  def test_host_contents_cve_ids_param
+    Setting[:allow_multiple_content_views] = true
+    ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+    host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
+    orig_cves = host.content_facet.content_view_environment_ids.to_a
+    target_cves_ids = [::Katello::ContentViewEnvironment.where(:content_view_id => @cv4.id,
+      :environment_id => @dev.id).first, ::Katello::ContentViewEnvironment.where(:content_view_id => @cv3.id,
+      :environment_id => @dev.id).first].map(&:id)
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_view_environment_ids => target_cves_ids
+      }
+    }, session: set_session_user
+    assert_response :success
+    host.content_facet.reload
+
+    assert_equal 2, host.content_facet.content_view_environment_ids.count
+    refute_equal orig_cves, host.content_facet.content_view_environment_ids
+    assert_equal_arrays target_cves_ids, host.content_facet.content_view_environments.ids
   end
 
   def test_host_update_with_env_only

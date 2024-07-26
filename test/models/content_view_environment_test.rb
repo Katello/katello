@@ -21,5 +21,12 @@ module Katello
 
       assert_includes cve.hosts, host
     end
+
+    def test_with_candlepin_name
+      dev = katello_environments(:dev)
+      view = katello_content_views(:library_dev_view)
+      cve = Katello::ContentViewEnvironment.where(:environment_id => dev, :content_view_id => view).first
+      assert_equal cve, ContentViewEnvironment.with_candlepin_name('dev_label/published_dev_view')
+    end
   end
 end
