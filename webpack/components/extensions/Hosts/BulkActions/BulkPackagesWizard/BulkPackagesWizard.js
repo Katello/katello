@@ -153,7 +153,6 @@ const BulkPackagesWizard = () => {
   return (
     <BulkPackagesWizardContext.Provider value={bulkPackagesWizardContextData}>
       <Wizard
-        title="Manage packages wizard"
         header={<WizardHeader title={__('Manage packages')} onClose={closeModal} />}
       >
         <WizardStep

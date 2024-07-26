@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from 'react-testing-lib-wrapper';
+import * as hooks from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import ContentViewDetailsCard from '../ContentViewDetailsCard';
 
 const baseHostDetails = {
@@ -40,6 +41,10 @@ const baseHostDetails = {
     uuid: '123',
   },
 };
+
+beforeEach(() => {
+  jest.spyOn(hooks, 'useUrlParams').mockImplementation(() => ({}));
+});
 
 test('shows content view details when host is registered', () => {
   const { getByText } = render(<ContentViewDetailsCard hostDetails={baseHostDetails} />);

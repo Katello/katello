@@ -118,7 +118,6 @@ const BulkErrataWizard = () => {
   return (
     <BulkErrataWizardContext.Provider value={BulkErrataWizardContextData}>
       <Wizard
-        title="Manage errata wizard"
         header={<WizardHeader title={__('Manage errata')} onClose={closeModal} />}
       >
         <WizardStep

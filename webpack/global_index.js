@@ -4,8 +4,10 @@ import { registerReducer } from 'foremanReact/common/MountingService';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { registerColumns } from 'foremanReact/components/HostsIndex/Columns/core';
 import componentRegistry from 'foremanReact/components/componentRegistry';
+import { registerGetActions } from 'foremanReact/components/HostsIndex/TableRowActions/core';
 
 import hostsIndexColumnExtensions from './ForemanColumnExtensions/index';
+import hostTableRowActions from './components/extensions/Hosts/TableRowActions';
 import SystemStatuses from './components/extensions/about';
 import {
   RegistrationCommands,
@@ -94,7 +96,11 @@ addGlobalFill('_all-hosts-modals', 'BulkPackagesWizardModal', <BulkPackagesWizar
 addGlobalFill('_all-hosts-modals', 'BulkErrataWizardModal', <BulkErrataWizardModal key="bulk-errata-wizard-modal" />, 200);
 
 registerColumns(hostsIndexColumnExtensions);
-
+registerGetActions({
+  pluginName: 'katello',
+  getActionsFunc: hostTableRowActions,
+  tableName: 'hosts',
+});
 
 componentRegistry.register({
   name: 'ActivationKeysSearch',
