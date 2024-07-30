@@ -7,11 +7,16 @@ module Katello
     include ForemanTasks::Concerns::ActionSubject
     include ScopedSearchExtensions
 
-    belongs_to :organization, :inverse_of => :activation_keys
-    belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :activation_keys
-    belongs_to :user, :inverse_of => :activation_keys, :class_name => "::User"
-    belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :activation_keys
+    has_many :content_view_environment_activation_keys, :class_name => "Katello::ContentViewEnvironmentActivationKey",
+             :dependent => :destroy, :inverse_of => :activation_key
+    has_many :content_view_environments, :through => :content_view_environment_activation_keys,
+             :class_name => "Katello::ContentViewEnvironment", :source => :content_view_environment
 
+    has_many :content_views, :through => :content_view_environments, :class_name => "Katello::ContentView"
+    has_many :lifecycle_environments, :through => :content_view_environments, :class_name => "Katello::KTEnvironment"
+
+    belongs_to :organization, :inverse_of => :activation_keys
+    belongs_to :user, :inverse_of => :activation_keys, :class_name => "::User"
     has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy
     has_many :host_collections, :through => :key_host_collections
 
@@ -25,9 +30,6 @@ module Katello
     has_many :activation_key_purpose_addons, :class_name => "Katello::ActivationKeyPurposeAddon", :dependent => :destroy, :inverse_of => :activation_key
     has_many :purpose_addons, :class_name => "Katello::PurposeAddon", :through => :activation_key_purpose_addons
 
-    alias_method :lifecycle_environment, :environment
-
-    before_validation :set_default_content_view, :unless => :persisted?
     before_destroy :validate_destroyable!
     accepts_nested_attributes_for :purpose_addons
 
@@ -36,7 +38,6 @@ module Katello
     validates :name, :presence => true
     validates :name, :format => { without: /,/, message: _('cannot contain commas') }
     validates :name, :uniqueness => {:scope => :organization_id}
-    validate :environment_exists
     validates :max_hosts, :numericality => {:less_than => 2**31, :allow_nil => true}
     validates_each :max_hosts do |record, attr, value|
       if record.unlimited_hosts
@@ -54,15 +55,33 @@ module Katello
         end
       end
     end
-    validates_with Validators::ContentViewEnvironmentValidator
+    validates_with Katello::Validators::GeneratedContentViewValidator
+    validate :check_cves
 
-    scope :in_environment, ->(env) { where(:environment_id => env) }
+    scope :with_environments, ->(lifecycle_environments) do
+      joins(:content_view_environment_activation_keys => :content_view_environment).
+        where("#{::Katello::ContentViewEnvironment.table_name}.environment_id" => lifecycle_environments)
+    end
+
+    scope :with_content_views, ->(content_views) do
+      joins(:content_view_environment_activation_keys => :content_view_environment).
+        where("#{::Katello::ContentViewEnvironment.table_name}.content_view_id" => content_views)
+    end
+
+    scope :with_content_view_environments, ->(content_view_environments) do
+      joins(:content_view_environment_activation_keys => :content_view_environment).
+        where("#{::Katello::ContentViewEnvironment.table_name}.id" => content_view_environments)
+    end
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
-    scoped_search :rename => :environment, :on => :name, :relation => :environment, :complete_value => true
-    scoped_search :rename => :content_view, :on => :name, :relation => :content_view, :complete_value => true
-    scoped_search :on => :content_view_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
+
+    scoped_search :relation => :content_views, :on => :name, :complete_value => true, :rename => :content_view, :only_explicit => true
+    scoped_search :relation => :content_views, :on => :id, :complete_value => true, :rename => :content_view_id, :only_explicit => true
+
+    scoped_search :relation => :lifecycle_environments, :on => :id, :complete_value => true, :rename => :lifecycle_environment_id, :only_explicit => true
+    scoped_search :relation => :lifecycle_environments, :on => :name, :complete_value => true, :rename => :environment, :only_explicit => true
+
     scoped_search :on => :description, :complete_value => true
     scoped_search :on => :name, :relation => :subscriptions, :rename => :subscription_name, :complete_value => true, :ext_method => :find_by_subscription_name
     scoped_search :on => :id, :relation => :subscriptions, :rename => :subscription_id, :complete_value => true,
@@ -71,12 +90,76 @@ module Katello
     scoped_search :on => :purpose_role, :rename => :role, :complete_value => true
     scoped_search :on => :name, :rename => :addon, :relation => :purpose_addon, :complete_value => true, :ext_method => :find_by_purpose_addons
 
-    def environment_exists
-      if environment_id && environment.nil?
-        errors.add(:environment, _("ID: %s doesn't exist ") % environment_id)
-      elsif !environment.nil? && environment.organization != self.organization
-        errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
+    def self.in_environments(envs)
+      with_environments(envs)
+    end
+
+    def content_view_environments=(new_cves)
+      if new_cves.length > 1 && !Setting['allow_multiple_content_views']
+        fail ::Katello::Errors::MultiEnvironmentNotSupportedError,
+        _("Assigning an activation key to multiple content view environments is not enabled.")
       end
+      super(new_cves)
+      Katello::ContentViewEnvironmentActivationKey.reprioritize_for_activation_key(self, new_cves)
+      self.content_view_environments.reload unless self.new_record?
+    end
+
+    def multi_content_view_environment?
+      # returns false if there are no content view environments
+      content_view_environments.size > 1
+    end
+
+    def single_content_view_environment?
+      # also returns false if there are no content view environments
+      content_view_environments.size == 1
+    end
+
+    def single_content_view
+      if multi_content_view_environment?
+        Rails.logger.warn _("Activation key %s has more than one content view. Use #content_views instead.") % name
+      end
+      content_view_environments&.first&.content_view
+    end
+
+    def content_view
+      single_content_view
+    end
+
+    def environment
+      single_lifecycle_environment
+    end
+
+    def single_lifecycle_environment
+      if multi_content_view_environment?
+        Rails.logger.warn _("Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead.") % name
+      end
+      content_view_environments&.first&.lifecycle_environment
+    end
+
+    # rubocop:disable Metrics/CyclomaticComplexity
+    def assign_single_environment(
+      content_view_id: nil, lifecycle_environment_id: nil, environment_id: nil,
+      content_view: nil, lifecycle_environment: nil, environment: nil
+    )
+      lifecycle_environment_id ||= environment_id || lifecycle_environment&.id || environment&.id || self.single_lifecycle_environment&.id
+      content_view_id ||= content_view&.id || self.single_content_view&.id
+
+      unless lifecycle_environment_id
+        fail _("Lifecycle environment must be specified")
+      end
+
+      unless content_view_id
+        fail _("Content view must be specified")
+      end
+
+      content_view_environment = ::Katello::ContentViewEnvironment
+        .where(:content_view_id => content_view_id, :environment_id => lifecycle_environment_id)
+        .first_or_create do |cve|
+        Rails.logger.info("ContentViewEnvironment not found for content view '#{cve.content_view_name}' and environment '#{cve.environment&.name}'; creating a new one.")
+      end
+      fail _("Unable to create ContentViewEnvironment. Check the logs for more information.") if content_view_environment.nil?
+
+      self.content_view_environments = [content_view_environment]
     end
 
     def usage_count
@@ -92,11 +175,11 @@ module Katello
     end
 
     def available_releases
-      if self.environment
-        self.environment.available_releases
-      else
-        self.organization.library.available_releases
+      releases = self.content_view_environments.flat_map do |cve|
+        cve.content_view.version(cve.lifecycle_environment).available_releases
       end
+      return self.organization.library.available_releases if releases.blank?
+      releases
     end
 
     def available_subscriptions
@@ -133,8 +216,9 @@ module Katello
     def copy(new_name)
       new_key = ActivationKey.new
       new_key.name = new_name
-      new_key.attributes = self.attributes.slice("description", "environment_id", "organization_id", "content_view_id", "max_hosts", "unlimited_hosts")
+      new_key.attributes = self.attributes.slice("description", "organization_id", "max_hosts", "unlimited_hosts")
       new_key.host_collection_ids = self.host_collection_ids
+      new_key.content_view_environments = content_view_environments
       new_key
     end
 
@@ -190,12 +274,13 @@ module Katello
       true
     end
 
-    private
-
-    def set_default_content_view
-      if self.environment && self.content_view.nil?
-        self.content_view = self.environment.try(:default_content_view)
+    def check_cves
+      cves_not_in_org = self.content_view_environments.any? do |cve|
+        cve.content_view.organization != cve.environment.organization ||
+          self.organization != cve.content_view.organization
       end
+
+      errors.add(:base, _("Cannot add content view environments from a different organization")) if cves_not_in_org
     end
 
     apipie :class, desc: "A class representing #{model_name.human} object" do

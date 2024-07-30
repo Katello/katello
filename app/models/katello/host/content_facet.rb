@@ -1,5 +1,6 @@
 module Katello
   module Host
+    # rubocop:disable Metrics/ClassLength
     class ContentFacet < Katello::Model
       audited :associated_with => :host
       self.table_name = 'katello_content_facets'
@@ -46,6 +47,21 @@ module Katello
       validates_with Katello::Validators::GeneratedContentViewValidator
       validates_associated :content_view_environment_content_facets, :message => _("invalid: The content source must sync the lifecycle environment assigned to the host. See the logs for more information.")
       validates :host, :presence => true, :allow_blank => false
+
+      scope :with_environments, ->(lifecycle_environments) do
+        joins(:content_view_environment_content_facets => :content_view_environment).
+          where("#{::Katello::ContentViewEnvironment.table_name}.environment_id" => lifecycle_environments)
+      end
+
+      scope :with_content_views, ->(content_views) do
+        joins(:content_view_environment_content_facets => :content_view_environment).
+          where("#{::Katello::ContentViewEnvironment.table_name}.content_view_id" => content_views)
+      end
+
+      scope :with_content_view_environments, ->(content_view_environments) do
+        joins(:content_view_environment_content_facets => :content_view_environment).
+          where("#{::Katello::ContentViewEnvironment.table_name}.id" => content_view_environments)
+      end
 
       attr_accessor :cves_changed
 
@@ -255,13 +271,6 @@ module Katello
           "(#{::Katello::ContentViewEnvironment.table_name}.content_view_version_id = #{version.id} AND #{::Katello::ContentViewEnvironment.table_name}.environment_id IN (#{env_ids.join(',')}))"
         end
         relation.where(queries.join(" OR "))
-      end
-
-      def self.in_content_views_and_environments(content_views: nil, lifecycle_environments: nil)
-        relation = self.joins(:content_view_environment_content_facets => :content_view_environment)
-        relation = relation.where("#{::Katello::ContentViewEnvironment.table_name}.content_view_id" => content_views) if content_views
-        relation = relation.where("#{::Katello::ContentViewEnvironment.table_name}.environment_id" => lifecycle_environments) if lifecycle_environments
-        relation
       end
 
       def self.with_non_installable_errata(errata, hosts = nil)

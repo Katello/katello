@@ -38,13 +38,16 @@ module Katello
 
     has_many :filters, :dependent => :destroy, :class_name => "Katello::ContentViewFilter"
 
-    has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict_with_exception
-
     has_many :content_view_environment_content_facets, :class_name => "Katello::ContentViewEnvironmentContentFacet",
              :through => :content_view_environments
     has_many :content_facets, :class_name => "Katello::Host::ContentFacet", :through => :content_view_environment_content_facets,
              :inverse_of => :content_views
     has_many :hosts, :class_name => "::Host::Managed", :through => :content_facets,
+             :inverse_of => :content_views
+
+    has_many :content_view_environment_activation_keys, :class_name => "Katello::ContentViewEnvironmentActivationKey",
+             :through => :content_view_environments
+    has_many :activation_keys, :class_name => "Katello::ActivationKey", :through => :content_view_environment_activation_keys,
              :inverse_of => :content_views
 
     has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet",
@@ -448,10 +451,7 @@ module Katello
       # update errata applicability counts for all hosts in the CV & LE
       Location.no_taxonomy_scope do
         User.as_anonymous_admin do
-          ::Katello::Host::ContentFacet.in_content_views_and_environments(
-            content_views: [self],
-            lifecycle_environments: [environment]
-          ).each do |facet|
+          ::Katello::Host::ContentFacet.with_content_views(self).with_environments(environment).each do |facet|
             facet.update_applicability_counts
             facet.update_errata_status
           rescue NoMethodError
@@ -699,10 +699,7 @@ module Katello
     def check_orphaned_content_facets!(environments: [])
       Location.no_taxonomy_scope do
         User.as_anonymous_admin do
-          ::Katello::Host::ContentFacet.in_content_views_and_environments(
-            content_views: [self],
-            lifecycle_environments: environments
-          ).each do |facet|
+          ::Katello::Host::ContentFacet.with_content_views(self).with_environments(environments).each do |facet|
             unless facet.host
               fail _("Orphaned content facets for deleted hosts exist for the content view and environment. Please run rake task : katello:clean_orphaned_facets and try again!")
             end
@@ -720,7 +717,7 @@ module Katello
       }
 
       dependencies.each do |key, name|
-        if (models = self.association(key).scope.in_environment(env)).any?
+        if (models = self.association(key).scope.in_environments(env)).any?
           errors << _("Cannot remove '%{view}' from environment '%{env}' due to associated %{dependent}: %{names}.") %
             { view: self.name, env: env.name, dependent: name, names: models.map(&:name).join(", ") }
         end

@@ -22,7 +22,7 @@ module Katello
   class ProductContentFinderActivationKeyTest < ProductContentFinderTestBase
     def setup
       super
-      @key = ActivationKey.new(:organization => @product1.organization)
+      @key = katello_activation_keys(:simple_key)
     end
 
     def test_all
@@ -44,8 +44,10 @@ module Katello
     end
 
     def test_match_environments
-      @key.environment = @repo2_cv.environment
-      @key.content_view = @repo2_cv.content_view
+      cves = ::Katello::ContentViewEnvironment.where(environment_id: @repo2_cv.environment,
+                                                      content_view_id: @repo2_cv.content_view)
+
+      @key.update!(content_view_environments: cves)
 
       Katello::Repository.where(:root => Katello::RootRepository.where(:content_id => @repo1.content_id),
                                 :content_view_version_id => @key.content_view.version(@key.environment)).destroy_all

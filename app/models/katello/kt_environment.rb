@@ -8,8 +8,6 @@ module Katello
     include Ext::LabelFromName
 
     belongs_to :organization, :class_name => "Organization", :inverse_of => :kt_environments
-    has_many :activation_keys, :class_name => "Katello::ActivationKey",
-                               :dependent => :restrict_with_exception, :foreign_key => :environment_id
 
     has_many :env_priors, :class_name => "Katello::EnvironmentPrior", :foreign_key => :environment_id, :dependent => :destroy
     has_many :priors, :class_name => "Katello::KTEnvironment", :through => :env_priors, :source => :env_prior
@@ -30,13 +28,20 @@ module Katello
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
              :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
     has_many :content_view_environment_content_facets, :through => :content_view_environments,
-                          :class_name => "Katello::ContentViewEnvironmentContentFacet",
-                          :inverse_of => :lifecycle_environment
+                          :class_name => "Katello::ContentViewEnvironmentContentFacet"
+
     has_many :content_facets, :through => :content_view_environment_content_facets,
-                          :class_name => "Katello::Host::ContentFacet",
-                          :inverse_of => :lifecycle_environments
+                          :class_name => "Katello::Host::ContentFacet"
+
     has_many :content_views, :through => :content_view_environments
     has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
+
+    has_many :content_view_environment_activation_keys, :through => :content_view_environments,
+                          :class_name => "Katello::ContentViewEnvironmentActivationKey",
+                          :dependent => :restrict_with_exception
+
+    has_many :activation_keys, :through => :content_view_environment_activation_keys,
+                          :class_name => "Katello::ActivationKey"
 
     has_many :hosts,      :class_name => "::Host::Managed", :through => :content_facets,
                           :inverse_of => :lifecycle_environments

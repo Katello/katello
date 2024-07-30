@@ -45,23 +45,12 @@ module Katello
           content_facet_attributes = params.dig(:host, :content_facet_attributes)
           return if content_facet_attributes.blank? || @host&.content_facet.blank? ||
             (cve_params[:content_view_id].present? && cve_params[:lifecycle_environment_id].present?)
-          new_cves = nil
-          if cve_params[:content_view_environments].present? && cve_params[:content_view_environment_ids].blank?
-            # Must do maps here to ensure CVEs remain in the same order.
-            # Using ActiveRecord .where will return them in a different order.
-            environment_names = cve_params[:content_view_environments].map(&:strip)
-            Rails.logger.debug "new environment names: #{environment_names}"
-            new_cves = environment_names.map do |name|
-              ::Katello::ContentViewEnvironment.with_candlepin_name(name, organization: @host.organization)
-            end
-          end
-          if cve_params[:content_view_environment_ids].present?
-            new_cves = cve_params[:content_view_environment_ids].map do |id|
-              ::Katello::ContentViewEnvironment.find_by(id: id)
-            end
-          end
+          cves = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
+            labels: cve_params[:content_view_environments],
+            ids: cve_params[:content_view_environment_ids],
+            organization: @organization || @host&.organization)
 
-          @host.content_facet.content_view_environments = new_cves.compact if new_cves.present?
+          @host.content_facet.content_view_environments = cves if cves.present?
         end
 
         def cve_params

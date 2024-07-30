@@ -1,19 +1,43 @@
 module Katello
-  class Api::V2::ActivationKeysController < Api::V2::ApiController
+  class Api::V2::ActivationKeysController < Api::V2::ApiController  # rubocop:disable Metrics/ClassLength
     include Katello::Concerns::FilteredAutoCompleteSearch
     include Katello::Concerns::Api::V2::ContentOverridesController
     before_action :verify_presence_of_organization_or_environment, :only => [:index]
-    before_action :find_environment, :only => [:index, :create, :update]
     before_action :find_optional_organization, :only => [:index, :create, :show]
-    before_action :find_content_view, :only => [:index]
     before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :available_releases,
                                                                :available_host_collections, :add_host_collections, :remove_host_collections,
                                                                :content_override, :add_subscriptions, :remove_subscriptions,
                                                                :subscriptions]
+    before_action :find_content_view_environments, :only => [:create, :update]
     before_action :verify_simple_content_access_disabled, :only => [:add_subscriptions]
     before_action :validate_release_version, :only => [:create, :update]
 
-    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach purpose_role purpose_usage purpose_addons content_view_environment))
+    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach purpose_role purpose_usage purpose_addons content_view_environments))
+
+    def_param_group :activation_key do
+      param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+      param :name, String, :desc => N_("name"), :required => true
+      param :description, String, :desc => N_("description")
+      param :max_hosts, :number, :desc => N_("maximum number of registered content hosts")
+      param :unlimited_hosts, :bool, :desc => N_("can the activation key have unlimited hosts")
+      param :release_version, String, :desc => N_("content release version")
+      param :service_level, String, :desc => N_("service level")
+      param :auto_attach, :bool, :desc => N_("auto attach subscriptions upon registration"), deprecated: true
+      param :purpose_usage, String, :desc => N_("Sets the system purpose usage")
+      param :purpose_role, String, :desc => N_("Sets the system purpose usage")
+      param :purpose_addons, Array, :desc => N_("Sets the system add-ons")
+
+      param :environment, Hash, :desc => N_("Hash containing the Id of the single lifecycle environment to be associated with the activation key."), deprecated: true
+      param :content_view_id, Integer, :desc => N_("Id of the single content view to be associated with the activation key.")
+      param :environment_id, Integer, :desc => N_("Id of the single lifecycle environment to be associated with the activation key.")
+      param :content_view_environments, Array, :desc => N_("Comma-separated list of Candlepin environment names to be associated with the activation key,"\
+                                              " in the format of 'lifecycle_environment_label/content_view_label'."\
+                                              " Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified."\
+                                              " Requires allow_multiple_content_views setting to be on.")
+      param :content_view_environment_ids, Array, :desc => N_("Array of content view environment ids to be associated with the activation key."\
+                                              " Ignored if content_view_id and lifecycle_environment_id are specified."\
+                                              " Requires allow_multiple_content_views setting to be on.")
+    end
 
     api :GET, "/activation_keys", N_("List activation keys")
     api :GET, "/environments/:environment_id/activation_keys"
@@ -22,31 +46,26 @@ module Katello
     param :environment_id, :number, :desc => N_("environment identifier")
     param :content_view_id, :number, :desc => N_("content view identifier")
     param :name, String, :desc => N_("activation key name to filter by")
+    param :content_view_environments, Array, :desc => N_("Comma-separated list of Candlepin environment names associated with the activation key,"\
+                                            " in the format of 'lifecycle_environment_label/content_view_label'."\
+                                            " Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified."\
+                                            " Requires allow_multiple_content_views setting to be on.")
+    param :content_view_environment_ids, Array, :desc => N_("Array of content view environment ids associated with the activation key. " \
+                                            "Ignored if content_view_id and lifecycle_environment_id are specified."\
+                                            "Requires allow_multiple_content_views setting to be on.")
+
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(ActivationKey)
     def index
-      activation_key_includes = [:content_view, :environment, :host_collections, :organization]
+      activation_key_includes = [:content_view_environments, :host_collections, :organization]
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc, :includes => activation_key_includes))
     end
 
     api :POST, "/activation_keys", N_("Create an activation key")
-    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
-    param :name, String, :desc => N_("name"), :required => true
-    param :description, String, :desc => N_("description")
-    param :environment, Hash, :desc => N_("environment")
-    param :environment_id, :number, :desc => N_("environment id")
-    param :content_view_id, :number, :desc => N_("content view id")
-    param :max_hosts, :number, :desc => N_("maximum number of registered content hosts")
-    param :unlimited_hosts, :bool, :desc => N_("can the activation key have unlimited hosts")
-    param :release_version, String, :desc => N_("content release version")
-    param :service_level, String, :desc => N_("service level")
-    param :auto_attach, :bool, :desc => N_("auto attach subscriptions upon registration"), deprecated: true
-    param :purpose_usage, String, :desc => N_("Sets the system purpose usage")
-    param :purpose_role, String, :desc => N_("Sets the system purpose usage")
-    param :purpose_addons, Array, :desc => N_("Sets the system add-ons")
+    param_group :activation_key
     def create
       @activation_key = ActivationKey.new(activation_key_params) do |activation_key|
-        activation_key.environment = @environment if @environment
+        activation_key.content_view_environments = @content_view_environments if @content_view_environments
         activation_key.organization = @organization
         activation_key.user = current_user
       end
@@ -57,21 +76,10 @@ module Katello
     end
 
     api :PUT, "/activation_keys/:id", N_("Update an activation key")
+    param_group :activation_key
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
-    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
-    param :name, String, :desc => N_("name"), :required => false
-    param :description, String, :desc => N_("description")
-    param :environment_id, :number, :desc => N_("environment id")
-    param :content_view_id, :number, :desc => N_("content view id")
-    param :max_hosts, :number, :desc => N_("maximum number of registered content hosts")
-    param :unlimited_hosts, :bool, :desc => N_("can the activation key have unlimited hosts")
-    param :release_version, String, :desc => N_("content release version")
-    param :service_level, String, :desc => N_("service level")
-    param :auto_attach, :bool, :desc => N_("auto attach subscriptions upon registration")
-    param :purpose_usage, String, :desc => N_("Sets the system purpose usage")
-    param :purpose_role, String, :desc => N_("Sets the system purpose usage")
-    param :purpose_addons, Array, :desc => N_("Sets the system add-ons")
     def update
+      @activation_key.update!(content_view_environments: @content_view_environments) if @content_view_environments.present?
       sync_task(::Actions::Katello::ActivationKey::Update, @activation_key, activation_key_params)
       respond_for_show(:resource => @activation_key)
     end
@@ -247,8 +255,9 @@ module Katello
       activation_keys = ActivationKey.readable
       activation_keys = activation_keys.where(:name => params[:name]) if params[:name]
       activation_keys = activation_keys.where(:organization_id => @organization) if @organization
-      activation_keys = activation_keys.where(:environment_id => @environment) if @environment
-      activation_keys = activation_keys.where(:content_view_id => @content_view) if @content_view
+      activation_keys = activation_keys.with_content_view_environments(@content_view_environments) if @content_view_environments
+      activation_keys = activation_keys.with_content_views(params[:content_view_id]) if params[:content_view_id]
+      activation_keys = activation_keys.with_environments(params[:lifecycle_environments]) if params[:lifecycle_environments]
       activation_keys
     end
 
@@ -266,15 +275,33 @@ module Katello
       subscriptions
     end
 
-    def find_environment
+    def find_cve_for_single
       environment_id = params[:environment_id]
-      environment_id = params[:environment][:id] if !environment_id && params[:environment]
-      return unless environment_id
+      environment_id ||= params.dig(:environment, :id)
+      content_view_id = params[:content_view_id]
+      if environment_id.blank? || content_view_id.blank?
+        fail HttpErrors::BadRequest, _("Environment ID and content view ID must be provided together")
+      end
+      cve = ::Katello::ContentViewEnvironment.readable.where(environment_id: environment_id,
+                                                             content_view_id: content_view_id).first
+      if cve.blank?
+        fail HttpErrors::NotFound, _("Couldn't find content view environment with content view ID '%{cv}'"\
+                                    " or environment ID '%{env}'") % { cv: content_view_id, env: environment_id }
+      end
+      @content_view_environments = [cve]
+    end
 
-      @environment = KTEnvironment.readable.find_by(id: environment_id)
-      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
-      @organization = @environment.organization
-      @environment
+    def find_content_view_environments
+      @content_view_environments = []
+      if params[:environment_id] || params[:environment]
+        find_cve_for_single
+      elsif params[:content_view_environments] || params[:content_view_environment_ids]
+        @content_view_environments = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
+              labels: params[:content_view_environments],
+              ids: params[:content_view_environment_ids],
+              organization: @organization || @activation_key&.organization)
+      end
+      @organization ||= @content_view_environments.first&.organization
     end
 
     def find_host_collections
@@ -293,14 +320,6 @@ module Katello
       fail HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
     end
 
-    def find_content_view
-      if params.include?(:content_view_id)
-        cv_id = params[:content_view_id]
-        @content_view = ContentView.readable.find_by(:id => cv_id)
-        fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
-      end
-    end
-
     def permitted_params
       params.require(:activation_key).permit(:name,
                                              :description,
@@ -316,14 +335,15 @@ module Katello
                                              :purpose_usage,
                                              :purpose_addon_ids,
                                              :content_overrides => [],
-                                             :host_collection_ids => []).to_h
+                                             :host_collection_ids => [],
+                                             :content_view_environments => [],
+                                             :content_view_environment_ids => []).to_h
     end
 
     def activation_key_params
-      key_params = permitted_params
+      key_params = permitted_params.except(:environment_id, :content_view_id,
+                      :content_view_environments, :content_view_environment_ids)
 
-      key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)
-      key_params[:content_view_id] = params[:content_view][:id] if params[:content_view].try(:[], :id)
       unless params[:purpose_addons].nil?
         key_params[:purpose_addon_ids] = params[:purpose_addons].map { |addon| ::Katello::PurposeAddon.find_or_create_by(name: addon).id }
       end

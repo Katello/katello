@@ -34,7 +34,7 @@ module Katello
       end
 
       def all_editable?(content_view, environments)
-        key_query = ActivationKey.where(:content_view_id => content_view, :environment_id => environments)
+        key_query = ActivationKey.with_content_views(content_view).with_environments(environments)
         key_query.count == key_query.editable.count
       end
     end

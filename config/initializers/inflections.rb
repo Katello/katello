@@ -2,7 +2,9 @@
 Rails.autoloaders.each do |autoloader|
   autoloader.inflector.inflect(
     'kt_environment' => 'KTEnvironment',
-    'cdn' => 'CDN'
+    'cdn' => 'CDN',
+    'cveak_migrator' => 'CVEAKMigrator',
+    'cvecf_migrator' => 'CVECFMigrator'
   )
 end
 

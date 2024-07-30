@@ -44,7 +44,7 @@ node :environments do |cv|
       id: env.id,
       label: env.label,
       name: env.name,
-      activation_keys: cv&.activation_keys&.in_environment(env)&.ids,
+      activation_keys: cv&.activation_keys&.in_environments([env])&.ids,
       hosts: cv&.hosts&.in_environments([env])&.ids,
       permissions: {readable: env.readable?}
     }

@@ -5,6 +5,8 @@ module Katello
     def setup
       @dev_key = katello_activation_keys(:dev_key)
       @dev_staging_view_key = katello_activation_keys(:library_dev_staging_view_key)
+      @dev_staging_cve = katello_content_view_environments(:library_dev_staging_view_dev)
+
       @dev_view = katello_content_views(:library_dev_view)
       @lib_view = katello_content_views(:library_view)
       @pool_one = katello_pools(:pool_one)
@@ -16,26 +18,28 @@ module Katello
     should allow_values(*valid_name_list).for(:description)
     should_not allow_values(-1, 0, 'foo').for(:max_hosts)
 
-    test "can have content view" do
+    test "can have content view environment" do
       @dev_key = katello_activation_keys(:dev_key)
-      @dev_key.content_view = @dev_view
+      @dev_key.content_view_environments = [@dev_staging_cve]
       assert @dev_key.save!
-      assert_not_nil @dev_key.content_view
-      assert_includes @dev_view.activation_keys, @dev_key
+      assert_not_nil @dev_key.single_content_view
+      assert_includes @dev_staging_cve.content_view.activation_keys, @dev_key
     end
 
-    test "does not require a content view" do
-      assert_nil @dev_key.content_view
-      assert @dev_key.save!
-      assert_nil @dev_key.content_view
+    test "does not require a content view environment" do
+      assert @dev_key.update(content_view_environments: [])
+      assert_nil @dev_key.single_content_view
     end
 
-    test "content view must be in environment" do
-      @dev_key.content_view = @lib_view
-      refute @dev_key.save
-      refute_empty @dev_key.errors.keys
+    test "content view environment must be in the same org" do
+      library_dev_staging_cve = katello_content_view_environments(:library_dev_staging_view_dev)
+      org2 = taxonomies(:organization2)
+      ak = ActivationKey.create!(name: 'new_key', organization: org2)
+      ak.content_view_environments << library_dev_staging_cve
+      refute ak.save
+      refute_empty ak.errors.keys
       assert_raises(ActiveRecord::RecordInvalid) do
-        @dev_key.save!
+        ak.save!
       end
     end
 
@@ -55,15 +59,12 @@ module Katello
     end
 
     test "key can be copied" do
-      @dev_key.content_view = katello_content_views(:acme_default)
-      @dev_key.environment = katello_environments(:library)
       @dev_key.max_hosts = 200
       new_key = @dev_key.copy("new key name")
-
       assert_equal new_key.name, "new key name"
       assert_equal new_key.description, @dev_key.description
       assert_equal new_key.host_collections, @dev_key.host_collections
-      assert_equal new_key.content_view, @dev_key.content_view
+      assert_equal new_key.content_view_environments, @dev_key.content_view_environments
       assert_equal new_key.organization, @dev_key.organization
       assert_equal new_key.max_hosts, @dev_key.max_hosts
     end

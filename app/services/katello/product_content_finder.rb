@@ -15,14 +15,7 @@ module Katello
 
     def product_content
       if match_environment
-        if consumable.is_a?(::Katello::ActivationKey) # TODO: remove this when AKs are refactored for multi CV
-          environment = consumable.lifecycle_environment
-          view = consumable.content_view
-          return ProductContent.none unless environment && view
-          versions = ContentViewVersion.in_environment(environment).where(:content_view_id => view).first
-        else # consumable is a SubscriptionFacet
-          versions = consumable.content_view_environments.select(:content_view_version_id).map(&:content_view_version_id)
-        end
+        versions = consumable.content_view_environments.select(:content_view_version_id).map(&:content_view_version_id)
       end
 
       considered_products = match_subscription ? consumable.products : consumable.organization.products.enabled.uniq

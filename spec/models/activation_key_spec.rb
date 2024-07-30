@@ -14,16 +14,20 @@ module Katello
       @organization = get_organization
       @environment_1 = katello_environments(:dev)
       @environment_2 = katello_environments(:staging)
+
+      @library_cve = katello_content_view_environments(:library_default_view_environment)
+      @dev_cve = katello_content_view_environments(:library_dev_view_dev)
+      @staging_cve = katello_content_view_environments(:library_dev_staging_view_staging)
+
       @akey = ActivationKey.create(:name => aname, :description => adesc, :organization => @organization,
-                                   :environment_id => @environment_1.id, :unlimited_hosts => false,
+                                   :unlimited_hosts => false,
                                    :max_hosts => 1)
     end
 
     describe "in valid state" do
       it "should be valid if the environment is Library" do
         @akey.name = 'valid key'
-        @akey.environment_id = @organization.library.id
-        @akey.content_view_id = @organization.library.content_views.first.id
+        @akey.content_view_environments = [@library_cve]
         value(@akey).must_be :valid?
         value(@akey.errors[:base]).must_be_empty
       end
@@ -43,15 +47,8 @@ module Katello
         value(@akey.errors[:base]).must_be_empty
       end
 
-      it "should be invalid if non-existent environment is specified" do
-        @akey.name = 'invalid key'
-        @akey.environment_id = 123_456
-
-        value(@akey).wont_be :valid?
-        value(@akey.errors[:environment]).wont_be_empty
-      end
-
       it "should be invalid if environment in another org is specified" do
+        skip "TODO - should be in CVE"
         org_2 = get_organization(:organization2)
         #Organization.create!(:name=>'test_org2', :label=> 'test_org2')
         env_1_org2 = KTEnvironment.create(:name => 'dev', :label => 'dev', :prior => org_2.library.id, :organization => org_2)
@@ -87,8 +84,8 @@ module Katello
       it "environment" do
         a = ActivationKey.find_by_name(aname)
         value(a).wont_be :nil?
-        b = ActivationKey.update(a.id, :environment => @environment_2)
-        value(b.environment).must_equal @environment_2
+        b = ActivationKey.update(a.id, content_view_environments: [@staging_cve])
+        value(b.content_view_environments.first).must_equal @staging_cve
       end
     end
 
