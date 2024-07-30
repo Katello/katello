@@ -232,10 +232,7 @@ module Katello
         version_environment[:environments] << cve.environment unless version_environment[:environments].include?(cve.environment)
         version_environment[:next_version] ||= version.next_incremental_version
         version_environment[:content_host_count] ||= 0
-        version_environment[:content_host_count] += content_facets.in_content_views_and_environments(
-          content_views: [cve.content_view],
-          lifecycle_environments: [cve.environment]
-        ).count
+        version_environment[:content_host_count] += content_facets.with_content_view_environments(cve).count
 
         if version.content_view.composite?
           version_environment[:components] = version.components_needing_errata(@errata)

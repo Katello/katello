@@ -70,7 +70,7 @@ child :environments => :environments do
   end
 
   node :activation_key_count do |env|
-    Katello::ActivationKey.where(:environment_id => env.id).where(:content_view_id => version.content_view_id).count
+    Katello::ActivationKey.with_content_views(version.content_view).with_environments(env).count
   end
 end
 

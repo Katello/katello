@@ -79,7 +79,7 @@ module Katello
 
     def test_all_editable?
       ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key).id)
-      keys = ActivationKey.where(:content_view_id => ak.content_view_id, :environment_id => ak.environment)
+      keys = ActivationKey.with_content_views(ak.single_content_view).with_environments(ak.single_content_view)
 
       clause = keys.map { |key| "name=\"#{key.name}\"" }.join(" or ")
 

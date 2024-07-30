@@ -437,9 +437,7 @@ module Katello
     end
 
     def test_check_remove_from_environment!
-      facets = ::Katello::Host::ContentFacet.in_content_views_and_environments(
-        lifecycle_environments: [@dev]
-      )
+      facets = ::Katello::Host::ContentFacet.with_environments(@dev)
       host_ids = facets.joins(:host).select('hosts.id').pluck('hosts.id')
       facets.each do |facet|
         facet&.host&.subscription_facet&.destroy

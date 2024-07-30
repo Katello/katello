@@ -33,10 +33,7 @@ module Katello
       ::User.as(user.login) do
         @content_view = options[:content_view]
         @environment = options[:environment]
-        @content_facets = Katello::Host::ContentFacet.in_content_views_and_environments(
-          :lifecycle_environments => [@environment],
-          :content_views => [@content_view]
-        )
+        @content_facets = Katello::Host::ContentFacet.with_content_views(@content_view).with_environments(@environment)
         @hosts = ::Host::Managed.authorized("view_hosts").where(:id => @content_facets.pluck(:host_id))
         @errata = @content_facets.map(&:installable_errata).flatten.uniq
 

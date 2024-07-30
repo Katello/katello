@@ -166,7 +166,7 @@ module Katello
 
         if activation_keys.present?
           if content_view_environments.blank?
-            content_view_environments = [lookup_content_view_environment(activation_keys)]
+            content_view_environments = lookup_content_view_environments(activation_keys)
           end
           set_host_collections(host, activation_keys)
         end
@@ -264,12 +264,23 @@ module Katello
         host.host_collection_ids = host_collection_ids
       end
 
-      def lookup_content_view_environment(activation_keys)
+      def lookup_content_view_environments(activation_keys)
+        # If the setting is on, we combine all CVEs from all AKs
+        if Setting['allow_multiple_content_views']
+          cves = activation_keys.map do |act_key|
+            act_key.content_view_environments
+          end
+          cves = cves.flatten.uniq
+          fail _('At least one activation key must have a lifecycle environment and content view assigned to it') if cves.blank?
+          return cves
+        end
+
+        # If the setting is off, we stick with the previous behavior (the last AK with a valid cv/lce wins).
         activation_key = activation_keys.reverse.detect do |act_key|
-          act_key.environment && act_key.content_view
+          act_key.content_view_environments.any?
         end
         if activation_key
-          ::Katello::ContentViewEnvironment.where(:content_view_id => activation_key.content_view, :environment_id => activation_key.environment).first
+          ::Katello::ContentViewEnvironment.where(:content_view_id => activation_key.content_view, :environment_id => activation_key.environment)
         else
           fail _('At least one activation key must have a lifecycle environment and content view assigned to it')
         end

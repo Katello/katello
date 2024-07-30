@@ -7,6 +7,14 @@ module Katello
       @content_facet = katello_content_facets(:content_facet_one)
     end
 
+    def test_activation_keys
+      cve = katello_content_view_environments(:library_dev_view_library)
+      ak = katello_activation_keys(:simple_key)
+      ak.update!(content_view_environments: [cve])
+      cve = Katello::ContentViewEnvironment.where(cve.slice(:environment_id, :content_view_id)).first
+      assert_includes cve.activation_keys, ak
+    end
+
     def test_for_content_facets
       cve = @content_facet.content_view_environments.first
       assert_includes ContentViewEnvironment.for_content_facets(@content_facet), cve

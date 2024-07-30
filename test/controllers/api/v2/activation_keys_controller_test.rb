@@ -91,7 +91,7 @@ module Katello
 
     def test_create_protected
       dev_env_read_permission = {:name => :view_lifecycle_environments, :search => "id=\"#{@library.id}\"" }
-      view_read_permission = {:name => :view_lifecycle_environments, :search => "id=\"#{@view.id}\"" }
+      view_read_permission = {:name => :view_content_views, :search => "label=\"#{@view.label}\"" }
 
       allowed_perms = [[@create_permission, dev_env_read_permission, view_read_permission]]
       denied_perms = [@view_permission, @update_permission, @destroy_permission]

@@ -3,16 +3,21 @@ extends 'katello/api/v2/common/timestamps'
 
 attributes :id, :name, :description, :unlimited_hosts, :auto_attach
 
-attributes :content_view_id
-
-child :content_view => :content_view do
-  attributes :id, :name
+node :content_view_id do |ak|
+  ak.single_content_view&.id
 end
 
-child :environment => :environment do
-  attributes :name, :id
+node :content_view do |ak|
+  ak.single_content_view&.slice(:id, :name)
 end
-attributes :environment_id
+
+node :environment_id do |ak|
+  ak.single_lifecycle_environment&.id
+end
+
+node :environment do |ak|
+  ak.single_lifecycle_environment&.slice(:id, :name)
+end
 
 attributes :usage_count, :user_id, :max_hosts, :system_template_id, :release_version, :purpose_usage, :purpose_role
 

@@ -481,9 +481,11 @@ module Katello
                      ]
 
       env_ids = [@dev.id.to_s, @staging.id.to_s]
-      Katello::ActivationKey.expects(:where).at_least_once.returns([]).with do |args|
-        args[:content_view_id].id == @library_dev_staging_view.id && args[:environment_id] == env_ids
-      end
+      with_environments = mock
+      with_environments.expects(:with_environments).returns([]).with(env_ids).at_least_once
+
+      Katello::ActivationKey.expects(:with_content_views).with(@library_dev_staging_view).
+                            at_least_once.returns(with_environments)
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
         put :remove, params: { :id => @library_dev_staging_view.id, :environment_ids => env_ids }
@@ -555,12 +557,12 @@ module Katello
                       [host_edit_permission, host_cv_remove_permission, host_env_remove_permission,
                        alternate_env_read_permission, bad_cv_read_permission]
                      ]
-
       env_ids = [environment.id.to_s]
+      with_environments = mock
+      with_environments.expects(:with_environments).returns([]).with(env_ids).at_least_once
 
-      Katello::ActivationKey.expects(:where).at_least_once.returns([]).with do |args|
-        args[:content_view_id].id == content_view.id && args[:environment_id] == env_ids
-      end
+      Katello::ActivationKey.expects(:with_content_views).with(content_view).
+                            at_least_once.returns(with_environments)
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
         User.current.update_attribute(:organizations, [host.organization])

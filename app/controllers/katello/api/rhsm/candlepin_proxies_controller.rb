@@ -390,6 +390,11 @@ module Katello
           activation_key = organization.activation_keys.find_by(:name => ak_name)
           fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
 
+          if activation_key.multi_content_view_environment? && !Setting['allow_multiple_content_views']
+            fail HttpErrors::BadRequest, _("Activation key '%s' is associated to multiple environments"\
+                                           " and registering to multiple environments is not enabled.") % ak_name
+          end
+
           if !activation_key.unlimited_hosts && activation_key.usage_count >= activation_key.max_hosts
             fail Errors::MaxHostsReachedException, _("Max Hosts (%{limit}) reached for activation key '%{name}'") %
                 { :limit => activation_key.max_hosts, :name => activation_key.name }

@@ -2,32 +2,24 @@ simple_key:
   name: Simple Activation Key
   description: A simple activation key.
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
-  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
-  content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
   auto_attach: true
 
 another_simple_key:
   name: Another Simple Activation Key
   description: Another simple activation key.
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
-  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
-  content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
   auto_attach: true
 
 yet_another_simple_key:
   name: Yet Another Activation Key
   description: And another simple activation key!
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
-  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
-  content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
   auto_attach: true
 
 and_yet_another_simple_key:
   name: And Yet Another Simple Activation Key
   description: Here we go again!
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
-  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
-  content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
   auto_attach: true
 
 dev_key:
@@ -35,24 +27,19 @@ dev_key:
   description: A simple activation key.
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
-  environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
   auto_attach: true
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 library_dev_staging_view_key:
   name: Lib Dev Stating Activation Key
   description: Here we go again!
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
-  environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
-  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_staging_view) %>
   auto_attach: true
 
 purpose_attributes_key:
   name: Activation Key
   description: A simple activation key.
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
-  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
-  content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
   auto_attach: true
   purpose_role: role name
   purpose_usage: usage name

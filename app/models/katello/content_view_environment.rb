@@ -15,6 +15,9 @@ module Katello
     has_many :content_view_environment_content_facets, :class_name => "Katello::ContentViewEnvironmentContentFacet", :dependent => :destroy, :inverse_of => :content_view_environment
     has_many :content_facets, through: :content_view_environment_content_facets, :class_name => "::Katello::Host::ContentFacet", :inverse_of => :content_view_environments
 
+    has_many :content_view_environment_activation_keys, :class_name => "Katello::ContentViewEnvironmentActivationKey", :dependent => :destroy, :inverse_of => :content_view_environment
+    has_many :activation_keys, through: :content_view_environment_activation_keys, :class_name => "::Katello::ActivationKey", :inverse_of => :content_view_environments
+
     validates_lengths_from_database
     validates :environment_id, uniqueness: {scope: :content_view_id}, presence: true
     validates :content_view_id, presence: true
@@ -26,6 +29,7 @@ module Katello
     scope :non_default, -> { joins(:content_view).where("katello_content_views.default" => false) }
     scope :default, -> { joins(:content_view).where("katello_content_views.default" => true) }
     alias :lifecycle_environment :environment
+    has_one :organization, :through => :environment
 
     def self.for_content_facets(content_facets)
       joins(:content_view_environment_content_facets, :content_facets).where("#{Katello::ContentViewEnvironmentContentFacet.table_name}.content_facet_id" => content_facets).uniq
@@ -51,7 +55,7 @@ module Katello
     end
 
     def activation_keys
-      content_view.activation_keys.in_environment(environment)
+      ::Katello::ActivationKey.with_content_views(self.content_view).with_environments(self.environment)
     end
 
     def default_environment?
@@ -63,8 +67,29 @@ module Katello
       "#{environment.label}/#{content_view.label}"
     end
 
-    def priority(content_facet)
-      content_view_environment_content_facets.find_by(:content_facet_id => content_facet.id).try(:priority)
+    def priority(content_object)
+      if content_object.is_a? Katello::ActivationKey
+        content_view_environment_activation_keys.find_by(:activation_key_id => content_object.id).try(:priority)
+      elsif content_object.is_a? Katello::Host::ContentFacet
+        content_view_environment_content_facets.find_by(:content_facet_id => content_object.id).try(:priority)
+      end
+    end
+
+    def self.fetch_content_view_environments(labels: [], ids: [], organization:)
+      # Must do maps here to ensure CVEs remain in the same order.
+      # Using ActiveRecord .where will return them in a different order.
+      if ids.present?
+        ids.map! do |id|
+          ::Katello::ContentViewEnvironment.find_by(id: id)
+        end
+        ids.compact
+      elsif labels.present?
+        environment_names = labels.map(&:strip)
+        environment_names.map! do |name|
+          with_candlepin_name(name, organization: organization)
+        end
+        environment_names.compact
+      end
     end
 
     private

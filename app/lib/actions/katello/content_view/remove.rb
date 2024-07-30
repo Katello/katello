@@ -119,11 +119,13 @@ module Actions
           end
           all_cv_envs = combined_cv_envs(cv_envs, versions)
 
-          if all_cv_envs.flat_map(&:hosts).any? && system_cve(options).nil?
+          if all_cv_envs.flat_map(&:hosts).any? && !cve_exists?(options[:system_environment_id],
+                                                                options[:system_content_view_id])
             fail _("Unable to reassign systems. Please check system_content_view_id and system_environment_id.")
           end
 
-          if all_cv_envs.flat_map(&:activation_keys).any? && activation_key_cve(options).nil?
+          if all_cv_envs.flat_map(&:activation_keys).any? && !cve_exists?(options[:key_environment_id],
+                                                                          options[:key_content_view_id])
             fail _("Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id.")
           end
         end
@@ -132,16 +134,10 @@ module Actions
           (cv_envs + versions.flat_map(&:content_view_environments)).uniq
         end
 
-        def system_cve(options)
-          ::Katello::ContentViewEnvironment.where(:environment_id => options[:system_environment_id],
-                                                  :content_view_id => options[:system_content_view_id]
-                                                 ).first
-        end
-
-        def activation_key_cve(options)
-          ::Katello::ContentViewEnvironment.where(:environment_id => options[:key_environment_id],
-                                                  :content_view_id => options[:key_content_view_id]
-                                                 ).first
+        def cve_exists?(environment_id, content_view_id)
+          ::Katello::ContentViewEnvironment.where(:environment_id => environment_id,
+                                                  :content_view_id => content_view_id
+                                                 ).exists?
         end
       end
     end
