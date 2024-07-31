@@ -22,7 +22,7 @@ module Katello
           if @uri.scheme == 'file'
             crawl_file_path(uri(resume_point))
           elsif %w(http https).include?(@uri.scheme)
-            spidr_crawl_pages(resume_point)
+            spidr_crawl_pages(uri(resume_point))
           end
         end
 
@@ -54,6 +54,7 @@ module Katello
         end
 
         def spidr_crawl_pages(url)
+          url = url.to_s
           user, password = @upstream_username, @upstream_password
           Spidr.site(url, proxy: spidr_proxy_details) do |spider|
             spider.authorized.add(url, user, password) if user && password
@@ -85,8 +86,7 @@ module Katello
           # * link ends with '/' so it should be a directory
           # * link doesn't end with '/Packages/', as this increases
           #       processing time and memory usage considerably
-
-          return url.hostname == @uri.hostname && !@crawled.include?(url.to_s) &&
+          return url.path.starts_with?(@uri.path) && url.hostname == @uri.hostname && !@crawled.include?(url.to_s) &&
             url.path.ends_with?('/') && !url.path.ends_with?('/Packages/')
         end
       end
