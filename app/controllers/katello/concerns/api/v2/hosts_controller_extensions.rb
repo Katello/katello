@@ -42,7 +42,8 @@ module Katello
         end
 
         def set_content_view_environments
-          return if @host&.content_facet.blank? ||
+          content_facet_attributes = params.dig(:host, :content_facet_attributes)
+          return if content_facet_attributes.blank? || @host&.content_facet.blank? ||
             (cve_params[:content_view_id].present? && cve_params[:lifecycle_environment_id].present?)
           new_cves = nil
           if cve_params[:content_view_environments].present? && cve_params[:content_view_environment_ids].blank?
