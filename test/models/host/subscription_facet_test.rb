@@ -41,6 +41,19 @@ module Katello
       assert_includes ::Host.search_for("role = satellite"), host
     end
 
+    def test_convert2rhel_through_foreman_on_host
+      subscription_facet.update(convert2rhel_through_foreman: 1)
+      assert_equal 1, host.subscription_facet.convert2rhel_through_foreman
+      assert_includes ::Host.search_for("convert2rhel_through_foreman = 1"), host
+    end
+
+    def test_convert2rhel_through_foreman_not_on_host
+      # We want the value nil unless the custom fact is present otherwise we get a 0 in the database which if debugging
+      # might make you think it was converted2rhel but not with satellite.
+      assert_nil host.subscription_facet.convert2rhel_through_foreman
+      refute_equal 0, host.subscription_facet.convert2rhel_through_foreman
+    end
+
     def test_search_addon
       host.subscription_facet.purpose_addons << katello_purpose_addons(:addon)
       assert_includes ::Host.search_for("addon = \"Test Addon\""), host
