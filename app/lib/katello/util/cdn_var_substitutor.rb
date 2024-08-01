@@ -68,7 +68,9 @@ module Katello
 
           futures.each do |future|
             resolved << future.value
-            Rails.logger.error("Failed at scanning for repository: #{future.reason}") if future.rejected?
+            if future.rejected?
+              fail Errors::CdnSubstitutionError, "Failed at scanning for repository: #{future.reason}"
+            end
           end
         end
 
