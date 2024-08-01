@@ -68,13 +68,12 @@ const loadRepositorySetRepos = (contentId, productId) => async (dispatch) => {
       productId,
       results: data.results,
     });
-  } catch (response) {
-    const error = response && response.data && response.data.error;
-    return dispatch({
-      type: REPOSITORY_SET_REPOSITORIES_FAILURE,
-      contentId,
+  } catch (error) {
+    return dispatch(apiError(
+      REPOSITORY_SET_REPOSITORIES_FAILURE,
       error,
-    });
+      { contentId },
+    ));
   }
 };
 

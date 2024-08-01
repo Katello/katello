@@ -39,7 +39,7 @@ describe('repositorySetRepositories reducer', () => {
   it('should have error on REPOSITORY_SET_REPOSITORIES_FAILURE', () => {
     expect(reducer(initialState, {
       type: types.REPOSITORY_SET_REPOSITORIES_FAILURE,
-      contentId,
+      payload: { contentId },
       error: 'Unable to process request.',
     })).toEqual(errorState);
   });

@@ -125,6 +125,23 @@ module ::Actions::Katello::RepositorySet
       assert_equal action.output[:results].first[:enabled], true
     end
 
+    it 'raises CdnSubstitutionError when substitute_vars fails' do
+      planned_action = plan_action action, product, content.id
+
+      error_message = "Failed at scanning for repository: Connection refused - connect(2) for \"cdn.redhat.com\" port 443"
+
+      Katello::Util::CdnVarSubstitutor.any_instance.stubs(:substitute_vars).raises(Katello::Errors::CdnSubstitutionError, error_message)
+
+      assert_raises_with_message Katello::Errors::CdnSubstitutionError, error_message do
+        run_action planned_action do |run_action|
+          substitutor = stub(:cdn_var_substitutor)
+          substitutor.stubs(:substitute_vars).raises(Katello::Errors::CdnSubstitutionError, error_message)
+          run_action.stubs(content: content)
+          run_action.stubs(cdn_var_substitutor: substitutor)
+        end
+      end
+    end
+
     def simulate_run
       planned_action = plan_action action, product, content.id
 

@@ -81,7 +81,7 @@ export default (state = initialState, action) => {
     });
 
   case REPOSITORY_SET_REPOSITORIES_FAILURE:
-    return state.set(action.contentId, {
+    return state.set(action.payload.contentId, {
       loading: false,
       repositories: [],
       error: action.error,
