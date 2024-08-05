@@ -1,14 +1,7 @@
 class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
-  def change
-    count = select_value <<~SQL
-      SELECT count(*) FROM pg_extension WHERE extname = 'evr';
-    SQL
-    if count.to_i == 0
-      return
-    else
-      execute <<~SQL
-        DROP EXTENSION evr CASCADE;
-      SQL
+  def up
+    if extension_enabled?('evr')
+      disable_extension('evr')
 
       execute <<~SQL
               create type evr_array_item as (
@@ -155,5 +148,9 @@ class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
       create_trigger :evr_insert_trigger_katello_installed_packages, on: :katello_installed_packages
       create_trigger :evr_update_trigger_katello_installed_packages, on: :katello_installed_packages
     end
+  end
+
+  def down
+    fail ActiveRecord::IrreversibleMigration
   end
 end
