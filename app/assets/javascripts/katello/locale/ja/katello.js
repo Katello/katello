@@ -149,6 +149,9 @@
       "%s is unreachable. %s": [
         "%s に到達できません。%s"
       ],
+      "%s was not found!": [
+        ""
+      ],
       "%{errata} (%{total} other errata)": [
         "%{errata} (他のエラータ: %{total})"
       ],
@@ -404,6 +407,12 @@
       "A backend service [ %s ] is unreachable": [
         "バックエンドサービス [ %s ] に到達できません"
       ],
+      "A comma-separated list of refs to include during a sync. The wildcards *, ? are recognized.": [
+        ""
+      ],
+      "A comma-separated list of tags to exclude during a sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
+        ""
+      ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
         "多数のエラータがこのコンテンツビューに適用されていません。そのため、最初の 100 件のみが表示されています。"
       ],
@@ -512,8 +521,8 @@
       "Activation keys can be managed {here}.": [
         ""
       ],
-      "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.": [
-        "CentOS および Red Hat Enterprise Linux に必要な subscription-manager クライアントのアクティベーションキー。ホストグループにアクティベーションキーがない場合にのみ必要です。"
+      "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys or if you do not provide a host group.": [
+        ""
       ],
       "Activation keys may be used during {system_registration}.": [
         ""
@@ -638,6 +647,9 @@
       "Affected Repositories": [
         "影響のあるリポジトリー"
       ],
+      "Affected hosts": [
+        ""
+      ],
       "Affected repositories": [
         "影響を受けるリポジトリー"
       ],
@@ -677,7 +689,7 @@
       "All versions will be removed from these environments": [
         "すべてのバージョンがこれらの環境から削除されます"
       ],
-      "Allow a host to be registered to multiple content view environments with 'subscription-manager register --environments'.": [
+      "Allow a host to be assigned to multiple content view environments with 'subscription-manager register --environments' or 'subscription-manager environments --set'.": [
         ""
       ],
       "Allow deleting repositories in published content views": [
@@ -770,14 +782,23 @@
       "Applicable Content Hosts": [
         "適用可能なコンテンツホスト"
       ],
+      "Applicable bugfix/enhancement errata": [
+        ""
+      ],
       "Applicable errata apply to at least one package installed on the host.": [
         "適用可能なエラータは、ホストにインストールされている 1 つ以上のパッケージに適用されます。"
+      ],
+      "Applicable security errata": [
+        ""
       ],
       "Application": [
         "アプリケーション"
       ],
       "Apply": [
         "適用"
+      ],
+      "Apply errata": [
+        ""
       ],
       "Apply erratum": [
         ""
@@ -845,6 +866,9 @@
       "Array of content view component IDs to remove. Identifier of the component association": [
         "削除するコンテンツビューコンポーネント ID の配列。コンポーネントの関連付けの ID"
       ],
+      "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Array of host ids": [
         "ホスト ID の配列"
       ],
@@ -880,6 +904,9 @@
       ],
       "Assign the release version to one or more hosts": [
         "1 台以上のホストにリリースバージョンを割り当てます"
+      ],
+      "Assigning a host to multiple content view environments is not enabled.": [
+        ""
       ],
       "Associated location IDs": [
         "関連するロケーション ID"
@@ -1076,6 +1103,9 @@
       "Calculate Applicable Errata based on a particular Environment": [
         "特定の環境に基づく適用可能なエラータの計算"
       ],
+      "Calculate content counts on smart proxies automatically": [
+        ""
+      ],
       "Can communicate with the Red Hat Portal for subscriptions.": [
         "サブスクリプションでは、Red Hat ポータルと通信できます。"
       ],
@@ -1217,6 +1247,9 @@
       "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
         ""
       ],
+      "Cannot install errata: No installable errata found for search term '%s'": [
+        ""
+      ],
       "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}": [
         "複合コンテンツビューバージョン (%{name} バージョン、バージョン %{version}) で増分更新を実行できません"
       ],
@@ -1247,6 +1280,9 @@
       "Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'.": [
         "環境からコンテンツビューを削除できません。ライフサイクル環境 '%{env}' にはコンテンツビュー '%{view}' がありません。"
       ],
+      "Cannot remove package(s): This host does not have any installed packages matching the search term '%s'.": [
+        ""
+      ],
       "Cannot set attribute %{attr} for content type %{type}": [
         "コンテンツタイプ %{type} に属性 %{attr} を設定できません"
       ],
@@ -1264,6 +1300,12 @@
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         "file:// リポジトリーをオンデマンドダウンロードポリシーと同期できません"
+      ],
+      "Cannot update properties of a container push repository": [
+        ""
+      ],
+      "Cannot upgrade packages: No installed packages found for search term '%s'": [
+        ""
       ],
       "Cannot upload Ansible collections.": [
         "Ansible コレクションをアップロードできません。"
@@ -1310,11 +1352,11 @@
       "Checksum of file to upload": [
         "アップロードするファイルのチェックサム"
       ],
-      "Checksum of the repository, currently 'sha1' & 'sha256' are supported": [
-        "リポジトリーのチェックサムです。現在、'sha1' と 'sha256' がサポートされています"
-      ],
       "Checksum type cannot be set for yum repositories with on demand download policy.": [
         "オンデマンドのダウンロードポリシーが指定された Yum リポジトリーにはチェックサムタイプを設定できません。"
+      ],
+      "Checksum used for published repository contents. Supported types: %s": [
+        ""
       ],
       "Choose content credentials if required for this RHUI source.": [
         "この RHUI ソースに必要な場合は、コンテンツの認証情報を選択します。"
@@ -1346,6 +1388,9 @@
       "Collapse All": [
         "すべて折りたたむ"
       ],
+      "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
         "コンマ区切りのサブパスの一覧。すべてのサブパスには、必ず末尾にスラッシュが必要で、先頭には不要です"
       ],
@@ -1357,6 +1402,9 @@
       ],
       "Compare": [
         "比較"
+      ],
+      "Completed pulp task protection days": [
+        ""
       ],
       "Component": [
         "コンポーネント"
@@ -1586,6 +1634,9 @@
       "Content type %{content_type} is incompatible with repositories of type %{repo_type}": [
         "コンテンツタイプ %{content_type} には、タイプ %{repo_type} のリポジトリーとの互換性がありません"
       ],
+      "Content type does not support repo discovery": [
+        ""
+      ],
       "Content view": [
         "コンテンツビュー"
       ],
@@ -1616,10 +1667,10 @@
       "Content view and lifecycle environment must be provided together": [
         ""
       ],
-      "Content view details": [
-        "コンテンツビューの詳細"
-      ],
       "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
+        ""
+      ],
+      "Content view environments": [
         ""
       ],
       "Content view environments and activation key must all belong to the same organization": [
@@ -1744,6 +1795,15 @@
       ],
       "Could not find environments for promotion": [
         "プロモート環境が見つかりませんでした"
+      ],
+      "Could not locate Pulp distribution.": [
+        ""
+      ],
+      "Could not locate local uploaded repository for content indexing.": [
+        ""
+      ],
+      "Could not locate repository properties for content indexing.": [
+        ""
       ],
       "Could not remove the lifecycle environment from the smart proxy": [
         "Smart Proxy からライフサイクル環境を削除できませんでした"
@@ -2273,8 +2333,8 @@
       "Details": [
         "詳細"
       ],
-      "Determining settings for ${name}": [
-        "{name} 設定の決定"
+      "Determining settings for ${truncate(name)}": [
+        ""
       ],
       "Digest": [
         ""
@@ -2335,6 +2395,12 @@
       ],
       "Download rate limit": [
         "レート制限のダウンロード"
+      ],
+      "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
+        ""
+      ],
+      "Due to a change in your products, this container name has become ambiguous (product name '%{prod_label}'). If you wish to continue using this container name, destroy the product in conflict with '%{prod_name}' (id %{prod_id}). If you wish to keep both products, destroy '%{org_label}/%{prod_dot_label}/%{root_repo_label}' and retry your push using the id format.": [
+        ""
       ],
       "Duplicate artifact detected": [
         "重複するアーティファクトが検出されました"
@@ -2534,6 +2600,12 @@
       "Errata mail": [
         "エラータメール"
       ],
+      "Errata statuses not updated for deleted content facet with UUID %s": [
+        ""
+      ],
+      "Errata to apply": [
+        ""
+      ],
       "Errata to exclusively include in the action": [
         "アクションにだけ含めるエラータ"
       ],
@@ -2581,6 +2653,9 @@
       ],
       "Exclude": [
         "除外"
+      ],
+      "Exclude Refs": [
+        ""
       ],
       "Exclude all RPMs not associated to any errata": [
         "エラータに関連付けられていないすべての RPM を除外する"
@@ -3083,6 +3158,9 @@
       "Hosts: ": [
         "ホスト: "
       ],
+      "How many days before a completed Pulp task is purged by Orphan Cleanup.": [
+        ""
+      ],
       "How many repositories should be synced concurrently on the capsule. A smaller number may lead to longer sync times. A larger number will increase dynflow load.": [
         "Capsule で同時に同期する必要があるリポジトリ数。数値が小さいほど、同期時間が長くなる可能性があり、数値が大きいほど、dynflow の負荷が増加します。"
       ],
@@ -3212,8 +3290,17 @@
       "Id of the repository to limit verifying checksum on": [
         ""
       ],
+      "Id of the single content view to be associated with the host.": [
+        ""
+      ],
+      "Id of the single lifecycle environment to be associated with the host.": [
+        ""
+      ],
       "Id of the smart proxy": [
         "Smart Proxy の ID"
+      ],
+      "Id of the smart proxy from which the host consumes content.": [
+        ""
       ],
       "Idenifier of the SSL CA Cert": [
         "SSL CA 証明書の ID"
@@ -3266,13 +3353,16 @@
       "If this is enabled, and register_hostname_fact is set and provided, registration will look for a new host by name only using that fact, and will skip all hostname matching": [
         "これが有効で、register_hostname_fact が設定および指定されている場合には、登録時に、そのファクトだけを使用して名前で新規ホストを検索し、ホスト名の照合をすべてスキップします"
       ],
+      "If this is enabled, content counts on smart proxies will be updated automatically after content sync.": [
+        ""
+      ],
       "If this is enabled, repositories can be deleted even when they belong to published content views. The deleted repository will be removed from all content view versions.": [
         "有効の場合、公開済みコンテンツビューに属する場合でもリポジトリーを削除できます。削除されたリポジトリーは、すべてのコンテンツビューバージョンから削除されます。"
       ],
       "If this is enabled, repositories of content view versions without environments (\\\"archived\\\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'.": [
         "これが有効な場合には、環境 (\\\"archived\\\") がないコンテンツビューバージョンのリポジトリーが '/pulp/content/<organization>/content_views/<content view>/X.Y/...' で配布されます。"
       ],
-      "If true, only errata that can be installed without an incremental update will affect the host's errata status.": [
+      "If true, only errata that can be installed without an incremental update will affect the host's errata status. Also affects the Host Collections dashboard widget.": [
         ""
       ],
       "If true, only return repository sets that are associated with an active subscriptions": [
@@ -3395,6 +3485,9 @@
       "Include": [
         "追加"
       ],
+      "Include Refs": [
+        ""
+      ],
       "Include all RPMs not associated to any errata": [
         "エラータに関連付けられていないすべての RPM を含める"
       ],
@@ -3494,7 +3587,13 @@
       "Installable": [
         "インストール可能"
       ],
+      "Installable bugfix/enhancement errata": [
+        ""
+      ],
       "Installable errata are applicable errata that are available in the host's content view and lifecycle environment.": [
+        ""
+      ],
+      "Installable security errata": [
         ""
       ],
       "Installable updates": [
@@ -3577,6 +3676,24 @@
       ],
       "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'": [
         "無効なフィルタールールが指定されました。'version' を 'min_version' または 'max_version' と同じタプルで指定することはできません"
+      ],
+      "Invalid format. Container name cannot be blank.": [
+        ""
+      ],
+      "Invalid format. Container pushes should follow 'organization_label/product_label/name' OR 'id/organization_id/product_id/name' schema.": [
+        ""
+      ],
+      "Invalid format. Organization id must be an integer without leading zeros.": [
+        ""
+      ],
+      "Invalid format. Organization label cannot be blank.": [
+        ""
+      ],
+      "Invalid format. Product id must be an integer without leading zeros.": [
+        ""
+      ],
+      "Invalid format. Product label cannot be blank.": [
+        ""
       ],
       "Invalid mirroring policy for repository type %{type}, only %{policies} are valid.": [
         "リポジトリータイプ %%{type} には無効なミラーリングポリシーです。%%{policies} だけが有効です。"
@@ -3854,6 +3971,9 @@
       "List all organizations": [
         "すべての組織を一覧表示します"
       ],
+      "List all packages unique by name": [
+        ""
+      ],
       "List alternate content sources.": [
         "代替コンテンツソースを一覧表示します。"
       ],
@@ -4093,6 +4213,15 @@
       ],
       "Manage Manifest": [
         "マニフェストの管理"
+      ],
+      "Manage content": [
+        ""
+      ],
+      "Manage errata": [
+        ""
+      ],
+      "Manage packages": [
+        ""
       ],
       "Manifest": [
         "Manifest (マニフェスト)"
@@ -4385,6 +4514,12 @@
       "No available component content view updates": [
         ""
       ],
+      "No available debs found for search term '%s'. Check the host's content view environments and already-installed debs.": [
+        ""
+      ],
+      "No available packages found for search term '%s'. Check the host's content view environments and already-installed packages.": [
+        ""
+      ],
       "No available repository or filter updates": [
         ""
       ],
@@ -4439,6 +4574,9 @@
       "No errata filter rules yet": [
         ""
       ],
+      "No errata found.": [
+        ""
+      ],
       "No errata matching given search query": [
         ""
       ],
@@ -4476,6 +4614,9 @@
         "subscription-manager に登録されているホストが選択肢に含まれていません。"
       ],
       "No hosts were specified": [
+        ""
+      ],
+      "No installed debs found for search term '%s'": [
         ""
       ],
       "No installed packages and/or enabled repositories have been reported by %s.": [
@@ -4649,6 +4790,12 @@
       "No syncable repositories found for selected products and options.": [
         "選択した製品およびオプションに同期可能なリポジトリーが見つかりません。"
       ],
+      "No upgradable packages found for search term '%s'. The host may already have the latest version(s) installed.": [
+        ""
+      ],
+      "No upgradable packages found.": [
+        ""
+      ],
       "No uploads param specified. An array of uploads to import is required.": [
         "アップロードパラメータが指定されていません。インポートするアップロードパラメーターの配列が必要です。"
       ],
@@ -4714,6 +4861,9 @@
       ],
       "Number to Allocate": [
         "割り当て数"
+      ],
+      "OS": [
+        ""
       ],
       "OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host.": [
         "OS は {osRestricted} に制限されています。ホスト OS が一致しない場合は、このホストでリポジトリーは利用できません。"
@@ -4802,14 +4952,23 @@
       "Organization id": [
         "組織 ID"
       ],
+      "Organization id not found: '%s'": [
+        ""
+      ],
       "Organization identifier": [
         "組織 ID"
       ],
       "Organization label": [
         "組織ラベル"
       ],
+      "Organization label '%s' is ambiguous. Try using an id-based container name.": [
+        ""
+      ],
       "Organization not found": [
         "組織が見つかりません"
+      ],
+      "Organization not found: '%s'": [
+        ""
       ],
       "Organization required": [
         "必要な組織"
@@ -5000,6 +5159,15 @@
       "Packages must be provided": [
         "パッケージを指定してください"
       ],
+      "Packages to be removed": [
+        ""
+      ],
+      "Packages to be updated": [
+        ""
+      ],
+      "Packages to install": [
+        ""
+      ],
       "Packages will appear here when available.": [
         "パッケージが利用可能になると、ここに表示されます。"
       ],
@@ -5111,11 +5279,11 @@
       "Policy to set for mirroring content.  Must be one of %s.": [
         "コンテンツのミラーリングに設定するポリシー。%s のいずれかでなければなりません。"
       ],
-      "Prefer registered through proxy for remote execution": [
-        "リモート実行には登録済みプロキシーを優先"
+      "Prefer registered through Smart Proxy for remote execution": [
+        ""
       ],
-      "Prefer using a proxy to which a host is registered when using remote execution": [
-        "リモート実行を使用する場合は、ホストが登録されているプロキシーの使用を優先します。"
+      "Prefer using a Smart Proxy to which a host is registered when using remote execution": [
+        ""
       ],
       "Prevent from further updates": [
         "今後の更新を回避"
@@ -5168,7 +5336,13 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         "ホストのインストール済み製品からリストされた製品 ID。\\\\\\n        製品 API が返した製品 ID とは異なります。"
       ],
+      "Product id not found: '%s'": [
+        ""
+      ],
       "Product label": [
+        ""
+      ],
+      "Product label '%s' is ambiguous. Try using an id-based container name.": [
         ""
       ],
       "Product name": [
@@ -5176,6 +5350,9 @@
       ],
       "Product name as listed from a host's installed products": [
         "ホストのインストール済み製品からリストされた製品名"
+      ],
+      "Product not found: '%s'": [
+        ""
       ],
       "Product the repository belongs to": [
         "リポジトリーが属する製品"
@@ -5255,8 +5432,8 @@
       "Publish": [
         "公開"
       ],
-      "Publish Lifecycle Environment Repositories": [
-        "ライフサイクル環境リポジトリーの公開"
+      "Publish Lifecycle Environment Container Repositories": [
+        ""
       ],
       "Publish a content view": [
         "コンテンツビューの公開"
@@ -5273,8 +5450,8 @@
       "Published new version": [
         "新規バージョンを公開しました"
       ],
-      "Publishing ${name}": [
-        "公開 {name}"
+      "Publishing ${truncate(name)}": [
+        ""
       ],
       "Publishing content view": [
         "コンテンツビューの公開"
@@ -5663,6 +5840,9 @@
       "Remove package via Katello interface": [
         "Katello インターフェイスでのパッケージの削除"
       ],
+      "Remove packages": [
+        ""
+      ],
       "Remove packages via Katello interface": [
         "Katello インターフェイスでのパッケージの削除"
       ],
@@ -5774,6 +5954,9 @@
       "Repository name": [
         ""
       ],
+      "Repository name '%{container_name}' already exists in this product using a different naming scheme. Please retry your request with the %{root_repo_container_push_name} format or destroy and recreate the repository using your preferred schema.": [
+        ""
+      ],
       "Repository not found": [
         "リポジトリーが見つかりません"
       ],
@@ -5826,6 +6009,9 @@
         "バージョンリポジトリーの再公開"
       ],
       "Republish repository metadata": [
+        ""
+      ],
+      "Requested access to '%s' is denied": [
         ""
       ],
       "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys.": [
@@ -5975,14 +6161,26 @@
       "Returns content that can be both added and is currently added to the object. The value 'content_view_filter' is supported": [
         "両方とも追加可能で、現在オブジェクトに追加されているコンテンツを返します。値 'content_view_filter' がサポートされています"
       ],
+      "Review": [
+        ""
+      ],
       "Review affected environment": [
         "影響を受ける環境の確認"
       ],
       "Review affected environments": [
         "影響を受ける環境を確認"
       ],
+      "Review and optionally exclude hosts from your selection.": [
+        ""
+      ],
+      "Review and then click {submitBtnText}.": [
+        ""
+      ],
       "Review details": [
         "詳細を確認"
+      ],
+      "Review hosts": [
+        ""
       ],
       "Review the information below and click ": [
         "以下の情報を確認して、次をクリック: "
@@ -6143,6 +6341,9 @@
       "Select a source": [
         ""
       ],
+      "Select action": [
+        ""
+      ],
       "Select add-ons": [
         "アドオンの選択"
       ],
@@ -6164,11 +6365,17 @@
       "Select an organization": [
         "組織の選択"
       ],
+      "Select at least one erratum.": [
+        ""
+      ],
+      "Select at least one package.": [
+        ""
+      ],
       "Select attributes for ${akDetails.name}": [
         ""
       ],
-      "Select available version of ${cvName} to use": [
-        "使用する {cvName} の利用可能なバージョンの選択"
+      "Select available version of ${truncate(cvName)} to use": [
+        ""
       ],
       "Select available version of content views to use": [
         "使用するコンテンツビューの利用可能なバージョンの選択"
@@ -6178,6 +6385,12 @@
       ],
       "Select environment": [
         "環境の選択"
+      ],
+      "Select errata": [
+        ""
+      ],
+      "Select errata to apply on the selected hosts. Some errata may already be applied on some hosts.": [
+        ""
       ],
       "Select host collection(s) to associate with host {hostName}.": [
         "ホスト {hostName} に関連付けるホストコレクションを選択します。"
@@ -6197,8 +6410,17 @@
       "Select one": [
         "1 つを選択"
       ],
+      "Select packages to install on the selected hosts. Some packages may already be installed on some hosts.": [
+        ""
+      ],
       "Select packages to install to the host {hostName}.": [
         "ホスト {hostName} にインストールするパッケージを選択します。"
+      ],
+      "Select packages to remove on the selected hosts.": [
+        ""
+      ],
+      "Select packages to upgrade to the latest version. Packages may have different versions on different hosts.": [
+        ""
       ],
       "Select page": [
         "ページの選択"
@@ -6235,6 +6457,12 @@
       ],
       "Selected environments ": [
         "選択済みの環境 "
+      ],
+      "Selected errata will be applied on {hostCount} hosts": [
+        ""
+      ],
+      "Selected packages will be {submitAction} on {hostCount} hosts": [
+        ""
       ],
       "Sending a list of included IDs is not allowed when all items are being selected.": [
         "すべての項目が選択されている場合、含まれる ID の一覧を送信することはできません。"
@@ -7235,6 +7463,9 @@
       "This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode.": [
         ""
       ],
+      "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.": [
+        ""
+      ],
       "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
         "このホストのコンテンツビューおよびライフサイクル環境に含まれていないため、このエラータはインストール可能ではありません。"
       ],
@@ -7245,6 +7476,9 @@
         "このホストにはパッケージがありません。"
       ],
       "This host has errata that are applicable, but not installable. Adjust your filters and try again.": [
+        ""
+      ],
+      "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments.": [
         ""
       ],
       "This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled.": [
@@ -7328,6 +7562,9 @@
       "Title": [
         "タイトル"
       ],
+      "To change content view environments, a specific organization must be selected from the organization context.": [
+        ""
+      ],
       "To enable the synced content option, this host must use a content source, content view, and lifecycle environment which contain synced kickstart repositories for the selected architecture and operating system.": [
         ""
       ],
@@ -7347,6 +7584,12 @@
         "まず、このホストをホストコレクションに追加します。"
       ],
       "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.": [
+        ""
+      ],
+      "To manage host packages, a specific organization must be selected from the organization context.": [
+        ""
+      ],
+      "To manage packages, select an action.": [
         ""
       ],
       "Total steps: ": [
@@ -7568,9 +7811,6 @@
       "Unsupported CDN resource": [
         "サポートされない CDN リソース"
       ],
-      "Unsupported URL protocol %s.": [
-        "非対応の URL プロトコル %s です。"
-      ],
       "Unsupported event type %{type}. Supported: %{types}": [
         "サポートされていないイベントタイプ %{type}。サポート: %{types}"
       ],
@@ -7748,6 +7988,12 @@
       "Upgrade": [
         "アップグレード"
       ],
+      "Upgrade all packages": [
+        ""
+      ],
+      "Upgrade packages": [
+        ""
+      ],
       "Upgrade via customized remote execution": [
         "カスタマイズされたリモート実行によるアップグレード"
       ],
@@ -7762,9 +8008,6 @@
       ],
       "Upload a subscription manifest": [
         "サブスクリプションマニフェストのアップロード"
-      ],
-      "Upload content into the repository": [
-        "コンテンツのリポジトリーへのアップロード"
       ],
       "Upload into": [
         "アップロード先"
@@ -7933,9 +8176,6 @@
       ],
       "Version details updated.": [
         "バージョン情報が更新されました。"
-      ],
-      "Version in use": [
-        "使用中のバージョン"
       ],
       "Versions": [
         "バージョン"
@@ -8111,6 +8351,9 @@
       "You have unsaved changes. Do you want to exit without saving your changes?": [
         "保存されていない変更があります。変更を保存せずに終了しますか?"
       ],
+      "You must select at least one host.": [
+        ""
+      ],
       "You were not allowed to add %s": [
         "%s を追加できません"
       ],
@@ -8127,6 +8370,9 @@
         "%(entitlementCount)s 件のエンタイトルメントに変更を加えています"
       ],
       "Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.": [
+        ""
+      ],
+      "Your manifest has expired. To continue using Red Hat content, import a new manifest.": [
         ""
       ],
       "Your manifest will expire in {daysMessage}. To extend the expiration date, refresh your manifest. Or, if your Foreman is disconnected, import a new manifest.": [
@@ -8570,6 +8816,9 @@
       "initiating Pulp task": [
         "Pulp タスクの開始"
       ],
+      "installed": [
+        ""
+      ],
       "installing errata...": [
         "エラータをインストールしています..."
       ],
@@ -8923,6 +9172,9 @@
       ],
       "update a filter": [
         "フィルターの更新"
+      ],
+      "updated": [
+        ""
       ],
       "updating package group...": [
         "パッケージグループを更新しています..."

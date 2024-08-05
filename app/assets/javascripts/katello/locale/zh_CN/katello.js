@@ -149,6 +149,9 @@
       "%s is unreachable. %s": [
         "%s 无法访问。%s"
       ],
+      "%s was not found!": [
+        ""
+      ],
       "%{errata} (%{total} other errata)": [
         "%{errata} （%{total} 个其他勘误）"
       ],
@@ -404,6 +407,12 @@
       "A backend service [ %s ] is unreachable": [
         "一个后端服务 [ %s ] 无法被访问"
       ],
+      "A comma-separated list of refs to include during a sync. The wildcards *, ? are recognized.": [
+        ""
+      ],
+      "A comma-separated list of tags to exclude during a sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
+        ""
+      ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
         "此内容视图中未应用大量勘误，因此仅显示前 100 个。"
       ],
@@ -512,8 +521,8 @@
       "Activation keys can be managed {here}.": [
         ""
       ],
-      "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.": [
-        "subscription-manager 客户端的激活码，CentOS 和 Red Hat Enterprise Linux 需要它。只有在主机组没有激活码时才需要。"
+      "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys or if you do not provide a host group.": [
+        ""
       ],
       "Activation keys may be used during {system_registration}.": [
         ""
@@ -638,6 +647,9 @@
       "Affected Repositories": [
         "受影响的仓库"
       ],
+      "Affected hosts": [
+        ""
+      ],
       "Affected repositories": [
         "受影响的仓库"
       ],
@@ -677,7 +689,7 @@
       "All versions will be removed from these environments": [
         "所有版本都将从这些环境中删除"
       ],
-      "Allow a host to be registered to multiple content view environments with 'subscription-manager register --environments'.": [
+      "Allow a host to be assigned to multiple content view environments with 'subscription-manager register --environments' or 'subscription-manager environments --set'.": [
         ""
       ],
       "Allow deleting repositories in published content views": [
@@ -770,14 +782,23 @@
       "Applicable Content Hosts": [
         "适用的内容主机"
       ],
+      "Applicable bugfix/enhancement errata": [
+        ""
+      ],
       "Applicable errata apply to at least one package installed on the host.": [
         "适用的勘误会应用到主机上安装的至少一个软件包。"
+      ],
+      "Applicable security errata": [
+        ""
       ],
       "Application": [
         "应用"
       ],
       "Apply": [
         "应用"
+      ],
+      "Apply errata": [
+        ""
       ],
       "Apply erratum": [
         ""
@@ -845,6 +866,9 @@
       "Array of content view component IDs to remove. Identifier of the component association": [
         "要删除的内容视图组件 ID 的数组。组件关联的标识符"
       ],
+      "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Array of host ids": [
         "主机 ID 数组"
       ],
@@ -880,6 +904,9 @@
       ],
       "Assign the release version to one or more hosts": [
         "将发行版本分配给一个或多个主机"
+      ],
+      "Assigning a host to multiple content view environments is not enabled.": [
+        ""
       ],
       "Associated location IDs": [
         "关联的位置 ID"
@@ -1076,6 +1103,9 @@
       "Calculate Applicable Errata based on a particular Environment": [
         "根據特定環境，計算可套用的勘誤"
       ],
+      "Calculate content counts on smart proxies automatically": [
+        ""
+      ],
       "Can communicate with the Red Hat Portal for subscriptions.": [
         "可与红帽门户网站沟通以获取订阅。"
       ],
@@ -1217,6 +1247,9 @@
       "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
         ""
       ],
+      "Cannot install errata: No installable errata found for search term '%s'": [
+        ""
+      ],
       "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}": [
         "无法在组合内容视图版本 (%{name} version version %{version} 上执行增量更新"
       ],
@@ -1247,6 +1280,9 @@
       "Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'.": [
         "无法从环境中删除内容视图。内容视图 '%{view}' 没有在生命周期环境 '%{env}' 中。"
       ],
+      "Cannot remove package(s): This host does not have any installed packages matching the search term '%s'.": [
+        ""
+      ],
       "Cannot set attribute %{attr} for content type %{type}": [
         "无法为内容类型 %{attr} 设置属性 %{type}"
       ],
@@ -1264,6 +1300,12 @@
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         "无法同步带有按需下载策略的 file:// 仓库"
+      ],
+      "Cannot update properties of a container push repository": [
+        ""
+      ],
+      "Cannot upgrade packages: No installed packages found for search term '%s'": [
+        ""
       ],
       "Cannot upload Ansible collections.": [
         "无法上传 Ansible 集合。"
@@ -1310,11 +1352,11 @@
       "Checksum of file to upload": [
         "上传文件的 Checksum"
       ],
-      "Checksum of the repository, currently 'sha1' & 'sha256' are supported": [
-        "仓库的 Checksum，目前支援 'sha1' 和 'sha256'"
-      ],
       "Checksum type cannot be set for yum repositories with on demand download policy.": [
         "无法为使用按需下载策略的 yum 仓库设置 Checksum 类型。"
+      ],
+      "Checksum used for published repository contents. Supported types: %s": [
+        ""
       ],
       "Choose content credentials if required for this RHUI source.": [
         "如果需要此 RHUI 源，请选择内容凭证。"
@@ -1346,6 +1388,9 @@
       "Collapse All": [
         "全部折叠"
       ],
+      "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
         "以逗号分隔的子路径列表。所有子路径都必须在结尾有一个斜杠，且在开头没有斜杠。"
       ],
@@ -1357,6 +1402,9 @@
       ],
       "Compare": [
         "比较"
+      ],
+      "Completed pulp task protection days": [
+        ""
       ],
       "Component": [
         "组件"
@@ -1586,6 +1634,9 @@
       "Content type %{content_type} is incompatible with repositories of type %{repo_type}": [
         "内容类型 %{content_type} 与类型为％{repo_type} 的软件仓库不兼容"
       ],
+      "Content type does not support repo discovery": [
+        ""
+      ],
       "Content view": [
         "内容视图"
       ],
@@ -1616,10 +1667,10 @@
       "Content view and lifecycle environment must be provided together": [
         ""
       ],
-      "Content view details": [
-        "内容视图详情"
-      ],
       "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
+        ""
+      ],
+      "Content view environments": [
         ""
       ],
       "Content view environments and activation key must all belong to the same organization": [
@@ -1744,6 +1795,15 @@
       ],
       "Could not find environments for promotion": [
         "无法找到升级到的环境"
+      ],
+      "Could not locate Pulp distribution.": [
+        ""
+      ],
+      "Could not locate local uploaded repository for content indexing.": [
+        ""
+      ],
+      "Could not locate repository properties for content indexing.": [
+        ""
       ],
       "Could not remove the lifecycle environment from the smart proxy": [
         "无法从智能代理中删除生命周期环境"
@@ -2273,8 +2333,8 @@
       "Details": [
         "详情"
       ],
-      "Determining settings for ${name}": [
-        "确定 $ 的设置{name}"
+      "Determining settings for ${truncate(name)}": [
+        ""
       ],
       "Digest": [
         ""
@@ -2335,6 +2395,12 @@
       ],
       "Download rate limit": [
         "下载速率限制"
+      ],
+      "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
+        ""
+      ],
+      "Due to a change in your products, this container name has become ambiguous (product name '%{prod_label}'). If you wish to continue using this container name, destroy the product in conflict with '%{prod_name}' (id %{prod_id}). If you wish to keep both products, destroy '%{org_label}/%{prod_dot_label}/%{root_repo_label}' and retry your push using the id format.": [
+        ""
       ],
       "Duplicate artifact detected": [
         "检测到重复工件"
@@ -2534,6 +2600,12 @@
       "Errata mail": [
         "勘误邮件"
       ],
+      "Errata statuses not updated for deleted content facet with UUID %s": [
+        ""
+      ],
+      "Errata to apply": [
+        ""
+      ],
       "Errata to exclusively include in the action": [
         "仅包含在操作中的勘误"
       ],
@@ -2581,6 +2653,9 @@
       ],
       "Exclude": [
         "排除"
+      ],
+      "Exclude Refs": [
+        ""
       ],
       "Exclude all RPMs not associated to any errata": [
         "排除没有与任何勘误关联的所有 RPM"
@@ -3083,6 +3158,9 @@
       "Hosts: ": [
         "主机："
       ],
+      "How many days before a completed Pulp task is purged by Orphan Cleanup.": [
+        ""
+      ],
       "How many repositories should be synced concurrently on the capsule. A smaller number may lead to longer sync times. A larger number will increase dynflow load.": [
         "capsule 上应同时同步多少个参数。较小的数字可能导致更长的同步时间。较大的数字将增加 dynflow 负载。"
       ],
@@ -3212,8 +3290,17 @@
       "Id of the repository to limit verifying checksum on": [
         ""
       ],
+      "Id of the single content view to be associated with the host.": [
+        ""
+      ],
+      "Id of the single lifecycle environment to be associated with the host.": [
+        ""
+      ],
       "Id of the smart proxy": [
         "智能代理 ID"
+      ],
+      "Id of the smart proxy from which the host consumes content.": [
+        ""
       ],
       "Idenifier of the SSL CA Cert": [
         "SSL CA 证书的标识符"
@@ -3266,13 +3353,16 @@
       "If this is enabled, and register_hostname_fact is set and provided, registration will look for a new host by name only using that fact, and will skip all hostname matching": [
         "如果这个被启用，并且设置并提供了register_hostname_fact，注册将仅使用该 fact 按名称查找新主机，并且将忽略所有主机名匹配"
       ],
+      "If this is enabled, content counts on smart proxies will be updated automatically after content sync.": [
+        ""
+      ],
       "If this is enabled, repositories can be deleted even when they belong to published content views. The deleted repository will be removed from all content view versions.": [
         "如果启用此项，可以删除仓库，即使它们属于公布的内容视图。已删除的仓库将从所有内容视图版本中删除。"
       ],
       "If this is enabled, repositories of content view versions without environments (\\\"archived\\\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'.": [
         "如果启用此项，在没有环境的情况下，内容视图版本的软件仓库将在 '/pulp/content/<organization>//content_views/<content view>/X.Y/...' 中分发。"
       ],
-      "If true, only errata that can be installed without an incremental update will affect the host's errata status.": [
+      "If true, only errata that can be installed without an incremental update will affect the host's errata status. Also affects the Host Collections dashboard widget.": [
         ""
       ],
       "If true, only return repository sets that are associated with an active subscriptions": [
@@ -3395,6 +3485,9 @@
       "Include": [
         "包括"
       ],
+      "Include Refs": [
+        ""
+      ],
       "Include all RPMs not associated to any errata": [
         "包括所有没有与任何勘误关联的 RPM"
       ],
@@ -3494,7 +3587,13 @@
       "Installable": [
         "可安装"
       ],
+      "Installable bugfix/enhancement errata": [
+        ""
+      ],
       "Installable errata are applicable errata that are available in the host's content view and lifecycle environment.": [
+        ""
+      ],
+      "Installable security errata": [
         ""
       ],
       "Installable updates": [
@@ -3577,6 +3676,24 @@
       ],
       "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'": [
         "指定了无效的过滤器规则，“ version” 不能在同一个tuple 中与 'min_version' 或 'max_version' 一起指定"
+      ],
+      "Invalid format. Container name cannot be blank.": [
+        ""
+      ],
+      "Invalid format. Container pushes should follow 'organization_label/product_label/name' OR 'id/organization_id/product_id/name' schema.": [
+        ""
+      ],
+      "Invalid format. Organization id must be an integer without leading zeros.": [
+        ""
+      ],
+      "Invalid format. Organization label cannot be blank.": [
+        ""
+      ],
+      "Invalid format. Product id must be an integer without leading zeros.": [
+        ""
+      ],
+      "Invalid format. Product label cannot be blank.": [
+        ""
       ],
       "Invalid mirroring policy for repository type %{type}, only %{policies} are valid.": [
         "对仓库类型 %{type} 而言无效的镜像策略，只有 %{policies} 有效。"
@@ -3854,6 +3971,9 @@
       "List all organizations": [
         "列出所有机构"
       ],
+      "List all packages unique by name": [
+        ""
+      ],
       "List alternate content sources.": [
         "备用内容源列表。"
       ],
@@ -4093,6 +4213,15 @@
       ],
       "Manage Manifest": [
         "管理清单"
+      ],
+      "Manage content": [
+        ""
+      ],
+      "Manage errata": [
+        ""
+      ],
+      "Manage packages": [
+        ""
       ],
       "Manifest": [
         "清单"
@@ -4385,6 +4514,12 @@
       "No available component content view updates": [
         ""
       ],
+      "No available debs found for search term '%s'. Check the host's content view environments and already-installed debs.": [
+        ""
+      ],
+      "No available packages found for search term '%s'. Check the host's content view environments and already-installed packages.": [
+        ""
+      ],
       "No available repository or filter updates": [
         ""
       ],
@@ -4439,6 +4574,9 @@
       "No errata filter rules yet": [
         ""
       ],
+      "No errata found.": [
+        ""
+      ],
       "No errata matching given search query": [
         ""
       ],
@@ -4476,6 +4614,9 @@
         "在选择中未找到 subscription-manager 注册的主机。"
       ],
       "No hosts were specified": [
+        ""
+      ],
+      "No installed debs found for search term '%s'": [
         ""
       ],
       "No installed packages and/or enabled repositories have been reported by %s.": [
@@ -4649,6 +4790,12 @@
       "No syncable repositories found for selected products and options.": [
         "找不到所选产品和选项的可同步仓库。"
       ],
+      "No upgradable packages found for search term '%s'. The host may already have the latest version(s) installed.": [
+        ""
+      ],
+      "No upgradable packages found.": [
+        ""
+      ],
       "No uploads param specified. An array of uploads to import is required.": [
         "未指定上传参数。需要导入的上传阵列。"
       ],
@@ -4714,6 +4861,9 @@
       ],
       "Number to Allocate": [
         "分配编号"
+      ],
+      "OS": [
+        ""
       ],
       "OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host.": [
         "仅限于 {osRestricted}。如果主机操作系统不匹配，则这个主机上将无法使用该仓库。"
@@ -4802,14 +4952,23 @@
       "Organization id": [
         "組織 ID"
       ],
+      "Organization id not found: '%s'": [
+        ""
+      ],
       "Organization identifier": [
         "机构标识符"
       ],
       "Organization label": [
         "机构标签"
       ],
+      "Organization label '%s' is ambiguous. Try using an id-based container name.": [
+        ""
+      ],
       "Organization not found": [
         "没有找到机构"
+      ],
+      "Organization not found: '%s'": [
+        ""
       ],
       "Organization required": [
         "需要的机构"
@@ -5000,6 +5159,15 @@
       "Packages must be provided": [
         "必须提供软件包"
       ],
+      "Packages to be removed": [
+        ""
+      ],
+      "Packages to be updated": [
+        ""
+      ],
+      "Packages to install": [
+        ""
+      ],
       "Packages will appear here when available.": [
         "当软件包可用时，将在此处显示。"
       ],
@@ -5111,11 +5279,11 @@
       "Policy to set for mirroring content.  Must be one of %s.": [
         "为镜像内容设置的策略。必须是 %s 之一。"
       ],
-      "Prefer registered through proxy for remote execution": [
-        "首选通过代理注册以进行远程执行"
+      "Prefer registered through Smart Proxy for remote execution": [
+        ""
       ],
-      "Prefer using a proxy to which a host is registered when using remote execution": [
-        "在使用远程执行时，首选使用注册主机的代理"
+      "Prefer using a Smart Proxy to which a host is registered when using remote execution": [
+        ""
       ],
       "Prevent from further updates": [
         "防止进一步更新"
@@ -5168,7 +5336,13 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         "产品 id，与列出的主机安装的产品一样，\\\\\\n        而不是 products api 返回的 product id"
       ],
+      "Product id not found: '%s'": [
+        ""
+      ],
       "Product label": [
+        ""
+      ],
+      "Product label '%s' is ambiguous. Try using an id-based container name.": [
         ""
       ],
       "Product name": [
@@ -5176,6 +5350,9 @@
       ],
       "Product name as listed from a host's installed products": [
         "产品名称，与列出的主机安装的产品一样"
+      ],
+      "Product not found: '%s'": [
+        ""
       ],
       "Product the repository belongs to": [
         "仓库所属的产品"
@@ -5255,8 +5432,8 @@
       "Publish": [
         "发布"
       ],
-      "Publish Lifecycle Environment Repositories": [
-        "发布生命周期环境仓库"
+      "Publish Lifecycle Environment Container Repositories": [
+        ""
       ],
       "Publish a content view": [
         "出版內容視域"
@@ -5273,8 +5450,8 @@
       "Published new version": [
         "发布新版本"
       ],
-      "Publishing ${name}": [
-        "发布 ${name}"
+      "Publishing ${truncate(name)}": [
+        ""
       ],
       "Publishing content view": [
         "发布内容视图"
@@ -5663,6 +5840,9 @@
       "Remove package via Katello interface": [
         "通过 Katello 界面删除软件包"
       ],
+      "Remove packages": [
+        ""
+      ],
       "Remove packages via Katello interface": [
         "通过 Katello 界面删除软件包"
       ],
@@ -5774,6 +5954,9 @@
       "Repository name": [
         ""
       ],
+      "Repository name '%{container_name}' already exists in this product using a different naming scheme. Please retry your request with the %{root_repo_container_push_name} format or destroy and recreate the repository using your preferred schema.": [
+        ""
+      ],
       "Repository not found": [
         "找不到軟體庫"
       ],
@@ -5826,6 +6009,9 @@
         "发布版本库"
       ],
       "Republish repository metadata": [
+        ""
+      ],
+      "Requested access to '%s' is denied": [
         ""
       ],
       "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys.": [
@@ -5975,14 +6161,26 @@
       "Returns content that can be both added and is currently added to the object. The value 'content_view_filter' is supported": [
         "返回可以添加及当前被添加的内容。支持值“ content_view_filter”"
       ],
+      "Review": [
+        ""
+      ],
       "Review affected environment": [
         "检查受影响的环境"
       ],
       "Review affected environments": [
         "检查受影响的环境"
       ],
+      "Review and optionally exclude hosts from your selection.": [
+        ""
+      ],
+      "Review and then click {submitBtnText}.": [
+        ""
+      ],
       "Review details": [
         "审阅详情"
+      ],
+      "Review hosts": [
+        ""
       ],
       "Review the information below and click ": [
         "查看以下信息并点 "
@@ -6143,6 +6341,9 @@
       "Select a source": [
         ""
       ],
+      "Select action": [
+        ""
+      ],
       "Select add-ons": [
         "选择附加组件"
       ],
@@ -6164,11 +6365,17 @@
       "Select an organization": [
         "选择一个机构"
       ],
+      "Select at least one erratum.": [
+        ""
+      ],
+      "Select at least one package.": [
+        ""
+      ],
       "Select attributes for ${akDetails.name}": [
         ""
       ],
-      "Select available version of ${cvName} to use": [
-        "选择可用的 ${cvName} 版本"
+      "Select available version of ${truncate(cvName)} to use": [
+        ""
       ],
       "Select available version of content views to use": [
         "选择要使用的内容视图的可用版本"
@@ -6178,6 +6385,12 @@
       ],
       "Select environment": [
         "选择环境"
+      ],
+      "Select errata": [
+        ""
+      ],
+      "Select errata to apply on the selected hosts. Some errata may already be applied on some hosts.": [
+        ""
       ],
       "Select host collection(s) to associate with host {hostName}.": [
         "选择与主机 {hostName} 关联的主机集合。"
@@ -6197,8 +6410,17 @@
       "Select one": [
         "选择一个"
       ],
+      "Select packages to install on the selected hosts. Some packages may already be installed on some hosts.": [
+        ""
+      ],
       "Select packages to install to the host {hostName}.": [
         "选择安装到主机 {hostName} 的软件包。"
+      ],
+      "Select packages to remove on the selected hosts.": [
+        ""
+      ],
+      "Select packages to upgrade to the latest version. Packages may have different versions on different hosts.": [
+        ""
       ],
       "Select page": [
         "选择页"
@@ -6235,6 +6457,12 @@
       ],
       "Selected environments ": [
         "选择的环境 "
+      ],
+      "Selected errata will be applied on {hostCount} hosts": [
+        ""
+      ],
+      "Selected packages will be {submitAction} on {hostCount} hosts": [
+        ""
       ],
       "Sending a list of included IDs is not allowed when all items are being selected.": [
         "当选择所有项目时，不允许发送包含 ID 的列表。"
@@ -7235,6 +7463,9 @@
       "This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode.": [
         ""
       ],
+      "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.": [
+        ""
+      ],
       "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
         "此勘误不可安装，因为它不在此主机的内容视图和生命周期环境中。"
       ],
@@ -7245,6 +7476,9 @@
         "该主机没有任何软件包。"
       ],
       "This host has errata that are applicable, but not installable. Adjust your filters and try again.": [
+        ""
+      ],
+      "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments.": [
         ""
       ],
       "This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled.": [
@@ -7328,6 +7562,9 @@
       "Title": [
         "提示"
       ],
+      "To change content view environments, a specific organization must be selected from the organization context.": [
+        ""
+      ],
       "To enable the synced content option, this host must use a content source, content view, and lifecycle environment which contain synced kickstart repositories for the selected architecture and operating system.": [
         ""
       ],
@@ -7347,6 +7584,12 @@
         "要开始，将此主机添加到主机集合。"
       ],
       "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.": [
+        ""
+      ],
+      "To manage host packages, a specific organization must be selected from the organization context.": [
+        ""
+      ],
+      "To manage packages, select an action.": [
         ""
       ],
       "Total steps: ": [
@@ -7568,9 +7811,6 @@
       "Unsupported CDN resource": [
         "不支持的 CDN 资源"
       ],
-      "Unsupported URL protocol %s.": [
-        "不支持的 URL 协议 %s。"
-      ],
       "Unsupported event type %{type}. Supported: %{types}": [
         "不支持的事件类型 %{type}。支持：%{types}"
       ],
@@ -7748,6 +7988,12 @@
       "Upgrade": [
         "升级"
       ],
+      "Upgrade all packages": [
+        ""
+      ],
+      "Upgrade packages": [
+        ""
+      ],
       "Upgrade via customized remote execution": [
         "通过自定义远程执行升级"
       ],
@@ -7762,9 +8008,6 @@
       ],
       "Upload a subscription manifest": [
         "上载订阅清单"
-      ],
-      "Upload content into the repository": [
-        "上傳內容至軟體庫"
       ],
       "Upload into": [
         "上传到"
@@ -7933,9 +8176,6 @@
       ],
       "Version details updated.": [
         "更新的版本详情。"
-      ],
-      "Version in use": [
-        "使用的版本"
       ],
       "Versions": [
         "版本"
@@ -8111,6 +8351,9 @@
       "You have unsaved changes. Do you want to exit without saving your changes?": [
         "您有尚未保存的更改。您要退出而不保存更改吗？"
       ],
+      "You must select at least one host.": [
+        ""
+      ],
       "You were not allowed to add %s": [
         "您不允许添加 %s"
       ],
@@ -8127,6 +8370,9 @@
         "您更改了 %(entitlementCount)s 个权利"
       ],
       "Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.": [
+        ""
+      ],
+      "Your manifest has expired. To continue using Red Hat content, import a new manifest.": [
         ""
       ],
       "Your manifest will expire in {daysMessage}. To extend the expiration date, refresh your manifest. Or, if your Foreman is disconnected, import a new manifest.": [
@@ -8570,6 +8816,9 @@
       "initiating Pulp task": [
         "初始化 Pulp 任務"
       ],
+      "installed": [
+        ""
+      ],
       "installing errata...": [
         "正在安装勘误..."
       ],
@@ -8923,6 +9172,9 @@
       ],
       "update a filter": [
         "更新篩選器"
+      ],
+      "updated": [
+        ""
       ],
       "updating package group...": [
         "正在更新软件包组..."

@@ -150,6 +150,9 @@
       "%s is unreachable. %s": [
         ""
       ],
+      "%s was not found!": [
+        ""
+      ],
       "%{errata} (%{total} other errata)": [
         "%{errata}（%{total} 個其它勘誤）"
       ],
@@ -405,6 +408,12 @@
       "A backend service [ %s ] is unreachable": [
         "無法連上後端服務 [ %s ]"
       ],
+      "A comma-separated list of refs to include during a sync. The wildcards *, ? are recognized.": [
+        ""
+      ],
+      "A comma-separated list of tags to exclude during a sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
+        ""
+      ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
         "許多勘誤並未套用於此內容視域，因此只顯示了前 100 個。"
       ],
@@ -513,7 +522,7 @@
       "Activation keys can be managed {here}.": [
         ""
       ],
-      "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.": [
+      "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys or if you do not provide a host group.": [
         ""
       ],
       "Activation keys may be used during {system_registration}.": [
@@ -639,6 +648,9 @@
       "Affected Repositories": [
         ""
       ],
+      "Affected hosts": [
+        ""
+      ],
       "Affected repositories": [
         ""
       ],
@@ -678,7 +690,7 @@
       "All versions will be removed from these environments": [
         ""
       ],
-      "Allow a host to be registered to multiple content view environments with 'subscription-manager register --environments'.": [
+      "Allow a host to be assigned to multiple content view environments with 'subscription-manager register --environments' or 'subscription-manager environments --set'.": [
         ""
       ],
       "Allow deleting repositories in published content views": [
@@ -771,7 +783,13 @@
       "Applicable Content Hosts": [
         ""
       ],
+      "Applicable bugfix/enhancement errata": [
+        ""
+      ],
       "Applicable errata apply to at least one package installed on the host.": [
+        ""
+      ],
+      "Applicable security errata": [
         ""
       ],
       "Application": [
@@ -779,6 +797,9 @@
       ],
       "Apply": [
         "套用"
+      ],
+      "Apply errata": [
+        ""
       ],
       "Apply erratum": [
         ""
@@ -846,6 +867,9 @@
       "Array of content view component IDs to remove. Identifier of the component association": [
         ""
       ],
+      "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Array of host ids": [
         "主機 ID 陣列"
       ],
@@ -880,6 +904,9 @@
         ""
       ],
       "Assign the release version to one or more hosts": [
+        ""
+      ],
+      "Assigning a host to multiple content view environments is not enabled.": [
         ""
       ],
       "Associated location IDs": [
@@ -1077,6 +1104,9 @@
       "Calculate Applicable Errata based on a particular Environment": [
         "根據特定環境，計算可套用的勘誤"
       ],
+      "Calculate content counts on smart proxies automatically": [
+        ""
+      ],
       "Can communicate with the Red Hat Portal for subscriptions.": [
         ""
       ],
@@ -1218,6 +1248,9 @@
       "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
         ""
       ],
+      "Cannot install errata: No installable errata found for search term '%s'": [
+        ""
+      ],
       "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}": [
         "無法在一個複合式內容視域版本（%{name} 版本 版本 %{version}）中執行一項遞增的更新"
       ],
@@ -1248,6 +1281,9 @@
       "Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'.": [
         "無法從環境移除內容視域。內容視域 '%{view}' 並不位於生命週期環境 '%{env}' 中。"
       ],
+      "Cannot remove package(s): This host does not have any installed packages matching the search term '%s'.": [
+        ""
+      ],
       "Cannot set attribute %{attr} for content type %{type}": [
         ""
       ],
@@ -1264,6 +1300,12 @@
         "無法為複合檢視指定內容"
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
+        ""
+      ],
+      "Cannot update properties of a container push repository": [
+        ""
+      ],
+      "Cannot upgrade packages: No installed packages found for search term '%s'": [
         ""
       ],
       "Cannot upload Ansible collections.": [
@@ -1311,10 +1353,10 @@
       "Checksum of file to upload": [
         ""
       ],
-      "Checksum of the repository, currently 'sha1' & 'sha256' are supported": [
+      "Checksum type cannot be set for yum repositories with on demand download policy.": [
         ""
       ],
-      "Checksum type cannot be set for yum repositories with on demand download policy.": [
+      "Checksum used for published repository contents. Supported types: %s": [
         ""
       ],
       "Choose content credentials if required for this RHUI source.": [
@@ -1347,6 +1389,9 @@
       "Collapse All": [
         "全部收回"
       ],
+      "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
         ""
       ],
@@ -1357,6 +1402,9 @@
         ""
       ],
       "Compare": [
+        ""
+      ],
+      "Completed pulp task protection days": [
         ""
       ],
       "Component": [
@@ -1587,6 +1635,9 @@
       "Content type %{content_type} is incompatible with repositories of type %{repo_type}": [
         ""
       ],
+      "Content type does not support repo discovery": [
+        ""
+      ],
       "Content view": [
         ""
       ],
@@ -1617,10 +1668,10 @@
       "Content view and lifecycle environment must be provided together": [
         ""
       ],
-      "Content view details": [
+      "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
         ""
       ],
-      "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
+      "Content view environments": [
         ""
       ],
       "Content view environments and activation key must all belong to the same organization": [
@@ -1744,6 +1795,15 @@
         "找不到所有指定的勘誤 ID：%s"
       ],
       "Could not find environments for promotion": [
+        ""
+      ],
+      "Could not locate Pulp distribution.": [
+        ""
+      ],
+      "Could not locate local uploaded repository for content indexing.": [
+        ""
+      ],
+      "Could not locate repository properties for content indexing.": [
         ""
       ],
       "Could not remove the lifecycle environment from the smart proxy": [
@@ -2274,7 +2334,7 @@
       "Details": [
         "詳細資料"
       ],
-      "Determining settings for ${name}": [
+      "Determining settings for ${truncate(name)}": [
         ""
       ],
       "Digest": [
@@ -2335,6 +2395,12 @@
         "下載除錯憑證"
       ],
       "Download rate limit": [
+        ""
+      ],
+      "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
+        ""
+      ],
+      "Due to a change in your products, this container name has become ambiguous (product name '%{prod_label}'). If you wish to continue using this container name, destroy the product in conflict with '%{prod_name}' (id %{prod_id}). If you wish to keep both products, destroy '%{org_label}/%{prod_dot_label}/%{root_repo_label}' and retry your push using the id format.": [
         ""
       ],
       "Duplicate artifact detected": [
@@ -2535,6 +2601,12 @@
       "Errata mail": [
         "勘誤郵件"
       ],
+      "Errata statuses not updated for deleted content facet with UUID %s": [
+        ""
+      ],
+      "Errata to apply": [
+        ""
+      ],
       "Errata to exclusively include in the action": [
         ""
       ],
@@ -2582,6 +2654,9 @@
       ],
       "Exclude": [
         "排除"
+      ],
+      "Exclude Refs": [
+        ""
       ],
       "Exclude all RPMs not associated to any errata": [
         ""
@@ -3084,6 +3159,9 @@
       "Hosts: ": [
         ""
       ],
+      "How many days before a completed Pulp task is purged by Orphan Cleanup.": [
+        ""
+      ],
       "How many repositories should be synced concurrently on the capsule. A smaller number may lead to longer sync times. A larger number will increase dynflow load.": [
         ""
       ],
@@ -3213,7 +3291,16 @@
       "Id of the repository to limit verifying checksum on": [
         ""
       ],
+      "Id of the single content view to be associated with the host.": [
+        ""
+      ],
+      "Id of the single lifecycle environment to be associated with the host.": [
+        ""
+      ],
       "Id of the smart proxy": [
+        ""
+      ],
+      "Id of the smart proxy from which the host consumes content.": [
         ""
       ],
       "Idenifier of the SSL CA Cert": [
@@ -3267,13 +3354,16 @@
       "If this is enabled, and register_hostname_fact is set and provided, registration will look for a new host by name only using that fact, and will skip all hostname matching": [
         ""
       ],
+      "If this is enabled, content counts on smart proxies will be updated automatically after content sync.": [
+        ""
+      ],
       "If this is enabled, repositories can be deleted even when they belong to published content views. The deleted repository will be removed from all content view versions.": [
         ""
       ],
       "If this is enabled, repositories of content view versions without environments (\\\"archived\\\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'.": [
         ""
       ],
-      "If true, only errata that can be installed without an incremental update will affect the host's errata status.": [
+      "If true, only errata that can be installed without an incremental update will affect the host's errata status. Also affects the Host Collections dashboard widget.": [
         ""
       ],
       "If true, only return repository sets that are associated with an active subscriptions": [
@@ -3396,6 +3486,9 @@
       "Include": [
         "包含"
       ],
+      "Include Refs": [
+        ""
+      ],
       "Include all RPMs not associated to any errata": [
         ""
       ],
@@ -3495,7 +3588,13 @@
       "Installable": [
         "可安裝"
       ],
+      "Installable bugfix/enhancement errata": [
+        ""
+      ],
       "Installable errata are applicable errata that are available in the host's content view and lifecycle environment.": [
+        ""
+      ],
+      "Installable security errata": [
         ""
       ],
       "Installable updates": [
@@ -3578,6 +3677,24 @@
       ],
       "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'": [
         "指定了無效的篩選器規則，'version' 不可指定為與 'min_version' 或 'max_version' 相同的變數值組"
+      ],
+      "Invalid format. Container name cannot be blank.": [
+        ""
+      ],
+      "Invalid format. Container pushes should follow 'organization_label/product_label/name' OR 'id/organization_id/product_id/name' schema.": [
+        ""
+      ],
+      "Invalid format. Organization id must be an integer without leading zeros.": [
+        ""
+      ],
+      "Invalid format. Organization label cannot be blank.": [
+        ""
+      ],
+      "Invalid format. Product id must be an integer without leading zeros.": [
+        ""
+      ],
+      "Invalid format. Product label cannot be blank.": [
+        ""
       ],
       "Invalid mirroring policy for repository type %{type}, only %{policies} are valid.": [
         ""
@@ -3855,6 +3972,9 @@
       "List all organizations": [
         "列出所有組織"
       ],
+      "List all packages unique by name": [
+        ""
+      ],
       "List alternate content sources.": [
         ""
       ],
@@ -4094,6 +4214,15 @@
       ],
       "Manage Manifest": [
         "管理清單"
+      ],
+      "Manage content": [
+        ""
+      ],
+      "Manage errata": [
+        ""
+      ],
+      "Manage packages": [
+        ""
       ],
       "Manifest": [
         ""
@@ -4386,6 +4515,12 @@
       "No available component content view updates": [
         ""
       ],
+      "No available debs found for search term '%s'. Check the host's content view environments and already-installed debs.": [
+        ""
+      ],
+      "No available packages found for search term '%s'. Check the host's content view environments and already-installed packages.": [
+        ""
+      ],
       "No available repository or filter updates": [
         ""
       ],
@@ -4440,6 +4575,9 @@
       "No errata filter rules yet": [
         ""
       ],
+      "No errata found.": [
+        ""
+      ],
       "No errata matching given search query": [
         ""
       ],
@@ -4477,6 +4615,9 @@
         ""
       ],
       "No hosts were specified": [
+        ""
+      ],
+      "No installed debs found for search term '%s'": [
         ""
       ],
       "No installed packages and/or enabled repositories have been reported by %s.": [
@@ -4650,6 +4791,12 @@
       "No syncable repositories found for selected products and options.": [
         ""
       ],
+      "No upgradable packages found for search term '%s'. The host may already have the latest version(s) installed.": [
+        ""
+      ],
+      "No upgradable packages found.": [
+        ""
+      ],
       "No uploads param specified. An array of uploads to import is required.": [
         ""
       ],
@@ -4714,6 +4861,9 @@
         ""
       ],
       "Number to Allocate": [
+        ""
+      ],
+      "OS": [
         ""
       ],
       "OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host.": [
@@ -4803,13 +4953,22 @@
       "Organization id": [
         "組織 ID"
       ],
+      "Organization id not found: '%s'": [
+        ""
+      ],
       "Organization identifier": [
         "組織識別子"
       ],
       "Organization label": [
         "組織標籤"
       ],
+      "Organization label '%s' is ambiguous. Try using an id-based container name.": [
+        ""
+      ],
       "Organization not found": [
+        ""
+      ],
+      "Organization not found: '%s'": [
         ""
       ],
       "Organization required": [
@@ -5001,6 +5160,15 @@
       "Packages must be provided": [
         "必須提供套件"
       ],
+      "Packages to be removed": [
+        ""
+      ],
+      "Packages to be updated": [
+        ""
+      ],
+      "Packages to install": [
+        ""
+      ],
       "Packages will appear here when available.": [
         ""
       ],
@@ -5112,10 +5280,10 @@
       "Policy to set for mirroring content.  Must be one of %s.": [
         ""
       ],
-      "Prefer registered through proxy for remote execution": [
+      "Prefer registered through Smart Proxy for remote execution": [
         ""
       ],
-      "Prefer using a proxy to which a host is registered when using remote execution": [
+      "Prefer using a Smart Proxy to which a host is registered when using remote execution": [
         ""
       ],
       "Prevent from further updates": [
@@ -5169,7 +5337,13 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
+      "Product id not found: '%s'": [
+        ""
+      ],
       "Product label": [
+        ""
+      ],
+      "Product label '%s' is ambiguous. Try using an id-based container name.": [
         ""
       ],
       "Product name": [
@@ -5177,6 +5351,9 @@
       ],
       "Product name as listed from a host's installed products": [
         "來自主機已安裝產品的產品名稱"
+      ],
+      "Product not found: '%s'": [
+        ""
       ],
       "Product the repository belongs to": [
         "產品的軟體庫屬於"
@@ -5256,7 +5433,7 @@
       "Publish": [
         "發行"
       ],
-      "Publish Lifecycle Environment Repositories": [
+      "Publish Lifecycle Environment Container Repositories": [
         ""
       ],
       "Publish a content view": [
@@ -5274,7 +5451,7 @@
       "Published new version": [
         "已出版的新版本"
       ],
-      "Publishing ${name}": [
+      "Publishing ${truncate(name)}": [
         ""
       ],
       "Publishing content view": [
@@ -5664,6 +5841,9 @@
       "Remove package via Katello interface": [
         "透過 Katello 介面移除套件"
       ],
+      "Remove packages": [
+        ""
+      ],
       "Remove packages via Katello interface": [
         ""
       ],
@@ -5775,6 +5955,9 @@
       "Repository name": [
         ""
       ],
+      "Repository name '%{container_name}' already exists in this product using a different naming scheme. Please retry your request with the %{root_repo_container_push_name} format or destroy and recreate the repository using your preferred schema.": [
+        ""
+      ],
       "Repository not found": [
         "找不到軟體庫"
       ],
@@ -5827,6 +6010,9 @@
         ""
       ],
       "Republish repository metadata": [
+        ""
+      ],
+      "Requested access to '%s' is denied": [
         ""
       ],
       "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys.": [
@@ -5976,13 +6162,25 @@
       "Returns content that can be both added and is currently added to the object. The value 'content_view_filter' is supported": [
         ""
       ],
+      "Review": [
+        ""
+      ],
       "Review affected environment": [
         ""
       ],
       "Review affected environments": [
         ""
       ],
+      "Review and optionally exclude hosts from your selection.": [
+        ""
+      ],
+      "Review and then click {submitBtnText}.": [
+        ""
+      ],
       "Review details": [
+        ""
+      ],
+      "Review hosts": [
         ""
       ],
       "Review the information below and click ": [
@@ -6144,6 +6342,9 @@
       "Select a source": [
         ""
       ],
+      "Select action": [
+        ""
+      ],
       "Select add-ons": [
         ""
       ],
@@ -6165,10 +6366,16 @@
       "Select an organization": [
         ""
       ],
+      "Select at least one erratum.": [
+        ""
+      ],
+      "Select at least one package.": [
+        ""
+      ],
       "Select attributes for ${akDetails.name}": [
         ""
       ],
-      "Select available version of ${cvName} to use": [
+      "Select available version of ${truncate(cvName)} to use": [
         ""
       ],
       "Select available version of content views to use": [
@@ -6179,6 +6386,12 @@
       ],
       "Select environment": [
         "選擇環境"
+      ],
+      "Select errata": [
+        ""
+      ],
+      "Select errata to apply on the selected hosts. Some errata may already be applied on some hosts.": [
+        ""
       ],
       "Select host collection(s) to associate with host {hostName}.": [
         ""
@@ -6198,7 +6411,16 @@
       "Select one": [
         ""
       ],
+      "Select packages to install on the selected hosts. Some packages may already be installed on some hosts.": [
+        ""
+      ],
       "Select packages to install to the host {hostName}.": [
+        ""
+      ],
+      "Select packages to remove on the selected hosts.": [
+        ""
+      ],
+      "Select packages to upgrade to the latest version. Packages may have different versions on different hosts.": [
         ""
       ],
       "Select page": [
@@ -6235,6 +6457,12 @@
         ""
       ],
       "Selected environments ": [
+        ""
+      ],
+      "Selected errata will be applied on {hostCount} hosts": [
+        ""
+      ],
+      "Selected packages will be {submitAction} on {hostCount} hosts": [
         ""
       ],
       "Sending a list of included IDs is not allowed when all items are being selected.": [
@@ -7236,6 +7464,9 @@
       "This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode.": [
         ""
       ],
+      "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.": [
+        ""
+      ],
       "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
         ""
       ],
@@ -7246,6 +7477,9 @@
         ""
       ],
       "This host has errata that are applicable, but not installable. Adjust your filters and try again.": [
+        ""
+      ],
+      "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments.": [
         ""
       ],
       "This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled.": [
@@ -7329,6 +7563,9 @@
       "Title": [
         "提示"
       ],
+      "To change content view environments, a specific organization must be selected from the organization context.": [
+        ""
+      ],
       "To enable the synced content option, this host must use a content source, content view, and lifecycle environment which contain synced kickstart repositories for the selected architecture and operating system.": [
         ""
       ],
@@ -7348,6 +7585,12 @@
         ""
       ],
       "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.": [
+        ""
+      ],
+      "To manage host packages, a specific organization must be selected from the organization context.": [
+        ""
+      ],
+      "To manage packages, select an action.": [
         ""
       ],
       "Total steps: ": [
@@ -7569,9 +7812,6 @@
       "Unsupported CDN resource": [
         ""
       ],
-      "Unsupported URL protocol %s.": [
-        "不支援的 URL 通訊協定 %s。"
-      ],
       "Unsupported event type %{type}. Supported: %{types}": [
         ""
       ],
@@ -7749,6 +7989,12 @@
       "Upgrade": [
         ""
       ],
+      "Upgrade all packages": [
+        ""
+      ],
+      "Upgrade packages": [
+        ""
+      ],
       "Upgrade via customized remote execution": [
         ""
       ],
@@ -7763,9 +8009,6 @@
       ],
       "Upload a subscription manifest": [
         "上傳訂閱清單"
-      ],
-      "Upload content into the repository": [
-        "上傳內容至軟體庫"
       ],
       "Upload into": [
         "上傳入"
@@ -7933,9 +8176,6 @@
         ""
       ],
       "Version details updated.": [
-        ""
-      ],
-      "Version in use": [
         ""
       ],
       "Versions": [
@@ -8112,6 +8352,9 @@
       "You have unsaved changes. Do you want to exit without saving your changes?": [
         ""
       ],
+      "You must select at least one host.": [
+        ""
+      ],
       "You were not allowed to add %s": [
         "不允許新增 %s"
       ],
@@ -8128,6 +8371,9 @@
         ""
       ],
       "Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.": [
+        ""
+      ],
+      "Your manifest has expired. To continue using Red Hat content, import a new manifest.": [
         ""
       ],
       "Your manifest will expire in {daysMessage}. To extend the expiration date, refresh your manifest. Or, if your Foreman is disconnected, import a new manifest.": [
@@ -8571,6 +8817,9 @@
       "initiating Pulp task": [
         "初始化 Pulp 任務"
       ],
+      "installed": [
+        ""
+      ],
       "installing errata...": [
         "正在安裝勘誤..."
       ],
@@ -8924,6 +9173,9 @@
       ],
       "update a filter": [
         "更新篩選器"
+      ],
+      "updated": [
+        ""
       ],
       "updating package group...": [
         "正在更新套件群組..."
