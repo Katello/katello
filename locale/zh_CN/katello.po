@@ -161,6 +161,9 @@ msgstr "%s 是必需的"
 msgid "%s is unreachable. %s"
 msgstr "%s 无法访问。%s"
 
+msgid "%s was not found!"
+msgstr ""
+
 msgid "%{errata} (%{total} other errata)"
 msgstr "%{errata} （%{total} 个其他勘误）"
 
@@ -416,6 +419,12 @@ msgstr ""
 msgid "A backend service [ %s ] is unreachable"
 msgstr "一个后端服务 [ %s ] 无法被访问"
 
+msgid "A comma-separated list of refs to include during a sync. The wildcards *, ? are recognized."
+msgstr ""
+
+msgid "A comma-separated list of tags to exclude during a sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'."
+msgstr ""
+
 msgid "A large number of errata are unapplied in this content view, so only the first 100 are shown."
 msgstr "此内容视图中未应用大量勘误，因此仅显示前 100 个。"
 
@@ -524,8 +533,8 @@ msgstr "激活码"
 msgid "Activation keys can be managed {here}."
 msgstr ""
 
-msgid "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys."
-msgstr "subscription-manager 客户端的激活码，CentOS 和 Red Hat Enterprise Linux 需要它。只有在主机组没有激活码时才需要。"
+msgid "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys or if you do not provide a host group."
+msgstr ""
 
 msgid "Activation keys may be used during {system_registration}."
 msgstr ""
@@ -650,6 +659,9 @@ msgstr "其他内容"
 msgid "Affected Repositories"
 msgstr "受影响的仓库"
 
+msgid "Affected hosts"
+msgstr ""
+
 msgid "Affected repositories"
 msgstr "受影响的仓库"
 
@@ -689,7 +701,7 @@ msgstr "所有版本"
 msgid "All versions will be removed from these environments"
 msgstr "所有版本都将从这些环境中删除"
 
-msgid "Allow a host to be registered to multiple content view environments with 'subscription-manager register --environments'."
+msgid "Allow a host to be assigned to multiple content view environments with 'subscription-manager register --environments' or 'subscription-manager environments --set'."
 msgstr ""
 
 msgid "Allow deleting repositories in published content views"
@@ -790,14 +802,23 @@ msgstr "适用"
 msgid "Applicable Content Hosts"
 msgstr "适用的内容主机"
 
+msgid "Applicable bugfix/enhancement errata"
+msgstr ""
+
 msgid "Applicable errata apply to at least one package installed on the host."
 msgstr "适用的勘误会应用到主机上安装的至少一个软件包。"
+
+msgid "Applicable security errata"
+msgstr ""
 
 msgid "Application"
 msgstr "应用"
 
 msgid "Apply"
 msgstr "应用"
+
+msgid "Apply errata"
+msgstr ""
 
 msgid "Apply erratum"
 msgstr ""
@@ -865,6 +886,9 @@ msgstr "要添加的组件数组"
 msgid "Array of content view component IDs to remove. Identifier of the component association"
 msgstr "要删除的内容视图组件 ID 的数组。组件关联的标识符"
 
+msgid "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Array of host ids"
 msgstr "主机 ID 数组"
 
@@ -901,6 +925,9 @@ msgstr "将环境和内容视图分配给一个或多个主机"
 
 msgid "Assign the release version to one or more hosts"
 msgstr "将发行版本分配给一个或多个主机"
+
+msgid "Assigning a host to multiple content view environments is not enabled."
+msgstr ""
 
 msgid "Associated location IDs"
 msgstr "关联的位置 ID"
@@ -1097,6 +1124,9 @@ msgstr "根據特定內容視域，計算可套用的勘誤"
 msgid "Calculate Applicable Errata based on a particular Environment"
 msgstr "根據特定環境，計算可套用的勘誤"
 
+msgid "Calculate content counts on smart proxies automatically"
+msgstr ""
+
 msgid "Can communicate with the Red Hat Portal for subscriptions."
 msgstr "可与红帽门户网站沟通以获取订阅。"
 
@@ -1238,6 +1268,9 @@ msgstr ""
 msgid "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export."
 msgstr ""
 
+msgid "Cannot install errata: No installable errata found for search term '%s'"
+msgstr ""
+
 msgid "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}"
 msgstr "无法在组合内容视图版本 (%{name} version version %{version} 上执行增量更新"
 
@@ -1268,6 +1301,9 @@ msgstr "無法從非自訂軟體庫移除內容"
 msgid "Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'."
 msgstr "无法从环境中删除内容视图。内容视图 '%{view}' 没有在生命周期环境 '%{env}' 中。"
 
+msgid "Cannot remove package(s): This host does not have any installed packages matching the search term '%s'."
+msgstr ""
+
 msgid "Cannot set attribute %{attr} for content type %{type}"
 msgstr "无法为内容类型 %{attr} 设置属性 %{type}"
 
@@ -1285,6 +1321,12 @@ msgstr "无法为复合视图指定内容"
 
 msgid "Cannot sync file:// repositories with the On Demand Download Policy"
 msgstr "无法同步带有按需下载策略的 file:// 仓库"
+
+msgid "Cannot update properties of a container push repository"
+msgstr ""
+
+msgid "Cannot upgrade packages: No installed packages found for search term '%s'"
+msgstr ""
 
 msgid "Cannot upload Ansible collections."
 msgstr "无法上传 Ansible 集合。"
@@ -1331,11 +1373,11 @@ msgstr "checksum 是必需的参数。"
 msgid "Checksum of file to upload"
 msgstr "上传文件的 Checksum"
 
-msgid "Checksum of the repository, currently 'sha1' & 'sha256' are supported"
-msgstr "仓库的 Checksum，目前支援 'sha1' 和 'sha256'"
-
 msgid "Checksum type cannot be set for yum repositories with on demand download policy."
 msgstr "无法为使用按需下载策略的 yum 仓库设置 Checksum 类型。"
+
+msgid "Checksum used for published repository contents. Supported types: %s"
+msgstr ""
 
 msgid "Choose content credentials if required for this RHUI source."
 msgstr "如果需要此 RHUI 源，请选择内容凭证。"
@@ -1367,6 +1409,9 @@ msgstr "关闭"
 msgid "Collapse All"
 msgstr "全部折叠"
 
+msgid "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front."
 msgstr "以逗号分隔的子路径列表。所有子路径都必须在结尾有一个斜杠，且在开头没有斜杠。"
 
@@ -1378,6 +1423,9 @@ msgstr "逗号分隔的标签列表，以同步容器镜像仓库"
 
 msgid "Compare"
 msgstr "比较"
+
+msgid "Completed pulp task protection days"
+msgstr ""
 
 msgid "Component"
 msgstr "组件"
@@ -1607,6 +1655,9 @@ msgstr "内容类型 %{content_type_string} 不属于已启用的存储库类型
 msgid "Content type %{content_type} is incompatible with repositories of type %{repo_type}"
 msgstr "内容类型 %{content_type} 与类型为％{repo_type} 的软件仓库不兼容"
 
+msgid "Content type does not support repo discovery"
+msgstr ""
+
 msgid "Content view"
 msgstr "内容视图"
 
@@ -1637,10 +1688,10 @@ msgstr ""
 msgid "Content view and lifecycle environment must be provided together"
 msgstr ""
 
-msgid "Content view details"
-msgstr "内容视图详情"
-
 msgid "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish."
+msgstr ""
+
+msgid "Content view environments"
 msgstr ""
 
 msgid "Content view environments and activation key must all belong to the same organization"
@@ -1765,6 +1816,15 @@ msgstr "找不到所有指定的勘误 ID：%s"
 
 msgid "Could not find environments for promotion"
 msgstr "无法找到升级到的环境"
+
+msgid "Could not locate Pulp distribution."
+msgstr ""
+
+msgid "Could not locate local uploaded repository for content indexing."
+msgstr ""
+
+msgid "Could not locate repository properties for content indexing."
+msgstr ""
 
 msgid "Could not remove the lifecycle environment from the smart proxy"
 msgstr "无法从智能代理中删除生命周期环境"
@@ -2294,8 +2354,8 @@ msgstr "销毁一个或多个仓库"
 msgid "Details"
 msgstr "详情"
 
-msgid "Determining settings for ${name}"
-msgstr "确定 $ 的设置{name}"
+msgid "Determining settings for ${truncate(name)}"
+msgstr ""
 
 msgid "Digest"
 msgstr ""
@@ -2356,6 +2416,12 @@ msgstr "下载调试证书"
 
 msgid "Download rate limit"
 msgstr "下载速率限制"
+
+msgid "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format."
+msgstr ""
+
+msgid "Due to a change in your products, this container name has become ambiguous (product name '%{prod_label}'). If you wish to continue using this container name, destroy the product in conflict with '%{prod_name}' (id %{prod_id}). If you wish to keep both products, destroy '%{org_label}/%{prod_dot_label}/%{root_repo_label}' and retry your push using the id format."
+msgstr ""
 
 msgid "Duplicate artifact detected"
 msgstr "检测到重复工件"
@@ -2555,6 +2621,12 @@ msgstr "勘误的勘误ID（RHSA-2012:108）"
 msgid "Errata mail"
 msgstr "勘误邮件"
 
+msgid "Errata statuses not updated for deleted content facet with UUID %s"
+msgstr ""
+
+msgid "Errata to apply"
+msgstr ""
+
 msgid "Errata to exclusively include in the action"
 msgstr "仅包含在操作中的勘误"
 
@@ -2602,6 +2674,9 @@ msgstr "超过可用数量"
 
 msgid "Exclude"
 msgstr "排除"
+
+msgid "Exclude Refs"
+msgstr ""
 
 msgid "Exclude all RPMs not associated to any errata"
 msgstr "排除没有与任何勘误关联的所有 RPM"
@@ -3108,6 +3183,9 @@ msgstr "有可安装勘误的主机"
 msgid "Hosts: "
 msgstr "主机："
 
+msgid "How many days before a completed Pulp task is purged by Orphan Cleanup."
+msgstr ""
+
 msgid "How many repositories should be synced concurrently on the capsule. A smaller number may lead to longer sync times. A larger number will increase dynflow load."
 msgstr "capsule 上应同时同步多少个参数。较小的数字可能导致更长的同步时间。较大的数字将增加 dynflow 负载。"
 
@@ -3237,8 +3315,17 @@ msgstr "将同步限制于在的仓库 ID"
 msgid "Id of the repository to limit verifying checksum on"
 msgstr ""
 
+msgid "Id of the single content view to be associated with the host."
+msgstr ""
+
+msgid "Id of the single lifecycle environment to be associated with the host."
+msgstr ""
+
 msgid "Id of the smart proxy"
 msgstr "智能代理 ID"
+
+msgid "Id of the smart proxy from which the host consumes content."
+msgstr ""
 
 msgid "Idenifier of the SSL CA Cert"
 msgstr "SSL CA 证书的标识符"
@@ -3293,13 +3380,16 @@ msgstr "如果这个被启用，复合内容视图可能无法发布或升级，
 msgid "If this is enabled, and register_hostname_fact is set and provided, registration will look for a new host by name only using that fact, and will skip all hostname matching"
 msgstr "如果这个被启用，并且设置并提供了register_hostname_fact，注册将仅使用该 fact 按名称查找新主机，并且将忽略所有主机名匹配"
 
+msgid "If this is enabled, content counts on smart proxies will be updated automatically after content sync."
+msgstr ""
+
 msgid "If this is enabled, repositories can be deleted even when they belong to published content views. The deleted repository will be removed from all content view versions."
 msgstr "如果启用此项，可以删除仓库，即使它们属于公布的内容视图。已删除的仓库将从所有内容视图版本中删除。"
 
 msgid "If this is enabled, repositories of content view versions without environments (\"archived\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'."
 msgstr "如果启用此项，在没有环境的情况下，内容视图版本的软件仓库将在 '/pulp/content/<organization>//content_views/<content view>/X.Y/...' 中分发。"
 
-msgid "If true, only errata that can be installed without an incremental update will affect the host's errata status."
+msgid "If true, only errata that can be installed without an incremental update will affect the host's errata status. Also affects the Host Collections dashboard widget."
 msgstr ""
 
 msgid "If true, only return repository sets that are associated with an active subscriptions"
@@ -3422,6 +3512,9 @@ msgstr "进行中"
 msgid "Include"
 msgstr "包括"
 
+msgid "Include Refs"
+msgstr ""
+
 msgid "Include all RPMs not associated to any errata"
 msgstr "包括所有没有与任何勘误关联的 RPM"
 
@@ -3521,7 +3614,13 @@ msgstr "通过远程执行安装"
 msgid "Installable"
 msgstr "可安装"
 
+msgid "Installable bugfix/enhancement errata"
+msgstr ""
+
 msgid "Installable errata are applicable errata that are available in the host's content view and lifecycle environment."
+msgstr ""
+
+msgid "Installable security errata"
 msgstr ""
 
 msgid "Installable updates"
@@ -3604,6 +3703,24 @@ msgstr "提供的导出格式无效。格式必须是 %s 之一 "
 
 msgid "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'"
 msgstr "指定了无效的过滤器规则，“ version” 不能在同一个tuple 中与 'min_version' 或 'max_version' 一起指定"
+
+msgid "Invalid format. Container name cannot be blank."
+msgstr ""
+
+msgid "Invalid format. Container pushes should follow 'organization_label/product_label/name' OR 'id/organization_id/product_id/name' schema."
+msgstr ""
+
+msgid "Invalid format. Organization id must be an integer without leading zeros."
+msgstr ""
+
+msgid "Invalid format. Organization label cannot be blank."
+msgstr ""
+
+msgid "Invalid format. Product id must be an integer without leading zeros."
+msgstr ""
+
+msgid "Invalid format. Product label cannot be blank."
+msgstr ""
 
 msgid "Invalid mirroring policy for repository type %{type}, only %{policies} are valid."
 msgstr "对仓库类型 %{type} 而言无效的镜像策略，只有 %{policies} 有效。"
@@ -3881,6 +3998,9 @@ msgstr "列出所有 :resource_id"
 msgid "List all organizations"
 msgstr "列出所有机构"
 
+msgid "List all packages unique by name"
+msgstr ""
+
 msgid "List alternate content sources."
 msgstr "备用内容源列表。"
 
@@ -4120,6 +4240,15 @@ msgstr "在发布/提升复合内容视图之前，请确保已发布所有组�
 
 msgid "Manage Manifest"
 msgstr "管理清单"
+
+msgid "Manage content"
+msgstr ""
+
+msgid "Manage errata"
+msgstr ""
+
+msgid "Manage packages"
+msgstr ""
 
 msgid "Manifest"
 msgstr "清单"
@@ -4426,6 +4555,12 @@ msgstr "没有可显示的工件"
 msgid "No available component content view updates"
 msgstr ""
 
+msgid "No available debs found for search term '%s'. Check the host's content view environments and already-installed debs."
+msgstr ""
+
+msgid "No available packages found for search term '%s'. Check the host's content view environments and already-installed packages."
+msgstr ""
+
 msgid "No available repository or filter updates"
 msgstr ""
 
@@ -4480,6 +4615,9 @@ msgstr "没有环境"
 msgid "No errata filter rules yet"
 msgstr ""
 
+msgid "No errata found."
+msgstr ""
+
 msgid "No errata matching given search query"
 msgstr ""
 
@@ -4517,6 +4655,9 @@ msgid "No hosts registered with subscription-manager found in selection."
 msgstr "在选择中未找到 subscription-manager 注册的主机。"
 
 msgid "No hosts were specified"
+msgstr ""
+
+msgid "No installed debs found for search term '%s'"
 msgstr ""
 
 msgid "No installed packages and/or enabled repositories have been reported by %s."
@@ -4690,6 +4831,12 @@ msgstr "没有符合您搜索条件的订阅。"
 msgid "No syncable repositories found for selected products and options."
 msgstr "找不到所选产品和选项的可同步仓库。"
 
+msgid "No upgradable packages found for search term '%s'. The host may already have the latest version(s) installed."
+msgstr ""
+
+msgid "No upgradable packages found."
+msgstr ""
+
 msgid "No uploads param specified. An array of uploads to import is required."
 msgstr "未指定上传参数。需要导入的上传阵列。"
 
@@ -4755,6 +4902,9 @@ msgstr "每页返回的结果数量。"
 
 msgid "Number to Allocate"
 msgstr "分配编号"
+
+msgid "OS"
+msgstr ""
 
 msgid "OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host."
 msgstr "仅限于 {osRestricted}。如果主机操作系统不匹配，则这个主机上将无法使用该仓库。"
@@ -4843,14 +4993,23 @@ msgstr "机构不能为空。"
 msgid "Organization id"
 msgstr "組織 ID"
 
+msgid "Organization id not found: '%s'"
+msgstr ""
+
 msgid "Organization identifier"
 msgstr "机构标识符"
 
 msgid "Organization label"
 msgstr "机构标签"
 
+msgid "Organization label '%s' is ambiguous. Try using an id-based container name."
+msgstr ""
+
 msgid "Organization not found"
 msgstr "没有找到机构"
+
+msgid "Organization not found: '%s'"
+msgstr ""
 
 msgid "Organization required"
 msgstr "需要的机构"
@@ -5041,6 +5200,15 @@ msgstr "软件包"
 msgid "Packages must be provided"
 msgstr "必须提供软件包"
 
+msgid "Packages to be removed"
+msgstr ""
+
+msgid "Packages to be updated"
+msgstr ""
+
+msgid "Packages to install"
+msgstr ""
+
 msgid "Packages will appear here when available."
 msgstr "当软件包可用时，将在此处显示。"
 
@@ -5152,11 +5320,11 @@ msgstr "请稍等。"
 msgid "Policy to set for mirroring content.  Must be one of %s."
 msgstr "为镜像内容设置的策略。必须是 %s 之一。"
 
-msgid "Prefer registered through proxy for remote execution"
-msgstr "首选通过代理注册以进行远程执行"
+msgid "Prefer registered through Smart Proxy for remote execution"
+msgstr ""
 
-msgid "Prefer using a proxy to which a host is registered when using remote execution"
-msgstr "在使用远程执行时，首选使用注册主机的代理"
+msgid "Prefer using a Smart Proxy to which a host is registered when using remote execution"
+msgstr ""
 
 msgid "Prevent from further updates"
 msgstr "防止进一步更新"
@@ -5213,7 +5381,13 @@ msgstr ""
 "产品 id，与列出的主机安装的产品一样，\\\n"
 "        而不是 products api 返回的 product id"
 
+msgid "Product id not found: '%s'"
+msgstr ""
+
 msgid "Product label"
+msgstr ""
+
+msgid "Product label '%s' is ambiguous. Try using an id-based container name."
 msgstr ""
 
 msgid "Product name"
@@ -5221,6 +5395,9 @@ msgstr "产品名称"
 
 msgid "Product name as listed from a host's installed products"
 msgstr "产品名称，与列出的主机安装的产品一样"
+
+msgid "Product not found: '%s'"
+msgstr ""
 
 msgid "Product the repository belongs to"
 msgstr "仓库所属的产品"
@@ -5300,8 +5477,8 @@ msgstr "以 DER 编码的公钥块或证书内容"
 msgid "Publish"
 msgstr "发布"
 
-msgid "Publish Lifecycle Environment Repositories"
-msgstr "发布生命周期环境仓库"
+msgid "Publish Lifecycle Environment Container Repositories"
+msgstr ""
 
 msgid "Publish a content view"
 msgstr "出版內容視域"
@@ -5318,8 +5495,8 @@ msgstr "发布的日期"
 msgid "Published new version"
 msgstr "发布新版本"
 
-msgid "Publishing ${name}"
-msgstr "发布 ${name}"
+msgid "Publishing ${truncate(name)}"
+msgstr ""
 
 msgid "Publishing content view"
 msgstr "发布内容视图"
@@ -5708,6 +5885,9 @@ msgstr "通过 Katello 接口删除软件包组"
 msgid "Remove package via Katello interface"
 msgstr "通过 Katello 界面删除软件包"
 
+msgid "Remove packages"
+msgstr ""
+
 msgid "Remove packages via Katello interface"
 msgstr "通过 Katello 界面删除软件包"
 
@@ -5819,6 +5999,9 @@ msgstr "仓库标签 '%s' 没有与内容视图关联。"
 msgid "Repository name"
 msgstr ""
 
+msgid "Repository name '%{container_name}' already exists in this product using a different naming scheme. Please retry your request with the %{root_repo_container_push_name} format or destroy and recreate the repository using your preferred schema."
+msgstr ""
+
 msgid "Repository not found"
 msgstr "找不到軟體庫"
 
@@ -5871,6 +6054,9 @@ msgid "Republish Version Repositories"
 msgstr "发布版本库"
 
 msgid "Republish repository metadata"
+msgstr ""
+
+msgid "Requested access to '%s' is denied"
 msgstr ""
 
 msgid "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys."
@@ -6020,14 +6206,26 @@ msgstr "返回启用的内容类型"
 msgid "Returns content that can be both added and is currently added to the object. The value 'content_view_filter' is supported"
 msgstr "返回可以添加及当前被添加的内容。支持值“ content_view_filter”"
 
+msgid "Review"
+msgstr ""
+
 msgid "Review affected environment"
 msgstr "检查受影响的环境"
 
 msgid "Review affected environments"
 msgstr "检查受影响的环境"
 
+msgid "Review and optionally exclude hosts from your selection."
+msgstr ""
+
+msgid "Review and then click {submitBtnText}."
+msgstr ""
+
 msgid "Review details"
 msgstr "审阅详情"
+
+msgid "Review hosts"
+msgstr ""
 
 msgid "Review the information below and click "
 msgstr "查看以下信息并点 "
@@ -6188,6 +6386,9 @@ msgstr "选择安装 katello-host-tools-tracer 的供应商"
 msgid "Select a source"
 msgstr ""
 
+msgid "Select action"
+msgstr ""
+
 msgid "Select add-ons"
 msgstr "选择附加组件"
 
@@ -6209,11 +6410,17 @@ msgstr "选择一个选项"
 msgid "Select an organization"
 msgstr "选择一个机构"
 
+msgid "Select at least one erratum."
+msgstr ""
+
+msgid "Select at least one package."
+msgstr ""
+
 msgid "Select attributes for ${akDetails.name}"
 msgstr ""
 
-msgid "Select available version of ${cvName} to use"
-msgstr "选择可用的 ${cvName} 版本"
+msgid "Select available version of ${truncate(cvName)} to use"
+msgstr ""
 
 msgid "Select available version of content views to use"
 msgstr "选择要使用的内容视图的可用版本"
@@ -6223,6 +6430,12 @@ msgstr "选择内容视图"
 
 msgid "Select environment"
 msgstr "选择环境"
+
+msgid "Select errata"
+msgstr ""
+
+msgid "Select errata to apply on the selected hosts. Some errata may already be applied on some hosts."
+msgstr ""
 
 msgid "Select host collection(s) to associate with host {hostName}."
 msgstr "选择与主机 {hostName} 关联的主机集合。"
@@ -6242,8 +6455,17 @@ msgstr "全部不选择"
 msgid "Select one"
 msgstr "选择一个"
 
+msgid "Select packages to install on the selected hosts. Some packages may already be installed on some hosts."
+msgstr ""
+
 msgid "Select packages to install to the host {hostName}."
 msgstr "选择安装到主机 {hostName} 的软件包。"
+
+msgid "Select packages to remove on the selected hosts."
+msgstr ""
+
+msgid "Select packages to upgrade to the latest version. Packages may have different versions on different hosts."
+msgstr ""
 
 msgid "Select page"
 msgstr "选择页"
@@ -6280,6 +6502,12 @@ msgstr "选择的环境 "
 
 msgid "Selected environments "
 msgstr "选择的环境 "
+
+msgid "Selected errata will be applied on {hostCount} hosts"
+msgstr ""
+
+msgid "Selected packages will be {submitAction} on {hostCount} hosts"
+msgstr ""
 
 msgid "Sending a list of included IDs is not allowed when all items are being selected."
 msgstr "当选择所有项目时，不允许发送包含 ID 的列表。"
@@ -7284,6 +7512,9 @@ msgstr "此内容视图将被删除。改变将在点 Delete 后生效。"
 msgid "This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode."
 msgstr ""
 
+msgid "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead."
+msgstr ""
+
 msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
 msgstr "此勘误不可安装，因为它不在此主机的内容视图和生命周期环境中。"
 
@@ -7294,6 +7525,9 @@ msgid "This host does not have any packages."
 msgstr "该主机没有任何软件包。"
 
 msgid "This host has errata that are applicable, but not installable. Adjust your filters and try again."
+msgstr ""
+
+msgid "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments."
 msgstr ""
 
 msgid "This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled."
@@ -7377,6 +7611,9 @@ msgstr "时间戳"
 msgid "Title"
 msgstr "提示"
 
+msgid "To change content view environments, a specific organization must be selected from the organization context."
+msgstr ""
+
 msgid "To enable the synced content option, this host must use a content source, content view, and lifecycle environment which contain synced kickstart repositories for the selected architecture and operating system."
 msgstr ""
 
@@ -7396,6 +7633,12 @@ msgid "To get started, add this host to a host collection."
 msgstr "要开始，将此主机添加到主机集合。"
 
 msgid "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories."
+msgstr ""
+
+msgid "To manage host packages, a specific organization must be selected from the organization context."
+msgstr ""
+
+msgid "To manage packages, select an action."
 msgstr ""
 
 msgid "Total steps: "
@@ -7617,9 +7860,6 @@ msgstr "未指定"
 msgid "Unsupported CDN resource"
 msgstr "不支持的 CDN 资源"
 
-msgid "Unsupported URL protocol %s."
-msgstr "不支持的 URL 协议 %s。"
-
 msgid "Unsupported event type %{type}. Supported: %{types}"
 msgstr "不支持的事件类型 %{type}。支持：%{types}"
 
@@ -7797,6 +8037,12 @@ msgstr "可升级到"
 msgid "Upgrade"
 msgstr "升级"
 
+msgid "Upgrade all packages"
+msgstr ""
+
+msgid "Upgrade packages"
+msgstr ""
+
 msgid "Upgrade via customized remote execution"
 msgstr "通过自定义远程执行升级"
 
@@ -7811,9 +8057,6 @@ msgstr "上载文件内容的一部分"
 
 msgid "Upload a subscription manifest"
 msgstr "上载订阅清单"
-
-msgid "Upload content into the repository"
-msgstr "上傳內容至軟體庫"
 
 msgid "Upload into"
 msgstr "上传到"
@@ -7982,9 +8225,6 @@ msgstr "版本 ${versionTwo}"
 
 msgid "Version details updated."
 msgstr "更新的版本详情。"
-
-msgid "Version in use"
-msgstr "使用的版本"
 
 msgid "Versions"
 msgstr "版本"
@@ -8160,6 +8400,9 @@ msgstr "您有订阅将在 %s 天内过期"
 msgid "You have unsaved changes. Do you want to exit without saving your changes?"
 msgstr "您有尚未保存的更改。您要退出而不保存更改吗？"
 
+msgid "You must select at least one host."
+msgstr ""
+
 msgid "You were not allowed to add %s"
 msgstr "您不允许添加 %s"
 
@@ -8176,6 +8419,9 @@ msgid "You're making changes to %(entitlementCount)s entitlement(s)"
 msgstr "您更改了 %(entitlementCount)s 个权利"
 
 msgid "Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest."
+msgstr ""
+
+msgid "Your manifest has expired. To continue using Red Hat content, import a new manifest."
 msgstr ""
 
 msgid "Your manifest will expire in {daysMessage}. To extend the expiration date, refresh your manifest. Or, if your Foreman is disconnected, import a new manifest."
@@ -8619,6 +8865,9 @@ msgstr "初始 %s 任务"
 msgid "initiating Pulp task"
 msgstr "初始化 Pulp 任務"
 
+msgid "installed"
+msgstr ""
+
 msgid "installing errata..."
 msgstr "正在安装勘误..."
 
@@ -8972,6 +9221,9 @@ msgstr "无限制"
 
 msgid "update a filter"
 msgstr "更新篩選器"
+
+msgid "updated"
+msgstr ""
 
 msgid "updating package group..."
 msgstr "正在更新软件包组..."

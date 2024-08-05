@@ -157,6 +157,9 @@ msgstr "%s აუცილებელია"
 msgid "%s is unreachable. %s"
 msgstr "%s მიუწვდომელია. %s"
 
+msgid "%s was not found!"
+msgstr ""
+
 msgid "%{errata} (%{total} other errata)"
 msgstr "%{errata} (%{total} სხვა მორჩენილი პაჩი)"
 
@@ -412,6 +415,12 @@ msgstr ""
 msgid "A backend service [ %s ] is unreachable"
 msgstr "უკანაბოლოს სერვისი [ %s ] მიუწვდომელია"
 
+msgid "A comma-separated list of refs to include during a sync. The wildcards *, ? are recognized."
+msgstr ""
+
+msgid "A comma-separated list of tags to exclude during a sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'."
+msgstr ""
+
 msgid "A large number of errata are unapplied in this content view, so only the first 100 are shown."
 msgstr ""
 
@@ -520,7 +529,7 @@ msgstr "აქტივაცის გასაღებები"
 msgid "Activation keys can be managed {here}."
 msgstr ""
 
-msgid "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys."
+msgid "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys or if you do not provide a host group."
 msgstr ""
 
 msgid "Activation keys may be used during {system_registration}."
@@ -646,6 +655,9 @@ msgstr "დამატებითი შემცველობა"
 msgid "Affected Repositories"
 msgstr "მოყოლილი რეპოზიტორიები"
 
+msgid "Affected hosts"
+msgstr ""
+
 msgid "Affected repositories"
 msgstr "მოყოლილი რეპოზიტორიები"
 
@@ -685,7 +697,7 @@ msgstr "ყველა ვერსია"
 msgid "All versions will be removed from these environments"
 msgstr "ამ გარემოებიდან ყველა ვერსია წაიშლება"
 
-msgid "Allow a host to be registered to multiple content view environments with 'subscription-manager register --environments'."
+msgid "Allow a host to be assigned to multiple content view environments with 'subscription-manager register --environments' or 'subscription-manager environments --set'."
 msgstr ""
 
 msgid "Allow deleting repositories in published content views"
@@ -784,7 +796,13 @@ msgstr "განკუთვნილი"
 msgid "Applicable Content Hosts"
 msgstr "შესატყვისი შემცველობის ჰოსტები"
 
+msgid "Applicable bugfix/enhancement errata"
+msgstr ""
+
 msgid "Applicable errata apply to at least one package installed on the host."
+msgstr ""
+
+msgid "Applicable security errata"
 msgstr ""
 
 msgid "Application"
@@ -792,6 +810,9 @@ msgstr "აპლიკაცია"
 
 msgid "Apply"
 msgstr "გამოყენება"
+
+msgid "Apply errata"
+msgstr ""
 
 msgid "Apply erratum"
 msgstr ""
@@ -859,6 +880,9 @@ msgstr "დასამატებელი კომპონენტებ�
 msgid "Array of content view component IDs to remove. Identifier of the component association"
 msgstr ""
 
+msgid "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Array of host ids"
 msgstr "ჰოსტის ID-ების მასივი"
 
@@ -895,6 +919,9 @@ msgid "Assign the environment and content view to one or more hosts"
 msgstr ""
 
 msgid "Assign the release version to one or more hosts"
+msgstr ""
+
+msgid "Assigning a host to multiple content view environments is not enabled."
 msgstr ""
 
 msgid "Associated location IDs"
@@ -1092,6 +1119,9 @@ msgstr "შესატყვისი მორჩენილი პაჩე�
 msgid "Calculate Applicable Errata based on a particular Environment"
 msgstr "შესატყვისი მორჩენილი პაჩების მითითეული გარემოს მიხედვით გამოთვლა"
 
+msgid "Calculate content counts on smart proxies automatically"
+msgstr ""
+
 msgid "Can communicate with the Red Hat Portal for subscriptions."
 msgstr ""
 
@@ -1233,6 +1263,9 @@ msgstr ""
 msgid "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export."
 msgstr ""
 
+msgid "Cannot install errata: No installable errata found for search term '%s'"
+msgstr ""
+
 msgid "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}"
 msgstr ""
 
@@ -1263,6 +1296,9 @@ msgstr ""
 msgid "Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'."
 msgstr ""
 
+msgid "Cannot remove package(s): This host does not have any installed packages matching the search term '%s'."
+msgstr ""
+
 msgid "Cannot set attribute %{attr} for content type %{type}"
 msgstr ""
 
@@ -1279,6 +1315,12 @@ msgid "Cannot specify content for composite views"
 msgstr "კომპოზიტური ხედის შემცველობის მითითება შეუძლებელია"
 
 msgid "Cannot sync file:// repositories with the On Demand Download Policy"
+msgstr ""
+
+msgid "Cannot update properties of a container push repository"
+msgstr ""
+
+msgid "Cannot upgrade packages: No installed packages found for search term '%s'"
 msgstr ""
 
 msgid "Cannot upload Ansible collections."
@@ -1326,10 +1368,10 @@ msgstr "საკონტროლო ჯამი აუცილებელ�
 msgid "Checksum of file to upload"
 msgstr "ასატვირთი ფაილის საკონტროლო ჯამი"
 
-msgid "Checksum of the repository, currently 'sha1' & 'sha256' are supported"
-msgstr "რეპოზიტორიის საკონტროლო ჯამი. ამჟამად მხარდაჭერილი მნიშვნელობებია 'sha1' და 'sha256'"
-
 msgid "Checksum type cannot be set for yum repositories with on demand download policy."
+msgstr ""
+
+msgid "Checksum used for published repository contents. Supported types: %s"
 msgstr ""
 
 msgid "Choose content credentials if required for this RHUI source."
@@ -1362,6 +1404,9 @@ msgstr "დახურვა"
 msgid "Collapse All"
 msgstr "ყველას ჩაკეცვა"
 
+msgid "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front."
 msgstr ""
 
@@ -1373,6 +1418,9 @@ msgstr ""
 
 msgid "Compare"
 msgstr "შედარება"
+
+msgid "Completed pulp task protection days"
+msgstr ""
 
 msgid "Component"
 msgstr "კომპონენტი"
@@ -1602,6 +1650,9 @@ msgstr ""
 msgid "Content type %{content_type} is incompatible with repositories of type %{repo_type}"
 msgstr ""
 
+msgid "Content type does not support repo discovery"
+msgstr ""
+
 msgid "Content view"
 msgstr "შემცველობის ხედი"
 
@@ -1632,10 +1683,10 @@ msgstr ""
 msgid "Content view and lifecycle environment must be provided together"
 msgstr ""
 
-msgid "Content view details"
-msgstr "შემცველობის ხედის დეტალები"
-
 msgid "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish."
+msgstr ""
+
+msgid "Content view environments"
 msgstr ""
 
 msgid "Content view environments and activation key must all belong to the same organization"
@@ -1760,6 +1811,15 @@ msgstr "მითითებული მორჩენილი პაჩე�
 
 msgid "Could not find environments for promotion"
 msgstr "დასაწინაურებელი გარემოები არ არსებობს"
+
+msgid "Could not locate Pulp distribution."
+msgstr ""
+
+msgid "Could not locate local uploaded repository for content indexing."
+msgstr ""
+
+msgid "Could not locate repository properties for content indexing."
+msgstr ""
 
 msgid "Could not remove the lifecycle environment from the smart proxy"
 msgstr ""
@@ -2289,8 +2349,8 @@ msgstr "ერთი ან მეტი რეპოზიტორიის �
 msgid "Details"
 msgstr "დეტალები"
 
-msgid "Determining settings for ${name}"
-msgstr "პარამეტრების გარკვევა ${name}-სთვის"
+msgid "Determining settings for ${truncate(name)}"
+msgstr ""
 
 msgid "Digest"
 msgstr ""
@@ -2351,6 +2411,12 @@ msgstr "გამართვის სერტიფიკატის გა�
 
 msgid "Download rate limit"
 msgstr "გადმოწერის სიჩქარის ლიმიტი"
+
+msgid "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format."
+msgstr ""
+
+msgid "Due to a change in your products, this container name has become ambiguous (product name '%{prod_label}'). If you wish to continue using this container name, destroy the product in conflict with '%{prod_name}' (id %{prod_id}). If you wish to keep both products, destroy '%{org_label}/%{prod_dot_label}/%{root_repo_label}' and retry your push using the id format."
+msgstr ""
 
 msgid "Duplicate artifact detected"
 msgstr "ნაპოვნია დუბლირებული არტეფაქტი"
@@ -2550,6 +2616,12 @@ msgstr "მორჩენილი პაჩის ID (RHSA-2012:108)"
 msgid "Errata mail"
 msgstr "მორჩენილი ელფოსტა"
 
+msgid "Errata statuses not updated for deleted content facet with UUID %s"
+msgstr ""
+
+msgid "Errata to apply"
+msgstr ""
+
 msgid "Errata to exclusively include in the action"
 msgstr "ამ ქმედებაში ექსკლუზიურად ჩასართავი მორჩენილი პაჩი"
 
@@ -2597,6 +2669,9 @@ msgstr "სცდება ხელმისაწვდომ რაოდე�
 
 msgid "Exclude"
 msgstr "გამორიცხვა"
+
+msgid "Exclude Refs"
+msgstr ""
 
 msgid "Exclude all RPMs not associated to any errata"
 msgstr ""
@@ -3101,6 +3176,9 @@ msgstr "ჰოსტები დაყენებადი მორჩენ�
 msgid "Hosts: "
 msgstr "ჰოსტები: "
 
+msgid "How many days before a completed Pulp task is purged by Orphan Cleanup."
+msgstr ""
+
 msgid "How many repositories should be synced concurrently on the capsule. A smaller number may lead to longer sync times. A larger number will increase dynflow load."
 msgstr ""
 
@@ -3230,8 +3308,17 @@ msgstr "სინქრონიზაციის ლიმიტის და�
 msgid "Id of the repository to limit verifying checksum on"
 msgstr ""
 
+msgid "Id of the single content view to be associated with the host."
+msgstr ""
+
+msgid "Id of the single lifecycle environment to be associated with the host."
+msgstr ""
+
 msgid "Id of the smart proxy"
 msgstr "ჭკვიანი პროქსის ID"
+
+msgid "Id of the smart proxy from which the host consumes content."
+msgstr ""
 
 msgid "Idenifier of the SSL CA Cert"
 msgstr "SSL CA სერტიფიკატს იდენტიფიკატორი"
@@ -3286,13 +3373,16 @@ msgstr ""
 msgid "If this is enabled, and register_hostname_fact is set and provided, registration will look for a new host by name only using that fact, and will skip all hostname matching"
 msgstr ""
 
+msgid "If this is enabled, content counts on smart proxies will be updated automatically after content sync."
+msgstr ""
+
 msgid "If this is enabled, repositories can be deleted even when they belong to published content views. The deleted repository will be removed from all content view versions."
 msgstr ""
 
 msgid "If this is enabled, repositories of content view versions without environments (\"archived\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'."
 msgstr ""
 
-msgid "If true, only errata that can be installed without an incremental update will affect the host's errata status."
+msgid "If true, only errata that can be installed without an incremental update will affect the host's errata status. Also affects the Host Collections dashboard widget."
 msgstr ""
 
 msgid "If true, only return repository sets that are associated with an active subscriptions"
@@ -3415,6 +3505,9 @@ msgstr "პროცესშია"
 msgid "Include"
 msgstr "ჩართვა"
 
+msgid "Include Refs"
+msgstr ""
+
 msgid "Include all RPMs not associated to any errata"
 msgstr ""
 
@@ -3514,7 +3607,13 @@ msgstr "დაშორებული გაშვების გავლი�
 msgid "Installable"
 msgstr "დაყენებადი"
 
+msgid "Installable bugfix/enhancement errata"
+msgstr ""
+
 msgid "Installable errata are applicable errata that are available in the host's content view and lifecycle environment."
+msgstr ""
+
+msgid "Installable security errata"
 msgstr ""
 
 msgid "Installable updates"
@@ -3596,6 +3695,24 @@ msgid "Invalid export format provided. Format must be one of  %s "
 msgstr ""
 
 msgid "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'"
+msgstr ""
+
+msgid "Invalid format. Container name cannot be blank."
+msgstr ""
+
+msgid "Invalid format. Container pushes should follow 'organization_label/product_label/name' OR 'id/organization_id/product_id/name' schema."
+msgstr ""
+
+msgid "Invalid format. Organization id must be an integer without leading zeros."
+msgstr ""
+
+msgid "Invalid format. Organization label cannot be blank."
+msgstr ""
+
+msgid "Invalid format. Product id must be an integer without leading zeros."
+msgstr ""
+
+msgid "Invalid format. Product label cannot be blank."
 msgstr ""
 
 msgid "Invalid mirroring policy for repository type %{type}, only %{policies} are valid."
@@ -3874,6 +3991,9 @@ msgstr ":resource_id-ების სია"
 msgid "List all organizations"
 msgstr "ყველა ორგანიზაციის სია"
 
+msgid "List all packages unique by name"
+msgstr ""
+
 msgid "List alternate content sources."
 msgstr "ალტერნატიული შემცველობის წყაროების სია."
 
@@ -4113,6 +4233,15 @@ msgstr ""
 
 msgid "Manage Manifest"
 msgstr "მანიფესტის მართვა"
+
+msgid "Manage content"
+msgstr ""
+
+msgid "Manage errata"
+msgstr ""
+
+msgid "Manage packages"
+msgstr ""
 
 msgid "Manifest"
 msgstr "მანიფესტი"
@@ -4413,6 +4542,12 @@ msgstr "საჩვენებელი არტეფაქტების �
 msgid "No available component content view updates"
 msgstr ""
 
+msgid "No available debs found for search term '%s'. Check the host's content view environments and already-installed debs."
+msgstr ""
+
+msgid "No available packages found for search term '%s'. Check the host's content view environments and already-installed packages."
+msgstr ""
+
 msgid "No available repository or filter updates"
 msgstr ""
 
@@ -4467,6 +4602,9 @@ msgstr "გარემოების გარეშე"
 msgid "No errata filter rules yet"
 msgstr ""
 
+msgid "No errata found."
+msgstr ""
+
 msgid "No errata matching given search query"
 msgstr ""
 
@@ -4504,6 +4642,9 @@ msgid "No hosts registered with subscription-manager found in selection."
 msgstr ""
 
 msgid "No hosts were specified"
+msgstr ""
+
+msgid "No installed debs found for search term '%s'"
 msgstr ""
 
 msgid "No installed packages and/or enabled repositories have been reported by %s."
@@ -4677,6 +4818,12 @@ msgstr ""
 msgid "No syncable repositories found for selected products and options."
 msgstr "მონიშნული პროდუქტებისა და პარამეტრებისთვის დასასინქრონებელი რეპოზიტორიები აღმოჩენილი არაა."
 
+msgid "No upgradable packages found for search term '%s'. The host may already have the latest version(s) installed."
+msgstr ""
+
+msgid "No upgradable packages found."
+msgstr ""
+
 msgid "No uploads param specified. An array of uploads to import is required."
 msgstr ""
 
@@ -4742,6 +4889,9 @@ msgstr "თითოეულ გვერდზე დასაბრუნე�
 
 msgid "Number to Allocate"
 msgstr "გამოსაყოფი რიცხვი"
+
+msgid "OS"
+msgstr ""
 
 msgid "OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host."
 msgstr ""
@@ -4830,14 +4980,23 @@ msgstr "ორგანიზაცია ცარიელი ვერ იქ
 msgid "Organization id"
 msgstr "ორგანიზაციის ID"
 
+msgid "Organization id not found: '%s'"
+msgstr ""
+
 msgid "Organization identifier"
 msgstr "ორგანიზაციის იდენტიფიკატორი"
 
 msgid "Organization label"
 msgstr "ორგანიზაციის ჭდე"
 
+msgid "Organization label '%s' is ambiguous. Try using an id-based container name."
+msgstr ""
+
 msgid "Organization not found"
 msgstr "ორგანიზაცია არ არსებობს"
+
+msgid "Organization not found: '%s'"
+msgstr ""
 
 msgid "Organization required"
 msgstr "ორგანიზაციის მითითება აუცილებელია"
@@ -5028,6 +5187,15 @@ msgstr "პაკეტები"
 msgid "Packages must be provided"
 msgstr "საჭიროა პაკეტების მითითება"
 
+msgid "Packages to be removed"
+msgstr ""
+
+msgid "Packages to be updated"
+msgstr ""
+
+msgid "Packages to install"
+msgstr ""
+
 msgid "Packages will appear here when available."
 msgstr "პაკეტები, როცა ხელმისაწვდომი იქნება, აქ გამოჩნდება."
 
@@ -5139,10 +5307,10 @@ msgstr "გთხოვთ, მოითმინოთ..."
 msgid "Policy to set for mirroring content.  Must be one of %s."
 msgstr "შემცველობის სარკისებური ასლის პოლიტიკა.  უნდა იყოს ერთ-ერთი %s-დან."
 
-msgid "Prefer registered through proxy for remote execution"
+msgid "Prefer registered through Smart Proxy for remote execution"
 msgstr ""
 
-msgid "Prefer using a proxy to which a host is registered when using remote execution"
+msgid "Prefer using a Smart Proxy to which a host is registered when using remote execution"
 msgstr ""
 
 msgid "Prevent from further updates"
@@ -5198,7 +5366,13 @@ msgid ""
 "        this is not the same product id as the products api returns"
 msgstr ""
 
+msgid "Product id not found: '%s'"
+msgstr ""
+
 msgid "Product label"
+msgstr ""
+
+msgid "Product label '%s' is ambiguous. Try using an id-based container name."
 msgstr ""
 
 msgid "Product name"
@@ -5206,6 +5380,9 @@ msgstr "პროდუქტის სახელი"
 
 msgid "Product name as listed from a host's installed products"
 msgstr "პროდუქტის სახელი იმ სახით, როგორითაც ის ჰოსტზე დაყენებული პროდუქტების სიაშია ჩამოთვლილი"
+
+msgid "Product not found: '%s'"
+msgstr ""
 
 msgid "Product the repository belongs to"
 msgstr "პროდუქტი, რომელსაც რეპოზიტორია მიეკუთვნება"
@@ -5285,8 +5462,8 @@ msgstr "საჯარო გასაღების ბლოკი DER კ�
 msgid "Publish"
 msgstr "გამოქვეყნება"
 
-msgid "Publish Lifecycle Environment Repositories"
-msgstr "ცხოვრების ციკლის გარემოს რეპოზიტორიების გასაჯაროება"
+msgid "Publish Lifecycle Environment Container Repositories"
+msgstr ""
 
 msgid "Publish a content view"
 msgstr "შემცველობის ხედის გამოქვეყნება"
@@ -5303,8 +5480,8 @@ msgstr "გამოქვეყნების დრო"
 msgid "Published new version"
 msgstr "გამოქვეყნდა ახალი ვერსია"
 
-msgid "Publishing ${name}"
-msgstr "${name}-ის გამოცემა"
+msgid "Publishing ${truncate(name)}"
+msgstr ""
 
 msgid "Publishing content view"
 msgstr "შემცველობის ხედის გამოქვეყნება"
@@ -5693,6 +5870,9 @@ msgstr "პაკეტების ჯგუფის წაშლა Katello-�
 msgid "Remove package via Katello interface"
 msgstr "პაკეტის წაშლა Katello-ის ინტერფეისიდან"
 
+msgid "Remove packages"
+msgstr ""
+
 msgid "Remove packages via Katello interface"
 msgstr "პაკეტების წაშლა Katello-ის ინტერფეისიდან"
 
@@ -5804,6 +5984,9 @@ msgstr ""
 msgid "Repository name"
 msgstr ""
 
+msgid "Repository name '%{container_name}' already exists in this product using a different naming scheme. Please retry your request with the %{root_repo_container_push_name} format or destroy and recreate the repository using your preferred schema."
+msgstr ""
+
 msgid "Repository not found"
 msgstr "რეპოზიტორია არ არსებობს"
 
@@ -5856,6 +6039,9 @@ msgid "Republish Version Repositories"
 msgstr "ვერსიების რეპოზიტორიების თავიდან გამოჩენა"
 
 msgid "Republish repository metadata"
+msgstr ""
+
+msgid "Requested access to '%s' is denied"
 msgstr ""
 
 msgid "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys."
@@ -6005,14 +6191,26 @@ msgstr "აბრუნებს შემცველობის ჩართ�
 msgid "Returns content that can be both added and is currently added to the object. The value 'content_view_filter' is supported"
 msgstr ""
 
+msgid "Review"
+msgstr ""
+
 msgid "Review affected environment"
 msgstr "მოყოლილი გარემოს გადახედვა"
 
 msgid "Review affected environments"
 msgstr "მოყოლილი გარემოების გადახედვა"
 
+msgid "Review and optionally exclude hosts from your selection."
+msgstr ""
+
+msgid "Review and then click {submitBtnText}."
+msgstr ""
+
 msgid "Review details"
 msgstr "დეტალების გადახედვა"
+
+msgid "Review hosts"
+msgstr ""
 
 msgid "Review the information below and click "
 msgstr ""
@@ -6173,6 +6371,9 @@ msgstr ""
 msgid "Select a source"
 msgstr ""
 
+msgid "Select action"
+msgstr ""
+
 msgid "Select add-ons"
 msgstr "აირჩიეთ დამატებები"
 
@@ -6194,11 +6395,17 @@ msgstr "აირჩიეთ პარამეტრი"
 msgid "Select an organization"
 msgstr "აირჩიეთ ორგანიზაცია"
 
+msgid "Select at least one erratum."
+msgstr ""
+
+msgid "Select at least one package."
+msgstr ""
+
 msgid "Select attributes for ${akDetails.name}"
 msgstr ""
 
-msgid "Select available version of ${cvName} to use"
-msgstr "გამოსაყენებლად აირჩიეთ ${cvName} -ის ვერსია"
+msgid "Select available version of ${truncate(cvName)} to use"
+msgstr ""
 
 msgid "Select available version of content views to use"
 msgstr "აირჩიეთ გამოსაყენებელი შემცველობის ხედების ვერსია"
@@ -6208,6 +6415,12 @@ msgstr "შემცველობის წყაროს არჩევა"
 
 msgid "Select environment"
 msgstr "აირჩიეთ გარემო"
+
+msgid "Select errata"
+msgstr ""
+
+msgid "Select errata to apply on the selected hosts. Some errata may already be applied on some hosts."
+msgstr ""
 
 msgid "Select host collection(s) to associate with host {hostName}."
 msgstr ""
@@ -6227,8 +6440,17 @@ msgstr "მონიშვნის მოხსნა"
 msgid "Select one"
 msgstr "მონიშნეთ ერთი"
 
+msgid "Select packages to install on the selected hosts. Some packages may already be installed on some hosts."
+msgstr ""
+
 msgid "Select packages to install to the host {hostName}."
 msgstr "აირჩიეთ პაკეტები, რომლებიც ჰოსტზე {hostName} გნებავთ, დააყენოთ."
+
+msgid "Select packages to remove on the selected hosts."
+msgstr ""
+
+msgid "Select packages to upgrade to the latest version. Packages may have different versions on different hosts."
+msgstr ""
 
 msgid "Select page"
 msgstr "აირჩიეთ გვერდი"
@@ -6265,6 +6487,12 @@ msgstr "მონიშნული გარემო "
 
 msgid "Selected environments "
 msgstr "მონიშნული გარემოები "
+
+msgid "Selected errata will be applied on {hostCount} hosts"
+msgstr ""
+
+msgid "Selected packages will be {submitAction} on {hostCount} hosts"
+msgstr ""
 
 msgid "Sending a list of included IDs is not allowed when all items are being selected."
 msgstr ""
@@ -7269,6 +7497,9 @@ msgstr ""
 msgid "This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode."
 msgstr ""
 
+msgid "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead."
+msgstr ""
+
 msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
 msgstr ""
 
@@ -7279,6 +7510,9 @@ msgid "This host does not have any packages."
 msgstr "ამ ჰოსტს პაკეტები არ გააჩნია."
 
 msgid "This host has errata that are applicable, but not installable. Adjust your filters and try again."
+msgstr ""
+
+msgid "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments."
 msgstr ""
 
 msgid "This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled."
@@ -7362,6 +7596,9 @@ msgstr "დროის შტამპი"
 msgid "Title"
 msgstr "სათაური"
 
+msgid "To change content view environments, a specific organization must be selected from the organization context."
+msgstr ""
+
 msgid "To enable the synced content option, this host must use a content source, content view, and lifecycle environment which contain synced kickstart repositories for the selected architecture and operating system."
 msgstr ""
 
@@ -7381,6 +7618,12 @@ msgid "To get started, add this host to a host collection."
 msgstr "დასაწყებად ეს ჰოსტი ჰოსტების კოლექციაში ჩაამატეთ."
 
 msgid "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories."
+msgstr ""
+
+msgid "To manage host packages, a specific organization must be selected from the organization context."
+msgstr ""
+
+msgid "To manage packages, select an action."
 msgstr ""
 
 msgid "Total steps: "
@@ -7602,9 +7845,6 @@ msgstr "მიუთითებელი"
 msgid "Unsupported CDN resource"
 msgstr "CDN-ის მხარდაუჭერელი რესურსი"
 
-msgid "Unsupported URL protocol %s."
-msgstr "URL-ის მხარდაუჭერელი პროტოკოლი: %s."
-
 msgid "Unsupported event type %{type}. Supported: %{types}"
 msgstr ""
 
@@ -7782,6 +8022,12 @@ msgstr "განახლებადი ვერსიამდე"
 msgid "Upgrade"
 msgstr "განახლება"
 
+msgid "Upgrade all packages"
+msgstr ""
+
+msgid "Upgrade packages"
+msgstr ""
+
 msgid "Upgrade via customized remote execution"
 msgstr "მორგებული დაშორებული გაშვების გავლით განახლება"
 
@@ -7796,9 +8042,6 @@ msgstr "ფაილის შემცველობის ნაწილი�
 
 msgid "Upload a subscription manifest"
 msgstr "გამოწერის მანიფესტის ატვირთვა"
-
-msgid "Upload content into the repository"
-msgstr "რეპოზიტორიაში შემცველობის ატვირთვა"
 
 msgid "Upload into"
 msgstr "ატვირთვის სამიზნე"
@@ -7967,9 +8210,6 @@ msgstr "ვერსია ${versionTwo}"
 
 msgid "Version details updated."
 msgstr "ვერსიის დეტალები განახლდა."
-
-msgid "Version in use"
-msgstr "გამოყენებული ვერსია"
 
 msgid "Versions"
 msgstr "ვერსიები"
@@ -8145,6 +8385,9 @@ msgstr "თქვენი გამოწერის ვადა %s დღე
 msgid "You have unsaved changes. Do you want to exit without saving your changes?"
 msgstr ""
 
+msgid "You must select at least one host."
+msgstr ""
+
 msgid "You were not allowed to add %s"
 msgstr "%s-ის ჩამატების უფლება არ გაქვთ"
 
@@ -8161,6 +8404,9 @@ msgid "You're making changes to %(entitlementCount)s entitlement(s)"
 msgstr ""
 
 msgid "Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest."
+msgstr ""
+
+msgid "Your manifest has expired. To continue using Red Hat content, import a new manifest."
 msgstr ""
 
 msgid "Your manifest will expire in {daysMessage}. To extend the expiration date, refresh your manifest. Or, if your Foreman is disconnected, import a new manifest."
@@ -8604,6 +8850,9 @@ msgstr ""
 msgid "initiating Pulp task"
 msgstr "pulp-ის ამოცანის ინიციალიზაცია"
 
+msgid "installed"
+msgstr ""
+
 msgid "installing errata..."
 msgstr "მორჩენილი პაჩის დაყენება..."
 
@@ -8957,6 +9206,9 @@ msgstr "შეუზღუდავი"
 
 msgid "update a filter"
 msgstr "ფილტრის ატვირთვა"
+
+msgid "updated"
+msgstr ""
 
 msgid "updating package group..."
 msgstr "პაკეტების ჯგუფის განახლება..."
