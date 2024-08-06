@@ -5,6 +5,8 @@ module Katello
       CONTENT_TYPE = "deb".freeze
       PULPCORE_CONTENT_TYPE = "deb.package".freeze
 
+      lazy_accessor :initializer => :backend_data
+
       def self.content_api
         PulpDebClient::ContentPackagesApi.new(Katello::Pulp3::Api::Apt.new(SmartProxy.pulp_primary!).api_client)
       end
@@ -34,8 +36,40 @@ module Katello
           name: unit[:package],
           version: unit[:version],
           description: unit[:description]&.truncate(255),
-          architecture: unit[:architecture]
+          architecture: unit[:architecture],
+          section: unit[:section],
+          maintainer: unit[:maintainer],
+          homepage: unit[:homepage],
+          installed_size: unit[:installed_size]
         }
+      end
+
+      def depends
+        Util::Deb.parse_dependencies(backend_data['depends'])
+      end
+
+      def pre_depends
+        Util::Deb.parse_dependencies(backend_data['pre_depends'])
+      end
+
+      def recommends
+        Util::Deb.parse_dependencies(backend_data['recommends'])
+      end
+
+      def suggests
+        Util::Deb.parse_dependencies(backend_data['suggests'])
+      end
+
+      def enhances
+        Util::Deb.parse_dependencies(backend_data['enhances'])
+      end
+
+      def breaks
+        Util::Deb.parse_dependencies(backend_data['breaks'])
+      end
+
+      def conflicts
+        Util::Deb.parse_dependencies(backend_data['conflicts'])
       end
     end
   end

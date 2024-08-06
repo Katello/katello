@@ -2,7 +2,7 @@
 
 <div data-extend-template="layouts/full-page-details.html">
   <div data-block="content">
-    <h4 translate>Basic Information</h4>
+    <h4 translate>Package Information</h4>
 
     <dl class="dl-horizontal dl-horizontal-left">
       <dt translate>Installed On</dt>
@@ -46,6 +46,18 @@
 
       <dt translate>Description</dt>
       <dd>{{ deb.description }}</dd>
+
+      <dt translate>Section</dt>
+      <dd>{{ deb.section }}</dd>
+
+      <dt translate>Maintainer</dt>
+      <dd>{{ deb.maintainer }}</dd>
+
+      <dt translate>Homepage</dt>
+      <dd>{{ deb.homepage }}</dd>
+
+      <dt translate>Installed size</dt>
+      <dd>{{ deb.installed_size }} kB</dd>
     </dl>
     <div class="divider"></div>
 
