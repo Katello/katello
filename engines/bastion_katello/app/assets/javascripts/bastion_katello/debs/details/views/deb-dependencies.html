@@ -1,0 +1,54 @@
+<span page-title ng-model="deb">{{ 'Deb: ' | translate }} {{ deb.nva }}</span>
+
+<section>
+
+  <div ng-if="deb.depends.length > 0" class="details fl">
+    <h4 translate><b>Depends</b></h4>
+    <div ng-repeat="item in deb.depends | orderBy:'toString()'">
+      {{ item }}
+    </div>
+  </div>
+
+  <div ng-if="deb.pre_depends.length > 0" class="details fl">
+    <h4 translate><b>Pre-Depends</b></h4>
+    <div ng-repeat="item in deb.pre_depends | orderBy:'toString()'">
+      {{ item }}
+    </div>
+  </div>
+
+  <div ng-if="deb.recommends.length > 0" class="details fl">
+    <h4 translate><b>Recommends</b></h4>
+    <div ng-repeat="item in deb.recommends | orderBy:'toString()'">
+      {{ item }}
+    </div>
+  </div>
+
+  <div ng-if="deb.suggests.length > 0" class="details fl">
+    <h4 translate><b>Suggests</b></h4>
+    <div ng-repeat="item in deb.suggests | orderBy:'toString()'">
+      {{ item }}
+    </div>
+  </div>
+
+  <div ng-if="deb.enhances.length > 0" class="details fl">
+    <h4 translate><b>Enhances</b></h4>
+    <div ng-repeat="item in deb.enhances | orderBy:'toString()'">
+      {{ item }}
+    </div>
+  </div>
+
+  <div ng-if="deb.breaks.length > 0" class="details fl">
+    <h4 translate><b>Breaks</b></h4>
+    <div ng-repeat="item in deb.breaks | orderBy:'toString()'">
+      {{ item }}
+    </div>
+  </div>
+
+  <div ng-if="deb.conflicts.length > 0" class="details fl">
+    <h4 translate><b>Conflicts</b></h4>
+    <div ng-repeat="item in deb.conflicts | orderBy:'toString()'">
+      {{ item }}
+    </div>
+  </div>
+
+</section>

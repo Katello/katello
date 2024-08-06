@@ -40,6 +40,15 @@
                 parent: 'debs'
             }
         })
+        .state('deb.dependencies', {
+            url: '/dependencies',
+            permission: ['view_products', 'view_content_views'],
+            templateUrl: 'debs/details/views/deb-dependencies.html',
+            ncyBreadcrumb: {
+                label: "{{ 'Dependencies' | translate }}",
+                parent: 'deb.info'
+            }
+        })
         .state('deb.repositories', {
             url: '/repositories',
             permission: ['view_products'],

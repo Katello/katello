@@ -14,6 +14,13 @@
           </span>
         </a>
       </li>
+      <li ng-class="{active: isState('deb.dependencies')}">
+        <a ui-sref="deb.dependencies">
+          <span translate>
+            Dependencies
+          </span>
+        </a>
+      </li>
       <li ng-show="permitted('view_products')" ng-class="{active: isState('deb.repositories')}">
         <a ui-sref="deb.repositories">
           <span translate>
