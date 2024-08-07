@@ -39,6 +39,7 @@ export const BulkPackagesReviewFooter = () => {
     [INSTALL]: katelloPackageInstallBySearchUrl,
     [REMOVE]: katelloPackageRemoveBySearchUrl,
     [UPGRADE]: packagesUpdateUrl,
+    [UPGRADE_ALL]: packagesUpdateUrl,
   };
   const getCustomizedRexUrl = packageRexUrls[selectedAction];
   const customizedRexUrl = getCustomizedRexUrl({
