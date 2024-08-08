@@ -42,6 +42,7 @@ export const BulkPackagesReview = () => {
     [INSTALL]: __('Packages to install'),
     [REMOVE]: __('Packages to be removed'),
     [UPGRADE]: __('Packages to be updated'),
+    [UPGRADE_ALL]: __('Packages to be updated'),
   };
 
   const treeViewTitle = packageActionsDescriptions[selectedAction];
