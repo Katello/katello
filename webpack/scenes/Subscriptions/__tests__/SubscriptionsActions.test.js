@@ -58,7 +58,7 @@ describe('subscription actions', () => {
       'creates SUBSCRIPTIONS_REQUEST and then fails with 422',
       async () => {
         mockErrorRequest({
-          url: '/katello/api/v2/subscriptions',
+          url: '/katello/api/v2/subscriptions?product_host_count=1',
           status: 422,
         });
         await store.dispatch(loadSubscriptions());
@@ -69,7 +69,7 @@ describe('subscription actions', () => {
       'creates SUBSCRIPTIONS_REQUEST and ends with success',
       async () => {
         mockRequest({
-          url: '/katello/api/v2/subscriptions',
+          url: '/katello/api/v2/subscriptions?product_host_count=1',
           response: requestSuccessResponse,
         });
         await store.dispatch(loadSubscriptions());

@@ -70,7 +70,7 @@ export const loadSubscriptions = (extendedParams = {}) => async (dispatch) => {
   const params = createSubscriptionParams(extendedParams);
 
   try {
-    const { data } = await api.get('/subscriptions', {}, params);
+    const { data } = await api.get('/subscriptions?product_host_count=1', {}, params);
     const result = dispatch({
       type: SUBSCRIPTIONS_SUCCESS,
       response: data,

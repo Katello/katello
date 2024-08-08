@@ -10,7 +10,7 @@ export const loadSubscriptionDetails = subscriptionId => async (dispatch) => {
   dispatch({ type: SUBSCRIPTION_DETAILS_REQUEST });
 
   try {
-    const { data } = await api.get(`/organizations/${orgId()}/subscriptions/${subscriptionId}`);
+    const { data } = await api.get(`/organizations/${orgId()}/subscriptions/${subscriptionId}?product_host_count=1`);
     return dispatch({
       type: SUBSCRIPTION_DETAILS_SUCCESS,
       response: data,
