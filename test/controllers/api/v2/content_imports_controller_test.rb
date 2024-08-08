@@ -6,7 +6,7 @@ module Katello
     METADATA = {
       organization: "org name",
       products: {
-        'label' => { name: 'product name', label: 'label' }
+        'label' => { name: 'product name', label: 'label' },
       },
       gpg_keys: {'foo' => {label: 'lol'} },
       repositories: {
@@ -14,15 +14,15 @@ module Katello
           name: 'root repo name',
           label: 'root_label',
           product: { label: 'label' },
-          redhat: true
-        }
+          redhat: true,
+        },
       },
       toc: "toc file name",
       content_view: { name: "cv name", label: 'cv label' },
       content_view_version: {
         major: "4",
-        minor: "5"
-      }
+        minor: "5",
+      },
     }.with_indifferent_access
 
     def models

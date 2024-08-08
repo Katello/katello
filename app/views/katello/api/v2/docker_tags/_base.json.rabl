@@ -24,7 +24,7 @@ if @organization
       attributes = {
         :id => repo.id,
         :name => repo.name,
-        :full_path => repo.full_path
+        :full_path => repo.full_path,
       }
       attributes
     end
@@ -34,7 +34,7 @@ if @organization
     product = first_repo&.product
     attributes = {
       :id => product&.id,
-      :name => product&.name
+      :name => product&.name,
     }
     attributes
   end

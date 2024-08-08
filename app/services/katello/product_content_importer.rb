@@ -152,7 +152,7 @@ module Katello
         vendor: content[:vendor],
         gpg_url: content[:gpgUrl],
         content_url: content[:contentUrl],
-        organization_id: product.organization_id
+        organization_id: product.organization_id,
       }
     end
 

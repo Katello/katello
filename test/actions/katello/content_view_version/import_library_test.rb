@@ -40,7 +40,7 @@ module ::Actions::Katello::ContentViewVersion
     let(:import_metadata) do
       {
         products: {
-          prod.label => prod.slice(:name, :label).merge(redhat: prod.redhat?)
+          prod.label => prod.slice(:name, :label).merge(redhat: prod.redhat?),
         },
         gpg_keys: {},
         repositories: {
@@ -54,19 +54,19 @@ module ::Actions::Katello::ContentViewVersion
                             unprotected: false,
                             content_type: 'yum',
                             download_policy: 'immediate',
-                            content: { id: repo.content_id, label: 'misc-24037', url: "/org/cv/dump" }
-          }
+                            content: { id: repo.content_id, label: 'misc-24037', url: "/org/cv/dump" },
+          },
         },
         content_view_version: {
           major: '1',
-          minor: '0'
+          minor: '0',
         },
         content_view: {
           name: ::Katello::ContentView::EXPORT_LIBRARY,
           label: ::Katello::ContentView::EXPORT_LIBRARY,
           description: 'great',
-          generated_for: :library_export
-        }
+          generated_for: :library_export,
+        },
       }.with_indifferent_access
     end
 

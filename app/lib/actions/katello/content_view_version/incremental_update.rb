@@ -8,7 +8,7 @@ module Actions
         HUMANIZED_TYPES = {
           ::Katello::Erratum::CONTENT_TYPE => "Errata",
           ::Katello::Rpm::CONTENT_TYPE => "Packages",
-          ::Katello::Deb::CONTENT_TYPE => "Deb Packages"
+          ::Katello::Deb::CONTENT_TYPE => "Deb Packages",
         }.freeze
 
         def humanized_name
@@ -217,7 +217,7 @@ module Actions
           content = { ::Katello::Erratum::CONTENT_TYPE => [],
                       ::Katello::Rpm::CONTENT_TYPE => [],
                       ::Katello::ModuleStream::CONTENT_TYPE => [],
-                      ::Katello::Deb::CONTENT_TYPE => []
+                      ::Katello::Deb::CONTENT_TYPE => [],
                     }
 
           base_repos = ::Katello::ContentViewVersion.find(input[:old_version]).repositories

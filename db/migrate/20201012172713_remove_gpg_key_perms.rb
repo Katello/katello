@@ -4,7 +4,7 @@ class RemoveGpgKeyPerms < ActiveRecord::Migration[6.0]
       Permission.find_by(name: :view_gpg_keys) => Permission.find_by(name: :view_content_credentials),
       Permission.find_by(name: :edit_gpg_keys) => Permission.find_by(name: :edit_content_credentials),
       Permission.find_by(name: :destroy_gpg_keys) => Permission.find_by(name: :destroy_content_credentials),
-      Permission.find_by(name: :create_gpg_keys) => Permission.find_by(name: :create_content_credentials)
+      Permission.find_by(name: :create_gpg_keys) => Permission.find_by(name: :create_content_credentials),
     }
   end
 

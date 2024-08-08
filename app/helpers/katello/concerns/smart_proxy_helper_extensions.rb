@@ -29,20 +29,20 @@ module Katello
         policies = [
           {
             :name => _("On Demand"),
-            :label => ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
+            :label => ::Katello::RootRepository::DOWNLOAD_ON_DEMAND,
           },
           {
             :name => _("Immediate"),
-            :label => ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
+            :label => ::Katello::RootRepository::DOWNLOAD_IMMEDIATE,
           },
           {
             :name => _("Streamed"),
-            :label => SmartProxy::DOWNLOAD_STREAMED
+            :label => SmartProxy::DOWNLOAD_STREAMED,
           },
           {
             :name => _("Inherit from Repository"),
-            :label => SmartProxy::DOWNLOAD_INHERIT
-          }
+            :label => SmartProxy::DOWNLOAD_INHERIT,
+          },
         ]
 
         policies.map { |p| OpenStruct.new(p) }

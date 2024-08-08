@@ -30,7 +30,7 @@ module Katello
         RFauxFactory.gen_alphanumeric(rand(2..127)),
         RFauxFactory.gen_alphanumeric(128),
         RFauxFactory.gen_alpha(rand(2..127)),
-        RFauxFactory.gen_alpha(128)
+        RFauxFactory.gen_alpha(128),
       ]
     end
 
@@ -51,7 +51,7 @@ module Katello
         { login: '', pass: '', quote: false },
         { login: RFauxFactory.gen_alpha(rand(1..512)), pass: RFauxFactory.gen_alpha, quote: false },
         { login: RFauxFactory.gen_alphanumeric(rand(1..512)), pass: RFauxFactory.gen_alphanumeric, quote: false },
-        { login: RFauxFactory.gen_utf8(rand(1..50)), pass: RFauxFactory.gen_utf8, quote: true }
+        { login: RFauxFactory.gen_utf8(rand(1..50)), pass: RFauxFactory.gen_utf8, quote: true },
       ]
       if escape
         credentials = credentials.map do |cred|
@@ -66,7 +66,7 @@ module Katello
       credentials = [
         { login: RFauxFactory.gen_alpha(1024), pass: '', string_type: :alpha },
         { login: RFauxFactory.gen_alpha(512), pass: RFauxFactory.gen_alpha(512), string_type: :alpha },
-        { login: RFauxFactory.gen_utf8(512), pass: RFauxFactory.gen_utf8(512), string_type: :utf8 }
+        { login: RFauxFactory.gen_utf8(512), pass: RFauxFactory.gen_utf8(512), string_type: :utf8 },
       ]
       if escape
         credentials = credentials.map do |cred|

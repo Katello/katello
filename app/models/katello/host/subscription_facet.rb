@@ -146,7 +146,7 @@ module Katello
           :releaseVer => release_version,
           :environments => self.candlepin_environments,
           :installedProducts => self.installed_products.map(&:consumer_attributes),
-          :guestIds => virtual_guest_uuids
+          :guestIds => virtual_guest_uuids,
         }
         attrs[:facts] = facts if facts
         HashWithIndifferentAccess.new(attrs)

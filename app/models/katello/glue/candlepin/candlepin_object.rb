@@ -21,7 +21,7 @@ module Katello
       def import_candlepin_record(record:, organization:)
         db_attrs = {
           cp_id: record['id'],
-          organization: organization
+          organization: organization,
         }
 
         yield(db_attrs) if block_given?

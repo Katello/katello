@@ -26,7 +26,7 @@ module Katello
           namespace: unit['namespace'],
           version: unit['version'],
           name: unit['name'],
-          description: unit['description']
+          description: unit['description'],
         }
       end
 

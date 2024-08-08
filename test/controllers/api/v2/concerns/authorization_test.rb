@@ -96,16 +96,16 @@ module Katello
           foo2: 3,
           foo3: {
             baz: [@repo.id],
-            baz2: 9
-          }
-        }
+            baz2: 9,
+          },
+        },
       }
 
       @filtered_associations = {
         foo: ::Katello::ContentView,
         foo3: {
-          baz: ::Katello::Repository
-        }
+          baz: ::Katello::Repository,
+        },
       }
     end
 

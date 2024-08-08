@@ -34,7 +34,7 @@ module Katello
           name: unit[:package],
           version: unit[:version],
           description: unit[:description]&.truncate(255),
-          architecture: unit[:architecture]
+          architecture: unit[:architecture],
         }
       end
     end

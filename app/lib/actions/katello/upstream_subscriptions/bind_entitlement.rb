@@ -20,7 +20,7 @@ module Actions
         def pool
           {
             pool: input[:pool],
-            quantity: input[:quantity]
+            quantity: input[:quantity],
           }
         end
       end

@@ -3,11 +3,13 @@ module Katello
     module Discovery
       class Container < RepoDiscovery
         attr_reader :found, :crawled, :to_follow
+
+        # rubocop:disable Metrics/ParameterLists
         def initialize(url, crawled = [], found = [], to_follow = [],
                        upstream_credentials_and_search = {
                          upstream_username: nil,
                          upstream_password: nil,
-                         search: '*'
+                         search: '*',
                        })
           @uri = uri(url)
           @upstream_username = upstream_credentials_and_search[:upstream_username].presence
@@ -94,7 +96,7 @@ module Katello
           request_params = {
             method: :get,
             headers: { accept: :json },
-            url: "#{@uri}v1/search?q=#{@search}"
+            url: "#{@uri}v1/search?q=#{@search}",
           }
 
           request_params[:user] = @upstream_username if @upstream_username
@@ -107,7 +109,7 @@ module Katello
               @found << result['name']
             end
           rescue
-            # Note: v2 endpoint does not support search
+            # NOTE: v2 endpoint does not support search
             request_params[:url] = "#{@uri}v2/_catalog"
             loop do
               results = RestClient::Request.execute(request_params)
