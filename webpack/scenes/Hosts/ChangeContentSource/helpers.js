@@ -18,12 +18,6 @@ export const formIsLoading = (data, contentView, change) => (
   change === STATUS.PENDING
 );
 
-export const copyToClipboard = (event, textToCopy) => {
-  const clipboard = event.currentTarget.parentElement;
-  const el = document.createElement('textarea');
-  el.value = textToCopy;
-  clipboard.appendChild(el);
-  el.select();
-  document.execCommand('copy');
-  clipboard.removeChild(el);
+export const copyToClipboard = async (event, textToCopy) => {
+  await navigator.clipboard.writeText(textToCopy);
 };

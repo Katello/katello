@@ -382,7 +382,7 @@ Copyright (c) 2011 by Harvest
       this.search_results.mouseout(function(evt) {
         return _this.search_results_mouseout(evt);
       });
-      this.form_field_jq.bind("liszt:updated", function(evt) {
+      this.form_field_jq.on("liszt:updated", function(evt) {
         return _this.results_update_field(evt);
       });
       this.search_field.blur(function(evt) {
@@ -421,7 +421,7 @@ Copyright (c) 2011 by Harvest
         this.container.removeClass('chzn-disabled');
         this.search_field[0].disabled = false;
         if (!this.is_multiple) {
-          return this.selected_item.bind("focus", this.activate_action);
+          return this.selected_item.on("focus", this.activate_action);
         }
       }
     };
