@@ -181,6 +181,12 @@ module Katello
         end
       end
 
+      def initialize_empty
+        # Can be used to initialize a newly created library instance repository with some initial content.
+        # Currently only used for deb type repositories!
+        fail NotImplementedError
+      end
+
       def update
         api.repositories_api.update(repository_reference.try(:repository_href), create_options)
       end
