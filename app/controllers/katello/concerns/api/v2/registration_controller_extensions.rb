@@ -31,6 +31,13 @@ module Katello
         super.merge(rhsm_url: smart_proxy.rhsm_url, pulp_content_url: smart_proxy.pulp_content_url)
       end
 
+      def find_location
+        from_id = Location.authorized(:view_locations).find(params['location_id']) if params['location_id'].present?
+        from_setting = Location.authorized(:view_locations).find_by(name: Setting[:default_location_subscribed_hosts])
+
+        from_id || from_setting || User.current.default_location || User.current.my_locations.first
+      end
+
       private
 
       def smart_proxy
