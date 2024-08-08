@@ -185,11 +185,11 @@ module Katello
       # We need to explicitly load this files because Foreman has
       # similar strucuture and if the Foreman files are loaded first,
       # autoloading doesn't work.
-      require_dependency "#{Katello::Engine.root}/app/lib/katello/api/v2/rendering"
-      require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/api_controller"
-      require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
-      require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp"
-      require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp_node"
+      # require_dependency "#{Katello::Engine.root}/app/lib/katello/api/v2/rendering"
+      # require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/api_controller"
+      # require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
+      # require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp"
+      # require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp_node"
 
       #Api controller extensions
       ::Api::V2::HostsController.include Katello::Concerns::Api::V2::HostsControllerExtensions

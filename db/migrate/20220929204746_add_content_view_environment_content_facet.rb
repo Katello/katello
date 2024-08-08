@@ -8,7 +8,7 @@ class AddContentViewEnvironmentContentFacet < ActiveRecord::Migration[6.1]
       t.references :content_view_environment, :null => false, :index => false, :foreign_key => { :to_table => 'katello_content_view_environments' }
       t.references :content_facet, :null => false, :index => false, :foreign_key => { :to_table => 'katello_content_facets' }
     end
-    ::Katello::Util::CVECFMigrator.new.execute!
+    ::Katello::Util::CvecfMigrator.new.execute!
     FakeContentFacet.all.each do |content_facet|
       cve_id = ::Katello::KTEnvironment.find(content_facet.lifecycle_environment_id)
           .content_view_environments

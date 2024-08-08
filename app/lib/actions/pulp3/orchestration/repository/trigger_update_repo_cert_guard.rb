@@ -9,7 +9,7 @@ module Actions
 
           def run
             repository = ::Katello::Repository.find(input[:repository_id])
-            ForemanTasks.async_task(::Actions::Pulp3::Repository::UpdateCVRepositoryCertGuard, repository, smart_proxy)
+            ForemanTasks.async_task(::Actions::Pulp3::Repository::UpdateCvRepositoryCertGuard, repository, smart_proxy)
           end
 
           def humanized_name
