@@ -116,6 +116,18 @@ module Katello
           cdn_var.validate_substitutions(content, substitutions)
         end
       end
+
+      def test_substitute_vars_raises_error
+        cdn_var = CdnVarSubstitutor.new(@resource)
+
+        path = '/content/dist/rhel/server/5/$releasever/$basearch/os'
+
+        cdn_var.stubs(:resolve_path).raises(StandardError.new("Connection refused - connect(2) for \"cdn.redhat.com\" port 443"))
+
+        assert_raises(Errors::CdnSubstitutionError, "Failed at scanning for repository: Connection refused - connect(2) for \"cdn.redhat.com\" port 443") do
+          cdn_var.substitute_vars(path)
+        end
+      end
     end
   end
 end
