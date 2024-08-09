@@ -408,7 +408,7 @@ module Katello
         ['test', '<%= repository.label %>', 'test'],
         ['test', '<%= organization.label %> <%= repository.label %>', 'empty_organization_test'],
         ['test', ' <%= organization.label %>   <%= repository.label %> ', 'empty_organization_test'],
-        ['test', '', 'empty_organization-puppet_product-test']
+        ['test', '', 'empty_organization-puppet_product-test'],
       ]
 
       labels.each do |label, pattern, result|
@@ -652,7 +652,7 @@ module Katello
         { input: '/content/rhel/x64', expected: '/content/rhel/x64' },
         { input: '/content/$releasever/$basearch', expected: '/content/6Server/x86_64' },
         { input: '/content/$releasever/f00-$basearch', expected: '/content/6Server/f00-x86_64' },
-        { input: '/content/$basearch/foo/$releasever', expected: '/content/x86_64/foo/6Server' }
+        { input: '/content/$basearch/foo/$releasever', expected: '/content/x86_64/foo/6Server' },
       ]
 
       fixtures.each do |fixture|

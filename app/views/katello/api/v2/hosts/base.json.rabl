@@ -20,7 +20,7 @@ if @facet
       {
         :id => content_view.id,
         :name => content_view.name,
-        :composite => content_view.composite?
+        :composite => content_view.composite?,
       }
     end
   end
@@ -29,7 +29,7 @@ if @facet
     if lifecycle_environment.present?
       {
         :id => lifecycle_environment.id,
-        :name => lifecycle_environment.name
+        :name => lifecycle_environment.name,
       }
     end
   end

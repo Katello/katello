@@ -87,7 +87,7 @@ module Actions
           {
             :checksum => Digest::SHA256.hexdigest(File.read(file[:path])),
             :name => file[:filename],
-            :size => File.size(file[:path])
+            :size => File.size(file[:path]),
           }
         end
       end

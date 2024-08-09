@@ -30,7 +30,7 @@ module Katello
                    " is required to be able to export: '%{exportable_types}'." %
                    { content_view: content_view_version.content_view.name,
                      current: content_view_version.version,
-                     exportable_types: ::Katello::Repository.exportable_types(format: format).join("', '")
+                     exportable_types: ::Katello::Repository.exportable_types(format: format).join("', '"),
                    })
           end
         end

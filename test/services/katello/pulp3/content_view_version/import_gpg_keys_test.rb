@@ -15,7 +15,7 @@ module Katello
 
             metadata_gpg_keys = [
               stub('existing gpg', name: existing_gpgkey.name, content: updated_content),
-              stub('new gpg', name: gpg_key, content: 'new content')
+              stub('new gpg', name: gpg_key, content: 'new content'),
             ]
 
             importer = Katello::Pulp3::ContentViewVersion::ImportGpgKeys.new(

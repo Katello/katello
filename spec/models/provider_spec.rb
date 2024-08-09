@@ -7,7 +7,7 @@ module Katello
         :name => "some name",
         :description => "a description",
         :provider_type => Provider::REDHAT,
-        :organization => @organization
+        :organization => @organization,
       }
     end
 
@@ -16,7 +16,7 @@ module Katello
         :name => "some name",
         :description => "a description",
         :provider_type => Provider::CUSTOM,
-        :organization => @organization
+        :organization => @organization,
       }
     end
 
@@ -123,7 +123,7 @@ module Katello
         @provider = Provider.create(to_create_custom)
         id = @provider.id
         @provider.destroy
-        lambda { Provider.find(id) }.must_raise(ActiveRecord::RecordNotFound)
+        lambda { Provider.find(id) }.must_raise(ActiveRecord::RecordNotFound) # rubocop:disable Minitest/GlobalExpectations
       end
     end
 

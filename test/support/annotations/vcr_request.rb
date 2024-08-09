@@ -15,7 +15,7 @@ module Katello
           'method' => method,
           'path' => path,
           'title' => nil,
-          'description' => nil
+          'description' => nil,
         }
       end
 

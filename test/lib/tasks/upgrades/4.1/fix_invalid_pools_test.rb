@@ -33,7 +33,7 @@ module Katello
       Katello::Resources::Candlepin::Pool.expects(:find).once.returns(
         'productId' => subscription.cp_id,
         'owner' => {
-          'key' => org_one.label
+          'key' => org_one.label,
         }
       )
       Katello::Pool.any_instance.expects(:import_data).with(true).once
@@ -59,7 +59,7 @@ module Katello
       Katello::Resources::Candlepin::Pool.expects(:find).once.returns(
         'productId' => subscription.cp_id,
         'owner' => {
-          'key' => nil # org lookup will return nothing
+          'key' => nil, # org lookup will return nothing
         }
       )
 
@@ -85,7 +85,7 @@ module Katello
       Katello::Resources::Candlepin::Pool.expects(:find).once.returns(
         'productId' => '12354', # this returns nothing for the subscription lookup
         'owner' => {
-          'key' => org_one.label
+          'key' => org_one.label,
         }
       )
 

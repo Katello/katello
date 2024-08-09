@@ -137,7 +137,7 @@ module ::Actions::Pulp3
           proxy_url: "https://bad_url",
           proxy_username: "bad_username",
           proxy_password: "bad_password",
-          total_timeout: 42
+          total_timeout: 42,
         }
       )
 

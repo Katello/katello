@@ -19,7 +19,7 @@ module Katello
         rpms = package_ids.map do |package_id|
           {
             module_stream_id: katello_id,
-            rpm_id: package_id
+            rpm_id: package_id,
           }
         end
         add_timestamps(rpms)
@@ -38,7 +38,7 @@ module Katello
         profiles = profiles_json.map do |profile, _rpms|
           {
             module_stream_id: katello_id,
-            name: profile
+            name: profile,
           }
         end
         add_timestamps(profiles)

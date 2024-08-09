@@ -73,18 +73,18 @@ module Katello
       current_subs == new_url_subs
     end
 
-    def self.substitute_content_path(arch: nil, releasever: nil, content_path:)
+    def self.substitute_content_path(content_path:, arch: nil, releasever: nil)
       arch = nil if arch == "noarch"
       substitutions = {
         :releasever => releasever,
-        :basearch => arch
+        :basearch => arch,
       }.compact
       path = substitutions.inject(content_path) do |path_url, (key, value)|
         path_url.gsub("$#{key}", value)
       end
       {
         path: path,
-        substitutions: substitutions
+        substitutions: substitutions,
       }
     end
   end

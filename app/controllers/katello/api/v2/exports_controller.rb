@@ -21,7 +21,7 @@ module Katello
                                   syncable_repos: ::Katello::Repository.exportable_types(
                                     format: ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE).join(", "),
                                   importable_repos: ::Katello::Repository.exportable_types(
-                                    format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE).join(", ")
+                                    format: ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE).join(", "),
                                 }),
                      :required => false
     end

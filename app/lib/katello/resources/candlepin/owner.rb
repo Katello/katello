@@ -18,7 +18,7 @@ module Katello
               :displayName => description,
               :contentPrefix => "/#{key}/$env",
               :contentAccessMode => content_access_mode,
-              :contentAccessModeList => 'org_environment'
+              :contentAccessModeList => 'org_environment',
             }
             owner_json = self.post(path, attrs.to_json, self.default_headers).body
             JSON.parse(owner_json).with_indifferent_access

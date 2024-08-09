@@ -32,11 +32,11 @@ module Katello
                   "id" => SecureRandom.uuid,
                   "type" => "file",
                   "name" => "import_all_content",
-                  "contentUrl" => "/content/dist/rhel/server/6/$releasever/$basearch/satellite/5.7/iso"
+                  "contentUrl" => "/content/dist/rhel/server/6/$releasever/$basearch/satellite/5.7/iso",
                 },
-                "enabled" => false
-              }
-            ]
+                "enabled" => false,
+              },
+            ],
           }
         end
       end
@@ -58,7 +58,7 @@ module Katello
         { from: '/content/rhel/$aaa/$bbb/', to: '/content/foo/xxxx-$bbb/yyyy-$aaa', expected_result: true },
         { from: '/content/rhel/$aaa/$bbb', to: '$aaa/content/$bbb', expected_result: true },
         { from: '/content/rhel/$aaa', to: '/content/foo', expected_result: false },
-        { from: '/content/rhel/$aaa', to: '/content/$bbb', expected_result: false }
+        { from: '/content/rhel/$aaa', to: '/content/$bbb', expected_result: false },
       ]
       fixtures.each do |fixture|
         @content.content_url = fixture[:from]

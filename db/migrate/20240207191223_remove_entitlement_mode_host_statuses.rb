@@ -11,7 +11,7 @@ class RemoveEntitlementModeHostStatuses < ActiveRecord::Migration[6.1]
       "Katello::PurposeAddonsStatus",
       "Katello::PurposeRoleStatus",
       "Katello::PurposeSlaStatus",
-      "Katello::PurposeUsageStatus"
+      "Katello::PurposeUsageStatus",
     ]
 
     ::HostStatus::Status.where(type: obsolete_statuses).delete_all

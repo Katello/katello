@@ -21,7 +21,7 @@ module Actions
         unit_key: upload.except('id'),
         upload_id: '1',
         unit_metadata: nil,
-        content_type: 'rpm'
+        content_type: 'rpm',
       }
 
       assert_action_planned_with(action, pulp3_import_class,

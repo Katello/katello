@@ -32,6 +32,6 @@ node :permissions do |gpg_key|
   {
     :view_gpg_keys => gpg_key.readable?,
     :edit_gpg_keys => gpg_key.editable?,
-    :destroy_gpg_keys => gpg_key.deletable?
+    :destroy_gpg_keys => gpg_key.deletable?,
   }
 end

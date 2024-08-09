@@ -229,7 +229,7 @@ module Katello
                                            { name: "view_hostgroups", search: "name=#{hostgroup.name}"},
                                            { name: "edit_hostgroups", search: "name=#{hostgroup.name}"},
                                            { name: 'view_host_collections'},
-                                           { name: 'edit_host_collections'}
+                                           { name: 'edit_host_collections'},
                                           ],
                                           organizations: [@host.organization],
                                           locations: [@host.location])

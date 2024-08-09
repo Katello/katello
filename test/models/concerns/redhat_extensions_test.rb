@@ -21,7 +21,7 @@ module Katello
         'name' => 'RedHat',
         'major' => "2",
         'minor' => "1",
-        'family' => 'Redhat'
+        'family' => 'Redhat',
       }
       os = ::Redhat.create!(params)
       assert_equal os.title, "RedHat 2.1"
@@ -36,7 +36,7 @@ module Katello
         'major' => "2",
         'minor' => "5",
         'family' => 'Redhat',
-        'description' => 'RedHat 2.1'
+        'description' => 'RedHat 2.1',
       }
       os = ::Redhat.create!(params)
       assert_equal os.title, "RedHat 2.1"
@@ -148,7 +148,7 @@ module Katello
       @hostgroup = ::Hostgroup.new(:name => "testhg",
         :content_facet_attributes => {
           :lifecycle_environment_id => @repo_with_distro.environment.id,
-          :content_view_id => @repo_with_distro.content_view.id
+          :content_view_id => @repo_with_distro.content_view.id,
         }
       )
       @hostgroup.architecture = architectures(:x86_64)

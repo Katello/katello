@@ -85,7 +85,7 @@ module Katello
       collection = {
         :results => sorted_repos.reverse,
         :subtotal => repos.size,
-        :total => repos.size
+        :total => repos.size,
       }
 
       respond_for_index :collection => collection

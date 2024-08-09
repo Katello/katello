@@ -9,13 +9,13 @@ module Katello
                             {"_ns" => "workers", "last_heartbeat" => "2016-09-13T20:07:54Z", "_id" => "scheduler@chicken.example.com"},
                             {"_ns" => "workers", "last_heartbeat" => "2016-09-13T20:08:21Z", "_id" => "resource_manager@chicken.example.com"},
                             {"_ns" => "workers", "last_heartbeat" => "2016-09-13T20:08:20Z", "_id" => "reserved_resource_worker-1@chicken.example.com"},
-                            {"_ns" => "workers", "last_heartbeat" => "2016-09-13T20:08:20Z", "_id" => "reserved_resource_worker-0@chicken.example.com"}
+                            {"_ns" => "workers", "last_heartbeat" => "2016-09-13T20:08:20Z", "_id" => "reserved_resource_worker-0@chicken.example.com"},
                           ],
                          "messaging_connection" => {"connected" => true},
                          "database_connection" => {"connected" => true},
                          "api_version" => "2",
-                         "versions" => {"platform_version" => "2.9.1"
-                          }
+                         "versions" => {"platform_version" => "2.9.1",
+                          },
                         }
     end
 
@@ -182,11 +182,11 @@ module Katello
                            "name" => "reserved-resource-worker-1@zeta.partello.example.com",
                            "last_heartbeat" => "2019-06-13T18:59:40.006524Z",
                            "online" => true,
-                           "missing" => false}
+                           "missing" => false},
                          ],
                          "online_content_apps" =>
                          [{"last_heartbeat": "2021-10-20T13:32:36.817752Z",
-                           "name": "3835@katello.example.com"}
+                           "name": "3835@katello.example.com"},
                          ],
                          "missing_workers" => [],
                          "database_connection" => {"connected" => true},
@@ -212,21 +212,21 @@ module Katello
 
     def test_failure_on_all_workers
       run_exception_test({ "database_connection" => {"connected" => true},
-                           "redis_connection" => {"connected" => true}
+                           "redis_connection" => {"connected" => true},
                           }, /No pulpcore workers are running at/)
     end
 
     def test_failure_on_all_workers_empty
       run_exception_test({ "database_connection" => {"connected" => true},
                            "redis_connection" => {"connected" => true},
-                           "online_workers" => []
+                           "online_workers" => [],
                           }, /No pulpcore workers are running at/)
     end
 
     def test_failure_on_no_reserved_resource_worker
       run_exception_test({ "database_connection" => {"connected" => true},
                            "redis_connection" => {"connected" => true},
-                           "online_workers" => []
+                           "online_workers" => [],
                           }, /No pulpcore workers are running at/)
     end
 
@@ -234,7 +234,7 @@ module Katello
       json = { "database_connection" => {"connected" => true},
                "redis_connection" => {"connected" => true},
                "online_workers" => @ok_pulp_status['online_workers'],
-               "online_content_apps" => []
+               "online_content_apps" => [],
       }
       message = /No pulpcore content apps are running at/
 

@@ -7,7 +7,7 @@
 User.as_anonymous_admin do
   Bookmark.without_auditing do
     bookmarks = [
-      {:name => "Without a Tag", :query => 'not has tag', :controller => "katello_docker_manifests"}
+      {:name => "Without a Tag", :query => 'not has tag', :controller => "katello_docker_manifests"},
     ]
 
     bookmarks.each do |input|

@@ -20,7 +20,7 @@ module Katello
             "running": 1,
             "completed": 0,
             "canceled": 0,
-            "failed": 0
+            "failed": 0,
           }
           group = Katello::Pulp3::TaskGroup.new(@primary, group_data)
           refute group.error
@@ -35,7 +35,7 @@ module Katello
             "running": 0,
             "completed": 0,
             "canceled": 0,
-            "failed": 1
+            "failed": 1,
           }
           group = Katello::Pulp3::TaskGroup.new(@primary, group_data)
           assert group.error
@@ -54,7 +54,7 @@ module Katello
             "running": 0,
             "completed": 0,
             "canceled": 1,
-            "failed": 0
+            "failed": 0,
           }
           group = Katello::Pulp3::TaskGroup.new(@primary, group_data)
           assert group.error
