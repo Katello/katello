@@ -22,7 +22,13 @@ module Katello
 
         def publication_options(repository_version)
           options = super(repository_version)
-          options.merge(checksum_type: root.checksum_type)
+          # To work around https://projects.theforeman.org/issues/37715
+          checksum_type = if root.checksum_type.nil?
+                            'sha256'
+                          else
+                            root.checksum_type
+                          end
+          options.merge(checksum_type: checksum_type)
         end
 
         def specific_create_options

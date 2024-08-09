@@ -77,6 +77,15 @@ module Katello
             assert_equal 'sha512', publication_options[:checksum_type]
           end
 
+          def test_publication_options_sets_checksum_type_to_sha_256_when_nil
+            @repo.version_href = 'a_version_href'
+            @repo.root.checksum_type = nil
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            publication_options = service.publication_options(@repo.version_href)
+            assert_equal 'a_version_href', publication_options[:repository_version]
+            assert_equal 'sha256', publication_options[:checksum_type]
+          end
+
           def test_refresh_distributions_distribution_ref_wrong
             service = @repo.backend_service(@proxy)
             service.stubs(:lookup_distributions).returns([PulpRpmClient::RpmRpmDistributionResponse.new(pulp_href: 'some fake href')])
