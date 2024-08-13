@@ -28,12 +28,11 @@ module Katello
           }
         }.to_json
 
-      @controller.expects(:render).with(:action => "new")
       post :create, params: {
         :remote_action => "errata_install",
         bulk_host_ids: bulk_host_ids, customize: true }
 
-      assert_response :success
+      assert_response :found
     end
 
     def test_customized_errata_install_with_install_all_shows_new
@@ -44,13 +43,12 @@ module Katello
           }
         }.to_json
 
-      @controller.expects(:render).with(:action => "new")
       post :create, params: {
         :remote_action => "errata_install",
         bulk_host_ids: bulk_host_ids, customize: true,
         install_all: true }
 
-      assert_response :success
+      assert_response :found
     end
 
     def test_customized_errata_install_with_errata_id_shows_new
@@ -64,17 +62,16 @@ module Katello
       bulk_errata_ids =
         {
           included: {
-            ids: []
+            ids: [katello_errata(:security).errata_id]
           }
         }.to_json
 
-      @controller.expects(:render).with(:action => "new")
       post :create, params: {
         :remote_action => "errata_install",
         bulk_host_ids: bulk_host_ids, bulk_errata_ids: bulk_errata_ids,
         customize: true }
 
-      assert_response :success
+      assert_response :found
     end
   end
 end
