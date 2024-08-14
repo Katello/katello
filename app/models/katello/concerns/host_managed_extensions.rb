@@ -480,8 +480,10 @@ module Katello
 
       def rhel_eos_schedule_index
         return nil unless probably_rhel?
-        major = operatingsystem.major
+        major = operatingsystem&.major
+        return nil unless major
         return "RHEL#{major}" unless major == "7"
+
         arch_name = architecture&.name
         case arch_name
         when "ppc64le"
