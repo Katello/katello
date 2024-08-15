@@ -525,7 +525,7 @@
 
     <span ng-hide="(repository.content_type === 'deb' && repository.url)">
     <section class="well" ng-if="permitted('edit_products', product) && !product.redhat && repository.content_type !== 'docker' && repository.content_type !== 'ostree' && repository.content_type !== 'ansible_collection'">
-      <h5 translate ng-show="repository.content_type === 'yum' || 'deb'">Upload Package</h5>
+      <h5 translate ng-show="repository.content_type === 'yum' || repository.content_type === 'deb'">Upload Package</h5>
       <h5 translate ng-show="repository.content_type === 'file'">Upload File</h5>
 
       <form role="form"
