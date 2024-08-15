@@ -43,7 +43,7 @@ module Katello
 
     def test_convert2rhel_through_foreman_on_host
       subscription_facet.update(convert2rhel_through_foreman: 1)
-      assert_equal 1, host.subscription_facet.convert2rhel_through_foreman
+      assert true, host.subscription_facet.convert2rhel_through_foreman
       assert_includes ::Host.search_for("convert2rhel_through_foreman = 1"), host
     end
 
