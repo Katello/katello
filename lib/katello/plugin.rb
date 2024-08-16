@@ -666,29 +666,27 @@ Foreman::Plugin.register :katello do
     end
   end
 
-  if Katello.with_remote_execution?
-    RemoteExecutionFeature.register(:katello_package_install, N_("Katello: Install Package"), :description => N_("Install package via Katello interface"), :provided_inputs => ['package'])
-    RemoteExecutionFeature.register(:katello_package_install_by_search, N_("Katello: Install packages by search query"), :description => N_("Install packages via Katello interface"), :provided_inputs => ['Package search query'])
-    RemoteExecutionFeature.register(:katello_package_update, N_("Katello: Update Package"), :description => N_("Update package via Katello interface"), :provided_inputs => ['package'])
-    RemoteExecutionFeature.register(:katello_packages_update_by_search, N_("Katello: Update Packages by search query"), :description => N_("Update packages via Katello interface"), :provided_inputs => ['Package search query'])
-    RemoteExecutionFeature.register(:katello_package_remove, N_("Katello: Remove Package"), :description => N_("Remove package via Katello interface"), :provided_inputs => ['package'])
-    RemoteExecutionFeature.register(:katello_packages_remove_by_search, N_("Katello: Remove Packages by search query"), :description => N_("Remove packages via Katello interface"), :provided_inputs => ['Package search query'])
-    RemoteExecutionFeature.register(:katello_group_install, N_("Katello: Install Package Group"), :description => N_("Install package group via Katello interface"), :provided_inputs => ['package'])
-    RemoteExecutionFeature.register(:katello_group_update, N_("Katello: Update Package Group"), :description => N_("Update package group via Katello interface"), :provided_inputs => ['package'])
-    RemoteExecutionFeature.register(:katello_group_remove, N_("Katello: Remove Package Group"), :description => N_("Remove package group via Katello interface"), :provided_inputs => ['package'])
-    RemoteExecutionFeature.register(:katello_errata_install, N_("Katello: Install Errata"), :description => N_("Install errata via Katello interface"), :provided_inputs => ['errata'])
-    RemoteExecutionFeature.register(:katello_errata_install_by_search, N_("Katello: Install errata by search query"), :description => N_("Install errata using scoped search query"), :provided_inputs => ['Errata search query'])
-    RemoteExecutionFeature.register(:katello_service_restart, N_("Katello: Service Restart"), :description => N_("Restart Services via Katello interface"), :provided_inputs => ['helpers'])
-    RemoteExecutionFeature.register(:katello_host_tracer_resolve, N_("Katello: Resolve Traces"), :description => N_("Resolve traces via Katello interface"), :provided_inputs => ['ids'])
-    RemoteExecutionFeature.register(:katello_change_content_source, N_("Katello: Configure host for new content source"), :description => N_("Replace content source on the target machine"), :provided_inputs => [])
-    RemoteExecutionFeature.register(:katello_upload_profile, N_("Katello: Upload Profile"), :description => N_("Upload package / repos profile"), :provided_inputs => [])
-    RemoteExecutionFeature.register(:katello_module_stream_action, N_("Katello: Module Stream Actions"),
-                                    :description => N_("Perform a module stream action via Katello interface"),
-                                    :provided_inputs => ['action', 'module_spec', 'options'])
-    allowed_template_helpers :errata
+  RemoteExecutionFeature.register(:katello_package_install, N_("Katello: Install Package"), :description => N_("Install package via Katello interface"), :provided_inputs => ['package'])
+  RemoteExecutionFeature.register(:katello_package_install_by_search, N_("Katello: Install packages by search query"), :description => N_("Install packages via Katello interface"), :provided_inputs => ['Package search query'])
+  RemoteExecutionFeature.register(:katello_package_update, N_("Katello: Update Package"), :description => N_("Update package via Katello interface"), :provided_inputs => ['package'])
+  RemoteExecutionFeature.register(:katello_packages_update_by_search, N_("Katello: Update Packages by search query"), :description => N_("Update packages via Katello interface"), :provided_inputs => ['Package search query'])
+  RemoteExecutionFeature.register(:katello_package_remove, N_("Katello: Remove Package"), :description => N_("Remove package via Katello interface"), :provided_inputs => ['package'])
+  RemoteExecutionFeature.register(:katello_packages_remove_by_search, N_("Katello: Remove Packages by search query"), :description => N_("Remove packages via Katello interface"), :provided_inputs => ['Package search query'])
+  RemoteExecutionFeature.register(:katello_group_install, N_("Katello: Install Package Group"), :description => N_("Install package group via Katello interface"), :provided_inputs => ['package'])
+  RemoteExecutionFeature.register(:katello_group_update, N_("Katello: Update Package Group"), :description => N_("Update package group via Katello interface"), :provided_inputs => ['package'])
+  RemoteExecutionFeature.register(:katello_group_remove, N_("Katello: Remove Package Group"), :description => N_("Remove package group via Katello interface"), :provided_inputs => ['package'])
+  RemoteExecutionFeature.register(:katello_errata_install, N_("Katello: Install Errata"), :description => N_("Install errata via Katello interface"), :provided_inputs => ['errata'])
+  RemoteExecutionFeature.register(:katello_errata_install_by_search, N_("Katello: Install errata by search query"), :description => N_("Install errata using scoped search query"), :provided_inputs => ['Errata search query'])
+  RemoteExecutionFeature.register(:katello_service_restart, N_("Katello: Service Restart"), :description => N_("Restart Services via Katello interface"), :provided_inputs => ['helpers'])
+  RemoteExecutionFeature.register(:katello_host_tracer_resolve, N_("Katello: Resolve Traces"), :description => N_("Resolve traces via Katello interface"), :provided_inputs => ['ids'])
+  RemoteExecutionFeature.register(:katello_change_content_source, N_("Katello: Configure host for new content source"), :description => N_("Replace content source on the target machine"), :provided_inputs => [])
+  RemoteExecutionFeature.register(:katello_upload_profile, N_("Katello: Upload Profile"), :description => N_("Upload package / repos profile"), :provided_inputs => [])
+  RemoteExecutionFeature.register(:katello_module_stream_action, N_("Katello: Module Stream Actions"),
+                                  :description => N_("Perform a module stream action via Katello interface"),
+                                  :provided_inputs => ['action', 'module_spec', 'options'])
+  allowed_template_helpers :errata
 
-    RemoteExecutionProvider.singleton_class.prepend(Katello::Concerns::RemoteExecutionProviderExtensions)
-  end
+  RemoteExecutionProvider.singleton_class.prepend(Katello::Concerns::RemoteExecutionProviderExtensions)
 
   tests_to_skip("AccessPermissionsTest" => [
                   'foreman_tasks/api/tasks/callback should have a permission that grants access',

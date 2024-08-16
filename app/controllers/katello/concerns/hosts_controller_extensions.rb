@@ -94,10 +94,8 @@ module Katello
                                       .joins(:lifecycle_environments)
                                       .distinct
 
-          if Katello.with_remote_execution?
-            template_id = RemoteExecutionFeature.feature!(:katello_change_content_source).job_template_id
-            job_invocation_path = new_job_invocation_path(template_id: template_id, host_ids: content_hosts.map { |h| h[:id] }) if template_id
-          end
+          template_id = RemoteExecutionFeature.feature!(:katello_change_content_source).job_template_id
+          job_invocation_path = new_job_invocation_path(template_id: template_id, host_ids: content_hosts.map { |h| h[:id] }) if template_id
 
           render json: {
             content_hosts: content_hosts,

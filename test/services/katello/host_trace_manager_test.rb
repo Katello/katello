@@ -1,10 +1,5 @@
 require 'katello_test_helper'
 
-unless Katello.with_remote_execution?
-  class JobInvocationComposer
-  end
-end
-
 module Katello
   class HostTraceManagerTest < ActiveSupport::TestCase
     def setup

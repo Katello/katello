@@ -259,13 +259,9 @@ module Katello
         labels = 'label ^ (Actions::Katello::Host::Erratum::Install, Actions::Katello::Host::Erratum::ApplicableErrataInstall)'
         select = 'foreman_tasks_tasks.*'
 
-        if Katello.with_remote_execution?
-          new_labels = 'label = Actions::RemoteExecution::RunHostJob AND remote_execution_feature.label ^ (katello_errata_install, katello_errata_install_by_search)'
-          labels = [labels, new_labels].map { |label| "(#{label})" }.join(' OR ')
-          select += ',template_invocations.id AS template_invocation_id'
-        else
-          select += ',NULL AS template_invocation_id'
-        end
+        new_labels = 'label = Actions::RemoteExecution::RunHostJob AND remote_execution_feature.label ^ (katello_errata_install, katello_errata_install_by_search)'
+        labels = [labels, new_labels].map { |label| "(#{label})" }.join(' OR ')
+        select += ',template_invocations.id AS template_invocation_id'
 
         search = [search_up_to, search_since, search_result, "state = stopped", labels].compact.join(' and ')
 
