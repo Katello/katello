@@ -75,7 +75,7 @@ module Katello
         verify_ssl: @acs.verify_ssl,
         use_http_proxies: @acs.use_http_proxies,
         upstream_username: @acs.upstream_username,
-        upstream_password: @acs.upstream_password
+        upstream_password: @acs.upstream_password,
       }
       assert_response :success
       assert_template 'api/v2/common/create'
@@ -103,7 +103,7 @@ module Katello
         verify_ssl: @acs_rhui.verify_ssl,
         use_http_proxies: @acs_rhui.use_http_proxies,
         upstream_username: @acs_rhui.upstream_username,
-        upstream_password: @acs_rhui.upstream_password
+        upstream_password: @acs_rhui.upstream_password,
       }
       assert_response :success
       assert_template 'api/v2/common/create'
@@ -122,7 +122,7 @@ module Katello
         smart_proxy_ids: [@smart_proxy.id],
         content_type: @acs_simplified.content_type,
         alternate_content_source_type: @acs_simplified.alternate_content_source_type,
-        product_ids: [@product.id]
+        product_ids: [@product.id],
       }
       assert_response :success
       assert_template 'api/v2/common/create'
@@ -145,7 +145,7 @@ module Katello
         alternate_content_source_type: @acs.alternate_content_source_type,
         verify_ssl: @acs.verify_ssl,
         upstream_username: @acs.upstream_username,
-        upstream_password: @acs.upstream_password
+        upstream_password: @acs.upstream_password,
       }
       assert_response :unprocessable_entity
     end
@@ -167,7 +167,7 @@ module Katello
         alternate_content_source_type: @acs.alternate_content_source_type,
         verify_ssl: @acs.verify_ssl,
         upstream_username: @acs.upstream_username,
-        upstream_password: @acs.upstream_password
+        upstream_password: @acs.upstream_password,
       }
       assert_response :unprocessable_entity
     end
@@ -190,7 +190,7 @@ module Katello
         verify_ssl: @acs_rhui.verify_ssl,
         use_http_proxies: @acs_rhui.use_http_proxies,
         upstream_username: @acs_rhui.upstream_username,
-        upstream_password: @acs_rhui.upstream_password
+        upstream_password: @acs_rhui.upstream_password,
       }
       assert_response :unprocessable_entity
     end
@@ -215,7 +215,7 @@ module Katello
         upstream_password: @acs.upstream_password,
 
         # illegal param
-        product_ids: [@product.id]
+        product_ids: [@product.id],
       }
       assert_response :unprocessable_entity
     end
@@ -231,7 +231,7 @@ module Katello
         product_ids: [@product.id],
 
         # illegal param
-        verify_ssl: @acs.verify_ssl
+        verify_ssl: @acs.verify_ssl,
       }
 
       assert_response :unprocessable_entity
@@ -258,7 +258,7 @@ module Katello
         verify_ssl: @acs.verify_ssl,
         use_http_proxies: @acs.use_http_proxies,
         upstream_username: @acs.upstream_username,
-        upstream_password: @acs.upstream_password
+        upstream_password: @acs.upstream_password,
       }
       assert_response :success
       assert_template 'api/v2/alternate_content_sources/show'
@@ -281,7 +281,7 @@ module Katello
         alternate_content_source_type: @acs.alternate_content_source_type,
         verify_ssl: @acs.verify_ssl,
         upstream_username: @acs.upstream_username,
-        upstream_password: @acs.upstream_password
+        upstream_password: @acs.upstream_password,
       }
       assert_response :unprocessable_entity
     end
@@ -303,7 +303,7 @@ module Katello
         alternate_content_source_type: @acs.alternate_content_source_type,
         verify_ssl: @acs.verify_ssl,
         upstream_username: @acs.upstream_username,
-        upstream_password: @acs.upstream_password
+        upstream_password: @acs.upstream_password,
       }
       assert_response :unprocessable_entity
     end
@@ -313,7 +313,7 @@ module Katello
         id: @acs.id,
 
         # illegal param
-        product_ids: [@product.id]
+        product_ids: [@product.id],
       }
       assert_response :unprocessable_entity
     end
@@ -323,7 +323,7 @@ module Katello
         id: @acs_simplified.id,
 
         # illegal param
-        verify_ssl: @acs.verify_ssl
+        verify_ssl: @acs.verify_ssl,
       }
       assert_response :unprocessable_entity
     end

@@ -46,7 +46,7 @@ module Katello
             :base_path => "mock relative_path",
             :name => "Default_Organization-Cabinet-pulp3_Ansible_collection_1",
             :content_guard => nil,
-            :repository_version => "repo_href"
+            :repository_version => "repo_href",
           }).returns(distribution_data)
 
           PulpAnsibleClient::DistributionsAnsibleApi.any_instance.expects(:create).with(distribution_data)

@@ -350,7 +350,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       sync_options = {
         :skip_metadata_check => ::Foreman::Cast.to_bool(params[:skip_metadata_check]),
         :validate_contents => ::Foreman::Cast.to_bool(params[:validate_contents]),
-        :incremental => ::Foreman::Cast.to_bool(params[:incremental])
+        :incremental => ::Foreman::Cast.to_bool(params[:incremental]),
       }
 
       if @repository.url.blank?
@@ -515,7 +515,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
         upload_args = {
           content_type: params[:content_type],
           generate_metadata: generate_metadata,
-          sync_capsule: sync_capsule
+          sync_capsule: sync_capsule,
         }
         upload_args.merge!(generic_content_type_import_upload_args)
 

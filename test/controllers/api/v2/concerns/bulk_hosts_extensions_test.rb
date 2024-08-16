@@ -41,7 +41,7 @@ module Katello
       @controller.instance_variable_set(
         :@params,
         {
-          :install_all => true
+          :install_all => true,
         })
       result = @controller.find_bulk_hosts(@edit, {})
 

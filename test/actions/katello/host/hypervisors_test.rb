@@ -12,7 +12,7 @@ module Katello::Host
       @content_view_environment = katello_content_view_environments(:library_dev_view_library)
       @hypervisor_params = { 'hypervisor' => ['guest-1', 'guest-2'] }
       @hypervisor_response = {
-        'created' => [{'uuid' => 1, 'name' => 'foo', 'extra' => 'stranger', 'owner' => {'key' => 'org-label'}}]
+        'created' => [{'uuid' => 1, 'name' => 'foo', 'extra' => 'stranger', 'owner' => {'key' => 'org-label'}}],
       }
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns(nil)
     end
@@ -34,7 +34,7 @@ module Katello::Host
         json = {
           'created' => [{'uuid' => 1, 'name' => 'foo1', 'extra' => 'stranger', 'owner' => owner}],
           'updated' => [{'uuid' => 2, 'name' => 'foo2', 'owner' => owner}],
-          'unchanged' => [{'uuid' => 3, 'name' => 'foo3', 'owner' => owner}]
+          'unchanged' => [{'uuid' => 3, 'name' => 'foo3', 'owner' => owner}],
         }
         expected = [{:uuid => 1, :name => 'foo1', :organization_label => 'org-label'},
                     {:uuid => 2, :name => 'foo2', :organization_label => 'org-label'},

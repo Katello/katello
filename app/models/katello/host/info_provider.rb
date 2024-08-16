@@ -6,7 +6,7 @@ module Katello
       def host_info
         info = {}
         info['parameters'] = {
-          'foreman_host_collections' => host.host_collections.map(&:name)
+          'foreman_host_collections' => host.host_collections.map(&:name),
         }
 
         if host.content_facet.present?
@@ -42,7 +42,7 @@ module Katello
           'latest-version' => content_view.try(:latest_version),
           'version' => content_version(content_view_environment).try(:version),
           'published' => content_version(content_view_environment).try(:created_at).try(:time).to_s,
-          'components' => content_view_components(content_view_environment)
+          'components' => content_view_components(content_view_environment),
         }
       end
 

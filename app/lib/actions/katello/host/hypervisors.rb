@@ -29,7 +29,7 @@ module Actions
                 {
                   :name => hypervisor['name'],
                   :uuid => hypervisor['uuid'],
-                  :organization_label => hypervisor['owner']['key']
+                  :organization_label => hypervisor['owner']['key'],
                 }
               end
             end

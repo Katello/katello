@@ -56,8 +56,8 @@ class HostsControllerTest < ActionController::TestCase
       :name => 'test-content',
       :content_facet_attributes => {
         :lifecycle_environment_id => "",
-        :content_source_id => ""
-      }
+        :content_source_id => "",
+      },
     } }, session: set_session_user
     assert_equal_arrays orig_cves, @host.content_facet.content_view_environment_ids
   end
@@ -90,7 +90,7 @@ class HostsControllerTest < ActionController::TestCase
         'OS',
         'Content View Environments',
         'Registered',
-        'Last Checkin'
+        'Last Checkin',
       ]
 
       assert_equal expected_columns, csv_body.first

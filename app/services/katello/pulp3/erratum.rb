@@ -75,7 +75,7 @@ module Katello
           {
             bug_id: bugzilla[:id],
             href: bugzilla[:href],
-            erratum_id: katello_id
+            erratum_id: katello_id,
           }
         end
       end
@@ -85,7 +85,7 @@ module Katello
           {
             cve_id: cve[:id],
             href: cve[:href],
-            erratum_id: katello_id
+            erratum_id: katello_id,
           }
         end
       end

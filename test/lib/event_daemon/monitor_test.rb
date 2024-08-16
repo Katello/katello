@@ -13,7 +13,7 @@ module Katello
 
         def self.status(*)
           {
-            running: true
+            running: true,
           }
         end
       end
@@ -58,7 +58,7 @@ module Katello
         mock_status = {
           running: true,
           processed_count: 1,
-          failed_count: 0
+          failed_count: 0,
         }
         MockService.stubs(:status).returns(mock_status)
         Rails.cache.expects(:write).with(

@@ -20,7 +20,7 @@ module ::Actions::Katello::ActivationKey
          :release_version => activation_key.release_version,
          :purpose_usage => activation_key.purpose_usage,
          :purpose_role => activation_key.purpose_role,
-         :purpose_addons => [katello_purpose_addons(:addon).name]
+         :purpose_addons => [katello_purpose_addons(:addon).name],
       }
     end
     it 'plans' do

@@ -103,7 +103,7 @@ module Katello
             content_hosts: content_hosts,
             hosts_without_content: hosts_without_content,
             content_sources: content_sources,
-            job_invocation_path: job_invocation_path
+            job_invocation_path: job_invocation_path,
           }
         end
       end

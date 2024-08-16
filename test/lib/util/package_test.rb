@@ -33,7 +33,7 @@ module Katello
         {:epoch => '10', :version => '2', :release => '4'},
         {:epoch => '10', :version => '3.2', :release => '4'},
         {:epoch => '10', :version => '3.10', :release => '3.2'},
-        {:epoch => '10', :version => '3.10', :release => '3.10'}
+        {:epoch => '10', :version => '3.10', :release => '3.10'},
       ]
       packages.each do |package|
         package[:version_sortable] = Util::Package.sortable_version(package[:version])
@@ -41,7 +41,7 @@ module Katello
       end
       expected_packages = [
         packages[0].with_indifferent_access,
-        packages[-1].with_indifferent_access
+        packages[-1].with_indifferent_access,
       ]
       assert_equal expected_packages, Util::Package.find_latest_packages(packages)
     end

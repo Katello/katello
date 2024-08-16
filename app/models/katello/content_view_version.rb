@@ -357,7 +357,7 @@ module Katello
     def auto_publish_composites!
       metadata = {
         description: _("Auto Publish - Triggered by '%s'") % self.name,
-        triggered_by: self.id
+        triggered_by: self.id,
       }
       self.content_view.auto_publish_components.pluck(:composite_content_view_id).each do |composite_id|
         ::Katello::EventQueue.push_event(::Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_id) do |attrs|
@@ -443,12 +443,12 @@ module Katello
             repo.slice(:id, :name, :label, :arch, :major, :minor,
                        :content_type, :os_versions, :url, :content_id).merge(redhat: repo.redhat?, root: repo.root.id,
                                                                              product: repo.product.slice(:id, :label))
-          end
+          end,
         }
       end
       self.applied_filters = {
         applied_filters: applied_filters_and_rules,
-        dependency_solving: content_view.solve_dependencies
+        dependency_solving: content_view.solve_dependencies,
       }
       save!
     end

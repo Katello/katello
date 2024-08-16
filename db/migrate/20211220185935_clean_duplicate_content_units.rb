@@ -86,14 +86,14 @@ class CleanDuplicateContentUnits < ActiveRecord::Migration[6.0]
     handle_duplicate(Katello::DockerManifestList, 'docker_manifest_list_id', [:pulp_id],
                      associated_models: {
                        Katello::DockerManifestListManifest => :docker_manifest_id,
-                       Katello::RepositoryDockerManifestList => :repository_id
+                       Katello::RepositoryDockerManifestList => :repository_id,
                      })
     add_index :katello_docker_manifest_lists, :pulp_id, :unique => true
 
     handle_duplicate(Katello::DockerManifest, 'docker_manifest_id', [:pulp_id],
                      associated_models: {
                        Katello::DockerManifestListManifest => :docker_manifest_list_id,
-                       Katello::RepositoryDockerManifest => :repository_id
+                       Katello::RepositoryDockerManifest => :repository_id,
                      })
     add_index :katello_docker_manifests, :pulp_id, :unique => true
   end

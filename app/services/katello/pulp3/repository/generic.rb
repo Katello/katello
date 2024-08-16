@@ -9,7 +9,7 @@ module Katello
         def distribution_options(path)
           options = {
             base_path: path,
-            name: "#{generate_backend_object_name}"
+            name: "#{generate_backend_object_name}",
           }
 
           if ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication

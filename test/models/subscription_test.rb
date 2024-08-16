@@ -15,15 +15,15 @@ module Katello
         [
           {
             'id' => product.cp_id,
-            'attributes' => {}
-          }
+            'attributes' => {},
+          },
         ]
       )
 
       product_data = [
         {
-          'id' => product.cp_id
-        }
+          'id' => product.cp_id,
+        },
       ]
 
       Katello::Resources::Candlepin::Product.expects(:all).returns(product_data)

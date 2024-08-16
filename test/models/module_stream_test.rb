@@ -112,7 +112,7 @@ module Katello
         [{:name => "boo", :stream => "100", :version => "11111", :context => "cccc", :arch => "noarch"}, "boo:100:11111:cccc:noarch"],
         [{:name => "boo", :stream => "100", :version => "11111", :arch => "noarch"}, "boo:100:11111"],
         [{:name => "boo", :stream => "100", :context => "cccc", :arch => "noarch"}, "boo:100"],
-        [{:name => "boo", :version => "11111", :context => "cccc", :arch => "noarch"}, "boo"]
+        [{:name => "boo", :version => "11111", :context => "cccc", :arch => "noarch"}, "boo"],
       ]
       inputs.each do |params, expectation|
         assert_equal expectation, ModuleStream.new(params).module_spec

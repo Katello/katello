@@ -27,7 +27,7 @@ class Actions::Katello::Foreman::ContentUpdateTest < ActiveSupport::TestCase
       "content_view_id" => content_view.id,
       "repository_id" => nil,
       "remote_user" => SETTINGS[:katello][:pulp][:default_login],
-      "remote_cp_user" => SETTINGS[:katello][:pulp][:default_login]
+      "remote_cp_user" => SETTINGS[:katello][:pulp][:default_login],
     }
 
     assert_equal expected, action.input

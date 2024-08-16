@@ -39,7 +39,7 @@ module Actions
                                                                                                 {
                                                                                                   upstream_username: input[:upstream_username],
                                                                                                   upstream_password: password,
-                                                                                                  search: input[:search]
+                                                                                                  search: input[:search],
                                                                                                 }
                                                                                               )
 

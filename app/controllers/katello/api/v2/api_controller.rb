@@ -170,7 +170,7 @@ module Katello
         :selectable => selectable.blank? ? total : selectable,
         :page => page,
         :per_page => per_page,
-        :error => error
+        :error => error,
       }
     end
 

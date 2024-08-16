@@ -115,7 +115,7 @@ module Katello
           :id => env.cp_id,
           :name => env.label,
           :display_name => env.name,
-          :description => env.content_view.description
+          :description => env.content_view.description,
         }
       end
 

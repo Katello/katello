@@ -86,7 +86,7 @@ module Katello
               'accountNumber' => '',
               'productId' => product_id,
               'providedProducts' => [],
-              'contractNumber' => ''
+              'contractNumber' => '',
             }
             JSON.parse(Candlepin::Pool.create(owner_key, pool))
           end

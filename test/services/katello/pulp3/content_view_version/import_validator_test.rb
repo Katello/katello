@@ -93,7 +93,7 @@ module Katello
                      label: repo.label,
                      product: metadata_product,
                      content_type: 'bogus',
-                     redhat: !repo.redhat?)
+                     redhat: !repo.redhat?),
               ]
 
               @intersecting_repos = [repo]
@@ -110,7 +110,7 @@ module Katello
 
               @content_view = cvv.content_view
               @metadata_repos = [
-                stub('metadata repo', redhat: true)
+                stub('metadata repo', redhat: true),
               ]
 
               exception = assert_raises(RuntimeError) do
@@ -122,12 +122,12 @@ module Katello
             it "fails on metadata if redhat products in the metadata are not in the library" do
               @metadata_products = [
                 stub('product', redhat: false, name: 'prod', label: 'prod', cp_id: nil),
-                stub('red hat product', redhat: true, name: 'Red Hat Linux', label: 'rhel_7', cp_id: nil)
+                stub('red hat product', redhat: true, name: 'Red Hat Linux', label: 'rhel_7', cp_id: nil),
               ]
 
               @metadata_repos = [
                 stub('metadata repo', name: "misc", label: "misc", redhat: true, product: @metadata_products.first),
-                stub('metadata repo', name: "rhel_7", label: "rhel_7", redhat: true, product: @metadata_products.second)
+                stub('metadata repo', name: "rhel_7", label: "rhel_7", redhat: true, product: @metadata_products.second),
               ]
 
               exception = assert_raises(RuntimeError) do
@@ -142,13 +142,13 @@ module Katello
           it "can validate Red Hat repositories based on their cp_id" do
             @metadata_products = [
               stub('product', redhat: false, name: 'prod', label: 'prod', cp_id: '83'),
-              stub('red hat product', redhat: true, name: 'Red Hat Linux', label: 'rhel_7', cp_id: '69')
+              stub('red hat product', redhat: true, name: 'Red Hat Linux', label: 'rhel_7', cp_id: '69'),
             ]
 
             @content_view = cvv.content_view
             @metadata_repos = [
               stub('metadata repo', name: "misc", label: "misc", redhat: true, product: @metadata_products.first),
-              stub('metadata repo', name: "rhel_7", label: "rhel_7", redhat: true, product: @metadata_products.second)
+              stub('metadata repo', name: "rhel_7", label: "rhel_7", redhat: true, product: @metadata_products.second),
             ]
 
             exception = assert_raises(RuntimeError) do

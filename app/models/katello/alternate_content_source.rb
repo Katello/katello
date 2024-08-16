@@ -40,25 +40,25 @@ module Katello
     # verify ssl must be validated this way due to presence: <bool> failing on a value of false
     validates :verify_ssl, if: -> { custom? || rhui? }, inclusion: {
       in: [true, false],
-      message: "must be provided for custom or rhui ACS"
+      message: "must be provided for custom or rhui ACS",
     }
     validates :verify_ssl, if: :simplified?, inclusion: {
       in: [nil],
-      message: "cannot be provided for simplified ACS"
+      message: "cannot be provided for simplified ACS",
     }
     validates :alternate_content_source_type, inclusion: {
       in: ->(_) { ACS_TYPES },
       allow_blank: false,
-      message: ->(_, _) { _("is not a valid type. Must be one of the following: %s") % ACS_TYPES.join(',') }
+      message: ->(_, _) { _("is not a valid type. Must be one of the following: %s") % ACS_TYPES.join(',') },
     }
     validates :content_type, inclusion: {
       in: ->(_) { RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES },
       allow_blank: false,
-      message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % (RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES).sort.join(',') }
+      message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % (RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES).sort.join(',') },
     }
     validates :content_type, if: -> { rhui? }, inclusion: {
       in: [::Katello::Repository::YUM_TYPE],
-      message: "'%{value}' is not valid for RHUI ACS"
+      message: "'%{value}' is not valid for RHUI ACS",
     }
     validate :constraint_acs_update, on: :update
     validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
