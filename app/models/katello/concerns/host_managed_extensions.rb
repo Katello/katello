@@ -85,7 +85,7 @@ module Katello
       end
 
       included do
-        prepend ::ForemanRemoteExecution::HostExtensions if ::Katello.with_remote_execution?
+        prepend ::ForemanRemoteExecution::HostExtensions
         prepend Overrides
 
         delegate :content_source_id, :single_content_view, :single_lifecycle_environment, :default_environment?, :single_content_view_environment?, :multi_content_view_environment?, :kickstart_repository_id, :bound_repositories,

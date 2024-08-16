@@ -10,9 +10,7 @@ Katello::Engine.routes.draw do
       end
     end
 
-    if Katello.with_remote_execution?
-      match '/remote_execution' => 'remote_execution#create', :via => [:post]
-    end
+    match '/remote_execution' => 'remote_execution#create', :via => [:post]
   end
 
   get '/katello/providers/redhat_provider', to: redirect('/redhat_repositories')

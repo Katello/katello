@@ -3,7 +3,6 @@ require 'katello_test_helper'
 module Katello
   class RemoteExecutionControllerTest < ActionController::TestCase
     def setup
-      skip "RemoteExecution not used" unless Katello.with_remote_execution?
       setup_controller_defaults
       login_user(User.find(users(:admin).id))
       models
@@ -22,7 +21,6 @@ module Katello
     end
 
     def test_customized_errata_install_shows_new
-      skip "RemoteExecution not used" unless Katello.with_remote_execution?
       bulk_host_ids =
         {
           included: {
@@ -39,7 +37,6 @@ module Katello
     end
 
     def test_customized_errata_install_with_install_all_shows_new
-      skip "RemoteExecution not used" unless Katello.with_remote_execution?
       bulk_host_ids =
         {
           included: {
@@ -57,7 +54,6 @@ module Katello
     end
 
     def test_customized_errata_install_with_errata_id_shows_new
-      skip "RemoteExecution not used" unless Katello.with_remote_execution?
       bulk_host_ids =
         {
           included: {

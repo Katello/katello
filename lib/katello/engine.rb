@@ -202,9 +202,7 @@ module Katello
 
       ::AuditSearch::ClassMethods.prepend Katello::Concerns::AuditSearch
 
-      if ::Katello.with_remote_execution?
-        ::RemoteExecutionProxySelector.prepend Katello::Concerns::RemoteExecutionProxySelectorExtensions
-      end
+      ::RemoteExecutionProxySelector.prepend Katello::Concerns::RemoteExecutionProxySelectorExtensions
 
       load 'katello/repository_types.rb'
       load 'katello/scheduled_jobs.rb'
@@ -221,11 +219,6 @@ module Katello
         load task if File.file?(task)
       end
     end
-  end
-
-  # check whether foreman_remote_execution to integrate is available in the system
-  def self.with_remote_execution?
-    Foreman::Plugin.installed?("foreman_remote_execution")
   end
 
   def self.with_ansible?
