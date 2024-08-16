@@ -9,10 +9,10 @@
       <dd>
         <i class="fa fa-spinner fa-spin" ng-show="installedPackageCount === undefined"></i>
         <span ng-show="installedPackageCount !== undefined">
-          <a ng-if="newHostDetailsUI" href="{{ newHostUrl('installed_package') }}" translate>
+          <a ng-if="newHostDetailsUI" href="{{ newHostUrl('installed_package') }}" target="_blank" rel="noreferrer noopener" translate>
             {{ installedPackageCount }} Host(s)
           </a>
-          <a ng-if="!newHostDetailsUI" href="{{ encodedUrl('installed_package') }}" translate>
+          <a ng-if="!newHostDetailsUI" href="{{ encodedUrl('installed_package') }}" target="_blank" rel="noreferrer noopener" translate>
             {{ installedPackageCount }} Host(s)
           </a>
         </span>
@@ -20,20 +20,20 @@
 
       <dt translate>Applicable To</dt>
       <dd>
-        <a ng-if="newHostDetailsUI" href="{{ newHostUrl('applicable_rpms') }}" translate>
+        <a ng-if="newHostDetailsUI" href="{{ newHostUrl('applicable_rpms') }}" target="_blank" rel="noreferrer noopener" translate>
           {{ package.hosts_applicable_count }} Host(s)
         </a>
-        <a ng-if="!newHostDetailsUI" href="{{ encodedUrl('applicable_rpms') }}" translate>
+        <a ng-if="!newHostDetailsUI" href="{{ encodedUrl('applicable_rpms') }}" target="_blank" rel="noreferrer noopener" translate>
           {{ package.hosts_applicable_count }} Host(s)
         </a>
       </dd>
 
       <dt translate>Upgradable For</dt>
       <dd>
-        <a ng-if="newHostDetailsUI" href="{{ newHostUrl('upgradable_rpms') }}" translate>
+        <a ng-if="newHostDetailsUI" href="{{ newHostUrl('upgradable_rpms') }}" target="_blank" rel="noreferrer noopener" translate>
           {{ package.hosts_available_count }} Host(s)
         </a>
-        <a ng-if="!newHostDetailsUI" href="{{ encodedUrl('upgradable_rpms') }}" translate>
+        <a ng-if="!newHostDetailsUI" href="{{ encodedUrl('upgradable_rpms') }}" target="_blank" rel="noreferrer noopener" translate>
           {{ package.hosts_available_count }} Host(s)
         </a>
       </dd>
