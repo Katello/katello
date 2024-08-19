@@ -107,6 +107,16 @@ module Katello
       end
     end
 
+    test "should not allow generated content view to be associated with activation key" do
+      generated_cv = FactoryBot.create(:katello_content_view, :generated_for => :repository_export, :organization => @dev_view.organization)
+
+      exception = assert_raises(ActiveRecord::RecordInvalid) do
+        @dev_key.update!(content_view: generated_cv)
+      end
+
+      assert_match(/Generated content views cannot be assigned to hosts or activation keys/, exception.message)
+    end
+
     def test_search_name
       activation_keys = ActivationKey.search_for("name = \"#{@dev_staging_view_key.name}\"")
       assert_includes activation_keys, @dev_staging_view_key
