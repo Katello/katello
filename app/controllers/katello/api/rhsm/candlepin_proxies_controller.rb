@@ -211,7 +211,16 @@ module Katello
 
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
-      host = Katello::RegistrationManager.process_registration(rhsm_params, find_content_view_environments)
+      content_view_environments = find_content_view_environments
+      if content_view_environments.any? { |cve| cve.content_view.generated_for_repository_export? }
+        render json: {
+          displayMessage: _("Cannot register with a content view generated for repository export"),
+          errors: [_("Cannot register with a content view generated for repository export")]
+        }, status: :bad_request
+        return
+      end
+
+      host = Katello::RegistrationManager.process_registration(rhsm_params, content_view_environments)
 
       host.reload
 
@@ -408,7 +417,8 @@ module Katello
     def update_environments_from_facts(param_environments)
       return if param_environments.blank?
       new_envs = param_environments.map do |env|
-        get_content_view_environment("cp_id", env['id'])
+        cve = get_content_view_environment("cp_id", env['id'])
+        cve unless cve&.content_view&.generated_for_repository_export?
       end
       new_envs.compact!
       Rails.logger.debug "Setting new content view environments for host #{@host.to_label}: #{new_envs.map(&:label)}"

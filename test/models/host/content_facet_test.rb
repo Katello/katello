@@ -93,6 +93,17 @@ module Katello
       content_facet_rec = host1.associated_audits.where(auditable_id: content_facet1.id)
       assert content_facet_rec, "No associated audit record for content_facet"
     end
+
+    def test_content_view_environments_not_generated_for_repository_export
+      generated_cv = FactoryBot.create(:katello_content_view, :generated_for => :repository_export, :organization => view.organization)
+      generated_cve = FactoryBot.create(:katello_content_view_environment, :content_view => generated_cv, :environment => library)
+
+      exception = assert_raises(ActiveRecord::RecordInvalid) do
+        content_facet.content_view_environments = [generated_cve]
+      end
+
+      assert_includes exception.message, "Content view '#{generated_cv.name}' is a generated content view, which cannot be assigned to hosts or activation keys."
+    end
   end
 
   class ContentFacetErrataTest < ContentFacetBase
