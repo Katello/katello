@@ -663,6 +663,12 @@ Foreman::Plugin.register :katello do
         default: true,
         full_name: N_('Calculate content counts on smart proxies automatically'),
         description: N_("If this is enabled, content counts on smart proxies will be updated automatically after content sync.")
+
+      setting 'hide_reclaim_space_warning',
+        type: :boolean,
+        default: false,
+        full_name: N_('Hide Reclaim Space Warning'),
+        description: N_('If this is enabled, the Smart Proxy page will suppress the warning message about reclaiming space.')
     end
   end
 
