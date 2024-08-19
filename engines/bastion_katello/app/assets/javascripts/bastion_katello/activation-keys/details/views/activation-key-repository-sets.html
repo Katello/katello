@@ -33,6 +33,19 @@
           <option value="">{{'All' | translate}}</option>
       </select>
     </label>
+
+    <label class="repository-status-label">
+      <span translate>Status</span>
+      <select
+              id="repositoryStatuses"
+              name="repositoryStatuses"
+              ng-model="repositoryStatus.value"
+              ng-options="id as name for (id, name) in repositoryStatuses"
+              ng-change="selectRepositoryStatus()"
+              >
+          <option value="">{{'All' | translate}}</option>
+      </select>
+    </label>
   </div>
 
   <div data-block="list-actions">

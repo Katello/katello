@@ -38,6 +38,14 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
 
         $scope.repositoryType = {};
 
+        $scope.repositoryStatuses = {
+            enabled: translate("Enabled"),
+            disabled: translate("Disabled"),
+            overridden: translate("Overridden")
+        };
+
+        $scope.repositoryStatus = {};
+
         $scope.contentAccessModes = {
             contentAccessModeAll: true,
             contentAccessModeEnv: true
@@ -47,6 +55,14 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
             delete $scope.nutupane.table.params['repository_type'];
             if (!_.isEmpty($scope.repositoryType.value)) {
                 $scope.nutupane.table.params['repository_type'] = $scope.repositoryType.value;
+            }
+            $scope.nutupane.refresh();
+        };
+
+        $scope.selectRepositoryStatus = function () {
+            delete $scope.nutupane.table.params.status;
+            if (!_.isEmpty($scope.repositoryStatus.value)) {
+                $scope.nutupane.table.params.status = $scope.repositoryStatus.value;
             }
             $scope.nutupane.refresh();
         };
