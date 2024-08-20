@@ -55,6 +55,10 @@ module Katello
 
     validate :subscription_matches_organization
 
+    def product_host_count
+      Katello::Host::ContentFacet.joins(bound_repositories: { product: :pools }).where(pools: { id: id }).distinct.count
+    end
+
     def subscription_matches_organization
       return if errors[:subscription].any? || errors[:organization].any? # let other validations catch this
       unless subscription&.organization_id == self.organization_id
@@ -147,7 +151,7 @@ module Katello
       property :days_until_expiration, Integer, desc: 'Returns number of days until expiration'
     end
     class Jail < ::Safemode::Jail
-      allow :id, :name, :available, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date, :organization, :consumed, :days_until_expiration
+      allow :id, :name, :available, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date, :organization, :consumed, :days_until_expiration, :product_host_count
     end
   end
 end

@@ -15,4 +15,5 @@ export default {
   type: __('Type'),
   multi_entitlement: __('Multi-entitlement'),
   stacking_id: __('Stacking ID'),
+  product_host_count: __('Product Host Count'),
 };

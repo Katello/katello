@@ -41,16 +41,17 @@ module Katello
         format.csv do
           options[:csv] = true
           collection = scoped_search(*base_args, options)
-          csv_response(collection,
-                       [:id, :subscription_id, :name, :cp_id, :organization_id, :sockets, :cores,
-                        :start_date, :end_date, :consumed, :quantity, :account_number, :contract_number,
-                        :support_level, :ram, :stacking_id, :multi_entitlement, :type, :product_id,
-                        :unmapped_guest, :virt_only, :virt_who, :upstream?],
-                       ['Pool Id Number', 'Subscription Id', 'Name', 'Pool Id', 'Organization Id',
-                        'Sockets', 'Cores', 'Start Date', 'End Date', 'Consumed', 'Quantity', 'Account Number',
-                        'Contract Number', 'Support Level', 'RAM', 'Stacking Id', 'Multi Entitlement', 'Type',
-                        'Product Id', 'Unmapped Guest', 'Virt Only', 'Requires Virt Who', 'Upstream'])
+          fields = [:id, :subscription_id, :name, :cp_id, :organization_id, :sockets, :cores,
+                    :start_date, :end_date, :consumed, :quantity, :account_number, :contract_number,
+                    :support_level, :ram, :stacking_id, :multi_entitlement, :type, :product_id,
+                    :unmapped_guest, :virt_only, :virt_who, :upstream?, :product_host_count]
+          headers = ['Pool Id Number', 'Subscription Id', 'Name', 'Pool Id', 'Organization Id',
+                     'Sockets', 'Cores', 'Start Date', 'End Date', 'Consumed', 'Quantity', 'Account Number',
+                     'Contract Number', 'Support Level', 'RAM', 'Stacking Id', 'Multi Entitlement', 'Type',
+                     'Product Id', 'Unmapped Guest', 'Virt Only', 'Requires Virt Who', 'Upstream', 'Product Host Count']
+          csv_response(collection, fields, headers)
         end
+
         format.any do
           collection = scoped_search(*base_args, options)
           if params[:activation_key_id]
@@ -58,6 +59,9 @@ module Katello
             collection[:results] = collection[:results].map do |pool|
               ActivationKeySubscriptionsPresenter.new(pool, key_pools)
             end
+          end
+          collection[:results] = collection[:results].map do |pool|
+            ProductHostCountPresenter.new(pool)
           end
           respond(:collection => collection)
         end
@@ -87,6 +91,8 @@ module Katello
       if params[:organization_id] && @resource.organization_id != params[:organization_id].to_i
         fail HttpErrors::BadRequest, N_('This subscription is not relevant to the current organization.')
       end
+
+      @resource = ProductHostCountPresenter.new(@resource)
 
       respond(:resource => @resource)
     end

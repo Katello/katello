@@ -344,5 +344,26 @@ module Katello
 
       assert_equal pool_host_ids.length, hosts_list.keys.length
     end
+
+    def test_product_host_count
+      product1 = katello_products(:product_host_count)
+      product1.pools << @pool_one
+      product1.pools << @pool_two
+      repo1 = katello_repositories(:product_host_count_repo1)
+      repo2 = katello_repositories(:product_host_count_repo2)
+      repo1.product = product1
+      repo2.product = product1
+      content_facet1 = katello_content_facets(:content_facet_one)
+      content_facet2 = katello_content_facets(:content_facet_two)
+
+      # test if both hosts are counted correctly
+      content_facet1.bound_repositories = [repo1]
+      content_facet2.bound_repositories = [repo1]
+      assert_equal 2, @pool_one.product_host_count
+
+      # test if multiple repositories in one product are counted only as one
+      content_facet2.bound_repositories = [repo1, repo2]
+      assert_equal 2, @pool_one.product_host_count
+    end
   end
 end

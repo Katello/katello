@@ -102,6 +102,11 @@ export const SUBSCRIPTION_TABLE_COLUMNS = [
     label: __('Entitlements'),
     value: false,
   },
+  {
+    key: 'product_host_count',
+    label: __('Product Host Count'),
+    value: false,
+  },
 ];
 
 export const SUBSCRIPTION_TABLE_DEFAULT_COLUMNS = [
@@ -114,4 +119,5 @@ export const SUBSCRIPTION_TABLE_DEFAULT_COLUMNS = [
   'consumed',
   'quantity',
   'type',
+  'product_host_count',
 ];

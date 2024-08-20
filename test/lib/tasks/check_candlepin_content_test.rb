@@ -27,7 +27,7 @@ module Katello
 
     def test_candlepin_content_check_with_missing_repos
       Katello::Ping.expects(:ping).returns(:status => 'ok')
-      Katello::Util::CandlepinRepositoryChecker.expects(:repository_exist_in_backend?).at_most(12)
+      Katello::Util::CandlepinRepositoryChecker.expects(:repository_exist_in_backend?).at_most(14)
       Rake.application.invoke_task('katello:check_candlepin_content')
     end
   end

@@ -146,4 +146,14 @@ export const createSubscriptionsTableSchema = (
       formatters: [getEntitlementsFormatter(inlineEditController, hasPermission)],
     },
   },
+  {
+    property: 'product_host_count',
+    header: {
+      label: __('Product Host Count'),
+      formatters: [headerFormatter],
+    },
+    cell: {
+      formatters: [cellFormatter],
+    },
+  },
 ];

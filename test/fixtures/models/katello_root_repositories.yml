@@ -305,3 +305,24 @@ pulp3_ostree_root_1:
   unprotected: <%= true %>
   url: ""
   mirroring_policy: "mirror_content_only"
+
+product_host_count_repo1_root:
+  name:                 product host count repo 1
+  content_id:           34
+  content_type:         yum
+  label:                product_host_count_repo_1__label
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:product_host_count) %>
+  url:                  "https://product-host-count-repo1.com"
+  download_policy:      on_demand
+  mirroring_policy:     "mirror_content_only"
+
+product_host_count_repo2_root:
+  name:                 product host count repo 2
+  content_id:           35
+  content_type:         yum
+  label:                product_host_count_repo_2__label
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:product_host_count) %>
+  url:                  "https://product-host-count-repo2.com"
+  download_policy:      on_demand
+  mirroring_policy:     "mirror_content_only"
+

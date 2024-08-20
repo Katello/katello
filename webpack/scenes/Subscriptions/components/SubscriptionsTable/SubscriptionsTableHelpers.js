@@ -50,6 +50,7 @@ const buildTableCollapseRow = (subscriptionGroup) => {
     name: first.name,
     virt_only: first.virt_only,
     hypervisor: first.hypervisor,
+    product_host_count: 'NA',
   };
   return heading;
 };
