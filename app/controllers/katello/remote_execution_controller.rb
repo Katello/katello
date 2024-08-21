@@ -13,7 +13,7 @@ module Katello
         @composer.trigger
         redirect_to job_invocation_path(@composer.job_invocation)
       else
-        render :action => 'new'
+        redirect_to new_job_invocation_path({ feature: feature_name, host_ids: hosts.ids, inputs: inputs })
       end
     end
 
