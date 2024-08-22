@@ -19,7 +19,7 @@ module Katello
 
       def deletable?
         promoted_repos = repositories.select { |repo| repo.promoted? }
-        authorized?(:destroy_products) && promoted_repos.empty?
+        authorized?(:destroy_products) && (promoted_repos.empty? || Setting[:delete_repo_across_cv])
       end
 
       module ClassMethods
