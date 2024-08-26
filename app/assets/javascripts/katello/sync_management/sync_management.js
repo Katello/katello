@@ -386,7 +386,7 @@ $("#sync_product_form")
   });
 
 $("#sync_toggle").change(function () {
-  var img = "<img  src='" + KT.common.spinner_path() + "'>";
+  var img = "<img src='" + KT.common.spinner_path() + "'>";
   $("#sync_toggle_cont").append(img);
   if ($(this).is(":checked")) {
     KT.content.showOnlySyncing();
