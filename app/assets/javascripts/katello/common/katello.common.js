@@ -65,7 +65,7 @@ KT.common = (function() {
             }
         },
         spinner_path : function() {
-          return "/assets/spinner.gif";
+          return document.querySelector('#sync_toggle_cont').dataset.spinnerAssetPath;
         },
         to_human_readable_bytes : function(bytes) {
             var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'],
