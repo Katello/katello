@@ -114,7 +114,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                 ouiaId="edit-details-pencil-edit"
                 aria-label="edit-details-pencil-edit"
                 variant="link"
-                isSmall
+                size="sm"
                 icon={<PencilAltIcon />}
                 onClick={() => setEditDetailsModalOpen(true)}
               >{__('Edit')}
@@ -194,7 +194,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                 ouiaId="edit-smart-proxies-pencil-edit"
                 aria-label="edit-smart-proxies-pencil-edit"
                 variant="link"
-                isSmall
+                size="sm"
                 icon={<PencilAltIcon />}
                 onClick={() => setEditSmartProxiesModalOpen(true)}
               >{__('Edit')}
@@ -265,7 +265,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   ouiaId="edit-products-pencil-edit"
                   aria-label="edit-products-pencil-edit"
                   variant="link"
-                  isSmall
+                  size="sm"
                   icon={<PencilAltIcon />}
                   onClick={() => setEditProductsModalOpen(true)}
                 >{__('Edit')}
@@ -319,7 +319,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   ouiaId="edit-urls-pencil-edit"
                   aria-label="edit-urls-pencil-edit"
                   variant="link"
-                  isSmall
+                  size="sm"
                   icon={<PencilAltIcon />}
                   onClick={() => setEditUrlModalOpen(true)}
                 >{__('Edit')}
@@ -380,7 +380,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   ouiaId="edit-credentials-pencil-edit"
                   aria-label="edit-credentials-pencil-edit"
                   variant="link"
-                  isSmall
+                  size="sm"
                   icon={<PencilAltIcon />}
                   onClick={() => setEditCredentialsModalOpen(true)}
                 >{__('Edit')}

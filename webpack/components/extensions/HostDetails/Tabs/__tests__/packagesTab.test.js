@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act, screen } from 'react-testing-lib-wrapper';
 import * as hooks from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
@@ -135,9 +135,13 @@ test('Can filter by package status', async (done) => {
 
   const statusDropdown = queryByText('Status', { ignore: 'th' });
   expect(statusDropdown).toBeInTheDocument();
-  fireEvent.click(statusDropdown);
+  await act(async () => {
+    fireEvent.click(statusDropdown);
+  });
   const upgradable = getByRole('option', { name: 'select Upgradable' });
-  fireEvent.click(upgradable);
+  await act(async () => {
+    fireEvent.click(upgradable);
+  });
   await patientlyWaitFor(() => {
     expect(queryByText('coreutils')).toBeInTheDocument();
     expect(queryByText('acl')).not.toBeInTheDocument();
@@ -184,19 +188,27 @@ test('Can upgrade a package via remote execution', async (done) => {
 
   const statusDropdown = getByText('Status', { ignore: 'th' });
   expect(statusDropdown).toBeInTheDocument();
-  fireEvent.click(statusDropdown);
+  await act(async () => {
+    fireEvent.click(statusDropdown);
+  });
   const upgradable = getByRole('option', { name: 'select Upgradable' });
-  fireEvent.click(upgradable);
+  await act(async () => {
+    fireEvent.click(upgradable);
+  });
   await patientlyWaitFor(() => {
     expect(getByText('coreutils')).toBeInTheDocument();
   });
-
-  const kebabDropdown = getByLabelText('Actions');
-  kebabDropdown.click();
+  
+  const kebabDropdown = getByLabelText('Kebab toggle');
+  await act(async () => {
+    kebabDropdown.click();
+  });
 
   const rexAction = getByText('Upgrade via remote execution');
   await patientlyWaitFor(() => expect(rexAction).toBeInTheDocument());
-  fireEvent.click(rexAction);
+  await act(async () => {
+    fireEvent.click(rexAction);
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
@@ -228,15 +240,21 @@ test('Can upgrade a package via customized remote execution', async (done) => {
 
   const statusDropdown = getByText('Status', { ignore: 'th' });
   expect(statusDropdown).toBeInTheDocument();
-  fireEvent.click(statusDropdown);
+  await act(async () => {
+    fireEvent.click(statusDropdown);
+  });
   const upgradable = getByRole('option', { name: 'select Upgradable' });
-  fireEvent.click(upgradable);
+  await act(async () => {
+    fireEvent.click(upgradable);
+  });
   await patientlyWaitFor(() => {
     expect(getByText('coreutils')).toBeInTheDocument();
   });
 
-  const kebabDropdown = getByLabelText('Actions');
-  kebabDropdown.click();
+  const kebabDropdown = getByLabelText('Kebab toggle');
+  await act(async () => {
+    kebabDropdown.click();
+  });
 
   const rexAction = getByText('Upgrade via customized remote execution');
   const feature = REX_FEATURES.KATELLO_PACKAGE_UPDATE;
@@ -247,8 +265,9 @@ test('Can upgrade a package via customized remote execution', async (done) => {
     'href',
     `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostname})&inputs%5Bpackage%5D=${packageName}`,
   );
-
-  fireEvent.click(rexAction);
+  await act(async () => {
+    fireEvent.click(rexAction);
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
@@ -292,11 +311,14 @@ test('Can bulk upgrade via remote execution', async (done) => {
   expect(getByLabelText('Select row 1').checked).toEqual(true);
 
   const upgradeDropdown = getAllByRole('button', { name: 'Select' })[1];
-  fireEvent.click(upgradeDropdown);
-
+  await act(async () => {
+    fireEvent.click(upgradeDropdown);
+  });
   const rexAction = getByLabelText('bulk_upgrade_rex');
   expect(rexAction).toBeInTheDocument();
-  fireEvent.click(rexAction);
+  await act(async () => {
+    fireEvent.click(rexAction);
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
@@ -331,7 +353,9 @@ test('Can bulk upgrade via customized remote execution', async (done) => {
   expect(getByLabelText('Select row 1').checked).toEqual(true);
 
   const upgradeDropdown = getAllByRole('button', { name: 'Select' })[1];
-  fireEvent.click(upgradeDropdown);
+  await act(async () => {
+    fireEvent.click(upgradeDropdown);
+  });
   expect(upgradeDropdown).not.toHaveAttribute('disabled');
 
   const rexAction = getByLabelText('bulk_upgrade_customized_rex');

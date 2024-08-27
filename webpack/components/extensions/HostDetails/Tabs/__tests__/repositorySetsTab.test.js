@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, within, fireEvent, act } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../test-utils/nockWrapper';
 import katelloApi, { foremanApi } from '../../../../../services/api';
 import { REPOSITORY_SETS_KEY } from '../RepositorySetsTab/RepositorySetsConstants';
@@ -244,9 +244,10 @@ test('Can override to disabled', async (done) => {
   expect(getAllByText('Enabled')).toHaveLength(2);
   expect(getAllByText('Disabled')).toHaveLength(1);
   // Find the first action menu and click it
-  const actionMenu = getAllByLabelText('Actions')[0].closest('button');
-  fireEvent.click(actionMenu);
-
+  const actionMenu = getAllByLabelText('Kebab toggle')[0].closest('button');
+  await act(async () => {
+    fireEvent.click(actionMenu);
+  });
   const overrideMenuItem = getByText('Override to disabled');
   expect(overrideMenuItem).toBeInTheDocument();
   fireEvent.click(overrideMenuItem);
@@ -284,8 +285,10 @@ test('Can override to enabled', async (done) => {
   expect(getAllByText('Enabled')).toHaveLength(2);
   expect(getAllByText('Disabled')).toHaveLength(1);
   // The second item is overridden to disabled; we're going to override to enabled
-  const actionMenu = getAllByLabelText('Actions')[1].closest('button');
-  fireEvent.click(actionMenu);
+  const actionMenu = getAllByLabelText('Kebab toggle')[1].closest('button');
+  await act(async () => {
+    fireEvent.click(actionMenu);
+  });
 
   const overrideMenuItem = getByText('Override to enabled');
   expect(overrideMenuItem).toBeInTheDocument();
@@ -323,8 +326,10 @@ test('Can reset to default', async (done) => {
   expect(getAllByText('Disabled')).toHaveLength(1);
 
   // The second item is overridden to disabled but would normally be enabled; we're going to reset
-  const actionMenu = getAllByLabelText('Actions')[1].closest('button');
-  fireEvent.click(actionMenu);
+  const actionMenu = getAllByLabelText('Kebab toggle')[1].closest('button');
+  await act(async () => {
+    fireEvent.click(actionMenu);
+  });
 
   const overrideMenuItem = getByText('Reset to default');
   expect(overrideMenuItem).toBeInTheDocument();
@@ -358,7 +363,9 @@ test('Can override in bulk', async (done) => {
   getByLabelText('Select row 0').click();
   getByLabelText('Select row 1').click();
   const actionMenu = getByLabelText('bulk_actions');
-  actionMenu.click();
+  await act(async () => {
+    fireEvent.click(actionMenu);
+  });
   const resetToDefault = queryByText('Reset to default');
   expect(resetToDefault).toBeInTheDocument();
   resetToDefault.click();
@@ -391,7 +398,9 @@ test('Can override in bulk when limited to environment', async (done) => {
   await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
   getByLabelText('Select all').click();
   const actionMenu = getByLabelText('bulk_actions');
-  actionMenu.click();
+  await act(async () => {
+    fireEvent.click(actionMenu);
+  });
   const resetToDefault = queryByText('Reset to default');
   expect(resetToDefault).toBeInTheDocument();
   resetToDefault.click();
@@ -422,7 +431,9 @@ test('Can filter by status', async (done) => {
   const statusContainer = queryByLabelText('select Status container', { ignore: 'th' });
   const statusDropdown = within(statusContainer).queryByText('Status');
   expect(statusDropdown).toBeInTheDocument();
-  fireEvent.click(statusDropdown);
+  await act(async () => {
+    fireEvent.click(statusDropdown);
+  });
   const overridden = getByRole('option', { name: 'select Overridden' });
   fireEvent.click(overridden);
   await patientlyWaitFor(() => {

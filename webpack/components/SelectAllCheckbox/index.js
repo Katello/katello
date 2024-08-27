@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, DropdownToggle, DropdownToggleCheckbox,
-  DropdownItem } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownToggleCheckbox,
+  DropdownItem,
+} from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { noop } from 'foremanReact/common/helpers';
 
@@ -95,7 +99,7 @@ const SelectAllCheckbox = ({
               key="tablewrapper-select-all-checkbox"
               ouiaId="select-all-checkbox-dropdown-toggle-checkbox"
               aria-label="Select all"
-              onChange={checked => onSelectAllCheckboxChange(checked)}
+              onChange={(_event, checked) => onSelectAllCheckboxChange(checked)}
               isChecked={selectionToggle}
               isDisabled={totalCount === 0 && selectedCount === 0}
             >

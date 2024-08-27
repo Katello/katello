@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent,act } from 'react-testing-lib-wrapper';
 import mockAvailableHostCollections from './availableHostCollections.fixtures.json';
 import mockRemovableHostCollections from './removableHostCollections.fixtures.json';
 import { REMOVABLE_HOST_COLLECTIONS_KEY } from '../HostCollectionsConstants';
@@ -99,10 +99,14 @@ describe('HostCollectionsAddModal', () => {
     await patientlyWaitFor(() =>
       expect(getAllByText(firstHostCollection.name)[0]).toBeInTheDocument());
     const checkbox = getByRole('checkbox', { name: 'Select row 0' });
-    fireEvent.click(checkbox);
+    await act(async () => {
+      fireEvent.click(checkbox);
+    });
     const addButton = getByRole('button', { name: 'Add' });
     expect(addButton).toHaveAttribute('aria-disabled', 'false');
-    fireEvent.click(addButton);
+    await act(async () => {
+      fireEvent.click(addButton);
+    });
 
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
@@ -204,12 +208,15 @@ describe('HostCollectionsRemoveModal', () => {
     await patientlyWaitFor(() =>
       expect(getAllByText(firstRemovableHostCollection.name)[0]).toBeInTheDocument());
     const checkbox = getByRole('checkbox', { name: 'Select row 0' });
-    fireEvent.click(checkbox);
+    await act(async () => {
+      fireEvent.click(checkbox);
+    });
     expect(getAllByText('1 selected')).toHaveLength(1);
     const removeButton = getByRole('button', { name: 'Remove' });
     expect(removeButton).toHaveAttribute('aria-disabled', 'false');
-    fireEvent.click(removeButton);
-
+    await act(async () => {
+      fireEvent.click(removeButton);
+    });
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
     assertNockRequest(alterScope);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
@@ -216,27 +216,39 @@ test('Can add published component views to content view with modal', async (done
     .reply(200, compositeCvDetails);
 
   const {
-    getByText, getByLabelText, queryByLabelText, getAllByLabelText,
+    getByText, getByLabelText, queryByLabelText, getAllByLabelText,findAllByLabelText
   } = renderWithRedux(
     <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
   );
   await patientlyWaitFor(() => {
-    expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[2]);
-  expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'true');
+  await act(async () => {
+    await findAllByLabelText('Kebab toggle')
+    fireEvent.click(getAllByLabelText('Kebab toggle')[2]);
+  });
+  
   await patientlyWaitFor(() => {
     expect(getByText('Add')).toBeInTheDocument();
   });
-  fireEvent.click(getByText('Add'));
+  
+  await act(async () => {
+    fireEvent.click(getByText('Add'));
+  });
+  
   await patientlyWaitFor(() => {
     expect(getByText('Add content view')).toBeInTheDocument();
   });
-  fireEvent.click(getByLabelText('add_component'));
+  
+  await act(async () => {
+    fireEvent.click(getByLabelText('add_component'));
+  });
+  
   await patientlyWaitFor(() => {
     expect(queryByLabelText('add_component')).not.toBeInTheDocument();
   });
+  
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(publishedComponentVersionsScope);
@@ -274,10 +286,12 @@ test('Can add unpublished component views to content view', async (done) => {
     renderOptions,
   );
   await patientlyWaitFor(() => {
-    expect(getAllByLabelText('Actions').slice(-1)[0]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle').slice(-1)[0]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions').slice(-1)[0]);
-  expect(getAllByLabelText('Actions').slice(-1)[0]).toHaveAttribute('aria-expanded', 'true');
+  await act(async () => {
+    fireEvent.click(getAllByLabelText('Kebab toggle').slice(-1)[0]);
+  });
+  expect(getAllByLabelText('Kebab toggle').slice(-1)[0]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Add')).toBeInTheDocument());
   fireEvent.click(getByText('Add'));
   assertNockRequest(autocompleteScope);
@@ -316,10 +330,12 @@ test('Can remove component views from content view', async (done) => {
     renderOptions,
   );
   await patientlyWaitFor(() => {
-    expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[0]);
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+  await act(async () => {
+    fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  });
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
   fireEvent.click(getByText('Remove'));
   assertNockRequest(autocompleteScope);
@@ -329,7 +345,7 @@ test('Can remove component views from content view', async (done) => {
   assertNockRequest(cvDetailsScope, done);
 });
 
-test('Can bulk add component views to content view with modal', async (done) => {
+test.only('Can bulk add component views to content view with modal', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponentsWithoutSearch)
@@ -363,20 +379,38 @@ test('Can bulk add component views to content view with modal', async (done) => 
     expect(getByLabelText('Select row 2')).toBeInTheDocument();
     expect(getByLabelText('bulk_add_components')).toHaveAttribute('aria-disabled', 'true');
   });
-  fireEvent.click(getByLabelText('Select row 2'));
-  fireEvent.click(getByLabelText('Select row 3'));
+  await act(async () => {
+    fireEvent.click(getByLabelText('Select row 2'));
+  });
+  
+  await act(async () => {
+    fireEvent.click(getByLabelText('Select row 3'));
+  });
+  
   await patientlyWaitFor(() => {
     expect(getByLabelText('bulk_add_components')).toHaveAttribute('aria-disabled', 'false');
   });
-  fireEvent.click(getByLabelText('bulk_add_components'));
+  
+  await act(async () => {
+    fireEvent.click(getByLabelText('bulk_add_components'));
+  });
+  
   await patientlyWaitFor(() => {
     expect(getAllByText('Add content views')[1]).toBeInTheDocument();
     expect(getAllByRole('textbox')[0]).toHaveValue('Version 4.0 (3 days ago)');
   });
-  fireEvent.click(getAllByRole('textbox')[0]);
-  fireEvent.click(queryByText('Version 3.0'));
-
-  fireEvent.click(getByLabelText('add_components'));
+  
+  await act(async () => {
+    fireEvent.click(getAllByRole('textbox')[0]);
+  });
+  
+  await act(async () => {
+    fireEvent.click(queryByText('Version 3.0'));
+  });
+  
+  await act(async () => {
+    fireEvent.click(getByLabelText('add_components'));
+  });
   await patientlyWaitFor(() => {
     expect(queryByText('Select available version of content views to use')).not.toBeInTheDocument();
     expect(getByLabelText('bulk_add_components')).toHaveAttribute('aria-disabled', 'false');

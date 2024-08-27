@@ -49,7 +49,7 @@ const renderOptions = isTracerInstalled => ({ // sets initial Redux state
   },
 });
 
-const actionMenuToTheRightOf = node => node.nextElementSibling.firstElementChild.firstElementChild;
+const actionMenuToTheRightOf = node => node.nextElementSibling.firstElementChild;
 
 const hostTraces = foremanApi.getApiUrl('/hosts/1/traces');
 const autocompleteUrl = '/hosts/1/traces/auto_complete_search';
@@ -227,7 +227,10 @@ describe('With tracer installed', () => {
     fireEvent.click(traceCheckbox);
     expect(traceCheckbox.checked).toEqual(true);
     const actionMenu = getByLabelText('bulk_actions');
-    actionMenu.click();
+  
+    await act(async () => {
+      actionMenu.click();
+    });
     const viaRexAction = queryByText('Restart via remote execution');
     expect(viaRexAction).toBeInTheDocument();
     viaRexAction.click();
@@ -268,13 +271,18 @@ describe('With tracer installed', () => {
 
 
     const selectAllCheckbox = getByLabelText('Select all');
-    fireEvent.click(selectAllCheckbox);
+    
+    await act(async () => { 
+      fireEvent.click(selectAllCheckbox);
+    });
     expect(traceCheckbox.checked).toEqual(true);
 
     fireEvent.click(getByLabelText('Select row 0')); // de select
     fireEvent.click(getByLabelText('Select row 2')); // de select
 
-    fireEvent.click(getByText('Reboot host'));
+    await act(async () => { 
+      fireEvent.click(getByText('Reboot host'));
+    });
 
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
@@ -301,17 +309,19 @@ describe('With tracer installed', () => {
     await patientlyWaitFor(() => {
       const traceNameNode = getByText(firstTrace.helper);
       traceActionMenu = actionMenuToTheRightOf(traceNameNode);
-      expect(traceActionMenu).toHaveAttribute('aria-label', 'Actions');
+      expect(traceActionMenu).toHaveAttribute('aria-label', 'Kebab toggle');
     });
-    traceActionMenu.click();
-
+    await act(async () => {
+      traceActionMenu.click();
+    });
     let viaRexAction;
     await patientlyWaitFor(() => {
       viaRexAction = getByText('Restart via remote execution');
       expect(viaRexAction).toBeInTheDocument();
     });
-    viaRexAction.click();
-
+    await act(async () => {
+      viaRexAction.click();
+    });
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
     assertNockRequest(scope, done);
@@ -334,10 +344,11 @@ describe('With tracer installed', () => {
     await patientlyWaitFor(() => {
       const traceNameNode = getByText(firstTrace.helper);
       traceActionMenu = actionMenuToTheRightOf(traceNameNode);
-      expect(traceActionMenu).toHaveAttribute('aria-label', 'Actions');
+      expect(traceActionMenu).toHaveAttribute('aria-label', 'Kebab toggle');
     });
-    fireEvent.click(traceActionMenu);
-
+    await act(async () => {
+      fireEvent.click(traceActionMenu);
+    });
     let viaCustomizedRexAction;
     await patientlyWaitFor(() => {
       viaCustomizedRexAction = getByText('Restart via customized remote execution');
@@ -372,7 +383,9 @@ describe('With tracer installed', () => {
     expect(traceCheckbox.checked).toEqual(true);
 
     const actionMenu = getByLabelText('bulk_actions');
-    fireEvent.click(actionMenu);
+    await act(async () => {
+      fireEvent.click(actionMenu);
+    });
     const viaCustomizedRexAction = queryByText('Restart via customized remote execution');
 
     expect(viaCustomizedRexAction).toBeInTheDocument();

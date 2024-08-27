@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, within, fireEvent, act } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_ERRATA_KEY, ERRATA_SEARCH_QUERY } from '../ErrataTab/HostErrataConstants';
@@ -815,7 +815,7 @@ test('Can filter by severity', async (done) => {
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   // the Bugfix text in the table is just a text node, while the dropdown is a button
   expect(getByText('Moderate', { ignore: ['button', 'title'] })).toBeInTheDocument();
-  expect(getByText('Important', { ignore: ['.pf-c-select__toggle-text', 'title'] })).toBeInTheDocument();
+  expect(getByText('Important', { ignore: ['.pf-v5-c-select__toggle-text', 'title'] })).toBeInTheDocument();
   expect(getByText('Critical', { ignore: ['button', 'title'] })).toBeInTheDocument();
   const severityContainer = queryByLabelText('select Severity container', { ignore: 'th' });
   const severityDropdown = within(severityContainer).queryByText('Severity');
@@ -824,11 +824,11 @@ test('Can filter by severity', async (done) => {
   const important = getByRole('option', { name: 'select Important' });
   fireEvent.click(important);
   await patientlyWaitFor(() => {
-    expect(queryByText('Moderate', { ignore: ['.pf-c-select__toggle-text'] })).not.toBeInTheDocument();
-    expect(queryByText('Critical', { ignore: ['.pf-c-select__toggle-text'] })).not.toBeInTheDocument();
+    expect(queryByText('Moderate', { ignore: ['.pf-v5-c-select__toggle-text'] })).not.toBeInTheDocument();
+    expect(queryByText('Critical', { ignore: ['.pf-v5-c-select__toggle-text'] })).not.toBeInTheDocument();
   });
   await patientlyWaitFor(() => {
-    expect(getByText('Important', { ignore: ['.pf-c-select__toggle-text', 'title'] })).toBeInTheDocument();
+    expect(getByText('Important', { ignore: ['.pf-v5-c-select__toggle-text', 'title'] })).toBeInTheDocument();
   });
 
 
@@ -871,7 +871,9 @@ test('Can bulk apply via remote execution', async (done) => {
   actionMenu.click();
   const viaRexAction = queryByText('Apply via remote execution');
   expect(viaRexAction).toBeInTheDocument();
-  viaRexAction.click();
+  await act(async () => {
+    viaRexAction.click();
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(resolveErrataScope);
@@ -911,7 +913,9 @@ test('Can select all, exclude and bulk apply via remote execution', async (done)
   actionMenu.click();
   const viaRexAction = queryByText('Apply via remote execution');
   expect(viaRexAction).toBeInTheDocument();
-  viaRexAction.click();
+  await act(async () => {
+    viaRexAction.click();
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(resolveErrataScope);
@@ -947,7 +951,9 @@ test('Can apply errata in bulk via customized remote execution', async (done) =>
     `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostName})&inputs%5BErrata%20search%20query%5D=errata_id%20%5E%20(${errata})`,
   );
 
-  viaRexAction.click();
+  await act(async () => {
+    viaRexAction.click();
+  });
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
@@ -973,16 +979,20 @@ test('Can apply a single erratum to the host via remote execution', async (done)
     renderOptions(cfWithErrataTotal(mockErrata.total)),
   );
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-  const erratumActionMenu = within(getByLabelText('Select row 0').closest('tr')).getByLabelText('Actions');
-  expect(erratumActionMenu).toHaveAttribute('aria-label', 'Actions');
-  erratumActionMenu.click();
-
+  const erratumActionMenu = within(getByLabelText('Select row 0').closest('tr')).getByLabelText('Kebab toggle');
+  expect(erratumActionMenu).toHaveAttribute('aria-label', 'Kebab toggle');
+  await act(async () => {
+    erratumActionMenu.click();
+  });
+  
   let viaRexAction;
   await patientlyWaitFor(() => {
     viaRexAction = getByText('Apply via remote execution');
     expect(viaRexAction).toBeInTheDocument();
   });
-  viaRexAction.click();
+  await act(async () => {
+    viaRexAction.click();
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(resolveErrataScope);
@@ -1005,16 +1015,19 @@ test('Can apply a single erratum to the host via customized remote execution', a
     renderOptions(cfWithErrataTotal(mockErrata.total)),
   );
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-  const erratumActionMenu = within(getByLabelText('Select row 0').closest('tr')).getByLabelText('Actions');
-  expect(erratumActionMenu).toHaveAttribute('aria-label', 'Actions');
-  erratumActionMenu.click();
-
+  const erratumActionMenu = within(getByLabelText('Select row 0').closest('tr')).getByLabelText('Kebab toggle');
+  expect(erratumActionMenu).toHaveAttribute('aria-label', 'Kebab toggle');
+  await act(async () => {
+    erratumActionMenu.click();
+  });
   let viaRexAction;
   await patientlyWaitFor(() => {
     viaRexAction = getByText('Apply via customized remote execution');
     expect(viaRexAction).toBeInTheDocument();
   });
-  viaRexAction.click();
+  await act(async () => {
+    viaRexAction.click();
+  });
   expect(viaRexAction).toHaveAttribute(
     'href',
     `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostName})&inputs%5BErrata%20search%20query%5D=errata_id%20=%20${errataId}`,

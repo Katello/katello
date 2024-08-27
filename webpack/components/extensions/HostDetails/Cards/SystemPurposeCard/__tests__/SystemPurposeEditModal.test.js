@@ -1,6 +1,6 @@
 import React from 'react';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import HOST_DETAILS from '../../../HostDetailsConstants';
 import SystemPurposeEditModal from '../SystemPurposeEditModal';
 import { assertNockRequest, nockInstance } from '../../../../../../test-utils/nockWrapper';
@@ -163,8 +163,9 @@ describe('SystemPurposeEditModal', () => {
 
     // Save button should now be enabled
     expect(saveButton).toHaveAttribute('aria-disabled', 'false');
-    fireEvent.click(saveButton);
-
+    await act(async () => {
+      fireEvent.click(saveButton);
+    });
     await patientlyWaitFor(() => {
       expect(baseAttributes.closeModal).toHaveBeenCalled();
     });
@@ -217,8 +218,9 @@ describe('SystemPurposeEditModal', () => {
 
     // Save button should now be enabled
     expect(saveButton).toHaveAttribute('aria-disabled', 'false');
-    fireEvent.click(saveButton);
-
+    await act(async () => {
+      fireEvent.click(saveButton);
+    });
     await patientlyWaitFor(() => {
       expect(baseAttributes.closeModal).toHaveBeenCalled();
     });
@@ -246,8 +248,9 @@ describe('SystemPurposeEditModal', () => {
       />, renderOptions());
 
     const releaseVersionDropdown = getByLabelText('Release version');
-    fireEvent.click(releaseVersionDropdown);
-
+    await act(async () => {
+      fireEvent.click(releaseVersionDropdown);
+    });
     await patientlyWaitFor(() => {
       expect(getByText('8')).toBeInTheDocument();
       expect(getByText('9')).toBeInTheDocument();
@@ -276,8 +279,9 @@ describe('SystemPurposeEditModal', () => {
       />, renderOptions(ACTIVATION_KEY));
 
     const releaseVersionDropdown = getByLabelText('Release version');
-    fireEvent.click(releaseVersionDropdown);
-
+    await act(async () => {
+      fireEvent.click(releaseVersionDropdown);
+    });
     await patientlyWaitFor(() => {
       expect(getByText('8')).toBeInTheDocument();
       expect(getByText('9')).toBeInTheDocument();

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '@patternfly/react-core';
 import { TableText } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
@@ -25,7 +26,7 @@ const PackagesStatus = ({ upgradable_versions: upgradableVersions }) => {
 
   return (
     <TableText wrapModifier="nowrap">
-      {color && <PackagesIcon color={color} title={label} />} {label}
+      {color && <Icon color={color} title={label}><PackagesIcon /></Icon>} {label}
     </TableText>
   );
 };
