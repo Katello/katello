@@ -10,11 +10,13 @@ import {
   TabTitleText,
   Split,
   SplitItem,
+  Button,
+} from '@patternfly/react-core';
+import {
   Dropdown,
   DropdownItem,
   KebabToggle,
-  Button,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import onSelect from '../../../../components/Table/helpers';

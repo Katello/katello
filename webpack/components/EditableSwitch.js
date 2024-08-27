@@ -18,7 +18,7 @@ const EditableSwitch = ({
       aria-label={identifier}
       ouiaId={`switch-${identifier}`}
       isChecked={value}
-      onChange={onSwitch}
+      onChange={(_event, val) => onSwitch(val)}
       disabled={disabled}
     />
   );

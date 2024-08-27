@@ -2,10 +2,21 @@ import React, { useCallback, useState, useMemo } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup,
-  DropdownToggle, DropdownToggleAction,
+  Split,
+  SplitItem,
+  ActionList,
+  ActionListItem,
+  Skeleton,
+  Tooltip,
+  ToggleGroup,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+  DropdownToggle,
+  DropdownToggleAction,
+} from '@patternfly/react-core/deprecated';
 import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
 import {
   TableVariant,
@@ -250,7 +261,7 @@ export const ErrataTab = () => {
   const disabledReason = __('A remote execution job is in progress');
 
   const tdSelect = useCallback((errataId, rowIndex, rexJobInProgress) => ({
-    disable: rexJobInProgress || !isSelectable(errataId),
+    isDisabled: rexJobInProgress || !isSelectable(errataId),
     isSelected: isSelected(errataId),
     onSelect: (event, selected) => selectOne(selected, errataId),
     rowIndex,

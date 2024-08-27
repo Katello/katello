@@ -1,9 +1,19 @@
 import React, { useState, useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-  Skeleton, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, DropdownToggle, DropdownToggleAction, Alert,
+  Skeleton,
+  Split,
+  SplitItem,
+  ActionList,
+  ActionListItem,
+  Alert,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownToggle,
+  DropdownToggleAction,
+} from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
@@ -270,7 +280,7 @@ const TracesTab = () => {
                 {showActions ? (
                   <Td
                     select={{
-                      disable: actionInProgress || resolveDisabled,
+                      isDisabled: actionInProgress || resolveDisabled,
                       props: {
                         'aria-label': `check-${application}`,
                       },

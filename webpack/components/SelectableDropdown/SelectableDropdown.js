@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Spinner, Select, SelectOption, SelectVariant, Level, LevelItem } from '@patternfly/react-core';
+import {
+  Spinner,
+  Level,
+  LevelItem,
+} from '@patternfly/react-core';
+import {
+  Select,
+  SelectOption,
+  SelectVariant,
+} from '@patternfly/react-core/deprecated';
 import { ErrorCircleOIcon } from '@patternfly/react-icons';
 
 
@@ -37,7 +46,7 @@ const SelectableDropdown = ({
           aria-label={`select ${title}`}
           key="type-dropdown"
           variant={SelectVariant.single}
-          onToggle={onToggle}
+          onToggle={(_event, open) => onToggle(open)}
           onSelect={onSelect}
           selections={selected}
           isOpen={isOpen}

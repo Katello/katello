@@ -119,10 +119,10 @@ test('Can add a filter rule', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText(name)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[3]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[3]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[3]);
-  expect(getAllByLabelText('Actions')[3]).toHaveAttribute('aria-expanded', 'true');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[3]);
+  expect(getAllByLabelText('Kebab toggle')[3]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Add')).toBeInTheDocument());
   fireEvent.click(getByText('Add'));
 
@@ -175,10 +175,10 @@ test('Can remove a filter rule', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText(name)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[2]);
-  expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'true');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[2]);
+  expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
   fireEvent.click(getByText('Remove'));
 

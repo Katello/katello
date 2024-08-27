@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import * as hooks from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
@@ -132,7 +132,9 @@ test('Can filter by package status', async (done) => {
 
   const statusDropdown = queryByText('Status', { ignore: 'th' });
   expect(statusDropdown).toBeInTheDocument();
-  fireEvent.click(statusDropdown);
+  await act(async () => {
+    fireEvent.click(statusDropdown);
+  });
   const upgradable = getByRole('option', { name: 'select Upgradable' });
   fireEvent.click(upgradable);
   await patientlyWaitFor(() => {
@@ -182,20 +184,26 @@ test('Can upgrade a package via remote execution', async (done) => {
 
   const statusDropdown = getByText('Status', { ignore: 'th' });
   expect(statusDropdown).toBeInTheDocument();
-  fireEvent.click(statusDropdown);
+  await act(async () => {
+    fireEvent.click(statusDropdown);
+  });
   const upgradable = getByRole('option', { name: 'select Upgradable' });
   fireEvent.click(upgradable);
   await patientlyWaitFor(() => {
     expect(getByText('libmagic1')).toBeInTheDocument();
     expect(getByText('libapt-pkg6.0')).toBeInTheDocument();
   });
-
-  const kebabDropdown = getAllByLabelText('Actions');
-  kebabDropdown[0].click();
+  const kebabDropdown = getAllByLabelText('Kebab toggle');
+  await act(async () => {
+    kebabDropdown[0].click();
+  });
 
   const rexAction = getByText('Upgrade via remote execution');
   await patientlyWaitFor(() => expect(rexAction).toBeInTheDocument());
-  fireEvent.click(rexAction);
+
+  await act(async () => {
+    fireEvent.click(rexAction);
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
@@ -227,7 +235,9 @@ test('Can upgrade a package via customized remote execution', async (done) => {
 
   const statusDropdown = getByText('Status', { ignore: 'th' });
   expect(statusDropdown).toBeInTheDocument();
-  fireEvent.click(statusDropdown);
+  await act(async () => {
+    fireEvent.click(statusDropdown);
+  });
   const upgradable = getByRole('option', { name: 'select Upgradable' });
   fireEvent.click(upgradable);
   await patientlyWaitFor(() => {
@@ -235,8 +245,10 @@ test('Can upgrade a package via customized remote execution', async (done) => {
     expect(getByText('libmagic1')).toBeInTheDocument();
   });
 
-  const kebabDropdown = getAllByLabelText('Actions');
-  kebabDropdown[0].click();
+  const kebabDropdown = getAllByLabelText('Kebab toggle');
+  await act(async () => {
+    kebabDropdown[0].click();
+  });
 
   const rexAction = getByText('Upgrade via customized remote execution');
   const feature = REX_FEATURES.KATELLO_PACKAGE_UPDATE;
@@ -248,7 +260,9 @@ test('Can upgrade a package via customized remote execution', async (done) => {
     `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostname})&inputs%5Bpackage%5D=${packageName}`,
   );
 
-  fireEvent.click(rexAction);
+  await act(async () => {
+    fireEvent.click(rexAction);
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
@@ -295,7 +309,9 @@ test('Can bulk upgrade via remote execution', async (done) => {
 
   const rexAction = getByLabelText('bulk_upgrade_rex');
   expect(rexAction).toBeInTheDocument();
-  fireEvent.click(rexAction);
+  await act(async () => {
+    fireEvent.click(rexAction);
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);

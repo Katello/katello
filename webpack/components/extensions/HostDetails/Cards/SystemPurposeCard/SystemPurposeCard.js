@@ -22,6 +22,7 @@ import {
   Tooltip,
   Skeleton,
   CardExpandableContent,
+  Icon,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -104,14 +105,16 @@ const SystemPurposeCard = ({ hostDetails, akDetails }) => {
                     enableFlip
                     isContentLeftAligned
                   >
-                    <OutlinedQuestionCircleIcon style={{ marginTop: '7px' }} color="gray" />
+                    <Icon color="gray">
+                      <OutlinedQuestionCircleIcon style={{ marginTop: '7px' }} />
+                    </Icon>
                   </Tooltip>
                 </FlexItem>
               </Flex>
             </FlexItem>
             {showEditButton && (
               <FlexItem>
-                <Button variant="link" isSmall ouiaId="syspurpose-edit-button" onClick={() => setEditing(val => !val)}>{__('Edit')}</Button>
+                <Button variant="link" size="sm" ouiaId="syspurpose-edit-button" onClick={() => setEditing(val => !val)}>{__('Edit')}</Button>
               </FlexItem>)
             }
           </Flex>

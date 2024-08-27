@@ -2,7 +2,19 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { ActionGroup, Button, Form, FormGroup, Modal, ModalVariant, TextArea, TextInput } from '@patternfly/react-core';
+import {
+  ActionGroup,
+  Button,
+  Form,
+  FormGroup,
+  Modal,
+  ModalVariant,
+  TextArea,
+  TextInput,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+} from '@patternfly/react-core';
 import { editACS, getACSDetails } from '../../ACSActions';
 import { areSubPathsValid, isValidUrl } from '../../helpers';
 
@@ -63,8 +75,6 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
           label={__('Base URL')}
           type="string"
           fieldId="acs_base_url"
-          helperTextInvalid={helperTextInvalid}
-          validated={urlValidated}
           isRequired
         >
           <TextInput
@@ -77,25 +87,41 @@ const ACSEditURLPaths = ({ onClose, acsId, acsDetails }) => {
             placeholder={baseURLplaceholder}
             value={acsUrl}
             validated={urlValidated}
-            onChange={value => setAcsUrl(value)}
+            onChange={(_event, value) => setAcsUrl(value)}
           />
+          {urlValidated === 'error' && (
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem variant="error">
+                  {helperTextInvalid}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>
+          )}
         </FormGroup>
         <FormGroup
           label={__('Subpaths')}
           type="string"
           fieldId="acs_subpaths"
-          helperTextInvalid={__('Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.')}
-          validated={subPathValidated}
         >
           <TextArea
             placeholder="test/repo1/, test/repo2/,"
             value={acsSubpath}
             validated={subPathValidated}
-            onChange={value => setAcsSubpath(value)}
+            onChange={(_event, value) => setAcsSubpath(value)}
             name="acs_subpath_field"
             id="acs_subpath_field"
             aria-label="acs_subpath_field"
           />
+          {subPathValidated === 'error' && (
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem variant="error">
+                  {__('Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.')}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>
+          )}
         </FormGroup>
         <ActionGroup>
           <Button

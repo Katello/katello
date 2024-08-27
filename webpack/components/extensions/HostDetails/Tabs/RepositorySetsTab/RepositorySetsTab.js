@@ -22,9 +22,6 @@ import {
   ActionListItem,
   Alert,
   AlertActionCloseButton,
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
   Label,
   Skeleton,
   Split,
@@ -33,6 +30,11 @@ import {
   ToggleGroupItem,
   Tooltip,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
 import { FlagIcon } from '@patternfly/react-icons';
 import {
   TableVariant,
@@ -616,7 +618,7 @@ const RepositorySetsTab = () => {
                 <Tr key={id} ouiaId={`tr-${rowIndex}`}>
                   {canDoContentOverrides ? (
                     <Td select={{
-                      disable: !isSelectable(id),
+                      isDisabled: !isSelectable(id),
                       isSelected: isSelected(id),
                       onSelect: (event, selected) => selectOne(selected, id),
                       rowIndex,
