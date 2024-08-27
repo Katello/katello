@@ -9,11 +9,19 @@ import { PACKAGE_SEARCH_QUERY } from './PackagesTab/YumInstallablePackagesConsta
 import { PACKAGES_SEARCH_QUERY, SELECTED_UPDATE_VERSIONS } from './PackagesTab/HostPackagesConstants';
 
 // PARAM BUILDING
-const baseParams = (options) => {
+export const buildHostSearch = ({ hostname, hostSearch }) => {
+  let result = hostSearch ?? `name ^ (${hostname})`;
+  if (result === '') {
+    // user has selected all hosts
+    result = 'set? name'; // the name field is NOT NULL, so this will match all hosts
+  }
+  return result;
+};
+export const baseParams = (options) => {
   const {
     feature, hostname, hostSearch, descriptionFormat, inputs = {},
   } = options;
-  const search = hostSearch ?? `name ^ (${hostname})`;
+  const search = buildHostSearch({ hostname, hostSearch });
   return ({
     job_invocation: {
       feature,
@@ -89,7 +97,7 @@ const katelloPackagesUpdateParams = (options) => {
   const {
     hostname, search, hostSearch, versions, descriptionFormat,
   } = options;
-  const searchQuery = hostSearch ?? `name ^ (${hostname})`;
+  const searchQuery = buildHostSearch({ hostname, hostSearch });
   return ({
     job_invocation: {
       feature: REX_FEATURES.KATELLO_PACKAGES_UPDATE_BY_SEARCH,
