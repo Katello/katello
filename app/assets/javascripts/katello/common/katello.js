@@ -9,7 +9,7 @@ KT.widget = {};
 
 // Must be at the top to prevent AngularJS unnecessary digest operations
 // And to handle the hashPrefix that AngularJS adds that confuses BBQ
-$(window).bind("hashchange", function(event) {
+$(window).on("hashchange", function(event) {
 // refresh the favicon to make sure it shows up
     $('link[type*=icon]').detach().appendTo('head');
 });
@@ -31,7 +31,7 @@ function update_status() {
               }
           },
           error: function (xhr, status, error) {
-              statusElement.text(jQuery.parseJSON(xhr.responseText).message);
+              statusElement.text(JSON.parse(xhr.responseText).message);
               clearInterval(i);
           }
       });
@@ -212,14 +212,14 @@ var client_common = {
 /**
  * Document Ready function
  */
-$(document).ready(function (){
+$(document).on('loadJS', function (){
     KT.common.link_hover_setup('dark');
 
     //Add a handler so that if any input has focus
     //   our keyboard shortcuts don't steal it
-    $(":input").focus(function() {
+    $(":input").on("focus", function() {
         onInputField = true;
-    }).blur(function() {
+    }).on("blur", function() {
         onInputField = false;
     });
 
@@ -231,13 +231,14 @@ $(document).ready(function (){
 /**
  * Window Ready function
  */
+
 $(window).ready(function(){
     $('.fc').parent().css({"text-align":"center"});
     //all purpose display loading icon for ajax calls
-    $("#loading").bind("ajaxSend", function(){
+    $("#loading").on("ajaxSend", function(){
       $(this).show();
       $('body').css('cursor', 'wait');
-    }).bind("ajaxComplete", function(){
+    }).on("ajaxComplete", function(){
       $(this).hide();
       $('body').css('cursor', 'default');
     });

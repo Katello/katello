@@ -17,9 +17,9 @@ KT.object.label = (function(){
 
             disable_inputs(undefined);
 
-            $('.create_button').mousedown(function() {retrieve_label = false;});
+            $('.create_button').on("mousedown", function() {retrieve_label = false;});
 
-            $('.name_input').blur(function(event){
+            $('.name_input').on("blur", function(event){
                 var name_input = $(this),
                     name = name_input.val(),
                     label = $(this).closest('fieldset').next('fieldset'),
@@ -51,7 +51,7 @@ KT.object.label = (function(){
                     enable_inputs(name_input);
                 }
             });
-            $('.name_input').bind('click, focusin', function() {
+            $('.name_input').on('click, focusin', function() {
                 disable_inputs($(this));
                 initial_name_value = $(this).val();
             });

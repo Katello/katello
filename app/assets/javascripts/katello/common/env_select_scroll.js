@@ -20,7 +20,7 @@ KT.env_select_scroll = function(options) {
                 combined_width = 0,
                 anchors = trail.find("a, label"),
                 my_min_size_selected = min_size_selected;
-            anchors.unbind("mouseout").unbind("mouseover").width('auto');
+            anchors.off("mouseout").off("mouseover").width('auto');
 
             anchors.each(function() {
                 combined_width += $(this).width() + anchor_padding;
@@ -86,7 +86,7 @@ KT.env_select_scroll = function(options) {
                 };
 
 
-                anchor.mouseover(function() {
+                anchor.on("mouseover", function() {
                     if (over_interval) {
                         return false;
                     }
@@ -105,7 +105,7 @@ KT.env_select_scroll = function(options) {
                     }, freq);
                 });
 
-                anchor.mouseout(function() {
+                anchor.on("mouseout", function() {
                     if (out_interval) {
                         return false;
                     }
