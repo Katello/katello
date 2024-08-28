@@ -21,6 +21,7 @@ const PageControls = ({
         perPage={perPage}
         onChange={onPaginationUpdate}
         variant={variant}
+        updateParamsByUrl={false}
       />
     </FlexItem>
   );
