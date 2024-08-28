@@ -62,12 +62,6 @@ const ActivationKeys = ({
     );
   }, [handleInvalidField, hostGroupId, hostGroupActivationKeys, pluginValues]);
 
-  useEffect(() => {
-    if (activationKeys?.length === 1) {
-      onChange({ activationKeys: [activationKeys[0].name] });
-    }
-  }, [activationKeys, onChange]);
-
   return (
     <FormGroup
       onFocus={() => setHasInteraction(true)}
