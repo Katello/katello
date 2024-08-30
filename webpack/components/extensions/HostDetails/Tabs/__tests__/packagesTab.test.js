@@ -255,6 +255,94 @@ test('Can upgrade a package via customized remote execution', async (done) => {
   assertNockRequest(statusScope, done);
 });
 
+test('Can remove a package via remote execution', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, { ...mockPackagesData, results: [firstPackage] });
+
+  const removeScope = nockInstance
+    .post(jobInvocations, {
+      job_invocation: {
+        inputs: {
+          package: firstPackage.name,
+        },
+        search_query: `name ^ (${hostname})`,
+        feature: REX_FEATURES.KATELLO_PACKAGE_REMOVE,
+      },
+    })
+    .reply(201);
+
+  const {
+    getByText,
+    getAllByText,
+    getByLabelText,
+  } = renderWithRedux(<PackagesTab />, renderOptions());
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+
+  const kebabDropdown = getByLabelText('Actions');
+  kebabDropdown.click();
+
+  const rexAction = getByText('Remove');
+  await patientlyWaitFor(() => expect(rexAction).toBeInTheDocument());
+  fireEvent.click(rexAction);
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(removeScope, done);
+});
+
+test('Can bulk remove a package via remote execution', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const removeScope = nockInstance
+    .post(jobInvocations, {
+      job_invocation: {
+        inputs: {
+          [PACKAGES_SEARCH_QUERY]: `id ^ (${firstPackage.id},${secondPackage.id})`,
+        },
+        search_query: `name ^ (${hostname})`,
+        feature: REX_FEATURES.KATELLO_PACKAGES_REMOVE_BY_SEARCH,
+        description_format: 'Remove package(s) chrony, coreutils',
+      },
+    })
+    .reply(201);
+
+  const {
+    getByText,
+    getAllByText,
+    getByRole,
+    getByLabelText,
+  } = renderWithRedux(<PackagesTab />, renderOptions());
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+
+  getByRole('checkbox', { name: 'Select row 0' }).click();
+  expect(getByLabelText('Select row 0').checked).toEqual(true);
+  getByRole('checkbox', { name: 'Select row 1' }).click();
+  expect(getByLabelText('Select row 1').checked).toEqual(true);
+
+  const kebabDropdown = getByRole('button', { name: 'bulk_actions' });
+  await patientlyWaitFor(() => expect(kebabDropdown).toBeInTheDocument());
+  fireEvent.click(kebabDropdown);
+
+  const rexAction = getByText('Remove');
+  await patientlyWaitFor(() => expect(rexAction).toBeInTheDocument());
+  fireEvent.click(rexAction);
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(removeScope, done);
+});
+
 test('Can bulk upgrade via remote execution', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
 
