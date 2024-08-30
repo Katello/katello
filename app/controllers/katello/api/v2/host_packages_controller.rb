@@ -1,6 +1,7 @@
 module Katello
   class Api::V2::HostPackagesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
+    include Katello::Concerns::Api::V2::RepositoryContentController
 
     UPGRADABLE = "upgradable".freeze
     UP_TO_DATE = "up-to-date".freeze
@@ -8,7 +9,7 @@ module Katello
 
     before_action :require_packages_or_groups, :only => [:install, :remove]
     before_action :require_packages_only, :only => [:upgrade]
-    before_action :find_editable_host_with_facet, :except => :index
+    before_action :find_editable_host_with_facet, :except => [:index, :installed_packages]
     before_action :find_host, :only => :index
 
     resource_description do
@@ -19,6 +20,20 @@ module Katello
     def_param_group :packages_or_groups do
       param :packages, Array, :desc => N_("List of package names"), :required => false
       param :groups, Array, :desc => N_("List of package group names (Deprecated)"), :required => false
+    end
+
+    api :GET, "/host_packages/installed_packages", N_("Return a list of installed packages distinct by name")
+    param_group :search, ::Katello::Api::V2::ApiController
+    def installed_packages
+      _sort_by, _sort_order, options = sort_options
+      sort_by = 'name'
+      sort_order = 'asc'
+
+      options[:select] = "DISTINCT ON (#{::Katello::InstalledPackage.table_name}.name) #{::Katello::InstalledPackage.table_name}.id, #{::Katello::InstalledPackage.table_name}.name"
+      final_relation = ::Katello::InstalledPackage.all
+
+      result = scoped_search(final_relation, sort_by, sort_order, options)
+      respond_for_index(:collection => result, :template => "installed_packages")
     end
 
     api :GET, "/hosts/:host_id/packages", N_("List packages installed on the host")

@@ -93,7 +93,7 @@ const BulkPackagesTable = ({
     name: {
       title: __('Package'),
       wrapper: ({ name, id }) => (
-        <a target="_blank" href={`/packages/${id}`} rel="noreferrer">{name}</a>
+        <a target="_blank" href={tableType === 'remove' ? `/packages?search=${name}` : `/packages/${id}`} rel="noreferrer">{name}</a>
       ),
       isSorted: true,
       weight: 50,

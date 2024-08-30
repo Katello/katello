@@ -73,6 +73,14 @@ const katelloPackageRemoveParams = ({ hostname, packageName }) =>
     feature: REX_FEATURES.KATELLO_PACKAGE_REMOVE,
   });
 
+const katelloPackagesRemoveParams = ({ hostname, search, descriptionFormat }) =>
+  baseParams({
+    hostname,
+    inputs: { [PACKAGES_SEARCH_QUERY]: search },
+    feature: REX_FEATURES.KATELLO_PACKAGES_REMOVE_BY_SEARCH,
+    descriptionFormat,
+  });
+
 const katelloPackageRemoveBySearchParams = ({
   hostname, hostSearch, search, descriptionFormat,
 }) =>
@@ -205,6 +213,16 @@ export const removePackage = ({ hostname, packageName }) => post({
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloPackageRemoveParams({ hostname, packageName }),
+  handleSuccess: showRexToast,
+  errorToast,
+});
+
+// Used by packages wizard
+export const removePackages = ({ hostname, search, descriptionFormat }) => post({
+  type: API_OPERATIONS.POST,
+  key: REX_JOB_INVOCATIONS_KEY,
+  url: foremanApi.getApiUrl('/job_invocations'),
+  params: katelloPackagesRemoveParams({ hostname, search, descriptionFormat }),
   handleSuccess: showRexToast,
   errorToast,
 });
