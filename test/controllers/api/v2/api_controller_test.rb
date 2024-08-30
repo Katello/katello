@@ -55,6 +55,20 @@ module Katello
       assert_equal(2, response[:results].length)
     end
 
+    def test_scoped_search_casts_to_integer
+      params = { full_result: 'false', page: '1', per_page: '2' }
+      @controller.stubs(:params).returns(params)
+
+      response = @controller.scoped_search(@query, @default_sort[0], @default_sort[1], @options)
+      refute_empty response[:results], "results"
+      assert_nil response[:error], "error"
+      assert_equal 1, response[:page], "page"
+      assert_kind_of(Integer, response[:page])
+      assert_equal 2, response[:per_page], "per page"
+      assert_kind_of(Integer, response[:per_page])
+      assert_equal(2, response[:results].length)
+    end
+
     def test_scoped_search_no_results
       params = { :search => "asdfasdf" }
       @controller.stubs(:params).returns(params)
