@@ -20,13 +20,10 @@ module Katello
     end
 
     def_param_group :search do
-      param :search, String, :desc => N_("Search string")
-      param :page, :number, :desc => N_("Page number, starting at 1")
-      param :per_page, :number, :desc => N_("Number of results per page to return")
-      param :order, String, :desc => N_("Sort field and order, eg. 'id DESC'")
-      param :full_result, :bool, :desc => N_("Whether or not to show all results")
-      param :sort_by, String, :desc => N_("Field to sort the results on")
-      param :sort_order, String, :desc => N_("How to order the sorted results (e.g. ASC for ascending)")
+      param_group :search_and_pagination, ::Api::V2::BaseController
+      param :full_result, :bool, :desc => N_("DEPRECATED, use `per_page=all`"), deprecated: true
+      param :sort_by, String, :desc => N_("DEPRECATED, use `order`"), deprecated: true
+      param :sort_order, String, :desc => N_("DEPRECATED, use `order`"), deprecated: true
     end
 
     param :object_root, String, :desc => N_("root-node of single-resource responses (optional)")
@@ -61,12 +58,10 @@ module Katello
       resource = options[:resource_class] || resource_class
       includes = options.fetch(:includes, [])
       group = options.fetch(:group, nil)
-      params[:full_result] = true if options[:csv]
+      params[:per_page] = 'all' if options[:csv]
       blank_query = resource.none
 
-      if params[:order]
-        (params[:sort_by], params[:sort_order]) = params[:order].split(' ')
-      else
+      unless params[:order]
         params[:order] = "#{params[:sort_by]} #{params[:sort_order]}"
       end
 
@@ -95,13 +90,11 @@ module Katello
         subtotal = dist_total
         selectable = dist_total
       end
-      if ::Foreman::Cast.to_bool(params[:full_result])
+      if params[:per_page] == 'all' || ::Foreman::Cast.to_bool(params[:full_result])
         params[:per_page] = total
       else
         query = query.paginate(paginate_options)
       end
-      page = params[:page] || 1
-      per_page = params[:per_page] || Setting[:entries_per_page]
       query = (total.zero? || subtotal.zero?) ? blank_query : query
 
       if options[:csv]
@@ -111,8 +104,8 @@ module Katello
           query: query,
           subtotal: subtotal,
           total: total,
-          page: page,
-          per_page: per_page,
+          page: metadata_page,
+          per_page: metadata_per_page,
           selectable: selectable
         )
       end
