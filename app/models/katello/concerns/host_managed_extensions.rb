@@ -498,7 +498,7 @@ module Katello
       end
 
       def package_names_for_job_template(action:, search:, versions: nil)
-        if self.operatingsystem.family == 'Debian'
+        if self&.operatingsystem&.family == 'Debian'
           deb_names_for_job_template(action: action, search: search)
         else
           yum_names_for_job_template(action: action, search: search, versions: versions)

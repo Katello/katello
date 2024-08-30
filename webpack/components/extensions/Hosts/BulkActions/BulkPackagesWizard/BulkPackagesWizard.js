@@ -12,7 +12,7 @@ import HostReview from '../HostReview';
 import { BulkPackagesReview, dropdownOptions } from './04_Review';
 import { BulkPackagesUpgradeTable, BulkPackagesInstallTable, BulkPackagesRemoveTable } from './02_BulkPackagesTable';
 import { BulkPackagesReviewFooter } from './04_ReviewFooter';
-import katelloApi from '../../../../../services/api';
+import katelloApi, { foremanApi } from '../../../../../services/api';
 
 export const UPGRADE_ALL = 'upgradeAll';
 export const UPGRADE = 'upgrade';
@@ -53,8 +53,13 @@ export const useHostsBulkSelect = ({ initialSelectedHosts, modalIsOpen }) => {
   };
 };
 
-export const getPackagesUrl = selectedAction =>
-  `${katelloApi.getApiUrl('/packages/thindex')}?per_page=7&include_permissions=true&packages_restrict_upgradable=${selectedAction === 'upgrade'}`;
+export const getPackagesUrl = (selectedAction) => {
+  if (selectedAction === REMOVE) {
+    return `${foremanApi.getApiUrl('/hosts/host_packages/installed_packages')}?per_page=7&include_permissions=true`;
+  }
+
+  return `${katelloApi.getApiUrl('/packages/thindex')}?per_page=7&include_permissions=true&packages_restrict_upgradable=${selectedAction === 'upgrade'}`;
+};
 
 const BulkPackagesWizard = () => {
   const { modalOpen, setModalClosed: closeModal } = useForemanModal({ id: 'bulk-packages-wizard' });
