@@ -332,9 +332,9 @@ module Katello
         end
       elsif params.key?(:organization_id) && !params.key?(:environment_id) && !params.key?(:environments)
         organization = Organization.current
-        environments = organization.library.content_view_environment
+        environments = [organization.library.content_view_environment]
       elsif User.current.default_organization.present?
-        environments = User.current.default_organization.library.content_view_environment
+        environments = [User.current.default_organization.library.content_view_environment]
       else
         fail HttpErrors::NotFound, _("User '%s' did not specify an organization ID and does not have a default organization.") % current_user.login
       end
