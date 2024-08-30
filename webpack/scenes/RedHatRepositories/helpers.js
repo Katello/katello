@@ -36,6 +36,7 @@ export const getSetsComponent = (repoSetsState, onPaginationChange) => {
         <Pagination
           itemCount={itemCount}
           onChange={onPaginationChange}
+          updateParamsByUrl={false}
           isCompact
           {...pagination}
         />
@@ -67,6 +68,7 @@ export const getEnabledComponent = (enabledReposState, onPaginationChange) => {
           isCompact
           itemCount={itemCount}
           onChange={onPaginationChange}
+          updateParamsByUrl={false}
           {...pagination}
         />
       </div>
