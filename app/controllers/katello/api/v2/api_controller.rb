@@ -188,13 +188,6 @@ module Katello
       @organization
     end
 
-    def sort_params
-      options = {}
-      options[:sort_by] = params[:sort_by] if params[:sort_by]
-      options[:sort_order] = params[:sort_order] if params[:sort_order]
-      options
-    end
-
     def find_optional_organization
       org_id = organization_id
       return if org_id.nil?
