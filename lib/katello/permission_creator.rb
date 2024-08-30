@@ -279,7 +279,8 @@ module Katello
                                                         :repo_errata,
                                                         :repo_compare_errata,
                                                         :repo_compare_packages],
-                           'katello/api/v2/repository_sets' => [:index, :show, :available_repositories, :auto_complete_search]
+                           'katello/api/v2/repository_sets' => [:index, :show, :available_repositories, :auto_complete_search],
+                           'katello/api/v2/host_packages' => [:installed_packages]
                          },
                          :resource_type => 'Katello::Product',
                          :finder_scope => :readable
