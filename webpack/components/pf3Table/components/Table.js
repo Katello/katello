@@ -45,6 +45,7 @@ const Table = ({
         <Pagination
           itemCount={itemCount}
           onChange={onPaginationChange}
+          updateParamsByUrl={false}
           {...pagination}
         />
       )}
