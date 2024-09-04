@@ -188,9 +188,13 @@ const RepositorySetsTab = () => {
     lifecycleEnvironmentLibrary,
     contentView,
     lifecycleEnvironment,
+    contentViewEnvironments = [],
   } = contentFacet;
   const { name: contentViewName } = contentView ?? {};
   const { name: lifecycleEnvironmentName } = lifecycleEnvironment ?? {};
+  const multiEnvHost = contentViewEnvironments.length > 1;
+  const contentViewEnvironmentNames =
+    contentViewEnvironments.map(({ candlepin_name: candlepinName }) => candlepinName).join(', ');
   const nonLibraryHost = contentViewDefault === false ||
     lifecycleEnvironmentLibrary === false;
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
@@ -497,7 +501,8 @@ const RepositorySetsTab = () => {
     </Split>
   ) : null;
 
-  const hostEnvText = 'the "{contentViewName}" content view and "{lifecycleEnvironmentName}" environment';
+  const hostEnvText = multiEnvHost ? 'the host\'s content view environments: {contentViewEnvironmentNames}'
+    : 'the "{contentViewName}" content view and "{lifecycleEnvironmentName}" lifecycle environment';
 
   const alertText = (toggleGroupState === LIMIT_TO_ENVIRONMENT ?
     `Showing only repositories in ${hostEnvText}.` :
@@ -531,6 +536,7 @@ const RepositorySetsTab = () => {
                   values={{
                     contentViewName,
                     lifecycleEnvironmentName,
+                    contentViewEnvironmentNames,
                   }}
                 />
               }
