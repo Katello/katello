@@ -100,8 +100,8 @@ module Katello
       else
         query = query.paginate(paginate_options)
       end
-      page = params[:page] || 1
-      per_page = params[:per_page] || Setting[:entries_per_page]
+      page = metadata_page # from Foreman Api::V2::BaseController
+      per_page = metadata_per_page
       query = (total.zero? || subtotal.zero?) ? blank_query : query
 
       if options[:csv]
