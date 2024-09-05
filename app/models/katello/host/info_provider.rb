@@ -35,8 +35,11 @@ module Katello
       end
 
       def content_view_info(content_view_environment)
+        return {} if content_view_environment.blank?
+
         content_view = content_view_environment.content_view
         return {} if content_view.blank?
+
         {
           'label' => content_view.try(:label),
           'latest-version' => content_view.try(:latest_version),
