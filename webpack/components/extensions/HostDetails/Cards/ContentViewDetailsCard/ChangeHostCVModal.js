@@ -229,7 +229,7 @@ const ChangeHostCVModal = ({
       </TextContent>
       <Checkbox
         isChecked={forceProfileUpload}
-        onChange={setForceProfileUpload}
+        onChange={(_event, val) => setForceProfileUpload(val)}
         label={__('Update the host immediately via remote execution')}
         id="force-profile-upload-checkbox"
         ouiaId="force-profile-upload-checkbox"

@@ -25,13 +25,15 @@ import {
   ActionListItem,
   Bullseye,
   Button,
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
   Split,
   SplitItem,
   Checkbox,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
 import {
   TableVariant,
   Thead,
@@ -373,7 +375,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
     >
       <Thead>
         <Tr key="version-header" ouiaId="version-header">
-          {hasPermission(permissions, 'edit_content_views') && <Th key="select-all" />}
+          {hasPermission(permissions, 'edit_content_views') && <Th key="select-all" aria-label="Select all table header" />}
           {columnHeaders.map((title, index) => {
             if (index === 0) {
               return <Th modifier="fitContent" key={`col-header-${title}`}>{title}</Th>;
@@ -402,7 +404,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
                     id={id}
                     ouiaId={`repository-checkbox-${id}`}
                     isChecked={isSelected(id)}
-                    onChange={selected =>
+                    onChange={(_event, selected) =>
                       selectOne(selected, id, repo)
                     }
                   />

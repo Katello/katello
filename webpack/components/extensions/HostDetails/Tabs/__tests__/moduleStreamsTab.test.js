@@ -62,7 +62,8 @@ test('Can call API for Module streams and show on screen on page load', async (d
     expect(getAllByText(firstModuleStreams.name)[0]).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
   act(done);
 });
 
@@ -89,7 +90,8 @@ test('Can handle no Module streams being present', async (done) => {
   await patientlyWaitFor(() => expect(queryByText('This host does not have any Module streams.')).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
   act(done);
 });
 
@@ -166,7 +168,8 @@ test('When there are no search results, can display an empty state with a clear 
   assertNockRequest(badAutoCompleteScope);
   assertNockRequest(badSearchScope);
   assertNockRequest(scopeWithoutSearch);
-  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(autocompleteScope);
+  done();
 });
 
 test('Can filter results based on status', async (done) => {
@@ -198,7 +201,8 @@ test('Can filter results based on status', async (done) => {
   fireEvent.click(installed);
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(scope2, done);
+  assertNockRequest(scope2);
+  done();
   act(done);
 });
 
@@ -231,7 +235,8 @@ test('Can filter results based on Installation status', async (done) => {
   fireEvent.click(installed);
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(scope2, done);
+  assertNockRequest(scope2);
+  done();
   act(done);
 });
 
@@ -260,7 +265,8 @@ test('Can provide dropdown actions with redirects on Module Streams with customi
   expect(getByText('Enable')).toHaveAttribute('href', '/job_invocations/new?feature=katello_module_stream_action&search=name%20%5E%20(test-host)&inputs%5Baction%5D=enable&inputs%5Bmodule_spec%5D=walrus:2.4');
   expect(getByText('Install')).toHaveAttribute('href', '/job_invocations/new?feature=katello_module_stream_action&search=name%20%5E%20(test-host)&inputs%5Baction%5D=install&inputs%5Bmodule_spec%5D=walrus:2.4');
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
   act(done);
 });
 
@@ -305,6 +311,7 @@ test('Can perform actions on Module Streams', async (done) => {
   fireEvent.click(getByLabelText('confirm-module-action'));
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(jobScope, done);
+  assertNockRequest(jobScope);
+  done();
   act(done);
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 
 import ContentViewFilterDetails from '../ContentViewFilterDetails';
@@ -74,7 +74,8 @@ test('Can enable and disable add filter button', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
-  assertNockRequest(moduleStreamsScope, done);
+  assertNockRequest(moduleStreamsScope);
+  done();
 });
 
 test('Can add a filter rule', async (done) => {
@@ -119,19 +120,25 @@ test('Can add a filter rule', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText(name)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[3]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[3]);
-  expect(getAllByLabelText('Actions')[3]).toHaveAttribute('aria-expanded', 'true');
+  await act(async () => {
+    fireEvent.click(getAllByLabelText('Kebab toggle')[1]);
+  });
+  expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Add')).toBeInTheDocument());
-  fireEvent.click(getByText('Add'));
+
+  await act(async () => {
+    fireEvent.click(getByText('Add'));
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleScope);
   assertNockRequest(cvRequestCallbackScope);
-  assertNockRequest(moduleStreamsScope, done);
+  assertNockRequest(moduleStreamsScope);
+  done();
 });
 
 test('Can remove a filter rule', async (done) => {
@@ -175,10 +182,10 @@ test('Can remove a filter rule', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText(name)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[2]);
-  expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'true');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[2]);
+  expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
   fireEvent.click(getByText('Remove'));
 
@@ -189,7 +196,8 @@ test('Can remove a filter rule', async (done) => {
   assertNockRequest(cvFiltersRuleScope);
   assertNockRequest(cvRequestCallbackScope);
 
-  assertNockRequest(moduleStreamsScope, done);
+  assertNockRequest(moduleStreamsScope);
+  done();
 });
 
 test('Can bulk remove filter rules', async (done) => {
@@ -251,7 +259,8 @@ test('Can bulk remove filter rules', async (done) => {
   assertNockRequest(cvFiltersRuleBulkDeleteScope);
   assertNockRequest(cvRequestCallbackScope);
 
-  assertNockRequest(moduleStreamsScope, done);
+  assertNockRequest(moduleStreamsScope);
+  done();
 });
 
 test('Can bulk add filter rules', async (done) => {
@@ -309,7 +318,8 @@ test('Can bulk add filter rules', async (done) => {
   assertNockRequest(cvFiltersRuleBulkAddScope);
   assertNockRequest(cvRequestCallbackScope);
 
-  assertNockRequest(moduleStreamsScope, done);
+  assertNockRequest(moduleStreamsScope);
+  done();
 });
 
 
@@ -347,7 +357,9 @@ test('Can filter by added/not added rules', async (done) => {
   await patientlyWaitFor(() => {
     expect(getByText(name)).toBeInTheDocument();
     expect(getByTestId('allAddedNotAdded')).toBeInTheDocument();
-    fireEvent.click(getByTestId('allAddedNotAdded')?.childNodes[0]?.childNodes[0]);
+    act(() => {
+      fireEvent.click(getByTestId('allAddedNotAdded')?.childNodes[0]?.childNodes[0]);
+    });
   });
 
   await patientlyWaitFor(() => {
@@ -358,7 +370,9 @@ test('Can filter by added/not added rules', async (done) => {
   await patientlyWaitFor(() => {
     expect(getByText(name)).toBeInTheDocument();
     expect(getByTestId('allAddedNotAdded')).toBeInTheDocument();
-    fireEvent.click(getByTestId('allAddedNotAdded')?.childNodes[0]?.childNodes[0]);
+    act(() => {
+      fireEvent.click(getByTestId('allAddedNotAdded')?.childNodes[0]?.childNodes[0]);
+    });
   });
 
   await patientlyWaitFor(() => {
@@ -369,5 +383,6 @@ test('Can filter by added/not added rules', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
-  assertNockRequest(moduleStreamsScope, done);
+  assertNockRequest(moduleStreamsScope);
+  done();
 });

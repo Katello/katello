@@ -2,21 +2,26 @@ import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Skeleton,
+import {
+  Skeleton,
   Label,
   Button,
   Split,
   SplitItem,
   Checkbox,
-  Dropdown,
   Text,
   TextVariants,
+  Modal,
+  ModalVariant,
+  Icon,
+} from '@patternfly/react-core';
+import {
+  Dropdown,
   DropdownItem,
   KebabToggle,
   DropdownPosition,
   DropdownSeparator,
-  Modal,
-  ModalVariant } from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import PropTypes from 'prop-types';
 import { upperFirst, lowerCase } from 'lodash';
 import { TableText, TableVariant, Thead, Tbody, Tr, Td } from '@patternfly/react-table';
@@ -54,9 +59,9 @@ const EnabledIcon = ({ streamText, streamInstallStatus, upgradable }) => {
   case (streamInstallStatus?.length > 0 && streamText === 'disabled'):
     return <TableText wrapModifier="nowrap">{INSTALLED_STATE.INSTALLED}</TableText>;
   case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable !== true):
-    return <><CheckIcon color="green" /> {INSTALLED_STATE.UPTODATE}</>;
+    return <><Icon color="green" ><CheckIcon /></Icon>{INSTALLED_STATE.UPTODATE}</>;
   case (streamInstallStatus?.length > 0 && streamText === 'enabled' && upgradable):
-    return <><LongArrowAltUpIcon color="blue" /> {INSTALLED_STATE.UPGRADEABLE}</>;
+    return <><Icon color="blue"><LongArrowAltUpIcon /></Icon> {INSTALLED_STATE.UPGRADEABLE}</>;
   default:
     return <InactiveText text={INSTALLED_STATE.NOTINSTALLED} />;
   }
@@ -432,7 +437,7 @@ export const ModuleStreamsTab = () => {
                     id={`Checkbox${id}`}
                     label={__('Customize with Rex')}
                     isChecked={id === useCustomizedRex}
-                    onChange={checked => (checked ? setUseCustomizedRex(id) : setUseCustomizedRex(''))}
+                    onChange={(_event, checked) => (checked ? setUseCustomizedRex(id) : setUseCustomizedRex(''))}
                   />
                 </DropdownItem>,
                 <DropdownSeparator key={`separator-${id}`} ouiaId={`separator-${id}`} />,

@@ -1,5 +1,6 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import nock from 'nock';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 
 import api from '../../../../../services/api';
@@ -54,7 +55,8 @@ test('Can call API and show filters on page load', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can search for filter', async (done) => {
@@ -115,7 +117,8 @@ test('Can search for filter', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(initialScope);
-  assertNockRequest(withSearchScope, done);
+  assertNockRequest(withSearchScope);
+  done();
 });
 
 test('Can remove a filter', async (done) => {
@@ -143,17 +146,23 @@ test('Can remove a filter', async (done) => {
   );
 
   await patientlyWaitFor(() => {
-    expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[0]);
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+
+  await act(async () => {
+    fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  });
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
-  fireEvent.click(getByText('Remove'));
+  await act(async () => {
+    fireEvent.click(getByText('Remove'));
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(getContentViewScope);
   assertNockRequest(removeFilterScope);
-  assertNockRequest(callbackGetContentViewScope, done);
+  assertNockRequest(callbackGetContentViewScope);
+  done();
 });
 
 test('Can remove multiple filters', async (done) => {
@@ -184,15 +193,19 @@ test('Can remove multiple filters', async (done) => {
     fireEvent.click(getByLabelText('Select all rows'));
     expect(getAllByLabelText('bulk_actions')[0]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('bulk_actions')[0]);
+  await act(async () => {
+    fireEvent.click(getAllByLabelText('bulk_actions')[0]);
+  });
   expect(getAllByLabelText('bulk_actions')[0]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
-  fireEvent.click(getByText('Remove'));
-
+  await act(async () => {
+    fireEvent.click(getByText('Remove'));
+  });
   assertNockRequest(autocompleteScope);
   assertNockRequest(getContentViewScope);
   assertNockRequest(removeFilterScope);
-  assertNockRequest(callbackGetContentViewScope, done);
+  assertNockRequest(callbackGetContentViewScope);
+  done();
 });
 
 test('Shows call-to-action button when there are no filters', async (done) => {
@@ -208,7 +221,6 @@ test('Shows call-to-action button when there are no filters', async (done) => {
     .get(cvFilters)
     .query(true)
     .reply(200, emptyContentViewFiltersData);
-
   const { queryByLabelText } =
     renderWithRedux(withCVRoute(<ContentViewFilters cvId={1} details={details} />), renderOptions);
 
@@ -216,11 +228,14 @@ test('Shows call-to-action button when there are no filters', async (done) => {
   await patientlyWaitFor(() => {
     expect(queryByLabelText('create_filter_empty_state')).toBeInTheDocument();
   });
-  fireEvent.click(queryByLabelText('create_filter_empty_state'));
+  await act(async () => {
+    fireEvent.click(queryByLabelText('create_filter_empty_state'));
+  });
   await patientlyWaitFor(() => {
     expect(queryByLabelText('create_filter')).toBeInTheDocument();
   });
   assertNockRequest(autocompleteScope);
   assertNockRequest(repoTypeScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });

@@ -8,10 +8,12 @@ import {
   Button,
   ActionList,
   ActionListItem,
+} from '@patternfly/react-core';
+import {
   Dropdown,
   DropdownItem,
   KebabToggle,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { TableVariant, fitContent } from '@patternfly/react-table';
 import { omit } from 'lodash';
 import { STATUS } from 'foremanReact/constants';

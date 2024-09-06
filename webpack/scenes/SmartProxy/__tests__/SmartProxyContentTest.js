@@ -46,5 +46,6 @@ test('Can display Smart proxy content table and expand env and cv details', asyn
   expect(getAllByText(/7 errata/i)[0]).toBeInTheDocument();
   expect(getAllByText(/14 Module streams/i)[0]).toBeInTheDocument();
   expect(getAllByText(/2 Package groups/i)[0]).toBeInTheDocument();
-  assertNockRequest(detailsScope, done);
+  assertNockRequest(detailsScope);
+  done();
 });
