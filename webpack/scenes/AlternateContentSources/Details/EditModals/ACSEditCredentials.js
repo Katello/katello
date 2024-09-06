@@ -135,7 +135,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             id="verify-ssl-switch"
             aria-label="verify-ssl-switch"
             isChecked={acsVerifySSL}
-            onChange={checked => setAcsVerifySSL(checked)}
+            onChange={(_event, checked) => setAcsVerifySSL(checked)}
           />
         </FormGroup>
         <FormGroup
@@ -148,7 +148,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             isRequired
             isDisabled={!acsVerifySSL}
             value={acsCAcert}
-            onChange={value => setAcsCAcert(value)}
+            onChange={(_event, value) => setAcsCAcert(value)}
             aria-label="sslCAcert_select"
           >
             {
@@ -197,7 +197,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
               name="acs_username_field"
               aria-label="acs_username_field"
               value={acsUsername}
-              onChange={(value) => {
+              onChange={(_event, value) => {
                 setAcsUsername(value);
               }}
             />
@@ -216,7 +216,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
               name="acs_password_field"
               aria-label="acs_password_field"
               value={acsPassword}
-              onChange={(value) => {
+              onChange={(_event, value) => {
                 setAcsPassword(value);
               }}
             />
@@ -247,7 +247,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
               ouiaId="ssl-client-cert-select"
               isRequired
               value={acsSslClientCert}
-              onChange={value => setAcsSslClientCert(value)}
+              onChange={(_event, value) => setAcsSslClientCert(value)}
               aria-label="ssl_client_cert_select"
             >
               {
@@ -276,7 +276,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
               ouiaId="ssl_client_key_select"
               isRequired
               value={acsSslClientKey}
-              onChange={value => setAcsSslClientKey(value)}
+              onChange={(_event, value) => setAcsSslClientKey(value)}
               aria-label="ssl_client_key_select"
             >
               {

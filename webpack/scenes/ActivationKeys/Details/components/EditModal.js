@@ -131,7 +131,7 @@ const EditModal = ({ akDetails, akId }) => {
               id="ak-name-input"
               type="text"
               value={nameValue}
-              onChange={handleNameInputChange}
+              onChange={(_event, value) => handleNameInputChange(value)}
             />
           </FormGroup>
           <FormGroup
@@ -150,7 +150,7 @@ const EditModal = ({ akDetails, akId }) => {
                   minusBtnAriaLabel="minus"
                   plusBtnAriaLabel="plus"
                   isDisabled={isUnlimited}
-                  allowEmptyInput
+
                 />
               </StackItem>
               <StackItem>
@@ -172,7 +172,7 @@ const EditModal = ({ akDetails, akId }) => {
               type="text"
               placeholder={__('Description')}
               value={descriptionValue || ''}
-              onChange={handleDescriptionInputChange}
+              onChange={(_event, value) => handleDescriptionInputChange(value)}
             />
           </FormGroup>
         </Form>

@@ -3,9 +3,19 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector } from 'react-redux';
 import {
-  Grid, GridItem, TextContent, Text, TextVariants,
-  Select, SelectOption, SelectVariant, Flex, FlexItem,
+  Grid,
+  GridItem,
+  TextContent,
+  Text,
+  TextVariants,
+  Flex,
+  FlexItem,
 } from '@patternfly/react-core';
+import {
+  Select,
+  SelectOption,
+  SelectVariant,
+} from '@patternfly/react-core/deprecated';
 import { selectCVDetails } from '../../ContentViewDetailSelectors';
 import { HelpToolTip } from '../../../Create/ContentViewFormComponents';
 
@@ -97,7 +107,7 @@ const CVVersionCompareHeader = ({
                       placeholderText={__('Select an option')}
                       aria-label="Select version one"
                       ouiaId="select-version-one"
-                      onToggle={setIsOpenSelectVersionOne}
+                      onToggle={(_event, val) => setIsOpenSelectVersionOne(val)}
                       onSelect={onSelectVersionOne}
                       selections={versionOne}
                       isOpen={isOpenSelectVersionOne}
@@ -124,7 +134,7 @@ const CVVersionCompareHeader = ({
                       placeholderText="Select an option"
                       aria-label="Select version two"
                       ouiaId="select-version-two"
-                      onToggle={setIsOpenSelectVersionTwo}
+                      onToggle={(_event, val) => setIsOpenSelectVersionTwo(val)}
                       onSelect={onSelectVersionTwo}
                       selections={versionTwo}
                       isOpen={isOpenSelectVersionTwo}
@@ -154,7 +164,7 @@ const CVVersionCompareHeader = ({
                   placeholderText="Select an option"
                   aria-label="Select view by"
                   ouiaId="select-view-by"
-                  onToggle={setIsOpenSelectViewBy}
+                  onToggle={(_event, val) => setIsOpenSelectViewBy(val)}
                   onSelect={onSelectViewBy}
                   selections={selectedViewBy}
                   isOpen={isOpenSelectViewBy}

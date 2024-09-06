@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import * as reactRedux from 'react-redux';
 import {
   nockInstance,
@@ -52,7 +52,9 @@ test('Can display errata-date filter rule and edit', async (done) => {
     expect(getByText('08/15/2020')).toBeInTheDocument();
   });
   // Can clear date with chip
-  getByLabelText('08/15/1990').click();
+  await act(async () => {
+    getByLabelText('08/15/1990').click();
+  });
   await patientlyWaitFor(() => {
     expect(getByText('ANY')).toBeInTheDocument();
     expect(queryByText('08/15/1990')).not.toBeInTheDocument();
@@ -60,8 +62,11 @@ test('Can display errata-date filter rule and edit', async (done) => {
     // Enabled Edit rule button
     expect(getByLabelText('save_filter_rule')).toHaveAttribute('aria-disabled', 'false');
   });
-  getByLabelText('save_filter_rule').click();
+  await act(async () => {
+    getByLabelText('save_filter_rule').click();
+  });
 
   useSelectorMock.mockClear();
-  assertNockRequest(ruleEditScope, done);
+  assertNockRequest(ruleEditScope);
+  done();
 });

@@ -105,7 +105,7 @@ const CVPublishForm = ({
             aria-label="input_description"
             name="description"
             value={description}
-            onChange={setDescription}
+            onChange={(e, v) => setDescription(v)}
           />
         </FormGroup>
         <FormGroup label={__('Promote')} fieldId="promote">
@@ -114,7 +114,7 @@ const CVPublishForm = ({
             ouiaId="promote-switch"
             aria-label="promote-switch"
             isChecked={promote}
-            onChange={checkPromote}
+            onChange={(_event, checked) => checkPromote(checked)}
           />
         </FormGroup>
       </Form>

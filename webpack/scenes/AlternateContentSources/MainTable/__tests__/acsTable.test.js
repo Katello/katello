@@ -30,7 +30,8 @@ test('Can call API and show ACS on page load', async (done) => {
   // Assert that the ACS name is now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => expect(getByText(firstAcs.name)).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
   act(done);
 });
 
@@ -56,6 +57,7 @@ test('Can handle no ACS being present', async (done) => {
   expect(queryByText(firstAcs.name)).toBeNull();
   expect(queryByLabelText('Select all')).not.toBeInTheDocument();
   await patientlyWaitFor(() => expect(queryByText("You currently don't have any alternate content sources.")).toBeInTheDocument());
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
   act(done);
 });
