@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, within, fireEvent, act } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_ERRATA_KEY, ERRATA_SEARCH_QUERY } from '../ErrataTab/HostErrataConstants';
@@ -123,7 +123,8 @@ test('Can call API for errata and show on screen on page load', async (done) => 
   await patientlyWaitFor(() => expect(getAllByText(firstErrata.severity)[0]).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can handle no errata being present', async (done) => {
@@ -149,7 +150,8 @@ test('Can handle no errata being present', async (done) => {
   await patientlyWaitFor(() => expect(queryByText('This host has errata that are applicable, but not installable. Adjust your filters and try again.')).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can display expanded errata details', async (done) => {
@@ -192,7 +194,8 @@ test('Can display expanded errata details', async (done) => {
   expect(queryByText(firstErrata.summary)).not.toBeInTheDocument();
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can select one errata', async (done) => {
@@ -225,7 +228,8 @@ test('Can select one errata', async (done) => {
   expect(queryByText('1 selected')).toBeInTheDocument();
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can select all errata across pages through checkbox', async (done) => {
@@ -265,8 +269,10 @@ test('Can select all errata across pages through checkbox', async (done) => {
   expect(getByLabelText('Select row 0').checked).toEqual(true);
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
-  assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done();
+  assertNockRequest(scope2);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can deselect all errata across pages through checkbox', async (done) => {
@@ -310,8 +316,10 @@ test('Can deselect all errata across pages through checkbox', async (done) => {
   expect(getByLabelText('Select row 0').checked).toEqual(false);
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
-  assertNockRequest(scope2, done);
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
+  assertNockRequest(scope2);
+  done();
 });
 
 
@@ -352,8 +360,10 @@ test('Can select & deselect errata across pages', async (done) => {
   expect(queryByText('4 selected')).toBeInTheDocument();
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
-  assertNockRequest(scope2, done);
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
+  assertNockRequest(scope2);
+  done();
 });
 
 test('Can select & de-select all errata through selectDropDown', async (done) => {
@@ -394,7 +404,8 @@ test('Can select & de-select all errata through selectDropDown', async (done) =>
   expect(getByLabelText('Select row 0').checked).toEqual(false);
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can de-select items in select all mode across pages', async (done) => {
@@ -460,9 +471,12 @@ test('Can de-select items in select all mode across pages', async (done) => {
   expect(getByLabelText('Select row 1').checked).toEqual(false);
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
-  assertNockRequest(scope2, done);
-  assertNockRequest(scope3, done);
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
+  assertNockRequest(scope2);
+  done();
+  assertNockRequest(scope3);
+  done();
 });
 
 test('Can select page and select only items on the page', async (done) => {
@@ -496,7 +510,8 @@ test('Can select page and select only items on the page', async (done) => {
   expect(getByLabelText('Select row 0').checked).toEqual(true);
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Select all is disabled if all rows are selected', async (done) => {
@@ -550,7 +565,8 @@ test('Select all is disabled if all rows are selected', async (done) => {
   expect(getByText('Select none (0)')).toHaveAttribute('aria-disabled', 'false');
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Toggle Group shows if it\'s not the default content view or library enviroment', async (done) => {
@@ -572,7 +588,8 @@ test('Toggle Group shows if it\'s not the default content view or library enviro
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   expect(queryByLabelText('Installable Errata')).toBeInTheDocument();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Toggle Group shows if it\'s the default content view but non-library environment', async (done) => {
@@ -598,7 +615,8 @@ test('Toggle Group shows if it\'s the default content view but non-library envir
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   expect(queryByLabelText('Installable Errata')).toBeInTheDocument();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Toggle Group shows if it\'s the library environment but non-default content view', async (done) => {
@@ -625,7 +643,8 @@ test('Toggle Group shows if it\'s the library environment but non-default conten
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   expect(queryByLabelText('Installable Errata')).toBeInTheDocument();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Toggle Group does not show if it\'s the default content view and library environment', async (done) => {
@@ -652,7 +671,8 @@ test('Toggle Group does not show if it\'s the default content view and library e
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   expect(queryByLabelText('Installable Errata')).not.toBeInTheDocument();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Selection is disabled for errata which are applicable but not installable', async (done) => {
@@ -676,7 +696,8 @@ test('Selection is disabled for errata which are applicable but not installable'
   expect(getByLabelText('Select row 1')).not.toBeDisabled();
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can select only installable errata across pages through checkbox', async (done) => {
@@ -719,8 +740,10 @@ test('Can select only installable errata across pages through checkbox', async (
   expect(getByLabelText('Select row 0').checked).toEqual(true);
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
-  assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done();
+  assertNockRequest(scope2);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can toggle with the Toggle Group ', async (done) => {
@@ -746,7 +769,8 @@ test('Can toggle with the Toggle Group ', async (done) => {
   expect(getByText('Applicable').parentElement).toHaveAttribute('aria-pressed', 'false');
   expect(getAllByText('Installable')[0].parentElement).toHaveAttribute('aria-pressed', 'true');
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can filter by errata type', async (done) => {
@@ -788,7 +812,8 @@ test('Can filter by errata type', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope2);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can filter by severity', async (done) => {
@@ -815,7 +840,7 @@ test('Can filter by severity', async (done) => {
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   // the Bugfix text in the table is just a text node, while the dropdown is a button
   expect(getByText('Moderate', { ignore: ['button', 'title'] })).toBeInTheDocument();
-  expect(getByText('Important', { ignore: ['.pf-c-select__toggle-text', 'title'] })).toBeInTheDocument();
+  expect(getByText('Important', { ignore: ['.pf-v5-c-select__toggle-text', 'title'] })).toBeInTheDocument();
   expect(getByText('Critical', { ignore: ['button', 'title'] })).toBeInTheDocument();
   const severityContainer = queryByLabelText('select Severity container', { ignore: 'th' });
   const severityDropdown = within(severityContainer).queryByText('Severity');
@@ -824,17 +849,18 @@ test('Can filter by severity', async (done) => {
   const important = getByRole('option', { name: 'select Important' });
   fireEvent.click(important);
   await patientlyWaitFor(() => {
-    expect(queryByText('Moderate', { ignore: ['.pf-c-select__toggle-text'] })).not.toBeInTheDocument();
-    expect(queryByText('Critical', { ignore: ['.pf-c-select__toggle-text'] })).not.toBeInTheDocument();
+    expect(queryByText('Moderate', { ignore: ['.pf-v5-c-select__toggle-text'] })).not.toBeInTheDocument();
+    expect(queryByText('Critical', { ignore: ['.pf-v5-c-select__toggle-text'] })).not.toBeInTheDocument();
   });
   await patientlyWaitFor(() => {
-    expect(getByText('Important', { ignore: ['.pf-c-select__toggle-text', 'title'] })).toBeInTheDocument();
+    expect(getByText('Important', { ignore: ['.pf-v5-c-select__toggle-text', 'title'] })).toBeInTheDocument();
   });
 
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope2);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can bulk apply via remote execution', async (done) => {
@@ -871,11 +897,14 @@ test('Can bulk apply via remote execution', async (done) => {
   actionMenu.click();
   const viaRexAction = queryByText('Apply via remote execution');
   expect(viaRexAction).toBeInTheDocument();
-  viaRexAction.click();
+  await act(async () => {
+    viaRexAction.click();
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(resolveErrataScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can select all, exclude and bulk apply via remote execution', async (done) => {
@@ -911,11 +940,14 @@ test('Can select all, exclude and bulk apply via remote execution', async (done)
   actionMenu.click();
   const viaRexAction = queryByText('Apply via remote execution');
   expect(viaRexAction).toBeInTheDocument();
-  viaRexAction.click();
+  await act(async () => {
+    viaRexAction.click();
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(resolveErrataScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can apply errata in bulk via customized remote execution', async (done) => {
@@ -947,9 +979,12 @@ test('Can apply errata in bulk via customized remote execution', async (done) =>
     `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostName})&inputs%5BErrata%20search%20query%5D=errata_id%20%5E%20(${errata})`,
   );
 
-  viaRexAction.click();
+  await act(async () => {
+    viaRexAction.click();
+  });
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can apply a single erratum to the host via remote execution', async (done) => {
@@ -973,20 +1008,25 @@ test('Can apply a single erratum to the host via remote execution', async (done)
     renderOptions(cfWithErrataTotal(mockErrata.total)),
   );
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-  const erratumActionMenu = within(getByLabelText('Select row 0').closest('tr')).getByLabelText('Actions');
-  expect(erratumActionMenu).toHaveAttribute('aria-label', 'Actions');
-  erratumActionMenu.click();
-
+  const erratumActionMenu = within(getByLabelText('Select row 0').closest('tr')).getByLabelText('Kebab toggle');
+  expect(erratumActionMenu).toHaveAttribute('aria-label', 'Kebab toggle');
+  await act(async () => {
+    erratumActionMenu.click();
+  });
+  
   let viaRexAction;
   await patientlyWaitFor(() => {
     viaRexAction = getByText('Apply via remote execution');
     expect(viaRexAction).toBeInTheDocument();
   });
-  viaRexAction.click();
+  await act(async () => {
+    viaRexAction.click();
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(resolveErrataScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can apply a single erratum to the host via customized remote execution', async (done) => {
@@ -1005,20 +1045,24 @@ test('Can apply a single erratum to the host via customized remote execution', a
     renderOptions(cfWithErrataTotal(mockErrata.total)),
   );
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-  const erratumActionMenu = within(getByLabelText('Select row 0').closest('tr')).getByLabelText('Actions');
-  expect(erratumActionMenu).toHaveAttribute('aria-label', 'Actions');
-  erratumActionMenu.click();
-
+  const erratumActionMenu = within(getByLabelText('Select row 0').closest('tr')).getByLabelText('Kebab toggle');
+  expect(erratumActionMenu).toHaveAttribute('aria-label', 'Kebab toggle');
+  await act(async () => {
+    erratumActionMenu.click();
+  });
   let viaRexAction;
   await patientlyWaitFor(() => {
     viaRexAction = getByText('Apply via customized remote execution');
     expect(viaRexAction).toBeInTheDocument();
   });
-  viaRexAction.click();
+  await act(async () => {
+    viaRexAction.click();
+  });
   expect(viaRexAction).toHaveAttribute(
     'href',
     `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostName})&inputs%5BErrata%20search%20query%5D=errata_id%20=%20${errataId}`,
   );
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });

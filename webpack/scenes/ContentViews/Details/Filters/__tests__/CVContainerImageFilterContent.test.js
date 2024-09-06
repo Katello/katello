@@ -75,7 +75,8 @@ test('Can view container image filter rules', async (done) => {
 
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(cvFiltersScope, done);
+  assertNockRequest(cvFiltersScope);
+  done();
 });
 
 // Remove
@@ -107,13 +108,13 @@ test('Can remove filter rules', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(queryByText(firstResultName)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
   });
 
-  fireEvent.click(getAllByLabelText('Actions')[0]);
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
 
   await patientlyWaitFor(() => {
-    expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+    expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
     expect(queryByText('Remove')).toBeInTheDocument();
     fireEvent.click(queryByText('Remove'));
   });
@@ -126,7 +127,8 @@ test('Can remove filter rules', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFilterDeleteScope);
-  assertNockRequest(cvFiltersCallbackScope, done);
+  assertNockRequest(cvFiltersCallbackScope);
+  done();
 });
 
 // Add
@@ -187,7 +189,8 @@ test('Can add filter rules', async (done) => {
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFilterAddScope);
   assertNockRequest(autocompleteNameScope);
-  assertNockRequest(cvFiltersCallbackScope, done);
+  assertNockRequest(cvFiltersCallbackScope);
+  done();
   act(done);
 });
 
@@ -239,13 +242,13 @@ test('Can edit filter rules', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(queryByText(firstResultName)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
   });
 
-  fireEvent.click(getAllByLabelText('Actions')[0]);
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
 
   await patientlyWaitFor(() => {
-    expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+    expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
     expect(queryByText('Edit')).toBeInTheDocument();
     fireEvent.click(queryByText('Edit'));
   });
@@ -268,7 +271,8 @@ test('Can edit filter rules', async (done) => {
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFilterAddScope);
   assertNockRequest(autocompleteNameScope);
-  assertNockRequest(cvFiltersCallbackScope, done);
+  assertNockRequest(cvFiltersCallbackScope);
+  done();
   act(done);
 });
 
@@ -302,7 +306,8 @@ test('Shows call-to-action when there are no filter rules', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(autocompleteNameScope);
-  assertNockRequest(cvFiltersScope, done);
+  assertNockRequest(cvFiltersScope);
+  done();
   act(done);
 });
 
@@ -325,6 +330,7 @@ test('Hides bulk_remove dropdownItem when there are no filter rules', async (don
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(cvFiltersScope, done);
+  assertNockRequest(cvFiltersScope);
+  done();
   act(done);
 });

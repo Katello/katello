@@ -46,7 +46,7 @@ const AddBookmarkModal = ({ selectedItem, onClose, controller }) => {
             aria-label="input_name"
             name="name"
             value={name}
-            onChange={setName}
+            onChange={(_event, val) => setName(val)}
           />
         </FormGroup>
         <FormGroup label={__('Search Query')} isRequired fieldId="query">
@@ -58,7 +58,7 @@ const AddBookmarkModal = ({ selectedItem, onClose, controller }) => {
             aria-label="input_query"
             name="query"
             value={query}
-            onChange={setQuery}
+            onChange={(_event, val) => setQuery(val)}
           />
         </FormGroup>
         <FormGroup fieldId="public" isInline>
@@ -68,7 +68,7 @@ const AddBookmarkModal = ({ selectedItem, onClose, controller }) => {
             name="public"
             label={__('Public')}
             isChecked={isPublic}
-            onChange={setIsPublic}
+            onChange={(_event, val) => setIsPublic(val)}
           />
           <Tooltip
             position={TooltipPosition.top}

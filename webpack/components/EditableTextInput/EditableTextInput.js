@@ -69,7 +69,7 @@ const EditableTextInput = ({
     onKeyUp,
     component,
     value: inputValue || '',
-    onChange: setInputValue,
+    onChange: (e, v) => setInputValue(v),
   };
 
   return editing ? (

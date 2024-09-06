@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Flex, SelectOption } from '@patternfly/react-core';
+import {
+  Flex,
+} from '@patternfly/react-core';
+import {
+  SelectOption,
+} from '@patternfly/react-core/deprecated';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {

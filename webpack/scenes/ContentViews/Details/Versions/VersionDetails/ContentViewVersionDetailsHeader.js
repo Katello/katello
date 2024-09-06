@@ -11,11 +11,13 @@ import {
   Label,
   Flex,
   FlexItem,
+} from '@patternfly/react-core';
+import {
   Dropdown,
   DropdownItem,
   KebabToggle,
   DropdownPosition,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { useHistory } from 'react-router-dom';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { hasPermission } from '../../../helpers';
@@ -131,7 +133,7 @@ const ContentViewVersionDetailsHeader = ({
           style={{ width: 'inherit' }}
           position={DropdownPosition.right}
           toggle={
-            <KebabToggle onToggle={setDropdownOpen} id="toggle-dropdown" />
+            <KebabToggle onToggle={(_event, val) => setDropdownOpen(val)} id="toggle-dropdown" />
           }
           isOpen={dropdownOpen}
           dropdownItems={dropDownItems}
@@ -153,7 +155,7 @@ const ContentViewVersionDetailsHeader = ({
         <Flex>
           {environments?.map(({ name, id: envId }) => (
             <FlexItem key={name}>
-              <Label isTruncated color="purple" href={`/lifecycle_environments/${envId}`}>{name}</Label>
+              <Label color="purple" href={`/lifecycle_environments/${envId}`}>{name}</Label>
             </FlexItem>))}
         </Flex>
       </GridItem>

@@ -43,7 +43,8 @@ test('Can call API for CVs and show on screen on page load', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can show last task and link to it', async (done) => {
@@ -67,7 +68,8 @@ test('Can show last task and link to it', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can show latest version and link to it', async (done) => {
@@ -99,7 +101,8 @@ test('Can show latest version and link to it', async (done) => {
       .toHaveAttribute('href', '/lifecycle_environments/2');
   });
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can expand cv and show activation keys and hosts', async (done) => {
@@ -137,7 +140,8 @@ test('Can expand cv and show activation keys and hosts', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can handle no Content Views being present', async (done) => {
@@ -158,7 +162,8 @@ test('Can handle no Content Views being present', async (done) => {
 
   expect(queryByText(firstCV.name)).toBeNull();
   await patientlyWaitFor(() => expect(queryByText('You currently have no content views to display')).toBeInTheDocument());
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can handle errored response', async (done) => {
@@ -171,7 +176,8 @@ test('Can handle errored response', async (done) => {
 
   expect(queryByText(firstCV.name)).toBeNull();
   await patientlyWaitFor(() => expect(queryByText(/Something went wrong! Please check server logs!/i)).toBeInTheDocument());
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can handle unpublished Content Views', async (done) => {
@@ -188,7 +194,8 @@ test('Can handle unpublished Content Views', async (done) => {
 
   await patientlyWaitFor(() => expect(getAllByText(/not yet published/i).length).toBeGreaterThan(0));
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can handle pagination', async (done) => {
@@ -232,7 +239,8 @@ test('Can handle pagination', async (done) => {
   });
   assertNockRequest(autocompleteScope);
   assertNockRequest(firstPageScope);
-  assertNockRequest(secondPageScope, done); // Only pass jest callback to the last API request
+  assertNockRequest(secondPageScope);
+  done(); // Only pass jest callback to the last API request
 });
 
 test('Can search for specific Content View', async (done) => {
@@ -289,7 +297,8 @@ test('Can search for specific Content View', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(initialScope);
-  assertNockRequest(withSearchScope, done);
+  assertNockRequest(withSearchScope);
+  done();
 });
 
 test('Nothing is shown for empty search', async (done) => {
@@ -322,7 +331,8 @@ test('Nothing is shown for empty search', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(initialScope);
-  assertNockRequest(withSearchScope, done);
+  assertNockRequest(withSearchScope);
+  done();
 });
 
 test('Displays Create Content View and opens modal with Form', async () => {

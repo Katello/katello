@@ -111,7 +111,7 @@ const SelectSource = () => {
             isRequired
             isDisabled={acsType === 'rhui'}
             value={contentType}
-            onChange={(value) => {
+            onChange={(_event, value) => {
               setContentType(value);
             }}
             aria-label="FormSelect Input"

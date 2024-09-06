@@ -1,8 +1,22 @@
 import React, { useContext, useState } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { FormattedMessage } from 'react-intl';
-import { TreeView, Button, Text, TextContent, TextVariants, Flex, FlexItem, Dropdown, DropdownItem, DropdownToggle } from '@patternfly/react-core';
-import { useWizardContext } from '@patternfly/react-core/next';
+import {
+  TreeView,
+  Button,
+  Text,
+  TextContent,
+  TextVariants,
+  Flex,
+  FlexItem,
+  useWizardContext,
+} from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownToggle,
+} from '@patternfly/react-core/deprecated';
+
 import { CaretDownIcon } from '@patternfly/react-icons';
 import { BulkErrataWizardContext } from './BulkErrataWizard';
 

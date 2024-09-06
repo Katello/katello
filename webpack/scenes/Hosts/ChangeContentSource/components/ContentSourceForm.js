@@ -8,12 +8,14 @@ import {
   Form,
   Grid,
   GridItem,
-  Select,
-  SelectOption,
-  SelectVariant,
   TextContent,
   Text,
 } from '@patternfly/react-core';
+import {
+  Select,
+  SelectOption,
+  SelectVariant,
+} from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
