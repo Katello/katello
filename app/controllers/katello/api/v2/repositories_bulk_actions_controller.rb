@@ -6,7 +6,7 @@ module Katello
     param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def destroy_repositories
       deletion_authorized_repositories = @repositories.deletable
-      unpromoted_repos = Setting.find_by(name: 'delete_repo_across_cv')&.value ? deletion_authorized_repositories : deletion_authorized_repositories.reject { |repo| repo.promoted? && repo.content_views.generated_for_none.exists? }
+      unpromoted_repos = Setting[:delete_repo_across_cv] ? deletion_authorized_repositories : deletion_authorized_repositories.reject { |repo| repo.promoted? && repo.content_views.generated_for_none.exists? }
       unpromoted_repos_non_last_affected_repo = unpromoted_repos.reject { |repo| repo.filters.any? { |filter| filter.repositories.size == 1 } }
       messages1 = format_bulk_action_messages(
           :success    => "",
@@ -36,7 +36,7 @@ module Katello
         task = async_task(::Actions::BulkAction,
                           ::Actions::Katello::Repository::Destroy,
                           unpromoted_repos_non_last_affected_repo,
-                          remove_from_content_view_versions: Setting.find_by(name: 'delete_repo_across_cv')&.value
+                          remove_from_content_view_versions: Setting[:delete_repo_across_cv]
         )
       else
         status = 400
