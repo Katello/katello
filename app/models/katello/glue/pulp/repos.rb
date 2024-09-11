@@ -137,10 +137,10 @@ module Katello
 
         # Container push may concurrently call root add several times before the db can update.
         if repo_param[:is_container_push]
-          RootRepository.create_or_find_by!(repo_param)
-        else
-          RootRepository.new(repo_param)
+          root = RootRepository.find_by(repo_param)
+          return root if root
         end
+        RootRepository.new(repo_param)
       end
     end
   end
