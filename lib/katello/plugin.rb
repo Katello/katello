@@ -1,10 +1,9 @@
 require 'katello/permission_creator'
 require 'katello/repository_types'
-require 'katello/host_status_manager'
 # rubocop:disable Metrics/BlockLength
 
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 3.11'
+  requires_foreman '>= 3.13'
   register_gettext
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'),

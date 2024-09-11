@@ -79,13 +79,13 @@ module Katello
     def test_custom_uln_base_url
       @yum_acs.base_url = 'uln://uln-repo'
       error = assert_raises(ActiveRecord::RecordInvalid) { @yum_acs.save! }
-      assert_match 'Validation failed: Base url uln://uln-repo is not a valid path', error.message
+      assert_match 'Validation failed: Base URL uln://uln-repo is not a valid path', error.message
     end
 
     def test_custom_missing_base_url
       @yum_acs.base_url = nil
       error = assert_raises(ActiveRecord::RecordInvalid) { @yum_acs.save! }
-      assert_match "Base url can\'t be blank", error.message
+      assert_match "Base URL can\'t be blank", error.message
     end
 
     def test_custom_missing_verify_ssl

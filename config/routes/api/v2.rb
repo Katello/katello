@@ -1,6 +1,3 @@
-require 'katello/api/constraints/activation_key_constraint'
-require 'katello/api/mapper_extensions'
-
 class ActionDispatch::Routing::Mapper
   include Katello::Routing::MapperExtensions
 end

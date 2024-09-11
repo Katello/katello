@@ -1,4 +1,3 @@
-require 'proxy_api'
 require 'proxy_api/pulp'
 require 'proxy_api/pulp_node'
 require 'proxy_api/container_gateway'

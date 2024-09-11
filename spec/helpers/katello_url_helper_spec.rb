@@ -1,7 +1,7 @@
 require 'katello_test_helper'
 
 module Katello
-  describe KatelloUrlHelper do
+  describe KatelloURLHelper do
     describe "Valid https? Urls" do
       it "should validate clean http urls" do
         assert kurl_valid?('http://www.hugheshoney.com')
