@@ -272,8 +272,10 @@ module Katello
       self.content_view_version.content_view
     end
 
+    # Skip setting container name if the repository is not container type or
+    # if it's a library instance of a container-push repo, indicating that the container name is set by the user.
     def skip_container_name?
-      self.library_instance? && self.root.docker? && self.root.is_container_push
+      !self.root.docker? || (self.root.is_container_push && self.library_instance?)
     end
 
     def library_instance?
