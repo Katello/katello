@@ -78,20 +78,21 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     Setting[:allow_multiple_content_views] = true
     ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
     host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem,
-                              :content_view => @content_view, :lifecycle_environment => @environment)
+                              :content_view => @content_view, :lifecycle_environment => @environment, :organization => @environment.organization)
     Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
     orig_cves = host.content_facet.content_view_environment_ids.to_a
+    target_cves = [::Katello::ContentViewEnvironment.where(:content_view_id => @cv4.id,
+      :environment_id => @dev.id).first, ::Katello::ContentViewEnvironment.where(:content_view_id => @cv3.id,
+      :environment_id => @dev.id).first]
+    target_cves_ids = target_cves.map(&:id)
     put :update, params: {
       :id => host.id,
       :content_facet_attributes => {
-        :content_view_environments => ["#{@dev.label}/#{@cv4.label}", "#{@dev.label}/#{@cv3.label}"]
+        :content_view_environments => target_cves.map(&:label)
       }
     }, session: set_session_user
     assert_response :success
     host.content_facet.reload
-    target_cves_ids = [::Katello::ContentViewEnvironment.where(:content_view_id => @cv4.id,
-      :environment_id => @dev.id).first, ::Katello::ContentViewEnvironment.where(:content_view_id => @cv3.id,
-      :environment_id => @dev.id).first].map(&:id)
     assert_equal 2, host.content_facet.content_view_environment_ids.count
     refute_equal orig_cves, host.content_facet.content_view_environment_ids
     assert_equal_arrays target_cves_ids, host.content_facet.content_view_environments.ids
@@ -140,6 +141,59 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
       :id => host.id,
       :content_facet_attributes => {
         :content_view_id => @cv2.id
+      }
+    }, session: set_session_user
+    assert_response :unprocessable_entity
+  end
+
+  def test_set_content_view_environments_with_valid_content_view_environs_param
+    Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
+    ::Host::Managed.any_instance.expects(:update_candlepin_associations)
+    host = FactoryBot.create(:host, :with_content, :with_subscription,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    ::Katello::ContentViewEnvironment.expects(:fetch_content_view_environments).returns([katello_content_view_environments(:library_default_view_environment)])
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_view_environments => ["Library"]
+      }
+    }, session: set_session_user
+    assert_response :success
+  end
+
+  def test_set_content_view_environments_with_valid_ids_param
+    Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
+    ::Host::Managed.any_instance.expects(:update_candlepin_associations)
+    host = FactoryBot.create(:host, :with_content, :with_subscription,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_view_environment_ids => [@cv4.content_view_environments.first.id]
+      }
+    }, session: set_session_user
+    assert_response :success
+  end
+
+  def test_set_content_view_environments_with_invalid_ids_param
+    host = FactoryBot.create(:host, :with_content, :with_subscription,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_view_environment_ids => ["invalid string"]
+      }
+    }, session: set_session_user
+    assert_response :unprocessable_entity
+  end
+
+  def test_set_content_view_environments_with_invalid_content_view_environs_param
+    host = FactoryBot.create(:host, :with_content, :with_subscription,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_view_environments => ["invalid string"]
       }
     }, session: set_session_user
     assert_response 422

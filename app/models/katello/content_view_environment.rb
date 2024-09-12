@@ -36,13 +36,7 @@ module Katello
     end
 
     def self.with_candlepin_name(cp_name, organization: Organization.current)
-      lce_name, cv_name = cp_name.split('/')
-      if cv_name.blank? && lce_name == 'Library'
-        return default.find_by(
-          environment: ::Katello::KTEnvironment.library.where(organization: organization)&.first
-        )
-      end
-      joins(:environment, :content_view).where("#{Katello::KTEnvironment.table_name}.label" => lce_name, "#{Katello::ContentView.table_name}.label" => cv_name).first
+      joins(:environment, :content_view).where("#{Katello::KTEnvironment.table_name}.organization_id" => organization, label: cp_name).first
     end
 
     # retrieve the owning environment for this content view environment.
@@ -63,8 +57,7 @@ module Katello
     end
 
     def candlepin_name
-      return environment.label if default_environment?
-      "#{environment.label}/#{content_view.label}"
+      label
     end
 
     def priority(content_object)
@@ -79,10 +72,10 @@ module Katello
       # Must do maps here to ensure CVEs remain in the same order.
       # Using ActiveRecord .where will return them in a different order.
       if ids.present?
-        ids.map! do |id|
+        cves = ids.map do |id|
           ::Katello::ContentViewEnvironment.find_by(id: id)
         end
-        ids.compact
+        cves.compact
       elsif labels.present?
         environment_names = labels.map(&:strip)
         environment_names.map! do |name|
