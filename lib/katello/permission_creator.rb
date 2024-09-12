@@ -51,6 +51,11 @@ module Katello
     end
 
     def capsule_content_permissions
+      @plugin.permission :view_smart_proxies,
+                         {
+                           'katello/api/v2/capsules' => [:index, :show]
+                         },
+                         :resource_type => "SmartProxy"
       @plugin.permission :manage_capsule_content,
                          {
                            'katello/api/v2/capsule_content' => [:add_lifecycle_environment, :remove_lifecycle_environment,
@@ -62,7 +67,7 @@ module Katello
       @plugin.permission :view_capsule_content,
                          {
                            'katello/api/v2/capsule_content' => [:counts, :lifecycle_environments, :available_lifecycle_environments, :sync_status],
-                           'smart_proxies' => [:pulp_storage, :pulp_status, :show_with_content],
+                           'smart_proxies' => [:pulp_storage, :pulp_status, :show_with_content, :index],
                            'katello/api/v2/capsules' => [:index, :show]
                          },
                          :resource_type => "SmartProxy"
