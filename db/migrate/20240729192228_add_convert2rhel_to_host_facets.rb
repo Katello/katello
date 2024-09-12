@@ -4,6 +4,6 @@ class AddConvert2rhelToHostFacets < ActiveRecord::Migration[6.1]
   end
 
   def down
-    remove_column :subscription_facets, :convert2rhel_through_foreman
+    remove_column :katello_subscription_facets, :convert2rhel_through_foreman
   end
 end
