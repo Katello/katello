@@ -2,6 +2,7 @@ module Actions
   module Katello
     module CapsuleContent
       class Sync < ::Actions::EntryAction
+        middleware.do_not_use Dynflow::Middleware::Common::Transaction
         include ::Actions::ObservableAction
         def resource_locks
           :link
