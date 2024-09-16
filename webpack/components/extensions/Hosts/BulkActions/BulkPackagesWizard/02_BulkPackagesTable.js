@@ -133,8 +133,6 @@ const BulkPackagesTable = ({
         showCheckboxes
         apiUrl={PACKAGES_URL}
         apiOptions={apiOptions}
-        headerText={__('Packages')}
-        header={null}
         controller="packages"
         customSearchProps={customSearchProps}
         creatable={false}
