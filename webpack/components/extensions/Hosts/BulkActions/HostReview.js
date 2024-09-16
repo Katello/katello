@@ -122,8 +122,6 @@ const HostReview = ({
         showCheckboxes
         apiUrl={HOSTS_API_PATH}
         apiOptions={apiOptions}
-        headerText={__('Hosts')}
-        header={null}
         controller="hosts"
         creatable={false}
         replacementResponse={response}
