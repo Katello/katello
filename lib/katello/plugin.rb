@@ -653,7 +653,7 @@ Foreman::Plugin.register :katello do
 
       setting 'distribute_archived_cvv',
         type: :boolean,
-        default: true,
+        default: false,
         full_name: N_('Distribute archived content view versions'),
         description: N_("If this is enabled, repositories of content view versions without environments (\"archived\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'.")
 
