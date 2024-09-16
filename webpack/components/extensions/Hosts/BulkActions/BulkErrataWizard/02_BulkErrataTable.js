@@ -148,8 +148,6 @@ const BulkErrataTable = () => {
         showCheckboxes
         apiUrl={ERRATA_URL}
         apiOptions={apiOptions}
-        headerText={__('Errata')}
-        header={null}
         controller="errata"
         customSearchProps={customSearchProps}
         creatable={false}
