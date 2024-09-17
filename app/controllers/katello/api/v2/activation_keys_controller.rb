@@ -79,7 +79,16 @@ module Katello
     param_group :activation_key
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
     def update
-      @activation_key.update!(content_view_environments: @content_view_environments) if @content_view_environments.present?
+      if @content_view_environments.present?
+        if @content_view_environments.length == 1
+          @activation_key.assign_single_environment(
+            content_view: @content_view_environments.first.content_view,
+            lifecycle_environment: @content_view_environments.first.lifecycle_environment
+          )
+        else
+          @activation_key.update!(content_view_environments: @content_view_environments)
+        end
+      end
       sync_task(::Actions::Katello::ActivationKey::Update, @activation_key, activation_key_params)
       respond_for_show(:resource => @activation_key)
     end
@@ -276,9 +285,8 @@ module Katello
     end
 
     def find_cve_for_single
-      environment_id = params[:environment_id]
-      environment_id ||= params.dig(:environment, :id)
-      content_view_id = params[:content_view_id]
+      environment_id = params.dig(:environment, :id) || params[:environment_id]
+      content_view_id = params.dig(:content_view, :id) || params[:content_view_id]
       if environment_id.blank? || content_view_id.blank?
         fail HttpErrors::BadRequest, _("Environment ID and content view ID must be provided together")
       end

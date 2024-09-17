@@ -6,6 +6,12 @@
   </span>
 </div>
 
+<div bst-alert="warning" ng-if="activationKey.multi_content_view_environment">
+  <span translate>
+    This activation key has multiple content view environments, which are not yet displayed in the web UI. Changing the content view or lifecycle environment here will overwrite the activation key's multiple environments. To avoid this, update the activation key via Hammer.
+  </span>
+</div>
+
 <div data-extend-template="layouts/two-column-details.html">
   <div data-block="left-column">
     <h4 translate>Basic Information</h4>

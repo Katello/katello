@@ -137,6 +137,7 @@ module Katello
     end
 
     # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def assign_single_environment(
       content_view_id: nil, lifecycle_environment_id: nil, environment_id: nil,
       content_view: nil, lifecycle_environment: nil, environment: nil
@@ -159,8 +160,14 @@ module Katello
       end
       fail _("Unable to create ContentViewEnvironment. Check the logs for more information.") if content_view_environment.nil?
 
-      self.content_view_environments = [content_view_environment]
+      if self.content_view_environments.include?(content_view_environment)
+        Rails.logger.info("Activation key '#{name}' already has the content view environment '#{content_view_environment.content_view_name}' and environment '#{content_view_environment.environment&.name}'.")
+      else
+        self.content_view_environments = [content_view_environment]
+      end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     def usage_count
       subscription_facet_activation_keys.count
