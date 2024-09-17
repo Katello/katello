@@ -32,7 +32,7 @@ class ManageManifestModal extends Component {
     }
 
     if (prevProps.taskInProgress && !this.props.taskInProgress) {
-      this.props.loadOrganization();
+      this.props.loadOrganization({ force_manifest_expire_cache: true });
       this.props.loadManifestHistory();
     }
 
