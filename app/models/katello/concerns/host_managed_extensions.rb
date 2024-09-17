@@ -511,17 +511,17 @@ module Katello
         actions = %w(install remove update).freeze
         case action
         when 'install'
-          yum_installable = ::Katello::Rpm.yum_installable_for_host(self).search_for(search).distinct.pluck(:name)
+          yum_installable = ::Katello::Rpm.search_for(search).distinct.pluck(:name)
           if yum_installable.empty?
-            fail N_("No available packages found for search term '%s'. Check the host's content view environments and already-installed packages.") % search
+            fail N_("No available packages found for search term '%s'.") % search
           end
           yum_installable
         when 'remove'
           return [] if search.empty?
 
-          yum_removable = installed_packages.search_for(search).distinct.pluck(:name)
+          yum_removable = ::Katello::InstalledPackage.search_for(search).distinct.pluck(:name)
           if yum_removable.empty?
-            fail N_("Cannot remove package(s): This host does not have any installed packages matching the search term '%s'.") % search
+            fail N_("Cannot remove package(s): No installed packages found for search term '%s'.") % search
           end
           yum_removable
         when 'update'
@@ -536,14 +536,15 @@ module Katello
           end
           pkg_name_archs = installed_packages.search_for(search).distinct.pluck(:name, :arch)
           if pkg_name_archs.empty?
-            fail _("Cannot upgrade packages: No installed packages found for search term '%s'") % search
+            fail _("Cannot upgrade packages: No installed packages found for search term '%s'.") % search
           end
-          upgrades = ::Katello::Rpm.installable_for_hosts([self]).select(:id, :name, :arch, :nvra, :evr).order(evr: :desc).group_by { |i| [i.name, i.arch] }
-          result = pkg_name_archs.map { |name, arch| versions_by_name_arch[[name, arch]] || upgrades[[name, arch]]&.first&.nvra }.compact
-          if result.empty?
-            fail _("No upgradable packages found for search term '%s'. The host may already have the latest version(s) installed.") % search
+          versionless_upgrades = ::Katello::Rpm.where(name: pkg_name_archs.map(&:first)).select(:id, :name, :arch, :evr).order(evr: :desc).group_by { |i| [i.name, i.arch] }
+          # Use versions_by_name_arch if a version is specified, otherwise use the latest version. If using the latest version, upgrade by name only, not by name and arch.
+          pkg_names_and_nvras = pkg_name_archs.map { |name, arch| versions_by_name_arch[[name, arch]] || versionless_upgrades[[name, arch]]&.first&.name }.compact
+          if pkg_names_and_nvras.empty?
+            fail _("No upgradable packages found for search term '%s'.") % search
           end
-          result
+          pkg_names_and_nvras
         else
           fail ::Foreman::Exception.new(N_("package_names_for_job_template: Action must be one of %s"), actions.join(', '))
         end
@@ -554,7 +555,7 @@ module Katello
         actions = %w(install remove update).freeze
         case action
         when 'install'
-          deb_installable = ::Katello::Deb.apt_installable_for_host(self).search_for(search).distinct.pluck(:name)
+          deb_installable = ::Katello::Deb.search_for(search).distinct.pluck(:name)
           if deb_installable.empty?
             fail _("No available debs found for search term '%s'. Check the host's content view environments and already-installed debs.") % search
           end
@@ -562,10 +563,10 @@ module Katello
         when 'remove'
           return [] if search.empty?
 
-          installed_debs.search_for(search).distinct.pluck(:name)
+          ::Katello::InstalledDeb.search_for(search).distinct.pluck(:name)
         when 'update'
           return [] if search.empty?
-          deb_results = installed_debs.search_for(search).distinct.pluck(:name)
+          deb_results = ::Katello::InstalledDeb.search_for(search).distinct.pluck(:name)
           if deb_results.empty?
             fail _("No installed debs found for search term '%s'") % search
           end
@@ -575,10 +576,11 @@ module Katello
         end
       end
 
-      def advisory_ids(search:)
-        ids = ::Katello::Erratum.installable_for_hosts([self]).search_for(search).pluck(:errata_id)
+      def advisory_ids(search:, check_installable_for_host: true)
+        errata_scope = check_installable_for_host ? ::Katello::Erratum.installable_for_hosts([self]) : ::Katello::Erratum
+        ids = errata_scope.search_for(search).pluck(:errata_id)
         if ids.empty?
-          fail _("Cannot install errata: No installable errata found for search term '%s'") % search
+          fail _("Cannot install errata: No errata found for search term '%s'") % search
         end
         ids
       end
