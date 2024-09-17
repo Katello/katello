@@ -12,7 +12,7 @@ template_inputs:
   required: false
 %>
 
-<% advisory_ids = @host.advisory_ids(search: input("Errata search query")) -%>
+<% advisory_ids = @host.advisory_ids(search: input("Errata search query"), check_installable_for_host: false) -%>
 <% render_error(N_("No errata matching given search query")) if !input("Errata search query").blank? && advisory_ids.blank? -%>
 # RESOLVED_ERRATA_IDS=<%= advisory_ids.join(',') %>
 
