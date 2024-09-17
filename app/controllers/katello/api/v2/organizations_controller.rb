@@ -50,6 +50,7 @@ module Katello
     param :id, :number, :desc => N_("organization ID"), :required => true
     def show
       @render_template = 'katello/api/v2/organizations/show'
+      @organization.manifest_expiration_date(cached: false) if params[:force_manifest_expire_cache]
       super
     end
 
