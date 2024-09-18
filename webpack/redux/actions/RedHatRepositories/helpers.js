@@ -20,17 +20,17 @@ const recommendedRepositoriesRHEL = [
   'rhel-8-for-x86_64-appstream-kickstart',
   'rhel-8-for-x86_64-baseos-eus-rpms',
   'rhel-8-for-x86_64-appstream-eus-rpms',
-  'rhel-7-server-rpms',
-  'rhel-7-server-optional-rpms',
-  'rhel-7-server-extras-rpms',
-  'rhel-7-server-kickstart',
+  'rhel-7-server-els-rpms',
+  'rhel-7-server-els-optional-rpms',
 ];
 
 const recommendedRepositoriesSatTools = [
   'satellite-client-6-for-rhel-9-x86_64-rpms',
   'satellite-client-6-for-rhel-8-x86_64-rpms',
-  'rhel-7-server-satellite-client-6-rpms',
-  'rhel-6-server-els-satellite-client-6-rpms',
+  'rhel-7-server-els-satellite-client-6-rpms',
+  'rhel-7-server-els-satellite-6-client-2-rpms',
+  'satellite-6-client-2-for-rhel-8-x86_64-rpms',
+  'satellite-6-client-2-for-rhel-9-x86_64-rpms',
 ];
 
 const recommendedRepositoriesMisc = [
