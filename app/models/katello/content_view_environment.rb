@@ -68,9 +68,10 @@ module Katello
     end
 
     def priority(content_object)
-      if content_object.is_a? Katello::ActivationKey
+      case content_object
+      when Katello::ActivationKey
         content_view_environment_activation_keys.find_by(:activation_key_id => content_object.id).try(:priority)
-      elsif content_object.is_a? Katello::Host::ContentFacet
+      when Katello::Host::ContentFacet
         content_view_environment_content_facets.find_by(:content_facet_id => content_object.id).try(:priority)
       end
     end
