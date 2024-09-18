@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+# rubocop:disable Metrics/ClassLength
 require 'katello_test_helper'
 
 module Katello
@@ -16,10 +17,7 @@ module Katello
       ::SmartProxy.any_instance.stubs(:associate_features)
     end
 
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
-    def test_update_content_counts
-      @proxy_mirror.features << ::Feature.find_by(name: ::SmartProxy::PULP3_FEATURE)
+    def setup_yum_repo
       yum_repo = katello_repositories(:fedora_17_x86_64)
       yum_repo.srpms << ::Katello::Srpm.find_by(pulp_id: 'three-uuid')
       yum_service = yum_repo.backend_service(@proxy).with_mirror_adapter
@@ -35,7 +33,10 @@ module Katello
         "rpm.packagecategory" => {count: 1, href: 'href'}
       }
       yum_service.expects(:latest_content_counts).once.returns(yum_counts)
+      yum_repo
+    end
 
+    def setup_file_repo
       file_repo = katello_repositories(:pulp3_file_1)
       file_repo.update library_instance_id: file_repo.id
       file_service = file_repo.backend_service(@proxy).with_mirror_adapter
@@ -44,7 +45,10 @@ module Katello
         "file.file" => {count: 100, href: 'href'}
       }
       file_service.expects(:latest_content_counts).once.returns(file_counts)
+      file_repo
+    end
 
+    def setup_ansible_collection_repo
       ansible_repo = katello_repositories(:pulp3_ansible_collection_1)
       ansible_repo.update library_instance_id: ansible_repo.id
       ansible_service = ansible_repo.backend_service(@proxy).with_mirror_adapter
@@ -53,7 +57,10 @@ module Katello
         "ansible.collection" => {count: 802, href: 'href'}
       }
       ansible_service.expects(:latest_content_counts).once.returns(ansible_counts)
+      ansible_repo
+    end
 
+    def setup_container_repo
       container_repo = katello_repositories(:pulp3_docker_1)
       container_repo.update library_instance_id: container_repo.id
       container_repo.docker_manifest_lists << ::Katello::DockerManifestList.create(pulp_id: 'manifester-lister')
@@ -66,7 +73,27 @@ module Katello
         "container.tag" => {count: 5, href: 'href'}
       }
       container_service.expects(:latest_content_counts).once.returns(container_counts)
+      container_repo
+    end
 
+    def setup_cvv_container_repo
+      busybox_repo = katello_repositories(:busybox)
+      container_repo = katello_repositories(:busybox_dev)
+      container_repo.update library_instance_id: busybox_repo.id
+      container_repo.docker_manifest_lists << ::Katello::DockerManifestList.create(pulp_id: 'manifester-list1')
+      container_service = container_repo.backend_service(@proxy).with_mirror_adapter
+      container_repo.expects(:backend_service).with(@proxy).once.returns(container_service)
+      container_service.expects(:count_by_pulpcore_type).with(::Katello::Pulp3::DockerManifestList).once.returns(1)
+      container_counts = {
+        "container.blob" => {count: 30, href: 'href'},
+        "container.manifest" => {count: 10, href: 'href'},
+        "container.tag" => {count: 5, href: 'href'}
+      }
+      container_service.expects(:latest_content_counts).once.returns(container_counts)
+      container_repo
+    end
+
+    def setup_ostree_repo
       ostree_repo = katello_repositories(:pulp3_ostree_1)
       ostree_repo.update library_instance_id: ostree_repo.id
       ostree_service = ostree_repo.backend_service(@proxy).with_mirror_adapter
@@ -75,7 +102,10 @@ module Katello
         "ostree.refs" => {count: 30, href: 'href'}
       }
       ostree_service.expects(:latest_content_counts).once.returns(ostree_counts)
+      ostree_repo
+    end
 
+    def setup_deb_repo
       deb_repo = katello_repositories(:pulp3_deb_1)
       deb_repo.update library_instance_id: deb_repo.id
       deb_service = deb_repo.backend_service(@proxy).with_mirror_adapter
@@ -84,7 +114,10 @@ module Katello
         "deb.package" => {count: 987, href: 'href'}
       }
       deb_service.expects(:latest_content_counts).once.returns(deb_counts)
+      deb_repo
+    end
 
+    def setup_python_repo
       python_repo = katello_repositories(:pulp3_python_1)
       python_repo.update library_instance_id: python_repo.id
       python_service = python_repo.backend_service(@proxy).with_mirror_adapter
@@ -93,8 +126,23 @@ module Katello
         "python.python" => {count: 42, href: 'href'}
       }
       python_service.expects(:latest_content_counts).once.returns(python_counts)
+      python_repo
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    def test_update_global_content_counts
+      @proxy_mirror.features << ::Feature.find_by(name: ::SmartProxy::PULP3_FEATURE)
+      yum_repo = setup_yum_repo
+      file_repo = setup_file_repo
+      ansible_repo = setup_ansible_collection_repo
+      container_repo = setup_container_repo
+      cvv_container_repo = setup_cvv_container_repo
+      ostree_repo = setup_ostree_repo
+      deb_repo = setup_deb_repo
+      python_repo = setup_python_repo
       repos = [yum_repo, file_repo, ansible_repo, container_repo,
-               ostree_repo, deb_repo, python_repo]
+               ostree_repo, deb_repo, python_repo, cvv_container_repo]
+      @proxy.lifecycle_environments << [container_repo.environment, cvv_container_repo.environment]
       ::Katello::SmartProxyHelper.any_instance.expects(:repositories_available_to_capsule).once.returns(repos)
       @proxy.update_content_counts!
       counts = @proxy.content_counts
@@ -170,13 +218,113 @@ module Katello
                   { "python_package" => 42 }
               }
             }
-          }
+          },
+          cvv_container_repo.content_view_version.id.to_s =>
+          { "repositories" =>
+            { cvv_container_repo.id.to_s => {
+              "metadata" => {
+                "env_id" => cvv_container_repo.environment.id,
+                "library_instance_id" => cvv_container_repo.library_instance_or_self.id,
+                "product_id" => cvv_container_repo.product_id,
+                "content_type" => cvv_container_repo.content_type
+              },
+              "counts" => { "container.blob" => 30, "docker_manifest_list" => 1, "docker_manifest" => 9, "docker_tag" => 5 }
+            }
+            }
+        }
         }
       }
       assert_equal expected_counts, counts
     end
-    # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
+
+    def test_update_environment_content_counts
+      @proxy_mirror.features << ::Feature.find_by(name: ::SmartProxy::PULP3_FEATURE)
+      container_repo = setup_container_repo
+      repos = [container_repo]
+      @proxy.lifecycle_environments << container_repo.environment
+      ::Katello::SmartProxyHelper.any_instance.expects(:repositories_available_to_capsule)
+                                 .with(container_repo.environment, nil)
+                                 .once
+                                 .returns(repos)
+      @proxy.update_content_counts!(environment: container_repo.environment)
+      counts = @proxy.content_counts
+      expected_counts = { "content_view_versions" =>
+                           { container_repo.content_view_version.id.to_s =>
+                              { "repositories" =>
+                                 { container_repo.id.to_s => {
+                                   "metadata" => {
+                                     "env_id" => container_repo.environment.id,
+                                     "library_instance_id" => container_repo.library_instance_or_self.id,
+                                     "product_id" => container_repo.product_id,
+                                     "content_type" => container_repo.content_type
+                                   },
+                                   "counts" =>
+                                   { "container.blob" => 30, "docker_manifest_list" => 1, "docker_manifest" => 9, "docker_tag" => 5 }
+                                 }
+                                 }
+                              }
+                           }
+                         }
+      assert_equal expected_counts, counts
+    end
+
+    def test_update_content_view_counts
+      cvv_container_repo = setup_cvv_container_repo
+      repos = [cvv_container_repo]
+      @proxy.lifecycle_environments = [cvv_container_repo.environment]
+      ::Katello::SmartProxyHelper.any_instance.expects(:repositories_available_to_capsule)
+                                 .with(nil, cvv_container_repo.content_view_version.content_view)
+                                 .once
+                                 .returns(repos)
+      @proxy.update_content_counts!(environment: nil,
+                                    content_view: cvv_container_repo.content_view_version.content_view,
+                                    repository: nil)
+      counts = @proxy.content_counts
+      expected_counts = { "content_view_versions" =>
+                           { cvv_container_repo.content_view_version.id.to_s =>
+                              { "repositories" =>
+                                 { cvv_container_repo.id.to_s => {
+                                   "metadata" => {
+                                     "env_id" => cvv_container_repo.environment.id,
+                                     "library_instance_id" => cvv_container_repo.library_instance_or_self.id,
+                                     "product_id" => cvv_container_repo.product_id,
+                                     "content_type" => cvv_container_repo.content_type
+                                   },
+                                   "counts" =>
+                                   { "container.blob" => 30, "docker_manifest_list" => 1, "docker_manifest" => 9, "docker_tag" => 5 }
+                                 }
+                                 }
+                              }
+                           }
+      }
+      assert_equal expected_counts, counts
+    end
+
+    def test_update_repository_counts
+      cvv_container_repo = setup_cvv_container_repo
+      @proxy.lifecycle_environments << cvv_container_repo.environment
+      @proxy.update_content_counts!(repository: cvv_container_repo)
+      counts = @proxy.content_counts
+      expected_counts = { "content_view_versions" =>
+                           { cvv_container_repo.content_view_version.id.to_s =>
+                              { "repositories" =>
+                                 { cvv_container_repo.id.to_s => {
+                                   "metadata" => {
+                                     "env_id" => cvv_container_repo.environment.id,
+                                     "library_instance_id" => cvv_container_repo.library_instance_or_self.id,
+                                     "product_id" => cvv_container_repo.product_id,
+                                     "content_type" => cvv_container_repo.content_type
+                                   },
+                                   "counts" =>
+                                   { "container.blob" => 30, "docker_manifest_list" => 1, "docker_manifest" => 9, "docker_tag" => 5 }
+                                 }
+                                 }
+                              }
+                           }
+      }
+      assert_equal expected_counts, counts
+    end
 
     def test_sets_default_download_policy
       Setting[:default_proxy_download_policy] = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
@@ -332,3 +480,4 @@ module Katello
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

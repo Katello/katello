@@ -19,7 +19,6 @@ const ExpandedSmartProxyRepositories = ({
         filteredData[key] = entry;
       }
     });
-
     return filteredData;
   };
   const envContentCounts = filterDataByEnvId();
@@ -48,6 +47,43 @@ const ExpandedSmartProxyRepositories = ({
     /* eslint-enable max-len */
     return cellList;
   };
+
+  const getDataListItems = () => {
+    if (Object.keys(envContentCounts).length) {
+      return Object.keys(envContentCounts).map((repo, index) => (
+        <DataListItem key={`${repo.id}-${index}`}>
+          <DataListItemRow>
+            <DataListItemCells
+              dataListCells={dataListCellLists(envContentCounts[repo], repo)}
+            />
+          </DataListItemRow>
+        </DataListItem>
+      ));
+    }
+
+    if (repositories?.length) {
+      return repositories.map((repo, index) => (
+        <DataListItem key={`${repo.id}-${index}`}>
+          <DataListItemRow>
+            <DataListItemCells
+              dataListCells={dataListCellListsNotSynced(repo)}
+            />
+          </DataListItemRow>
+        </DataListItem>
+      ));
+    }
+
+    return (
+      <DataListItem key="empty">
+        <DataListItemRow>
+          <DataListItemCells
+            dataListCells={[<DataListCell key="cv-empty"><InactiveText text={__('Content view version is empty')} /></DataListCell>]}
+          />
+        </DataListItemRow>
+      </DataListItem>
+    );
+  };
+
   if (syncedToCapsule) {
     return (
       <DataList aria-label="Expanded repository details" isCompact>
@@ -64,24 +100,7 @@ const ExpandedSmartProxyRepositories = ({
             />
           </DataListItemRow>
         </DataListItem>
-        {Object.keys(envContentCounts).length ?
-          Object.keys(envContentCounts).map((repo, index) => (
-            <DataListItem key={`${repo.id}-${index}`}>
-              <DataListItemRow>
-                <DataListItemCells
-                  dataListCells={dataListCellLists(envContentCounts[repo], repo)}
-                />
-              </DataListItemRow>
-            </DataListItem>
-          )) :
-          <DataListItem key="empty">
-            <DataListItemRow>
-              <DataListItemCells
-                dataListCells={[<DataListCell key="cv-empty"><InactiveText text={__('Content view version is empty')} /></DataListCell>]}
-              />
-            </DataListItemRow>
-          </DataListItem>
-          }
+        {getDataListItems()}
       </DataList>
     );
   }
@@ -112,7 +131,7 @@ const ExpandedSmartProxyRepositories = ({
         <DataListItem key="empty">
           <DataListItemRow>
             <DataListItemCells
-              dataListCells={[<DataListCell key="cv-empty"><InactiveText text={__('Content view version is empty')} /></DataListCell>]}
+              dataListCells={[<DataListCell key="cv-empty"><InactiveText text={__('Content view version is empty or content counts are not up to date')} /></DataListCell>]}
             />
           </DataListItemRow>
         </DataListItem>

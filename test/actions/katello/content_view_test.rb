@@ -442,7 +442,9 @@ module ::Actions::Katello::ContentView
       plan_action(action, content_view, library)
       assert_action_planned_with(action, ::Actions::BulkAction, ::Actions::Katello::CapsuleContent::Sync,
                                  [smart_proxy_service_1.smart_proxy, smart_proxy_service_2.smart_proxy].sort,
-                                 :content_view_id => content_view.id, :environment_id => library.id)
+                                 :content_view_id => content_view.id,
+                                 :environment_id => library.id,
+                                 :skip_content_counts_update => true)
     end
   end
 
