@@ -8,7 +8,7 @@
 
 <div bst-alert="warning" ng-if="activationKey.multi_content_view_environment">
   <span translate>
-    This activation key has multiple content view environments, which are not yet displayed in the web UI. Changing the content view or lifecycle environment here will overwrite the activation key's multiple environments. To avoid this, update the activation key via Hammer.
+    This activation key has multiple content view environments, which cannot yet be edited in the web UI. To change this key's content view environments, update the activation key via Hammer.
   </span>
 </div>
 
@@ -56,7 +56,6 @@
           </div>
         </div>
       </dd>
-
 
       <div class="divider"></div>
       <h4 translate>System Purpose</h4>
@@ -123,17 +122,18 @@
           on-delete="clearReleaseVersion()"
           on-save="save(activationKey)">
       </dd>
-
+    </dl>
+    <dl class="dl-horizontal dl-horizontal-left" ng-if="!activationKey.multi_content_view_environment">
       <dt bst-feature-flag="lifecycle_environments">
         <span translate>Environment</span>
       </dt>
       <dd bst-feature-flag="lifecycle_environments">
         <div path-selector="environments"
-             ng-model="activationKey.environment"
-             mode="singleSelect"
-             selection-required="selectionRequired"
-             disabled="denied('edit_activation_keys', activationKey)"
-             disable-trigger="disableEnvironmentSelection">
+            ng-model="activationKey.environment"
+            mode="singleSelect"
+            selection-required="selectionRequired"
+            disabled="denied('edit_activation_keys', activationKey)"
+            disable-trigger="disableEnvironmentSelection">
         </div>
       </dd>
 
@@ -142,14 +142,14 @@
       </dt>
       <dd bst-feature-flag="lifecycle_environments">
         <div bst-edit-select="activationKey.content_view.name"
-             readonly="denied('edit_activation_keys', activationKey) || activationKey.environment === undefined || activationKey.environment === null"
-             selector="activationKey.content_view.id"
-             options="contentViews()"
-             on-cancel="cancelContentViewUpdate()"
-             on-save="saveContentView(activationKey)"
-             deletable="activationKey.content_view"
-             on-delete="resetEnvironment(activationKey)"
-             edit-trigger="editContentView">
+            readonly="denied('edit_activation_keys', activationKey) || activationKey.environment === undefined || activationKey.environment === null"
+            selector="activationKey.content_view.id"
+            options="contentViews()"
+            on-cancel="cancelContentViewUpdate()"
+            on-save="saveContentView(activationKey)"
+            deletable="activationKey.content_view"
+            on-delete="resetEnvironment(activationKey)"
+            edit-trigger="editContentView">
         </div>
 
         <div bst-alert="info" ng-show="editEnvironment">
@@ -159,6 +159,14 @@
           <p translate>You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.</p>
         </div>
       </dd>
+    </dl>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <span id="ak-cve-details" data-ak-details="{{ activationKey }}" class="hidden"></span>
+      <foreman-react-component
+          name="CVEDetailsCard"
+          data-props=""
+          ng-if="activationKey.multi_content_view_environment"
+      ></foreman-react-component>
     </dl>
   </div>
 </div>
