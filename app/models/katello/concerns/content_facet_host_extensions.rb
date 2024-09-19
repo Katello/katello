@@ -79,22 +79,14 @@ module Katello
       module ClassMethods
         def find_by_applicable_errata(_key, operator, value)
           conditions = sanitize_sql_for_conditions(["#{Katello::Erratum.table_name}.errata_id #{operator} ?", value_to_sql(operator, value)])
-          hosts = ::Host::Managed.joins(:applicable_errata).where(conditions)
-          if hosts.empty?
-            { :conditions => "1=0" }
-          else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).join(',')})" }
-          end
+          hosts = ::Host::Managed.joins(:applicable_errata).select(:id).where(conditions)
+          { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.to_sql})" }
         end
 
         def find_by_installable_errata(_key, operator, value)
           conditions = sanitize_sql_for_conditions(["#{Katello::Erratum.table_name}.errata_id #{operator} ?", value_to_sql(operator, value)])
-          facets = Katello::Host::ContentFacet.joins_installable_errata.where(conditions)
-          if facets.empty?
-            { :conditions => "1=0" }
-          else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
-          end
+          facets = Katello::Host::ContentFacet.joins_installable_errata.select(:host_id).where(conditions)
+          { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.to_sql})" }
         end
 
         def find_by_applicable_debs(_key, operator, value)
@@ -117,42 +109,26 @@ module Katello
 
         def find_by_applicable_rpms(_key, operator, value)
           conditions = sanitize_sql_for_conditions(["#{Katello::Rpm.table_name}.nvra #{operator} ?", value_to_sql(operator, value)])
-          hosts = ::Host::Managed.joins(:applicable_rpms).where(conditions)
-          if hosts.empty?
-            { :conditions => "1=0" }
-          else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).join(',')})" }
-          end
+          hosts = ::Host::Managed.joins(:applicable_rpms).select(:id).where(conditions)
+          { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.to_sql})" }
         end
 
         def find_by_installable_rpms(_key, operator, value)
           conditions = sanitize_sql_for_conditions(["#{Katello::Rpm.table_name}.nvra #{operator} ?", value_to_sql(operator, value)])
-          facets = Katello::Host::ContentFacet.joins_installable_rpms.where(conditions)
-          if facets.empty?
-            { :conditions => "1=0" }
-          else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
-          end
+          facets = Katello::Host::ContentFacet.joins_installable_rpms.select(:host_id).where(conditions)
+          { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.to_sql})" }
         end
 
         def find_by_repository_content_label(_key, operator, value)
           conditions = sanitize_sql_for_conditions(["#{Katello::Content.table_name}.label #{operator} ?", value_to_sql(operator, value)])
-          facets = Katello::Host::ContentFacet.joins_repositories.where(conditions)
-          if facets.empty?
-            { :conditions => "1=0" }
-          else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
-          end
+          facets = Katello::Host::ContentFacet.joins_repositories.select(:host_id).where(conditions)
+          { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.to_sql})" }
         end
 
         def find_by_repository_name(_key, operator, value)
           conditions = sanitize_sql_for_conditions(["#{Katello::RootRepository.table_name}.name #{operator} ?", value_to_sql(operator, value)])
-          facets = Katello::Host::ContentFacet.joins_repositories.where(conditions)
-          if facets.empty?
-            { :conditions => "1=0" }
-          else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
-          end
+          facets = Katello::Host::ContentFacet.joins_repositories.select(:host_id).where(conditions)
+          { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.to_sql})" }
         end
 
         def in_content_view_environments(content_views: nil, lifecycle_environments: nil)
