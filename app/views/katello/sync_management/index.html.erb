@@ -8,9 +8,9 @@
       "complete": "<%= escape_javascript(_('Sync complete.')) %>",
       "no_start_time": "<%= escape_javascript(_('No start time currently available.')) %>"
     });
-
-      KT.repo_status = $.parseJSON('<%= escape_javascript(@repo_status.to_json.html_safe) %>');
+      KT.repo_status = JSON.parse('<%= escape_javascript(@repo_status.to_json.html_safe) %>');
       KT.permissions = { "syncable" : <%= any_syncable? %> };
+      KT.content.populateRepoStatus();
   </script>
 <% end -%>
 
