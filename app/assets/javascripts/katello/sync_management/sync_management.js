@@ -205,10 +205,22 @@ KT.content = (function () {
           $(this).collapse();
         });
     };
+    populate_repo_status = function () {
+      var ids = [];
+      $.each(KT.repo_status, function (repo_id, status) {
+        if (status.is_running) {
+          ids.push(repo_id);
+          KT.content.draw_syncing(repo_id, status.progress.progress, status.sync_id);
+        }
+      });
+      KT.content.reset_products(KT.repo_status);
+      KT.content_actions.addSyncing(ids);
+    }
 
   return {
     updateProduct: updateProduct,
     updateRepo: updateRepo,
+    populateRepoStatus: populate_repo_status,
     finishRepo: finishRepo,
     select_all: select_all,
     select_none: select_none,
@@ -346,15 +358,7 @@ KT.content_actions = (function () {
   };
 })();
 
-var ids = [];
-$.each(KT.repo_status, function (repo_id, status) {
-  if (status.is_running) {
-    ids.push(repo_id);
-    KT.content.draw_syncing(repo_id, status.progress.progress, status.sync_id);
-  }
-});
-KT.content.reset_products(KT.repo_status);
-KT.content_actions.addSyncing(ids);
+KT.content.populateRepoStatus();
 
 $("#select_all").on("click", KT.content.select_all);
 $("#select_none").on("click", KT.content.select_none);
