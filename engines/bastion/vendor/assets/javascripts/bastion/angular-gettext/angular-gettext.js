@@ -1,3 +1,5 @@
+var loadAngularJSgettext = new Event('loadAngularJSgettext');
+
 angular.module('gettext', []);
 angular.module('gettext').constant('gettext', function (str) {
   /*
@@ -343,3 +345,5 @@ angular.module('gettext').factory('gettextPlurals', function () {
     }
   };
 });
+
+document.dispatchEvent(loadAngularJSgettext);
