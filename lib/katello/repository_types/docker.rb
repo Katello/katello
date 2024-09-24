@@ -27,10 +27,12 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
                :priority => 1,
                :pulp3_service_class => ::Katello::Pulp3::DockerManifest,
                :removable => true,
-               :uploadable => true
+               :uploadable => true,
+               :primary_content => true
   content_type Katello::DockerManifestList,
                :priority => 2,
-               :pulp3_service_class => ::Katello::Pulp3::DockerManifestList
+               :pulp3_service_class => ::Katello::Pulp3::DockerManifestList,
+               :primary_content => true
   content_type Katello::DockerTag,
                :priority => 3,
                :pulp3_service_class => ::Katello::Pulp3::DockerTag,
