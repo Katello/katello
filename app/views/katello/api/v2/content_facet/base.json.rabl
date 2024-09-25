@@ -32,6 +32,10 @@ child :content_view_environments => :content_view_environments do
   end
 end
 
+node :multi_content_view_environment do |content_facet|
+  content_facet.multi_content_view_environment?
+end
+
 # single cv/lce for backward compatibility
 node :content_view do |content_facet|
   content_view = content_facet.single_content_view
