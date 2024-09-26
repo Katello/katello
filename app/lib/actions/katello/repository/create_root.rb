@@ -5,11 +5,12 @@ module Actions
         def plan(root, relative_path = nil)
           begin
             root.save!
-          rescue ActiveRecord::RecordInvalid
-            if root.is_container_push
+          rescue ActiveRecord::RecordInvalid => e
+            if root.is_container_push && e.message.include?("Container Repository Name") && e.message.include?("conflicts with an existing repository")
               logger.warn("Skipping repository creation as container push repository already exists: #{root.container_push_name}")
               return
             end
+            raise e
           end
           repository = ::Katello::Repository.new(:environment => root.organization.library,
                                       :content_view_version => root.organization.library.default_content_view_version,
