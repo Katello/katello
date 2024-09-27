@@ -10,9 +10,9 @@ module Katello
           "id" => "4010",
           "type" => "file",
           "name" => "foo",
-          "contentUrl" => "/content/dist/rhel/server/6/$releasever/$basearch/satellite/5.7/iso"
+          "contentUrl" => "/content/dist/rhel/server/6/$releasever/$basearch/satellite/5.7/iso",
         },
-        "enabled" => false
+        "enabled" => false,
       }]
       @service = ProductContentImporter.new
     end
@@ -104,14 +104,14 @@ module Katello
                               "id" => "11210",
                               "type" => "yum",
                               "label" => "codeready-builder-for-rhel-9-s390x-eus-rpms",
-                              "name" => "Red Hat CodeReady Linux Builder for RHEL 9 IBM z Systems - Extended Update Support (RPMs)"
+                              "name" => "Red Hat CodeReady Linux Builder for RHEL 9 IBM z Systems - Extended Update Support (RPMs)",
                             },
                           "enabled" => false},
                          {"content" =>
                             {"id" => "9268",
                              "type" => "yum",
                              "label" => "codeready-builder-for-rhel-8-s390x-eus-debug-rpms",
-                             "name" => "Red Hat CodeReady Linux Builder for RHEL 8 IBM z Systems - Extended Update Support (Debug RPMs)"
+                             "name" => "Red Hat CodeReady Linux Builder for RHEL 8 IBM z Systems - Extended Update Support (Debug RPMs)",
                              },
                           "enabled" => false}]},
                      {"id" => "350", "productContent" => []},

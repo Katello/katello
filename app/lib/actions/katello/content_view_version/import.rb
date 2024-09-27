@@ -40,7 +40,7 @@ module Actions
                             importing: !metadata_map.syncable_format?,
                             syncable: metadata_map.syncable_format?,
                             major: metadata_map.content_view_version.major,
-                            minor: metadata_map.content_view_version.minor
+                            minor: metadata_map.content_view_version.minor,
                           })
               plan_self(content_view_id: import.content_view.id)
             end

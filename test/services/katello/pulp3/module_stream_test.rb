@@ -40,12 +40,12 @@ module Katello
             "arch": "x86_64",
             "artifacts": [
               "walrus-0:5.21-1.noarch",
-              "foobar-8.noarch"
+              "foobar-8.noarch",
             ],
             "dependencies": [
 
             ],
-            "packages": ["pulp3/href1", "pulp3/href2"]
+            "packages": ["pulp3/href1", "pulp3/href2"],
           }.with_indifferent_access
         end
 

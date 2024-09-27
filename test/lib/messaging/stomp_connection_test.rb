@@ -12,7 +12,7 @@ module Katello
         @settings = {
           queue_name: 'my_queue',
           subscription_name: 'my_subscription',
-          client_id: 'my_client_id'
+          client_id: 'my_client_id',
         }
         @connection = Katello::Messaging::StompConnection.new(settings: @settings)
       end
@@ -20,7 +20,7 @@ module Katello
       def test_subscribe
         expected_options = {
           'ack' => 'client-individual',
-          'durable-subscription-name' => @settings[:subscription_name]
+          'durable-subscription-name' => @settings[:subscription_name],
         }
         @stomp_client.expects(:subscribe).with(@settings[:queue_name], expected_options)
 

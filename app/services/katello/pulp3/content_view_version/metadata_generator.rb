@@ -21,7 +21,7 @@ module Katello
                   content_view: content_view.slice(:name, :label, :description, :generated_for),
                   content_view_version: content_view_version.slice(:major, :minor, :description),
                   incremental: from_content_view_version.present?,
-                  format: export_service.format
+                  format: export_service.format,
           }
           unless from_content_view_version.blank?
             ret[:from_content_view_version] = from_content_view_version.slice(:major, :minor)
@@ -72,7 +72,7 @@ module Katello
                                                                    content_path: content.content_url)
           { id: content.cp_content_id,
             label: content.label,
-            url: content_data[:path]
+            url: content_data[:path],
           }
         end
 

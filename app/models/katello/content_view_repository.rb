@@ -6,7 +6,7 @@ module Katello
                                 Repository::FILE_TYPE,
                                 Repository::DEB_TYPE,
                                 Repository::ANSIBLE_COLLECTION_TYPE,
-                                Katello::RepositoryTypeManager.generic_repository_types(false).keys.flatten
+                                Katello::RepositoryTypeManager.generic_repository_types(false).keys.flatten,
                                ].flatten.freeze
 
     ALLOWED_IMPORT_REPOSITORY_TYPES = Repository::EXPORTABLE_TYPES

@@ -7,7 +7,7 @@ module Katello
         { 'productId' => 'product_1' },
         { 'productId' => 'product_2', 'providedProductIds' => ['p product 1', 'p product 2'] },
         { 'productId' => 'product_3', 'providedProductIds' => ['p product 1', 'p product 3'] },
-        { 'productId' => 'product_4', 'providedProductIds' => ['p product 4', 'p product 3'] }
+        { 'productId' => 'product_4', 'providedProductIds' => ['p product 4', 'p product 3'] },
       ].freeze
 
     PRODUCT_NAME ||= "Load_Balancing".freeze
@@ -19,7 +19,7 @@ module Katello
       :cp_id => 1,
       :attrs => [],
       :multiplier => 1,
-      :organization_id => 1
+      :organization_id => 1,
     }.with_indifferent_access
 
     SIMPLE_PRODUCT_WITH_INVALID_NAME ||= HashWithIndifferentAccess.new(
@@ -37,23 +37,23 @@ module Katello
       :multiplier => 1,
       :attrs => [{
         "name" => "version",
-        "value" => "1.0"
+        "value" => "1.0",
       },
                  {
                    "name" => "variant",
-                   "value" => "ALL"
+                   "value" => "ALL",
                  },
                  {
                    "name" => "arch",
-                   "value" => "ALL"
+                   "value" => "ALL",
                  },
                  {
                    "name" => "type",
-                   "value" => "SVC"
+                   "value" => "SVC",
                  },
                  {
                    "name" => "sockets",
-                   "value" => 2
+                   "value" => 2,
                  }]
     )
 
@@ -80,11 +80,11 @@ module Katello
           "contentUrl" => "/released-extra/RHEL-5-Server/$releasever/$basearch/os/ClusterStorage/",
           "gpgUrl" => "/some/gpg/url/",
           "updated" => "2011-01-04T18:47:47.219+0000",
-          "created" => "2011-01-04T18:47:47.219+0000"
+          "created" => "2011-01-04T18:47:47.219+0000",
         },
         "enabled" => true,
         "flexEntitlement" => 0,
-        "physicalEntitlement" => 0}
+        "physicalEntitlement" => 0},
                          ],
       :attrs => {'name' => ProductTestData::PRODUCT_NAME}
     )
@@ -96,7 +96,7 @@ module Katello
         "href" => "/owners/ACME_Corporation",
         "id" => "ff808081311ad38001311ad3b5b60001",
         "key" => "ACME_Corporation_spec",
-        "displayName" => "ACME_Corporation_spec"
+        "displayName" => "ACME_Corporation_spec",
       },
       "providedProducts" => [
 
@@ -105,8 +105,8 @@ module Katello
           "productName" => "Red Hat Enterprise Linux 6 Server SVC",
           "productId" => "20",
           "updated" => "2011-07-11T20=>26=>26.511+0000",
-          "created" => "2011-07-11T20=>26=>26.511+0000"
-        }
+          "created" => "2011-07-11T20=>26=>26.511+0000",
+        },
       ],
       "endDate" => "2025-05-29T00=>00=>00.000+0000",
       "startDate" => "2011-07-11T20=>10=>22.519+0000",

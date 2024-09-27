@@ -6,7 +6,7 @@ module Katello
     TYPES_FROM_PARAMS = {
       bugfix: Katello::Erratum::BUGZILLA, # ['bugfix', 'recommended']
       security: Katello::Erratum::SECURITY, # ['security']
-      enhancement: Katello::Erratum::ENHANCEMENT # ['enhancement', 'optional']
+      enhancement: Katello::Erratum::ENHANCEMENT, # ['enhancement', 'optional']
     }.freeze
 
     before_action :find_host, only: :index

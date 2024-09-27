@@ -24,7 +24,7 @@ module Katello
         to_day + 5.minutes,
         to_day + 5.days,
         to_day - 1.day,
-        to_day - 5.minutes
+        to_day - 5.minutes,
       ]
     end
 

@@ -65,7 +65,7 @@ module Katello
       export_task.returns(build_task_stub)
       post :version, params: { id: @library_view_version.id,
                                destination_server: destination,
-                               chunk_size_gb: chunk_size_gb
+                               chunk_size_gb: chunk_size_gb,
                              }
       assert_response :success
     end
@@ -90,7 +90,7 @@ module Katello
       post :version, params: { id: @library_view_version.id,
                                destination_server: destination,
                                chunk_size_gb: chunk_size_gb,
-                               from_history_id: history[:id]
+                               from_history_id: history[:id],
                              }
       assert_response :success
     end
@@ -104,7 +104,7 @@ module Katello
                                      .returns
 
       post :version, params: { id: @library_view_version.id,
-                               destination_server: destination
+                               destination_server: destination,
                              }
       response = JSON.parse(@response.body)['displayMessage']
       assert_match(%r{No existing export history was found to perform an incremental export}, response)
@@ -141,7 +141,7 @@ module Katello
       post :library, params: { organization_id: org.id,
                                destination_server: destination,
                                chunk_size_gb: chunk_size_gb,
-                               fail_on_missing_content: true
+                               fail_on_missing_content: true,
                              }
       assert_response :success
     end
@@ -149,7 +149,7 @@ module Katello
     def test_library_bad_request_on_incremental
       org = get_organization
       post :library, params: { organization_id: org.id,
-                               from_latest_increment: true
+                               from_latest_increment: true,
                              }
       response = JSON.parse(@response.body)['displayMessage']
       assert_match(/Unable to incrementally export/, response)

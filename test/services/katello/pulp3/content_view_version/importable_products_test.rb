@@ -16,7 +16,7 @@ module Katello
             metadata_products = [
               stub(label: new_prod_1, name: new_prod_1, description: 'fake', redhat: false, gpg_key: metadata_gpg_key),
               stub(label: new_prod_2, name: new_prod_2, description: 'fake', redhat: false, gpg_key: nil),
-              stub(label: repo.product.label, name: repo.product.name, description: repo.product.description, redhat: false, gpg_key: metadata_gpg_key)
+              stub(label: repo.product.label, name: repo.product.name, description: repo.product.description, redhat: false, gpg_key: metadata_gpg_key),
             ]
 
             helper = Katello::Pulp3::ContentViewVersion::ImportableProducts.new(
@@ -44,7 +44,7 @@ module Katello
             label = "#{repo.product.label}-f000"
 
             metadata_products = [
-              stub(label: label, name: repo.product.name, description: repo.product.description, redhat: false, gpg_key: metadata_gpg_key)
+              stub(label: label, name: repo.product.name, description: repo.product.description, redhat: false, gpg_key: metadata_gpg_key),
             ]
 
             helper = Katello::Pulp3::ContentViewVersion::ImportableProducts.new(

@@ -40,7 +40,7 @@ module Katello
       post: Net::HTTP::Post,
       put: Net::HTTP::Put,
       patch: Net::HTTP::Patch,
-      delete: Net::HTTP::Delete
+      delete: Net::HTTP::Delete,
     }.freeze
 
     class << self
@@ -145,7 +145,7 @@ module Katello
         options = {
           :headers => added_header,
           :open_timeout => SETTINGS[:katello][:rest_client_timeout],
-          :timeout => SETTINGS[:katello][:rest_client_timeout]
+          :timeout => SETTINGS[:katello][:rest_client_timeout],
         }
         options[:ssl_ca_file] = self.ca_cert_file unless self.ca_cert_file.nil?
         options[:ssl_client_cert] = self.ssl_client_cert unless self.ssl_client_cert.nil?

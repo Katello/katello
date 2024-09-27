@@ -10,14 +10,14 @@ module Katello
       let(:model) do
         {
           :model => ::Katello::CapsuleLifecycleEnvironment,
-          :fields => [:lifecycle_environment_id, :capsule_id]
+          :fields => [:lifecycle_environment_id, :capsule_id],
         }
       end
 
       let(:content_view) do
         {
           :model => ::Katello::ContentView,
-          :fields => [:name, :organization_id]
+          :fields => [:name, :organization_id],
         }
       end
 
@@ -37,7 +37,7 @@ module Katello
           .expects(:count)
           .returns({
                      [1, 1] => 2,
-                     [6, 1] => 2
+                     [6, 1] => 2,
                    })
         mock_relation
           .expects(:pluck).with('min(id)')
@@ -45,7 +45,7 @@ module Katello
         result = migrator.cleaning_queries(model)
         expected = [
           {:lifecycle_environment_id => 1, :capsule_id => 1, :min_id => 1},
-          {:lifecycle_environment_id => 6, :capsule_id => 1, :min_id => 6}
+          {:lifecycle_environment_id => 6, :capsule_id => 1, :min_id => 6},
         ]
         assert_equal result, expected
       end
@@ -85,7 +85,7 @@ module Katello
         migrator.expects(:cleaning_queries).at_least(5).returns(
         [
           {:lifecycle_environment_id => 1, :capsule_id => 1, :min_id => 1},
-          {:lifecycle_environment_id => 6, :capsule_id => 1, :min_id => 6}
+          {:lifecycle_environment_id => 6, :capsule_id => 1, :min_id => 6},
         ])
         migrator.expects(:clean_duplicates).at_least(5).returns(5)
         migrator.expects(:rename_duplicates).at_least_once.returns(1)

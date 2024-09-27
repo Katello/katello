@@ -20,7 +20,7 @@ module Katello
       {
         "katello_task_statuses" => ["task_owner_id"],
         "katello_content_view_erratum_filter_rules" => ["errata_id"],
-        "katello_repositories" => ["content_id"]
+        "katello_repositories" => ["content_id"],
       }
     end
 
@@ -67,7 +67,7 @@ module Katello
         "Katello::SmartProxySyncHistory",
         "Katello::SubscriptionFacetActivationKey",
         "Katello::SubscriptionFacetInstalledProduct",
-        "Katello::SubscriptionFacetPurposeAddon"
+        "Katello::SubscriptionFacetPurposeAddon",
       ]
     end
 

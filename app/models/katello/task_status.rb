@@ -247,7 +247,7 @@ module Katello
       # Handle not very friendly Pulp message
       case errors
       when /^\(.*\)$/
-        if stacktrace.class == Array
+        if stacktrace.instance_of?(Array)
           stacktrace.last.split(":").first
         else
           stacktrace.split("(").first

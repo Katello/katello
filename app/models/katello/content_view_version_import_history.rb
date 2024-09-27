@@ -35,7 +35,7 @@ module Katello
     def self.generate_audit_comment(user:, content_view_name:)
       truncate_audit_comment(_("Content imported by %{user} into content view '%{name}'") % {
         user: user.to_label,
-        name: content_view_name
+        name: content_view_name,
       })
     end
   end

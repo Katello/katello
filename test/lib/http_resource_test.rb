@@ -24,8 +24,8 @@ module Katello
         too: 'tru',
         arr: [
           :arr_one,
-          :arr_two
-        ]
+          :arr_two,
+        ],
       }
 
       result = TestHttpResource.hash_to_query(params)

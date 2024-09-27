@@ -54,7 +54,7 @@ module Katello
           proxy_url: smart_proxy.http_proxy&.url,
           proxy_username: smart_proxy.http_proxy&.username,
           proxy_password: smart_proxy.http_proxy&.password,
-          total_timeout: Setting[:sync_connect_timeout]
+          total_timeout: Setting[:sync_connect_timeout],
         }
         if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.empty? && !remote_options[:url].end_with?('/PULP_MANIFEST')
           remote_options[:url] = acs.base_url + '/PULP_MANIFEST'
@@ -73,7 +73,7 @@ module Katello
           {
             client_cert: acs.ssl_client_cert&.content,
             client_key: acs.ssl_client_key&.content,
-            ca_cert: acs.ssl_ca_cert&.content
+            ca_cert: acs.ssl_ca_cert&.content,
           }
         end
       end

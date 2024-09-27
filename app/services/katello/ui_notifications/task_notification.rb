@@ -16,8 +16,8 @@ module Katello
           :links => [
             {
               :path_method => :foreman_tasks_task_path,
-              :title => _('Task detail')
-            }
+              :title => _('Task detail'),
+            },
           ]
         ).actions
       end

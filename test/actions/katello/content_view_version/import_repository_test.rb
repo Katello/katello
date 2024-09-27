@@ -34,26 +34,26 @@ module ::Actions::Katello::ContentViewVersion
 
       {
         products: {
-          prod.label => prod.slice(:name, :label).merge(redhat: prod.redhat?)
+          prod.label => prod.slice(:name, :label).merge(redhat: prod.redhat?),
         },
         gpg_keys: {},
         repositories: {
           "misc-24037" => { label: prod.repositories.first.label,
                             product: prod.slice(:label),
-                            redhat: prod.redhat?
-          }
+                            redhat: prod.redhat?,
+          },
         },
         content_view_version: {
           major: '1',
-          minor: '0'
+          minor: '0',
         },
         content_view: {
           name: "Export-Repository",
           label: 'Export-Repository',
           description: 'great',
-          generated_for: :repository_export
+          generated_for: :repository_export,
         },
-        destination_server: "wow"
+        destination_server: "wow",
       }.with_indifferent_access
     end
 

@@ -10,7 +10,7 @@ module Katello
         def remote_options
           deb_remote_options = {
             policy: root.download_policy,
-            distributions: root.deb_releases
+            distributions: root.deb_releases,
           }
           deb_remote_options[:components] = root.deb_components.present? ? root.deb_components : nil
           deb_remote_options[:architectures] = root.deb_architectures.present? ? root.deb_architectures : nil
@@ -33,7 +33,7 @@ module Katello
         def mirror_remote_options
           super.merge(
             {
-              distributions: repo.deb_releases + "#{' default' unless repo.deb_releases.include? 'default'}"
+              distributions: repo.deb_releases + "#{' default' unless repo.deb_releases.include? 'default'}",
             }
           )
         end
@@ -44,7 +44,7 @@ module Katello
           popts.merge!(
             {
               structured: true, # publish real suites (e.g. 'stable')
-              simple: true # publish all into 'default'-suite
+              simple: true, # publish all into 'default'-suite
             }
           )
           popts[:signing_service] = ss[0].pulp_href if ss && ss.length == 1
@@ -55,7 +55,7 @@ module Katello
           {
             base_path: path,
             publication: repo.publication_href,
-            name: "#{generate_backend_object_name}"
+            name: "#{generate_backend_object_name}",
           }
         end
 
@@ -104,7 +104,7 @@ module Katello
             config_hash = {
               source_repo_version: repo_config[:source_repo_version],
               dest_repo: repo_config[:dest_repo],
-              content: []
+              content: [],
             }
             config_hash[:dest_base_version] = repo_config[:dest_base_version] if repo_config[:dest_base_version]
             data_dup.config << config_hash

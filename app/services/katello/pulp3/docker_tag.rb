@@ -18,7 +18,7 @@ module Katello
       def self.generate_model_row(unit)
         row = {
           pulp_id: unit[unit_identifier],
-          name: unit['name']
+          name: unit['name'],
         }
 
         taggable = ::Katello::DockerManifest.find_by(:pulp_id => unit['tagged_manifest'])

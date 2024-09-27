@@ -23,7 +23,7 @@ module Bastion
 
       SETTINGS[:bastion][:assets][:precompile] = [
         'bastion/bastion.css',
-        'bastion/bastion.js'
+        'bastion/bastion.js',
       ]
 
       locale_files = Dir.glob("#{Bastion::Engine.root}/vendor/assets/javascripts/#{Bastion.localization_path("*")}")

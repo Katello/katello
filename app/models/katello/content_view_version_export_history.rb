@@ -18,7 +18,7 @@ module Katello
     validates :export_type, :presence => true,
               :inclusion => { :in => EXPORT_TYPES,
                               :allow_blank => false,
-                              :message => _("must be one of the following: %s" % EXPORT_TYPES.join(', '))
+                              :message => _("must be one of the following: %s" % EXPORT_TYPES.join(', ')),
                             }
     validates :metadata, :presence => true
     serialize :metadata, Hash
@@ -51,7 +51,7 @@ module Katello
       self.export_type ||= self.class.export_type_from_metadata(metadata)
     end
 
-    def self.generate_audit_comment(user:, content_view_version:, from_version: nil, metadata:)
+    def self.generate_audit_comment(user:, content_view_version:, metadata:, from_version: nil)
       export_type = export_type_from_metadata(metadata)
       if content_view_version.content_view.generated_for_library?
         export_descriptor = "library export"

@@ -5,7 +5,7 @@ module Katello
       Katello::Errors::ManifestExpired,
       Katello::Errors::UpstreamConsumerGone,
       Katello::Errors::UpstreamConsumerNotFound,
-      Katello::Errors::NoManifestImported
+      Katello::Errors::NoManifestImported,
     ].freeze
 
     def initialize(organization)

@@ -23,6 +23,6 @@ attributes :upstream_pool_id
 node :hypervisor, :if => lambda { |sub| sub && sub.respond_to?(:hypervisor) && sub.hypervisor } do |subscription|
   {
     id: subscription.hypervisor.id,
-    name: subscription.hypervisor.name
+    name: subscription.hypervisor.name,
   }
 end

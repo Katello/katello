@@ -35,7 +35,7 @@ module BastionKatello
           { 'consumerCertRPM' => consumer_cert_rpm,
             'defaultDownloadPolicy' => !Foreman.in_rake? && db_migrated && Setting['default_download_policy'],
             'remoteExecutionPresent' => true,
-            'hostToolingEnabled' => true
+            'hostToolingEnabled' => true,
           }
         end
       )
