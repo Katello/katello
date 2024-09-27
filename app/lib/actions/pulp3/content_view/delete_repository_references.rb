@@ -14,7 +14,11 @@ module Actions
           to_delete = content_view.repository_references.select do |repository_reference|
             repo = repository_reference.root_repository.library_instance
             if delete_href?(repository_reference.repository_href, content_view)
-              tasks << repo.backend_service(smart_proxy).delete_repository(repository_reference)
+              if repo.root.is_container_push?
+                tasks << repo.backend_service(smart_proxy).delete_distributions
+              else
+                tasks << repo.backend_service(smart_proxy).delete_repository(repository_reference)
+              end
               true
             else
               false
@@ -22,7 +26,7 @@ module Actions
           end
           to_delete.each(&:destroy)
 
-          output[:pulp_tasks] = tasks
+          output[:pulp_tasks] = tasks.compact
         end
 
         #migrated composites may have the same RepositoryReference as their component
