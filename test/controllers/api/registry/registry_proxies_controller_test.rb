@@ -993,7 +993,7 @@ module Katello
         @controller.instance_variable_set(:@container_path_input, container_push_name)
         @controller.instance_variable_set(:@container_push_name_format, container_push_name_format)
         @controller.expects(:sync_task).with(
-          ::Actions::Katello::Repository::CreateRoot,
+          ::Actions::Katello::Repository::CreateContainerPushRoot,
           mock_root_repo,
           container_push_name
         ).returns(true)

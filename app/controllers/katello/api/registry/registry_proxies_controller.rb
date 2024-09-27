@@ -354,7 +354,7 @@ module Katello
           container_push_name: @container_path_input,
           container_push_name_format: @container_push_name_format
         )
-        sync_task(::Actions::Katello::Repository::CreateRoot, root, @container_path_input)
+        sync_task(::Actions::Katello::Repository::CreateContainerPushRoot, root, @container_path_input)
       end
     end
 
