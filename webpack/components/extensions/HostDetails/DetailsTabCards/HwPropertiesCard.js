@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { number_to_human_size as NumberToHumanSize } from 'number_helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   DescriptionList,
@@ -46,7 +47,7 @@ const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
   const cpuSockets = facts?.['cpu::cpu_socket(s)'];
   const coreSocket = facts?.['cpu::core(s)_per_socket'];
   const blockDevices = facts?.blockdevices;
-  const memory = facts?.['dmi::memory::maximum_capacity'];
+  const memory = facts?.['memory::memtotal'];
 
   return (
     <CardTemplate
@@ -74,7 +75,11 @@ const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
         </DescriptionListGroup>
         <DescriptionListGroup>
           <DescriptionListTerm>{__('RAM')}</DescriptionListTerm>
-          <DescriptionListDescription>{memory}</DescriptionListDescription>
+          <DescriptionListDescription>
+            {NumberToHumanSize(memory * 1024, {
+              strip_insignificant_zeros: true,
+            })}
+          </DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup>
           <HostDisks blockDevices={blockDevices} />
