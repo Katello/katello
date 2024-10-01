@@ -189,6 +189,10 @@ module Katello
       releases
     end
 
+    def content_view_environment_labels
+      content_view_environment_names.join(',')
+    end
+
     def available_subscriptions
       all_pools = self.get_pools.map { |pool| pool["id"] }
       added_pools = self.pools.pluck(:cp_id)
