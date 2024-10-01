@@ -207,6 +207,46 @@ module Katello
       assert_equal key_description, response['description']
     end
 
+    def test_create_with_content_view_environments_param
+      cve = katello_content_view_environments(:library_dev_view_library)
+      cve.update(organization: @organization)
+      content_view_environments = ['published_dev_view_library']
+      ActivationKey.any_instance.expects(:reload)
+      assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
+        assert_equal content_view_environments, activation_key.content_view_environments.map(&:candlepin_name), [cve.candlepin_name]
+        assert_valid activation_key
+      end
+
+      post :create, params: {
+        :organization_id => @organization.id,
+        :content_view_environments => content_view_environments,
+        :activation_key => {:name => 'new key'}
+      }
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+    end
+
+    def test_create_with_content_view_environment_ids_param
+      cve = katello_content_view_environments(:library_dev_view_library)
+      cve.update(organization: @organization)
+      content_view_environment_ids = [cve.id]
+      ActivationKey.any_instance.expects(:reload)
+      assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
+        assert_equal content_view_environment_ids, activation_key.content_view_environments.map(&:id)
+        assert_valid activation_key
+      end
+
+      post :create, params: {
+        :organization_id => @organization.id,
+        :content_view_environment_ids => content_view_environment_ids,
+        :activation_key => {:name => 'new key'}
+      }
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+    end
+
     test_attributes :pid => 'a9e756e1-886d-4f0d-b685-36ce4247517d'
     def test_should_not_create_with_no_hosts_limit
       post :create, params: {
@@ -215,6 +255,16 @@ module Katello
       }
       assert_response :unprocessable_entity
       assert_match 'Validation failed: Max hosts cannot be nil', @response.body
+    end
+
+    def test_should_not_create_with_invalid_content_view_environments_param
+      post :create, params: { :organization_id => @organization.id, :content_view_environments => ['foo'] }
+      assert_response :unprocessable_entity
+    end
+
+    def test_should_not_create_with_invalid_content_view_environment_ids_param
+      post :create, params: { :organization_id => @organization.id, :content_view_environment_ids => ['foo'] }
+      assert_response :unprocessable_entity
     end
 
     test_attributes :pid => 'c018b177-2074-4f1a-a7e0-9f38d6c9a1a6'
@@ -298,6 +348,96 @@ module Katello
     def test_should_not_update_with_invalid_release
       put(:update, params: { :organization_id => @organization.id, :id => @activation_key.id, :release_version => "foo" })
       assert_response :bad_request
+    end
+
+    def test_should_not_update_with_invalid_content_view_environments_param
+      put :update, params: { :organization_id => @organization.id, :id => @activation_key.id, :content_view_environments => ['foo'] }
+      assert_response :unprocessable_entity
+    end
+
+    def test_should_not_update_with_invalid_content_view_environment_ids_param
+      put :update, params: { :organization_id => @organization.id, :id => @activation_key.id, :content_view_environment_ids => ['foo'] }
+      assert_response :unprocessable_entity
+    end
+
+    def test_update_with_cleared_cves
+      cve = katello_content_view_environments(:library_dev_view_library)
+      cve.update(organization: @organization)
+      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, _activation_key_params|
+        assert_valid activation_key
+      end
+      assert_operator @activation_key.content_view_environments.size, :>, 0
+
+      put :update, params: {
+        :organization_id => @organization.id,
+        :id => @activation_key.id,
+        :content_view_environments => []
+      }
+
+      assert_response :success
+      assert_equal 0, @activation_key.content_view_environments.size
+    end
+
+    def test_update_with_cleared_cve_ids
+      cve = katello_content_view_environments(:library_dev_view_library)
+      cve.update(organization: @organization)
+      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, _activation_key_params|
+        assert_valid activation_key
+      end
+      assert_operator @activation_key.content_view_environments.size, :>, 0
+
+      put :update, params: {
+        :organization_id => @organization.id,
+        :id => @activation_key.id,
+        :content_view_environment_ids => []
+      }
+
+      assert_response :success
+      assert_equal 0, @activation_key.content_view_environments.size
+    end
+
+    def test_update_with_cleared_cv_lce_ids
+      cve = katello_content_view_environments(:library_dev_view_library)
+      cve.update(organization: @organization)
+      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, _activation_key_params|
+        assert_valid activation_key
+      end
+      assert_operator @activation_key.content_view_environments.size, :>, 0
+
+      put :update, params: {
+        :organization_id => @organization.id,
+        :id => @activation_key.id,
+        :content_view_id => nil,
+        :environment_id => nil
+      }
+
+      assert_response :success
+      assert_equal 0, @activation_key.content_view_environments.size
+    end
+
+    def test_update_from_angularjs_does_not_clear_cves
+      cve = katello_content_view_environments(:library_dev_view_library)
+      cve.update(organization: @organization)
+      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, _activation_key_params|
+        assert_valid activation_key
+      end
+      assert_operator @activation_key.content_view_environments.size, :>, 0
+
+      put :update, params: {
+        :organization_id => @organization.id,
+        :id => @activation_key.id,
+        :content_view_id => nil,
+        :environment_id => nil,
+        :content_view => {
+          :id => @view.id
+        },
+        :environment => {
+          :id => @library.id
+        }
+      }
+
+      assert_response :success
+      assert_operator @activation_key.content_view_environments.size, :>, 0
     end
 
     test_attributes :pid => 'ec225dad-2d27-4b37-989d-1ba2c7f74ac4'

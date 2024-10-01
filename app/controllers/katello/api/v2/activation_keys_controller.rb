@@ -2,6 +2,7 @@ module Katello
   class Api::V2::ActivationKeysController < Api::V2::ApiController  # rubocop:disable Metrics/ClassLength
     include Katello::Concerns::FilteredAutoCompleteSearch
     include Katello::Concerns::Api::V2::ContentOverridesController
+    include Katello::Concerns::Api::V2::MultiCVParamsHandling
     before_action :verify_presence_of_organization_or_environment, :only => [:index]
     before_action :find_optional_organization, :only => [:index, :create, :show]
     before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :available_releases,
@@ -65,7 +66,7 @@ module Katello
     param_group :activation_key
     def create
       @activation_key = ActivationKey.new(activation_key_params) do |activation_key|
-        activation_key.content_view_environments = @content_view_environments if @content_view_environments
+        activation_key.content_view_environments = @content_view_environments if update_cves?
         activation_key.organization = @organization
         activation_key.user = current_user
       end
@@ -79,8 +80,8 @@ module Katello
     param_group :activation_key
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
     def update
-      if @content_view_environments.present?
-        if @content_view_environments.length == 1
+      if @content_view_environments.present? || update_cves?
+        if single_assignment? && @content_view_environments.length == 1
           @activation_key.assign_single_environment(
             content_view: @content_view_environments.first.content_view,
             lifecycle_environment: @content_view_environments.first.lifecycle_environment
@@ -294,7 +295,7 @@ module Katello
                                                              content_view_id: content_view_id).first
       if cve.blank?
         fail HttpErrors::NotFound, _("Couldn't find content view environment with content view ID '%{cv}'"\
-                                    " or environment ID '%{env}'") % { cv: content_view_id, env: environment_id }
+                                    " and environment ID '%{env}'") % { cv: content_view_id, env: environment_id }
       end
       @content_view_environments = [cve]
     end
@@ -305,11 +306,41 @@ module Katello
         find_cve_for_single
       elsif params[:content_view_environments] || params[:content_view_environment_ids]
         @content_view_environments = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
-              labels: params[:content_view_environments],
-              ids: params[:content_view_environment_ids],
-              organization: @organization || @activation_key&.organization)
+          labels: params[:content_view_environments],
+          ids: params[:content_view_environment_ids],
+          organization: @organization || @activation_key&.organization)
+        if @content_view_environments.blank?
+          handle_errors(candlepin_names: params[:content_view_environments],
+          ids: params[:content_view_environment_ids])
+        end
       end
+      handle_blank_cve_params
       @organization ||= @content_view_environments.first&.organization
+    end
+
+    def handle_blank_cve_params
+      if params.key?(:environment) && params.key?(:content_view)
+        return # AngularJS sends nested environment and content_view params, but with blank _id values
+      end
+      # Activation keys do not require CVEs to be associated. So it's possible the user intends to clear them.
+      if params.key?(:environment_id) && params[:environment_id].blank? && params.key?(:content_view_id) && params[:content_view_id].blank?
+        @content_view_environments = []
+      elsif params.key?(:content_view_environments) && params[:content_view_environments].blank?
+        @content_view_environments = []
+      elsif params.key?(:content_view_environment_ids) && params[:content_view_environment_ids].blank?
+        @content_view_environments = []
+      end
+    end
+
+    def single_assignment?
+      (params.key?(:environment_id) && params.key?(:content_view_id)) ||
+      (params.key?(:environment) && params.key?(:content_view))
+    end
+
+    def update_cves?
+      single_assignment? ||
+        params.key?(:content_view_environments) || # multi
+        params.key?(:content_view_environment_ids)
     end
 
     def find_host_collections

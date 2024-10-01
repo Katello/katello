@@ -3,6 +3,7 @@ module Katello
     module Api::V2::HostsControllerExtensions
       extend ActiveSupport::Concern
       include ForemanTasks::Triggers
+      include Katello::Concerns::Api::V2::MultiCVParamsHandling
 
       module Overrides
         def action_permission
@@ -49,8 +50,12 @@ module Katello
             labels: cve_params[:content_view_environments],
             ids: cve_params[:content_view_environment_ids],
             organization: @organization || @host&.organization)
-
-          @host.content_facet.content_view_environments = cves if cves.present?
+          if cves.present?
+            @host.content_facet.content_view_environments = cves
+          else
+            handle_errors(candlepin_names: cve_params[:content_view_environments],
+              ids: cve_params[:content_view_environment_ids])
+          end
         end
 
         def cve_params
