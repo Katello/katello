@@ -87,6 +87,10 @@
                 on-save="save(repository)"
                 ng-if='option.input_type=="textarea"'>
             </dd>
+            <dd bst-edit-number="genericRemoteOptions[$index].value"
+                on-save="save(repository)"
+                ng-if='option.input_type=="number"'>
+            </dd>
         </span>
       </span>
 
