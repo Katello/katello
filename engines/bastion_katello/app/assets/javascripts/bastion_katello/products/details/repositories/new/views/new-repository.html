@@ -283,6 +283,17 @@
             {{option.description}}
           </p>
         </div>
+        <div ng-if='option.input_type=="number"' bst-form-group label="{{ option.title | translate }}">
+          <input
+            name="option_name"
+            ng-model="genericRemoteOptions[$index].value"
+            type="number"
+            min="0"
+            placeholder="default value is {{ option.default }}"/>
+          <p class="help-block" translate>
+            {{option.description}}
+          </p>
+        </div>
       </div>
 
       <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-if="repository.content_type === 'yum' || repository.content_type === 'deb' || repository.content_type === 'docker'">

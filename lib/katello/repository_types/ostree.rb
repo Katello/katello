@@ -19,10 +19,12 @@ Katello::RepositoryTypeManager.register('ostree') do
   repo_sync_url_class PulpOstreeClient::RepositorySyncURL
 
   generic_remote_option :include_refs, title: N_("Include Refs"), type: Array, input_type: "text", delimiter: ",", default: [],
-                         description: N_("A comma-separated list of refs to include during a sync. The wildcards *, ? are recognized.")
+                         description: N_("A comma-separated list of refs to include during an ostree sync. The wildcards *, ? are recognized.")
 
   generic_remote_option :exclude_refs, title: N_("Exclude Refs"), type: Array, input_type: "text", delimiter: ",", default: [],
-                         description: N_("A comma-separated list of tags to exclude during a sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.")
+                         description: N_("A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.")
+
+  generic_remote_option :depth, title: N_("Depth"), type: :number, input_type: "number", delimiter: "", default: 0, description: N_("An option to specify how many ostree commits to traverse.")
 
   url_description N_("URL of an OSTree repository.")
 
@@ -53,5 +55,5 @@ Katello::RepositoryTypeManager.register('ostree') do
   default_managed_content_type :ostree_ref
 
   test_url 'https://fixtures.pulpproject.org/ostree/small/'
-  test_url_root_options generic_remote_options: {include_refs: ['rawhide']}.to_json
+  test_url_root_options generic_remote_options: {include_refs: ['rawhide'], depth: 1}.to_json
 end
