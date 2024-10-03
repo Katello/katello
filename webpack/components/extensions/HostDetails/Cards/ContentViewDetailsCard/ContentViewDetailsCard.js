@@ -24,6 +24,7 @@ import ContentViewIcon from '../../../../../scenes/ContentViews/components/Conte
 import { hasRequiredPermissions, hostIsRegistered } from '../../hostDetailsHelpers';
 import ChangeHostCVModal from './ChangeHostCVModal';
 import { truncate } from '../../../../../utils/helpers';
+import InactiveText from '../../../../../scenes/ContentViews/components/InactiveText';
 
 const requiredPermissions = [
   'view_lifecycle_environments', 'view_content_views',
@@ -144,6 +145,9 @@ export const CVEDetailsBareCard = ({
       </CardHeader>
       <CardBody>
         <Flex direction={{ default: 'column' }}>
+          {contentViewEnvironments.length === 0 && (
+            <InactiveText text={__('N/A')} />
+          )}
           {contentViewEnvironments.map(env => (
             <ContentViewEnvironmentDisplay
               key={`${env.lifecycle_environment.name}-${env.content_view.name}`}
