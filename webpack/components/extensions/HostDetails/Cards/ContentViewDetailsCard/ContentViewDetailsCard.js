@@ -135,7 +135,7 @@ export const CVEDetailsBareCard = ({
                 toggle={<KebabToggle aria-label="change_content_view_hamburger" onToggle={toggleHamburger} />}
                 isOpen={isDropdownOpen}
                 isPlain
-                ouiaId="change-host-content-view-kebab"
+                ouiaId="change-content-view-environments-card-kebab"
                 position="right"
                 dropdownItems={dropdownItems}
               />

@@ -62,8 +62,6 @@ module Katello
 
     def test_fetch_content_view_environments_mixed_validity_candlepin_names
       dev = katello_environments(:dev)
-      view = katello_content_views(:library_dev_view)
-      cve = Katello::ContentViewEnvironment.where(:environment_id => dev, :content_view_id => view).first
       assert_raises(HttpErrors::UnprocessableEntity) do
         ContentViewEnvironment.fetch_content_view_environments(labels: ['published_dev_view_dev, bogus'], organization: dev.organization)
       end
