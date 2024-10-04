@@ -72,6 +72,8 @@ Katello::Engine.routes.draw do
         match '/content_views/:composite_content_view_id/content_view_components/remove' => 'content_view_components#remove_components', :via => :put
         match '/content_views/:composite_content_view_id/content_view_components/:id' => 'content_view_components#update', :via => :put
 
+        api_resources :content_view_environments, :only => [:index]
+
         api_resources :content_views do
           get :auto_complete_search, :on => :collection
           member do
