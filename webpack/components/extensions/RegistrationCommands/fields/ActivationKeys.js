@@ -125,7 +125,7 @@ const ActivationKeys = ({
             <SelectOption
               key={ack.name}
               value={ack.name}
-              description={ack?.lce ? ack.lce : __('No environment')}
+              description={ack?.cves ? ack.cves : __('No content view environments')}
             />
           ))}
       </Select>
