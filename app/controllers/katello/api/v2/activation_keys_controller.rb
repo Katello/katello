@@ -323,7 +323,7 @@ module Katello
           ids: params[:content_view_environment_ids],
           organization: @organization || @activation_key&.organization)
         if @content_view_environments.blank?
-          handle_errors(candlepin_names: params[:content_view_environments],
+          handle_errors(labels: params[:content_view_environments],
           ids: params[:content_view_environment_ids])
         end
       end

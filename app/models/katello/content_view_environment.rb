@@ -44,8 +44,8 @@ module Katello
         where("#{Katello::ContentViewEnvironmentContentFacet.table_name}.content_facet_id" => content_facets)
     end
 
-    def self.with_candlepin_name(cp_name, organization: Organization.current)
-      joins(:environment, :content_view).where("#{Katello::KTEnvironment.table_name}.organization_id" => organization, label: cp_name).first
+    def self.with_label_and_org(label, organization: Organization.current)
+      joins(:environment, :content_view).where("#{Katello::KTEnvironment.table_name}.organization_id" => organization, label: label).first
     end
 
     # retrieve the owning environment for this content view environment.
@@ -63,10 +63,6 @@ module Katello
 
     def default_environment?
       content_view.default? && environment.library?
-    end
-
-    def candlepin_name
-      label
     end
 
     def priority(content_object)
@@ -95,7 +91,7 @@ module Katello
       elsif labels.present?
         environment_names = labels.map(&:strip)
         environment_names.each do |name|
-          cve = with_candlepin_name(name, organization: organization)
+          cve = with_label_and_org(name, organization: organization)
           if cve.blank?
             label_errors << name
           else
