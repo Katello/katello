@@ -4,9 +4,9 @@ module Katello
       extend ActiveSupport::Concern
       include ::Katello::Api::V2::ErrorHandling
 
-      def handle_errors(candlepin_names: [], ids: [])
-        if candlepin_names.present?
-          fail HttpErrors::UnprocessableEntity, "No content view environments found with names: #{candlepin_names.join(',')}"
+      def handle_errors(labels: [], ids: [])
+        if labels.present?
+          fail HttpErrors::UnprocessableEntity, "No content view environments found with names: #{labels.join(',')}"
         elsif ids.present?
           fail HttpErrors::UnprocessableEntity, "No content view environments found with ids: #{ids}"
         end
