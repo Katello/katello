@@ -29,6 +29,7 @@
         <th bst-table-column="consumed"><span translate>Host Limit</span></th>
         <th bst-table-column="environment"><span translate>Environment</span></th>
         <th bst-table-column="contentView"><span translate>Content View</span></th>
+        <th bst-table-column="multi-cv"><span translate>Multi Content View Environment</span></th>
       </tr>
       </thead>
 
@@ -48,6 +49,7 @@
         <td bst-table-cell>{{ activationKey | activationKeyConsumedFilter }}</td>
         <td bst-table-cell>{{ activationKey.environment.name || "" }}</td>
         <td bst-table-cell>{{ activationKey.content_view.name || "" }}</td>
+        <td bst-table-cell>{{ activationKey.multi_content_view_environment ? 'Yes' : 'No' }}</td>
       </tr>
       </tbody>
     </table>

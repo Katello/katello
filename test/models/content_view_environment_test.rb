@@ -54,8 +54,26 @@ module Katello
     def test_fetch_content_view_environments_invalid_ids_does_not_mutate_array
       dev = katello_environments(:dev)
       input_ids = [0, 999]
-      assert_equal [], ContentViewEnvironment.fetch_content_view_environments(ids: input_ids, organization: dev.organization)
+      assert_raises(HttpErrors::UnprocessableEntity) do
+        ContentViewEnvironment.fetch_content_view_environments(ids: input_ids, organization: dev.organization)
+      end
       assert_equal [0, 999], input_ids # should not have a map! which mutates the input array
+    end
+
+    def test_fetch_content_view_environments_mixed_validity_candlepin_names
+      dev = katello_environments(:dev)
+      assert_raises(HttpErrors::UnprocessableEntity) do
+        ContentViewEnvironment.fetch_content_view_environments(labels: ['published_dev_view_dev, bogus'], organization: dev.organization)
+      end
+    end
+
+    def test_fetch_content_view_environments_mixed_validity_ids
+      dev = katello_environments(:dev)
+      view = katello_content_views(:library_dev_view)
+      cve = Katello::ContentViewEnvironment.where(:environment_id => dev, :content_view_id => view).first
+      assert_raises(HttpErrors::UnprocessableEntity) do
+        ContentViewEnvironment.fetch_content_view_environments(ids: [cve.id, 9999], organization: dev.organization)
+      end
     end
   end
 end

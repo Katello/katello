@@ -69,20 +69,37 @@ module Katello
     end
 
     def self.fetch_content_view_environments(labels: [], ids: [], organization:)
-      # Must do maps here to ensure CVEs remain in the same order.
+      # Must ensure CVEs remain in the same order.
       # Using ActiveRecord .where will return them in a different order.
+      id_errors = []
+      label_errors = []
+      cves = []
       if ids.present?
-        cves = ids.map do |id|
-          ::Katello::ContentViewEnvironment.find_by(id: id)
+        ids.each do |id|
+          cve = ::Katello::ContentViewEnvironment.find_by(id: id)
+          if cve.blank?
+            id_errors << id
+          else
+            cves << cve
+          end
         end
-        cves.compact
       elsif labels.present?
         environment_names = labels.map(&:strip)
-        environment_names.map! do |name|
-          with_candlepin_name(name, organization: organization)
+        environment_names.each do |name|
+          cve = with_candlepin_name(name, organization: organization)
+          if cve.blank?
+            label_errors << name
+          else
+            cves << cve
+          end
         end
-        environment_names.compact
       end
+      if labels.present? && labels.length != cves.length
+        fail HttpErrors::UnprocessableEntity, _("No content view environments found with names: %{names}") % {names: label_errors.join(', ')} if label_errors.present?
+      elsif ids.present? && ids.length != cves.length
+        fail HttpErrors::UnprocessableEntity, _("No content view environments found with ids: %{ids}") % {ids: id_errors.join(', ')} if id_errors.present?
+      end
+      cves
     end
 
     private

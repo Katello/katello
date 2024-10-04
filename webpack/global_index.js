@@ -38,6 +38,7 @@ import BulkChangeHostCVModal from './components/extensions/Hosts/BulkActions/Bul
 import BulkPackagesWizardModal from './components/extensions/Hosts/BulkActions/BulkPackagesWizard/index.js';
 import BulkErrataWizardModal from './components/extensions/Hosts/BulkActions/BulkErrataWizard/index.js';
 import ActivationKeysSearch from './components/ActivationKeysSearch';
+import { CVEDetailsCard } from './scenes/ActivationKeys/Details/components/CVEDetailsCard.js';
 
 registerReducer('katelloExtends', extendReducer);
 registerReducer('katello', rootReducer);
@@ -102,8 +103,14 @@ registerGetActions({
   tableName: 'hosts',
 });
 
-componentRegistry.register({
-  name: 'ActivationKeysSearch',
-  type: ActivationKeysSearch,
-});
+componentRegistry.registerMultiple([
+  {
+    name: 'ActivationKeysSearch',
+    type: ActivationKeysSearch,
+  },
+  {
+    name: 'CVEDetailsCard',
+    type: CVEDetailsCard,
+  },
+]);
 

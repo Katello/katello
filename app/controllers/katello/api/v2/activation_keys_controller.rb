@@ -300,11 +300,23 @@ module Katello
       @content_view_environments = [cve]
     end
 
+    def params_likely_not_from_angularjs?
+      # AngularJS sends back the activation key's existing API response values.
+      # A side effect of this is that when it sends params[:content_view_environments] or params[:content_view_environment_ids],
+      # it incorrectly sends the nested objects from the rabl response, instead of the required single comma-separated string of Candlepin names.
+      # This would cause fetch_content_view_environments to fail.
+      # Therefore, we need a way to (a) detect if the request is from AngularJS, and (b) avoid trying to handle the nested objects as if they were strings.
+      # So we look at params[:multi_content_view_environment]. This is a computed value, not meant to be submitted as part of an update request.
+      # If it's true or false, it's likely AngularJS.
+      # And if the key is omitted, it's likely from Hammer or API, so it's safe to proceed.
+      !params.key?(:multi_content_view_environment)
+    end
+
     def find_content_view_environments
       @content_view_environments = []
       if params[:environment_id] || params[:environment]
         find_cve_for_single
-      elsif params[:content_view_environments] || params[:content_view_environment_ids]
+      elsif params_likely_not_from_angularjs? && (params[:content_view_environments] || params[:content_view_environment_ids])
         @content_view_environments = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
           labels: params[:content_view_environments],
           ids: params[:content_view_environment_ids],

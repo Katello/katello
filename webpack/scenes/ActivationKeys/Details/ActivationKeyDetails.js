@@ -34,6 +34,7 @@ import { getActivationKey } from './ActivationKeyActions';
 import DeleteModal from './components/DeleteModal';
 import InactiveText from '../../ContentViews/components/InactiveText';
 import SystemPurposeCard from '../../../components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeCard';
+import { CVEDetailsBareCard } from '../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 
 const ActivationKeyDetails = ({ match }) => {
   const dispatch = useDispatch();
@@ -112,6 +113,9 @@ const ActivationKeyDetails = ({ match }) => {
         <Grid className="ak-details-tab-page" hasGutter>
           <GridItem span={6}>
             <SystemPurposeCard akDetails={akDetails} />
+          </GridItem>
+          <GridItem span={6}>
+            <CVEDetailsBareCard contentViewEnvironments={akDetails.contentViewEnvironments} />
           </GridItem>
         </Grid>
       </PageSection>

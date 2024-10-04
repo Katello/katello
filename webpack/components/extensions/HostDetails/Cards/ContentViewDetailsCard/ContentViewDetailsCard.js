@@ -24,6 +24,7 @@ import ContentViewIcon from '../../../../../scenes/ContentViews/components/Conte
 import { hasRequiredPermissions, hostIsRegistered } from '../../hostDetailsHelpers';
 import ChangeHostCVModal from './ChangeHostCVModal';
 import { truncate } from '../../../../../utils/helpers';
+import InactiveText from '../../../../../scenes/ContentViews/components/InactiveText';
 
 const requiredPermissions = [
   'view_lifecycle_environments', 'view_content_views',
@@ -95,7 +96,106 @@ ContentViewEnvironmentDisplay.propTypes = {
   }).isRequired,
 };
 
-const HostContentViewDetails = ({
+export const CVEDetailsBareCard = ({
+  contentViewEnvironments, hostPermissions, permissions, dropdownItems,
+  isDropdownOpen, toggleHamburger,
+}) => {
+  const userPermissions = { ...hostPermissions, ...permissions };
+  const showKebab = hasRequiredPermissions(requiredPermissions, userPermissions);
+
+  return (
+    <Card ouiaId="content-view-details-card">
+      <CardHeader>
+        <Flex
+          alignItems={{ default: 'alignItemsCenter' }}
+          justifyContent={{ default: 'justifyContentSpaceBetween' }}
+          style={{ width: '100%' }}
+        >
+          <FlexItem>
+            <Flex
+              alignItems={{ default: 'alignItemsCenter' }}
+              justifyContent={{ default: 'justifyContentSpaceBetween' }}
+            >
+              <FlexItem>
+                <CardTitle>
+                  <FormattedMessage
+                    id="cv-card-title"
+                    defaultMessage="{count, plural, =0 {Content view environments} one {Content view environment} other {Content view environments}}"
+                    values={{
+                      count: contentViewEnvironments.length,
+                    }}
+                  />
+                </CardTitle>
+              </FlexItem>
+            </Flex>
+          </FlexItem>
+          {showKebab && dropdownItems && (
+            <FlexItem>
+              <Dropdown
+                toggle={<KebabToggle aria-label="change_content_view_hamburger" onToggle={toggleHamburger} />}
+                isOpen={isDropdownOpen}
+                isPlain
+                ouiaId="change-content-view-environments-card-kebab"
+                position="right"
+                dropdownItems={dropdownItems}
+              />
+            </FlexItem>
+          )}
+        </Flex>
+      </CardHeader>
+      <CardBody>
+        <Flex direction={{ default: 'column' }}>
+          {contentViewEnvironments.length === 0 && (
+            <InactiveText text={__('N/A')} />
+          )}
+          {contentViewEnvironments.map(env => (
+            <ContentViewEnvironmentDisplay
+              key={`${env.lifecycle_environment.name}-${env.content_view.name}`}
+              contentView={env.content_view}
+              lifecycleEnvironment={env.lifecycle_environment}
+            />
+          ))}
+        </Flex>
+      </CardBody>
+    </Card>
+  );
+};
+
+CVEDetailsBareCard.propTypes = {
+  contentViewEnvironments: PropTypes.arrayOf(PropTypes.shape({
+    content_view: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number,
+      composite: PropTypes.bool,
+    }),
+    lifecycle_environment: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number,
+    }),
+  })),
+  hostPermissions: PropTypes.shape({
+    edit_hosts: PropTypes.bool,
+  }),
+  permissions: PropTypes.shape({
+    view_content_views: PropTypes.bool,
+    view_lifecycle_environments: PropTypes.bool,
+    promote_or_remove_content_views_to_environments: PropTypes.bool,
+  }),
+  dropdownItems: PropTypes.arrayOf(PropTypes.node),
+  isDropdownOpen: PropTypes.bool,
+  toggleHamburger: PropTypes.func,
+};
+
+CVEDetailsBareCard.defaultProps = {
+  contentViewEnvironments: [],
+  hostPermissions: {},
+  permissions: {},
+  dropdownItems: [],
+  isDropdownOpen: false,
+  toggleHamburger: () => {},
+};
+
+export const ContentViewEnvironmentDetails = ({
   contentViewEnvironments, hostId, hostName, orgId, hostEnvId,
   hostPermissions, permissions, contentSourceId,
 }) => {
@@ -126,57 +226,14 @@ const HostContentViewDetails = ({
 
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
-      <Card ouiaId="content-view-details-card">
-        <CardHeader>
-          <Flex
-            alignItems={{ default: 'alignItemsCenter' }}
-            justifyContent={{ default: 'justifyContentSpaceBetween' }}
-            style={{ width: '100%' }}
-          >
-            <FlexItem>
-              <Flex
-                alignItems={{ default: 'alignItemsCenter' }}
-                justifyContent={{ default: 'justifyContentSpaceBetween' }}
-              >
-                <FlexItem>
-                  <CardTitle>
-                    <FormattedMessage
-                      id="cv-card-title"
-                      defaultMessage="{count, plural, =0 {Content view environments} one {Content view environment} other {Content view environments}}"
-                      values={{
-                        count: contentViewEnvironments.length,
-                      }}
-                    />
-                  </CardTitle>
-                </FlexItem>
-              </Flex>
-            </FlexItem>
-            {showKebab && (
-              <FlexItem>
-                <Dropdown
-                  toggle={<KebabToggle aria-label="change_content_view_hamburger" onToggle={toggleHamburger} />}
-                  isOpen={isDropdownOpen}
-                  isPlain
-                  ouiaId="change-host-content-view-kebab"
-                  position="right"
-                  dropdownItems={dropdownItems}
-                />
-              </FlexItem>
-            )}
-          </Flex>
-        </CardHeader>
-        <CardBody>
-          <Flex direction={{ default: 'column' }}>
-            {contentViewEnvironments.map(env => (
-              <ContentViewEnvironmentDisplay
-                key={`${env.lifecycle_environment.name}-${env.content_view.name}`}
-                contentView={env.content_view}
-                lifecycleEnvironment={env.lifecycle_environment}
-              />
-            ))}
-          </Flex>
-        </CardBody>
-      </Card>
+      <CVEDetailsBareCard
+        isDropdownOpen={isDropdownOpen}
+        toggleHamburger={toggleHamburger}
+        contentViewEnvironments={contentViewEnvironments}
+        hostPermissions={hostPermissions}
+        permissions={permissions}
+        dropdownItems={showKebab ? dropdownItems : []}
+      />
       {hostId &&
         <ChangeHostCVModal
           isOpen={isModalOpen}
@@ -194,7 +251,7 @@ const HostContentViewDetails = ({
   );
 };
 
-HostContentViewDetails.propTypes = {
+ContentViewEnvironmentDetails.propTypes = {
   contentViewEnvironments: PropTypes.arrayOf(PropTypes.shape({
     content_view: PropTypes.shape({
       name: PropTypes.string,
@@ -221,7 +278,7 @@ HostContentViewDetails.propTypes = {
   contentSourceId: PropTypes.number,
 };
 
-HostContentViewDetails.defaultProps = {
+ContentViewEnvironmentDetails.defaultProps = {
   contentViewEnvironments: [],
   hostId: null,
   hostName: '',
@@ -232,10 +289,11 @@ HostContentViewDetails.defaultProps = {
   contentSourceId: null,
 };
 
+
 const ContentViewDetailsCard = ({ hostDetails }) => {
   if (hostIsRegistered({ hostDetails })
     && hostDetails.content_facet_attributes && hostDetails.organization_id) {
-    return (<HostContentViewDetails
+    return (<ContentViewEnvironmentDetails
       hostId={hostDetails.id}
       hostName={hostDetails.name}
       contentSourceId={hostDetails.content_facet_attributes.content_source?.id}
@@ -246,37 +304,6 @@ const ContentViewDetailsCard = ({ hostDetails }) => {
     />);
   }
   return null;
-};
-
-HostContentViewDetails.propTypes = {
-  contentView: PropTypes.shape({
-    name: PropTypes.string,
-    id: PropTypes.number,
-    composite: PropTypes.bool,
-  }).isRequired,
-  hostId: PropTypes.number,
-  hostName: PropTypes.string,
-  contentSourceId: PropTypes.number,
-  orgId: PropTypes.number,
-  hostEnvId: PropTypes.number,
-  hostPermissions: PropTypes.shape({
-    edit_hosts: PropTypes.bool,
-  }),
-  permissions: PropTypes.shape({
-    view_content_views: PropTypes.bool,
-    view_lifecycle_environments: PropTypes.bool,
-    promote_or_remove_content_views_to_environments: PropTypes.bool,
-  }),
-};
-
-HostContentViewDetails.defaultProps = {
-  hostEnvId: null,
-  hostId: null,
-  hostName: '',
-  orgId: null,
-  contentSourceId: null,
-  hostPermissions: {},
-  permissions: {},
 };
 
 ContentViewDetailsCard.propTypes = {
