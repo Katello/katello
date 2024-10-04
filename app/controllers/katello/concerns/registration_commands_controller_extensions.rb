@@ -7,7 +7,7 @@ module Katello
         aks = ActivationKey.authorized(:view_activation_keys)
                            .where(organization_id: registration_params[:organization_id])
                            .order(:name)
-                           .map { |ak| { name: ak.name, lce: ak.environment&.name } }
+                           .map { |ak| { name: ak.name, cves: ak.content_view_environments.map(&:label).join(', ') } }
 
         lces = KTEnvironment.readable
                             .where(organization_id: registration_params[:organization_id])
