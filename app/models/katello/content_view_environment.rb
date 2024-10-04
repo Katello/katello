@@ -28,11 +28,20 @@ module Katello
 
     scope :non_default, -> { joins(:content_view).where("katello_content_views.default" => false) }
     scope :default, -> { joins(:content_view).where("katello_content_views.default" => true) }
+    scope :non_generated, -> { where(content_view: ::Katello::ContentView.ignore_generated) }
+
+    scoped_search :on => :id, :complete_value => true
+
     alias :lifecycle_environment :environment
     has_one :organization, :through => :environment
 
+    def self.in_organization(org)
+      where(environment_id: org.kt_environments)
+    end
+
     def self.for_content_facets(content_facets)
-      joins(:content_view_environment_content_facets, :content_facets).where("#{Katello::ContentViewEnvironmentContentFacet.table_name}.content_facet_id" => content_facets).uniq
+      joins(:content_facets).
+        where("#{Katello::ContentViewEnvironmentContentFacet.table_name}.content_facet_id" => content_facets)
     end
 
     def self.with_candlepin_name(cp_name, organization: Organization.current)
