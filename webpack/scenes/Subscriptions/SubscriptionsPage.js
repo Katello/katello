@@ -204,7 +204,7 @@ class SubscriptionsPage extends Component {
         description: __('Add subscriptions using the Add Subscriptions button.'),
         action: {
           title: __('Add subscriptions'),
-          url: 'subscriptions/add',
+          url: '/subscriptions/add',
         },
       }
       : {
