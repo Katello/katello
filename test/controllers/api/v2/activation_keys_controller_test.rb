@@ -213,7 +213,7 @@ module Katello
       content_view_environments = ['published_dev_view_library']
       ActivationKey.any_instance.expects(:reload)
       assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
-        assert_equal content_view_environments, activation_key.content_view_environments.map(&:candlepin_name), [cve.candlepin_name]
+        assert_equal content_view_environments, activation_key.content_view_environments.map(&:label), [cve.label]
         assert_valid activation_key
       end
 

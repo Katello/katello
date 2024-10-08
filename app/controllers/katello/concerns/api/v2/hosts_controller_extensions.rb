@@ -53,7 +53,7 @@ module Katello
           if cves.present?
             @host.content_facet.content_view_environments = cves
           else
-            handle_errors(candlepin_names: cve_params[:content_view_environments],
+            handle_errors(labels: cve_params[:content_view_environments],
               ids: cve_params[:content_view_environment_ids])
           end
         end
