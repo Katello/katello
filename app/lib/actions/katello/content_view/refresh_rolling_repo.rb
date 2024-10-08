@@ -26,7 +26,7 @@ module Actions
 
           repository.version_href = library_instance.version_href
           repository.publication_href = library_instance.publication_href
-          if repository.deb_using_structured_apt?
+          if repository.deb?
             repository.content_id = library_instance.content_id
           end
           repository.save!

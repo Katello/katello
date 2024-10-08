@@ -96,7 +96,7 @@ module Katello
 
     # Return deb packages that are not installed on a host, but could be installed
     # the word 'installable' has a different meaning here than elsewhere
-    def self.apt_installable_for_host(host)
+    def self.deb_installable_for_host(host)
       repos = host.content_facet.bound_repositories.pluck(:id)
       Katello::Deb.in_repositories(repos).where.not(name: host.installed_debs.pluck(:name)).order(:name)
     end

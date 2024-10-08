@@ -7,12 +7,40 @@ module Katello
         UNIT_LIMIT = 10_000
         SIGNING_SERVICE_NAME = 'katello_deb_sign'.freeze
 
+        def pulp_primary_api
+          # Sometimes we need to make sure we are talking to the pulp primary and not a smart proxy!
+          if smart_proxy.pulp_primary?
+            api
+          else
+            self.class.instance_for_type(repo, ::SmartProxy.pulp_primary).api
+          end
+        end
+
         def initialize_empty
           # For every empty APT library instance repository we must add at least a release component to
           # ensure we have a publishable repo with consumable metadata. Otherwise smart proxy syncs will
           # fail, and consuming hosts will choke on empty repos.
           opts = {:repository => repository_reference.repository_href, :component => "empty", :distribution => "katello"}
           api.content_release_components_api.create(opts)
+        end
+
+        def pulp_components
+          return [] if repo.version_href.blank?
+          return ["all"] if version_missing_structure_content?
+          pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| x.plain_component }.uniq
+        end
+
+        def sanitize_pulp_distribution(distribution)
+          return "flat-repo" if distribution == "/"
+          return distribution.chomp("/") if distribution&.end_with?("/")
+          # Only needed for repository versions created with pulp_deb <= 3.6
+          distribution
+        end
+
+        def pulp_distributions
+          return [] if repo.version_href.blank?
+          return ["default"] if version_missing_structure_content?
+          pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| sanitize_pulp_distribution(x.distribution) }.uniq
         end
 
         def remote_options
@@ -39,13 +67,7 @@ module Katello
         end
 
         def mirror_remote_options
-          distributions = if repo.deb_using_structured_apt? && !version_missing_structure_content?
-                            repo.deb_pulp_distributions.join(' ')
-                          else
-                            'default'
-                          end
-
-          super.merge({distributions: distributions})
+          super.merge({distributions: pulp_distributions.join(' ')})
         end
 
         def version_missing_structure_content?
@@ -54,9 +76,7 @@ module Katello
           # It may also affect filtered CV versions created with very old Katello versions.
           # This method can identify such cases, so that we may fall back to simple publishing.
           return false if repo.version_href.blank?
-          # We cannot just use api here, because this is sometimes the proxy api, and we always want to talk to the primary!
-          api_primary = self.class.instance_for_type(repo, ::SmartProxy.pulp_primary).api
-          version = api_primary.repository_versions_api.read(repo.version_href)
+          version = pulp_primary_api.repository_versions_api.read(repo.version_href)
           apt_content_types = version&.content_summary&.present&.keys
           return apt_content_types.include?('deb.package') && !apt_content_types.include?('deb.package_release_component')
         end
@@ -67,9 +87,6 @@ module Katello
           if version_missing_structure_content?
             popts.merge!({ structured: false })
             popts.merge!({ simple: true })
-          else
-            popts.merge!({ structured: true })
-            popts.merge!({ simple: true }) unless repository.deb_using_structured_apt?
           end
           popts[:signing_service] = ss[0].pulp_href if ss && ss.length == 1
           popts
