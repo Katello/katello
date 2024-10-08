@@ -15,7 +15,7 @@ module Actions
           generate_metadata = options.fetch(:generate_metadata, true)
           plan_action(Katello::Repository::MetadataGenerate, repository, :dependency => import_upload_task, :force_publication => true) if generate_metadata
 
-          if repository.deb_using_structured_apt? && generate_metadata
+          if repository.deb? && generate_metadata
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
                         owner:           repository.organization.label,
                         repository_id:   repository.id,

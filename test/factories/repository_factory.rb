@@ -21,7 +21,12 @@ FactoryBot.define do
 
     after(:build) do |repo, evaluator|
       %w(product product_id content_id content_type label name docker_upstream_name url unprotected download_policy mirroring_policy).each do |attr|
-        repo.root.send("#{attr}=", evaluator.send(attr)) if evaluator.send(attr)
+        if attr == 'content_id' && repo.deb?
+          # For deb content the content_id is stored on the repo and root.content_id is nil!
+          repo.content_id = evaluator.content_id
+        else
+          repo.root.send("#{attr}=", evaluator.send(attr)) if evaluator.send(attr)
+        end
       end
     end
 
@@ -65,8 +70,10 @@ FactoryBot.define do
 
     trait :deb do
       association :root, :deb_root, :factory => :katello_root_repository, :strategy => :build
+      content_id { 'deb-content-id' }
     end
 
     factory :docker_repository, traits: [:docker]
+    factory :deb_repository, traits: [:deb]
   end
 end
