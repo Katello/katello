@@ -53,6 +53,17 @@ module Katello
         scoped_search :relation => :bound_root_repositories, :on => :name, :rename => :repository, :complete_value => true, :ext_method => :find_by_repository_name, :only_explicit => true
         scoped_search :relation => :bound_content, :on => :label, :rename => :repository_content_label, :complete_value => true, :ext_method => :find_by_repository_content_label, :only_explicit => true
 
+        scoped_search relation: :content_facet, on: :bootc_booted_image, complete_value: true, only_explicit: true
+        scoped_search relation: :content_facet, on: :bootc_booted_digest, complete_value: true, only_explicit: true
+        scoped_search relation: :content_facet, on: :bootc_available_image, complete_value: true, only_explicit: true
+        scoped_search relation: :content_facet, on: :bootc_available_digest, complete_value: true, only_explicit: true
+        scoped_search relation: :content_facet, on: :bootc_staged_image, complete_value: true, only_explicit: true
+        scoped_search relation: :content_facet, on: :bootc_staged_digest, complete_value: true, only_explicit: true
+        scoped_search relation: :content_facet, on: :bootc_rollback_image, complete_value: true, only_explicit: true
+        scoped_search relation: :content_facet, on: :bootc_rollback_digest, complete_value: true, only_explicit: true
+        scoped_search relation: :content_facet, on: :bootc_booted_image, rename: :image_mode, only_explicit: true, ext_method: :find_by_image_mode,
+                      operators: ['='], complete_value: { true: true, false: false}
+
         # preserve options set by facets framework, but add new :reject_if statement
         accepts_nested_attributes_for(
           :content_facet,
@@ -77,6 +88,17 @@ module Katello
       end
 
       module ClassMethods
+        def find_by_image_mode(_key, _operator, value)
+          # operator is always '='
+          state = ::Foreman::Cast.to_bool(value)
+          if state
+            hosts = ::Host::Managed.joins(:content_facet).select(:id).where.not("#{::Katello::Host::ContentFacet.table_name}.bootc_booted_image" => nil)
+          else
+            hosts = ::Host::Managed.joins(:content_facet).select(:id).where("#{::Katello::Host::ContentFacet.table_name}.bootc_booted_image" => nil)
+          end
+          { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.to_sql})" }
+        end
+
         def find_by_applicable_errata(_key, operator, value)
           conditions = sanitize_sql_for_conditions(["#{Katello::Erratum.table_name}.errata_id #{operator} ?", value_to_sql(operator, value)])
           hosts = ::Host::Managed.joins(:applicable_errata).where(conditions)

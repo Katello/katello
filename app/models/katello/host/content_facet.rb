@@ -47,6 +47,8 @@ module Katello
       validates_with Katello::Validators::GeneratedContentViewValidator
       validates_associated :content_view_environment_content_facets, :message => _("invalid: The content source must sync the lifecycle environment assigned to the host. See the logs for more information.")
       validates :host, :presence => true, :allow_blank => false
+      validates :bootc_booted_digest, :bootc_available_digest, :bootc_staged_digest, :bootc_rollback_digest,
+                format: { with: /\Asha256:[A-Fa-f0-9]{64}\z/, message: "must be a valid sha256 digest", allow_nil: true }
 
       scope :with_environments, ->(lifecycle_environments) do
         joins(:content_view_environment_content_facets => :content_view_environment).
@@ -86,6 +88,10 @@ module Katello
 
       def mark_cves_unchanged
         self.cves_changed = false
+      end
+
+      def image_mode_host?
+        bootc_booted_image.present?
       end
 
       def cves_changed?
