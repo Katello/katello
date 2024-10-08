@@ -27,6 +27,58 @@ module Katello
       assert_equal view.version(library), host.content_facet.content_view_environments.reload.first.content_view_version
     end
 
+    def test_bootc_booted_digest_validation
+      error = assert_raises(ActiveRecord::RecordInvalid) do
+        host.content_facet.update!(bootc_booted_digest: "blah")
+      end
+      assert_includes error.message, "Bootc booted digest must be a valid sha256 digest"
+    end
+
+    def test_bootc_available_digest_validation
+      error = assert_raises(ActiveRecord::RecordInvalid) do
+        host.content_facet.update!(bootc_available_digest: "blah")
+      end
+      assert_includes error.message, "Bootc available digest must be a valid sha256 digest"
+    end
+
+    def test_bootc_staged_digest_validation
+      error = assert_raises(ActiveRecord::RecordInvalid) do
+        host.content_facet.update!(bootc_staged_digest: "blah")
+      end
+      assert_includes error.message, "Bootc staged digest must be a valid sha256 digest"
+    end
+
+    def test_bootc_rollback_digest_validation
+      error = assert_raises(ActiveRecord::RecordInvalid) do
+        host.content_facet.update!(bootc_rollback_digest: "blah")
+      end
+      assert_includes error.message, "Bootc rollback digest must be a valid sha256 digest"
+    end
+
+    def test_bootc_booted_digest_valid
+      valid_digest = "sha256:dcfb2965cda67bd3731408ace23dd07ff3116168c2b832e16bba8234525724a3"
+      host.content_facet.update!(bootc_booted_digest: valid_digest)
+      assert_equal valid_digest, host.content_facet.bootc_booted_digest
+    end
+
+    def test_bootc_available_digest_valid
+      valid_digest = "sha256:dcfb2965cda67bd3731408ace23dd07ff3116168c2b832e16bba8234525724a3"
+      host.content_facet.update!(bootc_available_digest: valid_digest)
+      assert_equal valid_digest, host.content_facet.bootc_available_digest
+    end
+
+    def test_bootc_staged_digest_valid
+      valid_digest = "sha256:dcfb2965cda67bd3731408ace23dd07ff3116168c2b832e16bba8234525724a3"
+      host.content_facet.update!(bootc_staged_digest: valid_digest)
+      assert_equal valid_digest, host.content_facet.bootc_staged_digest
+    end
+
+    def test_bootc_rollback_digest_valid
+      valid_digest = "sha256:dcfb2965cda67bd3731408ace23dd07ff3116168c2b832e16bba8234525724a3"
+      host.content_facet.update!(bootc_rollback_digest: valid_digest)
+      assert_equal valid_digest, host.content_facet.bootc_rollback_digest
+    end
+
     def test_tracer_installed?
       refute host.content_facet.tracer_installed?
 

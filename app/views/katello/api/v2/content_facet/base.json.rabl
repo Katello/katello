@@ -67,3 +67,6 @@ end
 child :kickstart_repository => :kickstart_repository do
   attributes :id, :name
 end
+
+attributes :bootc_booted_image, :bootc_booted_digest, :bootc_available_image, :bootc_available_digest,
+           :bootc_staged_image, :bootc_staged_digest, :bootc_rollback_image, :bootc_rollback_digest
