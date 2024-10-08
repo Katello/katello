@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   ActionList,
   ActionListItem,
@@ -19,6 +19,7 @@ import {
 import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText } from '@patternfly/react-table';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
@@ -44,6 +45,7 @@ import { hasRequiredPermissions as can,
   userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
+import { runSubmanRepos } from '../../Cards/ContentViewDetailsCard/HostContentViewActions';
 
 export const hideDebsTab = ({ hostDetails }) => !(hostDetails?.operatingsystem_family === 'Debian');
 
@@ -197,6 +199,7 @@ export const DebsTab = () => {
   const { results, ...metadata } = response;
   const { error: errorSearchBody } = metadata;
   const status = useSelector(state => selectHostDebsStatus(state));
+  const dispatch = useDispatch();
   const {
     selectOne,
     isSelected,
@@ -268,6 +271,21 @@ export const DebsTab = () => {
     lastCompletedJob: lastCompletedPackageInstall,
     isPolling: isInstallInProgress,
   } = useRexJobPolling(packageInstallAction, getHostDetails({ hostname }));
+
+  const refreshHostDetails = () => dispatch({
+    type: 'API_GET',
+    payload: {
+      key: HOST_DETAILS_KEY,
+      url: `/api/hosts/${hostname}`,
+    },
+  });
+  const {
+    triggerJobStart: triggerRecalculate, lastCompletedJob: lastCompletedRecalculate,
+  } = useRexJobPolling(() => runSubmanRepos(hostname, refreshHostDetails));
+  const handleRefreshApplicabilityClick = () => {
+    setIsBulkActionOpen(false);
+    triggerRecalculate();
+  };
 
   const actionInProgress = (isRemoveInProgress || isUpgradeInProgress
     || isBulkRemoveInProgress || isBulkUpgradeInProgress || isInstallInProgress);
@@ -345,7 +363,7 @@ export const DebsTab = () => {
     </DropdownItem>,
   ];
 
-  const dropdownRemoveItems = [
+  const kebabItems = [
     <DropdownItem
       aria-label="bulk_remove"
       ouiaId="bulk_remove"
@@ -365,6 +383,15 @@ export const DebsTab = () => {
       onClick={handleInstallPackagesClick}
     >
       {__('Install packages')}
+    </DropdownItem>,
+    <DropdownItem
+      aria-label="refresh_applicability"
+      ouiaId="refresh_applicability"
+      key="refresh_applicability"
+      component="button"
+      onClick={handleRefreshApplicabilityClick}
+    >
+      {__('Refresh package applicability')}
     </DropdownItem>,
   ];
 
@@ -406,7 +433,7 @@ export const DebsTab = () => {
               toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
               isOpen={isBulkActionOpen}
               isPlain
-              dropdownItems={dropdownRemoveItems}
+              dropdownItems={kebabItems}
               ouiaId="bulk_actions_dropdown"
             />
           </ActionListItem>
@@ -461,7 +488,7 @@ export const DebsTab = () => {
           additionalListeners={[hostId, packageStatusSelected,
             activeSortDirection, activeSortColumn, lastCompletedPackageUpgrade,
             lastCompletedPackageRemove, lastCompletedBulkPackageRemove,
-            lastCompletedBulkPackageUpgrade, lastCompletedPackageInstall]}
+            lastCompletedBulkPackageUpgrade, lastCompletedPackageInstall, lastCompletedRecalculate]}
           fetchItems={fetchItems}
           bookmarkController="katello_host_installed_debs"
           readOnlyBookmarks={readOnlyBookmarks}
