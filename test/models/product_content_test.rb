@@ -52,13 +52,12 @@ module Katello
       assert_includes Katello::ProductContent.enabled(@product.organization), @product_content
     end
 
-    def test_enabled_with_structured_apt_content
-      Setting['deb_enable_structured_apt'] = true
+    def test_deb_enabled
       assert_includes Katello::ProductContent.all, @product_content
       refute_includes Katello::ProductContent.enabled(@product.organization), @product_content
 
-      deb_root = FactoryBot.create(:katello_root_repository, :structured_apt_deb_root, :product => @product)
-      deb_repo = FactoryBot.create(:structured_apt_katello_repository, :root => deb_root, :environment_id => @product.organization.library.id, :content_id => @content_id,
+      deb_root = FactoryBot.create(:katello_root_repository, :deb_root, :product => @product)
+      deb_repo = FactoryBot.create(:deb_repository, :root => deb_root, :environment_id => @product.organization.library.id, :content_id => @content_id,
         :content_view_version_id => @product.organization.default_content_view.versions.first.id)
 
       assert_nil deb_root.content_id

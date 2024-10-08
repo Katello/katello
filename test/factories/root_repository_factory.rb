@@ -45,14 +45,6 @@ FactoryBot.define do
       deb_releases { "5 6" }
       deb_components { "best" }
       deb_architectures { "x86_64" }
-    end
-
-    trait :structured_apt_deb_root do
-      content_type { "deb" }
-      download_policy { "" }
-      deb_releases { "5 6" }
-      deb_components { "best" }
-      deb_architectures { "x86_64" }
       content_id { nil }
     end
 
