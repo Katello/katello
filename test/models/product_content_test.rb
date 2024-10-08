@@ -53,7 +53,6 @@ module Katello
     end
 
     def test_enabled_with_structured_apt_content
-      Setting['deb_enable_structured_apt'] = true
       assert_includes Katello::ProductContent.all, @product_content
       refute_includes Katello::ProductContent.enabled(@product.organization), @product_content
 
