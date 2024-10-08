@@ -26,7 +26,7 @@ module Actions
             index_options = {id: new_repository.id, force_index: true}
             index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
 
-            if new_repository.deb_using_structured_apt? && generate_metadata
+            if new_repository.deb? && generate_metadata
               plan_action(Candlepin::Product::ContentUpdate,
                           owner:           new_repository.organization.label,
                           repository_id:   new_repository.id,

@@ -48,7 +48,7 @@ module Actions
                                         pulp_sync_options)
               output = sync_action.output
 
-              update_deb_content(repo)
+              update_deb_content(repo) if repo.deb?
               plan_action(Katello::Repository::IndexContent, :id => repo.id, :force_index => skip_metadata_check)
               plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
               plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
@@ -101,8 +101,6 @@ module Actions
         end
 
         def update_deb_content(repo)
-          return unless repo.deb_using_structured_apt?
-
           plan_action(::Actions::Candlepin::Product::ContentUpdate,
                       owner:           repo.organization.label,
                       repository_id:   repo.id,
