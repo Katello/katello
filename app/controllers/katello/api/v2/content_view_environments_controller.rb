@@ -10,7 +10,7 @@ module Katello
       api_version "v2"
     end
 
-    api :GET, "/content_view_environments", N_("List content view environmentss")
+    api :GET, "/content_view_environments", N_("List content view environments")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     param :lifecycle_environment_id, :number, :desc => N_("environment identifier"), :required => false
     param :content_view_id, :number, :desc => N_("Content view identifier"), :required => false
