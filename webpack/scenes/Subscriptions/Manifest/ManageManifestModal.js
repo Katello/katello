@@ -4,13 +4,14 @@ import { Grid, Col, Row, Tabs, Tab, FormControl, ControlLabel } from 'react-boot
 import { FormattedMessage } from 'react-intl';
 import { Button, Spinner } from 'patternfly-react';
 import { Alert } from '@patternfly/react-core';
-import { propsToCamelCase } from 'foremanReact/common/helpers';
+import { propsToCamelCase, getDocsURL } from 'foremanReact/common/helpers';
 import ForemanModal from 'foremanReact/components/ForemanModal';
 import Slot from 'foremanReact/components/common/Slot';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TooltipButton from '../../../components/TooltipButton';
 import { LoadingState } from '../../../components/LoadingState';
 import { Table } from '../../../components/pf3Table';
+
 
 import { columns } from './ManifestHistoryTableSchema';
 import DeleteManifestModalText from './DeleteManifestModalText';
@@ -111,8 +112,9 @@ class ManageManifestModal extends Component {
       header: __('There is no manifest history to display.'),
       description: __('Import a manifest using the Manifest tab above.'),
       documentation: {
-        label: __('Learn more about adding subscription manifests '),
-        url: 'https://access.redhat.com/solutions/3410771',
+        label: __('Learn more about adding subscription manifests in '),
+        buttonLabel: __('the documentation.'),
+        url: getDocsURL('Managing_Content', 'Managing_Red_Hat_Subscriptions_content-management'),
       },
     });
 
