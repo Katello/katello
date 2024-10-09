@@ -17,7 +17,6 @@ module Katello
 
     def_param_group :activation_key do
       param :organization_id, :number, :desc => N_("organization identifier"), :required => true
-      param :name, String, :desc => N_("name"), :required => true
       param :description, String, :desc => N_("description")
       param :max_hosts, :number, :desc => N_("maximum number of registered content hosts")
       param :unlimited_hosts, :bool, :desc => N_("can the activation key have unlimited hosts")
@@ -63,6 +62,7 @@ module Katello
     end
 
     api :POST, "/activation_keys", N_("Create an activation key")
+    param :name, String, :desc => N_("name"), :required => true
     param_group :activation_key
     def create
       @activation_key = ActivationKey.new(activation_key_params) do |activation_key|
@@ -79,6 +79,7 @@ module Katello
     api :PUT, "/activation_keys/:id", N_("Update an activation key")
     param_group :activation_key
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
+    param :name, String, :desc => N_("name"), :required => false
     def update
       if @content_view_environments.present? || update_cves?
         if single_assignment? && @content_view_environments.length == 1
