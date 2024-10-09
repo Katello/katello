@@ -2,7 +2,7 @@ import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import store from 'foremanReact/redux';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
-import { addToast } from 'foremanReact/components/ToastsList/slice.js';
+import { addToast } from 'foremanReact/components/ToastsList/slice';
 import { getResponseErrorMsgs } from '../../utils/helpers';
 
 export const bulkSearchKey = key => `${key}_TASK_SEARCH`;
