@@ -21,9 +21,16 @@ module Katello
       considered_products = match_subscription ? consumable.products : consumable.organization.products.enabled.uniq
 
       roots = Katello::RootRepository.where(:product_id => considered_products).subscribable
-      roots = roots.in_content_view_version(versions) if versions.present?
+      roots = roots.in_content_view_version(versions).distinct if versions.present?
+      content_ids = roots.where.not(:content_id => nil).pluck(:content_id)
+      structured_apt_roots = roots.where(:content_id => nil)
+      if structured_apt_roots.any?
+        deb_repos_query = Katello::Repository.where(root: structured_apt_roots)
+        deb_repos = match_environment ? deb_repos_query.where(content_view_version: versions, environment: consumable.environment) : deb_repos_query.where(:library_instance_id => nil)
+        content_ids += deb_repos.pluck(:content_id)
+      end
 
-      consumable.organization.enabled_product_content_for(roots)
+      consumable.organization.enabled_product_content_for(content_ids)
     end
 
     def custom_content_labels

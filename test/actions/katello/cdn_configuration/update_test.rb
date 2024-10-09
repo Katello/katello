@@ -31,7 +31,7 @@ module ::Actions::Katello::CdnConfiguration
       }
     end
 
-    def test_plans_katello_cdn
+    def test_plans_katello_cdn # rubocop:disable Metrics/AbcSize
       attrs = {
         type: Katello::CdnConfiguration::NETWORK_SYNC,
         url: 'http://newcdn.example.com',
@@ -53,7 +53,7 @@ module ::Actions::Katello::CdnConfiguration
       ::Katello::RootRepository.expects(:in_organization).returns([root_repo])
 
       ::Katello::Resources::CDN::KatelloCdn.any_instance.expects(:repository_url).with(
-          content_label: root_repo.content.label,
+          content_label: root_repo.library_instance.content.label,
           arch: root_repo.arch,
           major: root_repo.major,
           minor: root_repo.minor

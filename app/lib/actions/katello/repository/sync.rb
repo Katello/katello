@@ -46,6 +46,7 @@ module Actions
                                         pulp_sync_options)
               output = sync_action.output
 
+              update_deb_content(repo)
               plan_action(Katello::Repository::IndexContent, :id => repo.id, :force_index => skip_metadata_check)
               plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
               plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
@@ -92,6 +93,21 @@ module Actions
           found = all_planned_actions(Pulp3::Repository::Sync) if found.empty?
           found = all_planned_actions(Pulp3::Repository::Repair) if found.empty?
           Helpers::Presenter::Delegated.new(self, found)
+        end
+
+        def update_deb_content(repo)
+          return unless repo.deb_using_structured_apt?
+
+          plan_action(::Actions::Candlepin::Product::ContentUpdate,
+                      owner:           repo.organization.label,
+                      repository_id:   repo.id,
+                      name:            repo.root.name,
+                      type:            repo.root.content_type,
+                      arches:          repo.root.format_arches,
+                      label:           repo.root.custom_content_label,
+                      content_url:     repo.root.custom_content_path,
+                      gpg_key_url:     repo.yum_gpg_key_url,
+                      metadata_expire: repo.root.metadata_expire)
         end
 
         def rescue_strategy
