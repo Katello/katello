@@ -187,7 +187,7 @@ module Katello
 
     def test_candlepin_environment_id_no_content
       subscription_facet.host.content_facet.destroy!
-      assert_equal subscription_facet.reload.candlepin_environments.first, ContentViewEnvironment.where(:content_view_id => org.default_content_view,
+      assert_equal subscription_facet.reload.candlepin_environments.first[:id], ContentViewEnvironment.where(:content_view_id => org.default_content_view,
                                                                                                :environment_id => org.library).first.cp_id
     end
 
