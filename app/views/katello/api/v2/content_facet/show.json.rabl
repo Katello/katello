@@ -40,6 +40,12 @@ child :content_facet => :content_facet_attributes do
     node(:view_products) { user.can?("view_products") }
     node(:create_bookmarks) { user.can?("create_bookmarks") }
   end
+
+  node :image_mode do |content_facet|
+    content_facet.image_mode_host?
+  end
+  attributes :bootc_booted_image, :bootc_booted_digest, :bootc_available_image, :bootc_available_digest,
+             :bootc_staged_image, :bootc_staged_digest, :bootc_rollback_image, :bootc_rollback_digest
 end
 
 attributes :description, :facts
