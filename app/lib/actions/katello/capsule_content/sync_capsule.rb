@@ -5,7 +5,11 @@ module Actions
         # rubocop:disable Metrics/MethodLength
         execution_plan_hooks.use :update_content_counts, :on => :success
         def plan(smart_proxy, options = {})
-          plan_self(:smart_proxy_id => smart_proxy.id)
+          plan_self(:smart_proxy_id => smart_proxy.id,
+                    :environment_id => options[:environment_id],
+                    :content_view_id => options[:content_view_id],
+                    :repository_id => options[:repository_id],
+                    :skip_content_counts_update => options[:skip_content_counts_update])
           action_subject(smart_proxy)
           environment = options[:environment]
           content_view = options[:content_view]
@@ -69,9 +73,10 @@ module Actions
         end
 
         def update_content_counts(_execution_plan)
-          if Setting[:automatic_content_count_updates]
+          if Setting[:automatic_content_count_updates] && !input[:skip_content_counts_update]
             smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
-            ::ForemanTasks.async_task(::Actions::Katello::CapsuleContent::UpdateContentCounts, smart_proxy)
+            options = {environment_id: input[:environment_id], content_view_id: input[:content_view_id], repository_id: input[:repository_id]}
+            ::ForemanTasks.async_task(::Actions::Katello::CapsuleContent::UpdateContentCounts, smart_proxy, options)
           else
             Rails.logger.info "Skipping content counts update as automatic content count updates are disabled. To enable automatic content count updates, set the 'automatic_content_count_updates' setting to true.
 To update content counts manually, run the 'Update Content Counts' action."
