@@ -251,8 +251,7 @@ export default ({ cvId, versionId }) => [
       },
       {
         title: __('Updated'),
-        getProperty: item => item?.updated &&
-          <LongDateTime date={item.updated} showRelativeTimeTooltip />,
+        getProperty: item => item?.updated,
       },
     ],
   },
