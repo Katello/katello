@@ -158,7 +158,7 @@ module Katello
             { :id => cve.content_view.cp_environment_id(cve.lifecycle_environment) }
           end
         else
-          self.host.organization.default_content_view.cp_environment_id(self.host.organization.library)
+          [{ :id => self.host.organization.default_content_view.cp_environment_id(self.host.organization.library) }]
         end
       end
 
