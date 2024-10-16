@@ -19,10 +19,17 @@ reboot = commands.delete('reboot')
 <% if reboot -%>
 shutdown -r +1
 <% else -%>
-<%= commands.join("\n") %>
+RETVAL=0
+<% commands.each do |command| -%>
+<%= command %>
+if [ $? -ne 0 ]; then
+  RETVAL=1
+fi
+<% end -%>
 RUN_TRACER_CMD='katello-tracer-upload'
 if [ "$(id -u)" -ne 0 ]; then
   RUN_TRACER_CMD='sudo katello-tracer-upload'
 fi
 $RUN_TRACER_CMD
+exit $RETVAL
 <% end %>
