@@ -610,7 +610,8 @@ class ::Host::Managed::Jail < Safemode::Jail
         :host_collections, :pools, :hypervisor_host, :installed_debs,
         :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template,
         :filtered_entitlement_quantity_consumed, :bound_repositories,
-        :single_content_view, :single_lifecycle_environment, :release_version
+        :single_content_view, :single_lifecycle_environment, :release_version,
+        :purpose_role, :purpose_usage
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail
