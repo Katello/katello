@@ -1,7 +1,7 @@
 extends 'katello/api/v2/common/org_reference'
 extends 'katello/api/v2/common/timestamps'
 
-attributes :id, :name, :description, :unlimited_hosts, :auto_attach
+attributes :id, :name, :description, :unlimited_hosts, :auto_attach, :content_view_environment_labels
 
 node :multi_content_view_environment do |ak|
   ak.multi_content_view_environment?
@@ -16,7 +16,8 @@ child :content_view_environments => :content_view_environments do
       content_view_version: cve.content_view_version&.version,
       content_view_version_id: cve.content_view_version&.id,
       content_view_version_latest: cve.content_view_version&.latest?,
-      content_view_default: cve.content_view&.default?
+      content_view_default: cve.content_view&.default?,
+      content_view_environment_id: cve.id
     }
   end
   node :lifecycle_environment do |cve|
@@ -26,7 +27,7 @@ child :content_view_environments => :content_view_environments do
       lifecycle_environment_library: cve.lifecycle_environment&.library?
     }
   end
-  node :candlepin_name do |cve|
+  node :label do |cve|
     cve.candlepin_name
   end
 end
