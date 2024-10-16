@@ -194,7 +194,7 @@ const RepositorySetsTab = () => {
   const { name: lifecycleEnvironmentName } = lifecycleEnvironment ?? {};
   const multiEnvHost = contentViewEnvironments.length > 1;
   const contentViewEnvironmentNames =
-    contentViewEnvironments.map(({ candlepin_name: candlepinName }) => candlepinName).join(', ');
+    contentViewEnvironments.map(({ label }) => label).join(', ');
   const nonLibraryHost = contentViewDefault === false ||
     lifecycleEnvironmentLibrary === false;
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);

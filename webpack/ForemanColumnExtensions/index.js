@@ -131,7 +131,7 @@ const hostsIndexColumnExtensions = [
             }
           >
             <FlexItem>
-              {truncate(contentViewEnvironments.map(cve => cve.candlepin_name).join(', '), 35)}
+              {truncate(contentViewEnvironments.map(cve => cve.label).join(', '), 35)}
             </FlexItem>
           </Popover>
         </Flex>

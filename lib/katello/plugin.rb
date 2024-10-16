@@ -362,7 +362,7 @@ Foreman::Plugin.register :katello do
         type: :boolean,
         default: false,
         full_name: N_('Allow multiple content views'),
-        description: N_("Allow a host to be assigned to multiple content view environments with 'subscription-manager register --environments' or 'subscription-manager environments --set'.") # TODO: update this description when AKs support this setting as well
+        description: N_("Allow hosts or activation keys to be associated with multiple content view environments")
 
       setting 'content_default_http_proxy',
         type: :string,
