@@ -16,8 +16,16 @@ template_inputs:
 commands = input(:helper).split(',').map { |split| split.strip }
 reboot = commands.delete('reboot')
 -%>
-<%= commands.join("\n") %>
-katello-tracer-upload
 <% if reboot -%>
 <%= render_template('Power Action - Script Default', action: 'restart') %>
-<% end %>
+<% else -%>
+RETVAL=0
+<% commands.each do |command| -%>
+<%= command %>
+if [ $? -ne 0 ]; then
+  RETVAL=1
+fi
+<% end -%>
+katello-tracer-upload
+<% end -%>
+exit $RETVAL
