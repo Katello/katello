@@ -25,7 +25,7 @@ jobs:
       plugin: katello
       postgresql_container: ghcr.io/theforeman/postgresql-evr
       test_existing_database: false
-      foreman_version: develop # set to the Foreman release branch after branching :)
+      foreman_version: refs/pull/10299/head # set to the Foreman release branch after branching :)
 
   angular:
     name: Angular ${{ matrix.engine }} - NodeJS ${{ matrix.node }}
