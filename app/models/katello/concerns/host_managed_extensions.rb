@@ -89,7 +89,7 @@ module Katello
         prepend Overrides
 
         delegate :content_source_id, :single_content_view, :single_lifecycle_environment, :default_environment?, :single_content_view_environment?, :multi_content_view_environment?, :kickstart_repository_id, :bound_repositories,
-          :installable_errata, :installable_rpms, to: :content_facet, allow_nil: true
+          :installable_errata, :installable_rpms, :image_mode_host?, to: :content_facet, allow_nil: true
 
         delegate :release_version, :purpose_role, :purpose_usage, to: :subscription_facet, allow_nil: true
 
@@ -127,6 +127,10 @@ module Katello
         register_rebuild(:queue_refresh_content_host_status, N_("Refresh_Content_Host_Status"))
 
         scope :with_pools_expiring_in_days, ->(days) { joins(:pools).merge(Katello::Pool.expiring_in_days(days)).distinct }
+
+        scope :image_mode, -> do
+          joins(:content_facet).where.not("#{::Katello::Host::ContentFacet.table_name}.bootc_booted_image" => nil)
+        end
 
         scoped_search :relation => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
         scoped_search :relation => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
