@@ -1,0 +1,16 @@
+<% if @http_proxy.new_record? %>
+  <div class="clearfix">
+    <div class="form-group ">
+      <label class="col-md-2 control-label" for="http_proxy_default_content">
+        Default content HTTP proxy
+      </label>
+      <div class="col-md-4">
+        <%= check_box_tag 'http_proxy[default_content]',
+                          '1',
+                          params.dig('http_proxy', 'default_content') == '1',
+                          id: 'http_proxy_default_content' %>
+        Set this proxy as the default for content, updating the 'Default HTTP Proxy' setting.
+      </div>
+    </div>
+  </div>
+<% end %>
