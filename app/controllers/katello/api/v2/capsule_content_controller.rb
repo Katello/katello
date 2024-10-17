@@ -26,13 +26,6 @@ module Katello
       render json: @capsule.content_counts.to_json
     end
 
-    api :POST, '/capsules/:id/content/update_counts', N_('Update content counts for the smart proxy')
-    param :id, Integer, :desc => N_('Id of the smart proxy'), :required => true
-    def update_counts
-      task = async_task(::Actions::Katello::CapsuleContent::UpdateContentCounts, @capsule)
-      respond_for_async :resource => task
-    end
-
     api :GET, '/capsules/:id/content/lifecycle_environments', N_('List the lifecycle environments attached to the smart proxy')
     param_group :lifecycle_environments
     def lifecycle_environments
@@ -83,6 +76,24 @@ module Katello
       task = async_task(::Actions::Katello::CapsuleContent::Sync,
                         @capsule,
                         sync_options)
+      respond_for_async :resource => task
+    end
+
+    api :POST, '/capsules/:id/content/update_counts', N_('Update content counts for the smart proxy')
+    param :id, Integer, :desc => N_('Id of the smart proxy'), :required => true
+    param :environment_id, Integer, :desc => N_('Id of the environment to limit the content counting on')
+    param :content_view_id, Integer, :desc => N_('Id of the content view to limit the content counting on')
+    param :repository_id, Integer, :desc => N_('Id of the repository to limit the content counting on')
+    def update_counts
+      find_environment if params[:environment_id]
+      find_content_view if params[:content_view_id]
+      find_repository if params[:repository_id]
+      count_options = {
+        :environment_id => @environment.try(:id),
+        :content_view_id => @content_view.try(:id),
+        :repository_id => @repository.try(:id)
+      }
+      task = async_task(::Actions::Katello::CapsuleContent::UpdateContentCounts, @capsule, count_options)
       respond_for_async :resource => task
     end
 
