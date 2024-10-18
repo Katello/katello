@@ -54,7 +54,7 @@
           </dd>
 
           <dt ng-if="product.redhat != true" translate>Metadata Expiration (Seconds)</dt>
-          <dd bst-edit-number="repository.metadata_expire" on-save="save(repository)" 
+          <dd bst-edit-number="repository.metadata_expire" on-save="save(repository)"
               readonly="product.redhat || denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
               deletable="repository.metadata_expire !== null"
               on-delete="clearMetadataExpire()"
@@ -77,7 +77,7 @@
       </dd>
 
       <span ng-show="repository.generic_remote_options !== []">
-        <span ng-repeat="option in genericRemoteOptions"> 
+        <span ng-repeat="option in genericRemoteOptions">
           <dt>{{option.title}}</dt>
             <dd bst-edit-text="genericRemoteOptions[$index].value"
                 on-save="save(repository)"
@@ -333,7 +333,7 @@
           options="certs()"
           on-save="save(repository)">
       </dd>
-      <span ng-if="repository.content_type == 'yum' || repository.content_type == 'deb' || repository.content_type == 'docker'">
+      <span ng-if="repository.content_type === 'deb' || repository.content_type === 'docker' || repository.content_type === 'file' || repository.content_type === 'yum'">
         <dt translate>Download Policy</dt>
         <dd bst-edit-select="downloadPolicyDisplay(repository.download_policy)"
             readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"

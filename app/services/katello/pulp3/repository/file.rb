@@ -17,12 +17,14 @@ module Katello
         end
 
         def remote_options
+          options = common_remote_options
           #TODO: move to user specifying PULP_MANIFEST
           if root.url.blank?
-            common_remote_options.merge(url: nil)
+            options[:url] = nil
           else
-            common_remote_options.merge(url: root.url + '/PULP_MANIFEST')
+            options[:url] = root.url + '/PULP_MANIFEST'
           end
+          options.merge!(policy: root.download_policy)
         end
 
         def partial_repo_path

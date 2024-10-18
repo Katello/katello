@@ -23,7 +23,7 @@ module Katello
     SKIPABLE_METADATA_TYPES = [Repository::YUM_TYPE, Repository::DEB_TYPE].freeze
 
     CONTENT_ATTRIBUTE_RESTRICTIONS = {
-      :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE, Repository::DOCKER_TYPE],
+      :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE, Repository::DOCKER_TYPE, Repository::FILE_TYPE],
     }.freeze
 
     MAX_EXPIRE_TIME = 7 * 24 * 60 * 60
