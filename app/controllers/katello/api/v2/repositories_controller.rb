@@ -52,7 +52,7 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
       param :include_tags, Array, :desc => N_("Comma-separated list of tags to sync for a container image repository")
       param :exclude_tags, Array, :desc => N_("Comma-separated list of tags to exclude when syncing a container image repository. Default: any tag ending in \"-source\"")
-      param :download_policy, ["immediate", "on_demand"], :desc => N_("download policy for yum, deb, and docker repos (either 'immediate' or 'on_demand')")
+      param :download_policy, ["immediate", "on_demand"], :desc => N_("download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')")
       param :download_concurrency, :number, :desc => N_("Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10")
       param :mirroring_policy, Katello::RootRepository::MIRRORING_POLICIES, :desc => N_("Policy to set for mirroring content.  Must be one of %s.") % RootRepository::MIRRORING_POLICIES
       param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA")
