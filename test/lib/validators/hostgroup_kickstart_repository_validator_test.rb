@@ -63,7 +63,7 @@ module Katello
 
       @validator.validate(@content_facet)
 
-      assert_empty @content_facet.errors.values
+      assert_empty @content_facet.errors.map { |error| error.message }
     end
 
     test 'it invalidates missing content source on a hostgroup' do

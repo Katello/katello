@@ -10,12 +10,12 @@ module Katello
           if environment_id
             env = KTEnvironment.where(:id => environment_id).first
             unless view.blank? || env.blank? || view.in_environment?(env)
-              record.errors[:base] << _("Content view '%{view}' is not in environment '%{env}'") %
-                                        {:view => view.name, :env => env.name}
+              record.errors.add(:base, _("Content view '%{view}' is not in environment '%{env}'") %
+                                        {:view => view.name, :env => env.name})
             end
           end
           if view&.generated_for_repository?
-            record.errors[:base] << _("Generated content views cannot be assigned to hosts or activation keys")
+            record.errors.add(:base, _("Generated content views cannot be assigned to hosts or activation keys"))
           end
         end
       end

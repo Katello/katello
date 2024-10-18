@@ -1,5 +1,4 @@
 require 'katello_test_helper'
-require 'katello/util/url_matcher'
 
 module Katello
   describe Util::URLMatcher do

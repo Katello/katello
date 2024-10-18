@@ -1,6 +1,5 @@
 require 'katello_test_helper'
-require 'support/pulp3_support'
-require 'katello/pulp3/repository'
+require_relative '../../../support/pulp3_support.rb'
 
 types = Katello::RepositoryTypeManager.defined_repository_types
 types.slice!(ENV['TEST_CONTENT_TYPES'].split(',')) unless ENV['CONTENT_TYPES'].blank?

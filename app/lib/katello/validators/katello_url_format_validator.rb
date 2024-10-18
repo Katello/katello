@@ -13,7 +13,7 @@ module Katello
         end
 
         attribute_name = options[:field_name] || attribute
-        record.errors[attribute_name] << N_("is invalid") unless kurl_valid?(value)
+        record.errors.add(attribute_name, N_("is invalid")) unless kurl_valid?(value)
       end
     end
   end

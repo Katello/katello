@@ -11,8 +11,8 @@ module Katello
             env = KTEnvironment.where(:id => environment_id).first
             return if view.blank? || env.blank?
             if view.default? && !env.library?
-              record.errors[:base] << _("Lifecycle environment '%{env}' cannot be used with content view '%{view}'") %
-                                        {:view => view.name, :env => env.name}
+              record.errors.add(:base, _("Lifecycle environment '%{env}' cannot be used with content view '%{view}'") %
+                                        {:view => view.name, :env => env.name})
             end
           end
         end
