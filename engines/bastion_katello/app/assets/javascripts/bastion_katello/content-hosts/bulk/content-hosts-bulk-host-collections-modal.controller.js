@@ -69,8 +69,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkHostCollecti
 
             if (action === 'add') {
                 HostBulkAction.addHostCollections(params, success, error);
+                $scope.ok();
             } else if (action === 'remove') {
                 HostBulkAction.removeHostCollections(params, success, error);
+                $scope.ok();
             }
         };
 
