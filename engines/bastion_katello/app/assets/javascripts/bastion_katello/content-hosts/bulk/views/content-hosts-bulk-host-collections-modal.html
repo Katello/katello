@@ -10,7 +10,7 @@
 
     <div bst-alert="info" ng-show="hostCollections.action == 'add'">
       <span translate>
-        Are you sure you want to add the {{ table.numSelected }} content host(s) selected to the host collection(s) chosen?
+        Are you sure you want to add the content host(s) selected to the host collection(s) chosen?
       </span>
       <div>
         <button type="button" class="btn btn-default" ng-click="performHostCollectionAction()" translate>Yes</button>
@@ -20,7 +20,7 @@
 
     <div bst-alert="info" ng-show="hostCollections.action == 'remove'">
       <span translate>
-        Are you sure you want to remove the {{ table.numSelected }} content host(s) selected from the host collection(s) chosen?
+        Are you sure you want to remove the content host(s) selected from the host collection(s) chosen?
       </span>
       <div>
         <button type="button" class="btn btn-default" ng-click="performHostCollectionAction()" translate>Yes</button>
@@ -84,8 +84,8 @@
   </div>
 
   <div data-block="modal-footer">
-    <button type="button" class="btn btn-primary" ng-click="ok()" translate>
-      Done
+    <button type="button" class="btn btn-default" ng-click="ok()" translate>
+      Cancel
     </button>
   </div>
 </div>
