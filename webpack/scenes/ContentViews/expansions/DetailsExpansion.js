@@ -5,12 +5,15 @@ import RelatedCompositeContentViewsModal from './RelatedCompositeContentViewsMod
 import RelatedContentViewComponentsModal from './RelatedContentViewComponentsModal';
 
 const DetailsExpansion = ({
-  cvId, cvName, cvComposite, activationKeys, hosts, relatedCVCount, relatedCompositeCVs,
+  cvId, cvName, cvComposite, cvRolling, activationKeys, hosts, relatedCVCount, relatedCompositeCVs,
 }) => {
   const activationKeyCount = activationKeys.length;
   const hostCount = hosts.length;
 
   const relatedContentViewModal = () => {
+    if (cvRolling) {
+      return <></>;
+    }
     if (cvComposite) {
       return (
         <>
@@ -49,6 +52,7 @@ DetailsExpansion.propTypes = {
   hosts: PropTypes.arrayOf(PropTypes.shape({})),
   cvName: PropTypes.string,
   cvComposite: PropTypes.bool,
+  cvRolling: PropTypes.bool,
   relatedCompositeCVs: PropTypes.arrayOf(PropTypes.shape({})),
   relatedCVCount: PropTypes.number,
 };
@@ -58,6 +62,7 @@ DetailsExpansion.defaultProps = {
   hosts: [],
   cvName: '',
   cvComposite: false,
+  cvRolling: false,
   relatedCompositeCVs: [],
   relatedCVCount: 0,
 

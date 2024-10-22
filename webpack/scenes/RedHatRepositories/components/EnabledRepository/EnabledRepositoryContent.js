@@ -9,7 +9,7 @@ const EnabledRepositoryContent = ({
 }) => (
   <Spinner loading={loading} inline>
     <OverlayTrigger
-      overlay={<Tooltip id={disableTooltipId}>{canDisable ? __('Disable') : __('Cannot be disabled because it is part of a published content view')}</Tooltip>}
+      overlay={<Tooltip id={disableTooltipId}>{canDisable ? __('Disable') : __('Cannot be disabled because it is part of a content view')}</Tooltip>}
       placement="bottom"
       trigger={['hover', 'focus']}
       rootClose={false}
