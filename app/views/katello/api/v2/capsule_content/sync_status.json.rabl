@@ -67,6 +67,7 @@ child @lifecycle_environments => :lifecycle_environments do
           :label => content_view.label,
           :name => content_view.name,
           :composite => content_view.composite,
+          :rolling => content_view.rolling,
           :last_published => content_view.versions.empty? ? nil : content_view.versions.in_environment(env).first&.created_at,
           :default => content_view.default,
           :up_to_date => @capsule.repos_pending_sync(env, content_view).empty?,

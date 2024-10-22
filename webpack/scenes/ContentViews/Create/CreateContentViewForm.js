@@ -11,6 +11,12 @@ import { LabelDependencies, LabelAutoPublish } from './ContentViewFormComponents
 import ContentViewIcon from '../components/ContentViewIcon';
 import './CreateContentViewForm.scss';
 
+export const contentViewDescriptions = {
+  CV: __('Contains repositories. Versions are published and optionally filtered.'),
+  CCV: __('Contains content views. You must choose the version to use for each content view.'),
+  RCV: __('Contains repositories. Always serves the latest synced content, without the need to publish versions.'),
+};
+
 const CreateContentViewForm = ({ setModalOpen }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState('');
@@ -18,6 +24,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
   const [description, setDescription] = useState('');
   const [composite, setComposite] = useState(false);
   const [component, setComponent] = useState(true);
+  const [rolling, setRolling] = useState(false);
   const [autoPublish, setAutoPublish] = useState(false);
   const [dependencies, setDependencies] = useState(false);
   const [redirect, setRedirect] = useState(false);
@@ -56,7 +63,8 @@ const CreateContentViewForm = ({ setModalOpen }) => {
       label,
       description,
       composite,
-      solve_dependencies: dependencies,
+      rolling,
+      solve_dependencies: (dependencies && !(rolling || composite)),
       auto_publish: (autoPublish && composite),
     }));
   };
@@ -70,7 +78,11 @@ const CreateContentViewForm = ({ setModalOpen }) => {
 
   if (redirect) {
     const { id } = response;
-    if (composite) { window.location.assign(`/content_views/${id}#/contentviews`); } else { window.location.assign(`/content_views/${id}#/repositories`); }
+    if (composite) {
+      window.location.assign(`/content_views/${id}#/contentviews`);
+    } else {
+      window.location.assign(`/content_views/${id}#/repositories`);
+    }
   }
 
   const submitDisabled = !name?.length || !label?.length || saving || redirect || labelValidated === 'error';
@@ -127,37 +139,51 @@ const CreateContentViewForm = ({ setModalOpen }) => {
       </FormGroup>
       <FormGroup isInline fieldId="type" label={__('Type')}>
         <Grid hasGutter>
-          <GridItem span={6}>
+          <GridItem span={4}>
             <Tile
               style={{ height: '100%' }}
               isStacked
               aria-label="component_tile"
-              icon={<ContentViewIcon composite={false} />}
+              icon={<ContentViewIcon composite={false} rolling={false} />}
               id="component"
               title={__('Content view')}
-              onClick={() => { setComponent(true); setComposite(false); }}
+              onClick={() => { setComponent(true); setComposite(false); setRolling(false); }}
               isSelected={component}
             >
-              {__('Single content view consisting of e.g. repositories')}
+              {contentViewDescriptions.CV}
             </Tile>
           </GridItem>
-          <GridItem span={6}>
+          <GridItem span={4}>
             <Tile
               style={{ height: '100%' }}
               isStacked
               aria-label="composite_tile"
-              icon={<ContentViewIcon composite />}
+              icon={<ContentViewIcon composite rolling={false} />}
               id="composite"
               title={__('Composite content view')}
-              onClick={() => { setComposite(true); setComponent(false); }}
+              onClick={() => { setComposite(true); setComponent(false); setRolling(false); }}
               isSelected={composite}
             >
-              {__('Consisting of multiple content views')}
+              {contentViewDescriptions.CCV}
+            </Tile>
+          </GridItem>
+          <GridItem span={4}>
+            <Tile
+              style={{ height: '100%' }}
+              isStacked
+              aria-label="rolling_tile"
+              icon={<ContentViewIcon composite={false} rolling />}
+              id="rolling"
+              title={__('Rolling content view')}
+              onClick={() => { setComposite(false); setComponent(false); setRolling(true); }}
+              isSelected={rolling}
+            >
+              {contentViewDescriptions.RCV}
             </Tile>
           </GridItem>
         </Grid>
       </FormGroup>
-      {!composite &&
+      {!composite && !rolling &&
         <FormGroup isInline fieldId="dependencies">
           <Checkbox
             id="dependencies"

@@ -45,6 +45,7 @@ module Katello
              :class_name => "Katello::ContentViewVersion", :inverse_of => :components
     has_many :published_in_composite_content_views, through: :composites, source: :content_view
     delegate :default, :default?, to: :content_view
+    delegate :rolling, :rolling?, to: :content_view
 
     validates_lengths_from_database
 
@@ -389,7 +390,7 @@ module Katello
     end
 
     def check_ready_to_promote!(to_env)
-      fail _("Default content view versions cannot be promoted") if default?
+      fail _("Default and Rolling content view versions cannot be promoted") if default? || rolling?
       content_view.check_composite_action_allowed!(to_env)
       content_view.check_docker_repository_names!(to_env)
       content_view.check_orphaned_content_facets!(environments: [to_env])

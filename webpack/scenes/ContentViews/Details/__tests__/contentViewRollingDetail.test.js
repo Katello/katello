@@ -5,7 +5,7 @@ import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrap
 import api from '../../../../services/api';
 import ContentViewDetails from '../ContentViewDetails';
 import CONTENT_VIEWS_KEY from '../../ContentViewsConstants';
-import cvDetailData from './contentViewDetails.fixtures.json';
+import cvDetailData from './contentViewRollingDetails.fixtures.json';
 
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)">{component}</Route>;
@@ -48,7 +48,7 @@ test('Can call API and show details on page load', async (done) => {
 });
 
 test('Can edit text details such as name', async (done) => {
-  const newName = 'agoodname';
+  const newName = 'agoodrollingname';
   const updatedCVDetails = { ...cvDetailData, name: newName };
   const getscope = nockInstance
     .get(cvDetailsPath)
@@ -69,8 +69,11 @@ test('Can edit text details such as name', async (done) => {
 
   const editLabel = 'edit name';
   // Wait for page to load and confirm edit button is present, then click to edit
-  await patientlyWaitFor(() => { expect(getByLabelText(editLabel)).toBeInTheDocument(); });
+  await patientlyWaitFor(() => {
+    expect(getByLabelText(editLabel)).toBeInTheDocument();
+  });
   getByLabelText(editLabel).click();
+
 
   const inputLabel = /name text input/;
   await patientlyWaitFor(() => { expect(getByLabelText(inputLabel)).toBeInTheDocument(); });
@@ -78,65 +81,69 @@ test('Can edit text details such as name', async (done) => {
   getByLabelText('submit name').click();
 
   // Make sure new name is showing after update
-  await patientlyWaitFor(() => { expect(getByLabelText('name text value')).toHaveTextContent(newName); });
-
-  assertNockRequest(getscope);
-  assertNockRequest(updatescope);
-  assertNockRequest(afterUpdateScope, done);
-  act(done);
+  await patientlyWaitFor(() => {
+    expect(getByLabelText('name text value')).toHaveTextContent(newName); assertNockRequest(getscope);
+    assertNockRequest(updatescope);
+    assertNockRequest(afterUpdateScope, done);
+    act(done);
+  });
 });
 
-test('Page contains CV type', async (done) => {
+test('Page contains Rolling CV type', async (done) => {
   const getscope = nockInstance
     .get(cvDetailsPath)
     .query(true)
     .reply(200, cvDetailData);
 
-  const { queryByText } = renderWithRedux(
+  const { queryByText, queryByLabelText } = renderWithRedux(
     withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
 
   // Wait for page to load
   await patientlyWaitFor(() => {
-    expect(queryByText('Content view')).toBeInTheDocument();
-    expect(queryByText('Rolling content view')).not.toBeInTheDocument();
+    expect(queryByText('Content view')).not.toBeInTheDocument();
+    expect(queryByText('Rolling content view')).toBeInTheDocument();
     expect(queryByText('Composite content view')).not.toBeInTheDocument();
-    expect(queryByText('Versions')).toBeInTheDocument();
-    expect(queryByText('Filters')).toBeInTheDocument();
-    expect(queryByText('History')).toBeInTheDocument();
+    expect(queryByText('Versions')).not.toBeInTheDocument();
+    expect(queryByText('Filters')).not.toBeInTheDocument();
+    expect(queryByText('History')).not.toBeInTheDocument();
     expect(queryByText('Repositories')).toBeInTheDocument();
+  });
+
+  // expand actions button
+  queryByLabelText('Actions').click();
+  // we expect a delete action, but no copy action
+  await patientlyWaitFor(() => {
+    expect(queryByText('Delete')).toBeVisible();
+    expect(queryByText('Copy')).not.toBeInTheDocument();
   });
 
   assertNockRequest(getscope);
   act(done);
 });
 
-
-test('Can edit boolean details such as solve dependencies', async (done) => {
-  const updatedCVDetails = { ...cvDetailData, solve_dependencies: true };
+test('Page does not containt boolean details such as solve dependencies', async (done) => {
+  const updatedCVDetails = { ...cvDetailData };
   const getscope = nockInstance
     .get(cvDetailsPath)
     .query(true)
     .reply(200, cvDetailData);
   const updatescope = nockInstance
-    .put(cvDetailsPath, { include_permissions: true, solve_dependencies: true })
+    .put(cvDetailsPath, { include_permissions: false, solve_dependencies: false })
     .reply(200, updatedCVDetails);
   const afterUpdateScope = nockInstance
     .get(cvDetailsPath)
     .query(true)
     .reply(200, updatedCVDetails);
 
-  const { getByLabelText, queryByLabelText } = renderWithRedux(
+  const { queryByLabelText } = renderWithRedux(
     withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
 
   const checkboxLabel = /solve_dependencies switch/;
-  await patientlyWaitFor(() => expect(getByLabelText(checkboxLabel)).toBeInTheDocument());
-  expect(getByLabelText(checkboxLabel).checked).toBeFalsy();
-  fireEvent.click(getByLabelText(checkboxLabel));
-  await patientlyWaitFor(() => expect(getByLabelText(checkboxLabel).checked).toBeTruthy());
+  await patientlyWaitFor(() => expect(queryByLabelText(checkboxLabel)).not.toBeInTheDocument());
 
   const disabledImportLabel = /import_only_switch/;
   expect(queryByLabelText(disabledImportLabel)).not.toBeInTheDocument();

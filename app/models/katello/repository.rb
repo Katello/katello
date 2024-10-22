@@ -718,6 +718,8 @@ module Katello
     def archived_instance
       if self.environment_id.nil? || self.library_instance_id.nil?
         self
+      elsif self.content_view.rolling?
+        self.library_instance
       else
         self.content_view_version.archived_repos.where(:root_id => self.root_id).first
       end

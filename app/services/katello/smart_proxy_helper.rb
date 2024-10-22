@@ -1,5 +1,6 @@
 module Katello
   class SmartProxyHelper
+    include ::Actions::Helpers::RollingCVRepos
     attr_accessor :smart_proxy
 
     def initialize(smart_proxy)
@@ -39,7 +40,11 @@ module Katello
     def combined_repos_available_to_capsule(environment = nil, content_view = nil, repository = nil)
       lifecycle_environment_check(environment, repository)
       if repository && !library_export_repo(repository)
-        [repository]
+        if repository.library_instance?
+          [repository] + find_related_rolling_repos(repository)
+        else
+          [repository]
+        end
       else
         repositories_available_to_capsule(environment, content_view)
       end

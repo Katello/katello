@@ -32,10 +32,12 @@ node :default_content_view_id do |org|
 end
 
 node(:composite_content_views_count) { Katello::ContentView.readable&.in_organization(Organization.current)&.composite&.count }
+node(:rolling_content_views_count) { Katello::ContentView.readable&.in_organization(Organization.current)&.rolling&.count }
 node(:content_view_components_count) do
   Katello::ContentView.readable&.
     in_organization(Organization.current)&.
     non_composite&.
+    non_rolling&.
     non_default&.
     ignore_generated&.count
 end

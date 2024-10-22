@@ -43,6 +43,9 @@ module Katello
     param :repository_ids, Array, :desc => N_("list of repository ids")
     param :description, String, :desc => N_("description of the filter")
     def create
+      if @view.rolling?
+        fail HttpErrors::BadRequest, _("It's not possible to create a filter for a rolling content view.")
+      end
       params[:type] = "erratum" if (params[:type] == "erratum_date" || params[:type] == "erratum_id")
       filter = ContentViewFilter.create_for(params[:type], filter_params.merge(:content_view => @view))
       respond :resource => filter

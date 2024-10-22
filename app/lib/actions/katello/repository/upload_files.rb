@@ -6,6 +6,8 @@ module Actions
   module Katello
     module Repository
       class UploadFiles < Actions::EntryAction
+        include Helpers::RollingCVRepos
+
         def plan(repository, files, content_type = nil, options = {})
           action_subject(repository)
           repository.check_ready_to_act!
@@ -38,6 +40,9 @@ module Actions
             plan_action(FinishUpload, repository, content_type: content_type, upload_actions: upload_actions)
             plan_self(tmp_files: tmp_files)
             plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repository.id]) if generate_applicability
+
+            # Refresh rolling CVs that have this repository
+            update_rolling_content_views(repository)
           end
         ensure
           # Delete tmp files when some exception occurred. Would be
@@ -46,7 +51,8 @@ module Actions
         end
 
         def run
-          ForemanTasks.async_task(Repository::CapsuleSync, ::Katello::Repository.find(input[:repository][:id])) if Setting[:foreman_proxy_content_auto_sync]
+          repository = ::Katello::Repository.find(input[:repository][:id])
+          ForemanTasks.async_task(Repository::CapsuleSync, repository) if Setting[:foreman_proxy_content_auto_sync]
         rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 

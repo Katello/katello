@@ -108,6 +108,9 @@ module Katello
       @version = ContentViewVersion.exportable.find_by_id(params[:id])
       throw_resource_not_found(name: 'content view version', id: params[:id]) if @version.blank?
       @view = @version.content_view
+      if @view.rolling?
+        fail HttpErrors::BadRequest, _("It's not possible to export a rolling content view.")
+      end
     end
 
     def find_history

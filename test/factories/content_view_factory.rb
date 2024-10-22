@@ -11,5 +11,9 @@ FactoryBot.define do
     trait :import_only do
       import_only { true }
     end
+
+    trait :rolling do
+      rolling { true }
+    end
   end
 end

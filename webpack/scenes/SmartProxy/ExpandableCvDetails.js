@@ -51,7 +51,7 @@ const ExpandableCvDetails = ({
       </Thead>
       {contentViews.map((cv, rowIndex) => {
         const {
-          id, name: cvName, composite, up_to_date: upToDate,
+          id, name: cvName, composite, rolling, up_to_date: upToDate,
           cvv_id: versionId, cvv_version: version, repositories,
         } = cv;
         const upToDateVal = upToDate ? <CheckCircleIcon style={{ color: 'green' }} /> : <TimesCircleIcon style={{ color: 'red' }} />;
@@ -72,6 +72,7 @@ const ExpandableCvDetails = ({
               <Td>
                 <ContentViewIcon
                   composite={composite}
+                  rolling={rolling}
                   description={<a href={cv.default ? urlBuilder('products', '') : urlBuilder('content_views', '', id)}>{cvName}</a>}
                 />
               </Td>
