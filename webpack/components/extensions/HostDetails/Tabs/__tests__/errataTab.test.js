@@ -20,6 +20,9 @@ const contentFacetAttributes = {
   id: 11,
   uuid: 'e5761ea3-4117-4ecf-83d0-b694f99b389e',
   content_view_default: false,
+  contentView: {
+    rolling: false,
+  },
   lifecycle_environment_library: false,
   errata_counts: {
     total: 3,
@@ -635,6 +638,35 @@ test('Toggle Group does not show if it\'s the default content view and library e
   const options = renderOptions({
     ...cfWithErrataTotal(mockErrata.total),
     content_view_default: true,
+    lifecycle_environment_library: true,
+  });
+  // return errata data results when we look for errata
+  const scope = nockInstance
+    .get(hostErrata)
+    .query(defaultQuery)
+    .reply(200, mockErrata);
+
+  const {
+    queryByLabelText,
+    getAllByText,
+  } = renderWithRedux(<ErrataTab />, options);
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
+  expect(queryByLabelText('Installable Errata')).not.toBeInTheDocument();
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Toggle Group does not show if it\'s a rolling content view and library environment', async (done) => {
+  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const mockErrata = makeMockErrata({});
+  const options = renderOptions({
+    ...cfWithErrataTotal(mockErrata.total),
+    contentView: {
+      rolling: true,
+    },
     lifecycle_environment_library: true,
   });
   // return errata data results when we look for errata

@@ -3,6 +3,8 @@ module Actions
   module Katello
     module Repository
       class ImportUpload < Actions::EntryAction
+        include Helpers::RollingCVRepos
+
         # rubocop:disable Metrics/MethodLength
         def plan(repository, uploads, options = {})
           action_subject(repository)
@@ -52,6 +54,9 @@ module Actions
             plan_action(Katello::Repository::MetadataGenerate, repository, force_publication: true) if generate_metadata
             plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repository.id]) if generate_applicability
             plan_self(repository_id: repository.id, sync_capsule: sync_capsule, upload_results: upload_results)
+
+            # Refresh rolling CVs that have this repository
+            update_rolling_content_views(repository)
           end
         end
         # rubocop:enable Metrics/MethodLength

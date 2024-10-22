@@ -38,7 +38,7 @@ namespace :katello do
 
     repos.find_each.with_index do |repo, index|
       puts "Processing Repository #{index + 1}/#{repos.count}: #{repo.name} (#{repo.id})"
-      unless repo_exists?(repo)
+      unless repo_exists?(repo) || repo.content_view.rolling
         handle_missing_repo(repo)
       end
     end

@@ -14,6 +14,7 @@ child :content_view_environments => :content_view_environments do
       id: cve.content_view&.id,
       name: cve.content_view&.name,
       composite: cve.content_view&.composite,
+      rolling: cve.content_view&.rolling,
       content_view_version: cve.content_view_version&.version,
       content_view_version_id: cve.content_view_version&.id,
       content_view_version_latest: cve.content_view_version&.latest?,
@@ -46,6 +47,7 @@ node :content_view do |content_facet|
       :id => content_view.id,
       :name => content_view.name,
       :composite => content_view.composite?,
+      :rolling => content_view.rolling?,
     }
   end
 end

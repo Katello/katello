@@ -20,7 +20,7 @@ import { truncate } from '../../../utils/helpers';
 
 const CVPublishReview = ({
   details: {
-    id, name, composite, next_version: nextVersion,
+    id, name, composite, rolling, next_version: nextVersion,
   },
   userCheckedItems,
 }) => {
@@ -79,7 +79,7 @@ const CVPublishReview = ({
         <Tbody>
           <Tr ouiaId="cv-publish-review-table-row">
             <Td>
-              <><ContentViewIcon composite={composite} description={truncate(name)} /><InactiveText text={__('Newly published')} /></>
+              <><ContentViewIcon composite={composite} rolling={rolling} description={truncate(name)} /><InactiveText text={__('Newly published')} /></>
             </Td>
             <Td>
               {__('Version')} {nextVersion}
@@ -107,6 +107,7 @@ CVPublishReview.propTypes = {
     ]).isRequired,
     name: PropTypes.string.isRequired,
     composite: PropTypes.bool.isRequired,
+    rolling: PropTypes.bool.isRequired,
     next_version: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string,

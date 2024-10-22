@@ -53,6 +53,7 @@ const buildExpandableRows = (contentViews) => {
       id,
       name,
       composite,
+      rolling,
       next_version: nextVersion,
       version_count: versionCount,
       description,
@@ -74,6 +75,7 @@ const buildExpandableRows = (contentViews) => {
       cvName: name,
       cvVersionCount: versionCount,
       cvComposite: composite,
+      cvRolling: rolling,
       cvNextVersion: nextVersion,
       latestVersionEnvironments,
       latestVersionId,
@@ -94,6 +96,7 @@ const buildExpandableRows = (contentViews) => {
             cvId={id}
             cvName={name}
             cvComposite={composite}
+            cvRolling={rolling}
             {...{
               activationKeys, hosts, relatedCVCount, relatedCompositeCVs,
             }}

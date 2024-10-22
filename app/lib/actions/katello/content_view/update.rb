@@ -28,6 +28,14 @@ module Actions
             end
           end
 
+          if content_view.rolling? && content_view_params.key?(:repository_ids)
+            repo_ids_to_add = content_view_params[:repository_ids] - content_view.repository_ids
+            repo_ids_to_remove = content_view.repository_ids - content_view_params[:repository_ids]
+
+            plan_action(AddRollingRepoClone, content_view, repo_ids_to_add) if repo_ids_to_add.any?
+            plan_action(RemoveRollingRepoClone, content_view, repo_ids_to_remove) if repo_ids_to_remove.any?
+          end
+
           content_view.update!(content_view_params)
         end
       end

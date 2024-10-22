@@ -71,6 +71,16 @@ module Katello
     validates :composite,
               inclusion: { in: [false], message: "Composite Content Views can not solve dependencies" },
               if: :solve_dependencies
+    validates :rolling, :inclusion => [true, false]
+    validates :rolling,
+              inclusion: { in: [false], message: "Rolling content views can not solve dependencies" },
+              if: :solve_dependencies
+    validates :rolling,
+              inclusion: { in: [false], message: "Rolling content views can not be composite" },
+              if: :composite
+    validates :rolling,
+              inclusion: { in: [false], message: "Rolling content views can not be import only" },
+              if: :import_only
     validates :import_only, :inclusion => [true, false]
     validates :import_only,
               inclusion: { in: [false], message: "Import-only Content Views can not be Composite" },
@@ -93,6 +103,8 @@ module Katello
     scope :non_default, -> { where(:default => false) }
     scope :composite, -> { where(:composite => true) }
     scope :non_composite, -> { where(:composite => [nil, false]) }
+    scope :rolling, -> { where(:rolling => true) }
+    scope :non_rolling, -> { where(:rolling => [nil, false]) }
     scope :generated, -> { where.not(:generated_for => :none) }
     scope :generated_for_repository, -> {
       where(:generated_for => [:repository_export,
@@ -113,6 +125,7 @@ module Katello
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :label, :complete_value => true
     scoped_search :on => :composite, :complete_value => { :true => true, :false => false }
+    scoped_search :on => :rolling, :complete_value => { :true => true, :false => false }
     scoped_search :on => :generated_for, :complete_value => true
     scoped_search :on => :default # just for ordering
     scoped_search :on => :name, :complete_value => true,
@@ -804,7 +817,7 @@ module Katello
     end
 
     def unpublishable?
-      default? || import_only? || generated?
+      default? || import_only? || generated? || rolling?
     end
 
     def needs_publish?
