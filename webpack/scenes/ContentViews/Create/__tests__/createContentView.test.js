@@ -22,6 +22,7 @@ const createDetails = {
   label: '1232123',
   description: '',
   composite: false,
+  rolling: false,
   solve_dependencies: false,
   auto_publish: false,
 };
@@ -74,7 +75,8 @@ test('Displays dependent fields correctly', () => {
   expect(getByText('Name')).toBeInTheDocument();
   expect(getByText('Label')).toBeInTheDocument();
   expect(getByText('Composite content view')).toBeInTheDocument();
-  expect(getByText('Content view')).toBeInTheDocument();
+  expect(getByText('Regular content view')).toBeInTheDocument();
+  expect(getByText('Rolling content view')).toBeInTheDocument();
   expect(getByText('Solve dependencies')).toBeInTheDocument();
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
 
