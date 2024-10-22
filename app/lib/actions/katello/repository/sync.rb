@@ -56,6 +56,7 @@ module Actions
               end
               plan_self(:id => repo.id, :sync_result => output, :skip_metadata_check => skip_metadata_check, :validate_contents => validate_contents,
                         :contents_changed => output[:contents_changed])
+              update_rolling_content_views(repo)
               plan_action(Katello::Repository::SyncHook, :id => repo.id)
             end
           end
@@ -108,6 +109,16 @@ module Actions
                       content_url:     repo.root.custom_content_path,
                       gpg_key_url:     repo.yum_gpg_key_url,
                       metadata_expire: repo.root.metadata_expire)
+        end
+
+        def update_rolling_content_views(repo)
+          concurrence do
+            repos = repo.root.repositories.in_environment(1).where(content_view_version: ::Katello::ContentViewVersion.where(content_view: ::Katello::ContentView.rolling))
+
+            repos.each do |rolling_repo|
+              plan_action(ContentView::RefreshRollingRepo, rolling_repo)
+            end
+          end
         end
 
         def rescue_strategy

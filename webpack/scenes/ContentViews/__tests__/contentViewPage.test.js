@@ -358,7 +358,8 @@ test('Displays Create Content View and opens modal with Form', async () => {
   expect(getByText('Name')).toBeInTheDocument();
   expect(getByText('Label')).toBeInTheDocument();
   expect(getByText('Composite content view')).toBeInTheDocument();
-  expect(getByText('Content view')).toBeInTheDocument();
+  expect(getByText('Rolling content view')).toBeInTheDocument();
+  expect(getByText('Regular content view')).toBeInTheDocument();
   expect(getByText('Solve dependencies')).toBeInTheDocument();
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
 });

@@ -99,6 +99,34 @@ module ::Actions::Katello::ContentView
     end
   end
 
+  class AddRollingRepoCloneTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::AddRollingRepoClone }
+    let(:content_view) { katello_content_views(:rolling_view) }
+    let(:repository) { katello_repositories(:fedora_17_x86_64) }
+    let(:library) { katello_environments(:library) }
+    before do
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns({})
+    end
+    it 'plans' do
+      action.stubs(:task).returns(success_task)
+      repository.version_href = 'foo'
+      repository.publication_href = 'bar'
+      repository.save!
+
+      clone = Katello::Repository.new(
+        library_instance: repository,
+        root: repository.root,
+        content_view_version: content_view.versions.first,
+        environment: library,
+        relative_path: 'some_unique_path'
+      )
+      Katello::Repository.any_instance.expects(:build_clone).returns(clone)
+      plan_action(action, content_view, [repository.id])
+
+      assert_action_planned_with action, ::Actions::Katello::ContentView::RefreshRollingRepo, clone
+    end
+  end
+
   class PromoteToEnvironmentTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::PromoteToEnvironment }
 
@@ -390,6 +418,25 @@ module ::Actions::Katello::ContentView
     it 'raises error when validation fails' do
       ::Actions::Katello::ContentView::Update.any_instance.expects(:action_subject).with(content_view)
       assert_raises(ActiveRecord::RecordInvalid) { create_and_plan_action action_class, content_view, :name => '' }
+    end
+  end
+
+  class UpdateRollingTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::Update }
+    let(:add_rolling_repo_action_class) { ::Actions::Katello::ContentView::AddRollingRepoClone }
+    let(:remove_rolling_repo_action_class) { ::Actions::Katello::ContentView::RemoveRollingRepoClone }
+    let(:content_view) { katello_content_views(:rolling_view) }
+    let(:repository) { katello_repositories(:rhel_6_x86_64) }
+    let(:action) { create_action action_class }
+
+    it 'plans add/remove repo' do
+      action.expects(:action_subject).with(content_view)
+      old_repo_ids = content_view.repository_ids
+
+      plan_action action, content_view, 'repository_ids' => [repository.id]
+
+      assert_action_planned_with action, add_rolling_repo_action_class, content_view, [repository.id]
+      assert_action_planned_with action, remove_rolling_repo_action_class, content_view, old_repo_ids
     end
   end
 
