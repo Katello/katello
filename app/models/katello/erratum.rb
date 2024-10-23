@@ -5,7 +5,8 @@ module Katello
     SECURITY = ["security"].freeze
     BUGZILLA = ["bugfix", "recommended"].freeze
     ENHANCEMENT = ["enhancement", "optional"].freeze
-    TYPES = [SECURITY, BUGZILLA, ENHANCEMENT].flatten.freeze
+    OTHER = ["other"].freeze
+    TYPES = [SECURITY, BUGZILLA, ENHANCEMENT, OTHER].flatten.freeze
 
     NONE = "None".freeze
     LOW = "Low".freeze
@@ -55,6 +56,7 @@ module Katello
     scope :security, -> { of_type(Erratum::SECURITY) }
     scope :bugfix, -> { of_type(Erratum::BUGZILLA) }
     scope :enhancement, -> { of_type(Erratum::ENHANCEMENT) }
+    scope :other, -> { of_type(Erratum::OTHER) }
     scope :modular, -> { where(:id => joins(:packages => :module_stream_errata_packages)) }
     scope :non_modular, -> { where.not(:id => modular) }
 

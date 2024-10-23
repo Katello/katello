@@ -4,7 +4,8 @@ module Katello
 
     ERRATA_TYPES = { 'bugfix' => _('Bug Fix'),
                      'enhancement' => _('Enhancement'),
-                     'security' => _('Security') }.with_indifferent_access
+                     'security' => _('Security'),
+                     'other' => _('Other') }.with_indifferent_access
 
     has_many :erratum_rules, :dependent => :destroy, :foreign_key => :content_view_filter_id,
                              :class_name => "Katello::ContentViewErratumFilterRule"
@@ -26,6 +27,7 @@ module Katello
       end
     end
 
+    # TODO: Quinn - probably this method
     def content_unit_pulp_ids(repo, additional_included_errata = [])
       return [] if erratum_rules.blank?
 
@@ -43,7 +45,7 @@ module Katello
         clauses = []
         clauses << errata_from
         clauses << errata_to
-        clauses << types_clause
+        clauses << types_clause # TODO - look at this
         if self.inclusion?
           package_filenames = Erratum.list_filenames_by_clauses(repo, clauses.compact, [])
           errata_pulp_ids = errata_package_pulp_ids_from_package_filenames(repo, package_filenames)
@@ -94,7 +96,14 @@ module Katello
     def types_clause
       types = erratum_rules.first.types
       return if types.blank?
-      errata_types_in(types)
+
+      conditions = []
+      valid_types = ["bugfix", "enhancement", "security"]
+      conditions << errata_types_in(types.reject { |type| type == "other" })
+      conditions << errata_types_not_in(valid_types) if types.include?("other")
+      conditions.reduce(nil) do |combined_clause, condition|
+        combined_clause ? combined_clause.or(condition) : condition
+      end
     end
 
     def filter_by_id?
@@ -103,6 +112,10 @@ module Katello
 
     def errata_types_in(types)
       erratum_arel[:errata_type].in(types)
+    end
+
+    def errata_types_not_in(types)
+      erratum_arel[:errata_type].not_in(types)
     end
 
     def errata_in(ids)

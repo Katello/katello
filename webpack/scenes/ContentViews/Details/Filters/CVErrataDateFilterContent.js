@@ -171,6 +171,15 @@ const CVErrataDateFilterContent = ({
                       {__('Bugfix')}
                     </p>
                   </SelectOption>
+                  <SelectOption
+                    isDisabled={!hasPermission(permissions, 'edit_content_views')}
+                    key="other"
+                    value="other"
+                  >
+                    <p style={{ marginTop: '4px' }}>
+                      {__('Other')}
+                    </p>
+                  </SelectOption>
                 </Select>
               </FlexItem>
               <FlexItem span={1} spacer={{ default: 'spacerNone' }}>

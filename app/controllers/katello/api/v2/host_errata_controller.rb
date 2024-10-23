@@ -6,7 +6,8 @@ module Katello
     TYPES_FROM_PARAMS = {
       bugfix: Katello::Erratum::BUGZILLA, # ['bugfix', 'recommended']
       security: Katello::Erratum::SECURITY, # ['security']
-      enhancement: Katello::Erratum::ENHANCEMENT # ['enhancement', 'optional']
+      enhancement: Katello::Erratum::ENHANCEMENT, # ['enhancement', 'optional']
+      other: Katello::Erratum::OTHER # ['other']
     }.freeze
 
     before_action :find_host, only: :index
@@ -41,7 +42,7 @@ module Katello
     param :content_view_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Content View"), :required => false
     param :environment_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Environment"), :required => false
     param :include_applicable, :bool, :desc => N_("Return errata that are applicable to this host. Defaults to false)"), :required => false
-    param :type, String, :desc => N_("Return only errata of a particular type (security, bugfix, enhancement)"), :required => false
+    param :type, String, :desc => N_("Return only errata of a particular type (security, bugfix, enhancement, other)"), :required => false
     param :severity, String, :desc => N_("Return only errata of a particular severity (None, Low, Moderate, Important, Critical)"), :required => false
     param_group :search, Api::V2::ApiController
     def index
