@@ -13,7 +13,8 @@ module Katello
                                       requirements_file: root.ansible_collection_requirements.blank? ? nil : root.ansible_collection_requirements,
                                       auth_url: root.ansible_collection_auth_url,
                                       token: root.ansible_collection_auth_token,
-                                      tls_validation: root.verify_ssl_on_sync)
+                                      tls_validation: root.verify_ssl_on_sync,
+                                      sync_dependencies: root.sync_dependencies)
         end
 
         def distribution_options(path)

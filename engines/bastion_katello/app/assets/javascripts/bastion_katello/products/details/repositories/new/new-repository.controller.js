@@ -132,7 +132,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             });
 
             $scope.save = function (repository) {
-                var fields = ['upstream_password', 'upstream_username', 'ansible_collection_auth_token', 'ansible_collection_auth_url', 'ansible_collection_requirements'];
+                var fields = ['upstream_password', 'upstream_username', 'ansible_collection_auth_token', 'ansible_collection_auth_url', 'ansible_collection_requirements', 'sync_repositories'];
                 if (repository.content_type === 'yum') {
                     repository.os_versions = $scope.osVersionsParam();
                     repository.ignorable_content = [];

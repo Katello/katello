@@ -118,6 +118,19 @@
         </a></p>
       </div>
 
+      <div ng-show="repository.content_type === 'ansible_collection'">
+        <div class="checkbox">
+          <label>
+            <input id="sync_dependencies" name="sync_dependencies" ng-model="repository.sync_dependencies" ng-init="repository.sync_dependencies=true" type="checkbox"/>
+            <span translate>Sync Dependencies</span>
+          </label>
+
+          <p class="help-block" translate>
+            Include dependencies of Ansible collections in the repository.
+          </p>
+        </div>
+      </div>
+
       <div ng-show="repository.content_type === 'ansible_collection'" bst-form-group label="{{ 'Auth URL' | translate }}">
         <input id="ansible_collection_auth_url"
                name="ansible_collection_auth_url"

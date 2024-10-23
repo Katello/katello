@@ -144,6 +144,13 @@
             edit-trigger="uploadedFile">
         </dd>
 
+        <dt translate>Sync Dependencies</dt>
+        <dd bst-edit-checkbox="repository.sync_dependencies"
+            formatter="booleanToYesNo"
+            on-save="save(repository)"
+            readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push">
+        </dd>
+
         <dt translate>Ansible Collection Authorization</dt>
         <dd bst-edit-custom="repository.ansible_collection_auth_exists"
             readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"

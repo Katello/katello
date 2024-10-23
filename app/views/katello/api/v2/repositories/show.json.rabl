@@ -19,6 +19,7 @@ glue(@resource.root) do
   attributes :ssl_ca_cert_id
   attributes :ssl_client_cert_id
   attributes :ssl_client_key_id
+  attributes :sync_dependencies
 
   attributes :product_type
   attributes :upstream_username

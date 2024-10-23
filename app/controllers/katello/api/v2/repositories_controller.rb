@@ -580,7 +580,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       keys = [:download_policy, :mirroring_policy, :sync_policy, :arch, :verify_ssl_on_sync, :upstream_password,
               :upstream_username, :download_concurrency, :metadata_expire,
               {:os_versions => []}, :deb_releases, :deb_components, :deb_architectures, :description,
-              :http_proxy_policy, :http_proxy_id, :retain_package_versions_count, {:ignorable_content => []}
+              :http_proxy_policy, :http_proxy_id, :retain_package_versions_count, {:ignorable_content => []}, :sync_dependencies
              ]
       keys += [{:include_tags => []}, {:exclude_tags => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
       keys += [:upstream_authentication_token] if params[:action] == 'create' || @repository&.yum?
@@ -620,7 +620,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       root = @product.add_repo(repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
                                                             :checksum_type, :download_policy, :http_proxy_policy,
-                                                            :metadata_expire).to_h.with_indifferent_access)
+                                                            :metadata_expire, :sync_dependencies).to_h.with_indifferent_access)
       root.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
       root.mirroring_policy = repo_params[:mirroring_policy] || Katello::RootRepository::MIRRORING_POLICY_CONTENT
       root.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
