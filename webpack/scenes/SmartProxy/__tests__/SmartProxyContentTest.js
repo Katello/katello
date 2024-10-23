@@ -8,6 +8,7 @@ import SmartProxyExpandableTable from '../SmartProxyExpandableTable';
 const smartProxyContentData = require('./SmartProxyContentTest.fixtures.json');
 
 const smartProxyContentPath = api.getApiUrl('/capsules/1/content/sync');
+const smartProxyRefreshCountPath = api.getApiUrl('/capsules/1/content/update_counts');
 
 const smartProxyContent = { ...smartProxyContentData };
 
@@ -47,4 +48,65 @@ test('Can display Smart proxy content table and expand env and cv details', asyn
   expect(getAllByText(/14 Module streams/i)[0]).toBeInTheDocument();
   expect(getAllByText(/2 Package groups/i)[0]).toBeInTheDocument();
   assertNockRequest(detailsScope, done);
+});
+
+test('Can call content count refresh for environment', async (done) => {
+  const detailsScope = nockInstance
+    .get(smartProxyContentPath)
+    .query(true)
+    .reply(200, smartProxyContent);
+
+  const countsEnvRefreshScope = nockInstance
+    .post(smartProxyRefreshCountPath, {
+      environment_id: 1,
+    })
+    .reply(202);
+
+  const {
+    getByText, queryAllByLabelText,
+  } = renderWithRedux(contentTable);
+  await patientlyWaitFor(() => expect(getByText('Environment')).toBeInTheDocument());
+  const envRowActions = queryAllByLabelText('Actions')[0];
+  envRowActions.click();
+  await patientlyWaitFor(() => expect(getByText('Refresh counts')).toBeInTheDocument());
+  const refreshEnv = getByText('Refresh counts');
+  refreshEnv.click();
+
+  assertNockRequest(detailsScope);
+  assertNockRequest(countsEnvRefreshScope, done);
+});
+
+test('Can call content count refresh for content view', async (done) => {
+  const detailsScope = nockInstance
+    .get(smartProxyContentPath)
+    .query(true)
+    .reply(200, smartProxyContent);
+
+  const countsCVRefreshScope = nockInstance
+    .post(smartProxyRefreshCountPath, {
+      content_view_id: 1,
+    })
+    .reply(202);
+
+
+  const {
+    getByText, getAllByText, getByLabelText, queryAllByLabelText,
+  } = renderWithRedux(contentTable);
+  await patientlyWaitFor(() => expect(getByText('Environment')).toBeInTheDocument());
+  const tdEnvExpand = getByLabelText('expand-env-1');
+  const envExpansion = within(tdEnvExpand).getByLabelText('Details');
+  envExpansion.click();
+  await patientlyWaitFor(() => expect(getAllByText('Content view')[0]).toBeInTheDocument());
+  expect(getAllByText('Last published')[0]).toBeInTheDocument();
+  expect(getAllByText('Repository')[0]).toBeInTheDocument();
+  expect(getAllByText('Synced')[0]).toBeInTheDocument();
+  const cvRowActions = queryAllByLabelText('Actions')[1];
+  cvRowActions.click();
+
+  await patientlyWaitFor(() => expect(getByText('Refresh counts')).toBeInTheDocument());
+  const refreshCvCounts = getByText('Refresh counts');
+  refreshCvCounts.click();
+
+  assertNockRequest(detailsScope, done);
+  assertNockRequest(countsCVRefreshScope, done);
 });
