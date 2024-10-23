@@ -59,9 +59,20 @@ module Katello
         fail HttpErrors::UnprocessableEntity, msg
       end
 
+      custom_index_relation_handle_type_and_time(collection)
+    end
+
+    def custom_index_relation_handle_type_and_time(collection)
       collection = collection.where("#{date_type} >= ?", params[:start_date]) if params[:start_date]
       collection = collection.where("#{date_type} <= ?", params[:end_date]) if params[:end_date]
-      collection = collection.of_type(params[:types]) if params[:types]
+      if params[:types]
+        include_other = params[:types]&.include?('other')
+        params[:types]&.delete('other')
+        collection = collection.of_type(
+          params[:types],
+          include_other
+        )
+      end
       collection
     end
 

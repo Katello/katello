@@ -6,6 +6,9 @@ module Katello
       @repo = katello_repositories(:fedora_17_x86_64)
     end
 
+    TYPICAL_TYPES_RESPONSE =
+      " AND \"katello_errata\".\"errata_type\" IN ('bugfix', 'enhancement', 'security')".freeze
+
     def test_erratum_by_id_returns_arel_for_specified_errata_id
       erratum = katello_errata(:security)
       @repo.errata = [erratum]
@@ -24,7 +27,7 @@ module Katello
       filter = id_rule.filter
       filter.reload
 
-      assert_equal "\"katello_errata\".\"updated\" >= '#{start_date}' AND \"katello_errata\".\"errata_type\" IN ('bugfix', 'enhancement', 'security')",
+      assert_equal "\"katello_errata\".\"updated\" >= '#{start_date}'" + TYPICAL_TYPES_RESPONSE,
         filter.generate_clauses(@repo).to_sql
     end
 
@@ -35,7 +38,7 @@ module Katello
       filter = id_rule.filter
       filter.reload
 
-      assert_equal "\"katello_errata\".\"issued\" >= '#{start_date}' AND \"katello_errata\".\"errata_type\" IN ('bugfix', 'enhancement', 'security')",
+      assert_equal "\"katello_errata\".\"issued\" >= '#{start_date}'" + TYPICAL_TYPES_RESPONSE,
         filter.generate_clauses(@repo).to_sql
     end
 
@@ -45,7 +48,7 @@ module Katello
       filter = id_rule.filter
       filter.reload
 
-      assert_equal "\"katello_errata\".\"updated\" <= '#{end_date}' AND \"katello_errata\".\"errata_type\" IN ('bugfix', 'enhancement', 'security')",
+      assert_equal "\"katello_errata\".\"updated\" <= '#{end_date}'" + TYPICAL_TYPES_RESPONSE,
         filter.generate_clauses(@repo).to_sql
     end
 
@@ -56,7 +59,7 @@ module Katello
       filter = id_rule.filter
       filter.reload
 
-      assert_equal "\"katello_errata\".\"issued\" <= '#{end_date}' AND \"katello_errata\".\"errata_type\" IN ('bugfix', 'enhancement', 'security')",
+      assert_equal "\"katello_errata\".\"issued\" <= '#{end_date}'" + TYPICAL_TYPES_RESPONSE,
         filter.generate_clauses(@repo).to_sql
     end
 
@@ -66,6 +69,16 @@ module Katello
       filter.reload
 
       assert_equal "\"katello_errata\".\"errata_type\" IN ('bugfix')",
+        filter.generate_clauses(@repo).to_sql
+    end
+
+    def test_errata_by_type_returns_arel_by_errata_type_other
+      id_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule, :allow_other_types => true)
+      id_rule.update!(types: [])
+      filter = id_rule.filter
+      filter.reload
+
+      assert_equal "\"katello_errata\".\"errata_type\" NOT IN ('security', 'bugfix', 'recommended', 'enhancement', 'optional')",
         filter.generate_clauses(@repo).to_sql
     end
 
@@ -209,13 +222,16 @@ module Katello
     end
 
     def test_content_unit_pulp_ids_by_errata_type
-      rpm1 = @repo.rpms.first
-      rpm2 = @repo.rpms.last
+      rpm1 = @repo.rpms[0]
+      rpm2 = @repo.rpms[1]
+      rpm3 = @repo.rpms[2]
 
       erratum1 = Katello::Erratum.new(:pulp_id => "one", :errata_id => "ERRATA1", :errata_type => 'bugfix')
       erratum1.packages << Katello::ErratumPackage.new(:filename => rpm1.filename, :name => "e1", :nvrea => "e1")
       erratum2 = Katello::Erratum.new(:pulp_id => "two", :errata_id => "ERRATA2", :errata_type => 'security')
       erratum2.packages << Katello::ErratumPackage.new(:filename => rpm2.filename, :name => "e2", :nvrea => "e2")
+      erratum3 = Katello::Erratum.new(:pulp_id => "three", :errata_id => "ERRATA3", :errata_type => 'not_recognized')
+      erratum3.packages << Katello::ErratumPackage.new(:filename => rpm3.filename, :name => "e3", :nvrea => "e3")
 
       @repo.errata = [erratum2]
       @repo.save!
@@ -225,6 +241,29 @@ module Katello
       filter.reload
 
       assert_equal [rpm2.pulp_id], filter.content_unit_pulp_ids(@repo)
+    end
+
+    def test_content_unit_pulp_ids_by_errata_type_other
+      rpm1 = @repo.rpms[0]
+      rpm2 = @repo.rpms[1]
+      rpm3 = @repo.rpms[2]
+
+      erratum1 = Katello::Erratum.new(:pulp_id => "one", :errata_id => "ERRATA1", :errata_type => 'bugfix')
+      erratum1.packages << Katello::ErratumPackage.new(:filename => rpm1.filename, :name => "e1", :nvrea => "e1")
+      erratum2 = Katello::Erratum.new(:pulp_id => "two", :errata_id => "ERRATA2", :errata_type => 'security')
+      erratum2.packages << Katello::ErratumPackage.new(:filename => rpm2.filename, :name => "e2", :nvrea => "e2")
+      erratum3 = Katello::Erratum.new(:pulp_id => "three", :errata_id => "ERRATA3", :errata_type => 'not_recognized')
+      erratum3.packages << Katello::ErratumPackage.new(:filename => rpm3.filename, :name => "e3", :nvrea => "e3")
+
+      @repo.errata = [erratum3]
+      @repo.save!
+
+      id_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule, :allow_other_types => true)
+      id_rule.update!(types: [])
+      filter = id_rule.filter
+      filter.reload
+
+      assert_equal [rpm3.pulp_id], filter.content_unit_pulp_ids(@repo)
     end
   end
 end

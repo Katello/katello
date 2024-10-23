@@ -2,9 +2,9 @@ module Katello
   module Validators
     class ContentViewErratumFilterRuleValidator < ActiveModel::Validator
       def validate(record)
-        if record.errata_id.blank? && record.start_date.blank? && record.end_date.blank? && record.types.blank?
+        if record.errata_id.blank? && record.start_date.blank? && record.end_date.blank? && record.types.blank? && record.allow_other_types == false
           invalid_parameters = _("Invalid erratum filter rule specified, Must specify at least one of the following:" \
-                                     " 'errata_id', 'start_date', 'end_date' or 'types'")
+            " 'errata_id', 'start_date', 'end_date', 'types', or 'allow_other_types'")
           record.errors.add(:base, invalid_parameters)
           return
         end

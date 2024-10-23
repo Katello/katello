@@ -47,7 +47,7 @@ const CVFilterDetailType = ({
       details={details}
     />);
   case 'erratum':
-    if (head(rules)?.types) {
+    if (head(rules)?.types || head(rules)?.allow_other_types) {
       return (<CVErrataDateFilterContent
         cvId={cvId}
         filterId={filterId}

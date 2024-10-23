@@ -23,6 +23,7 @@ test('Can display errata-date filter rule and edit', async (done) => {
     end_date: '2020-08-15T12:00:00.000Z',
     types: ['enhancement', 'security'],
     date_type: 'issued',
+    allow_other_types: false,
   };
 
   const ruleEditScope = nockInstance
