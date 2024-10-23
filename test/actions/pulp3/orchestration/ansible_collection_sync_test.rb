@@ -40,6 +40,17 @@ module ::Actions::Pulp3
       assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
     end
 
+    def test_sync_wo_dependencies
+      @repo.root.update(:sync_dependencies => false)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      @repo.reload
+      refute_equal @repo.version_href, @repo_version_href
+
+      pulp_remote = @repo.backend_service(@primary).get_remote
+      assert_equal pulp_remote.sync_dependencies, false
+    end
+
     def test_sync_mirror_false
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
