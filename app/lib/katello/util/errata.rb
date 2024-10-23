@@ -36,6 +36,8 @@ module Katello
           return ::Katello::Erratum::ENHANCEMENT
         when "security"
           return ::Katello::Erratum::SECURITY
+        when "other"
+          return ::Katello::Erratum::OTHER
         end
       end
 

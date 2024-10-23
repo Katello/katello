@@ -109,7 +109,7 @@ module Katello
       param :errata_ids, Array, :desc => N_("erratum: IDs or a select all object")
       param :start_date, String, :desc => N_("erratum: start date (YYYY-MM-DD)")
       param :end_date, String, :desc => N_("erratum: end date (YYYY-MM-DD)")
-      param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
+      param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security, other)")
       param :date_type, String, :desc => N_("erratum: search using the 'Issued On' or 'Updated On' column of the errata. Values are 'issued'/'updated'")
       param :module_stream_ids, Array, :desc => N_("module stream ids")
     end
