@@ -27,8 +27,8 @@ child :content_view_environments => :content_view_environments do
       lifecycle_environment_library: cve.lifecycle_environment&.library?
     }
   end
-  node :candlepin_name do |cve|
-    cve.candlepin_name
+  node :label do |cve|
+    cve.label
   end
 end
 

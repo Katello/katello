@@ -30,14 +30,14 @@ module Katello
       assert_includes cve.hosts, host
     end
 
-    def test_with_candlepin_name
+    def test_with_label_and_org
       dev = katello_environments(:dev)
       view = katello_content_views(:library_dev_view)
       cve = Katello::ContentViewEnvironment.where(:environment_id => dev, :content_view_id => view).first
-      assert_equal cve, ContentViewEnvironment.with_candlepin_name('published_dev_view_dev', organization: dev.organization)
+      assert_equal cve, ContentViewEnvironment.with_label_and_org('published_dev_view_dev', organization: dev.organization)
     end
 
-    def test_fetch_content_view_environments_candlepin_names
+    def test_fetch_content_view_environments_labels
       dev = katello_environments(:dev)
       view = katello_content_views(:library_dev_view)
       cve = Katello::ContentViewEnvironment.where(:environment_id => dev, :content_view_id => view).first
@@ -60,7 +60,7 @@ module Katello
       assert_equal [0, 999], input_ids # should not have a map! which mutates the input array
     end
 
-    def test_fetch_content_view_environments_mixed_validity_candlepin_names
+    def test_fetch_content_view_environments_mixed_validity_labels
       dev = katello_environments(:dev)
       assert_raises(HttpErrors::UnprocessableEntity) do
         ContentViewEnvironment.fetch_content_view_environments(labels: ['published_dev_view_dev, bogus'], organization: dev.organization)
