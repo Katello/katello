@@ -14,7 +14,7 @@ module Actions
         def invoke_external_task
           repo = ::Katello::Repository.find(input[:repository_id])
           sync_options = {}
-          sync_options[:optimize] = false if sync_options[:skip_metadata_check]
+          sync_options[:optimize] = !input[:options].fetch(:skip_metadata_check, false)
           output[:pulp_tasks] = repo.backend_service(smart_proxy).with_mirror_adapter.sync(sync_options)
         end
 
