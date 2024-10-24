@@ -91,7 +91,7 @@ module Katello
       host.reload
       ::Katello::Host::SubscriptionFacet.update_facts(host, rhsm_params[:facts]) unless rhsm_params[:facts].blank?
 
-      respond_for_show(:resource => host, :template => '../../../api/v2/hosts/show')
+      respond_for_show(:resource => host, :full_template => 'katello/api/v2/hosts/show')
     end
 
     def params_to_rhsm_params

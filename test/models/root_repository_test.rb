@@ -156,7 +156,7 @@ module Katello
       %w[sha256 sha384 sha512].each do |checksum_type|
         @root.checksum_type = checksum_type
         refute @root.valid?, "Validation failed for create with valid checksum_type: '#{checksum_type}'"
-        assert @root.errors.key?(:checksum_type)
+        assert_includes @root.errors.attribute_names, :checksum_type
       end
     end
 
@@ -174,7 +174,7 @@ module Katello
       invalid_name_list.each do |invalid_name|
         @root.name = invalid_name
         refute @root.valid?, "Validation passed for create with invalid name: '#{invalid_name}' length: #{invalid_name.length}"
-        assert @root.errors.key?(:name)
+        assert_includes @root.errors.attribute_names, :name
       end
     end
 
@@ -188,7 +188,7 @@ module Katello
                       )
 
       refute_valid new_repo
-      assert new_repo.errors.key?(:name)
+      assert_includes new_repo.errors.attribute_names, :name
       assert_match 'has already been taken for this product.', new_repo.errors[:name][0]
     end
 
@@ -196,7 +196,7 @@ module Katello
     def test_create_with_invalid_label
       @root.label = RFauxFactory.gen_utf8
       refute_valid @root
-      assert @root.errors.key?(:label)
+      assert_includes @root.errors.attribute_names, :label
       assert_match 'cannot contain characters other than ascii alpha numerals, \'_\', \'-\'.', @root.errors[:label][0]
     end
 
@@ -212,7 +212,7 @@ module Katello
             @root.valid?
           end
         end
-        assert @root.errors.key?(:url)
+        assert_includes @root.errors.attribute_names, :url
         assert_match 'is invalid', @root.errors[:url][0]
       end
     end
@@ -228,7 +228,7 @@ module Katello
         assert_raise URI::InvalidURIError do
           @root.valid?
         end
-        assert @root.errors.key?(:url)
+        assert_includes @root.errors.attribute_names, :url
         assert_match 'is invalid', @root.errors[:url][0]
       end
     end
@@ -246,7 +246,7 @@ module Katello
             @root.valid?
           end
         end
-        assert @root.errors.key?(:url)
+        assert_includes @root.errors.attribute_names, :url
         assert_match 'is too long (maximum is 1024 characters)', @root.errors[:url][0]
       end
     end
@@ -257,7 +257,7 @@ module Katello
       assert @root.save
       @root.download_policy = 'invalid_download_policy'
       refute_valid @root
-      assert @root.errors.key?(:download_policy)
+      assert_includes @root.errors.attribute_names, :download_policy
       assert_match 'must be one of the following: immediate, on_demand', @root.errors[:download_policy][0]
     end
 
@@ -266,7 +266,7 @@ module Katello
       @root.download_policy = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
       @root.content_type = 'ansible_collection'
       refute @root.valid?, "Validation succeed for create with download_policy and non-yum repository: ansible_collection"
-      assert @root.errors.key?(:download_policy)
+      assert_includes @root.errors.attribute_names, :download_policy
       assert_match(/Cannot set attribute.*ansible_collection.*/, @root.errors[:download_policy][0])
     end
 
@@ -275,7 +275,7 @@ module Katello
       @root.checksum_type = 'invalid checksum_type'
       @root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
       refute_valid @root
-      assert @root.errors.key?(:checksum_type)
+      assert_includes @root.errors.attribute_names, :checksum_type
       assert_match 'is not included in the list', @root.errors[:checksum_type][0]
     end
 
@@ -396,7 +396,7 @@ module Katello
       invalid_name_list.each do |invalid_name|
         @fedora_root.name = invalid_name
         refute @fedora_root.valid?, "Validation succeed for update with invalid name: #{invalid_name} length: #{invalid_name.length}"
-        assert @fedora_root.errors.key?(:name)
+        assert_includes @fedora_root.errors.attribute_names, :name
       end
     end
 
@@ -405,7 +405,7 @@ module Katello
       repo = @fedora_root
       repo.label = 'new_label'
       refute repo.valid?
-      assert repo.errors.key?(:label)
+      assert_includes repo.errors.attribute_names, :label
       assert_match 'cannot be changed.', repo.errors[:label][0]
     end
 
@@ -421,7 +421,7 @@ module Katello
           repo.valid?
         end
 
-        assert repo.errors.key?(:url)
+        assert_includes repo.errors.attribute_names, :url
         assert_match 'is invalid', repo.errors[:url][0]
       end
     end
@@ -439,7 +439,7 @@ module Katello
             repo.valid?
           end
         end
-        assert repo.errors.key?(:url)
+        assert_includes repo.errors.attribute_names, :url
         assert_match 'is too long (maximum is 1024 characters)', repo.errors[:url][0]
       end
     end

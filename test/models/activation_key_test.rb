@@ -37,7 +37,7 @@ module Katello
       ak = ActivationKey.create!(name: 'new_key', organization: org2)
       ak.content_view_environments << library_dev_staging_cve
       refute ak.save
-      refute_empty ak.errors.keys
+      refute_empty ak.errors.attribute_names
       assert_raises(ActiveRecord::RecordInvalid) do
         ak.save!
       end

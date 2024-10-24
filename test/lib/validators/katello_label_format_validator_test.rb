@@ -1,10 +1,20 @@
 require 'katello_test_helper'
 
 module Katello
+  class KatelloLabelFormatValidatorMockModel < Hash
+    def initialize
+      super
+      self[:name] = []
+    end
+
+    def add(attribute, message)
+      self[attribute] << message
+    end
+  end
   class KatelloLabelFormatValidatorTest < ActiveSupport::TestCase
     def setup
       @validator = Validators::KatelloLabelFormatValidator.new(:attributes => [:name])
-      @model = OpenStruct.new(:errors => {:name => []})
+      @model = OpenStruct.new(:errors => KatelloLabelFormatValidatorMockModel.new)
     end
 
     def test_validate_each

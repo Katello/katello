@@ -143,7 +143,7 @@ module Katello
       invalid_name_list.each do |name|
         host_collection = HostCollection.new(:name => name, :organization => @organization)
         refute host_collection.valid?, "Validation succeed for create with invalid name: '#{name}' length: #{name.length})"
-        assert host_collection.errors.key?(:name)
+        assert_includes host_collection.errors.attribute_names, :name
       end
     end
 

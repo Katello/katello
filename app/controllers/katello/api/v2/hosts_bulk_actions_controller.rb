@@ -188,7 +188,7 @@ module Katello
     param_group :bulk_params
     def traces
       collection = scoped_search(Katello::HostTracer.where(host_id: @hosts.pluck(:id)), 'application', 'desc', resource_class: Katello::HostTracer)
-      respond_for_index(:collection => collection, :template => '../../../api/v2/host_tracer/index')
+      respond_for_index(:collection => collection, :full_template => 'katello/api/v2/host_tracer/index')
     end
 
     api :PUT, "/hosts/bulk/resolve_traces", N_("Resolve traces for one or more hosts")
@@ -255,7 +255,7 @@ module Katello
       options[:resource_class] = Katello::ModuleStream
       host_module_streams = Katello::ModuleStream.available_for_hosts(@hosts)
       respond_for_index(collection: scoped_search(host_module_streams, :name, :asc, options),
-                        template: '../../../api/v2/module_streams/name_streams')
+                        full_template: 'katello/api/v2/module_streams/name_streams')
     end
 
     api :PUT, "/hosts/bulk/change_content_source", N_("Update the content source for specified hosts and generate the reconfiguration script")

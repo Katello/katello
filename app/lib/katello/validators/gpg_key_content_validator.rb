@@ -15,25 +15,25 @@ module Katello
             gpg_key_line_array.pop
 
             if gpg_key_line_array.empty?
-              record.errors[attribute] << _("must contain valid Public GPG Key")
+              record.errors.add(attribute, _("must contain valid Public GPG Key"))
             else
               unless gpg_key_line_array.drop(1).join.match(/[a-zA-Z0-9+\/=]*/)
-                record.errors[attribute] << _("must contain valid Public GPG Key")
+                record.errors.add(attribute, _("must contain valid Public GPG Key"))
               end
             end
 
           else
-            record.errors[attribute] << _("must contain valid Public GPG Key")
+            record.errors.add(attribute, _("must contain valid Public GPG Key"))
           end
 
         else
-          record.errors[attribute] << _("must contain GPG Key")
+          record.errors.add(attribute, _("must contain GPG Key"))
         end
       end
 
       def self.validate_line_length(record, attribute, value)
         value.each_line do |line|
-          record.errors[attribute] << _("must contain valid  Public GPG Key") if line.length > ContentCredential::MAX_CONTENT_LINE_LENGTH
+          record.errors.add(attribute, _("must contain valid  Public GPG Key")) if line.length > ContentCredential::MAX_CONTENT_LINE_LENGTH
         end
       end
     end

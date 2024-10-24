@@ -3,7 +3,7 @@ module Katello
     class ContainerImageNameValidator < ActiveModel::EachValidator
       def validate_each(record, attribute, value)
         if value && !ContainerImageNameValidator.validate_name(value)
-          record.errors[attribute] << N_("invalid container image name")
+          record.errors.add(attribute, N_("invalid container image name"))
         end
       end
 

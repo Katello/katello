@@ -84,7 +84,7 @@ module Katello
       invalid_name_list.each do |name|
         sync_plan = SyncPlan.new(valid_attributes.merge(:name => name))
         refute sync_plan.valid?, "Validation succeed for create with invalid name: '#{name}' length: #{name.length})"
-        assert sync_plan.errors.key?(:name)
+        assert_includes sync_plan.errors.attribute_names, :name
       end
     end
 
@@ -93,7 +93,7 @@ module Katello
       invalid_name_list.each do |interval|
         sync_plan = SyncPlan.new(valid_attributes.merge(:interval => interval))
         refute sync_plan.valid?, "Validation succeed for create with invalid interval: '#{interval}'"
-        assert sync_plan.errors.key?(:interval)
+        assert_includes sync_plan.errors.attribute_names, :interval
       end
     end
 
@@ -183,7 +183,7 @@ module Katello
       invalid_name_list.each do |name|
         @plan.name = name
         refute @plan.valid?, "Validation succeed for update with invalid name: '#{name}' length: #{name.length})"
-        assert @plan.errors.key?(:name)
+        assert_includes @plan.errors.attribute_names, :name
       end
     end
 

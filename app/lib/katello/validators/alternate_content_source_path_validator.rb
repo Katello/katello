@@ -6,11 +6,11 @@ module Katello
           case attribute
           when :base_url
             unless AlternateContentSourcePathValidator.validate_base_url(value)
-              record.errors[attribute] << N_("%s is not a valid path") % value
+              record.errors.add(attribute, N_("%s is not a valid path") % value)
             end
           when :subpaths
             unless AlternateContentSourcePathValidator.validate_subpaths(value)
-              record.errors[attribute] << N_('All subpaths must have a slash at the end and none at the front')
+              record.errors.add(attribute, N_('All subpaths must have a slash at the end and none at the front'))
             end
           end
         end

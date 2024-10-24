@@ -1,6 +1,4 @@
 require 'katello_test_helper'
-require 'foreman/renderer'
-require 'foreman/renderer/source/string'
 
 module Katello
   class BaseTemplateScopeExtensionsTest < ActiveSupport::TestCase

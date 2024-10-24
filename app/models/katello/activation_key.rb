@@ -42,16 +42,16 @@ module Katello
     validates_each :max_hosts do |record, attr, value|
       if record.unlimited_hosts
         unless value.nil?
-          record.errors[attr] << _("cannot be set because unlimited hosts is set")
+          record.errors.add(attr, _("cannot be set because unlimited hosts is set"))
         end
       else
         if value.nil?
-          record.errors[attr] << _("cannot be nil")
+          record.errors.add(attr, _("cannot be nil"))
         elsif value <= 0
-          record.errors[attr] << _("cannot be less than one")
+          record.errors.add(attr, _("cannot be less than one"))
         elsif value < record.subscription_facets.length
           # we don't let users to set usage limit lower than current in-use
-          record.errors[attr] << _("cannot be lower than current usage count (%s)" % record.subscription_facets.length)
+          record.errors.add(attr, _("cannot be lower than current usage count (%s)" % record.subscription_facets.length))
         end
       end
     end
