@@ -83,7 +83,7 @@ module Katello
           if hosts.empty?
             { :conditions => "1=0" }
           else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).join(',')})" }
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).uniq.join(',')})" }
           end
         end
 
@@ -93,7 +93,7 @@ module Katello
           if facets.empty?
             { :conditions => "1=0" }
           else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).uniq.join(',')})" }
           end
         end
 
@@ -102,7 +102,7 @@ module Katello
           if hosts.empty?
             { :conditions => "1=0" }
           else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).join(',')})" }
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).uniq.join(',')})" }
           end
         end
 
@@ -111,7 +111,7 @@ module Katello
           if facets.empty?
             { :conditions => "1=0" }
           else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).uniq.join(',')})" }
           end
         end
 
@@ -121,7 +121,7 @@ module Katello
           if hosts.empty?
             { :conditions => "1=0" }
           else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).join(',')})" }
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).uniq.join(',')})" }
           end
         end
 
@@ -131,7 +131,7 @@ module Katello
           if facets.empty?
             { :conditions => "1=0" }
           else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).uniq.join(',')})" }
           end
         end
 
@@ -141,7 +141,7 @@ module Katello
           if facets.empty?
             { :conditions => "1=0" }
           else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).uniq.join(',')})" }
           end
         end
 
@@ -151,7 +151,7 @@ module Katello
           if facets.empty?
             { :conditions => "1=0" }
           else
-            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).uniq.join(',')})" }
           end
         end
 
