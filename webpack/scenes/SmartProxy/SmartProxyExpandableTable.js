@@ -35,12 +35,13 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
     __('Last sync'),
   ];
 
-  const refreshCountAction = {
+  const refreshCountAction = envId => ({
     title: __('Refresh counts'),
     onClick: () => {
-      dispatch(updateSmartProxyContentCounts(smartProxyId));
+      dispatch(updateSmartProxyContentCounts(smartProxyId, { environment_id: envId }));
     },
-  };
+  });
+
   const fetchItems = useCallback(
     () => getSmartProxyContent({ smartProxyId, organizationId }),
     [smartProxyId, organizationId],
@@ -109,7 +110,7 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
                   <Td
                     key={`rowActions-${id}`}
                     actions={{
-                      items: [refreshCountAction],
+                      items: [refreshCountAction(id)],
                     }}
                   />
                 </Tr>
@@ -117,6 +118,7 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
                   <Td colSpan={4}>
                     {isExpanded ?
                       <ExpandableCvDetails
+                        smartProxyId={smartProxyId}
                         contentViews={contentViews}
                         contentCounts={contentCounts}
                         envId={id}
