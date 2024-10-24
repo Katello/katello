@@ -409,10 +409,10 @@
       "A backend service [ %s ] is unreachable": [
         "Um serviço backend [ %s ] é inatingível"
       ],
-      "A comma-separated list of refs to include during a sync. The wildcards *, ? are recognized.": [
+      "A comma-separated list of refs to include during an ostree sync. The wildcards *, ? are recognized.": [
         ""
       ],
-      "A comma-separated list of tags to exclude during a sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
+      "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
         ""
       ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
@@ -466,9 +466,6 @@
       "About page": [
         ""
       ],
-      "Abstract": [
-        ""
-      ],
       "Abstract async task": [
         "Tarefa assíncrona abstrata"
       ],
@@ -499,6 +496,15 @@
       "Activation key": [
         "Chave de ativação"
       ],
+      "Activation key %s has more than one content view. Use #content_views instead.": [
+        ""
+      ],
+      "Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead.": [
+        ""
+      ],
+      "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled.": [
+        ""
+      ],
       "Activation key ID": [
         "Ativação do ID da chave"
       ],
@@ -512,6 +518,9 @@
         ""
       ],
       "Activation key for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. For multiple keys use `activation_keys` param instead.": [
+        ""
+      ],
+      "Activation key identifier": [
         ""
       ],
       "Activation key(s) to use during registration": [
@@ -760,6 +769,9 @@
       "An error occurred during upload \\n%{error_message}": [
         ""
       ],
+      "An option to specify how many ostree commits to traverse.": [
+        ""
+      ],
       "Another component already includes content view with ID %s": [
         "Outro componente já inclui a visualização do conteúdo com ID %s"
       ],
@@ -868,6 +880,12 @@
       "Array of content view component IDs to remove. Identifier of the component association": [
         "Matriz de IDs de componentes de visualização de conteúdo para remover. Identificador da associação do componente"
       ],
+      "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
+      "Array of content view environment ids to be associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -910,6 +928,9 @@
         "Atribuir a versão de lançamento a um ou mais hosts"
       ],
       "Assigning a host to multiple content view environments is not enabled.": [
+        ""
+      ],
+      "Assigning an activation key to multiple content view environments is not enabled.": [
         ""
       ],
       "Associated location IDs": [
@@ -1167,6 +1188,9 @@
       "Cannot add composite versions to another composite content view": [
         "Não é possível adicionar coleções de versão a outra coleção de visualização de conteúdo"
       ],
+      "Cannot add content view environments from a different organization": [
+        ""
+      ],
       "Cannot add default content view to composite content view": [
         "Não é possível adicionar visualização de conteúdo padrão a uma coleção de visualiação de conteúdo"
       ],
@@ -1251,7 +1275,7 @@
       "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
         ""
       ],
-      "Cannot install errata: No installable errata found for search term '%s'": [
+      "Cannot install errata: No errata found for search term '%s'": [
         ""
       ],
       "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}": [
@@ -1284,7 +1308,7 @@
       "Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'.": [
         "Não é possível remover a visualização do conteúdo do ambiente. A visualização do conteúdo '%{view}' não está no ambiente do ciclo de vida '%{env}'."
       ],
-      "Cannot remove package(s): This host does not have any installed packages matching the search term '%s'.": [
+      "Cannot remove package(s): No installed packages found for search term '%s'.": [
         ""
       ],
       "Cannot set attribute %{attr} for content type %{type}": [
@@ -1308,7 +1332,7 @@
       "Cannot update properties of a container push repository": [
         ""
       ],
-      "Cannot upgrade packages: No installed packages found for search term '%s'": [
+      "Cannot upgrade packages: No installed packages found for search term '%s'.": [
         ""
       ],
       "Cannot upload Ansible collections.": [
@@ -1392,6 +1416,12 @@
       "Collapse All": [
         "Recolher todos"
       ],
+      "Comma-separated list of Candlepin environment names associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
+      "Comma-separated list of Candlepin environment names to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -1402,6 +1432,9 @@
         ""
       ],
       "Comma-separated list of tags to sync for a container image repository": [
+        ""
+      ],
+      "Commit upload": [
         ""
       ],
       "Compare": [
@@ -1749,14 +1782,23 @@
       "Copy": [
         ""
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "Copiar uma chave de ativação"
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         ""
       ],
       "Copy to clipboard": [
         "Copiar para área de transferência"
+      ],
+      "Copy version": [
+        ""
       ],
       "Copy version units to library": [
         "Copiar unidades da versão para a biblioteca"
@@ -1845,8 +1887,8 @@
       "Couldn't find content host environment '%s'": [
         "Não foi possível encontrar o ambiente de hospedagem de conteúdo '%s'"
       ],
-      "Couldn't find content view '%s'": [
-        "Não foi possível encontrar a visualização do conteúdo '%s'"
+      "Couldn't find content view environment with content view ID '%{cv}' and environment ID '%{env}'": [
+        ""
       ],
       "Couldn't find content view version '%s'": [
         "Não foi possível encontrar a versão de visualização do conteúdo '%s'"
@@ -1903,6 +1945,9 @@
         ""
       ],
       "Create Alternate Content Source": [
+        ""
+      ],
+      "Create Container Push Repository Root": [
         ""
       ],
       "Create Export History": [
@@ -1962,10 +2007,19 @@
       "Create content view": [
         ""
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         ""
       ],
       "Create host collection": [
+        ""
+      ],
+      "Create import": [
+        ""
+      ],
+      "Create importer": [
         ""
       ],
       "Create new activation key": [
@@ -1975,6 +2029,12 @@
         "Criar organização"
       ],
       "Create package filter rule": [
+        ""
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
         ""
       ],
       "Create rule": [
@@ -2223,10 +2283,34 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
+      "Delete distributions": [
+        ""
+      ],
       "Delete manifest from Red Hat provider": [
         "Remover manifesto do provedor da Red Hat"
       ],
       "Delete multiple filters from a content view": [
+        ""
+      ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete orphaned migrated repositories": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
         ""
       ],
       "Delete version": [
@@ -2257,6 +2341,9 @@
         ""
       ],
       "Deleting versions: {versionList}": [
+        ""
+      ],
+      "Depth": [
         ""
       ],
       "Description": [
@@ -2321,6 +2408,12 @@
       ],
       "Destroy an environment in an organization": [
         "Destruir um ambiente em uma organização "
+      ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
       ],
       "Destroy one or more alternate content sources": [
         ""
@@ -2505,6 +2598,9 @@
       "Enable repository sets": [
         ""
       ],
+      "Enable structured APT for deb content": [
+        ""
+      ],
       "Enable/Disable auto publish of composite view": [
         "Habilitar/desabilitar a publicação automática de coleção de visualização"
       ],
@@ -2556,11 +2652,17 @@
       "Environment ID": [
         ""
       ],
+      "Environment ID and content view ID must be provided together": [
+        ""
+      ],
       "Environment IDs": [
         "IDs de Ambiente"
       ],
       "Environment cannot be in its own promotion path": [
         "O Ambiente não pode estar em seu próprio caminho de promoção"
+      ],
+      "Environment contents refresh": [
+        ""
       ],
       "Environment identifier": [
         "Identificador de ambiente"
@@ -2943,6 +3045,9 @@
       "Generate host applicability": [
         "Gerar aplicabilidade de host"
       ],
+      "Generate metadata": [
+        ""
+      ],
       "Generate repository applicability": [
         "Gerar aplicabilidade de repositório"
       ],
@@ -3015,11 +3120,17 @@
       "Has to be > 0": [
         "Tem de ser > 0"
       ],
+      "Hash containing the Id of the single lifecycle environment to be associated with the activation key.": [
+        ""
+      ],
       "Help": [
         ""
       ],
       "Helper": [
         "Ajudante"
+      ],
+      "Hide Reclaim Space Warning": [
+        ""
       ],
       "Hide affected activation keys": [
         ""
@@ -3135,6 +3246,9 @@
       "Host id to list applicable packages for": [
         "ID do host para listar os pacotes aplicáveis"
       ],
+      "Host identifier": [
+        ""
+      ],
       "Host lifecycle support expiration notification": [
         ""
       ],
@@ -3234,9 +3348,6 @@
       "ID of the sync plan": [
         "ID do plano de sinc"
       ],
-      "ID: %s doesn't exist ": [
-        "ID: %s não existe "
-      ],
       "IDs of products to copy repository information from into a Simplified Alternate Content Source. Products must include at least one repository of the chosen content type.": [
         ""
       ],
@@ -3294,7 +3405,13 @@
       "Id of the repository to limit verifying checksum on": [
         ""
       ],
+      "Id of the single content view to be associated with the activation key.": [
+        ""
+      ],
       "Id of the single content view to be associated with the host.": [
+        ""
+      ],
+      "Id of the single lifecycle environment to be associated with the activation key.": [
         ""
       ],
       "Id of the single lifecycle environment to be associated with the host.": [
@@ -3345,6 +3462,9 @@
       "If product certificates should be used to authenticate to a custom CDN.": [
         ""
       ],
+      "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.": [
+        ""
+      ],
       "If specified, remove the first instance of a subscription with matching id and quantity": [
         "Se especificado, remova a primeira instância de uma subscrição com quantidade e ID correspondentes "
       ],
@@ -3364,6 +3484,9 @@
         ""
       ],
       "If this is enabled, repositories of content view versions without environments (\\\"archived\\\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'.": [
+        ""
+      ],
+      "If this is enabled, the Smart Proxy page will suppress the warning message about reclaiming space.": [
         ""
       ],
       "If true, only errata that can be installed without an incremental update will affect the host's errata status. Also affects the Host Collections dashboard widget.": [
@@ -3453,6 +3576,9 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
+      "Import migration": [
+        ""
+      ],
       "Import new manifest": [
         ""
       ],
@@ -3460,6 +3586,12 @@
         ""
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
+        ""
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
         ""
       ],
       "Import uploads into a repository": [
@@ -3557,6 +3689,9 @@
       ],
       "Inherit from Repository": [
         "Herdar de repositório"
+      ],
+      "Initialize": [
+        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "Iniciar sincronização dos produtos anexados ao plano de sincronização "
@@ -3858,7 +3993,7 @@
       "Latest version": [
         ""
       ],
-      "Learn more about adding subscription manifests ": [
+      "Learn more about adding subscription manifests in ": [
         ""
       ],
       "Legacy UI": [
@@ -3994,6 +4129,9 @@
         "Listar componentes vinculados a esta visualização de conteúdo"
       ],
       "List content counts for the smart proxy": [
+        ""
+      ],
+      "List content view environments": [
         ""
       ],
       "List content view versions": [
@@ -4365,6 +4503,15 @@
       "Module streams will appear here after enabling Red Hat repositories or creating custom products.": [
         ""
       ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
+        ""
+      ],
       "Multi-entitlement": [
         "Direitos múltiplos"
       ],
@@ -4521,7 +4668,7 @@
       "No available debs found for search term '%s'. Check the host's content view environments and already-installed debs.": [
         ""
       ],
-      "No available packages found for search term '%s'. Check the host's content view environments and already-installed packages.": [
+      "No available packages found for search term '%s'.": [
         ""
       ],
       "No available repository or filter updates": [
@@ -4537,6 +4684,12 @@
         "Nenhuma ID de conteúdo fornecida "
       ],
       "No content in selected versions.": [
+        ""
+      ],
+      "No content view environments found with ids: %{ids}": [
+        ""
+      ],
+      "No content view environments found with names: %{names}": [
         ""
       ],
       "No content view history events found.": [
@@ -4794,7 +4947,7 @@
       "No syncable repositories found for selected products and options.": [
         "Nenhum repositório sincronizável encontrado para as opções e os produtos selecionados."
       ],
-      "No upgradable packages found for search term '%s'. The host may already have the latest version(s) installed.": [
+      "No upgradable packages found for search term '%s'.": [
         ""
       ],
       "No upgradable packages found.": [
@@ -5325,6 +5478,9 @@
       "Product Create": [
         "Criação de Produto"
       ],
+      "Product Host Count": [
+        ""
+      ],
       "Product ID": [
         "ID de produto"
       ],
@@ -5508,6 +5664,9 @@
       "Pulp task error": [
         "Erro de tarefa Pulp"
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
         ""
       ],
@@ -5616,6 +5775,9 @@
       "Reclaim Space": [
         ""
       ],
+      "Reclaim space": [
+        ""
+      ],
       "Reclaim space from On Demand repositories": [
         ""
       ],
@@ -5679,6 +5841,9 @@
       "Refresh all alternate content sources": [
         ""
       ],
+      "Refresh all distributions": [
+        ""
+      ],
       "Refresh alternate content sources": [
         ""
       ],
@@ -5691,7 +5856,13 @@
       "Refresh counts": [
         ""
       ],
+      "Refresh distribution": [
+        ""
+      ],
       "Refresh errata applicability": [
+        ""
+      ],
+      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
@@ -5699,6 +5870,12 @@
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Atualizar manifesto importado anteriormente  para provedor Red Hat "
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
+        ""
       ],
       "Refresh source": [
         ""
@@ -5838,6 +6015,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         ""
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "Remover grupo de pacotes via interface do Katello"
       ],
@@ -5865,6 +6045,12 @@
       "Remove subscriptions from one or more hosts": [
         "Remover subscrições de um ou mais hosts"
       ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
+      ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Remover as versões e/ou ambientes a partir de uma visualização de conteúdo e reajustar os sistemas e as chaves"
       ],
@@ -5889,6 +6075,9 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         ""
       ],
+      "Repair": [
+        ""
+      ],
       "Replace content source on the target machine": [
         ""
       ],
@@ -5907,11 +6096,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
+      "Repositories certs reset": [
+        ""
+      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
         "Repositórios de Visualizações de Conteúdo publicadas não são permitidas."
+      ],
+      "Repositories gpg reset": [
+        ""
       ],
       "Repository": [
         "Repo"
@@ -6084,6 +6279,9 @@
       "Return Red Hat (non-custom) products only": [
         "Retornar apenas produtos Red Hat (não personalizados)"
       ],
+      "Return a list of installed packages distinct by name": [
+        ""
+      ],
       "Return content that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported.": [
         "Retorne conteúdo que possa ser adicionado ao objeto especificado. Os valores 'content_view_version' e 'content_view_filter' são compatíveis."
       ],
@@ -6240,7 +6438,25 @@
       "Save": [
         "Salvar"
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
+        ""
+      ],
+      "Scan cdn": [
         ""
       ],
       "Schema version 1": [
@@ -7023,6 +7239,9 @@
       "Supported Content Types": [
         "Tipos de conteúdo compatíveis"
       ],
+      "Sync": [
+        ""
+      ],
       "Sync Canceled": [
         "Sincronização cancelada"
       ],
@@ -7596,6 +7815,9 @@
       "To manage packages, select an action.": [
         ""
       ],
+      "Toggle": [
+        ""
+      ],
       "Total steps: ": [
         "Total de etapas: "
       ],
@@ -7890,6 +8112,9 @@
       "Update content view environments for host %s": [
         ""
       ],
+      "Update distributions": [
+        ""
+      ],
       "Update hosts manually": [
         ""
       ],
@@ -7922,6 +8147,12 @@
       ],
       "Update release version for host %s": [
         "Versão de atualização para o host %s"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "Atualizar serviços que exigem reinicialização"
@@ -8013,6 +8244,12 @@
       "Upload a subscription manifest": [
         "Carregar um manifesto da subscrição"
       ],
+      "Upload content": [
+        ""
+      ],
+      "Upload file": [
+        ""
+      ],
       "Upload into": [
         "Carregar em"
       ],
@@ -8021,6 +8258,9 @@
       ],
       "Upload request id": [
         "Carregar ID de requisição"
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         ""
@@ -8604,9 +8844,6 @@
       "content view filter rule identifier": [
         "Identificador de regra de filtro de visualização de conteúdo"
       ],
-      "content view id": [
-        "ID de visualização de conteúdo"
-      ],
       "content view identifier": [
         "identificador de visualização de conteúdo"
       ],
@@ -8693,12 +8930,6 @@
       ],
       "enhancements": [
         ""
-      ],
-      "environment": [
-        "ambiente"
-      ],
-      "environment id": [
-        "ID de ambiente"
       ],
       "environment identifier": [
         "identificador de ambiente"
@@ -8970,9 +9201,6 @@
       "name of the subscription": [
         ""
       ],
-      "name: %s doesn't exist ": [
-        "nome: %s não existe "
-      ],
       "new name for the filter": [
         "novo nome para o filtro"
       ],
@@ -9139,6 +9367,9 @@
         "identificador numérico do plano de sinc"
       ],
       "system registration": [
+        ""
+      ],
+      "the documentation.": [
         ""
       ],
       "the following attributes can not be updated for the Red Hat provider: [ %s ]": [

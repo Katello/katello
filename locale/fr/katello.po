@@ -424,10 +424,10 @@ msgstr ""
 msgid "A backend service [ %s ] is unreachable"
 msgstr "Un service backend [ %s ] est injoignable"
 
-msgid "A comma-separated list of refs to include during a sync. The wildcards *, ? are recognized."
+msgid "A comma-separated list of refs to include during an ostree sync. The wildcards *, ? are recognized."
 msgstr ""
 
-msgid "A comma-separated list of tags to exclude during a sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'."
+msgid "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'."
 msgstr ""
 
 msgid "A large number of errata are unapplied in this content view, so only the first 100 are shown."
@@ -481,9 +481,6 @@ msgstr "TOUT"
 msgid "About page"
 msgstr "Page d'accueil"
 
-msgid "Abstract"
-msgstr "Résumé"
-
 msgid "Abstract async task"
 msgstr "Tâche async abstraite"
 
@@ -514,6 +511,15 @@ msgstr "Clés d'activation"
 msgid "Activation key"
 msgstr "Clé d'activation"
 
+msgid "Activation key %s has more than one content view. Use #content_views instead."
+msgstr ""
+
+msgid "Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead."
+msgstr ""
+
+msgid "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled."
+msgstr ""
+
 msgid "Activation key ID"
 msgstr "ID de clé d'activation"
 
@@ -528,6 +534,9 @@ msgstr ""
 
 msgid "Activation key for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. For multiple keys use `activation_keys` param instead."
 msgstr "Clé d'activation pour le client subscription-manager, requise pour CentOS et Red Hat Enterprise Linux. Pour plusieurs clés, utilisez plutôt le paramètre `activation_keys`."
+
+msgid "Activation key identifier"
+msgstr ""
 
 msgid "Activation key(s) to use during registration"
 msgstr ""
@@ -781,6 +790,9 @@ msgid ""
 "%{error_message}"
 msgstr "Une erreur s'est produite lors de la synchronisation %{error_message}"
 
+msgid "An option to specify how many ostree commits to traverse."
+msgstr ""
+
 msgid "Another component already includes content view with ID %s"
 msgstr "Une autre composante comprend déjà une vue du contenu avec ID %s"
 
@@ -889,6 +901,12 @@ msgstr "Tableau des éléments à ajouter"
 msgid "Array of content view component IDs to remove. Identifier of the component association"
 msgstr "Tableau des ID des composants de la vue du contenu à supprimer. Identificateur de l'association de composants"
 
+msgid "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
+msgid "Array of content view environment ids to be associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr ""
 
@@ -932,6 +950,9 @@ msgid "Assign the release version to one or more hosts"
 msgstr "Attribuer la version de diffusion à un ou plusieurs hôtes"
 
 msgid "Assigning a host to multiple content view environments is not enabled."
+msgstr ""
+
+msgid "Assigning an activation key to multiple content view environments is not enabled."
 msgstr ""
 
 msgid "Associated location IDs"
@@ -1189,6 +1210,9 @@ msgstr "Impossible d'ajouter des versions composites à un affichage de contenu 
 msgid "Cannot add composite versions to another composite content view"
 msgstr "Impossible d'ajouter des versions composites à un autre affichage de contenu composite"
 
+msgid "Cannot add content view environments from a different organization"
+msgstr ""
+
 msgid "Cannot add default content view to composite content view"
 msgstr "Impossible d'ajouter un affichage du contenu par défaut à la vue du contenu composite"
 
@@ -1273,7 +1297,7 @@ msgstr ""
 msgid "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export."
 msgstr ""
 
-msgid "Cannot install errata: No installable errata found for search term '%s'"
+msgid "Cannot install errata: No errata found for search term '%s'"
 msgstr ""
 
 msgid "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}"
@@ -1306,7 +1330,7 @@ msgstr "Impossible de supprimer le contenu d'un référentiel non personnalisé.
 msgid "Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'."
 msgstr "Impossible de supprimer l'affichage de contenu de l'environnement. L'affichage de contenu '%{view}' ne se trouve pas dans l'environnement de cycle de vie '%{env}'."
 
-msgid "Cannot remove package(s): This host does not have any installed packages matching the search term '%s'."
+msgid "Cannot remove package(s): No installed packages found for search term '%s'."
 msgstr ""
 
 msgid "Cannot set attribute %{attr} for content type %{type}"
@@ -1330,7 +1354,7 @@ msgstr "Impossible de synchroniser les référentiels file:// avec les politique
 msgid "Cannot update properties of a container push repository"
 msgstr ""
 
-msgid "Cannot upgrade packages: No installed packages found for search term '%s'"
+msgid "Cannot upgrade packages: No installed packages found for search term '%s'."
 msgstr ""
 
 msgid "Cannot upload Ansible collections."
@@ -1414,6 +1438,12 @@ msgstr "Fermer"
 msgid "Collapse All"
 msgstr "Réduire tout"
 
+msgid "Comma-separated list of Candlepin environment names associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
+msgid "Comma-separated list of Candlepin environment names to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr ""
 
@@ -1425,6 +1455,9 @@ msgstr "Liste de balises, séparées par des virgules, à exclure lors de la syn
 
 msgid "Comma-separated list of tags to sync for a container image repository"
 msgstr "Liste de balises séparées par des virgules à synchroniser pour le référentiel d'images des conteneurs"
+
+msgid "Commit upload"
+msgstr ""
 
 msgid "Compare"
 msgstr "Comparez"
@@ -1771,14 +1804,23 @@ msgstr "Copié dans le presse-papiers"
 msgid "Copy"
 msgstr "Copie"
 
+msgid "Copy all units"
+msgstr ""
+
 msgid "Copy an activation key"
 msgstr "Copier une clé d'activation|"
+
+msgid "Copy content"
+msgstr ""
 
 msgid "Copy content view"
 msgstr "Copier l’affichage de contenu"
 
 msgid "Copy to clipboard"
 msgstr "Copier dans le presse-papiers"
+
+msgid "Copy version"
+msgstr ""
 
 msgid "Copy version units to library"
 msgstr "Copier les unités de version dans la bibliothèque"
@@ -1867,8 +1909,8 @@ msgstr "L'id de l'affichage du contenu de la clé d'activation '%s' est introuva
 msgid "Couldn't find content host environment '%s'"
 msgstr "L'environnement de l'hôte du contenu '%s' est introuvable"
 
-msgid "Couldn't find content view '%s'"
-msgstr "L'affichage de contenu '%s' est introuvable"
+msgid "Couldn't find content view environment with content view ID '%{cv}' and environment ID '%{env}'"
+msgstr ""
 
 msgid "Couldn't find content view version '%s'"
 msgstr "Impossible de trouver la version d'affichage de contenu '%s'"
@@ -1927,6 +1969,9 @@ msgstr "Créer ACS"
 msgid "Create Alternate Content Source"
 msgstr "Créer une autre source de contenu"
 
+msgid "Create Container Push Repository Root"
+msgstr ""
+
 msgid "Create Export History"
 msgstr "Créer un historique des exportations"
 
@@ -1984,11 +2029,20 @@ msgstr "Créez les informations d'identification du contenu avec le certificat e
 msgid "Create content view"
 msgstr "Créer Affichage du contenu"
 
+msgid "Create exporter"
+msgstr ""
+
 msgid "Create filter"
 msgstr "Créer un filtre"
 
 msgid "Create host collection"
 msgstr "Créer Collection d'hôtes"
+
+msgid "Create import"
+msgstr ""
+
+msgid "Create importer"
+msgstr ""
 
 msgid "Create new activation key"
 msgstr ""
@@ -1998,6 +2052,12 @@ msgstr "Créer une organisation"
 
 msgid "Create package filter rule"
 msgstr "Créer une règle de filtrage des paquets"
+
+msgid "Create publication"
+msgstr ""
+
+msgid "Create remote"
+msgstr ""
 
 msgid "Create rule"
 msgstr "Créer une règle"
@@ -2245,11 +2305,35 @@ msgstr "Supprimer l’affichage du contenu"
 msgid "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view."
 msgstr ""
 
+msgid "Delete distributions"
+msgstr ""
+
 msgid "Delete manifest from Red Hat provider"
 msgstr "Supprimer le fichier manifeste du fournisseur Red Hat"
 
 msgid "Delete multiple filters from a content view"
 msgstr "Supprimer plusieurs filtres d'affichage de contenu"
+
+msgid "Delete orphan alternate content sources"
+msgstr ""
+
+msgid "Delete orphan distributions"
+msgstr ""
+
+msgid "Delete orphan remotes"
+msgstr ""
+
+msgid "Delete orphan repository versions"
+msgstr ""
+
+msgid "Delete orphaned migrated repositories"
+msgstr ""
+
+msgid "Delete remote"
+msgstr ""
+
+msgid "Delete repository references"
+msgstr ""
 
 msgid "Delete version"
 msgstr "Supprimer la version"
@@ -2280,6 +2364,9 @@ msgstr "Suppression de la version {versionList}"
 
 msgid "Deleting versions: {versionList}"
 msgstr "Suppression des versions : {versionList}"
+
+msgid "Depth"
+msgstr ""
 
 msgid "Description"
 msgstr "Description"
@@ -2343,6 +2430,12 @@ msgstr "Détruire un environnement"
 
 msgid "Destroy an environment in an organization"
 msgstr "Détruire un environnement dans une organisation"
+
+msgid "Destroy exporter"
+msgstr ""
+
+msgid "Destroy importer"
+msgstr ""
 
 msgid "Destroy one or more alternate content sources"
 msgstr "Détruire une ou plusieurs sources de contenu alternatives"
@@ -2527,6 +2620,9 @@ msgstr "Activer un référentiel à partir de l'ensemble"
 msgid "Enable repository sets"
 msgstr "Activer les ensembles de référentiels"
 
+msgid "Enable structured APT for deb content"
+msgstr ""
+
 msgid "Enable/Disable auto publish of composite view"
 msgstr "Activer/désactiver la publication automatique de la vue composite"
 
@@ -2578,11 +2674,17 @@ msgstr "Environnement"
 msgid "Environment ID"
 msgstr ""
 
+msgid "Environment ID and content view ID must be provided together"
+msgstr ""
+
 msgid "Environment IDs"
 msgstr "IDs des environnements"
 
 msgid "Environment cannot be in its own promotion path"
 msgstr "L'environnement ne peut pas se trouver dans son propre chemin de promotion"
+
+msgid "Environment contents refresh"
+msgstr ""
 
 msgid "Environment identifier"
 msgstr "Identifiant d'environnement"
@@ -2969,6 +3071,9 @@ msgstr ""
 msgid "Generate host applicability"
 msgstr "Générer l'applicabilité à l'hôte"
 
+msgid "Generate metadata"
+msgstr ""
+
 msgid "Generate repository applicability"
 msgstr "Générer l'applicabilité du référentiel"
 
@@ -3041,11 +3146,17 @@ msgstr "Propriétés HW"
 msgid "Has to be > 0"
 msgstr "Doit être > 0"
 
+msgid "Hash containing the Id of the single lifecycle environment to be associated with the activation key."
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
 msgid "Helper"
 msgstr "Aide"
+
+msgid "Hide Reclaim Space Warning"
+msgstr ""
 
 msgid "Hide affected activation keys"
 msgstr "Cacher les clés d'activation affectées"
@@ -3161,6 +3272,9 @@ msgstr "Identifiant de l'hôte pour énumérer les errata applicables pour"
 msgid "Host id to list applicable packages for"
 msgstr "Identifiant de l'hôte pour énumérer les packages applicables pour"
 
+msgid "Host identifier"
+msgstr ""
+
 msgid "Host lifecycle support expiration notification"
 msgstr ""
 
@@ -3260,9 +3374,6 @@ msgstr "ID du référentiel dans l'ensemble à désactiver"
 msgid "ID of the sync plan"
 msgstr "ID du plan de sync"
 
-msgid "ID: %s doesn't exist "
-msgstr "ID : %s n'existe pas "
-
 msgid "IDs of products to copy repository information from into a Simplified Alternate Content Source. Products must include at least one repository of the chosen content type."
 msgstr "ID des produits dont il faut copier les informations de référentiel dans une source de contenu alternative simplifiée. Les produits doivent comprendre au moins un référentiel du type de contenu choisi."
 
@@ -3320,7 +3431,13 @@ msgstr "Id du référentiel sur lequel limiter la synchronisation"
 msgid "Id of the repository to limit verifying checksum on"
 msgstr ""
 
+msgid "Id of the single content view to be associated with the activation key."
+msgstr ""
+
 msgid "Id of the single content view to be associated with the host."
+msgstr ""
+
+msgid "Id of the single lifecycle environment to be associated with the activation key."
 msgstr ""
 
 msgid "Id of the single lifecycle environment to be associated with the host."
@@ -3373,6 +3490,9 @@ msgstr "Si les hôtes ne parviennent pas à s'enregistrer en raison de doublons 
 msgid "If product certificates should be used to authenticate to a custom CDN."
 msgstr ""
 
+msgid "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'."
+msgstr ""
+
 msgid "If specified, remove the first instance of a subscription with matching id and quantity"
 msgstr "Si spécifié, supprimer la première instance d'un abonnement avec la quantité et l'id correspondants"
 
@@ -3393,6 +3513,9 @@ msgstr "Si cette option est activée, les référentiels peuvent être supprimé
 
 msgid "If this is enabled, repositories of content view versions without environments (\"archived\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'."
 msgstr "Si cette option est activée, les dépôts de versions de vues de contenu sans environnement (\"archivées\") seront distribués dans '/pulp/content/<organization>/content_views/<content view>/X.Y/...'."
+
+msgid "If this is enabled, the Smart Proxy page will suppress the warning message about reclaiming space."
+msgstr ""
 
 msgid "If true, only errata that can be installed without an incremental update will affect the host's errata status. Also affects the Host Collections dashboard widget."
 msgstr ""
@@ -3481,6 +3604,9 @@ msgstr "Importe un référentiel"
 msgid "Import a subscription manifest to give hosts access to Red Hat content."
 msgstr ""
 
+msgid "Import migration"
+msgstr ""
+
 msgid "Import new manifest"
 msgstr ""
 
@@ -3489,6 +3615,12 @@ msgstr "Importation uniquement"
 
 msgid "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view."
 msgstr "Les affichages de contenu importés ne peuvent pas être publiés directement. Le contenu ne peut être mis à jour qu'en l'important dans la vue."
+
+msgid "Import repository upload"
+msgstr ""
+
+msgid "Import upload"
+msgstr ""
 
 msgid "Import uploads into a repository"
 msgstr "Importer les téléchargements dans un référentiel"
@@ -3585,6 +3717,9 @@ msgstr "Le type Informable doit être l'un parmi [%{list} ]"
 
 msgid "Inherit from Repository"
 msgstr "Hérité du référentiel"
+
+msgid "Initialize"
+msgstr ""
 
 msgid "Initiate a sync of the products attached to the sync plan"
 msgstr "Initier une synchronisation des produits attachés au plan de synchronisation"
@@ -3886,7 +4021,7 @@ msgstr "Dernier errata"
 msgid "Latest version"
 msgstr "Dernière version"
 
-msgid "Learn more about adding subscription manifests "
+msgid "Learn more about adding subscription manifests in "
 msgstr ""
 
 msgid "Legacy UI"
@@ -4022,6 +4157,9 @@ msgid "List components attached to this content view"
 msgstr "Liste des éléments attachés à cette vue de contenu"
 
 msgid "List content counts for the smart proxy"
+msgstr ""
+
+msgid "List content view environments"
 msgstr ""
 
 msgid "List content view versions"
@@ -4395,6 +4533,15 @@ msgstr "Flux de module"
 msgid "Module streams will appear here after enabling Red Hat repositories or creating custom products."
 msgstr "Les flux de modules apparaîtront ici après avoir activé les référentiels Red Hat ou créé des produits personnalisés."
 
+msgid "Multi copy all units"
+msgstr ""
+
+msgid "Multi copy content"
+msgstr ""
+
+msgid "Multi copy units"
+msgstr ""
+
 msgid "Multi-entitlement"
 msgstr "Droits d’accès multiples"
 
@@ -4563,7 +4710,7 @@ msgstr ""
 msgid "No available debs found for search term '%s'. Check the host's content view environments and already-installed debs."
 msgstr ""
 
-msgid "No available packages found for search term '%s'. Check the host's content view environments and already-installed packages."
+msgid "No available packages found for search term '%s'."
 msgstr ""
 
 msgid "No available repository or filter updates"
@@ -4580,6 +4727,12 @@ msgstr "Aucuns ids de contenu ne sont fournis"
 
 msgid "No content in selected versions."
 msgstr "Aucun contenu dans les versions sélectionnées."
+
+msgid "No content view environments found with ids: %{ids}"
+msgstr ""
+
+msgid "No content view environments found with names: %{names}"
+msgstr ""
 
 msgid "No content view history events found."
 msgstr "Aucun historique d'affichage de contenu n'a été trouvé."
@@ -4836,7 +4989,7 @@ msgstr "Aucun abonnement ne correspond à vos critères dae recherche."
 msgid "No syncable repositories found for selected products and options."
 msgstr "Aucun référentiel synchronisable n'a été trouvé pour les produits et options sélectionnés."
 
-msgid "No upgradable packages found for search term '%s'. The host may already have the latest version(s) installed."
+msgid "No upgradable packages found for search term '%s'."
 msgstr ""
 
 msgid "No upgradable packages found."
@@ -5367,6 +5520,9 @@ msgstr "Contenu du produit"
 msgid "Product Create"
 msgstr "Créer Produit"
 
+msgid "Product Host Count"
+msgstr ""
+
 msgid "Product ID"
 msgstr "ID Produit"
 
@@ -5554,6 +5710,9 @@ msgstr "Stockage Pulp"
 msgid "Pulp task error"
 msgstr "Erreur de tâche pulp"
 
+msgid "Purge completed tasks"
+msgstr ""
+
 msgid "Python Package"
 msgstr "Package Python"
 
@@ -5662,6 +5821,9 @@ msgstr "Redémarrage nécessaire"
 msgid "Reclaim Space"
 msgstr "Récupération d’espace"
 
+msgid "Reclaim space"
+msgstr ""
+
 msgid "Reclaim space from On Demand repositories"
 msgstr "Récupérer l’espace en provenance des référentiels Sur demande"
 
@@ -5725,6 +5887,9 @@ msgstr "Actualiser le fichier manifeste"
 msgid "Refresh all alternate content sources"
 msgstr ""
 
+msgid "Refresh all distributions"
+msgstr ""
+
 msgid "Refresh alternate content sources"
 msgstr "Réactualiser les sources de contenu alternatives"
 
@@ -5737,7 +5902,13 @@ msgstr ""
 msgid "Refresh counts"
 msgstr ""
 
+msgid "Refresh distribution"
+msgstr ""
+
 msgid "Refresh errata applicability"
+msgstr ""
+
+msgid "Refresh if needed"
 msgstr ""
 
 msgid "Refresh package applicability"
@@ -5745,6 +5916,12 @@ msgstr ""
 
 msgid "Refresh previously imported manifest for Red Hat provider"
 msgstr "Actualiser le fichier manifeste importé précédemment pour le fournisseur de Red Hat"
+
+msgid "Refresh remote"
+msgstr ""
+
+msgid "Refresh repos"
+msgstr ""
 
 msgid "Refresh source"
 msgstr "Source de rafraîchissement"
@@ -5884,6 +6061,9 @@ msgstr "Supprimer une ou plusieurs collections d'hôtes d'un ou plusieurs hôtes
 msgid "Remove one or more subscriptions from an upstream manifest"
 msgstr "Supprimer un ou plusieurs abonnements d'un manifeste amont"
 
+msgid "Remove orphans"
+msgstr ""
+
 msgid "Remove package group via Katello interface"
 msgstr "Supprimer un groupe de packages via l'interface Katello"
 
@@ -5911,6 +6091,12 @@ msgstr ""
 msgid "Remove subscriptions from one or more hosts"
 msgstr "Supprimer les abonnements d'un ou plusieurs hôtes"
 
+msgid "Remove units"
+msgstr ""
+
+msgid "Remove unneeded repos"
+msgstr ""
+
 msgid "Remove versions and/or environments from a content view and reassign systems and keys"
 msgstr "Supprimer les versions et/ou les environnements de l'affichage de contenu et assigner les systèmes et les clés à nouveau"
 
@@ -5935,6 +6121,9 @@ msgstr "Retrait du produit %{prod_name} avec ID %{prod_id} de l'ACS %{acs_name} 
 msgid "Removing this version from all environments will not delete the version. Version will still be available for later promotion."
 msgstr "Supprimer cette version de tous les environnement n’aura pas pour effet de supprimer la version. La version sera toujours disponible pour une promotion ultérieure."
 
+msgid "Repair"
+msgstr ""
+
 msgid "Replace content source on the target machine"
 msgstr ""
 
@@ -5953,11 +6142,17 @@ msgstr "Référentiels"
 msgid "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected)."
 msgstr "Les référentiels ne sont pas disponibles pour l'activation lorsque la configuration du CDN est définie sur Air-gapped (déconnecté)."
 
+msgid "Repositories certs reset"
+msgstr ""
+
 msgid "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions."
 msgstr ""
 
 msgid "Repositories from published Content Views are not allowed."
 msgstr "Les référentiels des affichages de contenu publiés ne sont pas autorisés."
+
+msgid "Repositories gpg reset"
+msgstr ""
 
 msgid "Repository"
 msgstr "Référentiel"
@@ -6130,6 +6325,9 @@ msgstr "Extraire un seul errata de l'hôte"
 msgid "Return Red Hat (non-custom) products only"
 msgstr "Retourne uniquement les produits Red Hat (non-personnalisés)"
 
+msgid "Return a list of installed packages distinct by name"
+msgstr ""
+
 msgid "Return content that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported."
 msgstr "Retourne le contenu qui peut être ajouté à l'objet spécifié.  Les valeurs \"content_view_version\" et \"content_view_filter\" sont supportées."
 
@@ -6286,8 +6484,26 @@ msgstr "ABONNEMENTS EXPIRANT BIENTÔT"
 msgid "Save"
 msgstr "Enregistrer"
 
+msgid "Save artifact"
+msgstr ""
+
+msgid "Save distribution references"
+msgstr ""
+
+msgid "Save publication"
+msgstr ""
+
+msgid "Save version"
+msgstr ""
+
+msgid "Save versions"
+msgstr ""
+
 msgid "Saving alternate content source..."
 msgstr "Mise à jour de la source de contenu alternatif..."
+
+msgid "Scan cdn"
+msgstr ""
 
 msgid "Schema version 1"
 msgstr ""
@@ -7069,6 +7285,9 @@ msgstr ""
 msgid "Supported Content Types"
 msgstr "Types de contenu pris en charge"
 
+msgid "Sync"
+msgstr ""
+
 msgid "Sync Canceled"
 msgstr "Sync Annulée"
 
@@ -7650,6 +7869,9 @@ msgstr ""
 msgid "To manage packages, select an action."
 msgstr ""
 
+msgid "Toggle"
+msgstr ""
+
 msgid "Total steps: "
 msgstr "Total des étapes : "
 
@@ -7944,6 +8166,9 @@ msgstr ""
 msgid "Update content view environments for host %s"
 msgstr ""
 
+msgid "Update distributions"
+msgstr ""
+
 msgid "Update hosts manually"
 msgstr ""
 
@@ -7976,6 +8201,12 @@ msgstr "Mettre à jour la version de publication pour l'hôte"
 
 msgid "Update release version for host %s"
 msgstr "Mettre à jour la version de publication pour l'hôte %s"
+
+msgid "Update remote"
+msgstr ""
+
+msgid "Update repository"
+msgstr ""
 
 msgid "Update services requiring restart"
 msgstr "Mise à jour des services nécessitant un redémarrage"
@@ -8067,6 +8298,12 @@ msgstr "Télécharger une partie du contenu du fichier"
 msgid "Upload a subscription manifest"
 msgstr "Télécharger un fichier manifeste d'abonnement"
 
+msgid "Upload content"
+msgstr ""
+
+msgid "Upload file"
+msgstr ""
+
 msgid "Upload into"
 msgstr "Téléverser vers"
 
@@ -8075,6 +8312,9 @@ msgstr ""
 
 msgid "Upload request id"
 msgstr "Télécharger l'id de requête"
+
+msgid "Upload tag"
+msgstr ""
 
 msgid "Upstream Candlepin"
 msgstr "Chandelle en amont"
@@ -8658,9 +8898,6 @@ msgstr "Identifiant du filtre de l'affichage de contenu"
 msgid "content view filter rule identifier"
 msgstr "Identifiant de règle de filtrage d’affichage de contenu"
 
-msgid "content view id"
-msgstr "ID de l'affichage de contenu"
-
 msgid "content view identifier"
 msgstr "identifiant d'affichage du contenu"
 
@@ -8747,12 +8984,6 @@ msgstr ""
 
 msgid "enhancements"
 msgstr ""
-
-msgid "environment"
-msgstr "environnement"
-
-msgid "environment id"
-msgstr "id d'environnement"
 
 msgid "environment identifier"
 msgstr "identifiant d'environnement"
@@ -9024,9 +9255,6 @@ msgstr "nom du référentiel"
 msgid "name of the subscription"
 msgstr "nom de l'abonnement"
 
-msgid "name: %s doesn't exist "
-msgstr "nom : %s n'existe pas "
-
 msgid "new name for the filter"
 msgstr "nouveau nom du filtre"
 
@@ -9193,6 +9421,9 @@ msgid "sync plan numeric identifier"
 msgstr "identifiant numérique du plan de sync"
 
 msgid "system registration"
+msgstr ""
+
+msgid "the documentation."
 msgstr ""
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"

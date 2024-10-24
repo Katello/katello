@@ -416,10 +416,10 @@ msgstr ""
 msgid "A backend service [ %s ] is unreachable"
 msgstr "無法連上後端服務 [ %s ]"
 
-msgid "A comma-separated list of refs to include during a sync. The wildcards *, ? are recognized."
+msgid "A comma-separated list of refs to include during an ostree sync. The wildcards *, ? are recognized."
 msgstr ""
 
-msgid "A comma-separated list of tags to exclude during a sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'."
+msgid "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'."
 msgstr ""
 
 msgid "A large number of errata are unapplied in this content view, so only the first 100 are shown."
@@ -473,9 +473,6 @@ msgstr ""
 msgid "About page"
 msgstr ""
 
-msgid "Abstract"
-msgstr ""
-
 msgid "Abstract async task"
 msgstr "抽象 async task"
 
@@ -506,6 +503,15 @@ msgstr "啟動金鑰"
 msgid "Activation key"
 msgstr ""
 
+msgid "Activation key %s has more than one content view. Use #content_views instead."
+msgstr ""
+
+msgid "Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead."
+msgstr ""
+
+msgid "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled."
+msgstr ""
+
 msgid "Activation key ID"
 msgstr "啟動金鑰 ID"
 
@@ -519,6 +525,9 @@ msgid "Activation key details updated"
 msgstr ""
 
 msgid "Activation key for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. For multiple keys use `activation_keys` param instead."
+msgstr ""
+
+msgid "Activation key identifier"
 msgstr ""
 
 msgid "Activation key(s) to use during registration"
@@ -773,6 +782,9 @@ msgid ""
 "%{error_message}"
 msgstr ""
 
+msgid "An option to specify how many ostree commits to traverse."
+msgstr ""
+
 msgid "Another component already includes content view with ID %s"
 msgstr ""
 
@@ -881,6 +893,12 @@ msgstr ""
 msgid "Array of content view component IDs to remove. Identifier of the component association"
 msgstr ""
 
+msgid "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
+msgid "Array of content view environment ids to be associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr ""
 
@@ -922,6 +940,9 @@ msgid "Assign the release version to one or more hosts"
 msgstr ""
 
 msgid "Assigning a host to multiple content view environments is not enabled."
+msgstr ""
+
+msgid "Assigning an activation key to multiple content view environments is not enabled."
 msgstr ""
 
 msgid "Associated location IDs"
@@ -1179,6 +1200,9 @@ msgstr "無法新增複合式版本至複合式內容視域中"
 msgid "Cannot add composite versions to another composite content view"
 msgstr "無法新增複合式版本至另一個複合式內容視域中"
 
+msgid "Cannot add content view environments from a different organization"
+msgstr ""
+
 msgid "Cannot add default content view to composite content view"
 msgstr "無法新增預設內容視域至複合式內容視域中"
 
@@ -1263,7 +1287,7 @@ msgstr ""
 msgid "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export."
 msgstr ""
 
-msgid "Cannot install errata: No installable errata found for search term '%s'"
+msgid "Cannot install errata: No errata found for search term '%s'"
 msgstr ""
 
 msgid "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}"
@@ -1296,7 +1320,7 @@ msgstr "無法從非自訂軟體庫移除內容"
 msgid "Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'."
 msgstr "無法從環境移除內容視域。內容視域 '%{view}' 並不位於生命週期環境 '%{env}' 中。"
 
-msgid "Cannot remove package(s): This host does not have any installed packages matching the search term '%s'."
+msgid "Cannot remove package(s): No installed packages found for search term '%s'."
 msgstr ""
 
 msgid "Cannot set attribute %{attr} for content type %{type}"
@@ -1320,7 +1344,7 @@ msgstr ""
 msgid "Cannot update properties of a container push repository"
 msgstr ""
 
-msgid "Cannot upgrade packages: No installed packages found for search term '%s'"
+msgid "Cannot upgrade packages: No installed packages found for search term '%s'."
 msgstr ""
 
 msgid "Cannot upload Ansible collections."
@@ -1404,6 +1428,12 @@ msgstr "關閉"
 msgid "Collapse All"
 msgstr "全部收回"
 
+msgid "Comma-separated list of Candlepin environment names associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
+msgid "Comma-separated list of Candlepin environment names to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr ""
 
@@ -1414,6 +1444,9 @@ msgid "Comma-separated list of tags to exclude when syncing a container image re
 msgstr ""
 
 msgid "Comma-separated list of tags to sync for a container image repository"
+msgstr ""
+
+msgid "Commit upload"
 msgstr ""
 
 msgid "Compare"
@@ -1761,13 +1794,22 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
+msgid "Copy all units"
+msgstr ""
+
 msgid "Copy an activation key"
 msgstr "複製啟動金鑰"
+
+msgid "Copy content"
+msgstr ""
 
 msgid "Copy content view"
 msgstr ""
 
 msgid "Copy to clipboard"
+msgstr ""
+
+msgid "Copy version"
 msgstr ""
 
 msgid "Copy version units to library"
@@ -1857,8 +1899,8 @@ msgstr "找不到內容主機的內容視域 id「%s」"
 msgid "Couldn't find content host environment '%s'"
 msgstr "找不到內容主機環境「%s」"
 
-msgid "Couldn't find content view '%s'"
-msgstr "找不到內容視域 '%s'"
+msgid "Couldn't find content view environment with content view ID '%{cv}' and environment ID '%{env}'"
+msgstr ""
 
 msgid "Couldn't find content view version '%s'"
 msgstr "找不到內容視域版本 '%s'"
@@ -1915,6 +1957,9 @@ msgid "Create ACS"
 msgstr ""
 
 msgid "Create Alternate Content Source"
+msgstr ""
+
+msgid "Create Container Push Repository Root"
 msgstr ""
 
 msgid "Create Export History"
@@ -1974,10 +2019,19 @@ msgstr ""
 msgid "Create content view"
 msgstr ""
 
+msgid "Create exporter"
+msgstr ""
+
 msgid "Create filter"
 msgstr ""
 
 msgid "Create host collection"
+msgstr ""
+
+msgid "Create import"
+msgstr ""
+
+msgid "Create importer"
 msgstr ""
 
 msgid "Create new activation key"
@@ -1987,6 +2041,12 @@ msgid "Create organization"
 msgstr "建立組織"
 
 msgid "Create package filter rule"
+msgstr ""
+
+msgid "Create publication"
+msgstr ""
+
+msgid "Create remote"
 msgstr ""
 
 msgid "Create rule"
@@ -2235,10 +2295,34 @@ msgstr ""
 msgid "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view."
 msgstr ""
 
+msgid "Delete distributions"
+msgstr ""
+
 msgid "Delete manifest from Red Hat provider"
 msgstr "從 Red Hat 供應者中刪除清單"
 
 msgid "Delete multiple filters from a content view"
+msgstr ""
+
+msgid "Delete orphan alternate content sources"
+msgstr ""
+
+msgid "Delete orphan distributions"
+msgstr ""
+
+msgid "Delete orphan remotes"
+msgstr ""
+
+msgid "Delete orphan repository versions"
+msgstr ""
+
+msgid "Delete orphaned migrated repositories"
+msgstr ""
+
+msgid "Delete remote"
+msgstr ""
+
+msgid "Delete repository references"
 msgstr ""
 
 msgid "Delete version"
@@ -2269,6 +2353,9 @@ msgid "Deleting version {versionList}"
 msgstr ""
 
 msgid "Deleting versions: {versionList}"
+msgstr ""
+
+msgid "Depth"
 msgstr ""
 
 msgid "Description"
@@ -2333,6 +2420,12 @@ msgstr "銷毀環境"
 
 msgid "Destroy an environment in an organization"
 msgstr "銷毀組織中的一個環境"
+
+msgid "Destroy exporter"
+msgstr ""
+
+msgid "Destroy importer"
+msgstr ""
 
 msgid "Destroy one or more alternate content sources"
 msgstr ""
@@ -2517,6 +2610,9 @@ msgstr "啟用一個軟體庫"
 msgid "Enable repository sets"
 msgstr ""
 
+msgid "Enable structured APT for deb content"
+msgstr ""
+
 msgid "Enable/Disable auto publish of composite view"
 msgstr ""
 
@@ -2568,11 +2664,17 @@ msgstr "環境"
 msgid "Environment ID"
 msgstr ""
 
+msgid "Environment ID and content view ID must be provided together"
+msgstr ""
+
 msgid "Environment IDs"
 msgstr "環境 ID"
 
 msgid "Environment cannot be in its own promotion path"
 msgstr "環境不能位於自己的推送路徑上"
+
+msgid "Environment contents refresh"
+msgstr ""
 
 msgid "Environment identifier"
 msgstr ""
@@ -2957,6 +3059,9 @@ msgstr ""
 msgid "Generate host applicability"
 msgstr ""
 
+msgid "Generate metadata"
+msgstr ""
+
 msgid "Generate repository applicability"
 msgstr ""
 
@@ -3029,10 +3134,16 @@ msgstr ""
 msgid "Has to be > 0"
 msgstr ""
 
+msgid "Hash containing the Id of the single lifecycle environment to be associated with the activation key."
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
 msgid "Helper"
+msgstr ""
+
+msgid "Hide Reclaim Space Warning"
 msgstr ""
 
 msgid "Hide affected activation keys"
@@ -3149,6 +3260,9 @@ msgstr ""
 msgid "Host id to list applicable packages for"
 msgstr ""
 
+msgid "Host identifier"
+msgstr ""
+
 msgid "Host lifecycle support expiration notification"
 msgstr ""
 
@@ -3248,9 +3362,6 @@ msgstr ""
 msgid "ID of the sync plan"
 msgstr "同步計劃的 ID"
 
-msgid "ID: %s doesn't exist "
-msgstr "ID：%s 不存在"
-
 msgid "IDs of products to copy repository information from into a Simplified Alternate Content Source. Products must include at least one repository of the chosen content type."
 msgstr ""
 
@@ -3308,7 +3419,13 @@ msgstr ""
 msgid "Id of the repository to limit verifying checksum on"
 msgstr ""
 
+msgid "Id of the single content view to be associated with the activation key."
+msgstr ""
+
 msgid "Id of the single content view to be associated with the host."
+msgstr ""
+
+msgid "Id of the single lifecycle environment to be associated with the activation key."
 msgstr ""
 
 msgid "Id of the single lifecycle environment to be associated with the host."
@@ -3361,6 +3478,9 @@ msgstr ""
 msgid "If product certificates should be used to authenticate to a custom CDN."
 msgstr ""
 
+msgid "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'."
+msgstr ""
+
 msgid "If specified, remove the first instance of a subscription with matching id and quantity"
 msgstr "指定後，使用相符的 ID 與數量，移除訂閱服務的第一個項目"
 
@@ -3380,6 +3500,9 @@ msgid "If this is enabled, repositories can be deleted even when they belong to 
 msgstr ""
 
 msgid "If this is enabled, repositories of content view versions without environments (\"archived\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'."
+msgstr ""
+
+msgid "If this is enabled, the Smart Proxy page will suppress the warning message about reclaiming space."
 msgstr ""
 
 msgid "If true, only errata that can be installed without an incremental update will affect the host's errata status. Also affects the Host Collections dashboard widget."
@@ -3469,6 +3592,9 @@ msgstr ""
 msgid "Import a subscription manifest to give hosts access to Red Hat content."
 msgstr ""
 
+msgid "Import migration"
+msgstr ""
+
 msgid "Import new manifest"
 msgstr ""
 
@@ -3476,6 +3602,12 @@ msgid "Import only"
 msgstr ""
 
 msgid "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view."
+msgstr ""
+
+msgid "Import repository upload"
+msgstr ""
+
+msgid "Import upload"
 msgstr ""
 
 msgid "Import uploads into a repository"
@@ -3572,6 +3704,9 @@ msgid "Informable Type must be one of the following [ %{list} ]"
 msgstr "Informable Type 必須是以下 [ %{list} ] 其中之一"
 
 msgid "Inherit from Repository"
+msgstr ""
+
+msgid "Initialize"
 msgstr ""
 
 msgid "Initiate a sync of the products attached to the sync plan"
@@ -3874,7 +4009,7 @@ msgstr "最新勘誤"
 msgid "Latest version"
 msgstr ""
 
-msgid "Learn more about adding subscription manifests "
+msgid "Learn more about adding subscription manifests in "
 msgstr ""
 
 msgid "Legacy UI"
@@ -4010,6 +4145,9 @@ msgid "List components attached to this content view"
 msgstr ""
 
 msgid "List content counts for the smart proxy"
+msgstr ""
+
+msgid "List content view environments"
 msgstr ""
 
 msgid "List content view versions"
@@ -4383,6 +4521,15 @@ msgstr ""
 msgid "Module streams will appear here after enabling Red Hat repositories or creating custom products."
 msgstr ""
 
+msgid "Multi copy all units"
+msgstr ""
+
+msgid "Multi copy content"
+msgstr ""
+
+msgid "Multi copy units"
+msgstr ""
+
 msgid "Multi-entitlement"
 msgstr "多重權利"
 
@@ -4545,7 +4692,7 @@ msgstr ""
 msgid "No available debs found for search term '%s'. Check the host's content view environments and already-installed debs."
 msgstr ""
 
-msgid "No available packages found for search term '%s'. Check the host's content view environments and already-installed packages."
+msgid "No available packages found for search term '%s'."
 msgstr ""
 
 msgid "No available repository or filter updates"
@@ -4561,6 +4708,12 @@ msgid "No content ids provided"
 msgstr "未提供內容 ID"
 
 msgid "No content in selected versions."
+msgstr ""
+
+msgid "No content view environments found with ids: %{ids}"
+msgstr ""
+
+msgid "No content view environments found with names: %{names}"
 msgstr ""
 
 msgid "No content view history events found."
@@ -4818,7 +4971,7 @@ msgstr ""
 msgid "No syncable repositories found for selected products and options."
 msgstr ""
 
-msgid "No upgradable packages found for search term '%s'. The host may already have the latest version(s) installed."
+msgid "No upgradable packages found for search term '%s'."
 msgstr ""
 
 msgid "No upgradable packages found."
@@ -5349,6 +5502,9 @@ msgstr "產品內容"
 msgid "Product Create"
 msgstr "產品建立"
 
+msgid "Product Host Count"
+msgstr ""
+
 msgid "Product ID"
 msgstr "產品 ID"
 
@@ -5534,6 +5690,9 @@ msgstr "Pulp 儲存"
 msgid "Pulp task error"
 msgstr "Pulp 任務錯誤"
 
+msgid "Purge completed tasks"
+msgstr ""
+
 msgid "Python Package"
 msgstr ""
 
@@ -5642,6 +5801,9 @@ msgstr ""
 msgid "Reclaim Space"
 msgstr ""
 
+msgid "Reclaim space"
+msgstr ""
+
 msgid "Reclaim space from On Demand repositories"
 msgstr ""
 
@@ -5705,6 +5867,9 @@ msgstr "更新清單"
 msgid "Refresh all alternate content sources"
 msgstr ""
 
+msgid "Refresh all distributions"
+msgstr ""
+
 msgid "Refresh alternate content sources"
 msgstr ""
 
@@ -5717,7 +5882,13 @@ msgstr ""
 msgid "Refresh counts"
 msgstr ""
 
+msgid "Refresh distribution"
+msgstr ""
+
 msgid "Refresh errata applicability"
+msgstr ""
+
+msgid "Refresh if needed"
 msgstr ""
 
 msgid "Refresh package applicability"
@@ -5725,6 +5896,12 @@ msgstr ""
 
 msgid "Refresh previously imported manifest for Red Hat provider"
 msgstr "為 Red Hat 供應者更新之前匯入的清單"
+
+msgid "Refresh remote"
+msgstr ""
+
+msgid "Refresh repos"
+msgstr ""
 
 msgid "Refresh source"
 msgstr ""
@@ -5864,6 +6041,9 @@ msgstr "從一或多台主機刪除一或多個主機集項目"
 msgid "Remove one or more subscriptions from an upstream manifest"
 msgstr ""
 
+msgid "Remove orphans"
+msgstr ""
+
 msgid "Remove package group via Katello interface"
 msgstr "透過 Katello 介面移除套件群組"
 
@@ -5891,6 +6071,12 @@ msgstr ""
 msgid "Remove subscriptions from one or more hosts"
 msgstr ""
 
+msgid "Remove units"
+msgstr ""
+
+msgid "Remove unneeded repos"
+msgstr ""
+
 msgid "Remove versions and/or environments from a content view and reassign systems and keys"
 msgstr "從內容視域中移除版本且（或）環境，並重新指定系統與金鑰"
 
@@ -5915,6 +6101,9 @@ msgstr ""
 msgid "Removing this version from all environments will not delete the version. Version will still be available for later promotion."
 msgstr ""
 
+msgid "Repair"
+msgstr ""
+
 msgid "Replace content source on the target machine"
 msgstr ""
 
@@ -5933,11 +6122,17 @@ msgstr "軟體庫"
 msgid "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected)."
 msgstr ""
 
+msgid "Repositories certs reset"
+msgstr ""
+
 msgid "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions."
 msgstr ""
 
 msgid "Repositories from published Content Views are not allowed."
 msgstr "不允許來自於已發行之內容視域的軟體庫。"
+
+msgid "Repositories gpg reset"
+msgstr ""
 
 msgid "Repository"
 msgstr "軟體庫"
@@ -6110,6 +6305,9 @@ msgstr "為主機取得單一勘誤"
 msgid "Return Red Hat (non-custom) products only"
 msgstr ""
 
+msgid "Return a list of installed packages distinct by name"
+msgstr ""
+
 msgid "Return content that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported."
 msgstr ""
 
@@ -6266,7 +6464,25 @@ msgstr ""
 msgid "Save"
 msgstr "儲存"
 
+msgid "Save artifact"
+msgstr ""
+
+msgid "Save distribution references"
+msgstr ""
+
+msgid "Save publication"
+msgstr ""
+
+msgid "Save version"
+msgstr ""
+
+msgid "Save versions"
+msgstr ""
+
 msgid "Saving alternate content source..."
+msgstr ""
+
+msgid "Scan cdn"
 msgstr ""
 
 msgid "Schema version 1"
@@ -7049,6 +7265,9 @@ msgstr ""
 msgid "Supported Content Types"
 msgstr ""
 
+msgid "Sync"
+msgstr ""
+
 msgid "Sync Canceled"
 msgstr "已取消同步"
 
@@ -7626,6 +7845,9 @@ msgstr ""
 msgid "To manage packages, select an action."
 msgstr ""
 
+msgid "Toggle"
+msgstr ""
+
 msgid "Total steps: "
 msgstr ""
 
@@ -7920,6 +8142,9 @@ msgstr ""
 msgid "Update content view environments for host %s"
 msgstr ""
 
+msgid "Update distributions"
+msgstr ""
+
 msgid "Update hosts manually"
 msgstr ""
 
@@ -7951,6 +8176,12 @@ msgid "Update release version for host"
 msgstr ""
 
 msgid "Update release version for host %s"
+msgstr ""
+
+msgid "Update remote"
+msgstr ""
+
+msgid "Update repository"
 msgstr ""
 
 msgid "Update services requiring restart"
@@ -8043,6 +8274,12 @@ msgstr "上傳一組檔案內容"
 msgid "Upload a subscription manifest"
 msgstr "上傳訂閱清單"
 
+msgid "Upload content"
+msgstr ""
+
+msgid "Upload file"
+msgstr ""
+
 msgid "Upload into"
 msgstr "上傳入"
 
@@ -8051,6 +8288,9 @@ msgstr ""
 
 msgid "Upload request id"
 msgstr "上傳需求 ID"
+
+msgid "Upload tag"
+msgstr ""
 
 msgid "Upstream Candlepin"
 msgstr ""
@@ -8634,9 +8874,6 @@ msgstr "內容視域篩選器的識別子"
 msgid "content view filter rule identifier"
 msgstr ""
 
-msgid "content view id"
-msgstr "內容視域 ID"
-
 msgid "content view identifier"
 msgstr "內容視域識別子"
 
@@ -8723,12 +8960,6 @@ msgstr ""
 
 msgid "enhancements"
 msgstr ""
-
-msgid "environment"
-msgstr "環境"
-
-msgid "environment id"
-msgstr "環境 ID"
 
 msgid "environment identifier"
 msgstr "環境識別子"
@@ -9000,9 +9231,6 @@ msgstr "軟體庫名稱"
 msgid "name of the subscription"
 msgstr ""
 
-msgid "name: %s doesn't exist "
-msgstr "名稱：%s 不存在"
-
 msgid "new name for the filter"
 msgstr "篩選器的新名稱"
 
@@ -9169,6 +9397,9 @@ msgid "sync plan numeric identifier"
 msgstr "同步計畫的數字型態識別子"
 
 msgid "system registration"
+msgstr ""
+
+msgid "the documentation."
 msgstr ""
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"

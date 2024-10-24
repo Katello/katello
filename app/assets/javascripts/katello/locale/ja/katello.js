@@ -407,10 +407,10 @@
       "A backend service [ %s ] is unreachable": [
         "バックエンドサービス [ %s ] に到達できません"
       ],
-      "A comma-separated list of refs to include during a sync. The wildcards *, ? are recognized.": [
+      "A comma-separated list of refs to include during an ostree sync. The wildcards *, ? are recognized.": [
         ""
       ],
-      "A comma-separated list of tags to exclude during a sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
+      "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
         ""
       ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
@@ -464,9 +464,6 @@
       "About page": [
         "About ページ"
       ],
-      "Abstract": [
-        "概要"
-      ],
       "Abstract async task": [
         "非同期タスクの抽象化"
       ],
@@ -497,6 +494,15 @@
       "Activation key": [
         "アクティベーションキー"
       ],
+      "Activation key %s has more than one content view. Use #content_views instead.": [
+        ""
+      ],
+      "Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead.": [
+        ""
+      ],
+      "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled.": [
+        ""
+      ],
       "Activation key ID": [
         "アクティベーションキー ID"
       ],
@@ -511,6 +517,9 @@
       ],
       "Activation key for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. For multiple keys use `activation_keys` param instead.": [
         "CentOS および Red Hat Enterprise Linux に必要な subscription-manager クライアントのアクティベーションキー。複数のキーの場合は、代わりに `activation_keys` パラメーターを使用してください。"
+      ],
+      "Activation key identifier": [
+        ""
       ],
       "Activation key(s) to use during registration": [
         ""
@@ -758,6 +767,9 @@
       "An error occurred during upload \\n%{error_message}": [
         "アップロード中にエラーが発生しました \\n%{error_message}"
       ],
+      "An option to specify how many ostree commits to traverse.": [
+        ""
+      ],
       "Another component already includes content view with ID %s": [
         "別のコンポーネントに ID %s のコンテンツがすでに含まれています"
       ],
@@ -866,6 +878,12 @@
       "Array of content view component IDs to remove. Identifier of the component association": [
         "削除するコンテンツビューコンポーネント ID の配列。コンポーネントの関連付けの ID"
       ],
+      "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
+      "Array of content view environment ids to be associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -906,6 +924,9 @@
         "1 台以上のホストにリリースバージョンを割り当てます"
       ],
       "Assigning a host to multiple content view environments is not enabled.": [
+        ""
+      ],
+      "Assigning an activation key to multiple content view environments is not enabled.": [
         ""
       ],
       "Associated location IDs": [
@@ -1163,6 +1184,9 @@
       "Cannot add composite versions to another composite content view": [
         "複合バージョンを別の複合コンテンツビューに追加できません"
       ],
+      "Cannot add content view environments from a different organization": [
+        ""
+      ],
       "Cannot add default content view to composite content view": [
         "デフォルトのコンテンツビューを複合コンテンツビューに追加できません"
       ],
@@ -1247,7 +1271,7 @@
       "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
         ""
       ],
-      "Cannot install errata: No installable errata found for search term '%s'": [
+      "Cannot install errata: No errata found for search term '%s'": [
         ""
       ],
       "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}": [
@@ -1280,7 +1304,7 @@
       "Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'.": [
         "環境からコンテンツビューを削除できません。ライフサイクル環境 '%{env}' にはコンテンツビュー '%{view}' がありません。"
       ],
-      "Cannot remove package(s): This host does not have any installed packages matching the search term '%s'.": [
+      "Cannot remove package(s): No installed packages found for search term '%s'.": [
         ""
       ],
       "Cannot set attribute %{attr} for content type %{type}": [
@@ -1304,7 +1328,7 @@
       "Cannot update properties of a container push repository": [
         ""
       ],
-      "Cannot upgrade packages: No installed packages found for search term '%s'": [
+      "Cannot upgrade packages: No installed packages found for search term '%s'.": [
         ""
       ],
       "Cannot upload Ansible collections.": [
@@ -1388,6 +1412,12 @@
       "Collapse All": [
         "すべて折りたたむ"
       ],
+      "Comma-separated list of Candlepin environment names associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
+      "Comma-separated list of Candlepin environment names to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -1399,6 +1429,9 @@
       ],
       "Comma-separated list of tags to sync for a container image repository": [
         "コンテナーイメージリポジトリーに同期するコンマ区切りのタグ一覧"
+      ],
+      "Commit upload": [
+        ""
       ],
       "Compare": [
         "比較"
@@ -1745,14 +1778,23 @@
       "Copy": [
         "コピー"
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "アクティベーションキーをコピーします"
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         "コンテンツビューのコピー"
       ],
       "Copy to clipboard": [
         "クリップボードへのコピー"
+      ],
+      "Copy version": [
+        ""
       ],
       "Copy version units to library": [
         "バージョンユニットのライブラリーへのコピー"
@@ -1841,8 +1883,8 @@
       "Couldn't find content host environment '%s'": [
         "コンテンツホストの環境 '%s' が見つかりませんでした"
       ],
-      "Couldn't find content view '%s'": [
-        "コンテンツビュー '%s' が見つかりませんでした"
+      "Couldn't find content view environment with content view ID '%{cv}' and environment ID '%{env}'": [
+        ""
       ],
       "Couldn't find content view version '%s'": [
         "コンテンツビューのバージョン '%s' が見つかりませんでした"
@@ -1901,6 +1943,9 @@
       "Create Alternate Content Source": [
         "代替コンテンツソースの作成"
       ],
+      "Create Container Push Repository Root": [
+        ""
+      ],
       "Create Export History": [
         "エクスポート履歴の作成"
       ],
@@ -1958,11 +2003,20 @@
       "Create content view": [
         "コンテンツビューの作成"
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         "フィルターの作成"
       ],
       "Create host collection": [
         "ホストコレクションの作成"
+      ],
+      "Create import": [
+        ""
+      ],
+      "Create importer": [
+        ""
       ],
       "Create new activation key": [
         ""
@@ -1972,6 +2026,12 @@
       ],
       "Create package filter rule": [
         "パッケージフィルタールールの作成"
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
+        ""
       ],
       "Create rule": [
         "ルールの作成"
@@ -2219,11 +2279,35 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
+      "Delete distributions": [
+        ""
+      ],
       "Delete manifest from Red Hat provider": [
         "Red Hat プロバイダーからマニフェストを削除"
       ],
       "Delete multiple filters from a content view": [
         "コンテンツビューから複数のフィルターを削除します"
+      ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete orphaned migrated repositories": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
+        ""
       ],
       "Delete version": [
         "バージョンの削除"
@@ -2254,6 +2338,9 @@
       ],
       "Deleting versions: {versionList}": [
         "バージョンを削除しています: {versionList}"
+      ],
+      "Depth": [
+        ""
       ],
       "Description": [
         "説明"
@@ -2317,6 +2404,12 @@
       ],
       "Destroy an environment in an organization": [
         "組織の環境を破棄"
+      ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
       ],
       "Destroy one or more alternate content sources": [
         "1 つ以上の代替コンテンツソースの破棄"
@@ -2501,6 +2594,9 @@
       "Enable repository sets": [
         "リポジトリーセットの有効化"
       ],
+      "Enable structured APT for deb content": [
+        ""
+      ],
       "Enable/Disable auto publish of composite view": [
         "複合ビューの自動公開を有効/無効にします"
       ],
@@ -2552,11 +2648,17 @@
       "Environment ID": [
         ""
       ],
+      "Environment ID and content view ID must be provided together": [
+        ""
+      ],
       "Environment IDs": [
         "環境 ID"
       ],
       "Environment cannot be in its own promotion path": [
         "同じ環境内のプロモートパスに環境を存在させることはできません。"
+      ],
+      "Environment contents refresh": [
+        ""
       ],
       "Environment identifier": [
         "環境 ID"
@@ -2939,6 +3041,9 @@
       "Generate host applicability": [
         "ホストに適用可能なエラータを生成します"
       ],
+      "Generate metadata": [
+        ""
+      ],
       "Generate repository applicability": [
         "リポジトリーに適用可能なエラータを生成します"
       ],
@@ -3011,11 +3116,17 @@
       "Has to be > 0": [
         "0 より大きい必要があります"
       ],
+      "Hash containing the Id of the single lifecycle environment to be associated with the activation key.": [
+        ""
+      ],
       "Help": [
         ""
       ],
       "Helper": [
         "ヘルパー"
+      ],
+      "Hide Reclaim Space Warning": [
+        ""
       ],
       "Hide affected activation keys": [
         "影響のあるアクティベーションキーを非表示"
@@ -3131,6 +3242,9 @@
       "Host id to list applicable packages for": [
         "該当するパッケージをリストするホスト ID"
       ],
+      "Host identifier": [
+        ""
+      ],
       "Host lifecycle support expiration notification": [
         ""
       ],
@@ -3230,9 +3344,6 @@
       "ID of the sync plan": [
         "同期プランの ID"
       ],
-      "ID: %s doesn't exist ": [
-        "ID: %s が存在しません "
-      ],
       "IDs of products to copy repository information from into a Simplified Alternate Content Source. Products must include at least one repository of the chosen content type.": [
         "リポジトリー情報を Simplified Alternate Content Source にコピーする製品の ID。製品には、選択したコンテンツタイプのリポジトリーが少なくとも 1 つ含まれている必要があります。"
       ],
@@ -3290,7 +3401,13 @@
       "Id of the repository to limit verifying checksum on": [
         ""
       ],
+      "Id of the single content view to be associated with the activation key.": [
+        ""
+      ],
       "Id of the single content view to be associated with the host.": [
+        ""
+      ],
+      "Id of the single lifecycle environment to be associated with the activation key.": [
         ""
       ],
       "Id of the single lifecycle environment to be associated with the host.": [
@@ -3341,6 +3458,9 @@
       "If product certificates should be used to authenticate to a custom CDN.": [
         ""
       ],
+      "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.": [
+        ""
+      ],
       "If specified, remove the first instance of a subscription with matching id and quantity": [
         "指定された場合、ID と数量が一致するサブスクリプションの最初のインスタンスを削除します"
       ],
@@ -3361,6 +3481,9 @@
       ],
       "If this is enabled, repositories of content view versions without environments (\\\"archived\\\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'.": [
         "これが有効な場合には、環境 (\\\"archived\\\") がないコンテンツビューバージョンのリポジトリーが '/pulp/content/<organization>/content_views/<content view>/X.Y/...' で配布されます。"
+      ],
+      "If this is enabled, the Smart Proxy page will suppress the warning message about reclaiming space.": [
+        ""
       ],
       "If true, only errata that can be installed without an incremental update will affect the host's errata status. Also affects the Host Collections dashboard widget.": [
         ""
@@ -3449,6 +3572,9 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
+      "Import migration": [
+        ""
+      ],
       "Import new manifest": [
         ""
       ],
@@ -3457,6 +3583,12 @@
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "インポートのみのコンテンツビューは直接公開できません。コンテンツは、ビューにインポートしなければ更新されません。"
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
+        ""
       ],
       "Import uploads into a repository": [
         "アップロードのリポジトリーへのインポート"
@@ -3553,6 +3685,9 @@
       ],
       "Inherit from Repository": [
         "リポジトリーから継承"
+      ],
+      "Initialize": [
+        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "同期プランに割り当てられた製品の同期を開始します"
@@ -3854,7 +3989,7 @@
       "Latest version": [
         "最新バージョン"
       ],
-      "Learn more about adding subscription manifests ": [
+      "Learn more about adding subscription manifests in ": [
         ""
       ],
       "Legacy UI": [
@@ -3990,6 +4125,9 @@
         "このコンテンツビューに割り当てられたコンポーネントの一覧を表示します"
       ],
       "List content counts for the smart proxy": [
+        ""
+      ],
+      "List content view environments": [
         ""
       ],
       "List content view versions": [
@@ -4361,6 +4499,15 @@
       "Module streams will appear here after enabling Red Hat repositories or creating custom products.": [
         "Red Hat リポジトリーを有効にしたり、カスタム製品を作成したりすると、モジュールストリームがここに表示されます。"
       ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
+        ""
+      ],
       "Multi-entitlement": [
         "マルチエンタイトルメント"
       ],
@@ -4517,7 +4664,7 @@
       "No available debs found for search term '%s'. Check the host's content view environments and already-installed debs.": [
         ""
       ],
-      "No available packages found for search term '%s'. Check the host's content view environments and already-installed packages.": [
+      "No available packages found for search term '%s'.": [
         ""
       ],
       "No available repository or filter updates": [
@@ -4534,6 +4681,12 @@
       ],
       "No content in selected versions.": [
         "選択したバージョンにコンテンツがありません。"
+      ],
+      "No content view environments found with ids: %{ids}": [
+        ""
+      ],
+      "No content view environments found with names: %{names}": [
+        ""
       ],
       "No content view history events found.": [
         "コンテンビューの履歴イベントが見つかりません。"
@@ -4790,7 +4943,7 @@
       "No syncable repositories found for selected products and options.": [
         "選択した製品およびオプションに同期可能なリポジトリーが見つかりません。"
       ],
-      "No upgradable packages found for search term '%s'. The host may already have the latest version(s) installed.": [
+      "No upgradable packages found for search term '%s'.": [
         ""
       ],
       "No upgradable packages found.": [
@@ -5321,6 +5474,9 @@
       "Product Create": [
         "製品の作成"
       ],
+      "Product Host Count": [
+        ""
+      ],
       "Product ID": [
         "製品 ID"
       ],
@@ -5504,6 +5660,9 @@
       "Pulp task error": [
         "Pulp タスクのエラー"
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
         "Python パッケージ"
       ],
@@ -5612,6 +5771,9 @@
       "Reclaim Space": [
         "領域の再利用"
       ],
+      "Reclaim space": [
+        ""
+      ],
       "Reclaim space from On Demand repositories": [
         "オンデマンドリポジトリーからの領域の再利用"
       ],
@@ -5675,6 +5837,9 @@
       "Refresh all alternate content sources": [
         ""
       ],
+      "Refresh all distributions": [
+        ""
+      ],
       "Refresh alternate content sources": [
         "代替コンテンツソースの更新"
       ],
@@ -5687,7 +5852,13 @@
       "Refresh counts": [
         ""
       ],
+      "Refresh distribution": [
+        ""
+      ],
       "Refresh errata applicability": [
+        ""
+      ],
+      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
@@ -5695,6 +5866,12 @@
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Red Hat プロバイダーの以前にインポートされたマニフェストを更新"
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
+        ""
       ],
       "Refresh source": [
         "ソースの更新"
@@ -5834,6 +6011,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         "アップストリームマニフェストから 1 つ以上のサブスクリプションを削除します"
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "Katello インターフェイスでのパッケージグループの削除"
       ],
@@ -5861,6 +6041,12 @@
       "Remove subscriptions from one or more hosts": [
         "1 つ以上のホストからサブスクリプションを削除します"
       ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
+      ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "コンテンツビューからバージョンおよび/または環境を削除し、システムおよびキーを再度割り当てます"
       ],
@@ -5885,6 +6071,9 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         "すべての環境からこのバージョンを削除しても、バージョンは削除されません。バージョンは引き続き以降のプロモーションの対象になります。"
       ],
+      "Repair": [
+        ""
+      ],
       "Replace content source on the target machine": [
         ""
       ],
@@ -5903,11 +6092,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "CDN 設定がエアギャップ (切断) に設定されている間、リポジトリーは有効にできません。"
       ],
+      "Repositories certs reset": [
+        ""
+      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
         "公開されたコンテンツビューからのリポジトリーは許可されません。"
+      ],
+      "Repositories gpg reset": [
+        ""
       ],
       "Repository": [
         "リポジトリー"
@@ -6080,6 +6275,9 @@
       "Return Red Hat (non-custom) products only": [
         "Red Hat (カスタム以外) 製品のみを返します"
       ],
+      "Return a list of installed packages distinct by name": [
+        ""
+      ],
       "Return content that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported.": [
         "指定のオブジェクトに追加可能なコンテンツを返します。'content_view_version' と 'content_view_filter' の値がサポートされます。"
       ],
@@ -6236,8 +6434,26 @@
       "Save": [
         "保存"
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
         "代替コンテンツソースの保存"
+      ],
+      "Scan cdn": [
+        ""
       ],
       "Schema version 1": [
         ""
@@ -7019,6 +7235,9 @@
       "Supported Content Types": [
         "サポート対象のコンテンツタイプ"
       ],
+      "Sync": [
+        ""
+      ],
       "Sync Canceled": [
         "同期が取り消されました"
       ],
@@ -7592,6 +7811,9 @@
       "To manage packages, select an action.": [
         ""
       ],
+      "Toggle": [
+        ""
+      ],
       "Total steps: ": [
         "ステップ合計数: "
       ],
@@ -7886,6 +8108,9 @@
       "Update content view environments for host %s": [
         ""
       ],
+      "Update distributions": [
+        ""
+      ],
       "Update hosts manually": [
         ""
       ],
@@ -7918,6 +8143,12 @@
       ],
       "Update release version for host %s": [
         "ホスト %s のリリースバージョンの更新"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "再起動が必要なサービスの更新"
@@ -8009,6 +8240,12 @@
       "Upload a subscription manifest": [
         "サブスクリプションマニフェストのアップロード"
       ],
+      "Upload content": [
+        ""
+      ],
+      "Upload file": [
+        ""
+      ],
       "Upload into": [
         "アップロード先"
       ],
@@ -8017,6 +8254,9 @@
       ],
       "Upload request id": [
         "要求 ID のアップロード"
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         "アップストリーム Candlepin"
@@ -8600,9 +8840,6 @@
       "content view filter rule identifier": [
         "コンテンツビューフィルタールール ID"
       ],
-      "content view id": [
-        "コンテンツビュー ID"
-      ],
       "content view identifier": [
         "コンテンツビュー ID"
       ],
@@ -8689,12 +8926,6 @@
       ],
       "enhancements": [
         ""
-      ],
-      "environment": [
-        "環境"
-      ],
-      "environment id": [
-        "環境 ID"
       ],
       "environment identifier": [
         "環境 ID"
@@ -8966,9 +9197,6 @@
       "name of the subscription": [
         "サブスクリプションの名前"
       ],
-      "name: %s doesn't exist ": [
-        "名前: %s が存在しません "
-      ],
       "new name for the filter": [
         "フィルターの新規の名前"
       ],
@@ -9135,6 +9363,9 @@
         "同期プランの数値 ID"
       ],
       "system registration": [
+        ""
+      ],
+      "the documentation.": [
         ""
       ],
       "the following attributes can not be updated for the Red Hat provider: [ %s ]": [
