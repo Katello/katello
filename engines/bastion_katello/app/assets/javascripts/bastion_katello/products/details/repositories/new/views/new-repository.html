@@ -152,7 +152,7 @@
                 <br />
                 <div class="alert alert-danger" ><strong>Warning. </strong>Are you sure you want to add a comma in this whitespace separated list of distributions?</div>
        </div>
-     
+
       </div>
 
       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Components' | translate }}">
@@ -296,7 +296,7 @@
         </div>
       </div>
 
-      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-if="repository.content_type === 'yum' || repository.content_type === 'deb' || repository.content_type === 'docker'">
+      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-if="repository.content_type === 'deb' || repository.content_type === 'docker' || repository.content_type === 'file' || repository.content_type === 'yum'">
         <select id="download_policy"
                 name="download_policy"
                 ng-model="repository.download_policy"

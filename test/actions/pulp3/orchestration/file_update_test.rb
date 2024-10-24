@@ -59,6 +59,19 @@ module ::Actions::Pulp3
       assert_equal 1, dist_refs.count, "Expected 1 distribution reference."
     end
 
+    def test_update_policy
+      @repo.root.update(
+        download_policy: 'on_demand')
+
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Update,
+        @repo,
+        @primary)
+
+      file_remote = ::Katello::Pulp3::Api::File.new(@primary).remotes_api
+      assert_equal file_remote.list.results.find { |remote| remote.name == "Default_Organization-Cabinet-My_Files" }.policy, "on_demand"
+    end
+
     def test_update_set_unprotected
       @repo.root.update(unprotected: false)
 
