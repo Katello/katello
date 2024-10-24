@@ -19,6 +19,18 @@ module Katello
   end
 
   class HostManagedExtensionsTest < HostManagedExtensionsTestBase
+    def test_image_mode_host_positive
+      Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
+      @foreman_host.content_facet.update(bootc_booted_image: 'quay.io/salami/salad')
+      assert @foreman_host.content_facet.image_mode_host?
+    end
+
+    def test_image_mode_host_negative
+      Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
+      @foreman_host.content_facet.update(bootc_booted_image: nil)
+      refute @foreman_host.content_facet.image_mode_host?
+    end
+
     def test_update_organization
       host = FactoryBot.create(:host, :with_subscription)
       assert_raises ::Katello::Errors::HostRegisteredException do
@@ -56,6 +68,55 @@ module Katello
       host_with_pool = FactoryBot.create(:host, :with_subscription)
       host_with_pool.subscription_facet.pools << FactoryBot.build(:katello_pool, :expiring_in_12_days, cp_id: 1, organization: host_with_pool.organization)
       assert_includes ::Host.search_for('pools_expiring_in_days = 30'), host_with_pool
+    end
+
+    def test_image_mode_search
+      host_no_image = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
+      @foreman_host.content_facet.update(bootc_booted_image: 'quay.io/salami/soup')
+      assert_includes ::Host.search_for('image_mode = true'), @foreman_host
+      refute_includes ::Host.search_for('image_mode = true'), host_no_image
+      assert_includes ::Host.search_for('image_mode = false'), host_no_image
+      refute_includes ::Host.search_for('image_mode = false'), @foreman_host
+    end
+
+    def test_bootc_facts_search
+      host_no_image = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
+      @foreman_host.content_facet.update(
+        bootc_booted_image: 'quay.io/salami/booted',
+        bootc_booted_digest: 'sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+        bootc_available_image: 'quay.io/salami/available',
+        bootc_available_digest: 'sha256:abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+        bootc_staged_image: 'quay.io/salami/staged',
+        bootc_staged_digest: 'sha256:fedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321',
+        bootc_rollback_image: 'quay.io/salami/rollback',
+        bootc_rollback_digest: 'sha256:0987654321fedcba0987654321fedcba0987654321fedcba0987654321fedcba'
+      )
+
+      assert_includes ::Host.search_for('bootc_booted_image = quay.io/salami/booted'), @foreman_host
+      refute_includes ::Host.search_for('bootc_booted_image = quay.io/salami/booted'), host_no_image
+
+      assert_includes ::Host.search_for('bootc_booted_digest = sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'), @foreman_host
+      refute_includes ::Host.search_for('bootc_booted_digest = sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'), host_no_image
+
+      assert_includes ::Host.search_for('bootc_available_image = quay.io/salami/available'), @foreman_host
+      refute_includes ::Host.search_for('bootc_available_image = quay.io/salami/available'), host_no_image
+
+      assert_includes ::Host.search_for('bootc_available_digest = sha256:abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'), @foreman_host
+      refute_includes ::Host.search_for('bootc_available_digest = sha256:abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'), host_no_image
+
+      assert_includes ::Host.search_for('bootc_staged_image = quay.io/salami/staged'), @foreman_host
+      refute_includes ::Host.search_for('bootc_staged_image = quay.io/salami/staged'), host_no_image
+
+      assert_includes ::Host.search_for('bootc_staged_digest = sha256:fedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321'), @foreman_host
+      refute_includes ::Host.search_for('bootc_staged_digest = sha256:fedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321'), host_no_image
+
+      assert_includes ::Host.search_for('bootc_rollback_image = quay.io/salami/rollback'), @foreman_host
+      refute_includes ::Host.search_for('bootc_rollback_image = quay.io/salami/rollback'), host_no_image
+
+      assert_includes ::Host.search_for('bootc_rollback_digest = sha256:0987654321fedcba0987654321fedcba0987654321fedcba0987654321fedcba'), @foreman_host
+      refute_includes ::Host.search_for('bootc_rollback_digest = sha256:0987654321fedcba0987654321fedcba0987654321fedcba0987654321fedcba'), host_no_image
     end
 
     def test_smart_proxy_ids_with_katello
