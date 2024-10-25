@@ -345,9 +345,10 @@ module Katello
       end
     end
 
+    # AngularJS sends :environment and :content_view_id
     def single_assignment?
-      (params.key?(:environment_id) && params.key?(:content_view_id)) ||
-      (params.key?(:environment) && params.key?(:content_view))
+      (params.key?(:environment) || params.key?(:environment_id)) &&
+      (params.key?(:content_view) || params.key?(:content_view_id))
     end
 
     def update_cves?
