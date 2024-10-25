@@ -4,8 +4,12 @@ module Cert
       organization.debug_cert
     end
 
+    def self.ca_cert_filename
+      Setting[:ssl_ca_file]
+    end
+
     def self.ca_cert
-      File.read(Setting[:ssl_ca_file])
+      File.read(ca_cert_filename)
     end
 
     def self.candlepin_client_ca_cert

@@ -256,9 +256,11 @@ module Katello
         when :excon
           config.ssl_client_cert = ::Cert::Certs.ssl_client_cert_filename
           config.ssl_client_key = ::Cert::Certs.ssl_client_key_filename
+          config.ssl_ca_file = ::Cert::Certs.ca_cert_filename
         when :net_http
           config.ssl_client_cert = ::Cert::Certs.ssl_client_cert
           config.ssl_client_key = ::Cert::Certs.ssl_client_key
+          config.ssl_ca_file = ::Cert::Certs.ca_cert_filename
         else
           fail "Unexpected connection_adapter #{Faraday.default_adapter}!  Cannot continue, this is likely a bug."
         end
