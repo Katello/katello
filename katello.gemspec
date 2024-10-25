@@ -51,15 +51,15 @@ Gem::Specification.new do |gem|
   gem.add_dependency "spidr"
 
   # Pulp dependencies
-  gem.add_dependency "pulpcore_client", ">= 3.49.1", "< 3.50.0", "!= 3.49.14"
-  gem.add_dependency "pulp_file_client", ">= 3.49.1", "< 3.50.0", "!= 3.49.14"
-  gem.add_dependency "pulp_ansible_client", ">= 0.21.3", "< 0.22.0"
-  gem.add_dependency "pulp_container_client", ">= 2.20.0", "< 2.21.0"
-  gem.add_dependency "pulp_deb_client", ">= 3.2.0", "< 3.3.0"
-  gem.add_dependency "pulp_rpm_client", ">= 3.26.1", "< 3.27.0"
-  gem.add_dependency "pulp_certguard_client", ">= 3.49.1", "< 3.50.0", "!= 3.49.14"
-  gem.add_dependency "pulp_python_client", ">= 3.11.0", "< 3.12.0"
-  gem.add_dependency "pulp_ostree_client", ">= 2.3.0", "< 2.4.0"
+  gem.add_dependency "pulpcore_client", ">= 3.63.1", "< 3.64.0"
+  gem.add_dependency "pulp_file_client", ">= 3.63.1", "< 3.64.0"
+  gem.add_dependency "pulp_ansible_client", ">= 0.22.2", "< 0.23.0"
+  gem.add_dependency "pulp_container_client", ">= 2.21.1", "< 2.22.0"
+  gem.add_dependency "pulp_deb_client", ">= 3.3.1", "< 3.4.0"
+  gem.add_dependency "pulp_rpm_client", ">= 3.27.2", "< 3.28.0"
+  gem.add_dependency "pulp_certguard_client", ">= 3.63.1", "< 3.64.0"
+  gem.add_dependency "pulp_python_client", ">= 3.12.5", "< 3.13.0"
+  gem.add_dependency "pulp_ostree_client", ">= 2.4.4", "< 2.5.0"
 
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'
