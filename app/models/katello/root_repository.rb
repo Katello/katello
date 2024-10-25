@@ -218,12 +218,6 @@ module Katello
       ::Host.joins(:content_facet => :bound_repositories).where("#{Katello::Repository.table_name}.root_id" => self.select(:id))
     end
 
-    def ensure_no_download_policy
-      if !yum? && download_policy.present?
-        errors.add(:download_policy, _("cannot be set for non-yum repositories."))
-      end
-    end
-
     def ensure_no_checksum_on_demand
       if checksum_type.present? && download_policy == DOWNLOAD_ON_DEMAND
         errors.add(:checksum_type, _("Checksum type cannot be set for yum repositories with on demand download policy."))
