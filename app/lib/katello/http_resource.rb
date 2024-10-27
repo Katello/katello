@@ -18,8 +18,8 @@ module Katello
 
     include Katello::Concerns::FilterSensitiveData
 
-    class_attribute :consumer_secret, :consumer_key, :ca_cert_file, :prefix, :site, :default_headers,
-                    :ssl_client_cert, :ssl_client_key
+    class_attribute :consumer_secret, :consumer_key, :prefix, :site, :default_headers,
+                    :ssl_client_cert, :ssl_client_key, :ssl_ca_file
 
     attr_reader :json
 
@@ -128,7 +128,7 @@ module Katello
                    :authorize_path => "",
                    :access_token_path => ""}
 
-        params[:ca_file] = self.ca_cert_file unless self.ca_cert_file.nil?
+        params[:ca_file] = self.ssl_ca_file unless self.ssl_ca_file.nil?
         # New OAuth consumer to setup signing the request
         consumer = OAuth::Consumer.new(self.consumer_key,
                             self.consumer_secret,
@@ -147,7 +147,7 @@ module Katello
           :open_timeout => SETTINGS[:katello][:rest_client_timeout],
           :timeout => SETTINGS[:katello][:rest_client_timeout]
         }
-        options[:ssl_ca_file] = self.ca_cert_file unless self.ca_cert_file.nil?
+        options[:ssl_ca_file] = self.ssl_ca_file unless self.ssl_ca_file.nil?
         options[:ssl_client_cert] = self.ssl_client_cert unless self.ssl_client_cert.nil?
         options[:ssl_client_key] = self.ssl_client_key unless self.ssl_client_key.nil?
 
