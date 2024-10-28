@@ -30,7 +30,7 @@ module Katello
       param :environment, Hash, :desc => N_("Hash containing the Id of the single lifecycle environment to be associated with the activation key."), deprecated: true
       param :content_view_id, Integer, :desc => N_("Id of the single content view to be associated with the activation key.")
       param :environment_id, Integer, :desc => N_("Id of the single lifecycle environment to be associated with the activation key.")
-      param :content_view_environments, Array, :desc => N_("Comma-separated list of Candlepin environment names to be associated with the activation key,"\
+      param :content_view_environments, Array, :desc => N_("Comma-separated list of content view environment labels to be associated with the activation key,"\
                                               " in the format of 'lifecycle_environment_label/content_view_label'."\
                                               " Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified."\
                                               " Requires allow_multiple_content_views setting to be on.")
@@ -46,7 +46,7 @@ module Katello
     param :environment_id, :number, :desc => N_("environment identifier")
     param :content_view_id, :number, :desc => N_("content view identifier")
     param :name, String, :desc => N_("activation key name to filter by")
-    param :content_view_environments, Array, :desc => N_("Comma-separated list of Candlepin environment names associated with the activation key,"\
+    param :content_view_environments, Array, :desc => N_("Comma-separated list of content view environment labels associated with the activation key,"\
                                             " in the format of 'lifecycle_environment_label/content_view_label'."\
                                             " Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified."\
                                             " Requires allow_multiple_content_views setting to be on.")
@@ -304,7 +304,7 @@ module Katello
     def params_likely_not_from_angularjs?
       # AngularJS sends back the activation key's existing API response values.
       # A side effect of this is that when it sends params[:content_view_environments] or params[:content_view_environment_ids],
-      # it incorrectly sends the nested objects from the rabl response, instead of the required single comma-separated string of Candlepin names.
+      # it incorrectly sends the nested objects from the rabl response, instead of the required single comma-separated string of CVE labels.
       # This would cause fetch_content_view_environments to fail.
       # Therefore, we need a way to (a) detect if the request is from AngularJS, and (b) avoid trying to handle the nested objects as if they were strings.
       # So we look at params[:multi_content_view_environment]. This is a computed value, not meant to be submitted as part of an update request.
