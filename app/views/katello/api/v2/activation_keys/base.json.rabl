@@ -28,7 +28,7 @@ child :content_view_environments => :content_view_environments do
     }
   end
   node :label do |cve|
-    cve.candlepin_name
+    cve.label
   end
 end
 

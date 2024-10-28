@@ -359,11 +359,6 @@ module Katello
         host.refresh_global_status!
       end
 
-      # TODO: uncomment when we need to display multiple CVE names in the UI
-      # def content_view_environment_names
-      #   content_view_environments.map(&:candlepin_name).join(', ')
-      # end
-
       def self.joins_installable_relation(content_model, facet_join_model)
         facet_repository = Katello::ContentFacetRepository.table_name
         content_table = content_model.table_name
