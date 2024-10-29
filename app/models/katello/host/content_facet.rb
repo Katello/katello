@@ -127,6 +127,10 @@ module Katello
         self.host&.update_candlepin_associations unless self.host&.new_record?
       end
 
+      def content_view_environment_labels
+        content_view_environments.map(&:label).join(',')
+      end
+
       # rubocop:disable Metrics/CyclomaticComplexity
       def assign_single_environment(
         content_view_id: nil, lifecycle_environment_id: nil, environment_id: nil,

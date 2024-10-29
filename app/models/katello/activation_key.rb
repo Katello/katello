@@ -190,7 +190,7 @@ module Katello
     end
 
     def content_view_environment_labels
-      content_view_environment_names.join(',')
+      content_view_environments.map(&:label).join(',')
     end
 
     def available_subscriptions
