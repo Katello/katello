@@ -18,10 +18,11 @@ export const getSmartProxies = () => get({
   params: { organization_id: orgId(), per_page: 'all' },
 });
 
-export const updateSmartProxyContentCounts = smartProxyId => post({
+export const updateSmartProxyContentCounts = (smartProxyId, params) => post({
   type: API_OPERATIONS.POST,
   key: SMART_PROXY_COUNTS_UPDATE_KEY,
   url: api.getApiUrl(`/capsules/${smartProxyId}/content/update_counts`),
+  params,
   handleSuccess: (response) => {
     renderTaskStartedToast(response?.data, __('Smart proxy content count refresh has started in the background'));
   },

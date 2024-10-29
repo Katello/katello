@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableComposable, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import { CheckCircleIcon, TimesCircleIcon } from '@patternfly/react-icons';
@@ -8,17 +9,26 @@ import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import ContentViewIcon from '../ContentViews/components/ContentViewIcon';
 import ExpandedSmartProxyRepositories from './ExpandedSmartProxyRepositories';
+import { updateSmartProxyContentCounts } from './SmartProxyContentActions';
 
-const ExpandableCvDetails = ({ contentViews, contentCounts, envId }) => {
+const ExpandableCvDetails = ({
+  smartProxyId, contentViews, contentCounts, envId,
+}) => {
   const columnHeaders = [
     __('Content view'),
     __('Version'),
     __('Last published'),
     __('Synced'),
   ];
-  // const { content_counts: contentCounts } = counts;
+  const dispatch = useDispatch();
   const expandedTableRows = useSet([]);
   const tableRowIsExpanded = id => expandedTableRows.has(id);
+  const refreshCountAction = cvId => ({
+    title: __('Refresh counts'),
+    onClick: () => {
+      dispatch(updateSmartProxyContentCounts(smartProxyId, { content_view_id: cvId }));
+    },
+  });
 
   return (
     <TableComposable
@@ -68,6 +78,12 @@ const ExpandableCvDetails = ({ contentViews, contentCounts, envId }) => {
               </Td>
               <Td><LongDateTime date={cv.last_published} showRelativeTimeTooltip /></Td>
               <Td>{upToDateVal}</Td>
+              <Td
+                key={`rowActions-${id}`}
+                actions={{
+                  items: [refreshCountAction(id)],
+                }}
+              />
             </Tr>
             <Tr key="child_row" ouiaId={`ContentViewTableRowChild-${id}`} isExpanded={isExpanded}>
               <Td colSpan={12}>
@@ -89,6 +105,10 @@ const ExpandableCvDetails = ({ contentViews, contentCounts, envId }) => {
 };
 
 ExpandableCvDetails.propTypes = {
+  smartProxyId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]).isRequired,
   contentViews: PropTypes.arrayOf(PropTypes.shape({})),
   contentCounts: PropTypes.shape({
     content_view_versions: PropTypes.shape({}),
