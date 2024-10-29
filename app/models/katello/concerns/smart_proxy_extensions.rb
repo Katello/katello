@@ -140,41 +140,86 @@ module Katello
         URI.parse(self.url).host != self.registration_host
       end
 
-      def update_content_counts!
-        # {:content_view_versions=>{87=>{:repositories=>{1=>{:metadata=>{},:counts=>{:rpms=>98, :module_streams=>9898}}}}}
-        new_content_counts = { content_view_versions: {} }
+      def update_content_counts!(environment: nil, content_view: nil, repository: nil)
+        if environment.nil? && content_view.nil? && repository.nil?
+          global_content_counts
+        else
+          smart_proxy_helper = ::Katello::SmartProxyHelper.new(self)
+          repos = repository ? [repository] : smart_proxy_helper.repositories_available_to_capsule(environment, content_view)
+          self.with_lock do
+            repos_content_count(repos)
+          end
+        end
+      end
+
+      #{"content_view_versions"=>
+      #   {"5"=>
+      #     {"repositories"=>
+      #       {"20"=>{"counts"=>{"rpm"=>32, "erratum"=>4}, "metadata"=>{"env_id"=>2, "product_id"=>1, "content_type"=>"yum", "library_instance_id"=>14}},
+      #        "21"=>{"counts"=>{"file"=>3}, "metadata"=>{"env_id"=>2, "product_id"=>1, "content_type"=>"file", "library_instance_id"=>15}},
+      #        "22"=>{"counts"=>{"file"=>3}, "metadata"=>{"env_id"=>3, "product_id"=>1, "content_type"=>"file", "library_instance_id"=>15}},
+      #        "23"=>{"counts"=>{"rpm"=>32, "erratum"=>4}, "metadata"=>{"env_id"=>3, "product_id"=>1, "content_type"=>"yum", "library_instance_id"=>14}}}}}}
+      #
+
+      def repos_content_count(repos, reset: false)
+        new_content_counts = initialize_content_counts(reset: reset)
+        repos.each do |repo|
+          process_repository(repo, new_content_counts)
+        end
+        remove_unavailable_versions(new_content_counts)
+        update(content_counts: new_content_counts)
+      end
+
+      def initialize_content_counts(reset: false)
+        if reset
+          { content_view_versions: {} }.with_indifferent_access
+        else
+          (content_counts&.deep_dup || { content_view_versions: {} }).with_indifferent_access
+        end
+      end
+
+      def process_repository(repo, content_counts)
+        repo_mirror_service = repo.backend_service(self).with_mirror_adapter
+        repo_content_counts = repo_mirror_service.latest_content_counts
+        translated_counts = translate_counts(repo, repo_mirror_service, repo_content_counts)
+        content_counts[:content_view_versions][repo.content_view_version_id.to_s] ||= { repositories: {}}
+        content_counts[:content_view_versions][repo.content_view_version_id.to_s][:repositories][repo.id.to_s] = translated_counts
+      end
+
+      def translate_counts(repo, repo_mirror_service, repo_content_counts)
+        translated_counts = {metadata: {}, counts: {}}
+        translated_counts[:metadata] = {
+          env_id: repo.environment_id,
+          library_instance_id: repo.library_instance_or_self.id,
+          product_id: repo.product_id,
+          content_type: repo.content_type
+        }
+        repo_content_counts&.each do |name, count|
+          count = count[:count]
+          if name == 'rpm.package' && repo.content_counts['srpm'] > 0
+            translated_counts[:counts]['srpm'] = repo_mirror_service.count_by_pulpcore_type(::Katello::Pulp3::Srpm)
+            translated_counts[:counts]['rpm'] = count - translated_counts[:counts]['srpm']
+          elsif name == 'container.manifest' && repo.content_counts['docker_manifest_list'] > 0
+            translated_counts[:counts]['docker_manifest_list'] = repo_mirror_service.count_by_pulpcore_type(::Katello::Pulp3::DockerManifestList)
+            translated_counts[:counts]['docker_manifest'] = count - translated_counts[:counts]['docker_manifest_list']
+          else
+            translated_counts[:counts][::Katello::Pulp3::PulpContentUnit.katello_name_from_pulpcore_name(name, repo)] = count
+          end
+        end
+        translated_counts
+      end
+
+      def remove_unavailable_versions(content_counts)
+        version_ids_available_to_proxy = Katello::ContentViewVersion.in_environment(lifecycle_environments)&.pluck(:id)&.uniq
+        version_ids_in_count_map = content_counts[:content_view_versions].keys&.map(&:to_i)
+        version_ids_to_remove = version_ids_in_count_map - version_ids_available_to_proxy
+        version_ids_to_remove.each { |id| content_counts[:content_view_versions].delete(id.to_s) }
+      end
+
+      def global_content_counts
         smart_proxy_helper = ::Katello::SmartProxyHelper.new(self)
         repos = smart_proxy_helper.repositories_available_to_capsule
-
-        repos&.each do |repo|
-          repo_mirror_service = repo.backend_service(self).with_mirror_adapter
-          repo_content_counts = repo_mirror_service.latest_content_counts
-          translated_counts = {metadata: {}, counts: {}}
-          translated_counts[:metadata] = {
-            env_id: repo.environment_id,
-            library_instance_id: repo.library_instance_or_self.id,
-            product_id: repo.product_id,
-            content_type: repo.content_type
-          }
-          repo_content_counts&.each do |name, count|
-            count = count[:count]
-            # Some content units in Pulp have the same model
-            if name == 'rpm.package' && repo.content_counts['srpm'] > 0
-              translated_counts[:counts]['srpm'] = repo_mirror_service.count_by_pulpcore_type(::Katello::Pulp3::Srpm)
-              translated_counts[:counts]['rpm'] = count - translated_counts[:counts]['srpm']
-            elsif name == 'container.manifest' && repo.content_counts['docker_manifest_list'] > 0
-              translated_counts[:counts]['docker_manifest_list'] = repo_mirror_service.count_by_pulpcore_type(::Katello::Pulp3::DockerManifestList)
-              translated_counts[:counts]['docker_manifest'] = count - translated_counts[:counts]['docker_manifest_list']
-            else
-              translated_counts[:counts][::Katello::Pulp3::PulpContentUnit.katello_name_from_pulpcore_name(name, repo)] = count
-            end
-          end
-          new_content_counts[:content_view_versions][repo.content_view_version_id] ||= { repositories: {}}
-          # Store counts on capsule of archived repos which are reused across environment copies
-          # of the archived repo corresponding to each environment CV version is promoted to.
-          new_content_counts[:content_view_versions][repo.content_view_version_id][:repositories][repo.id] = translated_counts
-        end
-        update(content_counts: new_content_counts)
+        repos_content_count(repos, reset: true)
       end
 
       def sync_container_gateway
