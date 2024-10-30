@@ -13,7 +13,7 @@ module Katello
     before_action :verify_simple_content_access_disabled, :only => [:add_subscriptions]
     before_action :validate_release_version, :only => [:create, :update]
 
-    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach purpose_role purpose_usage purpose_addons content_view_environments))
+    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach purpose_role purpose_usage content_view_environments))
 
     def_param_group :activation_key do
       param :organization_id, :number, :desc => N_("organization identifier"), :required => true
@@ -25,7 +25,6 @@ module Katello
       param :auto_attach, :bool, :desc => N_("auto attach subscriptions upon registration"), deprecated: true
       param :purpose_usage, String, :desc => N_("Sets the system purpose usage")
       param :purpose_role, String, :desc => N_("Sets the system purpose usage")
-      param :purpose_addons, Array, :desc => N_("Sets the system add-ons")
 
       param :environment, Hash, :desc => N_("Hash containing the Id of the single lifecycle environment to be associated with the activation key."), deprecated: true
       param :content_view_id, Integer, :desc => N_("Id of the single content view to be associated with the activation key."), :allow_nil => true
@@ -385,7 +384,6 @@ module Katello
                                              :unlimited_hosts,
                                              :purpose_role,
                                              :purpose_usage,
-                                             :purpose_addon_ids,
                                              :content_overrides => [],
                                              :host_collection_ids => [],
                                              :content_view_environments => [],
@@ -396,9 +394,6 @@ module Katello
       key_params = permitted_params.except(:environment_id, :content_view_id,
                       :content_view_environments, :content_view_environment_ids)
 
-      unless params[:purpose_addons].nil?
-        key_params[:purpose_addon_ids] = params[:purpose_addons].map { |addon| ::Katello::PurposeAddon.find_or_create_by(name: addon).id }
-      end
       unlimited = params[:activation_key].try(:[], :unlimited_hosts)
       max_hosts = params[:activation_key].try(:[], :max_hosts)
 

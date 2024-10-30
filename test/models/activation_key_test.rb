@@ -206,12 +206,6 @@ module Katello
       assert_includes activation_keys, @purpose_key
     end
 
-    def test_search_addon
-      @purpose_key.purpose_addons << katello_purpose_addons(:addon)
-      activation_keys = ActivationKey.search_for("addon = \"Test Addon\"")
-      assert_includes activation_keys, @purpose_key
-    end
-
     def test_search_usage
       activation_keys = ActivationKey.search_for("usage = \"#{@purpose_key.purpose_usage}\"")
       assert_includes activation_keys, @purpose_key

@@ -22,11 +22,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
         $scope.defaultRoles = ['Red Hat Enterprise Linux Server', 'Red Hat Enterprise Linux Workstation', 'Red Hat Enterprise Linux Compute Node'];
         $scope.defaultUsages = ['Production', 'Development/Test', 'Disaster Recovery'];
 
-        $scope.purposeAddonsCount = 0;
         $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
 
-        $scope.organization = Organization.get({id: CurrentOrganization}, function(org) {
-            $scope.purposeAddonsCount += org.system_purposes.addons.length;
+        $scope.organization = Organization.get({id: CurrentOrganization}, function() {
         });
 
         $scope.panel = {
@@ -111,44 +109,6 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
                     roles.push(role);
                 }
                 return _.union(roles, $scope.defaultRoles);
-            });
-        };
-
-
-        $scope.savePurposeAddons = function (key) {
-
-            if ($scope.purposeAddonsList) {
-                key['purpose_addons'] = _.chain($scope.purposeAddonsList).filter(function(addOn) {
-                    return addOn.selected;
-                }).map(function(addOn) {
-                    return addOn.name;
-                }).value();
-            }
-
-            return $scope.save(key);
-        };
-
-
-        $scope.purposeAddons = function () {
-            var purposeAddons;
-            var addOns;
-
-            return $scope.organization.$promise.then(function(org) {
-                $scope.purposeAddonsList = [];
-                addOns = org.system_purposes.addons;
-
-                purposeAddons = $scope.activationKey.purpose_addons;
-                angular.forEach(purposeAddons, function(addOn) {
-                    if (addOn && !_.includes(addOns, addOn)) {
-                        addOns.push(addOn);
-                    }
-                });
-
-                angular.forEach(addOns, function (addOn) {
-                    $scope.purposeAddonsList.push({"name": addOn, "selected": purposeAddons.indexOf(addOn) > -1});
-                });
-
-                return $scope.purposeAddonsList;
             });
         };
     }]

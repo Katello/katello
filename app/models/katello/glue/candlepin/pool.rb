@@ -10,7 +10,7 @@ module Katello
         lazy_accessor :subscription_facts, :initializer => lambda { |_s| self.subscription ? self.subscription.attributes : {} }
 
         lazy_accessor :pool_derived, :owner, :source_pool_id, :virt_limit, :arch, :description, :product_family,
-          :variant, :suggested_quantity, :support_type, :product_id, :type, :upstream_entitlement_id, :roles, :usage, :addons,
+          :variant, :suggested_quantity, :support_type, :product_id, :type, :upstream_entitlement_id, :roles, :usage,
           :initializer => :pool_facts
 
         lazy_accessor :name, :support_level, :org, :sockets, :cores, :instance_multiplier,

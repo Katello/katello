@@ -205,14 +205,12 @@ module Katello
     param :service_level, String, :desc => N_("Service level of host")
     param :purpose_role, String, :desc => N_("Role of host")
     param :purpose_usage, String, :desc => N_("Usage of host")
-    param :purpose_addons, Array, :desc => N_("Sets the system add-ons")
     def system_purpose
       task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::UpdateSystemPurpose,
         @hosts,
         params[:service_level],
         params[:purpose_role],
-        params[:purpose_usage],
-        params[:purpose_addons])
+        params[:purpose_usage])
 
       respond_for_async :resource => task
     end

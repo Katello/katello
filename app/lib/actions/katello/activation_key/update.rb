@@ -14,8 +14,7 @@ module Actions
                         service_level: activation_key.service_level,
                         auto_attach: activation_key.auto_attach,
                         purpose_role: activation_key.purpose_role,
-                        purpose_usage: activation_key.purpose_usage,
-                        purpose_addons: activation_key.purpose_addons.pluck(:name))
+                        purpose_usage: activation_key.purpose_usage)
           end
         end
 
@@ -24,8 +23,7 @@ module Actions
           cp_changed?(activation_key.service_level, activation_key_params[:service_level]) ||
           cp_changed?(activation_key.release_version, activation_key_params[:release_version]) ||
           cp_changed?(activation_key.purpose_role, activation_key_params[:purpose_role]) ||
-          cp_changed?(activation_key.purpose_usage, activation_key_params[:purpose_usage]) ||
-          cp_changed?(activation_key.purpose_addon_ids, activation_key_params[:purpose_addon_ids])
+          cp_changed?(activation_key.purpose_usage, activation_key_params[:purpose_usage])
         end
 
         def cp_changed?(activation_key, activation_key_params)

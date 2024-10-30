@@ -19,14 +19,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSystemPurpos
 
         $scope.organization = Organization.get({id: CurrentOrganization});
 
-        $scope.purposeAddonsList = function () {
-            var defaultOptions = ['No Change', 'None (Clear)'];
-            if ($scope.organization.system_purposes && $scope.organization.system_purposes.addons) {
-                return defaultOptions.concat($scope.organization.system_purposes.addons);
-            }
-            return [];
-        };
-
         $scope.defaultUsages = ['No change', 'None (Clear)', 'Production', 'Development/Test', 'Disaster Recovery'];
         $scope.defaultRoles = ['No change', 'None (Clear)', 'Red Hat Enterprise Linux Server', 'Red Hat Enterprise Linux Workstation', 'Red Hat Enterprise Linux Compute Node'];
         $scope.defaultServiceLevels = ['No change', 'None (Clear)', 'Self-Support', 'Standard', 'Premium'];
@@ -37,46 +29,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSystemPurpos
         $scope.selectedRoles = $scope.defaultRoles[0];
         $scope.selectedServiceLevels = $scope.defaultServiceLevels[0];
 
-        $scope.selected = {
-           addons: undefined
-        };
-
         $scope.selectedItemToParam = function (item) {
             var mapping = {
                 "None (Clear)": "",
-                "No change": null,
-                "": []
+                "No change": null
             };
-            if (Array.isArray(item)) {
-                return $scope.selectedAddonsToParam(item);
-            }
             if (mapping.hasOwnProperty(item)) {
                 return mapping[item];
             }
             return item;
-        };
-
-        $scope.selectedAddonsToParam = function (addons) {
-            var intentOptions = ['No Change', 'None (Clear)'];
-
-            var userIntent = intentOptions.filter(function(val) {
-                return addons.indexOf(val) !== -1;
-            });
-
-            if (userIntent.length === 0) {
-                return addons;
-            }
-
-            if (userIntent.includes('No Change')) {
-                return null;
-            }
-
-            if (userIntent.includes('None (Clear)') && addons.length === 1) {
-                return [];
-            } if (userIntent.includes('None (Clear)') && addons.length > 1) {
-                addons.shift();
-                return addons;
-            }
         };
 
         function actionParams() {
@@ -84,7 +45,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSystemPurpos
 
             params['purpose_usage'] = $scope.selectedItemToParam($scope.selectedUsages);
             params['purpose_role'] = $scope.selectedItemToParam($scope.selectedRoles);
-            params['purpose_addons'] = $scope.selectedItemToParam($scope.selectedAddons);
             params['service_level'] = $scope.selectedItemToParam($scope.selectedServiceLevels);
 
             return params;

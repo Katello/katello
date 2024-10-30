@@ -27,7 +27,6 @@ export const subDetails = Immutable({
   support_type: 'L1-L3',
   roles: 'Test Role',
   usage: ' Development',
-  addons: 'Addon1, Addon2',
   id: 48,
   cp_id: '4028f92a6317cfbd0163b419377f3bee',
   subscription_id: 3,

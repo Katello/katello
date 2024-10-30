@@ -16,7 +16,6 @@ const baseHostDetails = {
     edit_hosts: true,
   },
   subscription_facet_attributes: {
-    purpose_addons: ['Addon1', 'Addon2'],
     purpose_role: 'Red Hat Enterprise Linux Server',
     purpose_usage: 'Production',
     service_level: 'Premium',
@@ -61,8 +60,6 @@ test('shows system purpose details for a host', async (done) => {
   expect(getByText('Red Hat Enterprise Linux Server')).toBeInTheDocument();
   expect(getByText('Production')).toBeInTheDocument();
   expect(getByText('Premium')).toBeInTheDocument();
-  expect(getByText('Addon1')).toBeInTheDocument();
-  expect(getByText('Addon2')).toBeInTheDocument();
   expect(getByText('8')).toBeInTheDocument();
 
   assertNockRequest(orgScope);
@@ -77,8 +74,6 @@ test('shows system purpose details for an activation key', () => {
   expect(getByText('Red Hat Enterprise Linux Server')).toBeInTheDocument();
   expect(getByText('Production')).toBeInTheDocument();
   expect(getByText('Premium')).toBeInTheDocument();
-  expect(getByText('Addon1')).toBeInTheDocument();
-  expect(getByText('Addon2')).toBeInTheDocument();
   expect(getByText('8')).toBeInTheDocument();
 });
 

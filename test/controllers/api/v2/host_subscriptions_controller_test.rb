@@ -148,7 +148,6 @@ module Katello
         'type' => 'system',
         'role' => 'MyRole',
         'usage' => 'MyUsage',
-        'addOns' => 'Addon1,Addon2',
         'facts' => facts,
         'installedProducts' => [{
           'productId' => '1',
@@ -167,7 +166,6 @@ module Katello
           :installed_products => installed_products,
           :purpose_role => 'MyRole',
           :purpose_usage => 'MyUsage',
-          :purpose_addons => 'Addon1,Addon2',
         }
       )
 

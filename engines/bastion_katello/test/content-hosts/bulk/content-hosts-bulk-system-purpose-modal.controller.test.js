@@ -18,8 +18,7 @@ describe('Controller: ContentHostsBulkSystemPurposeModalController', function() 
             service_levels: ['Premium'],
             system_purposes: {
               roles: ['custom-role'],
-              usage: ['custom-usage'],
-              addons: ['custom-addon']
+              usage: ['custom-usage']
             }
           }
   
@@ -53,7 +52,6 @@ describe('Controller: ContentHostsBulkSystemPurposeModalController', function() 
         var usageRoles = $scope.defaultRoles;
         var usages = $scope.defaultUsages;
         $httpBackend.flush();
-        var addons = $scope.purposeAddonsList();
 
         expect(serviceLevels.length).toEqual(5);
         expect(serviceLevels.sort()).toEqual(['No change', 'None (Clear)', 'Self-Support', 'Standard', 'Premium'].sort());
@@ -61,12 +59,10 @@ describe('Controller: ContentHostsBulkSystemPurposeModalController', function() 
         expect(usageRoles.sort()).toEqual(['No change', 'None (Clear)', 'Red Hat Enterprise Linux Server', 'Red Hat Enterprise Linux Workstation', 'Red Hat Enterprise Linux Compute Node'].sort());
         expect(usages.length).toEqual(5);
         expect(usages.sort()).toEqual(['No change', 'None (Clear)', 'Production', 'Development/Test', 'Disaster Recovery'].sort());
-        expect(addons.length).toEqual(3);
-        expect(addons.sort()).toEqual(['No Change', 'None (Clear)', 'custom-addon'].sort());
     });
 
     it("should perform the function and transition", function() {
-        var params = _.extend(hostIds, {purpose_usage: null, purpose_role: null, service_level: null, purpose_addons: null});
+        var params = _.extend(hostIds, {purpose_usage: null, purpose_role: null, service_level: null});
         spyOn(BulkAction, 'systemPurpose');
 
         $scope.performAction();
@@ -75,20 +71,13 @@ describe('Controller: ContentHostsBulkSystemPurposeModalController', function() 
     });
 
     it("should return null when 'No Change' is selected", function() {
-        var param = $scope.selectedItemToParam(['No Change']);
+        var param = $scope.selectedItemToParam(['No change']);
         expect(param).toEqual(null);
     });
 
     it("should return empty string/array when 'None (Clear)' is only selected", function() {
         var stringParam = $scope.selectedItemToParam('None (Clear)');
-        var addonParam = $scope.selectedItemToParam(['None (Clear)']);
         expect(stringParam).toEqual("");
-        expect(addonParam).toEqual([]);
-    });
-
-    it("should return addons when 'None (Clear)' is selected with other addons", function() {
-        var addonParam = $scope.selectedItemToParam(['None (Clear)', 'custom-addon']);
-        expect(addonParam).toEqual(['custom-addon'])
     });
 
     it("provides a function for closing the modal", function () {
