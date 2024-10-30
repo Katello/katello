@@ -25,15 +25,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
 
         $scope.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
 
-        $scope.organization = Organization.get({id: CurrentOrganization}, function(org) {
-            $scope.purposeAddonsCount += org.system_purposes.addons.length;
+        $scope.organization = Organization.get({id: CurrentOrganization}, function() {
         });
 
         $scope.defaultUsages = ['Production', 'Development/Test', 'Disaster Recovery'];
         $scope.defaultRoles = ['Red Hat Enterprise Linux Server', 'Red Hat Enterprise Linux Workstation', 'Red Hat Enterprise Linux Compute Node'];
         $scope.defaultServiceLevels = ['Self-Support', 'Standard', 'Premium'];
 
-        $scope.purposeAddonsCount = 0;
         $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
 
         $scope.panel = {
@@ -46,7 +44,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                 host.unregisterDelete = !host.hasSubscription() || deleteHostOnUnregister;
                 host.deleteHostOnUnregister = deleteHostOnUnregister;
                 $scope.panel.loading = false;
-                $scope.purposeAddonsCount += host.subscription_facet_attributes.purpose_addons.length;
             }, function (response) {
                 $scope.panel.loading = false;
                 ApiErrorHandler.handleGETRequestErrors(response, $scope);
@@ -82,14 +79,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                 'service_level': host.subscription_facet_attributes.service_level,
                 'release_version': host.subscription_facet_attributes.release_version
             };
-
-            if ($scope.purposeAddonsList) {
-                newHost['subscription_facet_attributes']['purpose_addons'] = _.chain($scope.purposeAddonsList).filter(function(addOn) {
-                    return addOn.selected;
-                }).map(function(addOn) {
-                    return addOn.name;
-                }).value();
-            }
 
             return $scope.save(newHost, true);
         };
@@ -189,29 +178,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                     usages.push(usage);
                 }
                 return _.union(usages, $scope.defaultUsages);
-            });
-        };
-
-        $scope.purposeAddons = function () {
-            var purposeAddons;
-            var addOns;
-
-            return $scope.organization.$promise.then(function(org) {
-                $scope.purposeAddonsList = [];
-                addOns = org.system_purposes.addons;
-
-                purposeAddons = $scope.host.subscription_facet_attributes.purpose_addons;
-                angular.forEach(purposeAddons, function(addOn) {
-                    if (addOn && !_.includes(addOns, addOn)) {
-                        addOns.push(addOn);
-                    }
-                });
-
-                angular.forEach(addOns, function (addOn) {
-                    $scope.purposeAddonsList.push({"name": addOn, "selected": purposeAddons.indexOf(addOn) > -1});
-                });
-
-                return $scope.purposeAddonsList;
             });
         };
 

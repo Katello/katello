@@ -17,8 +17,6 @@ import {
   FlexItem,
   GridItem,
   Label,
-  List,
-  ListItem,
   Tooltip,
   Skeleton,
   CardExpandableContent,
@@ -41,12 +39,11 @@ const SystemPurposeCard = ({ hostDetails, akDetails }) => {
   const { organization_id: orgId, name } = details;
   const subscriptionFacetAttributes = details?.subscription_facet_attributes;
   const {
-    purposeRole, purposeUsage, purposeAddons, releaseVersion, serviceLevel,
+    purposeRole, purposeUsage, releaseVersion, serviceLevel,
   } = propsToCamelCase((subscriptionFacetAttributes || details) ?? {});
   const sysPurposeProps = {
     purposeRole,
     purposeUsage,
-    purposeAddons,
     releaseVersion,
     serviceLevel,
   };
@@ -142,21 +139,6 @@ const SystemPurposeCard = ({ hostDetails, akDetails }) => {
                 <Dd>
                   {dataIsLoading ? <Skeleton /> : releaseVersion}
                 </Dd>
-                {!!purposeAddons?.length && (
-                  <>
-                    <Dt>{__('Add-ons')}</Dt>
-                    {dataIsLoading ? <Skeleton /> : (
-                      <Dd>
-                        <List isPlain>
-                          {purposeAddons.map(addon => (
-                            <ListItem key={addon}>{addon}</ListItem>
-                          ))}
-                        </List>
-                      </Dd>
-                    )}
-                  </>
-                )
-                }
               </DescriptionListGroup>
             </DescriptionList>
             {showEditButton && (
@@ -201,7 +183,6 @@ SystemPurposeCard.propTypes = {
     purpose_role: PropTypes.string,
     release_version: PropTypes.string,
     service_level: PropTypes.string,
-    purpose_addons: PropTypes.arrayOf(PropTypes.string),
     permissions: PropTypes.shape({
       edit_activation_keys: PropTypes.bool,
     }),

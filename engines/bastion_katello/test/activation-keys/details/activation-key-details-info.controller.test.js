@@ -47,7 +47,6 @@ describe('Controller: ActivationKeyDetailsInfoController', function() {
             id: 2,
             purpose_usage: "test usage",
             purpose_role: "test role",
-            purpose_addons: ["test addon1"],
 
             hasContent: function() { return true; }
         });
@@ -89,10 +88,4 @@ describe('Controller: ActivationKeyDetailsInfoController', function() {
         $scope.clearRole();
         expect($scope.activationKey['purpose_role']).toBe('');
     });
-
-    it('should clear addOns', function() {
-        $scope.clearAddOns();
-        expect($scope.activationKey['purpose_addons']).toEqual([]);
-    });
-
 });

@@ -93,18 +93,6 @@
           on-delete="clearRole()"
           on-save="save(activationKey)">
       </dd>
-
-      <dt translate>Add ons</dt>
-      <dd bst-edit-multiselect="activationKey.purpose_addons"
-          readonly="denied('edit_activation_keys', activationKey) || purposeAddonsCount === 0"
-          options="purposeAddons()"
-          formatter="arrayToString"
-          deletable="true"
-          on-delete="clearAddOns()"
-          selector="activationKey.purpose_addons"
-          on-save="savePurposeAddons(activationKey)">
-      </dd>
-
     </dl>
   </div>
 

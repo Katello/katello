@@ -4,5 +4,4 @@ export default {
   support_level: __('Service Level (SLA)'),
   usage: __('Usage Type'),
   roles: __('Roles'),
-  addons: __('Add ons'),
 };

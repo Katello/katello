@@ -28,8 +28,7 @@ describe('Controller: ContentHostDetailsController', function() {
           service_levels: ['Premium'],
           system_purposes: {
             roles: ['custom-role'],
-            usage: ['custom-usage'],
-            addons: ['custom-addon']
+            usage: ['custom-usage']
           }
         }
 
@@ -65,8 +64,7 @@ describe('Controller: ContentHostDetailsController', function() {
               autoheal: true,
               service_level: 'Premium',
               purpose_role: 'current-role',
-              purpose_usage: 'current-usage',
-              purpose_addons: ['current-addon']
+              purpose_usage: 'current-usage'
             },
 
             $update: function(success, error) {
@@ -135,27 +133,6 @@ describe('Controller: ContentHostDetailsController', function() {
                 }
             };
         });
-
-        it("sends purpose addons when they are set", function() {
-          spyOn($scope, 'save');
-          $scope.purposeAddonsList = [
-              {name: "Addon1", selected: true},
-              {name: "Addon2", selected: false},
-          ];
-          expectedHost['subscription_facet_attributes']['purpose_addons'] = ['Addon1'];
-
-          $scope.saveSubscriptionFacet(mockHost);
-
-          expect($scope.save).toHaveBeenCalledWith(expectedHost, true);
-        });
-
-        it ("doesn't send addons when they aren't set", function() {
-          spyOn($scope, 'save');
-
-          $scope.saveSubscriptionFacet(mockHost);
-
-          expect($scope.save).toHaveBeenCalledWith(expectedHost, true);
-        });
     });
 
     it("sets the menu expander on the scope", function() {
@@ -186,16 +163,6 @@ describe('Controller: ContentHostDetailsController', function() {
         $scope.purposeUsages().then(function(usages) {
             expect(usages.sort()).toEqual(['Production', 'Development/Test', 'Disaster Recovery',
                 'custom-usage', 'current-usage'].sort());
-        });
-        $httpBackend.flush();
-    });
-
-    it("provides a list of system purpose addons", function() {
-        $scope.purposeAddons().then(function(addons) {
-            expect(addons).toEqual([
-                {name: 'custom-addon', selected: false},
-                {name: 'current-addon', selected: true},
-             ]);
         });
         $httpBackend.flush();
     });

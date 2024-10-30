@@ -12,9 +12,6 @@ module Katello
       has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy, :inverse_of => :subscription_facet
       has_many :activation_keys, :through => :subscription_facet_activation_keys, :class_name => "Katello::ActivationKey"
 
-      has_many :subscription_facet_purpose_addons, :class_name => "Katello::SubscriptionFacetPurposeAddon", :dependent => :destroy, :inverse_of => :subscription_facet
-      has_many :purpose_addons, :class_name => "Katello::PurposeAddon", :through => :subscription_facet_purpose_addons
-
       has_many :subscription_facet_pools, :class_name => "Katello::SubscriptionFacetPool", :dependent => :delete_all, :inverse_of => :subscription_facet
       has_many :pools, :through => :subscription_facet_pools, :class_name => "Katello::Pool"
 
@@ -27,9 +24,7 @@ module Katello
 
       DEFAULT_TYPE = 'system'.freeze
 
-      accepts_nested_attributes_for :installed_products, :purpose_addons
-
-      dirty_has_many_associations :purpose_addons
+      accepts_nested_attributes_for :installed_products
 
       attr_accessor :facts
 
@@ -63,9 +58,6 @@ module Katello
         self.update_installed_products(consumer_params['installedProducts']) if consumer_params.key?('installedProducts')
         self.purpose_role = consumer_params['role'] unless consumer_params['role'].nil?
         self.purpose_usage = consumer_params['usage'] unless consumer_params['usage'].nil?
-        unless consumer_params['addOns'].nil?
-          self.purpose_addon_ids = consumer_params['addOns'].map { |addon_name| ::Katello::PurposeAddon.find_or_create_by(name: addon_name).id }
-        end
 
         unless consumer_params['releaseVer'].nil?
           release = consumer_params['releaseVer']
@@ -141,7 +133,6 @@ module Katello
           :autoheal => autoheal,
           :usage => purpose_usage,
           :role => purpose_role,
-          :addOns => purpose_addons.pluck(:name),
           :serviceLevel => service_level,
           :releaseVer => release_version,
           :environments => self.candlepin_environments,
@@ -283,7 +274,7 @@ module Katello
       end
 
       def backend_update_needed?
-        %w(release_version service_level autoheal purpose_role purpose_usage purpose_addon_ids).each do |method|
+        %w(release_version service_level autoheal purpose_role purpose_usage).each do |method|
           if self.send("#{method}_changed?")
             Rails.logger.debug("backend_update_needed: subscription facet #{method} changed")
             return true

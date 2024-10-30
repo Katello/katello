@@ -8,7 +8,6 @@ module Actions
         param :release_version
         param :purpose_role
         param :purpose_usage
-        param :purpse_addons
       end
 
       def run
@@ -18,8 +17,7 @@ module Actions
                                                                                   input[:service_level],
                                                                                   input[:release_version],
                                                                                   input[:purpose_role],
-                                                                                  input[:purpose_usage],
-                                                                                  input[:purpose_addons])
+                                                                                  input[:purpose_usage])
       end
     end
   end

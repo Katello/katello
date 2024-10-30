@@ -298,16 +298,6 @@ module Katello
       assert subscription_facet.backend_update_needed?
     end
 
-    def test_backend_update_needed_purpose_addons?
-      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
-      subscription_facet = host.subscription_facet
-      host.content_facet.cves_changed = false
-      refute host.subscription_facet.backend_update_needed?
-
-      subscription_facet.purpose_addon_ids = [katello_purpose_addons(:addon).id]
-      assert host.subscription_facet.backend_update_needed?
-    end
-
     def test_host_update_with_overridden_dmi_uuid
       ::Setting[:host_dmi_uuid_duplicates] = ['duplicate-dmi-uuid']
       params = {facts: {'dmi.system.uuid' => 'duplicate-dmi-uuid'}}.with_indifferent_access

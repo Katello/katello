@@ -10,8 +10,7 @@ module Actions
                                   service_level: params[:service_level],
                                   release_version: activation_key.release_version,
                                   purpose_role: activation_key.purpose_role,
-                                  purpose_usage: activation_key.purpose_usage,
-                                  purpose_addons: activation_key.purpose_addons.pluck(:name))
+                                  purpose_usage: activation_key.purpose_usage)
           cp_id = cp_create.output[:response][:id]
           action_subject(activation_key, :cp_id => cp_id)
           plan_self

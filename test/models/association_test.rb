@@ -67,7 +67,7 @@ module Katello
         "Katello::SmartProxySyncHistory",
         "Katello::SubscriptionFacetActivationKey",
         "Katello::SubscriptionFacetInstalledProduct",
-        "Katello::SubscriptionFacetPurposeAddon",
+        "Katello::SubscriptionFacetInstalledProduct",
       ]
     end
 

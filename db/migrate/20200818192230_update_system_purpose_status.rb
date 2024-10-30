@@ -2,7 +2,6 @@ class UpdateSystemPurposeStatus < ActiveRecord::Migration[6.0]
   def change
     purpose_types = [
       "Katello::PurposeStatus",
-      "Katello::PurposeAddonsStatus",
       "Katello::PurposeRoleStatus",
       "Katello::PurposeSlaStatus",
       "Katello::PurposeUsageStatus",

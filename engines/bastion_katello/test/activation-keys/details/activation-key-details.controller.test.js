@@ -23,8 +23,7 @@ describe('Controller: ActivationKeyDetailsController', function() {
             id: '1',
             system_purposes: {
                 roles: ['custom-role'],
-                usage: ['custom-usage'],
-                addons: ['custom-addon']
+                usage: ['custom-usage']
             }
         }
 
@@ -43,7 +42,6 @@ describe('Controller: ActivationKeyDetailsController', function() {
             environment: mockEnvironment,
             purpose_usage: 'current-usage',
             purpose_role: 'current-role',
-            purpose_addons: ['current-addon'],
             $update: function (success, error) {
                 if (mockActivationKey.failed) {
                     error({data: {error: {full_messages: ['error!']}}});
@@ -108,16 +106,6 @@ describe('Controller: ActivationKeyDetailsController', function() {
         $scope.purposeUsages().then(function(usages) {
             expect(usages.sort()).toEqual(['Production', 'Development/Test', 'Disaster Recovery',
                 'custom-usage', 'current-usage'].sort());
-        });
-        $httpBackend.flush();
-    });
-
-    it("provides a list of system purpose addons", function() {
-        $scope.purposeAddons().then(function(addons) {
-            expect(addons).toEqual([
-                {name: 'custom-addon', selected: false},
-                {name: 'current-addon', selected: true},
-            ]);
         });
         $httpBackend.flush();
     });

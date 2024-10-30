@@ -2,7 +2,6 @@ module Katello
   module FixturesSupport
     FIXTURE_CLASSES = {
       :katello_activation_keys => Katello::ActivationKey,
-      :katello_activation_key_purpose_addons => Katello::ActivationKeyPurposeAddon,
       :katello_alternate_content_sources => Katello::AlternateContentSource,
       :katello_cdn_configurations => Katello::CdnConfiguration,
       :katello_contents => Katello::Content,
@@ -31,7 +30,6 @@ module Katello
       :katello_pool_products => Katello::PoolProduct,
       :katello_product_contents => Katello::ProductContent,
       :katello_providers => Katello::Provider,
-      :katello_purpose_addons => Katello::PurposeAddon,
       :katello_root_repositories => Katello::RootRepository,
       :katello_repositories => Katello::Repository,
       :katello_sync_plans => Katello::SyncPlan,

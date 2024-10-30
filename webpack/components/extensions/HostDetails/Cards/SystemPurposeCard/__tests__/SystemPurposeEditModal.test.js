@@ -22,7 +22,6 @@ const baseHostDetails = {
     edit_hosts: true,
   },
   subscription_facet_attributes: {
-    purpose_addons: ['Addon1', 'Addon2'],
     purpose_role: 'Red Hat Enterprise Linux Server',
     purpose_usage: 'Production',
     service_level: 'Premium',
@@ -85,8 +84,6 @@ describe('SystemPurposeEditModal', () => {
     expect(getByText('Red Hat Enterprise Linux Server')).toBeInTheDocument();
     expect(getByText('Production')).toBeInTheDocument();
     expect(getByText('Premium')).toBeInTheDocument();
-    expect(getByText('Addon1')).toBeInTheDocument();
-    expect(getByText('Addon2')).toBeInTheDocument();
     expect(getByText('8')).toBeInTheDocument();
 
     assertNockRequest(orgScope);
@@ -136,7 +133,6 @@ describe('SystemPurposeEditModal', () => {
             // we're going to change role from 'Server' to 'Workstation'
             purpose_role: 'Red Hat Enterprise Linux Workstation',
             purpose_usage: 'Production',
-            purpose_addons: ['Addon1', 'Addon2'],
             release_version: '8',
             service_level: 'Premium',
           },
@@ -191,7 +187,6 @@ describe('SystemPurposeEditModal', () => {
           autoheal: true,
           purpose_role: 'Red Hat Enterprise Linux Workstation',
           purpose_usage: 'Production',
-          purpose_addons: ['Addon1', 'Addon2'],
           release_version: '8',
           service_level: 'Premium',
         },

@@ -117,11 +117,6 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
             $scope.save($scope.activationKey);
         };
 
-        $scope.clearAddOns = function () {
-            $scope.activationKey['purpose_addons'] = [];
-            $scope.save($scope.activationKey);
-        };
-
         $scope.contentViews = function () {
             var deferred = $q.defer();
 

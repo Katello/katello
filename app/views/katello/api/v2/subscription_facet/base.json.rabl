@@ -3,7 +3,3 @@ attributes :id, :uuid, :last_checkin, :service_level, :release_version, :autohea
 child :user => :user do
   attributes :id, :login
 end
-
-node :purpose_addons do |sub|
-  sub.purpose_addons.pluck(:name)
-end

@@ -247,7 +247,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
 
   def test_create_with_permitted_attributes
     cf_attrs = {:content_view_id => @content_view.id, :lifecycle_environment_id => @environment.id}
-    sf_attrs = {:purpose_addons => ["Addon"]}
+    sf_attrs = {:purpose_role => "MyRole"}
     attrs = @host.clone.attributes.merge("name" => "contenthost.example.com", "content_facet_attributes" => cf_attrs, "subscription_facet_attributes" => sf_attrs).compact!
 
     assert_difference('Host.unscoped.count') do
@@ -266,19 +266,5 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     post :create, params: attrs
     assert_response :success # the uuid is simply filtered out which allows the host to be still saved
     refute Katello::Host::ContentFacet.where(:uuid => cf_attrs[:uuid]).exists?
-  end
-
-  def test_create_purpose_addons
-    sf_attrs = {:purpose_addons => ["Addon", katello_purpose_addons(:addon).name]}
-    attrs = @host.clone.attributes.merge("name" => "host", "subscription_facet_attributes" => sf_attrs)
-
-    post :create, params: attrs
-
-    host_id = JSON.parse(response.body)["id"]
-    host = Host.find(host_id)
-    addon_names = host.subscription_facet.purpose_addons.pluck(:name)
-
-    assert_equal addon_names.sort, sf_attrs[:purpose_addons].sort
-    assert_response :success
   end
 end

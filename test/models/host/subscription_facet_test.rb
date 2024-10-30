@@ -31,11 +31,6 @@ module Katello
   end
 
   class SubscriptionFacetSystemPurposeTest < SubscriptionFacetBase
-    def test_update_addons
-      host.subscription_facet.purpose_addons << katello_purpose_addons(:addon)
-      assert_valid host.subscription_facet
-    end
-
     def test_search_role
       subscription_facet.update(purpose_role: 'satellite')
       assert_includes ::Host.search_for("role = satellite"), host
@@ -54,11 +49,6 @@ module Katello
       refute_equal 0, host.subscription_facet.convert2rhel_through_foreman
     end
 
-    def test_search_addon
-      host.subscription_facet.purpose_addons << katello_purpose_addons(:addon)
-      assert_includes ::Host.search_for("addon = \"Test Addon\""), host
-    end
-
     def test_search_usage
       subscription_facet.update(purpose_usage: 'disaster recovery')
       assert_includes ::Host.search_for('usage = "disaster recovery"'), host
@@ -69,7 +59,7 @@ module Katello
       Katello::Resources::Candlepin::Consumer.stubs(:virtual_host).returns(nil)
 
       # set intial values
-      params = { role: 'satellite', usage: 'DR', addOns: ["Test1", "Test2"] }
+      params = { role: 'satellite', usage: 'DR' }
       subscription_facet.update_from_consumer_attributes(params.with_indifferent_access)
 
       # purpose attributes are preserved when not sent to us
@@ -77,14 +67,12 @@ module Katello
 
       assert_equal params[:role], subscription_facet.purpose_role
       assert_equal params[:usage], subscription_facet.purpose_usage
-      assert_equal params[:addOns], subscription_facet.purpose_addons.pluck(:name)
 
       # purpose attributes can be cleared
-      subscription_facet.update_from_consumer_attributes({role: '', usage: '', addOns: []}.with_indifferent_access)
+      subscription_facet.update_from_consumer_attributes({role: '', usage: ''}.with_indifferent_access)
 
       assert_empty subscription_facet.purpose_role
       assert_empty subscription_facet.purpose_usage
-      assert_empty subscription_facet.purpose_addons
     end
   end
 

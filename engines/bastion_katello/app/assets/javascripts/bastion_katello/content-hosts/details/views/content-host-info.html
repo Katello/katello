@@ -130,18 +130,6 @@
             on-delete="clearRole()"
             on-save="saveSubscriptionFacet(host)">
         </dd>
-
-        <dt translate>Add ons</dt>
-        <dd bst-edit-multiselect="host.subscription_facet_attributes.purpose_addons"
-            readonly="denied('edit_hosts', host) || purposeAddonsCount === 0"
-            formatter="arrayToString"
-            deletable="true"
-            on-delete="clearAddOns()"
-            selector="host.subscription_facet_attributes.purpose_addons"
-            options="purposeAddons()"
-            on-save="saveSubscriptionFacet(host)">
-        </dd>
-
       </dl>
 
       <div class="divider"></div>

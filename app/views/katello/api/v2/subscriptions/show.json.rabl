@@ -5,7 +5,7 @@ extends "katello/api/v2/subscriptions/base"
 attributes :arch
 attributes :description
 attributes :support_type
-attributes :roles, :usage, :addons
+attributes :roles, :usage
 attributes :product_host_count
 
 node(:host_count) do |subscription|

@@ -17,14 +17,13 @@ class Actions::Candlepin::ActivationKey::CreateTest < ActiveSupport::TestCase
                              service_level: 'Self-Support',
                              release_version: '7Server',
                              purpose_role: "role",
-                             purpose_usage: "usage",
-                             purpose_addons: ["Test"]
+                             purpose_usage: "usage"
                             )
     end
 
     it 'runs' do
       ::Katello::Util::Model.stubs(:uuid).returns(123)
-      ::Katello::Resources::Candlepin::ActivationKey.expects(:create).with(123, nil, true, "Self-Support", "7Server", "role", "usage", ["Test"])
+      ::Katello::Resources::Candlepin::ActivationKey.expects(:create).with(123, nil, true, "Self-Support", "7Server", "role", "usage")
       run_action planned_action
     end
   end
@@ -42,11 +41,11 @@ class Actions::Candlepin::ActivationKey::UpdateTest < ActiveSupport::TestCase
     let(:action_class) { ::Actions::Candlepin::ActivationKey::Update }
 
     let(:planned_action) do
-      create_and_plan_action(action_class, cp_id: "foo", :release_version => 1, :service_level => "Premium", :auto_attach => true, :purpose_role => "test role", :purpose_usage => "test usage", :purpose_addons => ["test1"])
+      create_and_plan_action(action_class, cp_id: "foo", :release_version => 1, :service_level => "Premium", :auto_attach => true, :purpose_role => "test role", :purpose_usage => "test usage")
     end
 
     it 'runs' do
-      ::Katello::Resources::Candlepin::ActivationKey.expects(:update).with("foo", 1, "Premium", true, "test role", "test usage", ["test1"])
+      ::Katello::Resources::Candlepin::ActivationKey.expects(:update).with("foo", 1, "Premium", true, "test role", "test usage")
       run_action planned_action
     end
   end

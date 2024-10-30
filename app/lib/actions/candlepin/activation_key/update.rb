@@ -9,7 +9,6 @@ module Actions
           param :auto_attach
           param :purpose_role
           param :purpose_usage
-          param :purpose_addons
         end
 
         def run
@@ -19,8 +18,7 @@ module Actions
                                                                 input[:service_level],
                                                                 input[:auto_attach],
                                                                 input[:purpose_role],
-                                                                input[:purpose_usage],
-                                                                input[:purpose_addons])
+                                                                input[:purpose_usage])
         end
       end
     end

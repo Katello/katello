@@ -109,11 +109,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             $scope.saveSubscriptionFacet($scope.host);
         };
 
-        $scope.clearAddOns = function () {
-            $scope.host.subscription_facet_attributes['purpose_addons'] = [];
-            $scope.saveSubscriptionFacet($scope.host);
-        };
-
         $scope.clearServiceLevel = function () {
             $scope.host.subscription_facet_attributes['service_level'] = '';
             $scope.saveSubscriptionFacet($scope.host);
