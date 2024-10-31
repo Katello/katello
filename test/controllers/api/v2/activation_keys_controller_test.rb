@@ -227,6 +227,27 @@ module Katello
       assert_template 'katello/api/v2/common/create'
     end
 
+    def test_create_from_angularjs_with_environments_param
+      cve = katello_content_view_environments(:library_default_view_environment)
+      cve.update(organization: @organization)
+      content_view_environments = ['library_default_view_library']
+      ActivationKey.any_instance.expects(:reload)
+      assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
+        assert_equal content_view_environments, activation_key.content_view_environments.map(&:label), [cve.label]
+        assert_valid activation_key
+      end
+
+      post :create, params: {
+        :organization_id => @organization.id,
+        :environment => {:id => @library.id},
+        :content_view_id => @acme_view.id,
+        :activation_key => {:name => 'new key'}
+      }
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+    end
+
     def test_create_with_content_view_environment_ids_param
       cve = katello_content_view_environments(:library_dev_view_library)
       cve.update(organization: @organization)
