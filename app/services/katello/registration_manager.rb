@@ -154,13 +154,18 @@ module Katello
         end
       end
 
+      # rubocop:disable Metrics/MethodLength
       def register_host(host, consumer_params, content_view_environments, activation_keys = [])
         new_host = host.new_record?
         unless new_host
           host.save!
           # Keep the kickstart repository ID so the host's Medium isn't unset
           # Important for registering a host during provisioning
-          unregister_host(host, :unregistering => true, :keep_kickstart_repository => true)
+          begin
+            unregister_host(host, :unregistering => true, :keep_kickstart_repository => true)
+          rescue RestClient::Gone
+            Rails.logger.debug("Host %s has been removed in preparation for reregistration" % host&.name)
+          end
           host.reload
         end
 
@@ -194,6 +199,7 @@ module Katello
           finalize_registration(host)
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def check_registration_services
         ping_results = {}
