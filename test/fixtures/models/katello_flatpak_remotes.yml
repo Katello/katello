@@ -1,0 +1,16 @@
+redhat_flatpak_remote:
+  name: Red Hat Flatpak Remote
+  url: "https://flatpaks.redhat.io/rhel/"
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  seeded: true
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+fedora_flatpak_remote:
+  name: Fedora Flatpak Remote
+  url: "https://flatpaks.fedoraproject.org/"
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  seeded: true
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+

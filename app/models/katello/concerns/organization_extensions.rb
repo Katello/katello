@@ -33,7 +33,7 @@ module Katello
         has_many :product_contents, :through => :products
         has_many :repositories, :through => :products
         has_one :cdn_configuration, :class_name => "Katello::CdnConfiguration", :dependent => :destroy, :inverse_of => :organization
-
+        has_many :flatpak_remotes, :class_name => "Katello::FlatpakRemote", :dependent => :destroy, :inverse_of => :organization
         #older association
         has_many :org_tasks, :dependent => :destroy, :class_name => "Katello::TaskStatus", :inverse_of => :organization
 

@@ -74,8 +74,6 @@ module FixtureTestCase
       taxonomy['label'] = taxonomy['name'].tr(' ', '_')
     end
     File.write(taxonomies_file, taxonomies.to_yaml)
-
-    set_fixture_class katello_generic_content_units: Katello::GenericContentUnit
     fixtures(:all)
 
     load_permissions
