@@ -32,6 +32,8 @@ child :content_view_environments => :content_view_environments do
   end
 end
 
+attributes :content_view_environment_labels
+
 node :multi_content_view_environment do |content_facet|
   content_facet.multi_content_view_environment?
 end
