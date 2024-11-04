@@ -1,3 +1,35 @@
+# 4.14.1 Gold Road (2024-11-04)
+
+## Features
+
+### Web UI
+ * Send events on angular translation load ([#37858](https://projects.theforeman.org/issues/37858), [f5510e9a](https://github.com/Katello/katello.git/commit/f5510e9a91ba0ced64f95aad7937f158437303e9))
+
+## Bug Fixes
+
+### Subscriptions
+ * Unable to change the system purpose for the hypervisor. ([#37899](https://projects.theforeman.org/issues/37899), [86764854](https://github.com/Katello/katello.git/commit/867648548b65d7fa918dc12dc64a7daa53110778))
+ * Subscriptions page can retrieve stale manifest expiration date in certain situations ([#37832](https://projects.theforeman.org/issues/37832), [e0f354dd](https://github.com/Katello/katello.git/commit/e0f354dd704f556439932aa897cfefd48259ede7))
+  * "Manage Manifest" modal links to access.redhat.com ([#37889](https://projects.theforeman.org/issues/37889), [75399148](https://github.com/Katello/katello.git/commit/753991489457b11d7dfb929caa7bee0291269386))
+ * Unable to add subscription to the empty manifest ([#37876](https://projects.theforeman.org/issues/37876), [eba327d9](https://github.com/Katello/katello.git/commit/eba327d93dae1fcf7de8dfd1d93579a08523db57))
+
+### Content Views
+ * Content View publish from different pages gives inconsistent warning message ([#37886](https://projects.theforeman.org/issues/37886), [0851e1e0](https://github.com/Katello/katello.git/commit/0851e1e0402e3bf5ddaeb48c44a729ef5d560d00))
+  * Handle empty CVE in InfoProvider content_view_info ([#37779](https://projects.theforeman.org/issues/37779), [eddaf06b](https://github.com/Katello/katello.git/commit/eddaf06bdbfb90f8540b38a4d4cf587e606b9a88))
+
+### Repositories
+ * Org deletion fails if there are container repositories present ([#37863](https://projects.theforeman.org/issues/37863), [c2cabf9e](https://github.com/Katello/katello.git/commit/c2cabf9e7f839b19f5d844eefc041b25303512da))
+ * Update recommend repositories for RHEL 7 on Satellite GUI and add new client tools repo ([#37840](https://projects.theforeman.org/issues/37840), [8c01c7cd](https://github.com/Katello/katello.git/commit/8c01c7cd046510f1f0db4ef060a435159b254577))
+ * Active Only checkbox on Sync Status page does not work ([#37827](https://projects.theforeman.org/issues/37827), [1fd6f0ac](https://github.com/Katello/katello.git/commit/1fd6f0acd1077733ec4f6de82a5ab782141bb719))
+ * Creating a repository with duplicate name fails with confusing error ([#37822](https://projects.theforeman.org/issues/37822), [9456160c](https://github.com/Katello/katello.git/commit/9456160c9f8d4ec055664cfcfb8a945a0df34a4d))
+
+### Web UI
+ * Managing errata from content hosts page disturbs Satellite web page alignment ([#37845](https://projects.theforeman.org/issues/37845), [b2405590](https://github.com/Katello/katello.git/commit/b240559003f7038babc84e88a529d2328e895ad2))
+
+### Hosts
+ * Package profile is not updated when overriding reposet to enabled ([#37831](https://projects.theforeman.org/issues/37831), [ec142095](https://github.com/Katello/katello.git/commit/ec14209530cc385397bc1dfaa845603676482f37))
+ * Hammer host update false positive when assigning multiple environments ([#37772](https://projects.theforeman.org/issues/37772), [31b5c98b](https://github.com/Katello/katello.git/commit/31b5c98ba80fbe8ae8e13eb902529fe6dc81bf6a))
+
 # 4.14.0 Gold Road (2024-09-17)
 
 ## Features
