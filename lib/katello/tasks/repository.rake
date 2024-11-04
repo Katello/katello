@@ -71,10 +71,11 @@ namespace :katello do
     end
   end
 
-  desc "Re-import all container manifests to populate labels and annotations."
+  desc "Re-import all container manifests and lists to populate labels and annotations."
   task :import_container_manifest_labels => ["dynflow:client", "check_ping"] do
     User.current = User.anonymous_api_admin
     handle_manifest_label_updates
+    handle_manifest_list_label_updates
   end
 
   def lookup_repositories
@@ -114,20 +115,29 @@ namespace :katello do
     end
   end
 
-  def handle_manifest_label_updates
+  def handle_manifest_updates(model_class)
     batch_size = 1000
-    Katello::DockerManifest.
-      where(schema_version: 2).
-      where(annotations: {}, labels: {}).
-      where(is_bootable: false, is_flatpak: false).
-      find_in_batches(batch_size: batch_size) do |group|
+    content_type = model_class::CONTENT_TYPE
+    model_class.
+     where(schema_version: 2).
+     where(annotations: {}, labels: {}).
+     where(is_bootable: false, is_flatpak: false).
+     find_in_batches(batch_size: batch_size) do |group|
       manifest_unit_ids = group.pluck(:pulp_id)
       index_service = Katello::ContentUnitIndexer.new(
-        content_type: Katello::RepositoryTypeManager.find_content_type("docker_manifest"),
-        pulp_content_ids: manifest_unit_ids
+       content_type: Katello::RepositoryTypeManager.find_content_type(content_type),
+       pulp_content_ids: manifest_unit_ids
       )
       index_service.reimport_units
     end
+  end
+
+  def handle_manifest_label_updates
+    handle_manifest_updates(Katello::DockerManifest)
+  end
+
+  def handle_manifest_list_label_updates
+    handle_manifest_updates(Katello::DockerManifestList)
   end
 
   def handle_missing_root_repo(root_repo)
