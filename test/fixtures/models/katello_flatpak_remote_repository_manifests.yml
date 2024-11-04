@@ -1,0 +1,35 @@
+rhel9_runtime_manifest:
+  name: runtime
+  flatpak_remote_repository_id: <%= ActiveRecord::FixtureSet.identify(:rhel9_flatpak_runtime) %>
+  digest: "sha256:661b328e7e3b8108948b8712f81fc9ee496c0bf3998a8d68c8a3ca25becb3844"
+  tags:
+    - "latest"
+    - "el9-9040020240312160503.1726696165"
+    - "el9"
+  application: false
+  runtime: runtime/com.redhat.Platform/x86_64/el9
+  flatpak_ref: runtime/com.redhat.Platform/x86_64/el9
+
+rhel9_firefox_manifest_x86_84:
+  name: firefox
+  flatpak_remote_repository_id: <%= ActiveRecord::FixtureSet.identify(:rhel9_firefox_flatpak) %>
+  digest: "sha256:1a9e49a6360bf87c3aaa5efb7b8479ddc220e5e963f8c625556cd359d3396560"
+  tags:
+    - "flatpak"
+    - "latest"
+    - "flatpak-9040020240611093110.1728578272"
+  application: true
+  runtime: runtime/com.redhat.Platform/x86_64/el9
+  flatpak_ref: app/org.mozilla.Firefox/x86_64/stable
+
+rhel9_firefox_manifest_s390x:
+  name: firefox
+  flatpak_remote_repository_id: <%= ActiveRecord::FixtureSet.identify(:rhel9_firefox_flatpak) %>
+  digest: "sha256:5ad3e3aaab201f1b6e684a638d931459b1e911c11596eeea86aac5edb24c58e7"
+  tags:
+    - "flatpak"
+    - "latest"
+    - "flatpak-9000020220822143207.1"
+  application: true
+  runtime: runtime/com.redhat.Platform/s390x/el9
+  flatpak_ref: app/org.mozilla.Firefox/s390x/stable

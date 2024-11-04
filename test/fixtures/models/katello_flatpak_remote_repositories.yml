@@ -1,0 +1,28 @@
+rhel9_flatpak_runtime:
+  name: "rhel9/flatpak-runtime"
+  label: "Redhat flatpak-rhel9/flatpak-runtime"
+  flatpak_remote_id: <%= ActiveRecord::FixtureSet.identify(:redhat_flatpak_remote) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+f41_flatpak_runtime:
+  name: "f41/flatpak-runtime"
+  label: "Fedora flatpak-f41/flatpak-runtime"
+  flatpak_remote_id: <%= ActiveRecord::FixtureSet.identify(:fedora_flatpak_remote) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+rhel9_firefox_flatpak:
+  name: "rhel9/firefox-flatpak"
+  label: "Redhat flatpak-rhel9/firefox-flatpak"
+  flatpak_remote_id: <%= ActiveRecord::FixtureSet.identify(:redhat_flatpak_remote) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+firefox:
+  name: firefox
+  label: "Fedora flatpak-firefox"
+  flatpak_remote_id: <%= ActiveRecord::FixtureSet.identify(:fedora_flatpak_remote) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
