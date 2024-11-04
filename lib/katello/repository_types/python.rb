@@ -28,6 +28,9 @@ Katello::RepositoryTypeManager.register('python') do
   generic_remote_option :package_types, title: N_("Package Types"), type: Array, input_type: "text", delimiter: ",", default: [],
                         description: N_("Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg, bdist_dumb, bdist_egg, bdist_msi, bdist_rpm, bdist_wheel, bdist_wininst, sdist.")
 
+  generic_remote_option :keep_latest_packages, title: N_("Keep latest packages"), type: :number, input_type: "number", default: 0,
+                        description: N_("The amount of latest versions of a package to keep on sync, includes pre-releases if synced. Default 0 keeps all versions.")
+
   url_description N_("URL of a PyPI content source such as https://pypi.org.")
 
   generic_content_type 'python_package',
