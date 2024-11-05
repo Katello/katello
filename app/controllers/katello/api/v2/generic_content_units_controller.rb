@@ -2,7 +2,8 @@ module Katello
   class Api::V2::GenericContentUnitsController < Api::V2::ApiController
     resource_description do
       name 'Content Units'
-      param :content_type, String, desc: N_("Possible values: #{Katello::RepositoryTypeManager.generic_content_types.join(", ")}"), required: true
+      param :content_type, lambda { |val| Katello::RepositoryTypeManager.generic_content_types.include?(val) },
+            desc: N_("Possible values: %s") % Katello::RepositoryTypeManager.generic_content_types.join(", "), required: true
     end
     apipie_concern_subst(:a_resource => N_("a content unit"), :resource_id => "content_units")
 
