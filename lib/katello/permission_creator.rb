@@ -16,6 +16,7 @@ module Katello
       subscription_permissions
       sync_plan_permissions
       alternate_content_source_permissions
+      flatpak_remote_permissions
       user_permissions
     end
 
@@ -448,6 +449,51 @@ module Katello
                            'katello/api/v2/content_export_incrementals' => [:library, :version, :repository],
                          },
                          :resource_type => 'Organization'
+    end
+
+    def flatpak_remote_permissions
+      @plugin.permission :view_flatpak_remotes,
+                         {
+                           'katello/api/v2/flatpak_remotes' => [:index, :show, :auto_complete_search]
+                         },
+                         :resource_type => 'Katello::FlatpakRemote',
+                         :finder_scope => :readable
+      @plugin.permission :create_flatpak_remotes,
+                         {
+                           'katello/api/v2/flatpak_remotes' => [:create]
+                         },
+                         :resource_type => 'Katello::FlatpakRemote',
+                         :finder_scope => :creatable
+      @plugin.permission :edit_flatpak_remotes,
+                         {
+                           'katello/api/v2/flatpak_remotes' => [:update, :scan]
+                         },
+                         :resource_type => 'Katello::FlatpakRemote',
+                         :finder_scope => :editable
+      @plugin.permission :destroy_flatpak_remotes,
+                         {
+                           'katello/api/v2/flatpak_remotes' => [:destroy]
+                         },
+                         :resource_type => 'Katello::FlatpakRemote',
+                         :finder_scope => :deletable
+    end
+
+    def flatpak_remote_repository_permissions
+      @plugin.permission :view_flatpak_remote_repositories,
+                          {
+                            'katello/api/v2/flatpak_remote_repositories' => [:index, :show, :auto_complete_search]
+                          },
+                          :resource_type => 'Katello::FlatpakRemoteRepository',
+                          :finder_scope => :readable
+    end
+
+    def flatpak_remote_repository_manifest_permissions
+      @plugin.permission :view_flatpak_remote_repository_manifests,
+                          {
+                            'katello/api/v2/flatpak_remote_repository_manifests' => [:index, :show, :auto_complete_search]
+                          },
+                          :resource_type => 'Katello::FlatpakRemoteRepositoryManifest',
+                          :finder_scope => :readable
     end
   end
 end
