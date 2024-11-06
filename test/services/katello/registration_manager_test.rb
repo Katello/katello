@@ -279,6 +279,16 @@ module Katello
         ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
       end
 
+      def test_force_registration_existing_host
+        ::Host::Managed.any_instance.expects(:update_candlepin_associations).times(1)
+        ::Katello::RegistrationManager.expects(:unregister_host).raises(RestClient::Gone)
+        ::Katello::RegistrationManager.expects(:create_in_candlepin)
+        ::Katello::RegistrationManager.expects(:finalize_registration)
+        Rails.logger.expects(:debug).with("Host #{@host.name} has been removed in preparation for reregistration")
+        Rails.logger.expects(:debug).with("ContentFacet: Marking CVEs changed for host #{@host.name}").times(1)
+        ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
+      end
+
       def test_unregister_host
         ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
