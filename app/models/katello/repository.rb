@@ -556,9 +556,9 @@ module Katello
         view = self.content_view.label
         product = self.product.label
         env = cve.label.split('/').first
-        "#{org}-#{env.downcase}-#{view}-#{product}-#{self.root.label}"
+        "#{org}/#{env.downcase}/#{view}/#{product}/#{self.root.label}"
       else
-        "#{org}-#{self.content_view.label}-#{self.content_view_version.version}-#{self.root.product.label}-#{self.root.label}"
+        "#{org}/#{self.content_view.label}/#{self.content_view_version.version}/#{self.root.product.label}/#{self.root.label}"
       end
     end
 
@@ -936,9 +936,9 @@ module Katello
       # the container provided. Branches numbered as ordered below.
       #
       # 1 - Render promotion pattern (or env pattern if no promo pattern)
-      # 2 - <org label>-<product label>-<repo label>
-      # 3 - <org label>-<env label>-<cv label>-<product label>-<repo label>
-      # 4 - <org label>-<cv label>-<cvv label>-<product label>-<repo label>
+      # 2 - <org label>/<product label>/<repo label>
+      # 3 - <org label>/<env label>/<cv label>/<product label>/<repo label>
+      # 4 - <org label>/<cv label>/<cvv label>/<product label>/<repo label>
       is_pattern_provided = pattern.present?
       env_exists = repository.environment.present?
       is_env_pattern_provided = env_exists && repository.environment.registry_name_pattern.present?
@@ -967,7 +967,7 @@ module Katello
       else
         items = [repository.organization.label, repository.content_view.label, repository.content_view_version.version, repository.product.label, repository.label]
       end
-      Repository.clean_container_name(items.compact.join("-"))
+      Repository.clean_container_name(items.compact.join("/"))
     end
 
     def self.clean_container_name(name)

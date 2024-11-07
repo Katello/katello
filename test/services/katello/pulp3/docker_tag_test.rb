@@ -51,7 +51,8 @@ module Katello
         # https://projects.theforeman.org/issues/35709
         # Tests indexing repositories with manifests that use the application/vnd.oci.image.index.v1+json media type.
         def test_index_with_oci_tagged_manifest
-          @repo.root.update(url: 'https://quay.io', docker_upstream_name: 'ansible/ansible-runner')
+          @repo.root.update(url: 'https://quay.io', docker_upstream_name: 'ansible/ansible-runner',
+                            include_tags: ['latest'], download_policy: 'on_demand')
           Katello::DockerTag.destroy_all
           sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
           ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)

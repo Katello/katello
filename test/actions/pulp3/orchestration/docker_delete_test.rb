@@ -9,6 +9,7 @@ module ::Actions::Pulp3
       @repo = katello_repositories(:busybox)
       ensure_creatable(@repo, @primary)
       create_repo(@repo, @primary)
+      @repo.root.update(include_tags: ['latest'])
       ForemanTasks.sync_task(
         ::Actions::Katello::Repository::MetadataGenerate, @repo)
 
