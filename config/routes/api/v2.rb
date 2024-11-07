@@ -20,6 +20,14 @@ Katello::Engine.routes.draw do
           member do
             post :scan
           end
+          api_resources :flatpak_remote_repositories, :only => [:index, :show]
+        end
+
+        api_resources :flatpak_remote_repositories, :only => [:index, :show] do
+          get :auto_complete_search, :on => :collection
+          member do
+            post :mirror
+          end
         end
 
         api_resources :capsules, :only => [:index, :show] do

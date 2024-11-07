@@ -2,7 +2,7 @@ module Katello
   class Api::V2::FlatpakRemotesController < Katello::Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_authorized_katello_resource, :except => [:index, :create, :scan, :auto_complete_search]
+    before_action :find_authorized_katello_resource, :except => [:index, :create, :auto_complete_search]
     before_action :find_optional_organization, :only => [:index, :auto_complete_search]
 
     resource_description do
@@ -34,7 +34,7 @@ module Katello
       remotes
     end
 
-    api :GET, "/flatpak_remotes/:id", N_("Show a content view")
+    api :GET, "/flatpak_remotes/:id", N_("Show a flatpak remote")
     param :id, :number, :desc => N_("Flatpak remote numeric identifier"), :required => true
     def show
       respond :resource => @flatpak_remote
@@ -47,6 +47,7 @@ module Katello
     param_group :flatpak_remote
     def create
       flatpak_remote = FlatpakRemote.new(flatpak_remote_params)
+      flatpak_remote.save!
       respond_for_create(resource: flatpak_remote)
     end
 
@@ -57,6 +58,7 @@ module Katello
     param :url, String, :desc => N_("url")
     def update
       @flatpak_remote.update!(flatpak_remote_params)
+      respond_for_show(:resource => @flatpak_remote)
     end
 
     api :DELETE, "/flatpak_remotes/:id", N_("Delete a flatpak remote")

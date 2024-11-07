@@ -17,5 +17,6 @@ module Katello
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :url, :complete_value => true
     scoped_search :on => :seeded, :complete_value => true
+    scoped_search :on => :registry_url, :complete_value => true
   end
 end
