@@ -418,10 +418,10 @@ module Katello
 
       # ensure that all containers are stored with the proper auto-generated names
       [version1, version2].each do |version|
-        name = "#{@dev.organization.name.downcase.sub!(" ", "_")}-"\
-          "#{version.content_view.label.downcase}-"\
-          "#{version.content_view.content_view_versions[0].version.sub!(".", "_")}-"\
-          "#{version.repositories[0].product.label.downcase}-"\
+        name = "#{@dev.organization.name.downcase.sub!(" ", "_")}/"\
+          "#{version.content_view.label.downcase}/"\
+          "#{version.content_view.content_view_versions[0].version.sub!(".", "_")}/"\
+          "#{version.repositories[0].product.label.downcase}/"\
           "#{version.repositories[0].name.downcase.sub!(" ", "_")}"
         assert_equal name, version.repositories[0].container_repository_name
       end

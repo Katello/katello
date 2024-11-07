@@ -363,14 +363,14 @@ module Katello
       repo = katello_repositories(:busybox)
       repo.set_container_repository_name
 
-      assert_equal 'empty_organization-puppet_product-busybox', repo.container_repository_name
+      assert_equal 'empty_organization/puppet_product/busybox', repo.container_repository_name
     end
 
     def test_set_container_repository_name_cv
       repo = katello_repositories(:busybox_view1)
       repo.set_container_repository_name
 
-      assert_equal 'empty_organization-published_library_view-1_0-puppet_product-busybox', repo.container_repository_name
+      assert_equal 'empty_organization/published_library_view/1_0/puppet_product/busybox', repo.container_repository_name
     end
 
     def test_set_container_repository_name_special_chars
@@ -379,26 +379,26 @@ module Katello
       #name should not end in underscore
       repo.root.label = "test_"
       repo.set_container_repository_name
-      assert_equal 'empty_organization-puppet_product-test', repo.container_repository_name
+      assert_equal 'empty_organization/puppet_product/test', repo.container_repository_name
 
       #replace more than 2 consecutive underscores.
       repo.root.label = 'te___st'
       repo.container_repository_name = nil
       repo.set_container_repository_name
-      assert_equal 'empty_organization-puppet_product-te_st', repo.container_repository_name
+      assert_equal 'empty_organization/puppet_product/te_st', repo.container_repository_name
 
       #replace more than 2 consecutive underscores with a single underscore iff it is not in the start or end of name.
       # Note that -_ is not allowed in the name either.
       repo.root.label = '_____tep______st_____'
       repo.container_repository_name = nil
       repo.set_container_repository_name
-      assert_equal 'empty_organization-puppet_producttep_st', repo.container_repository_name
+      assert_equal 'empty_organization/puppet_product/_tep_st', repo.container_repository_name
 
       #'-_' is not allowed in the name.
       repo.root.label = '-______test____'
       repo.container_repository_name = nil
       repo.set_container_repository_name
-      assert_equal 'empty_organization-puppet_product-test', repo.container_repository_name
+      assert_equal 'empty_organization/puppet_product/test', repo.container_repository_name
     end
 
     def test_container_repository_name_pattern
@@ -408,7 +408,7 @@ module Katello
         ['test', '<%= repository.label %>', 'test'],
         ['test', '<%= organization.label %> <%= repository.label %>', 'empty_organization_test'],
         ['test', ' <%= organization.label %>   <%= repository.label %> ', 'empty_organization_test'],
-        ['test', '', 'empty_organization-puppet_product-test'],
+        ['test', '', 'empty_organization/puppet_product/test'],
       ]
 
       labels.each do |label, pattern, result|
@@ -668,10 +668,10 @@ module Katello
                     :root => Katello::RootRepository.new(:label => 'dockeruser_repo', :product => @fedora_17_x86_64.product)
                    )
 
-      assert_equal "empty_organization-org_default_label-1.0-fedora_label-dockeruser_repo", @repo.generate_docker_repo_path
+      assert_equal "empty_organization/org_default_label/1.0/fedora_label/dockeruser_repo", @repo.generate_docker_repo_path
 
       @repo.environment = @repo.organization.library
-      assert_equal "empty_organization-library_default_view_library-org_default_label-#{@repo.product.label}-dockeruser_repo", @repo.generate_docker_repo_path
+      assert_equal "empty_organization/library_default_view_library/org_default_label/#{@repo.product.label}/dockeruser_repo", @repo.generate_docker_repo_path
     end
 
     def test_generate_repo_path_for_component

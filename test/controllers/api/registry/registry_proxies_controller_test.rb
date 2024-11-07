@@ -274,8 +274,8 @@ module Katello
         body = JSON.parse(response.body)
         assert_equal(body['repositories'].compact.sort,
                      ["busybox",
-                      "empty_organization-dev_label-published_dev_view-puppet_product-busybox",
-                      "#{org.label.downcase}-puppet_product-busybox"])
+                      "empty_organization/dev_label/published_dev_view/puppet_product/busybox",
+                      "#{org.label.downcase}-puppet_product-busybox"].sort)
       end
 
       it "shows only available images for unauthenticated requests" do
@@ -315,8 +315,8 @@ module Katello
         assert_equal(body,
                       "num_results" => 2,
                       "query" => "abc",
-                      "results" => [{ "name" => "#{org.label.downcase}-puppet_product-busybox", "description" => nil },
-                                    { "name" => "#{org.label.downcase}-published_library_view-1_0-puppet_product-busybox", "description" => nil }]
+                      "results" => [{ "name" => "#{org.label.downcase}/puppet_product/busybox", "description" => nil },
+                                    { "name" => "#{org.label.downcase}/published_library_view/1_0/puppet_product/busybox", "description" => nil }]
                     )
       end
 
@@ -342,7 +342,7 @@ module Katello
         assert_response 200
         body = JSON.parse(response.body)
         assert_equal 1, body["results"].length
-        assert_equal "#{repo.organization.label.downcase}-dev_label-published_dev_view-puppet_product-busybox", body["results"][0]["name"]
+        assert_equal "#{repo.organization.label.downcase}/dev_label/published_dev_view/puppet_product/busybox", body["results"][0]["name"]
       end
 
       it "show unauthenticated repositories for head requests" do
