@@ -15,6 +15,16 @@ module Katello
       ALL_TRACER_PACKAGE_NAMES = [ "python-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
                                    "python3-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
                                    HOST_TOOLS_TRACER_PACKAGE_NAME ].freeze
+      BOOTC_FIELD_FACT_NAMES = [
+        "bootc.booted.image",
+        "bootc.booted.digest",
+        "bootc.staged.image",
+        "bootc.staged.digest",
+        "bootc.rollback.image",
+        "bootc.rollback.digest",
+        "bootc.available.image",
+        "bootc.available.digest"
+      ].freeze
 
       belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :inverse_of => :kickstart_content_facets
       belongs_to :content_source, :class_name => "::SmartProxy", :inverse_of => :content_facets
@@ -306,6 +316,21 @@ module Katello
           where(content_facet_id: content_facets, erratum_id: errata)
 
         Katello::Host::ContentFacet.where(id: non_installable_errata)
+      end
+
+      def self.populate_fields_from_facts(host, parser, _type, _source_proxy)
+        return unless host.content_facet.present?
+        facet = host.content_facet || host.build_content_facet
+        attrs_to_add = {}
+        BOOTC_FIELD_FACT_NAMES.each do |fact_name|
+          fact_value = parser.facts[fact_name]
+          next if fact_value.blank?
+          field_name = fact_name.gsub(".", "_")
+
+          attrs_to_add[field_name] = fact_value
+        end
+        facet.assign_attributes(attrs_to_add)
+        facet.save unless facet.new_record?
       end
 
       def self.with_applicable_errata(errata)
