@@ -534,10 +534,16 @@ module Katello
           versions_by_name_arch = {}
           if versions.present?
             JSON.parse(versions).each do |nvra|
-              nvra =~ /([^.]*)-[-.\w]*\.(\w+)/
-              versions_by_name_arch[[Regexp.last_match(1), Regexp.last_match(2)]] = nvra
+              package_info = ::Katello::Util::Package.parse_nvrea(nvra)
+              versions_by_name_arch[[package_info[:name], package_info[:arch]]] = nvra
             end
           end
+
+          # > versions_by_name_arch
+          # =>
+          # {["glibc-langpack-en", "x86_64"]=>"glibc-langpack-en-2.34-100.el9_4.2.x86_64",
+          #  ["crypto-policies", "noarch"]=>"crypto-policies-20221215-1.git9a18988.el9_2.1.noarch"}
+
           pkg_name_archs = installed_packages.search_for(search).distinct.pluck(:name, :arch)
           if pkg_name_archs.empty?
             fail _("Cannot upgrade packages: No installed packages found for search term '%s'.") % search
