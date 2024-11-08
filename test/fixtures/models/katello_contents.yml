@@ -6,6 +6,30 @@ deb_content:
   content_url:  /custom/Debian_12/Debian_12_amd64_main/?comp=main&rel=bookworm
   content_type: "deb"
 
+deb_content_v1:
+  name:         debian
+  label:        debian
+  cp_content_id: 111
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  content_url:  /custom/Debian_12/Debian_12_amd64_main/?comp=main&rel=bookworm
+  content_type: "deb"
+
+deb_content_v2:
+  name:         debian
+  label:        debian
+  cp_content_id: 112
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  content_url:  /custom/Debian_12/Debian_12_amd64_main/?comp=main&rel=bookworm
+  content_type: "deb"
+
+deb_content_v3:
+  name:         debian
+  label:        debian
+  cp_content_id: 113
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  content_url:  /custom/Debian_12/Debian_10_amd64_main/?comp=main&rel=buster
+  content_type: "deb"
+
 some_content:
   name:         Fedora
   cp_content_id: 1

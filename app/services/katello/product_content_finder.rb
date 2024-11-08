@@ -26,7 +26,8 @@ module Katello
       structured_apt_roots = roots.where(:content_id => nil)
       if structured_apt_roots.any?
         deb_repos_query = Katello::Repository.where(root: structured_apt_roots)
-        deb_repos = match_environment ? deb_repos_query.where(content_view_version: versions, environment: consumable.environment) : deb_repos_query.where(:library_instance_id => nil)
+        environment = consumable.respond_to?(:environment) ? consumable.environment : consumable.content_view_environments.select(:environment_id).map(&:environment_id)
+        deb_repos = match_environment ? deb_repos_query.where(content_view_version: versions, environment: environment) : deb_repos_query.where(:library_instance_id => nil)
         content_ids += deb_repos.pluck(:content_id)
       end
 
