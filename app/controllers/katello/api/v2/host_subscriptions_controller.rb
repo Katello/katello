@@ -186,7 +186,7 @@ module Katello
         validate_content_overrides_enabled(override_params)
       end
       sync_task(::Actions::Katello::Host::UpdateContentOverrides, @host, content_override_values, false)
-      fetch_product_content
+      fetch_product_content(!params.dig(:content_overrides_search, :search).nil? && Foreman::Cast.to_bool(params.dig(:content_overrides_search, :limit_to_env)))
     end
 
     api :GET, "/hosts/:host_id/subscriptions/available_release_versions", N_("Show releases available for the content host")
@@ -205,8 +205,8 @@ module Katello
 
     private
 
-    def fetch_product_content
-      content_finder = ProductContentFinder.new(:consumable => @host.subscription_facet)
+    def fetch_product_content(limit_to_env = false)
+      content_finder = ProductContentFinder.new(:match_environment => limit_to_env, :consumable => @host.subscription_facet)
       content = content_finder.presenter_with_overrides(@host.subscription_facet.candlepin_consumer.content_overrides)
       respond_with_template_collection("index", 'repository_sets', :collection => full_result_response(content))
     end
