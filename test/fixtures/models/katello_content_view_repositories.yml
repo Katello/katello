@@ -6,6 +6,10 @@ library_view_debian_10_amd64:
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view) %>
   repository_id:   <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64) %>
 
+library_view_acme_debian_10_amd64:
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
+  repository_id:   <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64_dev) %>
+
 library_view_rhel_6_x86_64:
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
   repository_id:   <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>

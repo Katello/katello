@@ -15,6 +15,7 @@ debian_9_amd64:
 debian_10_amd64:
   root_id:              <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64_root) %>
   pulp_id:              Debian_10
+  content_id:           110
   relative_path:        'ACME_Corporation/library/debian_10_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
@@ -36,6 +37,7 @@ debian_10_dev_library_view:
   library_instance:     debian_10_amd64
   root_id:              <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64_root) %>
   pulp_id:              debian_10_dev_library_view
+  content_id:           112
   relative_path:        'ACME_Corporation/dev/debian_10_library_library_view_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
@@ -44,6 +46,7 @@ debian_10_amd64_dev:
   library_instance:     debian_10_amd64
   root_id:              <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64_root) %>
   pulp_id:              12
+  content_id:           111
   relative_path:        'ACME_Corporation/dev/debian_10_dev_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
@@ -309,6 +312,15 @@ busybox_view2:
   relative_path:        'ACME_Corporation/library/busybox'
   environment_id:
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
+
+debian_10_amd64_composite_view_version_1:
+  library_instance:     debian_10_amd64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64_root) %>
+  pulp_id:              8_deb_composite_version1
+  content_id:           113
+  relative_path:        'ACME_Corporation/library/composite/debian_10_label'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
 
 rhel_6_x86_64_composite_view_version_1:
   library_instance:     rhel_6_x86_64

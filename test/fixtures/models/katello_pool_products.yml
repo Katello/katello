@@ -6,6 +6,10 @@ basic_redhat:
     pool_id: <%= ActiveRecord::FixtureSet.identify(:pool_one) %>
     product_id: <%= ActiveRecord::FixtureSet.identify(:redhat) %>
 
+basic_debian:
+    pool_id: <%= ActiveRecord::FixtureSet.identify(:pool_one) %>
+    product_id: <%= ActiveRecord::FixtureSet.identify(:debian) %>
+
 other_sub_fedora:
     pool_id: <%= ActiveRecord::FixtureSet.identify(:pool_two) %>
     product_id: <%= ActiveRecord::FixtureSet.identify(:fedora) %>
