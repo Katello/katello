@@ -303,6 +303,31 @@ module Katello
       assert_equal(label, result[0][:content_label])
     end
 
+    def test_find_content_overrides_with_inverse_search_limited_to_environment_with_structured_apt
+      # Create Host with "deb" as content
+      content_view = katello_content_views(:library_dev_view)
+      library = katello_environments(:library)
+      activation_key = katello_activation_keys(:library_dev_staging_view_key)
+      host_collection = katello_host_collections(:simple_host_collection)
+      activation_key.host_collections << host_collection
+
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => content_view,
+                                :lifecycle_environment => library, :organization => content_view.organization)
+
+      # Create fake product with content_id and stub ProductContentFinder
+      content = katello_contents(:deb_content_v1)
+      pc = [FactoryBot.build(:katello_product_content, content: content)]
+      ProductContentFinder.any_instance.stubs(:product_content).returns(pc)
+
+      controller = ::Katello::Api::V2::HostSubscriptionsController.new
+      controller.params = { :host_id => host.id, :content_overrides_search => { :search => "cp_content_id !^ (#{content.cp_content_id})", :limit_to_env => true} }
+      controller.instance_variable_set(:@host, host)
+      controller.send(:find_content_overrides)
+
+      result = controller.instance_variable_get(:@content_overrides)
+      assert_equal(0, result.length)
+    end
+
     def test_content_override_bulk
       content_overrides = [{:content_label => 'some-content', :value => 1}]
       expected_content_labels = content_overrides.map { |co| co[:content_label] }
