@@ -236,6 +236,7 @@ module ::Actions::Katello::Repository
     let(:published_repository) { katello_repositories(:rhel_6_x86_64) }
     let(:published_fedora_repository) { katello_repositories(:fedora_17_x86_64) }
     let(:simplified_acs) { katello_alternate_content_sources(:yum_alternate_content_source) }
+    let(:published_rhel7_repository) { katello_repositories(:rhel_7_no_arch) }
     def setup
       simplified_acs.products << published_repository.product
       ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id)
@@ -378,22 +379,24 @@ module ::Actions::Katello::Repository
       assert_not_equal(0, simplified_acs.products.length)
     end
 
-    it 'plans ACS product removal when removing the deleting the last repo with URL' do
-      ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: published_repository.id)
+    it 'plans ACS product removal when deleting the last repo with URL' do
+      ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: published_rhel7_repository.id)
       action = create_action action_class
-      action.stubs(:action_subject).with(published_repository)
+      action.stubs(:action_subject).with(published_rhel7_repository)
 
       # manually remove the URLs from all repos in product except repository
-      repository.product.repositories.each do |repo|
-        repo.root.url = nil unless repo.id == repository.id
+      testing_repo = repository.product.repositories[4]
+      testing_repo.product.repositories.each do |repo|
+        repo.root.url = nil unless repo.id == testing_repo.id || repo.root.id == testing_repo.root.id
+        repo.root.save!(validate: false)
       end
-      url_sum = repository.product.repositories.count do |repo|
+      url_sum = testing_repo.product.repositories.count do |repo|
         repo.root.url.present?
       end
       assert_equal(1, url_sum) # double check there's only one URL left
 
       # Since there is only one URL remaining, the product should be removed
-      plan_action action, published_repository, remove_from_content_view_versions: true
+      plan_action action, published_rhel7_repository, remove_from_content_view_versions: true
       simplified_acs.reload
       assert_equal(0, simplified_acs.products.length)
     end
