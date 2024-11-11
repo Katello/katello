@@ -82,11 +82,7 @@ module Actions
           # Remove products from ACS's that contain no repositories which both
           # match the ACS content type and have a non-nil URL
           product = repository.product
-          repo_content_types = Set.new
-          product.acs_compatible_repositories.each do |test_repo|
-            # we need to check id because test_repo will still contain the old, non-nil url
-            repo_content_types.add(test_repo.content_type) if (repository.id != test_repo.id) && test_repo.url.present?
-          end
+          repo_content_types = ::Katello::RootRepository.where(:id => product.repositories.where.not(:id => repository.id).select(:root_id)).where.not(:url => [nil, '']).distinct.pluck(:content_type)
           ::Katello::AlternateContentSource.with_products(product).each do |acs|
             unless repo_content_types.include?(acs.content_type)
               acs.products = acs.products - [product]
