@@ -19,8 +19,8 @@ module Katello
     api :GET, "/environments/:environment_id/activation_keys"
     api :GET, "/organizations/:organization_id/activation_keys"
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
-    param :environment_id, :number, :desc => N_("environment identifier")
-    param :content_view_id, :number, :desc => N_("content view identifier")
+    param :environment_id, :number, :desc => N_("environment identifier"), :allow_nil => true
+    param :content_view_id, :number, :desc => N_("content view identifier"), :allow_nil => true
     param :name, String, :desc => N_("activation key name to filter by")
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(ActivationKey)
