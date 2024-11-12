@@ -23,7 +23,7 @@ module Katello
         "bootc.rollback.image",
         "bootc.rollback.digest",
         "bootc.available.image",
-        "bootc.available.digest"
+        "bootc.available.digest",
       ].freeze
 
       belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :inverse_of => :kickstart_content_facets
@@ -320,21 +320,23 @@ module Katello
       end
 
       def self.populate_fields_from_facts(host, parser, _type, _source_proxy)
-        return unless host.content_facet.present?
+        return if host.content_facet.blank?
         facet = host.content_facet || host.build_content_facet
         attrs_to_add = {}
         BOOTC_FIELD_FACT_NAMES.each do |fact_name|
           fact_value = parser.facts[fact_name]
-          next if fact_value.blank?
-          field_name = fact_name.gsub(".", "_")
-
-          attrs_to_add[field_name] = fact_value
+          field_name = fact_name.tr(".", "_")
+          attrs_to_add[field_name] = fact_value # overwrite with nil if fact is not present
         end
         if attrs_to_add['bootc_booted_digest'].present?
           manifest_entity = find_manifest_entity(digest: attrs_to_add['bootc_booted_digest'])
           if manifest_entity.present?
             attrs_to_add['manifest_entity_type'] = manifest_entity.model_name.name
             attrs_to_add['manifest_entity_id'] = manifest_entity.id
+          else
+            # remove the association if the manifest entity is not found
+            attrs_to_add['manifest_entity_type'] = nil
+            attrs_to_add['manifest_entity_id'] = nil
           end
         end
         facet.assign_attributes(attrs_to_add)
