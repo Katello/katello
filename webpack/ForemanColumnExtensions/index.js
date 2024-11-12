@@ -5,9 +5,19 @@ import {
   SecurityIcon,
   EnhancementIcon,
   PackageIcon,
+  CheckIcon,
 } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
-import { Flex, FlexItem, Popover, Badge } from '@patternfly/react-core';
+import {
+  Flex,
+  FlexItem,
+  Popover,
+  Badge,
+  DescriptionList,
+  DescriptionListGroup,
+  DescriptionListDescription as Dd,
+  DescriptionListTerm as Dt,
+} from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import RelativeDateTime from 'foremanReact/components/common/dates/RelativeDateTime';
 import { ContentViewEnvironmentDisplay } from '../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
@@ -22,6 +32,47 @@ const hostsIndexColumnExtensions = [
       return rhelLifecycle || '—';
     },
     weight: 2000,
+    isSorted: true,
+  },
+  {
+    columnName: 'bootc_booted_image',
+    title: __('Image mode'),
+    wrapper: (hostDetails) => {
+      const imageMode = hostDetails?.content_facet_attributes?.bootc_booted_image;
+      const digest = hostDetails?.content_facet_attributes?.bootc_booted_digest;
+      return (
+        <Flex>
+          {imageMode ?
+            <Popover
+              id="image-mode-tooltip"
+              className="image-mode-tooltip"
+              maxWidth="74rem"
+              headerContent={hostDetails.display_name}
+              bodyContent={
+                <Flex direction={{ default: 'column' }}>
+                  <DescriptionList isHorizontal>
+                    <DescriptionListGroup>
+                      <Dt>{__('Booted image')}</Dt>
+                      <Dd>{hostDetails.content_facet_attributes.bootc_booted_image}</Dd>
+                    </DescriptionListGroup>
+                    <DescriptionListGroup>
+                      <Dt>{__('Digest')}</Dt>
+                      <Dd>{digest}</Dd>
+                    </DescriptionListGroup>
+                  </DescriptionList>
+                </Flex>
+              }
+            >
+              <FlexItem>
+                <CheckIcon />
+              </FlexItem>
+            </Popover>
+            : '—'
+          }
+        </Flex>
+      );
+    },
+    weight: 2050,
     isSorted: true,
   },
   {

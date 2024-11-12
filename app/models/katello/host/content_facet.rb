@@ -28,6 +28,7 @@ module Katello
 
       belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :inverse_of => :kickstart_content_facets
       belongs_to :content_source, :class_name => "::SmartProxy", :inverse_of => :content_facets
+      belongs_to :manifest_entity, :polymorphic => true, :optional => true, :inverse_of => :content_facets
 
       has_many :content_view_environment_content_facets, :class_name => "Katello::ContentViewEnvironmentContentFacet", :dependent => :destroy, :inverse_of => :content_facet
       has_many :content_view_environments, :through => :content_view_environment_content_facets,
@@ -329,8 +330,19 @@ module Katello
 
           attrs_to_add[field_name] = fact_value
         end
+        if attrs_to_add['bootc_booted_digest'].present?
+          manifest_entity = find_manifest_entity(digest: attrs_to_add['bootc_booted_digest'])
+          if manifest_entity.present?
+            attrs_to_add['manifest_entity_type'] = manifest_entity.model_name.name
+            attrs_to_add['manifest_entity_id'] = manifest_entity.id
+          end
+        end
         facet.assign_attributes(attrs_to_add)
         facet.save unless facet.new_record?
+      end
+
+      def self.find_manifest_entity(digest:)
+        ::Katello::DockerManifestList.find_by(digest: digest) || ::Katello::DockerManifest.find_by(digest: digest)
       end
 
       def self.with_applicable_errata(errata)
