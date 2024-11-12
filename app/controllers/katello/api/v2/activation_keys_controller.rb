@@ -28,8 +28,8 @@ module Katello
       param :purpose_addons, Array, :desc => N_("Sets the system add-ons")
 
       param :environment, Hash, :desc => N_("Hash containing the Id of the single lifecycle environment to be associated with the activation key."), deprecated: true
-      param :content_view_id, Integer, :desc => N_("Id of the single content view to be associated with the activation key.")
-      param :environment_id, Integer, :desc => N_("Id of the single lifecycle environment to be associated with the activation key.")
+      param :content_view_id, Integer, :desc => N_("Id of the single content view to be associated with the activation key."), :allow_nil => true
+      param :environment_id, Integer, :desc => N_("Id of the single lifecycle environment to be associated with the activation key."), :allow_nil => true
       param :content_view_environments, Array, :desc => N_("Comma-separated list of content view environment labels to be associated with the activation key,"\
                                               " in the format of 'lifecycle_environment_label/content_view_label'."\
                                               " Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified."\
