@@ -6,8 +6,8 @@ module Katello
     has_many :docker_manifest_list_manifests, :class_name => "Katello::DockerManifestListManifest",
              :dependent => :delete_all, :inverse_of => :docker_manifest_list
     has_many :docker_manifests, :through => :docker_manifest_list_manifests, :inverse_of => :docker_manifest_lists
-    has_many :content_facets, :as => :manifest_entity, :dependent => :nullify
-    has_many :hosts, :class_name => "::Host::Managed", :through => :content_facets, :inverse_of => :docker_manifest_lists
+    has_many :content_facets, :class_name => "::Katello::Host::ContentFacet", :as => :manifest_entity, :dependent => :nullify
+    has_many :hosts, :class_name => "::Host::Managed", :through => :content_facets, :inverse_of => :docker_manifest_list
 
     CONTENT_TYPE = "docker_manifest_list".freeze
 
