@@ -5,7 +5,6 @@ import {
   SecurityIcon,
   EnhancementIcon,
   PackageIcon,
-  CheckIcon,
 } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 import {
@@ -22,21 +21,12 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import RelativeDateTime from 'foremanReact/components/common/dates/RelativeDateTime';
 import { ContentViewEnvironmentDisplay } from '../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 import { truncate } from '../utils/helpers';
+import RepoIcon from '../scenes/ContentViews/Details/Repositories/RepoIcon';
 
 const hostsIndexColumnExtensions = [
   {
-    columnName: 'rhel_lifecycle_status',
-    title: __('RHEL Lifecycle status'),
-    wrapper: (hostDetails) => {
-      const rhelLifecycle = hostDetails?.rhel_lifecycle_status_label;
-      return rhelLifecycle || '—';
-    },
-    weight: 2000,
-    isSorted: true,
-  },
-  {
     columnName: 'bootc_booted_image',
-    title: __('Image mode'),
+    title: <RepoIcon type="docker" customTooltip={__('Image mode / package mode')} />,
     wrapper: (hostDetails) => {
       const imageMode = hostDetails?.content_facet_attributes?.bootc_booted_image;
       const digest = hostDetails?.content_facet_attributes?.bootc_booted_digest;
@@ -64,15 +54,25 @@ const hostsIndexColumnExtensions = [
               }
             >
               <FlexItem>
-                <CheckIcon />
+                <RepoIcon type="docker" customTooltip={__('Image mode')} />
               </FlexItem>
             </Popover>
-            : '—'
+            : <span style={{ color: 'gray' }}><RepoIcon type="yum" customTooltip={__('Package mode')} /></span>
           }
         </Flex>
       );
     },
-    weight: 2050,
+    weight: 35, // between power status (0) and name (50)
+    isSorted: true,
+  },
+  {
+    columnName: 'rhel_lifecycle_status',
+    title: __('RHEL Lifecycle status'),
+    wrapper: (hostDetails) => {
+      const rhelLifecycle = hostDetails?.rhel_lifecycle_status_label;
+      return rhelLifecycle || '—';
+    },
+    weight: 2000,
     isSorted: true,
   },
   {
