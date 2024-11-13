@@ -23,7 +23,7 @@ module Katello
     SKIPABLE_METADATA_TYPES = [Repository::YUM_TYPE, Repository::DEB_TYPE].freeze
 
     CONTENT_ATTRIBUTE_RESTRICTIONS = {
-      :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE, Repository::DOCKER_TYPE],
+      :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE, Repository::DOCKER_TYPE, Repository::FILE_TYPE],
     }.freeze
 
     MAX_EXPIRE_TIME = 7 * 24 * 60 * 60
@@ -216,12 +216,6 @@ module Katello
 
     def self.hosts_with_applicability
       ::Host.joins(:content_facet => :bound_repositories).where("#{Katello::Repository.table_name}.root_id" => self.select(:id))
-    end
-
-    def ensure_no_download_policy
-      if !yum? && download_policy.present?
-        errors.add(:download_policy, _("cannot be set for non-yum repositories."))
-      end
     end
 
     def ensure_no_checksum_on_demand
