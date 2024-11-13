@@ -30,7 +30,6 @@ const recommendedRepositoriesSatTools = [
   'satellite-client-6-for-rhel-9-x86_64-rpms',
   'satellite-client-6-for-rhel-8-x86_64-rpms',
   'rhel-7-server-els-satellite-client-6-rpms',
-  'rhel-7-server-els-satellite-6-client-2-rpms',
 ];
 
 const recommendedRepositoriesMisc = [
