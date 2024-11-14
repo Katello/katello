@@ -19,6 +19,7 @@ import ErrataOverviewCard from './components/extensions/HostDetails/Cards/Errata
 import InstalledProductsCard from './components/extensions/HostDetails/DetailsTabCards/InstalledProductsCard';
 import RegistrationCard from './components/extensions/HostDetails/DetailsTabCards/RegistrationCard';
 import HwPropertiesCard from './components/extensions/HostDetails/DetailsTabCards/HwPropertiesCard';
+import ImageModeCard from './components/extensions/HostDetails/DetailsTabCards/ImageModeCard';
 
 import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js';
 import extendReducer from './components/extensions/reducers';
@@ -71,6 +72,8 @@ addGlobalFill('recent-communication-card-item', 'Recent communication', <RecentC
 // Details tab cards & card extensions
 addGlobalFill('host-tab-details-cards', 'Installed products', <InstalledProductsCard key="installed-products" />, 100);
 addGlobalFill('host-tab-details-cards', 'Registration details', <RegistrationCard key="registration-details" />, 200);
+addGlobalFill('host-tab-details-cards', 'HW properties', <HwPropertiesCard key="hw-properties" />, 200);
+addGlobalFill('host-tab-details-cards', 'Image mode details', <ImageModeCard key="image-mode-details" />, 3000);
 addGlobalFill('host-details-tab-properties-1', 'Subscription UUID', <SystemPropertiesCardSubscription key="subscription-uuid" />);
 addGlobalFill('host-details-tab-properties-2', 'Tracer', <SystemPropertiesCardTracer key="tracer-status" />);
 addGlobalFill('host-details-tab-properties-3', 'Virtualization', <SystemPropertiesCardVirtualization key="virtualization" />);
@@ -89,7 +92,6 @@ addGlobalFill(
   100,
 );
 
-addGlobalFill('host-tab-details-cards', 'HW properties', <HwPropertiesCard key="hw-properties" />, 200);
 
 // Hosts Index page extensions
 addGlobalFill('_all-hosts-modals', 'BulkChangeHostCVModal', <BulkChangeHostCVModal key="bulk-change-host-cv-modal" />, 100);
