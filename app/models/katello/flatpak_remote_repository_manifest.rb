@@ -6,5 +6,9 @@ module Katello
                inverse_of: :remote_repository_manifests
     validates :flatpak_remote_repository_id, presence: true
     validates :name, presence: true
+
+    def runtime_dependency
+      FlatpakRemoteRepositoryManifest.where(flatpak_ref: self.runtime)
+    end
   end
 end

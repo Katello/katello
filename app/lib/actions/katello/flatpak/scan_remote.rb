@@ -5,25 +5,16 @@ module Actions
     module Flatpak
       class ScanRemote < Actions::EntryAction
         def plan(remote, _args = {})
-          url = format_url(remote.url)
-          plan_self({:remote_id => remote.id, :url => url})
+          plan_self({:remote_id => remote.id, :url => format_url(remote.url)})
         end
 
         def run
           remote = ::Katello::FlatpakRemote.find(input[:remote_id])
-          url = input[:url]
-          request_params = {
-            method: :get,
-            headers: { accept: :json },
-            url: url,
-          }
-          results = RestClient::Request.execute(request_params)
-          results = JSON.parse(results)
+          results = fetch_results(input[:url])
+          remote.update!(registry_url: results['Registry']) unless remote.registry_url
           repositories = results['Results']
           repositories.each do |repository|
             remote_repository = remote.remote_repositories.find_or_initialize_by(name: repository['Name'])
-            remote_repository.label = remote.name + '-' + repository['Name']
-            remote_repository.flatpak_remote = remote
             remote_repository.save!
             repository['Images'].each do |image|
               remote_repository_manifest = remote_repository.manifests.find_or_initialize_by(digest: image['Digest'])
@@ -38,7 +29,21 @@ module Actions
           end
         end
 
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
+        end
+
         private
+
+        def fetch_results(url)
+          request_params = {
+            method: :get,
+            headers: { accept: :json },
+            url: url,
+          }
+          response = RestClient::Request.execute(request_params)
+          JSON.parse(response)
+        end
 
         def extract_runtime_from_metadata(metadata)
           match = metadata.match(/^runtime=(.*)$/)
