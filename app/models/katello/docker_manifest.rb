@@ -16,7 +16,7 @@ module Katello
     scoped_search :on => :digest, :rename => :digest, :complete_value => true, :only_explicit => true
     scoped_search :on => :schema_version, :rename => :schema_version, :complete_value => true, :only_explicit => true
     scoped_search :relation => :docker_manifest_lists, :on => :digest, :rename => :manifest_list_digest, :complete_value => true, :only_explicit => true
-    scoped_search :on => :is_bootable, :rename => :bootable, :complete_value => { true => true, false => false }, :only_explicit => true
+    scoped_search :on => :is_bootable, :rename => :bootable, :complete_value => true, :only_explicit => true
 
     def self.default_sort
       order(:schema_version)
