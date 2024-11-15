@@ -98,6 +98,9 @@ module Katello
         has_many :content_views, through: :content_view_environments
         has_many :lifecycle_environments, through: :content_view_environments
 
+        has_one :docker_manifest, through: :content_facet, source: :manifest_entity, source_type: 'Katello::DockerManifest'
+        has_one :docker_manifest_list, through: :content_facet, source: :manifest_entity, source_type: 'Katello::DockerManifestList'
+
         has_many :host_installed_packages, :class_name => "::Katello::HostInstalledPackage", :foreign_key => :host_id, :dependent => :delete_all
         has_many :installed_packages, :class_name => "::Katello::InstalledPackage", :through => :host_installed_packages
 

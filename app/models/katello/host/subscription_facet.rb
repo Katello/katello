@@ -302,10 +302,11 @@ module Katello
         return unless host.subscription_facet || has_convert2rhel
         # Add in custom convert2rhel fact if system was converted using convert2rhel through Katello
         # We want the value nil unless the custom fact is present otherwise we get a 0 in the database which if debugging
-        # might make you think it was converted2rhel but not with satellite, that is why I have the tenary below.
+        # might make you think it was converted2rhel but not with satellite, that is why I have the ternary below.
         facet = host.subscription_facet || host.build_subscription_facet
         facet.attributes = {
           convert2rhel_through_foreman: has_convert2rhel ? ::Foreman::Cast.to_bool(parser.facts['conversions.env.CONVERT2RHEL_THROUGH_FOREMAN']) : nil,
+
         }.compact
         facet.save unless facet.new_record?
       end

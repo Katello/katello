@@ -7,13 +7,78 @@ import {
   PackageIcon,
 } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
-import { Flex, FlexItem, Popover, Badge } from '@patternfly/react-core';
+import {
+  Flex,
+  FlexItem,
+  Popover,
+  Badge,
+  DescriptionList,
+  DescriptionListGroup,
+  DescriptionListDescription as Dd,
+  DescriptionListTerm as Dt,
+  Text,
+  TextVariants,
+} from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import RelativeDateTime from 'foremanReact/components/common/dates/RelativeDateTime';
 import { ContentViewEnvironmentDisplay } from '../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 import { truncate } from '../utils/helpers';
+import RepoIcon from '../scenes/ContentViews/Details/Repositories/RepoIcon';
+import FontAwesomeImageModeIcon from '../components/extensions/Hosts/FontAwesomeImageModeIcon';
+import './index.scss';
 
 const hostsIndexColumnExtensions = [
+  {
+    columnName: 'bootc_booted_image',
+    title: (
+      <span id="image-mode-column-title-icon">
+        <FontAwesomeImageModeIcon title={__('Image mode / package mode')} />
+      </span>
+    ),
+    wrapper: (hostDetails) => {
+      const imageMode = hostDetails?.content_facet_attributes?.bootc_booted_image;
+      const digest = hostDetails?.content_facet_attributes?.bootc_booted_digest;
+      return (
+        <span className={imageMode ? 'image-mode-column-td-icon' : 'package-mode-column-td-icon'}>
+          {imageMode ?
+            <Popover
+              id="image-mode-tooltip"
+              className="image-mode-tooltip"
+              maxWidth="74rem"
+              headerContent={hostDetails.display_name}
+              bodyContent={
+                <Flex direction={{ default: 'column' }}>
+                  <FlexItem>
+                    <Flex direction={{ default: 'row' }} alignItems={{ default: 'alignItemsCenter' }}>
+                      <FlexItem>
+                        <FontAwesomeImageModeIcon />
+                      </FlexItem>
+                      <Text ouiaId="image-mode-popover-h4" component={TextVariants.h4}>{__('Image-mode host')}</Text>
+                    </Flex>
+                  </FlexItem>
+                  <DescriptionList isCompact isHorizontal>
+                    <DescriptionListGroup>
+                      <Dt>{__('Running image')}</Dt>
+                      <Dd>{hostDetails.content_facet_attributes.bootc_booted_image}</Dd>
+                    </DescriptionListGroup>
+                    <DescriptionListGroup>
+                      <Dt>{__('Digest')}</Dt>
+                      <Dd>{digest}</Dd>
+                    </DescriptionListGroup>
+                  </DescriptionList>
+                </Flex>
+              }
+            >
+              <FontAwesomeImageModeIcon title={__('Image mode')} />
+            </Popover>
+            : <span style={{ color: 'var(--pf-global--palette--black-600)' }}><RepoIcon type="yum" customTooltip={__('Package mode')} /></span>
+          }
+        </span>
+      );
+    },
+    weight: 35, // between power status (0) and name (50)
+    isSorted: true,
+  },
   {
     columnName: 'rhel_lifecycle_status',
     title: __('RHEL Lifecycle status'),

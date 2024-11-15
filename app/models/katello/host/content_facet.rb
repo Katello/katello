@@ -15,9 +15,20 @@ module Katello
       ALL_TRACER_PACKAGE_NAMES = [ "python-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
                                    "python3-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
                                    HOST_TOOLS_TRACER_PACKAGE_NAME ].freeze
+      BOOTC_FIELD_FACT_NAMES = [
+        "bootc.booted.image",
+        "bootc.booted.digest",
+        "bootc.staged.image",
+        "bootc.staged.digest",
+        "bootc.rollback.image",
+        "bootc.rollback.digest",
+        "bootc.available.image",
+        "bootc.available.digest",
+      ].freeze
 
       belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :inverse_of => :kickstart_content_facets
       belongs_to :content_source, :class_name => "::SmartProxy", :inverse_of => :content_facets
+      belongs_to :manifest_entity, :polymorphic => true, :optional => true, :inverse_of => :content_facets
 
       has_many :content_view_environment_content_facets, :class_name => "Katello::ContentViewEnvironmentContentFacet", :dependent => :destroy, :inverse_of => :content_facet
       has_many :content_view_environments, :through => :content_view_environment_content_facets,
@@ -306,6 +317,34 @@ module Katello
           where(content_facet_id: content_facets, erratum_id: errata)
 
         Katello::Host::ContentFacet.where(id: non_installable_errata)
+      end
+
+      def self.populate_fields_from_facts(host, parser, _type, _source_proxy)
+        return if host.content_facet.blank?
+        facet = host.content_facet || host.build_content_facet
+        attrs_to_add = {}
+        BOOTC_FIELD_FACT_NAMES.each do |fact_name|
+          fact_value = parser.facts[fact_name]
+          field_name = fact_name.tr(".", "_")
+          attrs_to_add[field_name] = fact_value # overwrite with nil if fact is not present
+        end
+        if attrs_to_add['bootc_booted_digest'].present?
+          manifest_entity = find_manifest_entity(digest: attrs_to_add['bootc_booted_digest'])
+          if manifest_entity.present?
+            attrs_to_add['manifest_entity_type'] = manifest_entity.model_name.name
+            attrs_to_add['manifest_entity_id'] = manifest_entity.id
+          else
+            # remove the association if the manifest entity is not found
+            attrs_to_add['manifest_entity_type'] = nil
+            attrs_to_add['manifest_entity_id'] = nil
+          end
+        end
+        facet.assign_attributes(attrs_to_add)
+        facet.save unless facet.new_record?
+      end
+
+      def self.find_manifest_entity(digest:)
+        ::Katello::DockerManifestList.find_by(digest: digest) || ::Katello::DockerManifest.find_by(digest: digest)
       end
 
       def self.with_applicable_errata(errata)
