@@ -94,7 +94,8 @@ module Katello
           if state
             hosts = ::Host::Managed.joins(:content_facet).select(:id).where.not("#{::Katello::Host::ContentFacet.table_name}.bootc_booted_image" => nil)
           else
-            hosts = ::Host::Managed.joins(:content_facet).select(:id).where("#{::Katello::Host::ContentFacet.table_name}.bootc_booted_image" => nil)
+            # left_outer_joins will include hosts without a content facet. We assume such hosts are package-mode hosts.
+            hosts = ::Host::Managed.left_outer_joins(:content_facet).select(:id).where("#{::Katello::Host::ContentFacet.table_name}.bootc_booted_image" => nil)
           end
           { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.to_sql})" }
         end
