@@ -48,7 +48,9 @@ module Actions
             if input[:content_unit_href]
               output[:content_unit_href] = input[:content_unit_href]
             elsif input[:artifact_output]
-              output[:content_unit_href] = input[:artifact_output][:content_unit_href] || input[:artifact_output][:pulp_tasks].last[:created_resources].first
+              output[:content_unit_href] = input[:artifact_output][:content_unit_href] ||
+                input[:artifact_output][:pulp_tasks].last[:created_resources].find { |href| href.include?("/deb/packages") } ||
+                input[:artifact_output][:pulp_tasks].last[:created_resources].first
             else
               output[:content_unit_href] = nil
             end
