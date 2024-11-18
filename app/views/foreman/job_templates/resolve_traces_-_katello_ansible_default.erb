@@ -17,10 +17,11 @@ kind: job_template
 commands = @host.traces_helpers(search: input('Traces search query'))
 reboot = commands.delete('reboot')
 -%>
+<% if reboot -%>
+    - reboot:
+<% else -%>
 <%= render_template(
     'Run Command - Ansible Default',
     :command => (commands.push('katello-tracer-upload')).join("\n")
 ) %>
-<% if reboot %>
-    - reboot:
-<% end %>
+<% end -%>
