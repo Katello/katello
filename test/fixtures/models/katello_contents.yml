@@ -1,3 +1,11 @@
+deb_content:
+  name:         debian
+  label:        debian
+  cp_content_id: 110
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  content_url:  /custom/Debian_12/Debian_12_amd64_main/?comp=main&rel=bookworm
+  content_type: "deb"
+
 some_content:
   name:         Fedora
   cp_content_id: 1
