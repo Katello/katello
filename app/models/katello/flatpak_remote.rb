@@ -10,6 +10,7 @@ module Katello
     validates :name, presence: true
     validates :url, presence: true
     validates :organization_id, presence: true
+    validates :name, :uniqueness => {:scope => :organization_id}
 
     scope :seeded, -> { where(:seeded => true) }
 

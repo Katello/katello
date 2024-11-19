@@ -35,7 +35,7 @@ module Katello
     end
 
     def index_remote_relation(query)
-      query = query.joins(:flatpak_remote_id => :remote).where("#{FlatpakRemote.table_name}.organization_id" => @organization) if @organization
+      query = query.joins(:flatpak_remote).where("#{FlatpakRemote.table_name}.organization_id" => @organization) if @organization
       if params[:flatpak_remote_id]
         query.where(flatpak_remote_id: params[:flatpak_remote_id])
       else
@@ -44,15 +44,15 @@ module Katello
     end
 
     api :GET, "/flatpak_remote_repositories/:id", N_("Show a flatpak remote repository")
-    param :id, :number, :desc => N_("Flatpak remote numeric identifier"), :required => true
+    param :id, :number, :desc => N_("Flatpak remote repository numeric identifier"), :required => true
     param :manifests, :boolean, :desc => N_("Include manifests"), :required => false
     def show
       respond :resource => @flatpak_remote_repository
     end
 
     api :POST, "/flatpak_remote_repositories/:id/mirror", N_("Mirror a flatpak remote repository")
-    param :id, :number, :desc => N_("Flatpak remote numeric identifier"), :required => true
-    param :product_id, :number, :desc => N_("Product ID to mirror the repository to"), :required => true
+    param :id, :number, :desc => N_("Flatpak remote repository numeric identifier"), :required => true
+    param :product_id, :number, :desc => N_("Product ID to mirror the remote repository to"), :required => true
     def mirror
       task = async_task(::Actions::Katello::Flatpak::MirrorRemoteRepository, @flatpak_remote_repository, @product)
       respond_for_async :resource => task
