@@ -6,7 +6,7 @@ module Katello
       end
 
       def self.hexdigest(string)
-        defined?(ActiveSupport::Digest) ? OpenSSL::Digest::SHA1.hexdigest(string)[0...32] : Digest::MD5.hexdigest(string)
+        defined?(ActiveSupport::Digest) ? ActiveSupport::Digest.hexdigest(string) : Digest::MD5.hexdigest(string)
       end
 
       def self.ostructize(obj, options = {})
