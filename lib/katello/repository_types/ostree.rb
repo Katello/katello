@@ -24,7 +24,7 @@ Katello::RepositoryTypeManager.register('ostree') do
   generic_remote_option :exclude_refs, title: N_("Exclude Refs"), type: Array, input_type: "text", delimiter: ",", default: [],
                          description: N_("A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.")
 
-  generic_remote_option :depth, title: N_("Depth"), type: :number, input_type: "number", delimiter: "", default: 0, description: N_("An option to specify how many ostree commits to traverse.")
+  generic_remote_option :depth, title: N_("Depth"), type: :number, input_type: "number", default: 0, description: N_("An option to specify how many ostree commits to traverse.")
 
   url_description N_("URL of an OSTree repository.")
 
