@@ -160,6 +160,8 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                     $scope.genericRemoteOptions.forEach(function(option) {
                         if (option.type === "Array" && option.value !== "") {
                             repository[option.name] = option.value.split(option.delimiter);
+                        } else if (option.type === "number" && option.value === "") {
+                            repository[option.name] = option.default;
                         } else {
                             repository[option.name] = option.value;
                         }
