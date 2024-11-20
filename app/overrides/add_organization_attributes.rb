@@ -11,6 +11,12 @@ Deface::Override.new(:virtual_path => "taxonomies/_form",
                      :text => '<% if taxonomy.is_a?(Location) %><%= render_original %><% end %>'
                     )
 
+Deface::Override.new(:virtual_path => "taxonomies/_step1",
+                    :name => "add_organization_attributes_on_create",
+                    :insert_after => 'erb[loud]:contains("text_f"):contains(":name")',
+                    :partial => 'overrides/organizations/step_1_override'
+                    )
+
 # Add organization attributes to org edit
 Deface::Override.new(:virtual_path => "taxonomies/_form",
                      :name => "add_organization_attributes_on_edit",
