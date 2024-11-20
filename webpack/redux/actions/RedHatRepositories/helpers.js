@@ -10,6 +10,14 @@ const repoTypeSearchQueryMap = {
 };
 
 const recommendedRepositoriesRHEL = [
+  'rhel-10-for-x86_64-baseos-rpms',
+  'rhel-10-for-x86_64-baseos-kickstart',
+  'rhel-10-for-x86_64-baseos-rpms',
+  'rhel-10-for-x86_64-baseos-kickstart',
+  'rhel-10-for-x86_64-appstream-rpms',
+  'rhel-10-for-x86_64-appstream-kickstart',
+  'rhel-10-for-x86_64-baseos-eus-rpms',
+  'rhel-10-for-x86_64-appstream-eus-rpms',
   'rhel-9-for-x86_64-baseos-rpms',
   'rhel-9-for-x86_64-baseos-kickstart',
   'rhel-9-for-x86_64-appstream-rpms',
@@ -27,6 +35,7 @@ const recommendedRepositoriesRHEL = [
 ];
 
 const recommendedRepositoriesSatTools = [
+  'satellite-client-6-for-rhel-10-x86_64-rpms',
   'satellite-client-6-for-rhel-9-x86_64-rpms',
   'satellite-client-6-for-rhel-8-x86_64-rpms',
   'rhel-7-server-els-satellite-client-6-rpms',
