@@ -35,6 +35,10 @@ module Actions
                     katello_errata.id in (#{input[:unit_map][:errata].join(",")})").map(&:erratum_pulp3_href)
           end
 
+          if input[:unit_map][:debs].any?
+            unit_hrefs << ::Katello::Deb.where(:id => input[:unit_map][:debs]).map(&:pulp_id)
+          end
+
           if input[:unit_map][:rpms].any?
             unit_hrefs << ::Katello::Rpm.where(:id => input[:unit_map][:rpms]).map(&:pulp_id)
           end

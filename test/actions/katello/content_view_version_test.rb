@@ -87,7 +87,7 @@ module ::Actions::Katello::ContentViewVersion
         pulp3_repo_map[[library_repo.id]] = { :dest_repo => new_repo.id, :base_version => nil }
         assert_action_planned_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
                                   pulp3_repo_map,
-                                  { :errata => [], :rpms => [old_rpm.id] },
+                                  { :debs => [], :errata => [], :rpms => [old_rpm.id] },
                                   :dependency_solving => false)
         assert_action_planned_with(action, ::Actions::Pulp3::Repository::CopyContent, library_repo, SmartProxy.pulp_primary, new_repo, copy_all: true, remove_all: true)
         assert_action_planned_with(action, ::Actions::Katello::Repository::MetadataGenerate, new_repo)
@@ -103,7 +103,7 @@ module ::Actions::Katello::ContentViewVersion
         pulp3_repo_map[[library_repo.id]] = { :dest_repo => new_repo.id, :base_version => 1 }
         assert_action_planned_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
                                   pulp3_repo_map,
-                                  { :errata => [], :rpms => [old_rpm.id] },
+                                  { :debs => [], :errata => [], :rpms => [old_rpm.id] },
                                   :dependency_solving => true)
         refute_action_planned(action, ::Actions::Pulp3::Repository::CopyContent)
       end
