@@ -131,9 +131,13 @@ module Katello
         SmartProxy.joins(:smart_proxy_alternate_content_sources).where('katello_smart_proxy_alternate_content_sources.smart_proxy_id' => self.id)
       end
 
-      def registration_host
+      def registration_url
         url = self.setting('Registration', 'registration_url').presence || self.url
-        URI.parse(url).host
+        URI(url)
+      end
+
+      def registration_host
+        registration_url.host
       end
 
       def load_balanced?
@@ -600,12 +604,16 @@ module Katello
         URI(setting(SmartProxy::PULP3_FEATURE, 'content_app_url'))
       end
 
+      def load_balancer_pulp_content_url
+        URI::HTTPS.build(host: registration_url.host, path: pulp_content_url.path)
+      end
+
       def audit_capsule_sync
         write_audit(action: "sync capsule", comment: _('Successfully synced capsule.'), audited_changes: {})
       end
 
       class ::SmartProxy::Jail < ::Safemode::Jail
-        allow :rhsm_url, :pulp_content_url
+        allow :rhsm_url, :pulp_content_url, :load_balancer_pulp_content_url, :registration_url
       end
     end
   end
