@@ -6,7 +6,7 @@ module Katello
         #environment is not duplicated in its path
         # We do not want circular dependencies
         return if record.prior.nil?
-        record.errors[:prior] << _(" environment cannot be set to an environment already on its path") if duplicate? record.prior
+        record.errors.add(:prior, _(" environment cannot be set to an environment already on its path")) if duplicate? record.prior
       end
 
       def duplicate?(record)

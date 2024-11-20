@@ -5,7 +5,7 @@ module Katello
         exists = RootRepository.where(:product_id => record.product_id, attribute => value).where("id != ?", record.id || -1).exists?
 
         if record.send("#{attribute}_changed?") && record.custom? && exists
-          record.errors[attribute] << _("has already been taken for this product.")
+          record.errors.add(attribute, _("has already been taken for this product."))
         end
       end
     end

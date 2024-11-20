@@ -5,7 +5,7 @@ module Katello
         unique = self.unique_attribute?(record, attribute, value)
 
         unless unique
-          record.errors[attribute] << _("has already been taken for a product in this organization.")
+          record.errors.add(attribute, _("has already been taken for a product in this organization."))
         end
       end
 
