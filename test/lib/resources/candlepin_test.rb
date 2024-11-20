@@ -1,5 +1,4 @@
 require 'katello_test_helper'
-require 'katello/resources/candlepin'
 
 module Katello
   module Resources

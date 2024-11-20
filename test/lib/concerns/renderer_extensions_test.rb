@@ -1,5 +1,4 @@
 require 'katello_test_helper'
-require 'foreman/renderer/scope/provisioning'
 
 module Katello
   class RendererExtensionsTest < ActiveSupport::TestCase
