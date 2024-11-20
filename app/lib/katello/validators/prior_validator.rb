@@ -8,7 +8,7 @@ module Katello
         # prior to have only one child (unless its the Library)
         ancestor = record.prior
         if ancestor && !ancestor.library? && (ancestor.successors.count == 1 && !ancestor.successors.include?(record))
-          record.errors[:prior] << _("prior environment can only have one child")
+          record.errors.add(:prior, _("prior environment can only have one child"))
         end
       end
     end

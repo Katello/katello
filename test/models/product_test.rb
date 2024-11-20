@@ -76,7 +76,7 @@ module Katello
             :name => name
         )
         refute product.valid?, "Validation succeeded for create with invalid name: '#{name}' length: #{name.length})"
-        assert_includes product.errors.keys, :name
+        assert_includes product.errors.attribute_names, :name
       end
     end
 
@@ -89,7 +89,7 @@ module Katello
           :label => RFauxFactory.gen_utf8
       )
       refute_valid product
-      assert_includes product.errors.keys, :label
+      assert_includes product.errors.attribute_names, :label
     end
 
     test_attributes :pid => '1a9f6e0d-43fb-42e2-9dbd-e880f03b0297'
@@ -124,7 +124,7 @@ module Katello
       invalid_name_list.each do |name|
         @product.name = name
         refute @product.valid?, "Validation succeeded for update with invalid name: '#{name}' length: #{name.length})"
-        assert_includes @product.errors.keys, :name
+        assert_includes @product.errors.attribute_names, :name
       end
     end
 
@@ -134,7 +134,7 @@ module Katello
       @product.save!
       @product.label = RFauxFactory.gen_alpha
       refute_valid @product
-      assert_includes @product.errors.keys, :label
+      assert_includes @product.errors.attribute_names, :label
       assert_equal 'cannot be changed.', @product.errors['label'][0]
     end
 
