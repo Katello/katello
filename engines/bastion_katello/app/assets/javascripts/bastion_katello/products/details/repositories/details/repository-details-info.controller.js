@@ -261,7 +261,11 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                             optionIndex = $scope.genericRemoteOptions.map(function(option) {
                                 return option.name;
                             }).indexOf(key);
-                            $scope.genericRemoteOptions[optionIndex].value = remOptions[key].join($scope.genericRemoteOptions[optionIndex].delimiter);
+                            if ($scope.genericRemoteOptions[optionIndex].delimiter) {
+                                $scope.genericRemoteOptions[optionIndex].value = remOptions[key].join($scope.genericRemoteOptions[optionIndex].delimiter);
+                            } else {
+                                $scope.genericRemoteOptions[optionIndex].value = remOptions[key];
+                            }
                         }
                     });
                 }
