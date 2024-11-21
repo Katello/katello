@@ -50,6 +50,43 @@ test('Can display Smart proxy content table and expand env and cv details', asyn
   assertNockRequest(detailsScope, done);
 });
 
+test('Handles empty content_counts and displays N/A for Packages and Additional content', async (done) => {
+  const emptyContentCountsData = {
+    ...smartProxyContent,
+    content_counts: {},
+  };
+
+  const detailsScope = nockInstance
+    .get(smartProxyContentPath)
+    .query(true)
+    .reply(200, emptyContentCountsData);
+
+  const { getByText, getAllByText, getByLabelText } = renderWithRedux(contentTable);
+
+  await patientlyWaitFor(() => expect(getByText('Environment')).toBeInTheDocument());
+
+  const tdEnvExpand = getByLabelText('expand-env-1');
+  const envExpansion = within(tdEnvExpand).getByLabelText('Details');
+  envExpansion.click();
+
+  await patientlyWaitFor(() => expect(getAllByText('Content view')[0]).toBeInTheDocument());
+  expect(getAllByText('Last published')[0]).toBeInTheDocument();
+  expect(getAllByText('Repository')[0]).toBeInTheDocument();
+  expect(getAllByText('Synced')[0]).toBeInTheDocument();
+
+  const tdCvExpand = getByLabelText('expand-cv-1');
+  const cvExpansion = within(tdCvExpand).getByLabelText('Details');
+  expect(cvExpansion).toHaveAttribute('aria-expanded', 'false');
+  cvExpansion.click();
+
+  await patientlyWaitFor(() => expect(cvExpansion).toHaveAttribute('aria-expanded', 'true'));
+
+  expect(getAllByText('N/A')[0]).toBeInTheDocument();
+  expect(getAllByText('N/A')[1]).toBeInTheDocument();
+
+  assertNockRequest(detailsScope, done);
+});
+
 test('Can call content count refresh for environment', async (done) => {
   const detailsScope = nockInstance
     .get(smartProxyContentPath)
