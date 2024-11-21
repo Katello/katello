@@ -31,12 +31,6 @@ jobs:
   - job: copr_build
     trigger: pull_request
     targets:
-      rhel-8:
-        additional_modules: "katello:el8,foreman-devel:el8"
-        additional_repos:
-          - https://yum.theforeman.org/releases/nightly/el8/x86_64/
-          - https://yum.theforeman.org/plugins/nightly/el8/x86_64/
-          - https://yum.theforeman.org/katello/nightly/katello/el8/x86_64/
       rhel-9:
         additional_modules: "foreman-devel:el9"
         additional_repos:
