@@ -19,8 +19,22 @@ module Actions
                 plan_action(Pulp3::Repository::SaveVersion, repository, {force_fetch_version: true, tasks: tag_manifest_output[:pulp_tasks]})
               else
                 if content_unit_href
-                  artifact_output = { :content_unit_href => content_unit_href }
                   commit_output = {}
+                  if repository.deb?
+                    # find artifact-href
+                    content_backend_service = smart_proxy.content_service('deb')
+                    artifact_href = content_backend_service.content_api.read(content_unit_href).artifact
+
+                    artifact_output = plan_action(Pulp3::Repository::SaveArtifact,
+                                                  file,
+                                                  repository,
+                                                  smart_proxy,
+                                                  nil,
+                                                  args.dig(:unit_type_id),
+                                                  args.merge({artifact_href: artifact_href})).output
+                  else
+                    artifact_output = { :content_unit_href => content_unit_href }
+                  end
                 else
                   commit_output = plan_action(Pulp3::Repository::CommitUpload,
                                               repository,
