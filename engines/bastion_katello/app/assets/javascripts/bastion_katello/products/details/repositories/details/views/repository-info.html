@@ -312,6 +312,12 @@
             on-save="save(repository)">
         </dd>
       </span>
+      <span ng-if="((repository.content_type === 'yum' && !product.redhat) || repository.content_type === 'deb') && repository.full_gpg_key_path ">
+        <dt translate>URL to GPG Key</dt>
+        <dd>
+          <a ng-href="{{ repository.full_gpg_key_path }}">{{ repository.full_gpg_key_path }}</a>
+        </dd>
+      </span>
       <dt translate>SSL CA Cert</dt>
       <dd bst-edit-select="repository.ssl_ca_cert.name"
           readonly="product.redhat ||denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"
