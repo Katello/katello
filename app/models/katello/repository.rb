@@ -357,6 +357,13 @@ module Katello
       end
     end
 
+    def full_gpg_key_path(smart_proxy = nil, force_http = false)
+      return if self.root.gpg_key.try(:content).blank?
+      pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : ::SmartProxy.pulp_primary.url)
+      scheme = force_http ? 'http' : 'https'
+      "#{scheme}://#{pulp_uri.host.downcase}#{gpg_key_content_api_repository_url(self, :only_path => true)}"
+    end
+
     def product_type
       redhat? ? "redhat" : "custom"
     end
