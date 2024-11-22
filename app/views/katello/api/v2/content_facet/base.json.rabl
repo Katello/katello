@@ -61,7 +61,8 @@ node :lifecycle_environment do |content_facet|
 end
 
 child :content_source => :content_source do
-  attributes :id, :name, :url
+  attributes :id, :name, :url, :registration_host
+  node(:load_balanced) { |content_source| content_source.load_balanced? }
 end
 
 child :kickstart_repository => :kickstart_repository do

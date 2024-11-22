@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   DescriptionList,
@@ -55,12 +56,14 @@ const RegistrationCard = ({ isExpandedGlobal, hostDetails }) => {
   const subscriptionFacetAttributes
     = propsToCamelCase(hostDetails?.subscription_facet_attributes || {});
   const {
-    registeredAt, activationKeys, user,
+    registeredAt, registeredThrough, activationKeys, user,
   }
     = subscriptionFacetAttributes;
   const contentFacetAttributes
     = propsToCamelCase(hostDetails?.content_facet_attributes || {});
   const { contentSourceName } = contentFacetAttributes;
+  const { contentSource } = propsToCamelCase(contentFacetAttributes || {});
+  const { loadBalanced, registrationHost } = propsToCamelCase(contentSource || {});
   const login = user?.login;
   if (!registeredAt) return null;
   return (
@@ -80,8 +83,31 @@ const RegistrationCard = ({ isExpandedGlobal, hostDetails }) => {
           <RegisteredBy user={login} activationKeys={activationKeys} />
         </DescriptionListGroup>
         <DescriptionListGroup>
+          <DescriptionListTerm>{__('Registered to')}</DescriptionListTerm>
+          <DescriptionListDescription>{registeredThrough}</DescriptionListDescription>
+        </DescriptionListGroup>
+        {loadBalanced && (
+          <DescriptionListGroup>
+            <DescriptionListTerm>{__('Load balancer')}</DescriptionListTerm>
+            <DescriptionListDescription>{registrationHost}</DescriptionListDescription>
+          </DescriptionListGroup>
+        )}
+        <DescriptionListGroup>
           <DescriptionListTerm>{__('Content source')}</DescriptionListTerm>
-          <DescriptionListDescription>{contentSourceName}</DescriptionListDescription>
+          {!loadBalanced && (
+            <DescriptionListDescription>{contentSourceName}</DescriptionListDescription>
+          )}
+          {loadBalanced && (
+            <DescriptionListDescription>
+              <FormattedMessage
+                id="load-balancer-content-source-text"
+                defaultMessage={__('Content may come from {contentSourceName} or any other Smart Proxy behind the load balancer.')}
+                values={{
+                  contentSourceName: <strong>{contentSourceName}</strong>,
+                }}
+              />
+            </DescriptionListDescription>
+          )}
         </DescriptionListGroup>
       </DescriptionList>
     </CardTemplate>
