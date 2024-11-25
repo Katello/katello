@@ -26,7 +26,9 @@ const ExpandableCvDetails = ({
   const refreshCountAction = cvId => ({
     title: __('Refresh counts'),
     onClick: () => {
-      dispatch(updateSmartProxyContentCounts(smartProxyId, { content_view_id: cvId }));
+      dispatch(updateSmartProxyContentCounts(smartProxyId, {
+        environment_id: envId, content_view_id: cvId,
+      }));
     },
   });
 
