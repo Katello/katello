@@ -90,7 +90,7 @@ const ExpandableCvDetails = ({
             <Tr key="child_row" ouiaId={`ContentViewTableRowChild-${id}`} isExpanded={isExpanded}>
               <Td colSpan={12}>
                 <ExpandedSmartProxyRepositories
-                  contentCounts={contentCounts?.content_view_versions[versionId]?.repositories}
+                  contentCounts={contentCounts?.content_view_versions?.[versionId]?.repositories}
                   repositories={repositories}
                   syncedToCapsule={upToDate}
                   envId={envId}
