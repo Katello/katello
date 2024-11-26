@@ -385,7 +385,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(published_rhel7_repository)
 
       # manually remove the URLs from all repos in product except repository
-      testing_repo = repository.product.repositories[4]
+      testing_repo = ::Katello::Repository.joins(:root).find_by(katello_root_repositories: { label: 'rhel_7_no_arch_label' })
       testing_repo.product.repositories.each do |repo|
         repo.root.url = nil unless repo.id == testing_repo.id || repo.root.id == testing_repo.root.id
         repo.root.save!(validate: false)
