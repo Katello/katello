@@ -85,6 +85,7 @@ test('Can call content count refresh for content view', async (done) => {
   const countsCVRefreshScope = nockInstance
     .post(smartProxyRefreshCountPath, {
       content_view_id: 1,
+      environment_id: 1,
     })
     .reply(202);
 
