@@ -67,6 +67,46 @@ module Katello
         host_subscription_facet(host)&.service_level
       end
 
+      apipie :method, 'Returns system purpose SLA for the host' do
+        required :host, 'Host::Managed', desc: 'Host object to get system purpose SLA for'
+        returns String, example: 'host_purpose_sla(host) #=> "Standard"'
+      end
+      def host_purpose_sla(host)
+        host_subscription_facet(host)&.service_level
+      end
+
+      apipie :method, 'Returns system purpose role for the host' do
+        required :host, 'Host::Managed', desc: 'Host object to get system purpose role for'
+        returns String, example: 'host_purpose_role(host) #=> "Red Hat Enterprise Linux Server"'
+      end
+      def host_purpose_role(host)
+        host_subscription_facet(host)&.purpose_role
+      end
+
+      apipie :method, 'Returns system purpose usage for the host' do
+        required :host, 'Host::Managed', desc: 'Host object to get system purpose usage for'
+        returns String, example: 'host_purpose_usage(host) #=> "Production"'
+      end
+      def host_purpose_usage(host)
+        host_subscription_facet(host)&.purpose_usage
+      end
+
+      apipie :method, 'Returns system purpose release version for the host' do
+        required :host, 'Host::Managed', desc: 'Host object to get system purpose release version for'
+        returns String, example: 'host_purpose_release_version(host) #=> "9"'
+      end
+      def host_purpose_release_version(host)
+        host_subscription_facet(host)&.release_version
+      end
+
+      apipie :method, 'Returns whether host is a hypervisor' do
+        required :host, 'Host::Managed', desc: 'Host object to determine hypervisor value for'
+        returns String, example: 'host_is_hypervisor(host) #=> "t"'
+      end
+      def host_is_hypervisor(host)
+        host_subscription_facet(host)&.hypervisor
+      end
+
       apipie :method, 'Returns installed products for the host' do
         required :host, 'Host::Managed', desc: 'Host object to get products for'
         returns array_of: 'Product', desc: "Array of installed product objects on the host"
