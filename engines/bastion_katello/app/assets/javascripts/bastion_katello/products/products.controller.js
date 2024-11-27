@@ -68,7 +68,7 @@ angular.module('Bastion.products').controller('ProductsController',
             Notification.setSuccessMessage(message, {
                 link: {
                     children: translate("Click to view task"),
-                    href: translate("/foreman_tasks/tasks/%taskId").replace('%taskId', taskId)
+                    href: "/foreman_tasks/tasks/%taskId".replace('%taskId', taskId)
                 }});
         });
 
@@ -98,7 +98,7 @@ angular.module('Bastion.products').controller('ProductsController',
                 Notification.setSuccessMessage(message, {
                     link: {
                         children: translate("Click to monitor task progress."),
-                        href: translate("/foreman_tasks/tasks/%taskId").replace('%taskId', task.id)
+                        href: "/foreman_tasks/tasks/%taskId".replace('%taskId', task.id)
                     }});
             };
 
@@ -113,7 +113,7 @@ angular.module('Bastion.products').controller('ProductsController',
                 Notification.setSuccessMessage(message, {
                     link: {
                         children: translate("Click to monitor task progress."),
-                        href: translate("/foreman_tasks/tasks/%taskId").replace('%taskId', task.id)
+                        href: "/foreman_tasks/tasks/%taskId".replace('%taskId', task.id)
                     }});
             };
 
