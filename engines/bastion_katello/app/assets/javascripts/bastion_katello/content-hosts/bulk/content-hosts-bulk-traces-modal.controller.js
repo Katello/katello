@@ -34,7 +34,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesContro
                 Notification.setSuccessMessage(message, {
                     link: {
                         children: translate("View job invocations."),
-                        href: translate("/job_invocations")
+                        href: "/job_invocations"
                     }});
                 $scope.ok();
             };

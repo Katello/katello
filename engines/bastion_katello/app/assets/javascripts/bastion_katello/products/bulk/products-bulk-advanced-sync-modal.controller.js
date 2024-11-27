@@ -25,7 +25,7 @@ angular.module('Bastion.products').controller('ProductsBulkAdvancedSyncModalCont
                 Notification.setSuccessMessage(message, {
                 link: {
                     children: translate("Click to view task"),
-                    href: translate("/foreman_tasks/tasks/%taskId").replace('%taskId', task.id)
+                    href: "/foreman_tasks/tasks/%taskId".replace('%taskId', task.id)
                 }});
             };
 
