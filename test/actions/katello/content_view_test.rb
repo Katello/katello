@@ -102,28 +102,130 @@ module ::Actions::Katello::ContentView
   class AddRollingRepoCloneTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::AddRollingRepoClone }
     let(:content_view) { katello_content_views(:rolling_view) }
-    let(:repository) { katello_repositories(:fedora_17_x86_64) }
+    let(:repository_rpm) { katello_repositories(:fedora_17_x86_64) }
+    let(:repository_deb) { katello_repositories(:debian_10_amd64) }
     let(:library) { katello_environments(:library) }
-    before do
-      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns({})
+    let(:clone_rpm) do
+      FactoryBot.create :katello_repository,
+                      root: repository_rpm.root,
+                      content_view_version: content_view.versions.first,
+                      environment: library
     end
-    it 'plans' do
+    let(:clone_deb) do
+      FactoryBot.create :katello_repository,
+                      root: repository_deb.root,
+                      content_view_version: content_view.versions.first,
+                      environment: library
+    end
+    let(:cv_env) { content_view.content_view_environment(library) }
+
+    before do
+      [repository_rpm, repository_deb].each do |repository|
+        repository.version_href = 'foo'
+        repository.publication_href = 'bar'
+        repository.save!
+      end
+    end
+
+    it 'plans multiple' do
       action.stubs(:task).returns(success_task)
-      repository.version_href = 'foo'
-      repository.publication_href = 'bar'
-      repository.save!
 
-      clone = Katello::Repository.new(
-        library_instance: repository,
-        root: repository.root,
-        content_view_version: content_view.versions.first,
-        environment: library,
-        relative_path: 'some_unique_path'
-      )
-      Katello::Repository.any_instance.expects(:build_clone).returns(clone)
-      plan_action(action, content_view, [repository.id])
+      Katello::Repository.any_instance.expects(:build_clone).returns(clone_deb)
+      Katello::Repository.any_instance.expects(:build_clone).returns(clone_rpm)
+      plan_action(action, content_view, [repository_rpm.id, repository_deb.id])
 
-      assert_action_planned_with action, ::Actions::Katello::ContentView::RefreshRollingRepo, clone
+      assert_action_planned_with action, ::Actions::Katello::ContentView::RefreshRollingRepo, clone_rpm
+      assert_action_planned_with action, ::Actions::Katello::ContentView::RefreshRollingRepo, clone_deb
+
+      assert_action_planned_with action, ::Actions::Candlepin::Environment::AddContentToEnvironment,
+                                 view_env_cp_id: cv_env.cp_id, content_id: repository_rpm.content_id
+      assert_action_planned_with action, ::Actions::Candlepin::Environment::AddContentToEnvironment,
+                                 view_env_cp_id: cv_env.cp_id, content_id: repository_deb.content_id
+    end
+
+    it 'plan refresh for existing' do
+      clone_deb.library_instance = repository_deb
+      clone_deb.version_href = 'some_version'
+      clone_deb.publication_href = 'some_publication'
+      clone_deb.save!
+
+      refute_equal repository_deb.version_href, clone_deb.version_href
+      refute_equal repository_deb.publication_href, clone_deb.publication_href
+      # double-add
+      plan_action(action, content_view, [repository_deb.id])
+
+      assert_equal 1, content_view.get_repo_clone(library, repository_deb).count
+      assert_action_planned_with action, ::Actions::Katello::ContentView::RefreshRollingRepo, clone_deb
+      assert_action_planned_with action, ::Actions::Candlepin::Environment::AddContentToEnvironment,
+                                 view_env_cp_id: cv_env.cp_id, content_id: repository_deb.content_id
+    end
+
+    it 'plans nothing' do
+      plan_action(action, content_view, [])
+
+      refute_action_planned action, ::Actions::Katello::ContentView::RefreshRollingRepo
+      refute_action_planned action, ::Actions::Candlepin::Environment::AddContentToEnvironment
+    end
+  end
+
+  class RemoveRollingRepoCloneTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::RemoveRollingRepoClone }
+    let(:content_view) { katello_content_views(:rolling_view) }
+    let(:repository_rpm) { katello_repositories(:fedora_17_x86_64) }
+    let(:repository_deb) { katello_repositories(:debian_10_amd64) }
+    let(:library) { katello_environments(:library) }
+    let(:clone_rpm) do
+      FactoryBot.create :katello_repository,
+                      root: repository_rpm.root,
+                      library_instance: repository_rpm,
+                      content_view_version: content_view.versions.first,
+                      environment: library
+    end
+    let(:clone_deb) do
+      FactoryBot.create :katello_repository,
+                      root: repository_deb.root,
+                      library_instance: repository_deb,
+                      content_view_version: content_view.versions.first,
+                      environment: library
+    end
+    let(:primary) { SmartProxy.pulp_primary }
+
+    before do
+      [repository_rpm, repository_deb].each do |repository|
+        repository.version_href = 'foo'
+        repository.publication_href = 'bar'
+        repository.save!
+      end
+    end
+
+    it 'plans remove multiple' do
+      clone_rpm.save!
+      clone_deb.save!
+
+      plan_action(action, content_view, [repository_rpm.id, repository_deb.id])
+
+      assert_action_planned_with action, ::Actions::Pulp3::Repository::DeleteDistributions, clone_rpm.id, primary
+      assert_action_planned_with action, ::Actions::Pulp3::Repository::DeleteDistributions, clone_deb.id, primary
+
+      cv_env = content_view.content_view_environment(library)
+      assert_action_planned_with action, ::Actions::Candlepin::Environment::SetContent, content_view, library, cv_env
+    end
+
+    it 'plan ignores gone repo' do
+      clone_rpm.destroy
+
+      plan_action(action, content_view, [repository_rpm.id])
+
+      refute_action_planned action, ::Actions::Pulp3::Repository::DeleteDistributions
+
+      cv_env = content_view.content_view_environment(library)
+      assert_action_planned_with action, ::Actions::Candlepin::Environment::SetContent, content_view, library, cv_env
+    end
+
+    it 'plans nothing' do
+      plan_action(action, content_view, [])
+      refute_action_planned action, ::Actions::Pulp3::Repository::DeleteDistributions
+      assert_action_planned action, ::Actions::Candlepin::Environment::SetContent
     end
   end
 

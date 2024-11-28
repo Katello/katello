@@ -8,8 +8,11 @@ module Actions
           concurrence do
             ::Katello::Repository.where(id: repository_ids).each do |repository|
               sequence do
-                clone = repository.build_clone(content_view: content_view, environment: library)
-                clone.save!
+                clone = content_view.get_repo_clone(library, repository).first
+                if clone.nil?
+                  clone = repository.build_clone(content_view: content_view, environment: library)
+                  clone.save!
+                end
                 plan_action(RefreshRollingRepo, clone)
 
                 view_env_cp_id = content_view.content_view_environment(library).cp_id

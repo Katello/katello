@@ -162,7 +162,11 @@ export default () => {
               <FlexItem>
                 <TextContent>
                   <Text ouiaId="cv-details-header-name" component={TextVariants.h1}>
-                    <ContentViewIcon count={truncate(name)} composite={composite} rolling={rolling} />
+                    <ContentViewIcon
+                      count={truncate(name)}
+                      composite={composite}
+                      rolling={rolling}
+                    />
                   </Text>
                 </TextContent>
               </FlexItem>

@@ -7,7 +7,7 @@ module Actions
           sequence do
             plan_self(repository_id: repository.id)
             plan_action(Pulp3::Repository::RefreshDistribution, repository, SmartProxy.pulp_primary)
-            plan_action(Repository::IndexContent, id: repository.id)
+            plan_action(Repository::IndexContent, id: repository.id, source_repository_id: repository.library_instance.id)
           end
         end
 

@@ -52,6 +52,15 @@ module Actions
             plan_action(Katello::Repository::MetadataGenerate, repository, force_publication: true) if generate_metadata
             plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repository.id]) if generate_applicability
             plan_self(repository_id: repository.id, sync_capsule: sync_capsule, upload_results: upload_results)
+
+            # Refresh rolling CVs that have this repository
+            repos = repository.root.repositories.in_environment(1).where(content_view_version: ::Katello::ContentViewVersion.where(content_view: ::Katello::ContentView.rolling))
+
+            concurrence do
+              repos.each do |rolling_repo|
+                plan_action(ContentView::RefreshRollingRepo, rolling_repo)
+              end
+            end
           end
         end
         # rubocop:enable Metrics/MethodLength
