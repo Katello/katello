@@ -1,3 +1,20 @@
+# 4.14.2 Gold Road (2024-12-02)
+
+## Bug Fixes
+
+### API
+ * apidoc doesn't allow to unset CV/LCE of an activationkey ([#38008](https://projects.theforeman.org/issues/38008), [c03c7e29](https://github.com/Katello/katello.git/commit/c03c7e292639a6b8e4af4b38886d947d3067ad56))
+
+### Content Views
+ * Deleting a CV version does not scale when a product has too many repos (cloned in CVs) ([#38003](https://projects.theforeman.org/issues/38003), [ffbf8b21](https://github.com/Katello/katello.git/commit/ffbf8b21e929f96b539b09077bc2911f65ef0bd7), [7ad24da8](https://github.com/Katello/katello.git/commit/7ad24da886a60eb7c28a4d43f75588f2e2191e31))
+
+### Repositories
+ * Remove Client2 repos from Recommended Repositories on Sat6.16 ([#37985](https://projects.theforeman.org/issues/37985))
+ * Update recommend repositories on Satellite GUI to add Capsule, Utils and Maintenance repos for 6.16. ([#37984](https://projects.theforeman.org/issues/37984), [da090f35](https://github.com/Katello/katello.git/commit/da090f35431635eb2ffeeeb9644a2e45cd29d0c8))
+
+### Hosts
+ * getting hosts list performs redundantly huge query over duplicated host IDs ([#37842](https://projects.theforeman.org/issues/37842), [3c8c351e](https://github.com/Katello/katello.git/commit/3c8c351e72c087e09b77dea7ea2dff49e3b56150))
+
 # 4.14.1 Gold Road (2024-11-04)
 
 ## Features
