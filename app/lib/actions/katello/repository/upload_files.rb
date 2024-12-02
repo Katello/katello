@@ -6,7 +6,9 @@ module Actions
   module Katello
     module Repository
       class UploadFiles < Actions::EntryAction
-        def plan(repository, files, content_type = nil, options = {}) # rubocop:disable Metrics/MethodLength
+        include Helpers::RollingCVRepos
+
+        def plan(repository, files, content_type = nil, options = {})
           action_subject(repository)
           repository.check_ready_to_act!
           repository.clear_smart_proxy_sync_histories
@@ -40,13 +42,7 @@ module Actions
             plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repository.id]) if generate_applicability
 
             # Refresh rolling CVs that have this repository
-            repos = repository.root.repositories.in_environment(1).where(content_view_version: ::Katello::ContentViewVersion.where(content_view: ::Katello::ContentView.rolling))
-
-            concurrence do
-              repos.each do |rolling_repo|
-                plan_action(ContentView::RefreshRollingRepo, rolling_repo)
-              end
-            end
+            update_rolling_content_views(repository)
           end
         ensure
           # Delete tmp files when some exception occurred. Would be

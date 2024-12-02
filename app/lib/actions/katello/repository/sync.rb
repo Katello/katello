@@ -5,6 +5,7 @@ module Actions
       class Sync < Actions::EntryAction
         extend ApipieDSL::Class
         include Helpers::Presenter
+        include Helpers::RollingCVRepos
         include ::Actions::ObservableAction
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
@@ -109,16 +110,6 @@ module Actions
                       content_url:     repo.root.custom_content_path,
                       gpg_key_url:     repo.yum_gpg_key_url,
                       metadata_expire: repo.root.metadata_expire)
-        end
-
-        def update_rolling_content_views(repo)
-          concurrence do
-            repos = repo.root.repositories.in_environment(1).where(content_view_version: ::Katello::ContentViewVersion.where(content_view: ::Katello::ContentView.rolling))
-
-            repos.each do |rolling_repo|
-              plan_action(ContentView::RefreshRollingRepo, rolling_repo)
-            end
-          end
         end
 
         def rescue_strategy

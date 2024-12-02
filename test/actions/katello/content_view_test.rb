@@ -99,6 +99,81 @@ module ::Actions::Katello::ContentView
     end
   end
 
+  class RefreshRollingRepoTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::RefreshRollingRepo }
+    let(:content_view) { katello_content_views(:rolling_view) }
+    let(:repository_deb) { katello_repositories(:debian_10_amd64) }
+    let(:library) { katello_environments(:library) }
+    let(:clone_deb) do
+      FactoryBot.create :katello_repository,
+                        root: repository_deb.root,
+                        library_instance: repository_deb,
+                        content_view_version: content_view.versions.first,
+                        environment: library
+    end
+
+    before do
+      repository_deb.version_href = 'foo'
+      repository_deb.publication_href = 'bar'
+      repository_deb.save!
+      clone_deb.save!
+    end
+
+    it 'plans' do
+      action.stubs(:task).returns(success_task)
+      refute_equal repository_deb.version_href, clone_deb.version_href
+
+      plan_action(action, clone_deb)
+
+      assert_action_planned_with action, ::Actions::Pulp3::Repository::RefreshDistribution, clone_deb, SmartProxy.pulp_primary
+      assert_action_planned_with action, ::Actions::Katello::Repository::IndexContent, id: clone_deb.id, source_repository_id: repository_deb.id
+    end
+
+    it 'triggers with sync' do
+      sync_action = create_action ::Actions::Katello::Repository::Sync
+      sync_action.stubs(:task).returns(success_task)
+
+      plan_action(sync_action, repository_deb)
+
+      assert_action_planned_with sync_action, action_class, clone_deb
+    end
+
+    it 'triggers with upload_files' do
+      upload_action = create_action ::Actions::Katello::Repository::UploadFiles
+      upload_action.stubs(:task).returns(success_task)
+      upload_action.stubs(:prepare_tmp_files).returns([{path: 'some/path'}])
+
+      plan_action(upload_action, repository_deb, [{path: 'nowhere'}])
+
+      assert_action_planned_with upload_action, action_class, clone_deb
+    end
+
+    it 'triggers with import_upload' do
+      import_action = create_action ::Actions::Katello::Repository::ImportUpload
+      import_action.stubs(:task).returns(success_task)
+      file = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'frigg_1.0_ppc64.deb')
+      #action.expects(:action_subject).with(custom_repository)
+
+      plan_action import_action, repository_deb, [{:path => file, :filename => 'frigg_1.0_ppc64.deb'}]
+
+      assert_action_planned_with import_action, action_class, clone_deb
+    end
+
+    it 'updates pulp_hrefs' do
+      last_changed = DateTime.new(2024, 12, 2.5)
+      DateTime.stubs(:now).returns(last_changed)
+      action_class.any_instance.expects(:plan_action).twice
+
+      ForemanTasks.sync_task(action_class, clone_deb)
+
+      clone_deb.reload
+      assert_equal repository_deb.version_href, clone_deb.version_href
+      assert_equal repository_deb.publication_href, clone_deb.publication_href
+      assert_equal repository_deb.content_id, clone_deb.content_id
+      assert_equal last_changed, clone_deb.last_contents_changed
+    end
+  end
+
   class AddRollingRepoCloneTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::AddRollingRepoClone }
     let(:content_view) { katello_content_views(:rolling_view) }
