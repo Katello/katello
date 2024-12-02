@@ -171,10 +171,10 @@ module Katello
       end
 
       def initialize_content_counts(reset: false)
-        if reset
+        if reset || content_counts.empty?
           { content_view_versions: {} }.with_indifferent_access
         else
-          (content_counts&.deep_dup || { content_view_versions: {} }).with_indifferent_access
+          content_counts.deep_dup.with_indifferent_access
         end
       end
 
@@ -182,7 +182,9 @@ module Katello
         repo_mirror_service = repo.backend_service(self).with_mirror_adapter
         repo_content_counts = repo_mirror_service.latest_content_counts
         translated_counts = translate_counts(repo, repo_mirror_service, repo_content_counts)
-        content_counts[:content_view_versions][repo.content_view_version_id.to_s] ||= { repositories: {}}
+        if content_counts[:content_view_versions][repo.content_view_version_id.to_s].empty?
+          content_counts[:content_view_versions][repo.content_view_version_id.to_s] = { repositories: {}}.with_indifferent_access
+        end
         content_counts[:content_view_versions][repo.content_view_version_id.to_s][:repositories][repo.id.to_s] = translated_counts
       end
 
