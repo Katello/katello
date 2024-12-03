@@ -257,17 +257,16 @@ module Katello
         search_since = since.present? ? "ended_at > \"#{since}\"" : nil
         search_result = status.present? && status != 'all' ? "result = #{status}" : nil
         labels = 'label ^ (Actions::Katello::Host::Erratum::Install, Actions::Katello::Host::Erratum::ApplicableErrataInstall)'
-        select = 'foreman_tasks_tasks.*'
 
         new_labels = 'label = Actions::RemoteExecution::RunHostJob AND remote_execution_feature.label ^ (katello_errata_install, katello_errata_install_by_search)'
         labels = [labels, new_labels].map { |label| "(#{label})" }.join(' OR ')
-        select += ',template_invocations.id AS template_invocation_id'
 
         search = [search_up_to, search_since, search_result, "state = stopped", labels].compact.join(' and ')
 
         tasks = load_resource(klass: ForemanTasks::Task,
                               permission: 'view_foreman_tasks',
-                              select: select,
+                              joins: [:template_invocation],
+                              preload: [:template_invocation],
                               search: search)
         only_host_ids = ::Host.search_for(host_filter).pluck(:id) if host_filter
 
@@ -383,7 +382,7 @@ module Katello
           found = script.lines.find { |line| line.start_with? '# RESOLVED_ERRATA_IDS=' } || ''
           (found.chomp.split('=', 2).last || '').split(',')
         else
-          TemplateInvocationInputValue.joins(:template_input).where("template_invocation_id = ? AND template_inputs.name = ?", task.template_invocation_id, 'errata')
+          TemplateInvocationInputValue.joins(:template_input).where("template_invocation_id = ? AND template_inputs.name = ?", task.template_invocation.id, 'errata')
             .first&.value&.split(',') || []
         end
       end
