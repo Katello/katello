@@ -288,7 +288,10 @@ module Katello
       if (!@content_view || !@content_view.composite?)
         attrs.push({:repository_ids => []}, :repository_ids)
       end
-      params.require(:content_view).permit(*attrs).to_h
+      result = params.require(:content_view).permit(*attrs).to_h
+      # sanitize repository_ids to be a list of integers
+      result[:repository_ids] = result[:repository_ids].compact.map(&:to_i) if result[:repository_ids].present?
+      result
     end
 
     def find_environment
