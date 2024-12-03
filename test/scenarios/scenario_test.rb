@@ -21,8 +21,8 @@ module Scenarios
       sleep 2
       @support.import_products(@org, manifest_path)
 
-      assert_equal 2, @org.products.length
-      assert_equal 5, @org.product_contents.length
+      assert_equal 342, @org.products.length
+      assert_equal 9606, @org.product_contents.length
 
       manifest_path = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'manifest_small_modified.zip')
       @support.import_manifest(@org.label, manifest_path)
@@ -30,8 +30,8 @@ module Scenarios
       @support.import_products(@org, manifest_path)
       @org.reload
 
-      assert_equal 3, @org.products.length
-      assert_equal 9, @org.product_contents.length
+      assert_equal 342, @org.products.length
+      assert_equal 9597, @org.product_contents.length
 
       assert @org.products.where(name: 'Red Hat Container Imagez').exists?
       assert @org.product_contents.joins(:content).where("#{Katello::Content.table_name}.name = 'Red Hat Enterprise Linux 6 Server (Containerz)'").exists?
