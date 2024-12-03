@@ -18,11 +18,16 @@ const CVVersionRemoveReview = () => {
   const activationKeysResponse = useSelector(state => selectCVActivationKeys(state, cvId));
   const hostsResponse = useSelector(state => selectCVHosts(state, cvId));
   const { results: hostResponse } = hostsResponse;
-  const { results: akResponse } = activationKeysResponse;
+  const { results: akResponse = [] } = activationKeysResponse || {};
   const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
   const versionDeleteInfo = __(`Version ${versionNameToRemove} will be deleted from all environments. It will no longer be available for promotion.`);
   const removalNotice = __(`Version ${versionNameToRemove} will be removed from the environments listed below, and will remain available for later promotion. ` +
     'Changes listed below will be effective after clicking Remove.');
+
+  const multiCVActivationKeys = akResponse.filter(key => key.multi_content_view_environment);
+  const multiCVActivationKeysCount = multiCVActivationKeys.length;
+
+  const singleCVActivationKeysCount = akResponse.length - multiCVActivationKeysCount;
 
   return (
     <>
@@ -62,11 +67,23 @@ const CVVersionRemoveReview = () => {
       {affectedActivationKeys &&
         <>
           <h3>{__('Activation keys')}</h3>
-          <Flex>
-            <FlexItem><ExclamationTriangleIcon /></FlexItem>
-            <FlexItem><p>{__(`${pluralize(akResponse.length, 'activation key')} will be moved to content view ${selectedCVNameForAK} in `)}</p></FlexItem>
-            <FlexItem><Label isTruncated color="purple" href={`/lifecycle_environments/${selectedEnvForAK[0].id}`}>{selectedEnvForAK[0].name}</Label></FlexItem>
-          </Flex>
+          {singleCVActivationKeysCount > 0 && (
+            <Flex>
+              <FlexItem><ExclamationTriangleIcon /></FlexItem>
+              <FlexItem><p>{__(`${pluralize(singleCVActivationKeysCount, 'activation key')} will be moved to content view ${selectedCVNameForAK} in `)}</p></FlexItem>
+              <FlexItem><Label isTruncated color="purple" href={`/lifecycle_environments/${selectedEnvForAK[0].id}`}>{selectedEnvForAK[0].name}</Label></FlexItem>
+            </Flex>
+          )}
+          {multiCVActivationKeysCount > 0 && (
+            <Flex>
+              <FlexItem><ExclamationTriangleIcon /></FlexItem>
+              <FlexItem>
+                <p>
+                  {__(`Content view environment will be removed from ${pluralize(multiCVActivationKeysCount, 'multi-environment activation key')}.`)}
+                </p>
+              </FlexItem>
+            </Flex>
+          )}
         </>}
     </>
   );
