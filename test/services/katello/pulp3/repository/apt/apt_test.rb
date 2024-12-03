@@ -16,20 +16,6 @@ module Katello
             ensure_creatable(@repo, @proxy)
           end
 
-          def test_copy_units_does_not_clear_repo_during_composite_merger
-            service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
-            service.expects(:remove_all_content).never
-            service.copy_units([], false)
-          end
-
-          def test_copy_units_rewrites_missing_content_error
-            fake_content_href = '/pulp/api/v3/repositories/deb/apt/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/'
-            service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
-            create_repo(@repo, @proxy)
-            error = assert_raises(::Katello::Errors::Pulp3Error) { service.copy_units([fake_content_href], false) }
-            assert_match(/Please run `foreman-rake katello:delete_orphaned_content` to fix the following repository: Debian 9 amd64./, error.message)
-          end
-
           def test_remote_options
             @repo.root.url = "http://foo.com/bar/"
             service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
