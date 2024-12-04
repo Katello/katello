@@ -21,8 +21,8 @@ module Scenarios
       sleep 2
       @support.import_products(@org, manifest_path)
 
-      assert_equal 2, @org.products.length
-      assert_equal 5, @org.product_contents.length
+      assert_equal 3, @org.products.length
+      assert_equal 8, @org.product_contents.length
 
       manifest_path = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'manifest_small_modified.zip')
       @support.import_manifest(@org.label, manifest_path)

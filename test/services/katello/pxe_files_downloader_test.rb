@@ -46,7 +46,7 @@ module Katello
       cert.add_extension ef.create_extension("authorityKeyIdentifier",
                                              "keyid:always,issuer:always")
 
-      cert.sign key, OpenSSL::Digest.new('SHA1')
+      cert.sign key, OpenSSL::Digest.new('SHA256')
 
       cert.to_pem
     end

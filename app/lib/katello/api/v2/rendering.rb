@@ -41,8 +41,9 @@ module Katello
         def respond_with_template(action, resource_name, options = {}, &_block)
           yield if block_given?
           status = options[:status] || 200
+          template = options[:full_template] || "katello/api/v2/#{resource_name}/#{action}"
 
-          render :template => "katello/api/v2/#{resource_name}/#{action}",
+          render :template => template,
                  :status => status,
                  :locals => options.slice(:object_name, :root_name, :locals),
                  :layout => "katello/api/v2/layouts/#{options[:layout]}"
