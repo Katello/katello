@@ -33,6 +33,7 @@ module Katello
         params[:consumer] = upstream_consumer_id if attachable
         params[:sort_by] = 'Product.name'
         params[:order] = 'asc'
+        params[:add_future] = true
         params
       end
 

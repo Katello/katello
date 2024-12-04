@@ -20,7 +20,7 @@ module Katello
     end
 
     def stub_fetch_pools(response, base_params: {}, extra_params: [], included_fields: UpstreamPool.all_fields)
-      base_params = base_params.merge(:sort_by => 'Product.name', :order => "asc")
+      base_params = base_params.merge(:sort_by => 'Product.name', :order => "asc", :add_future => true)
       Katello::UpstreamPool.expects(:request_params)
                            .with(base_params: base_params,
                                  extra_params: extra_params,
