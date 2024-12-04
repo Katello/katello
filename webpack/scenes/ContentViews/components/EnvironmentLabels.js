@@ -11,7 +11,7 @@ const EnvironmentLabels = (environments) => {
       <React.Fragment key={env.id} style={{ marginBottom: '5px' }}>
         <Label
           color={labelColor}
-          isTruncated
+
         >{env.name}
         </Label>
       </React.Fragment>
@@ -19,7 +19,7 @@ const EnvironmentLabels = (environments) => {
   default:
     return (
       <React.Fragment>
-        <Label color={labelColor} isTruncated>
+        <Label color={labelColor} >
           {name}
         </Label>
       </React.Fragment>

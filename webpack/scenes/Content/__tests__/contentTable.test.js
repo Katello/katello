@@ -40,7 +40,8 @@ test('Can call API for Python Packages and show table on page load', async (done
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(contentTypesScope);
-  assertNockRequest(pythonPackagesScope, done);
+  assertNockRequest(pythonPackagesScope);
+  done();
 });
 
 test('Can call API for Ansible collections and show table on page load', async (done) => {
@@ -71,5 +72,6 @@ test('Can call API for Ansible collections and show table on page load', async (
     expect(getAllByText(firstPackage.checksum)[0]).toBeInTheDocument();
   });
   assertNockRequest(autocompleteScope);
-  assertNockRequest(ansibleCollections, done);
+  assertNockRequest(ansibleCollections);
+  done();
 });

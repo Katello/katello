@@ -7,12 +7,6 @@ import {
   Checkbox,
   Chip,
   ChipGroup,
-  ContextSelector,
-  Dropdown,
-  DropdownItem,
-  DropdownSeparator,
-  DropdownToggle,
-  DropdownToggleCheckbox,
   FormSelect,
   Menu,
   Modal,
@@ -20,10 +14,8 @@ import {
   Nav,
   NavExpandable,
   NavItem,
-  OptionsMenu,
   Pagination,
   Radio,
-  Select,
   Switch,
   TabButton,
   TabContent,
@@ -34,10 +26,22 @@ import {
   Toolbar,
 } from '@patternfly/react-core';
 import {
-  Table,
-  TableComposable,
+  ContextSelector,
+  Dropdown,
+  DropdownItem,
+  DropdownSeparator,
+  DropdownToggle,
+  DropdownToggleCheckbox,
+  OptionsMenu,
+  Select,
+} from '@patternfly/react-core/deprecated';
+import {
   Tr,
 } from '@patternfly/react-table';
+import {
+  Table as TableDeprecated,
+  Table,
+} from '@patternfly/react-table/deprecated';
 
 const checkForOuiaIds = () => {
   const ouiaSupportedPFComponents = [
@@ -74,7 +78,7 @@ const checkForOuiaIds = () => {
     Title,
     Toolbar,
     Table,
-    TableComposable,
+    TableDeprecated,
     Tr,
   ];
   beforeEach(() => {

@@ -222,7 +222,7 @@ const ContentViewTable = () => {
     >
       <Thead>
         <Tr ouiaId="cvTableHeaderRow">
-          <Th key="expand-carat" />
+          <Th key="expand-carat" aria-label="expand table header" />
           {columnHeaders.map(col => (
             <Th
               key={col}
@@ -231,7 +231,7 @@ const ContentViewTable = () => {
               {col}
             </Th>
           ))}
-          <Th key="action-menu" />
+          <Th key="action-menu" aria-label="action menu table header" />
         </Tr>
       </Thead>
       {

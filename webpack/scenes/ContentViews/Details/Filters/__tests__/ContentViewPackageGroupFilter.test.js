@@ -84,7 +84,8 @@ test('Can enable and disable add filter button', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
-  assertNockRequest(packageGroupsScope, done);
+  assertNockRequest(packageGroupsScope);
+  done();
 });
 
 test('Can remove a filter rule', async (done) => {
@@ -127,10 +128,10 @@ test('Can remove a filter rule', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText(name)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[2]);
-  expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'true');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[2]);
+  expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
   fireEvent.click(getByText('Remove'));
 
@@ -141,7 +142,8 @@ test('Can remove a filter rule', async (done) => {
   assertNockRequest(cvFiltersRuleScope);
   assertNockRequest(cvRequestCallbackScope);
 
-  assertNockRequest(packageGroupsScope, done);
+  assertNockRequest(packageGroupsScope);
+  done();
 });
 
 test('Can add a filter rule', async (done) => {
@@ -186,10 +188,10 @@ test('Can add a filter rule', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText(name)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[3]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[3]);
-  expect(getAllByLabelText('Actions')[3]).toHaveAttribute('aria-expanded', 'true');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[1]);
+  expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Add')).toBeInTheDocument());
   fireEvent.click(getByText('Add'));
 
@@ -200,7 +202,8 @@ test('Can add a filter rule', async (done) => {
   assertNockRequest(cvFiltersRuleScope);
   assertNockRequest(cvRequestCallbackScope);
 
-  assertNockRequest(packageGroupsScope, done);
+  assertNockRequest(packageGroupsScope);
+  done();
 });
 
 test('Can bulk remove filter rules', async (done) => {
@@ -262,7 +265,8 @@ test('Can bulk remove filter rules', async (done) => {
   assertNockRequest(cvFiltersRuleBulkDeleteScope);
   assertNockRequest(cvRequestCallbackScope);
 
-  assertNockRequest(packageGroupsScope, done);
+  assertNockRequest(packageGroupsScope);
+  done();
 });
 
 test('Can bulk add filter rules', async (done) => {
@@ -320,7 +324,8 @@ test('Can bulk add filter rules', async (done) => {
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleBulkAddScope);
   assertNockRequest(cvRequestCallbackScope);
-  assertNockRequest(packageGroupsScope, done);
+  assertNockRequest(packageGroupsScope);
+  done();
 });
 
 test('Can show affected repository tab on dropdown selection and add repos', async (done) => {
@@ -418,7 +423,8 @@ test('Can show affected repository tab on dropdown selection and add repos', asy
   assertNockRequest(cvAllReposScope);
   assertNockRequest(autocompleteScope);
   assertNockRequest(autocompleteScopeRepo);
-  assertNockRequest(packageGroupsScope, done);
+  assertNockRequest(packageGroupsScope);
+  done();
 });
 
 test('Can show affected repository tab and remove affected repos', async (done) => {
@@ -510,7 +516,8 @@ test('Can show affected repository tab and remove affected repos', async (done) 
   assertNockRequest(bulkRemoveReposScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvAllReposScope);
-  assertNockRequest(packageGroupsScope, done);
+  assertNockRequest(packageGroupsScope);
+  done();
 });
 
 test('Can filter by added/not added rules', async (done) => {
@@ -569,5 +576,6 @@ test('Can filter by added/not added rules', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
-  assertNockRequest(packageGroupsScope, done);
+  assertNockRequest(packageGroupsScope);
+  done();
 });
