@@ -112,7 +112,7 @@ module Katello
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :label, :complete_value => true
-    scoped_search :on => :composite, :complete_value => true
+    scoped_search :on => :composite, :complete_value => { :true => true, :false => false }
     scoped_search :on => :generated_for, :complete_value => true
     scoped_search :on => :default # just for ordering
     scoped_search :on => :name, :complete_value => true,
