@@ -13,6 +13,7 @@ module Katello
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
 
+    around_action :add_to_environment, :only => [:create]
     resource_description do
       api_version "v2"
     end
@@ -84,6 +85,7 @@ module Katello
     param :name, String, :desc => N_("Name of the content view"), :required => true
     param :label, String, :desc => N_("Content view label")
     param :composite, :bool, :desc => N_("Composite content view")
+    param :rolling, :bool, :desc => N_("Rolling content view")
     param_group :content_view
     def create
       @content_view = ContentView.create!(view_params) do |view|
@@ -284,11 +286,14 @@ module Katello
     def view_params
       attrs = [:name, :description, :auto_publish, :solve_dependencies, :import_only,
                :default, :created_at, :updated_at, :next_version, {:component_ids => []}]
-      attrs.push(:label, :composite) if action_name == "create"
+      attrs.push(:label, :composite, :rolling) if action_name == "create"
       if (!@content_view || !@content_view.composite?)
         attrs.push({:repository_ids => []}, :repository_ids)
       end
-      params.require(:content_view).permit(*attrs).to_h
+      result = params.require(:content_view).permit(*attrs).to_h
+      # sanitize repository_ids to be a list of integers
+      result[:repository_ids] = result[:repository_ids].map(&:to_i) if result[:repository_ids].present?
+      result
     end
 
     def find_environment
@@ -306,6 +311,12 @@ module Katello
         module_records.push(latest)
       end
       module_records
+    end
+
+    def add_to_environment
+      yield
+      return unless params[:rolling]
+      async_task(::Actions::Katello::ContentView::AddToEnvironment, @content_view.create_new_version, @content_view.organization.library)
     end
   end
 end
