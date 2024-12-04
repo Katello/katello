@@ -4,7 +4,8 @@ module Katello
       class Product < CandlepinResource
         class << self
           def all(owner_label, included = [])
-            products = JSON.parse(Candlepin::CandlepinResource.get(path(owner_label) + "?#{included_list(included)}", self.default_headers).body)
+            url = path(owner_label) + "?active=include" + "&#{included_list(included)}"
+            products = JSON.parse(Candlepin::CandlepinResource.get(url, self.default_headers).body)
             ::Katello::Util::Data.array_with_indifferent_access products
           end
 
