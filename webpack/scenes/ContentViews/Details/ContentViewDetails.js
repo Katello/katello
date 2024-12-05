@@ -81,31 +81,17 @@ export default () => {
   if (status === STATUS.PENDING) return (<Loading />);
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
 
-  const dropDownItems = [
-    <DropdownItem
-      key="copy"
-      ouiaId="cv-copy"
-      onClick={() => {
-        setCopying(true);
-      }}
-    >
-      {__('Copy')}
-    </DropdownItem>,
-    <DropdownItem
-      key="delete"
-      ouiaId="cv-delete"
-      onClick={() => {
-        setDeleting(true);
-      }}
-    >
-      {__('Delete')}
-    </DropdownItem>,
-  ];
-
   const {
     name, composite, rolling, permissions, environments, versions,
     generated_for: generatedFor, import_only: importOnly,
   } = details;
+
+  const dropDownItems = [];
+  if (!rolling) {
+    dropDownItems.push(<DropdownItem key="copy" ouiaId="cv-copy" onClick={() => { setCopying(true); }} > {__('Copy')}</DropdownItem>);
+  }
+  dropDownItems.push(<DropdownItem key="delete" ouiaId="cv-delete" onClick={() => { setDeleting(true); }} > {__('Delete')}</DropdownItem>);
+
   const generatedContentView = generatedFor !== 'none';
   const detailsTab = {
     key: 'details',
