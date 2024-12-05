@@ -139,6 +139,9 @@ module Katello
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     param :environment_id, :number, :desc => N_("environment numeric identifier"), :required => true
     def remove_from_environment
+      if @content_view.rolling?
+        fail HttpErrors::BadRequest, _("It's not possible to remove a Rolling content view from an environment.")
+      end
       unless @content_view.environments.include?(@environment)
         fail HttpErrors::BadRequest, _("Content view '%{view}' is not in lifecycle environment '%{env}'.") %
               {view: @content_view.name, env: @environment.name}
@@ -158,6 +161,9 @@ module Katello
     param :key_environment_id, :number, :desc => N_("environment to reassign orphaned activation keys to")
     param :destroy_content_view, :boolean, :desc => N_("delete the content view with all the versions and environments")
     def remove
+      if @content_view.rolling?
+        fail HttpErrors::BadRequest, _("It's not possible to remove versions from a Rolling content view.")
+      end
       if params[:destroy_content_view]
         cv_envs = @content_view.content_view_environments
         versions = @content_view.versions
@@ -194,6 +200,9 @@ module Katello
     param :key_content_view_id, :number, :desc => N_("content view to reassign orphaned activation keys to")
     param :key_environment_id, :number, :desc => N_("environment to reassign orphaned activation keys to")
     def bulk_delete_versions
+      if @content_view.rolling?
+        fail HttpErrors::BadRequest, _("It's not possible to bulk remove versions from a Rolling content view.")
+      end
       params[:bulk_content_view_version_ids] ||= {}
 
       versions = find_bulk_items(bulk_params: params[:bulk_content_view_version_ids],
@@ -239,6 +248,9 @@ module Katello
     param :name, String, :required => true, :desc => N_("New content view name")
     def copy
       @content_view = Katello::ContentView.readable.find_by(:id => params[:id])
+      if @content_view.rolling?
+        fail HttpErrors::BadRequest, _("It's not possible to copy a Rolling content view.")
+      end
       throw_resource_not_found(name: 'content_view', id: params[:id]) if @content_view.blank?
       ensure_non_default
       new_content_view = @content_view.copy(params[:content_view][:name])
@@ -248,6 +260,9 @@ module Katello
     private
 
     def validate_publish_params!
+      if @content_view.rolling?
+        fail HttpErrors::BadRequest, _("It's not possible to publish a Rolling content view.")
+      end
       if params[:repos_units].present? && @content_view.composite?
         fail HttpErrors::BadRequest, _("Directly setting package lists on composite content views is not allowed. Please " \
                                      "update the components, then re-publish the composite.")
