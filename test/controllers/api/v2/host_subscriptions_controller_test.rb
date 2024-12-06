@@ -239,6 +239,38 @@ module Katello
       refute_equal result, "wrong"
     end
 
+    def test_fetch_product_content_with_respect_to_environment
+      # Create fake product content and stub ProductContentFinder
+      pcf = mock
+      pcf.stubs(:presenter_with_overrides)
+
+      controller = ::Katello::Api::V2::HostSubscriptionsController.new
+      controller.stubs(:respond_with_template_collection)
+      controller.stubs(:sync_task)
+      controller.stubs(:validate_content_overrides_enabled)
+      controller.stubs(:full_result_response)
+      controller.instance_variable_set(:@host, @host)
+      controller.instance_variable_set(:@content_overrides, [{:content_label => 'some-content', :value => 1}])
+
+      # Actual tests that expect the correct parameters to be passed to 'content_override'
+      ProductContentFinder.expects(:new).with(match_environment: true, consumable: @host.subscription_facet).returns(pcf)
+      ProductContentFinder.expects(:new).with(match_environment: false, consumable: @host.subscription_facet).returns(pcf).times(3)
+
+      # Invoke the call to the controller with a variaty of parameters
+      # Try with limit_to_env enabled
+      controller.params = { :host_id => @host.id, :content_overrides_search => { :search => '', :limit_to_env => true} }
+      controller.send(:content_override)
+      # Try with limit_to_env disabled
+      controller.params = { :host_id => @host.id, :content_overrides_search => { :search => '', :limit_to_env => false} }
+      controller.send(:content_override)
+      # Try with limit_to_env not set - should be the same as disabled
+      controller.params = { :host_id => @host.id, :content_overrides_search => { :search => ''} }
+      controller.send(:content_override)
+      # Try without search params - should be the same as disabled
+      controller.params = { :host_id => @host.id}
+      controller.send(:content_override)
+    end
+
     def test_find_content_overrides_with_empty_string_search_limited_to_environment
       # Create Host with "fedora" and "rhel" as content
       content_view = katello_content_views(:library_dev_view)
