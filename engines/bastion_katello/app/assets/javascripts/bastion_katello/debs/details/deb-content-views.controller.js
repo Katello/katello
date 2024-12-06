@@ -45,7 +45,8 @@
         '$scope',
         'Nutupane',
         'ContentViewVersion',
-        'CurrentOrganization'
+        'CurrentOrganization',
+        'translate'
     ];
 
 })();
