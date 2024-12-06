@@ -1,6 +1,6 @@
 object @resource
 
-attributes :id, :schema_version, :digest, :manifest_type
+attributes :id, :schema_version, :digest, :manifest_type, :content_type
 attributes :annotations, :labels, :is_bootable, :is_flatpak
 
 child :docker_tags => :tags do
