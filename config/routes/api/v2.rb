@@ -278,6 +278,8 @@ Katello::Engine.routes.draw do
               get :manifest_history
             end
           end
+          api_resources :flatpak_remotes, :only => [:index, :show]
+          api_resources :flatpak_remote_repositories, :only => [:index, :show]
         end
 
         match "/packages/thindex" => "packages#thindex", :via => :get
