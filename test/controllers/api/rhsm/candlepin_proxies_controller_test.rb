@@ -85,7 +85,7 @@ module Katello
       end
     end
 
-    describe "register with a lifecycle environment" do
+    describe "register with a single lifecycle environment" do
       before do
         @facts = { 'network.hostname' => 'somehostname'}
         @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment).id)
@@ -122,7 +122,7 @@ module Katello
         assert_response 400
       end
 
-      it "should not register" do
+      it "should not register with dead services" do
         ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
         ::Katello::RegistrationManager.expects(:process_registration).never
 
@@ -130,6 +130,31 @@ module Katello
                                          :environment_id => @content_view_environment.cp_id, :facts => @facts })
 
         assert_response 500
+      end
+
+      it "should not register with a content view generated for repository export" do
+        organization = Organization.find(taxonomies(:empty_organization).id)
+        library = organization.library
+
+        generated_cv = FactoryBot.create(:katello_content_view, :generated_for => :repository_export, :organization => organization)
+        generated_cve = FactoryBot.create(:katello_content_view_environment,
+                                          :content_view => generated_cv,
+                                          :environment => library)
+
+        Resources::Candlepin::Consumer.stubs(:get)
+        ::Katello::RegistrationManager.expects(:check_registration_services).returns(true)
+        ::Katello::RegistrationManager.expects(:process_registration).never
+
+        post(
+          :consumer_create,
+          :params => {
+            :organization_id => organization.label,
+            :environment_id => generated_cve.cp_id,
+            :facts => @facts
+          }
+        )
+
+        assert_response 400
       end
     end
 
