@@ -19,6 +19,7 @@ Katello::Engine.routes.draw do
       match '/v2' => 'registry_proxies#ping', :via => :get
       match '/v1/_ping' => 'registry_proxies#v1_ping', :via => :get
       match '/v1/search' => 'registry_proxies#v1_search', :via => :get
+      match '/index/static' => 'registry_proxies#static_index', :via => :get
     end
   end
 end
