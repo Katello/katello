@@ -1059,10 +1059,15 @@ module Katello
       pulp_api.list({:repository_version => version_href}).results.map { |x| x.component }.uniq
     end
 
+    def deb_sanitize_pulp_distribution(distribution)
+      return "flat-repo" if distribution&.end_with?("/")
+      distribution
+    end
+
     def deb_pulp_distributions(version_href = self.version_href)
       return [] if version_href.blank?
       pulp_api = Katello::Pulp3::Repository.instance_for_type(self, SmartProxy.pulp_primary).api.content_release_components_api
-      pulp_api.list({:repository_version => version_href}).results.map { |x| x.distribution }.uniq
+      pulp_api.list({:repository_version => version_href}).results.map { |x| deb_sanitize_pulp_distribution(x.distribution) }.uniq
     end
 
     def sync_status
