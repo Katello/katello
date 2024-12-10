@@ -204,6 +204,15 @@ Foreman::Plugin.register :katello do
        :after => :content_hosts,
        :turbolinks => false
 
+  menu :labs_menu,
+       :flatpak,
+       :url => '/labs/flatpak_remotes',
+       :url_hash => {:controller => 'katello/api/v2/flatpak_remotes_controller',
+                     :action => 'index'},
+       :caption => N_('Flatpak Remotes'),
+       :parent => :lab_features_menu,
+       :turbolinks => false
+
   extend_template_helpers Katello::KatelloUrlsHelper
   extend_template_helpers Katello::Concerns::BaseTemplateScopeExtensions
 
