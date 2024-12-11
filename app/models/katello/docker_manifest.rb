@@ -11,12 +11,15 @@ module Katello
     CONTENT_TYPE = "docker_manifest".freeze
 
     scope :bootable, -> { where(:is_bootable => true) }
+    scope :flatpak, -> { where(:is_flatpak => true) }
 
     scoped_search :relation => :docker_tags, :on => :name, :rename => :tag, :complete_value => true
     scoped_search :on => :digest, :rename => :digest, :complete_value => true, :only_explicit => true
     scoped_search :on => :schema_version, :rename => :schema_version, :complete_value => true, :only_explicit => true
     scoped_search :relation => :docker_manifest_lists, :on => :digest, :rename => :manifest_list_digest, :complete_value => true, :only_explicit => true
     scoped_search :on => :is_bootable, :rename => :bootable, :complete_value => true, :only_explicit => true
+    scoped_search :on => :is_flatpak, :rename => :flatpak, :complete_value => true, :only_explicit => true
+    scoped_search :on => :content_type, :complete_value => true, :only_explicit => true
 
     def self.default_sort
       order(:schema_version)
