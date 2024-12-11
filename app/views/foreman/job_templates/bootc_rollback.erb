@@ -1,0 +1,13 @@
+<%#
+kind: job_template
+name: Bootc Rollback - Script Default
+job_category: Bootc
+description_format: 'bootc rollback'
+feature: katello_bootc_rollback
+provider_type: script
+foreign_input_sets:
+- template: Bootc Action - Script Default
+  exclude: action, options, target
+%>
+
+<%= render_template('Bootc Action - Script Default', :action => 'rollback') %>
