@@ -1,0 +1,13 @@
+<%#
+kind: job_template
+name: Bootc Switch - Script Default
+job_category: Bootc
+description_format: 'bootc switch %{options} %{target}'
+feature: katello_bootc_switch
+provider_type: script
+foreign_input_sets:
+- template: Bootc Action - Script Default
+  exclude: action
+%>
+
+<%= render_template('Bootc Action - Script Default', :action => 'switch') %>

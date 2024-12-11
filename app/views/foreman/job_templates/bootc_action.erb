@@ -1,0 +1,26 @@
+<%#
+kind: job_template
+name: Bootc Action - Script Default
+model: JobTemplate
+job_category: Bootc
+description_format: 'bootc %{action} %{options} %{target}'
+provider_type: script
+feature: katello_bootc_action
+template_inputs:
+- name: action
+  description: 'The bootc action: upgrade, switch, rollback or status'
+  input_type: user
+  options: "upgrade\nswitch\nrollback\nstatus"
+  required: true
+- name: options
+  description: Additional options for bootc action
+  input_type: user
+  required: false
+- name: target
+  description: Target for bootc switch action
+  input_type: user
+  required: false
+%>
+
+bootc <%= input('action') %> <%= input('options') %> <%= input('target') %>
+subscription-manager facts --update

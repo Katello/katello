@@ -698,6 +698,10 @@ Foreman::Plugin.register :katello do
   RemoteExecutionFeature.register(:katello_module_stream_action, N_("Katello: Module Stream Actions"),
                                   :description => N_("Perform a module stream action via Katello interface"),
                                   :provided_inputs => ['action', 'module_spec', 'options'])
+  RemoteExecutionFeature.register(:katello_bootc_upgrade, N_("Katello: Bootc Upgrade"), :description => N_("Bootc upgrade via Bootc interface"))
+  RemoteExecutionFeature.register(:katello_bootc_switch, N_("Katello: Bootc Switch"), :description => N_("Bootc switch via Bootc interface"))
+  RemoteExecutionFeature.register(:katello_bootc_rollback, N_("Katello: Bootc Rollback"), :description => N_("Bootc rollback via Bootc interface"))
+  RemoteExecutionFeature.register(:katello_bootc_status, N_("Katello: Bootc Status"), :description => N_("Bootc status via Bootc interface"))
   allowed_template_helpers :errata
 
   RemoteExecutionProvider.singleton_class.prepend(Katello::Concerns::RemoteExecutionProviderExtensions)
