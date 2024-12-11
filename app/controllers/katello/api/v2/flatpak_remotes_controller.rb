@@ -19,7 +19,6 @@ module Katello
     api :GET, "/flatpak_remotes", N_("List flatpak remotes")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     param :name, String, :desc => N_("Name of the flatpak remote"), :required => false
-    param :label, String, :desc => N_("Label of the flatpak remote"), :required => false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(FlatpakRemote)
     def index
@@ -35,14 +34,16 @@ module Katello
     end
 
     api :GET, "/flatpak_remotes/:id", N_("Show a flatpak remote")
+    api :GET, "/organizations/:organization_id/flatpak_remotes/:id", N_("Show a flatpak remote")
     param :id, :number, :desc => N_("Flatpak remote numeric identifier"), :required => true
+    param :organization_id, :number, :desc => N_("organization identifier")
     def show
       respond :resource => @flatpak_remote
     end
 
-    api :POST, "/flatpak_remote", N_("Create a flatpak remote")
+    api :POST, "/flatpak_remotes", N_("Create a flatpak remote")
     param :name, String, :desc => N_("name"), :required => true
-    param :url, String, :desc => N_("url"), :required => true
+    param :url, String, :desc => N_("Base URL of the flatpak registry index, ex: https://flatpaks.redhat.io/rhel/ , https://registry.fedoraproject.org/."), :required => true
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param_group :flatpak_remote
     def create
@@ -55,7 +56,7 @@ module Katello
     param_group :flatpak_remote
     param :id, :number, :desc => N_("Flatpak remote numeric identifier"), :required => true
     param :name, String, :desc => N_("name")
-    param :url, String, :desc => N_("url")
+    param :url, String, :desc => N_("Base URL of the flatpak registry index, ex: https://flatpaks.redhat.io/rhel/ , https://registry.fedoraproject.org/.")
     def update
       @flatpak_remote.update!(flatpak_remote_params)
       respond_for_show(:resource => @flatpak_remote)
@@ -67,7 +68,7 @@ module Katello
       @flatpak_remote.destroy
     end
 
-    api :POST, "/flatpak_remote/:id/scan", N_("Scan a flatpak remote")
+    api :POST, "/flatpak_remotes/:id/scan", N_("Scan a flatpak remote")
     param :id, :number, :desc => N_("Flatpak remote numeric identifier"), :required => true
     def scan
       task = async_task(::Actions::Katello::Flatpak::ScanRemote, @flatpak_remote)
@@ -79,7 +80,7 @@ module Katello
     end
 
     def flatpak_remote_params
-      params.require(:flatpak_remote).permit(:name, :url, :organization_id, :description, :username, :token)
+      params.require(:flatpak_remote).permit(:name, :url, :description, :organization_id, :username, :token)
     end
   end
 end
