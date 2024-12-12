@@ -12,13 +12,13 @@ class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
           n       NUMERIC,
           s       TEXT
         );
-        
+
         create type evr_t as (
           epoch INT,
           version evr_array_item[],
           release evr_array_item[]
         );
-        
+
         CREATE FUNCTION evr_trigger() RETURNS trigger AS $$
           BEGIN
             NEW.evr = (select ROW(coalesce(NEW.epoch::numeric,0),
@@ -27,14 +27,14 @@ class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
             RETURN NEW;
           END;
         $$ language 'plpgsql';
-        
+
         create or replace FUNCTION empty(t TEXT)
         	RETURNS BOOLEAN as $$
         	BEGIN
         		return t ~ '^[[:space:]]*$';
         	END;
         $$ language 'plpgsql';
-        
+
         create or replace FUNCTION isalpha(ch CHAR)
           RETURNS BOOLEAN as $$
           BEGIN
@@ -46,7 +46,7 @@ class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
             return FALSE;
           END;
         $$ language 'plpgsql';
-        
+
         create or replace FUNCTION isalphanum(ch CHAR)
         	RETURNS BOOLEAN as $$
         	BEGIN
@@ -59,7 +59,7 @@ class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
         		return FALSE;
         	END;
         $$ language 'plpgsql';
-        
+
         create or replace function isdigit(ch CHAR)
         	RETURNS BOOLEAN as $$
         	BEGIN
@@ -70,7 +70,7 @@ class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
         	  return FALSE;
         	END ;
         $$ language 'plpgsql';
-        
+
         create or replace FUNCTION rpmver_array (string1 IN VARCHAR)
         	RETURNS evr_array_item[] as $$
         	declare
@@ -87,7 +87,7 @@ class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
         		then
         			RAISE EXCEPTION 'VALUE_ERROR.';
         		end if;
-        
+
         		one := str1;
         		<<segment_loop>>
         		while one <> ''
@@ -114,7 +114,7 @@ class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
         				then segm1 := substr(one, 1, length(one) - length(str1));
         				else segm1 := one;
         				end if;
-        
+
         				if segm1 = '' then return ver_array; end if; /* arbitrary */
         				if isnum
         				then
@@ -127,11 +127,11 @@ class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
         				one := str1;
         			end;
         		end loop segment_loop;
-        
+
         		return ver_array;
         	END ;
         $$ language 'plpgsql';
-        
+
       SQL
 
       add_column :katello_rpms, :evr, :evr_t
