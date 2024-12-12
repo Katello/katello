@@ -4,6 +4,7 @@ describe('Controller: DebsController', function() {
         $controller,
         dependencies,
         Deb,
+        Repository,
         Nutupane;
 
     beforeEach(module('Bastion.debs', 'Bastion.test-mocks'));
@@ -25,7 +26,7 @@ describe('Controller: DebsController', function() {
 
     beforeEach(inject(function(_$controller_, $rootScope, _$location_, MockResource, translateMock) {
         Deb = MockResource.$new();
-        //Repository = MockResource.$new();
+        Repository = MockResource.$new();
         $scope = $rootScope.$new();
         $location = _$location_;
 
@@ -36,7 +37,7 @@ describe('Controller: DebsController', function() {
             Nutupane: Nutupane,
             Deb: Deb,
             //Task: Task,
-            //Repository: Repository,
+            Repository: Repository,
             CurrentOrganization: 'CurrentOrganization',
             translate: translateMock
         };
@@ -63,4 +64,24 @@ describe('Controller: DebsController', function() {
         expect($scope.table.params['packages_restrict_applicable']).toBe(true)
         expect($scope.table.params['packages_restrict_upgradable']).toBe(true)
     });
+
+    it('should set the repository_id param on Nutupane when a repository is chosen', function () {
+        spyOn($scope.nutupane, 'setParams');
+        spyOn($scope.nutupane, 'refresh');
+
+        $scope.repository = {id: 1};
+        $scope.$apply();
+
+        expect($scope.nutupane.setParams).toHaveBeenCalledWith({'repository_id': 1});
+        expect($scope.nutupane.refresh).toHaveBeenCalled();
+    });
+
+    it('allows the setting of the repositoryId via a query string parameter', function () {
+        $location.search('repositoryId', '1');
+
+        $controller('DebsController', dependencies);
+
+        expect($scope.repository.id).toBe(1);
+    });
+
 });
