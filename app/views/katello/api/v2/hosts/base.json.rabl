@@ -5,14 +5,6 @@ object @resource
 
 attributes :id, :name, :description
 
-node :operatingsystem_family do |resource|
-  resource.operatingsystem&.family
-end
-
-node :operatingsystem_major do |resource|
-  resource.operatingsystem&.major
-end
-
 if @facet
   node :content_view do
     content_view = @facet&.single_content_view
