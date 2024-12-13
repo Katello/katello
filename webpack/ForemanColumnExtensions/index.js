@@ -97,6 +97,7 @@ const hostsIndexColumnExtensions = [
       const registered = !!hostDetails?.subscription_facet_attributes?.uuid;
       const { security, bugfix, enhancement } = errataCounts ?? {};
       const upgradableRpmCount = hostDetails?.content_facet_attributes?.upgradable_package_count;
+      const upgradableDebCount = hostDetails?.content_facet_attributes?.upgradable_deb_count;
       if (!registered) return '—';
       const hostErrataUrl = type => `hosts/${hostDetails?.name}#/Content/errata?type=${type}&show=installable`;
       return (
@@ -119,10 +120,14 @@ const hostsIndexColumnExtensions = [
               <Link to={hostErrataUrl('enhancement')}>{enhancement}</Link>
             </FlexItem>
           }
-          {upgradableRpmCount !== undefined &&
+          {(upgradableRpmCount !== undefined || upgradableDebCount !== undefined) &&
             <FlexItem>
               <PackageIcon />
-              <Link to={`hosts/${hostDetails?.name}#/Content/Packages?status=Upgradable`}>{upgradableRpmCount}</Link>
+              { hostDetails?.operatingsystem_family === 'Debian' ?
+                <Link to={`hosts/${hostDetails?.name}#/Content/Debs?status=Upgradable`}>{upgradableDebCount}</Link>
+                :
+                <Link to={`hosts/${hostDetails?.name}#/Content/Packages?status=Upgradable`}>{upgradableRpmCount}</Link>
+              }
             </FlexItem>
           }
         </Flex>
