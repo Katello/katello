@@ -33,6 +33,8 @@ Katello::Engine.routes.draw do
   match '/alternate_content_sources' => 'react#index', :via => [:get]
   match '/alternate_content_sources/*page' => 'react#index', :via => [:get]
 
+  match '/booted_container_images' => 'react#index', :via => [:get]
+
   Katello::RepositoryTypeManager.generic_ui_content_types(false).each do |type|
     get "/#{type.pluralize}", to: redirect("/content/#{type.pluralize}")
     get "/#{type.pluralize}/:page", to: redirect("/content/#{type.pluralize}/%{page}")
