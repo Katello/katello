@@ -70,6 +70,15 @@ Foreman::Plugin.register :katello do
          :engine => Katello::Engine,
          :turbolinks => false
 
+    menu :top_menu,
+         :booted_container_images,
+         :caption => N_('Booted container images'),
+         :url_hash => {:controller => 'katello/api/v2/host_bootc_images',
+                       :action => 'bootc_images'},
+         :url => '/booted_container_images',
+         :engine => Katello::Engine,
+         :turbolinks => false
+
     divider :top_menu, :caption => N_('Lifecycle'), :parent => :content_menu
 
     menu :top_menu,
