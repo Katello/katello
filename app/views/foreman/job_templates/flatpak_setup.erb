@@ -1,0 +1,35 @@
+<%#
+kind: job_template
+name: Setup Flatpak remote on host
+job_category: Katello
+description_format: 'Setup Flatpak remote on host'
+provider_type: script
+template_inputs:
+- name: Flatpak registry URL
+  description: URL of server/capsule
+  input_type: user
+  required: true
+- name: Username
+  description: Username for container registry login
+  input_type: user
+  required: true
+- name: Password
+  description: Password/Access token for container registry login
+  input_type: user
+  required: true
+- name: Remote Name
+  description: Remote name for Flatpak
+  input_type: user
+  required: true
+%>
+
+<%
+  remote_name = input('Remote Name')
+  server_url = input('Flatpak registry URL')
+  username = input('Username')
+  password = input('Password')
+%>
+
+sudo flatpak remote-add --authenticator-name=org.flatpak.Authenticator.Oci <%= remote_name %> oci+<%= server_url %>/
+sudo podman login <%= server_url %> --username <%= username %> --password <%= password %>
+sudo cp /run/containers/0/auth.json /etc/flatpak/oci-auth.json
