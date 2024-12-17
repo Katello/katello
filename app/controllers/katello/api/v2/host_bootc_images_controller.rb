@@ -10,10 +10,11 @@ module Katello
     param :per_page, :number, :desc => N_("Number of results per page to return")
     def bootc_images
       bootc_image_map = bootc_host_image_map
-      page = params[:page] || 1
-      per_page = params[:per_page] || Setting[:entries_per_page]
-      paged_results = bootc_image_map.to_a.paginate(page: page, per_page: per_page)
-      render json: { total: bootc_image_map.size, bootc_images: paged_results }
+      page = params[:page].to_i || 1
+      per_page = params[:per_page].to_i || Setting[:entries_per_page]
+      paged_images = bootc_image_map.to_a.paginate(page: page, per_page: per_page)
+      results = paged_images.collect { |image| { image_name: image[0], digests: image[1] } }
+      render json: { total: bootc_image_map.size, page: page, per_page: per_page, subtotal: bootc_image_map.size, results: results}
     end
 
     private
