@@ -1,0 +1,27 @@
+<%#
+kind: job_template
+name: Set up Flatpak remote on host
+job_category: Katello
+description_format: 'Set up Flatpak remote on host'
+provider_type: script
+template_inputs:
+- name: Remote Name
+  description: Remote name for Flatpak
+  input_type: user
+  required: true
+- name: Flatpak registry URL
+  description: URL of server/capsule
+  input_type: user
+  required: true
+foreign_input_sets:
+- template: Login to flatpak registry via podman
+  exclude: Flatpak registry URL
+%>
+
+<%
+  remote_name = input('Remote Name')
+  registry_url = input('Flatpak registry URL')
+%>
+
+sudo flatpak remote-add --authenticator-name=org.flatpak.Authenticator.Oci <%= remote_name %> oci+<%= registry_url %>/
+<%= render_template('Login to flatpak registry via podman', 'Flatpak registry URL': registry_url) %>

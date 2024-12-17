@@ -1,0 +1,30 @@
+<%#
+kind: job_template
+name: Login to flatpak registry via podman
+job_category: Katello
+description_format: 'Login to flatpak registry via podman'
+provider_type: script
+template_inputs:
+- name: Flatpak registry URL
+  description: URL of server/capsule
+  input_type: user
+  required: true
+- name: Username
+  description: Username for container registry login
+  input_type: user
+  required: true
+- name: Password
+  description: Password/Access token for container registry login
+  input_type: user
+  required: true
+  hidden_value: true
+%>
+
+<%
+  server_url = input('Flatpak registry URL')
+  username = input('Username')
+  password = input('Password')
+%>
+
+sudo podman login <%= server_url %> --username <%= username %> --password <%= password %>
+sudo cp /run/containers/0/auth.json /etc/flatpak/oci-auth.json
