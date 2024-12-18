@@ -84,6 +84,10 @@ module Katello
         uri.user = nil
         "#{name} (#{uri})"
       end
+
+      def content_default_http_proxy?
+        Setting[:content_default_http_proxy] == name
+      end
     end
   end
 end
