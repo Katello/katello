@@ -342,7 +342,9 @@ module Katello
     end
 
     def latest_version_env
-      latest_version_object.try(:environments) || []
+      environments = organization.readable_promotion_paths.flatten
+      environments.insert(0, organization.library)
+      environments.intersection(latest_version_object.try(:environments) || [])
     end
 
     def last_task

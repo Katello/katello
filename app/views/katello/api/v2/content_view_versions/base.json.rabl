@@ -49,7 +49,7 @@ end
 extends 'katello/api/v2/common/timestamps'
 
 version = @object || @resource
-child :environments => :environments do
+child :sorted_organization_readable_environments => :environments do
   attributes :id, :name, :label
 
   node :publish_date do |env|

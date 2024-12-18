@@ -108,6 +108,12 @@ module Katello
       name
     end
 
+    def sorted_organization_readable_environments
+      organization_readable_environments = organization.readable_promotion_paths.flatten
+      organization_readable_environments.insert(0, organization.library)
+      organization_readable_environments.intersection(environments)
+    end
+
     def self.contains_file(file_unit_id)
       where(id: Katello::Repository.where(id: Katello::RepositoryFileUnit.where(file_unit_id: file_unit_id).select(:repository_id)).select(:content_view_version_id))
     end
