@@ -15,6 +15,7 @@ module Katello
     param :content_type, RepositoryTypeManager.uploadable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')")
     def create
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Ansible collections.") if @repository.ansible_collection?
+      fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload container content via Hammer/API. Use podman push instead.") if @repository.docker?
       content_type = params[:content_type] || ::Katello::RepositoryTypeManager.find(@repository.content_type)&.default_managed_content_type&.label
       RepositoryTypeManager.check_content_matches_repo_type!(@repository, content_type)
       if ::Katello::RepositoryTypeManager.generic_content_type?(content_type)
