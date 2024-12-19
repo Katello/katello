@@ -1,0 +1,13 @@
+<%#
+kind: job_template
+name: Bootc Upgrade - Script Default
+job_category: Bootc
+description_format: 'bootc upgrade %{options}'
+feature: katello_bootc_upgrade
+provider_type: script
+foreign_input_sets:
+- template: Bootc Action - Script Default
+  exclude: action, target
+%>
+
+<%= render_template('Bootc Action - Script Default', :action => 'upgrade') %>
