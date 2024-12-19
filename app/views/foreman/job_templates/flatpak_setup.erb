@@ -1,0 +1,37 @@
+<%#
+kind: job_template
+name: Install Flatpak and Firefox
+job_category: Katello
+description_format: 'Install Flatpak and Firefox'
+feature: katello_host_flatpak_install
+provider_type: script
+template_inputs:
+- name: Flatpak registry URL
+  description: URL of server/capsule
+  input_type: user
+  required: true
+- name: Username
+  description: Username for container registry login
+  input_type: user
+  required: true
+- name: Password
+  description: Password for container registry login
+  input_type: user
+  required: true
+- name: Remote Name
+  description: Remote name for Flatpak
+  input_type: user
+  required: true
+%>
+
+<%
+  remote_name = input('Remote Name')
+  server_url = input('Flatpak registry URL')
+  username = input('Username')
+  password = input('Password')
+%>
+
+flatpak remote-add --authenticator-name=org.flatpak.Authenticator.Oci <%= remote_name %> oci+<%= server_url %>/
+podman login <%= server_url %> --username <%= username %> --password <%= password %>
+cp /run/containers/0/auth.json /etc/flatpak/oci-auth.json
+flatpak install firefox --assumeyes
