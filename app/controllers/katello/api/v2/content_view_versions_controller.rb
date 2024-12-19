@@ -60,6 +60,9 @@ module Katello
     param :environment_ids, Array, :desc => N_("Identifiers for Lifecycle Environment")
     param :description, String, :desc => N_("The description for the content view version promotion")
     def promote
+      if @view.rolling?
+        fail HttpErrors::BadRequest, _("It's not possible to promote a rolling content view.")
+      end
       is_force = ::Foreman::Cast.to_bool(params[:force])
       task = async_task(::Actions::Katello::ContentView::Promote,
                         @content_view_version, @environments, is_force, params[:description])
@@ -97,6 +100,9 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. New ver
     api :DELETE, "/content_view_versions/:id", N_("Remove content view version")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     def destroy
+      if @view.rolling?
+        fail HttpErrors::BadRequest, _("It's not possible to destroy a version of a rolling content view.")
+      end
       task = async_task(::Actions::Katello::ContentViewVersion::Destroy, @content_view_version)
       respond_for_async :resource => task
     end

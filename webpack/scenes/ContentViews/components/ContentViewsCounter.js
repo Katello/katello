@@ -11,8 +11,9 @@ const ContentViewsCounter = () => {
   const {
     composite_content_views_count: composite,
     content_view_components_count: component,
+    rolling_content_views_count: rolling,
   } = organization;
-  if (composite || component) {
+  if (composite || component || rolling) {
     return (
       <Grid>
         <GridItem span={12}>
@@ -21,7 +22,8 @@ const ContentViewsCounter = () => {
               <FlexItem spacer={{ default: 'spacerXs' }}>
                 <ContentViewIcon
                   composite={false}
-                  description={__('Content views')}
+                  rolling={false}
+                  description={__('Regular content views')}
                   count={(component || component === 0) ? component : <InProgressIcon />}
                 />
               </FlexItem>
@@ -29,7 +31,7 @@ const ContentViewsCounter = () => {
                 <Tooltip
                   position="top"
                   content={
-                    __('Consists of repositories')
+                    __('Contains a set of versioned and optionally filtered repositories')
                   }
                 >
                   <OutlinedQuestionCircleIcon />
@@ -52,7 +54,30 @@ const ContentViewsCounter = () => {
                 <Tooltip
                   position="top"
                   content={
-                    __('Consists of content views')
+                    __('Contains a set of regular content views')
+                  }
+                >
+                  <OutlinedQuestionCircleIcon />
+                </Tooltip>
+              </FlexItem>
+            </Flex>
+          </b>
+        </GridItem>
+        <GridItem span={12}>
+          <b>
+            <Flex>
+              <FlexItem spacer={{ default: 'spacerXs' }}>
+                <ContentViewIcon
+                  rolling
+                  description={__('Rolling content views')}
+                  count={(rolling || rolling === 0) ? rolling : <InProgressIcon />}
+                />
+              </FlexItem>
+              <FlexItem>
+                <Tooltip
+                  position="top"
+                  content={
+                    __('Contains a set of repositories that always contain the latest synced content')
                   }
                 >
                   <OutlinedQuestionCircleIcon />
