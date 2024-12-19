@@ -15,6 +15,17 @@ const BootedContainerImagesPage = () => {
   const columns = {
     image_name: {
       title: __('Image name'),
+      isSorted: true,
+    },
+    digest: {
+      title: __('Image digests'),
+      wrapper: ({digests}) => digests.length,
+    },
+    hosts: {
+      title: __('Hosts'),
+      wrapper: ({image_name, digests}) => (
+        <a href={`/hosts?search=bootc_booted_image%20=%20${image_name}`}>{digests.reduce((total, digest) => total + digest.host_count, 0)}</a>
+      ),
     },
   };
 
