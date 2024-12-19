@@ -3,6 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   ActionList,
   ActionListItem,
+  Skeleton,
+  Split,
+  SplitItem,
+} from '@patternfly/react-core';
+import {
   Dropdown,
   DropdownItem,
   DropdownSeparator,
@@ -12,10 +17,7 @@ import {
   Select,
   SelectOption,
   SelectVariant,
-  Skeleton,
-  Split,
-  SplitItem,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText } from '@patternfly/react-table';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -74,7 +76,7 @@ const UpdateVersionsSelect = ({
           variant={SelectVariant.single}
           aria-label="upgradable-version-select"
           ouiaId="upgradable-version-select"
-          onToggle={isOpen => toggleUpgradableVersionSelect(isOpen, rowIndex)}
+          onToggle={(_event, isOpen) => toggleUpgradableVersionSelect(isOpen, rowIndex)}
           onSelect={(event, selected) => {
             onUpgradableVersionSelect(event, selected, rowIndex, packageName);
           }}
@@ -502,7 +504,7 @@ export const DebsTab = () => {
         >
           <Thead>
             <Tr ouiaId="row-header">
-              <Th key="select-all" />
+              <Th key="select-all" aria-label="Select all table header" />
               <SortableColumnHeaders
                 columnHeaders={columnHeaders}
                 pfSortParams={pfSortParams}
@@ -537,12 +539,7 @@ export const DebsTab = () => {
                     isDisabled: actionInProgress,
                   },
                   {
-                    title: __('Upgrade via customized remote execution'),
-                    component: 'a',
-                    href: katelloPackageUpdateUrl({
-                      hostname,
-                      packageName,
-                    }),
+                    title: <a href={katelloPackageUpdateUrl({ hostname, packageName })}>{__('Upgrade via customized remote execution')}</a>,
                   },
                 );
               }
@@ -552,7 +549,7 @@ export const DebsTab = () => {
                   {showActions ? (
                     <Td
                       select={{
-                        disable: actionInProgress,
+                        isDisabled: actionInProgress,
                         isSelected: isSelected(id),
                         onSelect: (event, selected) => selectOne(selected, id, pkg),
                         rowIndex,

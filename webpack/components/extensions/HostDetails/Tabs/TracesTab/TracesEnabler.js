@@ -4,12 +4,11 @@ import {
   EmptyState,
   EmptyStateIcon,
   EmptyStateBody,
-  Title,
   EmptyStateVariant,
   Button,
   Flex,
   FlexItem,
-  Spinner,
+  Spinner, EmptyStateHeader, EmptyStateFooter,
 } from '@patternfly/react-core';
 import { WrenchIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -67,14 +66,12 @@ const TracesEnabler = ({ hostname, tracerRpmAvailable }) => {
   } = useRexJobPolling(initialAction, successAction);
 
   return (
-    <EmptyState variant={EmptyStateVariant.small}>
+    <EmptyState variant={EmptyStateVariant.sm}>
       {pollingStarted ?
         <Spinner /> :
         <EmptyStateIcon icon={WrenchIcon} />
       }
-      <Title ouiaId="enable-tracer-title" headingLevel="h2" size="lg">
-        {pollingStarted ? enablingTitle : title}
-      </Title>
+      <EmptyStateHeader titleText={<>{pollingStarted ? enablingTitle : title}</>} headingLevel="h2" />
       <EmptyStateBody>
         <Flex direction={{ default: 'column' }}>
           <FlexItem>{body}</FlexItem>
@@ -90,13 +87,15 @@ const TracesEnabler = ({ hostname, tracerRpmAvailable }) => {
           </FlexItem>
         </Flex>
       </EmptyStateBody>
-      <EnableTracerModal
-        key={hostname}
-        isOpen={enableTracerModalOpen}
-        setIsOpen={setEnableTracerModalOpen}
-        triggerJobStart={triggerJobStart}
-        tracerRpmAvailable={tracerRpmAvailable}
-      />
+      <EmptyStateFooter>
+        <EnableTracerModal
+          key={hostname}
+          isOpen={enableTracerModalOpen}
+          setIsOpen={setEnableTracerModalOpen}
+          triggerJobStart={triggerJobStart}
+          tracerRpmAvailable={tracerRpmAvailable}
+        />
+      </EmptyStateFooter>
     </EmptyState>
   );
 };

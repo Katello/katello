@@ -8,7 +8,7 @@ const ComponentEnvironments = ({ environments }) => environments.map((env, index
     style={{ margin: `4px 0 4px ${index > 0 ? '4px' : '0'}` }}
     color="purple"
     href={`/lifecycle_environments/${env.id}`}
-    isTruncated
+
   >
     {env.name}
   </Label>

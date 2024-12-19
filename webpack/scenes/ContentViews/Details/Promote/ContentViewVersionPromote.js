@@ -133,7 +133,7 @@ const ContentViewVersionPromote = ({
               aria-label="input_description"
               name="description"
               value={description}
-              onChange={value => setDescription(value)}
+              onChange={(_event, value) => setDescription(value)}
             />
           </FormGroup>
           {!alertDismissed && forcePromote.length > 0 && (

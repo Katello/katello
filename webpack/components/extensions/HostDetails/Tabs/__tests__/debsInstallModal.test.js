@@ -77,7 +77,8 @@ test('Can call API for installable deb packages and show on screen on page load'
   await patientlyWaitFor(() => expect(getAllByText(firstPackages.name)[0]).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can handle no installable deb packages being present', async (done) => {
@@ -109,7 +110,8 @@ test('Can handle no installable deb packages being present', async (done) => {
   await patientlyWaitFor(() => expect(queryByText('No packages available to install')).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 
@@ -146,7 +148,8 @@ test('Can install a deb package via remote execution', async (done) => {
 
   expect(triggerPackageInstall).toHaveBeenCalled();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can install a deb package via customized remote execution', async (done) => {
@@ -183,7 +186,8 @@ test('Can install a deb package via customized remote execution', async (done) =
     `/job_invocations/new?feature=${REX_FEATURES.KATELLO_PACKAGE_INSTALL}&search=name%20%5E%20(test-host)&inputs%5Bpackage%5D=duck,cheetah`,
   );
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Uses packages_install_by_search_query template when in select all mode', async (done) => {
@@ -221,6 +225,7 @@ test('Uses packages_install_by_search_query template when in select all mode', a
     `/job_invocations/new?feature=${REX_FEATURES.KATELLO_PACKAGE_INSTALL_BY_SEARCH}&search=name%20%5E%20(test-host)&inputs%5BPackage%20search%20query%5D=id%20!%5E%20(32376)`,
   );
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 

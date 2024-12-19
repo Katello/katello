@@ -270,11 +270,11 @@ test('Remove rpm filter rule in a self-closing modal', async (done) => {
   expect(queryByText(cvFilterName)).toBeNull();
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[1]).toBeInTheDocument();
+    expect(getAllByLabelText('Kebab toggle')[1]).toBeInTheDocument();
   });
-
-  getAllByLabelText('Actions')[1].click();
-
+  await act(async () => {
+    getAllByLabelText('Kebab toggle')[1].click();
+  });
   await patientlyWaitFor(() => {
     expect(getByText('Remove')).toBeInTheDocument();
   });
@@ -282,7 +282,7 @@ test('Remove rpm filter rule in a self-closing modal', async (done) => {
   getByText('Remove').click();
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[1]).toBeInTheDocument();
+    expect(getAllByLabelText('Kebab toggle')[1]).toBeInTheDocument();
   });
 
   assertNockRequest(autocompleteScope);
@@ -338,11 +338,11 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
   expect(queryByText(cvFilterName)).toBeNull();
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[1]).toBeInTheDocument();
+    expect(getAllByLabelText('Kebab toggle')[1]).toBeInTheDocument();
   });
-
-  getAllByLabelText('Actions')[1].click();
-
+  await act(async () => {
+    getAllByLabelText('Kebab toggle')[1].click();
+  });
   await patientlyWaitFor(() => {
     expect(getByText('Edit')).toBeInTheDocument();
   });

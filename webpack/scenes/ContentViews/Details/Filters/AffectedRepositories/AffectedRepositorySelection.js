@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Select, SelectOption } from '@patternfly/react-core';
+import {
+  Select,
+  SelectOption,
+} from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectCVFilterDetails } from '../../ContentViewDetailSelectors';
 import { editCVFilter, getCVFilterDetails } from '../../ContentViewDetailActions';
@@ -41,7 +44,7 @@ const AffectedRepositorySelection = ({
       selections={type}
       onSelect={onSelect}
       isOpen={typeSelectOpen}
-      onToggle={isExpanded => setTypeSelectOpen(isExpanded)}
+      onToggle={(_event, isExpanded) => setTypeSelectOpen(isExpanded)}
       id="affected_repos"
       name="affected_repos"
       aria-label="affected_repos"
