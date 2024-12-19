@@ -33,6 +33,7 @@ module Katello
         before_create :associate_default_locations
         before_create :associate_lifecycle_environments
         before_validation :set_default_download_policy
+        after_update :refresh_smart_proxy_sync_histories
 
         lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_node.extensions.repository.retrieve_all }
 
@@ -471,12 +472,25 @@ module Katello
       end
 
       def remove_lifecycle_environment(environment)
+        smart_proxy_helper = ::Katello::SmartProxyHelper.new(self)
+        repos = smart_proxy_helper.repositories_available_to_capsule(environment)
+        smart_proxy_helper.clear_smart_proxy_sync_histories(repos) unless repos.empty?
         self.lifecycle_environments.find(environment.id)
         unless self.lifecycle_environments.destroy(environment)
           fail _("Could not remove the lifecycle environment from the smart proxy")
         end
       rescue ActiveRecord::RecordNotFound
         raise _("Lifecycle environment was not attached to the smart proxy; therefore, no changes were made.")
+      end
+
+      def refresh_smart_proxy_sync_histories
+        smart_proxy_helper = ::Katello::SmartProxyHelper.new(self)
+        repos = smart_proxy_helper.repositories_available_to_capsule.select(:id)
+        if repos.size == 0
+          self.smart_proxy_sync_histories.delete_all
+        else
+          self.smart_proxy_sync_histories.where.not(repository_id: repos).delete_all
+        end
       end
 
       def available_lifecycle_environments(organization_id = nil)

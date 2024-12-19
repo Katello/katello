@@ -144,6 +144,7 @@ module Katello
                ostree_repo, deb_repo, python_repo, cvv_container_repo]
       @proxy.lifecycle_environments << [container_repo.environment, cvv_container_repo.environment]
       ::Katello::SmartProxyHelper.any_instance.expects(:repositories_available_to_capsule).once.returns(repos)
+      @proxy.expects(:refresh_smart_proxy_sync_histories).returns(true)
       @proxy.update_content_counts!
       counts = @proxy.content_counts
       expected_counts = { "content_view_versions" =>
@@ -247,6 +248,7 @@ module Katello
                                  .with(container_repo.environment, nil)
                                  .once
                                  .returns(repos)
+      @proxy.expects(:refresh_smart_proxy_sync_histories).returns(true)
       @proxy.update_content_counts!(environment: container_repo.environment)
       counts = @proxy.content_counts
       expected_counts = { "content_view_versions" =>
@@ -277,6 +279,7 @@ module Katello
                                  .with(nil, cvv_container_repo.content_view_version.content_view)
                                  .once
                                  .returns(repos)
+      @proxy.expects(:refresh_smart_proxy_sync_histories).returns(true)
       @proxy.update_content_counts!(environment: nil,
                                     content_view: cvv_container_repo.content_view_version.content_view,
                                     repository: nil)
@@ -303,6 +306,7 @@ module Katello
 
     def test_update_repository_counts
       cvv_container_repo = setup_cvv_container_repo
+      @proxy.expects(:refresh_smart_proxy_sync_histories).returns(true)
       @proxy.lifecycle_environments << cvv_container_repo.environment
       @proxy.update_content_counts!(repository: cvv_container_repo)
       counts = @proxy.content_counts
@@ -324,6 +328,19 @@ module Katello
                            },
       }
       assert_equal expected_counts, counts
+    end
+
+    def test_refresh_sync_history
+      file_repo = katello_repositories(:pulp3_file_1)
+      file_repo.update library_instance_id: file_repo.id
+      repos = [file_repo]
+      @proxy.lifecycle_environments = [file_repo.environment]
+      ::Katello::SmartProxyHelper.any_instance.expects(:repositories_available_to_capsule)
+                                 .returns(repos)
+      file_repo.create_smart_proxy_sync_history(@proxy)
+      assert_equal 1, @proxy.smart_proxy_sync_histories.count
+      @proxy.remove_lifecycle_environment(file_repo.environment)
+      assert_equal 0, @proxy.smart_proxy_sync_histories.count
     end
 
     def test_sets_default_download_policy
