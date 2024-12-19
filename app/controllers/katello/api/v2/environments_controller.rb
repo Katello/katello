@@ -84,6 +84,10 @@ module Katello
       ID of an environment that is prior to the new environment in the chain. It has to be
       either the ID of Library or the ID of an environment at the end of a chain.
     DESC
+    param :path_id, Integer, :desc => <<-DESC
+      If you are adding an environment to an existing path after Library, pass the ID of the environment that is the current successor of Library in the path.
+      It has to be the id of the old environment following library in this path.
+    DESC
     def create
       create_params = environment_params
       create_params[:label] = labelize_params(create_params)
