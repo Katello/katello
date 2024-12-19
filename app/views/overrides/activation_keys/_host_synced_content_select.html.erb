@@ -23,9 +23,15 @@
              :class => 'form-control',  :name => ks_repo_select_name, :disabled => kickstart_options.empty? %>
 <% end %>
 
-<% content_for(:javascripts) do -%>
-  <script>
+<script>
+  if(window.allJsLoaded){
     KT.hosts.set_media_selection_bindings();
     KT.hosts.update_media_enablement();
-  </script>
-<% end -%>
+  }
+  else {
+  $(document).on('ContentLoad', function(){
+    KT.hosts.set_media_selection_bindings();
+    KT.hosts.update_media_enablement();
+  }); 
+  } 
+</script>
