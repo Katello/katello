@@ -9,7 +9,11 @@ module Actions
             end
 
             content_view_environment.activation_keys.each do |key|
-              plan_action(ActivationKey::Reassign, key, options[:key_content_view_id], options[:key_environment_id])
+              if key.multi_content_view_environment?
+                key.content_view_environments = key.content_view_environments - [content_view_environment]
+              else
+                plan_action(ActivationKey::Reassign, key, options[:key_content_view_id], options[:key_environment_id])
+              end
             end
           end
         end

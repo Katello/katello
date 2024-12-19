@@ -35,6 +35,7 @@ const AffectedActivationKeys = ({
   const columnHeaders = [
     __('Name'),
     __('Environment'),
+    __('Multi Content View Environment'),
   ];
   const emptyContentTitle = __('No matching activation keys found.');
   const emptyContentBody = __("Given criteria doesn't match any activation keys. Try changing your rule.");
@@ -65,12 +66,15 @@ const AffectedActivationKeys = ({
         </Tr>
       </Thead>
       <Tbody>
-        {results?.map(({ name, id, environment }) => (
+        {results?.map(({
+          name, id, environment, multi_content_view_environment: multiContentViewEnvironment,
+        }) => (
           <Tr ouiaId={id} key={id}>
             <Td>
               <a rel="noreferrer" target="_blank" href={urlBuilder(`activation_keys/${id}`, '')}>{name}</a>
             </Td>
             <Td><EnvironmentLabels environments={environment} /></Td>
+            <Td>{ multiContentViewEnvironment ? 'Yes' : 'No' }</Td>
           </Tr>
         ))
         }

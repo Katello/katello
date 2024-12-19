@@ -1,12 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { ExpandableSection, SelectOption } from '@patternfly/react-core';
+import { ExpandableSection, SelectOption, Alert, AlertActionCloseButton } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import EnvironmentPaths from '../../../../components/EnvironmentPaths/EnvironmentPaths';
 import getContentViews from '../../../../ContentViewsActions';
 import { selectContentViewError, selectContentViews, selectContentViewStatus } from '../../../../ContentViewSelectors';
+import { selectCVActivationKeys } from '../../../ContentViewDetailSelectors';
 import AffectedActivationKeys from '../affectedActivationKeys';
 import DeleteContext from '../DeleteContext';
 import ContentViewSelect from '../../../../components/ContentViewSelect/ContentViewSelect';
@@ -17,7 +18,9 @@ const CVReassignActivationKeysForm = () => {
   const contentViewsInEnvResponse = useSelector(selectContentViews);
   const contentViewsInEnvStatus = useSelector(selectContentViewStatus);
   const contentViewsInEnvError = useSelector(selectContentViewError);
+  const activationKeysResponse = useSelector(selectCVActivationKeys);
   const cvInEnvLoading = contentViewsInEnvStatus === STATUS.PENDING;
+  const [alertDismissed, setAlertDismissed] = useState(false);
   const [cvSelectOpen, setCVSelectOpen] = useState(false);
   const [cvSelectOptions, setCvSelectionOptions] = useState([]);
   const [showActivationKeys, setShowActivationKeys] = useState(false);
@@ -72,6 +75,9 @@ const CVReassignActivationKeysForm = () => {
     contentViewsInEnvError, selectedEnvForAK, setSelectedCVForAK, setSelectedCVNameForAK,
     cvInEnvLoading, selectedCVForAK, cvId, versionEnvironments, selectedEnvSet]);
 
+  const multiCVWarning = activationKeysResponse?.results?.some?.(key =>
+    key.multi_content_view_environment);
+
   const fetchSelectedCVName = (id) => {
     const { results } = contentViewsInEnvResponse ?? { };
     return results.filter(cv => cv.id === id)[0]?.name;
@@ -102,8 +108,21 @@ const CVReassignActivationKeysForm = () => {
     cvSelectOptions,
   });
 
+  const multiCVRemovalInfo = __('This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details.');
+
   return (
     <>
+      {!alertDismissed && multiCVWarning && (
+        <Alert
+          ouiaId="multi-cv-warning-alert"
+          variant="warning"
+          isInline
+          title={__('Warning')}
+          actionClose={<AlertActionCloseButton onClose={() => setAlertDismissed(true)} />}
+        >
+          <p>{multiCVRemovalInfo}</p>
+        </Alert>
+      )}
       <EnvironmentPaths
         userCheckedItems={selectedEnvForAK}
         setUserCheckedItems={setSelectedEnvForAK}
