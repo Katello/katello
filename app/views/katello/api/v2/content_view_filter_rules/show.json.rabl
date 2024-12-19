@@ -13,6 +13,7 @@ attributes :start_date, :if => lambda { |rule| rule.respond_to?(:start_date) && 
 attributes :end_date, :if => lambda { |rule| rule.respond_to?(:end_date) && !rule.end_date.blank? }
 attributes :architecture, :if => lambda { |rule| rule.respond_to?(:architecture) && !rule.architecture.blank? }
 attributes :types, :if => lambda { |rule| rule.respond_to?(:types) && !rule.types.blank? }
+attributes :allow_other_types, :if => lambda { |rule| rule.respond_to?(:allow_other_types) }
 attributes :date_type, :if => lambda { |rule| rule.respond_to?(:date_type) }
 attributes :module_stream_id, :if => lambda { |rule| rule.respond_to?(:module_stream_id) && !rule.module_stream_id.blank? }
 if @resource&.try(:module_stream)
