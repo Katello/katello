@@ -98,3 +98,13 @@ library_dev_view_acme:
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
+
+rolling_view_library:
+  name:           Rolling view library environment
+  label:          'rolling_view_library'
+  cp_id:          14
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:rolling_view) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:rolling_view_library_version) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

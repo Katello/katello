@@ -243,8 +243,8 @@ module Katello
 
       params = { :repository_ids => [repository.id.to_s] }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
-        assert_equal content_view_params.key?(:repository_ids), true
-        assert_equal content_view_params[:repository_ids], params[:repository_ids]
+        assert content_view_params.key?(:repository_ids)
+        assert_equal [repository.id], content_view_params[:repository_ids]
       end
       put :update, params: { :id => @library_dev_staging_view.id, :content_view => params }
 
