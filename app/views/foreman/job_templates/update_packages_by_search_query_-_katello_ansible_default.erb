@@ -22,7 +22,7 @@ template_inputs:
   versions: input('Selected update versions')
 ) -%>
 <% if package_names.empty? -%>
-<%= render_template('Package Action - Ansible Default', :state => 'latest', :name => '"*"') %>
+<%= render_template('Package Action - Ansible Default', :state => 'latest', :name => '*') %>
 <% else -%>
 ---
 - hosts: all
