@@ -226,23 +226,6 @@ module Katello
           multi_copy_units(repo_id_map, dependency_solving)
         end
 
-        def copy_units(content_unit_hrefs, remove_all)
-          remove_all = true if remove_all.nil?
-          tasks = []
-
-          if content_unit_hrefs.sort!.any?
-            first_slice = remove_all
-            content_unit_hrefs.each_slice(UNIT_LIMIT) do |slice|
-              tasks << add_content(slice, first_slice)
-              first_slice = false
-            end
-          # If we're merging composite cv repositories, don't clear out the Pulp repository.
-          elsif remove_all
-            tasks << remove_all_content
-          end
-          tasks
-        end
-
         def copy_content_for_source(source_repository, options = {})
           # copy_units_by_href(source_repository.debs.pluck(:pulp_id))
           filters = ContentViewDebFilter.where(:id => options[:filter_ids])
@@ -261,7 +244,22 @@ module Katello
 
           content_unit_hrefs = whitelist_ids - blacklist_ids
 
-          copy_units(content_unit_hrefs.uniq, options[:remove_all])
+          pulp_deb_copy_serializer = PulpDebClient::Copy.new
+          pulp_deb_copy_serializer.dependency_solving = false
+          pulp_deb_copy_serializer.config = [{
+            source_repo_version: source_repository.version_href,
+            dest_repo: repository_reference.repository_href,
+            content: content_unit_hrefs,
+          }]
+
+          remove_all = options[:remove_all]
+          remove_all = true if remove_all.nil?
+
+          if remove_all
+            remove_all_content_from_repo(repository_reference.repository_href)
+          end
+
+          copy_content_chunked(pulp_deb_copy_serializer)
         end
 
         def regenerate_applicability
