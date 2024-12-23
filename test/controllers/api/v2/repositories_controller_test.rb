@@ -929,8 +929,8 @@ module Katello
       post :upload_content, params: { :id => @repository.id, :content_type => 'cheese' }
 
       assert_response 422
-      response =  "{\"displayMessage\":\"Invalid params provided - content_type must be one of deb,docker_manifest,file,ostree_ref,python_package,rpm,srpm\"," \
-        "\"errors\":[\"Invalid params provided - content_type must be one of deb,docker_manifest,file,ostree_ref,python_package,rpm,srpm\"]}"
+      response =  "{\"displayMessage\":\"Invalid params provided - content_type must be one of deb,file,ostree_ref,python_package,rpm,srpm\"," \
+        "\"errors\":[\"Invalid params provided - content_type must be one of deb,file,ostree_ref,python_package,rpm,srpm\"]}"
       assert_match response, @response.body
     end
 
