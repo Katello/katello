@@ -59,6 +59,7 @@ Foreman::Application.routes.draw do
 
           collection do
             match '/auto_complete_search' => 'host_autocomplete#auto_complete_search', :via => :get
+            match '/bootc_images' => 'host_bootc_images#bootc_images', :via => :get
             match '/bulk/add_host_collections' => 'hosts_bulk_actions#bulk_add_host_collections', :via => :put
             match '/bulk/remove_host_collections' => 'hosts_bulk_actions#bulk_remove_host_collections', :via => :put
             match '/bulk/remove_host_collections' => 'hosts_bulk_actions#bulk_remove_host_collections', :via => :put
