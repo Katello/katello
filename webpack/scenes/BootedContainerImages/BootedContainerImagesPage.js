@@ -22,7 +22,7 @@ import BOOTED_CONTAINER_IMAGES_KEY, { BOOTED_CONTAINER_IMAGES_API_PATH } from '.
 
 const BootedContainerImagesPage = () => {
   const columns = {
-    image_name: {
+    bootc_booted_image: {
       title: __('Image name'),
       isSorted: true,
     },
@@ -32,8 +32,8 @@ const BootedContainerImagesPage = () => {
     },
     hosts: {
       title: __('Hosts'),
-      wrapper: ({image_name, digests}) => (
-        <a href={`/hosts?search=bootc_booted_image%20=%20${image_name}`}>{digests.reduce((total, digest) => total + digest.host_count, 0)}</a>
+      wrapper: ({bootc_booted_image, digests}) => (
+        <a href={`/hosts?search=bootc_booted_image%20=%20${bootc_booted_image}`}>{digests.reduce((total, digest) => total + digest.host_count, 0)}</a>
       ),
     },
   };
@@ -59,13 +59,19 @@ const BootedContainerImagesPage = () => {
       columnsToSortParams[columns[key].title] = key;
     }
   });
+  const onSort = (_event, index, direction) => {
+    setParamsAndAPI({
+      ...params,
+      order: `${Object.keys(columns)[index]} ${direction}`,
+    });
+  };
   const { pfSortParams } = useTableSort({
     allColumns: Object.keys(columns).map(k => columns[k].title),
     columnsToSortParams,
     onSort,
   });
   const expandedImages = useSet([]);
-  const imageIsExpanded = image_name => expandedImages.has(image_name);
+  const imageIsExpanded = bootc_booted_image => expandedImages.has(bootc_booted_image);
   const STATUS = {
     PENDING: 'PENDING',
     RESOLVED: 'RESOLVED',
@@ -91,12 +97,6 @@ const BootedContainerImagesPage = () => {
   });
 
   const [columnNamesKeys, keysToColumnNames] = getColumnHelpers(columns);
-  const onSort = (_event, index, direction) => {
-    setParamsAndAPI({
-      ...params,
-      order: `${Object.keys(columns)[index]} ${direction}`,
-    });
-  };
   const onPagination = newPagination => {
     setParamsAndAPI({ ...params, ...newPagination });
   };
@@ -175,17 +175,17 @@ const BootedContainerImagesPage = () => {
             )}
           </Tbody>
           {results?.map((result, rowIndex) => {
-            const { image_name, digests } = result;
-            const isExpanded = imageIsExpanded(image_name);
+            const { bootc_booted_image, digests } = result;
+            const isExpanded = imageIsExpanded(bootc_booted_image);
             return (
               <Tbody key={`bootable-container-images-body-${rowIndex}`} isExpanded={isExpanded}>
-                <Tr key={image_name} ouiaId={`table-row-${rowIndex}`}>
+                <Tr key={bootc_booted_image} ouiaId={`table-row-${rowIndex}`}>
                   <>
                     <Td
                       expand={digests.length > 0 && {
                         rowIndex,
                         isExpanded,
-                        onToggle: (_event, _rInx, isOpen,) => expandedImages.onToggle(isOpen, image_name),
+                        onToggle: (_event, _rInx, isOpen,) => expandedImages.onToggle(isOpen, bootc_booted_image),
                         expandId: 'booted-containers-expander'
                       }}
                     />
