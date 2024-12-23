@@ -26,9 +26,9 @@ module Katello
     def test_bootc_images_counts_properly_no_paging
       get :bootc_images
       assert_response :success
-      results = JSON.parse(@response.body)['bootc_images']
-      assert_includes results, ["image1", [{"bootc_booted_digest" => "sha256:dcfb2965cda67bd3731408ace23dd07ff3116168c2b832e16bba8234525724a3", "host_count" => 2}]]
-      assert_includes results, ["image2", [{"bootc_booted_digest" => "sha256:dcfb2965cda67bc3731408aae23dd07ff3116168c2b832e16bba8234525724a5", "host_count" => 1}]]
+      results = JSON.parse(@response.body)['results']
+      assert_includes results, {"bootc_booted_image" => "image1", "digests" => [{"bootc_booted_digest" => "sha256:dcfb2965cda67bd3731408ace23dd07ff3116168c2b832e16bba8234525724a3", "host_count" => 2}]}
+      assert_includes results, {"bootc_booted_image" => "image2", "digests" => [{"bootc_booted_digest" => "sha256:dcfb2965cda67bc3731408aae23dd07ff3116168c2b832e16bba8234525724a5", "host_count" => 1}]}
     end
 
     def test_bootc_images_pages
@@ -43,10 +43,10 @@ module Katello
       get :bootc_images, params: { page: 4, per_page: 1 }
       page4 = @response.body
 
-      assert_equal [["image1", [{"bootc_booted_digest" => "sha256:dcfb2965cda67bd3731408ace23dd07ff3116168c2b832e16bba8234525724a3", "host_count" => 1}]]], JSON.parse(page1)['bootc_images']
-      assert_equal [["image2", [{"bootc_booted_digest" => "sha256:dcfb2965cda67bc3731408aae23dd07ff3116168c2b832e16bba8234525724a5", "host_count" => 1}]]], JSON.parse(page2)['bootc_images']
-      assert_equal [["image3", [{"bootc_booted_digest" => "sha256:dcfb2965cda67bd3731408ace93dd07ff3116168c2b832e16bba8234525724c9", "host_count" => 1}]]], JSON.parse(page3)['bootc_images']
-      assert_empty JSON.parse(page4)['bootc_images']
+      assert_equal [{"bootc_booted_image" => "image1", "digests" => [{"bootc_booted_digest" => "sha256:dcfb2965cda67bd3731408ace23dd07ff3116168c2b832e16bba8234525724a3", "host_count" => 1}]}], JSON.parse(page1)['results']
+      assert_equal [{"bootc_booted_image" => "image2", "digests" => [{"bootc_booted_digest" => "sha256:dcfb2965cda67bc3731408aae23dd07ff3116168c2b832e16bba8234525724a5", "host_count" => 1}]}], JSON.parse(page2)['results']
+      assert_equal [{"bootc_booted_image" => "image3", "digests" => [{"bootc_booted_digest" => "sha256:dcfb2965cda67bd3731408ace93dd07ff3116168c2b832e16bba8234525724c9", "host_count" => 1}]}], JSON.parse(page3)['results']
+      assert_empty JSON.parse(page4)['results']
     end
   end
 end

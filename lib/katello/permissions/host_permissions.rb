@@ -43,6 +43,8 @@ Foreman::AccessControl.permission(:edit_hosts).actions.concat [
 
 Foreman::AccessControl.permission(:view_hosts).actions.concat [
   'hosts/content_hosts',
+  'katello/api/v2/host_bootc_images/bootc_images',
+  'katello/api/v2/host_bootc_images/auto_complete_search',
   'katello/api/v2/host_autocomplete/auto_complete_search',
   'katello/api/v2/host_errata/index',
   'katello/api/v2/host_errata/show',

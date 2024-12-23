@@ -30,7 +30,7 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :host_bootc_images, :only => [:bootc_images] do
+        api_resources :host_bootc_images, :only => [:auto_complete_search] do
           get :auto_complete_search, :on => :collection
         end
 
