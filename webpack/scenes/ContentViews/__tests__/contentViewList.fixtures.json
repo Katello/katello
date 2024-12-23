@@ -1,6 +1,6 @@
 {
-  "total": 2,
-  "subtotal": 2,
+  "total": 3,
+  "subtotal": 3,
   "page": 1,
   "per_page": 20,
   "error": null,
@@ -14,6 +14,7 @@
   "results": [
     {
       "composite": false,
+      "rolling": false,
       "component_ids": [],
       "default": false,
       "version_count": 1,
@@ -107,6 +108,7 @@
     },
     {
       "composite": true,
+      "rolling": false,
       "component_ids": [
         27,
         28
@@ -251,6 +253,91 @@
           ]
         }
       ]
+    },
+    {
+      "composite": false,
+      "rolling": true,
+      "component_ids": [],
+      "default": false,
+      "version_count": 1,
+      "latest_version": "1.0",
+      "latest_version_id": 14,
+      "latest_version_environments": [
+        {
+          "id": 1,
+          "name": "Library",
+          "label": "Library"
+        }
+        ],
+      "auto_publish": false,
+      "solve_dependencies": false,
+      "repository_ids": [
+        1
+      ],
+      "id": 3,
+      "name": "cv_rolling",
+      "label": "cv_rolling",
+      "description": "I am a rolling CV",
+      "organization_id": 1,
+      "organization": {
+        "name": "Default Organization",
+        "label": "Default_Organization",
+        "id": 1
+      },
+      "created_at": "2020-03-19 15:08:59 UTC",
+      "updated_at": "2020-03-19 15:09:11 UTC",
+      "environments": [
+        {
+          "id": 8,
+          "name": "Library",
+          "label": "Library",
+          "permissions": {
+            "readable": true
+          }
+        }
+      ],
+      "repositories": [
+        {
+          "id": 3,
+          "name": "zoo3",
+          "label": "zoo3",
+          "content_type": "yum"
+        }
+      ],
+      "versions": [
+        {
+          "id": 3,
+          "version": "1.0",
+          "published": "2020-03-19 15:09:11 UTC",
+          "environment_ids": [
+            1
+          ]
+        }
+      ],
+      "components": [],
+      "content_view_components": [],
+      "activation_keys": [
+        {
+          "id": 3,
+          "name": "test_ack_key_roll"
+        }
+      ],
+      "hosts": [
+        {
+          "id": 3,
+          "name": "katello-client3.samir.example.com"
+        }
+      ],
+      "last_task": {},
+      "next_version": "2.0",
+      "last_published": "2020-03-19 15:09:11 UTC",
+      "permissions": {
+        "view_content_views": true,
+        "edit_content_views": true,
+        "destroy_content_views": true,
+        "publish_content_views": true,
+        "promote_or_remove_content_views": true
+      }
     }
   ],
   "composite": 1,

@@ -13,6 +13,7 @@ if @facet
         :id => content_view.id,
         :name => content_view.name,
         :composite => content_view.composite?,
+        :rolling => content_view.rolling?,
       }
     end
   end
