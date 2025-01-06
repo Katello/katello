@@ -88,7 +88,7 @@ describe('SystemPurposeEditModal', () => {
 
     assertNockRequest(orgScope);
     assertNockRequest(availableReleaseVersionsScope);
-  done();
+    done();
   });
 
   test('Shows blank options as (unset)', () => {
@@ -171,7 +171,7 @@ describe('SystemPurposeEditModal', () => {
       assertNockRequest(scope);
     });
     assertNockRequest(hostDetailsScope);
-  done();
+    done();
   });
   test('Calls API and changes syspurpose values for activation key', async (done) => {
     const orgScope = nockInstance
@@ -226,7 +226,7 @@ describe('SystemPurposeEditModal', () => {
       assertNockRequest(scope);
     });
     assertNockRequest(akDetailsScope);
-  done();
+    done();
   });
   test('Retrieves available release versions for host', async (done) => {
     const orgScope = nockInstance

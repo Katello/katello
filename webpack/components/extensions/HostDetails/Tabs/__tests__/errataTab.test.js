@@ -1013,7 +1013,7 @@ test('Can apply a single erratum to the host via remote execution', async (done)
   await act(async () => {
     erratumActionMenu.click();
   });
-  
+
   let viaRexAction;
   await patientlyWaitFor(() => {
     viaRexAction = getByText('Apply via remote execution');

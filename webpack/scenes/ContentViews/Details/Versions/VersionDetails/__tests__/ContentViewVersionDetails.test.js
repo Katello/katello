@@ -257,7 +257,7 @@ testConfig.forEach(({
     assertNockRequest(scope);
     assertNockRequest(tabScope);
     assertNockRequest(scope);
-  done();
+    done();
   }));
 
 test('Can change repository selector', async (done) => {

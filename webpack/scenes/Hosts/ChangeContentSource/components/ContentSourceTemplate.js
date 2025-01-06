@@ -104,7 +104,8 @@ const ContentSourceTemplate = ({ template, hostCount }) => {
           <ExpandableSectionToggle
             isExpanded={isExpanded}
             onToggle={() => setIsExpanded(!isExpanded)}
-            contentId="code-block-expand-content" toggleId="code-block-expand-toggle"
+            contentId="code-block-expand-content"
+            toggleId="code-block-expand-toggle"
             direction="up"
           >
             {isExpanded ? 'Show less' : 'Show more'}

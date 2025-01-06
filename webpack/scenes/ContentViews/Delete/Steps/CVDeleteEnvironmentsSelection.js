@@ -67,7 +67,7 @@ const CVDeleteEnvironmentSelection = () => {
                 <Table ouiaId="cv-delete-env-select-table" variant={TableVariant.compact}>
                   <Thead>
                     <Tr ouiaId="cv-delete-env-select-table-header">
-                      <Th aria-label="select header"/>
+                      <Th aria-label="select header" />
                       {columnHeaders.map(col =>
                         <Th key={col}>{col}</Th>)}
                     </Tr>

@@ -18,7 +18,7 @@ import {
   SelectOption,
   SelectVariant,
 } from '@patternfly/react-core/deprecated';
-import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText, ActionsColumn} from '@patternfly/react-table';
+import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText, ActionsColumn } from '@patternfly/react-table';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
@@ -552,13 +552,19 @@ export const PackagesTab = () => {
                     isDisabled: actionInProgress,
                   },
                   {
-                    title: <a href={katelloPackageUpdateUrl({
-                      hostname,
-                      packageName: selectedPackageUpgradeVersion({
-                        packageName,
-                        upgradableVersions,
-                      }),
-                    })}>{__('Upgrade via customized remote execution')}</a>,
+                    title: (
+                      <a
+                        href={katelloPackageUpdateUrl({
+                          hostname,
+                          packageName: selectedPackageUpgradeVersion({
+                            packageName,
+                            upgradableVersions,
+                          }),
+                        })}
+                      >
+                        {__('Upgrade via customized remote execution')}
+                      </a>
+                    ),
                   },
                 );
               }
@@ -603,7 +609,8 @@ export const PackagesTab = () => {
                         items: rowActions,
                       }}
                     ><ActionsColumn
-                      actions={rowActions} />
+                      actions={rowActions}
+                    />
                     </Td>
                   ) : null}
                 </Tr>

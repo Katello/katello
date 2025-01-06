@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent,act } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import mockAvailableHostCollections from './availableHostCollections.fixtures.json';
 import mockRemovableHostCollections from './removableHostCollections.fixtures.json';
 import { REMOVABLE_HOST_COLLECTIONS_KEY } from '../HostCollectionsConstants';
@@ -66,7 +66,7 @@ describe('HostCollectionsAddModal', () => {
       expect(getAllByText(firstHostCollection.name)[0]).toBeInTheDocument());
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
-  done(); // Pass jest callback to confirm test is done
+    done(); // Pass jest callback to confirm test is done
   });
 
   test('Calls alterHostCollections with combined list of existing and new host collections', async (done) => {
@@ -113,7 +113,7 @@ describe('HostCollectionsAddModal', () => {
     assertNockRequest(scope);
     assertNockRequest(alterScope);
     assertNockRequest(hostDetailsScope);
-  done();
+    done();
   });
   test('Host collections whose host limit is exceeded are disabled', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
@@ -143,7 +143,7 @@ describe('HostCollectionsAddModal', () => {
 
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
-  done(); // Pass jest callback to confirm test is done
+    done(); // Pass jest callback to confirm test is done
   });
 });
 
@@ -176,7 +176,7 @@ describe('HostCollectionsRemoveModal', () => {
     // Assert request was made and completed, see helper function
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
-  done(); // Pass jest callback to confirm test is done
+    done(); // Pass jest callback to confirm test is done
   });
 
   test('Calls alterHostCollections with host collections being removed filtered out from the list', async (done) => {
@@ -225,7 +225,7 @@ describe('HostCollectionsRemoveModal', () => {
     assertNockRequest(scope);
     assertNockRequest(alterScope);
     assertNockRequest(hostDetailsScope);
-  done();
+    done();
   });
 });
 

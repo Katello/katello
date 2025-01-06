@@ -4,6 +4,7 @@ import {
   Spinner,
   Level,
   LevelItem,
+  Icon,
 } from '@patternfly/react-core';
 import {
   Select,
@@ -18,7 +19,15 @@ const SelectableDropdown = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const icon = () => {
-    if (error) return <span aria-label={`${title} error`}><ErrorCircleOIcon color="red" /></span>;
+    if (error) {
+      return (
+        <span aria-label={`${title} error`}>
+          <Icon color="red">
+            <ErrorCircleOIcon />
+          </Icon>
+        </span>
+      );
+    }
     if (loading) return <span aria-label={`${title} spinner`}><Spinner size="sm" /></span>;
     return null;
   };

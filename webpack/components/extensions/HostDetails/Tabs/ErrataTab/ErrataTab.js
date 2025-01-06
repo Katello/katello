@@ -503,7 +503,7 @@ export const ErrataTab = () => {
                 pfSortParams={pfSortParams}
                 columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
               />
-              <Th key="action-menu" aria-label="action menu table header"/>
+              <Th key="action-menu" aria-label="action menu table header" />
             </Tr>
           </Thead>
           <>

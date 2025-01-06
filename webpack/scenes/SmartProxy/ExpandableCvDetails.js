@@ -39,7 +39,7 @@ const ExpandableCvDetails = ({
     >
       <Thead>
         <Tr ouiaId="column-headers">
-          <Th aria-label="select header"/>
+          <Th aria-label="select header" />
           {columnHeaders.map(col => (
             <Th
               key={col}

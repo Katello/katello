@@ -150,7 +150,7 @@ const ACSTable = () => {
   const isSingleSelected = rowId => (Number(rowId) === Number(acsId) ||
       Number(rowId) === Number(expandedId));
   const customStyle = {
-    borderLeft: '5px solid var(--pf-global--primary-color--100)',
+    borderLeft: '5px solid var(--pf-v5-global--primary-color--100)',
   };
 
   const PanelContent = () => {

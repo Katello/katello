@@ -1,5 +1,4 @@
 import React from 'react';
-import nock from 'nock';
 import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 

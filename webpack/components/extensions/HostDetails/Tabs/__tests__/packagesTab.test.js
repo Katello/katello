@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent, act, screen } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import * as hooks from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
@@ -201,7 +201,7 @@ test('Can upgrade a package via remote execution', async (done) => {
   await patientlyWaitFor(() => {
     expect(getByText('coreutils')).toBeInTheDocument();
   });
-  
+
   const kebabDropdown = getByLabelText('Kebab toggle');
   await act(async () => {
     kebabDropdown.click();

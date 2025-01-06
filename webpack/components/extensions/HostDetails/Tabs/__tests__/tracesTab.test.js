@@ -81,7 +81,7 @@ describe('With tracer installed', () => {
     // Assert request was made and completed, see helper function
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
-  done();
+    done();
   });
 
   test('Can handle no traces being present', async (done) => {
@@ -101,7 +101,7 @@ describe('With tracer installed', () => {
     // Assert request was made and completed, see helper function
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
-  done();
+    done();
   });
 
   test('Can bulk restart traces via Restart App button', async (done) => {
@@ -140,7 +140,7 @@ describe('With tracer installed', () => {
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
     assertNockRequest(scope);
-  done();
+    done();
   });
 
   test('Warns you when one of the selected traces requires reboot', async (done) => {
@@ -171,7 +171,7 @@ describe('With tracer installed', () => {
     });
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
-  done();
+    done();
   });
 
   test('Warns about reboot when using select all', async (done) => {
@@ -202,7 +202,7 @@ describe('With tracer installed', () => {
     });
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
-  done();
+    done();
   });
 
   test('Can bulk restart traces via remote execution', async (done) => {
@@ -232,7 +232,7 @@ describe('With tracer installed', () => {
     fireEvent.click(traceCheckbox);
     expect(traceCheckbox.checked).toEqual(true);
     const actionMenu = getByLabelText('bulk_actions');
-  
+
     await act(async () => {
       actionMenu.click();
     });
@@ -243,7 +243,7 @@ describe('With tracer installed', () => {
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
     assertNockRequest(scope);
-  done();
+    done();
   });
 
   test('Can select all, exclude and bulk restart traces via remote execution', async (done) => {
@@ -277,8 +277,8 @@ describe('With tracer installed', () => {
 
 
     const selectAllCheckbox = getByLabelText('Select all');
-    
-    await act(async () => { 
+
+    await act(async () => {
       fireEvent.click(selectAllCheckbox);
     });
     expect(traceCheckbox.checked).toEqual(true);
@@ -286,14 +286,14 @@ describe('With tracer installed', () => {
     fireEvent.click(getByLabelText('Select row 0')); // de select
     fireEvent.click(getByLabelText('Select row 2')); // de select
 
-    await act(async () => { 
+    await act(async () => {
       fireEvent.click(getByText('Reboot host'));
     });
 
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
     assertNockRequest(scope);
-  done();
+    done();
   });
 
   test('Can restart a single trace via remote execution', async (done) => {
@@ -332,7 +332,7 @@ describe('With tracer installed', () => {
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
     assertNockRequest(scope);
-  done();
+    done();
   });
 
   test('Can restart a single trace via customized remote execution', async (done) => {
@@ -369,7 +369,7 @@ describe('With tracer installed', () => {
 
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
-  done();
+    done();
   });
 
   test('Can bulk restart traces via customized remote execution', async (done) => {
@@ -405,7 +405,7 @@ describe('With tracer installed', () => {
 
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
-  done();
+    done();
   });
 
   describe('Remote execution URL helper logic', () => {
@@ -434,7 +434,7 @@ describe('With tracer installed', () => {
 
       assertNockRequest(autocompleteScope);
       assertNockRequest(scope);
-  done();
+      done();
     });
   });
 });
@@ -478,7 +478,7 @@ describe('Without tracer installed', () => {
     expect(queryByText('via remote execution')).not.toBeInTheDocument();
 
     assertNockRequest(jobInvocationScope);
-  done();
+    done();
   });
 
   test('Detects if tracer package is not available to install', async () => {

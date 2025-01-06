@@ -12,11 +12,6 @@ import {
   FormSelectOption,
 } from '@patternfly/react-core';
 
-import {
-  Select,
-  SelectOption,
-  SelectVariant,
-} from '@patternfly/react-core/deprecated';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {

@@ -220,7 +220,7 @@ test('Can add published component views to content view with modal', async (done
     .reply(200, compositeCvDetails);
 
   const {
-    getByText, getByLabelText, queryByLabelText, getAllByLabelText,findAllByLabelText
+    getByText, getByLabelText, queryByLabelText, getAllByLabelText, findAllByLabelText,
   } = renderWithRedux(
     <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
@@ -229,30 +229,30 @@ test('Can add published component views to content view with modal', async (done
     expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'false');
   });
   await act(async () => {
-    await findAllByLabelText('Kebab toggle')
+    await findAllByLabelText('Kebab toggle');
     fireEvent.click(getAllByLabelText('Kebab toggle')[2]);
   });
-  
+
   await patientlyWaitFor(() => {
     expect(getByText('Add')).toBeInTheDocument();
   });
-  
+
   await act(async () => {
     fireEvent.click(getByText('Add'));
   });
-  
+
   await patientlyWaitFor(() => {
     expect(getByText('Add content view')).toBeInTheDocument();
   });
-  
+
   await act(async () => {
     fireEvent.click(getByLabelText('add_component'));
   });
-  
+
   await patientlyWaitFor(() => {
     expect(queryByLabelText('add_component')).not.toBeInTheDocument();
   });
-  
+
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(publishedComponentVersionsScope);
@@ -389,32 +389,32 @@ test('Can bulk add component views to content view with modal', async (done) => 
   await act(async () => {
     fireEvent.click(getByLabelText('Select row 2'));
   });
-  
+
   await act(async () => {
     fireEvent.click(getByLabelText('Select row 3'));
   });
-  
+
   await patientlyWaitFor(() => {
     expect(getByLabelText('bulk_add_components')).toHaveAttribute('aria-disabled', 'false');
   });
-  
+
   await act(async () => {
     fireEvent.click(getByLabelText('bulk_add_components'));
   });
-  
+
   await patientlyWaitFor(() => {
     expect(getAllByText('Add content views')[1]).toBeInTheDocument();
     expect(getAllByRole('textbox')[0]).toHaveValue('Version 4.0 (3 days ago)');
   });
-  
+
   await act(async () => {
     fireEvent.click(getAllByRole('textbox')[0]);
   });
-  
+
   await act(async () => {
     fireEvent.click(queryByText('Version 3.0'));
   });
-  
+
   await act(async () => {
     fireEvent.click(getByLabelText('add_components'));
   });

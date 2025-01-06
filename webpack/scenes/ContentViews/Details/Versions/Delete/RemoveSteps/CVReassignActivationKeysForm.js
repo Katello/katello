@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
-  ExpandableSection, Alert, AlertActionCloseButton
+  ExpandableSection, Alert, AlertActionCloseButton,
 } from '@patternfly/react-core';
 import {
   SelectOption,
