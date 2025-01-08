@@ -70,6 +70,13 @@ module Katello
       assert_includes ::Host.search_for('pools_expiring_in_days = 30'), host_with_pool
     end
 
+    def test_bootc_allow_blank
+      Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
+      @foreman_host.content_facet.update(bootc_booted_image: 'quay.io/salami/soup')
+      @foreman_host.content_facet.update(bootc_booted_digest: '')
+      assert @foreman_host.content_facet.image_mode_host?
+    end
+
     def test_image_mode_search
       host_no_image = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
       Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
