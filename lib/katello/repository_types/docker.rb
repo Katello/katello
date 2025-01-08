@@ -27,7 +27,6 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
                :priority => 1,
                :pulp3_service_class => ::Katello::Pulp3::DockerManifest,
                :removable => true,
-               :uploadable => true,
                :primary_content => true
   content_type Katello::DockerManifestList,
                :priority => 2,

@@ -46,6 +46,13 @@ module Katello
       assert_response :success
     end
 
+    def test_create_container_upload_request
+      container_repo = katello_repositories(:busybox)
+      post :create, params: { :repository_id => container_repo.id, :size => 100, :checksum => 'test_checksum2' }
+      assert_response :error
+      assert_match 'Cannot upload container content via Hammer/API. Use podman push instead.', @response.body
+    end
+
     def test_create_collection_upload_request
       ansible_collection_repo = katello_repositories(:pulp3_ansible_collection_1)
       post :create, params: { :repository_id => ansible_collection_repo.id, :size => 100, :checksum => 'test_checksum' }
