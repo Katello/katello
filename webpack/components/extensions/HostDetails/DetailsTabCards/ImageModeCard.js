@@ -9,6 +9,7 @@ import {
 } from '@patternfly/react-core';
 import CardTemplate from 'foremanReact/components/HostDetails/Templates/CardItem/CardTemplate';
 import FontAwesomeImageModeIcon from '../../../../components/extensions/Hosts/FontAwesomeImageModeIcon';
+import { createJob } from '../Tabs/customizedRexUrlHelpers';
 
 const cardHeader = (
   <>
@@ -16,6 +17,11 @@ const cardHeader = (
     <FontAwesomeImageModeIcon />
   </>
 );
+const actionUrl = hostname => createJob({
+  hostname,
+  feature: 'katello_bootc_action',
+  inputs: {},
+});
 
 const ImageModeCard = ({ isExpandedGlobal, hostDetails }) => {
   const imageMode = hostDetails?.content_facet_attributes?.bootc_booted_image;
@@ -28,6 +34,7 @@ const ImageModeCard = ({ isExpandedGlobal, hostDetails }) => {
       masonryLayout
       isExpandedGlobal={isExpandedGlobal}
     >
+      <a href={actionUrl(hostDetails.name)}>{__('Modify via remote execution')}</a>
       <DescriptionList isHorizontal>
         <DescriptionListGroup>
           <Dt>{__('Running image')}</Dt>
@@ -58,6 +65,7 @@ const ImageModeCard = ({ isExpandedGlobal, hostDetails }) => {
 ImageModeCard.propTypes = {
   isExpandedGlobal: PropTypes.bool,
   hostDetails: PropTypes.shape({
+    name: PropTypes.string,
     content_facet_attributes: PropTypes.shape({
       bootc_booted_image: PropTypes.string,
       bootc_booted_digest: PropTypes.string,
