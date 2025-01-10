@@ -28,12 +28,12 @@ const BootedContainerImagesPage = () => {
     },
     digest: {
       title: __('Image digests'),
-      wrapper: ({digests}) => digests.length,
+      wrapper: ({ digests }) => digests.length,
     },
     hosts: {
       title: __('Hosts'),
-      wrapper: ({bootc_booted_image, digests}) => (
-        <a href={`/hosts?search=bootc_booted_image%20=%20${bootc_booted_image}`}>{digests.reduce((total, digest) => total + digest.host_count, 0)}</a>
+      wrapper: ({ bootc_booted_image: bootcBootedImage, digests }) => (
+        <a href={`/hosts?search=bootc_booted_image%20=%20${bootcBootedImage}`}>{digests.reduce((total, digest) => total + digest.host_count, 0)}</a>
       ),
     },
   };
@@ -54,10 +54,15 @@ const BootedContainerImagesPage = () => {
     defaultParams,
   });
   const columnsToSortParams = {};
-  Object.keys(columns).forEach(key => {
+  Object.keys(columns).forEach((key) => {
     if (columns[key].isSorted) {
       columnsToSortParams[columns[key].title] = key;
     }
+  });
+  const { setParamsAndAPI, params } = useSetParamsAndApiAndSearch({
+    defaultParams,
+    apiOptions,
+    setAPIOptions: response.setAPIOptions,
   });
   const onSort = (_event, index, direction) => {
     setParamsAndAPI({
@@ -71,7 +76,7 @@ const BootedContainerImagesPage = () => {
     onSort,
   });
   const expandedImages = useSet([]);
-  const imageIsExpanded = bootc_booted_image => expandedImages.has(bootc_booted_image);
+  const imageIsExpanded = bootcBootedImage => expandedImages.has(bootcBootedImage);
   const STATUS = {
     PENDING: 'PENDING',
     RESOLVED: 'RESOLVED',
@@ -81,23 +86,14 @@ const BootedContainerImagesPage = () => {
   const {
     response: {
       results = [],
-      per_page: perPage,
-      page,
       subtotal,
       message: errorMessage,
     },
     status = STATUS.PENDING,
-    setAPIOptions,
   } = response;
 
-  const { setParamsAndAPI, params } = useSetParamsAndApiAndSearch({
-    defaultParams,
-    apiOptions,
-    setAPIOptions: response.setAPIOptions,
-  });
-
   const [columnNamesKeys, keysToColumnNames] = getColumnHelpers(columns);
-  const onPagination = newPagination => {
+  const onPagination = (newPagination) => {
     setParamsAndAPI({ ...params, ...newPagination });
   };
   const bottomPagination = (
@@ -107,9 +103,15 @@ const BootedContainerImagesPage = () => {
       perPage={params.perPage}
       itemCount={subtotal}
       onChange={onPagination}
-      updateParamsByUrl={true}
+      updateParamsByUrl
     />
   );
+
+  const getColumnWidth = (key) => {
+    if (key === 'bootc_booted_image') return 40;
+    if (key === 'digest') return 15;
+    return 45;
+  };
 
   return (
     <TableIndexPage
@@ -128,6 +130,7 @@ const BootedContainerImagesPage = () => {
                 <Th />
                 {columnNamesKeys.map(k => (
                   <Th
+                    width={getColumnWidth(k)}
                     key={k}
                     sort={
                       Object.values(columnsToSortParams).includes(k) &&
@@ -165,7 +168,7 @@ const BootedContainerImagesPage = () => {
                     />
                   </Td>
                 </Tr>
-              )}
+            )}
             {errorMessage && (
               <Tr ouiaId="table-error">
                 <Td colSpan={100}>
@@ -175,18 +178,19 @@ const BootedContainerImagesPage = () => {
             )}
           </Tbody>
           {results?.map((result, rowIndex) => {
-            const { bootc_booted_image, digests } = result;
-            const isExpanded = imageIsExpanded(bootc_booted_image);
+            const { bootcBootedImage, digests } = result;
+            const isExpanded = imageIsExpanded(bootcBootedImage);
             return (
-              <Tbody key={`bootable-container-images-body-${rowIndex}`} isExpanded={isExpanded}>
-                <Tr key={bootc_booted_image} ouiaId={`table-row-${rowIndex}`}>
+              <Tbody key="bootable-container-images-body" isExpanded={isExpanded}>
+                <Tr key={bootcBootedImage} ouiaId={`table-row-${rowIndex}`}>
                   <>
                     <Td
                       expand={digests.length > 0 && {
                         rowIndex,
                         isExpanded,
-                        onToggle: (_event, _rInx, isOpen,) => expandedImages.onToggle(isOpen, bootc_booted_image),
-                        expandId: 'booted-containers-expander'
+                        onToggle: (_event, _rInx, isOpen) =>
+                          expandedImages.onToggle(isOpen, bootcBootedImage),
+                        expandId: 'booted-containers-expander',
                       }}
                     />
                     {columnNamesKeys.map(k => (
@@ -199,30 +203,32 @@ const BootedContainerImagesPage = () => {
                     ))}
                   </>
                 </Tr>
-                {digests ? <Tr isExpanded={isExpanded}>
-                  <Td colSpan={3}>
-                    <ExpandableRowContent>
-                      <TableComposable variant="compact" isStriped>
-                        <Thead>
-                          <Tr>
-                            <Th>{__('Image digest')}</Th>
-                            <Th>{__('Hosts')}</Th>
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {digests.map((digest, index) => (
-                            <Tr key={index}>
-                              <Td>{digest.bootc_booted_digest}</Td>
-                              <Td>
-                                <a href={`/hosts?search=bootc_booted_digest%20=%20${digest.bootc_booted_digest}`}>{digest.host_count}</a>
-                              </Td>
+                {digests ?
+                  <Tr isExpanded={isExpanded} ouiaId={`table-row-outer-expandable-${rowIndex}`}>
+                    <Td />
+                    <Td colSpan={3}>
+                      <ExpandableRowContent>
+                        <TableComposable variant="compact" isStriped ouiaId={`table-composable-expanded-${rowIndex}`}>
+                          <Thead>
+                            <Tr ouiaId={`table-row-inner-expandable-${rowIndex}`}>
+                              <Th width={50}>{__('Image digest')}</Th>
+                              <Th width={50}>{__('Hosts')}</Th>
                             </Tr>
-                          ))}
-                        </Tbody>
-                      </TableComposable>
-                    </ExpandableRowContent>
-                  </Td>
-                </Tr> : null}
+                          </Thead>
+                          <Tbody>
+                            {digests.map((digest, index) => (
+                              <Tr key={digest} ouiaId={`table-row-expandable-content-${index}`}>
+                                <Td>{digest.bootc_booted_digest}</Td>
+                                <Td>
+                                  <a href={`/hosts?search=bootc_booted_digest%20=%20${digest.bootc_booted_digest}`}>{digest.host_count}</a>
+                                </Td>
+                              </Tr>
+                            ))}
+                          </Tbody>
+                        </TableComposable>
+                      </ExpandableRowContent>
+                    </Td>
+                  </Tr> : null}
               </Tbody>
             );
           })}
