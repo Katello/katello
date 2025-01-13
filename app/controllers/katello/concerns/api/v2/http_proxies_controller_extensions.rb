@@ -5,9 +5,9 @@ module Katello
         module HttpProxiesControllerExtensions
           extend ::Apipie::DSL::Concern
 
-          update_api(:create) do
+          update_api(:create, :show) do
             param :http_proxy, Hash do
-              param :default_content_proxy, :bool, :required => false, :desc => N_('Set this HTTP proxy as the default content HTTP proxy')
+              param :content_default_http_proxy, :bool, :required => false, :desc => N_('Set this HTTP proxy as the default content HTTP proxy')
             end
           end
         end

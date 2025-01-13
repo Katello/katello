@@ -11,7 +11,7 @@ module Katello
 
       def update_content_default_http_proxy
         return unless @http_proxy.persisted?
-        return unless ActiveRecord::Type::Boolean.new.deserialize(params.dig('http_proxy', 'default_content'))
+        return unless ActiveRecord::Type::Boolean.new.deserialize(params.dig('http_proxy', 'content_default_http_proxy'))
 
         Setting[:content_default_http_proxy] = @http_proxy.name
       end
