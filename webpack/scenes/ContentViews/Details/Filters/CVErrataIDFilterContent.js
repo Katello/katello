@@ -60,7 +60,7 @@ const CVErrataIDFilterContent = ({
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
   const [statusSelected, setStatusSelected] = useState(ALL_STATUSES);
   const [typeSelectOpen, setTypeSelectOpen] = useState(false);
-  const [selectedTypes, setSelectedTypes] = useState(ERRATA_TYPES);
+  const [selectedTypes, setSelectedTypes] = useState([...ERRATA_TYPES, 'other']);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const activeFilters = [statusSelected, selectedTypes, startDate, endDate];
@@ -198,9 +198,15 @@ const CVErrataIDFilterContent = ({
 
   const onTypeSelect = (selection) => {
     if (selectedTypes.includes(selection)) {
+      // If the selection is the only selection remaining, do not allow it to be removed
       if (selectedTypes.length === 1) return;
+
+      // Filter out the current selection to deselect it
       setSelectedTypes(selectedTypes.filter(e => e !== selection));
-    } else setSelectedTypes([...selectedTypes, selection]);
+    } else {
+      // Add the current selection to the selected types
+      setSelectedTypes([...selectedTypes, selection]);
+    }
     setTypeSelectOpen(false);
   };
 
@@ -324,6 +330,11 @@ const CVErrataIDFilterContent = ({
                       <SelectOption isDisabled={singleSelection('bugfix')} key="bugfix" value="bugfix">
                         <p style={{ marginTop: '4px' }}>
                           {__('Bugfix')}
+                        </p>
+                      </SelectOption>
+                      <SelectOption isDisabled={singleSelection('bugfix')} key="other" value="other">
+                        <p style={{ marginTop: '4px' }}>
+                          {__('Other')}
                         </p>
                       </SelectOption>
                     </Select>

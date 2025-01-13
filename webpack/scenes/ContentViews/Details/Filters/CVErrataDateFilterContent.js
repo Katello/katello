@@ -46,7 +46,12 @@ const CVErrataDateFilterContent = ({
     selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const { repositories = [], rules } = filterDetails;
   const [{
-    id, types, start_date: ruleStartDate, end_date: ruleEndDate, date_type: ruleDateType,
+    id,
+    types,
+    allow_other_types: ruleAllowOtherTypes,
+    start_date: ruleStartDate,
+    end_date: ruleEndDate,
+    date_type: ruleDateType,
   } = {}] = rules;
   const { permissions } = details;
   const [startDate, setStartDate] = useState(convertAPIDateToUIFormat(ruleStartDate));
@@ -54,11 +59,22 @@ const CVErrataDateFilterContent = ({
   const [dateType, setDateType] = useState(ruleDateType);
   const [dateTypeSelectOpen, setDateTypeSelectOpen] = useState(false);
   const [typeSelectOpen, setTypeSelectOpen] = useState(false);
-  const [selectedTypes, setSelectedTypes] = useState(types);
   const dispatch = useDispatch();
   const [activeTabKey, setActiveTabKey] = useState(0);
   const [startEntry, setStartEntry] = useState(false);
   const [endEntry, setEndEntry] = useState(false);
+
+  const getInitialSelectedTypes = () => {
+    if (!types) {
+      return ['other'];
+    }
+    if (ruleAllowOtherTypes) {
+      return [...types, 'other'];
+    }
+    return types;
+  };
+
+  const [selectedTypes, setSelectedTypes] = useState(getInitialSelectedTypes());
 
   const onSave = () => {
     dispatch(editCVFilterRule(
@@ -68,8 +84,9 @@ const CVErrataDateFilterContent = ({
         content_view_filter_id: filterId,
         start_date: startDate && startDate !== '' ? dateParse(startDate) : null,
         end_date: endDate && endDate !== '' ? dateParse(endDate) : null,
-        types: selectedTypes,
+        types: selectedTypes.filter(e => e !== 'other'),
         date_type: dateType,
+        allow_other_types: selectedTypes.includes('other'),
       },
       () => {
         dispatch({ type: CONTENT_VIEW_NEEDS_PUBLISH });
@@ -81,15 +98,21 @@ const CVErrataDateFilterContent = ({
   const resetFilters = () => {
     setStartDate(convertAPIDateToUIFormat(ruleStartDate));
     setEndDate(convertAPIDateToUIFormat(ruleEndDate));
-    setSelectedTypes(types);
     setDateType(ruleDateType);
+    setSelectedTypes(getInitialSelectedTypes());
   };
 
   const onTypeSelect = (selection) => {
     if (selectedTypes.includes(selection)) {
+      // If the selection is the only selection remaining, do not allow it to be removed
       if (selectedTypes.length === 1) return;
+
+      // Filter out the current selection to deselect it
       setSelectedTypes(selectedTypes.filter(e => e !== selection));
-    } else setSelectedTypes([...selectedTypes, selection]);
+    } else {
+      // Add the selection to the selected types
+      setSelectedTypes([...selectedTypes, selection]);
+    }
   };
 
   const singleSelection = selection => (selectedTypes.length === 1
@@ -99,7 +122,7 @@ const CVErrataDateFilterContent = ({
     (
       isEqual(convertAPIDateToUIFormat(ruleStartDate), startDate) &&
       isEqual(convertAPIDateToUIFormat(ruleEndDate), endDate) &&
-      isEqual(sortBy(types), sortBy(selectedTypes)) &&
+      isEqual(sortBy(getInitialSelectedTypes()), sortBy(selectedTypes)) &&
       isEqual(ruleDateType, dateType)
     );
 
@@ -171,6 +194,15 @@ const CVErrataDateFilterContent = ({
                       {__('Bugfix')}
                     </p>
                   </SelectOption>
+                  <SelectOption
+                    isDisabled={singleSelection('other') || !hasPermission(permissions, 'edit_content_views')}
+                    key="other"
+                    value="other"
+                  >
+                    <p style={{ marginTop: '4px' }}>
+                      {__('Other')}
+                    </p>
+                  </SelectOption>
                 </Select>
               </FlexItem>
               <FlexItem span={1} spacer={{ default: 'spacerNone' }}>
@@ -178,7 +210,7 @@ const CVErrataDateFilterContent = ({
                   <Tooltip
                     position="top"
                     content={
-                      __('Atleast one errata type needs to be selected.')
+                      __('At least one errata type option needs to be selected.')
                     }
                   >
                     <OutlinedQuestionCircleIcon />

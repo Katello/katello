@@ -92,9 +92,21 @@ module Katello
     end
 
     def types_clause
+      # Create an array to store output clauses for quick type filtering later
+      conditions = []
+
+      # Add clauses for types in the filter
       types = erratum_rules.first.types
-      return if types.blank?
-      errata_types_in(types)
+      conditions << errata_types_in(types) unless types.blank?
+
+      # Add clauses for 'other' types
+      conditions << errata_types_not_in(Erratum::TYPES) if erratum_rules.first.allow_other_types?
+
+      # Reduce the array of clauses to a single clause and return
+      return if conditions.empty?
+      conditions.reduce(nil) do |combined_clause, condition|
+        combined_clause ? combined_clause.or(condition) : condition
+      end
     end
 
     def filter_by_id?
@@ -103,6 +115,10 @@ module Katello
 
     def errata_types_in(types)
       erratum_arel[:errata_type].in(types)
+    end
+
+    def errata_types_not_in(types)
+      erratum_arel[:errata_type].not_in(types)
     end
 
     def errata_in(ids)

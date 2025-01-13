@@ -48,8 +48,14 @@ module Katello
                   :validator => ->(value) { ['true', 'false'].include?(value.downcase) },
                   :operators => ["="]
 
-    def self.of_type(type)
-      where(:errata_type => type)
+    def self.of_type(type, include_other = false)
+      if include_other
+        where.not(
+          :errata_type => [Erratum::SECURITY, Erratum::BUGZILLA, Erratum::ENHANCEMENT].flatten
+          ).or(where(:errata_type => type))
+      else
+        where(:errata_type => type)
+      end
     end
 
     scope :security, -> { of_type(Erratum::SECURITY) }
