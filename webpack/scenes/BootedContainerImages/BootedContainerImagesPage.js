@@ -96,17 +96,6 @@ const BootedContainerImagesPage = () => {
   const onPagination = (newPagination) => {
     setParamsAndAPI({ ...params, ...newPagination });
   };
-  const bottomPagination = (
-    <Pagination
-      key="table-bottom-pagination"
-      page={params.page}
-      perPage={params.perPage}
-      itemCount={subtotal}
-      onChange={onPagination}
-      updateParamsByUrl
-    />
-  );
-
   const getColumnWidth = (key) => {
     if (key === 'bootc_booted_image') return 40;
     if (key === 'digest') return 15;
@@ -178,10 +167,10 @@ const BootedContainerImagesPage = () => {
             )}
           </Tbody>
           {results?.map((result, rowIndex) => {
-            const { bootcBootedImage, digests } = result;
+            const { bootc_booted_image: bootcBootedImage, digests } = result;
             const isExpanded = imageIsExpanded(bootcBootedImage);
             return (
-              <Tbody key="bootable-container-images-body" isExpanded={isExpanded}>
+              <Tbody key={`bootable-container-images-body-${bootcBootedImage}`} isExpanded={isExpanded}>
                 <Tr key={bootcBootedImage} ouiaId={`table-row-${rowIndex}`}>
                   <>
                     <Td
@@ -190,12 +179,12 @@ const BootedContainerImagesPage = () => {
                         isExpanded,
                         onToggle: (_event, _rInx, isOpen) =>
                           expandedImages.onToggle(isOpen, bootcBootedImage),
-                        expandId: 'booted-containers-expander',
+                        expandId: `booted-containers-expander-${bootcBootedImage}`,
                       }}
                     />
                     {columnNamesKeys.map(k => (
                       <Td
-                        key={k}
+                        key={`${bootcBootedImage}-${keysToColumnNames[k]}`}
                         dataLabel={keysToColumnNames[k]}
                       >
                         {columns[k].wrapper ? columns[k].wrapper(result) : result[k]}
@@ -217,7 +206,7 @@ const BootedContainerImagesPage = () => {
                           </Thead>
                           <Tbody>
                             {digests.map((digest, index) => (
-                              <Tr key={digest} ouiaId={`table-row-expandable-content-${index}`}>
+                              <Tr key={digest.bootc_booted_digest} ouiaId={`table-row-expandable-content-${index}`}>
                                 <Td>{digest.bootc_booted_digest}</Td>
                                 <Td>
                                   <a href={`/hosts?search=bootc_booted_digest%20=%20${digest.bootc_booted_digest}`}>{digest.host_count}</a>
@@ -233,7 +222,16 @@ const BootedContainerImagesPage = () => {
             );
           })}
         </TableComposable>
-        {results.length > 0 && !errorMessage && bottomPagination}
+        {results.length > 0 && !errorMessage &&
+          <Pagination
+            key="table-bottom-pagination"
+            page={params.page}
+            perPage={params.perPage}
+            itemCount={subtotal}
+            onChange={onPagination}
+            updateParamsByUrl
+          />
+        }
       </>
     </TableIndexPage>
   );
