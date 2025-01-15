@@ -1,0 +1,23 @@
+<%#
+kind: job_template
+name: Install Flatpak application on host
+job_category: Katello
+description_format: 'Install Flatpak application %{Application name} on host'
+provider_type: script
+template_inputs:
+- name: Flatpak remote name
+  description: Name of remote to use on host
+  input_type: user
+  required: false
+- name: Application name
+  description: Name of the application to install
+  input_type: user
+  required: true
+%>
+
+<%
+  remote_name = input('Flatpak remote name')
+  app_name = input('Application name')
+%>
+
+sudo dbus-launch flatpak install <%= remote_name %> <%= app_name %> --assumeyes
