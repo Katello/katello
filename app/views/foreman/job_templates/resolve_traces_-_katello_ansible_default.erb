@@ -18,7 +18,7 @@ commands = @host.traces_helpers(search: input('Traces search query'))
 reboot = commands.delete('reboot')
 -%>
 <% if reboot -%>
-    - reboot:
+<%= render_template('Power Action - Ansible Default', action: 'restart') %>
 <% else -%>
 <%= render_template(
     'Run Command - Ansible Default',
