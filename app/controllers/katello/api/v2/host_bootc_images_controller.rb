@@ -23,7 +23,17 @@ module Katello
       bootc_image_map = bootc_host_image_map
       paged_images = bootc_image_map.to_a.paginate(page: page, per_page: per_page)
       results = paged_images.collect { |image| { bootc_booted_image: image[0], digests: image[1] } }
-      render json: { total: bootc_image_map.size, page: page, per_page: per_page, subtotal: bootc_image_map.size, results: results}
+      render json: {
+        total: bootc_image_map.size,
+        page: page,
+        per_page: per_page,
+        subtotal: bootc_image_map.size,
+        sort: {
+          by: params[:sort_by],
+          order: params[:sort_order],
+        },
+        results: results,
+      }
     end
 
     private
