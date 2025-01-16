@@ -72,7 +72,7 @@ Foreman::Plugin.register :katello do
 
     menu :top_menu,
          :booted_container_images,
-         :caption => N_('Booted container images'),
+         :caption => N_('Booted Container Images'),
          :url_hash => {:controller => 'katello/api/v2/host_bootc_images',
                        :action => 'bootc_images'},
          :url => '/booted_container_images',

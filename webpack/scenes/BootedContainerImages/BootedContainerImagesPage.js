@@ -18,9 +18,11 @@ import {
 import Pagination from 'foremanReact/components/Pagination';
 import EmptyPage from 'foremanReact/routes/common/EmptyPage';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { useForemanHostsPageUrl } from 'foremanReact/Root/Context/ForemanContext';
 import BOOTED_CONTAINER_IMAGES_KEY, { BOOTED_CONTAINER_IMAGES_API_PATH } from './BootedContainerImagesConstants';
 
 const BootedContainerImagesPage = () => {
+  const foremanHostsPageUrl = useForemanHostsPageUrl();
   const columns = {
     bootc_booted_image: {
       title: __('Image name'),
@@ -33,7 +35,7 @@ const BootedContainerImagesPage = () => {
     hosts: {
       title: __('Hosts'),
       wrapper: ({ bootc_booted_image: bootcBootedImage, digests }) => (
-        <a href={`/hosts?search=bootc_booted_image%20=%20${bootcBootedImage}`}>{digests.reduce((total, digest) => total + digest.host_count, 0)}</a>
+        <a href={`${foremanHostsPageUrl}?search=bootc_booted_image%20=%20${bootcBootedImage}`}>{digests.reduce((total, digest) => total + digest.host_count, 0)}</a>
       ),
     },
   };
@@ -145,7 +147,7 @@ const BootedContainerImagesPage = () => {
                 </Td>
               </Tr>
             )}
-            {!status === STATUS.PENDING &&
+            {!(status === STATUS.PENDING) &&
               results.length === 0 &&
               !errorMessage && (
                 <Tr ouiaId="table-empty">
@@ -200,8 +202,8 @@ const BootedContainerImagesPage = () => {
                         <TableComposable variant="compact" isStriped ouiaId={`table-composable-expanded-${rowIndex}`}>
                           <Thead>
                             <Tr ouiaId={`table-row-inner-expandable-${rowIndex}`}>
-                              <Th width={50}>{__('Image digest')}</Th>
-                              <Th width={50}>{__('Hosts')}</Th>
+                              <Th width={55}>{__('Image digest')}</Th>
+                              <Th width={45}>{__('Hosts')}</Th>
                             </Tr>
                           </Thead>
                           <Tbody>
@@ -209,7 +211,7 @@ const BootedContainerImagesPage = () => {
                               <Tr key={digest.bootc_booted_digest} ouiaId={`table-row-expandable-content-${index}`}>
                                 <Td>{digest.bootc_booted_digest}</Td>
                                 <Td>
-                                  <a href={`/hosts?search=bootc_booted_digest%20=%20${digest.bootc_booted_digest}`}>{digest.host_count}</a>
+                                  <a href={`${foremanHostsPageUrl}?search=bootc_booted_digest%20=%20${digest.bootc_booted_digest}`}>{digest.host_count}</a>
                                 </Td>
                               </Tr>
                             ))}

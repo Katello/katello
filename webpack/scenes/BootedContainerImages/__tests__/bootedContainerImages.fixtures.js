@@ -15,15 +15,15 @@ const bootedContainerImagesResponse = Immutable({
         },
         {
           bootc_booted_digest: 'sha256:54256a998f0c62e16f3927c82b570f90bd8449a52e03daabd5fd16d6419fd573',
-          host_count: 1,
+          host_count: 2,
         },
         {
           bootc_booted_digest: 'sha256:54256a998f0c62e16f3927c82b570f90bd8449a52e03daabd5fd16d6419fd574',
-          host_count: 1,
+          host_count: 3,
         },
         {
           bootc_booted_digest: 'sha256:54256a998f0c62e16f3927c82b570f90bd8449a52e03daabd5fd16d6419fd575',
-          host_count: 1,
+          host_count: 4,
         },
       ],
     },
@@ -32,7 +32,7 @@ const bootedContainerImagesResponse = Immutable({
       digests: [
         {
           bootc_booted_digest: 'sha256:54256a998f0c62e16f3927c82b570f90bd8449a52e03daabd5fd16d6419fd576',
-          host_count: 1,
+          host_count: 6,
         },
       ],
     },
