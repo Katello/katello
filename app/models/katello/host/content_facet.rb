@@ -136,7 +136,7 @@ module Katello
       def content_view_environments=(new_cves)
         if new_cves.length > 1 && !Setting['allow_multiple_content_views']
           fail ::Katello::Errors::MultiEnvironmentNotSupportedError,
-          _("Assigning a host to multiple content view environments is not enabled.")
+          _("Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.")
         end
         super(new_cves)
         Katello::ContentViewEnvironmentContentFacet.reprioritize_for_content_facet(self, new_cves)
