@@ -14,6 +14,7 @@ module Katello
     let(:status) { host.get_status(Katello::RhelLifecycleStatus) }
 
     let(:release) { 'RHEL9' }
+    let(:release10) { 'RHEL10' }
 
     def test_get_status
       assert host.get_status(Katello::RhelLifecycleStatus)
@@ -35,7 +36,7 @@ module Katello
         assert eos_schedule_data.key?(rhel_version)
         assert eos_schedule_data[rhel_version].is_a?(Hash)
       end
-      eos_schedule_data.each do |_, schedule|
+      eos_schedule_data.except('RHEL10').each do |_, schedule|
         assert schedule.is_a?(Hash)
         %w[full_support maintenance_support].each { |support_category| assert schedule.key?(support_category) }
         schedule.each do |support_category, end_time|
@@ -114,6 +115,14 @@ module Katello
       fake_maintenance_support_end_date(Date.today - 3.years)
       fake_extended_support_end_date(Date.today - 1.year)
       assert_equal Katello::RhelLifecycleStatus::SUPPORT_ENDED, status.to_status
+    end
+
+    def test_empty_full_support_end_date
+      os.hosts << host
+      host.operatingsystem.update(:name => "RedHat", :major => "10", :minor => "0")
+      host.expects(:rhel_eos_schedule_index).returns(release10)
+      Katello::RhelLifecycleStatus.expects(:approaching_end_of_category).returns({})
+      assert_equal Katello::RhelLifecycleStatus::FULL_SUPPORT, status.to_status
     end
 
     def test_full_support_end_dates
