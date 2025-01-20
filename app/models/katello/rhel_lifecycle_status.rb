@@ -13,6 +13,9 @@ module Katello
     end
 
     RHEL_EOS_SCHEDULE = { # dates that each support category ends
+      'RHEL10' => {
+        'full_support' => nil,
+      },
       'RHEL9' => {
         'full_support' => end_of_day('2027-05-31'),
         'maintenance_support' => end_of_day('2032-05-31'),
@@ -74,6 +77,7 @@ module Katello
 
     def self.lifecycles_expire_soon
       expiring = RHEL_EOS_SCHEDULE.collect do |index, schedules|
+        next if schedules['full_support'].blank?
         expire_soon = schedules.except("full_support").select { |_k, v| (Time.now.utc..Time.now.utc + EOS_WARNING_THRESHOLD).cover?(v) }
         {index => expire_soon} if expire_soon.present?
       end
@@ -98,6 +102,8 @@ module Katello
       extended_support_end_date = RHEL_EOS_SCHEDULE[release]['extended_support']
 
       case
+      when full_support_end_date.blank?
+        return FULL_SUPPORT
       when Date.today <= full_support_end_date
         return FULL_SUPPORT
       when Date.today <= maintenance_support_end_date
