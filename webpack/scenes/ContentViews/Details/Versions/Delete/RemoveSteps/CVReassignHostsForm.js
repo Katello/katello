@@ -1,12 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { ExpandableSection, SelectOption } from '@patternfly/react-core';
+import { ExpandableSection, SelectOption, Alert, AlertActionCloseButton } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import EnvironmentPaths from '../../../../components/EnvironmentPaths/EnvironmentPaths';
 import getContentViews from '../../../../ContentViewsActions';
 import { selectContentViewError, selectContentViews, selectContentViewStatus } from '../../../../ContentViewSelectors';
+import { selectCVHosts } from '../../../ContentViewDetailSelectors';
 import AffectedHosts from '../affectedHosts';
 import DeleteContext from '../DeleteContext';
 import ContentViewSelect from '../../../../components/ContentViewSelect/ContentViewSelect';
@@ -25,6 +26,13 @@ const CVReassignHostsForm = () => {
     cvId, versionEnvironments, selectedEnvSet, selectedEnvForHost, setSelectedEnvForHost,
     currentStep, selectedCVForHosts, setSelectedCVNameForHosts, setSelectedCVForHosts,
   } = useContext(DeleteContext);
+  const [alertDismissed, setAlertDismissed] = useState(false);
+  const hostResponse = useSelector(selectCVHosts);
+
+  const multiCVWarning = hostResponse?.results?.some?.(host =>
+    host.content_facet_attributes?.multi_content_view_environment);
+
+  const multiCVRemovalInfo = __('This content view version is used in one or more multi-environment hosts. The version will simply be removed from the multi-environment hosts. The content view and lifecycle environment you select here will only apply to single-environment hosts. See hammer activation-key --help for more details.');
 
   // Fetch content views for selected environment to reassign hosts to.
   useDeepCompareEffect(
@@ -103,6 +111,17 @@ const CVReassignHostsForm = () => {
 
   return (
     <>
+      {!alertDismissed && multiCVWarning && (
+        <Alert
+          ouiaId="multi-cv-warning-alert"
+          variant="warning"
+          isInline
+          title={__('Warning')}
+          actionClose={<AlertActionCloseButton onClose={() => setAlertDismissed(true)} />}
+        >
+          <p>{multiCVRemovalInfo}</p>
+        </Alert>
+      )}
       <EnvironmentPaths
         userCheckedItems={selectedEnvForHost}
         setUserCheckedItems={setSelectedEnvForHost}

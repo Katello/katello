@@ -30,6 +30,7 @@ const AffectedHosts = ({
   const columnHeaders = [
     __('Name'),
     __('Environment'),
+    __('Multi Content View Environment'),
   ];
   const emptyContentTitle = __('No matching hosts found.');
   const emptyContentBody = __("Given criteria doesn't match any hosts. Try changing your rule.");
@@ -63,13 +64,17 @@ const AffectedHosts = ({
         {results?.map(({
           name,
           id,
-          content_facet_attributes: { lifecycle_environment: environment },
+          content_facet_attributes: {
+            lifecycle_environment: environment,
+            multi_content_view_environment: multiContentViewEnvironment,
+          },
         }) => (
           <Tr ouiaId={id} key={id}>
             <Td>
               <a rel="noreferrer" target="_blank" href={urlBuilder(`new/hosts/${id}`, '')}>{name}</a>
             </Td>
             <Td><EnvironmentLabels environments={environment} /></Td>
+            <Td>{ multiContentViewEnvironment ? __('Yes') : __('No') }</Td>
           </Tr>
         ))
         }

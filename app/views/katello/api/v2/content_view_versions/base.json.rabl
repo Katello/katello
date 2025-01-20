@@ -46,6 +46,10 @@ node :permissions do |cvv|
   }
 end
 
+child :content_view_environments => :content_view_environments do
+  attributes :label, :environment_id, :environment_name
+end
+
 extends 'katello/api/v2/common/timestamps'
 
 version = @object || @resource

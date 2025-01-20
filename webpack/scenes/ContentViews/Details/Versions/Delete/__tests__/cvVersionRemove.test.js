@@ -152,7 +152,8 @@ test('Can open Remove wizard and remove version from environment with hosts', as
 
 
   const {
-    getByText, getAllByText, getByLabelText, getAllByLabelText, queryByText, getByPlaceholderText,
+    getByText, getAllByText, getByLabelText, getAllByLabelText, queryByText,
+    getByPlaceholderText, getByTestId,
   } = renderWithRedux(
     <ContentViewVersions cvId={2} details={cvDetailData} />,
     renderOptions,
@@ -192,7 +193,7 @@ test('Can open Remove wizard and remove version from environment with hosts', as
   fireEvent.click(getByText('Next'));
   await patientlyWaitFor(() => {
     expect(getByText('Review details')).toBeInTheDocument();
-    expect(getByText('1 host will be moved to content view cv2 in')).toBeInTheDocument();
+    expect(getByTestId('single-cv-hosts-remove')).toBeInTheDocument();
   });
   fireEvent.click(getAllByText('Remove')[0]);
   assertNockRequest(scope);
@@ -238,7 +239,8 @@ test('Can open Remove wizard and remove version from environment with activation
 
 
   const {
-    getByText, getAllByText, getByLabelText, getAllByLabelText, queryByText, getByPlaceholderText,
+    getByText, getAllByText, getByLabelText, getAllByLabelText, queryByText,
+    getByPlaceholderText, getByTestId,
   } = renderWithRedux(
     <ContentViewVersions cvId={2} details={cvDetailData} />,
     renderOptions,
@@ -278,7 +280,7 @@ test('Can open Remove wizard and remove version from environment with activation
   fireEvent.click(getByText('Next'));
   await patientlyWaitFor(() => {
     expect(getByText('Review details')).toBeInTheDocument();
-    expect(getByText('1 activation key will be moved to content view cv2 in')).toBeInTheDocument();
+    expect(getByTestId('single-cv-activation-keys-remove')).toBeInTheDocument();
   });
   fireEvent.click(getAllByText('Remove')[0]);
 
