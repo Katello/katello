@@ -29,7 +29,7 @@ module Katello
 
             root = product.root_repositories.find do |r|
               if repo.content&.id && repo.redhat
-                repo_exists = r.content.cp_content_id == repo.content.id &&
+                repo_exists = r.library_instance.content.cp_content_id == repo.content.id &&
                   r.arch == repo.arch &&
                   r.major == repo.major &&
                   r.minor == repo.minor
