@@ -17,10 +17,10 @@ module Katello
         def test_sync
           @repo_mirror.stubs(:remote_href).returns("remote_href")
           @repo_mirror.stubs(:repository_href).returns("repository_href")
-          sync_url = @repo_service.api.repository_sync_url_class.new(remote: "remote_href", mirror: true)
-          PulpAnsibleClient::AnsibleRepositorySyncURL.expects(:new).with({ remote: "remote_href", mirror: true }).once.returns(sync_url)
+          sync_url = @repo_service.api.repository_sync_url_class.new(remote: "remote_href", mirror: true, optimize: true)
+          PulpAnsibleClient::AnsibleRepositorySyncURL.expects(:new).with({ remote: "remote_href", mirror: true, optimize: true }).once.returns(sync_url)
           PulpAnsibleClient::RepositoriesAnsibleApi.any_instance.expects(:sync).once.with("repository_href", sync_url)
-          @repo_mirror.sync(optimize: "test", skip_types: "another test")
+          @repo_mirror.sync(optimize: true, skip_types: "another test")
         end
 
         def test_refresh_distributions_update_dist
