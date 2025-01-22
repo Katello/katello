@@ -156,6 +156,9 @@ module Katello
       ::HttpProxy.include Katello::Concerns::HttpProxyExtensions
       ForemanTasks::RecurringLogic.include Katello::Concerns::RecurringLogicExtensions
 
+      # Validator extensions
+      ::BookmarkControllerValidator.singleton_class.send :prepend, Katello::Concerns::BookmarkControllerValidatorExtensions
+
       #Controller extensions
       ::HostsController.include Katello::Concerns::HostsControllerExtensions
       ::SmartProxiesController.include Katello::Concerns::SmartProxiesControllerExtensions
