@@ -51,7 +51,7 @@ module Katello
       assert_not_valid @root
       assert_equal @root.errors.full_messages, [
         "Os versions invalid: Repositories can only require one OS version.",
-        "Os versions must be one of: rhel-6, rhel-7, rhel-8, rhel-9",
+        "Os versions must be one of: rhel-6, rhel-7, rhel-8, rhel-9, rhel-10",
       ]
     end
 

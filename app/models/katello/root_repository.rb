@@ -39,7 +39,8 @@ module Katello
     RHEL7 = 'rhel-7'.freeze
     RHEL8 = 'rhel-8'.freeze
     RHEL9 = 'rhel-9'.freeze
-    ALLOWED_OS_VERSIONS = [RHEL6, RHEL7, RHEL8, RHEL9].freeze
+    RHEL10 = 'rhel-10'.freeze
+    ALLOWED_OS_VERSIONS = [RHEL6, RHEL7, RHEL8, RHEL9, RHEL10].freeze
 
     MIRRORING_POLICY_ADDITIVE = 'additive'.freeze
     MIRRORING_POLICY_CONTENT = 'mirror_content_only'.freeze
