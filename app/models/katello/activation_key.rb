@@ -290,7 +290,7 @@ module Katello
       property :name, String, desc: 'Returns the name of the Activation Key.'
     end
     class Jail < ::Safemode::Jail
-      allow :name
+      allow :name, :content_view_environment_labels, :multi_content_view_environment?
     end
   end
 end

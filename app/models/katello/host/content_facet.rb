@@ -453,7 +453,7 @@ module Katello
               :errata_counts, :id, :kickstart_repository, :kickstart_repository_id, :kickstart_repository_name,
               :upgradable_deb_count, :upgradable_module_stream_count, :upgradable_rpm_count, :uuid,
               :installable_security_errata_count, :installable_bugfix_errata_count, :installable_enhancement_errata_count,
-              :single_content_view, :single_lifecycle_environment
+              :single_content_view, :single_lifecycle_environment, :content_view_environment_labels
       end
     end
   end
