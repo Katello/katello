@@ -48,7 +48,14 @@ module Katello
 
       source = Foreman::Renderer.get_source(template: template, host: host)
       scope = Foreman::Renderer.get_scope(source: source, host: host)
-      Foreman::Renderer.render(source, scope)
+
+      <<~CMD
+        if [ -f /etc/yggdrasil/config.toml ]; then
+          cp /etc/yggdrasil/config.toml /etc/yggdrasil/config.toml.bak
+          export YGGDRASIL_RESTART_DELAY=10
+          #{Foreman::Renderer.render(source, scope)}
+        fi
+      CMD
     end
   end
 end
