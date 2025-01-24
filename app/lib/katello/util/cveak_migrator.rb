@@ -27,8 +27,9 @@ module Katello
           Rails.logger.info "You may want to change the content view / lifecycle environment for these activation keys manually."
         end
         (aks_with_no_cve + aks_with_missing_cve).each do |ak|
-          default_content_view = ak.organization.default_content_view
-          library = ak.organization.library
+          ak_organization = ::Organization.find_by(id: ak.organization_id)
+          default_content_view = ak_organization.default_content_view
+          library = ak_organization.library
           Rails.logger.info "Updating activation key #{ak.name} with default content_view_id and lifecycle_environment_id"
           ak&.update_columns(content_view_id: default_content_view&.id, environment_id: library&.id)
         end
