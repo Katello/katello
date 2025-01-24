@@ -19,5 +19,9 @@ module Katello
     scoped_search :on => :url, :complete_value => true
     scoped_search :on => :seeded, :complete_value => true
     scoped_search :on => :registry_url, :complete_value => true
+
+    def self.humanize_class_name(_name = nil)
+      _("Flatpak Remotes")
+    end
   end
 end
