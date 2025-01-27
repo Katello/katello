@@ -31,8 +31,9 @@ module Katello
           pulp_id: unit[unit_identifier],
           annotations: unit['annotations'],
           labels: unit['labels'],
-          is_bootable: unit['is_bootable'],
-          is_flatpak: unit['is_flatpak'],
+          is_bootable: unit['is_bootable'] || unit['type'] == 'bootable',
+          is_flatpak: unit['is_flatpak'] || unit['type'] == 'flatpak',
+          content_type: unit['type'],
         }
       end
 
