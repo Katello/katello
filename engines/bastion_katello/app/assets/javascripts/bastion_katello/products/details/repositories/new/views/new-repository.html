@@ -26,8 +26,8 @@
       <div bst-form-group label="{{ 'Description' | translate }}">
         <textarea id="description"
                   name="description"
-                  ng-model="repository.description"
-                  type="text"/>
+                  ng-model="repository.description">
+        </textarea>
       </div>
 
       <div bst-form-group label="{{ 'Type' | translate }}">
@@ -107,8 +107,8 @@
                name="ansible_collection_requirements"
                ng-model="repository.ansible_collection_requirements"
                rows="10"
-               placeholder= "{{ 'You can upload a requirements.yml file below to auto-fill contents or paste contents of requirement.yml here' | translate }}"
-               type="text"/>
+               placeholder= "{{ 'You can upload a requirements.yml file below to auto-fill contents or paste contents of requirement.yml here' | translate }}">
+        </textarea>
       </div>
 
       <div class="form-group" ng-show="repository.content_type === 'ansible_collection'">
@@ -290,8 +290,8 @@
 	  <textarea
               id="option-{{$index}}"
               name="option-{{$index}}"
-              ng-model="genericRemoteOptions[$index].value"
-              type="text"/>
+              ng-model="genericRemoteOptions[$index].value">
+      </textarea>
           <p class="help-block" translate>
             {{option.description}}
           </p>
