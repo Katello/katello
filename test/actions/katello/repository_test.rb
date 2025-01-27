@@ -141,11 +141,20 @@ module ::Actions::Katello::Repository
       assert_action_planed action, candlepin_action_class
     end
 
-    it 'plans pulp3 update when retain_package_version is updated' do
+    it 'throws error on pulp3 update when retain_package_version is updated without additive' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
+      error = assert_raises(ActiveRecord::RecordInvalid) do
+        plan_action action, repository.root, :retain_package_versions_count => 17
+      end
+      assert_match(/Retain package versions count cannot be set for repositories without 'Additive' mirroring policy/, error.message)
+    end
 
-      plan_action action, repository.root, :retain_package_versions_count => 17
+    it 'plans pulp3 update when retain_package_version is updated with additive' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+      repo_params = { retain_package_versions_count: 17, mirroring_policy: ::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE }
+      plan_action action, repository.root, repo_params
       assert_action_planed action, pulp3_action_class
     end
 
