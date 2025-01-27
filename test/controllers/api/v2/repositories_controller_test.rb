@@ -545,6 +545,7 @@ module Katello
     end
 
     def test_update_with_gpg_key
+      @repository.root.update!(mirroring_policy: Katello::RootRepository::MIRRORING_POLICY_ADDITIVE)
       key = ContentCredential.find(katello_gpg_keys('fedora_gpg_key').id)
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
         assert_equal root, @repository.root
@@ -557,6 +558,7 @@ module Katello
     end
 
     def test_update_with_cert
+      @repository.root.update!(mirroring_policy: Katello::RootRepository::MIRRORING_POLICY_ADDITIVE)
       cert = ContentCredential.find(katello_gpg_keys('fedora_cert').id)
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
         assert_equal root, @repository.root
@@ -657,8 +659,11 @@ module Katello
       repo = katello_repositories(:fedora_17_unpublished)
       assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
         assert_equal attributes[:retain_package_versions_count], retain_package_versions_count
+        assert_equal attributes[:mirroring_policy], ::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE
       end
-      put :update, params: { :id => repo.id, :retain_package_versions_count => retain_package_versions_count }
+      put :update, params: { :id => repo.id,
+                             :retain_package_versions_count => retain_package_versions_count,
+                             :mirroring_policy => ::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE }
     end
 
     def test_update_with_limit_tags
@@ -675,6 +680,7 @@ module Katello
     end
 
     def test_update_non_docker_repo_with_limit_tags
+      @repository.root.update!(mirroring_policy: Katello::RootRepository::MIRRORING_POLICY_ADDITIVE)
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
         assert_equal root, @repository.root
         expected = { 'name' => 'new name' }
