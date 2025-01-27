@@ -403,6 +403,13 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
         end
       end
 
+      additive_policy = ::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE
+      is_repo_param_additive = repo_params[:mirroring_policy] == additive_policy
+      is_root_additive = @repository.root.mirroring_policy == additive_policy
+
+      if @repository.yum? && !(is_repo_param_additive || is_root_additive)
+        repo_params[:retain_package_versions_count] = nil
+      end
       sync_task(::Actions::Katello::Repository::Update, @repository.root, repo_params)
       respond_for_show(:resource => @repository)
     end

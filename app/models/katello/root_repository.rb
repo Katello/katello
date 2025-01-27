@@ -338,6 +338,9 @@ module Katello
       unless yum?
         errors.add(:retain_package_versions_count, N_("is only allowed for Yum repositories."))
       end
+      if yum? && self.mirroring_policy != MIRRORING_POLICY_ADDITIVE
+        errors.add(:retain_package_versions_count, N_("cannot be set for repositories without 'Additive' mirroring policy."))
+      end
       if self.retain_package_versions_count.to_i < 0
         errors.add(:retain_package_versions_count, N_("must not be a negative value."))
       end

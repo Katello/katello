@@ -59,6 +59,7 @@ module Katello
       @root.content_type = 'yum'
       @root.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
       @root.retain_package_versions_count = -2
+      @root.mirroring_policy = 'additive'
       assert_not_valid @root
       assert_equal @root.errors[:retain_package_versions_count], ["must not be a negative value."]
     end
@@ -67,6 +68,7 @@ module Katello
       @root.content_type = 'yum'
       @root.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
       @root.retain_package_versions_count = 2
+      @root.mirroring_policy = 'additive'
       assert_valid @root
     end
 
@@ -582,7 +584,12 @@ module Katello
       assert @root.valid?
 
       @root.retain_package_versions_count = 2
+      @root.mirroring_policy = 'additive'
       assert @root.valid?
+
+      @root.mirroring_policy = 'mirror_content_only'
+      refute @root.valid?
+      assert_equal @root.errors[:retain_package_versions_count], ["cannot be set for repositories without 'Additive' mirroring policy."]
     end
 
     def test_sha1_checksum_removed
