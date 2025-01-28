@@ -139,8 +139,8 @@
           <td bst-table-cell>{{ host.operatingsystem_name }}</td>
           <td bst-table-cell>{{ host.content_facet_attributes.lifecycle_environment.name }}</td>
           <td bst-table-cell>{{ host.content_facet_attributes.content_view.name || "" }}</td>
-          <td bst-table-cell><long-date-time date="host.subscription_facet_attributes.registered_at" default="'Never registered' | translate" /></td>
-          <td bst-table-cell><long-date-time date="host.subscription_facet_attributes.last_checkin" default="'Never checked in' | translate" /></td>
+          <td bst-table-cell><long-date-time date="host.subscription_facet_attributes.registered_at" default="'Never registered' | translate"></long-date-time></td>
+          <td bst-table-cell><long-date-time date="host.subscription_facet_attributes.last_checkin" default="'Never checked in' | translate"></long-date-time></td>
         </tr>
       </tbody>
     </table>

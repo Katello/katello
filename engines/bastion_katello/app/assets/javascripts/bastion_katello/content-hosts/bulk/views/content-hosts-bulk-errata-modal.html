@@ -102,11 +102,11 @@
               <span ng-switch="newHostDetailsUI">
                 <a ng-switch-when="true" target="_blank" href="{{ '/hosts?search=installable_errata%3D' + erratum.errata_id }}">
                   {{ erratum.affected_hosts_count }}
-                <span class="fa fa-external-link"/>
+                  <span class="fa fa-external-link"></span>
                 </a>
                 <a ng-switch-when="false" target="_blank" href="{{ '/content_hosts?search=installable_errata%3D' + erratum.errata_id }}">
                 {{ erratum.affected_hosts_count }}
-                <span class="fa fa-external-link"/>
+                  <span class="fa fa-external-link"></span>
               </a>
               </span>
              </td>

@@ -16,7 +16,8 @@
       <select class="form-control" ng-disabled="creating()"
               ng-model="createRepoChoices.existingProductId"
               ng-options="product.id as product.name for product in products"
-              ng-required="createRepoChoices.newProduct === 'false'"/>
+              ng-required="createRepoChoices.newProduct === 'false'">
+      </select>
     </div>
 
     <div bst-form-group ng-show="createRepoChoices.newProduct === 'true'"
@@ -45,7 +46,8 @@
     <div bst-form-group ng-show="createRepoChoices.newProduct === 'true' && contentCredentials.length !== 0"
          label="{{ 'GPG Key' | translate }}">
       <select class="form-control" ng-model="createRepoChoices.product.gpg_key_id"
-              ng-options="content_credential.id as content_credential.name for content_credential in contentCredentials"/>
+              ng-options="content_credential.id as content_credential.name for content_credential in contentCredentials">
+      </select>
     </div>
 
     <h4 translate>Repository Options</h4>

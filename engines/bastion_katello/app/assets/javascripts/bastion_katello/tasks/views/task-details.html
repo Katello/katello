@@ -8,10 +8,10 @@
   <dd>{{ task.username }}</dd>
 
   <dt translate>Started At</dt>
-  <dd><short-date-time date="task.started_at" /></dd>
+  <dd><short-date-time date="task.started_at"></short-date-time></dd>
 
   <dt translate>Finished At</dt>
-  <dd><short-date-time date="task.ended_at" /></dd>
+  <dd><short-date-time date="task.ended_at"></short-date-time></dd>
 
   <dt translate>Parameters</dt>
   <dd ng-switch="isArray(task.humanized.input)">

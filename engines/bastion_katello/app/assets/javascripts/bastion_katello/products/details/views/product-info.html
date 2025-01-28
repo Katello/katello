@@ -88,13 +88,13 @@
 
       <dt translate>Last Sync</dt>
       <dd>
-        <relative-date date="product.last_sync" />
-        (<long-date-time date="product.last_sync" /> <translate>Local Time</translate>)
+        <relative-date date="product.last_sync" ></relative-date>
+        (<long-date-time date="product.last_sync" ></long-date-time> <translate>Local Time</translate>)
       </dd>
 
       <dt translate>Next Sync</dt>
       <dd ng-show="product.sync_plan.next_sync">
-        <long-date-time date="product.sync_plan.next_sync" /> (<translate>Server Time</translate>)
+        <long-date-time date="product.sync_plan.next_sync" ></long-date-time> (<translate>Server Time</translate>)
       </dd>
       <dd ng-hide="product.sync_plan.next_sync" translate>
         Synced manually, no interval set.
