@@ -396,8 +396,11 @@
       <span ng-include="'products/details/partials/sync-status.html'"></span>
 
       <dt translate>Last Sync</dt>
-      <dd ng-show="repository.last_sync == null" translate>
+      <dd ng-show="repository.last_sync == null && repository.last_sync_words == null" translate>
         Not Synced
+      </dd>
+      <dd ng-show="repository.last_sync == null && repository.last_sync_words" translate>
+        Completed {{ repository.last_sync_words }} ago
       </dd>
       <dd ng-hide="repository.last_sync == null || repository.last_sync.ended_at == null">
         <relative-date date="repository.last_sync.ended_at" />
