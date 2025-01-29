@@ -65,7 +65,8 @@ test('Can show filter details and package groups on page load', async (done) => 
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
-  assertNockRequest(packageGroupsScope, done);
+  assertNockRequest(packageGroupsScope);
+  done();
   act(done);
 });
 
@@ -145,6 +146,7 @@ test('Can search for package groups in package group filter', async (done) => {
   assertNockRequest(cvFiltersScope);
   assertNockRequest(packageGroupsScope);
   assertNockRequest(withSearchScope);
-  assertNockRequest(packageGroupSearchScope, done);
+  assertNockRequest(packageGroupSearchScope);
+  done();
   act(done);
 });

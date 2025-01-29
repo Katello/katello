@@ -1,7 +1,7 @@
 import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
-import { Tooltip } from '@patternfly/react-core';
+import { Tooltip, Icon } from '@patternfly/react-core';
 import { EnterpriseIcon, RegistryIcon } from '@patternfly/react-icons';
 import './contentViewIcon.scss';
 
@@ -19,7 +19,15 @@ const ContentViewIcon = ({
       content={composite ? __('Composite content view') : __('Content view')}
       {...toolTipProps}
     >
-      {composite ? <RegistryIcon size="md" {...props} /> : <EnterpriseIcon size="sm" {...props} />}
+      {composite ? (
+        <Icon size="md">
+          <RegistryIcon {...props} />
+        </Icon>
+      ) : (
+        <Icon size="md">
+          <EnterpriseIcon {...props} />
+        </Icon>
+      )}
     </Tooltip>
   );
   return (

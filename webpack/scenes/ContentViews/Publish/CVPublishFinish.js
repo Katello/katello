@@ -7,8 +7,7 @@ import { useHistory } from 'react-router-dom';
 import {
   Bullseye, Button, Grid, GridItem,
   Progress, ProgressSize, ProgressMeasureLocation,
-  ProgressVariant, EmptyState, EmptyStateIcon, EmptyStateVariant,
-  Title,
+  ProgressVariant, EmptyState, EmptyStateIcon, EmptyStateVariant, EmptyStateHeader,
 } from '@patternfly/react-core';
 import { ExternalLinkAltIcon, InProgressIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -101,11 +100,8 @@ const CVPublishFinish = ({
 
   return (
     <>
-      <EmptyState style={{ marginTop: '10px' }} variant={EmptyStateVariant.large}>
-        <EmptyStateIcon icon={InProgressIcon} />
-        <Title headingLevel="h2" size="lg" ouiaId="publish-cv-title">
-          {__('Publishing content view')}
-        </Title>
+      <EmptyState style={{ marginTop: '10px' }} variant={EmptyStateVariant.lg}>
+        <EmptyStateHeader titleText={<>{__('Publishing content view')}</>} icon={<EmptyStateIcon icon={InProgressIcon} />} headingLevel="h2" />
       </EmptyState>
       <Grid hasGutter>
         <GridItem span={12} rowSpan={19}>

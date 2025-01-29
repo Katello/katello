@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { Modal, ModalVariant, Button, Flex, FlexItem } from '@patternfly/react-core';
-import { TableComposable, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import { Table /* data-codemods */, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { EnterpriseIcon } from '@patternfly/react-icons';
 import { urlBuilder } from '../../../__mocks__/foremanReact/common/urlHelpers';
 
@@ -44,7 +44,7 @@ const RelatedCompositeContentViewsModal = ({
         }}
         appendTo={document.body}
       >
-        <TableComposable
+        <Table
           aria-label={`${cvId}_table`}
           ouiaId={`${cvId}_table`}
           variant="compact"
@@ -65,7 +65,7 @@ const RelatedCompositeContentViewsModal = ({
               </Tr>
             ))}
           </Tbody>
-        </TableComposable>
+        </Table>
       </Modal>
     </>
   );
