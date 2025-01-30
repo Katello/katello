@@ -400,13 +400,13 @@
         Not Synced
       </dd>
       <dd ng-hide="repository.last_sync == null || repository.last_sync.ended_at == null">
-        <relative-date date="repository.last_sync.ended_at" />
-        (<short-date-time date="repository.last_sync.ended_at" /> <translate>Local Time</translate>)
+        <relative-date date="repository.last_sync.ended_at" ></relative-date>
+        (<short-date-time date="repository.last_sync.ended_at" ></short-date-time> <translate>Local Time</translate>)
       </dd>
 
       <dt translate>Next Sync</dt>
       <dd ng-show="repository.product.sync_plan.next_sync">
-        <long-date-time date="repository.product.sync_plan.next_sync" /> (<translate>Server Time</translate>)
+        <long-date-time date="repository.product.sync_plan.next_sync" ></long-date-time> (<translate>Server Time</translate>)
       </dd>
       <dd ng-hide="repository.product.sync_plan.next_sync" translate>
         Synced manually, no interval set.
@@ -537,7 +537,7 @@
         </tbody>
       </table>
 
-      <div class="divider" ng-if="repository.content_type === 'ostree'"/>
+      <div class="divider" ng-if="repository.content_type === 'ostree'"></div>
     </section>
 
     <span ng-hide="(repository.content_type === 'deb' && repository.url)">

@@ -4,7 +4,8 @@
   <form ng-submit="discover()" name="discoveryForm" class="col-sm-5" role="form">
     <div bst-form-group label="{{ 'Repository Type' | translate }}">
       <select ng-model="discovery.contentType"
-              ng-options="contentType.id as contentType.name for contentType in contentTypes"/>
+              ng-options="contentType.id as contentType.name for contentType in contentTypes">
+      </select>
     </div>
 
     <div bst-form-group ng-if="discovery.contentType === 'yum'"
