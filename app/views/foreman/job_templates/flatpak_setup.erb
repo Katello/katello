@@ -1,6 +1,6 @@
 <%#
 kind: job_template
-name: Set up Flatpak remote on host
+name: Flatpak - Set up remote on host
 job_category: Katello
 description_format: 'Set up Flatpak remote on host'
 provider_type: script
@@ -14,7 +14,7 @@ template_inputs:
   input_type: user
   required: true
 foreign_input_sets:
-- template: Login to flatpak registry via podman
+- template: Flatpak - Login to registry via podman
   exclude: Flatpak registry URL
 %>
 
