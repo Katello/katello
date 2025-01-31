@@ -132,7 +132,7 @@ test('Can expand cv and show activation keys and hosts', async (done) => {
     expect(queryByLabelText('activation_keys_link_2').textContent).toEqual('1');
 
     // Displays hosts link with count
-    expect(queryByLabelText('host_link_2')).toHaveAttribute('href', '/hosts?search=content_view_id+%3D+2');
+    expect(queryByLabelText('host_link_2')).toHaveAttribute('href', '/new/hosts?search=content_view_id%3D2');
     expect(queryByLabelText('host_link_2').textContent).toEqual('1');
   });
 
