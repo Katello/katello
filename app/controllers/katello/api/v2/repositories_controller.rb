@@ -307,6 +307,10 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
       repo_params[:ssl_client_cert] = ssl_client_cert
       repo_params[:ssl_client_key] = ssl_client_key
 
+      if repo_params[:package_types]
+        repo_params[:package_types] = repo_params[:package_types].map(& :strip)
+      end
+
       root = construct_repo_from_params(repo_params)
       sync_task(::Actions::Katello::Repository::CreateRoot, root)
       @repository = root.reload.library_instance
@@ -393,6 +397,10 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       repo_params = repository_params
       if !repo_params[:url].nil? && URI(repo_params[:url]).userinfo
         fail "Do not include the username/password in the URL. Use the username/password settings instead."
+      end
+
+      if repo_params[:package_types]
+        repo_params[:package_types] = repo_params[:package_types].map(& :strip)
       end
 
       if @repository.generic?
