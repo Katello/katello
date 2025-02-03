@@ -1,3 +1,10 @@
+# 4.14.3 Gold Road (2025-02-03)
+
+## Bug Fixes
+
+### Hosts
+ * Katello tries to update the deleted Candlepin consumer during force register after deleting certificates ([#38189](https://projects.theforeman.org/issues/38189))
+
 # 4.14.2 Gold Road (2024-12-02)
 
 ## Bug Fixes
