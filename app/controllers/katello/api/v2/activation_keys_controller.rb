@@ -313,7 +313,7 @@ module Katello
 
     def find_content_view_environments
       @content_view_environments = []
-      if params[:environment_id] || params[:environment]
+      if (params[:environment_id] || params[:environment]) || (params[:content_view_id] || params[:content_view])
         find_cve_for_single
       elsif params_likely_not_from_angularjs? && (params[:content_view_environments] || params[:content_view_environment_ids])
         @content_view_environments = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
