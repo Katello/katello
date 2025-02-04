@@ -589,8 +589,8 @@ module Katello
         end
       end
 
-      def advisory_ids(search:, check_installable_for_host: true)
-        errata_scope = check_installable_for_host ? ::Katello::Erratum.installable_for_hosts([self]) : ::Katello::Erratum
+      def advisory_ids(search:)
+        errata_scope = ::Katello::Erratum.installable_for_hosts([self])
         ids = errata_scope.search_for(search).pluck(:errata_id)
         if ids.empty?
           fail _("Cannot install errata: No errata found for search term '%s'") % search
