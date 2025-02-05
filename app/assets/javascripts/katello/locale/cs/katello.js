@@ -3,19 +3,19 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 2.4.0-RC1",
+        "Project-Id-Version": "katello 1.0.0",
         "Report-Msgid-Bugs-To": "",
-        "PO-Revision-Date": "2013-01-22 13:28+0000",
-        "Last-Translator": "lzap <lzap@seznam.cz>",
+        "PO-Revision-Date": "2025-02-05 14:11+0000",
+        "Last-Translator": "FULL NAME <EMAIL@ADDRESS>",
         "Language-Team": "LANGUAGE <LL@li.org>",
-        "Language": "cs",
+        "Language": "",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
         "Content-Transfer-Encoding": "8bit",
-        "Plural-Forms": "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;",
+        "Plural-Forms": "nplurals=INTEGER; plural=EXPRESSION;",
         "lang": "cs",
         "domain": "katello",
-        "plural_forms": "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
+        "plural_forms": "nplurals=INTEGER; plural=EXPRESSION;"
       },
       "\\n* Product = '%{product}', Repository = '%{repository}'": [
         ""
@@ -117,7 +117,7 @@
         ""
       ],
       "%s Errata": [
-        "všechny balíčky"
+        ""
       ],
       "%s Host": [
         "",
@@ -127,7 +127,7 @@
         ""
       ],
       "%s ago": [
-        "před %s"
+        ""
       ],
       "%s content type is not enabled.": [
         ""
@@ -214,7 +214,7 @@
         ""
       ],
       "%{group} (%{total} other package groups) update failed": [
-        "všechny aktualizační balíčky selhaly"
+        ""
       ],
       "%{group} (%{total} other package groups) update timed out": [
         ""
@@ -223,22 +223,22 @@
         ""
       ],
       "%{group} package group install canceled": [
-        "Skupiny balíčků"
+        ""
       ],
       "%{group} package group install failed": [
-        "Žádné nové instalační balíčky"
+        ""
       ],
       "%{group} package group install timed out": [
         ""
       ],
       "%{group} package group installed": [
-        "Žádné nové instalační balíčky"
+        ""
       ],
       "%{group} package group remove canceled": [
-        "Skupiny balíčků"
+        ""
       ],
       "%{group} package group remove failed": [
-        "všechny aktualizační balíčky selhaly"
+        ""
       ],
       "%{group} package group remove timed out": [
         ""
@@ -247,16 +247,16 @@
         ""
       ],
       "%{group} package group update canceled": [
-        "Skupiny balíčků"
+        ""
       ],
       "%{group} package group update failed": [
-        "všechny aktualizační balíčky selhaly"
+        ""
       ],
       "%{group} package group update timed out": [
         ""
       ],
       "%{group} package group updated": [
-        "všechny aktualizační balíčky"
+        ""
       ],
       "%{label} failed": [
         ""
@@ -280,7 +280,7 @@
         ""
       ],
       "%{package} (%{total} other packages) installed": [
-        "Žádné nové instalační balíčky"
+        ""
       ],
       "%{package} (%{total} other packages) remove canceled": [
         ""
@@ -298,7 +298,7 @@
         ""
       ],
       "%{package} (%{total} other packages) update failed": [
-        "všechny aktualizační balíčky selhaly"
+        ""
       ],
       "%{package} (%{total} other packages) update timed out": [
         ""
@@ -307,34 +307,34 @@
         ""
       ],
       "%{package} package install canceled": [
-        "Žádné nové instalační balíčky"
+        ""
       ],
       "%{package} package install timed out": [
-        "Žádné nové instalační balíčky"
+        ""
       ],
       "%{package} package remove canceled": [
-        "Skupiny balíčků"
+        ""
       ],
       "%{package} package remove failed": [
-        "všechny aktualizační balíčky selhaly"
+        ""
       ],
       "%{package} package remove timed out": [
         ""
       ],
       "%{package} package removed": [
-        "Balíček přesunut"
+        ""
       ],
       "%{package} package update canceled": [
-        "všechny aktualizační balíčky selhaly"
+        ""
       ],
       "%{package} package update failed": [
-        "všechny aktualizační balíčky selhaly"
+        ""
       ],
       "%{package} package update timed out": [
-        "všechny aktualizační balíčky selhaly"
+        ""
       ],
       "%{package} package updated": [
-        "všechny aktualizační balíčky"
+        ""
       ],
       "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
         ""
@@ -388,7 +388,7 @@
         ""
       ],
       ": '%s' is a built-in environment": [
-        "prostředí"
+        ""
       ],
       ":a_resource identifier": [
         ""
@@ -465,9 +465,6 @@
       "About page": [
         ""
       ],
-      "Abstract async task": [
-        ""
-      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
       ],
@@ -490,7 +487,7 @@
         ""
       ],
       "Activation Keys": [
-        "Aktivační klíče"
+        ""
       ],
       "Activation key": [
         ""
@@ -505,7 +502,7 @@
         ""
       ],
       "Activation key ID": [
-        "Aktivační klíče"
+        ""
       ],
       "Activation key deleted": [
         ""
@@ -541,7 +538,7 @@
         ""
       ],
       "Active only": [
-        "Aktivační klíče"
+        ""
       ],
       "Add": [
         ""
@@ -603,9 +600,6 @@
       "Add one or more host collections to one or more hosts": [
         ""
       ],
-      "Add ons": [
-        ""
-      ],
       "Add products to sync plan": [
         ""
       ],
@@ -634,9 +628,6 @@
         ""
       ],
       "Add to a host collection": [
-        ""
-      ],
-      "Add-ons": [
         ""
       ],
       "Added": [
@@ -699,13 +690,13 @@
       "All versions will be removed from these environments": [
         ""
       ],
-      "Allow a host to be assigned to multiple content view environments with 'subscription-manager register --environments' or 'subscription-manager environments --set'.": [
-        ""
-      ],
       "Allow deleting repositories in published content views": [
         ""
       ],
       "Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode.": [
+        ""
+      ],
+      "Allow hosts or activation keys to be associated with multiple content view environments": [
         ""
       ],
       "Allow hosts to re-register themselves only when they are in build mode": [
@@ -925,10 +916,10 @@
       "Assign the release version to one or more hosts": [
         ""
       ],
-      "Assigning a host to multiple content view environments is not enabled.": [
+      "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
         ""
       ],
-      "Assigning an activation key to multiple content view environments is not enabled.": [
+      "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
         ""
       ],
       "Associated location IDs": [
@@ -944,22 +935,22 @@
         ""
       ],
       "At least one activation key must be provided": [
-        "Musí existovat alespoň jedna organizace."
+        ""
       ],
       "At least one activation key must have a lifecycle environment and content view assigned to it": [
+        ""
+      ],
+      "At least one errata type option needs to be selected.": [
         ""
       ],
       "At least one of the selected items requires the host to reboot": [
         ""
       ],
       "At least one organization must exist.": [
-        "Musí existovat alespoň jedna organizace."
-      ],
-      "Atleast one errata type needs to be selected.": [
         ""
       ],
       "Attach a subscription": [
-        "Neplatný stav"
+        ""
       ],
       "Attach subscriptions": [
         ""
@@ -982,9 +973,6 @@
       "Auto Publish - Triggered by '%s'": [
         ""
       ],
-      "Auto attach subscriptions": [
-        "Smazat poskytovatele"
-      ],
       "Auto publish": [
         ""
       ],
@@ -1000,6 +988,12 @@
       "Available Repositories": [
         ""
       ],
+      "Available image": [
+        ""
+      ],
+      "Available image digest": [
+        ""
+      ],
       "Available schema versions": [
         ""
       ],
@@ -1007,12 +1001,15 @@
         ""
       ],
       "Backend System Status": [
-        "Systém"
+        ""
       ],
       "Base URL": [
         ""
       ],
       "Base URL for finding alternate content": [
+        ""
+      ],
+      "Base URL of the flatpak registry index, ex: https://flatpaks.redhat.io/rhel/ , https://registry.fedoraproject.org/.": [
         ""
       ],
       "Base URL to perform repo discovery on": [
@@ -1058,6 +1055,24 @@
         ""
       ],
       "Bookmarks marked as public are available to all users": [
+        ""
+      ],
+      "Bootc rollback via Bootc interface": [
+        ""
+      ],
+      "Bootc status via Bootc interface": [
+        ""
+      ],
+      "Bootc switch via Bootc interface": [
+        ""
+      ],
+      "Bootc upgrade via Bootc interface": [
+        ""
+      ],
+      "Booted Container Images": [
+        ""
+      ],
+      "Booted container images": [
         ""
       ],
       "Both": [
@@ -1136,22 +1151,22 @@
         ""
       ],
       "Can't update the '%s' environment": [
-        "prostředí"
+        ""
       ],
       "Cancel": [
-        "Stornováno."
+        ""
       ],
       "Cancel repository discovery": [
-        "Repozitáře"
+        ""
       ],
       "Cancel running smart proxy synchronization": [
         ""
       ],
       "Canceled": [
-        "Stornováno."
+        ""
       ],
       "Cancelled.": [
-        "Stornováno."
+        ""
       ],
       "Candlepin": [
         ""
@@ -1339,6 +1354,9 @@
       "Cannot upload Container Image content.": [
         ""
       ],
+      "Cannot upload container content via Hammer/API. Use podman push instead.": [
+        ""
+      ],
       "Capacity": [
         ""
       ],
@@ -1414,13 +1432,13 @@
       "Collapse All": [
         ""
       ],
-      "Comma-separated list of Candlepin environment names associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of Candlepin environment names to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
@@ -1430,9 +1448,6 @@
         ""
       ],
       "Comma-separated list of tags to sync for a container image repository": [
-        ""
-      ],
-      "Commit upload": [
         ""
       ],
       "Compare": [
@@ -1463,7 +1478,7 @@
         ""
       ],
       "Composite content view": [
-        "Vyhledat obsah"
+        ""
       ],
       "Composite content views": [
         ""
@@ -1532,7 +1547,7 @@
         ""
       ],
       "Content": [
-        "Vyhledat obsah"
+        ""
       ],
       "Content Count": [
         ""
@@ -1559,10 +1574,10 @@
         ""
       ],
       "Content Hosts": [
-        "Vyhledat obsah"
+        ""
       ],
       "Content Source": [
-        "Vyhledat obsah"
+        ""
       ],
       "Content Sync": [
         ""
@@ -1571,7 +1586,7 @@
         ""
       ],
       "Content View": [
-        "Vyhledat obsah"
+        ""
       ],
       "Content View %{view}: Versions: %{versions}": [
         ""
@@ -1580,7 +1595,7 @@
         ""
       ],
       "Content View Filter id": [
-        "Vyhledat obsah"
+        ""
       ],
       "Content View Filter identifier. Use to filter by ID": [
         ""
@@ -1616,7 +1631,7 @@
         ""
       ],
       "Content Views": [
-        "Vyhledat obsah"
+        ""
       ],
       "Content cannot be imported into a Composite Content View. ": [
         ""
@@ -1643,6 +1658,9 @@
         ""
       ],
       "Content imported by %{user} into content view '%{name}'": [
+        ""
+      ],
+      "Content may come from {contentSourceName} or any other Smart Proxy behind the load balancer.": [
         ""
       ],
       "Content not uploaded to pulp": [
@@ -1705,6 +1723,9 @@
       "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
         ""
       ],
+      "Content view environment": [
+        ""
+      ],
       "Content view environments": [
         ""
       ],
@@ -1718,10 +1739,10 @@
         ""
       ],
       "Content view identifier": [
-        "Vyhledat obsah"
+        ""
       ],
       "Content view label": [
-        "Vyhledat obsah"
+        ""
       ],
       "Content view must be specified": [
         ""
@@ -1753,6 +1774,9 @@
       "Content view version is empty": [
         ""
       ],
+      "Content view version is empty or content counts are not up to date": [
+        ""
+      ],
       "Content views": [
         ""
       ],
@@ -1780,25 +1804,13 @@
       "Copy": [
         ""
       ],
-      "Copy all units": [
-        ""
-      ],
       "Copy an activation key": [
-        "Číst aktivační klíče"
-      ],
-      "Copy content": [
         ""
       ],
       "Copy content view": [
         ""
       ],
       "Copy to clipboard": [
-        ""
-      ],
-      "Copy version": [
-        ""
-      ],
-      "Copy version units to library": [
         ""
       ],
       "Cores per socket": [
@@ -1808,7 +1820,7 @@
         ""
       ],
       "Could not delete organization '%s'.": [
-        "Vybrat organizaci"
+        ""
       ],
       "Could not find %{content} with id '%{id}' in repository.": [
         ""
@@ -1865,7 +1877,7 @@
         ""
       ],
       "Couldn't find Organization '%s'.": [
-        "Smazat organizaci"
+        ""
       ],
       "Couldn't find activation key '%s'": [
         ""
@@ -1898,19 +1910,19 @@
         ""
       ],
       "Couldn't find environment '%s'": [
-        "prostředí"
+        ""
       ],
       "Couldn't find errata ids '%s'": [
-        "Smazat organizaci"
+        ""
       ],
       "Couldn't find host collection '%s'": [
-        "Smazat organizaci"
+        ""
       ],
       "Couldn't find host with host id '%s'": [
         ""
       ],
       "Couldn't find organization '%s'": [
-        "Smazat organizaci"
+        ""
       ],
       "Couldn't find prior-environment '%s'": [
         ""
@@ -1964,7 +1976,7 @@
         ""
       ],
       "Create a content view": [
-        "Vyhledat obsah"
+        ""
       ],
       "Create a custom product": [
         ""
@@ -1975,23 +1987,26 @@
       "Create a filter rule. The parameters included should be based upon the filter type.": [
         ""
       ],
+      "Create a flatpak remote": [
+        ""
+      ],
       "Create a host collection": [
         ""
       ],
       "Create a product": [
-        "Smazat poskytovatele"
+        ""
       ],
       "Create a sync plan": [
         ""
       ],
       "Create an activation key": [
-        "Číst aktivační klíče"
+        ""
       ],
       "Create an alternate content source to download content from during repository syncing.  Note: alternate content sources are global and affect ALL sync actions on their smart proxies regardless of organization.": [
         ""
       ],
       "Create an environment": [
-        "prostředí"
+        ""
       ],
       "Create an environment in an organization": [
         ""
@@ -2005,34 +2020,19 @@
       "Create content view": [
         ""
       ],
-      "Create exporter": [
-        ""
-      ],
       "Create filter": [
         ""
       ],
       "Create host collection": [
         ""
       ],
-      "Create import": [
-        ""
-      ],
-      "Create importer": [
-        ""
-      ],
       "Create new activation key": [
         ""
       ],
       "Create organization": [
-        "Vybrat organizaci"
+        ""
       ],
       "Create package filter rule": [
-        ""
-      ],
-      "Create publication": [
-        ""
-      ],
-      "Create remote": [
         ""
       ],
       "Create rule": [
@@ -2063,13 +2063,13 @@
         ""
       ],
       "Custom Content Repositories": [
-        "Repozitáře"
+        ""
       ],
       "Custom cron expression only needs to be set for interval value of custom cron": [
         ""
       ],
       "Custom repositories cannot be disabled.": [
-        "Neznámý štítek repozitáře: %s"
+        ""
       ],
       "Customize with Rex": [
         ""
@@ -2087,7 +2087,7 @@
         ""
       ],
       "Date format is incorrect.": [
-        "Nesprávný formát datumu."
+        ""
       ],
       "Days Remaining": [
         ""
@@ -2231,22 +2231,22 @@
         ""
       ],
       "Delete": [
-        "Smazat role"
+        ""
       ],
       "Delete Activation Key": [
-        "Číst aktivační klíče"
+        ""
       ],
       "Delete Host upon unregister": [
         ""
       ],
       "Delete Lifecycle Environment": [
-        "prostředí"
+        ""
       ],
       "Delete Manifest": [
-        "Smazat role"
+        ""
       ],
       "Delete Product": [
-        "Smazán poskytovatel [%s]"
+        ""
       ],
       "Delete Upstream Subscription": [
         ""
@@ -2255,10 +2255,13 @@
         ""
       ],
       "Delete a content view": [
-        "Vyhledat obsah"
+        ""
       ],
       "Delete a filter rule": [
-        "Vyberat architekturu"
+        ""
+      ],
+      "Delete a flatpak remote": [
+        ""
       ],
       "Delete activation key?": [
         ""
@@ -2270,7 +2273,7 @@
         ""
       ],
       "Delete an organization": [
-        "Vybrat organizaci"
+        ""
       ],
       "Delete an upload request": [
         ""
@@ -2281,34 +2284,10 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
-      "Delete distributions": [
-        ""
-      ],
       "Delete manifest from Red Hat provider": [
         ""
       ],
       "Delete multiple filters from a content view": [
-        ""
-      ],
-      "Delete orphan alternate content sources": [
-        ""
-      ],
-      "Delete orphan distributions": [
-        ""
-      ],
-      "Delete orphan remotes": [
-        ""
-      ],
-      "Delete orphan repository versions": [
-        ""
-      ],
-      "Delete orphaned migrated repositories": [
-        ""
-      ],
-      "Delete remote": [
-        ""
-      ],
-      "Delete repository references": [
         ""
       ],
       "Delete version": [
@@ -2321,13 +2300,13 @@
         ""
       ],
       "Deleted consumer '%s'": [
-        "Vybrat distribuci"
+        ""
       ],
       "Deleted from ": [
         ""
       ],
       "Deleted from %{environment}": [
-        "prostředí"
+        ""
       ],
       "Deleting content view : ": [
         ""
@@ -2356,6 +2335,9 @@
       "Description for the new published content view version": [
         ""
       ],
+      "Description of the flatpak remote": [
+        ""
+      ],
       "Description of the repository": [
         ""
       ],
@@ -2375,7 +2357,7 @@
         ""
       ],
       "Destroy Content Host": [
-        "Smazat systémy"
+        ""
       ],
       "Destroy Content Host %s": [
         ""
@@ -2402,15 +2384,9 @@
         ""
       ],
       "Destroy an environment": [
-        "prostředí"
+        ""
       ],
       "Destroy an environment in an organization": [
-        ""
-      ],
-      "Destroy exporter": [
-        ""
-      ],
-      "Destroy importer": [
         ""
       ],
       "Destroy one or more alternate content sources": [
@@ -2461,11 +2437,8 @@
       "Disabling Simple Content Access failed for '%{subject}'.": [
         ""
       ],
-      "Discover": [
-        ""
-      ],
       "Discover Repositories": [
-        "Repozitáře"
+        ""
       ],
       "Distribute archived content view versions": [
         ""
@@ -2504,7 +2477,7 @@
         ""
       ],
       "Duration": [
-        "Organizace"
+        ""
       ],
       "ERRATA ADVISORY": [
         ""
@@ -2659,9 +2632,6 @@
       "Environment cannot be in its own promotion path": [
         ""
       ],
-      "Environment contents refresh": [
-        ""
-      ],
       "Environment identifier": [
         ""
       ],
@@ -2684,10 +2654,10 @@
         ""
       ],
       "Errata ID": [
-        "Instalační balíčky"
+        ""
       ],
       "Errata Install": [
-        "Instalační balíčky"
+        ""
       ],
       "Errata Install scheduled by %s": [
         ""
@@ -2700,9 +2670,6 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         ""
-      ],
-      "Errata mail": [
-        "Instalační balíčky"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2729,7 +2696,7 @@
         ""
       ],
       "Erratum Install Failed": [
-        "Instalační balíčky"
+        ""
       ],
       "Erratum Install Timed Out": [
         ""
@@ -2834,7 +2801,7 @@
         ""
       ],
       "Facts successfully updated.": [
-        "úspěšně vytvořen."
+        ""
       ],
       "Failed": [
         ""
@@ -2861,9 +2828,6 @@
         ""
       ],
       "Fetch installable errata for one or more hosts.": [
-        ""
-      ],
-      "Fetch pxe files": [
         ""
       ],
       "Fetch traces for one or more hosts": [
@@ -2959,9 +2923,6 @@
       "Filter versions that are components in the specified composite version": [
         ""
       ],
-      "Filtered index content": [
-        ""
-      ],
       "Filters": [
         ""
       ],
@@ -2981,6 +2942,15 @@
         ""
       ],
       "Finished": [
+        ""
+      ],
+      "Flatpak Remotes": [
+        ""
+      ],
+      "Flatpak remote numeric identifier": [
+        ""
+      ],
+      "Flatpak remote repository numeric identifier": [
         ""
       ],
       "Force": [
@@ -3041,9 +3011,6 @@
         ""
       ],
       "Generate host applicability": [
-        ""
-      ],
-      "Generate metadata": [
         ""
       ],
       "Generate repository applicability": [
@@ -3146,7 +3113,7 @@
         ""
       ],
       "Host": [
-        "Hostitel"
+        ""
       ],
       "Host %s has not been registered with subscription-manager.": [
         ""
@@ -3164,10 +3131,10 @@
         ""
       ],
       "Host Collection name": [
-        "organizace"
+        ""
       ],
       "Host Collections": [
-        "organizace"
+        ""
       ],
       "Host Duplicate DMI UUIDs": [
         ""
@@ -3283,12 +3250,6 @@
       "How to order the sorted results (e.g. ASC for ascending)": [
         ""
       ],
-      "Hypervisors": [
-        ""
-      ],
-      "Hypervisors update": [
-        ""
-      ],
       "ID of a HTTP Proxy": [
         ""
       ],
@@ -3310,6 +3271,9 @@
       "ID of an organization to show repositories in": [
         ""
       ],
+      "ID of flatpak remote to show repositories of": [
+        ""
+      ],
       "ID of the Organization": [
         ""
       ],
@@ -3317,7 +3281,7 @@
         ""
       ],
       "ID of the environment": [
-        "prostředí"
+        ""
       ],
       "ID of the host": [
         ""
@@ -3326,7 +3290,7 @@
         ""
       ],
       "ID of the organization": [
-        "Vybrat organizaci"
+        ""
       ],
       "ID of the product containing the repository set": [
         ""
@@ -3370,10 +3334,16 @@
       "Id of the content host": [
         ""
       ],
+      "Id of the content view to limit the content counting on": [
+        ""
+      ],
       "Id of the content view to limit the synchronization on": [
         ""
       ],
       "Id of the content view to limit verifying checksum on": [
+        ""
+      ],
+      "Id of the environment to limit the content counting on": [
         ""
       ],
       "Id of the environment to limit the synchronization on": [
@@ -3395,6 +3365,9 @@
         ""
       ],
       "Id of the organization to limit environments on": [
+        ""
+      ],
+      "Id of the repository to limit the content counting on": [
         ""
       ],
       "Id of the repository to limit the synchronization on": [
@@ -3532,6 +3505,27 @@
       "Image": [
         ""
       ],
+      "Image digest": [
+        ""
+      ],
+      "Image digests": [
+        ""
+      ],
+      "Image mode": [
+        ""
+      ],
+      "Image mode / package mode": [
+        ""
+      ],
+      "Image mode details": [
+        ""
+      ],
+      "Image name": [
+        ""
+      ],
+      "Image-mode host": [
+        ""
+      ],
       "Immediate": [
         ""
       ],
@@ -3545,7 +3539,7 @@
         ""
       ],
       "Import Manifest": [
-        "Závažnost: Důležitá"
+        ""
       ],
       "Import Repository": [
         ""
@@ -3574,9 +3568,6 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
-      "Import migration": [
-        ""
-      ],
       "Import new manifest": [
         ""
       ],
@@ -3584,12 +3575,6 @@
         ""
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
-        ""
-      ],
-      "Import repository upload": [
-        ""
-      ],
-      "Import upload": [
         ""
       ],
       "Import uploads into a repository": [
@@ -3634,6 +3619,9 @@
       "Include filter": [
         ""
       ],
+      "Include manifests": [
+        ""
+      ],
       "Included": [
         ""
       ],
@@ -3655,9 +3643,6 @@
       "Incremental Update incomplete.": [
         ""
       ],
-      "Incremental Update of  Content View Version(s) ": [
-        ""
-      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         ""
       ],
@@ -3670,25 +3655,10 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         ""
       ],
-      "Index content": [
-        ""
-      ],
-      "Index errata": [
-        "Instalační balíčky"
-      ],
-      "Index module streams": [
-        ""
-      ],
-      "Index package groups": [
-        ""
-      ],
       "Informable Type must be one of the following [ %{list} ]": [
         ""
       ],
       "Inherit from Repository": [
-        ""
-      ],
-      "Initialize": [
         ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
@@ -3743,7 +3713,7 @@
         ""
       ],
       "Installed Packages": [
-        "všechny balíčky"
+        ""
       ],
       "Installed module profiles will be removed. Additionally, all packages whose names are provided by specific modules will be removed. Packages required by other installed modules profiles and packages whose names are also provided by other modules are not removed.": [
         ""
@@ -3761,12 +3731,9 @@
         ""
       ],
       "Installing Package Group...": [
-        "všechny balíčky"
+        ""
       ],
       "Installing Package...": [
-        "všechny balíčky"
-      ],
-      "Instance update": [
         ""
       ],
       "Instance-based": [
@@ -3788,7 +3755,7 @@
         ""
       ],
       "Invalid content label: %s": [
-        "Neplatný stav"
+        ""
       ],
       "Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}": [
         ""
@@ -3799,7 +3766,7 @@
       "Invalid erratum filter rule specified, 'errata_id' cannot be specified in the same tuple as 'start_date', 'end_date' or 'types'": [
         ""
       ],
-      "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date' or 'types'": [
+      "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date', 'types', or 'allow_other_types'": [
         ""
       ],
       "Invalid erratum types %{invalid_types} provided. Erratum type can be any of %{valid_types}": [
@@ -3883,7 +3850,25 @@
       "Job '${description}' has started.": [
         ""
       ],
+      "Katello Bootc interface": [
+        ""
+      ],
       "Katello ID of local pool to update": [
+        ""
+      ],
+      "Katello: Bootc Action": [
+        ""
+      ],
+      "Katello: Bootc Rollback": [
+        ""
+      ],
+      "Katello: Bootc Status": [
+        ""
+      ],
+      "Katello: Bootc Switch": [
+        ""
+      ],
+      "Katello: Bootc Upgrade": [
         ""
       ],
       "Katello: Configure host for new content source": [
@@ -3934,6 +3919,9 @@
       "Katello: Upload Profile": [
         ""
       ],
+      "Keep latest packages": [
+        ""
+      ],
       "Key-value hash of subscription-manager facts, nesting uses a period delimiter (.)": [
         ""
       ],
@@ -3956,6 +3944,9 @@
         ""
       ],
       "Label of the content view": [
+        ""
+      ],
+      "Label of the flatpak remote": [
         ""
       ],
       "Last check-in:": [
@@ -4016,7 +4007,7 @@
         ""
       ],
       "Lifecycle Environment": [
-        "prostředí"
+        ""
       ],
       "Lifecycle Environment %s has associated Activation Keys. Please change or remove the associated Activation Keys before trying to delete this lifecycle environment.": [
         ""
@@ -4031,7 +4022,7 @@
         ""
       ],
       "Lifecycle Environments": [
-        "prostředí"
+        ""
       ],
       "Lifecycle environment": [
         ""
@@ -4100,13 +4091,13 @@
         ""
       ],
       "List activation keys": [
-        "Aktivační klíče"
+        ""
       ],
       "List all :resource_id": [
         ""
       ],
       "List all organizations": [
-        "Organizace"
+        ""
       ],
       "List all packages unique by name": [
         ""
@@ -4123,6 +4114,9 @@
       "List available subscriptions from Red Hat Subscription Management": [
         ""
       ],
+      "List booted bootc container images for hosts": [
+        ""
+      ],
       "List components attached to this content view": [
         ""
       ],
@@ -4136,7 +4130,7 @@
         ""
       ],
       "List content views": [
-        "Vyhledat obsah"
+        ""
       ],
       "List deb packages": [
         ""
@@ -4145,13 +4139,13 @@
         ""
       ],
       "List environment paths": [
-        "prostředí"
+        ""
       ],
       "List environments in an organization": [
         ""
       ],
       "List errata": [
-        "Instalační balíčky"
+        ""
       ],
       "List errata available for the content host": [
         ""
@@ -4162,8 +4156,17 @@
       "List filter rules": [
         ""
       ],
+      "List flatpak remote repositories": [
+        ""
+      ],
+      "List flatpak remote's repositories": [
+        ""
+      ],
+      "List flatpak remotes": [
+        ""
+      ],
       "List host collections": [
-        "Spravovat role"
+        ""
       ],
       "List host collections in an activation key": [
         ""
@@ -4214,7 +4217,7 @@
         ""
       ],
       "List of host collection ids": [
-        "Vybrat organizaci"
+        ""
       ],
       "List of host collection ids to update": [
         ""
@@ -4238,7 +4241,7 @@
         ""
       ],
       "List of package names": [
-        "všechny balíčky"
+        ""
       ],
       "List of product ids": [
         ""
@@ -4271,7 +4274,7 @@
         ""
       ],
       "List of repository ids": [
-        "Smazán poskytovatel [%s]"
+        ""
       ],
       "List of resources types that will be automatically associated": [
         ""
@@ -4298,7 +4301,7 @@
         ""
       ],
       "List products": [
-        "Produkty"
+        ""
       ],
       "List repositories in the environment": [
         ""
@@ -4319,12 +4322,15 @@
         ""
       ],
       "List sync plans": [
-        "Vybrat distribuci"
+        ""
       ],
       "List the lifecycle environments attached to the smart proxy": [
         ""
       ],
       "List the lifecycle environments not attached to the smart proxy": [
+        ""
+      ],
+      "Load balancer": [
         ""
       ],
       "Loading": [
@@ -4456,9 +4462,6 @@
       "Messaging connection": [
         ""
       ],
-      "Metadata generate": [
-        ""
-      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -4466,6 +4469,12 @@
         ""
       ],
       "Minimum version": [
+        ""
+      ],
+      "Mirror Remote Repository": [
+        ""
+      ],
+      "Mirror a flatpak remote repository": [
         ""
       ],
       "Missing activation key!": [
@@ -4478,6 +4487,9 @@
         ""
       ],
       "Moderate": [
+        ""
+      ],
+      "Modify via remote execution": [
         ""
       ],
       "Modular": [
@@ -4501,13 +4513,7 @@
       "Module streams will appear here after enabling Red Hat repositories or creating custom products.": [
         ""
       ],
-      "Multi copy all units": [
-        ""
-      ],
-      "Multi copy content": [
-        ""
-      ],
-      "Multi copy units": [
+      "Multi Content View Environment": [
         ""
       ],
       "Multi-entitlement": [
@@ -4561,6 +4567,12 @@
       "Name of the content view": [
         ""
       ],
+      "Name of the flatpak remote": [
+        ""
+      ],
+      "Name of the flatpak remote repository": [
+        ""
+      ],
       "Name of the host": [
         ""
       ],
@@ -4583,7 +4595,7 @@
         ""
       ],
       "Nest": [
-        "Host"
+        ""
       ],
       "Network Sync": [
         ""
@@ -4595,16 +4607,16 @@
         ""
       ],
       "New Errata": [
-        "všechny balíčky"
+        ""
       ],
       "New content view name": [
-        "Vyhledat obsah"
+        ""
       ],
       "New host collection name": [
-        "Vyhledat obsah"
+        ""
       ],
       "New name cannot be blank": [
-        "Název nesmí být prázdný."
+        ""
       ],
       "New name for the content view": [
         ""
@@ -4628,7 +4640,7 @@
         ""
       ],
       "No Content View": [
-        "Vyhledat obsah"
+        ""
       ],
       "No Content found": [
         ""
@@ -4684,6 +4696,9 @@
       "No content in selected versions.": [
         ""
       ],
+      "No content view environments": [
+        ""
+      ],
       "No content view environments found with ids: %{ids}": [
         ""
       ],
@@ -4691,7 +4706,7 @@
         ""
       ],
       "No content view history events found.": [
-        "Vyhledat obsah"
+        ""
       ],
       "No content views available": [
         ""
@@ -4720,9 +4735,6 @@
       "No enabled repositories match your search criteria.": [
         ""
       ],
-      "No environment": [
-        ""
-      ],
       "No environments": [
         ""
       ],
@@ -4739,7 +4751,7 @@
         ""
       ],
       "No errors": [
-        "Žádné chyby"
+        ""
       ],
       "No existing export history was found to perform an incremental export. A full export must be performed": [
         ""
@@ -4757,7 +4769,7 @@
         ""
       ],
       "No host collections found.": [
-        "Vyhledat obsah"
+        ""
       ],
       "No host collections yet": [
         ""
@@ -4853,7 +4865,7 @@
         ""
       ],
       "No new packages installed": [
-        "Žádné nové instalační balíčky"
+        ""
       ],
       "No package groups yet": [
         ""
@@ -4868,10 +4880,10 @@
         ""
       ],
       "No packages removed": [
-        "Balíček přesunut"
+        ""
       ],
       "No packages updated": [
-        "všechny aktualizační balíčky"
+        ""
       ],
       "No pool IDs were provided.": [
         ""
@@ -4937,7 +4949,7 @@
         ""
       ],
       "No start time currently available.": [
-        "Žádné nové instalační balíčky"
+        ""
       ],
       "No subscriptions match your search criteria.": [
         ""
@@ -5075,7 +5087,7 @@
         ""
       ],
       "Only one Red Hat provider permitted for an Organization": [
-        "Spravovat organizace"
+        ""
       ],
       "Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.": [
         ""
@@ -5087,13 +5099,13 @@
         ""
       ],
       "Organization": [
-        "Organizace"
+        ""
       ],
       "Organization %s is being deleted.": [
         ""
       ],
       "Organization ID": [
-        "Organizace"
+        ""
       ],
       "Organization ID is required": [
         ""
@@ -5102,19 +5114,19 @@
         ""
       ],
       "Organization cannot be blank.": [
-        "Název nesmí být prázdný."
+        ""
       ],
       "Organization id": [
-        "Organizace"
+        ""
       ],
       "Organization id not found: '%s'": [
         ""
       ],
       "Organization identifier": [
-        "Organizace"
+        ""
       ],
       "Organization label": [
-        "Organizace"
+        ""
       ],
       "Organization label '%s' is ambiguous. Try using an id-based container name.": [
         ""
@@ -5126,7 +5138,7 @@
         ""
       ],
       "Organization required": [
-        "Organizace"
+        ""
       ],
       "Orphaned Content Protection Time": [
         ""
@@ -5171,91 +5183,91 @@
         ""
       ],
       "Package": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Group": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Group Install": [
-        "Instalační balíčky"
+        ""
       ],
       "Package Group Install Canceled": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Group Install Complete": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Group Install Failed": [
-        "Instalační balíčky"
+        ""
       ],
       "Package Group Install Timed Out": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Group Install scheduled by %s": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Group Remove": [
-        "Balíček přesunut"
+        ""
       ],
       "Package Group Remove Canceled": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Group Remove Complete": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Group Remove Failed": [
-        "Balíček přesunut"
+        ""
       ],
       "Package Group Remove Timed Out": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Group Remove scheduled by %s": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Group Update": [
-        "Balíček aktualizován"
+        ""
       ],
       "Package Group Update scheduled by %s": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Groups": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package Install": [
-        "Instalační balíčky"
+        ""
       ],
       "Package Install Canceled": [
-        "Instalační balíčky"
+        ""
       ],
       "Package Install Complete": [
-        "Instalační balíčky"
+        ""
       ],
       "Package Install Failed": [
-        "Instalační balíčky"
+        ""
       ],
       "Package Install Timed Out": [
-        "Instalační balíčky"
+        ""
       ],
       "Package Install scheduled by %s": [
-        "Instalační balíčky"
+        ""
       ],
       "Package Remove": [
-        "Balíček přesunut"
+        ""
       ],
       "Package Remove Canceled": [
-        "Balíček přesunut"
+        ""
       ],
       "Package Remove Complete": [
-        "Balíček přesunut"
+        ""
       ],
       "Package Remove Failed": [
-        "Balíček přesunut"
+        ""
       ],
       "Package Remove Timed Out": [
-        "Balíček přesunut"
+        ""
       ],
       "Package Remove scheduled by %s": [
-        "Balíček přesunut"
+        ""
       ],
       "Package Type": [
         ""
@@ -5264,34 +5276,34 @@
         ""
       ],
       "Package Update": [
-        "Balíček aktualizován"
+        ""
       ],
       "Package Update Canceled": [
-        "Balíček aktualizován"
+        ""
       ],
       "Package Update Complete": [
-        "Balíček aktualizován"
+        ""
       ],
       "Package Update Failed": [
-        "Balíček aktualizován"
+        ""
       ],
       "Package Update Timed Out": [
-        "Balíček aktualizován"
+        ""
       ],
       "Package Update scheduled by %s": [
-        "Balíček aktualizován"
+        ""
       ],
       "Package group update canceled": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package group update complete": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package group update failed": [
-        "všechny aktualizační balíčky selhaly"
+        ""
       ],
       "Package group update timed out": [
-        "Skupiny balíčků"
+        ""
       ],
       "Package groups": [
         ""
@@ -5305,14 +5317,17 @@
       "Package installation: \\\"%{package}\\\" ": [
         ""
       ],
-      "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg, bdist_dumb, bdist_egg, bdist_msi, bdist_rpm, bdist_wheel, bdist_wininst, sdist.": [
+      "Package mode": [
+        ""
+      ],
+      "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist.": [
         ""
       ],
       "Packages": [
-        "Skupiny balíčků"
+        ""
       ],
       "Packages must be provided": [
-        "Musí existovat alespoň jedna organizace."
+        ""
       ],
       "Packages to be removed": [
         ""
@@ -5434,6 +5449,9 @@
       "Policy to set for mirroring content.  Must be one of %s.": [
         ""
       ],
+      "Possible values: %s": [
+        ""
+      ],
       "Prefer registered through Smart Proxy for remote execution": [
         ""
       ],
@@ -5468,7 +5486,7 @@
         ""
       ],
       "Product": [
-        "Produkty"
+        ""
       ],
       "Product Content": [
         ""
@@ -5482,14 +5500,17 @@
       "Product ID": [
         ""
       ],
+      "Product ID to mirror the remote repository to": [
+        ""
+      ],
       "Product and Repositories": [
-        "Produkty a Repozitáře"
+        ""
       ],
       "Product architecture": [
         ""
       ],
       "Product description": [
-        "Produkty"
+        ""
       ],
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
@@ -5504,7 +5525,7 @@
         ""
       ],
       "Product name": [
-        "Produkty"
+        ""
       ],
       "Product name as listed from a host's installed products": [
         ""
@@ -5528,7 +5549,7 @@
         ""
       ],
       "Products": [
-        "Produkty"
+        ""
       ],
       "Products updated.": [
         ""
@@ -5594,7 +5615,7 @@
         ""
       ],
       "Publish a content view": [
-        "Vyhledat obsah"
+        ""
       ],
       "Publish new version": [
         ""
@@ -5660,9 +5681,6 @@
         ""
       ],
       "Pulp task error": [
-        ""
-      ],
-      "Purge completed tasks": [
         ""
       ],
       "Python Package": [
@@ -5773,9 +5791,6 @@
       "Reclaim Space": [
         ""
       ],
-      "Reclaim space": [
-        ""
-      ],
       "Reclaim space from On Demand repositories": [
         ""
       ],
@@ -5795,10 +5810,10 @@
         ""
       ],
       "Red Hat CDN URL": [
-        "Produkty"
+        ""
       ],
       "Red Hat Repositories": [
-        "Repozitáře"
+        ""
       ],
       "Red Hat Repositories page": [
         ""
@@ -5834,12 +5849,9 @@
         ""
       ],
       "Refresh Manifest": [
-        "Smazat role"
-      ],
-      "Refresh all alternate content sources": [
         ""
       ],
-      "Refresh all distributions": [
+      "Refresh all alternate content sources": [
         ""
       ],
       "Refresh alternate content sources": [
@@ -5854,25 +5866,13 @@
       "Refresh counts": [
         ""
       ],
-      "Refresh distribution": [
-        ""
-      ],
       "Refresh errata applicability": [
-        ""
-      ],
-      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
         ""
       ],
       "Refresh previously imported manifest for Red Hat provider": [
-        ""
-      ],
-      "Refresh remote": [
-        ""
-      ],
-      "Refresh repos": [
         ""
       ],
       "Refresh source": [
@@ -5899,6 +5899,9 @@
       "Registered on": [
         ""
       ],
+      "Registered to": [
+        ""
+      ],
       "Registering to multiple environments is not enabled.": [
         ""
       ],
@@ -5912,9 +5915,6 @@
         ""
       ],
       "Registry name pattern will result in invalid container image name of member repositories": [
-        ""
-      ],
-      "Reindex subscriptions": [
         ""
       ],
       "Related composite content views": [
@@ -5963,13 +5963,13 @@
         ""
       ],
       "Remove Content": [
-        "Smazat role"
+        ""
       ],
       "Remove Version": [
-        "repozitář"
+        ""
       ],
       "Remove Versions and Associations": [
-        "Smazat organizaci"
+        ""
       ],
       "Remove a content view from an environment": [
         ""
@@ -5984,7 +5984,7 @@
         ""
       ],
       "Remove from Environment": [
-        "prostředí"
+        ""
       ],
       "Remove from environment": [
         ""
@@ -6011,9 +6011,6 @@
         ""
       ],
       "Remove one or more subscriptions from an upstream manifest": [
-        ""
-      ],
-      "Remove orphans": [
         ""
       ],
       "Remove package group via Katello interface": [
@@ -6043,12 +6040,6 @@
       "Remove subscriptions from one or more hosts": [
         ""
       ],
-      "Remove units": [
-        ""
-      ],
-      "Remove unneeded repos": [
-        ""
-      ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         ""
       ],
@@ -6062,18 +6053,15 @@
         ""
       ],
       "Removing Package Group...": [
-        "Skupiny balíčků"
+        ""
       ],
       "Removing Package...": [
-        "Smazat balíček filtrů"
+        ""
       ],
       "Removing product %{prod_name} with ID %{prod_id} from ACS %{acs_name} with ID %{acs_id}": [
         ""
       ],
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
-        ""
-      ],
-      "Repair": [
         ""
       ],
       "Replace content source on the target machine": [
@@ -6089,12 +6077,9 @@
         ""
       ],
       "Repositories": [
-        "Repozitáře"
-      ],
-      "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
-      "Repositories certs reset": [
+      "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
@@ -6103,11 +6088,8 @@
       "Repositories from published Content Views are not allowed.": [
         ""
       ],
-      "Repositories gpg reset": [
-        ""
-      ],
       "Repository": [
-        "repozitář"
+        ""
       ],
       "Repository %s cannot be deleted since it has already been included in a published Content View. Use repository details page to delete": [
         ""
@@ -6140,7 +6122,7 @@
         ""
       ],
       "Repository id": [
-        "Repozitáře"
+        ""
       ],
       "Repository identifier": [
         ""
@@ -6155,7 +6137,7 @@
         ""
       ],
       "Repository not found": [
-        "Repozitáře"
+        ""
       ],
       "Repository path": [
         ""
@@ -6397,6 +6379,12 @@
       "Roles": [
         ""
       ],
+      "Rollback image": [
+        ""
+      ],
+      "Rollback image digest": [
+        ""
+      ],
       "Rules to be added": [
         ""
       ],
@@ -6407,6 +6395,12 @@
         ""
       ],
       "Running": [
+        ""
+      ],
+      "Running image": [
+        ""
+      ],
+      "Running image digest": [
         ""
       ],
       "SKU": [
@@ -6436,25 +6430,10 @@
       "Save": [
         ""
       ],
-      "Save artifact": [
-        ""
-      ],
-      "Save distribution references": [
-        ""
-      ],
-      "Save publication": [
-        ""
-      ],
-      "Save version": [
-        ""
-      ],
-      "Save versions": [
-        ""
-      ],
       "Saving alternate content source...": [
         ""
       ],
-      "Scan cdn": [
+      "Scan a flatpak remote": [
         ""
       ],
       "Schema version 1": [
@@ -6482,7 +6461,7 @@
         ""
       ],
       "Search string": [
-        "všechny balíčky"
+        ""
       ],
       "Search string for erratum to perform an action on": [
         ""
@@ -6497,7 +6476,7 @@
         ""
       ],
       "Security": [
-        "Smazat systémy"
+        ""
       ],
       "Security errata applicable": [
         ""
@@ -6515,10 +6494,10 @@
         ""
       ],
       "Select Content View": [
-        "Vyhledat obsah"
+        ""
       ],
       "Select None": [
-        "Vybrat organizaci"
+        ""
       ],
       "Select Organization": [
         ""
@@ -6562,9 +6541,6 @@
       "Select action": [
         ""
       ],
-      "Select add-ons": [
-        ""
-      ],
       "Select all": [
         ""
       ],
@@ -6572,7 +6548,7 @@
         ""
       ],
       "Select an Organization": [
-        "Vybrat organizaci"
+        ""
       ],
       "Select an environment": [
         ""
@@ -6703,13 +6679,13 @@
       "Set content overrides to one or more hosts": [
         ""
       ],
+      "Set this HTTP proxy as the default content HTTP proxy": [
+        ""
+      ],
       "Set true to override to enabled; Set false to override to disabled.'": [
         ""
       ],
       "Set true to remove an override and reset it to 'default'": [
-        ""
-      ],
-      "Sets the system add-ons": [
         ""
       ],
       "Sets the system purpose usage": [
@@ -6722,7 +6698,7 @@
         ""
       ],
       "Severity": [
-        "Závažnost: Nízká"
+        ""
       ],
       "Severity must be one of: %s": [
         ""
@@ -6737,7 +6713,7 @@
         ""
       ],
       "Show a content view": [
-        "Vyhledat obsah"
+        ""
       ],
       "Show a content view component": [
         ""
@@ -6745,20 +6721,26 @@
       "Show a content view's history": [
         ""
       ],
+      "Show a flatpak remote": [
+        ""
+      ],
+      "Show a flatpak remote repository": [
+        ""
+      ],
       "Show a host collection": [
-        "organizace"
+        ""
       ],
       "Show a product": [
-        "Smazat poskytovatele"
+        ""
       ],
       "Show a repository": [
         ""
       ],
       "Show a subscription": [
-        "organizace"
+        ""
       ],
       "Show a sync plan": [
-        "+ Nový plán"
+        ""
       ],
       "Show affected activation keys": [
         ""
@@ -6773,13 +6755,13 @@
         ""
       ],
       "Show an activation key": [
-        "Číst aktivační klíče"
+        ""
       ],
       "Show an alternate content source.": [
         ""
       ],
       "Show an environment": [
-        "prostředí"
+        ""
       ],
       "Show content available for an activation key": [
         ""
@@ -6797,7 +6779,7 @@
         ""
       ],
       "Show organization": [
-        "+ Nová organizace"
+        ""
       ],
       "Show release versions available for an activation key": [
         ""
@@ -7072,11 +7054,17 @@
       "Stacking ID": [
         ""
       ],
+      "Staged image": [
+        ""
+      ],
+      "Staged image digest": [
+        ""
+      ],
       "Start Date": [
         ""
       ],
       "Start Date and Time can't be blank": [
-        "Název nesmí být prázdný."
+        ""
       ],
       "Start Time": [
         ""
@@ -7121,13 +7109,13 @@
         ""
       ],
       "Subscription": [
-        "organizace"
+        ""
       ],
       "Subscription Details": [
         ""
       ],
       "Subscription ID": [
-        "organizace"
+        ""
       ],
       "Subscription Info": [
         ""
@@ -7148,7 +7136,7 @@
         ""
       ],
       "Subscription Pool uuid": [
-        "organizace"
+        ""
       ],
       "Subscription UUID": [
         ""
@@ -7217,7 +7205,7 @@
         ""
       ],
       "Successfully removed %{count} content host(s) from host collection %{host_collection}.": [
-        "úspěšně vytvořen."
+        ""
       ],
       "Successfully synced capsule.": [
         ""
@@ -7237,11 +7225,8 @@
       "Supported Content Types": [
         ""
       ],
-      "Sync": [
-        ""
-      ],
       "Sync Canceled": [
-        "Stornováno."
+        ""
       ],
       "Sync Connect Timeout": [
         ""
@@ -7250,10 +7235,10 @@
         ""
       ],
       "Sync Incomplete": [
-        "Stornováno."
+        ""
       ],
       "Sync Overview": [
-        "Stornováno."
+        ""
       ],
       "Sync Plan": [
         ""
@@ -7262,7 +7247,7 @@
         ""
       ],
       "Sync Plans": [
-        "+ Nový plán"
+        ""
       ],
       "Sync Repository on Smart Proxy(ies)": [
         ""
@@ -7277,7 +7262,7 @@
         ""
       ],
       "Sync Status": [
-        "Systém"
+        ""
       ],
       "Sync Summary": [
         ""
@@ -7289,12 +7274,9 @@
         ""
       ],
       "Sync a repository": [
-        "Vybrat organizaci"
-      ],
-      "Sync all repositories for a product": [
         ""
       ],
-      "Sync capsule": [
+      "Sync all repositories for a product": [
         ""
       ],
       "Sync complete.": [
@@ -7315,9 +7297,6 @@
       "Sync state": [
         ""
       ],
-      "Syncable export": [
-        ""
-      ],
       "Synced": [
         ""
       ],
@@ -7334,7 +7313,7 @@
         ""
       ],
       "Synchronize repository": [
-        "Smazat poskytovatele"
+        ""
       ],
       "Synchronize smart proxy": [
         ""
@@ -7349,7 +7328,7 @@
         ""
       ],
       "Syncing Complete.": [
-        "Žádné šablony"
+        ""
       ],
       "Synopsis": [
         ""
@@ -7388,7 +7367,7 @@
         ""
       ],
       "Task canceled": [
-        "Stornováno."
+        ""
       ],
       "Task detail": [
         ""
@@ -7430,6 +7409,9 @@
         ""
       ],
       "The actual file contents": [
+        ""
+      ],
+      "The amount of latest versions of a package to keep on sync, includes pre-releases if synced. Default 0 keeps all versions.": [
         ""
       ],
       "The content type for the Alternate Content Source": [
@@ -7541,7 +7523,7 @@
         ""
       ],
       "The repository is already enabled": [
-        "Neznámý štítek repozitáře: %s"
+        ""
       ],
       "The repository's publication is missing. Please run a 'complete sync' on %s.": [
         ""
@@ -7675,6 +7657,9 @@
       "This content view version doesn't have a history.": [
         ""
       ],
+      "This content view version is used in one or more multi-environment hosts. The version will simply be removed from the multi-environment hosts. The content view and lifecycle environment you select here will only apply to single-environment hosts. See hammer activation-key --help for more details.": [
+        ""
+      ],
       "This content view will be automatically updated to the latest version.": [
         ""
       ],
@@ -7685,6 +7670,9 @@
         ""
       ],
       "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.": [
+        ""
+      ],
+      "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details.": [
         ""
       ],
       "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
@@ -7813,7 +7801,7 @@
       "To manage packages, select an action.": [
         ""
       ],
-      "Toggle": [
+      "Token/password for the flatpak remote": [
         ""
       ],
       "Total steps: ": [
@@ -8000,7 +7988,7 @@
         ""
       ],
       "Unattach a subscription": [
-        "Smazat poskytovatele"
+        ""
       ],
       "Unfiltered params array: %s.": [
         ""
@@ -8042,7 +8030,7 @@
         ""
       ],
       "Update": [
-        "Balíček aktualizován"
+        ""
       ],
       "Update Alternate Content Source": [
         ""
@@ -8069,7 +8057,7 @@
         ""
       ],
       "Update a content view": [
-        "Vyhledat obsah"
+        ""
       ],
       "Update a content view version": [
         ""
@@ -8077,31 +8065,31 @@
       "Update a filter rule. The parameters included should be based upon the filter type.": [
         ""
       ],
+      "Update a flatpak remote": [
+        ""
+      ],
       "Update a host collection": [
         ""
       ],
       "Update a repository": [
-        "Smazat poskytovatele"
+        ""
       ],
       "Update a sync plan": [
         ""
       ],
       "Update an activation key": [
-        "Číst aktivační klíče"
+        ""
       ],
       "Update an alternate content source.": [
         ""
       ],
       "Update an environment": [
-        "prostředí"
+        ""
       ],
       "Update an environment in an organization": [
         ""
       ],
       "Update content counts for the smart proxy": [
-        ""
-      ],
-      "Update content urls": [
         ""
       ],
       "Update content view environments for host": [
@@ -8110,23 +8098,14 @@
       "Update content view environments for host %s": [
         ""
       ],
-      "Update distributions": [
-        ""
-      ],
       "Update hosts manually": [
-        ""
-      ],
-      "Update http proxy": [
-        ""
-      ],
-      "Update http proxy details": [
         ""
       ],
       "Update installed packages, enabled repos, module inventory": [
         ""
       ],
       "Update organization": [
-        "Vybrat organizaci"
+        ""
       ],
       "Update package group via Katello interface": [
         ""
@@ -8137,19 +8116,10 @@
       "Update packages via Katello interface": [
         ""
       ],
-      "Update redhat repository": [
-        ""
-      ],
       "Update release version for host": [
         ""
       ],
       "Update release version for host %s": [
-        ""
-      ],
-      "Update remote": [
-        ""
-      ],
-      "Update repository": [
         ""
       ],
       "Update services requiring restart": [
@@ -8189,7 +8159,7 @@
         ""
       ],
       "Updates a product": [
-        "Smazat poskytovatele"
+        ""
       ],
       "Updates available: Component content view versions have been updated.": [
         ""
@@ -8198,7 +8168,7 @@
         ""
       ],
       "Updating Package...": [
-        "Smazat balíček filtrů"
+        ""
       ],
       "Updating System Purpose for host": [
         ""
@@ -8207,7 +8177,7 @@
         ""
       ],
       "Updating package group...": [
-        "Smazat balíček filtrů"
+        ""
       ],
       "Updating repository authentication configuration": [
         ""
@@ -8242,12 +8212,6 @@
       "Upload a subscription manifest": [
         ""
       ],
-      "Upload content": [
-        ""
-      ],
-      "Upload file": [
-        ""
-      ],
       "Upload into": [
         ""
       ],
@@ -8255,9 +8219,6 @@
         ""
       ],
       "Upload request id": [
-        ""
-      ],
-      "Upload tag": [
         ""
       ],
       "Upstream Candlepin": [
@@ -8347,6 +8308,9 @@
       "Username for authentication. Relevant only for 'upstream_server' type.": [
         ""
       ],
+      "Username for the flatpak remote": [
+        ""
+      ],
       "Username of the upstream repository user used for authentication": [
         ""
       ],
@@ -8369,9 +8333,6 @@
         ""
       ],
       "Verify SSL": [
-        ""
-      ],
-      "Verify checksum": [
         ""
       ],
       "Verify checksum for content on smart proxy": [
@@ -8477,7 +8438,7 @@
         ""
       ],
       "Virtual": [
-        "Virtuální"
+        ""
       ],
       "Virtual guests": [
         ""
@@ -8672,12 +8633,15 @@
         ""
       ],
       "a package": [
-        "všechny balíčky"
+        ""
       ],
       "a package group": [
-        "všechny balíčky"
+        ""
       ],
       "actions not found": [
+        ""
+      ],
+      "activation key": [
         ""
       ],
       "activation key identifier": [
@@ -8687,7 +8651,7 @@
         ""
       ],
       "activation keys": [
-        "Aktivační klíče"
+        ""
       ],
       "add all module streams without errata to the included/excluded list. (module stream filter only)": [
         ""
@@ -8699,13 +8663,13 @@
         ""
       ],
       "all packages": [
-        "všechny balíčky"
+        ""
       ],
       "all packages update": [
-        "všechny aktualizační balíčky"
+        ""
       ],
       "all packages update failed": [
-        "všechny aktualizační balíčky selhaly"
+        ""
       ],
       "allow unauthenticed pull of container images": [
         ""
@@ -8720,10 +8684,10 @@
         ""
       ],
       "an erratum": [
-        "Instalační balíčky"
+        ""
       ],
       "an organization": [
-        "+ Nová organizace"
+        ""
       ],
       "are only allowed for Yum repositories.": [
         ""
@@ -8756,7 +8720,7 @@
         ""
       ],
       "can't be blank": [
-        "nemůže být prázdné"
+        ""
       ],
       "cannot add filter to generated content views": [
         ""
@@ -8765,16 +8729,16 @@
         ""
       ],
       "cannot be a binary file.": [
-        "nemůže být binární soubor."
+        ""
       ],
       "cannot be blank": [
-        "nemůže být prázdné"
+        ""
       ],
       "cannot be blank when Repository URL is provided.": [
         ""
       ],
       "cannot be changed.": [
-        "nemůže být prázdné"
+        ""
       ],
       "cannot be deleted if it has been promoted.": [
         ""
@@ -8786,28 +8750,28 @@
         ""
       ],
       "cannot be nil": [
-        "nemůže být prázdné"
+        ""
       ],
       "cannot be set because unlimited hosts is set": [
         ""
       ],
-      "cannot be set for non-yum repositories.": [
+      "cannot be set for repositories without 'Additive' mirroring policy.": [
         ""
       ],
       "cannot contain characters other than ascii alpha numerals, '_', '-'. ": [
-        "nesmí obsahovat jiné znaky než písmena, číslice, mezery, '_', '-'."
+        ""
       ],
       "cannot contain commas": [
         ""
       ],
       "cannot contain filters if composite view": [
-        "nesmí obsahovat jiné znaky než ASCII hodnoty"
+        ""
       ],
       "cannot contain filters whose repositories do not belong to this content view": [
         ""
       ],
       "cannot contain more than %s characters": [
-        "musí obsahovat nejméně %s znaků"
+        ""
       ],
       "change the host's content source.": [
         ""
@@ -8828,9 +8792,12 @@
         ""
       ],
       "content release version": [
-        "Vyhledat obsah"
+        ""
       ],
       "content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')": [
+        ""
+      ],
+      "content type ('deb', 'file', 'ostree_ref', 'rpm', 'srpm')": [
         ""
       ],
       "content view component ID. Identifier of the component association": [
@@ -8843,7 +8810,7 @@
         ""
       ],
       "content view identifier": [
-        "Vyhledat obsah"
+        ""
       ],
       "content view identifier of the component who's latest version is desired": [
         ""
@@ -8855,10 +8822,10 @@
         ""
       ],
       "content view publish": [
-        "Vyhledat obsah"
+        ""
       ],
       "content view refresh": [
-        "Vyhledat obsah"
+        ""
       ],
       "content view to reassign orphaned activation keys to": [
         ""
@@ -8903,7 +8870,7 @@
         ""
       ],
       "description": [
-        "organizace"
+        ""
       ],
       "description of the environment": [
         ""
@@ -8917,7 +8884,7 @@
       "disk": [
         ""
       ],
-      "download policy for yum, deb, and docker repos (either 'immediate' or 'on_demand')": [
+      "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
         ""
       ],
       "enables or disables synchronization": [
@@ -8930,7 +8897,7 @@
         ""
       ],
       "environment identifier": [
-        "prostředí vyžadováno"
+        ""
       ],
       "environment numeric identifier": [
         ""
@@ -8945,7 +8912,7 @@
         ""
       ],
       "environments": [
-        "prostředí"
+        ""
       ],
       "errata_id of the content view filter rule": [
         ""
@@ -8954,6 +8921,9 @@
         ""
       ],
       "erratum: IDs or a select all object": [
+        ""
+      ],
+      "erratum: allow types not matching a valid errata type": [
         ""
       ],
       "erratum: end date (YYYY-MM-DD)": [
@@ -9005,7 +8975,7 @@
         ""
       ],
       "has already been taken": [
-        "Ověření se nezdařilo: Štítek byl již přijat."
+        ""
       ],
       "has already been taken for a product in this organization.": [
         ""
@@ -9014,6 +8984,9 @@
         ""
       ],
       "here": [
+        ""
+      ],
+      "host": [
         ""
       ],
       "host collection name to filter by": [
@@ -9062,16 +9035,16 @@
         ""
       ],
       "installing package group...": [
-        "všechny balíčky"
+        ""
       ],
       "installing package groups...": [
-        "všechny balíčky"
+        ""
       ],
       "installing package...": [
-        "všechny balíčky"
+        ""
       ],
       "installing packages...": [
-        "všechny balíčky"
+        ""
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         ""
@@ -9116,7 +9089,7 @@
         ""
       ],
       "list of repository ids": [
-        "Smazán poskytovatel [%s]"
+        ""
       ],
       "list of rpm filename strings to include in published version": [
         ""
@@ -9136,6 +9109,18 @@
       "module streams not found": [
         ""
       ],
+      "multi-environment activation key": [
+        ""
+      ],
+      "multi-environment activation keys": [
+        ""
+      ],
+      "multi-environment host": [
+        ""
+      ],
+      "multi-environment hosts": [
+        ""
+      ],
       "must be %{gpg_key} or %{cert}": [
         ""
       ],
@@ -9152,16 +9137,16 @@
         ""
       ],
       "must be unique within one organization": [
-        "Název musí být unikátní vrámci jedné organizace."
+        ""
       ],
       "must contain '%s'": [
         ""
       ],
       "must contain GPG Key": [
-        "GPG klíč"
+        ""
       ],
       "must contain at least %s character": [
-        "musí obsahovat nejméně %s znaků"
+        ""
       ],
       "must contain valid  Public GPG Key": [
         ""
@@ -9173,28 +9158,28 @@
         ""
       ],
       "must not contain leading or trailing white spaces.": [
-        "nesmí obsahovat více než %s znaků"
+        ""
       ],
       "name": [
-        "Název"
+        ""
       ],
       "name of organization": [
-        "Vybrat organizaci"
+        ""
       ],
       "name of the content view filter rule": [
         ""
       ],
       "name of the environment": [
-        "prostředí"
+        ""
       ],
       "name of the filter": [
         ""
       ],
       "name of the organization": [
-        "Vybrat organizaci"
+        ""
       ],
       "name of the repository": [
-        "Vybrat organizaci"
+        ""
       ],
       "name of the subscription": [
         ""
@@ -9215,16 +9200,16 @@
         ""
       ],
       "of environment must be unique within one organization": [
-        "Název musí být unikátní vrámci jedné organizace."
+        ""
       ],
       "only show the repositories readable by this user with this username": [
         ""
       ],
       "organization ID": [
-        "Organizace"
+        ""
       ],
       "organization identifier": [
-        "Organizace"
+        ""
       ],
       "package group: uuid": [
         ""
@@ -9278,31 +9263,31 @@
         ""
       ],
       "removing package group...": [
-        "Skupiny balíčků"
+        ""
       ],
       "removing package groups...": [
-        "Skupiny balíčků"
+        ""
       ],
       "removing package...": [
-        "Smazat balíček filtrů"
+        ""
       ],
       "removing packages...": [
-        "Smazat balíček filtrů"
+        ""
       ],
       "repo label": [
         ""
       ],
       "repository ID": [
-        "Repozitáře"
+        ""
       ],
       "repository id": [
-        "Repozitáře"
+        ""
       ],
       "repository identifier": [
-        "Repozitáře"
+        ""
       ],
       "repository source url": [
-        "Repozitáře"
+        ""
       ],
       "root-node of collection contained in responses (default: 'results')": [
         ""
@@ -9359,7 +9344,7 @@
         ""
       ],
       "sync plan name": [
-        "+ Nový plán"
+        ""
       ],
       "sync plan numeric identifier": [
         ""
@@ -9419,7 +9404,7 @@
         ""
       ],
       "updating packages...": [
-        "všechny balíčky"
+        ""
       ],
       "upstream Foreman server": [
         ""

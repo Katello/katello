@@ -464,9 +464,6 @@
       "About page": [
         "About ページ"
       ],
-      "Abstract async task": [
-        "非同期タスクの抽象化"
-      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "Red Hat Subcription Management へのアクセスは禁止されています。これを変更する場合は、コンテンツ設定の「サブスクリプション接続の有効化」を更新してください。"
       ],
@@ -602,9 +599,6 @@
       "Add one or more host collections to one or more hosts": [
         "1 つ以上のホストに 1 つ以上のホストコレクションを追加します"
       ],
-      "Add ons": [
-        "アドオン"
-      ],
       "Add products to sync plan": [
         "製品の同期プランへの追加"
       ],
@@ -634,9 +628,6 @@
       ],
       "Add to a host collection": [
         "ホストコレクションへの追加"
-      ],
-      "Add-ons": [
-        "アドオン"
       ],
       "Added": [
         "追加されました"
@@ -698,14 +689,14 @@
       "All versions will be removed from these environments": [
         "すべてのバージョンがこれらの環境から削除されます"
       ],
-      "Allow a host to be assigned to multiple content view environments with 'subscription-manager register --environments' or 'subscription-manager environments --set'.": [
-        ""
-      ],
       "Allow deleting repositories in published content views": [
         "公開済みコンテンツビューでのリポジトリー削除を許可"
       ],
       "Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode.": [
         "ホストがビルドモードである限り、ホスト登録が「ホストプロファイルの想定」をバイパスすることを許可します。"
+      ],
+      "Allow hosts or activation keys to be associated with multiple content view environments": [
+        ""
       ],
       "Allow hosts to re-register themselves only when they are in build mode": [
         "ホストがビルドモードである場合にのみ、ホスト自体の再登録を許可します"
@@ -923,10 +914,10 @@
       "Assign the release version to one or more hosts": [
         "1 台以上のホストにリリースバージョンを割り当てます"
       ],
-      "Assigning a host to multiple content view environments is not enabled.": [
+      "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
         ""
       ],
-      "Assigning an activation key to multiple content view environments is not enabled.": [
+      "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
         ""
       ],
       "Associated location IDs": [
@@ -947,14 +938,14 @@
       "At least one activation key must have a lifecycle environment and content view assigned to it": [
         "1 つ以上のアクティベーションキーには、ライフサイクル環境の設定が必要であり、コンテンツビューをこれに割り当てる必要があります"
       ],
+      "At least one errata type option needs to be selected.": [
+        ""
+      ],
       "At least one of the selected items requires the host to reboot": [
         ""
       ],
       "At least one organization must exist.": [
         "1 つ以上の組織が存在している必要があります。"
-      ],
-      "Atleast one errata type needs to be selected.": [
-        "少なくとも 1 つのエラータタイプを選択する必要があります。"
       ],
       "Attach a subscription": [
         "サブスクリプションを割り当てる"
@@ -980,9 +971,6 @@
       "Auto Publish - Triggered by '%s'": [
         "自動公開 - '%s' によるトリガー"
       ],
-      "Auto attach subscriptions": [
-        "サブスクリプションの自動割り当て"
-      ],
       "Auto publish": [
         "自動公開"
       ],
@@ -998,6 +986,12 @@
       "Available Repositories": [
         "利用可能なリポジトリー"
       ],
+      "Available image": [
+        ""
+      ],
+      "Available image digest": [
+        ""
+      ],
       "Available schema versions": [
         ""
       ],
@@ -1012,6 +1006,9 @@
       ],
       "Base URL for finding alternate content": [
         "代替コンテンツを検索するためのベース URL"
+      ],
+      "Base URL of the flatpak registry index, ex: https://flatpaks.redhat.io/rhel/ , https://registry.fedoraproject.org/.": [
+        ""
       ],
       "Base URL to perform repo discovery on": [
         "リポジトリー検出を実行するベース URL"
@@ -1057,6 +1054,24 @@
       ],
       "Bookmarks marked as public are available to all users": [
         "パブリックと識別されたブックマークは、すべてのユーザーが利用できます"
+      ],
+      "Bootc rollback via Bootc interface": [
+        ""
+      ],
+      "Bootc status via Bootc interface": [
+        ""
+      ],
+      "Bootc switch via Bootc interface": [
+        ""
+      ],
+      "Bootc upgrade via Bootc interface": [
+        ""
+      ],
+      "Booted Container Images": [
+        ""
+      ],
+      "Booted container images": [
+        ""
       ],
       "Both": [
         "両方"
@@ -1337,6 +1352,9 @@
       "Cannot upload Container Image content.": [
         "コンテナーイメージのコンテンツをアップロードできません。"
       ],
+      "Cannot upload container content via Hammer/API. Use podman push instead.": [
+        ""
+      ],
       "Capacity": [
         "容量"
       ],
@@ -1412,13 +1430,13 @@
       "Collapse All": [
         "すべて折りたたむ"
       ],
-      "Comma-separated list of Candlepin environment names associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of Candlepin environment names to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
@@ -1429,9 +1447,6 @@
       ],
       "Comma-separated list of tags to sync for a container image repository": [
         "コンテナーイメージリポジトリーに同期するコンマ区切りのタグ一覧"
-      ],
-      "Commit upload": [
-        ""
       ],
       "Compare": [
         "比較"
@@ -1643,6 +1658,9 @@
       "Content imported by %{user} into content view '%{name}'": [
         "%{user} によって '%{name}' にインポートされたコンテンツ"
       ],
+      "Content may come from {contentSourceName} or any other Smart Proxy behind the load balancer.": [
+        ""
+      ],
       "Content not uploaded to pulp": [
         "コンテンツが pulp にアップロードされませんでした"
       ],
@@ -1703,6 +1721,9 @@
       "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
         ""
       ],
+      "Content view environment": [
+        ""
+      ],
       "Content view environments": [
         ""
       ],
@@ -1751,6 +1772,9 @@
       "Content view version is empty": [
         ""
       ],
+      "Content view version is empty or content counts are not up to date": [
+        ""
+      ],
       "Content views": [
         "コンテンツビュー"
       ],
@@ -1778,26 +1802,14 @@
       "Copy": [
         "コピー"
       ],
-      "Copy all units": [
-        ""
-      ],
       "Copy an activation key": [
         "アクティベーションキーをコピーします"
-      ],
-      "Copy content": [
-        ""
       ],
       "Copy content view": [
         "コンテンツビューのコピー"
       ],
       "Copy to clipboard": [
         "クリップボードへのコピー"
-      ],
-      "Copy version": [
-        ""
-      ],
-      "Copy version units to library": [
-        "バージョンユニットのライブラリーへのコピー"
       ],
       "Cores per socket": [
         "1 ソケットあたりのコア数"
@@ -1973,6 +1985,9 @@
       "Create a filter rule. The parameters included should be based upon the filter type.": [
         "フィルタールールの作成。組み込まれるパラメーターはフィルタータイプに基づいている必要があります。"
       ],
+      "Create a flatpak remote": [
+        ""
+      ],
       "Create a host collection": [
         "ホストコレクションの作成"
       ],
@@ -2003,20 +2018,11 @@
       "Create content view": [
         "コンテンツビューの作成"
       ],
-      "Create exporter": [
-        ""
-      ],
       "Create filter": [
         "フィルターの作成"
       ],
       "Create host collection": [
         "ホストコレクションの作成"
-      ],
-      "Create import": [
-        ""
-      ],
-      "Create importer": [
-        ""
       ],
       "Create new activation key": [
         ""
@@ -2026,12 +2032,6 @@
       ],
       "Create package filter rule": [
         "パッケージフィルタールールの作成"
-      ],
-      "Create publication": [
-        ""
-      ],
-      "Create remote": [
-        ""
       ],
       "Create rule": [
         "ルールの作成"
@@ -2258,6 +2258,9 @@
       "Delete a filter rule": [
         "フィルタールールの削除"
       ],
+      "Delete a flatpak remote": [
+        ""
+      ],
       "Delete activation key?": [
         ""
       ],
@@ -2279,35 +2282,11 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
-      "Delete distributions": [
-        ""
-      ],
       "Delete manifest from Red Hat provider": [
         "Red Hat プロバイダーからマニフェストを削除"
       ],
       "Delete multiple filters from a content view": [
         "コンテンツビューから複数のフィルターを削除します"
-      ],
-      "Delete orphan alternate content sources": [
-        ""
-      ],
-      "Delete orphan distributions": [
-        ""
-      ],
-      "Delete orphan remotes": [
-        ""
-      ],
-      "Delete orphan repository versions": [
-        ""
-      ],
-      "Delete orphaned migrated repositories": [
-        ""
-      ],
-      "Delete remote": [
-        ""
-      ],
-      "Delete repository references": [
-        ""
       ],
       "Delete version": [
         "バージョンの削除"
@@ -2353,6 +2332,9 @@
       ],
       "Description for the new published content view version": [
         "新規に公開されたコンテンツビューバージョンの説明"
+      ],
+      "Description of the flatpak remote": [
+        ""
       ],
       "Description of the repository": [
         "リポジトリーの説明"
@@ -2405,12 +2387,6 @@
       "Destroy an environment in an organization": [
         "組織の環境を破棄"
       ],
-      "Destroy exporter": [
-        ""
-      ],
-      "Destroy importer": [
-        ""
-      ],
       "Destroy one or more alternate content sources": [
         "1 つ以上の代替コンテンツソースの破棄"
       ],
@@ -2458,9 +2434,6 @@
       ],
       "Disabling Simple Content Access failed for '%{subject}'.": [
         "'%{subject}' のシンプルコンテンツアクセスの有効化に失敗しました。"
-      ],
-      "Discover": [
-        "検出"
       ],
       "Discover Repositories": [
         "リポジトリーの検出"
@@ -2657,9 +2630,6 @@
       "Environment cannot be in its own promotion path": [
         "同じ環境内のプロモートパスに環境を存在させることはできません。"
       ],
-      "Environment contents refresh": [
-        ""
-      ],
       "Environment identifier": [
         "環境 ID"
       ],
@@ -2698,9 +2668,6 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "エラータのエラータ ID (RHSA-2012:108)"
-      ],
-      "Errata mail": [
-        "エラータメール"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2861,9 +2828,6 @@
       "Fetch installable errata for one or more hosts.": [
         "1 つまたは複数のホストにインストール可能なエラータを取得します。"
       ],
-      "Fetch pxe files": [
-        "PXE ファイルの取得"
-      ],
       "Fetch traces for one or more hosts": [
         "1 台以上のホストのトレースを取得します"
       ],
@@ -2957,9 +2921,6 @@
       "Filter versions that are components in the specified composite version": [
         "指定した複合バージョンに含まれるコンポーネントのバージョンを絞り込む"
       ],
-      "Filtered index content": [
-        "フィルタリングしたインデックスコンテンツ"
-      ],
       "Filters": [
         "フィルター"
       ],
@@ -2980,6 +2941,15 @@
       ],
       "Finished": [
         "終了"
+      ],
+      "Flatpak Remotes": [
+        ""
+      ],
+      "Flatpak remote numeric identifier": [
+        ""
+      ],
+      "Flatpak remote repository numeric identifier": [
+        ""
       ],
       "Force": [
         "強制"
@@ -3040,9 +3010,6 @@
       ],
       "Generate host applicability": [
         "ホストに適用可能なエラータを生成します"
-      ],
-      "Generate metadata": [
-        ""
       ],
       "Generate repository applicability": [
         "リポジトリーに適用可能なエラータを生成します"
@@ -3281,12 +3248,6 @@
       "How to order the sorted results (e.g. ASC for ascending)": [
         "結果のソート順 (例: ascending (昇順) の ASC)"
       ],
-      "Hypervisors": [
-        "ハイパーバイザー"
-      ],
-      "Hypervisors update": [
-        "ハイパーバイザーの更新"
-      ],
       "ID of a HTTP Proxy": [
         "HTTP プロキシ ー ID"
       ],
@@ -3307,6 +3268,9 @@
       ],
       "ID of an organization to show repositories in": [
         "リポジトリーを表示させる組織の ID"
+      ],
+      "ID of flatpak remote to show repositories of": [
+        ""
       ],
       "ID of the Organization": [
         "組織 ID"
@@ -3368,10 +3332,16 @@
       "Id of the content host": [
         "コンテンツホストの ID"
       ],
+      "Id of the content view to limit the content counting on": [
+        ""
+      ],
       "Id of the content view to limit the synchronization on": [
         "同期を制限するコンテンツビューの ID"
       ],
       "Id of the content view to limit verifying checksum on": [
+        ""
+      ],
+      "Id of the environment to limit the content counting on": [
         ""
       ],
       "Id of the environment to limit the synchronization on": [
@@ -3394,6 +3364,9 @@
       ],
       "Id of the organization to limit environments on": [
         "環境を制限する組織の ID"
+      ],
+      "Id of the repository to limit the content counting on": [
+        ""
       ],
       "Id of the repository to limit the synchronization on": [
         "同期を制限するリポジトリーの ID"
@@ -3530,6 +3503,27 @@
       "Image": [
         ""
       ],
+      "Image digest": [
+        ""
+      ],
+      "Image digests": [
+        ""
+      ],
+      "Image mode": [
+        ""
+      ],
+      "Image mode / package mode": [
+        ""
+      ],
+      "Image mode details": [
+        ""
+      ],
+      "Image name": [
+        ""
+      ],
+      "Image-mode host": [
+        ""
+      ],
       "Immediate": [
         "即時"
       ],
@@ -3572,9 +3566,6 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
-      "Import migration": [
-        ""
-      ],
       "Import new manifest": [
         ""
       ],
@@ -3583,12 +3574,6 @@
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "インポートのみのコンテンツビューは直接公開できません。コンテンツは、ビューにインポートしなければ更新されません。"
-      ],
-      "Import repository upload": [
-        ""
-      ],
-      "Import upload": [
-        ""
       ],
       "Import uploads into a repository": [
         "アップロードのリポジトリーへのインポート"
@@ -3632,6 +3617,9 @@
       "Include filter": [
         "追加フィルター"
       ],
+      "Include manifests": [
+        ""
+      ],
       "Included": [
         "包含済み"
       ],
@@ -3653,9 +3641,6 @@
       "Incremental Update incomplete.": [
         "増分更新が完了していません。"
       ],
-      "Incremental Update of  Content View Version(s) ": [
-        "コンテンツビューバージョンの増分更新"
-      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} 件のコンテンツビューバージョンの増分更新"
       ],
@@ -3668,26 +3653,11 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         "複合コンテンツ %{name} のバージョン %{version} に増分更新が指定されましたが、コンポーネントは更新されていません。"
       ],
-      "Index content": [
-        "コンテンツのインデックス作成"
-      ],
-      "Index errata": [
-        "エラータのインデックス作成"
-      ],
-      "Index module streams": [
-        "モジュールストリームのインデックス作成"
-      ],
-      "Index package groups": [
-        "パッケージグループのインデックス作成"
-      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "情報タイプは以下のいずれかでなければなりません [ %{list} ]"
       ],
       "Inherit from Repository": [
         "リポジトリーから継承"
-      ],
-      "Initialize": [
-        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "同期プランに割り当てられた製品の同期を開始します"
@@ -3764,9 +3734,6 @@
       "Installing Package...": [
         "パッケージのインストール中..."
       ],
-      "Instance update": [
-        "インスタンスの更新"
-      ],
       "Instance-based": [
         "インスタンスベース"
       ],
@@ -3797,8 +3764,8 @@
       "Invalid erratum filter rule specified, 'errata_id' cannot be specified in the same tuple as 'start_date', 'end_date' or 'types'": [
         "無効なエラータフィルタールールが指定されました。'errata_id' を 'start_date'、'end_date' または 'types' と同じ組で指定することはできません"
       ],
-      "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date' or 'types'": [
-        "無効なエラータフィルタールールが指定されました。少なくとも以下のいずれかを指定する必要があります: 'errata_id'、'start_date'、'end_date' または 'types'"
+      "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date', 'types', or 'allow_other_types'": [
+        ""
       ],
       "Invalid erratum types %{invalid_types} provided. Erratum type can be any of %{valid_types}": [
         "無効なエラータタイプ %{invalid_types} が指定されました。エラータタイプは %{valid_types} のいずれかに指定できます"
@@ -3881,8 +3848,26 @@
       "Job '${description}' has started.": [
         "ジョブ '${description}' が開始されました。"
       ],
+      "Katello Bootc interface": [
+        ""
+      ],
       "Katello ID of local pool to update": [
         "更新するローカルプールの Katello ID"
+      ],
+      "Katello: Bootc Action": [
+        ""
+      ],
+      "Katello: Bootc Rollback": [
+        ""
+      ],
+      "Katello: Bootc Status": [
+        ""
+      ],
+      "Katello: Bootc Switch": [
+        ""
+      ],
+      "Katello: Bootc Upgrade": [
+        ""
       ],
       "Katello: Configure host for new content source": [
         ""
@@ -3932,6 +3917,9 @@
       "Katello: Upload Profile": [
         ""
       ],
+      "Keep latest packages": [
+        ""
+      ],
       "Key-value hash of subscription-manager facts, nesting uses a period delimiter (.)": [
         "subscription-manager ファクトの Key-Value ハッシュ。ネスト化には、ピリオド (.) で区切ります。"
       ],
@@ -3955,6 +3943,9 @@
       ],
       "Label of the content view": [
         "コンテンツビューのラベル"
+      ],
+      "Label of the flatpak remote": [
+        ""
       ],
       "Last check-in:": [
         "最終チェックイン"
@@ -4121,6 +4112,9 @@
       "List available subscriptions from Red Hat Subscription Management": [
         "Red Hat Subscription Management から利用可能なサブスクリプションを一覧表示します"
       ],
+      "List booted bootc container images for hosts": [
+        ""
+      ],
       "List components attached to this content view": [
         "このコンテンツビューに割り当てられたコンポーネントの一覧を表示します"
       ],
@@ -4159,6 +4153,15 @@
       ],
       "List filter rules": [
         "フィルタールールを一覧表示"
+      ],
+      "List flatpak remote repositories": [
+        ""
+      ],
+      "List flatpak remote's repositories": [
+        ""
+      ],
+      "List flatpak remotes": [
+        ""
       ],
       "List host collections": [
         "ホストコレクションを一覧表示"
@@ -4325,6 +4328,9 @@
       "List the lifecycle environments not attached to the smart proxy": [
         "Smart Proxy に割り当てられていないライフサイクル環境を一覧表示します"
       ],
+      "Load balancer": [
+        ""
+      ],
       "Loading": [
         "ロード中"
       ],
@@ -4454,9 +4460,6 @@
       "Messaging connection": [
         "メッセージング接続"
       ],
-      "Metadata generate": [
-        ""
-      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -4465,6 +4468,12 @@
       ],
       "Minimum version": [
         "最小のバージョン"
+      ],
+      "Mirror Remote Repository": [
+        ""
+      ],
+      "Mirror a flatpak remote repository": [
+        ""
       ],
       "Missing activation key!": [
         "アクティベーションキーがありません!"
@@ -4477,6 +4486,9 @@
       ],
       "Moderate": [
         "中"
+      ],
+      "Modify via remote execution": [
+        ""
       ],
       "Modular": [
         "モジュラー"
@@ -4499,13 +4511,7 @@
       "Module streams will appear here after enabling Red Hat repositories or creating custom products.": [
         "Red Hat リポジトリーを有効にしたり、カスタム製品を作成したりすると、モジュールストリームがここに表示されます。"
       ],
-      "Multi copy all units": [
-        ""
-      ],
-      "Multi copy content": [
-        ""
-      ],
-      "Multi copy units": [
+      "Multi Content View Environment": [
         ""
       ],
       "Multi-entitlement": [
@@ -4558,6 +4564,12 @@
       ],
       "Name of the content view": [
         "コンテンツビューの名前"
+      ],
+      "Name of the flatpak remote": [
+        ""
+      ],
+      "Name of the flatpak remote repository": [
+        ""
       ],
       "Name of the host": [
         "ホスト名"
@@ -4682,6 +4694,9 @@
       "No content in selected versions.": [
         "選択したバージョンにコンテンツがありません。"
       ],
+      "No content view environments": [
+        ""
+      ],
       "No content view environments found with ids: %{ids}": [
         ""
       ],
@@ -4717,9 +4732,6 @@
       ],
       "No enabled repositories match your search criteria.": [
         "検索条件に一致する有効なリポジトリーはありません。"
-      ],
-      "No environment": [
-        "環境なし"
       ],
       "No environments": [
         "環境なし"
@@ -5303,8 +5315,11 @@
       "Package installation: \\\"%{package}\\\" ": [
         "パッケージのインストール: \\\"%{package}\\\" "
       ],
-      "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg, bdist_dumb, bdist_egg, bdist_msi, bdist_rpm, bdist_wheel, bdist_wininst, sdist.": [
-        "Python コンテンツの同期に使用するパッケージタイプ (コンマ区切り)。すべてのパッケージタイプを指定するには、空白のままにします。パッケージタイプは、bdist_dmg、bdist_dumb、bdist_egg, bdist_msi、bdist_rpm、bdist_wheel、bdist_wininst、sdist です。"
+      "Package mode": [
+        ""
+      ],
+      "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist.": [
+        ""
       ],
       "Packages": [
         "パッケージ"
@@ -5432,6 +5447,9 @@
       "Policy to set for mirroring content.  Must be one of %s.": [
         "コンテンツのミラーリングに設定するポリシー。%s のいずれかでなければなりません。"
       ],
+      "Possible values: %s": [
+        ""
+      ],
       "Prefer registered through Smart Proxy for remote execution": [
         ""
       ],
@@ -5479,6 +5497,9 @@
       ],
       "Product ID": [
         "製品 ID"
+      ],
+      "Product ID to mirror the remote repository to": [
+        ""
       ],
       "Product and Repositories": [
         "製品およびリポジトリー"
@@ -5660,9 +5681,6 @@
       "Pulp task error": [
         "Pulp タスクのエラー"
       ],
-      "Purge completed tasks": [
-        ""
-      ],
       "Python Package": [
         "Python パッケージ"
       ],
@@ -5771,9 +5789,6 @@
       "Reclaim Space": [
         "領域の再利用"
       ],
-      "Reclaim space": [
-        ""
-      ],
       "Reclaim space from On Demand repositories": [
         "オンデマンドリポジトリーからの領域の再利用"
       ],
@@ -5837,9 +5852,6 @@
       "Refresh all alternate content sources": [
         ""
       ],
-      "Refresh all distributions": [
-        ""
-      ],
       "Refresh alternate content sources": [
         "代替コンテンツソースの更新"
       ],
@@ -5852,13 +5864,7 @@
       "Refresh counts": [
         ""
       ],
-      "Refresh distribution": [
-        ""
-      ],
       "Refresh errata applicability": [
-        ""
-      ],
-      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
@@ -5866,12 +5872,6 @@
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Red Hat プロバイダーの以前にインポートされたマニフェストを更新"
-      ],
-      "Refresh remote": [
-        ""
-      ],
-      "Refresh repos": [
-        ""
       ],
       "Refresh source": [
         "ソースの更新"
@@ -5897,6 +5897,9 @@
       "Registered on": [
         "登録先"
       ],
+      "Registered to": [
+        ""
+      ],
       "Registering to multiple environments is not enabled.": [
         ""
       ],
@@ -5911,9 +5914,6 @@
       ],
       "Registry name pattern will result in invalid container image name of member repositories": [
         "レジストリー名のパターンが原因で、メンバーリポジトリーのコンテナーイメージ名が無効になります"
-      ],
-      "Reindex subscriptions": [
-        "サブスクリプションのインデックス再作成"
       ],
       "Related composite content views": [
         "関連する複合コンテンツビュー"
@@ -6011,9 +6011,6 @@
       "Remove one or more subscriptions from an upstream manifest": [
         "アップストリームマニフェストから 1 つ以上のサブスクリプションを削除します"
       ],
-      "Remove orphans": [
-        ""
-      ],
       "Remove package group via Katello interface": [
         "Katello インターフェイスでのパッケージグループの削除"
       ],
@@ -6041,12 +6038,6 @@
       "Remove subscriptions from one or more hosts": [
         "1 つ以上のホストからサブスクリプションを削除します"
       ],
-      "Remove units": [
-        ""
-      ],
-      "Remove unneeded repos": [
-        ""
-      ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "コンテンツビューからバージョンおよび/または環境を削除し、システムおよびキーを再度割り当てます"
       ],
@@ -6071,9 +6062,6 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         "すべての環境からこのバージョンを削除しても、バージョンは削除されません。バージョンは引き続き以降のプロモーションの対象になります。"
       ],
-      "Repair": [
-        ""
-      ],
       "Replace content source on the target machine": [
         ""
       ],
@@ -6092,17 +6080,11 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "CDN 設定がエアギャップ (切断) に設定されている間、リポジトリーは有効にできません。"
       ],
-      "Repositories certs reset": [
-        ""
-      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
         "公開されたコンテンツビューからのリポジトリーは許可されません。"
-      ],
-      "Repositories gpg reset": [
-        ""
       ],
       "Repository": [
         "リポジトリー"
@@ -6395,6 +6377,12 @@
       "Roles": [
         "ロール"
       ],
+      "Rollback image": [
+        ""
+      ],
+      "Rollback image digest": [
+        ""
+      ],
       "Rules to be added": [
         "追加するルール"
       ],
@@ -6406,6 +6394,12 @@
       ],
       "Running": [
         "実行中"
+      ],
+      "Running image": [
+        ""
+      ],
+      "Running image digest": [
+        ""
       ],
       "SKU": [
         "SKU"
@@ -6434,25 +6428,10 @@
       "Save": [
         "保存"
       ],
-      "Save artifact": [
-        ""
-      ],
-      "Save distribution references": [
-        ""
-      ],
-      "Save publication": [
-        ""
-      ],
-      "Save version": [
-        ""
-      ],
-      "Save versions": [
-        ""
-      ],
       "Saving alternate content source...": [
         "代替コンテンツソースの保存"
       ],
-      "Scan cdn": [
+      "Scan a flatpak remote": [
         ""
       ],
       "Schema version 1": [
@@ -6559,9 +6538,6 @@
       ],
       "Select action": [
         ""
-      ],
-      "Select add-ons": [
-        "アドオンの選択"
       ],
       "Select all": [
         "すべてを選択"
@@ -6701,14 +6677,14 @@
       "Set content overrides to one or more hosts": [
         "1 台以上のホストにコンテンツ上書きを設定します"
       ],
+      "Set this HTTP proxy as the default content HTTP proxy": [
+        ""
+      ],
       "Set true to override to enabled; Set false to override to disabled.'": [
         "true に設定するとオーバーライドが有効になり、false に設定するとオーバーライドが無効になります。"
       ],
       "Set true to remove an override and reset it to 'default'": [
         "上書きを削除して「デフォルト」にリセットするには True に設定します"
-      ],
-      "Sets the system add-ons": [
-        "システムのアドオンを設定します"
       ],
       "Sets the system purpose usage": [
         "システム目的の使用率を設定します"
@@ -6742,6 +6718,12 @@
       ],
       "Show a content view's history": [
         "コンテンツビューの履歴を表示"
+      ],
+      "Show a flatpak remote": [
+        ""
+      ],
+      "Show a flatpak remote repository": [
+        ""
       ],
       "Show a host collection": [
         "ホストコレクションの表示"
@@ -7070,6 +7052,12 @@
       "Stacking ID": [
         "スタッキング ID"
       ],
+      "Staged image": [
+        ""
+      ],
+      "Staged image digest": [
+        ""
+      ],
       "Start Date": [
         "開始日"
       ],
@@ -7235,9 +7223,6 @@
       "Supported Content Types": [
         "サポート対象のコンテンツタイプ"
       ],
-      "Sync": [
-        ""
-      ],
       "Sync Canceled": [
         "同期が取り消されました"
       ],
@@ -7292,9 +7277,6 @@
       "Sync all repositories for a product": [
         "製品のすべてのリポジトリーを同期します"
       ],
-      "Sync capsule": [
-        "Capsule の同期"
-      ],
       "Sync complete.": [
         "同期が完了しました。"
       ],
@@ -7312,9 +7294,6 @@
       ],
       "Sync state": [
         "同期の状態"
-      ],
-      "Syncable export": [
-        "同期可能なエクスポート"
       ],
       "Synced": [
         ""
@@ -7429,6 +7408,9 @@
       ],
       "The actual file contents": [
         "実際のコンテンツファイル"
+      ],
+      "The amount of latest versions of a package to keep on sync, includes pre-releases if synced. Default 0 keeps all versions.": [
+        ""
       ],
       "The content type for the Alternate Content Source": [
         "代替コンテンツソースのコンテンツタイプ"
@@ -7673,6 +7655,9 @@
       "This content view version doesn't have a history.": [
         "このコンテンツビューバージョンには履歴がありません。"
       ],
+      "This content view version is used in one or more multi-environment hosts. The version will simply be removed from the multi-environment hosts. The content view and lifecycle environment you select here will only apply to single-environment hosts. See hammer activation-key --help for more details.": [
+        ""
+      ],
       "This content view will be automatically updated to the latest version.": [
         "このコンテンツビューは、最新バージョンに自動的に更新されます。"
       ],
@@ -7683,6 +7668,9 @@
         ""
       ],
       "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.": [
+        ""
+      ],
+      "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details.": [
         ""
       ],
       "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
@@ -7811,7 +7799,7 @@
       "To manage packages, select an action.": [
         ""
       ],
-      "Toggle": [
+      "Token/password for the flatpak remote": [
         ""
       ],
       "Total steps: ": [
@@ -8075,6 +8063,9 @@
       "Update a filter rule. The parameters included should be based upon the filter type.": [
         "フィルタールールの更新。組み込まれるパラメーターはフィルタータイプに基づくものでなければなりません。"
       ],
+      "Update a flatpak remote": [
+        ""
+      ],
       "Update a host collection": [
         "ホストコレクションの更新"
       ],
@@ -8099,26 +8090,14 @@
       "Update content counts for the smart proxy": [
         ""
       ],
-      "Update content urls": [
-        "コンテンツ url の更新"
-      ],
       "Update content view environments for host": [
         ""
       ],
       "Update content view environments for host %s": [
         ""
       ],
-      "Update distributions": [
-        ""
-      ],
       "Update hosts manually": [
         ""
-      ],
-      "Update http proxy": [
-        "http プロキシーの更新"
-      ],
-      "Update http proxy details": [
-        "HTTP プロキシーの詳細更新"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "インストール済みパッケージ、有効なリポジトリー、モジュールインベントリーの更新"
@@ -8135,20 +8114,11 @@
       "Update packages via Katello interface": [
         "Katello インターフェイスでのパッケージの更新"
       ],
-      "Update redhat repository": [
-        "redhat リポジトリーの更新"
-      ],
       "Update release version for host": [
         "ホストのリリースバージョンの更新"
       ],
       "Update release version for host %s": [
         "ホスト %s のリリースバージョンの更新"
-      ],
-      "Update remote": [
-        ""
-      ],
-      "Update repository": [
-        ""
       ],
       "Update services requiring restart": [
         "再起動が必要なサービスの更新"
@@ -8240,12 +8210,6 @@
       "Upload a subscription manifest": [
         "サブスクリプションマニフェストのアップロード"
       ],
-      "Upload content": [
-        ""
-      ],
-      "Upload file": [
-        ""
-      ],
       "Upload into": [
         "アップロード先"
       ],
@@ -8254,9 +8218,6 @@
       ],
       "Upload request id": [
         "要求 ID のアップロード"
-      ],
-      "Upload tag": [
-        ""
       ],
       "Upstream Candlepin": [
         "アップストリーム Candlepin"
@@ -8345,6 +8306,9 @@
       "Username for authentication. Relevant only for 'upstream_server' type.": [
         "認証用のユーザー名。'upstream_server' タイプにのみ必要です。"
       ],
+      "Username for the flatpak remote": [
+        ""
+      ],
       "Username of the upstream repository user used for authentication": [
         "認証に使用するアップストリームリポジトリーユーザーのユーザー名"
       ],
@@ -8368,9 +8332,6 @@
       ],
       "Verify SSL": [
         "SSL の確認"
-      ],
-      "Verify checksum": [
-        "チェックサムの確認"
       ],
       "Verify checksum for content on smart proxy": [
         ""
@@ -8678,6 +8639,9 @@
       "actions not found": [
         "アクションが見つかりません"
       ],
+      "activation key": [
+        ""
+      ],
       "activation key identifier": [
         "アクティベーションキー ID"
       ],
@@ -8789,8 +8753,8 @@
       "cannot be set because unlimited hosts is set": [
         "ホストが無制限に設定されているため設定できません"
       ],
-      "cannot be set for non-yum repositories.": [
-        "yum 以外のリポジトリーには設定できません。"
+      "cannot be set for repositories without 'Additive' mirroring policy.": [
+        ""
       ],
       "cannot contain characters other than ascii alpha numerals, '_', '-'. ": [
         "ASCII 英数字、アンダースコア (_)、ハイフン (-) 以外の文字を含めることはできません。 "
@@ -8830,6 +8794,9 @@
       ],
       "content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')": [
         "コンテンツタイプ ('deb'、'docker_manifest'、'file'、'ostree_ref'、'rpm'、'srpm')"
+      ],
+      "content type ('deb', 'file', 'ostree_ref', 'rpm', 'srpm')": [
+        ""
       ],
       "content view component ID. Identifier of the component association": [
         "コンテンツビューコンポーネント ID。コンポーネントの関連付けの ID"
@@ -8915,8 +8882,8 @@
       "disk": [
         "ディスク"
       ],
-      "download policy for yum, deb, and docker repos (either 'immediate' or 'on_demand')": [
-        "yum、deb、docker リポジトリーのダウンロードポリシー ('immediate' または 'on_demand')"
+      "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
+        ""
       ],
       "enables or disables synchronization": [
         "同期の有効化または無効化"
@@ -8953,6 +8920,9 @@
       ],
       "erratum: IDs or a select all object": [
         "エラータ: ID またはすべてのオブジェクトを選択"
+      ],
+      "erratum: allow types not matching a valid errata type": [
+        ""
       ],
       "erratum: end date (YYYY-MM-DD)": [
         "エラータ: 終了日 (YYYY-MM-DD)"
@@ -9012,6 +8982,9 @@
         "この製品に対してすでに使用されています。"
       ],
       "here": [
+        ""
+      ],
+      "host": [
         ""
       ],
       "host collection name to filter by": [
@@ -9133,6 +9106,18 @@
       ],
       "module streams not found": [
         "モジュールストリームが見つかりません"
+      ],
+      "multi-environment activation key": [
+        ""
+      ],
+      "multi-environment activation keys": [
+        ""
+      ],
+      "multi-environment host": [
+        ""
+      ],
+      "multi-environment hosts": [
+        ""
       ],
       "must be %{gpg_key} or %{cert}": [
         "%{gpg_key} または %{cert} でなければなりません。"
