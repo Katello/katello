@@ -50,7 +50,18 @@ module Katello
       end
 
       def last_sync_audit
-        Audited::Audit.where(:auditable_id => self.repositories, :auditable_type => Katello::Repository.name, :action => "sync").order(:created_at).last
+        repository_ids = self.repositories.pluck(:id)
+        return nil if repository_ids.blank?
+
+        Audited::Audit
+         .where(
+          auditable_id: repository_ids,
+          auditable_type: Katello::Repository.name,
+          action: "sync"
+         )
+         .order(created_at: :desc)
+         .limit(1)
+         .first
       end
 
       def last_sync
