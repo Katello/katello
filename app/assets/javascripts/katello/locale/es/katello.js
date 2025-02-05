@@ -466,9 +466,6 @@
       "About page": [
         ""
       ],
-      "Abstract async task": [
-        "Tarea de sincronización abstracta"
-      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
       ],
@@ -604,9 +601,6 @@
       "Add one or more host collections to one or more hosts": [
         "Agregar una o más colecciones de hosts a uno o más hosts"
       ],
-      "Add ons": [
-        "Complementos"
-      ],
       "Add products to sync plan": [
         "Añadir productos al plan de sincronización"
       ],
@@ -635,9 +629,6 @@
         ""
       ],
       "Add to a host collection": [
-        ""
-      ],
-      "Add-ons": [
         ""
       ],
       "Added": [
@@ -700,13 +691,13 @@
       "All versions will be removed from these environments": [
         ""
       ],
-      "Allow a host to be assigned to multiple content view environments with 'subscription-manager register --environments' or 'subscription-manager environments --set'.": [
-        ""
-      ],
       "Allow deleting repositories in published content views": [
         ""
       ],
       "Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode.": [
+        ""
+      ],
+      "Allow hosts or activation keys to be associated with multiple content view environments": [
         ""
       ],
       "Allow hosts to re-register themselves only when they are in build mode": [
@@ -927,10 +918,10 @@
       "Assign the release version to one or more hosts": [
         "Asignar la versión de lanzamiento a uno o más hosts"
       ],
-      "Assigning a host to multiple content view environments is not enabled.": [
+      "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
         ""
       ],
-      "Assigning an activation key to multiple content view environments is not enabled.": [
+      "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
         ""
       ],
       "Associated location IDs": [
@@ -951,14 +942,14 @@
       "At least one activation key must have a lifecycle environment and content view assigned to it": [
         "Al menos una llave de activación debe tener un entorno del ciclo de vida y una vista de contenido asignados a ella"
       ],
+      "At least one errata type option needs to be selected.": [
+        ""
+      ],
       "At least one of the selected items requires the host to reboot": [
         ""
       ],
       "At least one organization must exist.": [
         "Al menos una organización debe existir."
-      ],
-      "Atleast one errata type needs to be selected.": [
-        ""
       ],
       "Attach a subscription": [
         "Agregar una suscripción"
@@ -984,9 +975,6 @@
       "Auto Publish - Triggered by '%s'": [
         "Publicación automática - Activada por '%s'"
       ],
-      "Auto attach subscriptions": [
-        "Autoagregar suscripciones"
-      ],
       "Auto publish": [
         ""
       ],
@@ -1002,6 +990,12 @@
       "Available Repositories": [
         "Repositorios disponibles"
       ],
+      "Available image": [
+        ""
+      ],
+      "Available image digest": [
+        ""
+      ],
       "Available schema versions": [
         ""
       ],
@@ -1015,6 +1009,9 @@
         ""
       ],
       "Base URL for finding alternate content": [
+        ""
+      ],
+      "Base URL of the flatpak registry index, ex: https://flatpaks.redhat.io/rhel/ , https://registry.fedoraproject.org/.": [
         ""
       ],
       "Base URL to perform repo discovery on": [
@@ -1060,6 +1057,24 @@
         "Guardar esta búsqueda en marcadores"
       ],
       "Bookmarks marked as public are available to all users": [
+        ""
+      ],
+      "Bootc rollback via Bootc interface": [
+        ""
+      ],
+      "Bootc status via Bootc interface": [
+        ""
+      ],
+      "Bootc switch via Bootc interface": [
+        ""
+      ],
+      "Bootc upgrade via Bootc interface": [
+        ""
+      ],
+      "Booted Container Images": [
+        ""
+      ],
+      "Booted container images": [
         ""
       ],
       "Both": [
@@ -1341,6 +1356,9 @@
       "Cannot upload Container Image content.": [
         "No se puede cargar el contenido de la imagen del contenedor."
       ],
+      "Cannot upload container content via Hammer/API. Use podman push instead.": [
+        ""
+      ],
       "Capacity": [
         "Capacidad"
       ],
@@ -1416,13 +1434,13 @@
       "Collapse All": [
         "Contraer todo"
       ],
-      "Comma-separated list of Candlepin environment names associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of Candlepin environment names to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
@@ -1432,9 +1450,6 @@
         ""
       ],
       "Comma-separated list of tags to sync for a container image repository": [
-        ""
-      ],
-      "Commit upload": [
         ""
       ],
       "Compare": [
@@ -1647,6 +1662,9 @@
       "Content imported by %{user} into content view '%{name}'": [
         ""
       ],
+      "Content may come from {contentSourceName} or any other Smart Proxy behind the load balancer.": [
+        ""
+      ],
       "Content not uploaded to pulp": [
         ""
       ],
@@ -1707,6 +1725,9 @@
       "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
         ""
       ],
+      "Content view environment": [
+        ""
+      ],
       "Content view environments": [
         ""
       ],
@@ -1755,6 +1776,9 @@
       "Content view version is empty": [
         ""
       ],
+      "Content view version is empty or content counts are not up to date": [
+        ""
+      ],
       "Content views": [
         ""
       ],
@@ -1782,26 +1806,14 @@
       "Copy": [
         ""
       ],
-      "Copy all units": [
-        ""
-      ],
       "Copy an activation key": [
         "Copiar una clave de activación"
-      ],
-      "Copy content": [
-        ""
       ],
       "Copy content view": [
         ""
       ],
       "Copy to clipboard": [
         "Copiar al portapapeles"
-      ],
-      "Copy version": [
-        ""
-      ],
-      "Copy version units to library": [
-        "Copiar unidades de versión a la biblioteca"
       ],
       "Cores per socket": [
         "Núcleos por socket"
@@ -1977,6 +1989,9 @@
       "Create a filter rule. The parameters included should be based upon the filter type.": [
         "Crear una regla de filtro. Los parámetros incluidos se deben basar en el tipo de filtro."
       ],
+      "Create a flatpak remote": [
+        ""
+      ],
       "Create a host collection": [
         "Crear una recopilación de hosts"
       ],
@@ -2007,19 +2022,10 @@
       "Create content view": [
         ""
       ],
-      "Create exporter": [
-        ""
-      ],
       "Create filter": [
         ""
       ],
       "Create host collection": [
-        ""
-      ],
-      "Create import": [
-        ""
-      ],
-      "Create importer": [
         ""
       ],
       "Create new activation key": [
@@ -2029,12 +2035,6 @@
         "Crear organización"
       ],
       "Create package filter rule": [
-        ""
-      ],
-      "Create publication": [
-        ""
-      ],
-      "Create remote": [
         ""
       ],
       "Create rule": [
@@ -2262,6 +2262,9 @@
       "Delete a filter rule": [
         "Borrar una regla de filtro"
       ],
+      "Delete a flatpak remote": [
+        ""
+      ],
       "Delete activation key?": [
         ""
       ],
@@ -2283,34 +2286,10 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
-      "Delete distributions": [
-        ""
-      ],
       "Delete manifest from Red Hat provider": [
         "Borrar manifiesto de proveedor de Red Hat"
       ],
       "Delete multiple filters from a content view": [
-        ""
-      ],
-      "Delete orphan alternate content sources": [
-        ""
-      ],
-      "Delete orphan distributions": [
-        ""
-      ],
-      "Delete orphan remotes": [
-        ""
-      ],
-      "Delete orphan repository versions": [
-        ""
-      ],
-      "Delete orphaned migrated repositories": [
-        ""
-      ],
-      "Delete remote": [
-        ""
-      ],
-      "Delete repository references": [
         ""
       ],
       "Delete version": [
@@ -2357,6 +2336,9 @@
       ],
       "Description for the new published content view version": [
         "Descripción para la nueva versión de vista de contenido publicada"
+      ],
+      "Description of the flatpak remote": [
+        ""
       ],
       "Description of the repository": [
         "Descripción del repositorio"
@@ -2409,12 +2391,6 @@
       "Destroy an environment in an organization": [
         "Destruir un entorno en una organización"
       ],
-      "Destroy exporter": [
-        ""
-      ],
-      "Destroy importer": [
-        ""
-      ],
       "Destroy one or more alternate content sources": [
         ""
       ],
@@ -2462,9 +2438,6 @@
       ],
       "Disabling Simple Content Access failed for '%{subject}'.": [
         ""
-      ],
-      "Discover": [
-        "Descubrir"
       ],
       "Discover Repositories": [
         "Detectar repositorios"
@@ -2661,9 +2634,6 @@
       "Environment cannot be in its own promotion path": [
         "No puede haber entorno en su propia ruta de entorno"
       ],
-      "Environment contents refresh": [
-        ""
-      ],
       "Environment identifier": [
         "Identificador del entorno"
       ],
@@ -2702,9 +2672,6 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "ID de errata de la errata (RHSA-2012:108)"
-      ],
-      "Errata mail": [
-        "Correo de erratas"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2865,9 +2832,6 @@
       "Fetch installable errata for one or more hosts.": [
         "Buscar erratas instalables para uno o más hosts."
       ],
-      "Fetch pxe files": [
-        "Buscar archivos pxe"
-      ],
       "Fetch traces for one or more hosts": [
         "Buscar rastros para uno o más hosts"
       ],
@@ -2961,9 +2925,6 @@
       "Filter versions that are components in the specified composite version": [
         "Filtrar versiones que sean componentes en la versión de compuesta específica"
       ],
-      "Filtered index content": [
-        "Contenido del índice filtrado"
-      ],
       "Filters": [
         "Filtros"
       ],
@@ -2984,6 +2945,15 @@
       ],
       "Finished": [
         "Finalizado"
+      ],
+      "Flatpak Remotes": [
+        ""
+      ],
+      "Flatpak remote numeric identifier": [
+        ""
+      ],
+      "Flatpak remote repository numeric identifier": [
+        ""
       ],
       "Force": [
         ""
@@ -3044,9 +3014,6 @@
       ],
       "Generate host applicability": [
         "Generar la aplicabilidad del host"
-      ],
-      "Generate metadata": [
-        ""
       ],
       "Generate repository applicability": [
         "Generar la aplicabilidad del repositorio"
@@ -3285,12 +3252,6 @@
       "How to order the sorted results (e.g. ASC for ascending)": [
         "Cómo ordenar los resultados clasificados (p. ej., ASC para orden ascendente)"
       ],
-      "Hypervisors": [
-        "Hipervisores"
-      ],
-      "Hypervisors update": [
-        "Actualización de hipervisores"
-      ],
       "ID of a HTTP Proxy": [
         "ID de un proxy HTTP"
       ],
@@ -3311,6 +3272,9 @@
       ],
       "ID of an organization to show repositories in": [
         "ID de una organización en la mostrar los repositorios"
+      ],
+      "ID of flatpak remote to show repositories of": [
+        ""
       ],
       "ID of the Organization": [
         "ID de la organización"
@@ -3372,10 +3336,16 @@
       "Id of the content host": [
         "ID del host de contenido"
       ],
+      "Id of the content view to limit the content counting on": [
+        ""
+      ],
       "Id of the content view to limit the synchronization on": [
         ""
       ],
       "Id of the content view to limit verifying checksum on": [
+        ""
+      ],
+      "Id of the environment to limit the content counting on": [
         ""
       ],
       "Id of the environment to limit the synchronization on": [
@@ -3398,6 +3368,9 @@
       ],
       "Id of the organization to limit environments on": [
         "ID de la organización para limitar entornos en"
+      ],
+      "Id of the repository to limit the content counting on": [
+        ""
       ],
       "Id of the repository to limit the synchronization on": [
         ""
@@ -3534,6 +3507,27 @@
       "Image": [
         ""
       ],
+      "Image digest": [
+        ""
+      ],
+      "Image digests": [
+        ""
+      ],
+      "Image mode": [
+        ""
+      ],
+      "Image mode / package mode": [
+        ""
+      ],
+      "Image mode details": [
+        ""
+      ],
+      "Image name": [
+        ""
+      ],
+      "Image-mode host": [
+        ""
+      ],
       "Immediate": [
         "Inmediato"
       ],
@@ -3576,9 +3570,6 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
-      "Import migration": [
-        ""
-      ],
       "Import new manifest": [
         ""
       ],
@@ -3586,12 +3577,6 @@
         ""
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
-        ""
-      ],
-      "Import repository upload": [
-        ""
-      ],
-      "Import upload": [
         ""
       ],
       "Import uploads into a repository": [
@@ -3636,6 +3621,9 @@
       "Include filter": [
         ""
       ],
+      "Include manifests": [
+        ""
+      ],
       "Included": [
         ""
       ],
@@ -3657,9 +3645,6 @@
       "Incremental Update incomplete.": [
         "Actualización incremental incompleta."
       ],
-      "Incremental Update of  Content View Version(s) ": [
-        "Actualización gradual de versiones de la vista de contenido"
-      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "Actualización incremental de %{content_view_count} Contenido Ver versión(es) "
       ],
@@ -3672,26 +3657,11 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         "Actualización incremental especificada para el compuesto %{name} versión %{version}, pero ningún componente actualizado."
       ],
-      "Index content": [
-        "Contenido del índice"
-      ],
-      "Index errata": [
-        "Erratas de índice"
-      ],
-      "Index module streams": [
-        "Secuencias del módulo de índice"
-      ],
-      "Index package groups": [
-        "Grupos de paquete del índice"
-      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Informable El tipo debe ser uno de los siguientes [ %{list} ]"
       ],
       "Inherit from Repository": [
         "Heredar del repositorio"
-      ],
-      "Initialize": [
-        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "Iniciar una sincronización de los productos adjuntos al plan de sincronización"
@@ -3768,9 +3738,6 @@
       "Installing Package...": [
         "Instalando paquete..."
       ],
-      "Instance update": [
-        "Actualización de instancia"
-      ],
       "Instance-based": [
         "Basado en la instancia"
       ],
@@ -3801,8 +3768,8 @@
       "Invalid erratum filter rule specified, 'errata_id' cannot be specified in the same tuple as 'start_date', 'end_date' or 'types'": [
         "Regla de filtro de errata no válida. 'errata_id' no se puede especificar en la misma tupla que 'start_date', 'end_date' o 'types'"
       ],
-      "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date' or 'types'": [
-        "Se ha especificado una regla de filtro de errata no válida. Debe especificar al menos una de las siguientes opciones: 'errata_id', 'start_date', 'end_date' o 'types'"
+      "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date', 'types', or 'allow_other_types'": [
+        ""
       ],
       "Invalid erratum types %{invalid_types} provided. Erratum type can be any of %{valid_types}": [
         "Tipos de erratas no válidos %{invalid_types} proporcionados. El tipo de errata puede ser cualquiera de %{valid_types}"
@@ -3885,8 +3852,26 @@
       "Job '${description}' has started.": [
         ""
       ],
+      "Katello Bootc interface": [
+        ""
+      ],
       "Katello ID of local pool to update": [
         "La ID de Katello del grupo local para actualizar"
+      ],
+      "Katello: Bootc Action": [
+        ""
+      ],
+      "Katello: Bootc Rollback": [
+        ""
+      ],
+      "Katello: Bootc Status": [
+        ""
+      ],
+      "Katello: Bootc Switch": [
+        ""
+      ],
+      "Katello: Bootc Upgrade": [
+        ""
       ],
       "Katello: Configure host for new content source": [
         ""
@@ -3936,6 +3921,9 @@
       "Katello: Upload Profile": [
         ""
       ],
+      "Keep latest packages": [
+        ""
+      ],
       "Key-value hash of subscription-manager facts, nesting uses a period delimiter (.)": [
         "El hash de valores clave de los eventos del administrador de suscripciones, la anidación utiliza un delimitador de período (.)"
       ],
@@ -3958,6 +3946,9 @@
         "Etiqueta del contenido"
       ],
       "Label of the content view": [
+        ""
+      ],
+      "Label of the flatpak remote": [
         ""
       ],
       "Last check-in:": [
@@ -4125,6 +4116,9 @@
       "List available subscriptions from Red Hat Subscription Management": [
         "Listar suscripciones disponibles del administrador de suscripciones de Red Hat"
       ],
+      "List booted bootc container images for hosts": [
+        ""
+      ],
       "List components attached to this content view": [
         "Listar componentes adjunta a esta vista de contenido"
       ],
@@ -4163,6 +4157,15 @@
       ],
       "List filter rules": [
         "Mostrar reglas de filtro"
+      ],
+      "List flatpak remote repositories": [
+        ""
+      ],
+      "List flatpak remote's repositories": [
+        ""
+      ],
+      "List flatpak remotes": [
+        ""
       ],
       "List host collections": [
         "Mostrar recopilaciones de hosts"
@@ -4329,6 +4332,9 @@
       "List the lifecycle environments not attached to the smart proxy": [
         "Listar entornos del ciclo de vida que no están vinculados al proxy inteligente"
       ],
+      "Load balancer": [
+        ""
+      ],
       "Loading": [
         "Cargando"
       ],
@@ -4458,9 +4464,6 @@
       "Messaging connection": [
         "Conexión de mensajes"
       ],
-      "Metadata generate": [
-        ""
-      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -4468,6 +4471,12 @@
         ""
       ],
       "Minimum version": [
+        ""
+      ],
+      "Mirror Remote Repository": [
+        ""
+      ],
+      "Mirror a flatpak remote repository": [
         ""
       ],
       "Missing activation key!": [
@@ -4481,6 +4490,9 @@
       ],
       "Moderate": [
         "Moderado"
+      ],
+      "Modify via remote execution": [
+        ""
       ],
       "Modular": [
         ""
@@ -4503,13 +4515,7 @@
       "Module streams will appear here after enabling Red Hat repositories or creating custom products.": [
         ""
       ],
-      "Multi copy all units": [
-        ""
-      ],
-      "Multi copy content": [
-        ""
-      ],
-      "Multi copy units": [
+      "Multi Content View Environment": [
         ""
       ],
       "Multi-entitlement": [
@@ -4562,6 +4568,12 @@
       ],
       "Name of the content view": [
         "Nombre de la vista de contenido"
+      ],
+      "Name of the flatpak remote": [
+        ""
+      ],
+      "Name of the flatpak remote repository": [
+        ""
       ],
       "Name of the host": [
         "Nombre del host"
@@ -4686,6 +4698,9 @@
       "No content in selected versions.": [
         ""
       ],
+      "No content view environments": [
+        ""
+      ],
       "No content view environments found with ids: %{ids}": [
         ""
       ],
@@ -4721,9 +4736,6 @@
       ],
       "No enabled repositories match your search criteria.": [
         "No hay repositorios habilitados que coincidan con sus criterios de búsqueda."
-      ],
-      "No environment": [
-        ""
       ],
       "No environments": [
         ""
@@ -5307,7 +5319,10 @@
       "Package installation: \\\"%{package}\\\" ": [
         "Instalación del paquete: \\\"%{package}\\\" "
       ],
-      "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg, bdist_dumb, bdist_egg, bdist_msi, bdist_rpm, bdist_wheel, bdist_wininst, sdist.": [
+      "Package mode": [
+        ""
+      ],
+      "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist.": [
         ""
       ],
       "Packages": [
@@ -5436,6 +5451,9 @@
       "Policy to set for mirroring content.  Must be one of %s.": [
         ""
       ],
+      "Possible values: %s": [
+        ""
+      ],
       "Prefer registered through Smart Proxy for remote execution": [
         ""
       ],
@@ -5483,6 +5501,9 @@
       ],
       "Product ID": [
         "ID de producto"
+      ],
+      "Product ID to mirror the remote repository to": [
+        ""
       ],
       "Product and Repositories": [
         "Producto y repositorios"
@@ -5664,9 +5685,6 @@
       "Pulp task error": [
         "Error de tarea de Pulp"
       ],
-      "Purge completed tasks": [
-        ""
-      ],
       "Python Package": [
         ""
       ],
@@ -5775,9 +5793,6 @@
       "Reclaim Space": [
         ""
       ],
-      "Reclaim space": [
-        ""
-      ],
       "Reclaim space from On Demand repositories": [
         ""
       ],
@@ -5841,9 +5856,6 @@
       "Refresh all alternate content sources": [
         ""
       ],
-      "Refresh all distributions": [
-        ""
-      ],
       "Refresh alternate content sources": [
         ""
       ],
@@ -5856,13 +5868,7 @@
       "Refresh counts": [
         ""
       ],
-      "Refresh distribution": [
-        ""
-      ],
       "Refresh errata applicability": [
-        ""
-      ],
-      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
@@ -5870,12 +5876,6 @@
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Actualizar el manifiesto importado anteriormente para el proveedor de Red Hat"
-      ],
-      "Refresh remote": [
-        ""
-      ],
-      "Refresh repos": [
-        ""
       ],
       "Refresh source": [
         ""
@@ -5901,6 +5901,9 @@
       "Registered on": [
         ""
       ],
+      "Registered to": [
+        ""
+      ],
       "Registering to multiple environments is not enabled.": [
         ""
       ],
@@ -5915,9 +5918,6 @@
       ],
       "Registry name pattern will result in invalid container image name of member repositories": [
         "El patrón de nombres de registro dará como resultado un nombre de imagen de contenedor no válido de los depósitos de los miembros"
-      ],
-      "Reindex subscriptions": [
-        "Reindexar suscripciones"
       ],
       "Related composite content views": [
         ""
@@ -6015,9 +6015,6 @@
       "Remove one or more subscriptions from an upstream manifest": [
         ""
       ],
-      "Remove orphans": [
-        ""
-      ],
       "Remove package group via Katello interface": [
         "Eliminar el grupo de paquetes a través de la interfaz de Katello"
       ],
@@ -6045,12 +6042,6 @@
       "Remove subscriptions from one or more hosts": [
         "Eliminar las suscripciones de uno o más hosts"
       ],
-      "Remove units": [
-        ""
-      ],
-      "Remove unneeded repos": [
-        ""
-      ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Eliminar versiones y/o entornos de una vista de contenido y volver a asignar sistemas y llaves"
       ],
@@ -6075,9 +6066,6 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         ""
       ],
-      "Repair": [
-        ""
-      ],
       "Replace content source on the target machine": [
         ""
       ],
@@ -6096,17 +6084,11 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
-      "Repositories certs reset": [
-        ""
-      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
         "No se permiten los  de vistas de contenido publicadas "
-      ],
-      "Repositories gpg reset": [
-        ""
       ],
       "Repository": [
         "Repositorio"
@@ -6399,6 +6381,12 @@
       "Roles": [
         "Roles"
       ],
+      "Rollback image": [
+        ""
+      ],
+      "Rollback image digest": [
+        ""
+      ],
       "Rules to be added": [
         ""
       ],
@@ -6410,6 +6398,12 @@
       ],
       "Running": [
         "Ejecutando"
+      ],
+      "Running image": [
+        ""
+      ],
+      "Running image digest": [
+        ""
       ],
       "SKU": [
         "SKU"
@@ -6438,25 +6432,10 @@
       "Save": [
         "Guardar"
       ],
-      "Save artifact": [
-        ""
-      ],
-      "Save distribution references": [
-        ""
-      ],
-      "Save publication": [
-        ""
-      ],
-      "Save version": [
-        ""
-      ],
-      "Save versions": [
-        ""
-      ],
       "Saving alternate content source...": [
         ""
       ],
-      "Scan cdn": [
+      "Scan a flatpak remote": [
         ""
       ],
       "Schema version 1": [
@@ -6562,9 +6541,6 @@
         ""
       ],
       "Select action": [
-        ""
-      ],
-      "Select add-ons": [
         ""
       ],
       "Select all": [
@@ -6705,14 +6681,14 @@
       "Set content overrides to one or more hosts": [
         "Establecer las anulaciones de contenido en uno o más hosts"
       ],
+      "Set this HTTP proxy as the default content HTTP proxy": [
+        ""
+      ],
       "Set true to override to enabled; Set false to override to disabled.'": [
         ""
       ],
       "Set true to remove an override and reset it to 'default'": [
         "Establecer como verdadero para eliminar una anulación y volver a establecerla como 'por defecto'"
-      ],
-      "Sets the system add-ons": [
-        "Establece los complementos del sistema"
       ],
       "Sets the system purpose usage": [
         "Establece el uso del propósito del sistema"
@@ -6746,6 +6722,12 @@
       ],
       "Show a content view's history": [
         "Mostrar el historial de una vista de contenido"
+      ],
+      "Show a flatpak remote": [
+        ""
+      ],
+      "Show a flatpak remote repository": [
+        ""
       ],
       "Show a host collection": [
         "Mostrar una recopilación de hosts"
@@ -7074,6 +7056,12 @@
       "Stacking ID": [
         "ID de pila"
       ],
+      "Staged image": [
+        ""
+      ],
+      "Staged image digest": [
+        ""
+      ],
       "Start Date": [
         "Fecha de inicio"
       ],
@@ -7239,9 +7227,6 @@
       "Supported Content Types": [
         "Tipos de contenido admitidos"
       ],
-      "Sync": [
-        ""
-      ],
       "Sync Canceled": [
         "Sincronización cancelada"
       ],
@@ -7296,9 +7281,6 @@
       "Sync all repositories for a product": [
         "Sincronizar todos los repositorios de un producto"
       ],
-      "Sync capsule": [
-        "Cápsula de sincronización"
-      ],
       "Sync complete.": [
         "Sincronización completa."
       ],
@@ -7315,9 +7297,6 @@
         ""
       ],
       "Sync state": [
-        ""
-      ],
-      "Syncable export": [
         ""
       ],
       "Synced": [
@@ -7433,6 +7412,9 @@
       ],
       "The actual file contents": [
         "El contenido real del archivo"
+      ],
+      "The amount of latest versions of a package to keep on sync, includes pre-releases if synced. Default 0 keeps all versions.": [
+        ""
       ],
       "The content type for the Alternate Content Source": [
         ""
@@ -7677,6 +7659,9 @@
       "This content view version doesn't have a history.": [
         "Esta versión de vista de contenido no tiene un historial."
       ],
+      "This content view version is used in one or more multi-environment hosts. The version will simply be removed from the multi-environment hosts. The content view and lifecycle environment you select here will only apply to single-environment hosts. See hammer activation-key --help for more details.": [
+        ""
+      ],
       "This content view will be automatically updated to the latest version.": [
         ""
       ],
@@ -7687,6 +7672,9 @@
         ""
       ],
       "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.": [
+        ""
+      ],
+      "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details.": [
         ""
       ],
       "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
@@ -7815,7 +7803,7 @@
       "To manage packages, select an action.": [
         ""
       ],
-      "Toggle": [
+      "Token/password for the flatpak remote": [
         ""
       ],
       "Total steps: ": [
@@ -8079,6 +8067,9 @@
       "Update a filter rule. The parameters included should be based upon the filter type.": [
         "Actualizar una regla de filtro. Los parámetros incluidos se deben basar en el tipo de filtro."
       ],
+      "Update a flatpak remote": [
+        ""
+      ],
       "Update a host collection": [
         "Actualizar una recopilación de hosts"
       ],
@@ -8103,26 +8094,14 @@
       "Update content counts for the smart proxy": [
         ""
       ],
-      "Update content urls": [
-        "Actualizar los URL de contenido"
-      ],
       "Update content view environments for host": [
         ""
       ],
       "Update content view environments for host %s": [
         ""
       ],
-      "Update distributions": [
-        ""
-      ],
       "Update hosts manually": [
         ""
-      ],
-      "Update http proxy": [
-        "Actualizar el proxy http"
-      ],
-      "Update http proxy details": [
-        "Actualizar los detalles del proxy http"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "Actualizar los paquetes instalados, los repositorios habilitados, el inventario de módulos"
@@ -8139,20 +8118,11 @@
       "Update packages via Katello interface": [
         ""
       ],
-      "Update redhat repository": [
-        "Actualizar el repositorio de redhat"
-      ],
       "Update release version for host": [
         "Actualizar versión de lanzamiento para el host"
       ],
       "Update release version for host %s": [
         "Actualizar la versión del host %s"
-      ],
-      "Update remote": [
-        ""
-      ],
-      "Update repository": [
-        ""
       ],
       "Update services requiring restart": [
         "La actualización de servicios requiere el reinicio"
@@ -8244,12 +8214,6 @@
       "Upload a subscription manifest": [
         "Cargar un manifiesto de suscripción"
       ],
-      "Upload content": [
-        ""
-      ],
-      "Upload file": [
-        ""
-      ],
       "Upload into": [
         "Cargar a "
       ],
@@ -8258,9 +8222,6 @@
       ],
       "Upload request id": [
         "Cargar ID de solicitud"
-      ],
-      "Upload tag": [
-        ""
       ],
       "Upstream Candlepin": [
         ""
@@ -8349,6 +8310,9 @@
       "Username for authentication. Relevant only for 'upstream_server' type.": [
         ""
       ],
+      "Username for the flatpak remote": [
+        ""
+      ],
       "Username of the upstream repository user used for authentication": [
         "El nombre de usuario del usuario del repositorio de canal ascendente se usa para la autenticación"
       ],
@@ -8372,9 +8336,6 @@
       ],
       "Verify SSL": [
         "Verificar SSL"
-      ],
-      "Verify checksum": [
-        "Verificar la suma de comprobación"
       ],
       "Verify checksum for content on smart proxy": [
         ""
@@ -8682,6 +8643,9 @@
       "actions not found": [
         "acciones no encontradas"
       ],
+      "activation key": [
+        ""
+      ],
       "activation key identifier": [
         "identificador de clave de activación"
       ],
@@ -8793,8 +8757,8 @@
       "cannot be set because unlimited hosts is set": [
         "no se pude establecer porque se establece un número ilimitado de hosts"
       ],
-      "cannot be set for non-yum repositories.": [
-        "no se puede establecer para repositorios que no correspondan a yum."
+      "cannot be set for repositories without 'Additive' mirroring policy.": [
+        ""
       ],
       "cannot contain characters other than ascii alpha numerals, '_', '-'. ": [
         "No puede contener caracteres que no sean alfanuméricos ASCII, '_', '-'. "
@@ -8833,6 +8797,9 @@
         "versión de lanzamiento de contenido"
       ],
       "content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')": [
+        ""
+      ],
+      "content type ('deb', 'file', 'ostree_ref', 'rpm', 'srpm')": [
         ""
       ],
       "content view component ID. Identifier of the component association": [
@@ -8919,7 +8886,7 @@
       "disk": [
         ""
       ],
-      "download policy for yum, deb, and docker repos (either 'immediate' or 'on_demand')": [
+      "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
         ""
       ],
       "enables or disables synchronization": [
@@ -8957,6 +8924,9 @@
       ],
       "erratum: IDs or a select all object": [
         "errata: ID o una Selección de todos los objetos"
+      ],
+      "erratum: allow types not matching a valid errata type": [
+        ""
       ],
       "erratum: end date (YYYY-MM-DD)": [
         "errata: fecha de finalización (AAAA-MM-DD)"
@@ -9016,6 +8986,9 @@
         "ya se ha tomado para este producto."
       ],
       "here": [
+        ""
+      ],
+      "host": [
         ""
       ],
       "host collection name to filter by": [
@@ -9137,6 +9110,18 @@
       ],
       "module streams not found": [
         "corrientes de módulos no encontradas"
+      ],
+      "multi-environment activation key": [
+        ""
+      ],
+      "multi-environment activation keys": [
+        ""
+      ],
+      "multi-environment host": [
+        ""
+      ],
+      "multi-environment hosts": [
+        ""
       ],
       "must be %{gpg_key} or %{cert}": [
         "debe ser %{gpg_key} o %{cert}"

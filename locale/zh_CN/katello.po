@@ -476,9 +476,6 @@ msgstr "任何"
 msgid "About page"
 msgstr "About 页面"
 
-msgid "Abstract async task"
-msgstr "抽象 async 任务"
-
 msgid "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'."
 msgstr "禁止访问红帽订阅管理。如果要更改这个设置，请更新内容设置\"订阅连接已启用\"。"
 
@@ -614,9 +611,6 @@ msgstr "添加新书签"
 msgid "Add one or more host collections to one or more hosts"
 msgstr "将一个或多个主机集合添加到一个或多个主机"
 
-msgid "Add ons"
-msgstr "附加组件"
-
 msgid "Add products to sync plan"
 msgstr "为同步计划添加产品"
 
@@ -646,9 +640,6 @@ msgstr ""
 
 msgid "Add to a host collection"
 msgstr "添加到一个主机集合"
-
-msgid "Add-ons"
-msgstr "附加组件"
 
 msgid "Added"
 msgstr "添加"
@@ -710,14 +701,14 @@ msgstr "所有版本"
 msgid "All versions will be removed from these environments"
 msgstr "所有版本都将从这些环境中删除"
 
-msgid "Allow a host to be assigned to multiple content view environments with 'subscription-manager register --environments' or 'subscription-manager environments --set'."
-msgstr ""
-
 msgid "Allow deleting repositories in published content views"
 msgstr "允许删除公布的内容视图中的仓库"
 
 msgid "Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode."
 msgstr "只要主机处于构建模式，允许主机注册绕过 'Host Profile Assume'。"
+
+msgid "Allow hosts or activation keys to be associated with multiple content view environments"
+msgstr ""
 
 msgid "Allow hosts to re-register themselves only when they are in build mode"
 msgstr "仅当主机处于构建模式时才允许主机重新注册"
@@ -944,10 +935,10 @@ msgstr "将环境和内容视图分配给一个或多个主机"
 msgid "Assign the release version to one or more hosts"
 msgstr "将发行版本分配给一个或多个主机"
 
-msgid "Assigning a host to multiple content view environments is not enabled."
+msgid "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting."
 msgstr ""
 
-msgid "Assigning an activation key to multiple content view environments is not enabled."
+msgid "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting."
 msgstr ""
 
 msgid "Associated location IDs"
@@ -968,14 +959,14 @@ msgstr "至少需要提供一个激活码"
 msgid "At least one activation key must have a lifecycle environment and content view assigned to it"
 msgstr "至少有一个激活密钥有分配的生命周期环境和内容视图"
 
+msgid "At least one errata type option needs to be selected."
+msgstr ""
+
 msgid "At least one of the selected items requires the host to reboot"
 msgstr ""
 
 msgid "At least one organization must exist."
 msgstr "至少必须存在一个组织。"
-
-msgid "Atleast one errata type needs to be selected."
-msgstr "至少需要选择一个勘误。"
 
 msgid "Attach a subscription"
 msgstr "附加订阅"
@@ -1001,9 +992,6 @@ msgstr "作者"
 msgid "Auto Publish - Triggered by '%s'"
 msgstr "自动发布 - 由 '%s' 触发"
 
-msgid "Auto attach subscriptions"
-msgstr "自动附加订阅"
-
 msgid "Auto publish"
 msgstr "自动发布"
 
@@ -1019,6 +1007,12 @@ msgstr "可用权利"
 msgid "Available Repositories"
 msgstr "可用仓库"
 
+msgid "Available image"
+msgstr ""
+
+msgid "Available image digest"
+msgstr ""
+
 msgid "Available schema versions"
 msgstr ""
 
@@ -1033,6 +1027,9 @@ msgstr "基本 URL"
 
 msgid "Base URL for finding alternate content"
 msgstr "查找备用内容的基本 URL"
+
+msgid "Base URL of the flatpak registry index, ex: https://flatpaks.redhat.io/rhel/ , https://registry.fedoraproject.org/."
+msgstr ""
 
 msgid "Base URL to perform repo discovery on"
 msgstr "执行仓库发现操纵的基础 URL"
@@ -1078,6 +1075,24 @@ msgstr "收藏本搜索"
 
 msgid "Bookmarks marked as public are available to all users"
 msgstr "标记为公共的书签可供所有用户使用"
+
+msgid "Bootc rollback via Bootc interface"
+msgstr ""
+
+msgid "Bootc status via Bootc interface"
+msgstr ""
+
+msgid "Bootc switch via Bootc interface"
+msgstr ""
+
+msgid "Bootc upgrade via Bootc interface"
+msgstr ""
+
+msgid "Booted Container Images"
+msgstr ""
+
+msgid "Booted container images"
+msgstr ""
 
 msgid "Both"
 msgstr "两者"
@@ -1358,6 +1373,9 @@ msgstr "无法上传 Ansible 集合。"
 msgid "Cannot upload Container Image content."
 msgstr "无法上传容器镜像内容。"
 
+msgid "Cannot upload container content via Hammer/API. Use podman push instead."
+msgstr ""
+
 msgid "Capacity"
 msgstr "容量"
 
@@ -1433,13 +1451,13 @@ msgstr "关闭"
 msgid "Collapse All"
 msgstr "全部折叠"
 
-msgid "Comma-separated list of Candlepin environment names associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgid "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr ""
 
-msgid "Comma-separated list of Candlepin environment names to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgid "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr ""
 
-msgid "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgid "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr ""
 
 msgid "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front."
@@ -1450,9 +1468,6 @@ msgstr "同步容器镜像仓库时要排除的标签列表（以逗号分隔）
 
 msgid "Comma-separated list of tags to sync for a container image repository"
 msgstr "逗号分隔的标签列表，以同步容器镜像仓库"
-
-msgid "Commit upload"
-msgstr ""
 
 msgid "Compare"
 msgstr "比较"
@@ -1664,6 +1679,9 @@ msgstr "內容主机"
 msgid "Content imported by %{user} into content view '%{name}'"
 msgstr "由 %{user} 导入到内容视图 '%{name}' 中的内容"
 
+msgid "Content may come from {contentSourceName} or any other Smart Proxy behind the load balancer."
+msgstr ""
+
 msgid "Content not uploaded to pulp"
 msgstr "没有上传到 pulp 的内容"
 
@@ -1724,6 +1742,9 @@ msgstr ""
 msgid "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish."
 msgstr ""
 
+msgid "Content view environment"
+msgstr ""
+
 msgid "Content view environments"
 msgstr ""
 
@@ -1772,6 +1793,9 @@ msgstr "内容视图版本导入的历史标识符"
 msgid "Content view version is empty"
 msgstr ""
 
+msgid "Content view version is empty or content counts are not up to date"
+msgstr ""
+
 msgid "Content views"
 msgstr "内容视图"
 
@@ -1799,26 +1823,14 @@ msgstr "已复制到剪贴板"
 msgid "Copy"
 msgstr "复制"
 
-msgid "Copy all units"
-msgstr ""
-
 msgid "Copy an activation key"
 msgstr "复制激活码"
-
-msgid "Copy content"
-msgstr ""
 
 msgid "Copy content view"
 msgstr "复制内容视图"
 
 msgid "Copy to clipboard"
 msgstr "复制到剪贴板"
-
-msgid "Copy version"
-msgstr ""
-
-msgid "Copy version units to library"
-msgstr "将版本单位复制到库"
 
 msgid "Cores per socket"
 msgstr "每個插槽的核心數"
@@ -1994,6 +2006,9 @@ msgstr "创建自定义仓库"
 msgid "Create a filter rule. The parameters included should be based upon the filter type."
 msgstr "创建一个过滤规则。所包含的参数应基于过滤器类型。"
 
+msgid "Create a flatpak remote"
+msgstr ""
+
 msgid "Create a host collection"
 msgstr "建立主機集"
 
@@ -2024,20 +2039,11 @@ msgstr "使用生成的 SSL 证书和密钥创建内容凭据。"
 msgid "Create content view"
 msgstr "创建內容视图"
 
-msgid "Create exporter"
-msgstr ""
-
 msgid "Create filter"
 msgstr "创建过滤器"
 
 msgid "Create host collection"
 msgstr "创建主机集"
-
-msgid "Create import"
-msgstr ""
-
-msgid "Create importer"
-msgstr ""
 
 msgid "Create new activation key"
 msgstr ""
@@ -2047,12 +2053,6 @@ msgstr "创建机构"
 
 msgid "Create package filter rule"
 msgstr "创建软件包过滤规则"
-
-msgid "Create publication"
-msgstr ""
-
-msgid "Create remote"
-msgstr ""
 
 msgid "Create rule"
 msgstr "创建规则"
@@ -2279,6 +2279,9 @@ msgstr "刪除內容視域"
 msgid "Delete a filter rule"
 msgstr "刪除过滤器规则"
 
+msgid "Delete a flatpak remote"
+msgstr ""
+
 msgid "Delete activation key?"
 msgstr ""
 
@@ -2300,35 +2303,11 @@ msgstr "删除內容视图"
 msgid "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view."
 msgstr ""
 
-msgid "Delete distributions"
-msgstr ""
-
 msgid "Delete manifest from Red Hat provider"
 msgstr "從 Red Hat 供應者中刪除清單"
 
 msgid "Delete multiple filters from a content view"
 msgstr "从内容视图中删除多个过滤器"
-
-msgid "Delete orphan alternate content sources"
-msgstr ""
-
-msgid "Delete orphan distributions"
-msgstr ""
-
-msgid "Delete orphan remotes"
-msgstr ""
-
-msgid "Delete orphan repository versions"
-msgstr ""
-
-msgid "Delete orphaned migrated repositories"
-msgstr ""
-
-msgid "Delete remote"
-msgstr ""
-
-msgid "Delete repository references"
-msgstr ""
 
 msgid "Delete version"
 msgstr "删除版本"
@@ -2374,6 +2353,9 @@ msgstr "内容视图的描述"
 
 msgid "Description for the new published content view version"
 msgstr "新发布的内容视图版本的描述"
+
+msgid "Description of the flatpak remote"
+msgstr ""
 
 msgid "Description of the repository"
 msgstr "仓库的描述信息"
@@ -2426,12 +2408,6 @@ msgstr "销毁环境"
 msgid "Destroy an environment in an organization"
 msgstr "銷毀組織中的一個環境"
 
-msgid "Destroy exporter"
-msgstr ""
-
-msgid "Destroy importer"
-msgstr ""
-
 msgid "Destroy one or more alternate content sources"
 msgstr "销毁一个或多个备用内容源"
 
@@ -2479,9 +2455,6 @@ msgstr "禁用"
 
 msgid "Disabling Simple Content Access failed for '%{subject}'."
 msgstr "为 '%{subject}' 禁用简单内容访问失败。"
-
-msgid "Discover"
-msgstr "发现"
 
 msgid "Discover Repositories"
 msgstr "发现软件仓库"
@@ -2678,9 +2651,6 @@ msgstr "环境 ID"
 msgid "Environment cannot be in its own promotion path"
 msgstr "環境不能位於自己的推送路徑上"
 
-msgid "Environment contents refresh"
-msgstr ""
-
 msgid "Environment identifier"
 msgstr "环境标识符"
 
@@ -2719,9 +2689,6 @@ msgstr ""
 
 msgid "Errata id of the erratum (RHSA-2012:108)"
 msgstr "勘误的勘误ID（RHSA-2012:108）"
-
-msgid "Errata mail"
-msgstr "勘误邮件"
 
 msgid "Errata statuses not updated for deleted content facet with UUID %s"
 msgstr ""
@@ -2882,9 +2849,6 @@ msgstr "为主机获取可用的模块流。"
 msgid "Fetch installable errata for one or more hosts."
 msgstr "为一台或多台主机获取可安装的勘误。"
 
-msgid "Fetch pxe files"
-msgstr "获取 pxe 文件"
-
 msgid "Fetch traces for one or more hosts"
 msgstr "为一个或多个主机获取跟踪"
 
@@ -2978,9 +2942,6 @@ msgstr "按版本号过滤版本"
 msgid "Filter versions that are components in the specified composite version"
 msgstr "过滤在指定复合版本中作为组件的版本"
 
-msgid "Filtered index content"
-msgstr "已过滤的索引内容"
-
 msgid "Filters"
 msgstr "过滤器"
 
@@ -3001,6 +2962,15 @@ msgstr "完成"
 
 msgid "Finished"
 msgstr "完成"
+
+msgid "Flatpak Remotes"
+msgstr ""
+
+msgid "Flatpak remote numeric identifier"
+msgstr ""
+
+msgid "Flatpak remote repository numeric identifier"
+msgstr ""
 
 msgid "Force"
 msgstr "强制"
@@ -3065,9 +3035,6 @@ msgstr ""
 
 msgid "Generate host applicability"
 msgstr "产生主机适用性"
-
-msgid "Generate metadata"
-msgstr ""
 
 msgid "Generate repository applicability"
 msgstr "生成仓库适用性"
@@ -3306,12 +3273,6 @@ msgstr "capsule 上应同时同步多少个参数。较小的数字可能导致�
 msgid "How to order the sorted results (e.g. ASC for ascending)"
 msgstr "如何排序結果的順序（比方說 ASC 從下到上）"
 
-msgid "Hypervisors"
-msgstr "Hypervisor"
-
-msgid "Hypervisors update"
-msgstr "Hypervisor 更新"
-
 msgid "ID of a HTTP Proxy"
 msgstr "HTTP 代理的 ID"
 
@@ -3332,6 +3293,9 @@ msgstr "欲顯示其軟體庫的環境之 ID"
 
 msgid "ID of an organization to show repositories in"
 msgstr "在其中显示仓库的机构 ID"
+
+msgid "ID of flatpak remote to show repositories of"
+msgstr ""
 
 msgid "ID of the Organization"
 msgstr "机构 ID"
@@ -3393,10 +3357,16 @@ msgstr "用于备用内容源的 HTTP 代理 ID"
 msgid "Id of the content host"
 msgstr "内容主机 ID"
 
+msgid "Id of the content view to limit the content counting on"
+msgstr ""
+
 msgid "Id of the content view to limit the synchronization on"
 msgstr "将同步限制于在的内容视图 ID"
 
 msgid "Id of the content view to limit verifying checksum on"
+msgstr ""
+
+msgid "Id of the environment to limit the content counting on"
 msgstr ""
 
 msgid "Id of the environment to limit the synchronization on"
@@ -3419,6 +3389,9 @@ msgstr "要取得状态的机构 ID"
 
 msgid "Id of the organization to limit environments on"
 msgstr "把环境限制于的机构 ID"
+
+msgid "Id of the repository to limit the content counting on"
+msgstr ""
 
 msgid "Id of the repository to limit the synchronization on"
 msgstr "将同步限制于在的仓库 ID"
@@ -3557,6 +3530,27 @@ msgstr "忽略的主机"
 msgid "Image"
 msgstr ""
 
+msgid "Image digest"
+msgstr ""
+
+msgid "Image digests"
+msgstr ""
+
+msgid "Image mode"
+msgstr ""
+
+msgid "Image mode / package mode"
+msgstr ""
+
+msgid "Image mode details"
+msgstr ""
+
+msgid "Image name"
+msgstr ""
+
+msgid "Image-mode host"
+msgstr ""
+
 msgid "Immediate"
 msgstr "立即"
 
@@ -3599,9 +3593,6 @@ msgstr "导入软件仓库"
 msgid "Import a subscription manifest to give hosts access to Red Hat content."
 msgstr ""
 
-msgid "Import migration"
-msgstr ""
-
 msgid "Import new manifest"
 msgstr ""
 
@@ -3610,12 +3601,6 @@ msgstr "仅导入"
 
 msgid "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view."
 msgstr "仅导入不能直接发布的内容视图。内容只能通过导入至视图来更新。"
-
-msgid "Import repository upload"
-msgstr ""
-
-msgid "Import upload"
-msgstr ""
 
 msgid "Import uploads into a repository"
 msgstr "将上传文件导入仓库"
@@ -3659,6 +3644,9 @@ msgstr "包含由导入/导出操作生成的内容视图，默认为 false"
 msgid "Include filter"
 msgstr "包含的过滤"
 
+msgid "Include manifests"
+msgstr ""
+
 msgid "Included"
 msgstr "包含"
 
@@ -3680,9 +3668,6 @@ msgstr "增量更新"
 msgid "Incremental Update incomplete."
 msgstr "增量更新不完整。"
 
-msgid "Incremental Update of  Content View Version(s) "
-msgstr "内容视图版本的增量更新"
-
 msgid "Incremental Update of %{content_view_count} Content View Version(s) "
 msgstr "增量更新 %{content_view_count} 个内容视图版本"
 
@@ -3695,26 +3680,11 @@ msgstr "增量更新至少需要一个内容单元"
 msgid "Incremental update specified for composite %{name} version %{version}, but no components updated."
 msgstr "为复合 %{name} 版本 %{version} 指定了增量更新，但没有更新的组件。"
 
-msgid "Index content"
-msgstr "索引內容"
-
-msgid "Index errata"
-msgstr "索引勘误"
-
-msgid "Index module streams"
-msgstr "索引模块流"
-
-msgid "Index package groups"
-msgstr "索引软件包组"
-
 msgid "Informable Type must be one of the following [ %{list} ]"
 msgstr "信息类型需要是 [ %{list} ] 之一"
 
 msgid "Inherit from Repository"
 msgstr "从仓库继承"
-
-msgid "Initialize"
-msgstr ""
 
 msgid "Initiate a sync of the products attached to the sync plan"
 msgstr "启动同步计划中附加产品的同步"
@@ -3791,9 +3761,6 @@ msgstr "正在安装软件包组..."
 msgid "Installing Package..."
 msgstr "正在安裝套件..."
 
-msgid "Instance update"
-msgstr "实例更新"
-
 msgid "Instance-based"
 msgstr "基于实例"
 
@@ -3824,8 +3791,8 @@ msgstr "无效的日期范围。勘误过滤规则的开始日期必须早于结
 msgid "Invalid erratum filter rule specified, 'errata_id' cannot be specified in the same tuple as 'start_date', 'end_date' or 'types'"
 msgstr "指定了無效的勘誤篩選器規則，「errata_id」不可指定為與 'start_date'、'end_date' 或 'types' 相同的變數值組"
 
-msgid "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date' or 'types'"
-msgstr "指定了无效的勘误过滤，需要是以下之一：'errata_id'、'start_date'、'end_date' 或 'types'"
+msgid "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date', 'types', or 'allow_other_types'"
+msgstr ""
 
 msgid "Invalid erratum types %{invalid_types} provided. Erratum type can be any of %{valid_types}"
 msgstr "提供了无效的勘误类型 %{invalid_types}。勘误类型可用是 %{valid_types} 中的任何值"
@@ -3908,8 +3875,26 @@ msgstr "作为 '${description}' 已完成"
 msgid "Job '${description}' has started."
 msgstr "作业 '${description}' 已启动。"
 
+msgid "Katello Bootc interface"
+msgstr ""
+
 msgid "Katello ID of local pool to update"
 msgstr "要更新的本地池的 Katello ID"
+
+msgid "Katello: Bootc Action"
+msgstr ""
+
+msgid "Katello: Bootc Rollback"
+msgstr ""
+
+msgid "Katello: Bootc Status"
+msgstr ""
+
+msgid "Katello: Bootc Switch"
+msgstr ""
+
+msgid "Katello: Bootc Upgrade"
+msgstr ""
 
 msgid "Katello: Configure host for new content source"
 msgstr ""
@@ -3959,6 +3944,9 @@ msgstr "Katello: 通过搜索查询更新软件包"
 msgid "Katello: Upload Profile"
 msgstr ""
 
+msgid "Keep latest packages"
+msgstr ""
+
 msgid "Key-value hash of subscription-manager facts, nesting uses a period delimiter (.)"
 msgstr "subscription-manager fact 的键-值哈希，使用句点 (.) 进行嵌套"
 
@@ -3982,6 +3970,9 @@ msgstr "内容标签"
 
 msgid "Label of the content view"
 msgstr "内容视图标签"
+
+msgid "Label of the flatpak remote"
+msgstr ""
 
 msgid "Last check-in:"
 msgstr "最后签到："
@@ -4148,6 +4139,9 @@ msgstr "列出机构中的可用版本"
 msgid "List available subscriptions from Red Hat Subscription Management"
 msgstr "列出来自 Red Hat Subscription Management 的可用订阅"
 
+msgid "List booted bootc container images for hosts"
+msgstr ""
+
 msgid "List components attached to this content view"
 msgstr "列出此内容视图附带的组件"
 
@@ -4186,6 +4180,15 @@ msgstr "列出出口历史"
 
 msgid "List filter rules"
 msgstr "列表过滤规则"
+
+msgid "List flatpak remote repositories"
+msgstr ""
+
+msgid "List flatpak remote's repositories"
+msgstr ""
+
+msgid "List flatpak remotes"
+msgstr ""
 
 msgid "List host collections"
 msgstr "列出主機集"
@@ -4352,6 +4355,9 @@ msgstr "列出附加到智能代理的生命周期环境"
 msgid "List the lifecycle environments not attached to the smart proxy"
 msgstr "列出未附加到智能代理的生命周期环境"
 
+msgid "Load balancer"
+msgstr ""
+
 msgid "Loading"
 msgstr "加载"
 
@@ -4481,9 +4487,6 @@ msgstr "信息"
 msgid "Messaging connection"
 msgstr "訊息連線"
 
-msgid "Metadata generate"
-msgstr ""
-
 msgid ""
 "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\n"
 "Alternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories."
@@ -4494,6 +4497,12 @@ msgstr "从此 Content View 版本的上游导出历史记录中获取的元数�
 
 msgid "Minimum version"
 msgstr "最小版本"
+
+msgid "Mirror Remote Repository"
+msgstr ""
+
+msgid "Mirror a flatpak remote repository"
+msgstr ""
 
 msgid "Missing activation key!"
 msgstr "缺少激活码！"
@@ -4506,6 +4515,9 @@ msgstr "模型"
 
 msgid "Moderate"
 msgstr "中等"
+
+msgid "Modify via remote execution"
+msgstr ""
 
 msgid "Modular"
 msgstr "模块化"
@@ -4528,13 +4540,7 @@ msgstr "模块流"
 msgid "Module streams will appear here after enabling Red Hat repositories or creating custom products."
 msgstr "启用红帽存储库或创建自定义产品后，将在此处显示模块流。"
 
-msgid "Multi copy all units"
-msgstr ""
-
-msgid "Multi copy content"
-msgstr ""
-
-msgid "Multi copy units"
+msgid "Multi Content View Environment"
 msgstr ""
 
 msgid "Multi-entitlement"
@@ -4599,6 +4605,12 @@ msgstr "备用内容源的名称"
 
 msgid "Name of the content view"
 msgstr "內容視域的名稱"
+
+msgid "Name of the flatpak remote"
+msgstr ""
+
+msgid "Name of the flatpak remote repository"
+msgstr ""
 
 msgid "Name of the host"
 msgstr "主机名"
@@ -4723,6 +4735,9 @@ msgstr "未提供內容 ID"
 msgid "No content in selected versions."
 msgstr "所选版本中没有内容。"
 
+msgid "No content view environments"
+msgstr ""
+
 msgid "No content view environments found with ids: %{ids}"
 msgstr ""
 
@@ -4758,9 +4773,6 @@ msgstr ""
 
 msgid "No enabled repositories match your search criteria."
 msgstr "没有启用的仓库符合您的搜索条件。"
-
-msgid "No environment"
-msgstr "没有环境"
 
 msgid "No environments"
 msgstr "没有环境"
@@ -5344,8 +5356,11 @@ msgstr "软件包安装失败：\"%{package}\""
 msgid "Package installation: \"%{package}\" "
 msgstr "软件包安装：\"%{package}\" "
 
-msgid "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg, bdist_dumb, bdist_egg, bdist_msi, bdist_rpm, bdist_wheel, bdist_wininst, sdist."
-msgstr "为 Python 内容同步的软件包类型，以逗号隔开。留空代表获得每个软件包类型。软件包类型包括 bdist_dmg、bdist_dumb、bdist_egg、bdist_msi、bdist_msi、bdist_rpm、bdist_wheel、bdist_wininst、sdist、sdist."
+msgid "Package mode"
+msgstr ""
+
+msgid "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist."
+msgstr ""
 
 msgid "Packages"
 msgstr "软件包"
@@ -5473,6 +5488,9 @@ msgstr "请稍等。"
 msgid "Policy to set for mirroring content.  Must be one of %s."
 msgstr "为镜像内容设置的策略。必须是 %s 之一。"
 
+msgid "Possible values: %s"
+msgstr ""
+
 msgid "Prefer registered through Smart Proxy for remote execution"
 msgstr ""
 
@@ -5520,6 +5538,9 @@ msgstr ""
 
 msgid "Product ID"
 msgstr "产品 ID"
+
+msgid "Product ID to mirror the remote repository to"
+msgstr ""
 
 msgid "Product and Repositories"
 msgstr "产品和存储库"
@@ -5705,9 +5726,6 @@ msgstr "Pulp 存储"
 msgid "Pulp task error"
 msgstr "Pulp 任务错误"
 
-msgid "Purge completed tasks"
-msgstr ""
-
 msgid "Python Package"
 msgstr "Python 软件包"
 
@@ -5816,9 +5834,6 @@ msgstr "需要重启"
 msgid "Reclaim Space"
 msgstr "重新声明空间"
 
-msgid "Reclaim space"
-msgstr ""
-
 msgid "Reclaim space from On Demand repositories"
 msgstr "重新声明来自 On Demand 软件仓库的空间"
 
@@ -5882,9 +5897,6 @@ msgstr "刷新清单"
 msgid "Refresh all alternate content sources"
 msgstr ""
 
-msgid "Refresh all distributions"
-msgstr ""
-
 msgid "Refresh alternate content sources"
 msgstr "销毁备用内容源"
 
@@ -5897,13 +5909,7 @@ msgstr ""
 msgid "Refresh counts"
 msgstr ""
 
-msgid "Refresh distribution"
-msgstr ""
-
 msgid "Refresh errata applicability"
-msgstr ""
-
-msgid "Refresh if needed"
 msgstr ""
 
 msgid "Refresh package applicability"
@@ -5911,12 +5917,6 @@ msgstr ""
 
 msgid "Refresh previously imported manifest for Red Hat provider"
 msgstr "為 Red Hat 供應者更新之前匯入的清單"
-
-msgid "Refresh remote"
-msgstr ""
-
-msgid "Refresh repos"
-msgstr ""
 
 msgid "Refresh source"
 msgstr "刷新源"
@@ -5942,6 +5942,9 @@ msgstr "注册人"
 msgid "Registered on"
 msgstr "注册于"
 
+msgid "Registered to"
+msgstr ""
+
 msgid "Registering to multiple environments is not enabled."
 msgstr ""
 
@@ -5956,9 +5959,6 @@ msgstr "Registry 名称特征导致成员仓库 '%{name}' 的容器镜像名称�
 
 msgid "Registry name pattern will result in invalid container image name of member repositories"
 msgstr "Registry 名称特征将导致成员仓库的容器镜像名称无效"
-
-msgid "Reindex subscriptions"
-msgstr "重新索引订阅"
 
 msgid "Related composite content views"
 msgstr "相关的复合内容视图"
@@ -6056,9 +6056,6 @@ msgstr "从一个或多个主机中删除一个或多个主机集合"
 msgid "Remove one or more subscriptions from an upstream manifest"
 msgstr "从上游清单中删除一个或多个订阅"
 
-msgid "Remove orphans"
-msgstr ""
-
 msgid "Remove package group via Katello interface"
 msgstr "通过 Katello 接口删除软件包组"
 
@@ -6086,12 +6083,6 @@ msgstr ""
 msgid "Remove subscriptions from one or more hosts"
 msgstr "从一个或多个主机上删除订阅"
 
-msgid "Remove units"
-msgstr ""
-
-msgid "Remove unneeded repos"
-msgstr ""
-
 msgid "Remove versions and/or environments from a content view and reassign systems and keys"
 msgstr "从内容视图中删除版本和/或环境，并重新分配系统和密钥"
 
@@ -6116,9 +6107,6 @@ msgstr "删除来自 ID 为 %{acs_id} 的 ACS %{acs_name} 的 ID 为 %{prod_id} 
 msgid "Removing this version from all environments will not delete the version. Version will still be available for later promotion."
 msgstr "从所有环境中移出此版本不会删除此版本。版本仍可用于以后的提升。"
 
-msgid "Repair"
-msgstr ""
-
 msgid "Replace content source on the target machine"
 msgstr ""
 
@@ -6137,17 +6125,11 @@ msgstr "软件仓库"
 msgid "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected)."
 msgstr "当 CDN 配置设置为 Air-gapped（断开连接）时，仓库不可用。"
 
-msgid "Repositories certs reset"
-msgstr ""
-
 msgid "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions."
 msgstr ""
 
 msgid "Repositories from published Content Views are not allowed."
 msgstr "不允许来自发布的内容视图中的仓库。"
-
-msgid "Repositories gpg reset"
-msgstr ""
 
 msgid "Repository"
 msgstr "仓库"
@@ -6440,6 +6422,12 @@ msgstr "主机角色"
 msgid "Roles"
 msgstr "角色"
 
+msgid "Rollback image"
+msgstr ""
+
+msgid "Rollback image digest"
+msgstr ""
+
 msgid "Rules to be added"
 msgstr "要添加的规则"
 
@@ -6451,6 +6439,12 @@ msgstr ""
 
 msgid "Running"
 msgstr "執行中"
+
+msgid "Running image"
+msgstr ""
+
+msgid "Running image digest"
+msgstr ""
 
 msgid "SKU"
 msgstr "SKU"
@@ -6479,25 +6473,10 @@ msgstr "订阅将很快过期"
 msgid "Save"
 msgstr "保存"
 
-msgid "Save artifact"
-msgstr ""
-
-msgid "Save distribution references"
-msgstr ""
-
-msgid "Save publication"
-msgstr ""
-
-msgid "Save version"
-msgstr ""
-
-msgid "Save versions"
-msgstr ""
-
 msgid "Saving alternate content source..."
 msgstr "更新备用内容源..."
 
-msgid "Scan cdn"
+msgid "Scan a flatpak remote"
 msgstr ""
 
 msgid "Schema version 1"
@@ -6604,9 +6583,6 @@ msgstr ""
 
 msgid "Select action"
 msgstr ""
-
-msgid "Select add-ons"
-msgstr "选择附加组件"
 
 msgid "Select all"
 msgstr "选择所有"
@@ -6746,14 +6722,14 @@ msgstr "设置主机的内容覆盖"
 msgid "Set content overrides to one or more hosts"
 msgstr "为一个或更多主机设置内容覆盖"
 
+msgid "Set this HTTP proxy as the default content HTTP proxy"
+msgstr ""
+
 msgid "Set true to override to enabled; Set false to override to disabled.'"
 msgstr "设置为 true 进行覆盖以启用；设置为 false 进行覆盖以禁用。'"
 
 msgid "Set true to remove an override and reset it to 'default'"
 msgstr "设置为 true 以删除覆盖并将它重置为 'default'"
-
-msgid "Sets the system add-ons"
-msgstr "设置系统附加组件"
 
 msgid "Sets the system purpose usage"
 msgstr "设置系统用途使用"
@@ -6787,6 +6763,12 @@ msgstr "显示内容视图组件"
 
 msgid "Show a content view's history"
 msgstr "显示内容视图的历史记录"
+
+msgid "Show a flatpak remote"
+msgstr ""
+
+msgid "Show a flatpak remote repository"
+msgstr ""
 
 msgid "Show a host collection"
 msgstr "顯示主機集項目"
@@ -7115,6 +7097,12 @@ msgstr "将导出的内容拆分为不超过指定大小（以 GB 为单位）�
 msgid "Stacking ID"
 msgstr "堆叠 ID"
 
+msgid "Staged image"
+msgstr ""
+
+msgid "Staged image digest"
+msgstr ""
+
 msgid "Start Date"
 msgstr "开始日期"
 
@@ -7280,9 +7268,6 @@ msgstr ""
 msgid "Supported Content Types"
 msgstr "支持的内容类型"
 
-msgid "Sync"
-msgstr ""
-
 msgid "Sync Canceled"
 msgstr "已取消同步"
 
@@ -7337,9 +7322,6 @@ msgstr "同步軟體庫"
 msgid "Sync all repositories for a product"
 msgstr "为一个产品同步所有存储库"
 
-msgid "Sync capsule"
-msgstr "同步 capsule"
-
 msgid "Sync complete."
 msgstr "完成同步。"
 
@@ -7357,9 +7339,6 @@ msgstr "选择所需的产品，直接从上游仓库同步智能代理内容。
 
 msgid "Sync state"
 msgstr "同步状态"
-
-msgid "Syncable export"
-msgstr "可同步导出"
 
 msgid "Synced"
 msgstr ""
@@ -7474,6 +7453,9 @@ msgstr "在此组合视图上要求的操作不能执行，除非所有组件的
 
 msgid "The actual file contents"
 msgstr "實際的檔案內容"
+
+msgid "The amount of latest versions of a package to keep on sync, includes pre-releases if synced. Default 0 keeps all versions."
+msgstr ""
 
 msgid "The content type for the Alternate Content Source"
 msgstr "备用内容源的内容类型"
@@ -7722,6 +7704,9 @@ msgstr "此内容视图没有任何关联的版本。"
 msgid "This content view version doesn't have a history."
 msgstr "此内容视图版本没有历史记录。"
 
+msgid "This content view version is used in one or more multi-environment hosts. The version will simply be removed from the multi-environment hosts. The content view and lifecycle environment you select here will only apply to single-environment hosts. See hammer activation-key --help for more details."
+msgstr ""
+
 msgid "This content view will be automatically updated to the latest version."
 msgstr "此内容视图将自动更新至最新版本。"
 
@@ -7732,6 +7717,9 @@ msgid "This endpoint is deprecated and will be removed in an upcoming release. S
 msgstr ""
 
 msgid "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead."
+msgstr ""
+
+msgid "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details."
 msgstr ""
 
 msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
@@ -7860,7 +7848,7 @@ msgstr ""
 msgid "To manage packages, select an action."
 msgstr ""
 
-msgid "Toggle"
+msgid "Token/password for the flatpak remote"
 msgstr ""
 
 msgid "Total steps: "
@@ -8124,6 +8112,9 @@ msgstr "更新內容视图版本"
 msgid "Update a filter rule. The parameters included should be based upon the filter type."
 msgstr "更新过滤器规则。包含的参数应基于过滤器类型。"
 
+msgid "Update a flatpak remote"
+msgstr ""
+
 msgid "Update a host collection"
 msgstr "更新主機集項目"
 
@@ -8148,26 +8139,14 @@ msgstr "更新組織中的環境"
 msgid "Update content counts for the smart proxy"
 msgstr ""
 
-msgid "Update content urls"
-msgstr "更新内容 url"
-
 msgid "Update content view environments for host"
 msgstr ""
 
 msgid "Update content view environments for host %s"
 msgstr ""
 
-msgid "Update distributions"
-msgstr ""
-
 msgid "Update hosts manually"
 msgstr ""
-
-msgid "Update http proxy"
-msgstr "更新 HTTP 代理"
-
-msgid "Update http proxy details"
-msgstr "更新 http 代理详情"
 
 msgid "Update installed packages, enabled repos, module inventory"
 msgstr "更新安装的软件包，已启用的仓库，模块清单"
@@ -8184,20 +8163,11 @@ msgstr "通过 Katello 接口更新软件包"
 msgid "Update packages via Katello interface"
 msgstr "通过 Katello 接口更新软件包"
 
-msgid "Update redhat repository"
-msgstr "更新 redhat 仓库"
-
 msgid "Update release version for host"
 msgstr "为主机更新发行版本"
 
 msgid "Update release version for host %s"
 msgstr "为主机 %s 更新发行版本"
-
-msgid "Update remote"
-msgstr ""
-
-msgid "Update repository"
-msgstr ""
 
 msgid "Update services requiring restart"
 msgstr "更新服务需要重启"
@@ -8289,12 +8259,6 @@ msgstr "上载文件内容的一部分"
 msgid "Upload a subscription manifest"
 msgstr "上载订阅清单"
 
-msgid "Upload content"
-msgstr ""
-
-msgid "Upload file"
-msgstr ""
-
 msgid "Upload into"
 msgstr "上传到"
 
@@ -8303,9 +8267,6 @@ msgstr ""
 
 msgid "Upload request id"
 msgstr "上传请求 ID"
-
-msgid "Upload tag"
-msgstr ""
 
 msgid "Upstream Candlepin"
 msgstr "上游 Candlepin"
@@ -8394,6 +8355,9 @@ msgstr "用户名"
 msgid "Username for authentication. Relevant only for 'upstream_server' type."
 msgstr "用于身份验证的用户名。只适用于 'upstream_server' 类型。"
 
+msgid "Username for the flatpak remote"
+msgstr ""
+
 msgid "Username of the upstream repository user used for authentication"
 msgstr "用于认证的上游仓库用户的用户名"
 
@@ -8417,9 +8381,6 @@ msgstr "值需要是一个布尔值，或 'default' 代表 'enabled'"
 
 msgid "Verify SSL"
 msgstr "验证 SSL"
-
-msgid "Verify checksum"
-msgstr "验证校验和"
 
 msgid "Verify checksum for content on smart proxy"
 msgstr ""
@@ -8727,6 +8688,9 @@ msgstr "软件包組"
 msgid "actions not found"
 msgstr "未找到操作"
 
+msgid "activation key"
+msgstr ""
+
 msgid "activation key identifier"
 msgstr "激活码标识符"
 
@@ -8838,8 +8802,8 @@ msgstr "不能为零"
 msgid "cannot be set because unlimited hosts is set"
 msgstr "无法设置，因为设置了无限的主机"
 
-msgid "cannot be set for non-yum repositories."
-msgstr "无法为非 yum 仓库设置。"
+msgid "cannot be set for repositories without 'Additive' mirroring policy."
+msgstr ""
 
 msgid "cannot contain characters other than ascii alpha numerals, '_', '-'. "
 msgstr "不可包含除了 ascii 字母數字、'_'、'-' 以外的字元。"
@@ -8879,6 +8843,9 @@ msgstr "内容发行版本"
 
 msgid "content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')"
 msgstr "content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')"
+
+msgid "content type ('deb', 'file', 'ostree_ref', 'rpm', 'srpm')"
+msgstr ""
 
 msgid "content view component ID. Identifier of the component association"
 msgstr "内容视图组件 ID。组件关联的标识符"
@@ -8964,8 +8931,8 @@ msgstr "仓库的描述"
 msgid "disk"
 msgstr "磁盘"
 
-msgid "download policy for yum, deb, and docker repos (either 'immediate' or 'on_demand')"
-msgstr "yum、deb, 和 docker 仓库的下载策略（'immediate' 或 'on_demand'）"
+msgid "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')"
+msgstr ""
 
 msgid "enables or disables synchronization"
 msgstr "启用或禁用同步"
@@ -9002,6 +8969,9 @@ msgstr "errata_ids是一个必需的参数"
 
 msgid "erratum: IDs or a select all object"
 msgstr "勘誤：ID 或全選物件"
+
+msgid "erratum: allow types not matching a valid errata type"
+msgstr ""
 
 msgid "erratum: end date (YYYY-MM-DD)"
 msgstr "勘誤：截止日期（YYYY-MM-DD）"
@@ -9061,6 +9031,9 @@ msgid "has already been taken for this product."
 msgstr "已經為此產品使用。"
 
 msgid "here"
+msgstr ""
+
+msgid "host"
 msgstr ""
 
 msgid "host collection name to filter by"
@@ -9182,6 +9155,18 @@ msgstr "模块流 ID"
 
 msgid "module streams not found"
 msgstr "找不到模块流"
+
+msgid "multi-environment activation key"
+msgstr ""
+
+msgid "multi-environment activation keys"
+msgstr ""
+
+msgid "multi-environment host"
+msgstr ""
+
+msgid "multi-environment hosts"
+msgstr ""
 
 msgid "must be %{gpg_key} or %{cert}"
 msgstr "必须是 ％{gpg_key} 或 %{cert}"

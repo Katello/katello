@@ -3,11 +3,12 @@
 # 진선재, 2022
 # 0868a4d1af5275b3f70b0a6dac4c99a4, 2023
 # Bryan Kearney <bryan.kearney@gmail.com>, 2023
+# Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Last-Translator: Bryan Kearney <bryan.kearney@gmail.com>, 2023\n"
+"Last-Translator: Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/foreman/teams/114/ko/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,7 +21,7 @@ msgstr "-- 간격 선택 --"
 
 #: app/assets/javascripts/bastion_katello/subscriptions/subscription-start-date.directive.js
 msgid "(future)"
-msgstr ""
+msgstr "(future)"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
 msgid "{{ 'Add Selected' | translate }}"
@@ -28,19 +29,19 @@ msgstr "{{ '선택한 항목 추가' | translate }}"
 
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
 msgid "{{ contentCredential.name }}"
-msgstr ""
+msgstr "{{ contentCredential.name }}"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "{{ deb.hosts_applicable_count }} Host(s)"
-msgstr ""
+msgstr "{{ deb.hosts_available_count }} 호스트"
 
 #: app/assets/javascripts/bastion_katello/debs/views/debs.html
 msgid "{{ deb.hosts_applicable_count || 0 }} Applicable,"
-msgstr ""
+msgstr "{{ errata.hosts_applicable_count || 0 }} 적용 가능,"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "{{ deb.hosts_available_count }} Host(s)"
-msgstr "{{ deb.hosts_available_count }} 호스트(들)"
+msgstr "{{ deb.hosts_available_count }} 호스트"
 
 #: app/assets/javascripts/bastion_katello/debs/views/debs.html
 msgid "{{ deb.hosts_available_count || 0 }} Upgradable"
@@ -56,63 +57,63 @@ msgstr "{{ errata.hosts_available_count || 0 }} 설치 가능 "
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "{{ errata.title }}"
-msgstr ""
+msgstr "{{ errata.title }}"
 
 #: app/assets/javascripts/bastion_katello/files/details/views/file.html
 msgid "{{ file.name }}"
-msgstr ""
+msgstr "{{ file.name }}"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
-msgid "{{ host.name }}"
-msgstr ""
+msgid "{{ host.display_name }}"
+msgstr "{{ host.display_name }}"
 
 #: app/assets/javascripts/bastion_katello/common/views/rhel-lifecycle-notice.html
 msgid "{{ host.rhel_lifecycle_status_label }}"
-msgstr ""
+msgstr "{{ host.rhel_lifecycle_status_label }}"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "{{ host.subscription_facet_attributes.user.login }}"
-msgstr ""
+msgstr "{{ host.subscription_facet_attributes.user.login }}"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "{{ installedDebCount }} Host(s)"
-msgstr ""
+msgstr "{{ deb.hosts_available_count }} 호스트"
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "{{ installedPackageCount }} Host(s)"
-msgstr ""
+msgstr "{{ deb.hosts_available_count }} 호스트"
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "{{ package.hosts_applicable_count }} Host(s)"
-msgstr ""
+msgstr "{{ deb.hosts_available_count }} 호스트"
 
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "{{ package.hosts_applicable_count || 0 }} Applicable,"
-msgstr ""
+msgstr "{{ errata.hosts_applicable_count || 0 }} 적용 가능,"
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "{{ package.hosts_available_count }} Host(s)"
-msgstr ""
+msgstr "{{ deb.hosts_available_count }} 호스트"
 
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "{{ package.hosts_available_count || 0 }} Upgradable"
-msgstr ""
+msgstr "{{ deb.hosts_available_count }} 업그레이드 가능"
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "{{ package.human_readable_size }} ({{ package.size }} Bytes)"
-msgstr ""
+msgstr "{{ package.human_readable_size }} ({{ package.size }} 바이트)"
 
 #: app/assets/javascripts/bastion_katello/products/details/views/product-info.html
 msgid "{{ product.active_task_count }}"
-msgstr ""
+msgstr "{{ product.active_task_count }}"
 
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
 msgid "{{ product.name }}"
-msgstr ""
+msgstr "{{ product.name }}"
 
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-repositories.html
 msgid "{{ repo.last_sync_words }} ago"
-msgstr ""
+msgstr "{{ repo.last_sync_words }} 전"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid ""
@@ -154,7 +155,7 @@ msgstr "{{ repository.content_counts.rpm || 0 }} 패키지 "
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "{{ repository.content_counts.srpm }} Source RPMs"
-msgstr "{{ repository.content_counts.srpm }} 소스 RPMs"
+msgstr "{{ repository.content_counts.srpm }} 소스 RPM"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-repositories.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
@@ -166,7 +167,7 @@ msgstr "{{ repository.last_sync_words }} 전 "
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "{{ repository.name }}"
-msgstr ""
+msgstr "{{ repository.name }}"
 
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment.html
 msgid "{{ type.display }}"
@@ -174,15 +175,15 @@ msgstr "{{ type.display }}"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-generic-content.html
 msgid "{{header}}"
-msgstr ""
+msgstr "{{header}}"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "{{option.description}}"
-msgstr ""
+msgstr "{{option.description}}"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "{{urlDescription}}"
-msgstr ""
+msgstr "{{urlDescription}}"
 
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
 msgid ""
@@ -193,11 +194,11 @@ msgstr "*로 표시된 컨텐츠 뷰 버전은 복합 컨텐츠 뷰 버전입니
 #: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-advanced-sync-modal.controller.js
 #: app/assets/javascripts/bastion_katello/products/products.controller.js
 msgid "/foreman_tasks/tasks/%taskId"
-msgstr ""
+msgstr "/foreman_tasks/tasks/%taskId"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/content-hosts-bulk-traces-modal.controller.js
 msgid "/job_invocations"
-msgstr ""
+msgstr "/job_invocations"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/activationKeyConsumed.filter.js
 #: app/assets/javascripts/bastion_katello/subscriptions/subscriptionConsumed.filter.js
@@ -395,7 +396,7 @@ msgstr "컨텐츠 호스트 추가: "
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-add-host-collections.controller.js
 #: app/assets/javascripts/bastion_katello/content-hosts/details/content-host-add-host-collections.controller.js
 msgid "Add Host Collections"
-msgstr ""
+msgstr "호스트 컬렉션 추가"
 
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
 msgid "Add hosts to the host collection to see available actions."
@@ -416,7 +417,7 @@ msgstr "추가 기능:"
 
 #: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-add-products.controller.js
 msgid "Add Products"
-msgstr ""
+msgstr "제품 추가"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
@@ -431,7 +432,7 @@ msgstr "선택 사항 추가 "
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-add-subscriptions.controller.js
 #: app/assets/javascripts/bastion_katello/content-hosts/details/content-host-add-subscriptions.controller.js
 msgid "Add Subscriptions"
-msgstr ""
+msgstr "서브스크립션 추가"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
 msgid "Add Subscriptions for Activation Key:"
@@ -483,7 +484,7 @@ msgstr "영향을 받은 시스템"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
 msgid "All"
-msgstr ""
+msgstr "전체"
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
@@ -677,8 +678,8 @@ msgid "Apply Errata"
 msgstr "에라타 적용"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
-msgid "Apply Errata to Content Host \"{{host.name}}\"?"
-msgstr "컨텐츠 호스트 \"{{host.name}}\"에 에라타를 적용하시겠습니까?"
+msgid "Apply Errata to Content Host \"{{host.display_name}}\"?"
+msgstr "에라트를 컨텐츠 호스트 \"{{host.display_name}}\"에 적용하시겠습니까?"
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-content-hosts.html
 msgid "Apply Errata to Content Hosts"
@@ -742,8 +743,10 @@ msgid ""
 msgstr "선택한 제품(들)에 동기화 계획을 추가하시겠습니까?"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
-msgid "Are you sure you want to apply Errata to content host \"{{ host.name }}\"?"
-msgstr "컨텐츠 호스트 \"{{ host.name }}\"에 에라타를 적용하시겠습니까?"
+msgid ""
+"Are you sure you want to apply Errata to content host \"{{ host.display_name"
+" }}\"?"
+msgstr "에라트를 컨텐츠 호스트 \"{{ host.display_name }}\"에 적용하시겠습니까?"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid ""
@@ -871,7 +874,7 @@ msgid_plural ""
 "Repositories that are published in content view\n"
 "                             versions or are the last affected repository in a content view filter will be skipped. You can delete those from the repository details page.\n"
 "                             "
-msgstr[0] ""
+msgstr[0] "{{ table.getSelected()[0].name }} 리포지토리를 제거하시겠습니까?"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-docker-manifests.html
 msgid ""
@@ -901,9 +904,9 @@ msgstr "선택한 {{ table.numSelected }}개 리포지토리 집합(들)을 기�
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 msgid ""
-"Are you sure you want to restart services on content host \"{{ host.name "
-"}}\"?"
-msgstr "컨텐츠 호스트 \"{{ host.name }}\"에서 서비스를 다시 시작하시겠습니까?"
+"Are you sure you want to restart services on content host \"{{ "
+"host.display_name }}\"?"
+msgstr "콘텐츠 호스트 \"{{ host.display_name }}\"에서 서비스를 다시 시작하시겠습니까?"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 msgid ""
@@ -993,7 +996,7 @@ msgstr "자동 첨부 "
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 msgid "Auto-attach available subscriptions to all selected hosts."
-msgstr ""
+msgstr "선택한 모든 호스트에 사용 가능한 서브스크립션을 자동으로 첨부합니다."
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Auto-Attach Details"
@@ -1001,7 +1004,7 @@ msgstr "자동-연결 세부 정보"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 msgid "Auto-attach uses all available subscriptions, not a selected subset."
-msgstr ""
+msgstr "자동 첨부는 선택한 하위 집합이 아닌 사용 가능한 모든 서브스크립션을 사용합니다."
 
 #: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
@@ -1092,7 +1095,7 @@ msgstr "빌드 시간"
 
 #: app/assets/javascripts/bastion_katello/tasks/task-details.controller.js
 msgid "Bulk Task"
-msgstr ""
+msgstr "대량 작업"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
@@ -1181,6 +1184,8 @@ msgid ""
 "if set. The repository will use the upstream checksum type to verify "
 "downloads."
 msgstr ""
+"다운로드 정책을 \"온디멘드\"로 변경하면 체크섬 유형도 설정된 경우 삭제됩니다. 리포지터리는 업스트림 체크섬 유형을 사용하여 다운로드를"
+" 확인합니다."
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid ""
@@ -1330,11 +1335,11 @@ msgstr "컨텐츠 수 "
 
 #: app/assets/javascripts/bastion_katello/content-credentials/content-credentials.controller.js
 msgid "Content Credential"
-msgstr ""
+msgstr "컨텐츠 인증 정보"
 
 #: app/assets/javascripts/bastion_katello/content-credentials/new/new-content-credential.controller.js
 msgid "Content Credential %s has been created."
-msgstr "%s 콘텐츠 인증 정보가 생성되었습니다."
+msgstr "%s 컨텐츠 인증 정보가 생성되었습니다."
 
 #: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
 msgid "Content Credential Contents"
@@ -1382,7 +1387,7 @@ msgstr "컨텐츠 호스트 제한 "
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
 msgid "Content Host Module Stream Management"
-msgstr ""
+msgstr "컨텐츠 호스트 모듈 스트림 관리"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Content Host Properties"
@@ -1398,7 +1403,7 @@ msgstr "컨텐츠 호스트 상태 "
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 msgid "Content Host Traces Management"
-msgstr ""
+msgstr "컨텐츠 호스트 추적 관리"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 msgid "Content Host:"
@@ -1546,7 +1551,7 @@ msgstr "컨텐츠 인증 정보 생성"
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-copy.controller.js
 #: app/assets/javascripts/bastion_katello/host-collections/details/host-collection-copy.controller.js
 msgid "Create Copy"
-msgstr ""
+msgstr "복사본 생성"
 
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
 msgid "Create Discovered Repositories"
@@ -1568,7 +1573,7 @@ msgstr "제품 생성"
 
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "Create Repositories"
-msgstr ""
+msgstr "리포지토리 생성"
 
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "Create Selected"
@@ -1610,7 +1615,7 @@ msgstr "활성키의 현재 서브스크립션:"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 msgid "Custom"
-msgstr ""
+msgstr "사용자 지정"
 
 #: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-details-info.controller.js
 #: app/assets/javascripts/bastion_katello/sync-plans/sync-plan-helper.service.js
@@ -1659,7 +1664,7 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/content-host-debs-actions.controller.js
 msgid "Deb Package Actions"
-msgstr ""
+msgstr "Deb 패키지 작업"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 msgid "deb Package Updates"
@@ -1686,7 +1691,7 @@ msgstr "Deb 패키지 대상:"
 
 #: app/assets/javascripts/bastion_katello/environments/details/environment-content.controller.js
 msgid "Deb Repositories"
-msgstr ""
+msgstr "Deb 리포지토리"
 
 #: app/assets/javascripts/bastion_katello/environments/views/environments.html
 msgid "Deb Repositories <div>{{ library.counts.deb_repositories || 0 }}</div>"
@@ -1700,7 +1705,7 @@ msgstr "Deb:"
 #: app/assets/javascripts/bastion_katello/debs/debs.controller.js
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Debs"
-msgstr ""
+msgstr "Deb"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/checksum.service.js
 msgid "Default"
@@ -1720,7 +1725,7 @@ msgstr " {{ table.numSelected  }} 호스트를 삭제하시겠습니까?"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Delete filters"
-msgstr ""
+msgstr "필터 삭제"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 msgid "Delete Hosts"
@@ -1728,7 +1733,7 @@ msgstr "호스트 삭제 "
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/yum-content-units.service.js
 msgid "Delta RPM"
-msgstr "델타 RPM"
+msgstr "Delta RPM"
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package.html
 #: app/assets/javascripts/bastion_katello/packages/packages.controller.js
@@ -1847,18 +1852,18 @@ msgstr "배포 정보"
 msgid ""
 "Do not require a subscription entitlement certificate for accessing this "
 "repository."
-msgstr "이 리포지터리에 액세스하는 데 구독 자격 인증서가 필요하지 않습니다."
+msgstr "이 리포지터리에 액세스하는 데 서브스크립션 자격 인증서가 필요하지 않습니다."
 
 #: app/assets/javascripts/bastion_katello/environments/details/environment-content.controller.js
 msgid "Docker"
-msgstr ""
+msgstr "Docker"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-docker-tags.html
 msgid ""
 "Docker metadata generation has been initiated in the background.  Click\n"
 "            <a ng-href=\"{{ taskUrl() }}\">Here</a> to monitor the progress."
 msgstr ""
-"백그라운드에서 도커 메타데이터 생성이 시작되었습니다. 클릭\n"
+"백그라운드에서 Docker 메타데이터 생성이 시작되었습니다. 클릭\n"
 "<a ng-href=\"{{ taskUrl() }}\">여기</a>은 진행 상황을 모니터링합니다."
 
 #: app/assets/javascripts/bastion_katello/environments/views/environments.html
@@ -2092,7 +2097,7 @@ msgstr "필터 "
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-content-hosts.html
 msgid "Filter by Environment"
-msgstr ""
+msgstr "환경별 필터링"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
 msgid "Filter by Status:"
@@ -2111,13 +2116,6 @@ msgstr "필터 "
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 msgid "Finished At"
 msgstr "종료 일시: "
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid ""
-"For older operating systems such as Red Hat Enterprise Linux 5 or CentOS 5 "
-"it is recommended to use sha1."
-msgstr ""
-"Red Hat Enterprise Linux 5 또는 CentOS 5와 같은 이전 운영 체제의 경우 sha1를 사용할 것을 권장합니다. "
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -2193,7 +2191,7 @@ msgstr "호스트 컬렉션 멤버쉽 "
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 msgid "Host Collection Membership Management"
-msgstr ""
+msgstr "호스트 컬렉션 멤버십 관리"
 
 #: app/assets/javascripts/bastion_katello/host-collections/details/host-collection-details.controller.js
 msgid "Host Collection removed."
@@ -2263,7 +2261,7 @@ msgstr "HTTP 프록시"
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
 msgid "HTTP Proxy Management"
-msgstr ""
+msgstr "HTTP 프록시 관리"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "HTTP Proxy Policy"
@@ -2279,7 +2277,7 @@ msgstr "HTTP 프록시:"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "HttpProxyPolicy"
-msgstr "HTTP프록시정책"
+msgstr "HttpProxyPolicy"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
@@ -2287,14 +2285,20 @@ msgid "Id"
 msgstr "ID"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+msgid ""
+"If you want to upload individual packages, create a separate repository with"
+" an empty \"Upstream URL\" field."
+msgstr "개별 패키지를 업로드하려면 빈 \"업스트림 URL\" 필드가 있는 별도의 리포지토리를 만듭니다."
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Ignore SRPMs"
-msgstr "SRPMs 무시"
+msgstr "SRPM 무시"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Ignore treeinfo"
-msgstr ""
+msgstr "treeinfo 무시"
 
 #: app/assets/javascripts/bastion_katello/docker-tags/details/docker-tag-details.controller.js
 msgid "Image"
@@ -2441,6 +2445,10 @@ msgid "Last Puppet Report"
 msgstr "마지막 Puppet 보고 "
 
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
+msgid "Last reclaim failed:"
+msgstr "마지막 반환 실패"
+
+#: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Last reclaim space failed:"
 msgstr "마지막 공간 반환 실패:"
 
@@ -2521,7 +2529,7 @@ msgstr "제한 "
 msgid ""
 "Limit Repository Sets to only those available in this Activation Key's "
 "Lifecycle  Environment"
-msgstr ""
+msgstr "이 활성화 키의 라이프 사이클 환경에서 사용할 수 있는 리포지토리 세트만 제한"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
 msgid ""
@@ -2553,20 +2561,20 @@ msgstr "목록"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-host-collections.controller.js
 msgid "List Host Collections"
-msgstr ""
+msgstr "호스트 컬렉션 목록"
 
 #: app/assets/javascripts/bastion_katello/host-collections/details/host-collection-add-hosts.controller.js
 #: app/assets/javascripts/bastion_katello/host-collections/details/host-collection-hosts.controller.js
 msgid "List Hosts"
-msgstr ""
+msgstr "호스트 목록"
 
 #: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-products.controller.js
 msgid "List Products"
-msgstr ""
+msgstr "제품 목록"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-subscriptions.controller.js
 msgid "List Subscriptions"
-msgstr ""
+msgstr "서브스크립션 목록"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections.html
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
@@ -2589,7 +2597,7 @@ msgstr "로딩 중...\""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Make filters apply to all repositories in the content view"
-msgstr ""
+msgstr "콘텐츠 보기의 모든 리포지토리에 필터 적용"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
 msgid "Manage Ansible Collections for Repository:"
@@ -2666,7 +2674,7 @@ msgstr "매니페스트 유형"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Metadata Expiration (Seconds)"
-msgstr ""
+msgstr "메타데이터 만료 (초)"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -2732,7 +2740,7 @@ msgstr "상세 정보 "
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 #: app/assets/javascripts/bastion_katello/errata/errata-severity.filter.js
 msgid "N/A"
-msgstr "해당 없음 "
+msgstr "N/A"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-associations-content-hosts.html
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
@@ -2832,7 +2840,7 @@ msgstr "새 활성화 키 "
 
 #: app/assets/javascripts/bastion_katello/content-credentials/new/new-content-credential.controller.js
 msgid "New Content Credential"
-msgstr ""
+msgstr "새 컨텐츠 인증 정보"
 
 #: app/assets/javascripts/bastion_katello/environments/views/new-environment.html
 #: app/assets/javascripts/bastion_katello/environments/new-environment.controller.js
@@ -2841,7 +2849,7 @@ msgstr "새 환경 "
 
 #: app/assets/javascripts/bastion_katello/host-collections/new/new-host-collection.controller.js
 msgid "New Host Collection"
-msgstr ""
+msgstr "새 호스트 컬렉션"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-copy.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-copy.html
@@ -2967,7 +2975,7 @@ msgstr "일치하는 결과가 없음"
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-packages.html
 msgid "No Packages to show"
-msgstr ""
+msgstr "표시할 패키지 없음"
 
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "No products are available to add to this Sync Plan."
@@ -3283,14 +3291,14 @@ msgstr "실행 "
 msgid ""
 "Performing host package actions is disabled because Katello is not "
 "configured for remote execution."
-msgstr ""
+msgstr "Katello가 원격 실행을 위해 구성되어 있지 않기 때문에 호스트 패키지 작업을 수행하는 것이 비활성화됩니다."
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
 msgid ""
 "Performing host package actions is disabled because Katello is not "
 "configured for Remote Execution."
-msgstr ""
+msgstr "Katello가 원격 실행을 위해 구성되어 있지 않기 때문에 호스트 패키지 작업을 수행하는 것이 비활성화됩니다."
 
 #: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
 msgid "Physical"
@@ -3418,7 +3426,7 @@ msgstr "제공 "
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content-hosts.controller.js
 msgid "Provisioning"
-msgstr ""
+msgstr "프로비저닝"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 msgid "Provisioning Details"
@@ -3487,7 +3495,7 @@ msgstr "반복 로직"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 msgid "Red Hat"
-msgstr ""
+msgstr "Red Hat"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
 msgid "Red Hat Repositories page"
@@ -3829,7 +3837,7 @@ msgstr "리포지터리 세트"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-repository-sets-modal.html
 msgid "Repository Sets Management"
-msgstr ""
+msgstr "리포지터리 세트 관리"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 #: app/assets/javascripts/bastion_katello/content-hosts/details/content-host-repository-sets.controller.js
@@ -3838,7 +3846,7 @@ msgstr "리포지터리 세트 설정이 성공적으로 저장되었습니다."
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
 msgid "Repository type"
-msgstr ""
+msgstr "리포지터리 유형"
 
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "Repository Type"
@@ -3861,7 +3869,7 @@ msgstr "리포지터리: "
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Republish Repository Metadata"
-msgstr ""
+msgstr "리포지터리 메타데이터 재게시"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Requirements"
@@ -3904,8 +3912,8 @@ msgid "Restart Selected"
 msgstr "선택 사항 재시작"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
-msgid "Restart Services on Content Host \"{{host.name}}\"?"
-msgstr "컨텐츠 호스트 \"{{host.name}}\"에서 서비스를 다시 시작하겠습니까?"
+msgid "Restart Services on Content Host \"{{host.display_name}}\"?"
+msgstr "콘텐츠 호스트 \"{{host.display_name}}\"에서 서비스를 다시 시작하시겠습니까?"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Restrict to <br>OS version"
@@ -4017,7 +4025,7 @@ msgstr "조직 선택 "
 
 #: app/assets/javascripts/bastion_katello/errata/details/erratum-content-hosts.controller.js
 msgid "Select Content Host(s)"
-msgstr ""
+msgstr "컨텐츠 호스트 선택"
 
 #: app/assets/javascripts/bastion_katello/environments/details/environment-content.controller.js
 msgid "Select Content View"
@@ -4027,7 +4035,7 @@ msgstr "컨텐츠 뷰 선택 "
 msgid ""
 "Select this option if treeinfo files or other kickstart content is failing "
 "to syncronize from the upstream repository."
-msgstr ""
+msgstr "treeinfo 파일이나 기타 kickstart 컨텐츠가 업스트림 리포지터리에서 동기화되지 않는 경우 이 옵션을 선택하세요."
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-advanced-sync-modal.html
 msgid ""
@@ -4044,7 +4052,7 @@ msgstr "이 옵션을 선택하면 SRPMs가 리포지터리 동기화에서 제�
 msgid ""
 "Selecting this option will exclude treeinfo files from repository "
 "synchronization."
-msgstr ""
+msgstr "이 옵션을 선택하면 treeinfo 파일이 리포지터리 동기화에서 제외됩니다."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -4097,6 +4105,8 @@ msgid ""
 "cannot be applied to the host, delete the incremental content view version "
 "and retry the application with dependency solving turned on."
 msgstr ""
+"속도 증가를 위해 종속성 해결을 건너뜁니다. 업데이트를 호스트에 적용할 수 없는 경우 증분 콘텐츠 보기 버전을 삭제하고 종속성 해결을 켠"
+" 상태에서 애플리케이션을 다시 시도합니다."
 
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy currently reclaiming space..."
@@ -4211,7 +4221,6 @@ msgstr "상태 "
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-provisioning-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
 #: app/assets/javascripts/bastion_katello/tasks/views/tasks-table.html
 #: app/assets/javascripts/bastion_katello/tasks/views/user-tasks-table.html
 msgid "Status"
@@ -4233,22 +4242,12 @@ msgid "Subscription Management"
 msgstr "서브스크립션 관리"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-associations-content-hosts.html
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
-#: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 msgid "Subscription Status"
 msgstr "서브스크립션 상태 "
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Subscription UUID"
 msgstr "서브스크립션 UUID"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
-msgid ""
-"subscription-manager register --org=\"{{ activationKey.organization.label "
-"}}\" --activationkey=\"{{ activationKey.name }}\""
-msgstr ""
-"subscription-manager register --org=\"{{ activationKey.organization.label "
-"}}\" --activationkey=\"{{ activationKey.name }}\""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
@@ -4359,7 +4358,7 @@ msgstr "동기화 계획이 생성되어 제품에 할당되었습니다."
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 msgid "Sync Plan Management"
-msgstr ""
+msgstr "동기화 계획 관리"
 
 #: app/assets/javascripts/bastion_katello/products/new/new-sync-plan-modal.controller.js
 msgid "Sync Plan saved"
@@ -4433,10 +4432,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
 msgid "System Purpose Management"
 msgstr "시스템 목적 관리"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
-msgid "System Purpose Status"
-msgstr "시스템 목적 상태"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-docker-manifest-lists.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-docker-manifests.html
@@ -4517,7 +4512,7 @@ msgstr "이 호스트에서 에라타를 사용 가능하게 하려면 컨텐츠
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid ""
 "The filters below have this repository as the last affected repository!"
-msgstr ""
+msgstr "아래 필터에 따르면 이 리포지터리는 마지막으로 영향을 받은 리포지터리입니다!"
 
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
 msgid ""
@@ -4572,20 +4567,26 @@ msgstr "추적을 확인하려면 원격 실행 플러그인을 설치해야 합
 msgid ""
 "The repository will only be available on content hosts with the selected "
 "architecture."
-msgstr ""
+msgstr "리포지터리는 선택한 아키텍처를 갖춘 콘텐츠 호스트에서만 사용할 수 있습니다."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
 "The repository will only be available on content hosts with the selected OS "
 "version."
-msgstr ""
+msgstr "리포지터리는 선택한 OS 버전이 설치된 콘텐츠 호스트에서만 사용할 수 있습니다."
 
 #: app/assets/javascripts/bastion_katello/activation-keys/new/views/activation-key-new.html
 msgid ""
 "The selected environment contains no Content Views, please select a "
 "different environment."
 msgstr "선택한 환경에 컨텐츠 뷰가 없습니다. 다른 환경을 선택하십시오. "
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+msgid ""
+"The sha1 checksum type is no longer supported. The checksum type will reset "
+"to 'Default' at the next edit or change in content."
+msgstr "sha1 체크섬 유형은 더 이상 지원되지 않습니다. 체크섬 유형은 다음 편집이나 콘텐츠 변경 시 '기본값'으로 재설정됩니다."
 
 #: app/assets/javascripts/bastion_katello/sync-plans/new/views/new-sync-plan-form.html
 msgid "The time the sync should happen in your current time zone."
@@ -4700,8 +4701,12 @@ msgstr "이 활성키는 다른 컨텐츠 호스트와 연결되어 있지 않�
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 msgid ""
-"This activation key may be used during system registration. For example:"
-msgstr "시스템 등록 도중 이 활성키를 사용할 수 있습니다. 예: "
+"This activation key may be used during <a "
+"href=\"/hosts/register?initialAKSelection={{ activationKey.name }}\">system "
+"registration.</a>"
+msgstr ""
+"이 활성화 키는 <a href=\"/hosts/register?initialAKSelection={{ activationKey.name "
+"}}\"> 시스템 등록</a> 동안 사용될 수 있습니다."
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
 msgid "This change will be applied to <b>{{ hostCount }} systems.</b>"
@@ -4713,7 +4718,7 @@ msgstr "이 컨테이너 이미지 태그는 라이프사이클 환경에 없습
 
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-repositories.html
 msgid "This Container Image Tag is not present in any Repositories."
-msgstr ""
+msgstr "이 컨테이너 이미지 태그는 어떤 리포지터리에도 없습니다."
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 msgid ""
@@ -4722,21 +4727,6 @@ msgid ""
 msgstr ""
 "이 작업은 가상 머신과 DNS 레코드와 같은 호스트에 연결되어 관리되는 리소스도 제거할 수 있습니다.\n"
 "이를 방지하려면 <a href=\"/settings\">설정 페이지 </a>에서 \"등록 취소 시 호스트 삭제\" 설정을 false로 변경합니다."
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/content-access-mode-banner.html
-msgid ""
-"This organization has Simple Content Access enabled.  Hosts are not required"
-" to have subscriptions attached to access repositories."
-msgstr ""
-"이 조직에서는 단순 컨텐츠 액세스를 사용할 수 있습니다. 호스트에는 액세스 리포지터리에 연결된 서브스크립션이 필요하지 않습니다."
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/content-access-mode-banner.html
-msgid ""
-"This organization is not using <a target=\"_blank\" "
-"href=\"https://access.redhat.com/articles/simple-content-access\">Simple "
-"Content Access.</a> Entitlement-based subscription management is deprecated "
-"and will be removed in Katello 4.12."
-msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
@@ -4837,8 +4827,8 @@ msgid "Unregister Host"
 msgstr "호스트 등록 취소"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
-msgid "Unregister Host \"{{host.name}}\"?"
-msgstr "호스트 \"{{host.name}}\"의 등록을 취소하겠습니까?"
+msgid "Unregister Host \"{{host.display_name}}\"?"
+msgstr "호스트 \"{{host.display_name}}\"을/를 등록 취소하시겠습니까?"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 msgid "Unregister Options:"
@@ -5053,7 +5043,7 @@ msgstr "컨텐츠 Checksum 확인"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
 msgid "Verify SSL"
-msgstr "SSL 확인 "
+msgstr "Verify SSL"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-applicable.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
@@ -5163,6 +5153,8 @@ msgid ""
 "associated custom products and only associated Red Hat subscriptions "
 "required to satisfy the system's installed products."
 msgstr ""
+"자동 연결이 활성화되면 등록된 시스템은 모든 관련 사용자 정의 제품에 연결되고, 시스템에 설치된 제품을 충족하는 데 필요한 관련 Red "
+"Hat 서브스크립션에만 연결됩니다."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -5230,7 +5222,7 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-packages.html
 msgid "You cannot remove content from a redhat repository"
-msgstr ""
+msgstr "Redhat 리포지터리에서 콘텐츠를 제거할 수 없습니다."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid ""
@@ -5241,7 +5233,7 @@ msgstr "권한이 없기 때문에 이 리포지터리를 삭제할 수 없습�
 msgid ""
 "You cannot remove this product because it has repositories that are the last"
 " affected repository on content view filters"
-msgstr ""
+msgstr "이 제품에는 콘텐츠 보기 필터의 마지막 영향을 받는 리포지터리가 있으므로 제거할 수 없습니다"
 
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
 msgid "You cannot remove this product because it is a Red Hat product."
@@ -5311,7 +5303,7 @@ msgstr "현재 호스트 컬렉션이 없습니다. 오른쪽에 있는 버튼�
 msgid ""
 "You currently don't have any Hosts in this Host Collection, you can add "
 "Content Hosts after selecting the 'Add' tab."
-msgstr ""
+msgstr "현재 이 호스트 컬렉션에 호스트가 없습니다. '추가' 탭을 선택한 후 콘텐츠 호스트를 추가할 수 있습니다."
 
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
 msgid ""

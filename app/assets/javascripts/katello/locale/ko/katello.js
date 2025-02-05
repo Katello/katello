@@ -465,9 +465,6 @@
       "About page": [
         ""
       ],
-      "Abstract async task": [
-        "비동기 작업 개요"
-      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
       ],
@@ -603,9 +600,6 @@
       "Add one or more host collections to one or more hosts": [
         "하나 이상의 호스트에 하나 이상의 호스트 컬렉션 추가"
       ],
-      "Add ons": [
-        "추가 기능"
-      ],
       "Add products to sync plan": [
         "동기화 계획에 제품 추가 "
       ],
@@ -634,9 +628,6 @@
         ""
       ],
       "Add to a host collection": [
-        ""
-      ],
-      "Add-ons": [
         ""
       ],
       "Added": [
@@ -699,13 +690,13 @@
       "All versions will be removed from these environments": [
         ""
       ],
-      "Allow a host to be assigned to multiple content view environments with 'subscription-manager register --environments' or 'subscription-manager environments --set'.": [
-        ""
-      ],
       "Allow deleting repositories in published content views": [
         ""
       ],
       "Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode.": [
+        ""
+      ],
+      "Allow hosts or activation keys to be associated with multiple content view environments": [
         ""
       ],
       "Allow hosts to re-register themselves only when they are in build mode": [
@@ -924,10 +915,10 @@
       "Assign the release version to one or more hosts": [
         ""
       ],
-      "Assigning a host to multiple content view environments is not enabled.": [
+      "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
         ""
       ],
-      "Assigning an activation key to multiple content view environments is not enabled.": [
+      "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
         ""
       ],
       "Associated location IDs": [
@@ -948,14 +939,14 @@
       "At least one activation key must have a lifecycle environment and content view assigned to it": [
         "최소 하나의 활성키가 라이프 사이클 환경에 필요하며, 콘텐츠 뷰를 이에 할당해야 합니다 "
       ],
+      "At least one errata type option needs to be selected.": [
+        ""
+      ],
       "At least one of the selected items requires the host to reboot": [
         ""
       ],
       "At least one organization must exist.": [
         "최소 하나의 조직이 존재해야 합니다. "
-      ],
-      "Atleast one errata type needs to be selected.": [
-        ""
       ],
       "Attach a subscription": [
         "서브스크립션 첨부 "
@@ -981,9 +972,6 @@
       "Auto Publish - Triggered by '%s'": [
         ""
       ],
-      "Auto attach subscriptions": [
-        "서브스크립션 자동 첨부"
-      ],
       "Auto publish": [
         ""
       ],
@@ -999,6 +987,12 @@
       "Available Repositories": [
         ""
       ],
+      "Available image": [
+        ""
+      ],
+      "Available image digest": [
+        ""
+      ],
       "Available schema versions": [
         ""
       ],
@@ -1012,6 +1006,9 @@
         ""
       ],
       "Base URL for finding alternate content": [
+        ""
+      ],
+      "Base URL of the flatpak registry index, ex: https://flatpaks.redhat.io/rhel/ , https://registry.fedoraproject.org/.": [
         ""
       ],
       "Base URL to perform repo discovery on": [
@@ -1057,6 +1054,24 @@
         "이 검색을 북마크 "
       ],
       "Bookmarks marked as public are available to all users": [
+        ""
+      ],
+      "Bootc rollback via Bootc interface": [
+        ""
+      ],
+      "Bootc status via Bootc interface": [
+        ""
+      ],
+      "Bootc switch via Bootc interface": [
+        ""
+      ],
+      "Bootc upgrade via Bootc interface": [
+        ""
+      ],
+      "Booted Container Images": [
+        ""
+      ],
+      "Booted container images": [
         ""
       ],
       "Both": [
@@ -1338,6 +1353,9 @@
       "Cannot upload Container Image content.": [
         ""
       ],
+      "Cannot upload container content via Hammer/API. Use podman push instead.": [
+        ""
+      ],
       "Capacity": [
         "용량 "
       ],
@@ -1413,13 +1431,13 @@
       "Collapse All": [
         "모두 축소"
       ],
-      "Comma-separated list of Candlepin environment names associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of Candlepin environment names to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of Candlepin environment names to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
@@ -1429,9 +1447,6 @@
         ""
       ],
       "Comma-separated list of tags to sync for a container image repository": [
-        ""
-      ],
-      "Commit upload": [
         ""
       ],
       "Compare": [
@@ -1644,6 +1659,9 @@
       "Content imported by %{user} into content view '%{name}'": [
         ""
       ],
+      "Content may come from {contentSourceName} or any other Smart Proxy behind the load balancer.": [
+        ""
+      ],
       "Content not uploaded to pulp": [
         ""
       ],
@@ -1704,6 +1722,9 @@
       "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
         ""
       ],
+      "Content view environment": [
+        ""
+      ],
       "Content view environments": [
         ""
       ],
@@ -1752,6 +1773,9 @@
       "Content view version is empty": [
         ""
       ],
+      "Content view version is empty or content counts are not up to date": [
+        ""
+      ],
       "Content views": [
         ""
       ],
@@ -1779,25 +1803,13 @@
       "Copy": [
         ""
       ],
-      "Copy all units": [
-        ""
-      ],
       "Copy an activation key": [
         "활성키 복사 "
-      ],
-      "Copy content": [
-        ""
       ],
       "Copy content view": [
         ""
       ],
       "Copy to clipboard": [
-        ""
-      ],
-      "Copy version": [
-        ""
-      ],
-      "Copy version units to library": [
         ""
       ],
       "Cores per socket": [
@@ -1974,6 +1986,9 @@
       "Create a filter rule. The parameters included should be based upon the filter type.": [
         "필터 규칙을 생성합니다. 포함된 매개 변수는 필터 유형에 기반해야 합니다. "
       ],
+      "Create a flatpak remote": [
+        ""
+      ],
       "Create a host collection": [
         "호스트 컬렉션 생성 "
       ],
@@ -2004,19 +2019,10 @@
       "Create content view": [
         ""
       ],
-      "Create exporter": [
-        ""
-      ],
       "Create filter": [
         ""
       ],
       "Create host collection": [
-        ""
-      ],
-      "Create import": [
-        ""
-      ],
-      "Create importer": [
         ""
       ],
       "Create new activation key": [
@@ -2026,12 +2032,6 @@
         "조직 생성 "
       ],
       "Create package filter rule": [
-        ""
-      ],
-      "Create publication": [
-        ""
-      ],
-      "Create remote": [
         ""
       ],
       "Create rule": [
@@ -2259,6 +2259,9 @@
       "Delete a filter rule": [
         "필터 규칙 삭제 "
       ],
+      "Delete a flatpak remote": [
+        ""
+      ],
       "Delete activation key?": [
         ""
       ],
@@ -2280,34 +2283,10 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
-      "Delete distributions": [
-        ""
-      ],
       "Delete manifest from Red Hat provider": [
         "Red Hat 공급자에서 매니페스트 삭제 "
       ],
       "Delete multiple filters from a content view": [
-        ""
-      ],
-      "Delete orphan alternate content sources": [
-        ""
-      ],
-      "Delete orphan distributions": [
-        ""
-      ],
-      "Delete orphan remotes": [
-        ""
-      ],
-      "Delete orphan repository versions": [
-        ""
-      ],
-      "Delete orphaned migrated repositories": [
-        ""
-      ],
-      "Delete remote": [
-        ""
-      ],
-      "Delete repository references": [
         ""
       ],
       "Delete version": [
@@ -2354,6 +2333,9 @@
       ],
       "Description for the new published content view version": [
         "새로 공개된 컨텐츠 뷰 버전 설명 "
+      ],
+      "Description of the flatpak remote": [
+        ""
       ],
       "Description of the repository": [
         ""
@@ -2406,12 +2388,6 @@
       "Destroy an environment in an organization": [
         "조직에서 환경 삭제 "
       ],
-      "Destroy exporter": [
-        ""
-      ],
-      "Destroy importer": [
-        ""
-      ],
       "Destroy one or more alternate content sources": [
         ""
       ],
@@ -2459,9 +2435,6 @@
       ],
       "Disabling Simple Content Access failed for '%{subject}'.": [
         ""
-      ],
-      "Discover": [
-        "검색"
       ],
       "Discover Repositories": [
         "리포지터리 검색 "
@@ -2658,9 +2631,6 @@
       "Environment cannot be in its own promotion path": [
         "환경은 자체 승격 경로에 존재할 수 없음 "
       ],
-      "Environment contents refresh": [
-        ""
-      ],
       "Environment identifier": [
         ""
       ],
@@ -2699,9 +2669,6 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "에라타의 에라타 ID (RHSA-2012:108)"
-      ],
-      "Errata mail": [
-        "에라타 메일"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2862,9 +2829,6 @@
       "Fetch installable errata for one or more hosts.": [
         ""
       ],
-      "Fetch pxe files": [
-        ""
-      ],
       "Fetch traces for one or more hosts": [
         ""
       ],
@@ -2958,9 +2922,6 @@
       "Filter versions that are components in the specified composite version": [
         "지정된 복합 버전에 있는 구성 요소인 버전을 필터링 "
       ],
-      "Filtered index content": [
-        "필터링된 인덱스 컨텐츠"
-      ],
       "Filters": [
         "필터 "
       ],
@@ -2981,6 +2942,15 @@
       ],
       "Finished": [
         "완료"
+      ],
+      "Flatpak Remotes": [
+        ""
+      ],
+      "Flatpak remote numeric identifier": [
+        ""
+      ],
+      "Flatpak remote repository numeric identifier": [
+        ""
       ],
       "Force": [
         ""
@@ -3040,9 +3010,6 @@
         ""
       ],
       "Generate host applicability": [
-        ""
-      ],
-      "Generate metadata": [
         ""
       ],
       "Generate repository applicability": [
@@ -3282,12 +3249,6 @@
       "How to order the sorted results (e.g. ASC for ascending)": [
         "정렬된 결고를 정렬하는 방법 (예: 오름차순의 ASC) "
       ],
-      "Hypervisors": [
-        "하이퍼바이저"
-      ],
-      "Hypervisors update": [
-        "하이퍼바이저 업데이트"
-      ],
       "ID of a HTTP Proxy": [
         ""
       ],
@@ -3308,6 +3269,9 @@
       ],
       "ID of an organization to show repositories in": [
         "리포지터리에 표시할 조직 ID "
+      ],
+      "ID of flatpak remote to show repositories of": [
+        ""
       ],
       "ID of the Organization": [
         ""
@@ -3369,10 +3333,16 @@
       "Id of the content host": [
         "컨텐츠 호스트 ID"
       ],
+      "Id of the content view to limit the content counting on": [
+        ""
+      ],
       "Id of the content view to limit the synchronization on": [
         ""
       ],
       "Id of the content view to limit verifying checksum on": [
+        ""
+      ],
+      "Id of the environment to limit the content counting on": [
         ""
       ],
       "Id of the environment to limit the synchronization on": [
@@ -3395,6 +3365,9 @@
       ],
       "Id of the organization to limit environments on": [
         "환경을 제한할 조직의 ID"
+      ],
+      "Id of the repository to limit the content counting on": [
+        ""
       ],
       "Id of the repository to limit the synchronization on": [
         ""
@@ -3531,6 +3504,27 @@
       "Image": [
         ""
       ],
+      "Image digest": [
+        ""
+      ],
+      "Image digests": [
+        ""
+      ],
+      "Image mode": [
+        ""
+      ],
+      "Image mode / package mode": [
+        ""
+      ],
+      "Image mode details": [
+        ""
+      ],
+      "Image name": [
+        ""
+      ],
+      "Image-mode host": [
+        ""
+      ],
       "Immediate": [
         "즉시"
       ],
@@ -3573,9 +3567,6 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
-      "Import migration": [
-        ""
-      ],
       "Import new manifest": [
         ""
       ],
@@ -3583,12 +3574,6 @@
         ""
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
-        ""
-      ],
-      "Import repository upload": [
-        ""
-      ],
-      "Import upload": [
         ""
       ],
       "Import uploads into a repository": [
@@ -3633,6 +3618,9 @@
       "Include filter": [
         ""
       ],
+      "Include manifests": [
+        ""
+      ],
       "Included": [
         ""
       ],
@@ -3654,9 +3642,6 @@
       "Incremental Update incomplete.": [
         "증분 업데이트가 완료되지 않았습니다. "
       ],
-      "Incremental Update of  Content View Version(s) ": [
-        ""
-      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         ""
       ],
@@ -3669,25 +3654,10 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         "복합 %{name} v버전 %{version}에 대해 증분 업데이트가 지정되었지만 구성 요소가 업데이트되지 않았습니다."
       ],
-      "Index content": [
-        "컨텐츠 인덱싱"
-      ],
-      "Index errata": [
-        "에라타 인덱스"
-      ],
-      "Index module streams": [
-        ""
-      ],
-      "Index package groups": [
-        "패키지 그룹 인덱싱"
-      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "정보 유형은 다음 중 하나이어야 합니다 [ %{list} ]"
       ],
       "Inherit from Repository": [
-        ""
-      ],
-      "Initialize": [
         ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
@@ -3765,9 +3735,6 @@
       "Installing Package...": [
         "패키지 설치 중..."
       ],
-      "Instance update": [
-        ""
-      ],
       "Instance-based": [
         "인스턴스 기반 "
       ],
@@ -3798,8 +3765,8 @@
       "Invalid erratum filter rule specified, 'errata_id' cannot be specified in the same tuple as 'start_date', 'end_date' or 'types'": [
         "잘못된 에라타 필터 규칙이 지정되었습니다. 'errata_id'는 'start_date', 'end_date', 'types'과 동일한 튜플로 지정할 수 없습니다"
       ],
-      "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date' or 'types'": [
-        "잘못된 에라타 필터 규칙이 지정되었습니다. 최소 다음 중 하나를 지정해야 합니다: 'errata_id', 'start_date', 'end_date', 'types'"
+      "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date', 'types', or 'allow_other_types'": [
+        ""
       ],
       "Invalid erratum types %{invalid_types} provided. Erratum type can be any of %{valid_types}": [
         "잘못된 에라타 유형 %{invalid_types}이 지정되었습니다. 에라타 유형은 %{valid_types} 중 하나가 될 수 있습니다"
@@ -3882,7 +3849,25 @@
       "Job '${description}' has started.": [
         ""
       ],
+      "Katello Bootc interface": [
+        ""
+      ],
       "Katello ID of local pool to update": [
+        ""
+      ],
+      "Katello: Bootc Action": [
+        ""
+      ],
+      "Katello: Bootc Rollback": [
+        ""
+      ],
+      "Katello: Bootc Status": [
+        ""
+      ],
+      "Katello: Bootc Switch": [
+        ""
+      ],
+      "Katello: Bootc Upgrade": [
         ""
       ],
       "Katello: Configure host for new content source": [
@@ -3933,6 +3918,9 @@
       "Katello: Upload Profile": [
         ""
       ],
+      "Keep latest packages": [
+        ""
+      ],
       "Key-value hash of subscription-manager facts, nesting uses a period delimiter (.)": [
         ""
       ],
@@ -3955,6 +3943,9 @@
         "컨텐츠 레이블 "
       ],
       "Label of the content view": [
+        ""
+      ],
+      "Label of the flatpak remote": [
         ""
       ],
       "Last check-in:": [
@@ -4122,6 +4113,9 @@
       "List available subscriptions from Red Hat Subscription Management": [
         ""
       ],
+      "List booted bootc container images for hosts": [
+        ""
+      ],
       "List components attached to this content view": [
         ""
       ],
@@ -4160,6 +4154,15 @@
       ],
       "List filter rules": [
         "필터 규칙 목록 나열 "
+      ],
+      "List flatpak remote repositories": [
+        ""
+      ],
+      "List flatpak remote's repositories": [
+        ""
+      ],
+      "List flatpak remotes": [
+        ""
       ],
       "List host collections": [
         "호스트 컬렉션 목록 나열 "
@@ -4326,6 +4329,9 @@
       "List the lifecycle environments not attached to the smart proxy": [
         ""
       ],
+      "Load balancer": [
+        ""
+      ],
       "Loading": [
         "로딩 중 "
       ],
@@ -4455,9 +4461,6 @@
       "Messaging connection": [
         "메시징 연결"
       ],
-      "Metadata generate": [
-        ""
-      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -4465,6 +4468,12 @@
         ""
       ],
       "Minimum version": [
+        ""
+      ],
+      "Mirror Remote Repository": [
+        ""
+      ],
+      "Mirror a flatpak remote repository": [
         ""
       ],
       "Missing activation key!": [
@@ -4478,6 +4487,9 @@
       ],
       "Moderate": [
         "중간 수준"
+      ],
+      "Modify via remote execution": [
+        ""
       ],
       "Modular": [
         "모듈식의"
@@ -4500,13 +4512,7 @@
       "Module streams will appear here after enabling Red Hat repositories or creating custom products.": [
         ""
       ],
-      "Multi copy all units": [
-        ""
-      ],
-      "Multi copy content": [
-        ""
-      ],
-      "Multi copy units": [
+      "Multi Content View Environment": [
         ""
       ],
       "Multi-entitlement": [
@@ -4559,6 +4565,12 @@
       ],
       "Name of the content view": [
         "컨텐츠 뷰 이름 "
+      ],
+      "Name of the flatpak remote": [
+        ""
+      ],
+      "Name of the flatpak remote repository": [
+        ""
       ],
       "Name of the host": [
         ""
@@ -4683,6 +4695,9 @@
       "No content in selected versions.": [
         ""
       ],
+      "No content view environments": [
+        ""
+      ],
       "No content view environments found with ids: %{ids}": [
         ""
       ],
@@ -4717,9 +4732,6 @@
         ""
       ],
       "No enabled repositories match your search criteria.": [
-        ""
-      ],
-      "No environment": [
         ""
       ],
       "No environments": [
@@ -5304,7 +5316,10 @@
       "Package installation: \\\"%{package}\\\" ": [
         "패키지 설치: \\\"%{package}\\\""
       ],
-      "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg, bdist_dumb, bdist_egg, bdist_msi, bdist_rpm, bdist_wheel, bdist_wininst, sdist.": [
+      "Package mode": [
+        ""
+      ],
+      "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist.": [
         ""
       ],
       "Packages": [
@@ -5433,6 +5448,9 @@
       "Policy to set for mirroring content.  Must be one of %s.": [
         ""
       ],
+      "Possible values: %s": [
+        ""
+      ],
       "Prefer registered through Smart Proxy for remote execution": [
         ""
       ],
@@ -5480,6 +5498,9 @@
       ],
       "Product ID": [
         "제품 ID"
+      ],
+      "Product ID to mirror the remote repository to": [
+        ""
       ],
       "Product and Repositories": [
         "제품 및 리포지터리 "
@@ -5661,9 +5682,6 @@
       "Pulp task error": [
         "Pulp 작업 오류 "
       ],
-      "Purge completed tasks": [
-        ""
-      ],
       "Python Package": [
         ""
       ],
@@ -5772,9 +5790,6 @@
       "Reclaim Space": [
         "공간 회수"
       ],
-      "Reclaim space": [
-        ""
-      ],
       "Reclaim space from On Demand repositories": [
         ""
       ],
@@ -5838,9 +5853,6 @@
       "Refresh all alternate content sources": [
         ""
       ],
-      "Refresh all distributions": [
-        ""
-      ],
       "Refresh alternate content sources": [
         ""
       ],
@@ -5853,13 +5865,7 @@
       "Refresh counts": [
         ""
       ],
-      "Refresh distribution": [
-        ""
-      ],
       "Refresh errata applicability": [
-        ""
-      ],
-      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
@@ -5867,12 +5873,6 @@
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Red Hat 공급자에 대해 이전에 가져온 매니페스트를 새로 고침 "
-      ],
-      "Refresh remote": [
-        ""
-      ],
-      "Refresh repos": [
-        ""
       ],
       "Refresh source": [
         ""
@@ -5898,6 +5898,9 @@
       "Registered on": [
         ""
       ],
+      "Registered to": [
+        ""
+      ],
       "Registering to multiple environments is not enabled.": [
         ""
       ],
@@ -5912,9 +5915,6 @@
       ],
       "Registry name pattern will result in invalid container image name of member repositories": [
         ""
-      ],
-      "Reindex subscriptions": [
-        "서브스크립션 다시 인덱싱"
       ],
       "Related composite content views": [
         ""
@@ -6012,9 +6012,6 @@
       "Remove one or more subscriptions from an upstream manifest": [
         ""
       ],
-      "Remove orphans": [
-        ""
-      ],
       "Remove package group via Katello interface": [
         "Katello 인터페이스를 통해 패키지 그룹 삭제"
       ],
@@ -6042,12 +6039,6 @@
       "Remove subscriptions from one or more hosts": [
         ""
       ],
-      "Remove units": [
-        ""
-      ],
-      "Remove unneeded repos": [
-        ""
-      ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "컨텐츠 뷰에서 버전 및 환경 삭제 후 시스템 및 키 다시 지정 "
       ],
@@ -6072,9 +6063,6 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         ""
       ],
-      "Repair": [
-        ""
-      ],
       "Replace content source on the target machine": [
         ""
       ],
@@ -6093,17 +6081,11 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
-      "Repositories certs reset": [
-        ""
-      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
         "공개된 컨텐츠 뷰에서 리포지터리는 허용되지 않습니다. "
-      ],
-      "Repositories gpg reset": [
-        ""
       ],
       "Repository": [
         "리포지터리 "
@@ -6396,6 +6378,12 @@
       "Roles": [
         "역할 "
       ],
+      "Rollback image": [
+        ""
+      ],
+      "Rollback image digest": [
+        ""
+      ],
       "Rules to be added": [
         ""
       ],
@@ -6407,6 +6395,12 @@
       ],
       "Running": [
         "실행 중 "
+      ],
+      "Running image": [
+        ""
+      ],
+      "Running image digest": [
+        ""
       ],
       "SKU": [
         ""
@@ -6435,25 +6429,10 @@
       "Save": [
         "저장"
       ],
-      "Save artifact": [
-        ""
-      ],
-      "Save distribution references": [
-        ""
-      ],
-      "Save publication": [
-        ""
-      ],
-      "Save version": [
-        ""
-      ],
-      "Save versions": [
-        ""
-      ],
       "Saving alternate content source...": [
         ""
       ],
-      "Scan cdn": [
+      "Scan a flatpak remote": [
         ""
       ],
       "Schema version 1": [
@@ -6559,9 +6538,6 @@
         ""
       ],
       "Select action": [
-        ""
-      ],
-      "Select add-ons": [
         ""
       ],
       "Select all": [
@@ -6702,13 +6678,13 @@
       "Set content overrides to one or more hosts": [
         ""
       ],
+      "Set this HTTP proxy as the default content HTTP proxy": [
+        ""
+      ],
       "Set true to override to enabled; Set false to override to disabled.'": [
         ""
       ],
       "Set true to remove an override and reset it to 'default'": [
-        ""
-      ],
-      "Sets the system add-ons": [
         ""
       ],
       "Sets the system purpose usage": [
@@ -6743,6 +6719,12 @@
       ],
       "Show a content view's history": [
         "컨텐츠 뷰의 기록 표시 "
+      ],
+      "Show a flatpak remote": [
+        ""
+      ],
+      "Show a flatpak remote repository": [
+        ""
       ],
       "Show a host collection": [
         "호스트 컬렉션 표시 "
@@ -7071,6 +7053,12 @@
       "Stacking ID": [
         "스태킹 ID"
       ],
+      "Staged image": [
+        ""
+      ],
+      "Staged image digest": [
+        ""
+      ],
       "Start Date": [
         "시작 날짜 "
       ],
@@ -7236,9 +7224,6 @@
       "Supported Content Types": [
         ""
       ],
-      "Sync": [
-        ""
-      ],
       "Sync Canceled": [
         "동기화 취소 "
       ],
@@ -7293,9 +7278,6 @@
       "Sync all repositories for a product": [
         "제품의 모든 리포지터리 동기화"
       ],
-      "Sync capsule": [
-        ""
-      ],
       "Sync complete.": [
         "동기화가 완료되었습니다. "
       ],
@@ -7312,9 +7294,6 @@
         ""
       ],
       "Sync state": [
-        ""
-      ],
-      "Syncable export": [
         ""
       ],
       "Synced": [
@@ -7430,6 +7409,9 @@
       ],
       "The actual file contents": [
         "실제 파일 컨텐츠 "
+      ],
+      "The amount of latest versions of a package to keep on sync, includes pre-releases if synced. Default 0 keeps all versions.": [
+        ""
       ],
       "The content type for the Alternate Content Source": [
         ""
@@ -7674,6 +7656,9 @@
       "This content view version doesn't have a history.": [
         ""
       ],
+      "This content view version is used in one or more multi-environment hosts. The version will simply be removed from the multi-environment hosts. The content view and lifecycle environment you select here will only apply to single-environment hosts. See hammer activation-key --help for more details.": [
+        ""
+      ],
       "This content view will be automatically updated to the latest version.": [
         ""
       ],
@@ -7684,6 +7669,9 @@
         ""
       ],
       "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.": [
+        ""
+      ],
+      "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details.": [
         ""
       ],
       "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
@@ -7812,7 +7800,7 @@
       "To manage packages, select an action.": [
         ""
       ],
-      "Toggle": [
+      "Token/password for the flatpak remote": [
         ""
       ],
       "Total steps: ": [
@@ -8076,6 +8064,9 @@
       "Update a filter rule. The parameters included should be based upon the filter type.": [
         "필터 규칙을 업데이트합니다. 포함된 매개 변수는 필터 유형에 기반해야 합니다. "
       ],
+      "Update a flatpak remote": [
+        ""
+      ],
       "Update a host collection": [
         "호스트 컬렉션 업데이트 "
       ],
@@ -8100,25 +8091,13 @@
       "Update content counts for the smart proxy": [
         ""
       ],
-      "Update content urls": [
-        ""
-      ],
       "Update content view environments for host": [
         ""
       ],
       "Update content view environments for host %s": [
         ""
       ],
-      "Update distributions": [
-        ""
-      ],
       "Update hosts manually": [
-        ""
-      ],
-      "Update http proxy": [
-        ""
-      ],
-      "Update http proxy details": [
         ""
       ],
       "Update installed packages, enabled repos, module inventory": [
@@ -8136,19 +8115,10 @@
       "Update packages via Katello interface": [
         ""
       ],
-      "Update redhat repository": [
-        ""
-      ],
       "Update release version for host": [
         ""
       ],
       "Update release version for host %s": [
-        ""
-      ],
-      "Update remote": [
-        ""
-      ],
-      "Update repository": [
         ""
       ],
       "Update services requiring restart": [
@@ -8241,12 +8211,6 @@
       "Upload a subscription manifest": [
         "서브스크립션 매니페스트 업로드 "
       ],
-      "Upload content": [
-        ""
-      ],
-      "Upload file": [
-        ""
-      ],
       "Upload into": [
         "업로드 "
       ],
@@ -8255,9 +8219,6 @@
       ],
       "Upload request id": [
         "요청 ID 업로드 "
-      ],
-      "Upload tag": [
-        ""
       ],
       "Upstream Candlepin": [
         ""
@@ -8346,6 +8307,9 @@
       "Username for authentication. Relevant only for 'upstream_server' type.": [
         ""
       ],
+      "Username for the flatpak remote": [
+        ""
+      ],
       "Username of the upstream repository user used for authentication": [
         ""
       ],
@@ -8369,9 +8333,6 @@
       ],
       "Verify SSL": [
         "SSL 확인 "
-      ],
-      "Verify checksum": [
-        ""
       ],
       "Verify checksum for content on smart proxy": [
         ""
@@ -8679,6 +8640,9 @@
       "actions not found": [
         ""
       ],
+      "activation key": [
+        ""
+      ],
       "activation key identifier": [
         "활성키 ID "
       ],
@@ -8790,8 +8754,8 @@
       "cannot be set because unlimited hosts is set": [
         ""
       ],
-      "cannot be set for non-yum repositories.": [
-        "비yum 리포지터리에 대해 설정할 수 없습니다."
+      "cannot be set for repositories without 'Additive' mirroring policy.": [
+        ""
       ],
       "cannot contain characters other than ascii alpha numerals, '_', '-'. ": [
         "ASCII 영숫자, '_', '-' 이외의 문자를 포함할 수 없습니다."
@@ -8830,6 +8794,9 @@
         "컨텐츠 릴리즈 버전 "
       ],
       "content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')": [
+        ""
+      ],
+      "content type ('deb', 'file', 'ostree_ref', 'rpm', 'srpm')": [
         ""
       ],
       "content view component ID. Identifier of the component association": [
@@ -8916,7 +8883,7 @@
       "disk": [
         ""
       ],
-      "download policy for yum, deb, and docker repos (either 'immediate' or 'on_demand')": [
+      "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
         ""
       ],
       "enables or disables synchronization": [
@@ -8954,6 +8921,9 @@
       ],
       "erratum: IDs or a select all object": [
         "에라타: ID 또는 모든 개체 선택 "
+      ],
+      "erratum: allow types not matching a valid errata type": [
+        ""
       ],
       "erratum: end date (YYYY-MM-DD)": [
         "에라타: 종료일 (YYYY-MM-DD)"
@@ -9013,6 +8983,9 @@
         "제품에 대해 이미 사용되고 있습니다. "
       ],
       "here": [
+        ""
+      ],
+      "host": [
         ""
       ],
       "host collection name to filter by": [
@@ -9133,6 +9106,18 @@
         ""
       ],
       "module streams not found": [
+        ""
+      ],
+      "multi-environment activation key": [
+        ""
+      ],
+      "multi-environment activation keys": [
+        ""
+      ],
+      "multi-environment host": [
+        ""
+      ],
+      "multi-environment hosts": [
         ""
       ],
       "must be %{gpg_key} or %{cert}": [
