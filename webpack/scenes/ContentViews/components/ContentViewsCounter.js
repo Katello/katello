@@ -5,7 +5,6 @@ import { Grid, GridItem, Flex, FlexItem, Tooltip } from '@patternfly/react-core'
 import { InProgressIcon, OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import ContentViewIcon from './ContentViewIcon';
 import { selectOrganizationState } from '../../Organizations/OrganizationSelectors';
-import { contentViewDescriptions } from '../Create/CreateContentViewForm';
 
 const ContentViewsCounter = () => {
   const organization = useSelector(selectOrganizationState);
@@ -31,7 +30,7 @@ const ContentViewsCounter = () => {
               <FlexItem>
                 <Tooltip
                   position="top"
-                  content={__(contentViewDescriptions.CV)}
+                  content={__('Contains repositories. Versions are published and optionally filtered.')}
                 >
                   <OutlinedQuestionCircleIcon />
                 </Tooltip>
@@ -52,7 +51,7 @@ const ContentViewsCounter = () => {
               <FlexItem>
                 <Tooltip
                   position="top"
-                  content={__(contentViewDescriptions.CCV)}
+                  content={__('Contains content views. You must choose the version to use for each content view.')}
                 >
                   <OutlinedQuestionCircleIcon />
                 </Tooltip>
@@ -73,7 +72,7 @@ const ContentViewsCounter = () => {
               <FlexItem>
                 <Tooltip
                   position="top"
-                  content={__(contentViewDescriptions.RCV)}
+                  content={__('Contains repositories. Always serves the latest synced content, without the need to publish versions.')}
                 >
                   <OutlinedQuestionCircleIcon />
                 </Tooltip>
