@@ -704,7 +704,7 @@ module Katello
                           .uniq
                           .map { |task| "- #{Setting['foreman_url']}/foreman_tasks/tasks/#{task&.id}" }
                           .join("\n")
-        fail _("This repository has pending tasks in associated content views. Please wait for the tasks: " + errored_tasks +
+        fail _("Repository #{self.label} has pending tasks in associated content views. Please wait for the tasks: " + errored_tasks +
                " to complete before proceeding.")
       end
     end
