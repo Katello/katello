@@ -168,14 +168,14 @@ KT.orgswitcher = (function($) {
                 }
                 this_favorite.show();
 
-                this_checkbox.removeAttr("disabled");
+                this_checkbox.prop("disabled", false);
               },
               error: function(data, textStatus, jqXHR){
                 //hide the spinner and show the favorite is not selected
                 this_spinner.addClass('hidden').hide();
                 this_checkbox.attr("checked", false);
                 this_favorite.show();
-                this_checkbox.removeAttr("disabled");
+                this_checkbox.prop("disabled", false);
               }
           });
       }

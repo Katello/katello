@@ -183,8 +183,8 @@ KT.env_content_view_selector = (function() {
             $('.cancel_env_content_view').attr('disabled', 'disabled');
         },
         enable_buttons = function() {
-            $('.save_env_content_view').removeAttr('disabled');
-            $('.cancel_env_content_view').removeAttr('disabled');
+            $('.save_env_content_view').prop("disabled", false);
+            $('.cancel_env_content_view').prop("disabled", false);
         };
 
     return {

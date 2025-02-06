@@ -77,10 +77,10 @@ KT.object.label = (function(){
     enable_inputs = function(current_name_input) {
         if (current_name_input === undefined) {
             // enable all label inputs
-            $(".label_input").removeAttr("disabled");
+            $(".label_input").prop("disabled", false);
         } else {
             // enable the label input associated with the current name
-            current_name_input.closest('fieldset').next('fieldset').find('input.label_input').removeAttr("disabled");
+            current_name_input.closest('fieldset').next('fieldset').find('input.label_input').prop("disabled", false);
         }
     };
 
