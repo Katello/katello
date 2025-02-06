@@ -8,7 +8,7 @@ module ::Actions::Pulp3
       User.current = users(:admin)
       @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
-      @repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+      @repo.root.update!(url: 'https://fixtures.pulpproject.org/rpm-no-comps/')
       create_repo(@repo, @primary)
       ForemanTasks.sync_task(
           ::Actions::Katello::Repository::MetadataGenerate, @repo)
