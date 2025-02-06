@@ -9593,7 +9593,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
 
         if (writeAttr !== false) {
           if (value === null || isUndefined(value)) {
-            this.$$element.removeAttr(attrName);
+            this.$$element.prop(attrName, false);
           } else {
             if (SIMPLE_ATTR_NAME.test(attrName)) {
               // jQuery skips special boolean attrs treatment in XML nodes for
@@ -9602,7 +9602,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
               // in XHTML, call `removeAttr` in such cases instead.
               // See https://github.com/jquery/jquery/issues/4249
               if (booleanKey && value === false) {
-                this.$$element.removeAttr(attrName);
+                this.$$element.prop(attrName, false);
               } else {
                 this.$$element.attr(attrName, value);
               }

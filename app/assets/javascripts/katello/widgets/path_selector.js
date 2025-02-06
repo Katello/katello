@@ -192,7 +192,7 @@ KT.path_select = function(div_id, name, environments, options_in){
             on_deselect = function(select_elem){
                 unselect_nodes(select_elem);
                 if(options.select_mode === 'single'){
-                    nodes.removeAttr('disabled');
+                    nodes.prop("disabled", false);
                 }
                 if(options.link_first && select_elem.parents('li').is(':first-child')){
                     unselect_nodes(first_nodes.find('input:checkbox:checked').hide());
@@ -219,14 +219,15 @@ KT.path_select = function(div_id, name, environments, options_in){
             }
         },
         unselect_nodes = function(checkbox_list){
-            checkbox_list.removeAttr('checked').removeAttr('disabled');
+            checkbox_list.prop('checked', false);
+            checkbox_list.prop('disabled', false);
             checkbox_list.parents('label').removeClass('active');
         },
         disable_all = function() {
             path_selector.find('input:checkbox').attr('disabled', 'disabled');
         },
         enable_all = function() {
-            path_selector.find('input:checkbox').removeAttr('disabled');
+            path_selector.find('input:checkbox').prop('disabled', false);
         },
         get_selected = function(){
             var selected = path_selector.find('input:checked'),
@@ -276,7 +277,7 @@ KT.path_select = function(div_id, name, environments, options_in){
             return options.select_event;
         },
         clear_selected = function(){
-            path_selector.find('input:disabled').removeAttr('disabled');
+            path_selector.find('input:disabled').prop('disabled', false);
             unselect_nodes(path_selector.find('input:checked').hide());
         },
         set_selected = function(id) {
