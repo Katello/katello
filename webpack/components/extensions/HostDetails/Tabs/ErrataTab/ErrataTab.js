@@ -427,7 +427,7 @@ export const ErrataTab = () => {
             />
             <ErrataToggleGroupItem
               text={__('Installable')}
-              tooltipText={__('Installable errata are applicable errata that are available in the host\'s content view and lifecycle environment.')}
+              tooltipText={__('Installable errata are applicable errata that are available in the host\'s assigned content view environments.')}
               buttonId="installableToggle"
               aria-label="Show installable errata"
               isSelected={toggleGroupState === INSTALLABLE}
@@ -557,7 +557,7 @@ export const ErrataTab = () => {
                         <span>
                           <Tooltip
                             content={
-                              __("This erratum is not installable because it is not in this host's content view and lifecycle environment.")
+                              __("This erratum is not installable because it is not in this host's assigned content view environments.")
                             }
                           >
 

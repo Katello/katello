@@ -87,7 +87,7 @@ const DebInstallModal = ({
   isOpen, closeModal, hostId, hostName, triggerPackageInstall,
 }) => {
   const emptyContentTitle = __('No packages available to install');
-  const emptyContentBody = __('No packages available to install on this host. Please check the host\'s content view and lifecycle environment.');
+  const emptyContentBody = __('No packages available to install on this host. Please check the host\'s assigned content view environments.');
   const emptySearchTitle = __('No matching packages found');
   const emptySearchBody = __('Try changing your search settings.');
   const columnHeaders = ['', __('Package'), __('Version')];
