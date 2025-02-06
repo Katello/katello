@@ -81,31 +81,17 @@ export default () => {
   if (status === STATUS.PENDING) return (<Loading />);
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
 
-  const dropDownItems = [
-    <DropdownItem
-      key="copy"
-      ouiaId="cv-copy"
-      onClick={() => {
-        setCopying(true);
-      }}
-    >
-      {__('Copy')}
-    </DropdownItem>,
-    <DropdownItem
-      key="delete"
-      ouiaId="cv-delete"
-      onClick={() => {
-        setDeleting(true);
-      }}
-    >
-      {__('Delete')}
-    </DropdownItem>,
-  ];
-
   const {
-    name, composite, permissions, environments, versions,
+    name, composite, rolling, permissions, environments, versions,
     generated_for: generatedFor, import_only: importOnly,
   } = details;
+
+  const dropDownItems = [];
+  if (!rolling) {
+    dropDownItems.push(<DropdownItem key="copy" ouiaId="cv-copy" onClick={() => { setCopying(true); }} > {__('Copy')}</DropdownItem>);
+  }
+  dropDownItems.push(<DropdownItem key="delete" ouiaId="cv-delete" onClick={() => { setDeleting(true); }} > {__('Delete')}</DropdownItem>);
+
   const generatedContentView = generatedFor !== 'none';
   const detailsTab = {
     key: 'details',
@@ -141,11 +127,11 @@ export default () => {
   /* eslint-disable no-nested-ternary */
   const tabs = [
     detailsTab,
-    versionsTab,
+    ...(rolling ? [] : [versionsTab]),
     ...(composite ? [contentViewsTab] :
-      ((importOnly || generatedContentView) ?
+      ((importOnly || generatedContentView || rolling) ?
         [repositoriesTab] : [repositoriesTab, filtersTab])),
-    historyTab,
+    ...(rolling ? [] : [historyTab]),
   ];
   /* eslint-enable no-nested-ternary */
 
@@ -162,7 +148,11 @@ export default () => {
               <FlexItem>
                 <TextContent>
                   <Text ouiaId="cv-details-header-name" component={TextVariants.h1}>
-                    <ContentViewIcon count={truncate(name)} composite={composite} />
+                    <ContentViewIcon
+                      count={truncate(name)}
+                      composite={composite}
+                      rolling={rolling}
+                    />
                   </Text>
                 </TextContent>
               </FlexItem>
@@ -170,7 +160,8 @@ export default () => {
           </GridItem>
           <GridItem md={4} sm={12} style={{ minWidth: '380px' }}>
             <Flex justifyContent={{ lg: 'justifyContentFlexEnd', sm: 'justifyContentFlexStart' }}>
-              {hasPermission(permissions, 'publish_content_views') &&
+              {!rolling &&
+                hasPermission(permissions, 'publish_content_views') &&
                 <FlexItem>
                   <Button
                     ouiaId="cv-details-publish-button"
