@@ -32,8 +32,12 @@ module Katello
     end
 
     def sync
-      tasks = sync_repos(params[:repoids]) || []
-      render :json => tasks.as_json
+      begin
+        tasks = sync_repos(params[:repoids]) || []
+        render json: tasks.as_json
+      rescue StandardError => e
+        render json: { error: e.message }, status: :internal_server_error
+      end
     end
 
     def sync_status
