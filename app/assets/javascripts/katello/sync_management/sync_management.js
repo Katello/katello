@@ -387,6 +387,20 @@ $("#sync_product_form")
     if ($("input[name='repoids[]']:checked").length === 0) {
       return false;
     }
+  })
+  .on("ajax:error", function (event, response) {
+    let errorMessage = localize("error");
+    if (response && response.responseJSON && response.responseJSON.error) {
+      errorMessage = response.responseJSON.error;
+    }
+    if (window.tfm && window.tfm.toastNotifications) {
+      window.tfm.toastNotifications.notify({
+        message: errorMessage,
+        type: "danger",
+      });
+    } else {
+      alert(errorMessage);
+    }
   });
 
 $("#sync_toggle").on("change", function () {
