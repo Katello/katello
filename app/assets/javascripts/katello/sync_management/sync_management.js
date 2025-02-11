@@ -124,7 +124,7 @@ KT.content = (function () {
       KT.content.select_repo();
     },
     select_none = function () {
-      $("#products_table").find("input[type=checkbox]").removeAttr("checked");
+      $("#products_table").find("input[type=checkbox]").prop("checked", false);
       KT.content.select_repo();
     },
     select_repo = function () {
@@ -185,7 +185,7 @@ KT.content = (function () {
     expand_all = function () {
       var sync_toggle = $("#sync_toggle");
       if ($(sync_toggle).is(":checked")) {
-        $(sync_toggle).removeAttr("checked");
+        $(sync_toggle).prop("checked", false);
         KT.content.showAll();
       }
       $("#products_table")

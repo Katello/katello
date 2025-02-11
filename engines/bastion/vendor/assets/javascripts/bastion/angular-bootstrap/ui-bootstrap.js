@@ -6082,7 +6082,7 @@ angular.module('ui.bootstrap.timepicker', [])
     padHours = angular.isDefined($attrs.padHours) ? $scope.$parent.$eval($attrs.padHours) : true;
 
   $scope.tabindex = angular.isDefined($attrs.tabindex) ? $attrs.tabindex : 0;
-  $element.removeAttr('tabindex');
+  $element.prop('tabindex', false);
 
   this.init = function(ngModelCtrl_, inputs) {
     ngModelCtrl = ngModelCtrl_;
@@ -6805,7 +6805,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.debounce', 'ui.bootstrap
       });
 
       if (hintInputElem.attr('id')) {
-        hintInputElem.removeAttr('id'); // remove duplicate id if present.
+        hintInputElem.prop('id', false); // remove duplicate id if present.
       }
       inputsContainer.append(hintInputElem);
       hintInputElem.after(element);
@@ -6854,7 +6854,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.debounce', 'ui.bootstrap
     // This attribute is added or removed automatically when the `activeIdx` changes.
     scope.$watch('activeIdx', function(index) {
       if (index < 0) {
-        element.removeAttr('aria-activedescendant');
+        element.prop('aria-activedescendant', '');
       } else {
         element.attr('aria-activedescendant', getMatchId(index));
       }
