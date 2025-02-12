@@ -107,12 +107,16 @@ child :content_view_components => :content_view_components do
   extends "katello/api/v2/content_view_components/show"
 end
 
-child :activation_keys => :activation_keys do
-  attributes :id, :name
+node :activation_keys do |cv|
+  cv.activation_keys.uniq.map do |ak|
+    { id: ak.id, name: ak.name }
+  end
 end
 
-child :hosts => :hosts do
-  attributes :id, :name
+node :hosts do |cv|
+  cv.hosts.uniq.map do |host|
+    { id: host.id, name: host.name }
+  end
 end
 
 extends 'katello/api/v2/common/timestamps'
