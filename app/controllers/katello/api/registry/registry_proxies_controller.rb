@@ -23,7 +23,19 @@ module Katello
     end
 
     rescue_from RestClient::Exception do |e|
-      Rails.logger.error pp_exception(e)
+      # Log BLOB_UNKNOWN errors as info.
+      # These 404s occur as part of podman push's blob lookup and should not be reported as errors.
+      if e.http_code == 404
+        body = JSON.parse(e.http_body) rescue {}
+        if body["errors"]&.any? { |error| error["code"] == "BLOB_UNKNOWN" }
+          Rails.logger.info pp_exception(e)
+        else
+          Rails.logger.error pp_exception(e)
+        end
+      else
+        Rails.logger.error pp_exception(e)
+      end
+
       if request_from_katello_cli?
         render json: { errors: [e.http_body] }, status: e.http_code
       else
