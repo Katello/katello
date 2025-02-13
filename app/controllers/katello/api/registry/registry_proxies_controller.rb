@@ -481,14 +481,18 @@ module Katello
       if !require_user_authorization?
         personal_token = OpenStruct.new(token: 'unauthenticated', issued_at: Time.now, expires_at: 3.minutes.from_now)
       else
-        personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry').first
-        if personal_token.nil?
-          personal_token = PersonalAccessToken.new(user: User.current, name: 'registry', expires_at: 6.minutes.from_now)
-          personal_token.generate_token
-          personal_token.save!
-        else
-          personal_token.expires_at = 6.minutes.from_now
-          personal_token.save!
+        PersonalAccessToken.transaction do
+          personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry').first
+          if personal_token.nil?
+            personal_token = PersonalAccessToken.new(user: User.current, name: 'registry', expires_at: 6.minutes.from_now)
+            personal_token.generate_token
+            personal_token.save!
+          else
+            personal_token.expires_at = 6.minutes.from_now
+            personal_token.save!
+          end
+        rescue ActiveRecord::RecordInvalid
+          personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry').reload.first
         end
       end
 
