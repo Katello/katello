@@ -5,8 +5,9 @@
     option.kt-cv  { margin-left: 1em; }
 </style>
 <% spinner_path = asset_path('spinner.gif') %>
+<% can_change_content_source = User.current.can?("view_smart_proxies") && User.current.can?("view_capsule_content") %>
 
-<% if edit_action? && !using_hostgroups_page? && !using_discovered_hosts_page? %>
+<% if edit_action? && !using_hostgroups_page? && !using_discovered_hosts_page? && can_change_content_source %>
   <div style="margin-left: 270px">
     <%= link_to _("Change content source"), "/change_host_content_source?fromPage=hostEdit&host_id=#{@host.id}&initialContentSourceId=#{@host.content_source_id}" %>
   </div>
