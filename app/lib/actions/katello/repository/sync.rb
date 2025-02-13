@@ -5,6 +5,7 @@ module Actions
       class Sync < Actions::EntryAction
         extend ApipieDSL::Class
         include Helpers::Presenter
+        include Helpers::RollingCVRepos
         include ::Actions::ObservableAction
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
@@ -56,6 +57,7 @@ module Actions
               end
               plan_self(:id => repo.id, :sync_result => output, :skip_metadata_check => skip_metadata_check, :validate_contents => validate_contents,
                         :contents_changed => output[:contents_changed])
+              update_rolling_content_views(repo)
               plan_action(Katello::Repository::SyncHook, :id => repo.id)
             end
           end
