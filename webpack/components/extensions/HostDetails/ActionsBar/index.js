@@ -22,6 +22,9 @@ const HostActionsBar = () => {
   const recalculateApplicability = ['edit_hosts', 'create_job_invocations'];
   const showRecalculate =
     can(recalculateApplicability, userPermissionsFromHostDetails({ hostDetails }));
+  const changeContentSource = ['view_smart_proxies', 'view_capsule_content'];
+  const showChangeContentSource =
+    can(changeContentSource, userPermissionsFromHostDetails({ hostDetails }));
 
   const refreshHostDetails = () => dispatch({
     type: 'API_GET',
@@ -62,14 +65,17 @@ const HostActionsBar = () => {
         </DropdownItem>
       )
       }
-      <DropdownItem
-        ouiaId="katello-change-host-content-source"
-        key="katello-change-host-content-source"
-        href={foremanUrl(`/change_host_content_source?host_id=${hostDetails?.id}&initialContentSourceId=${hostDetails?.content_facet_attributes?.content_source_id}`)}
-        icon={<CubeIcon />}
-      >
-        {__('Change content source')}
-      </DropdownItem>
+      {showChangeContentSource && (
+        <DropdownItem
+          ouiaId="katello-change-host-content-source"
+          key="katello-change-host-content-source"
+          href={foremanUrl(`/change_host_content_source?host_id=${hostDetails?.id}&initialContentSourceId=${hostDetails?.content_facet_attributes?.content_source_id}`)}
+          icon={<CubeIcon />}
+        >
+          {__('Change content source')}
+        </DropdownItem>
+      )
+      }
     </>
   );
 };

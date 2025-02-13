@@ -39,6 +39,8 @@ child :content_facet => :content_facet_attributes do
     node(:view_activation_keys) { user.can?("view_activation_keys") }
     node(:view_products) { user.can?("view_products") }
     node(:create_bookmarks) { user.can?("create_bookmarks") }
+    node(:view_smart_proxies) { user.can?("view_smart_proxies") }
+    node(:view_capsule_content) { user.can?("view_capsule_content") }
   end
 end
 
