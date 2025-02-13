@@ -45,9 +45,15 @@ module Actions
 
             pulp_repo = repo.backend_service(smart_proxy)
             if !current_repos_on_capsule_ids.include?(repo.id)
+              # create_mirror_entities does not apply to the primary smart proxy
               pulp_repo.create_mirror_entities
             else
-              tasks += pulp_repo.refresh_mirror_entities
+              if smart_proxy.pulp_primary?
+                # The primary smart proxy has extra remote options, like proxy_url
+                tasks += pulp_repo.refresh_entities
+              else
+                tasks += pulp_repo.refresh_mirror_entities
+              end
             end
           end
           tasks
