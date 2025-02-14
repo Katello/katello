@@ -27,12 +27,14 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkReleaseVersi
         }
 
         $scope.selected = {
-            release: undefined
+            release: ""
         };
         $scope.fetchingReleases = true;
 
         Organization.releaseVersions({id: CurrentOrganization}, function (response) {
             $scope.releases = response.results;
+            // Add empty string to unset the release version
+            $scope.releases.unshift("");
             $scope.fetchingReleases = false;
         });
 
