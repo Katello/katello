@@ -136,6 +136,10 @@ module Katello
         RepositoryMirror.new(self).refresh_entities
       end
 
+      def refresh_entities
+        [update_remote].flatten.compact
+      end
+
       def refresh_if_needed
         tasks = []
         tasks << update_remote #always update remote
