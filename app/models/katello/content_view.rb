@@ -42,12 +42,12 @@ module Katello
              :through => :content_view_environments
     has_many :content_facets, :class_name => "Katello::Host::ContentFacet", :through => :content_view_environment_content_facets,
              :inverse_of => :content_views
-    has_many :hosts, :class_name => "::Host::Managed", :through => :content_facets,
+    has_many :hosts, -> { reorder(:id).distinct }, :class_name => "::Host::Managed", :through => :content_facets,
              :inverse_of => :content_views
 
     has_many :content_view_environment_activation_keys, :class_name => "Katello::ContentViewEnvironmentActivationKey",
              :through => :content_view_environments
-    has_many :activation_keys, :class_name => "Katello::ActivationKey", :through => :content_view_environment_activation_keys,
+    has_many :activation_keys, -> { reorder(:id).distinct }, :class_name => "Katello::ActivationKey", :through => :content_view_environment_activation_keys,
              :inverse_of => :content_views
 
     has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet",
