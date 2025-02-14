@@ -27,7 +27,7 @@
         <i ng-show="fetchingReleases" class="fa fa-spinner inline-icon fa-spin"></i>
         <select ng-hide="fetchingReleases || releases.length === 0"
                 type="select"
-                ng-options="release for release in releases"
+                ng-options="release === '' ? '(unset)' : release for release in releases"
                 ng-model="selected.release">
         </select>
 
