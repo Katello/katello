@@ -46,7 +46,6 @@ module Katello
       :katello_repository_debs => Katello::RepositoryDeb,
       :katello_repository_rpms => Katello::RepositoryRpm,
       :katello_repository_srpms => Katello::RepositorySrpm,
-      :katello_yum_metadata_files => Katello::YumMetadataFile,
       :katello_content_facets => Katello::Host::ContentFacet,
       :katello_subscription_facets => Katello::Host::SubscriptionFacet,
       :katello_docker_manifests => Katello::DockerManifest,
