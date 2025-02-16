@@ -11,8 +11,9 @@ const ContentViewsCounter = () => {
   const {
     composite_content_views_count: composite,
     content_view_components_count: component,
+    rolling_content_views_count: rolling,
   } = organization;
-  if (composite || component) {
+  if (composite || component || rolling) {
     return (
       <Grid>
         <GridItem span={12}>
@@ -21,6 +22,7 @@ const ContentViewsCounter = () => {
               <FlexItem spacer={{ default: 'spacerXs' }}>
                 <ContentViewIcon
                   composite={false}
+                  rolling={false}
                   description={__('Content views')}
                   count={(component || component === 0) ? component : <InProgressIcon />}
                 />
@@ -28,9 +30,7 @@ const ContentViewsCounter = () => {
               <FlexItem>
                 <Tooltip
                   position="top"
-                  content={
-                    __('Consists of repositories')
-                  }
+                  content={__('Contains repositories. Versions are published and optionally filtered.')}
                 >
                   <OutlinedQuestionCircleIcon />
                 </Tooltip>
@@ -51,9 +51,28 @@ const ContentViewsCounter = () => {
               <FlexItem>
                 <Tooltip
                   position="top"
-                  content={
-                    __('Consists of content views')
-                  }
+                  content={__('Contains content views. You must choose the version to use for each content view.')}
+                >
+                  <OutlinedQuestionCircleIcon />
+                </Tooltip>
+              </FlexItem>
+            </Flex>
+          </b>
+        </GridItem>
+        <GridItem span={12}>
+          <b>
+            <Flex>
+              <FlexItem spacer={{ default: 'spacerXs' }}>
+                <ContentViewIcon
+                  rolling
+                  description={__('Rolling content views')}
+                  count={(rolling || rolling === 0) ? rolling : <InProgressIcon />}
+                />
+              </FlexItem>
+              <FlexItem>
+                <Tooltip
+                  position="top"
+                  content={__('Contains repositories. Always serves the latest synced content, without the need to publish versions.')}
                 >
                   <OutlinedQuestionCircleIcon />
                 </Tooltip>

@@ -53,7 +53,8 @@ test('Can show last task and link to it', async (done) => {
     .query(true)
     .reply(200, cvIndexData);
 
-  const { getByText, queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
+  const { getByText, queryByText, queryAllByText } =
+    renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
 
@@ -63,7 +64,7 @@ test('Can show last task and link to it', async (done) => {
     expect(getByText('3 days ago').closest('a'))
       .toHaveAttribute('href', '/foreman_tasks/tasks/54088dac-b990-491c-a891-1d7d1a3f5161/');
     // If no task is found display empty text N/A
-    expect(queryByText('N/A')).toBeTruthy();
+    expect(queryAllByText('N/A')).toBeTruthy();
   });
 
   assertNockRequest(autocompleteScope);
@@ -88,15 +89,19 @@ test('Can show latest version and link to it', async (done) => {
   await patientlyWaitFor(() => {
     expect(queryByText(firstCV.name)).toBeTruthy();
     // Displays link to the latest version
-    expect(getByText('Version 1.0').closest('a'))
+    expect(queryAllByText('Version 1.0')[0].closest('a'))
       .toHaveAttribute('href', '/content_views/2/versions/11/');
+    // We do not expect 'Version 1.0' for the rolling CV fixture
+    expect(queryAllByText('Version 1.0')).toHaveLength(1);
     // If no task is found display empty text Not yet published if latest version is null
     expect(queryAllByText('Not yet published')[0]).toBeTruthy();
     // Able to display Environment labels with link to the environment
-    expect(getByText('Library').closest('a'))
+    expect(queryAllByText('Library')[0].closest('a'))
       .toHaveAttribute('href', '/lifecycle_environments/1');
     expect(getByText('dev').closest('a'))
       .toHaveAttribute('href', '/lifecycle_environments/2');
+    expect(queryAllByText('Library')[1].closest('a'))
+      .toHaveAttribute('href', '/lifecycle_environments/1');
   });
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
@@ -134,6 +139,57 @@ test('Can expand cv and show activation keys and hosts', async (done) => {
     // Displays hosts link with count
     expect(queryByLabelText('host_link_2')).toHaveAttribute('href', '/new/hosts?search=content_view_id%3D2');
     expect(queryByLabelText('host_link_2').textContent).toEqual('1');
+    // Content views can be part of a composite content view
+    expect(queryByText(/Related composite content views:/)).toBeVisible();
+  });
+
+  getAllByLabelText('Details')[0].click();
+  // Collapse content for first CV
+  await patientlyWaitFor(() => {
+    // Details should disappear
+    expect(queryByText(/Related composite content views:/)).not.toBeVisible();
+  });
+
+  // Expand content for rolling CV
+  await patientlyWaitFor(() => {
+    getAllByLabelText('Details')[2].click();
+    expect(queryByLabelText('host_link_3').textContent).toEqual('1');
+    // Rolling content views cannot be part of composite content views
+    expect(queryByText(/Related composite content views:/)).not.toBeVisible();
+  });
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Can show the correct options in CV kebap menu', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
+  const scope = nockInstance
+    .get(cvIndexPath)
+    .query(true)
+    .reply(200, cvIndexData);
+
+  const {
+    getAllByLabelText,
+    queryByText,
+  } = renderWithRedux(<ContentViewsPage />, renderOptions);
+
+  await patientlyWaitFor(() => {
+    // open kebap menu of content view, should contain all available action options
+    getAllByLabelText('Actions')[0].click();
+    expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+    expect(queryByText('Publish')).toBeVisible();
+    expect(queryByText('Promote')).toBeVisible();
+    expect(queryByText('Copy')).toBeVisible();
+    expect(queryByText('Delete')).toBeVisible();
+
+    // open kebap menu of rolling content view, should only show 'Delete' action
+    getAllByLabelText('Actions')[2].click();
+    expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'true');
+    expect(queryByText('Publish')).toBeNull();
+    expect(queryByText('Promote')).toBeNull();
+    expect(queryByText('Copy')).toBeNull();
+    expect(queryByText('Delete')).toBeVisible();
   });
 
   assertNockRequest(autocompleteScope);
@@ -358,6 +414,7 @@ test('Displays Create Content View and opens modal with Form', async () => {
   expect(getByText('Name')).toBeInTheDocument();
   expect(getByText('Label')).toBeInTheDocument();
   expect(getByText('Composite content view')).toBeInTheDocument();
+  expect(getByText('Rolling content view')).toBeInTheDocument();
   expect(getByText('Content view')).toBeInTheDocument();
   expect(getByText('Solve dependencies')).toBeInTheDocument();
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
