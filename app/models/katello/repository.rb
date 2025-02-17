@@ -1060,7 +1060,8 @@ module Katello
     end
 
     def deb_sanitize_pulp_distribution(distribution)
-      return "flat-repo" if distribution&.end_with?("/")
+      return "flat-repo" if distribution == "/"
+      return distribution.chomp("/") if distribution&.end_with?("/")
       distribution
     end
 
