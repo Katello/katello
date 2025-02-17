@@ -12,6 +12,11 @@ module Actions
                                           solve_dependencies: solve_dependencies)
                 plan_action(Actions::Pulp3::Repository::SaveVersions, extended_repo_map.values.pluck(:dest_repo),
                             tasks: copy_action.output[:pulp_tasks])
+                repo_id_map = {}
+                extended_repo_map.each do |source_repos, dest_repo_map|
+                  repo_id_map[source_repos.first.id] = dest_repo_map[:dest_repo].id if dest_repo_map[:filters].blank?
+                end
+                plan_self(repo_id_map: repo_id_map)
               end
             else
               repo_id_map = {}
