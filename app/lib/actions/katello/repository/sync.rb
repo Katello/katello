@@ -57,7 +57,6 @@ module Actions
               end
               plan_self(:id => repo.id, :sync_result => output, :skip_metadata_check => skip_metadata_check, :validate_contents => validate_contents,
                         :contents_changed => output[:contents_changed])
-              update_rolling_content_views(repo)
               plan_action(Katello::Repository::SyncHook, :id => repo.id)
             end
           end
@@ -71,7 +70,11 @@ module Actions
         end
 
         def finalize
-          ::Katello::Repository.find(input[:id])&.audit_sync
+          repo = ::Katello::Repository.find(input[:id])
+          if repo
+            repo&.audit_sync
+            update_rolling_content_views_async(repo)
+          end
         end
 
         def humanized_name

@@ -8,7 +8,12 @@ module Actions
             plan_self(repository_id: repository.id)
             plan_action(Pulp3::Repository::RefreshDistribution, repository, SmartProxy.pulp_primary)
             plan_action(Repository::IndexContent, id: repository.id, source_repository_id: repository.library_instance.id)
+            plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repository.id])
           end
+        end
+
+        def humanized_name
+          _('Refresh RollingCV Repo')
         end
 
         def run
