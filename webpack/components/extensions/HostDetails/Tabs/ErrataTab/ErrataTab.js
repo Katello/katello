@@ -388,7 +388,9 @@ export const ErrataTab = () => {
   ) : null;
 
   const hostIsNonLibrary = (
-    contentFacet?.contentViewDefault === false || contentFacet.lifecycleEnvironmentLibrary === false
+    (contentFacet?.contentViewDefault === false ||
+      contentFacet.lifecycleEnvironmentLibrary === false) &&
+    contentFacet.contentView.rolling === false
   );
   const toggleGroup = (
     <Split hasGutter>

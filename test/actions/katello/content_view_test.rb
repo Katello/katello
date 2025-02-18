@@ -127,15 +127,7 @@ module ::Actions::Katello::ContentView
 
       assert_action_planned_with action, ::Actions::Pulp3::Repository::RefreshDistribution, clone_deb, SmartProxy.pulp_primary
       assert_action_planned_with action, ::Actions::Katello::Repository::IndexContent, id: clone_deb.id, source_repository_id: repository_deb.id
-    end
-
-    it 'triggers with sync' do
-      sync_action = create_action ::Actions::Katello::Repository::Sync
-      sync_action.stubs(:task).returns(success_task)
-
-      plan_action(sync_action, repository_deb)
-
-      assert_action_planned_with sync_action, action_class, clone_deb
+      assert_action_planned_with action, ::Actions::Katello::Applicability::Repository::Regenerate, repo_ids: [clone_deb.id]
     end
 
     it 'triggers with upload_files' do
@@ -162,7 +154,7 @@ module ::Actions::Katello::ContentView
     it 'updates pulp_hrefs' do
       last_changed = DateTime.new(2024, 12, 2.5)
       DateTime.stubs(:now).returns(last_changed)
-      action_class.any_instance.expects(:plan_action).twice
+      action_class.any_instance.expects(:plan_action).at_least(3)
 
       ForemanTasks.sync_task(action_class, clone_deb)
 
@@ -171,6 +163,36 @@ module ::Actions::Katello::ContentView
       assert_equal repository_deb.publication_href, clone_deb.publication_href
       assert_equal repository_deb.content_id, clone_deb.content_id
       assert_equal last_changed, clone_deb.last_contents_changed
+    end
+  end
+
+  class SyncRepositoryRefreshRollingRepoTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::Sync }
+    let(:content_view) { katello_content_views(:rolling_view) }
+    let(:repository_rpm) { katello_repositories(:fedora_17_x86_64) }
+    let(:library) { katello_environments(:library) }
+    let(:clone_rpm) do
+      FactoryBot.create :katello_repository,
+                        root: repository_rpm.root,
+                        library_instance: repository_rpm,
+                        content_view_version: content_view.versions.first,
+                        environment: library
+    end
+
+    before do
+      repository_rpm.version_href = 'foo'
+      repository_rpm.publication_href = 'bar'
+      repository_rpm.save!
+      clone_rpm.save!
+    end
+
+    it 'triggers async RefreshRollingRepo' do
+      action.stubs(:input).returns(
+        id: clone_rpm.id
+      )
+      ForemanTasks.expects(:async_task).with(::Actions::Katello::ContentView::RefreshRollingRepo,
+                                             clone_rpm)
+      action.finalize
     end
   end
 
