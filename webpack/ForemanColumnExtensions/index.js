@@ -31,9 +31,7 @@ const hostsIndexColumnExtensions = [
   {
     columnName: 'bootc_booted_image',
     title: (
-      <span id="image-mode-column-title-icon">
-        <FontAwesomeImageModeIcon title={__('Image mode / package mode')} />
-      </span>
+      <Text title={__('Image mode / package mode')} ouiaId="image-mode-column-title" className="pf-c-table__text">{__('Type')}</Text>
     ),
     wrapper: (hostDetails) => {
       const imageMode = hostDetails?.content_facet_attributes?.bootc_booted_image;
