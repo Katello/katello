@@ -120,6 +120,51 @@ module Katello
       assert_includes @library.content_views, @library_view
     end
 
+    def test_unique_hosts
+      org = FactoryBot.create(:organization)
+
+      cv = FactoryBot.create(:katello_content_view, organization: org)
+
+      env1 = FactoryBot.create(:katello_environment, organization: org)
+      env2 = FactoryBot.create(:katello_environment, organization: org)
+
+      host1 = ::Host::Managed.create!(:name => 'foohost.example.com', :managed => false, :organization_id => org.id)
+      host2 = ::Host::Managed.create!(:name => 'barhost.example.com', :managed => false, :organization_id => org.id)
+
+      cve1 = FactoryBot.create(:katello_content_view_environment, content_view: cv, environment: env1)
+      cve2 = FactoryBot.create(:katello_content_view_environment, content_view: cv, environment: env2)
+
+      content_facet1 = Katello::Host::ContentFacet.create!(content_view_id: cv.id, lifecycle_environment_id: env1.id, host: host1)
+      content_facet2 = Katello::Host::ContentFacet.create!(content_view_id: cv.id, lifecycle_environment_id: env2.id, host: host2)
+
+      Katello::ContentViewEnvironmentContentFacet.create!(content_view_environment: cve1, content_facet: content_facet1)
+      Katello::ContentViewEnvironmentContentFacet.create!(content_view_environment: cve2, content_facet: content_facet1)
+      Katello::ContentViewEnvironmentContentFacet.create!(content_view_environment: cve2, content_facet: content_facet2)
+
+      assert_equal 2, cv.hosts.count
+    end
+
+    def test_unique_activation_keys
+      org = FactoryBot.create(:organization)
+
+      cv = FactoryBot.create(:katello_content_view, organization: org)
+
+      env1 = FactoryBot.create(:katello_environment, organization: org)
+      env2 = FactoryBot.create(:katello_environment, organization: org)
+
+      ak1 = Katello::ActivationKey.create!(name: 'activation_key1', organization: org)
+      ak2 = Katello::ActivationKey.create!(name: 'activation_key2', organization: org)
+
+      cve1 = FactoryBot.create(:katello_content_view_environment, content_view: cv, environment: env1)
+      cve2 = FactoryBot.create(:katello_content_view_environment, content_view: cv, environment: env2)
+
+      Katello::ContentViewEnvironmentActivationKey.create!(content_view_environment: cve1, activation_key: ak1)
+      Katello::ContentViewEnvironmentActivationKey.create!(content_view_environment: cve2, activation_key: ak1)
+      Katello::ContentViewEnvironmentActivationKey.create!(content_view_environment: cve2, activation_key: ak2)
+
+      assert_equal 2, cv.activation_keys.count
+    end
+
     def test_promote
       skip "TODO: Fix content views"
       Repository.any_instance.stubs(:checksum_type).returns(nil)
