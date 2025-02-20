@@ -1046,6 +1046,7 @@ module Katello
 
     def deb_content_url_options
       return '' unless version_href
+      return '' if backend_service(SmartProxy.pulp_primary).version_missing_structure_content?
 
       components = deb_pulp_components.join(',')
       distributions = deb_pulp_distributions.join(',')

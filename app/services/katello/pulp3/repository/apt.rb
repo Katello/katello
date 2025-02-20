@@ -39,7 +39,7 @@ module Katello
         end
 
         def mirror_remote_options
-          distributions = if repo.deb_using_structured_apt?
+          distributions = if repo.deb_using_structured_apt? && !version_missing_structure_content?
                             repo.deb_pulp_distributions.join(' ')
                           else
                             'default'
@@ -48,11 +48,29 @@ module Katello
           super.merge({distributions: distributions})
         end
 
+        def version_missing_structure_content?
+          # There may be old pulp_deb repo versions that have no package_release_components to go with the packages.
+          # This could be because packages were uploaded with Katello < 4.12
+          # It may also affect filtered CV versions created with very old Katello versions.
+          # This method can identify such cases, so that we may fall back to simple publishing.
+          return false if repo.version_href.blank?
+          # We cannot just use api here, because this is sometimes the proxy api, and we always want to talk to the primary!
+          api_primary = self.class.instance_for_type(repo, ::SmartProxy.pulp_primary).api
+          version = api_primary.repository_versions_api.read(repo.version_href)
+          apt_content_types = version&.content_summary&.present&.keys
+          return apt_content_types.include?('deb.package') && !apt_content_types.include?('deb.package_release_component')
+        end
+
         def publication_options(repository)
           ss = api.signing_services_api.list(name: SIGNING_SERVICE_NAME).results
           popts = super(repository)
-          popts.merge!({ structured: true })
-          popts.merge!({ simple: true }) unless repository.deb_using_structured_apt?
+          if version_missing_structure_content?
+            popts.merge!({ structured: false })
+            popts.merge!({ simple: true })
+          else
+            popts.merge!({ structured: true })
+            popts.merge!({ simple: true }) unless repository.deb_using_structured_apt?
+          end
           popts[:signing_service] = ss[0].pulp_href if ss && ss.length == 1
           popts
         end
