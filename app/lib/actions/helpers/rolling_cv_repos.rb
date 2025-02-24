@@ -17,7 +17,7 @@ module Actions
 
       def update_rolling_content_views_async(repo)
         concerned_repos(repo).each do |rolling_repo|
-          ForemanTasks.async_task(::Actions::Katello::ContentView::RefreshRollingRepo, rolling_repo)
+          ForemanTasks.sync_task(::Actions::Katello::ContentView::RefreshRollingRepo, rolling_repo)
         end
       end
     end

@@ -63,10 +63,6 @@ module Actions
         end
 
         def run
-          repo = ::Katello::Repository.find(input[:id])
-          repo.clear_smart_proxy_sync_histories if input[:contents_changed]
-          ForemanTasks.async_task(Repository::CapsuleSync, repo) if Setting[:foreman_proxy_content_auto_sync]
-        rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
         def finalize
@@ -75,6 +71,9 @@ module Actions
             repo&.audit_sync
             update_rolling_content_views_async(repo)
           end
+          repo.clear_smart_proxy_sync_histories if input[:contents_changed]
+          ForemanTasks.async_task(Repository::CapsuleSync, repo) if Setting[:foreman_proxy_content_auto_sync]
+        rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
         def humanized_name
