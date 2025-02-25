@@ -146,13 +146,13 @@ KT.hosts.onKatelloHostEditLoad = function(){
 
     $.each(prefixes, function(index, prefix) {
         $.each(attributes, function(attrIndex, attribute) {
-            $('body').on('change', '#' + prefix + '_' + attribute, function () {
+            $('body').on('select2:select select2:unselecting', '#' + prefix + '_' + attribute, function () {
                 KT.hosts.toggle_installation_medium();
             });
         });
     });
 
-    $('body').on('change', '#content_source_id', function () {
+    $('body').on('select2:select select2:unselecting', '#content_source_id', function () {
         KT.hosts.contentSourceChanged();
         KT.hosts.toggle_installation_medium();
     });
@@ -266,14 +266,15 @@ KT.hosts.on_synced_content_dropdown_change = function() {
 
 KT.hosts.set_install_media_bindings = function() {
     // reset the host medium id
-    $("#host_medium_id").on("change", KT.hosts.on_install_media_dropdown_change);
-    $("#s2id_host_medium_id").on("change", KT.hosts.on_install_media_dropdown_change);
-    $("#hostgroup_medium_id").on("change", KT.hosts.on_install_media_dropdown_change);
-    $("#s2id_hostgroup_medium_id").on("change", KT.hosts.on_install_media_dropdown_change);
+    $("#host_medium_id").on("select2:select", KT.hosts.on_install_media_dropdown_change);
+    $("#s2id_host_medium_id").on("select2:select", KT.hosts.on_install_media_dropdown_change);
+    $("#hostgroup_medium_id").on("select2:select", KT.hosts.on_install_media_dropdown_change);
+    $("#s2id_hostgroup_medium_id").on("select2:select", KT.hosts.on_install_media_dropdown_change);
 };
-
 KT.hosts.set_synced_content_bindings = function() {
-    KT.hosts.get_synced_content_dropdown().change(KT.hosts.on_synced_content_dropdown_change);
+    KT.hosts
+      .get_synced_content_dropdown()
+      .on('select2:select', KT.hosts.on_synced_content_dropdown_change);
 };
 
 KT.hosts.set_media_selection_bindings = function() {
