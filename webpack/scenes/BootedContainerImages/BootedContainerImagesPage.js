@@ -134,40 +134,42 @@ const BootedContainerImagesPage = () => {
               </>
             </Tr>
           </Thead>
-          <Tbody>
-            {status === STATUS.PENDING && results.length === 0 && (
-              <Tr ouiaId="table-loading">
-                <Td colSpan={100}>
-                  <EmptyPage
-                    message={{
-                      type: 'loading',
-                      text: __('Loading...'),
-                    }}
-                  />
-                </Td>
-              </Tr>
-            )}
-            {!(status === STATUS.PENDING) &&
-              results.length === 0 &&
-              !errorMessage && (
-                <Tr ouiaId="table-empty">
+          {(results.length === 0 || errorMessage) && (
+            <Tbody>
+              {status === STATUS.PENDING && results.length === 0 && (
+                <Tr ouiaId="table-loading">
                   <Td colSpan={100}>
                     <EmptyPage
                       message={{
-                        type: 'empty',
+                        type: 'loading',
+                        text: __('Loading...'),
                       }}
                     />
                   </Td>
                 </Tr>
-            )}
-            {errorMessage && (
-              <Tr ouiaId="table-error">
-                <Td colSpan={100}>
-                  <EmptyPage message={{ type: 'error', text: errorMessage }} />
-                </Td>
-              </Tr>
-            )}
-          </Tbody>
+              )}
+              {!(status === STATUS.PENDING) &&
+                results.length === 0 &&
+                !errorMessage && (
+                  <Tr ouiaId="table-empty">
+                    <Td colSpan={100}>
+                      <EmptyPage
+                        message={{
+                          type: 'empty',
+                        }}
+                      />
+                    </Td>
+                  </Tr>
+              )}
+              {errorMessage && (
+                <Tr ouiaId="table-error">
+                  <Td colSpan={100}>
+                    <EmptyPage message={{ type: 'error', text: errorMessage }} />
+                  </Td>
+                </Tr>
+              )}
+            </Tbody>
+          )}
           {results?.map((result, rowIndex) => {
             const { bootc_booted_image: bootcBootedImage, digests } = result;
             const isExpanded = imageIsExpanded(bootcBootedImage);
