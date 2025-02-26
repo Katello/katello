@@ -5,7 +5,8 @@ module Katello
 
       def prepare_host
         if params['uuid']
-          @host = Katello::Host::SubscriptionFacet.find_by(uuid: params['uuid'])&.host
+          host_id = Katello::Host::SubscriptionFacet.find_by(uuid: params['uuid'])&.host_id
+          @host = ::Host::Managed.unscoped.find_by(id: host_id)
           if @host.nil?
             msg = _("Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this instance") % params['uuid']
             fail ActiveRecord::RecordNotFound, msg
