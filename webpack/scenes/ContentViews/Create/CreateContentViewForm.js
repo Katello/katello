@@ -11,6 +11,12 @@ import { LabelDependencies, LabelAutoPublish } from './ContentViewFormComponents
 import ContentViewIcon from '../components/ContentViewIcon';
 import './CreateContentViewForm.scss';
 
+export const contentViewDescriptions = {
+  CV: 'Contains repositories. Versions are published and optionally filtered.',
+  CCV: 'Contains content views. You must choose the version to use for each content view.',
+  RCV: 'Contains repositories. Always serves the latest synced content, without the need to publish versions.',
+};
+
 const CreateContentViewForm = ({ setModalOpen }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState('');
@@ -144,7 +150,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
               onClick={() => { setComponent(true); setComposite(false); setRolling(false); }}
               isSelected={component}
             >
-              {__('Contains repositories. Versions are published and optionally filtered.')}
+              {__(contentViewDescriptions.CV)}
             </Tile>
           </GridItem>
           <GridItem span={4}>
@@ -158,7 +164,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
               onClick={() => { setComposite(true); setComponent(false); setRolling(false); }}
               isSelected={composite}
             >
-              {__('Contains content views. You must choose the version to use for each content view.')}
+              {__(contentViewDescriptions.CCV)}
             </Tile>
           </GridItem>
           <GridItem span={4}>
@@ -172,7 +178,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
               onClick={() => { setComposite(false); setComponent(false); setRolling(true); }}
               isSelected={rolling}
             >
-              {__('Contains repositories. Always serves the latest synced content, without the need to publish versions.')}
+              {__(contentViewDescriptions.RCV)}
             </Tile>
           </GridItem>
         </Grid>

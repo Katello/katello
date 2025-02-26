@@ -61,7 +61,7 @@ export const ContentViewEnvironmentDisplay = ({
         >
           <Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{lifecycleEnvironment.name}</Label>
         </Tooltip>
-        <ContentViewIcon composite={contentView.composite} rolling={contentView.rolling} style={{ marginRight: '2px' }} position="left" />
+        <ContentViewIcon composite={contentView.composite} rolling={contentViewDefault || contentView.rolling} style={{ marginRight: '2px' }} position="left" />
         {contentViewDefault ? <span>{contentView.name}</span> :
         <a style={{ fontSize: '14px' }} href={`/content_views/${contentView.id}`}>
           {truncate(contentView.name)}
