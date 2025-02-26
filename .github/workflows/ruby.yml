@@ -25,7 +25,6 @@ jobs:
     uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v0
     with:
       plugin: katello
-      postgresql_container: ghcr.io/theforeman/postgresql-evr
       test_existing_database: false
       foreman_version: develop # set to the Foreman release branch after branching :)
 
