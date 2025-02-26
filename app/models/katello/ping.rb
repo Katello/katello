@@ -9,9 +9,6 @@ module Katello
         proxy = fetch_proxy(capsule_id)
         services = [:candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events]
         services += [:pulp3, :pulp3_content] if proxy&.pulp3_enabled?
-        if proxy.nil? || proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) || proxy.has_feature?(SmartProxy::PULP_FEATURE)
-          services += [:pulp, :pulp_auth]
-        end
 
         services
       end
@@ -75,27 +72,11 @@ module Katello
         end
       end
 
-      def ping_pulp_without_auth(service_result, capsule_id)
-        exception_watch(service_result) do
-          Katello::Ping.pulp_without_auth(pulp_url(capsule_id))
-        end
-      end
-
       def ping_candlepin_without_auth(service_result)
         url = SETTINGS[:katello][:candlepin][:url]
         exception_watch(service_result) do
           status = backend_status(url, :candlepin)
           check_candlepin_status(status)
-        end
-      end
-
-      def ping_pulp_with_auth(service_result, pulp_without_auth_status, capsule_id)
-        exception_watch(service_result) do
-          if pulp_without_auth_status == OK_RETURN_CODE
-            Katello::Pulp::Server.config(pulp_url(capsule_id), User.remote_user).resources.user.retrieve_all
-          else
-            fail _("Skipped pulp_auth check after failed pulp check")
-          end
         end
       end
 
@@ -150,36 +131,6 @@ module Katello
         packages.split("\n").sort
       end
 
-      def pulp_url(capsule_id)
-        proxy = fetch_proxy(capsule_id)
-        uri = URI.parse(proxy.pulp_url)
-        "#{uri.scheme}://#{uri.host.downcase}/pulp/api/v2/"
-      end
-
-      # this checks Pulp is running and responding without need
-      # for authentication. We don't use RestClient.options here
-      # because it returns empty string, which is not enough to say
-      # pulp is the one that responded
-      def pulp_without_auth(url)
-        json = backend_status(url, :pulp)
-
-        fail _("Pulp does not appear to be running at %s.") % url if json.empty?
-
-        if json['database_connection'] && json['database_connection']['connected'] != true
-          fail _("Pulp database connection issue at %s.") % url
-        end
-
-        if json['messaging_connection'] && json['messaging_connection']['connected'] != true
-          fail _("Pulp message bus connection issue at %s.") % url
-        end
-
-        unless all_pulp_workers_present?(json)
-          fail _("Not all necessary pulp workers running at %s.") % url
-        end
-
-        json
-      end
-
       def pulp3_without_auth(url)
         json = backend_status(url, :pulp)
         fail _("Pulp does not appear to be running at %s.") % url if json.empty?
@@ -232,10 +183,8 @@ module Katello
 
         ping_pulp3_without_auth(result[:pulp3], capsule_id) if result.include?(:pulp3)
         ping_pulp3_content_without_auth(result[:pulp3_content], capsule_id) if result.include?(:pulp3_content)
-        ping_pulp_without_auth(result[:pulp], capsule_id) if result.include?(:pulp)
         ping_candlepin_without_auth(result[:candlepin]) if result.include?(:candlepin)
 
-        ping_pulp_with_auth(result[:pulp_auth], result[:pulp][:status], capsule_id) if result.include?(:pulp_auth)
         ping_candlepin_with_auth(result[:candlepin_auth]) if result.include?(:candlepin_auth)
         ping_foreman_tasks(result[:foreman_tasks]) if result.include?(:foreman_tasks)
         ping_katello_events(result[:katello_events]) if result.include?(:katello_events)
