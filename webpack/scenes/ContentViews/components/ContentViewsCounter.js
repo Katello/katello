@@ -31,7 +31,7 @@ const ContentViewsCounter = () => {
               <FlexItem>
                 <Tooltip
                   position="top"
-                  content={__(contentViewDescriptions.CV)}
+                  content={contentViewDescriptions.CV}
                 >
                   <OutlinedQuestionCircleIcon />
                 </Tooltip>
@@ -52,7 +52,7 @@ const ContentViewsCounter = () => {
               <FlexItem>
                 <Tooltip
                   position="top"
-                  content={__(contentViewDescriptions.CCV)}
+                  content={contentViewDescriptions.CCV}
                 >
                   <OutlinedQuestionCircleIcon />
                 </Tooltip>
@@ -73,7 +73,7 @@ const ContentViewsCounter = () => {
               <FlexItem>
                 <Tooltip
                   position="top"
-                  content={__(contentViewDescriptions.RCV)}
+                  content={contentViewDescriptions.RCV}
                 >
                   <OutlinedQuestionCircleIcon />
                 </Tooltip>
