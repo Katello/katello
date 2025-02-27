@@ -30,6 +30,7 @@ const ContentViewInfo = ({ cvId, details }) => {
     label,
     description,
     composite,
+    rolling,
     solve_dependencies: solveDependencies,
     auto_publish: autoPublish,
     import_only: importOnly,
@@ -41,6 +42,8 @@ const ContentViewInfo = ({ cvId, details }) => {
     if (val === details[attribute]) return;
     dispatch(updateContentView(cvId, { [attribute]: val }));
   };
+  let iconText = __('Content view');
+  if (composite) { iconText = __('Composite content view'); } else if (rolling) { iconText = __('Rolling content view'); }
 
   return (
     <TextContent className="margin-0-24">
@@ -71,7 +74,7 @@ const ContentViewInfo = ({ cvId, details }) => {
         <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
           <Flex>
             <FlexItem spacer={{ default: 'spacerXs' }}>
-              <ContentViewIcon composite={composite} description={composite ? __('Composite') : __('Content view')} />
+              <ContentViewIcon composite={composite} rolling={rolling} description={iconText} />
             </FlexItem>
           </Flex>
         </TextListItem>
@@ -99,7 +102,7 @@ const ContentViewInfo = ({ cvId, details }) => {
             boolean
             {...{ currentAttribute, setCurrentAttribute }}
           />) :
-          (<ActionableDetail
+          (!rolling && <ActionableDetail
             label={__('Solve dependencies')}
             attribute="solve_dependencies"
             key={solveDependencies}
@@ -155,6 +158,7 @@ ContentViewInfo.propTypes = {
     label: PropTypes.string,
     description: PropTypes.string,
     composite: PropTypes.bool,
+    rolling: PropTypes.bool,
     solve_dependencies: PropTypes.bool,
     auto_publish: PropTypes.bool,
     import_only: PropTypes.bool,

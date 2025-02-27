@@ -2,24 +2,36 @@ import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { Tooltip } from '@patternfly/react-core';
-import { EnterpriseIcon, RegistryIcon } from '@patternfly/react-icons';
+import { EnterpriseIcon, RegistryIcon, SyncAltIcon } from '@patternfly/react-icons';
 import './contentViewIcon.scss';
 
 const ContentViewIcon = ({
-  composite, count, description, style, ...toolTipProps
+  composite, rolling, count, description, style, ...toolTipProps
 }) => {
   const props = {
-    className: composite ? 'svg-icon-composite' : 'svg-icon-component',
+    className: 'svg-icon-component',
   };
+  let content = __('Content view');
+  let icon = <EnterpriseIcon size="sm" {...props} />;
+  if (composite) {
+    props.className = 'svg-icon-composite';
+    content = __('Composite content view');
+    icon = <RegistryIcon size="md" {...props} />;
+  } else if (rolling) {
+    props.className = 'svg-icon-rolling';
+    content = __('Rolling content view');
+    icon = <SyncAltIcon size="sm" {...props} />;
+  }
+
   const cvIcon = (
     <Tooltip
       position="auto"
       enableFlip
       entryDelay={400}
-      content={composite ? __('Composite content view') : __('Content view')}
+      content={content}
       {...toolTipProps}
     >
-      {composite ? <RegistryIcon size="md" {...props} /> : <EnterpriseIcon size="sm" {...props} />}
+      {icon}
     </Tooltip>
   );
   return (
@@ -33,6 +45,7 @@ const ContentViewIcon = ({
 
 ContentViewIcon.propTypes = {
   composite: PropTypes.bool,
+  rolling: PropTypes.bool,
   count: PropTypes.node,
   description: PropTypes.node,
   style: PropTypes.shape({}),
@@ -40,6 +53,7 @@ ContentViewIcon.propTypes = {
 
 ContentViewIcon.defaultProps = {
   composite: false,
+  rolling: false,
   count: null,
   description: null,
   style: {},
