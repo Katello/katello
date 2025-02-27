@@ -190,7 +190,7 @@ module ::Actions::Katello::ContentView
       action.stubs(:input).returns(
         id: clone_rpm.id
       )
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::ContentView::RefreshRollingRepo,
+      ForemanTasks.expects(:async_task).with(::Actions::Katello::ContentView::RefreshRollingRepo,
                                             clone_rpm)
       ForemanTasks.expects(:async_task).with(::Actions::Katello::Repository::CapsuleSync, clone_rpm)
       action.finalize
