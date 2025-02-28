@@ -132,9 +132,17 @@ module Katello
 
     config.to_prepare do
       Katello::CandlepinEventListener.client_factory = proc do
+        settings = ActiveRecord::Base.connection_pool.with_connection do
+          SETTINGS[:katello][:candlepin_events].merge(
+            ssl_key_file: Setting[:ssl_priv_key],
+            ssl_cert_file: Setting[:ssl_certificate],
+            ssl_ca_file: Setting[:ssl_ca_file]
+          )
+        end
+
         Katello::Messaging::Connection.create(
           connection_class: Katello::Messaging::StompConnection,
-          settings: SETTINGS[:katello][:candlepin_events]
+          settings: settings
         )
       end
 
