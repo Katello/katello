@@ -132,9 +132,17 @@ module Katello
 
     config.to_prepare do
       Katello::CandlepinEventListener.client_factory = proc do
+        # These settings are pulled from settings.yaml intentionally
+        # And are not meant to be switched to the database Settings
+        settings = SETTINGS[:katello][:candlepin_events].deep_merge(
+          :ssl_key_file => SETTINGS[:ssl_priv_key],
+          :ssl_cert_file => SETTINGS[:ssl_certificate],
+          :ssl_ca_file => SETTINGS[:ssl_ca_file]
+        )
+
         Katello::Messaging::Connection.create(
           connection_class: Katello::Messaging::StompConnection,
-          settings: SETTINGS[:katello][:candlepin_events]
+          settings: settings
         )
       end
 
