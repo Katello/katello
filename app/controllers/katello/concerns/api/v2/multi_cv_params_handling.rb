@@ -19,6 +19,10 @@ module Katello
           :with_logging => true
         )
       end
+
+      def handle_multicv_not_enabled(e)
+        render :json => { :error => { :message => e.message }}, :status => :bad_request
+      end
     end
   end
 end
