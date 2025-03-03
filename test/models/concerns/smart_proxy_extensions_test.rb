@@ -399,13 +399,18 @@ module Katello
       assert_equal @proxy_mirror.lifecycle_environments.all.count, 0
     end
 
-    def test_rhsm_url_pulp_primary
-      assert_includes @proxy.rhsm_url.to_s, "/rhsm"
-      assert_not_includes @proxy.rhsm_url.to_s, ":8443"
+    def test_rhsm_url_without_rhsm_url_setting
+      Setting[:foreman_url] = 'https://foreman.example.com/'
+      proxy = FactoryBot.build(:smart_proxy, :with_pulp3)
+      assert_equal "https://foreman.example.com/rhsm", proxy.rhsm_url.to_s
     end
 
-    def test_rhsm_url_pulp_mirror
-      assert_includes @proxy_mirror.rhsm_url.to_s, ":8443/rhsm"
+    def test_rhsm_url_with_rhsm_url_setting
+      proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
+      feature = proxy.smart_proxy_feature_by_name(::SmartProxy::PULP3_FEATURE)
+      feature.settings['rhsm_url'] = 'https://rhsm.example.com/rhsm'
+      feature.save!
+      assert_equal 'https://rhsm.example.com/rhsm', proxy.rhsm_url.to_s
     end
 
     def test_sync_container_gateway
