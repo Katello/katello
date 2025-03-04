@@ -1,4 +1,4 @@
-# 4.16.0.rc1 Taliesin (2025-02-20)
+# 4.16.0.rc2 Taliesin (2025-03-04)
 
 ## Features
 
@@ -43,6 +43,37 @@
 
 ## Bug Fixes
 
+### Activation Key
+ * Unable to an create activation key when no content-view is selected ([#38251](https://projects.theforeman.org/issues/38251), [fa485519](https://github.com/Katello/katello.git/commit/fa48551933923044b7dd7284acdf33a1988c8035))
+ * hammer activation-key create false positive when passing in only --content-view ([#38170](https://projects.theforeman.org/issues/38170), [571efcb9](https://github.com/Katello/katello.git/commit/571efcb9d623e2c686eb97856a6eec57f6f8469c))
+ * Can't remove a version from an environment if it is being used by a multi-CV activation key. ([#37895](https://projects.theforeman.org/issues/37895), [380e7ed1](https://github.com/Katello/katello.git/commit/380e7ed17310eebcb7430b86ca433d2fb7fadd26))
+ * Multi-CV activation keys get their content view environments overwritten on any edit ([#37798](https://projects.theforeman.org/issues/37798), [c87ef0f6](https://github.com/Katello/katello.git/commit/c87ef0f6ad9ec6ade3bb10e811e3cfef17b7cb48))
+
+### Content Views
+ * Old CV versions may contain deb repos without structure content ([#38231](https://projects.theforeman.org/issues/38231), [a94ad14e](https://github.com/Katello/katello.git/commit/a94ad14e0164c7d55a8181dc87baad7d2ce30874))
+ * CV with depsolving and filters on selected repos is broken at orhpan cleanup ([#38218](https://projects.theforeman.org/issues/38218), [ebfaf9bb](https://github.com/Katello/katello.git/commit/ebfaf9bb78bf8ac663584f647ae220b3ac928c6f))
+ * Content views list duplicate relations for multiCV hosts and activation keys ([#38179](https://projects.theforeman.org/issues/38179), [3bad7ac6](https://github.com/Katello/katello.git/commit/3bad7ac6fcfe801910200348014adf1cd93f024e))
+ * Use new host page setting to link to hosts index from content view details page ([#38160](https://projects.theforeman.org/issues/38160), [412e7f93](https://github.com/Katello/katello.git/commit/412e7f93ef4a3d9a7601a4cc1ed8d51dfb819ead))
+ * To convert "Got multiple version_hrefs for pulp task" error into a warning or suppress it ([#38150](https://projects.theforeman.org/issues/38150), [882b257a](https://github.com/Katello/katello.git/commit/882b257afce348d1795db28fce81611543287b9e))
+ * Reassigning host content views when removing Content view version/environment in multi-CV hosts ([#38116](https://projects.theforeman.org/issues/38116), [9c9d486b](https://github.com/Katello/katello.git/commit/9c9d486b4cd566d5b937da7c7013c5207634f128))
+ * The content view APIs will pass repository_ids to the code both as a list of int or a list of strings ([#38076](https://projects.theforeman.org/issues/38076), [d041f949](https://github.com/Katello/katello.git/commit/d041f949beb8d5c30eb5f3005ffe3ac1d1721987))
+
+### Hosts
+ * in host edit, unselecting media causes page freeze  ([#38230](https://projects.theforeman.org/issues/38230), [83498c4f](https://github.com/Katello/katello.git/commit/83498c4f1e027faf730f6d40d27dcdf309d0af1e))
+ * Image mode all hosts column title should be 'Type' ([#38226](https://projects.theforeman.org/issues/38226), [bbbf9e02](https://github.com/Katello/katello.git/commit/bbbf9e026ba85ada1ba8ce75be1e4f26168b9fbb))
+ * Extra tbody left inside booted containers table causes automation issues ([#38225](https://projects.theforeman.org/issues/38225), [d8dc2626](https://github.com/Katello/katello.git/commit/d8dc2626709e1303d683585b8ae073b11850b73a))
+ * Add unset feature in set release version bulk action on the content host ([#38215](https://projects.theforeman.org/issues/38215), [a739b710](https://github.com/Katello/katello.git/commit/a739b7104bde511b2a77eead93c6207cc94943a2))
+ * Should hide Change content source task when permissions are missing ([#38214](https://projects.theforeman.org/issues/38214), [d0ec81e8](https://github.com/Katello/katello.git/commit/d0ec81e8a1ba430f1cc67840d4ad3e309c34d803))
+ * RHEL 10 support policy + EOL info is added to hosts ([#38152](https://projects.theforeman.org/issues/38152), [527df0a5](https://github.com/Katello/katello.git/commit/527df0a5da5379d19ade2a7b3abcbbf43fc5b72b))
+ * Flatpak install REX template assumes presence of the optional remote name input ([#38149](https://projects.theforeman.org/issues/38149))
+ * content_view_environments methods need to be added to Safemode ([#38142](https://projects.theforeman.org/issues/38142), [614ec0b7](https://github.com/Katello/katello.git/commit/614ec0b74057e5c418524343994403a457a65f3b))
+ * Job: Resolve Traces - Katello Ansible Default - fails to reboot machine ([#38140](https://projects.theforeman.org/issues/38140), [c988a004](https://github.com/Katello/katello.git/commit/c988a004a54587ef615b2593741afae28ef8897b))
+ * Do not double-escape "*" during package update ([#38137](https://projects.theforeman.org/issues/38137), [fcd6cdb8](https://github.com/Katello/katello.git/commit/fcd6cdb830fe3a77c342752203cd2f9af618c688))
+ * Image mode digests should be allowed to be empty ([#38128](https://projects.theforeman.org/issues/38128), [dfa1ec8b](https://github.com/Katello/katello.git/commit/dfa1ec8b2d28bb2ea0498308b3801f51fcdb2d76))
+ * Change content source & REX Pull provider ([#38111](https://projects.theforeman.org/issues/38111), [fb274faa](https://github.com/Katello/katello.git/commit/fb274faa08ac4745420172a01b73d6006e0aa0f0))
+ * In host/groups media should not be visible when Synced Content is selected ([#38104](https://projects.theforeman.org/issues/38104), [469efd5b](https://github.com/Katello/katello.git/commit/469efd5b76f78869fdc92d442853315678ea77e9))
+ * As a user, I can see an overview of container images used with image-mode systems via API & hammer ([#38072](https://projects.theforeman.org/issues/38072), [ec7ef5c7](https://github.com/Katello/katello.git/commit/ec7ef5c70fd68e865a580ef498bbda2909728cdc))
+
 ### Repositories
  * APT repos using flat repo format with a distribution other than "/" are broken ([#38221](https://projects.theforeman.org/issues/38221), [6db53865](https://github.com/Katello/katello.git/commit/6db538659a93349c0bc63419d78769416ed963a7))
  * Http proxy is referenced in postgres even after being removed from the Satellite server ([#38204](https://projects.theforeman.org/issues/38204), [63404582](https://github.com/Katello/katello.git/commit/6340458228aa063ef1b24a1f01f119d97f01ef26))
@@ -58,39 +89,15 @@
  * Errors while deleting repository from Katello: Unable to find content with the ID "XXXX" ([#37600](https://projects.theforeman.org/issues/37600), [fae84712](https://github.com/Katello/katello.git/commit/fae847127ac78a38e0bbf2da98d804add0674746))
  * Python Package Types don't filter out whitespace ([#35676](https://projects.theforeman.org/issues/35676), [155aa5b4](https://github.com/Katello/katello.git/commit/155aa5b4629131563aa74eea3aede9df794c65e1))
 
-### Hosts
- * Add unset feature in set release version bulk action on the content host ([#38215](https://projects.theforeman.org/issues/38215), [a739b710](https://github.com/Katello/katello.git/commit/a739b7104bde511b2a77eead93c6207cc94943a2))
- * Should hide Change content source task when permissions are missing ([#38214](https://projects.theforeman.org/issues/38214), [d0ec81e8](https://github.com/Katello/katello.git/commit/d0ec81e8a1ba430f1cc67840d4ad3e309c34d803))
- * RHEL 10 support policy + EOL info is added to hosts ([#38152](https://projects.theforeman.org/issues/38152), [527df0a5](https://github.com/Katello/katello.git/commit/527df0a5da5379d19ade2a7b3abcbbf43fc5b72b))
- * Flatpak install REX template assumes presence of the optional remote name input ([#38149](https://projects.theforeman.org/issues/38149))
- * content_view_environments methods need to be added to Safemode ([#38142](https://projects.theforeman.org/issues/38142), [614ec0b7](https://github.com/Katello/katello.git/commit/614ec0b74057e5c418524343994403a457a65f3b))
- * Job: Resolve Traces - Katello Ansible Default - fails to reboot machine ([#38140](https://projects.theforeman.org/issues/38140), [c988a004](https://github.com/Katello/katello.git/commit/c988a004a54587ef615b2593741afae28ef8897b))
- * Do not double-escape "*" during package update ([#38137](https://projects.theforeman.org/issues/38137), [fcd6cdb8](https://github.com/Katello/katello.git/commit/fcd6cdb830fe3a77c342752203cd2f9af618c688))
- * Image mode digests should be allowed to be empty ([#38128](https://projects.theforeman.org/issues/38128), [dfa1ec8b](https://github.com/Katello/katello.git/commit/dfa1ec8b2d28bb2ea0498308b3801f51fcdb2d76))
- * Change content source & REX Pull provider ([#38111](https://projects.theforeman.org/issues/38111), [fb274faa](https://github.com/Katello/katello.git/commit/fb274faa08ac4745420172a01b73d6006e0aa0f0))
- * In host/groups media should not be visible when Synced Content is selected ([#38104](https://projects.theforeman.org/issues/38104), [469efd5b](https://github.com/Katello/katello.git/commit/469efd5b76f78869fdc92d442853315678ea77e9))
- * As a user, I can see an overview of container images used with image-mode systems via API & hammer ([#38072](https://projects.theforeman.org/issues/38072), [ec7ef5c7](https://github.com/Katello/katello.git/commit/ec7ef5c70fd68e865a580ef498bbda2909728cdc))
-
 ### Container
+ * Container push should hide expected 404 message from pulp when looking up blobs ([#38212](https://projects.theforeman.org/issues/38212), [e2be2fbb](https://github.com/Katello/katello.git/commit/e2be2fbb245d5c03d26b04e7c77d150b22159ad7))
  * OSP Authenticated Pull fails from Satellite with error 422 Client Error: Unprocessable Content for url ([#38206](https://projects.theforeman.org/issues/38206), [86ea51ec](https://github.com/Katello/katello.git/commit/86ea51ec575416b788ce5c3b08843cde8562e25b))
  * As a user, I can see an overview of container images used with image-mode systems in the UI ([#38107](https://projects.theforeman.org/issues/38107), [775218f4](https://github.com/Katello/katello.git/commit/775218f4444e8c3513149d58dc7c2b8f26fab9d0))
-
-### Content Views
- * Content views list duplicate relations for multiCV hosts and activation keys ([#38179](https://projects.theforeman.org/issues/38179), [3bad7ac6](https://github.com/Katello/katello.git/commit/3bad7ac6fcfe801910200348014adf1cd93f024e))
- * Use new host page setting to link to hosts index from content view details page ([#38160](https://projects.theforeman.org/issues/38160), [412e7f93](https://github.com/Katello/katello.git/commit/412e7f93ef4a3d9a7601a4cc1ed8d51dfb819ead))
- * To convert "Got multiple version_hrefs for pulp task" error into a warning or suppress it ([#38150](https://projects.theforeman.org/issues/38150), [882b257a](https://github.com/Katello/katello.git/commit/882b257afce348d1795db28fce81611543287b9e))
- * Reassigning host content views when removing Content view version/environment in multi-CV hosts ([#38116](https://projects.theforeman.org/issues/38116), [9c9d486b](https://github.com/Katello/katello.git/commit/9c9d486b4cd566d5b937da7c7013c5207634f128))
- * The content view APIs will pass repository_ids to the code both as a list of int or a list of strings ([#38076](https://projects.theforeman.org/issues/38076), [d041f949](https://github.com/Katello/katello.git/commit/d041f949beb8d5c30eb5f3005ffe3ac1d1721987))
 
 ### Errata Management
  * 'Select all' on errata page attempts installing extra errata on host ([#38175](https://projects.theforeman.org/issues/38175), [002a5436](https://github.com/Katello/katello.git/commit/002a5436b5d67fefc36fc97351f5cab5e33dc3b7))
  * Argument list too long in "Install errata by search query - Katello Ansible Default" when applying multiple errata ([#38163](https://projects.theforeman.org/issues/38163), [e6f6e436](https://github.com/Katello/katello.git/commit/e6f6e436736be0e06a358941f0a6a59f144fe7be))
  * Content view with include errata filter has fewer package count than expected ([#37946](https://projects.theforeman.org/issues/37946), [68b1db34](https://github.com/Katello/katello.git/commit/68b1db34593597d77dbba126a53dbec2d3aa4fa3))
-
-### Activation Key
- * hammer activation-key create false positive when passing in only --content-view ([#38170](https://projects.theforeman.org/issues/38170), [571efcb9](https://github.com/Katello/katello.git/commit/571efcb9d623e2c686eb97856a6eec57f6f8469c))
- * Can't remove a version from an environment if it is being used by a multi-CV activation key. ([#37895](https://projects.theforeman.org/issues/37895), [380e7ed1](https://github.com/Katello/katello.git/commit/380e7ed17310eebcb7430b86ca433d2fb7fadd26))
- * Multi-CV activation keys get their content view environments overwritten on any edit ([#37798](https://projects.theforeman.org/issues/37798), [c87ef0f6](https://github.com/Katello/katello.git/commit/c87ef0f6ad9ec6ade3bb10e811e3cfef17b7cb48))
 
 ### Foreman Proxy Content
  * Drop EL8 builds from container_gateway plugin ([#38148](https://projects.theforeman.org/issues/38148), [ab847a2f](https://github.com/Katello/smart_proxy_container_gateway.git/commit/ab847a2f4a4760369ff28646154d39c9f8b9ac8a))
@@ -124,6 +131,7 @@
  * hammer allows creation of content overrides other than 'enabled' ([#37151](https://projects.theforeman.org/issues/37151), [8d3c4c78](https://github.com/Katello/hammer-cli-katello.git/commit/8d3c4c783e68df896888d975c2001b3329d7f383), [49bffbb7](https://github.com/Katello/hammer-cli-katello.git/commit/49bffbb7a2e0145950c8fe66a1f26f7435a50614))
 
 ### Other
+ * Update Recommeneded Repositories Page to modify Satellite, Capsule and Maintainance repository from 6.16 to 6.17 for RHEL 9 ([#38261](https://projects.theforeman.org/issues/38261), [3252bf73](https://github.com/Katello/katello.git/commit/3252bf739d4c54fefa17d871b0155e4f21715a5d))
  * Humanize Resource Type for flatpak permissions ([#38161](https://projects.theforeman.org/issues/38161), [a30fb411](https://github.com/Katello/katello.git/commit/a30fb41138771f56451ef2601ad578dd984559a8))
  * deb type content host with structured APT enabled throws errors on repository sets tab ([#37998](https://projects.theforeman.org/issues/37998), [efd860b8](https://github.com/Katello/katello.git/commit/efd860b84b7ac8395dac7599bbad64d289ada363))
  * As a user, I can expect container repo names to follow the latest standard ([#37988](https://projects.theforeman.org/issues/37988), [9c985331](https://github.com/Katello/katello.git/commit/9c985331886f51ed79241796e5aaf87609c9f1f7))
