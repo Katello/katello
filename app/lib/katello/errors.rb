@@ -14,6 +14,8 @@ module Katello
 
     class MultiEnvironmentNotSupportedError < StandardError; end
 
+    class ContentViewEnvironmentError < StandardError; end
+
     # unauthorized access
     class SecurityViolation < StandardError; end
 

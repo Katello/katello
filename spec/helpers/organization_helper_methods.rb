@@ -30,7 +30,7 @@ module Katello
         view = ContentView.create!(:name => "test view #{count}", :label => "test_view_#{count}",
                                    :organization => env.organization)
 
-        version = ContentViewVersion.new(:content_view => view,
+        version = ContentViewVersion.first_or_create(:content_view => view,
                                          :major => 1)
         view.add_environment(env, version)
         version.save!

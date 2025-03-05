@@ -149,6 +149,7 @@ module Katello
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/PerceivedComplexity
       def assign_single_environment(
         content_view_id: nil, lifecycle_environment_id: nil, environment_id: nil,
         content_view: nil, lifecycle_environment: nil, environment: nil
@@ -165,11 +166,15 @@ module Katello
         end
 
         content_view_environment = ::Katello::ContentViewEnvironment
-          .where(:content_view_id => content_view_id, :environment_id => lifecycle_environment_id)
-          .first_or_create do |cve|
-          Rails.logger.info("ContentViewEnvironment not found for content view '#{cve.content_view_name}' and environment '#{cve.environment&.name}'; creating a new one.")
+          .find_by(:content_view_id => content_view_id, :environment_id => lifecycle_environment_id)
+        if content_view_environment.nil?
+          env_label = ::Katello::KTEnvironment.find_by(:id => lifecycle_environment_id)&.label
+          fail ::Katello::Errors::ContentViewEnvironmentError, _("Unable to find a lifecycle environment with ID %s") % lifecycle_environment_id if env_label.nil?
+          cv_label = ::Katello::ContentView.find_by(:id => content_view_id)&.label
+          fail ::Katello::Errors::ContentViewEnvironmentError, _("Unable to find a content view with ID %s") % content_view_id if cv_label.nil?
+          hypothetical_cve_label = "%s/%s" % [env_label, cv_label]
+          fail ::Katello::Errors::ContentViewEnvironmentError, _("Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment.") % hypothetical_cve_label
         end
-        fail _("Unable to create ContentViewEnvironment. Check the logs for more information.") if content_view_environment.nil?
 
         self.content_view_environments = [content_view_environment]
       end
