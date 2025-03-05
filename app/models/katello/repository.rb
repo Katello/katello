@@ -950,6 +950,11 @@ module Katello
       env_exists = repository.environment.present?
       is_env_pattern_provided = env_exists && repository.environment.registry_name_pattern.present?
       is_cv_default = repository.content_view.default?
+      items = if Validators::ContainerImageNameValidator.validate_name(repository.organization.label)
+                [repository.organization.label]
+              else
+                ['id', repository.organization.id]
+              end
 
       if is_env_pattern_provided || (is_pattern_provided && env_exists)
         pattern ||= repository.environment.registry_name_pattern
@@ -968,11 +973,11 @@ module Katello
         pattern = box.eval(erb.src, allowed_vars, scope_variables)
         return Repository.clean_container_name(pattern)
       elsif is_cv_default && !is_pattern_provided
-        items = [repository.organization.label, repository.product.label, repository.label]
+        items += [repository.product.label, repository.label]
       elsif env_exists
-        items = [repository.organization.label, repository.environment.label, repository.content_view.label, repository.product.label, repository.label]
+        items += [repository.environment.label, repository.content_view.label, repository.product.label, repository.label]
       else
-        items = [repository.organization.label, repository.content_view.label, repository.content_view_version.version, repository.product.label, repository.label]
+        items += [repository.content_view.label, repository.content_view_version.version, repository.product.label, repository.label]
       end
       Repository.clean_container_name(items.compact.join("/"))
     end
