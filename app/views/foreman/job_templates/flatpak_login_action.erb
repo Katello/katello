@@ -27,4 +27,6 @@ template_inputs:
 %>
 
 sudo podman login <%= server_url %> --username <%= username %> --password <%= password %>
-sudo cp /run/containers/0/auth.json /etc/flatpak/oci-auth.json
+if test -f "/run/containers/0/auth.json"; then
+  sudo cp --update /run/containers/0/auth.json /etc/flatpak/oci-auth.json
+fi
