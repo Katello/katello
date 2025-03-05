@@ -1,3 +1,33 @@
+# 4.15.1 Macho Man (2025-03-05)
+
+## Bug Fixes
+
+### Inter Server Sync
+ * Importing into a repository that already exists on the importing instance broken ([#38156](https://projects.theforeman.org/issues/38156), [eca16821](https://github.com/Katello/katello.git/commit/eca16821b42141e29d328186234914f09735548a))
+
+### Activation Key
+ * FakeActivationKey doesn't respond to #organization method ([#38147](https://projects.theforeman.org/issues/38147), [b5945627](https://github.com/Katello/katello.git/commit/b59456279edcd76857775a971a7147a40ba742a4))
+
+### Container
+ * "hammer repository  upload-content" not long working for docker repository ([#38103](https://projects.theforeman.org/issues/38103), [87f14da7](https://github.com/Katello/katello.git/commit/87f14da7b86017c90a406ef2a5d77790c04994b6))
+
+### Content Views
+ * Scoped search is broken for for content views if the search parameter is boolean ([#38062](https://projects.theforeman.org/issues/38062), [adfb230e](https://github.com/Katello/katello.git/commit/adfb230eb517ab7c9e284da0117c21ee582dda85))
+
+### Reporting
+ * Failed to genereate report using "Host - Applied Errata" template. ([#38058](https://projects.theforeman.org/issues/38058), [7655a15d](https://github.com/Katello/katello.git/commit/7655a15d07f25293d1f978255dad1a7ec445caaa))
+
+### Subscriptions
+ * Product.all doesn't return future-dated subscriptions due to recent Candlepin change ([#38055](https://projects.theforeman.org/issues/38055), [74241a4f](https://github.com/Katello/katello.git/commit/74241a4fcb273402325f1a299250a9d5f23ecb6f))
+
+### Repositories
+ * Error Mirroring Policy: Additive -> Complete Mirroring ([#38040](https://projects.theforeman.org/issues/38040), [06452b5f](https://github.com/Katello/katello.git/commit/06452b5f349194d7aad319f40f04b85f9af57541))
+
+### Foreman Proxy Content
+ * podman login  via smart proxy fails on GMT+x timezones ([#37925](https://projects.theforeman.org/issues/37925), [a18d3c1e](https://github.com/Katello/smart_proxy_container_gateway.git/commit/a18d3c1ea7a091cd0f01f0a25df0bd0d31beb48d))
+
+### Other
+ * Empty Error Pop Up related to structured APT on the RepositorySets page ([#38011](https://projects.theforeman.org/issues/38011), [7b9ce649](https://github.com/Katello/katello.git/commit/7b9ce64929d537e340b8dea7ec461fc4df019ea8))
 # 4.15.0 Macho Man (2024-12-02)
 
 ## Features
