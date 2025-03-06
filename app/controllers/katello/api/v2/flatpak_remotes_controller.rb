@@ -1,6 +1,9 @@
 module Katello
   class Api::V2::FlatpakRemotesController < Katello::Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
+    include ::Foreman::Controller::FilterParameters
+
+    filter_parameters :token
 
     before_action :find_authorized_katello_resource, :except => [:index, :create, :auto_complete_search]
     before_action :find_optional_organization, :only => [:index, :auto_complete_search]
