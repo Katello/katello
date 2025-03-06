@@ -55,7 +55,8 @@ module ::Actions::Pulp3
       repository_reference = repo_reference(@repo)
       versions = ::Katello::Pulp3::Api::File.new(@primary).repository_versions_api.list(repository_reference.repository_href, {}).results.collect(&:pulp_href)
       tasks = ::Katello::Pulp3::Api::File.new(@primary).tasks_api.list(state__in: ['completed']).results
-      assert_empty tasks
+      assert_equal 1, tasks.length
+      assert_equal 'pulpcore.app.tasks.purge.purge', tasks.first.name
       refute_includes versions, repository_reference.repository_href + "versions/1/"
       assert_includes versions, repository_reference.repository_href + "versions/2/"
     end
