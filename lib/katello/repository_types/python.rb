@@ -38,7 +38,7 @@ Katello::RepositoryTypeManager.register('python') do
                        pulpcore_name: "python.python",
                        model_class: Katello::GenericContentUnit,
                        pulp3_api: PulpPythonClient::ContentPackagesApi,
-                       pulp3_model: PulpPythonClient::PythonPythonPackageContent,
+                       pulp3_model: PulpPythonClient::PythonPythonPackageContentResponse,
                        pulp3_service_class: Katello::Pulp3::GenericContentUnit,
                        model_name: lambda { |pulp_unit| pulp_unit["name"] },
                        model_version: lambda { |pulp_unit| pulp_unit["version"] },
