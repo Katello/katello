@@ -15,7 +15,7 @@ export const ContentViewDescription = ({ cv, versionNumber }) => {
     fontWeight: 400,
     color: pfDescriptionColor.value,
   };
-  if (cv.default) return <span style={descriptionStyle}>{__('Library')}</span>;
+  if (cv.rolling || cv.default) return <span style={descriptionStyle}>{__('Library')}</span>;
   return (
     <span style={descriptionStyle}>
       <FormattedMessage
@@ -29,6 +29,7 @@ export const ContentViewDescription = ({ cv, versionNumber }) => {
 
 ContentViewDescription.propTypes = {
   cv: PropTypes.shape({
+    rolling: PropTypes.bool.isRequired,
     default: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
     latest_version: PropTypes.string.isRequired,
@@ -56,6 +57,7 @@ const ContentViewSelectOption = ({ cv, env, value }) => (
     >
       <ContentViewIcon
         composite={cv.composite}
+        rolling={cv.rolling || cv.default}
         size="sm"
       />
       <Flex
@@ -78,6 +80,8 @@ ContentViewSelectOption.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     composite: PropTypes.bool.isRequired,
+    rolling: PropTypes.bool.isRequired,
+    default: PropTypes.bool.isRequired,
   }).isRequired,
   env: PropTypes.shape({
     id: PropTypes.number.isRequired,

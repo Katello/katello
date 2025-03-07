@@ -47,7 +47,7 @@ module Katello
          CAST (#{kcc}.composite_content_view_id as BOOLEAN) ASC, #{kc}.name
       SQL
       query = Katello::ContentView.readable.in_organization(@organization)
-      query = query&.non_composite&.non_default&.generated_for_none
+      query = query&.non_composite&.non_default&.non_rolling&.generated_for_none
       component_cv_ids = Katello::ContentViewComponent.where(composite_content_view_id: @view.id).select(:content_view_id)
       query = case params[:status]
               when "Not added"
@@ -145,23 +145,23 @@ module Katello
     def get_total(status)
       case status
       when 'All'
-        return Katello::ContentView.non_default.non_composite.in_organization(@organization).count
+        return Katello::ContentView.non_default.non_composite.non_rolling.in_organization(@organization).count
       when 'Added'
         return Katello::ContentViewComponent.where(composite_content_view_id: @view.id).count
       when 'Not added'
-        return Katello::ContentView.non_default.non_composite.in_organization(@organization).count - Katello::ContentViewComponent.where(composite_content_view_id: @view.id).count
+        return Katello::ContentView.non_default.non_composite.non_rolling.in_organization(@organization).count - Katello::ContentViewComponent.where(composite_content_view_id: @view.id).count
       else
-        return Katello::ContentView.non_default.non_composite.in_organization(@organization).count
+        return Katello::ContentView.non_default.non_composite.non_rolling.in_organization(@organization).count
       end
     end
 
     def find_composite_content_view
-      @view = ContentView.composite.non_default.readable.find_by(id: params[:composite_content_view_id])
+      @view = ContentView.composite.non_default.non_rolling.readable.find_by(id: params[:composite_content_view_id])
       throw_resource_not_found(name: 'composite content view', id: params[:composite_content_view_id]) if @view.nil?
     end
 
     def find_composite_content_view_for_edit
-      @view = ContentView.composite.non_default.editable.find_by(id: params[:composite_content_view_id])
+      @view = ContentView.composite.non_default.non_rolling.editable.find_by(id: params[:composite_content_view_id])
       throw_resource_not_found(name: 'composite content view', id: params[:composite_content_view_id]) if @view.nil?
     end
 

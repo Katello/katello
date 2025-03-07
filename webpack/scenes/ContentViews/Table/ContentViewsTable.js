@@ -114,6 +114,14 @@ const ContentViewTable = () => {
       onClick: () => openDeleteModal(cvInfo),
     };
 
+    if (cvInfo.rolling) {
+      return [
+        ...[],
+        ...[],
+        ...[],
+        ...(hasPermission(permissions, 'destroy_content_views') ? [deleteAction] : []),
+      ];
+    }
     return [
       ...(hasPermission(permissions, 'publish_content_views') ? [publishAction] : []),
       ...(hasPermission(permissions, 'promote_or_remove_content_views') ? [promoteAction] : []),
@@ -238,6 +246,7 @@ const ContentViewTable = () => {
         results?.map((cvInfo, rowIndex) => {
           const {
             composite,
+            rolling,
             name,
             id: cvId,
             last_published: lastPublished,
@@ -265,7 +274,7 @@ const ContentViewTable = () => {
                       expandedTableRows.onToggle(isOpen, cvId),
                   }}
                 />
-                <Td><ContentViewIcon position="right" composite={composite} /></Td>
+                <Td><ContentViewIcon position="right" composite={composite} rolling={rolling} /></Td>
                 <Td><Link to={`${urlBuilder('content_views', '')}${cvId}`}>{truncate(name)}</Link></Td>
                 <Td>{lastPublished ? <LongDateTime date={lastPublished} showRelativeTimeTooltip /> : <InactiveText text={__('Not yet published')} />}</Td>
                 <Td><LastSync startedAt={startedAt} lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /></Td>
@@ -275,6 +284,7 @@ const ContentViewTable = () => {
                     latestVersion,
                     latestVersionId: cvLatestVersionId,
                     latestVersionEnvironments: cvLatestVersionEnvironments,
+                    rolling,
                   }}
                   /> :
                   <InactiveText style={{ marginTop: '0.5em', marginBottom: '0.5em' }} text={__('Not yet published')} />}
@@ -293,6 +303,7 @@ const ContentViewTable = () => {
                       cvId={cvId}
                       cvName={name}
                       cvComposite={composite}
+                      cvRolling={rolling}
                       {...{
                         activationKeys, hosts, relatedCVCount, relatedCompositeCVs,
                       }}

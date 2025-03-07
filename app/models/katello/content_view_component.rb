@@ -53,6 +53,10 @@ module Katello
         errors.add(:base, _("Cannot add default content view to composite content view"))
       end
 
+      if view.rolling?
+        errors.add(:base, _("Cannot add rolling content view to composite content view"))
+      end
+
       if attached_content_view_ids.include?(view.id)
         errors.add(:base, _("Another component already includes content view with ID %s" % view.id))
       end
