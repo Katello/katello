@@ -48,6 +48,8 @@ module Katello
             handle_errors(labels: cve_params[:content_view_environments],
               ids: cve_params[:content_view_environment_ids])
           end
+        rescue Katello::Errors::MultiEnvironmentNotSupportedError => e
+          handle_multicv_not_enabled(e)
         end
 
         def cve_params
