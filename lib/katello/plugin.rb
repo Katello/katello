@@ -686,7 +686,8 @@ Foreman::Plugin.register :katello do
         default: false,
         full_name: N_('Enable structured APT for deb content'),
         description: N_("If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. " \
-                        "You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.")
+                        "You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'."),
+        :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::DEB_TYPE) }
     end
   end
 
