@@ -56,7 +56,7 @@ module Katello
         import_associations(units) if @repository
       end
 
-      if @model_class.many_repository_associations && @repository
+      if @repository
         sync_repository_associations(association_tracker, additive: filtered_indexing)
       end
     end
