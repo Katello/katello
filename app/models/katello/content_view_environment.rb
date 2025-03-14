@@ -21,6 +21,7 @@ module Katello
     validates_lengths_from_database
     validates :environment_id, uniqueness: {scope: :content_view_id}, presence: true
     validates :content_view_id, presence: true
+    validates :content_view_version_id, presence: true
     validates_with Validators::ContentViewEnvironmentOrgValidator
     validates_with Validators::ContentViewEnvironmentCoherentDefaultValidator
 
