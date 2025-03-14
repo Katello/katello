@@ -33,6 +33,7 @@ const ImageModeCard = ({ isExpandedGlobal, hostDetails }) => {
       expandable
       masonryLayout
       isExpandedGlobal={isExpandedGlobal}
+      ouiaId="image-mode"
     >
       <a href={actionUrl(hostDetails.name)}>{__('Modify via remote execution')}</a>
       <DescriptionList isHorizontal>
