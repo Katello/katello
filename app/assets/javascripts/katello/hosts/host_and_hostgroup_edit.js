@@ -49,7 +49,7 @@ KT.hosts.fetchEnvironments = function () {
         });
     $.get(url, function (content_source) {
         $.each(content_source.lifecycle_environments, function(index, env) {
-            // Don't show environments that aren't in the selected org. See jQuery.each() docs    
+            // Don't show environments that aren't in the selected org. See jQuery.each() docs
             if (!orgIds.includes(env.organization_id)) return true;
             option = $("<option />").val(env.id).text(env.name);
             select.append(option);
@@ -157,7 +157,7 @@ KT.hosts.onKatelloHostEditLoad = function(){
             });
         });
     });
-
+    $('body').off('select2:select select2:unselecting', '#content_source_id');
     $('body').on('select2:select select2:unselecting', '#content_source_id', function () {
         KT.hosts.contentSourceChanged();
         KT.hosts.toggle_installation_medium();
