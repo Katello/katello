@@ -26,7 +26,7 @@ template_inputs:
   password = input('Password')
 %>
 
-echo <%= password %> | sudo podman login <%= server_url %> --username <%= username %> --password-stdin
+echo <%= shell_escape(password) %> | sudo podman login <%= server_url %> --username <%= username %> --password-stdin
 if test -f "/run/containers/0/auth.json"; then
   sudo cp --update /run/containers/0/auth.json /etc/flatpak/oci-auth.json
 fi
