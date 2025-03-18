@@ -45,7 +45,9 @@ module Katello
     end
 
     def self.enabled(organization)
-      joins(:content).where("#{self.content_table_name}.cp_content_id" => Katello::RootRepository.in_organization(organization).select(:content_id))
+      content_ids = Katello::RootRepository.in_organization(organization).where.not(content_id: nil).pluck(:content_id)
+      structured_apt_content_ids = Katello::Repository.in_organization(organization).library.pluck(:content_id)
+      joins(:content).where("#{self.content_table_name}.cp_content_id" => content_ids + structured_apt_content_ids)
     end
 
     def self.with_valid_subscription(organization)
