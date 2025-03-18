@@ -47,6 +47,15 @@ FactoryBot.define do
       deb_architectures { "x86_64" }
     end
 
+    trait :structured_apt_deb_root do
+      content_type { "deb" }
+      download_policy { "" }
+      deb_releases { "5 6" }
+      deb_components { "best" }
+      deb_architectures { "x86_64" }
+      content_id { nil }
+    end
+
     factory :docker_root_repository, traits: [:docker_root]
   end
 end
