@@ -15,9 +15,6 @@ import {
   DrawerHead,
   DrawerPanelContent,
   DrawerPanelBody,
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
   Text,
   TextContent,
   TextList,
@@ -26,6 +23,11 @@ import {
   TextListVariants,
   TextVariants,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
 import { TableVariant, Tbody, Td, Th, Thead, Tr, ActionsColumn } from '@patternfly/react-table';
 import { useSelectionSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
@@ -148,7 +150,7 @@ const ACSTable = () => {
   const isSingleSelected = rowId => (Number(rowId) === Number(acsId) ||
       Number(rowId) === Number(expandedId));
   const customStyle = {
-    borderLeft: '5px solid var(--pf-global--primary-color--100)',
+    borderLeft: '5px solid var(--pf-v5-global--primary-color--100)',
   };
 
   const PanelContent = () => {
@@ -196,14 +198,14 @@ const ACSTable = () => {
                 ouiaId="refresh-acs"
                 onClick={() => onRefresh(acs?.id)}
                 variant="secondary"
-                isSmall
+                size="sm"
                 aria-label="refresh_acs"
               >
                 {__('Refresh source')}
               </Button>
               <Dropdown
                 style={{ paddingRight: '0px' }}
-                toggle={<KebabToggle aria-label="details_actions" onToggle={setDetailsKebabOpen} style={{ paddingRight: '0px' }} />}
+                toggle={<KebabToggle aria-label="details_actions" onToggle={(_event, val) => setDetailsKebabOpen(val)} style={{ paddingRight: '0px' }} />}
                 isOpen={detailsKebabOpen}
                 ouiaId="acs-details-actions"
                 isPlain
@@ -344,7 +346,7 @@ const ACSTable = () => {
                   </Button>}
                   {renderActionButtons && (canEdit || canDelete) &&
                   <Dropdown
-                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
+                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={(_event, val) => setKebabOpen(val)} />}
                     isOpen={kebabOpen}
                     ouiaId="acs-bulk-actions"
                     isPlain
@@ -430,7 +432,7 @@ const ACSTable = () => {
                           id={id}
                           aria-label={`Select ACS ${id}`}
                           isChecked={isSelected(id)}
-                          onChange={selected => selectOne(selected, id)}
+                          onChange={(_event, selected) => selectOne(selected, id)}
                         />
                       </Td>
                       <Td>

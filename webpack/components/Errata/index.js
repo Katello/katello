@@ -199,7 +199,7 @@ export const ErrataToggleGroupItem = ({
     <ToggleGroupItem
       text={text}
       isSelected={isSelected}
-      onChange={onChange}
+      onChange={(e, v) => onChange(v)}
       {...toggleGroupItemProps}
     />
   </Tooltip>

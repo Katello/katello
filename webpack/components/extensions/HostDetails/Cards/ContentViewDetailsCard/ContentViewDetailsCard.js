@@ -4,15 +4,17 @@ import {
   CardHeader,
   CardTitle,
   CardBody,
-  Dropdown,
-  DropdownItem,
   Flex,
   FlexItem,
   GridItem,
-  KebabToggle,
   Label,
   Tooltip,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
 import { FormattedMessage } from 'react-intl';
 
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
@@ -59,7 +61,7 @@ export const ContentViewEnvironmentDisplay = ({
             }}
           />}
         >
-          <Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{lifecycleEnvironment.name}</Label>
+          <Label color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{lifecycleEnvironment.name}</Label>
         </Tooltip>
         <ContentViewIcon composite={contentView.composite} rolling={contentViewDefault || contentView.rolling} style={{ marginRight: '2px' }} position="left" />
         {contentViewDefault ? <span>{contentView.name}</span> :

@@ -270,11 +270,9 @@ test('Remove rpm filter rule in a self-closing modal', async (done) => {
   expect(queryByText(cvFilterName)).toBeNull();
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[1]).toBeInTheDocument();
+    expect(getAllByLabelText('Kebab toggle')[0]).toBeInTheDocument();
   });
-
-  getAllByLabelText('Actions')[1].click();
-
+  getAllByLabelText('Kebab toggle')[0].click();
   await patientlyWaitFor(() => {
     expect(getByText('Remove')).toBeInTheDocument();
   });
@@ -282,7 +280,7 @@ test('Remove rpm filter rule in a self-closing modal', async (done) => {
   getByText('Remove').click();
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[1]).toBeInTheDocument();
+    expect(getAllByLabelText('Kebab toggle')[1]).toBeInTheDocument();
   });
 
   assertNockRequest(autocompleteScope);
@@ -338,16 +336,14 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
   expect(queryByText(cvFilterName)).toBeNull();
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[1]).toBeInTheDocument();
+    expect(getAllByLabelText('Kebab toggle')[0]).toBeInTheDocument();
   });
-
-  getAllByLabelText('Actions')[1].click();
-
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
   await patientlyWaitFor(() => {
     expect(getByText('Edit')).toBeInTheDocument();
   });
 
-  getByText('Edit').click();
+  fireEvent.click(getByText('Edit'));
 
   await patientlyWaitFor(() => {
     expect(getByText('Edit RPM rule')).toBeInTheDocument();
@@ -409,6 +405,6 @@ test('Shows call-to-action when there are no RPM filters', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFilterDetailScope);
-  assertNockRequest(cvPackageFilterRulesScope);
+  assertNockRequest(cvPackageFilterRulesScope, done);
   act(done);
 });

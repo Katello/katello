@@ -3,7 +3,19 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { TableVariant } from '@patternfly/react-table';
-import { Tabs, Tab, TabTitleText, Split, SplitItem, Dropdown, DropdownItem, KebabToggle, Button } from '@patternfly/react-core';
+import {
+  Tabs,
+  Tab,
+  TabTitleText,
+  Split,
+  SplitItem,
+  Button,
+} from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import onSelect from '../../../../components/Table/helpers';

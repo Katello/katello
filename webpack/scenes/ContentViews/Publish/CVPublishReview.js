@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  TableComposable, Thead, Tbody, Tr, Th,
+  Table /* data-codemods */, Thead, Tbody, Tr, Th,
   Td,
 } from '@patternfly/react-table';
 import { EnterpriseIcon, RegistryIcon } from '@patternfly/react-icons';
@@ -67,7 +67,7 @@ const CVPublishReview = ({
           </>
           }
       />
-      <TableComposable ouiaId="cv-publish-review-table" aria-label="Review Table">
+      <Table ouiaId="cv-publish-review-table" aria-label="Review Table">
         <Thead>
           <Tr ouiaId="cv-publish-review-table-headers">
             <Th>{__('Content view name')}</Th>
@@ -93,7 +93,7 @@ const CVPublishReview = ({
             }
           </Tr>
         </Tbody>
-      </TableComposable>
+      </Table>
     </>
   );
 };

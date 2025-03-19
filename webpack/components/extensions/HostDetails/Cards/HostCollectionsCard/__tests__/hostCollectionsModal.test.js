@@ -1,9 +1,9 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import mockAvailableHostCollections from './availableHostCollections.fixtures.json';
 import mockRemovableHostCollections from './removableHostCollections.fixtures.json';
 import { REMOVABLE_HOST_COLLECTIONS_KEY } from '../HostCollectionsConstants';
-import { assertNockRequest, mockAutocomplete, nockInstance } from '../../../../../../test-utils/nockWrapper';
+import nock, { assertNockRequest, mockAutocomplete, nockInstance } from '../../../../../../test-utils/nockWrapper';
 import katelloApi, { foremanApi } from '../../../../../../services/api';
 import { HostCollectionsAddModal, HostCollectionsRemoveModal } from '../HostCollectionsModal';
 
@@ -44,6 +44,10 @@ describe('HostCollectionsAddModal', () => {
     const { results } = mockAvailableHostCollections;
     [firstHostCollection] = results;
   });
+  afterEach(() => {
+    nock.cleanAll(); // Removes all interceptors
+    nock.restore(); // Restores HTTP to normal behavior
+  });
 
   test('Calls API with available_for=host on page load', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
@@ -65,7 +69,8 @@ describe('HostCollectionsAddModal', () => {
     await patientlyWaitFor(() =>
       expect(getAllByText(firstHostCollection.name)[0]).toBeInTheDocument());
     assertNockRequest(autocompleteScope);
-    assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+    assertNockRequest(scope);
+    act(done);
   });
 
   test('Calls alterHostCollections with combined list of existing and new host collections', async (done) => {
@@ -107,7 +112,8 @@ describe('HostCollectionsAddModal', () => {
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
     assertNockRequest(alterScope);
-    assertNockRequest(hostDetailsScope, done);
+    assertNockRequest(hostDetailsScope);
+    act(done);
   });
   test('Host collections whose host limit is exceeded are disabled', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
@@ -136,7 +142,8 @@ describe('HostCollectionsAddModal', () => {
     expect(disabledCheckboxes).toHaveLength(maxedOutHostCollections.length);
 
     assertNockRequest(autocompleteScope);
-    assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+    assertNockRequest(scope);
+    act(done); // Pass jest callback to confirm test is done
   });
 });
 
@@ -146,6 +153,10 @@ describe('HostCollectionsRemoveModal', () => {
     [firstHostCollection] = results;
   });
 
+  afterEach(() => {
+    nock.cleanAll(); // Removes all interceptors
+    nock.restore(); // Restores HTTP to normal behavior
+  });
   test('Calls API without available_for=host on page load', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
@@ -168,7 +179,8 @@ describe('HostCollectionsRemoveModal', () => {
       expect(getAllByText(firstHostCollection.name)[0]).toBeInTheDocument());
     // Assert request was made and completed, see helper function
     assertNockRequest(autocompleteScope);
-    assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+    assertNockRequest(scope);
+    act(done); // Pass jest callback to confirm test is done
   });
 
   test('Calls alterHostCollections with host collections being removed filtered out from the list', async (done) => {
@@ -204,16 +216,20 @@ describe('HostCollectionsRemoveModal', () => {
     await patientlyWaitFor(() =>
       expect(getAllByText(firstRemovableHostCollection.name)[0]).toBeInTheDocument());
     const checkbox = getByRole('checkbox', { name: 'Select row 0' });
-    fireEvent.click(checkbox);
+    await act(async () => {
+      fireEvent.click(checkbox);
+    });
     expect(getAllByText('1 selected')).toHaveLength(1);
     const removeButton = getByRole('button', { name: 'Remove' });
     expect(removeButton).toHaveAttribute('aria-disabled', 'false');
-    fireEvent.click(removeButton);
-
+    await act(async () => {
+      fireEvent.click(removeButton);
+    });
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
     assertNockRequest(alterScope);
-    assertNockRequest(hostDetailsScope, done);
+    assertNockRequest(hostDetailsScope);
+    act(done);
   });
 });
 

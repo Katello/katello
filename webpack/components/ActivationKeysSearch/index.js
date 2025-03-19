@@ -5,13 +5,14 @@ import {
   FormGroup,
   Spinner,
   EmptyState,
-  Title,
   Button,
+  Alert, EmptyStateHeader,
+} from '@patternfly/react-core';
+import {
   Select,
   SelectOption,
   SelectVariant,
-  Alert,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { FormattedMessage } from 'react-intl';
 import $ from 'jquery';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -134,9 +135,7 @@ const ActivationKeysSearch = () => {
   if (!(selectedEnvId && selectedContentViewId)) {
     return (
       <EmptyState>
-        <Title headingLevel="h4" size="lg" ouiaId="ak-empty-state-title">
-          {__('Please select a lifecycle environment and content view to view activation keys.')}
-        </Title>
+        <EmptyStateHeader titleText={<>{__('Please select a lifecycle environment and content view to view activation keys.')}</>} headingLevel="h4" />
       </EmptyState>
     );
   }
@@ -157,7 +156,7 @@ const ActivationKeysSearch = () => {
           <Select
             ouiaId="ak-select"
             variant={SelectVariant.typeaheadMulti}
-            onToggle={setIsOpen}
+            onToggle={(_event, val) => setIsOpen(val)}
             onSelect={onSelect}
             selections={selectedKeys}
             isOpen={isOpen}

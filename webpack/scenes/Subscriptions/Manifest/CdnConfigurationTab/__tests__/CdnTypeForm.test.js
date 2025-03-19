@@ -38,5 +38,6 @@ test('Can update to cdn type', async (done) => {
 
   const updateButton = getByLabelText(updateButtonName);
   fireEvent.click(updateButton);
-  assertNockRequest(updateCdnConfigurationRequest, done);
+  assertNockRequest(updateCdnConfigurationRequest);
+  done();
 });

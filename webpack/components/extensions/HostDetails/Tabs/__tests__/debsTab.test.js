@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import * as hooks from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
@@ -75,7 +75,8 @@ test('Can call API for packages and show on screen on page load', async (done) =
   await patientlyWaitFor(() => expect(getAllByText(firstDeb.name)[0]).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can handle no packages being present', async (done) => {
@@ -101,7 +102,8 @@ test('Can handle no packages being present', async (done) => {
   await patientlyWaitFor(() => expect(queryByText('This host does not have any packages.')).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can filter by package status', async (done) => {
@@ -132,7 +134,9 @@ test('Can filter by package status', async (done) => {
 
   const statusDropdown = queryByText('Status', { ignore: 'th' });
   expect(statusDropdown).toBeInTheDocument();
-  fireEvent.click(statusDropdown);
+  await act(async () => {
+    fireEvent.click(statusDropdown);
+  });
   const upgradable = getByRole('option', { name: 'select Upgradable' });
   fireEvent.click(upgradable);
   await patientlyWaitFor(() => {
@@ -143,7 +147,8 @@ test('Can filter by package status', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope2);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can upgrade a package via remote execution', async (done) => {
@@ -182,25 +187,32 @@ test('Can upgrade a package via remote execution', async (done) => {
 
   const statusDropdown = getByText('Status', { ignore: 'th' });
   expect(statusDropdown).toBeInTheDocument();
-  fireEvent.click(statusDropdown);
+  await act(async () => {
+    fireEvent.click(statusDropdown);
+  });
   const upgradable = getByRole('option', { name: 'select Upgradable' });
   fireEvent.click(upgradable);
   await patientlyWaitFor(() => {
     expect(getByText('libmagic1')).toBeInTheDocument();
     expect(getByText('libapt-pkg6.0')).toBeInTheDocument();
   });
-
-  const kebabDropdown = getAllByLabelText('Actions');
-  kebabDropdown[0].click();
+  const kebabDropdown = getAllByLabelText('Kebab toggle');
+  await act(async () => {
+    kebabDropdown[0].click();
+  });
 
   const rexAction = getByText('Upgrade via remote execution');
   await patientlyWaitFor(() => expect(rexAction).toBeInTheDocument());
-  fireEvent.click(rexAction);
+
+  await act(async () => {
+    fireEvent.click(rexAction);
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(statusScope);
-  assertNockRequest(upgradeScope, done);
+  assertNockRequest(upgradeScope);
+  done();
 });
 
 test('Can upgrade a package via customized remote execution', async (done) => {
@@ -227,7 +239,9 @@ test('Can upgrade a package via customized remote execution', async (done) => {
 
   const statusDropdown = getByText('Status', { ignore: 'th' });
   expect(statusDropdown).toBeInTheDocument();
-  fireEvent.click(statusDropdown);
+  await act(async () => {
+    fireEvent.click(statusDropdown);
+  });
   const upgradable = getByRole('option', { name: 'select Upgradable' });
   fireEvent.click(upgradable);
   await patientlyWaitFor(() => {
@@ -235,8 +249,10 @@ test('Can upgrade a package via customized remote execution', async (done) => {
     expect(getByText('libmagic1')).toBeInTheDocument();
   });
 
-  const kebabDropdown = getAllByLabelText('Actions');
-  kebabDropdown[0].click();
+  const kebabDropdown = getAllByLabelText('Kebab toggle');
+  await act(async () => {
+    kebabDropdown[0].click();
+  });
 
   const rexAction = getByText('Upgrade via customized remote execution');
   const feature = REX_FEATURES.KATELLO_PACKAGE_UPDATE;
@@ -248,11 +264,14 @@ test('Can upgrade a package via customized remote execution', async (done) => {
     `/job_invocations/new?feature=${feature}&search=name%20%5E%20(${hostname})&inputs%5Bpackage%5D=${packageName}`,
   );
 
-  fireEvent.click(rexAction);
+  await act(async () => {
+    fireEvent.click(rexAction);
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(statusScope, done);
+  assertNockRequest(statusScope);
+  done();
 });
 
 test('Can bulk upgrade via remote execution', async (done) => {
@@ -295,11 +314,14 @@ test('Can bulk upgrade via remote execution', async (done) => {
 
   const rexAction = getByLabelText('bulk_upgrade_rex');
   expect(rexAction).toBeInTheDocument();
-  fireEvent.click(rexAction);
+  await act(async () => {
+    fireEvent.click(rexAction);
+  });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(upgradeScope, done);
+  assertNockRequest(upgradeScope);
+  done();
 });
 
 test('Can bulk upgrade via customized remote execution', async (done) => {
@@ -338,7 +360,8 @@ test('Can bulk upgrade via customized remote execution', async (done) => {
   expect(rexAction).toHaveAttribute('href', job);
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Upgrade is disabled when there are non-upgradable packages selected', async (done) => {
@@ -368,7 +391,8 @@ test('Upgrade is disabled when there are non-upgradable packages selected', asyn
   expect(upgradeDropdown).toHaveAttribute('disabled');
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Remove is disabled when in select all mode', async (done) => {
@@ -394,7 +418,8 @@ test('Remove is disabled when in select all mode', async (done) => {
   expect(removeButton).toHaveAttribute('aria-disabled', 'true');
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Sets initial search query from url params', async (done) => {
@@ -415,6 +440,7 @@ test('Sets initial search query from url params', async (done) => {
   expect(queryByText(secondDeb.name)).not.toBeInTheDocument();
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 

@@ -49,7 +49,7 @@ const renderOptions = isTracerInstalled => ({ // sets initial Redux state
   },
 });
 
-const actionMenuToTheRightOf = node => node.nextElementSibling.firstElementChild.firstElementChild;
+const actionMenuToTheRightOf = node => node.nextElementSibling.firstElementChild;
 
 const hostTraces = foremanApi.getApiUrl('/hosts/1/traces');
 const autocompleteUrl = '/hosts/1/traces/auto_complete_search';
@@ -80,7 +80,8 @@ describe('With tracer installed', () => {
     await patientlyWaitFor(() => expect(queryByText(firstTrace.application)).toBeInTheDocument());
     // Assert request was made and completed, see helper function
     assertNockRequest(autocompleteScope);
-    assertNockRequest(scope, done);
+    assertNockRequest(scope);
+    done();
   });
 
   test('Can handle no traces being present', async (done) => {
@@ -99,7 +100,8 @@ describe('With tracer installed', () => {
     await patientlyWaitFor(() => expect(queryByText('No applications to restart')).toBeInTheDocument());
     // Assert request was made and completed, see helper function
     assertNockRequest(autocompleteScope);
-    assertNockRequest(scope, done);
+    assertNockRequest(scope);
+    done();
   });
 
   test('Can bulk restart traces via Restart App button', async (done) => {
@@ -137,7 +139,8 @@ describe('With tracer installed', () => {
 
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
-    assertNockRequest(scope, done);
+    assertNockRequest(scope);
+    done();
   });
 
   test('Warns you when one of the selected traces requires reboot', async (done) => {
@@ -167,7 +170,8 @@ describe('With tracer installed', () => {
       expect(queryByText('At least one of the selected items requires the host to reboot')).toBeInTheDocument();
     });
     assertNockRequest(autocompleteScope);
-    assertNockRequest(scope, done);
+    assertNockRequest(scope);
+    done();
   });
 
   test('Warns about reboot when using select all', async (done) => {
@@ -197,7 +201,8 @@ describe('With tracer installed', () => {
       expect(queryByText('At least one of the selected items requires the host to reboot')).toBeInTheDocument();
     });
     assertNockRequest(autocompleteScope);
-    assertNockRequest(scope, done);
+    assertNockRequest(scope);
+    done();
   });
 
   test('Can bulk restart traces via remote execution', async (done) => {
@@ -227,14 +232,18 @@ describe('With tracer installed', () => {
     fireEvent.click(traceCheckbox);
     expect(traceCheckbox.checked).toEqual(true);
     const actionMenu = getByLabelText('bulk_actions');
-    actionMenu.click();
+
+    await act(async () => {
+      actionMenu.click();
+    });
     const viaRexAction = queryByText('Restart via remote execution');
     expect(viaRexAction).toBeInTheDocument();
     viaRexAction.click();
 
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
-    assertNockRequest(scope, done);
+    assertNockRequest(scope);
+    done();
   });
 
   test('Can select all, exclude and bulk restart traces via remote execution', async (done) => {
@@ -268,17 +277,23 @@ describe('With tracer installed', () => {
 
 
     const selectAllCheckbox = getByLabelText('Select all');
-    fireEvent.click(selectAllCheckbox);
+
+    await act(async () => {
+      fireEvent.click(selectAllCheckbox);
+    });
     expect(traceCheckbox.checked).toEqual(true);
 
     fireEvent.click(getByLabelText('Select row 0')); // de select
     fireEvent.click(getByLabelText('Select row 2')); // de select
 
-    fireEvent.click(getByText('Reboot host'));
+    await act(async () => {
+      fireEvent.click(getByText('Reboot host'));
+    });
 
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
-    assertNockRequest(scope, done);
+    assertNockRequest(scope);
+    done();
   });
 
   test('Can restart a single trace via remote execution', async (done) => {
@@ -301,20 +316,23 @@ describe('With tracer installed', () => {
     await patientlyWaitFor(() => {
       const traceNameNode = getByText(firstTrace.helper);
       traceActionMenu = actionMenuToTheRightOf(traceNameNode);
-      expect(traceActionMenu).toHaveAttribute('aria-label', 'Actions');
+      expect(traceActionMenu).toHaveAttribute('aria-label', 'Kebab toggle');
     });
-    traceActionMenu.click();
-
+    await act(async () => {
+      traceActionMenu.click();
+    });
     let viaRexAction;
     await patientlyWaitFor(() => {
       viaRexAction = getByText('Restart via remote execution');
       expect(viaRexAction).toBeInTheDocument();
     });
-    viaRexAction.click();
-
+    await act(async () => {
+      viaRexAction.click();
+    });
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
-    assertNockRequest(scope, done);
+    assertNockRequest(scope);
+    done();
   });
 
   test('Can restart a single trace via customized remote execution', async (done) => {
@@ -334,10 +352,11 @@ describe('With tracer installed', () => {
     await patientlyWaitFor(() => {
       const traceNameNode = getByText(firstTrace.helper);
       traceActionMenu = actionMenuToTheRightOf(traceNameNode);
-      expect(traceActionMenu).toHaveAttribute('aria-label', 'Actions');
+      expect(traceActionMenu).toHaveAttribute('aria-label', 'Kebab toggle');
     });
-    fireEvent.click(traceActionMenu);
-
+    await act(async () => {
+      fireEvent.click(traceActionMenu);
+    });
     let viaCustomizedRexAction;
     await patientlyWaitFor(() => {
       viaCustomizedRexAction = getByText('Restart via customized remote execution');
@@ -349,7 +368,8 @@ describe('With tracer installed', () => {
     );
 
     assertNockRequest(autocompleteScope);
-    assertNockRequest(scope, done);
+    assertNockRequest(scope);
+    done();
   });
 
   test('Can bulk restart traces via customized remote execution', async (done) => {
@@ -372,7 +392,9 @@ describe('With tracer installed', () => {
     expect(traceCheckbox.checked).toEqual(true);
 
     const actionMenu = getByLabelText('bulk_actions');
-    fireEvent.click(actionMenu);
+    await act(async () => {
+      fireEvent.click(actionMenu);
+    });
     const viaCustomizedRexAction = queryByText('Restart via customized remote execution');
 
     expect(viaCustomizedRexAction).toBeInTheDocument();
@@ -382,7 +404,8 @@ describe('With tracer installed', () => {
     );
 
     assertNockRequest(autocompleteScope);
-    assertNockRequest(scope, done);
+    assertNockRequest(scope);
+    done();
   });
 
   describe('Remote execution URL helper logic', () => {
@@ -410,7 +433,8 @@ describe('With tracer installed', () => {
       expect(traceCheckbox.disabled).toEqual(true);
 
       assertNockRequest(autocompleteScope);
-      assertNockRequest(scope, done);
+      assertNockRequest(scope);
+      done();
     });
   });
 });
@@ -453,7 +477,8 @@ describe('Without tracer installed', () => {
     fireEvent.click(enableTracesModalButton);
     expect(queryByText('via remote execution')).not.toBeInTheDocument();
 
-    assertNockRequest(jobInvocationScope, done);
+    assertNockRequest(jobInvocationScope);
+    done();
   });
 
   test('Detects if tracer package is not available to install', async () => {

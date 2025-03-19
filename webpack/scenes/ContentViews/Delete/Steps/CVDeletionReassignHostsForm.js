@@ -1,7 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { ExpandableSection, SelectOption } from '@patternfly/react-core';
+import {
+  ExpandableSection,
+} from '@patternfly/react-core';
+import {
+  SelectOption,
+} from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import getContentViews from '../../ContentViewsActions';
@@ -117,7 +122,7 @@ const CVDeletionReassignHostsForm = () => {
       </ContentViewSelect>
       <ExpandableSection
         toggleText={showHosts ? 'Hide hosts' : 'Show hosts'}
-        onToggle={expanded => setShowHosts(expanded)}
+        onToggle={(_event, expanded) => setShowHosts(expanded)}
         isExpanded={showHosts}
       >
         <AffectedHosts

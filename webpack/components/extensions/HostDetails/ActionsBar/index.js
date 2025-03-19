@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { DropdownItem, DropdownSeparator } from '@patternfly/react-core';
+import {
+  DropdownItem,
+  DropdownSeparator,
+} from '@patternfly/react-core/deprecated';
 import { CubeIcon, UndoIcon, RedoIcon } from '@patternfly/react-icons';
 
 import { translate as __ } from 'foremanReact/common/I18n';

@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { ExpandableSection, SelectOption, Alert, AlertActionCloseButton } from '@patternfly/react-core';
+import { ExpandableSection, Alert, AlertActionCloseButton } from '@patternfly/react-core';
+import { SelectOption } from '@patternfly/react-core/deprecated';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import EnvironmentPaths from '../../../../components/EnvironmentPaths/EnvironmentPaths';
@@ -146,7 +147,7 @@ const CVReassignHostsForm = () => {
       </ContentViewSelect>
       <ExpandableSection
         toggleText={showHosts ? 'Hide hosts' : 'Show hosts'}
-        onToggle={expanded => setShowHosts(expanded)}
+        onToggle={(_event, expanded) => setShowHosts(expanded)}
         isExpanded={showHosts}
       >
         <AffectedHosts

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { ExpandableSection, Flex, FlexItem } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
-import { TableVariant, TableComposable, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import { TableVariant, Table /* data-codemods */, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import CVDeleteContext from '../CVDeleteContext';
@@ -60,14 +60,14 @@ const CVDeleteEnvironmentSelection = () => {
             <ExpandableSection
               key={version.id}
               toggleText={__(`Version ${version.version}`)}
-              onToggle={expanded => setExpanded(index, expanded)}
+              onToggle={(_event, expanded) => setExpanded(index, expanded)}
               isExpanded={versionExpanded[index]}
             >
               {(version?.environments.length !== 0) ?
-                <TableComposable ouiaId="cv-delete-env-select-table" variant={TableVariant.compact}>
+                <Table ouiaId="cv-delete-env-select-table" variant={TableVariant.compact}>
                   <Thead>
                     <Tr ouiaId="cv-delete-env-select-table-header">
-                      <Th />
+                      <Th aria-label="select header" />
                       {columnHeaders.map(col =>
                         <Th key={col}>{col}</Th>)}
                     </Tr>
@@ -84,7 +84,7 @@ const CVDeleteEnvironmentSelection = () => {
                             select={{
                               rowIndex,
                               isSelected: true,
-                              disable: true,
+                              isDisabled: true,
                             }}
                           />
                           <Td>
@@ -96,7 +96,7 @@ const CVDeleteEnvironmentSelection = () => {
                       );
                     })}
                   </Tbody>
-                </TableComposable> :
+                </Table> :
                 <InactiveText text={__('This version is not promoted to any environments.')} />
               }
             </ExpandableSection>

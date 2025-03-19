@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-escape */
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 
 import CONTENT_VIEWS_KEY from '../ContentViewsConstants';
 import ContentViewsPage from '../../ContentViews';
@@ -43,7 +43,8 @@ test('Can call API for CVs and show on screen on page load', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  act(done);
 });
 
 test('Can show last task and link to it', async (done) => {
@@ -68,7 +69,8 @@ test('Can show last task and link to it', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  act(done); // Pass jest callback to confirm test is done
 });
 
 test('Can show latest version and link to it', async (done) => {
@@ -104,7 +106,8 @@ test('Can show latest version and link to it', async (done) => {
       .toHaveAttribute('href', '/lifecycle_environments/1');
   });
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  act(done); // Pass jest callback to confirm test is done
 });
 
 test('Can expand cv and show activation keys and hosts', async (done) => {
@@ -168,24 +171,28 @@ test('Can show the correct options in CV kebap menu', async (done) => {
     .query(true)
     .reply(200, cvIndexData);
 
-  const {
-    getAllByLabelText,
-    queryByText,
-  } = renderWithRedux(<ContentViewsPage />, renderOptions);
+  const { getAllByLabelText, queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
-  await patientlyWaitFor(() => {
+  await patientlyWaitFor(() => expect(getAllByLabelText('Kebab toggle')[0]).toBeInTheDocument());
+  await act(async () => {
+    getAllByLabelText('Kebab toggle')[0].click();
+  });
+  await patientlyWaitFor(async () => {
     // open kebap menu of content view, should contain all available action options
-    getAllByLabelText('Actions')[0].click();
-    expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+    expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
     expect(queryByText('Publish')).toBeVisible();
     expect(queryByText('Promote')).toBeVisible();
     expect(queryByText('Copy')).toBeVisible();
     expect(queryByText('Delete')).toBeVisible();
 
     // open kebap menu of rolling content view, should only show 'Delete' action
-    getAllByLabelText('Actions')[2].click();
-    expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
-    expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'true');
+  });
+  await act(async () => {
+    getAllByLabelText('Kebab toggle')[2].click();
+  });
+  await patientlyWaitFor(async () => {
+    expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'true');
     expect(queryByText('Publish')).toBeNull();
     expect(queryByText('Promote')).toBeNull();
     expect(queryByText('Copy')).toBeNull();
@@ -193,7 +200,8 @@ test('Can show the correct options in CV kebap menu', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  act(done); // Pass jest callback to confirm test is done
 });
 
 test('Can handle no Content Views being present', async (done) => {
@@ -214,7 +222,8 @@ test('Can handle no Content Views being present', async (done) => {
 
   expect(queryByText(firstCV.name)).toBeNull();
   await patientlyWaitFor(() => expect(queryByText('You currently have no content views to display')).toBeInTheDocument());
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  act(done);
 });
 
 test('Can handle errored response', async (done) => {
@@ -227,7 +236,8 @@ test('Can handle errored response', async (done) => {
 
   expect(queryByText(firstCV.name)).toBeNull();
   await patientlyWaitFor(() => expect(queryByText(/Something went wrong! Please check server logs!/i)).toBeInTheDocument());
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  act(done);
 });
 
 test('Can handle unpublished Content Views', async (done) => {
@@ -244,7 +254,8 @@ test('Can handle unpublished Content Views', async (done) => {
 
   await patientlyWaitFor(() => expect(getAllByText(/not yet published/i).length).toBeGreaterThan(0));
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  act(done);
 });
 
 test('Can handle pagination', async (done) => {
@@ -288,7 +299,8 @@ test('Can handle pagination', async (done) => {
   });
   assertNockRequest(autocompleteScope);
   assertNockRequest(firstPageScope);
-  assertNockRequest(secondPageScope, done); // Only pass jest callback to the last API request
+  assertNockRequest(secondPageScope);
+  act(done); // Only pass jest callback to the last API request
 });
 
 test('Can search for specific Content View', async (done) => {
@@ -345,7 +357,8 @@ test('Can search for specific Content View', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(initialScope);
-  assertNockRequest(withSearchScope, done);
+  assertNockRequest(withSearchScope);
+  act(done);
 });
 
 test('Nothing is shown for empty search', async (done) => {
@@ -378,7 +391,8 @@ test('Nothing is shown for empty search', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(initialScope);
-  assertNockRequest(withSearchScope, done);
+  assertNockRequest(withSearchScope);
+  act(done);
 });
 
 test('Displays Create Content View and opens modal with Form', async () => {
