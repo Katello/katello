@@ -44,7 +44,7 @@ export const ArtifactsWithNoErrataRenderer = ({ filterDetails }) => {
     label={getLabel()}
     isChecked={artifactsNoErrata}
     isDisabled={isLoading}
-    onChange={checked => setArtifactsNoErrata(checked)}
+    onChange={(_event, checked) => setArtifactsNoErrata(checked)}
   />);
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { TableComposable, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
+import { Table /* data-codemods */, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import { CheckCircleIcon, TimesCircleIcon } from '@patternfly/react-icons';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
@@ -33,13 +33,13 @@ const ExpandableCvDetails = ({
   });
 
   return (
-    <TableComposable
+    <Table
       aria-label="expandable-content-views"
       ouiaId="expandable-content-views"
     >
       <Thead>
         <Tr ouiaId="column-headers">
-          <Th />
+          <Th aria-label="select header" />
           {columnHeaders.map(col => (
             <Th
               key={col}
@@ -102,7 +102,7 @@ const ExpandableCvDetails = ({
         );
       })}
 
-    </TableComposable>
+    </Table>
 
   );
 };

@@ -29,7 +29,7 @@ const HostsModal = ({
       <SearchInput
         placeholder={__('Search')}
         value={search}
-        onChange={v => setSearch(v)}
+        onChange={(e, v) => setSearch(v)}
         onClear={() => setSearch('')}
       />
       <List isPlain isBordered className="margin-top-16">

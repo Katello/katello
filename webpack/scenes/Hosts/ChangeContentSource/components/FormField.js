@@ -16,7 +16,7 @@ const FormField = ({
       <FormSelect
         ouiaId={`${id}_select`}
         value={value}
-        onChange={v => onChange(v)}
+        onChange={(_event, v) => onChange(v)}
         className="without_select2"
         isDisabled={isDisabled}
         id={`${id}_select`}

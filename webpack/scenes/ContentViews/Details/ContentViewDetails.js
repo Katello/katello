@@ -10,11 +10,13 @@ import {
   Button,
   Flex,
   FlexItem,
+} from '@patternfly/react-core';
+import {
   Dropdown,
   DropdownItem,
   KebabToggle,
   DropdownPosition,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { STATUS } from 'foremanReact/constants';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -202,7 +204,7 @@ export default () => {
                   position={DropdownPosition.right}
                   ouiaId="cv-details-actions"
                   style={{ marginLeft: 'auto' }}
-                  toggle={<KebabToggle onToggle={setDropdownOpen} id="toggle-dropdown" />}
+                  toggle={<KebabToggle onToggle={(_event, val) => setDropdownOpen(val)} id="toggle-dropdown" />}
                   isOpen={dropDownOpen}
                   isPlain
                   dropdownItems={dropDownItems}

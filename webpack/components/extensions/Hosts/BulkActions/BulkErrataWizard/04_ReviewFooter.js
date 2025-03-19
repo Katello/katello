@@ -1,7 +1,11 @@
 import React, { useContext } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Button } from '@patternfly/react-core';
-import { WizardFooterWrapper, useWizardContext } from '@patternfly/react-core/next';
+import {
+  Button,
+  WizardFooterWrapper,
+  useWizardContext,
+} from '@patternfly/react-core';
+
 import { BulkErrataWizardContext } from './BulkErrataWizard';
 import { dropdownOptions } from './04_Review';
 import { errataInstallUrl } from '../../../HostDetails/Tabs/customizedRexUrlHelpers';

@@ -215,7 +215,8 @@ test('Can display create wizard and create custom ACS', async (done) => {
   assertNockRequest(contentCredentialScope);
   assertNockRequest(productScope);
   assertNockRequest(smartProxyScope);
-  assertNockRequest(createScope, done);
+  assertNockRequest(createScope);
+  done();
   act(done);
 });
 
@@ -307,7 +308,8 @@ test('Can display create wizard and create RHUI ACS', async (done) => {
   assertNockRequest(contentCredentialScope);
   assertNockRequest(productScope);
   assertNockRequest(smartProxyScope);
-  assertNockRequest(createScope, done);
+  assertNockRequest(createScope);
+  done();
   act(done);
 });
 
@@ -387,6 +389,7 @@ test('Can display create wizard and create simplified ACS', async (done) => {
   assertNockRequest(productScope);
   assertNockRequest(contentCredentialScope);
   assertNockRequest(smartProxyScope);
-  assertNockRequest(createScope, done);
+  assertNockRequest(createScope);
+  done();
   act(done);
 });

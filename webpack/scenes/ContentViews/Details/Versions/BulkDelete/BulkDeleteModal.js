@@ -4,7 +4,9 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { PropTypes } from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
-import { Wizard } from '@patternfly/react-core';
+import {
+  Wizard,
+} from '@patternfly/react-core/deprecated';
 
 import BulkDeleteContextWrapper, {
   BulkDeleteContext,

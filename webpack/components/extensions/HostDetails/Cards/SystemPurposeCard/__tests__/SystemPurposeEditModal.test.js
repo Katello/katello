@@ -1,6 +1,6 @@
 import React from 'react';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import HOST_DETAILS from '../../../HostDetailsConstants';
 import SystemPurposeEditModal from '../SystemPurposeEditModal';
 import { assertNockRequest, nockInstance } from '../../../../../../test-utils/nockWrapper';
@@ -87,7 +87,8 @@ describe('SystemPurposeEditModal', () => {
     expect(getByText('8')).toBeInTheDocument();
 
     assertNockRequest(orgScope);
-    assertNockRequest(availableReleaseVersionsScope, done);
+    assertNockRequest(availableReleaseVersionsScope);
+    done();
   });
 
   test('Shows blank options as (unset)', () => {
@@ -159,8 +160,9 @@ describe('SystemPurposeEditModal', () => {
 
     // Save button should now be enabled
     expect(saveButton).toHaveAttribute('aria-disabled', 'false');
-    fireEvent.click(saveButton);
-
+    await act(async () => {
+      fireEvent.click(saveButton);
+    });
     await patientlyWaitFor(() => {
       expect(baseAttributes.closeModal).toHaveBeenCalled();
     });
@@ -168,7 +170,8 @@ describe('SystemPurposeEditModal', () => {
     [orgScope, availableReleaseVersionsScope, hostEditScope].forEach((scope) => {
       assertNockRequest(scope);
     });
-    assertNockRequest(hostDetailsScope, done);
+    assertNockRequest(hostDetailsScope);
+    done();
   });
   test('Calls API and changes syspurpose values for activation key', async (done) => {
     const orgScope = nockInstance
@@ -212,8 +215,9 @@ describe('SystemPurposeEditModal', () => {
 
     // Save button should now be enabled
     expect(saveButton).toHaveAttribute('aria-disabled', 'false');
-    fireEvent.click(saveButton);
-
+    await act(async () => {
+      fireEvent.click(saveButton);
+    });
     await patientlyWaitFor(() => {
       expect(baseAttributes.closeModal).toHaveBeenCalled();
     });
@@ -221,7 +225,8 @@ describe('SystemPurposeEditModal', () => {
     [orgScope, availableReleaseVersionsScope, akEditScope].forEach((scope) => {
       assertNockRequest(scope);
     });
-    assertNockRequest(akDetailsScope, done);
+    assertNockRequest(akDetailsScope);
+    done();
   });
   test('Retrieves available release versions for host', async (done) => {
     const orgScope = nockInstance
@@ -241,8 +246,9 @@ describe('SystemPurposeEditModal', () => {
       />, renderOptions());
 
     const releaseVersionDropdown = getByLabelText('Release version');
-    fireEvent.click(releaseVersionDropdown);
-
+    await act(async () => {
+      fireEvent.click(releaseVersionDropdown);
+    });
     await patientlyWaitFor(() => {
       expect(getByText('8')).toBeInTheDocument();
       expect(getByText('9')).toBeInTheDocument();
@@ -271,8 +277,9 @@ describe('SystemPurposeEditModal', () => {
       />, renderOptions(ACTIVATION_KEY));
 
     const releaseVersionDropdown = getByLabelText('Release version');
-    fireEvent.click(releaseVersionDropdown);
-
+    await act(async () => {
+      fireEvent.click(releaseVersionDropdown);
+    });
     await patientlyWaitFor(() => {
       expect(getByText('8')).toBeInTheDocument();
       expect(getByText('9')).toBeInTheDocument();

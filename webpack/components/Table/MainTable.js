@@ -1,11 +1,12 @@
 import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
+
 import {
-  Table,
+  Table as TableDeprecated,
   TableHeader,
   TableBody,
-  TableComposable,
-} from '@patternfly/react-table';
+  Table,
+} from '@patternfly/react-table/deprecated';
 import { STATUS } from 'foremanReact/constants';
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
@@ -96,18 +97,18 @@ const MainTable = ({
   const tableProps = { cells, rows, ...extraTableProps };
   if (children) {
     return (
-      <TableComposable
+      <Table
         ouiaId="content-view-table-composable"
         aria-label="Content View Table"
         className="katello-pf4-table"
         {...extraTableProps}
       >
         {children}
-      </TableComposable>
+      </Table>
     );
   }
   return (
-    <Table
+    <TableDeprecated
       ouiaId="Content-View-table"
       aria-label="Content View Table"
       className="katello-pf4-table"
@@ -115,7 +116,7 @@ const MainTable = ({
     >
       <TableHeader />
       <TableBody />
-    </Table>
+    </TableDeprecated>
   );
 };
 

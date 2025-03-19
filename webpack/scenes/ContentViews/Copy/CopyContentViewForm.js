@@ -55,7 +55,7 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
           ouiaId="input_name"
           name="name"
           value={name}
-          onChange={setName}
+          onChange={(_event, val) => setName(val)}
         />
       </FormGroup>
       <ActionGroup>

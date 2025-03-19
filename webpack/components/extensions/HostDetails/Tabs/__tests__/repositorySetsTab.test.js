@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, within, fireEvent, act } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../test-utils/nockWrapper';
 import katelloApi, { foremanApi } from '../../../../../services/api';
 import { REPOSITORY_SETS_KEY } from '../RepositorySetsTab/RepositorySetsConstants';
@@ -83,7 +83,8 @@ test('Can call API for repository sets and show basic table', async (done) => {
   // Assert that the repository sets are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can handle no repository sets being present', async (done) => {
@@ -108,7 +109,8 @@ test('Can handle no repository sets being present', async (done) => {
   await patientlyWaitFor(() => expect(queryByText('No repository sets to show.')).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Toggle Group shows if it\'s not the default content view or library enviroment', async (done) => {
@@ -127,7 +129,8 @@ test('Toggle Group shows if it\'s not the default content view or library enviro
   await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
   expect(queryByLabelText('Limit to environment')).toBeInTheDocument();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Toggle Group shows if it\'s the default content view but non-library environment', async (done) => {
@@ -151,7 +154,8 @@ test('Toggle Group shows if it\'s the default content view but non-library envir
   await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
   expect(queryByLabelText('Limit to environment')).toBeInTheDocument();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Toggle Group shows if it\'s the library environment but a non-default content view', async (done) => {
@@ -174,7 +178,8 @@ test('Toggle Group shows if it\'s the library environment but a non-default cont
   await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
   expect(queryByLabelText('Limit to environment')).toBeInTheDocument();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Toggle Group does not show if it\'s the library environment and default content view', async (done) => {
@@ -199,7 +204,8 @@ test('Toggle Group does not show if it\'s the library environment and default co
   await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
   expect(queryByLabelText('Limit to environment')).not.toBeInTheDocument();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can toggle with the Toggle Group ', async (done) => {
@@ -221,7 +227,8 @@ test('Can toggle with the Toggle Group ', async (done) => {
   expect(queryByLabelText('Limit to environment')).toHaveAttribute('aria-pressed', 'true');
   expect(queryByLabelText('No limit')).toHaveAttribute('aria-pressed', 'false');
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can override to disabled', async (done) => {
@@ -244,9 +251,10 @@ test('Can override to disabled', async (done) => {
   expect(getAllByText('Enabled')).toHaveLength(2);
   expect(getAllByText('Disabled')).toHaveLength(1);
   // Find the first action menu and click it
-  const actionMenu = getAllByLabelText('Actions')[0].closest('button');
-  fireEvent.click(actionMenu);
-
+  const actionMenu = getAllByLabelText('Kebab toggle')[0].closest('button');
+  await act(async () => {
+    fireEvent.click(actionMenu);
+  });
   const overrideMenuItem = getByText('Override to disabled');
   expect(overrideMenuItem).toBeInTheDocument();
   fireEvent.click(overrideMenuItem);
@@ -259,7 +267,8 @@ test('Can override to disabled', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(contentOverrideScope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(contentOverrideScope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can override to enabled', async (done) => {
@@ -284,8 +293,10 @@ test('Can override to enabled', async (done) => {
   expect(getAllByText('Enabled')).toHaveLength(2);
   expect(getAllByText('Disabled')).toHaveLength(1);
   // The second item is overridden to disabled; we're going to override to enabled
-  const actionMenu = getAllByLabelText('Actions')[1].closest('button');
-  fireEvent.click(actionMenu);
+  const actionMenu = getAllByLabelText('Kebab toggle')[1].closest('button');
+  await act(async () => {
+    fireEvent.click(actionMenu);
+  });
 
   const overrideMenuItem = getByText('Override to enabled');
   expect(overrideMenuItem).toBeInTheDocument();
@@ -298,7 +309,8 @@ test('Can override to enabled', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(contentOverrideScope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(contentOverrideScope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can reset to default', async (done) => {
@@ -323,8 +335,10 @@ test('Can reset to default', async (done) => {
   expect(getAllByText('Disabled')).toHaveLength(1);
 
   // The second item is overridden to disabled but would normally be enabled; we're going to reset
-  const actionMenu = getAllByLabelText('Actions')[1].closest('button');
-  fireEvent.click(actionMenu);
+  const actionMenu = getAllByLabelText('Kebab toggle')[1].closest('button');
+  await act(async () => {
+    fireEvent.click(actionMenu);
+  });
 
   const overrideMenuItem = getByText('Reset to default');
   expect(overrideMenuItem).toBeInTheDocument();
@@ -337,7 +351,8 @@ test('Can reset to default', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(contentOverrideScope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(contentOverrideScope);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can override in bulk', async (done) => {
@@ -358,14 +373,17 @@ test('Can override in bulk', async (done) => {
   getByLabelText('Select row 0').click();
   getByLabelText('Select row 1').click();
   const actionMenu = getByLabelText('bulk_actions');
-  actionMenu.click();
+  await act(async () => {
+    fireEvent.click(actionMenu);
+  });
   const resetToDefault = queryByText('Reset to default');
   expect(resetToDefault).toBeInTheDocument();
   resetToDefault.click();
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(contentOverrideScope, done); // Pass jest callback to confirm test is done});
+  assertNockRequest(contentOverrideScope);
+  done(); // Pass jest callback to confirm test is done});
 });
 test('Can override in bulk when limited to environment', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
@@ -391,14 +409,17 @@ test('Can override in bulk when limited to environment', async (done) => {
   await patientlyWaitFor(() => expect(getByText(firstRepoSet.contentUrl)).toBeInTheDocument());
   getByLabelText('Select all').click();
   const actionMenu = getByLabelText('bulk_actions');
-  actionMenu.click();
+  await act(async () => {
+    fireEvent.click(actionMenu);
+  });
   const resetToDefault = queryByText('Reset to default');
   expect(resetToDefault).toBeInTheDocument();
   resetToDefault.click();
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(contentOverrideScope, done);
+  assertNockRequest(contentOverrideScope);
+  done();
 });
 
 test('Can filter by status', async (done) => {
@@ -422,7 +443,9 @@ test('Can filter by status', async (done) => {
   const statusContainer = queryByLabelText('select Status container', { ignore: 'th' });
   const statusDropdown = within(statusContainer).queryByText('Status');
   expect(statusDropdown).toBeInTheDocument();
-  fireEvent.click(statusDropdown);
+  await act(async () => {
+    fireEvent.click(statusDropdown);
+  });
   const overridden = getByRole('option', { name: 'select Overridden' });
   fireEvent.click(overridden);
   await patientlyWaitFor(() => {
@@ -430,7 +453,8 @@ test('Can filter by status', async (done) => {
   });
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope2);
+  done(); // Pass jest callback to confirm test is done
 });
 
 test('Can display restrictions as labels', async (done) => {
@@ -448,5 +472,6 @@ test('Can display restrictions as labels', async (done) => {
   expect(secondRepoSet.archRestricted).not.toBeNull();
   expect(getByText(secondRepoSet.archRestricted)).toBeInTheDocument();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope);
+  done(); // Pass jest callback to confirm test is done
 });

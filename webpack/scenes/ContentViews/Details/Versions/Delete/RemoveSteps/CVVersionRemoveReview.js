@@ -63,7 +63,7 @@ const CVVersionRemoveReview = () => {
           </Flex>
           <Flex>
             {selectedCVE?.map(({ environment_name: name, environment_id: id }) =>
-              <FlexItem key={name}><Label isTruncated color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label></FlexItem>)}
+              <FlexItem key={name}><Label color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label></FlexItem>)}
           </Flex>
         </>}
       {affectedHosts &&
@@ -82,7 +82,7 @@ const CVVersionRemoveReview = () => {
                     plural: __('hosts'),
                     cvName: selectedCVNameForHosts,
                     envName: selectedEnvForHost[0] && (
-                      <Label isTruncated color="purple" href={`/lifecycle_environments/${selectedEnvForHost[0].id}`}>
+                      <Label color="purple" href={`/lifecycle_environments/${selectedEnvForHost[0].id}`}>
                         {selectedEnvForHost[0].name}
                       </Label>
                     ),
@@ -138,7 +138,7 @@ const CVVersionRemoveReview = () => {
                     plural: __('activation keys'),
                     cvName: selectedCVNameForAK,
                     envName: selectedEnvForAK[0] && (
-                      <Label isTruncated color="purple" href={`/lifecycle_environments/${selectedEnvForAK[0].id}`}>
+                      <Label color="purple" href={`/lifecycle_environments/${selectedEnvForAK[0].id}`}>
                         {selectedEnvForAK[0].name}
                       </Label>
                     ),

@@ -62,7 +62,7 @@ const EnvironmentPaths = ({
                     ouiaId={`${env.id}${index}`}
                     label={<EnvironmentLabels environments={env} isDisabled={isDisabled} />}
                     aria-label={env.label}
-                    onChange={checked => oncheckedChange(checked, env)}
+                    onChange={(e, checked) => oncheckedChange(checked, env)}
                   />))}
               </FormGroup>
               <hr />

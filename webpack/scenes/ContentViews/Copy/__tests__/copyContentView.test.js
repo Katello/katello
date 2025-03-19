@@ -35,5 +35,6 @@ test('Can copy content view from form', async (done) => {
     expect(setModalOpen).toBeCalled();
   });
 
-  assertNockRequest(copyscope, done);
+  assertNockRequest(copyscope);
+  done();
 });

@@ -5,6 +5,7 @@ import {
   FlexItem,
   Label,
   Text,
+  Icon,
 } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import {
@@ -19,14 +20,14 @@ const ActionSummary = ({ title, text, selectedEnv: { name, id } }) => (
     {text &&
       <Flex>
         <FlexItem style={{ marginRight: '8px' }}>
-          <ExclamationTriangleIcon color={warningColor.value} />
+          <Icon color={warningColor.value}><ExclamationTriangleIcon /></Icon>
         </FlexItem>
         <FlexItem style={{ marginRight: '8px' }}>
           <Text ouiaId="action-summary-text">{text}</Text>
         </FlexItem>
         {name && id &&
           <FlexItem>
-            <Label isTruncated color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label>
+            <Label color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label>
           </FlexItem>
         }
       </Flex>

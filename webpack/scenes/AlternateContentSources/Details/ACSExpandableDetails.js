@@ -103,7 +103,8 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   setShowUrlPaths(false);
                   setShowCredentials(false);
                 }}
-                contentId="showDetails"
+                contentId="showDetails-content"
+                toggleId="showDetails-toggle"
               >
                 <Text ouiaId="expandable-details-text">{__('Details')}</Text>
               </ExpandableSectionToggle>
@@ -114,7 +115,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                 ouiaId="edit-details-pencil-edit"
                 aria-label="edit-details-pencil-edit"
                 variant="link"
-                isSmall
+                size="sm"
                 icon={<PencilAltIcon />}
                 onClick={() => setEditDetailsModalOpen(true)}
               >{__('Edit')}
@@ -127,7 +128,8 @@ const ACSExpandableDetails = ({ expandedId }) => {
           <ExpandableSection
             isExpanded={showDetails}
             isDetached
-            contentId="showDetails"
+            contentId="showDetails-content"
+            toggleId="showDetails-toggle"
           >
             <TextContent className="margin-0-24 expandable-section-text">
               <TextList component={TextListVariants.dl}>
@@ -183,7 +185,8 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   setShowCredentials(false);
                   setShowProducts(false);
                 }}
-                contentId="showSmartProxies"
+                contentId="showSmartProxies-content"
+                toggleId="showSmartProxies-toggle"
               >
                 <Text ouiaId="expandable-smart-proxies-text">{__('Smart proxies')}</Text>
               </ExpandableSectionToggle>
@@ -194,7 +197,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                 ouiaId="edit-smart-proxies-pencil-edit"
                 aria-label="edit-smart-proxies-pencil-edit"
                 variant="link"
-                isSmall
+                size="sm"
                 icon={<PencilAltIcon />}
                 onClick={() => setEditSmartProxiesModalOpen(true)}
               >{__('Edit')}
@@ -206,7 +209,8 @@ const ACSExpandableDetails = ({ expandedId }) => {
         <StackItem className="primary-detail-stack-items-border">
           <ExpandableSection
             isDetached
-            contentId="showSmartProxies"
+            contentId="showSmartProxies-content"
+            toggleId="showSmartProxies-toggle"
             isExpanded={showSmartProxies}
           >
             <List className="margin-0-24 expandable-section-text" isPlain isBordered>
@@ -254,7 +258,8 @@ const ACSExpandableDetails = ({ expandedId }) => {
                     setShowCredentials(false);
                   }}
                   isExpanded={showProducts}
-                  contentId="showProducts"
+                  contentId="showProducts-content"
+                  toggleId="showProducts-toggle"
                 >
                   <Text ouiaId="expandable-products-text">{__('Products')}</Text>
                 </ExpandableSectionToggle>
@@ -265,7 +270,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   ouiaId="edit-products-pencil-edit"
                   aria-label="edit-products-pencil-edit"
                   variant="link"
-                  isSmall
+                  size="sm"
                   icon={<PencilAltIcon />}
                   onClick={() => setEditProductsModalOpen(true)}
                 >{__('Edit')}
@@ -277,7 +282,8 @@ const ACSExpandableDetails = ({ expandedId }) => {
           <StackItem>
             <ExpandableSection
               isDetached
-              contentId="showProducts"
+              contentId="showProducts-content"
+              toggleId="showProducts-toggle"
               isExpanded={showProducts}
             >
               <List className="margin-0-24 expandable-section-text" isPlain isBordered>
@@ -308,7 +314,8 @@ const ACSExpandableDetails = ({ expandedId }) => {
                     setShowCredentials(false);
                   }}
                   isExpanded={showUrlPaths}
-                  contentId="showUrlPaths"
+                  contentId="showUrlPaths-content"
+                  toggleId="showUrlPaths-toggle"
                 >
                   <Text ouiaId="expandable-url-paths-text">{__('URL and subpaths')}</Text>
                 </ExpandableSectionToggle>
@@ -319,7 +326,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   ouiaId="edit-urls-pencil-edit"
                   aria-label="edit-urls-pencil-edit"
                   variant="link"
-                  isSmall
+                  size="sm"
                   icon={<PencilAltIcon />}
                   onClick={() => setEditUrlModalOpen(true)}
                 >{__('Edit')}
@@ -330,7 +337,8 @@ const ACSExpandableDetails = ({ expandedId }) => {
           </StackItem>
           <StackItem className="primary-detail-stack-items-border">
             <ExpandableSection
-              contentId="showUrlPaths"
+              contentId="showUrlPaths-content"
+              toggleId="showUrlPaths-toggle"
               isDetached
               isExpanded={showUrlPaths}
             >
@@ -369,7 +377,8 @@ const ACSExpandableDetails = ({ expandedId }) => {
                     setShowCredentials(expanded);
                   }}
                   isExpanded={showCredentials}
-                  contentId="showCredentials"
+                  contentId="showCredentials-content"
+                  toggleId="showCredentials-toggle"
                 >
                   <Text ouiaId="expandable-credentials-text">{__('Credentials')}</Text>
                 </ExpandableSectionToggle>
@@ -380,7 +389,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   ouiaId="edit-credentials-pencil-edit"
                   aria-label="edit-credentials-pencil-edit"
                   variant="link"
-                  isSmall
+                  size="sm"
                   icon={<PencilAltIcon />}
                   onClick={() => setEditCredentialsModalOpen(true)}
                 >{__('Edit')}
@@ -392,7 +401,8 @@ const ACSExpandableDetails = ({ expandedId }) => {
           <StackItem className="primary-detail-stack-items-border">
             <ExpandableSection
               isExpanded={showCredentials}
-              contentId="showCredentials"
+              contentId="showCredentials-content"
+              toggleId="showCredentials-toggle"
               isDetached
             >
               <TextContent className="margin-0-24 expandable-section-text">

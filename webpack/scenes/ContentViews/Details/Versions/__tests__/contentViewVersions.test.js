@@ -250,9 +250,9 @@ test('Can open Promote Modal', async (done) => {
     expect(getByText(`Version ${firstVersion.version}`)).toBeInTheDocument();
   });
   // Expand Row Action
-  expect(getAllByLabelText('Actions')[1]).toHaveAttribute('aria-expanded', 'false');
-  fireEvent.click(getAllByLabelText('Actions')[1]);
-  expect(getAllByLabelText('Actions')[1]).toHaveAttribute('aria-expanded', 'true');
+  expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[1]);
+  expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'true');
   fireEvent.click(getByText('Promote'));
   await patientlyWaitFor(() => {
     expect(getByText('Select a lifecycle environment from the available promotion paths to promote new version.')).toBeInTheDocument();
@@ -340,9 +340,9 @@ test('Can open Promote Modal and show out of path warnings', async (done) => {
     expect(getByText(`Version ${firstVersion.version}`)).toBeInTheDocument();
   });
   // Expand Row Action
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
-  fireEvent.click(getAllByLabelText('Actions')[0]);
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
   fireEvent.click(getByText('Promote'));
   await patientlyWaitFor(() => {
     expect(getByText('Select a lifecycle environment from the available promotion paths to promote new version.')).toBeInTheDocument();

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Wizard } from '@patternfly/react-core';
+import {
+  Wizard,
+} from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import getEnvironmentPaths from '../../../components/EnvironmentPaths/EnvironmentPathActions';

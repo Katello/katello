@@ -1,7 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TableVariant, TableText, Tbody, Thead, Td, Tr, Th } from '@patternfly/react-table';
-import { Checkbox, Dropdown, DropdownItem, Grid, KebabToggle, GridItem, Button } from '@patternfly/react-core';
+import {
+  Checkbox,
+  Grid,
+  GridItem,
+  Button,
+} from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { STATUS } from 'foremanReact/constants';
@@ -151,7 +161,7 @@ const ContentViewVersions = ({ cvId, details }) => {
         id={versionId}
         aria-label={`Select version ${versionId}`}
         isChecked={isSelected(versionId)}
-        onChange={selected => selectOne(selected, versionId)}
+        onChange={(_event, selected) => selectOne(selected, versionId)}
       />,
       <>
         <Link to={`/versions/${versionId}`}>{__('Version ')}{version}</Link>
@@ -303,7 +313,7 @@ const ContentViewVersions = ({ cvId, details }) => {
               </GridItem>
               <GridItem md={4} sm={12}>
                 <Dropdown
-                  toggle={<KebabToggle aria-label="bulk_actions" onToggle={setKebabOpen} />}
+                  toggle={<KebabToggle aria-label="bulk_actions" onToggle={(_event, val) => setKebabOpen(val)} />}
                   isOpen={kebabOpen}
                   ouiaId="cv-versions-bulk-actions"
                   isPlain
