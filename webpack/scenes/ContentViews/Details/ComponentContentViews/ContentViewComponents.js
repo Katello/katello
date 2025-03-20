@@ -2,9 +2,18 @@ import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Bullseye, Split, SplitItem, Button, ActionList,
-  ActionListItem, Dropdown, DropdownItem, KebabToggle,
+  Bullseye,
+  Split,
+  SplitItem,
+  Button,
+  ActionList,
+  ActionListItem,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
 import { TableVariant, fitContent, TableText } from '@patternfly/react-table';
 import { PencilAltIcon } from '@patternfly/react-icons';
 import { STATUS } from 'foremanReact/constants';

@@ -64,7 +64,7 @@ export default () => {
                   versionOrVersions: affectedVersions.length > 1 ? __('Versions ') : __('Version '),
                   envLabel: (() => {
                     const { id, name } = first(environments);
-                    return <Label isTruncated color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label>;
+                    return <Label color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label>;
                   })(),
                 }}
                 defaultMessage={pluralEnvironments ?
@@ -77,7 +77,7 @@ export default () => {
             <Flex>
               {environments.map(({ name, id }) => (
                 <FlexItem key={id}>
-                  <Label isTruncated color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label>
+                  <Label color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label>
                 </FlexItem>))
               }
             </Flex>}

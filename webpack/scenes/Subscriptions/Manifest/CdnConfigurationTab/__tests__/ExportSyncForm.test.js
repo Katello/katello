@@ -39,6 +39,7 @@ test('Can update to Airgapped type', async (done) => {
 
   const updateButton = getByLabelText(updateButtonName);
   fireEvent.click(updateButton);
-  assertNockRequest(updateCdnConfigurationRequest, done);
+  assertNockRequest(updateCdnConfigurationRequest);
+  done();
 });
 

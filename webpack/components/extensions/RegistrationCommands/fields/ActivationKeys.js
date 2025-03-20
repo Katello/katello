@@ -1,21 +1,14 @@
 /* eslint-disable max-len, react/forbid-prop-types */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  FormGroup,
-  Select,
-  SelectOption,
-  SelectVariant,
-} from '@patternfly/react-core';
+import { FormGroup, FormHelperText, HelperText, HelperTextItem } from '@patternfly/react-core';
+import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
 
 import LabelIcon from 'foremanReact/components/common/LabelIcon';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 
-import {
-  validateAKField,
-  akHasValidValue,
-} from '../RegistrationCommandsPageHelpers';
+import { validateAKField, akHasValidValue } from '../RegistrationCommandsPageHelpers';
 
 const ActivationKeys = ({
   activationKeys,
@@ -34,11 +27,7 @@ const ActivationKeys = ({
     onChange({ activationKeys: keys });
     handleInvalidField(
       'Activation Keys',
-      akHasValidValue(
-        hostGroupId,
-        pluginValues?.activationKeys,
-        hostGroupActivationKeys,
-      ),
+      akHasValidValue(hostGroupId, pluginValues?.activationKeys, hostGroupActivationKeys),
     );
   };
 
@@ -54,41 +43,24 @@ const ActivationKeys = ({
   useEffect(() => {
     handleInvalidField(
       'Activation Keys',
-      akHasValidValue(
-        hostGroupId,
-        pluginValues?.activationKeys,
-        hostGroupActivationKeys,
-      ),
+      akHasValidValue(hostGroupId, pluginValues?.activationKeys, hostGroupActivationKeys),
     );
   }, [handleInvalidField, hostGroupId, hostGroupActivationKeys, pluginValues]);
 
+  const isError =
+    validateAKField(
+      hasInteraction,
+      hostGroupId,
+      activationKeys,
+      pluginValues?.activationKeys,
+      hostGroupActivationKeys,
+    ) === 'error';
   return (
     <FormGroup
       onFocus={() => setHasInteraction(true)}
       label={__('Activation Keys')}
       fieldId="activation_keys_field"
-      helperText={
-        hostGroupActivationKeys &&
-        sprintf('From host group: %s', hostGroupActivationKeys)
-      }
-      helperTextInvalid={
-        activationKeys?.length === 0 ? (
-          <a href="/activation_keys/new">{__('Create new activation key')}</a>
-        ) : (
-          __('No Activation Keys selected')
-        )
-      }
-      helperTextInvalidIcon={<ExclamationCircleIcon />}
-      labelIcon={
-        <LabelIcon text={__('Activation key(s) to use during registration')} />
-      }
-      validated={validateAKField(
-        hasInteraction,
-        hostGroupId,
-        activationKeys,
-        pluginValues?.activationKeys,
-        hostGroupActivationKeys,
-      )}
+      labelIcon={<LabelIcon text={__('Activation key(s) to use during registration')} />}
       isRequired
     >
       <Select
@@ -116,9 +88,7 @@ const ActivationKeys = ({
         id="activation_keys_field"
         className="without_select2"
         isDisabled={isLoading || activationKeys?.length === 0}
-        placeholderText={
-          activationKeys?.length === 0 ? __('No Activation keys to select') : ''
-        }
+        placeholderText={activationKeys?.length === 0 ? __('No Activation keys to select') : ''}
       >
         {activationKeys &&
           activationKeys.map(ack => (
@@ -129,6 +99,28 @@ const ActivationKeys = ({
             />
           ))}
       </Select>
+      {isError && (
+        <FormHelperText>
+          <HelperText>
+            <HelperTextItem variant="error" icon={<ExclamationCircleIcon />}>
+              {activationKeys?.length === 0 ? (
+                <a href="/activation_keys/new">{__('Create new activation key')}</a>
+              ) : (
+                __('No Activation Keys selected')
+              )}
+            </HelperTextItem>
+          </HelperText>
+        </FormHelperText>
+      )}
+      {!isError && hostGroupActivationKeys && (
+        <FormHelperText>
+          <HelperText>
+            <HelperTextItem>
+              {sprintf('From host group: %s', hostGroupActivationKeys)}
+            </HelperTextItem>
+          </HelperText>
+        </FormHelperText>
+      )}
     </FormGroup>
   );
 };
@@ -136,10 +128,7 @@ const ActivationKeys = ({
 ActivationKeys.propTypes = {
   activationKeys: PropTypes.array,
   selectedKeys: PropTypes.array,
-  hostGroupActivationKeys: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.array,
-  ]),
+  hostGroupActivationKeys: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   hostGroupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   pluginValues: PropTypes.shape({
     activationKeys: PropTypes.array,

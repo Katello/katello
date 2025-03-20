@@ -35,7 +35,8 @@ test('Can call API and show history on page load', async (done) => {
   // Assert that the repo name is now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => expect(getByText(firstHistory.description)).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can link to view environment', async () => {
@@ -79,5 +80,6 @@ test('Can handle no History being present', async (done) => {
   expect(queryByText(firstHistory.description)).toBeNull();
   await patientlyWaitFor(() => expect(queryByText('History will appear here when the content view is published or promoted.')).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });

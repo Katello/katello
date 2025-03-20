@@ -50,7 +50,8 @@ test('Can call API for Python package details and show details tab on page load'
     expect(getByLabelText('content_breadcrumb_content')).toHaveTextContent(name);
   });
 
-  assertNockRequest(pythonPackagesScope, done);
+  assertNockRequest(pythonPackagesScope);
+  done();
 });
 
 test('Can call API for Python package repository details and show repositories tab', async (done) => {
@@ -80,7 +81,8 @@ test('Can call API for Python package repository details and show repositories t
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(pythonPackageRepositoryDetailsScope, done);
+  assertNockRequest(pythonPackageRepositoryDetailsScope);
+  done();
 });
 
 test('Can call API for Ansible collection details and show details tab on page load', async (done) => {
@@ -109,7 +111,8 @@ test('Can call API for Ansible collection details and show details tab on page l
     expect(getByLabelText('content_breadcrumb_content')).toHaveTextContent(name);
   });
 
-  assertNockRequest(ansibleCollectionsScope, done);
+  assertNockRequest(ansibleCollectionsScope);
+  done();
 });
 
 test('Can call API for Ansible collection repository details and show repositories tab', async (done) => {
@@ -139,5 +142,6 @@ test('Can call API for Ansible collection repository details and show repositori
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(ansibleCollectionRepositoryDetailsScope, done);
+  assertNockRequest(ansibleCollectionRepositoryDetailsScope);
+  done();
 });

@@ -3,6 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   ActionList,
   ActionListItem,
+  Skeleton,
+  Split,
+  SplitItem,
+} from '@patternfly/react-core';
+import {
   Dropdown,
   DropdownItem,
   DropdownSeparator,
@@ -12,11 +17,8 @@ import {
   Select,
   SelectOption,
   SelectVariant,
-  Skeleton,
-  Split,
-  SplitItem,
-} from '@patternfly/react-core';
-import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText } from '@patternfly/react-table';
+} from '@patternfly/react-core/deprecated';
+import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText, ActionsColumn } from '@patternfly/react-table';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
@@ -74,7 +76,7 @@ const UpdateVersionsSelect = ({
           variant={SelectVariant.single}
           aria-label="upgradable-version-select"
           ouiaId="upgradable-version-select"
-          onToggle={isOpen => toggleUpgradableVersionSelect(isOpen, rowIndex)}
+          onToggle={(_event, isOpen) => toggleUpgradableVersionSelect(isOpen, rowIndex)}
           onSelect={(event, selected) => {
             onUpgradableVersionSelect(event, selected, rowIndex, packageName);
           }}
@@ -515,13 +517,13 @@ export const PackagesTab = () => {
         >
           <Thead>
             <Tr ouiaId="row-header">
-              <Th key="select-all" />
+              <Th key="select-all" aria-label="Select all table header" />
               <SortableColumnHeaders
                 columnHeaders={columnHeaders}
                 pfSortParams={pfSortParams}
                 columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
               />
-              <Th />
+              <Th aria-label="action menu header" />
             </Tr>
           </Thead>
           <Tbody>
@@ -550,15 +552,19 @@ export const PackagesTab = () => {
                     isDisabled: actionInProgress,
                   },
                   {
-                    title: __('Upgrade via customized remote execution'),
-                    component: 'a',
-                    href: katelloPackageUpdateUrl({
-                      hostname,
-                      packageName: selectedPackageUpgradeVersion({
-                        packageName,
-                        upgradableVersions,
-                      }),
-                    }),
+                    title: (
+                      <a
+                        href={katelloPackageUpdateUrl({
+                          hostname,
+                          packageName: selectedPackageUpgradeVersion({
+                            packageName,
+                            upgradableVersions,
+                          }),
+                        })}
+                      >
+                        {__('Upgrade via customized remote execution')}
+                      </a>
+                    ),
                   },
                 );
               }
@@ -568,7 +574,7 @@ export const PackagesTab = () => {
                   {showActions ? (
                     <Td
                       select={{
-                        disable: actionInProgress,
+                        isDisabled: actionInProgress,
                         isSelected: isSelected(id),
                         onSelect: (event, selected) => selectOne(selected, id, pkg),
                         rowIndex,
@@ -602,7 +608,10 @@ export const PackagesTab = () => {
                       actions={{
                         items: rowActions,
                       }}
+                    ><ActionsColumn
+                      actions={rowActions}
                     />
+                    </Td>
                   ) : null}
                 </Tr>
               );

@@ -4,11 +4,27 @@ import { isEqual, sortBy, capitalize } from 'lodash';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import {
-  Tooltip, Form, ActionGroup, Flex, FlexItem, Select,
-  SelectOption, SelectVariant, ChipGroup, Chip,
-  Tabs, Tab, TabTitleText, Button, DatePicker, Bullseye,
-  Divider, Text,
+  Tooltip,
+  Form,
+  ActionGroup,
+  Flex,
+  FlexItem,
+  ChipGroup,
+  Chip,
+  Tabs,
+  Tab,
+  TabTitleText,
+  Button,
+  DatePicker,
+  Bullseye,
+  Divider,
+  Text,
 } from '@patternfly/react-core';
+import {
+  Select,
+  SelectOption,
+  SelectVariant,
+} from '@patternfly/react-core/deprecated';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectCVFilterDetails } from '../ContentViewDetailSelectors';
@@ -159,7 +175,7 @@ const CVErrataDateFilterContent = ({
               <FlexItem span={2}>
                 <Select
                   variant={SelectVariant.checkbox}
-                  onToggle={setTypeSelectOpen}
+                  onToggle={(_event, val) => setTypeSelectOpen(val)}
                   onSelect={(_event, selection) => onTypeSelect(selection)}
                   selections={selectedTypes}
                   isOpen={typeSelectOpen}
@@ -217,7 +233,7 @@ const CVErrataDateFilterContent = ({
                   </Tooltip>
                 }
               </FlexItem>
-              <Divider isVertical />
+              <Divider orientation={{ default: 'vertical' }} />
               <FlexItem span={2} spacer={{ default: 'spacerNone' }}>
                 <Select
                   selections={dateType}
@@ -226,7 +242,7 @@ const CVErrataDateFilterContent = ({
                     setDateTypeSelectOpen(false);
                   }}
                   isOpen={dateTypeSelectOpen}
-                  onToggle={setDateTypeSelectOpen}
+                  onToggle={(_event, val) => setDateTypeSelectOpen(val)}
                   id="date_type_selector"
                   ouiaId="date_type_selector"
                   name="date_type_selector"

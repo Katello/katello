@@ -47,7 +47,7 @@ FontAwesomeImageModeIcon.propTypes = {
 };
 
 FontAwesomeImageModeIcon.defaultProps = {
-  fill: 'var(--pf-global--palette--black-600)',
+  fill: 'var(--pf-v5-global--palette--black-600)',
   margin: '-2px',
   title: __('Image mode'),
 };

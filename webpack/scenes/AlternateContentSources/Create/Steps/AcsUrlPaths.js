@@ -6,6 +6,9 @@ import {
   FormGroup,
   TextInput,
   TextArea,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
 } from '@patternfly/react-core';
 import ACSCreateContext from '../ACSCreateContext';
 import WizardHeader from '../../../ContentViews/components/WizardHeader';
@@ -41,8 +44,6 @@ const AcsUrlPaths = () => {
         <FormGroup
           label={__('Base URL')}
           fieldId="acs_base_url"
-          helperTextInvalid={helperTextInvalid}
-          validated={urlValidated}
           isRequired
         >
           <TextInput
@@ -55,8 +56,17 @@ const AcsUrlPaths = () => {
             placeholder={baseURLplaceholder}
             value={url}
             validated={urlValidated}
-            onChange={value => setUrl(value)}
+            onChange={(_event, value) => setUrl(value)}
           />
+          {urlValidated === 'error' && (
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem variant="error">
+                  {helperTextInvalid}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>
+          )}
         </FormGroup>
         {acsType === 'rhui' &&
         <>
@@ -73,19 +83,24 @@ const AcsUrlPaths = () => {
         <FormGroup
           label={__('Subpaths')}
           type="string"
-          fieldId="acs_subpaths"
-          helperTextInvalid={__('Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.')}
-          validated={subPathValidated}
         >
           <TextArea
             placeholder="test/repo1/, test/repo2/,"
             value={subpaths}
             validated={subPathValidated}
-            onChange={value => setSubpaths(value)}
+            onChange={(_event, value) => setSubpaths(value)}
             name="acs_subpath_field"
             id="acs_subpath_field"
             aria-label="acs_subpath_field"
           />
+          {subPathValidated === 'error' && (
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem variant="error">
+                  {__('Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.')}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>)}
         </FormGroup>
       </Form>
     </>

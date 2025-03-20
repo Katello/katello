@@ -72,9 +72,9 @@ test('Can call API for CVs and show Delete Wizard for the row', async (done) => 
   expect(queryByText(firstCV.name)).toBeNull();
   // Assert that the CV name is now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => expect(queryByText(firstCV.name)).toBeInTheDocument());
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
-  fireEvent.click(getAllByLabelText('Actions')[0]);
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
   fireEvent.click(getByText('Delete'));
   await patientlyWaitFor(() => expect(getAllByText('Remove versions from environments')[1]).toBeInTheDocument());
 
@@ -82,7 +82,8 @@ test('Can call API for CVs and show Delete Wizard for the row', async (done) => 
   assertNockRequest(autocompleteScope);
   assertNockRequest(envPathDeleteScope);
   assertNockRequest(cvDetailsScope);
-  assertNockRequest(cvVersionsScope, done);
+  assertNockRequest(cvVersionsScope);
+  done();
 });
 
 test('Can open Delete wizard and delete CV with all steps', async (done) => {
@@ -152,9 +153,9 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
   expect(queryByText(firstCV.name)).toBeNull();
   // Assert that the CV name is now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => expect(queryByText(firstCV.name)).toBeInTheDocument());
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
-  fireEvent.click(getAllByLabelText('Actions')[0]);
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
   fireEvent.click(getByText('Delete'));
   await patientlyWaitFor(() => {
     expect(getAllByText('Remove versions from environments')[1]).toBeInTheDocument();
@@ -223,6 +224,7 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
   assertNockRequest(activationKeysScope);
   assertNockRequest(cVDropDownOptionsScope);
   assertNockRequest(cvDeleteScope);
-  assertNockRequest(cvRedirectScope, done);
+  assertNockRequest(cvRedirectScope);
+  done();
   act(done);
 });

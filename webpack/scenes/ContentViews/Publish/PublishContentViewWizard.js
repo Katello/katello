@@ -2,7 +2,9 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { STATUS } from 'foremanReact/constants';
-import { Wizard } from '@patternfly/react-core';
+import {
+  Wizard,
+} from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import CVPublishForm from './CVPublishForm';
 import CVPublishFinish from './CVPublishFinish';

@@ -35,7 +35,7 @@ const NameACS = () => {
             name="acs_name_field"
             aria-label="acs_name_field"
             value={name}
-            onChange={(value) => { setName(value); }}
+            onChange={(_event, value) => { setName(value); }}
           />
         </FormGroup>
         <FormGroup
@@ -45,7 +45,7 @@ const NameACS = () => {
         >
           <TextArea
             value={description}
-            onChange={(value) => { setDescription(value); }}
+            onChange={(_event, value) => { setDescription(value); }}
             name="acs_description_field"
             id="acs_description_field"
           />

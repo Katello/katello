@@ -39,7 +39,8 @@ test('Can save content view filter from form', (done) => {
 
   fireEvent.submit(getByLabelText('create_filter'));
   assertNockRequest(repoTypeScope);
-  assertNockRequest(createFilterscope, done);
+  assertNockRequest(createFilterscope);
+  done();
 });
 
 test('Closes content view filter form upon save', async (done) => {
@@ -59,5 +60,6 @@ test('Closes content view filter form upon save', async (done) => {
     expect(queryByText('Description')).not.toBeInTheDocument();
   });
   assertNockRequest(repoTypeScope);
-  assertNockRequest(createFilterscope, done);
+  assertNockRequest(createFilterscope);
+  done();
 });

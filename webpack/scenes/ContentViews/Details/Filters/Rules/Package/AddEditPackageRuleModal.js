@@ -181,7 +181,7 @@ const AddEditPackageRuleModal = ({
           <FormSelect
             ouiaId="version-comparator"
             value={versionComparator}
-            onChange={setVersionComparator}
+            onChange={(_event, val) => setVersionComparator(val)}
             id="version_comparator"
             name="version_comparator"
             aria-label="version_comparator"
@@ -201,7 +201,7 @@ const AddEditPackageRuleModal = ({
               aria-label="input_version"
               name="version"
               value={version}
-              onChange={setVersion}
+              onChange={(_event, val) => setVersion(val)}
             />
           </FormGroup>}
         {showMinVersion &&
@@ -213,7 +213,7 @@ const AddEditPackageRuleModal = ({
               aria-label="input_min_version"
               name="min_version"
               value={minVersion}
-              onChange={setMinVersion}
+              onChange={(_event, val) => setMinVersion(val)}
             />
           </FormGroup>}
         {showMaxVersion &&
@@ -225,7 +225,7 @@ const AddEditPackageRuleModal = ({
               aria-label="input_max_version"
               name="max_version"
               value={maxVersion}
-              onChange={setMaxVersion}
+              onChange={(_event, val) => setMaxVersion(val)}
             />
           </FormGroup>}
         <ActionGroup>

@@ -4,9 +4,27 @@ import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, FormGroup, TextInput, TextArea, Checkbox, ActionGroup, Button, Tile, Grid, GridItem } from '@patternfly/react-core';
+import {
+  Form,
+  FormGroup,
+  TextInput,
+  TextArea,
+  Checkbox,
+  ActionGroup,
+  Button,
+  Tile,
+  Grid,
+  GridItem,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+} from '@patternfly/react-core';
 import { createContentView } from '../ContentViewsActions';
-import { selectCreateContentViews, selectCreateContentViewStatus, selectCreateContentViewError } from './ContentViewCreateSelectors';
+import {
+  selectCreateContentViews,
+  selectCreateContentViewStatus,
+  selectCreateContentViewError,
+} from './ContentViewCreateSelectors';
 import { LabelDependencies, LabelAutoPublish } from './ContentViewFormComponents';
 import ContentViewIcon from '../components/ContentViewIcon';
 import './CreateContentViewForm.scss';
@@ -69,12 +87,9 @@ const CreateContentViewForm = ({ setModalOpen }) => {
     }));
   };
 
-  useEffect(
-    () => {
-      setLabel(name.replace(/[^A-Za-z0-9_-]/g, '_'));
-    },
-    [name],
-  );
+  useEffect(() => {
+    setLabel(name.replace(/[^A-Za-z0-9_-]/g, '_'));
+  }, [name]);
 
   if (redirect) {
     const { id } = response;
@@ -85,7 +100,8 @@ const CreateContentViewForm = ({ setModalOpen }) => {
     }
   }
 
-  const submitDisabled = !name?.length || !label?.length || saving || redirect || labelValidated === 'error';
+  const submitDisabled =
+    !name?.length || !label?.length || saving || redirect || labelValidated === 'error';
 
   return (
     <Form
@@ -104,15 +120,13 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           ouiaId="input_name"
           name="name"
           value={name}
-          onChange={value => setName(value)}
+          onChange={(_event, value) => setName(value)}
         />
       </FormGroup>
       <FormGroup
         label={__('Label')}
         isRequired
         fieldId="label"
-        helperTextInvalid="Must be Ascii alphanumeric, '_' or '-'"
-        validated={labelValidated}
       >
         <TextInput
           isRequired
@@ -123,8 +137,17 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           name="label"
           value={label}
           validated={labelValidated}
-          onChange={handleLabelChange}
+          onChange={(_event, newLabel) => handleLabelChange(newLabel, _event)}
         />
+        {labelValidated === 'error' && (
+          <FormHelperText>
+            <HelperText>
+              <HelperTextItem variant="error">
+                {__("Must be Ascii alphanumeric, '_' or '-'")}
+              </HelperTextItem>
+            </HelperText>
+          </FormHelperText>
+        )}
       </FormGroup>
       <FormGroup label={__('Description')} fieldId="description">
         <TextArea
@@ -134,7 +157,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           name="description"
           aria-label="input_description"
           value={description}
-          onChange={value => setDescription(value)}
+          onChange={(_event, value) => setDescription(value)}
         />
       </FormGroup>
       <FormGroup isInline fieldId="type" label={__('Type')}>
@@ -183,7 +206,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           </GridItem>
         </Grid>
       </FormGroup>
-      {!composite && !rolling &&
+      {!composite && !rolling && (
         <FormGroup isInline fieldId="dependencies">
           <Checkbox
             id="dependencies"
@@ -191,10 +214,11 @@ const CreateContentViewForm = ({ setModalOpen }) => {
             name="dependencies"
             label={LabelDependencies()}
             isChecked={dependencies}
-            onChange={checked => setDependencies(checked)}
+            onChange={(_event, checked) => setDependencies(checked)}
           />
-        </FormGroup>}
-      {composite &&
+        </FormGroup>
+      )}
+      {composite && (
         <FormGroup isInline fieldId="autoPublish">
           <Checkbox
             id="autoPublish"
@@ -202,9 +226,10 @@ const CreateContentViewForm = ({ setModalOpen }) => {
             name="autoPublish"
             label={LabelAutoPublish()}
             isChecked={autoPublish}
-            onChange={checked => setAutoPublish(checked)}
+            onChange={(_event, checked) => setAutoPublish(checked)}
           />
-        </FormGroup>}
+        </FormGroup>
+      )}
       <ActionGroup>
         <Button
           ouiaId="create-content-view-form-submit"
@@ -216,7 +241,11 @@ const CreateContentViewForm = ({ setModalOpen }) => {
         >
           {__('Create content view')}
         </Button>
-        <Button ouiaId="create-content-view-form-cancel" variant="link" onClick={() => setModalOpen(false)}>
+        <Button
+          ouiaId="create-content-view-form-cancel"
+          variant="link"
+          onClick={() => setModalOpen(false)}
+        >
           {__('Cancel')}
         </Button>
       </ActionGroup>

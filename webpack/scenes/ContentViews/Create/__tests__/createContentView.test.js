@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
@@ -44,7 +44,8 @@ test('Can save content view from form', async (done) => {
 
   getByLabelText('create_content_view').click();
 
-  assertNockRequest(createscope, done);
+  assertNockRequest(createscope);
+  done();
 });
 
 test('Form closes itself upon save', async (done) => {
@@ -66,7 +67,8 @@ test('Form closes itself upon save', async (done) => {
     expect(window.location.assign).toHaveBeenCalled();
   });
 
-  assertNockRequest(createscope, done);
+  assertNockRequest(createscope);
+  done();
 });
 
 test('Displays dependent fields correctly', () => {
@@ -99,6 +101,8 @@ test('Validates label field', () => {
   const { getByText, getByLabelText } = renderWithRedux(form);
   expect(getByText('Label')).toBeInTheDocument();
 
-  fireEvent.change(getByLabelText('input_label'), { target: { value: '123 2123' } });
+  act(() => {
+    fireEvent.change(getByLabelText('input_label'), { target: { value: '123 2123' } });
+  });
   expect(getByText('Must be Ascii alphanumeric, \'_\' or \'-\'')).toBeInTheDocument();
 });

@@ -1,9 +1,19 @@
 import React, { useState, useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-  Skeleton, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, DropdownToggle, DropdownToggleAction, Alert,
+  Skeleton,
+  Split,
+  SplitItem,
+  ActionList,
+  ActionListItem,
+  Alert,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownToggle,
+  DropdownToggleAction,
+} from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
@@ -233,13 +243,13 @@ const TracesTab = () => {
       >
         <Thead>
           <Tr ouiaId="row-header">
-            <Th key="select_checkbox" />
+            <Th key="select_checkbox" aria-label="select table header" />
             <SortableColumnHeaders
               columnHeaders={columnHeaders}
               pfSortParams={pfSortParams}
               columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
             />
-            <Th key="action_menu" />
+            <Th key="action_menu" aria-label="action menu table header" />
           </Tr>
         </Thead>
         <Tbody>
@@ -257,7 +267,7 @@ const TracesTab = () => {
             let rowDropdownItems = [
               { title: 'Restart via remote execution', onClick: () => onRestartApp(id), isDisabled: actionInProgress },
               {
-                component: 'a', href: resolveTraceUrl({ hostname, search: tracesSearchQuery(id) }), title: 'Restart via customized remote execution',
+                title: <a href={resolveTraceUrl({ hostname, search: tracesSearchQuery(id) })}>{__('Restart via customized remote execution')}</a>,
               },
             ];
             if (resolveDisabled) {
@@ -270,7 +280,7 @@ const TracesTab = () => {
                 {showActions ? (
                   <Td
                     select={{
-                      disable: actionInProgress || resolveDisabled,
+                      isDisabled: actionInProgress || resolveDisabled,
                       props: {
                         'aria-label': `check-${application}`,
                       },

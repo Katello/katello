@@ -1,6 +1,9 @@
 import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Select, SelectVariant } from '@patternfly/react-core';
+import {
+  Select,
+  SelectVariant,
+} from '@patternfly/react-core/deprecated';
 import PropTypes from 'prop-types';
 
 const ContentViewSelect = ({

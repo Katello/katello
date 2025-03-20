@@ -128,6 +128,7 @@ test('Select an env > call CV API > select a CV > Save button is enabled', async
   expect(saveButton).toBeInTheDocument();
   expect(saveButton).toHaveAttribute('aria-disabled', 'false');
 
-  assertNockRequest(contentViewsScope, done);
+  assertNockRequest(contentViewsScope);
+  done();
   act(done);
 });

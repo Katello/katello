@@ -1,10 +1,24 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Flex, Modal, ModalVariant, Select, SelectVariant,
-  SelectOption, Checkbox, Form, FormGroup,
-  ActionGroup, Button, Card, CardTitle, CardBody, Tooltip,
+  Flex,
+  Modal,
+  ModalVariant,
+  Checkbox,
+  Form,
+  FormGroup,
+  ActionGroup,
+  Button,
+  Card,
+  CardTitle,
+  CardBody,
+  Tooltip,
 } from '@patternfly/react-core';
+import {
+  Select,
+  SelectVariant,
+  SelectOption,
+} from '@patternfly/react-core/deprecated';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useDispatch } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -78,7 +92,7 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
                   }
                   }
                   isOpen={cvVersionSelectOpen === componentCvName}
-                  onToggle={isExpanded => setCvVersionSelectOpen(isExpanded ? componentCvName : '')}
+                  onToggle={(_event, isExpanded) => setCvVersionSelectOpen(isExpanded ? componentCvName : '')}
                   id={`horzontal-form-title-${componentCvName}-${cvVersionSelectOpen[componentCvName]}`}
                   name="horizontal-form-title"
                   aria-label={`version-select-${componentCvName}`}
@@ -106,7 +120,7 @@ const ComponentContentViewBulkAddModal = ({ cvId, rowsToAdd, onClose }) => {
                     name="latest"
                     label={__('Always update to latest version')}
                     isChecked={selectedComponentLatest[componentCvName]}
-                    onChange={(checked) => {
+                    onChange={(_event, checked) => {
                       setSelectedComponentLatest({
                         ...selectedComponentLatest,
                         ...{ [componentCvName]: checked },

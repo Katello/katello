@@ -35,7 +35,8 @@ test('Can show matching content modal', async (done) => {
   });
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(cvMatchContentscope, done);
+  assertNockRequest(cvMatchContentscope);
+  done();
 });
 
 test('Can search with filter', async (done) => {
@@ -87,5 +88,6 @@ test('Can search with filter', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(getMatchContentscope);
-  assertNockRequest(secondGetMatchContentscope, done);
+  assertNockRequest(secondGetMatchContentscope);
+  done();
 });

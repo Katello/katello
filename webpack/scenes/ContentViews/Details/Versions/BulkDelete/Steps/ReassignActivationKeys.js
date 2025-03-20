@@ -17,9 +17,11 @@ import {
   ExpandableSection,
   Popover,
   PopoverPosition,
+} from '@patternfly/react-core';
+import {
   SelectDirection,
   SelectOption,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 
 import EnvironmentPaths

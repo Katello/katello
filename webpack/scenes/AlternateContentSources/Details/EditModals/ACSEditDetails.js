@@ -50,7 +50,7 @@ const ACSEditDetails = ({ onClose, acsId, acsDetails }) => {
             name="acs_name_field"
             aria-label="acs_name_field"
             value={acsName}
-            onChange={(value) => {
+            onChange={(_event, value) => {
               setACSName(value);
             }}
           />
@@ -62,7 +62,7 @@ const ACSEditDetails = ({ onClose, acsId, acsDetails }) => {
         >
           <TextArea
             value={acsDescription}
-            onChange={(value) => {
+            onChange={(_event, value) => {
               setAcsDescription(value);
             }}
             name="acs_description_field"

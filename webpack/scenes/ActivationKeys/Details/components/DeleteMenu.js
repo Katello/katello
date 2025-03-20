@@ -2,7 +2,17 @@ import React, {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, DropdownItem, KebabToggle, DropdownPosition, Split, Icon, Text } from '@patternfly/react-core';
+import {
+  Split,
+  Icon,
+  Text,
+} from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+  DropdownPosition,
+} from '@patternfly/react-core/deprecated';
 import { UndoIcon, TrashIcon } from '@patternfly/react-icons';
 import { noop } from 'foremanReact/common/helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -56,7 +66,7 @@ const DeleteMenu = ({ handleModalToggle, akId }) => {
       ouiaId="dekete-action"
       onSelect={onSelect}
       position={DropdownPosition.right}
-      toggle={<KebabToggle id="toggle-kebab" aria-label="delete-toggle" onToggle={onToggle} />}
+      toggle={<KebabToggle id="toggle-kebab" aria-label="delete-toggle" onToggle={(_event, isOpenValue) => onToggle(isOpenValue)} />}
       isOpen={isOpen}
       isPlain
       dropdownItems={dropdownItems}

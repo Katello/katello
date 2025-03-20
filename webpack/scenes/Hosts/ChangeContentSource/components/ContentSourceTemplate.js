@@ -97,14 +97,15 @@ const ContentSourceTemplate = ({ template, hostCount }) => {
         <CodeBlock actions={actions} className="cs_template_code margin-top-20">
           <CodeBlockCode>
             {__('Change content source')}
-            <ExpandableSection isExpanded={isExpanded} isDetached>
+            <ExpandableSection contentId="code-block-expand-content" toggleId="code-block-expand-toggle" isExpanded={isExpanded} isDetached >
               {template}
             </ExpandableSection>
           </CodeBlockCode>
           <ExpandableSectionToggle
             isExpanded={isExpanded}
             onToggle={() => setIsExpanded(!isExpanded)}
-            contentId="code-block-expand"
+            contentId="code-block-expand-content"
+            toggleId="code-block-expand-toggle"
             direction="up"
           >
             {isExpanded ? 'Show less' : 'Show more'}

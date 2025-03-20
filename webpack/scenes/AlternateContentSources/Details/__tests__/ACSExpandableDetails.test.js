@@ -36,7 +36,8 @@ test('Can call API and show ACS details expandable sections on page load', async
     expect(queryByText('URL and subpaths')).toBeInTheDocument();
     expect(queryByText('Credentials')).toBeInTheDocument();
   });
-  assertNockRequest(acsDetailsScope, done);
+  assertNockRequest(acsDetailsScope);
+  done();
   act(done);
 });
 
@@ -104,6 +105,7 @@ test('Can expand expandable sections on details page', async (done) => {
     expect(queryByText('true')).not.toBeInTheDocument();
   });
 
-  assertNockRequest(acsDetailsScope, done);
+  assertNockRequest(acsDetailsScope);
+  done();
   act(done);
 });

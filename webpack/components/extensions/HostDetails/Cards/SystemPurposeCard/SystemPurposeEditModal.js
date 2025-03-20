@@ -11,6 +11,7 @@ import {
   FormSelect,
   FormSelectOption,
 } from '@patternfly/react-core';
+
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
@@ -183,7 +184,7 @@ const SystemPurposeEditModal = ({
             name="role"
             ouiaId="role-select"
             value={selectedRole}
-            onChange={setSelectedRole}
+            onChange={(_event, val) => setSelectedRole(val)}
           >
             {roleOptions.map(option => (
               <FormSelectOption
@@ -200,7 +201,7 @@ const SystemPurposeEditModal = ({
             name="serviceLevel"
             ouiaId="service-level-select"
             value={selectedServiceLevel}
-            onChange={setSelectedServiceLevel}
+            onChange={(_event, val) => setSelectedServiceLevel(val)}
           >
             {serviceLevelOptions.map(option => (
               <FormSelectOption
@@ -217,7 +218,7 @@ const SystemPurposeEditModal = ({
             name="usage"
             ouiaId="usage-select"
             value={selectedUsage}
-            onChange={setSelectedUsage}
+            onChange={(_event, val) => setSelectedUsage(val)}
           >
             {usageOptions.map(option => (
               <FormSelectOption
@@ -234,7 +235,7 @@ const SystemPurposeEditModal = ({
             name="release_version"
             ouiaId="release-version-select"
             value={selectedReleaseVersion}
-            onChange={setSelectedReleaseVersion}
+            onChange={(_event, val) => setSelectedReleaseVersion(val)}
           >
             {releaseVersionOptions.map(option => (
               <FormSelectOption

@@ -61,7 +61,8 @@ test('Can call API and show versions on page load', async (done) => {
     expect(getByText(`Version ${firstVersion.version}`)).toBeTruthy();
   });
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can open Remove wizard and remove version from simple environment', async (done) => {
@@ -97,9 +98,9 @@ test('Can open Remove wizard and remove version from simple environment', async 
     expect(getByText(`Version ${firstVersion.version}`)).toBeTruthy();
   });
   // Expand Row Action
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
-  fireEvent.click(getAllByLabelText('Actions')[0]);
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
   fireEvent.click(getByText('Remove from environments'));
   await patientlyWaitFor(() => {
     expect(getByText('Remove Version')).toBeInTheDocument();
@@ -115,7 +116,8 @@ test('Can open Remove wizard and remove version from simple environment', async 
   assertNockRequest(scope);
   assertNockRequest(autocompleteScope);
   assertNockRequest(envPathRemovalScope);
-  assertNockRequest(versionRemovalScope, done);
+  assertNockRequest(versionRemovalScope);
+  done();
 });
 
 test('Can open Remove wizard and remove version from environment with hosts', async (done) => {
@@ -166,9 +168,9 @@ test('Can open Remove wizard and remove version from environment with hosts', as
     expect(getByText(`Version ${firstVersion.version}`)).toBeTruthy();
   });
   // Expand Row Action
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
-  fireEvent.click(getAllByLabelText('Actions')[0]);
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
   fireEvent.click(getByText('Remove from environments'));
   await patientlyWaitFor(() => {
     expect(getByText('Remove Version')).toBeInTheDocument();
@@ -202,7 +204,8 @@ test('Can open Remove wizard and remove version from environment with hosts', as
   assertNockRequest(hostScope);
   assertNockRequest(cVDropDownOptionsScope);
   assertNockRequest(envPathRemovalScope);
-  assertNockRequest(versionRemovalScope, done);
+  assertNockRequest(versionRemovalScope);
+  done();
 });
 
 test('Can open Remove wizard and remove version from environment with activation keys', async (done) => {
@@ -253,9 +256,9 @@ test('Can open Remove wizard and remove version from environment with activation
     expect(getByText(`Version ${firstVersion.version}`)).toBeTruthy();
   });
   // Expand Row Action
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
-  fireEvent.click(getAllByLabelText('Actions')[0]);
-  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
   fireEvent.click(getByText('Remove from environments'));
   await patientlyWaitFor(() => {
     expect(getByText('Remove Version')).toBeInTheDocument();
@@ -290,5 +293,6 @@ test('Can open Remove wizard and remove version from environment with activation
   assertNockRequest(activationKeysScope);
   assertNockRequest(cVDropDownOptionsScope);
   assertNockRequest(envPathRemovalScope);
-  assertNockRequest(versionRemovalScope, done);
+  assertNockRequest(versionRemovalScope);
+  done();
 });

@@ -72,7 +72,8 @@ test('Can enable and disable add filter button', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
-  assertNockRequest(errataScope, done);
+  assertNockRequest(errataScope);
+  done();
   act(done);
 });
 
@@ -118,10 +119,10 @@ test('Can add a filter rule', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText(errataId)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[3]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[3]);
-  expect(getAllByLabelText('Actions')[3]).toHaveAttribute('aria-expanded', 'true');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[1]);
+  expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Add')).toBeInTheDocument());
   act(() => { fireEvent.click(getByText('Add')); });
 
@@ -131,7 +132,8 @@ test('Can add a filter rule', async (done) => {
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleScope);
   assertNockRequest(cvRequestCallbackScope);
-  assertNockRequest(errataScope, done);
+  assertNockRequest(errataScope);
+  done();
   act(done);
 });
 
@@ -176,10 +178,10 @@ test('Can remove a filter rule', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText(errataId)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[2]);
-  expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'true');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[2]);
+  expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
   act(() => { fireEvent.click(getByText('Remove')); });
 
@@ -189,7 +191,8 @@ test('Can remove a filter rule', async (done) => {
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleScope);
   assertNockRequest(cvRequestCallbackScope);
-  assertNockRequest(errataScope, done);
+  assertNockRequest(errataScope);
+  done();
   act(done);
 });
 
@@ -253,7 +256,8 @@ test('Can bulk remove filter rules', async (done) => {
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleBulkDeleteScope);
   assertNockRequest(cvRequestCallbackScope);
-  assertNockRequest(errataScope, done);
+  assertNockRequest(errataScope);
+  done();
   act(done);
 });
 
@@ -314,7 +318,8 @@ test('Can bulk add filter rules', async (done) => {
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleBulkAddScope);
   assertNockRequest(cvRequestCallbackScope);
-  assertNockRequest(errataScope, done);
+  assertNockRequest(errataScope);
+  done();
   act(done);
 });
 
@@ -395,6 +400,7 @@ test('Can show filters and chips', async (done) => {
   assertNockRequest(errataScope); // 2nd call on status selection
   assertNockRequest(errataScope); // 3rd call on errata type selection
   assertNockRequest(errataScope); // 4th call on start date change
-  assertNockRequest(errataScope, done); // Last call on end date change
+  assertNockRequest(errataScope);
+  done(); // Last call on end date change
   act(done);
 });

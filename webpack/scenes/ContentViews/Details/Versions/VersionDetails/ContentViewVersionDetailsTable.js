@@ -9,10 +9,12 @@ import {
 } from 'react-redux';
 import {
   Grid,
+} from '@patternfly/react-core';
+import {
   Select,
   SelectOption,
   SelectVariant,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import {
   TableVariant,
   Tbody,
@@ -94,7 +96,7 @@ const ContentViewVersionDetailsTable = ({
         actionButtons={
           repoType &&
           <Select
-            onToggle={setOpen}
+            onToggle={(_event, val) => setOpen(val)}
             isOpen={open}
             ouiaId="repo-type-selector"
             variant={SelectVariant.single}

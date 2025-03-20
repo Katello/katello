@@ -22,9 +22,6 @@ import {
   ActionListItem,
   Alert,
   AlertActionCloseButton,
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
   Label,
   Skeleton,
   Split,
@@ -33,6 +30,11 @@ import {
   ToggleGroupItem,
   Tooltip,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
 import { FlagIcon } from '@patternfly/react-icons';
 import {
   TableVariant,
@@ -593,13 +595,13 @@ const RepositorySetsTab = () => {
         >
           <Thead>
             <Tr ouiaId="header-tr">
-              <Th key="select-all" />
+              <Th key="select-all" aria-label="Select all table header" />
               <SortableColumnHeaders
                 columnHeaders={columnHeaders}
                 pfSortParams={pfSortParams}
                 columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
               />
-              <Th key="action-menu" />
+              <Th key="action-menu" aria-label="action menu table header" />
             </Tr>
           </Thead>
           <Tbody>
@@ -622,7 +624,7 @@ const RepositorySetsTab = () => {
                 <Tr key={id} ouiaId={`tr-${rowIndex}`}>
                   {canDoContentOverrides ? (
                     <Td select={{
-                      disable: !isSelectable(id),
+                      isDisabled: !isSelectable(id),
                       isSelected: isSelected(id),
                       onSelect: (event, selected) => selectOne(selected, id),
                       rowIndex,

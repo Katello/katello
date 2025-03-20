@@ -44,7 +44,8 @@ test('Can call API and show details on page load', async (done) => {
     expect(queryByLabelText('Generated')).not.toBeInTheDocument();
   });
 
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can edit text details such as name', async (done) => {
@@ -82,7 +83,8 @@ test('Can edit text details such as name', async (done) => {
 
   assertNockRequest(getscope);
   assertNockRequest(updatescope);
-  assertNockRequest(afterUpdateScope, done);
+  assertNockRequest(afterUpdateScope);
+  done();
   act(done);
 });
 
@@ -143,7 +145,8 @@ test('Can edit boolean details such as solve dependencies', async (done) => {
 
   assertNockRequest(getscope);
   assertNockRequest(updatescope);
-  assertNockRequest(afterUpdateScope, done);
+  assertNockRequest(afterUpdateScope);
+  done();
   act(done);
 });
 
@@ -186,5 +189,6 @@ test('Can show import_only and generated when true', async (done) => {
     expect(getByLabelText('generated_by_export_switch')).toBeInTheDocument();
   });
 
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });

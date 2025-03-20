@@ -18,6 +18,7 @@ import {
   DescriptionListTerm as Dt,
   Text,
   TextVariants,
+  Icon,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import RelativeDateTime from 'foremanReact/components/common/dates/RelativeDateTime';
@@ -69,7 +70,7 @@ const hostsIndexColumnExtensions = [
             >
               <FontAwesomeImageModeIcon title={__('Image mode')} />
             </Popover>
-            : <span style={{ color: 'var(--pf-global--palette--black-600)' }}><RepoIcon type="yum" customTooltip={__('Package mode')} /></span>
+            : <span style={{ color: 'var(--pf-v5-global--palette--black-600)' }}><RepoIcon type="yum" customTooltip={__('Package mode')} /></span>
           }
         </span>
       );
@@ -102,19 +103,26 @@ const hostsIndexColumnExtensions = [
         <Flex alignContent={{ default: 'alignContentSpaceBetween' }}>
           {security !== undefined &&
             <FlexItem>
-              <SecurityIcon color="#0066cc" />
+              <Icon color="#0066cc" >
+                <SecurityIcon />
+              </Icon>
               <Link to={hostErrataUrl('security')}>{security}</Link>
             </FlexItem>
           }
           {bugfix !== undefined &&
             <FlexItem>
-              <BugIcon color="#8bc1f7" />
+              <Icon color="#8bc1f7" >
+                <BugIcon />
+              </Icon>
               <Link to={hostErrataUrl('bugfix')}>{bugfix}</Link>
             </FlexItem>
           }
           {enhancement !== undefined &&
             <FlexItem>
-              <EnhancementIcon color="#002f5d" />
+
+              <Icon color="#002f5d" >
+                <EnhancementIcon color="#002f5d" />
+              </Icon>
               <Link to={hostErrataUrl('enhancement')}>{enhancement}</Link>
             </FlexItem>
           }

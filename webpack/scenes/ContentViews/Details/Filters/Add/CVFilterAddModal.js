@@ -6,9 +6,22 @@ import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
-  Modal, ModalVariant, Form, FormGroup, TextInput, ActionGroup, Button, Radio, TextArea,
-  Split, SplitItem, Select, SelectOption,
+  Modal,
+  ModalVariant,
+  Form,
+  FormGroup,
+  TextInput,
+  ActionGroup,
+  Button,
+  Radio,
+  TextArea,
+  Split,
+  SplitItem,
 } from '@patternfly/react-core';
+import {
+  Select,
+  SelectOption,
+} from '@patternfly/react-core/deprecated';
 import { addCVFilterRule, createContentViewFilter, getRepositoryTypes } from '../../ContentViewDetailActions';
 import { selectCreateContentViewFilter, selectCreateContentViewFilterStatus,
   selectCreateContentViewFilterError, selectCreateFilterRule,
@@ -129,7 +142,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
             ouiaId="input_name"
             name="name"
             value={name}
-            onChange={value => setName(value)}
+            onChange={(_event, value) => setName(value)}
           />
         </FormGroup>
         <FormGroup label={__('Content type')} isRequired fieldId="content_type">
@@ -137,7 +150,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
             selections={type}
             onSelect={onSelect}
             isOpen={typeSelectOpen}
-            onToggle={setTypeSelectOpen}
+            onToggle={(_event, val) => setTypeSelectOpen(val)}
             ouiaId="content_type"
             id="content_type"
             name="content_type"
@@ -152,7 +165,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
               <Radio
                 isChecked={inclusion}
                 name="radio-1"
-                onChange={checked => setInclusion(checked)}
+                onChange={(_event, checked) => setInclusion(checked)}
                 label={__('Include filter')}
                 id="include_filter"
                 ouiaId="include_filter"
@@ -164,7 +177,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
               <Radio
                 isChecked={!inclusion}
                 name="radio-1"
-                onChange={checked => setInclusion(!checked)}
+                onChange={(_event, checked) => setInclusion(!checked)}
                 label={__('Exclude filter')}
                 id="exclude_filter"
                 ouiaId="exclude_filter"
@@ -184,7 +197,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
             resizeOrientation="vertical"
             autoResize
             style={{ maxHeight: '200px', minHeight: '36px' }}
-            onChange={value => setDescription(value)}
+            onChange={(_event, value) => setDescription(value)}
           />
         </FormGroup>
         <ActionGroup>

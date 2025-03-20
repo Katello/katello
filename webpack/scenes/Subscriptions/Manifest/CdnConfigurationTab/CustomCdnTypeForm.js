@@ -92,7 +92,7 @@ const CustomCdnTypeForm = ({
           aria-label="cdn-url"
           type="text"
           value={url || ''}
-          onChange={value => setUrl(value)}
+          onChange={(_event, value) => setUrl(value)}
           isDisabled={updatingCdnConfiguration}
         />
       </FormGroup>
@@ -105,7 +105,7 @@ const CustomCdnTypeForm = ({
           aria-label="cdn-ssl-ca-content-credential"
           value={sslCaCredentialValue || ''}
           isDisabled={updatingCdnConfiguration}
-          onChange={value => setSslCaCredentialId(value)}
+          onChange={(_event, value) => setSslCaCredentialId(value)}
         >
           <FormSelectOption label={__('N/A')} />
           {contentCredentials.map(cred =>

@@ -156,7 +156,7 @@ const NetworkSyncForm = ({
             aria-label="cdn-url"
             type="text"
             value={url || ''}
-            onChange={value => setUrl(value)}
+            onChange={(_event, value) => setUrl(value)}
             isDisabled={updatingCdnConfiguration}
           />
         </FormGroup>
@@ -169,7 +169,7 @@ const NetworkSyncForm = ({
             aria-label="cdn-username"
             type="text"
             value={username || ''}
-            onChange={value => setUsername(value)}
+            onChange={(_event, value) => setUsername(value)}
             isDisabled={updatingCdnConfiguration}
           />
         </FormGroup>
@@ -197,7 +197,7 @@ const NetworkSyncForm = ({
             type="text"
             value={upstreamOrganizationLabel || ''}
             isDisabled={updatingCdnConfiguration}
-            onChange={setUpstreamOrganizationLabel}
+            onChange={(_event, val) => setUpstreamOrganizationLabel(val)}
           />
         </FormGroup>
         <FormGroup
@@ -209,7 +209,7 @@ const NetworkSyncForm = ({
             type="text"
             value={upstreamLifecycleEnvironmentLabel || ''}
             isDisabled={updatingCdnConfiguration}
-            onChange={setUpstreamLifecycleEnvironmentLabel}
+            onChange={(_event, val) => setUpstreamLifecycleEnvironmentLabel(val)}
           />
         </FormGroup>
         <FormGroup
@@ -221,7 +221,7 @@ const NetworkSyncForm = ({
             type="text"
             value={upstreamContentViewLabel || ''}
             isDisabled={updatingCdnConfiguration}
-            onChange={setUpstreamContentViewLabel}
+            onChange={(_event, val) => setUpstreamContentViewLabel(val)}
           />
         </FormGroup>
         <FormGroup
@@ -233,7 +233,7 @@ const NetworkSyncForm = ({
             aria-label="cdn-ssl-ca-content-credential"
             value={sslCaCredentialValue || ''}
             isDisabled={updatingCdnConfiguration}
-            onChange={value => setSslCaCredentialId(value)}
+            onChange={(_event, value) => setSslCaCredentialId(value)}
           >
             <FormSelectOption label={__('Select one')} isDisabled isPlaceholder />
             {contentCredentials.map(cred =>

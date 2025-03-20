@@ -58,7 +58,7 @@ const ACSSmartProxies = () => {
           ouiaId="use-http-proxies-switch"
           aria-label="use-http-proxies-switch"
           isChecked={useHttpProxies}
-          onChange={checked => setUseHttpProxies(checked)}
+          onChange={(_event, checked) => setUseHttpProxies(checked)}
         />
       </FormGroup>
     </>

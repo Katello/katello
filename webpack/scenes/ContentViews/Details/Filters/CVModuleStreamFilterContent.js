@@ -5,9 +5,21 @@ import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { omit } from 'lodash';
 import { TableVariant } from '@patternfly/react-table';
 import {
-  Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem,
-  KebabToggle, Select, SelectOption, SelectVariant,
+  Tabs,
+  Tab,
+  TabTitleText,
+  Split,
+  SplitItem,
+  Button,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+  Select,
+  SelectOption,
+  SelectVariant,
+} from '@patternfly/react-core/deprecated';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 
@@ -245,7 +257,7 @@ const CVModuleStreamFilterContent = ({
                   <SplitItem data-testid="allAddedNotAdded">
                     <Select
                       variant={SelectVariant.single}
-                      onToggle={setSelectOpen}
+                      onToggle={(_event, val) => setSelectOpen(val)}
                       ouiaId="added-notAdded-selector"
                       onSelect={(_event, selection) => {
                         setSelectedIndex(allAddedNotAdded.indexOf(selection));

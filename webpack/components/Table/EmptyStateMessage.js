@@ -4,10 +4,8 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateVariant,
-  EmptyStateSecondaryActions,
   Bullseye,
-  Title,
-  Button,
+  Button, EmptyStateActions, EmptyStateHeader, EmptyStateFooter,
 } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -77,7 +75,7 @@ const EmptyStateMessage = ({
   return (
     <Bullseye>
       <EmptyState
-        variant={happy ? EmptyStateVariant.xl : EmptyStateVariant.small}
+        variant={happy ? EmptyStateVariant.xl : EmptyStateVariant.sm}
       >
         <KatelloEmptyStateIcon
           error={!!error}
@@ -85,15 +83,14 @@ const EmptyStateMessage = ({
           customIcon={PlusCircleIcon}
           happyIcon={happy}
         />
-        <Title headingLevel="h2" size="lg" ouiaId="empty-state-title">
-          {emptyStateTitle}
-        </Title>
+        <EmptyStateHeader titleText={<>{emptyStateTitle}</>} headingLevel="h2" />
         <EmptyStateBody>
           {emptyStateBody}
         </EmptyStateBody>
-        {showPrimaryAction && actionButton}
-        {showSecondaryActionAnchor &&
-          <EmptyStateSecondaryActions>
+        <EmptyStateFooter>
+          {showPrimaryAction && actionButton}
+          {showSecondaryActionAnchor &&
+          <EmptyStateActions>
             <Button variant="link" ouiaId="empty-state-secondary-action-link">
               {extraTableProps.secondaryActionTargetBlank ? (
                 <a href={secondaryActionLink} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }} >{secondaryActionTitle}</a>
@@ -101,17 +98,18 @@ const EmptyStateMessage = ({
                 <a href={secondaryActionLink} style={{ textDecoration: 'none' }} >{secondaryActionTitle}</a>
               )}
             </Button>
-          </EmptyStateSecondaryActions>
+          </EmptyStateActions>
         }
 
-        {(!showSecondaryActionAnchor &&
+          {(!showSecondaryActionAnchor &&
           (showSecondaryActionButton || searchIsActive || !!filtersAreActive)) &&
-          <EmptyStateSecondaryActions>
+          <EmptyStateActions>
             <Button variant="link" onClick={handleClick} ouiaId="empty-state-secondary-action-router-link">
               {secondaryActionText}
             </Button>
-          </EmptyStateSecondaryActions>
+          </EmptyStateActions>
         }
+        </EmptyStateFooter>
       </EmptyState>
     </Bullseye>
   );

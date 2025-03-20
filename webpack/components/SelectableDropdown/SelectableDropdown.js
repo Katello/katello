@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Spinner, Select, SelectOption, SelectVariant, Level, LevelItem } from '@patternfly/react-core';
+import {
+  Spinner,
+  Level,
+  LevelItem,
+  Icon,
+} from '@patternfly/react-core';
+import {
+  Select,
+  SelectOption,
+  SelectVariant,
+} from '@patternfly/react-core/deprecated';
 import { ErrorCircleOIcon } from '@patternfly/react-icons';
 
 
@@ -9,7 +19,15 @@ const SelectableDropdown = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const icon = () => {
-    if (error) return <span aria-label={`${title} error`}><ErrorCircleOIcon color="red" /></span>;
+    if (error) {
+      return (
+        <span aria-label={`${title} error`}>
+          <Icon color="red">
+            <ErrorCircleOIcon />
+          </Icon>
+        </span>
+      );
+    }
     if (loading) return <span aria-label={`${title} spinner`}><Spinner size="sm" /></span>;
     return null;
   };
@@ -37,7 +55,7 @@ const SelectableDropdown = ({
           aria-label={`select ${title}`}
           key="type-dropdown"
           variant={SelectVariant.single}
-          onToggle={onToggle}
+          onToggle={(_event, open) => onToggle(open)}
           onSelect={onSelect}
           selections={selected}
           isOpen={isOpen}

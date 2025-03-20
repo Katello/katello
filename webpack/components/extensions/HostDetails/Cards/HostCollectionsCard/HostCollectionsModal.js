@@ -192,7 +192,7 @@ export const HostCollectionsModal = ({
               <Tr key={id} ouiaId={`row-${id}`}>
                 <Td
                   select={{
-                    disable: isDisabled,
+                    isDisabled,
                     isSelected: isSelected(id),
                     onSelect: (_event, selected) => selectOne(selected, id, hostCollection),
                     rowIndex,

@@ -108,7 +108,8 @@ test('Can show versions details - Components Tab', async (done) => {
 
   assertNockRequest(scope);
   assertNockRequest(scope);
-  assertNockRequest(componentScope, done);
+  assertNockRequest(componentScope);
+  done();
 });
 
 const testConfig = [
@@ -255,7 +256,8 @@ testConfig.forEach(({
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
     assertNockRequest(tabScope);
-    assertNockRequest(scope, done);
+    assertNockRequest(scope);
+    done();
   }));
 
 test('Can change repository selector', async (done) => {
@@ -317,5 +319,6 @@ test('Can change repository selector', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(tabScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });

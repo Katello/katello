@@ -1,10 +1,21 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Flex, Modal, ModalVariant, Select, SelectVariant,
-  SelectOption, Checkbox, Form, FormGroup,
-  ActionGroup, Button, Tooltip,
+  Flex,
+  Modal,
+  ModalVariant,
+  Checkbox,
+  Form,
+  FormGroup,
+  ActionGroup,
+  Button,
+  Tooltip,
 } from '@patternfly/react-core';
+import {
+  Select,
+  SelectVariant,
+  SelectOption,
+} from '@patternfly/react-core/deprecated';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -105,7 +116,7 @@ const ComponentContentViewAddModal = ({
             id="horzontal-form-title"
             name="horizontal-form-title"
             isOpen={cvVersionSelectOpen}
-            onToggle={isExpanded => setCvVersionSelectOpen(isExpanded)}
+            onToggle={(_event, isExpanded) => setCvVersionSelectOpen(isExpanded)}
             aria-label="CvVersion"
             ouiaId="select-cv-version"
             menuAppendTo="parent"
@@ -131,7 +142,7 @@ const ComponentContentViewAddModal = ({
               name="latest"
               label={__('Always update to latest version')}
               isChecked={formLatest}
-              onChange={checked => updateLatest(checked)}
+              onChange={(_event, checked) => updateLatest(checked)}
             />
             <Tooltip
               position="top"

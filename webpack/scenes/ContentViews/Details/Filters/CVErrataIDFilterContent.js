@@ -5,10 +5,28 @@ import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { capitalize, omit, isEqual } from 'lodash';
 import { TableVariant } from '@patternfly/react-table';
 import {
-  Tabs, Tab, TabTitleText, Split, SplitItem, Select, SelectVariant,
-  SelectOption, Button, Dropdown, DropdownItem, KebabToggle, Flex, FlexItem,
-  Bullseye, DatePicker, ChipGroup, Chip, Text,
+  Tabs,
+  Tab,
+  TabTitleText,
+  Split,
+  SplitItem,
+  Button,
+  Flex,
+  FlexItem,
+  Bullseye,
+  DatePicker,
+  ChipGroup,
+  Chip,
+  Text,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+  Select,
+  SelectVariant,
+  SelectOption,
+} from '@patternfly/react-core/deprecated';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 
@@ -310,7 +328,7 @@ const CVErrataIDFilterContent = ({
                       aria-label="errata_type_selector"
                       ouiaId="errata_type_selector"
                       variant={SelectVariant.checkbox}
-                      onToggle={setTypeSelectOpen}
+                      onToggle={(_event, val) => setTypeSelectOpen(val)}
                       onSelect={(_event, selection) => onTypeSelect(selection)}
                       selections={selectedTypes}
                       isOpen={typeSelectOpen}
@@ -374,7 +392,7 @@ const CVErrataIDFilterContent = ({
                         setDateTypeSelectOpen(false);
                       }}
                       isOpen={dateTypeSelectOpen}
-                      onToggle={setDateTypeSelectOpen}
+                      onToggle={(_event, val) => setDateTypeSelectOpen(val)}
                       id="date_type_selector"
                       name="date_type_selector"
                       ouiaId="date_type_selector"

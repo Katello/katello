@@ -1,6 +1,17 @@
 import React, { useState, createContext, useContext } from 'react';
-import { Radio, Text, TextVariants, TextContent, Alert } from '@patternfly/react-core';
-import { Wizard, WizardHeader, WizardStep } from '@patternfly/react-core/next';
+import {
+  Radio,
+  Text,
+  TextVariants,
+  TextContent,
+  Alert,
+  Wizard,
+  WizardHeader,
+} from '@patternfly/react-core';
+import {
+  WizardStep,
+} from '@patternfly/react-core/deprecated';
+
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
