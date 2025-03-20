@@ -52,6 +52,21 @@ module Katello
       assert_includes Katello::ProductContent.enabled(@product.organization), @product_content
     end
 
+    def test_enabled_with_structured_apt_content
+      Setting['deb_enable_structured_apt'] = true
+      assert_includes Katello::ProductContent.all, @product_content
+      refute_includes Katello::ProductContent.enabled(@product.organization), @product_content
+
+      deb_root = FactoryBot.create(:katello_root_repository, :structured_apt_deb_root, :product => @product)
+      deb_repo = FactoryBot.create(:structured_apt_katello_repository, :root => deb_root, :environment_id => @product.organization.library.id, :content_id => @content_id,
+        :content_view_version_id => @product.organization.default_content_view.versions.first.id)
+
+      assert_nil deb_root.content_id
+      assert_equal @content_id, deb_repo.content_id
+      assert_equal deb_root.library_instance.content_id, @content_id
+      assert_includes Katello::ProductContent.enabled(@product.organization), @product_content
+    end
+
     def test_enabled_value_from_candlepin
       ::Katello::Resources::Candlepin::Product.expects(:get).returns(
         [
