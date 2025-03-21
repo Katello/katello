@@ -9,7 +9,7 @@ module ::Actions::Katello::ContentViewVersion
       Setting[:ssl_priv_key] = '/etc/foreman/client_key.pem'
       @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
-      @repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+      @repo.root.update!(url: 'https://fixtures.pulpproject.org/rpm-no-comps/')
       @repo = create_and_sync(@repo, @primary)
       @content_view = @repo.content_view
       @content_view_version = @repo.content_view_version
