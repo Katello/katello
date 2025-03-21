@@ -186,7 +186,7 @@ module Katello
     end
 
     def archived_repos
-      self.default? ? self.repositories : self.repos(nil)
+      (self.default? || self.rolling?) ? self.repositories : self.repos(nil)
     end
 
     def non_archive_repos
