@@ -22,6 +22,9 @@ module Katello
       def orphan_repository_versions
         repo_version_map = {}
 
+        # TODO: if there is an error, check if the related distribution is deletable.
+        # If it is (no expected path), then delete the distribution and then the version.
+        # If it is not, skip deleting the version and log an error.
         pulp3_enabled_repo_types.each do |repo_type|
           api = repo_type.pulp3_api(smart_proxy)
           version_hrefs = api.repository_versions
