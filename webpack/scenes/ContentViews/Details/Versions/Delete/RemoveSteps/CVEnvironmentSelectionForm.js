@@ -1,17 +1,39 @@
 import React, { useContext, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Alert, Checkbox, EmptyState, EmptyStateVariant, Title, EmptyStateBody, AlertActionCloseButton } from '@patternfly/react-core';
 import { TableVariant, TableComposable, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import DeleteContext from '../DeleteContext';
+import { selectCVHosts, selectCVActivationKeys } from '../../../ContentViewDetailSelectors';
+import { getHosts, getActivationKeys } from '../../../ContentViewDetailActions';
 
 const CVEnvironmentSelectionForm = () => {
   const [alertDismissed, setAlertDismissed] = useState(false);
   const {
+    cvId,
     versionNameToRemove, versionEnvironments, selectedEnvSet,
     setAffectedActivationKeys, setAffectedHosts, deleteFlow,
     removeDeletionFlow, setRemoveDeletionFlow,
   } = useContext(DeleteContext);
+
+  const dispatch = useDispatch();
+  const hostsResponse = useSelector(selectCVHosts);
+  const activationKeysResponse = useSelector(selectCVActivationKeys);
+
+  useDeepCompareEffect(() => {
+    const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
+
+    let cvQuery = `content_view_id=${cvId}`;
+    const selectedEnvStringsForHosts = selectedEnv.map(env => `lifecycle_environment_id=${env.id}`).join(' OR ');
+    if (selectedEnvStringsForHosts.length) cvQuery += ` AND (${selectedEnvStringsForHosts})`;
+    dispatch(getHosts({ search: cvQuery }));
+
+    let akQuery = `content_view_id=${cvId}`;
+    const selectedEnvStringsForAK = selectedEnv.map(env => `lifecycle_environment_id=${env.id}`).join(' OR ');
+    if (selectedEnvStringsForAK.length) akQuery += ` AND (${selectedEnvStringsForAK})`;
+    dispatch(getActivationKeys({ search: akQuery }));
+  }, [dispatch, cvId, versionEnvironments, selectedEnvSet]);
 
   const areAllSelected = () => versionEnvironments.every(env => selectedEnvSet.has(env.id));
 
@@ -26,10 +48,24 @@ const CVEnvironmentSelectionForm = () => {
   // Based on env selected for removal, decide if we need to reassign hosts and activation keys.
   useDeepCompareEffect(() => {
     const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
-    setAffectedActivationKeys(!!(selectedEnv.filter(env => env.activation_key_count > 0).length));
-    setAffectedHosts(!!(selectedEnv.filter(env => env.host_count > 0).length));
+
+    if (activationKeysResponse?.results?.length > 0 &&
+      activationKeysResponse.results.every(key => key.multi_content_view_environment)) {
+      setAffectedActivationKeys(false);
+    } else {
+      setAffectedActivationKeys(!!(selectedEnv.filter(env =>
+        env.activation_key_count > 0).length));
+    }
+    if (hostsResponse?.results?.length > 0 &&
+      hostsResponse.results.every(host =>
+        host.content_facet_attributes?.multi_content_view_environment)) {
+      setAffectedHosts(false);
+    } else {
+      setAffectedHosts(!!(selectedEnv.filter(env => env.host_count > 0).length));
+    }
   }, [setAffectedActivationKeys, setAffectedHosts,
-    versionEnvironments, selectedEnvSet, selectedEnvSet.size]);
+    versionEnvironments, selectedEnvSet, selectedEnvSet.size,
+    hostsResponse, activationKeysResponse]);
 
   const onSelectAll = (event, isSelected) => {
     if (!isSelected) {
