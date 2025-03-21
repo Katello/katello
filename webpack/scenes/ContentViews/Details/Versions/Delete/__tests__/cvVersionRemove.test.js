@@ -76,6 +76,16 @@ test('Can open Remove wizard and remove version from simple environment', async 
     .query(true)
     .reply(200, environmentPathsData);
 
+  const hostScope = nockInstance
+    .get(hostURL)
+    .query(true)
+    .reply(200, affectedHostData);
+
+  const activationKeysScope = nockInstance
+    .get(activationKeyURL)
+    .query(true)
+    .reply(200, affectedActivationKeysData);
+
   const cvVersionRemoveParams = { id: 2, environment_ids: [4] };
 
   const versionRemovalScope = nockInstance
@@ -115,6 +125,8 @@ test('Can open Remove wizard and remove version from simple environment', async 
   assertNockRequest(scope);
   assertNockRequest(autocompleteScope);
   assertNockRequest(envPathRemovalScope);
+  assertNockRequest(hostScope);
+  assertNockRequest(activationKeysScope);
   assertNockRequest(versionRemovalScope, done);
 });
 
@@ -122,6 +134,10 @@ test('Can open Remove wizard and remove version from environment with hosts', as
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const hostAutocompleteUrl = '/hosts/auto_complete_search';
   const hostAutocompleteScope = mockForemanAutocomplete(nockInstance, hostAutocompleteUrl);
+  const hostAutocompleteMock = nockInstance
+    .get(foremanApi.getApiUrl(hostAutocompleteUrl))
+    .query({ organization_id: '1', search: '' })
+    .reply(200, { results: [] });
 
   const scope = nockInstance
     .get(cvVersions)
@@ -133,10 +149,20 @@ test('Can open Remove wizard and remove version from environment with hosts', as
     .query(true)
     .reply(200, environmentPathsData);
 
+  const initialHostScope = nockInstance
+    .get(hostURL)
+    .query({ organization_id: '1', search: 'content_view_id=2' })
+    .reply(200, { results: [] });
+
   const hostScope = nockInstance
     .get(hostURL)
-    .query(true)
+    .query({ organization_id: '1', search: 'content_view_id=2 AND (lifecycle_environment_id=6)' })
     .reply(200, affectedHostData);
+
+  const activationKeysScope = nockInstance
+    .get(activationKeyURL)
+    .query(true)
+    .reply(200, { results: [] });
 
   const cVDropDownOptionsScope = nockInstance
     .get(cVDropDownOptionsPath)
@@ -199,7 +225,10 @@ test('Can open Remove wizard and remove version from environment with hosts', as
   assertNockRequest(scope);
   assertNockRequest(autocompleteScope);
   assertNockRequest(hostAutocompleteScope);
+  assertNockRequest(hostAutocompleteMock);
+  assertNockRequest(initialHostScope);
   assertNockRequest(hostScope);
+  assertNockRequest(activationKeysScope);
   assertNockRequest(cVDropDownOptionsScope);
   assertNockRequest(envPathRemovalScope);
   assertNockRequest(versionRemovalScope, done);
@@ -209,6 +238,10 @@ test('Can open Remove wizard and remove version from environment with activation
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const akAutocompleteUrl = '/activation_keys/auto_complete_search';
   const akAutocompleteScope = mockAutocomplete(nockInstance, akAutocompleteUrl);
+  const activationKeysAutocompleteMock = nockInstance
+    .get(api.getApiUrl(akAutocompleteUrl))
+    .query({ organization_id: '1', search: '' })
+    .reply(200, { results: [] });
 
   const scope = nockInstance
     .get(cvVersions)
@@ -220,10 +253,20 @@ test('Can open Remove wizard and remove version from environment with activation
     .query(true)
     .reply(200, environmentPathsData);
 
+  const initialActivationKeyScope = nockInstance
+    .get(activationKeyURL)
+    .query({ organization_id: '1', search: 'content_view_id=2' })
+    .reply(200, { results: [] });
+
   const activationKeysScope = nockInstance
     .get(activationKeyURL)
-    .query(true)
+    .query({ organization_id: '1', search: 'content_view_id = 2 AND ( environment=test2 )' })
     .reply(200, affectedActivationKeysData);
+
+  const hostScope = nockInstance
+    .get(hostURL)
+    .query(true)
+    .reply(200, { results: [] });
 
   const cVDropDownOptionsScope = nockInstance
     .get(cVDropDownOptionsPath)
@@ -287,7 +330,10 @@ test('Can open Remove wizard and remove version from environment with activation
   assertNockRequest(scope);
   assertNockRequest(autocompleteScope);
   assertNockRequest(akAutocompleteScope);
+  assertNockRequest(activationKeysAutocompleteMock);
+  assertNockRequest(initialActivationKeyScope);
   assertNockRequest(activationKeysScope);
+  assertNockRequest(hostScope);
   assertNockRequest(cVDropDownOptionsScope);
   assertNockRequest(envPathRemovalScope);
   assertNockRequest(versionRemovalScope, done);
