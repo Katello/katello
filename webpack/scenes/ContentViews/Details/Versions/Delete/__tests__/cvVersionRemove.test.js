@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockAutocomplete, mockForemanAutocomplete } from '../../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../../test-utils/nockWrapper';
 import api, { foremanApi } from '../../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../../ContentViewsConstants';
 import ContentViewVersions from '../../ContentViewVersions';
@@ -123,7 +123,11 @@ test('Can open Remove wizard and remove version from simple environment', async 
 test('Can open Remove wizard and remove version from environment with hosts', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const hostAutocompleteUrl = '/hosts/auto_complete_search';
-  const hostAutocompleteScope = mockForemanAutocomplete(nockInstance, hostAutocompleteUrl);
+  const hostAutocompleteScope = nockInstance
+    .get(foremanApi.getApiUrl(hostAutocompleteUrl))
+    .query(true)
+    .times(2)
+    .reply(200, []);
 
   const scope = nockInstance
     .get(cvVersions)
@@ -138,6 +142,7 @@ test('Can open Remove wizard and remove version from environment with hosts', as
   const hostScope = nockInstance
     .get(hostURL)
     .query(true)
+    .times(2)
     .reply(200, affectedHostData);
 
   const cVDropDownOptionsScope = nockInstance
@@ -211,7 +216,11 @@ test('Can open Remove wizard and remove version from environment with hosts', as
 test('Can open Remove wizard and remove version from environment with activation keys', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const akAutocompleteUrl = '/activation_keys/auto_complete_search';
-  const akAutocompleteScope = mockAutocomplete(nockInstance, akAutocompleteUrl);
+  const akAutocompleteScope = nockInstance
+    .get(api.getApiUrl(akAutocompleteUrl))
+    .query(true)
+    .times(2)
+    .reply(200, []);
 
   const scope = nockInstance
     .get(cvVersions)
@@ -226,6 +235,7 @@ test('Can open Remove wizard and remove version from environment with activation
   const activationKeysScope = nockInstance
     .get(activationKeyURL)
     .query(true)
+    .times(2)
     .reply(200, affectedActivationKeysData);
 
   const cVDropDownOptionsScope = nockInstance
