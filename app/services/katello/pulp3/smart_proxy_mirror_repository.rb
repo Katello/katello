@@ -23,8 +23,14 @@ module Katello
         repo_version_map = {}
 
         # TODO: if there is an error, check if the related distribution is deletable.
-        # If it is (no expected path), then delete the distribution and then the version.
-        # If it is not, skip deleting the version and log an error.
+        # If it is orphaned in Katello, then delete the distribution and then the version.
+        # If it is not:
+        #   For content on the main Katello server, distribute the version saved on the Repository record.
+        #   For content on a smart proxy, redistribute the content using the latest version of the Pulp repository.
+        # Question: should we just throw an error telling users to
+        #   resync the smart proxy / regenerate metadata on the main server?
+        # Question: will putting orphaned distribution deletion first help fix things?
+
         pulp3_enabled_repo_types.each do |repo_type|
           api = repo_type.pulp3_api(smart_proxy)
           version_hrefs = api.repository_versions
