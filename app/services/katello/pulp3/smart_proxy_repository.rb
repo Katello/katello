@@ -49,6 +49,31 @@ module Katello
         end
       end
 
+      def orphan_distributions
+        # Each key is a Pulp 3 plugin API and each value is the list of version_hrefs
+        distribution_map = {}
+        pulp3_enabled_repo_types.each do |repo_type|
+          api = repo_type.pulp3_api(smart_proxy)
+          katello_dist_hrefs = ::Katello::RootRepository.where(content_type: repo_type.id)
+                                .joins(:repositories => :distribution_references)
+                                .pluck(:href)
+          pulp_dist_hrefs = api.distributions_list_all.map(&:pulp_href)
+          distribution_map[api] = pulp_dist_hrefs - katello_dist_hrefs
+        end
+
+        distribution_map
+      end
+
+      def delete_orphan_distributions
+        tasks = []
+        orphan_distributions.each do |api, hrefs|
+          tasks << hrefs.collect do |href|
+            api.distributions_api.delete(href)
+          end
+        end
+        tasks.flatten
+      end
+
       def orphan_repository_versions
         # Each key is a Pulp 3 plugin API and each value is the list of version_hrefs
         repo_version_map = {}
