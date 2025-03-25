@@ -45,6 +45,9 @@
             return angular.isDefined(this.repositoryType(desiredType));
         };
 
+        this.repositoryType = this.repositoryType.bind(this);
+        this.repositoryTypeEnabled = this.repositoryTypeEnabled.bind(this);
+
         this.pulp3Supported = function(desiredType) {
             var found = _.find(repositoryTypes, function(type) {
                 return type.id === desiredType;
