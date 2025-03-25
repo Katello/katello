@@ -59,6 +59,7 @@ test('Can show versions detail header', async (done) => {
   await patientlyWaitFor(() => {
     expect(getByText(`Version ${version}`)).toBeInTheDocument();
   });
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
   act(done);// Need to tell the test to stahp!
 });

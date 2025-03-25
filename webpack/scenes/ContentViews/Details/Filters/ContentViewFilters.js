@@ -1,7 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
-import { Label, Split, SplitItem, Dropdown, DropdownItem, KebabToggle, Button } from '@patternfly/react-core';
+import {
+  Label,
+  Split,
+  SplitItem,
+  Button,
+} from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
 import { TableVariant } from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';

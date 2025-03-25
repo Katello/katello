@@ -38,7 +38,8 @@ test('Can call API and show Wizard', async (done) => {
   });
 
   assertNockRequest(scope);
-  assertNockRequest(filterScope, done);
+  assertNockRequest(filterScope);
+  done();
 });
 
 test('Can show wizard with duplicate repository warning for composite CV', async (done) => {
@@ -80,7 +81,8 @@ test('Can show wizard with duplicate repository warning for composite CV', async
   });
 
   assertNockRequest(scope);
-  assertNockRequest(filterScope, done);
+  assertNockRequest(filterScope);
+  done();
 });
 
 test('Can show wizard without duplicate repository warning for composite CV', async (done) => {
@@ -107,7 +109,8 @@ test('Can show wizard without duplicate repository warning for composite CV', as
   });
 
   assertNockRequest(scope);
-  assertNockRequest(filterScope, done);
+  assertNockRequest(filterScope);
+  done();
 });
 
 test('Can show Wizard and show environment paths', async (done) => {
@@ -138,7 +141,8 @@ test('Can show Wizard and show environment paths', async (done) => {
   });
   useSelectorMock.mockClear();
   assertNockRequest(scope);
-  assertNockRequest(filterScope, done);
+  assertNockRequest(filterScope);
+  done();
 });
 
 test('Can show and hide force promotion alert', async (done) => {
@@ -187,6 +191,7 @@ test('Can show and hide force promotion alert', async (done) => {
 
   // uncheck outOfOrderEnv
   fireEvent.click(getByLabelText(outOfOrderEnv));
+
   fireEvent.click(getByLabelText(outOfOrderEnv2));
   expect(queryByText('Force promotion')).not.toBeInTheDocument();
 
@@ -196,7 +201,8 @@ test('Can show and hide force promotion alert', async (done) => {
 
   useSelectorMock.mockClear();
   assertNockRequest(scope);
-  assertNockRequest(filterScope, done);
+  assertNockRequest(filterScope);
+  done();
 });
 
 test('Can show Wizard form and move to review', async (done) => {
@@ -228,7 +234,8 @@ test('Can show Wizard form and move to review', async (done) => {
   });
   useSelectorMock.mockClear();
   assertNockRequest(scope);
-  assertNockRequest(filterScope, done);
+  assertNockRequest(filterScope);
+  done();
 });
 
 test('Can move to Finish step and publish CV', async (done) => {
@@ -261,6 +268,7 @@ test('Can move to Finish step and publish CV', async (done) => {
 
   assertNockRequest(scope);
   assertNockRequest(filterScope);
-  assertNockRequest(publishScope, done);
+  assertNockRequest(publishScope);
+  done();
   act(done); // stop listening for nocks
 });

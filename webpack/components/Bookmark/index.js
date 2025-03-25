@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
-import { Dropdown, DropdownItem, DropdownToggle, DropdownSeparator } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownToggle,
+  DropdownSeparator,
+} from '@patternfly/react-core/deprecated';
 import { OutlinedBookmarkIcon } from '@patternfly/react-icons';
 import { getBookmarks } from './BookmarkActions';
 import { selectBookmarks, selectBookmarkStatus } from './BookmarkSelectors';
@@ -71,7 +76,7 @@ const Bookmark = ({
           <DropdownToggle
             ouiaId="bookmark-toggle"
             isDisabled={isDisabled || status !== STATUS.RESOLVED}
-            onToggle={setDropdownOpen}
+            onToggle={(_event, val) => setDropdownOpen(val)}
             id="toggle-id"
           >
             <OutlinedBookmarkIcon />

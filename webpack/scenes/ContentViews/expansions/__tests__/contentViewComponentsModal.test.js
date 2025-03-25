@@ -37,7 +37,8 @@ test('Can call API and show Related Content Views Components Modal', async (done
   await patientlyWaitFor(() => expect(getByText('Related content views')).toBeInTheDocument());
 
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can call API and show Related Composite Content Views Modal', async () => {

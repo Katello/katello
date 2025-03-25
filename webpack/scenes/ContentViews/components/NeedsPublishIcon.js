@@ -1,7 +1,7 @@
 import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
-import { Tooltip } from '@patternfly/react-core';
+import { Tooltip, Icon } from '@patternfly/react-core';
 import { ArrowCircleUpIcon } from '@patternfly/react-icons';
 import './NeedsPublishIcon.scss';
 
@@ -24,11 +24,12 @@ const NeedsPublishIcon = ({ composite, determinate }) => (
     entryDelay={400}
     content={tooltipContent(composite, determinate)}
   >
-    <ArrowCircleUpIcon
-      id={determinate ? 'determinate-needs-publish' : 'indeterminate-needs-publish'}
-      size="sm"
-      className={determinate ? 'determinate-needs-publish' : 'indeterminate-needs-publish'}
-    />
+    <Icon size="sm">
+      <ArrowCircleUpIcon
+        id={determinate ? 'determinate-needs-publish' : 'indeterminate-needs-publish'}
+        className={determinate ? 'determinate-needs-publish' : 'indeterminate-needs-publish'}
+      />
+    </Icon>
   </Tooltip>
 );
 

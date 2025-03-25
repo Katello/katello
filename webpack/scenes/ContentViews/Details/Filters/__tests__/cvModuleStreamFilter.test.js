@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 
 import ContentViewFilterDetails from '../ContentViewFilterDetails';
@@ -35,6 +35,68 @@ const renderOptions = {
 };
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
+
+test('Can filter by added/not added rules', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const { rules } = cvFilterDetails;
+  const { name } = rules[0];
+
+  const cvFilterScope = nockInstance
+    .get(cvFilterDetailsPath)
+    .query(true)
+    .reply(200, cvFilterDetails);
+
+  const cvFiltersScope = nockInstance
+    .get(cvFiltersPath)
+    .query(true)
+    .reply(200, cvFilterFixtures);
+
+  const moduleStreamsScope = nockInstance
+    .get(moduleStreamsPath)
+    .query(true)
+    .times(3) // For first call (All), Added, and Not Added
+    .reply(200, allModuleStreams);
+
+  const {
+    getByText, queryByText, getByTestId, getByLabelText,
+  } = renderWithRedux(withCVRoute(<ContentViewFilterDetails
+    cvId={1}
+    details={details}
+  />), renderOptions);
+
+  // Nothing will show at first, page is loading
+  expect(queryByText(name)).toBeNull();
+
+  await patientlyWaitFor(() => {
+    expect(getByText(name)).toBeInTheDocument();
+    expect(getByTestId('allAddedNotAdded')).toBeInTheDocument();
+    act(() => {
+      fireEvent.click(getByTestId('allAddedNotAdded')?.childNodes[0]?.childNodes[0]);
+    });
+  });
+
+  await patientlyWaitFor(() => {
+    expect(getByLabelText(ADDED)).toBeInTheDocument();
+    getByLabelText(ADDED).click();
+  });
+
+  await patientlyWaitFor(() => {
+    expect(getByText(name)).toBeInTheDocument();
+    expect(getByTestId('allAddedNotAdded')).toBeInTheDocument();
+    fireEvent.click(getByTestId('allAddedNotAdded')?.childNodes[0]?.childNodes[0]);
+  });
+
+  await patientlyWaitFor(() => {
+    expect(getByLabelText(NOT_ADDED)).toBeInTheDocument();
+    fireEvent.click(getByLabelText(NOT_ADDED));
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(cvFilterScope);
+  assertNockRequest(cvFiltersScope);
+  assertNockRequest(moduleStreamsScope);
+  act(done);
+});
 
 test('Can enable and disable add filter button', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
@@ -75,6 +137,7 @@ test('Can enable and disable add filter button', async (done) => {
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(moduleStreamsScope, done);
+  act(done);
 });
 
 test('Can add a filter rule', async (done) => {
@@ -119,11 +182,14 @@ test('Can add a filter rule', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText(name)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[3]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[3]);
-  expect(getAllByLabelText('Actions')[3]).toHaveAttribute('aria-expanded', 'true');
+  await act(async () => {
+    fireEvent.click(getAllByLabelText('Kebab toggle')[1]);
+  });
+  expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Add')).toBeInTheDocument());
+
   fireEvent.click(getByText('Add'));
 
   assertNockRequest(autocompleteScope);
@@ -132,6 +198,7 @@ test('Can add a filter rule', async (done) => {
   assertNockRequest(cvFiltersRuleScope);
   assertNockRequest(cvRequestCallbackScope);
   assertNockRequest(moduleStreamsScope, done);
+  act(done);
 });
 
 test('Can remove a filter rule', async (done) => {
@@ -175,10 +242,10 @@ test('Can remove a filter rule', async (done) => {
 
   await patientlyWaitFor(() => {
     expect(getByText(name)).toBeInTheDocument();
-    expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'false');
+    expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'false');
   });
-  fireEvent.click(getAllByLabelText('Actions')[2]);
-  expect(getAllByLabelText('Actions')[2]).toHaveAttribute('aria-expanded', 'true');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[2]);
+  expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
   fireEvent.click(getByText('Remove'));
 
@@ -190,6 +257,7 @@ test('Can remove a filter rule', async (done) => {
   assertNockRequest(cvRequestCallbackScope);
 
   assertNockRequest(moduleStreamsScope, done);
+  act(done);
 });
 
 test('Can bulk remove filter rules', async (done) => {
@@ -252,6 +320,7 @@ test('Can bulk remove filter rules', async (done) => {
   assertNockRequest(cvRequestCallbackScope);
 
   assertNockRequest(moduleStreamsScope, done);
+  act(done);
 });
 
 test('Can bulk add filter rules', async (done) => {
@@ -310,64 +379,5 @@ test('Can bulk add filter rules', async (done) => {
   assertNockRequest(cvRequestCallbackScope);
 
   assertNockRequest(moduleStreamsScope, done);
-});
-
-
-test('Can filter by added/not added rules', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const { rules } = cvFilterDetails;
-  const { name } = rules[0];
-
-  const cvFilterScope = nockInstance
-    .get(cvFilterDetailsPath)
-    .query(true)
-    .reply(200, cvFilterDetails);
-
-  const cvFiltersScope = nockInstance
-    .get(cvFiltersPath)
-    .query(true)
-    .reply(200, cvFilterFixtures);
-
-  const moduleStreamsScope = nockInstance
-    .get(moduleStreamsPath)
-    .query(true)
-    .times(3) // For first call (All), Added, and Not Added
-    .reply(200, allModuleStreams);
-
-  const {
-    getByText, queryByText, getByTestId, getByLabelText,
-  } = renderWithRedux(withCVRoute(<ContentViewFilterDetails
-    cvId={1}
-    details={details}
-  />), renderOptions);
-
-  // Nothing will show at first, page is loading
-  expect(queryByText(name)).toBeNull();
-
-  await patientlyWaitFor(() => {
-    expect(getByText(name)).toBeInTheDocument();
-    expect(getByTestId('allAddedNotAdded')).toBeInTheDocument();
-    fireEvent.click(getByTestId('allAddedNotAdded')?.childNodes[0]?.childNodes[0]);
-  });
-
-  await patientlyWaitFor(() => {
-    expect(getByLabelText(ADDED)).toBeInTheDocument();
-    getByLabelText(ADDED).click();
-  });
-
-  await patientlyWaitFor(() => {
-    expect(getByText(name)).toBeInTheDocument();
-    expect(getByTestId('allAddedNotAdded')).toBeInTheDocument();
-    fireEvent.click(getByTestId('allAddedNotAdded')?.childNodes[0]?.childNodes[0]);
-  });
-
-  await patientlyWaitFor(() => {
-    expect(getByLabelText(NOT_ADDED)).toBeInTheDocument();
-    getByLabelText(NOT_ADDED).click();
-  });
-
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(cvFilterScope);
-  assertNockRequest(cvFiltersScope);
-  assertNockRequest(moduleStreamsScope, done);
+  act(done);
 });

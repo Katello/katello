@@ -1,7 +1,7 @@
 import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
-import { Tooltip } from '@patternfly/react-core';
+import { Tooltip, Icon } from '@patternfly/react-core';
 import { EnterpriseIcon, RegistryIcon, SyncAltIcon } from '@patternfly/react-icons';
 import './contentViewIcon.scss';
 
@@ -12,15 +12,15 @@ const ContentViewIcon = ({
     className: 'svg-icon-component',
   };
   let content = __('Content view');
-  let icon = <EnterpriseIcon size="sm" {...props} />;
+  let icon = <Icon size="sm"><EnterpriseIcon {...props} /></Icon>;
   if (composite) {
     props.className = 'svg-icon-composite';
     content = __('Composite content view');
-    icon = <RegistryIcon size="md" {...props} />;
+    icon = <Icon size="md"><RegistryIcon {...props} /></Icon>;
   } else if (rolling) {
     props.className = 'svg-icon-rolling';
     content = __('Rolling content view');
-    icon = <SyncAltIcon size="sm" {...props} />;
+    icon = <Icon size="sm"><SyncAltIcon {...props} /></Icon>;
   }
 
   const cvIcon = (

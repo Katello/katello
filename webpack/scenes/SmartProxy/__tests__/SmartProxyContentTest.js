@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, within } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, within, act } from 'react-testing-lib-wrapper';
 
 import { nockInstance, assertNockRequest } from '../../../test-utils/nockWrapper';
 import api from '../../../services/api';
@@ -47,7 +47,8 @@ test('Can display Smart proxy content table and expand env and cv details', asyn
   expect(getAllByText(/7 errata/i)[0]).toBeInTheDocument();
   expect(getAllByText(/14 Module streams/i)[0]).toBeInTheDocument();
   expect(getAllByText(/2 Package groups/i)[0]).toBeInTheDocument();
-  assertNockRequest(detailsScope, done);
+  assertNockRequest(detailsScope);
+  done();
 });
 
 test('Handles empty content_counts and displays N/A for Packages and Additional content', async (done) => {
@@ -100,17 +101,19 @@ test('Can call content count refresh for environment', async (done) => {
     .reply(202);
 
   const {
-    getByText, queryAllByLabelText,
+    getByText, getAllByLabelText,
   } = renderWithRedux(contentTable);
   await patientlyWaitFor(() => expect(getByText('Environment')).toBeInTheDocument());
-  const envRowActions = queryAllByLabelText('Actions')[0];
-  envRowActions.click();
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
   await patientlyWaitFor(() => expect(getByText('Refresh counts')).toBeInTheDocument());
   const refreshEnv = getByText('Refresh counts');
   refreshEnv.click();
 
   assertNockRequest(detailsScope);
   assertNockRequest(countsEnvRefreshScope, done);
+  act(done);
 });
 
 test('Can call content count refresh for content view', async (done) => {
@@ -128,7 +131,7 @@ test('Can call content count refresh for content view', async (done) => {
 
 
   const {
-    getByText, getAllByText, getByLabelText, queryAllByLabelText,
+    getByText, getAllByText, getByLabelText, getAllByLabelText,
   } = renderWithRedux(contentTable);
   await patientlyWaitFor(() => expect(getByText('Environment')).toBeInTheDocument());
   const tdEnvExpand = getByLabelText('expand-env-1');
@@ -138,13 +141,15 @@ test('Can call content count refresh for content view', async (done) => {
   expect(getAllByText('Last published')[0]).toBeInTheDocument();
   expect(getAllByText('Repository')[0]).toBeInTheDocument();
   expect(getAllByText('Synced')[0]).toBeInTheDocument();
-  const cvRowActions = queryAllByLabelText('Actions')[1];
-  cvRowActions.click();
+  expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[1]);
+  expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'true');
 
   await patientlyWaitFor(() => expect(getByText('Refresh counts')).toBeInTheDocument());
   const refreshCvCounts = getByText('Refresh counts');
   refreshCvCounts.click();
 
-  assertNockRequest(detailsScope, done);
+  assertNockRequest(detailsScope);
   assertNockRequest(countsCVRefreshScope, done);
+  act(done);
 });

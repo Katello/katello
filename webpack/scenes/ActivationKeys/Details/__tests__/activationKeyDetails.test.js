@@ -36,7 +36,8 @@ test('Makes API call and displays AK details on screen', async (done) => {
   expect(getByText('test description')).toBeInTheDocument();
   expect(getByText('1/4')).toBeInTheDocument();
 
-  assertNockRequest(akScope, done);
+  assertNockRequest(akScope);
+  done();
 });
 
 test('Displays placeholder when description is missing', async (done) => {
@@ -54,7 +55,8 @@ test('Displays placeholder when description is missing', async (done) => {
   await patientlyWaitFor(() => expect(getByRole('heading', { name: 'test' })).toBeInTheDocument());
   expect(getByText('No description provided')).toBeInTheDocument();
 
-  assertNockRequest(akScope, done);
+  assertNockRequest(akScope);
+  done();
 });
 
 test('Delete menu appears when toggle is clicked', async (done) => {
@@ -67,7 +69,8 @@ test('Delete menu appears when toggle is clicked', async (done) => {
   fireEvent.click(deleteToggle);
   await patientlyWaitFor(() => expect(getByText('Delete')).toBeInTheDocument());
 
-  assertNockRequest(akScope, done);
+  assertNockRequest(akScope);
+  done();
 });
 
 test('Edit modal appears when button is clicked', async (done) => {
@@ -79,7 +82,8 @@ test('Edit modal appears when button is clicked', async (done) => {
   fireEvent.click(editButton);
   await patientlyWaitFor(() => expect(getByText('Edit activation key')).toBeInTheDocument());
 
-  assertNockRequest(akScope, done);
+  assertNockRequest(akScope);
+  done();
 });
 
 test('Page displays 0 when usage count is null', async (done) => {
@@ -97,7 +101,8 @@ test('Page displays 0 when usage count is null', async (done) => {
   await patientlyWaitFor(() => expect(getByRole('heading', { name: 'test' })).toBeInTheDocument());
   expect(getByText('0/4')).toBeInTheDocument();
 
-  assertNockRequest(akScope, done);
+  assertNockRequest(akScope);
+  done();
 });
 
 test('Delete modal appears when link is clicked', async (done) => {
@@ -113,5 +118,6 @@ test('Delete modal appears when link is clicked', async (done) => {
   fireEvent.click(deleteLink);
   await patientlyWaitFor(() => expect(getByText('Activation Key will no longer be available for use. This operation cannot be undone.')).toBeInTheDocument());
 
-  assertNockRequest(akScope, done);
+  assertNockRequest(akScope);
+  done();
 });

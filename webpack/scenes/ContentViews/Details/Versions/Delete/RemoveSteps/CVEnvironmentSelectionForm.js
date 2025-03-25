@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { Alert, Checkbox, EmptyState, EmptyStateVariant, Title, EmptyStateBody, AlertActionCloseButton } from '@patternfly/react-core';
-import { TableVariant, TableComposable, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import { Alert, Checkbox, EmptyState, EmptyStateVariant, EmptyStateBody, AlertActionCloseButton, EmptyStateHeader } from '@patternfly/react-core';
+import { TableVariant, Table /* data-codemods */, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import DeleteContext from '../DeleteContext';
 
@@ -73,12 +73,12 @@ const CVEnvironmentSelectionForm = () => {
               id="delete_version"
               label={__('Delete version')}
               isChecked={removeDeletionFlow}
-              onChange={checked => setRemoveDeletionFlow(checked)}
+              onChange={(_event, checked) => setRemoveDeletionFlow(checked)}
               style={{ margin: 0 }}
             />
           </Alert>)}
       {(versionEnvironments.length !== 0) &&
-        <TableComposable ouiaId="version-delete-env-table" variant={TableVariant.compact}>
+        <Table ouiaId="version-delete-env-table" variant={TableVariant.compact}>
           <Thead>
             <Tr ouiaId="version-delete-env-table-header">
               <Td
@@ -86,7 +86,7 @@ const CVEnvironmentSelectionForm = () => {
                   rowIndex: 0,
                   onSelect: onSelectAll,
                   isSelected: areAllSelected() || deleteFlow || removeDeletionFlow,
-                  disable: deleteFlow || removeDeletionFlow,
+                  isDisabled: deleteFlow || removeDeletionFlow,
                 }}
               />
               {columnHeaders.map(col =>
@@ -106,7 +106,7 @@ const CVEnvironmentSelectionForm = () => {
                       rowIndex,
                       onSelect: (event, isSelected) => onSelect(event, isSelected, id),
                       isSelected: selectedEnvSet.has(id) || deleteFlow || removeDeletionFlow,
-                      disable: deleteFlow || removeDeletionFlow,
+                      isDisabled: deleteFlow || removeDeletionFlow,
                     }}
                   />
                   <Td>
@@ -118,12 +118,10 @@ const CVEnvironmentSelectionForm = () => {
               ))
             }
           </Tbody>
-        </TableComposable>}
+        </Table>}
       {(versionEnvironments.length === 0) &&
         <EmptyState variant={EmptyStateVariant.xs}>
-          <Title headingLevel="h4" size="md" ouiaId="not-promoted-title">
-            {__('This version has not been promoted to any environments.')}
-          </Title>
+          <EmptyStateHeader titleText={<>{__('This version has not been promoted to any environments.')}</>} headingLevel="h4" />
           <EmptyStateBody>
             {versionEnvironmentsEmptyInfo}
           </EmptyStateBody>

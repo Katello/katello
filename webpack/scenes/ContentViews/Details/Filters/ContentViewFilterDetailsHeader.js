@@ -11,13 +11,15 @@ import {
   Text,
   TextVariants,
   Label,
+  Flex,
+  FlexItem,
+} from '@patternfly/react-core';
+import {
   Dropdown,
   DropdownItem,
   KebabToggle,
   DropdownPosition,
-  Flex,
-  FlexItem,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useDispatch } from 'react-redux';
 import getContentViewDetails, {
@@ -134,7 +136,7 @@ const ContentViewFilterDetailsHeader = ({
               ouiaId="cv-filter-actions-kebab"
               position={DropdownPosition.right}
               style={{ marginLeft: 'auto' }}
-              toggle={<KebabToggle onToggle={setDropdownOpen} id="toggle-dropdown" />}
+              toggle={<KebabToggle onToggle={(_event, val) => setDropdownOpen(val)} id="toggle-dropdown" />}
               isOpen={dropDownOpen}
               isPlain
               dropdownItems={dropDownItems}

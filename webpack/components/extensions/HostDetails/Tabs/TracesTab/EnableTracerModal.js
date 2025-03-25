@@ -6,15 +6,17 @@ import {
   FlexItem,
   Modal,
   ModalVariant,
-  Dropdown,
-  DropdownItem,
-  DropdownToggle,
   Text,
   TextContent,
   TextList,
   TextListItem,
   Alert,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownToggle,
+} from '@patternfly/react-core/deprecated';
 import { CaretDownIcon, ArrowRightIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector } from 'react-redux';

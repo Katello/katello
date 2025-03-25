@@ -81,7 +81,7 @@ const AddEditDebPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData 
             aria-label="input_name"
             name="name"
             value={name}
-            onChange={value => setName(value)}
+            onChange={(_event, value) => setName(value)}
           />
         </FormGroup>
         <FormGroup label={__('Architecture')} fieldId="architecture">
@@ -92,7 +92,7 @@ const AddEditDebPackageRuleModal = ({ filterId, onClose, selectedFilterRuleData 
             aria-label="input_architecture"
             name="architecture"
             value={architecture}
-            onChange={value => setArchitecture(value)}
+            onChange={(_event, value) => setArchitecture(value)}
           />
         </FormGroup>
         <ActionGroup>

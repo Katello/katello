@@ -2,10 +2,21 @@ import React, { useCallback, useState, useMemo } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup,
-  DropdownToggle, DropdownToggleAction,
+  Split,
+  SplitItem,
+  ActionList,
+  ActionListItem,
+  Skeleton,
+  Tooltip,
+  ToggleGroup,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+  DropdownToggle,
+  DropdownToggleAction,
+} from '@patternfly/react-core/deprecated';
 import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
 import {
   TableVariant,
@@ -250,7 +261,7 @@ export const ErrataTab = () => {
   const disabledReason = __('A remote execution job is in progress');
 
   const tdSelect = useCallback((errataId, rowIndex, rexJobInProgress) => ({
-    disable: rexJobInProgress || !isSelectable(errataId),
+    isDisabled: rexJobInProgress || !isSelectable(errataId),
     isSelected: isSelected(errataId),
     onSelect: (event, selected) => selectOne(selected, errataId),
     rowIndex,
@@ -487,14 +498,14 @@ export const ErrataTab = () => {
         >
           <Thead>
             <Tr ouiaId="row-header">
-              <Th key="expand-carat" />
-              <Th key="select-all" />
+              <Th key="expand-carat" aria-label="expand table header" />
+              <Th key="select-all" aria-label="Select all table header" />
               <SortableColumnHeaders
                 columnHeaders={columnHeaders}
                 pfSortParams={pfSortParams}
                 columnsToSortParams={COLUMNS_TO_SORT_PARAMS}
               />
-              <Th key="action-menu" />
+              <Th key="action-menu" aria-label="action menu table header" />
             </Tr>
           </Thead>
           <>
@@ -517,17 +528,13 @@ export const ErrataTab = () => {
                     isDisabled: actionInProgress,
                   },
                   {
-                    title: __('Apply via customized remote execution'),
-                    component: 'a',
-                    href: errataInstallUrl({ hostname, search: errataSearchQuery(errataId) }),
+                    title: <a href={errataInstallUrl({ hostname, search: errataSearchQuery(errataId) })}>{__('Apply via customized remote execution')}</a>,
                   },
                 ];
               } else {
                 rowActions = [
                   {
-                    title: __('Apply erratum'), // Incremental update
-                    component: 'a',
-                    href: urlBuilder(`errata/${id}/content-hosts`, ''),
+                    title: <a href={urlBuilder(`errata/${id}`, '')}>{__('View details')}</a>, // Incremental update
                   },
                 ];
               }

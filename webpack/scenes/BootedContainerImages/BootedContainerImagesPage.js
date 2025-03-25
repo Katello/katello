@@ -1,5 +1,5 @@
 import React from 'react';
-import { TableComposable, Thead, Th, Tbody, Tr, Td, ExpandableRowContent } from '@patternfly/react-table';
+import { Table, Thead, Th, Tbody, Tr, Td, ExpandableRowContent } from '@patternfly/react-table';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import {
   useSetParamsAndApiAndSearch,
@@ -114,7 +114,7 @@ const BootedContainerImagesPage = () => {
       controller="/katello/api/v2/host_bootc_images"
     >
       <>
-        <TableComposable variant="compact" ouiaId="booted-containers-table" isStriped>
+        <Table variant="compact" ouiaId="booted-containers-table" isStriped>
           <Thead>
             <Tr ouiaId="table-header">
               <>
@@ -201,7 +201,7 @@ const BootedContainerImagesPage = () => {
                     <Td />
                     <Td colSpan={3}>
                       <ExpandableRowContent>
-                        <TableComposable variant="compact" isStriped ouiaId={`table-composable-expanded-${rowIndex}`}>
+                        <Table variant="compact" isStriped ouiaId={`table-composable-expanded-${rowIndex}`}>
                           <Thead>
                             <Tr ouiaId={`table-row-inner-expandable-${rowIndex}`}>
                               <Th width={55}>{__('Image digest')}</Th>
@@ -218,14 +218,14 @@ const BootedContainerImagesPage = () => {
                               </Tr>
                             ))}
                           </Tbody>
-                        </TableComposable>
+                        </Table>
                       </ExpandableRowContent>
                     </Td>
                   </Tr> : null}
               </Tbody>
             );
           })}
-        </TableComposable>
+        </Table>
         {results.length > 0 && !errorMessage &&
           <Pagination
             key="table-bottom-pagination"

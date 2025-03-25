@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { Modal, Button, Dropdown, DropdownItem, DropdownToggle, DropdownDirection, DropdownToggleAction } from '@patternfly/react-core';
+import {
+  Modal,
+  Button,
+} from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownToggle,
+  DropdownDirection,
+  DropdownToggleAction,
+} from '@patternfly/react-core/deprecated';
 import { CaretDownIcon, CaretUpIcon } from '@patternfly/react-icons';
 import { useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -213,7 +223,7 @@ const DebInstallModal = ({
               <Tr key={id} ouiaId={`row-${id}`}>
                 <Td
                   select={{
-                    disable: false,
+                    isDisabled: false,
                     isSelected: isSelected(id),
                     onSelect: (_event, selected) => selectOne(selected, id, pkg),
                     rowIndex,

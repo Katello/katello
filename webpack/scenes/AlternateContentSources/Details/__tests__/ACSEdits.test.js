@@ -44,7 +44,8 @@ test('Can show custom ACS details expandable sections with edit buttons', async 
     expect(queryByText('Credentials')).toBeInTheDocument();
     expect(getByLabelText('edit-credentials-pencil-edit')).toBeInTheDocument();
   });
-  assertNockRequest(acsDetailsScope, done);
+  assertNockRequest(acsDetailsScope);
+  done();
   act(done);
 });
 
@@ -89,7 +90,8 @@ test('Can open and close edit ACS details modal', async (done) => {
   await patientlyWaitFor(() => {
     expect(queryByLabelText('edit_acs_details')).not.toBeInTheDocument();
   });
-  assertNockRequest(acsDetailsScope, done);
+  assertNockRequest(acsDetailsScope);
+  done();
   act(done);
 });
 
@@ -138,7 +140,8 @@ test('Can edit ACS details in the edit modal', async (done) => {
   });
   assertNockRequest(acsDetailsScope);
   assertNockRequest(acsEditScope);
-  assertNockRequest(acsDetailsScope, done);
+  assertNockRequest(acsDetailsScope);
+  done();
   act(done);
 });
 
@@ -175,7 +178,8 @@ test('Can show simplified ACS details expandable sections with edit buttons', as
     expect(queryByText('Credentials')).not.toBeInTheDocument();
     expect(queryByText('URL and subpaths')).not.toBeInTheDocument();
   });
-  assertNockRequest(acsDetailsScope, done);
+  assertNockRequest(acsDetailsScope);
+  done();
   act(done);
 });
 
@@ -240,6 +244,7 @@ test('Can edit products in a simplified ACS details edit modal', async (done) =>
   assertNockRequest(acsDetailsScope);
   assertNockRequest(productsScope);
   assertNockRequest(acsEditScope);
-  assertNockRequest(acsDetailsScope, done);
+  assertNockRequest(acsDetailsScope);
+  done();
   act(done);
 });

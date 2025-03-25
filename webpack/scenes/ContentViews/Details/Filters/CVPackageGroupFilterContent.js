@@ -4,9 +4,21 @@ import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { TableVariant } from '@patternfly/react-table';
 import {
-  Tabs, Tab, TabTitleText, Split, SplitItem, Button,
-  Select, SelectVariant, SelectOption, Dropdown, DropdownItem, KebabToggle,
+  Tabs,
+  Tab,
+  TabTitleText,
+  Split,
+  SplitItem,
+  Button,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+  Select,
+  SelectVariant,
+  SelectOption,
+} from '@patternfly/react-core/deprecated';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 
@@ -235,7 +247,7 @@ const CVPackageGroupFilterContent = ({
                   <SplitItem data-testid="allAddedNotAdded">
                     <Select
                       variant={SelectVariant.single}
-                      onToggle={setSelectOpen}
+                      onToggle={(_event, val) => setSelectOpen(val)}
                       ouiaId="allAddedNotAdded"
                       onSelect={(_event, selection) => {
                         setSelectedIndex(allAddedNotAdded.indexOf(selection));

@@ -88,7 +88,8 @@ test('Can update the upstream server configuration', async (done) => {
   const updateButton = getByLabelText(updateButtonName);
   fireEvent.click(updateButton);
 
-  assertNockRequest(updateCdnConfigurationRequest, done);
+  assertNockRequest(updateCdnConfigurationRequest);
+  done();
 });
 
 test('the form shall reflect the given cdnConfiguration', () => {

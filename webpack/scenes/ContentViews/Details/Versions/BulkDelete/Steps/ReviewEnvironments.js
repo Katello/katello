@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { Label } from '@patternfly/react-core';
 import {
-  TableComposable,
+  Table /* data-codemods */,
   TableVariant,
   Tbody,
   Td,
@@ -64,7 +64,7 @@ export default () => {
               __('{versionOrVersions} {versionList} will be removed from the listed environment and will no longer be available for promotion.')}
           />}
       />
-      <TableComposable ouiaId="bulk-delete-env-table" variant={TableVariant.compact}>
+      <Table ouiaId="bulk-delete-env-table" variant={TableVariant.compact}>
         <Thead>
           <Tr ouiaId="bulk-delete-env-header">
             {columnHeaders.map(col =>
@@ -84,7 +84,7 @@ export default () => {
               <Td>
                 <Label
                   /* TODO: Add "isCompact" to this on update of patternfly */
-                  isTruncated
+
                   color="purple"
                 >
                   {name}
@@ -97,7 +97,7 @@ export default () => {
           )))
           }
         </Tbody>
-      </TableComposable>
+      </Table>
     </>
   );
 };

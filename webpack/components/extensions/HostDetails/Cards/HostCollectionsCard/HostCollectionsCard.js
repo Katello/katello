@@ -6,14 +6,16 @@ import {
   CardHeader,
   CardTitle,
   CardBody,
-  Dropdown,
   ExpandableSection,
-  KebabToggle,
   Flex,
   FlexItem,
   GridItem,
-  DropdownItem,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  KebabToggle,
+  DropdownItem,
+} from '@patternfly/react-core/deprecated';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';

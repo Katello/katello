@@ -76,7 +76,7 @@ const ACSCredentials = () => {
                 name="acs_username_field"
                 aria-label="acs_username_field"
                 value={username}
-                onChange={(value) => { setUsername(value); }}
+                onChange={(_event, value) => { setUsername(value); }}
               />
 
             </FormGroup>
@@ -93,7 +93,7 @@ const ACSCredentials = () => {
                 name="acs_password_field"
                 aria-label="acs_password_field"
                 value={password}
-                onChange={(value) => { setPassword(value); }}
+                onChange={(_event, value) => { setPassword(value); }}
               />
             </FormGroup>
           </>
@@ -122,7 +122,10 @@ const ACSCredentials = () => {
               ouiaId="sslCert-select"
               isRequired
               value={sslCert}
-              onChange={(value) => { setSslCert(value); setSslCertName(getCertName(value)); }}
+              onChange={(_event, value) => {
+                setSslCert(value);
+                setSslCertName(getCertName(value));
+              }}
               aria-label="sslCert_select"
             >
               {
@@ -152,7 +155,7 @@ const ACSCredentials = () => {
               ouiaId="sslKey-select"
               isRequired
               value={sslKey}
-              onChange={(value) => { setSslKey(value); setSslKeyName(getCertName(value)); }}
+              onChange={(_event, value) => { setSslKey(value); setSslKeyName(getCertName(value)); }}
               aria-label="sslKey_select"
             >
               {
@@ -198,7 +201,7 @@ const ACSCredentials = () => {
             ouiaId="verify-ssl-switch"
             aria-label="verify-ssl-switch"
             isChecked={verifySSL}
-            onChange={checked => setVerifySSL(checked)}
+            onChange={(_event, checked) => setVerifySSL(checked)}
           />
         </FormGroup>
         <FormGroup
@@ -211,7 +214,7 @@ const ACSCredentials = () => {
             isDisabled={!verifySSL}
             isRequired
             value={caCert}
-            onChange={(value) => { setCACert(value); setCACertName(getCertName(value)); }}
+            onChange={(_event, value) => { setCACert(value); setCACertName(getCertName(value)); }}
             aria-label="sslCAcert_select"
           >
             {

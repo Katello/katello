@@ -61,7 +61,8 @@ test('Can enable and disable add repositories button', async (done) => {
   });
   assertNockRequest(autocompleteScope);
   assertNockRequest(noReposScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
 });
 
 test('Can add repositories', async (done) => {
@@ -107,7 +108,8 @@ test('Can add repositories', async (done) => {
   assertNockRequest(cvDetailScope);
   assertNockRequest(autocompleteScope);
   assertNockRequest(noReposScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
   act(done);
 });
 
@@ -149,6 +151,7 @@ test('Can remove repositories', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvDetailScope);
-  assertNockRequest(scope, done);
+  assertNockRequest(scope);
+  done();
   act(done);
 });

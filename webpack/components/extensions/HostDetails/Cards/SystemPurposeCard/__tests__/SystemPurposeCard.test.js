@@ -63,7 +63,8 @@ test('shows system purpose details for a host', async (done) => {
   expect(getByText('8')).toBeInTheDocument();
 
   assertNockRequest(orgScope);
-  assertNockRequest(availableReleaseVersionsScope, done);
+  assertNockRequest(availableReleaseVersionsScope);
+  done();
 });
 
 test('shows system purpose details for an activation key', () => {
@@ -93,7 +94,8 @@ test('shows edit button for a user with edit_hosts permission', async (done) => 
   expect(queryByText('Edit')).toBeInTheDocument();
 
   assertNockRequest(orgScope);
-  assertNockRequest(availableReleaseVersionsScope, done);
+  assertNockRequest(availableReleaseVersionsScope);
+  done();
 });
 
 test('does not show edit button for a user without edit_hosts permission', (done) => {
@@ -118,6 +120,7 @@ test('does not show edit button for a user without edit_hosts permission', (done
   expect(queryByText('Edit')).not.toBeInTheDocument();
 
   assertNockRequest(orgScope);
-  assertNockRequest(availableReleaseVersionsScope, done);
+  assertNockRequest(availableReleaseVersionsScope);
+  done();
   act(done);
 });

@@ -13,7 +13,7 @@ import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
-import { ChartPie } from '@patternfly/react-charts';
+import { ChartPie, ChartTooltip } from '@patternfly/react-charts';
 import { ErrataMapper, ErrataToggleGroupItem } from '../../../../components/Errata';
 import { hostIsRegistered } from '../hostDetailsHelpers';
 import { TranslatedAnchor } from '../../../Table/components/TranslatedPlural';
@@ -85,6 +85,9 @@ function HostInstallableErrata({
                   }}
                   width={250}
                   height={130}
+                  labelComponent={
+                    <ChartTooltip constrainToVisibleArea renderInPortal={false} />
+                  }
                 />
               </div>
             </div>
