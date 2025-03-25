@@ -602,6 +602,14 @@ module Katello
         repos_in_env_cv(environment, content_view) - repos_in_sync_history
       end
 
+      def up_to_date?(environment = nil, content_view = nil)
+        total_repos = repos_in_env_cv(environment, content_view)&.count
+        pending_sync = repos_pending_sync(environment, content_view)&.count
+        return true if pending_sync&.zero? && total_repos&.positive?
+        return false if total_repos.to_i == pending_sync.to_i
+        return 'partial'
+      end
+
       def rhsm_url
         # Since Foreman 3.1 this setting is set
         if (rhsm_url = setting(SmartProxy::PULP3_FEATURE, 'rhsm_url'))

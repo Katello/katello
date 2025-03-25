@@ -54,7 +54,13 @@ const ExpandableCvDetails = ({
           id, name: cvName, composite, rolling, up_to_date: upToDate,
           cvv_id: versionId, cvv_version: version, repositories,
         } = cv;
-        const upToDateVal = upToDate ? <CheckCircleIcon style={{ color: 'green' }} /> : <TimesCircleIcon style={{ color: 'red' }} />;
+        let upToDateVal;
+        if (upToDate === true) {
+          upToDateVal = <CheckCircleIcon style={{ color: 'green' }} />;
+        } else {
+          upToDateVal = <TimesCircleIcon style={{ color: 'red' }} />;
+        }
+
         const isExpanded = tableRowIsExpanded(versionId);
         return (
           <Tbody key={`${id} + ${versionId}`}isExpanded={isExpanded}>
