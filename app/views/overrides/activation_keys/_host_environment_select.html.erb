@@ -22,8 +22,14 @@
     <%= select_tag cs_select_id, content_source_options(@hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)), :data => {"spinner_path" => spinner_path},
                :class => 'form-control',  :name => cs_select_name %>
   <% else %>
-    <%= hidden_field_tag 'host[content_facet_attributes][content_source_id]', fetch_content_source(@host).try(:id) %>
-    <%= select_tag cs_select_id, content_source_options(@host, :selected_host_group => @hostgroup || @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cs_select_name, :disabled => cv_lce_disabled? %>
+    <% content_source_id = fetch_content_source(@host).try(:id) || params.dig("host", "content_facet_attributes", "content_source_id") %>
+    <%= hidden_field_tag 'host[content_facet_attributes][content_source_id]', content_source_id %>
+    <%= select_tag  cs_select_id,
+                    content_source_options(@host, content_source_id, :selected_host_group => @hostgroup || @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)),
+                    :data => {"spinner_path" => spinner_path},
+                    :class => 'form-control',
+                    :name => cs_select_name,
+                    :disabled => cv_lce_disabled? %>
   <% end %>
 <% end %>
 
