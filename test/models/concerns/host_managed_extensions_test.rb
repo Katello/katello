@@ -148,7 +148,7 @@ module Katello
 
     def test_update_with_invalid_cv_env_combo
       host = FactoryBot.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
-      assert_raises(ActiveRecord::RecordInvalid) do
+      assert_raises(Katello::Errors::ContentViewEnvironmentError) do
         host.content_facet.assign_single_environment(
           content_view: @library_view,
           lifecycle_environment: @organization1_library # env is not in the same org as @library_view
