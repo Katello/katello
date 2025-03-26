@@ -5,13 +5,11 @@ module Katello
     extend ActiveSupport::Concern
     #  Class.repository_association_class
     included do
-      if many_repository_associations
-        # rubocop:disable Rails/ReflectionClassName
-        has_many repository_association.to_sym, class_name: repository_association_class_name,
-                 dependent: :delete_all, inverse_of: association_name
-        has_many :repositories, through: repository_association.to_sym, class_name: "Katello::Repository"
-        include ::Katello::Concerns::SearchByRepositoryName
-      end
+      # rubocop:disable Rails/ReflectionClassName
+      has_many repository_association.to_sym, class_name: repository_association_class_name,
+               dependent: :delete_all, inverse_of: association_name
+      has_many :repositories, through: repository_association.to_sym, class_name: "Katello::Repository"
+      include ::Katello::Concerns::SearchByRepositoryName
     end
 
     def backend_data
@@ -50,10 +48,6 @@ module Katello
         "::Katello::Pulp::#{self.name.demodulize}".constantize
       end
 
-      def many_repository_associations
-        self != YumMetadataFile
-      end
-
       def repository_association
         repository_association_class_name.demodulize.pluralize.underscore
       end
@@ -86,27 +80,11 @@ module Katello
       end
 
       def copy_repository_associations(source_repo, dest_repo)
-        if many_repository_associations
-          delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
-                         #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
-          ActiveRecord::Base.transaction do
-            ActiveRecord::Base.connection.execute(delete_query)
-            self.repository_association_class.import(db_columns_copy, db_values_copy(source_repo, dest_repo), validate: false)
-          end
-        else
-          columns = column_names - ["id", "pulp_id", "created_at", "updated_at", "repository_id"]
-          queries = []
-          queries << "delete from #{self.table_name} where repository_id = #{dest_repo.id} and
-                          pulp_id not in (select pulp_id from #{self.table_name} where repository_id = #{source_repo.id})"
-          queries << "insert into #{self.table_name} (repository_id, pulp_id, #{columns.join(',')})
-                    select #{dest_repo.id} as repository_id, pulp_id, #{columns.join(',')} from #{self.table_name}
-                    where repository_id = #{source_repo.id} and pulp_id not in (select pulp_id
-                    from #{self.table_name} where repository_id = #{dest_repo.id})"
-          ActiveRecord::Base.transaction do
-            queries.each do |query|
-              ActiveRecord::Base.connection.execute(query)
-            end
-          end
+        delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
+                       #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
+        ActiveRecord::Base.transaction do
+          ActiveRecord::Base.connection.execute(delete_query)
+          self.repository_association_class.import(db_columns_copy, db_values_copy(source_repo, dest_repo), validate: false)
         end
       end
 
@@ -168,19 +146,11 @@ module Katello
       end
 
       def orphaned
-        if many_repository_associations
-          left_joins(repository_association.to_sym).where("#{repository_association_class.table_name}.#{unit_id_field}" => nil)
-        else
-          where.not(:repository_id => ::Katello::Repository.select(:id))
-        end
+        left_joins(repository_association.to_sym).where("#{repository_association_class.table_name}.#{unit_id_field}" => nil)
       end
 
       def in_repositories(repos)
-        if many_repository_associations
-          where(:id => repository_association_class.where(:repository_id => repos).select(unit_id_field))
-        else
-          where(:repository_id => repos)
-        end
+        where(:id => repository_association_class.where(:repository_id => repos).select(unit_id_field))
       end
 
       def pulp_data(pulp_id)

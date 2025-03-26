@@ -72,8 +72,6 @@ module Katello
     has_many :repository_docker_manifest_lists, :class_name => "Katello::RepositoryDockerManifestList", :dependent => :delete_all
     has_many :docker_manifest_lists, :through => :repository_docker_manifest_lists
 
-    has_many :yum_metadata_files, :dependent => :destroy, :class_name => "Katello::YumMetadataFile"
-
     has_many :repository_docker_tags, :class_name => "Katello::RepositoryDockerTag", :dependent => :delete_all
     has_many :docker_tags, :through => :repository_docker_tags
 

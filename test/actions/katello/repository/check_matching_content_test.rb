@@ -44,7 +44,6 @@ module Actions
       action_class.any_instance.stubs(:errata_match?).returns(true)
       action_class.any_instance.stubs(:package_groups_match?).returns(true)
       action_class.any_instance.stubs(:distributions_match?).returns(true)
-      action_class.any_instance.stubs(:yum_metadata_files_match?).returns(true)
       #::Katello::Repository.any_instance.expects(:published?).returns(true)
 
       yum_repo.update_attribute(:saved_checksum_type, "sha512")
