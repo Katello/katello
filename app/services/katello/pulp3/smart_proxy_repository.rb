@@ -33,11 +33,35 @@ module Katello
         katello_repos.select { |repo| repo_ids.include? repo.pulp_id }
       end
 
+      # See app/services/katello/pulp3/smart_proxy_mirror_repository.rb#delete_orphan_repository_versions for content proxy orphan cleanup
       def delete_orphan_repository_versions
         tasks = []
         orphan_repository_versions.each do |api, version_hrefs|
           tasks << version_hrefs.collect do |href|
             api.repository_versions_api.delete(href)
+          rescue => e
+            if e.message.include?('Please update the necessary distributions first.')
+              related_distributions = if api.repository_type.publications_api_class.present?
+                                        publication_hrefs = api.publications_list_all(repository_version: href).map(&:pulp_href)
+                                        # Searching distributions by publication isn't supported
+                                        api.distributions_list_all.select { |dist| publication_hrefs.include? dist.publication }
+                                      else
+                                        # Searching distributions by repository version isn't supported
+                                        api.distributions_list_all.select { |dist| dist.repository_version == href }
+                                      end
+              repositories_to_redistribute = ::Katello::Repository.joins(:distribution_references)
+                .where(:distribution_references => { :href => related_distributions.map(&:pulp_href) })
+              warning = 'Completely resync (skip metadata check) or regenerate metadata for repositories with the following paths: ' \
+                        "#{repositories_to_redistribute.map(&:relative_path).join(', ')}. " \
+                        "Orphan cleanup is skipped for these repositories until they are fixed on smart proxy with ID #{smart_proxy.id}. " \
+                        "Try `hammer repository synchronize --skip-metadata-check 1 ...` using --id with #{repositories_to_redistribute.map(&:id).join(', ')}."
+              Rails.logger.warn(warning)
+              Rails.logger.debug("Orphan cleanup error: investigate the version_href #{href} " \
+                                 "and the related distributions #{related_distributions.map(&:pulp_href)}")
+              Rails.logger.debug('It is likely that the related distributions are distributing an older version of the repository.')
+            else
+              raise e
+            end
           end
         end
         tasks.flatten
