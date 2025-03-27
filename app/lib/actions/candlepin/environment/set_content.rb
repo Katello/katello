@@ -36,12 +36,12 @@ module Actions
               # Since its a dup id refresh the existing ids list (which hopefully will not have the duplicate content)
               # and try again.
               output[:add_ids] = content_ids - existing_ids
-            rescue RestClient::ResourceNotFound => e
+            rescue RestClient::ResourceNotFound, RestClient::NotFound => e
               # Set a higher limit for retries just in case the missing content is not being parsed from the error body correctly.
               # If the content is not found after the retries, assume it is gone and continue.
               raise e if ((retries += 1) == 1_000)
               # Parse the missing content from the Candlepin response and remove it from the add_ids list.
-              missing_content = JSON.parse(e.response.body)['displayMessage'].split(' ')[-1].gsub(/"(.+?)"\./, '\1')
+              missing_content = JSON.parse(e.response.body)['displayMessage'].split(' ')[-1].gsub(/[".]/, '')
               Rails.logger.debug "Content #{missing_content} not found in the environment. Removing it from the add_ids list."
               output[:add_ids].delete(missing_content)
             end
