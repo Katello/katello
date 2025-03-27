@@ -75,6 +75,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     @arch = architectures(:x86_64)
     @cv = @repo_with_distro.content_view
     @env = @repo_with_distro.environment
+    @cv2 = katello_content_views(:library_view)
   end
 
   test "kickstart repository options should handle os - selected call with no params" do
@@ -192,8 +193,8 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     host = ::Host.new
     host.content_facet = ::Katello::Host::ContentFacet.new(:content_source_id => 999)
     host.content_facet.assign_single_environment(
-      lifecycle_environment_id: 997,
-      content_view_id: 998
+      lifecycle_environment_id: @env.id,
+      content_view_id: @cv2.id
     )
     host.content_facet.content_view_environments.first.stubs(:generate_info)
     hostgroup = ::Hostgroup.new(
