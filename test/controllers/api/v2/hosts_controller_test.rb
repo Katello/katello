@@ -61,13 +61,13 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     put :update, params: {
       :id => host.id,
       :content_facet_attributes => {
-        :content_view_id => @cv2.id,
+        :content_view_id => @cv3.id,
         :lifecycle_environment_id => @dev.id,
       },
     }, session: set_session_user
     assert_response :success
     host.content_facet.reload
-    target_cve = ::Katello::ContentViewEnvironment.where(:content_view_id => @cv2.id,
+    target_cve = ::Katello::ContentViewEnvironment.where(:content_view_id => @cv3.id,
       :environment_id => @dev.id).first
     assert_equal 1, host.content_facet.content_view_environment_ids.count
     refute_equal orig_cves, host.content_facet.content_view_environment_ids
