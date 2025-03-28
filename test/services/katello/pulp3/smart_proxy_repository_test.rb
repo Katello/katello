@@ -31,6 +31,22 @@ module Katello
       end
     end
 
+    class SmartProxyRepositoryOrphanRepositoryVersionsTest < ActiveSupport::TestCase
+      include Katello::Pulp3Support
+
+      def setup
+        @primary = ::SmartProxy.pulp_primary
+        @smart_proxy_repo = ::Katello::Pulp3::SmartProxyRepository.new(@primary)
+      end
+
+      def test_distributed_version_hrefs_are_skipped
+        @smart_proxy_repo.expects(:report_misconfigured_repository_version).once
+        ::PulpContainerClient::RepositoriesContainerVersionsApi.any_instance.expects(:delete).raises(::PulpContainerClient::ApiError.new(code: 400, message: 'Please update the necessary distributions first.'))
+        @smart_proxy_repo.expects(:orphan_repository_versions).once.returns({ ::Katello::Pulp3::Api::Docker.new(@primary) => [::PulpContainerClient::RepositoryVersionResponse.new(pulp_href: 'repo_href')] })
+        @smart_proxy_repo.delete_orphan_repository_versions
+      end
+    end
+
     class SmartProxyRepositoryOrphanDistributionsTest < ActiveSupport::TestCase
       include Katello::Pulp3Support
 
