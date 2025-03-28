@@ -13,6 +13,7 @@ import AffectedHosts from '../affectedHosts';
 import DeleteContext from '../DeleteContext';
 import ContentViewSelect from '../../../../components/ContentViewSelect/ContentViewSelect';
 import { getCVPlaceholderText, shouldDisableCVSelect } from '../../../../components/ContentViewSelect/helpers';
+import { selectEnvironmentPaths } from '../../../../components/EnvironmentPaths/EnvironmentPathSelectors';
 
 const CVReassignHostsForm = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,38 @@ const CVReassignHostsForm = () => {
   } = useContext(DeleteContext);
   const [alertDismissed, setAlertDismissed] = useState(false);
   const hostResponse = useSelector(selectCVHosts);
+  const environmentPathResponse = useSelector(state => selectEnvironmentPaths(state));
+
+  const contentSourceIds = new Set((hostResponse?.results || [])
+    .map(host => host.content_facet_attributes?.content_source_id)
+    .filter(id => id));
+
+  const lifecycleEnvironments = environmentPathResponse?.results?.map(path =>
+    path.environments).flat() || [];
+
+  const enabledLifecycleEnvironmentIds = new Set();
+
+  if (lifecycleEnvironments) {
+    lifecycleEnvironments.forEach((env) => {
+      if (env.capsules) {
+        env.capsules.forEach((capsule) => {
+          if (contentSourceIds.has(capsule.id) && capsule.lifecycle_environments) {
+            capsule.lifecycle_environments.forEach((le) => {
+              enabledLifecycleEnvironmentIds.add(le.id);
+            });
+          }
+        });
+      }
+    });
+  }
+
+  const disabledEnvs = enabledLifecycleEnvironmentIds.size
+    ? lifecycleEnvironments.filter(env => !enabledLifecycleEnvironmentIds.has(env.id))
+    : [];
+
+  const showAlert = disabledEnvs.length > 0;
+
+  const affectedHostIds = (hostResponse?.results || []).map(host => host.id).join(',');
 
   const multiCVWarning = hostResponse?.results?.some?.(host =>
     host.content_facet_attributes?.multi_content_view_environment);
@@ -123,12 +156,27 @@ const CVReassignHostsForm = () => {
           <p>{multiCVRemovalInfo}</p>
         </Alert>
       )}
+      {showAlert && (
+        <Alert
+          variant="info"
+          ouiaId="disabled-environments-alert"
+          isInline
+          title={__('Some environments are disabled because they are not associated with all of the affected hosts\' content sources.')}
+          style={{ marginBottom: '1rem' }}
+        >
+          {__('To enable them, add the environment to the hosts\' content sources, or ')}
+          <a href={`/change_host_content_source?search=id ^ (${affectedHostIds})`}>
+            {__('assign a new content source to the hosts.')}
+          </a>
+        </Alert>
+      )}
       <EnvironmentPaths
         userCheckedItems={selectedEnvForHost}
         setUserCheckedItems={setSelectedEnvForHost}
         publishing={false}
         headerText={__('Select lifecycle environment')}
         multiSelect={false}
+        enabledLifecycleEnvironmentIds={enabledLifecycleEnvironmentIds}
       />
       <ContentViewSelect
         onClear={onClear}

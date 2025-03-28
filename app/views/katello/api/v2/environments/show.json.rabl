@@ -67,4 +67,18 @@ node :content_views do |env|
   end
 end
 
+node :capsules do |env|
+  env.capsules.map do |capsule|
+    {
+      :id => capsule.id,
+      :name => capsule.name,
+      :lifecycle_environments => capsule.capsule_lifecycle_environments.map do |cle|
+        {
+          :id => cle.lifecycle_environment.id,
+        }
+      end,
+    }
+  end
+end
+
 extends 'katello/api/v2/common/timestamps'
