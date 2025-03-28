@@ -31,6 +31,144 @@ module Katello
       end
     end
 
+    class SmartProxyMirrorRepositoryOrphanRepositoryVersionsTest < ActiveSupport::TestCase
+      include Katello::Pulp3Support
+
+      def setup
+        @proxy = FactoryBot.create(:smart_proxy, :pulp_mirror, :with_pulp3)
+        @proxy.stubs(:pulp_primary?).returns(false)
+        @smart_proxy_mirror_repo = ::Katello::Pulp3::SmartProxyMirrorRepository.new(@proxy)
+      end
+
+      def test_distributed_version_hrefs_are_skipped
+        @smart_proxy_mirror_repo.expects(:report_misconfigured_repository_version).once
+        ::PulpContainerClient::RepositoriesContainerVersionsApi.any_instance.expects(:delete).raises(::PulpContainerClient::ApiError.new(code: 400, message: 'Please update the necessary distributions first.'))
+        @smart_proxy_mirror_repo.expects(:orphan_repository_versions).once.returns({ ::Katello::Pulp3::Api::Docker.new(@proxy) => [::PulpContainerClient::RepositoryVersionResponse.new(pulp_href: 'repo_href')] })
+        @smart_proxy_mirror_repo.delete_orphan_repository_versions
+      end
+
+      def test_report_misconfigured_repository_version_yum
+        fedora = katello_repositories(:fedora_17_x86_64)
+        ver_href = 'ver_href'
+        pub_href = 'pub_href'
+        dist_href = 'dist_href'
+        api = ::Katello::Pulp3::Api::Yum.new(@proxy)
+        api.expects(:publications_list_all).with(repository_version: ver_href).once.returns([::PulpRpmClient::RpmRpmPublicationResponse.new(pulp_href: pub_href)])
+        api.expects(:distributions_list_all).once.returns([::PulpRpmClient::RpmRpmDistributionResponse.new(pulp_href: dist_href, publication: pub_href, name: fedora.pulp_id)])
+
+        errors = @smart_proxy_mirror_repo.report_misconfigured_repository_version(api, ver_href)
+        assert_includes errors, "Completely resync (skip metadata check) repositories with the following paths to the smart proxy with ID #{@proxy.id}: " \
+                                "#{fedora.relative_path}. " \
+                                "Orphan cleanup is skipped for these repositories until they are fixed on smart proxy with ID #{@proxy.id}. " \
+                                "Try `hammer capsule content synchronize --id #{@proxy.id} --skip-metadata-check 1 ...` using " \
+                                "--repository-id with #{fedora.id}."
+      end
+
+      def test_report_misconfigured_repository_version_container
+        busybox = katello_repositories(:busybox)
+        ver_href = 'ver_href'
+        dist_href = 'dist_href'
+        api = ::Katello::Pulp3::Api::Docker.new(@proxy)
+        api.expects(:distributions_list_all).once.returns([::PulpContainerClient::ContainerContainerDistributionResponse.new(pulp_href: dist_href, repository_version: ver_href, name: busybox.pulp_id)])
+
+        errors = @smart_proxy_mirror_repo.report_misconfigured_repository_version(api, ver_href)
+        assert_includes errors, "Completely resync (skip metadata check) repositories with the following paths to the smart proxy with ID #{@proxy.id}: " \
+                                "#{busybox.relative_path}. " \
+                                "Orphan cleanup is skipped for these repositories until they are fixed on smart proxy with ID #{@proxy.id}. " \
+                                "Try `hammer capsule content synchronize --id #{@proxy.id} --skip-metadata-check 1 ...` using " \
+                                "--repository-id with #{busybox.id}."
+      end
+
+      def test_report_misconfigured_repository_version_no_repos_mirror
+        ver_href = 'ver_href'
+        pub_href = 'pub_href'
+        dist_href = 'dist_href'
+        api = ::Katello::Pulp3::Api::Yum.new(@proxy)
+        api.expects(:publications_list_all).with(repository_version: ver_href).once.returns([::PulpRpmClient::RpmRpmPublicationResponse.new(pulp_href: pub_href)])
+        api.expects(:distributions_list_all).once.returns([::PulpRpmClient::RpmRpmDistributionResponse.new(pulp_href: dist_href, publication: pub_href, name: 'not here')])
+
+        errors = @smart_proxy_mirror_repo.report_misconfigured_repository_version(api, ver_href)
+        assert_equal errors, []
+      end
+    end
+
+    class SmartProxyRepositoryOrphanRepositoryVersionsTest < ActiveSupport::TestCase
+      include Katello::Pulp3Support
+
+      def setup
+        @primary = ::SmartProxy.pulp_primary
+        @smart_proxy_repo = ::Katello::Pulp3::SmartProxyRepository.new(@primary)
+      end
+
+      def test_distributed_version_hrefs_are_skipped
+        @smart_proxy_repo.expects(:report_misconfigured_repository_version).once
+        ::PulpContainerClient::RepositoriesContainerVersionsApi.any_instance.expects(:delete).raises(::PulpContainerClient::ApiError.new(code: 400, message: 'Please update the necessary distributions first.'))
+        @smart_proxy_repo.expects(:orphan_repository_versions).once.returns({ ::Katello::Pulp3::Api::Docker.new(@primary) => [::PulpContainerClient::RepositoryVersionResponse.new(pulp_href: 'repo_href')] })
+        @smart_proxy_repo.delete_orphan_repository_versions
+      end
+
+      def test_report_misconfigured_repository_version_yum_default_view
+        fedora = katello_repositories(:fedora_17_x86_64)
+        ver_href = 'ver_href'
+        pub_href = 'pub_href'
+        dist_href = 'dist_href'
+        api = ::Katello::Pulp3::Api::Yum.new(@primary)
+        api.expects(:publications_list_all).with(repository_version: ver_href).once.returns([::PulpRpmClient::RpmRpmPublicationResponse.new(pulp_href: pub_href)])
+        api.expects(:distributions_list_all).once.returns([::PulpRpmClient::RpmRpmDistributionResponse.new(pulp_href: dist_href, publication: pub_href)])
+
+        ::Katello::Pulp3::DistributionReference.create!(path: 'path', href: dist_href, repository_id: fedora.id)
+
+        errors = @smart_proxy_repo.report_misconfigured_repository_version(api, ver_href)
+        assert_includes errors, "Completely resync (skip metadata check) or regenerate metadata for repositories with the following paths: " \
+                                "#{fedora.relative_path}. Orphan cleanup is skipped for these repositories until they are fixed on smart proxy " \
+                                "with ID #{@primary.id}. Try `hammer repository synchronize --skip-metadata-check 1 ...` using --id with #{fedora.id}. "
+      end
+
+      def test_report_misconfigured_repository_version_yum_content_view
+        fedora = katello_repositories(:fedora_17_x86_64).clones.find { |c| c.pulp_id == 'fedora_17_library_library_view' }
+        ver_href = 'ver_href'
+        pub_href = 'pub_href'
+        dist_href = 'dist_href'
+        api = ::Katello::Pulp3::Api::Yum.new(@primary)
+        api.expects(:publications_list_all).with(repository_version: ver_href).once.returns([::PulpRpmClient::RpmRpmPublicationResponse.new(pulp_href: pub_href)])
+        api.expects(:distributions_list_all).once.returns([::PulpRpmClient::RpmRpmDistributionResponse.new(pulp_href: dist_href, publication: pub_href)])
+
+        ::Katello::Pulp3::DistributionReference.create!(path: 'path', href: dist_href, repository_id: fedora.id)
+
+        errors = @smart_proxy_repo.report_misconfigured_repository_version(api, ver_href)
+        assert_includes errors, "Completely resync (skip metadata check) or regenerate metadata for repositories with the following paths: " \
+                                "ACME_Corporation/dev/fedora_17_library_library_view_label. Orphan cleanup is skipped for these repositories " \
+                                "until they are fixed on smart proxy with ID #{@primary.id}. Try `hammer content-view version republish-repositories ...` using --id with #{fedora.content_view_version.id}."
+      end
+
+      def test_report_misconfigured_repository_version_container_default_view
+        busybox = katello_repositories(:busybox)
+        ver_href = 'ver_href'
+        dist_href = 'dist_href'
+        api = ::Katello::Pulp3::Api::Docker.new(@primary)
+        api.expects(:distributions_list_all).once.returns([::PulpContainerClient::ContainerContainerDistributionResponse.new(pulp_href: dist_href, repository_version: ver_href)])
+
+        ::Katello::Pulp3::DistributionReference.create!(path: 'path', href: dist_href, repository_id: busybox.id)
+
+        errors = @smart_proxy_repo.report_misconfigured_repository_version(api, ver_href)
+        assert_includes errors, "Completely resync (skip metadata check) or regenerate metadata for repositories with the following paths: " \
+                                "#{busybox.relative_path}. Orphan cleanup is skipped for these repositories until they are fixed on smart proxy " \
+                                "with ID #{@primary.id}. Try `hammer repository synchronize --skip-metadata-check 1 ...` using --id with #{busybox.id}. "
+      end
+
+      def test_report_misconfigured_repository_version_no_repos
+        ver_href = 'ver_href'
+        pub_href = 'pub_href'
+        dist_href = 'dist_href'
+        api = ::Katello::Pulp3::Api::Yum.new(@primary)
+        api.expects(:publications_list_all).with(repository_version: ver_href).once.returns([::PulpRpmClient::RpmRpmPublicationResponse.new(pulp_href: pub_href)])
+        api.expects(:distributions_list_all).once.returns([::PulpRpmClient::RpmRpmDistributionResponse.new(pulp_href: dist_href, publication: pub_href)])
+
+        errors = @smart_proxy_repo.report_misconfigured_repository_version(api, ver_href)
+        assert_equal errors, []
+      end
+    end
+
     class SmartProxyRepositoryOrphanDistributionsTest < ActiveSupport::TestCase
       include Katello::Pulp3Support
 
