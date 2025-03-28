@@ -37,45 +37,48 @@ module Katello
         repo_version_map
       end
 
+      def report_misconfigured_repository_version(api, href)
+        # Reasons for distributions distributing orphaned repository versions:
+        # 1. The sync succeeded but Pulp did not update the publication (yum content)
+        #    - Fix: completely resync the repository to the smart proxy (need to verify)
+        # 2. The sync suceeded but metadata was not generated (non-yum content)
+        #    - Fix: completely resync the repository on the smart proxy (need to verify)
+        # 3. A repository, distribution, and publication was lost track of
+        #    - Fix: same as 4
+        # 4. Pulp content was modified outside of Katello
+        #    - Fix: find repositories outside of Katello and delete them. Deleting the entire repo works and leaves an orphaned distribution.
+        #        - If RemoveUnneededRepos goes first, this should be taken care of.
+        related_distributions = if api.repository_type.publications_api_class.present?
+                                  publication_hrefs = api.publications_list_all(repository_version: href).map(&:pulp_href)
+                                  # Searching distributions by publication isn't supported
+                                  api.distributions_list_all.select { |dist| publication_hrefs.include? dist.publication }
+                                else
+                                  # Searching distributions by repository version isn't supported
+                                  api.distributions_list_all.select { |dist| dist.repository_version == href }
+                                end
+        repositories_to_redistribute = ::Katello::Repository.where(pulp_id: related_distributions.map(&:name))
+        warning = "Completely resync (skip metadata check) repositories with the following paths to the smart proxy with ID #{smart_proxy.id}: " \
+                  "#{repositories_to_redistribute.map(&:relative_path).join(', ')}. " \
+                  "Orphan cleanup is skipped for these repositories until they are fixed on smart proxy with ID #{smart_proxy.id}. " \
+                  "Try `hammer capsule content synchronize --id #{smart_proxy.id} --skip-metadata-check 1 ...` using " \
+                  "--repository-id with #{repositories_to_redistribute.map(&:id).join(', ')}"
+        errors << warning
+        Rails.logger.warn(warning)
+        Rails.logger.debug("Orphan cleanup error: investigate the version_href #{href} on the smart proxy with ID #{smart_proxy.id} " \
+                            "and the related distributions #{related_distributions.map(&:pulp_href)}")
+        Rails.logger.debug('It is likely that the related distributions are distributing an older version of the repository.')
+      end
+
       # See app/services/katello/pulp3/smart_proxy_repository.rb#delete_orphan_repository_versions for foreman orphan cleanup
       def delete_orphan_repository_versions
         tasks = []
         errors = []
         orphan_repository_versions.each do |api, version_hrefs|
-          tasks << version_hrefs.collect do |href|
-            api.repository_versions_api.delete(href)
+          version_hrefs.each do |href|
+            tasks << api.repository_versions_api.delete(href)
           rescue => e
             if e.message.include?('Please update the necessary distributions first.')
-              # Reasons for distributions distributing orphaned repository versions:
-              # 1. The sync succeeded but Pulp did not update the publication (yum content)
-              #    - Fix: completely resync the repository to the smart proxy (need to verify)
-              # 2. The sync suceeded but metadata was not generated (non-yum content)
-              #    - Fix: completely resync the repository on the smart proxy (need to verify)
-              # 3. A repository, distribution, and publication was lost track of
-              #    - Fix: same as 4
-              # 4. Pulp content was modified outside of Katello
-              #    - Fix: find repositories outside of Katello and delete them. Deleting the entire repo works and leaves an orphaned distribution.
-              #        - If RemoveUnneededRepos goes first, this should be taken care of.
-
-              related_distributions = if api.repository_type.publications_api_class.present?
-                                        publication_hrefs = api.publications_list_all(repository_version: href).map(&:pulp_href)
-                                        # Searching distributions by publication isn't supported
-                                        api.distributions_list_all.select { |dist| publication_hrefs.include? dist.publication }
-                                      else
-                                        # Searching distributions by repository version isn't supported
-                                        api.distributions_list_all.select { |dist| dist.repository_version == href }
-                                      end
-              repositories_to_redistribute = ::Katello::Repository.where(pulp_id: related_distributions.map(&:name))
-              warning = "Completely resync (skip metadata check) repositories with the following paths to the smart proxy with ID #{smart_proxy.id}: " \
-                        "#{repositories_to_redistribute.map(&:relative_path).join(', ')}. " \
-                        "Orphan cleanup is skipped for these repositories until they are fixed on smart proxy with ID #{smart_proxy.id}. " \
-                        "Try `hammer capsule content synchronize --id #{smart_proxy.id} --skip-metadata-check 1 ...` using " \
-                        "--repository-id with #{repositories_to_redistribute.map(&:id).join(', ')}"
-              errors << warning
-              Rails.logger.warn(warning)
-              Rails.logger.debug("Orphan cleanup error: investigate the version_href #{href} on the smart proxy with ID #{smart_proxy.id} " \
-                                 "and the related distributions #{related_distributions.map(&:pulp_href)}")
-              Rails.logger.debug('It is likely that the related distributions are distributing an older version of the repository.')
+              report_misconfigured_repository_version(api, href)
             else
               raise e
             end
