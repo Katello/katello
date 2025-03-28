@@ -36,6 +36,7 @@ module Katello
       # See app/services/katello/pulp3/smart_proxy_mirror_repository.rb#delete_orphan_repository_versions for content proxy orphan cleanup
       def delete_orphan_repository_versions
         tasks = []
+        errors = []
         orphan_repository_versions.each do |api, version_hrefs|
           tasks << version_hrefs.collect do |href|
             api.repository_versions_api.delete(href)
@@ -60,6 +61,7 @@ module Katello
               if repositories_to_redistribute.in_non_default_view.any?
                 warning += "Try `hammer content-view version republish-repositories ...` using --id with #{repositories_to_redistribute.in_non_default_view.pluck(:content_view_version_id).uniq}." \
               end
+              errors << warning
               Rails.logger.warn(warning)
               Rails.logger.debug("Orphan cleanup error: investigate the version_href #{href} " \
                                  "and the related distributions #{related_distributions.map(&:pulp_href)}")
@@ -69,7 +71,7 @@ module Katello
             end
           end
         end
-        tasks.flatten
+        { pulp_tasks: tasks.flatten, errors: errors.flatten }
       end
 
       def pulp3_enabled_repo_types

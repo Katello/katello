@@ -7,7 +7,9 @@ module Actions
         end
 
         def run
-          output[:pulp_tasks] = ::Katello::Pulp3::SmartProxyRepository.instance_for_type(smart_proxy).delete_orphan_repository_versions
+          cleanup_outputs = ::Katello::Pulp3::SmartProxyRepository.instance_for_type(smart_proxy).delete_orphan_repository_versions
+          output[:pulp_tasks] = cleanup_outputs[:pulp_tasks]
+          output[:errors] = cleanup_outputs[:errors]
         end
       end
     end
