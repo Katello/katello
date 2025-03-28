@@ -53,8 +53,13 @@ module Katello
                 .where(:distribution_references => { :href => related_distributions.map(&:pulp_href) })
               warning = 'Completely resync (skip metadata check) or regenerate metadata for repositories with the following paths: ' \
                         "#{repositories_to_redistribute.map(&:relative_path).join(', ')}. " \
-                        "Orphan cleanup is skipped for these repositories until they are fixed on smart proxy with ID #{smart_proxy.id}. " \
-                        "Try `hammer repository synchronize --skip-metadata-check 1 ...` using --id with #{repositories_to_redistribute.map(&:id).join(', ')}."
+                        "Orphan cleanup is skipped for these repositories until they are fixed on smart proxy with ID #{smart_proxy.id}. "
+              if repositories_to_redistribute.in_default_view.any?
+                warning += "Try `hammer repository synchronize --skip-metadata-check 1 ...` using --id with #{repositories_to_redistribute.in_default_view.map(&:id).join(', ')}. " \
+              end
+              if repositories_to_redistribute.in_non_default_view.any?
+                warning += "Try `hammer content-view version republish-repositories ...` using --id with #{repositories_to_redistribute.in_non_default_view.pluck(:content_view_version_id).uniq}." \
+              end
               Rails.logger.warn(warning)
               Rails.logger.debug("Orphan cleanup error: investigate the version_href #{href} " \
                                  "and the related distributions #{related_distributions.map(&:pulp_href)}")
