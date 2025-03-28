@@ -4,7 +4,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { List, ListItem } from '@patternfly/react-core';
 import CardTemplate from 'foremanReact/components/HostDetails/Templates/CardItem/CardTemplate';
 
-const InstalledProductsCard = ({ isExpandedGlobal, hostDetails }) => {
+const InstalledProductsCard = ({ hostDetails }) => {
   const installedProducts = hostDetails?.subscription_facet_attributes?.installed_products;
   if (!installedProducts?.length) return null;
   return (
@@ -12,7 +12,6 @@ const InstalledProductsCard = ({ isExpandedGlobal, hostDetails }) => {
       header={__('Installed products')}
       expandable
       masonryLayout
-      isExpandedGlobal={isExpandedGlobal}
     >
       <List isPlain>
         {installedProducts.map(product => (
@@ -26,7 +25,6 @@ const InstalledProductsCard = ({ isExpandedGlobal, hostDetails }) => {
 };
 
 InstalledProductsCard.propTypes = {
-  isExpandedGlobal: PropTypes.bool,
   hostDetails: PropTypes.shape({
     subscription_facet_attributes: PropTypes.shape({
       installed_products: PropTypes.arrayOf(PropTypes.shape({
@@ -38,7 +36,6 @@ InstalledProductsCard.propTypes = {
 };
 
 InstalledProductsCard.defaultProps = {
-  isExpandedGlobal: false,
   hostDetails: {},
 };
 
