@@ -40,6 +40,7 @@ module Katello
       # See app/services/katello/pulp3/smart_proxy_repository.rb#delete_orphan_repository_versions for foreman orphan cleanup
       def delete_orphan_repository_versions
         tasks = []
+        errors = []
         orphan_repository_versions.each do |api, version_hrefs|
           tasks << version_hrefs.collect do |href|
             api.repository_versions_api.delete(href)
@@ -70,6 +71,7 @@ module Katello
                         "Orphan cleanup is skipped for these repositories until they are fixed on smart proxy with ID #{smart_proxy.id}. " \
                         "Try `hammer capsule content synchronize --id #{smart_proxy.id} --skip-metadata-check 1 ...` using " \
                         "--repository-id with #{repositories_to_redistribute.map(&:id).join(', ')}"
+              errors << warning
               Rails.logger.warn(warning)
               Rails.logger.debug("Orphan cleanup error: investigate the version_href #{href} on the smart proxy with ID #{smart_proxy.id} " \
                                  "and the related distributions #{related_distributions.map(&:pulp_href)}")
@@ -79,7 +81,7 @@ module Katello
             end
           end
         end
-        tasks.flatten
+        { pulp_tasks: tasks.flatten, errors: errors.flatten }
       end
 
       def delete_orphan_repositories
