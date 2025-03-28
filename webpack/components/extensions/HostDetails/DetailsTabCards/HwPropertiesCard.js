@@ -39,7 +39,7 @@ HostDisks.defaultProps = {
   blockDevices: '',
 };
 
-const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
+const HwPropertiesCard = ({ hostDetails }) => {
   if (hostIsNotRegistered({ hostDetails })) return null;
   const { facts } = hostDetails || {};
   const model = facts?.['virt::host_type'];
@@ -53,7 +53,6 @@ const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
     <CardTemplate
       header={__('HW properties')}
       expandable
-      isExpandedGlobal={isExpandedGlobal}
       masonryLayout
     >
       <DescriptionList isHorizontal>
@@ -90,7 +89,6 @@ const HwPropertiesCard = ({ isExpandedGlobal, hostDetails }) => {
 };
 
 HwPropertiesCard.propTypes = {
-  isExpandedGlobal: PropTypes.bool,
   hostDetails: PropTypes.shape({
     facts: PropTypes.shape({
       model: PropTypes.string,
@@ -104,7 +102,6 @@ HwPropertiesCard.propTypes = {
 };
 
 HwPropertiesCard.defaultProps = {
-  isExpandedGlobal: false,
   hostDetails: {},
 };
 

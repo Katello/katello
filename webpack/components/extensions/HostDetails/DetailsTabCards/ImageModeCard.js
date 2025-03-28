@@ -23,7 +23,7 @@ const actionUrl = hostname => createJob({
   inputs: {},
 });
 
-const ImageModeCard = ({ isExpandedGlobal, hostDetails }) => {
+const ImageModeCard = ({ hostDetails }) => {
   const imageMode = hostDetails?.content_facet_attributes?.bootc_booted_image;
   if (!imageMode) return null;
   const getValueOrDash = value => (value || '—');
@@ -32,7 +32,6 @@ const ImageModeCard = ({ isExpandedGlobal, hostDetails }) => {
       header={cardHeader}
       expandable
       masonryLayout
-      isExpandedGlobal={isExpandedGlobal}
       ouiaId="image-mode"
     >
       <a href={actionUrl(hostDetails.name)}>{__('Modify via remote execution')}</a>
@@ -64,7 +63,6 @@ const ImageModeCard = ({ isExpandedGlobal, hostDetails }) => {
 };
 
 ImageModeCard.propTypes = {
-  isExpandedGlobal: PropTypes.bool,
   hostDetails: PropTypes.shape({
     name: PropTypes.string,
     content_facet_attributes: PropTypes.shape({
@@ -81,7 +79,6 @@ ImageModeCard.propTypes = {
 };
 
 ImageModeCard.defaultProps = {
-  isExpandedGlobal: false,
   hostDetails: {},
 };
 
