@@ -70,7 +70,7 @@ child @lifecycle_environments => :lifecycle_environments do
           :rolling => content_view.rolling,
           :last_published => content_view.versions.empty? ? nil : content_view.versions.in_environment(env).first&.created_at,
           :default => content_view.default,
-          :up_to_date => @capsule.repos_pending_sync(env, content_view).empty?,
+          :up_to_date => @capsule.up_to_date?(env, content_view),
           :counts => {
             :repositories => ::Katello::ContentViewVersion.in_environment(env).find_by(:content_view => content_view)&.archived_repos&.count,
           },
