@@ -126,7 +126,7 @@ module Katello
       def self.orphan_distribution?(distribution)
         distribution.try(:publication).nil? &&
             distribution.try(:repository).nil? &&
-            distribution.try(:repository_version).nil? &&
+            distribution.try(:repository_version).nil? ||
             ::Katello::Repository.pluck(:pulp_id).exclude?(distribution.name)
       end
 
