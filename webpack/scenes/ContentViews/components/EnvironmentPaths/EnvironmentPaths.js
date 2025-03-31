@@ -11,7 +11,7 @@ import Loading from '../../../../components/Loading';
 
 const EnvironmentPaths = ({
   userCheckedItems, setUserCheckedItems, promotedEnvironments,
-  publishing, headerText, multiSelect, isDisabled,
+  publishing, headerText, multiSelect, isDisabled, enabledLifecycleEnvironmentIds,
 }) => {
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
@@ -55,6 +55,8 @@ const EnvironmentPaths = ({
                     envCheckedInList(env, promotedEnvironments)}
                     isDisabled={isDisabled || (publishing && env.library)
                     || env?.content_source?.environment_is_associated === false
+                    || (enabledLifecycleEnvironmentIds &&
+                      !enabledLifecycleEnvironmentIds.has(env.id))
                     || envCheckedInList(env, promotedEnvironments)}
                     className="env-path__labels-with-pointer"
                     key={`${env.id}${index}`}
@@ -84,6 +86,7 @@ EnvironmentPaths.propTypes = {
   headerText: PropTypes.string,
   multiSelect: PropTypes.bool,
   isDisabled: PropTypes.bool,
+  enabledLifecycleEnvironmentIds: PropTypes.instanceOf(Set),
 };
 
 EnvironmentPaths.defaultProps = {
@@ -92,5 +95,6 @@ EnvironmentPaths.defaultProps = {
   headerText: __('Select a lifecycle environment from the available promotion paths to promote new version.'),
   multiSelect: true,
   isDisabled: false,
+  enabledLifecycleEnvironmentIds: null,
 };
 export default EnvironmentPaths;
