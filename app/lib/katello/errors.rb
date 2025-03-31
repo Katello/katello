@@ -172,5 +172,11 @@ module Katello
         _("This Organization's subscription manifest has expired. Please import a new manifest.")
       end
     end
+
+    class OrphanCleanupRepoVersionDeleteError < StandardError
+      def message
+        _('Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details.')
+      end
+    end
   end
 end
