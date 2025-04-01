@@ -2,10 +2,8 @@ import React, { useState, createContext, useContext } from 'react';
 import {
   Wizard,
   WizardHeader,
-} from '@patternfly/react-core';
-import {
   WizardStep,
-} from '@patternfly/react-core/deprecated';
+} from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';

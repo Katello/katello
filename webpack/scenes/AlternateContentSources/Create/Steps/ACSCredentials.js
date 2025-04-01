@@ -58,6 +58,7 @@ const ACSCredentials = () => {
             setSslCertName('');
             setSslKeyName('');
           }}
+          style={{ marginTop: '0rem' }}
         />
         }
         {(authentication === 'manual') &&
@@ -110,6 +111,7 @@ const ACSCredentials = () => {
             setUsername('');
             setPassword('');
           }}
+          style={{ marginTop: '0rem' }}
         />
         {(authentication === 'content_credentials') &&
         <>
@@ -194,6 +196,7 @@ const ACSCredentials = () => {
             setUsername('');
             setPassword('');
           }}
+          style={{ marginTop: '0rem' }}
         />
         <FormGroup label={__('Verify SSL')} fieldId="verify_ssl">
           <Switch
