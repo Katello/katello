@@ -8,13 +8,15 @@ import {
   FlexItem,
   GridItem,
   ToggleGroup,
+  ToggleGroupItem,
+  Tooltip,
 } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import { ChartPie, ChartTooltip } from '@patternfly/react-charts';
-import { ErrataMapper, ErrataToggleGroupItem } from '../../../../components/Errata';
+import { ErrataMapper } from '../../../../components/Errata';
 import { hostIsRegistered } from '../hostDetailsHelpers';
 import { TranslatedAnchor } from '../../../Table/components/TranslatedPlural';
 import EmptyStateMessage from '../../../Table/EmptyStateMessage';
@@ -123,19 +125,31 @@ const ErrataOverviewCard = ({ hostDetails }) => {
             <CardTitle>{__('Errata')}</CardTitle>
             {neededErrata &&
               <ToggleGroup isCompact>
-                <ErrataToggleGroupItem
+                <ToggleGroupItem
                   text={__('Applicable')}
                   aria-label="Show applicable errata chart"
-                  tooltipText={__('Applicable errata apply to at least one package installed on the host.')}
+                  buttonId="applicableToggle"
                   isSelected={errataCategory === 'applicable'}
                   onChange={selected => selected && setErrataCategory('applicable')}
                 />
-                <ErrataToggleGroupItem
+                <ToggleGroupItem
                   text={__('Installable')}
                   aria-label="Show installable errata chart"
-                  tooltipText={__('Installable errata are applicable errata that are available in the host\'s assigned content view environments.')}
+                  buttonId="installableToggle"
                   isSelected={errataCategory === 'installable'}
                   onChange={selected => selected && setErrataCategory('installable')}
+                />
+                <Tooltip
+                  content={__('Applicable errata apply to at least one package installed on the host.')}
+                  position="top"
+                  enableFlip
+                  triggerRef={() => document.getElementById('applicableToggle')}
+                />
+                <Tooltip
+                  content={__('Installable errata are applicable errata that are available in the host\'s assigned content view environments.')}
+                  position="top"
+                  enableFlip
+                  triggerRef={() => document.getElementById('installableToggle')}
                 />
               </ToggleGroup>
             }
