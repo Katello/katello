@@ -40,7 +40,7 @@ const ExpandedSmartProxyRepositories = ({
   const dataListCellListsNotSynced = (repo) => {
     const cellList = [];
     /* eslint-disable max-len */
-    cellList.push(<DataListCell key={`${repo.id}-name`}><span><a href={`/products/${repo.product_id}/repositories/${repo.library_id}/`}>{repo.name}</a></span></DataListCell>);
+    cellList.push(<DataListCell key={`${repo.id}-name`}><span><a href={`/products/${repo.product_id}/repositories/${repo.library_id || repo.id}/`}>{repo.name}</a></span></DataListCell>);
     cellList.push(<DataListCell key={`${repo.id}-type`}><RepoIcon type={repo.content_type} identifier={repo.id} /></DataListCell>);
     cellList.push(<DataListCell key={`${repo.id}-rpm`}><span><InactiveText text="N/A" /></span></DataListCell>);
     cellList.push(<DataListCell key={`${repo.id}-count`}><InactiveText text="N/A" /></DataListCell>);
@@ -83,6 +83,52 @@ const ExpandedSmartProxyRepositories = ({
       </DataListItem>
     );
   };
+
+  const getUnsyncedRepositoriesDataListItems = () => {
+    const countedRepoLibraryIds = Object.values(envContentCounts).map(count =>
+      count.metadata.library_instance_id);
+    const repositoriesNotSynced = repositories.filter(repo =>
+      !countedRepoLibraryIds.includes(repo.library_id || repo.id));
+    if (repositoriesNotSynced?.length) {
+      return repositoriesNotSynced.map((repo, index) => {
+        if (!envContentCounts[repo.id]) {
+          return (
+            <DataListItem key={`${repo.id}-${index}`}>
+              <DataListItemRow>
+                <DataListItemCells
+                  dataListCells={dataListCellListsNotSynced(repo)}
+                />
+              </DataListItemRow>
+            </DataListItem>
+          );
+        }
+        return <></>;
+      });
+    }
+    return <></>;
+  };
+
+  if (syncedToCapsule === 'partial') {
+    return (
+      <DataList aria-label="Expanded repository details" isCompact>
+        <DataListItem key="headers" >
+          <DataListItemRow>
+            <DataListItemCells dataListCells={[
+              <DataListCell key="primary content">
+                <b>{__('Repository')}</b>
+              </DataListCell>,
+              <DataListCell key="Type"><b>{__('Type')}</b></DataListCell>,
+              <DataListCell key="Package count"><b>{__('Packages')}</b></DataListCell>,
+              <DataListCell key="Additional content"><b>{__('Additional content')}</b></DataListCell>,
+            ]}
+            />
+          </DataListItemRow>
+        </DataListItem>
+        {getDataListItems()}
+        {getUnsyncedRepositoriesDataListItems()}
+      </DataList>
+    );
+  }
 
   if (syncedToCapsule) {
     return (
@@ -142,7 +188,10 @@ const ExpandedSmartProxyRepositories = ({
 ExpandedSmartProxyRepositories.propTypes = {
   contentCounts: PropTypes.shape({}),
   repositories: PropTypes.arrayOf(PropTypes.shape({})),
-  syncedToCapsule: PropTypes.bool,
+  syncedToCapsule: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.string, // The API can return true/false or 'partial' for partially synced CVs
+  ]),
   envId: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string, // The API can sometimes return strings
