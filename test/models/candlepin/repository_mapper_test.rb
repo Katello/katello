@@ -48,5 +48,19 @@ module Katello
 
       assert_equal 'immediate', mapper.download_policy
     end
+
+    def test_download_policy_file_repo
+      mapper = Candlepin::RepositoryMapper.new(@product_content.product, @product_content.content, {})
+      mapper.expects(:katello_content_type).returns('file')
+      Setting[:default_redhat_download_policy] = 'immediate'
+      assert_equal 'immediate', mapper.download_policy
+    end
+
+    def test_download_policy_python_repo
+      mapper = Candlepin::RepositoryMapper.new(@product_content.product, @product_content.content, {})
+      mapper.expects(:katello_content_type).returns('python')
+      Setting[:default_redhat_download_policy] = 'immediate'
+      assert_equal '', mapper.download_policy
+    end
   end
 end
