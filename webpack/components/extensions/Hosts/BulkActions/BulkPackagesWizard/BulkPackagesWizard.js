@@ -7,10 +7,8 @@ import {
   Alert,
   Wizard,
   WizardHeader,
-} from '@patternfly/react-core';
-import {
   WizardStep,
-} from '@patternfly/react-core/deprecated';
+} from '@patternfly/react-core';
 
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
@@ -202,6 +200,7 @@ const BulkPackagesWizard = () => {
               label={__('Upgrade all packages')}
               id="r1-upgrade-all-packages"
               ouiaId="r1-upgrade-all-packages"
+              style={{ marginTop: '0rem' }}
             />
             <Radio
               isChecked={selectedAction === UPGRADE}
@@ -210,6 +209,7 @@ const BulkPackagesWizard = () => {
               label={__('Upgrade packages')}
               id="r2-upgrade-packages"
               ouiaId="r2-upgrade-packages"
+              style={{ marginTop: '0rem' }}
             />
             <Radio
               isChecked={selectedAction === INSTALL}
@@ -218,6 +218,7 @@ const BulkPackagesWizard = () => {
               label={__('Install packages')}
               id="r3-install-packages"
               ouiaId="r3-install-packages"
+              style={{ marginTop: '0rem' }}
             />
             <Radio
               isChecked={selectedAction === REMOVE}
@@ -226,6 +227,7 @@ const BulkPackagesWizard = () => {
               label={__('Remove packages')}
               id="r4-remove-packages"
               ouiaId="r4-remove-packages"
+              style={{ marginTop: '0rem' }}
             />
           </div>
         </WizardStep>

@@ -180,6 +180,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             setAcsSslClientCert('');
             setAcsSslClientKey('');
           }}
+          style={{ marginTop: '0rem' }}
         />
         {authentication === 'manual' &&
         <>
@@ -235,6 +236,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             setAcsUsername('');
             setAcsPassword('');
           }}
+          style={{ marginTop: '0rem' }}
         />
         {authentication === 'credentials' &&
         <>
@@ -311,6 +313,7 @@ const ACSEditCredentials = ({ onClose, acsId, acsDetails }) => {
             setAcsUsername('');
             setAcsPassword('');
           }}
+          style={{ marginTop: '0rem' }}
         />
         <ActionGroup>
           <Button
