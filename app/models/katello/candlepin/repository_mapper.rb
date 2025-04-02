@@ -139,7 +139,7 @@ module Katello
       end
 
       def download_policy
-        if katello_content_type == Repository::YUM_TYPE
+        if ::Katello::RootRepository::CONTENT_ATTRIBUTE_RESTRICTIONS[:download_policy].include?(katello_content_type)
           Setting[:default_redhat_download_policy]
         else
           ""
