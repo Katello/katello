@@ -42,12 +42,16 @@ import { katelloPackageUpdateUrl, packagesUpdateUrl } from '../customizedRexUrlH
 import './PackagesTab.scss';
 import hostIdNotReady, { getHostDetails } from '../../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
-import { hasRequiredPermissions as can,
+import {
+  hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
-  userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
+  userPermissionsFromHostDetails,
+  hostIsImageMode,
+} from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
 import { runSubmanRepos } from '../../Cards/ContentViewDetailsCard/HostContentViewActions';
+import ImageModeHostAlert from '../../../Hosts/ImageModeHostAlert';
 
 const invokeRexJobs = ['create_job_invocations'];
 const createBookmarks = ['create_bookmarks'];
@@ -477,6 +481,7 @@ export const PackagesTab = () => {
   return (
     <div>
       <div id="packages-tab">
+        {hostIsImageMode({ hostDetails }) && <ImageModeHostAlert />}
         <TableWrapper
           {...{
             metadata,
