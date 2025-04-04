@@ -50,7 +50,9 @@ import {
   hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
   userPermissionsFromHostDetails,
+  hostIsImageMode,
 } from '../../hostDetailsHelpers';
+import ImageModeHostAlert from '../../../Hosts/ImageModeHostAlert';
 
 export const hideModuleStreamsTab = ({ hostDetails }) => !(hostDetails?.operatingsystem_family === 'Redhat' && Number(hostDetails?.operatingsystem_major > 7));
 
@@ -348,6 +350,7 @@ export const ModuleStreamsTab = () => {
   return (
     <div>
       <div id="modulestreams-tab">
+        {hostIsImageMode({ hostDetails }) && <ImageModeHostAlert />}
         <TableWrapper
           {...{
             metadata,

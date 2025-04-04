@@ -105,7 +105,7 @@ const HostReview = ({
           {__('Review hosts')}
         </Text>
         <Text ouiaId="mpw-step-3-content" component={TextVariants.p}>
-          {__('Review and optionally exclude hosts from your selection.')}
+          {__('Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot.')}
         </Text>
       </TextContent>
       {selectedCount === 0 && hasInteracted && (
