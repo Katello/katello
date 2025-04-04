@@ -11,10 +11,6 @@ module Katello
       other.class == self.class && other.smart_proxy == smart_proxy
     end
 
-    def default_capsule?
-      @smart_proxy.pulp_primary?
-    end
-
     def lifecycle_environment_check(environment = nil, repository = nil)
       environment = repository.environment if repository
 
