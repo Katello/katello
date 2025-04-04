@@ -9,6 +9,7 @@ import {
   Skeleton,
   Tooltip,
   ToggleGroup,
+  ToggleGroupItem,
 } from '@patternfly/react-core';
 import {
   Dropdown,
@@ -39,7 +40,7 @@ import { useSet, useBulkSelect, useUrlParams } from 'foremanReact/components/PF4
 import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
 import SelectableDropdown from '../../../../SelectableDropdown';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
-import { ErrataType, ErrataSeverity, ErrataToggleGroupItem } from '../../../../../components/Errata';
+import { ErrataType, ErrataSeverity } from '../../../../../components/Errata';
 import { getInstallableErrata } from './HostErrataActions';
 import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
@@ -430,23 +431,33 @@ export const ErrataTab = () => {
       {hostIsNonLibrary &&
         <SplitItem>
           <ToggleGroup aria-label="Installable Errata">
-            <ErrataToggleGroupItem
+            <ToggleGroupItem
               text={__('Applicable')}
-              tooltipText={__('Applicable errata apply to at least one package installed on the host.')}
               buttonId="applicableToggle"
               aria-label="Show applicable errata"
               isSelected={toggleGroupState === APPLICABLE}
               onChange={() => setToggleGroupState(APPLICABLE)}
             />
-            <ErrataToggleGroupItem
+            <ToggleGroupItem
               text={__('Installable')}
-              tooltipText={__('Installable errata are applicable errata that are available in the host\'s assigned content view environments.')}
               buttonId="installableToggle"
               aria-label="Show installable errata"
               isSelected={toggleGroupState === INSTALLABLE}
               onChange={() => setToggleGroupState(INSTALLABLE)}
             />
           </ToggleGroup>
+          <Tooltip
+            content={__('Applicable errata apply to at least one package installed on the host.')}
+            position="top"
+            enableFlip
+            triggerRef={() => document.getElementById('applicableToggle')}
+          />
+          <Tooltip
+            content={__('Installable errata are applicable errata that are available in the host\'s assigned content view environments.')}
+            position="top"
+            enableFlip
+            triggerRef={() => document.getElementById('installableToggle')}
+          />
         </SplitItem>
       }
     </Split>
