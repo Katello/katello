@@ -211,6 +211,12 @@ module Katello
           self.class.fetch_from_list { |page_opts| repository_versions_api.list(repository_href, page_opts.merge(options)) }
         end
 
+        def publications_list_all(args = {})
+          self.class.fetch_from_list do |page_opts|
+            publications_api.list(page_opts.merge(args))
+          end
+        end
+
         def distributions_list_all(args = {})
           self.class.fetch_from_list do |page_opts|
             distributions_api.list(page_opts.merge(args))

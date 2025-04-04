@@ -70,9 +70,10 @@ module Katello
 
         def test_delete_orphan_repository_versions
           delete_orphan_tasks = @smart_proxy_service.delete_orphan_repository_versions
-          delete_orphan_tasks.compact.each { |task| wait_on_task(@primary, task) }
+          delete_orphan_tasks[:pulp_tasks].compact.each { |task| wait_on_task(@primary, task) }
           orphans = @smart_proxy_service.orphan_repository_versions.collect { |_api, repo_versions| repo_versions }.flatten
           assert_empty orphans
+          assert_empty delete_orphan_tasks[:errors]
         end
       end
     end

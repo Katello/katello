@@ -6,8 +6,15 @@ module Actions
           plan_self(:smart_proxy_id => smart_proxy.id)
         end
 
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
+        end
+
         def run
-          output[:pulp_tasks] = ::Katello::Pulp3::SmartProxyRepository.instance_for_type(smart_proxy).delete_orphan_repository_versions
+          cleanup_outputs = ::Katello::Pulp3::SmartProxyRepository.instance_for_type(smart_proxy).delete_orphan_repository_versions
+          output[:pulp_tasks] = cleanup_outputs[:pulp_tasks]
+          output[:errors] = cleanup_outputs[:errors]
+          fail ::Katello::Errors::OrphanCleanupRepoVersionDeleteError if output[:errors].any?
         end
       end
     end
