@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TableText } from '@patternfly/react-table';
-import { Tooltip, ToggleGroupItem } from '@patternfly/react-core';
+import { Tooltip } from '@patternfly/react-core';
 import {
   chart_color_black_500 as pfBlack,
   chart_color_gold_400 as pfGold,
@@ -188,26 +188,3 @@ ErrataSeverity.propTypes = {
   severity: PropTypes.string.isRequired,
 };
 
-export const ErrataToggleGroupItem = ({
-  text, tooltipText, isSelected, onChange, ...toggleGroupItemProps
-}) => (
-  <Tooltip
-    content={tooltipText}
-    position="top"
-    enableFlip
-  >
-    <ToggleGroupItem
-      text={text}
-      isSelected={isSelected}
-      onChange={(e, v) => onChange(v)}
-      {...toggleGroupItemProps}
-    />
-  </Tooltip>
-);
-
-ErrataToggleGroupItem.propTypes = {
-  text: PropTypes.string.isRequired,
-  tooltipText: PropTypes.string.isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
