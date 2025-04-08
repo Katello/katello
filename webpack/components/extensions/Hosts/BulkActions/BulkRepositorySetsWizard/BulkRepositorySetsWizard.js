@@ -53,7 +53,7 @@ const BulkRepositorySetsWizard = () => {
   const repoSetsBulkSelect = useBulkSelect({
     results: repoSetsResults,
     metadata: { total, page, selectable: subtotal },
-    // idColumn: 'name',
+    idColumn: 'label',
   });
 
   const initialSelectedHosts = fetchBulkParams();
