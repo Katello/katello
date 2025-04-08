@@ -1,23 +1,25 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, DropdownItem, DropdownList, Divider, MenuToggle, ToolbarItem } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, DropdownList, Divider, MenuToggle, MenuToggleAction, ToolbarItem } from '@patternfly/react-core';
 import { getPageStats } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { RowSelectTd } from 'foremanReact/components/HostsIndex/RowSelectTd';
 import SelectAllCheckbox from 'foremanReact/components/PF4/TableIndexPage/Table/SelectAllCheckbox';
+import { noop } from 'foremanReact/common/helpers';
 
 import katelloApi from '../../../../../services/api';
 import { REPO_SETS_URL, BulkRepositorySetsWizardContext } from './BulkRepositorySetsWizard';
 
+const dropdownValues = {
+  0: __('No change'),
+  1: __('Override to enabled'),
+  2: __('Override to disabled'),
+  3: __('Reset to default'),
+};
+
 const ContentOverrideDropdown = ({ repoLabel, pendingOverrides, setPendingOverrides }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownValues = {
-    0: __('No change'),
-    1: __('Override to enabled'),
-    2: __('Override to disabled'),
-    3: __('Reset to default'),
-  };
 
   const currentValue = pendingOverrides[repoLabel] ?? 0;
   const currentLabel = dropdownValues[currentValue];
@@ -26,16 +28,10 @@ const ContentOverrideDropdown = ({ repoLabel, pendingOverrides, setPendingOverri
   };
   const onSelect = (_event, value) => {
     setIsOpen(false);
-    if (value === 0) {
-      // remove the override from pending; user does not want to change it
-      const { [repoLabel]: _, ...rest } = pendingOverrides;
-      setPendingOverrides(rest);
-    } else {
-      setPendingOverrides({
-        ...pendingOverrides,
-        [repoLabel]: value,
-      });
-    }
+    setPendingOverrides({
+      ...pendingOverrides,
+      [repoLabel]: value,
+    });
   };
   return (
     <Dropdown
@@ -83,20 +79,21 @@ export const BulkRepositorySetsTable = ({
   repoSetsResponse,
 }) => {
   const {
-    selectAll,
     selectPage,
     selectNone,
     selectOne,
     isSelected,
     selectedCount,
+    selectedResults,
     areAllRowsSelected,
     areAllRowsOnPageSelected,
     updateSearchQuery,
-    setSelectedCount,
   } = repoSetsBulkSelect;
 
   const repoSetsWizardContext = useContext(BulkRepositorySetsWizardContext);
   const { pendingOverrides, setPendingOverrides } = repoSetsWizardContext;
+  const [actionDropdownValue, setActionDropdownValue] = useState(0);
+  const [actionToggleOpen, setActionToggleOpen] = useState(false);
 
   const {
     total, page, subtotal, per_page: perPage,
@@ -119,10 +116,10 @@ export const BulkRepositorySetsTable = ({
     },
     enabled_by_default: {
       title: __('Status'),
-      wrapper: ({ content }) => (
+      wrapper: ({ label }) => (
         <ContentOverrideDropdown
-          key={content?.label ?? 'no-label'}
-          repoLabel={content?.label}
+          key={label ?? 'no-label'}
+          repoLabel={label}
           pendingOverrides={pendingOverrides}
           setPendingOverrides={setPendingOverrides}
         />
@@ -136,7 +133,7 @@ export const BulkRepositorySetsTable = ({
     <ToolbarItem key="selectAll">
       <SelectAllCheckbox
         {...{
-          selectAll,
+          selectAll: noop,
           selectOne,
           updateSearchQuery,
           selectNone,
@@ -153,10 +150,72 @@ export const BulkRepositorySetsTable = ({
     </ToolbarItem>
   );
 
+  const onToggleClick = () => {
+    setActionToggleOpen(!actionToggleOpen);
+  };
+  const handleActionToggle = (value) => {
+    const result = {};
+    selectedResults.forEach((repo) => {
+      result[repo.label] = value;
+    });
+    setPendingOverrides({ ...pendingOverrides, ...result });
+  };
+  const onSelect = (_event, value) => {
+    handleActionToggle(value);
+    setActionToggleOpen(false);
+  };
+
+  const actionButton = (
+    <Dropdown
+      isOpen={actionToggleOpen}
+      onSelect={onSelect}
+      onOpenChange={val => setActionToggleOpen(!val)}
+      ouiaId="content-override-action-dropdown"
+      toggle={toggleRef => (
+        <MenuToggle
+          ref={toggleRef}
+          onClick={onToggleClick}
+          isExpanded={actionToggleOpen}
+          variant="primary"
+          splitButtonOptions={{
+            variant: 'action',
+            items: [
+              <MenuToggleAction
+                isDisabled={selectedCount === 0}
+                id="split-button-action-example-with-toggle-button"
+                key="split-action"
+                aria-label="Action"
+                onClick={() => handleActionToggle(actionDropdownValue)}
+              >
+                {dropdownValues[actionDropdownValue]}
+              </MenuToggleAction>],
+          }}
+          aria-label="Content override action to apply to all selected repositories"
+          isDisabled={selectedCount === 0}
+        />
+      )}
+    >
+      <DropdownList>
+        {Object.entries(dropdownValues).map(([key, value]) => (
+          <DropdownItem
+            key={key}
+            value={key}
+            ouiaId={`content-override-action-dropdown-${key}`}
+            onClick={() => setActionDropdownValue(key)}
+          >
+            {value}
+          </DropdownItem>
+        ))}
+      </DropdownList>
+    </Dropdown>
+  );
+
   return (
     <TableIndexPage
       showCheckboxes
+      idColumn="label"
       updateParamsByUrl={false}
+      customToolbarItems={[actionButton]}
       rowSelectTd={RowSelectTd}
       selectionToolbar={selectionToolbar}
       columns={columns}
@@ -168,7 +227,6 @@ export const BulkRepositorySetsTable = ({
       apiOptions={{ key: 'BULK_HOST_REPO_SETS' }}
       selectOne={selectOne}
       isSelected={isSelected}
-      setSelectedCount={setSelectedCount}
       selectedCount={selectedCount}
       selectPage={selectPage}
       selectNone={selectNone}
@@ -193,7 +251,7 @@ BulkRepositorySetsTable.propTypes = {
     areAllRowsSelected: PropTypes.func.isRequired,
     areAllRowsOnPageSelected: PropTypes.func.isRequired,
     updateSearchQuery: PropTypes.func.isRequired,
-    setSelectedCount: PropTypes.func.isRequired,
+    selectedResults: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   }).isRequired,
   repoSetsResults: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   repoSetsMetadata: PropTypes.shape({
