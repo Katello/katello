@@ -50,13 +50,17 @@ import { installErrata } from '../RemoteExecutionActions';
 import { errataInstallUrl } from '../customizedRexUrlHelpers';
 import './ErrataTab.scss';
 import hostIdNotReady, { getHostDetails } from '../../HostDetailsActions';
-import { hasRequiredPermissions as can,
+import {
+  hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
-  userPermissionsFromHostDetails } from '../../hostDetailsHelpers';
+  userPermissionsFromHostDetails,
+  hostIsImageMode,
+} from '../../hostDetailsHelpers';
 import SortableColumnHeaders from '../../../../Table/components/SortableColumnHeaders';
 import { useRexJobPolling } from '../RemoteExecutionHooks';
 import { errataStatusContemplation, friendlyErrataStatus } from '../../../../Errata/errataHelpers';
 import { runSubmanRepos } from '../../Cards/ContentViewDetailsCard/HostContentViewActions';
+import ImageModeHostAlert from '../../../Hosts/ImageModeHostAlert';
 
 const recalculateApplicability = ['edit_hosts'];
 const invokeRexJobs = ['create_job_invocations'];
@@ -466,6 +470,7 @@ export const ErrataTab = () => {
   return (
     <div>
       <div id="errata-tab">
+        {hostIsImageMode({ hostDetails }) && <ImageModeHostAlert />}
         <TableWrapper
           {...{
             metadata,

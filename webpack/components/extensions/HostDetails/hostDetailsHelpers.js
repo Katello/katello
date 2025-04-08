@@ -24,3 +24,6 @@ export const hasRequiredPermissions = (requiredPermissions = [], userPermissions
 
 export const missingRequiredPermissions = (requiredPermissions = [], userPermissions) =>
   !hasRequiredPermissions(requiredPermissions, userPermissions);
+
+export const hostIsImageMode = ({ hostDetails }) =>
+    hostDetails?.content_facet_attributes?.bootc_booted_image;
