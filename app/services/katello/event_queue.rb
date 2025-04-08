@@ -24,13 +24,17 @@ module Katello
       Katello::Event.where(:in_progress => true, :object_id => object_id, :event_type => event_type).where('created_at <= ?', on_or_earlier_than).delete_all
     end
 
-    def self.next_event
-      first = runnable_events.where(:in_progress => false).order(:created_at => 'asc').first
-      return if first.nil?
-      last = runnable_events.where(:in_progress => false, :object_id => first.object_id,
-                                    :event_type => first.event_type).order(:created_at => 'desc').first
-      mark_in_progress(first)
-      last
+    def self.oldest_runnable_event
+      runnable_events.where(in_progress: false).order(created_at: :asc).first
+    end
+
+    def self.next_event(event_type, object_id)
+      # Find the newest event by type and object id
+      runnable_events.where(
+        in_progress: false,
+        object_id: object_id,
+        event_type: event_type
+      ).order(created_at: :desc).first
     end
 
     def self.mark_in_progress(event)
