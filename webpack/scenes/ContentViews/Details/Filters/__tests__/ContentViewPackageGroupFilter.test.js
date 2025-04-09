@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
@@ -52,7 +51,7 @@ afterEach(() => {
   nock.restore(); // Restores HTTP to normal behavior
 });
 
-test.skip('Can enable and disable add filter button', async (done) => {
+test('Can enable and disable add filter button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { name: cvFilterName } = cvFilterDetails;
   const cvFilterScope = nockInstance
@@ -94,7 +93,7 @@ test.skip('Can enable and disable add filter button', async (done) => {
   act(done);
 });
 
-test.skip('Can remove a filter rule', async (done) => {
+test('Can remove a filter rule', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
@@ -152,7 +151,7 @@ test.skip('Can remove a filter rule', async (done) => {
   act(done);
 });
 
-test.skip('Can add a filter rule', async (done) => {
+test('Can add a filter rule', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
@@ -212,7 +211,7 @@ test.skip('Can add a filter rule', async (done) => {
   act(done);
 });
 
-test.skip('Can bulk remove filter rules', async (done) => {
+test('Can bulk remove filter rules', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
@@ -275,8 +274,10 @@ test.skip('Can bulk remove filter rules', async (done) => {
   act(done);
 });
 
-test.skip('Can bulk add filter rules', async (done) => {
+test('Can bulk add filter rules', async (done) => {
+  console.log('Setting up mocks for autocomplete and filter rules API...'); // Debug log
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
+  console.log('Mocked autocomplete scope:', autocompleteScope); // Debug log
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
 
@@ -284,11 +285,13 @@ test.skip('Can bulk add filter rules', async (done) => {
     .get(cvFilterDetailsPath)
     .query(true)
     .reply(200, cvFilterDetails);
+  console.log('Mocked CV Filter API with path:', cvFilterDetailsPath); // Debug log
 
   const cvFiltersScope = nockInstance
     .get(cvFiltersPath)
     .query(true)
     .reply(200, cvFilterFixtures);
+  console.log('Mocked CV Filters API with path:', cvFiltersPath); // Debug log
 
   const bulkAddParams = { rules_params: [{ uuid: '/pulp/api/v3/content/rpm/packagegroups/ead4ed04-2569-4c2c-ab70-da5052f7dd33/' }] };
 
@@ -300,6 +303,7 @@ test.skip('Can bulk add filter rules', async (done) => {
     .get(packageGroupsPath)
     .query(true)
     .reply(200, allPackageGroups);
+  console.log('Mocked Package Groups API with path:', packageGroupsPath); // Debug log
 
   const cvRequestCallbackScope = nockInstance
     .get(cvRefreshCallbackPath)
@@ -313,10 +317,12 @@ test.skip('Can bulk add filter rules', async (done) => {
       details={details}
     />), renderOptions);
 
+  console.log('Waiting for page to load and content to appear...'); // Debug log
   // Nothing will show at first, page is loading
   expect(queryByText(name)).toBeNull();
 
   await patientlyWaitFor(() => {
+    console.log('Ensuring the filter name appears...'); // Debug log
     expect(getByText(name)).toBeInTheDocument();
     expect(getByLabelText('Select all rows')).toBeInTheDocument();
     expect(getByLabelText('bulk_actions')).toHaveAttribute('aria-expanded', 'false');
@@ -334,7 +340,7 @@ test.skip('Can bulk add filter rules', async (done) => {
   act(done);
 });
 
-test.skip('Can filter by added/not added rules', async (done) => {
+test('Can filter by added/not added rules', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
@@ -391,7 +397,7 @@ test.skip('Can filter by added/not added rules', async (done) => {
   act(done);
 });
 
-test.skip('Can show affected repository tab on dropdown selection and add repos', async (done) => {
+test('Can show affected repository tab on dropdown selection and add repos', async (done) => {
   const autocompleteScope = mockAutocomplete(
     nockInstance,
     autocompleteUrl,
@@ -492,7 +498,7 @@ test.skip('Can show affected repository tab on dropdown selection and add repos'
   act(done);
 });
 
-test.skip('Can show affected repository tab and remove affected repos', async (done) => {
+test('Can show affected repository tab and remove affected repos', async (done) => {
   const autocompleteScope = mockAutocomplete(
     nockInstance,
     autocompleteUrl,
