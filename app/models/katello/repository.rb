@@ -1057,7 +1057,7 @@ module Katello
       return [] if version_href.blank?
 
       pulp_api = Katello::Pulp3::Repository.instance_for_type(self, SmartProxy.pulp_primary).api.content_release_components_api
-      pulp_api.list({:repository_version => version_href}).results.map { |x| x.component }.uniq
+      pulp_api.list({:repository_version => version_href}).results.map { |x| x.plain_component }.uniq
     end
 
     def deb_sanitize_pulp_distribution(distribution)
