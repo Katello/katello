@@ -1,0 +1,12 @@
+class RemoveKatelloAnsibleJobTemplateDuplicates < ActiveRecord::Migration[6.1]
+  def change
+    names = [
+      "Install errata by search query - Katello Ansible Default",
+      "Install packages by search query - Katello Ansible Default",
+      "Remove packages by search query - Katello Ansible Default",
+      "Update packages by search query - Katello Ansible Default"
+    ]
+    JobTemplate.where(job_category: 'Katello').where(name: names).update(locked: false)
+    JobTemplate.where(job_category: 'Katello').where(name: names).destroy_all
+  end
+end
