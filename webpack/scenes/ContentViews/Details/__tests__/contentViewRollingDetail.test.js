@@ -40,6 +40,7 @@ test('Can call API and show details on page load', async (done) => {
     expect(getByLabelText('a_cv_index')).toBeInTheDocument();
     expect(getByLabelText(`b_${name}`)).toBeInTheDocument();
     expect(getByLabelText('c_details')).toBeInTheDocument();
+    expect(getByLabelText('Lifecycle Environments')).toBeInTheDocument();
     expect(queryByLabelText('Import only')).not.toBeInTheDocument();
     expect(queryByLabelText('Generated')).not.toBeInTheDocument();
   });
