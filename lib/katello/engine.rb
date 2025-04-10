@@ -80,7 +80,7 @@ module Katello
     initializer "katello.start_katello_events", before: :finisher_hook do
       unless Rails.env.test?
         ForemanTasks.dynflow.config.post_executor_init do |world|
-          Actions::Katello::EventDaemon::EventQueue.launch(world)
+          Actions::Katello::EventQueue::Monitor.launch(world)
         end
       end
     end

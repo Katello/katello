@@ -5,11 +5,22 @@ module Katello
     @event_types = {}
 
     def self.create_instance(event)
+      return unless supported_event_types.include?(event.event_type)
+
       event_class = ::Katello::EventQueue.event_class(event.event_type)
 
       event_class.new(event.object_id) do |instance|
         instance.metadata = event.metadata if event.metadata
       end
+    end
+
+    def self.initialize
+      delete_unsupported_events
+      reset_in_progress
+    end
+
+    def self.delete_unsupported_events
+      Katello::Event.where.not(event_type: supported_event_types).delete_all
     end
 
     def self.queue_depth
@@ -20,21 +31,12 @@ module Katello
       Katello::Event.where(process_after: nil).or(Katello::Event.where(process_after: Date.new..Time.zone.now))
     end
 
-    def self.clear_events(event_type, object_id, on_or_earlier_than)
-      Katello::Event.where(:in_progress => true, :object_id => object_id, :event_type => event_type).where('created_at <= ?', on_or_earlier_than).delete_all
+    def self.clear_events(event_type, object_id)
+      Katello::Event.where(:in_progress => true, :object_id => object_id, :event_type => event_type).delete_all
     end
 
-    def self.oldest_runnable_event
+    def self.next_event
       runnable_events.where(in_progress: false).order(created_at: :asc).first
-    end
-
-    def self.next_event(event_type, object_id)
-      # Find the newest event by type and object id
-      runnable_events.where(
-        in_progress: false,
-        object_id: object_id,
-        event_type: event_type
-      ).order(created_at: :desc).first
     end
 
     def self.mark_in_progress(event)
@@ -83,7 +85,6 @@ module Katello
     end
 
     def self.event_class(event_type)
-      fail _("Invalid event_type %s") % event_type if @event_types[event_type].nil?
       @event_types[event_type].constantize
     end
   end
