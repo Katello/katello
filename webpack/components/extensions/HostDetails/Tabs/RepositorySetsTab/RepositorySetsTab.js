@@ -84,7 +84,7 @@ export const hideRepoSetsTab = ({ hostDetails }) =>
   );
 
 const editHosts = ['edit_hosts'];
-const getEnabledValue = ({ enabled, enabledContentOverride }) => {
+export const getEnabledValue = ({ enabled, enabledContentOverride }) => {
   const isOverridden = (enabledContentOverride !== null);
   return {
     isOverridden,
@@ -92,7 +92,7 @@ const getEnabledValue = ({ enabled, enabledContentOverride }) => {
   };
 };
 
-const EnabledIcon = ({ isEnabled, isOverridden }) => {
+export const EnabledIcon = ({ isEnabled, isOverridden }) => {
   const enabledLabel = (
     <Label
       color={isEnabled ? 'green' : 'gray'}
