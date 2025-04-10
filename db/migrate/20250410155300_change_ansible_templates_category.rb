@@ -1,4 +1,4 @@
-class ChangeAnsibleTemplatesCategory < ActiveRecord::Migration[7.0]
+class ChangeAnsibleTemplatesCategory < ActiveRecord::Migration[6.1]
   TEMPLATES = [
     'Install errata by search query - Katello Ansible Default',
     'Install packages by search query - Katello Ansible Default',
