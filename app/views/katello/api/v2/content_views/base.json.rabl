@@ -52,6 +52,7 @@ node :environments do |cv|
     }
   end
 end
+attributes :environment_ids
 
 if @object.composite?
   child :component_repositories => :repositories do
