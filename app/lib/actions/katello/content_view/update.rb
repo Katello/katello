@@ -2,7 +2,9 @@ module Actions
   module Katello
     module ContentView
       class Update < Actions::EntryAction
-        def plan(content_view, content_view_params)
+        # rubocop:disable Metrics/AbcSize
+        # rubocop:disable Metrics/MethodLength
+        def plan(content_view, content_view_params, environment_ids)
           action_subject content_view
           content_view_params = content_view_params.with_indifferent_access
 
@@ -28,12 +30,33 @@ module Actions
             end
           end
 
-          if content_view.rolling? && content_view_params.key?(:repository_ids)
-            repo_ids_to_add = content_view_params[:repository_ids] - content_view.repository_ids
-            repo_ids_to_remove = content_view.repository_ids - content_view_params[:repository_ids]
+          if content_view.rolling?
+            environment_ids_for_new_repos = retained_environment_ids = content_view.environment_ids
+            repo_ids_to_add = repo_ids_to_remove = []
+            retained_repo_ids = content_view.repository_ids
+            if content_view_params.key?(:repository_ids)
+              repo_ids_to_add = content_view_params[:repository_ids] - content_view.repository_ids
+              repo_ids_to_remove = content_view.repository_ids - content_view_params[:repository_ids]
+              retained_repo_ids -= repo_ids_to_remove
+            end
+            unless environment_ids.nil?
+              environment_ids_for_new_repos = environment_ids
+              environment_ids_to_add = environment_ids - content_view.environment_ids
+              environment_ids_to_remove = content_view.environment_ids - environment_ids
+              retained_environment_ids -= environment_ids_to_remove
 
-            plan_action(AddRollingRepoClone, content_view, repo_ids_to_add) if repo_ids_to_add.any?
-            plan_action(RemoveRollingRepoClone, content_view, repo_ids_to_remove) if repo_ids_to_remove.any?
+              ::Katello::KTEnvironment.where(id: environment_ids_to_add).each do |environment|
+                plan_action(AddToEnvironment, content_view.versions[0], environment)
+              end
+              plan_action(AddRollingRepoClone, content_view, retained_repo_ids, environment_ids_to_add) if retained_repo_ids.any? && environment_ids_to_add.any?
+
+              ::Katello::KTEnvironment.where(id: environment_ids_to_remove).each do |environment|
+                plan_action(RemoveFromEnvironment, content_view, environment)
+              end
+            end
+
+            plan_action(AddRollingRepoClone, content_view, repo_ids_to_add, environment_ids_for_new_repos) if repo_ids_to_add.any?
+            plan_action(RemoveRollingRepoClone, content_view, repo_ids_to_remove, retained_environment_ids) if repo_ids_to_remove.any?
           end
 
           content_view.update!(content_view_params)
