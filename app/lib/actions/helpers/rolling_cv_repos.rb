@@ -2,7 +2,7 @@ module Actions
   module Helpers
     module RollingCVRepos
       def find_related_rolling_repos(repo)
-        repo.root.repositories.in_environment(repo.environment).where(
+        repo.root.repositories.where(
           content_view_version: ::Katello::ContentViewVersion.where(content_view: ::Katello::ContentView.rolling)
         )
       end

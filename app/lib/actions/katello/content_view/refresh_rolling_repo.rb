@@ -2,6 +2,8 @@ module Actions
   module Katello
     module ContentView
       class RefreshRollingRepo < Actions::EntryAction
+        include Helpers::SmartProxySyncHelper
+
         def plan(repository, contents_changed)
           action_subject repository
           sequence do
@@ -33,6 +35,7 @@ module Actions
         def finalize
           repository = ::Katello::Repository.find(input[:repository_id])
           repository.clear_smart_proxy_sync_histories if input[:contents_changed]
+          schedule_async_repository_proxy_sync(repository)
         end
       end
     end

@@ -10,9 +10,11 @@ import {
 } from '../../../test-utils/nockWrapper';
 import createBasicCVs from './basicContentViews.fixtures';
 import cvIndexData from './contentViewList.fixtures.json';
+import environmentPathsData from '../Publish/__tests__/environmentPaths.fixtures.json';
 
 const cvIndexPath = api.getApiUrl('/content_views');
 const autocompleteUrl = '/content_views/auto_complete_search';
+const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
 const renderOptions = { apiNamespace: CONTENT_VIEWS_KEY };
 const autocompleteQuery = {
   organization_id: 1,
@@ -409,6 +411,10 @@ test('Displays Create Content View and opens modal with Form', async () => {
     .get(cvIndexPath)
     .query(true)
     .reply(200, noResults);
+  const scope = nockInstance
+    .get(environmentPathsPath)
+    .query(true)
+    .reply(200, environmentPathsData);
   const {
     getByText, queryByText, getByLabelText,
   } = renderWithRedux(<ContentViewsPage />, renderOptions);
@@ -421,6 +427,7 @@ test('Displays Create Content View and opens modal with Form', async () => {
   expect(queryByText('Content view')).not.toBeInTheDocument();
   expect(queryByText('Solve dependencies')).not.toBeInTheDocument();
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
+  expect(queryByText('Lifecycle Environments')).not.toBeInTheDocument();
 
   getByLabelText('create_content_view').click();
 
@@ -432,6 +439,8 @@ test('Displays Create Content View and opens modal with Form', async () => {
   expect(getByText('Content view')).toBeInTheDocument();
   expect(getByText('Solve dependencies')).toBeInTheDocument();
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
+  expect(queryByText('Lifecycle Environments')).not.toBeInTheDocument();
+  assertNockRequest(scope);
 });
 
 /* eslint-enable no-useless-escape */
