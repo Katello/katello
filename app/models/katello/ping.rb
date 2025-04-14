@@ -49,10 +49,15 @@ module Katello
         end
       end
 
+      def event_queue_foreman_tasks
+        ForemanTasks::Task.running.where(label: Actions::Katello::EventQueue::Monitor.name)
+      end
+
       def ping_katello_events(result)
         exception_watch(result) do
-          status = Katello::EventDaemon::Runner.service_status(:katello_events)
-          event_daemon_status(status, result)
+          if event_queue_foreman_tasks.empty?
+            result[:status] = FAIL_RETURN_CODE
+          end
         end
       end
 
@@ -238,7 +243,7 @@ module Katello
         ping_pulp_with_auth(result[:pulp_auth], result[:pulp][:status], capsule_id) if result.include?(:pulp_auth)
         ping_candlepin_with_auth(result[:candlepin_auth]) if result.include?(:candlepin_auth)
         ping_foreman_tasks(result[:foreman_tasks]) if result.include?(:foreman_tasks)
-        ping_katello_events(result[:katello_events]) if result.include?(:katello_events)
+        ping_katello_events(result[:katello_events]) if result.include?(:katello_events) # Wait for foreman-tasks result
         ping_candlepin_events(result[:candlepin_events]) if result.include?(:candlepin_events)
 
         # set overall status result code
