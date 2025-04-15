@@ -23,8 +23,9 @@ import HostReview from '../HostReview';
 import katelloApi from '../../../../../services/api';
 import { useHostsBulkSelect } from '../BulkPackagesWizard/BulkPackagesWizard';
 
+const DEFAULT_PER_PAGE = 5;
 export const BulkRepositorySetsWizardContext = createContext({});
-export const REPO_SETS_URL = katelloApi.getApiUrl('/repository_sets?per_page=7&include_permissions=true&enabled=true&with_custom=true&organization_id=1');
+export const REPO_SETS_URL = katelloApi.getApiUrl(`/repository_sets?per_page=${DEFAULT_PER_PAGE}&include_permissions=true&enabled=true&with_custom=true&organization_id=1`);
 
 const BulkRepositorySetsWizard = () => {
   const { modalOpen, setModalClosed: closeModal } = useForemanModal({ id: 'bulk-repo-sets-wizard' });
@@ -41,6 +42,7 @@ const BulkRepositorySetsWizard = () => {
     replacementResponse, // don't fetch data if modal is closed
     apiUrl: REPO_SETS_URL,
     apiOptions,
+    defaultParams: { per_page: DEFAULT_PER_PAGE },
   });
 
   const {
