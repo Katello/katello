@@ -105,6 +105,14 @@ module Katello
         bootc_booted_image.present?
       end
 
+      def yum_or_yum_transient
+        if image_mode_host?
+          'yum --transient'
+        else
+          'yum'
+        end
+      end
+
       def cves_changed?
         cves_changed
       end
@@ -458,7 +466,7 @@ module Katello
               :errata_counts, :id, :kickstart_repository, :kickstart_repository_id, :kickstart_repository_name,
               :upgradable_deb_count, :upgradable_module_stream_count, :upgradable_rpm_count, :uuid,
               :installable_security_errata_count, :installable_bugfix_errata_count, :installable_enhancement_errata_count,
-              :single_content_view, :single_lifecycle_environment, :content_view_environment_labels
+              :single_content_view, :single_lifecycle_environment, :content_view_environment_labels, :yum_or_yum_transient
       end
     end
   end

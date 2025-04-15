@@ -89,7 +89,7 @@ module Katello
         prepend Overrides
 
         delegate :content_source_id, :single_content_view, :single_lifecycle_environment, :default_environment?, :single_content_view_environment?, :multi_content_view_environment?, :kickstart_repository_id, :bound_repositories,
-          :content_view_environment_labels, :installable_errata, :installable_rpms, :image_mode_host?, to: :content_facet, allow_nil: true
+          :content_view_environment_labels, :installable_errata, :installable_rpms, :image_mode_host?, :yum_or_yum_transient, to: :content_facet, allow_nil: true
 
         delegate :release_version, :purpose_role, :purpose_usage, to: :subscription_facet, allow_nil: true
 
@@ -624,7 +624,7 @@ class ::Host::Managed::Jail < Safemode::Jail
         :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template,
         :filtered_entitlement_quantity_consumed, :bound_repositories,
         :single_content_view, :single_lifecycle_environment, :content_view_environment_labels, :multi_content_view_environment?,
-        :release_version, :purpose_role, :purpose_usage
+        :release_version, :purpose_role, :purpose_usage, :image_mode_host?, :yum_or_yum_transient
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail

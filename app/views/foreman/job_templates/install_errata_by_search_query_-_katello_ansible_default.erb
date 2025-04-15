@@ -21,6 +21,6 @@ template_inputs:
 <%= render_template('Run Command - Ansible Default', :command => "zypper -n install -t patch #{advisory_ids.join(' ')}") %>
 <% else -%>
 <% advisories = advisory_ids.map { |e| "--advisory=#{e}" }.join(' ') -%>
-<%= render_template('Run Command - Ansible Default', :command => "yum -y update-minimal #{advisories}") %>
+<%= render_template('Run Command - Ansible Default', :command => "#{@host.yum_or_yum_transient} -y update-minimal #{advisories}") %>
 <% end -%>
 <%= snippet_if_exists(template_name + " custom post") %>

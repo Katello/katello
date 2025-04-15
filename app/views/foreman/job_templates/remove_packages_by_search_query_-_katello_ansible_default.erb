@@ -17,6 +17,14 @@ template_inputs:
 ) -%>
 ---
 - hosts: all
+<% if @host.image_mode_host? -%>
+    - shell:
+        cmd: |
+<%=       indent(10) { 'bootc usr-overlay' } %>
+      register: out
+      ignore_errors: true
+    - debug: var=out
+<% end -%>
   tasks:
     - package:
         name:
@@ -24,3 +32,6 @@ template_inputs:
           - <%= package_name %>
 <% end -%>
         state: absent
+<% if @host.image_mode_host? -%>
+        use: 'dnf'
+<% end -%>
