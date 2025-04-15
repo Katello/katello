@@ -5,11 +5,13 @@ import {
   Divider, MenuToggle, MenuToggleAction, ToolbarItem,
 } from '@patternfly/react-core';
 import {
-  Tr, Td,
+  Tr, Td, Tbody,
 } from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
 import { getPageStats, getColumnHelpers } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
+import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
+import Pagination from 'foremanReact/components/Pagination';
 import { Table } from 'foremanReact/components/PF4/TableIndexPage/Table/Table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { RowSelectTd } from 'foremanReact/components/HostsIndex/RowSelectTd';
@@ -117,11 +119,15 @@ export const BulkRepositorySetsTable = ({
   const {
     total, page, subtotal, per_page: perPage,
   } = repoSetsMetadata;
-
   const apiOptions = { key: 'BULK_HOST_REPO_SETS' };
   const { status: repoSetsLoadingStatus } = repoSetsResponse;
-
   const pageStats = getPageStats({ total: subtotal, page, perPage });
+  const onPagination = (newPagination) => {
+    setRepoSetsParamsAndAPI({ ...repoSetsParams, ...newPagination });
+  };
+
+  const expandedRepos = useSet([]);
+  const repoIsExpanded = id => expandedRepos.has(id);
 
   const columns = {
     name: {
@@ -278,31 +284,63 @@ export const BulkRepositorySetsTable = ({
           columns={columns}
           refreshData={noop}
           url=""
+          results={repoSetsResults}
           isPending={repoSetsLoadingStatus === STATUS.PENDING}
           params={repoSetsParams}
           setParams={setRepoSetsParamsAndAPI}
+          bottomPagination={
+            <Pagination
+              key="table-bottom-pagination-yes-you-better"
+              page={page}
+              perPage={perPage}
+              itemCount={subtotal}
+              onChange={onPagination}
+              updateParamsByUrl={false}
+            />
+          }
         >
-          {repoSetsResults.map((result, rowIndex) => (
-            <Tr
-              key={result.label}
-              ouiaId={`table-row-${rowIndex}`}
-              isClickable
-            >
-              <RowSelectTd
-                rowData={result}
-                selectOne={selectOne}
-                isSelected={isSelected}
-                idColumnName="label"
-              />
-              {columnNamesKeys.map(k => (
-                <Td key={k} dataLabel={keysToColumnNames[k]}>
-                  {columns[k].wrapper
-                    ? columns[k].wrapper(result)
-                    : result[k]}
-                </Td>
-              ))}
-            </Tr>
-          ))}
+          {repoSetsResults.map((result, rowIndex) => {
+            const repoLabel = result.label;
+            const isExpanded = repoIsExpanded(repoLabel);
+            return (
+              <Tbody isExpanded={isExpanded} key={`tbody1-${repoLabel}`}>
+                <Tr
+                  key={repoLabel}
+                  ouiaId={`table-row-${rowIndex}`}
+                  isClickable
+                >
+                  <Td
+                    expand={{
+                      rowIndex,
+                      isExpanded,
+                      onToggle: (_event, _rInx, isOpen) =>
+                        expandedRepos.onToggle(isOpen, repoLabel),
+                    }}
+                  />
+                  <RowSelectTd
+                    rowData={result}
+                    selectOne={selectOne}
+                    isSelected={isSelected}
+                    idColumnName="label"
+                  />
+                  {columnNamesKeys.map(k => (
+                    <Td key={k} dataLabel={keysToColumnNames[k]}>
+                      {columns[k].wrapper
+                        ? columns[k].wrapper(result)
+                        : result[k]}
+                    </Td>
+                  ))}
+                </Tr>
+                <Tr key={`child-row-${repoLabel}`} ouiaId={`child-row-${repoLabel}`} isExpanded={isExpanded}>
+                  <Td />
+                  <Td />
+                  <Td colSpan={2}>
+                    <pre style={{ marginTop: '0.63rem' }} id={`pre-repo-label-${repoLabel}`}>{repoLabel}</pre>
+                  </Td>
+                </Tr>
+              </Tbody>
+            );
+          })}
         </Table>
       </TableIndexPage>
     </>
