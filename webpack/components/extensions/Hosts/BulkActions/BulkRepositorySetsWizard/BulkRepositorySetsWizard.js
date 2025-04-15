@@ -12,7 +12,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
-import { useTableIndexAPIResponse } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
+import { useTableIndexAPIResponse, useSetParamsAndApiAndSearch } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
 
 import { BulkRepositorySetsTable } from './01_BulkRepositorySetsTable';
 import { BulkRepositorySetsReview } from './03_Review';
@@ -48,7 +48,8 @@ const BulkRepositorySetsWizard = () => {
       results: repoSetsResults,
       ...repoSetsMetadata
     },
-    // status: repoSetsStatus,
+    setAPIOptions,
+    // status: repoSetsStatus = STATUS.PENDING,
   } = repoSetsResponse;
 
   const { total, page, subtotal } = repoSetsMetadata;
@@ -57,6 +58,17 @@ const BulkRepositorySetsWizard = () => {
     results: repoSetsResults,
     metadata: { total, page, selectable: subtotal },
     idColumn: 'label',
+  });
+
+  const {
+    setParamsAndAPI: setRepoSetsParamsAndAPI,
+    params: repoSetsParams,
+  } = useSetParamsAndApiAndSearch({
+    defaultParams: { search: '' },
+    apiOptions,
+    setAPIOptions,
+    updateSearchQuery: repoSetsBulkSelect.updateSearchQuery,
+    pushToHistory: false,
   });
 
   const initialSelectedHosts = fetchBulkParams();
@@ -85,6 +97,7 @@ const BulkRepositorySetsWizard = () => {
     setShouldValidateStep1,
     setShouldValidateStep2,
     repoSetsSelectionIsValid,
+    setRepoSetsParamsAndAPI,
     // finishButtonLoading,
     // setFinishButtonLoading,
     // selectedRexOption,
@@ -120,6 +133,7 @@ const BulkRepositorySetsWizard = () => {
             repoSetsResults={repoSetsResults}
             repoSetsMetadata={repoSetsMetadata}
             repoSetsResponse={repoSetsResponse}
+            repoSetsParams={repoSetsParams}
           />
         </WizardStep>
         <WizardStep

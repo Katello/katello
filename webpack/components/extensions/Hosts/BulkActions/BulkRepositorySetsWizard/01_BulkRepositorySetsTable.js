@@ -1,10 +1,16 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Alert, Dropdown, DropdownItem, DropdownList, Divider, MenuToggle, MenuToggleAction, ToolbarItem,
+  Alert, Dropdown, DropdownItem, DropdownList,
+  Divider, MenuToggle, MenuToggleAction, ToolbarItem,
 } from '@patternfly/react-core';
-import { getPageStats } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
+import {
+  Tr, Td,
+} from '@patternfly/react-table';
+import { STATUS } from 'foremanReact/constants';
+import { getPageStats, getColumnHelpers } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
+import { Table } from 'foremanReact/components/PF4/TableIndexPage/Table/Table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { RowSelectTd } from 'foremanReact/components/HostsIndex/RowSelectTd';
 import SelectAllCheckbox from 'foremanReact/components/PF4/TableIndexPage/Table/SelectAllCheckbox';
@@ -41,6 +47,7 @@ const ContentOverrideDropdown =
     };
     return (
       <Dropdown
+        key={`pf-ContentOverrideDropdown-${repoLabel}`}
         isOpen={isOpen}
         onSelect={onSelect}
         onOpenChange={openVal => setIsOpen(!openVal)}
@@ -52,17 +59,17 @@ const ContentOverrideDropdown =
         shouldFocusToggleOnSelect
       >
         <DropdownList>
-          <DropdownItem value={0} key="no-change" ouiaId={`content-override-dropdown-${repoLabel}-no-change`}>
+          <DropdownItem value={0} key={`content-override-dropdown-${repoLabel}-no-change`} ouiaId={`content-override-dropdown-${repoLabel}-no-change`}>
             {__('No change')}
           </DropdownItem>
-          <DropdownItem value={1} key="enable" ouiaId={`content-override-dropdown-${repoLabel}-enable`}>
+          <DropdownItem value={1} key={`content-override-dropdown-${repoLabel}-enable`} ouiaId={`content-override-dropdown-${repoLabel}-enable`}>
             {__('Override to enabled')}
           </DropdownItem>
-          <DropdownItem value={2} key="disable" ouiaId={`content-override-dropdown-${repoLabel}-disable`}>
+          <DropdownItem value={2} key={`content-override-dropdown-${repoLabel}-disable`} ouiaId={`content-override-dropdown-${repoLabel}-disable`}>
             {__('Override to disabled')}
           </DropdownItem>
           <Divider key="divider" />
-          <DropdownItem value={3} key="reset-to-default" ouiaId={`content-override-dropdown-${repoLabel}-reset-to-default`}>
+          <DropdownItem value={3} key={`content-override-dropdown-${repoLabel}-reset-to-default`} ouiaId={`content-override-dropdown-${repoLabel}-reset-to-default`}>
             {__('Reset to default')}
           </DropdownItem>
         </DropdownList>
@@ -83,6 +90,7 @@ export const BulkRepositorySetsTable = ({
   repoSetsBulkSelect,
   repoSetsResults,
   repoSetsMetadata,
+  repoSetsParams,
   repoSetsResponse,
 }) => {
   const {
@@ -101,6 +109,7 @@ export const BulkRepositorySetsTable = ({
   const {
     pendingOverrides, setPendingOverrides, shouldValidateStep1,
     setShouldValidateStep1, repoSetsSelectionIsValid,
+    setRepoSetsParamsAndAPI,
   } = repoSetsWizardContext;
   const [actionDropdownValue, setActionDropdownValue] = useState(0);
   const [actionToggleOpen, setActionToggleOpen] = useState(false);
@@ -108,6 +117,9 @@ export const BulkRepositorySetsTable = ({
   const {
     total, page, subtotal, per_page: perPage,
   } = repoSetsMetadata;
+
+  const apiOptions = { key: 'BULK_HOST_REPO_SETS' };
+  const { status: repoSetsLoadingStatus } = repoSetsResponse;
 
   const pageStats = getPageStats({ total: subtotal, page, perPage });
 
@@ -182,6 +194,7 @@ export const BulkRepositorySetsTable = ({
       isOpen={actionToggleOpen}
       onSelect={onSelect}
       onOpenChange={val => setActionToggleOpen(!val)}
+      key="content-override-action-dropdown"
       ouiaId="content-override-action-dropdown"
       toggle={toggleRef => (
         <MenuToggle
@@ -222,6 +235,8 @@ export const BulkRepositorySetsTable = ({
     </Dropdown>
   );
 
+  const [columnNamesKeys, keysToColumnNames] = getColumnHelpers(columns);
+
   return (
     <>
       {shouldValidateStep1 && !repoSetsSelectionIsValid && (
@@ -234,21 +249,14 @@ export const BulkRepositorySetsTable = ({
         />
       )}
       <TableIndexPage
-        showCheckboxes
-        idColumn="label"
-        updateParamsByUrl={false}
         customToolbarItems={[actionButton]}
-        rowSelectTd={RowSelectTd}
         selectionToolbar={selectionToolbar}
-        columns={columns}
         results={repoSetsResults}
         metadata={repoSetsMetadata}
         response={repoSetsResponse}
         tableType="repository_sets"
         apiUrl={REPO_SETS_URL}
-        apiOptions={{ key: 'BULK_HOST_REPO_SETS' }}
-        selectOne={selectOne}
-        isSelected={isSelected}
+        apiOptions={apiOptions}
         selectedCount={selectedCount}
         selectPage={selectPage}
         selectNone={selectNone}
@@ -258,7 +266,45 @@ export const BulkRepositorySetsTable = ({
           },
         }}
         bulkSelect={repoSetsBulkSelect}
-      />
+      >
+        <Table
+          childrenOutsideTbody
+          showCheckboxes
+          rowSelectTd={RowSelectTd}
+          selectOne={selectOne}
+          isSelected={isSelected}
+          isEmbedded
+          idColumn="label"
+          columns={columns}
+          refreshData={noop}
+          url=""
+          isPending={repoSetsLoadingStatus === STATUS.PENDING}
+          params={repoSetsParams}
+          setParams={setRepoSetsParamsAndAPI}
+        >
+          {repoSetsResults.map((result, rowIndex) => (
+            <Tr
+              key={result.label}
+              ouiaId={`table-row-${rowIndex}`}
+              isClickable
+            >
+              <RowSelectTd
+                rowData={result}
+                selectOne={selectOne}
+                isSelected={isSelected}
+                idColumnName="label"
+              />
+              {columnNamesKeys.map(k => (
+                <Td key={k} dataLabel={keysToColumnNames[k]}>
+                  {columns[k].wrapper
+                    ? columns[k].wrapper(result)
+                    : result[k]}
+                </Td>
+              ))}
+            </Tr>
+          ))}
+        </Table>
+      </TableIndexPage>
     </>
   );
 };
@@ -277,6 +323,11 @@ BulkRepositorySetsTable.propTypes = {
     selectedResults: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   }).isRequired,
   repoSetsResults: PropTypes.arrayOf(PropTypes.shape({})),
+  repoSetsParams: PropTypes.shape({
+    page: PropTypes.number,
+    perPage: PropTypes.number,
+    order: PropTypes.string,
+  }).isRequired,
   repoSetsMetadata: PropTypes.shape({
     total: PropTypes.number,
     page: PropTypes.number,
