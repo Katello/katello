@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Alert, Dropdown, DropdownItem, DropdownList,
   Divider, MenuToggle, MenuToggleAction, ToolbarItem,
+  PaginationVariant,
 } from '@patternfly/react-core';
 import {
   Tr, Td, Tbody,
@@ -272,6 +273,15 @@ export const BulkRepositorySetsTable = ({
           },
         }}
         bulkSelect={repoSetsBulkSelect}
+        topPagination={<Pagination
+          key="table-index-page-top-pagination"
+          updateParamsByUrl={false}
+          variant={PaginationVariant.top}
+          page={page}
+          perPage={perPage}
+          itemCount={subtotal}
+          onChange={onPagination}
+        />}
       >
         <Table
           childrenOutsideTbody
