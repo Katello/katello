@@ -20,6 +20,28 @@ kind: job_template
 <%= render_template('Run Command - Ansible Default', :command => "zypper -n install -t patch #{advisories}") %>
 <% else -%>
 <% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') -%>
-<%= render_template('Run Command - Ansible Default', :command => "#{@host.yum_or_yum_transient} -y update-minimal #{advisories}") %>
+---
+- hosts: all
+  tasks:
+    - name: Collect bootc status
+      shell:
+        cmd: 'bootc status --json'
+      register: bootc_status
+      ignore_errors: true
+    - name: Parse bootc status json
+      set_fact:
+        bootc_status_json: "{{ bootc_status.stdout | from_json }}"
+      when: bootc_status.rc == 0
+    - name: Install errata via dnf for image mode machines
+      shell:
+        cmd: 'dnf -y --transient update-minimal <%= advisories %>'
+      register: out
+      when: bootc_status_json is defined and bootc_status_json['status']['booted'] != 'null'
+    - name: Install errata normally
+      shell:
+        cmd: 'yum -y update-minimal <%= advisories %>'
+      register: out
+      when: bootc_status_json is not defined or bootc_status_json['status']['booted'] == 'null'
+    - debug: var=out
 <% end -%>
 <%= snippet_if_exists(template_name + " custom post") %>

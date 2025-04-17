@@ -107,7 +107,7 @@ module Katello
 
       def yum_or_yum_transient
         if image_mode_host?
-          'yum --transient'
+          'dnf --transient'
         else
           'yum'
         end
