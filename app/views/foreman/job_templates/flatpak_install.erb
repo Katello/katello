@@ -13,11 +13,19 @@ template_inputs:
   description: Name of the application to install
   input_type: user
   required: true
+- name: Launch a session bus instance
+  description: Launch a session bus instance for the flatpak application using 'dbus-run-session'. Requires package dbus-daemon on client. Select 'true' for machines without a display server.
+  input_type: user
+  required: false
+  options: "true\r\nfalse"
+  advanced: false
+  value_type: plain
+  default: 'false'
 %>
 
 <%
   remote_name = input('Flatpak remote name')
   app_name = input('Application name')
+  use_dbus_session = input('Launch a session bus instance') == 'true'
 %>
-
-sudo dbus-launch flatpak install <%= remote_name %> <%= app_name %> --assumeyes
+sudo <%= use_dbus_session ? 'dbus-run-session ' : ''%>flatpak install <%= remote_name %> <%= app_name %> --assumeyes
