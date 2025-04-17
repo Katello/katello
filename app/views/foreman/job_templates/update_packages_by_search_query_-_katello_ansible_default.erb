@@ -27,18 +27,31 @@ template_inputs:
 ---
 - hosts: all
   tasks:
-<% if @host.image_mode_host? -%>
-    - shell:
-        cmd: |
-<%=       indent(10) { 'bootc usr-overlay' } %>
+    - name: Collect bootc status
+      shell:
+        cmd: 'bootc status --json'
+      register: bootc_status
+      ignore_errors: true
+    - name: Parse bootc status json
+      set_fact:
+        bootc_status_json: "{{ bootc_status.stdout | from_json }}"
+      when: bootc_status.rc == 0
+    - name: Enable bootc overlay
+      shell:
+        cmd: 'bootc usr-overlay'
       register: out
       ignore_errors: true
+      when: bootc_status_json is defined and bootc_status_json['status']['booted'] != 'null'
     - debug: var=out
-<% end -%>
-    - package:
+    - name: Install packages via dnf for image mode machines
+      package:
         name: <%= indent(10) { to_yaml(package_names).gsub(/---/, "") } -%>
         state: latest
-<% if @host.image_mode_host? -%>
         use: 'dnf'
-<% end -%>
+      when: bootc_status_json is defined and bootc_status_json['status']['booted'] != 'null'
+    - name: Install packages normally
+      package:
+        name: <%= indent(10) { to_yaml(package_names).gsub(/---/, "") } -%>
+        state: latest
+      when: bootc_status_json is not defined or bootc_status_json['status']['booted'] == 'null'
 <% end -%>
