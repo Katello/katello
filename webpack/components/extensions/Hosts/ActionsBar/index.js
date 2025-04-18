@@ -40,6 +40,7 @@ const HostActionsBar = () => {
       'bulk-change-cv-modal',
       'bulk-packages-wizard',
       'bulk-errata-wizard',
+      'bulk-repo-sets-wizard',
     ].forEach((id) => {
       dispatch(addModal({ id }));
     });
@@ -47,6 +48,7 @@ const HostActionsBar = () => {
   const { setModalOpen: openBulkChangeCVModal } = useForemanModal({ id: 'bulk-change-cv-modal' });
   const { setModalOpen: openBulkPackagesWizardModal } = useForemanModal({ id: 'bulk-packages-wizard' });
   const { setModalOpen: openBulkErrataWizardModal } = useForemanModal({ id: 'bulk-errata-wizard' });
+  const { setModalOpen: openBulkRepositorySetsWizardModal } = useForemanModal({ id: 'bulk-repo-sets-wizard' });
 
   const orgId = useForemanOrganization()?.id;
 
@@ -83,6 +85,15 @@ const HostActionsBar = () => {
                 isDisabled={selectedCount === 0}
               >
                 {__('Errata')}
+              </MenuItem>
+              <MenuItem
+                itemId="bulk-repo-sets-wizard-dropdown-item"
+                key="bulk-repo-sets-wizard-dropdown-item"
+                onClick={openBulkRepositorySetsWizardModal}
+                isDisabled={selectedCount === 0 || !orgId}
+                description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage host content overrides, a specific organization must be selected from the organization context.')} />}
+              >
+                {__('Repository sets')}
               </MenuItem>
               <MenuItem
                 itemId="change-content-s-dropdown-item"
