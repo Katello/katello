@@ -73,8 +73,20 @@ child :sorted_organization_readable_environments => :environments do
     ::Host.authorized('view_hosts').in_content_view_environment(:content_view => version.content_view, :lifecycle_environment => env).count
   end
 
+  node :multi_env_host_count do |env|
+    hosts = ::Host.authorized('view_hosts')
+      .in_content_view_environments(content_views: [version.content_view], lifecycle_environments: [env])
+    hosts.count { |host| host.content_facet.multi_content_view_environment? }
+  end
+
   node :activation_key_count do |env|
     Katello::ActivationKey.with_content_views(version.content_view).with_environments(env).count
+  end
+
+  node :multi_env_ak_count do |env|
+    keys = Katello::ActivationKey.with_content_views(version.content_view)
+      .with_environments(env)
+    keys.count { |key| key.multi_content_view_environment? }
   end
 end
 

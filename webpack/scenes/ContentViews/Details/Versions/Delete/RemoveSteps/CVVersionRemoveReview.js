@@ -1,24 +1,24 @@
 import React, { useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Alert, Flex, FlexItem, Label, AlertActionCloseButton } from '@patternfly/react-core';
+import { Alert, Flex, FlexItem, Label, AlertActionCloseButton, ExpandableSection } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { selectCVActivationKeys, selectCVHosts, selectCVVersions } from '../../../ContentViewDetailSelectors';
+import { selectCVVersions } from '../../../ContentViewDetailSelectors';
 import DeleteContext from '../DeleteContext';
 import WizardHeader from '../../../../components/WizardHeader';
+import AffectedHosts from '../affectedHosts';
+import AffectedActivationKeys from '../affectedActivationKeys';
 
 const CVVersionRemoveReview = () => {
   const [alertDismissed, setAlertDismissed] = useState(false);
+  const [showHosts, setShowHosts] = useState(false);
+  const [showAKs, setShowAKs] = useState(false);
   const {
-    cvId, versionIdToRemove, versionNameToRemove, selectedEnvSet,
+    cvId, versionEnvironments, versionIdToRemove, versionNameToRemove, selectedEnvSet,
     selectedEnvForAK, selectedCVNameForAK, selectedCVNameForHosts,
-    selectedEnvForHost, affectedActivationKeys, affectedHosts, deleteFlow, removeDeletionFlow,
+    selectedEnvForHost, deleteFlow, removeDeletionFlow,
   } = useContext(DeleteContext);
-  const activationKeysResponse = useSelector(state => selectCVActivationKeys(state, cvId));
-  const hostsResponse = useSelector(state => selectCVHosts(state, cvId));
-  const { results: hostResponse = [] } = hostsResponse || {};
-  const { results: akResponse = [] } = activationKeysResponse || {};
   const cvVersions = useSelector(state => selectCVVersions(state, cvId));
   const versionDeleteInfo = __(`Version ${versionNameToRemove} will be deleted from all environments. It will no longer be available for promotion.`);
   const removalNotice = __(`Version ${versionNameToRemove} will be removed from the environments listed below, and will remain available for later promotion. ` +
@@ -29,16 +29,19 @@ const CVVersionRemoveReview = () => {
     .flatMap(cv => cv.content_view_environments || [])
     .filter(env => selectedEnvSet.has(env.environment_id));
 
-  const multiCVHosts = hostResponse?.filter(host =>
-    host.content_facet_attributes?.multi_content_view_environment) || [];
-  const multiCVHostsCount = multiCVHosts.length;
+  const selectedEnvs = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
 
-  const singleCVHostsCount = (hostResponse?.length || 0) - multiCVHostsCount;
+  const hostCount = selectedEnvs.reduce((sum, env) =>
+    sum + (env.host_count || 0), 0);
+  const multiCVHostsCount = selectedEnvs.reduce((sum, env) =>
+    sum + (env.multi_env_host_count || 0), 0);
+  const singleCVHostsCount = hostCount - multiCVHostsCount;
 
-  const multiCVActivationKeys = akResponse.filter(key => key.multi_content_view_environment);
-  const multiCVActivationKeysCount = multiCVActivationKeys.length;
-
-  const singleCVActivationKeysCount = akResponse.length - multiCVActivationKeysCount;
+  const akCount = selectedEnvs.reduce((sum, env) =>
+    sum + (env.activation_key_count || 0), 0);
+  const multiCVActivationKeysCount = selectedEnvs.reduce((sum, env) =>
+    sum + (env.multi_env_ak_count || 0), 0);
+  const singleCVActivationKeysCount = akCount - multiCVActivationKeysCount;
 
   return (
     <>
@@ -66,7 +69,7 @@ const CVVersionRemoveReview = () => {
               <FlexItem key={name}><Label color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label></FlexItem>)}
           </Flex>
         </>}
-      {affectedHosts &&
+      {hostCount > 0 &&
         <>
           <h3>{__('Content hosts')}</h3>
           {singleCVHostsCount > 0 && (
@@ -121,8 +124,22 @@ const CVVersionRemoveReview = () => {
               </FlexItem>
             </Flex>
           )}
+          <ExpandableSection
+            toggleText={showHosts ? 'Hide hosts' : 'Show hosts'}
+            onToggle={() => setShowHosts(prev => !prev)}
+            isExpanded={showHosts}
+          >
+            <AffectedHosts
+              {...{
+                cvId,
+                versionEnvironments,
+                selectedEnvSet,
+              }}
+              deleteCV={false}
+            />
+          </ExpandableSection>
         </>}
-      {affectedActivationKeys &&
+      {akCount > 0 &&
         <>
           <h3>{__('Activation keys')}</h3>
           {singleCVActivationKeysCount > 0 && (
@@ -177,6 +194,20 @@ const CVVersionRemoveReview = () => {
               </FlexItem>
             </Flex>
           )}
+          <ExpandableSection
+            toggleText={showAKs ? 'Hide activation keys' : 'Show activation keys'}
+            onToggle={() => setShowAKs(prev => !prev)}
+            isExpanded={showAKs}
+          >
+            <AffectedActivationKeys
+              {...{
+                cvId,
+                versionEnvironments,
+                selectedEnvSet,
+              }}
+              deleteCV={false}
+            />
+          </ExpandableSection>
         </>}
     </>
   );
