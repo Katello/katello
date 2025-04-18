@@ -11,7 +11,7 @@ const FiltersAppliedIcon = () => (
     content={__('Filters were applied to this version.')}
   >
     <Icon size="sm">
-      <FilterIcon style={{ color: '#0081db', margin: '0 9px' }} />
+      <FilterIcon style={{ color: '#0081db', marginLeft: '9px' }} />
     </Icon>
   </Tooltip>
 );

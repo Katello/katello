@@ -61,7 +61,7 @@ export const ContentViewEnvironmentDisplay = ({
             }}
           />}
         >
-          <Label color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{lifecycleEnvironment.name}</Label>
+          <Label color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`} style={{ marginRight: '2px' }}>{lifecycleEnvironment.name}</Label>
         </Tooltip>
         <ContentViewIcon composite={contentView.composite} rolling={contentViewDefault || contentView.rolling} style={{ marginRight: '2px' }} position="left" />
         {contentViewDefault ? <span>{contentView.name}</span> :

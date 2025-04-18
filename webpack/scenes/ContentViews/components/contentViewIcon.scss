@@ -2,15 +2,16 @@
   display: flex;
   align-items: center;
   align-content: center;
+  gap: 6px;
 
   .composite-component-count {
-    min-width: 10px;
+    min-width: 12px;
     text-align: center;
   }
 }
 
 .svg-icon-composite {
-  margin: 0 6px;
+  margin: 0 9px;
   display: block;
 }
 
@@ -22,4 +23,11 @@
 .svg-icon-rolling {
   margin: 0 9px;
   display: block;
+}
+
+.svg-centered-container:has(.svg-icon-component), 
+.svg-centered-container:has(.svg-icon-rolling) {
+  > span:last-child {
+    margin-left: 4px;
+  }
 }
