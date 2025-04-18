@@ -32,6 +32,19 @@ const ExpandableCvDetails = ({
     },
   });
 
+  const anyRepoInEnv = (repositories) => {
+    if (repositories && Object.values(repositories)) {
+      return Object.values(repositories).some(repo => repo.metadata.env_id === envId);
+    }
+    return false;
+  };
+
+  const getSyncedToCapsuleStatus = (upToDate, versionId) => {
+    if (upToDate) return upToDate;
+    if (anyRepoInEnv(contentCounts?.content_view_versions?.[versionId]?.repositories)) return 'partial';
+    return false;
+  };
+
   return (
     <Table
       aria-label="expandable-content-views"
@@ -99,7 +112,7 @@ const ExpandableCvDetails = ({
                 <ExpandedSmartProxyRepositories
                   contentCounts={contentCounts?.content_view_versions?.[versionId]?.repositories}
                   repositories={repositories}
-                  syncedToCapsule={upToDate}
+                  syncedToCapsule={getSyncedToCapsuleStatus(upToDate, versionId)}
                   envId={envId}
                 />
               </Td>
