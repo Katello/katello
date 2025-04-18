@@ -10,7 +10,7 @@ module Katello
         end
 
         def action_permission
-          if params[:action] == 'pulp_status' || params[:action] == 'pulp_storage'
+          if params[:action] == 'pulp_storage'
             :view
           else
             super
@@ -23,7 +23,7 @@ module Katello
         helper 'bastion/layout'
 
         append_view_path('app/views/foreman')
-        before_action :find_resource_and_status, :only => [:pulp_storage, :pulp_status]
+        before_action :find_resource, :only => [:pulp_storage]
 
         def pulp_storage
           @storage = @smart_proxy.pulp_disk_usage
@@ -38,30 +38,6 @@ module Katello
             format.json { render :json => {:success => false, :message => e} }
           end
         end
-
-        def pulp_status
-          pulp_connection = @proxy_status[:pulp] || @proxy_status[:pulpnode]
-          @pulp_status = pulp_connection.status
-          if @pulp_status['fatal']
-            Rails.logger.warn @pulp_status['fatal']
-            respond_to do |format|
-              format.html { render :plain => _('Error connecting to Pulp service') }
-              format.json { render :json => {:success => false, :message => @pulp_status['fatal']} }
-            end
-          else
-            respond_to do |format|
-              format.html { render :layout => false }
-              format.json { render :json => {:success => true, :message => @pulp_status} }
-            end
-          end
-        end
-      end
-
-      private
-
-      def find_resource_and_status
-        find_resource
-        find_status
       end
     end
   end
