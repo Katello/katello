@@ -22,6 +22,9 @@ import { BulkPackagesReview, dropdownOptions } from './04_Review';
 import { BulkPackagesUpgradeTable, BulkPackagesInstallTable, BulkPackagesRemoveTable } from './02_BulkPackagesTable';
 import { BulkPackagesReviewFooter } from './04_ReviewFooter';
 import katelloApi, { foremanApi } from '../../../../../services/api';
+import CVEnvironmentMismatchWarning from '../CVEnvironmentMismatchWarning';
+import OSFamilyMismatchWarning from '../OSFamilyMismatchWarning';
+import BULK_ACTIONS_OSFAMILY from '../BulkActionsConstants';
 
 export const UPGRADE_ALL = 'upgradeAll';
 export const UPGRADE = 'upgrade';
@@ -62,17 +65,17 @@ export const useHostsBulkSelect = ({ initialSelectedHosts, modalIsOpen }) => {
   };
 };
 
-export const getPackagesUrl = (selectedAction) => {
+export const getPackagesUrl = (selectedAction, osFamily) => {
+  if (osFamily === BULK_ACTIONS_OSFAMILY.INVALID) { return ''; }
   if (selectedAction === REMOVE) {
-    return `${foremanApi.getApiUrl('/hosts/host_packages/installed_packages')}?per_page=7&include_permissions=true`;
+    return `${foremanApi.getApiUrl(`/hosts/host_${osFamily}/installed_${osFamily}`)}?per_page=7&include_permissions=true`;
   }
 
-  return `${katelloApi.getApiUrl('/packages/thindex')}?per_page=7&include_permissions=true&packages_restrict_upgradable=${selectedAction === 'upgrade'}`;
+  return `${katelloApi.getApiUrl(`/${osFamily}/thindex`)}?per_page=7&include_permissions=true&packages_restrict_upgradable=${selectedAction === 'upgrade'}`;
 };
 
 const BulkPackagesWizard = () => {
   const { modalOpen, setModalClosed: closeModal } = useForemanModal({ id: 'bulk-packages-wizard' });
-
 
   const [selectedAction, setSelectedAction] = useState(UPGRADE_ALL);
 
@@ -86,30 +89,49 @@ const BulkPackagesWizard = () => {
   const packageActionsNames = {
     install: __('Install packages'), remove: __('Remove packages'), upgrade: __('Upgrade packages'), upgradeAll: __('Upgrade packages'),
   };
-  const packageActions = () => {
-    switch (selectedAction) {
-    case INSTALL:
-      return (
-        <BulkPackagesInstallTable modalIsOpen={modalOpen} />
-      );
-    case REMOVE:
-      return (
-        <BulkPackagesRemoveTable modalIsOpen={modalOpen} />
-      );
-    default:
-      return (
-        <BulkPackagesUpgradeTable modalIsOpen={modalOpen} />
-      );
+
+
+  const initialSelectedHosts = fetchBulkParams();
+
+  const hostsBulkSelect =
+    useHostsBulkSelect({ initialSelectedHosts, modalIsOpen: modalOpen });
+
+  const currentlySelectedHosts =
+    hostsBulkSelect?.hostsResponse?.response?.results?.filter(host =>
+      !hostsBulkSelect.hostsBulkSelect.exclusionSet.has(host.id));
+  const OSFamilyMismatch =
+    selectedAction !== UPGRADE_ALL && currentlySelectedHosts?.length > 1 &&
+    currentlySelectedHosts?.some(host =>
+      host.operatingsystem_family !== currentlySelectedHosts[0].operatingsystem_family);
+  const CVEnvMismatch =
+    !OSFamilyMismatch &&
+    selectedAction !== UPGRADE_ALL && currentlySelectedHosts?.length > 1 &&
+    currentlySelectedHosts?.some(host =>
+      host.content_facet_attributes?.content_view_environment_labels !==
+      currentlySelectedHosts[0].content_facet_attributes?.content_view_environment_labels);
+
+  const getOSFamily = () => {
+    if (OSFamilyMismatch || currentlySelectedHosts === undefined) { return BULK_ACTIONS_OSFAMILY.INVALID; } else if (currentlySelectedHosts[0]?.operatingsystem_family === 'Debian') { return BULK_ACTIONS_OSFAMILY.DEBIAN; }
+
+    return BULK_ACTIONS_OSFAMILY.REDHAT;
+  };
+
+  const getContentWarning = () => {
+    if (OSFamilyMismatch) {
+      return (<OSFamilyMismatchWarning />);
+    } else if (CVEnvMismatch) {
+      return (<CVEnvironmentMismatchWarning />);
     }
+    return (<></>);
   };
 
   const finishButtonTextValues = {
     install: __('Install'), remove: __('Remove'), upgrade: __('Upgrade'), upgradeAll: __('Upgrade'),
   };
   const finishButtonText = finishButtonTextValues[selectedAction];
-  const PACKAGES_URL = getPackagesUrl(selectedAction);
+  const PACKAGES_URL = getPackagesUrl(selectedAction, getOSFamily());
   const apiOptions = { key: 'BULK_HOST_PACKAGES' };
-  const replacementResponse = !modalOpen ? { response: {} } : false;
+  const replacementResponse = !modalOpen || OSFamilyMismatch ? { response: {} } : false;
   const packagesResponse = useTableIndexAPIResponse({
     replacementResponse, // don't fetch data if modal is closed
     apiUrl: PACKAGES_URL,
@@ -131,11 +153,6 @@ const BulkPackagesWizard = () => {
     metadata: { total, page, selectable: subtotal },
     idColumn: 'name',
   });
-
-  const initialSelectedHosts = fetchBulkParams();
-
-  const hostsBulkSelect =
-    useHostsBulkSelect({ initialSelectedHosts, modalIsOpen: modalOpen });
 
   // eslint-disable-next-line no-restricted-globals
   const selectionIsValid = count => count > 0 || isNaN(count);
@@ -164,6 +181,39 @@ const BulkPackagesWizard = () => {
     packagesResponse,
     hostsBulkSelect: hostsBulkSelect.hostsBulkSelect,
   };
+
+  const packageActions = () => {
+    switch (selectedAction) {
+    case INSTALL:
+      return (
+        <BulkPackagesInstallTable
+          osFamily={getOSFamily()}
+          OSFamilyMismatch={OSFamilyMismatch}
+          warningBanner={getContentWarning()}
+          modalIsOpen={modalOpen}
+        />
+      );
+    case REMOVE:
+      return (
+        <BulkPackagesRemoveTable
+          osFamily={getOSFamily()}
+          OSFamilyMismatch={OSFamilyMismatch}
+          warningBanner={getContentWarning()}
+          modalIsOpen={modalOpen}
+        />
+      );
+    default:
+      return (
+        <BulkPackagesUpgradeTable
+          osFamily={getOSFamily()}
+          OSFamilyMismatch={OSFamilyMismatch}
+          warningBanner={getContentWarning()}
+          modalIsOpen={modalOpen}
+        />
+      );
+    }
+  };
+
   return (
     <BulkPackagesWizardContext.Provider value={bulkPackagesWizardContextData}>
       <Wizard
@@ -182,7 +232,8 @@ const BulkPackagesWizard = () => {
               {__('To manage packages, select an action.')}
             </Text>
           </TextContent>
-          {packagesStatus === STATUS.RESOLVED && !packagesResultsPresent && (
+          {getContentWarning()}
+          {packagesStatus === STATUS.RESOLVED && !packagesResultsPresent && !OSFamilyMismatch && (
             <Alert
               ouiaId="no-packages-found-alert"
               variant="info"
@@ -252,6 +303,7 @@ const BulkPackagesWizard = () => {
             hostsBulkSelect={hostsBulkSelect}
             initialSelectedHosts={initialSelectedHosts}
             setShouldValidateStep={setShouldValidateStep3}
+            warningBanner={getContentWarning()}
           />
         </WizardStep>
         <WizardStep
@@ -260,7 +312,7 @@ const BulkPackagesWizard = () => {
           footer={<BulkPackagesReviewFooter />}
           isDisabled={!step4Valid || !packagesResultsPresent}
         >
-          <BulkPackagesReview />
+          <BulkPackagesReview showCVEnvMismatchWarning={CVEnvMismatch} />
         </WizardStep>
       </Wizard>
     </BulkPackagesWizardContext.Provider>
