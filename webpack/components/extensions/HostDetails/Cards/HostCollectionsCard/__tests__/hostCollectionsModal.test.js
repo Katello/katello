@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import mockAvailableHostCollections from './availableHostCollections.fixtures.json';
@@ -50,7 +49,7 @@ describe('HostCollectionsAddModal', () => {
     nock.restore(); // Restores HTTP to normal behavior
   });
 
-  test.skip('Calls API with available_for=host on page load', async (done) => {
+  test('Calls API with available_for=host on page load', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
     const scope = nockInstance
@@ -74,7 +73,7 @@ describe('HostCollectionsAddModal', () => {
     act(done);
   });
 
-  test.skip('Calls alterHostCollections with combined list of existing and new host collections', async (done) => {
+  test('Calls alterHostCollections with combined list of existing and new host collections', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
     const scope = nockInstance
@@ -116,13 +115,36 @@ describe('HostCollectionsAddModal', () => {
     assertNockRequest(hostDetailsScope);
     act(done);
   });
-  test.skip('Host collections whose host limit is exceeded are disabled', async (done) => {
-    const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  test('Host collections whose host limit is exceeded are disabled', async (done) => {
+    // const scope = nockInstance
+    //   .get(availableHostCollections)
+    //   .query(defaultQueryWithAvailable)
+    //   .reply(200, mockAvailableHostCollections);
 
-    const scope = nockInstance
+    console.log('Testing with autocomplete URL:', autocompleteUrl);
+
+    // Mock the autocomplete API request for localhost (IPv4)
+    const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+    console.log('Mocked autocomplete request for IPv4:', autocompleteScope);
+
+    // Mock the autocomplete API for IPv6
+    const autocompleteScopeIPv6 = nock('http://[::1]')
+      .get(autocompleteUrl)
+      .query(true) // Match any query parameters
+      .reply(200, []);
+    console.log('Mocked autocomplete request for IPv6:', autocompleteScopeIPv6);
+
+    // Mock the host collections API for both IPv4 and IPv6
+    const scope = nock('http://localhost') // IPv4 without port
       .get(availableHostCollections)
-      .query(defaultQueryWithAvailable)
+      .query(true) // Match any query parameters
       .reply(200, mockAvailableHostCollections);
+
+    const scopeIPv6 = nock('http://[::1]')
+      .get(availableHostCollections)
+      .query(true) // Match any query parameters
+      .reply(200, mockAvailableHostCollections);
+    console.log('Mocked GET request for available host collections on IPv6:', availableHostCollections);
 
     const { getAllByRole, getAllByText }
        = renderWithRedux(<HostCollectionsAddModal
@@ -133,17 +155,22 @@ describe('HostCollectionsAddModal', () => {
          existingHostCollectionIds={[]}
        />, renderOptions());
 
+    console.log('Waiting for host collection elements to appear...'); // Debug log
     await patientlyWaitFor(() =>
       expect(getAllByText(firstHostCollection.name)[0]).toBeInTheDocument());
 
     const disabledCheckboxes = getAllByRole('checkbox').filter(c => c.disabled);
     const maxedOutHostCollections = mockAvailableHostCollections.results.filter(r =>
       r.max_hosts === r.total_hosts);
+    console.log(`Disabled checkboxes: ${disabledCheckboxes.length}`); // Debug log
+    console.log(`Maxed-out Host Collections: ${maxedOutHostCollections.length}`); // Debug log
     expect(disabledCheckboxes.length).toBeGreaterThan(0);
     expect(disabledCheckboxes).toHaveLength(maxedOutHostCollections.length);
 
     assertNockRequest(autocompleteScope);
+    assertNockRequest(autocompleteScopeIPv6);
     assertNockRequest(scope);
+    assertNockRequest(scopeIPv6);
     act(done); // Pass jest callback to confirm test is done
   });
 });
@@ -158,7 +185,7 @@ describe('HostCollectionsRemoveModal', () => {
     nock.cleanAll(); // Removes all interceptors
     nock.restore(); // Restores HTTP to normal behavior
   });
-  test.skip('Calls API without available_for=host on page load', async (done) => {
+  test('Calls API without available_for=host on page load', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
     const scope = nockInstance
@@ -184,7 +211,7 @@ describe('HostCollectionsRemoveModal', () => {
     act(done); // Pass jest callback to confirm test is done
   });
 
-  test.skip('Calls alterHostCollections with host collections being removed filtered out from the list', async (done) => {
+  test('Calls alterHostCollections with host collections being removed filtered out from the list', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
     const scope = nockInstance
