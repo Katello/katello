@@ -240,20 +240,18 @@ module Katello
     def find_content_overrides
       if !params.dig(:content_overrides_search, :search).nil?
 
-        content_labels = ::Katello::Content.joins(:product_contents)
-                            .where("#{Katello::ProductContent.table_name}.product_id": @host.organization.products.subscribable.enabled)
-                            .search_for(params[:content_overrides_search][:search])
-                            .pluck(:label)
+        content = ::Katello::Content.joins(:product_contents)
+                                    .where("#{Katello::ProductContent.table_name}.product_id": @host.organization.products.subscribable.enabled)
 
-        if Foreman::Cast.to_bool(params.dig(:content_overrides_search, :limit_to_env))
-          env_content = ProductContentFinder.new(
-              :match_subscription => false,
-              :match_environment => true,
-              :consumable => @host.subscription_facet
-          ).product_content
-          env_content_labels = ::Katello::Content.find(env_content.pluck(:content_id)).pluck(:label)
-          content_labels &= env_content_labels
-        end
+        env_content = ProductContentFinder.new(
+          :match_subscription => false,
+          :match_environment => Foreman::Cast.to_bool(params.dig(:content_overrides_search, :limit_to_env)),
+          :consumable => @host.subscription_facet
+        ).product_content
+        content = content.where(id: env_content.pluck(:content_id))
+
+        content_labels = content.search_for(params[:content_overrides_search][:search])
+          .pluck(:label)
 
         @content_overrides = content_labels.map do |label|
           { content_label: label,
