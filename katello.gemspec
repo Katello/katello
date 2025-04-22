@@ -51,6 +51,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency "spidr"
 
   # Pulp dependencies
+  # faraday pin for compatibility with foreman_azure_rm
+  gem.add_dependency "faraday", "~> 1.10", ">= 1.10.2"
   gem.add_dependency "pulpcore_client", ">= 3.73.0", "< 3.74.0"
   gem.add_dependency "pulp_file_client", ">= 3.73.0", "< 3.74.0"
   gem.add_dependency "pulp_ansible_client", ">= 0.24.1", "< 0.25.0"
@@ -58,7 +60,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "pulp_deb_client", ">= 3.5.1", "< 3.6.0"
   gem.add_dependency "pulp_rpm_client", ">= 3.29.0", "< 3.30.0"
   gem.add_dependency "pulp_certguard_client", ">= 3.73.0", "< 3.74.0"
-  gem.add_dependency "pulp_python_client", ">= 3.14.0", "< 3.15.0"
+  gem.add_dependency "pulp_python_client", ">= 3.13.0", "< 3.14.0"
   gem.add_dependency "pulp_ostree_client", ">= 2.4.6", "< 2.5.0"
 
   # UI
