@@ -22,6 +22,7 @@ import HostReview from '../HostReview';
 // import { BulkRepositorySetsReviewFooter } from './04_ReviewFooter';
 import katelloApi from '../../../../../services/api';
 import { useHostsBulkSelect } from '../BulkPackagesWizard/BulkPackagesWizard';
+import { BulkRepositorySetsReviewFooter } from './03_ReviewFooter';
 
 const DEFAULT_PER_PAGE = 5;
 export const BulkRepositorySetsWizardContext = createContext({});
@@ -32,9 +33,15 @@ const BulkRepositorySetsWizard = () => {
   const [pendingOverrides, setPendingOverrides] = useState({}); // { repo_label: 1 }
   const [shouldValidateStep2, setShouldValidateStep2] = useState(false);
   const [shouldValidateStep1, setShouldValidateStep1] = useState(false);
+  const [, setCurrentStep] = useState();
+  const onStepChange = (_event, newStep) => setCurrentStep((oldStep) => {
+    setShouldValidateStep1(true);
+    if (oldStep === 'brsw-step-2') setShouldValidateStep2(true);
+    return newStep?.id;
+  });
   const apiOptions = { key: 'BULK_HOST_REPO_SETS' };
 
-  const finishButtonText = 'Set content overrides';
+  const finishButtonText = __('Set content overrides');
   const replacementResponse = !modalOpen ? { response: {} } : false;
   const { selectedCount: initialSelectedHostCount, fetchBulkParams }
       = useContext(ForemanActionsBarContext);
@@ -88,7 +95,8 @@ const BulkRepositorySetsWizard = () => {
   const hostSelectionIsValid = selectionIsValid(hostsBulkSelect.hostsBulkSelect.selectedCount);
   const step1Valid = shouldValidateStep1 ? repoSetsSelectionIsValid : true;
   const step2Valid = shouldValidateStep2 ? hostSelectionIsValid : true;
-  const step3Valid = hostSelectionIsValid && repoSetsSelectionIsValid;
+  const allStepsValid = step1Valid && step2Valid;
+  const [finishButtonLoading, setFinishButtonLoading] = useState(false);
 
   const BulkRepositorySetsWizardContextData = {
     pendingOverrides,
@@ -98,12 +106,11 @@ const BulkRepositorySetsWizard = () => {
     shouldValidateStep1,
     setShouldValidateStep1,
     setShouldValidateStep2,
+    allStepsValid,
     repoSetsSelectionIsValid,
     setRepoSetsParamsAndAPI,
-    // finishButtonLoading,
-    // setFinishButtonLoading,
-    // selectedRexOption,
-    // setSelectedRexOption,
+    finishButtonLoading,
+    setFinishButtonLoading,
     closeModal,
     repoSetsBulkSelect,
     repoSetsResults,
@@ -115,6 +122,7 @@ const BulkRepositorySetsWizard = () => {
     <BulkRepositorySetsWizardContext.Provider value={BulkRepositorySetsWizardContextData}>
       <Wizard
         header={<WizardHeader title={__('Manage repository sets')} onClose={closeModal} />}
+        onStepChange={onStepChange}
       >
         <WizardStep
           name={__('Select repository sets')}
@@ -154,7 +162,7 @@ const BulkRepositorySetsWizard = () => {
         <WizardStep
           name={__('Review')}
           id="brsw-step-3"
-          footer={{ isNextDisabled: !step3Valid, onClose: closeModal }}
+          footer={<BulkRepositorySetsReviewFooter />}
         >
           <BulkRepositorySetsReview />
         </WizardStep>

@@ -50,24 +50,19 @@ const pendingOverrideToApiParamItem = ({ repoLabel, value }) => {
 };
 
 export const BulkRepositorySetsReview = () => {
-  const { goToStepById, activeStep } = useWizardContext();
+  const { goToStepById } = useWizardContext();
   const {
-    pendingOverrides, setShouldValidateStep1, setShouldValidateStep2,
+    pendingOverrides,
   } = useContext(BulkRepositorySetsWizardContext);
   const overridesEntries = Object.entries(pendingOverrides);
   const apiParams = overridesEntries
     .map(([repoLabel, value]) => pendingOverrideToApiParamItem({ repoLabel, value }))
     .filter(item => item);
-  console.log(apiParams);
 
   const overridesTexts = overridesEntries
     .filter(([_repoLabel, value]) => Number(value) !== 0)
     .map(([repoLabel, value]) => [repoLabel, dropdownValues[value]]);
 
-  if (activeStep?.id === 'brsw-step-3') {
-    setShouldValidateStep1(true);
-    setShouldValidateStep2(true);
-  }
   return (
     <>
       <TextContent>
@@ -75,7 +70,7 @@ export const BulkRepositorySetsReview = () => {
           {__('Review')}
         </Text>
         <Text component={TextVariants.p} ouiaId="bulk-repo-sets-wizard-review-description">
-          {__('Review and then click Submit. Status will be changed for the selected repository sets on the selected hosts.')}
+          {__('Review and then click \'Set content overrides.\' Status will be changed for the selected repository sets on the selected hosts.')}
         </Text>
       </TextContent>
       <Grid>
@@ -101,7 +96,7 @@ export const BulkRepositorySetsReview = () => {
           </Text>
         </GridItem>
         {overridesTexts.map(([repoLabel, actionText]) => (
-          <>
+          <React.Fragment key={repoLabel}>
             <GridItem span={8}>
               <Text component={TextVariants.p} ouiaId="brsw-review-step-repo-label">
                 {repoLabel}
@@ -112,7 +107,7 @@ export const BulkRepositorySetsReview = () => {
                 {actionText}
               </Text>
             </GridItem>
-          </>
+          </React.Fragment>
         ))}
       </Grid>
     </>
