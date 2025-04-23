@@ -79,6 +79,15 @@ Foreman::Plugin.register :katello do
          :engine => Katello::Engine,
          :turbolinks => false
 
+    menu :top_menu,
+         :flatpak_remotes,
+         :caption => N_('Flatpak Remotes'),
+         :url_hash => {:controller => 'katello/api/v2/flatpak_remotes',
+                       :action => 'index'},
+         :url => '/flatpak_remotes',
+         :engine => Katello::Engine,
+         :turbolinks => false
+
     divider :top_menu, :caption => N_('Lifecycle'), :parent => :content_menu
 
     menu :top_menu,

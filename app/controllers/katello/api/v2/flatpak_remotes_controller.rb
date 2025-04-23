@@ -6,7 +6,7 @@ module Katello
     filter_parameters :token
 
     before_action :find_authorized_katello_resource, :except => [:index, :create, :auto_complete_search]
-    before_action :find_optional_organization, :only => [:index, :auto_complete_search]
+    before_action :find_organization, :only => [:index, :auto_complete_search]
 
     resource_description do
       name 'Flatpak Remotes'
