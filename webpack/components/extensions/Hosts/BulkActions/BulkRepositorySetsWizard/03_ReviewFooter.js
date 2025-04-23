@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   Button,
@@ -6,35 +7,44 @@ import {
   useWizardContext,
 } from '@patternfly/react-core';
 import { BulkRepositorySetsWizardContext } from './BulkRepositorySetsWizard';
+import { bulkUpdateHostContentOverrides } from './actions';
+import { pendingOverrideToApiParamItem } from './helpers';
 
 export const BulkRepositorySetsReviewFooter = () => {
   const {
     pendingOverrides,
-    // setPendingOverrides,
     finishButtonText,
-    // initialSelectedHostCount,
-    // shouldValidateStep1,
-    // setShouldValidateStep1,
-    // setShouldValidateStep2,
-    // repoSetsSelectionIsValid,
     allStepsValid,
-    // setRepoSetsParamsAndAPI,
     finishButtonLoading,
     setFinishButtonLoading,
     closeModal,
-    // repoSetsBulkSelect,
-    // repoSetsResults,
-    // repoSetsMetadata,
-    // repoSetsResponse,
     hostsBulkSelect,
   } = useContext(BulkRepositorySetsWizardContext);
 
   const { goToStepById } = useWizardContext();
+  const dispatch = useDispatch();
+
+  const overridesEntries = Object.entries(pendingOverrides);
+  const apiParams = overridesEntries
+    .map(([repoLabel, value]) => pendingOverrideToApiParamItem({ repoLabel, value }))
+    .filter(item => item);
+
+  const saveContentOverrides = () => {
+    const requestBody = {
+      included: {
+        search: hostsBulkSelect.fetchBulkParams(),
+      },
+      content_overrides: apiParams,
+    };
+    dispatch(bulkUpdateHostContentOverrides(
+      requestBody, hostsBulkSelect.fetchBulkParams(),
+      closeModal, closeModal,
+    ));
+  };
 
   const handleFinishButtonClick = () => {
     setFinishButtonLoading(true);
-    console.log(pendingOverrides);
-    console.log(hostsBulkSelect.selectedCount);
+    saveContentOverrides();
     closeModal();
   };
   return (
