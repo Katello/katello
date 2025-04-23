@@ -16,10 +16,7 @@ import { useTableIndexAPIResponse, useSetParamsAndApiAndSearch } from 'foremanRe
 
 import { BulkRepositorySetsTable } from './01_BulkRepositorySetsTable';
 import { BulkRepositorySetsReview } from './03_Review';
-// import { STATUS } from 'foremanReact/constants';
 import HostReview from '../HostReview';
-// import { BulkRepositorySetsReview, dropdownOptions } from './04_Review';
-// import { BulkRepositorySetsReviewFooter } from './04_ReviewFooter';
 import katelloApi from '../../../../../services/api';
 import { useHostsBulkSelect } from '../BulkPackagesWizard/BulkPackagesWizard';
 import { BulkRepositorySetsReviewFooter } from './03_ReviewFooter';
@@ -58,7 +55,6 @@ const BulkRepositorySetsWizard = () => {
       ...repoSetsMetadata
     },
     setAPIOptions,
-    // status: repoSetsStatus = STATUS.PENDING,
   } = repoSetsResponse;
 
   const { total, page, subtotal } = repoSetsMetadata;
@@ -87,7 +83,6 @@ const BulkRepositorySetsWizard = () => {
 
   // eslint-disable-next-line no-restricted-globals
   const selectionIsValid = count => count > 0 || isNaN(count);
-  // const repoSetsResultsPresent = (repoSetsResults?.length ?? 0) > 0;
   const pendingOverridesCount =
     Object.values(pendingOverrides).filter(val => Number(val) !== 0).length;
   const repoSetsSelectionIsValid =
