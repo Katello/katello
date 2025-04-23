@@ -15,50 +15,12 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { BulkRepositorySetsWizardContext } from './BulkRepositorySetsWizard';
 import { dropdownValues } from './01_BulkRepositorySetsTable';
 
-// const dropdownValues = {
-//   0: __('No change'),
-//   1: __('Override to enabled'),
-//   2: __('Override to disabled'),
-//   3: __('Reset to default'),
-// };
-
-const pendingOverrideToApiParamItem = ({ repoLabel, value }) => {
-  switch (Number(value)) {
-  case 0:
-    return null;
-  case 1:
-    return {
-      content_label: repoLabel,
-      name: 'enabled',
-      value: true,
-    };
-  case 2:
-    return {
-      content_label: repoLabel,
-      name: 'enabled',
-      value: false,
-    };
-  case 3:
-    return {
-      content_label: repoLabel,
-      name: 'enabled',
-      remove: true,
-    };
-  default:
-    return null;
-  }
-};
-
 export const BulkRepositorySetsReview = () => {
   const { goToStepById } = useWizardContext();
   const {
     pendingOverrides,
   } = useContext(BulkRepositorySetsWizardContext);
   const overridesEntries = Object.entries(pendingOverrides);
-  const apiParams = overridesEntries
-    .map(([repoLabel, value]) => pendingOverrideToApiParamItem({ repoLabel, value }))
-    .filter(item => item);
-
   const overridesTexts = overridesEntries
     .filter(([_repoLabel, value]) => Number(value) !== 0)
     .map(([repoLabel, value]) => [repoLabel, dropdownValues[value]]);

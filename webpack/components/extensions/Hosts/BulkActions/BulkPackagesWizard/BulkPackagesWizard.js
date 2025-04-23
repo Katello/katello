@@ -248,6 +248,7 @@ const BulkPackagesWizard = () => {
         >
           <HostReview
             key={modalOpen}
+            selectedAction={selectedAction}
             hostsBulkSelect={hostsBulkSelect}
             initialSelectedHosts={initialSelectedHosts}
             setShouldValidateStep={setShouldValidateStep3}
