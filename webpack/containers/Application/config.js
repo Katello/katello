@@ -16,6 +16,7 @@ import withHeader from './withHeaders';
 import ChangeContentSource from '../../scenes/Hosts/ChangeContentSource';
 import AlternateContentSource from '../../scenes/AlternateContentSources';
 import BootedContainerImages from '../../scenes/BootedContainerImages';
+import FlatpakRemotesPage from '../../scenes/FlatpakRemotes/FlatpakRemotesPage';
 
 // eslint-disable-next-line import/prefer-default-export
 export const links = [
@@ -89,5 +90,9 @@ export const links = [
   {
     path: 'booted_container_images',
     component: WithOrganization(withHeader(BootedContainerImages, { title: __('Booted container images') })),
+  },
+  {
+    path: 'flatpak_remotes',
+    component: WithOrganization(withHeader(FlatpakRemotesPage, { title: __('Flatpak Remotes') })),
   },
 ];
