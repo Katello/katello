@@ -52,7 +52,7 @@ Gem::Specification.new do |gem|
 
   # Pulp dependencies
   # faraday pin for compatibility with foreman_azure_rm
-  gem.add_dependency "faraday", "~> 1.10", ">= 1.10.2"
+  gem.add_dependency "faraday", ">= 1.10.2", "< 1.11.0"
   gem.add_dependency "pulpcore_client", ">= 3.73.0", "< 3.74.0"
   gem.add_dependency "pulp_file_client", ">= 3.73.0", "< 3.74.0"
   gem.add_dependency "pulp_ansible_client", ">= 0.24.1", "< 0.25.0"
