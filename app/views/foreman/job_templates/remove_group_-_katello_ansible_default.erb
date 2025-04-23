@@ -16,29 +16,15 @@ kind: job_template
 ---
 - hosts: all
   tasks:
-    - name: Collect bootc status
-      shell:
-        cmd: 'bootc status --json'
-      register: bootc_status
-      ignore_errors: true
-    - name: Parse bootc status json
-      set_fact:
-        bootc_status_json: "{{ bootc_status.stdout | from_json }}"
-      when: bootc_status.rc == 0
-    - name: Enable bootc overlay
-      shell:
-        cmd: 'bootc usr-overlay'
-      register: out
-      ignore_errors: true
-      when: bootc_status_json is defined and bootc_status_json['status']['booted'] != 'null'
-    - debug: var=out
+<%= indent(4) { snippet('check_bootc_status') } %>
     - name: Remove groups via dnf for image mode machines
       shell:
         cmd: 'dnf -y --transient group remove <%= input('package') %>'
       register: out
-      when: bootc_status_json is defined and bootc_status_json['status']['booted'] != 'null'
+      when: is_bootc_host
     - name: Remove groups normally
       shell:
         cmd: 'yum -y group remove <%= input('package') %>'
       register: out
-      when: bootc_status_json is not defined or bootc_status_json['status']['booted'] == 'null'
+      when: not is_bootc_host
+    - debug: var=out
