@@ -66,7 +66,7 @@ module Katello
         end
 
         def partial_update(href)
-          data = PulpCertguardClient::CertguardRHSMCertGuard.new(ca_certificate: ca_cert)
+          data = { ca_certificate: ca_cert }
           rhsm_api_client.partial_update(href, data)
         end
 
