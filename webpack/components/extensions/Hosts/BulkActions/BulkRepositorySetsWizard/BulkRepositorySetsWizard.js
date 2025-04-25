@@ -67,7 +67,6 @@ const BulkRepositorySetsWizard = () => {
 
   const {
     setParamsAndAPI: setRepoSetsParamsAndAPI,
-    params: repoSetsParams,
   } = useSetParamsAndApiAndSearch({
     defaultParams: { search: '' },
     apiOptions,
@@ -138,7 +137,6 @@ const BulkRepositorySetsWizard = () => {
             repoSetsResults={repoSetsResults}
             repoSetsMetadata={repoSetsMetadata}
             repoSetsResponse={repoSetsResponse}
-            repoSetsParams={repoSetsParams}
           />
         </WizardStep>
         <WizardStep

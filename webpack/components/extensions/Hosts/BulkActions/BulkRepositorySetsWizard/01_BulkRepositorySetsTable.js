@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   Alert, Dropdown, DropdownItem, DropdownList,
   Divider, MenuToggle, MenuToggleAction, ToolbarItem,
-  PaginationVariant,
 } from '@patternfly/react-core';
 import {
   Tr, Td, Tbody,
@@ -12,7 +11,6 @@ import { STATUS } from 'foremanReact/constants';
 import { getPageStats, getColumnHelpers } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
 import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
-import Pagination from 'foremanReact/components/Pagination';
 import { Table } from 'foremanReact/components/PF4/TableIndexPage/Table/Table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { RowSelectTd } from 'foremanReact/components/HostsIndex/RowSelectTd';
@@ -93,7 +91,6 @@ export const BulkRepositorySetsTable = ({
   repoSetsBulkSelect,
   repoSetsResults,
   repoSetsMetadata,
-  repoSetsParams,
   repoSetsResponse,
 }) => {
   const {
@@ -123,9 +120,6 @@ export const BulkRepositorySetsTable = ({
   const apiOptions = { key: 'BULK_HOST_REPO_SETS' };
   const { status: repoSetsLoadingStatus } = repoSetsResponse;
   const pageStats = getPageStats({ total: subtotal, page, perPage });
-  const onPagination = (newPagination) => {
-    setRepoSetsParamsAndAPI({ ...repoSetsParams, ...newPagination });
-  };
 
   const expandedRepos = useSet([]);
   const repoIsExpanded = id => expandedRepos.has(id);
@@ -273,15 +267,7 @@ export const BulkRepositorySetsTable = ({
           },
         }}
         bulkSelect={repoSetsBulkSelect}
-        topPagination={<Pagination
-          key="table-index-page-top-pagination"
-          updateParamsByUrl={false}
-          variant={PaginationVariant.top}
-          page={page}
-          perPage={perPage}
-          itemCount={subtotal}
-          onChange={onPagination}
-        />}
+        updateParamsByUrl={false}
       >
         <Table
           childrenOutsideTbody
@@ -296,18 +282,11 @@ export const BulkRepositorySetsTable = ({
           url=""
           results={repoSetsResults}
           isPending={repoSetsLoadingStatus === STATUS.PENDING}
-          params={repoSetsParams}
+          params={{ ...repoSetsMetadata, perPage, page }}
           setParams={setRepoSetsParamsAndAPI}
-          bottomPagination={
-            <Pagination
-              key="table-bottom-pagination-yes-you-better"
-              page={page}
-              perPage={perPage}
-              itemCount={subtotal}
-              onChange={onPagination}
-              updateParamsByUrl={false}
-            />
-          }
+          page={page}
+          perPage={perPage}
+          itemCount={subtotal}
         >
           {repoSetsResults.map((result, rowIndex) => {
             const repoLabel = result.label;
@@ -371,11 +350,6 @@ BulkRepositorySetsTable.propTypes = {
     selectedResults: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   }).isRequired,
   repoSetsResults: PropTypes.arrayOf(PropTypes.shape({})),
-  repoSetsParams: PropTypes.shape({
-    page: PropTypes.number,
-    perPage: PropTypes.number,
-    order: PropTypes.string,
-  }).isRequired,
   repoSetsMetadata: PropTypes.shape({
     total: PropTypes.number,
     page: PropTypes.number,
