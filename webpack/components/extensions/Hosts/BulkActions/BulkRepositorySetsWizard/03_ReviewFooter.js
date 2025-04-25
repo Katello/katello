@@ -49,6 +49,9 @@ export const BulkRepositorySetsReviewFooter = () => {
   };
   return (
     <WizardFooterWrapper>
+      <Button variant="secondary" onClick={() => goToStepById('brsw-step-2')} isDisabled={finishButtonLoading} ouiaId="bulk-reposets-wiz-step3-back">
+        {__('Back')}
+      </Button>
       <Button
         key="bulk-repo-sets-wizard-finish-button"
         ouiaId="bulk-repo-sets-wizard-finish-button"
@@ -59,9 +62,6 @@ export const BulkRepositorySetsReviewFooter = () => {
         onClick={handleFinishButtonClick}
       >
         {finishButtonText}
-      </Button>
-      <Button variant="secondary" onClick={() => goToStepById('brsw-step-2')} isDisabled={finishButtonLoading} ouiaId="bulk-reposets-wiz-step3-back">
-        {__('Back')}
       </Button>
       <Button variant="link" onClick={closeModal} isDisabled={finishButtonLoading} ouiaId="bulk-repo-sets-wiz-step3-cancel">
         {__('Cancel')}
