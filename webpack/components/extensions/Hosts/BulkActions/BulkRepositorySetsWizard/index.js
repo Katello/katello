@@ -8,13 +8,12 @@ const BulkRepositorySetsWizardModal = () => {
 
   return (
     <Modal
-      width="70%"
       ouiaId="bulk-repo-sets-wizard-modal"
       isOpen={isOpen}
       showClose={false}
       aria-label="Wizard modal"
       hasNoBodyWrapper
-      variant={ModalVariant.medium}
+      variant={ModalVariant.large}
     >
       <BulkRepositorySetsWizard />
     </Modal>
