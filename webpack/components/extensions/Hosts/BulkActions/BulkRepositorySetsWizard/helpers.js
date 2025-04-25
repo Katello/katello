@@ -1,4 +1,4 @@
-const pendingOverrideToApiParamItem = ({ repoLabel, value }) => {
+export const pendingOverrideToApiParamItem = ({ repoLabel, value }) => {
   switch (Number(value)) {
   case 0: // No change
     return null;
