@@ -8,7 +8,7 @@ const BulkRepositorySetsWizardModal = () => {
 
   return (
     <Modal
-      width="60%"
+      width="70%"
       ouiaId="bulk-repo-sets-wizard-modal"
       isOpen={isOpen}
       showClose={false}
