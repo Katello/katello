@@ -10,7 +10,7 @@ attributes :content_counts
 attributes :mirroring_policy
 
 glue(@object.root) do
-  attributes :content_type, :url, :arch, :os_versions, :content_id, :generic_remote_options
+  attributes :content_type, :url, :docker_upstream_name, :arch, :os_versions, :content_id, :generic_remote_options
   attributes :major, :minor
 
   child :product do |_product|

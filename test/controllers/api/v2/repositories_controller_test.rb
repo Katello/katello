@@ -114,6 +114,13 @@ module Katello
       end
     end
 
+    def test_index_returns_docker_upstream_name
+      response = get :index, params: { :product_id => @product.id }
+      repo = ::Katello::Repository.find_by(relative_path: '/Default_Organization/library/pulp3_Docker_1')
+      container_repo = JSON.parse(response.body)['results'].find { |r| r['docker_upstream_name'] == repo.docker_upstream_name }
+      assert_equal container_repo['id'], repo.id
+    end
+
     def test_index_with_product_id
       ids = Repository.in_product(@product).where(:library_instance_id => nil).pluck(:id)
 
