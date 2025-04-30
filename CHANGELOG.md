@@ -1,3 +1,19 @@
+# 4.16.1 Taliesin (2025-04-30)
+
+### Repositories
+ * Switch to using optional dbus-run-session for installing flatpak applications using REX ([#38372](https://projects.theforeman.org/issues/38372), [1eb8f50e](https://github.com/Katello/katello.git/commit/1eb8f50e1cd92e622dba14d119d74f2533586071))
+ * Cannot update "Unprotected" field on repositories ([#38368](https://projects.theforeman.org/issues/38368), [dfe1afe2](https://github.com/Katello/katello.git/commit/dfe1afe2c36a23885be21c376ca3fb71003831f9))
+ * Creation of File type Red Hat repositories fails ([#38339](https://projects.theforeman.org/issues/38339), [104ccd39](https://github.com/Katello/katello.git/commit/104ccd390a30a3db8bc2f0894a8fdd94f17c0bc5))
+
+### Subscriptions
+ * gsub regex to skip adding missing candlepin content does not remove quote marks ([#38320](https://projects.theforeman.org/issues/38320), [ac7eb1a2](https://github.com/Katello/katello.git/commit/ac7eb1a234ee1ca7d66f47f57944d87723478130))
+
+### Security
+ * FIPS-enabled deployment fails with Rails 7 ([#38118](https://projects.theforeman.org/issues/38118))
+
+### Other
+ * Flatpak login action job template passes the password as an argument, making it possible to see the password in process listing ([#38287](https://projects.theforeman.org/issues/38287), [ab66a515](https://github.com/Katello/katello.git/commit/ab66a515773841f4082bb943210b60955ef3a514))
+
 # 4.16.0 Taliesin (2025-03-14)
 
 ## Features
