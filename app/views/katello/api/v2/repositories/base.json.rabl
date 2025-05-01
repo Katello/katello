@@ -1,6 +1,7 @@
 object @resource
 
 extends 'katello/api/v2/common/identifier'
+extends 'katello/api/v2/common/org_reference'
 
 attributes :pulp_id => :backend_identifier
 attributes :relative_path, :container_repository_name, :full_path, :library_instance_id
