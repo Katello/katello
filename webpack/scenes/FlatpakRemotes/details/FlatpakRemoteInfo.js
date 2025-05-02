@@ -1,6 +1,7 @@
 // Import necessary modules and components from react, react-redux, and @patternfly/react-core libraries
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import {
   Flex,
   FlexItem,
@@ -11,14 +12,21 @@ import {
   TextListItemVariants,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
+import {selectFlatpakRemoteDetails} from "./FlatpakRemoteSelectors";
+import {getFlatpakRemoteInfo} from "./FlatpakRemoteActions";
 
 const FlatpakRemoteInfo = () => {
   const remoteId = Number(useParams().id);
 
   // Utilize useSelector hook to select details from the state
   const details = useSelector((state) =>
-    selectFlatpakRemotesDetails(state, remoteId) || {}
+    selectFlatpakRemoteDetails(state, remoteId) || {}
   );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getFlatpakRemoteInfo(remoteId));
+  }, [remoteId, dispatch]);
+
 
   // Return the component's UI structure using PatternFly components
   return (
