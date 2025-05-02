@@ -797,6 +797,9 @@ msgstr "Ansible コレクション"
 msgid "Ansible collections"
 msgstr "Ansible コレクション"
 
+msgid "Any updates to image mode host(s) will be lost on the next reboot."
+msgstr ""
+
 msgid "Applicability Batch Size"
 msgstr "適用可能なバッチサイズ"
 
@@ -822,9 +825,6 @@ msgid "Apply"
 msgstr "適用"
 
 msgid "Apply errata"
-msgstr ""
-
-msgid "Apply erratum"
 msgstr ""
 
 msgid "Apply to all repositories in the CV"
@@ -1242,13 +1242,19 @@ msgstr ""
 msgid "Cannot add repositories to a composite content view"
 msgstr "リポジトリーを複合コンテンツビューに追加できません"
 
+msgid "Cannot add rolling content view to composite content view"
+msgstr ""
+
+msgid "Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment."
+msgstr ""
+
 msgid "Cannot associate a Red Hat provider with a custom product"
 msgstr ""
 
 msgid "Cannot associate a component to a non composite content view"
 msgstr "コンポーネントを複合コンテンツビュー以外に関連付けできません"
 
-msgid "Cannot be disabled because it is part of a published content view"
+msgid "Cannot be disabled because it is part of a content view"
 msgstr ""
 
 msgid "Cannot calculate name for custom repos"
@@ -1488,9 +1494,6 @@ msgstr "コンポーネントのバージョン: '%{cvv}'、製品: '%{product}'
 msgid "Components"
 msgstr "コンポーネント"
 
-msgid "Composite"
-msgstr "複合"
-
 msgid "Composite Content View"
 msgstr "複合コンテンツビュー"
 
@@ -1520,15 +1523,6 @@ msgstr "マニフェスト削除の確定"
 
 msgid "Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific."
 msgstr "ライフサイクル環境のレジストリー名のパターンをより具体的な名前に変更することをご検討ください。"
-
-msgid "Consisting of multiple content views"
-msgstr "複数のコンテンツビューで構成されます"
-
-msgid "Consists of content views"
-msgstr "コンテンツビューで構成"
-
-msgid "Consists of repositories"
-msgstr "リポジトリーで構成"
 
 msgid "Consumed"
 msgstr "使用済み"
@@ -1565,6 +1559,15 @@ msgstr "コンテナーマニフェスト"
 
 msgid "Container tags"
 msgstr "コンテナータグ"
+
+msgid "Contains content views. You must choose the version to use for each content view."
+msgstr ""
+
+msgid "Contains repositories. Always serves the latest synced content, without the need to publish versions."
+msgstr ""
+
+msgid "Contains repositories. Versions are published and optionally filtered."
+msgstr ""
 
 msgid "Content"
 msgstr "コンテンツ"
@@ -2172,8 +2175,8 @@ msgstr "デフォルトの Smart Proxy ダウンロードポリシー"
 msgid "Default System SLA"
 msgstr "デフォルトのシステム SLA"
 
-msgid "Default content view versions cannot be promoted"
-msgstr "デフォルトコンテンツビューのバージョンはプロモートできません"
+msgid "Default and Rolling content view versions cannot be promoted"
+msgstr ""
 
 msgid "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')"
 msgstr "Smart Proxy 同期のデフォルトのダウンロードポリシー ('inherit'、'immediate'、または 'on_demand' のいずれか)"
@@ -3723,7 +3726,7 @@ msgstr "インストール可能"
 msgid "Installable bugfix/enhancement errata"
 msgstr ""
 
-msgid "Installable errata are applicable errata that are available in the host's content view and lifecycle environment."
+msgid "Installable errata are applicable errata that are available in the host's assigned content view environments."
 msgstr ""
 
 msgid "Installable security errata"
@@ -3868,6 +3871,27 @@ msgid "Issued from"
 msgstr "発行元"
 
 msgid "It is only allowed for Non-Redhat Yum repositories."
+msgstr ""
+
+msgid "It's not possible to bulk remove versions from a rolling content view."
+msgstr ""
+
+msgid "It's not possible to copy a rolling content view."
+msgstr ""
+
+msgid "It's not possible to create a filter for a rolling content view."
+msgstr ""
+
+msgid "It's not possible to destroy a version of a rolling content view."
+msgstr ""
+
+msgid "It's not possible to export a rolling content view."
+msgstr ""
+
+msgid "It's not possible to promote a rolling content view."
+msgstr ""
+
+msgid "It's not possible to publish a rolling content view."
 msgstr ""
 
 msgid "Job '${description}' completed"
@@ -4547,6 +4571,9 @@ msgstr ""
 msgid "Multi-entitlement"
 msgstr "マルチエンタイトルメント"
 
+msgid "Must be Ascii alphanumeric, '_' or '-'"
+msgstr ""
+
 msgid "N/A"
 msgstr "N/A"
 
@@ -4916,7 +4943,7 @@ msgstr "パッケージがありません"
 msgid "No packages available to install"
 msgstr "インストール可能なパッケージはありません"
 
-msgid "No packages available to install on this host. Please check the host's content view and lifecycle environment."
+msgid "No packages available to install on this host. Please check the host's assigned content view environments."
 msgstr ""
 
 msgid "No packages removed"
@@ -5180,6 +5207,9 @@ msgstr ""
 msgid "Organization required"
 msgstr "必要な組織"
 
+msgid "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details."
+msgstr ""
+
 msgid "Orphaned Content Protection Time"
 msgstr "単独コンテンツの保護時間"
 
@@ -5332,6 +5362,9 @@ msgstr "パッケージの更新がタイムアウトになりました"
 
 msgid "Package Update scheduled by %s"
 msgstr "%s によりパッケージの更新がスケジュールされました"
+
+msgid "Package actions will be transient"
+msgstr ""
 
 msgid "Package group update canceled"
 msgstr "パッケージグループの更新が取り消されました"
@@ -5895,6 +5928,9 @@ msgstr "%s のコンテンツホストステータスのリフレッシュ"
 msgid "Refresh Manifest"
 msgstr "マニフェストの更新"
 
+msgid "Refresh RollingCV Repo"
+msgstr ""
+
 msgid "Refresh all alternate content sources"
 msgstr ""
 
@@ -6396,7 +6432,7 @@ msgstr "影響を受ける環境の確認"
 msgid "Review affected environments"
 msgstr "影響を受ける環境を確認"
 
-msgid "Review and optionally exclude hosts from your selection."
+msgid "Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot."
 msgstr ""
 
 msgid "Review and then click {submitBtnText}."
@@ -6427,6 +6463,12 @@ msgid "Rollback image"
 msgstr ""
 
 msgid "Rollback image digest"
+msgstr ""
+
+msgid "Rolling content view"
+msgstr ""
+
+msgid "Rolling content views"
 msgstr ""
 
 msgid "Rules to be added"
@@ -6861,9 +6903,6 @@ msgstr ""
 msgid "Simplified"
 msgstr "簡易"
 
-msgid "Single content view consisting of e.g. repositories"
-msgstr "リポジトリー (例) で構成される単一コンテンツビュー"
-
 msgid "Size of file to upload"
 msgstr "アップロードするファイルのサイズ"
 
@@ -6905,6 +6944,9 @@ msgstr "コンテンツビューの公開時にデフォルトでは RPM 依存�
 
 msgid "Solve dependencies"
 msgstr "依存関係の解決"
+
+msgid "Some environments are disabled because they are not associated with all of the affected hosts' content sources."
+msgstr ""
 
 msgid "Some environments are disabled because they are not associated with the host's content source."
 msgstr ""
@@ -7504,6 +7546,9 @@ msgstr ""
 "インポートメタデータで提供されている以下のリポジトリーのコンテンツタイプまたはプロバイダータイプが正しくありません。インポートする前に、エクスポートリポジトリーとインポートリポジトリーが同じタイプであることを確認してください\n"
 " %%{repos}"
 
+msgid "The generated container repository name is invalid. Please review the lifecycle environment's registry name pattern. It may be caused by special characters in the components that make up the name, like the organization."
+msgstr ""
+
 msgid "The id of the content source"
 msgstr "コンテンツソースの ID"
 
@@ -7727,8 +7772,8 @@ msgstr ""
 msgid "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details."
 msgstr ""
 
-msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
-msgstr "このホストのコンテンツビューおよびライフサイクル環境に含まれていないため、このエラータはインストール可能ではありません。"
+msgid "This erratum is not installable because it is not in this host's assigned content view environments."
+msgstr ""
 
 msgid "This host does not have any Module streams."
 msgstr "このホストにはモジュールストリームがありません。"
@@ -7770,9 +7815,6 @@ msgid "This is not a linked repository"
 msgstr "これは、リンクされたリポジトリーではありません"
 
 msgid "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}."
-msgstr ""
-
-msgid "This repository has pending tasks in associated content views. Please wait for the tasks: "
 msgstr ""
 
 msgid "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use."
@@ -7984,6 +8026,12 @@ msgstr "Pulp ストレージを検出できません"
 
 msgid "Unable to detect puppet path"
 msgstr "Puppet パスを検出できません"
+
+msgid "Unable to find a content view with ID %s"
+msgstr ""
+
+msgid "Unable to find a lifecycle environment with ID %s"
+msgstr ""
 
 msgid "Unable to find product '%s' in organization '%s'"
 msgstr "組織 '%s' で製品 '%s' が見つかりません"
@@ -8471,6 +8519,9 @@ msgstr "表示"
 msgid "View content views"
 msgstr ""
 
+msgid "View details"
+msgstr ""
+
 msgid "View documentation"
 msgstr ""
 
@@ -8743,6 +8794,9 @@ msgstr "組織"
 
 msgid "are only allowed for Yum repositories."
 msgstr "Yum リポジトリーでのみ許可されています。"
+
+msgid "assign a new content source to the hosts"
+msgstr ""
 
 msgid "attempted to sync a non-library repository."
 msgstr ""
@@ -9100,9 +9154,6 @@ msgstr "パッケージをインストールしています..."
 
 msgid "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."
 msgstr "指定のオブジェクトを解釈して、指定のオブジェクトに関連付け可能なリポジトリーのみを返します。'content_view' と 'content_view_version' のみがサポートされます。"
-
-msgid "invalid container image name"
-msgstr "無効なコンテナーイメージ名"
 
 msgid "invalid: Repositories can only require one OS version."
 msgstr "無効: リポジトリーに必要な OS バージョンは 1 つだけです。"

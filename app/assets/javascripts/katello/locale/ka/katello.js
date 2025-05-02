@@ -777,6 +777,9 @@
       "Ansible collections": [
         "Ansible-ის კოლექციები"
       ],
+      "Any updates to image mode host(s) will be lost on the next reboot.": [
+        ""
+      ],
       "Applicability Batch Size": [
         ""
       ],
@@ -802,9 +805,6 @@
         "გამოყენება"
       ],
       "Apply errata": [
-        ""
-      ],
-      "Apply erratum": [
         ""
       ],
       "Apply to all repositories in the CV": [
@@ -1222,13 +1222,19 @@
       "Cannot add repositories to a composite content view": [
         "რეპოზიტორიების კომპოზიტურ შემცველობის ხედში ჩამატება შეუძლებელია"
       ],
+      "Cannot add rolling content view to composite content view": [
+        ""
+      ],
+      "Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment.": [
+        ""
+      ],
       "Cannot associate a Red Hat provider with a custom product": [
         ""
       ],
       "Cannot associate a component to a non composite content view": [
         ""
       ],
-      "Cannot be disabled because it is part of a published content view": [
+      "Cannot be disabled because it is part of a content view": [
         ""
       ],
       "Cannot calculate name for custom repos": [
@@ -1468,9 +1474,6 @@
       "Components": [
         "კომპონენტები"
       ],
-      "Composite": [
-        "კომპოზიტი"
-      ],
       "Composite Content View": [
         "კომპოზიტური შემცველობის ხედი"
       ],
@@ -1500,15 +1503,6 @@
       ],
       "Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.": [
         ""
-      ],
-      "Consisting of multiple content views": [
-        "შედგება მრავალი შემცველობის ხედისგან"
-      ],
-      "Consists of content views": [
-        "შედგება შემცველობის ხედებისგან"
-      ],
-      "Consists of repositories": [
-        "შედგება რეპოზიტორიებისგან"
       ],
       "Consumed": [
         "მოხმარებულია"
@@ -1545,6 +1539,15 @@
       ],
       "Container tags": [
         "კონტეინერის ჭდეები"
+      ],
+      "Contains content views. You must choose the version to use for each content view.": [
+        ""
+      ],
+      "Contains repositories. Always serves the latest synced content, without the need to publish versions.": [
+        ""
+      ],
+      "Contains repositories. Versions are published and optionally filtered.": [
+        ""
       ],
       "Content": [
         "შემცველობა"
@@ -2152,8 +2155,8 @@
       "Default System SLA": [
         "სისტემის ნაგულისხმები SLA"
       ],
-      "Default content view versions cannot be promoted": [
-        "ნაგულისხმები შემცველობის ხედის ვერსიების წახალისება შეუძლებელია"
+      "Default and Rolling content view versions cannot be promoted": [
+        ""
       ],
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         ""
@@ -3697,7 +3700,7 @@
       "Installable bugfix/enhancement errata": [
         ""
       ],
-      "Installable errata are applicable errata that are available in the host's content view and lifecycle environment.": [
+      "Installable errata are applicable errata that are available in the host's assigned content view environments.": [
         ""
       ],
       "Installable security errata": [
@@ -3842,6 +3845,27 @@
         "გამომცემელი"
       ],
       "It is only allowed for Non-Redhat Yum repositories.": [
+        ""
+      ],
+      "It's not possible to bulk remove versions from a rolling content view.": [
+        ""
+      ],
+      "It's not possible to copy a rolling content view.": [
+        ""
+      ],
+      "It's not possible to create a filter for a rolling content view.": [
+        ""
+      ],
+      "It's not possible to destroy a version of a rolling content view.": [
+        ""
+      ],
+      "It's not possible to export a rolling content view.": [
+        ""
+      ],
+      "It's not possible to promote a rolling content view.": [
+        ""
+      ],
+      "It's not possible to publish a rolling content view.": [
         ""
       ],
       "Job '${description}' completed": [
@@ -4519,6 +4543,9 @@
       "Multi-entitlement": [
         ""
       ],
+      "Must be Ascii alphanumeric, '_' or '-'": [
+        ""
+      ],
       "N/A": [
         "N/A"
       ],
@@ -4876,7 +4903,7 @@
       "No packages available to install": [
         "დასაყენებელი პაკეტები მიუწვდომელია"
       ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+      "No packages available to install on this host. Please check the host's assigned content view environments.": [
         ""
       ],
       "No packages removed": [
@@ -5140,6 +5167,9 @@
       "Organization required": [
         "ორგანიზაციის მითითება აუცილებელია"
       ],
+      "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details.": [
+        ""
+      ],
       "Orphaned Content Protection Time": [
         ""
       ],
@@ -5292,6 +5322,9 @@
       ],
       "Package Update scheduled by %s": [
         "პაკეტის განახლება შესრულების რიგშია %s-ის მიერ"
+      ],
+      "Package actions will be transient": [
+        ""
       ],
       "Package group update canceled": [
         "პაკეტის ჯგუფის განახლება გაუქმდა"
@@ -5851,6 +5884,9 @@
       "Refresh Manifest": [
         "მანიფესტის განახლება"
       ],
+      "Refresh RollingCV Repo": [
+        ""
+      ],
       "Refresh all alternate content sources": [
         ""
       ],
@@ -6352,7 +6388,7 @@
       "Review affected environments": [
         "მოყოლილი გარემოების გადახედვა"
       ],
-      "Review and optionally exclude hosts from your selection.": [
+      "Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot.": [
         ""
       ],
       "Review and then click {submitBtnText}.": [
@@ -6383,6 +6419,12 @@
         ""
       ],
       "Rollback image digest": [
+        ""
+      ],
+      "Rolling content view": [
+        ""
+      ],
+      "Rolling content views": [
         ""
       ],
       "Rules to be added": [
@@ -6817,9 +6859,6 @@
       "Simplified": [
         "გამარტივებული"
       ],
-      "Single content view consisting of e.g. repositories": [
-        "ერთი შემცველობის ხედი, შედგენილი, მაგალითად, რეპოზიტორიებისგან"
-      ],
       "Size of file to upload": [
         "ასატვირთი ფაილის ზომა"
       ],
@@ -6861,6 +6900,9 @@
       ],
       "Solve dependencies": [
         "დამოკიდებულებების ამოხსნა"
+      ],
+      "Some environments are disabled because they are not associated with all of the affected hosts' content sources.": [
+        ""
       ],
       "Some environments are disabled because they are not associated with the host's content source.": [
         ""
@@ -7456,6 +7498,9 @@
       "The following repositories provided in the import metadata have an incorrect content type or provider type. Make sure the export and import repositories are of the same type before importing\\n %{repos}": [
         ""
       ],
+      "The generated container repository name is invalid. Please review the lifecycle environment's registry name pattern. It may be caused by special characters in the components that make up the name, like the organization.": [
+        ""
+      ],
       "The id of the content source": [
         "შემცველობის წყაროს ID"
       ],
@@ -7675,7 +7720,7 @@
       "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details.": [
         ""
       ],
-      "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
+      "This erratum is not installable because it is not in this host's assigned content view environments.": [
         ""
       ],
       "This host does not have any Module streams.": [
@@ -7718,9 +7763,6 @@
         "ბმულ რეპოზიტორიას არ წარმოადგენს"
       ],
       "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        ""
-      ],
-      "This repository has pending tasks in associated content views. Please wait for the tasks: ": [
         ""
       ],
       "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.": [
@@ -7932,6 +7974,12 @@
       ],
       "Unable to detect puppet path": [
         "Puppet-ის ბილიკის პოვნა შეუძლებელია"
+      ],
+      "Unable to find a content view with ID %s": [
+        ""
+      ],
+      "Unable to find a lifecycle environment with ID %s": [
+        ""
       ],
       "Unable to find product '%s' in organization '%s'": [
         "ორგანიზაციაში %2$s პროდუქტი %1$s არ არსებობს"
@@ -8419,6 +8467,9 @@
       "View content views": [
         ""
       ],
+      "View details": [
+        ""
+      ],
       "View documentation": [
         ""
       ],
@@ -8691,6 +8742,9 @@
       ],
       "are only allowed for Yum repositories.": [
         "დაშვებულია მხოლოდ Yum-ის რეპოზიტორიებისთვის."
+      ],
+      "assign a new content source to the hosts": [
+        ""
       ],
       "attempted to sync a non-library repository.": [
         ""
@@ -9048,9 +9102,6 @@
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         ""
-      ],
-      "invalid container image name": [
-        "კონტეინერის ასლის არასწორი სახელი"
       ],
       "invalid: Repositories can only require one OS version.": [
         "არასწორია: რეპოზიტორიებს შეიძლება ოს-ის მხოლოდ ერთი ვერსია სჭირდებოდეთ."

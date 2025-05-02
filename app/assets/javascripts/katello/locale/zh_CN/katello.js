@@ -776,6 +776,9 @@
       "Ansible collections": [
         "Ansible 集合"
       ],
+      "Any updates to image mode host(s) will be lost on the next reboot.": [
+        ""
+      ],
       "Applicability Batch Size": [
         "适用批次数量"
       ],
@@ -801,9 +804,6 @@
         "应用"
       ],
       "Apply errata": [
-        ""
-      ],
-      "Apply erratum": [
         ""
       ],
       "Apply to all repositories in the CV": [
@@ -1220,13 +1220,19 @@
       "Cannot add repositories to a composite content view": [
         "无法将仓库添加到复合内容视图"
       ],
+      "Cannot add rolling content view to composite content view": [
+        ""
+      ],
+      "Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment.": [
+        ""
+      ],
       "Cannot associate a Red Hat provider with a custom product": [
         ""
       ],
       "Cannot associate a component to a non composite content view": [
         "无法将一个组件和一个非复合内容视图相关联"
       ],
-      "Cannot be disabled because it is part of a published content view": [
+      "Cannot be disabled because it is part of a content view": [
         ""
       ],
       "Cannot calculate name for custom repos": [
@@ -1466,9 +1472,6 @@
       "Components": [
         "组件"
       ],
-      "Composite": [
-        "组成"
-      ],
       "Composite Content View": [
         "复合内容视图"
       ],
@@ -1498,15 +1501,6 @@
       ],
       "Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.": [
         "考虑将生命周期环境的注册表名称特征改为更具体。"
-      ],
-      "Consisting of multiple content views": [
-        "由多个组件内容视图组成"
-      ],
-      "Consists of content views": [
-        "由内容视图组成"
-      ],
-      "Consists of repositories": [
-        "由仓库组成"
       ],
       "Consumed": [
         "已消耗"
@@ -1543,6 +1537,15 @@
       ],
       "Container tags": [
         "容器标签"
+      ],
+      "Contains content views. You must choose the version to use for each content view.": [
+        ""
+      ],
+      "Contains repositories. Always serves the latest synced content, without the need to publish versions.": [
+        ""
+      ],
+      "Contains repositories. Versions are published and optionally filtered.": [
+        ""
       ],
       "Content": [
         "内容"
@@ -2150,8 +2153,8 @@
       "Default System SLA": [
         "默认系统 SLA"
       ],
-      "Default content view versions cannot be promoted": [
-        "无法提升默认的内容视图版本"
+      "Default and Rolling content view versions cannot be promoted": [
+        ""
       ],
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         "智能代理同步默认下载策略（'inherit'、immediate' 或'on_demand'）"
@@ -3695,7 +3698,7 @@
       "Installable bugfix/enhancement errata": [
         ""
       ],
-      "Installable errata are applicable errata that are available in the host's content view and lifecycle environment.": [
+      "Installable errata are applicable errata that are available in the host's assigned content view environments.": [
         ""
       ],
       "Installable security errata": [
@@ -3840,6 +3843,27 @@
         "出自"
       ],
       "It is only allowed for Non-Redhat Yum repositories.": [
+        ""
+      ],
+      "It's not possible to bulk remove versions from a rolling content view.": [
+        ""
+      ],
+      "It's not possible to copy a rolling content view.": [
+        ""
+      ],
+      "It's not possible to create a filter for a rolling content view.": [
+        ""
+      ],
+      "It's not possible to destroy a version of a rolling content view.": [
+        ""
+      ],
+      "It's not possible to export a rolling content view.": [
+        ""
+      ],
+      "It's not possible to promote a rolling content view.": [
+        ""
+      ],
+      "It's not possible to publish a rolling content view.": [
         ""
       ],
       "Job '${description}' completed": [
@@ -4517,6 +4541,9 @@
       "Multi-entitlement": [
         "多权利"
       ],
+      "Must be Ascii alphanumeric, '_' or '-'": [
+        ""
+      ],
       "N/A": [
         "不适用"
       ],
@@ -4874,7 +4901,7 @@
       "No packages available to install": [
         "没有可安装的软件包"
       ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+      "No packages available to install on this host. Please check the host's assigned content view environments.": [
         ""
       ],
       "No packages removed": [
@@ -5138,6 +5165,9 @@
       "Organization required": [
         "需要的机构"
       ],
+      "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details.": [
+        ""
+      ],
       "Orphaned Content Protection Time": [
         "孤立的内容保护时间"
       ],
@@ -5290,6 +5320,9 @@
       ],
       "Package Update scheduled by %s": [
         "%s调度的软件包更新"
+      ],
+      "Package actions will be transient": [
+        ""
       ],
       "Package group update canceled": [
         "软件包组更新已取消"
@@ -5849,6 +5882,9 @@
       "Refresh Manifest": [
         "刷新清单"
       ],
+      "Refresh RollingCV Repo": [
+        ""
+      ],
       "Refresh all alternate content sources": [
         ""
       ],
@@ -6350,7 +6386,7 @@
       "Review affected environments": [
         "检查受影响的环境"
       ],
-      "Review and optionally exclude hosts from your selection.": [
+      "Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot.": [
         ""
       ],
       "Review and then click {submitBtnText}.": [
@@ -6381,6 +6417,12 @@
         ""
       ],
       "Rollback image digest": [
+        ""
+      ],
+      "Rolling content view": [
+        ""
+      ],
+      "Rolling content views": [
         ""
       ],
       "Rules to be added": [
@@ -6815,9 +6857,6 @@
       "Simplified": [
         "简化的"
       ],
-      "Single content view consisting of e.g. repositories": [
-        "包含例如仓库的单一内容视图"
-      ],
       "Size of file to upload": [
         "要上传的文件大小"
       ],
@@ -6859,6 +6898,9 @@
       ],
       "Solve dependencies": [
         "解决依赖关系"
+      ],
+      "Some environments are disabled because they are not associated with all of the affected hosts' content sources.": [
+        ""
       ],
       "Some environments are disabled because they are not associated with the host's content source.": [
         ""
@@ -7454,6 +7496,9 @@
       "The following repositories provided in the import metadata have an incorrect content type or provider type. Make sure the export and import repositories are of the same type before importing\\n %{repos}": [
         "导入元数据中提供的以下存储库的内容类型或供应商类型不正确。在导入 %{repos} 之前，请确保导出和导入存储库的类型相同"
       ],
+      "The generated container repository name is invalid. Please review the lifecycle environment's registry name pattern. It may be caused by special characters in the components that make up the name, like the organization.": [
+        ""
+      ],
       "The id of the content source": [
         "内容源的 id"
       ],
@@ -7673,8 +7718,8 @@
       "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details.": [
         ""
       ],
-      "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
-        "此勘误不可安装，因为它不在此主机的内容视图和生命周期环境中。"
+      "This erratum is not installable because it is not in this host's assigned content view environments.": [
+        ""
       ],
       "This host does not have any Module streams.": [
         "此主机没有任何模块流。"
@@ -7716,9 +7761,6 @@
         "没有连接的仓库"
       ],
       "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        ""
-      ],
-      "This repository has pending tasks in associated content views. Please wait for the tasks: ": [
         ""
       ],
       "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.": [
@@ -7930,6 +7972,12 @@
       ],
       "Unable to detect puppet path": [
         "无法检测到 puppet 路径"
+      ],
+      "Unable to find a content view with ID %s": [
+        ""
+      ],
+      "Unable to find a lifecycle environment with ID %s": [
+        ""
       ],
       "Unable to find product '%s' in organization '%s'": [
         "在机构 '%s' 中找不到产品 '%s'"
@@ -8417,6 +8465,9 @@
       "View content views": [
         ""
       ],
+      "View details": [
+        ""
+      ],
       "View documentation": [
         ""
       ],
@@ -8689,6 +8740,9 @@
       ],
       "are only allowed for Yum repositories.": [
         "仅允许用于Yum存储库。"
+      ],
+      "assign a new content source to the hosts": [
+        ""
       ],
       "attempted to sync a non-library repository.": [
         ""
@@ -9046,9 +9100,6 @@
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         "解析指定的对象只返回与特定对象关联的仓库。只支持 'content_view' 和 'content_view_version'。"
-      ],
-      "invalid container image name": [
-        "无效的容器镜像名称"
       ],
       "invalid: Repositories can only require one OS version.": [
         "无效：存储库只能要求一个操作系统版本。"
