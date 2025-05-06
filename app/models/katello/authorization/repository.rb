@@ -37,7 +37,17 @@ module Katello
         joins(:root).where("#{Repository.table_name}.id in (?) or #{self.table_name}.id in (?) or #{self.table_name}.id in (?) or #{self.table_name}.id in (?)", in_products, in_content_views, in_versions, in_environments)
       end
 
-      def readable_docker_catalog
+      def readable_docker_catalog(host = nil)
+        if host
+          repo_ids = nil
+          if host&.content_view_environments&.any?
+            repo_ids = host.content_view_environments.flat_map do |cve|
+              cve&.content_view_version&.repositories&.where(environment_id: cve.environment)&.non_archived&.docker_type&.pluck(:id)
+            end
+          end
+          repos = Katello::Repository.where(id: repo_ids)
+          return repos
+        end
         readable_docker_catalog_as(User.current)
       end
 
