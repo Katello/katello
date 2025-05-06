@@ -790,6 +790,9 @@ msgstr "Ansible-ის კოლექცია"
 msgid "Ansible collections"
 msgstr "Ansible-ის კოლექციები"
 
+msgid "Any updates to image mode host(s) will be lost on the next reboot."
+msgstr ""
+
 msgid "Applicability Batch Size"
 msgstr ""
 
@@ -815,9 +818,6 @@ msgid "Apply"
 msgstr "გამოყენება"
 
 msgid "Apply errata"
-msgstr ""
-
-msgid "Apply erratum"
 msgstr ""
 
 msgid "Apply to all repositories in the CV"
@@ -1236,13 +1236,19 @@ msgstr ""
 msgid "Cannot add repositories to a composite content view"
 msgstr "რეპოზიტორიების კომპოზიტურ შემცველობის ხედში ჩამატება შეუძლებელია"
 
+msgid "Cannot add rolling content view to composite content view"
+msgstr ""
+
+msgid "Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment."
+msgstr ""
+
 msgid "Cannot associate a Red Hat provider with a custom product"
 msgstr ""
 
 msgid "Cannot associate a component to a non composite content view"
 msgstr ""
 
-msgid "Cannot be disabled because it is part of a published content view"
+msgid "Cannot be disabled because it is part of a content view"
 msgstr ""
 
 msgid "Cannot calculate name for custom repos"
@@ -1482,9 +1488,6 @@ msgstr "კომპონენტის ვერსია: '%{cvv}', პრ�
 msgid "Components"
 msgstr "კომპონენტები"
 
-msgid "Composite"
-msgstr "კომპოზიტი"
-
 msgid "Composite Content View"
 msgstr "კომპოზიტური შემცველობის ხედი"
 
@@ -1514,15 +1517,6 @@ msgstr "დაადასტურეთ მანიფესტის წა�
 
 msgid "Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific."
 msgstr ""
-
-msgid "Consisting of multiple content views"
-msgstr "შედგება მრავალი შემცველობის ხედისგან"
-
-msgid "Consists of content views"
-msgstr "შედგება შემცველობის ხედებისგან"
-
-msgid "Consists of repositories"
-msgstr "შედგება რეპოზიტორიებისგან"
 
 msgid "Consumed"
 msgstr "მოხმარებულია"
@@ -1559,6 +1553,15 @@ msgstr "კონტეინერის მანიფესტები"
 
 msgid "Container tags"
 msgstr "კონტეინერის ჭდეები"
+
+msgid "Contains content views. You must choose the version to use for each content view."
+msgstr ""
+
+msgid "Contains repositories. Always serves the latest synced content, without the need to publish versions."
+msgstr ""
+
+msgid "Contains repositories. Versions are published and optionally filtered."
+msgstr ""
 
 msgid "Content"
 msgstr "შემცველობა"
@@ -2166,8 +2169,8 @@ msgstr ""
 msgid "Default System SLA"
 msgstr "სისტემის ნაგულისხმები SLA"
 
-msgid "Default content view versions cannot be promoted"
-msgstr "ნაგულისხმები შემცველობის ხედის ვერსიების წახალისება შეუძლებელია"
+msgid "Default and Rolling content view versions cannot be promoted"
+msgstr ""
 
 msgid "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')"
 msgstr ""
@@ -3715,7 +3718,7 @@ msgstr "დაყენებადი"
 msgid "Installable bugfix/enhancement errata"
 msgstr ""
 
-msgid "Installable errata are applicable errata that are available in the host's content view and lifecycle environment."
+msgid "Installable errata are applicable errata that are available in the host's assigned content view environments."
 msgstr ""
 
 msgid "Installable security errata"
@@ -3860,6 +3863,27 @@ msgid "Issued from"
 msgstr "გამომცემელი"
 
 msgid "It is only allowed for Non-Redhat Yum repositories."
+msgstr ""
+
+msgid "It's not possible to bulk remove versions from a rolling content view."
+msgstr ""
+
+msgid "It's not possible to copy a rolling content view."
+msgstr ""
+
+msgid "It's not possible to create a filter for a rolling content view."
+msgstr ""
+
+msgid "It's not possible to destroy a version of a rolling content view."
+msgstr ""
+
+msgid "It's not possible to export a rolling content view."
+msgstr ""
+
+msgid "It's not possible to promote a rolling content view."
+msgstr ""
+
+msgid "It's not possible to publish a rolling content view."
 msgstr ""
 
 msgid "Job '${description}' completed"
@@ -4539,6 +4563,9 @@ msgstr ""
 msgid "Multi-entitlement"
 msgstr ""
 
+msgid "Must be Ascii alphanumeric, '_' or '-'"
+msgstr ""
+
 msgid "N/A"
 msgstr "N/A"
 
@@ -4902,7 +4929,7 @@ msgstr "პაკეტების გარეშე"
 msgid "No packages available to install"
 msgstr "დასაყენებელი პაკეტები მიუწვდომელია"
 
-msgid "No packages available to install on this host. Please check the host's content view and lifecycle environment."
+msgid "No packages available to install on this host. Please check the host's assigned content view environments."
 msgstr ""
 
 msgid "No packages removed"
@@ -5166,6 +5193,9 @@ msgstr ""
 msgid "Organization required"
 msgstr "ორგანიზაციის მითითება აუცილებელია"
 
+msgid "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details."
+msgstr ""
+
 msgid "Orphaned Content Protection Time"
 msgstr ""
 
@@ -5318,6 +5348,9 @@ msgstr "პაკეტის განახლების ვადა გა
 
 msgid "Package Update scheduled by %s"
 msgstr "პაკეტის განახლება შესრულების რიგშია %s-ის მიერ"
+
+msgid "Package actions will be transient"
+msgstr ""
 
 msgid "Package group update canceled"
 msgstr "პაკეტის ჯგუფის განახლება გაუქმდა"
@@ -5879,6 +5912,9 @@ msgstr "შემცველობის ჰოსტის სტატუს�
 msgid "Refresh Manifest"
 msgstr "მანიფესტის განახლება"
 
+msgid "Refresh RollingCV Repo"
+msgstr ""
+
 msgid "Refresh all alternate content sources"
 msgstr ""
 
@@ -6380,7 +6416,7 @@ msgstr "მოყოლილი გარემოს გადახედვ�
 msgid "Review affected environments"
 msgstr "მოყოლილი გარემოების გადახედვა"
 
-msgid "Review and optionally exclude hosts from your selection."
+msgid "Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot."
 msgstr ""
 
 msgid "Review and then click {submitBtnText}."
@@ -6411,6 +6447,12 @@ msgid "Rollback image"
 msgstr ""
 
 msgid "Rollback image digest"
+msgstr ""
+
+msgid "Rolling content view"
+msgstr ""
+
+msgid "Rolling content views"
 msgstr ""
 
 msgid "Rules to be added"
@@ -6845,9 +6887,6 @@ msgstr ""
 msgid "Simplified"
 msgstr "გამარტივებული"
 
-msgid "Single content view consisting of e.g. repositories"
-msgstr "ერთი შემცველობის ხედი, შედგენილი, მაგალითად, რეპოზიტორიებისგან"
-
 msgid "Size of file to upload"
 msgstr "ასატვირთი ფაილის ზომა"
 
@@ -6889,6 +6928,9 @@ msgstr ""
 
 msgid "Solve dependencies"
 msgstr "დამოკიდებულებების ამოხსნა"
+
+msgid "Some environments are disabled because they are not associated with all of the affected hosts' content sources."
+msgstr ""
 
 msgid "Some environments are disabled because they are not associated with the host's content source."
 msgstr ""
@@ -7486,6 +7528,9 @@ msgid ""
 " %{repos}"
 msgstr ""
 
+msgid "The generated container repository name is invalid. Please review the lifecycle environment's registry name pattern. It may be caused by special characters in the components that make up the name, like the organization."
+msgstr ""
+
 msgid "The id of the content source"
 msgstr "შემცველობის წყაროს ID"
 
@@ -7707,7 +7752,7 @@ msgstr ""
 msgid "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details."
 msgstr ""
 
-msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
+msgid "This erratum is not installable because it is not in this host's assigned content view environments."
 msgstr ""
 
 msgid "This host does not have any Module streams."
@@ -7750,9 +7795,6 @@ msgid "This is not a linked repository"
 msgstr "ბმულ რეპოზიტორიას არ წარმოადგენს"
 
 msgid "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}."
-msgstr ""
-
-msgid "This repository has pending tasks in associated content views. Please wait for the tasks: "
 msgstr ""
 
 msgid "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use."
@@ -7964,6 +8006,12 @@ msgstr "Pulp-ის საცავის პოვნა შეუძლებ�
 
 msgid "Unable to detect puppet path"
 msgstr "Puppet-ის ბილიკის პოვნა შეუძლებელია"
+
+msgid "Unable to find a content view with ID %s"
+msgstr ""
+
+msgid "Unable to find a lifecycle environment with ID %s"
+msgstr ""
 
 msgid "Unable to find product '%s' in organization '%s'"
 msgstr "ორგანიზაციაში %2$s პროდუქტი %1$s არ არსებობს"
@@ -8451,6 +8499,9 @@ msgstr "დალაგება"
 msgid "View content views"
 msgstr ""
 
+msgid "View details"
+msgstr ""
+
 msgid "View documentation"
 msgstr ""
 
@@ -8723,6 +8774,9 @@ msgstr "ორგანიზაცია"
 
 msgid "are only allowed for Yum repositories."
 msgstr "დაშვებულია მხოლოდ Yum-ის რეპოზიტორიებისთვის."
+
+msgid "assign a new content source to the hosts"
+msgstr ""
 
 msgid "attempted to sync a non-library repository."
 msgstr ""
@@ -9080,9 +9134,6 @@ msgstr "პაკეტების დაყენება..."
 
 msgid "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."
 msgstr ""
-
-msgid "invalid container image name"
-msgstr "კონტეინერის ასლის არასწორი სახელი"
 
 msgid "invalid: Repositories can only require one OS version."
 msgstr "არასწორია: რეპოზიტორიებს შეიძლება ოს-ის მხოლოდ ერთი ვერსია სჭირდებოდეთ."

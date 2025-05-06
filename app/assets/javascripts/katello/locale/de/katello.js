@@ -777,6 +777,9 @@
       "Ansible collections": [
         ""
       ],
+      "Any updates to image mode host(s) will be lost on the next reboot.": [
+        ""
+      ],
       "Applicability Batch Size": [
         "Anwendbarkeit Chargengröße"
       ],
@@ -802,9 +805,6 @@
         "Anwenden"
       ],
       "Apply errata": [
-        ""
-      ],
-      "Apply erratum": [
         ""
       ],
       "Apply to all repositories in the CV": [
@@ -1222,13 +1222,19 @@
       "Cannot add repositories to a composite content view": [
         "Repositorys können nicht zu einer Verbundinhaltsansicht hinzugefügt werden"
       ],
+      "Cannot add rolling content view to composite content view": [
+        ""
+      ],
+      "Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment.": [
+        ""
+      ],
       "Cannot associate a Red Hat provider with a custom product": [
         ""
       ],
       "Cannot associate a component to a non composite content view": [
         "Eine Komponente kann nicht mit einer nicht zusammengesetzten Inhaltsansicht verknüpft werden"
       ],
-      "Cannot be disabled because it is part of a published content view": [
+      "Cannot be disabled because it is part of a content view": [
         ""
       ],
       "Cannot calculate name for custom repos": [
@@ -1468,9 +1474,6 @@
       "Components": [
         "Komponenten"
       ],
-      "Composite": [
-        "Verbund"
-      ],
       "Composite Content View": [
         "Zusammengesetzte Inhaltsansicht"
       ],
@@ -1500,15 +1503,6 @@
       ],
       "Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.": [
         "Erwägen Sie, das Registrierungsnamenmuster der Lebenszyklusumgebung in etwas Spezifischeres zu ändern."
-      ],
-      "Consisting of multiple content views": [
-        ""
-      ],
-      "Consists of content views": [
-        ""
-      ],
-      "Consists of repositories": [
-        ""
       ],
       "Consumed": [
         "Verbraucht"
@@ -1544,6 +1538,15 @@
         ""
       ],
       "Container tags": [
+        ""
+      ],
+      "Contains content views. You must choose the version to use for each content view.": [
+        ""
+      ],
+      "Contains repositories. Always serves the latest synced content, without the need to publish versions.": [
+        ""
+      ],
+      "Contains repositories. Versions are published and optionally filtered.": [
         ""
       ],
       "Content": [
@@ -2152,8 +2155,8 @@
       "Default System SLA": [
         "Standardmäßige SLA des Systems"
       ],
-      "Default content view versions cannot be promoted": [
-        "Standardmäßige Inhaltsansichtsversionen können nicht übertragen werden"
+      "Default and Rolling content view versions cannot be promoted": [
+        ""
       ],
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         ""
@@ -3697,7 +3700,7 @@
       "Installable bugfix/enhancement errata": [
         ""
       ],
-      "Installable errata are applicable errata that are available in the host's content view and lifecycle environment.": [
+      "Installable errata are applicable errata that are available in the host's assigned content view environments.": [
         ""
       ],
       "Installable security errata": [
@@ -3842,6 +3845,27 @@
         ""
       ],
       "It is only allowed for Non-Redhat Yum repositories.": [
+        ""
+      ],
+      "It's not possible to bulk remove versions from a rolling content view.": [
+        ""
+      ],
+      "It's not possible to copy a rolling content view.": [
+        ""
+      ],
+      "It's not possible to create a filter for a rolling content view.": [
+        ""
+      ],
+      "It's not possible to destroy a version of a rolling content view.": [
+        ""
+      ],
+      "It's not possible to export a rolling content view.": [
+        ""
+      ],
+      "It's not possible to promote a rolling content view.": [
+        ""
+      ],
+      "It's not possible to publish a rolling content view.": [
         ""
       ],
       "Job '${description}' completed": [
@@ -4519,6 +4543,9 @@
       "Multi-entitlement": [
         "Multi-Berechtigung"
       ],
+      "Must be Ascii alphanumeric, '_' or '-'": [
+        ""
+      ],
       "N/A": [
         "N/A"
       ],
@@ -4876,7 +4903,7 @@
       "No packages available to install": [
         ""
       ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+      "No packages available to install on this host. Please check the host's assigned content view environments.": [
         ""
       ],
       "No packages removed": [
@@ -5140,6 +5167,9 @@
       "Organization required": [
         "Organisation erforderlich"
       ],
+      "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details.": [
+        ""
+      ],
       "Orphaned Content Protection Time": [
         ""
       ],
@@ -5292,6 +5322,9 @@
       ],
       "Package Update scheduled by %s": [
         "Paketaktualisierung eingeplant durch %s"
+      ],
+      "Package actions will be transient": [
+        ""
       ],
       "Package group update canceled": [
         "Paketgruppenaktualisierung abgebrochen"
@@ -5851,6 +5884,9 @@
       "Refresh Manifest": [
         "Manifest aktualisieren"
       ],
+      "Refresh RollingCV Repo": [
+        ""
+      ],
       "Refresh all alternate content sources": [
         ""
       ],
@@ -6352,7 +6388,7 @@
       "Review affected environments": [
         ""
       ],
-      "Review and optionally exclude hosts from your selection.": [
+      "Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot.": [
         ""
       ],
       "Review and then click {submitBtnText}.": [
@@ -6383,6 +6419,12 @@
         ""
       ],
       "Rollback image digest": [
+        ""
+      ],
+      "Rolling content view": [
+        ""
+      ],
+      "Rolling content views": [
         ""
       ],
       "Rules to be added": [
@@ -6817,9 +6859,6 @@
       "Simplified": [
         ""
       ],
-      "Single content view consisting of e.g. repositories": [
-        ""
-      ],
       "Size of file to upload": [
         "Größe der Datei zum hochladen"
       ],
@@ -6861,6 +6900,9 @@
       ],
       "Solve dependencies": [
         "Abhängigkeiten lösen"
+      ],
+      "Some environments are disabled because they are not associated with all of the affected hosts' content sources.": [
+        ""
       ],
       "Some environments are disabled because they are not associated with the host's content source.": [
         ""
@@ -7456,6 +7498,9 @@
       "The following repositories provided in the import metadata have an incorrect content type or provider type. Make sure the export and import repositories are of the same type before importing\\n %{repos}": [
         "Die folgenden Repositorys, die in den Importmetadaten bereitgestellt werden, weisen einen falschen Inhaltstyp oder Anbietertyp auf. Stellen Sie vor dem Import sicher, dass die Export- und Import-Repositorys vom gleichen Typ sind\\n %{repos}"
       ],
+      "The generated container repository name is invalid. Please review the lifecycle environment's registry name pattern. It may be caused by special characters in the components that make up the name, like the organization.": [
+        ""
+      ],
       "The id of the content source": [
         ""
       ],
@@ -7675,7 +7720,7 @@
       "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details.": [
         ""
       ],
-      "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
+      "This erratum is not installable because it is not in this host's assigned content view environments.": [
         ""
       ],
       "This host does not have any Module streams.": [
@@ -7718,9 +7763,6 @@
         "Dies ist kein verlinktes Repository"
       ],
       "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        ""
-      ],
-      "This repository has pending tasks in associated content views. Please wait for the tasks: ": [
         ""
       ],
       "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.": [
@@ -7932,6 +7974,12 @@
       ],
       "Unable to detect puppet path": [
         "Puppet-Pfad kann nicht erkannt werden"
+      ],
+      "Unable to find a content view with ID %s": [
+        ""
+      ],
+      "Unable to find a lifecycle environment with ID %s": [
+        ""
       ],
       "Unable to find product '%s' in organization '%s'": [
         "Unable to find product '%s' in organization '%s'"
@@ -8419,6 +8467,9 @@
       "View content views": [
         ""
       ],
+      "View details": [
+        ""
+      ],
       "View documentation": [
         ""
       ],
@@ -8691,6 +8742,9 @@
       ],
       "are only allowed for Yum repositories.": [
         "sind nur für Yum-Repositorys zulässig."
+      ],
+      "assign a new content source to the hosts": [
+        ""
       ],
       "attempted to sync a non-library repository.": [
         ""
@@ -9048,9 +9102,6 @@
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         "interpretiert das angegebene Objekt so, dass nur Repositorys zurückgegeben werden, die dem angegebenen Objekt zugeordnet werden können. Nur 'content_view' und 'content_view_version' werden unterstützt."
-      ],
-      "invalid container image name": [
-        "Ungültiger Container-Image-Name"
       ],
       "invalid: Repositories can only require one OS version.": [
         "ungültig: Repositorys können nur eine Betriebssystemversion erfordern."

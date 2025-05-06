@@ -4,13 +4,13 @@
 # 0868a4d1af5275b3f70b0a6dac4c99a4, 2017
 # tim123, 2020
 # Bryan Kearney <bryan.kearney@gmail.com>, 2023
-# Amit Upadhye <aupadhye@redhat.com>, 2023
-# Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2024
+# Amit Upadhye <aupadhye@redhat.com>, 2025
+# Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Last-Translator: Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2024\n"
+"Last-Translator: Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/foreman/teams/114/zh_CN/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -51,7 +51,7 @@ msgstr "{{ deb.hosts_available_count || 0 }} 可升级"
 
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
 msgid "{{ errata.hosts_applicable_count || 0 }} Applicable,"
-msgstr "{{ errata.hosts_applicable_count || 0 }} 适用。"
+msgstr "{{ errata.hosts_applicable_count || 0 }} 适用"
 
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
 msgid "{{ errata.hosts_available_count || 0 }} Installable"
@@ -192,15 +192,6 @@ msgid ""
 "Their components needing updating are listed underneath."
 msgstr "*这些标记的内容视图版本来自复合内容视图。它们的需要更新的组件在下面列出。"
 
-#: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-advanced-sync-modal.controller.js
-#: app/assets/javascripts/bastion_katello/products/products.controller.js
-msgid "/foreman_tasks/tasks/%taskId"
-msgstr "/foreman_tasks/tasks/%taskId"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/content-hosts-bulk-traces-modal.controller.js
-msgid "/job_invocations"
-msgstr "/job_invocations"
-
 #: app/assets/javascripts/bastion_katello/activation-keys/activationKeyConsumed.filter.js
 #: app/assets/javascripts/bastion_katello/subscriptions/subscriptionConsumed.filter.js
 msgid "%(consumed)s out of %(quantity)s"
@@ -224,9 +215,25 @@ msgid ""
 "repository, and no content will be removed."
 msgstr "<b>Additive:</b> 同步时的新内容将添加到仓库中，且不会删除任何内容。"
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-dependencies.html
+msgid "<b>Breaks</b>"
+msgstr "<b>Breaks</b>"
+
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-dependencies.html
+msgid "<b>Conflicts</b>"
+msgstr "<b>Conflicts</b>"
+
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-dependencies.html
+msgid "<b>Depends</b>"
+msgstr "<b>Depends</b>"
+
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "<b>Description</b>"
 msgstr "<b>描述</b>"
+
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-dependencies.html
+msgid "<b>Enhances</b>"
+msgstr "<b>Enhances</b>"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "<b>Issued</b>"
@@ -258,13 +265,25 @@ msgstr "<b>模块流</b>"
 msgid "<b>Packages</b>"
 msgstr "<b> 软件包</b>"
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-dependencies.html
+msgid "<b>Pre-Depends</b>"
+msgstr "<b>Pre-Depends</b>"
+
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "<b>Reboot Suggested</b>"
 msgstr "<b>建议重启</b>"
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-dependencies.html
+msgid "<b>Recommends</b>"
+msgstr "<b>建议</b>"
+
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "<b>Solution</b>"
 msgstr "<b>解决</b>"
+
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-dependencies.html
+msgid "<b>Suggests</b>"
+msgstr "<b>推荐</b>"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "<b>Title</b>"
@@ -401,15 +420,6 @@ msgstr "将主机添加到主机集合以查看可用操作。"
 msgid "Add New Environment"
 msgstr "添加新环境"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
-msgid "Add ons"
-msgstr "附加组件"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
-msgid "Add ons:"
-msgstr "附加组件："
-
 #: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-add-products.controller.js
 msgid "Add Products"
 msgstr "添加产品"
@@ -491,6 +501,7 @@ msgstr "所有内容视图"
 msgid "All Lifecycle Environments"
 msgstr "所有生命周期环境"
 
+#: app/assets/javascripts/bastion_katello/debs/debs.controller.js
 #: app/assets/javascripts/bastion_katello/environments/details/environment-content.controller.js
 #: app/assets/javascripts/bastion_katello/errata/errata.controller.js
 #: app/assets/javascripts/bastion_katello/packages/packages.controller.js
@@ -726,9 +737,9 @@ msgstr "架构"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 msgid ""
-"Are you sure you want to add the {{ table.numSelected }} content host(s) "
-"selected to the host collection(s) chosen?"
-msgstr "您确定要添加{{ table.numSelected }}选定的内容主机到选定的主机集合？"
+"Are you sure you want to add the content host(s) selected to the host "
+"collection(s) chosen?"
+msgstr "您确定要添加选定的内容主机到选定的主机集合？"
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 msgid ""
@@ -878,9 +889,9 @@ msgstr[0] "您确定要删除{{ table.numSelected }} 个选择了的容器镜像
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 msgid ""
-"Are you sure you want to remove the {{ table.numSelected }} content host(s) "
-"selected from the host collection(s) chosen?"
-msgstr "您确定要从所选的主机集合中删除{{ table.numSelected }}个选择的内容主机？"
+"Are you sure you want to remove the content host(s) selected from the host "
+"collection(s) chosen?"
+msgstr "您确定要从所选的主机集合中删除个选择的内容主机？"
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 msgid ""
@@ -1020,7 +1031,6 @@ msgstr "后端识别码"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
-#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-info.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-info.html
@@ -1083,6 +1093,7 @@ msgid "Bulk Task"
 msgstr "批量任务"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
@@ -1315,8 +1326,8 @@ msgid "Content Credential %s has been created."
 msgstr "内容凭证%s已被创造。"
 
 #: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-msgid "Content Credential Contents"
-msgstr "内容凭证内容"
+msgid "Content Credential Contents *"
+msgstr "内容凭证内容 *"
 
 #: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-details-info.controller.js
 msgid "Content Credential successfully uploaded"
@@ -1574,10 +1585,6 @@ msgstr "关键"
 msgid "Cron Logic"
 msgstr "Cron 逻辑"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
-msgid "ctrl-click or shift-click to select multiple Add ons"
-msgstr "按 Ctrl 或 Shift 以选择多个附加组件"
-
 #: app/assets/javascripts/bastion_katello/content-hosts/content/content-host-errata.controller.js
 msgid "Current Lifecycle Environment (%e/%cv)"
 msgstr "当前的生命周期环境 (%e/%cv)"
@@ -1662,12 +1669,13 @@ msgstr "Deb 软件包用于："
 
 #: app/assets/javascripts/bastion_katello/environments/details/environment-content.controller.js
 msgid "Deb Repositories"
-msgstr "Deb 存储库"
+msgstr "Deb 软件仓库"
 
 #: app/assets/javascripts/bastion_katello/environments/views/environments.html
 msgid "Deb Repositories <div>{{ library.counts.deb_repositories || 0 }}</div>"
 msgstr "Deb 软件仓库 <div>{{ library.counts.deb_repositories || 0 }}</div>"
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-dependencies.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb.html
 msgid "Deb:"
@@ -1706,6 +1714,7 @@ msgstr "删除主机"
 msgid "Delta RPM"
 msgstr "Delta RPM"
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package.html
 #: app/assets/javascripts/bastion_katello/packages/packages.controller.js
 msgid "Dependencies"
@@ -1787,6 +1796,7 @@ msgid "Disable"
 msgstr "禁用"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
+#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 #: app/assets/javascripts/bastion_katello/repository-sets/repository-sets-enabled.filter.js
 msgid "Disabled"
 msgstr "禁用"
@@ -1846,7 +1856,6 @@ msgstr "Docker 标签"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-environment-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-release-version-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-repository-sets-modal.html
@@ -1870,6 +1879,7 @@ msgid "Enable Traces"
 msgstr "启用跟踪"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
+#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 #: app/assets/javascripts/bastion_katello/repository-sets/repository-sets-enabled.filter.js
 msgid "Enabled"
 msgstr "启用"
@@ -2139,6 +2149,10 @@ msgstr "的客户"
 msgid "Helper"
 msgstr "帮助"
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
+msgid "Homepage"
+msgstr "主页"
+
 #: app/assets/javascripts/bastion_katello/content-hosts/details/content-host-details.controller.js
 msgid "Host %s has been deleted."
 msgstr "主机 %s 已被删除。"
@@ -2286,6 +2300,10 @@ msgstr ""
 "为了浏览此仓库，您必须<a ng-href=\"/organizations/{{ organization "
 "}}/edit\">下载证书</a>或向管理员询问证书。"
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Include dependencies of Ansible collections in the repository."
+msgstr "在仓库中包含 Ansible 集合的依赖项。"
+
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Include Tags"
@@ -2356,6 +2374,10 @@ msgstr "安装的产品"
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
 msgid "Installed Profile"
 msgstr "安装的配置集"
+
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
+msgid "Installed size"
+msgstr "安装的大小"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Interfaces"
@@ -2561,6 +2583,10 @@ msgstr "载入中..."
 msgid "Loading...\""
 msgstr "加载...\""
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
+msgid "Maintainer"
+msgstr "维护者"
+
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Make filters apply to all repositories in the content view"
 msgstr "使过滤应用到内容视图中的所有仓库"
@@ -2695,6 +2721,10 @@ msgstr "模块流："
 msgid "More Details"
 msgstr "更多详情"
 
+#: app/assets/javascripts/bastion_katello/activation-keys/views/activation-keys.html
+msgid "Multi Content View Environment"
+msgstr "多内容视图环境"
+
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-repositories.html
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-repositories.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
@@ -2715,7 +2745,6 @@ msgstr "不适用"
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
 #: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
@@ -2769,6 +2798,10 @@ msgstr "不适用"
 #: app/assets/javascripts/bastion_katello/sync-plans/views/sync-plans.html
 msgid "Name"
 msgstr "名称"
+
+#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
+msgid "Name *"
+msgstr "名称 *"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -3106,6 +3139,10 @@ msgid ""
 "OSTree Repositories <div>{{ library.counts.ostree_repositories || 0 }}</div>"
 msgstr "OSTree 仓库 <div>{{ library.counts.ostree_repositories || 0 }}</div>"
 
+#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
+msgid "Overridden"
+msgstr "覆盖"
+
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-repository-sets-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
@@ -3141,6 +3178,7 @@ msgstr "软件包组"
 msgid "Package Groups for Repository:"
 msgstr "仓库的软件包组："
 
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Package Information"
 msgstr "软件包信息"
@@ -3692,6 +3730,7 @@ msgstr "仓库发现"
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-repositories.controller.js
+#: app/assets/javascripts/bastion_katello/debs/debs.controller.js
 #: app/assets/javascripts/bastion_katello/debs/details/deb-repositories.controller.js
 #: app/assets/javascripts/bastion_katello/docker-tags/details/docker-tag-repositories.controller.js
 #: app/assets/javascripts/bastion_katello/environments/details/environment-content.controller.js
@@ -3954,6 +3993,10 @@ msgstr "模式版本1"
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-info.html
 msgid "Schema Version 2"
 msgstr "模式版本2"
+
+#: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
+msgid "Section"
+msgstr "部分"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
@@ -4271,6 +4314,11 @@ msgstr "支持级别"
 msgid "Sync"
 msgstr "同步"
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Sync Dependencies"
+msgstr "同步依赖项"
+
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 #: app/assets/javascripts/bastion_katello/sync-plans/views/sync-plans.html
@@ -4407,7 +4455,7 @@ msgstr "临时"
 
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
 msgid ""
-"The <i>Registry Name Pattern</i> overrides the default name by which container images may be pulled from the server. (By default this name is a combination of Organization, Lifecycle Environment, Content View, Product, and Repository labels.)\n"
+"The <i>Registry Name Pattern</i> overrides the default name by which container images may be pulled from the server. (By default this name is a combination of Organization, Lifecycle Environment, Content View, Product, and Repository labels delimited by forward slashes \"/\".)\n"
 "\n"
 "          <br><br>The name may be constructed using ERB syntax. Variables available for use are:\n"
 "\n"
@@ -4430,7 +4478,7 @@ msgid ""
 "&lt;%= organization.label %&gt;-&lt;%= lifecycle_environment.label %&gt;-&lt;%= content_view.label %&gt;-&lt;%= product.label %&gt;-&lt;%= repository.label %&gt;\n"
 "&lt;%= organization.label %&gt;/&lt;%= repository.docker_upstream_name %&gt;</pre>"
 msgstr ""
-"<i>Registry Name Pattern</i> 会覆盖容器镜像可能从服务器抓取的默认名称。（默认情况下，这个名称是一个组合了机构、生命周期环境、内容视图和仓库的标签）\n"
+"<i>Registry Name Pattern</i> 会覆盖容器镜像可能从服务器抓取的默认名称。（默认情况下，这个名称是一个组合了机构、生命周期环境、内容视图和仓库的标签，以斜杠 \"/\" 分隔）\n"
 "\n"
 "          <br><br>The name may be constructed using ERB syntax. Variables available for use are:\n"
 "\n"
@@ -4640,6 +4688,13 @@ msgid ""
 "This action will affect only those Content Hosts that require a change.\n"
 "        If the Content Host does not have the selected Subscription no action will take place."
 msgstr "此操作将仅影响那些需要更改的内容主机。如果内容主机没有所选的订阅，则不会执行任何操作。"
+
+#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
+msgid ""
+"This activation key has multiple content view environments, which cannot yet"
+" be edited in the web UI. To change this key's content view environments, "
+"update the activation key via Hammer."
+msgstr "此激活密钥具有多个内容视图环境，它们无法在 Web UI 中编辑。要更改此密钥的内容视图环境，通过 Hammer 更新激活码。"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-associations-content-hosts.html
 msgid "This activation key is not associated with any content hosts."
@@ -4925,6 +4980,10 @@ msgstr "您要同步的 registry 的URL。例如：https：//registry-1.docker.i
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "URL to Discover"
 msgstr "发现 URL"
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+msgid "URL to GPG Key"
+msgstr "GPG 密钥的 URL"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""

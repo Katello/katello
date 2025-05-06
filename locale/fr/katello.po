@@ -799,6 +799,9 @@ msgstr "Collection Ansible"
 msgid "Ansible collections"
 msgstr "Collections Ansible"
 
+msgid "Any updates to image mode host(s) will be lost on the next reboot."
+msgstr ""
+
 msgid "Applicability Batch Size"
 msgstr "Applicabilité Taille du lot"
 
@@ -824,9 +827,6 @@ msgid "Apply"
 msgstr "Appliquer"
 
 msgid "Apply errata"
-msgstr ""
-
-msgid "Apply erratum"
 msgstr ""
 
 msgid "Apply to all repositories in the CV"
@@ -1246,13 +1246,19 @@ msgstr ""
 msgid "Cannot add repositories to a composite content view"
 msgstr "Impossible d'ajouter des référentiels à un affichage du contenu composite"
 
+msgid "Cannot add rolling content view to composite content view"
+msgstr ""
+
+msgid "Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment."
+msgstr ""
+
 msgid "Cannot associate a Red Hat provider with a custom product"
 msgstr ""
 
 msgid "Cannot associate a component to a non composite content view"
 msgstr "Impossible d'ajouter un composant à un affichage de contenu non-composite"
 
-msgid "Cannot be disabled because it is part of a published content view"
+msgid "Cannot be disabled because it is part of a content view"
 msgstr ""
 
 msgid "Cannot calculate name for custom repos"
@@ -1492,9 +1498,6 @@ msgstr "Version du composant : '%{cvv}', Produit : '%{product}', Dépôt : '%{re
 msgid "Components"
 msgstr "Composants"
 
-msgid "Composite"
-msgstr "Composite"
-
 msgid "Composite Content View"
 msgstr "Affichage du contenu composite"
 
@@ -1524,15 +1527,6 @@ msgstr "Confirmer la suppression du manifeste"
 
 msgid "Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific."
 msgstr "Envisagez de modifier le modèle de nom de registre de l’environnement de cycle de vie pour le rendre plus spécifique."
-
-msgid "Consisting of multiple content views"
-msgstr "Constitué de plusieurs vues de contenu"
-
-msgid "Consists of content views"
-msgstr "Consiste en affichages de contenu"
-
-msgid "Consists of repositories"
-msgstr "Consiste en référentiels"
 
 msgid "Consumed"
 msgstr "Consommé"
@@ -1569,6 +1563,15 @@ msgstr "Manifestes de containeurs"
 
 msgid "Container tags"
 msgstr "Balises de conteneur"
+
+msgid "Contains content views. You must choose the version to use for each content view."
+msgstr ""
+
+msgid "Contains repositories. Always serves the latest synced content, without the need to publish versions."
+msgstr ""
+
+msgid "Contains repositories. Versions are published and optionally filtered."
+msgstr ""
 
 msgid "Content"
 msgstr "Contenu"
@@ -2176,8 +2179,8 @@ msgstr "Politique de téléchargement par défaut du Proxy Smart"
 msgid "Default System SLA"
 msgstr "SLA du système par défaut"
 
-msgid "Default content view versions cannot be promoted"
-msgstr "Les versions de l'affichage du contenu par défaut ne peuvent pas être promues"
+msgid "Default and Rolling content view versions cannot be promoted"
+msgstr ""
 
 msgid "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')"
 msgstr "Stratégie de téléchargement par défaut des syncs de Proxy Smart (soit 'immediate', 'on_demand')"
@@ -3727,7 +3730,7 @@ msgstr "Installable"
 msgid "Installable bugfix/enhancement errata"
 msgstr ""
 
-msgid "Installable errata are applicable errata that are available in the host's content view and lifecycle environment."
+msgid "Installable errata are applicable errata that are available in the host's assigned content view environments."
 msgstr ""
 
 msgid "Installable security errata"
@@ -3872,6 +3875,27 @@ msgid "Issued from"
 msgstr "Délivré par"
 
 msgid "It is only allowed for Non-Redhat Yum repositories."
+msgstr ""
+
+msgid "It's not possible to bulk remove versions from a rolling content view."
+msgstr ""
+
+msgid "It's not possible to copy a rolling content view."
+msgstr ""
+
+msgid "It's not possible to create a filter for a rolling content view."
+msgstr ""
+
+msgid "It's not possible to destroy a version of a rolling content view."
+msgstr ""
+
+msgid "It's not possible to export a rolling content view."
+msgstr ""
+
+msgid "It's not possible to promote a rolling content view."
+msgstr ""
+
+msgid "It's not possible to publish a rolling content view."
 msgstr ""
 
 msgid "Job '${description}' completed"
@@ -4551,6 +4575,9 @@ msgstr ""
 msgid "Multi-entitlement"
 msgstr "Droits d’accès multiples"
 
+msgid "Must be Ascii alphanumeric, '_' or '-'"
+msgstr ""
+
 msgid "N/A"
 msgstr "Sans objet"
 
@@ -4920,7 +4947,7 @@ msgstr "Aucun package"
 msgid "No packages available to install"
 msgstr "Aucun paquet disponible pour l'installation"
 
-msgid "No packages available to install on this host. Please check the host's content view and lifecycle environment."
+msgid "No packages available to install on this host. Please check the host's assigned content view environments."
 msgstr ""
 
 msgid "No packages removed"
@@ -5184,6 +5211,9 @@ msgstr ""
 msgid "Organization required"
 msgstr "Organisation requise"
 
+msgid "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details."
+msgstr ""
+
 msgid "Orphaned Content Protection Time"
 msgstr "Temps de protection du contenu orphelin"
 
@@ -5336,6 +5366,9 @@ msgstr "Délai d'expiration de la mise à jour du package dépassé"
 
 msgid "Package Update scheduled by %s"
 msgstr "Mise à jour du package planifiée par %s"
+
+msgid "Package actions will be transient"
+msgstr ""
 
 msgid "Package group update canceled"
 msgstr "Mise à jour du groupe de packages annulée"
@@ -5899,6 +5932,9 @@ msgstr "Rafraîchir les statuts d’hôtes de contenu pour %s"
 msgid "Refresh Manifest"
 msgstr "Actualiser le fichier manifeste"
 
+msgid "Refresh RollingCV Repo"
+msgstr ""
+
 msgid "Refresh all alternate content sources"
 msgstr ""
 
@@ -6400,7 +6436,7 @@ msgstr "Examen de l'environnement affecté"
 msgid "Review affected environments"
 msgstr "Examiner les environnements affectés"
 
-msgid "Review and optionally exclude hosts from your selection."
+msgid "Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot."
 msgstr ""
 
 msgid "Review and then click {submitBtnText}."
@@ -6431,6 +6467,12 @@ msgid "Rollback image"
 msgstr ""
 
 msgid "Rollback image digest"
+msgstr ""
+
+msgid "Rolling content view"
+msgstr ""
+
+msgid "Rolling content views"
 msgstr ""
 
 msgid "Rules to be added"
@@ -6865,9 +6907,6 @@ msgstr ""
 msgid "Simplified"
 msgstr "Simplifié"
 
-msgid "Single content view consisting of e.g. repositories"
-msgstr "Vue de contenu unique composée de référentiels par ex."
-
 msgid "Size of file to upload"
 msgstr "Taille du fichier à télécharger"
 
@@ -6909,6 +6948,9 @@ msgstr "Résoudre les dépendances RPM par défaut sur Content View publish, les
 
 msgid "Solve dependencies"
 msgstr "Résoudre les dépendances"
+
+msgid "Some environments are disabled because they are not associated with all of the affected hosts' content sources."
+msgstr ""
 
 msgid "Some environments are disabled because they are not associated with the host's content source."
 msgstr ""
@@ -7508,6 +7550,9 @@ msgstr ""
 "Les référentiels suivants fournis dans les métadonnées d'importation ont un type de contenu ou un type de fournisseur incorrect. Assurez-vous que les référentiels d'exportation et d'importation sont du même type avant de procéder à l'importation de\n"
 " %{repos}"
 
+msgid "The generated container repository name is invalid. Please review the lifecycle environment's registry name pattern. It may be caused by special characters in the components that make up the name, like the organization."
+msgstr ""
+
 msgid "The id of the content source"
 msgstr "L'identifiant de la source de contenu"
 
@@ -7731,8 +7776,8 @@ msgstr ""
 msgid "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details."
 msgstr ""
 
-msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
-msgstr "Cet erratum n’est pas installable car il ne fait pas partie de ce affichage de contenu ou environnement de cycle de vie de cet hôte."
+msgid "This erratum is not installable because it is not in this host's assigned content view environments."
+msgstr ""
 
 msgid "This host does not have any Module streams."
 msgstr "Cet hôte n'a pas de flux de modules."
@@ -7774,9 +7819,6 @@ msgid "This is not a linked repository"
 msgstr "Il ne s'agit pas d'un référentiel associé"
 
 msgid "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}."
-msgstr ""
-
-msgid "This repository has pending tasks in associated content views. Please wait for the tasks: "
 msgstr ""
 
 msgid "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use."
@@ -7988,6 +8030,12 @@ msgstr "Impossible de détecter la stockage Pulp"
 
 msgid "Unable to detect puppet path"
 msgstr "Impossible de détecter le chemin d’accès Pulp"
+
+msgid "Unable to find a content view with ID %s"
+msgstr ""
+
+msgid "Unable to find a lifecycle environment with ID %s"
+msgstr ""
 
 msgid "Unable to find product '%s' in organization '%s'"
 msgstr "Impossible de trouver le produit '%s' dans l’organisation '%s'"
@@ -8475,6 +8523,9 @@ msgstr "Afficher par"
 msgid "View content views"
 msgstr ""
 
+msgid "View details"
+msgstr ""
+
 msgid "View documentation"
 msgstr ""
 
@@ -8747,6 +8798,9 @@ msgstr "une organisation"
 
 msgid "are only allowed for Yum repositories."
 msgstr "ne sont autorisés que pour les référentiels Yum."
+
+msgid "assign a new content source to the hosts"
+msgstr ""
 
 msgid "attempted to sync a non-library repository."
 msgstr ""
@@ -9104,9 +9158,6 @@ msgstr "installation des packages..."
 
 msgid "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."
 msgstr "Interprète l'objet spécifié pour qu’il ne retourne que les référentiels qui peuvent être associés à l'objet spécifié. La valeur 'content_view' est prise en charge."
-
-msgid "invalid container image name"
-msgstr "nom de l'image du conteneur non valide"
 
 msgid "invalid: Repositories can only require one OS version."
 msgstr "invalide : les référentiels ne peuvent exiger qu'une seule version du système d'exploitation."

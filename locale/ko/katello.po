@@ -790,6 +790,9 @@ msgstr ""
 msgid "Ansible collections"
 msgstr ""
 
+msgid "Any updates to image mode host(s) will be lost on the next reboot."
+msgstr ""
+
 msgid "Applicability Batch Size"
 msgstr ""
 
@@ -815,9 +818,6 @@ msgid "Apply"
 msgstr "적용"
 
 msgid "Apply errata"
-msgstr ""
-
-msgid "Apply erratum"
 msgstr ""
 
 msgid "Apply to all repositories in the CV"
@@ -1235,13 +1235,19 @@ msgstr ""
 msgid "Cannot add repositories to a composite content view"
 msgstr "복합적인 컨텐츠 뷰에 리포지터리를 추가할 수 없습니다 "
 
+msgid "Cannot add rolling content view to composite content view"
+msgstr ""
+
+msgid "Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment."
+msgstr ""
+
 msgid "Cannot associate a Red Hat provider with a custom product"
 msgstr ""
 
 msgid "Cannot associate a component to a non composite content view"
 msgstr ""
 
-msgid "Cannot be disabled because it is part of a published content view"
+msgid "Cannot be disabled because it is part of a content view"
 msgstr ""
 
 msgid "Cannot calculate name for custom repos"
@@ -1481,9 +1487,6 @@ msgstr ""
 msgid "Components"
 msgstr "구성 요소"
 
-msgid "Composite"
-msgstr "복합 "
-
 msgid "Composite Content View"
 msgstr ""
 
@@ -1512,15 +1515,6 @@ msgid "Confirm delete manifest"
 msgstr ""
 
 msgid "Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific."
-msgstr ""
-
-msgid "Consisting of multiple content views"
-msgstr ""
-
-msgid "Consists of content views"
-msgstr ""
-
-msgid "Consists of repositories"
 msgstr ""
 
 msgid "Consumed"
@@ -1557,6 +1551,15 @@ msgid "Container manifests"
 msgstr ""
 
 msgid "Container tags"
+msgstr ""
+
+msgid "Contains content views. You must choose the version to use for each content view."
+msgstr ""
+
+msgid "Contains repositories. Always serves the latest synced content, without the need to publish versions."
+msgstr ""
+
+msgid "Contains repositories. Versions are published and optionally filtered."
 msgstr ""
 
 msgid "Content"
@@ -2165,8 +2168,8 @@ msgstr ""
 msgid "Default System SLA"
 msgstr "기본값 시스템 SLA"
 
-msgid "Default content view versions cannot be promoted"
-msgstr "기본값 컨텐츠 뷰 버전은 승격할 수 없습니다 "
+msgid "Default and Rolling content view versions cannot be promoted"
+msgstr ""
 
 msgid "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')"
 msgstr ""
@@ -3714,7 +3717,7 @@ msgstr "설치 가능 "
 msgid "Installable bugfix/enhancement errata"
 msgstr ""
 
-msgid "Installable errata are applicable errata that are available in the host's content view and lifecycle environment."
+msgid "Installable errata are applicable errata that are available in the host's assigned content view environments."
 msgstr ""
 
 msgid "Installable security errata"
@@ -3859,6 +3862,27 @@ msgid "Issued from"
 msgstr ""
 
 msgid "It is only allowed for Non-Redhat Yum repositories."
+msgstr ""
+
+msgid "It's not possible to bulk remove versions from a rolling content view."
+msgstr ""
+
+msgid "It's not possible to copy a rolling content view."
+msgstr ""
+
+msgid "It's not possible to create a filter for a rolling content view."
+msgstr ""
+
+msgid "It's not possible to destroy a version of a rolling content view."
+msgstr ""
+
+msgid "It's not possible to export a rolling content view."
+msgstr ""
+
+msgid "It's not possible to promote a rolling content view."
+msgstr ""
+
+msgid "It's not possible to publish a rolling content view."
 msgstr ""
 
 msgid "Job '${description}' completed"
@@ -4538,6 +4562,9 @@ msgstr ""
 msgid "Multi-entitlement"
 msgstr "멀티 인타이틀먼트 "
 
+msgid "Must be Ascii alphanumeric, '_' or '-'"
+msgstr ""
+
 msgid "N/A"
 msgstr "해당 없음 "
 
@@ -4901,7 +4928,7 @@ msgstr ""
 msgid "No packages available to install"
 msgstr ""
 
-msgid "No packages available to install on this host. Please check the host's content view and lifecycle environment."
+msgid "No packages available to install on this host. Please check the host's assigned content view environments."
 msgstr ""
 
 msgid "No packages removed"
@@ -5165,6 +5192,9 @@ msgstr ""
 msgid "Organization required"
 msgstr "필요한 조직 "
 
+msgid "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details."
+msgstr ""
+
 msgid "Orphaned Content Protection Time"
 msgstr ""
 
@@ -5317,6 +5347,9 @@ msgstr "패키지 업데이트 시간 초과 "
 
 msgid "Package Update scheduled by %s"
 msgstr "%s에 의해 스케줄된 패키지 업데이트 "
+
+msgid "Package actions will be transient"
+msgstr ""
 
 msgid "Package group update canceled"
 msgstr "패키지 그룹 업데이트 취소"
@@ -5878,6 +5911,9 @@ msgstr ""
 msgid "Refresh Manifest"
 msgstr "매니페스트 새로 고침 "
 
+msgid "Refresh RollingCV Repo"
+msgstr ""
+
 msgid "Refresh all alternate content sources"
 msgstr ""
 
@@ -6379,7 +6415,7 @@ msgstr ""
 msgid "Review affected environments"
 msgstr ""
 
-msgid "Review and optionally exclude hosts from your selection."
+msgid "Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot."
 msgstr ""
 
 msgid "Review and then click {submitBtnText}."
@@ -6410,6 +6446,12 @@ msgid "Rollback image"
 msgstr ""
 
 msgid "Rollback image digest"
+msgstr ""
+
+msgid "Rolling content view"
+msgstr ""
+
+msgid "Rolling content views"
 msgstr ""
 
 msgid "Rules to be added"
@@ -6844,9 +6886,6 @@ msgstr ""
 msgid "Simplified"
 msgstr ""
 
-msgid "Single content view consisting of e.g. repositories"
-msgstr ""
-
 msgid "Size of file to upload"
 msgstr ""
 
@@ -6887,6 +6926,9 @@ msgid "Solve RPM dependencies by default on Content View publish, defaults to fa
 msgstr ""
 
 msgid "Solve dependencies"
+msgstr ""
+
+msgid "Some environments are disabled because they are not associated with all of the affected hosts' content sources."
 msgstr ""
 
 msgid "Some environments are disabled because they are not associated with the host's content source."
@@ -7485,6 +7527,9 @@ msgid ""
 " %{repos}"
 msgstr ""
 
+msgid "The generated container repository name is invalid. Please review the lifecycle environment's registry name pattern. It may be caused by special characters in the components that make up the name, like the organization."
+msgstr ""
+
 msgid "The id of the content source"
 msgstr ""
 
@@ -7706,7 +7751,7 @@ msgstr ""
 msgid "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details."
 msgstr ""
 
-msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
+msgid "This erratum is not installable because it is not in this host's assigned content view environments."
 msgstr ""
 
 msgid "This host does not have any Module streams."
@@ -7749,9 +7794,6 @@ msgid "This is not a linked repository"
 msgstr ""
 
 msgid "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}."
-msgstr ""
-
-msgid "This repository has pending tasks in associated content views. Please wait for the tasks: "
 msgstr ""
 
 msgid "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use."
@@ -7962,6 +8004,12 @@ msgid "Unable to detect pulp storage"
 msgstr "pulp 스토리지를 감지할 수 없습니다."
 
 msgid "Unable to detect puppet path"
+msgstr ""
+
+msgid "Unable to find a content view with ID %s"
+msgstr ""
+
+msgid "Unable to find a lifecycle environment with ID %s"
 msgstr ""
 
 msgid "Unable to find product '%s' in organization '%s'"
@@ -8450,6 +8498,9 @@ msgstr ""
 msgid "View content views"
 msgstr ""
 
+msgid "View details"
+msgstr ""
+
 msgid "View documentation"
 msgstr ""
 
@@ -8721,6 +8772,9 @@ msgid "an organization"
 msgstr "조직 "
 
 msgid "are only allowed for Yum repositories."
+msgstr ""
+
+msgid "assign a new content source to the hosts"
 msgstr ""
 
 msgid "attempted to sync a non-library repository."
@@ -9078,9 +9132,6 @@ msgid "installing packages..."
 msgstr "패키지 설치 중..."
 
 msgid "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."
-msgstr ""
-
-msgid "invalid container image name"
 msgstr ""
 
 msgid "invalid: Repositories can only require one OS version."
