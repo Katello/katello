@@ -12,5 +12,18 @@ template_inputs:
 provider_type: Ansible
 kind: job_template
 %>
-
-<%= render_template('Run Command - Ansible Default', :command => "yum -y group install #{input('package')}") %>
+---
+- hosts: all
+  tasks:
+<%= indent(4) { snippet('check_bootc_status') } %>
+    - name: Install groups via dnf for image mode machines
+      shell:
+        cmd: 'dnf -y --transient groupinstall <%= input('package') %>'
+      register: out
+      when: is_bootc_host
+    - name: Install groups normally
+      shell:
+        cmd: 'yum -y groupinstall <%= input('package') %>'
+      register: out
+      when: not is_bootc_host
+    - debug: var=out

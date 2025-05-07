@@ -21,6 +21,20 @@ template_inputs:
 <%= render_template('Run Command - Ansible Default', :command => "zypper -n install -t patch #{advisory_ids.join(' ')}") %>
 <% else -%>
 <% advisories = advisory_ids.map { |e| "--advisory=#{e}" }.join(' ') -%>
-<%= render_template('Run Command - Ansible Default', :command => "yum -y update-minimal #{advisories}") %>
+---
+- hosts: all
+  tasks:
+<%= indent(4) { snippet('check_bootc_status') } %>
+    - name: Install errata via dnf for image mode machines
+      shell:
+        cmd: 'dnf -y --transient update-minimal <%= advisories %>'
+      register: out
+      when: is_bootc_host
+    - name: Install errata normally
+      shell:
+        cmd: 'yum -y update-minimal <%= advisories %>'
+      register: out
+      when: not is_bootc_host
+    - debug: var=out
 <% end -%>
 <%= snippet_if_exists(template_name + " custom post") %>
