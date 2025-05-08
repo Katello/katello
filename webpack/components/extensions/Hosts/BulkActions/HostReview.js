@@ -18,6 +18,7 @@ const HostReview = ({
   initialSelectedHosts,
   hostsBulkSelect,
   setShouldValidateStep,
+  warningBanner,
 }) => {
   const apiOptions = { key: 'HOST_REVIEW' };
 
@@ -86,6 +87,13 @@ const HostReview = ({
       isSorted: true,
       weight: 100,
     },
+    cv_environments: {
+      title: __('Content View Environments'),
+      wrapper: hostDetails =>
+        hostDetails?.content_facet_attributes?.content_view_environment_labels,
+      isSorted: false,
+      weight: 100,
+    },
   };
 
   // restrict search query to only selected hosts
@@ -98,6 +106,7 @@ const HostReview = ({
     return newSearchQuery;
   };
 
+
   return (
     <>
       <TextContent>
@@ -108,6 +117,7 @@ const HostReview = ({
           {__('Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot.')}
         </Text>
       </TextContent>
+      {(warningBanner)}
       {selectedCount === 0 && hasInteracted && (
         <Alert
           ouiaId="no-hosts-alert"
@@ -163,6 +173,7 @@ HostReview.propTypes = {
     }),
     hostsResponse: PropTypes.shape([]),
   }),
+  warningBanner: PropTypes.element.isRequired,
   setShouldValidateStep: PropTypes.func.isRequired,
 };
 
