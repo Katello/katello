@@ -25,9 +25,15 @@ const CVEnvironmentSelectionForm = () => {
 
   // Based on env selected for removal, decide if we need to reassign hosts and activation keys.
   useDeepCompareEffect(() => {
-    const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
-    setAffectedActivationKeys(!!(selectedEnv.filter(env => env.activation_key_count > 0).length));
-    setAffectedHosts(!!(selectedEnv.filter(env => env.host_count > 0).length));
+    const selectedEnvironments = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
+
+    const needsHostReassignment = selectedEnvironments.some(env =>
+      (env.host_count || 0) > (env.multi_env_host_count || 0));
+    setAffectedHosts(needsHostReassignment);
+
+    const needsAKReassignment = selectedEnvironments.some(env =>
+      (env.activation_key_count || 0) > (env.multi_env_ak_count || 0));
+    setAffectedActivationKeys(needsAKReassignment);
   }, [setAffectedActivationKeys, setAffectedHosts,
     versionEnvironments, selectedEnvSet, selectedEnvSet.size]);
 

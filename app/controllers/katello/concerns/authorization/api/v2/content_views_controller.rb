@@ -119,7 +119,11 @@ module Katello
       return deny_access unless KTEnvironment.promotable.where(:id => env_ids).count == env_ids.size && view.promotable_or_removable?
 
       total_count = Katello::Host::ContentFacet.with_content_views(view).with_environments(env_ids).count
-      if total_count > 0
+      single_env_host_count = Katello::Host::ContentFacet
+        .with_content_views(view)
+        .with_environments(env_ids)
+        .count { |facet| !facet.multi_content_view_environment? }
+      if single_env_host_count > 0
         unless options[:system_content_view_id] && options[:system_environment_id]
           fail _("Unable to reassign content hosts. Please provide system_content_view_id and system_environment_id.")
         end
@@ -132,7 +136,9 @@ module Katello
         end
       end
 
-      if Katello::ActivationKey.with_content_views(view).with_environments(env_ids).count > 0
+      keys = Katello::ActivationKey.with_content_views(view).with_environments(env_ids)
+      single_env_keys_exist = keys.any? { |key| !key.multi_content_view_environment? }
+      if single_env_keys_exist
         # if we are reassigning activation key environments/ cv
         # make sure the activation key using present environments or cv are editable.
         unless options[:key_content_view_id] && options[:key_environment_id]
