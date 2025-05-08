@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
@@ -52,7 +51,7 @@ afterEach(() => {
   nock.restore(); // Restores HTTP to normal behavior
 });
 
-test.skip('Can enable and disable add filter button', async (done) => {
+test('Can enable and disable add filter button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { name: cvFilterName } = cvFilterDetails;
   const cvFilterScope = nockInstance
@@ -94,7 +93,7 @@ test.skip('Can enable and disable add filter button', async (done) => {
   act(done);
 });
 
-test.skip('Can remove a filter rule', async (done) => {
+test('Can remove a filter rule', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
@@ -152,7 +151,7 @@ test.skip('Can remove a filter rule', async (done) => {
   act(done);
 });
 
-test.skip('Can add a filter rule', async (done) => {
+test('Can add a filter rule', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
@@ -212,7 +211,7 @@ test.skip('Can add a filter rule', async (done) => {
   act(done);
 });
 
-test.skip('Can bulk remove filter rules', async (done) => {
+test('Can bulk remove filter rules', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
@@ -275,7 +274,7 @@ test.skip('Can bulk remove filter rules', async (done) => {
   act(done);
 });
 
-test.skip('Can bulk add filter rules', async (done) => {
+test('Can bulk add filter rules', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
@@ -334,7 +333,7 @@ test.skip('Can bulk add filter rules', async (done) => {
   act(done);
 });
 
-test.skip('Can filter by added/not added rules', async (done) => {
+test('Can filter by added/not added rules', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
@@ -391,7 +390,7 @@ test.skip('Can filter by added/not added rules', async (done) => {
   act(done);
 });
 
-test.skip('Can show affected repository tab on dropdown selection and add repos', async (done) => {
+test('Can show affected repository tab on dropdown selection and add repos', async (done) => {
   const autocompleteScope = mockAutocomplete(
     nockInstance,
     autocompleteUrl,
@@ -492,7 +491,7 @@ test.skip('Can show affected repository tab on dropdown selection and add repos'
   act(done);
 });
 
-test.skip('Can show affected repository tab and remove affected repos', async (done) => {
+test('Can show affected repository tab and remove affected repos', async (done) => {
   const autocompleteScope = mockAutocomplete(
     nockInstance,
     autocompleteUrl,
