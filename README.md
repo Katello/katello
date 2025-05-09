@@ -18,6 +18,7 @@ Linux based systems.
 
 ## Development
 
+
 The most common way to set up Katello for development is to use
 [forklift](https://github.com/theforeman/forklift).
 This will set up a virtual machine with the Katello codebase checked out.
