@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require "katello_test_helper"
-
 module Katello
   class Api::V2::OrganizationsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
@@ -11,6 +10,7 @@ module Katello
       @create_permission = :create_organizations
       @update_permission = :edit_organizations
       @delete_permission = :destroy_organizations
+      @export_permission = :export_content
     end
 
     def models
@@ -165,6 +165,28 @@ module Katello
       assert_protected_action(:releases, allowed_perms, denied_perms, [@organization]) do
         get :releases, params: { :id => @organization.id }
       end
+    end
+
+    def test_download_debug_certificate_protected
+      allowed_perms = [[@read_permission, @export_permission]]
+      denied_perms = [@create_permission, @update_permission, @delete_permission]
+
+      assert_protected_action(:download_debug_certificate, allowed_perms, denied_perms, [@organization]) do
+        get :download_debug_certificate, params: { :id => @organization.title }
+      end
+    end
+
+    def test_download_debug_certificate_success
+      # Stub the certificate data
+      cert_data = { key: "DUMMY-CERTIFICATE-DATA", cert: "DUMMY-CERTIFICATE-DATA"}
+      Organization.any_instance.expects(:debug_cert).returns(cert_data)
+      # Perform the request
+      get :download_debug_certificate, params: { id: @organization.title }
+      # Verify response
+      assert_response :success
+      assert_match(/attachment; filename="#{@organization.name}-key-cert.pem"/, response.headers['Content-Disposition'])
+      assert_includes response.body, cert_data[:key]
+      assert_includes response.body, cert_data[:cert]
     end
 
     context "create_organization" do
