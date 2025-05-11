@@ -109,16 +109,16 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/organizations/:label/cancel_repo_discover", N_("Cancel repository discovery")
-    param :label, String, :desc => N_("Organization label")
+    api :PUT, "/organizations/:id/cancel_repo_discover", N_("Cancel repository discovery")
+    param :id, String, :desc => N_("Organization ID or title")
     param :url, String, :desc => N_("base url to perform repo discovery on")
     def cancel_repo_discover
       task = @organization.cancel_repo_discovery
       respond_for_async :resource => task
     end
 
-    api :GET, "/organizations/:label/download_debug_certificate", N_("Download a debug certificate")
-    param :label, String, :desc => N_("Organization label")
+    api :GET, "/organizations/:id/download_debug_certificate", N_("Download a debug certificate")
+    param :id, String, :desc => N_("Organization ID or title")
     def download_debug_certificate
       pem = @organization.debug_cert
       data = "#{pem[:key]}\n\n#{pem[:cert]}"
@@ -168,11 +168,15 @@ module Katello
 
     protected
 
+    def organization_export_content_permission?
+      org = Organization.friendly.find(params[:id])
+      org&.authorized?(:export_content)
+    end
+
     def action_permission
       if params[:action] == "releases"
         :view
-      elsif params[:action] == "download_debug_certificate" &&
-          Organization.find(params[:id]).authorized?(:export_content)
+      elsif params[:action] == "download_debug_certificate" && organization_export_content_permission?
         :view
       elsif %w(download_debug_certificate redhat_provider repo_discover cdn_configuration
                cancel_repo_discover).include?(params[:action])
@@ -180,10 +184,6 @@ module Katello
       else
         super
       end
-    end
-
-    def resource_identifying_attributes
-      %w(id label)
     end
 
     def skip_nested_id
