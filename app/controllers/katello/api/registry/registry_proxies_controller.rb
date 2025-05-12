@@ -1,6 +1,7 @@
 module Katello
   # rubocop:disable Metrics/ClassLength
   class Api::Registry::RegistryProxiesController < Api::V2::ApiController
+    include Katello::Authentication::ClientAuthentication
     before_action :disable_strong_params
     before_action :confirm_settings
     skip_before_action :authorize
@@ -43,6 +44,18 @@ module Katello
       end
     end
 
+    def authenticate_cert_request
+      if cert_present?
+        client_cert = ::Cert::RhsmClient.new(cert_from_request)
+        uuid = client_cert.uuid
+        auth = authenticate_client
+        if auth
+          ::User.current = ::User.anonymous_admin
+          @host = Katello::Host::ContentFacet.find_by(uuid: uuid)&.host
+        end
+      end
+    end
+
     def redirect_authorization_headers
       response.headers['Docker-Distribution-API-Version'] = 'registry/2.0'
       response.headers['Www-Authenticate'] = "Bearer realm=\"#{request_url}/v2/token\"," \
@@ -64,6 +77,9 @@ module Katello
           redirect_authorization_headers if redirect_on_failure
           return false
         end
+      else
+        authenticate_cert_request
+        return true if @host
       end
       false
     end
@@ -454,7 +470,7 @@ module Katello
       return nil unless params[:repository]
       repository = Repository.docker_type.find_by(container_repository_name: params[:repository])
       if require_user_authorization?(repository)
-        repository = Repository.readable_docker_catalog.find_by(container_repository_name: params[:repository])
+        repository = Repository.readable_docker_catalog(@host).find_by(container_repository_name: params[:repository])
       end
       repository
     end
@@ -660,7 +676,7 @@ module Katello
       params[:per_page] = params[:n] || 25
       params[:search] = params[:q]
 
-      search_results = scoped_search(Repository.readable_docker_catalog.distinct,
+      search_results = scoped_search(Repository.readable_docker_catalog(@host).distinct,
                                      :container_repository_name, :asc, options)
 
       results = {
@@ -674,7 +690,7 @@ module Katello
     end
 
     def catalog
-      repositories = Repository.readable_docker_catalog.collect do |repository|
+      repositories = Repository.readable_docker_catalog(@host).collect do |repository|
         repository.container_repository_name
       end
       render json: { repositories: repositories }
