@@ -1,6 +1,5 @@
-/* eslint-disable */
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act, waitFor } from 'react-testing-lib-wrapper';
 import mockAvailableHostCollections from './availableHostCollections.fixtures.json';
 import mockRemovableHostCollections from './removableHostCollections.fixtures.json';
 import { REMOVABLE_HOST_COLLECTIONS_KEY } from '../HostCollectionsConstants';
@@ -50,7 +49,7 @@ describe('HostCollectionsAddModal', () => {
     nock.restore(); // Restores HTTP to normal behavior
   });
 
-  test.skip('Calls API with available_for=host on page load', async (done) => {
+  test('Calls API with available_for=host on page load', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
     const scope = nockInstance
@@ -74,7 +73,7 @@ describe('HostCollectionsAddModal', () => {
     act(done);
   });
 
-  test.skip('Calls alterHostCollections with combined list of existing and new host collections', async (done) => {
+  test('Calls alterHostCollections with combined list of existing and new host collections', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
     const scope = nockInstance
@@ -113,10 +112,10 @@ describe('HostCollectionsAddModal', () => {
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope);
     assertNockRequest(alterScope);
-    assertNockRequest(hostDetailsScope);
-    act(done);
+    await waitFor(() => expect(hostDetailsScope.isDone()).toBe(true));
+    assertNockRequest(hostDetailsScope, done);
   });
-  test.skip('Host collections whose host limit is exceeded are disabled', async (done) => {
+  test('Host collections whose host limit is exceeded are disabled', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
     const scope = nockInstance
@@ -158,7 +157,7 @@ describe('HostCollectionsRemoveModal', () => {
     nock.cleanAll(); // Removes all interceptors
     nock.restore(); // Restores HTTP to normal behavior
   });
-  test.skip('Calls API without available_for=host on page load', async (done) => {
+  test('Calls API without available_for=host on page load', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
     const scope = nockInstance
@@ -184,7 +183,7 @@ describe('HostCollectionsRemoveModal', () => {
     act(done); // Pass jest callback to confirm test is done
   });
 
-  test.skip('Calls alterHostCollections with host collections being removed filtered out from the list', async (done) => {
+  test('Calls alterHostCollections with host collections being removed filtered out from the list', async (done) => {
     const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
     const scope = nockInstance
@@ -233,4 +232,3 @@ describe('HostCollectionsRemoveModal', () => {
     act(done);
   });
 });
-
