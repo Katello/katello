@@ -52,6 +52,16 @@ module Katello
       super
     end
 
+    def thindex
+      sort_by, sort_order, options = sort_options
+
+      options[:select] = "DISTINCT ON (#{Deb.table_name}.name) #{Deb.table_name}.id, #{Deb.table_name}.name"
+      final_relation = custom_index_relation(Deb.all)
+
+      result = scoped_search(final_relation, sort_by, sort_order, options)
+      respond_for_index(:collection => result, :template => "thindex")
+    end
+
     def final_custom_index_relation(collection)
       # :packages_restrict_latest is intended to filter the result set after all
       # other constraints have been applied, including the scoped_search
