@@ -64,7 +64,7 @@ const CVReassignHostsForm = () => {
 
   const affectedHostIds = (hostResponse?.results || []).map(host => host.id).join(',');
 
-  const multiCVWarning = hostResponse?.results?.some?.(host =>
+  const multiCVInfo = hostResponse?.results?.some?.(host =>
     host.content_facet_attributes?.multi_content_view_environment);
 
   const multiCVRemovalInfo = __('This content view version is used in one or more multi-environment hosts. The version will simply be removed from the multi-environment hosts. The content view and lifecycle environment you select here will only apply to single-environment hosts. See hammer activation-key --help for more details.');
@@ -146,12 +146,12 @@ const CVReassignHostsForm = () => {
 
   return (
     <>
-      {!alertDismissed && multiCVWarning && (
+      {!alertDismissed && multiCVInfo && (
         <Alert
-          ouiaId="multi-cv-warning-alert"
-          variant="warning"
+          ouiaId="multi-cv-info-alert"
+          variant="info"
           isInline
-          title={__('Warning')}
+          title={__('Multi-environment host(s) affected')}
           actionClose={<AlertActionCloseButton onClose={() => setAlertDismissed(true)} />}
         >
           <p>{multiCVRemovalInfo}</p>

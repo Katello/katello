@@ -119,13 +119,17 @@ module Actions
           end
           all_cv_envs = combined_cv_envs(cv_envs, versions)
 
-          if all_cv_envs.flat_map(&:hosts).any? && !cve_exists?(options[:system_environment_id],
-                                                                options[:system_content_view_id])
+          single_env_hosts_exist = all_cv_envs.flat_map(&:hosts).any? do |host|
+            !host.content_facet.multi_content_view_environment?
+          end
+          if single_env_hosts_exist && !cve_exists?(options[:system_environment_id], options[:system_content_view_id])
             fail _("Unable to reassign systems. Please check system_content_view_id and system_environment_id.")
           end
 
-          if all_cv_envs.flat_map(&:activation_keys).any? && !cve_exists?(options[:key_environment_id],
-                                                                          options[:key_content_view_id])
+          single_env_keys_exist = all_cv_envs.flat_map(&:activation_keys).any? do |key|
+            !key.multi_content_view_environment?
+          end
+          if single_env_keys_exist && !cve_exists?(options[:key_environment_id], options[:key_content_view_id])
             fail _("Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id.")
           end
         end

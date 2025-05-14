@@ -80,7 +80,7 @@ const CVReassignActivationKeysForm = () => {
     contentViewsInEnvError, selectedEnvForAK, setSelectedCVForAK, setSelectedCVNameForAK,
     cvInEnvLoading, selectedCVForAK, cvId, versionEnvironments, selectedEnvSet]);
 
-  const multiCVWarning = activationKeysResponse?.results?.some?.(key =>
+  const multiCVInfo = activationKeysResponse?.results?.some?.(key =>
     key.multi_content_view_environment);
 
   const fetchSelectedCVName = (id) => {
@@ -117,12 +117,12 @@ const CVReassignActivationKeysForm = () => {
 
   return (
     <>
-      {!alertDismissed && multiCVWarning && (
+      {!alertDismissed && multiCVInfo && (
         <Alert
-          ouiaId="multi-cv-warning-alert"
-          variant="warning"
+          ouiaId="multi-cv-info-alert"
+          variant="info"
           isInline
-          title={__('Warning')}
+          title={__('Multi-environment activation key(s) affected')}
           actionClose={<AlertActionCloseButton onClose={() => setAlertDismissed(true)} />}
         >
           <p>{multiCVRemovalInfo}</p>
