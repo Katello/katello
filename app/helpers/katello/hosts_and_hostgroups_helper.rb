@@ -161,7 +161,7 @@ module Katello
                                        accessible_content_proxies(host)
                                      end
         accessible_content_objects.each do |content_object|
-          selected = selected_id == content_object.id ? 'selected' : ''
+          selected = "#{selected_id}" == "#{content_object.id}" ? 'selected' : ''
           content_object_options << %(<option value="#{content_object.id}" class="kt-env" #{selected}>#{h(content_object.name)}</option>)
         end
 
@@ -186,10 +186,10 @@ module Katello
       )
     end
 
-    def content_source_options(host, options = {})
+    def content_source_options(host, content_source_id, options = {})
       content_options(
         host,
-        fetch_content_source(host, options).try(:id),
+        content_source_id,
         :content_source,
         options
       )
