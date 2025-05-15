@@ -841,21 +841,14 @@ module Katello
 
     def static_index
       host_ip = request.remote_ip
-      host = ::Host.joins(:primary_interface).where("nics.ip = :host_ip OR nics.ip6 = :host_ip", host_ip: host_ip)&.first
+      @host ||= ::Host.joins(:primary_interface).where("nics.ip = :host_ip OR nics.ip6 = :host_ip", host_ip: host_ip)&.first
       flatpak_index = (redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers) })
       flatpak_index_json = JSON.parse(flatpak_index)
-      # Filter out repositories if it's a registered host
-      if host&.content_view_environments&.any?
-        # host.update(flatpak_index: flatpak_index) Will this help??
-        repos = host.content_view_environments.flat_map do |cve|
-          cve.content_view_version.repositories
-        end
-        available_container_repo_names = repos.map(&:container_repository_name)
-        flatpak_index_json['Results'] = flatpak_index_json['Results'].select do |result|
-          available_container_repo_names.include?(result['Name'])
-        end
+      repos = Repository.readable_docker_catalog(@host)
+      available_container_repo_names = repos.map(&:container_repository_name)
+      flatpak_index_json['Results'] = flatpak_index_json['Results'].select do |result|
+        available_container_repo_names.include?(result['Name'])
       end
-      # Otherwise just return unfiltered pulp flatpak index
       render json: flatpak_index_json
     end
   end
