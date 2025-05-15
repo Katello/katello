@@ -25,6 +25,11 @@ module Katello
       SQL
 
       query = Katello::Repository.readable.in_default_view.in_organization(@organization)
+      if @content_view.rolling
+        # Exclude container push repositories
+        query = query.joins(:root).where(katello_root_repositories: { is_container_push: false })
+      end
+
       query = query.with_type(params[:content_type]) if params[:content_type]
       # Use custom sort to perform the join and order since we need to order by specific content_view
       # and the ORDER BY query needs access to the katello_content_view_repositories table

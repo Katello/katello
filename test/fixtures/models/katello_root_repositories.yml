@@ -330,3 +330,15 @@ product_host_count_repo2_root:
   download_policy:      on_demand
   mirroring_policy:     "mirror_content_only"
 
+container_push_root:
+  name:                 container push repo
+  content_id:           1
+  content_type:         docker
+  label:                container-push-repo
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
+  unprotected:          <%= true %>
+  mirroring_policy:     additive
+  download_policy:      immediate
+  container_push_name:  "id/1/2/container-push-repo"
+  container_push_name_format: id
+  is_container_push:    <%= true %>
